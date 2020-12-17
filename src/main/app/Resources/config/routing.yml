@@ -1,0 +1,14 @@
+claro_app:
+    resource: "@ClarolineAppBundle/Controller/Platform/ClientController.php"
+    type: annotation
+    options: { expose: true }
+
+claro_locale:
+    resource: "@ClarolineAppBundle/Controller/Platform/LocaleController.php"
+    type: annotation
+    options: { expose: true }
+
+claro_terms_of_service:
+    resource: "@ClarolineAppBundle/Controller/Platform/TermsOfServiceController.php"
+    type: annotation
+    options: { expose: true }

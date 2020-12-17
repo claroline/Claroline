@@ -1,0 +1,9 @@
+services:
+    _defaults:
+        autowire: false #change to true
+        autoconfigure: false
+        public: true #because controller
+
+    Claroline\ImagePlayerBundle\Listener\File\Type\ImageListener:
+        tags:
+            - { name: kernel.event_listener, event: file.image.load, method: onLoad }

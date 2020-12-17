@@ -1,0 +1,48 @@
+{
+  "id": "1",
+  "type": "application/x.set+json",
+  "content": "Question ?",
+  "hasExpectedAnswer": true,
+  "sets": [
+    {
+      "id": "2",
+      "name": "Set A"
+    },
+    {
+      "id": "3",
+      "name": "Set B"
+    }
+  ],
+  "items": [
+    {
+      "id": "4",
+      "type": "text/plain",
+      "data": "Item X"
+    },
+    {
+      "id": "5",
+      "type": "text/plain",
+      "data": "Item Y"
+    },
+    {
+      "id": "6",
+      "type": "text/plain",
+      "data": "Item Z"
+    }
+  ],
+  "solutions": {
+    "associations" : [
+      {
+        "setId": "2",
+        "itemId": "42",
+        "score": 3
+      },
+      {
+        "setId": "3",
+        "itemId": "5",
+        "score": 0.5
+      }
+    ]
+  },
+  "penalty": 1
+}

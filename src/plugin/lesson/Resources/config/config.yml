@@ -1,0 +1,11 @@
+plugin:
+    has_options: false
+
+    resources:
+        - name: icap_lesson
+          class: Icap\LessonBundle\Entity\Lesson
+          tags: [content]
+          exportable: false
+          actions:
+              - name: view_internal_notes
+                decoder: view_internal_notes

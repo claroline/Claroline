@@ -1,0 +1,21 @@
+services:
+    Claroline\AppBundle\Command\ApiDumperCommand:
+        arguments:
+            - '@Claroline\AppBundle\Routing\Finder'
+            - '@Claroline\AppBundle\Routing\Documentator'
+        tags:
+            - { name: 'console.command', command: 'claroline:api:dump' }
+
+    Claroline\AppBundle\Command\ApiImportCommand:
+        arguments:
+            - '@Claroline\AuthenticationBundle\Security\Authentication\Authenticator'
+            - '@Claroline\AppBundle\API\TransferProvider'
+        tags:
+            - { name: 'console.command', command: 'claroline:app:import' }
+
+    Claroline\AppBundle\Command\DebugRouterCommand:
+        arguments:
+            - '@Claroline\AppBundle\Routing\Finder'
+        tags:
+            - { name: 'console.command', command: 'claroline:api:router:debug' }
+

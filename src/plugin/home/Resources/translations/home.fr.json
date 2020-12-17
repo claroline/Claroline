@@ -1,0 +1,14 @@
+{
+    "add_tab": "Ajouter un onglet",
+    "tab_add_child": "Ajouter un sous-onglet",
+    "home_tab_delete_confirm_title": "Suppression d'un onglet",
+    "home_tab_delete_confirm_message": "Êtes-vous sûr de vouloir supprimer cet onglet ?",
+    "home_tab_locked": "Vous ne pouvez pas modifier cet onglet",
+    "home_tab_locked_message": "Cet onglet a été configuré par un administrateur et ne peut pas être supprimé ou modifié.",
+    "new_tab": "Nouvel onglet",
+    "new_tab_configure": "2. Configurer l'onglet",
+    "new_tab_select": "1. Choisir le type d'onglet à créer",
+
+    "widgets": "Widgets",
+    "widgets_desc": "Permet de créer une grille de différents types de widgets."
+}

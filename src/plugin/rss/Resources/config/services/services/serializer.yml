@@ -1,0 +1,10 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+
+    Claroline\RssBundle\Serializer\RssSerializer:
+        tags: [claroline.serializer]
+        arguments:
+           - '@claroline.rss_reader.provider'

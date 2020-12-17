@@ -1,0 +1,11 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+
+    Claroline\AppBundle\Persistence\TableManager:
+        arguments:
+            - '@doctrine.dbal.default_connection'
+        calls:
+            - setLogger: [ '@logger' ]

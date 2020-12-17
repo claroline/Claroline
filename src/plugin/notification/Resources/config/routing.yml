@@ -1,0 +1,13 @@
+icap_notification:
+    resource: "@IcapNotificationBundle/Controller/"
+    type: annotation
+    options:
+        expose: true
+
+# JSON API
+icap_notification_follower_api:
+    resource: "@IcapNotificationBundle/Controller/API/"
+    prefix: apiv2
+    type: api
+    options:
+        expose: true

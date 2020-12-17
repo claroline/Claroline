@@ -1,0 +1,15 @@
+services:
+    _defaults:
+        public: true #because controller
+
+    Claroline\TeamBundle\Controller\API\TeamController:
+        parent: Claroline\AppBundle\Controller\AbstractCrudController
+        public: true
+        arguments:
+            - '@security.authorization_checker'
+            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@Claroline\TeamBundle\Manager\TeamManager'
+
+    Claroline\TeamBundle\Controller\API\WorkspaceTeamParametersController:
+        parent: Claroline\AppBundle\Controller\AbstractCrudController
+        public: true

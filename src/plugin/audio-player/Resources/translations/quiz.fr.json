@@ -1,0 +1,8 @@
+{
+    "correct_zone_desc": "Zone bleue = Zone correcte attendue",
+    "default_tolerance": "Tolérance par défaut",
+    "expected_zones": "Zones correctes attendues",
+    "nb_authorized_selection": "Nombre de sélections authorisées",
+    "pick_audio_file": "Choisir un fichier audio",
+    "tolerance_zone_desc": "Zone rose = Marge de tolérance"
+}

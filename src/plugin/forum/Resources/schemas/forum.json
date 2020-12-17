@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "The forum id"
+    },
+    "validationMode": {
+      "type": "integer",
+      "description": "The validation mode"
+    },
+    "maxComment": {
+      "type": "integer",
+      "description": "The max amount of comment per post"
+    }
+  }
+}

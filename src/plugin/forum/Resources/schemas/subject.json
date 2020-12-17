@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "The subject id"
+    },
+    "title": {
+      "type": "string",
+      "description": "The subject title"
+    },
+    "forum": {
+      "$ref": "https://github.com/claroline/Distribution/tree/master/plugin/forum/Resources/schemas/forum.json"
+    },
+    "meta": {
+      "type": ["object"],
+      "properties": {
+        "views": {
+          "type": "integer",
+          "description": "The number of views"
+        },
+        "created": {
+          "type": ["string"],
+          "description": "The subject creation date"
+        },
+        "updated": {
+          "type": ["string"],
+          "description": "The subject update date"
+        },
+        "sticky": {
+          "type": "boolean",
+          "description": "The subject should be on the front page"
+        },
+        "closed": {
+          "type": "boolean",
+          "description": "The subject is closed"
+        }
+      }
+    }
+  }
+}

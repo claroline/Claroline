@@ -1,0 +1,141 @@
+/*
+ * Table component styles
+ */
+
+.table {
+    // header
+    > thead > tr > th {
+        position: relative; // for positioning sorting indicator
+        border-bottom: none !important;
+    }
+
+    // Fixes vertical align in tables
+    > thead > tr > th,
+    > thead > tr > td,
+    > tbody > tr > th,
+    > tbody > tr > td {
+        vertical-align: middle;
+    }
+
+    > tbody {
+        .box-shadow(@box-shadow-base);
+
+        th:first-child,
+        td:first-child {
+            border-left: 1px solid @table-border-color;
+        }
+
+        th:last-child,
+        td:last-child {
+            border-right: 1px solid @table-border-color;
+        }
+
+        > tr:last-child th,
+        > tr:last-child td {
+            border-bottom: 1px solid @table-border-color;
+        }
+
+        > tr {
+            background: @panel-bg;
+        }
+
+        > tr.selected {
+            background-color: @state-info-bg;
+            border-color: #abcfe0; // todo : use a var
+
+            > th,
+            > td {
+                border-color: #abcfe0; // todo : use a var
+            }
+
+            + tr > th,
+            + tr > td {
+                border-top-color: #abcfe0; // todo : use a var
+            }
+        }
+
+        > tr.selected:hover {
+            background-color: #b5d9ea !important; // important is required to override strips color
+        }
+    }
+
+    .selected-actions-row > td {
+        padding: 0 !important;
+        border-top: none;
+    }
+
+    .list-selected {
+        .list-selected-label {
+            padding: @table-cell-padding 0;
+            .fa {
+                width: 30px; // same as .checkbox-cell. TODO : use a var
+                margin-right: @table-cell-padding;
+            }
+        }
+
+        .btn {
+            padding: @table-cell-padding - 1;  // -1 to absorb btn border
+        }
+    }
+}
+
+.table-striped {
+    > tbody > tr.selected:nth-of-type(odd) {
+        background-color: #bfe3f4;
+    }
+}
+
+
+// -
+// Cells
+// ---
+
+.sorting-cell {
+    padding-right: 24px !important; // arbitrary value to have the sorting indicator centered in the padding. FIXME
+    cursor: pointer;
+
+    .fa {
+        line-height: 1.42857; // todo find the correct computed line-height
+        position: absolute;
+        right: 8px; // same as horizontal padding of the cell
+    }
+}
+
+.checkbox-cell {
+    width: 30px;
+    text-align: center;
+}
+
+.actions-cell {
+    width: 36px; // because this cell should only contain a dropdown to gain horizontal space (no buttons bar)
+    padding: 0 !important; // move padding on btns
+    white-space: nowrap; // avoids buttons to break on multi lines
+
+    .btn {
+        padding: @table-cell-padding - 1;  // -1 to absorb btn border
+    }
+
+    .dropdown-menu {
+        margin-top: 0;
+    }
+}
+
+.table-condensed {
+    .list-selected {
+        .list-selected-label {
+            padding: @table-condensed-cell-padding 0;
+            .fa {
+                margin-right: @table-condensed-cell-padding;
+            }
+        }
+
+
+        .btn {
+            padding: @table-condensed-cell-padding - 1; // -1 to absorb btn border
+        }
+    }
+
+    .actions-cell .btn {
+        padding: @table-condensed-cell-padding - 1;  // -1 to absorb btn border
+    }
+}

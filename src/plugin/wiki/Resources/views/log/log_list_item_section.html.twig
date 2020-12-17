@@ -1,0 +1,7 @@
+{% if log.details.section is defined %}
+    <a href="{{ resourcePath(log.getResourceNode()) }}"><strong>{{ log.details.section.title }}</strong></a>
+{% endif %}
+
+{% if log.details.contribution is defined %}
+    <a href="{{ resourcePath(log.getResourceNode()) }}"><strong>{{ log.details.contribution.title }}</strong></a>
+{% endif %}

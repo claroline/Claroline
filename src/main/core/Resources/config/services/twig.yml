@@ -1,0 +1,28 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+        tags: [twig.extension]
+
+    Claroline\CoreBundle\Twig\ContentExtension:
+       arguments:
+          - '@claroline.manager.content_manager'
+
+    Claroline\CoreBundle\Twig\RoutingExtension:
+       arguments:
+          - '@Claroline\CoreBundle\Library\RoutingHelper'
+
+    Claroline\CoreBundle\Twig\LogTranslatorExtension:
+       arguments:
+          - '@Claroline\CoreBundle\Library\RoutingHelper'
+          - '@translator'
+          - '@twig'
+
+    Claroline\CoreBundle\Twig\PcreExtension: ~
+
+    Claroline\CoreBundle\Twig\WebpackExtension:
+       arguments:
+           - '@twig.extension.assets'
+           - '%kernel.environment%'
+           - '%kernel.project_dir%'

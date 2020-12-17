@@ -1,0 +1,45 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+
+    Icap\LessonBundle\Listener\Resource\LessonListener:
+        arguments:
+            - '@security.authorization_checker'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Icap\LessonBundle\Manager\ChapterManager'
+        tags:
+            - { name: kernel.event_listener, event: resource.icap_lesson.load, method: onLoad }
+            - { name: kernel.event_listener, event: resource.icap_lesson.copy, method: onCopy }
+            - { name: kernel.event_listener, event: transfer.icap_lesson.export, method: onExport }
+            - { name: kernel.event_listener, event: transfer.icap_lesson.import.after, method: onImport }
+
+    icap.listener.lesson_log_listener:
+        class: Icap\LessonBundle\Listener\LogListener
+        calls:
+            - [setContainer, ["@service_container"]]
+        tags:
+            - { name: kernel.event_listener, event: create_log_list_item_resource-icap_lesson-chapter_create,    method: onCreateLogListItem }
+            - { name: kernel.event_listener, event: create_log_list_item_resource-icap_lesson-chapter_read,      method: onCreateLogListItem }
+            - { name: kernel.event_listener, event: create_log_list_item_resource-icap_lesson-chapter_update,    method: onCreateLogListItem }
+            - { name: kernel.event_listener, event: create_log_list_item_resource-icap_lesson-chapter_delete,    method: onCreateLogListItem }
+            - { name: kernel.event_listener, event: create_log_list_item_resource-icap_lesson-chapter_move,      method: onCreateLogListItem }
+            - { name: kernel.event_listener, event: create_log_details_resource-icap_lesson-chapter_create,      method: onChapterCreateLogDetails }
+            - { name: kernel.event_listener, event: create_log_details_resource-icap_lesson-chapter_read,        method: onChapterCreateLogDetails }
+            - { name: kernel.event_listener, event: create_log_details_resource-icap_lesson-chapter_update,      method: onChapterCreateLogDetails }
+            - { name: kernel.event_listener, event: create_log_details_resource-icap_lesson-chapter_delete,      method: onChapterCreateLogDetails }
+            - { name: kernel.event_listener, event: create_log_details_resource-icap_lesson-chapter_move,        method: onChapterCreateLogDetails }
+
+    Icap\LessonBundle\Listener\NotificationUserParametersListener:
+        tags:
+            - { name: kernel.event_listener, event: icap_notification_user_parameters_event, method: onGetTypesForParameters }
+
+    Icap\LessonBundle\Listener\NotificationListener:
+        arguments:
+            - '@translator'
+        tags:
+            - { name: kernel.event_listener, event: create_notification_item_resource-icap_lesson-chapter_create, method: onCreateNotificationItem }
+            - { name: kernel.event_listener, event: create_notification_item_resource-icap_lesson-chapter_update, method: onCreateNotificationItem }

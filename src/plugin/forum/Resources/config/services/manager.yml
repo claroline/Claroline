@@ -1,0 +1,13 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+
+    Claroline\ForumBundle\Manager\ForumManager:
+        arguments:
+            - '@Claroline\CoreBundle\Library\RoutingHelper'
+            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\MessageBundle\Manager\MessageManager'
+            - '@Claroline\CoreBundle\Manager\Template\TemplateManager'

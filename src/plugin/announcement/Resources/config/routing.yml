@@ -1,0 +1,4 @@
+claro_announcement_bundle:
+    resource: "@ClarolineAnnouncementBundle/Controller/"
+    type:     annotation
+    prefix:   /

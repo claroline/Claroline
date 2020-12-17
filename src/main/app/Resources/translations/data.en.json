@@ -1,0 +1,20 @@
+{
+  "boolean": "Boolean",
+  "choice": "Choice",
+  "collection": "Collection",
+  "country": "Country",
+  "currency": "Currency",
+  "date": "Date",
+  "date-range": "Period",
+  "email": "Email",
+  "file": "File",
+  "html": "Rich text",
+  "image": "Image",
+  "ip": "IP address",
+  "number": "Number",
+  "string": "Text",
+  "url": "URL",
+  "array_of": "A list of '%type%'",
+  "integer": "Integer",
+  "object": "Object"
+}

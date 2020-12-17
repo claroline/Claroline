@@ -1,0 +1,59 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true # required by controllers
+
+    Claroline\AppBundle\Controller\AbstractCrudController:
+        abstract: true
+        calls:
+            - method: setFinder
+              arguments:
+                  - '@Claroline\AppBundle\API\FinderProvider'
+            - method: setSerializer
+              arguments:
+                  - '@Claroline\AppBundle\API\SerializerProvider'
+            - method: setCrud
+              arguments:
+                  - '@Claroline\AppBundle\API\Crud'
+            - method: setObjectManager
+              arguments:
+                  - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - method: setRouterFinder
+              arguments:
+                  - '@Claroline\AppBundle\Routing\Finder'
+            - method: setRouterDocumentator
+              arguments:
+                  - '@Claroline\AppBundle\Routing\Documentator'
+
+    Claroline\AppBundle\Controller\AbstractSecurityController:
+        abstract: true
+        calls:
+            - method: setObjectManager
+              arguments:
+                  - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - method: setAuthorizationChecker
+              arguments:
+                  - '@security.authorization_checker'
+
+    Claroline\AppBundle\Controller\Platform\ClientController:
+        arguments:
+            - '@security.token_storage'
+            - '@twig'
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+            - '@Claroline\AppBundle\Manager\SecurityManager'
+            - '@Claroline\CoreBundle\Manager\Tool\ToolManager'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\CoreBundle\API\Serializer\Platform\ClientSerializer'
+
+    Claroline\AppBundle\Controller\Platform\LocaleController:
+        arguments:
+            - '@claroline.manager.locale_manager'
+            - '@security.token_storage'
+
+    Claroline\AppBundle\Controller\Platform\TermsOfServiceController:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\AppBundle\Manager\TermsOfServiceManager'

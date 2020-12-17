@@ -1,0 +1,50 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "The uuid of the track"
+    },
+    "autoId": {
+      "type": "number",
+      "description": "The id of the track"
+    },
+    "video": {
+      "type": "object",
+      "description": "The video file resource to which the track is associated",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "The id of the video fileresource"
+        }
+      },
+      "required": ["id"]
+    },
+    "meta": {
+      "type": "object",
+      "description": "Informations about the track",
+      "properties": {
+        "label": {
+          "type": "string",
+          "description": "The label of the track"
+        },
+        "lang": {
+          "type": "string",
+          "description": "The lang code of the track"
+        },
+        "kind": {
+          "type": "string",
+          "description": "The type of the track"
+        },
+        "default": {
+          "type": "boolean",
+          "description": "Whether it is a default the track or not"
+        }
+      },
+      "required": ["label", "lang", "kind", "default"]
+    }
+  },
+  "claroIds": ["id"],
+  "required": ["video", "meta"]
+}

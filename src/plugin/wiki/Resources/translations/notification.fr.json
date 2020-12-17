@@ -1,0 +1,5 @@
+{
+    "resource-icap_wiki-contribution_create": "a contribué à la section %section% du wiki %wiki%",
+    "resource-icap_wiki-section_create": "a créé la section %section% dans le wiki %wiki%",
+    "resource-icap_wiki-user_tagged": "vous a cité dans la section %section% du wiki %wiki%"
+}

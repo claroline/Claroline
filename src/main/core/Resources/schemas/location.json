@@ -1,0 +1,56 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "The location id"
+    },
+    "meta": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "integer",
+          "description": "The location type"
+        }
+      }
+    },
+    "phone": {
+      "type": ["null", "string"],
+      "description": "The location phone"
+    },
+    "address": {
+      "type": "object",
+      "properties": {
+        "street1": {
+          "type": ["null", "string"],
+          "description": "The location street"
+        },
+        "street2": {
+          "type": ["null", "string"],
+          "description": "The location street (second part)"
+        },
+        "postalCode": {
+          "type": ["null", "string"],
+          "description": "The location zip code"
+        },
+        "city": {
+          "type": ["null", "string"],
+          "description": "The location city"
+        },
+        "state": {
+          "type": ["null", "string"],
+          "description": "The location state"
+        },
+        "country": {
+          "type": "string",
+          "description": "The location country"
+        }
+      }
+    }
+  },
+  "claroline": {
+    "requiredAtCreation": ["name"],
+    "ids":  ["id", "name"]
+  }
+}

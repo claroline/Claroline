@@ -1,0 +1,9 @@
+services:
+    _defaults:
+        public: true #because controller
+
+    Claroline\VideoPlayerBundle\Controller\APINew\TrackController:
+        parent: Claroline\AppBundle\Controller\AbstractCrudController
+        public: true
+        arguments:
+            - '%claroline.param.files_directory%'

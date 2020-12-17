@@ -1,0 +1,19 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: false
+
+    Claroline\ClacoFormBundle\Manager\ClacoFormManager:
+        arguments:
+            - '@security.authorization_checker'
+            - '@event_dispatcher'
+            - '@filesystem'
+            - '%claroline.param.files_directory%'
+            - '@Claroline\MessageBundle\Manager\MessageManager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@router'
+            - '@security.token_storage'
+            - '@translator'
+        calls:
+            - setLogger: [ '@logger' ]

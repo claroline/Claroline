@@ -1,0 +1,4 @@
+services:
+    claroline.installation.loader:
+        class: "%claroline.installation_loader.class%"
+        tags: [routing.loader]

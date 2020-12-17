@@ -1,0 +1,18 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+        tags: [claroline.crud]
+
+    Claroline\BigBlueButtonBundle\Crud\RecordingCrud:
+        arguments:
+            - '@Claroline\BigBlueButtonBundle\Manager\BBBManager'
+        tags:
+            - { name: kernel.event_listener, event: crud_pre_delete_object_claroline_bigbluebuttonbundle_entity_recording, method: preDelete }
+
+    Claroline\BigBlueButtonBundle\Crud\BBBCrud:
+        arguments:
+            - '@Claroline\BigBlueButtonBundle\Manager\BBBManager'
+        tags:
+            - { name: kernel.event_listener, event: crud_post_update_object_claroline_bigbluebuttonbundle_entity_bbb, method: postUpdate }

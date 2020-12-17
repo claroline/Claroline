@@ -1,0 +1,19 @@
+services:
+    _defaults:
+        public: true #because controller
+
+    Innova\PathBundle\Controller\PathController:
+        parent: Claroline\AppBundle\Controller\AbstractCrudController
+        public: true
+        arguments:
+            - '@security.authorization_checker'
+            - '@Innova\PathBundle\Manager\UserProgressionManager'
+
+    Innova\PathBundle\Controller\PathTrackingController:
+        arguments:
+            - '@security.authorization_checker'
+            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@claroline.manager.tool_manager'
+            - '@Innova\PathBundle\Manager\UserProgressionManager'

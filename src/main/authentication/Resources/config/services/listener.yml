@@ -1,0 +1,18 @@
+services:
+    _defaults:
+        autowire: false #change to true
+        autoconfigure: false
+        public: true #because controller
+
+    Claroline\AuthenticationBundle\Listener\Platform\OauthSsoListener:
+        arguments:
+            - '@Claroline\AuthenticationBundle\Manager\OauthManager'
+        tags:
+            - { name: kernel.event_listener, event: claroline_populate_client_config, method: onConfig }
+
+    Claroline\AuthenticationBundle\Listener\UserListener:
+        arguments:
+            - '@Claroline\AuthenticationBundle\Manager\OauthManager'
+        tags:
+            - { name: kernel.event_listener, event: merge_users, method: onMerge }
+            - { name: kernel.event_listener, event: log, method: onDelete }

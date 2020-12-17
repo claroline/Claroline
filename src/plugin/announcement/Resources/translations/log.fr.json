@@ -1,0 +1,22 @@
+{
+    "log_resource-claroline_announcement_aggregate-create_filter": "Création d'une annonce",
+    "log_resource-claroline_announcement_aggregate-create_sentence": "a créé une annonce dans %resource%",
+    "log_resource-claroline_announcement_aggregate-create_shortname": "Création",
+    "log_resource-claroline_announcement_aggregate-create_title": "Création d'une annonce",
+    "log_resource-claroline_announcement_aggregate-delete_filter": "Suppression d'une annonce",
+    "log_resource-claroline_announcement_aggregate-delete_sentence": "a supprimé une annonce dans %resource%",
+    "log_resource-claroline_announcement_aggregate-delete_shortname": "Suppression",
+    "log_resource-claroline_announcement_aggregate-delete_title": "Suppression d'une annonce",
+    "log_resource-claroline_announcement_aggregate-edit_filter": "Modification d'une annonce",
+    "log_resource-claroline_announcement_aggregate-edit_sentence": "a modifié une annonce dans %resource%",
+    "log_resource-claroline_announcement_aggregate-edit_shortname": "Modification",
+    "log_resource-claroline_announcement_aggregate-edit_title": "Modification d'une annonce",
+    "log_announcement-create_sentence": "a été créé une annonce dans %resource%",
+    "log_announcement-send_sentence": "a envoyé une annonce dans %resource%",
+    "log_announcement-update_sentence": "a modifié une annonce dans %resource%",
+    "log_announcement-delete_sentence": "a supprimé une annonce dans %resource%",
+    "log_announcement-create_shortname": "Création d'une annonce",
+    "log_announcement-send_shortname": "Envoi d'une annonce",
+    "log_announcement-update_shortname": "Mise à jour d'une annonce",
+    "log_announcement-delete_shortname": "Suppression d'une annonce"
+}

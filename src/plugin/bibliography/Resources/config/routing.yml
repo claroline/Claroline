@@ -1,0 +1,7 @@
+# JSON API
+icap_biblio_api:
+    resource: "@IcapBibliographyBundle/Controller/API/"
+    prefix: apiv2
+    type: api
+    options:
+        expose: true

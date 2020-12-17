@@ -1,0 +1,19 @@
+{
+  "log_forum_subject-create_shortname": "Subject created",
+  "log_forum_message-unmoderated_shortname": "Message unmoderated",
+  "log_forum_message-create_shortname": "Message created",
+  "log_forum_subject-stick_shortname": "Subject sticked",
+  "log_forum_subject-flag_shortname": "Subject reported",
+  "log_forum_subject-update_shortname": "Subject updated",
+  "log_forum_subject-open_shortname": "Subject opened",
+  "log_forum_subject-close_shortname": "Subject closed",
+  "log_forum_subject-create_sentence": "created subject %subject.title% dans %resource%",
+  "log_forum_message-unmoderated_sentence": "unlocked a message in subject %subject.title% in %resource",
+  "log_forum_message-create_sentence": "created a mesasge in subject %subject.title% in %resource%",
+  "log_forum_subject-stick_sentence": "sticked subject %subject.title% in %resource%",
+  "log_forum_subject-flag_sentence": "flagged subject %subject.title% in %resource%",
+  "log_forum_subject-update_sentence": "updated subject %subject.title% in %resource%",
+  "log_forum_subject-open_sentence": "opened subject %subject.title% in %resource%",
+  "log_forum_subject-close_sentence": "closed le subject %subject.title% in %resource%"
+
+}

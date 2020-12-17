@@ -1,0 +1,28 @@
+services:
+    _defaults:
+        autowire: false #change to true
+        autoconfigure: false
+        public: true #because controller
+
+    Claroline\TeamBundle\Manager\Transfer\Team:
+        arguments:
+            - '@security.authorization_checker'
+            - '@security.token_storage'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@claroline.serializer.team'
+            - '@Claroline\TeamBundle\Manager\TeamManager'
+            - '@claroline.serializer.team.parameters'
+
+      #alias is required: todo: use tags
+    claroline.transfer.claroline_team_tool:
+        alias: Claroline\TeamBundle\Manager\Transfer\Team
+        public: true
+
+    Claroline\TeamBundle\Manager\TeamManager:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@claroline.manager.resource_manager'
+            - '@claroline.manager.rights_manager'
+            - '@claroline.manager.role_manager'
+            - '@Claroline\CoreBundle\Manager\Tool\ToolRightsManager'

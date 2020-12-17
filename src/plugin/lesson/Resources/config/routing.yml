@@ -1,0 +1,6 @@
+icap_lesson_api:
+    resource: "@IcapLessonBundle/Controller/"
+    prefix: apiv2
+    type: api
+    options:
+        expose: true

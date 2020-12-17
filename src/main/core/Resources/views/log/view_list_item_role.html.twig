@@ -1,0 +1,9 @@
+{% if log.getDetails().role is defined %}
+    <strong>
+        {% if log.Role() != null %}
+            {{ log.getDetails().role.name|trans({}, 'platform') }}
+        {% else %}
+            <em>{{ log.getDetails().role.name|trans({}, 'platform') }}</em>
+        {% endif %}
+    </strong>
+{% endif %}

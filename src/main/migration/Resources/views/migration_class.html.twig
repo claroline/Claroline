@@ -1,0 +1,23 @@
+{% from '@ClarolineMigration/migration_macros.html.twig' import statementBlock %}
+<?php
+
+namespace {{ namespace }};
+
+use Doctrine\DBAL\Schema\Schema;
+use Doctrine\Migrations\AbstractMigration;
+
+/**
+ * Auto-generated migration based on mapping information: modify it with caution.
+ *
+ * Generation date: {{ "now"|date("Y/m/d h:i:s") }}
+ */
+class {{ class }} extends AbstractMigration
+{
+    public function up(Schema $schema)
+    {
+{{ statementBlock(upQueries) }}    }
+
+    public function down(Schema $schema)
+    {
+{{ statementBlock(downQueries) }}    }
+}

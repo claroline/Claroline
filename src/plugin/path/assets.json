@@ -1,0 +1,7 @@
+{
+  "styles": {
+    "entry": {
+      "path-resource": "resources/path/index.less"
+    }
+  }
+}

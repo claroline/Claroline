@@ -1,0 +1,24 @@
+.tag-control {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  select {
+    flex: 1;
+  }
+
+  .form-control {
+    min-width: 0; // hack to avoid overflow in FF
+
+    + .form-control {
+      margin-left: floor(@grid-gutter-width / 2);
+    }
+  }
+
+  // todo find better selector
+  input[type=number] {
+    text-align: right;
+    max-width: 80px;
+  }
+}

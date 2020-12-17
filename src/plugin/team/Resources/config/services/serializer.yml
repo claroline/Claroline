@@ -1,0 +1,29 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+
+    Claroline\TeamBundle\Serializer\TeamSerializer:
+        tags: [claroline.serializer]
+        arguments:
+           - '@Claroline\AppBundle\Persistence\ObjectManager'
+           - '@claroline.manager.resource_manager'
+           - '@Claroline\TeamBundle\Manager\TeamManager'
+           - '@security.token_storage'
+           - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
+           - '@Claroline\CoreBundle\API\Serializer\User\RoleSerializer'
+           - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'
+
+    claroline.serializer.team:
+         alias: Claroline\TeamBundle\Serializer\TeamSerializer
+         public: true
+
+    Claroline\TeamBundle\Serializer\WorkspaceTeamParametersSerializer:
+        tags: [claroline.serializer]
+        arguments:
+           - '@Claroline\AppBundle\Persistence\ObjectManager'
+
+    claroline.serializer.team.parameters:
+         alias: Claroline\TeamBundle\Serializer\WorkspaceTeamParametersSerializer
+         public: true

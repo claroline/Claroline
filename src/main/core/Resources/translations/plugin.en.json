@@ -1,0 +1,5 @@
+{
+  "claroline/distribution": "Standard distribution of Claroline",
+  "claroline_core": "Core",
+  "claroline_core_desc": "Provides base features of the Claroline platform."
+}

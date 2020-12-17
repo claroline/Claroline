@@ -1,0 +1,6 @@
+claro_tag_bundle_tag:
+    resource: "@ClarolineTagBundle/Controller/"
+    type:     api
+    prefix:   apiv2
+    options:
+        expose: true

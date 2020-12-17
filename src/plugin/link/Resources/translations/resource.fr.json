@@ -1,0 +1,5 @@
+{
+    "shortcut": "Raccourci",
+    "shortcut_desc": "Permet de créer un raccourci vers une ressource hébergée dans la plateforme.",
+    "target_resource": "Ressource cible"
+}

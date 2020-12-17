@@ -1,0 +1,53 @@
+{
+  "id": "1",
+  "type": "application/x.set+json",
+  "content": "Question ?",
+  "penalty": 1,
+  "random": false,
+  "hasExpectedAnswer": true,
+  "sets": [
+    {
+      "id": "2",
+      "type": "text/html",
+      "data": "Set A"
+    },
+    {
+      "id": "3",
+      "type": "text/html",
+      "data": "Set B"
+    }
+  ],
+  "items": [
+    {
+      "id": "4",
+      "type": "text/plain",
+      "data": "Item X"
+    },
+    {
+      "id": "5",
+      "type": "text/plain",
+      "data": "Item Y"
+    },
+    {
+      "id": "6",
+      "type": "text/plain",
+      "data": "Item Z"
+    }
+  ],
+  "solutions": {
+    "associations": [
+      {
+        "setId": "2",
+        "itemId": "4",
+        "score": -1,
+        "feedback": "Lorem ipsum"
+      },
+      {
+        "setId": "3",
+        "itemId": "5",
+        "score": -0.5,
+        "feedback": "Lorem ipsum"
+      }
+    ]
+  }
+}

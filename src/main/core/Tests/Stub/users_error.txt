@@ -1,0 +1,11 @@
+firstname1;lastname1;u1;password1;email1@claroline.net;code1
+firstname2;lastname2;username2;pé';email2@claroline.ne;code2
+firstname3;lastname3;username3;password3éééééééééé;email3@claroline.net;code3
+firstname4;lastname4;username4;password4;email4@claroline.net;code4
+firstname5;5;usee5;passwo;ClaudiaTortelloni@claroline.net;code5
+firstname5;5;usee5;passwo;ClaudiaTortelloni@claroline.net;code5
+Stéphane;Klein;stefk;stefk;stefk@claroline.net;stefk
+Nicolas;Fougère;fougeman;fougeman;nicolas.godfraind@gmail.com;fou
+Nicolas;Fougère;fougeman;fougeman;nicolas.godfraind@gmail.com;fou
+Esdras;Ngongo;easyes;easyes;esdras@claroline.net;esdras
+Jorge;Solis;colombo;colombe;jorge@drugstore.com;drugman

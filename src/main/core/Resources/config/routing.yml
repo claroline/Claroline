@@ -1,0 +1,43 @@
+fos_js_routing:
+    resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
+
+claro_authentication:
+    resource: "@ClarolineCoreBundle/Controller/AuthenticationController.php"
+    type: annotation
+    options: { expose: true }
+
+claro_legacy:
+    resource: "@ClarolineCoreBundle/Controller/LegacyController.php"
+    type: annotation
+
+claro_desktop:
+    resource: "@ClarolineCoreBundle/Controller/DesktopController.php"
+    type: annotation
+
+claro_workspace:
+    resource: "@ClarolineCoreBundle/Controller/WorkspaceController.php"
+    type: annotation
+
+claro_admin:
+    resource: "@ClarolineCoreBundle/Controller/AdministrationController.php"
+    type: annotation
+
+claro_resource:
+    resource: "@ClarolineCoreBundle/Controller/ResourceController.php"
+    type: annotation
+
+claro_search:
+    resource: "@ClarolineCoreBundle/Controller/SearchController.php"
+    type: annotation
+
+claro_file:
+    resource: "@ClarolineCoreBundle/Controller/FileController.php"
+    type: annotation
+    prefix: file
+
+claro_new_api:
+    resource: "@ClarolineCoreBundle/Controller/APINew/"
+    prefix: apiv2
+    type: api
+    options:
+        expose: true

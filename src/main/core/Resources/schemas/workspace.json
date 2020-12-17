@@ -1,0 +1,146 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": ["string"],
+      "description": "The workspace id or uuid"
+    },
+    "name": {
+      "type": "string",
+      "description": "The workspace name"
+    },
+    "code": {
+      "type": "string",
+      "description": "The workspace code",
+      "minLength": 1
+    },
+    "model": {
+      "type": "object",
+      "description": "The model to use to prefill the workspace",
+      "properties": {
+        "code": {
+          "type": "string",
+          "description": "The code of the model used to pre-configure the workspace"
+        }
+      }
+    },
+    "meta": {
+      "type": "object",
+      "properties": {
+        "model": {
+          "type": "boolean",
+          "description": "The workspace is a model"
+        },
+        "personal": {
+          "type": "boolean",
+          "description": "The workspace is a personal workspace"
+        },
+        "description": {
+          "type": ["string", "null"],
+          "description": "The workspace description"
+        },
+        "created": {
+          "type": "string",
+          "description": "The workspace creation date"
+        },
+        "creator": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "The workspace creator"
+            }
+          }
+        }
+      }
+    },
+    "restrictions": {
+      "type": "object",
+      "properties": {
+        "hidden": {
+          "type": "boolean",
+          "description": "The workspace is hidden"
+        },
+        "dates": {
+          "type": "array",
+          "description": "The workspace opening and closing dates",
+          "items": {
+            "type": ["string", "null"]
+          }
+        },
+        "maxUsers": {
+          "type": ["integer", "null"],
+          "description": "The maximum amount of users the workspace can have"
+        },
+        "maxStorage": {
+          "type": ["integer", "string", "null"],
+          "description": "The maximum amount of data storage the workspace is allowed to take"
+        },
+        "maxResources": {
+          "type": ["integer", "null"],
+          "description": "The maximum amount of resources in the workspace"
+        }
+      }
+    },
+    "registration": {
+      "type": "object",
+      "properties": {
+        "validation": {
+          "type": "boolean",
+          "description": "Registrations to the workspace need to be validated by a manager"
+        },
+        "selfRegistration": {
+          "type": "boolean",
+          "description": "Users can register themselves to the workspace"
+        },
+        "selfUnregistration": {
+          "type": "boolean",
+          "description": "Users can unregister themselves from the workspace"
+        }
+      }
+    },
+    "managers": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "email": {
+                "type": "string",
+                "description": "The user email address"
+              },
+              "username": {
+                "type": "string",
+                "description": "The user username"
+              }
+            }
+          },
+          {
+              "type": "null"
+          }
+        ]
+      }
+    },
+    "organizations": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "oneOf": [
+          {
+              "$ref": "https://github.com/claroline/Distribution/tree/master/main/core/Resources/schemas/organization.json"
+          },
+          {
+              "type": "null"
+          }
+        ]
+      }
+    }
+  },
+  "claroline": {
+    "requiredAtCreation": ["code", "name"],
+    "ids": ["id", "code"]
+  }
+}

@@ -1,0 +1,175 @@
+/*
+ * Data grid.
+ */
+
+.data-grid {
+    margin-bottom: @component-margin-bottom;
+}
+
+
+// -
+// Header
+// ---
+
+.data-grid-header {
+    border: 1px solid transparent;
+    padding: @data-grid-gutter 0 @data-grid-gutter @data-grid-gutter;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    > .checkbox {
+        margin: 0;
+    }
+}
+
+.data-grid-sort {
+    display: flex; // correct vertical align
+    flex-direction: row;
+    margin-left: auto;
+
+    .btn-link {
+        padding: 0 @data-grid-gutter;
+        border: none;
+        font-weight: bold;
+    }
+
+    > .btn-link { // really ugly
+        border-left: 1px solid #ccc;
+    }
+}
+
+// customizes bulk actions
+.data-grid .list-selected {
+    border: 1px solid transparent;
+    margin-bottom: @data-grid-gutter;
+
+    // mimic checkboxes for proper alignment with "select all" checkbox
+    .list-selected-label {
+        position: relative;
+        padding: @data-grid-gutter @data-grid-gutter @data-grid-gutter @data-grid-gutter + 20px;
+
+        .fa {
+            position: absolute;
+            margin-left: -20px;
+            margin-top: 3px; // arbitrary
+            width: 16px;
+        }
+    }
+
+    .btn {
+        padding: @data-grid-gutter;
+    }
+}
+
+
+// -
+// Content & Items
+// ---
+
+.data-grid-content {
+    margin: 0; // reset ul margin
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+
+    // remove <ul> styles
+    list-style-type: none;
+    padding: 0;
+}
+
+.data-grid-item-container {
+    position: relative; // constrain selection checkbox
+
+    .data-card {
+        height: 100%;
+        width: 100%;
+    }
+}
+
+.data-grid-item-select {
+    position: absolute;
+    margin: 0 !important;
+    left: @data-grid-gutter * 2;
+}
+
+
+// -
+// Sizing
+// ---
+
+.data-grid-row {
+    .data-grid-content {
+        margin: -@data-grid-gutter/2 -@data-grid-gutter; // absorb items margin
+    }
+
+    .data-grid-item-container {
+        padding: @data-grid-gutter/2 @data-grid-gutter;
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+    .data-grid-item-select {
+        top: @data-grid-gutter + @data-grid-gutter/2;
+    }
+}
+
+.data-grid-col {
+    .data-grid-content {
+        margin: -@data-grid-gutter; // absorb items margin
+    }
+
+    .data-grid-item-container {
+        padding: @data-grid-gutter;
+    }
+
+    .data-grid-item-select {
+        top: @data-grid-gutter * 2;
+    }
+
+    // XS screens :
+    //   - small tiles : 2
+    //   - large tiles : 1
+    @media (max-width: @screen-xs-max) {
+        &.data-grid-sm .data-grid-item-container {
+            flex: 0 0 (100% / 2);
+            max-width: 100% / 2;
+        }
+
+        &.data-grid-lg .data-grid-item-container {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+    }
+
+    // SM screens :
+    //   - small tiles : 3
+    //   - large tiles : 2
+    @media (min-width: @screen-sm-min) and (max-width: @screen-sm-max) {
+        &.data-grid-sm .data-grid-item-container {
+            flex: 0 0 (100% / 3);
+            max-width: 100% / 3;
+        }
+
+        &.data-grid-lg .data-grid-item-container {
+            flex: 0 0 (100% / 2);
+            max-width: 100% / 2;
+        }
+    }
+
+    // MD & LG screens :
+    //   - small tiles : 5
+    //   - large tiles : 3
+    @media (min-width: @screen-sm-max) {
+        &.data-grid-sm .data-grid-item-container {
+            flex: 0 0 (100% / 5);
+            max-width: 100% / 5;
+        }
+
+        &.data-grid-lg .data-grid-item-container {
+            flex: 0 0 (100% / 3);
+            max-width: 100% / 3;
+        }
+    }
+}

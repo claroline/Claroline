@@ -1,0 +1,47 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+
+    Claroline\CursusBundle\Manager\CourseManager:
+        arguments:
+            - '@security.token_storage'
+            - '@event_dispatcher'
+            - '@translator'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\Manager\PlatformManager'
+            - '@Claroline\CoreBundle\Manager\Template\TemplateManager'
+            - '@Claroline\CoreBundle\Manager\RoleManager'
+            - '@Claroline\CursusBundle\Manager\SessionManager'
+
+    Claroline\CursusBundle\Manager\SessionManager:
+        arguments:
+            - '@event_dispatcher'
+            - '@translator'
+            - '@claroline.manager.mail_manager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@router'
+            - '@Claroline\AppBundle\Manager\PlatformManager'
+            - '@Claroline\CoreBundle\Manager\RoleManager'
+            - '@Claroline\CoreBundle\Library\RoutingHelper'
+            - '@claroline.manager.template_manager'
+            - '@security.token_storage'
+            - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
+            - '@Claroline\CursusBundle\Manager\EventManager'
+
+    Claroline\CursusBundle\Manager\EventManager:
+        arguments:
+            - '@event_dispatcher'
+            - '@claroline.manager.mail_manager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@router'
+            - '@claroline.manager.template_manager'
+            - '@security.token_storage'
+
+    Claroline\CursusBundle\Manager\EventPresenceManager:
+        arguments:
+            - '@translator'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\Manager\Template\TemplateManager'
+            - '@Claroline\CursusBundle\Manager\EventManager'

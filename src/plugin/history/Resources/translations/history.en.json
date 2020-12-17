@@ -1,0 +1,9 @@
+{
+  "history": "History",
+  "all_resources": "Show all my resources",
+  "all_workspaces": "Show all my workspaces",
+  "empty_workspaces": "You have not viewed any workspace",
+  "empty_workspaces_help": "Browse your workspaces to see them appear here",
+  "empty_resources": "You have not viewed any resource",
+  "empty_resources_help": "Browse your resources to see them appear here"
+}

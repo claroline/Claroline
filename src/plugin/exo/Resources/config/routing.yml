@@ -1,0 +1,39 @@
+# JSON API
+
+# Exposes CRUD actions for exercises
+# Also permits to publish / unpublish the exercise
+ujm_api_exercise:
+    resource: "@UJMExoBundle/Controller/ExerciseController.php"
+    type: annotation
+    prefix: /api
+
+# Exposes CRUD actions for papers
+# Also permits to export papers in CSV format
+ujm_api_paper:
+    resource: "@UJMExoBundle/Controller/PaperController.php"
+    type: annotation
+    prefix: /api
+
+# Exposes CRUD actions for questions
+ujm_api_question:
+    resource: "@UJMExoBundle/Controller/Item/ItemController.php"
+    type: annotation
+    prefix: /api
+
+# Exposes actions to play and submit answers to an exercise
+ujm_api_attempt:
+    resource: "@UJMExoBundle/Controller/AttemptController.php"
+    type: annotation
+    prefix: /api
+
+# Exposes actions for manual correction of questions
+ujm_api_correction:
+    resource: "@UJMExoBundle/Controller/CorrectionController.php"
+    type: annotation
+    prefix: /api
+
+# Exposes actions to share and manage shared questions
+ujm_api_share:
+    resource: "@UJMExoBundle/Controller/Item/ShareController.php"
+    type: annotation
+    prefix: /api

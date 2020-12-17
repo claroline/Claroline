@@ -1,0 +1,71 @@
+.carousel-inner {
+    height: 100%;
+
+    > .item {
+        height: 100%;
+        
+        &.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        > img {
+            // center img
+            margin: 0 auto;
+        }
+    }
+}
+
+.carousel-control {
+    // allows font-awesome icons as controls
+    .fa {
+        position: absolute;
+        top: 50%;
+        margin-top: -10px;
+        z-index: 5;
+        display: inline-block;
+    }
+
+    .fa-chevron-left {
+        left: 50%;
+        margin-left: -10px;
+    }
+    .fa-chevron-right {
+        right: 50%;
+        margin-right: -10px;
+    }
+}
+
+// makes indicators size customizable
+.carousel-indicators {
+    li {
+        width:  @carousel-indicator-size;
+        height: @carousel-indicator-size;
+        margin: (@carousel-indicator-active-size - @carousel-indicator-size) / 2;
+
+    }
+    .active {
+        width:  @carousel-indicator-active-size;
+        height: @carousel-indicator-active-size;
+    }
+}
+
+// Scale up controls for tablets and up
+@media screen and (min-width: @screen-sm-min) {
+    // Scale up the controls a smidge
+    .carousel-control {
+        .fa {
+            width: (@carousel-control-font-size * 1.5);
+            height: (@carousel-control-font-size * 1.5);
+            margin-top: (@carousel-control-font-size / -2);
+            font-size: (@carousel-control-font-size * 1.5);
+        }
+        .fa-chevron-left {
+            margin-left: (@carousel-control-font-size / -2);
+        }
+        .fa-chevron-right {
+            margin-right: (@carousel-control-font-size / -2);
+        }
+    }
+}

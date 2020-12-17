@@ -1,0 +1,57 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true #because lazy
+
+    Claroline\AppBundle\Manager\PlatformManager:
+        arguments:
+            - '@request_stack'
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+
+    Claroline\AppBundle\Manager\SecurityManager:
+        arguments:
+            - '@security.token_storage'
+
+    Claroline\AppBundle\Manager\DatabaseManager:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@doctrine.dbal.default_connection'
+            - '@Claroline\AppBundle\API\FinderProvider'
+            - '%claroline.param.archive_directory%'
+        calls:
+            - setLogger: [ '@logger' ]
+
+    claroline.manager.database_manager:
+        alias: Claroline\AppBundle\Manager\DatabaseManager
+        public: true
+
+    Claroline\AppBundle\Manager\CommandManager:
+        arguments:
+            - '@kernel'
+
+    claroline.manager.command_manager:
+        alias: Claroline\AppBundle\Manager\CommandManager
+        public: true
+
+    Claroline\AppBundle\Manager\CacheManager:
+        arguments:
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - '@kernel'
+
+    claroline.manager.cache_manager:
+        alias: Claroline\AppBundle\Manager\CacheManager
+        public: true
+
+    Claroline\AppBundle\Manager\File\TempFileManager:
+        arguments:
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+
+    claroline.manager.temp_file:
+        alias: Claroline\AppBundle\Manager\File\TempFileManager
+        public: true
+
+    Claroline\AppBundle\Manager\TermsOfServiceManager:
+        arguments:
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+            - '@claroline.manager.content_manager'

@@ -1,0 +1,84 @@
+.agenda-month {
+    flex: 1; // fill .page-content
+    display: flex;
+    flex-direction: column;
+    margin: 0 -(floor(@grid-gutter-width / 2)); // absorb .page-content padding
+    max-height: 100%;
+    background: @agenda-bg;
+
+    // rows
+    .calendar-row {
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+    }
+
+    .day-names {
+        font-family: @headings-font-family;
+        color: @brand-primary;
+        font-size: @font-size-small;
+    }
+
+    .week {
+        flex: 1;
+        border-bottom: 1px solid @agenda-grid-border;
+    }
+
+    // cells
+    .calendar-cell {
+        flex: 1;
+        text-align: center;
+
+        border-right: 1px solid @agenda-grid-border;
+
+        &:last-child {
+            border-right: none;
+        }
+    }
+
+    .day-name {
+        padding: 5px;
+        text-transform: uppercase; // todo : use a var
+    }
+
+    .day {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+
+        .day-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 26px;
+            height: 26px;
+            margin: 5px auto;
+            border-radius: 50%;
+
+            //color: @agenda-color;
+            background: transparent;
+            border: 1px solid transparent;
+            font-weight: bold;
+        }
+
+        &.now .day-number {
+            color: @brand-primary;
+            background: transparent;
+            border-color: @brand-primary;
+        }
+
+        &.selected .day-number {
+            color: white;
+            background: @brand-primary;
+            border-color: @brand-primary;
+        }
+
+        &.fill {
+            background: @body-bg; // TODO : use its own var
+
+            .day-number {
+                color: @gray-light;
+            }
+        }
+    }
+}

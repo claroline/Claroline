@@ -1,0 +1,246 @@
+/*
+ * Forms.
+ */
+
+@import "fields/index";
+@import "form-stepper";
+
+// FIXME: this is ugly to do it like it
+// if there are additional containers, I'm fucked and it may be required by some other components too
+.page-content > .data-form {
+    &:first-child {
+        margin-top: @component-margin-bottom;
+
+        > .h-title { // avoid double margin
+            margin-top: 0;
+        }
+    }
+}
+.page-content > .form-stepper {
+    &:first-child {
+        margin-top: @component-margin-bottom;
+    }
+}
+
+.form-mode {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    .btn-link {
+        font-weight: bold;
+    }
+}
+
+.read-only {
+    background: @input-bg-disabled;
+    border-radius: @input-border-radius;
+    border: 1px solid transparent;
+    line-height: @line-height-computed;
+    padding: @padding-base-vertical @padding-base-horizontal;
+}
+
+
+// -
+// Errors & messages
+// ---
+
+.help-block-list {
+    margin: 0;
+    padding: 0;
+}
+
+.help-block {
+    text-align: justify;
+
+    padding-left: @padding-base-horizontal + 1px; // keep alignment with error blocks
+    margin-bottom: 0; // top margin is sufficient to stack and bottom margin add spacing in some cases
+
+    // Just expose some vars as bootstrap doesn't do it
+    color: @help-block-color;
+    font-size: @help-block-font-size;
+
+    .help-icon {
+        width: 20px - @icon-text-spacer; // small cheat to have the same spacing than checkbox (currently 20px)
+        text-align: center;
+        margin-right: @icon-text-spacer;
+    }
+}
+
+.error-block {
+    padding: @padding-small-vertical @padding-base-horizontal;
+    border: 1px solid transparent;
+    border-radius: @border-radius-small;
+}
+
+.error-block-warning,
+.has-warning .error-block {
+    color: @state-warning-text;
+    background: @state-warning-bg;
+    border-color: @state-warning-border;
+}
+
+.error-block-danger,
+.has-error .error-block {
+    color: @state-danger-text;
+    background: @state-danger-bg;
+    border-color: @state-danger-border;
+}
+
+.validation-status {
+    cursor: help;
+    margin: 0 @padding-base-horizontal;
+}
+
+
+// -
+// Fieldset
+// ---
+
+// todo : we may need a more specific namespacing
+.sub-fields {
+    // this is used to conditionally display fields on radio/checkbox check
+    // we align the displayed fields with the label of the radio/checkbox
+    // but there is no var in bootstrap for this (=20px)
+    margin-left: 4px; // cheat to have the border in the center of the checkbox/radio of the parent field if any
+    padding-left: 14px; // fill remaining space to be 20px
+    border-left: 2px solid @input-border;
+}
+
+
+// -
+// Labels
+// ---
+
+.control-label {
+    display: block;
+    color: @input-label-color;
+
+    > small {
+        color: @text-muted;
+        margin-left: 5px;
+        font-style: italic;
+        font-weight: normal;
+    }
+}
+
+// Just permits to individually control the color of the label during validation
+.has-success .control-label {
+    color: @input-success-label-color;
+}
+.has-warning .control-label {
+    color: @input-warning-label-color;
+}
+.has-error .control-label {
+    color: @input-error-label-color;
+}
+
+
+// -
+// Embedded forms
+// ---
+
+// todo : maybe merge with override made for modals
+.embedded-form-section {
+    .content-meta {
+        background: @panel-default-heading-bg;
+        padding: 10px @panel-body-padding;
+        border-bottom: 1px solid @panel-default-border;
+        margin-bottom: 0;
+    }
+
+    .form {
+        margin: -@panel-body-padding; // maybe not the best way to handle it
+    }
+
+    .form-primary-section {
+        // removes panel styles
+        box-shadow: none;
+        border: none;
+        border-radius: 0;
+        margin-bottom: 0;
+
+        + .form-primary-section {
+            border-top: 1px solid @panel-default-border;
+        }
+    }
+
+    .form-sections {
+        margin: 0;
+        .panel {
+            box-shadow: none; // this may be applied to all panels in modals
+            border-radius: 0;
+            border-left: 0;
+            border-right: 0;
+
+            + .panel {
+                border-top: none;
+                margin: 0;
+            }
+        }
+    }
+}
+
+
+// -
+// Buttons
+// ---
+
+.form-toolbar {
+    position: fixed;
+    display: block;
+    right: 45px;
+    bottom: 30px;
+    z-index: @zindex-dropdown - 1;
+
+    .btn {
+        width: 72px;
+        height: 72px;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 28px;
+        border-radius: 50%;
+        box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
+
+        + .btn {
+            margin-left: 5px;
+        }
+    }
+}
+
+
+// -
+// Utilities
+// ---
+
+// Utility class to avoid extra space after a form.
+// meant to be used on a `.form-group`
+.form-last {
+    margin-bottom: 0 !important;
+}
+
+.input-placeholder {
+    color: @input-color-placeholder;
+}
+
+// TODO : merge with placeholders
+.no-item-info {
+    font-style: italic;
+    text-align: center;
+
+    line-height: @line-height-base;
+    border: 1px dashed @input-color-placeholder;
+    border-radius: @input-border-radius;
+    padding: @padding-base-vertical @padding-base-horizontal;
+    color: @input-color-placeholder;
+}
+.has-warning .no-item-info {
+    color: @state-warning-text;
+    border-color: @state-warning-text;
+}
+
+.has-error .no-item-info {
+    color: @state-danger-text;
+    border-color: @state-danger-text;
+}

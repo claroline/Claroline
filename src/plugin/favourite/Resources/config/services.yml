@@ -1,0 +1,26 @@
+services:
+    _defaults:
+        public: true #because controller
+
+    HeVinci\FavouriteBundle\Controller\FavouriteController:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@HeVinci\FavouriteBundle\Manager\FavouriteManager'
+
+    HeVinci\FavouriteBundle\Listener\DataSource\MyFavouritesSource:
+        arguments:
+            - '@security.token_storage'
+            - '@Claroline\AppBundle\API\FinderProvider'
+        tags:
+            - { name: kernel.event_listener, event: data_source.my_favourites.load, method: getData }
+
+    HeVinci\FavouriteBundle\Listener\UserListener:
+        arguments:
+            - '@HeVinci\FavouriteBundle\Manager\FavouriteManager'
+        tags:
+            - { name: kernel.event_listener, event: merge_users, method: merge_users }
+
+    HeVinci\FavouriteBundle\Manager\FavouriteManager:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'

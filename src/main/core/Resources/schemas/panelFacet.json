@@ -1,0 +1,29 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "uuid": {
+      "type": "string",
+      "format": "string",
+      "description": "The panel uuid"
+    },
+    "name": {
+      "type": "string",
+      "description": "The panel name"
+    },
+    "position": {
+      "type": "integer",
+      "description": "The panel position"
+    },
+    "fields": {
+      "type": "array",
+      "description": "The field list",
+      "uniqueItems": true,
+      "items": { "$ref": "https://github.com/claroline/Distribution/tree/master/main/core/Resources/schemas/fieldFacet.json" }
+    }
+  },
+  "claroline": {
+    "ids": ["id"]
+  },
+  "required": ["name"]
+}

@@ -1,0 +1,17 @@
+{
+    "chapter_creation": "Créer un nouveau chapitre",
+    "delete_also_children": "Voulez-vous également supprimer ses sous-chapitres ? Dans le cas contraire, ceux-ci seront remontés dans le parent immédiat.",
+    "delete_warning": "Voulez-vous supprimer ce chapitre définitivement ?",
+    "move_destination": "Où placer le chapitre :",
+    "new_chapter": "Nouveau chapitre",
+    "subchapter": "En tant que sous-chapitre",
+    "sibling": "Au même niveau",
+    "empty_lesson_message": "Ce cours est vide. Commencez par créer un nouveau chapitre.",
+    "move_chapter": "Déplacer le chapitre",
+    "move_relation" : "Relation avec le chapitre parent",
+    "internal_note_visibility_help": "Les notes internes sont uniquement visibles par les utilisateurs ayant le droit 'Voir les notes internes'.",
+    "chapter_loading": "Nous chargeons votre chapitre...",
+    "start_lesson": "Commencer le cours",
+    "start_disabled_empty": "Le cours est vide.",
+    "lesson_search": "Rechercher dans le cours"
+}

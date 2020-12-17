@@ -1,0 +1,49 @@
+.list-group {
+    margin-bottom: @list-group-margin-bottom;
+
+    .list-group-item-variant(selected; @state-info-bg; @state-info-text);
+}
+
+.list-group-striped {
+    > .list-group-item:nth-of-type(odd) {
+        background-color: @table-bg-accent;
+    }
+}
+
+.list-group-values {
+    .list-group-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-weight: bold;
+
+        .value {
+            color: @gray-light;
+            font-weight: normal;
+            text-align: right;
+        }
+    }
+}
+
+.checkbox.list-group-item {
+    margin-top: 0;
+
+    // Hover state
+    &:not(.list-group-item-selected):hover,
+    &:not(.list-group-item-selected):focus {
+        color: @list-group-link-hover-color;
+        background-color: @list-group-hover-bg;
+    }
+}
+
+.list-group-item {
+    padding: @list-group-item-padding-v @list-group-item-padding-h;
+
+    .action-subscript {
+        float: right; // todo : find a better approach
+
+        .fa {
+            margin: 0;
+        }
+    }
+}

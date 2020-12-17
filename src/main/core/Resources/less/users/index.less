@@ -1,0 +1,91 @@
+/*
+ * Users barrel.
+ */
+
+@import "variables";
+@import "mixins";
+
+// Components styles
+@import "comments";
+@import "authentication"; // todo : should not be included in main theme file
+@import "message";
+@import "timeline";
+
+// todo : try to merge all user-avatar styles here
+.user-avatar {
+    border-radius: 50%;
+
+    // for .fa when no picture
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #CCCCCC;
+
+    // make avatar always look as a square
+    &:after {
+        content: "";
+        display: block;
+        padding-bottom: 100%;
+    }
+
+    &.user-avatar-md {
+        // for picture
+        max-width: 70px;
+        max-height: 70px;
+
+        // for .fa when no picture
+        font-size: 70px;
+    }
+
+    &.user-avatar-lg {
+        // for picture
+        max-width: 200px;
+        max-height: 200px;
+
+        // for .fa when no picture
+        font-size: 90px;
+    }
+}
+
+.user-micro {
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    vertical-align: middle;
+    font-size: @font-size-small;
+    font-weight: bold;
+
+    .user-avatar {
+        margin-right: 10px;
+
+        // for picture
+        max-height: 30px;
+
+        // for .fa when no picture
+        font-size: 30px;
+    }
+}
+
+.user-page {
+    // make avatar looks bigger than standard page icons
+    .page-icon {
+        width: 200px;
+        height: 200px;
+        margin-bottom: -40px;
+
+        .user-avatar {
+            background: white;
+        }
+    }
+
+    .user-profile-aside {
+        // because of the profile picture
+        margin-top: floor((@font-size-h2 * @headings-line-height) + (@line-height-computed / 2)) + @component-margin-bottom;
+    }
+}
+
+.user-profile {
+    .btn-add-facet {
+        text-align: left;
+    }
+}

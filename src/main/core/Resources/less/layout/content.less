@@ -1,0 +1,31 @@
+
+.content-meta {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: @component-margin-bottom;
+
+    // todo : use it's own vars
+    background: @list-controls-bg;
+    padding: 10px floor(@grid-gutter-width / 2);
+    color: @list-controls-color;
+}
+
+.content-creator {
+
+}
+
+.content-dates {
+    color: #777; // todo use a var same than user micro
+    font-style: italic;
+    font-size: @font-size-small; // same than .user-micro
+    text-align: right;
+    > span {
+        display: block;
+
+        + span {
+            margin-top: 5px;
+        }
+    }
+}

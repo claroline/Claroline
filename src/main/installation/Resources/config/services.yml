@@ -1,0 +1,40 @@
+services:
+    claroline.installation.manager:
+        class: '%claroline.installation_manager.class%'
+        arguments:
+            - '@service_container'
+            - '@claroline.migration.manager'
+            - '@claroline.installation.fixture_loader'
+            - '%kernel.environment%'
+        calls:
+            - setLogger: [ '@logger' ]
+
+    claroline.installation.fixture_loader:
+        class: '%claroline.installation_fixture_loader.class%'
+        arguments:
+            - '@claroline.installation.fixture_loader.locator'
+            - '@claroline.doctrine_fixture_executor'
+        calls:
+            - setLogger: ['@logger']
+
+    claroline.symfony_fixture_loader:
+        shared: false
+        class: '%claroline.symfony_fixture_loader.class%'
+        arguments:
+            - '@service_container'
+
+    claroline.installation.fixture_loader.locator:
+        class: Symfony\Component\DependencyInjection\ServiceLocator
+        arguments:
+            - { claroline.symfony_fixture_loader: '@claroline.symfony_fixture_loader' }
+        tags: ['container.service_locator']
+
+    claroline.doctrine_fixture_executor:
+        class: '%claroline.doctrine_fixture_executor.class%'
+        arguments:
+            - '@doctrine.orm.entity_manager'
+
+    Claroline\InstallationBundle\Repository\UpdaterExecutionRepository:
+        arguments:
+            - '@Doctrine\Persistence\ManagerRegistry'
+        tags: ['doctrine.repository_service']

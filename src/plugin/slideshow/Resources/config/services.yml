@@ -1,0 +1,4 @@
+imports:
+    - { resource: services/controller.yml }
+    - { resource: services/serializer.yml }
+    - { resource: services/listener.yml }

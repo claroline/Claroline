@@ -1,0 +1,36 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: false
+
+    Claroline\AnnouncementBundle\Listener\DataSource\AnnouncementSource:
+        arguments:
+            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@security.token_storage'
+        tags:
+            - { name: kernel.event_listener, event: data_source.announcements.load, method: getData }
+
+    Claroline\AnnouncementBundle\Listener\Resource\AnnouncementListener:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@twig'
+            - '@Claroline\AnnouncementBundle\Manager\AnnouncementManager'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\AppBundle\API\Crud'
+            - '@security.authorization_checker'
+        tags:
+            - { name: kernel.event_listener, event: resource.claroline_announcement_aggregate.load, method: load }
+            - { name: kernel.event_listener, event: resource.claroline_announcement_aggregate.copy, method: copy }
+            - { name: kernel.event_listener, event: transfer.claroline_announcement_aggregate.export, method: onExport }
+            - { name: kernel.event_listener, event: transfer.claroline_announcement_aggregate.import.after, method: onImport }
+            - { name: kernel.event_listener, event: resource.claroline_announcement_aggregate.delete, method: delete }
+
+    Claroline\AnnouncementBundle\Listener\CrudListener:
+        arguments:
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
+        tags:
+            - { name: kernel.event_listener, event: crud.post.create.announcement, method: onAnnouncementCreate, priority: -1 }
+            - { name: kernel.event_listener, event: crud.post.create.announcement_send, method: onAnnouncementSend }
+            - { name: kernel.event_listener, event: crud.post.update.announcement, method: onAnnouncementUpdate }
+            - { name: kernel.event_listener, event: crud.pre.delete.announcement, method: onAnnouncementDelete }

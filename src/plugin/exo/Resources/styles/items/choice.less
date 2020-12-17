@@ -1,0 +1,70 @@
+.choice-answer-items {
+  display: flex;
+  margin: -(floor(@answer-item-margin-bottom / 2));
+
+  // remove <ul> styles
+  padding: 0;
+  list-style-type: none;
+
+  &.horizontal {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  &.vertical {
+    flex-direction: column;
+  }
+
+  + .btn {
+    margin-top: @answer-item-margin-bottom;
+  }
+}
+
+.choice-answer-item {
+  flex: 1;
+  margin: floor(@answer-item-margin-bottom / 2);
+  display: flex;
+  align-items: flex-start;
+
+  .choice-item-tick {
+    flex-shrink: 0;
+    align-self: flex-start; // make sure tick is always in the top left corner
+    margin-top: 4px; // same as checkboxes/radios
+    margin-right: floor(@grid-gutter-width / 2);
+  }
+
+  .choice-item-content {
+    flex: 1;
+
+    > p { // remove margin on tinyMCE container
+      margin-bottom: 0;
+    }
+  }
+
+  .choice-item-feedback {
+    margin-left: floor(@grid-gutter-width / 2);
+  }
+}
+
+.choice-editor {
+  .choice-answer-item {
+    .text-fields {
+      margin-right: floor(@grid-gutter-width / 2);
+    }
+
+    .score {
+      margin-right: floor(@grid-gutter-width / 2);
+    }
+  }
+}
+
+.choice-player {
+  .choice-answer-item {
+    cursor: pointer;
+
+    &:hover:not(.selected-answer) {
+      background: darken(@answer-item-bg, 10%);
+      border-color: darken(@answer-item-border, 10%);
+    }
+  }
+}

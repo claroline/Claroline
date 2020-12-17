@@ -1,0 +1,34 @@
+services:
+    _defaults:
+        public: true #because controller
+
+    HeVinci\CompetencyBundle\Controller\API\AbilityController:
+        parent: Claroline\AppBundle\Controller\AbstractCrudController
+        public: true
+        arguments:
+            - '@security.authorization_checker'
+            - '@HeVinci\CompetencyBundle\Manager\CompetencyManager'
+
+    HeVinci\CompetencyBundle\Controller\API\CompetencyAbilityController:
+        parent: Claroline\AppBundle\Controller\AbstractCrudController
+        public: true
+
+    HeVinci\CompetencyBundle\Controller\API\CompetencyController:
+        parent: Claroline\AppBundle\Controller\AbstractCrudController
+        public: true
+        arguments:
+            - '@security.authorization_checker'
+            - '@HeVinci\CompetencyBundle\Manager\CompetencyManager'
+            - '@claroline.manager.tool_manager'
+
+    HeVinci\CompetencyBundle\Controller\API\ScaleController:
+        parent: Claroline\AppBundle\Controller\AbstractCrudController
+        public: true
+
+    HeVinci\CompetencyBundle\Controller\MyObjectiveController:
+        parent: Claroline\AppBundle\Controller\AbstractCrudController
+        public: true
+        arguments:
+            - '@HeVinci\CompetencyBundle\Manager\CompetencyManager'
+            - '@HeVinci\CompetencyBundle\Manager\ObjectiveManager'
+            - '@HeVinci\CompetencyBundle\Manager\ProgressManager'

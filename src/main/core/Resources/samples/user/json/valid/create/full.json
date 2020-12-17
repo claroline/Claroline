@@ -1,0 +1,28 @@
+{
+    "id": "e41a5aa5-f92b-447c-9454-04968a41a349",
+    "name": "Homer Simpson",
+    "firstName": "Homer",
+    "lastName": "Simpson",
+    "username": "Elorfin",
+    "plainPassword": "1234",
+    "picture": {
+      "url": "../../data\\aaaaaaaaaaaaaaaaaaaa\\c51f7ee7-4ec6-462c-b394-278d0e359207.tmp"
+    },
+    "email": "homer.simpson@gmail.com",
+    "administrativeCode": null,
+    "meta": {
+        "publicUrl": "homer.simpson",
+        "acceptedTerms": null,
+        "lastLogin": "2017-12-06T07:02:51",
+        "created": "2017-12-03T10:46:22",
+        "description": "gdgf",
+        "mailValidated": true,
+        "mailNotified": true,
+        "mailWarningHidden": true,
+        "publicUrlTuned": false,
+        "authentication": null,
+        "personalWorkspace": true,
+        "enabled": true,
+        "removed": false
+    }
+}

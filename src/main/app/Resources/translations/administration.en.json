@@ -1,0 +1,26 @@
+{
+  "loading": "We are loading the administration...",
+  "maintenance_mode": "Maintenance mode",
+  "maintenance_mode_alert": "The maintenance mode of the platform is enabled.",
+  "maintenance_mode_activation": "The maintenance mode allows you to temporarily disable access to your platform. The user interface and the API will no longer be accessible.",
+  "maintenance_mode_deactivation": "All users will be able to access the platform again.",
+  "customize_maintenance_message": "Customize the message displayed to users",
+  "maintenance_allowed_users": "Users with the role %role% will still be able to log in and access the entire platform.",
+
+  "platform_unavailable_alert": "The platform is not available for now.",
+  "platform_unavailable_title": "The platform is not available for now",
+  "platform_unavailable_help": "Please come back later or contact an administrator to find out when the platform will be available again",
+  "only_admin_login_help": "Only administrators can login.",
+
+  "platform_offline": "Offline",
+  "platform_online": "Online",
+  "platform_maintenance": "Under maintenance",
+
+  "why_platform_disabled": "Why is my platform no longer accessible?",
+  "platform_disabled_alert": "The platform has been disabled.",
+  "platform_disabled_desc": "The platform has been manually disabled by an administrator.",
+  "platform_not_started_alert": "The platform is not yet accessible.",
+  "platform_not_started_desc": "The platform will be open from %date%.",
+  "platform_ended_alert": "The platform is no longer accessible.",
+  "platform_ended_desc": "The platform has been closed since %date%."
+}

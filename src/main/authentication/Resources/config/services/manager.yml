@@ -1,0 +1,24 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+
+    Claroline\AuthenticationBundle\Manager\IPWhiteListManager:
+        arguments:
+          - '%claroline.param.ip_white_list_file%'
+          - '%claroline.param.ip_range_white_list_file%'
+
+    claroline.manager.ip_white_list_manager:
+        alias: Claroline\AuthenticationBundle\Manager\IPWhiteListManager
+        public: true
+
+    Claroline\AuthenticationBundle\Manager\OauthManager:
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@claroline.manager.cache_manager'
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+            - '@security.token_storage'
+            - '@Claroline\AuthenticationBundle\Security\Authentication\Authenticator'
+        tags:
+            - { name: kernel.event_listener, event: refresh_cache, method: refreshCache } # TODO : create a listener for that

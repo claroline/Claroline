@@ -1,0 +1,30 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+
+    HeVinci\CompetencyBundle\Serializer\ScaleSerializer:
+        tags: [claroline.serializer]
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+
+    HeVinci\CompetencyBundle\Serializer\LevelSerializer:
+        tags: [claroline.serializer]
+
+    HeVinci\CompetencyBundle\Serializer\CompetencySerializer:
+        tags: [claroline.serializer]
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@HeVinci\CompetencyBundle\Serializer\CompetencyAbilitySerializer'
+            - '@HeVinci\CompetencyBundle\Serializer\ScaleSerializer'
+
+    HeVinci\CompetencyBundle\Serializer\CompetencyAbilitySerializer:
+        tags: [claroline.serializer]
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@HeVinci\CompetencyBundle\Serializer\AbilitySerializer'
+            - '@HeVinci\CompetencyBundle\Serializer\LevelSerializer'
+
+    HeVinci\CompetencyBundle\Serializer\AbilitySerializer:
+        tags: [claroline.serializer]

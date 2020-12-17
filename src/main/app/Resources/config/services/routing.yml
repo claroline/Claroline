@@ -1,0 +1,21 @@
+services:
+    Claroline\AppBundle\Routing\Router:
+        parent: router.default
+
+    Claroline\AppBundle\Routing\Finder:
+        public: true
+        autowire: false
+        autoconfigure: false
+        arguments:
+            - '@router'
+
+    Claroline\AppBundle\Routing\Documentator:
+        public: true
+        autowire: false
+        autoconfigure: false
+        arguments:
+            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\AppBundle\API\SchemaProvider'
+            - '@annotation_reader'
+            - '@Claroline\AppBundle\Routing\Finder'

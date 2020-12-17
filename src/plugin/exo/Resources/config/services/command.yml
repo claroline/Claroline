@@ -1,0 +1,23 @@
+services:
+
+    UJM\ExoBundle\Command\QuestionProprietaryUpdateCommand:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+        tags:
+            - { name: 'console.command', command: 'claroline:question:update_owner' }
+
+    UJM\ExoBundle\Command\ExportExoResultsCommand:
+        arguments:
+            - '@Claroline\CoreBundle\Manager\UserManager'
+            - '@UJM\ExoBundle\Manager\ExerciseManager'
+            - '@doctrine.orm.entity_manager'
+            - '@security.token_storage'
+        tags:
+            - { name: 'console.command', command: 'claroline:exo:export_results' }
+
+    UJM\ExoBundle\Command\ComputeScoresCommand:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@UJM\ExoBundle\Manager\Attempt\PaperManager'
+        tags:
+            - { name: 'console.command', command: 'claroline:quiz:scores' }

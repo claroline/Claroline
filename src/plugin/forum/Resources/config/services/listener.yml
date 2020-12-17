@@ -1,0 +1,53 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+
+    Claroline\ForumBundle\Listener\DataSource\ForumSource:
+        arguments:
+            - '@security.token_storage'
+            - '@Claroline\AppBundle\API\FinderProvider'
+        tags:
+            - { name: kernel.event_listener, event: data_source.forum_messages.load, method: getData }
+
+    Claroline\ForumBundle\Listener\Resource\ForumListener:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\AppBundle\API\Crud'
+            - '@claroline.manager.resource_evaluation_manager'
+            - '@Claroline\ForumBundle\Manager\ForumManager'
+            - '@security.token_storage'
+        tags:
+            - { name: kernel.event_listener, event: resource.claroline_forum.load, method: onOpen }
+            - { name: kernel.event_listener, event: transfer.claroline_forum.export, method: onExport }
+            - { name: kernel.event_listener, event: transfer.claroline_forum.import.before, method: onImportBefore }
+            - { name: kernel.event_listener, event: transfer.claroline_forum.import.after, method: onImport }
+            - { name: kernel.event_listener, event: generate_resource_user_evaluation_claroline_forum, method: onGenerateResourceTracking }
+
+    Claroline\ForumBundle\Listener\ApiListener:
+        arguments:
+            - '@Claroline\ForumBundle\Manager\ForumManager'
+        tags:
+            - { name: kernel.event_listener, event: merge_users, method: onMerge }
+
+    Claroline\ForumBundle\Listener\NotificationListener:
+        arguments:
+            - '@translator'
+            - '@router'
+        tags:
+            - { name: kernel.event_listener, event: create_notification_item_forum_message, method: onCreateNotificationItem }
+            - { name: kernel.event_listener, event: icap_notification_user_parameters_event, method: onGetTypesForParameters }
+
+    Claroline\ForumBundle\Listener\CrudListener:
+        arguments:
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - '@Claroline\CoreBundle\API\Finder\User\UserFinder'
+        tags:
+            - { name: kernel.event_listener, event: crud.post.create.forum_message, method: onPostCreate, priority: -1 }
+            - { name: kernel.event_listener, event: crud.post.update.forum_message, method: onPostUpdate }
+            - { name: kernel.event_listener, event: crud.pre.delete.forum_message, method: onPostDelete }
+            - { name: kernel.event_listener, event: crud.post.create.forum_subject, method: onSubjectCreate, priority: -1 }
+            - { name: kernel.event_listener, event: crud.post.update.forum_subject, method: onSubjectUpdate }
+            - { name: kernel.event_listener, event: crud.pre.delete.forum_subject, method: onSubjectDelete }

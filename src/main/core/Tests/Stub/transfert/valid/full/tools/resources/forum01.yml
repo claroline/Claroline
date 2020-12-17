@@ -1,0 +1,9 @@
+data:
+  categories:
+    - category:
+        name: 'catname':
+        topics:
+            - name: 'subname'
+            - answers:
+                - username: 'ezs'
+                - content: 'blablabla'

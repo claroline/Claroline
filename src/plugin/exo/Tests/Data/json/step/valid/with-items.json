@@ -1,0 +1,83 @@
+{
+  "id": "1",
+  "title": "Lorem ipsum dolor sit amet",
+  "parameters": {
+    "maxAttempts": 0,
+    "randomOrder": "once",
+    "randomPick": "once",
+    "pick": 1
+  },
+  "items": [
+    {
+      "id": "1",
+      "type": "application/x.choice+json",
+      "content": "Question 1 ?",
+      "hasExpectedAnswer": true,
+      "score": {
+        "type": "sum"
+      },
+      "objects": [
+        {
+          "id": "1",
+          "type": "image/png",
+          "url": "http://domain.com/image.png"
+        }
+      ],
+      "choices": [
+        {
+          "id": "2",
+          "type": "text/plain",
+          "data": "True"
+        },
+        {
+          "id": "3",
+          "type": "text/plain",
+          "data": "False"
+        }
+      ],
+      "random": false,
+      "multiple": false,
+      "solutions": [
+        {
+          "id": "3",
+          "score": 1
+        }
+      ],
+      "tags": []
+    },
+    {
+      "id": "2",
+      "type": "application/x.choice+json",
+      "content": "Question 2 ?",
+      "hasExpectedAnswer": true,
+      "score": {
+        "type": "sum"
+      },
+      "choices": [
+        {
+          "id": "1",
+          "type": "text/plain",
+          "data": "True"
+        },
+        {
+          "id": "3",
+          "type": "text/plain",
+          "data": "False"
+        }
+      ],
+      "random": false,
+      "multiple": false,
+      "solutions": [
+        {
+          "id": "1",
+          "score": 2
+        },
+        {
+          "id": "3",
+          "score": 1
+        }
+      ],
+      "tags": []
+    }
+  ]
+}

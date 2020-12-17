@@ -1,0 +1,189 @@
+/**
+ * ClacoForm resource.
+ */
+
+@import "./../variables.less";
+@import "./../mixins.less";
+
+.claroline_claco_form-page .resource-overview {
+    flex: 1 0 auto;
+    display: flex;
+    min-height: 100%;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin: 0 -(floor(@grid-gutter-width / 2));
+
+    .btn-overview {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        font-size: @font-size-large;
+        text-align: center;
+        color: @text-color;
+        margin: floor(@grid-gutter-width / 2);
+        padding: 0;
+        background: white;
+        border: 1px solid #e5e5e5;
+        max-height: 240px;
+        height: 100%;
+
+        .action-icon,
+        .action-label {
+            padding: floor(@grid-gutter-width / 2);
+        }
+
+        .action-icon {
+            color: @text-muted;
+            font-size: 72px;
+            padding: 15px;
+            background: @gray-lightest;
+            border-bottom: 1px solid #e5e5e5; // todo : add var (same as feedback in exo)
+        }
+
+        .action-label {
+            flex: 1 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        &:hover,
+        &:focus {
+            border-color: @brand-primary;
+            .box-shadow(@dropdown-menu-box-shadow);
+
+            .action-icon {
+                background: @brand-primary;
+                color: rgba(255, 255, 255, 0.75);
+                border-color: @btn-primary-border;
+            }
+        }
+    }
+}
+
+.entry-container {
+    margin-bottom: @component-margin-bottom;
+
+    .entry {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+
+        .btn-entry-nav {
+            flex: 0;
+            font-size: @carousel-control-font-size;
+            padding: 0;
+            border: none;
+        }
+
+        // Scale up controls for tablets and up
+        @media screen and (min-width: @screen-sm-min) {
+            .btn-entry-nav {
+                font-size: (@carousel-control-font-size * 1.5);
+            }
+        }
+
+    }
+
+    .entry-content {
+        flex: 1;
+    }
+
+    .panel {
+        margin-bottom: 0;
+    }
+
+    .entry-title {
+        margin-top: 0;
+    }
+
+    // TODO : make it generic (DataDetails in panels)
+    .data-details {
+        .panel {
+            border: none;
+            box-shadow: none;
+            background: none;
+        }
+
+        .panel-body {
+            padding: 0;
+        }
+    }
+}
+
+// same as announce
+.entry-meta {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    color: #777;
+    background: @gray-lightest; // panel heading
+    padding: 5px 10px;
+    margin-bottom: @component-margin-bottom;
+
+    .entry-info {
+        flex: 1 0 auto;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+
+        .date {
+            padding: 0 10px;
+            font-size: @font-size-small;
+            font-style: italic;
+        }
+    }
+
+    .entry-actions {
+        margin-left: auto;
+        padding-left: 10px;
+        border-left: 1px solid #ccc;
+
+        .btn {
+            padding: 0;
+            + .btn {
+                margin-left: 5px;
+            }
+        }
+    }
+}
+
+.entry-footer {
+    .title {
+        display: inline-block;
+        color: #777;
+        font-size: @font-size-small;
+        min-width: 80px; // todo: find better
+    }
+
+    hr {
+        border-color: #ccc;
+        margin-top: 10px; // same as .panel-footer v-padding (no var)
+        margin-bottom: 10px; // same as .panel-footer v-padding (no var)
+    }
+
+    // todo : do not use .label (too many overrides)
+    .label {
+        display: inline-block;
+        font-size: 100%;
+        font-weight: normal;
+
+        + .label {
+            margin-left: 5px;
+        }
+    }
+}
+
+.entry-menu {
+    text-align: right;
+}
+
+.form-group-align {
+    display: flex;
+    align-items: center;
+}

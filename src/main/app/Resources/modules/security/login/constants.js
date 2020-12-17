@@ -1,0 +1,12 @@
+
+const LOGIN_REDIRECT_LAST      = 'last'
+const LOGIN_REDIRECT_DESKTOP   = 'desktop'
+const LOGIN_REDIRECT_WORKSPACE = 'workspace'
+const LOGIN_REDIRECT_URL       = 'url'
+
+export const constants = {
+  LOGIN_REDIRECT_LAST,
+  LOGIN_REDIRECT_DESKTOP,
+  LOGIN_REDIRECT_WORKSPACE,
+  LOGIN_REDIRECT_URL
+}

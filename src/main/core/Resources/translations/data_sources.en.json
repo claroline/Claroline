@@ -1,0 +1,18 @@
+{
+  "admin_tools": "List of admin tools",
+  "admin_tools_desc": "Allows to list administration tools accessible by the current user.",
+  "my_workspaces": "List of my workspaces",
+  "my_workspaces_desc": "Allows to list workspaces in which the current user is registered.",
+  "resources": "List of resources",
+  "resources_desc": "Allows to list resources accessible by the current user.",
+  "tools": "List of tools",
+  "tools_desc": "Allows to list tools accessible by the current user.",
+  "users": "List of users",
+  "users_desc": "Allows to list users visible by the current user.",
+  "workspaces": "List of workspaces",
+  "workspaces_desc": "Allows to list workspaces visible by the current user. This includes workspaces that the user manages, in which he is registered or in which he can register.",
+  "resource": "Selected resource",
+  "resource_desc": "Allows to display a selected resource.",
+  "personal_workspace": "Personal workspace directory",
+  "personal_workspace_desc": "Allows to display the root directory of the current user's personal workspace."
+}

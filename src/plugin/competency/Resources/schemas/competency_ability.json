@@ -1,0 +1,56 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "The uuid of the competency ability"
+    },
+    "competency": {
+      "type": ["object"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The uuid of the competency"
+        }
+      },
+      "required": ["id"]
+    },
+    "ability": {
+      "type": ["object"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The uuid of the ability"
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the ability"
+        },
+        "minResourceCount": {
+          "type": "integer",
+          "description": "The number of resources to pass"
+        },
+        "minEvaluatedResourceCount": {
+          "type": "integer",
+          "description": "The number of evaluated resources to pass"
+        }
+      },
+      "required": ["id", "name"]
+    },
+    "level": {
+      "type": ["object"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The uuid of the level"
+        }
+      },
+      "required": ["id"]
+    }
+  },
+  "required": ["id"],
+  "claroline": {
+    "ids": ["id"]
+  }
+}

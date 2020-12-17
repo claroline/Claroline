@@ -1,0 +1,32 @@
+# This file contains the core container parameters.
+parameters:
+    # Project base paths
+    claroline.param.vendor_directory: "%kernel.project_dir%/vendor"
+    claroline.param.public_directory: "%kernel.project_dir%/public"
+    claroline.param.files_directory:  "%kernel.project_dir%/files"
+
+    # File paths
+    claroline.param.config_directory:       "%claroline.param.files_directory%/config"
+    claroline.param.archive_directory:      "%claroline.param.files_directory%/archives"
+    claroline.param.public_files_directory: "%claroline.param.files_directory%/data"
+    claroline.param.uploads_directory:      "%claroline.param.public_files_directory%/uploads"
+    claroline.param.data_web_dir:           "%claroline.param.public_directory%/data"
+
+    # Log paths
+    claroline.param.import_log_dir:    "%kernel.logs_dir%/transfer"
+    claroline.param.workspace_log_dir: "%kernel.logs_dir%/workspace"
+
+    # Configuration provider
+    claroline.param.bundle_file:                   "%claroline.param.config_directory%/bundles.ini"
+    claroline.param.platform_config_handler_class: "Claroline\\CoreBundle\\Library\\Configuration\\PlatformConfigurationHandler"
+    claroline.param.platform_options:              "%claroline.param.config_directory%/platform_options.json"
+
+    # Base workspace model path
+    claroline.param.workspace.default: "%kernel.project_dir%/src/main/core/Resources/config/workspace.zip"
+
+    # Core plugin API descriptors
+    claroline.api.sample.dir:      "%kernel.project_dir%/src/main/core/Resources/samples"
+    claroline.api.core_schema.dir: "%kernel.project_dir%/src/main/core/Resources/schema"
+
+    # Disable symfony legacy autowiring
+    container.autowiring.strict_mode: true

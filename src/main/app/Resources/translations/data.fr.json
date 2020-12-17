@@ -1,0 +1,20 @@
+{
+  "boolean": "Booléen",
+  "choice": "Choix",
+  "collection": "Collection",
+  "country": "Pays",
+  "currency": "Monnaie",
+  "date": "Date",
+  "date-range": "Période",
+  "email": "Courriel",
+  "file": "Fichier",
+  "html": "Texte riche",
+  "image": "Image",
+  "ip": "Adresse IP",
+  "number": "Nombre",
+  "string": "Texte",
+  "url": "URL",
+  "array_of": "Une liste de '%type%'",
+  "integer": "Nombre entier",
+  "object": "Objet"
+}

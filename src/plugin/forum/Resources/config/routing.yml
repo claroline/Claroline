@@ -1,0 +1,6 @@
+claro_forum_api:
+    resource: "@ClarolineForumBundle/Controller/API"
+    prefix: apiv2
+    type: api
+    options:
+        expose: true

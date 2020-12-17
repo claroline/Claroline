@@ -1,0 +1,101 @@
+.panel {
+    margin-bottom: @panel-margin-bottom; // change the bootstrap @line-height-computed var
+    .box-shadow(@panel-box-shadow); // just override bootstrap to use a var.
+
+    .panel-heading {
+        position: relative; // used to create an absolute button bar in the right corner
+
+        small {
+            margin-left: 5px;
+        }
+    }
+
+    .panel-title {
+        .icon-with-text-right {
+            margin-right: @panel-heading-padding-h;
+        }
+    }
+
+    .panel-actions {
+        position: absolute; // TODO : use flex design instead
+        right: 0;
+        top: 0;
+        height: 100%;
+        display: flex;
+        align-items: center;
+    }
+
+    .panel-body img {
+        max-width: 100%;
+    }
+
+    // remove box-shadow of some components when contained in a panel
+    .panel,
+    .table > tbody {
+         box-shadow: none;
+     }
+
+    // embedded table
+    .table > tbody {
+        border: none;
+    }
+
+    // embedded panel group
+    > .panel-group {
+        margin: 0;
+
+        .panel {
+            border-radius: 0;
+            border-left: 0;
+            border-right: 0;
+
+            + .panel {
+                border-top: none;
+                margin-top: 0;
+            }
+        }
+
+        .panel-heading {
+            border-radius: 0;
+        }
+
+        // avoids double border
+        // this may be problematic if the panel-group is not the last child
+        // of the parent panel
+        // todo : find a way to make this work properly
+        .panel:last-child {
+            border-bottom: none;
+        }
+    }
+}
+
+.panel-group {
+    .panel-title > a {
+        display: block; // make the click zone fill the parent block
+        cursor: pointer; // the <a> tag to toggle the panel has no href, so the cursor do not change properly
+    }
+
+    .panel-title.opened,
+    .panel-title[aria-expanded=true],
+    .panel-title > *[aria-expanded=true] {
+        color: @brand-primary;
+        font-weight: bold;
+
+        .panel-title-icon {
+            color: @brand-primary;
+            // for svg icons
+            fill: @brand-primary;
+            stroke: @brand-primary;
+        }
+    }
+}
+
+// disabled panels
+.panel-disabled {
+    box-shadow: none;
+    opacity: 0.75;
+
+    .panel-title > a {
+        cursor: not-allowed;
+    }
+}

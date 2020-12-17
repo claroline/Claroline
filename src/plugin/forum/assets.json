@@ -1,0 +1,7 @@
+{
+  "styles": {
+    "entry": {
+      "forum-resource": "resources/forum/index.less"
+    }
+  }
+}

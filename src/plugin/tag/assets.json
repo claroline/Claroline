@@ -1,0 +1,7 @@
+{
+  "styles": {
+    "entry": {
+      "main": "index.less"
+    }
+  }
+}

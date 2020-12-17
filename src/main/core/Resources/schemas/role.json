@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": ["string", "null"],
+      "description": "The role id"
+    },
+    "name": {
+      "type": ["string", "null"],
+      "description": "The role name",
+      "minLength": 1
+    },
+    "translationKey": {
+      "type": ["string", "null"],
+      "description": "The role displayed value",
+      "minLength": 1
+    }
+  },
+  "claroline": {
+    "requiredAtCreation": ["translationKey"],
+    "ids":  ["id", "name"]
+  }
+}

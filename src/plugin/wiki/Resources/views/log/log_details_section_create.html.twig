@@ -1,0 +1,10 @@
+{% if log.details.section is defined %}
+    <h4>{{ ('log_created_section')|trans({}, 'log') }}</h4>
+
+    <dl class="dl-horizontal">
+        <dt>{{ ('log_section_title')|trans({}, 'log') }}</dt>
+        <dd>{{ log.details.section.title }}</dd>
+        <dt>{{ ('log_section_text')|trans({}, 'log') }}</dt>
+        <dd>{{ log.details.section.text|raw }}</dd>
+    </dl>
+{% endif %}

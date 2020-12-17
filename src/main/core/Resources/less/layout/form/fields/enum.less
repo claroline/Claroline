@@ -1,0 +1,38 @@
+.enum-control {
+    ul {
+        padding: 0;
+        margin: 0;
+        list-style-type: none;
+    }
+
+    .enum-item {
+        display: flex;
+        align-items: flex-start;
+        background-color: @gray-lighter;
+        border: 1px solid @gray-lighter;
+        border-radius: @border-radius-base;
+        padding: 10px;
+        margin-bottom: 4px;
+
+        .enum-item-content {
+            flex: 1;
+            margin-right: floor(@grid-gutter-width / 2);
+            margin-bottom: 0;
+        }
+
+        .error-block {
+            margin-bottom: 0;
+        }
+
+        .right-controls {
+            .btn {
+                padding-left: 4px;
+                padding-right: 4px;
+            }
+        }
+    }
+
+    .btn-block {
+        margin-top: 10px;
+    }
+}

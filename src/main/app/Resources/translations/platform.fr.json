@@ -1,0 +1,14 @@
+{
+  "activation": "Activation",
+  "deactivation": "Désactivation",
+  "currency": {
+    "value": "%value% %unit%",
+    "euro": "EUR",
+    "euro_short": "€",
+    "dollar": "USD",
+    "dollar_short": "$"
+  },
+  "not_found": "Contenu non trouvé",
+  "loading": "Chargement en cours...",
+  "dpo": "Délégué à la protection des données"
+}

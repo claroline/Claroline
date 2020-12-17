@@ -1,0 +1,13 @@
+{
+  "add_slide": "Add a slide",
+  "auto_play": "Automatically start slideshow",
+  "new_slide": "New slide",
+  "no_slide": "No slide.",
+  "show_controls": "Display controls",
+  "slide_delete_confirm": "Deleting a slide",
+  "slide_delete_message": "Are you sure you want to delete this slide ?",
+  "slide_duration": "Slide show time",
+  "slide_parameters": "Parameters of the slide",
+  "slides": "Slides",
+  "start_slideshow": "Start slideshow"
+}

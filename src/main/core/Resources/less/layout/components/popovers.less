@@ -1,0 +1,61 @@
+.popover {
+    padding: 0;
+    border-radius: @popover-border-radius;
+    .box-shadow(@popover-box-shadow);
+
+    &.bottom {
+        margin-bottom: @component-margin-bottom;
+        // when arrow is on top of the popover, give it the title bg color
+        > .arrow:after {
+            border-bottom-color: @popover-title-bg;
+        }
+    }
+}
+
+.popover-title {
+    font-family: @headings-font-family;
+    line-height: @line-height-computed;
+    border-bottom: 1px solid @popover-title-border-color;
+    border-radius: (@popover-border-radius - 1) (@popover-border-radius - 1) 0 0;
+    padding: @popover-title-padding;
+}
+
+.popover-content {
+    padding: @popover-content-padding;
+}
+
+.popover-list-group {
+    .popover-content {
+        padding: 0;
+
+        // correct the render of border radius when the last child is not displayed
+        overflow: hidden;
+        border-bottom-left-radius: @popover-border-radius;
+        border-bottom-right-radius: @popover-border-radius;
+    }
+
+    .list-group {
+        margin: 0;
+        max-height: 220px;
+        overflow-y: auto;
+
+        .list-group-item {
+            padding: @popover-content-padding;
+            border-left: none;
+            border-right: none;
+
+            &:first-child {
+                border-top: 0;
+                border-top-left-radius: 0;
+                border-top-right-radius: 0;
+            }
+
+            &:last-child {
+                border-bottom: 0;
+                margin-bottom: 0;
+                border-bottom-left-radius: @popover-border-radius;
+                border-bottom-right-radius: @popover-border-radius;
+            }
+        }
+    }
+}

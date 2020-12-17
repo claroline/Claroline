@@ -1,0 +1,17 @@
+services:
+    _defaults:
+        public: true #because controller
+
+    Claroline\ForumBundle\Controller\API\ForumController:
+        parent: Claroline\AppBundle\Controller\AbstractCrudController
+        public: true
+        arguments:
+             - '@Claroline\ForumBundle\Manager\ForumManager'
+
+    Claroline\ForumBundle\Controller\API\MessageController:
+        parent: Claroline\AppBundle\Controller\AbstractCrudController
+        public: true
+
+    Claroline\ForumBundle\Controller\API\SubjectController:
+        parent: Claroline\AppBundle\Controller\AbstractCrudController
+        public: true

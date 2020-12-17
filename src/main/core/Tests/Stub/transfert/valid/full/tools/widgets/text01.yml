@@ -1,0 +1,5 @@
+data:
+    - locale: 'en'
+      content: '<html> tototototototot </html>'
+    - locale: 'fr'
+      content: '<html> blablabla </html>'

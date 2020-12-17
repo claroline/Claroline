@@ -1,0 +1,36 @@
+services:
+    _defaults:
+        autowire: false #change to true
+        autoconfigure: false
+        public: true #because controller
+
+    HeVinci\CompetencyBundle\Listener\Administration\CompetenciesListener:
+        arguments:
+            - '@HeVinci\CompetencyBundle\Manager\CompetencyManager'
+        tags:
+            - { name: kernel.event_listener, event: administration_tool_competencies, method: onDisplayTool }
+
+    HeVinci\CompetencyBundle\Listener\PluginListener:
+        arguments:
+            - '@HeVinci\CompetencyBundle\Manager\CompetencyManager'
+            - '@HeVinci\CompetencyBundle\Manager\ObjectiveManager'
+            - '@security.token_storage'
+            - '@request_stack'
+            - '@http_kernel'
+        tags:
+            - { name: kernel.event_listener, event: administration_tool_learning-objectives, method: onOpenLearningObjectivesTool }
+            - { name: kernel.event_listener, event: open_tool_desktop_my-learning-objectives, method: onOpenMyLearningObjectivesTool }
+            - { name: kernel.event_listener, event: resource_action_manage_competencies, method: onOpenResourceCompetencies }
+
+    HeVinci\CompetencyBundle\Listener\ResourceListener:
+        arguments:
+            - '@HeVinci\CompetencyBundle\Manager\ProgressManager'
+        tags:
+            - { name: kernel.event_listener, event: resource_evaluation, method: onResourceEvaluation }
+
+    HeVinci\CompetencyBundle\Listener\UserListener:
+        arguments:
+            - '@HeVinci\CompetencyBundle\Manager\ObjectiveManager'
+            - '@HeVinci\CompetencyBundle\Manager\ProgressManager'
+        tags:
+            - { name: kernel.event_listener, event: merge_users, method: onMerge }

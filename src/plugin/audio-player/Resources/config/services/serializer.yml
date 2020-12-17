@@ -1,0 +1,23 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+
+    Claroline\AudioPlayerBundle\Serializer\Resource\SectionSerializer:
+        tags: [claroline.serializer]
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+
+    Claroline\AudioPlayerBundle\Serializer\Resource\SectionCommentSerializer:
+        tags: [claroline.serializer]
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AudioPlayerBundle\Serializer\Resource\SectionSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
+
+    Claroline\AudioPlayerBundle\Serializer\Resource\AudioParamsSerializer:
+        tags: [claroline.serializer]
+
+    Claroline\AudioPlayerBundle\Serializer\Quiz\WaveformQuestionSerializer:
+        tags: [claroline.serializer]

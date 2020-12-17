@@ -1,0 +1,15 @@
+{
+  "id": "abc-def-hijklm",
+  "subject": {
+    "id": "abc-def-hijklmm"
+  },
+  "content": "Contenu du message... blablablablablabal et blablablabla",
+  "meta": {
+    "creator": {
+      "name": "Ceci est le nom de l'auteur si le creator a été supprimé",
+      "id": "abc-def-hijklm"
+    },
+    "created": "2017-12-06T07:02:51",
+    "updated": "2018-12-06T07:02:51"
+  }
+}

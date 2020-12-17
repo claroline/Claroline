@@ -1,0 +1,190 @@
+/*
+ * Data tree.
+ */
+
+
+@data-tree-indent: 40px;
+@data-tree-gutter: 10px;
+@data-tree-lines-color: #777;
+
+.data-list {
+    // todo slightly ugly
+    .data-tree {
+        margin-left: -@data-tree-gutter;
+    }
+}
+
+.btn-tree-toggle {
+    z-index: 2;
+    display: inline-flex;
+    padding: 0;
+    justify-content: center;
+    align-items: center;
+    width: @data-tree-gutter*2;
+    height: @data-tree-gutter*2;
+    font-size: 10px;
+    margin: @data-tree-gutter;
+    background: @body-bg; // should be overridden in panels / modales
+    border: 1px solid @data-tree-lines-color;
+    color: @data-tree-lines-color;
+    border-radius: 50%;
+    text-align: center;
+
+    .fa {
+        text-align: center;
+    }
+
+    &:hover,
+    &:focus {
+        border-color: #333; // todo use a var. same as default btn hover `color`
+    }
+}
+
+
+// -
+// Header
+// ---
+
+.data-tree-header {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    > .btn-tree-toggle {
+        margin-bottom: 0;
+    }
+
+    > .checkbox {
+        flex: 1;
+        margin: @data-tree-gutter @data-tree-gutter 0;
+        border-left: 1px solid transparent; // for correct alignment
+    }
+}
+
+// customizes bulk actions
+.data-tree .list-selected {
+    position: relative;
+    border: 1px solid transparent;
+    margin-top: @data-tree-gutter;
+    margin-left: @data-tree-indent;
+
+    .list-selected-label {
+        padding: @data-tree-gutter;
+        .fa {
+            margin-right: @data-tree-gutter;
+        }
+    }
+
+    .btn {
+        padding: @data-tree-gutter;
+    }
+
+    &:before {
+        position: absolute;
+        z-index: 1;
+        top: -(@data-tree-gutter + 1px);
+        left: -((@data-tree-indent / 2) + 1px);
+        bottom: -1px;
+        content: " ";
+        border-left: 1px solid @data-tree-lines-color;
+    }
+
+    &:after {
+        z-index: 1;
+        position: absolute;
+        content: " ";
+        left: -((@data-tree-indent / 2) + 1px);
+        bottom: 50%;
+        border-top: 1px solid @data-tree-lines-color;
+        width: @data-tree-indent / 2;
+        box-sizing: content-box;
+    }
+}
+
+
+// -
+// Content & Items
+// ---
+
+.data-tree-content {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.data-tree-content,
+.data-tree-children {
+    > .data-tree-item-container:last-child {
+        > .data-tree-item:not(.expanded):after {
+            border: none;
+        }
+    }
+}
+
+.data-tree-item {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+
+    .btn-tree-toggle {
+        margin-top: @data-tree-gutter*2;
+    }
+
+    .data-card {
+        margin-top: @data-tree-gutter;
+    }
+
+    // draw lines
+    // connect to parent
+    &:before {
+        z-index: 1;
+        position: absolute;
+        left: 20px;
+        top: 0;
+        content: " ";
+        border-bottom: 1px solid @data-tree-lines-color;
+        width: 20px;
+        border-left: 1px solid @data-tree-lines-color;
+        height: @data-tree-gutter*3;
+        box-sizing: content-box;
+    }
+
+    // draw lines
+    // connect to next sibling
+    &:after {
+        z-index: 1;
+        position: absolute;
+        left: 20px;
+        top: @data-tree-gutter*2;
+        bottom: 0;
+        content: " ";
+        border-left: 1px solid @data-tree-lines-color;
+    }
+}
+
+.data-tree-item-select {
+    position: absolute;
+    top: @data-tree-gutter;
+    left: @data-tree-indent;
+    margin: @data-tree-gutter !important;
+}
+
+.data-tree-leaf {
+    padding-left: 40px;
+}
+
+.data-tree-children {
+    position: relative;
+    list-style-type: none;
+    margin: 0;
+    padding-left: @data-tree-indent;
+
+    &:before {
+        z-index: 1;
+        position: absolute;
+        content: " ";
+        left: 20px;
+        height: 100%;
+        border-left: 1px solid @data-tree-lines-color;
+    }
+}

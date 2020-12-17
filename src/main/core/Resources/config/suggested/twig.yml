@@ -1,0 +1,7 @@
+twig:
+    debug:            "%kernel.debug%"
+    strict_variables: "%kernel.debug%"
+    exception_controller: null
+
+    globals:
+        config:         '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'

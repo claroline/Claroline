@@ -1,0 +1,8 @@
+# JSON API
+claro_scorm_bundle_api:
+    resource: "@ClarolineScormBundle/Controller/"
+    prefix: apiv2
+    type: api
+    options:
+        expose: true
+

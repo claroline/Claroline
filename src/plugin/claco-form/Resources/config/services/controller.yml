@@ -1,0 +1,43 @@
+services:
+    _defaults:
+        public: true #because controller
+
+    Claroline\ClacoFormBundle\Controller\API\CategoryController:
+        parent: Claroline\AppBundle\Controller\AbstractCrudController
+        public: true
+
+    Claroline\ClacoFormBundle\Controller\API\ClacoFormController:
+        parent: Claroline\AppBundle\Controller\AbstractCrudController
+        public: true
+
+    Claroline\ClacoFormBundle\Controller\API\EntryController:
+        parent: Claroline\AppBundle\Controller\AbstractCrudController
+        public: true
+        arguments:
+            - '@Claroline\ClacoFormBundle\Manager\ClacoFormManager'
+
+    Claroline\ClacoFormBundle\Controller\API\EntryUserController:
+        parent: Claroline\AppBundle\Controller\AbstractCrudController
+        public: true
+
+    Claroline\ClacoFormBundle\Controller\API\KeywordController:
+        parent: Claroline\AppBundle\Controller\AbstractCrudController
+        public: true
+
+    Claroline\ClacoFormBundle\Controller\ClacoFormController:
+        arguments:
+            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@Claroline\ClacoFormBundle\Manager\ClacoFormManager'
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+            - '%claroline.param.files_directory%'
+            - '@claroline.manager.organization.location_manager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@request_stack'
+            - '@twig'
+            - '@translator'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@security.token_storage'
+            - '@claroline.manager.user_manager'
+            - '@Claroline\ClacoFormBundle\Serializer\EntrySerializer'
+            - '@Claroline\ClacoFormBundle\Serializer\CommentSerializer'
+            - '@Claroline\ClacoFormBundle\Serializer\EntryUserSerializer'

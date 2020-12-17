@@ -1,0 +1,31 @@
+svg.chart {
+  .grid {
+    .tick {
+      opacity: 0.7;
+      &, line {
+        stroke: @gray-light;
+      }
+    }
+    path {
+      stroke-width: 1;
+      stroke: @gray-light;
+    }
+  }
+
+  .axis-label {
+    font-size: @font-size;
+    font-weight: bold;
+  }
+}
+
+.pie-chart {
+  .fa {
+    z-index: 5;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: #262626;
+    display: block;
+    color: white;
+  }
+}

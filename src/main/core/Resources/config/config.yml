@@ -1,0 +1,301 @@
+plugin:
+    resource_actions:
+        # Opens a resource
+        - name: open
+          decoder: open
+          scope: [object]
+          default: true # This is the default action of the resource (it SHOULD NOT be overridden)
+          api: [GET]
+
+        # Displays common resources info (the one from the node)
+        - name: about
+          decoder: open
+          scope: [object]
+          api: [GET]
+
+        # Changes changes the content of a resource
+        - name: edit
+          decoder: edit
+          group: management
+          scope: [object]
+          api: [PUT]
+
+        # Changes and manages the rights of a resource
+        - name: rights
+          decoder: administrate
+          group: management
+          scope: [object]
+          api: [GET, POST, PUT]
+
+        # Publishes one ore more resources
+        - name: publish
+          decoder: administrate
+          group: management
+          scope: [object, collection]
+          api: [PUT]
+
+        # Unpublishes one ore more resources
+        - name: unpublish
+          decoder: administrate
+          group: management
+          scope: [object, collection]
+          api: [PUT]
+
+        # Exports one or more resources in a Claroline format (archive + manifest)
+        - name: export
+          decoder: export
+          group: transfer
+          scope: [object, collection] # The action can be executed on multiple resources at once.
+          api: [GET]
+          recursive: true
+
+        # Deletes one or more resources
+        - name: delete
+          decoder: delete
+          group: management
+          scope: [object, collection] # The action can be executed on multiple resources at once.
+          api: [DELETE]
+          recursive: true
+
+        # Restores one or more soft deleted resources
+        - name: restore
+          decoder: delete
+          group: management
+          scope: [object, collection] # The action can be executed on multiple resources at once.
+          api: [POST]
+          recursive: true
+
+        # Changes common resources info (the one from the node) for one or more resources
+        - name: configure
+          decoder: administrate
+          group: management
+          scope: [object]
+          api: [PUT]
+          recursive: true
+
+        # Creates a copy of one or more resources
+        - name: copy
+          decoder: administrate
+          group: management
+          scope: [object, collection] # The action can be executed on multiple resources at once.
+          api: [POST]
+          recursive: true
+
+        # Changes the parent of one or more resources
+        - name: move
+          decoder: administrate
+          group: management
+          scope: [object, collection] # The action can be executed on multiple resources at once.
+          api: [PUT]
+          recursive: true
+
+        - name: notes
+          decoder: open
+          scope: [object]
+          api: [GET, POST, PUT, DELETE]
+
+    resources:
+        - name: file
+          class: Claroline\CoreBundle\Entity\Resource\File
+          tags: [content]
+          exportable: true
+          actions:
+              # Downloads the underlying resource file
+              - name: download
+                decoder: export
+                group: transfer
+                api: [GET]
+              # Edits the underlying resource file
+              - name: change_file
+                decoder: edit
+                group: management
+                api: [PUT]
+
+        - name: directory
+          class: Claroline\CoreBundle\Entity\Resource\Directory
+          tags: [structure]
+          exportable: true
+          actions:
+              # Creates a new resource in the directory
+              - name: add
+                decoder: create
+                group: management
+                api: [POST]
+
+              # Imports one or more resources in the directory
+              - name: import
+                decoder: create
+                group: transfer
+                api: [POST]
+
+              # Creates one or several File resources in the directory
+              - name: add_files
+                decoder: create
+                group: management
+                api: [POST]
+
+        - name: text
+          class: Claroline\CoreBundle\Entity\Resource\Text
+          tags: [content]
+          exportable: true
+
+    admin_tools:
+        - name: main_settings
+          class: cog
+
+        - name: community
+          class: user
+
+        - name: tasks_scheduling
+          class: clock-o
+
+        - name: transfer
+          class: exchange
+
+        - name: templates_management
+          class: file-alt
+
+        - name: integration
+          class: plug
+
+    widgets:
+        - name: simple
+          class: Claroline\CoreBundle\Entity\Widget\Type\SimpleWidget
+          context: [workspace, desktop, home, administration]
+          tags: [content]
+
+        - name: list
+          class: Claroline\CoreBundle\Entity\Widget\Type\ListWidget
+          sources: [list]
+
+        # - name: profile
+        #   class: Claroline\CoreBundle\Entity\Widget\Type\ProfileWidget
+        #   context: [workspace, desktop]
+        #   tags: [community]
+
+        - name: resource
+          class: Claroline\CoreBundle\Entity\Widget\Type\ResourceWidget
+          sources: [resource]
+
+    data_sources:
+        - name: resources
+          type: list
+          context: [workspace, desktop, home, administration]
+          tags: [content]
+
+        - name: resource
+          type: resource
+          context: [workspace, desktop, home, administration]
+          tags: [content]
+
+        - name: personal_workspace
+          type: resource
+          context: [desktop, administration]
+          tags: [content]
+
+        - name: workspaces
+          type: list
+          context: [desktop, workspace, home, administration]
+          tags: [content]
+
+        - name: my_workspaces
+          type: list
+          context: [desktop, workspace, administration]
+          tags: [content]
+
+        - name: users
+          type: list
+          context: [desktop, workspace, administration]
+          tags: [community]
+
+        - name: admin_tools
+          type: list
+          context: [administration]
+          tags: [structure]
+
+        - name: tools
+          type: list
+          context: [desktop, workspace]
+          tags: [structure]
+
+    tools:
+        - name: workspaces
+          class: book
+          is_displayable_in_workspace: false
+          is_displayable_in_desktop: true
+          is_configurable_in_workspace: false
+          is_configurable_in_desktop: false
+          is_desktop_required: true
+          is_workspace_required: false
+          is_exportable: true
+          is_locked_for_admin: false
+          is_anonymous_excluded: false
+
+        - name: resources
+          class: folder
+          is_displayable_in_workspace: true
+          is_displayable_in_desktop: true
+          is_configurable_in_workspace: true
+          is_configurable_in_desktop: false
+          is_desktop_required: false
+          is_workspace_required: false
+          is_exportable: true
+          is_locked_for_admin: false
+          is_anonymous_excluded: false
+
+        - name: resource_trash
+          class: trash-alt
+          is_displayable_in_workspace: true
+          is_displayable_in_desktop: false
+          is_configurable_in_workspace: false
+          is_configurable_in_desktop: false
+          is_desktop_required: false
+          is_workspace_required: true
+          is_exportable: false
+          is_locked_for_admin: false
+          is_anonymous_excluded: false
+
+        - name: community
+          class: user
+          is_displayable_in_workspace: true
+          is_displayable_in_desktop: true
+          is_configurable_in_workspace: false
+          is_configurable_in_desktop: false
+          is_desktop_required: true
+          is_workspace_required: true
+          is_exportable: false
+          is_locked_for_admin: false
+          is_anonymous_excluded: true
+          tool_rights:
+              - name: create_user
+              - name: show_dashboard
+
+        - name: transfer
+          class: exchange
+          is_displayable_in_workspace: true
+          is_displayable_in_desktop: false
+          is_configurable_in_workspace: false
+          is_configurable_in_desktop: false
+          is_desktop_required: false
+          is_workspace_required: false
+          is_exportable: false
+          is_locked_for_admin: false
+          is_anonymous_excluded: true
+
+    templates:
+        - name: claro_mail_layout
+          placeholders: [content]
+        - name: user_activation
+          placeholders: [user_activation_link]
+        - name: claro_mail_registration
+          placeholders: [validation_mail, password]
+        - name: claro_mail_validation
+          placeholders: [validation_mail]
+        - name: password_initialization
+          placeholders: [password_initialization_link]
+        - name: forgotten_password
+          placeholders: [password_reset_link]
+        - name: workspace_registration
+          placeholders: [workspace_name, workspace_code, role_name]
+        - name: platform_role_registration
+          placeholders: [role_name]

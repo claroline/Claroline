@@ -1,0 +1,54 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "The comment's id"
+    },
+    "message": {
+      "type": "string",
+      "description": "The comment's content",
+      "minLength": 1
+    },
+    "creationDate": {
+      "type": "string",
+      "description": "The comment creation date"
+    },
+    "updateDate": {
+      "type": "string",
+      "description": "The comment update date"
+    },
+    "publicationDate": {
+      "type": "string",
+      "description": "The comment publication date"
+    },
+    "isPublished": {
+      "type": "boolean",
+      "description": "The comment publication status"
+    },
+    "author": {
+      "type": ["object"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Author id"
+        },
+        "firstName": {
+          "type": "string",
+          "description": "Author first name"
+        },
+        "lastName": {
+          "type": "string",
+          "description": "Author last name"
+        },
+        "email": {
+          "type": "string",
+          "description": "Author email"
+        }
+      }
+    }
+  },
+  "required": ["id", "message"],
+  "claroIds": ["id"]
+}

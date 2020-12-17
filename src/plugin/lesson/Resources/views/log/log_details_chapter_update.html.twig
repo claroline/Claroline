@@ -1,0 +1,22 @@
+{% if log.details.chapter is defined %}
+    {% if log.getDetails().chapter.changeSet is defined and log.getDetails().chapter.changeSet|length > 0 %}
+        <div>
+            <h4>{{ ('log_change_set')|trans({}, 'log') }}</h4>
+            <h5>{{ ('log_old_values')|trans({}, 'log') }}</h5>
+            {% set changeSet = log.getDetails().chapter.changeSet %}
+            <dl class="dl-horizontal">
+                {% for key, values in changeSet %}
+                    <dt>{{ key|trans({}, 'log') }}</dt>
+                        <dd>{{ values[0]|raw }}</dd>
+                {% endfor %}
+            </dl>
+            <h5>{{ ('log_new_values')|trans({}, 'log') }}</h5>
+            <dl class="dl-horizontal">
+                {% for key, values in changeSet %}
+                    <dt>{{ key|trans({}, 'log') }}</dt>
+                        <dd>{{ values[1]|raw }}</dd>
+                {% endfor %}
+            </dl>
+        </div>
+    {% endif %}
+{% endif %}

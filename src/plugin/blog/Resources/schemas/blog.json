@@ -1,0 +1,16 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "The blog's id"
+    },
+    "name": {
+      "type": "string",
+      "description": "The blog's' name",
+      "minLength": 1
+    }
+  },
+  "claroIds": ["id"]
+}

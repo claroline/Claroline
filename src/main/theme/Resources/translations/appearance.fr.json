@@ -1,0 +1,12 @@
+{
+  "user_interface": "Interface utilisateur",
+  "themes": "Thèmes",
+  "icons": "Icones",
+  "posters": "Images de couverture & miniatures",
+  "colors": "Couleurs",
+
+  "footer": "Pied de page",
+  "footer_show_locale": "Afficher la langue",
+  "footer_show_help": "Afficher l'aide",
+  "footer_show_terms_of_service": "Afficher les conditions d'utilisation"
+}

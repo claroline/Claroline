@@ -1,0 +1,94 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "The session uuid"
+    },
+    "code": {
+      "type": "string",
+      "description": "The session code",
+      "minLength": 1
+    },
+    "name": {
+      "type": "string",
+      "description": "The session name",
+      "minLength": 1
+    },
+    "description": {
+      "type": ["string", "null"],
+      "description": "The session description"
+    },
+    "meta": {
+      "type": ["object"],
+      "properties": {
+        "course": {
+          "type": ["object"],
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "The session course"
+            }
+          }
+        },
+        "type": {
+          "type": "integer",
+          "description": "The session type"
+        },
+        "default": {
+          "type": "boolean",
+          "description": "Whether the session is the default one"
+        },
+        "order": {
+          "type": "integer",
+          "description": "The cursus order"
+        }
+      }
+    },
+    "restrictions": {
+      "type": "object",
+      "properties": {
+        "maxUsers": {
+          "type": ["integer", "null"],
+          "description": "The maximum amount of users the session can have"
+        },
+        "dates": {
+          "type": "array",
+          "items": {
+            "type": ["string", "null"]
+          }
+        }
+      },
+      "required": ["dates"]
+    },
+    "registration": {
+      "type": "object",
+      "properties": {
+        "selfRegistration": {
+          "type": "boolean"
+        },
+        "selfUnregistration": {
+          "type": "boolean"
+        },
+        "validation": {
+          "type": "boolean"
+        },
+        "userValidation": {
+          "type": "boolean"
+        },
+        "mail": {
+          "type": "boolean"
+        },
+        "eventRegistrationType": {
+          "type": "integer"
+        }
+      }
+    }
+  },
+  "required": ["name", "code"],
+  "claroline": {
+    "requiredAtCreation": ["name", "code"],
+    "ids": ["id"]
+  }
+}

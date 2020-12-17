@@ -1,0 +1,63 @@
+services:
+    _instanceof:
+        Claroline\MigrationBundle\Command\AbstractCommand:
+            calls:
+                - [setManager, ['@claroline.migration.manager']]
+
+    claroline.migration.manager:
+        class: '%claroline.migration_manager.class%'
+        arguments:
+            - '@claroline.migration.generator'
+            - '@claroline.migration.writer'
+            - '@claroline.migration.migrator'
+
+    claroline.migration.generator:
+        class: '%claroline.migration_generator.class%'
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@claroline.migration.doctrine_schema_tool'
+
+    claroline.migration.writer:
+        class: '%claroline.migration_writer.class%'
+        arguments:
+            - '@filesystem'
+            - '@twig'
+
+    claroline.migration.migrator:
+        class: '%claroline.migration_migrator.class%'
+        arguments:
+            - '@doctrine.dbal.default_connection'
+
+    claroline.migration.doctrine_schema_tool:
+        class: '%claroline.migration_schema_tool.class%'
+        arguments:
+            - '@doctrine.orm.entity_manager'
+
+
+    # Console commands
+
+    Claroline\MigrationBundle\Command\DiscardCommand:
+        tags:
+            - { name: 'console.command', command: 'claroline:teams:check' }
+
+    Claroline\MigrationBundle\Command\DowngradeCommand:
+        tags:
+            - { name: 'console.command', command: 'claroline:migration:downgrade' }
+
+    Claroline\MigrationBundle\Command\GenerateCommand:
+        tags:
+            - { name: 'console.command', command: 'claroline:migration:generate' }
+
+    Claroline\MigrationBundle\Command\ReplaceCommand:
+        tags:
+            - { name: 'console.command', command: 'claroline:migration:replace' }
+
+    Claroline\MigrationBundle\Command\UpgradeCommand:
+        tags:
+            - { name: 'console.command', command: 'claroline:migration:upgrade' }
+
+    Claroline\MigrationBundle\Command\VersionCommand:
+        arguments:
+            - '@claroline.migration.migrator'
+        tags:
+            - { name: 'console.command', command: 'claroline:migration:version' }

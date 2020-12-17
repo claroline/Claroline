@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "The organization id"
+    },
+    "name": {
+      "type": ["null", "string"],
+      "description": "The organization name",
+      "minLength": 1
+    },
+    "code": {
+      "type": "string",
+      "description": "The organization code",
+      "minLength": 1
+    },
+    "email": {
+      "type": ["null", "string"],
+      "description": "The organization email"
+    }
+  },
+  "claroline": {
+    "ids": ["id", "code", "email"]
+  }
+}

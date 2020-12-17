@@ -1,0 +1,46 @@
+security:
+    providers:
+        user_db:
+            entity: { class: Claroline\CoreBundle\Entity\User }
+
+    encoders:
+        legacy:
+            algorithm: sha512
+
+        Claroline\CoreBundle\Entity\User:
+            algorithm: native # Uses password_hash() with bcrypt/sodium (depends on the platform)
+            migrate_from: legacy # Enables seemless password upgrades from sha512 to modern hash algo
+
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        main:
+            pattern: ^/
+            anonymous: ~
+            logout:
+                path:   /logout
+                target: /
+            switch_user: { role: ROLE_ALLOWED_TO_SWITCH, parameter: _switch }
+            user_checker: Claroline\CoreBundle\Security\UserChecker
+
+            guard:
+                authenticators:
+                    - 'Claroline\AuthenticationBundle\Security\Authentication\Guard\IpAuthenticator'
+                    - 'Claroline\AuthenticationBundle\Security\Authentication\Guard\ApiTokenAuthenticator'
+                entry_point: 'Claroline\AuthenticationBundle\Security\Authentication\Guard\ApiTokenAuthenticator'
+
+            # Allows JSON authentication
+            json_login:
+                check_path: /login
+                success_handler: Claroline\CoreBundle\Listener\AuthenticationSuccessListener
+                failure_handler: Claroline\CoreBundle\Listener\AuthenticationFailureHandler
+
+    access_decision_manager:
+        allow_if_all_abstain: false
+
+    access_control:
+        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/connect, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/saml, roles: IS_AUTHENTICATED_ANONYMOUSLY }

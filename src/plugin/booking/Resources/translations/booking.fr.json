@@ -1,0 +1,14 @@
+{
+  "booking": "Réservation",
+  "bookings": "Réservations",
+  "room": "Salle",
+  "rooms": "Salles",
+  "new_room": "Nouvelles salle",
+  "add_room": "Ajouter une salle",
+  "room_loading": "Nous chargeons la salle...",
+  "material": "Matériel",
+  "materials": "Matériel",
+  "new_material": "Nouveau matériel",
+  "add_material": "Ajouter un matériel",
+  "material_loading": "Nous chargeons le matériel..."
+}

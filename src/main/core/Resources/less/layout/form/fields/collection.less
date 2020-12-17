@@ -1,0 +1,41 @@
+.collection-control {
+    ul {
+        margin: 0;
+        padding: 0;
+        list-style-type: none;
+    }
+
+    .collection-item {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        background: @gray-lighter;
+        border: 1px solid transparent;
+        padding: 5px;
+
+        + .collection-item {
+            margin-top: 5px;
+        }
+
+        .border-radius(@border-radius-base);
+
+        > .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        .btn-delete {
+            margin-left: floor(@grid-gutter-width / 2);
+            align-self: flex-start;
+        }
+    }
+
+    .btn-delete-all {
+        padding: 5px;
+    }
+
+    .btn-add {
+        margin-top: 5px;
+    }
+}

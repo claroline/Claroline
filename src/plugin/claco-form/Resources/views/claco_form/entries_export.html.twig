@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="UTF-8">
+    </head>
+    <body>
+        <table>
+            <tr>
+                <th>{{ 'id'|trans({}, 'platform') }}</th>
+                <th>{{ 'uuid'|trans({}, 'platform') }}</th>
+                <th>{{ 'entry_title'|trans({}, 'clacoform') }}</th>
+                <th>{{ 'author'|trans({}, 'platform') }}</th>
+                <th>{{ 'publication_date'|trans({}, 'clacoform') }}</th>
+                <th>{{ 'edition_date'|trans({}, 'clacoform') }}</th>
+
+                {% for field in fields %}
+                    <th>{{ field.getName() }}</th>
+                {% endfor %}
+
+                <th>{{ 'username'|trans({}, 'platform') }}</th>
+                <th>{{ 'email'|trans({}, 'platform') }}</th>
+            </tr>
+
+            {% for entry in entries %}
+                <tr>
+                    <td>{{ entry['id'] }}</td>
+                    <td>{{ entry['uuid'] }}</td>
+                    <td>{{ entry['title'] }}</td>
+                    <td>{{ entry['author'] }}</td>
+                    <td>{{ entry['publicationDate'] }}</td>
+                    <td>{{ entry['editionDate'] }}</td>
+
+                    {% for field in fields %}
+                        <td>
+                            {% if entry[field.getId()] is defined %}
+                                {{ entry[field.getId()] }}
+                            {% endif %}
+                        </td>
+                    {% endfor %}
+
+                    <td>{{ entry['author_username'] }}</td>
+                    <td>{{ entry['author_email'] }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </body>
+</html>

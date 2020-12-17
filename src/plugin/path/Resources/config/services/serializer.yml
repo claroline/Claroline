@@ -1,0 +1,18 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+
+    Innova\PathBundle\Serializer\PathSerializer:
+        tags: [claroline.serializer]
+        arguments:
+           - '@Innova\PathBundle\Serializer\StepSerializer'
+
+    Innova\PathBundle\Serializer\StepSerializer:
+        tags: [claroline.serializer]
+        arguments:
+           - '@Claroline\AppBundle\Persistence\ObjectManager'
+           - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
+           - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
+           - '@security.token_storage'

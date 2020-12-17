@@ -1,0 +1,7 @@
+{
+  "styles": {
+    "entry": {
+      "badges-tool": "tools/badges/index.less"
+    }
+  }
+}

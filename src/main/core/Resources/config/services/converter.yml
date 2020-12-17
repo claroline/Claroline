@@ -1,0 +1,11 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true #because lazy
+
+    Claroline\CoreBundle\Converter\CurrentUserConverter:
+        arguments:
+            - '@security.token_storage'
+        tags:
+            - { name: request.param_converter, converter: current_user, priority: false }

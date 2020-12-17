@@ -1,0 +1,14 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: false
+
+    Claroline\AnnouncementBundle\Manager\AnnouncementManager:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - '@Claroline\AnnouncementBundle\Serializer\AnnouncementSerializer'
+            - '@claroline.manager.mail_manager'
+            - '@claroline.manager.scheduled_task_manager'
+            - '@Claroline\AppBundle\API\FinderProvider'

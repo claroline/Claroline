@@ -1,0 +1,35 @@
+
+.agenda-event-micro {
+    display: block;
+    width: 100%;
+    background: @event-color-default;
+
+    text-align: left;
+    font-size: @font-size-small;
+    padding: 2px 5px;
+    margin-bottom: 2px;
+
+    &.done {
+        text-decoration: line-through;
+    }
+
+    &.event-start {
+        margin-left: 5px;
+        border-top-left-radius: @border-radius-small;
+        border-bottom-left-radius: @border-radius-small;
+    }
+
+    &.event-start-out-range {
+
+    }
+
+    &.event-end {
+        margin-right: 5px;
+        border-top-right-radius: @border-radius-small;
+        border-bottom-right-radius: @border-radius-small;
+    }
+
+    &.event-end-out-range {
+
+    }
+}

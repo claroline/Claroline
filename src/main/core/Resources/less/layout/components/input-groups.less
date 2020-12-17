@@ -1,0 +1,59 @@
+.input-group {
+    //z-index: 1; // otherwise it overlaps lateral menu
+    .form-control {
+        &.focus { // required by fake form-control inputs for advanced types
+            z-index: 3; // make sure input overlaps addons
+        }
+    }
+}
+
+.input-group-btn {
+    > .btn {
+        &:hover,
+        &:focus,
+        &:active {
+            z-index: 3; // make sure button overlaps input
+        }
+    }
+}
+
+// c/c from original bootstrap styles to also manage dropdown btns
+.input-group-btn {
+    // Negative margin for spacing, position for bringing hovered/focused/actived
+    // element above the siblings.
+    > .dropdown {
+        &.open {
+            > .btn {
+                z-index: 3;
+            }
+        }
+
+        + .btn {
+            margin-left: -1px;
+        }
+
+        > .btn {
+            position: relative;
+
+            // Bring the "active" button to the front
+            &:hover,
+            &:focus,
+            &:active {
+                z-index: 3;
+            }
+        }
+    }
+
+    // Negative margin to only have a 1px border between the two
+    &:first-child {
+        > .dropdown > .btn {
+            margin-right: -1px;
+        }
+    }
+    &:last-child {
+        > .dropdown > .btn {
+            z-index: 2;
+            margin-left: -1px;
+        }
+    }
+}

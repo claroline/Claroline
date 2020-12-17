@@ -1,0 +1,26 @@
+<style type="text/css">
+    .log_list_item {
+        font-size: 12px;
+    }
+</style>
+
+<div class="col-md-2 log_list_item">
+    {% if log.getDateLog()|date('date_format'|trans({}, 'platform')) == ''|date('date_format'|trans({}, 'platform')) %}
+        {{ 'today'|trans({}, 'platform') ~ ', ' }}
+    {% else %}
+        {{ log.getDateLog()|date('date_format'|trans({}, 'platform')) ~ ', ' }}
+    {% endif %}
+    {{ log.getDateLog()|date('H:i') }}
+</div>
+
+<div class="col-md-2 log_list_item">
+    {% include 'ClarolineCoreBundle:log:view_list_item_label.html.twig' %}
+</div>
+
+<div class="col-md-2 log_list_item">
+    {% include 'ClarolineCoreBundle:log:view_list_item_doer.html.twig' %}
+</div>
+
+<div class='col-md-6 log_list_item'>
+    {% include 'ClarolineCoreBundle:log:view_list_item_sentence.html.twig' %}
+</div>

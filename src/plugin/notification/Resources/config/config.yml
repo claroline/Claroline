@@ -1,0 +1,44 @@
+plugin:
+    has_options: false
+
+    resource_actions:
+        # Gets all the notifications for the current user
+        - name: notifications
+          decoder: open
+          group: notifications
+          scope: [object]
+          api: [GET]
+
+        # Gets all the users following a resource
+        - name: followers
+          decoder: open
+          group: notifications
+          scope: [object]
+          api: [GET]
+
+        # Follows one or more resources
+        - name: follow
+          decoder: open
+          group: notifications
+          scope: [object, collection] # The action can be executed on multiple resources at once.
+          api: [PUT]
+
+        # Unfollows one or more resources
+        - name: unfollow
+          decoder: open
+          group: notifications
+          scope: [object, collection] # The action can be executed on multiple resources at once.
+          api: [PUT]
+
+    tools:
+        - name: notification
+          class: bell
+          is_displayable_in_workspace: false
+          is_displayable_in_desktop: true
+          is_configurable_in_workspace: false
+          is_configurable_in_desktop: false
+          is_desktop_required: false
+          is_workspace_required: false
+          is_exportable: false
+          is_locked_for_admin: false
+          is_anonymous_excluded: true

@@ -1,0 +1,7 @@
+plugin:
+  has_options: false
+
+  resources:
+    - name: hevinci_url
+      class: HeVinci\UrlBundle\Entity\Url
+      exportable: false

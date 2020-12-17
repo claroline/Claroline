@@ -1,0 +1,8 @@
+{
+  "styles": {
+    "entry": {
+      "blog-resource": "resources/blog/index.less",
+      "blog-pdf": "resources/blog/pdf.less"
+    }
+  }
+}

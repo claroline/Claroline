@@ -1,0 +1,12 @@
+services:
+    _defaults:
+        public: true #because controller
+
+    Claroline\AnnouncementBundle\Controller\AnnouncementController:
+        arguments:
+            - '@Claroline\AnnouncementBundle\Manager\AnnouncementManager'
+            - '@Claroline\AnnouncementBundle\Serializer\AnnouncementSerializer'
+            - '@Claroline\AppBundle\API\Crud'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@security.authorization_checker'

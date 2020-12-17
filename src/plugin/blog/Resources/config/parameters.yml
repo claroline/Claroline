@@ -1,0 +1,9 @@
+parameters:
+  listWidgetBlog:
+    0: search
+    1: info_bar
+    2: rss_feed
+    3: blog_widget_tag_list_blog_form_tag_cloud
+    4: editor
+    5: calendar
+    6: archives

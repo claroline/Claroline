@@ -1,0 +1,6 @@
+claro_event:
+    resource: "@ClarolineAgendaBundle/Controller/"
+    prefix: apiv2
+    type: api
+    options:
+        expose: true

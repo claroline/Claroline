@@ -1,0 +1,12 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+
+    Icap\LessonBundle\Manager\ChapterManager:
+        arguments:
+           - '@doctrine.orm.entity_manager'
+           - '@Icap\LessonBundle\Serializer\ChapterSerializer'
+           - '@Claroline\AppBundle\Persistence\ObjectManager'
+           - '@event_dispatcher'

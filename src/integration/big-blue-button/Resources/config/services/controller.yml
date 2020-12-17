@@ -1,0 +1,22 @@
+services:
+    _defaults:
+        public: true
+
+    Claroline\BigBlueButtonBundle\Controller\AdministrationController:
+        arguments:
+            - '@security.authorization_checker'
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\Crud'
+            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@claroline.manager.tool_manager'
+            - '@Claroline\BigBlueButtonBundle\Manager\BBBManager'
+
+    Claroline\BigBlueButtonBundle\Controller\BBBController:
+        parent: Claroline\AppBundle\Controller\AbstractCrudController
+        public: true
+        arguments:
+            - '@security.authorization_checker'
+            - '@Claroline\BigBlueButtonBundle\Manager\BBBManager'
+            - '@router'
+            - '@Claroline\CoreBundle\Library\RoutingHelper'

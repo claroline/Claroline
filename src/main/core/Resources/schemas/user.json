@@ -1,0 +1,94 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "The user id"
+    },
+    "email": {
+      "type": "string",
+      "description": "The user email address",
+      "minLength": 1
+    },
+    "firstName": {
+      "type": "string",
+      "description": "The user first name",
+      "minLength": 1
+    },
+    "lastName": {
+      "type": "string",
+      "description": "The user last name",
+      "minLength": 1
+    },
+    "username": {
+      "type": "string",
+      "description": "The user username",
+      "minLength": 1
+    },
+    "administrativeCode": {
+      "type": ["string", "null"],
+      "description": "The user administrativeCode",
+      "minLength": 1
+    },
+    "plainPassword": {
+      "type": "string",
+      "description": "The plain login password",
+      "minLength": 1
+    },
+    "meta": {
+      "type": "object",
+      "properties": {
+        "personalWorkspace": {
+          "type": "boolean",
+          "description": "If the user has a personal workspace"
+        },
+        "description": {
+          "type": ["string", "null"],
+          "description": "The user description"
+        }
+      }
+    },
+    "groups": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "oneOf": [
+          {
+              "$ref": "https://github.com/claroline/Distribution/tree/master/main/core/Resources/schemas/group.json"
+          }
+        ]
+      }
+    },
+    "roles": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "oneOf": [
+          {
+              "$ref": "https://github.com/claroline/Distribution/tree/master/main/core/Resources/schemas/role.json"
+          }
+        ]
+      }
+    },
+    "mainOrganization": {
+      "type": "object",
+      "$ref": "https://github.com/claroline/Distribution/tree/master/main/core/Resources/schemas/organization.json"
+    },
+    "organizations": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "oneOf": [
+          {
+              "$ref": "https://github.com/claroline/Distribution/tree/master/main/core/Resources/schemas/organization.json"
+          }
+        ]
+      }
+    }
+  },
+  "claroline": {
+    "requiredAtCreation": ["email", "firstName", "lastName", "username", "plainPassword"],
+    "ids": ["id", "email", "username"]
+  }
+}

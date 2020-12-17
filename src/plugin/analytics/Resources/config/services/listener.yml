@@ -1,0 +1,12 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: false
+
+    Claroline\AnalyticsBundle\Listener\Tool\DashboardListener:
+        arguments:
+            - '@Claroline\AnalyticsBundle\Manager\AnalyticsManager'
+        tags:
+            - { name: kernel.event_listener, event: open_tool_workspace_dashboard, method: onDisplayWorkspace }
+            - { name: kernel.event_listener, event: administration_tool_dashboard, method: onDisplayAdministration }

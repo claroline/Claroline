@@ -19,14 +19,16 @@ public/themes/*
 docker-compose.override.yml
 installed
 composer.lock
+symfony.lock
 package-lock.json
 .php_cs.cache
+.phpunit.result.cache
 ###> symfony/framework-bundle ###
-/claroline/.env.local
-/claroline/.env.local.php
-/claroline/.env.*.local
-/claroline/config/secrets/prod/prod.decrypt.private.php
-/claroline/public/bundles/
-/claroline/var/
-/claroline/vendor/
+/.env.local
+/.env.local.php
+/.env.*.local
+/config/secrets/prod/prod.decrypt.private.php
+/public/bundles/
+/var/
+/vendor/
 ###< symfony/framework-bundle ###

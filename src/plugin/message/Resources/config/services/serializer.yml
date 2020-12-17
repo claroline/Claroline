@@ -1,0 +1,38 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+
+    Claroline\MessageBundle\Serializer\MessageSerializer:
+        tags: [claroline.serializer]
+        arguments:
+           - '@Claroline\AppBundle\Persistence\ObjectManager'
+           - '@security.token_storage'
+           - '@Claroline\MessageBundle\Manager\MessageManager'
+           - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
+           - '@Claroline\CoreBundle\API\Serializer\User\GroupSerializer'
+           - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'
+
+    Claroline\MessageBundle\Serializer\Contact\OptionsSerializer:
+        tags: [claroline.serializer]
+        arguments:
+           - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
+           - '@Claroline\AppBundle\Persistence\ObjectManager'
+
+    Claroline\MessageBundle\Serializer\Contact\ContactSerializer:
+        tags: [claroline.serializer]
+        arguments:
+           - '@Claroline\MessageBundle\Serializer\Contact\CategorySerializer'
+           - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
+           - '@Claroline\AppBundle\Persistence\ObjectManager'
+
+    claroline.serializer.contact:
+           alias: Claroline\MessageBundle\Serializer\Contact\ContactSerializer
+           public: true
+
+    Claroline\MessageBundle\Serializer\Contact\CategorySerializer:
+        tags: [claroline.serializer]
+        arguments:
+           - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
+           - '@Claroline\AppBundle\Persistence\ObjectManager'

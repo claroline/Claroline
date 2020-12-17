@@ -1,0 +1,60 @@
+/*
+ * Quiz plugin vars.
+ */
+
+// Claroline & bootstrap variables
+@import "/src/main/app/Resources/styles/variables";
+
+
+// -
+// Base & utilities
+// ---
+
+@quiz-container-width:         1200px;
+// only applied in paper, not in list
+// permits to stick box to the border (absorb panel padding)
+@score-margin:                 -@panel-body-padding -@panel-body-padding @panel-body-padding @panel-body-padding;
+
+
+// -
+// Answers
+// ---
+
+@answer-item-bg:            @gray-lighter;
+@answer-item-border:        @answer-item-bg;
+@answer-item-inner-border:  darken(@answer-item-bg, 10%);
+@answer-item-border-radius: @border-radius-base;
+@answer-item-padding:       10px;
+@answer-item-margin-bottom: 10px;
+@answer-item-box-shadow:    none;
+
+// highlight expected answers in editor
+@expected-answer-color:     inherit; // do not change text color in editor for readability
+@expected-answer-border:    @state-success-border;
+@expected-answer-bg:        @state-success-bg;
+
+// highlight unexpected answers in editor
+@unexpected-answer-color:   inherit; // do not change text color in editor for readability
+@unexpected-answer-border:  @state-danger-border;
+@unexpected-answer-bg:      @state-danger-bg;
+
+// highlight correct answers given by the user (in feedback / paper)
+@correct-answer-color:      @state-success-text;
+@correct-answer-border:     @expected-answer-border;
+@correct-answer-bg:         @expected-answer-bg;
+
+// highlight incorrect answers given by the user (in feedback / paper)
+@incorrect-answer-color:    @state-danger-text;
+@incorrect-answer-border:   @unexpected-answer-border;
+@incorrect-answer-bg:       @unexpected-answer-bg;
+
+// highlight user selected answer (also used to show expected answer in papers)
+@selected-answer-color:     @state-selected-text;
+@selected-answer-border:    @state-selected-border;
+@selected-answer-bg:        @state-selected-bg;
+
+// highlight unanswered questions in stats (in paper)
+// todo removes this ugly color
+@unanswered-answer-color:   #FF5400;
+@unanswered-answer-border:  #F2DAB0;
+@unanswered-answer-bg:      #F2DAB0;

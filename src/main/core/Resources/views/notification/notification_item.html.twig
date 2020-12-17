@@ -1,0 +1,8 @@
+<div>
+    {% if notification.userId is not empty and notification.details.doer is defined %}
+        <a href="#/desktop/community/{{ notification.userId }}">
+        <strong>{{ notification.details.doer.firstName ~ ' ' ~ notification.details.doer.lastName }}</strong></a>
+    {% else %}
+        <strong>{{ systemName }}</strong>
+    {% endif %}
+</div>

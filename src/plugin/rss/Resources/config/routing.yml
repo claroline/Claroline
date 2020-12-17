@@ -1,0 +1,7 @@
+# JSON API
+claroline_rss_api:
+    resource: "@ClarolineRssBundle/Controller/"
+    prefix: apiv2
+    type: api
+    options:
+        expose: true

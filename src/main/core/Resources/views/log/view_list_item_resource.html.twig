@@ -1,0 +1,9 @@
+{% if log.details.resource is defined%}
+    <strong>
+        {% if log.resourceNode != null %}
+            <a href="#/desktop/resources/{{ log.resourceNode.slug }}">{{ log.details.resource.name }}</a>
+        {% else %}
+            <em>{{ log.details.resource.name }}</em>
+        {% endif %}
+    </strong>
+{% endif %}

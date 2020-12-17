@@ -1,0 +1,148 @@
+.ordering-answer-items {
+  display: flex;
+  margin: -(floor(@answer-item-margin-bottom / 2));
+
+  // remove <ul> styles
+  padding: 0;
+  list-style-type: none;
+
+  &.horizontal {
+    flex-direction: row;
+    flex-wrap: wrap;
+
+    .ordering-answer-item {
+      flex-direction: column;
+      align-items: stretch;
+
+      .text-fields {
+        order: 2;
+        margin-top: floor(@grid-gutter-width / 2);
+      }
+
+      .right-controls {
+        order: 1;
+        margin-left: auto;
+      }
+    }
+  }
+
+  &.vertical {
+    flex-direction: column;
+
+    .ordering-answer-item {
+      flex-direction: row;
+
+      .text-fields {
+        margin-right: floor(@grid-gutter-width / 2);
+      }
+    }
+  }
+
+  > li {
+    flex: 1;
+  }
+
+  + .btn {
+    margin-top: @answer-item-margin-bottom;
+  }
+}
+
+.ordering-answer-item {
+  margin: floor(@answer-item-margin-bottom / 2);
+  display: flex;
+  align-items: flex-start;
+
+  .score {
+    margin-right: floor(@grid-gutter-width / 2);
+  }
+}
+
+.ordering-player {
+  .horizontal {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .item {
+    display: flex;
+    margin: 5px;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+
+    .btn-link {
+      padding: 0;
+      border: none;
+    }
+  }
+
+  .horizontal .item {
+    width: 100%;
+  }
+
+  .drop-container {
+    background-color: #ffffff;
+    border: 1px dashed #bbb;
+    border-radius: 5px;
+    height: auto;
+    text-align: center;
+    padding: 5px;
+    margin-left: 5px;
+    margin-right: 5px;
+    &.on-hover {
+      background-color: #eee;
+    }
+  }
+}
+
+
+.ordering-paper {
+  .horizontal {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .item {
+    display: flex;
+    margin: 5px;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .horizontal .item {
+    width: 100%;
+    max-width: 250px;
+  }
+
+  .positive-score {
+    background-color: #d4ffb0;
+    border: 1px solid #d6e9c6;
+  }
+
+  .negative-score {
+    background-color: #f9e2e2;
+    border: 1px solid #ebccd1;
+  }
+
+  .no-score {
+    background-color: #f5f5f5;
+    border: 1px solid #e5e5e5;
+  }
+
+  .unanswered-item {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px;
+  }
+
+  .stats-item {
+    justify-content: flex-end;
+  }
+
+  .stats-success {
+    .answer-stats {
+      color: @selected-answer-bg;
+      background-color: @selected-answer-color;
+    }
+  }
+}

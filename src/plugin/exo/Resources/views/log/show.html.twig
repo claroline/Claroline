@@ -1,0 +1,20 @@
+{% extends 'ClarolineCoreBundle:log:view_details.html.twig' %}
+
+{% block logDetailsContext %}
+    {{ parent() }}
+
+    {% if constant('UJM\\ExoBundle\\Event\\Log\\LogExerciseEvaluatedEvent::ACTION') == log.action %}
+        <div class='list-group'>
+            <div class='list-group-item'>
+                <h4>{{ 'result'|trans({}, 'quiz') }}</h4>
+                <dl class="dl-horizontal">
+                    <dt>{{ 'score'|trans({}, 'quiz') }}<dt>
+                    <dd>{{ log.details.result }}</dd>
+
+                    <dt>{{ 'score_max'|trans({}, 'quiz') }}<dt>
+                    <dd>{{ log.details.resultMax }}</dd>
+                </dl>
+            </div>
+        </div>
+    {% endif%}
+{% endblock %}

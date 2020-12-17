@@ -1,0 +1,17 @@
+services:
+    _defaults:
+        autowire: false #change to true
+        autoconfigure: false
+        public: true #because controller
+
+    Icap\NotificationBundle\Manager\NotificationManager:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@security.token_storage'
+            - '@event_dispatcher'
+            - '@Icap\NotificationBundle\Manager\NotificationUserParametersManager'
+
+    Icap\NotificationBundle\Manager\NotificationUserParametersManager:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@event_dispatcher'

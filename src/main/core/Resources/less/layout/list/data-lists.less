@@ -1,0 +1,197 @@
+.data-list {
+    flex: 1 0 auto; // to fill page if needed
+    display: flex;
+    flex-direction: column;
+    margin-bottom: @component-margin-bottom;
+
+    // Responsive table.
+    //
+    // I put it here to avoid possible side effects in other use of .table.
+    // The code can seem a little bit weird but it permits to have all rows the same height (1 line)
+    // and to add ellipsis on long texts.
+    //
+    // This is far from perfect but it's the best I can do for now.
+    //
+    // Drawbacks :
+    //  - all columns get the same width. So for some data it's too large (cf. boolean) or too small (long text / links).
+    /*.table td,*/ // it breaks dropdowns if uncommented
+    .table th {
+        max-width: 1px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    .content-loader {
+        margin-top: @component-margin-bottom;
+    }
+}
+
+.list-header {
+    display: flex;
+    align-items: stretch;
+
+    .list-header-btn {
+        font-size: @font-size-large; // same as search icon
+        line-height: @line-height-large;
+        height: @input-height-large;
+        padding: @padding-large-vertical @padding-large-horizontal;
+    }
+
+    .open {
+        .list-header-btn {
+            box-shadow: none;
+            background: @list-controls-active-bg;
+            color: @list-controls-active-color;
+        }
+    }
+}
+
+.list-selected {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    background: @list-controls-bg;
+
+    .list-selected-label {
+        font-weight: bold;
+        .fa {
+            text-align: center;
+        }
+    }
+
+    .list-selected-actions {
+        white-space: nowrap; // avoids buttons to break on multi lines
+    }
+}
+
+a.list-primary-action,
+button.list-primary-action {
+    .button-link-variant(@link-color, @link-hover-color, @link-hover-decoration);
+}
+
+.list-primary-action {
+    text-align: inherit;
+    display: block; // fill cell
+    width: 100%;
+    font-weight: bold;
+}
+
+.list-options {
+    background: @list-controls-bg;
+    display: flex;
+    align-items: flex-end;
+    margin-left: auto; // force right alignment if no search
+}
+
+.list-toolbar {
+    background: @list-controls-bg;
+    display: flex;
+    align-items: flex-end;
+}
+
+.list-footer {
+    margin-top: auto;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+
+    .count {
+        padding: @padding-base-vertical @padding-base-horizontal;
+        color: @list-controls-color;
+        background: @list-controls-bg;
+        border: 1px solid transparent;
+        font-weight: bold;
+        border-radius: @border-radius-base;
+    }
+
+    .pagination-container {
+        margin-left: auto;
+    }
+}
+
+.list-empty {
+    margin: auto;
+    min-width: 50%;
+
+    .list-empty-info {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding: 15px;
+    }
+
+    .list-empty-icon {
+        font-size: 120px;
+        color: #ddd;
+        margin: 15px;
+    }
+
+    .list-empty-content {
+        flex: 2;
+        margin: 15px;
+        font-size: @font-size-large;
+    }
+
+    .list-empty-actions {
+        padding: 30px;
+        border-top: 1px solid #ddd;
+    }
+
+    .list-content-desc {
+        max-width: 400px;
+        font-size: 12px;
+        text-align: justify;
+        margin-top: 10px;
+    }
+
+    .list-empty-more {
+        border-top: 1px solid #ddd;
+        margin-top: @component-margin-bottom;
+        padding-top: @component-margin-bottom;
+    }
+
+    .btn {
+        text-align: left;
+        padding: @padding-large-vertical @padding-large-horizontal;
+
+        .fa {
+            margin-right: @icon-text-spacer;
+        }
+
+        + .btn {
+            margin-top: 5px;
+        }
+    }
+}
+
+@media (max-width: @screen-xs-max) {
+    .list-empty {
+        .list-empty-info {
+            text-align: center;
+            flex-direction: column;
+        }
+    }
+
+    .list-footer {
+        flex-direction: column;
+        align-items: stretch;
+
+        .count {
+            order: 2;
+            text-align: center;
+
+            + .pagination-container {
+                margin-bottom: floor(@component-margin-bottom / 2);
+            }
+        }
+
+        .pagination-container {
+            order: 1;
+            margin-left: 0;
+        }
+    }
+}

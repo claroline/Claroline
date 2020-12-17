@@ -1,0 +1,4 @@
+email;firstName;lastName;username;plainPassword
+john.doe@test.com;John;Doe;john.doe;john.doe
+jeanpaul.dupond@test.com;Jean-Paul;Dupond;jeanpaul.dupond;jeanpaul.dupond
+john.smith@test.com;John;Smith;john.smith;john.smith

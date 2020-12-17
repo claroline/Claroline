@@ -1,0 +1,57 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "The uuid of the path"
+    },
+    "display": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": ["string", "null"],
+          "description": "The description of the path"
+        },
+        "showOverview": {
+          "type": "boolean",
+          "description": "Wether the overview is displayed or not"
+        },
+        "numbering": {
+          "enum": ["none", "numeric", "literal", "custom"],
+          "description": "Numbering of the steps"
+        },
+        "manualProgressionAllowed": {
+          "type": "boolean",
+          "description": "Wether setting progression manually is allowed or not"
+        },
+        "showScore": {
+          "type": "boolean",
+          "description": "Wether the score is displayed or not"
+        }
+      },
+      "required": ["showOverview", "manualProgressionAllowed"]
+    },
+    "score": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "integer",
+          "description": "The percentage to obtain to pass the path"
+        },
+        "total": {
+          "type": "integer",
+          "description": "The displayed total for the score"
+        }
+      }
+    },
+    "steps": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "https://github.com/claroline/Distribution/tree/master/plugin/path/Resources/schemas/step.json"
+      }
+    }
+  },
+  "claroIds": ["id"]
+}

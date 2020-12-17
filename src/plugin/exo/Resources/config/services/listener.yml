@@ -1,0 +1,43 @@
+services:
+    _defaults:
+        autowire: false #change to true
+        autoconfigure: false
+        public: true #because controller
+
+    UJM\ExoBundle\Listener\Entity\ItemListener:
+        arguments:
+            - '@service_container'
+        tags: ['doctrine.entity_listener']
+
+    UJM\ExoBundle\Listener\Log\DisplayLogListener:
+        arguments:
+            - '@service_container'
+        tags:
+            - { name: kernel.event_listener, event: create_log_details_resource-ujm_exercise-exercise_evaluated, method: onCreateLogDetails }
+
+    UJM\ExoBundle\Listener\Resource\ExerciseListener:
+        arguments:
+            - '@security.authorization_checker'
+            - '@UJM\ExoBundle\Manager\ExerciseManager'
+            - '@UJM\ExoBundle\Manager\Attempt\PaperManager'
+            - '@UJM\ExoBundle\Manager\AttemptManager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@claroline.manager.resource_evaluation_manager'
+            - '@security.token_storage'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+        tags:
+            - { name: kernel.event_listener, event: resource.ujm_exercise.load, method: onLoad }
+            - { name: kernel.event_listener, event: resource.ujm_exercise.delete, method: onDelete }
+            - { name: kernel.event_listener, event: docimology_ujm_exercise, method: onDocimology }
+
+    UJM\ExoBundle\Listener\Tool\QuestionBankListener:
+        tags:
+            - { name: kernel.event_listener, event: open_tool_desktop_ujm_questions, method: onDisplayDesktop }
+
+    UJM\ExoBundle\Listener\ApiListener:
+        arguments:
+            - '@UJM\ExoBundle\Manager\Item\ItemManager'
+            - '@UJM\ExoBundle\Manager\Item\ShareManager'
+            - '@UJM\ExoBundle\Manager\Attempt\PaperManager'
+        tags:
+            - { name: kernel.event_listener, event: merge_users, method: onMerge }

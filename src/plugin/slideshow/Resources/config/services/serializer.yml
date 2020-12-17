@@ -1,0 +1,11 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+
+    Claroline\SlideshowBundle\Serializer\SlideshowSerializer:
+        tags: [claroline.serializer]
+        arguments:
+           - '@Claroline\AppBundle\Persistence\ObjectManager'
+           - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'

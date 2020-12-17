@@ -1,0 +1,8 @@
+{
+  "styles": {
+    "entry": {
+      "competency": "tools/competency.less",
+      "my-objectives": "tools/my-objectives.less"
+    }
+  }
+}

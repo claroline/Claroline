@@ -1,0 +1,30 @@
+services:
+    Claroline\WebResourceBundle\Manager\WebResourceManager:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@service_container'
+
+    Claroline\WebResourceBundle\Controller\API\WebResourceController:
+        parent: Claroline\AppBundle\Controller\AbstractCrudController
+        public: true
+        arguments:
+            - '@claroline.manager.resource_manager'
+            - '@Claroline\WebResourceBundle\Manager\WebResourceManager'
+
+    Claroline\WebResourceBundle\Listener\WebResourceListener:
+        arguments:
+            - '%claroline.param.files_directory%'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '%claroline.param.uploads_directory%'
+            - '@Claroline\WebResourceBundle\Manager\WebResourceManager'
+            - '@claroline.manager.resource_manager'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+        tags:
+            - { name: kernel.event_listener, event: resource.claroline_web_resource.load, method: onLoad }
+            - { name: kernel.event_listener, event: transfer.claroline_web_resource.import.before, method: onImportBefore }
+            - { name: kernel.event_listener, event: transfer.claroline_web_resource.export, method: onExportFile }
+            - { name: kernel.event_listener, event: transfer.claroline_web_resource.import.after, method: onImportFile }
+            - { name: kernel.event_listener, event: resource.claroline_web_resource.delete, method: onDelete }
+            - { name: kernel.event_listener, event: resource.claroline_web_resource.copy, method: onCopy }
+            - { name: kernel.event_listener, event: download_claroline_web_resource, method: onDownload }
+            - { name: kernel.event_listener, event: resource.claroline_web_resource.change_file, method: onFileChange }

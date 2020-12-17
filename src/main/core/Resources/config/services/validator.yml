@@ -1,0 +1,46 @@
+services:
+  _defaults:
+      autowire: false
+      autoconfigure: false
+      public: true
+
+  _instanceof:
+      Claroline\AppBundle\API\ValidatorInterface:
+          tags: [claroline.validator]
+
+  Claroline\CoreBundle\API\Validator\WorkspaceValidator:
+      arguments:
+        - '@Claroline\AppBundle\Persistence\ObjectManager'
+
+  Claroline\CoreBundle\API\Validator\UserValidator:
+      arguments:
+        - '@Claroline\AppBundle\Persistence\ObjectManager'
+        - '@Claroline\CoreBundle\API\Serializer\User\ProfileSerializer'
+
+  Claroline\CoreBundle\API\Validator\GroupValidator:
+      arguments:
+        - '@Claroline\AppBundle\Persistence\ObjectManager'
+
+  Claroline\CoreBundle\API\Validator\Resource\ResourceNodeValidator:
+      arguments:
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
+
+  Claroline\CoreBundle\Validator\Constraints\UsernameValidator:
+      arguments:
+          - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
+          - '@translator'
+
+  username_validator:
+      alias: Claroline\CoreBundle\Validator\Constraints\UsernameValidator
+      public: true
+
+  Claroline\CoreBundle\Validator\Constraints\UserAdministrativeCodeValidator:
+      arguments:
+          - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
+          - '@translator'
+
+  user_administrative_code_validator:
+      alias: Claroline\CoreBundle\Validator\Constraints\UserAdministrativeCodeValidator
+      public: true

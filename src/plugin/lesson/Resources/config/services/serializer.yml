@@ -1,0 +1,13 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: false
+        tags: [claroline.serializer]
+
+    Icap\LessonBundle\Serializer\LessonSerializer: ~
+
+    Icap\LessonBundle\Serializer\ChapterSerializer:
+        arguments:
+           - '@Claroline\AppBundle\Persistence\ObjectManager'
+           - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'

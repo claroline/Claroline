@@ -1,0 +1,140 @@
+.pair-player,
+.pair-feedback,
+.pair-paper,
+.pair-editor {
+  .items-col,
+  .pairs-col {
+    ul {
+      padding: 0;
+      margin: 0;
+      list-style-type: none;
+    }
+  }
+}
+
+.pair-editor {
+  .pair,
+  .item {
+    display: flex;
+
+    .text-fields {
+      margin-right: floor(@grid-gutter-width / 2);
+    }
+  }
+
+  .odd-score,
+  .association-score {
+    width: 60px;
+    margin-right: floor(@grid-gutter-width / 2);
+  }
+
+  .pair {
+    // Display both items on the same line
+    .form-group {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .checkbox {
+      margin-bottom: 0;
+    }
+
+    .pair-item,
+    .pair-item-placeholder {
+      width: 49%; // not ideal because we have no control on the size of the gape
+    }
+
+    .pair-item {
+      background-color: #fff;
+      border: 1px solid white;
+      padding: @padding-base-vertical @padding-base-horizontal;
+      border-radius: @border-radius-base;
+      min-height: @input-height-base;
+
+      .item-content {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        max-height: 80px;
+
+        > p { // remove margin on tinyMCE container
+          margin-bottom: 0;
+        }
+      }
+
+      .btn-pin-item {
+        padding: 0;
+        border: none;
+      }
+
+      .btn-pin-item.btn-disabled {
+        color: #aaa;
+      }
+    }
+  }
+}
+
+/* PLAYER */
+.pair-player {
+  .pair {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    .pair-item,
+    .pair-item-placeholder {
+      width: 49%; // not ideal because we have no control on the size of the gape
+    }
+
+    .pair-item {
+      background-color: #fff;
+      border: 1px solid white;
+      padding: @padding-base-vertical @padding-base-horizontal;
+      border-radius: @border-radius-base;
+    }
+  }
+
+  .item-content {
+    overflow-y: auto;
+    max-height: 200px;
+
+    > p { // remove margin on tinyMCE container
+      margin-bottom: 0;
+    }
+  }
+
+  .btn-drag .drag-handle,
+  .btn-item-remove {
+    padding: 0;
+    border: none;
+  }
+}
+
+.pair-feedback,
+.pair-paper {
+  .item,
+  .unanswered-item {
+    display: flex;
+    padding: 5px;
+    width: 100%;
+    align-items: center;
+    min-height: 34px;
+    justify-content: space-between;
+  }
+
+  .item-content {
+    overflow-y: auto;
+    max-height: 200px;
+
+    > p { // remove margin on tinyMCE container
+      margin-bottom: 0;
+    }
+  }
+}
+
+.pair-paper {
+  .unanswered-item {
+    padding: 10px;
+    margin-top: 10px;
+  }
+}

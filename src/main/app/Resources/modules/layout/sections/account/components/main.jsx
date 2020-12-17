@@ -1,0 +1,35 @@
+import React from 'react'
+
+import {trans} from '#/main/app/intl/translation'
+import {Routes} from '#/main/app/router'
+import {Await} from '#/main/app/components/await'
+import {ContentLoader} from '#/main/app/content/components/loader'
+
+import {getSections} from '#/main/app/layout/sections/account/utils'
+
+const AccountMain = () =>
+  <Await
+    for={getSections()}
+    placeholder={
+      <ContentLoader
+        size="lg"
+        description={trans('loading')}
+      />
+    }
+    then={(sections) =>
+      <Routes
+        path="/account"
+        redirect={[
+          {from: '/', exact: true, to: '/'+sections[0].name}
+        ]}
+        routes={sections.map(section => ({
+          path: `/${section.name}`,
+          component: section.component
+        }))}
+      />
+    }
+  />
+
+export {
+  AccountMain
+}

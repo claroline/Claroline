@@ -1,0 +1,94 @@
+services:
+    _defaults:
+        autowire: false #change to true
+        autoconfigure: false
+        public: true #because controller
+
+    _instanceof:
+        UJM\ExoBundle\Library\Validator\JsonSchemaValidator:
+            calls:
+              - method: setJsonSchema
+                arguments:
+                  - '@UJM\ExoBundle\Library\Json\JsonSchema'
+
+    UJM\ExoBundle\Validator\JsonSchema\Attempt\AnswerData\BooleanAnswerValidator: ~
+
+    UJM\ExoBundle\Validator\JsonSchema\Attempt\AnswerData\ChoiceAnswerValidator: ~
+
+    UJM\ExoBundle\Validator\JsonSchema\Attempt\AnswerData\ClozeAnswerValidator: ~
+
+    UJM\ExoBundle\Validator\JsonSchema\Attempt\AnswerData\GraphicAnswerValidator: ~
+
+    UJM\ExoBundle\Validator\JsonSchema\Attempt\AnswerData\GridAnswerValidator: ~
+
+    UJM\ExoBundle\Validator\JsonSchema\Attempt\AnswerData\MatchAnswerValidator: ~
+
+    UJM\ExoBundle\Validator\JsonSchema\Attempt\AnswerData\OpenAnswerValidator: ~
+
+    UJM\ExoBundle\Validator\JsonSchema\Attempt\AnswerData\OrderingAnswerValidator: ~
+
+    UJM\ExoBundle\Validator\JsonSchema\Attempt\AnswerData\PairAnswerValidator: ~
+
+    UJM\ExoBundle\Validator\JsonSchema\Attempt\AnswerData\SelectionAnswerValidator: ~
+
+    UJM\ExoBundle\Validator\JsonSchema\Attempt\AnswerData\SetAnswerValidator: ~
+
+    UJM\ExoBundle\Validator\JsonSchema\Attempt\AnswerData\WordsAnswerValidator: ~
+
+    UJM\ExoBundle\Validator\JsonSchema\Attempt\AnswerValidator:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@ujm_exo.collection.item_definitions'
+
+    UJM\ExoBundle\Validator\JsonSchema\Content\ContentValidator: ~
+
+    UJM\ExoBundle\Validator\JsonSchema\Item\Type\BooleanQuestionValidator: ~
+
+    UJM\ExoBundle\Validator\JsonSchema\Item\Type\ChoiceQuestionValidator: ~
+
+    UJM\ExoBundle\Validator\JsonSchema\Item\Type\ClozeQuestionValidator:
+        arguments:
+            - '@UJM\ExoBundle\Validator\JsonSchema\Misc\KeywordValidator'
+
+    UJM\ExoBundle\Validator\JsonSchema\Item\Type\ContentItemValidator: ~
+
+    UJM\ExoBundle\Validator\JsonSchema\Item\Type\GraphicQuestionValidator: ~
+
+    UJM\ExoBundle\Validator\JsonSchema\Item\Type\GridQuestionValidator:
+        arguments:
+            - '@UJM\ExoBundle\Validator\JsonSchema\Misc\KeywordValidator'
+
+    UJM\ExoBundle\Validator\JsonSchema\Item\Type\MatchQuestionValidator: ~
+
+    UJM\ExoBundle\Validator\JsonSchema\Item\Type\OpenQuestionValidator: ~
+
+    UJM\ExoBundle\Validator\JsonSchema\Item\Type\OrderingQuestionValidator: ~
+
+    UJM\ExoBundle\Validator\JsonSchema\Item\Type\PairQuestionValidator: ~
+
+    UJM\ExoBundle\Validator\JsonSchema\Item\Type\SelectionQuestionValidator: ~
+
+    UJM\ExoBundle\Validator\JsonSchema\Item\Type\SetQuestionValidator: ~
+
+    UJM\ExoBundle\Validator\JsonSchema\Item\Type\WordsQuestionValidator:
+        arguments:
+            - '@UJM\ExoBundle\Validator\JsonSchema\Misc\KeywordValidator'
+
+    UJM\ExoBundle\Validator\JsonSchema\Item\HintValidator: ~
+
+    UJM\ExoBundle\Validator\JsonSchema\Item\ItemValidator:
+        arguments:
+            - '@ujm_exo.collection.item_definitions'
+            - '@UJM\ExoBundle\Validator\JsonSchema\Item\HintValidator'
+            - '@UJM\ExoBundle\Validator\JsonSchema\Content\ContentValidator'
+
+    UJM\ExoBundle\Validator\JsonSchema\Misc\KeywordValidator: ~
+
+    UJM\ExoBundle\Validator\JsonSchema\ExerciseValidator:
+        arguments:
+            - '@UJM\ExoBundle\Validator\JsonSchema\StepValidator'
+
+    UJM\ExoBundle\Validator\JsonSchema\StepValidator:
+        arguments:
+            - '@UJM\ExoBundle\Validator\JsonSchema\Item\ItemValidator'
+            - '@UJM\ExoBundle\Validator\JsonSchema\Content\ContentValidator'

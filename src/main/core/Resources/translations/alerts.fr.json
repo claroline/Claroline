@@ -1,0 +1,226 @@
+{
+  "generic": {
+    "pending": {
+      "title": "Chargement en cours",
+      "message": "Veuillez patienter pendant le chargement de vos données."
+    },
+    "success": {
+      "title": "Succès",
+      "message": ""
+    },
+    "warning": {
+      "title": "Attention",
+      "message": ""
+    },
+    "unauthorized": {
+      "title": "Accès non authorisé",
+      "message": "Vous devez être connecté pour accéder à cette fonctionnalité."
+    },
+    "forbidden": {
+      "title": "Accès interdit",
+      "message": "Vous n'avez pas accès à cette fonctionnalité."
+    },
+    "unavailable": {
+      "title": "Plateforme temporairement indisponible",
+      "message": "Veuillez réessayer plus tard ou contacter un administrateur."
+    },
+    "error": {
+      "title": "Erreur",
+      "message": "Veuillez contacter un administrateur."
+    },
+    "info": {
+      "title": "Information",
+      "message": ""
+    }
+  },
+  "load": {
+    "pending": {
+      "title": "Chargement en cours",
+      "message": "Veuillez patienter pendant le chargement de vos données."
+    },
+    "error": {
+      "title": "Echec du chargement",
+      "message": "Nous n'avons pas réussi à charger vos données."
+    }
+  },
+  "refresh": {
+    "pending": {
+      "title": "Rechargement en cours",
+      "message": "Veuillez patienter pendant le rafraîchissement de vos données."
+    },
+    "error": {
+      "title": "Echec du rechargement",
+      "message": "Nous n'avons pas réussi à rafraîchir vos données."
+    }
+  },
+  "save": {
+    "pending": {
+      "title": "Sauvegarde en cours",
+      "message": "Veuillez patienter pendant la sauvegarde de vos données."
+    },
+    "success": {
+      "title": "Sauvegarde réussie",
+      "message": "Vos données ont correctement été sauvegardées."
+    },
+    "warning": {
+      "title": "Echec de la sauvegarde",
+      "message": "Veuillez corriger les erreurs de votre formulaire et réessayer."
+    },
+    "error": {
+      "title": "Echec de la sauvegarde",
+      "message": "Nous n'avons pas réussi à sauvegarder vos données."
+    },
+    "forbidden": {
+      "title": "Sauvegarde interdite",
+      "message": "Vous n'avez pas les droits nécessaires pour sauvegarder ces données."
+    }
+  },
+  "create": {
+    "pending": {
+      "title": "Création en cours",
+      "message": "Veuillez patienter pendant la sauvegarde de vos données."
+    },
+    "success": {
+      "title": "Création réussie",
+      "message": "Vos données ont correctement été sauvegardées."
+    },
+    "warning": {
+      "title": "Echec de la création",
+      "message": "Veuillez corriger les erreurs de votre formulaire et réessayer."
+    },
+    "error": {
+      "title": "Echec de la création",
+      "message": "Nous n'avons pas réussi à sauvegarder vos données."
+    },
+    "forbidden": {
+      "title": "Création interdite",
+      "message": "Vous n'avez pas les droits nécessaires pour créer ces données."
+    }
+  },
+  "update": {
+    "pending": {
+      "title": "Mise à jour en cours",
+      "message": "Veuillez patienter pendant la sauvegarde de vos données."
+    },
+    "success": {
+      "title": "Mise à jour réussie",
+      "message": "Vos données ont correctement été sauvegardées."
+    },
+    "warning": {
+      "title": "Echec de la mise à jour",
+      "message": "Veuillez corriger les erreurs de votre formulaire et réessayer."
+    },
+    "error": {
+      "title": "Echec de la mise à jour",
+      "message": "Nous n'avons pas réussi à sauvegarder vos données."
+    },
+    "forbidden": {
+      "title": "Mise à jour interdite",
+      "message": "Vous n'avez pas les droits nécessaires pour modifier ces données."
+    }
+  },
+  "delete": {
+    "pending": {
+      "title": "Suppression en cours",
+      "message": "Veuillez patienter pendant la suppression de vos données."
+    },
+    "success": {
+      "title": "Suppression réussie",
+      "message": "Vos données ont correctement été supprimée."
+    },
+    "warning": {
+      "title": "Avertissement sur la suppression",
+      "message": "Ils se peut que certaines données n'aient pas été supprimées."
+    },
+    "error": {
+      "title": "Echec de la suppression",
+      "message": "Nous n'avons pas réussi à supprimer vos données."
+    },
+    "forbidden": {
+      "title": "Suppression interdite",
+      "message": "Vous n'avez pas les droits nécessaires pour supprimer ces données."
+    }
+  },
+  "send": {
+    "pending": {
+      "title": "Envoi en cours",
+      "message": "Veuillez patienter pendant l'envoi de votre message."
+    },
+    "success": {
+      "title": "Envoi réussi",
+      "message": "Votre message a correctement été envoyé."
+    },
+    "error": {
+      "title": "Echec de l'envoi",
+      "message": "Nous n'avons pas réussi à envoyer votre message."
+    }
+  },
+  "upload": {
+    "pending": {
+      "title": "Téléchargement en cours",
+      "message": "Veuillez patienter pendant le téléchargement de votre fichier."
+    },
+    "success": {
+      "title": "Téléchargement réussi",
+      "message": "Votre fichier a correctement été téléchargé."
+    },
+    "warning": {
+      "title": "Echec du téléchargement",
+      "message": "Veuillez utiliser un type de fichier supporté et réessayer."
+    },
+    "error": {
+      "title": "Echec du téléchargement",
+      "message": "Nous n'avons pas réussi à télécharger votre fichier."
+    },
+    "forbidden": {
+      "title": "Téléchargement interdit",
+      "message": "Vous n'avez pas les droits nécessaires pour télécharger ce fichier."
+    }
+  },
+  "publish": {
+    "pending": {
+      "title": "Publication en cours",
+      "message": "Veuillez patienter pendant la publication du contenu."
+    },
+    "success": {
+      "title": "Publication réussie",
+      "message": "Votre contenu a correctement été publié et est maintenant visible."
+    },
+    "error": {
+      "title": "Echec de la publication",
+      "message": "Nous n'avons pas réussi à publier votre contenu."
+    }
+  },
+  "unpublish": {
+    "pending": {
+      "title": "Dépublication en cours",
+      "message": "Veuillez patienter pendant la dépublication du contenu."
+    },
+    "success": {
+      "title": "Dépublication réussie",
+      "message": "Votre contenu a correctement été dépublié et n'est plus visible."
+    },
+    "error": {
+      "title": "Echec de la dépublication",
+      "message": "Nous n'avons pas réussi à dépublier votre contenu."
+    }
+  },
+  "register": {
+    "pending": {
+      "title": "Inscription en cours",
+      "message": "Veuillez patienter pendant que nous créons votre compte."
+    },
+    "success": {
+      "title": "Inscription réussie",
+      "message": "Votre compte a correctement été créé."
+    },
+    "warning": {
+      "title": "Echec de l'inscription",
+      "message": "Veuillez corriger les erreurs de votre formulaire d'inscription et réessayer."
+    },
+    "error": {
+      "title": "Echec de l'inscription",
+      "message": "Nous n'avons pas réussi à créer votre compte."
+    }
+  }
+}

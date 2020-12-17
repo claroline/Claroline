@@ -1,0 +1,12 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+
+    Claroline\AudioPlayerBundle\Library\Quiz\Item\Definition\WaveformDefinition:
+        tags: [ujm_exo.definition.item]
+        arguments:
+           - '@Claroline\AudioPlayerBundle\Validator\Quiz\JsonSchema\Item\Type\WaveformQuestionValidator'
+           - '@Claroline\AudioPlayerBundle\Validator\Quiz\JsonSchema\Attempt\AnswerData\WaveformAnswerValidator'
+           - '@Claroline\AudioPlayerBundle\Serializer\Quiz\WaveformQuestionSerializer'

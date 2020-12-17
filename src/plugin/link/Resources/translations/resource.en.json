@@ -1,0 +1,5 @@
+{
+    "shortcut": "Shortcut",
+    "shortcut_desc": "Allows to create a shortcut to a resource hosted in the platform.",
+    "target_resource": "Target resource"
+}

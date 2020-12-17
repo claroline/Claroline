@@ -1,0 +1,4 @@
+{
+  "entry_field_duplicated": "The field %field% can not be duplicated.",
+  "entry_field_required": "The field %field% is required."
+}

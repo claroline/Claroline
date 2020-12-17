@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "The uuid of the chapter"
+    },
+    "slug": {
+      "type": "string",
+      "description": "The slug of the chapter"
+    },
+    "title": {
+      "type": "string",
+      "description": "The title of the chapter"
+    },
+    "text": {
+      "type": "string",
+      "description": "The text of the chapter"
+    },
+    "internalNote": {
+      "type": ["string", "null"],
+      "description": "A text only visible by users with the correct right"
+    },
+    "parentSlug": {
+      "type": "string",
+      "description": "The slug of the chapter's parent chapter"
+    },
+    "previousSlug": {
+      "type": "string",
+      "description": "The slug of the chapter's previous sibling"
+    },
+    "nextSlug": {
+      "type": "string",
+      "description": "The slug of the chapter's next sibling"
+    }
+  },
+  "required": ["title", "text"],
+  "claroline": {
+    "ids":  ["id"]
+  }
+}

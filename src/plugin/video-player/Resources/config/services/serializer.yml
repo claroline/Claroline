@@ -1,0 +1,15 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+
+    Claroline\VideoPlayerBundle\Serializer\TrackSerializer:
+        tags: [claroline.serializer]
+        arguments:
+           - '@Claroline\AppBundle\Persistence\ObjectManager'
+           - '@claroline.manager.file_manager'
+
+    claroline.serializer.video.track:
+         alias: Claroline\VideoPlayerBundle\Serializer\TrackSerializer
+         public: true

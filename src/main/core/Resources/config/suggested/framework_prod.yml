@@ -1,0 +1,18 @@
+framework:
+    secret:          "%secret%"
+    router:
+        resource: .
+        type: dynamic
+        utf8: true
+    form:            true
+    validation:      { enable_annotations: true }
+    translator:      { fallback: en }
+    default_locale: "%locale%"
+    session:
+      handler_id: "claroline.session_handler.file" # Overridden by SessionConfigPass
+      cookie_httponly: true
+      cookie_secure: auto
+      cookie_samesite: lax
+    cache: ~
+    php_errors:
+        log: true

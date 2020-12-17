@@ -1,0 +1,13 @@
+{
+  "webpack": {
+    "entry": {
+      "agenda": "tools/agenda/index"
+    }
+  },
+  "styles": {
+    "entry": {
+      "clock": "header/clock.less",
+      "agenda": "tools/agenda/index.less"
+    }
+  }
+}

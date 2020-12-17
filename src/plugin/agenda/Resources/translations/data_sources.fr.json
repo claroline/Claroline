@@ -1,0 +1,6 @@
+{
+    "events": "Liste d'événements",
+    "events_desc": "Permet de lister les évènements de l'utilisateur courant.",
+    "tasks": "Liste de tâches",
+    "tasks_desc": "Permet de lister les tâches de l'utilisateur courant."
+}

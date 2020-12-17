@@ -1,0 +1,7 @@
+plugin:
+  has_options: true
+
+  resources:
+    - name: claroline_dropzone
+      class: Claroline\DropZoneBundle\Entity\Dropzone
+      tags: [evaluation]

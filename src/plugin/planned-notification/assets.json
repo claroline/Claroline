@@ -1,0 +1,13 @@
+{
+  "webpack": {
+    "entry": {
+      "tool": "tools/planned-notification"
+    }
+  },
+
+  "styles": {
+    "entry": {
+      "tool": "planned-notification/index.less"
+    }
+  }
+}

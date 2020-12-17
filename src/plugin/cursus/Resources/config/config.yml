@@ -1,0 +1,105 @@
+plugin:
+    has_options: false
+
+    tools:
+        - name: training_events
+          is_displayable_in_workspace: true
+          is_displayable_in_desktop: false
+          class: clock
+
+        - name: trainings
+          is_displayable_in_workspace: false
+          is_displayable_in_desktop: true
+          class: graduation-cap
+
+    data_sources:
+        - name: public_course_sessions
+          type: list
+          context: [workspace, desktop, home]
+          tags: [community, event]
+
+        - name: my_course_sessions
+          type: list
+          context: [desktop]
+          tags: [community, event]
+
+    templates:
+        - name: training_course
+          placeholders:
+              - course_name
+              - course_code
+              - course_description
+              - course_poster
+              - course_default_duration
+              - course_public_registration
+              - course_max_users
+
+        - name: training_session
+          placeholders:
+              - course_name
+              - course_code
+              - course_description
+              - session_url
+              - session_name
+              - session_code
+              - session_description
+              - session_poster
+              - session_public_registration
+              - session_max_users
+              - session_start
+              - session_end
+
+        - name: training_session_invitation
+          placeholders:
+              - course_name
+              - course_code
+              - course_description
+              - session_url
+              - session_name
+              - session_description
+              - session_poster
+              - session_start
+              - session_end
+              - session_trainers
+
+        - name: training_session_confirmation
+          placeholders:
+              - course_name
+              - course_code
+              - course_description
+              - session_url
+              - session_name
+              - session_description
+              - session_poster
+              - session_start
+              - session_end
+              - session_trainers
+              - registration_confirmation_url
+
+        - name: training_event_invitation
+          placeholders:
+              - course_name
+              - course_code
+              - course_description
+              - session_name
+              - session_description
+              - session_code
+              - session_start
+              - session_end
+              - event_name
+              - event_code
+              - event_description
+              - event_start
+              - event_end
+              - event_location_name
+              - event_location_address
+              - event_trainers
+
+        - name: training_event_presences
+          placeholders:
+              - event_name
+              - event_code
+              - event_description
+              - event_start
+              - event_end
+              - event_presences_table

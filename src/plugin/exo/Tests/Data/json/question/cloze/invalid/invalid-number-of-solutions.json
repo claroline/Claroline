@@ -1,0 +1,32 @@
+{
+  "id": "1",
+  "type": "application/x.cloze+json",
+  "content": "Question ?",
+  "text": "Lorem [[1]] dolor sit [[2]].",
+  "hasExpectedAnswer": true,
+  "score": {
+    "type": "sum"
+  },
+  "holes": [
+    {
+      "id": "1",
+      "choices": ["foo", "ipsum", "bar"]
+    },
+    {
+      "id": "2",
+      "size": 10
+    }
+  ],
+  "solutions": [
+    {
+      "holeId": "1",
+      "answers": [
+        {
+          "text": "ipsum",
+          "caseSensitive": false,
+          "score": 1.5
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+.pdf-player-menu {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-bottom: @component-margin-bottom;
+    border-radius: @summary-border-radius;
+    background: @summary-bg;
+    color: @summary-color;
+    box-shadow: @summary-box-shadow-h;
+
+    .pdf-pages,
+    .pdf-zoom {
+        display: flex;
+        align-items: center;
+        white-space: nowrap;
+        padding: 5px;
+    }
+
+    .pdf-zoom {
+        .pdf-zoom-unit {
+            display: inline-block;
+            padding-right: @padding-base-horizontal;
+        }
+    }
+
+    .form-control {
+        width: 80px;
+        vertical-align: middle;
+        border-radius: 0;
+        margin: 0 5px;
+        display: inline-block;
+    }
+
+    .btn {
+        padding-top: 4px;
+        padding-bottom: 4px;
+        color: @summary-link-color;
+
+        &:hover {
+            color: @summary-link-hover-color;
+        }
+        &.active,
+        &:focus {
+            color: @summary-link-active-color;
+        }
+    }
+}
+
+.pdf-player {
+    text-align: center;
+
+    .pdf-player-page {
+        border: 1px solid @panel-default-border;
+        border-radius: @panel-border-radius;
+        box-shadow: @box-shadow-base;
+
+        max-width: 100%;
+    }
+}

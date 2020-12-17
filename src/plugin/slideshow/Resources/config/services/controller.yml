@@ -1,0 +1,7 @@
+services:
+    _defaults:
+        public: true #because controller
+
+    Claroline\SlideshowBundle\Controller\SlideshowController:
+        parent: Claroline\AppBundle\Controller\AbstractCrudController
+        public: true

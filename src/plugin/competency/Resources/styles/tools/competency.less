@@ -1,0 +1,64 @@
+/*
+ * Competency tool styles.
+ */
+
+@import "../variables";
+@import "../mixins";
+
+
+.competency-card {
+    flex: 1;
+
+    .competency-abilities {
+        padding: 0;
+        margin: 0;
+        margin-left: 40px;
+        list-style: none;
+    }
+
+    .competency-ability {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 5px;
+        padding: 5px 10px;
+        border-radius: @border-radius-small;
+        background: @gray-lighter;
+
+        &:before {
+            box-sizing: content-box;
+            position: absolute;
+            content: " ";
+            display: block;
+            top: -5px;
+            left: -20px;
+            width: 20px;
+            height: 50%;
+            padding-bottom: 5px;
+            border-left: 1px solid #ccc;
+            border-bottom: 1px solid #ccc;
+        }
+
+        &:after {
+            box-sizing: content-box;
+            position: absolute;
+            content: " ";
+            display: block;
+            left: -20px;
+            bottom: 0;
+            width: 20px;
+            height: 50%;
+            padding-bottom: 5px;
+            border-left: 1px solid #ccc;
+        }
+
+        &:last-child:after {
+            border: none;
+        }
+    }
+
+    .competency-ability-name {
+        font-weight: bold;
+    }
+}

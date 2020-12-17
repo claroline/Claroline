@@ -1,0 +1,24 @@
+services:
+    _defaults:
+        public: true #because controller
+
+    Claroline\MessageBundle\Controller\Contact\ContactController:
+        parent: Claroline\AppBundle\Controller\AbstractCrudController
+        public: true
+        arguments:
+            - '@Claroline\MessageBundle\Manager\ContactManager'
+            - '@claroline.serializer.contact'
+            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@security.token_storage'
+            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
+
+    Claroline\MessageBundle\Controller\Contact\OptionsController:
+        parent: Claroline\AppBundle\Controller\AbstractCrudController
+        public: true
+
+    Claroline\MessageBundle\Controller\MessageController:
+        parent: Claroline\AppBundle\Controller\AbstractCrudController
+        public: true
+        arguments:
+            - '@security.token_storage'
+            - '@Claroline\MessageBundle\Manager\MessageManager'

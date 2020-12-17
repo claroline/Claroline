@@ -1,0 +1,11 @@
+{
+  "id": "1",
+  "title": "Lorem ipsum dolor sit amet",
+  "parameters": {
+    "maxAttempts": 0,
+    "randomOrder": "once",
+    "randomPick": "once",
+    "pick": 1
+  },
+  "items": []
+}

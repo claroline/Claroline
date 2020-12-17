@@ -1,0 +1,136 @@
+/*
+ * Buttons styles
+ */
+
+// TODO : grab last styles from bootstrap and remove base buttons api
+
+// removes default button styles everywhere
+// appears as a <a>
+button,
+input[type=button],
+input[type=submit],
+input[type=reset] {
+    background-color: transparent;
+    border: none;
+    text-decoration: none;
+    box-shadow: none;
+    padding: 0;
+
+    &:hover,
+    &:focus {
+        box-shadow: none;
+    }
+
+    &:focus {
+        box-shadow: none;
+        .tab-focus();
+    }
+}
+
+
+/* CHROME HACK FOR OUTLINED BUTTON WHEN FOCUSED */
+a,
+button,
+input[type=button],
+input[type=submit],
+input[type=reset] {
+    &:focus,
+    &.focus,
+    &:active,
+    &.active {
+        outline: none !important;
+    }
+}
+
+
+// -
+// Standard Buttons
+// ---
+
+.btn {
+    .button-base();
+
+    &:not(.btn-link) { // FIXME : ugly as fuck. Find a better way to do it
+        &.default {
+            .button-variant(@btn-default-color; @btn-default-bg; @btn-default-border);
+        }
+        &.primary {
+            .button-variant(@btn-primary-color; @btn-primary-bg; @btn-primary-border);
+        }
+        &.success {
+            .button-variant(@btn-success-color; @btn-success-bg; @btn-success-border);
+        }
+        &.info {
+            .button-variant(@btn-info-color; @btn-info-bg; @btn-info-border);
+        }
+        &.warning {
+            .button-variant(@btn-warning-color; @btn-warning-bg; @btn-warning-border);
+        }
+        &.danger {
+            .button-variant(@btn-danger-color; @btn-danger-bg; @btn-danger-border);
+        }
+    }
+}
+
+
+// -
+// Link Buttons
+// ---
+
+.btn-link {
+    .button-link-base();
+}
+
+// variants
+.btn-link.primary {
+    .button-link-variant(@link-color, @link-hover-color, @link-hover-decoration);
+}
+
+.btn-link.default {
+    .button-link-variant(@gray, @gray-dark, @link-hover-decoration);
+}
+
+.btn-link.danger {
+    .button-link-variant(@brand-danger, darken(@brand-danger, 10%), @link-hover-decoration);
+}
+
+// todo : for retro compatibility, to remove
+.btn-link-danger {
+    .button-link-variant(@brand-danger, darken(@brand-danger, 10%), @link-hover-decoration);
+}
+.btn-link-default {
+    .button-link-variant(@gray, @gray-dark, @link-hover-decoration);
+}
+.btn-group.open .dropdown-toggle {
+    // remove push effect on dropdown links
+    &.btn-link-default,
+    &.btn-link-danger {
+        box-shadow: none;
+    }
+}
+
+
+// -
+// Button sizes
+// ---
+
+.btn-lg {
+    // line-height: ensure even-numbered height of button next to large input
+    .button-size(@padding-large-vertical; @padding-large-horizontal; @font-size-large; @line-height-large; @btn-border-radius-large);
+}
+.btn-sm {
+    // line-height: ensure proper height of button next to small input
+    .button-size(@padding-small-vertical; @padding-small-horizontal; @font-size-small; @line-height-small; @btn-border-radius-small);
+}
+.btn-xs {
+    .button-size(@padding-xs-vertical; @padding-xs-horizontal; @font-size-small; @line-height-small; @btn-border-radius-small);
+}
+
+
+// -
+// Other Variants
+// ---
+
+.btn-emphasis {
+    padding: @padding-large-vertical @padding-large-horizontal;
+}

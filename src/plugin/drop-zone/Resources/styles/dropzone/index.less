@@ -1,0 +1,110 @@
+/*
+ * DropZone resource styles.
+ */
+
+// Plugin
+@import "../variables";
+@import "../mixins";
+// Custom data types
+@import "../data/criteria";
+
+// Resource styles
+@import "overview";
+
+// old
+#drop-form {
+    border: solid 1px #CCCCCC;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.document-type,
+.document-date {
+    white-space: nowrap;
+}
+
+.correction-form-panel {
+    padding: 20px;
+}
+
+.btn-group-right {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.correction-row {
+    .correction-form-panel {
+        margin: 0px;
+        border: none;
+        box-shadow: none;
+    }
+}
+
+.correction-form-row {
+    background-color: gray;
+}
+
+.criterion-scale-form-row {
+    min-width: 300px;
+}
+
+#denial-box {
+    margin-top: 20px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    border-top: solid 1px #BBBBBB;
+    border-bottom: solid 1px #BBBBBB;
+}
+
+.dropzone-button-icon {
+    margin-right: 5px;
+}
+
+.drop-list table th.text-left {
+    min-width: 65px;
+}
+
+.revision-table {
+    width: auto;
+
+    th, td {
+        padding: 10px;
+    }
+}
+
+.revision-comments-separator {
+    margin-top: 80px;
+}
+
+.dropzone-comments-title {
+    margin-bottom: 30px;
+}
+
+.manager-document {
+    background-color: #79D762 !important;
+}
+
+.drop-content, .revision-content {
+    width: 100%;
+}
+
+.drop-nav, .revision-nav {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+
+    .btn-drop-nav, .btn-revision-nav {
+        flex: 0;
+        font-size: @carousel-control-font-size;
+        padding: 0;
+        border: none;
+    }
+
+    // Scale up controls for tablets and up
+    @media screen and (min-width: @screen-sm-min) {
+        .btn-drop-nav, .btn-revision-nav {
+            font-size: (@carousel-control-font-size * 1.5);
+        }
+    }
+}

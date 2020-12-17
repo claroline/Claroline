@@ -1,0 +1,20 @@
+plugin:
+    has_options: false
+
+    resources:
+        - name: icap_blog
+          class: Icap\BlogBundle\Entity\Blog
+          tags: [community, content]
+          exportable: false
+          actions:
+              - name: blog_post
+                decoder: post
+
+              - name: moderate
+                decoder: moderate
+
+    data_sources:
+        - name: blog_posts
+          type: list
+          context: [workspace, desktop, home]
+          tags: [content, community]

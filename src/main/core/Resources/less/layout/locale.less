@@ -1,0 +1,66 @@
+.locale-icon {
+    margin: 4px 0;
+
+    .locale-icon-small();
+}
+
+.locale-btn {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    padding: 15px;
+    background: #EDEDED;
+    margin: 4px;
+
+    + .locale-btn {
+        margin-left: 6px !important;
+
+        &:active,
+        &.active,
+        &:hover,
+        &:focus {
+            margin-left: 2px !important;
+        }
+    }
+
+    .locale-icon {
+        opacity: .6;
+    }
+
+    &:hover,
+    &:focus {
+        margin: 0;
+        background: @gray-lightest;
+
+        .locale-icon {
+            opacity: 1;
+            .locale-icon-large();
+        }
+    }
+
+    &:active,
+    &.active {
+        margin: 0;
+        background: white;
+        border-color: @brand-primary;
+        box-shadow: @box-shadow-base;
+
+        .locale-icon {
+            opacity: 1;
+            .locale-icon-large();
+        }
+    }
+}
+
+// mixins
+.locale-icon-small() {
+    width: 24px;
+    height: 16px;
+}
+
+.locale-icon-large() {
+    width: 32px;
+    height: 24px;
+}

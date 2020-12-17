@@ -1,0 +1,46 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "The facet id"
+    },
+    "title": {
+      "type": "string",
+      "description": "The facet title"
+    },
+    "position": {
+      "type": "integer",
+      "description": "The facet position"
+    },
+    "display": {
+      "type": "object",
+      "properties": {
+        "creation": {
+          "type": "boolean",
+          "description": "Display the facet at registration"
+        }
+      }
+    },
+    "meta": {
+      "type": "object",
+      "properties": {
+        "main": {
+          "type": "boolean",
+          "description": "Is it the main facet"
+        }
+      }
+    },
+    "section": {
+      "type": "array",
+      "description": "The panel list",
+      "uniqueItems": true,
+      "items": { "$ref": "https://github.com/claroline/Distribution/tree/master/main/core/Resources/schemas/panelFacet.json" }
+    }
+  },
+  "required": ["title"],
+  "claroline": {
+    "ids": ["id"]
+  }
+}

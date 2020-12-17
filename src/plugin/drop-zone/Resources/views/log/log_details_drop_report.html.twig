@@ -1,0 +1,26 @@
+<div class='list-group'>
+	<div class='list-group-item'>
+		{% if log.details.report is defined %}
+            <h4>{{ ('Reported copy')|trans({}, 'dropzone') }}</h4>
+            <dl class="dl-horizontal">
+                <dt>{{ 'Report reason'|trans({}, 'dropzone') }}:</dt>
+                <dd>{{ log.details.report.report_comment|raw }}</dd>
+		    </dl>
+            {% if log.details.report.dropzoneId is defined %}
+                <dl class="dl-horizontal">
+                    <dt>{{ 'Reported copy'|trans({}, 'dropzone') }}:</dt>
+                    <dd>
+                        <a href={{ path('claro_dropzone_detail_drop',{'dropzoneId':log.details.report.dropzoneId,'dropId':log.details.report.dropId}) }}>{{ 'copy'|trans({}, 'dropzone') }}</a>
+                    </dd>
+                </dl>
+            {% endif %}
+        {% endif %}
+		{% if log.details.report is defined and log.details.report.drop is defined and  log.details.report.drop.documents is defined %}
+		    <h4>{{ ('log_drop_documents')|trans({}, 'log') }}</h4>
+			    {% for document in  log.details.report.drop.documents %}
+			    	test
+			        {% include 'ClarolineDropZoneBundle:Log:log_details_document.html.twig' with {'document': document} %}
+			    {% endfor %}
+		{% endif %}
+	</div>
+</div>

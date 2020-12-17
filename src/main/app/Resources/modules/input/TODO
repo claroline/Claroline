@@ -1,0 +1,3 @@
+- [ ] remove DataType api to only handle raw inputs
+- [ ] add `input[type]`
+- [ ] add textarea

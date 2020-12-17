@@ -1,0 +1,17 @@
+services:
+    claroline.session_handler.file:
+        class: Symfony\Component\HttpFoundation\Session\Storage\Handler\StrictSessionHandler
+        arguments: [ '@Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeFileSessionHandler' ]
+
+    claroline.session_handler.redis:
+        class: Symfony\Component\HttpFoundation\Session\Storage\Handler\RedisSessionHandler
+        arguments:
+            - '@.claroline.session_handler.redis.connection'
+
+    Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeFileSessionHandler:
+        arguments:
+            - "%kernel.project_dir%/var/sessions"
+
+    .claroline.session_handler.redis.connection:
+        class: Redis
+

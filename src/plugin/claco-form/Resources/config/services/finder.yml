@@ -1,0 +1,30 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+
+    _instanceof:
+        Claroline\AppBundle\API\Finder\AbstractFinder:
+            tags: [claroline.finder]
+            calls:
+                - method: setObjectManager
+                  arguments:
+                     - '@Claroline\AppBundle\Persistence\ObjectManager'
+                - method: setEntityManager
+                  arguments:
+                     - '@doctrine.orm.entity_manager'
+                - method: setEventDispatcher
+                  arguments:
+                     - '@Claroline\AppBundle\Event\StrictDispatcher'
+
+    Claroline\ClacoFormBundle\Finder\CategoryFinder: ~
+
+    Claroline\ClacoFormBundle\Finder\EntryFinder:
+        arguments:
+          - '@security.authorization_checker'
+          - '@claroline.manager.organization.location_manager'
+          - '@security.token_storage'
+          - '@translator'
+
+    Claroline\ClacoFormBundle\Finder\KeywordFinder: ~

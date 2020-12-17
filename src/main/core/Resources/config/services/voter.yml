@@ -1,0 +1,75 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+
+    _instanceof:
+        Claroline\CoreBundle\Security\Voter\AbstractVoter:
+            autowire: false
+            tags: [security.voter]
+            calls:
+              - method: setContainer
+                arguments:
+                  - '@service_container'
+            #this will have to change one day I think
+
+    Claroline\CoreBundle\Security\Voter\ConnectionMessage\ConnectionMessageVoter: ~
+
+    Claroline\CoreBundle\Security\Voter\Template\TemplateVoter: ~
+
+    Claroline\CoreBundle\Security\Voter\Tool\ToolVoter:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\Manager\Tool\ToolMaskDecoderManager'
+
+    Claroline\CoreBundle\Security\Voter\Tool\OrderedToolVoter: ~
+
+    Claroline\CoreBundle\Security\Voter\Tool\AdministrationToolVoter: ~
+
+    Claroline\CoreBundle\Security\Voter\AdministratorVoter:
+        tags: [security.voter]
+
+    Claroline\CoreBundle\Security\Voter\ApiTokenVoter: ~
+
+    Claroline\CoreBundle\Security\Voter\FacetVoter: ~
+
+    Claroline\CoreBundle\Security\Voter\GroupVoter: ~
+
+    Claroline\CoreBundle\Security\Voter\ImportFileVoter: ~
+
+    Claroline\CoreBundle\Security\Voter\IPWhiteListVoter:
+        tags: [security.voter]
+        arguments:
+            - '@claroline.manager.ip_white_list_manager'
+
+    Claroline\CoreBundle\Security\Voter\LocationVoter: ~
+
+    Claroline\CoreBundle\Security\Voter\OrganizationVoter: ~
+
+    Claroline\CoreBundle\Security\Voter\PublicFileVoter: ~
+
+    Claroline\CoreBundle\Security\Voter\ResourceCommentVoter: ~
+
+    Claroline\CoreBundle\Security\Voter\ResourceVoter:
+        tags: [security.voter]
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@translator'
+            - '@claroline.manager.mask_manager'
+            - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
+            - '@claroline.manager.resource_manager'
+            - '@claroline.manager.rights_manager'
+            - '@claroline.manager.resource_restrictions'
+
+    Claroline\CoreBundle\Security\Voter\RoleVoter: ~
+
+    Claroline\CoreBundle\Security\Voter\TextVoter: ~
+
+    Claroline\CoreBundle\Security\Voter\UserSwitchVoter: ~
+
+    Claroline\CoreBundle\Security\Voter\UserVoter:
+        arguments:
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+
+    Claroline\CoreBundle\Security\Voter\WorkspaceVoter: ~

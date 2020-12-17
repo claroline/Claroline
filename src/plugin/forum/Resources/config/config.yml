@@ -1,0 +1,20 @@
+plugin:
+    has_options: false
+
+    resources:
+        - name: claroline_forum
+          class: Claroline\ForumBundle\Entity\Forum
+          tags: [community]
+          exportable: true
+          actions:
+              - name: post
+              
+    data_sources:
+        - name: forum_messages
+          type: list
+          context: [workspace, desktop, home]
+          tags: [community]
+
+    templates:
+        - name: forum_new_message
+          placeholders: [forum, forum_url, subject, subject_url, message, date, author, workspace, workspace_url]

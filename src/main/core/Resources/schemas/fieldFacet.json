@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "The field id"
+    },
+    "name": {
+      "type": "string",
+      "description": "The field name"
+    },
+    "label": {
+      "type": "string",
+      "description": "The field label"
+    },
+    "options": {
+      "type": "object",
+      "description": "The field option list"
+    },
+    "required": {
+      "type": "boolean",
+      "description": "Is the field required"
+    }
+  },
+  "required": ["name"],
+  "claroline": {
+    "ids": ["id"]
+  }
+}

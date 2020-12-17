@@ -1,0 +1,3 @@
+# for now we excludes the webpack dynamic imports files
+# it uses an experimental features which is not yet supported by eslint
+**/modules/plugin.js

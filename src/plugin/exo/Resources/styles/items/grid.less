@@ -1,0 +1,183 @@
+.grid-editor {
+  .col-controls,
+  .row-controls {
+    background: @gray-lightest;
+    text-align: center;
+
+    .grid-score {
+      display: inline-block; // display input on same line than delete btn
+      width: 60px;
+      margin-right: floor(@grid-gutter-width / 2);
+    }
+
+    .btn-link,
+    .btn {
+      padding-left: 4px;
+      padding-right: 4px;
+    }
+  }
+
+  .row-controls {
+    border-radius: 0 10px 10px 0;
+  }
+
+  .col-controls {
+    border-radius: 0 0 10px 10px;
+  }
+
+  .grid-cell {
+    vertical-align: top;
+
+    .cell-header {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+    }
+
+    .cell-actions {
+      position: relative;
+
+      // we use precise selectors to avoid impact popover styles
+      .btn-link,
+      .btn {
+        padding: 4px; // same as feedback btn
+      }
+    }
+
+    .cell-input {
+      resize: none;
+      border: none;
+      border-radius: 0;
+      background: transparent; // display the background color chosen by user
+
+      &:focus {
+        box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.25);
+      }
+    }
+
+    .cell-dropdown {
+      .dropdown-toggle {
+        display: block;
+        border: none;
+        background: transparent;
+        border-radius: 0;
+        width: 100%;
+      }
+
+      .dropdown-menu {
+        min-width: 100%;
+      }
+    }
+
+    .cell-popover {
+      // fix popover position
+      // todo : find a more robust way to position popovers
+      margin-left: -165px; // half size of the popover (180px) - 15px hack to center popover arrow and open btn
+      color: @text-color; // avoid having cell custom color in the edit popover
+    }
+
+    .dropdown-menu {
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  }
+}
+
+.grid-table {
+  width: 100%;
+}
+
+.grid-player {
+
+  .grid-body {
+    /*display: flex;
+    justify-content: center;
+    flex-direction: column;*/
+
+    .grid-table {
+      /*border-collapse: collapse;
+      border-spacing: 0;*/
+      /*width: 100%;*/
+    }
+
+    .grid-table td {
+      /*display: table-cell;
+      vertical-align: middle;*/
+      padding: 7px;
+    }
+  }
+
+  .grid-cell {
+    /*width: 100%;*/
+    .cell-body {
+      /*padding: 5px;*/
+    }
+  }
+}
+
+
+.grid-paper {
+
+  .cell-header {
+    padding: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .additional-infos {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+    }
+  }
+
+  .item-score {
+    margin-left: 5px;
+  }
+
+  .cell-header-expected {
+    padding: 5px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+
+  .grid-body {
+    /*display: flex;
+    justify-content: center;
+    flex-direction: column;*/
+
+    .grid-table {
+      /*border-collapse: collapse;
+      border-spacing: 0;*/
+      /*width: 100%;*/
+    }
+
+    .grid-table td {
+      display: table-cell;
+      vertical-align: middle;
+      min-width: 100px;
+    }
+  }
+
+  .grid-cell {
+    width: 100%;
+    .cell-body {
+      padding: 5px;
+    }
+  }
+
+  .answer-item {
+    display: flex;
+    margin: 5px;
+    justify-content: space-between;
+  }
+
+  .unanswered-item {
+    display: flex;
+    padding: 10px;
+    align-items: center;
+    min-height: 34px;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+}

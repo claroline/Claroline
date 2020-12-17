@@ -1,0 +1,222 @@
+{
+  "generic": {
+    "pending": {
+      "title": "Loading",
+      "message": "Please wait while we load your data."
+    },
+    "success": {
+      "title": "Success",
+      "message": ""
+    },
+    "warning": {
+      "title": "Attention",
+      "message": ""
+    },
+    "unauthorized": {
+      "title": "Unauthorized access",
+      "message": "You must be be logged to access to this feature."
+    },
+    "forbidden": {
+      "title": "Access forbidden",
+      "message": "You don't have access to this feature."
+    },
+    "unavailable": {
+      "title": "Platform temporarily unavailable",
+      "message": "Please try again later or contact an administrator."
+    },
+    "error": {
+      "title": "Error",
+      "message": "Please contact an administrator."
+    }
+  },
+  "load": {
+    "pending": {
+      "title": "Loading",
+      "message": "Please wait while we load your data."
+    },
+    "error": {
+      "title": "Load failure",
+      "message": "We were unable to load your data."
+    }
+  },
+  "refresh": {
+    "pending": {
+      "title": "Reloading",
+      "message": "Please wait while we reload your data."
+    },
+    "error": {
+      "title": "Reload failure",
+      "message": "We were unable to reload your data."
+    }
+  },
+  "save": {
+    "pending": {
+      "title": "Save in progress",
+      "message": "Please wait while we save your data."
+    },
+    "success": {
+      "title": "Successful save",
+      "message": "Your data has been saved correctly."
+    },
+    "warning": {
+      "title": "Save failure",
+      "message": "Please correct the errors on your form and try again."
+    },
+    "error": {
+      "title": "Save failure",
+      "message": "We were unable to save your data."
+    },
+    "forbidden": {
+      "title": "Save forbidden",
+      "message": "You do not have the necessary rights to save this data."
+    }
+  },
+  "create": {
+    "pending": {
+      "title": "Creation in progress",
+      "message": "Please wait while we save your data."
+    },
+    "success": {
+      "title": "Successful creation",
+      "message": "Your data has been saved correctly."
+    },
+    "warning": {
+      "title": "Creation failure",
+      "message": "Please correct the errors on your form and try again."
+    },
+    "error": {
+      "title": "Creation failure",
+      "message": "We were unable to save your data."
+    },
+    "forbidden": {
+      "title": "Creation forbidden",
+      "message": "You do not have the necessary rights to create this data."
+    }
+  },
+  "update": {
+    "pending": {
+      "title": "Update in progress",
+      "message": "Please wait while we save your data."
+    },
+    "success": {
+      "title": "Successful update",
+      "message": "Your data has been saved correctly."
+    },
+    "warning": {
+      "title": "Update failure",
+      "message": "Please correct the errors on your form and try again."
+    },
+    "error": {
+      "title": "Update failure",
+      "message": "We were unable to save your data."
+    },
+    "forbidden": {
+      "title": "Update forbidden",
+      "message": "You do not have the necessary rights to update this data."
+    }
+  },
+  "delete": {
+    "pending": {
+      "title": "Deletion in progress",
+      "message": "Please wait while we delete your data."
+    },
+    "success": {
+      "title": "Successful deletion",
+      "message": "Your data has been deleted correctly."
+    },
+    "warning": {
+      "title": "Deletion warning",
+      "message": "Some data might not have been deleted."
+    },
+    "error": {
+      "title": "Deletion failure",
+      "message": "We were unable to delete your data."
+    },
+    "forbidden": {
+      "title": "Deletion forbidden",
+      "message": "You do not have the necessary rights to delete this data."
+    }
+  },
+  "send": {
+    "pending": {
+      "title": "Sending in progress",
+      "message": "Please wait while we send your message."
+    },
+    "success": {
+      "title": "Successful sending",
+      "message": "Your message has been sent correctly."
+    },
+    "error": {
+      "title": "Sending failure",
+      "message": "We were unable to send your message."
+    }
+  },
+  "upload": {
+    "pending": {
+      "title": "Uploading",
+      "message": "Please wait while we upload your file."
+    },
+    "success": {
+      "title": "Successful upload",
+      "message": "Your file has been uploaded correctly."
+    },
+    "warning": {
+      "title": "Upload failure",
+      "message": "Please use a supported file type and try again."
+    },
+    "error": {
+      "title": "Upload failure",
+      "message": "We were unable to upload your file."
+    },
+    "forbidden": {
+      "title": "Upload forbidden",
+      "message": "You do not have the necessary rights to upload this file."
+    }
+  },
+  "publish": {
+    "pending": {
+      "title": "Publishing in progress",
+      "message": "Please wait while we publish your content."
+    },
+    "success": {
+      "title": "Successful publishing",
+      "message": "Your content has been published correctly and is now visible."
+    },
+    "error": {
+      "title": "Publishing failure",
+      "message": "We were unable to publish your content."
+    }
+  },
+  "unpublish": {
+    "pending": {
+      "title": "Unpublish in progress",
+      "message": "Please wait while we unpublish your content."
+    },
+    "success": {
+      "title": "Successful unpublishing",
+      "message": "Your message has been unpublished correctly and is no longer visible."
+    },
+    "error": {
+      "title": "Unpublish failure",
+      "message": "We were unable to unpublish your content."
+    }
+  },
+  "register": {
+    "pending": {
+      "title": "Registraion in progress",
+      "message": "Please wait while we create your account."
+    },
+    "success": {
+      "title": "Successful registration",
+      "message": "Your account has been correctly created."
+    },
+    "warning": {
+      "title": "Registration failure",
+      "message": "Please correct the errors on your registration form and try again."
+    },
+    "error": {
+      "title": "Registration failure",
+      "message": "We are unable to create your account."
+    }
+  }
+}

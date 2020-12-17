@@ -1,0 +1,24 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+
+    Claroline\ScormBundle\Listener\ScormListener:
+        arguments:
+            - '%claroline.param.files_directory%'
+            - '@filesystem'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager'
+            - '@Claroline\ScormBundle\Manager\ScormManager'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@security.token_storage'
+            - '%claroline.param.uploads_directory%'
+        tags:
+           - { name: kernel.event_listener, event: resource.claroline_scorm.load, method: onLoad }
+           - { name: kernel.event_listener, event: resource.claroline_scorm.delete, method: onDelete }
+           - { name: kernel.event_listener, event: transfer.claroline_scorm.import.before, method: onImportBefore }
+           - { name: kernel.event_listener, event: transfer.claroline_scorm.export, method: onExportFile }
+           - { name: kernel.event_listener, event: transfer.claroline_scorm.import.after, method: onImportFile }
+           - { name: kernel.event_listener, event: resource.claroline_scorm.copy, method: onCopy }
+           - { name: kernel.event_listener, event: download_claroline_scorm, method: onDownload }

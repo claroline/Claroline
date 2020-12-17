@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "number",
+      "description": "The id of the Text resource"
+    },
+    "content": {
+      "type": "string",
+      "description": "The content of the Text resource"
+    },
+    "meta": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "number",
+          "description": "The version of the Text resource"
+        }
+      },
+      "required": ["version"]
+    }
+  },
+  "claroline": {
+    "ids":  ["id"]
+  }
+}

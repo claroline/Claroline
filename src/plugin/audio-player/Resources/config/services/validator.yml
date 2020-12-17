@@ -1,0 +1,16 @@
+services:
+    _defaults:
+        autowire: false #change to true
+        autoconfigure: false
+        public: true #because controller
+
+    _instanceof:
+        UJM\ExoBundle\Library\Validator\JsonSchemaValidator:
+            calls:
+              - method: setJsonSchema
+                arguments:
+                  - '@UJM\ExoBundle\Library\Json\JsonSchema'
+
+    Claroline\AudioPlayerBundle\Validator\Quiz\JsonSchema\Attempt\AnswerData\WaveformAnswerValidator: ~
+
+    Claroline\AudioPlayerBundle\Validator\Quiz\JsonSchema\Item\Type\WaveformQuestionValidator: ~

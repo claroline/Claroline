@@ -1,0 +1,11 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: false
+
+    HeVinci\UrlBundle\Listener\Resource\UrlListener:
+        arguments:
+            - '@Claroline\AppBundle\API\SerializerProvider'
+        tags:
+            - { name: kernel.event_listener, event: resource.hevinci_url.load, method: onLoad }

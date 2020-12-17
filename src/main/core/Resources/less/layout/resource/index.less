@@ -1,0 +1,165 @@
+
+@import "embedded";
+@import "rights";
+
+.resource-type {
+    border-radius: @border-radius-base;
+    background: @gray-lightest;
+    border: 1px solid transparent;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    font-size: @font-size-large;
+
+    .resource-icon {
+        height: 40px;
+        margin-right: 10px;
+    }
+
+    h1 {
+        padding: 0;
+        margin: 0;
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+    p {
+        margin-top: 5px;
+        margin-bottom: 0;
+        font-style: italic;
+        font-size: @font-size-small;
+        color: @gray-light;
+    }
+}
+
+.resource-user-progression {
+    .gauge {
+        border-radius: 50%;
+    }
+
+    &.open .dropdown-toggle {
+        box-shadow: none;
+
+        .gauge {
+            box-shadow: 0 0 5px @brand-secondary;
+        }
+    }
+
+    .dropdown-menu {
+        padding: 0;
+        width: @popover-max-width;
+        margin-top: 15px;
+    }
+
+    .dropdown-menu-header {
+        padding: @list-group-item-padding-v @list-group-item-padding-h;
+
+        margin: 0;
+        display: flex;
+        align-items: center;
+
+        > .fa {
+            display: flex;
+            flex-shrink: 0;
+            align-items: center;
+            justify-content: center;
+
+            color: white;
+            font-size: 26px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+
+            margin-right: 15px;
+
+            background: @gray;
+
+            &.ended {
+                background: @brand-success;
+            }
+
+            &.failed {
+                background: @brand-danger;
+            }
+
+            &.in-progress {
+                background: @brand-info;
+            }
+
+            &.incomplete {
+                background: @brand-warning;
+            }
+        }
+    }
+
+    // mostly the same than `.analytics-card`
+    .list-group-item {
+        display: flex;
+        align-items: center;
+
+        > .fa {
+            display: flex;
+            flex-shrink: 0;
+            align-items: center;
+            justify-content: center;
+
+            color: white;
+            font-size: 16px;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+
+            margin-left: 9px;
+            margin-right: 15px + 9px;
+        }
+
+        h5 {
+            margin: 0;
+            font-weight: 900;
+        }
+
+        small {
+            display: block;
+            margin-bottom: 5px;
+        }
+    }
+}
+
+.resource-evaluation-card {
+    .resource-evaluation-details {
+        display: flex;
+
+        // mostly the same than `.analytics-card`
+        article {
+            display: flex;
+            align-items: center;
+            margin-bottom: @data-card-padding;
+
+            > .fa {
+                display: flex;
+                flex-shrink: 0;
+                align-items: center;
+                justify-content: center;
+
+                color: white;
+                font-size: @font-size-small;
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+
+                margin-left: @data-card-padding;
+                margin-right: @data-card-padding;
+            }
+
+            h5 {
+                margin: 0;
+                font-weight: 900;
+            }
+
+            small {
+                display: block;
+                margin-bottom: 5px;
+            }
+        }
+    }
+}

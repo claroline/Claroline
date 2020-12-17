@@ -1,0 +1,228 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+
+    UJM\ExoBundle\Serializer\UserSerializer:
+        tags: [claroline.serializer]
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
+
+    ujm_exo.serializer.user:
+         alias: UJM\ExoBundle\Serializer\UserSerializer
+         public: true
+
+    UJM\ExoBundle\Serializer\StepSerializer:
+        tags: [claroline.serializer]
+        arguments:
+            - '@ujm_exo.serializer.item'
+
+    ujm_exo.serializer.step:
+         alias: UJM\ExoBundle\Serializer\StepSerializer
+         public: true
+
+    UJM\ExoBundle\Serializer\ExerciseSerializer:
+        tags: [claroline.serializer]
+        arguments:
+            - '@security.token_storage'
+            - '@ujm_exo.serializer.step'
+            - '@UJM\ExoBundle\Manager\Item\ItemManager'
+
+    ujm_exo.serializer.exercise:
+         alias: UJM\ExoBundle\Serializer\ExerciseSerializer
+         public: true
+
+    UJM\ExoBundle\Serializer\Misc\KeywordSerializer:
+        tags: [claroline.serializer]
+
+    ujm_exo.serializer.keyword:
+         alias: UJM\ExoBundle\Serializer\Misc\KeywordSerializer
+         public: true
+
+    UJM\ExoBundle\Serializer\Misc\CellChoiceSerializer:
+        tags: [claroline.serializer]
+
+    ujm_exo.serializer.cell_choice:
+         alias: UJM\ExoBundle\Serializer\Misc\CellChoiceSerializer
+         public: true
+
+    UJM\ExoBundle\Serializer\Item\ItemSerializer:
+        tags: [claroline.serializer]
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@security.token_storage'
+            - '@ujm_exo.collection.item_definitions'
+            - '@ujm_exo.serializer.user'
+            - '@ujm_exo.serializer.hint'
+            - '@ujm_exo.serializer.resource_content'
+            - '@ujm_exo.serializer.item_object'
+            - '@service_container'
+            - '@event_dispatcher'
+
+    ujm_exo.serializer.item:
+         alias: UJM\ExoBundle\Serializer\Item\ItemSerializer
+         public: true
+
+    UJM\ExoBundle\Serializer\Item\ItemObjectSerializer:
+        tags: [claroline.serializer]
+
+    ujm_exo.serializer.item_object:
+         alias: UJM\ExoBundle\Serializer\Item\ItemObjectSerializer
+         public: true
+
+    UJM\ExoBundle\Serializer\Item\HintSerializer:
+        tags: [claroline.serializer]
+
+    ujm_exo.serializer.hint:
+         alias: UJM\ExoBundle\Serializer\Item\HintSerializer
+         public: true
+
+    UJM\ExoBundle\Serializer\Item\Type\WordsQuestionSerializer:
+        tags: [claroline.serializer]
+        arguments:
+            - '@ujm_exo.serializer.keyword'
+
+    ujm_exo.serializer.question_words:
+         alias: UJM\ExoBundle\Serializer\Item\Type\WordsQuestionSerializer
+         public: true
+
+    UJM\ExoBundle\Serializer\Item\Type\SetQuestionSerializer:
+        tags: [claroline.serializer]
+        arguments:
+            - '@ujm_exo.serializer.content'
+
+    ujm_exo.serializer.question_set:
+         alias: UJM\ExoBundle\Serializer\Item\Type\SetQuestionSerializer
+         public: true
+
+    UJM\ExoBundle\Serializer\Item\Type\SelectionQuestionSerializer:
+        tags: [claroline.serializer]
+
+    ujm_exo.serializer.question_selection:
+         alias: UJM\ExoBundle\Serializer\Item\Type\SelectionQuestionSerializer
+         public: true
+
+    UJM\ExoBundle\Serializer\Item\Type\PairQuestionSerializer:
+        tags: [claroline.serializer]
+        arguments:
+            - '@ujm_exo.serializer.content'
+
+    ujm_exo.serializer.question_pair:
+         alias: UJM\ExoBundle\Serializer\Item\Type\PairQuestionSerializer
+         public: true
+
+    UJM\ExoBundle\Serializer\Item\Type\OrderingQuestionSerializer:
+        tags: [claroline.serializer]
+        arguments:
+            - '@ujm_exo.serializer.content'
+
+    ujm_exo.serializer.question_ordering:
+         alias: UJM\ExoBundle\Serializer\Item\Type\OrderingQuestionSerializer
+         public: true
+
+    UJM\ExoBundle\Serializer\Item\Type\OpenQuestionSerializer:
+        tags: [claroline.serializer]
+
+    ujm_exo.serializer.question_open:
+         alias: UJM\ExoBundle\Serializer\Item\Type\OpenQuestionSerializer
+         public: true
+
+    UJM\ExoBundle\Serializer\Item\Type\MatchQuestionSerializer:
+        tags: [claroline.serializer]
+        arguments:
+            - '@ujm_exo.serializer.content'
+
+    ujm_exo.serializer.question_match:
+         alias: UJM\ExoBundle\Serializer\Item\Type\MatchQuestionSerializer
+         public: true
+
+    UJM\ExoBundle\Serializer\Item\Type\GridQuestionSerializer:
+        tags: [claroline.serializer]
+        arguments:
+            - '@ujm_exo.serializer.cell_choice'
+
+    ujm_exo.serializer.question_grid:
+         alias: UJM\ExoBundle\Serializer\Item\Type\GridQuestionSerializer
+         public: true
+
+    UJM\ExoBundle\Serializer\Item\Type\GraphicQuestionSerializer:
+        tags: [claroline.serializer]
+        arguments:
+            - '@Claroline\CoreBundle\Library\Utilities\FileUtilities'
+
+    ujm_exo.serializer.question_graphic:
+         alias: UJM\ExoBundle\Serializer\Item\Type\GraphicQuestionSerializer
+         public: true
+
+    UJM\ExoBundle\Serializer\Item\Type\ContentItemSerializer:
+        tags: [claroline.serializer]
+
+    ujm_exo.serializer.item_content:
+         alias: UJM\ExoBundle\Serializer\Item\Type\ContentItemSerializer
+         public: true
+
+    UJM\ExoBundle\Serializer\Item\Type\ClozeQuestionSerializer:
+        tags: [claroline.serializer]
+        arguments:
+            - '@ujm_exo.serializer.keyword'
+
+    ujm_exo.serializer.question_cloze:
+         alias: UJM\ExoBundle\Serializer\Item\Type\ClozeQuestionSerializer
+         public: true
+
+    UJM\ExoBundle\Serializer\Item\Type\ChoiceQuestionSerializer:
+        tags: [claroline.serializer]
+        arguments:
+            - '@ujm_exo.serializer.content'
+
+    ujm_exo.serializer.question_choice:
+         alias: UJM\ExoBundle\Serializer\Item\Type\ChoiceQuestionSerializer
+         public: true
+
+    UJM\ExoBundle\Serializer\Item\Type\BooleanQuestionSerializer:
+        tags: [claroline.serializer]
+        arguments:
+            - '@ujm_exo.serializer.content'
+
+    ujm_exo.serializer.question_boolean:
+         alias: UJM\ExoBundle\Serializer\Item\Type\BooleanQuestionSerializer
+         public: true
+
+    UJM\ExoBundle\Serializer\Content\ResourceContentSerializer:
+        tags: [claroline.serializer]
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '%claroline.param.files_directory%'
+            - '@router'
+            - '@claroline.manager.resource_manager'
+
+    ujm_exo.serializer.resource_content:
+         alias: UJM\ExoBundle\Serializer\Content\ResourceContentSerializer
+         public: true
+
+    UJM\ExoBundle\Serializer\Content\ContentSerializer:
+        arguments:
+            - '@ujm_exo.serializer.resource_content'
+
+    ujm_exo.serializer.content:
+         alias: UJM\ExoBundle\Serializer\Content\ContentSerializer
+         public: true
+
+    UJM\ExoBundle\Serializer\Attempt\PaperSerializer:
+        tags: [claroline.serializer]
+        arguments:
+            - '@ujm_exo.serializer.user'
+            - '@ujm_exo.serializer.answer'
+
+    ujm_exo.serializer.paper:
+         alias: UJM\ExoBundle\Serializer\Attempt\PaperSerializer
+         public: true
+
+    UJM\ExoBundle\Serializer\Attempt\AnswerSerializer:
+        tags: [claroline.serializer]
+
+    ujm_exo.serializer.answer:
+         alias: UJM\ExoBundle\Serializer\Attempt\AnswerSerializer
+         public: true

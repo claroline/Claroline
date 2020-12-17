@@ -1,0 +1,51 @@
+@import "./correction";
+@import "./docimology";
+@import "./editor";
+@import "./overview";
+@import "./player";
+@import "./statistics";
+
+.quiz-type-control {
+    .dropdown {
+        width: 100%;
+
+        &.open {
+            .dropdown-toggle {
+                .form-control-focus();
+            }
+        }
+    }
+
+    // this is a big c/c from .resource-type
+    .quiz-type {
+        height: auto !important; // override default form control
+        display: flex !important; // important because of dropdown styles
+        align-items: center;
+        text-align: left;
+        width: 100%;
+
+        .fa {
+            font-size: 40px;
+            margin-right: 10px;
+        }
+
+        h1 {
+            padding: 0;
+            margin: 0;
+            font-size: @font-size-large;
+            font-weight: bold;
+        }
+
+        p {
+            margin-top: 5px;
+            margin-bottom: 0;
+            font-style: italic;
+            font-size: @font-size-small;
+            color: #777; // todo : use a var
+        }
+
+        &.active p {
+            color: white;
+        }
+    }
+}

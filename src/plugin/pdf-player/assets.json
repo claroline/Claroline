@@ -1,0 +1,7 @@
+{
+  "styles": {
+    "entry": {
+      "pdf-resource": "resources/pdf.less"
+    }
+  }
+}

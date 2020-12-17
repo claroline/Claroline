@@ -1,0 +1,54 @@
+services:
+    _defaults:
+        public: true #because controller
+
+    # Trainings
+    Claroline\CursusBundle\Controller\CourseController:
+        parent: Claroline\AppBundle\Controller\AbstractCrudController
+        public: true
+        arguments:
+            - '@security.authorization_checker'
+            - '@security.token_storage'
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+            - '@claroline.manager.tool_manager'
+            - '@Claroline\CursusBundle\Manager\CourseManager'
+
+    Claroline\CursusBundle\Controller\SessionController:
+        parent: Claroline\AppBundle\Controller\AbstractCrudController
+        public: true
+        arguments:
+            - '@security.authorization_checker'
+            - '@security.token_storage'
+            - '@translator'
+            - '@Claroline\CoreBundle\Library\RoutingHelper'
+            - '@Claroline\CursusBundle\Manager\SessionManager'
+
+    Claroline\CursusBundle\Controller\EventController:
+        parent: Claroline\AppBundle\Controller\AbstractCrudController
+        public: true
+        arguments:
+            - '@security.authorization_checker'
+            - '@security.token_storage'
+            - '@translator'
+            - '@Claroline\CursusBundle\Manager\EventManager'
+
+    Claroline\CursusBundle\Controller\EventPresenceController:
+        arguments:
+            - '@security.authorization_checker'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\CursusBundle\Manager\EventPresenceManager'
+
+    # User trainings
+    Claroline\CursusBundle\Controller\User\SessionController:
+        arguments:
+            - '@security.authorization_checker'
+            - '@security.token_storage'
+            - '@Claroline\AppBundle\API\FinderProvider'
+
+    Claroline\CursusBundle\Controller\User\EventController:
+        arguments:
+            - '@security.authorization_checker'
+            - '@security.token_storage'
+            - '@Claroline\AppBundle\API\FinderProvider'

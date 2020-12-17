@@ -1,0 +1,21 @@
+/**
+ * Styles for `ip` data type.
+ */
+
+.ip-control {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    .dot {
+        font-weight: 900;
+        display: block;
+        margin: 0 10px;
+    }
+
+    .form-control {
+        flex: 1;
+        text-align: right;
+        min-width: 0; // hack to avoid overflow in FF
+    }
+}

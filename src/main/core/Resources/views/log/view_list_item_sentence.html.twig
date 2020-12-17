@@ -1,0 +1,5 @@
+{% if listItemView is defined and listItemView != null %}
+    {{ listItemView|raw }}
+{% else %}
+    {{ translateLog(log)|raw }}
+{% endif %}

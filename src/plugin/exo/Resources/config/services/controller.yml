@@ -1,0 +1,43 @@
+services:
+    _defaults:
+        public: true #because controller
+
+    UJM\ExoBundle\Controller\Item\ItemController:
+        arguments:
+          - '@Claroline\AppBundle\API\FinderProvider'
+          - '@UJM\ExoBundle\Manager\Item\ItemManager'
+          - '@event_dispatcher'
+
+    UJM\ExoBundle\Controller\Item\ShareController:
+        arguments:
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
+          - '@ujm_exo.serializer.user'
+          - '@UJM\ExoBundle\Manager\Item\ShareManager'
+
+    UJM\ExoBundle\Controller\AttemptController:
+        arguments:
+          - '@security.authorization_checker'
+          - '@UJM\ExoBundle\Manager\AttemptManager'
+          - '@UJM\ExoBundle\Manager\Attempt\PaperManager'
+          - '@claroline.manager.resource_evaluation_manager'
+          - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceUserEvaluationSerializer'
+
+    UJM\ExoBundle\Controller\CorrectionController:
+        arguments:
+          - '@security.authorization_checker'
+          - '@UJM\ExoBundle\Manager\CorrectionManager'
+
+    UJM\ExoBundle\Controller\ExerciseController:
+        arguments:
+          - '@security.authorization_checker'
+          - '@UJM\ExoBundle\Manager\ExerciseManager'
+          - '@UJM\ExoBundle\Manager\DocimologyManager'
+          - '@UJM\ExoBundle\Manager\Item\ItemManager'
+
+    UJM\ExoBundle\Controller\PaperController:
+        arguments:
+          - '@security.authorization_checker'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
+          - '@Claroline\AppBundle\API\FinderProvider'
+          - '@UJM\ExoBundle\Manager\Attempt\PaperManager'
+          - '@UJM\ExoBundle\Manager\ExerciseManager'

@@ -1,0 +1,64 @@
+.current-step {
+    flex: 1; // will push navigation to the bottom of the page
+}
+
+.step-poster,
+.step-title {
+    margin-top: @line-height-computed - 4px; // 4px is to absorb progress bar height
+}
+
+.step-poster {
+    border-radius: @step-poster-border-radius;
+
+    + .step-title {
+        margin-top: @line-height-computed; // restore default margin
+    }
+}
+
+.step-manual-progression {
+    margin-left: auto;
+
+    // fixes v-align
+    display: flex;
+    align-items: center;
+    line-height: @line-height-computed;
+
+    // remove title styles
+    font-family: @font-family-base;
+    font-size: @font-size-base;
+
+    .dropdown-toggle {
+        font-weight: bold;
+
+        &.unseen    { color: @step-status-unseen-color; }
+        &.seen      { color: @step-status-seen-color; }
+        &.to_do     { color: @step-status-to_do-color; }
+        &.done      { color: @step-status-done-color; }
+        &.to_review { color: @step-status-to_review-color; }
+    }
+}
+
+.step-primary-resource {
+    background: @step-resource-bg;
+    border-radius: @border-radius-large;
+
+    .page-header {
+        background-color: @step-resource-bg;
+    }
+}
+
+.step-primary-resource,
+.step-secondary-resources {
+    margin-bottom: @component-margin-bottom;
+}
+
+// todo : rename it in step indicator
+.step-progression {
+    font-size: @step-status-size !important; // override font-awesome
+
+    &.unseen    { color: @step-status-unseen-color; }
+    &.seen      { color: @step-status-seen-color; }
+    &.to_do     { color: @step-status-to_do-color; }
+    &.done      { color: @step-status-done-color; }
+    &.to_review { color: @step-status-to_review-color; }
+}

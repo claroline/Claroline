@@ -2,15 +2,9 @@ README
 ======
 
 [![Join the chat at https://gitter.im/claroline/Claroline](https://badges.gitter.im/claroline/Claroline.svg)](https://gitter.im/claroline/Claroline?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Build Status](https://github.com/Claroline/Claroline/workflows/ci/badge.svg)](https://github.com/Claroline/Claroline/actions)
 
-This repository provides the basic application structure of the Claroline
-platform. It doesn't contain the sources nor the third-party libraries
-required to make the application fully functional. Those sources have to
-be installed following one of the procedures described below.
-
-If you want to contribute or directly browse the sources of the project,
-check the [claroline/Distribution][distribution] repository, which gathers
-the standard modules and plugins of the platform.
+This repository provides the source code of the Claroline LMS platform.
 
 =======
 **/!\ Warning if you wan't to upgrade to 13.x from a older version of Claroline [read this](README.md#Upgrade-From-12x-or-older-to-13x) /!\**
@@ -29,7 +23,7 @@ is managed through composer scripts listed in the [composer.json](composer.json)
 file. For an installation from scratch, the commands would be:
 
     git clone -b 13.x http://github.com/claroline/Claroline
-    cd Claroline/claroline
+    cd Claroline
     php bin/configure
     php bin/check
     composer install --no-dev --optimize-autoloader

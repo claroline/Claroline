@@ -1,0 +1,9 @@
+{
+  "id": "123",
+  "content": "question title",
+  "type": "application/x.unknown+json",
+  "hasExpectedAnswer": true,
+  "score": {
+    "type": "sum"
+  }
+}

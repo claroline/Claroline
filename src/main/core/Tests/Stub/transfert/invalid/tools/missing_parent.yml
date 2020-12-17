@@ -1,0 +1,50 @@
+data:
+    root:
+        uid: 0
+        roles:
+            - role:
+                name: 'ROLE_1'
+                rights:
+                    open: true
+                    edit: false
+                    create:
+                        resource: 'hello'
+    directories:
+        - directory:
+            name: 'root'
+            uid: 1
+            parent: 0
+            roles:
+                - role:
+                    name: 'ROLE_1'
+                    rights:
+                        open: true
+                        edit: false
+                        create:
+                            resource: 'hello'
+        - directory:
+            name: dir1
+            uid: 2
+            creator: bar
+            parent: 1
+            roles:
+                - role:
+                    name: 'ROLE_1'
+                    rights:
+                        open: true
+                        edit: false
+                        create:
+                            resource: 'hello'
+        - directory:
+            name: dir2
+            uid: 3
+            creator: toto
+            parent: 123
+            roles:
+                - role:
+                    name: 'ROLE_1'
+                    rights:
+                        open: true
+                        edit: false
+                        create:
+                            resource: 'hello'

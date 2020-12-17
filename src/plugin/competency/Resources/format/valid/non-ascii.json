@@ -1,0 +1,9 @@
+{
+  "name": "Référentiel test",
+  "description": "Référentiel en français",
+  "scale": {
+    "name": "Échelle test",
+    "levels": ["à", "ù", "è"]
+  },
+  "competencies": []
+}

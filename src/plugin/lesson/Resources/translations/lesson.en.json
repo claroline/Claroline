@@ -1,0 +1,17 @@
+{
+    "chapter_creation": "Create chapter",
+    "delete_also_children": "Do you really want to delete its subchapters too? Otherwise they will be placed in the nearest parent chapter.",
+    "delete_warning": "Do you really want to delete this chapter?",
+    "move_destination": "Move chapter to :",
+    "new_chapter": "New chapter",
+    "subchapter": "As sub-chapter",
+    "sibling": "At the same level",
+    "empty_lesson_message": "This lesson is empty. You can start by adding a new chapter.",
+    "move_chapter": "Move chapter",
+    "move_relation" : "Relation with parent chapter",
+    "internal_note_visibility_help": "Internal notes are only visible to users with the 'View internal notes' right.",
+    "chapter_loading": "We are loading your chapter...",
+    "start_lesson": "Start lesson",
+    "start_disabled_empty": "The lesson is empty.",
+    "lesson_search": "Search in the lesson"
+}

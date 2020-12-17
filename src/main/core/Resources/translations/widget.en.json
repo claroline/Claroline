@@ -1,0 +1,28 @@
+{
+    "widget": "Widget",
+    "add_widget": "Add a widget",
+    "cancel_move_widget": "Cancel move",
+    "widget_delete_confirm_title": "Delete widget",
+    "widget_delete_confirm_message": "Are you sure you want to delete this widget ?",
+    "insert_widget": "Drop widget",
+    "modify_widget": "Edit widget",
+    "move_widget": "Move widget",
+    "new_section_configure": "2. Configure the section",
+    "new_section_select": "1. Choose the section layout to add",
+    "new_widget": "New widget",
+    "new_widget_configure": "2. Configure the widget",
+    "new_widget_select": "1. Choose the type of widget to add",
+    "restrictions_by_roles" : "Restrict by roles",
+
+    "simple": "Simple content",
+    "simple_desc": "Allows to create and display a rich text (link, image, video).",
+    "list": "Data list",
+    "list_desc": "Allows to configure (filters, display modes, sorting) and display a list of chosen elements.",
+    "profile": "User profile",
+    "profile_desc": "Allows to display the profile of the current user or the chosen one.",
+    "resource": "Resource",
+    "resource_desc": "Allows to display an existing resource.",
+
+    "publish_section": "Publish section",
+    "layout_columns": "{1} 1 column |]1,Inf[ %count% columns"
+}

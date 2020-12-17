@@ -1,0 +1,8 @@
+plugin:
+  has_options: false
+
+  resources:
+    - name: innova_path
+      class: Innova\PathBundle\Entity\Path\Path
+      tags: [structure, content, evaluation]
+      exportable: true

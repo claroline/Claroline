@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "The ID of the resource node."
+    },
+    "name": {
+      "type": "string",
+      "description": "The ID of the resource node."
+    },
+    "rights": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "https://github.com/claroline/Distribution/tree/master/main/core/Resources/schemas/resource/rights.json" }
+    }
+  },
+  "claroline": {
+    "ids":  ["id", "name"]
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "id": "abc-def-hijklm",
+  "forum": {
+    "id": "abc-def-hijklmm"
+  },
+  "title": "TITRE DU SUJET !!!!",
+  "meta": {
+    "views": 1,
+    "creator": {
+      "name": "Ceci est le nom de l'auteur si le creator a été supprimé",
+      "id": "abc-def-hijklm"
+    },
+    "created": "2017-12-06T07:02:51",
+    "updated": "2018-12-06T07:02:51",
+    "sticky": false,
+    "closed": false
+  }
+}

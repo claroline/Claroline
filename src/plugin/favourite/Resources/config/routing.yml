@@ -1,0 +1,4 @@
+# JSON API
+hevinci_favourite_api:
+    resource: "@HeVinciFavouriteBundle/Controller/"
+    type: annotation

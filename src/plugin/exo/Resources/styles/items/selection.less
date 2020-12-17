@@ -1,0 +1,116 @@
+.selection-editor {
+  position: relative; // contain hole popovers
+
+  .footer {
+    text-align: center;
+  }
+
+  .selection-button {
+    .form-control {
+      cursor: pointer; // don't know why it's not done by default
+      border-radius: @answer-item-border-radius 0 0 @answer-item-border-radius;
+    }
+
+    .btn-link,
+    .btn {
+      padding: 4px;
+    }
+  }
+
+  .popover {
+    min-width: 360px; // grow popover
+
+    .popover-title {
+      > div {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .btn-link,
+        .btn {
+          padding: 0 4px; // horizontal : same as feedback and delete item btns
+        }
+      }
+    }
+  }
+}
+
+.span-selection {
+  border-color: #7DB3C9;
+  border-width: 3px;
+  border-style: solid;
+  cursor: pointer;
+}
+
+.selection-button {
+  cursor: pointer
+}
+
+.checked-selection {
+  background-color: #7DB3C9;
+  border-color: #7DB3C9;
+  border-width: 3px;
+  border-style: solid;
+}
+
+.selection-success {
+  color: @correct-answer-color;
+  background: @correct-answer-bg;
+
+  .selection-text {
+    text-decoration: underline;
+    font-weight: bold;
+  }
+}
+
+.selection-error {
+  color: @incorrect-answer-color;
+  background: @incorrect-answer-bg;
+
+  .selection-text {
+    text-decoration: underline;
+    font-weight: bold;
+  }
+}
+
+.selection-text {
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+.selection-info {
+  color: @selected-answer-color;
+  background: @selected-answer-bg;
+
+  .selection-text {
+    text-decoration: underline;
+    font-weight: bold;
+  }
+}
+
+.selection-answer {
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+.selection-success-color {
+  color: @correct-answer-color;
+}
+
+.selection-error-color {
+  color: @incorrect-answer-color;
+}
+
+.selection-info-color {
+  color: @selected-answer-color;
+}
+
+.color-option:hover {
+  background-color:transparent;
+  text-decoration: none;
+}
+
+.selection-score {
+  width: 50%;
+  display: inline-block;
+}

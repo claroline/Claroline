@@ -1,0 +1,12 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true #because lazy
+
+    Claroline\OpenBadgeBundle\Crud\BadgeClassCrud:
+        arguments:
+            - '@security.token_storage'
+            - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
+        tags:
+            - { name: kernel.event_listener, event: crud_pre_create_object_claroline_openbadgebundle_entity_badgeclass, method: preCreate }

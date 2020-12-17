@@ -1,0 +1,21 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+
+    Claroline\AnnouncementBundle\Serializer\AnnouncementSerializer:
+        tags: [claroline.serializer]
+        arguments:
+            - '@security.token_storage'
+            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
+            - '@Claroline\CoreBundle\Library\Utilities\FileUtilities'
+
+    Claroline\AnnouncementBundle\Serializer\AnnouncementAggregateSerializer:
+        tags: [claroline.serializer]
+        arguments:
+            - '@Claroline\AnnouncementBundle\Serializer\AnnouncementSerializer'

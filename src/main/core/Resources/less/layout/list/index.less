@@ -1,0 +1,113 @@
+/**
+ * DataList styles.
+ */
+
+@import "data-grids";
+@import "data-lists";
+@import "data-trees";
+
+
+// FIXME: this is ugly to do it like it
+// if there are additional containers, I'm fucked and it may be required by some other components too
+.page-content > .data-list {
+    &:first-child {
+        margin-top: @component-margin-bottom;
+    }
+}
+
+
+// -
+// Modals
+// ---
+
+.data-picker-modal {
+    .embedded-list-variant(@modal-footer-bg, @modal-footer-bg, @modal-header-border-color, @modal-inner-padding);
+
+    .data-list {
+        margin: 0;
+    }
+}
+
+
+// -
+// Embedded list
+// ---
+
+.embedded-list-section {
+    .embedded-list-variant(@panel-default-heading-bg, @panel-footer-bg, @panel-inner-border, @panel-body-padding);
+
+    .data-list {
+        margin: -@panel-body-padding; // maybe not the best way to handle it
+    }
+}
+
+.embedded-list-variant(@header-bg, @footer-bg, @border-color, @padding-base) {
+    .list-header {
+        background: @header-bg;
+        border-bottom: 1px solid @border-color;
+    }
+
+    .list-toolbar,
+    .list-search,
+    .list-options {
+        background: @header-bg;
+    }
+
+    .list-selected {
+        border-left: none;
+        border-right: none;
+        border-top: 1px solid @border-color; // force border top for table display
+        border-color: @border-color;
+        background: @header-bg;
+    }
+
+    .list-footer {
+        padding: 5px;
+        background: @footer-bg;
+        border-top: 1px solid @border-color;
+    }
+
+    .content-loader {
+        margin: 0;
+        border-radius: 0;
+    }
+
+    // customize view modes
+    .data-table {
+        margin-bottom: -1px; // merge last row and footer borders
+    }
+
+    .data-grid {
+        margin-bottom: @data-grid-gutter;
+        .data-grid-header,
+        .list-selected-label {
+            margin-left: @data-grid-gutter;
+        }
+    }
+
+    .data-grid-col {
+        .data-grid-content {
+            margin: -@data-grid-gutter 0;
+        }
+    }
+
+    .data-grid-row {
+        .data-grid-content {
+            margin: -@data-grid-gutter/2 0;
+        }
+    }
+
+    .table {
+        th:first-child,
+        td:first-child {
+            border-left: none;
+            padding-left: @padding-base;
+        }
+
+        th:last-child,
+        td:last-child {
+            border-right: none;
+            padding-right: @padding-base;
+        }
+    }
+}

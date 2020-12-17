@@ -1,0 +1,11 @@
+# JSON API
+claro_dropzone_api:
+    resource: "@ClarolineDropZoneBundle/Controller/API/"
+    prefix: apiv2
+    type: api
+    options:
+        expose: true
+
+claro_dropzone_log:
+    resource: "@ClarolineDropZoneBundle/Controller/Resource/DropzoneController.php"
+    type: annotation

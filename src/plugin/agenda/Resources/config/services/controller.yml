@@ -1,0 +1,12 @@
+services:
+    _defaults:
+        public: true #because controller
+
+    Claroline\AgendaBundle\Controller\EventController:
+        parent: Claroline\AppBundle\Controller\AbstractCrudController
+        public: true
+        arguments:
+            - '@security.authorization_checker'
+            - '@security.token_storage'
+            - '@Claroline\CoreBundle\Library\Utilities\FileUtilities'
+            - '@Claroline\AgendaBundle\Manager\AgendaManager'

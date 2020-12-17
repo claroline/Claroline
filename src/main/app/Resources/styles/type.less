@@ -1,0 +1,69 @@
+// in bootstrap this doesn't use the mixin
+.text-muted {
+    .text-emphasis-variant(@text-muted);
+}
+
+// a color to use on background which is considered 'dark' by tinycolor2
+// @see https://www.npmjs.com/package/tinycolor2#isdark
+.text-light {
+    color: @text-light-color !important; // todo : adjust
+}
+
+// a color to use on background which is considered 'light' by tinycolor2
+// @see https://www.npmjs.com/package/tinycolor2#islight
+.text-dark {
+    color: @text-dark-color !important; // todo : adjust
+}
+
+.text-subtitles {
+    .text-movie-subtitles();
+}
+
+.h-title {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: left;
+
+    small {
+        display: block;
+        margin-top: 5px;
+    }
+}
+
+.h-numbering {
+    display: inline-flex;
+    align-items: center;
+    align-self: stretch;
+    font-size: @heading-numbering-font;
+    font-weight: @heading-numbering-weight;
+    padding: @heading-numbering-padding;
+    margin-right: 10px;
+    background: @heading-numbering-bg;
+    color: @heading-numbering-color;
+    border-radius: @heading-numbering-border-radius;
+    .box-shadow(@heading-numbering-box-shadow);
+
+    &:after {
+        content: @heading-numbering-separator;
+    }
+}
+
+.btn.h-back {
+    margin-right: floor(@grid-gutter-width / 2);
+    padding: @padding-base-horizontal;
+    border-radius: 50%;
+}
+
+.h-toolbar {
+    margin-left: auto;
+    white-space: nowrap;
+}
+
+// AVOID USING IT
+// Find a better way to handle it
+.h-first {
+    // otherwise there is too many space when used just after a .page-header
+    // there may be a better way to handle it.
+    margin-top: 0;
+}

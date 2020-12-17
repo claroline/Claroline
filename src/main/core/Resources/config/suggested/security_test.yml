@@ -1,0 +1,7 @@
+imports:
+    - { resource: security_dev.yml }
+
+security:
+    firewalls:
+        main:
+            http_basic: ~

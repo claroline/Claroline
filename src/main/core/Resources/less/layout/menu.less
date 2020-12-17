@@ -1,0 +1,254 @@
+
+// todo : write a mixin to generate menu btns variant (for shortcuts, search btn, menu items)
+
+.app-menu {
+    overflow-y: auto; // gets its own scrollbar
+    max-width: @toolbar-size;
+    width: 100%;
+    top: @top-bar-height;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    background-color: @toolbar-bg;
+    color: @toolbar-color;
+
+    .app-menu-header {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: stretch;
+        flex-shrink: 0;
+    }
+
+    .app-menu-title {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        line-height: 1;
+        padding: 10px floor(@grid-gutter-width / 2);
+        margin: 0;
+        font-family: @font-family-base;
+    }
+
+    .app-menu-status {
+        background-color: @toolbar-link-hover-bg;
+        padding: floor(@grid-gutter-width / 2);
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+
+        .gauge {
+            flex-shrink: 0;
+        }
+
+        .app-menu-status-info {
+            flex: 1 0;
+            margin-left: floor(@grid-gutter-width / 2);
+            font-style: italic;
+            font-size: @font-size-small;
+            color: @top-bar-link-disabled-color;
+
+            h3 {
+                margin-top: 0;
+                font-style: normal;
+                color: @toolbar-color;
+                display: flex;
+                justify-content: space-between;
+            }
+        }
+
+        .app-menu-status-toolbar {
+            flex: 1 0 100%;
+            text-align: right;
+
+            > .btn-link {
+                text-transform: uppercase;
+                padding: 0;
+                border: none;
+            }
+        }
+
+        + .app-menu-shortcuts {
+            margin-top: 2px;
+        }
+    }
+
+    .app-menu-impersonation {
+        #gradient > .striped(@color: @toolbar-bg; @angle: 45deg);
+        background-size: 100px 100px;
+    }
+
+    .app-menu-shortcuts {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        .app-menu-shortcuts-btn {
+            flex: 1;
+            font-size: 16px;
+            padding-left: 10px;
+            padding-right: 10px;
+            color: @toolbar-link-color;
+            background: @toolbar-link-hover-bg;
+
+            + .app-menu-shortcuts-btn {
+                margin-left: 2px;
+            }
+        }
+    }
+
+    .app-menu-section {
+        &:first-of-type {
+            margin-top: auto;
+        }
+
+        &.opened {
+            flex: 1;
+        }
+
+        > h2 {
+            margin: 0;
+
+            > button {
+                text-align: left;
+                padding: floor(@grid-gutter-width / 2);
+                display: block;
+                width: 100%;
+            }
+        }
+    }
+
+    .app-menu-back {
+        flex: 0;
+    }
+
+    .list-group-item {
+        font-style: italic;
+        padding-left: @grid-gutter-width !important;
+
+        &.active {
+            padding-left: 26px !important;
+            border-left: 4px solid @toolbar-active-color;
+        }
+
+        &.danger {
+            color: @brand-danger;
+
+            &:hover,
+            &:focus {
+                color: white;
+                background: @brand-danger;
+            }
+
+            &.disabled {
+                opacity: .65; // same than standard button
+                color: @brand-danger;
+                background: transparent;
+            }
+        }
+    }
+
+    .list-group-item,
+    .app-menu-back {
+        display: block;
+        width: 100%;
+        padding: floor(@grid-gutter-width / 2);
+        line-height: 1;
+        color: @toolbar-link-color;
+        background: @toolbar-link-bg;
+        border: none;
+
+        &:hover {
+            color: @toolbar-link-hover-color;
+            background: @toolbar-link-hover-bg;
+        }
+
+        &:focus,
+        &:active,
+        &.active {
+            &,
+            &:hover,
+            &:focus {
+                color: @toolbar-link-active-color;
+                background-color: @toolbar-link-active-bg;
+            }
+        }
+
+        &[disabled],
+        &.disabled {
+            // avoid focus or hover effect on disabled
+            &,
+            &:hover,
+            &:focus {
+                color: @toolbar-link-disabled-color;
+                background-color: @toolbar-link-disabled-bg;
+            }
+
+            // preserve active state on disabled (because active links are disabled)
+            &.active {
+                &,
+                &:hover,
+                &:focus {
+                    color: @toolbar-link-active-color;
+                    background: @toolbar-link-active-bg;
+                    opacity: 1;
+                }
+            }
+        }
+    }
+}
+
+.app-menu-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 3;
+}
+
+.app-menu-search {
+    margin: floor(@grid-gutter-width / 2);
+    margin-top: 0;
+
+    .form-control {
+        color: @toolbar-link-hover-color;
+        background: lighten(@toolbar-bg, 8%);
+        border-color: transparent;
+        box-shadow: none;
+
+        .placeholder(@toolbar-link-color);
+    }
+
+    .input-group-btn > .btn { // specific selector required to override default styles
+        color: @toolbar-link-color;
+        background: @toolbar-link-hover-bg;
+        border-color: transparent;
+
+        &.disabled, &.disabled:hover {
+            color: @toolbar-link-disabled-color;
+            background: @toolbar-link-disabled-bg;
+            border-color: lighten(@toolbar-bg, 8%);
+        }
+
+        &:hover {
+            color: @toolbar-link-active-color;
+            background: @toolbar-link-active-bg;
+            border-color: transparent;
+        }
+    }
+}
+
+// XS/SM screens :
+@media (max-width: @screen-md-max) {
+    .app-menu {
+        position: absolute;
+        z-index: 4;
+        .box-shadow(0 0 3px 1px rgba(0, 0, 0, 0.5));
+    }
+}

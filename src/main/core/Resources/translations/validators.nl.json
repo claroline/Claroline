@@ -1,0 +1,23 @@
+{
+    "The code {{ code }} is already assigned to another workspace.": "De code {{ code }} is al toegewezen aan een andere werkruimte.",
+    "The name {{ name }} is already in use.": "De naam {{ name }} is al gebruikt.",
+    "The user or group {{ name }} does not exist.": "De gebruiker of de groep [{{ name }}] bestaat niet.",
+    "email_not_valid": "Deze email is niet geldig.",
+    "google_meta_tag_error": "Het veld moet een meta-tag zijn. Voorbeeld : <meta name=\"google-site-verification\" content=\"XXX\" />.'",
+    "invalid_date_range": "De einddatum mag de begindatum niet voorafgaan.",
+    "invalid_domain_name": "Deze domeinnaam is niet geldig.",
+    "invalid_size_message": "Deze opslageenheid is niet geldig (B, KB, MB, GB).",
+    "name_required": "De naam is vereist.",
+    "need_at_least_one_translation": "U moet tenminste één volledige vertaling leveren.",
+    "password_mismatch": "De wachtwoorden komen niet overeen.",
+    "port_error": "De poort moet een nummer zijn.",
+    "public_profile_url_not_valid": "De URL van uw openbaar profiel is niet geldig.",
+    "role_already_exists": "Deze rol bestaat al.",
+    "special_char_not_allowed": "De speciale tekens worden niet aanvaard. De toegelaten tekens zijn : a-z, A-Z, 0-9, @, _, - en.",
+    "username_doesnt_exist": "De gebruiker %username% bestaat niet.",
+    "valid_end_date_required": "Een geldige einddatum is vereist.",
+    "valid_end_hour_required": "Een geldig einduur is vereist.",
+    "valid_start_date_required": "Een geldige begindatum is vereist.",
+    "valid_start_hour_required": "Een geldig beginuur is vereist.",
+    "value_not_blank": "Deze waarde mag niet leeg zijn."
+}

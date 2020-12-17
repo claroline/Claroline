@@ -1,0 +1,10 @@
+{
+  "favourites": "Favoris",
+  "empty_workspaces": "Vous n'avez aucun espace d'activités favoris",
+  "empty_workspaces_help": "Parcourez vos espaces d'activités pour les ajouter à vos favoris et les voir apparaître ici",
+  "empty_resources": "Vous n'avez aucune ressource favorite",
+  "empty_resources_help": "Parcourez vos ressources pour les ajouter à vos favoris et les voir apparaître ici",
+  "delete_favorite": "Suppression du favoris",
+  "delete_resource_message": "Êtes-vous sûr de vouloir retirer cette ressource de vos favoris ?",
+  "delete_workspace_message": "Êtes-vous sûr de vouloir retirer cet espace d'activités de vos favoris ?"
+}

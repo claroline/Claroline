@@ -1,0 +1,203 @@
+
+.page {
+    flex: 1 0 auto;
+    display: flex;
+    flex-direction: column;
+    max-width: 100%;
+
+    &.fullscreen {
+        position: fixed;
+        z-index: @zindex-fullscreen;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        background: @body-bg; // regular page container has no background. We need to hide what is under
+        overflow-y: scroll; // get the scrollbar
+    }
+}
+
+.page-header {
+    // this is to make box shadow of page-header and footer appear over content with bg. I should find a better way to handle it (without z-index)
+    z-index: 2;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    background-color: @page-header-bg;
+
+    padding: @page-header-padding;
+    margin: 0;
+    border-bottom: none;
+    .box-shadow(0 2px 2px rgba(0,0,0,.15));
+
+    .page-title {
+        order: 2;
+        flex: 1;
+    }
+
+    + .page-content-shift {
+        margin-top: @component-margin-bottom;
+    }
+}
+
+.page-poster {
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    min-height: 300px;
+    border-bottom: none;
+
+    // use movie subtitles styles to make title always readable
+    // maybe one day add a background checker
+    .page-title,
+    .page-title > small {
+        .text-movie-subtitles();
+    }
+}
+
+.page-icon {
+    order: 1;
+    flex-shrink: 0;
+    width: 70px;
+    height: 70px;
+    margin: 10px floor(@grid-gutter-width / 2);
+
+    > * {
+        max-width: 100%;
+        max-height: 100%;
+    }
+}
+
+.page-title {
+    font-size: @page-header-font-size;
+    font-weight: @page-header-weight;
+    margin: floor(@grid-gutter-width / 2) 0;
+    padding: 0 floor(@grid-gutter-width / 2);
+
+    > small {
+        display: block;
+        margin-top: 5px;
+        font-size: 50%;
+        font-style: italic;
+    }
+}
+
+.page-actions {
+    order: 3;
+    margin-left: auto;
+    margin-top: floor(@grid-gutter-width / 2);
+    margin-bottom: floor(@grid-gutter-width / 2);
+    padding: 0 floor(@grid-gutter-width / 2);
+    white-space: nowrap;
+
+    .page-actions-group { // todo remove me (for retro compatibility)
+        display: inline-block;
+        margin-left: floor(@grid-gutter-width / 2);
+
+        &:first-child {
+            margin-left: 0;
+        }
+    }
+
+    > .page-actions-btn:first-child,
+    .page-actions-group .page-actions-btn:first-child {
+        margin-left: 0; // absorb first btn margin
+    }
+
+    .page-actions-btn {
+        margin-left: .2em;
+    }
+
+    .dropdown-menu {
+        margin-top: 5px; // increase margin to avoid overlap btn label if any
+    }
+}
+
+.page-actions-separator {
+    display: inline-block;
+    margin: 0 5px;
+}
+
+// Current styles permit to have 7 buttons in one line on 360px screens (without btn groups)
+.page-actions-btn {
+    .button-base();
+
+    position: relative; // for buttons with labels
+    text-align: center;
+    border-radius: (.65em * 2) + 1.25em;
+    padding: .65em;
+    font-size: 1.25em;
+    line-height: 1.25em;
+
+    border: 1px solid transparent !important; // not perfect, it's required to override default btns border
+
+    &.default {
+        .button-variant(@gray-dark; @gray-lightest; transparent);
+    }
+
+    &.primary {
+         .button-variant(@btn-primary-color; @btn-primary-bg; transparent);
+     }
+
+    &.danger {
+        .button-variant(@brand-danger; @gray-lighter; transparent);
+    }
+
+    // displays icon as a square
+    .action-icon {
+        width: 1.25em;
+    }
+
+    // puts labels in the bottom right corner
+    .action-subscript {
+        position: absolute;
+        top: auto; // reset bootstrap default
+        bottom: -5px;
+        right: 0;
+        font-size: 14px;
+        line-height: 1;
+
+        &.label {
+            font-size: 10px;
+            padding: .2em .4em;
+        }
+    }
+}
+
+.page-content {
+    // this is to make box shadow of page-header and footer appear over content with bg. I should find a better way to handle it (without z-index)
+    z-index: 1;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex: 1 0 auto; // only specifying flex property here make the item fill the remaining space in its parent
+    padding: 0 floor(@grid-gutter-width / 2);
+}
+
+.page-icon {
+    .tool-icon,
+    .resource-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: hsla(0,0%,100%,.6);
+        border-radius: 50%;
+        font-size: 32px;
+        padding: floor(@grid-gutter-width / 2);
+        .box-shadow(0 0px 4px rgba(0,0,0,.5));
+    }
+
+    .tool-icon {
+        height: 100%;
+        width: 100%;
+    }
+}
+
+@media (max-width: @screen-sm-min) {
+    .page-header {
+        flex-wrap: wrap;
+    }
+}

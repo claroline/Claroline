@@ -7,6 +7,7 @@ RUN a2enmod rewrite expires ssl headers
 
 RUN apt-get update && apt-get install -y \
   git \
+
   mariadb-client \
   wget \
   unzip \

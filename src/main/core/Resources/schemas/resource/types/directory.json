@@ -1,0 +1,13 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "number",
+      "description": "The ID of the directory resource."
+    }
+  },
+  "claroline": {
+    "ids":  ["id"]
+  }
+}

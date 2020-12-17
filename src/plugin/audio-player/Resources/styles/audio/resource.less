@@ -1,0 +1,98 @@
+@import '../variables';
+
+.audio-resource-player {
+    margin-top: 10px;
+
+    .comments-buttons {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 20px;
+
+        .btn {
+            margin-left: 4px;
+        }
+    }
+
+    .wave, canvas {
+        z-index: 1 !important;
+    }
+}
+
+.audio-player-transcripts {
+    border: solid 1px lightgray;
+    margin-bottom: 10px;
+    padding: 5px;
+}
+
+.audio-player-section {
+    margin-top: 40px;
+
+    .section-controls {
+        display: flex;
+        justify-content: center;
+
+        .section-btn {
+            margin: 5px;
+        }
+
+        .activated {
+            filter: brightness(120%);
+        }
+    }
+
+    .section-display {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .section-help {
+            border: solid 1px lightgray;
+            border-radius: 5px;
+            padding: 10px;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .user-message-container {
+            width: 100%;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+    }
+}
+
+.section-configuration {
+    margin-top: 20px;
+    background-color: @gray-lighter;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    padding: 10px;
+}
+
+.section-configuration.selected {
+    border: solid 2px darkslategray;
+}
+
+.section-configuration-head {
+    display: flex;
+
+    .section-time-group {
+        margin-right: 5px;
+        width: 40%;
+    }
+}
+
+.section-audio-group {
+    display: flex;
+    margin-top: 20px;
+}
+
+.audio-resource-sections-comments {
+    .sections-comments, .sections-comments-list {
+        margin-top: 30px;
+    }
+}
+
+.wavesurfer-region:hover {
+  filter: brightness(80%);
+}

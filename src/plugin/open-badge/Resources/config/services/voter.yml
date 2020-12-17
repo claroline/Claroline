@@ -1,0 +1,21 @@
+services:
+    _defaults:
+        autoconfigure: false
+        public: false
+
+    _instanceof:
+        Claroline\CoreBundle\Security\Voter\AbstractVoter:
+            autowire: false
+            tags: [security.voter]
+            calls:
+                - method: setContainer
+                  arguments:
+                      - '@service_container'
+
+    Claroline\OpenBadgeBundle\Security\Voter\AssertionVoter: ~
+
+    Claroline\OpenBadgeBundle\Security\Voter\BadgeClassVoter:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+
+    Claroline\OpenBadgeBundle\Security\Voter\EvidenceVoter: ~

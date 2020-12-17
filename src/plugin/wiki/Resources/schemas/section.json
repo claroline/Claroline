@@ -1,0 +1,50 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "The uuid of the section"
+    },
+    "activeContribution": {
+      "type": ["object", "null"],
+      "description": "The section's active contribution"
+    },
+    "meta": {
+      "type": "object",
+      "properties": {
+        "createdAt": {
+          "type": "string",
+          "description": "The section's creation date"
+        },
+        "creator": {
+          "type": ["object", "null"],
+          "description": "The section's author"
+        },
+        "visible": {
+          "type": "boolean",
+          "description": "The section's visibility"
+        },
+        "deletedAt": {
+          "type": "string",
+          "description": "The section's deletion date"
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "description": "The section's sub-sections",
+      "uniqueItems": true,
+      "items": {
+        "oneOf": [
+          {
+            "$ref": "https://github.com/claroline/Distribution/tree/master/plugin/wiki/Resources/schemas/section.json"
+          }
+        ]
+      }
+    }
+  },
+  "claroline": {
+    "ids":  ["id"]
+  }
+}

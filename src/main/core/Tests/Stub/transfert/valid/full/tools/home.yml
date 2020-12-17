@@ -1,0 +1,16 @@
+  data:
+  - tab:
+        name: tabname
+        widgets:
+         - widget:
+             name: 'ceci est un merveilleux texte'
+             type: 'simple_text'
+             import:
+                - path: 'tools/widgets/text01.yml'
+  - tab:
+        name: tabname02
+
+
+
+
+

@@ -1,0 +1,96 @@
+{
+  "name": "Civil service competency framework",
+  "description": "Competency framework to support the Civil Service Reform Plan and the new performance management system.",
+  "scale": {
+    "name": "Civil service levels",
+    "levels": ["Level 1", "Level 2", "Level 3"]
+  },
+  "competencies": [
+    {
+      "name": "Setting direction",
+      "competencies": [
+        {
+          "name": "Seeing the big picture",
+          "abilities": [
+            {
+              "name": "Gathering information from a range of relevant sources inside and outside their Department to inform own work",
+              "level": "Level 1"
+            },
+            {
+              "name": "Understanding what is required of them in their role and how this contributes to team and Departmental priorities",
+              "level": "Level 1"
+            },
+            {
+              "name": "Keeping up to date with a broad set of issues relating to the work of the Department",
+              "level": "Level 2"
+            },
+            {
+              "name": "Being alert to emerging issues and trends which might impact or benefit own and team’s work",
+              "level": "Level 3"
+            }
+          ]
+        },
+        {
+          "name": "Making effective decisions",
+          "abilities": [
+            {
+              "name": "Making and recording effective decisions following the appropriate decision making criteria, framework or guidance",
+              "level": "Level 1"
+            },
+            {
+              "name": "Demonstrating accountability and making unbiased decisions",
+              "level": "Level 2"
+            },
+            {
+              "name": "Making decisions when they are needed, even if they prove difficult or unpopular",
+              "level": "Level 3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Delivering results",
+      "competencies": [
+        {
+          "name": "Managing a quality service",
+          "abilities": [
+            {
+              "name": "Communicating in a way that meets and anticipates the customer’s requirements and gives a favourable impression of the Civil Service",
+              "level": "Level 1"
+            },
+            {
+              "name": "Explaining clearly to customers what can be done",
+              "level": "Level 2"
+            },
+            {
+              "name": "Making effective use of project management skills and techniques to deliver outcomes, including identifying risks and mitigating actions ",
+              "level": "Level 3"
+            }
+          ]
+        },
+        {
+          "name": "Delivering at pace",
+          "abilities": [
+            {
+              "name": "Working in an organised manner using own knowledge and expertise to deliver on time and to standard",
+              "level": "Level 1"
+            },
+            {
+              "name": "Creating regular reviews of what and who is required to make a project/activity successful and make ongoing improvements",
+              "level": "Level 2"
+            },
+            {
+              "name": "Being interested and positive about what they and the team are trying to achieve",
+              "level": "Level 2"
+            },
+            {
+              "name": "Successfully managing, supporting and stretching self and team to deliver agreed goals and objectives",
+              "level": "Level 3"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

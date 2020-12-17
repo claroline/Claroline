@@ -1,0 +1,58 @@
+claro_security_login:
+    path: /login
+    options: { expose: true }
+
+claro_security_logout:
+    path: /logout
+    options: { expose: true }
+
+# OAUTH
+hwi_oauth_redirect:
+    resource: "@HWIOAuthBundle/Resources/config/routing/redirect.xml"
+    prefix:   /connect
+    options:
+        expose: true
+
+hwi_oauth_connect:
+    resource: "@HWIOAuthBundle/Resources/config/routing/connect.xml"
+    prefix:   /connect
+
+hwi_oauth_login:
+    resource: "@HWIOAuthBundle/Resources/config/routing/login.xml"
+    prefix:   /login
+
+# SSO specific routes
+dropbox_login:
+    path: /login/check-dropbox
+
+facebook_login:
+    path: /login/check-facebook
+
+github_login:
+    path: /login/check-github
+
+google_login:
+    path: /login/check-google
+
+linkedin_login:
+    path: /login/check-linkedin
+
+office_365_login:
+    path: /login/check-o365
+
+twitter_login:
+    path: /login/check-twitter
+
+windows_live_login:
+    path: /login/check-windows
+
+oauth2_generic_login:
+    path: /login/check-generic
+
+# Claroline API
+claro_authentication_api:
+    resource: "@ClarolineAuthenticationBundle/Controller/"
+    prefix: apiv2
+    type: api
+    options:
+        expose: true

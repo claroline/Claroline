@@ -1,0 +1,6 @@
+url_api:
+    resource: "@HeVinciUrlBundle/Controller/"
+    prefix: apiv2
+    type: api
+    options:
+        expose: true

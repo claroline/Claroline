@@ -1,0 +1,73 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "The options' id"
+    },
+    "authorizeComment": {
+      "type": "boolean",
+      "description": "Comments authorized"
+    },
+    "authorizeAnonymousComment": {
+      "type": "boolean",
+      "description": "Anonymous comments authorized"
+    },
+    "postPerPage": {
+      "type": "integer",
+      "description": "Post number per page"
+    },
+    "autoPublishPost": {
+      "type": "boolean",
+      "description": "Automatic publication of posts"
+    },
+    "commentModerationMode": {
+      "type": "integer",
+      "description": "Moderation mode option"
+    },
+    "displayPostViewCounter": {
+      "type": "boolean",
+      "description": "Display post views number"
+    },
+    "tagCloud": {
+      "type": "integer",
+      "description": "Tag cloud presentation mode"
+    },
+    "tagTopMode": {
+      "type": "boolean",
+      "description": "Display top tags only"
+    },
+    "maxtTag": {
+      "type": "integer",
+      "description": "Tag number to display"
+    },
+    "displayFullPosts": {
+      "type": "boolean",
+      "description": "Display full posts in view list"
+    },
+    "infos": {
+      "type": "string",
+      "description": "Information toolbar content"
+    },
+    "widgetOrder": {
+      "type": ["object"],
+      "properties": {
+        "nameTemplate": {
+          "type": "string",
+          "description": "Widget template name"
+        },
+        "visibility": {
+          "type": "boolean",
+          "description": "Visiblity status"
+        },
+        "id": {
+          "type": "string",
+          "description": "Widget id"
+        }
+      }
+    }
+  },
+  "required": ["id"],
+  "claroIds": ["id"]
+}

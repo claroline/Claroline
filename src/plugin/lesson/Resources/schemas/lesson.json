@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "The uuid of the lesson"
+    },
+    "title": {
+      "type": "string",
+      "description": "The title of the lesson"
+    },
+    "display": {
+      "type": "object",
+      "properties": {
+        "showOverview": {
+          "type": "boolean",
+          "description": "The lesson has an overview page"
+        }
+      }
+    }
+  },
+  "claroline": {
+    "ids":  ["id"]
+  }
+}

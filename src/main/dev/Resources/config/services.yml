@@ -1,0 +1,33 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: false
+
+    Claroline\DevBundle\Manager\TranslationManager:
+        calls:
+            - setLogger: [ '@logger' ]
+
+    Claroline\DevBundle\Listener\DebugListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.response, method: onResponse }
+
+    # Console Commands
+
+    Claroline\DevBundle\Command\TranslationDebugCommand:
+        arguments:
+            - '@Claroline\DevBundle\Manager\TranslationManager'
+        tags:
+            - { name: 'console.command', command: 'claroline:fixup:translations' }
+
+    Claroline\DevBundle\Command\CreatePluginCommand:
+        arguments:
+            - '%claroline.param.vendor_directory%'
+        tags:
+            - { name: 'console.command', command: 'claroline:plugin:create' }
+
+    Claroline\DevBundle\Command\RouterDebugCommand:
+        arguments:
+            - '@router'
+        tags:
+            - { name: 'console.command', command: 'claroline:debug:router' }

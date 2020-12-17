@@ -1,0 +1,7 @@
+# JSON API
+icap_wiki_api:
+    resource: "@IcapWikiBundle/Controller/"
+    prefix: apiv2
+    type: api
+    options:
+        expose: true

@@ -1,0 +1,24 @@
+{
+  "id": "1",
+  "type": "application/x.choice+json",
+  "title": "Question ?",
+  "content": "",
+  "score": {
+    "type": "sum"
+  },
+  "hasExpectedAnswer": true,
+  "choices": [
+    {
+      "id": "1",
+      "type": "text/html",
+      "data": "True"
+    },
+    {
+      "id": "2",
+      "type": "text/html",
+      "data": "False"
+    }
+  ],
+  "random": false,
+  "multiple": false
+}

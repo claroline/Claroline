@@ -1,0 +1,146 @@
+.jtk-endpoint {
+  z-index: 2;
+}
+
+.jtk-endpoint,
+.jtk-connector {
+  cursor: pointer;
+}
+
+.jtk-connector {
+  z-index: 1;
+  opacity: 0.6;
+
+  &.jtk-hover {
+    opacity: 1;
+  }
+}
+
+.match-items {
+  /* required by jsPlumb for proper drawing */
+  position: relative;
+
+  .item-col {
+    ul {
+      padding: 0;
+      margin: 0;
+      list-style-type: none;
+    }
+  }
+
+  .divide-col {
+    /* required for position computing */
+    position: relative;
+
+    .popover {
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  }
+}
+
+/* MATCH EDITOR */
+.match-editor {
+  .match-items {
+    .match-item {
+      display: flex;
+    }
+
+    // no need to indent feedback
+    .feedback-container {
+      padding-left: 0;
+    }
+
+    .left-controls {
+      margin-right: floor(@grid-gutter-width / 2);
+    }
+
+    .right-controls {
+      margin-left: floor(@grid-gutter-width / 2);
+    }
+
+    .popover {
+      min-width: 250px !important;
+
+      .popover-title {
+        > div {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+
+          .btn-link,
+          .btn {
+            padding: 0 4px; // horizontal : same as feedback and delete item btns
+          }
+        }
+      }
+
+      .association {
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-end;
+
+        .btn-link,
+        .btn {
+          padding-left: 4px;
+          padding-right: 4px;
+        }
+
+        .association-score {
+          width: 60px;
+          margin-right: floor(@grid-gutter-width / 2);
+        }
+      }
+    }
+  }
+}
+
+.match-player {
+  /* required to set height of children to 100% of its height */
+  display: flex;
+
+  .match-items-list {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+  }
+}
+
+.match-associations {
+  .answer-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .sets {
+      flex-grow: 1;
+      display: flex;
+      align-items: center;
+    }
+  }
+}
+
+.match-association-feedback {
+  min-width: 250px;
+}
+
+.jtk-connector,
+.match-association {
+  stroke: #666;
+}
+.selected-association {
+  stroke: @selected-answer-color;
+}
+.correct-association {
+  stroke: @correct-answer-color;
+}
+.incorrect-association {
+  stroke: @incorrect-answer-color;
+}
+.expected-association {
+  stroke: @correct-answer-color;
+}
+.unexpected-association {
+  stroke: @incorrect-answer-color;
+}

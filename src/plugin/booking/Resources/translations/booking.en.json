@@ -1,0 +1,14 @@
+{
+  "booking": "Booking",
+  "bookings": "Bookings",
+  "room": "Room",
+  "rooms": "Rooms",
+  "new_room": "New room",
+  "add_room": "Add a room",
+  "room_loading": "We are loading the room...",
+  "material": "Material",
+  "materials": "Materials",
+  "new_material": "New material",
+  "add_material": "Add a material",
+  "material_loading": "We are loading the material..."
+}

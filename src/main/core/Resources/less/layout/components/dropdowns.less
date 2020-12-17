@@ -1,0 +1,228 @@
+.dropdown-menu {
+    padding: @dropdown-menu-padding-v @dropdown-menu-padding-h; // more vars
+    font-style: normal; // avoid getting font transformation from parent
+    font-family: @font-family-base; // just to avoid getting title font when headings
+
+    // adds more customization options
+    .box-shadow(@dropdown-menu-box-shadow);
+    border-radius: @dropdown-menu-border-radius;
+
+    > li > a,
+    > li > button {
+        padding: @dropdown-link-padding-v @dropdown-link-padding-h;
+    }
+
+    .dropdown-checkbox {
+        label {
+            white-space: nowrap;
+            line-height: @line-height-base;
+            padding: @dropdown-link-padding-v @dropdown-link-padding-h;
+
+            input[type="radio"],
+            input[type="checkbox"] {
+                margin-right: @dropdown-link-padding-h;
+            }
+        }
+
+        &:hover,
+        &:focus {
+            label {
+                background: @dropdown-link-hover-bg;
+            }
+        }
+    }
+
+    // increases space between icons and text
+    .icon-with-text-right {
+        margin-right: @dropdown-link-padding-h;
+    }
+
+    // removes additional margin when checkboxes/radios are inside dropdown
+    .checkbox,
+    .radio {
+        margin: 0;
+    }
+
+    .list-group {
+        margin: 0;
+
+        .list-group-item {
+            border-left: none;
+            border-right: none;
+        }
+        .list-group-item:first-child {
+            border-top-right-radius: 0;
+            border-top-left-radius: 0;
+        }
+
+        .list-group-item:last-child {
+            border-bottom-right-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+
+        &:last-child {
+            .list-group-item:last-child {
+                border-bottom: none;
+            }
+        }
+    }
+
+    > li {
+        .action-subscript {
+            float: right; // todo : find a better approach
+        }
+    }
+}
+
+.dropdown-menu-full {
+    width: 100%;
+}
+
+.dropdown-header {
+    font-weight: bold;
+    font-style: italic;
+    padding: @dropdown-link-padding-v @dropdown-link-padding-h;
+}
+
+// allows buttons for better HTML semantics
+// Links within the dropdown menu
+.dropdown-menu > li > button {
+    // reset button
+    border: none;
+    background: transparent;
+    min-width: 100%;
+    text-align: left;
+
+    // apply same styles than bootstrap
+    display: block;
+    clear: both;
+    font-weight: normal;
+    line-height: @line-height-base;
+    color: @dropdown-link-color;
+    white-space: nowrap; // prevent links from randomly breaking onto new lines
+
+    // Hover/Focus state
+    &:hover,
+    &:focus {
+        text-decoration: none;
+        color: @dropdown-link-hover-color;
+        background-color: @dropdown-link-hover-bg;
+    }
+
+    // Active state
+    .active {
+        &,
+        &:hover,
+        &:focus {
+            color: @dropdown-link-active-color;
+            text-decoration: none;
+            outline: 0;
+            background-color: @dropdown-link-active-bg;
+        }
+    }
+}
+
+// creates contextual links
+// todo : replace by new action class
+.dropdown-menu > li > .danger {
+    color: @brand-danger;
+
+    &:hover,
+    &:focus {
+        color: white;
+        background: @brand-danger;
+    }
+
+    &.disabled {
+        opacity: .65; // same than standard button
+        color: @brand-danger;
+        background: transparent;
+    }
+}
+
+.dropdown-menu > li > .primary {
+    color: @brand-primary;
+
+    &:hover,
+    &:focus {
+        color: white;
+        background: @brand-primary;
+    }
+
+    &.disabled {
+        opacity: .65; // same than standard button
+        color: @brand-primary;
+        background: transparent;
+    }
+}
+
+// reworks items states (because we put active classes on <a> not <li>)
+
+// Active state
+.dropdown-menu > li > .active {
+    &,
+    &:hover,
+    &:focus {
+        color: @dropdown-link-active-color;
+        text-decoration: none;
+        outline: 0;
+        background-color: @dropdown-link-active-bg;
+    }
+}
+
+// Disabled state
+//
+// Gray out text and ensure the hover/focus state remains gray
+
+.dropdown-menu > li > .disabled {
+    &,
+    &:hover,
+    &:focus {
+        color: @dropdown-link-disabled-color;
+    }
+
+    // Nuke hover/focus effects
+    &:hover,
+    &:focus {
+        text-decoration: none;
+        background-color: transparent;
+        background-image: none; // Remove CSS gradient
+        .reset-filter();
+        cursor: @cursor-disabled;
+    }
+}
+
+.dropdown-menu .nav-tabs {
+    padding: 0 5px;
+    border-color: @dropdown-divider-bg;
+    background: @panel-default-heading-bg;
+
+    > li > button,
+    > li > a {
+        border-top: none !important;
+        border-radius: 0;
+    }
+}
+
+.data-cards-stacked .data-card,
+.dropdown-menu .data-card { // TODO : replace by data-cards-stacked
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+
+    .data-card-header,
+    .data-card-content {
+        border-radius: 0;
+    }
+
+    + .data-card {
+        border-top: 1px solid @data-card-border;
+    }
+}
+
+.data-cards-striped .data-card:nth-of-type(odd) {
+    background-color: @table-bg-accent;
+    .data-card-header {
+        background-color: #f0f0f0;
+    }
+}

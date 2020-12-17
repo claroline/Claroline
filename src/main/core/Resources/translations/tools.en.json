@@ -1,0 +1,14 @@
+{
+    "transfer": "Data import/export",
+    "parameters": "Settings",
+    "resources": "Resources",
+    "tasks_scheduling": "Tasks scheduling",
+    "community": "Community",
+    "main_settings": "Settings",
+    "technical_settings": "Technical settings",
+    "appearance_settings": "Appearance",
+    "templates_management": "Templates management",
+    "resource_trash": "Resources trash",
+    "integration": "Integration",
+    "workspaces": "Workspaces"
+}

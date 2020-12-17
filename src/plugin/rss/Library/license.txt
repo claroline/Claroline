@@ -1,0 +1,9 @@
+The material of this library is heavily inspired by the 'syndexport' library
+developped by Maxime Millet.
+
+References :
+
+- Author: MILLET Maxime <maxime@milletmaxime.net>
+- License: CC-BY-SA see http://www.milletmaxime.net
+- Version: 1.1 (07/15/2012)
+- Doc: http://milletmaxime.net/142510-php-class-syndexport-parser-flux-atom-et-flux-rss.html

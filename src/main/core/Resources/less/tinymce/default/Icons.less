@@ -1,0 +1,173 @@
+/*
+ * Icons
+ *
+ * Uses platform FontAwesome library.
+ */
+
+.@{prefix}-ico {
+  .fa-icon;
+  .fas;
+
+  speak: none;
+  text-shadow: none !important;
+  vertical-align: middle;
+  height: @icon-box;
+  color: @btn-text;
+  background: transparent center center;
+  background-size: cover;
+
+  // mimic fa-fw
+  text-align: center;
+  width: (20em / 16);
+}
+
+.@{prefix}-btn-small .@{prefix}-ico {
+  font-size: @icon-size * .75;
+}
+
+.@{prefix}-i-save:before                 { content: @fa-var-save; }
+.@{prefix}-i-newdocument:before          { content: @fa-var-plus; }
+.@{prefix}-i-fullpage:before             { content: @fa-var-expand; }
+.@{prefix}-i-alignleft:before            { content: @fa-var-align-left; }
+.@{prefix}-i-aligncenter:before          { content: @fa-var-align-center; }
+.@{prefix}-i-alignright:before           { content: @fa-var-align-right; }
+.@{prefix}-i-alignjustify:before         { content: @fa-var-align-justify; }
+.@{prefix}-i-alignnone:before            { content: @fa-var-align-justify; } // todo : find better
+.@{prefix}-i-cut:before                  { content: @fa-var-cut; }
+.@{prefix}-i-paste:before                { content: @fa-var-clipboard; }
+.@{prefix}-i-searchreplace:before        { content: @fa-var-search; }
+.@{prefix}-i-bullist:before              { content: @fa-var-list-ul; }
+.@{prefix}-i-numlist:before              { content: @fa-var-list-ol; }
+.@{prefix}-i-indent:before               { content: @fa-var-indent; }
+.@{prefix}-i-outdent:before              { content: @fa-var-outdent; }
+.@{prefix}-i-blockquote:before           { content: @fa-var-quote-left; }
+.@{prefix}-i-undo:before                 { content: @fa-var-undo; }
+.@{prefix}-i-redo:before                 { content: @fa-var-redo; }
+.@{prefix}-i-link:before                 { content: @fa-var-link; }
+.@{prefix}-i-unlink:before               { content: @fa-var-unlink; }
+.@{prefix}-i-anchor:before               { content: @fa-var-anchor; }
+.@{prefix}-i-image:before                { content: @fa-var-image; }
+.@{prefix}-i-media:before                { content: @fa-var-film; }
+.@{prefix}-i-help:before                 { content: @fa-var-question-circle; }
+.@{prefix}-i-code:before                 { content: @fa-var-code; }
+.@{prefix}-i-insertdatetime:before       { content: @fa-var-calendar; }
+.@{prefix}-i-preview:before              { content: @fa-var-eye; }
+.@{prefix}-i-forecolor:before            { content: @fa-var-font; }
+.@{prefix}-i-backcolor:before            { content: @fa-var-font; }
+.@{prefix}-i-table:before                { content: @fa-var-table; }
+.@{prefix}-i-hr:before                   { content: @fa-var-window-minimize; }
+.@{prefix}-i-removeformat:before         { content: @fa-var-eraser; }
+.@{prefix}-i-subscript:before            { content: @fa-var-subscript; }
+.@{prefix}-i-superscript:before          { content: @fa-var-superscript; }
+.@{prefix}-i-charmap:before              { content: @fa-var-euro-sign; }
+.@{prefix}-i-emoticons:before            { content: @fa-var-smile; }
+.@{prefix}-i-print:before                { content: @fa-var-print; }
+.@{prefix}-i-fullscreen:before           { content: @fa-var-expand; }
+.@{prefix}-i-spellchecker:before         { content: @fa-var-sort-alpha-down; } // todo : find better
+.@{prefix}-i-nonbreaking:before          { content: "\e025"; }
+.@{prefix}-i-template:before             { content: @fa-var-list-alt; } // todo : find better
+.@{prefix}-i-pagebreak:before            { content: "\e027"; }
+.@{prefix}-i-restoredraft:before         { content: "\e028"; }
+.@{prefix}-i-bold:before                 { content: @fa-var-bold; }
+.@{prefix}-i-italic:before               { content: @fa-var-italic; }
+.@{prefix}-i-underline:before            { content: @fa-var-underline; }
+.@{prefix}-i-strikethrough:before        { content: @fa-var-strikethrough; }
+.@{prefix}-i-visualchars:before          { content: @fa-var-i-cursor; }
+.@{prefix}-i-visualblocks:before         { content: @fa-var-paragraph; }
+.@{prefix}-i-ltr:before                  { content: "\e02f"; }
+.@{prefix}-i-rtl:before                  { content: "\e030"; }
+.@{prefix}-i-copy:before                 { content: @fa-var-copy; }
+.@{prefix}-i-browse:before               { content: @fa-var-search; }
+.@{prefix}-i-pastetext:before            { content: @fa-var-clipboard; }
+.@{prefix}-i-rotateleft:before           { content: "\eaa8"; }
+.@{prefix}-i-rotateright:before          { content: "\eaa9"; }
+.@{prefix}-i-crop:before                 { content: @fa-var-crop; }
+.@{prefix}-i-editimage:before            { content: "\e915"; }
+.@{prefix}-i-options:before              { content: "\ec6a"; }
+.@{prefix}-i-flipv:before                { content: "\eaaa"; }
+.@{prefix}-i-fliph:before                { content: "\eaac"; }
+.@{prefix}-i-zoomin:before               { content: @fa-var-search-plus; }
+.@{prefix}-i-zoomout:before              { content: @fa-var-search-minus; }
+.@{prefix}-i-sun:before                  { content: @fa-var-sun; }
+.@{prefix}-i-moon:before                 { content: @fa-var-moon; }
+.@{prefix}-i-arrowleft:before            { content: @fa-var-arrow-left; }
+.@{prefix}-i-arrowright:before           { content: @fa-var-arrow-right; }
+.@{prefix}-i-drop:before                 { content: "\e935"; }
+.@{prefix}-i-contrast:before             { content: @fa-var-adjust; }
+.@{prefix}-i-sharpen:before              { content: "\eba7"; }
+.@{prefix}-i-resize2:before              { content: @fa-var-expand-arrows-alt; }
+.@{prefix}-i-orientation:before          { content: "\e601"; }
+.@{prefix}-i-invert:before               { content: "\e602"; }
+.@{prefix}-i-gamma:before                { content: "\e600"; }
+.@{prefix}-i-remove:before               { content: @fa-var-times; }
+.@{prefix}-i-tablerowprops:before        { content: "\e604"; }
+.@{prefix}-i-tablecellprops:before       { content: "\e605"; }
+.@{prefix}-i-table2:before               { content: "\e606"; }
+.@{prefix}-i-tablemergecells:before      { content: "\e607"; }
+.@{prefix}-i-tableinsertcolbefore:before { content: "\e608"; }
+.@{prefix}-i-tableinsertcolafter:before  { content: "\e609"; }
+.@{prefix}-i-tableinsertrowbefore:before { content: "\e60a"; }
+.@{prefix}-i-tableinsertrowafter:before  { content: "\e60b"; }
+.@{prefix}-i-tablesplitcells:before      { content: "\e60d"; }
+.@{prefix}-i-tabledelete:before          { content: @fa-var-trash-alt; }
+.@{prefix}-i-tableleftheader:before      { content: "\e62a"; }
+.@{prefix}-i-tabletopheader:before       { content: "\e62b"; }
+.@{prefix}-i-tabledeleterow:before       { content: "\e800"; }
+.@{prefix}-i-tabledeletecol:before       { content: "\e801"; }
+.@{prefix}-i-codesample:before           { content: @fa-var-code; }
+.@{prefix}-i-fill:before                 { content: @fa-var-fill; }
+.@{prefix}-i-borderwidth:before          { content: "\e903"; }
+.@{prefix}-i-line:before                 { content: "\e904"; }
+.@{prefix}-i-count:before                { content: "\e905"; }
+.@{prefix}-i-translate:before            { content: @fa-var-language; }
+.@{prefix}-i-drag:before                 { content: "\e908"; }
+.@{prefix}-i-home:before                 { content: @fa-var-home; }
+.@{prefix}-i-upload:before               { content: @fa-var-upload; }
+.@{prefix}-i-bubble:before               { content: "\e91c"; }
+.@{prefix}-i-user:before                 { content: @fa-var-user; }
+.@{prefix}-i-lock:before                 { content: @fa-var-lock; }
+.@{prefix}-i-unlock:before               { content: @fa-var-unlock; }
+.@{prefix}-i-settings:before             { content: @fa-var-cog; }
+.@{prefix}-i-remove2:before              { content: @fa-var-trash; }
+.@{prefix}-i-menu:before                 { content: "\e92d"; }
+.@{prefix}-i-warning:before              { content: "\e930"; }
+.@{prefix}-i-question:before             { content: @fa-var-question; }
+.@{prefix}-i-pluscircle:before           { content: @fa-var-plus-circle; }
+.@{prefix}-i-info:before                 { content: @fa-var-info; }
+.@{prefix}-i-notice:before               { content: "\e934"; }
+.@{prefix}-i-arrowup:before              { content: @fa-var-arrow-up; }
+.@{prefix}-i-arrowdown:before            { content: @fa-var-arrow-down; }
+.@{prefix}-i-arrowup2:before             { content: @fa-var-arrow-circle-up; }
+.@{prefix}-i-arrowdown2:before           { content: @fa-var-arrow-circle-down; }
+.@{prefix}-i-menu2:before                { content: "\e941"; }
+.@{prefix}-i-newtab:before               { content: "\e961"; }
+.@{prefix}-i-a11y:before                 { content: "\e900"; }
+.@{prefix}-i-plus:before                 { content: @fa-var-plus; }
+.@{prefix}-i-insert:before               { content: @fa-var-plus; }
+.@{prefix}-i-minus:before                { content: @fa-var-minus; }
+.@{prefix}-i-books:before                { content: @fa-var-book; }
+.@{prefix}-i-reload:before               { content: @fa-var-sync; }
+.@{prefix}-i-toc:before                  { content: "\e901"; }
+.@{prefix}-i-checkmark:before            { content: @fa-var-check; }
+.@{prefix}-i-checkbox:before             { content: @fa-var-check-square; }
+.@{prefix}-i-selected:before             { content: @fa-var-check; }
+
+.@{prefix}-i-inserttime:before           { content: @fa-var-clock; }
+.@{prefix}-i-date:before                 { content: @fa-var-calendar; }
+.@{prefix}-i-percent:before              { content: @fa-var-percent; }
+
+// we don't have the correct icon in FontAwesome (no corner resize icon)
+// so we just draw a small triangle in CSS
+.@{prefix}-i-resize:before {
+  content: " ";
+  display: block;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 0 14px 14px;
+  border-color: transparent transparent fade(@btn-text, 40%) transparent;
+}
+
+.@{prefix}-i-insert                { font-size: 14px; }
+.@{prefix}-i-selected              { visibility: hidden; }
+i.@{prefix}-i-backcolor            { text-shadow: none; background: @colorbtn-backcolor-bg; }

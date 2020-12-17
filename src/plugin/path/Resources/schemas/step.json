@@ -1,0 +1,57 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "The uuid of the step"
+    },
+    "title": {
+      "type": "string",
+      "description": "The title of the step"
+    },
+    "description": {
+      "type": ["string", "null"],
+      "description": "The description of the step"
+    },
+    "primaryResource": {
+      "type": ["object", "null"],
+      "description": "The primary resource of the step",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The uuid of the resource"
+        }
+      },
+      "required": ["id"]
+    },
+    "secondaryResources": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The uuid of the resource"
+          }
+        },
+        "required": ["id"],
+        "claroIds": ["id"]
+      }
+    },
+    "evaluated": {
+      "type": "boolean",
+      "description": "Wether the score of the primary resource is used to compute the score of the path"
+    },
+    "children": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "https://github.com/claroline/Distribution/tree/master/plugin/path/Resources/schemas/step.json"
+      }
+    }
+  },
+  "claroIds": ["id"],
+  "required": ["title"]
+}

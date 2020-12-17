@@ -1,0 +1,46 @@
+.users-cell {
+    > div {
+        display: flex;
+        align-items: center;
+        justify-content: space-between
+    }
+
+    .dropdown-menu {
+        .user-micro {
+            display: flex !important;
+        }
+    }
+}
+
+.table {
+    .users-cell,
+    .user-cell {
+        padding: 0 @table-cell-padding !important;
+    }
+
+
+    .user-avatar { // same than user-micro
+        // for picture
+        max-height: 30px;
+        max-width: 30px;
+
+        // for .fa when no picture
+        font-size: 30px;
+    }
+}
+
+.table-condensed {
+    .users-cell,
+    .user-cell {
+        padding: 0 @table-condensed-cell-padding !important;
+    }
+
+    .user-avatar {
+        // for picture
+        max-height: 25px;
+        max-width: 25px;
+
+        // for .fa when no picture
+        font-size: 25px;
+    }
+}

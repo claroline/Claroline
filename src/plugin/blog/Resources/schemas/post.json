@@ -1,0 +1,75 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "The post id"
+    },
+    "title": {
+      "type": "string",
+      "description": "The post title",
+      "minLength": 1
+    },
+    "content": {
+      "type": "string",
+      "description": "The post content",
+      "minLength": 1
+    },
+    "creationDate": {
+      "type": "string",
+      "description": "The post creation date"
+    },
+    "isPublished": {
+      "type": "boolean",
+      "description": "The post publication state according to current date"
+    },
+    "isPublished": {
+      "type": "boolean",
+      "description": "The post publication status"
+    },
+    "pinned": {
+      "type": "boolean",
+      "description": "The post pinned status"
+    },
+    "modificationDate": {
+      "type": "string",
+      "description": "The post modification date"
+    },
+    "publicationDate": {
+      "type": "string",
+      "description": "The post publication date"
+    },
+    "viewCounter": {
+      "type": "integer",
+      "description": "The post view number"
+    },
+    "tags": {
+      "type": "string",
+      "description": "Post tags, comma separated"
+    },
+    "author": {
+      "type": ["object"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Author id"
+        },
+        "firstName": {
+          "type": "string",
+          "description": "Author first name"
+        },
+        "lastName": {
+          "type": "string",
+          "description": "Author last name"
+        },
+        "email": {
+          "type": "string",
+          "description": "Author email"
+        }
+      }
+    }
+  },
+  "required": ["id", "title"],
+  "claroIds": ["id"]
+}

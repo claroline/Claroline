@@ -1,0 +1,8 @@
+{
+  "styles": {
+    "entry": {
+      "wiki-resource": "resources/wiki/index.less",
+      "wiki-resource-pdf": "resources/wiki/pdf.less"
+    }
+  }
+}

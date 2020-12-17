@@ -1,0 +1,12 @@
+{
+    "notifications": "Notifications",
+    "all_notifications": "Voir toutes mes notifications",
+    "empty_unread": "Vous n'avez pas de nouvelles notifications",
+    "more_unread": "+ %count% autres nouvelles notifications",
+    "done_at": "le %date%",
+    "disable_notifications": "Ne pas suivre cette ressource",
+    "disable_notifications_info": "Ne pas être notifié des nouveautés de cette ressource",
+    "enable_notifications": "Suivre cette ressource",
+    "enable_notifications_info": "Être notifié des nouveautés de cette ressource",
+    "mark_all_viewed": "Tout marquer comme lu"
+}

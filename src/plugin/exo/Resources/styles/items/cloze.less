@@ -1,0 +1,97 @@
+.cloze-editor {
+  position: relative; // contain hole popovers
+
+  .cloze-hole {
+    .form-control {
+      cursor: pointer; // don't know why it's not done by default
+      border-radius: @answer-item-border-radius 0 0 @answer-item-border-radius;
+    }
+
+    .btn-link,
+    .btn {
+      padding: 4px;
+    }
+  }
+}
+
+.cloze-editor,
+.cloze-paper,
+.cloze-feedback {
+  .cloze-hole {
+    padding: 0; // We need to adjust how answers are rendered
+
+    .answer-warning-span {
+      margin-right: floor(@grid-gutter-width / 2);
+    }
+
+    // restyle input
+    .form-control {
+      //margin-right: floor(@grid-gutter-width / 2);
+      border: none;
+      border-radius: 0;
+    }
+
+    // contextual styles
+    &.correct-answer .form-control {
+      color: @correct-answer-color;
+      background: @correct-answer-bg;
+    }
+    &.incorrect-answer .form-control {
+      color: @incorrect-answer-color;
+      background: @incorrect-answer-bg;
+    }
+    &.selected-answer .form-control {
+      color: @selected-answer-color;
+      background: @selected-answer-bg;
+    }
+  }
+}
+
+.cloze-paper,
+.cloze-feedback {
+  .cloze-hole {
+    padding: 0 @answer-item-padding; // We need to adjust how answers are rendered
+
+    .form-control + .btn-feedback,
+    .form-control + .solution-score {
+      margin-left: floor(@grid-gutter-width / 2);
+    }
+  }
+}
+
+.cloze-text {
+  .text-editor {
+    line-height: @input-height-small + 2px; // same as hole for better centering (2px for the hole borders)
+  }
+}
+
+.cloze-hole {
+  line-height: @input-height-small;
+  display: inline-flex;
+  align-items: center;
+  margin: 2px 0; // to prevent the holes from touching
+
+  .form-control {
+    width: auto; // remove bootstrap default 100%
+    max-width: 200px;
+  }
+}
+
+.cloze-stats {
+  .unanswered-item {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+
+  .answer-item {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .answer-stats-table {
+    border: solid 1px @answer-item-bg;
+    padding: 0 @answer-item-padding;
+    border-radius: @answer-item-border-radius;
+  }
+}

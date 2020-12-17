@@ -1,0 +1,12 @@
+/*
+ * User mixins.
+ */
+
+.sso-connect-btn(@primary-color, @secondary-color) {
+    background-color: @primary-color !important;
+
+    &:hover,
+    &:focus {
+        background-color: @secondary-color !important;
+    }
+}

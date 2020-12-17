@@ -1,0 +1,4 @@
+data:
+  file:
+      path: hypnotoad.pdf
+      mime_type: application/pdf

@@ -1,0 +1,33 @@
+services:
+    _defaults:
+        autowire: false #change to true
+        autoconfigure: false
+        public: true #because controller
+
+    Icap\NotificationBundle\Listener\Platform\ClientListener:
+        arguments:
+            - '@twig'
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+        tags:
+            - { name: kernel.event_listener, event: claroline_populate_client_config, method: onConfig }
+            - { name: kernel.event_listener, event: layout.inject.stylesheet, method: onInjectCss }
+
+    Icap\NotificationBundle\Listener\Resource\ResourceNodeListener:
+        arguments:
+            - '@Icap\NotificationBundle\Manager\NotificationManager'
+            - '@security.token_storage'
+        tags:
+            - { name: kernel.event_listener, event: serialize_resource_node, method: onSerialize }
+
+    Icap\NotificationBundle\Listener\LogListener:
+        arguments:
+            - '@Icap\NotificationBundle\Manager\NotificationManager'
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+        tags:
+            - { name: kernel.event_listener, event: log, method: onLog }
+
+    Icap\NotificationBundle\Listener\UserListener:
+        arguments:
+            - '@Icap\NotificationBundle\Manager\NotificationUserParametersManager'
+        tags:
+            - { name: kernel.event_listener, event: merge_users, method: onMerge }

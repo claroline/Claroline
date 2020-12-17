@@ -1,0 +1,14 @@
+services:
+    _defaults:
+        autoconfigure: false
+        public: false
+
+    Claroline\OpenBadgeBundle\Manager\OpenBadgeManager:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\Manager\Template\TemplateManager'
+            - '@twig'
+
+    Claroline\OpenBadgeBundle\Manager\RuleManager:
+        arguments:
+          - '@Claroline\AppBundle\Persistence\ObjectManager'

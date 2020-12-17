@@ -1,0 +1,21 @@
+properties:
+    name: Anglais
+    code: EN
+    visible: true
+    selfregistration: true
+    selfUnregistration: false
+    disabledNotifications: false
+    owner: 'ezs'
+
+members:
+    owner:
+        first_name: ffdgdf
+        last_name: sdfsd
+        username: 'owned'
+        password: enclair
+        email: moi@moi.com
+        code: USER01
+        roles:
+          - name: 'ROLE_1'
+          - name: 'ROLE_2'
+          - name: 'ROLE_3'

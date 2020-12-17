@@ -1,0 +1,30 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: false
+
+    # Tools
+    Claroline\CursusBundle\Listener\Tool\TrainingEventsListener:
+        arguments:
+            - '@Claroline\AppBundle\API\FinderProvider'
+        tags:
+            - { name: kernel.event_listener, event: open_tool_workspace_training_events, method: onDisplayWorkspace }
+
+    Claroline\CursusBundle\Listener\Tool\TrainingsListener:
+        tags:
+            - { name: kernel.event_listener, event: open_tool_desktop_trainings, method: onDisplayDesktop }
+
+    # Data sources
+    Claroline\CursusBundle\Listener\DataSource\PublicSessionSource:
+        arguments:
+            - '@Claroline\AppBundle\API\FinderProvider'
+        tags:
+            - { name: kernel.event_listener, event: data_source.public_course_sessions.load, method: getData }
+
+    Claroline\CursusBundle\Listener\DataSource\MySessionSource:
+        arguments:
+            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@security.token_storage'
+        tags:
+            - { name: kernel.event_listener, event: data_source.my_course_sessions.load, method: getData }

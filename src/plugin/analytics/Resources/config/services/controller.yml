@@ -1,0 +1,50 @@
+services:
+    Claroline\AnalyticsBundle\Controller\Administration\DashboardController:
+        parent: Claroline\AppBundle\Controller\AbstractSecurityController
+        arguments:
+            - '@security.token_storage'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@Claroline\AnalyticsBundle\Manager\AnalyticsManager'
+            - '@claroline.event.manager'
+
+    Claroline\AnalyticsBundle\Controller\Administration\LogController:
+        parent: Claroline\AppBundle\Controller\AbstractSecurityController
+        arguments:
+            - '@security.token_storage'
+            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@claroline.log.manager'
+
+    Claroline\AnalyticsBundle\Controller\Resource\LogController:
+        public: true # required by controllers
+        arguments:
+            - '@security.authorization_checker'
+            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@claroline.log.manager'
+
+    Claroline\AnalyticsBundle\Controller\User\TrackingController:
+        public: true # required by controllers
+        arguments:
+            - '@Claroline\AppBundle\API\FinderProvider'
+
+    Claroline\AnalyticsBundle\Controller\Workspace\DashboardController:
+        public: true # required by controllers
+        arguments:
+            - '@security.authorization_checker'
+            - '@security.token_storage'
+            - '@translator'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@Claroline\AnalyticsBundle\Manager\AnalyticsManager'
+            - '@claroline.event.manager'
+
+    Claroline\AnalyticsBundle\Controller\Workspace\LogController:
+        public: true # required by controllers
+        arguments:
+            - '@security.authorization_checker'
+            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@Claroline\CoreBundle\API\Serializer\Log\LogSerializer'
+            - '@claroline.log.manager'

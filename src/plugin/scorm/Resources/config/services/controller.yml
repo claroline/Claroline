@@ -1,0 +1,11 @@
+services:
+    _defaults:
+        public: true #because controller
+
+    Claroline\ScormBundle\Controller\ScormController:
+        arguments:
+          - '@security.authorization_checker'
+          - '@Claroline\AppBundle\API\FinderProvider'
+          - '@Claroline\ScormBundle\Manager\ScormManager'
+          - '@Claroline\ScormBundle\Serializer\ScoTrackingSerializer'
+          - '@translator'

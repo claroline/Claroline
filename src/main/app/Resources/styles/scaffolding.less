@@ -1,0 +1,114 @@
+body {
+    background: transparent; // removes bootstrap default for TinyMCE rendering
+}
+
+// We use classes for `html` and `body` tags
+// to avoid adding unwanted styles in iframe or tinyMCE
+
+// Moves the app scroll bar after the fixed header
+.claroline-app {
+    height: 100%;
+
+    > body {
+        height: 100%;
+        overflow-y: hidden;
+
+        // only put body bg for claroline apps (avoids modifying TinyMCE content bg)
+        background: @body-bg;
+    }
+}
+
+.app-container {
+    position: relative;
+    height: 100%;
+    overflow-y: hidden;
+
+    display: flex;
+    flex-direction: row;
+}
+
+.app {
+    flex: 1;
+    position: relative; // to constrain sidebar
+    height: 100%;
+    overflow-y: hidden;
+    padding-top: @top-bar-height;
+    display: flex;
+    flex-direction: row;
+}
+
+.app-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    height: 100%;
+    overflow-y: auto;
+}
+
+.app-toolbar {
+    padding: @component-margin-bottom 0;
+    background: white;
+    border-left: 1px solid #ddd;
+
+    .app-toolbar-link {
+        font-size: @font-size-large;
+        display: block;
+
+        &.active {
+
+        }
+
+        + .app-toolbar-link {
+            margin-top: 5px;
+        }
+    }
+}
+
+.app-loader {
+    position: absolute;
+    overflow: hidden;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: @zindex-modal + 1;
+    height: 3px;
+    background: fadeOut(@brand-primary, 70%);
+
+    &:before {
+        content: " ";
+        position: absolute;
+        left: 0;
+        top: 0;
+        background: @brand-primary;
+        width: 50%;
+        height: 3px;
+        animation: app-loader-move 1.5s ease-out 1s infinite running;
+    }
+}
+
+@keyframes app-loader-move {
+    from {left: -50%;}
+    to   {left: 100%;}
+}
+
+// TODO : merge with other security pages styles
+.app-disabled {
+    max-width: 960px;
+    margin: 0 auto;
+
+    .page-title {
+        .fa {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 50px;
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            background: white;
+            margin: 0 auto 15px;
+
+            .box-shadow(@thumbnail-box-shadow);
+        }
+    }
+}

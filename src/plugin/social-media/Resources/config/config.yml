@@ -1,0 +1,23 @@
+plugin:
+    has_options: false
+
+    resource_actions:
+        - name: like
+          group: community
+          decoder: open
+          api: [PUT]
+
+        - name: unlike
+          group: community
+          decoder: open
+          api: [PUT]
+
+        - name: share
+          group: community
+          decoder: open
+          api: [POST]
+
+        - name: comments
+          group: community
+          decoder: open
+          api: [GET, POST, PUT, DELETE]

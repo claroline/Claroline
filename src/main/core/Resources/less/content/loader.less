@@ -1,0 +1,81 @@
+
+.content-loader {
+    flex: 1;
+    text-align: center;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    color: @loader-color;
+    font-family: @headings-font-family;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 15px;
+    background: @loader-bg;
+    border-radius: @border-radius-base;
+
+    .content-loader-sizing-variant(120px);
+}
+
+// sizing
+.content-loader-sm {
+    .content-loader-sizing-variant(80px);
+
+    .content-loader-description {
+        max-width: 320px;
+    }
+}
+
+.content-loader-lg {
+    .content-loader-sizing-variant(160px);
+
+    .content-loader-description {
+        max-width: 640px;
+    }
+}
+
+.content-loader-animation {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    background: @loader-bg;
+    border-radius: 50%;
+    margin-bottom: @component-margin-bottom;
+
+    border: 2px solid white;
+}
+
+.content-loader-description {
+    font-size: 14px;
+    font-weight: normal;
+    font-style: italic;
+    margin-bottom: @component-margin-bottom;
+    font-family: @font-family-base;
+}
+
+.hourglass {
+    overflow: visible !important;
+
+    .hourglass-cap    { fill: @loader-color; }
+    .hourglass-border { stroke: @loader-color; }
+
+    .primary   .hourglass-liquid { fill: @loader-primary; }
+    .secondary .hourglass-liquid { fill: @loader-secondary; }
+}
+
+// mixins
+.content-loader-sizing-variant(@size) {
+    .content-loader-animation {
+        width: @size * 2;
+        height: @size * 2;
+    }
+
+    .hourglass {
+        width: @size;
+        height: @size;
+    }
+}

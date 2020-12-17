@@ -1,0 +1,7 @@
+# JSON API
+claro_messaging_api:
+    resource: "@ClarolineMessageBundle/Controller/"
+    prefix: apiv2
+    type: api
+    options:
+        expose: true

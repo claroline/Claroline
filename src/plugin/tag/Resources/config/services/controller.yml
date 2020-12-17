@@ -1,0 +1,9 @@
+services:
+    _defaults:
+        public: true #because controller
+
+    Claroline\TagBundle\Controller\TagController:
+        parent: Claroline\AppBundle\Controller\AbstractCrudController
+        public: true
+        arguments:
+            - '@Claroline\TagBundle\Manager\TagManager'

@@ -1,0 +1,19 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+        tags: [claroline.serializer]
+
+    Claroline\ScormBundle\Serializer\ScormSerializer:
+        arguments:
+           - '@Claroline\AppBundle\Persistence\ObjectManager'
+           - '@Claroline\ScormBundle\Serializer\ScoSerializer'
+
+    Claroline\ScormBundle\Serializer\ScoSerializer: ~
+
+    Claroline\ScormBundle\Serializer\ScoTrackingSerializer:
+        arguments:
+           - '@Claroline\AppBundle\Persistence\ObjectManager'
+           - '@Claroline\ScormBundle\Serializer\ScoSerializer'
+           - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'

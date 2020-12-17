@@ -1,0 +1,7 @@
+# JSON API
+claro_cursus_bundle_api:
+    resource: "@ClarolineCursusBundle/Controller/"
+    prefix: apiv2
+    type: api
+    options:
+        expose: true

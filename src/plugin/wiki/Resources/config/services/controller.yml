@@ -1,0 +1,23 @@
+services:
+    _defaults:
+        public: true
+
+    Icap\WikiBundle\Controller\ContributionController:
+        arguments:
+            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@Icap\WikiBundle\Manager\SectionManager'
+            - '@Icap\WikiBundle\Manager\ContributionManager'
+            - '@security.authorization_checker'
+
+    Icap\WikiBundle\Controller\SectionController:
+        arguments:
+            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@Icap\WikiBundle\Manager\SectionManager'
+            - '@security.authorization_checker'
+
+    Icap\WikiBundle\Controller\WikiController:
+        arguments:
+            - '@security.authorization_checker'
+            - '@twig'
+            - '@Icap\WikiBundle\Manager\WikiManager'
+            - '@Icap\WikiBundle\Manager\SectionManager'

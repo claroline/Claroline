@@ -1,0 +1,41 @@
+services:
+    _defaults:
+        public: true #because controller
+
+    Claroline\DropZoneBundle\Controller\API\DropCommentController:
+        parent: Claroline\AppBundle\Controller\AbstractCrudController
+        public: true
+
+    Claroline\DropZoneBundle\Controller\API\DropController:
+        arguments:
+            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@Claroline\DropZoneBundle\Manager\DropzoneManager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@security.authorization_checker'
+            
+    Claroline\DropZoneBundle\Controller\API\DropzoneController:
+        arguments:
+            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@Claroline\DropZoneBundle\Manager\DropzoneManager'
+            - '%claroline.param.files_directory%'
+            - '@event_dispatcher'
+            - '@security.authorization_checker'
+
+    Claroline\DropZoneBundle\Controller\API\DropzoneToolController:
+        parent: Claroline\AppBundle\Controller\AbstractCrudController
+        public: true
+
+    Claroline\DropZoneBundle\Controller\API\RevisionCommentController:
+        parent: Claroline\AppBundle\Controller\AbstractCrudController
+        public: true
+
+    Claroline\DropZoneBundle\Controller\API\RevisionController:
+        parent: Claroline\AppBundle\Controller\AbstractCrudController
+        public: true
+        arguments:
+            - '@security.authorization_checker'
+            - '@Claroline\DropZoneBundle\Manager\DropzoneManager'
+
+    Claroline\DropZoneBundle\Controller\Resource\DropzoneController:
+        arguments:
+            - '@router'

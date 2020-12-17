@@ -1,0 +1,18 @@
+{
+    "log_forum_subject-create_shortname": "Création d'un sujet",
+    "log_forum_message-unmoderated_shortname": "Déblocage d'un message",
+    "log_forum_message-create_shortname": "Création d'un message",
+    "log_forum_subject-stick_shortname": "Épinglement d'un sujet",
+    "log_forum_subject-flag_shortname": "Report d'un sujet",
+    "log_forum_subject-update_shortname": "Modification d'un sujet",
+    "log_forum_subject-open_shortname": "Ouverture d'un sujet",
+    "log_forum_subject-close_shortname": "Fermeture d'un sujet",
+    "log_forum_subject-create_sentence": "a créé le sujet %subject.title% dans %resource%",
+    "log_forum_message-unmoderated_sentence": "A débloqué un message dans le sujet %subject.title% dans %resource",
+    "log_forum_message-create_sentence": "a créé un message dans le sujet %subject.title% dans %resource%",
+    "log_forum_subject-stick_sentence": "a épinglé le sujet %subject.title% dans %resource%",
+    "log_forum_subject-flag_sentence": "a reporté le sujet %subject.title% dans %resource%",
+    "log_forum_subject-update_sentence": "a mis à jour le sujet %subject.title% dans %resource%",
+    "log_forum_subject-open_sentence": "a ouvert le sujet %subject.title% dans %resource%",
+    "log_forum_subject-close_sentence": "a fermé le sujet %subject.title% dans %resource%"
+}

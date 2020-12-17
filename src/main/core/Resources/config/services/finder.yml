@@ -1,0 +1,106 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+
+    _instanceof:
+        Claroline\AppBundle\API\Finder\AbstractFinder:
+            tags: [claroline.finder]
+            calls:
+                - method: setObjectManager
+                  arguments:
+                     - '@Claroline\AppBundle\Persistence\ObjectManager'
+                - method: setEntityManager
+                  arguments:
+                     - '@doctrine.orm.entity_manager'
+                - method: setEventDispatcher
+                  arguments:
+                     - '@Claroline\AppBundle\Event\StrictDispatcher'
+
+    Claroline\CoreBundle\API\Finder\TransferFinder: ~
+
+    Claroline\CoreBundle\API\Finder\Workspace\WorkspaceFinder:
+        arguments:
+          - '@security.authorization_checker'
+          - '@security.token_storage'
+
+    Claroline\CoreBundle\API\Finder\Workspace\RequirementsFinder: ~
+
+    Claroline\CoreBundle\API\Finder\Workspace\PendingRegistrationFinder: ~
+
+    Claroline\CoreBundle\API\Finder\Workspace\OrderedToolFinder: ~
+
+    Claroline\CoreBundle\API\Finder\Workspace\EvaluationFinder: ~
+
+    Claroline\CoreBundle\API\Finder\User\UserFinder:
+        arguments:
+          - '@security.authorization_checker'
+          - '@security.token_storage'
+          - '@claroline.manager.workspace_manager'
+
+    Claroline\CoreBundle\API\Finder\User\RoleFinder:
+        arguments:
+          - '@security.authorization_checker'
+          - '@security.token_storage'
+
+    Claroline\CoreBundle\API\Finder\User\OrganizationFinder:
+        arguments:
+          - '@security.authorization_checker'
+          - '@security.token_storage'
+
+    Claroline\CoreBundle\API\Finder\User\LocationFinder: ~
+
+    Claroline\CoreBundle\API\Finder\User\GroupFinder:
+        arguments:
+          - '@security.authorization_checker'
+          - '@security.token_storage'
+
+    Claroline\CoreBundle\API\Finder\User\FieldFacetValueFinder:
+        arguments:
+          - '@security.authorization_checker'
+          - '@security.token_storage'
+
+    Claroline\CoreBundle\API\Finder\Tool\ToolFinder:
+        arguments:
+          - '@claroline.manager.plugin_manager'
+
+    Claroline\CoreBundle\API\Finder\Tool\AdminToolFinder:
+        arguments:
+          - '@claroline.manager.plugin_manager'
+
+    Claroline\CoreBundle\API\Finder\Template\TemplateFinder: ~
+
+    Claroline\CoreBundle\API\Finder\Task\ScheduledTaskFinder:
+        arguments:
+          - '@security.authorization_checker'
+          - '@security.token_storage'
+
+    Claroline\CoreBundle\API\Finder\Resource\ResourceUserEvaluationFinder: ~
+
+    Claroline\CoreBundle\API\Finder\Resource\ResourceTypeFinder: ~
+
+    Claroline\CoreBundle\API\Finder\Resource\ResourceRightsFinder: ~
+
+    Claroline\CoreBundle\API\Finder\Resource\ResourceNodeFinder:
+        arguments:
+          - '@security.authorization_checker'
+          - '@security.token_storage'
+
+    Claroline\CoreBundle\API\Finder\Log\LogFinder: ~
+
+    Claroline\CoreBundle\API\Finder\Log\Connection\LogConnectWorkspaceFinder: ~
+
+    Claroline\CoreBundle\API\Finder\Log\Connection\LogConnectToolFinder: ~
+
+    Claroline\CoreBundle\API\Finder\Log\Connection\LogConnectResourceFinder: ~
+
+    Claroline\CoreBundle\API\Finder\Log\Connection\LogConnectPlatformFinder: ~
+
+    Claroline\CoreBundle\API\Finder\Log\Connection\LogConnectAdminToolFinder: ~
+
+    Claroline\CoreBundle\API\Finder\Widget\WidgetInstanceFinder: ~
+
+    Claroline\CoreBundle\API\Finder\Widget\WidgetContainerFinder: ~
+
+    Claroline\CoreBundle\API\Finder\ConnectionMessage\ConnectionMessageFinder: ~

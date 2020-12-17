@@ -1,0 +1,9 @@
+{% macro statementBlock(queries) %}
+{% autoescape false %}
+{% for query in queries %}
+        $this->addSql("
+{{ formatSql(query) }}
+        ");
+{% endfor %}
+{% endautoescape %}
+{% endmacro %}

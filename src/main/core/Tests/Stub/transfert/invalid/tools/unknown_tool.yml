@@ -1,0 +1,10 @@
+tools:
+    - tool:
+        type: 'somethingnotexistant'
+        translation: 'yolo'
+        data:
+          somedata: somevalue
+        roles:
+          - name: ROLE_1
+          - name: ROLE_2
+

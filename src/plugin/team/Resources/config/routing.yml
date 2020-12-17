@@ -1,0 +1,7 @@
+# JSON API
+claro_team_bundle_api:
+    resource: "@ClarolineTeamBundle/Controller/API/"
+    prefix: apiv2
+    type: api
+    options:
+        expose: true

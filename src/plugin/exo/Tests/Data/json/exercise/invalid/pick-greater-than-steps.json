@@ -1,0 +1,68 @@
+{
+  "id": "1",
+  "title": "quiz title",
+  "parameters": {
+    "type": "summative",
+    "anonymous": false,
+    "interruptible": true,
+    "duration": 0,
+    "maxAttempts": 5,
+    "showMetadata": true,
+    "showStatistics": false,
+    "showFullCorrection": true,
+    "showCorrectionAt": "validation",
+    "showScoreAt": "correction",
+    "hasExpectedAnswer": true
+  },
+  "picking": {
+    "type": "standard",
+    "randomOrder": "once",
+    "randomPick": "once",
+    "pick": 2
+  },
+  "steps": [
+    {
+      "id": "2",
+      "items": [
+        {
+          "id": "1",
+          "type": "application/x.choice+json",
+          "content": "Question ?",
+          "hasExpectedAnswer": true,
+          "score": {
+            "type": "sum"
+          },
+          "choices": [
+            {
+              "id": "1",
+              "type": "text/html",
+              "data": "choice 1"
+            },
+            {
+              "id": "2",
+              "type": "text/html",
+              "data": "choice 2"
+            },
+            {
+              "id": "3",
+              "type": "text/html",
+              "data": "choice 3"
+            }
+          ],
+          "random": false,
+          "multiple": false,
+          "solutions": [
+            {
+              "id": "1",
+              "score": 2
+            },
+            {
+              "id": "3",
+              "score": 1
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

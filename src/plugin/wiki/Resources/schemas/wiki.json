@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "The uuid of the wiki"
+    },
+    "mode": {
+      "type": ["string", "null"],
+      "enum": ["0", "1", "2"],
+      "description": "The wiki's mode"
+    },
+    "display": {
+      "type": "object",
+      "properties": {
+        "sectionNumbers": {
+          "type": "boolean",
+          "description": "Option to display/hide wiki's section number"
+        },
+        "contents": {
+          "type": "boolean",
+          "description": "Option to display/hide wiki's contents"
+        }
+      }
+    }
+  },
+  "claroline": {
+    "ids":  ["id"]
+  }
+}

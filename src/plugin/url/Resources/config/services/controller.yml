@@ -1,0 +1,9 @@
+services:
+    _defaults:
+        public: true #because controller
+
+    HeVinci\UrlBundle\Controller\UrlController:
+        parent: Claroline\AppBundle\Controller\AbstractCrudController
+        public: true
+        arguments:
+            - '@Claroline\CoreBundle\Manager\Template\PlaceholderManager'

@@ -1,0 +1,11 @@
+services:
+    _defaults:
+        autowire: false #change to true
+        autoconfigure: false
+        public: true #because controller
+
+    Claroline\AuthenticationBundle\Configuration\LegacyParametersMapping:
+        tags: ['claroline.configuration.mapping.legacy']
+
+    Claroline\AuthenticationBundle\Configuration\PlatformDefaults:
+        tags: ['claroline.configuration']

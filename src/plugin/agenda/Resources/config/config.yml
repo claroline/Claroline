@@ -1,0 +1,18 @@
+plugin:
+    has_options: false
+    tools:
+        - name: agenda
+          is_displayable_in_workspace: true
+          is_displayable_in_desktop: true
+          class: calendar
+
+    data_sources:
+        - name: events
+          type: list
+          context: [workspace, desktop, home]
+          tags: [event]
+
+        - name: tasks
+          type: list
+          context: [workspace, desktop, home]
+          tags: [event]

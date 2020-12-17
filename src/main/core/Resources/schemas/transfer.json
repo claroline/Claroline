@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "action": {
+      "type": "string",
+      "format": "string",
+      "description": "The action to use"
+    },
+    "file": {
+        "$ref": "https://github.com/claroline/Distribution/tree/master/main/core/Resources/schemas/publicFile.json"
+    }
+  }
+}

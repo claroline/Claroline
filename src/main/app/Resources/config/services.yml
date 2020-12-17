@@ -1,0 +1,76 @@
+imports:
+    - { resource: services/controller.yml }
+    - { resource: services/command.yml }
+    - { resource: services/finder.yml }
+    - { resource: services/manager.yml }
+    - { resource: services/adapter.yml }
+    - { resource: services/persistence.yml }
+    - { resource: services/routing.yml }
+
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+
+    Claroline\AppBundle\API\FinderProvider:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+
+    Claroline\AppBundle\API\Crud:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\AppBundle\API\ValidatorProvider'
+            - '@Claroline\AppBundle\API\SchemaProvider'
+            - '@security.authorization_checker'
+
+    Claroline\AppBundle\API\SchemaProvider:
+        arguments:
+            - '%kernel.project_dir%'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+
+    Claroline\AppBundle\API\SerializerProvider:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '%kernel.project_dir%'
+
+    Claroline\AppBundle\API\TransferProvider:
+        arguments:
+            - '%kernel.project_dir%'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\AppBundle\API\SchemaProvider'
+            - '%claroline.param.import_log_dir%'
+            - '@translator'
+        calls:
+            - setLogger: ['@logger']
+
+    Claroline\AppBundle\API\ValidatorProvider:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\SchemaProvider'
+
+    Claroline\AppBundle\Listener\ApiListener:
+        arguments:
+            - '@security.token_storage'
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception, method: onError, priority: 99 }
+
+    Claroline\AppBundle\Persistence\ObjectManager:
+        arguments:
+            - '@doctrine.orm.entity_manager'
+        calls:
+            - setLogger: ['@logger']
+
+    Claroline\AppBundle\Event\StrictDispatcher:
+        arguments:
+            - '@event_dispatcher'
+
+    Claroline\AppBundle\Routing\ApiLoader:
+        tags: ['routing.loader']
+        arguments:
+            - '@file_locator'
+            - '@annotation_reader'
