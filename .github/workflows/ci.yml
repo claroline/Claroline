@@ -2,7 +2,6 @@ name: "Tests"
 
 on:
     pull_request:
-    push:
 
 jobs:
     php-74:
@@ -63,7 +62,7 @@ jobs:
                 DIFF: ${{ steps.diff.outputs.diff }}
 
             - name: "Run PHPCSFixer checks"
-              run: if [ "$DIFF" != '' ]; then vendor/bin/php-cs-fixer fix --dry-run --diff --config=src/main/dev/Resources/travis/php-cs.php; fi
+              run: if [ "$DIFF" != '' ]; then vendor/bin/php-cs-fixer fix --dry-run --diff --config=.php_cs; fi
               env:
                 DIFF: ${{ steps.diff.outputs.diff }}
 

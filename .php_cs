@@ -7,7 +7,7 @@
  * default fixer level: Symfony).
  ******************************************************************************/
 
-$pkgDir = realpath(__DIR__.'/../../../../..');
+$pkgDir = realpath(__DIR__);
 $targetFile = "{$pkgDir}/git_diff_files.txt";
 
 if (!file_exists($targetFile)) {
