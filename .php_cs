@@ -1,13 +1,13 @@
 <?php
 
 /*******************************************************************************
- * This script is a config file for PHP-CS-Fixer designed for travis builds.
+ * This script is a config file for PHP-CS-Fixer designed for CI builds.
  * It reads a list of targets (supposably files changed by the push/PR) from
  * a file located in the root directory and passed them to the CS config (with
  * default fixer level: Symfony).
  ******************************************************************************/
 
-$pkgDir = realpath(__DIR__.'/../../../..');
+$pkgDir = realpath(__DIR__);
 $targetFile = "{$pkgDir}/git_diff_files.txt";
 
 if (!file_exists($targetFile)) {

@@ -12,7 +12,7 @@
     bootstrap                   = "./vendor/autoload.php" >
 
     <php>
-        <server name="KERNEL_CLASS" value="Claroline\AppBundle\Kernel" />
+        <server name="KERNEL_CLASS" value="Claroline\KernelBundle\Kernel" />
     </php>
 
     <testsuites>

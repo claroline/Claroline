@@ -7,39 +7,6 @@ Doctrine Migrations integration bundle providing :
 - Generation for multiple target platforms
 - API allowing to execute migrations programmaticaly
 
-[![Build Status](https://secure.travis-ci.org/claroline/MigrationBundle.png?branch=master)](http://travis-ci.org/claroline/MigrationBundle)
-
-Installation
-------------
-
-Install the bundle with composer:
-
-```sh
-composer require claroline/migration-bundle
-```
-
-Then add the bundle to your application kernel:
-
-```php
-// app/AppKernel.php
-<?php
-
-use Symfony\Component\HttpKernel\Kernel;
-
-class AppKernel extends Kernel
-{
-    public function registerBundles()
-    {
-        $bundles = array(
-            // ...
-            new Claroline\MigrationBundle\ClarolineMigrationBundle(),
-        );
-    }
-
-    // ...
-}
-```
-
 Commands
 --------
 
