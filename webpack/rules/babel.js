@@ -3,7 +3,7 @@
  */
 module.exports = () => ({
   test: /\.(js|jsx)$/,
-  exclude: /web\/packages|node_modules/,
+  exclude: /public\/packages|node_modules/,
   use: {
     loader: 'babel-loader',
     options: {

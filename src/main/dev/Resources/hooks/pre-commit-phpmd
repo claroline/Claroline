@@ -5,7 +5,7 @@
  * This pre-commit hook checks for PHPMD errors.
  */
 
-$binDir = __DIR__.'/../../../../../../bin';
+$binDir = __DIR__.'/../../../../../bin';
 $phpmd = realpath("{$binDir}/phpmd");
 
 if (!$phpmd) {

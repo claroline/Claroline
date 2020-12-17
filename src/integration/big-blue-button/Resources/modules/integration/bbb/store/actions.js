@@ -2,7 +2,7 @@ import {API_REQUEST, url} from '#/main/app/api'
 import {makeActionCreator} from '#/main/app/store/actions'
 import {actions as listActions} from '#/main/app/content/list/store/actions'
 
-import {selectors} from '#/integration/big-blue-button/integration/bbb/store'
+import {selectors} from '#/integration/big-blue-button/integration/bbb/store/selectors'
 
 export const MEETINGS_UPDATE = 'MEETINGS_UPDATE'
 export const MEETINGS_SET_LOADED = 'MEETINGS_SET_LOADED'

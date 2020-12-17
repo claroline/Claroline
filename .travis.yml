@@ -96,6 +96,3 @@ script:
   - if [ "$DIFF" != '' ]; then node_modules/.bin/eslint --ext js --ext jsx `echo "$DIFF" | grep 'Resources/modules/.\+\.js' | tr '\n' ' '`; fi
   # launch php tests
   - SYMFONY_DEPRECATIONS_HELPER=weak vendor/bin/simple-phpunit --dont-report-useless-tests
-  # launch js tests
-  # FIXME : enable JS test suite when fixed
-  # - $ROOT/node_modules/.bin/karma start --single-run

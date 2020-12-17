@@ -4,7 +4,7 @@
 /**
  * This pre-commit hook checks for ESLint errors.
  */
-$moduleBinDir = __DIR__.'/../../../../../../../node_modules/.bin';
+$moduleBinDir = __DIR__.'/../../../../../node_modules/.bin';
 $eslint = realpath("{$moduleBinDir}/eslint");
 
 if (!$eslint) {

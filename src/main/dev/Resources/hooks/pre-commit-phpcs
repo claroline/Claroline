@@ -8,7 +8,7 @@
  *
  * @since   Sept 4 2012
  */
-$binDir = __DIR__.'/../../../../../../bin';
+$binDir = __DIR__.'/../../../../../bin';
 $csFixer = realpath("{$binDir}/php-cs-fixer");
 $configFile = __DIR__.'/../config/phpcs.php';
 
