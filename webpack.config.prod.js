@@ -87,7 +87,7 @@ module.exports = {
     }
   },
   resolve: {
-    modules: ['./node_modules', './public/packages'],
+    modules: ['./node_modules'],
     extensions: ['.js', '.jsx']
   }
 }

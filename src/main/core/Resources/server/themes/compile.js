@@ -12,6 +12,9 @@ function compile(srcFile, outputFile, additionalVarsFiles) {
 
   const compileOptions = {
     filename: srcFile,
+    paths: [
+      paths.root()
+    ],
     sourceMap: {
       // directly embed the less files in the map instead of referencing them
       // this permits to avoid giving access to the original files

@@ -16,13 +16,12 @@ use Claroline\CoreBundle\Entity\Cryptography\CryptographicKey;
 
 class CryptographyManager
 {
-    /**
-     * @param ObjectManager $persistence
-     */
+    private $om;
+
     public function __construct(
-        ObjectManager $persistence
+        ObjectManager $om
     ) {
-        $this->om = $persistence;
+        $this->om = $om;
     }
 
     public function generatePair()
@@ -34,7 +33,9 @@ class CryptographyManager
         ];
 
         $res = openssl_pkey_new($config);
+
         // Extract the private key from $res to $privKey
+        $privKey = '';
         openssl_pkey_export($res, $privKey);
         // Extract the public key from $res to $pubKey
         $pubKey = openssl_pkey_get_details($res);

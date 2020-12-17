@@ -1,0 +1,28 @@
+/*
+ * Base Claroline application styles.
+ *
+ * All custom themes should include this file to have access to the base styles needed
+ * for the user interface.
+ */
+
+// Import Bootstrap
+@import "bootstrap";
+
+// Import FontAwesome
+@import "@{vendor-path}/@fortawesome/fontawesome-free/less/fontawesome";
+@import "@{vendor-path}/@fortawesome/fontawesome-free/less/solid";
+@import "@{vendor-path}/@fortawesome/fontawesome-free/less/regular";
+@import "@{vendor-path}/@fortawesome/fontawesome-free/less/brands";
+@import "@{vendor-path}/@fortawesome/fontawesome-free/less/v4-shims";
+
+@fa-font-path: "../../packages/@fortawesome/fontawesome-free/webfonts";
+
+// Import Claroline layout
+@import "variables";
+@import "mixins";
+@import "scaffolding";
+@import "utilities";
+@import "type";
+
+// TODO : remove me
+@import "/src/main/core/Resources/less/main";
