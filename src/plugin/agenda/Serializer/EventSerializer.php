@@ -33,15 +33,6 @@ class EventSerializer
     /** @var UserSerializer */
     private $userSerializer;
 
-    /**
-     * RoleSerializer constructor.
-     *
-     * @param AuthorizationCheckerInterface $authorization
-     * @param ObjectManager                 $om
-     * @param PublicFileSerializer          $fileSerializer
-     * @param WorkspaceSerializer           $workspaceSerializer
-     * @param UserSerializer                $userSerializer
-     */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         ObjectManager $om,
@@ -61,17 +52,8 @@ class EventSerializer
         return 'event';
     }
 
-    /**
-     * @param Event $event
-     *
-     * @return array
-     */
-    public function serialize(Event $event)
+    public function serialize(Event $event): array
     {
-        $editable = $event->getWorkspace() ?
-            $this->authorization->isGranted('EDIT', $event) :
-            false !== $event->isEditable();
-
         return [
             'id' => $event->getUuid(),
             'title' => $event->getTitle(),
@@ -86,7 +68,8 @@ class EventSerializer
                 'color' => $event->getPriority(),
             ],
             'permissions' => [
-                'edit' => $editable,
+                'edit' => $this->authorization->isGranted('EDIT', $event),
+                'delete' => $this->authorization->isGranted('DELETE', $event),
             ],
         ];
     }
@@ -102,12 +85,8 @@ class EventSerializer
 
     /**
      * Serialize the event thumbnail.
-     *
-     * @param Event $event
-     *
-     * @return array|null
      */
-    private function serializeThumbnail(Event $event)
+    private function serializeThumbnail(Event $event): ?array
     {
         if (!empty($event->getThumbnail())) {
             /** @var PublicFile $file */
@@ -123,13 +102,7 @@ class EventSerializer
         return null;
     }
 
-    /**
-     * @param array      $data
-     * @param Event|null $event
-     *
-     * @return Event
-     */
-    public function deserialize(array $data, Event $event = null)
+    public function deserialize(array $data, Event $event = null): Event
     {
         $this->sipe('id', 'setUuid', $data, $event);
         $this->sipe('title', 'setTitle', $data, $event);
@@ -156,7 +129,6 @@ class EventSerializer
                 $event->setWorkspace($workspace);
             }
         }
-        //owner set in crud create
 
         if (isset($data['start'])) {
             $event->setStart(DateNormalizer::denormalize($data['start']));
@@ -167,10 +139,5 @@ class EventSerializer
         }
 
         return $event;
-    }
-
-    public function getClass()
-    {
-        return Event::class;
     }
 }

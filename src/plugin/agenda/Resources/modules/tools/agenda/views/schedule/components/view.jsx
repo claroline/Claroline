@@ -4,10 +4,11 @@ import classes from 'classnames'
 import moment from 'moment'
 import tinycolor from 'tinycolor2'
 import get from 'lodash/get'
+import isEmpty from 'lodash/isEmpty'
 
-import {LinkButton} from '#/main/app/buttons/link'
-import {ModalButton} from '#/main/app/buttons'
-import {now} from '#/main/app/intl/date'
+import {trans, now} from '#/main/app/intl'
+import {LinkButton, ModalButton} from '#/main/app/buttons'
+import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
 import {CalendarView} from '#/plugin/agenda/tools/agenda/views/components/calendar'
 import {constants} from '#/plugin/agenda/event/constants'
@@ -112,28 +113,38 @@ const AgendaViewSchedule = (props) => {
       view={props.view}
       loadEvents={props.loadEvents}
     >
-      <div className="agenda-schedule">
-        {Object.keys(schedule)
-          .sort((a, b) => a < b ? -1 : 1)
-          .map(date => {
-            const current = moment(date)
+      {isEmpty(schedule) &&
+        <ContentPlaceholder
+          style={{marginTop: 20}}
+          title={trans('no_event', {}, 'agenda')}
+          size="lg"
+        />
+      }
 
-            return (
-              <ScheduleDay
-                key={date}
-                path={props.path}
-                className={classes({
-                  now:      current.isSame(nowDate, 'day'),
-                  selected: current.isSame(props.referenceDate, 'day')
-                })}
-                current={current}
-                events={schedule[date]}
-                eventActions={props.eventActions}
-              />
-            )
-          })
-        }
-      </div>
+      {!isEmpty(schedule) &&
+        <div className="agenda-schedule">
+          {Object.keys(schedule)
+            .sort((a, b) => a < b ? -1 : 1)
+            .map(date => {
+              const current = moment(date)
+
+              return (
+                <ScheduleDay
+                  key={date}
+                  path={props.path}
+                  className={classes({
+                    now: current.isSame(nowDate, 'day'),
+                    selected: current.isSame(props.referenceDate, 'day')
+                  })}
+                  current={current}
+                  events={schedule[date]}
+                  eventActions={props.eventActions}
+                />
+              )
+            })
+          }
+        </div>
+      }
     </CalendarView>
   )
 }

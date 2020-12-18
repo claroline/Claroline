@@ -34,6 +34,10 @@ class EventVoter extends AbstractVoter
 
     public function checkEdit(TokenInterface $token, $object)
     {
+        if (!$object->isEditable()) {
+            return VoterInterface::ACCESS_DENIED;
+        }
+
         $workspace = $object->getWorkspace();
 
         $currentUser = $token->getUser();
@@ -68,6 +72,6 @@ class EventVoter extends AbstractVoter
 
     public function getSupportedActions()
     {
-        return[self::OPEN, self::VIEW, self::CREATE, self::EDIT, self::DELETE, self::PATCH];
+        return [self::OPEN, self::VIEW, self::CREATE, self::EDIT, self::DELETE, self::PATCH];
     }
 }
