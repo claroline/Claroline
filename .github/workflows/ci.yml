@@ -1,78 +1,100 @@
 name: "Tests"
 
 on:
-    pull_request:
+  pull_request:
 
 jobs:
-    php-74:
-        name: "PHPUnit (PHP 7.4)"
-        runs-on: ubuntu-latest
+  setup:
+    name: "Setup (PHP 7.4)"
+    runs-on: ubuntu-latest
 
-        services:
-            mysql:
-                image: mysql:8.0
-                options: >-
-                    --health-cmd "mysqladmin ping --silent"
-                    -e MYSQL_ALLOW_EMPTY_PASSWORD=yes
-                    -e MYSQL_DATABASE=claroline_test
-                ports:
-                    - "3306:3306"
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v2"
+        with:
+          fetch-depth: 2
 
-        steps:
-            - name: "Checkout"
-              uses: "actions/checkout@v2"
-              with:
-                  fetch-depth: 2
+      - name: "Install PHP 7.4"
+        uses: "shivammathur/setup-php@v2"
+        with:
+          php-version: "7.4"
+          extensions: pdo_mysql
 
-            - name: "Install PHP 7.4"
-              uses: "shivammathur/setup-php@v2"
-              with:
-                  php-version: "7.4"
-                  extensions: pdo_mysql
+      - name: "List modified files"
+        id: diff
+        run: |
+          git fetch origin
+          git diff --name-only --diff-filter=AM origin/${{ github.base_ref }} > git_diff_files.txt
+          echo "::set-output name=diff::$(cat git_diff_files.txt)"
 
-            - name: "List modified files"
-              id: diff
-              run: |
-                git fetch origin
-                git diff --name-only --diff-filter=AM origin/${{ github.base_ref }} > git_diff_files.txt
-                echo "::set-output name=diff::$(cat git_diff_files.txt)"
+      - name: "Cache composer dependencies"
+        uses: actions/cache@v1
+        with:
+          path: "~/.composer/cache"
+          key: composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: composer-
 
-            -   name: "Cache composer dependencies"
-                uses: actions/cache@v1
-                with:
-                    path: "~/.composer/cache"
-                    key: composer-${{ hashFiles('**/composer.lock') }}
-                    restore-keys: composer-
+      - name: "Set project parameters"
+        run: php bin/configure --default
 
-            - name: "Set project parameters"
-              run: php bin/configure --default
+      - name: "Install PHP dependencies with Composer"
+        run: composer update --no-interaction
 
-            - name: "Install PHP dependencies with Composer"
-              run: composer update --no-interaction
+      - name: Cache node modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
 
-            - name: "Install JS dependencies with NPM"
-              run: npm install
+      - name: "Install JS dependencies with NPM"
+        run: npm install
 
-            - name: "Build JS files with Webpack"
-              run: npm run webpack
+  styles:
+    name: "Code styles check"
+    needs: setup
+    runs-on: ubuntu-latest
 
-            - name: "Run PHPMD checks"
-              run: if [ "$DIFF" != '' ]; then vendor/bin/phpmd `echo "$DIFF" | xargs | sed -e :a -e '$!N; s/ /,/; ta'` text phpmd.xml; fi
-              env:
-                DIFF: ${{ steps.diff.outputs.diff }}
+    steps:
+      - name: "Run PHPMD checks"
+        run: if [ "$DIFF" != '' ]; then vendor/bin/phpmd `echo "$DIFF" | xargs | sed -e :a -e '$!N; s/ /,/; ta'` text phpmd.xml; fi
+        env:
+          DIFF: ${{ steps.diff.outputs.diff }}
 
-            - name: "Run PHPCSFixer checks"
-              run: if [ "$DIFF" != '' ]; then vendor/bin/php-cs-fixer fix --dry-run --diff --config=.php_cs; fi
-              env:
-                DIFF: ${{ steps.diff.outputs.diff }}
+      - name: "Run PHPCSFixer checks"
+        run: if [ "$DIFF" != '' ]; then vendor/bin/php-cs-fixer fix --dry-run --diff --config=.php_cs; fi
+        env:
+          DIFF: ${{ steps.diff.outputs.diff }}
 
-            - name: "Run ESLint checks"
-              run: if [ "$DIFF" != '' ]; then node_modules/.bin/eslint --ext js --ext jsx `echo "$DIFF" | grep 'Resources/modules/.\+\.js' | tr '\n' ' '`; fi
-              env:
-                DIFF: ${{ steps.diff.outputs.diff }}
+      - name: "Run ESLint checks"
+        run: if [ "$DIFF" != '' ]; then node_modules/.bin/eslint --ext js --ext jsx `echo "$DIFF" | grep 'Resources/modules/.\+\.js' | tr '\n' ' '`; fi
+        env:
+          DIFF: ${{ steps.diff.outputs.diff }}
 
-            - name: "Setup Claroline platform"
-              run: php bin/console claroline:install --env=test -vvv
+  php-74:
+    name: "PHPUnit (PHP 7.4)"
+    needs: setup
+    runs-on: ubuntu-latest
 
-            - name: "Run PHPUnit Tests"
-              run: SYMFONY_DEPRECATIONS_HELPER=weak vendor/bin/simple-phpunit --dont-report-useless-tests
+    services:
+      mysql:
+        image: mysql:8.0
+        options: >-
+          --health-cmd "mysqladmin ping --silent"
+          -e MYSQL_ALLOW_EMPTY_PASSWORD=yes
+          -e MYSQL_DATABASE=claroline_test
+        ports:
+          - "3306:3306"
+
+    steps:
+      - name: "Build JS files with Webpack"
+        run: npm run webpack
+
+      - name: "Setup Claroline platform"
+        run: php bin/console claroline:install --env=test -vvv
+
+      - name: "Run PHPUnit Tests"
+        run: SYMFONY_DEPRECATIONS_HELPER=weak vendor/bin/simple-phpunit --dont-report-useless-tests
