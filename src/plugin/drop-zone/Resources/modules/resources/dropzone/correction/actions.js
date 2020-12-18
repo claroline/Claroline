@@ -2,7 +2,7 @@ import {makeActionCreator} from '#/main/app/store/actions'
 import {API_REQUEST} from '#/main/app/api'
 
 import {selectors} from '#/plugin/drop-zone/resources/dropzone/store/selectors'
-import {actions as playerActions} from '#/plugin/drop-zone/resources/dropzone/player/actions'
+import {actions as baseActions} from '#/plugin/drop-zone/resources/dropzone/store/actions'
 
 export const DROP_UPDATE = 'DROP_UPDATE'
 export const CURRENT_DROP_LOAD = 'CURRENT_DROP_LOAD'
@@ -142,7 +142,7 @@ actions.executeTool = (toolId, documentId) => ({
       method: 'POST'
     },
     success: (data, dispatch) => {
-      dispatch(playerActions.updateDocument(data))
+      dispatch(baseActions.updateDocument(data))
     }
   }
 })

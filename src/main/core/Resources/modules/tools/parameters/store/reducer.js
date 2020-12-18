@@ -4,7 +4,7 @@ import {reducer as tokenReducer} from '#/main/core/tools/parameters/tokens/store
 import {combineReducers, makeReducer} from '#/main/app/store/reducer'
 
 import {TOOL_LOAD} from '#/main/core/tool/store/actions'
-import {selectors} from '#/main/core/tools/parameters/store'
+import {selectors} from '#/main/core/tools/parameters/store/selectors'
 
 const reducer = combineReducers({
   tools: makeReducer([], {

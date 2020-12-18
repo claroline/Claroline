@@ -21,7 +21,7 @@ import {
 } from '#/plugin/drop-zone/resources/dropzone/correction/actions'
 import {
   DOCUMENT_UPDATE
-} from '#/plugin/drop-zone/resources/dropzone/player/actions'
+} from '#/plugin/drop-zone/resources/dropzone/store/actions'
 
 const currentDropReducer = makeReducer(null, {
   [CURRENT_DROP_LOAD]: (state, action) => {

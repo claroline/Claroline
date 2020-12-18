@@ -9,10 +9,12 @@ import {RESOURCE_LOAD} from '#/main/core/resource/store/actions'
 import {selectors} from '#/plugin/drop-zone/resources/dropzone/store/selectors'
 
 import {
+  DOCUMENT_UPDATE
+} from '#/plugin/drop-zone/resources/dropzone/store/actions'
+import {
   MY_DROP_LOAD,
   MY_DROP_UPDATE,
   DOCUMENTS_ADD,
-  DOCUMENT_UPDATE,
   DOCUMENT_REMOVE,
   PEER_DROP_LOAD,
   PEER_DROP_RESET,

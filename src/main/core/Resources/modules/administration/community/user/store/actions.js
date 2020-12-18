@@ -4,7 +4,7 @@ import {API_REQUEST} from '#/main/app/api'
 import {actions as listActions} from '#/main/app/content/list/store/actions'
 import {actions as formActions} from '#/main/app/content/form/store/actions'
 
-import {selectors as baseSelectors} from '#/main/core/administration/community/store'
+import {selectors as baseSelectors} from '#/main/core/administration/community/store/selectors'
 import {User as UserTypes} from '#/main/core/user/prop-types'
 
 export const USER_COMPARE = 'USER_COMPARE'

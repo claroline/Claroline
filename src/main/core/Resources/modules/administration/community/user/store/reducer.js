@@ -6,7 +6,7 @@ import {makeInstanceAction} from '#/main/app/store/actions'
 
 import {FORM_SUBMIT_SUCCESS} from '#/main/app/content/form/store/actions'
 import {TOOL_LOAD} from '#/main/core/tool/store/actions'
-import {selectors as baseSelectors} from '#/main/core/administration/community/store'
+import {selectors as baseSelectors} from '#/main/core/administration/community/store/selectors'
 import {USER_COMPARE} from '#/main/core/administration/community/user/store/actions'
 
 const reducer = combineReducers({
