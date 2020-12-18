@@ -1,18 +1,18 @@
 import {combineReducers, makeReducer} from '#/main/app/store/reducer'
+import {makeInstanceAction} from '#/main/app/store/actions'
 
 import {makeFormReducer} from '#/main/app/content/form/store/reducer'
 import {makeListReducer} from '#/main/app/content/list/store'
-import {makeInstanceAction} from '#/main/app/store/actions'
 
 import {FORM_SUBMIT_SUCCESS} from '#/main/app/content/form/store/actions'
 import {TOOL_LOAD} from '#/main/core/tool/store/actions'
 
-import {selectors as baseSelectors} from '#/main/core/administration/community/store'
+import {selectors as baseSelectors} from '#/main/core/administration/community/store/selectors'
 
 const reducer = combineReducers({
   list: makeListReducer(baseSelectors.STORE_NAME+'.organizations.list', {}, {
     invalidated: makeReducer(false, {
-      [FORM_SUBMIT_SUCCESS+'/'+baseSelectors.STORE_NAME+'.organizations.current']: () => true, // todo : find better
+      [FORM_SUBMIT_SUCCESS+'/'+baseSelectors.STORE_NAME+'.organizations.current']: () => true,
       [makeInstanceAction(TOOL_LOAD, 'community')]: () => true
     })
   }),

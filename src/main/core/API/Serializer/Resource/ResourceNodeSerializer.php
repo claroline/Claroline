@@ -27,42 +27,25 @@ class ResourceNodeSerializer
 {
     use SerializerTrait;
 
+    const NO_PARENT = 'no_parent';
+
     /** @var ObjectManager */
     private $om;
-
     /** @var StrictDispatcher */
     private $eventDispatcher;
-
     /** @var PublicFileSerializer */
     private $fileSerializer;
-
     /** @var UserSerializer */
     private $userSerializer;
-
     /** @var OptimizedRightsManager */
     private $newRightsManager;
-
     /** @var RightsManager */
     private $rightsManager;
-
     /** @var MaskManager */
     private $maskManager;
-
     /** @var SerializerProvider */
     private $serializer;
 
-    /**
-     * ResourceNodeManager constructor.
-     *
-     * @param ObjectManager          $om
-     * @param StrictDispatcher       $eventDispatcher
-     * @param PublicFileSerializer   $fileSerializer
-     * @param UserSerializer         $userSerializer
-     * @param MaskManager            $maskManager
-     * @param OptimizedRightsManager $newRightsManager
-     * @param RightsManager          $rightsManager,
-     * @param SerializerProvider     $serializer
-     */
     public function __construct(
         ObjectManager $om,
         StrictDispatcher $eventDispatcher,
@@ -83,20 +66,20 @@ class ResourceNodeSerializer
         $this->serializer = $serializer;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'resource_node';
     }
 
+    public function getSchema(): string
+    {
+        return '#/main/core/resource/resource-node.json';
+    }
+
     /**
      * Serializes a ResourceNode entity for the JSON api.
-     *
-     * @param ResourceNode $resourceNode - the node to serialize
-     * @param array        $options
-     *
-     * @return array - the serialized representation of the node
      */
-    public function serialize(ResourceNode $resourceNode, array $options = [])
+    public function serialize(ResourceNode $resourceNode, array $options = []): array
     {
         $serializedNode = [
             'id' => $resourceNode->getUuid(),
@@ -125,13 +108,8 @@ class ResourceNodeSerializer
         }
 
         $parent = $resourceNode->getParent();
-        if (!empty($parent)) {
-            $serializedNode['parent'] = [
-                'id' => $parent->getUuid(),
-                'autoId' => $parent->getId(),
-                'name' => $parent->getName(),
-                'slug' => $parent->getSlug(),
-            ];
+        if (!empty($parent) && !in_array(static::NO_PARENT, $options)) {
+            $serializedNode['parent'] = $this->serialize($resourceNode->getParent(), [static::NO_PARENT]);
         }
 
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
@@ -150,21 +128,16 @@ class ResourceNodeSerializer
     /**
      * Dispatches an event to let plugins add some custom data to the serialized node.
      * For example, SocialMedia adds the number of likes.
-     *
-     * @param ResourceNode $resourceNode   - the original node entity
-     * @param array        $serializedNode - the serialized version of the node
-     * @param array        $options
-     *
-     * @return array - the decorated node
      */
-    private function decorate(ResourceNode $resourceNode, array $serializedNode, array $options = [])
+    private function decorate(ResourceNode $resourceNode, array $serializedNode, array $options = []): array
     {
         // avoid plugins override the standard node properties
         $unauthorizedKeys = array_keys($serializedNode);
 
         // 'thumbnail' is a key that can be overridden by another plugin. For example: UrlBundle
         // TODO : find a cleaner way to do it
-        if (false !== ($key = array_search('thumbnail', $unauthorizedKeys))) {
+        $key = array_search('thumbnail', $unauthorizedKeys);
+        if (false !== $key) {
             unset($unauthorizedKeys[$key]);
         }
 
@@ -180,12 +153,8 @@ class ResourceNodeSerializer
 
     /**
      * Serialize the resource poster.
-     *
-     * @param ResourceNode $resourceNode
-     *
-     * @return array|null
      */
-    private function serializePoster(ResourceNode $resourceNode)
+    private function serializePoster(ResourceNode $resourceNode): ?array
     {
         if (!empty($resourceNode->getPoster())) {
             /** @var PublicFile $file */
@@ -203,12 +172,8 @@ class ResourceNodeSerializer
 
     /**
      * Serialize the resource thumbnail.
-     *
-     * @param ResourceNode $resourceNode
-     *
-     * @return array|null
      */
-    private function serializeThumbnail(ResourceNode $resourceNode)
+    private function serializeThumbnail(ResourceNode $resourceNode): ?array
     {
         if (!empty($resourceNode->getThumbnail())) {
             /** @var PublicFile $file */
@@ -224,7 +189,7 @@ class ResourceNodeSerializer
         return null;
     }
 
-    private function serializeMeta(ResourceNode $resourceNode, array $options)
+    private function serializeMeta(ResourceNode $resourceNode, array $options): array
     {
         $meta = [
             'type' => $resourceNode->getResourceType()->getName(),
@@ -263,7 +228,7 @@ class ResourceNodeSerializer
         return $meta;
     }
 
-    private function serializeDisplay(ResourceNode $resourceNode)
+    private function serializeDisplay(ResourceNode $resourceNode): array
     {
         return [
             'fullscreen' => $resourceNode->isFullscreen(),
@@ -271,7 +236,7 @@ class ResourceNodeSerializer
         ];
     }
 
-    private function serializeRestrictions(ResourceNode $resourceNode)
+    private function serializeRestrictions(ResourceNode $resourceNode): array
     {
         return [
             'hidden' => $resourceNode->isHidden(),
@@ -286,12 +251,8 @@ class ResourceNodeSerializer
 
     /**
      * Deserializes resource node data into entities.
-     *
-     * @param array        $data
-     * @param ResourceNode $resourceNode
-     * @param array        $options
      */
-    public function deserialize(array $data, ResourceNode $resourceNode, array $options = [])
+    public function deserialize(array $data, ResourceNode $resourceNode, array $options = []): ResourceNode
     {
         $this->sipe('name', 'setName', $data, $resourceNode);
         $this->sipe('slug', 'setSlug', $data, $resourceNode);
@@ -361,6 +322,8 @@ class ResourceNodeSerializer
         if (!in_array(OPTIONS::IGNORE_RIGHTS, $options) && isset($data['rights'])) {
             $this->deserializeRights($data['rights'], $resourceNode, $options);
         }
+
+        return $resourceNode;
     }
 
     public function deserializeRights($rights, ResourceNode $resourceNode, array $options = [])
@@ -418,13 +381,5 @@ class ResourceNodeSerializer
                 $resourceNode->removeRight($existingRight);
             }
         }
-    }
-
-    /**
-     * @return string
-     */
-    public function getSchema()
-    {
-        return '#/main/core/resource/resource-node.json';
     }
 }

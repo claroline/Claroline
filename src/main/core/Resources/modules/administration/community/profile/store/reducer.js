@@ -6,7 +6,7 @@ import {makeInstanceAction} from '#/main/app/store/actions'
 import {makeFormReducer} from '#/main/app/content/form/store/reducer'
 import {TOOL_LOAD} from '#/main/core/tool/store/actions'
 
-import {selectors as baseSelectors} from '#/main/core/administration/community/store'
+import {selectors as baseSelectors} from '#/main/core/administration/community/store/selectors'
 import {decorate} from '#/main/core/user/profile/decorator'
 import {
   PROFILE_FACET_OPEN,

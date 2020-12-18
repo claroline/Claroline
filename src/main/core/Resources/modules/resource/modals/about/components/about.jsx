@@ -51,6 +51,10 @@ const AboutModal = props =>
               label: trans('description'),
               type: 'string'
             }, {
+              name: 'parent',
+              label: trans('parent'),
+              type: 'resource'
+            }, {
               name: 'workspace',
               label: trans('workspace'),
               type: 'workspace'
