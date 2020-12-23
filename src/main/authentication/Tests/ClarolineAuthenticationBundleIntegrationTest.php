@@ -27,6 +27,7 @@ class ClarolineAuthenticationBundleIntegrationTest extends TestCase
 
         // prevents errors for missing parent services coming from AppBundle
         $container->getCompilerPassConfig()->setAfterRemovingPasses([]);
+        $container->getCompilerPassConfig()->setRemovingPasses([]);
 
         $container->compile();
         $this->addToAssertionCount(1); // container compiled successfully
