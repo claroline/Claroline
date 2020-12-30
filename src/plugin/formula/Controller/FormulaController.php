@@ -9,7 +9,7 @@ class FormulaController
 {
     /**
      * @Route("/formula", name="icap_formula_plugin_index", options={"expose"=true})
-     * @EXT\Template("IcapFormulaPluginBundle:formula:index.html.twig")
+     * @EXT\Template("@IcapFormulaPlugin/formula/index.html.twig")
      *
      * @return array
      */
