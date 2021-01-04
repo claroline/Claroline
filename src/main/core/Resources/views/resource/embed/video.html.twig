@@ -1,4 +1,4 @@
-{% include "ClarolineVideoPlayerBundle::player.html.twig" with {
+{% include "@ClarolineVideoPlayer/player.html.twig" with {
     video: resource,
     source: url('claro_file_stream', {id: resource.resourceNode.uuid})
 } %}

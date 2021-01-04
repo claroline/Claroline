@@ -408,7 +408,7 @@ class EvaluationManager
     /**
      * Set required flag to true for each resource evaluations linked to the users having the given role.
      */
-    private function addRequirementToResourceEvaluationByRole(ResourceNode $resourceNode, Role $role)
+    public function addRequirementToResourceEvaluationByRole(ResourceNode $resourceNode, Role $role)
     {
         $users = [];
 

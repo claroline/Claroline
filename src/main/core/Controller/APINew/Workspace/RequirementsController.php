@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Controller\APINew\Workspace;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Role;
@@ -33,6 +34,8 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 class RequirementsController
 {
+    use RequestDecoderTrait;
+
     /** @var AuthorizationCheckerInterface */
     private $authorization;
     /** @var EvaluationManager */
@@ -44,15 +47,6 @@ class RequirementsController
     /** @var SerializerProvider */
     private $serializer;
 
-    /**
-     * RequirementsController constructor.
-     *
-     * @param AuthorizationCheckerInterface $authorization
-     * @param EvaluationManager             $evaluationManager
-     * @param FinderProvider                $finder
-     * @param ObjectManager                 $om
-     * @param SerializerProvider            $serializer
-     */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         EvaluationManager $evaluationManager,
@@ -68,20 +62,10 @@ class RequirementsController
     }
 
     /**
-     * @Route(
-     *    "/{workspace}/requirements/{type}/list",
-     *    name="apiv2_workspace_requirements_list",
-     *    methods={"GET"}
-     * )
+     * @Route("/{workspace}/requirements/{type}/list", name="apiv2_workspace_requirements_list", methods={"GET"})
      * @ParamConverter("workspace", options={"mapping": {"workspace": "uuid"}})
-     *
-     * @param Workspace $workspace
-     * @param string    $type
-     * @param Request   $request
-     *
-     * @return JsonResponse
      */
-    public function requirementsListAction(Workspace $workspace, $type, Request $request)
+    public function requirementsListAction(Workspace $workspace, string $type, Request $request): JsonResponse
     {
         if (!$this->authorization->isGranted(['dashboard', 'OPEN'], $workspace)) {
             throw new AccessDeniedException();
@@ -103,20 +87,10 @@ class RequirementsController
     }
 
     /**
-     * @Route(
-     *    "/{workspace}/requirements/{type}/create",
-     *    name="apiv2_workspace_requirements_create",
-     *    methods={"PUT"}
-     * )
+     * @Route("/{workspace}/requirements/{type}/create", name="apiv2_workspace_requirements_create", methods={"PUT"})
      * @ParamConverter("workspace", options={"mapping": {"workspace": "uuid"}})
-     *
-     * @param Workspace $workspace
-     * @param string    $type
-     * @param Request   $request
-     *
-     * @return JsonResponse
      */
-    public function requirementsCreateAction(Workspace $workspace, $type, Request $request)
+    public function requirementsCreateAction(Workspace $workspace, string $type, Request $request): JsonResponse
     {
         if (!$this->authorization->isGranted(['dashboard', 'OPEN'], $workspace)) {
             throw new AccessDeniedException();
@@ -133,19 +107,10 @@ class RequirementsController
     }
 
     /**
-     * @Route(
-     *     "/{workspace}/requirements/delete",
-     *     name="apiv2_workspace_requirements_delete",
-     *     methods={"DELETE"}
-     * )
+     * @Route("/{workspace}/requirements/delete", name="apiv2_workspace_requirements_delete", methods={"DELETE"})
      * @ParamConverter("workspace", options={"mapping": {"workspace": "uuid"}})
-     *
-     * @param Workspace $workspace
-     * @param Request   $request
-     *
-     * @return JsonResponse
      */
-    public function deleteBulkAction(Workspace $workspace, Request $request)
+    public function deleteBulkAction(Workspace $workspace, Request $request): JsonResponse
     {
         if (!$this->authorization->isGranted(['dashboard', 'OPEN'], $workspace)) {
             throw new AccessDeniedException();
@@ -157,18 +122,10 @@ class RequirementsController
     }
 
     /**
-     * @Route(
-     *    "/requirements/{requirements}/fetch",
-     *    name="apiv2_workspace_requirements_fetch",
-     *    methods="{GET}"
-     * )
+     * @Route("/requirements/{requirements}/fetch", name="apiv2_workspace_requirements_fetch", methods={"GET"})
      * @ParamConverter("requirements", options={"mapping": {"requirements": "uuid"}})
-     *
-     * @param Requirements $requirements
-     *
-     * @return JsonResponse
      */
-    public function requirementsFetchAction(Requirements $requirements)
+    public function requirementsFetchAction(Requirements $requirements): JsonResponse
     {
         if (!$this->authorization->isGranted(['dashboard', 'OPEN'], $requirements->getWorkspace())) {
             throw new AccessDeniedException();
@@ -178,20 +135,10 @@ class RequirementsController
     }
 
     /**
-     * @Route(
-     *    "/requirements/resource/{resourceNode}/{type}/list",
-     *    name="apiv2_workspace_requirements_resource_list",
-     *    methods={"GET"}
-     * )
+     * @Route("/requirements/resource/{resourceNode}/{type}/list", name="apiv2_workspace_requirements_resource_list", methods={"GET"})
      * @ParamConverter("resourceNode", options={"mapping": {"resourceNode": "uuid"}})
-     *
-     * @param ResourceNode $resourceNode
-     * @param string       $type
-     * @param Request      $request
-     *
-     * @return JsonResponse
      */
-    public function resourceListAction(ResourceNode $resourceNode, $type, Request $request)
+    public function resourceListAction(ResourceNode $resourceNode, string $type, Request $request): JsonResponse
     {
         $workspace = $resourceNode->getWorkspace();
 
@@ -216,19 +163,10 @@ class RequirementsController
     }
 
     /**
-     * @Route(
-     *    "/requirements/{requirements}/resources/add",
-     *    name="apiv2_workspace_requirements_resources_add",
-     *    methods={"PUT"}
-     * )
+     * @Route("/requirements/{requirements}/resources/add", name="apiv2_workspace_requirements_resources_add", methods={"PUT"})
      * @ParamConverter("requirements", options={"mapping": {"requirements": "uuid"}})
-     *
-     * @param Requirements $requirements
-     * @param Request      $request
-     *
-     * @return JsonResponse
      */
-    public function resourcesRequirementsAddAction(Requirements $requirements, Request $request)
+    public function resourcesRequirementsAddAction(Requirements $requirements, Request $request): JsonResponse
     {
         if (!$this->authorization->isGranted(['dashboard', 'OPEN'], $requirements->getWorkspace())) {
             throw new AccessDeniedException();
@@ -240,19 +178,10 @@ class RequirementsController
     }
 
     /**
-     * @Route(
-     *    "/requirements/{requirements}/resources/remove",
-     *    name="apiv2_workspace_requirements_resources_remove",
-     *    methods={"DELETE"}
-     * )
+     * @Route("/requirements/{requirements}/resources/remove", name="apiv2_workspace_requirements_resources_remove", methods={"DELETE"})
      * @ParamConverter("requirements", options={"mapping": {"requirements": "uuid"}})
-     *
-     * @param Requirements $requirements
-     * @param Request      $request
-     *
-     * @return JsonResponse
      */
-    public function resourcesRequirementsRemoveAction(Requirements $requirements, Request $request)
+    public function resourcesRequirementsRemoveAction(Requirements $requirements, Request $request): JsonResponse
     {
         if (!$this->authorization->isGranted(['dashboard', 'OPEN'], $requirements->getWorkspace())) {
             throw new AccessDeniedException();
@@ -264,19 +193,10 @@ class RequirementsController
     }
 
     /**
-     * @Route(
-     *    "/requirements/resource/{resourceNode}/remove",
-     *    name="apiv2_workspace_requirements_resource_remove",
-     *    methods={"DELETE"}
-     * )
+     * @Route("/requirements/resource/{resourceNode}/remove", name="apiv2_workspace_requirements_resource_remove", methods={"DELETE"})
      * @ParamConverter("resourceNode", options={"mapping": {"resourceNode": "uuid"}})
-     *
-     * @param ResourceNode $resourceNode
-     * @param Request      $request
-     *
-     * @return JsonResponse
      */
-    public function resourceRequirementsRemoveAction(ResourceNode $resourceNode, Request $request)
+    public function resourceRequirementsRemoveAction(ResourceNode $resourceNode, Request $request): JsonResponse
     {
         if (!$this->authorization->isGranted(['dashboard', 'OPEN'], $resourceNode->getWorkspace())) {
             throw new AccessDeniedException();
@@ -291,20 +211,10 @@ class RequirementsController
     }
 
     /**
-     * @Route(
-     *    "/requirements/resource/{resourceNode}/{type}/update",
-     *    name="apiv2_workspace_requirements_resource_update",
-     *    methods={"PUT"}
-     * )
+     * @Route("/requirements/resource/{resourceNode}/{type}/update", name="apiv2_workspace_requirements_resource_update", methods={"PUT"})
      * @ParamConverter("resourceNode", options={"mapping": {"resourceNode": "uuid"}})
-     *
-     * @param ResourceNode $resourceNode
-     * @param string       $type
-     * @param Request      $request
-     *
-     * @return JsonResponse
      */
-    public function resourceRequirementsUpdateAction(ResourceNode $resourceNode, $type, Request $request)
+    public function resourceRequirementsUpdateAction(ResourceNode $resourceNode, string $type, Request $request): JsonResponse
     {
         $workspace = $resourceNode->getWorkspace();
 
@@ -322,21 +232,5 @@ class RequirementsController
         }
 
         return new JsonResponse();
-    }
-
-    /**
-     * @param Request $request
-     * @param string  $class
-     * @param string  $property
-     *
-     * @return array
-     */
-    private function decodeIdsString(Request $request, $class, $property = 'ids')
-    {
-        $ids = $request->query->get($property);
-
-        $property = is_numeric($ids[0]) ? 'id' : 'uuid';
-
-        return $this->om->findList($class, $property, $ids);
     }
 }
