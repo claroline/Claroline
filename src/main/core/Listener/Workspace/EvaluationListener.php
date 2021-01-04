@@ -24,19 +24,11 @@ class EvaluationListener
     /** @var EvaluationManager */
     private $evaluationManager;
 
-    /**
-     * EvaluationListener constructor.
-     *
-     * @param EvaluationManager $evaluationManager
-     */
     public function __construct(EvaluationManager $evaluationManager)
     {
         $this->evaluationManager = $evaluationManager;
     }
 
-    /**
-     * @param UserEvaluationEvent $event
-     */
     public function onResourceEvaluation(UserEvaluationEvent $event)
     {
         /** @var ResourceUserEvaluation $resourceUserEvaluation */
@@ -48,9 +40,6 @@ class EvaluationListener
         $this->evaluationManager->computeEvaluation($workspace, $user, $resourceUserEvaluation, new \DateTime());
     }
 
-    /**
-     * @param LogGenericEvent $event
-     */
     public function onLog(LogGenericEvent $event)
     {
         if ($event instanceof LogRoleSubscribeEvent || $event instanceof LogRoleUnsubscribeEvent) {
@@ -77,17 +66,22 @@ class EvaluationListener
     }
 
     /**
-     * @param PatchEvent $event
+     * Updates users resource evaluation with role requirements.
+     * It will mark the evaluation as required/non required based on the defined requirements.
+     *
+     * @todo move this in Queue when available.
      */
+    public function onRoleChange(PatchEvent $event)
+    {
+        if ('user' === $event->getProperty() && in_array($event->getAction(), ['add', 'remove'])) {
+            $this->evaluationManager->manageRoleSubscription($event->getObject(), $event->getValue(), $event->getAction());
+        }
+    }
+
     public function groupUsersPostCollectionPatch(PatchEvent $event)
     {
-        if ('user' === $event->getProperty()) {
-            switch ($event->getAction()) {
-                case 'add':
-                case 'remove':
-                    $this->evaluationManager->manageGroupSubscription($event->getObject(), $event->getValue(), $event->getAction());
-                    break;
-            }
+        if ('user' === $event->getProperty() && in_array($event->getAction(), ['add', 'remove'])) {
+            $this->evaluationManager->manageGroupSubscription($event->getObject(), $event->getValue(), $event->getAction());
         }
     }
 }

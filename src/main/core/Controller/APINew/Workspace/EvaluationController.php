@@ -17,6 +17,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Evaluation;
+use Claroline\CoreBundle\Entity\Workspace\Requirements;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\Workspace\EvaluationManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -91,6 +92,17 @@ class EvaluationController
         foreach ($users as $user) {
             // this will automatically create missing evaluation
             $this->manager->getEvaluation($workspace, $user, true);
+        }
+
+        // updates resource evaluation with workspace requirements
+        // this is only required because in some cases ResourceUserEvaluation were not marked as required
+        // when defined in the workspace requirements
+        // TODO : to remove in 14.x
+        $requirements = $this->om->getRepository(Requirements::class)->findOneBy(['workspace' => $workspace, 'role' => $role]);
+        if ($requirements) {
+            foreach ($requirements->getResources() as $resource) {
+                $this->manager->addRequirementToResourceEvaluationByRole($resource, $role);
+            }
         }
 
         $this->om->endFlushSuite();
