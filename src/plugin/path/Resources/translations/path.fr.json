@@ -43,5 +43,7 @@
     "path_numbering_custom": "Customisée",
     "step_numbering": "Numérotation",
     "secondary_resources_open_target": "Ouverture des ressources complémentaires",
-    "start_disabled_empty": "Le parcours est vide."
+    "start_disabled_empty": "Le parcours est vide.",
+    "attempt_end_info": "Vous avez terminé le parcours.",
+    "attempt_end_title": "Félicitations !"
 }

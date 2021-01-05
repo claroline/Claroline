@@ -91,6 +91,27 @@ const EditorParameters = props =>
             }
           ]
         }, {
+          icon: 'fa fa-fw fa-flag-checkered',
+          title: trans('end_page'),
+          fields: [
+            {
+              name: 'display.showEndPage',
+              type: 'boolean',
+              label: trans('show_end_page'),
+              linked: [
+                {
+                  name: 'meta.endMessage',
+                  type: 'html',
+                  label: trans('end_message'),
+                  displayed: (path) => get(path, 'display.showEndPage'),
+                  options: {
+                    workspace: props.workspace
+                  }
+                }
+              ]
+            }
+          ]
+        }, {
           icon: 'fa fa-fw fa-percentage',
           title: trans('score'),
           fields: [

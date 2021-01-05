@@ -374,17 +374,17 @@ const EditorParameters = props => {
             ]
           }, {
             icon: 'fa fa-fw fa-flag-checkered',
-            title: trans('end_page', {}, 'quiz'),
+            title: trans('end_page'),
             fields: [
               {
                 name: 'parameters.showEndPage',
                 type: 'boolean',
-                label: trans('show_end_page', {}, 'quiz'),
+                label: trans('show_end_page'),
                 linked: [
                   {
                     name: 'parameters.endMessage',
                     type: 'html',
-                    label: trans('end_message', {}, 'quiz'),
+                    label: trans('end_message'),
                     displayed: hasEnd,
                     options: {
                       workspace: props.workspace

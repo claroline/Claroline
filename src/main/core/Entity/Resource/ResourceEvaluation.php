@@ -15,6 +15,9 @@ use Claroline\CoreBundle\Entity\Evaluation\AbstractEvaluation;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * Represents an attempt of a User to a ResourceNode.
+ * There may be several for a user and a resource.
+ *
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Resource\ResourceEvaluationRepository")
  * @ORM\Table(name="claro_resource_evaluation")
  */
@@ -53,9 +56,6 @@ class ResourceEvaluation extends AbstractEvaluation
         return $this->resourceUserEvaluation;
     }
 
-    /**
-     * @param ResourceUserEvaluation $resourceUserEvaluation
-     */
     public function setResourceUserEvaluation(ResourceUserEvaluation $resourceUserEvaluation)
     {
         $this->resourceUserEvaluation = $resourceUserEvaluation;

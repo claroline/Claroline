@@ -69,7 +69,7 @@ const EditorStep = props =>
                 }, {
                   name: 'showResourceHeader',
                   type: 'boolean',
-                  label: trans('show_resource_header'),
+                  label: trans('show_resource_header', {}, 'resource'),
                   displayed: (step) => !isEmpty(step.primaryResource)
                 }
               ]

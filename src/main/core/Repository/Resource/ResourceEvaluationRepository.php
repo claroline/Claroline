@@ -12,13 +12,14 @@
 namespace Claroline\CoreBundle\Repository\Resource;
 
 use Claroline\CoreBundle\Entity\Evaluation\AbstractEvaluation;
+use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
 
 class ResourceEvaluationRepository extends EntityRepository
 {
-    public function findOneInProgress(ResourceNode $node, User $user)
+    public function findOneInProgress(ResourceNode $node, User $user): ?ResourceEvaluation
     {
         return $this->createQueryBuilder('re')
             ->join('re.resourceUserEvaluation', 'rue')
@@ -31,6 +32,20 @@ class ResourceEvaluationRepository extends EntityRepository
                 AbstractEvaluation::STATUS_OPENED,
                 AbstractEvaluation::STATUS_INCOMPLETE,
             ])
+            ->setParameter('user', $user)
+            ->setParameter('resourceNode', $node)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    public function findLast(ResourceNode $node, User $user): ?ResourceEvaluation
+    {
+        return $this->createQueryBuilder('re')
+            ->join('re.resourceUserEvaluation', 'rue')
+            ->andWhere('rue.user = :user')
+            ->andWhere('rue.resourceNode = :resourceNode')
+            ->orderBy('re.date', 'DESC')
+            ->setMaxResults(1)
             ->setParameter('user', $user)
             ->setParameter('resourceNode', $node)
             ->getQuery()

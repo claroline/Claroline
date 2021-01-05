@@ -10,14 +10,14 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
+use Claroline\CoreBundle\Event\Resource\EvaluateResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
-use Claroline\CoreBundle\Event\UserEvaluationEvent;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\Step;
 use Innova\PathBundle\Manager\UserProgressionManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Used to integrate Path to Claroline resource manager.
@@ -42,16 +42,6 @@ class PathListener
     /** @var UserProgressionManager */
     private $userProgressionManager;
 
-    /**
-     * PathListener constructor.
-     *
-     * @param TokenStorageInterface  $tokenStorage
-     * @param TranslatorInterface    $translator
-     * @param ObjectManager          $om
-     * @param SerializerProvider     $serializer
-     * @param ResourceManager        $resourceManager
-     * @param UserProgressionManager $userProgressionManager
-     */
     public function __construct(
         TokenStorageInterface $tokenStorage,
         TranslatorInterface $translator,
@@ -70,8 +60,6 @@ class PathListener
 
     /**
      * Loads the Path resource.
-     *
-     * @param LoadResourceEvent $event
      */
     public function onLoad(LoadResourceEvent $event)
     {
@@ -90,10 +78,6 @@ class PathListener
 
     /**
      * Fired when a ResourceNode of type Path is duplicated.
-     *
-     * @param CopyResourceEvent $event
-     *
-     * @throws \Exception
      */
     public function onCopy(CopyResourceEvent $event)
     {
@@ -131,26 +115,19 @@ class PathListener
     /**
      * Fired when a Resource Evaluation with a score is created.
      * We will update progression for all paths using this resource.
-     *
-     * @param UserEvaluationEvent $event
      */
-    public function onEvaluation(UserEvaluationEvent $event)
+    public function onEvaluation(EvaluateResourceEvent $event)
     {
         /** @var ResourceUserEvaluation $evaluation */
         $evaluation = $event->getEvaluation();
 
-        $this->userProgressionManager->handleResourceEvaluation($evaluation);
+        $this->userProgressionManager->handleResourceEvaluation($evaluation, $event->getAttempt());
     }
 
     /**
      * Create directory to store copies of resources.
-     *
-     * @param ResourceNode $destination
-     * @param string       $pathName
-     *
-     * @return AbstractResource
      */
-    private function createResourcesCopyDirectory(ResourceNode $destination, $pathName)
+    private function createResourcesCopyDirectory(ResourceNode $destination, string $pathName): AbstractResource
     {
         /** @var User $user */
         $user = $this->tokenStorage->getToken()->getUser();
@@ -167,7 +144,7 @@ class PathListener
         );
     }
 
-    private function copyStepResources(Step $step, ResourceNode $destination, array $copiedResources = [])
+    private function copyStepResources(Step $step, ResourceNode $destination, array $copiedResources = []): array
     {
         /** @var User $user */
         $user = $this->tokenStorage->getToken()->getUser();

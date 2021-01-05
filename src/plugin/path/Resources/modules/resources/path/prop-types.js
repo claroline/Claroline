@@ -40,10 +40,12 @@ const Path = {
   propTypes: {
     id: T.string.isRequired,
     meta: T.shape({
-      description: T.string
+      description: T.string,
+      endMessage: T.string
     }),
     display: T.shape({
       showOverview: T.bool,
+      showEndPage: T.bool,
       numbering: T.oneOf(['none', 'numeric', 'literal', 'custom']),
       manualProgressionAllowed: T.bool,
       showScore: T.bool
@@ -63,6 +65,7 @@ const Path = {
     meta: {},
     display: {
       showOverview: false,
+      showEndPage: false,
       numbering: 'none',
       manualProgressionAllowed: false
     },

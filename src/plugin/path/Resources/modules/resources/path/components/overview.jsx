@@ -63,6 +63,7 @@ const PathOverview = props => {
         <h3 className="h2">{trans('summary')}</h3>
 
         <ContentSummary
+          className="component-container"
           links={props.path.steps.map(getStepSummary)}
         />
       </section>
