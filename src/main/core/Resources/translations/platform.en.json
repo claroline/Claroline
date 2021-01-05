@@ -1666,5 +1666,9 @@
     "privacy": "Private life",
     "full": "Full",
     "quantity": "Quantity",
-    "capacity": "Capacity"
+    "capacity": "Capacity",
+    "end_message": "End message",
+    "show_end_page": "Display end page",
+    "end_page": "End page",
+    "end": "End"
 }

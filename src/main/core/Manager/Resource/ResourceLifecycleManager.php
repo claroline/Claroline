@@ -5,14 +5,15 @@ namespace Claroline\CoreBundle\Manager\Resource;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\CreateResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DownloadResourceEvent;
+use Claroline\CoreBundle\Event\Resource\EvaluateResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
-use Claroline\CoreBundle\Event\UserEvaluationEvent;
 
 /**
  * Centralizes events dispatched for resources integration.
@@ -27,12 +28,6 @@ class ResourceLifecycleManager
     /** @var ObjectManager */
     private $om;
 
-    /**
-     * ResourceLifecycleManager constructor.
-     *
-     * @param StrictDispatcher $eventDispatcher
-     * @param ObjectManager    $om
-     */
     public function __construct(
         StrictDispatcher $eventDispatcher,
         ObjectManager $om)
@@ -91,11 +86,6 @@ class ResourceLifecycleManager
         return $event;
     }
 
-    /**
-     * @param ResourceNode $resourceNode
-     *
-     * @return DownloadResourceEvent
-     */
     public function export(ResourceNode $resourceNode)
     {
         /** @var DownloadResourceEvent $event */
@@ -120,13 +110,13 @@ class ResourceLifecycleManager
         return $event;
     }
 
-    public function evaluate(ResourceUserEvaluation $resourceUserEvaluation)
+    public function evaluate(ResourceUserEvaluation $resourceUserEvaluation, ResourceEvaluation $attempt)
     {
-        /** @var UserEvaluationEvent $event */
+        /** @var EvaluateResourceEvent $event */
         $event = $this->dispatcher->dispatch(
             'evaluate', // old : resource_evaluation
-            UserEvaluationEvent::class,
-            [$resourceUserEvaluation]
+            EvaluateResourceEvent::class,
+            [$resourceUserEvaluation, $attempt]
         );
 
         return $event;
@@ -135,8 +125,7 @@ class ResourceLifecycleManager
     /**
      * Generates the names for dispatched events.
      *
-     * @param string       $prefix
-     * @param ResourceNode $resourceNode
+     * @param string $prefix
      *
      * @return string
      */
@@ -147,8 +136,6 @@ class ResourceLifecycleManager
 
     /**
      * Returns the resource linked to a node.
-     *
-     * @param ResourceNode $resourceNode
      *
      * @return AbstractResource
      */

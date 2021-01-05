@@ -8,7 +8,8 @@ import {RESOURCE_LOAD} from '#/main/core/resource/store/actions'
 import {
   STEP_ENABLE_NAVIGATION,
   STEP_DISABLE_NAVIGATION,
-  STEP_UPDATE_PROGRESSION
+  STEP_UPDATE_PROGRESSION,
+  ATTEMPT_LOAD
 } from '#/plugin/path/resources/path/store/actions'
 
 import {reducer as editorReducer} from '#/plugin/path/resources/path/editor/store/reducer'
@@ -22,6 +23,9 @@ const reducer = combineReducers({
     [STEP_DISABLE_NAVIGATION]: () => false
   }),
   pathForm: editorReducer,
+  attempt: makeReducer(null, {
+    [ATTEMPT_LOAD]: (state, action) => action.attempt
+  }),
   path: makeReducer({}, {
     [makeInstanceAction(RESOURCE_LOAD, 'innova_path')]: (state, action) => action.resourceData.path || state,
     // replaces path data after success updates

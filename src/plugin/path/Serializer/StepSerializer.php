@@ -31,14 +31,6 @@ class StepSerializer
     private $secondaryResourceRepo;
     private $userProgressionRepo;
 
-    /**
-     * PathSerializer constructor.
-     *
-     * @param ObjectManager          $om
-     * @param PublicFileSerializer   $fileSerializer
-     * @param ResourceNodeSerializer $resourceSerializer
-     * @param TokenStorageInterface  $tokenStorage
-     */
     public function __construct(
         ObjectManager $om,
         PublicFileSerializer $fileSerializer,
@@ -56,26 +48,17 @@ class StepSerializer
         $this->userProgressionRepo = $om->getRepository('Innova\PathBundle\Entity\UserProgression');
     }
 
-    /**
-     * @return string
-     */
-    public function getSchema()
+    public function getSchema(): string
     {
         return '#/plugin/path/step.json';
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'path_step';
     }
 
-    /**
-     * @param Step  $step
-     * @param array $options
-     *
-     * @return array
-     */
-    public function serialize(Step $step, array $options = [])
+    public function serialize(Step $step, array $options = []): array
     {
         $poster = null;
         if (!empty($step->getPoster())) {
@@ -120,14 +103,7 @@ class StepSerializer
         ];
     }
 
-    /**
-     * @param Step  $step
-     * @param array $data
-     * @param array $options
-     *
-     * @return Step
-     */
-    public function deserialize(Step $step, $data, array $options = [])
+    public function deserialize(Step $step, array $data, array $options = []): Step
     {
         if (!in_array(Options::REFRESH_UUID, $options)) {
             $this->sipe('id', 'setUuid', $data, $step);
@@ -139,15 +115,7 @@ class StepSerializer
         $this->sipe('slug', 'setSlug', $data, $step);
         $this->sipe('description', 'setDescription', $data, $step);
         $this->sipe('poster.url', 'setPoster', $data, $step);
-
-        if (isset($data['display'])) {
-            if (isset($data['display']['numbering'])) {
-                $step->setNumbering($data['display']['numbering']);
-            }
-            if (isset($data['display']['height'])) {
-                $step->setActivityHeight($data['display']['height']);
-            }
-        }
+        $this->sipe('display.numbering', 'setNumbering', $data, $step);
 
         /* Set primary resource */
         $resource = isset($data['primaryResource']['id']) ?
@@ -215,21 +183,15 @@ class StepSerializer
         return $step;
     }
 
-    /**
-     * @param Step $step
-     *
-     * @return array
-     */
-    private function serializeUserProgression(Step $step)
+    private function serializeUserProgression(Step $step): array
     {
         $user = $this->tokenStorage->getToken()->getUser();
         $userProgression = 'anon.' !== $user ?
             $this->userProgressionRepo->findOneBy(['step' => $step, 'user' => $user]) :
             null;
-        $data = [
+
+        return [
             'status' => empty($userProgression) ? 'unseen' : $userProgression->getStatus(),
         ];
-
-        return $data;
     }
 }

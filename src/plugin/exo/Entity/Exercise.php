@@ -473,6 +473,11 @@ class Exercise extends AbstractResource
         return $this->showEndPage;
     }
 
+    public function getEndMessage()
+    {
+        return $this->endMessage;
+    }
+
     public function setEndMessage($endMessage)
     {
         $this->endMessage = $endMessage;
@@ -486,11 +491,6 @@ class Exercise extends AbstractResource
     public function setIntermediateScores($intermediateScores)
     {
         $this->intermediateScores = $intermediateScores;
-    }
-
-    public function getEndMessage()
-    {
-        return $this->endMessage;
     }
 
     public function setAttemptsReachedMessage($attemptsReachedMessage)

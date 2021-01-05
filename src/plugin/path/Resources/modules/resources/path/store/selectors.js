@@ -32,6 +32,11 @@ const navigationEnabled = createSelector(
   (resource) => resource.navigationEnabled
 )
 
+const attempt = createSelector(
+  [resource],
+  (resource) => resource.attempt
+)
+
 export const selectors = {
   STORE_NAME,
   resource,
@@ -39,5 +44,6 @@ export const selectors = {
   steps,
   empty,
   navigationEnabled,
-  showOverview
+  showOverview,
+  attempt
 }

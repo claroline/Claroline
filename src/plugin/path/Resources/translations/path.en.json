@@ -43,5 +43,7 @@
     "path_numbering_custom": "Custom",
     "step_numbering": "Numbering",
     "secondary_resources_open_target": "Secondary resources opening",
-    "start_disabled_empty": "Path is empty."
+    "start_disabled_empty": "Path is empty.",
+    "attempt_end_info": "You have finished the path.",
+    "attempt_end_title": "Congratulations !"
 }

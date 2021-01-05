@@ -62,11 +62,7 @@ class PathController extends AbstractCrudController
      * Update step progression for an user.
      *
      * @Route("/step/{id}/progression/update", name="innova_path_progression_update", methods={"PUT"})
-     * @EXT\ParamConverter(
-     *     "step",
-     *     class="InnovaPathBundle:Step",
-     *     options={"mapping": {"id": "uuid"}}
-     * )
+     * @EXT\ParamConverter("step", class="InnovaPathBundle:Step", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
     public function updateProgressionAction(Step $step, User $user, Request $request): JsonResponse
@@ -76,7 +72,7 @@ class PathController extends AbstractCrudController
         $this->checkPermission('OPEN', $node, [], true);
 
         $status = $this->decodeRequest($request)['status'];
-        $this->userProgressionManager->update($step, $user, $status, true);
+        $this->userProgressionManager->update($step, $user, $status);
         $resourceUserEvaluation = $this->userProgressionManager->getResourceUserEvaluation($step->getPath(), $user);
 
         return new JsonResponse([
@@ -91,16 +87,8 @@ class PathController extends AbstractCrudController
     /**
      * Fetch user progressions for path.
      *
-     * @Route(
-     *     "/{id}/progressions/fetch",
-     *     name="innova_path_progressions_fetch",
-     *     methods={"GET"}
-     * )
-     * @EXT\ParamConverter(
-     *     "path",
-     *     class="InnovaPathBundle:Path\Path",
-     *     options={"mapping": {"id": "uuid"}}
-     * )
+     * @Route("/{id}/progressions/fetch", name="innova_path_progressions_fetch", methods={"GET"})
+     * @EXT\ParamConverter("path", class="InnovaPathBundle:Path\Path", options={"mapping": {"id": "uuid"}})
      */
     public function progressionsFetchAction(Path $path, Request $request): JsonResponse
     {
@@ -120,23 +108,25 @@ class PathController extends AbstractCrudController
     }
 
     /**
+     * @Route("/{id}/attempt", name="innova_path_current_attempt", methods={"GET"})
+     * @EXT\ParamConverter("path", class="InnovaPathBundle:Path\Path", options={"mapping": {"id": "uuid"}})
+     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
+     */
+    public function getAttemptAction(Path $path, User $user)
+    {
+        $this->checkPermission('OPEN', $path->getResourceNode(), [], true);
+
+        return new JsonResponse(
+            $this->serializer->serialize($this->userProgressionManager->getCurrentAttempt($path, $user))
+        );
+    }
+
+    /**
      * Fetch user progressions for path.
      *
-     * @Route(
-     *     "/{id}/user/{user}/steps/progression/fetch",
-     *     name="innova_path_user_steps_progression_fetch",
-     *     methods={"GET"}
-     * )
-     * @EXT\ParamConverter(
-     *     "path",
-     *     class="InnovaPathBundle:Path\Path",
-     *     options={"mapping": {"id": "uuid"}}
-     * )
-     * @EXT\ParamConverter(
-     *     "user",
-     *     class="ClarolineCoreBundle:User",
-     *     options={"mapping": {"user": "uuid"}}
-     * )
+     * @Route("/{id}/user/{user}/steps/progression/fetch", name="innova_path_user_steps_progression_fetch", methods={"GET"})
+     * @EXT\ParamConverter("path", class="InnovaPathBundle:Path\Path", options={"mapping": {"id": "uuid"}})
+     * @EXT\ParamConverter("user", class="ClarolineCoreBundle:User", options={"mapping": {"user": "uuid"}})
      */
     public function userStepsProgressionFetchAction(Path $path, User $user): JsonResponse
     {
@@ -151,24 +141,19 @@ class PathController extends AbstractCrudController
      * This should be managed by Core when possible.
      *
      * @Route("/{id}/progression/csv", name="innova_path_users_progression_csv", methods={"GET"})
-     * @EXT\ParamConverter(
-     *     "path",
-     *     class="InnovaPathBundle:Path\Path",
-     *     options={"mapping": {"id": "uuid"}}
-     * )
+     * @EXT\ParamConverter("path", class="InnovaPathBundle:Path\Path", options={"mapping": {"id": "uuid"}})
      */
-    public function exportProgressionCsvAction(Path $path)
+    public function exportProgressionCsvAction(Path $path): StreamedResponse
     {
         $this->checkPermission('EDIT', $path->getResourceNode(), [], true);
 
-        $fileName = "progression-{$path->getResourceNode()->getSlug()}";
-        $fileName = TextNormalizer::toKey($fileName);
+        $fileName = TextNormalizer::toKey("progression-{$path->getResourceNode()->getSlug()}");
 
         $evaluations = $this->finder->searchEntities(ResourceUserEvaluation::class, [
             'filters' => ['resourceNode' => $path->getResourceNode()->getUuid()],
         ]);
 
-        return new StreamedResponse(function () use ($path, $evaluations) {
+        return new StreamedResponse(function () use ($evaluations) {
             // Prepare CSV file
             $handle = fopen('php://output', 'w+');
 

@@ -15,7 +15,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Evaluation\AbstractEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\UserEvaluationEvent;
+use Claroline\CoreBundle\Event\Resource\EvaluateResourceEvent;
 use Claroline\OpenBadgeBundle\Entity\Evidence;
 use Claroline\OpenBadgeBundle\Entity\Rules\Rule;
 use Claroline\OpenBadgeBundle\Manager\RuleManager;
@@ -32,13 +32,6 @@ class ResourceEvaluationListener
     /** @var RuleManager */
     private $manager;
 
-    /**
-     * RuleListener constructor.
-     *
-     * @param ObjectManager       $om
-     * @param TranslatorInterface $translator
-     * @param RuleManager         $manager
-     */
     public function __construct(
         ObjectManager $om,
         TranslatorInterface $translator,
@@ -49,10 +42,7 @@ class ResourceEvaluationListener
         $this->manager = $manager;
     }
 
-    /**
-     * @param UserEvaluationEvent $event
-     */
-    public function onResourceEvaluation(UserEvaluationEvent $event)
+    public function onResourceEvaluation(EvaluateResourceEvent $event)
     {
         /** @var ResourceUserEvaluation $evaluation */
         $evaluation = $event->getEvaluation();

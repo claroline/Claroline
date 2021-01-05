@@ -26,7 +26,7 @@ const PathCurrent = props => {
     <Fragment>
       <ProgressBar
         className="progress-minimal"
-        value={Math.floor(((currentIndex+1) / props.all.length) * 100)}
+        value={Math.floor(((currentIndex+1) / (props.all.length)) * 100)}
         size="xs"
         type="user"
       />
@@ -59,6 +59,19 @@ const PathCurrent = props => {
               <span className="fa fa-angle-double-right icon-with-text-left" />
             </LinkButton>
           }
+
+          {!next && props.endPage &&
+            <LinkButton
+              className="btn-link btn-next"
+              primary={true}
+              size="lg"
+              target={`${props.prefix}/end`}
+              onClick={() => scrollTo(`#resource-${props.resourceId} > .page-content`)}
+            >
+              {trans('end')}
+              <span className="fa fa-angle-double-right icon-with-text-left" />
+            </LinkButton>
+          }
         </nav>
       }
     </Fragment>
@@ -76,13 +89,15 @@ PathCurrent.propTypes = {
   all: T.arrayOf(T.shape(
     StepTypes.propTypes
   )),
+  endPage: T.bool,
   // the current step content
   children: T.node
 }
 
 PathCurrent.defaultProps = {
   all: [],
-  embedded: false
+  embedded: false,
+  endPage: false
 }
 
 export {

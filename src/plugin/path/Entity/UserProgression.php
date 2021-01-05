@@ -2,6 +2,7 @@
 
 namespace Innova\PathBundle\Entity;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -14,6 +15,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class UserProgression
 {
+    use Id;
+
     /**
      * Default status when creating a new UserProgression.
      *
@@ -35,97 +38,44 @@ class UserProgression
     ];
 
     /**
-     * Unique identifier.
-     *
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
-
-    /**
      * Step for which we track the progression.
-     *
-     * @var \Innova\PathBundle\Entity\Step
      *
      * @ORM\ManyToOne(targetEntity="Innova\PathBundle\Entity\Step")
      * @ORM\JoinColumn(name="step_id", referencedColumnName="id", onDelete="CASCADE")
-     **/
+     *
+     * @var Step
+     */
     protected $step;
 
     /**
      * User for which we track the progression.
      *
-     * @var \Claroline\CoreBundle\Entity\User
-     *
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
-     **/
+     *
+     * @var User
+     */
     protected $user;
 
     /**
      * Current state of the Step.
      *
-     * @var string
-     *
      * @ORM\Column(name="progression_status", type="string")
+     *
+     * @var string
      */
     protected $status;
 
-    /**
-     * Can the user access the step.
-     *
-     * @var bool
-     *
-     * @ORM\Column(name="authorized_access", type="boolean")
-     */
-    protected $authorized;
-
-    /**
-     * State of the access to the step.
-     *
-     * @var bool
-     *
-     * @ORM\Column(name="locked_access", type="boolean")
-     */
-    protected $locked;
-
-    /**
-     * Has the lock been called for removal ?
-     *
-     * @var bool
-     *
-     * @ORM\Column(name="lockedcall_access", type="boolean")
-     */
-    protected $lockedcall;
-
-    /**
-     * CLass constructor.
-     */
     public function __construct()
     {
         // Set the default status
         $this->status = static::$statusDefault;
-        $this->lockedcall = false;
-        $this->locked = false;
-    }
-
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
     }
 
     /**
      * Get Step.
      *
-     * @return \Innova\PathBundle\Entity\Step
+     * @return Step
      */
     public function getStep()
     {
@@ -135,9 +85,7 @@ class UserProgression
     /**
      * Set Step.
      *
-     * @param \Innova\PathBundle\Entity\Step $step
-     *
-     * @return \Innova\PathBundle\Entity\UserProgression
+     * @return UserProgression
      */
     public function setStep(Step $step)
     {
@@ -159,9 +107,7 @@ class UserProgression
     /**
      * Set User.
      *
-     * @param \Claroline\CoreBundle\Entity\User $user
-     *
-     * @return \Innova\PathBundle\Entity\UserProgression
+     * @return UserProgression
      */
     public function setUser(User $user)
     {
@@ -185,7 +131,7 @@ class UserProgression
      *
      * @param string $status
      *
-     * @return \Innova\PathBundle\Entity\UserProgression
+     * @return UserProgression
      */
     public function setStatus($status)
     {
@@ -212,77 +158,5 @@ class UserProgression
     public static function getAvailableStatus()
     {
         return static::$statusAvailable;
-    }
-
-    /**
-     * Set authorized.
-     *
-     * @param bool $authorized
-     *
-     * @return UserProgression
-     */
-    public function setAuthorized($authorized)
-    {
-        $this->authorized = $authorized;
-
-        return $this;
-    }
-
-    /**
-     * Get authorized.
-     *
-     * @return bool
-     */
-    public function getAuthorized()
-    {
-        return $this->authorized;
-    }
-
-    /**
-     * Set locked.
-     *
-     * @param bool $locked
-     *
-     * @return UserProgression
-     */
-    public function setLocked($locked)
-    {
-        $this->locked = $locked;
-
-        return $this;
-    }
-
-    /**
-     * Get locked.
-     *
-     * @return bool
-     */
-    public function getLocked()
-    {
-        return $this->locked;
-    }
-
-    /**
-     * Set lockedcall.
-     *
-     * @param bool $lockedcall
-     *
-     * @return UserProgression
-     */
-    public function setLockedcall($lockedcall)
-    {
-        $this->lockedcall = $lockedcall;
-
-        return $this;
-    }
-
-    /**
-     * Get lockedcall.
-     *
-     * @return bool
-     */
-    public function getLockedcall()
-    {
-        return $this->lockedcall;
     }
 }

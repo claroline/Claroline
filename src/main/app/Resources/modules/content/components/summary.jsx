@@ -17,7 +17,7 @@ class SummaryLink extends Component {
     super(props)
 
     this.state = {
-      collapsed: this.props.collapsed || false
+      collapsed: this.props.noCollapse ? false : (this.props.collapsed || false)
     }
 
     this.toggleCollapse = this.toggleCollapse.bind(this)
@@ -38,7 +38,7 @@ class SummaryLink extends Component {
   }
 
   render() {
-    const collapsible = this.props.collapsible || (this.props.children && 0 !== this.props.children.length)
+    const collapsible = !this.props.noCollapse && (this.props.collapsible || (this.props.children && 0 !== this.props.children.length))
 
     return (
       <li className="summary-link-container">
@@ -47,7 +47,7 @@ class SummaryLink extends Component {
         })}>
           <Button
             className="btn-summary-primary"
-            {...omit(this.props, 'children', 'additional', 'collapsible', 'collapsed', 'toggleCollapse')}
+            {...omit(this.props, 'children', 'additional', 'collapsible', 'collapsed', 'toggleCollapse', 'noCollapse')}
           />
 
           {(collapsible || 0 !== this.props.additional.length) &&
@@ -80,7 +80,7 @@ class SummaryLink extends Component {
               .map((child, index) =>
                 <SummaryLink
                   {...child}
-                  key={toKey(child.label) + index}
+                  key={toKey(child.id || child.label) + index}
                 />
               )
             }
@@ -92,6 +92,7 @@ class SummaryLink extends Component {
 }
 
 implementPropTypes(SummaryLink, ActionTypes, {
+  noCollapse: T.bool,
   additional: T.arrayOf(T.shape(
     ActionTypes.propTypes
   )),
@@ -107,7 +108,8 @@ implementPropTypes(SummaryLink, ActionTypes, {
   additional: [],
   children: [],
   collapsed: false,
-  collapsible: false
+  collapsible: false,
+  noCollapse: false
 })
 
 const ContentSummary = props => {
@@ -119,7 +121,8 @@ const ContentSummary = props => {
           .map((link, index) =>
             <SummaryLink
               {...link}
-              key={toKey(link.label) + index}
+              noCollapse={props.noCollapse}
+              key={toKey(link.id || link.label) + index}
             />
           )
         }
@@ -132,6 +135,7 @@ const ContentSummary = props => {
 
 ContentSummary.propTypes = {
   className: T.string,
+  noCollapse: T.bool,
   links: T.arrayOf(T.shape(merge({}, ActionTypes.propTypes, {
     collapsed: T.bool,
     // It forces the display of the collapse button even if children is empty

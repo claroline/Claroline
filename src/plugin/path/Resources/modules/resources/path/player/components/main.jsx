@@ -9,6 +9,7 @@ import {constants} from '#/plugin/path/resources/path/constants'
 import {Path as PathTypes, Step as StepTypes} from '#/plugin/path/resources/path/prop-types'
 import {PathCurrent} from '#/plugin/path/resources/path/components/current'
 import {Step} from '#/plugin/path/resources/path/player/components/step'
+import {PlayerEnd} from '#/plugin/path/resources/path/player/components/end'
 import {getNumbering, getStepUserProgression} from '#/plugin/path/resources/path/utils'
 
 const PlayerMain = props => {
@@ -31,6 +32,24 @@ const PlayerMain = props => {
         ]}
         routes={[
           {
+            path: '/play/end',
+            disabled: !props.path.display.showEndPage,
+            render: () => (
+              <PlayerEnd
+                path={props.basePath}
+                pathId={props.path.id}
+                resourceId={props.resourceId}
+                currentUser={props.currentUser}
+                workspace={props.workspace}
+                steps={props.path.steps}
+                scoreTotal={props.path.score.total}
+                showScore={props.path.display.showScore}
+                endMessage={props.path.meta.endMessage}
+                attempt={props.attempt}
+                getAttempt={props.getAttempt}
+              />
+            )
+          }, {
             path: '/play/:slug',
             onEnter: (params) => {
               const step = props.steps.find(step => params.slug === step.slug)
@@ -49,6 +68,7 @@ const PlayerMain = props => {
                     current={step}
                     all={props.steps}
                     navigation={props.navigationEnabled}
+                    endPage={props.path.display.showEndPage}
                   >
                     <Step
                       {...step}
@@ -87,9 +107,12 @@ PlayerMain.propTypes = {
   steps: T.arrayOf(T.shape(
     StepTypes.propTypes
   )),
+  attempt: T.object,
+  workspace: T.object,
   updateProgression: T.func.isRequired,
   enableNavigation: T.func.isRequired,
-  disableNavigation: T.func.isRequired
+  disableNavigation: T.func.isRequired,
+  getAttempt: T.func.isRequired
 }
 
 export {

@@ -14,45 +14,33 @@ class PathSerializer
     /** @var StepSerializer */
     private $stepSerializer;
 
-    /**
-     * PathSerializer constructor.
-     *
-     * @param StepSerializer $stepSerializer
-     */
     public function __construct(
         StepSerializer $stepSerializer
     ) {
         $this->stepSerializer = $stepSerializer;
     }
 
-    /**
-     * @return string
-     */
-    public function getSchema()
+    public function getSchema(): string
     {
         return '#/plugin/path/path.json';
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'path';
     }
 
-    /**
-     * @param Path  $path
-     * @param array $options
-     *
-     * @return array
-     */
-    public function serialize(Path $path, array $options = [])
+    public function serialize(Path $path, array $options = []): array
     {
         return [
             'id' => $path->getUuid(),
             'meta' => [
                 'description' => $path->getDescription(),
+                'endMessage' => $path->getEndMessage(),
             ],
             'display' => [
                 'showOverview' => $path->getShowOverview(),
+                'showEndPage' => $path->getShowEndPage(),
                 'numbering' => $path->getNumbering() ? $path->getNumbering() : 'none',
                 'manualProgressionAllowed' => $path->isManualProgressionAllowed(),
                 'showScore' => $path->getShowScore(),
@@ -70,14 +58,7 @@ class PathSerializer
         ];
     }
 
-    /**
-     * @param array $data
-     * @param Path  $path
-     * @param array $options
-     *
-     * @return Path
-     */
-    public function deserialize($data, Path $path, array $options = [])
+    public function deserialize(array $data, Path $path, array $options = []): Path
     {
         if (!in_array(Options::REFRESH_UUID, $options)) {
             $this->sipe('id', 'setUuid', $data, $path);
@@ -86,7 +67,9 @@ class PathSerializer
         }
 
         $this->sipe('meta.description', 'setDescription', $data, $path);
+        $this->sipe('meta.endMessage', 'setEndMessage', $data, $path);
         $this->sipe('display.showOverview', 'setShowOverview', $data, $path);
+        $this->sipe('display.showEndPage', 'setShowEndPage', $data, $path);
         $this->sipe('display.numbering', 'setNumbering', $data, $path);
         $this->sipe('display.manualProgressionAllowed', 'setManualProgressionAllowed', $data, $path);
         $this->sipe('display.showScore', 'setShowScore', $data, $path);
@@ -97,20 +80,14 @@ class PathSerializer
         $this->sipe('score.total', 'setScoreTotal', $data, $path);
 
         if (isset($data['steps'])) {
-            $this->deserializeSteps($data['steps'], $path, $options);
+            $this->deserializeSteps($data['steps'] ?? [], $path, $options);
         }
 
         return $path;
     }
 
-    /**
-     * @param array $stepsData
-     * @param Path  $path
-     * @param array $options
-     */
-    private function deserializeSteps($stepsData, Path $path, array $options = [])
+    private function deserializeSteps(array $stepsData, Path $path, array $options = []): void
     {
-        /** @var Step[] $currentSteps */
         $currentSteps = $path->getRootSteps();
         $ids = [];
 

@@ -15,11 +15,16 @@ const PlayerMain = connect(
     resourceId: resourceSelectors.id(state),
     path: selectors.path(state),
     navigationEnabled: selectors.navigationEnabled(state),
-    steps: flattenSteps(selectors.steps(state))
+    steps: flattenSteps(selectors.steps(state)),
+    workspace: resourceSelectors.workspace(state),
+    attempt: selectors.attempt(state)
   }),
   dispatch => ({
     updateProgression(stepId, status = constants.STATUS_SEEN, silent) {
       dispatch(actions.updateProgression(stepId, status, silent))
+    },
+    getAttempt(pathId) {
+      return dispatch(actions.getAttempt(pathId))
     },
     enableNavigation() {
       dispatch(actions.enableNavigation())

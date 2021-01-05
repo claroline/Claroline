@@ -17,6 +17,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
 /**
+ * Represents the global evaluation of a User for a ResourceNode.
+ * There is only one for a user and a resource.
+ *
  * @ORM\Entity
  * @ORM\Table(
  *     name="claro_resource_user_evaluation",
@@ -64,6 +67,8 @@ class ResourceUserEvaluation extends AbstractUserEvaluation
     protected $nbOpenings = 0;
 
     /**
+     * Is the evaluation used to compute the workspace evaluation ?
+     *
      * @ORM\Column(type="boolean")
      *
      * @var bool
