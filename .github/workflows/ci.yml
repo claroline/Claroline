@@ -43,7 +43,7 @@ jobs:
           DIFF: ${{ steps.diff.outputs.diff }}
 
       - name: "Install ESLint"
-        run: if [ "$DIFF" != '' ]; then npm install eslint; fi
+        run: if [ "$DIFF" != '' ]; then npm install eslint eslint-plugin-react@7.21.5; fi
         env:
           DIFF: ${{ steps.diff.outputs.diff }}
 
