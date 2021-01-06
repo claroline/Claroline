@@ -54,6 +54,7 @@ jobs:
 
   php:
     name: "PHPUnit (PHP 7.4)"
+    needs: cs
     runs-on: ubuntu-latest
 
     services:
