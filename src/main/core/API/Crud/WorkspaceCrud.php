@@ -13,14 +13,12 @@ use Claroline\CoreBundle\Listener\Log\LogListener;
 use Claroline\CoreBundle\Manager\Organization\OrganizationManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RoleManager;
-use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class WorkspaceCrud
 {
     private $manager;
-    private $userManager;
     private $tokenStorage;
     private $resourceManager;
     private $organizationManager;
@@ -30,7 +28,6 @@ class WorkspaceCrud
 
     public function __construct(
         WorkspaceManager $manager,
-        UserManager $userManager,
         TokenStorageInterface $tokenStorage,
         ResourceManager $resourceManager,
         RoleManager $roleManager,
@@ -39,7 +36,6 @@ class WorkspaceCrud
         LogListener $logListener
     ) {
         $this->manager = $manager;
-        $this->userManager = $userManager;
         $this->tokenStorage = $tokenStorage;
         $this->resourceManager = $resourceManager;
         $this->organizationManager = $orgaManager;
@@ -54,12 +50,10 @@ class WorkspaceCrud
 
         $workspace = $event->getObject();
 
-        $user = $this->tokenStorage->getToken() ?
-            $this->tokenStorage->getToken()->getUser() :
-            $this->userManager->getDefaultClarolineAdmin();
         $model = $workspace->getWorkspaceModel() ? $workspace->getWorkspaceModel() : $this->manager->getDefaultModel();
         $workspace->setWorkspaceModel($model);
 
+        $user = $this->tokenStorage->getToken() ? $this->tokenStorage->getToken()->getUser() : null;
         if ($user instanceof User && empty($workspace->getCreator())) {
             if (empty($workspace->getCreator())) {
                 $workspace->setCreator($user);

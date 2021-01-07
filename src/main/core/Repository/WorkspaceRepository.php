@@ -66,22 +66,6 @@ class WorkspaceRepository extends EntityRepository
     }
 
     /**
-     * Counts the personal workspaces.
-     *
-     * @return int
-     */
-    public function countPersonalWorkspaces()
-    {
-        return $this->_em
-            ->createQuery('
-                SELECT COUNT(w)
-                FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
-                WHERE w.personal = true
-            ')
-            ->getSingleScalarResult();
-    }
-
-    /**
      * Counts the non personal workspaces.
      *
      * @param array $organizations

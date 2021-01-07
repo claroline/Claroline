@@ -8,9 +8,6 @@ services:
     Claroline\CoreBundle\Command\API\ImportCsvCommand:
         arguments:
             - '%claroline.param.import_log_dir%'
-            - '@claroline.manager.user_manager'
-            - '@security.token_storage'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@claroline.manager.api_manager'
         tags:
             - { name: 'console.command', command: 'claroline:api:load' }

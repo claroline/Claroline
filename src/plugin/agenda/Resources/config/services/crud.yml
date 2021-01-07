@@ -7,6 +7,5 @@ services:
     Claroline\AgendaBundle\Crud\EventCrud:
         arguments:
             - '@security.token_storage'
-            - '@claroline.manager.user_manager'
         tags:
             - { name: kernel.event_listener, event: crud_pre_create_object_claroline_agendabundle_entity_event, method: preCreate }

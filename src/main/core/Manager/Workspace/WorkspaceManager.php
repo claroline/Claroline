@@ -39,8 +39,6 @@ class WorkspaceManager implements LoggerAwareInterface
 {
     use LoggableTrait;
 
-    const MAX_WORKSPACE_BATCH_SIZE = 10;
-
     /** @var TranslatorInterface */
     private $translator;
     /** @var RoleManager */
@@ -94,15 +92,14 @@ class WorkspaceManager implements LoggerAwareInterface
     public function rename(Workspace $workspace, $name)
     {
         $workspace->setName($name);
+
         $root = $this->resourceManager->getWorkspaceRoot($workspace);
         if ($root) {
-            $root = $this->resourceManager->getWorkspaceRoot($workspace);
             $root->setName($name);
             $this->om->persist($root);
         }
 
         $this->om->persist($workspace);
-
         $this->om->flush();
     }
 
@@ -147,14 +144,6 @@ class WorkspaceManager implements LoggerAwareInterface
     public function getWorkspacesByUser(User $user)
     {
         return $this->workspaceRepo->findByUser($user);
-    }
-
-    /**
-     * @return int
-     */
-    public function getNbPersonalWorkspaces()
-    {
-        return $this->workspaceRepo->countPersonalWorkspaces();
     }
 
     /**

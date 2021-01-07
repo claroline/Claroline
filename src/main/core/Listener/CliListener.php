@@ -11,40 +11,26 @@
 
 namespace Claroline\CoreBundle\Listener;
 
+use Claroline\AuthenticationBundle\Security\Authentication\Authenticator;
 use Claroline\CoreBundle\Command\AdminCliCommand;
 use Claroline\CoreBundle\Manager\UserManager;
-use Doctrine\ORM\EntityManager;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class CliListener
 {
-    private $tokenStorage;
+    private $authenticator;
     private $userManager;
-    private $em;
 
-    /**
-     * CliListener constructor.
-     *
-     * @param TokenStorageInterface $tokenStorage
-     * @param EntityManager         $em
-     * @param UserManager           $userManager
-     */
     public function __construct(
-        TokenStorageInterface $tokenStorage,
-        EntityManager $em,
+        Authenticator $authenticator,
         UserManager $userManager
     ) {
-        $this->tokenStorage = $tokenStorage;
-        $this->em = $em;
+        $this->authenticator = $authenticator;
         $this->userManager = $userManager;
     }
 
     /**
      * Sets claroline default admin for cli because it's very annoying otherwise to do it manually everytime.
-     *
-     * @param ConsoleCommandEvent $event
      */
     public function setDefaultUser(ConsoleCommandEvent $event)
     {
@@ -52,8 +38,7 @@ class CliListener
 
         if ($command instanceof AdminCliCommand) {
             $user = $this->userManager->getDefaultClarolineAdmin();
-            $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
-            $this->tokenStorage->setToken($token);
+            $this->authenticator->createToken($user);
         }
     }
 }

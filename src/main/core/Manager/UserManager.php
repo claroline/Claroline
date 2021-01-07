@@ -48,10 +48,9 @@ class UserManager implements LoggerAwareInterface
         $this->om = $om;
         $this->organizationManager = $organizationManager;
         $this->platformConfigHandler = $platformConfigHandler;
+
         $this->userRepo = $om->getRepository(User::class);
         $this->roleRepo = $om->getRepository(Role::class);
-
-        $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
     }
 
     /**
@@ -339,34 +338,6 @@ class UserManager implements LoggerAwareInterface
         if (!$user->hasRole('ROLE_ADMIN')) {
             $roleAdmin = $this->roleRepo->findOneBy(['name' => 'ROLE_ADMIN']);
             $user->addRole($roleAdmin);
-
-            $this->om->persist($user);
-            $this->om->flush();
-        }
-
-        return $user;
-    }
-
-    public function getDefaultClarolineUser()
-    {
-        $user = $this->getUserByUsername('claroline-connect-user');
-        if (!$user) {
-            $user = $this->crud->create(User::class, [
-                'firstName' => 'claroline-connect-user',
-                'lastName' => 'claroline-connect-user',
-                'username' => 'claroline-connect-user',
-                'email' => 'claroline-connect-user',
-                'plainPassword' => uniqid('', true),
-                'restrictions' => [
-                    'disabled' => true,
-                    'removed' => true,
-                ],
-            ], [Options::NO_EMAIL, Options::NO_PERSONAL_WORKSPACE]);
-        }
-
-        if (!$user->hasRole('ROLE_USER')) {
-            $roleUser = $this->roleRepo->findOneBy(['name' => 'ROLE_USER']);
-            $user->addRole($roleUser);
 
             $this->om->persist($user);
             $this->om->flush();

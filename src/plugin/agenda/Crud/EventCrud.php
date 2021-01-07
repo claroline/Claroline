@@ -2,36 +2,29 @@
 
 namespace Claroline\AgendaBundle\Crud;
 
+use Claroline\AgendaBundle\Entity\Event;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
-use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Manager\UserManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class EventCrud
 {
-    /**
-     * @param TokenStorageInterface $tokenStorage
-     */
-    public function __construct(TokenStorageInterface $tokenStorage, UserManager $userManager)
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
+
+    public function __construct(TokenStorageInterface $tokenStorage)
     {
         $this->tokenStorage = $tokenStorage;
-        $this->userManager = $userManager;
     }
 
-    /**
-     * @param CreateEvent $event
-     */
     public function preCreate(CreateEvent $event)
     {
-        /** @var Group $role */
+        /** @var Event $object */
         $object = $event->getObject();
-        $user = $this->tokenStorage->getToken()->getUser();
 
-        if ($user instanceof User) {
+        $user = $this->tokenStorage->getToken()->getUser();
+        if ($user instanceof User && empty($object->getUser())) {
             $object->setUser($user);
-        } else {
-            $object->setUser($this->userManager->getDefaultClarolineUser());
         }
     }
 }
