@@ -106,19 +106,21 @@ const OverviewMain = props =>
       }
     ]}
   >
-    <section className="resource-parameters">
-      <h3 className="h2">{trans('configuration')}</h3>
+    {props.quiz.parameters.showMetadata &&
+      <section className="resource-parameters">
+        <h3 className="h2">{trans('configuration')}</h3>
 
-      <Parameters
-        showCorrectionAt={props.quiz.parameters.showCorrectionAt}
-        correctionDate={props.quiz.parameters.correctionDate}
-        showScoreAt={props.quiz.parameters.showScoreAt}
-        interruptible={props.quiz.parameters.interruptible}
-        maxAttempts={props.quiz.parameters.maxAttempts}
-        timeLimited={props.quiz.parameters.timeLimited}
-        duration={props.quiz.parameters.duration}
-      />
-    </section>
+        <Parameters
+          showCorrectionAt={props.quiz.parameters.showCorrectionAt}
+          correctionDate={props.quiz.parameters.correctionDate}
+          showScoreAt={props.quiz.parameters.showScoreAt}
+          interruptible={props.quiz.parameters.interruptible}
+          maxAttempts={props.quiz.parameters.maxAttempts}
+          timeLimited={props.quiz.parameters.timeLimited}
+          duration={props.quiz.parameters.duration}
+        />
+      </section>
+    }
   </ResourceOverview>
 
 OverviewMain.propTypes = {
