@@ -1,7 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import {Provider, ReactReduxContext} from 'react-redux'
-
+import {Provider} from 'react-redux'
+import { useStore } from 'react-redux'
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
 
 import {Router} from '#/main/app/router'
@@ -9,9 +9,16 @@ import {Router} from '#/main/app/router'
 import {Popover} from '#/main/app/overlays/popover/components/popover'
 
 // TODO : find a better way to give access to the app store and router (It uses a portal which is not mounted in the current tree)
-const PopoverOverlay = props => !props.disabled ?
-  <ReactReduxContext.Consumer>
-    {({ store }) => (
+const PopoverOverlay = props => {
+  let store
+  try {
+    store = useStore()
+  } catch (e) {
+    store = null
+  }
+
+  if (!props.disabled) {
+    return (
       <OverlayTrigger
         trigger="click"
         placement={props.position}
@@ -22,20 +29,29 @@ const PopoverOverlay = props => !props.disabled ?
             className={props.className}
             title={props.label}
           >
-            <Provider store={store}>
+            {store &&
+              <Provider store={store}>
+                <Router>
+                  {props.content}
+                </Router>
+              </Provider>
+            }
+
+            {!store &&
               <Router>
                 {props.content}
               </Router>
-            </Provider>
+            }
           </Popover>
         }
       >
         {props.children}
       </OverlayTrigger>
-    )}
-  </ReactReduxContext.Consumer>
-  :
-  props.children
+    )
+  }
+
+  return props.children
+}
 
 PopoverOverlay.propTypes = {
   id: T.string.isRequired,
