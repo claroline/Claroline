@@ -22,7 +22,7 @@ class Version20201006072423 extends AbstractMigration
         $this->addSql('
             ALTER TABLE icap__lesson 
             ADD description LONGTEXT DEFAULT NULL, 
-            ADD show_overview TINYINT(1) DEFAULT "1" NOT NULL
+            ADD show_overview TINYINT(1) DEFAULT "0" NOT NULL
         ');
     }
 
