@@ -319,7 +319,6 @@ services:
     Claroline\CoreBundle\Manager\Workspace\Transfer\Tools\ResourceManager:
         arguments:
           - '@Claroline\AppBundle\API\SerializerProvider'
-          - '@claroline.manager.user_manager'
           - '@Claroline\AppBundle\API\FinderProvider'
           - '@Claroline\AppBundle\API\Crud'
           - '@security.token_storage'

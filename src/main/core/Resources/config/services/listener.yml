@@ -250,9 +250,8 @@ services:
 
     Claroline\CoreBundle\Listener\CliListener:
         arguments:
-            - '@security.token_storage'
-            - '@doctrine.orm.entity_manager'
-            - '@claroline.manager.user_manager'
+            - '@Claroline\AuthenticationBundle\Security\Authentication\Authenticator'
+            - '@Claroline\CoreBundle\Manager\UserManager'
         tags:
             - { name: kernel.event_listener, event: console.command, method: setDefaultUser, priority: 17 }
 

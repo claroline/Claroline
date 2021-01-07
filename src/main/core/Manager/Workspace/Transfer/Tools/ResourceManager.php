@@ -8,8 +8,8 @@ use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\API\Utils\FileBag;
 use Claroline\AppBundle\Event\StrictDispatcher;
-use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AppBundle\Log\LoggableTrait;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
@@ -17,7 +17,6 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\ExportObjectEvent;
 use Claroline\CoreBundle\Event\ImportObjectEvent;
 use Claroline\CoreBundle\Manager\ResourceManager as ResManager;
-use Claroline\CoreBundle\Manager\UserManager;
 use Psr\Log\LoggerAwareInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -35,19 +34,13 @@ class ResourceManager implements ToolImporterInterface, LoggerAwareInterface
     private $crud;
     /** @var TokenStorageInterface */
     private $tokenStorage;
-    /** @var UserManager */
-    private $userManager;
     /** @var StrictDispatcher */
     private $dispatcher;
     /** @var ResManager */
     private $resourceManager;
 
-    /**
-     * WorkspaceSerializer constructor.
-     */
     public function __construct(
         SerializerProvider $serializer,
-        UserManager $userManager,
         FinderProvider $finder,
         Crud $crud,
         TokenStorageInterface $tokenStorage,
@@ -60,7 +53,6 @@ class ResourceManager implements ToolImporterInterface, LoggerAwareInterface
         $this->finder = $finder;
         $this->crud = $crud;
         $this->tokenStorage = $tokenStorage;
-        $this->userManager = $userManager;
         $this->dispatcher = $eventDispatcher;
         $this->resourceManager = $resourceManager;
     }
@@ -149,9 +141,6 @@ class ResourceManager implements ToolImporterInterface, LoggerAwareInterface
 
             if ($this->tokenStorage->getToken() && $this->tokenStorage->getToken()->getUser() instanceof User) {
                 $node->setCreator($this->tokenStorage->getToken()->getUser());
-            } else {
-                $creator = $this->userManager->getDefaultClarolineAdmin();
-                $node->setCreator($creator);
             }
 
             $created[$node->getUuid()] = $node;

@@ -8,7 +8,6 @@ services:
     Claroline\CoreBundle\API\Crud\WorkspaceCrud:
         arguments:
             - '@claroline.manager.workspace_manager'
-            - '@claroline.manager.user_manager'
             - '@security.token_storage'
             - '@claroline.manager.resource_manager'
             - '@claroline.manager.role_manager'
