@@ -22,6 +22,10 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ObjectLockController
 {
+    private $om;
+    private $serializer;
+    private $manager;
+
     public function __construct(
       ObjectManager $om,
       SerializerProvider $serializer,
@@ -35,7 +39,7 @@ class ObjectLockController
     /**
      * @Route("/lock/class/{class}/id/{id}", name="apiv2_object_lock", methods={"PUT"})
      */
-    public function lockAction($class, $id)
+    public function lockAction($class, $id): JsonResponse
     {
         $this->manager->lock($class, $id);
 
@@ -45,7 +49,7 @@ class ObjectLockController
     /**
      * @Route("/unlock/class/{class}/id/{id}", name="apiv2_object_unlock", methods={"PUT"})
      */
-    public function unlockAction($class, $id)
+    public function unlockAction($class, $id): JsonResponse
     {
         $this->manager->unlock($class, $id);
 
@@ -55,7 +59,7 @@ class ObjectLockController
     /**
      * @Route("/class/{class}/id/{id}", name="apiv2_object_lock_get", methods={"GET"})
      */
-    public function getAction($class, $id)
+    public function getAction($class, $id): JsonResponse
     {
         return new JsonResponse($this->serializer->serialize($this->manager->getLock($class, $id)));
     }
