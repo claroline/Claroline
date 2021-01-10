@@ -15,9 +15,14 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\ObjectLock;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class LockManager
 {
+    private $om;
+    private $tokenStorage;
+    private $authChecker;
+
     public function __construct(ObjectManager $om, AuthorizationCheckerInterface $authChecker, TokenStorageInterface $tokenStorage)
     {
         $this->om = $om;
@@ -28,9 +33,11 @@ class LockManager
     public function lock($class, $uuid)
     {
         $this->check($class, $uuid);
+
         $lock = $this->getLock($class, $uuid);
         $lock->setLocked(true);
         $lock->setUser($this->tokenStorage->getToken()->getUser());
+
         $this->om->persist($lock);
         $this->om->flush();
     }
@@ -39,6 +46,7 @@ class LockManager
     {
         $lock = $this->getLock($class, $uuid);
         $lock->setLocked(false);
+
         $this->om->persist($lock);
         $this->om->flush();
     }
@@ -67,10 +75,12 @@ class LockManager
     public function create($class, $uuid)
     {
         $this->check($class, $uuid);
+
         $lock = new ObjectLock();
         $lock->setObjectUuid($uuid);
         $lock->setObjectClass($class);
         $lock->setUser($this->tokenStorage->getToken()->getUser());
+
         $this->om->persist($lock);
         $this->om->flush();
 
@@ -82,7 +92,7 @@ class LockManager
         $object = $this->om->find($class, $uuid);
 
         if (!$this->authChecker->isGranted('EDIT', $object)) {
-            throw new \Exception('You cannot (un)lock this resource');
+            throw new AccessDeniedException('You cannot (un)lock this resource');
         }
     }
 }

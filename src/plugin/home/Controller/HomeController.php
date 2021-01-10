@@ -18,6 +18,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Manager\LockManager;
 use Claroline\HomeBundle\Entity\HomeTab;
 use Claroline\HomeBundle\Serializer\HomeTabSerializer;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -109,7 +110,21 @@ class HomeController extends AbstractApiController
         foreach ($tabs as $tab) {
             // do not update tabs set by the administration tool
             if (HomeTab::TYPE_ADMIN_DESKTOP !== $tab['context']) {
-                $entity = $this->crud->update(HomeTab::class, $tab, [$context, Crud::THROW_EXCEPTION]);
+                $new = true;
+                if (isset($tab['id'])) {
+                    foreach ($installedTabs as $installedTab) {
+                        if ($installedTab->getUuid() === $tab['id']) {
+                            $new = false;
+                            break;
+                        }
+                    }
+                }
+
+                if ($new) {
+                    $entity = $this->crud->create(HomeTab::class, $tab, [$context, Crud::THROW_EXCEPTION]);
+                } else {
+                    $entity = $this->crud->update(HomeTab::class, $tab, [$context, Crud::THROW_EXCEPTION]);
+                }
             } else {
                 $entity = $this->om->getObject($tab, HomeTab::class);
             }
@@ -151,7 +166,21 @@ class HomeController extends AbstractApiController
         $ids = [];
         $updated = [];
         foreach ($tabs as $tab) {
-            $entity = $this->crud->update(HomeTab::class, $tab, [$context]);
+            $new = true;
+            if (isset($tab['id'])) {
+                foreach ($installedTabs as $installedTab) {
+                    if ($installedTab->getUuid() === $tab['id']) {
+                        $new = false;
+                        break;
+                    }
+                }
+            }
+            if ($new) {
+                $entity = $this->crud->create(HomeTab::class, $tab, [$context, Crud::THROW_EXCEPTION]);
+            } else {
+                $entity = $this->crud->update(HomeTab::class, $tab, [$context, Crud::THROW_EXCEPTION]);
+            }
+
             $updated[] = $entity;
             $ids = array_merge($ids, [$entity->getUuid()], array_map(function (HomeTab $child) {
                 return $child->getUuid();

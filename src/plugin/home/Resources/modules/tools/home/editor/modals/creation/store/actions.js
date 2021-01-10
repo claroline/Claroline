@@ -28,7 +28,8 @@ actions.startCreation = (context, type, administration, currentUser, position) =
       context.type,
     administration: administration,
     user: context.type === 'desktop' && !administration ? currentUser : null,
-    workspace: context.type === 'workspace' ? {id: context.data.id} : null
+    workspace: context.type === 'workspace' ? {id: context.data.id} : null,
+    _new: true // this is used to avoid requesting an ObjectLock to the server as the tab not already exists
   }), true))
 
   // set the tab title

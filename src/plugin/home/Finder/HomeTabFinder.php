@@ -47,7 +47,7 @@ class HomeTabFinder extends AbstractFinder
         // only grab tabs accessible by user
         $roleNames = $this->tokenStorage->getToken()->getRoleNames();
 
-        $isAdmin = in_array('ROLE_ADMIN', $roleNames) || (isset($searches['workspace']) && in_array('ROLE_MANAGER_'.$searches['workspace'], $roleNames));
+        $isAdmin = in_array('ROLE_ADMIN', $roleNames) || (isset($searches['workspace']) && in_array('ROLE_WS_MANAGER_'.$searches['workspace'], $roleNames));
         if (!$isAdmin) {
             // only get visible tabs for non admin
             $qb->andWhere('config.visible = true');
