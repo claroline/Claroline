@@ -13,11 +13,31 @@ namespace Claroline\BigBlueButtonBundle\Finder;
 
 use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\BigBlueButtonBundle\Entity\BBB;
+use Doctrine\ORM\QueryBuilder;
 
 class BBBFinder extends AbstractFinder
 {
     public function getClass()
     {
         return BBB::class;
+    }
+
+    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
+    {
+        foreach ($searches as $filterName => $filterValue) {
+            switch ($filterName) {
+                case 'workspace':
+                    $qb->leftJoin('obj.resourceNode', 'n');
+                    $qb->leftJoin('n.workspace', 'w');
+                    $qb->andWhere('w.uuid = :workspaceId');
+                    $qb->setParameter('workspaceId', $filterValue);
+                    break;
+
+                default:
+                    $this->setDefaults($qb, $filterName, $filterValue);
+            }
+        }
+
+        return $qb;
     }
 }
