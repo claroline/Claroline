@@ -90,6 +90,18 @@ class EditorTab extends Component {
             primary: true,
             group: trans('management')
           }, {
+            name: 'add-sub',
+            type: MODAL_BUTTON,
+            icon: 'fa fa-fw fa-plus',
+            label: trans('tab_add_child', {}, 'home'),
+            disabled: 'administration' === this.props.currentTab.context && !this.props.administration,
+            displayed: !this.props.currentTab.parent, // only allow one sub-level of tabs
+            modal: [MODAL_HOME_CREATION, {
+              position: this.props.tabs.length,
+              create: (tab) => this.props.createTab(this.props.currentTab, tab, (slug) => this.props.history.push(`${this.props.path}/edit/${slug}`))
+            }],
+            group: trans('management')
+          }, {
             name: 'configure',
             type: MODAL_BUTTON,
             icon: 'fa fa-fw fa-cog',

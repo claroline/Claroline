@@ -76,6 +76,7 @@ const PositionModal = props => {
                 name: 'parent',
                 label: trans('parent'),
                 type: 'choice',
+                placeholder: trans('root'),
                 options: {
                   condensed: true,
                   choices: parentChoices

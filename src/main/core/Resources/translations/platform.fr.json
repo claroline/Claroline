@@ -1702,5 +1702,6 @@
     "end_message": "Message de fin",
     "show_end_page": "Afficher la page de fin",
     "end_page": "Page de fin",
-    "end": "Fin"
+    "end": "Fin",
+    "root": "Racine"
 }
