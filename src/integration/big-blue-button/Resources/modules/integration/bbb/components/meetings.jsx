@@ -30,6 +30,14 @@ const BBBMeetings = (props) =>
           filterable: false,
           sortable: false
         }, {
+          name: 'node.workspace',
+          alias: 'workspace',
+          type: 'workspace',
+          label: trans('workspace'),
+          displayed: true,
+          filterable: true,
+          sortable: false
+        }, {
           name: 'info.participantCount',
           type: 'number',
           label: trans('participants'),

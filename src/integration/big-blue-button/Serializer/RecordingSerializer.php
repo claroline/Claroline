@@ -16,22 +16,37 @@ class RecordingSerializer
 
     public function serialize(Recording $recording, array $options = []): array
     {
-        return [
-           'id' => $recording->getUuid(),
-           'recordId' => $recording->getRecordId(),
-           'startTime' => (int) $recording->getStartTime(),
-           'endTime' => (int) $recording->getEndTime(),
-           'status' => $recording->getStatus(),
-           'participants' => $recording->getParticipants(),
-           // this is to display a link to the resource in administration
-           // so I don't need much information
-           'meeting' => [
-               'id' => $recording->getMeeting()->getResourceNode()->getUuid(),
-               'slug' => $recording->getMeeting()->getResourceNode()->getSlug(),
-               'name' => $recording->getMeeting()->getResourceNode()->getName(),
-           ],
-           'medias' => $recording->getMedias(),
+        $resourceNode = $recording->getMeeting()->getResourceNode();
+
+        $serialized = [
+            'id' => $recording->getUuid(),
+            'recordId' => $recording->getRecordId(),
+            'startTime' => (int) $recording->getStartTime(),
+            'endTime' => (int) $recording->getEndTime(),
+            'status' => $recording->getStatus(),
+            'participants' => $recording->getParticipants(),
+            // this is to display a link to the resource in administration
+            // so I don't need much information
+            'meeting' => [
+                'id' => $resourceNode->getUuid(),
+                'slug' => $resourceNode->getSlug(),
+                'name' => $resourceNode->getName(),
+            ],
+            'medias' => $recording->getMedias(),
         ];
+
+        // this is to display a link to the workspace in administration
+        // so I don't need much information
+        $workspace = $resourceNode->getWorkspace();
+        if ($workspace) {
+            $serialized['workspace'] = [
+                'id' => $workspace->getUuid(),
+                'slug' => $workspace->getSlug(),
+                'name' => $workspace->getName(),
+            ];
+        }
+
+        return $serialized;
     }
 
     public function deserialize(array $data, Recording $recording): Recording

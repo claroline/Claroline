@@ -40,6 +40,15 @@ const BBBRecordings = (props) =>
           displayed: true,
           primary: true,
           order: 1
+        }, {
+          name: 'workspace',
+          alias: 'workspace',
+          type: 'workspace',
+          label: trans('workspace'),
+          displayed: true,
+          filterable: true,
+          sortable: false,
+          order: 2
         }
       ]}
     />
