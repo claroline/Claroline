@@ -25,7 +25,7 @@ class UserChecker implements UserCheckerInterface
             return;
         }
 
-        if (!$user->isEnabled()) {
+        if (!$user->isEnabled() || $user->isRemoved()) {
             throw new AccessDeniedException('Your user account no longer exists.');
         }
     }
