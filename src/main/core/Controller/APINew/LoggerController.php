@@ -34,7 +34,7 @@ class LoggerController
      */
     public function getAction($subdir, $name)
     {
-        $file = $this->logDir.$subdir.DIRECTORY_SEPARATOR.$name.'.json';
+        $file = $this->logDir.DIRECTORY_SEPARATOR.$subdir.DIRECTORY_SEPARATOR.$name.'.json';
 
         if (file_exists($file)) {
             return new Response(file_get_contents($file));
