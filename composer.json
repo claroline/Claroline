@@ -145,8 +145,14 @@
         }
     },
     "scripts": {
+        "enable-maintenance": [
+            "Claroline\\CoreBundle\\Library\\Maintenance\\MaintenanceHandler::enableMaintenance"
+        ],
         "disable-maintenance": [
             "Claroline\\CoreBundle\\Library\\Maintenance\\MaintenanceHandler::disableMaintenance"
+        ],
+        "delete-cache": [
+            "rm -rf ./var/cache/"
         ],
         "bundles": [
             "Claroline\\BundleRecorder\\ScriptHandler::buildBundleFile"
@@ -161,8 +167,8 @@
         "pre-update-cmd": [
             "php bin/configure",
             "php bin/check",
-            "Claroline\\CoreBundle\\Library\\Maintenance\\MaintenanceHandler::enableMaintenance",
-            "Claroline\\CoreBundle\\Library\\Installation\\Refresher::deleteCache"
+            "composer enable-maintenance",
+            "composer delete-cache"
         ],
         "post-update-cmd": [
             "composer bundles",

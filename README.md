@@ -220,7 +220,6 @@ For user documentation, see [here](https://support.claroline.com/#/desktop/works
 
 [distribution]: https://github.com/claroline/Distribution
 [gd]:           http://www.php.net/manual/en/book.image.php
-[ffmpeg]:       http://ffmpeg-php.sourceforge.net
 [composer]:     https://getcomposer.org
 [node]:         https://nodejs.org
 [npm]:          https://docs.npmjs.com
