@@ -18,7 +18,6 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Manager\LockManager;
 use Claroline\HomeBundle\Entity\HomeTab;
 use Claroline\HomeBundle\Serializer\HomeTabSerializer;
-use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -67,7 +66,10 @@ class HomeController extends AbstractApiController
     public function homeAction(): JsonResponse
     {
         $tabs = $this->finder->search(HomeTab::class, [
-            'filters' => ['context' => HomeTab::TYPE_HOME],
+            'filters' => [
+                'context' => HomeTab::TYPE_HOME,
+                'parent' => null,
+            ],
         ]);
 
         $isAdmin = $this->authorization->isGranted('ROLE_ADMIN') || $this->authorization->isGranted('ROLE_HOME_MANAGER');

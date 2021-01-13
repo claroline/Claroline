@@ -34,7 +34,7 @@ class BadgeClassCrud
                 if (count($badge->getWorkspace()->getOrganizations()) > 1) {
                     $organization = $badge->getWorkspace()->getOrganizations()[0];
                 }
-            } else if ($this->tokenStorage->getToken()->getUser() instanceof User) {
+            } elseif ($this->tokenStorage->getToken()->getUser() instanceof User) {
                 $organization = $this->tokenStorage->getToken()->getUser()->getMainOrganization();
             }
 
