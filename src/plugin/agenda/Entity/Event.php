@@ -29,7 +29,6 @@ class Event
 {
     use Id;
     use Uuid;
-
     use Thumbnail;
 
     /**

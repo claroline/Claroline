@@ -20,13 +20,6 @@ class RemoveUser extends AbstractAction
     /** @var ObjectManager */
     private $om;
 
-    /**
-     * Action constructor.
-     *
-     * @param Crud               $crud
-     * @param SerializerProvider $serializer
-     * @param ObjectManager      $om
-     */
     public function __construct(Crud $crud, SerializerProvider $serializer, ObjectManager $om)
     {
         $this->crud = $crud;
@@ -38,7 +31,7 @@ class RemoveUser extends AbstractAction
     {
         // this should be handled by csv validation
         if (!isset($data['role'])) {
-            throw new \Exception('No role set for delete for user '.$this->printError($data['user']).".");
+            throw new \Exception('No role set for delete for user '.$this->printError($data['user']).'.');
         }
 
         $user = $this->om->getObject($data['user'], User::class, array_keys($data['user']));
