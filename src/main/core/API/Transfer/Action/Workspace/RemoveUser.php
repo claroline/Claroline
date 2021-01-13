@@ -36,6 +36,11 @@ class RemoveUser extends AbstractAction
 
     public function execute(array $data, &$successData = [])
     {
+        // this should be handled by csv validation
+        if (!isset($data['role'])) {
+            throw new \Exception('No role set for delete for user '.$this->printError($data['user']).".");
+        }
+
         $user = $this->om->getObject($data['user'], User::class, array_keys($data['user']));
 
         if (!$user) {
