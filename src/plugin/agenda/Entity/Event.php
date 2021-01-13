@@ -95,7 +95,7 @@ class Event
     /**
      * @ORM\Column(name="is_editable", nullable=true, type="boolean")
      */
-    private $isEditable;
+    private $isEditable = true;
 
     public function __construct()
     {
