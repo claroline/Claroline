@@ -11,6 +11,8 @@
 
 namespace Claroline\LinkBundle\Listener\Resource\Types;
 
+use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Event\Resource\DownloadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Manager\Resource\ResourceLifecycleManager;
@@ -21,41 +23,35 @@ use Claroline\LinkBundle\Entity\Resource\Shortcut;
  */
 class ShortcutListener
 {
+    /** @var SerializerProvider */
+    private $serializer;
     /** @var ResourceLifecycleManager */
     private $resourceLifecycle;
 
-    /**
-     * ShortcutListener constructor.
-     *
-     * @param ResourceLifecycleManager $resourceLifecycleManager
-     */
     public function __construct(
+        SerializerProvider $serializer,
         ResourceLifecycleManager $resourceLifecycleManager
     ) {
+        $this->serializer = $serializer;
         $this->resourceLifecycle = $resourceLifecycleManager;
     }
 
     /**
      * Loads a shortcut.
-     * It forwards the event to the target of the shortcut.
-     *
-     * @param LoadResourceEvent $event
      */
     public function load(LoadResourceEvent $event)
     {
         /** @var Shortcut $shortcut */
         $shortcut = $event->getResource();
 
-        $targetEvent = $this->resourceLifecycle->load($shortcut->getTarget());
-
-        $event->setData($targetEvent->getData());
+        $event->setData([
+            'embedded' => $this->serializer->serialize($shortcut->getTarget(), [Options::SERIALIZE_MINIMAL]),
+        ]);
     }
 
     /**
      * Exports a shortcut.
      * It forwards the event to the target of the shortcut.
-     *
-     * @param DownloadResourceEvent $event
      */
     public function export(DownloadResourceEvent $event)
     {
