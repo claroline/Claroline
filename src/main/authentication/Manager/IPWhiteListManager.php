@@ -69,7 +69,7 @@ class IPWhiteListManager
             if (is_array($ips)) {
                 foreach ($ips as $ip) {
                     $callerIp = !empty($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR'];
-                    if (isset($callerIp) && $ip === $callerIp) {
+                    if (isset($callerIp) && inet_ntop($ip) === inet_ntop($callerIp)) {
                         return true;
                     }
                 }
