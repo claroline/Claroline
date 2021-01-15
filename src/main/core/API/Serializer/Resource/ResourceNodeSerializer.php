@@ -21,7 +21,6 @@ use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
 use Claroline\CoreBundle\Manager\Resource\MaskManager;
 use Claroline\CoreBundle\Manager\Resource\OptimizedRightsManager;
 use Claroline\CoreBundle\Manager\Resource\RightsManager;
-use Claroline\LinkBundle\Entity\Resource\Shortcut;
 
 class ResourceNodeSerializer
 {
@@ -206,17 +205,6 @@ class ResourceNodeSerializer
             'views' => $resourceNode->getViewsCount(),
             'commentsActivated' => $resourceNode->isCommentsActivated(),
         ];
-
-        if (Shortcut::class === $resourceNode->getResourceType()->getClass()) {
-            // required for opening the proper player in case of shortcut. This is not pretty but the players
-            // need the meta['type'] to be the target one to open the proper player/editor (they don't know what to do otherwise)
-            // unless we implement a "link" player which will then the target and dispatch again.
-            // This is the easy way
-            /** @var Shortcut $resource */
-            $resource = $this->om->getRepository($resourceNode->getClass())->findOneBy(['resourceNode' => $resourceNode]);
-            $target = $resource->getTarget();
-            $meta['type'] = $target->getResourceType()->getName();
-        }
 
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
             $meta = array_merge($meta, [
