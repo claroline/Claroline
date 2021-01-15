@@ -118,6 +118,13 @@ class TagInput extends Component {
   create() {
     fetch(url(['apiv2_tag_create']), {
       method: 'POST' ,
+      headers: new Headers({
+        'Content-Type': 'application/json; charset=utf-8',
+        // next header is required for symfony to recognize our requests as XMLHttpRequest
+        // there is no spec about possible values, but this is the one expected by symfony
+        // @see Symfony\Component\HttpFoundation\Request::isXmlHttpRequest
+        'X-Requested-With': 'XMLHttpRequest'
+      }),
       credentials: 'include',
       body: JSON.stringify({
         name: this.state.currentTag
