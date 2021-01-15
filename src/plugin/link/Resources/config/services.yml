@@ -7,23 +7,24 @@ services:
     Claroline\LinkBundle\Serializer\ShortcutSerializer:
         tags: [claroline.serializer]
         arguments:
-           - '@Claroline\AppBundle\Persistence\ObjectManager'
-           - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
 
     Claroline\LinkBundle\Manager\ShortcutManager:
         arguments:
-           - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     Claroline\LinkBundle\Listener\Resource\ResourceListener:
         arguments:
-           - '@Claroline\LinkBundle\Manager\ShortcutManager'
+            - '@Claroline\LinkBundle\Manager\ShortcutManager'
         tags:
             - { name: kernel.event_listener, event: resource.shortcuts, method: shortcuts }
             - { name: kernel.event_listener, event: resource.delete, method: delete }
 
     Claroline\LinkBundle\Listener\Resource\Types\ShortcutListener:
         arguments:
-           - '@claroline.manager.resource_lifecycle'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@claroline.manager.resource_lifecycle'
         tags:
             - { name: kernel.event_listener, event: resource.shortcut.load, method: load }
             - { name: kernel.event_listener, event: resource.shortcut.open, method: open }
