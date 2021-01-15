@@ -71,7 +71,7 @@ class HomeTabVoter extends AbstractVoter
                 break;
 
             case HomeTab::TYPE_WORKSPACE:
-                $granted = $object->getWorkspace() && $this->isGranted(self::EDIT, $object->getWorkspace());
+                $granted = $object->getWorkspace() && $this->isGranted(['home', 'EDIT'], $object->getWorkspace());
                 break;
         }
 
