@@ -1158,7 +1158,9 @@ function APIClass(sco, scormData, tracking, dispatch, currentUser) {
                   }
 
                 case 'result':
-                  upperCaseResult = argValue.toUpperCase()
+                  if (typeof argValue === 'string') {
+                    upperCaseResult = argValue.toUpperCase()
+                  }
 
                   if ('CORRECT' === upperCaseResult ||
                     'INCORRECT' === upperCaseResult ||
