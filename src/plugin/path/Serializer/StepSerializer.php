@@ -95,9 +95,9 @@ class StepSerializer
             'display' => [
                 'numbering' => $step->getNumbering(),
             ],
-            'children' => array_map(function (Step $child) use ($options) {
+            'children' => array_values(array_map(function (Step $child) use ($options) {
                 return $this->serialize($child, $options);
-            }, $step->getChildren()->toArray()),
+            }, $step->getChildren()->toArray())),
             'userProgression' => $this->serializeUserProgression($step),
             'evaluated' => $step->isEvaluated(),
         ];
@@ -174,7 +174,6 @@ class StepSerializer
             // removes steps which no longer exists
             foreach ($currentChildren as $currentStep) {
                 if (!in_array($currentStep->getUuid(), $ids)) {
-                    $currentStep->setPath(null);
                     $step->removeChild($currentStep);
                 }
             }

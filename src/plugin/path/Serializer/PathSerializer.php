@@ -48,9 +48,9 @@ class PathSerializer
             'opening' => [
                 'secondaryResources' => $path->getSecondaryResourcesTarget(),
             ],
-            'steps' => array_map(function (Step $step) use ($options) {
+            'steps' => array_values(array_map(function (Step $step) use ($options) {
                 return $this->stepSerializer->serialize($step, $options);
-            }, $path->getRootSteps()),
+            }, $path->getRootSteps())),
             'score' => [
                 'success' => $path->getSuccessScore(),
                 'total' => $path->getScoreTotal(),
@@ -88,7 +88,6 @@ class PathSerializer
 
     private function deserializeSteps(array $stepsData, Path $path, array $options = []): void
     {
-        $currentSteps = $path->getRootSteps();
         $ids = [];
 
         // updates steps
@@ -109,10 +108,10 @@ class PathSerializer
         }
 
         // removes steps which no longer exists
+        $currentSteps = $path->getRootSteps();
         foreach ($currentSteps as $currentStep) {
             if (!in_array($currentStep->getUuid(), $ids)) {
                 $currentStep->setPath(null);
-                $currentStep->setParent(null);
             }
         }
     }
