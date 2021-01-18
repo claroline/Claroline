@@ -26,7 +26,7 @@
         "doctrine/dbal": "^2.7",
         "doctrine/doctrine-bundle": "^1.9",
         "doctrine/migrations": "^1.7",
-        "doctrine/orm": "^2.6",
+        "doctrine/orm": "^2.8",
         "dompdf/dompdf": "*",
         "friendsofsymfony/jsrouting-bundle": "^2.2",
         "gedmo/doctrine-extensions": "2.4.35",
