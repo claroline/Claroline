@@ -323,3 +323,7 @@ services:
             - '@Claroline\AppBundle\Event\StrictDispatcher'
         tags:
             - { name: kernel.event_listener, event: crud.post.patch.role, method: onRolePatch }
+
+    Claroline\CoreBundle\Listener\AuthenticationFailureListener:
+        tags:
+            - { name: kernel.event_listener, event: security.authentication.failure, method: onAuthenticationFailure }
