@@ -12,6 +12,7 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@security.encoder_factory'
             - '@Claroline\CoreBundle\Listener\AuthenticationSuccessListener'
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
 
     Claroline\AuthenticationBundle\Security\Authentication\Guard\IpAuthenticator:
         arguments:

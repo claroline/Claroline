@@ -325,5 +325,19 @@ services:
             - { name: kernel.event_listener, event: crud.post.patch.role, method: onRolePatch }
 
     Claroline\CoreBundle\Listener\AuthenticationFailureListener:
+        arguments:
+            - '@logger'
         tags:
             - { name: kernel.event_listener, event: security.authentication.failure, method: onAuthenticationFailure }
+
+    Claroline\CoreBundle\Listener\DeauthenticatedListener:
+        arguments:
+            - '@logger'
+        tags:
+            - { name: kernel.event_listener, event: security.logout_on_change, method: onDeauthentication }
+
+    Claroline\CoreBundle\Listener\NewPasswordListener:
+        arguments:
+            - '@logger'
+        tags:
+            - { name: kernel.event_listener, event: security.log.new_password, method: onNewPassword }

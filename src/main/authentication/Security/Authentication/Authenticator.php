@@ -11,8 +11,10 @@
 
 namespace Claroline\AuthenticationBundle\Security\Authentication;
 
+use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Event\Log\LogUserLoginEvent;
 use Claroline\CoreBundle\Listener\AuthenticationSuccessListener;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
@@ -41,19 +43,23 @@ class Authenticator
     private $authenticationHandler;
     /** @var UserProviderInterface */
     private $userRepo;
+    /** @var StrictDispatcher */
+    private $eventDispatcher;
 
     public function __construct(
         string $secret,
         TokenStorageInterface $tokenStorage,
         ObjectManager $om,
         EncoderFactoryInterface $encodeFactory,
-        AuthenticationSuccessListener $authenticationHandler
+        AuthenticationSuccessListener $authenticationHandler,
+        StrictDispatcher $eventDispatcher
     ) {
         $this->secret = $secret;
         $this->tokenStorage = $tokenStorage;
         $this->om = $om;
         $this->encodeFactory = $encodeFactory;
         $this->authenticationHandler = $authenticationHandler;
+        $this->eventDispatcher = $eventDispatcher;
 
         $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
     }
@@ -77,6 +83,8 @@ class Authenticator
 
         if ($passwordValidated) {
             $this->createToken($user);
+
+            $this->eventDispatcher->dispatch('log', LogUserLoginEvent::class, [$user]);
 
             return $user;
         }

@@ -12,9 +12,11 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
+use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AuthenticationBundle\Security\Authentication\Authenticator;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Event\Log\LogNewPasswordEvent;
 use Claroline\CoreBundle\Library\RoutingHelper;
 use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\UserManager;
@@ -34,19 +36,22 @@ class AuthenticationController
     private $mailManager;
     private $routingHelper;
     private $authenticator;
+    private $eventDispatcher;
 
     public function __construct(
         UserManager $userManager,
         ObjectManager $om,
         MailManager $mailManager,
         RoutingHelper $routingHelper,
-        Authenticator $authenticator
+        Authenticator $authenticator,
+        StrictDispatcher $eventDispatcher
     ) {
         $this->userManager = $userManager;
         $this->om = $om;
         $this->mailManager = $mailManager;
         $this->routingHelper = $routingHelper;
         $this->authenticator = $authenticator;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -127,6 +132,8 @@ class AuthenticationController
 
         $this->om->persist($user);
         $this->om->flush();
+
+        $this->eventDispatcher->dispatch(LogNewPasswordEvent::ACTION, LogNewPasswordEvent::class, [$user]);
 
         return new JsonResponse(null, 201);
     }
