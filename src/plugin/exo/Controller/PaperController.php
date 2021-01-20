@@ -7,7 +7,6 @@ use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Security\Collection\ResourceCollection;
-use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -47,15 +46,6 @@ class PaperController
     /** @var ExerciseManager */
     private $exerciseManager;
 
-    /**
-     * PaperController constructor.
-     *
-     * @param AuthorizationCheckerInterface $authorization
-     * @param ObjectManager                 $om
-     * @param FinderProvider                $finder
-     * @param PaperManager                  $paperManager
-     * @param ExerciseManager               $exerciseManager
-     */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         ObjectManager $om,
@@ -76,14 +66,8 @@ class PaperController
      *
      * @Route("", name="exercise_paper_list", methods={"GET"})
      * @EXT\ParamConverter("user", converter="current_user")
-     *
-     * @param Exercise $exercise
-     * @param User     $user
-     * @param Request  $request
-     *
-     * @return JsonResponse
      */
-    public function listAction(Exercise $exercise, User $user, Request $request)
+    public function listAction(Exercise $exercise, User $user, Request $request): JsonResponse
     {
         $this->assertHasPermission('OPEN', $exercise);
 
@@ -96,7 +80,7 @@ class PaperController
         if (!$this->authorization->isGranted('ADMINISTRATE', $collection) &&
             !$this->authorization->isGranted('MANAGE_PAPERS', $collection)
         ) {
-            $params['hiddenFilters']['user'] = $user->getId();
+            $params['hiddenFilters']['user'] = $user->getUuid();
         }
 
         $results = $this->finder->searchEntities(Paper::class, $params);
@@ -118,14 +102,8 @@ class PaperController
      * @Route("/{id}", name="exercise_paper_get", methods={"GET"})
      * @EXT\ParamConverter("paper", class="UJMExoBundle:Attempt\Paper", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user")
-     *
-     * @param Exercise $exercise
-     * @param Paper    $paper
-     * @param User     $user
-     *
-     * @return JsonResponse
      */
-    public function getAction(Exercise $exercise, Paper $paper, User $user)
+    public function getAction(Exercise $exercise, Paper $paper, User $user): JsonResponse
     {
         $this->assertHasPermission('OPEN', $exercise);
 
@@ -141,22 +119,13 @@ class PaperController
      * Deletes some papers associated with an exercise.
      *
      * @Route("", name="ujm_exercise_delete_papers", methods={"DELETE"})
-     *
-     * @param Exercise $exercise
-     * @param Request  $request
-     *
-     * @return JsonResponse
      */
-    public function deleteAction(Exercise $exercise, Request $request)
+    public function deleteAction(Exercise $exercise, Request $request): JsonResponse
     {
         $this->assertHasPermission('MANAGE_PAPERS', $exercise);
 
-        try {
-            $papers = $this->decodeIdsString($request, Paper::class);
-            $this->paperManager->delete($papers);
-        } catch (InvalidDataException $e) {
-            return new JsonResponse($e->getErrors(), 422);
-        }
+        $papers = $this->decodeIdsString($request, Paper::class);
+        $this->paperManager->delete($papers);
 
         return new JsonResponse(null, 204);
     }
@@ -165,12 +134,8 @@ class PaperController
      * Exports papers into a CSV file.
      *
      * @Route("/export/csv", name="exercise_papers_export", methods={"GET"})
-     *
-     * @param Exercise $exercise
-     *
-     * @return StreamedResponse
      */
-    public function exportCsvAction(Exercise $exercise)
+    public function exportCsvAction(Exercise $exercise): StreamedResponse
     {
         $this->assertHasPermission('MANAGE_PAPERS', $exercise);
 
@@ -186,12 +151,8 @@ class PaperController
      * Exports papers into a json file.
      *
      * @Route("/export/json", name="exercise_papers_export_json", methods={"GET"})
-     *
-     * @param Exercise $exercise
-     *
-     * @return StreamedResponse
      */
-    public function exportJsonAction(Exercise $exercise)
+    public function exportJsonAction(Exercise $exercise): StreamedResponse
     {
         if (!$this->isAdmin($exercise)) {
             // Only administrator or Paper Managers can export Papers
@@ -215,12 +176,8 @@ class PaperController
      * Exports papers into a csv file.
      *
      * @Route("/export/papers/csv", name="exercise_papers_export_csv", methods={"GET"})
-     *
-     * @param Exercise $exercise
-     *
-     * @return StreamedResponse
      */
-    public function exportCsvAnswersAction(Exercise $exercise)
+    public function exportCsvAnswersAction(Exercise $exercise): StreamedResponse
     {
         if (!$this->isAdmin($exercise)) {
             // Only administrator or Paper Managers can export Papers
@@ -237,12 +194,8 @@ class PaperController
 
     /**
      * Checks whether the current User has the administration rights on the Exercise.
-     *
-     * @param Exercise $exercise
-     *
-     * @return bool
      */
-    private function isAdmin(Exercise $exercise)
+    private function isAdmin(Exercise $exercise): bool
     {
         $collection = new ResourceCollection([$exercise->getResourceNode()]);
 
