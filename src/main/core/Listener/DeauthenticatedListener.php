@@ -5,7 +5,7 @@ namespace Claroline\CoreBundle\Listener;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Http\Event\DeauthenticatedEvent;
 
-class DeauthenticationListener
+class DeauthenticatedListener
 {
     private $logger;
 

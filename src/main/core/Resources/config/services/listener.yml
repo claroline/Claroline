@@ -330,7 +330,7 @@ services:
         tags:
             - { name: kernel.event_listener, event: security.authentication.failure, method: onAuthenticationFailure }
 
-    Claroline\CoreBundle\Listener\DeauthenticatedListener:
+    Claroline\CoreBundle\Listener\DeauthenticatedEvent:
         arguments:
             - '@logger'
         tags:
