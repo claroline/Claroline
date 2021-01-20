@@ -11,7 +11,8 @@ const PathOverview = connect(
     resourceId: resourceSelectors.id(state),
     path: selectors.path(state),
     empty: selectors.empty(state),
-    evaluation: resourceSelectors.resourceEvaluation(state)
+    evaluation: resourceSelectors.resourceEvaluation(state),
+    attempt: selectors.attempt(state)
   })
 )(PathOverviewComponent)
 

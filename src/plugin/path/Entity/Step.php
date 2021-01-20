@@ -58,6 +58,7 @@ class Step
      * @var Path
      *
      * @ORM\ManyToOne(targetEntity="Innova\PathBundle\Entity\Path\Path", inversedBy="steps")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     protected $path;
 
@@ -196,8 +197,6 @@ class Step
     /**
      * Set parent.
      *
-     * @param Step $parent
-     *
      * @return Step
      */
     public function setParent(Step $parent = null)
@@ -251,8 +250,6 @@ class Step
     /**
      * Add new child to the step.
      *
-     * @param Step $step
-     *
      * @return Step
      */
     public function addChild(Step $step)
@@ -268,8 +265,6 @@ class Step
 
     /**
      * Remove a step from children.
-     *
-     * @param Step $step
      *
      * @return Step
      */
@@ -367,9 +362,6 @@ class Step
         return $this->resource;
     }
 
-    /**
-     * @param ResourceNode $resource
-     */
     public function setResource(ResourceNode $resource = null)
     {
         $this->resource = $resource;
@@ -400,8 +392,6 @@ class Step
     /**
      * Add a secondary resource.
      *
-     * @param SecondaryResource $secondaryResource
-     *
      * @return Step
      */
     public function addSecondaryResource(SecondaryResource $secondaryResource)
@@ -416,8 +406,6 @@ class Step
 
     /**
      * Remove a secondary resource.
-     *
-     * @param SecondaryResource $secondaryResource
      *
      * @return Step
      */

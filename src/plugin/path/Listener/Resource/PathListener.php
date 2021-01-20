@@ -72,6 +72,7 @@ class PathListener
             'userEvaluation' => $user instanceof User ? $this->serializer->serialize(
                 $this->userProgressionManager->getResourceUserEvaluation($path, $user)
             ) : null,
+            'attempt' => $this->serializer->serialize($this->userProgressionManager->getCurrentAttempt($path, $user)),
         ]);
         $event->stopPropagation();
     }
