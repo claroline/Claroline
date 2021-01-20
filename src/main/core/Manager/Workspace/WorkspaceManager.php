@@ -572,8 +572,7 @@ class WorkspaceManager implements LoggerAwareInterface
             $workspace->setModel(true);
             $this->log('Add tools...');
             $this->container->get('claroline.manager.tool_manager')->addMissingWorkspaceTools($workspace);
-            $this->log('Build and set default admin');
-            $workspace->setCreator($this->container->get('claroline.manager.user_manager')->getDefaultClarolineAdmin());
+            $this->log('Build...');
             $this->container->get('Claroline\CoreBundle\Listener\Log\LogListener')->setDefaults();
 
             if (0 === count($this->shortcutsRepo->findBy(['workspace' => $workspace]))) {

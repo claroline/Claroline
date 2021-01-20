@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {createElement, Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import omit from 'lodash/omit'
 
@@ -8,56 +8,89 @@ import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {FormData} from '#/main/app/content/form/containers/data'
 
+import {getTool} from '#/main/core/tools'
 import {selectors} from '#/main/core/tool/modals/parameters/store'
 
-const ParametersModal = props =>
-  <Modal
-    {...omit(props, 'toolName', 'currentContext', 'data', 'saveEnabled', 'onSave', 'save', 'reset')}
-    icon="fa fa-fw fa-cog"
-    title={trans('parameters')}
-    subtitle={trans(props.toolName, {}, 'tools')}
-    onEntering={() => props.reset(props.data)}
-  >
-    <FormData
-      name={selectors.STORE_NAME}
-      sections={[
-        {
-          icon: 'fa fa-fw fa-desktop',
-          title: trans('display_parameters'),
-          fields: [
+class ParametersModal extends Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      customForm: null
+    }
+  }
+
+  componentDidMount() {
+    getTool(this.props.toolName).then((module) => {
+      let parametersComponent = null
+      if (module.default && module.default.parameters) {
+        parametersComponent = createElement(module.default.parameters)
+      }
+
+      this.setState({customForm: parametersComponent})
+    })
+  }
+
+  render() {
+    return (
+      <Modal
+        {...omit(this.props, 'toolName', 'currentContext', 'data', 'saveEnabled', 'onSave', 'save', 'reset')}
+        icon="fa fa-fw fa-cog"
+        title={trans('parameters')}
+        subtitle={trans(this.props.toolName, {}, 'tools')}
+        onEntering={() => this.props.reset(this.props.data)}
+      >
+        <FormData
+          name={selectors.STORE_NAME}
+          sections={[
             {
-              name: 'poster',
-              label: trans('poster'),
-              type: 'image',
-              options: {
-                ratio: '3:1'
-              }
+              className: 'embedded-form-section',
+              title: trans('custom'),
+              primary: true,
+              displayed: !!this.state.customForm,
+              component: this.state.customForm
             }, {
-              name: 'thumbnail',
-              label: trans('thumbnail'),
-              type: 'image'
-            }, {
-              name: 'display.showIcon',
-              label: trans('resource_showIcon', {}, 'resource'),
-              type: 'boolean'
+              icon: 'fa fa-fw fa-desktop',
+              title: trans('display_parameters'),
+              fields: [
+                {
+                  name: 'poster',
+                  label: trans('poster'),
+                  type: 'image',
+                  options: {
+                    ratio: '3:1'
+                  }
+                }, {
+                  name: 'thumbnail',
+                  label: trans('thumbnail'),
+                  type: 'image'
+                }, {
+                  name: 'display.showIcon',
+                  label: trans('resource_showIcon', {}, 'resource'),
+                  type: 'boolean'
+                }
+              ]
             }
-          ]
-        }
-      ]}
-    >
-      <Button
-        className="modal-btn btn btn-primary"
-        type={CALLBACK_BUTTON}
-        primary={true}
-        label={trans('save', {}, 'actions')}
-        disabled={!props.saveEnabled}
-        callback={() => {
-          props.save(props.toolName, props.currentContext, props.onSave)
-          props.fadeModal()
-        }}
-      />
-    </FormData>
-  </Modal>
+          ]}
+        >
+          <Button
+            className="modal-btn btn btn-primary"
+            type={CALLBACK_BUTTON}
+            htmlType="submit"
+            primary={true}
+            label={trans('save', {}, 'actions')}
+            disabled={!this.props.saveEnabled}
+            callback={() => {
+              this.props.save(this.props.toolName, this.props.currentContext, this.props.onSave)
+              this.props.fadeModal()
+            }}
+          />
+        </FormData>
+      </Modal>
+    )
+  }
+}
+
 
 ParametersModal.propTypes = {
   toolName: T.string.isRequired,
