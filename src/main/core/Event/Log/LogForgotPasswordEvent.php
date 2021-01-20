@@ -13,9 +13,9 @@ namespace Claroline\CoreBundle\Event\Log;
 
 use Claroline\CoreBundle\Entity\User;
 
-class LogNewPasswordEvent extends LogGenericEvent
+class LogForgotPasswordEvent extends LogGenericEvent
 {
-    const ACTION = 'security.log.new_password';
+    const ACTION = 'security.log.forgot_password';
 
     private $user;
 

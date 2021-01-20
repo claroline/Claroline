@@ -341,3 +341,9 @@ services:
             - '@logger'
         tags:
             - { name: kernel.event_listener, event: security.log.new_password, method: onNewPassword }
+
+    Claroline\CoreBundle\Listener\ForgotPasswordListener:
+        arguments:
+            - '@logger'
+        tags:
+            - { name: kernel.event_listener, event: security.log.forgot_password, method: onForgoPassword }
