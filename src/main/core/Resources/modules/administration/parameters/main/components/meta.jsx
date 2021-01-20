@@ -91,6 +91,20 @@ const Meta = (props) =>
           }
         ]
       }, {
+        icon: 'fa fa-fw fa-life-ring',
+        title: trans('support'),
+        fields: [
+          {
+            name: 'help.support_email',
+            label: trans('support_email'),
+            type: 'email'
+          }, {
+            name: 'help.url',
+            label: trans('help_url'),
+            type: 'url'
+          }
+        ]
+      }, {
         icon: 'fa fa-fw fa-hard-hat',
         title: trans('maintenance'),
         fields: [
