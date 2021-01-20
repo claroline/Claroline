@@ -491,6 +491,8 @@ abstract class AbstractCrudController extends AbstractApiController
 
     /**
      * @return array
+     *
+     * @todo this should get the current request as param.
      */
     protected function getDefaultHiddenFilters()
     {

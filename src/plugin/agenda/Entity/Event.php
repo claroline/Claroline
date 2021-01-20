@@ -88,13 +88,7 @@ class Event
      * @ORM\OneToMany(targetEntity="Claroline\AgendaBundle\Entity\EventInvitation", mappedBy="event")
      * @ORM\JoinColumn(nullable=true)
      */
-    private $eventInvitations = null;
-
-    //If this parameter is set to false, NOBODY could modify the event. This parameter is useful for displaying an event of another bundle without possibility of modification.
-    /**
-     * @ORM\Column(name="is_editable", nullable=true, type="boolean")
-     */
-    private $isEditable = true;
+    private $eventInvitations;
 
     public function __construct()
     {
@@ -210,18 +204,6 @@ class Event
         return $this->isTaskDone;
     }
 
-    public function setIsEditable($isEditable)
-    {
-        $this->isEditable = $isEditable;
-
-        return $this;
-    }
-
-    public function isEditable()
-    {
-        return $this->isEditable;
-    }
-
     /**
      * Set allDay.
      *
@@ -257,19 +239,7 @@ class Event
     }
 
     /**
-     * Get isEditable.
-     *
-     * @return bool
-     */
-    public function getIsEditable()
-    {
-        return $this->isEditable;
-    }
-
-    /**
      * Add eventInvitation.
-     *
-     * @param \Claroline\AgendaBundle\Entity\EventInvitation $eventInvitation
      *
      * @return Event
      */
@@ -282,8 +252,6 @@ class Event
 
     /**
      * Remove eventInvitation.
-     *
-     * @param \Claroline\AgendaBundle\Entity\EventInvitation $eventInvitation
      */
     public function removeEventInvitation(EventInvitation $eventInvitation)
     {
@@ -293,7 +261,7 @@ class Event
     /**
      * Get eventInvitations.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return ArrayCollection
      */
     public function getEventInvitations()
     {

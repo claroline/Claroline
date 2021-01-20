@@ -12,14 +12,12 @@
 namespace Claroline\AgendaBundle\Controller;
 
 use Claroline\AgendaBundle\Entity\Event;
-use Claroline\AgendaBundle\Manager\AgendaManager;
 use Claroline\AppBundle\Controller\AbstractCrudController;
-use Claroline\CoreBundle\Entity\File\PublicFile;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Library\Utilities\FileUtilities;
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -29,25 +27,23 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
  */
 class EventController extends AbstractCrudController
 {
+    use PermissionCheckerTrait;
+
     /** @var AuthorizationCheckerInterface */
     private $authorization;
     /** @var TokenStorageInterface */
     private $tokenStorage;
-    /** @var FileUtilities */
-    private $fileUtils;
-    /** @var AgendaManager */
-    private $manager;
+    /** @var RequestStack */
+    private $requestStack;
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         TokenStorageInterface $tokenStorage,
-        FileUtilities $fileUtils,
-        AgendaManager $manager
+        RequestStack $requestStack
     ) {
         $this->authorization = $authorization;
         $this->tokenStorage = $tokenStorage;
-        $this->fileUtils = $fileUtils;
-        $this->manager = $manager;
+        $this->requestStack = $requestStack;
     }
 
     public function getClass()
@@ -61,50 +57,16 @@ class EventController extends AbstractCrudController
     }
 
     /**
-     * @param string $class
-     *
-     * @return JsonResponse
-     */
-    public function listAction(Request $request, $class)
-    {
-        $query = $request->query->all();
-        $hiddenFilters = isset($query['hiddenFilters']) ? $query['hiddenFilters'] : [];
-        $query['hiddenFilters'] = array_merge($hiddenFilters, $this->getDefaultHiddenFilters());
-
-        // get start & end date and add them to the hidden filters list
-        $query['hiddenFilters']['inRange'] = [$query['start'] ?? null, $query['end'] ?? null];
-
-        if (!isset($query['filters']['workspaces'])) {
-            $user = $this->tokenStorage->getToken()->getUser();
-            if ('anon.' !== $user) {
-                $query['hiddenFilters']['user'] = $user->getUuid();
-            } else {
-                $query['hiddenFilters']['anonymous'] = true;
-            }
-        }
-
-        $data = $this->finder->search(
-            $class,
-            $query,
-            $this->options['list']
-        );
-
-        return new JsonResponse($data);
-    }
-
-    /**
      * Marks a list of tasks as done.
      *
      * @Route("/done", name="apiv2_task_mark_done", methods={"PUT"})
-     *
-     * @return JsonResponse
      */
-    public function markDoneAction(Request $request)
+    public function markDoneAction(Request $request): JsonResponse
     {
         /** @var Event[] $tasks */
         $tasks = $this->decodeIdsString($request, Event::class);
         foreach ($tasks as $task) {
-            if ($this->checkPermission($task) && $task->isTask() && !$task->isTaskDone()) {
+            if ($task->isTask() && !$task->isTaskDone() && $this->checkPermission('EDIT', $task)) {
                 $task->setIsTaskDone(true);
                 $this->om->persist($task);
             }
@@ -121,15 +83,13 @@ class EventController extends AbstractCrudController
      * Marks a list of tasks as to do.
      *
      * @Route("/todo", name="apiv2_task_mark_todo", methods={"PUT"})
-     *
-     * @return JsonResponse
      */
-    public function markTodoAction(Request $request)
+    public function markTodoAction(Request $request): JsonResponse
     {
         /** @var Event[] $tasks */
         $tasks = $this->decodeIdsString($request, Event::class);
         foreach ($tasks as $task) {
-            if ($this->checkPermission($task) && $task->isTask() && $task->isTaskDone()) {
+            if ($task->isTask() && $task->isTaskDone() && $this->checkPermission('EDIT', $task)) {
                 $task->setIsTaskDone(false);
                 $this->om->persist($task);
             }
@@ -142,24 +102,25 @@ class EventController extends AbstractCrudController
         }, $tasks));
     }
 
-    private function checkPermission(Event $event)
+    protected function getDefaultHiddenFilters(): array
     {
-        if (false === $event->isEditable()) {
-            return false;
-        }
+        $hiddenFilters = [];
 
-        if ($event->getWorkspace()) {
-            if (!$this->authorization->isGranted(['agenda', 'edit'], $event->getWorkspace())) {
-                return false;
+        $query = $this->requestStack->getCurrentRequest()->query->all();
+
+        // get start & end date and add them to the hidden filters list
+        $hiddenFilters['inRange'] = [$query['start'] ?? null, $query['end'] ?? null];
+
+        if (!isset($query['filters']['workspaces'])) {
+            /** @var User $user */
+            $user = $this->tokenStorage->getToken()->getUser();
+            if ('anon.' !== $user) {
+                $hiddenFilters['user'] = $user->getUuid();
+            } else {
+                $hiddenFilters['anonymous'] = true;
             }
-
-            return true;
         }
 
-        if ($this->tokenStorage->getToken()->getUser() !== $event->getUser()) {
-            return false;
-        }
-
-        return true;
+        return $hiddenFilters;
     }
 }
