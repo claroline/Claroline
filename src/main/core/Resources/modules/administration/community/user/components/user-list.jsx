@@ -46,8 +46,7 @@ const UserList = {
       name: 'restrictions.disabled',
       alias: 'isDisabled',
       type: 'boolean',
-      label: trans('user_disabled'),
-      displayed: true
+      label: trans('user_disabled')
     }, {
       name: 'meta.created',
       type: 'date',
