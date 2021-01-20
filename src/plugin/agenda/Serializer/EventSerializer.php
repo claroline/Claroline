@@ -110,7 +110,6 @@ class EventSerializer
         $this->sipe('allDay', 'setAllDay', $data, $event);
         $this->sipe('description', 'setDescription', $data, $event);
         $this->sipe('meta.done', 'setIsTaskDone', $data, $event);
-        $this->sipe('isEditable', 'setIsEditable', $data, $event);
 
         if (isset($data['meta'])) {
             if (isset($data['meta']['type'])) {

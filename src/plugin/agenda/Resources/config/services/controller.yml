@@ -8,5 +8,4 @@ services:
         arguments:
             - '@security.authorization_checker'
             - '@security.token_storage'
-            - '@Claroline\CoreBundle\Library\Utilities\FileUtilities'
-            - '@Claroline\AgendaBundle\Manager\AgendaManager'
+            - '@request_stack'

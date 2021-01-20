@@ -34,10 +34,6 @@ class EventVoter extends AbstractVoter
 
     public function checkEdit(TokenInterface $token, $object)
     {
-        if (!$object->isEditable()) {
-            return VoterInterface::ACCESS_DENIED;
-        }
-
         $workspace = $object->getWorkspace();
 
         $currentUser = $token->getUser();
