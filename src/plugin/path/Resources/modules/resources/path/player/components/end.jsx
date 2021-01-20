@@ -9,7 +9,6 @@ import {scrollTo} from '#/main/app/dom/scroll'
 import {Toolbar} from '#/main/app/action/components/toolbar'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ContentHtml} from '#/main/app/content/components/html'
-import {ContentLoader} from '#/main/app/content/components/loader'
 import {ScoreGauge} from '#/main/core/layout/gauge/components/score'
 import {ScoreBox} from '#/main/core/layout/evaluation/components/score-box'
 import {route} from '#/main/core/workspace/routing'
@@ -82,13 +81,8 @@ class PlayerEnd extends Component {
             </Fragment>
           }
 
-          <ContentSummary
-            className="component-container"
-            links={this.props.steps.map(this.getStepSummary)}
-            noCollapse={true}
-          />
-
           <Toolbar
+            className="component-container"
             buttonName="btn btn-block btn-emphasis"
             toolbar="restart home"
             actions={[
@@ -110,6 +104,12 @@ class PlayerEnd extends Component {
                 exact: true
               }
             ]}
+          />
+
+          <ContentSummary
+            className="component-container"
+            links={this.props.steps.map(this.getStepSummary)}
+            noCollapse={true}
           />
         </div>
       </div>

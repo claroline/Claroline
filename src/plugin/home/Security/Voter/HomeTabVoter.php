@@ -61,17 +61,17 @@ class HomeTabVoter extends AbstractVoter
                 $homeTool = $this->orderedToolRepo->findOneByNameAndDesktop('home');
                 $isOwner = $object->getUser() && $token->getUser() instanceof User && $object->getUser()->getId() === $token->getUser();
 
-                $granted = $isOwner && $homeTool && $this->isGranted('EDIT', $homeTool);
+                $granted = $isOwner && $homeTool && $this->isGranted(self::EDIT, $homeTool);
                 break;
 
             case HomeTab::TYPE_ADMIN_DESKTOP:
                 $homeTool = $this->orderedToolRepo->findOneByNameAndDesktop('home');
 
-                $granted = $homeTool && $this->isGranted('ADMINISTRATE', $homeTool);
+                $granted = $homeTool && $this->isGranted(self::ADMINISTRATE, $homeTool);
                 break;
 
             case HomeTab::TYPE_WORKSPACE:
-                $granted = $object->getWorkspace() && $this->isGranted(['home', 'EDIT'], $object->getWorkspace());
+                $granted = $object->getWorkspace() && $this->isGranted(['home', self::EDIT], $object->getWorkspace());
                 break;
         }
 

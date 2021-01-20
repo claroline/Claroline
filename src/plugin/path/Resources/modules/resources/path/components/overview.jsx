@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import get from 'lodash/get'
@@ -7,6 +7,7 @@ import {trans} from '#/main/app/intl/translation'
 import {scrollTo} from '#/main/app/dom/scroll'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ContentSummary} from '#/main/app/content/components/summary'
+import {ScoreBox} from '#/main/core/layout/evaluation/components/score-box'
 import {ResourceOverview} from '#/main/core/resource/components/overview'
 import {UserEvaluation as UserEvaluationTypes} from '#/main/core/resource/prop-types'
 
@@ -15,9 +16,22 @@ import {Path as PathTypes} from '#/plugin/path/resources/path/prop-types'
 const PathOverview = props => {
   function getStepSummary(step) {
     return {
+      id: step.id,
       type: LINK_BUTTON,
       icon: classes('step-progression fa fa-fw fa-circle', get(step, 'userProgression.status')),
-      label: step.title,
+      label: (
+        <Fragment>
+          {step.title}
+          {step.evaluated && get(props.path, 'display.showScore') && get(props.attempt, `data.resources[${step.id}].max`, null) &&
+            <ScoreBox
+              score={get(props.attempt, `data.resources[${step.id}].score`, null)}
+              scoreMax={get(props.attempt, `data.resources[${step.id}].max`)}
+              size="sm"
+              style={{marginLeft: 'auto'}}
+            />
+          }
+        </Fragment>
+      ),
       target: `${props.basePath}/play/${step.slug}`,
       children: step.children ? step.children.map(getStepSummary) : [],
       onClick: () => {
@@ -80,7 +94,8 @@ PathOverview.propTypes = {
   empty: T.bool.isRequired,
   evaluation: T.shape(
     UserEvaluationTypes.propTypes
-  )
+  ),
+  attempt: T.object
 }
 
 PathOverview.defaultProps = {
