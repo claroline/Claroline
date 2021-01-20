@@ -20,15 +20,11 @@ import {Tracking} from '#/plugin/analytics/user/tracking/containers/main'
 
 class Profile extends Component {
   componentDidMount() {
-    if (!this.props.loaded) {
-      this.props.open(this.props.publicUrl)
-    }
+    this.props.open(this.props.publicUrl)
   }
 
   componentDidUpdate(prevProps) {
-    if (!this.props.loaded && this.props.loaded !== prevProps.loaded) {
-      this.props.open(this.props.publicUrl)
-    }
+    this.props.open(this.props.publicUrl)
   }
 
   render() {
