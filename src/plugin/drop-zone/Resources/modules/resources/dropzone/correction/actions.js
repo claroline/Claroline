@@ -1,5 +1,5 @@
 import {makeActionCreator} from '#/main/app/store/actions'
-import {API_REQUEST} from '#/main/app/api'
+import {API_REQUEST, url} from '#/main/app/api'
 
 import {selectors} from '#/plugin/drop-zone/resources/dropzone/store/selectors'
 import {actions as baseActions} from '#/plugin/drop-zone/resources/dropzone/store/actions'
@@ -185,10 +185,6 @@ actions.cancelDropSubmission = (dropId) => ({
 
 actions.downloadDrops = (drops) => ({
   [API_REQUEST]: {
-    url: ['claro_dropzone_drops_download'],
-    request: {
-      method: 'POST',
-      body: JSON.stringify({_ids: drops.map(d => d.id)})
-    }
+    url: url(['claro_dropzone_drops_download'], {ids: drops.map(d => d.id)})
   }
 })

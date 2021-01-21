@@ -12,6 +12,7 @@
 namespace Claroline\DropZoneBundle\Controller\API;
 
 use Claroline\AppBundle\API\FinderProvider;
+use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
@@ -35,9 +36,12 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @Route("/dropzone", options={"expose"=true})
+ *
+ * @todo use crud
  */
 class DropController
 {
+    use RequestDecoderTrait;
     use PermissionCheckerTrait;
 
     /** @var FinderProvider */
@@ -128,6 +132,29 @@ class DropController
         } catch (\Exception $e) {
             return new JsonResponse($e->getMessage(), 422);
         }
+    }
+
+    /**
+     * Delete Drop.
+     *
+     * @Route("/{id}/drops", name="claro_dropzone_drop_delete", methods={"DELETE"})
+     * @EXT\ParamConverter("dropzone", class="ClarolineDropZoneBundle:Dropzone", options={"mapping": {"id": "uuid"}})
+     */
+    public function deleteAction(Dropzone $dropzone, Request $request): JsonResponse
+    {
+        $this->checkPermission('EDIT', $dropzone->getResourceNode(), [], true);
+
+        if (!$dropzone->hasLockDrops()) {
+            $drops = $this->decodeIdsString($request, Drop::class);
+
+            $this->om->startFlushSuite();
+            foreach ($drops as $drop) {
+                $this->manager->deleteDrop($drop);
+            }
+            $this->om->endFlushSuite();
+        }
+
+        return new JsonResponse(null, 204);
     }
 
     /**
@@ -420,9 +447,9 @@ class DropController
     /**
      * Downloads drops documents into a ZIP archive.
      *
-     * @Route("/drops/download", name="claro_dropzone_drops_download", methods={"POST"})
+     * @Route("/drops/download", name="claro_dropzone_drops_download", methods={"GET"})
      */
-    public function dropsDownloadAction(Request $request): StreamedResponse
+    public function downloadAction(Request $request): StreamedResponse
     {
         $drops = $this->decodeIdsString($request, Drop::class);
         /** @var Dropzone $dropzone */
@@ -451,7 +478,7 @@ class DropController
      * @Route("/{id}/drops/csv", name="claro_dropzone_drops_csv", methods={"GET"})
      * @EXT\ParamConverter("dropzone", class="ClarolineDropZoneBundle:Dropzone", options={"mapping": {"id": "uuid"}})
      */
-    public function exportDropsCsvAction(Dropzone $dropzone): StreamedResponse
+    public function exportCsvAction(Dropzone $dropzone): StreamedResponse
     {
         $this->checkPermission('EDIT', $dropzone->getResourceNode(), [], true);
 
@@ -514,17 +541,10 @@ class DropController
     }
 
     /**
-     * @Route(
-     *     "/drop/{id}/next",
-     *     name="claro_dropzone_drop_next"
-     * )
-     * @EXT\ParamConverter(
-     *     "drop",
-     *     class="ClarolineDropZoneBundle:Drop",
-     *     options={"mapping": {"id": "uuid"}}
-     * )
+     * @Route("/drop/{id}/next", name="claro_dropzone_drop_next")
+     * @EXT\ParamConverter("drop", class="ClarolineDropZoneBundle:Drop", options={"mapping": {"id": "uuid"}})
      */
-    public function nextDropAction(Drop $drop, Request $request): JsonResponse
+    public function nextAction(Drop $drop, Request $request): JsonResponse
     {
         $dropzone = $drop->getDropzone();
         $collection = new ResourceCollection([$dropzone->getResourceNode()]);
@@ -554,17 +574,10 @@ class DropController
     }
 
     /**
-     * @Route(
-     *     "/drop/{id}/previous",
-     *     name="claro_dropzone_drop_previous"
-     * )
-     * @EXT\ParamConverter(
-     *     "drop",
-     *     class="ClarolineDropZoneBundle:Drop",
-     *     options={"mapping": {"id": "uuid"}}
-     * )
+     * @Route("/drop/{id}/previous", name="claro_dropzone_drop_previous")
+     * @EXT\ParamConverter("drop", class="ClarolineDropZoneBundle:Drop", options={"mapping": {"id": "uuid"}})
      */
-    public function previousDropAction(Drop $drop, Request $request): JsonResponse
+    public function previousAction(Drop $drop, Request $request): JsonResponse
     {
         $dropzone = $drop->getDropzone();
         $collection = new ResourceCollection([$dropzone->getResourceNode()]);
@@ -615,18 +628,5 @@ class DropController
         if (!$user->hasRole($team->getRole()->getName())) {
             throw new AccessDeniedException();
         }
-    }
-
-    /**
-     * @param string $class
-     *
-     * @return array
-     */
-    protected function decodeIdsString(Request $request, $class)
-    {
-        $ids = json_decode($request->getContent(), true)['_ids'];
-        $property = is_numeric($ids[0]) ? 'id' : 'uuid';
-
-        return $this->om->findList($class, $property, $ids);
     }
 }

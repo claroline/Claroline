@@ -295,6 +295,17 @@ const EditorComponent = props =>
             label: trans('notify_managers_on_drop', {}, 'dropzone')
           }
         ]
+      }, {
+        icon: 'fa fa-fw fa-key',
+        title: trans('access_restrictions'),
+        fields: [
+          {
+            name: 'restrictions.lockDrops',
+            type: 'boolean',
+            label: trans('lock_drops', {}, 'dropzone'),
+            help: trans('lock_drops_help', {}, 'dropzone')
+          }
+        ]
       }
     ]}
   />

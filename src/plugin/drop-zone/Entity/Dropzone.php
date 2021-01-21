@@ -312,6 +312,15 @@ class Dropzone extends AbstractResource
     protected $revisionEnabled = false;
 
     /**
+     * If true, drops for the current dropzone can not be deleted.
+     *
+     * @ORM\Column(name="lock_drops", type="boolean", nullable=false)
+     *
+     * @var bool
+     */
+    protected $lockDrops = false;
+
+    /**
      * Dropzone constructor.
      */
     public function __construct()
@@ -701,5 +710,15 @@ class Dropzone extends AbstractResource
     public function setRevisionEnabled($revisionEnabled)
     {
         $this->revisionEnabled = $revisionEnabled;
+    }
+
+    public function hasLockDrops(): bool
+    {
+        return $this->lockDrops;
+    }
+
+    public function setLockDrops(bool $locked)
+    {
+        $this->lockDrops = $locked;
     }
 }

@@ -159,5 +159,7 @@
     "submit_my_drop_confirm": "Êtes-vous sûr de vouloir déposer votre production ? Cette action est définitive et plus aucune modification ne sera possible.",
     "evaluation_status_not_attempted": "Vous n'avez pas commencé votre production",
     "evaluation_status_opened": "Vous avez commencé votre production" ,
-    "evaluation_status_completed": "Vous avez terminé votre production"
+    "evaluation_status_completed": "Vous avez terminé votre production",
+    "lock_drops": "Protéger les dépôts des utilisateurs",
+    "lock_drops_help": "Il n'est plus possible de supprimer les dépôts des utilisateurs si ils sont protégés."
 }
