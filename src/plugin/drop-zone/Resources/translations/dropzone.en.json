@@ -159,6 +159,8 @@
     "submit_my_drop": "Submit my participation",
     "submit_my_drop_confirm": "Are you sure you want to submit your participation? This action is final and no further modifications will be possible.",
     "evaluation_status_not_attempted": "You haven't started the evaluation yet",
-    "evaluation_status_opened": "Evaluation pending" ,
-    "evaluation_status_completed": "You completed the evaluation"
+    "evaluation_status_opened": "Evaluation pending",
+    "evaluation_status_completed": "You completed the evaluation",
+    "lock_drops": "Protéger les dépôts des utilisateurs",
+    "lock_drops_help": "Il n'est plus possible de supprimer les dépôts des utilisateurs si ils sont protégés."
 }
