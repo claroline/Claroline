@@ -19,6 +19,6 @@ class DeauthenticatedListener
         $originalUser = $deauthenticatedEvent->getOriginalToken()->getUsername();
         $refreshedUser = $deauthenticatedEvent->getRefreshedToken()->getUsername();
 
-        $this->logger->error(sprintf("Deauthentication on %s with %s", $originalUser, $refreshedUser));
+        $this->logger->error(sprintf('Deauthentication on %s with %s', $originalUser, $refreshedUser));
     }
 }

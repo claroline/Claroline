@@ -38,12 +38,9 @@ class LogForgotPasswordEvent extends LogGenericEvent
         $this->user = $receiver;
     }
 
-    /**
-     * @return array
-     */
-    public static function getRestriction()
+    public static function getRestriction(): array
     {
-        return array(self::DISPLAYED_ADMIN);
+        return [self::DISPLAYED_ADMIN];
     }
 
     public function getUser(): User

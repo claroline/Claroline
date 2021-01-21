@@ -20,6 +20,9 @@ use Claroline\CoreBundle\Controller\APINew\Model\HasOrganizationsTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasRolesTrait;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Event\Log\LogForgotPasswordEvent;
+use Claroline\CoreBundle\Event\Log\LogUserDisableEvent;
+use Claroline\CoreBundle\Event\Log\LogUserEnableEvent;
 use Claroline\CoreBundle\Event\User\MergeUsersEvent;
 use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\UserManager;
@@ -39,7 +42,6 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 class UserController extends AbstractCrudController
 {
     use PermissionCheckerTrait;
-
     use HasRolesTrait;
     use HasOrganizationsTrait;
     use HasGroupsTrait;
@@ -247,6 +249,7 @@ class UserController extends AbstractCrudController
         foreach ($users as $user) {
             if (!$user->isEnabled() && $this->checkPermission('ADMINISTRATE', $user)) {
                 $this->manager->enable($user);
+                $this->eventDispatcher->dispatch(LogUserEnableEvent::ACTION, LogUserEnableEvent::class, [$user]);
                 $processed[] = $user;
             }
         }
@@ -277,6 +280,7 @@ class UserController extends AbstractCrudController
         foreach ($users as $user) {
             if ($user->isEnabled() && $this->checkPermission('ADMINISTRATE', $user)) {
                 $this->manager->disable($user);
+                $this->eventDispatcher->dispatch(LogUserDisableEvent::ACTION, LogUserDisableEvent::class, [$user]);
                 $processed[] = $user;
             }
         }
@@ -307,6 +311,7 @@ class UserController extends AbstractCrudController
         foreach ($users as $user) {
             if ($this->checkPermission('ADMINISTRATE', $user)) {
                 $this->mailManager->sendForgotPassword($user);
+                $this->eventDispatcher->dispatch(LogForgotPasswordEvent::ACTION, LogForgotPasswordEvent::class, [$user]);
                 $processed[] = $user;
             }
         }
