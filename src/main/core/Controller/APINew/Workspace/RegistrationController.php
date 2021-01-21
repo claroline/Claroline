@@ -394,10 +394,12 @@ class RegistrationController extends AbstractApiController
             throw new AccessDeniedException();
         }
 
-        if (!$workspace->getRegistrationValidation()) {
-            $this->workspaceManager->addUser($workspace, $currentUser);
-        } elseif (!$this->workspaceManager->isUserInValidationQueue($workspace, $currentUser)) {
-            $this->workspaceManager->addUserQueue($workspace, $currentUser);
+        if (!$this->workspaceManager->isRegistered($workspace, $currentUser)) {
+            if (!$workspace->getRegistrationValidation()) {
+                $this->workspaceManager->addUser($workspace, $currentUser);
+            } elseif (!$this->workspaceManager->isUserInValidationQueue($workspace, $currentUser)) {
+                $this->workspaceManager->addUserQueue($workspace, $currentUser);
+            }
         }
 
         return new JsonResponse(null, 204);
