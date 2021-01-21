@@ -13,9 +13,9 @@ namespace Claroline\CoreBundle\Event\Log;
 
 use Claroline\CoreBundle\Entity\User;
 
-class LogUserDisableEvent extends LogGenericEvent
+class UserDisableEvent extends LogGenericEvent
 {
-    const ACTION = 'security.log.user_disable';
+    const ACTION = 'event.user_disable';
 
     private $user;
 

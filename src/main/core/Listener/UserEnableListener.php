@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Listener;
 
-use Claroline\CoreBundle\Event\Log\LogUserEnableEvent;
+use Claroline\CoreBundle\Event\Log\UserEnableEvent;
 use Psr\Log\LoggerInterface;
 
 class UserEnableListener
@@ -23,7 +23,7 @@ class UserEnableListener
         $this->logger = $logger;
     }
 
-    public function onUserEnable(LogUserEnableEvent $logUserEnableEvent)
+    public function onUserEnable(UserEnableEvent $logUserEnableEvent)
     {
         //todo: do something
     }

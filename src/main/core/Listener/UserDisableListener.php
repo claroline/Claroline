@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Listener;
 
-use Claroline\CoreBundle\Event\Log\LogUserDisableEvent;
+use Claroline\CoreBundle\Event\Log\UserDisableEvent;
 use Psr\Log\LoggerInterface;
 
 class UserDisableListener
@@ -23,7 +23,7 @@ class UserDisableListener
         $this->logger = $logger;
     }
 
-    public function onUserDisable(LogUserDisableEvent $logUserDisableEvent)
+    public function onUserDisable(UserDisableEvent $logUserDisableEvent)
     {
         //todo: do something
     }

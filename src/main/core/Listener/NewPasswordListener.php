@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Listener;
 
-use Claroline\CoreBundle\Event\Log\LogNewPasswordEvent;
+use Claroline\CoreBundle\Event\Log\NewPasswordEvent;
 use Psr\Log\LoggerInterface;
 
 class NewPasswordListener
@@ -23,7 +23,7 @@ class NewPasswordListener
         $this->logger = $logger;
     }
 
-    public function onNewPassword(LogNewPasswordEvent $logNewPasswordEvent)
+    public function onNewPassword(NewPasswordEvent $logNewPasswordEvent)
     {
         //todo: do something
     }

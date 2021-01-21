@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Listener;
 
-use Claroline\CoreBundle\Event\Log\LogForgotPasswordEvent;
+use Claroline\CoreBundle\Event\Log\ForgotPasswordEvent;
 use Psr\Log\LoggerInterface;
 
 class ForgotPasswordListener
@@ -23,7 +23,7 @@ class ForgotPasswordListener
         $this->logger = $logger;
     }
 
-    public function onForgoPassword(LogForgotPasswordEvent $logForgotPasswordEvent)
+    public function onForgoPassword(ForgotPasswordEvent $logForgotPasswordEvent)
     {
         //todo: do something
     }

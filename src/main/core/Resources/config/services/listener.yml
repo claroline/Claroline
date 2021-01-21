@@ -340,22 +340,22 @@ services:
         arguments:
             - '@logger'
         tags:
-            - { name: kernel.event_listener, event: security.log.new_password, method: onNewPassword }
+            - { name: kernel.event_listener, event: event.new_password, method: onNewPassword }
 
     Claroline\CoreBundle\Listener\ForgotPasswordListener:
         arguments:
             - '@logger'
         tags:
-            - { name: kernel.event_listener, event: security.log.forgot_password, method: onForgoPassword }
+            - { name: kernel.event_listener, event: event.forgot_password, method: onForgoPassword }
 
     Claroline\CoreBundle\Listener\UserEnableListener:
         arguments:
             - '@logger'
         tags:
-            - { name: kernel.event_listener, event: security.log.user_enable, method: onUserEnable }
+            - { name: kernel.event_listener, event: event.user_enable, method: onUserEnable }
 
     Claroline\CoreBundle\Listener\UserDisableListener:
         arguments:
             - '@logger'
         tags:
-            - { name: kernel.event_listener, event: security.log.user_disable, method: onUserDisable }
+            - { name: kernel.event_listener, event: event.user_disable, method: onUserDisable }

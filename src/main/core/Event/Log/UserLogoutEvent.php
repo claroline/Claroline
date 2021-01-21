@@ -2,9 +2,9 @@
 
 namespace Claroline\CoreBundle\Event\Log;
 
-class LogUserLogoutEvent extends LogGenericEvent
+class UserLogoutEvent extends LogGenericEvent
 {
-    const ACTION = 'security.log.user_logout';
+    const ACTION = 'event.user_logout';
 
     /**
      * Constructor.

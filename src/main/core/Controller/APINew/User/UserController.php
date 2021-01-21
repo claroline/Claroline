@@ -20,9 +20,9 @@ use Claroline\CoreBundle\Controller\APINew\Model\HasOrganizationsTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasRolesTrait;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\Log\LogForgotPasswordEvent;
-use Claroline\CoreBundle\Event\Log\LogUserDisableEvent;
-use Claroline\CoreBundle\Event\Log\LogUserEnableEvent;
+use Claroline\CoreBundle\Event\Log\ForgotPasswordEvent;
+use Claroline\CoreBundle\Event\Log\UserDisableEvent;
+use Claroline\CoreBundle\Event\Log\UserEnableEvent;
 use Claroline\CoreBundle\Event\User\MergeUsersEvent;
 use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\UserManager;
@@ -249,7 +249,7 @@ class UserController extends AbstractCrudController
         foreach ($users as $user) {
             if (!$user->isEnabled() && $this->checkPermission('ADMINISTRATE', $user)) {
                 $this->manager->enable($user);
-                $this->eventDispatcher->dispatch(LogUserEnableEvent::ACTION, LogUserEnableEvent::class, [$user]);
+                $this->eventDispatcher->dispatch(UserEnableEvent::ACTION, UserEnableEvent::class, [$user]);
                 $processed[] = $user;
             }
         }
@@ -280,7 +280,7 @@ class UserController extends AbstractCrudController
         foreach ($users as $user) {
             if ($user->isEnabled() && $this->checkPermission('ADMINISTRATE', $user)) {
                 $this->manager->disable($user);
-                $this->eventDispatcher->dispatch(LogUserDisableEvent::ACTION, LogUserDisableEvent::class, [$user]);
+                $this->eventDispatcher->dispatch(UserDisableEvent::ACTION, UserDisableEvent::class, [$user]);
                 $processed[] = $user;
             }
         }
@@ -311,7 +311,7 @@ class UserController extends AbstractCrudController
         foreach ($users as $user) {
             if ($this->checkPermission('ADMINISTRATE', $user)) {
                 $this->mailManager->sendForgotPassword($user);
-                $this->eventDispatcher->dispatch(LogForgotPasswordEvent::ACTION, LogForgotPasswordEvent::class, [$user]);
+                $this->eventDispatcher->dispatch(ForgotPasswordEvent::ACTION, ForgotPasswordEvent::class, [$user]);
                 $processed[] = $user;
             }
         }
