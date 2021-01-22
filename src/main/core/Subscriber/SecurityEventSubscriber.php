@@ -15,6 +15,8 @@ class SecurityEventSubscriber implements EventSubscriberInterface
             SecurityEvents::USER_ENABLE => 'logEvent',
             SecurityEvents::NEW_PASSWORD => 'logEvent',
             SecurityEvents::FORGOT_PASSWORD => 'logEvent',
+            SecurityEvents::ADD_ROLE => 'logEvent',
+            SecurityEvents::REMOVE_ROLE => 'logEvent',
         ];
     }
 

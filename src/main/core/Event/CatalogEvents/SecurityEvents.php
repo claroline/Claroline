@@ -28,4 +28,14 @@ final class SecurityEvents
      * @Event("Claroline\CoreBundle\Event\Log\ForgotPasswordEvent")
      */
     public const FORGOT_PASSWORD = 'event.security.forgot_password';
+
+    /**
+     * @Event("Claroline\CoreBundle\Event\Log\AddRoleEvent")
+     */
+    public const ADD_ROLE = 'event.security.add_role';
+
+    /**
+     * @Event("Claroline\CoreBundle\Event\Log\RemoveRoleEvent")
+     */
+    public const REMOVE_ROLE = 'event.security.remove_role';
 }
