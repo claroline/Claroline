@@ -14,7 +14,8 @@ namespace Claroline\AuthenticationBundle\Security\Authentication;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\Log\LogUserLoginEvent;
+use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
+use Claroline\CoreBundle\Event\Log\UserLoginEvent;
 use Claroline\CoreBundle\Listener\AuthenticationSuccessListener;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
@@ -84,7 +85,7 @@ class Authenticator
         if ($passwordValidated) {
             $this->createToken($user);
 
-            $this->eventDispatcher->dispatch('log', LogUserLoginEvent::class, [$user]);
+            $this->eventDispatcher->dispatch(SecurityEvents::USER_LOGIN, UserLoginEvent::class, [$user]);
 
             return $user;
         }

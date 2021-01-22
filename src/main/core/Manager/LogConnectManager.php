@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Manager;
 
 use Claroline\AppBundle\API\FinderProvider;
+use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Log\Connection\AbstractLogConnect;
 use Claroline\CoreBundle\Entity\Log\Connection\LogConnectAdminTool;
@@ -25,12 +26,13 @@ use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
 use Claroline\CoreBundle\Event\Log\LogAdminToolReadEvent;
 use Claroline\CoreBundle\Event\Log\LogDesktopToolReadEvent;
 use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
-use Claroline\CoreBundle\Event\Log\LogUserLoginEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceEnterEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceToolReadEvent;
+use Claroline\CoreBundle\Event\Log\UserLoginEvent;
 use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
 use Claroline\CoreBundle\Manager\Workspace\EvaluationManager;
 use Claroline\CoreBundle\Repository\Tool\OrderedToolRepository;
@@ -67,19 +69,22 @@ class LogConnectManager
     private $logToolRepo;
     private $logResourceRepo;
     private $logAdminToolRepo;
+    private $eventDispatcher;
 
     public function __construct(
         FinderProvider $finder,
         ObjectManager $om,
         EvaluationManager $workspaceEvaluationManager,
         ResourceEvaluationManager $resourceEvaluationManager,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        StrictDispatcher $eventDispatcher
     ) {
         $this->finder = $finder;
         $this->om = $om;
         $this->workspaceEvaluationManager = $workspaceEvaluationManager;
         $this->resourceEvaluationManager = $resourceEvaluationManager;
         $this->translator = $translator;
+        $this->eventDispatcher = $eventDispatcher;
 
         $this->logRepo = $om->getRepository(Log::class);
         $this->orderedToolRepo = $om->getRepository(OrderedTool::class);
@@ -101,12 +106,13 @@ class LogConnectManager
 
         if (!is_null($user)) {
             switch ($action) {
-                case LogUserLoginEvent::ACTION:
+                case SecurityEvents::USER_LOGIN:
                     $this->om->startFlushSuite();
 
                     $this->createLogConnectPlatform($user, $dateLog);
 
                     $this->om->endFlushSuite();
+                    $this->eventDispatcher->dispatch(SecurityEvents::USER_LOGIN, UserLoginEvent::class, [$user]);
                     break;
                 case LogWorkspaceEnterEvent::ACTION:
                     $this->om->startFlushSuite();

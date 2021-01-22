@@ -10,6 +10,7 @@ class SecurityEventSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
+            SecurityEvents::USER_LOGIN => 'logEvent',
             SecurityEvents::USER_LOGOUT => 'logEvent',
             SecurityEvents::USER_DISABLE => 'logEvent',
             SecurityEvents::USER_ENABLE => 'logEvent',

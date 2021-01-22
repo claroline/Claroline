@@ -114,6 +114,7 @@ services:
             - '@Claroline\CoreBundle\Manager\Workspace\EvaluationManager'
             - '@claroline.manager.resource_evaluation_manager'
             - '@translator'
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
 
     Claroline\CoreBundle\Manager\LockManager:
         arguments:

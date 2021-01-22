@@ -5,6 +5,11 @@ namespace Claroline\CoreBundle\Event\CatalogEvents;
 final class SecurityEvents
 {
     /**
+     * @Event("Claroline\CoreBundle\Event\Log\UserLoginEvent")
+     */
+    public const USER_LOGIN = 'event.security.user_login';
+
+    /**
      * @Event("Claroline\CoreBundle\Event\Log\UserLogoutEvent")
      */
     public const USER_LOGOUT = 'event.security.user_logout';

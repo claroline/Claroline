@@ -11,23 +11,20 @@
 
 namespace Claroline\CoreBundle\Event\Log;
 
-class LogUserLoginEvent extends LogGenericEvent
-{
-    const ACTION = 'user-login';
+use Claroline\CoreBundle\Entity\User;
+use Symfony\Contracts\EventDispatcher\Event;
 
-    /**
-     * Constructor.
-     */
-    public function __construct()
+class UserLoginEvent extends Event
+{
+    private $user;
+
+    public function __construct(User $user)
     {
-        parent::__construct(self::ACTION, array());
+        $this->user = $user;
     }
 
-    /**
-     * @return array
-     */
-    public static function getRestriction()
+    public function getUser(): User
     {
-        return array(self::DISPLAYED_ADMIN);
+        return $this->user;
     }
 }
