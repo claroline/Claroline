@@ -16,6 +16,7 @@ use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AuthenticationBundle\Security\Authentication\Authenticator;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
 use Claroline\CoreBundle\Event\Log\ForgotPasswordEvent;
 use Claroline\CoreBundle\Event\Log\NewPasswordEvent;
 use Claroline\CoreBundle\Library\RoutingHelper;
@@ -93,7 +94,7 @@ class AuthenticationController
             $this->om->flush();
 
             if ($this->mailManager->sendForgotPassword($user)) {
-                $this->eventDispatcher->dispatch(ForgotPasswordEvent::ACTION, ForgotPasswordEvent::class, [$user]);
+                $this->eventDispatcher->dispatch(SecurityEvents::FORGOT_PASSWORD, ForgotPasswordEvent::class, [$user]);
 
                 return new JsonResponse('password_reset_send', 200);
             }
@@ -136,7 +137,7 @@ class AuthenticationController
         $this->om->persist($user);
         $this->om->flush();
 
-        $this->eventDispatcher->dispatch(NewPasswordEvent::ACTION, NewPasswordEvent::class, [$user]);
+        $this->eventDispatcher->dispatch(SecurityEvents::NEW_PASSWORD, NewPasswordEvent::class, [$user]);
 
         return new JsonResponse(null, 201);
     }

@@ -2,20 +2,20 @@
 
 namespace Claroline\CoreBundle\Event\Log;
 
-class UserLogoutEvent extends LogGenericEvent
-{
-    const ACTION = 'event.user_logout';
+use Claroline\CoreBundle\Entity\User;
+use Symfony\Contracts\EventDispatcher\Event;
 
-    /**
-     * Constructor.
-     */
-    public function __construct()
+class UserLogoutEvent extends Event
+{
+    private $user;
+
+    public function __construct(User $user)
     {
-        parent::__construct(self::ACTION, []);
+        $this->user = $user;
     }
 
-    public static function getRestriction(): array
+    public function getUser(): User
     {
-        return [self::DISPLAYED_ADMIN];
+        return $this->user;
     }
 }

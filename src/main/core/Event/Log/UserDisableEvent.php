@@ -12,35 +12,15 @@
 namespace Claroline\CoreBundle\Event\Log;
 
 use Claroline\CoreBundle\Entity\User;
+use Symfony\Contracts\EventDispatcher\Event;
 
-class UserDisableEvent extends LogGenericEvent
+class UserDisableEvent extends Event
 {
-    const ACTION = 'event.user_disable';
-
     private $user;
 
-    /**
-     * Constructor.
-     */
-    public function __construct($receiver)
+    public function __construct(User $user)
     {
-        parent::__construct(
-            self::ACTION,
-            [
-                'receiverUser' => [
-                    'lastName' => $receiver->getLastName(),
-                    'firstName' => $receiver->getFirstName(),
-                ],
-            ],
-            $receiver
-        );
-
-        $this->user = $receiver;
-    }
-
-    public static function getRestriction(): array
-    {
-        return [self::DISPLAYED_ADMIN];
+        $this->user = $user;
     }
 
     public function getUser(): User
