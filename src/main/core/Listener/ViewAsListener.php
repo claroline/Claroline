@@ -11,7 +11,10 @@
 
 namespace Claroline\CoreBundle\Listener;
 
+use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AuthenticationBundle\Security\Authentication\Authenticator;
+use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
+use Claroline\CoreBundle\Event\Log\ViewAsEvent;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -28,17 +31,21 @@ class ViewAsListener
     private $authenticator;
     /** @var RoleManager */
     private $roleManager;
+    /** @var StrictDispatcher */
+    private $eventDispatcher;
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         TokenStorageInterface $tokenStorage,
         Authenticator $authenticator,
-        RoleManager $roleManager
+        RoleManager $roleManager,
+        StrictDispatcher $eventDispatcher
     ) {
         $this->authorization = $authorization;
         $this->tokenStorage = $tokenStorage;
         $this->authenticator = $authenticator;
         $this->roleManager = $roleManager;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     public function onViewAs(RequestEvent $event)
@@ -74,6 +81,7 @@ class ViewAsListener
                             $this->authenticator->createAnonymousToken();
                         } else {
                             $this->authenticator->createToken($this->tokenStorage->getToken()->getUser(), ['ROLE_USER', $viewAs, 'ROLE_USURPATE_WORKSPACE_ROLE']);
+                            $this->eventDispatcher->dispatch(SecurityEvents::VIEW_AS, ViewAsEvent::class, [$this->tokenStorage->getToken()->getUser(), $viewAs]);
                         }
                     } else {
                         throw new AccessDeniedException(sprintf('You do not have the right to usurp the role %s.', $viewAs));

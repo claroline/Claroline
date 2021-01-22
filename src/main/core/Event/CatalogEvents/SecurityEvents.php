@@ -43,4 +43,9 @@ final class SecurityEvents
      * @Event("Claroline\CoreBundle\Event\Log\RemoveRoleEvent")
      */
     public const REMOVE_ROLE = 'event.security.remove_role';
+
+    /**
+     * @Event("Claroline\CoreBundle\Event\Log\ViewAsEvent")
+     */
+    public const VIEW_AS = 'event.security.view_as';
 }
