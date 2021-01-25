@@ -23,7 +23,7 @@ security:
                 path:   /logout
                 target: /
                 handlers:
-                    - Claroline\AuthenticationBundle\Security\LogoutHandler
+                    - Claroline\AuthenticationBundle\Security\Logout\LogoutHandler
             switch_user: { role: ROLE_ALLOWED_TO_SWITCH, parameter: _switch }
             user_checker: Claroline\CoreBundle\Security\UserChecker
 

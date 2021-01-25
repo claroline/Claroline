@@ -34,12 +34,6 @@ class LogoutHandler implements LogoutHandlerInterface
 
     private $eventDispatcher;
 
-    /**
-     * LogoutHandler constructor.
-     *
-     * @param SessionInterface     $session
-     * @param ResourceOwnerFactory $resourceOwnerFactory
-     */
     public function __construct(SessionInterface $session, ResourceOwnerFactory $resourceOwnerFactory, StrictDispatcher $eventDispatcher)
     {
         $this->session = $session;
@@ -47,13 +41,8 @@ class LogoutHandler implements LogoutHandlerInterface
         $this->eventDispatcher = $eventDispatcher;
     }
 
-
     /**
      * Logout user from SSO provider if needed.
-     *
-     * @param Request $request
-     * @param Response $response
-     * @param TokenInterface $token
      */
     public function logout(Request $request, Response $response, TokenInterface $token)
     {

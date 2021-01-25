@@ -24,6 +24,8 @@ use Claroline\CoreBundle\Entity\Workspace\Shortcuts;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceOptions;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue;
+use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
+use Claroline\CoreBundle\Event\Log\AddRoleEvent;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Repository\User\UserRepository;
@@ -133,6 +135,7 @@ class WorkspaceManager implements LoggerAwareInterface
 
         $user->setPersonalWorkspace($workspace);
         $user->addRole($workspace->getManagerRole());
+        $this->dispatcher->dispatch(SecurityEvents::ADD_ROLE, AddRoleEvent::class, [$user, $workspace->getManagerRole()]);
 
         $this->om->persist($user);
         $this->om->flush();
@@ -475,6 +478,7 @@ class WorkspaceManager implements LoggerAwareInterface
             $user = $workspaceCopy->getCreator();
             $user->addRole($managerRole);
             $this->om->persist($user);
+            $this->dispatcher->dispatch(SecurityEvents::ADD_ROLE, AddRoleEvent::class, [$user, $managerRole]);
         }
 
         $root = $this->resourceManager->getWorkspaceRoot($workspaceCopy);

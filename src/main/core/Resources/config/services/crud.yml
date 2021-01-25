@@ -58,6 +58,7 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\Manager\CryptographyManager'
             - '@Claroline\AppBundle\API\Crud'
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
         tags:
             - { name: kernel.event_listener, event: crud_pre_create_object_claroline_corebundle_entity_organization_organization, method: preCreate }
             - { name: kernel.event_listener, event: crud_post_create_object_claroline_corebundle_entity_organization_organization, method: postCreate }
