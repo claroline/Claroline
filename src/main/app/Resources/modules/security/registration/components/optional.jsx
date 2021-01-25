@@ -26,6 +26,10 @@ const Optional = () =>
               onlyEnabled: true
             }
           }, {
+            name: 'phone',
+            type: 'string',
+            label: trans('phone')
+          }, {
             name: 'meta.description',
             type: 'html',
             label: trans('description')
