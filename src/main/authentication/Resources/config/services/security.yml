@@ -39,6 +39,7 @@ services:
         arguments:
             - '@session'
             - '@Claroline\AuthenticationBundle\Security\Oauth\Hwi\ResourceOwnerFactory'
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
 
     Claroline\AuthenticationBundle\Security\Oauth\OauthUserProvider:
         arguments:
@@ -65,3 +66,7 @@ services:
         arguments:
             - '@guzzle_client.hwi_oauth'
             - '@guzzle_client.hwi_oauth.message_factory'
+
+    Claroline\AuthenticationBundle\Security\Logout\LogoutHandler:
+        arguments:
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
