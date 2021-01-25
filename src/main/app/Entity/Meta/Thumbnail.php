@@ -11,20 +11,14 @@ trait Thumbnail
      *
      * @var string
      */
-    private $thumbnail;
+    protected $thumbnail = null;
 
-    /**
-     * @return string
-     */
-    public function getThumbnail()
+    public function getThumbnail(): ?string
     {
         return $this->thumbnail;
     }
 
-    /**
-     * @param string $thumbnail
-     */
-    public function setThumbnail($thumbnail)
+    public function setThumbnail(string $thumbnail = null)
     {
         $this->thumbnail = $thumbnail;
     }

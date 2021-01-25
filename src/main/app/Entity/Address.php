@@ -11,42 +11,42 @@ trait Address
      *
      * @var string
      */
-    private $addressStreet1;
+    protected $addressStreet1;
 
     /**
      * @ORM\Column(name="address_street2", nullable=true)
      *
      * @var string
      */
-    private $addressStreet2;
+    protected $addressStreet2;
 
     /**
      * @ORM\Column(name="address_postal_code", nullable=true)
      *
      * @var string
      */
-    private $addressPostalCode;
+    protected $addressPostalCode;
 
     /**
      * @ORM\Column(name="address_city", nullable=true)
      *
      * @var string
      */
-    private $addressCity;
+    protected $addressCity;
 
     /**
      * @ORM\Column(name="address_state", nullable=true)
      *
      * @var string
      */
-    private $addressState;
+    protected $addressState;
 
     /**
      * @ORM\Column(name="address_country", nullable=true)
      *
      * @var string
      */
-    private $addressCountry;
+    protected $addressCountry;
 
     /**
      * @return string

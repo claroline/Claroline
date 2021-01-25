@@ -15,23 +15,13 @@ trait FromPlugin
      *
      * @var Plugin
      */
-    private $plugin;
+    protected $plugin;
 
-    /**
-     * Get plugin.
-     *
-     * @return Plugin
-     */
-    public function getPlugin()
+    public function getPlugin(): ?Plugin
     {
         return $this->plugin;
     }
 
-    /**
-     * Set plugin.
-     *
-     * @param Plugin $plugin
-     */
     public function setPlugin(Plugin $plugin)
     {
         $this->plugin = $plugin;

@@ -7,24 +7,18 @@ use Doctrine\ORM\Mapping as ORM;
 trait Description
 {
     /**
-     * @var string
-     *
      * @ORM\Column(name="description", type="text", nullable=true)
+     *
+     * @var string
      */
-    private $description = null;
+    protected $description = null;
 
-    /**
-     * @return string
-     */
-    public function getDescription()
+    public function getDescription(): ?string
     {
         return $this->description;
     }
 
-    /**
-     * @param string $description
-     */
-    public function setDescription($description)
+    public function setDescription(string $description = null)
     {
         $this->description = $description;
     }

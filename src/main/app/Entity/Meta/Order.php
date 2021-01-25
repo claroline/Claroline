@@ -16,7 +16,7 @@ trait Order
      *
      * @var int
      */
-    private $order = 0;
+    protected $order = 0;
 
     public function setOrder(int $order)
     {
