@@ -41,6 +41,11 @@ function getDetailsDefaultSection(parameters, user) {
         label: trans('email'),
         displayed: displayEmail
       }, {
+        name: 'phone',
+        type: 'string',
+        label: trans('phone'),
+        displayed: displayEmail
+      }, {
         name: 'meta.description',
         type: 'html',
         label: trans('description'),
@@ -74,6 +79,10 @@ function getFormDefaultSections(userData, isNew = false) {
           type: 'email',
           label: trans('email'),
           required: true
+        }, {
+          name: 'phone',
+          type: 'string',
+          label: trans('phone')
         }, {
           name: 'username',
           type: 'username',
