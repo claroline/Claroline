@@ -13,7 +13,7 @@ trait CreatedAt
      *
      * @var \DateTimeInterface
      */
-    private $createdAt;
+    protected $createdAt;
 
     /**
      * Returns the entity's creation date.

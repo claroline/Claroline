@@ -7,27 +7,17 @@ use Doctrine\ORM\Mapping as ORM;
 trait AllowedIps
 {
     /**
+     * @ORM\Column(name="allowed_ips", type="json", nullable=true)
+     *
      * @var string[]
-     *
-     * @ORM\Column(name="allowed_ips", type="json_array", nullable=true)
      */
-    private $allowedIps;
+    protected $allowedIps = [];
 
-    /**
-     * Returns the access code.
-     *
-     * @return string[]
-     */
-    public function getAllowedIps()
+    public function getAllowedIps(): ?array
     {
         return $this->allowedIps;
     }
 
-    /**
-     * Sets the access code.
-     *
-     * @param array $allowedIps
-     */
     public function setAllowedIps(array $allowedIps)
     {
         $this->allowedIps = $allowedIps;

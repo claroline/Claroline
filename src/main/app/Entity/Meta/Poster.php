@@ -11,20 +11,14 @@ trait Poster
      *
      * @var string
      */
-    private $poster;
+    protected $poster = null;
 
-    /**
-     * @return string
-     */
-    public function getPoster()
+    public function getPoster(): ?string
     {
         return $this->poster;
     }
 
-    /**
-     * @param string $poster
-     */
-    public function setPoster($poster)
+    public function setPoster(string $poster = null)
     {
         $this->poster = $poster;
     }

@@ -13,7 +13,7 @@ trait UpdatedAt
      *
      * @var \DateTimeInterface
      */
-    private $updatedAt;
+    protected $updatedAt;
 
     /**
      * Returns the entity's last update date.

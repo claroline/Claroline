@@ -11,7 +11,7 @@ trait AccessCode
      *
      * @ORM\Column(name="access_code", type="string", nullable=true)
      */
-    private $accessCode;
+    protected $accessCode;
 
     /**
      * Returns the access code.

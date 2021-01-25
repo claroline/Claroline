@@ -14,7 +14,6 @@ namespace Claroline\CoreBundle\Entity\Widget;
 use Claroline\AppBundle\Entity\FromPlugin;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
-use Claroline\CoreBundle\Entity\Plugin;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -46,16 +45,6 @@ class Widget
      * @var string
      */
     private $name;
-
-    /**
-     * The plugin that have introduced the widget.
-     *
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Plugin")
-     * @ORM\JoinColumn(onDelete="CASCADE")
-     *
-     * @var Plugin
-     */
-    private $plugin;
 
     /**
      * The class that holds the widget custom configuration if any.
@@ -134,26 +123,6 @@ class Widget
     }
 
     /**
-     * Get plugin.
-     *
-     * @return Plugin
-     */
-    public function getPlugin()
-    {
-        return $this->plugin;
-    }
-
-    /**
-     * Set plugin.
-     *
-     * @param Plugin $plugin
-     */
-    public function setPlugin(Plugin $plugin)
-    {
-        $this->plugin = $plugin;
-    }
-
-    /**
      * Get widget class.
      *
      * @return string
@@ -183,11 +152,6 @@ class Widget
         return $this->sources;
     }
 
-    /**
-     * Set sources.
-     *
-     * @param array $sources
-     */
     public function setSources(array $sources)
     {
         $this->sources = $sources;
@@ -203,11 +167,6 @@ class Widget
         return $this->context;
     }
 
-    /**
-     * Set context.
-     *
-     * @param array $context
-     */
     public function setContext(array $context)
     {
         $this->context = $context;
@@ -243,11 +202,6 @@ class Widget
         return $this->tags;
     }
 
-    /**
-     * Set tags.
-     *
-     * @param array $tags
-     */
     public function setTags(array $tags)
     {
         $this->tags = $tags;

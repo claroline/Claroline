@@ -11,7 +11,7 @@ trait AccessibleFrom
      *
      * @ORM\Column(name="accessible_from", type="datetime", nullable=true)
      */
-    private $accessibleFrom;
+    protected $accessibleFrom;
 
     /**
      * Returns the resource accessible from date.
