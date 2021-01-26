@@ -85,7 +85,7 @@ class AdministrationController
             'maxMeetings' => $this->config->getParameter('bbb.max_meetings'),
             'maxMeetingParticipants' => $this->config->getParameter('bbb.max_meeting_participants'),
             'maxParticipants' => $this->config->getParameter('bbb.max_participants'),
-            'activeMeetingsCount' => count($meetings),
+            'activeMeetings' => $meetings,
             'participantsCount' => $participantsCount,
             'allowRecords' => $this->config->getParameter('bbb.allow_records'),
             'servers' => $this->bbbManager->getServers(false),

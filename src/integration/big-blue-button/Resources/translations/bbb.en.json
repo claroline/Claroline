@@ -28,6 +28,7 @@
     "join": "Join the meeting",
     "meeting_cannot_join": "You can not join this meeting.",
     "no_record": "No recordings were made in this room.",
+    "no_active_meeting": "No room is open for now.",
 
     "allow_custom_usernames": "Allow users to change their username in the room",
     "open_meeting_in_new_tab": "Open in a new tab",

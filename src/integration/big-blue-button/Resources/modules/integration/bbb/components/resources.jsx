@@ -10,9 +10,9 @@ import {route as resourceRoute} from '#/main/core/resource/routing'
 
 import {selectors} from '#/integration/big-blue-button/integration/bbb/store'
 
-const BBBMeetings = (props) =>
+const BBBResources = (props) =>
   <Fragment>
-    <ContentTitle level={2} title={trans('meetings', {}, 'bbb')} />
+    <ContentTitle level={2} title={trans('resources')} />
 
     <ListData
       name={selectors.STORE_NAME+'.meetings'}
@@ -82,7 +82,7 @@ const BBBMeetings = (props) =>
     />
   </Fragment>
 
-BBBMeetings.propTypes = {
+BBBResources.propTypes = {
   servers: T.arrayOf(T.shape({
     url: T.string.isRequired,
     participants: T.number,
@@ -93,5 +93,5 @@ BBBMeetings.propTypes = {
 }
 
 export {
-  BBBMeetings
+  BBBResources
 }

@@ -24,10 +24,12 @@ class BBBFinder extends AbstractFinder
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
     {
+        $qb->leftJoin('obj.resourceNode', 'n');
+        $qb->andWhere('n.active = true'); // only rooms of non deleted nodes
+
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
                 case 'workspace':
-                    $qb->leftJoin('obj.resourceNode', 'n');
                     $qb->leftJoin('n.workspace', 'w');
                     $qb->andWhere('w.uuid = :workspaceId');
                     $qb->setParameter('workspaceId', $filterValue);

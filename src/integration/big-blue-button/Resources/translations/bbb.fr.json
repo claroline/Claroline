@@ -28,6 +28,7 @@
     "join": "Rejoindre la salle",
     "meeting_cannot_join": "Vous ne pouvez pas rejoindre la classe virtuelle.",
     "no_record": "Aucun enregistrement n'a été fait dans cette salle.",
+    "no_active_meeting": "Aucune salle n'est ouverte pour le moment.",
 
     "allow_custom_usernames": "Autoriser les utilisateurs à modifier leur nom d'utilisateur dans la salle",
     "open_meeting_in_new_tab": "Ouvrir dans un nouvel onglet",
