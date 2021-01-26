@@ -16,3 +16,4 @@ services:
             - '@Claroline\BigBlueButtonBundle\Manager\BBBManager'
         tags:
             - { name: kernel.event_listener, event: crud_post_update_object_claroline_bigbluebuttonbundle_entity_bbb, method: postUpdate }
+            - { name: kernel.event_listener, event: crud_post_delete_object_claroline_bigbluebuttonbundle_entity_bbb, method: postDelete }

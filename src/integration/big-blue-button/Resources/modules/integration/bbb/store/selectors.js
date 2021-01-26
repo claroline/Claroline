@@ -34,9 +34,14 @@ const maxParticipants = createSelector(
   (store) => store.maxParticipants
 )
 
-const activeMeetingsCount = createSelector(
+const activeMeetings = createSelector(
   [store],
-  (store) => store.activeMeetingsCount
+  (store) => store.activeMeetings
+)
+
+const activeMeetingsCount = createSelector(
+  [activeMeetings],
+  (activeMeetings) => activeMeetings.length
 )
 
 const participantsCount = createSelector(
@@ -51,6 +56,7 @@ export const selectors = {
   maxMeetings,
   maxMeetingParticipants,
   maxParticipants,
+  activeMeetings,
   activeMeetingsCount,
   participantsCount,
   servers,

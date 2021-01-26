@@ -14,6 +14,7 @@ const BBBTool = withReducer(selectors.STORE_NAME, reducer)(
       maxMeetings: selectors.maxMeetings(state),
       maxMeetingParticipants: selectors.maxMeetingParticipants(state),
       maxParticipants: selectors.maxParticipants(state),
+      activeMeetings: selectors.activeMeetings(state),
       activeMeetingsCount: selectors.activeMeetingsCount(state),
       participantsCount: selectors.participantsCount(state),
       servers: selectors.servers(state),
