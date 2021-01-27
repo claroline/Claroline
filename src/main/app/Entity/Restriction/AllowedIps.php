@@ -18,7 +18,7 @@ trait AllowedIps
         return $this->allowedIps;
     }
 
-    public function setAllowedIps(array $allowedIps)
+    public function setAllowedIps(array $allowedIps = [])
     {
         $this->allowedIps = $allowedIps;
     }
