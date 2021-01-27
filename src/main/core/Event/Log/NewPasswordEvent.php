@@ -27,4 +27,14 @@ class NewPasswordEvent extends Event
     {
         return $this->user;
     }
+
+    public function getEvent()
+    {
+        return 'NewPasswordEvent';
+    }
+
+    public function getMessage()
+    {
+        return "L'utilisateur {$this->user->getUsername()} a fait une demande pour un nouveau mot de passe.";
+    }
 }

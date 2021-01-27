@@ -18,4 +18,14 @@ class UserLogoutEvent extends Event
     {
         return $this->user;
     }
+
+    public function getEvent()
+    {
+        return 'UserLogoutEvent';
+    }
+
+    public function getMessage()
+    {
+        return "L'utilisateur {$this->user->getUsername()} vient de se déconnecter.";
+    }
 }

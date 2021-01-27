@@ -35,4 +35,14 @@ class AddRoleEvent extends Event
     {
         return $this->role;
     }
+
+    public function getEvent()
+    {
+        return 'AddRoleEvent';
+    }
+
+    public function getMessage()
+    {
+        return "Le role {$this->role->getName()} vient d'être ajouté à l'utilisateur {$this->user->getUsername()}.";
+    }
 }

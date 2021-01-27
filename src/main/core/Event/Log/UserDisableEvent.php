@@ -27,4 +27,14 @@ class UserDisableEvent extends Event
     {
         return $this->user;
     }
+
+    public function getEvent()
+    {
+        return 'UserDisableEvent';
+    }
+
+    public function getMessage()
+    {
+        return "L'utilisateur {$this->user->getUsername()} vient d'être désactivé.";
+    }
 }

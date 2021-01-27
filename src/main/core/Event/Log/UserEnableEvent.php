@@ -27,4 +27,14 @@ class UserEnableEvent extends Event
     {
         return $this->user;
     }
+
+    public function getEvent()
+    {
+        return 'UserEnableEvent';
+    }
+
+    public function getMessage()
+    {
+        return "L'utilisateur {$this->user->getUsername()} vient d'être activé.";
+    }
 }

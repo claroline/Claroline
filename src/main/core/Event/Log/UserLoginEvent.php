@@ -27,4 +27,14 @@ class UserLoginEvent extends Event
     {
         return $this->user;
     }
+
+    public function getEvent()
+    {
+        return 'UserLoginEvent';
+    }
+
+    public function getMessage()
+    {
+        return "L'utilisateur {$this->user->getUsername()} vient de se connecter.";
+    }
 }

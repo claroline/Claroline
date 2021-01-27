@@ -35,4 +35,14 @@ class RemoveRoleEvent extends Event
     {
         return $this->role;
     }
+
+    public function getEvent()
+    {
+        return 'RemoveRoleEvent';
+    }
+
+    public function getMessage()
+    {
+        return "Le role {$this->role->getName()} vient d'être retiré de l'utilisateur {$this->user->getUsername()}.";
+    }
 }

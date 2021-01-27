@@ -2,11 +2,21 @@
 
 namespace Claroline\CoreBundle\Subscriber;
 
+use Claroline\CoreBundle\Entity\Log\LogSecurity;
 use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 class SecurityEventSubscriber implements EventSubscriberInterface
 {
+    private $em;
+
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
+
     public static function getSubscribedEvents()
     {
         return [
@@ -24,6 +34,15 @@ class SecurityEventSubscriber implements EventSubscriberInterface
 
     public function logEvent($event)
     {
-        //Todo: Log the event
+        $request = Request::createFromGlobals();
+
+        $logEntry = new LogSecurity();
+        $logEntry->setDetails(sprintf('Log %s: %s', $event->getEvent(), $event->getMessage()));
+        $logEntry->setEvent($event->getEvent());
+        $logEntry->setUser($event->getUser());
+        $logEntry->setUserIp($request->getClientIp());
+
+        $this->em->persist($logEntry);
+        $this->em->flush();
     }
 }

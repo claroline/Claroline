@@ -27,4 +27,14 @@ class ForgotPasswordEvent extends Event
     {
         return $this->user;
     }
+
+    public function getEvent()
+    {
+        return 'ForgotPasswordEvent';
+    }
+
+    public function getMessage()
+    {
+        return "L'utilisateur {$this->user->getUsername()} vient de faire une demande de mot de passe oublié.";
+    }
 }
