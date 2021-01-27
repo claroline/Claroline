@@ -270,7 +270,7 @@ trait ListParameters
         $this->availableDisplays = $availableDisplays;
     }
 
-    public function getSearchMode(): string
+    public function getSearchMode(): ?string
     {
         return $this->searchMode;
     }
