@@ -52,7 +52,7 @@ class SummaryLink extends Component {
 
           {(collapsible || 0 !== this.props.additional.length) &&
             <Toolbar
-              className="summary-link-actions"
+              name="summary-link-actions"
               buttonName="btn-summary"
               tooltip="bottom"
               toolbar="collapse more"

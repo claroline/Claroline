@@ -152,6 +152,8 @@
     padding: @panel-body-padding;
 }
 
+// message variants
+
 .user-message-highlight {
     .user-message {
         border-color: @brand-primary;
@@ -162,5 +164,18 @@
 
     .user-message-meta {
         border-bottom-color: @brand-primary;
+    }
+}
+
+.user-message-hidden {
+    .user-message {
+        background: @gray-lighter;
+        border: 1px solid @gray-lighter;
+        &:before {
+            border-color: transparent @gray-lighter transparent transparent;
+        }
+        &:after {
+            border-color: transparent transparent transparent @gray-lighter;
+        }
     }
 }
