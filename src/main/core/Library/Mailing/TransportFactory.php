@@ -60,9 +60,6 @@ class TransportFactory
 
         // Default smtp
         $encryption = 'none' === $this->configHandler->getParameter('mailer_encryption') ? false : null; // null lets the transport choose the best value based on the platform.
-        if (!empty($this->configHandler->getParameter('mailer_encryption'))) {
-            $encryption = (bool) $this->configHandler->getParameter('mailer_encryption');
-        }
 
         $transport = new EsmtpTransport(
             $this->configHandler->getParameter('mailer_host'),
