@@ -23,6 +23,7 @@ services:
     Claroline\CoreBundle\API\Crud\User\UserCrud:
         arguments:
             - '@security.token_storage'
+            - '@Claroline\AuthenticationBundle\Security\Authentication\Authenticator'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
             - '@Claroline\CoreBundle\Manager\RoleManager'
@@ -35,14 +36,21 @@ services:
             - { name: kernel.event_listener, event: crud_pre_create_object_claroline_corebundle_entity_user, method: preCreate }
             - { name: kernel.event_listener, event: crud_pre_delete_object_claroline_corebundle_entity_user, method: preDelete }
             - { name: kernel.event_listener, event: crud_pre_update_object_claroline_corebundle_entity_user, method: preUpdate }
+            - { name: kernel.event_listener, event: crud_pre_patch_object_claroline_corebundle_entity_user, method: prePatch }
+            - { name: kernel.event_listener, event: crud_post_patch_object_claroline_corebundle_entity_user, method: postPatch }
 
     Claroline\CoreBundle\API\Crud\User\RoleCrud:
         arguments:
             - '@doctrine.dbal.default_connection'
+            - '@security.token_storage'
+            - '@Claroline\AuthenticationBundle\Security\Authentication\Authenticator'
+            - '@Claroline\CoreBundle\Manager\RoleManager'
         tags:
             - { name: kernel.event_listener, event: crud_pre_create_object_claroline_corebundle_entity_role, method: preCreate }
             - { name: kernel.event_listener, event: crud_post_create_object_claroline_corebundle_entity_role, method: postCreate }
             - { name: kernel.event_listener, event: crud_pre_delete_object_claroline_corebundle_entity_role, method: preDelete }
+            - { name: kernel.event_listener, event: crud_pre_patch_object_claroline_corebundle_entity_role, method: prePatch }
+            - { name: kernel.event_listener, event: crud_post_patch_object_claroline_corebundle_entity_role, method: postPatch }
 
     Claroline\CoreBundle\API\Crud\User\OrganizationCrud:
         arguments:
@@ -59,8 +67,12 @@ services:
     Claroline\CoreBundle\API\Crud\User\GroupCrud:
         arguments:
             - '@security.token_storage'
+            - '@Claroline\AuthenticationBundle\Security\Authentication\Authenticator'
+            - '@Claroline\CoreBundle\Manager\RoleManager'
         tags:
             - { name: kernel.event_listener, event: crud_pre_create_object_claroline_corebundle_entity_group, method: preCreate }
+            - { name: kernel.event_listener, event: crud_pre_patch_object_claroline_corebundle_entity_group, method: prePatch }
+            - { name: kernel.event_listener, event: crud_post_patch_object_claroline_corebundle_entity_group, method: postPatch }
 
     Claroline\CoreBundle\API\Crud\Resource\ResourceNodeCrud:
         arguments:

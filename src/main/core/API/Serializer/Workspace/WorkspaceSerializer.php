@@ -56,20 +56,6 @@ class WorkspaceSerializer
     /** @var ResourceNodeSerializer */
     private $resNodeSerializer;
 
-    /**
-     * WorkspaceSerializer constructor.
-     *
-     * @param AuthorizationCheckerInterface $authorization
-     * @param TokenStorageInterface         $tokenStorage
-     * @param ObjectManager                 $om
-     * @param WorkspaceManager              $workspaceManager
-     * @param ResourceManager               $resourceManager
-     * @param FileUtilities                 $fileUt
-     * @param FinderProvider                $finder
-     * @param UserSerializer                $userSerializer
-     * @param PublicFileSerializer          $publicFileSerializer
-     * @param ResourceNodeSerializer        $resNodeSerializer
-     */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         TokenStorageInterface $tokenStorage,
@@ -99,17 +85,11 @@ class WorkspaceSerializer
         return 'workspace';
     }
 
-    /**
-     * @return string
-     */
     public function getSchema()
     {
         return '#/main/core/workspace.json';
     }
 
-    /**
-     * @return string
-     */
     public function getSamples()
     {
         return '#/main/core/workspace';
@@ -117,13 +97,8 @@ class WorkspaceSerializer
 
     /**
      * Serializes a Workspace entity for the JSON api.
-     *
-     * @param Workspace $workspace - the workspace to serialize
-     * @param array     $options   - a list of serialization options
-     *
-     * @return array - the serialized representation of the workspace
      */
-    public function serialize(Workspace $workspace, array $options = [])
+    public function serialize(Workspace $workspace, array $options = []): array
     {
         $thumbnail = null;
         if ($workspace->getThumbnail()) {
@@ -207,13 +182,7 @@ class WorkspaceSerializer
         return false;
     }
 
-    /**
-     * @param Workspace $workspace
-     * @param array     $options
-     *
-     * @return array
-     */
-    private function getMeta(Workspace $workspace, array $options)
+    private function getMeta(Workspace $workspace, array $options): array
     {
         return [
             'lang' => $workspace->getLang(),
@@ -256,12 +225,7 @@ class WorkspaceSerializer
         return $openingData;
     }
 
-    /**
-     * @param Workspace $workspace
-     *
-     * @return array
-     */
-    private function getDisplay(Workspace $workspace)
+    private function getDisplay(Workspace $workspace): array
     {
         $options = $workspace->getOptions()->getDetails();
 
@@ -294,12 +258,7 @@ class WorkspaceSerializer
         ];
     }
 
-    /**
-     * @param Workspace $workspace
-     *
-     * @return array
-     */
-    private function getRestrictions(Workspace $workspace)
+    private function getRestrictions(Workspace $workspace): array
     {
         return [
             'hidden' => $workspace->isHidden(),
@@ -316,15 +275,10 @@ class WorkspaceSerializer
         ];
     }
 
-    /**
-     * @param Workspace $workspace
-     * @param array     $options
-     *
-     * @return array
-     */
-    private function getRegistration(Workspace $workspace, array $options)
+    private function getRegistration(Workspace $workspace, array $options): array
     {
         if ($workspace->getDefaultRole()) {
+            // this should use RoleSerializer but we will get a circular reference if we do it
             if (in_array(Options::REFRESH_UUID, $options)) {
                 $defaultRole = [
                   'translationKey' => $workspace->getDefaultRole()->getTranslationKey(),
@@ -360,14 +314,8 @@ class WorkspaceSerializer
 
     /**
      * Deserializes Workspace data into entities.
-     *
-     * @param array     $data
-     * @param Workspace $workspace
-     * @param array     $options
-     *
-     * @return Workspace
      */
-    public function deserialize(array $data, Workspace $workspace, array $options = [])
+    public function deserialize(array $data, Workspace $workspace, array $options = []): Workspace
     {
         $this->sipe('code', 'setCode', $data, $workspace);
         $this->sipe('name', 'setName', $data, $workspace);

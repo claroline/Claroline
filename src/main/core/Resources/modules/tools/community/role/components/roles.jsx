@@ -47,11 +47,6 @@ const RolesList = props =>
           choices: constants.ROLE_TYPES
         },
         displayed: false
-      }, {
-        name: 'restrictions.maxUsers',
-        type: 'number',
-        label: trans('maxUsers'),
-        displayed: false
       }
     ]}
     card={RoleCard}

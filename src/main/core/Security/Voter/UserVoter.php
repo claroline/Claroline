@@ -20,7 +20,7 @@ use Claroline\CoreBundle\Repository\Tool\OrderedToolRepository;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
-class UserVoter extends AbstractVoter
+class UserVoter extends AbstractRoleSubjectVoter
 {
     /** @var PlatformConfigurationHandler */
     private $config;
@@ -139,61 +139,15 @@ class UserVoter extends AbstractVoter
 
     private function checkPatch(TokenInterface $token, User $user, ObjectCollection $collection = null): int
     {
-        //single property: no check now
         if (!$collection) {
             return VoterInterface::ACCESS_GRANTED;
         }
 
-        if ($collection->isInstanceOf('Claroline\CoreBundle\Entity\Role')) {
-            // check if we can add a workspace (this block is mostly a c/c from RoleVoter)
-            $nonAuthorized = array_filter($collection->toArray(), function (Role $role) use ($token) {
-                $workspace = $role->getWorkspace();
-                if ($workspace) {
-                    if ($this->isGranted(['community', 'edit'], $workspace)) {
-                        $workspaceManager = $this->getContainer()->get('claroline.manager.workspace_manager');
-                        // If user is workspace manager then grant access
-                        if ($workspaceManager->isManager($workspace, $token)) {
-                            return false;
-                        }
-
-                        // Otherwise only allow modification of roles the current user owns
-                        if (in_array($role->getName(), $token->getRoleNames())) {
-                            return false;
-                        }
-                    }
-
-                    // If public registration is enabled and user try to get the default role, grant access
-                    if ($workspace->getSelfRegistration() && $workspace->getDefaultRole()) {
-                        if ($workspace->getDefaultRole()->getId() === $role->getId()) {
-                            return false;
-                        }
-                    }
-
-                    // user has no community right on the workspace he cannot add anything
-                    return true;
-                }
-
-                if (Role::PLATFORM_ROLE === $role->getType() && in_array($role->getName(), $token->getRoleNames())) {
-                    return false;
-                }
-
-                return true;
-            });
-
-            if (0 < count($nonAuthorized)) {
-                return VoterInterface::ACCESS_DENIED;
-            }
-
-            return VoterInterface::ACCESS_GRANTED;
+        if ($collection->isInstanceOf(Role::class)) {
+            return $this->checkPatchRoles($token, $collection);
         }
 
-        if ($this->isOrganizationManager($token, $user)) {
-            return VoterInterface::ACCESS_GRANTED;
-        }
-
-        // maybe do something more complicated later
-        return $this->isGranted(self::EDIT, $user) ?
-            VoterInterface::ACCESS_GRANTED : VoterInterface::ACCESS_DENIED;
+        return $this->checkEdit($token, $user);
     }
 
     private function checkCreate(TokenInterface $token, User $user)
@@ -237,10 +191,7 @@ class UserVoter extends AbstractVoter
         return VoterInterface::ACCESS_DENIED;
     }
 
-    /**
-     * @return string
-     */
-    public function getClass()
+    public function getClass(): string
     {
         return User::class;
     }

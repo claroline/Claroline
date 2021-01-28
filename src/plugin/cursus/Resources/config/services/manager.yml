@@ -22,6 +22,7 @@ services:
             - '@claroline.manager.mail_manager'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@router'
+            - '@Claroline\AppBundle\API\Crud'
             - '@Claroline\AppBundle\Manager\PlatformManager'
             - '@Claroline\CoreBundle\Manager\RoleManager'
             - '@Claroline\CoreBundle\Library\RoutingHelper'

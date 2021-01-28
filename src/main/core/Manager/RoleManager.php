@@ -11,21 +11,14 @@
 
 namespace Claroline\CoreBundle\Manager;
 
-use Claroline\AppBundle\API\Crud;
-use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Log\LoggableTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\AuthenticationBundle\Security\Authentication\Authenticator;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Exception\AddRoleException;
-use Claroline\CoreBundle\Exception\RoleReadOnlyException;
-use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Manager\Template\TemplateManager;
 use Claroline\CoreBundle\Repository\User\GroupRepository;
 use Claroline\CoreBundle\Repository\User\RoleRepository;
 use Claroline\CoreBundle\Repository\User\UserRepository;
@@ -37,25 +30,15 @@ use Symfony\Component\DependencyInjection\Container;
 
 class RoleManager implements LoggerAwareInterface
 {
+    use LoggableTrait;
+
     const EMPTY_USERS = 1;
     const EMPTY_GROUPS = 2;
 
-    use LoggableTrait;
-
-    /** @var StrictDispatcher */
-    private $dispatcher;
     /** @var ObjectManager */
     private $om;
     /** @var Container */
     private $container;
-    /** @var Authenticator */
-    private $authenticator;
-    /** @var PlatformConfigurationHandler */
-    private $configHandler;
-    /** @var TemplateManager */
-    private $templateManager;
-    /** @var Crud */
-    private $crud;
 
     /** @var WorkspaceRepository */
     private $workspaceRepo;
@@ -68,20 +51,10 @@ class RoleManager implements LoggerAwareInterface
 
     public function __construct(
         ObjectManager $om,
-        StrictDispatcher $dispatcher,
-        Container $container,
-        Authenticator $authenticator,
-        PlatformConfigurationHandler $configHandler,
-        TemplateManager $templateManager,
-        Crud $crud
+        Container $container
     ) {
         $this->om = $om;
-        $this->dispatcher = $dispatcher;
         $this->container = $container;
-        $this->authenticator = $authenticator;
-        $this->configHandler = $configHandler;
-        $this->templateManager = $templateManager;
-        $this->crud = $crud;
 
         $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
         $this->workspaceRepo = $om->getRepository('ClarolineCoreBundle:Workspace\Workspace');
@@ -187,54 +160,6 @@ class RoleManager implements LoggerAwareInterface
     }
 
     /**
-     * @param bool $sendMail
-     *
-     * @throws AddRoleException
-     */
-    public function associateRole(AbstractRoleSubject $ars, Role $role, $sendMail = false)
-    {
-        if (!$this->validateRoleInsert($ars, $role)) {
-            throw new AddRoleException('Role cannot be added');
-        }
-
-        if ('Claroline\CoreBundle\Entity\Group' === get_class($ars) && 'ROLE_USER' === $role->getName()) {
-            throw new AddRoleException('ROLE_USER cannot be added to groups');
-        }
-
-         $this->crud->patch($ars, 'role', Crud::COLLECTION_ADD, [$role]);
-
-        if ($ars instanceof User && $this->authenticator->isAuthenticatedUser($ars)) {
-            // replace token for the current user to give him correct rights for the end of the request
-            $this->authenticator->createToken($ars);
-        }
-
-        if ($sendMail) {
-            $withMail = $this->configHandler->getParameter('send_mail_at_workspace_registration');
-            $this->sendInscriptionMessage($ars, $role, $withMail);
-        }
-    }
-
-    public function dissociateRole(AbstractRoleSubject $ars, Role $role)
-    {
-        if ($ars->hasRole($role->getName())) {
-            $this->crud->patch($ars, 'role', Crud::COLLECTION_REMOVE, [$role]);
-        }
-    }
-
-    /**
-     * @throws RoleReadOnlyException
-     */
-    public function remove(Role $role)
-    {
-        if ($role->isReadOnly()) {
-            throw new RoleReadOnlyException('This role cannot be removed');
-        }
-
-        $this->om->remove($role);
-        $this->om->flush();
-    }
-
-    /**
      * @return Role[]
      */
     public function getWorkspaceRoles(Workspace $workspace)
@@ -308,104 +233,36 @@ class RoleManager implements LoggerAwareInterface
         return $role;
     }
 
-    public function edit(Role $role)
-    {
-        $this->om->persist($role);
-        $this->om->flush();
-    }
-
-    private function sendInscriptionMessage(AbstractRoleSubject $ars, Role $role, $withMail = true)
-    {
-        $workspace = $role->getWorkspace();
-        $locale = null;
-        $placeholders = [
-            'role_name' => $role->getTranslationKey(),
-        ];
-
-        if ($ars instanceof User) {
-            $locale = $ars->getLocale();
-            $placeholders['first_name'] = $ars->getFirstName();
-            $placeholders['last_name'] = $ars->getLastName();
-            $placeholders['username'] = $ars->getUsername();
-        }
-        //workspace registration
-        if ($workspace) {
-            $placeholders['workspace_name'] = $workspace->getName();
-            $placeholders['workspace_code'] = $workspace->getCode();
-
-            $object = $this->templateManager->getTemplate('workspace_registration', $placeholders, $locale, 'title');
-            $content = $this->templateManager->getTemplate('workspace_registration', $placeholders, $locale);
-        } else {
-            //new role
-            $object = $this->templateManager->getTemplate('platform_role_registration', $placeholders, $locale, 'title');
-            $content = $this->templateManager->getTemplate('platform_role_registration', $placeholders, $locale);
-        }
-
-        $sender = $this->container->get('security.token_storage')->getToken()->getUser();
-        $this->dispatcher->dispatch(
-            'claroline_message_sending',
-            'SendMessage',
-            [$sender, $content, $object, $ars, [], $withMail]
-        );
-    }
-
     /**
      * Returns if a role can be added to a RoleSubject.
-     *
-     * @return bool
      */
-    public function validateRoleInsert(AbstractRoleSubject $ars, Role $role)
+    public function validateRoleInsert(AbstractRoleSubject $ars, Role $role): bool
     {
-        $total = $this->countUsersByRoleIncludingGroup($role);
-
-        //cli always win!
-        if ('ROLE_ADMIN' === $role->getName() && 'cli' === php_sapi_name() ||
-            //web installer too
-            null === $this->container->get('security.token_storage')->getToken()) {
-            return true;
-        }
-
-        if ('ROLE_ADMIN' === $role->getName() && !$this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
-            return false;
-        }
-
         //if we already have the role, then it's ok
         if ($ars->hasRole($role->getName())) {
             return true;
         }
 
-        if (null === $role->getMaxUsers()) {
-            return true;
+        if ($ars instanceof Group && 'ROLE_USER' === $role->getName()) {
+            return false;
         }
 
-        if ($role->getWorkspace()) {
-            $maxUsers = $role->getWorkspace()->getMaxUsers();
+        if ($role->getWorkspace() && $role->getWorkspace()->getMaxUsers()) {
             $countByWorkspace = $this->container->get('Claroline\AppBundle\API\FinderProvider')->fetch(
-              User::class,
-              ['workspace' => $role->getWorkspace()->getUuid()],
-              null,
-              0,
-              -1,
-              true
+                User::class,
+                ['workspace' => $role->getWorkspace()->getUuid()],
+                null,
+                0,
+                -1,
+                true
             );
 
-            if ($maxUsers <= $countByWorkspace) {
+            if ($role->getWorkspace()->getMaxUsers() <= $countByWorkspace) {
                 return false;
             }
         }
 
-        if ($ars instanceof User) {
-            return $total < $role->getMaxUsers();
-        }
-
-        if ($ars instanceof Group) {
-            $userCount = $this->userRepo->countUsersOfGroup($ars);
-            $userWithRoleCount = $this->userRepo->countUsersOfGroupByRole($ars, $role);
-
-            return $total + $userCount - $userWithRoleCount < $role->getMaxUsers();
-        }
-
-        return false;
+        return true;
     }
 
     /**
@@ -423,11 +280,8 @@ class RoleManager implements LoggerAwareInterface
      *
      * @return Role[]
      */
-    public function getRolesByWorkspaceCodeAndTranslationKey(
-        $workspaceCode,
-        $translationKey,
-        $executeQuery = true
-    ) {
+    public function getRolesByWorkspaceCodeAndTranslationKey($workspaceCode, $translationKey, $executeQuery = true)
+    {
         return $this->roleRepo->findRolesByWorkspaceCodeAndTranslationKey(
             $workspaceCode,
             $translationKey,
@@ -664,11 +518,5 @@ class RoleManager implements LoggerAwareInterface
         }
 
         return $operationExecuted;
-    }
-
-    public function save(Role $role)
-    {
-        $this->om->persist($role);
-        $this->om->flush();
     }
 }

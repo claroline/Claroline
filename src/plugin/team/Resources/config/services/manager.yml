@@ -22,6 +22,7 @@ services:
     Claroline\TeamBundle\Manager\TeamManager:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\Crud'
             - '@claroline.manager.resource_manager'
             - '@claroline.manager.rights_manager'
             - '@claroline.manager.role_manager'

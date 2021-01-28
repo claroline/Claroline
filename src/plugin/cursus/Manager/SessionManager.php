@@ -11,6 +11,7 @@
 
 namespace Claroline\CursusBundle\Manager;
 
+use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Manager\PlatformManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Role;
@@ -47,6 +48,8 @@ class SessionManager
     private $om;
     /** @var UrlGeneratorInterface */
     private $router;
+    /** @var Crud */
+    private $crud;
     /** @var PlatformManager */
     private $platformManager;
     /** @var RoleManager */
@@ -72,6 +75,7 @@ class SessionManager
         MailManager $mailManager,
         ObjectManager $om,
         UrlGeneratorInterface $router,
+        Crud $crud,
         PlatformManager $platformManager,
         RoleManager $roleManager,
         RoutingHelper $routingHelper,
@@ -85,6 +89,7 @@ class SessionManager
         $this->mailManager = $mailManager;
         $this->om = $om;
         $this->router = $router;
+        $this->crud = $crud;
         $this->platformManager = $platformManager;
         $this->roleManager = $roleManager;
         $this->routingHelper = $routingHelper;
@@ -199,8 +204,8 @@ class SessionManager
 
                 // grant workspace role if registration is fully validated
                 $role = AbstractRegistration::TUTOR === $type ? $session->getTutorRole() : $session->getLearnerRole();
-                if ($role && $sessionUser->isValidated() && $sessionUser->isConfirmed()) {
-                    $this->roleManager->associateRole($user, $role);
+                if ($role && $sessionUser->isValidated() && $sessionUser->isConfirmed() && !$user->hasRole($role->getName())) {
+                    $this->crud->patch($user, 'role', Crud::COLLECTION_ADD, [$role], [Crud::NO_PERMISSIONS]);
                 }
                 $this->om->persist($sessionUser);
 
@@ -274,8 +279,8 @@ class SessionManager
 
             // grant workspace role if registration is fully validated
             $role = AbstractRegistration::TUTOR === $sessionUser->getType() ? $session->getTutorRole() : $session->getLearnerRole();
-            if ($role && $sessionUser->isValidated() && $sessionUser->isConfirmed()) {
-                $this->roleManager->associateRole($sessionUser->getUser(), $role);
+            if ($role && $sessionUser->isValidated() && $sessionUser->isConfirmed() && !$sessionUser->getUser()->hasRole($role->getName())) {
+                $this->crud->patch($sessionUser->getUser(), 'role', Crud::COLLECTION_ADD, [$role], [Crud::NO_PERMISSIONS]);
             }
         }
 
@@ -330,8 +335,8 @@ class SessionManager
 
                 // Registers group to session workspace
                 $role = AbstractRegistration::TUTOR === $type ? $session->getTutorRole() : $session->getLearnerRole();
-                if ($role) {
-                    $this->roleManager->associateRole($group, $role);
+                if ($role && !$group->hasRole($role->getName())) {
+                    $this->crud->patch($group, 'role', Crud::COLLECTION_ADD, [$role], [Crud::NO_PERMISSIONS]);
                 }
 
                 $this->om->persist($sessionGroup);

@@ -940,7 +940,6 @@
     "self_unregistration": "Self unregistration",
     "send": "Send",
     "send_mail": "Send an email",
-    "send_mail_at_workspace_registration": "Send an email when registering an user to a workspace",
     "send_mail_info": "send confirmation email",
     "server": "Server",
     "session": "Session",

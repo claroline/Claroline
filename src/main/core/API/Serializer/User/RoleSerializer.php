@@ -90,7 +90,6 @@ class RoleSerializer
 
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
             $serialized['meta'] = $this->serializeMeta($role);
-            $serialized['restrictions'] = $this->serializeRestrictions($role);
 
             if ($role->getWorkspace()) {
                 $serialized['workspace'] = $this->workspaceSerializer->serialize($role->getWorkspace(), [Options::SERIALIZE_MINIMAL]);
@@ -151,13 +150,6 @@ class RoleSerializer
         return $meta;
     }
 
-    public function serializeRestrictions(Role $role): array
-    {
-        return [
-            'maxUsers' => $role->getMaxUsers(),
-        ];
-    }
-
     private function serializeTools(Role $role, string $workspaceId = null): array
     {
         $tools = [];
@@ -198,7 +190,6 @@ class RoleSerializer
         }
 
         $this->sipe('meta.personalWorkspaceCreationEnabled', 'setPersonalWorkspaceCreationEnabled', $data, $role);
-        $this->sipe('restrictions.maxUsers', 'setMaxUsers', $data, $role);
 
         // we should test role type before trying to set the workspace
         if (!empty($data['workspace']) && !empty($data['workspace']['id'])) {

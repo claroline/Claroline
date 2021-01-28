@@ -868,7 +868,6 @@
     "self_unregistration": "Zelfuitschrijving",
     "send": "Sturen",
     "send_mail": "Een e-email sturen",
-    "send_mail_at_workspace_registration": "Een e-email sturen bij het inschrijven van een gebruiker aan een werkruimte.",
     "send_mail_info": "Een bevestiging per e-email sturen (platform toegankelijk zonder bevestiging van het ophalen van de e-email)",
     "server": "Server",
     "session": "Sessie",
