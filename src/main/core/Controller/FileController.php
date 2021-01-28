@@ -111,11 +111,7 @@ class FileController extends AbstractApiController
     }
 
     /**
-     * @Route("/tinymce/destinations/{workspace}",
-     *     name="claro_tinymce_file_destinations",
-     *     defaults ={"workspace"=null},
-     *     methods={"GET"}
-     *     )
+     * @Route("/tinymce/destinations/{workspace}", name="claro_tinymce_file_destinations", defaults={"workspace"=null}, methods={"GET"})
      *
      * @return JsonResponse
      */
@@ -138,7 +134,7 @@ class FileController extends AbstractApiController
      * Creates a resource from uploaded file.
      *
      * @Route("/tinymce/upload", name="claro_tinymce_file_upload", methods={"POST"})
-     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      *
      * @throws \Exception
      *
