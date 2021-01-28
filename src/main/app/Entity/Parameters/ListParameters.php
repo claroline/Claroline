@@ -275,7 +275,7 @@ trait ListParameters
         return $this->searchMode;
     }
 
-    public function setSearchMode(string $searchMode)
+    public function setSearchMode(string $searchMode = null)
     {
         $this->searchMode = $searchMode;
     }
