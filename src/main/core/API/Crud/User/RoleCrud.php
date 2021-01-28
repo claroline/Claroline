@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\API\Crud\User;
 
 use Claroline\AppBundle\Event\Crud\CreateEvent;
+use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\CoreBundle\Entity\Role;
 use Doctrine\DBAL\Driver\Connection;
 
@@ -11,19 +12,11 @@ class RoleCrud
     /** @var Connection */
     private $conn;
 
-    /**
-     * RoleCrud constructor.
-     *
-     * @param Connection $conn
-     */
     public function __construct(Connection $conn)
     {
         $this->conn = $conn;
     }
 
-    /**
-     * @param CreateEvent $event
-     */
     public function preCreate(CreateEvent $event)
     {
         /** @var Role $role */
@@ -34,9 +27,6 @@ class RoleCrud
         }
     }
 
-    /**
-     * @param CreateEvent $event
-     */
     public function postCreate(CreateEvent $event)
     {
         /** @var Role $role */
@@ -71,6 +61,17 @@ class RoleCrud
                     WHERE ot.workspace_id IS NULL AND user_id IS NULL
                 ")
                 ->execute();
+        }
+    }
+
+    public function preDelete(DeleteEvent $event)
+    {
+        /** @var Role $role */
+        $role = $event->getObject();
+
+        if ($role->isReadOnly()) {
+            // abort delete
+            $event->block();
         }
     }
 }
