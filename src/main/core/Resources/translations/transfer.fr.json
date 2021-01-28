@@ -2,6 +2,8 @@
     "create": "Créer",
     "add_user": "Ajouter un utilisateur",
     "remove_user": "Supprimer un utilisateur",
+    "add_group": "Ajouter un groupe",
+    "remove_group": "Supprimer un groupe",
     "delete": "Supprimer",
     "update": "Mettre à jour",
     "create_or_update": "Créer ou mettre à jour",

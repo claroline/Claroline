@@ -143,16 +143,6 @@ services:
         tags:
             - { name: 'console.command', command: 'claroline:plugin:uninstall' }
 
-    # Import
-
-    Claroline\CoreBundle\Command\Import\RegisterUserToWorkspaceFromCsvCommand:
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@claroline.manager.role_manager'
-            - '@Claroline\AppBundle\API\FinderProvider'
-        tags:
-            - { name: 'console.command', command: 'claroline:workspace:register' }
-
     # Logs
 
     Claroline\CoreBundle\Command\Logs\LogConnectionComputeCommand:
