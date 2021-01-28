@@ -22,6 +22,7 @@ class PluginInstallCommand extends AbstractPluginCommand
 {
     protected function configure()
     {
+        parent::_configure();
         $this->setDescription('Installs a specified claroline plugin.');
     }
 
