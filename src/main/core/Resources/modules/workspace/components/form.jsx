@@ -13,7 +13,7 @@ import {selectors as workspaceSelectors} from '#/main/core/workspace/store/selec
 import {FormData} from '#/main/app/content/form/containers/data'
 import {
   actions as formActions,
-  selectors as formSelect
+  selectors as formSelectors
 } from '#/main/app/content/form/store'
 
 import {route} from '#/main/core/workspace/routing'
@@ -243,6 +243,18 @@ const WorkspaceFormComponent = (props) =>
               }
             ]
           }, {
+            name: 'registration.defaultRole',
+            type: 'role',
+            label: trans('default_role'),
+            displayed: !props.new,
+            required: true,
+            options: {
+              picker: {
+                url: ['apiv2_workspace_list_roles', {id: props.id}],
+                filters: []
+              }
+            }
+          }, {
             name: 'registration.selfUnregistration',
             type: 'boolean',
             label: trans('activate_self_unregistration'),
@@ -426,6 +438,7 @@ WorkspaceFormComponent.propTypes = {
   isAdmin: T.bool.isRequired,
   hasBreadcrumb: T.bool.isRequired,
   new: T.bool.isRequired,
+  id: T.string,
   updateProp: T.func.isRequired
 }
 
@@ -433,7 +446,8 @@ const WorkspaceForm = connect(
   (state, ownProps) => ({
     isAdmin: securitySelectors.isAdmin(state),
     hasBreadcrumb: configSelectors.param(state, 'display.breadcrumb'),
-    new: formSelect.isNew(formSelect.form(state, ownProps.name)),
+    new: formSelectors.isNew(formSelectors.form(state, ownProps.name)),
+    id: formSelectors.data(formSelectors.form(state, ownProps.name)).id,
     tools: workspaceSelectors.tools(state),
     root: workspaceSelectors.root(state)
   }),
