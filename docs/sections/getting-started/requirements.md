@@ -7,25 +7,26 @@ title: Requirements
 
 For a development installation, you'll need at least:
 
-- PHP >= 5.6 with the following extensions:
+- PHP >= 7.2 with the following extensions:
     - curl
+    - dom
     - fileinfo
     - [gd][gd]
     - intl
     - mbstring
-    - mcrypt
+    - openssl
+    - pdo_mysql
     - xml
     - json
     - zip
-    - [ffmpeg][ffmpeg] (optional)
-- MySQL/MariaDB >=5.0
+- MySQL/MariaDB >= 8.0
 - [composer][composer] (recent version)
-- [node.js][node] >= 6.12
-- [npm][npm] >= 3.7
+- [node.js][node] >= 10
+- [npm][npm] >= 6
 
 It's also highly recommended to develop on an UNIX-like OS.
 
-> **For mysql >= 5.7**, there is an additional step.
+> **For mysql >= 8.0**, there is an additional step.
 >  
 >  You have to go into your terminal and type the following commands.
 >
