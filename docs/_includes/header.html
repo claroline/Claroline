@@ -1,0 +1,36 @@
+<header class="app-header">
+    <a class="app-brand" href="{{ "/" | absolute_url }}">
+        <img src="{{ "/assets/img/logo-sm.png" | relative_url }}" height="50" alt="Claroline logo">
+    </a>
+
+    <h1 class="app-title">
+        {{ site.title }}
+        <small>Technical guide</small>
+    </h1>
+
+    {% if site.data.version.current %}
+    <span class="app-version">{{ site.data.version.current }}</span>
+    {% endif %}
+
+    <nav class="app-links">
+        <a href="{{ 'https://gitter.im/' | append : site.github.repository_nwo }}">
+            Need
+            <b>Help ?</b>
+        </a>
+
+        <a href="{{ site.github.zip_url }}">
+            Download
+            <b>ZIP File</b>
+        </a>
+
+        <a href="{{ site.github.tar_url }}">
+            Download
+            <b>TAR Ball</b>
+        </a>
+
+        <a href="{{ site.github.repository_url }}">
+            View on
+            <b>GitHub</b>
+        </a>
+    </nav>
+</header>

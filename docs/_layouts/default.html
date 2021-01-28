@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <base href="{{ '/' | absolute_url }}" />
+
+        {% seo %}
+
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous" />
+        <link rel="stylesheet" href="{{ '/assets/css/styles.css?v=' | append: site.github.build_revision | relative_url }}" />
+        <link rel="shortcut icon" href="{{ '/assets/img/favicon.ico' | relative_url }}" />
+    </head>
+
+    <body>
+        {% include header.html %}
+
+        <div class="app-body" role="presentation">
+            {% include sidebar.html %}
+
+            <main class="app-content">
+                {{ content }}
+            </main>
+        </div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+        <script src="{{ '/assets/js/main.js?v=' | append: site.github.build_revision | relative_url }}"></script>
+    </body>
+</html>

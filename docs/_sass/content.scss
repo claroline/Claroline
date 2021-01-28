@@ -1,0 +1,40 @@
+/**
+ * Content
+ */
+
+.app-content {
+  width: 80%;
+  padding: 30px 60px;
+  padding-right: 480px; // make some space for summary
+
+  text-align: justify;
+
+  h1 {
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 15px;
+    margin-top: 0;
+  }
+
+  a {
+    color: $primary-color;
+    text-decoration: none;
+    font-weight: bold;
+
+    &:hover {
+      color: darken($primary-color, 10%);
+      text-decoration: underline;
+    }
+  }
+}
+
+
+/**
+ * Content summary
+ */
+
+.content-summary {
+
+}
+.content-summary h1 {
+
+}

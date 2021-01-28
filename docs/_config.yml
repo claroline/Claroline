@@ -1,0 +1,25 @@
+title: Claroline Connect
+description: Learning management system
+
+# Configuration
+markdown: kramdown
+highlighter: rouge
+kramdown:
+  auto_ids: true
+  # Enable GitHub Flavored Markdown (fenced code blocks)
+  input: GFM
+
+  syntax_highlighter: rouge
+  # Rouge Highlighter in Kramdown › http://kramdown.gettalong.org/syntax_highlighter/rouge.html
+  # span, block element options fall back to global
+  syntax_highlighter_opts:
+    # Rouge Options › https://github.com/jneen/rouge#full-options
+    css_class: 'highlight'
+    span:
+      line_numbers: false
+    block:
+      line_numbers: true
+      start_line: 1
+
+sass:
+  style: compact

@@ -1,0 +1,66 @@
+/**
+ * Header
+ */
+
+.app-header {
+  z-index: 2;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background: #262626;
+  color: white;
+  height: 60px;
+  min-height: 60px;
+  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.5);
+}
+
+.app-brand {
+  color: white;
+  text-decoration: none;
+  font-size: 0;
+  margin: 0 15px;
+}
+
+.app-title {
+  padding: 0;
+  margin: 0;
+  line-height: 1;
+  font-size: 24px;
+
+  small {
+    display: block;
+    margin-top: 2px;
+    font-size: 70%;
+    font-weight: normal;
+    font-style: italic;
+    color: $primary-color;
+  }
+}
+
+.app-version {
+  margin: 0 15px;
+  color: #888;
+}
+
+.app-links {
+  margin-left: auto;
+
+  a {
+    display: inline-block;
+    padding: 0 15px;
+    text-align: center;
+    font-size: 12px;
+    color: #aaa;
+    text-decoration: none;
+
+    + a {
+      border-left: 1px solid #aaa;
+    }
+  }
+
+  b {
+    display: block;
+    font-size: 14px;
+    color: #FFFFFF;
+  }
+}
