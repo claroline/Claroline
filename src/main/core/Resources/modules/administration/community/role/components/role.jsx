@@ -238,38 +238,6 @@ const Role = props => {
                 help: trans('role_personalWorkspaceCreation_help')
               }
             ]
-          }, {
-            icon: 'fa fa-fw fa-key',
-            title: trans('access_restrictions'),
-            fields: [
-              {
-                name: 'access_max_users',
-                type: 'boolean',
-                label: trans('access_max_users'),
-                calculated: (role) => role.restrictions && null !== role.restrictions.maxUsers && '' !== role.restrictions.maxUsers,
-                onChange: checked => {
-                  if (checked) {
-                    // initialize with the current nb of users with the role
-                    props.updateProp('restrictions.maxUsers', props.role.meta.users || 0)
-                  } else {
-                    // reset max users field
-                    props.updateProp('restrictions.maxUsers', null)
-                  }
-                },
-                linked: [
-                  {
-                    name: 'restrictions.maxUsers',
-                    type: 'number',
-                    label: trans('maxUsers'),
-                    displayed: props.role.restrictions && null !== props.role.restrictions.maxUsers && '' !== props.role.restrictions.maxUsers,
-                    required: true,
-                    options: {
-                      min: 0
-                    }
-                  }
-                ]
-              }
-            ]
           }
         ]}
       />
@@ -339,7 +307,6 @@ const Role = props => {
               type: MODAL_BUTTON,
               icon: 'fa fa-fw fa-plus',
               label: trans('add_user'),
-              disabled: props.role.restrictions && null !== props.role.restrictions.maxUsers && props.role.restrictions.maxUsers <= props.role.meta.users,
               modal: [MODAL_USERS, {
                 selectAction: (selected) => ({
                   type: CALLBACK_BUTTON,

@@ -244,20 +244,17 @@ class WorkspaceManager implements LoggerAwareInterface
 
     public function isUserInValidationQueue(Workspace $workspace, User $user) // TODO : move in WorkspaceUserQueueManager
     {
-        $workspaceRegistrationQueueRepo =
-            $this->om->getRepository('ClarolineCoreBundle:Workspace\WorkspaceRegistrationQueue');
+        $workspaceRegistrationQueueRepo = $this->om->getRepository(WorkspaceRegistrationQueue::class);
         $userQueued = $workspaceRegistrationQueueRepo->findOneBy(['workspace' => $workspace, 'user' => $user]);
 
         return !empty($userQueued);
     }
 
-    /**
-     * @return User
-     */
-    public function addUser(Workspace $workspace, User $user)
+    public function addUser(Workspace $workspace, User $user): User
     {
-        $role = $workspace->getDefaultRole();
-        $this->roleManager->associateRole($user, $role);
+        if ($workspace->getDefaultRole() && !$user->hasRole($workspace->getDefaultRole()->getName())) {
+            $this->crud->patch($user, 'role', Crud::COLLECTION_ADD, [$workspace->getDefaultRole()]);
+        }
 
         return $user;
     }
@@ -628,7 +625,9 @@ class WorkspaceManager implements LoggerAwareInterface
         });
 
         foreach ($rolesToRemove as $role) {
-            $this->roleManager->dissociateRole($subject, $role);
+            if ($subject->hasRole($role->getName())) {
+                $this->crud->patch($subject, 'role', Crud::COLLECTION_REMOVE, [$role]);
+            }
         }
     }
 

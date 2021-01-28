@@ -2,19 +2,40 @@
 
 namespace Claroline\CoreBundle\API\Crud\User;
 
+use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
+use Claroline\AppBundle\Event\Crud\PatchEvent;
+use Claroline\AuthenticationBundle\Security\Authentication\Authenticator;
+use Claroline\CoreBundle\Entity\AbstractRoleSubject;
+use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Manager\RoleManager;
 use Doctrine\DBAL\Driver\Connection;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class RoleCrud
 {
     /** @var Connection */
     private $conn;
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
+    /** @var Authenticator */
+    private $authenticator;
+    /** @var RoleManager */
+    private $manager;
 
-    public function __construct(Connection $conn)
-    {
+    public function __construct(
+        Connection $conn,
+        TokenStorageInterface $tokenStorage,
+        Authenticator $authenticator,
+        RoleManager $manager
+    ) {
         $this->conn = $conn;
+        $this->tokenStorage = $tokenStorage;
+        $this->authenticator = $authenticator;
+        $this->manager = $manager;
     }
 
     public function preCreate(CreateEvent $event)
@@ -72,6 +93,40 @@ class RoleCrud
         if ($role->isReadOnly()) {
             // abort delete
             $event->block();
+        }
+    }
+
+    public function prePatch(PatchEvent $event)
+    {
+        /** @var Role $role */
+        $role = $event->getObject();
+
+        // checks if we can add users/groups to the role
+        if (Crud::COLLECTION_ADD === $event->getAction() && in_array($event->getProperty(), ['user', 'group'])) {
+            /** @var AbstractRoleSubject $ars */
+            $ars = $event->getValue();
+            if ($ars->hasRole($role->getName()) || !$this->manager->validateRoleInsert($ars, $role)) {
+                $event->block();
+            }
+        }
+    }
+
+    public function postPatch(PatchEvent $event)
+    {
+        // refresh token to get updated roles if this is the current user or if he is in the group
+        if (in_array($event->getProperty(), ['user', 'group'])) {
+            $currentUser = $this->tokenStorage->getToken()->getUser();
+
+            $refresh = false;
+            if ($event->getValue() instanceof User) {
+                $refresh = $this->authenticator->isAuthenticatedUser($event->getValue());
+            } elseif ($event->getValue() instanceof Group && $currentUser instanceof User) {
+                $refresh = $currentUser->hasGroup($event->getValue());
+            }
+
+            if ($refresh) {
+                $this->authenticator->createToken($currentUser);
+            }
         }
     }
 }

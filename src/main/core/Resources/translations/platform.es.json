@@ -745,7 +745,6 @@
     "self_registration": "Auto-Inscripción",
     "send": "Enviar",
     "send_mail": "Enviar un correo electrónico",
-    "send_mail_at_workspace_registration": "Enviar un email al registrarse un usuario a un espacio de actividades",
     "server": "Servidor",
     "session": "Sesión",
     "session_db_cannot_perform_operations": "Error en la lectura o escritura de la tabla especificada. Por favor, compruebe que el usuario de base de datos tiene permisos suficientes y que no hay ninguna restricción especial en esta tabla.",

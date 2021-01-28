@@ -1,17 +1,13 @@
 services:
     _defaults:
         autoconfigure: false
-        public: false #because lazy
+        public: false
 
     Claroline\CoreBundle\Manager\Workspace\WorkspaceUserQueueManager:
         arguments:
           - '@Claroline\AppBundle\Event\StrictDispatcher'
           - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@claroline.manager.role_manager'
-
-    claroline.manager.workspace_user_queue_manager:
-        alias: Claroline\CoreBundle\Manager\Workspace\WorkspaceUserQueueManager
-        public: true
+          - '@Claroline\AppBundle\API\Crud'
 
     Claroline\CoreBundle\Manager\WidgetManager:
         arguments:
@@ -72,12 +68,7 @@ services:
         public: true
         arguments:
           - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@Claroline\AppBundle\Event\StrictDispatcher'
           - '@service_container'
-          - '@Claroline\AuthenticationBundle\Security\Authentication\Authenticator'
-          - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-          - '@claroline.manager.template_manager'
-          - '@Claroline\AppBundle\API\Crud'
         calls:
           - setLogger: [ '@logger' ]
 

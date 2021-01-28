@@ -964,7 +964,6 @@
     "self_unregistration": "Auto-désinscription",
     "send": "Envoyer",
     "send_mail": "Envoyer un courriel",
-    "send_mail_at_workspace_registration": "Envoyer un courriel lors de l'inscription d'un utilisateur à un espace d'activités",
     "send_mail_info": "Envoyer un courriel de confirmation (plateforme accessible sans confirmation de la réception du courriel)",
     "server": "Serveur",
     "session": "Session",

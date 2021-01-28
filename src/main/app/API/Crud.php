@@ -378,6 +378,8 @@ class Crud
             }
         }
 
+        // TODO : let the event explain why it has blocked the process
+        // for now we will do nothing and the user will not know why.
         return $generic->isAllowed() && $specific->isAllowed() && $isAllowed;
     }
 

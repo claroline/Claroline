@@ -31,11 +31,6 @@ const RoleList = {
       },
       displayed: true
     }, {
-      name: 'restrictions.maxUsers',
-      type: 'number',
-      label: trans('maxUsers'),
-      displayed: false
-    }, {
       name: 'workspace',
       type: 'workspace',
       label: trans('workspace'),

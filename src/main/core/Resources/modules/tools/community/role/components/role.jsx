@@ -177,7 +177,6 @@ class RoleForm extends Component {
                   type: MODAL_BUTTON,
                   icon: 'fa fa-fw fa-plus',
                   label: trans('add_user'),
-                  disabled: this.props.role.restrictions && null !== this.props.role.restrictions.maxUsers && this.props.role.restrictions.maxUsers <= this.props.role.meta.users,
                   modal: [MODAL_USERS, {
                     selectAction: (selected) => ({
                       type: CALLBACK_BUTTON,

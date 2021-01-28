@@ -125,13 +125,6 @@ class Role
     protected $workspace;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
-     *
-     * @var int
-     */
-    protected $maxUsers;
-
-    /**
      * should be unidirectional.
      *
      * @ORM\OneToMany(
@@ -337,16 +330,6 @@ class Role
     public function getWorkspace()
     {
         return $this->workspace;
-    }
-
-    public function setMaxUsers($maxUsers)
-    {
-        $this->maxUsers = $maxUsers;
-    }
-
-    public function getMaxUsers()
-    {
-        return $this->maxUsers;
     }
 
     public function addToolRights(ToolRights $tr)

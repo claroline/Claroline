@@ -144,8 +144,8 @@ services:
           - '@Claroline\AppBundle\API\SerializerProvider'
           - '@Claroline\AppBundle\API\FinderProvider'
           - '@Claroline\AppBundle\API\Crud'
-          - '@claroline.manager.workspace_manager'
-          - '@claroline.manager.workspace_user_queue_manager'
+          - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
+          - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceUserQueueManager'
 
     Claroline\CoreBundle\Controller\APINew\Workspace\RequirementsController:
         arguments:

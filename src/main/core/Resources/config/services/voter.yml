@@ -9,10 +9,13 @@ services:
             autowire: false
             tags: [security.voter]
             calls:
-              - method: setContainer
-                arguments:
-                  - '@service_container'
-            #this will have to change one day I think
+                - method: setContainer
+                  arguments:
+                      - '@service_container'
+
+        Claroline\CoreBundle\Security\Voter\AbstractRoleSubjectVoter:
+            autowire: false
+            tags: [security.voter]
 
     Claroline\CoreBundle\Security\Voter\ConnectionMessage\ConnectionMessageVoter: ~
 
