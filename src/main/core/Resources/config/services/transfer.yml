@@ -6,7 +6,6 @@ services:
         tags: [claroline.transfer.action]
 
     _instanceof:
-
         Claroline\AppBundle\API\Transfer\Action\AbstractCreateAction:
             tags: [claroline.transfer.action]
             calls:
@@ -33,7 +32,6 @@ services:
                   arguments:
                      - '@Claroline\AppBundle\API\SchemaProvider'
 
-
         Claroline\AppBundle\API\Transfer\Action\AbstractDeleteAction:
             tags: [claroline.transfer.action]
             calls:
@@ -51,38 +49,41 @@ services:
                   arguments:
                      - '@Claroline\AppBundle\API\Crud'
 
+    # Directories
     Claroline\CoreBundle\API\Transfer\Action\Directory\Create:
         arguments:
-          - '@Claroline\AppBundle\API\Crud'
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@Claroline\AppBundle\API\SerializerProvider'
-          - '@translator'
+            - '@Claroline\AppBundle\API\Crud'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@translator'
 
     Claroline\CoreBundle\API\Transfer\Action\Directory\CreateOrUpdate:
         arguments:
-          - '@Claroline\AppBundle\API\Crud'
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@Claroline\AppBundle\API\SerializerProvider'
-          - '@translator'
+            - '@Claroline\AppBundle\API\Crud'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@translator'
 
-    Claroline\CoreBundle\API\Transfer\Action\Group\AddUser:
-        arguments:
-          - '@Claroline\AppBundle\API\Crud'
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
-
+    # Groups
     Claroline\CoreBundle\API\Transfer\Action\Group\Create: ~
 
     Claroline\CoreBundle\API\Transfer\Action\Group\Delete: ~
 
+    Claroline\CoreBundle\API\Transfer\Action\Group\AddUser:
+        arguments:
+            - '@Claroline\AppBundle\API\Crud'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+
     Claroline\CoreBundle\API\Transfer\Action\Group\RemoveUser:
         arguments:
-          - '@Claroline\AppBundle\API\Crud'
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\Crud'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
 
+    # Users
     Claroline\CoreBundle\API\Transfer\Action\User\Create:
         arguments:
-          - '@Claroline\AppBundle\API\Crud'
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\Crud'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     Claroline\CoreBundle\API\Transfer\Action\User\CreateOrUpdate: ~
 
@@ -100,12 +101,7 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\Manager\UserManager'
 
-    Claroline\CoreBundle\API\Transfer\Action\Workspace\AddUser:
-        arguments:
-            - '@Claroline\AppBundle\API\Crud'
-            - '@Claroline\AppBundle\API\SerializerProvider'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-
+    # Workspaces
     Claroline\CoreBundle\API\Transfer\Action\Workspace\Create:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
@@ -115,7 +111,25 @@ services:
 
     Claroline\CoreBundle\API\Transfer\Action\Workspace\Delete: ~
 
+    Claroline\CoreBundle\API\Transfer\Action\Workspace\AddUser:
+        arguments:
+            - '@Claroline\AppBundle\API\Crud'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+
     Claroline\CoreBundle\API\Transfer\Action\Workspace\RemoveUser:
+        arguments:
+            - '@Claroline\AppBundle\API\Crud'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+
+    Claroline\CoreBundle\API\Transfer\Action\Workspace\AddGroup:
+        arguments:
+            - '@Claroline\AppBundle\API\Crud'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+
+    Claroline\CoreBundle\API\Transfer\Action\Workspace\RemoveGroup:
         arguments:
             - '@Claroline\AppBundle\API\Crud'
             - '@Claroline\AppBundle\API\SerializerProvider'
