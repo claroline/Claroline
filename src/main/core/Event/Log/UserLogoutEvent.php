@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Event\Log;
 
 use Claroline\CoreBundle\Entity\User;
 use Symfony\Contracts\EventDispatcher\Event;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class UserLogoutEvent extends Event
 {
@@ -24,8 +25,8 @@ class UserLogoutEvent extends Event
         return 'UserLogoutEvent';
     }
 
-    public function getMessage()
+    public function getMessage(TranslatorInterface $translator)
     {
-        return "L'utilisateur {$this->user->getUsername()} vient de se déconnecter.";
+        return sprintf($translator->trans('userLogout'), $this->user->getUsername());
     }
 }

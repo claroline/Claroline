@@ -1,4 +1,12 @@
 {
   "Bad credentials.": "Your username or password is incorrect.",
-  "User account is disabled.": "Your user account is disabled."
+  "User account is disabled.": "Your user account is disabled.",
+  "userLogout": "User %s has just logged off.",
+  "userLogin": "User %s has just logged in.",
+  "userDisable": "User %s has just been disabled.",
+  "userEnable": "User %s has just been enabled.",
+  "removeRole": "Role %s has just been removed from the user %s.",
+  "addRole": "Role %s has just been added from the user %s.",
+  "forgotPassword": "User %s has just requested a forgotten password.",
+  "newPassword": "User %s has requested a new password."
 }

@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Event\Log;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Symfony\Contracts\EventDispatcher\Event;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class RemoveRoleEvent extends Event
 {
@@ -41,8 +42,8 @@ class RemoveRoleEvent extends Event
         return 'RemoveRoleEvent';
     }
 
-    public function getMessage()
+    public function getMessage(TranslatorInterface $translator)
     {
-        return "Le role {$this->role->getName()} vient d'être retiré de l'utilisateur {$this->user->getUsername()}.";
+        return sprintf($translator->trans('removeRole'), $this->role->getName(), $this->user->getUsername());
     }
 }

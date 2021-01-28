@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Event\Log;
 
 use Claroline\CoreBundle\Entity\User;
 use Symfony\Contracts\EventDispatcher\Event;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ForgotPasswordEvent extends Event
 {
@@ -33,8 +34,8 @@ class ForgotPasswordEvent extends Event
         return 'ForgotPasswordEvent';
     }
 
-    public function getMessage()
+    public function getMessage(TranslatorInterface $translator)
     {
-        return "L'utilisateur {$this->user->getUsername()} vient de faire une demande de mot de passe oublié.";
+        return sprintf($translator->trans('forgotPassword'), $this->user->getUsername());
     }
 }

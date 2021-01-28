@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Event\Log;
 
 use Claroline\CoreBundle\Entity\User;
 use Symfony\Contracts\EventDispatcher\Event;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class NewPasswordEvent extends Event
 {
@@ -33,8 +34,8 @@ class NewPasswordEvent extends Event
         return 'NewPasswordEvent';
     }
 
-    public function getMessage()
+    public function getMessage(TranslatorInterface $translator)
     {
-        return "L'utilisateur {$this->user->getUsername()} a fait une demande pour un nouveau mot de passe.";
+        return sprintf($translator->trans('newPassword'), $this->user->getUsername());
     }
 }

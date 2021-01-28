@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Event\Log;
 
 use Claroline\CoreBundle\Entity\User;
 use Symfony\Contracts\EventDispatcher\Event;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class UserDisableEvent extends Event
 {
@@ -33,8 +34,8 @@ class UserDisableEvent extends Event
         return 'UserDisableEvent';
     }
 
-    public function getMessage()
+    public function getMessage(TranslatorInterface $translator)
     {
-        return "L'utilisateur {$this->user->getUsername()} vient d'être désactivé.";
+        return sprintf($translator->trans('userDisable'), $this->user->getUsername());
     }
 }

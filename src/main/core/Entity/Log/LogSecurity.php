@@ -42,6 +42,11 @@ class LogSecurity
     private $user;
 
     /**
+     * @ORM\Column(type="string")
+     */
+    private $country;
+
+    /**
      * @ORM\Column(type="string", nullable=true)
      */
     private $userIp;
@@ -107,6 +112,18 @@ class LogSecurity
     public function setUserIp(?string $userIp): string
     {
         $this->userIp = $userIp;
+
+        return $this;
+    }
+
+    public function getCountry(): string
+    {
+        return $this->country;
+    }
+
+    public function setCountry(string $country): self
+    {
+        $this->country = $country;
 
         return $this;
     }

@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Event\Log;
 
 use Claroline\CoreBundle\Entity\User;
 use Symfony\Contracts\EventDispatcher\Event;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class UserLoginEvent extends Event
 {
@@ -33,8 +34,8 @@ class UserLoginEvent extends Event
         return 'UserLoginEvent';
     }
 
-    public function getMessage()
+    public function getMessage(TranslatorInterface $translator)
     {
-        return "L'utilisateur {$this->user->getUsername()} vient de se connecter.";
+        return sprintf($translator->trans('userLogin'), $this->user->getUsername());
     }
 }

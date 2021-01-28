@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Event\Log;
 
 use Claroline\CoreBundle\Entity\User;
 use Symfony\Contracts\EventDispatcher\Event;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class UserEnableEvent extends Event
 {
@@ -33,8 +34,8 @@ class UserEnableEvent extends Event
         return 'UserEnableEvent';
     }
 
-    public function getMessage()
+    public function getMessage(TranslatorInterface $translator)
     {
-        return "L'utilisateur {$this->user->getUsername()} vient d'être activé.";
+        return sprintf($translator->trans('userEnable'), $this->user->getUsername());
     }
 }

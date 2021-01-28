@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Event\Log;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Symfony\Contracts\EventDispatcher\Event;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AddRoleEvent extends Event
 {
@@ -41,8 +42,8 @@ class AddRoleEvent extends Event
         return 'AddRoleEvent';
     }
 
-    public function getMessage()
+    public function getMessage(TranslatorInterface $translator)
     {
-        return "Le role {$this->role->getName()} vient d'être ajouté à l'utilisateur {$this->user->getUsername()}.";
+        return sprintf($translator->trans('addRole'), $this->role->getName(), $this->user->getUsername());
     }
 }
