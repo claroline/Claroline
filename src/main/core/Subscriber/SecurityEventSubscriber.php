@@ -7,14 +7,17 @@ use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class SecurityEventSubscriber implements EventSubscriberInterface
 {
     private $em;
+    private $client;
 
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em, HttpClientInterface $client)
     {
         $this->em = $em;
+        $this->client = $client;
     }
 
     public static function getSubscribedEvents()
@@ -41,6 +44,11 @@ class SecurityEventSubscriber implements EventSubscriberInterface
         $logEntry->setEvent($event->getEvent());
         $logEntry->setUser($event->getUser());
         $logEntry->setUserIp($request->getClientIp());
+
+        //Get infos from ip address
+        $response = json_decode($this->client->request('GET', 'http://ip-api.com/json/'.$request->getClientIp()), true);
+        $logEntry->setCountry($response['country']);
+        $logEntry->setCity($response['city']);
 
         $this->em->persist($logEntry);
         $this->em->flush();

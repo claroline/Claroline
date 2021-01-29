@@ -47,9 +47,14 @@ class LogSecurity
     private $country;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="string")
      */
     private $userIp;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    private $city;
 
     public function getId(): int
     {
@@ -124,6 +129,18 @@ class LogSecurity
     public function setCountry(string $country): self
     {
         $this->country = $country;
+
+        return $this;
+    }
+
+    public function getCity(): string
+    {
+        return $this->city;
+    }
+
+    public function setCity(string $city): self
+    {
+        $this->city = $city;
 
         return $this;
     }
