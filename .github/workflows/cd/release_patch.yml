@@ -14,28 +14,17 @@ jobs:
         with:
           fetch-depth: 0 # full git history
 
-      - name: Bump version and tag
+      - name: Update VERSION and CHANGELOG files
+        id: version
+        run: |
+          ./update-version.sh $(cat VERSION.txt | sed -n 1p | cut -d "." -f2) $RELEASE_BRANCH
+          echo "::set-output name=tag::$(head -n 1 VERSION.txt)"
+        env:
+          RELEASE_BRANCH: 13.x
+
+      - name: Create Release Tag
         uses: anothrNick/github-tag-action@latest
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DEFAULT_BUMP: patch
-
-      - name: Update CHANGELOG
-        id: changelog
-        run: echo "::set-output name=diff::$(./update-version.sh [FIXME] $GIT_BRANCH)"
-        with:
-          GIT_BRANCH: 13.x
-
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          body: |
-            $CHANGELOG
-          draft: false
-          prerelease: false
-          env: ${{ steps.changelog.outputs.diff }}
+          RELEASE_BRANCHES: 13.x
+          CUSTOM_TAG: ${{ steps.version.outputs.tag }}
