@@ -67,12 +67,21 @@ class PathListener
         $path = $event->getResource();
         $user = $this->tokenStorage->getToken()->getUser();
 
+        $evaluation = null;
+        $currentAttempt = null;
+        if ($user instanceof User) {
+            // retrieve user progression
+            $evaluation = $this->serializer->serialize(
+                $this->userProgressionManager->getResourceUserEvaluation($path, $user)
+            );
+
+            $currentAttempt = $this->serializer->serialize($this->userProgressionManager->getCurrentAttempt($path, $user));
+        }
+
         $event->setData([
             'path' => $this->serializer->serialize($path),
-            'userEvaluation' => $user instanceof User ? $this->serializer->serialize(
-                $this->userProgressionManager->getResourceUserEvaluation($path, $user)
-            ) : null,
-            'attempt' => $this->serializer->serialize($this->userProgressionManager->getCurrentAttempt($path, $user)),
+            'userEvaluation' => $evaluation,
+            'attempt' => $currentAttempt,
         ]);
         $event->stopPropagation();
     }

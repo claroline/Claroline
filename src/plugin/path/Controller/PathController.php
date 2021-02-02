@@ -110,15 +110,18 @@ class PathController extends AbstractCrudController
     /**
      * @Route("/{id}/attempt", name="innova_path_current_attempt", methods={"GET"})
      * @EXT\ParamConverter("path", class="InnovaPathBundle:Path\Path", options={"mapping": {"id": "uuid"}})
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
+     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      */
-    public function getAttemptAction(Path $path, User $user)
+    public function getAttemptAction(Path $path, User $user = null)
     {
         $this->checkPermission('OPEN', $path->getResourceNode(), [], true);
 
-        return new JsonResponse(
-            $this->serializer->serialize($this->userProgressionManager->getCurrentAttempt($path, $user))
-        );
+        $attempt = null;
+        if ($user) {
+            $attempt = $this->serializer->serialize($this->userProgressionManager->getCurrentAttempt($path, $user));
+        }
+
+        return new JsonResponse($attempt);
     }
 
     /**
