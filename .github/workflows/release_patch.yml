@@ -23,7 +23,7 @@ jobs:
           RELEASE_BRANCH: 13.x
 
       - name: Create Release Tag
-        uses: anothrNick/github-tag-action@latest
+        uses: anothrNick/github-tag-action@1.34.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RELEASE_BRANCHES: 13.x
