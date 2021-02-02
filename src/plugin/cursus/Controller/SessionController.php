@@ -149,6 +149,7 @@ class SessionController extends AbstractCrudController
 
         $params = $request->query->all();
         $params['hiddenFilters'] = $this->getDefaultHiddenFilters();
+        $params['hiddenFilters']['session'] = $session->getUuid();
 
         return new JsonResponse(
             $this->finder->search(Event::class, $params)
