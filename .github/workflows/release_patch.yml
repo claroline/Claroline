@@ -2,8 +2,8 @@ name: Patch Release (scheduled)
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "0 */1 * * *"
+#  schedule:
+#    - cron: "0 */1 * * *" # every wednesday
 
 jobs:
   build:
@@ -12,23 +12,45 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
         with:
-          fetch-depth: 0 # full git history
+          fetch-depth: 0
 
-      - name: Update VERSION and CHANGELOG files
-        id: version
+      - name: Update VERSION/CHANGELOG
+        id: bump
         run: |
-          export FULL_VERSION=$(cat VERSION.txt | sed -n 1p)gst
-          ./update-version.sh ${FULL_VERSION%.*} $RELEASE_BRANCH
-          echo "::set-output name=tag::$(head -n 1 VERSION.txt)"
+          export CURRENT_TAG=$(cat VERSION.txt | sed -n 1p)
+          ./update-version.sh ${CURRENT_TAG%.*} $RELEASE_BRANCH
+          export NEW_TAG=$(head -n 1 VERSION.txt)
+          echo "::set-output name=tag::${NEW_TAG}"
+          git config --global user.name chalasr
+          git config --global user.email robin.chalas@gmail.com
           git add changelogs/ VERSION.txt
-          git commit -m "Release version $(FULL_VERSION)"
-          git push origin $RELEASE_BRANCH
+          git commit -m "Release version ${NEW_TAG}"
         env:
           RELEASE_BRANCH: 13.x
+
+      - name: Create Release PR
+        id: release-pr
+        uses: peter-evans/create-pull-request@v3
+        with:
+          token: ${{ secrets.RELEASER_TOKEN }}
+          title: Release version ${{ steps.bump.outputs.tag }}
+
+      - name: Approve Release PR
+        uses: juliangruber/approve-pull-request-action@v1
+        with:
+          github-token: ${{ secrets.RELEASER_TOKEN }}
+          number: ${{ steps.release-pr.outputs.pull-request-number }}
+
+      - name: Merge Release PR
+        uses: juliangruber/merge-pull-request-action@v1
+        with:
+          github-token: ${{ secrets.RELEASER_TOKEN }}
+          number: ${{ steps.release-pr.outputs.pull-request-number }}
+          method: squash
 
       - name: Create Release Tag
         uses: anothrNick/github-tag-action@1.34.0
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.RELEASER_TOKEN }}
           RELEASE_BRANCHES: 13.x
-          CUSTOM_TAG: ${{ steps.version.outputs.tag }}
+          CUSTOM_TAG: ${{ steps.bump.outputs.tag }}
