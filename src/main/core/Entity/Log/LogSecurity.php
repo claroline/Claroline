@@ -39,7 +39,14 @@ class LogSecurity
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="SET NULL")
      */
-    private $user;
+    private $target;
+
+    /**
+     * @var User
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="SET NULL")
+     */
+    private $doer;
 
     /**
      * @ORM\Column(type="string")
@@ -49,7 +56,7 @@ class LogSecurity
     /**
      * @ORM\Column(type="string")
      */
-    private $userIp;
+    private $doerIp;
 
     /**
      * @ORM\Column(type="string")
@@ -97,26 +104,26 @@ class LogSecurity
         return $this;
     }
 
-    public function getUser(): User
+    public function getTarget(): User
     {
-        return $this->user;
+        return $this->target;
     }
 
-    public function setUser(User $user): self
+    public function setTarget(User $target): self
     {
-        $this->user = $user;
+        $this->target = $target;
 
         return $this;
     }
 
-    public function getUserIp(): string
+    public function getDoerIp(): string
     {
-        return $this->userIp;
+        return $this->doerIp;
     }
 
-    public function setUserIp(?string $userIp): string
+    public function setDoerIp(?string $doerIp): string
     {
-        $this->userIp = $userIp;
+        $this->doerIp = $doerIp;
 
         return $this;
     }
@@ -141,6 +148,18 @@ class LogSecurity
     public function setCity(string $city): self
     {
         $this->city = $city;
+
+        return $this;
+    }
+
+    public function getDoer(): User
+    {
+        return $this->doer;
+    }
+
+    public function setDoer(User $doer): self
+    {
+        $this->doer = $doer;
 
         return $this;
     }

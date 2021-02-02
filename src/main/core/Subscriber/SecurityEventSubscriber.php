@@ -7,20 +7,26 @@ use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class SecurityEventSubscriber implements EventSubscriberInterface
 {
     private $em;
     private $client;
+    private $security;
 
-    public function __construct(EntityManagerInterface $em, HttpClientInterface $client)
-    {
+    public function __construct(
+        EntityManagerInterface $em,
+        HttpClientInterface $client,
+        Security $security
+    ) {
         $this->em = $em;
         $this->client = $client;
+        $this->security = $security;
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             SecurityEvents::USER_LOGIN => 'logEvent',
@@ -35,15 +41,16 @@ class SecurityEventSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function logEvent($event)
+    public function logEvent($event): void
     {
         $request = Request::createFromGlobals();
 
         $logEntry = new LogSecurity();
         $logEntry->setDetails(sprintf('Log %s: %s', $event->getEvent(), $event->getMessage()));
         $logEntry->setEvent($event->getEvent());
-        $logEntry->setUser($event->getUser());
-        $logEntry->setUserIp($request->getClientIp());
+        $logEntry->setTarget($event->getUser());
+        $logEntry->setDoer($this->security->getUser());
+        $logEntry->setDoerIp($request->getClientIp());
 
         //Get infos from ip address
         $response = json_decode($this->client->request('GET', 'http://ip-api.com/json/'.$request->getClientIp()), true);
