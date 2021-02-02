@@ -17,8 +17,12 @@ jobs:
       - name: Update VERSION and CHANGELOG files
         id: version
         run: |
-          ./update-version.sh $(cat VERSION.txt | sed -n 1p | cut -d "." -f2) $RELEASE_BRANCH
+          export FULL_VERSION=$(cat VERSION.txt | sed -n 1p)gst
+          ./update-version.sh ${FULL_VERSION%.*} $RELEASE_BRANCH
           echo "::set-output name=tag::$(head -n 1 VERSION.txt)"
+          git add changelogs/ VERSION.txt
+          git commit -m "Release version $(FULL_VERSION)"
+          git push origin $RELEASE_BRANCH
         env:
           RELEASE_BRANCH: 13.x
 
