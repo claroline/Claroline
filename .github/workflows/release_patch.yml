@@ -41,7 +41,7 @@ jobs:
       - name: Approve Release PR
         uses: juliangruber/approve-pull-request-action@v1
         with:
-          github-token: ${{ secrets.RELEASER_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }} # FIXME should be a merger token
           number: ${{ steps.release-pr.outputs.pull-request-number }}
 
       - name: Merge Release PR
@@ -54,6 +54,6 @@ jobs:
       - name: Create Release Tag
         uses: anothrNick/github-tag-action@1.34.0
         env:
-          GITHUB_TOKEN: ${{ secrets.RELEASER_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RELEASE_BRANCHES: 13.x
           CUSTOM_TAG: ${{ steps.bump.outputs.tag }}
