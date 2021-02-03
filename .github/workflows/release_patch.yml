@@ -28,6 +28,9 @@ jobs:
         env:
           RELEASE_BRANCH: 13.x
 
+      - name: Set auth token
+        run: git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY
+
       - name: Create Release PR
         id: release-pr
         uses: peter-evans/create-pull-request@v3
