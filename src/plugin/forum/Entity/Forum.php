@@ -77,11 +77,25 @@ class Forum extends AbstractResource
     private $showOverview = true;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="description", type="text", nullable=true)
+     *
+     * @var string
      */
-    protected $description;
+    private $description;
+
+    /**
+     * @ORM\Column(options={"default"="ASC"})
+     *
+     * @var string
+     */
+    private $messageOrder = 'ASC';
+
+    /**
+     * @ORM\Column(type="boolean", options={"default"=false})
+     *
+     * @var bool
+     */
+    private $expandComments = false;
 
     public function __construct()
     {
@@ -136,7 +150,7 @@ class Forum extends AbstractResource
         return $this->dataListOptions;
     }
 
-    public function setLockDate(\DateTime $date = null)
+    public function setLockDate(\DateTimeInterface $date = null)
     {
         $this->lockDate = $date;
     }
@@ -190,13 +204,29 @@ class Forum extends AbstractResource
      * Set description.
      *
      * @param string $description
-     *
-     * @return Path
      */
     public function setDescription($description)
     {
         $this->description = $description;
+    }
 
-        return $this;
+    public function getMessageOrder(): string
+    {
+        return $this->messageOrder;
+    }
+
+    public function setMessageOrder(string $order)
+    {
+        $this->messageOrder = $order;
+    }
+
+    public function getExpandComments(): bool
+    {
+        return $this->expandComments;
+    }
+
+    public function setExpandComments(bool $expand)
+    {
+        $this->expandComments = $expand;
     }
 }

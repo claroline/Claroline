@@ -63,9 +63,9 @@ class Crud
     /**
      * Creates a new entry for `class` and populates it with `data`.
      *
-     * @param mixed  $classOrObject - the class of the entity to create or an instance of the entity
-     * @param mixed  $data          - the serialized data of the object to create
-     * @param array  $options       - additional creation options
+     * @param mixed $classOrObject - the class of the entity to create or an instance of the entity
+     * @param mixed $data          - the serialized data of the object to create
+     * @param array $options       - additional creation options
      *
      * @return object|array
      *

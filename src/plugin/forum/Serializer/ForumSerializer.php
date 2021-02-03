@@ -19,6 +19,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 class ForumSerializer
 {
     use PermissionCheckerTrait;
+    use SerializerTrait;
 
     private $finder;
 
@@ -38,8 +39,6 @@ class ForumSerializer
         $this->manager = $manager;
         $this->authorization = $authorization;
     }
-
-    use SerializerTrait;
 
     public function getClass()
     {
@@ -98,26 +97,28 @@ class ForumSerializer
             'moderation' => $forum->getValidationMode(),
             'maxComment' => $forum->getMaxComment(),
             'display' => [
-              'description' => $forum->getDescription(),
-              'showOverview' => $forum->getShowOverview(),
-              'subjectDataList' => $forum->getDataListOptions(),
-              'lastMessagesCount' => $forum->getDisplayMessages(),
+                'description' => $forum->getDescription(),
+                'showOverview' => $forum->getShowOverview(),
+                'subjectDataList' => $forum->getDataListOptions(),
+                'lastMessagesCount' => $forum->getDisplayMessages(),
+                'messageOrder' => $forum->getMessageOrder(),
+                'expandComments' => $forum->getExpandComments(),
             ],
             'restrictions' => [
-              'lockDate' => $forum->getLockDate() ? $forum->getLockDate()->format('Y-m-d\TH:i:s') : null, // TODO : use DateNormalizer
-              'banned' => $banned, // TODO : data about current user should not be here
-              'moderator' => $this->checkPermission('EDIT', $forum->getResourceNode()), // TODO : data about current user should not be here
+                'lockDate' => $forum->getLockDate() ? $forum->getLockDate()->format('Y-m-d\TH:i:s') : null, // TODO : use DateNormalizer
+                'banned' => $banned, // TODO : data about current user should not be here
+                'moderator' => $this->checkPermission('EDIT', $forum->getResourceNode()), // TODO : data about current user should not be here
             ],
             'meta' => [
-              'users' => $this->finder->fetch(User::class, ['forum' => $forum->getUuid()], null, 0, 0, true),
-              'subjects' => $this->finder->fetch(Subject::class, ['forum' => $forum->getUuid()], null, 0, 0, true),
-              //probably an issue with the validate_none somewhere
-              'messages' => $this->finder->fetch(Message::class, ['forum' => $forum->getUuid()], null, 0, 0, true),
-              'myMessages' => !is_string($currentUser) ?
-                  $this->finder->fetch(Message::class, ['forum' => $forum->getUuid(), 'creator' => $currentUser->getUsername()], null, 0, 0, true) :
-                  0, // TODO : data about current user should not be here
-              'tags' => $this->getTags($forum),
-              'notified' => $forumUser->isNotified(),
+                'users' => $this->finder->fetch(User::class, ['forum' => $forum->getUuid()], null, 0, 0, true),
+                'subjects' => $this->finder->fetch(Subject::class, ['forum' => $forum->getUuid()], null, 0, 0, true),
+                //probably an issue with the validate_none somewhere
+                'messages' => $this->finder->fetch(Message::class, ['forum' => $forum->getUuid()], null, 0, 0, true),
+                'myMessages' => !is_string($currentUser) ?
+                    $this->finder->fetch(Message::class, ['forum' => $forum->getUuid(), 'creator' => $currentUser->getUsername()], null, 0, 0, true) :
+                    0, // TODO : data about current user should not be here
+                'tags' => $this->getTags($forum),
+                'notified' => $forumUser->isNotified(),
             ],
         ];
     }
@@ -137,6 +138,8 @@ class ForumSerializer
         $this->sipe('display.subjectDataList', 'setDataListOptions', $data, $forum);
         $this->sipe('display.description', 'setDescription', $data, $forum);
         $this->sipe('display.showOverview', 'setShowOverview', $data, $forum);
+        $this->sipe('display.messageOrder', 'setMessageOrder', $data, $forum);
+        $this->sipe('display.expandComments', 'setExpandComments', $data, $forum);
 
         if (isset($data['restrictions'])) {
             if (isset($data['restrictions']['lockDate'])) {
