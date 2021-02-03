@@ -63,16 +63,26 @@ class Crud
     /**
      * Creates a new entry for `class` and populates it with `data`.
      *
-     * @param string $class   - the class of the entity to create
-     * @param mixed  $data    - the serialized data of the object to create
-     * @param array  $options - additional creation options
+     * @param mixed  $classOrObject - the class of the entity to create or an instance of the entity
+     * @param mixed  $data          - the serialized data of the object to create
+     * @param array  $options       - additional creation options
      *
      * @return object|array
      *
      * @throws InvalidDataException
      */
-    public function create($class, $data, array $options = [])
+    public function create($classOrObject, $data, array $options = [])
     {
+        if (is_string($classOrObject)) {
+            // class name received
+            $class = $classOrObject;
+            $object = new $classOrObject();
+        } else {
+            // object instance received
+            $class = get_class($classOrObject);
+            $object = $classOrObject;
+        }
+
         // validates submitted data.
         $errors = $this->validate($class, $data, ValidatorProvider::CREATE, $options);
         if (count($errors) > 0) {
@@ -85,7 +95,6 @@ class Crud
         }
 
         // gets entity from raw data.
-        $object = new $class();
         $object = $this->serializer->deserialize($data, $object, $options);
 
         if (!in_array(static::NO_PERMISSIONS, $options)) {
@@ -130,8 +139,8 @@ class Crud
         if (!in_array(static::NO_PERMISSIONS, $options)) {
             $this->checkPermission('EDIT', $oldObject, [], true);
         }
-        $oldData = $this->serializer->serialize($oldObject);
 
+        $oldData = $this->serializer->serialize($oldObject);
         if (!$oldData) {
             $oldData = [];
         }
