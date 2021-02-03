@@ -1,0 +1,69 @@
+name: Patch Release (scheduled)
+
+on:
+  workflow_dispatch:
+#  schedule:
+#    - cron: "0 */1 * * *" # every wednesday
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Update VERSION/CHANGELOG
+        id: bump
+        run: |
+          export CURRENT_TAG=$(cat VERSION.txt | sed -n 1p)
+          ./update-version.sh ${CURRENT_TAG%.*} $RELEASE_BRANCH
+          export NEW_TAG=$(head -n 1 VERSION.txt)
+          echo "::set-output name=tag::${NEW_TAG}"
+          git config --global user.name chalasr
+          git config --global user.email robin.chalas@gmail.com
+          git add changelogs/ VERSION.txt
+          git commit -m "Release version ${NEW_TAG}"
+        env:
+          RELEASE_BRANCH: 13.x
+
+      - name: Set auth token
+        run: git remote set-url origin https://x-access-token:${{ secrets.RELEASER_TOKEN }}@github.com/$GITHUB_REPOSITORY
+
+      - name: Create Release PR
+        id: release-pr
+        uses: peter-evans/create-pull-request@v3
+        with:
+          token: ${{ secrets.RELEASER_TOKEN }}
+          title: Release version ${{ steps.bump.outputs.tag }}
+          branch: release-${{ steps.bump.outputs.tag }}
+          delete-branch: true
+
+      - name: Approve Release PR
+        uses: juliangruber/approve-pull-request-action@v1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }} # FIXME should be a merger token
+          number: ${{ steps.release-pr.outputs.pull-request-number }}
+
+      - name: Merge Release PR
+        uses: juliangruber/merge-pull-request-action@v1
+        with:
+          github-token: ${{ secrets.RELEASER_TOKEN }}
+          number: ${{ steps.release-pr.outputs.pull-request-number }}
+          method: squash
+
+      - name: Create Tag
+        uses: anothrNick/github-tag-action@1.34.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_BRANCHES: 13.x
+          CUSTOM_TAG: ${{ steps.bump.outputs.tag }}
+
+      - name: Create Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.bump.outputs.tag }}
+          release_name: v${{ steps.bump.outputs.tag }}

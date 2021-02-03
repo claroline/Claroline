@@ -57,7 +57,6 @@ COMMITNAMES="$( cut -d " " -f 2- <<< "$LOGS" )"
 COMMITS=$(tr " " "\n" <<< "$COMMITS")
 mapfile -t COMMITNAMES <<< "$COMMITNAMES"
 
-COMMITSTRING=''
 MERGESTRING=''
 
 i=0
@@ -68,10 +67,10 @@ for COMMIT in $COMMITS
 do
     if [[ ${COMMITNAMES[$i]} == *"Merge"* ]]; then
         #we don't log them yet, but jenkins already do that
-        MERGESTRING="${MERGESTRING}\nclaroline/distribution@${COMMIT} - ${COMMITNAMES[$i]}"
+        MERGESTRING="${MERGESTRING}\nclaroline/claroline@${COMMIT} - ${COMMITNAMES[$i]}"
     else
-        NAMELINKS=`echo ${COMMITNAMES[$i]} | sed -r 's/\(#([^)]*)\).*/[#\1]\(https:\/\/github.com\/claroline\/Distribution\/pull\/\1\)/'`
-        printf "[${COMMIT}](https://github.com/claroline/Distribution/commit/${COMMIT}) - ${NAMELINKS}  "$'\n' >> changelogs/${BRANCH_NAME}-${BASE_VERSION}.x.md
+        NAMELINKS=`echo ${COMMITNAMES[$i]} | sed -r 's/\(#([^)]*)\).*/[#\1]\(https:\/\/github.com\/claroline\/Claroline\/pull\/\1\)/'`
+        printf "[${COMMIT}](https://github.com/claroline/Claroline/commit/${COMMIT}) - ${NAMELINKS}  "$'\n' >> changelogs/${BRANCH_NAME}-${BASE_VERSION}.x.md
     fi
     i=$((i + 1))
 done
