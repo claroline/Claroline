@@ -35,7 +35,7 @@ jobs:
         id: release-pr
         uses: peter-evans/create-pull-request@v3
         with:
-          token: ${{ secrets.RELEASER_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           title: Release version ${{ steps.bump.outputs.tag }}
           branch: release-${{ steps.bump.outputs.tag }}
           delete-branch: true
@@ -43,7 +43,7 @@ jobs:
       - name: Approve Release PR
         uses: juliangruber/approve-pull-request-action@v1
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }} # FIXME should be a merger token
+          github-token: ${{ secrets.RELEASER_TOKEN }}
           number: ${{ steps.release-pr.outputs.pull-request-number }}
 
       - name: Merge Release PR
