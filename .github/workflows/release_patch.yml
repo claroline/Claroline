@@ -35,7 +35,7 @@ jobs:
         id: release-pr
         uses: peter-evans/create-pull-request@v3
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.RELEASER_TOKEN }}
           title: Release version ${{ steps.bump.outputs.tag }}
 
       - name: Approve Release PR
