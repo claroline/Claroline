@@ -211,7 +211,7 @@ trait ListParameters
 
     public function getAvailableSort(): array
     {
-        return $this->availableSort;
+        return $this->availableSort ?? [];
     }
 
     public function setAvailableSort(array $availableSort)
@@ -231,12 +231,7 @@ trait ListParameters
 
     public function getAvailablePageSizes(): array
     {
-        //in case it was null after migration or bug
-        if (!$this->availablePageSizes) {
-            return [];
-        }
-
-        return $this->availablePageSizes;
+        return $this->availablePageSizes ?? [];
     }
 
     public function setAvailablePageSizes(array $availablePageSizes)
@@ -256,13 +251,7 @@ trait ListParameters
 
     public function getAvailableDisplays(): array
     {
-        //in case it was null after migration or bug
-
-        if (!$this->availableDisplays) {
-            return [];
-        }
-
-        return $this->availableDisplays;
+        return $this->availableDisplays ?? [];
     }
 
     public function setAvailableDisplays(array $availableDisplays)
@@ -282,7 +271,7 @@ trait ListParameters
 
     public function getFilters(): array
     {
-        return $this->filters;
+        return $this->filters ?? [];
     }
 
     public function setFilters(array $filters)
@@ -292,12 +281,7 @@ trait ListParameters
 
     public function getAvailableFilters(): array
     {
-        //in case it was null after migration or bug
-        if (!$this->availableFilters) {
-            return [];
-        }
-
-        return $this->availableFilters;
+        return $this->availableFilters ?? [];
     }
 
     public function setAvailableFilters(array $availableFilters)
@@ -307,12 +291,7 @@ trait ListParameters
 
     public function getAvailableColumns(): array
     {
-        //in case it was null after migration or bug
-        if (!$this->availableColumns) {
-            return [];
-        }
-
-        return $this->availableColumns;
+        return $this->availableColumns ?? [];
     }
 
     public function setAvailableColumns(array $availableColumns)
@@ -322,12 +301,7 @@ trait ListParameters
 
     public function getDisplayedColumns(): array
     {
-        //in case it was null after migration or bug
-        if (!$this->displayedColumns) {
-            return [];
-        }
-
-        return $this->displayedColumns;
+        return $this->displayedColumns ?? [];
     }
 
     public function setDisplayedColumns(array $displayedColumns)
@@ -337,12 +311,7 @@ trait ListParameters
 
     public function getCard(): array
     {
-        //in case it was null after migration or bug
-        if (!$this->card) {
-            return [];
-        }
-
-        return $this->card;
+        return $this->card ?? [];
     }
 
     public function setCard(array $card)
