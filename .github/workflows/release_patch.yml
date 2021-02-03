@@ -37,6 +37,8 @@ jobs:
         with:
           token: ${{ secrets.RELEASER_TOKEN }}
           title: Release version ${{ steps.bump.outputs.tag }}
+          branch: release-${{ steps.bump.outputs.tag }}
+          delete-branch: true
 
       - name: Approve Release PR
         uses: juliangruber/approve-pull-request-action@v1
