@@ -1,6 +1,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
+import get from 'lodash/get'
 
 import {Routes} from '#/main/app/router'
 import {actions as listActions} from '#/main/app/content/list/store'
@@ -28,7 +29,7 @@ const PlayerComponent = (props) =>
           if (params.id) {
             props.newSubject(params.id)
           } else {
-            props.invalidateMessagesList()
+            props.invalidateMessagesList(get(props.forum, 'display.messageOrder'))
             props.newSubject()
           }
         },
@@ -42,7 +43,7 @@ const PlayerComponent = (props) =>
         path: '/subjects/show/:id',
         component: Subject,
         onEnter: (params) => {
-          props.invalidateMessagesList()
+          props.invalidateMessagesList(get(props.forum, 'display.messageOrder'))
           props.openSubject(params.id)
         },
         onLeave: () => {
@@ -70,6 +71,7 @@ PlayerComponent.propTypes = {
 const Player = connect(
   state => ({
     path: resourceSelectors.path(state),
+    forum: selectors.forum(state),
     editingSubject: selectors.editingSubject(state),
     showSubjectForm: selectors.showSubjectForm(state)
   }),
@@ -89,7 +91,8 @@ const Player = connect(
     loadSubjectList() {
       dispatch(listActions.invalidateData(`${selectors.STORE_NAME}.subjects.list`))
     },
-    invalidateMessagesList() {
+    invalidateMessagesList(messageOrder) {
+      dispatch(listActions.updateSort(`${selectors.STORE_NAME}.subjects.messages`, 'creationDate', 'ASC' === messageOrder ? 1 : -1))
       dispatch(listActions.invalidateData(`${selectors.STORE_NAME}.subjects.messages`))
     }
   })

@@ -5,7 +5,9 @@ const Forum = {
     id: T.string.isRequired,
     display: T.shape({
       description: T.string,
-      showOverview: T.bool.isRequired
+      showOverview: T.bool.isRequired,
+      messageOrder: T.oneOf(['ASC', 'DESC']),
+      expandComments: T.bool
     }),
     restrictions: T.shape({}),
     meta: T.shape({
@@ -19,7 +21,10 @@ const Forum = {
     })
   },
   defaultProps: {
-
+    display: {
+      messageOrder: 'ASC',
+      expandComments: false
+    }
   }
 }
 

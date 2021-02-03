@@ -134,7 +134,7 @@ const SubjectFormComponent = (props) => {
                   {
                     name: 'title',
                     type: 'string',
-                    label: trans('forum_subject_title_form_title', {}, 'forum'),
+                    label: trans('title'),
                     required: true
                   },
                   {

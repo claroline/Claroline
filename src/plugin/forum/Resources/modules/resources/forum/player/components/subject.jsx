@@ -267,6 +267,7 @@ class SubjectComponent extends Component {
                   }
                   <MessageComments
                     message={message}
+                    opened={get(this.props.forum, 'display.expandComments', false)}
                   />
                 </li>
               )}
