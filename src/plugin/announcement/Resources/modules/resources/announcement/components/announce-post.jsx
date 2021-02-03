@@ -54,8 +54,8 @@ const AnnouncePost = props =>
               id={`${props.id}-send`}
               className="btn-link"
               type={LINK_BUTTON}
-              icon="fa fa-fw fa-at"
-              label={trans('send_mail')}
+              icon="fa fa-fw fa-paper-plane"
+              label={trans('send-announce', {}, 'actions')}
               tooltip="top"
               target={`${props.path}/${props.id}/send`}
             />

@@ -1,5 +1,5 @@
 import {makeActionCreator} from '#/main/app/store/actions'
-import {url, API_REQUEST} from '#/main/app/api'
+import {API_REQUEST} from '#/main/app/api'
 
 export const ANNOUNCE_ADD    = 'ANNOUNCE_ADD'
 export const ANNOUNCE_CHANGE = 'ANNOUNCE_CHANGE'
@@ -38,9 +38,12 @@ actions.removeAnnounce = (aggregateId, announce) => ({
 actions.sendAnnounce = (aggregateId, announce) => ({
   [API_REQUEST]: {
     type: 'send',
-    url: url(['claro_announcement_send', {aggregateId: aggregateId, id: announce.id}], {ids: announce.roles}),
+    url: ['claro_announcement_send', {aggregateId: aggregateId, id: announce.id}],
     request: {
-      method: 'POST'
+      method: 'POST',
+      body: JSON.stringify({
+        ids: announce.roles
+      })
     }
   }
 })
