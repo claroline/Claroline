@@ -9,3 +9,9 @@ services:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
+
+    Claroline\AuthenticationBundle\Serializer\IpUserSerializer:
+        tags: [claroline.serializer]
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'

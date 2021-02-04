@@ -12,6 +12,7 @@
 namespace Claroline\AuthenticationBundle;
 
 use Claroline\AuthenticationBundle\DependencyInjection\Compiler\OauthConfigPass;
+use Claroline\AuthenticationBundle\Installation\AdditionalInstaller;
 use Claroline\CoreBundle\Library\DistributionPluginBundle;
 use Claroline\KernelBundle\Bundle\AutoConfigurableInterface;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
@@ -22,6 +23,11 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class ClarolineAuthenticationBundle extends DistributionPluginBundle implements ConfigurationProviderInterface, AutoConfigurableInterface
 {
+    public function getAdditionalInstaller()
+    {
+        return new AdditionalInstaller($this->getUpdaterServiceLocator());
+    }
+
     public function build(ContainerBuilder $container)
     {
         parent::build($container);

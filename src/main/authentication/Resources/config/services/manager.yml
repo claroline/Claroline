@@ -4,15 +4,6 @@ services:
         autoconfigure: false
         public: true
 
-    Claroline\AuthenticationBundle\Manager\IPWhiteListManager:
-        arguments:
-          - '%claroline.param.ip_white_list_file%'
-          - '%claroline.param.ip_range_white_list_file%'
-
-    claroline.manager.ip_white_list_manager:
-        alias: Claroline\AuthenticationBundle\Manager\IPWhiteListManager
-        public: true
-
     Claroline\AuthenticationBundle\Manager\OauthManager:
         arguments:
             - '@doctrine.orm.entity_manager'

@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
- * Loads the core services configuration files.
+ * Loads the authentication services configuration files.
  */
 class ClarolineAuthenticationExtension extends Extension
 {
@@ -29,7 +29,6 @@ class ClarolineAuthenticationExtension extends Extension
         $locator = new FileLocator(__DIR__.'/../Resources/config');
         $loader = new YamlFileLoader($container, $locator);
 
-        $loader->load('parameters.yml');
         $loader->load('services.yml');
     }
 }

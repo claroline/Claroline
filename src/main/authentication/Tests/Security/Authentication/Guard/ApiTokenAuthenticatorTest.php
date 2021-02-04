@@ -42,7 +42,7 @@ class ApiTokenAuthenticatorTest extends MockeryTestCase
         $apiToken->setUser($user);
 
         $apiTokenRepository = $this->mock(EntityRepository::class);
-        $apiTokenRepository->shouldReceive('findOneByToken')->with('foo')->once()->andReturn($apiToken);
+        $apiTokenRepository->shouldReceive('findOneBy')->with(['token' => 'foo'])->once()->andReturn($apiToken);
 
         $om = $this->mock(ObjectManager::class);
         $om->shouldReceive('getRepository')->with(ApiToken::class)->andReturn($apiTokenRepository);
@@ -81,7 +81,7 @@ class ApiTokenAuthenticatorTest extends MockeryTestCase
 
     public function testSupportsRememberMe()
     {
-        $authenticator = new ApiTokenAuthenticator($this->createMock(ObjectManager::class));
+        $authenticator = new ApiTokenAuthenticator($this->mock(ObjectManager::class));
         $this->assertFalse($authenticator->supportsRememberMe());
     }
 }

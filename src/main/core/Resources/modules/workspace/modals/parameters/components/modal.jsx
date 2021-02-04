@@ -21,19 +21,19 @@ const ParametersModal = props =>
   >
     <WorkspaceForm
       name={selectors.STORE_NAME}
-    />
-
-    <Button
-      className="modal-btn btn"
-      type={CALLBACK_BUTTON}
-      primary={true}
-      label={trans('save', {}, 'actions')}
-      disabled={!props.saveEnabled}
-      callback={() => {
-        props.saveWorkspace(props.workspace, props.onSave)
-        props.fadeModal()
-      }}
-    />
+    >
+      <Button
+        className="modal-btn btn"
+        type={CALLBACK_BUTTON}
+        primary={true}
+        label={trans('save', {}, 'actions')}
+        disabled={!props.saveEnabled}
+        callback={() => {
+          props.saveWorkspace(props.workspace, props.onSave)
+          props.fadeModal()
+        }}
+      />
+    </WorkspaceForm>
   </Modal>
 
 ParametersModal.propTypes = {

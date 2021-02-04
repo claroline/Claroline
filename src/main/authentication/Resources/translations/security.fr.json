@@ -1,5 +1,9 @@
 {
   "tokens": "Jetons d'authentification",
   "add_token": "Ajouter un jeton d'authentification",
-  "token": "Jeton d'authentification"
+  "token": "Jeton d'authentification",
+  "add_ip": "Ajouter une adresse IP",
+  "new_ip": "Nouvelle adresse IP",
+  "ips_help": "La liste d'adresse IPs connues vous permet d'authentifier automatiquement les personnes consultant votre platforme depuis ces adresses avec les Utilisateurs choisis.",
+  "define_ip_range": "Définir une plage d'adresses IP"
 }

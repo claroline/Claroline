@@ -1508,8 +1508,6 @@
     "card_subtitle": "Second title",
     "card_description": "Description [Detailed list / Large grid]",
     "card_footer": "Metadata [Detailed list / Large grid]",
-    "default_admin": "Default administrator",
-    "security": "Security",
     "pdf": "PDF",
     "limits": "Limits",
     "sessions": "Sessions",
@@ -1632,6 +1630,7 @@
     "show_end_page": "Display end page",
     "end_page": "End page",
     "end": "End",
+    "start": "Start",
     "root": "Root",
     "support": "Assistance",
     "further_information": "Further information"

@@ -26,7 +26,7 @@ class ApiTokenAuthenticator extends AbstractGuardAuthenticator
     }
 
     /**
-     * (@inheritdoc}.
+     * {@inheritdoc}.
      */
     public function supports(Request $request)
     {
@@ -34,7 +34,7 @@ class ApiTokenAuthenticator extends AbstractGuardAuthenticator
     }
 
     /**
-     * (@inheritdoc}.
+     * {@inheritdoc}.
      */
     public function getCredentials(Request $request)
     {
@@ -42,11 +42,11 @@ class ApiTokenAuthenticator extends AbstractGuardAuthenticator
     }
 
     /**
-     * (@inheritdoc}.
+     * {@inheritdoc}.
      */
     public function getUser($credentials, UserProviderInterface $userProvider)
     {
-        $apiToken = $this->om->getRepository(ApiToken::class)->findOneByToken($credentials);
+        $apiToken = $this->om->getRepository(ApiToken::class)->findOneBy(['token' => $credentials]);
 
         if (!$apiToken instanceof ApiToken) {
             return null;
@@ -56,7 +56,7 @@ class ApiTokenAuthenticator extends AbstractGuardAuthenticator
     }
 
     /**
-     * (@inheritdoc}.
+     * {@inheritdoc}.
      */
     public function checkCredentials($credentials, UserInterface $user)
     {
@@ -65,7 +65,7 @@ class ApiTokenAuthenticator extends AbstractGuardAuthenticator
     }
 
     /**
-     * (@inheritdoc}.
+     * {@inheritdoc}.
      */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
     {
@@ -74,7 +74,7 @@ class ApiTokenAuthenticator extends AbstractGuardAuthenticator
     }
 
     /**
-     * (@inheritdoc}.
+     * {@inheritdoc}.
      */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
@@ -83,7 +83,7 @@ class ApiTokenAuthenticator extends AbstractGuardAuthenticator
     }
 
     /**
-     * (@inheritdoc}.
+     * {@inheritdoc}.
      */
     public function start(Request $request, AuthenticationException $authException = null)
     {
@@ -91,7 +91,7 @@ class ApiTokenAuthenticator extends AbstractGuardAuthenticator
     }
 
     /**
-     * (@inheritdoc}.
+     * {@inheritdoc}.
      */
     public function supportsRememberMe()
     {

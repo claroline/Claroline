@@ -15,8 +15,7 @@ services:
 
     Claroline\AuthenticationBundle\Security\Authentication\Guard\IpAuthenticator:
         arguments:
-            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-            - '@claroline.manager.ip_white_list_manager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     Claroline\AuthenticationBundle\Security\Authentication\Guard\ApiTokenAuthenticator:
         arguments:
