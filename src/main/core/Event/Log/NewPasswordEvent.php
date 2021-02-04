@@ -29,11 +29,6 @@ class NewPasswordEvent extends Event
         return $this->user;
     }
 
-    public function getEvent()
-    {
-        return 'NewPasswordEvent';
-    }
-
     public function getMessage(TranslatorInterface $translator)
     {
         return sprintf($translator->trans('newPassword'), $this->user->getUsername());

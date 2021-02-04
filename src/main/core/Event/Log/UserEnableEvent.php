@@ -29,11 +29,6 @@ class UserEnableEvent extends Event
         return $this->user;
     }
 
-    public function getEvent()
-    {
-        return 'UserEnableEvent';
-    }
-
     public function getMessage(TranslatorInterface $translator)
     {
         return sprintf($translator->trans('userEnable'), $this->user->getUsername());

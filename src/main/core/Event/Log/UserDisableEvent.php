@@ -29,11 +29,6 @@ class UserDisableEvent extends Event
         return $this->user;
     }
 
-    public function getEvent()
-    {
-        return 'UserDisableEvent';
-    }
-
     public function getMessage(TranslatorInterface $translator)
     {
         return sprintf($translator->trans('userDisable'), $this->user->getUsername());

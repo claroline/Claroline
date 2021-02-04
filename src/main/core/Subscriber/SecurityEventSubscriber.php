@@ -6,8 +6,9 @@ use Claroline\CoreBundle\Entity\Log\LogSecurity;
 use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Contracts\EventDispatcher\Event;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class SecurityEventSubscriber implements EventSubscriberInterface
@@ -15,15 +16,18 @@ class SecurityEventSubscriber implements EventSubscriberInterface
     private $em;
     private $client;
     private $security;
+    private $requestStack;
 
     public function __construct(
         EntityManagerInterface $em,
         HttpClientInterface $client,
-        Security $security
+        Security $security,
+        RequestStack $requestStack
     ) {
         $this->em = $em;
         $this->client = $client;
         $this->security = $security;
+        $this->requestStack = $requestStack;
     }
 
     public static function getSubscribedEvents(): array
@@ -41,13 +45,13 @@ class SecurityEventSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function logEvent($event): void
+    public function logEvent(Event $event, string $eventName): void
     {
-        $request = Request::createFromGlobals();
+        $request = $this->requestStack->getCurrentRequest();
 
         $logEntry = new LogSecurity();
-        $logEntry->setDetails(sprintf('Log %s: %s', $event->getEvent(), $event->getMessage()));
-        $logEntry->setEvent($event->getEvent());
+        $logEntry->setDetails(sprintf('Log %s: %s', $eventName, $event->getMessage()));
+        $logEntry->setEvent($eventName);
         $logEntry->setTarget($event->getUser());
         $logEntry->setDoer($this->security->getUser());
         $logEntry->setDoerIp($request->getClientIp());

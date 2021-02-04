@@ -29,11 +29,6 @@ class ForgotPasswordEvent extends Event
         return $this->user;
     }
 
-    public function getEvent()
-    {
-        return 'ForgotPasswordEvent';
-    }
-
     public function getMessage(TranslatorInterface $translator)
     {
         return sprintf($translator->trans('forgotPassword'), $this->user->getUsername());

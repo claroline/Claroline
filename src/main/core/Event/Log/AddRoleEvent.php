@@ -37,11 +37,6 @@ class AddRoleEvent extends Event
         return $this->role;
     }
 
-    public function getEvent()
-    {
-        return 'AddRoleEvent';
-    }
-
     public function getMessage(TranslatorInterface $translator)
     {
         return sprintf($translator->trans('addRole'), $this->role->getName(), $this->user->getUsername());

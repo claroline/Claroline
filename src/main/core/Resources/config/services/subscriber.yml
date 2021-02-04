@@ -1,7 +1,8 @@
 services:
-    _defaults:
-        autowire: true
-        autoconfigure: true
-        public: false
 
-    Claroline\CoreBundle\Subscriber\SecurityEventSubscriber: ~
+    Claroline\CoreBundle\Subscriber\SecurityEventSubscriber:
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@http_client'
+            - '@security.helper'
+            - '@request_stack'

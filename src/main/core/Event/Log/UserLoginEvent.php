@@ -29,11 +29,6 @@ class UserLoginEvent extends Event
         return $this->user;
     }
 
-    public function getEvent()
-    {
-        return 'UserLoginEvent';
-    }
-
     public function getMessage(TranslatorInterface $translator)
     {
         return sprintf($translator->trans('userLogin'), $this->user->getUsername());

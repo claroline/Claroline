@@ -20,11 +20,6 @@ class UserLogoutEvent extends Event
         return $this->user;
     }
 
-    public function getEvent()
-    {
-        return 'UserLogoutEvent';
-    }
-
     public function getMessage(TranslatorInterface $translator)
     {
         return sprintf($translator->trans('userLogout'), $this->user->getUsername());
