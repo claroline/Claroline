@@ -35,13 +35,6 @@ class OauthController extends AbstractCrudController
     /** @var OauthManager */
     private $oauthManager;
 
-    /**
-     * OauthController constructor.
-     *
-     * @param RouterInterface              $router
-     * @param PlatformConfigurationHandler $configHandler
-     * @param OauthManager                 $oauthManager
-     */
     public function __construct(
         RouterInterface $router,
         PlatformConfigurationHandler $configHandler,
@@ -64,12 +57,8 @@ class OauthController extends AbstractCrudController
 
     /**
      * @Route("/check_connection", name="claro_oauth_check_connexion")
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
      */
-    public function checkConnectionAction(Request $request)
+    public function checkConnectionAction(Request $request): RedirectResponse
     {
         $session = $request->getSession();
 
@@ -86,13 +75,8 @@ class OauthController extends AbstractCrudController
 
     /**
      * @Route("/link_account/{service}/{username}", name="claro_oauth_link_account", methods={"POST"})
-     *
-     * @param Request $request
-     * @param string  $username
-     *
-     * @return JsonResponse
      */
-    public function linkAccountAction(Request $request, $username)
+    public function linkAccountAction(Request $request, string $username): JsonResponse
     {
         $session = $request->getSession();
         $service = $session->get('claroline.oauth.resource_owner');

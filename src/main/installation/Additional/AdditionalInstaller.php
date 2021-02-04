@@ -95,22 +95,22 @@ abstract class AdditionalInstaller implements LoggerAwareInterface, ContainerAwa
         /** @var UpdaterExecutionRepository $updaterExecutionRepository */
         $updaterExecutionRepository = $this->container->get(ObjectManager::class)->getRepository(UpdaterExecution::class);
 
-        foreach (static::getUpdaters() as $version => $updatedClass) {
+        foreach (static::getUpdaters() as $version => $updaterClass) {
             if (!version_compare($currentVersion, $version, '<')) {
                 continue;
             }
 
-            $alreadyExecuted = $updaterExecutionRepository->hasBeenExecuted($updatedClass);
+            $alreadyExecuted = $updaterExecutionRepository->hasBeenExecuted($updaterClass);
 
             if (!$this->shouldReplayUpdaters() && $alreadyExecuted) {
                 return;
             }
 
-            $updater = $this->updaterLocator->get($updatedClass);
+            $updater = $this->updaterLocator->get($updaterClass);
             $updater->postUpdate();
 
             if (!$alreadyExecuted) {
-                $updaterExecutionRepository->markAsExecuted($updatedClass);
+                $updaterExecutionRepository->markAsExecuted($updaterClass);
             }
         }
     }

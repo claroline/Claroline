@@ -86,7 +86,6 @@ class PlatformDefaults implements ParameterProviderInterface
             ],
             'security' => [
                 'account_duration' => null,
-                'default_root_anon_id' => null,
             ],
             'session' => [
                 'storage_type' => 'file',

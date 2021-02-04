@@ -17,4 +17,12 @@ use Psr\Log\LoggerAwareInterface;
 abstract class Updater implements LoggerAwareInterface
 {
     use LoggableTrait;
+
+    public function preUpdate()
+    {
+    }
+
+    public function postUpdate()
+    {
+    }
 }

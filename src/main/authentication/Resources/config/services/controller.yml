@@ -9,3 +9,7 @@ services:
             - '@router'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
             - '@Claroline\AuthenticationBundle\Manager\OauthManager'
+
+    Claroline\AuthenticationBundle\Controller\IpUserController:
+        parent: Claroline\AppBundle\Controller\AbstractCrudController
+        public: true

@@ -1,7 +1,9 @@
 imports:
-    - { resource: services/serializer.yml }
-    - { resource: services/controller.yml }
     - { resource: services/configuration.yml }
+    - { resource: services/controller.yml }
+    - { resource: services/finder.yml }
+    - { resource: services/listener.yml }
     - { resource: services/manager.yml }
     - { resource: services/security.yml }
-    - { resource: services/listener.yml }
+    - { resource: services/serializer.yml }
+    - { resource: services/updater.yml }

@@ -2,11 +2,13 @@
 
 namespace Claroline\AuthenticationBundle\Tests\Security\Authentication\Guard;
 
-use Claroline\AuthenticationBundle\Manager\IPWhiteListManager;
+use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\AuthenticationBundle\Entity\IpUser;
 use Claroline\AuthenticationBundle\Security\Authentication\Guard\IpAuthenticator;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
+use Doctrine\ORM\EntityRepository;
+use Mockery;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -17,52 +19,44 @@ class IpAuthenticatorTest extends MockeryTestCase
 {
     public function testSupports()
     {
-        $whitelistManager = $this->mock(IPWhiteListManager::class);
-        $whitelistManager->shouldReceive('isWhiteListed')->once()->andReturn(true);
-
-        $config = $this->mock(PlatformConfigurationHandler::class);
-        $config->shouldReceive('getParameter')->with('security.default_root_anon_id')->andReturn('foo');
-
-        $authenticator = new IpAuthenticator($config, $whitelistManager);
+        $authenticator = new IpAuthenticator($this->mock(ObjectManager::class));
 
         $this->assertTrue($authenticator->supports(new Request()));
-
-        $whitelistManager = $this->mock(IPWhiteListManager::class);
-        $whitelistManager->shouldReceive('isWhiteListed')->once()->andReturn(false);
-
-        $authenticator = new IpAuthenticator($config, $whitelistManager);
-
-        $this->assertFalse($authenticator->supports(new Request()));
     }
 
     public function testGetCredentials()
     {
-        $config = $this->mock(PlatformConfigurationHandler::class);
-        $config->shouldReceive('getParameter')->with('security.default_root_anon_id')->andReturn('foo');
+        $authenticator = new IpAuthenticator($this->mock(ObjectManager::class));
 
-        $authenticator = new IpAuthenticator($config, $this->mock(IPWhiteListManager::class));
+        $request = $this->mock(Request::class);
+        $request->shouldReceive('getClientIp')->andReturn('127.0.0.1');
 
-        $this->assertSame('foo', $authenticator->getCredentials(new Request()));
+        $this->assertSame('127.0.0.1', $authenticator->getCredentials($request));
     }
 
     public function testGetUser()
     {
+        Mockery::getConfiguration()->allowMockingNonExistentMethods(true);
+
         $user = new User();
 
-        $config = $this->mock(PlatformConfigurationHandler::class);
-        $config->shouldReceive('getParameter')->with('security.default_root_anon_id')->andReturn('foo');
+        $ipUser = new IpUser();
+        $ipUser->setUser($user);
 
-        $userProvider = \Mockery::mock(UserProviderInterface::class);
-        $userProvider->shouldReceive('loadUserByUsername')->with('foo')->andReturn($user);
+        $ipUserRepository = $this->mock(EntityRepository::class);
+        $ipUserRepository->shouldReceive('findOneBy')->with(['ip' => '127.0.0.1'])->once()->andReturn($ipUser);
 
-        $authenticator = new IpAuthenticator($config, $this->mock(IPWhiteListManager::class));
+        $om = $this->mock(ObjectManager::class);
+        $om->shouldReceive('getRepository')->with(IpUser::class)->andReturn($ipUserRepository);
 
-        $this->assertSame($user, $authenticator->getUser('foo', $userProvider));
+        $authenticator = new IpAuthenticator($om);
+
+        $this->assertSame($user, $authenticator->getUser('127.0.0.1', $this->mock(UserProviderInterface::class)));
     }
 
     public function testOnAuthenticationSuccess()
     {
-        $authenticator = new IpAuthenticator($this->mock(PlatformConfigurationHandler::class), $this->mock(IPWhiteListManager::class));
+        $authenticator = new IpAuthenticator($this->mock(ObjectManager::class));
 
         $this->assertNull(
             $authenticator->onAuthenticationSuccess(new Request(), new PostAuthenticationGuardToken(new User(), 'test', []), 'test')
@@ -71,7 +65,7 @@ class IpAuthenticatorTest extends MockeryTestCase
 
     public function testOnAuthenticationFailure()
     {
-        $authenticator = new IpAuthenticator($this->mock(PlatformConfigurationHandler::class), $this->mock(IPWhiteListManager::class));
+        $authenticator = new IpAuthenticator($this->mock(ObjectManager::class));
 
         $this->assertNull(
             $authenticator->onAuthenticationFailure(new Request(), new AuthenticationException())
@@ -80,14 +74,14 @@ class IpAuthenticatorTest extends MockeryTestCase
 
     public function testStart()
     {
-        $authenticator = new IpAuthenticator($this->mock(PlatformConfigurationHandler::class), $this->mock(IPWhiteListManager::class));
+        $authenticator = new IpAuthenticator($this->mock(ObjectManager::class));
 
         $this->assertEquals(new RedirectResponse('/'), $authenticator->start(new Request()));
     }
 
     public function testSupportsRememberMe()
     {
-        $authenticator = new IpAuthenticator($this->mock(PlatformConfigurationHandler::class), $this->mock(IPWhiteListManager::class));
+        $authenticator = new IpAuthenticator($this->mock(ObjectManager::class));
         $this->assertFalse($authenticator->supportsRememberMe());
     }
 }

@@ -41,11 +41,6 @@ services:
 
     Claroline\CoreBundle\Security\Voter\ImportFileVoter: ~
 
-    Claroline\CoreBundle\Security\Voter\IPWhiteListVoter:
-        tags: [security.voter]
-        arguments:
-            - '@claroline.manager.ip_white_list_manager'
-
     Claroline\CoreBundle\Security\Voter\LocationVoter: ~
 
     Claroline\CoreBundle\Security\Voter\OrganizationVoter: ~
