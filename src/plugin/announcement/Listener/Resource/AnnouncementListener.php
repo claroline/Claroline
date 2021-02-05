@@ -97,7 +97,8 @@ class AnnouncementListener
             $newAnnouncement = $this->manager->serialize($announcement);
             $newAnnouncement['id'] = Uuid::uuid4()->toString();
             $this->crud->create('Claroline\AnnouncementBundle\Entity\Announcement', $newAnnouncement, [
-              'announcement_aggregate' => $copy,
+                Crud::NO_PERMISSIONS, // this has already been checked by the core before forwarding the copy
+                'announcement_aggregate' => $copy,
             ]);
         }
 
