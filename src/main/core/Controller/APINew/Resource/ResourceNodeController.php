@@ -10,7 +10,6 @@ use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Exception\ResourceAccessException;
 use Claroline\CoreBundle\Manager\LogConnectManager;
 use Claroline\CoreBundle\Manager\Resource\ResourceActionManager;
 use Claroline\CoreBundle\Manager\Resource\RightsManager;
@@ -152,7 +151,7 @@ class ResourceNodeController extends AbstractCrudController
         $add = $this->actionManager->get($parent, 'add');
 
         if (!$this->actionManager->hasPermission($add, $collection)) {
-            throw new ResourceAccessException($collection->getErrorsForDisplay(), $collection->getResources());
+            throw new AccessDeniedException($collection->getErrorsForDisplay(), $collection->getResources());
         }
 
         $filesData = $request->files->all();

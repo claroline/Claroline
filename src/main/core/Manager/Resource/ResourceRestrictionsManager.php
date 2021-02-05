@@ -3,7 +3,6 @@
 namespace Claroline\CoreBundle\Manager\Resource;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -25,13 +24,6 @@ class ResourceRestrictionsManager
     /** @var AuthorizationCheckerInterface */
     private $authorization;
 
-    /**
-     * ResourceRestrictionsManager constructor.
-     *
-     * @param SessionInterface              $session
-     * @param RightsManager                 $rightsManager
-     * @param AuthorizationCheckerInterface $authorization
-     */
     public function __construct(
         SessionInterface $session,
         RightsManager $rightsManager,
@@ -45,10 +37,7 @@ class ResourceRestrictionsManager
     /**
      * Checks access restrictions of a resource.
      *
-     * @param ResourceNode $resourceNode
-     * @param Role[]       $userRoles
-     *
-     * @return bool
+     * @param string[] $userRoles
      */
     public function isGranted(ResourceNode $resourceNode, array $userRoles): bool
     {
@@ -63,10 +52,7 @@ class ResourceRestrictionsManager
     /**
      * Gets the list of access error for a resource and a user roles.
      *
-     * @param ResourceNode $resourceNode
-     * @param Role[]       $userRoles
-     *
-     * @return array
+     * @param string[] $userRoles
      */
     public function getErrors(ResourceNode $resourceNode, array $userRoles): array
     {
@@ -104,10 +90,7 @@ class ResourceRestrictionsManager
     /**
      * Checks if a user has at least the right to access to one of the resource action.
      *
-     * @param ResourceNode $resourceNode
-     * @param Role[]       $userRoles
-     *
-     * @return bool
+     * @param string[] $userRoles
      */
     public function hasRights(ResourceNode $resourceNode, array $userRoles): bool
     {
@@ -122,10 +105,6 @@ class ResourceRestrictionsManager
 
     /**
      * Checks if the access period of the resource is started.
-     *
-     * @param ResourceNode $resourceNode
-     *
-     * @return bool
      */
     public function isStarted(ResourceNode $resourceNode): bool
     {
@@ -134,10 +113,6 @@ class ResourceRestrictionsManager
 
     /**
      * Checks if the access period of the resource is over.
-     *
-     * @param ResourceNode $resourceNode
-     *
-     * @return bool
      */
     public function isEnded(ResourceNode $resourceNode): bool
     {
@@ -146,10 +121,6 @@ class ResourceRestrictionsManager
 
     /**
      * Checks if the ip of the current user is allowed to access the resource.
-     *
-     * @param ResourceNode $resourceNode
-     *
-     * @return bool
      *
      * @todo works just with IPv4, should be working with IPv6
      */
@@ -185,10 +156,6 @@ class ResourceRestrictionsManager
     /**
      * Checks if a resource is unlocked.
      * (aka it has no access code, or user has already submitted it).
-     *
-     * @param ResourceNode $resourceNode
-     *
-     * @return bool
      */
     public function isUnlocked(ResourceNode $resourceNode): bool
     {
@@ -205,13 +172,8 @@ class ResourceRestrictionsManager
     /**
      * Submits a code to unlock a resource.
      * NB. The resource will stay unlocked as long as the user session stay alive.
-     *
-     * @param ResourceNode $resourceNode - The resource to unlock
-     * @param string       $code         - The code sent by the user
-     *
-     * @throws InvalidDataException - If the submitted code is incorrect
      */
-    public function unlock(ResourceNode $resourceNode, $code = null)
+    public function unlock(ResourceNode $resourceNode, string $code = null)
     {
         //if a code is defined
         if ($accessCode = $resourceNode->getAccessCode()) {
