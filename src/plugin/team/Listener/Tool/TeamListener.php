@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\TeamBundle\Listener;
+namespace Claroline\TeamBundle\Listener\Tool;
 
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Entity\User;

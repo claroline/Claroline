@@ -12,6 +12,7 @@
 namespace Claroline\TeamBundle\Controller\API;
 
 use Claroline\AppBundle\API\FinderProvider;
+use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -93,9 +94,10 @@ class TeamController extends AbstractCrudController
             $params['hiddenFilters'] = [];
         }
         $params['hiddenFilters']['workspace'] = $workspace->getId();
-        $data = $this->finder->search('Claroline\TeamBundle\Entity\Team', $params);
 
-        return new JsonResponse($data, 200);
+        return new JsonResponse(
+            $this->finder->search(Team::class, $params, [Options::SERIALIZE_LIST])
+        );
     }
 
     /**
