@@ -108,14 +108,14 @@ class ResourceNodeSerializer
 
         $parent = $resourceNode->getParent();
         if (!empty($parent) && !in_array(static::NO_PARENT, $options)) {
-            $serializedNode['parent'] = $this->serialize($resourceNode->getParent(), [static::NO_PARENT]);
+            $serializedNode['parent'] = $this->serialize($resourceNode->getParent(), [Options::SERIALIZE_MINIMAL, static::NO_PARENT]);
         }
 
-        if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
+        if (!in_array(Options::SERIALIZE_MINIMAL, $options) && !in_array(Options::SERIALIZE_LIST, $options)) {
             $serializedNode = array_merge($serializedNode, [
                 'display' => $this->serializeDisplay($resourceNode),
                 'restrictions' => $this->serializeRestrictions($resourceNode),
-                'comments' => array_map(function (ResourceComment $comment) {
+                'comments' => array_map(function (ResourceComment $comment) { // TODO : should not be exposed here
                     return $this->serializer->serialize($comment);
                 }, $resourceNode->getComments()->toArray()),
             ]);

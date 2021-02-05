@@ -96,6 +96,7 @@ class TeamManager
         $deletableDirectory = isset($data['deletableDirectory']) ? $data['deletableDirectory'] : false;
         $maxUsers = isset($data['maxUsers']) ? $data['maxUsers'] : null;
 
+        // TODO : this should use CRUD
         for ($i = 0; $i < $nbTeams; ++$i) {
             $team = new Team();
             $validName = $this->computeValidTeamName($workspace, $name, $index);

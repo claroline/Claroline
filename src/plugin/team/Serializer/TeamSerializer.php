@@ -69,25 +69,18 @@ class TeamSerializer
         return 'team';
     }
 
-    /**
-     * @return array
-     */
-    public function serialize(Team $team)
+    public function serialize(Team $team, array $options = []): array
     {
         $users = $team->getRole() ? $team->getRole()->getUsers()->toArray() : $team->getUsers()->toArray();
 
-        return [
+        $serialized = [
             'id' => $team->getUuid(),
             'name' => $team->getName(),
             'description' => $team->getDescription(),
-            'workspace' => $this->workspaceSerializer->serialize($team->getWorkspace(), [Options::SERIALIZE_MINIMAL]),
             'maxUsers' => $team->getMaxUsers(),
             'countUsers' => count($users),
             'selfRegistration' => $team->isSelfRegistration(),
             'selfUnregistration' => $team->isSelfUnregistration(),
-            'directory' => $team->getDirectory() ?
-                $this->resourceNodeSerializer->serialize($team->getDirectory()->getResourceNode(), [Options::SERIALIZE_MINIMAL]) :
-                null,
             'publicDirectory' => $team->isPublic(),
             'deletableDirectory' => $team->isDirDeletable(),
             'role' => $team->getRole() ?
@@ -97,6 +90,17 @@ class TeamSerializer
                 $this->roleSerializer->serialize($team->getTeamManagerRole(), [Options::SERIALIZE_MINIMAL]) :
                 null,
         ];
+
+        if (!in_array(Options::SERIALIZE_MINIMAL, $options) && !in_array(Options::SERIALIZE_LIST, $options)) {
+            $serialized = array_merge($serialized, [
+                'directory' => $team->getDirectory() ?
+                    $this->resourceNodeSerializer->serialize($team->getDirectory()->getResourceNode(), [Options::SERIALIZE_MINIMAL]) :
+                    null,
+                'workspace' => $this->workspaceSerializer->serialize($team->getWorkspace(), [Options::SERIALIZE_MINIMAL]),
+            ]);
+        }
+
+        return $serialized;
     }
 
     /**
@@ -120,7 +124,7 @@ class TeamSerializer
         $this->sipe('publicDirectory', 'setIsPublic', $data, $team);
         $this->sipe('deletableDirectory', 'setDirDeletable', $data, $team);
 
-        if (isset($data['workspace']['id'])) {
+        if (isset($data['workspace'])) {
             /** @var Workspace $workspace */
             $workspace = $this->workspaceRepo->findOneBy(['uuid' => $data['workspace']['id']]);
 
@@ -136,11 +140,10 @@ class TeamSerializer
         if (empty($teamRole)) {
             $teamRole = $this->teamManager->createTeamRole($team);
             $team->setRole($teamRole);
+            $this->om->persist($teamRole);
         }
         $maxUsers = !empty($data['maxUsers']) ? $data['maxUsers'] : null;
         $team->setMaxUsers($maxUsers);
-        $teamRole->setMaxUsers($maxUsers);
-        $this->om->persist($teamRole);
 
         if (empty($teamManagerRole)) {
             $teamManagerRole = $this->teamManager->createTeamRole($team, true);

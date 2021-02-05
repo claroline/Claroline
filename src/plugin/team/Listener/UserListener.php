@@ -5,25 +5,16 @@ namespace Claroline\TeamBundle\Listener;
 use Claroline\CoreBundle\Event\User\MergeUsersEvent;
 use Claroline\TeamBundle\Manager\TeamManager;
 
-/**
- * Class ApiListener.
- */
-class ApiListener
+class UserListener
 {
     /** @var TeamManager */
     private $manager;
 
-    /**
-     * @param TeamManager $manager
-     */
     public function __construct(TeamManager $manager)
     {
         $this->manager = $manager;
     }
 
-    /**
-     * @param MergeUsersEvent $event
-     */
     public function onMerge(MergeUsersEvent $event)
     {
         // Replace team manager of Team nodes
