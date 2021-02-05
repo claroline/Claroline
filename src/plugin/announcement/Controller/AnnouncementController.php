@@ -90,6 +90,7 @@ class AnnouncementController
 
         /** @var Announcement $announcement */
         $announcement = $this->crud->create($this->getClass(), $data, [
+            Crud::NO_PERMISSIONS, // this has already been checked
             'announcement_aggregate' => $aggregate,
         ]);
 
