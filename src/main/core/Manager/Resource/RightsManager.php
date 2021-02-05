@@ -138,9 +138,6 @@ class RightsManager implements LoggerAwareInterface
         }, $creationRights);
     }
 
-    /**
-     * @return ResourceRights
-     */
     public function getMaximumRights(array $roles, ResourceNode $node)
     {
         return $this->rightsRepo->findMaximumRights($roles, $node);

@@ -7,30 +7,21 @@ use Symfony\Component\HttpFoundation\Request;
 
 trait RequestDecoderTrait
 {
-    /**
-     * @param Request $request
-     *
-     * @return array
-     *
-     * @throws InvalidDataException
-     */
-    protected function decodeRequest(Request $request)
+    protected function decodeRequest(Request $request): ?array
     {
-        $decodedRequest = json_decode($request->getContent(), true);
+        $decodedRequest = null;
+        if (!empty($request->getContent())) {
+            $decodedRequest = json_decode($request->getContent(), true);
 
-        if (null === $decodedRequest) {
-            throw new InvalidDataException('Invalid request content sent.', []);
+            if (null === $decodedRequest) {
+                throw new InvalidDataException('Invalid request content sent.', []);
+            }
         }
 
         return $decodedRequest;
     }
 
-    /**
-     * @param Request $request
-     * @param string  $class
-     * @param string  $property
-     */
-    protected function decodeIdsString(Request $request, $class, $property = 'ids')
+    protected function decodeIdsString(Request $request, string $class, string $property = 'ids')
     {
         $ids = $request->query->get($property) ?? [];
 

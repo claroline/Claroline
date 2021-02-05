@@ -7,7 +7,6 @@ export default (resourceNodes) => ({ // TODO : collection
   icon: 'fa fa-fw fa-download',
   label: trans('download', {}, 'actions'),
   url: ['claro_resource_action', {
-    type: resourceNodes[0].meta.type,
     action: 'download',
     id: resourceNodes[0].id
   }]

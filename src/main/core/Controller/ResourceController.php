@@ -14,11 +14,11 @@ namespace Claroline\CoreBundle\Controller;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\MenuAction;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
-use Claroline\CoreBundle\Exception\ResourceAccessException;
 use Claroline\CoreBundle\Exception\ResourceNotFoundException;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Manager\Resource\ResourceActionManager;
@@ -35,6 +35,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Twig\Environment;
 
 /**
@@ -45,6 +46,8 @@ use Twig\Environment;
  */
 class ResourceController
 {
+    use RequestDecoderTrait;
+
     /** @var TokenStorageInterface */
     private $tokenStorage;
     /** @var AuthorizationCheckerInterface */
@@ -164,16 +167,8 @@ class ResourceController
     /**
      * Downloads a list of Resources.
      *
-     * @Route(
-     *     "/download",
-     *     name="claro_resource_download",
-     *     defaults ={"forceArchive"=false}
-     * )
-     * @Route(
-     *     "/download/{forceArchive}",
-     *     name="claro_resource_download",
-     *     requirements={"forceArchive" = "^(true|false|0|1)$"},
-     * )
+     * @Route("/download", name="claro_resource_download", defaults={"forceArchive"=false})
+     * @Route("/download/{forceArchive}", name="claro_resource_download", requirements={"forceArchive"="^(true|false|0|1)$"})
      *
      * @param bool $forceArchive
      *
@@ -181,13 +176,11 @@ class ResourceController
      */
     public function downloadAction(Request $request, $forceArchive = false)
     {
-        $ids = $request->query->get('ids');
-        $nodes = $this->om->findList(ResourceNode::class, 'uuid', $ids);
+        $nodes = $this->decodeIdsString($request, ResourceNode::class);
 
         $collection = new ResourceCollection($nodes);
-
         if (!$this->authorization->isGranted('EXPORT', $collection)) {
-            throw new ResourceAccessException($collection->getErrorsForDisplay(), $collection->getResources());
+            throw new AccessDeniedException($collection->getErrorsForDisplay());
         }
 
         $data = $this->manager->download($nodes, $forceArchive);
@@ -229,19 +222,14 @@ class ResourceController
      */
     public function executeCollectionAction(string $action, Request $request): JsonResponse
     {
-        $ids = $request->query->get('ids');
-
         /** @var ResourceNode[] $resourceNodes */
-        $resourceNodes = $this->om->findList(ResourceNode::class, 'uuid', $ids);
+        $resourceNodes = $this->decodeIdsString($request, ResourceNode::class);
+
         $responses = [];
 
         // read request and get user query
         $parameters = $request->query->all();
-        $content = null;
-
-        if (!empty($request->getContent())) {
-            $content = json_decode($request->getContent(), true);
-        }
+        $content = $this->decodeRequest($request);
         $files = $request->files->all();
 
         $this->om->startFlushSuite();
@@ -254,7 +242,7 @@ class ResourceController
             }
 
             // check current user rights
-            $this->checkAccess($this->actionManager->get($resourceNode, $action), [$resourceNode]);
+            $this->checkAccess($this->actionManager->get($resourceNode, $action), [$resourceNode], $parameters);
 
             // dispatch action event
             $responses[] = $this->actionManager->execute($resourceNode, $action, $parameters, $content, $files);
@@ -270,8 +258,8 @@ class ResourceController
     /**
      * Executes an action on one resource.
      *
-     * @Route("/{action}/{id}", name="claro_resource_action_short")
-     * @Route("/{type}/{action}/{id}", name="claro_resource_action")
+     * @Route("/{action}/{id}", name="claro_resource_action")
+     * @EXT\ParamConverter("resourceNode", class="ClarolineCoreBundle:Resource\ResourceNode", options={"mapping": {"id": "uuid"}})
      */
     public function executeAction(string $action, ResourceNode $resourceNode, Request $request): Response
     {
@@ -281,18 +269,13 @@ class ResourceController
             throw new NotFoundHttpException(sprintf('The action %s with method [%s] does not exist for resource type %s.', $action, $request->getMethod(), $resourceNode->getResourceType()->getName()));
         }
 
-        // check current user rights
-        $this->checkAccess($this->actionManager->get($resourceNode, $action), [$resourceNode]);
-
         // read request and get user query
         $parameters = $request->query->all();
-
-        $content = null;
-
-        if (!empty($request->getContent())) {
-            $content = json_decode($request->getContent(), true);
-        }
+        $content = $this->decodeRequest($request);
         $files = $request->files->all();
+
+        // check current user rights
+        $this->checkAccess($this->actionManager->get($resourceNode, $action), [$resourceNode], $parameters);
 
         // dispatch action event
         return $this->actionManager->execute($resourceNode, $action, $parameters, $content, $files);
@@ -307,7 +290,7 @@ class ResourceController
         $collection->setAttributes($attributes);
 
         if (!$this->actionManager->hasPermission($action, $collection)) {
-            throw new ResourceAccessException($collection->getErrorsForDisplay(), $collection->getResources());
+            throw new AccessDeniedException($collection->getErrorsForDisplay());
         }
     }
 }

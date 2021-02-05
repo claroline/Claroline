@@ -18,14 +18,14 @@ export default (resourceNodes, nodesRefresher) => ({
   modal: [MODAL_RESOURCES, {
     title: trans('select_target_directory'),
     current: 0 < resourceNodes.length && resourceNodes[0].parent ? resourceNodes[0].parent : null,
-    selectAction: (selected) => ({
+    selectAction: (selected = []) => ({
       type: ASYNC_BUTTON,
       label: trans('select', {}, 'actions'),
       request: {
-        url: url(
-          ['claro_resource_collection_action', {action: 'copy'}],
-          {ids: resourceNodes.map(resourceNode => resourceNode.id)}
-        ),
+        url: url(['claro_resource_collection_action', {action: 'copy'}], {
+          parent: selected[0] ? selected[0].id : null, // required for correct rights check in API
+          ids: resourceNodes.map(resourceNode => resourceNode.id)
+        }),
         request: {
           method: 'POST',
           body: JSON.stringify({destination: selected[0]})
