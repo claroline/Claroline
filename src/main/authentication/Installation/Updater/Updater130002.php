@@ -31,7 +31,7 @@ class Updater130002 extends Updater
         $this->logger = $logger;
     }
 
-    public function preUpdate()
+    public function postUpdate()
     {
         // no need to do anything if no user attached to ips
         if (!$this->config->getParameter('security.default_root_anon_id')) {
