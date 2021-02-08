@@ -2,6 +2,7 @@ import {trans} from '#/main/app/intl/translation'
 
 import {RoleDisplay} from '#/main/core/data/types/role/components/display'
 import {RoleInput} from '#/main/core/data/types/role/components/input'
+import {RoleFilter} from '#/main/core/data/types/role/components/filter'
 
 const dataType = {
   name: 'role',
@@ -13,7 +14,8 @@ const dataType = {
   },
   components: {
     details: RoleDisplay,
-    input: RoleInput
+    input: RoleInput,
+    search: RoleFilter
   }
 }
 
