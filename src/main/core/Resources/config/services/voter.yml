@@ -33,8 +33,6 @@ services:
     Claroline\CoreBundle\Security\Voter\AdministratorVoter:
         tags: [security.voter]
 
-    Claroline\CoreBundle\Security\Voter\ApiTokenVoter: ~
-
     Claroline\CoreBundle\Security\Voter\FacetVoter: ~
 
     Claroline\CoreBundle\Security\Voter\GroupVoter: ~

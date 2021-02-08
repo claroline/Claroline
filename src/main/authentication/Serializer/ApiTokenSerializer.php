@@ -1,41 +1,40 @@
 <?php
 
-namespace Claroline\CoreBundle\API\Serializer\Cryptography;
+namespace Claroline\AuthenticationBundle\Serializer;
 
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\AuthenticationBundle\Entity\ApiToken;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
-use Claroline\CoreBundle\Entity\Cryptography\ApiToken;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Repository\User\UserRepository;
 
 class ApiTokenSerializer
 {
     use SerializerTrait;
 
+    /** @var UserSerializer */
     private $userSerializer;
+    /** @var UserRepository */
+    private $userRepo;
 
-    /**
-     * OptionsSerializer constructor.
-     *
-     * @param UserSerializer $userSerializer
-     */
     public function __construct(UserSerializer $userSerializer, ObjectManager $om)
     {
         $this->userSerializer = $userSerializer;
-        $this->om = $om;
+        $this->userRepo = $om->getRepository(User::class);
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'api_token';
     }
 
-    /**
-     * @param Options $options
-     *
-     * @return array
-     */
-    public function serialize(ApiToken $token, array $options = [])
+    public function getClass()
+    {
+        return ApiToken::class;
+    }
+
+    public function serialize(ApiToken $token): array
     {
         return [
             'id' => $token->getUuid(),
@@ -45,26 +44,17 @@ class ApiTokenSerializer
         ];
     }
 
-    /**
-     * @param array        $data
-     * @param Options|null $options
-     *
-     * @return Options
-     */
-    public function deserialize(array $data, ApiToken $token, array $options = [])
+    public function deserialize(array $data, ApiToken $token): ApiToken
     {
+        $this->sipe('id', 'setUuid', $data, $token);
+        $this->sipe('token', 'setToken', $data, $token);
         $this->sipe('description', 'setDescription', $data, $token);
 
         if (isset($data['user'])) {
-            $user = $this->om->getRepository(User::class)->findOneByUsername($data['user']['username']);
+            $user = $this->userRepo->findOneBy(['username' => $data['user']['username']]);
             $token->setUser($user);
         }
 
         return $token;
-    }
-
-    public function getClass()
-    {
-        return ApiToken::class;
     }
 }

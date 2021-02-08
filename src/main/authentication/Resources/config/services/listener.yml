@@ -1,8 +1,14 @@
 services:
     _defaults:
-        autowire: false #change to true
+        autowire: false
         autoconfigure: false
-        public: true #because controller
+        public: false
+
+    Claroline\AuthenticationBundle\Listener\Crud\ApiTokenListener:
+        arguments:
+            - '@security.token_storage'
+        tags:
+            - { name: kernel.event_listener, event: crud.pre.create.api_token, method: preCreate }
 
     Claroline\AuthenticationBundle\Listener\Platform\OauthSsoListener:
         arguments:

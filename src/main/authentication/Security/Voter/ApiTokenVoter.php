@@ -9,10 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Security\Voter;
+namespace Claroline\AuthenticationBundle\Security\Voter;
 
-use Claroline\CoreBundle\Entity\Cryptography\ApiToken;
+use Claroline\AuthenticationBundle\Entity\ApiToken;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Security\Voter\AbstractVoter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 

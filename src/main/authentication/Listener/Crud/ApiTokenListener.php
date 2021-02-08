@@ -1,12 +1,12 @@
 <?php
 
-namespace Claroline\CoreBundle\API\Crud\Cryptography;
+namespace Claroline\AuthenticationBundle\Listener\Crud;
 
 use Claroline\AppBundle\Event\Crud\CreateEvent;
-use Claroline\CoreBundle\Entity\Cryptography\ApiToken;
+use Claroline\AuthenticationBundle\Entity\ApiToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class ApiTokenCrud
+class ApiTokenListener
 {
     /** @var TokenStorageInterface */
     private $tokenStorage;

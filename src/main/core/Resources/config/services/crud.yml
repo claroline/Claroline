@@ -96,9 +96,3 @@ services:
             - '@Claroline\CoreBundle\Library\Utilities\FileUtilities'
         tags:
             - { name: kernel.event_listener, event: crud_pre_create_object_claroline_corebundle_entity_file_publicfile, method: preCreate }
-
-    Claroline\CoreBundle\API\Crud\Cryptography\ApiTokenCrud:
-        arguments:
-            - '@security.token_storage'
-        tags:
-            - { name: kernel.event_listener, event: crud_pre_create_object_claroline_corebundle_entity_cryptography_apitoken, method: preCreate }
