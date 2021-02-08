@@ -4,14 +4,20 @@ services:
         autoconfigure: false
         public: true
 
-    Claroline\AuthenticationBundle\Serializer\OauthUserSerializer:
-        tags: [claroline.serializer]
+    Claroline\AuthenticationBundle\Serializer\ApiTokenSerializer:
+        tags: [ claroline.serializer ]
+        arguments:
+            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+
+    Claroline\AuthenticationBundle\Serializer\IpUserSerializer:
+        tags: [ claroline.serializer ]
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
 
-    Claroline\AuthenticationBundle\Serializer\IpUserSerializer:
-        tags: [claroline.serializer]
+    Claroline\AuthenticationBundle\Serializer\OauthUserSerializer:
+        tags: [ claroline.serializer ]
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'

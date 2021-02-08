@@ -3,8 +3,8 @@
 namespace Claroline\AuthenticationBundle\Tests\Security\Authentication\Guard;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\AuthenticationBundle\Entity\ApiToken;
 use Claroline\AuthenticationBundle\Security\Authentication\Guard\ApiTokenAuthenticator;
-use Claroline\CoreBundle\Entity\Cryptography\ApiToken;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 use Doctrine\ORM\EntityRepository;

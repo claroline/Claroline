@@ -325,12 +325,6 @@ services:
             - '@Claroline\CoreBundle\API\Serializer\User\RoleSerializer'
             - '@Claroline\CoreBundle\API\Serializer\Facet\PanelFacetSerializer'
 
-    Claroline\CoreBundle\API\Serializer\Cryptography\ApiTokenSerializer:
-        tags: [claroline.serializer]
-        arguments:
-            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-
     Claroline\CoreBundle\API\Serializer\Platform\ConnectionMessageSerializer:
         tags: [claroline.serializer]
         arguments:

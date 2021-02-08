@@ -3,7 +3,7 @@
 namespace Claroline\AuthenticationBundle\Security\Authentication\Guard;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Cryptography\ApiToken;
+use Claroline\AuthenticationBundle\Entity\ApiToken;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
