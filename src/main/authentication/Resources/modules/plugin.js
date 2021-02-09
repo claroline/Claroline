@@ -7,8 +7,8 @@ import {registry} from '#/main/app/plugins/registry'
  */
 registry.add('ClarolineAuthenticationBundle', {
   integration: {
-    'tokens' : () => { return import(/* webpackChunkName: "authentication-integration-tokens" */ '#/main/authentication/integration/tokens')},
-    'ips' : () => { return import(/* webpackChunkName: "authentication-integration-tokens" */ '#/main/authentication/integration/ips')}
+    'tokens': () => { return import(/* webpackChunkName: "authentication-integration-tokens" */ '#/main/authentication/integration/tokens')},
+    'ips'   : () => { return import(/* webpackChunkName: "authentication-integration-ips" */    '#/main/authentication/integration/ips')}
   },
 
   /**
