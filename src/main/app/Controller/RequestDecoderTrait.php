@@ -7,7 +7,10 @@ use Symfony\Component\HttpFoundation\Request;
 
 trait RequestDecoderTrait
 {
-    protected function decodeRequest(Request $request): ?array
+    /**
+     * @return mixed|null
+     */
+    protected function decodeRequest(Request $request)
     {
         $decodedRequest = null;
         if (!empty($request->getContent())) {
