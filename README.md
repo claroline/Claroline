@@ -2,7 +2,7 @@ README
 ======
 
 [![Join the chat at https://gitter.im/claroline/Claroline](https://badges.gitter.im/claroline/Claroline.svg)](https://gitter.im/claroline/Claroline?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![Build Status](https://github.com/claroline/Claroline/workflows/ci/badge.svg)](https://github.com/claroline/Claroline/actions)
+[![Build Status](https://github.com/claroline/Claroline/workflows/CI/badge.svg)](https://github.com/claroline/Claroline/actions)
 
 This repository provides the source code of the Claroline platform.
 
