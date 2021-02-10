@@ -26,6 +26,7 @@ const Course = {
       order: T.number
     }),
     restrictions: T.shape({
+      active: T.bool,
       users: T.number
     }),
     registration: T.shape({

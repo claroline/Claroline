@@ -15,7 +15,6 @@
     "create_session": "Create training session",
     "create_session_event": "Create session event",
     "default_session": "Default training session",
-    "default_session_duration_label": "Default training session duration (day)",
     "event_registration_automatic": "Automatic",
     "event_registration_manual": "Manual",
     "event_registration_public": "Public",

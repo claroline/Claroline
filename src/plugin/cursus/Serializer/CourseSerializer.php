@@ -118,6 +118,8 @@ class CourseSerializer
                     'order' => $course->getOrder(),
                 ],
                 'restrictions' => [
+                    'hidden' => $course->isHidden(),
+                    'active' => $course->hasAvailableSession(),
                     'users' => $course->getMaxUsers(),
                 ],
                 'registration' => [
@@ -160,6 +162,7 @@ class CourseSerializer
         $this->sipe('meta.order', 'setOrder', $data, $course);
 
         $this->sipe('restrictions.users', 'setMaxUsers', $data, $course);
+        $this->sipe('restrictions.hidden', 'setHidden', $data, $course);
 
         $this->sipe('registration.propagate', 'setPropagateRegistration', $data, $course);
         $this->sipe('registration.selfRegistration', 'setPublicRegistration', $data, $course);

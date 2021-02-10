@@ -106,27 +106,6 @@ class CourseController extends AbstractCrudController
     }
 
     /**
-     * @Route("/available", name="apiv2_cursus_course_available", methods={"GET"})
-     */
-    public function listAvailableAction(Request $request): JsonResponse
-    {
-        $this->checkToolAccess('OPEN');
-
-        $params = $request->query->all();
-        $params['hiddenFilters'] = $this->getDefaultHiddenFilters();
-
-        if (empty($params['filters'])) {
-            $params['filters'] = [];
-        }
-
-        $params['filters']['available'] = true;
-
-        return new JsonResponse(
-            $this->finder->search(Course::class, $params)
-        );
-    }
-
-    /**
      * @Route("/{slug}/open", name="apiv2_cursus_course_open", methods={"GET"})
      * @EXT\ParamConverter("course", class="ClarolineCursusBundle:Course", options={"mapping": {"slug": "slug"}})
      */
