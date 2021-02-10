@@ -69,7 +69,7 @@ class Updater130002 extends Updater
             $ranges = Yaml::parseFile($rangeFile);
             if (is_array($ranges)) {
                 foreach ($ranges as $range) {
-                    if (!empty($range) {
+                    if (!empty($range)) {
                         $ipUser = new IpUser();
                         $ipUser->setIp(implode(',', array_values($range)));
                         $ipUser->setRange(true);
