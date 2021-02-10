@@ -15,7 +15,6 @@
     "create_session": "Créer une session de formation",
     "create_session_event": "Créer une séance",
     "default_session": "Session par défaut",
-    "default_session_duration_label": "Durée par défaut d'une session de formation (jour)",
     "event_registration_automatic": "Automatique",
     "event_registration_manual": "Manuelle",
     "event_registration_public": "Publique",

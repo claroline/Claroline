@@ -179,6 +179,18 @@ class Course extends AbstractTraining
         return $defaultSession;
     }
 
+    public function hasAvailableSession()
+    {
+        $now = new \DateTime();
+        foreach ($this->sessions as $session) {
+            if ($session->getEndDate() > $now) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public function getDefaultSessionDuration()
     {
         return $this->defaultSessionDuration;

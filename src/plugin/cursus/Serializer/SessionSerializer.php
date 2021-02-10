@@ -115,12 +115,6 @@ class SessionSerializer
         ];
 
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
-            $duration = null;
-            if ($session->getStartDate() && $session->getEndDate()) {
-                // this is just to expose the same schema than course
-                $duration = $session->getEndDate()->diff($session->getStartDate())->format('%a');
-            }
-
             $serialized = array_merge($serialized, [
                 'meta' => [
                     'creator' => $session->getCreator() ?
@@ -128,7 +122,7 @@ class SessionSerializer
                         null,
                     'created' => DateNormalizer::normalize($session->getCreatedAt()),
                     'updated' => DateNormalizer::normalize($session->getUpdatedAt()),
-                    'duration' => $duration,
+                    'duration' => $session->getCourse() ? $session->getCourse()->getDefaultSessionDuration() : null,
                     'default' => $session->isDefaultSession(),
                     'order' => $session->getOrder(),
 

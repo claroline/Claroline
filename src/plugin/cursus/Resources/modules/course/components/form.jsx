@@ -46,6 +46,15 @@ const CourseForm = (props) =>
             type: 'html',
             label: trans('description')
           }, {
+            name: 'meta.duration',
+            type: 'number',
+            label: trans('duration'),
+            required: true,
+            options: {
+              min: 0,
+              unit: trans('days')
+            }
+          }, {
             name: 'tags',
             label: trans('tags'),
             type: 'tag'
@@ -225,14 +234,6 @@ const CourseForm = (props) =>
                   return acc
                 }, {}) :
                 {}
-            }
-          }, {
-            name: 'meta.duration',
-            type: 'number',
-            label: trans('default_session_duration_label', {}, 'cursus'),
-            required: true,
-            options: {
-              min: 0
             }
           }
         ]

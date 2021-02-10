@@ -13,7 +13,7 @@ const CourseCard = props =>
   <DataCard
     {...props}
     className={classes(props.className, {
-      'data-card-muted': get(props.data, 'restrictions.hidden', false)
+      'data-card-muted': get(props.data, 'restrictions.hidden', false) || !get(props.data, 'restrictions.active', false)
     })}
     id={props.data.id}
     poster={props.data.thumbnail ? asset(props.data.thumbnail.url) : null}
