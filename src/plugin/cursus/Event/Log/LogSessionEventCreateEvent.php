@@ -12,13 +12,13 @@
 namespace Claroline\CursusBundle\Event\Log;
 
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
-use Claroline\CursusBundle\Entity\SessionEvent;
+use Claroline\CursusBundle\Entity\Event;
 
 class LogSessionEventCreateEvent extends LogGenericEvent
 {
     const ACTION = 'cursusbundle-session-event-create';
 
-    public function __construct(SessionEvent $sessionEvent)
+    public function __construct(Event $sessionEvent)
     {
         $session = $sessionEvent->getSession();
         $course = $session->getCourse();
@@ -32,16 +32,7 @@ class LogSessionEventCreateEvent extends LogGenericEvent
         $details['courseId'] = $course->getUuid();
         $details['courseTitle'] = $course->getName();
         $details['courseCode'] = $course->getCode();
-        $details['tutors'] = [];
 
-        foreach ($sessionEvent->getTutors() as $tutor) {
-            $details['tutors'][] = [
-                'id' => $tutor->getUuid(),
-                'username' => $tutor->getUsername(),
-                'firstName' => $tutor->getFirstName(),
-                'lastName' => $tutor->getLastName(),
-            ];
-        }
         parent::__construct(self::ACTION, $details);
     }
 
