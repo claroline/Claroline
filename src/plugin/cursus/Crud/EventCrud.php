@@ -23,9 +23,6 @@ class EventCrud
 {
     private $eventDispatcher;
 
-    /**
-     * SessionEventCrud constructor.
-     */
     public function __construct(EventDispatcherInterface $eventDispatcher)
     {
         $this->eventDispatcher = $eventDispatcher;
@@ -33,19 +30,16 @@ class EventCrud
 
     public function postCreate(CreateEvent $event)
     {
-        $event = new LogSessionEventCreateEvent($event->getObject());
-        $this->eventDispatcher->dispatch($event, 'log');
+        $this->eventDispatcher->dispatch(new LogSessionEventCreateEvent($event->getObject()), 'log');
     }
 
     public function postUpdate(UpdateEvent $event)
     {
-        $event = new LogSessionEventEditEvent($event->getObject());
-        $this->eventDispatcher->dispatch($event, 'log');
+        $this->eventDispatcher->dispatch(new LogSessionEventEditEvent($event->getObject()), 'log');
     }
 
     public function preDelete(DeleteEvent $event)
     {
-        $event = new LogSessionEventDeleteEvent($event->getObject());
-        $this->eventDispatcher->dispatch($event, 'log');
+        $this->eventDispatcher->dispatch(new LogSessionEventDeleteEvent($event->getObject()), 'log');
     }
 }
