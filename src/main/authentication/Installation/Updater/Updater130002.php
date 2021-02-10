@@ -52,7 +52,7 @@ class Updater130002 extends Updater
             if (is_array($ips)) {
                 $processed = [];
                 foreach ($ips as $ip) {
-                    if (!in_array($ip, $processed)) {
+                    if (!empty($ip) && !in_array($ip, $processed)) {
                         $ipUser = new IpUser();
                         $ipUser->setIp($ip);
                         $ipUser->setUser($user);
@@ -69,10 +69,12 @@ class Updater130002 extends Updater
             $ranges = Yaml::parseFile($rangeFile);
             if (is_array($ranges)) {
                 foreach ($ranges as $range) {
-                    $ipUser = new IpUser();
-                    $ipUser->setIp(implode(',', array_values($range)));
-                    $ipUser->setRange(true);
-                    $ipUser->setUser($user);
+                    if (!empty($range) {
+                        $ipUser = new IpUser();
+                        $ipUser->setIp(implode(',', array_values($range)));
+                        $ipUser->setRange(true);
+                        $ipUser->setUser($user);
+                    }
 
                     $this->om->persist($ipUser);
                 }
