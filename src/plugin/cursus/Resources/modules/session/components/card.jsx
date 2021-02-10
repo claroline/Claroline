@@ -18,7 +18,7 @@ const SessionCard = props =>
       start: displayDate(props.data.restrictions.dates[0]),
       end: displayDate(props.data.restrictions.dates[1])
     })}
-    contentText={props.data.description}
+    contentText={props.data.plainDescription || props.data.description}
   />
 
 SessionCard.propTypes = {

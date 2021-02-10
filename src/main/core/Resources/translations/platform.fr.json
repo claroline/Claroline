@@ -1665,5 +1665,7 @@
     "start": "Début",
     "root": "Racine",
     "support": "Assistance",
-    "further_information": "Informations complémentaires"
+    "further_information": "Informations complémentaires",
+    "plain_description": "Résumé",
+    "plain_description_help": "Le résumé est affiché dans les listes à la place de la description HTML."
 }

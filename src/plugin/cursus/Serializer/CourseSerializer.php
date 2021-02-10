@@ -93,6 +93,7 @@ class CourseSerializer
             'name' => $course->getName(),
             'slug' => $course->getSlug(),
             'description' => $course->getDescription(),
+            'plainDescription' => $course->getPlainDescription(),
             'poster' => $this->serializePoster($course),
             'thumbnail' => $this->serializeThumbnail($course),
             'permissions' => [
@@ -154,6 +155,7 @@ class CourseSerializer
         $this->sipe('code', 'setCode', $data, $course);
         $this->sipe('name', 'setName', $data, $course);
         $this->sipe('description', 'setDescription', $data, $course);
+        $this->sipe('plainDescription', 'setPlainDescription', $data, $course);
 
         $this->sipe('meta.tutorRoleName', 'setTutorRoleName', $data, $course);
         $this->sipe('meta.learnerRoleName', 'setLearnerRoleName', $data, $course);

@@ -46,6 +46,12 @@ const CourseForm = (props) =>
             type: 'html',
             label: trans('description')
           }, {
+            name: 'plainDescription',
+            type: 'string',
+            label: trans('plain_description'),
+            options: {long: true},
+            help: trans('plain_description_help')
+          }, {
             name: 'meta.duration',
             type: 'number',
             label: trans('duration'),

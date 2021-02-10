@@ -42,6 +42,12 @@ const SessionForm = (props) =>
             type: 'html',
             label: trans('description')
           }, {
+            name: 'plainDescription',
+            type: 'string',
+            label: trans('plain_description'),
+            options: {long: true},
+            help: trans('plain_description_help')
+          }, {
             name: 'meta.default',
             type: 'boolean',
             label: trans('default_session', {}, 'cursus'),

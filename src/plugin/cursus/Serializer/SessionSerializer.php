@@ -95,6 +95,7 @@ class SessionSerializer
             'code' => $session->getCode(),
             'name' => $session->getName(),
             'description' => $session->getDescription(),
+            'plainDescription' => $session->getPlainDescription(),
             'poster' => $this->serializePoster($session),
             'thumbnail' => $this->serializeThumbnail($session),
             'permissions' => [
@@ -158,6 +159,7 @@ class SessionSerializer
         $this->sipe('code', 'setCode', $data, $session);
         $this->sipe('name', 'setName', $data, $session);
         $this->sipe('description', 'setDescription', $data, $session);
+        $this->sipe('plainDescription', 'setPlainDescription', $data, $session);
 
         $this->sipe('meta.default', 'setDefaultSession', $data, $session);
         $this->sipe('meta.order', 'setOrder', $data, $session);

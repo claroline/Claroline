@@ -11,6 +11,7 @@ const Course = {
     code: T.string,
     name: T.string,
     description: T.string,
+    plainDescription: T.string,
     parent: T.shape({ // This is a minimal Course
       id: T.string,
       code: T.string,
@@ -63,6 +64,7 @@ const Session = {
     code: T.string,
     name: T.string,
     description: T.string,
+    plainDescription: T.string,
     meta: T.shape({
       default: T.bool,
       course: T.shape(

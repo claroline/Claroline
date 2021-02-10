@@ -20,7 +20,7 @@ const CourseCard = props =>
     icon="fa fa-graduation-cap"
     title={props.data.name}
     subtitle={props.data.code}
-    contentText={props.data.description}
+    contentText={props.data.plainDescription || props.data.description}
     flags={[
       get(props.data, 'restrictions.hidden')           && ['fa fa-eye-slash', trans('training_hidden', {}, 'cursus')],
       get(props.data, 'registration.selfRegistration') && ['fa fa-globe',     trans('training_public_registration', {}, 'cursus')]
