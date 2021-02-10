@@ -375,6 +375,17 @@ class WorkspaceManager implements LoggerAwareInterface
             return false;
         }
 
+        if (in_array('ROLE_ADMIN', $token->getRoleNames())) {
+            // this should be checked at a higher level
+            return true;
+        }
+
+        //or we have the role_manager
+        $managerRole = $workspace->getManagerRole();
+        if ($managerRole && in_array($managerRole->getName(), $token->getRoleNames())) {
+            return true;
+        }
+
         if (!$this->isImpersonated($token)) {
             /** @var User $user */
             $user = $token->getUser();
@@ -395,17 +406,6 @@ class WorkspaceManager implements LoggerAwareInterface
                     }
                 }
             }
-        }
-
-        if (in_array('ROLE_ADMIN', $token->getRoleNames())) {
-            // this should be check at a higher level
-            return true;
-        }
-
-        //or we have the role_manager
-        $managerRole = $workspace->getManagerRole();
-        if ($managerRole && in_array($managerRole->getName(), $token->getRoleNames())) {
-            return true;
         }
 
         return false;

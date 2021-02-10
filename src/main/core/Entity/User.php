@@ -52,11 +52,9 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
 {
     use Id;
     use Uuid;
-
     use Poster;
     use Thumbnail;
     use Description;
-
     use GroupsTrait;
     use OrganizationsTrait;
 
@@ -400,9 +398,9 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
 
         $this->id = $user['id'];
         $this->username = $user['username'];
-        $this->rolesStringAsArray = $user['roles'];
         $this->roles = new ArrayCollection();
         $this->groups = new ArrayCollection();
+        $this->administratedOrganizations = new ArrayCollection();
     }
 
     /**
