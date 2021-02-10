@@ -183,7 +183,7 @@ class Course extends AbstractTraining
     {
         $now = new \DateTime();
         foreach ($this->sessions as $session) {
-            if ($session->getEndDate() > $now) {
+            if (empty($session->getEndDate()) || $session->getEndDate() > $now) {
                 return true;
             }
         }

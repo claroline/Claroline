@@ -32,7 +32,6 @@ class AbstractTraining
 {
     use Id;
     use Uuid;
-
     use Code;
     use Description;
     use Order;
@@ -49,6 +48,13 @@ class AbstractTraining
      * @var string
      */
     protected $name;
+
+    /**
+     * @ORM\Column(nullable=true)
+     *
+     * @var string
+     */
+    protected $plainDescription;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace")
@@ -94,6 +100,16 @@ class AbstractTraining
     public function setName($name)
     {
         $this->name = $name;
+    }
+
+    public function getPlainDescription(): ?string
+    {
+        return $this->plainDescription;
+    }
+
+    public function setPlainDescription(string $description = null)
+    {
+        $this->plainDescription = $description;
     }
 
     public function getWorkspace()

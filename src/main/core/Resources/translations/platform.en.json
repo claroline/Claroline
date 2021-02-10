@@ -1633,5 +1633,7 @@
     "start": "Start",
     "root": "Root",
     "support": "Assistance",
-    "further_information": "Further information"
+    "further_information": "Further information",
+    "plain_description": "Summary",
+    "plain_description_help": "The summary is displayed in lists instead of the HTML description."
 }
