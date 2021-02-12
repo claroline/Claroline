@@ -2,7 +2,7 @@
 
 namespace Icap\LessonBundle;
 
-use Claroline\CoreBundle\Library\DistributionPluginBundle;
+use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
 use Icap\LessonBundle\Installation\AdditionalInstaller;
 
 class IcapLessonBundle extends DistributionPluginBundle

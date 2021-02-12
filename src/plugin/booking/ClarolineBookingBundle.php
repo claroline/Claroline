@@ -11,7 +11,7 @@
 
 namespace Claroline\BookingBundle;
 
-use Claroline\CoreBundle\Library\DistributionPluginBundle;
+use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
 
 class ClarolineBookingBundle extends DistributionPluginBundle
 {

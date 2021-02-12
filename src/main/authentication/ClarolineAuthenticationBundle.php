@@ -13,15 +13,14 @@ namespace Claroline\AuthenticationBundle;
 
 use Claroline\AuthenticationBundle\DependencyInjection\Compiler\OauthConfigPass;
 use Claroline\AuthenticationBundle\Installation\AdditionalInstaller;
-use Claroline\CoreBundle\Library\DistributionPluginBundle;
-use Claroline\KernelBundle\Bundle\AutoConfigurableInterface;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 use Claroline\KernelBundle\Bundle\ConfigurationProviderInterface;
+use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
 use HWI\Bundle\OAuthBundle\HWIOAuthBundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class ClarolineAuthenticationBundle extends DistributionPluginBundle implements ConfigurationProviderInterface, AutoConfigurableInterface
+class ClarolineAuthenticationBundle extends DistributionPluginBundle implements ConfigurationProviderInterface
 {
     public function getAdditionalInstaller()
     {

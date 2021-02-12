@@ -11,8 +11,8 @@
 
 namespace Claroline\DropZoneBundle;
 
-use Claroline\CoreBundle\Library\DistributionPluginBundle;
 use Claroline\DropZoneBundle\Installation\AdditionalInstaller;
+use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
 
 /**
  * Bundle class.

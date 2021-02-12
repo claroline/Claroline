@@ -12,7 +12,7 @@
 namespace Claroline\BigBlueButtonBundle;
 
 use Claroline\BigBlueButtonBundle\Installation\AdditionalInstaller;
-use Claroline\CoreBundle\Library\DistributionPluginBundle;
+use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
 
 class ClarolineBigBlueButtonBundle extends DistributionPluginBundle
 {

@@ -21,7 +21,6 @@ plugin:
         #class: res_text.png
         is_displayable_in_workspace: true
         is_displayable_in_desktop: true
-        has_options: false (default = false: does the tool need a configuration page)
         tool_rights: (optional)
             - name: action_name
               granted_icon_class: fa fa-something

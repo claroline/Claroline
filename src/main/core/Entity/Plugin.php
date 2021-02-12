@@ -46,11 +46,6 @@ class Plugin
      */
     protected $bundleName;
 
-    /**
-     * @ORM\Column(name="has_options", type="boolean")
-     */
-    protected $hasOptions = false;
-
     public function getId()
     {
         return $this->id;
@@ -97,16 +92,6 @@ class Plugin
     public function getSfName()
     {
         return $this->vendorName.$this->bundleName;
-    }
-
-    public function setHasOptions($hasOptions)
-    {
-        $this->hasOptions = $hasOptions;
-    }
-
-    public function hasOptions()
-    {
-        return $this->hasOptions;
     }
 
     //for debugging

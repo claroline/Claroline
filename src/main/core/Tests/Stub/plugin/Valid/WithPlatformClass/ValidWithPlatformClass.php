@@ -11,7 +11,7 @@
 
 namespace Valid\WithPlatformClass;
 
-use Claroline\CoreBundle\Library\DistributionPluginBundle;
+use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
 
 class ValidWithPlatformClass extends DistributionPluginBundle
 {

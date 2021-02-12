@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
-use Claroline\CoreBundle\Library\PluginBundleInterface;
+use Claroline\KernelBundle\Bundle\PluginBundleInterface;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Yaml\Parser;
@@ -29,12 +29,6 @@ class ConfigurationChecker implements CheckerInterface
 
     private $processedConfiguration;
 
-    /**
-     * ConfigurationChecker constructor.
-     *
-     * @param Parser        $yamlParser
-     * @param EntityManager $em
-     */
     public function __construct(Parser $yamlParser, EntityManager $em)
     {
         $this->yamlParser = $yamlParser;
@@ -43,8 +37,6 @@ class ConfigurationChecker implements CheckerInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @param PluginBundleInterface $plugin
      *
      * @todo Create dedicated repository methods to retrieve tool/type names
      */

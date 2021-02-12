@@ -19,9 +19,9 @@ use Symfony\Component\Filesystem\Filesystem;
 class ScriptHandler
 {
     /**
-     * @var \Claroline\BundleRecorder\Recorder
+     * @var BundleHandler
      */
-    private static $recorder;
+    private static $handler;
 
     /**
      * Writes the list of available bundles, based on currently installed packages.
@@ -30,20 +30,19 @@ class ScriptHandler
      */
     public static function buildBundleFile(Event $event)
     {
-        static::getRecorder($event)->buildBundleFile();
+        static::getHandler($event)->writeBundleFile();
     }
 
-    private static function getRecorder(Event $event): Recorder
+    private static function getHandler(Event $event): BundleHandler
     {
-        if (!isset(static::$recorder)) {
+        if (!isset(static::$handler)) {
             $vendorDir = realpath(rtrim($event->getComposer()->getConfig()->get('vendor-dir'), '/'));
             $distBundlefile = realpath($vendorDir.'/../src/main/installation/Resources/config').DIRECTORY_SEPARATOR.'bundles.ini-dist';
             $bundleFile = realpath($vendorDir.'/../files/config').DIRECTORY_SEPARATOR.'bundles.ini';
-            $handler = new BundleHandler(new Filesystem(), $distBundlefile, $bundleFile, new ConsoleIoLogger($event->getIO()));
 
-            static::$recorder = new Recorder($handler, $vendorDir);
+            static::$handler = new BundleHandler(new Filesystem(), $distBundlefile, $bundleFile, new ConsoleIoLogger($event->getIO()));
         }
 
-        return static::$recorder;
+        return static::$handler;
     }
 }

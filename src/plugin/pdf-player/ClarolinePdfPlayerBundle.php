@@ -11,7 +11,7 @@
 
 namespace Claroline\PdfPlayerBundle;
 
-use Claroline\CoreBundle\Library\DistributionPluginBundle;
+use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
 
 class ClarolinePdfPlayerBundle extends DistributionPluginBundle
 {

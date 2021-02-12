@@ -12,10 +12,10 @@
 namespace Claroline\InstallationBundle\Manager;
 
 use Claroline\AppBundle\Log\LoggableTrait;
-use Claroline\CoreBundle\Library\PluginBundleInterface;
 use Claroline\InstallationBundle\Additional\AdditionalInstallerInterface;
 use Claroline\InstallationBundle\Bundle\InstallableInterface;
 use Claroline\InstallationBundle\Fixtures\FixtureLoader;
+use Claroline\KernelBundle\Bundle\PluginBundleInterface;
 use Claroline\MigrationBundle\Manager\Manager;
 use Claroline\MigrationBundle\Migrator\Migrator;
 use Psr\Log\LoggerAwareInterface;

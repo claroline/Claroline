@@ -12,10 +12,10 @@
 namespace Claroline\KernelBundle\Manager;
 
 use Claroline\AppBundle\Log\LoggableTrait;
-use Claroline\CoreBundle\Library\PluginBundleInterface;
 use Claroline\KernelBundle\Bundle\AutoConfigurableInterface;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 use Claroline\KernelBundle\Bundle\ConfigurationProviderInterface;
+use Claroline\KernelBundle\Bundle\PluginBundleInterface;
 use Psr\Log\LoggerAwareInterface;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\HttpKernel\KernelInterface;

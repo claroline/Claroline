@@ -1,5 +1,4 @@
 plugin:
-    has_options: false
     tools:
         - name: agenda
           is_displayable_in_workspace: true

@@ -345,7 +345,6 @@ abstract class RepositoryTestCase extends WebTestCase
         $plugin = new Plugin();
         $plugin->setVendorName($vendor);
         $plugin->setBundleName($bundle);
-        $plugin->setHasOptions(false);
         self::create($vendor.$bundle, $plugin);
     }
 

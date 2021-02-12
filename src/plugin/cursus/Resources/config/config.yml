@@ -1,6 +1,4 @@
 plugin:
-    has_options: false
-
     tools:
         - name: training_events
           is_displayable_in_workspace: true

@@ -21,14 +21,14 @@
                             <div class="pdf-contents-title">
                                 {{ 'summary'|trans({}, 'platform') }}
                             </div>
-                            {% include "IcapLessonBundle:lesson:lessonContents.pdf.twig" with {'chapters' : tree, 'delimeter' : '.', 'rootId' : ''} %}
+                            {% include "@IcapLesson/lesson/lessonContents.pdf.twig" with {'chapters' : tree, 'delimeter' : '.', 'rootId' : ''} %}
                         </div>
                         <div class="clearfix"></div>
                     </div>
                 {% endif %}
 
                 <div class="lesson-chapters">
-                    {% include "IcapLessonBundle:lesson:lessonChapters.pdf.twig" with {'chapters' : tree, 'lessonId' : _resource.id} %}
+                    {% include "@IcapLesson/lesson/lessonChapters.pdf.twig" with {'chapters' : tree, 'lessonId' : _resource.id} %}
                 </div>
             {% endif %}
         </div>

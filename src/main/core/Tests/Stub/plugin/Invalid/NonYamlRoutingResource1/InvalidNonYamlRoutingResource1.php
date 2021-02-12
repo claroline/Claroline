@@ -11,7 +11,7 @@
 
 namespace Invalid\NonYamlRoutingResource1;
 
-use Claroline\CoreBundle\Library\DistributionPluginBundle;
+use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
 
 class InvalidNonYamlRoutingResource1 extends DistributionPluginBundle
 {

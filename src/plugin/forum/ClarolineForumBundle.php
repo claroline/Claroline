@@ -11,12 +11,9 @@
 
 namespace Claroline\ForumBundle;
 
-use Claroline\CoreBundle\Library\DistributionPluginBundle;
 use Claroline\ForumBundle\Installation\AdditionalInstaller;
+use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
 
-/**
- * Bundle class.
- */
 class ClarolineForumBundle extends DistributionPluginBundle
 {
     public function getAdditionalInstaller()

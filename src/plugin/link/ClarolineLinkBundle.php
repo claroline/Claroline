@@ -11,7 +11,7 @@
 
 namespace Claroline\LinkBundle;
 
-use Claroline\CoreBundle\Library\DistributionPluginBundle;
+use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
 use Claroline\LinkBundle\Installation\AdditionalInstaller;
 
 class ClarolineLinkBundle extends DistributionPluginBundle

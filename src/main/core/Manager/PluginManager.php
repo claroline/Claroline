@@ -14,8 +14,8 @@ namespace Claroline\CoreBundle\Manager;
 use Claroline\AppBundle\Parser\IniParser;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Plugin;
-use Claroline\CoreBundle\Library\PluginBundle;
 use Claroline\CoreBundle\Repository\PluginRepository;
+use Claroline\KernelBundle\Bundle\PluginBundle;
 use Claroline\KernelBundle\Manager\BundleManager;
 use Symfony\Component\HttpKernel\KernelInterface;
 
@@ -95,21 +95,18 @@ class PluginManager
 
         foreach ($plugins as $plugin) {
             $bundle = $this->getBundle($plugin);
-            if ($bundle && !$bundle->isHidden()) {
+            if ($bundle) {
                 $data[] = [
                     'id' => $plugin->getId(),
                     'name' => $plugin->getShortName(),
                     'meta' => [
                         'version' => $this->getVersion($plugin),
-                        'origin' => $this->getOrigin($plugin),
                         'vendor' => $plugin->getVendorName(),
                         'bundle' => $plugin->getBundleName(),
                     ],
                     'ready' => $this->isReady($plugin),
                     'enabled' => $this->isLoaded($plugin),
                     'locked' => $this->isLocked($plugin),
-
-                    'hasOptions' => $plugin->hasOptions(),
 
                     'requirements' => $this->getRequirements($plugin),
                     'requiredBy' => $this->getRequiredBy($plugin),
@@ -192,26 +189,6 @@ class PluginManager
     public function getIniFile()
     {
         return $this->bundleFile;
-    }
-
-    /**
-     * @param mixed $plugin Plugin Entity, ShortName (ClarolineCoreBundle) Fqcn (Claroline\CoreBundle\ClarolineCoreBundle)
-     *
-     * @deprecated It's no longer possible to hide a plugin
-     */
-    public function isHidden($plugin): bool
-    {
-        return $this->getBundle($plugin)->isHidden();
-    }
-
-    /**
-     * @param mixed $plugin Plugin Entity, ShortName (ClarolineCoreBundle) Fqcn (Claroline\CoreBundle\ClarolineCoreBundle)
-     *
-     * @return string|null
-     */
-    public function getOrigin($plugin)
-    {
-        return $this->getBundle($plugin)->getOrigin();
     }
 
     /**

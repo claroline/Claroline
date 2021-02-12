@@ -1,6 +1,4 @@
 plugin:
-    has_options: false
-
     resource_actions:
         # Gets all the notifications for the current user
         - name: notifications

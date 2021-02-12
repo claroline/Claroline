@@ -13,7 +13,7 @@ namespace Claroline\CoreBundle\Command;
 
 use Claroline\AppBundle\Command\BaseCommandTrait;
 use Claroline\CoreBundle\Library\Installation\Plugin\Installer;
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\KernelBundle\Bundle\PluginBundle;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;

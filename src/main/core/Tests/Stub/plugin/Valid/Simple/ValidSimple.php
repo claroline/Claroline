@@ -11,7 +11,7 @@
 
 namespace Valid\Simple;
 
-use Claroline\CoreBundle\Library\DistributionPluginBundle;
+use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
 
 class ValidSimple extends DistributionPluginBundle
 {

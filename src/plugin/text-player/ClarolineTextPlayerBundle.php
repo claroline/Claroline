@@ -2,7 +2,7 @@
 
 namespace Claroline\TextPlayerBundle;
 
-use Claroline\CoreBundle\Library\DistributionPluginBundle;
+use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
 
 class ClarolineTextPlayerBundle extends DistributionPluginBundle
 {

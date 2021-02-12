@@ -3,7 +3,7 @@
 namespace Claroline\AgendaBundle;
 
 use Claroline\AgendaBundle\Installation\AdditionalInstaller;
-use Claroline\CoreBundle\Library\DistributionPluginBundle;
+use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
 
 /**
  * Bundle class.

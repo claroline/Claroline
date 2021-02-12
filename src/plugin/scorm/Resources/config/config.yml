@@ -1,6 +1,4 @@
 plugin:
-  has_options: false
-
   resources:
     - name: claroline_scorm
       class: Claroline\ScormBundle\Entity\Scorm

@@ -22,11 +22,11 @@ use Claroline\CoreBundle\Entity\Template\TemplateType;
 use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Widget\Widget;
-use Claroline\CoreBundle\Library\PluginBundleInterface;
 use Claroline\CoreBundle\Manager\Resource\MaskManager;
 use Claroline\CoreBundle\Manager\Tool\ToolManager;
 use Claroline\CoreBundle\Manager\Tool\ToolMaskDecoderManager;
 use Claroline\CoreBundle\Repository\PluginRepository;
+use Claroline\KernelBundle\Bundle\PluginBundleInterface;
 use Claroline\ThemeBundle\Entity\Theme;
 use Claroline\ThemeBundle\Manager\IconSetManager;
 use Psr\Log\LoggerAwareInterface;
@@ -95,7 +95,6 @@ class DatabaseWriter implements LoggerAwareInterface
         $pluginEntity = new Plugin();
         $pluginEntity->setVendorName($pluginBundle->getVendorName());
         $pluginEntity->setBundleName($pluginBundle->getBundleName());
-        $pluginEntity->setHasOptions($pluginConfiguration['has_options']);
 
         $this->em->persist($pluginEntity);
         $this->persistConfiguration($pluginConfiguration, $pluginEntity, $pluginBundle);
@@ -123,7 +122,6 @@ class DatabaseWriter implements LoggerAwareInterface
             return null;
         }
 
-        $plugin->setHasOptions($pluginConfiguration['has_options']);
         $this->em->persist($plugin);
         $this->log('Configuration was retrieved: updating...');
 

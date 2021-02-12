@@ -11,7 +11,7 @@
 
 namespace Invalid\MissingResourceKey1;
 
-use Claroline\CoreBundle\Library\DistributionPluginBundle;
+use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
 
 /**
  * Invalid because requiring keys are missing in its resource definition file.

@@ -9,16 +9,16 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Library;
+namespace Claroline\KernelBundle\Bundle;
 
 /**
- * Base class of all the plugin bundles on the claroline platform.
+ * Base class of all the plugins embedded by the claroline platform (aka plugins defined in src/).
  */
 abstract class DistributionPluginBundle extends PluginBundle
 {
-    public function getVersion(): string
+    final public function getVersion(): string
     {
-        $data = file_get_contents(realpath($this->getPath().'/../../VERSION.txt'));
+        $data = file_get_contents(realpath($this->getPath().'/../../../VERSION.txt'));
         $dataParts = explode("\n", $data);
 
         return trim($dataParts[0]);

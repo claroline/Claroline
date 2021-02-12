@@ -1,6 +1,4 @@
 plugin:
-    has_options: false
-
     resource_icons:
         - name: res_avi
           mime_types: [video]

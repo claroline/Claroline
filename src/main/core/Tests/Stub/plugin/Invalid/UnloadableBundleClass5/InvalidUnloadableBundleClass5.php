@@ -11,7 +11,7 @@
 
 namespace Invalid\UnloadableBundleClass5;
 
-use Claroline\CoreBundle\Library\DistributionPluginBundle;
+use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
 
 abstract class InvalidUnloadableBundleClass5 extends DistributionPluginBundle
 {

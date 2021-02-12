@@ -12,7 +12,7 @@
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\KernelBundle\Bundle\PluginBundle;
 use Symfony\Component\Config\Definition\Builder\NodeBuilder;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -42,7 +42,6 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->getRootNode();
         //maybe remove that line and edit plugins later
         $pluginSection = $rootNode->children('plugin');
-        $this->addGeneralSection($pluginSection);
         $this->addWidgetSection($pluginSection);
         $this->addDataSourceSection($pluginSection);
         $this->addResourceSection($pluginSection);
@@ -56,39 +55,11 @@ class Configuration implements ConfigurationInterface
         return $treeBuilder;
     }
 
-    private function addGeneralSection(NodeBuilder $pluginSection)
-    {
-        $plugin = $this->plugin;
-        $pluginFqcn = get_class($plugin);
-        $imgFolder = $plugin->getImgFolder();
-        $ds = DIRECTORY_SEPARATOR;
-
-        $pluginSection
-            ->booleanNode('has_options')
-                ->defaultFalse()
-            ->end()
-            ->scalarNode('icon')
-                ->validate()
-                    ->ifTrue(
-                        function ($v) use ($plugin) {
-                            return !call_user_func_array(
-                                __CLASS__.'::isIconValid',
-                                [$v, $plugin]
-                            );
-                        }
-                    )
-                    ->thenInvalid($pluginFqcn." : this file was not found ({$imgFolder}{$ds}%s)")
-                ->end()
-            ->end()
-        ->end();
-    }
-
     private function addResourceSection(NodeBuilder $pluginSection)
     {
         $plugin = $this->plugin;
         $pluginFqcn = get_class($plugin);
         $resourceFile = $plugin->getConfigFile();
-        $imgFolder = $plugin->getImgFolder();
         $listNames = $this->listNames;
         $updateMode = $this->isInUpdateMode();
 
@@ -138,22 +109,7 @@ class Configuration implements ConfigurationInterface
                                     )
                                 ->end()
                             ->end()
-                       ->booleanNode('is_visible')->end()    // must be removed
-                       ->booleanNode('is_browsable')->end()  // must be removed
                        ->scalarNode('exportable')->defaultValue(false)->end()
-                       ->scalarNode('icon')
-                           ->validate()
-                                ->ifTrue(
-                                    function ($v) use ($plugin) {
-                                        return !call_user_func_array(
-                                            __CLASS__.'::isResourceIconValid',
-                                            [$v, $plugin]
-                                        );
-                                    }
-                                )
-                                ->thenInvalid($pluginFqcn." : this file was not found ({$imgFolder}%s)")
-                           ->end()
-                       ->end()
                        ->arrayNode('tags')
                            ->prototype('scalar')->end()
                            ->defaultValue([])
@@ -324,8 +280,6 @@ class Configuration implements ConfigurationInterface
                         ->booleanNode('is_displayable_in_desktop')->isRequired()->end()
                         ->scalarNode('class')->end()
                         ->scalarNode('is_exportable')->defaultValue(false)->end()
-                        //@todo remove the following line later
-                        ->scalarNode('has_options')->defaultValue(false)->end()
                         ->scalarNode('is_desktop_required')->defaultValue(false)->end()
                         ->scalarNode('is_workspace_required')->defaultValue(false)->end()
                         ->scalarNode('is_configurable_in_workspace')->defaultValue(false)->end()
@@ -412,33 +366,6 @@ class Configuration implements ConfigurationInterface
     public static function isAbstractResourceExtended($v)
     {
         return (new $v()) instanceof AbstractResource;
-    }
-
-    public static function isResourceIconValid($v, $plugin)
-    {
-        $ds = DIRECTORY_SEPARATOR;
-        $imgFolder = $plugin->getImgFolder();
-        $expectedImgLocation = $imgFolder.$ds.$ds.$v;
-
-        return file_exists($expectedImgLocation);
-    }
-
-    public static function isSmallIconValid($v, $plugin)
-    {
-        $ds = DIRECTORY_SEPARATOR;
-        $imgFolder = $plugin->getImgFolder();
-        $expectedImgLocation = $imgFolder.$ds.'small'.$ds.$v;
-
-        return file_exists($expectedImgLocation);
-    }
-
-    public static function isIconValid($v, $plugin)
-    {
-        $ds = DIRECTORY_SEPARATOR;
-        $imgFolder = $plugin->getImgFolder();
-        $expectedImgLocation = $imgFolder.$ds.$v;
-
-        return file_exists($expectedImgLocation);
     }
 
     public static function isNameAlreadyExist($v, $listNames)

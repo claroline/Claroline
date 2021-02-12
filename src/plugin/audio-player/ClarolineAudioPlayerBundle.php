@@ -11,7 +11,7 @@
 
 namespace Claroline\AudioPlayerBundle;
 
-use Claroline\CoreBundle\Library\DistributionPluginBundle;
+use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
 
 class ClarolineAudioPlayerBundle extends DistributionPluginBundle
 {

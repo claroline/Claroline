@@ -11,7 +11,7 @@
 
 namespace Claroline\RssBundle;
 
-use Claroline\CoreBundle\Library\DistributionPluginBundle;
+use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
 
 class ClarolineRssBundle extends DistributionPluginBundle
 {

@@ -1,6 +1,4 @@
 plugin:
-    has_options: false
-
     tools:
         - name: booking
           is_displayable_in_workspace: false
