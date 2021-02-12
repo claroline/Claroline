@@ -10,5 +10,6 @@
   },
   "not_found": "Contenu non trouvé",
   "loading": "Chargement en cours...",
-  "dpo": "Délégué à la protection des données"
+  "dpo": "Délégué à la protection des données",
+  "next_step": "Suivant : %step%"
 }

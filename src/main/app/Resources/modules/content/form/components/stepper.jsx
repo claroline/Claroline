@@ -3,82 +3,17 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import isUndefined from 'lodash/isUndefined'
 
+import {scrollTo} from '#/main/app/dom/scroll'
 import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
-import {CallbackButton} from '#/main/app/buttons/callback'
 import {ContentTitle} from '#/main/app/content/components/title'
-
-/**
- * Renders the form navigation.
- *
- * @param props
- * @constructor
- */
-const FormStepperNav = props =>
-  <nav className="form-stepper-nav">
-    {props.steps.map((step, stepIndex) => {
-      const done = -1 !== props.done.indexOf(stepIndex)
-      if (done && props.activeIndex !== stepIndex) {
-        return (
-          <CallbackButton
-            key={stepIndex}
-            className="form-stepper-link done"
-            callback={() => props.navigate(stepIndex)}
-          >
-            <span className="form-step-badge">
-              {step.icon &&
-                <span className={step.icon} />
-              }
-
-              {!step.icon && (stepIndex+1)}
-            </span>
-
-            {step.title}
-          </CallbackButton>
-        )
-      }
-
-      return (
-        <span
-          key={stepIndex}
-          className={classes('form-stepper-link', {
-            active: props.activeIndex === stepIndex,
-            done: done
-          })}
-        >
-          <span className="form-step-badge">
-            {step.icon &&
-              <span className={step.icon} />
-            }
-
-            {!step.icon && (stepIndex+1)}
-          </span>
-
-          {step.title}
-        </span>
-      )
-    })}
-  </nav>
-
-FormStepperNav.propTypes = {
-  activeIndex: T.number.isRequired,
-  steps: T.arrayOf(T.shape({
-    icon: T.string,
-    title: T.string.isRequired,
-    component: T.any,
-    render: T.func
-  })).isRequired,
-  done: T.arrayOf(T.number),
-  navigate: T.func.isRequired
-}
+import {CountGauge} from '#/main/core/layout/gauge/components/count-gauge'
+import {ProgressBar} from '#/main/app/content/components/progress-bar'
 
 /**
  * Renders the form footer (aka. next and submit buttons).
- *
- * @param props
- * @constructor
  */
 const FormStepperFooter = props =>
   <div className="form-stepper-footer">
@@ -88,6 +23,7 @@ const FormStepperFooter = props =>
         type={CALLBACK_BUTTON}
         label={trans('previous')}
         callback={() => props.navigate(props.previousStep)}
+        onClick={() => scrollTo('.form-stepper')}
       />
     }
 
@@ -98,6 +34,7 @@ const FormStepperFooter = props =>
         label={trans('next')}
         callback={() => props.navigate(props.nextStep)}
         primary={true}
+        onClick={() => scrollTo('.form-stepper')}
       />
     }
 
@@ -106,6 +43,7 @@ const FormStepperFooter = props =>
         className="btn btn-emphasis btn-next"
         {...props.submit}
         primary={true}
+        onClick={() => scrollTo('.form-stepper')}
       />
     }
   </div>
@@ -171,18 +109,29 @@ class FormStepper extends Component {
   render() {
     return (
       <div className={classes('form-stepper', this.props.className)}>
-        <FormStepperNav
-          steps={this.props.steps}
-          done={this.state.doneSteps}
-          activeIndex={this.state.activeStep}
-          navigate={this.navigate}
+        <ProgressBar
+          className="progress-minimal"
+          value={Math.floor(((this.state.activeStep + 1) / (this.props.steps.length)) * 100)}
+          size="xs"
+          type="user"
         />
 
         <ContentTitle
           level={this.props.level}
           displayLevel={this.props.displayLevel}
           title={this.props.steps[this.state.activeStep].title}
-        />
+          subtitle={this.props.steps[this.state.activeStep+1] ? trans('next_step', {step: this.props.steps[this.state.activeStep+1].title}) : undefined}
+        >
+          <CountGauge
+            className="h-gauge"
+            value={this.state.activeStep + 1}
+            total={this.props.steps.length}
+            type="user"
+            displayValue={(value) => value + ' / ' + this.props.steps.length}
+            width={70}
+            height={70}
+          />
+        </ContentTitle>
 
         {this.props.steps[this.state.activeStep].component ?
           createElement(this.props.steps[this.state.activeStep].component) :
@@ -220,7 +169,8 @@ FormStepper.propTypes = {
 }
 
 FormStepper.defaultProps = {
-  level: 2
+  level: 2,
+  steps: []
 }
 
 export {
