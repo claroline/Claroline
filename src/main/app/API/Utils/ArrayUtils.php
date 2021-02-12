@@ -7,8 +7,7 @@ class ArrayUtils
     /**
      * This is more or less the equivalent of lodash set for array.
      *
-     * @param array  $object
-     * @param string $keys   - the property path
+     * @param string $keys - the property path
      * @param $value
      *
      * @throws \Exception
@@ -34,6 +33,12 @@ class ArrayUtils
 
     public static function remove(array &$object, $keys)
     {
+        // because sometimes there are keys with dot in it (eg. Scorm props cmi.*)
+        // we check the whole key exist before starting the recursive search
+        if (isset($object[$keys])) {
+            unset($object[$keys]);
+        }
+
         $keys = explode('.', $keys);
         $depth = count($keys);
         $key = array_shift($keys);
@@ -60,6 +65,16 @@ class ArrayUtils
      */
     public static function get(array $object, $keys, $default = null)
     {
+        // because sometimes there are keys with dot in it (eg. Scorm props cmi.*)
+        // we check the whole key exist before starting the recursive search
+        if (array_key_exists($keys, $object)) {
+            if (isset($object[$keys])) {
+                return $object[$keys];
+            }
+
+            return $default;
+        }
+
         $parts = explode('.', $keys);
         $key = array_shift($parts);
 
