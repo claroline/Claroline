@@ -1,6 +1,4 @@
 plugin:
-    has_options: false
-
     resources:
         - name: icap_wiki
           class: Icap\WikiBundle\Entity\Wiki

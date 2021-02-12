@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
+use Claroline\KernelBundle\Bundle\PluginBundleInterface;
 use RuntimeException;
 
 /**
@@ -18,7 +19,7 @@ use RuntimeException;
  * perform checks, access some of its methods, etc.) while it is not yet
  * known by the application kernel.
  *
- * @todo Remove to this class or move it to the installation bundle
+ * @todo Remove this class or move it to the installation bundle
  */
 class Loader
 {
@@ -35,7 +36,7 @@ class Loader
      *
      * @throws RuntimeException if the plugin class cannot be found or instantiated
      *
-     * @return DistributionPluginBundle
+     * @return PluginBundleInterface
      */
     public function load($pluginFqcn, $pluginPath = null)
     {
@@ -65,8 +66,8 @@ class Loader
             throw new RuntimeException("Class '{$pluginFqcn}' is not instantiable.", self::NON_INSTANTIABLE_BUNDLE_CLASS);
         }
 
-        if (!$reflectionClass->isSubclassOf('Claroline\CoreBundle\Library\DistributionPluginBundle')) {
-            throw new RuntimeException("Class '{$pluginFqcn}' doesn't extend Claroline 'DistributionPluginBundle' class.", self::UNEXPECTED_BUNDLE_TYPE);
+        if (!$reflectionClass->implementsInterface(PluginBundleInterface::class)) {
+            throw new RuntimeException("Class '{$pluginFqcn}' doesn't implement Claroline 'PluginBundleInterface' interface.", self::UNEXPECTED_BUNDLE_TYPE);
         }
 
         return new $pluginFqcn();

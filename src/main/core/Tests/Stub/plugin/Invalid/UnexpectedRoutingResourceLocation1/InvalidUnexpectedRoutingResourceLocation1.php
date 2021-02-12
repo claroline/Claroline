@@ -11,7 +11,7 @@
 
 namespace Invalid\UnexpectedRoutingResourceLocation1;
 
-use Claroline\CoreBundle\Library\DistributionPluginBundle;
+use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
 
 class InvalidUnexpectedRoutingResourceLocation1 extends DistributionPluginBundle
 {

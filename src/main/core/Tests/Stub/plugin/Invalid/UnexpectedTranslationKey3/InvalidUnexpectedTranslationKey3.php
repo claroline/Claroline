@@ -11,7 +11,7 @@
 
 namespace Invalid\UnexpectedTranslationKey3;
 
-use Claroline\CoreBundle\Library\DistributionPluginBundle;
+use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
 
 class InvalidUnexpectedTranslationKey3 extends DistributionPluginBundle
 {

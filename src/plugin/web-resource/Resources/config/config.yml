@@ -1,6 +1,4 @@
 plugin:
-  has_options: false
-
   resources:
     - name: claroline_web_resource
       class: Claroline\CoreBundle\Entity\Resource\File

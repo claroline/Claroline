@@ -1,6 +1,4 @@
 plugin:
-    has_options: false
-
     resources:
         - class: Claroline\ClacoFormBundle\Entity\ClacoForm
           name: claroline_claco_form

@@ -11,7 +11,7 @@
 
 namespace Claroline\OpenBadgeBundle;
 
-use Claroline\CoreBundle\Library\DistributionPluginBundle;
+use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
 use Claroline\OpenBadgeBundle\Installation\AdditionalInstaller;
 
 class ClarolineOpenBadgeBundle extends DistributionPluginBundle

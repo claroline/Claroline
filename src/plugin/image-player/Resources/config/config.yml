@@ -1,6 +1,4 @@
 plugin:
-    has_options: false
-
     resource_icons:
         - name: res_jpeg
           mime_types: [image, image/jpeg, image/pjpeg]

@@ -11,8 +11,8 @@
 
 namespace Claroline\CursusBundle;
 
-use Claroline\CoreBundle\Library\DistributionPluginBundle;
 use Claroline\CursusBundle\Installation\AdditionalInstaller;
+use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
 
 class ClarolineCursusBundle extends DistributionPluginBundle
 {

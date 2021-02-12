@@ -2,7 +2,7 @@
 
 namespace HeVinci\CompetencyBundle;
 
-use Claroline\CoreBundle\Library\DistributionPluginBundle;
+use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
 use HeVinci\CompetencyBundle\Installation\AdditionalInstaller;
 
 class HeVinciCompetencyBundle extends DistributionPluginBundle

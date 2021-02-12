@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Library;
+namespace Claroline\KernelBundle\Bundle;
 
 use Claroline\InstallationBundle\Bundle\InstallableBundle;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
@@ -86,21 +86,8 @@ abstract class PluginBundle extends InstallableBundle implements PluginBundleInt
         if (file_exists($defaultFilePath)) {
             return $defaultFilePath;
         }
-    }
 
-    public function getImgFolder()
-    {
-        $ds = DIRECTORY_SEPARATOR;
-        $path = "{$this->getPath()}{$ds}Resources{$ds}public{$ds}images{$ds}icons";
-
-        if (is_dir($path)) {
-            return $path;
-        }
-    }
-
-    public function getAssetsFolder()
-    {
-        return strtolower(str_replace('Bundle', '', $this->getVendorName().$this->getBundleName()));
+        return null;
     }
 
     /**
@@ -143,16 +130,6 @@ abstract class PluginBundle extends InstallableBundle implements PluginBundleInt
     }
 
     /**
-     * Returns true if the plugin has to be hidden.
-     *
-     * @return bool
-     */
-    public function isHidden()
-    {
-        return false;
-    }
-
-    /**
      * Returns path to the folder of the icon sets for resources.
      *
      * @return string
@@ -165,6 +142,8 @@ abstract class PluginBundle extends InstallableBundle implements PluginBundleInt
         if (is_dir($path)) {
             return $path;
         }
+
+        return null;
     }
 
     public function getRequiredThirdPartyBundles(string $environment): array
@@ -172,50 +151,8 @@ abstract class PluginBundle extends InstallableBundle implements PluginBundleInt
         return [];
     }
 
-    /**
-     * @deprecated find another way to retrieve it
-     */
-    public function getOrigin()
-    {
-        return $this->getComposerParameter('name');
-    }
-
     public function getDescription()
     {
         return file_exists($this->getPath().'/DESCRIPTION.md') ? file_get_contents($this->getPath().'/DESCRIPTION.md') : '';
-    }
-
-    /**
-     * @deprecated
-     */
-    private function getComposer()
-    {
-        static $data;
-
-        if (!$data) {
-            $ds = DIRECTORY_SEPARATOR;
-            $path = realpath($this->getPath().$ds.'composer.json');
-            //metapackage are 2 directories above
-            if (!$path) {
-                $path = realpath($this->getPath()."{$ds}..{$ds}..{$ds}composer.json");
-            }
-            $data = json_decode(file_get_contents($path));
-        }
-
-        return $data;
-    }
-
-    /**
-     * @deprecated
-     */
-    private function getComposerParameter($parameter, $default = null)
-    {
-        $data = $this->getComposer();
-
-        if ($data && property_exists($data, $parameter)) {
-            return $data->{$parameter};
-        }
-
-        return $default;
     }
 }

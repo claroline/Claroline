@@ -11,7 +11,7 @@
 
 namespace Invalid\UnloadableRoutingResource1;
 
-use Claroline\CoreBundle\Library\DistributionPluginBundle;
+use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
 
 class InvalidUnloadableRoutingResource1 extends DistributionPluginBundle
 {

@@ -11,7 +11,7 @@
 
 namespace Valid\Custom;
 
-use Claroline\CoreBundle\Library\DistributionPluginBundle;
+use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
 
 /**
  * Plugin overriding all the ClarolinePlugin methods.

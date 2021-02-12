@@ -11,7 +11,7 @@
 
 namespace Claroline\VideoPlayerBundle;
 
-use Claroline\CoreBundle\Library\DistributionPluginBundle;
+use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
 
 class ClarolineVideoPlayerBundle extends DistributionPluginBundle
 {

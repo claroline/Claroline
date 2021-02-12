@@ -11,7 +11,7 @@
 
 namespace Claroline\ScormBundle;
 
-use Claroline\CoreBundle\Library\DistributionPluginBundle;
+use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
 use Claroline\ScormBundle\Installation\AdditionalInstaller;
 
 class ClarolineScormBundle extends DistributionPluginBundle

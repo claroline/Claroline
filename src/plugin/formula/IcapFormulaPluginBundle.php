@@ -2,7 +2,7 @@
 
 namespace Icap\FormulaPluginBundle;
 
-use Claroline\CoreBundle\Library\DistributionPluginBundle;
+use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
 
 /**
  * Formula Plugin bundle class.

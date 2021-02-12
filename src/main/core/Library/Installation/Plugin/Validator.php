@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
-use Claroline\CoreBundle\Library\PluginBundleInterface;
+use Claroline\KernelBundle\Bundle\PluginBundleInterface;
 use InvalidArgumentException;
 
 /**
@@ -39,9 +39,7 @@ class Validator
     {
         foreach ($checkers as $checker) {
             if (!$checker instanceof CheckerInterface) {
-                throw new InvalidArgumentException(
-                    'Instances of CheckerInterface expected'
-                );
+                throw new InvalidArgumentException('Instances of CheckerInterface expected');
             }
         }
 
@@ -51,8 +49,6 @@ class Validator
 
     /**
      * Validates a plugin.
-     *
-     * @param PluginBundleInterface $plugin
      *
      * @return ValidationError[]
      */

@@ -9,10 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Library;
+namespace Claroline\KernelBundle\Bundle;
 
 use Claroline\InstallationBundle\Bundle\InstallableInterface;
-use Claroline\KernelBundle\Bundle\AutoConfigurableInterface;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 
 /**
@@ -26,17 +25,11 @@ interface PluginBundleInterface extends BundleInterface, AutoConfigurableInterfa
 
     public function getConfigFile();
 
-    public function getImgFolder();
-
-    public function getAssetsFolder();
-
     public function getRequiredExtensions();
 
     public function getRequiredPlugins();
 
     public function getExtraRequirements();
-
-    public function getOrigin();
 
     public function getDescription();
 
@@ -44,9 +37,4 @@ interface PluginBundleInterface extends BundleInterface, AutoConfigurableInterfa
      * @return BundleInterface[] A list of third party bundle instances required by the plugin
      */
     public function getRequiredThirdPartyBundles(string $environment): array;
-
-    /**
-     * @deprecated
-     */
-    public function isHidden();
 }

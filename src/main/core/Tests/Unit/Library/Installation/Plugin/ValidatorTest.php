@@ -34,7 +34,7 @@ class ValidatorTest extends MockeryTestCase
         $firstChecker = $this->mock('Claroline\CoreBundle\Library\Installation\Plugin\CheckerInterface');
         $secondChecker = $this->mock('Claroline\CoreBundle\Library\Installation\Plugin\CheckerInterface');
         $thirdChecker = $this->mock('Claroline\CoreBundle\Library\Installation\Plugin\CheckerInterface');
-        $plugin = $this->mock('Claroline\CoreBundle\Library\DistributionPluginBundle');
+        $plugin = $this->mock('Claroline\KernelBundle\Bundle\DistributionPluginBundle');
 
         $firstError = new ValidationError('foo');
         $secondError = new ValidationError('bar');

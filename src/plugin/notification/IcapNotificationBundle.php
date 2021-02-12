@@ -2,7 +2,7 @@
 
 namespace Icap\NotificationBundle;
 
-use Claroline\CoreBundle\Library\DistributionPluginBundle;
+use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
 use Icap\NotificationBundle\Installation\AdditionalInstaller;
 
 class IcapNotificationBundle extends DistributionPluginBundle

@@ -12,7 +12,7 @@
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
 use Claroline\CoreBundle\Entity\Plugin;
-use Claroline\CoreBundle\Library\PluginBundleInterface;
+use Claroline\KernelBundle\Bundle\PluginBundleInterface;
 use Psr\Log\LoggerInterface;
 
 /**

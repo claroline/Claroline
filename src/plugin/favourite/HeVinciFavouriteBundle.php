@@ -2,7 +2,7 @@
 
 namespace HeVinci\FavouriteBundle;
 
-use Claroline\CoreBundle\Library\DistributionPluginBundle;
+use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
 use HeVinci\FavouriteBundle\Installation\AdditionalInstaller;
 
 class HeVinciFavouriteBundle extends DistributionPluginBundle

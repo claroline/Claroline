@@ -138,9 +138,7 @@ class CreatePluginCommand extends Command
         $fmime = $input->getOption('file_player_mime');
 
         $config = [
-            'plugin' => [
-                'has_options' => false,
-            ],
+            'plugin' => [],
         ];
 
         if ($rType) {

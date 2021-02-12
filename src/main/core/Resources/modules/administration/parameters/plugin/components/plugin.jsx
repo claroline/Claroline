@@ -96,7 +96,7 @@ class Plugin extends Component {
               'fa-exclamation-triangle': !this.props.ready && !this.props.enabled
             })} />
 
-            <small>{trans(this.props.meta.origin, {}, 'plugin')}</small>
+            <small>{trans(this.props.meta.vendor, {}, 'plugin')}</small>
           </h3>
 
           <Button
@@ -134,12 +134,11 @@ Plugin.propTypes = {
   name: T.string.isRequired,
   meta: T.shape({
     version: T.string.isRequired,
-    origin: T.string.isRequired
+    vendor: T.string.isRequired
   }),
   ready: T.bool.isRequired,
   enabled: T.bool.isRequired,
   locked: T.bool.isRequired,
-  hasOptions: T.bool.isRequired,
   requirements: T.shape({
     extensions: T.array,
     plugins: T.array,

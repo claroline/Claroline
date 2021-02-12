@@ -114,7 +114,7 @@ class DataDisplay extends Component {
       )
     }
 
-    if (!this.props.value && false !== this.props.value) {
+    if (!this.props.value && false !== this.props.value && 0 !== this.props.value) {
       return (
         <span className="data-details-empty">{trans('empty_value')}</span>
       )

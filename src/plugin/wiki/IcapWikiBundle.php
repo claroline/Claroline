@@ -2,7 +2,7 @@
 
 namespace Icap\WikiBundle;
 
-use Claroline\CoreBundle\Library\DistributionPluginBundle;
+use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
 use Icap\WikiBundle\Installation\AdditionalInstaller;
 
 class IcapWikiBundle extends DistributionPluginBundle
