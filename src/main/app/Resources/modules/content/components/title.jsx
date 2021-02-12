@@ -55,6 +55,8 @@ const ContentTitle = props =>
       <span className="h-numbering">{props.numbering}</span>
     }
 
+    {props.children}
+
     <span>
       {props.title}
 
@@ -91,7 +93,8 @@ ContentTitle.propTypes = {
   }),
   actions: T.arrayOf(T.shape({
     // TODO : action types
-  }))
+  })),
+  children: T.node
 }
 
 ContentTitle.defaultProps = {

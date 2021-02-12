@@ -10,5 +10,6 @@
   },
   "not_found": "Content not found",
   "loading": "Loading...",
-  "dpo": "Data protection officer"
+  "dpo": "Data protection officer",
+  "next_step": "Next: %step%"
 }

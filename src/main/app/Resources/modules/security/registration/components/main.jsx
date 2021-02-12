@@ -65,7 +65,6 @@ class RegistrationMain extends Component {
       <FormStepper
         submit={{
           type: CALLBACK_BUTTON,
-          icon: 'fa fa-user-plus',
           label: trans('self-register', {}, 'actions'),
           confirm: {
             title: trans('registration'),
