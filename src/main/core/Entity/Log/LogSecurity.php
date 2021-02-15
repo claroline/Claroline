@@ -3,10 +3,12 @@
 namespace Claroline\CoreBundle\Entity\Log;
 
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Repository\Log\LogSecurityRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
+ * @ORM\Entity(repositoryClass=LogSecurityRepository::class)
  * @ORM\Table(name="claro_log_security")
  */
 class LogSecurity
@@ -104,7 +106,7 @@ class LogSecurity
         return $this;
     }
 
-    public function getTarget(): User
+    public function getTarget(): ?User
     {
         return $this->target;
     }
@@ -152,7 +154,7 @@ class LogSecurity
         return $this;
     }
 
-    public function getDoer(): User
+    public function getDoer(): ?User
     {
         return $this->doer;
     }

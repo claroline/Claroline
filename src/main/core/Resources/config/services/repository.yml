@@ -49,3 +49,7 @@ services:
         arguments:
           - '@Doctrine\Persistence\ManagerRegistry'
           - '@Claroline\CoreBundle\Manager\PluginManager'
+
+    Claroline\CoreBundle\Repository\Log\LogSecurityRepository:
+        arguments:
+            - '@Doctrine\Persistence\ManagerRegistry'
