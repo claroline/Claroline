@@ -45,20 +45,36 @@ class LoadPlatformRolesData extends AbstractFixture implements ContainerAwareInt
      */
     public function load(ObjectManager $manager)
     {
-        $userRole = $this->roleManager->createBaseRole(PlatformRoles::USER, 'user', true, true);
-        // initialize some tools rights to let users open their desktop
-        foreach (['home', 'resources', 'workspaces'] as $tool) {
-            $orderedTool = $this->toolManager->getOrderedTool($tool, Tool::DESKTOP);
-            if ($orderedTool) {
-                $this->toolManager->setPermissions(['open' => true], $orderedTool, $userRole);
+        if (!$this->roleManager->getRoleByName(PlatformRoles::USER)) {
+            $userRole = $this->roleManager->createBaseRole(PlatformRoles::USER, 'user', true, true);
+            // initialize some tools rights to let users open their desktop
+            foreach (['home', 'resources', 'workspaces'] as $tool) {
+                $orderedTool = $this->toolManager->getOrderedTool($tool, Tool::DESKTOP);
+                if ($orderedTool) {
+                    $this->toolManager->setPermissions(['open' => true], $orderedTool, $userRole);
+                }
             }
         }
 
-        $this->roleManager->createBaseRole(PlatformRoles::WS_CREATOR, 'ws_creator');
-        $this->roleManager->createBaseRole(PlatformRoles::ADMIN, 'admin');
-        $this->roleManager->createBaseRole(PlatformRoles::ANONYMOUS, 'anonymous');
-        $this->roleManager->createBaseRole('ROLE_HOME_MANAGER', 'home_manager');
-        $this->roleManager->createBaseRole('ROLE_ADMIN_ORGANIZATION', 'admin_organization');
+        if (!$this->roleManager->getRoleByName(PlatformRoles::WS_CREATOR)) {
+            $this->roleManager->createBaseRole(PlatformRoles::WS_CREATOR, 'ws_creator');
+        }
+
+        if (!$this->roleManager->getRoleByName(PlatformRoles::ADMIN)) {
+            $this->roleManager->createBaseRole(PlatformRoles::ADMIN, 'admin');
+        }
+
+        if (!$this->roleManager->getRoleByName(PlatformRoles::ANONYMOUS)) {
+            $this->roleManager->createBaseRole(PlatformRoles::ANONYMOUS, 'anonymous');
+        }
+
+        if (!$this->roleManager->getRoleByName('ROLE_HOME_MANAGER')) {
+            $this->roleManager->createBaseRole('ROLE_HOME_MANAGER', 'home_manager');
+        }
+
+        if (!$this->roleManager->getRoleByName('ROLE_ADMIN_ORGANIZATION')) {
+            $this->roleManager->createBaseRole('ROLE_ADMIN_ORGANIZATION', 'admin_organization');
+        }
     }
 
     public function getOrder()

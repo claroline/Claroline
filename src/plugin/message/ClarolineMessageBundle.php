@@ -20,9 +20,4 @@ class ClarolineMessageBundle extends DistributionPluginBundle
     {
         return new AdditionalInstaller();
     }
-
-    public function hasMigrations()
-    {
-        return true;
-    }
 }

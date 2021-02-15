@@ -15,7 +15,7 @@ use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
 
 class ClarolinePdfPlayerBundle extends DistributionPluginBundle
 {
-    public function hasMigrations()
+    public function hasMigrations(): bool
     {
         return false;
     }

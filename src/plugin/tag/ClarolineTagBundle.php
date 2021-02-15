@@ -15,8 +15,4 @@ use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
 
 class ClarolineTagBundle extends DistributionPluginBundle
 {
-    public function hasMigrations()
-    {
-        return true;
-    }
 }

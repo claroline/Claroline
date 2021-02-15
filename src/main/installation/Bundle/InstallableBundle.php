@@ -16,29 +16,24 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 abstract class InstallableBundle extends Bundle implements InstallableInterface
 {
-    public function hasMigrations()
+    public function hasMigrations(): bool
     {
         return true;
     }
 
-    public function getRequiredFixturesDirectory($environment)
+    public function getRequiredFixturesDirectory(string $environment): ?string
     {
-        return;
+        return null;
     }
 
-    public function getPostInstallFixturesDirectory($environment)
+    public function getPostInstallFixturesDirectory(string $environment): ?string
     {
-        return;
-    }
-
-    public function getOptionalFixturesDirectory($environment)
-    {
-        return;
+        return null;
     }
 
     public function getAdditionalInstaller()
     {
-        return;
+        return null;
     }
 
     public function getUpdaterServiceLocator(): ContainerInterface

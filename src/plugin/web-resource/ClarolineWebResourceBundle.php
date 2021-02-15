@@ -16,7 +16,7 @@ use Claroline\WebResourceBundle\Installation\AdditionalInstaller;
 
 class ClarolineWebResourceBundle extends DistributionPluginBundle
 {
-    public function hasMigrations()
+    public function hasMigrations(): bool
     {
         return false;
     }

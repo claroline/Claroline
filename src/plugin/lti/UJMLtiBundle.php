@@ -11,9 +11,4 @@ class UJMLtiBundle extends DistributionPluginBundle
     {
         return new AdditionalInstaller();
     }
-
-    public function hasMigrations()
-    {
-        return true;
-    }
 }

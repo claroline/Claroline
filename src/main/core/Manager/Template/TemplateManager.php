@@ -28,13 +28,6 @@ class TemplateManager
     private $templateTypeRepo;
     private $templateRepo;
 
-    /**
-     * TemplateManager constructor.
-     *
-     * @param ObjectManager                $om
-     * @param PlatformConfigurationHandler $config
-     * @param PlaceholderManager           $placeholderManager
-     */
     public function __construct(
         ObjectManager $om,
         PlatformConfigurationHandler $config,
@@ -48,9 +41,6 @@ class TemplateManager
         $this->templateRepo = $om->getRepository(Template::class);
     }
 
-    /**
-     * @param Template $template
-     */
     public function defineTemplateAsDefault(Template $template)
     {
         $templateType = $template->getType();
@@ -59,15 +49,7 @@ class TemplateManager
         $this->om->flush();
     }
 
-    /**
-     * @param string      $templateTypeName
-     * @param array       $placeholders
-     * @param string|null $locale
-     * @param string      $mode
-     *
-     * @return string
-     */
-    public function getTemplate($templateTypeName, $placeholders = [], $locale = null, $mode = 'content')
+    public function getTemplate(string $templateTypeName, array $placeholders = [], string $locale = null, string $mode = 'content'): string
     {
         $result = '';
         $templateType = $this->templateTypeRepo->findOneBy(['name' => $templateTypeName]);
@@ -107,14 +89,7 @@ class TemplateManager
         return $result;
     }
 
-    /**
-     * @param Template $template
-     * @param array    $placeholders
-     * @param string   $mode
-     *
-     * @return string
-     */
-    public function getTemplateContent(Template $template, $placeholders = [], $mode = 'content')
+    public function getTemplateContent(Template $template, array $placeholders = [], string $mode = 'content'): string
     {
         switch ($mode) {
             case 'content':

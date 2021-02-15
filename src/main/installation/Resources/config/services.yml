@@ -5,6 +5,7 @@ services:
             - '@service_container'
             - '@claroline.migration.manager'
             - '@claroline.installation.fixture_loader'
+            - '@Claroline\CoreBundle\Library\Installation\Plugin\Recorder'
             - '%kernel.environment%'
         calls:
             - setLogger: [ '@logger' ]

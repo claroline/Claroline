@@ -20,9 +20,4 @@ class ClarolineBigBlueButtonBundle extends DistributionPluginBundle
     {
         return new AdditionalInstaller();
     }
-
-    public function hasMigrations()
-    {
-        return true;
-    }
 }
