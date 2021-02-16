@@ -41,6 +41,8 @@ class EntryFormComponent extends Component {
     this.state = {
       template: ''
     }
+
+    //this.getConfirm = this.getConfirm.bind(this)
   }
 
   componentDidMount() {
@@ -219,6 +221,18 @@ class EntryFormComponent extends Component {
     return null
   }
 
+  getConfirm() {
+    if (this.props.isNew && this.props.showConfirm) {
+      return {
+        icon: '',
+        title: trans('confirm_new_entry', {}, 'clacoform'),
+        message: this.props.confirmMessage ? this.props.confirmMessage : trans('confirm_new_entry_message', {}, 'clacoform')
+      }
+    }
+
+    return undefined
+  }
+
   render() {
     if (this.props.isNew && !this.props.canAddEntry) {
       return (
@@ -239,7 +253,8 @@ class EntryFormComponent extends Component {
             validating={this.props.validating}
             save={{
               type: CALLBACK_BUTTON,
-              callback: () => this.props.saveForm(this.props.entry, this.props.fields, this.props.isNew, this.props.history.push, this.props.path)
+              callback: () => this.props.saveForm(this.props.entry, this.props.fields, this.props.isNew, this.props.history.push, this.props.path),
+              confirm: this.getConfirm()
             }}
             cancel={{
               type: LINK_BUTTON,
@@ -284,7 +299,8 @@ class EntryFormComponent extends Component {
             sections={this.getSections()}
             save={{
               type: CALLBACK_BUTTON,
-              callback: () => this.props.saveForm(this.props.entry, this.props.fields, this.props.isNew, this.props.history.push, this.props.path)
+              callback: () => this.props.saveForm(this.props.entry, this.props.fields, this.props.isNew, this.props.history.push, this.props.path),
+              confirm: this.getConfirm()
             }}
             cancel={{
               type: LINK_BUTTON,
@@ -300,11 +316,9 @@ class EntryFormComponent extends Component {
   }
 }
 
-
 EntryFormComponent.propTypes = {
   path: T.string.isRequired,
   currentUser: T.object,
-  impersonated: T.bool.isRequired,
   canEdit: T.bool.isRequired,
   canAddEntry: T.bool.isRequired,
   clacoFormId: T.string.isRequired,
@@ -331,7 +345,9 @@ EntryFormComponent.propTypes = {
   removeKeyword: T.func.isRequired,
   history: T.object.isRequired,
   pendingChanges: T.bool.isRequired,
-  validating: T.bool.isRequired
+  validating: T.bool.isRequired,
+  showConfirm: T.bool.isRequired,
+  confirmMessage: T.string
 }
 
 const EntryForm = withRouter(connect(
@@ -345,6 +361,8 @@ const EntryForm = withRouter(connect(
     fields: selectors.visibleFields(state),
     useTemplate: selectors.useTemplate(state),
     template: selectors.template(state),
+    showConfirm: selectors.showConfirm(state),
+    confirmMessage: selectors.confirmMessage(state),
     titleLabel: selectors.params(state).title_field_label,
     displayMetadata: selectors.params(state).display_metadata,
     isKeywordsEnabled: selectors.params(state).keywords_enabled,

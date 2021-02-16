@@ -24,7 +24,6 @@ use Doctrine\ORM\Mapping as ORM;
 class ClacoForm extends AbstractResource
 {
     use Uuid;
-
     // entries list configuration
     use ListParameters;
 
@@ -72,6 +71,22 @@ class ClacoForm extends AbstractResource
      * @var array
      */
     protected $details;
+
+    /**
+     * Ask for confirmation when a user submit a new entry.
+     *
+     * @ORM\Column(type="boolean")
+     *
+     * @var bool
+     */
+    private $showConfirm = false;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     *
+     * @var string
+     */
+    private $confirmMessage;
 
     /**
      * ClacoForm constructor.
@@ -142,6 +157,26 @@ class ClacoForm extends AbstractResource
     public function getKeywords()
     {
         return $this->keywords->toArray();
+    }
+
+    public function getShowConfirm(): bool
+    {
+        return $this->showConfirm;
+    }
+
+    public function setShowConfirm(bool $showConfirm)
+    {
+        $this->showConfirm = $showConfirm;
+    }
+
+    public function getConfirmMessage(): ?string
+    {
+        return $this->confirmMessage;
+    }
+
+    public function setConfirmMessage(string $message = null)
+    {
+        $this->confirmMessage = $message;
     }
 
     public function getDetails()
