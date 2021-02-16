@@ -42,6 +42,16 @@ const useTemplate = createSelector(
   (clacoForm) => get(clacoForm, 'template.enabled')
 )
 
+const showConfirm = createSelector(
+  [clacoForm],
+  (clacoForm) => get(clacoForm, 'display.showConfirm', false)
+)
+
+const confirmMessage = createSelector(
+  [clacoForm],
+  (clacoForm) => get(clacoForm, 'display.confirmMessage', null)
+)
+
 const entries = createSelector(
   [resource],
   (resource) => resource.entries
@@ -276,6 +286,7 @@ const showEntryNav = createSelector(
 
 export const selectors = {
   STORE_NAME,
+
   resource,
   clacoForm,
   isAnon,
@@ -285,6 +296,8 @@ export const selectors = {
   visibleFields,
   template,
   useTemplate,
+  showConfirm,
+  confirmMessage,
   entries,
   isCurrentEntryOwner,
   isCurrentEntrySharedUser,
