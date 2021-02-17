@@ -20,7 +20,6 @@ use Claroline\CoreBundle\Controller\APINew\Model\HasRolesTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasUsersTrait;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\Shortcuts;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Manager\LogConnectManager;
@@ -447,83 +446,6 @@ class WorkspaceController extends AbstractCrudController
         return new JsonResponse(array_map(function (Role $role) {
             return $this->serializer->serialize($role);
         }, $roles));
-    }
-
-    /**
-     * @ApiDoc(
-     *     description="List the configurable roles of a workspace for the current security token.",
-     *     queryString={
-     *         "$finder=Claroline\CoreBundle\Entity\Role&!workspaceConfigurable",
-     *         {"name": "page", "type": "integer", "description": "The queried page."},
-     *         {"name": "limit", "type": "integer", "description": "The max amount of objects per page."},
-     *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
-     *     },
-     *     parameters={
-     *         {"name": "id", "type": {"string", "integer"},  "description": "The workspace id or uuid"}
-     *     }
-     * )
-     * @Route("/{id}/role/configurable", name="apiv2_workspace_list_roles_configurable", methods={"GET"})
-     */
-    public function listConfigurableRolesAction(string $id, Request $request): JsonResponse
-    {
-        return new JsonResponse(
-            $this->finder->search(Role::class, array_merge(
-                $request->query->all(),
-                ['hiddenFilters' => ['workspaceConfigurable' => [$id]]]
-            ))
-        );
-    }
-
-    /**
-     * @ApiDoc(
-     *     description="Adds shortcuts to a workspace for a given role.",
-     *     parameters={
-     *         {"name": "workspace", "type": {"string"}, "description": "The workspace uuid"},
-     *         {"name": "role", "type": {"string"}, "description": "The role uuid"}
-     *     }
-     * )
-     * @Route("/{workspace}/role/{role}/shortcuts/add", name="apiv2_workspace_shortcuts_add", methods={"PUT"})
-     * @EXT\ParamConverter("workspace", class="ClarolineCoreBundle:Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
-     * @EXT\ParamConverter("role", class="ClarolineCoreBundle:Role", options={"mapping": {"role": "uuid"}})
-     */
-    public function shortcutsAddAction(Workspace $workspace, Role $role, Request $request): JsonResponse
-    {
-        $data = $this->decodeRequest($request);
-
-        if (isset($data['shortcuts']) && 0 < count($data['shortcuts'])) {
-            $this->workspaceManager->addShortcuts($workspace, $role, $data['shortcuts']);
-        }
-        $shortcuts = array_values(array_map(function (Shortcuts $shortcuts) {
-            return $this->serializer->serialize($shortcuts);
-        }, $workspace->getShortcuts()->toArray()));
-
-        return new JsonResponse($shortcuts);
-    }
-
-    /**
-     * @ApiDoc(
-     *     description="Removes a shortcut from a workspace for a given role.",
-     *     parameters={
-     *         {"name": "workspace", "type": {"string"}, "description": "The workspace uuid"},
-     *         {"name": "role", "type": {"string"}, "description": "The role uuid"}
-     *     }
-     * )
-     * @Route("/{workspace}/role/{role}/shortcut/remove", name="apiv2_workspace_shortcut_remove", methods={"PUT"})
-     * @EXT\ParamConverter("workspace", class="ClarolineCoreBundle:Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
-     * @EXT\ParamConverter("role", class="ClarolineCoreBundle:Role", options={"mapping": {"role": "uuid"}})
-     */
-    public function shortcutRemoveAction(Workspace $workspace, Role $role, Request $request): JsonResponse
-    {
-        $data = $this->decodeRequest($request);
-
-        if (isset($data['type']) && 0 < count($data['name'])) {
-            $this->workspaceManager->removeShortcut($workspace, $role, $data['type'], $data['name']);
-        }
-        $shortcuts = array_values(array_map(function (Shortcuts $shortcuts) {
-            return $this->serializer->serialize($shortcuts);
-        }, $workspace->getShortcuts()->toArray()));
-
-        return new JsonResponse($shortcuts);
     }
 
     /**

@@ -46,12 +46,7 @@ class OrderedToolRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    /**
-     * @param string $name
-     *
-     * @return OrderedTool
-     */
-    public function findOneByNameAndWorkspace($name, Workspace $workspace = null)
+    public function findOneByNameAndWorkspace(string $name, Workspace $workspace = null): ?OrderedTool
     {
         return $this->_em
             ->createQuery('

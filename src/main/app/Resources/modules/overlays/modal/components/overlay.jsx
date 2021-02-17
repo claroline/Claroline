@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, {Component, createElement} from 'react'
 import {PropTypes as T} from 'prop-types'
 import {Portal} from 'react-overlays'
 
@@ -15,7 +15,7 @@ class ModalOverlay extends Component {
     return (
       <Portal container={() => document.querySelector('.app-modal-container')}>
         <div className="app-modal" ref={(el) => this.container = el}>
-          {this.props.modals.map((modal, index) => React.createElement(
+          {this.props.modals.map((modal, index) => createElement(
             // grab the correct modal component from registry
             registry.get(modal.type),
 
@@ -38,7 +38,6 @@ class ModalOverlay extends Component {
 ModalOverlay.propTypes = {
   container: T.oneOfType([T.node, T.element]),
   show: T.bool.isRequired,
-  modal: T.shape(ModalTypes.propTypes),
   modals: T.arrayOf(T.shape(
     ModalTypes.propTypes
   )),

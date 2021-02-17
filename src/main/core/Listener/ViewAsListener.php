@@ -61,7 +61,6 @@ class ViewAsListener
                     $this->authenticator->cancelUsurpation($this->tokenStorage->getToken());
                 }
             } else {
-                $baseRole = substr($viewAs, 0, strripos($viewAs, '_'));
                 $role = $this->roleManager->getRoleByName($viewAs);
                 if (null === $role) {
                     throw new \Exception("The role {$viewAs} does not exists");
@@ -69,15 +68,15 @@ class ViewAsListener
 
                 if (!in_array('ROLE_USURPATE_WORKSPACE_ROLE', $this->tokenStorage->getToken()->getRoleNames())) {
                     // we are not already usurping a workspace role
-                    if ($this->authorization->isGranted('ADMINISTRATE', $role->getWorkspace())) {
+                    if (in_array($viewAs, ['ROLE_USER', 'ROLE_ANONYMOUS']) || $this->authorization->isGranted('ADMINISTRATE', $role->getWorkspace())) {
                         // we have the right to usurp one the workspace role
-                        if ('ROLE_ANONYMOUS' === $baseRole) {
+                        if ('ROLE_ANONYMOUS' === $viewAs) {
                             $this->authenticator->createAnonymousToken();
                         } else {
                             $this->authenticator->createToken($this->tokenStorage->getToken()->getUser(), ['ROLE_USER', $viewAs, 'ROLE_USURPATE_WORKSPACE_ROLE']);
                         }
                     } else {
-                        throw new AccessDeniedException();
+                        throw new AccessDeniedException(sprintf('You do not have the right to usurp the role %s.', $viewAs));
                     }
                 }
             }

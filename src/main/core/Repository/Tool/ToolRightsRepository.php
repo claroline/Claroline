@@ -17,16 +17,9 @@ use Doctrine\ORM\EntityRepository;
 class ToolRightsRepository extends EntityRepository
 {
     /**
-     * Returns the maximum rights on a given resource for a set of roles.
-     * Used by the ResourceVoter.
-     *
-     * @param string[]  $roles
-     * @param Tool      $tool
-     * @param Workspace $workspace
-     *
-     * @return int
+     * Returns the maximum rights on a given tool for a set of roles.
      */
-    public function findMaximumRights(array $roles, Tool $tool, Workspace $workspace = null)
+    public function findMaximumRights(array $roles, Tool $tool, Workspace $workspace = null): int
     {
         //add the role anonymous for everyone !
         if (!in_array('ROLE_ANONYMOUS', $roles)) {
