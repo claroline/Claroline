@@ -11,7 +11,7 @@ import {selectors} from '#/main/core/tools/community/store/selectors'
 const reducer = combineReducers({
   list: makeListReducer(selectors.STORE_NAME + '.roles.list', {}, {
     invalidated: makeReducer(false, {
-      [FORM_SUBMIT_SUCCESS + '/' + selectors.STORE_NAME + '.roles.current']: () => true, // todo : find better
+      [FORM_SUBMIT_SUCCESS + '/' + selectors.STORE_NAME + '.roles.current']: () => true,
       [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: () => true
     })
   }),

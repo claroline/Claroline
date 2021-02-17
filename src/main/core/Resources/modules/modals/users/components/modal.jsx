@@ -22,7 +22,7 @@ const UsersModal = props => {
       icon="fa fa-fw fa-user"
       className="data-picker-modal"
       bsSize="lg"
-      onExiting={props.reset}
+      onExited={props.reset}
     >
       <ListData
         name={selectors.STORE_NAME}

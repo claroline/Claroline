@@ -104,7 +104,7 @@ class RoleSerializer
                 }
             }
 
-            // TODO: Fix option for workspace uuid. For the moment the uuid of the workspace is prefixed with `workspace_id_`.
+            // TODO: remove this block later. For now it's still used by the UI
             if (in_array(Options::SERIALIZE_ROLE_TOOLS_RIGHTS, $options)) {
                 $workspaceId = null;
 
@@ -197,6 +197,7 @@ class RoleSerializer
                 ->findOneBy(['uuid' => $data['workspace']['id']]);
 
             if (!$role->getName()) {
+                // TODO : should be done in WorkspaceCrud
                 $role->setName('ROLE_WS_'.str_replace(' ', '_', strtoupper($data['translationKey'])).'_'.$data['workspace']['id']);
             }
 
@@ -223,40 +224,6 @@ class RoleSerializer
                     $adminTool->addRole($role);
                 } else {
                     $adminTool->removeRole($role);
-                }
-            }
-        }
-
-        // sets rights for workspace tools
-        if (isset($data['tools']) && in_array(Options::SERIALIZE_ROLE_TOOLS_RIGHTS, $options)) {
-            foreach ($data['tools'] as $toolName => $toolData) {
-                $tool = $this->om->getRepository('ClarolineCoreBundle:Tool\Tool')->findOneBy(['name' => $toolName]);
-
-                if ($tool) {
-                    // TODO: Fix option for workspace uuid. For the moment the uuid of the workspace is prefixed with `workspace_id_`.
-                    $workspaceId = null;
-
-                    foreach ($options as $option) {
-                        if ('workspace_id_' === substr($option, 0, 13)) {
-                            $workspaceId = substr($option, 13);
-                            break;
-                        }
-                    }
-
-                    if ($workspaceId) {
-                        $workspace = $this->om->getRepository(Workspace::class)->findOneBy(['uuid' => $workspaceId]);
-                        $tool = $this->om->getRepository(Tool::class)->findOneBy(['name' => $toolName]);
-
-                        /** @var OrderedTool $orderedTool */
-                        $orderedTool = $this->orderedToolRepo->findOneBy([
-                            'tool' => $tool,
-                            'workspace' => $workspace,
-                        ]);
-
-                        if ($orderedTool) {
-                            $this->rightsManager->setToolRights($orderedTool, $role, $this->maskManager->encodeMask($toolData, $orderedTool->getTool()));
-                        }
-                    }
                 }
             }
         }

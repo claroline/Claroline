@@ -88,7 +88,7 @@ const UsersList = props =>
         sortable: false,
         options: {
           picker: !isEmpty(props.workspace) ? {
-            url: ['apiv2_workspace_list_roles_configurable', {id: props.workspace.id}],
+            url: ['apiv2_workspace_list_roles_configurable', {workspace: props.workspace.id}],
             filters: []
           } : undefined
         }

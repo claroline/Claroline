@@ -28,11 +28,13 @@ class PathFinder extends AbstractFinder
         array $sortBy = null,
         array $options = ['count' => false, 'page' => 0, 'limit' => -1]
     ) {
+        $qb->leftJoin('obj.resourceNode', 'n');
+        $qb->andWhere('n.active = true'); // only non deleted nodes
+
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
                 case 'workspace':
-                    $qb->join('obj.resourceNode', 'r');
-                    $qb->join('r.workspace', 'w');
+                    $qb->join('n.workspace', 'w');
                     $qb->andWhere("w.uuid = :{$filterName}");
                     $qb->setParameter($filterName, $filterValue);
                     break;

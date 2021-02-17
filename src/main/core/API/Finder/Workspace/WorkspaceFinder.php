@@ -22,16 +22,9 @@ class WorkspaceFinder extends AbstractFinder
 {
     /** @var AuthorizationCheckerInterface */
     private $authChecker;
-
     /** @var TokenStorageInterface */
     private $tokenStorage;
 
-    /**
-     * WorkspaceFinder constructor.
-     *
-     * @param AuthorizationCheckerInterface $authChecker
-     * @param TokenStorageInterface         $tokenStorage
-     */
     public function __construct(
         AuthorizationCheckerInterface $authChecker,
         TokenStorageInterface $tokenStorage
@@ -53,15 +46,6 @@ class WorkspaceFinder extends AbstractFinder
         }
 
         foreach ($searches as $filterName => $filterValue) {
-            //remap some filters...
-            if ('meta.personal' === $filterName) {
-                $filterName = 'personal';
-            }
-
-            if ('meta.model' === $filterName) {
-                $filterName = 'model';
-            }
-
             switch ($filterName) {
                 case 'orphan':
                     if ($filterValue) {
@@ -196,8 +180,8 @@ class WorkspaceFinder extends AbstractFinder
     public function getExtraFieldMapping()
     {
         return [
-          'meta.personal' => 'is_personal',
-          'meta.model' => 'isModel',
+          'meta.personal' => 'personal',
+          'meta.model' => 'model',
         ];
     }
 

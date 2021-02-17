@@ -151,7 +151,7 @@ class WorkspaceController
                 }, $orderedTools)),
                 'root' => $this->serializer->serialize($this->om->getRepository(ResourceNode::class)->findOneBy(['workspace' => $workspace, 'parent' => null]), [Options::SERIALIZE_MINIMAL]),
                 // TODO : only export current user shortcuts (we get all roles for the configuration in community/editor)
-                //'shortcuts' => $this->manager->getShortcuts($workspace, $user),
+                //'shortcuts' => $this->manager->getShortcuts($workspace, $this->tokenStorage->getToken()->getRoleNames()),
                 'shortcuts' => array_values(array_map(function (Shortcuts $shortcuts) {
                     return $this->serializer->serialize($shortcuts);
                 }, $workspace->getShortcuts()->toArray())),

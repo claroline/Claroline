@@ -32,16 +32,17 @@ class RoleVoter extends AbstractVoter
 
         switch ($attributes[0]) {
             case self::EDIT:
-            case self::DELETE:
                 return $this->check($token, $object);
             case self::PATCH:
                 return $this->checkPatch($token, $object, $collection);
+            case self::DELETE:
+                return $this->checkDelete($token, $object);
         }
 
         return VoterInterface::ACCESS_ABSTAIN;
     }
 
-    public function checkPatch(TokenInterface $token, Role $role, $collection): int
+    protected function checkPatch(TokenInterface $token, Role $role, $collection): int
     {
         if ($collection->isInstanceOf(User::class) || $collection->isInstanceOf(Group::class)) {
             $grant = true;
@@ -63,7 +64,7 @@ class RoleVoter extends AbstractVoter
         return $this->check($token, $role);
     }
 
-    public function check(TokenInterface $token, Role $object): int
+    protected function check(TokenInterface $token, Role $object): int
     {
         // probably do the check from the UserVoter or a security issue will arise
         if (!$object->getWorkspace()) {
@@ -71,10 +72,8 @@ class RoleVoter extends AbstractVoter
               VoterInterface::ACCESS_GRANTED : VoterInterface::ACCESS_DENIED;
         }
 
-        // if it's a workspace role, we must be able be granted the edit perm on the workspace users tool
+        // if it's a workspace role, we must be granted the edit perm on the workspace users tool
         // and our right level to be less than the role we're trying to remove that way, a user cannot remove admins
-
-        /** @var Workspace $workspace */
         $workspace = $object->getWorkspace();
         if ($this->isGranted(['community', 'edit'], $workspace)) {
             $workspaceManager = $this->getContainer()->get('claroline.manager.workspace_manager');
@@ -97,6 +96,15 @@ class RoleVoter extends AbstractVoter
         }
 
         return VoterInterface::ACCESS_DENIED;
+    }
+
+    protected function checkDelete(TokenInterface $token, Role $object): int
+    {
+        if ($object->isReadOnly()) {
+            return VoterInterface::ACCESS_DENIED;
+        }
+
+        return $this->check($token, $object);
     }
 
     public function getSupportedActions()

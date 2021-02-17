@@ -61,7 +61,13 @@ const ParticipantsModal = props =>
           type: 'number',
           label: trans('progression'),
           displayed: true,
-          render: (rowData) => rowData.progression + ' / ' + rowData.progressionMax
+          render: (rowData) => {
+            if (rowData.progressionMax) {
+              return rowData.progression + ' / ' + rowData.progressionMax
+            }
+
+            return '-'
+          }
         }, {
           name: 'score',
           type: 'number',
