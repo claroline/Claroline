@@ -45,7 +45,7 @@ const DashboardMenu = (props) =>
           name: 'logs',
           type: LINK_BUTTON,
           icon: 'fa fa-fw fa-info-circle',
-          label: 'logs',
+          label: trans('logs'),
           target: props.path + '/logs'
         }
       ]}

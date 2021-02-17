@@ -48,3 +48,8 @@ services:
             - '@Claroline\AppBundle\API\FinderProvider'
             - '@Claroline\CoreBundle\API\Serializer\Log\LogSerializer'
             - '@Claroline\CoreBundle\Manager\LogManager'
+
+    Claroline\AnalyticsBundle\Controller\Administration\LogSecurityController:
+        parent: Claroline\AppBundle\Controller\AbstractSecurityController
+        arguments:
+            - '@Claroline\AppBundle\API\FinderProvider'

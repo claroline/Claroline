@@ -52,13 +52,7 @@ const DashboardTool = (props) =>
         }
       }, {
         path: '/logs',
-        render: () => {
-          const Log = (
-            <DashboardLog count={props.count} />
-          )
-
-          return Log
-        }
+        component: DashboardLog
       }
     ]}
   />

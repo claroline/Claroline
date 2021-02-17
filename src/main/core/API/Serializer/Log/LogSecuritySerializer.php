@@ -32,14 +32,14 @@ class LogSecuritySerializer
         }
 
         return [
-            'id'         => $logSecurity->getId(),
-            'city'       => $logSecurity->getCity(),
-            'country'    => $logSecurity->getCountry(),
-            'date'       => DateNormalizer::normalize($logSecurity->getDate()),
-            'details'    => $logSecurity->getDetails(),
-            'doer'       => $doer,
-            'event'      => $logSecurity->getEvent(),
-            'target'     => $target
+            'id' => $logSecurity->getId(),
+            'city' => $logSecurity->getCity(),
+            'country' => $logSecurity->getCountry(),
+            'date' => DateNormalizer::normalize($logSecurity->getDate()),
+            'details' => $logSecurity->getDetails(),
+            'doer' => $doer,
+            'event' => $logSecurity->getEvent(),
+            'target' => $target,
         ];
     }
 }

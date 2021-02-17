@@ -2,16 +2,52 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {ToolPage} from '#/main/core/tool/containers/page'
+import {ListData} from '#/main/app/content/list/containers/data'
+import {trans} from '#/main/app/intl/translation'
 
-import {LatestActionsChart} from '#/plugin/analytics/charts/latest-actions/containers/chart'
+import {selectors} from '#/plugin/analytics/administration/dashboard/store/selectors'
 
-const DashboardLog = (props) =>
-  <ToolPage subtitle='Log'>
-    <div className="row">
-      <div className="col-md-4">
-        <LatestActionsChart url={['apiv2_log_security']} />
-      </div>
-    </div>
+const DashboardLog = () =>
+  <ToolPage
+    subtitle={trans('logs')}
+  >
+    <ListData
+      name={selectors.LIST_NAME}
+      fetch={{
+        url: ['apiv2_logs_security'],
+        autoload: true
+      }}
+      definition={[
+        {
+          name: 'name',
+          type: 'string',
+          label: trans('name'),
+          displayed: true,
+          filterable: false,
+          sortable: false,
+          calculated: (rowData) => trans(rowData.name, {}, 'template'),
+          options: {
+            domain: 'template'
+          },
+          primary: true
+        }, {
+          name: 'description',
+          type: 'string',
+          label: trans('description'),
+          displayed: true,
+          filterable: false,
+          sortable: false,
+          calculated: (rowData) => trans(`${rowData.name}_desc`, {}, 'template')
+        }, {
+          name: 'typeName',
+          type: 'string',
+          label: trans('type'),
+          displayable: false,
+          filterable: false,
+          sortable: false
+        }
+      ]}
+    />
   </ToolPage>
 
 DashboardLog.propTypes = {
@@ -31,5 +67,5 @@ DashboardLog.propTypes = {
 }
 
 export {
-    DashboardLog
+  DashboardLog
 }

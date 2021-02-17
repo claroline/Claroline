@@ -3,12 +3,11 @@
 namespace Claroline\CoreBundle\Entity\Log;
 
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Repository\Log\LogSecurityRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * @ORM\Entity(repositoryClass=LogSecurityRepository::class)
+ * @ORM\Entity
  * @ORM\Table(name="claro_log_security")
  */
 class LogSecurity

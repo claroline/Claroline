@@ -312,7 +312,7 @@ class UserController extends AbstractCrudController
         foreach ($users as $user) {
             if ($this->checkPermission('ADMINISTRATE', $user)) {
                 $this->mailManager->sendForgotPassword($user);
-                $this->eventDispatcher->dispatch(ForgotPasswordEvent::ACTION, ForgotPasswordEvent::class, [$user]);
+                $this->eventDispatcher->dispatch(SecurityEvents::FORGOT_PASSWORD, ForgotPasswordEvent::class, [$user]);
                 $processed[] = $user;
             }
         }
