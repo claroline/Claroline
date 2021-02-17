@@ -98,6 +98,7 @@ class ClacoFormSerializer
                 'display_subtitle' => $clacoForm->getDisplaySubtitle(),
                 'display_content' => $clacoForm->getDisplayContent(),
                 'title_field_label' => $clacoForm->getTitleFieldLabel(),
+                'helpMessage' => $clacoForm->getHelpMessage(),
             ],
 
             'display' => [
@@ -180,6 +181,7 @@ class ClacoFormSerializer
     {
         // TODO : remove and call all setters individually
         $this->sipe('details', 'setDetails', $data, $clacoForm);
+        $this->sipe('details.helpMessage', 'setHelpMessage', $data, $clacoForm);
 
         // display
         $this->sipe('display.showEntryNav', 'setShowEntryNav', $data, $clacoForm);

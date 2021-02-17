@@ -76,6 +76,11 @@ const EditorComponent = props =>
         title: trans('general'),
         fields: [
           {
+            name: 'details.helpMessage',
+            label: trans('help_message', {}, 'clacoform'),
+            type: 'html',
+            help: trans('help_message_help', {}, 'clacoform')
+          }, {
             name: 'details.keywords_enabled',
             type: 'boolean',
             label: trans('label_keywords_enabled', {}, 'clacoform'),

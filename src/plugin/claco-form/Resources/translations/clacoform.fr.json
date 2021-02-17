@@ -185,5 +185,7 @@
     "show_confirm_help": "Si coché, une demande de confirmation sera proposée aux utilisateurs avant de soumettre la fiche.",
     "confirm_message": "Message de confirmation",
     "confirm_new_entry": "Soumettre la fiche",
-    "confirm_new_entry_message": "Êtes-vous sûr de vouloir sauvegarder cette nouvelle fiche ?"
+    "confirm_new_entry_message": "Êtes-vous sûr de vouloir sauvegarder cette nouvelle fiche ?",
+    "help_message": "Message d'aide",
+    "help_message_help": "Le message d'aide est affiché sur toutes les fiches de la base de données."
 }

@@ -89,6 +89,13 @@ class ClacoForm extends AbstractResource
     private $confirmMessage;
 
     /**
+     * @ORM\Column(type="text", nullable=true)
+     *
+     * @var string
+     */
+    private $helpMessage;
+
+    /**
      * ClacoForm constructor.
      */
     public function __construct()
@@ -177,6 +184,16 @@ class ClacoForm extends AbstractResource
     public function setConfirmMessage(string $message = null)
     {
         $this->confirmMessage = $message;
+    }
+
+    public function getHelpMessage(): ?string
+    {
+        return $this->helpMessage;
+    }
+
+    public function setHelpMessage(string $message = null)
+    {
+        $this->helpMessage = $message;
     }
 
     public function getDetails()

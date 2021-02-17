@@ -17,7 +17,8 @@ class Version20210215105628 extends AbstractMigration
         $this->addSql('
             ALTER TABLE claro_clacoformbundle_claco_form 
             ADD showConfirm TINYINT(1) NOT NULL, 
-            ADD confirmMessage LONGTEXT DEFAULT NULL
+            ADD confirmMessage LONGTEXT DEFAULT NULL,
+            ADD helpMessage LONGTEXT DEFAULT NULL
         ');
     }
 
@@ -26,7 +27,8 @@ class Version20210215105628 extends AbstractMigration
         $this->addSql('
             ALTER TABLE claro_clacoformbundle_claco_form 
             DROP showConfirm, 
-            DROP confirmMessage
+            DROP confirmMessage,
+            DROP helpMessage
         ');
     }
 }
