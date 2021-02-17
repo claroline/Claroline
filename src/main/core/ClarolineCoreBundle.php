@@ -113,12 +113,12 @@ class ClarolineCoreBundle extends DistributionPluginBundle implements Configurat
         return false;
     }
 
-    public function getRequiredFixturesDirectory($environment)
+    public function getRequiredFixturesDirectory(string $environment): string
     {
         return 'DataFixtures/Required';
     }
 
-    public function getPostInstallFixturesDirectory($environment)
+    public function getPostInstallFixturesDirectory(string $environment): string
     {
         return 'DataFixtures/PostInstall';
     }

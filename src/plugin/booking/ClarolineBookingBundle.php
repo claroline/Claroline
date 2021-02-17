@@ -15,8 +15,4 @@ use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
 
 class ClarolineBookingBundle extends DistributionPluginBundle
 {
-    public function hasMigrations()
-    {
-        return true;
-    }
 }

@@ -15,7 +15,6 @@ use Claroline\AppBundle\Log\LoggableTrait;
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerAwareInterface;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 
 /**

@@ -9,7 +9,7 @@ use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
  */
 class IcapFormulaPluginBundle extends DistributionPluginBundle
 {
-    public function hasMigrations()
+    public function hasMigrations(): bool
     {
         return false;
     }

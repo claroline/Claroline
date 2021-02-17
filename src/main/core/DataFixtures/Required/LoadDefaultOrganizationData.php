@@ -17,7 +17,7 @@ use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class LoadOrganizationData extends AbstractFixture implements ContainerAwareInterface
+class LoadDefaultOrganizationData extends AbstractFixture implements ContainerAwareInterface
 {
     /** @var OrganizationManager */
     private $organizationManager;
@@ -29,6 +29,7 @@ class LoadOrganizationData extends AbstractFixture implements ContainerAwareInte
 
     public function load(ObjectManager $manager)
     {
-        $this->organizationManager->createDefault();
+        // create default organization only if it does not exist
+        $this->organizationManager->getDefault(true);
     }
 }

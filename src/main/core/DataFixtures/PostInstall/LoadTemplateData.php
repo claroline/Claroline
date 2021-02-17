@@ -18,7 +18,7 @@ use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class LoadTemplateData extends AbstractFixture implements ContainerAwareInterface
 {
@@ -70,7 +70,7 @@ class LoadTemplateData extends AbstractFixture implements ContainerAwareInterfac
             $mailRegistrationEN->setName('claro_mail_registration');
             $mailRegistrationEN->setType($mailRegistrationType);
             $mailRegistrationEN->setTitle('Registration to %platform_name%');
-            $content = '<div>You username is %username%</div></br>';
+            $content = '<div>Your username is %username%</div></br>';
             $content .= '<div>Your password is %password%</div>';
             $content .= '<div>%validation_mail%</div>';
             $mailRegistrationEN->setContent($content);
