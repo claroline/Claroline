@@ -18,8 +18,14 @@ use Claroline\AppBundle\API\Utils\ArrayUtils;
  */
 class PlatformConfigurationHandler
 {
+    /** @var string */
     private $configFile;
+    /** @var array */
     private $parameters;
+    /** @var array */
+    private $defaultConfigs;
+    /** @var string[] */
+    private $mapping;
 
     /**
      * PlatformConfigurationHandler constructor.
@@ -49,21 +55,23 @@ class PlatformConfigurationHandler
      */
     public function getParameter($parameter)
     {
+        // parameter is defined
         if ($this->hasParameter($parameter)) {
             return ArrayUtils::get($this->parameters, $parameter);
         }
 
+        // parameter uses an old format
         if (array_key_exists($parameter, $this->mapping) && ArrayUtils::has($this->parameters, $this->mapping[$parameter])) {
             return ArrayUtils::get($this->parameters, $this->mapping[$parameter]);
         }
 
-        //otherwise let's go default
+        // otherwise let's go default
         $defaults = [];
         foreach ($this->defaultConfigs as $default) {
             $defaults = array_merge($default, $defaults);
         }
 
-        if (array_key_exists($parameter, $defaults)) {
+        if (ArrayUtils::has($defaults, $parameter)) {
             return ArrayUtils::get($defaults, $parameter);
         }
 
@@ -117,19 +125,12 @@ class PlatformConfigurationHandler
             $duplicates = array_intersect_key($defaultConfig, $newDefault);
 
             if (count($duplicates) > 0) {
-                throw new \RuntimeException(
-                    "The following duplicate key(s) were found in the {$newDefaultClass} configuration file: ".implode(', ', array_keys($duplicates))
-                );
+                throw new \RuntimeException("The following duplicate key(s) were found in the {$newDefaultClass} configuration file: ".implode(', ', array_keys($duplicates)));
             }
         }
 
         $this->defaultConfigs[$newDefaultClass] = $newDefault;
         $this->parameters = array_merge($newDefault, $this->parameters);
-    }
-
-    public function getDefaultParameters()
-    {
-        return $this->parameters;
     }
 
     protected function mergeParameters()

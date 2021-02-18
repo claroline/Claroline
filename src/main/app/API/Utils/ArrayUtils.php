@@ -98,8 +98,6 @@ class ArrayUtils
      * @param string $keys   - the property path
      *
      * @return mixed
-     *
-     * @throws \Exception
      */
     public static function has(array $object, $keys)
     {
