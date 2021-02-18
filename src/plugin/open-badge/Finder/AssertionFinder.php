@@ -28,8 +28,8 @@ class AssertionFinder extends AbstractFinder
             switch ($filterName) {
                 case 'badge':
                     $qb->join('obj.badge', 'b');
-                    $qb->andWhere('b.uuid = :uuid');
-                    $qb->setParameter('uuid', $filterValue);
+                    $qb->andWhere('b.uuid = :badge');
+                    $qb->setParameter('badge', $filterValue);
                     break;
                 case 'workspace':
                     $qb->join('obj.badge', 'b');
@@ -40,8 +40,8 @@ class AssertionFinder extends AbstractFinder
                 case 'user':
                 case 'recipient':
                     $qb->join('obj.recipient', 'r');
-                    $qb->andWhere('r.uuid = :uuid');
-                    $qb->setParameter('uuid', $filterValue);
+                    $qb->andWhere('r.uuid = :user');
+                    $qb->setParameter('user', $filterValue);
                     break;
                 default:
                   $this->setDefaults($qb, $filterName, $filterValue);
