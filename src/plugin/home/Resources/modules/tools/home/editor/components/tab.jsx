@@ -117,6 +117,7 @@ class EditorTab extends Component {
             type: MODAL_BUTTON,
             icon: 'fa fa-fw fa-arrows',
             label: trans('move', {}, 'actions'),
+            disabled: this.props.readOnly || 1 >= this.props.tabs.length,
             modal: [MODAL_HOME_POSITION, {
               tab: this.props.currentTab,
               tabs: flattenTabs(this.props.tabs),
@@ -152,7 +153,6 @@ class EditorTab extends Component {
             id: this.props.currentTab.id,
             className: 'Claroline\\HomeBundle\\Entity\\HomeTab'
           } : undefined}
-          disabled={this.props.readOnly}
           target={[this.props.administration ? 'apiv2_home_admin' : 'apiv2_home_update', {
             context: this.props.currentContext.type,
             contextId: !isEmpty(this.props.currentContext.data) ? this.props.currentContext.data.id : get(this.props.currentUser, 'id')
