@@ -3,151 +3,21 @@ services:
         autowire: false
         autoconfigure: false
 
-    # API
-
-    Claroline\CoreBundle\Command\API\ImportCsvCommand:
-        arguments:
-            - '%claroline.param.import_log_dir%'
-            - '@claroline.manager.api_manager'
-        tags:
-            - { name: 'console.command', command: 'claroline:api:load' }
-
-    # Database Integrity
-
-    Claroline\CoreBundle\Command\DatabaseIntegrity\DirectoryIntegrityCommand:
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CoreBundle\Manager\ResourceManager'
-        tags:
-            - { name: 'console.command', command: 'claroline:directory:check' }
-
-    Claroline\CoreBundle\Command\DatabaseIntegrity\PersonalWorkspaceIntegrityCheckerCommand:
-        arguments:
-            - '@claroline.manager.user_manager'
-            - '@doctrine.dbal.default_connection'
-        tags:
-            - { name: 'console.command', command: 'claroline:personal_ws:check' }
-
-    Claroline\CoreBundle\Command\DatabaseIntegrity\ResourceMaskDecoderIntegrityCheckerCommand:
-        arguments:
-            - '@claroline.manager.mask_manager'
-        tags:
-            - { name: 'console.command', command: 'claroline:resource_mask_decoder:check' }
-
-    Claroline\CoreBundle\Command\DatabaseIntegrity\ResourceRightsIntegrityCommand:
-        arguments:
-            - '@doctrine.dbal.default_connection'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@claroline.manager.rights_manager'
-        tags:
-            - { name: 'console.command', command: 'claroline:resource_rights:check' }
-
-    Claroline\CoreBundle\Command\DatabaseIntegrity\ResourceWorkspaceIntegrityCheckerCommand:
-        arguments:
-            - '@claroline.manager.resource_manager'
-        tags:
-            - { name: 'console.command', command: 'claroline:resource:check' }
-
-    Claroline\CoreBundle\Command\DatabaseIntegrity\RightsIntegrityCheckerCommand:
-        arguments:
-            - '@claroline.manager.rights_manager'
-        tags:
-            - { name: 'console.command', command: 'claroline:rights:check' }
-
-    Claroline\CoreBundle\Command\DatabaseIntegrity\RoleIntegrityCheckerCommand:
-        arguments:
-            - '@claroline.manager.role_manager'
-            - '@claroline.manager.user_manager'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-        tags:
-            - { name: 'console.command', command: 'claroline:roles:check' }
-
-    Claroline\CoreBundle\Command\DatabaseIntegrity\RootNodeIntegrityCheckerCommand:
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-        tags:
-            - { name: 'console.command', command: 'claroline:resource_root:check' }
-
-    Claroline\CoreBundle\Command\DatabaseIntegrity\UserIntegrityCheckerCommand:
-        arguments:
-            - '@claroline.manager.user_manager'
-        tags:
-            - { name: 'console.command', command: 'claroline:user:check' }
-
-    Claroline\CoreBundle\Command\DatabaseIntegrity\WorkspaceCheckerCommand:
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@claroline.manager.workspace_manager'
-            - '@doctrine.orm.entity_manager'
-            - '@claroline.manager.tool_manager'
-            - '@claroline.manager.organization.organization_manager'
-        tags:
-            - { name: 'console.command', command: 'claroline:workspace:check' }
-
     # Dev
 
-    Claroline\CoreBundle\Command\Dev\DisableMaintenanceCommand:
+    Claroline\CoreBundle\Command\Maintenance\DisableMaintenanceCommand:
         tags:
             - { name: 'console.command', command: 'claroline:maintenance:disable' }
 
-    Claroline\CoreBundle\Command\Dev\EnableMaintenanceCommand:
+    Claroline\CoreBundle\Command\Maintenance\EnableMaintenanceCommand:
         tags:
             - { name: 'console.command', command: 'claroline:maintenance:enable' }
-
-    Claroline\CoreBundle\Command\Dev\PlatformInstallCommand:
-        arguments:
-            - '%claroline.param.files_directory%'
-        tags:
-            - { name: 'console.command', command: 'claroline:install' }
-
-    Claroline\CoreBundle\Command\Dev\PlatformUpdateCommand:
-        arguments:
-            - '@Claroline\CoreBundle\Library\Installation\Refresher'
-            - '@Claroline\CoreBundle\Library\Installation\PlatformInstaller'
-            - '@Claroline\CoreBundle\Manager\VersionManager'
-            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-            - '@translator'
-            - '%kernel.environment%'
-        tags:
-            - { name: 'console.command', command: 'claroline:update' }
-
-    Claroline\CoreBundle\Command\Dev\ExecuteUpdaterCommand:
-        arguments:
-            - '@Claroline\InstallationBundle\Repository\UpdaterExecutionRepository'
-            - !tagged_locator
-                  tag: 'claroline.platform.updater'
-        tags:
-            - { name: 'console.command', command: 'claroline:updater:execute' }
-
-    Claroline\CoreBundle\Command\Dev\RefreshCommand:
-        arguments:
-            - '@Claroline\CoreBundle\Library\Installation\Refresher'
-        tags:
-            - { name: 'console.command', command: 'claroline:refresh' }
-
-    Claroline\CoreBundle\Command\Dev\UpdateConfigCommand:
-        arguments:
-            - '@Claroline\CoreBundle\Library\Installation\Plugin\Installer'
-        tags:
-            - { name: 'console.command', command: 'claroline:update_config' }
-
-    Claroline\CoreBundle\Command\Dev\PluginInstallCommand:
-        arguments:
-            - '@Claroline\CoreBundle\Library\Installation\Plugin\Installer'
-        tags:
-            - { name: 'console.command', command: 'claroline:plugin:install' }
-
-    Claroline\CoreBundle\Command\Dev\PluginUninstallCommand:
-        arguments:
-            - '@Claroline\CoreBundle\Library\Installation\Plugin\Installer'
-        tags:
-            - { name: 'console.command', command: 'claroline:plugin:uninstall' }
 
     # Logs
 
     Claroline\CoreBundle\Command\Logs\LogConnectionComputeCommand:
         arguments:
-            - '@claroline.manager.log_connect'
+            - '@Claroline\CoreBundle\Manager\LogConnectManager'
         tags:
             - { name: 'console.command', command: 'claroline:connection:duration' }
 
@@ -164,20 +34,11 @@ services:
         tags:
             - { name: 'console.command', command: 'claroline:logs:fetch' }
 
-    # Removal
-
-    Claroline\CoreBundle\Command\Removal\RemoveFilesFromUnusedWorkspaceCommand:
-        arguments:
-            - '%claroline.param.files_directory%'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-        tags:
-            - { name: 'console.command', command: 'claroline:clean:files' }
-
     # Task
 
-    Claroline\CoreBundle\Command\Task\ExecuteScheduledTasksCommand:
+    Claroline\CoreBundle\Command\ExecuteScheduledTasksCommand:
         arguments:
-            - '@claroline.manager.scheduled_task_manager'
+            - '@Claroline\CoreBundle\Manager\Task\ScheduledTaskManager'
             - '@event_dispatcher'
         tags:
             - { name: 'console.command', command: 'claroline:tasks:execute' }
@@ -246,30 +107,6 @@ services:
             - '@Claroline\CoreBundle\Manager\Workspace\TransferManager'
         tags:
             - { name: 'console.command', command: 'claroline:workspace:import' }
-
-    Claroline\CoreBundle\Command\Workspace\OpenToolCommand:
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@doctrine.orm.entity_manager'
-        tags:
-            - { name: 'console.command', command: 'claroline:workspace:open-tool' }
-
-    Claroline\CoreBundle\Command\Workspace\RemoveCommand:
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
-            - '@Claroline\AppBundle\API\FinderProvider'
-            - '@Claroline\AppBundle\API\Crud'
-            - '@Claroline\CoreBundle\Listener\Log\LogListener'
-        tags:
-            - { name: 'console.command', command: 'claroline:workspace:remove' }
-
-    Claroline\CoreBundle\Command\Workspace\EmptyByTagCommand:
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CoreBundle\Manager\RoleManager'
-        tags:
-            - { name: 'console.command', command: 'claroline:workspace:empty' }
 
     # Common
 

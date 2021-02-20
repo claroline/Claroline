@@ -19,14 +19,14 @@ services:
         arguments:
             - '@event_dispatcher'
             - '@translator'
-            - '@claroline.manager.mail_manager'
+            - '@Claroline\CoreBundle\Manager\MailManager'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@router'
             - '@Claroline\AppBundle\API\Crud'
             - '@Claroline\AppBundle\Manager\PlatformManager'
             - '@Claroline\CoreBundle\Manager\RoleManager'
             - '@Claroline\CoreBundle\Library\RoutingHelper'
-            - '@claroline.manager.template_manager'
+            - '@Claroline\CoreBundle\Manager\Template\TemplateManager'
             - '@security.token_storage'
             - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
             - '@Claroline\CursusBundle\Manager\EventManager'
@@ -34,10 +34,10 @@ services:
     Claroline\CursusBundle\Manager\EventManager:
         arguments:
             - '@event_dispatcher'
-            - '@claroline.manager.mail_manager'
+            - '@Claroline\CoreBundle\Manager\MailManager'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@router'
-            - '@claroline.manager.template_manager'
+            - '@Claroline\CoreBundle\Manager\Template\TemplateManager'
             - '@security.token_storage'
 
     Claroline\CursusBundle\Manager\EventPresenceManager:

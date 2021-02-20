@@ -9,23 +9,28 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Command\Dev;
+namespace Claroline\InstallationBundle\Command;
 
-use Claroline\CoreBundle\Library\Maintenance\MaintenanceHandler;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class DisableMaintenanceCommand extends Command
+/**
+ * Installs a plugin.
+ */
+class PluginInstallCommand extends AbstractPluginCommand
 {
     protected function configure()
     {
-        $this->setDescription('Disable maintenance mode');
+        parent::configure();
+
+        $this->setDescription('Installs a specified claroline plugin.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        MaintenanceHandler::disableMaintenance();
+        $plugin = $this->getPlugin($input);
+        $this->pluginInstaller->install($plugin);
+        $this->resetCache($output);
 
         return 0;
     }

@@ -24,7 +24,7 @@ services:
             - '@claroline.installation.manager'
             - '@Claroline\CoreBundle\Library\Installation\Plugin\Installer'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@claroline.manager.version_manager'
+            - '@Claroline\CoreBundle\Manager\VersionManager'
         calls:
             - setLogger: ['@logger']
 
@@ -45,16 +45,16 @@ services:
             - '@Claroline\CoreBundle\Library\Installation\Plugin\Recorder'
             - '@claroline.installation.manager'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@claroline.manager.plugin_manager'
+            - '@Claroline\CoreBundle\Manager\PluginManager'
             - '@translator'
-            - '@claroline.manager.version_manager'
+            - '@Claroline\CoreBundle\Manager\VersionManager'
         calls:
             - setLogger: [ '@logger' ]
 
     Claroline\CoreBundle\Library\Installation\Plugin\DatabaseWriter:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@claroline.manager.mask_manager'
+            - '@Claroline\CoreBundle\Manager\Resource\MaskManager'
             - '@filesystem'
             - '@kernel'
             - '@Claroline\CoreBundle\Manager\Tool\ToolManager'

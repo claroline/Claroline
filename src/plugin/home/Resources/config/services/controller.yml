@@ -10,5 +10,5 @@ services:
       - '@Claroline\AppBundle\Persistence\ObjectManager'
       - '@Claroline\AppBundle\API\FinderProvider'
       - '@Claroline\AppBundle\API\Crud'
-      - '@claroline.manager.lock_manager'
+      - '@Claroline\CoreBundle\Manager\LockManager'
       - '@Claroline\HomeBundle\Serializer\HomeTabSerializer'

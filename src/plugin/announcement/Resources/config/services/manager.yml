@@ -9,6 +9,6 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\Event\StrictDispatcher'
             - '@Claroline\AnnouncementBundle\Serializer\AnnouncementSerializer'
-            - '@claroline.manager.mail_manager'
-            - '@claroline.manager.scheduled_task_manager'
+            - '@Claroline\CoreBundle\Manager\MailManager'
+            - '@Claroline\CoreBundle\Manager\Task\ScheduledTaskManager'
             - '@Claroline\AppBundle\API\FinderProvider'

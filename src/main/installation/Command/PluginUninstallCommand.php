@@ -9,9 +9,8 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Command\Dev;
+namespace Claroline\InstallationBundle\Command;
 
-use Claroline\CoreBundle\Command\AbstractPluginCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -22,7 +21,8 @@ class PluginUninstallCommand extends AbstractPluginCommand
 {
     protected function configure()
     {
-        parent::_configure();
+        parent::configure();
+
         $this->setDescription('Uninstalls a specified claroline plugin.');
     }
 

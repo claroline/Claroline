@@ -12,27 +12,27 @@ services:
     Claroline\CoreBundle\Repository\Tool\AdministrationToolRepository:
         arguments:
           - '@Doctrine\Persistence\ManagerRegistry'
-          - '@claroline.manager.plugin_manager'
+          - '@Claroline\CoreBundle\Manager\PluginManager'
 
     Claroline\CoreBundle\Repository\Tool\OrderedToolRepository:
         arguments:
           - '@Doctrine\Persistence\ManagerRegistry'
-          - '@claroline.manager.plugin_manager'
+          - '@Claroline\CoreBundle\Manager\PluginManager'
 
     Claroline\CoreBundle\Repository\Resource\ResourceActionRepository:
         arguments:
           - '@Doctrine\Persistence\ManagerRegistry'
-          - '@claroline.manager.plugin_manager'
+          - '@Claroline\CoreBundle\Manager\PluginManager'
 
     Claroline\CoreBundle\Repository\Resource\ResourceTypeRepository:
         arguments:
           - '@Doctrine\Persistence\ManagerRegistry'
-          - '@claroline.manager.plugin_manager'
+          - '@Claroline\CoreBundle\Manager\PluginManager'
 
     Claroline\CoreBundle\Repository\Tool\ToolRepository:
         arguments:
           - '@Doctrine\Persistence\ManagerRegistry'
-          - '@claroline.manager.plugin_manager'
+          - '@Claroline\CoreBundle\Manager\PluginManager'
 
     Claroline\CoreBundle\Repository\User\UserRepository:
         arguments:
@@ -48,4 +48,4 @@ services:
         tags: [doctrine.repository_service]
         arguments:
           - '@Doctrine\Persistence\ManagerRegistry'
-          - '@claroline.manager.plugin_manager'
+          - '@Claroline\CoreBundle\Manager\PluginManager'

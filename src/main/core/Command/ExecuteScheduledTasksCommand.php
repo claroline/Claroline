@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Command\Task;
+namespace Claroline\CoreBundle\Command;
 
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Manager\Task\ScheduledTaskManager;

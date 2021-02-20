@@ -56,7 +56,7 @@ services:
         arguments:
             - '@security.token_storage'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@claroline.manager.cryptography_manager'
+            - '@Claroline\CoreBundle\Manager\CryptographyManager'
             - '@Claroline\AppBundle\API\Crud'
         tags:
             - { name: kernel.event_listener, event: crud_pre_create_object_claroline_corebundle_entity_organization_organization, method: preCreate }

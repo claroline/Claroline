@@ -80,18 +80,15 @@ class CreateCommand extends Command implements AdminCliCommand
             $roleName = PlatformRoles::USER;
         }
 
-        $object = $this->crud->create(
-            UserEntity::class,
-            [
-              'firstName' => $input->getArgument('user_first_name'),
-              'lastName' => $input->getArgument('user_last_name'),
-              'username' => $input->getArgument('user_username'),
-              'email' => $email,
-              'plainPassword' => $input->getArgument('user_password'),
-             ]
-        );
+        $object = $this->crud->create(UserEntity::class, [
+            'firstName' => $input->getArgument('user_first_name'),
+            'lastName' => $input->getArgument('user_last_name'),
+            'username' => $input->getArgument('user_username'),
+            'email' => $email,
+            'plainPassword' => $input->getArgument('user_password'),
+        ]);
 
-        $role = $this->om->getRepository(Role::class)->findOneByName($roleName);
+        $role = $this->om->getRepository(Role::class)->findOneBy(['name' => $roleName]);
         $object->addRole($role);
         $this->om->persist($object);
         $this->om->flush();
