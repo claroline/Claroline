@@ -10,7 +10,7 @@ services:
           - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
           - '%kernel.project_dir%/app'
           - '@Claroline\ThemeBundle\Serializer\ThemeSerializer'
-          - '@claroline.manager.plugin_manager'
+          - '@Claroline\CoreBundle\Manager\PluginManager'
 
     claroline.manager.theme_manager:
         alias: Claroline\ThemeBundle\Manager\ThemeManager

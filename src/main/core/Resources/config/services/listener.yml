@@ -10,7 +10,7 @@ services:
             - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
             - '@Claroline\CoreBundle\API\Serializer\User\ProfileSerializer'
             - '@claroline.manager.resource_manager'
-            - '@claroline.manager.user_manager'
+            - '@Claroline\CoreBundle\Manager\UserManager'
         tags:
             - { name: kernel.event_listener, event: administration_tool_community, method: onDisplayTool }
             - { name: kernel.event_listener, event: merge_users, method: onMergeUsers }
@@ -23,7 +23,7 @@ services:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
-            - '@claroline.manager.locale_manager'
+            - '@Claroline\CoreBundle\Manager\LocaleManager'
             - '@claroline.manager.icon_set_manager'
         tags:
             - { name: kernel.event_listener, event: administration_tool_main_settings, method: onDisplayTool }
@@ -96,7 +96,7 @@ services:
             - '@service_container'
             - '@claroline.manager.role_manager'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-            - '@claroline.manager.log_connect'
+            - '@Claroline\CoreBundle\Manager\LogConnectManager'
         tags:
             - { name: kernel.event_listener, event: log, method: onLog }
             - { name: kernel.event_listener, event: create_log_list_item, method: onLogListItem }
@@ -112,7 +112,7 @@ services:
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\AppBundle\API\Crud'
             - '@claroline.manager.resource_manager'
-            - '@claroline.manager.resource_action'
+            - '@Claroline\CoreBundle\Manager\Resource\ResourceActionManager'
             - '@claroline.manager.rights_manager'
             - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
         tags:
@@ -154,7 +154,7 @@ services:
             - '@Claroline\AppBundle\API\Crud'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@claroline.manager.resource_manager'
-            - '@claroline.manager.resource_lifecycle'
+            - '@Claroline\CoreBundle\Manager\Resource\ResourceLifecycleManager'
             - '@claroline.manager.resource_evaluation_manager'
         tags:
             - { name: kernel.event_listener, event: resource.load, method: load }
@@ -175,7 +175,7 @@ services:
         arguments:
             - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
             - '@Claroline\CoreBundle\API\Serializer\User\ProfileSerializer'
-            - '@claroline.manager.user_manager'
+            - '@Claroline\CoreBundle\Manager\UserManager'
         tags:
             - { name: kernel.event_listener, event: open_tool_workspace_community, method: onDisplayWorkspace }
             - { name: kernel.event_listener, event: open_tool_desktop_community, method: onDisplayDesktop }
@@ -232,8 +232,8 @@ services:
 
     Claroline\CoreBundle\Listener\ScheduledTaskListener:
         arguments:
-            - '@claroline.manager.mail_manager'
-            - '@claroline.manager.scheduled_task_manager'
+            - '@Claroline\CoreBundle\Manager\MailManager'
+            - '@Claroline\CoreBundle\Manager\Task\ScheduledTaskManager'
         tags:
             - { name: kernel.event_listener, event: claroline_scheduled_task_execute_email, method: onExecuteMailTask }
 
@@ -242,7 +242,7 @@ services:
             - '@security.token_storage'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
             - '@claroline.manager.temp_file'
-            - '@claroline.manager.locale_manager'
+            - '@Claroline\CoreBundle\Manager\LocaleManager'
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: setLocale, priority: 17 }
             - { name: kernel.event_listener, event: kernel.request, method: checkAvailability }
@@ -262,9 +262,9 @@ services:
             - '@Claroline\AppBundle\Event\StrictDispatcher'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\CoreBundle\Library\RoutingHelper'
-            - '@claroline.manager.user_manager'
+            - '@Claroline\CoreBundle\Manager\UserManager'
             - '@Claroline\CoreBundle\Manager\Tool\ToolManager'
-            - '@claroline.manager.connection_message_manager'
+            - '@Claroline\CoreBundle\Manager\ConnectionMessageManager'
 
     Claroline\CoreBundle\Listener\Entity\UserListener:
         arguments:

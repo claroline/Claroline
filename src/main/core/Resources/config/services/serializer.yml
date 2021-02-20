@@ -155,7 +155,7 @@ services:
         tags: [claroline.serializer]
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@claroline.manager.locale_manager'
+            - '@Claroline\CoreBundle\Manager\LocaleManager'
             - '@service_container'
 
     Claroline\CoreBundle\API\Serializer\Transfer\FileSerializer:
@@ -200,7 +200,7 @@ services:
     Claroline\CoreBundle\API\Serializer\Resource\ResourceTypeSerializer:
         tags: [claroline.serializer]
         arguments:
-            - '@claroline.manager.resource_action'
+            - '@Claroline\CoreBundle\Manager\Resource\ResourceActionManager'
 
     Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer:
         tags: [claroline.serializer]
@@ -209,7 +209,7 @@ services:
             - '@Claroline\AppBundle\Event\StrictDispatcher'
             - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
             - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
-            - '@claroline.manager.mask_manager'
+            - '@Claroline\CoreBundle\Manager\Resource\MaskManager'
             - '@claroline.manager.optimized_rights_manager'
             - '@claroline.manager.rights_manager'
             - '@Claroline\AppBundle\API\SerializerProvider'
@@ -253,8 +253,8 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
             - '@Claroline\AppBundle\Manager\PlatformManager'
-            - '@claroline.manager.version_manager'
-            - '@claroline.manager.plugin_manager'
+            - '@Claroline\CoreBundle\Manager\VersionManager'
+            - '@Claroline\CoreBundle\Manager\PluginManager'
             - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceTypeSerializer'
 
     Claroline\CoreBundle\API\Serializer\Log\LogSerializer:

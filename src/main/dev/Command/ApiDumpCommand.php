@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\AppBundle\Command;
+namespace Claroline\DevBundle\Command;
 
 use Claroline\AppBundle\Routing\Documentator;
 use Claroline\AppBundle\Routing\Finder;
@@ -19,7 +19,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Yaml\Yaml;
 
-class ApiDumperCommand extends Command
+class ApiDumpCommand extends Command
 {
     private $finder;
     private $documentator;

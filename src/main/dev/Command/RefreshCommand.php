@@ -9,32 +9,33 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Command\DatabaseIntegrity;
+namespace Claroline\DevBundle\Command;
 
-use Claroline\CoreBundle\Manager\Resource\RightsManager;
+use Claroline\CoreBundle\Library\Installation\Refresher;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class RightsIntegrityCheckerCommand extends Command
+class RefreshCommand extends Command
 {
-    private $rightsManager;
+    private $refresher;
 
-    public function __construct(RightsManager $rightsManager)
+    public function __construct(Refresher $refresher)
     {
-        $this->rightsManager = $rightsManager;
+        $this->refresher = $refresher;
 
         parent::__construct();
     }
 
     protected function configure()
     {
-        $this->setDescription('Checks the rights integrity of the platform.');
+        $this->setDescription('Installs/dumps the assets and empties the cache.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->rightsManager->checkIntegrity();
+        $this->refresher->setOutput($output);
+        $this->refresher->refresh($input->getOption('env'));
 
         return 0;
     }

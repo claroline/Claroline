@@ -12,30 +12,24 @@
 namespace Claroline\CoreBundle\Manager\Resource;
 
 use Claroline\AppBundle\API\Options;
-use Claroline\AppBundle\Log\LoggableTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Repository\Resource\ResourceNodeRepository;
 use Claroline\CoreBundle\Repository\Resource\ResourceRightsRepository;
 use Claroline\CoreBundle\Repository\Resource\ResourceTypeRepository;
 use Claroline\CoreBundle\Repository\User\RoleRepository;
-use Psr\Log\LoggerAwareInterface;
-use Psr\Log\LogLevel;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * @deprecated use OptimizedRightsManager instead
  */
-class RightsManager implements LoggerAwareInterface
+class RightsManager
 {
-    use LoggableTrait;
-
     /** @var TokenStorageInterface */
     private $tokenStorage;
 
@@ -95,7 +89,7 @@ class RightsManager implements LoggerAwareInterface
      */
     public function editPerms($permissions, $role, ResourceNode $node, $isRecursive = false, array $creations = [], $log = true)
     {
-        $newRightsManager = $this->container->get('Claroline\CoreBundle\Manager\Resource\OptimizedRightsManager');
+        $newRightsManager = $this->container->get('claroline.manager.optimized_rights_manager');
         $resourceType = $node->getResourceType();
 
         $mask = !is_int($permissions) ?
@@ -177,48 +171,6 @@ class RightsManager implements LoggerAwareInterface
 
             return $data;
         }, $resourceNode->getRights()->toArray());
-    }
-
-    public function checkIntegrity()
-    {
-        $this->log('Checking roles integrity for resources... This may take a while.');
-
-        /** @var Workspace[] $workspaces */
-        $workspaces = $this->om->getRepository('Claroline\CoreBundle\Entity\Workspace\Workspace')->findAll();
-        $this->om->startFlushSuite();
-        $i = 0;
-
-        foreach ($workspaces as $workspace) {
-            $this->log('Checking '.$workspace->getCode().'...');
-            /** @var ResourceNode $root */
-            $root = $this->container->get('claroline.manager.resource_manager')->getWorkspaceRoot($workspace);
-            $collaboratorRole = $this->roleManager->getCollaboratorRole($workspace);
-
-            if ($root && $collaboratorRole) {
-                $collaboratorFound = false;
-
-                foreach ($root->getRights() as $right) {
-                    if ($right->getRole()->getName() === $this->roleManager->getCollaboratorRole($workspace)->getName()) {
-                        $collaboratorFound = true;
-                    }
-                }
-
-                if (!$collaboratorFound) {
-                    $this->log('Adding missing right on root for '.$workspace->getCode().'.', LogLevel::DEBUG);
-                    $collaboratorRole = $this->roleManager->getCollaboratorRole($workspace);
-                    $this->editPerms(5, $collaboratorRole, $root, true, [], true);
-                    ++$i;
-
-                    if (0 === $i % 3) {
-                        $this->log('flushing...');
-                        $this->om->forceFlush();
-                        $this->om->clear();
-                    }
-                }
-            }
-        }
-
-        $this->om->endFlushSuite();
     }
 
     /**

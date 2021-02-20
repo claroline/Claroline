@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Command;
+namespace Claroline\InstallationBundle\Command;
 
 use Claroline\AppBundle\Command\BaseCommandTrait;
 use Claroline\CoreBundle\Library\Installation\Plugin\Installer;

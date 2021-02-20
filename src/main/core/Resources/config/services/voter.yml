@@ -52,11 +52,11 @@ services:
         arguments:
             - '@doctrine.orm.entity_manager'
             - '@translator'
-            - '@claroline.manager.mask_manager'
+            - '@Claroline\CoreBundle\Manager\Resource\MaskManager'
             - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
             - '@claroline.manager.resource_manager'
             - '@claroline.manager.rights_manager'
-            - '@claroline.manager.resource_restrictions'
+            - '@Claroline\CoreBundle\Manager\Resource\ResourceRestrictionsManager'
 
     Claroline\CoreBundle\Security\Voter\RoleVoter: ~
 

@@ -9,32 +9,38 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Command\Dev;
+namespace Claroline\InstallationBundle\Command;
 
-use Claroline\CoreBundle\Library\Installation\Plugin\Installer;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class UpdateConfigCommand extends Command
+/**
+ * Performs a fresh installation of the platform.
+ */
+class PlatformInstallCommand extends Command
 {
-    private $pluginInstaller;
+    private $filesDir;
 
-    public function __construct(Installer $pluginInstaller)
+    public function __construct(string $filesDir)
     {
-        $this->pluginInstaller = $pluginInstaller;
-
         parent::__construct();
+
+        $this->filesDir = $filesDir;
     }
 
     protected function configure()
     {
-        $this->setDescription('Runs the local update the config.');
+        $this->setDescription('Installs the platform.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->pluginInstaller->updateAllConfigurations();
+        $this
+            ->getApplication()
+            ->get('claroline:update')
+            ->run(new ArrayInput([]), $output);
 
         return 0;
     }

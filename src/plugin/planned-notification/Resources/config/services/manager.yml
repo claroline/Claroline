@@ -18,6 +18,6 @@ services:
 
     Claroline\PlannedNotificationBundle\Manager\PlannedNotificationManager:
        arguments:
-          - '@claroline.manager.mail_manager'
+          - '@Claroline\CoreBundle\Manager\MailManager'
           - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@claroline.manager.scheduled_task_manager'
+          - '@Claroline\CoreBundle\Manager\Task\ScheduledTaskManager'

@@ -11,14 +11,14 @@ services:
         arguments:
           - '@security.authorization_checker'
           - '@Claroline\AppBundle\API\FinderProvider'
-          - '@claroline.manager.log_connect'
+          - '@Claroline\CoreBundle\Manager\LogConnectManager'
           - '@claroline.manager.tool_manager'
 
     Claroline\CoreBundle\Controller\APINew\Platform\PluginController:
         parent: Claroline\AppBundle\Controller\AbstractSecurityController
         public: true
         arguments:
-          - '@claroline.manager.plugin_manager'
+          - '@Claroline\CoreBundle\Manager\PluginManager'
 
     Claroline\CoreBundle\Controller\APINew\Resource\Types\DirectoryController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
@@ -44,10 +44,10 @@ services:
         public: true
         arguments:
           - '@Claroline\AppBundle\Event\StrictDispatcher'
-          - '@claroline.manager.resource_action'
+          - '@Claroline\CoreBundle\Manager\Resource\ResourceActionManager'
           - '@claroline.manager.resource_manager'
           - '@claroline.manager.rights_manager'
-          - '@claroline.manager.log_connect'
+          - '@Claroline\CoreBundle\Manager\LogConnectManager'
           - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
           - '@security.token_storage'
 
@@ -56,7 +56,7 @@ services:
         public: true
         arguments:
           - '@security.authorization_checker'
-          - '@claroline.manager.template_manager'
+          - '@Claroline\CoreBundle\Manager\Template\TemplateManager'
           - '@claroline.manager.tool_manager'
 
     Claroline\CoreBundle\Controller\APINew\Template\TemplateTypeController:
@@ -115,12 +115,12 @@ services:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
         public: true
         arguments:
-          - '@security.token_storage'
-          - '@security.authorization_checker'
-          - '@Claroline\AppBundle\Event\StrictDispatcher'
-          - '@claroline.manager.user_manager'
-          - '@claroline.manager.mail_manager'
-          - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
+            - '@security.token_storage'
+            - '@security.authorization_checker'
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - '@Claroline\CoreBundle\Manager\UserManager'
+            - '@Claroline\CoreBundle\Manager\MailManager'
+            - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
 
     Claroline\CoreBundle\Controller\APINew\Workspace\EvaluationController:
         arguments:
@@ -166,13 +166,13 @@ services:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
         public: true
         arguments:
-          - '@claroline.manager.connection_message_manager'
+          - '@Claroline\CoreBundle\Manager\ConnectionMessageManager'
 
     Claroline\CoreBundle\Controller\APINew\DataSourceController:
         arguments:
           - '@Claroline\AppBundle\Event\StrictDispatcher'
           - '@Claroline\AppBundle\API\SerializerProvider'
-          - '@claroline.manager.data_source'
+          - '@Claroline\CoreBundle\Manager\DataSourceManager'
 
     Claroline\CoreBundle\Controller\APINew\SavedSearchController:
         arguments:
@@ -195,7 +195,7 @@ services:
         arguments:
           - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@Claroline\AppBundle\API\SerializerProvider'
-          - '@claroline.manager.lock_manager'
+          - '@Claroline\CoreBundle\Manager\LockManager'
 
     Claroline\CoreBundle\Controller\APINew\Platform\ParametersController:
         arguments:
@@ -229,7 +229,7 @@ services:
     Claroline\CoreBundle\Controller\APINew\WidgetController:
         arguments:
           - '@Claroline\AppBundle\API\SerializerProvider'
-          - '@claroline.manager.widget_manager'
+          - '@Claroline\CoreBundle\Manager\WidgetManager'
           - '@Claroline\CoreBundle\Manager\DataSourceManager'
 
     Claroline\CoreBundle\Controller\APINew\Platform\ArchiveController:
@@ -258,9 +258,9 @@ services:
 
     Claroline\CoreBundle\Controller\AuthenticationController:
         arguments:
-          - '@claroline.manager.user_manager'
+          - '@Claroline\CoreBundle\Manager\UserManager'
           - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@claroline.manager.mail_manager'
+          - '@Claroline\CoreBundle\Manager\MailManager'
           - '@Claroline\CoreBundle\Library\RoutingHelper'
           - '@Claroline\AuthenticationBundle\Security\Authentication\Authenticator'
 
@@ -292,8 +292,8 @@ services:
           - '@Claroline\AppBundle\API\FinderProvider'
           - '@Claroline\AppBundle\API\SerializerProvider'
           - '@claroline.manager.resource_manager'
-          - '@claroline.manager.resource_action'
-          - '@claroline.manager.resource_restrictions'
+          - '@Claroline\CoreBundle\Manager\Resource\ResourceActionManager'
+          - '@Claroline\CoreBundle\Manager\Resource\ResourceRestrictionsManager'
           - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@security.authorization_checker'
 

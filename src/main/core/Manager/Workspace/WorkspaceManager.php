@@ -646,36 +646,6 @@ class WorkspaceManager implements LoggerAwareInterface
         return $usersInRoles;
     }
 
-    public function setWorkspacesFlag()
-    {
-        /** @var Workspace[] $workspaces */
-        $workspaces = $this->container->get('Claroline\AppBundle\API\FinderProvider')->fetch(Workspace::class, [
-            'name' => 'Espace personnel',
-            'meta.personal' => false,
-            //maybe add personal user here
-        ]);
-
-        $i = 0;
-        $total = count($workspaces);
-
-        foreach ($workspaces as $workspace) {
-            $workspace->setPersonal(true);
-            $this->om->persist($workspace);
-
-            ++$i;
-
-            $this->log('Restore workspace personal flag for '.$workspace->getName().' '.$i.'/'.$total);
-
-            if (0 === $i % 500) {
-                $this->log('Flushing...');
-                $this->om->flush();
-            }
-        }
-
-        $this->log('Flushing...');
-        $this->om->flush();
-    }
-
     public function getShortcuts(Workspace $workspace, User $user = null)
     {
         $shortcuts = [];

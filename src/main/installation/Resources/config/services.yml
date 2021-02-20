@@ -1,3 +1,6 @@
+imports:
+    - { resource: services/command.yml }
+
 services:
     claroline.installation.manager:
         class: '%claroline.installation_manager.class%'

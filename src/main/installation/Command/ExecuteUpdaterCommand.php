@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Command\Dev;
+namespace Claroline\InstallationBundle\Command;
 
 use Claroline\CoreBundle\Library\Maintenance\MaintenanceHandler;
 use Claroline\InstallationBundle\Repository\UpdaterExecutionRepository;

@@ -23,7 +23,7 @@ services:
     Claroline\ClacoFormBundle\Finder\EntryFinder:
         arguments:
           - '@security.authorization_checker'
-          - '@claroline.manager.organization.location_manager'
+          - '@Claroline\CoreBundle\Manager\Organization\LocationManager'
           - '@security.token_storage'
           - '@translator'
 

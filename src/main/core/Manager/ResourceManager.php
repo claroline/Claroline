@@ -613,38 +613,6 @@ class ResourceManager implements LoggerAwareInterface
         return $this->rightsManager->isManager($resourceNode);
     }
 
-    public function checkIntegrity()
-    {
-        $resources = $this->resourceNodeRepo->findAll();
-        $batchSize = 500;
-        $i = 0;
-
-        /** @var ResourceNode $resource */
-        foreach ($resources as $resource) {
-            $absRes = $this->getResourceFromNode($resource);
-
-            if (!$absRes) {
-                $this->log('Resource '.$resource->getName().' not found. Removing...');
-                $this->om->remove($resource);
-            } else {
-                $parent = $resource->getParent();
-                if (null === $resource->getWorkspace() && $parent) {
-                    $workspace = $parent->getWorkspace();
-                    if ($workspace) {
-                        $resource->setWorkspace($workspace);
-                        $this->om->persist($workspace);
-                        if (0 === $batchSize % $i) {
-                            $this->om->flush();
-                        }
-                    }
-                }
-            }
-            ++$i;
-        }
-
-        $this->om->flush();
-    }
-
     private function getEncoding()
     {
         return 'UTF-8//TRANSLIT';

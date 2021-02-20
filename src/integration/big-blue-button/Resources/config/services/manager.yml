@@ -8,7 +8,7 @@ services:
         arguments:
             - '@security.token_storage'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-            - '@claroline.manager.curl_manager'
+            - '@Claroline\CoreBundle\Manager\CurlManager'
 
     Claroline\BigBlueButtonBundle\Manager\BBBManager:
         arguments:
@@ -17,6 +17,6 @@ services:
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\SerializerProvider'
-            - '@claroline.manager.curl_manager'
+            - '@Claroline\CoreBundle\Manager\CurlManager'
             - '@Claroline\CoreBundle\Library\RoutingHelper'
             - '@Claroline\BigBlueButtonBundle\Manager\ServerManager'

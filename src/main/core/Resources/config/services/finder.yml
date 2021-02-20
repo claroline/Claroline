@@ -63,11 +63,11 @@ services:
 
     Claroline\CoreBundle\API\Finder\Tool\ToolFinder:
         arguments:
-          - '@claroline.manager.plugin_manager'
+          - '@Claroline\CoreBundle\Manager\PluginManager'
 
     Claroline\CoreBundle\API\Finder\Tool\AdminToolFinder:
         arguments:
-          - '@claroline.manager.plugin_manager'
+          - '@Claroline\CoreBundle\Manager\PluginManager'
 
     Claroline\CoreBundle\API\Finder\Template\TemplateFinder: ~
 

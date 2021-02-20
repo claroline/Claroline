@@ -49,7 +49,7 @@ services:
 
     Claroline\AppBundle\Controller\Platform\LocaleController:
         arguments:
-            - '@claroline.manager.locale_manager'
+            - '@Claroline\CoreBundle\Manager\LocaleManager'
             - '@security.token_storage'
 
     Claroline\AppBundle\Controller\Platform\TermsOfServiceController:
