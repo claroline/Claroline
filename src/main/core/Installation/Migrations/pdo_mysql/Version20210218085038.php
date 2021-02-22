@@ -8,7 +8,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated migration based on mapping information: modify it with caution.
  *
- * Generation date: 2021/02/18 08:50:39
+ * Generation date: 2021/02/21 10:08:41
  */
 class Version20210218085038 extends AbstractMigration
 {
@@ -17,20 +17,28 @@ class Version20210218085038 extends AbstractMigration
         $this->addSql('
             CREATE TABLE claro_log_security (
                 id INT AUTO_INCREMENT NOT NULL, 
-                user_id INT DEFAULT NULL, 
+                target_id INT DEFAULT NULL, 
+                doer_id INT DEFAULT NULL, 
                 date DATETIME NOT NULL, 
                 details LONGTEXT NOT NULL, 
                 event VARCHAR(255) NOT NULL, 
                 country VARCHAR(255) NOT NULL, 
                 doerIp VARCHAR(255) NOT NULL, 
                 city VARCHAR(255) NOT NULL, 
-                INDEX IDX_91F693E1A76ED395 (user_id), 
+                INDEX IDX_91F693E1158E0B66 (target_id), 
+                INDEX IDX_91F693E112D3860F (doer_id), 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB
         ');
         $this->addSql('
             ALTER TABLE claro_log_security 
-            ADD CONSTRAINT FK_91F693E1A76ED395 FOREIGN KEY (user_id) 
+            ADD CONSTRAINT FK_91F693E1158E0B66 FOREIGN KEY (target_id) 
+            REFERENCES claro_user (id) 
+            ON DELETE SET NULL
+        ');
+        $this->addSql('
+            ALTER TABLE claro_log_security 
+            ADD CONSTRAINT FK_91F693E112D3860F FOREIGN KEY (doer_id) 
             REFERENCES claro_user (id) 
             ON DELETE SET NULL
         ');

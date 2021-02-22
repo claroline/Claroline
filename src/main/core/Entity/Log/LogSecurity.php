@@ -38,14 +38,14 @@ class LogSecurity
     /**
      * @var User
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="SET NULL")
+     * @ORM\JoinColumn(name="target_id", referencedColumnName="id", onDelete="SET NULL")
      */
     private $target;
 
     /**
      * @var User
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="SET NULL")
+     * @ORM\JoinColumn(name="doer_id", referencedColumnName="id", onDelete="SET NULL")
      */
     private $doer;
 

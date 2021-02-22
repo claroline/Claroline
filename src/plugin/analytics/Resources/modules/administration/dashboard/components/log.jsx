@@ -19,32 +19,51 @@ const DashboardLog = () =>
       }}
       definition={[
         {
-          name: 'name',
-          type: 'string',
-          label: trans('name'),
-          displayed: true,
-          filterable: false,
-          sortable: false,
-          calculated: (rowData) => trans(rowData.name, {}, 'template'),
-          options: {
-            domain: 'template'
-          },
-          primary: true
+          name: 'id',
+          type: 'number',
+          label: trans('id'),
+          displayed: true
         }, {
-          name: 'description',
+          name: 'city',
           type: 'string',
-          label: trans('description'),
-          displayed: true,
-          filterable: false,
-          sortable: false,
-          calculated: (rowData) => trans(`${rowData.name}_desc`, {}, 'template')
+          label: trans('city'),
+          displayed: true
         }, {
-          name: 'typeName',
+          name: 'country',
           type: 'string',
-          label: trans('type'),
-          displayable: false,
-          filterable: false,
-          sortable: false
+          label: trans('country'),
+          displayed: true
+        }, {
+          name: 'date',
+          label: trans('date'),
+          type: 'date',
+          options: {time: true},
+          displayed: true
+        }, {
+          name: 'details',
+          type: 'string',
+          label: trans('details'),
+          displayed: true
+        }, {
+          name: 'doer.name',
+          type: 'string',
+          label: trans('doer'),
+          displayed: true
+        }, {
+          name: 'target.name',
+          type: 'string',
+          label: trans('target'),
+          displayed: true
+        }, {
+          name: 'doer_ip',
+          type: 'string',
+          label: trans('ip_address'),
+          displayed: true
+        }, {
+          name: 'event',
+          type: 'string',
+          label: trans('event'),
+          displayed: true
         }
       ]}
     />

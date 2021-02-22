@@ -39,6 +39,7 @@ class LogSecuritySerializer
             'details' => $logSecurity->getDetails(),
             'doer' => $doer,
             'event' => $logSecurity->getEvent(),
+            'doer_ip' => $logSecurity->getDoerIp(),
             'target' => $target,
         ];
     }
