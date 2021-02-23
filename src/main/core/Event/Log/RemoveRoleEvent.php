@@ -39,6 +39,6 @@ class RemoveRoleEvent extends Event
 
     public function getMessage(TranslatorInterface $translator)
     {
-        return sprintf($translator->trans('removeRole'), $this->role->getName(), $this->user->getUsername());
+        return sprintf($translator->trans('removeRole', [], 'security'), $this->role->getName(), $this->user->getUsername());
     }
 }

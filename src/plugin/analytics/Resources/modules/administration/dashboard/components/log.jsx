@@ -26,7 +26,7 @@ const DashboardLog = () =>
         }, {
           name: 'city',
           type: 'string',
-          label: trans('city'),
+          label: trans('town'),
           displayed: true
         }, {
           name: 'country',

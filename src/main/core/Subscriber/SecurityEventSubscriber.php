@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\EventDispatcher\Event;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SecurityEventSubscriber implements EventSubscriberInterface
 {
@@ -17,17 +18,20 @@ class SecurityEventSubscriber implements EventSubscriberInterface
     private $client;
     private $security;
     private $requestStack;
+    private $translator;
 
     public function __construct(
         EntityManagerInterface $em,
         HttpClientInterface $client,
         Security $security,
-        RequestStack $requestStack
+        RequestStack $requestStack,
+        TranslatorInterface $translator
     ) {
         $this->em = $em;
         $this->client = $client;
         $this->security = $security;
         $this->requestStack = $requestStack;
+        $this->translator = $translator;
     }
 
     public static function getSubscribedEvents(): array
@@ -50,7 +54,7 @@ class SecurityEventSubscriber implements EventSubscriberInterface
         $request = $this->requestStack->getCurrentRequest();
 
         $logEntry = new LogSecurity();
-        $logEntry->setDetails(sprintf('Log %s: %s', $eventName, $event->getMessage()));
+        $logEntry->setDetails(sprintf('Log %s: %s', $eventName, $event->getMessage($this->translator)));
         $logEntry->setEvent($eventName);
         $logEntry->setTarget($event->getUser());
         $logEntry->setDoer($this->security->getUser());

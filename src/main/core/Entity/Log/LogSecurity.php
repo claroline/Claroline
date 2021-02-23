@@ -122,7 +122,7 @@ class LogSecurity
         return $this->doerIp;
     }
 
-    public function setDoerIp(?string $doerIp): string
+    public function setDoerIp(?string $doerIp): self
     {
         $this->doerIp = $doerIp;
 
