@@ -114,16 +114,27 @@ class Crud
     /**
      * Updates an entry of `class` with `data`.
      *
-     * @param string $class   - the class of the entity to updates
-     * @param mixed  $data    - the serialized data of the object to create
-     * @param array  $options - additional update options
+     * @param mixed $classOrObject - the class of the entity to update or an instance of the entity
+     * @param mixed $data          - the serialized data of the object to create
+     * @param array $options       - additional update options
      *
      * @return array|object
      *
      * @throws InvalidDataException
      */
-    public function update($class, $data, array $options = [])
+    public function update($classOrObject, $data, array $options = [])
     {
+        if (is_string($classOrObject)) {
+            // class name received
+            $class = $classOrObject;
+            // grab object from db
+            $oldObject = $this->om->getObject($data, $class, $this->schema->getIdentifiers($class) ?? []) ?? new $class();
+        } else {
+            // object instance received
+            $class = get_class($classOrObject);
+            $oldObject = $classOrObject;
+        }
+
         // validates submitted data.
         $errors = $this->validate($class, $data, ValidatorProvider::UPDATE);
         if (count($errors) > 0) {
@@ -135,7 +146,6 @@ class Crud
             }
         }
 
-        $oldObject = $this->om->getObject($data, $class, $this->schema->getIdentifiers($class) ?? []) ?? new $class();
         if (!in_array(static::NO_PERMISSIONS, $options)) {
             $this->checkPermission('EDIT', $oldObject, [], true);
         }
