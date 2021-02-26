@@ -1,5 +1,6 @@
 import React from 'react'
 import classes from 'classnames'
+import merge from 'lodash/merge'
 import omit from 'lodash/omit'
 import cloneDeep from 'lodash/cloneDeep'
 
@@ -22,12 +23,7 @@ const AddressInput = props =>
 
       props.onChange(newAddress)
     }}
-    setErrors={(name, error) => {
-      const newErrors = props.error ? cloneDeep(props.error) : {}
-      newErrors[name] = error
-
-      props.onError(newErrors)
-    }}
+    setErrors={(error) => props.onError(merge({}, props.error || {}, error || {}))}
     fields={[
       {
         name: 'street1',
@@ -66,6 +62,7 @@ const AddressInput = props =>
 
 implementPropTypes(AddressInput, DataInputTypes, {
   // more precise value type
+  error: T.object,
   value: T.shape(
     AddressTypes.propTypes
   ),
