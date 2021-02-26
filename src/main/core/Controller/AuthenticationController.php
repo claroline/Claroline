@@ -18,7 +18,7 @@ use Claroline\AuthenticationBundle\Security\Authentication\Authenticator;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
 use Claroline\CoreBundle\Event\Log\ForgotPasswordEvent;
-use Claroline\CoreBundle\Event\Log\NewPasswordEvent;
+use Claroline\CoreBundle\Event\Log\ValidateEmailEvent;
 use Claroline\CoreBundle\Library\RoutingHelper;
 use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\UserManager;
@@ -137,8 +137,6 @@ class AuthenticationController
         $this->om->persist($user);
         $this->om->flush();
 
-        $this->eventDispatcher->dispatch(SecurityEvents::NEW_PASSWORD, NewPasswordEvent::class, [$user]);
-
         return new JsonResponse(null, 201);
     }
 
@@ -151,6 +149,8 @@ class AuthenticationController
         if (!$foundAndValidated) {
             throw new NotFoundHttpException('User not found.');
         }
+
+        $this->eventDispatcher->dispatch(SecurityEvents::VALIDATE_EMAIL, ValidateEmailEvent::class, [$this->userManager->getByEmailValidationHash($hash)]);
 
         return new RedirectResponse(
             $this->routingHelper->indexPath()

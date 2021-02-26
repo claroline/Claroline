@@ -15,29 +15,28 @@ use Claroline\CoreBundle\Entity\User;
 use Symfony\Contracts\EventDispatcher\Event;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class ViewAsEvent extends Event
+class AuthenticationFailureEvent extends Event
 {
     private $user;
-    private $role;
+    private $message;
 
-    public function __construct(User $user, $role)
+    public function __construct($user, string $message)
     {
         $this->user = $user;
-        $this->role = $role;
+        $this->message = $message;
     }
 
-    public function getUser(): User
+    public function getUser(): ?User
     {
-        return $this->user;
+        if ($this->user instanceof User) {
+            return $this->user;
+        }
+
+        return null;
     }
 
-    public function getRole()
+    public function getMessage(TranslatorInterface $translator): string
     {
-        return $this->role;
-    }
-
-    public function getMessage(TranslatorInterface $translator)
-    {
-        return sprintf($translator->trans('viewAs', [], 'security'), $this->user->getUsername(), $this->role);
+        return sprintf($translator->trans('authenticationFailure', [], 'security'), $this->user, $this->message);
     }
 }

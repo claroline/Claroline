@@ -4,7 +4,7 @@ namespace Claroline\AnalyticsBundle\Controller\Administration;
 
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\Controller\AbstractSecurityController;
-use Claroline\CoreBundle\Entity\Log\LogSecurity;
+use Claroline\CoreBundle\Entity\Log\SecurityLog;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -12,7 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * @Route("/tools/admin/security-logs")
  */
-class LogSecurityController extends AbstractSecurityController
+class SecurityLogController extends AbstractSecurityController
 {
     private $finderProvider;
 
@@ -29,7 +29,7 @@ class LogSecurityController extends AbstractSecurityController
         $this->canOpenAdminTool('dashboard');
 
         return new JsonResponse($this->finderProvider->search(
-            LogSecurity::class,
+            SecurityLog::class,
             $request->query->all(),
             []
         ));

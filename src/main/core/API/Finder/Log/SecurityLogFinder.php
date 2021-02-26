@@ -12,14 +12,14 @@
 namespace Claroline\CoreBundle\API\Finder\Log;
 
 use Claroline\AppBundle\API\Finder\AbstractFinder;
-use Claroline\CoreBundle\Entity\Log\LogSecurity;
+use Claroline\CoreBundle\Entity\Log\SecurityLog;
 use Doctrine\ORM\QueryBuilder;
 
-class LogSecurityFinder extends AbstractFinder
+class SecurityLogFinder extends AbstractFinder
 {
     public function getClass()
     {
-        return LogSecurity::class;
+        return SecurityLog::class;
     }
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])

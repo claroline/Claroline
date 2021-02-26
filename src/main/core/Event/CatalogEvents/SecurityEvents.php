@@ -48,4 +48,14 @@ final class SecurityEvents
      * @Event("Claroline\CoreBundle\Event\Log\ViewAsEvent")
      */
     public const VIEW_AS = 'event.security.view_as';
+
+    /**
+     * @Event("Claroline\CoreBundle\Event\log\ValidateEmailEvent")
+     */
+    public const VALIDATE_EMAIL = 'event.security.validate_email';
+
+    /**
+     * @Event("Claroline\CoreBundle\Event\log\AuthenticationFailureEvent")
+     */
+    public const AUTHENTICATION_FAILURE = 'event.security.authentication_failure';
 }

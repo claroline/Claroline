@@ -2,10 +2,11 @@
 
 namespace Claroline\CoreBundle\Subscriber;
 
-use Claroline\CoreBundle\Entity\Log\LogSecurity;
+use Claroline\CoreBundle\Entity\Log\SecurityLog;
 use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\IpUtils;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\EventDispatcher\Event;
@@ -46,6 +47,8 @@ class SecurityEventSubscriber implements EventSubscriberInterface
             SecurityEvents::ADD_ROLE => 'logEvent',
             SecurityEvents::REMOVE_ROLE => 'logEvent',
             SecurityEvents::VIEW_AS => 'logEvent',
+            SecurityEvents::VALIDATE_EMAIL => 'logEvent',
+            SecurityEvents::AUTHENTICATION_FAILURE => 'logEvent',
         ];
     }
 
@@ -53,17 +56,17 @@ class SecurityEventSubscriber implements EventSubscriberInterface
     {
         $request = $this->requestStack->getCurrentRequest();
 
-        $logEntry = new LogSecurity();
-        $logEntry->setDetails(sprintf('Log %s: %s', $eventName, $event->getMessage($this->translator)));
+        $logEntry = new SecurityLog();
+        $logEntry->setDetails(sprintf($event->getMessage($this->translator)));
         $logEntry->setEvent($eventName);
         $logEntry->setTarget($event->getUser());
         $logEntry->setDoer($this->security->getUser());
-        $logEntry->setDoerIp($request->getClientIp());
 
         //Get infos from ip address
         $response = json_decode($this->client->request('GET', 'http://ip-api.com/json/'.$request->getClientIp()), true);
-        $logEntry->setCountry($response['country']);
-        $logEntry->setCity($response['city']);
+        $logEntry->setDoerIp(IpUtils::anonymize($request->getClientIp()));
+        $logEntry->setCountry($response['country'] ?? 'no country');
+        $logEntry->setCity($response['city'] ?? 'no city');
 
         $this->em->persist($logEntry);
         $this->em->flush();

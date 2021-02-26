@@ -67,11 +67,6 @@ services:
     Claroline\AppBundle\Event\StrictDispatcher:
         arguments:
             - '@event_dispatcher'
-            - '@doctrine.orm.entity_manager'
-            - '@http_client'
-            - '@security.helper'
-            - '@request_stack'
-            - '@translator'
 
     Claroline\AppBundle\Routing\ApiLoader:
         tags: ['routing.loader']

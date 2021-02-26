@@ -8,5 +8,8 @@
   "removeRole": "Le role %s vient d'être retiré de l'utilisateur %s.",
   "addRole": "Le role %s vient d'être ajouté à l'utilisateur %s.",
   "forgotPassword": "L'utilisateur %s vient de faire une demande de mot de passe oublié.",
-  "newPassword": "L'utilisateur %s a fait une demande pour un nouveau mot de passe."
+  "newPassword": "L'utilisateur %s a modifié son mot de passe.",
+  "viewAs": "L'utilisateur %s a utilisé la fonctionnalité 'voir en tant que' avec le role %s",
+  "validateEmail": "L'utilisateur %s a validé son adresse email",
+  "authenticationFailure": "Connexion échoué pour l'utilisateur %s : %s"
 }

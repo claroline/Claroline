@@ -5,10 +5,10 @@ namespace Claroline\CoreBundle\API\Serializer\Log;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
-use Claroline\CoreBundle\Entity\Log\LogSecurity;
+use Claroline\CoreBundle\Entity\Log\SecurityLog;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 
-class LogSecuritySerializer
+class SecurityLogSerializer
 {
     use SerializerTrait;
 
@@ -19,7 +19,7 @@ class LogSecuritySerializer
         $this->userSerializer = $userSerializer;
     }
 
-    public function serialize(LogSecurity $logSecurity): array
+    public function serialize(SecurityLog $logSecurity): array
     {
         $doer = null;
         if ($logSecurity->getDoer()) {
@@ -32,7 +32,6 @@ class LogSecuritySerializer
         }
 
         return [
-            'id' => $logSecurity->getId(),
             'city' => $logSecurity->getCity(),
             'country' => $logSecurity->getCountry(),
             'date' => DateNormalizer::normalize($logSecurity->getDate()),

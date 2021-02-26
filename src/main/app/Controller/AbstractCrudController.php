@@ -8,12 +8,16 @@ use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\API\Utils\ArrayUtils;
+use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AppBundle\Routing\Documentator;
 use Claroline\AppBundle\Routing\Finder;
+use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
+use Claroline\CoreBundle\Event\Log\NewPasswordEvent;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Security;
 
 abstract class AbstractCrudController extends AbstractApiController
 {
@@ -34,6 +38,12 @@ abstract class AbstractCrudController extends AbstractApiController
 
     /** @var ObjectManager */
     protected $om;
+
+    /** @var StrictDispatcher */
+    private $dispatcher;
+
+    /** @var Security */
+    private $security;
 
     /**
      * @var array
@@ -78,6 +88,16 @@ abstract class AbstractCrudController extends AbstractApiController
     public function setRouterDocumentator(Documentator $routerDocumentator)
     {
         $this->routerDocumentator = $routerDocumentator;
+    }
+
+    public function setDispatcher(StrictDispatcher $dispatcher)
+    {
+        $this->dispatcher = $dispatcher;
+    }
+
+    public function setSecurity(Security $security)
+    {
+        $this->security = $security;
     }
 
     /**
@@ -361,6 +381,10 @@ abstract class AbstractCrudController extends AbstractApiController
 
         //just in case so we really returns the proper object
         $this->om->refresh($object);
+
+        if (isset($query['event'])) {
+            $this->dispatcher->dispatch(SecurityEvents::NEW_PASSWORD, NewPasswordEvent::class, [$this->security->getUser()]);
+        }
 
         return new JsonResponse(
             $this->serializer->serialize($object, $options)

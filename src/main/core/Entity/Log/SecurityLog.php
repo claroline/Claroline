@@ -10,7 +10,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Entity
  * @ORM\Table(name="claro_log_security")
  */
-class LogSecurity
+class SecurityLog
 {
     /**
      * @ORM\Id
@@ -50,17 +50,17 @@ class LogSecurity
     private $doer;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      */
     private $country;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      */
     private $doerIp;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      */
     private $city;
 
@@ -110,14 +110,14 @@ class LogSecurity
         return $this->target;
     }
 
-    public function setTarget(User $target): self
+    public function setTarget(?User $target): self
     {
         $this->target = $target;
 
         return $this;
     }
 
-    public function getDoerIp(): string
+    public function getDoerIp(): ?string
     {
         return $this->doerIp;
     }
@@ -129,24 +129,24 @@ class LogSecurity
         return $this;
     }
 
-    public function getCountry(): string
+    public function getCountry(): ?string
     {
         return $this->country;
     }
 
-    public function setCountry(string $country): self
+    public function setCountry(?string $country): self
     {
         $this->country = $country;
 
         return $this;
     }
 
-    public function getCity(): string
+    public function getCity(): ?string
     {
         return $this->city;
     }
 
-    public function setCity(string $city): self
+    public function setCity(?string $city): self
     {
         $this->city = $city;
 
@@ -158,7 +158,7 @@ class LogSecurity
         return $this->doer;
     }
 
-    public function setDoer(User $doer): self
+    public function setDoer(?User $doer): self
     {
         $this->doer = $doer;
 

@@ -11,13 +11,7 @@
 
 namespace Claroline\AppBundle\Event;
 
-use Claroline\CoreBundle\Subscriber\SecurityEventSubscriber;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Security\Core\Security;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Basic event dispatcher, wrapping the base Symfony dispatcher and adding checks
@@ -33,29 +27,10 @@ class StrictDispatcher
     /** @var EventDispatcher */
     private $eventDispatcher;
 
-    private $em;
-    private $client;
-    private $security;
-    private $requestStack;
-    private $translator;
-
-    /**
-     * Constructor.
-     */
     public function __construct(
-        EventDispatcherInterface $ed,
-        EntityManagerInterface $em,
-        HttpClientInterface $client,
-        Security $security,
-        RequestStack $requestStack,
-        TranslatorInterface $translator
+        EventDispatcherInterface $ed
     ) {
         $this->eventDispatcher = $ed;
-        $this->em = $em;
-        $this->client = $client;
-        $this->security = $security;
-        $this->requestStack = $requestStack;
-        $this->translator = $translator;
     }
 
     /**
@@ -91,15 +66,6 @@ class StrictDispatcher
         if ($event instanceof MandatoryEventInterface && !$this->eventDispatcher->hasListeners($eventName)) {
             throw new MandatoryEventException("No listener is attached to the '{$eventName}' event");
         }
-
-        $eventSubscriber = new SecurityEventSubscriber(
-            $this->em,
-            $this->client,
-            $this->security,
-            $this->requestStack,
-            $this->translator
-        );
-        $this->eventDispatcher->addSubscriber($eventSubscriber);
 
         $this->eventDispatcher->dispatch($event, $eventName);
 

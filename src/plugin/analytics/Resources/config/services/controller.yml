@@ -49,7 +49,7 @@ services:
             - '@Claroline\CoreBundle\API\Serializer\Log\LogSerializer'
             - '@Claroline\CoreBundle\Manager\LogManager'
 
-    Claroline\AnalyticsBundle\Controller\Administration\LogSecurityController:
+    Claroline\AnalyticsBundle\Controller\Administration\SecurityLogController:
         parent: Claroline\AppBundle\Controller\AbstractSecurityController
         arguments:
             - '@Claroline\AppBundle\API\FinderProvider'

@@ -15,15 +15,13 @@ use Claroline\CoreBundle\Entity\User;
 use Symfony\Contracts\EventDispatcher\Event;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class ViewAsEvent extends Event
+class ValidateEmailEvent extends Event
 {
     private $user;
-    private $role;
 
-    public function __construct(User $user, $role)
+    public function __construct(User $user)
     {
         $this->user = $user;
-        $this->role = $role;
     }
 
     public function getUser(): User
@@ -31,13 +29,8 @@ class ViewAsEvent extends Event
         return $this->user;
     }
 
-    public function getRole()
+    public function getMessage(TranslatorInterface $translator): string
     {
-        return $this->role;
-    }
-
-    public function getMessage(TranslatorInterface $translator)
-    {
-        return sprintf($translator->trans('viewAs', [], 'security'), $this->user->getUsername(), $this->role);
+        return sprintf($translator->trans('validateEmail', [], 'security'), $this->user->getUsername());
     }
 }

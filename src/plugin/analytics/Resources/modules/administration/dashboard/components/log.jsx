@@ -19,11 +19,6 @@ const DashboardLog = () =>
       }}
       definition={[
         {
-          name: 'id',
-          type: 'number',
-          label: trans('id'),
-          displayed: true
-        }, {
           name: 'city',
           type: 'string',
           label: trans('town'),
