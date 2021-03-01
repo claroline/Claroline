@@ -16,9 +16,6 @@ class MySessionSource
     /** @var TokenStorageInterface */
     private $tokenStorage;
 
-    /**
-     * MySessionSource constructor.
-     */
     public function __construct(
         FinderProvider $finder,
         TokenStorageInterface $tokenStorage

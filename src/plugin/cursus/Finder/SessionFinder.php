@@ -12,6 +12,7 @@
 namespace Claroline\CursusBundle\Finder;
 
 use Claroline\AppBundle\API\Finder\AbstractFinder;
+use Claroline\CursusBundle\Entity\Course;
 use Claroline\CursusBundle\Entity\Session;
 use Doctrine\ORM\QueryBuilder;
 
@@ -93,6 +94,30 @@ class SessionFinder extends AbstractFinder
                     $qb->andWhere('(su.confirmed = 0 AND su.validated = 0)');
                     $qb->andWhere('u.uuid = :userId');
                     $qb->setParameter('userId', $filterValue);
+                    break;
+
+                case 'courseTags':// it's not named tags because it will be handle by the default tag search otherwise
+                    // I need to handle it manually because the tags search by claroline event does not allow
+                    $tags = is_string($filterValue) ? [$filterValue] : $filterValue;
+
+                    // generate query for tags filter
+                    $tagQueryBuilder = $this->om->createQueryBuilder();
+                    $tagQueryBuilder
+                        ->select('to.id')
+                        ->from('ClarolineTagBundle:TaggedObject', 'to')
+                        ->innerJoin('to.tag', 't')
+                        ->where('to.objectClass = :objectClass')
+                        ->andWhere('to.objectId = c.uuid') // this makes the UUID required on tagged objects
+                        ->andWhere('t.uuid IN (:tags)')
+                        ->groupBy('to.objectId')
+                        ->having('COUNT(to.id) = :expectedCount'); // this permits to make a AND between tags
+
+                    // append sub query to the original one
+                    $qb->andWhere($qb->expr()->exists($tagQueryBuilder->getDql()))
+                        ->setParameter('objectClass', Course::class)
+                        ->setParameter('tags', $tags)
+                        ->setParameter('expectedCount', count($tags));
+
                     break;
 
                 default:
