@@ -61,6 +61,13 @@ const CatalogList = (props) =>
           label: trans('code'),
           displayed: true
         }, {
+          name: 'location',
+          type: 'location',
+          label: trans('location'),
+          placeholder: trans('online_session', {}, 'cursus'),
+          displayable: false,
+          sortable: false
+        }, {
           name: 'tags',
           type: 'tag',
           label: trans('tags'),

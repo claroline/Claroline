@@ -63,6 +63,12 @@ class EventFinder extends AbstractFinder
                     $qb->setParameter($filterName, $filterValue);
                     break;
 
+                case 'location':
+                    $qb->join('obj.location', 'l');
+                    $qb->andWhere("l.uuid = :{$filterName}");
+                    $qb->setParameter($filterName, $filterValue);
+                    break;
+
                 case 'user':
                     $qb->leftJoin('Claroline\CursusBundle\Entity\Registration\EventUser', 'eu', 'WITH', 'eu.event = obj');
                     $qb->leftJoin('eu.user', 'u');

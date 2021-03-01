@@ -32,6 +32,17 @@ class CourseFinder extends AbstractFinder
                     $qb->setParameter($filterName, $filterValue);
                     break;
 
+                case 'location':
+                    $qb->andWhere("EXISTS (
+                        SELECT s.id 
+                        FROM Claroline\CursusBundle\Entity\Session AS s
+                        LEFT JOIN Claroline\CoreBundle\Entity\Organization\Location AS l WITH s.location = l
+                        WHERE s.course = obj.id
+                          AND l.uuid = :{$filterName}
+                    )");
+                    $qb->setParameter($filterName, $filterValue);
+                    break;
+
                 case 'organizations':
                     $qb->join('obj.organizations', 'o');
                     $qb->andWhere("o.uuid IN (:{$filterName})");
