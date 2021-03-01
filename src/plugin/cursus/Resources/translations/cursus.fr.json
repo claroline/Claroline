@@ -92,5 +92,7 @@
     "presence_absent_unjustified": "Absent (non justifié)",
     "presence_absent_unjustified_help": "L'utilisateur est absent de la séance et n'a pas justifié son absence.",
     "export-presences-empty": "Télécharger la liste de présences (vide)",
-    "export-presences-filled": "Télécharger la liste de présences (remplie)"
+    "export-presences-filled": "Télécharger la liste de présences (remplie)",
+    "no_course": "Aucune formation",
+    "session_info": "Informations sur la session"
 }
