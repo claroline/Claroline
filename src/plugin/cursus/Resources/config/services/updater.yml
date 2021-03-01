@@ -10,3 +10,9 @@ services:
             - '@Claroline\CursusBundle\DataFixtures\PostInstall\LoadTemplateData'
             - '@logger'
         tags: ['claroline.platform.updater']
+
+    Claroline\CursusBundle\Installation\Updater\Updater130005:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CursusBundle\DataFixtures\PostInstall\LoadTemplateData'
+        tags: [ 'claroline.platform.updater' ]

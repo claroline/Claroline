@@ -12,6 +12,7 @@
 namespace Claroline\CursusBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\Template\TemplateManager;
 use Claroline\CursusBundle\Entity\Event;
 use Claroline\CursusBundle\Entity\EventPresence;
@@ -123,5 +124,31 @@ class EventPresenceManager
         ];
 
         return $this->templateManager->getTemplate('training_event_presences', $placeholders, $locale);
+    }
+
+    public function downloadUser(Event $event, string $locale, User $user)
+    {
+        $status = EventPresence::UNKNOWN;
+        $presence = $this->om->getRepository(EventPresence::class)->findOneBy([
+            'event' => $event,
+            'user' => $user,
+        ]);
+        if ($presence) {
+            $status = $presence->getStatus();
+        }
+
+        $placeholders = [
+            'event_name' => $event->getName(),
+            'event_code' => $event->getCode(),
+            'event_description' => $event->getDescription(),
+            'event_start' => $event->getStartDate()->format('d/m/Y H:i'),
+            'event_end' => $event->getEndDate()->format('d/m/Y H:i'),
+            'event_presence_status' => $this->translator->trans('presence_'.$status, [], 'cursus'),
+            'user_username' => $user->getUsername(),
+            'user_first_name' => $user->getFirstName(),
+            'user_last_name' => $user->getLastName(),
+        ];
+
+        return $this->templateManager->getTemplate('training_event_presence', $placeholders, $locale);
     }
 }

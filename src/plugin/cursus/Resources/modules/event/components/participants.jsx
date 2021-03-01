@@ -6,7 +6,7 @@ import {schemeCategory20c} from 'd3-scale'
 
 import {trans} from '#/main/app/intl/translation'
 import {hasPermission} from '#/main/app/security'
-import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
+import {CALLBACK_BUTTON, DOWNLOAD_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {AlertBlock} from '#/main/app/alert/components/alert-block'
 import {Routes} from '#/main/app/router/components/routes'
 import {ListData} from '#/main/app/content/list/containers/data'
@@ -35,8 +35,17 @@ const EventUsers = (props) =>
         type: CALLBACK_BUTTON,
         icon: 'fa fa-fw fa-envelope',
         label: trans('send_invitation', {}, 'actions'),
-        callback: () => props.inviteUsers(props.event.id, rows),
+        callback: () => props.inviteUsers(props.event.id, rows[0].user.id),
         displayed: hasPermission('edit', props.event)
+      }, {
+        name: 'download-presence',
+        type: DOWNLOAD_BUTTON,
+        icon: 'fa fa-fw fa-file-pdf-o',
+        label: trans('download_presence', {}, 'cursus'),
+        file: {
+          url: ['apiv2_cursus_user_presence_download', {id: props.event.id, userId: rows[0].user.id}]
+        },
+        scope: ['object']
       }
     ]}
     add={{
@@ -142,6 +151,15 @@ const EventPresences = (props) =>
         modal: [MODAL_EVENT_PRESENCE, {
           changeStatus: (status) => props.setPresenceStatus(props.event.id, rows, status)
         }]
+      }, {
+        name: 'download-presence',
+        type: DOWNLOAD_BUTTON,
+        icon: 'fa fa-fw fa-file-pdf-o',
+        label: trans('download_presence', {}, 'cursus'),
+        file: {
+          url: ['apiv2_cursus_user_presence_download', {id: props.event.id, userId: rows[0].user.id}]
+        },
+        scope: ['object']
       }
     ]}
   />

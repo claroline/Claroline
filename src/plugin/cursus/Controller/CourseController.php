@@ -90,19 +90,23 @@ class CourseController extends AbstractCrudController
 
     protected function getDefaultHiddenFilters()
     {
+        $filters = [];
         if (!$this->authorization->isGranted('ROLE_ADMIN')) {
             /** @var User $user */
             $user = $this->tokenStorage->getToken()->getUser();
 
-            return [
-                'hidden' => $this->checkToolAccess('EDIT'),
-                'organizations' => array_map(function (Organization $organization) {
-                    return $organization->getUuid();
-                }, $user->getOrganizations()),
-            ];
+            // filter by organizations
+            $filters['organizations'] = array_map(function (Organization $organization) {
+                return $organization->getUuid();
+            }, $user->getOrganizations());
+
+            // hide hidden trainings for non admin
+            if (!$this->checkToolAccess('EDIT')) {
+                $filters['hidden'] = false;
+            }
         }
 
-        return [];
+        return $filters;
     }
 
     /**

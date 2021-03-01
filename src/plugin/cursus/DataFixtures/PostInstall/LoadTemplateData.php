@@ -68,12 +68,12 @@ class LoadTemplateData extends AbstractFixture implements ContainerAwareInterfac
             $om->persist($eventInvitationType);
         }
 
-        $eventPresenceType = $this->templateTypeRepo->findOneBy(['name' => 'training_event_presences']);
+        $eventPresencesType = $this->templateTypeRepo->findOneBy(['name' => 'training_event_presences']);
         $templates = $this->templateRepo->findBy(['name' => 'training_event_presences']);
-        if ($eventPresenceType && empty($templates)) {
+        if ($eventPresencesType && empty($templates)) {
             foreach ($this->availableLocales as $locale) {
                 $template = new Template();
-                $template->setType($eventPresenceType);
+                $template->setType($eventPresencesType);
                 $template->setName('training_event_presences');
                 $template->setLang($locale);
                 $template->setTitle($this->translator->trans('training_event_presences', [], 'template', $locale));
@@ -84,7 +84,30 @@ class LoadTemplateData extends AbstractFixture implements ContainerAwareInterfac
                 $template->setContent($content);
                 $om->persist($template);
             }
-            $eventPresenceType->setDefaultTemplate('training_event_presences');
+            $eventPresencesType->setDefaultTemplate('training_event_presences');
+            $om->persist($eventPresencesType);
+        }
+
+        $eventPresenceType = $this->templateTypeRepo->findOneBy(['name' => 'training_event_presence']);
+        $templates = $this->templateRepo->findBy(['name' => 'training_event_presence']);
+        if ($eventPresenceType && empty($templates)) {
+            foreach ($this->availableLocales as $locale) {
+                $template = new Template();
+                $template->setType($eventPresenceType);
+                $template->setName('training_event_presence');
+                $template->setLang($locale);
+                $template->setTitle($this->translator->trans('training_event_presence', [], 'template', $locale));
+                $content = '%event_name%<br/>';
+                $content .= '[%event_start% -> %event_end%]<br/>';
+                $content .= '%event_description%<br/><br/>';
+                $content .= '<ul>';
+                $content .= '<li><b>'.$this->translator->trans('user', [], 'platform', $locale).'</b> : %user_first_name% %user_last_name%</li>';
+                $content .= '<li><b>'.$this->translator->trans('status', [], 'platform', $locale).'</b> : %event_presence_status%</li>';
+                $content .= '</ul>';
+                $template->setContent($content);
+                $om->persist($template);
+            }
+            $eventPresenceType->setDefaultTemplate('training_event_presence');
             $om->persist($eventPresenceType);
         }
 
