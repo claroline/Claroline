@@ -72,6 +72,16 @@ export default {
         type: 'boolean',
         label: trans('user_validation', {}, 'cursus'),
         displayed: false
+      }, {
+        name: 'courseTags',
+        type: 'tag',
+        label: trans('tags'),
+        displayed: false,
+        displayable: false,
+        sortable: false,
+        options: {
+          objectClass: 'Claroline\\CursusBundle\\Entity\\Course'
+        }
       }
     ],
     card: SessionCard
