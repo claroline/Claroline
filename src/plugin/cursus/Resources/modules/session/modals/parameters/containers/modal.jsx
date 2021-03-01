@@ -33,7 +33,7 @@ const SessionFormModal = withReducer(selectors.STORE_NAME, reducer)(
                   slug: course.slug
                 }
               }
-            }, SessionTypes.defaultProps, omit(course, 'id')
+            }, SessionTypes.defaultProps, omit(course, 'id', 'description', 'plainDescription')
           ) // todo : omit props not needed for sessions
         }
 

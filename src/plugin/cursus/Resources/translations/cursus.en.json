@@ -92,5 +92,7 @@
     "presence_absent_unjustified": "Absent (not justified)",
     "presence_absent_unjustified_help": "The user is absent from the event and has not justified his absence.",
     "export-presences-empty": "Download the attendance list (empty)",
-    "export-presences-filled": "Download the attendance list (filled)"
+    "export-presences-filled": "Download the attendance list (filled)",
+    "no_course": "No training",
+    "session_info": "Session information"
 }

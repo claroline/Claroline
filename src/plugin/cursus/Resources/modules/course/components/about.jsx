@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
@@ -11,6 +11,7 @@ import {Button} from '#/main/app/action/components/button'
 import {LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {ContentHtml} from '#/main/app/content/components/html'
 import {ContentTitle} from '#/main/app/content/components/title'
+import {isHtmlEmpty} from '#/main/app/data/types/html/validators'
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 import {LocationCard} from '#/main/core/user/data/components/location-card'
 import {ResourceCard} from '#/main/core/resource/components/card'
@@ -235,11 +236,13 @@ const CourseAbout = (props) => {
           </AlertBlock>
         }
 
-        <div className="panel panel-default">
-          <ContentHtml className="panel-body">
-            {getInfo(props.course, props.activeSession, 'description') || trans('no_description')}
-          </ContentHtml>
-        </div>
+        {!isHtmlEmpty(get(props.course, 'description')) &&
+          <div className="panel panel-default">
+            <ContentHtml className="panel-body">
+              {get(props.course, 'description')}
+            </ContentHtml>
+          </div>
+        }
 
         {!isEmpty(props.course.tags) &&
           <div className="component-container tags">
@@ -250,6 +253,21 @@ const CourseAbout = (props) => {
               </span>
             )}
           </div>
+        }
+
+        {props.activeSession && !isHtmlEmpty(get(props.activeSession, 'description')) &&
+          <Fragment>
+            <ContentTitle
+              level={3}
+              displayLevel={2}
+              title={trans('session_info', {}, 'cursus')}
+            />
+            <div className="panel panel-default">
+              <ContentHtml className="panel-body">
+                {get(props.activeSession, 'description')}
+              </ContentHtml>
+            </div>
+          </Fragment>
         }
 
         {props.activeSession && !isEmpty(get(props.activeSession, 'resources')) &&
