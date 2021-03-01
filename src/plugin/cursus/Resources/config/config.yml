@@ -101,3 +101,16 @@ plugin:
               - event_start
               - event_end
               - event_presences_table
+
+        - name: training_event_presence
+          placeholders:
+              - event_name
+              - event_code
+              - event_description
+              - event_start
+              - event_end
+              - event_presence_status
+              - user_username
+              - user_first_name
+              - user_last_name
+

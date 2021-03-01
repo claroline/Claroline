@@ -94,5 +94,6 @@
     "export-presences-empty": "Télécharger la liste de présences (vide)",
     "export-presences-filled": "Télécharger la liste de présences (remplie)",
     "no_course": "Aucune formation",
-    "session_info": "Informations sur la session"
+    "session_info": "Informations sur la session",
+    "download_presence": "Télécharger l'attestation de présence (.pdf)"
 }

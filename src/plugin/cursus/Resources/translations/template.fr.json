@@ -7,6 +7,8 @@
     "training_event_invitation_desc": "Template utilisé pour le mail d'invitation à une séance de formation.",
     "training_event_presences": "Grille de présence d'une séance de formation",
     "training_event_presences_help": "Template utilisé pour l'impression de la grille de présence (vide ou pré-remplie) d'une séance de formation.",
+    "training_event_presence": "Attestation de présence à une séance de formation",
+    "training_event_presence_help": "Template utilisé pour l'impression l'attestation de présence d'un utilisateur à une séance de formation.",
     "training_session_invitation": "Invitation à une session de formation",
     "training_session_invitation_desc": "Template utilisé pour le mail d'invitation à une session de formation.",
     "training_session_confirmation": "Confirmation d'inscription à une session de formation",

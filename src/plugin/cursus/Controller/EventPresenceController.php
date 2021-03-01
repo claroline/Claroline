@@ -15,6 +15,7 @@ use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\CursusBundle\Entity\Event;
@@ -122,6 +123,33 @@ class EventPresenceController
         }, 200, [
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => 'attachment; filename='.TextNormalizer::toKey($event->getName()).'-presences.pdf',
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/user/{userId}/download", name="apiv2_cursus_user_presence_download", methods={"GET"})
+     * @EXT\ParamConverter("event", class="ClarolineCursusBundle:Event", options={"mapping": {"id": "uuid"}})
+     * @EXT\ParamConverter("user", class="ClarolineCoreBundle:User", options={"mapping": {"userId": "uuid"}})
+     */
+    public function downloadUserPdfAction(Event $event, User $user, Request $request): StreamedResponse
+    {
+        $this->checkPermission('EDIT', $event, [], true);
+
+        $domPdf = new Dompdf([
+            'isHtml5ParserEnabled' => true,
+            'isRemoteEnabled' => true,
+        ]);
+
+        $domPdf->loadHtml($this->manager->downloadUser($event, $request->getLocale(), $user));
+
+        // Render the HTML as PDF
+        $domPdf->render();
+
+        return new StreamedResponse(function () use ($domPdf) {
+            echo $domPdf->output();
+        }, 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename='.TextNormalizer::toKey($event->getName()).'-presence.pdf',
         ]);
     }
 }

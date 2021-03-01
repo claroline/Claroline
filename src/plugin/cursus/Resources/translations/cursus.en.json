@@ -94,5 +94,6 @@
     "export-presences-empty": "Download the attendance list (empty)",
     "export-presences-filled": "Download the attendance list (filled)",
     "no_course": "No training",
-    "session_info": "Session information"
+    "session_info": "Session information",
+    "download_presence": "Download the certificate of presence (.pdf)"
 }
