@@ -46,6 +46,12 @@ class SessionFinder extends AbstractFinder
                     $qb->setParameter($filterName, $filterValue);
                     break;
 
+                case 'location':
+                    $qb->join('obj.location', 'l');
+                    $qb->andWhere("l.uuid = :{$filterName}");
+                    $qb->setParameter($filterName, $filterValue);
+                    break;
+
                 case 'status':
                     switch ($filterValue) {
                         case 'not_started':
