@@ -1667,5 +1667,9 @@
     "support": "Assistance",
     "further_information": "Informations complémentaires",
     "plain_description": "Résumé",
-    "plain_description_help": "Le résumé est affiché dans les listes à la place de la description HTML."
+    "plain_description_help": "Le résumé est affiché dans les listes à la place de la description HTML.",
+    "pricing": "Tarification",
+    "enable_pricing": "Activer les options de tarification",
+    "currency": "Devise",
+    "price": "Prix"
 }

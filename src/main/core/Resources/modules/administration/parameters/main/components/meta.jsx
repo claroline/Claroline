@@ -105,6 +105,31 @@ const Meta = (props) =>
           }
         ]
       }, {
+        icon: 'fa fa-fw fa-credit-card',
+        title: trans('pricing'),
+        fields: [
+          {
+            name: 'pricing.enabled',
+            label: trans('enable_pricing'),
+            type: 'boolean',
+            linked: [
+              {
+                name: 'pricing.currency',
+                label: trans('currency'),
+                type: 'choice',
+                displayed: (params) => params.pricing && params.pricing.enabled,
+                options: {
+                  choices: {
+                    euro: trans('currency.euro'),
+                    us_dollar: trans('currency.us_dollar'),
+                    chf: trans('currency.chf')
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }, {
         icon: 'fa fa-fw fa-hard-hat',
         title: trans('maintenance'),
         fields: [

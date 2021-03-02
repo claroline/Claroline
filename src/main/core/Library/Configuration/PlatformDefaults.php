@@ -191,6 +191,10 @@ class PlatformDefaults implements ParameterProviderInterface
                     ],
                 ],
             ],
+            'pricing' => [
+                'enabled' => false,
+                'currency' => 'euro',
+            ],
         ];
     }
 }

@@ -5,8 +5,10 @@
     "value": "%value% %unit%",
     "euro": "EUR",
     "euro_short": "€",
-    "dollar": "USD",
-    "dollar_short": "$"
+    "us_dollar": "USD",
+    "us_dollar_short": "$",
+    "chf": "CHF",
+    "chf_short": "CHF"
   },
   "not_found": "Contenu non trouvé",
   "loading": "Chargement en cours...",

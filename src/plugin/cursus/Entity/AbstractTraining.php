@@ -92,6 +92,20 @@ class AbstractTraining
      */
     protected $maxUsers;
 
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     *
+     * @var float
+     */
+    protected $price = null;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     *
+     * @var string
+     */
+    protected $priceDescription = null;
+
     public function getName()
     {
         return $this->name;
@@ -185,5 +199,25 @@ class AbstractTraining
     public function setMaxUsers($maxUsers)
     {
         $this->maxUsers = $maxUsers;
+    }
+
+    public function getPrice(): ?float
+    {
+        return $this->price;
+    }
+
+    public function setPrice(float $price = null)
+    {
+        $this->price = $price;
+    }
+
+    public function getPriceDescription(): ?string
+    {
+        return $this->priceDescription;
+    }
+
+    public function setPriceDescription(string $description = null)
+    {
+        $this->priceDescription = $description;
     }
 }

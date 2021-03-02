@@ -3,8 +3,8 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import get from 'lodash/get'
 
-import {trans} from '#/main/app/intl/translation'
-import {now} from '#/main/app/intl/date'
+import {trans, now} from '#/main/app/intl'
+import {param} from '#/main/app/config'
 import {hasPermission} from '#/main/app/security'
 import {LINK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
@@ -110,6 +110,15 @@ const SessionList = (props) =>
         displayed: true,
         filterable: false,
         sortable: false
+      }, {
+        name: 'pricing.price',
+        alias: 'price',
+        label: trans('price'),
+        type: 'currency',
+        displayable: param('pricing.enabled'),
+        displayed: param('pricing.enabled'),
+        filterable: param('pricing.enabled'),
+        sortable: param('pricing.enabled')
       }, {
         name: 'meta.order',
         alias: 'order',
