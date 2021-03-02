@@ -19,16 +19,6 @@ const DashboardLog = () =>
       }}
       definition={[
         {
-          name: 'city',
-          type: 'string',
-          label: trans('town'),
-          displayed: true
-        }, {
-          name: 'country',
-          type: 'string',
-          label: trans('country'),
-          displayed: true
-        }, {
           name: 'date',
           label: trans('date'),
           type: 'date',
@@ -48,11 +38,6 @@ const DashboardLog = () =>
           name: 'target.name',
           type: 'string',
           label: trans('target'),
-          displayed: true
-        }, {
-          name: 'doer_ip',
-          type: 'string',
-          label: trans('ip_address'),
           displayed: true
         }, {
           name: 'event',

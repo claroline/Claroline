@@ -19,26 +19,26 @@ class SecurityLogSerializer
         $this->userSerializer = $userSerializer;
     }
 
-    public function serialize(SecurityLog $logSecurity): array
+    public function serialize(SecurityLog $securityLog): array
     {
         $doer = null;
-        if ($logSecurity->getDoer()) {
-            $doer = $this->userSerializer->serialize($logSecurity->getDoer(), [Options::SERIALIZE_MINIMAL]);
+        if ($securityLog->getDoer()) {
+            $doer = $this->userSerializer->serialize($securityLog->getDoer(), [Options::SERIALIZE_MINIMAL]);
         }
 
         $target = null;
-        if ($logSecurity->getTarget()) {
-            $target = $this->userSerializer->serialize($logSecurity->getTarget(), [Options::SERIALIZE_MINIMAL]);
+        if ($securityLog->getTarget()) {
+            $target = $this->userSerializer->serialize($securityLog->getTarget(), [Options::SERIALIZE_MINIMAL]);
         }
 
         return [
-            'city' => $logSecurity->getCity(),
-            'country' => $logSecurity->getCountry(),
-            'date' => DateNormalizer::normalize($logSecurity->getDate()),
-            'details' => $logSecurity->getDetails(),
+            'city' => $securityLog->getCity(),
+            'country' => $securityLog->getCountry(),
+            'date' => DateNormalizer::normalize($securityLog->getDate()),
+            'details' => $securityLog->getDetails(),
             'doer' => $doer,
-            'event' => $logSecurity->getEvent(),
-            'doer_ip' => $logSecurity->getDoerIp(),
+            'event' => $securityLog->getEvent(),
+            'doer_ip' => $securityLog->getDoerIp(),
             'target' => $target,
         ];
     }

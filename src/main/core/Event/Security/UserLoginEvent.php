@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Event\Log;
+namespace Claroline\CoreBundle\Event\Security;
 
 use Claroline\CoreBundle\Entity\User;
 use Symfony\Contracts\EventDispatcher\Event;
@@ -31,6 +31,6 @@ class UserLoginEvent extends Event
 
     public function getMessage(TranslatorInterface $translator)
     {
-        return sprintf($translator->trans('userLogin', [], 'security'), $this->user->getUsername());
+        return $translator->trans('userLogin', ['username' => $this->user->getUsername()], 'security');
     }
 }

@@ -25,11 +25,6 @@ class StrictDispatcherTest extends MockeryTestCase
     {
         parent::setUp();
         $this->dispatcher = $this->mock('Symfony\Component\EventDispatcher\EventDispatcher');
-        $this->em = $this->mock('Doctrine\ORM\EntityManager');
-        $this->client = $this->mock('Symfony\Component\HttpClient\MockHttpClient');
-        $this->security = $this->mock('Symfony\Component\Security\Core\Security');
-        $this->requestStack = $this->mock('Symfony\Component\HttpFoundation\RequestStack');
-        $this->translator = $this->mock('Symfony\Contracts\Translation\TranslatorInterface');
     }
 
     public function testDispatchThrowsExceptionOnInvalidClass()
@@ -37,12 +32,7 @@ class StrictDispatcherTest extends MockeryTestCase
         $this->expectException(MissingEventClassException::class);
 
         $claroDispatcher = new StrictDispatcher(
-            $this->dispatcher,
-            $this->em,
-            $this->client,
-            $this->security,
-            $this->requestStack,
-            $this->translator
+            $this->dispatcher
         );
         $claroDispatcher->dispatch('noClass', 'FakeClass', []);
     }
@@ -52,12 +42,7 @@ class StrictDispatcherTest extends MockeryTestCase
         $this->expectException(MandatoryEventException::class);
 
         $claroDispatcher = new StrictDispatcher(
-            $this->dispatcher,
-            $this->em,
-            $this->client,
-            $this->security,
-            $this->requestStack,
-            $this->translator
+            $this->dispatcher
         );
         $this->dispatcher->shouldReceive('hasListeners')->once()->andReturn(false);
         $this->dispatcher->shouldReceive('addSubscriber')->once();
@@ -69,12 +54,7 @@ class StrictDispatcherTest extends MockeryTestCase
         $this->expectException(NotPopulatedEventException::class);
 
         $claroDispatcher = new StrictDispatcher(
-            $this->dispatcher,
-            $this->em,
-            $this->client,
-            $this->security,
-            $this->requestStack,
-            $this->translator
+            $this->dispatcher
         );
         $this->dispatcher->shouldReceive('hasListeners')->once()->andReturn(true);
         $this->dispatcher->shouldReceive('addSubscriber')->once();
@@ -93,11 +73,6 @@ class StrictDispatcherTest extends MockeryTestCase
         );
         $claroDispatcher = new StrictDispatcher(
             $dispatcher,
-            $this->em,
-            $this->client,
-            $this->security,
-            $this->requestStack,
-            $this->translator
         );
         $this->dispatcher->shouldReceive('addSubscriber')->once();
         $this->dispatcher->shouldReceive('dispatch')->once();

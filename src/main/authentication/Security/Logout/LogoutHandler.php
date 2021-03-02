@@ -14,7 +14,7 @@ namespace Claroline\AuthenticationBundle\Security\Logout;
 
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
-use Claroline\CoreBundle\Event\Log\UserLogoutEvent;
+use Claroline\CoreBundle\Event\Security\UserLogoutEvent;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;

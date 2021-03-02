@@ -6,7 +6,6 @@ use Claroline\CoreBundle\Entity\Log\SecurityLog;
 use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpFoundation\IpUtils;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\EventDispatcher\Event;
@@ -54,19 +53,11 @@ class SecurityEventSubscriber implements EventSubscriberInterface
 
     public function logEvent(Event $event, string $eventName): void
     {
-        $request = $this->requestStack->getCurrentRequest();
-
         $logEntry = new SecurityLog();
-        $logEntry->setDetails(sprintf($event->getMessage($this->translator)));
+        $logEntry->setDetails($event->getMessage($this->translator));
         $logEntry->setEvent($eventName);
         $logEntry->setTarget($event->getUser());
         $logEntry->setDoer($this->security->getUser());
-
-        //Get infos from ip address
-        $response = json_decode($this->client->request('GET', 'http://ip-api.com/json/'.$request->getClientIp()), true);
-        $logEntry->setDoerIp(IpUtils::anonymize($request->getClientIp()));
-        $logEntry->setCountry($response['country'] ?? 'no country');
-        $logEntry->setCity($response['city'] ?? 'no city');
 
         $this->em->persist($logEntry);
         $this->em->flush();

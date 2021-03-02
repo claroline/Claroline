@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\AnalyticsBundle\Controller\Administration;
+namespace Claroline\CoreBundle\Controller\APINew\Log;
 
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\Controller\AbstractSecurityController;
@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/tools/admin/security-logs")
+ * @Route("/log/security")
  */
 class SecurityLogController extends AbstractSecurityController
 {

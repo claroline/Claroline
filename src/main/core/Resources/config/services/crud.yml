@@ -32,10 +32,12 @@ services:
             - '@Claroline\CoreBundle\Manager\Organization\OrganizationManager'
             - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
             - '@Icap\NotificationBundle\Manager\NotificationUserParametersManager'
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
         tags:
             - { name: kernel.event_listener, event: crud_pre_create_object_claroline_corebundle_entity_user, method: preCreate }
             - { name: kernel.event_listener, event: crud_pre_delete_object_claroline_corebundle_entity_user, method: preDelete }
             - { name: kernel.event_listener, event: crud_pre_update_object_claroline_corebundle_entity_user, method: preUpdate }
+            - { name: kernel.event_listener, event: crud_post_update_object_claroline_corebundle_entity_user, method: postUpdate }
             - { name: kernel.event_listener, event: crud_pre_patch_object_claroline_corebundle_entity_user, method: prePatch }
             - { name: kernel.event_listener, event: crud_post_patch_object_claroline_corebundle_entity_user, method: postPatch }
 
@@ -45,6 +47,7 @@ services:
             - '@security.token_storage'
             - '@Claroline\AuthenticationBundle\Security\Authentication\Authenticator'
             - '@Claroline\CoreBundle\Manager\RoleManager'
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
         tags:
             - { name: kernel.event_listener, event: crud_pre_create_object_claroline_corebundle_entity_role, method: preCreate }
             - { name: kernel.event_listener, event: crud_post_create_object_claroline_corebundle_entity_role, method: postCreate }

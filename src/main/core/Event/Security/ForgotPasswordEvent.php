@@ -9,21 +9,19 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Event\Log;
+namespace Claroline\CoreBundle\Event\Security;
 
 use Claroline\CoreBundle\Entity\User;
 use Symfony\Contracts\EventDispatcher\Event;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class ViewAsEvent extends Event
+class ForgotPasswordEvent extends Event
 {
     private $user;
-    private $role;
 
-    public function __construct(User $user, $role)
+    public function __construct(User $user)
     {
         $this->user = $user;
-        $this->role = $role;
     }
 
     public function getUser(): User
@@ -31,13 +29,8 @@ class ViewAsEvent extends Event
         return $this->user;
     }
 
-    public function getRole()
-    {
-        return $this->role;
-    }
-
     public function getMessage(TranslatorInterface $translator)
     {
-        return sprintf($translator->trans('viewAs', [], 'security'), $this->user->getUsername(), $this->role);
+        return $translator->trans('forgotPassword', ['username' => $this->user->getUsername()], 'security');
     }
 }

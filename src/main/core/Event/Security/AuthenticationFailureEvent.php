@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Event\Log;
+namespace Claroline\CoreBundle\Event\Security;
 
 use Claroline\CoreBundle\Entity\User;
 use Symfony\Contracts\EventDispatcher\Event;
@@ -37,6 +37,6 @@ class AuthenticationFailureEvent extends Event
 
     public function getMessage(TranslatorInterface $translator): string
     {
-        return sprintf($translator->trans('authenticationFailure', [], 'security'), $this->user, $this->message);
+        return $translator->trans('authenticationFailure', ['username' => $this->user, 'message' => $this->message], 'security');
     }
 }

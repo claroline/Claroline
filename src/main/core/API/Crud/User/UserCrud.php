@@ -8,11 +8,14 @@ use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\PatchEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
+use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AuthenticationBundle\Security\Authentication\Authenticator;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
+use Claroline\CoreBundle\Event\Security\NewPasswordEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Configuration\PlatformDefaults;
 use Claroline\CoreBundle\Manager\MailManager;
@@ -47,6 +50,8 @@ class UserCrud
     private $workspaceManager;
     /** @var NotificationUserParametersManager */
     private $notificationManager;
+    /** @var StrictDispatcher */
+    private $dispatcher;
 
     public function __construct(
         TokenStorageInterface $tokenStorage,
@@ -58,7 +63,8 @@ class UserCrud
         UserManager $userManager,
         OrganizationManager $organizationManager,
         WorkspaceManager $workspaceManager,
-        NotificationUserParametersManager $notificationManager
+        NotificationUserParametersManager $notificationManager,
+        StrictDispatcher $dispatcher
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->authenticator = $authenticator;
@@ -70,6 +76,7 @@ class UserCrud
         $this->organizationManager = $organizationManager;
         $this->workspaceManager = $workspaceManager;
         $this->notificationManager = $notificationManager;
+        $this->dispatcher = $dispatcher;
     }
 
     public function preCreate(CreateEvent $event)
@@ -215,6 +222,15 @@ class UserCrud
                 // TODO : rename personal WS if user is renamed
             }
             // TODO: create if not exist
+        }
+    }
+
+    public function postUpdate(UpdateEvent $event)
+    {
+        $user = $event->getObject();
+
+        if ($user->getPlainpassword()) {
+            $this->dispatcher->dispatch(SecurityEvents::NEW_PASSWORD, NewPasswordEvent::class, [$user]);
         }
     }
 

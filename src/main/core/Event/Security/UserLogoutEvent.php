@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Event\Log;
+namespace Claroline\CoreBundle\Event\Security;
 
 use Claroline\CoreBundle\Entity\User;
 use Symfony\Contracts\EventDispatcher\Event;
@@ -22,6 +22,6 @@ class UserLogoutEvent extends Event
 
     public function getMessage(TranslatorInterface $translator)
     {
-        return sprintf($translator->trans('userLogout', [], 'security'), $this->user->getUsername());
+        return $translator->trans('userLogout', ['username' => $this->user->getUsername()], 'security');
     }
 }

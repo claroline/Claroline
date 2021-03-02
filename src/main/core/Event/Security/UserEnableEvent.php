@@ -9,13 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Event\Log;
+namespace Claroline\CoreBundle\Event\Security;
 
 use Claroline\CoreBundle\Entity\User;
 use Symfony\Contracts\EventDispatcher\Event;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class UserDisableEvent extends Event
+class UserEnableEvent extends Event
 {
     private $user;
 
@@ -31,6 +31,6 @@ class UserDisableEvent extends Event
 
     public function getMessage(TranslatorInterface $translator)
     {
-        return sprintf($translator->trans('userDisable', [], 'security'), $this->user->getUsername());
+        return $translator->trans('userEnable', ['username' => $this->user->getUsername()], 'security');
     }
 }
