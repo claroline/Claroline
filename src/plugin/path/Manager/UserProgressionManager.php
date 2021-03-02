@@ -184,7 +184,7 @@ class UserProgressionManager
 
     private function updateResourceEvaluation(Step $step, User $user, string $status): ResourceEvaluation
     {
-        $evaluation = $this->resourceEvalRepo->findOneInProgress($step->getPath()->getResourceNode(), $user);
+        $evaluation = $this->resourceEvalRepo->findLast($step->getPath()->getResourceNode(), $user);
 
         $data = ['done' => []];
         if ($evaluation) {
