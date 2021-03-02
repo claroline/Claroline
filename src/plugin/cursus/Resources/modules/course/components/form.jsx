@@ -2,6 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
+import {param} from '#/main/app/config'
 import {FormData} from '#/main/app/content/form/containers/data'
 
 import {Course as CourseTypes} from '#/plugin/cursus/prop-types'
@@ -241,6 +242,27 @@ const CourseForm = (props) =>
                 }, {}) :
                 {}
             }
+          }
+        ]
+      }, {
+        icon: 'fa fa-fw fa-credit-card',
+        title: trans('pricing'),
+        displayed: param('pricing.enabled'),
+        fields: [
+          {
+            name: 'pricing.price',
+            label: trans('price'),
+            type: 'currency',
+            linked: [
+              {
+                name: 'pricing.description',
+                label: trans('comment'),
+                type: 'string',
+                options: {
+                  long: true
+                }
+              }
+            ]
           }
         ]
       }, {

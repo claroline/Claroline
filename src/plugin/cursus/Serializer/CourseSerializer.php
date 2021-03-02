@@ -131,6 +131,10 @@ class CourseSerializer
                     'userValidation' => $course->getUserValidation(),
                     'mail' => $course->getRegistrationMail(),
                 ],
+                'pricing' => [
+                    'price' => $course->getPrice(),
+                    'description' => $course->getPriceDescription(),
+                ],
                 'workspace' => $course->getWorkspace() ?
                     $this->workspaceSerializer->serialize($course->getWorkspace(), [Options::SERIALIZE_MINIMAL]) :
                     null,
@@ -172,6 +176,9 @@ class CourseSerializer
         $this->sipe('registration.validation', 'setRegistrationValidation', $data, $course);
         $this->sipe('registration.userValidation', 'setUserValidation', $data, $course);
         $this->sipe('registration.mail', 'setRegistrationMail', $data, $course);
+
+        $this->sipe('pricing.price', 'setPrice', $data, $course);
+        $this->sipe('pricing.description', 'setPriceDescription', $data, $course);
 
         if (isset($data['meta'])) {
             if (isset($data['meta']['created'])) {

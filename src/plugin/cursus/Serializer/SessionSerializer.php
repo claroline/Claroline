@@ -143,6 +143,10 @@ class SessionSerializer
                     'mail' => $session->getRegistrationMail(),
                     'eventRegistrationType' => $session->getEventRegistrationType(),
                 ],
+                'pricing' => [
+                    'price' => $session->getPrice(),
+                    'description' => $session->getPriceDescription(),
+                ],
                 'participants' => $this->sessionRepo->countParticipants($session),
                 'resources' => array_map(function (ResourceNode $resource) {
                     return $this->resourceSerializer->serialize($resource, [Options::SERIALIZE_MINIMAL]);
@@ -172,6 +176,9 @@ class SessionSerializer
         $this->sipe('registration.userValidation', 'setUserValidation', $data, $session);
         $this->sipe('registration.mail', 'setRegistrationMail', $data, $session);
         $this->sipe('registration.eventRegistrationType', 'setEventRegistrationType', $data, $session);
+
+        $this->sipe('pricing.price', 'setPrice', $data, $session);
+        $this->sipe('pricing.description', 'setPriceDescription', $data, $session);
 
         if (isset($data['meta'])) {
             if (isset($data['meta']['created'])) {

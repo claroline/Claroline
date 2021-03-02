@@ -1635,5 +1635,8 @@
     "support": "Assistance",
     "further_information": "Further information",
     "plain_description": "Summary",
-    "plain_description_help": "The summary is displayed in lists instead of the HTML description."
+    "plain_description_help": "The summary is displayed in lists instead of the HTML description.",
+    "enable_pricing": "Enable pricing options",
+    "currency": "Currency",
+    "price": "Price"
 }

@@ -138,6 +138,7 @@ class ClientSerializer
                 'defaultTool' => $this->config->getParameter('admin.default_tool'),
             ],
             'privacy' => $this->config->getParameter('privacy'),
+            'pricing' => $this->config->getParameter('pricing'),
             'plugins' => $this->pluginManager->getEnabled(true),
             'javascripts' => $this->config->getParameter('javascripts'), // TODO : this should not be exposed here
             'stylesheets' => $this->config->getParameter('stylesheets'), // TODO : this should not be exposed here
