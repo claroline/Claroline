@@ -164,19 +164,21 @@ class UserProgressionManager
                 if ($pathAttempt) {
                     // only update the path attempt if there is no evaluation for this resource yet
                     $attemptData = $pathAttempt->getData();
-                    if (empty($attemptData['resources']) || empty($attemptData['resources'][$step->getUuid()])) {
-                        $attemptData['resources'][$step->getUuid()] = [
-                            'id' => $resourceAttempt->getId(),
-                            'score' => $resourceAttempt->getScore(),
-                            'max' => $resourceAttempt->getScoreMax(),
-                        ];
-
-                        // recompute path attempt score
-                        $data = array_merge(['data' => $attemptData], $this->computeScore($step->getPath(), $attemptData['resources']));
-
-                        // forward update to core to let him recompute the ResourceUserEvaluation if needed
-                        $this->resourceEvalManager->updateResourceEvaluation($pathAttempt, $resourceAttempt->getDate(), $data, false, false);
+                    if (empty($attemptData['resources'])) {
+                        $attemptData['resources'] = [];
                     }
+
+                    $attemptData['resources'][$step->getUuid()] = [
+                        'id' => $resourceAttempt->getId(),
+                        'score' => $resourceAttempt->getScore(),
+                        'max' => $resourceAttempt->getScoreMax(),
+                    ];
+
+                    // recompute path attempt score
+                    $data = array_merge(['data' => $attemptData], $this->computeScore($step->getPath(), $attemptData['resources']));
+
+                    // forward update to core to let him recompute the ResourceUserEvaluation if needed
+                    $this->resourceEvalManager->updateResourceEvaluation($pathAttempt, $resourceAttempt->getDate(), $data, false, false);
                 }
             }
         }
