@@ -1,16 +1,13 @@
 import {connect} from 'react-redux'
 
 import {withReducer} from '#/main/app/store/reducer'
-import {selectors as toolSelectors} from '#/main/core/tool/store'
 
 import {actions, reducer, selectors} from '#/plugin/cursus/tools/trainings/catalog/store'
-import {CatalogMain as CatalogMainComponent} from '#/plugin/cursus/tools/trainings/catalog/components/main'
+import {CatalogTab as CatalogTabComponent} from '#/plugin/cursus/home/catalog/components/tab'
 
-const CatalogMain = withReducer(selectors.STORE_NAME, reducer)(
+const CatalogTab = withReducer(selectors.STORE_NAME, reducer)(
   connect(
-    (state) => ({
-      path: toolSelectors.path(state)
-    }),
+    null,
     (dispatch) => ({
       open(slug) {
         dispatch(actions.open(slug))
@@ -19,9 +16,9 @@ const CatalogMain = withReducer(selectors.STORE_NAME, reducer)(
         dispatch(actions.openForm(slug, defaultProps))
       }
     })
-  )(CatalogMainComponent)
+  )(CatalogTabComponent)
 )
 
 export {
-  CatalogMain
+  CatalogTab
 }

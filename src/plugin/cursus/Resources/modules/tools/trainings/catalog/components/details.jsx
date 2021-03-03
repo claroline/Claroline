@@ -1,8 +1,6 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import get from 'lodash/get'
 
-import {Routes} from '#/main/app/router/components/routes'
 import {trans} from '#/main/app/intl/translation'
 
 import {LINK_BUTTON} from '#/main/app/buttons'
@@ -10,7 +8,7 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 import {route} from '#/plugin/cursus/routing'
 import {Course as CourseTypes} from '#/plugin/cursus/prop-types'
 import {CoursePage} from '#/plugin/cursus/course/components/page'
-import {CourseDetails} from '#/plugin/cursus/course/components/details'
+import {CourseMain} from '#/plugin/cursus/course/containers/main'
 
 const CatalogDetails = (props) =>
   <CoursePage
@@ -31,50 +29,9 @@ const CatalogDetails = (props) =>
     activeSession={props.activeSession}
   >
     {props.course &&
-      <Routes
-        path={route(props.path, props.course)}
-        redirect={[
-          {from: '/', exact: true, to: '/'+get(props.activeSession, 'id'), disabled: !props.activeSession}
-        ]}
-        routes={[
-          {
-            path: '/',
-            disabled: !!props.activeSession,
-            render() {
-              const CurrentCourse = (
-                <CourseDetails
-                  path={props.path}
-                  course={props.course}
-                  availableSessions={props.availableSessions}
-                  register={props.register}
-                />
-              )
-
-              return CurrentCourse
-            }
-          }, {
-            path: '/:id',
-            onEnter(params = {}) {
-              if (params.id) {
-                props.openSession(params.id)
-              }
-            },
-            render() {
-              const CurrentCourse = (
-                <CourseDetails
-                  path={props.path}
-                  course={props.course}
-                  activeSession={props.activeSession}
-                  activeSessionRegistration={props.activeSessionRegistration}
-                  availableSessions={props.availableSessions}
-                  register={props.register}
-                />
-              )
-
-              return CurrentCourse
-            }
-          }
-        ]}
+      <CourseMain
+        path={props.path}
+        course={props.course}
       />
     }
   </CoursePage>
@@ -90,15 +47,7 @@ CatalogDetails.propTypes = {
   ),
   activeSession: T.shape({
     id: T.string.isRequired
-  }),
-  availableSessions: T.arrayOf(T.shape({
-    // TODO : propTypes
-  })),
-  activeSessionRegistration: T.shape({
-    // TODO : propTypes
-  }),
-  openSession: T.func.isRequired,
-  register: T.func.isRequired
+  })
 }
 
 export {

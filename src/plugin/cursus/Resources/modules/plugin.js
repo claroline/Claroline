@@ -5,7 +5,7 @@ registry.add('ClarolineCursusBundle', {
    * Provides tab types for Home tools.
    */
   home: {
-    //'training_catalog': () => { return import(/* webpackChunkName: "plugin-cursus-home-catalog" */ '#/plugin/cursus/home/catalog') }
+    'training_catalog': () => { return import(/* webpackChunkName: "plugin-cursus-home-catalog" */ '#/plugin/cursus/home/catalog') }
   },
 
   data: {

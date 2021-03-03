@@ -52,7 +52,7 @@ class EditorTab extends Component {
         currentContext: this.props.currentContext,
         tabs: this.props.tabs,
         currentTab: this.props.currentTab,
-        currentTabTitle: this.props.currentTabTitle,
+        title: this.props.currentTabTitle,
         update: (prop, data, tabId = null) => {
           if (tabId === null) {
             tabId = this.props.currentTab.id
@@ -76,7 +76,7 @@ class EditorTab extends Component {
         path="/edit"
         tabs={this.props.tabs}
         currentTab={this.props.currentTab}
-        currentTabTitle={this.props.currentTabTitle}
+        title={this.props.currentTabTitle}
         actions={[
           {
             name: 'add',

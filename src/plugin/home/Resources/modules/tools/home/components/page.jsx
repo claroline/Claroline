@@ -7,6 +7,7 @@ import {PageFull} from '#/main/app/page'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {getToolBreadcrumb, showToolBreadcrumb} from '#/main/core/tool/utils'
 
+import {getTabTitle} from '#/plugin/home/tools/home/utils'
 import {Tab as TabTypes} from '#/plugin/home/prop-types'
 import {Tabs} from '#/plugin/home/tools/home/components/tabs'
 
@@ -18,9 +19,10 @@ const HomePage = props =>
     showBreadcrumb={showToolBreadcrumb(props.currentContext.type, props.currentContext.data)}
     path={[].concat(getToolBreadcrumb('home', props.currentContext.type, props.currentContext.data), props.currentTab ? [{
       id: props.currentTab.id,
-      label: props.currentTabTitle,
-      target: props.path+'/'+props.currentTab.slug
-    }] : [])}
+      type: LINK_BUTTON,
+      label: getTabTitle(props.currentContext, props.currentTab),
+      target: props.basePath+props.path+'/'+props.currentTab.slug
+    }] : [], props.breadcrumb || [])}
     meta={{
       title: `${trans('home', {}, 'tools')}${'workspace' === props.currentContext.type ? ' - ' + props.currentContext.data.code : ''}`,
       description: get(props.currentContext, 'data.meta.description')
@@ -36,8 +38,9 @@ const HomePage = props =>
     icon={props.currentTab && props.currentTab.icon ?
       <span className={`tool-icon fa fa-${props.currentTab.icon}`} /> : undefined
     }
-    title={props.currentTabTitle}
-    poster={get(props.currentTab, 'poster.url')}
+    title={props.title}
+    subtitle={props.subtitle}
+    poster={props.poster || get(props.currentTab, 'poster.url')}
     toolbar="add | edit | fullscreen more"
     actions={props.currentTab ? [
       {
@@ -80,7 +83,10 @@ const HomePage = props =>
 
 HomePage.propTypes = {
   path: T.string,
-  currentTabTitle: T.string.isRequired,
+  breadcrumb: T.array,
+  title: T.string.isRequired,
+  subtitle: T.string,
+  poster: T.string,
   currentTab: T.shape(
     TabTypes.propTypes
   ),
