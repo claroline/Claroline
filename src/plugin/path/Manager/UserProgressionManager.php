@@ -164,7 +164,7 @@ class UserProgressionManager
                 if ($pathAttempt) {
                     // only update the path attempt if there is no evaluation for this resource yet
                     $attemptData = $pathAttempt->getData();
-                    if (empty($attemptData['resources']) || empty($attemptData['resources'][$step->getUuid()])) {
+                    if (empty($attemptData['resources'])) {
                         $attemptData['resources'][$step->getUuid()] = [
                             'id' => $resourceAttempt->getId(),
                             'score' => $resourceAttempt->getScore(),
