@@ -1,27 +1,26 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import get from 'lodash/get'
 
 import {HomePage} from '#/plugin/home/tools/home/containers/page'
 import {Tab as TabTypes} from '#/plugin/home/prop-types'
 
-import {UrlDisplay} from '#/plugin/url/components/display'
+import {selectors} from '#/plugin/cursus/tools/trainings/catalog/store'
+import {CourseList} from '#/plugin/cursus/course/components/list'
 
-const UrlTab = props =>
+const CatalogList = (props) =>
   <HomePage
     tabs={props.tabs}
     currentTab={props.currentTab}
     title={props.title}
   >
-    <UrlDisplay
-      url={get(props.currentTab, 'parameters.url')}
-      mode={get(props.currentTab, 'parameters.mode')}
-      ratio={get(props.currentTab, 'parameters.ratio')}
+    <CourseList
+      path={props.path}
+      name={selectors.LIST_NAME}
     />
   </HomePage>
 
-UrlTab.propTypes = {
-  currentContext: T.object,
+CatalogList.propTypes = {
+  path: T.string.isRequired,
   tabs: T.arrayOf(T.shape(
     TabTypes.propTypes
   )),
@@ -32,5 +31,5 @@ UrlTab.propTypes = {
 }
 
 export {
-  UrlTab
+  CatalogList
 }

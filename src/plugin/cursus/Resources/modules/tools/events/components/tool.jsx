@@ -23,7 +23,7 @@ const EventsTool = (props) =>
         render: () => (
           <EventsRegistered
             path={props.path}
-            contextId={props.contextId}
+            contextId={get(props.currentContext, 'data.id')}
             invalidateList={props.invalidateList}
           />
         )

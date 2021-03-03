@@ -17,7 +17,7 @@ const WidgetsTab = props => {
     <HomePage
       tabs={props.tabs}
       currentTab={props.currentTab}
-      currentTabTitle={props.currentTabTitle}
+      title={props.title}
     >
       {0 === visibleWidgets.length &&
         <ContentPlaceholder
@@ -47,7 +47,7 @@ WidgetsTab.propTypes = {
   tabs: T.arrayOf(T.shape(
     TabTypes.propTypes
   )),
-  currentTabTitle: T.string.isRequired,
+  title: T.string.isRequired,
   currentTab: T.shape(
     TabTypes.propTypes
   )

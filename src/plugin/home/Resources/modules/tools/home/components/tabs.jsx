@@ -19,7 +19,6 @@ const Tabs = props =>
           'nav-tab-hidden': get(tab, 'restrictions.hidden')
         })}
         target={`${props.prefix}/${tab.slug}`}
-        exact={true}
         activeStyle={{
           backgroundColor: get(tab, 'display.color'),
           borderColor: get(tab, 'display.color')
