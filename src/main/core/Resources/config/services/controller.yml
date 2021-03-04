@@ -268,11 +268,12 @@ services:
 
     Claroline\CoreBundle\Controller\AuthenticationController:
         arguments:
-            - '@Claroline\CoreBundle\Manager\UserManager'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CoreBundle\Manager\MailManager'
-            - '@Claroline\CoreBundle\Library\RoutingHelper'
-            - '@Claroline\AuthenticationBundle\Security\Authentication\Authenticator'
+          - '@Claroline\CoreBundle\Manager\UserManager'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
+          - '@Claroline\CoreBundle\Manager\MailManager'
+          - '@Claroline\CoreBundle\Library\RoutingHelper'
+          - '@Claroline\AuthenticationBundle\Security\Authentication\Authenticator'
+          - '@Claroline\AppBundle\Event\StrictDispatcher'
 
     Claroline\CoreBundle\Controller\DesktopController:
         arguments:
@@ -324,3 +325,9 @@ services:
             - '@claroline.manager.workspace_manager'
             - '@claroline.manager.workspace_restrictions'
             - '@Claroline\CoreBundle\Manager\Workspace\EvaluationManager'
+
+    Claroline\CoreBundle\Controller\APINew\Log\SecurityLogController:
+        parent: Claroline\AppBundle\Controller\AbstractSecurityController
+        public: true
+        arguments:
+            - '@Claroline\AppBundle\API\FinderProvider'

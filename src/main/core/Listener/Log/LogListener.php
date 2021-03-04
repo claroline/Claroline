@@ -22,10 +22,10 @@ use Claroline\CoreBundle\Event\Log\LogNotRepeatableInterface;
 use Claroline\CoreBundle\Event\Log\LogResourceDeleteEvent;
 use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
 use Claroline\CoreBundle\Event\Log\LogUserDeleteEvent;
-use Claroline\CoreBundle\Event\Log\LogUserLoginEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceEnterEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceRoleDeleteEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceToolReadEvent;
+use Claroline\CoreBundle\Event\Log\UserLoginEvent;
 use Claroline\CoreBundle\Event\LogCreateEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\LogConnectManager;
@@ -328,7 +328,7 @@ class LogListener
         }
 
         if ($logCreated && $log && (
-            $event instanceof LogUserLoginEvent ||
+            $event instanceof UserLoginEvent ||
             $event instanceof LogWorkspaceEnterEvent ||
             $event instanceof LogResourceReadEvent ||
             $event instanceof LogWorkspaceToolReadEvent ||

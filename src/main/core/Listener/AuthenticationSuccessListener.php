@@ -16,8 +16,9 @@ use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
 use Claroline\CoreBundle\Event\GenericDataEvent;
-use Claroline\CoreBundle\Event\Log\LogUserLoginEvent;
+use Claroline\CoreBundle\Event\Security\UserLoginEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Configuration\PlatformDefaults;
 use Claroline\CoreBundle\Library\RoutingHelper;
@@ -82,7 +83,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
             $request->setLocale($user->getLocale());
         }
 
-        $this->eventDispatcher->dispatch('log', LogUserLoginEvent::class, [$user]);
+        $this->eventDispatcher->dispatch(SecurityEvents::USER_LOGIN, UserLoginEvent::class, [$user]);
 
         $redirect = $this->getRedirection();
 

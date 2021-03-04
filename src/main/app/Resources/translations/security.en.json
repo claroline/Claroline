@@ -1,4 +1,15 @@
 {
   "Bad credentials.": "Your username or password is incorrect.",
-  "User account is disabled.": "Your user account is disabled."
+  "User account is disabled.": "Your user account is disabled.",
+  "userLogout": "User username has just logged out.",
+  "userLogin": "User username has just logged in.",
+  "userDisable": "User username has just been disabled.",
+  "userEnable": "User username has just been enabled.",
+  "removeRole": "Role role has just been removed from the user username.",
+  "addRole": "Role role has just been added from the user username.",
+  "forgotPassword": "User username has just requested a forgotten password.",
+  "newPassword": "User username has changed his password.",
+  "viewAs": "User username used the 'view as' feature with Role role.",
+  "validateEmail": "User username has validated his email address.",
+  "authenticationFailure": "Failed user authentication username : message"
 }

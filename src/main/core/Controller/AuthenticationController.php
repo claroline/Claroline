@@ -12,9 +12,12 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
+use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AuthenticationBundle\Security\Authentication\Authenticator;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
+use Claroline\CoreBundle\Event\Security\ValidateEmailEvent;
 use Claroline\CoreBundle\Library\RoutingHelper;
 use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\UserManager;
@@ -34,19 +37,22 @@ class AuthenticationController
     private $mailManager;
     private $routingHelper;
     private $authenticator;
+    private $eventDispatcher;
 
     public function __construct(
         UserManager $userManager,
         ObjectManager $om,
         MailManager $mailManager,
         RoutingHelper $routingHelper,
-        Authenticator $authenticator
+        Authenticator $authenticator,
+        StrictDispatcher $eventDispatcher
     ) {
         $this->userManager = $userManager;
         $this->om = $om;
         $this->mailManager = $mailManager;
         $this->routingHelper = $routingHelper;
         $this->authenticator = $authenticator;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -140,6 +146,8 @@ class AuthenticationController
         if (!$foundAndValidated) {
             throw new NotFoundHttpException('User not found.');
         }
+
+        $this->eventDispatcher->dispatch(SecurityEvents::VALIDATE_EMAIL, ValidateEmailEvent::class, [$this->userManager->getByEmailValidationHash($hash)]);
 
         return new RedirectResponse(
             $this->routingHelper->indexPath()

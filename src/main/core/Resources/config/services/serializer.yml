@@ -332,3 +332,8 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\Manager\PlatformManager'
             - '@Claroline\CoreBundle\API\Serializer\User\RoleSerializer'
+
+    Claroline\CoreBundle\API\Serializer\Log\SecurityLogSerializer:
+        tags: [claroline.serializer]
+        arguments:
+            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'

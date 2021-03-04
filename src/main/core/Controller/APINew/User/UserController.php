@@ -39,7 +39,6 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 class UserController extends AbstractCrudController
 {
     use PermissionCheckerTrait;
-
     use HasRolesTrait;
     use HasOrganizationsTrait;
     use HasGroupsTrait;

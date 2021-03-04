@@ -6,29 +6,39 @@ use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\PatchEvent;
+use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Cryptography\CryptographicKey;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
+use Claroline\CoreBundle\Event\Security\AddRoleEvent;
+use Claroline\CoreBundle\Event\Security\RemoveRoleEvent;
 use Claroline\CoreBundle\Manager\CryptographyManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class OrganizationCrud
 {
-    /**
-     * @param TokenStorageInterface $tokenStorage
-     */
-    public function __construct(TokenStorageInterface $tokenStorage, ObjectManager $om, CryptographyManager $cryptoManager, Crud $crud)
-    {
+    private $tokenStorage;
+    private $om;
+    private $cryptoManager;
+    private $crud;
+    private $dispatcher;
+
+    public function __construct(
+        TokenStorageInterface $tokenStorage,
+        ObjectManager $om,
+        CryptographyManager $cryptoManager,
+        Crud $crud,
+        StrictDispatcher $dispatcher
+    ) {
         $this->tokenStorage = $tokenStorage;
         $this->om = $om;
         $this->crud = $crud;
         $this->cryptoManager = $cryptoManager;
+        $this->dispatcher = $dispatcher;
     }
 
-    /**
-     * @param CreateEvent $event
-     */
     public function preCreate(CreateEvent $event)
     {
         $organization = $event->getObject();
@@ -39,10 +49,7 @@ class OrganizationCrud
         }
     }
 
-    /**
-     * @param CreateEvent $event
-     */
-    public function postCreate(CreateEvent $event)
+    public function postCreate(CreateEvent $event): void
     {
         $organization = $event->getObject();
         $key = $this->cryptoManager->generatePair();
@@ -51,10 +58,7 @@ class OrganizationCrud
         $this->om->flush();
     }
 
-    /**
-     * @param DeleteEvent $event
-     */
-    public function preDelete(DeleteEvent $event)
+    public function preDelete(DeleteEvent $event): void
     {
         /** @var Organization $organization */
         $organization = $event->getObject();
@@ -71,10 +75,7 @@ class OrganizationCrud
         }
     }
 
-    /**
-     * @param PatchEvent $event
-     */
-    public function postPatch(PatchEvent $event)
+    public function postPatch(PatchEvent $event): void
     {
         $action = $event->getAction();
         $users = $event->getValue();
@@ -88,10 +89,12 @@ class OrganizationCrud
                     foreach ($users as $user) {
                         $user->addRole($roleAdminOrga);
                         $this->om->persist($user);
+                        $this->dispatcher->dispatch(SecurityEvents::ADD_ROLE, AddRoleEvent::class, [$user, $roleAdminOrga]);
                     }
                 } else {
                     $users->addRole($roleAdminOrga);
                     $this->om->persist($users);
+                    $this->dispatcher->dispatch(SecurityEvents::ADD_ROLE, AddRoleEvent::class, [$users, $roleAdminOrga]);
                 }
             } elseif (Crud::COLLECTION_REMOVE === $action) {
                 if (is_array($users)) {
@@ -99,10 +102,12 @@ class OrganizationCrud
                     foreach ($users as $user) {
                         $user->removeRole($roleAdminOrga);
                         $this->om->persist($user);
+                        $this->dispatcher->dispatch(SecurityEvents::REMOVE_ROLE, RemoveRoleEvent::class, [$user, $roleAdminOrga]);
                     }
                 } else {
                     $users->removeRole($roleAdminOrga);
                     $this->om->persist($users);
+                    $this->dispatcher->dispatch(SecurityEvents::REMOVE_ROLE, RemoveRoleEvent::class, [$users, $roleAdminOrga]);
                 }
             }
 

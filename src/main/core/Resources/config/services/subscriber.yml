@@ -1,0 +1,11 @@
+services:
+
+    Claroline\CoreBundle\Subscriber\SecurityEventSubscriber:
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@http_client'
+            - '@security.helper'
+            - '@request_stack'
+            - '@translator'
+        tags:
+            - { name: kernel.event_subscriber }

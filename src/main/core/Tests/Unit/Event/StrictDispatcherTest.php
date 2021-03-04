@@ -21,12 +21,19 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class StrictDispatcherTest extends MockeryTestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->dispatcher = $this->mock('Symfony\Component\EventDispatcher\EventDispatcher');
+    }
+
     public function testDispatchThrowsExceptionOnInvalidClass()
     {
         $this->expectException(MissingEventClassException::class);
 
-        $dispatcher = $this->mock('Symfony\Component\EventDispatcher\EventDispatcher');
-        $claroDispatcher = new StrictDispatcher($dispatcher);
+        $claroDispatcher = new StrictDispatcher(
+            $this->dispatcher
+        );
         $claroDispatcher->dispatch('noClass', 'FakeClass', []);
     }
 
@@ -34,9 +41,11 @@ class StrictDispatcherTest extends MockeryTestCase
     {
         $this->expectException(MandatoryEventException::class);
 
-        $dispatcher = $this->mock('Symfony\Component\EventDispatcher\EventDispatcher');
-        $claroDispatcher = new StrictDispatcher($dispatcher);
-        $dispatcher->shouldReceive('hasListeners')->once()->andReturn(false);
+        $claroDispatcher = new StrictDispatcher(
+            $this->dispatcher
+        );
+        $this->dispatcher->shouldReceive('hasListeners')->once()->andReturn(false);
+        $this->dispatcher->shouldReceive('addSubscriber')->once();
         $claroDispatcher->dispatch('notObserved', 'Resource\ResourceAction', []);
     }
 
@@ -44,10 +53,12 @@ class StrictDispatcherTest extends MockeryTestCase
     {
         $this->expectException(NotPopulatedEventException::class);
 
-        $dispatcher = $this->mock('Symfony\Component\EventDispatcher\EventDispatcher');
-        $claroDispatcher = new StrictDispatcher($dispatcher);
-        $dispatcher->shouldReceive('hasListeners')->once()->andReturn(true);
-        $dispatcher->shouldReceive('dispatch')->once();
+        $claroDispatcher = new StrictDispatcher(
+            $this->dispatcher
+        );
+        $this->dispatcher->shouldReceive('hasListeners')->once()->andReturn(true);
+        $this->dispatcher->shouldReceive('addSubscriber')->once();
+        $this->dispatcher->shouldReceive('dispatch')->once();
         $claroDispatcher->dispatch('notPopulated', 'Tool\OpenTool', []);
     }
 
@@ -60,7 +71,11 @@ class StrictDispatcherTest extends MockeryTestCase
                 $event->setData(['content']);
             }
         );
-        $claroDispatcher = new StrictDispatcher($dispatcher);
+        $claroDispatcher = new StrictDispatcher(
+            $dispatcher,
+        );
+        $this->dispatcher->shouldReceive('addSubscriber')->once();
+        $this->dispatcher->shouldReceive('dispatch')->once();
         $event = $claroDispatcher->dispatch('test_populated', 'Tool\OpenTool', []);
         $this->assertEquals('content', $event->getData()[0]);
     }

@@ -11,7 +11,10 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
+use Claroline\CoreBundle\Event\Security\ForgotPasswordEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Mailing\Mailer;
 use Claroline\CoreBundle\Library\Mailing\Message;
@@ -32,6 +35,8 @@ class MailManager
     private $localeManager;
     /** @var UserManager */
     private $userManager;
+    /** @var StrictDispatcher */
+    private $dispatcher;
 
     public function __construct(
         Mailer $mailer,
@@ -39,7 +44,8 @@ class MailManager
         PlatformConfigurationHandler $config,
         TemplateManager $templateManager,
         LocaleManager $localeManager,
-        UserManager $userManager
+        UserManager $userManager,
+        StrictDispatcher $dispatcher
     ) {
         $this->mailer = $mailer;
         $this->router = $router;
@@ -47,6 +53,7 @@ class MailManager
         $this->templateManager = $templateManager;
         $this->localeManager = $localeManager;
         $this->userManager = $userManager;
+        $this->dispatcher = $dispatcher;
     }
 
     public function isMailerAvailable(): bool
@@ -56,6 +63,8 @@ class MailManager
 
     public function sendForgotPassword(User $user): bool
     {
+        $this->dispatcher->dispatch(SecurityEvents::FORGOT_PASSWORD, ForgotPasswordEvent::class, [$user]);
+
         $this->userManager->initializePassword($user);
         $hash = $user->getResetPasswordHash();
         $link = $this->router->generate(

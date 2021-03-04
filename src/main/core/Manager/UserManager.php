@@ -13,10 +13,14 @@ namespace Claroline\CoreBundle\Manager;
 
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
+use Claroline\CoreBundle\Event\Security\UserDisableEvent;
+use Claroline\CoreBundle\Event\Security\UserEnableEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Repository\User\RoleRepository;
 use Claroline\CoreBundle\Repository\User\UserRepository;
@@ -33,15 +37,19 @@ class UserManager
     private $userRepo;
     /** @var RoleRepository */
     private $roleRepo;
+    /** @var StrictDispatcher */
+    private $dispatcher;
 
     public function __construct(
         ObjectManager $om,
         Crud $crud,
-        PlatformConfigurationHandler $platformConfigHandler
+        PlatformConfigurationHandler $platformConfigHandler,
+        StrictDispatcher $dispatcher
     ) {
         $this->crud = $crud;
         $this->om = $om;
         $this->platformConfigHandler = $platformConfigHandler;
+        $this->dispatcher = $dispatcher;
 
         $this->userRepo = $om->getRepository(User::class);
         $this->roleRepo = $om->getRepository(Role::class);
@@ -249,6 +257,8 @@ class UserManager
         $this->om->persist($user);
         $this->om->flush();
 
+        $this->dispatcher->dispatch(SecurityEvents::USER_ENABLE, UserEnableEvent::class, [$user]);
+
         return $user;
     }
 
@@ -257,6 +267,8 @@ class UserManager
         $user->disable();
         $this->om->persist($user);
         $this->om->flush();
+
+        $this->dispatcher->dispatch(SecurityEvents::USER_DISABLE, UserDisableEvent::class, [$user]);
 
         return $user;
     }

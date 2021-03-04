@@ -1,4 +1,15 @@
 {
   "Bad credentials.": "Votre identifiant ou votre mot de passe est incorrect.",
-  "User account is disabled.": "Votre compte utilisateur est désactivé."
+  "User account is disabled.": "Votre compte utilisateur est désactivé.",
+  "userLogout": "L'utilisateur username vient de se déconnecter.",
+  "userLogin": "L'utilisateur username vient de se connecter.",
+  "userDisable": "L'utilisateur username vient d'être désactivé.",
+  "userEnable": "L'utilisateur username vient d'être activé.",
+  "removeRole": "Le Role role vient d'être retiré de l'utilisateur username.",
+  "addRole": "Le Role role vient d'être ajouté à l'utilisateur username.",
+  "forgotPassword": "L'utilisateur username vient de faire une demande de mot de passe oublié.",
+  "newPassword": "L'utilisateur username a modifié son mot de passe.",
+  "viewAs": "L'utilisateur username a utilisé la fonctionnalité 'voir en tant que' avec le Role role",
+  "validateEmail": "L'utilisateur username a validé son adresse email",
+  "authenticationFailure": "Connexion échoué pour l'utilisateur username : message"
 }

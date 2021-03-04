@@ -11,7 +11,10 @@
 
 namespace Claroline\AuthenticationBundle\Security\Oauth;
 
+use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AuthenticationBundle\Security\Oauth\Hwi\ResourceOwnerFactory;
+use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
+use Claroline\CoreBundle\Event\Security\UserLogoutEvent;
 use HWI\Bundle\OAuthBundle\OAuth\ResourceOwner\AbstractResourceOwner;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,25 +32,17 @@ class LogoutHandler implements LogoutHandlerInterface
 
     private $resourceOwnerFactory;
 
-    /**
-     * LogoutHandler constructor.
-     *
-     * @param SessionInterface     $session
-     * @param ResourceOwnerFactory $resourceOwnerFactory
-     */
-    public function __construct(SessionInterface $session, ResourceOwnerFactory $resourceOwnerFactory)
+    private $eventDispatcher;
+
+    public function __construct(SessionInterface $session, ResourceOwnerFactory $resourceOwnerFactory, StrictDispatcher $eventDispatcher)
     {
         $this->session = $session;
         $this->resourceOwnerFactory = $resourceOwnerFactory;
+        $this->eventDispatcher = $eventDispatcher;
     }
-
 
     /**
      * Logout user from SSO provider if needed.
-     *
-     * @param Request $request
-     * @param Response $response
-     * @param TokenInterface $token
      */
     public function logout(Request $request, Response $response, TokenInterface $token)
     {
@@ -64,6 +59,8 @@ class LogoutHandler implements LogoutHandlerInterface
             } catch (AuthenticationException $e) {
                 // Do nothing
             }
+
+            $this->eventDispatcher->dispatch(SecurityEvents::USER_LOGOUT, UserLogoutEvent::class, [$token->getUser()]);
         }
     }
 }

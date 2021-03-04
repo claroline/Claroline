@@ -104,3 +104,5 @@ services:
     Claroline\CoreBundle\API\Finder\Widget\WidgetContainerFinder: ~
 
     Claroline\CoreBundle\API\Finder\ConnectionMessage\ConnectionMessageFinder: ~
+
+    Claroline\CoreBundle\API\Finder\Log\SecurityLogFinder: ~
