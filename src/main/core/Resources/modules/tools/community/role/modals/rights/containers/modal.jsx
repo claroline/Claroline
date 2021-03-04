@@ -15,7 +15,7 @@ const RightsModal = withReducer(selectors.STORE_NAME, reducer)(
     }),
     (dispatch) => ({
       updateRights(toolName, perm, permValue) {
-        dispatch(formActions.updateProp(selectors.STORE_NAME, `${toolName}.${perm}`, 'rights', permValue))
+        dispatch(formActions.updateProp(selectors.STORE_NAME, `${toolName}.${perm}`, permValue))
       },
       loadRights(rights) {
         dispatch(formActions.resetForm(selectors.STORE_NAME, rights, false))
