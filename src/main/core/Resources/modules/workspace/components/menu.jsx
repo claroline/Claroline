@@ -4,6 +4,7 @@ import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 
 import {url} from '#/main/app/api'
+import {hasPermission} from '#/main/app/security/permissions'
 import {trans, number} from '#/main/app/intl'
 import {Button} from '#/main/app/action/components/button'
 import {Toolbar} from '#/main/app/action/components/toolbar'
@@ -142,11 +143,14 @@ const WorkspaceMenu = (props) => {
         exact: true
       }}
 
-      tools={props.tools.map(tool => ({
-        name: tool.name,
-        icon: tool.icon,
-        path: workspaceRoute(props.workspace, tool.name)
-      }))}
+      tools={props.tools
+        .filter(tool => hasPermission('open', tool))
+        .map(tool => ({
+          name: tool.name,
+          icon: tool.icon,
+          path: workspaceRoute(props.workspace, tool.name)
+        }))
+      }
       actions={workspaceActions}
     >
       {!props.impersonated && get(props.workspace, 'display.showProgression') &&
@@ -222,7 +226,8 @@ WorkspaceMenu.propTypes = {
   })),
   tools: T.arrayOf(T.shape({
     icon: T.string.isRequired,
-    name: T.string.isRequired
+    name: T.string.isRequired,
+    permissions: T.object
   })),
   changeSection: T.func.isRequired,
   update: T.func.isRequired

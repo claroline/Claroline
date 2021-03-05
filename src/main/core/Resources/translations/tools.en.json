@@ -1,4 +1,9 @@
 {
+    "loading": "We are loading your tool...",
+    "not_found": "Tool not found",
+    "not_found_desc": "We are sorry, we could not find your tool. It is possible that it does not exist (or no longer) or that the URL used is incorrect.",
+    "forbidden": "Access to the tool not possible",
+    "forbidden_desc": "You do not have access to this tool. Please contact an administrator to give you the necessary rights.",
     "transfer": "Data import/export",
     "parameters": "Settings",
     "resources": "Resources",

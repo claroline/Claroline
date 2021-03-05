@@ -17,7 +17,6 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Tool\Tool;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Repository\Tool\AdministrationToolRepository;
 use Claroline\CoreBundle\Repository\Tool\OrderedToolRepository;
@@ -167,10 +166,9 @@ class ToolManager implements LoggerAwareInterface
     /**
      * @return OrderedTool[]
      */
-    public function getOrderedToolsByDesktop(User $user): array
+    public function getOrderedToolsByDesktop(array $roles = []): array
     {
-        $roles = $user->getRoles();
-        if (in_array('ROLE_ADMIN', $roles)) {
+        if (empty($roles) || in_array('ROLE_ADMIN', $roles)) {
             return $this->orderedToolRepo->findByDesktop();
         }
 

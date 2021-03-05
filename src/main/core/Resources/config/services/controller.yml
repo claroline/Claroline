@@ -278,6 +278,7 @@ services:
     Claroline\CoreBundle\Controller\DesktopController:
         arguments:
             - '@security.authorization_checker'
+            - '@security.token_storage'
             - '@event_dispatcher'
             - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
             - '@Claroline\AppBundle\API\SerializerProvider'

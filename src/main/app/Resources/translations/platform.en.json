@@ -12,6 +12,7 @@
   },
   "not_found": "Content not found",
   "loading": "Loading...",
+  "forbidden": "Access forbidden",
   "dpo": "Data protection officer",
   "next_step": "Next: %step%"
 }
