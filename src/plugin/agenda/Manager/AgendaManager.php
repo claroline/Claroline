@@ -73,7 +73,6 @@ class AgendaManager
 
         $creator = $this->tokenStorage->getToken()->getUser();
         $message = new SendMessageEvent(
-            $creator,
             $this->translator->trans('send_message_content', [
                 '%Sender%' => $creator->getUserName(),
                 '%Start%' => $event->getStart(),
@@ -98,6 +97,7 @@ class AgendaManager
             $this->translator->trans('send_message_object', ['%EventName%' => $event->getTitle()], 'agenda'),
             null,
             $users,
+            $creator,
             false
         );
 

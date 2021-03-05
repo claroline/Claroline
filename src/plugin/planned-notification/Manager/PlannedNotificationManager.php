@@ -11,12 +11,14 @@
 
 namespace Claroline\PlannedNotificationBundle\Manager;
 
+use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Event\SendMessageEvent;
 use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\Task\ScheduledTaskManager;
 use Claroline\CoreBundle\Repository\Log\LogRepository;
@@ -45,14 +47,19 @@ class PlannedNotificationManager
     /** @var UserRepository */
     private $userRepo;
 
+    /** @var StrictDispatcher */
+    private $dispatcher;
+
     public function __construct(
         MailManager $mailManager,
         ObjectManager $om,
-        ScheduledTaskManager $scheduledTaskManager
+        ScheduledTaskManager $scheduledTaskManager,
+        StrictDispatcher $dispatcher
     ) {
         $this->mailManager = $mailManager;
         $this->om = $om;
         $this->scheduledTaskManager = $scheduledTaskManager;
+        $this->dispatcher = $dispatcher;
 
         $this->logRepo = $om->getRepository(Log::class);
         $this->plannedNotificationRepo = $om->getRepository(PlannedNotification::class);
@@ -157,7 +164,16 @@ class PlannedNotificationManager
     public function sendMessages(array $messages, array $users)
     {
         foreach ($messages as $message) {
-            $this->mailManager->send($message->getTitle(), $message->getContent(), $users);
+            $this->dispatcher->dispatch(
+                'claroline_message_sending',
+                SendMessageEvent::class,
+                [
+                    $message->getContent(),
+                    $message->getTitle(),
+                    null,
+                    $users,
+                ]
+            );
         }
     }
 

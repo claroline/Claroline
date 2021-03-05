@@ -11,8 +11,10 @@
 
 namespace Claroline\CursusBundle\Manager;
 
+use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Event\SendMessageEvent;
 use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\Template\TemplateManager;
 use Claroline\CursusBundle\Entity\Event;
@@ -42,6 +44,8 @@ class EventManager
     private $templateManager;
     /** @var TokenStorageInterface */
     private $tokenStorage;
+    /** @var StrictDispatcher */
+    private $dispatcher;
 
     private $eventUserRepo;
     private $eventGroupRepo;
@@ -52,7 +56,8 @@ class EventManager
         ObjectManager $om,
         UrlGeneratorInterface $router,
         TemplateManager $templateManager,
-        TokenStorageInterface $tokenStorage
+        TokenStorageInterface $tokenStorage,
+        StrictDispatcher $dispatcher
     ) {
         $this->eventDispatcher = $eventDispatcher;
         $this->mailManager = $mailManager;
@@ -60,6 +65,7 @@ class EventManager
         $this->router = $router;
         $this->templateManager = $templateManager;
         $this->tokenStorage = $tokenStorage;
+        $this->dispatcher = $dispatcher;
 
         $this->eventUserRepo = $om->getRepository(EventUser::class);
         $this->eventGroupRepo = $om->getRepository(EventGroup::class);
@@ -241,7 +247,15 @@ class EventManager
             $title = $this->templateManager->getTemplate('training_event_invitation', $placeholders, $locale, 'title');
             $content = $this->templateManager->getTemplate('training_event_invitation', $placeholders, $locale);
 
-            $this->mailManager->send($title, $content, [$user]);
+            $this->dispatcher->dispatch(
+                'claroline_message_sending',
+                SendMessageEvent::class,
+                [
+                    $content,
+                    $title,
+                    $user,
+                ]
+            );
         }
     }
 

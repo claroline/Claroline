@@ -12,11 +12,13 @@
 namespace Claroline\CursusBundle\Manager;
 
 use Claroline\AppBundle\API\Crud;
+use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Manager\PlatformManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Event\SendMessageEvent;
 use Claroline\CoreBundle\Library\RoutingHelper;
 use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\RoleManager;
@@ -64,6 +66,8 @@ class SessionManager
     private $workspaceManager;
     /** @var EventManager */
     private $sessionEventManager;
+    /** @var StrictDispatcher */
+    private $dispatcher;
 
     private $sessionRepo;
     private $sessionUserRepo;
@@ -82,7 +86,8 @@ class SessionManager
         TemplateManager $templateManager,
         TokenStorageInterface $tokenStorage,
         WorkspaceManager $workspaceManager,
-        EventManager $sessionEventManager
+        EventManager $sessionEventManager,
+        StrictDispatcher $dispatcher
     ) {
         $this->eventDispatcher = $eventDispatcher;
         $this->translator = $translator;
@@ -97,6 +102,7 @@ class SessionManager
         $this->tokenStorage = $tokenStorage;
         $this->workspaceManager = $workspaceManager;
         $this->sessionEventManager = $sessionEventManager;
+        $this->dispatcher = $dispatcher;
 
         $this->sessionRepo = $om->getRepository(Session::class);
         $this->sessionUserRepo = $om->getRepository(SessionUser::class);
@@ -519,7 +525,15 @@ class SessionManager
             $title = $this->templateManager->getTemplate($templateName, $placeholders, $locale, 'title');
             $content = $this->templateManager->getTemplate($templateName, $placeholders, $locale);
 
-            $this->mailManager->send($title, $content, [$user]);
+            $this->dispatcher->dispatch(
+                'claroline_message_sending',
+                SendMessageEvent::class,
+                [
+                    $content,
+                    $title,
+                    $user,
+                ]
+            );
         }
     }
 }

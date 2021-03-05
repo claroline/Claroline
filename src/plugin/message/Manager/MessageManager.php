@@ -178,22 +178,25 @@ class MessageManager
         return $message;
     }
 
-    public function sendMessageToAbstractRoleSubject(
-        AbstractRoleSubject $subject,
+    public function sendMessage(
         $content,
         $object,
+        ?AbstractRoleSubject $subject = null,
+        $users = [],
         $sender = null,
         $withMail = true
     ) {
-        $users = [];
+        if ($subject) {
+            $users = [];
 
-        if ($subject instanceof User) {
-            $users[] = $subject;
-        }
+            if ($subject instanceof User) {
+                $users[] = $subject;
+            }
 
-        if ($subject instanceof Group) {
-            foreach ($subject->getUsers() as $user) {
-                $users[] = $user;
+            if ($subject instanceof Group) {
+                foreach ($subject->getUsers() as $user) {
+                    $users[] = $user;
+                }
             }
         }
 

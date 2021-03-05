@@ -20,23 +20,23 @@ class SendMessageEvent extends Event
     private $content;
     private $object;
     private $receiver;
-    private $sender;
     private $users;
+    private $sender;
     private $withMail;
 
     public function __construct(
-        User $sender,
         $content,
         $object,
-        AbstractRoleSubject $receiver = null,
+        ?AbstractRoleSubject $receiver = null,
         array $users = [],
+        ?User $sender = null,
         $withMail = true
     ) {
-        $this->sender = $sender;
         $this->content = $content;
         $this->object = $object;
         $this->receiver = $receiver;
         $this->users = $users;
+        $this->sender = $sender;
         $this->withMail = $withMail;
     }
 

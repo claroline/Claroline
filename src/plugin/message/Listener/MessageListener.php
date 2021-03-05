@@ -24,12 +24,6 @@ class MessageListener
     /** @var ScheduledTaskManager */
     private $taskManager;
 
-    /**
-     * MessageListener constructor.
-     *
-     * @param MessageManager       $messageManager
-     * @param ScheduledTaskManager $taskManager
-     */
     public function __construct(
         MessageManager $messageManager,
         ScheduledTaskManager $taskManager
@@ -38,38 +32,18 @@ class MessageListener
         $this->taskManager = $taskManager;
     }
 
-    /**
-     * @param SendMessageEvent $event
-     */
     public function onMessageSending(SendMessageEvent $event)
     {
-        $this->messageManager->sendMessageToAbstractRoleSubject(
-            $event->getReceiver(),
+        $this->messageManager->sendMessage(
             $event->getContent(),
             $event->getObject(),
+            $event->getReceiver(),
+            $event->getUsers(),
             $event->getSender(),
             $event->getWithMail()
         );
     }
 
-    /**
-     * @param SendMessageEvent $event
-     */
-    public function onMessageSendingToUsers(SendMessageEvent $event)
-    {
-        $message = $this->messageManager->create(
-            $event->getContent(),
-            $event->getObject(),
-            $event->getUsers(),
-            $event->getSender()
-        );
-
-        $this->messageManager->send($message);
-    }
-
-    /**
-     * @param GenericDataEvent $event
-     */
     public function onExecuteMessageTask(GenericDataEvent $event)
     {
         /** @var ScheduledTask $task */

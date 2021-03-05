@@ -39,6 +39,7 @@ services:
             - '@router'
             - '@Claroline\CoreBundle\Manager\Template\TemplateManager'
             - '@security.token_storage'
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
 
     Claroline\CursusBundle\Manager\EventPresenceManager:
         arguments:
