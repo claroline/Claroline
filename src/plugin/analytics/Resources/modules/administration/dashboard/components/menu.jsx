@@ -44,9 +44,9 @@ const DashboardMenu = (props) =>
         }, {
           name: 'logs',
           type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-info-circle',
-          label: trans('logs'),
-          target: props.path + '/logs'
+          icon: 'fa fa-fw fa-shield',
+          label: trans('security'),
+          target: props.path + '/security'
         }
       ]}
       onClick={props.autoClose}
