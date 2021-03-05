@@ -10,6 +10,16 @@ const loaded = createSelector(
   (store) => store.loaded
 )
 
+const notFound = createSelector(
+  [store],
+  (store) => store.notFound
+)
+
+const accessDenied = createSelector(
+  [store],
+  (store) => store.accessDenied
+)
+
 const name = createSelector(
   [store],
   (store) => store.name
@@ -61,6 +71,8 @@ export const selectors = {
   tool,
 
   loaded,
+  notFound,
+  accessDenied,
   name,
   basePath,
   path,

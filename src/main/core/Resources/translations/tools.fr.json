@@ -1,4 +1,9 @@
 {
+    "loading": "Nous chargeons votre outil...",
+    "not_found": "Outil non trouvé",
+    "not_found_desc": "Nous sommes désolés, nous n'avons pas pu trouver votre outil. Il est possible qu'il n'existe pas (ou plus) ou que l'URL utilisée soit incorrecte.",
+    "forbidden": "Accès à l'outil impossible",
+    "forbidden_desc": "Vous n'avez pas accès à cet outil. Veuillez contacter un administrateur afin qu'il vous donne les droits nécessaires.",
     "transfer": "Import/Export de données",
     "parameters": "Paramètres",
     "resources": "Ressources",

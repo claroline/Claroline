@@ -38,7 +38,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @Route("/workspaces", options={"expose" = true})
@@ -118,15 +118,6 @@ class WorkspaceController
             // Log workspace opening
             $this->eventDispatcher->dispatch(new LogWorkspaceEnterEvent($workspace), 'log');
 
-            // Get the list of enabled workspace tool
-            if ($isManager) {
-                // gets all available tools
-                $orderedTools = $this->toolManager->getOrderedToolsByWorkspace($workspace);
-            } else {
-                // gets accessible tools by user
-                $orderedTools = $this->toolManager->getOrderedToolsByWorkspace($workspace, $this->tokenStorage->getToken()->getRoleNames());
-            }
-
             $userEvaluation = null;
             if ($user) {
                 $userEvaluation = $this->serializer->serialize(
@@ -146,9 +137,10 @@ class WorkspaceController
                 // to let the manager knows that other users can not enter the workspace
                 'accessErrors' => $accessErrors,
                 'userEvaluation' => $userEvaluation,
+                // get the list of enabled workspace tool
                 'tools' => array_values(array_map(function (OrderedTool $orderedTool) {
-                    return $this->serializer->serialize($orderedTool->getTool(), [Options::SERIALIZE_MINIMAL]);
-                }, $orderedTools)),
+                    return $this->serializer->serialize($orderedTool, [Options::SERIALIZE_MINIMAL]);
+                }, $this->toolManager->getOrderedToolsByWorkspace($workspace))),
                 'root' => $this->serializer->serialize($this->om->getRepository(ResourceNode::class)->findOneBy(['workspace' => $workspace, 'parent' => null]), [Options::SERIALIZE_MINIMAL]),
                 // TODO : only export current user shortcuts (we get all roles for the configuration in community/editor)
                 //'shortcuts' => $this->manager->getShortcuts($workspace, $this->tokenStorage->getToken()->getRoleNames()),

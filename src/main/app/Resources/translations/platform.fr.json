@@ -12,6 +12,7 @@
   },
   "not_found": "Contenu non trouvé",
   "loading": "Chargement en cours...",
+  "forbidden": "Accès interdit",
   "dpo": "Délégué à la protection des données",
   "next_step": "Suivant : %step%"
 }

@@ -4,13 +4,23 @@ import {
   TOOL_OPEN,
   TOOL_CLOSE,
   TOOL_LOAD,
-  TOOL_SET_LOADED
+  TOOL_SET_LOADED,
+  TOOL_SET_ACCESS_DENIED,
+  TOOL_SET_NOT_FOUND
 } from '#/main/core/tool/store/actions'
 
 const reducer = combineReducers({
   loaded: makeReducer(false, {
     [TOOL_SET_LOADED]: (state, action) => action.loaded,
     [TOOL_CLOSE]: () => false
+  }),
+  accessDenied: makeReducer(false, {
+    [TOOL_SET_ACCESS_DENIED]: (state, action) => action.accessDenied,
+    [TOOL_OPEN]: () => false
+  }),
+  notFound: makeReducer(false, {
+    [TOOL_SET_NOT_FOUND]: (state, action) => action.notFound,
+    [TOOL_OPEN]: () => false
   }),
   name: makeReducer(null, {
     [TOOL_OPEN]: (state, action) => action.name,
