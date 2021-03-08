@@ -19,6 +19,7 @@ const EventsDetails = (props) =>
     ] : undefined}
     currentContext={props.currentContext}
     event={props.event}
+    reload={props.reload}
   >
     <EventDetails
       path={props.path}
@@ -33,7 +34,8 @@ EventsDetails.propTypes = {
   }).isRequired,
   event: T.shape(
     EventTypes.propTypes
-  )
+  ),
+  reload: T.func.isRequired
 }
 
 export {

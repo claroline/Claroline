@@ -103,12 +103,7 @@ class SessionSerializer
                 'edit' => $this->authorization->isGranted('EDIT', $session),
                 'delete' => $this->authorization->isGranted('DELETE', $session),
             ],
-            'workspace' => $session->getWorkspace() ?
-                $this->workspaceSerializer->serialize($session->getWorkspace(), [Options::SERIALIZE_MINIMAL]) :
-                null,
-            'location' => $session->getLocation() ?
-                $this->locationSerializer->serialize($session->getLocation(), [Options::SERIALIZE_MINIMAL]) :
-                null,
+            'course' => $this->courseSerializer->serialize($session->getCourse(), [Options::SERIALIZE_MINIMAL]),
             'restrictions' => [
                 'users' => $session->getMaxUsers(),
                 'dates' => DateRangeNormalizer::normalize($session->getStartDate(), $session->getEndDate()),
@@ -117,6 +112,12 @@ class SessionSerializer
 
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
             $serialized = array_merge($serialized, [
+                'workspace' => $session->getWorkspace() ?
+                    $this->workspaceSerializer->serialize($session->getWorkspace(), [Options::SERIALIZE_MINIMAL]) :
+                    null,
+                'location' => $session->getLocation() ?
+                    $this->locationSerializer->serialize($session->getLocation(), [Options::SERIALIZE_MINIMAL]) :
+                    null,
                 'meta' => [
                     'creator' => $session->getCreator() ?
                         $this->userSerializer->serialize($session->getCreator(), [Options::SERIALIZE_MINIMAL]) :
@@ -126,8 +127,6 @@ class SessionSerializer
                     'duration' => $session->getCourse() ? $session->getCourse()->getDefaultSessionDuration() : null,
                     'default' => $session->isDefaultSession(),
                     'order' => $session->getOrder(),
-
-                    'course' => $this->courseSerializer->serialize($session->getCourse(), [Options::SERIALIZE_MINIMAL]),
                     'learnerRole' => $session->getLearnerRole() ?
                         $this->roleSerializer->serialize($session->getLearnerRole(), [Options::SERIALIZE_MINIMAL]) :
                         null,
@@ -213,9 +212,9 @@ class SessionSerializer
 
         $course = $session->getCourse();
         // Sets course at creation
-        if (empty($course) && isset($data['meta']['course']['id'])) {
+        if (empty($course) && isset($data['course']['id'])) {
             /** @var Course $course */
-            $course = $this->courseRepo->findOneBy(['uuid' => $data['meta']['course']['id']]);
+            $course = $this->courseRepo->findOneBy(['uuid' => $data['course']['id']]);
             if ($course) {
                 $session->setCourse($course);
             }

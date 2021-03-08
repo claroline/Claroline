@@ -65,11 +65,11 @@ const Session = {
     name: T.string,
     description: T.string,
     plainDescription: T.string,
+    course: T.shape(
+      Course.propTypes
+    ),
     meta: T.shape({
       default: T.bool,
-      course: T.shape(
-        Course.propTypes
-      ),
       workspace: T.shape(
         WorkspaceTypes.propTypes
       ),
@@ -129,9 +129,11 @@ const Event = {
     code: T.string,
     name: T.string,
     description: T.string,
+    session: T.shape(
+      Session.propTypes
+    ),
     meta: T.shape({
       type: T.number,
-      session: T.shape(Session.propTypes),
       set: T.string
     }),
     restrictions: T.shape({

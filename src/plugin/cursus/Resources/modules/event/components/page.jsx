@@ -5,12 +5,14 @@ import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
 import {hasPermission} from '#/main/app/security'
-import {LINK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
+import {MODAL_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 import {ContentLoader} from '#/main/app/content/components/loader'
 import {PageFull} from '#/main/app/page/components/full'
 import {getToolBreadcrumb, showToolBreadcrumb} from '#/main/core/tool/utils'
 
 import {Event as EventTypes} from '#/plugin/cursus/prop-types'
+import {MODAL_TRAINING_EVENT_ABOUT} from '#/plugin/cursus/event/modals/about'
+import {MODAL_TRAINING_EVENT_PARAMETERS} from '#/plugin/cursus/event/modals/parameters'
 
 const EventPage = (props) => {
   if (isEmpty(props.event)) {
@@ -31,11 +33,25 @@ const EventPage = (props) => {
       toolbar="edit | fullscreen more"
       actions={[
         {
+          name: 'about',
+          type: MODAL_BUTTON,
+          icon: 'fa fa-fw fa-info',
+          label: trans('show-info', {}, 'actions'),
+          modal: [MODAL_TRAINING_EVENT_ABOUT, {
+            event: props.event
+          }],
+          scope: ['object'],
+        }, {
           name: 'edit',
-          type: LINK_BUTTON,
+          type: MODAL_BUTTON,
           icon: 'fa fa-fw fa-pencil',
           label: trans('edit', {}, 'actions'),
-          target: props.basePath + '/' + props.event.id + '/edit',
+          modal: [MODAL_TRAINING_EVENT_PARAMETERS, {
+            event: props.event,
+            onSave: () => props.reload(props.event.id)
+          }],
+          scope: ['object'],
+          group: trans('management'),
           displayed: hasPermission('edit', props.event),
           primary: true
         }, {

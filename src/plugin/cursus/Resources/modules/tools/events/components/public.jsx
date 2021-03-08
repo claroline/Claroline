@@ -5,8 +5,7 @@ import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ToolPage} from '#/main/core/tool/containers/page'
 
-import {EventList} from '#/plugin/cursus/event/components/list'
-import {selectors} from '#/plugin/cursus/tools/events/store'
+import {EventList} from '#/plugin/cursus/event/containers/list'
 
 const EventsPublic = (props) =>
   <ToolPage
@@ -19,19 +18,17 @@ const EventsPublic = (props) =>
   >
     <EventList
       path={props.path}
-      name={selectors.LIST_NAME}
+      name={props.name}
       url={['apiv2_cursus_event_public', {workspace: props.contextId}]}
-      primaryAction={(row) => ({
-        type: LINK_BUTTON,
-        target: props.path+'/'+row.id,
-        label: trans('open', {}, 'actions')
-      })}
+      definition={props.definition}
     />
   </ToolPage>
 
 EventsPublic.propTypes = {
   path: T.string.isRequired,
-  contextId: T.string
+  name: T.string.isRequired,
+  contextId: T.string,
+  definition: T.array
 }
 
 export {

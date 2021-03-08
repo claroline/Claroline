@@ -22,13 +22,12 @@ const EventFormModal = withReducer(selectors.STORE_NAME, reducer)(
         } else {
           formData = merge(
             {
-              meta: {
-                session: {
-                  id: session.id,
-                  name: session.name,
-                  code: session.code,
-                  slug: session.slug
-                }
+              session: {
+                id: session.id,
+                name: session.name,
+                code: session.code,
+                slug: session.slug,
+                restrictions: session.restrictions
               }
             }, EventTypes.defaultProps, omit(session, 'id')
           ) // todo : omit props not needed for events

@@ -3,6 +3,8 @@
     "training_course_desc": "Template utilisé pour l'impression des informations relatives à une formation du catalogue.",
     "training_session": "Session de formation",
     "training_session_desc": "Template utilisé pour l'impression des informations relatives à une session de formation.",
+    "training_event": "Séance de formation",
+    "training_event_desc": "Template utilisé pour l'impression des informations relatives à une séance de formation.",
     "training_event_invitation": "Invitation à une séance de formation",
     "training_event_invitation_desc": "Template utilisé pour le mail d'invitation à une séance de formation.",
     "training_event_presences": "Grille de présence d'une séance de formation",

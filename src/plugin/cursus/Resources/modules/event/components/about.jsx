@@ -241,7 +241,7 @@ const EventAbout = (props) =>
         style={{marginBottom: 20}}
         orientation="row"
         size="xs"
-        data={props.event.meta.session}
+        data={props.event.session}
       />
     </div>
   </div>

@@ -44,6 +44,10 @@ const AboutModal = props =>
               name: 'code',
               label: trans('code'),
               type: 'string'
+            }, {
+              name: 'session',
+              label: trans('session', {}, 'cursus'),
+              type: 'training_session'
             }
           ]
         }

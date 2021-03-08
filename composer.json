@@ -10,8 +10,9 @@
         "homepage": "http://github.com/claroline"
     }],
     "require": {
-        "php": ">=7.1",
+        "php": ">=7.2",
         "ext-curl": "*",
+        "ext-dom": "*",
         "ext-fileinfo": "*",
         "ext-gd": "*",
         "ext-intl": "*",

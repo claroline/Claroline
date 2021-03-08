@@ -25,13 +25,11 @@ const SessionFormModal = withReducer(selectors.STORE_NAME, reducer)(
         } else {
           formData = merge(
             {
-              meta: {
-                course: {
-                  id: course.id,
-                  name: course.name,
-                  code: course.code,
-                  slug: course.slug
-                }
+              course: {
+                id: course.id,
+                name: course.name,
+                code: course.code,
+                slug: course.slug
               }
             }, SessionTypes.defaultProps, omit(course, 'id', 'description', 'plainDescription')
           ) // todo : omit props not needed for sessions

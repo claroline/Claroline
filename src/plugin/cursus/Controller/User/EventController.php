@@ -86,28 +86,4 @@ class EventController
             $this->finder->search(Event::class, $params)
         );
     }
-
-    /**
-     * List the session events for which the user is in pending list.
-     *
-     * @Route("/pending/{workspace}", name="apiv2_cursus_my_events_pending", methods={"GET"})
-     * @EXT\ParamConverter("workspace", class="ClarolineCoreBundle:Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
-     */
-    public function listPendingAction(Request $request, Workspace $workspace = null): JsonResponse
-    {
-        if (!$this->authorization->isGranted('IS_AUTHENTICATED_FULLY')) {
-            throw new AccessDeniedException();
-        }
-
-        $params = $request->query->all();
-        $params['hiddenFilters'] = [];
-        $params['hiddenFilters']['userPending'] = $this->tokenStorage->getToken()->getUser()->getUuid();
-        if ($workspace) {
-            $params['hiddenFilters']['workspace'] = $workspace->getUuid();
-        }
-
-        return new JsonResponse(
-            $this->finder->search(Event::class, $params)
-        );
-    }
 }

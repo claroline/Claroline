@@ -1,5 +1,6 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
 import {FormData} from '#/main/app/content/form/containers/data'
@@ -39,6 +40,12 @@ const EventForm = (props) =>
         title: trans('information'),
         fields: [
           {
+            name: 'session',
+            label: trans('session', {}, 'cursus'),
+            type: 'training_session',
+            required: true,
+            disabled: (data) => !isEmpty(data.session)
+          }, {
             name: 'description',
             type: 'html',
             label: trans('description')

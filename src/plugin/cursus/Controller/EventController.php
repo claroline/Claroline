@@ -162,7 +162,7 @@ class EventController extends AbstractCrudController
 
     /**
      * @Route("/{id}/pdf", name="apiv2_cursus_event_download_pdf", methods={"GET"})
-     * @EXT\ParamConverter("session", class="Claroline\CursusBundle\Entity\Session", options={"mapping": {"id": "uuid"}})
+     * @EXT\ParamConverter("sessionEvent", class="Claroline\CursusBundle\Entity\Event", options={"mapping": {"id": "uuid"}})
      */
     public function downloadPdfAction(Event $sessionEvent, Request $request): StreamedResponse
     {

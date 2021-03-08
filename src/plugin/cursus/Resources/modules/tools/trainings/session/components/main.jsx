@@ -51,68 +51,54 @@ const SessionMain = (props) =>
           path: '/',
           exact: true,
           onEnter: () => props.invalidateList(),
-          render: () => {
-            const Current = (
-              <SessionList
-                path={props.path}
-                name={selectors.STORE_NAME}
-                url={['apiv2_cursus_my_sessions_active']}
-                actions={(rows) => [
-                  {
-                    type: LINK_BUTTON,
-                    icon: 'fa fa-fw fa-book',
-                    label: trans('open-workspace', {}, 'actions'),
-                    target: workspaceRoute(rows[0].workspace),
-                    displayed: !!rows[0].workspace,
-                    scope: ['object']
-                  }
-                ]}
-              />
-            )
-
-            return Current
-          }
+          render: () => (
+            <SessionList
+              path={props.path+'/catalog'}
+              name={selectors.STORE_NAME}
+              url={['apiv2_cursus_my_sessions_active']}
+              actions={(rows) => [
+                {
+                  type: LINK_BUTTON,
+                  icon: 'fa fa-fw fa-book',
+                  label: trans('open-workspace', {}, 'actions'),
+                  target: workspaceRoute(rows[0].workspace),
+                  displayed: !!rows[0].workspace,
+                  scope: ['object']
+                }
+              ]}
+            />
+          )
         }, {
           path: '/ended',
           onEnter: () => props.invalidateList(),
-          render: () => {
-            const Ended = (
-              <SessionList
-                name={selectors.STORE_NAME}
-                url={['apiv2_cursus_my_sessions_ended']}
-                actions={(rows) => [
-                  {
-                    name: 'open-workspace',
-                    type: LINK_BUTTON,
-                    icon: 'fa fa-fw fa-book',
-                    label: trans('open-workspace', {}, 'actions'),
-                    target: workspaceRoute(rows[0].workspace),
-                    displayed: !!rows[0].workspace,
-                    scope: ['object']
-                  }
-                ]}
-              />
-            )
-
-            return Ended
-          }
+          render: () => (
+            <SessionList
+              path={props.path+'/catalog'}
+              name={selectors.STORE_NAME}
+              url={['apiv2_cursus_my_sessions_ended']}
+              actions={(rows) => [
+                {
+                  name: 'open-workspace',
+                  type: LINK_BUTTON,
+                  icon: 'fa fa-fw fa-book',
+                  label: trans('open-workspace', {}, 'actions'),
+                  target: workspaceRoute(rows[0].workspace),
+                  displayed: !!rows[0].workspace,
+                  scope: ['object']
+                }
+              ]}
+            />
+          )
         }, {
           path: '/pending',
           onEnter: () => props.invalidateList(),
-          render: () => {
-            const Pending = (
-              <SessionList
-                path={props.path}
-                name={selectors.STORE_NAME}
-                url={['apiv2_cursus_my_sessions_pending']}
-                actions={() => [
-
-                ]}
-              />
-            )
-
-            return Pending
-          }
+          render: () => (
+            <SessionList
+              path={props.path+'/catalog'}
+              name={selectors.STORE_NAME}
+              url={['apiv2_cursus_my_sessions_pending']}
+            />
+          )
         }
       ]}
     />
