@@ -10,11 +10,12 @@ registry.add('ClarolineCursusBundle', {
 
   data: {
     types: {
-      'course': () => { return import(/* webpackChunkName: "plugin-cursus-data-course" */ '#/plugin/cursus/data/types/course') }
+      'course'          : () => { return import(/* webpackChunkName: "plugin-cursus-data-course" */  '#/plugin/cursus/data/types/course') },
+      'training_session': () => { return import(/* webpackChunkName: "plugin-cursus-data-session" */ '#/plugin/cursus/data/types/session') }
     },
     sources: {
-      'public_course_sessions' : () => { return import(/* webpackChunkName: "plugin-cursus-data-public-sessions" */ '#/plugin/cursus/data/sources/sessions') },
-      'my_course_sessions'     : () => { return import(/* webpackChunkName: "plugin-cursus-data-my-sessions" */     '#/plugin/cursus/data/sources/my-sessions') }
+      'public_course_sessions': () => { return import(/* webpackChunkName: "plugin-cursus-data-public-sessions" */ '#/plugin/cursus/data/sources/sessions') },
+      'my_course_sessions'    : () => { return import(/* webpackChunkName: "plugin-cursus-data-my-sessions" */     '#/plugin/cursus/data/sources/my-sessions') }
     }
   },
 

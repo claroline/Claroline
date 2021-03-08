@@ -94,19 +94,19 @@ class CourseSerializer
             'slug' => $course->getSlug(),
             'description' => $course->getDescription(),
             'plainDescription' => $course->getPlainDescription(),
-            'poster' => $this->serializePoster($course),
             'thumbnail' => $this->serializeThumbnail($course),
             'permissions' => [
                 'open' => $this->authorization->isGranted('OPEN', $course),
                 'edit' => $this->authorization->isGranted('EDIT', $course),
                 'delete' => $this->authorization->isGranted('DELETE', $course),
             ],
-            'parent' => $course->getParent() ? $this->serialize($course->getParent(), [Options::SERIALIZE_MINIMAL]) : null,
             'tags' => $this->serializeTags($course),
         ];
 
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
             $serialized = array_merge($serialized, [
+                'poster' => $this->serializePoster($course),
+                'parent' => $course->getParent() ? $this->serialize($course->getParent(), [Options::SERIALIZE_MINIMAL]) : null,
                 'meta' => [
                     'creator' => $course->getCreator() ?
                         $this->userSerializer->serialize($course->getCreator(), [Options::SERIALIZE_MINIMAL]) :

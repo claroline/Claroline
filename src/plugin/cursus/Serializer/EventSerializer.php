@@ -73,20 +73,20 @@ class EventSerializer
             'code' => $event->getCode(),
             'name' => $event->getName(),
             'description' => $event->getDescription(),
+            'thumbnail' => $this->serializeThumbnail($event),
             'permissions' => [
                 'open' => $this->authorization->isGranted('OPEN', $event),
                 'edit' => $this->authorization->isGranted('EDIT', $event),
                 'delete' => $this->authorization->isGranted('DELETE', $event),
             ],
-            'poster' => $this->serializePoster($event),
-            'thumbnail' => $this->serializeThumbnail($event),
-            'location' => $event->getLocation() ? $this->locationSerializer->serialize($event->getLocation(), [Options::SERIALIZE_MINIMAL]) : null,
+            'session' => $this->sessionSerializer->serialize($event->getSession(), [Options::SERIALIZE_MINIMAL]),
         ];
 
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
             $serialized = array_merge($serialized, [
+                'poster' => $this->serializePoster($event),
+                'location' => $event->getLocation() ? $this->locationSerializer->serialize($event->getLocation(), [Options::SERIALIZE_MINIMAL]) : null,
                 'meta' => [
-                    'session' => $this->sessionSerializer->serialize($event->getSession(), [Options::SERIALIZE_MINIMAL]),
                     'locationExtra' => $event->getLocationExtra(),
                 ],
                 'restrictions' => [
@@ -129,9 +129,9 @@ class EventSerializer
         }
 
         $session = $event->getSession();
-        if (empty($session) && isset($data['meta']['session']['id'])) {
+        if (empty($session) && isset($data['session']['id'])) {
             /** @var Session $session */
-            $session = $this->sessionRepo->findOneBy(['uuid' => $data['meta']['session']['id']]);
+            $session = $this->sessionRepo->findOneBy(['uuid' => $data['session']['id']]);
 
             if ($session) {
                 $event->setSession($session);

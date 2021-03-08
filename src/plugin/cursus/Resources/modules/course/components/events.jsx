@@ -11,7 +11,7 @@ import {
 } from '#/plugin/cursus/prop-types'
 import {MODAL_TRAINING_EVENT_ABOUT} from '#/plugin/cursus/event/modals/about'
 import {MODAL_TRAINING_EVENT_PARAMETERS} from '#/plugin/cursus/event/modals/parameters'
-import {EventList} from '#/plugin/cursus/event/components/list'
+import {EventList} from '#/plugin/cursus/event/containers/list'
 import {selectors} from '#/plugin/cursus/tools/trainings/catalog/store/selectors'
 
 const CourseEvents = (props) =>
@@ -28,18 +28,6 @@ const CourseEvents = (props) =>
       })}
       actions={(rows) => [
         {
-          name: 'edit',
-          type: MODAL_BUTTON,
-          icon: 'fa fa-fw fa-pencil',
-          label: trans('edit', {}, 'actions'),
-          modal: [MODAL_TRAINING_EVENT_PARAMETERS, {
-            event: rows[0],
-            onSave: () => props.invalidateList()
-          }],
-          scope: ['object'],
-          group: trans('management'),
-          displayed: hasPermission('edit', rows[0])
-        }, {
           name: 'export-pdf',
           type: URL_BUTTON,
           icon: 'fa fa-fw fa-file-pdf-o',
@@ -59,7 +47,7 @@ const CourseEvents = (props) =>
         label={trans('add_event', {}, 'cursus')}
         modal={[MODAL_TRAINING_EVENT_PARAMETERS, {
           session: props.activeSession,
-          onSave: () => props.invalidateList()
+          onSave: props.invalidateList
         }]}
         primary={true}
       />

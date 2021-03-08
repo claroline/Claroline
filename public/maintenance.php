@@ -4,7 +4,7 @@ $maintenanceMode = file_exists(__DIR__.'/../files/config/.update');
 
 if (!$maintenanceMode) {
     $protocol = isset($_SERVER['HTTPS']) ? 'https://' : 'http://';
-    $url = $protocol.$_SERVER['HTTP_HOST'].$_SERVER['SCRIPT_NAME'].'/../app.php';
+    $url = $protocol.$_SERVER['HTTP_HOST'].$_SERVER['SCRIPT_NAME'].'/../index.php';
     header("Location: {$url}");
 }
 
@@ -37,7 +37,7 @@ if (!$maintenanceMode) {
                             echo '<p>The site is temporarily down for maintenance</p>';
                         }
                     ?>
-                    <a class="btn" href="app.php"><span class="glyphicon glyphicon-refresh"></span></a>
+                    <a class="btn" href="index.php"><span class="glyphicon glyphicon-refresh"></span></a>
                 </div>
             </div>
         </div>

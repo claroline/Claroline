@@ -65,9 +65,11 @@ class EventManager
         $this->eventGroupRepo = $om->getRepository(EventGroup::class);
     }
 
-    public function generateFromTemplate(Event $sessionEvent, string $locale)
+    public function generateFromTemplate(Event $event, string $locale)
     {
-        // TODO : implement
+        $placeholders = $this->getTemplatePlaceholders($event);
+
+        return $this->templateManager->getTemplate('training_event', $placeholders, $locale);
     }
 
     /**
@@ -226,54 +228,7 @@ class EventManager
      */
     public function sendSessionEventInvitation(Event $event, array $users)
     {
-        $session = $event->getSession();
-        $course = $session->getCourse();
-
-        $trainersList = '';
-        $eventTrainers = $this->eventUserRepo->findBy([
-            'event' => $event,
-            'type' => AbstractRegistration::TUTOR,
-        ]);
-
-        if (0 < count($eventTrainers)) {
-            $trainersList = '<ul>';
-
-            foreach ($eventTrainers as $eventTrainer) {
-                $user = $eventTrainer->getUser();
-                $trainersList .= '<li>'.$user->getFirstName().' '.$user->getLastName().'</li>';
-            }
-            $trainersList .= '</ul>';
-        }
-        $location = $event->getLocation();
-        $locationName = '';
-        $locationAddress = '';
-
-        if ($location) {
-            $locationName = $location->getName();
-            $locationAddress = $location->getAddress();
-            if ($location->getPhone()) {
-                $locationAddress .= '<br>'.$location->getPhone();
-            }
-        }
-
-        $basicPlaceholders = [
-            'course_name' => $course->getName(),
-            'course_code' => $course->getCode(),
-            'course_description' => $course->getDescription(),
-            'session_name' => $session->getName(),
-            'session_description' => $session->getDescription(),
-            'session_code' => $session->getCode(),
-            'session_start' => $session->getStartDate()->format('d/m/Y'),
-            'session_end' => $session->getEndDate()->format('d/m/Y'),
-            'event_name' => $event->getName(),
-            'event_description' => $event->getDescription(),
-            'event_code' => $event->getCode(),
-            'event_start' => $event->getStartDate()->format('d/m/Y H:i'),
-            'event_end' => $event->getEndDate()->format('d/m/Y H:i'),
-            'event_location_name' => $locationName,
-            'event_location_address' => $locationAddress,
-            'event_trainers' => $trainersList,
-        ];
+        $basicPlaceholders = $this->getTemplatePlaceholders($event);
 
         foreach ($users as $user) {
             $locale = $user->getLocale();
@@ -325,5 +280,57 @@ class EventManager
         }
 
         return array_values($users);
+    }
+
+    private function getTemplatePlaceholders(Event $event): array
+    {
+        $session = $event->getSession();
+        $course = $session->getCourse();
+
+        $trainersList = '';
+        $eventTrainers = $this->eventUserRepo->findBy([
+            'event' => $event,
+            'type' => AbstractRegistration::TUTOR,
+        ]);
+
+        if (0 < count($eventTrainers)) {
+            $trainersList = '<ul>';
+
+            foreach ($eventTrainers as $eventTrainer) {
+                $user = $eventTrainer->getUser();
+                $trainersList .= '<li>'.$user->getFirstName().' '.$user->getLastName().'</li>';
+            }
+            $trainersList .= '</ul>';
+        }
+        $location = $event->getLocation();
+        $locationName = '';
+        $locationAddress = '';
+
+        if ($location) {
+            $locationName = $location->getName();
+            $locationAddress = $location->getAddress();
+            if ($location->getPhone()) {
+                $locationAddress .= '<br>'.$location->getPhone();
+            }
+        }
+
+        return [
+            'course_name' => $course->getName(),
+            'course_code' => $course->getCode(),
+            'course_description' => $course->getDescription(),
+            'session_name' => $session->getName(),
+            'session_description' => $session->getDescription(),
+            'session_code' => $session->getCode(),
+            'session_start' => $session->getStartDate()->format('d/m/Y'),
+            'session_end' => $session->getEndDate()->format('d/m/Y'),
+            'event_name' => $event->getName(),
+            'event_description' => $event->getDescription(),
+            'event_code' => $event->getCode(),
+            'event_start' => $event->getStartDate()->format('d/m/Y H:i'),
+            'event_end' => $event->getEndDate()->format('d/m/Y H:i'),
+            'event_location_name' => $locationName,
+            'event_location_address' => $locationAddress,
+            'event_trainers' => $trainersList,
+        ];
     }
 }

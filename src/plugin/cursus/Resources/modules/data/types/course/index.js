@@ -11,6 +11,7 @@ const dataType = {
     label: trans('course', {}, 'data'),
     description: trans('course_desc', {}, 'data')
   },
+  render: (raw) => raw ? raw.name : null,
   components: {
     details: CourseDisplay,
     input: CourseInput

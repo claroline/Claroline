@@ -3,11 +3,13 @@ import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
 import {hasPermission} from '#/main/app/security'
-import {URL_BUTTON} from '#/main/app/buttons'
+import {LINK_BUTTON, MODAL_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
 
 import {constants} from '#/plugin/cursus/constants'
 import {EventCard} from '#/plugin/cursus/event/components/card'
+import {MODAL_TRAINING_EVENT_ABOUT} from '#/plugin/cursus/event/modals/about'
+import {MODAL_TRAINING_EVENT_PARAMETERS} from '#/plugin/cursus/event/modals/parameters'
 
 const EventList = (props) =>
   <ListData
@@ -16,8 +18,34 @@ const EventList = (props) =>
       url: props.url,
       autoload: true
     }}
+    primaryAction={props.primaryAction || ((row) => ({
+      type: LINK_BUTTON,
+      target: props.path+'/'+row.id,
+      label: trans('open', {}, 'actions')
+    }))}
     actions={(rows) => [
       {
+        name: 'about',
+        type: MODAL_BUTTON,
+        icon: 'fa fa-fw fa-info',
+        label: trans('show-info', {}, 'actions'),
+        modal: [MODAL_TRAINING_EVENT_ABOUT, {
+          event: rows[0]
+        }],
+        scope: ['object'],
+      }, {
+        name: 'edit',
+        type: MODAL_BUTTON,
+        icon: 'fa fa-fw fa-pencil',
+        label: trans('edit', {}, 'actions'),
+        modal: [MODAL_TRAINING_EVENT_PARAMETERS, {
+          event: rows[0],
+          onSave: props.invalidate
+        }],
+        scope: ['object'],
+        group: trans('management'),
+        displayed: hasPermission('edit', rows[0])
+      }, {
         name: 'export-pdf',
         type: URL_BUTTON,
         icon: 'fa fa-fw fa-file-pdf-o',
@@ -26,13 +54,28 @@ const EventList = (props) =>
         scope: ['object'],
         group: trans('transfer'),
         target: ['apiv2_cursus_event_download_pdf', {id: rows[0].id}]
+      }, {
+        name: 'export-presences-empty',
+        type: URL_BUTTON,
+        icon: 'fa fa-fw fa-border-none',
+        label: trans('export-presences-empty', {}, 'cursus'),
+        displayed: hasPermission('edit', rows[0]),
+        group: trans('presences', {}, 'cursus'),
+        target: ['apiv2_cursus_event_presence_download', {id: rows[0].id, filled: 0}]
+      }, {
+        name: 'export-presences-filled',
+        type: URL_BUTTON,
+        icon: 'fa fa-fw fa-border-all',
+        label: trans('export-presences-filled', {}, 'cursus'),
+        displayed: hasPermission('edit', rows[0]),
+        group: trans('presences', {}, 'cursus'),
+        target: ['apiv2_cursus_event_presence_download', {id: rows[0].id, filled: 1}]
       }
     ].concat(props.actions(rows))}
     delete={{
       url: ['apiv2_cursus_event_delete_bulk'],
       displayed: (rows) => -1 !== rows.findIndex(row => hasPermission('delete', row))
     }}
-    primaryAction={props.primaryAction}
     definition={[
       {
         name: 'name',
@@ -85,20 +128,25 @@ const EventList = (props) =>
           choices: constants.REGISTRATION_TYPES
         }
       }
-    ]}
+    ].concat(props.definition)}
     card={EventCard}
   />
 
 EventList.propTypes = {
+  path: T.string.isRequired,
   name: T.string.isRequired,
   url: T.oneOfType([T.string, T.array]).isRequired,
-
+  definition: T.arrayOf(T.shape({
+    // TODO : list property propTypes
+  })),
   primaryAction: T.func,
-  actions: T.func
+  actions: T.func,
+  invalidate: T.func.isRequired
 }
 
 EventList.defaultProps = {
-  actions: () => []
+  actions: () => [],
+  definition: []
 }
 
 export {

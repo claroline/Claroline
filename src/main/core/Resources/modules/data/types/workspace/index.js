@@ -8,7 +8,7 @@ import {WorkspaceFilter} from '#/main/core/data/types/workspace/components/filte
 const dataType = {
   name: 'workspace',
   meta: {
-    icon: 'fa fa-fw fa fa-books',
+    icon: 'fa fa-fw fa fa-book',
     label: trans('workspace', {}, 'data'),
     description: trans('workspace_desc', {}, 'data')
   },

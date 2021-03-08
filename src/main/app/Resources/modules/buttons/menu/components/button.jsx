@@ -72,8 +72,8 @@ class StandardMenu extends Component {
           {primaryActions.map((action) =>
             <MenuAction
               {...action}
-              key={action.id || toKey(action.label)}
-              id={action.id || `${props.id}-${toKey(action.label)}`}
+              key={action.id || action.name || toKey(action.label)}
+              id={action.id || action.name || `${props.id || props.name}-${toKey(action.label)}`}
             />
           )}
 
@@ -84,8 +84,8 @@ class StandardMenu extends Component {
           {unclassifiedActions.map((action) =>
             <MenuAction
               {...action}
-              key={action.id || toKey(action.label)}
-              id={action.id || `${props.id}-${toKey(action.label)}`}
+              key={action.id || action.name || toKey(action.label)}
+              id={action.id || action.name || `${props.id || props.name}-${toKey(action.label)}`}
             />
           )}
 
@@ -94,8 +94,8 @@ class StandardMenu extends Component {
             ...groupActions[group].map((action) =>
               <MenuAction
                 {...action}
-                key={action.id || toKey(action.label)}
-                id={action.id || `${props.id}-${toKey(action.label)}`}
+                key={action.id || action.name || toKey(action.label)}
+                id={action.id || action.name || `${props.id || props.name}-${toKey(action.label)}`}
               />
             )
           ])}
@@ -107,8 +107,8 @@ class StandardMenu extends Component {
           {dangerousActions.map((action) =>
             <MenuAction
               {...action}
-              key={action.id || toKey(action.label)}
-              id={action.id || `${props.id}-${toKey(action.label)}`}
+              key={action.id || action.name || toKey(action.label)}
+              id={action.id || action.name || `${props.id || props.name}-${toKey(action.label)}`}
             />
           )}
         </Menu>

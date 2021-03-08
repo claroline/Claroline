@@ -7,8 +7,7 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 import {ContentTabs} from '#/main/app/content/components/tabs'
 import {ToolPage} from '#/main/core/tool/containers/page'
 
-import {EventList} from '#/plugin/cursus/event/components/list'
-import {selectors} from '#/plugin/cursus/tools/events/store'
+import {EventList} from '#/plugin/cursus/event/containers/list'
 
 const EventsRegistered = (props) =>
   <ToolPage
@@ -50,61 +49,26 @@ const EventsRegistered = (props) =>
         {
           path: '/',
           exact: true,
-          onEnter: () => props.invalidateList(),
-          render: () => {
-            const Current = (
-              <EventList
-                path={props.path}
-                name={selectors.LIST_NAME}
-                url={['apiv2_cursus_my_events_active', {workspace: props.contextId}]}
-                primaryAction={(row) => ({
-                  type: LINK_BUTTON,
-                  target: props.path+'/'+row.id,
-                  label: trans('open', {}, 'actions')
-                })}
-              />
-            )
-
-            return Current
-          }
+          onEnter: props.invalidateList,
+          render: () => (
+            <EventList
+              path={props.path}
+              name={props.name}
+              url={['apiv2_cursus_my_events_active', {workspace: props.contextId}]}
+              definition={props.definition}
+            />
+          )
         }, {
           path: '/ended',
-          onEnter: () => props.invalidateList(),
-          render: () => {
-            const Ended = (
-              <EventList
-                path={props.path}
-                name={selectors.LIST_NAME}
-                url={['apiv2_cursus_my_events_ended', {workspace: props.contextId}]}
-                primaryAction={(row) => ({
-                  type: LINK_BUTTON,
-                  target: props.path+'/'+row.id,
-                  label: trans('open', {}, 'actions')
-                })}
-              />
-            )
-
-            return Ended
-          }
-        }, {
-          path: '/pending',
-          onEnter: () => props.invalidateList(),
-          render: () => {
-            const Pending = (
-              <EventList
-                path={props.path}
-                name={selectors.LIST_NAME}
-                url={['apiv2_cursus_my_events_pending', {workspace: props.contextId}]}
-                primaryAction={(row) => ({
-                  type: LINK_BUTTON,
-                  target: props.path+'/'+row.id,
-                  label: trans('open', {}, 'actions')
-                })}
-              />
-            )
-
-            return Pending
-          }
+          onEnter: props.invalidateList,
+          render: () => (
+            <EventList
+              path={props.path}
+              name={props.name}
+              url={['apiv2_cursus_my_events_ended', {workspace: props.contextId}]}
+              definition={props.definition}
+            />
+          )
         }
       ]}
     />
@@ -112,7 +76,9 @@ const EventsRegistered = (props) =>
 
 EventsRegistered.propTypes = {
   path: T.string.isRequired,
+  name: T.string.isRequired,
   contextId: T.string,
+  definition: T.array,
   invalidateList: T.func.isRequired
 }
 

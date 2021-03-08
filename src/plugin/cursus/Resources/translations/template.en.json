@@ -3,6 +3,8 @@
     "training_course_desc": "Template used to print information about a training.",
     "training_session": "Training session",
     "training_session_desc": "Template used to print information about a training session.",
+    "training_event": "Training event",
+    "training_event_desc": "Template used to print information about a training event.",
     "training_session_event_invitation": "Invitation to a training event",
     "training_session_event_invitation_desc": "Template used for the mail sent for the invitation to a training event.",
     "training_session_invitation": "Invitation to a training session",
