@@ -22,3 +22,10 @@ services:
         tags:
             - { name: kernel.event_listener, event: merge_users, method: onMerge }
             - { name: kernel.event_listener, event: log, method: onDelete }
+
+    Claroline\AuthenticationBundle\Listener\DataSource\MyTokensSource:
+        arguments:
+            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@security.token_storage'
+        tags:
+            - { name: kernel.event_listener, event: data_source.my_tokens.load, method: getData }

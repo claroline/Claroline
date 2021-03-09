@@ -18,4 +18,6 @@ services:
                   arguments:
                       - '@Claroline\AppBundle\Event\StrictDispatcher'
 
+    Claroline\AuthenticationBundle\Finder\ApiTokenFinder: ~
+
     Claroline\AuthenticationBundle\Finder\IpUserFinder: ~

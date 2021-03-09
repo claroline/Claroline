@@ -1,1 +1,6 @@
-plugin: ~
+plugin:
+    data_sources:
+        - name: my_tokens
+          type: list
+          context: [ desktop, administration ]
+          tags: [ structure ]
