@@ -24,19 +24,18 @@ class ApiTokenVoter extends AbstractVoter
      */
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
     {
+        return VoterInterface::ACCESS_DENIED;
         if ($token->getUser() instanceof User) {
-            $isAdmin = $this->hasAdminToolAccess($token, 'integration');
-
             switch ($attributes[0]) {
-                case self::CREATE:
-                    if ($isAdmin) {
-                        return VoterInterface::ACCESS_GRANTED;
-                    }
-                    break;
-
                 case self::EDIT:
                 case self::DELETE:
+                    if ($object->isLocked()) {
+                        return VoterInterface::ACCESS_DENIED;
+                    }
+                    // no break
+                case self::CREATE:
                 case self::VIEW:
+                    $isAdmin = $this->hasAdminToolAccess($token, 'integration');
                     if ($isAdmin || (!empty($object->getUser()) && $object->getUser()->getUuid() === $token->getUser()->getUuid())) {
                         return VoterInterface::ACCESS_GRANTED;
                     }

@@ -1,7 +1,7 @@
-import {actions} from '#/main/authentication/integration/tokens/store/actions'
 import {reducer} from '#/main/authentication/integration/tokens/store/reducer'
+import {selectors} from '#/main/authentication/integration/tokens/store/selectors'
 
 export {
-  actions,
-  reducer
+  reducer,
+  selectors
 }

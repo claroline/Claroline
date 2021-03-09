@@ -7,6 +7,7 @@ services:
     Claroline\AuthenticationBundle\Serializer\ApiTokenSerializer:
         tags: [ claroline.serializer ]
         arguments:
+            - '@security.authorization_checker'
             - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
 

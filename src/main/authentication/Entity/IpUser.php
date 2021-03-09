@@ -3,6 +3,7 @@
 namespace Claroline\AuthenticationBundle\Entity;
 
 use Claroline\AppBundle\Entity\Identifier\Id;
+use Claroline\AppBundle\Entity\Restriction\Locked;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -16,6 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
 class IpUser
 {
     use Id;
+    use Locked;
 
     /**
      * @ORM\Column(type="string", nullable=false, unique=true)
@@ -40,16 +42,6 @@ class IpUser
      * @var User
      */
     private $user;
-
-    /**
-     * Disallow edition/deletion from application.
-     * Useful to declare a third party app without worrying about a user deleting it.
-     *
-     * @ORM\Column(name="is_locked", type="boolean")
-     *
-     * @var bool
-     */
-    private $locked = false;
 
     public function getIp(): ?string
     {
@@ -79,16 +71,6 @@ class IpUser
     public function setUser(User $user)
     {
         $this->user = $user;
-    }
-
-    public function isLocked(): bool
-    {
-        return $this->locked;
-    }
-
-    public function setLocked(bool $locked)
-    {
-        $this->locked = $locked;
     }
 
     public function inRange(string $ip)

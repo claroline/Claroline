@@ -31,7 +31,7 @@ class IpUserSerializer
         return IpUser::class;
     }
 
-    public function serialize(IpUser $object)
+    public function serialize(IpUser $object): array
     {
         return [
             'id' => $object->getId(),
@@ -44,12 +44,13 @@ class IpUserSerializer
         ];
     }
 
-    public function deserialize(array $data, IpUser $object)
+    public function deserialize(array $data, IpUser $object): IpUser
     {
         if (isset($data['ip'])) {
             $object->setIp(is_array($data['ip']) ? implode(',', $data['ip']) : $data['ip']);
         }
         $this->sipe('range', 'setRange', $data, $object);
+        $this->sipe('restrictions.locked', 'setLocked', $data, $object);
 
         if (!empty($data['user'])) {
             /** @var User $user */
