@@ -23,6 +23,10 @@ class ApiTokenAuthenticatorTest extends MockeryTestCase
 
         $this->assertFalse($authenticator->supports(new Request()));
         $this->assertTrue($authenticator->supports(new Request(['apitoken' => 'foo'])));
+
+        $request = new Request();
+        $request->headers->set(ApiTokenAuthenticator::HEADER_NAME, 'foo');
+        $this->assertTrue($authenticator->supports($request));
     }
 
     public function testGetCredentials()
@@ -30,6 +34,10 @@ class ApiTokenAuthenticatorTest extends MockeryTestCase
         $authenticator = new ApiTokenAuthenticator($this->mock(ObjectManager::class));
 
         $this->assertSame('foo', $authenticator->getCredentials(new Request(['apitoken' => 'foo'])));
+
+        $request = new Request();
+        $request->headers->set(ApiTokenAuthenticator::HEADER_NAME, 'foo');
+        $this->assertSame('foo', $authenticator->getCredentials($request));
     }
 
     public function testGetUser()
