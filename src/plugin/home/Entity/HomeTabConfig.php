@@ -40,6 +40,11 @@ class HomeTabConfig
     private $centerTitle = false;
 
     /**
+     * @ORM\Column(type="boolean", options={"default"=1})
+     */
+    private $showTitle = true;
+
+    /**
      * @ORM\Column(nullable=true)
      */
     private $icon;
@@ -206,5 +211,15 @@ class HomeTabConfig
     public function setCenterTitle($centerTitle)
     {
         $this->centerTitle = $centerTitle;
+    }
+
+    public function getShowTitle(): bool
+    {
+        return $this->showTitle;
+    }
+
+    public function setShowTitle(bool $showTitle)
+    {
+        $this->showTitle = $showTitle;
     }
 }

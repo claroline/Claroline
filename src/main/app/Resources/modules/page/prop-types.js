@@ -76,6 +76,7 @@ const PageSimple = {
 const PageFull = {
   propTypes: merge({}, PageSimple.propTypes, {
     showHeader: T.bool,
+    showTitle: T.bool,
 
     disabled: T.bool,
 
@@ -133,6 +134,7 @@ const PageFull = {
   }),
   defaultProps: merge({}, PageSimple.defaultProps, {
     showHeader: true,
+    showTitle: true,
     disabled: false,
     actions: []
   })
