@@ -1,6 +1,7 @@
 {
   "tokens": "Jetons d'authentification",
   "add_token": "Ajouter un jeton d'authentification",
+  "new_token": "Nouveau jeton d'authentification",
   "token": "Jeton d'authentification",
   "add_ip": "Ajouter une adresse IP",
   "new_ip": "Nouvelle adresse IP",

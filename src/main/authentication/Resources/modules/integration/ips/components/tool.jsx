@@ -25,7 +25,6 @@ const IpsTool = props =>
         type: MODAL_BUTTON,
         icon: 'fa fa-plus',
         label: trans('add_ip', {}, 'security'),
-        target: `${props.path}/tokens/form`,
         primary: true,
         modal: [MODAL_IP_PARAMETERS, {
           onSave: () => props.invalidateList()

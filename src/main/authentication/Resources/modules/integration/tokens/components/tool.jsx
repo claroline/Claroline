@@ -1,13 +1,15 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
-import {Routes} from '#/main/app/router'
-import {LINK_BUTTON} from '#/main/app/buttons'
+import {hasPermission} from '#/main/app/security'
+import {LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {ToolPage} from '#/main/core/tool/containers/page'
 
-import {Tokens} from '#/main/authentication/integration/tokens/components/tokens'
-import {Token}  from '#/main/authentication/integration/tokens/components/token'
+import {MODAL_TOKEN_PARAMETERS} from '#/main/authentication/token/modals/parameters'
+import {TokenList} from '#/main/authentication/token/components/list'
+import {selectors} from '#/main/authentication/integration/tokens/store'
 
 const ApiToken = props =>
   <ToolPage
@@ -21,41 +23,40 @@ const ApiToken = props =>
     actions={[
       {
         name: 'add-token',
-        type: LINK_BUTTON,
+        type: MODAL_BUTTON,
         icon: 'fa fa-plus',
         label: trans('add_token', {}, 'security'),
-        target: `${props.path}/tokens/form`,
-        primary: true
+        primary: true,
+        modal: [MODAL_TOKEN_PARAMETERS, {
+          onSave: () => props.invalidateList()
+        }]
       }
     ]}
   >
-    <Routes
-      path={props.path}
-      routes={[
+    <TokenList
+      name={selectors.STORE_NAME}
+      definition={[
         {
-          path: '/tokens',
-          component: Tokens,
-          exact: true
-        }/*, {
-          path: '/token/form/:id?',
-          component: Token,
-          onEnter: (params) => {
-            props.openForm(params.id || null)
-          },
-          onLeave: () => {
-            props.resetForm()
-          }
-        }*/, {
-          path: '/tokens/form',
-          render: () => {
-            const component = <Token path={props.path} />
-
-            return component
-          },
-          onLeave: () => {
-            props.resetForm()
-          },
-          exact: true
+          name: 'user',
+          label: trans('user'),
+          type: 'user',
+          displayed: true,
+          order: 0
+        }
+      ]}
+      actions={(rows) => [
+        {
+          name: 'edit',
+          type: MODAL_BUTTON,
+          icon: 'fa fa-fw fa-pencil',
+          label: trans('edit', {}, 'actions'),
+          modal: [MODAL_TOKEN_PARAMETERS, {
+            token: rows[0],
+            onSave: () => props.invalidateList()
+          }],
+          disabled: !hasPermission('edit', rows[0]) || get(rows[0], 'restrictions.locked', false),
+          scope: ['object'],
+          group: trans('management')
         }
       ]}
     />
@@ -63,8 +64,7 @@ const ApiToken = props =>
 
 ApiToken.propTypes = {
   path: T.string.isRequired,
-  openForm: T.func.isRequired,
-  resetForm: T.func.isRequired
+  invalidateList: T.func.isRequired
 }
 
 export {

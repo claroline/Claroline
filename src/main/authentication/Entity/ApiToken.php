@@ -11,7 +11,10 @@
 
 namespace Claroline\AuthenticationBundle\Entity;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Claroline\AppBundle\Entity\Meta\Description;
+use Claroline\AppBundle\Entity\Restriction\Locked;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -21,14 +24,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ApiToken
 {
+    use Id;
+    use Description;
+    use Locked;
     use Uuid;
-
-    /**
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
@@ -40,77 +39,29 @@ class ApiToken
      */
     private $token;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $description;
-
     public function __construct()
     {
         $this->refreshUuid();
         $this->token = mb_substr(bin2hex(openssl_random_pseudo_bytes(36)), 0, 36);
     }
 
-    /**
-     * Get the value of Id.
-     *
-     * @return mixed
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Set the value of Id.
-     *
-     * @param mixed id
-     *
-     * @return self
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of User.
-     *
-     * @return User
-     */
-    public function getUser()
+    public function getUser(): ?User
     {
         return $this->user;
     }
 
-    /**
-     * Set the value of User.
-     *
-     * @param User user
-     *
-     * @return self
-     */
-    public function setUser($user)
+    public function setUser(User $user)
     {
         $this->user = $user;
-
-        return $this;
     }
 
-    public function getToken()
+    public function getToken(): string
     {
         return $this->token;
     }
 
-    public function setDescription($description)
+    public function setToken(string $token)
     {
-        $this->description = $description;
-    }
-
-    public function getDescription()
-    {
-        return $this->description;
+        $this->token = $token;
     }
 }

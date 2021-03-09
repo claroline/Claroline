@@ -2,6 +2,7 @@
   "add_token": "Add a token",
   "tokens": "Tokens",
   "token": "Token",
+  "new_token": "New token",
   "add_ip": "Add an IP address",
   "new_ip": "New IP address",
   "ips_help": "The list of known IP addresses allows you to automatically authenticate the people viewing your platform from these addresses with the chosen Users.",
