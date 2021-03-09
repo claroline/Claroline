@@ -6,6 +6,7 @@ import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
+import {ContentHtml} from '#/main/app/content/components/html'
 
 import {getSso} from '#/main/authentication/sso'
 import {selectors} from '#/main/app/security/login/store/selectors'
@@ -37,6 +38,14 @@ class LoginForm extends Component {
 
     return (
       <Fragment>
+        {this.props.help &&
+          <div className={classes('login-container', {
+            'login-with-sso': otherSso.length
+          })}>
+            <ContentHtml className="panel-body">{this.props.help}</ContentHtml>
+          </div>
+        }
+
         <div className={classes('login-container', {
           'login-with-sso': otherSso.length
         })}>
@@ -138,6 +147,7 @@ class LoginForm extends Component {
 }
 
 LoginForm.propTypes = {
+  help: T.string,
   sso: T.arrayOf(T.shape({
     service: T.string.isRequired,
     label: T.string,

@@ -103,6 +103,10 @@ const Parameters = (props) => {
             title: trans('login'),
             fields: [
               {
+                name: 'authentication.help',
+                type: 'html',
+                label: trans('message')
+              }, {
                 name: 'authentication.redirect_after_login_option',
                 type: 'choice',
                 label: trans('redirect_after_login_option'),
