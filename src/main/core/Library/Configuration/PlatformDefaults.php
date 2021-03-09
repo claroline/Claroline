@@ -157,6 +157,11 @@ class PlatformDefaults implements ParameterProviderInterface
                 'favourites',
                 'notifications',
             ],
+            'header_search' => [
+                'user' => true,
+                'workspace' => false,
+                'resource' => true,
+            ],
             'admin' => [
                 'default_tool' => 'home',
             ],
