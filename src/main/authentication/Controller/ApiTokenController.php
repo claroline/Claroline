@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @Route("apitoken")
@@ -49,13 +50,17 @@ class ApiTokenController extends AbstractCrudController
 
     protected function getDefaultHiddenFilters()
     {
+        if (!$this->authorization->isGranted('IS_AUTHENTICATED_FULLY')) {
+            throw new AccessDeniedException();
+        }
+
         $tool = $this->om->getRepository('ClarolineCoreBundle:Tool\AdminTool')
             ->findOneBy(['name' => 'integration']);
 
         if (!$this->authorization->isGranted('OPEN', $tool)) {
             // only list tokens of the current token for non admins
             return [
-                'user' => $this->tokenStorage->getToken()->getUser(),
+                'user' => $this->tokenStorage->getToken()->getUser()->getUuid(),
             ];
         }
 
@@ -67,6 +72,10 @@ class ApiTokenController extends AbstractCrudController
      */
     public function getCurrentAction(Request $request): JsonResponse
     {
+        if (!$this->authorization->isGranted('IS_AUTHENTICATED_FULLY')) {
+            throw new AccessDeniedException();
+        }
+
         $query = $request->query->all();
         $options = $this->options['list'];
 
@@ -75,7 +84,7 @@ class ApiTokenController extends AbstractCrudController
         }
 
         $query['hiddenFilters'] = [
-            'user' => $this->tokenStorage->getToken()->getUser(),
+            'user' => $this->tokenStorage->getToken()->getUser()->getUuid(),
         ];
 
         return new JsonResponse($this->finder->search(

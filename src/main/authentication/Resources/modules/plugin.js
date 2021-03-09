@@ -25,6 +25,12 @@ registry.add('ClarolineAuthenticationBundle', {
     'ips'   : () => { return import(/* webpackChunkName: "authentication-integration-ips" */    '#/main/authentication/integration/ips')}
   },
 
+  data: {
+    sources: {
+      'my_tokens': () => { return import(/* webpackChunkName: "authentication-data-source-my-tokens" */ '#/main/authentication/data/sources/my_tokens') },
+    }
+  },
+
   /**
    * Provides Single Sign-On.
    */

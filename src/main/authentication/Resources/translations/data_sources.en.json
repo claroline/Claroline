@@ -1,0 +1,4 @@
+{
+  "my_tokens": "List of my authentication tokens",
+  "my_tokens_desc": "Allows to list authentication tokens of the current user."
+}
