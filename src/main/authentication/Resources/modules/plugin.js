@@ -7,6 +7,13 @@ import {registry} from '#/main/app/plugins/registry'
  */
 registry.add('ClarolineAuthenticationBundle', {
   /**
+   * Provides menu which can be used in the main header menu.
+   */
+  header: {
+    'authentication': () => { return import(/* webpackChunkName: "authentication-header-authentication" */ '#/main/authentication/header/authentication') }
+  },
+
+  /**
    * Provides current user Account sections.
    */
   account: {
