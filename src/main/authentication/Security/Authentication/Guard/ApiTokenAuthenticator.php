@@ -17,6 +17,9 @@ use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
  */
 class ApiTokenAuthenticator extends AbstractGuardAuthenticator
 {
+    public const QUERY_PARAM = 'apitoken';
+    public const HEADER_NAME = 'CLAROLINE-API-TOKEN';
+
     /** @var ObjectManager */
     private $om;
 
@@ -30,7 +33,7 @@ class ApiTokenAuthenticator extends AbstractGuardAuthenticator
      */
     public function supports(Request $request)
     {
-        return $request->query->has('apitoken');
+        return $request->headers->has(self::HEADER_NAME) || $request->query->has(self::QUERY_PARAM);
     }
 
     /**
@@ -38,7 +41,7 @@ class ApiTokenAuthenticator extends AbstractGuardAuthenticator
      */
     public function getCredentials(Request $request)
     {
-        return $request->query->get('apitoken');
+        return $request->headers->get(self::HEADER_NAME) ?: $request->query->get(self::QUERY_PARAM);
     }
 
     /**
