@@ -8,6 +8,7 @@
     "new_tab": "Nouvel onglet",
     "new_tab_configure": "2. Configurer l'onglet",
     "new_tab_select": "1. Choisir le type d'onglet à créer",
+    "show_title": "Afficher le titre",
 
     "widgets": "Widgets",
     "widgets_desc": "Permet de créer une grille de différents types de widgets."

@@ -13,7 +13,7 @@ import {Toolbar} from '#/main/app/action/components/toolbar'
  * Title of the current page.
  */
 const PageTitle = props =>
-  <h1 className="page-title">
+  <h1 className={classes('page-title', {'sr-only': !props.show})}>
     {props.title}
     {props.subtitle &&
       <small>{props.subtitle}</small>
@@ -32,7 +32,8 @@ PageTitle.propTypes = {
    * Mostly used when the current page has sub-sections
    * example : in quizzes, we have edit/play/papers/etc. sections
    */
-  subtitle: T.node
+  subtitle: T.node,
+  show: T.bool
 }
 
 /**
@@ -52,6 +53,7 @@ const PageHeader = props =>
     <PageTitle
       title={props.title}
       subtitle={props.subtitle}
+      show={props.showTitle}
     />
 
     {props.icon &&
@@ -64,7 +66,7 @@ const PageHeader = props =>
 
     {(!isEmpty(props.actions) || props.actions instanceof Promise) &&
       <Toolbar
-        id={toKey(props.title)}
+        id={props.id || toKey(props.title)}
         className="page-actions"
         tooltip="bottom"
         toolbar={props.toolbar}
@@ -76,6 +78,8 @@ const PageHeader = props =>
   </header>
 
 PageHeader.propTypes = {
+  id: T.string,
+  showTitle: T.bool,
   title: T.string.isRequired,
   subtitle: T.node,
   icon: T.oneOfType([T.string, T.element]),

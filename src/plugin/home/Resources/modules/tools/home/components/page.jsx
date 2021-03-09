@@ -40,6 +40,7 @@ const HomePage = props =>
     }
     title={props.title}
     subtitle={props.subtitle}
+    showTitle={get(props.currentTab, 'display.showTitle')}
     poster={props.poster || get(props.currentTab, 'poster.url')}
     toolbar="add | edit | fullscreen more"
     actions={props.currentTab ? [

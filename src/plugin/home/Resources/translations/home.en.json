@@ -8,6 +8,7 @@
     "new_tab": "New tab",
     "new_tab_configure": "2. Configure the tab",
     "new_tab_select": "1. Choose the type of tab to create",
+    "show_title": "Display title",
 
     "widgets": "Widgets",
     "widgets_desc": "Allows to create a grid of different types of widgets."

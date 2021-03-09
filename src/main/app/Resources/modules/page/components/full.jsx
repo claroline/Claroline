@@ -58,11 +58,13 @@ class PageFull extends Component {
 
     return (
       <PageSimple
-        {...omit(this.props, 'showHeader', 'header', 'title', 'subtitle', 'icon', 'poster', 'toolbar', 'actions', 'fullscreen')}
+        {...omit(this.props, 'showHeader', 'showTitle', 'header', 'title', 'subtitle', 'icon', 'poster', 'toolbar', 'actions', 'fullscreen')}
         fullscreen={this.state.fullscreen}
       >
         {this.props.showHeader &&
           <PageHeader
+            id={this.props.id}
+            showTitle={this.props.showTitle}
             title={this.props.title}
             subtitle={this.props.subtitle}
             icon={this.props.icon}

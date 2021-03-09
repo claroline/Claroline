@@ -116,6 +116,7 @@ class HomeTabSerializer
             'display' => [
                 'color' => $homeTabConfig->getColor(),
                 'centerTitle' => $homeTabConfig->isCenterTitle(),
+                'showTitle' => $homeTabConfig->getShowTitle(),
             ],
             'user' => $homeTab->getUser() ? $this->userSerializer->serialize($homeTab->getUser(), [Options::SERIALIZE_MINIMAL]) : null,
             'children' => array_map(function (HomeTab $child) use ($options) {
@@ -172,6 +173,7 @@ class HomeTabSerializer
         $this->sipe('class', 'setClass', $data, $homeTab);
         $this->sipe('display.color', 'setColor', $data, $homeTabConfig);
         $this->sipe('display.centerTitle', 'setCenterTitle', $data, $homeTabConfig);
+        $this->sipe('display.showTitle', 'setShowTitle', $data, $homeTabConfig);
 
         if (isset($data['restrictions'])) {
             if (isset($data['restrictions']['hidden'])) {
