@@ -159,7 +159,7 @@ class PlatformDefaults implements ParameterProviderInterface
             ],
             'header_search' => [
                 'user' => true,
-                'workspace' => false,
+                'workspace' => true,
                 'resource' => true,
             ],
             'admin' => [
