@@ -125,7 +125,6 @@ class UserSerializer
             'lastName' => $user->getLastName(),
             'username' => $user->getUsername(),
             'picture' => $this->serializePicture($user),
-            'poster' => $this->serializePoster($user),
             'thumbnail' => $this->serializeThumbnail($user),
             'email' => $showEmail ? $user->getEmail() : null,
             'administrativeCode' => $user->getAdministrativeCode(),
@@ -159,6 +158,7 @@ class UserSerializer
             }, $user->getGroupRoles());
 
             $serializedUser = array_merge($serializedUser, [
+                'poster' => $this->serializePoster($user),
                 'meta' => $this->serializeMeta($user),
                 'restrictions' => $this->serializeRestrictions($user),
                 'roles' => array_merge($userRoles, $groupRoles),

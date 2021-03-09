@@ -2,6 +2,7 @@
 
 namespace Claroline\AuthenticationBundle\Serializer;
 
+use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AuthenticationBundle\Entity\ApiToken;
@@ -47,7 +48,7 @@ class ApiTokenSerializer
             'id' => $token->getUuid(),
             'token' => $token->getToken(),
             'description' => $token->getDescription(),
-            'user' => $token->getUser() ? $this->userSerializer->serialize($token->getUser()) : null,
+            'user' => $token->getUser() ? $this->userSerializer->serialize($token->getUser(), [Options::SERIALIZE_MINIMAL]) : null,
             'permissions' => [
                 'edit' => $this->authorization->isGranted('EDIT', $token),
                 'delete' => $this->authorization->isGranted('DELETE', $token),
