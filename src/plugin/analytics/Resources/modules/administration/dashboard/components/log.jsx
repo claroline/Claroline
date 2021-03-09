@@ -41,9 +41,12 @@ const DashboardLog = () =>
           displayed: false
         }, {
           name: 'event',
-          type: 'string',
+          type: 'translation',
           label: trans('event'),
-          displayed: false
+          displayed: false,
+          options: {
+            domain: 'security'
+          }
         }
       ]}
     />

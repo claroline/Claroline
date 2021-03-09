@@ -58,7 +58,7 @@ class SecurityEventSubscriber implements EventSubscriberInterface
     {
         $logEntry = new SecurityLog();
         $logEntry->setDetails($event->getMessage($this->translator));
-        $logEntry->setEvent($this->translator->trans($eventName, [], 'security'));
+        $logEntry->setEvent($eventName);
         $logEntry->setTarget($event->getUser());
         $logEntry->setDoer($this->security->getUser());
 
@@ -78,7 +78,7 @@ class SecurityEventSubscriber implements EventSubscriberInterface
                 ],
                 'security'
             ));
-            $logEntry->setEvent($this->translator->trans($eventName, [], 'security'));
+            $logEntry->setEvent($eventName);
             $logEntry->setTarget($event->getTargetUser());
             $logEntry->setDoer($this->security->getUser());
 
