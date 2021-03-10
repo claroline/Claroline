@@ -1,0 +1,7 @@
+services:
+
+    Claroline\MessageBundle\Subscriber\MessageSubscriber:
+        arguments:
+            - '@Claroline\MessageBundle\Manager\MessageManager'
+        tags:
+            - { name: kernel.event_subscriber }

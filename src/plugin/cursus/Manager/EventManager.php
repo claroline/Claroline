@@ -14,6 +14,7 @@ namespace Claroline\CursusBundle\Manager;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Event\CatalogEvents\MessageEvents;
 use Claroline\CoreBundle\Event\SendMessageEvent;
 use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\Template\TemplateManager;
@@ -248,7 +249,7 @@ class EventManager
             $content = $this->templateManager->getTemplate('training_event_invitation', $placeholders, $locale);
 
             $this->dispatcher->dispatch(
-                'claroline_message_sending',
+                MessageEvents::MESSAGE_SENDING,
                 SendMessageEvent::class,
                 [
                     $content,

@@ -13,3 +13,4 @@ services:
           - '@claroline.manager.role_manager'
           - '@translator'
           - '@service_container'
+          - '@Claroline\AppBundle\Event\StrictDispatcher'

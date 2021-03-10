@@ -18,6 +18,7 @@ use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Event\CatalogEvents\MessageEvents;
 use Claroline\CoreBundle\Event\SendMessageEvent;
 use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\Task\ScheduledTaskManager;
@@ -165,7 +166,7 @@ class PlannedNotificationManager
     {
         foreach ($messages as $message) {
             $this->dispatcher->dispatch(
-                'claroline_message_sending',
+                MessageEvents::MESSAGE_SENDING,
                 SendMessageEvent::class,
                 [
                     $message->getContent(),

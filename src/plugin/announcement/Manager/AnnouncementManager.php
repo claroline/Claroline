@@ -20,6 +20,8 @@ use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Event\CatalogEvents\MessageEvents;
+use Claroline\CoreBundle\Event\SendMessageEvent;
 use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\Task\ScheduledTaskManager;
 use Claroline\CoreBundle\Repository\User\RoleRepository;
@@ -126,14 +128,14 @@ class AnnouncementManager
         $this->om->flush();
 
         $this->eventDispatcher->dispatch(
-            'claroline_message_sending_to_users',
-            'SendMessage',
+            MessageEvents::MESSAGE_SENDING,
+            SendMessageEvent::class,
             [
-                $message['sender'],
                 $message['content'],
                 $message['object'],
                 null,
                 $message['receivers'],
+                $message['sender'],
             ]
         );
 

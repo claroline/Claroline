@@ -17,5 +17,4 @@ services:
             - '@Claroline\MessageBundle\Manager\MessageManager'
             - '@Claroline\CoreBundle\Manager\Task\ScheduledTaskManager'
         tags:
-            - { name: kernel.event_listener, event: claroline_message_sending, method: onMessageSending }
             - { name: kernel.event_listener, event: claroline_scheduled_task_execute_message, method: onExecuteMessageTask }

@@ -18,6 +18,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Event\CatalogEvents\MessageEvents;
 use Claroline\CoreBundle\Event\SendMessageEvent;
 use Claroline\CoreBundle\Library\RoutingHelper;
 use Claroline\CoreBundle\Manager\MailManager;
@@ -526,7 +527,7 @@ class SessionManager
             $content = $this->templateManager->getTemplate($templateName, $placeholders, $locale);
 
             $this->dispatcher->dispatch(
-                'claroline_message_sending',
+                MessageEvents::MESSAGE_SENDING,
                 SendMessageEvent::class,
                 [
                     $content,

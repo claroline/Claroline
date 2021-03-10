@@ -13,7 +13,6 @@ namespace Claroline\MessageBundle\Listener;
 
 use Claroline\CoreBundle\Entity\Task\ScheduledTask;
 use Claroline\CoreBundle\Event\GenericDataEvent;
-use Claroline\CoreBundle\Event\SendMessageEvent;
 use Claroline\CoreBundle\Manager\Task\ScheduledTaskManager;
 use Claroline\MessageBundle\Manager\MessageManager;
 
@@ -30,18 +29,6 @@ class MessageListener
     ) {
         $this->messageManager = $messageManager;
         $this->taskManager = $taskManager;
-    }
-
-    public function onMessageSending(SendMessageEvent $event)
-    {
-        $this->messageManager->sendMessage(
-            $event->getContent(),
-            $event->getObject(),
-            $event->getReceiver(),
-            $event->getUsers(),
-            $event->getSender(),
-            $event->getWithMail()
-        );
     }
 
     public function onExecuteMessageTask(GenericDataEvent $event)
