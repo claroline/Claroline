@@ -25,9 +25,6 @@ class AgendaSource
     /** @var TokenStorageInterface */
     private $tokenStorage;
 
-    /**
-     * AgendaSource constructor.
-     */
     public function __construct(
         FinderProvider $finder,
         TokenStorageInterface $tokenStorage

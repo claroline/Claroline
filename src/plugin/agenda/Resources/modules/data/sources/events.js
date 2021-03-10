@@ -26,11 +26,6 @@ export default {
         label: trans('description'),
         displayed: true
       }, {
-        name: 'allDay',
-        type: 'boolean',
-        label: trans('all_day', {}, 'agenda'),
-        displayed: true
-      }, {
         name: 'start',
         type: 'date',
         label: trans('start_date'),

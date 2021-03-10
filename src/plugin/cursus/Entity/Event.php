@@ -40,7 +40,7 @@ class Event
      *
      * @var string
      */
-    protected $name;
+    private $name;
 
     /**
      * @ORM\ManyToOne(
@@ -51,21 +51,21 @@ class Event
      *
      * @var Session
      */
-    protected $session;
+    private $session;
 
     /**
      * @ORM\Column(name="start_date", type="datetime", nullable=false)
      *
      * @var \DateTime
      */
-    protected $startDate;
+    private $startDate;
 
     /**
      * @ORM\Column(name="end_date", type="datetime", nullable=false)
      *
      * @var \DateTime
      */
-    protected $endDate;
+    private $endDate;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Organization\Location")
@@ -73,26 +73,23 @@ class Event
      *
      * @var Location
      */
-    protected $location;
+    private $location;
 
     /**
      * @ORM\Column(name="location_extra", type="text", nullable=true)
      */
-    protected $locationExtra;
+    private $locationExtra;
 
     /**
      * @ORM\Column(name="max_users", nullable=true, type="integer")
      */
-    protected $maxUsers;
+    private $maxUsers;
 
     /**
      * @ORM\Column(name="registration_type", type="integer", nullable=false, options={"default" = 0})
      */
-    protected $registrationType = Session::REGISTRATION_AUTO;
+    private $registrationType = Session::REGISTRATION_AUTO;
 
-    /**
-     * SessionEvent constructor.
-     */
     public function __construct()
     {
         $this->refreshUuid();
@@ -145,10 +142,7 @@ class Event
         return $this->endDate && $now > $this->endDate;
     }
 
-    /**
-     * @return Location
-     */
-    public function getLocation()
+    public function getLocation(): ?Location
     {
         return $this->location;
     }

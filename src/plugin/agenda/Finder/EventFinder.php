@@ -67,7 +67,7 @@ class EventFinder extends AbstractFinder
                     }
                     break;
                 case 'userId':
-                    $qb->leftJoin('obj.user', 'u');
+                    $qb->leftJoin('obj.creator', 'u');
                     $qb->andWhere("u.uuid = :{$filterName}");
                     $qb->setParameter($filterName, $filterValue);
                     break;
@@ -88,7 +88,7 @@ class EventFinder extends AbstractFinder
                     }
 
                     // join for creator
-                    $qb->leftJoin('obj.user', 'u');
+                    $qb->leftJoin('obj.creator', 'u');
 
                     // join for tool rights
                     $qb->leftJoin('w.orderedTools', 'ot');

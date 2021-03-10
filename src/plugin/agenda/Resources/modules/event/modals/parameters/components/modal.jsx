@@ -14,7 +14,7 @@ import {selectors} from '#/plugin/agenda/event/modals/parameters/store/selectors
 const ParametersModal = props =>
   <Modal
     {...omit(props, 'event', 'saveEnabled', 'loadEvent', 'update', 'save', 'onSave')}
-    icon="fa fa-fw fa-cog"
+    icon={props.event.id ? 'fa fa-fw fa-cog' : 'fa fa-fw fa-plus'}
     title={props.event.id ? props.event.title : trans('new_event', {}, 'agenda')}
     subtitle={trans('parameters')}
     onEntering={() => props.loadEvent(props.event)}
@@ -44,7 +44,7 @@ const ParametersModal = props =>
             }, {
               name: 'title',
               type: 'string',
-              label: trans('title'),
+              label: trans('name'),
               required: true
             }, {
               name: 'dates',

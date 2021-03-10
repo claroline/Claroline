@@ -32,12 +32,12 @@ class EventVoter extends AbstractVoter
         return VoterInterface::ACCESS_ABSTAIN;
     }
 
-    public function checkEdit(TokenInterface $token, $object)
+    public function checkEdit(TokenInterface $token, Event $object)
     {
         $workspace = $object->getWorkspace();
 
         $currentUser = $token->getUser();
-        $user = $object->getUser();
+        $user = $object->getCreator();
 
         // the user is the creator of the event
         if ('anon.' !== $currentUser && (!$user || $currentUser->getUuid() === $user->getUuid())) {

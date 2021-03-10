@@ -23,8 +23,8 @@ class EventCrud
         $object = $event->getObject();
 
         $user = $this->tokenStorage->getToken()->getUser();
-        if ($user instanceof User && empty($object->getUser())) {
-            $object->setUser($user);
+        if ($user instanceof User && empty($object->getCreator())) {
+            $object->setCreator($user);
         }
     }
 }

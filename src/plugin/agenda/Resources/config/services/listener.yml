@@ -16,9 +16,3 @@ services:
         tags:
             - { name: kernel.event_listener, event: data_source.events.load, method: getEventsData }
             - { name: kernel.event_listener, event: data_source.tasks.load, method: getTasksData }
-
-    Claroline\AgendaBundle\Listener\MergeUserListener:
-        arguments:
-            - '@Claroline\AgendaBundle\Manager\AgendaManager'
-        tags:
-            - { name: kernel.event_listener, event: merge_users, method: onMerge }

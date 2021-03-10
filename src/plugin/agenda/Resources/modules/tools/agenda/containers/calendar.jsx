@@ -34,12 +34,11 @@ const AgendaCalendar = withRouter(
       },
       create(event, context, user) {
         const end = moment(event.start, 'YYYY-MM-DDThh:mm:ss')
-        //default start date is 12am so it's cleaner that way as we end at the end of the day
-        end.add(12, 'h')
+        // default event duration to 1 hour
+        end.add(1, 'h')
         dispatch(modalActions.showModal(MODAL_EVENT_PARAMETERS, {
           event: merge({}, event, {
             workspace: !isEmpty(context) ? context : null,
-            allDay: true,
             end: end.format('YYYY-MM-DDThh:mm:ss'),
             meta: {
               creator: user

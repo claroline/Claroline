@@ -11,46 +11,51 @@
 
 namespace Claroline\AgendaBundle\Entity;
 
-use Claroline\AgendaBundle\Validator\Constraints\DateRange;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Claroline\AppBundle\Entity\Meta\Creator;
+use Claroline\AppBundle\Entity\Meta\Description;
+use Claroline\AppBundle\Entity\Meta\Name;
+use Claroline\AppBundle\Entity\Meta\Poster;
 use Claroline\AppBundle\Entity\Meta\Thumbnail;
-use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Organization\Location;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass="Claroline\AgendaBundle\Repository\EventRepository")
+ * @ORM\Entity()
  * @ORM\Table(name="claro_event")
- * @DateRange()
  */
 class Event
 {
     use Id;
+    use Creator;
+    use Description;
     use Uuid;
+    use Name;
+    use Poster;
     use Thumbnail;
 
     /**
-     * @ORM\Column(length=50)
-     * @Assert\NotBlank()
+     * @ORM\Column(name="event_type")
+     *
+     * @var string
      */
-    private $title;
+    private $type;
 
     /**
      * @ORM\Column(name="start_date", type="datetime", nullable=true)
+     *
+     * @var \DateTimeInterface
      */
     private $start;
 
     /**
      * @ORM\Column(name="end_date", type="datetime", nullable=true)
+     *
+     * @var \DateTimeInterface
      */
     private $end;
-
-    /**
-     * @ORM\Column(nullable=true, type="text")
-     */
-    private $description;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace", cascade={"persist"})
@@ -59,30 +64,19 @@ class Event
     private $workspace;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User", cascade={"persist"})
-     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
-     */
-    private $user;
-
-    /**
-     * @ORM\Column(name="is_all_day", type="boolean")
-     */
-    private $allDay = false;
-
-    /**
-     * @ORM\Column(name="is_task", type="boolean")
-     */
-    private $isTask = false;
-
-    /**
-     * @ORM\Column(name="is_task_done", type="boolean")
-     */
-    private $isTaskDone = false;
-
-    /**
      * @ORM\Column(nullable=true)
+     *
+     * @var string
      */
-    private $priority;
+    private $color;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Organization\Location")
+     * @ORM\JoinColumn(name="location_id", nullable=true, onDelete="SET NULL")
+     *
+     * @var Location
+     */
+    private $location;
 
     /**
      * @ORM\OneToMany(targetEntity="Claroline\AgendaBundle\Entity\EventInvitation", mappedBy="event")
@@ -97,14 +91,14 @@ class Event
         $this->eventInvitations = new ArrayCollection();
     }
 
-    public function getTitle()
+    public function getType(): ?string
     {
-        return $this->title;
+        return $this->type;
     }
 
-    public function setTitle($title)
+    public function setType(string $type)
     {
-        $this->title = $title;
+        $this->type = $type;
     }
 
     public function getStart()
@@ -127,16 +121,6 @@ class Event
         $this->end = $end;
     }
 
-    public function getDescription()
-    {
-        return $this->description;
-    }
-
-    public function setDescription($description)
-    {
-        $this->description = $description;
-    }
-
     public function getWorkspace()
     {
         return $this->workspace;
@@ -147,122 +131,36 @@ class Event
         $this->workspace = $workspace;
     }
 
-    public function getUser()
+    public function getColor(): ?string
     {
-        return $this->user;
+        return $this->color;
     }
 
-    public function setUser(User $user)
+    public function setColor(string $color = null)
     {
-        $this->user = $user;
+        $this->color = $color;
     }
 
-    public function isAllDay()
+    public function getLocation(): ?Location
     {
-        return $this->allDay;
+        return $this->location;
     }
 
-    public function setIsAllDay($isAllDay)
+    public function setLocation(Location $location = null)
     {
-        $this->allDay = (bool) $isAllDay;
+        $this->location = $location;
     }
 
-    public function getPriority()
-    {
-        return $this->priority;
-    }
-
-    public function setPriority($priority)
-    {
-        $this->priority = $priority;
-    }
-
-    public function setIsTask($isTask)
-    {
-        $this->isTask = $isTask;
-    }
-
-    public function getIsTask()
-    {
-        return $this->isTask;
-    }
-
-    public function isTask()
-    {
-        return $this->isTask;
-    }
-
-    public function setIsTaskDone($isTaskDone)
-    {
-        $this->isTaskDone = $isTaskDone;
-
-        return $this;
-    }
-
-    public function isTaskDone()
-    {
-        return $this->isTaskDone;
-    }
-
-    /**
-     * Set allDay.
-     *
-     * @param bool $allDay
-     *
-     * @return Event
-     */
-    public function setAllDay($allDay)
-    {
-        $this->allDay = $allDay;
-
-        return $this;
-    }
-
-    /**
-     * Get allDay.
-     *
-     * @return bool
-     */
-    public function getAllDay()
-    {
-        return $this->allDay;
-    }
-
-    /**
-     * Get isTaskDone.
-     *
-     * @return bool
-     */
-    public function getIsTaskDone()
-    {
-        return $this->isTaskDone;
-    }
-
-    /**
-     * Add eventInvitation.
-     *
-     * @return Event
-     */
     public function addEventInvitation(EventInvitation $eventInvitation)
     {
         $this->eventInvitations[] = $eventInvitation;
-
-        return $this;
     }
 
-    /**
-     * Remove eventInvitation.
-     */
     public function removeEventInvitation(EventInvitation $eventInvitation)
     {
         $this->eventInvitations->removeElement($eventInvitation);
     }
 
-    /**
-     * Get eventInvitations.
-     *
-     * @return ArrayCollection
-     */
     public function getEventInvitations()
     {
         return $this->eventInvitations;

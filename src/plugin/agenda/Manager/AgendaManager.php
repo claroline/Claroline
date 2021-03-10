@@ -13,49 +13,40 @@ namespace Claroline\AgendaBundle\Manager;
 
 use Claroline\AgendaBundle\Entity\Event;
 use Claroline\AgendaBundle\Entity\EventInvitation;
-use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\CatalogEvents\MessageEvents;
 use Claroline\CoreBundle\Event\SendMessageEvent;
-use Claroline\CoreBundle\Manager\RoleManager;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AgendaManager
 {
+    /** @var ObjectManager */
     private $om;
+    /** @var TokenStorageInterface */
     private $tokenStorage;
-    private $authorization;
-    private $rm;
-    private $translator;
-    private $container;
-    private $projectDir;
+    /** @var RouterInterface */
+    private $router;
+    /** @var EventDispatcherInterface */
     private $dispatcher;
+    /** @var TranslatorInterface */
+    private $translator;
 
     public function __construct(
         ObjectManager $om,
-        string $projectDir,
         TokenStorageInterface $tokenStorage,
-        AuthorizationCheckerInterface $authorization,
-        RoleManager $rm,
-        TranslatorInterface $translator,
-        ContainerInterface $container,
-        StrictDispatcher $dispatcher
+        RouterInterface $router,
+        EventDispatcherInterface $dispatcher,
+        TranslatorInterface $translator
     ) {
-        $this->projectDir = $projectDir;
         $this->om = $om;
         $this->tokenStorage = $tokenStorage;
-        $this->authorization = $authorization;
-        $this->rm = $rm;
-        $this->translator = $translator;
-        $this->container = $container;
+        $this->router = $router;
         $this->dispatcher = $dispatcher;
+        $this->translator = $translator;
     }
 
     public function sendInvitation(Event $event, array $users = [])
@@ -76,92 +67,36 @@ class AgendaManager
         }
         $this->om->flush();
 
-        $creator = $this->tokenStorage->getToken()->getUser();
-
-        $this->dispatcher->dispatch(
-            MessageEvents::MESSAGE_SENDING,
-            SendMessageEvent::class,
-            [
-                $this->translator->trans('send_message_content', [
-                    '%Sender%' => $creator->getUserName(),
-                    '%Start%' => $event->getStart(),
-                    '%End%' => $event->getEnd(),
-                    '%Description%' => $event->getDescription(),
-                    '%JoinAction%' => $this->container->get('router')->generate(
-                        'claro_agenda_invitation_action',
-                        ['event' => $event->getId(), 'action' => EventInvitation::JOIN],
-                        UrlGeneratorInterface::ABSOLUTE_URL
-                    ),
-                    '%MaybeAction%' => $this->container->get('router')->generate(
-                        'claro_agenda_invitation_action',
-                        ['event' => $event->getId(), 'action' => EventInvitation::MAYBE],
-                        UrlGeneratorInterface::ABSOLUTE_URL
-                    ),
-                    '%ResignAction%' => $this->container->get('router')->generate(
-                        'claro_agenda_invitation_action',
-                        ['event' => $event->getId(), 'action' => EventInvitation::RESIGN],
-                        UrlGeneratorInterface::ABSOLUTE_URL
-                    ),
-                ], 'agenda'),
-                $this->translator->trans('send_message_object', ['%EventName%' => $event->getTitle()], 'agenda'),
-                [$users],
-                $creator,
-                false,
-            ]
+        // TODO : replace by Template
+        $creator = $event->getCreator() ?? $this->tokenStorage->getToken()->getUser();
+        $message = new SendMessageEvent(
+            $this->translator->trans('send_message_content', [
+                '%Sender%' => $creator->getUserName(),
+                '%Start%' => $event->getStart(),
+                '%End%' => $event->getEnd(),
+                '%Description%' => $event->getDescription(),
+                '%JoinAction%' => $this->router->generate(
+                    'claro_agenda_invitation_action',
+                    ['event' => $event->getId(), 'action' => EventInvitation::JOIN],
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                ),
+                '%MaybeAction%' => $this->router->generate(
+                    'claro_agenda_invitation_action',
+                    ['event' => $event->getId(), 'action' => EventInvitation::MAYBE],
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                ),
+                '%ResignAction%' => $this->router->generate(
+                    'claro_agenda_invitation_action',
+                    ['event' => $event->getId(), 'action' => EventInvitation::RESIGN],
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                ),
+            ], 'agenda'),
+            $this->translator->trans('send_message_object', ['%EventName%' => $event->getName()], 'agenda'),
+            $users,
+            $creator,
+            false
         );
-    }
 
-    public function checkOpenAccess(Workspace $workspace)
-    {
-        if (!$this->authorization->isGranted('agenda', $workspace)) {
-            throw new AccessDeniedException('You cannot open the agenda');
-        }
-    }
-
-    public function checkEditAccess(Workspace $workspace)
-    {
-        if (!$this->authorization->isGranted(['agenda', 'edit'], $workspace)) {
-            throw new AccessDeniedException('You cannot edit the agenda');
-        }
-    }
-
-    /**
-     * Find every Event for a given user and the replace him by another.
-     *
-     * @return int
-     */
-    public function replaceEventUser(User $from, User $to)
-    {
-        $events = $this->om->getRepository('ClarolineAgendaBundle:Event')->findBy(['user' => $from]);
-
-        if (count($events) > 0) {
-            foreach ($events as $event) {
-                $event->setUser($to);
-            }
-
-            $this->om->flush();
-        }
-
-        return count($events);
-    }
-
-    /**
-     * Find every EventInvitation for a given user and the replace him by another.
-     *
-     * @return int
-     */
-    public function replaceEventInvitationUser(User $from, User $to)
-    {
-        $eventInvitations = $this->om->getRepository('ClarolineAgendaBundle:EventInvitation')->findByUser($from);
-
-        if (count($eventInvitations) > 0) {
-            foreach ($eventInvitations as $eventInvitation) {
-                $eventInvitation->setUser($to);
-            }
-
-            $this->om->flush();
-        }
-
-        return count($eventInvitations);
+        $this->dispatcher->dispatch($message, MessageEvents::MESSAGE_SENDING);
     }
 }
