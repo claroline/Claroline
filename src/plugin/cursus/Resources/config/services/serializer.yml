@@ -33,8 +33,7 @@ services:
         arguments:
             - '@security.authorization_checker'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
-            - '@Claroline\CoreBundle\API\Serializer\User\LocationSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\Planning\PlannedObjectSerializer'
             - '@Claroline\CursusBundle\Serializer\SessionSerializer'
 
     Claroline\CursusBundle\Serializer\EventPresenceSerializer:

@@ -13,8 +13,8 @@ const AGENDA_VIEWS = {
   week: ViewWeek,*/
   month: ViewMonth,
   year: ViewYear,
-  schedule: ViewSchedule/*,*/
-  //list: ViewList
+  schedule: ViewSchedule/*,
+  list: ViewList*/
 }
 
 export {

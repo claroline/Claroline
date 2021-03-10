@@ -12,7 +12,7 @@ import {UrlButton} from '#/main/app/buttons/url/components/button'
 
 import {EventMicro} from '#/plugin/agenda/event/components/micro'
 import {sortEvents} from '#/plugin/agenda/event/utils'
-import {Event as EventTypes} from '#/plugin/agenda/event/prop-types'
+import {Event as EventTypes} from '#/plugin/agenda/prop-types'
 import {route} from '#/plugin/agenda/tools/agenda/routing'
 
 const DayPopover = props =>
@@ -49,7 +49,7 @@ const DayPopover = props =>
             <EventMicro
               key={event.id}
               event={event}
-              actions={props.eventActions(event)}
+              reload={props.reload}
             />
           ))}
         </Fragment>
@@ -69,7 +69,7 @@ DayPopover.propTypes = {
   events: T.arrayOf(T.shape(
     EventTypes.propTypes
   )).isRequired,
-  eventActions: T.func.isRequired
+  reload: T.func.isRequired
 }
 
 const Month = props =>
@@ -111,7 +111,7 @@ const Month = props =>
 
                     return start.isSameOrBefore(current, 'day') && end.isSameOrAfter(current, 'day')
                   })}
-                  eventActions={props.eventActions}
+                  reload={props.reload}
                 />
               </td>
             )
@@ -132,7 +132,7 @@ Month.propTypes = {
   events: T.arrayOf(T.shape(
     EventTypes.propTypes
   )).isRequired,
-  eventActions: T.func.isRequired
+  reload: T.func.isRequired
 }
 
 const AgendaViewYear = (props) =>
@@ -154,7 +154,7 @@ const AgendaViewYear = (props) =>
           loaded={props.loaded}
           loadEvents={props.loadEvents}
           events={props.events}
-          eventActions={props.eventActions}
+          reload={props.reload}
         />
       </div>
     )}
@@ -177,7 +177,7 @@ AgendaViewYear.propTypes = {
     EventTypes.propTypes
   )).isRequired,
   create: T.func.isRequired,
-  eventActions: T.func.isRequired
+  reload: T.func.isRequired
 }
 
 export {

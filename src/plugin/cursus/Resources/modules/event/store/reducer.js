@@ -1,10 +1,13 @@
 import {combineReducers, makeReducer} from '#/main/app/store/reducer'
 import {makeListReducer} from '#/main/app/content/list/store/reducer'
 
-import {LOAD_EVENT} from '#/plugin/cursus/event/store/actions'
+import {LOAD_EVENT, EVENT_SET_LOADED} from '#/plugin/cursus/event/store/actions'
 import {selectors} from '#/plugin/cursus/event/store/selectors'
 
 export const reducer = combineReducers({
+  loaded: makeReducer(false, {
+    [EVENT_SET_LOADED]: (state, action) => action.loaded
+  }),
   event: makeReducer(null, {
     [LOAD_EVENT]: (state, action) => action.event
   }),

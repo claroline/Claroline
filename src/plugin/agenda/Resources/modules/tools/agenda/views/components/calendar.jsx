@@ -19,12 +19,12 @@ class CalendarViewComponent extends Component {
     }
   }
 
-  loadEvents() {
+  loadEvents(force = false) {
     // load events list
     const reference = moment(this.props.referenceDate)
     const view = AGENDA_VIEWS[this.props.view]
 
-    this.props.loadEvents(view.range(reference))
+    this.props.loadEvents(view.range(reference), force)
   }
 
   render() {
@@ -35,7 +35,7 @@ class CalendarViewComponent extends Component {
 CalendarViewComponent.propTYpes = {
   loaded: T.bool.isRequired,
   view: T.string.isRequired,
-  referenceDate: T.string.isRequired,
+  referenceDate: T.object.isRequired,
   loadEvents: T.func.isRequired,
   children: T.node
 }

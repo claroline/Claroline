@@ -7,9 +7,11 @@ import {actions as listActions} from '#/main/app/content/list/store/actions'
 import {selectors} from '#/plugin/cursus/event/store/selectors'
 
 export const LOAD_EVENT = 'LOAD_EVENT'
+export const EVENT_SET_LOADED = 'EVENT_SET_LOADED'
 
 export const actions = {}
 
+actions.setLoaded = makeActionCreator(EVENT_SET_LOADED, 'loaded')
 actions.loadEvent = makeActionCreator(LOAD_EVENT, 'event', 'registrations')
 
 actions.open = (id, force = false) => (dispatch, getState) => {
@@ -19,8 +21,14 @@ actions.open = (id, force = false) => (dispatch, getState) => {
       [API_REQUEST]: {
         url: ['apiv2_cursus_event_open', {id: id}],
         silent: true,
-        before: () => dispatch(actions.loadEvent(null, null)),
-        success: (data) => dispatch(actions.loadEvent(data.event, data.registrations))
+        before: () => {
+          dispatch(actions.setLoaded(false))
+          dispatch(actions.loadEvent(null, null))
+        },
+        success: (data) => {
+          dispatch(actions.loadEvent(data.event, data.registrations))
+          dispatch(actions.setLoaded(true))
+        }
       }
     })
   }

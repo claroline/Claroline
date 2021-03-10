@@ -32,7 +32,7 @@ const EventList = (props) =>
         modal: [MODAL_TRAINING_EVENT_ABOUT, {
           event: rows[0]
         }],
-        scope: ['object'],
+        scope: ['object']
       }, {
         name: 'edit',
         type: MODAL_BUTTON,
@@ -95,7 +95,7 @@ const EventList = (props) =>
         placeholder: trans('online_session', {}, 'cursus'),
         displayed: true
       }, {
-        name: 'restrictions.dates[0]',
+        name: 'start',
         alias: 'startDate',
         type: 'date',
         label: trans('start_date'),
@@ -104,7 +104,7 @@ const EventList = (props) =>
           time: true
         }
       }, {
-        name: 'restrictions.dates[1]',
+        name: 'end',
         alias: 'endDate',
         type: 'date',
         label: trans('end_date'),

@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, {Component, cloneElement} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
@@ -105,7 +105,7 @@ class GridSelection extends Component {
                 >
                   {typeof type.icon === 'string' ?
                     <span className={classes('type-icon', type.icon)} /> :
-                    React.cloneElement(type.icon, {
+                    cloneElement(type.icon, {
                       className: 'type-icon'
                     })
                   }

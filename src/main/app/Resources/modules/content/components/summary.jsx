@@ -58,8 +58,8 @@ class SummaryLink extends Component {
               toolbar="collapse more"
               actions={(this.props.additional || []).concat([
                 {
-                  type: CALLBACK_BUTTON,
                   name: 'collapse',
+                  type: CALLBACK_BUTTON,
                   icon: classes('fa fa-fw', {
                     'fa-caret-right': this.state.collapsed,
                     'fa-caret-down': !this.state.collapsed

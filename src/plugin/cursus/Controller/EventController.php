@@ -292,7 +292,7 @@ class EventController extends AbstractCrudController
         $this->checkPermission('EDIT', $sessionEvent, [], true);
 
         $sessionEventUsers = $this->decodeIdsString($request, EventUser::class);
-        $this->manager->removeUsers($sessionEventUsers);
+        $this->manager->removeUsers($sessionEvent, $sessionEventUsers);
 
         return new JsonResponse(null, 204);
     }

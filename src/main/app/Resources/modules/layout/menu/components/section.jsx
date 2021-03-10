@@ -9,13 +9,22 @@ const MenuSection = props =>
   <nav className={classes('app-menu-section', props.className, {
     opened: props.opened
   })}>
-    <h2 className="h4">
+    <h2 className="h4 app-menu-section-title">
       <Button
+        className="app-menu-section-toggle"
         type={CALLBACK_BUTTON}
         icon={props.icon}
         label={props.title}
         callback={props.toggle}
-      />
+      >
+        {!props.opened &&
+          <span className="toggle fa fa-fw fa-chevron-right" />
+        }
+
+        {props.opened &&
+          <span className="toggle fa fa-fw fa-chevron-down" />
+        }
+      </Button>
     </h2>
 
     {props.opened && props.children}

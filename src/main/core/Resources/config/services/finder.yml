@@ -18,6 +18,8 @@ services:
                   arguments:
                      - '@Claroline\AppBundle\Event\StrictDispatcher'
 
+    Claroline\CoreBundle\API\Finder\Planning\PlannedObjectFinder: ~
+
     Claroline\CoreBundle\API\Finder\TransferFinder: ~
 
     Claroline\CoreBundle\API\Finder\Workspace\WorkspaceFinder:

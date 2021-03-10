@@ -1465,7 +1465,6 @@
     "group_password_reset": "Reset the user passwords",
     "send_password_reset": "Do you really want to initialize the passwords of the following groups: %groups%",
     "guest": "Guest",
-    "guests": "Guests",
     "restricted_access": "Restricted access",
     "sorting": "Sorting",
     "modification_date": "Last modification",

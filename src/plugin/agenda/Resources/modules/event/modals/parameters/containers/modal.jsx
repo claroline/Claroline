@@ -8,7 +8,7 @@ import {
   selectors as formSelect
 } from '#/main/app/content/form/store'
 
-import {Event as EventTypes} from '#/plugin/agenda/event/prop-types'
+import {Event as EventTypes} from '#/plugin/agenda/prop-types'
 import {ParametersModal as ParametersModalComponent} from '#/plugin/agenda/event/modals/parameters/components/modal'
 import {reducer, selectors} from '#/plugin/agenda/event/modals/parameters/store'
 
@@ -22,7 +22,7 @@ const ParametersModal = withReducer(selectors.STORE_NAME, reducer)(
         dispatch(formActions.updateProp(selectors.STORE_NAME, prop, value))
       },
       save(event, onSave) {
-        dispatch(formActions.saveForm(selectors.STORE_NAME, event.id ? ['apiv2_event_update', {id: event.id}] : ['apiv2_event_create']))
+        dispatch(formActions.saveForm(selectors.STORE_NAME, event.id ? ['apiv2_planned_object_update', {id: event.id}] : ['apiv2_planned_object_create']))
           .then((response) => {
             if (onSave) {
               onSave(response)

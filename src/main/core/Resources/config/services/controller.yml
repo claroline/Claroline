@@ -20,6 +20,13 @@ services:
         arguments:
             - '@Claroline\CoreBundle\Manager\PluginManager'
 
+    Claroline\CoreBundle\Controller\APINew\Planning\PlannedObjectController:
+        parent: Claroline\AppBundle\Controller\AbstractCrudController
+        public: true
+        arguments:
+            - '@security.token_storage'
+            - '@request_stack'
+
     Claroline\CoreBundle\Controller\APINew\Resource\Types\DirectoryController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
         public: true

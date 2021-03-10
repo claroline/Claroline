@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Entity\Workspace;
 
+use Claroline\AppBundle\Entity\IdentifiableInterface;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Creator;
@@ -36,7 +37,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     @ORM\Index(name="name_idx", columns={"name"})
  * })
  */
-class Workspace
+class Workspace implements IdentifiableInterface
 {
     // identifiers
     use Id;

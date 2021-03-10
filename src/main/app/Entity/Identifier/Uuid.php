@@ -19,20 +19,16 @@ trait Uuid
 
     /**
      * Gets UUID.
-     *
-     * @return string
      */
-    public function getUuid()
+    public function getUuid(): string
     {
         return $this->uuid;
     }
 
     /**
      * Sets UUID.
-     *
-     * @param $uuid
      */
-    public function setUuid($uuid)
+    public function setUuid(string $uuid)
     {
         $this->uuid = $uuid;
     }
