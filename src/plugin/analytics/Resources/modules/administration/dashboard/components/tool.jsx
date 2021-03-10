@@ -51,7 +51,7 @@ const DashboardTool = (props) =>
           return Community
         }
       }, {
-        path: '/logs',
+        path: '/security',
         component: DashboardLog
       }
     ]}

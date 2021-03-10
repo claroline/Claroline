@@ -7,7 +7,9 @@ use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Security\Core\Authentication\Token\SwitchUserToken;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Http\Event\SwitchUserEvent;
 use Symfony\Contracts\EventDispatcher\Event;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -48,6 +50,7 @@ class SecurityEventSubscriber implements EventSubscriberInterface
             SecurityEvents::VIEW_AS => 'logEvent',
             SecurityEvents::VALIDATE_EMAIL => 'logEvent',
             SecurityEvents::AUTHENTICATION_FAILURE => 'logEvent',
+            SecurityEvents::SWITCH_USER => 'logEventSwitchUser',
         ];
     }
 
@@ -61,5 +64,26 @@ class SecurityEventSubscriber implements EventSubscriberInterface
 
         $this->em->persist($logEntry);
         $this->em->flush();
+    }
+
+    public function logEventSwitchUser(SwitchUserEvent $event, string $eventName): void
+    {
+        if (!$this->security->getToken() instanceof SwitchUserToken) {
+            $logEntry = new SecurityLog();
+            $logEntry->setDetails($this->translator->trans(
+                'switchUser',
+                [
+                    'username' => $this->security->getUser(),
+                    'target' => $event->getTargetUser(),
+                ],
+                'security'
+            ));
+            $logEntry->setEvent($eventName);
+            $logEntry->setTarget($event->getTargetUser());
+            $logEntry->setDoer($this->security->getUser());
+
+            $this->em->persist($logEntry);
+            $this->em->flush();
+        }
     }
 }

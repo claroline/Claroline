@@ -9,7 +9,7 @@ import {selectors} from '#/plugin/analytics/administration/dashboard/store/selec
 
 const DashboardLog = () =>
   <ToolPage
-    subtitle={trans('logs')}
+    subtitle={trans('security')}
   >
     <ListData
       name={selectors.LIST_NAME}
@@ -19,6 +19,11 @@ const DashboardLog = () =>
       }}
       definition={[
         {
+          name: 'doer',
+          type: 'user',
+          label: trans('user'),
+          displayed: true
+        }, {
           name: 'date',
           label: trans('date'),
           type: 'date',
@@ -30,20 +35,18 @@ const DashboardLog = () =>
           label: trans('details'),
           displayed: true
         }, {
-          name: 'doer.name',
-          type: 'string',
-          label: trans('doer'),
-          displayed: true
-        }, {
-          name: 'target.name',
-          type: 'string',
+          name: 'target',
+          type: 'user',
           label: trans('target'),
-          displayed: true
+          displayed: false
         }, {
           name: 'event',
-          type: 'string',
+          type: 'translation',
           label: trans('event'),
-          displayed: true
+          displayed: false,
+          options: {
+            domain: 'security'
+          }
         }
       ]}
     />
