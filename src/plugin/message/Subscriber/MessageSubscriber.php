@@ -11,18 +11,32 @@
 
 namespace Claroline\MessageBundle\Subscriber;
 
+use Claroline\CoreBundle\Entity\Log\MessageLog;
 use Claroline\CoreBundle\Event\CatalogEvents\MessageEvents;
 use Claroline\MessageBundle\Manager\MessageManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\EventDispatcher\Event;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class MessageSubscriber implements EventSubscriberInterface
 {
     private $messageManager;
+    private $em;
+    private $security;
+    private $translator;
 
-    public function __construct(MessageManager $messageManager)
-    {
+    public function __construct(
+        MessageManager $messageManager,
+        EntityManagerInterface $em,
+        Security $security,
+        TranslatorInterface $translator
+    ) {
         $this->messageManager = $messageManager;
+        $this->em = $em;
+        $this->security = $security;
+        $this->translator = $translator;
     }
 
     public static function getSubscribedEvents(): array
@@ -42,5 +56,31 @@ class MessageSubscriber implements EventSubscriberInterface
             $event->getSender(),
             $event->getWithMail()
         );
+
+        $sender = $event->getSender() ?? $this->security->getUser();
+
+        if ($event->getUsers()) {
+            foreach ($event->getUsers() as $user) {
+                $logEntry = new MessageLog();
+                $logEntry->setDetails($event->getMessage($this->translator, $sender, $user));
+                $logEntry->setEvent($eventName);
+                $logEntry->setReceiver($user);
+                $logEntry->setSender($sender);
+
+                $this->em->persist($logEntry);
+            }
+        } else {
+            $logEntry = new MessageLog();
+            $logEntry->setDetails($event->getMessage($this->translator, $sender, $event->getReceiver()));
+            $logEntry->setEvent($eventName);
+            $logEntry->setReceiver($event->getReceiver());
+            $logEntry->setSender($sender);
+
+            $this->em->persist($logEntry);
+
+            $this->em->persist($logEntry);
+        }
+
+        $this->em->flush();
     }
 }

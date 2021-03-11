@@ -1673,4 +1673,6 @@
     "currency": "Devise",
     "price": "Prix",
     "allow_change_password": "Autoriser les utilisateurs à changer leur mot de passe"
+    "sendMessage": "sender a envoyé un message à receveir",
+    "claroline_message_sending": "Envoi d'un message"
 }

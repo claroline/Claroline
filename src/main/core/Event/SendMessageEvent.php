@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Event;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\User;
 use Symfony\Contracts\EventDispatcher\Event;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SendMessageEvent extends Event
 {
@@ -98,5 +99,17 @@ class SendMessageEvent extends Event
     public function setWithMail($withMail)
     {
         $this->withMail = $withMail;
+    }
+
+    public function getMessage(TranslatorInterface $translator, $sender, User $receveir)
+    {
+        return $translator->trans(
+            'sendMessage',
+            [
+                'sender' => $this->getSender(),
+                'receveir' => $receveir,
+            ],
+            'platform'
+        );
     }
 }
