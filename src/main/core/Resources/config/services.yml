@@ -26,6 +26,9 @@ services:
             - method: setDispatcher
               arguments:
                 - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - method: setRepository
+              arguments:
+                - '@Claroline\CoreBundle\Repository\User\UserRepository'
 
     # array injection with annotations is not supported
     claroline.plugin.validator:

@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Listener;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
 use Claroline\CoreBundle\Event\Security\AuthenticationFailureEvent;
+use Claroline\CoreBundle\Repository\User\UserRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -23,10 +24,17 @@ class AuthenticationFailureHandler extends DefaultAuthenticationFailureHandler
 {
     /** @var StrictDispatcher */
     private $dispatcher;
+    /** @var UserRepository */
+    private $userRepository;
 
     public function setDispatcher(StrictDispatcher $dispatcher)
     {
         $this->dispatcher = $dispatcher;
+    }
+
+    public function setRepository(UserRepository $userRepository)
+    {
+        $this->userRepository = $userRepository;
     }
 
     /**
@@ -51,7 +59,7 @@ class AuthenticationFailureHandler extends DefaultAuthenticationFailureHandler
             SecurityEvents::AUTHENTICATION_FAILURE,
             AuthenticationFailureEvent::class,
             [
-                $username,
+                $this->userRepository->findUserByNameOnFailure($username) ?? $username,
                 $message,
             ]
         );

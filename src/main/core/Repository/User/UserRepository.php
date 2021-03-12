@@ -545,4 +545,19 @@ class UserRepository extends ServiceEntityRepository implements UserProviderInte
 
         return $executeQuery ? $query->getResult() : $query;
     }
+
+    public function findUserByNameOnFailure($username)
+    {
+        $dql = '
+            SELECT u FROM Claroline\CoreBundle\Entity\User u
+            WHERE u.username = :username
+            OR u.email = :username
+            AND u.isEnabled = true
+        ';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('username', $username);
+
+        return $query->getOneOrNullResult();
+    }
 }
