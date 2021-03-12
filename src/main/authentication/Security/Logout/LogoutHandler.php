@@ -13,6 +13,7 @@
 namespace Claroline\AuthenticationBundle\Security\Logout;
 
 use Claroline\AppBundle\Event\StrictDispatcher;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
 use Claroline\CoreBundle\Event\Security\UserLogoutEvent;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,6 +32,11 @@ class LogoutHandler implements LogoutHandlerInterface
 
     public function logout(Request $request, Response $response, TokenInterface $token)
     {
-        $this->eventDispatcher->dispatch(SecurityEvents::USER_LOGOUT, UserLogoutEvent::class, [$token->getUser()]);
+        if ($token->getUser() instanceof User) {
+            // only log if the user isn't already logged out
+            // this can occur with SAML : when we call the IDP to request a logout, it will call back to our logout endpoint
+            // but our user is no longer in the token storage.
+            $this->eventDispatcher->dispatch(SecurityEvents::USER_LOGOUT, UserLogoutEvent::class, [$token->getUser()]);
+        }
     }
 }
