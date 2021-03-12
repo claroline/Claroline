@@ -1671,5 +1671,6 @@
     "pricing": "Tarification",
     "enable_pricing": "Activer les options de tarification",
     "currency": "Devise",
-    "price": "Prix"
+    "price": "Prix",
+    "allow_change_password": "Autoriser les utilisateurs à changer leur mot de passe"
 }
