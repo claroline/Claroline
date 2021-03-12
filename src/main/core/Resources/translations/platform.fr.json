@@ -1316,7 +1316,7 @@
     "remove_scheduled_tasks_confirm": "Êtes-vous sûr de vouloir supprimer les tâches planifiées suivantes [ %task_list% ]?",
     "duplicate_model": "Dupliquer comme modèle",
     "login_auth_or": "OU",
-    "login_auth_claro_account": "Me connecter avec mon compte Claroline :",
+    "login_auth_claro_account": "Me connecter avec mon compte %platform% :",
     "login_auth_sso": "Me connecter avec un de mes autres comptes :",
     "published_at": "publié le %date%",
     "last_modified_at": "modifié le %date%",

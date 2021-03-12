@@ -12,6 +12,7 @@ import {reducer, selectors} from '#/main/app/security/login/store'
 const LoginForm = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
+      platformName: configSelectors.param(state, 'name'),
       help: configSelectors.param(state, 'loginHelp'),
       registration: configSelectors.param(state, 'selfRegistration'),
       sso: selectors.sso(state)
