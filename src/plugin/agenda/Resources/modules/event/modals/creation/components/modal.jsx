@@ -10,7 +10,7 @@ import {GridSelection} from '#/main/app/content/grid/components/selection'
 
 import {Event as EventTypes} from '#/plugin/agenda/prop-types'
 import {getEvents} from '#/plugin/agenda/events'
-import {TabForm} from '#/plugin/home/tools/home/editor/components/form'
+import {EventForm} from '#/plugin/agenda/event/components/form'
 import {selectors} from '#/plugin/agenda/event/modals/creation/store'
 
 class EventCreationModal extends Component {
@@ -66,7 +66,7 @@ class EventCreationModal extends Component {
             handleSelect={(selectedType) => {
               //const newType = this.state.types.find(type => type.name === selectedType.name)
 
-              this.props.startCreation(this.props.currentContext, selectedType, this.props.currentUser)
+              this.props.startCreation(this.props.event, selectedType.name, this.props.currentUser)
               this.changeStep('parameters')
             }}
           />
@@ -74,29 +74,23 @@ class EventCreationModal extends Component {
 
       case 'parameters':
         return (
-          <TabForm
-            level={5}
+          <EventForm
             name={selectors.STORE_NAME}
-            update={this.props.update}
-            setErrors={this.props.setErrors}
-
-            currentTab={this.props.tab}
-            currentContext={this.props.currentContext}
-            administration={this.props.administration}
+            event={this.props.formData}
           >
             <Button
               className="modal-btn btn"
               type={CALLBACK_BUTTON}
               primary={true}
               disabled={!this.props.saveEnabled}
-              label={trans('add', {}, 'actions')}
+              label={trans('save', {}, 'actions')}
               htmlType="submit"
               callback={() => {
-                this.props.create(this.props.event)
+                this.props.create(this.props.formData)
                 this.close()
               }}
             />
-          </TabForm>
+          </EventForm>
         )
     }
   }
@@ -110,9 +104,9 @@ class EventCreationModal extends Component {
   render() {
     return (
       <Modal
-        {...omit(this.props, 'currentUser', 'currentContext', 'event', 'saveEnabled', 'update', 'setErrors', 'create', 'startCreation', 'reset')}
+        {...omit(this.props, 'currentUser', 'currentContext', 'event', 'saveEnabled', 'update', 'create', 'startCreation', 'reset')}
         icon="fa fa-fw fa-plus"
-        title={trans('new_tab', {}, 'home')}
+        title={trans('new_event', {}, 'agenda')}
         subtitle={this.renderStepTitle()}
         fadeModal={() => this.close()}
       >
@@ -131,11 +125,13 @@ EventCreationModal.propTypes = {
   event: T.shape(
     EventTypes.propTypes
   ),
+  formData: T.shape(
+    EventTypes.propTypes
+  ),
   saveEnabled: T.bool.isRequired,
   create: T.func.isRequired,
   startCreation: T.func.isRequired,
   update: T.func.isRequired,
-  setErrors: T.func.isRequired,
   reset: T.func,
   fadeModal: T.func.isRequired
 }

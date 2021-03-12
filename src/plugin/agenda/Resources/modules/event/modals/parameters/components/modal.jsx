@@ -8,7 +8,7 @@ import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {FormData} from '#/main/app/content/form/containers/data'
 
-import {Event as EventTypes} from '#/plugin/agenda/event/prop-types'
+import {Event as EventTypes} from '#/plugin/agenda/prop-types'
 import {selectors} from '#/plugin/agenda/event/modals/parameters/store/selectors'
 
 const ParametersModal = props =>
@@ -84,6 +84,10 @@ const ParametersModal = props =>
           title: trans('display_parameters'),
           fields: [
             {
+              name: 'poster',
+              type: 'image',
+              label: trans('poster')
+            }, {
               name: 'thumbnail',
               type: 'image',
               label: trans('thumbnail')
@@ -95,19 +99,20 @@ const ParametersModal = props =>
           ]
         }
       ]}
-    />
-
-    <Button
-      className="modal-btn btn btn-primary"
-      type={CALLBACK_BUTTON}
-      primary={true}
-      label={trans('save', {}, 'actions')}
-      disabled={!props.saveEnabled}
-      callback={() => {
-        props.save(props.event, props.onSave)
-        props.fadeModal()
-      }}
-    />
+    >
+      <Button
+        className="modal-btn btn btn-primary"
+        type={CALLBACK_BUTTON}
+        primary={true}
+        label={trans('save', {}, 'actions')}
+        disabled={!props.saveEnabled}
+        htmlType="submit"
+        callback={() => {
+          props.save(props.event, props.onSave)
+          props.fadeModal()
+        }}
+      />
+    </FormData>
   </Modal>
 
 ParametersModal.propTypes = {

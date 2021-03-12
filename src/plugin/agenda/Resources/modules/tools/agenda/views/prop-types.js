@@ -1,6 +1,6 @@
 import {PropTypes as T} from 'prop-types'
 
-import {Event as EventTypes} from '#/plugin/agenda/event/prop-types'
+import {Event as EventTypes} from '#/plugin/agenda/prop-types'
 
 const AgendaView = {
   propTypes: {

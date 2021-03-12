@@ -7,7 +7,7 @@ import {getPlainText} from '#/main/app/data/types/html/utils'
 import {DataCard} from '#/main/app/data/components/card'
 
 import {constants} from '#/plugin/agenda/event/constants'
-import {Event as EventTypes} from '#/plugin/agenda/event/prop-types'
+import {Event as EventTypes} from '#/plugin/agenda/prop-types'
 
 const EventCard = (props) =>
   <DataCard

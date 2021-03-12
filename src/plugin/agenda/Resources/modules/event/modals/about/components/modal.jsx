@@ -10,7 +10,7 @@ import {DetailsData} from '#/main/app/content/details/components/data'
 
 import {route} from '#/main/core/tool/routing'
 import {route as workspaceRoute} from '#/main/core/workspace/routing'
-import {Event as EventTypes} from '#/plugin/agenda/event/prop-types'
+import {Event as EventTypes} from '#/plugin/agenda/prop-types'
 
 const AboutModal = props =>
   <Modal

@@ -10,7 +10,7 @@ import {DetailsData} from '#/main/app/content/details/components/data'
 import {PageFull} from '#/main/app/page/components/full'
 import {getToolBreadcrumb, showToolBreadcrumb} from '#/main/core/tool/utils'
 
-import {Event as EventTypes} from '#/plugin/agenda/event/prop-types'
+import {Event as EventTypes} from '#/plugin/agenda/prop-types'
 import {constants} from '#/plugin/agenda/event/constants'
 import {route} from '#/plugin/agenda/tools/agenda/routing'
 import {MODAL_EVENT_PARAMETERS} from '#/plugin/agenda/event/modals/parameters'

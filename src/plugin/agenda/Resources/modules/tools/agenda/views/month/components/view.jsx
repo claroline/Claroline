@@ -9,7 +9,7 @@ import {LinkButton} from '#/main/app/buttons/link'
 import {now, getApiFormat} from '#/main/app/intl/date'
 
 import {CalendarView} from '#/plugin/agenda/tools/agenda/views/components/calendar'
-import {Event as EventTypes} from '#/plugin/agenda/event/prop-types'
+import {Event as EventTypes} from '#/plugin/agenda/prop-types'
 import {EventMicro} from '#/plugin/agenda/event/components/micro'
 import {sortEvents} from '#/plugin/agenda/event/utils'
 import {route} from '#/plugin/agenda/tools/agenda/routing'

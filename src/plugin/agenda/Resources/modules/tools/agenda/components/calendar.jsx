@@ -10,8 +10,9 @@ import {now} from '#/main/app/intl/date'
 import {CALLBACK_BUTTON, LINK_BUTTON, MENU_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {ToolPage} from '#/main/core/tool/containers/page'
 
-import {Event as EventTypes} from '#/plugin/agenda/event/prop-types'
+import {Event as EventTypes} from '#/plugin/agenda/prop-types'
 import {constants} from '#/plugin/agenda/event/constants'
+import {MODAL_EVENT_CREATION} from '#/plugin/agenda/event/modals/creation'
 import {MODAL_EVENT_PARAMETERS} from '#/plugin/agenda/event/modals/parameters'
 
 import {route} from '#/plugin/agenda/tools/agenda/routing'
@@ -60,12 +61,15 @@ const AgendaCalendar = (props) => {
           target: route(props.path, props.view, now())
         }, {
           name: 'add',
-          type: CALLBACK_BUTTON,
+          type: MODAL_BUTTON,
           icon: 'fa fa-fw fa-plus',
           label: trans('add-event', {}, 'actions'),
-          callback: () => props.create({
-            start: now(false)
-          }, props.contextData, props.currentUser),
+          modal: [MODAL_EVENT_CREATION, {
+            event: {
+              start: now(false),
+              workspace: !isEmpty(props.contextData) ? props.contextData : null
+            }
+          }],
           displayed: !isEmpty(props.currentUser),
           primary: true
         }

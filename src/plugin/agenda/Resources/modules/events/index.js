@@ -3,7 +3,7 @@ import {getApp, getApps} from '#/main/app/plugins'
 const REGISTRY = 'events'
 
 function getEvent(name) {
-  return getApp(REGISTRY, name)()
+  return getApp(REGISTRY, name)().then(loadedType => loadedType.default)
 }
 
 function getEvents() {
@@ -13,6 +13,8 @@ function getEvents() {
   return Promise.all(
     // boot actions applications
     Object.keys(eventTypes).map(eventType => eventTypes[eventType]())
+  ).then(loadedTypes => loadedTypes
+    .map(typeModule => typeModule.default)
   )
 }
 

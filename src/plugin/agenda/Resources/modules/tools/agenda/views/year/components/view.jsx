@@ -12,7 +12,7 @@ import {UrlButton} from '#/main/app/buttons/url/components/button'
 
 import {EventMicro} from '#/plugin/agenda/event/components/micro'
 import {sortEvents} from '#/plugin/agenda/event/utils'
-import {Event as EventTypes} from '#/plugin/agenda/event/prop-types'
+import {Event as EventTypes} from '#/plugin/agenda/prop-types'
 import {route} from '#/plugin/agenda/tools/agenda/routing'
 
 const DayPopover = props =>

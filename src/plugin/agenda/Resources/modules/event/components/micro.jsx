@@ -7,7 +7,7 @@ import get from 'lodash/get'
 import {ModalButton} from '#/main/app/buttons'
 
 import {constants} from '#/plugin/agenda/event/constants'
-import {Event as EventTypes} from '#/plugin/agenda/event/prop-types'
+import {Event as EventTypes} from '#/plugin/agenda/prop-types'
 import {MODAL_EVENT_ABOUT} from '#/plugin/agenda/event/modals/about'
 
 const EventMicro = props => {

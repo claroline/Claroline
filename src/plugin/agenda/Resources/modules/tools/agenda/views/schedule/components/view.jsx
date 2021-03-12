@@ -12,7 +12,7 @@ import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
 import {CalendarView} from '#/plugin/agenda/tools/agenda/views/components/calendar'
 import {constants} from '#/plugin/agenda/event/constants'
-import {Event as EventTypes} from '#/plugin/agenda/event/prop-types'
+import {Event as EventTypes} from '#/plugin/agenda/prop-types'
 import {sortEvents, eventDuration} from '#/plugin/agenda/event/utils'
 import {route} from '#/plugin/agenda/tools/agenda/routing'
 import {MODAL_EVENT_ABOUT} from '#/plugin/agenda/event/modals/about'
