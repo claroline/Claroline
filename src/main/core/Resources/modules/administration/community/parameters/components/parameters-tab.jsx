@@ -137,6 +137,10 @@ const Parameters = (props) => {
                 type: 'boolean',
                 label: trans('auto_logging_after_registration'),
                 displayed: false // FIXME
+              }, {
+                name: 'authentication.changePassword',
+                type: 'boolean',
+                label: trans('allow_change_password')
               }
             ]
           }, {

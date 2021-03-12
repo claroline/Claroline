@@ -1638,5 +1638,6 @@
     "plain_description_help": "The summary is displayed in lists instead of the HTML description.",
     "enable_pricing": "Enable pricing options",
     "currency": "Currency",
-    "price": "Price"
+    "price": "Price",
+    "allow_change_password": "Allow users to change their password"
 }

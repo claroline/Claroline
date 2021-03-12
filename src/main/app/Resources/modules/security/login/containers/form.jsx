@@ -13,8 +13,9 @@ const LoginForm = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
       platformName: configSelectors.param(state, 'name'),
-      help: configSelectors.param(state, 'loginHelp'),
+      help: configSelectors.param(state, 'authentication.help'),
       registration: configSelectors.param(state, 'selfRegistration'),
+      resetPassword: configSelectors.param(state, 'authentication.changePassword'),
       sso: selectors.sso(state)
     }),
     (dispatch) => ({

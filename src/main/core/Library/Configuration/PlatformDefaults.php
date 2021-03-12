@@ -72,6 +72,7 @@ class PlatformDefaults implements ParameterProviderInterface
             ],
             'authentication' => [
                 'help' => null,
+                'changePassword' => true,
                 'redirect_after_login_option' => self::DEFAULT_REDIRECT_OPTION,
                 'redirect_after_login_url' => null,
                 'direct_third_party' => false,

@@ -113,7 +113,10 @@ class ClientSerializer
             'version' => $this->versionManager->getCurrent(),
             'environment' => $this->env,
             'helpUrl' => $this->config->getParameter('help_url'),
-            'loginHelp' => $this->config->getParameter('authentication.help'),
+            'authentication' => [ // TODO : move in AuthenticationBundle
+                'help' => $this->config->getParameter('authentication.help'),
+                'changePassword' => $this->config->getParameter('authentication.changePassword'),
+            ],
             'selfRegistration' => $this->config->getParameter('registration.self') && !$usersLimitReached,
             'serverUrl' => $this->platformManager->getUrl(),
             'locale' => $this->serializeLocale(),

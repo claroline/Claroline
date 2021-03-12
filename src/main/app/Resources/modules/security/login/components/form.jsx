@@ -102,13 +102,15 @@ class LoginForm extends Component {
               />
             </FormData>
 
-            <Button
-              className="btn-link btn-block"
-              type={LINK_BUTTON}
-              label={trans('forgot_password')}
-              target="/reset_password"
-              primary={true}
-            />
+            {this.props.resetPassword &&
+              <Button
+                className="btn-link btn-block"
+                type={LINK_BUTTON}
+                label={trans('forgot_password')}
+                target="/reset_password"
+                primary={true}
+              />
+            }
 
             {0 !== otherSso.length &&
               <div className="authentication-or">
@@ -155,6 +157,7 @@ LoginForm.propTypes = {
     primary: T.bool
   })).isRequired,
   registration: T.bool.isRequired,
+  resetPassword: T.bool.isRequired,
   login: T.func.isRequired,
   onLogin: T.func
 }

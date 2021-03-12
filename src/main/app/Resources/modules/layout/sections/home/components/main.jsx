@@ -46,7 +46,7 @@ const HomeMain = (props) =>
         }
       }, {
         path: '/reset_password',
-        disabled: props.authenticated,
+        disabled: props.authenticated || !props.changePassword,
         component: SendPassword
       }, {
         path: '/newpassword/:hash',
@@ -98,6 +98,7 @@ HomeMain.propTypes = {
   maintenanceMessage: T.string,
   authenticated: T.bool.isRequired,
   selfRegistration: T.bool.isRequired,
+  changePassword: T.bool.isRequired,
   hasHome: T.bool.isRequired,
   homeType: T.string.isRequired,
   homeData: T.string,

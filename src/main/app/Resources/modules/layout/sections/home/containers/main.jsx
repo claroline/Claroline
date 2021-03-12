@@ -21,7 +21,8 @@ const HomeMain = connect(
     homeType: selectors.homeType(state),
     homeData: selectors.homeData(state),
     authenticated: securitySelectors.isAuthenticated(state),
-    selfRegistration: configSelectors.param(state, 'selfRegistration')
+    selfRegistration: configSelectors.param(state, 'selfRegistration'),
+    changePassword: configSelectors.param(state, 'authentication.changePassword')
   }),
   (dispatch) => ({
     openHome(type, data) {
