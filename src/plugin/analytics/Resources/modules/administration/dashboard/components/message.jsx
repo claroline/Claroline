@@ -1,5 +1,4 @@
 import React from 'react'
-import {PropTypes as T} from 'prop-types'
 
 import {ToolPage} from '#/main/core/tool/containers/page'
 import {ListData} from '#/main/app/content/list/containers/data'
@@ -7,19 +6,19 @@ import {trans} from '#/main/app/intl/translation'
 
 import {selectors} from '#/plugin/analytics/administration/dashboard/store/selectors'
 
-const DashboardLog = () =>
+const DashboardMessage = () =>
   <ToolPage
-    subtitle={trans('security')}
+    subtitle={trans('message')}
   >
     <ListData
-      name={selectors.LIST_NAME}
+      name={selectors.MESSAGE_NAME}
       fetch={{
-        url: ['apiv2_logs_security'],
+        url: ['apiv2_logs_message'],
         autoload: true
       }}
       definition={[
         {
-          name: 'doer',
+          name: 'sender',
           type: 'user',
           label: trans('user'),
           displayed: true
@@ -35,7 +34,7 @@ const DashboardLog = () =>
           label: trans('details'),
           displayed: true
         }, {
-          name: 'target',
+          name: 'receiver',
           type: 'user',
           label: trans('target'),
           displayed: false
@@ -45,7 +44,7 @@ const DashboardLog = () =>
           label: trans('event'),
           displayed: false,
           options: {
-            domain: 'security'
+            domain: 'platform'
           }
         }
       ]}
@@ -53,5 +52,5 @@ const DashboardLog = () =>
   </ToolPage>
 
 export {
-  DashboardLog
+  DashboardMessage
 }

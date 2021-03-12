@@ -1639,7 +1639,7 @@
     "enable_pricing": "Enable pricing options",
     "currency": "Currency",
     "price": "Price",
-    "allow_change_password": "Allow users to change their password"
+    "allow_change_password": "Allow users to change their password",
     "sendMessage": "sender send a message to receveir",
     "claroline_message_sending": "Send a message"
 }
