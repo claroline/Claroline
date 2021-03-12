@@ -58,7 +58,7 @@ class LoginForm extends Component {
               </div>
             }
 
-            <p className="authentication-help">{trans('login_auth_claro_account')}</p>
+            <p className="authentication-help">{trans('login_auth_claro_account', {platform: this.props.platformName})}</p>
 
             <FormData
               name={selectors.FORM_NAME}
@@ -147,6 +147,7 @@ class LoginForm extends Component {
 }
 
 LoginForm.propTypes = {
+  platformName: T.string.isRequired,
   help: T.string,
   sso: T.arrayOf(T.shape({
     service: T.string.isRequired,

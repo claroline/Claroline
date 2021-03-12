@@ -1286,7 +1286,7 @@
     "remove_scheduled_tasks_confirm": "Are you sure you want to delete the following scheduled tasks [ %task_list% ]?",
     "duplicate_model": "Duplicate as model",
     "login_auth_or": "OR",
-    "login_auth_claro_account": "Connect with your Claroline account:",
+    "login_auth_claro_account": "Connect with your %platform% account:",
     "login_auth_sso": "Connect with one of your other account:",
     "published_at": "published on %date%",
     "last_modified_at": "modified on %date%",
