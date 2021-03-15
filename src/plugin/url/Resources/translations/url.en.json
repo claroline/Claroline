@@ -1,6 +1,7 @@
 {
+    "button_desc": "Display a button to open URL",
     "iframe_desc": "Display URL in the resource",
     "redirect_desc": "Open URL in the current tab",
     "tab_desc": "Open URL in a new tab",
-    "https_iframe_help": "The URL must user HTTPS to be correctly displayed."
+    "https_iframe_help": "The URL must use HTTPS to be correctly displayed."
 }
