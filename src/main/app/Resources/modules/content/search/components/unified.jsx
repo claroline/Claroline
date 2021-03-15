@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
+import isEmpty from 'lodash/isEmpty'
 import omit from 'lodash/omit'
 import cloneDeep from 'lodash/cloneDeep'
 
@@ -62,7 +63,7 @@ class SearchForm extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.current !== this.props.current) {
+    if ((!isEmpty(prevProps.current || !isEmpty(this.props.current))) && prevProps.current !== this.props.current) {
       this.setState({filters: this.props.current})
     }
   }
@@ -72,7 +73,7 @@ class SearchForm extends Component {
     const filterPos = newFilters.findIndex(filter => filter.property === property)
 
     let updated = false
-    if (undefined !== value && null !== value && (!value.hasOwnProperty('length') || 0 !== value.length)) {
+    if (undefined !== value && null !== value && (!Array.isArray(value) || 0 !== value.length)) {
       if (-1 !== filterPos) {
         updated = value !== newFilters[filterPos].value
         newFilters[filterPos] = {

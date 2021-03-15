@@ -44,7 +44,7 @@ const ResultsComponent = props =>
           type: 'user',
           displayed: true
         }, {
-          name: 'user.email',
+          name: 'userEmail',
           label: trans('email'),
           type: 'email'
         }, {
