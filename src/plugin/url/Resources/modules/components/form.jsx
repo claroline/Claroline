@@ -49,10 +49,11 @@ class UrlForm extends Component {
                 label: trans('mode'),
                 help: 'iframe' === get(this.props.url, 'mode') ? trans('https_iframe_help', {}, 'url') : undefined,
                 type: 'choice',
+                required: true,
                 options: {
                   multiple: false,
-                  condensed: true,
                   choices: {
+                    button: trans('button_desc', {}, 'url'),
                     iframe: trans('iframe_desc', {}, 'url'),
                     redirect: trans('redirect_desc', {}, 'url'),
                     tab: trans('tab_desc', {}, 'url')
