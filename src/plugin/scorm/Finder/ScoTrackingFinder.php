@@ -24,29 +24,39 @@ class ScoTrackingFinder extends AbstractFinder
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
     {
         $qb->join('obj.sco', 'sco');
-        $qb->join('sco.scorm', 'scorm');
-        $qb->andWhere('scorm.id = :scormId');
-        $qb->setParameter('scormId', $searches['scorm']);
 
+        $userJoin = false;
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
                 case 'scorm':
+                    $qb->join('sco.scorm', 'scorm');
+                    $qb->andWhere('scorm.id = :scormId');
+                    $qb->setParameter('scormId', $filterValue);
                     break;
+
                 case 'user':
-                    $qb->join('obj.user', 'u');
-                    $qb->andWhere("
-                        UPPER(u.firstName) LIKE :name
-                        OR UPPER(u.lastName) LIKE :name
-                        OR UPPER(u.username) LIKE :name
-                        OR CONCAT(UPPER(u.firstName), CONCAT(' ', UPPER(u.lastName))) LIKE :name
-                        OR CONCAT(UPPER(u.lastName), CONCAT(' ', UPPER(u.firstName))) LIKE :name
-                    ");
-                    $qb->setParameter('name', '%'.strtoupper($filterValue).'%');
+                    if (!$userJoin) {
+                        $qb->join('obj.user', 'u');
+                        $userJoin = true;
+                    }
+                    $qb->andWhere("u.uuid = :{$filterName}");
+                    $qb->setParameter($filterName, $filterValue);
                     break;
+
+                case 'userEmail':
+                    if (!$userJoin) {
+                        $qb->join('obj.user', 'u');
+                        $userJoin = true;
+                    }
+                    $qb->andWhere('UPPER(u.email) LIKE :email');
+                    $qb->setParameter('email', '%'.strtoupper($filterValue).'%');
+                    break;
+
                 case 'sco':
                     $qb->andWhere("UPPER(sco.title) LIKE :{$filterName}");
                     $qb->setParameter($filterName, '%'.strtoupper($filterValue).'%');
                     break;
+
                 default:
                     $this->setDefaults($qb, $filterName, $filterValue);
             }
@@ -60,9 +70,11 @@ class ScoTrackingFinder extends AbstractFinder
                     $qb->orderBy('sco.title', $sortByDirection);
                     break;
                 case 'user':
-                    $qb->join('obj.user', 'uu');
-                    $qb->orderBy('uu.firstName', $sortByDirection);
-                    $qb->orderBy('uu.lastName', $sortByDirection);
+                    if (!$userJoin) {
+                        $qb->join('obj.user', 'u');
+                    }
+                    $qb->orderBy('u.firstName', $sortByDirection);
+                    $qb->orderBy('u.lastName', $sortByDirection);
                     break;
                 case 'totalTime':
                     $qb->orderBy('obj.totalTimeInt', $sortByDirection);
