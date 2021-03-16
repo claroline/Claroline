@@ -37,6 +37,8 @@ class SecurityLogFinder extends AbstractFinder
             }
         }
 
+        $qb->orderBy('obj.id', 'desc');
+
         return $qb;
     }
 }
