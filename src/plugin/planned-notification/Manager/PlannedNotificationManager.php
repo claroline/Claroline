@@ -171,7 +171,6 @@ class PlannedNotificationManager
                 [
                     $message->getContent(),
                     $message->getTitle(),
-                    null,
                     $users,
                 ]
             );

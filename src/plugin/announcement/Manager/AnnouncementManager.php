@@ -133,7 +133,6 @@ class AnnouncementManager
             [
                 $message['content'],
                 $message['object'],
-                null,
                 $message['receivers'],
                 $message['sender'],
             ]

@@ -19,7 +19,6 @@ services:
         arguments:
             - '@event_dispatcher'
             - '@translator'
-            - '@Claroline\CoreBundle\Manager\MailManager'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@router'
             - '@Claroline\AppBundle\API\Crud'
@@ -34,7 +33,6 @@ services:
     Claroline\CursusBundle\Manager\EventManager:
         arguments:
             - '@event_dispatcher'
-            - '@Claroline\CoreBundle\Manager\MailManager'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@router'
             - '@Claroline\CoreBundle\Manager\Template\TemplateManager'

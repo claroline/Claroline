@@ -104,8 +104,7 @@ class AgendaManager
                     ),
                 ], 'agenda'),
                 $this->translator->trans('send_message_object', ['%EventName%' => $event->getTitle()], 'agenda'),
-                null,
-                $users,
+                [$users],
                 $creator,
                 false,
             ]

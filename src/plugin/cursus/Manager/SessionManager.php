@@ -21,7 +21,6 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\CatalogEvents\MessageEvents;
 use Claroline\CoreBundle\Event\SendMessageEvent;
 use Claroline\CoreBundle\Library\RoutingHelper;
-use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\Template\TemplateManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
@@ -45,8 +44,6 @@ class SessionManager
     private $eventDispatcher;
     /** @var TranslatorInterface */
     private $translator;
-    /** @var MailManager */
-    private $mailManager;
     /** @var ObjectManager */
     private $om;
     /** @var UrlGeneratorInterface */
@@ -77,7 +74,6 @@ class SessionManager
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
         TranslatorInterface $translator,
-        MailManager $mailManager,
         ObjectManager $om,
         UrlGeneratorInterface $router,
         Crud $crud,
@@ -92,7 +88,6 @@ class SessionManager
     ) {
         $this->eventDispatcher = $eventDispatcher;
         $this->translator = $translator;
-        $this->mailManager = $mailManager;
         $this->om = $om;
         $this->router = $router;
         $this->crud = $crud;
@@ -532,7 +527,7 @@ class SessionManager
                 [
                     $content,
                     $title,
-                    $user,
+                    [$user],
                 ]
             );
         }

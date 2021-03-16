@@ -16,7 +16,6 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\CatalogEvents\MessageEvents;
 use Claroline\CoreBundle\Event\SendMessageEvent;
-use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\Template\TemplateManager;
 use Claroline\CursusBundle\Entity\Event;
 use Claroline\CursusBundle\Entity\Registration\AbstractRegistration;
@@ -35,8 +34,6 @@ class EventManager
 {
     /** @var EventDispatcherInterface */
     private $eventDispatcher;
-    /** @var MailManager */
-    private $mailManager;
     /** @var ObjectManager */
     private $om;
     /** @var UrlGeneratorInterface */
@@ -53,7 +50,6 @@ class EventManager
 
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
-        MailManager $mailManager,
         ObjectManager $om,
         UrlGeneratorInterface $router,
         TemplateManager $templateManager,
@@ -61,7 +57,6 @@ class EventManager
         StrictDispatcher $dispatcher
     ) {
         $this->eventDispatcher = $eventDispatcher;
-        $this->mailManager = $mailManager;
         $this->om = $om;
         $this->router = $router;
         $this->templateManager = $templateManager;
@@ -254,7 +249,7 @@ class EventManager
                 [
                     $content,
                     $title,
-                    $user,
+                    [$user],
                 ]
             );
         }

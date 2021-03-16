@@ -48,35 +48,22 @@ class MessageSubscriber implements EventSubscriberInterface
 
     public function onMessageSending(Event $event, string $eventName)
     {
-        $this->messageManager->sendMessage(
+        $users = $this->messageManager->sendMessage(
             $event->getContent(),
             $event->getObject(),
-            $event->getReceiver(),
-            $event->getUsers(),
+            $event->getReceivers(),
             $event->getSender(),
             $event->getWithMail()
         );
 
         $sender = $event->getSender() ?? $this->security->getUser();
 
-        if ($event->getUsers()) {
-            foreach ($event->getUsers() as $user) {
-                $logEntry = new MessageLog();
-                $logEntry->setDetails($event->getMessage($this->translator, $sender, $user));
-                $logEntry->setEvent($eventName);
-                $logEntry->setReceiver($user);
-                $logEntry->setSender($sender);
-
-                $this->em->persist($logEntry);
-            }
-        } else {
+        foreach ($users as $user) {
             $logEntry = new MessageLog();
-            $logEntry->setDetails($event->getMessage($this->translator, $sender, $event->getReceiver()));
+            $logEntry->setDetails($event->getMessage($this->translator, $sender, $user));
             $logEntry->setEvent($eventName);
-            $logEntry->setReceiver($event->getReceiver());
+            $logEntry->setReceiver($user);
             $logEntry->setSender($sender);
-
-            $this->em->persist($logEntry);
 
             $this->em->persist($logEntry);
         }
