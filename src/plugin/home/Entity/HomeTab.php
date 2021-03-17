@@ -165,6 +165,15 @@ class HomeTab
         $this->workspace = $workspace;
     }
 
+    public function getConfig(): ?HomeTabConfig
+    {
+        if (!empty($this->homeTabConfigs)) {
+            return $this->homeTabConfigs[0];
+        }
+
+        return null;
+    }
+
     public function getHomeTabConfigs(): ArrayCollection
     {
         return $this->homeTabConfigs;

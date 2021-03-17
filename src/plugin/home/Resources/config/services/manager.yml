@@ -11,3 +11,9 @@ services:
     claroline.transfer.home:
         alias: Claroline\HomeBundle\Manager\Workspace\Transfer\Home
         public: true
+
+    Claroline\HomeBundle\Manager\HomeManager:
+        arguments:
+            - '@security.authorization_checker'
+            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@Claroline\AppBundle\API\SerializerProvider'

@@ -18,6 +18,4 @@ services:
           arguments:
             - '@Claroline\AppBundle\Event\StrictDispatcher'
 
-  Claroline\HomeBundle\Finder\HomeTabFinder:
-    arguments:
-      - '@security.token_storage'
+  Claroline\HomeBundle\Finder\HomeTabFinder: ~

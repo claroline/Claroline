@@ -38,14 +38,57 @@ class HomeTabVoter extends AbstractVoter
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
     {
         switch ($attributes[0]) {
-            case self::EDIT:   return $this->check($token, $object);
-            case self::DELETE: return $this->check($token, $object);
+            case self::OPEN:
+                return $this->check($token, $object);
+            case self::EDIT:
+            case self::DELETE:
+                return $this->checkEdit($token, $object);
         }
 
         return VoterInterface::ACCESS_ABSTAIN;
     }
 
-    public function check(TokenInterface $token, HomeTab $object)
+    private function check(TokenInterface $token, HomeTab $object): int
+    {
+        $granted = false;
+        switch ($object->getContext()) {
+            case HomeTab::TYPE_HOME:
+                $granted = true;
+                break;
+
+            case HomeTab::TYPE_ADMIN:
+                $granted = $this->hasAdminToolAccess($token, 'home');
+                break;
+
+            case HomeTab::TYPE_DESKTOP:
+                $homeTool = $this->orderedToolRepo->findOneByNameAndDesktop('home');
+                $isOwner = $object->getUser() && $token->getUser() instanceof User && $object->getUser()->getId() === $token->getUser();
+
+                $granted = $isOwner && $homeTool && $this->isGranted(self::OPEN, $homeTool);
+                break;
+
+            case HomeTab::TYPE_ADMIN_DESKTOP:
+                $homeTool = $this->orderedToolRepo->findOneByNameAndDesktop('home');
+
+                $granted = $homeTool && $this->isGranted(self::OPEN, $homeTool);
+                break;
+
+            case HomeTab::TYPE_WORKSPACE:
+                $granted = $object->getWorkspace() && $this->isGranted(['home', self::OPEN], $object->getWorkspace());
+                break;
+        }
+
+        if ($granted && $this->checkTabRestrictions($token, $object)) {
+            $config = $object->getConfig();
+            if (empty($config) || $config->isVisible() || VoterInterface::ACCESS_GRANTED === $this->checkEdit($token, $object)) {
+                return VoterInterface::ACCESS_GRANTED;
+            }
+        }
+
+        return VoterInterface::ACCESS_DENIED;
+    }
+
+    private function checkEdit(TokenInterface $token, HomeTab $object): int
     {
         $granted = false;
         switch ($object->getContext()) {
@@ -80,6 +123,22 @@ class HomeTabVoter extends AbstractVoter
         }
 
         return VoterInterface::ACCESS_DENIED;
+    }
+
+    private function checkTabRestrictions(TokenInterface $token, HomeTab $object): bool
+    {
+        $config = $object->getConfig();
+        if (empty($config) || 0 === $config->getRoles()->count()) {
+            return true;
+        }
+
+        foreach ($config->getRoles() as $role) {
+            if (in_array($role->getName(), $token->getRoleNames())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function getClass()
