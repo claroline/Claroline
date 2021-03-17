@@ -14,21 +14,9 @@ namespace Claroline\HomeBundle\Finder;
 use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\HomeBundle\Entity\HomeTab;
 use Doctrine\ORM\QueryBuilder;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class HomeTabFinder extends AbstractFinder
 {
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-
-    /**
-     * WorkspaceFinder constructor.
-     */
-    public function __construct(TokenStorageInterface $tokenStorage)
-    {
-        $this->tokenStorage = $tokenStorage;
-    }
-
     public function getClass()
     {
         return HomeTab::class;
@@ -40,41 +28,20 @@ class HomeTabFinder extends AbstractFinder
         array $sortBy = null,
         array $options = ['count' => false, 'page' => 0, 'limit' => -1]
     ) {
-        $qb = $this->om->createQueryBuilder();
-        $qb->select($options['count'] ? 'COUNT(obj)' : 'obj')->from($this->getClass(), 'obj');
-        $qb->leftJoin('obj.homeTabConfigs', 'config');
-
-        // only grab tabs accessible by user
-        $roleNames = $this->tokenStorage->getToken()->getRoleNames();
-
-        $isAdmin = in_array('ROLE_ADMIN', $roleNames) || (isset($searches['workspace']) && in_array('ROLE_WS_MANAGER_'.$searches['workspace'], $roleNames));
-        if (!$isAdmin) {
-            // only get visible tabs for non admin
-            $qb->andWhere('config.visible = true');
-
-            // only get tabs visible by the current user roles
-            if (!isset($searches['context']) || HomeTab::TYPE_DESKTOP !== $searches['context']) {
-                // no need to check roles for DESKTOP tabs because it's directly linked to the user
-                $qb->leftJoin('config.roles', 'r');
-                $qb->andWhere('(r.id IS NULL OR r.name IN (:roles))');
-                $qb->setParameter('roles', $roleNames);
-            }
-        }
-
+        $configJoin = false;
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
                 case 'context':
                     $qb->andWhere("obj.context = :{$filterName}");
                     $qb->setParameter($filterName, $filterValue);
-                    if (HomeTab::TYPE_DESKTOP === $filterValue) {
-                        // only get DESKTOP tabs for the current user
-                        $qb->leftJoin('obj.user', 'u');
-                        $qb->andWhere('u.id = :userId');
-                        $qb->setParameter('userId', $this->tokenStorage->getToken()->getUser()->getId());
-                    }
 
                     break;
+                case 'user':
+                    $qb->leftJoin('obj.user', 'u');
+                    $qb->andWhere("u.uuid = :{$filterName}");
+                    $qb->setParameter($filterName, $filterValue);
 
+                    break;
                 case 'workspace':
                     $qb->leftJoin('obj.workspace', 'w');
                     $qb->andWhere("w.uuid = :{$filterName}");
@@ -90,6 +57,27 @@ class HomeTabFinder extends AbstractFinder
                     }
 
                     break;
+                case 'visible':
+                    if (!$configJoin) {
+                        $qb->leftJoin('obj.homeTabConfigs', 'config');
+                        $configJoin = true;
+                    }
+                    $qb->andWhere('config.visible = true');
+
+                    break;
+                case 'roles':
+                    if (!empty($filterValue)) {
+                        if (!$configJoin) {
+                            $qb->leftJoin('obj.homeTabConfigs', 'config');
+                            $configJoin = true;
+                        }
+
+                        $qb->leftJoin('config.roles', 'r');
+                        $qb->andWhere('(r.id IS NULL OR r.name IN (:roles))');
+                        $qb->setParameter('roles', $filterValue);
+                    }
+
+                    break;
                 default:
                     $this->setDefaults($qb, $filterName, $filterValue);
             }
@@ -100,10 +88,11 @@ class HomeTabFinder extends AbstractFinder
         return $qb;
     }
 
-    public function getFilters()
+    public function getExtraFieldMapping()
     {
         return [
-            '$defaults' => [],
+            'config.roles' => 'roles',
+            'config.visible' => 'visible',
         ];
     }
 }

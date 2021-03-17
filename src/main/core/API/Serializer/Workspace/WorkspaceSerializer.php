@@ -323,15 +323,19 @@ class WorkspaceSerializer
         if (isset($data['thumbnail']) && isset($data['thumbnail']['id'])) {
             /** @var PublicFile $thumbnail */
             $thumbnail = $this->om->getObject($data['thumbnail'], PublicFile::class);
-            $workspace->setThumbnail($data['thumbnail']['url']);
-            $this->fileUt->createFileUse($thumbnail, Workspace::class, $workspace->getUuid());
+            if ($thumbnail) {
+                $workspace->setThumbnail($data['thumbnail']['url']);
+                $this->fileUt->createFileUse($thumbnail, Workspace::class, $workspace->getUuid());
+            }
         }
 
         if (isset($data['poster']) && isset($data['poster']['id'])) {
             /** @var PublicFile $poster */
             $poster = $this->om->getObject($data['poster'], PublicFile::class);
-            $workspace->setPoster($data['poster']['url']);
-            $this->fileUt->createFileUse($poster, Workspace::class, $workspace->getUuid());
+            if ($poster) {
+                $workspace->setPoster($data['poster']['url']);
+                $this->fileUt->createFileUse($poster, Workspace::class, $workspace->getUuid());
+            }
         }
 
         if (empty($workspace->getCreator()) && isset($data['meta']) && !empty($data['meta']['creator'])) {

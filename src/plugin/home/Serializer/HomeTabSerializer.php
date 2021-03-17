@@ -72,7 +72,7 @@ class HomeTabSerializer
 
     public function serialize(HomeTab $homeTab, array $options = []): array
     {
-        $homeTabConfig = $this->getConfig($homeTab);
+        $homeTabConfig = $homeTab->getConfig();
 
         if (!$homeTabConfig) {
             //something went wrong
@@ -119,6 +119,8 @@ class HomeTabSerializer
                 'showTitle' => $homeTabConfig->getShowTitle(),
             ],
             'user' => $homeTab->getUser() ? $this->userSerializer->serialize($homeTab->getUser(), [Options::SERIALIZE_MINIMAL]) : null,
+
+            // TODO : should no longer be exposed here (still required by update)
             'children' => array_map(function (HomeTab $child) use ($options) {
                 return $this->serialize($child, $options);
             }, $homeTab->getChildren()->toArray()),
@@ -157,7 +159,7 @@ class HomeTabSerializer
             $homeTab->refreshUuid();
         }
 
-        $homeTabConfig = $this->getConfig($homeTab);
+        $homeTabConfig = $homeTab->getConfig();
         if (!$homeTabConfig) {
             $homeTabConfig = new HomeTabConfig();
             $homeTabConfig->setHomeTab($homeTab);
@@ -186,8 +188,9 @@ class HomeTabSerializer
                 foreach ($data['restrictions']['roles'] as $roleData) {
                     /** @var Role $role */
                     $role = $this->om->getRepository(Role::class)->findOneBy(['uuid' => $roleData['id']]);
-
-                    $homeTabConfig->addRole($role);
+                    if ($role) {
+                        $homeTabConfig->addRole($role);
+                    }
                 }
 
                 $roles = array_map(function (array $role) {
@@ -239,7 +242,8 @@ class HomeTabSerializer
             $this->om->persist($typeParameters);
         }
 
-        // Set children steps
+        // Set children tabs
+        // TODO : should no longer be exposed here (still required by update)
         if (isset($data['children'])) {
             /** @var HomeTab[] $currentChildren */
             $currentChildren = $homeTab->getChildren()->toArray();
@@ -250,18 +254,10 @@ class HomeTabSerializer
                 $child = null;
                 if ($childData['id']) {
                     $child = $this->om->getRepository(HomeTab::class)->findOneBy(['uuid' => $childData['id']]);
-                    // TODO manage tabs moving
-                    /*foreach ($currentChildren as $currentChild) {
-                        if ($currentChild->getUuid() === $childData['id']) {
-                            $child = $currentChild;
-                            break;
-                        }
-                    }*/
                 }
 
                 if (empty($child)) {
                     $child = new HomeTab();
-                    //$this->om->persist($child);
                 }
 
                 $child->setOrder($childIndex);
@@ -274,21 +270,11 @@ class HomeTabSerializer
             // removes tabs which no longer exists
             foreach ($currentChildren as $currentTab) {
                 if (!in_array($currentTab->getUuid(), $ids)) {
-                    //$this->om->remove($currentTab);
                     $homeTab->removeChild($currentTab);
                 }
             }
         }
 
         return $homeTab;
-    }
-
-    private function getConfig(HomeTab $tab): ?HomeTabConfig
-    {
-        /** @var HomeTabConfig $homeTabConfig */
-        $homeTabConfig = $this->om->getRepository(HomeTabConfig::class)
-            ->findOneBy(['homeTab' => $tab]);
-
-        return $homeTabConfig;
     }
 }

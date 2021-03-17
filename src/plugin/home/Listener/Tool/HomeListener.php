@@ -11,40 +11,27 @@
 
 namespace Claroline\HomeBundle\Listener\Tool;
 
-use Claroline\AppBundle\API\FinderProvider;
-use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
-use Claroline\HomeBundle\Entity\HomeTab;
+use Claroline\HomeBundle\Manager\HomeManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * Home tool.
  */
 class HomeListener
 {
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-
-    /** @var FinderProvider */
-    private $finder;
-
-    /** @var SerializerProvider */
-    private $serializer;
-
     /** @var TokenStorageInterface */
     private $tokenStorage;
+    /** @var HomeManager */
+    private $manager;
 
     public function __construct(
-        AuthorizationCheckerInterface $authorization,
         TokenStorageInterface $tokenStorage,
-        FinderProvider $finder,
-        SerializerProvider $serializer
+        HomeManager $manager
     ) {
         $this->tokenStorage = $tokenStorage;
-        $this->finder = $finder;
-        $this->serializer = $serializer;
-        $this->authorization = $authorization;
+        $this->manager = $manager;
     }
 
     /**
@@ -52,31 +39,15 @@ class HomeListener
      */
     public function onDisplayDesktop(OpenToolEvent $event)
     {
-        $adminTabs = $this->finder->search(HomeTab::class, [
-            'filters' => [
-                'context' => HomeTab::TYPE_ADMIN_DESKTOP,
-                'parent' => null,
-            ],
-        ]);
-
-        $userTabs = $this->finder->search(HomeTab::class, [
-            'filters' => [
-                'context' => HomeTab::TYPE_DESKTOP,
-                'parent' => null,
-            ],
-        ]);
-
-        // generate the final list of tabs
-        $orderedTabs = array_merge(array_values($adminTabs['data']), array_values($userTabs['data']));
-
-        // we rewrite tab position because an admin and a user tab may have the same position
-        foreach ($orderedTabs as $index => &$tab) {
-            $tab['position'] = $index;
+        $user = null;
+        if ($this->tokenStorage->getToken()->getUser() instanceof User) {
+            $user = $this->tokenStorage->getToken()->getUser();
         }
 
         $event->setData([
-            'tabs' => $orderedTabs,
+            'tabs' => $this->manager->getDesktopTabs($user),
         ]);
+
         $event->stopPropagation();
     }
 
@@ -85,19 +56,10 @@ class HomeListener
      */
     public function onDisplayWorkspace(OpenToolEvent $event)
     {
-        $workspace = $event->getWorkspace();
-
-        $tabs = $this->finder->search(HomeTab::class, [
-            'filters' => [
-                'context' => HomeTab::TYPE_WORKSPACE,
-                'workspace' => $workspace->getUuid(),
-                'parent' => null,
-            ],
-        ]);
-
         $event->setData([
-            'tabs' => $tabs['data'],
+            'tabs' => $this->manager->getWorkspaceTabs($event->getWorkspace()),
         ]);
+
         $event->stopPropagation();
     }
 
@@ -106,17 +68,11 @@ class HomeListener
      */
     public function onDisplayAdministration(OpenToolEvent $event)
     {
-        $tabs = $this->finder->search(HomeTab::class, [
-            'filters' => [
-                'context' => HomeTab::TYPE_ADMIN,
-                'parent' => null,
-            ],
-        ]);
-
         $event->setData([
             'administration' => true,
-            'tabs' => $tabs['data'],
+            'tabs' => $this->manager->getAdministrationTabs(),
         ]);
+
         $event->stopPropagation();
     }
 }

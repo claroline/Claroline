@@ -15,12 +15,16 @@ use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\Controller\AbstractApiController;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Tool\OrderedTool;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\LockManager;
 use Claroline\HomeBundle\Entity\HomeTab;
+use Claroline\HomeBundle\Manager\HomeManager;
 use Claroline\HomeBundle\Serializer\HomeTabSerializer;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -29,6 +33,8 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 class HomeController extends AbstractApiController
 {
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
     /** @var AuthorizationCheckerInterface */
     private $authorization;
     /** @var ObjectManager */
@@ -41,21 +47,27 @@ class HomeController extends AbstractApiController
     private $serializer;
     /** @var LockManager */
     private $lockManager;
+    /** @var HomeManager */
+    private $manager;
 
     public function __construct(
+        TokenStorageInterface $tokenStorage,
         AuthorizationCheckerInterface $authorization,
         ObjectManager $om,
         FinderProvider $finder,
         Crud $crud,
         LockManager $lockManager,
-        HomeTabSerializer $serializer
+        HomeTabSerializer $serializer,
+        HomeManager $manager
     ) {
+        $this->tokenStorage = $tokenStorage;
         $this->authorization = $authorization;
         $this->om = $om;
         $this->finder = $finder;
         $this->crud = $crud;
         $this->lockManager = $lockManager;
         $this->serializer = $serializer;
+        $this->manager = $manager;
     }
 
     /**
@@ -65,17 +77,10 @@ class HomeController extends AbstractApiController
      */
     public function homeAction(): JsonResponse
     {
-        $tabs = $this->finder->search(HomeTab::class, [
-            'filters' => [
-                'context' => HomeTab::TYPE_HOME,
-                'parent' => null,
-            ],
-        ]);
-
         $isAdmin = $this->authorization->isGranted('ROLE_ADMIN') || $this->authorization->isGranted('ROLE_HOME_MANAGER');
 
         return new JsonResponse([
-            'tabs' => $tabs['data'],
+            'tabs' => $this->manager->getHomeTabs(),
             'data' => [
                 // mimic standard tool perms
                 'permissions' => [
@@ -101,6 +106,7 @@ class HomeController extends AbstractApiController
             $this->finder->fetch(HomeTab::class, ['context' => HomeTab::TYPE_HOME]) :
             $this->finder->fetch(HomeTab::class, 'desktop' === $context ? [
                 'context' => HomeTab::TYPE_DESKTOP,
+                'user' => $this->tokenStorage->getToken()->getUser()->getUuid(),
             ] : [
                 $context => $contextId,
             ]);
@@ -158,10 +164,9 @@ class HomeController extends AbstractApiController
 
         // retrieve existing tabs for the context to remove deleted ones
         /** @var HomeTab[] $installedTabs */
-        $installedTabs = $this->finder->fetch(
-            HomeTab::class,
-            ['context' => 'desktop' === $context ? HomeTab::TYPE_ADMIN_DESKTOP : HomeTab::TYPE_ADMIN]
-        );
+        $installedTabs = $this->finder->fetch(HomeTab::class, [
+            'context' => 'desktop' === $context ? HomeTab::TYPE_ADMIN_DESKTOP : HomeTab::TYPE_ADMIN,
+        ]);
 
         $this->om->startFlushSuite();
 
@@ -203,23 +208,16 @@ class HomeController extends AbstractApiController
      */
     public function userTabsFetchAction(): JsonResponse
     {
-        $adminTabs = $this->finder->search(HomeTab::class, [
-            'filters' => ['context' => HomeTab::TYPE_ADMIN_DESKTOP],
-        ]);
+        $this->checkDesktopPermissions('OPEN');
 
-        $userTabs = $this->finder->search(HomeTab::class, [
-            'filters' => ['context' => HomeTab::TYPE_DESKTOP],
-        ]);
-
-        // generate the final list of tabs
-        $orderedTabs = array_merge(array_values($adminTabs['data']), array_values($userTabs['data']));
-
-        // we rewrite tab position because an admin and a user tab may have the same position
-        foreach ($orderedTabs as $index => &$tab) {
-            $tab['position'] = $index;
+        $user = null;
+        if ($this->tokenStorage->getToken()->getUser() instanceof User) {
+            $user = $this->tokenStorage->getToken()->getUser();
         }
 
-        return new JsonResponse($orderedTabs);
+        return new JsonResponse(
+            $this->manager->getDesktopTabs($user)
+        );
     }
 
     /**
@@ -227,21 +225,11 @@ class HomeController extends AbstractApiController
      */
     public function adminTabsFetchAction(): JsonResponse
     {
-        if (!$this->authorization->isGranted('ROLE_ADMIN')) {
-            throw new AccessDeniedException();
-        }
-        $tabs = $this->finder->search(HomeTab::class, ['filters' => ['context' => HomeTab::TYPE_ADMIN_DESKTOP]]);
-        $tabs = array_filter($tabs['data'], function ($data) {
-            return !empty($data); // todo : check why this is required
-        });
-        $orderedTabs = [];
+        $this->checkDesktopPermissions('ADMINISTRATE');
 
-        foreach ($tabs as $tab) {
-            $orderedTabs[$tab['position']] = $tab;
-        }
-        ksort($orderedTabs);
-
-        return new JsonResponse(array_values($orderedTabs));
+        return new JsonResponse(
+            $this->manager->getCommonDesktopTabs()
+        );
     }
 
     private function cleanDatabase(array $installedTabs, array $ids)
@@ -253,6 +241,14 @@ class HomeController extends AbstractApiController
                 // the tab no longer exist we can remove it
                 $this->crud->delete($installedTab);
             }
+        }
+    }
+
+    private function checkDesktopPermissions(string $perm)
+    {
+        $homeTool = $this->om->getRepository(OrderedTool::class)->findOneByNameAndDesktop('home');
+        if (!$homeTool || !$this->authorization->isGranted($perm, $homeTool)) {
+            throw new AccessDeniedException();
         }
     }
 }
