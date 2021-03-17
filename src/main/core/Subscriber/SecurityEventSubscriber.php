@@ -3,7 +3,6 @@
 namespace Claroline\CoreBundle\Subscriber;
 
 use Claroline\CoreBundle\Entity\Log\SecurityLog;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
 use Claroline\CoreBundle\Event\Security\AuthenticationFailureEvent;
 use Doctrine\ORM\EntityManagerInterface;
