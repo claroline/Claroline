@@ -12,13 +12,15 @@
 namespace Claroline\CursusBundle\Manager;
 
 use Claroline\AppBundle\API\Crud;
+use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Manager\PlatformManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Event\CatalogEvents\MessageEvents;
+use Claroline\CoreBundle\Event\SendMessageEvent;
 use Claroline\CoreBundle\Library\RoutingHelper;
-use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\Template\TemplateManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
@@ -42,8 +44,6 @@ class SessionManager
     private $eventDispatcher;
     /** @var TranslatorInterface */
     private $translator;
-    /** @var MailManager */
-    private $mailManager;
     /** @var ObjectManager */
     private $om;
     /** @var UrlGeneratorInterface */
@@ -64,6 +64,8 @@ class SessionManager
     private $workspaceManager;
     /** @var EventManager */
     private $sessionEventManager;
+    /** @var StrictDispatcher */
+    private $dispatcher;
 
     private $sessionRepo;
     private $sessionUserRepo;
@@ -72,7 +74,6 @@ class SessionManager
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
         TranslatorInterface $translator,
-        MailManager $mailManager,
         ObjectManager $om,
         UrlGeneratorInterface $router,
         Crud $crud,
@@ -82,11 +83,11 @@ class SessionManager
         TemplateManager $templateManager,
         TokenStorageInterface $tokenStorage,
         WorkspaceManager $workspaceManager,
-        EventManager $sessionEventManager
+        EventManager $sessionEventManager,
+        StrictDispatcher $dispatcher
     ) {
         $this->eventDispatcher = $eventDispatcher;
         $this->translator = $translator;
-        $this->mailManager = $mailManager;
         $this->om = $om;
         $this->router = $router;
         $this->crud = $crud;
@@ -97,6 +98,7 @@ class SessionManager
         $this->tokenStorage = $tokenStorage;
         $this->workspaceManager = $workspaceManager;
         $this->sessionEventManager = $sessionEventManager;
+        $this->dispatcher = $dispatcher;
 
         $this->sessionRepo = $om->getRepository(Session::class);
         $this->sessionUserRepo = $om->getRepository(SessionUser::class);
@@ -519,7 +521,15 @@ class SessionManager
             $title = $this->templateManager->getTemplate($templateName, $placeholders, $locale, 'title');
             $content = $this->templateManager->getTemplate($templateName, $placeholders, $locale);
 
-            $this->mailManager->send($title, $content, [$user]);
+            $this->dispatcher->dispatch(
+                MessageEvents::MESSAGE_SENDING,
+                SendMessageEvent::class,
+                [
+                    $content,
+                    $title,
+                    [$user],
+                ]
+            );
         }
     }
 }
