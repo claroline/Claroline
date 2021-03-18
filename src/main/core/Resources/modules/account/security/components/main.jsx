@@ -7,6 +7,8 @@ import {showBreadcrumb} from '#/main/app/layout/utils'
 
 import {UserPage} from '#/main/core/user/components/page'
 import {User as UserTypes} from '#/main/core/user/prop-types'
+import {selectors} from '#/main/core/account/security/store/selectors'
+import {SecurityLogList} from '#/main/core/account/security/components/list'
 
 const SecurityMain = (props) =>
   <UserPage
@@ -25,31 +27,21 @@ const SecurityMain = (props) =>
     title={trans('security')}
     user={props.currentUser}
   >
+    <div style={{
+      marginTop: 60 // TODO : manage spacing correctly
+    }}>
+      <SecurityLogList
+        name={selectors.STORE_NAME}
+        url={['apiv2_logs_security_list_current']}
+      />
+    </div>
 
   </UserPage>
 
 SecurityMain.propTypes = {
   currentUser: T.shape(
     UserTypes.propTypes
-  ).isRequired,
-  privacy: T.shape({
-    countryStorage: T.string,
-    dpo: T.shape({
-      name: T.string,
-      email: T.string,
-      address: T.shape({
-        street1: T.string,
-        street2: T.string,
-        postalCode: T.string,
-        city: T.string,
-        state: T.string,
-        country: T.string
-      }),
-      phone: T.string
-    })
-  }).isRequired,
-  exportAccount: T.func.isRequired,
-  acceptTerms: T.func.isRequired
+  ).isRequired
 }
 
 export {

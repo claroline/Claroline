@@ -1,6 +1,7 @@
-
-import {actions} from '#/main/core/account/security/store/actions'
+import {reducer} from '#/main/core/account/security/store/reducer'
+import {selectors} from '#/main/core/account/security/store/selectors'
 
 export {
-  actions
+  reducer,
+  selectors
 }

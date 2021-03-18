@@ -1,25 +1,18 @@
 import {connect} from 'react-redux'
 
-import {selectors as configSelectors} from '#/main/app/config/store'
+import {withReducer} from '#/main/app/store/components/withReducer'
 import {selectors as securitySelectors} from '#/main/app/security/store'
 
-import {actions} from '#/main/core/account/privacy/store'
-import {SecurityMain as SecurityMainComponent} from '#/main/core/account/security/components/main'
+import {reducer, selectors} from '#/main/core/account/security/store'
+import {SecurityMain as SecurityMainComponent}  from '#/main/core/account/security/components/main'
 
-const SecurityMain = connect(
-  (state) => ({
-    privacy: configSelectors.param(state, 'privacy'),
-    currentUser: securitySelectors.currentUser(state)
-  }),
-  (dispatch) => ({
-    acceptTerms() {
-      dispatch(actions.acceptTerms())
-    },
-    exportAccount() {
-      dispatch(actions.exportAccount())
-    }
-  })
-)(SecurityMainComponent)
+const SecurityMain = withReducer(selectors.STORE_NAME, reducer)(
+  connect(
+    (state) => ({
+      currentUser: securitySelectors.currentUser(state)
+    })
+  )(SecurityMainComponent)
+)
 
 export {
   SecurityMain

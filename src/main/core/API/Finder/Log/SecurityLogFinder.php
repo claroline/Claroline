@@ -26,10 +26,14 @@ class SecurityLogFinder extends AbstractFinder
     {
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
-                case 'workspace':
-                    $qb->leftJoin('obj.workspace', 'w');
-                    $qb->andWhere('w.uuid = :workspaceId');
-                    $qb->setParameter('workspaceId', $filterValue);
+                case 'user':
+                    $qb->leftJoin('obj.doer', 'd');
+                    $qb->andWhere('d.uuid = :id');
+                    $qb->setParameter('id', $filterValue);
+                    break;
+                case 'email':
+                    $qb->orWhere('obj.details LIKE :email');
+                    $qb->setParameter('email', '%'.$filterValue.'%');
                     break;
 
                 default:

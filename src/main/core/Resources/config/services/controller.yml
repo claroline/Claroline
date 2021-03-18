@@ -339,3 +339,5 @@ services:
         public: true
         arguments:
             - '@Claroline\AppBundle\API\FinderProvider'
+            - '@security.authorization_checker'
+            - '@security.token_storage'
