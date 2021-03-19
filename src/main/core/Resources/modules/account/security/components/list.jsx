@@ -42,7 +42,7 @@ const SecurityLogList = (props) =>
           domain: 'security'
         }
       }
-    ].concat(props.definition)}
+    ]}
   />
 
 SecurityLogList.propTypes = {

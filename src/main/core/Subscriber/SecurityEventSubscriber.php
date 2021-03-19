@@ -4,7 +4,6 @@ namespace Claroline\CoreBundle\Subscriber;
 
 use Claroline\CoreBundle\Entity\Log\SecurityLog;
 use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
-use Claroline\CoreBundle\Event\Security\AuthenticationFailureEvent;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -61,11 +60,7 @@ class SecurityEventSubscriber implements EventSubscriberInterface
         $logEntry->setDetails($event->getMessage($this->translator));
         $logEntry->setEvent($eventName);
         $logEntry->setTarget($event->getUser());
-        $logEntry->setDoer($this->security->getUser());
-
-        if ($event instanceof AuthenticationFailureEvent) {
-            $logEntry->setDoer($event->getUser());
-        }
+        $logEntry->setDoer($this->security->getUser() ?? $event->getUser());
 
         $this->em->persist($logEntry);
         $this->em->flush();

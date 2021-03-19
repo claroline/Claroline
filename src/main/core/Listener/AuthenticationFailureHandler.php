@@ -33,7 +33,7 @@ class AuthenticationFailureHandler extends DefaultAuthenticationFailureHandler
         $this->dispatcher = $dispatcher;
     }
 
-    public function setRepository(ObjectManager $objectManager)
+    public function setObjectManager(ObjectManager $objectManager)
     {
         $this->objectManager = $objectManager;
     }

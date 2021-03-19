@@ -2,7 +2,9 @@ import {makeListReducer} from '#/main/app/content/list/store'
 
 import {selectors} from '#/main/core/account/security/store/selectors'
 
-const reducer = makeListReducer(selectors.STORE_NAME)
+const reducer = makeListReducer(selectors.STORE_NAME, {
+  sortBy: {property: 'date', direction: -1}
+})
 
 export {
   reducer

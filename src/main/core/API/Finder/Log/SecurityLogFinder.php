@@ -31,17 +31,11 @@ class SecurityLogFinder extends AbstractFinder
                     $qb->andWhere('d.uuid = :id');
                     $qb->setParameter('id', $filterValue);
                     break;
-                case 'email':
-                    $qb->orWhere('obj.details LIKE :email');
-                    $qb->setParameter('email', '%'.$filterValue.'%');
-                    break;
 
                 default:
                     $this->setDefaults($qb, $filterName, $filterValue);
             }
         }
-
-        $qb->orderBy('obj.id', 'desc');
 
         return $qb;
     }
