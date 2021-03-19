@@ -14,29 +14,30 @@ namespace Claroline\CoreBundle\Event;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\User;
 use Symfony\Contracts\EventDispatcher\Event;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SendMessageEvent extends Event
 {
     private $content;
     private $object;
-    private $receiver;
+    private $receivers;
     private $sender;
-    private $users;
     private $withMail;
 
+    /**
+     * @param AbstractRoleSubject[] $receivers
+     */
     public function __construct(
-        User $sender,
         $content,
         $object,
-        AbstractRoleSubject $receiver = null,
-        array $users = [],
+        array $receivers,
+        ?User $sender = null,
         $withMail = true
     ) {
-        $this->sender = $sender;
         $this->content = $content;
         $this->object = $object;
-        $this->receiver = $receiver;
-        $this->users = $users;
+        $this->receivers = $receivers;
+        $this->sender = $sender;
         $this->withMail = $withMail;
     }
 
@@ -60,14 +61,17 @@ class SendMessageEvent extends Event
         $this->object = $object;
     }
 
-    public function getReceiver()
+    public function getReceivers()
     {
-        return $this->receiver;
+        return $this->receivers;
     }
 
-    public function setReceiver(AbstractRoleSubject $receiver)
+    /**
+     * @param AbstractRoleSubject[] $receiver
+     */
+    public function setReceivers(array $receivers)
     {
-        $this->receiver = $receiver;
+        $this->receivers = $receivers;
     }
 
     public function getSender()
@@ -80,16 +84,6 @@ class SendMessageEvent extends Event
         $this->sender = $sender;
     }
 
-    public function getUsers()
-    {
-        return $this->users;
-    }
-
-    public function setUsers(array $users)
-    {
-        $this->users = $users;
-    }
-
     public function getWithMail()
     {
         return $this->withMail;
@@ -98,5 +92,17 @@ class SendMessageEvent extends Event
     public function setWithMail($withMail)
     {
         $this->withMail = $withMail;
+    }
+
+    public function getMessage(TranslatorInterface $translator, $sender, User $receveir)
+    {
+        return $translator->trans(
+            'sendMessage',
+            [
+                'sender' => $sender,
+                'receveir' => $receveir,
+            ],
+            'platform'
+        );
     }
 }

@@ -11,9 +11,11 @@
 
 namespace Claroline\CursusBundle\Manager;
 
+use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Manager\MailManager;
+use Claroline\CoreBundle\Event\CatalogEvents\MessageEvents;
+use Claroline\CoreBundle\Event\SendMessageEvent;
 use Claroline\CoreBundle\Manager\Template\TemplateManager;
 use Claroline\CursusBundle\Entity\Event;
 use Claroline\CursusBundle\Entity\Registration\AbstractRegistration;
@@ -32,8 +34,6 @@ class EventManager
 {
     /** @var EventDispatcherInterface */
     private $eventDispatcher;
-    /** @var MailManager */
-    private $mailManager;
     /** @var ObjectManager */
     private $om;
     /** @var UrlGeneratorInterface */
@@ -42,24 +42,26 @@ class EventManager
     private $templateManager;
     /** @var TokenStorageInterface */
     private $tokenStorage;
+    /** @var StrictDispatcher */
+    private $dispatcher;
 
     private $eventUserRepo;
     private $eventGroupRepo;
 
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
-        MailManager $mailManager,
         ObjectManager $om,
         UrlGeneratorInterface $router,
         TemplateManager $templateManager,
-        TokenStorageInterface $tokenStorage
+        TokenStorageInterface $tokenStorage,
+        StrictDispatcher $dispatcher
     ) {
         $this->eventDispatcher = $eventDispatcher;
-        $this->mailManager = $mailManager;
         $this->om = $om;
         $this->router = $router;
         $this->templateManager = $templateManager;
         $this->tokenStorage = $tokenStorage;
+        $this->dispatcher = $dispatcher;
 
         $this->eventUserRepo = $om->getRepository(EventUser::class);
         $this->eventGroupRepo = $om->getRepository(EventGroup::class);
@@ -241,7 +243,15 @@ class EventManager
             $title = $this->templateManager->getTemplate('training_event_invitation', $placeholders, $locale, 'title');
             $content = $this->templateManager->getTemplate('training_event_invitation', $placeholders, $locale);
 
-            $this->mailManager->send($title, $content, [$user]);
+            $this->dispatcher->dispatch(
+                MessageEvents::MESSAGE_SENDING,
+                SendMessageEvent::class,
+                [
+                    $content,
+                    $title,
+                    [$user],
+                ]
+            );
         }
     }
 

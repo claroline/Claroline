@@ -21,3 +21,4 @@ services:
           - '@Claroline\CoreBundle\Manager\MailManager'
           - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@Claroline\CoreBundle\Manager\Task\ScheduledTaskManager'
+          - '@Claroline\AppBundle\Event\StrictDispatcher'

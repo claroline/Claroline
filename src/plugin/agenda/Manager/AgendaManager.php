@@ -13,9 +13,11 @@ namespace Claroline\AgendaBundle\Manager;
 
 use Claroline\AgendaBundle\Entity\Event;
 use Claroline\AgendaBundle\Entity\EventInvitation;
+use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Event\CatalogEvents\MessageEvents;
 use Claroline\CoreBundle\Event\SendMessageEvent;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -34,6 +36,7 @@ class AgendaManager
     private $translator;
     private $container;
     private $projectDir;
+    private $dispatcher;
 
     public function __construct(
         ObjectManager $om,
@@ -42,7 +45,8 @@ class AgendaManager
         AuthorizationCheckerInterface $authorization,
         RoleManager $rm,
         TranslatorInterface $translator,
-        ContainerInterface $container
+        ContainerInterface $container,
+        StrictDispatcher $dispatcher
     ) {
         $this->projectDir = $projectDir;
         $this->om = $om;
@@ -51,6 +55,7 @@ class AgendaManager
         $this->rm = $rm;
         $this->translator = $translator;
         $this->container = $container;
+        $this->dispatcher = $dispatcher;
     }
 
     public function sendInvitation(Event $event, array $users = [])
@@ -72,37 +77,38 @@ class AgendaManager
         $this->om->flush();
 
         $creator = $this->tokenStorage->getToken()->getUser();
-        $message = new SendMessageEvent(
-            $creator,
-            $this->translator->trans('send_message_content', [
-                '%Sender%' => $creator->getUserName(),
-                '%Start%' => $event->getStart(),
-                '%End%' => $event->getEnd(),
-                '%Description%' => $event->getDescription(),
-                '%JoinAction%' => $this->container->get('router')->generate(
-                    'claro_agenda_invitation_action',
-                    ['event' => $event->getId(), 'action' => EventInvitation::JOIN],
-                    UrlGeneratorInterface::ABSOLUTE_URL
-                ),
-                '%MaybeAction%' => $this->container->get('router')->generate(
-                    'claro_agenda_invitation_action',
-                    ['event' => $event->getId(), 'action' => EventInvitation::MAYBE],
-                    UrlGeneratorInterface::ABSOLUTE_URL
-                ),
-                '%ResignAction%' => $this->container->get('router')->generate(
-                    'claro_agenda_invitation_action',
-                    ['event' => $event->getId(), 'action' => EventInvitation::RESIGN],
-                    UrlGeneratorInterface::ABSOLUTE_URL
-                ),
-            ], 'agenda'),
-            $this->translator->trans('send_message_object', ['%EventName%' => $event->getTitle()], 'agenda'),
-            null,
-            $users,
-            false
-        );
 
-        $dispatcher = $this->container->get('event_dispatcher');
-        $dispatcher->dispatch($message, 'claroline_message_sending_to_users');
+        $this->dispatcher->dispatch(
+            MessageEvents::MESSAGE_SENDING,
+            SendMessageEvent::class,
+            [
+                $this->translator->trans('send_message_content', [
+                    '%Sender%' => $creator->getUserName(),
+                    '%Start%' => $event->getStart(),
+                    '%End%' => $event->getEnd(),
+                    '%Description%' => $event->getDescription(),
+                    '%JoinAction%' => $this->container->get('router')->generate(
+                        'claro_agenda_invitation_action',
+                        ['event' => $event->getId(), 'action' => EventInvitation::JOIN],
+                        UrlGeneratorInterface::ABSOLUTE_URL
+                    ),
+                    '%MaybeAction%' => $this->container->get('router')->generate(
+                        'claro_agenda_invitation_action',
+                        ['event' => $event->getId(), 'action' => EventInvitation::MAYBE],
+                        UrlGeneratorInterface::ABSOLUTE_URL
+                    ),
+                    '%ResignAction%' => $this->container->get('router')->generate(
+                        'claro_agenda_invitation_action',
+                        ['event' => $event->getId(), 'action' => EventInvitation::RESIGN],
+                        UrlGeneratorInterface::ABSOLUTE_URL
+                    ),
+                ], 'agenda'),
+                $this->translator->trans('send_message_object', ['%EventName%' => $event->getTitle()], 'agenda'),
+                [$users],
+                $creator,
+                false,
+            ]
+        );
     }
 
     public function checkOpenAccess(Workspace $workspace)

@@ -57,11 +57,11 @@ class MessageManager
     /**
      * Create a message.
      *
-     * @param string $content The message content
-     * @param string $object  The message object
-     * @param User[] $users   The users receiving the message
-     * @param null   $sender  The user sending the message
-     * @param null   $parent  The message parent (is it's a discussion)
+     * @param string                $content The message content
+     * @param string                $object  The message object
+     * @param AbstractRoleSubject[] $users   The users receiving the message
+     * @param null                  $sender  The user sending the message
+     * @param null                  $parent  The message parent (is it's a discussion)
      *
      * @return Message
      */
@@ -178,27 +178,34 @@ class MessageManager
         return $message;
     }
 
-    public function sendMessageToAbstractRoleSubject(
-        AbstractRoleSubject $subject,
+    /**
+     * @param AbstractRoleSubject[] $receivers
+     */
+    public function sendMessage(
         $content,
         $object,
+        array $receivers = null,
         $sender = null,
         $withMail = true
     ) {
         $users = [];
-
-        if ($subject instanceof User) {
-            $users[] = $subject;
-        }
-
-        if ($subject instanceof Group) {
-            foreach ($subject->getUsers() as $user) {
-                $users[] = $user;
+        foreach ($receivers as $receiver) {
+            if ($receiver instanceof User) {
+                $users[] = $receiver;
+            } elseif ($receiver instanceof Group) {
+                foreach ($receiver->getUsers() as $user) {
+                    $users[] = $user;
+                }
             }
         }
 
         $message = $this->create($content, $object, $users, $sender);
         $this->send($message, true, $withMail);
+
+        /*
+         * Returns the table of users to be used in MessageSubscriber
+         */
+        return $users;
     }
 
     public function remove(UserMessage $message)

@@ -8,6 +8,7 @@ import {DashboardActivity} from '#/plugin/analytics/administration/dashboard/com
 import {DashboardContent} from '#/plugin/analytics/administration/dashboard/components/content'
 import {DashboardCommunity} from '#/plugin/analytics/administration/dashboard/components/community'
 import {DashboardLog} from '#/plugin/analytics/administration/dashboard/components/log'
+import {DashboardMessage} from '#/plugin/analytics/administration/dashboard/components/message'
 
 const DashboardTool = (props) =>
   <Routes
@@ -53,6 +54,9 @@ const DashboardTool = (props) =>
       }, {
         path: '/security',
         component: DashboardLog
+      }, {
+        path: '/message',
+        component: DashboardMessage
       }
     ]}
   />
