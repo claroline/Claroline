@@ -108,3 +108,5 @@ services:
     Claroline\CoreBundle\API\Finder\Log\SecurityLogFinder: ~
 
     Claroline\CoreBundle\API\Finder\Log\MessageLogFinder: ~
+
+    Claroline\CoreBundle\API\Finder\Log\FunctionalLogSerializer: ~

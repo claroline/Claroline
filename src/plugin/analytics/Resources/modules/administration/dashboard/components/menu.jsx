@@ -53,6 +53,12 @@ const DashboardMenu = (props) =>
           icon: 'fa fa-fw fa-message',
           label: trans('message'),
           target: props.path + '/message'
+        }, {
+          name: 'functional',
+          type: LINK_BUTTON,
+          icon: 'fa fa-fw fa-cogs',
+          label: trans('functional'),
+          target: props.path + '/functional'
         }
       ]}
       onClick={props.autoClose}

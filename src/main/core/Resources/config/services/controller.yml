@@ -341,3 +341,9 @@ services:
         public: true
         arguments:
             - '@Claroline\AppBundle\API\FinderProvider'
+
+    Claroline\CoreBundle\Controller\APINew\Log\FunctionalLogController:
+        parent: Claroline\AppBundle\Controller\AbstractSecurityController
+        public: true
+        arguments:
+            - '@Claroline\AppBundle\API\FinderProvider'
