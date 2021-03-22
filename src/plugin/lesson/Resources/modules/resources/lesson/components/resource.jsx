@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
-import {CALLBACK_BUTTON} from '#/main/app/buttons'
+import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {ResourcePage} from '#/main/core/resource/containers/page'
 
 import {ChapterResource} from '#/plugin/lesson/resources/lesson/components/chapter'
@@ -37,6 +37,13 @@ class LessonResource extends Component {
         primaryAction="chapter"
         customActions={[
           {
+            type: LINK_BUTTON,
+            icon: 'fa fa-fw fa-home',
+            label: trans('show_overview'),
+            displayed: this.props.overview,
+            target: this.props.path,
+            exact: true
+          }, {
             type: CALLBACK_BUTTON,
             icon: 'fa fa-fw fa-file-pdf-o',
             displayed: this.props.canExport,
