@@ -333,6 +333,8 @@ services:
         public: true
         arguments:
             - '@Claroline\AppBundle\API\FinderProvider'
+            - '@security.authorization_checker'
+            - '@security.token_storage'
 
     Claroline\CoreBundle\Controller\APINew\Log\MessageLogController:
         parent: Claroline\AppBundle\Controller\AbstractSecurityController
