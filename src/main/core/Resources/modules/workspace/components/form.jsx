@@ -118,15 +118,36 @@ const WorkspaceFormComponent = (props) =>
             type: 'image',
             label: trans('thumbnail')
           }, {
-            name: 'display.showMenu',
-            type: 'boolean',
-            label: trans('showTools'),
-            mode: 'expert'
-          }, {
             name: 'display.showProgression',
             type: 'boolean',
             label: trans('showProgression'),
             mode: 'advanced'
+          }, {
+            name: 'breadcrumb.displayed',
+            type: 'boolean',
+            label: trans('showBreadcrumbs'),
+            displayed: props.hasBreadcrumb, // only show breadcrumb config if it's not disabled at platform level
+            mode: 'advanced',
+            linked: [
+              {
+                name: 'breadcrumb.items',
+                type: 'choice',
+                label: trans('links'),
+                required: true,
+                displayed: (workspace) => get(workspace, 'breadcrumb.displayed') || false,
+                options: {
+                  choices: {
+                    desktop: trans('desktop'),
+                    workspaces: trans('workspace_list'),
+                    current: trans('current_workspace'),
+                    tool: trans('tool')
+                  },
+                  inline: false,
+                  condensed: false,
+                  multiple: true
+                }
+              }
+            ]
           }
         ]
       }, {
@@ -181,38 +202,20 @@ const WorkspaceFormComponent = (props) =>
                 }
               }
             ]
-          }
-        ]
-      }, {
-        icon: 'fa fa-fw fa-map-signs',
-        title: trans('breadcrumb'),
-        mode: 'advanced',
-        displayed: props.hasBreadcrumb, // only show breadcrumb config if it's not disabled at platform level
-        fields: [
-          {
-            name: 'breadcrumb.displayed',
-            type: 'boolean',
-            label: trans('showBreadcrumbs'),
-            linked: [
-              {
-                name: 'breadcrumb.items',
-                type: 'choice',
-                label: trans('links'),
-                required: true,
-                displayed: (workspace) => get(workspace, 'breadcrumb.displayed') || false,
-                options: {
-                  choices: {
-                    desktop: trans('desktop'),
-                    workspaces: trans('workspace_list'),
-                    current: trans('current_workspace'),
-                    tool: trans('tool')
-                  },
-                  inline: false,
-                  condensed: false,
-                  multiple: true
-                }
+          }, {
+            name: 'opening.menu',
+            type: 'choice',
+            label: trans('tools_menu'),
+            mode: 'expert',
+            placeholder: trans('do_nothing'),
+            options: {
+              condensed: false,
+              noEmpty: false,
+              choices: {
+                open: trans('open_tools_menu'),
+                close: trans('close_tools_menu')
               }
-            ]
+            }
           }
         ]
       }, {

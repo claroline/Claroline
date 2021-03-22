@@ -7,7 +7,7 @@ import {actions as layoutActions, selectors as layoutSelectors} from '#/main/app
 import {actions as toolActions} from '#/main/core/tool/store'
 
 import {HomeMain as HomeMainComponent} from '#/main/app/layout/sections/home/components/main'
-import {selectors} from '#/main/app/layout/sections/home/store'
+import {actions, selectors} from '#/main/app/layout/sections/home/store'
 import {constants} from '#/main/app/layout/sections/home/constants'
 
 const HomeMain = connect(
@@ -25,6 +25,9 @@ const HomeMain = connect(
     changePassword: configSelectors.param(state, 'authentication.changePassword')
   }),
   (dispatch) => ({
+    open() {
+      dispatch(actions.open())
+    },
     openHome(type, data) {
       if (constants.HOME_TYPE_URL === type) {
         window.location.replace(data)

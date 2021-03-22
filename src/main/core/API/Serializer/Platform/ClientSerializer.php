@@ -137,9 +137,11 @@ class ClientSerializer
             'desktop' => [ // TODO : find a better way to store and expose this
                 'defaultTool' => $this->config->getParameter('desktop.default_tool'),
                 'showProgression' => $this->config->getParameter('desktop.show_progression'),
+                'menu' => $this->config->getParameter('desktop.menu'),
             ],
             'admin' => [ // TODO : find a better way to store and expose this
                 'defaultTool' => $this->config->getParameter('admin.default_tool'),
+                'menu' => $this->config->getParameter('admin.menu'),
             ],
             'privacy' => $this->config->getParameter('privacy'),
             'pricing' => $this->config->getParameter('pricing'),

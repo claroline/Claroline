@@ -38,24 +38,36 @@ const dataType = {
       required: true
     }
   ],
-  parse: (display, options) => Object.keys(options.choices).find(enumValue => display === enumValue || display === options.choices[enumValue]),
-  render: (raw, options) => {
-    if (Array.isArray(raw)) {
-      return raw.map(value => options.choices[value]).join(', ')
-    } else {
-      return options.choices[raw]
+  parse: (display, options) => {
+    if (null !== display) {
+      return Object.keys(options.choices).find(enumValue => display === enumValue || display === options.choices[enumValue])
     }
+
+    return null
+  },
+  render: (raw, options) => {
+    if (null !== raw) {
+      if (Array.isArray(raw)) {
+        return raw.map(value => options.choices[value]).join(', ')
+      } else {
+        return options.choices[raw]
+      }
+    }
+
+    return null
   },
   validate: (value, options) => {
-    const choices = options.choices || {}
+    if (value) {
+      const choices = options.choices || {}
 
-    if (options.multiple) {
-      const unknown = differenceBy(value, Object.keys(choices), (selected) => selected+'')
-      if (0 !== unknown.length) {
+      if (options.multiple) {
+        const unknown = differenceBy(value, Object.keys(choices), (selected) => selected+'')
+        if (0 !== unknown.length) {
+          return tval('This value is invalid.')
+        }
+      } else if (-1 === Object.keys(choices).indexOf(value)) {
         return tval('This value is invalid.')
       }
-    } else if (!choices.hasOwnProperty(value)) {
-      return tval('This value is invalid.')
     }
   },
   components: {

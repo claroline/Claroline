@@ -65,10 +65,10 @@ const Radios = props => {
           key="empty-value"
           id={`${props.id}-empty`}
           label={props.placeholder || trans('none')}
-          value={null}
+          value=""
           inline={props.inline}
           checked={null === props.value}
-          onChange={props.onChange}
+          onChange={() => props.onChange(null)}
         />
       }
 
