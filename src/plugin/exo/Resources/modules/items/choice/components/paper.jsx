@@ -115,7 +115,7 @@ const ChoicePaper = props =>
               </ContentHtml>
 
               <AnswerStats stats={{
-                value: props.stats.choices[solution.id] ?
+                value: props.stats.choices && props.stats.choices[solution.id] ?
                   props.stats.choices[solution.id] :
                   0,
                 total: props.stats.total
