@@ -203,7 +203,17 @@ class WorkspaceSerializer
         $openingData = [
             'type' => 'tool',
             'target' => 'home',
+            'menu' => null,
         ];
+
+        if ($details && isset($details['hide_tools_menu'])) {
+            // test for bool values is for retro-compatibility to avoid having to migrate a json col in a huge table
+            if (is_string($details['hide_tools_menu'])) {
+                $openingData['menu'] = $details['hide_tools_menu'];
+            } else {
+                $openingData['menu'] = !$details['hide_tools_menu'] ? 'open' : 'close';
+            }
+        }
 
         if ($details && isset($details['opening_type'])) {
             $openingData['type'] = $details['opening_type'];
@@ -229,22 +239,9 @@ class WorkspaceSerializer
     {
         $options = $workspace->getOptions()->getDetails();
 
-        $openResource = null;
-        if (isset($options['workspace_opening_resource']) && $options['workspace_opening_resource']) {
-            $resource = $this->om
-                ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceNode')
-                ->findOneBy(['id' => $options['workspace_opening_resource']]);
-
-            if (!empty($resource)) {
-                $openResource = $this->resNodeSerializer->serialize($resource);
-            }
-        }
-
         return [
             'color' => !empty($options['background_color']) ? $options['background_color'] : null,
-            'showMenu' => !isset($options['hide_tools_menu']) || !$options['hide_tools_menu'],
             'showProgression' => $workspace->getShowProgression(),
-            'openResource' => $openResource,
         ];
     }
 
@@ -411,22 +408,18 @@ class WorkspaceSerializer
         $workspaceOptions = $workspace->getOptions();
 
         if (isset($data['display']) || isset($data['opening'])) {
-            $this->sipe('display.showProgression', 'setShowProgression', $data, $workspace);
-
             $details = $workspaceOptions->getDetails();
             if (empty($details)) {
                 $details = [];
             }
 
             if (isset($data['display'])) {
+                $this->sipe('display.showProgression', 'setShowProgression', $data, $workspace);
                 $details['background_color'] = !empty($data['display']['color']) ? $data['display']['color'] : null;
-                $details['hide_tools_menu'] = isset($data['display']['showMenu']) ? !$data['display']['showMenu'] : true;
-                $details['use_workspace_opening_resource'] = !empty($data['display']['openResource']);
-                $details['workspace_opening_resource'] = !empty($data['display']['openResource']) && !empty($data['display']['openResource']['autoId']) ?
-                    $data['display']['openResource']['autoId'] :
-                    null;
             }
+
             if (isset($data['opening'])) {
+                $details['hide_tools_menu'] = isset($data['opening']['menu']) ? $data['opening']['menu'] : null;
                 $details['opening_type'] = isset($data['opening']['type']) && isset($data['opening']['target']) && !empty($data['opening']['target']) ?
                     $data['opening']['type'] :
                     'tool';

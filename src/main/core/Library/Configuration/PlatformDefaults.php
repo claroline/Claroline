@@ -32,6 +32,7 @@ class PlatformDefaults implements ParameterProviderInterface
             'home' => [
                 'type' => 'none',
                 'data' => null,
+                'menu' => null,
             ],
             'profile' => [
                 'roles_confidential' => [],
@@ -166,10 +167,12 @@ class PlatformDefaults implements ParameterProviderInterface
             ],
             'admin' => [
                 'default_tool' => 'home',
+                'menu' => null,
             ],
             'desktop' => [
                 'default_tool' => 'home',
                 'show_progression' => false,
+                'menu' => null,
             ],
             'show_about_button' => true,
             'notifications_refresh_delay' => 0, // in ms

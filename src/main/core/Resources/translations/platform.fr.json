@@ -450,7 +450,6 @@
     "hide_client": "Cacher un client",
     "hide_client_message": "Êtes-vous sûr de vouloir cacher ce client ?",
     "hide_field": "Cacher le champ",
-    "hide_tools_menu": "Cacher le menu d'outils (sauf pour les gestionnaires).",
     "home": "Accueil",
     "home_lock": "Verrouillage du bureau",
     "home_manager": "Gestionnaire de l'accueil",
@@ -1478,12 +1477,15 @@
     "restrict_hidden": "Cacher",
     "restrict_hidden_help": "L'élément sera toujours accessible mais les utilisateurs ne le verront plus dans les listes.",
     "showBreadcrumbs": "Afficher le fil d'Ariane",
-    "showTools": "Afficher le menu d'outils aux utilisateurs",
     "showProgression": "Afficher la progression de l'utilisateur",
     "opening_parameters": "Paramètres d'ouverture",
     "enable_notifications": "Activer les notifications",
     "open_workspace_resource": "Ouvrir une ressource de l'espace d'activités",
     "open_workspace_tool": "Ouvrir un outil de l'espace d'activités",
+    "tools_menu": "Menu d'outils",
+    "open_tools_menu": "Ouvrir automatiquement le menu",
+    "close_tools_menu": "Fermer automatiquement le menu",
+    "do_nothing": "Ne rien faire",
     "unit_kilo": "k",
     "unit_mega": "M",
     "unit_giga": "G",
@@ -1674,5 +1676,7 @@
     "price": "Prix",
     "allow_change_password": "Autoriser les utilisateurs à changer leur mot de passe",
     "sendMessage": "sender a envoyé un message à receveir",
-    "claroline_message_sending": "Envoi d'un message"
+    "claroline_message_sending": "Envoi d'un message",
+    "planned_at": "Planifié le",
+    "planning": "Planification"
 }

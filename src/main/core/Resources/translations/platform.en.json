@@ -444,7 +444,6 @@
     "hide_client": "Hide a client",
     "hide_client_message": "Do you really want to hide this client ?",
     "hide_field": "Hide field",
-    "hide_tools_menu": "Hide tools menu (except for managers)",
     "home": "Home",
     "home_lock": "Home lock",
     "home_manager": "Home manager",
@@ -1446,12 +1445,15 @@
     "restrict_hidden": "Hide",
     "restrict_hidden_help": "The item will still be accessible but users will no longer see it in the lists.",
     "showBreadcrumbs": "Display breadcrumb",
-    "showTools": "Display tools menu to users",
     "showProgression": "Display user progression",
     "workspace_opening": "Opening parameters",
     "enable_notifications": "Enable notifications",
     "open_workspace_resource": "Open a workspace resource",
     "open_workspace_tool": "Open a workspace tool",
+    "tools_menu": "Tools menu",
+    "open_tools_menu": "Automatically open tools menu",
+    "close_tools_menu": "Automatically close tools menu",
+    "do_nothing": "Do nothing",
     "unit_kilo": "K",
     "unit_mega": "M",
     "unit_giga": "G",
@@ -1641,5 +1643,7 @@
     "price": "Price",
     "allow_change_password": "Allow users to change their password",
     "sendMessage": "sender send a message to receveir",
-    "claroline_message_sending": "Send a message"
+    "claroline_message_sending": "Send a message",
+    "planned_at": "Planned at",
+    "planning": "Planning"
 }
