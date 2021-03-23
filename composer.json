@@ -157,7 +157,7 @@
             "Claroline\\CoreBundle\\Library\\Maintenance\\MaintenanceHandler::disableMaintenance"
         ],
         "delete-cache": [
-            "rm -rf ./var/cache/"
+            "rm -rf ./var/cache/*"
         ],
         "bundles": [
             "Claroline\\BundleRecorder\\ScriptHandler::buildBundleFile"
