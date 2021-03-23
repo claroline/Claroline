@@ -10,7 +10,9 @@ const reducer = combineReducers({
   count: makeReducer({}, {
     [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: (state, action) => action.toolData.count
   }),
-  securityLogs: makeListReducer(selectors.LIST_NAME),
+  securityLogs: makeListReducer(selectors.LIST_NAME, {
+    sortBy: {property: 'date', direction: -1}
+  }),
   messageLogs: makeListReducer(selectors.MESSAGE_NAME)
 })
 

@@ -26,6 +26,9 @@ services:
             - method: setDispatcher
               arguments:
                 - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - method: setObjectManager
+              arguments:
+                - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     # array injection with annotations is not supported
     claroline.plugin.validator:

@@ -14,26 +14,30 @@ echo "MySQL is up"
 if [ -f files/installed ]; then
   echo "Claroline is already installed"
 
-  currentVersion=$(head -n 1 VERSION.txt)
-  versionLastUsed=$(head -n 1 files/versionLastUsed.txt)
+  if [ -f files/versionLastUsed.txt ]; then
+    versionLastUsed=$(head -n 1 files/versionLastUsed.txt)
+    currentVersion=$(head -n 1 VERSION.txt)
 
-  if [[ "$currentVersion" != "$versionLastUsed" ]]; then
-    echo "New version detected, updating..."
-    php bin/configure # we run it again to regenerate parameters.yml inside the volume
-    php bin/check
-    composer enable-maintenance
-    composer delete-cache
-    php bin/console claroline:update -vvv
-    composer disable-maintenance
-    chmod -R 750 var files config
-    chown -R www-data:www-data var files config
-    composer delete-cache # fixes SAML errors
+    if [[ "$versionLastUsed" != "$currentVersion" ]]; then
+      echo "New version detected, updating..."
+      php bin/configure # we run it again to regenerate parameters.yml inside the volume
+      php bin/check
+      composer enable-maintenance
+      composer delete-cache
+      php bin/console claroline:update -vvv
+      composer disable-maintenance
+      chmod -R 750 var files config
+      chown -R www-data:www-data var files config
+      composer delete-cache # fixes SAML errors
+    else
+      echo "Claroline version is up to date"
+    fi
   fi
 else
   echo "Installing Claroline..."
   php bin/configure # we run it again to generate parameters.yml inside the volume
   php bin/check
-  composer bundles
+  composer bundles # we run it again to generate bundles.ini inside the volume
   php bin/console claroline:install -vvv
 
   if [[ -v PLATFORM_NAME ]]; then
