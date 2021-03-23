@@ -11,6 +11,7 @@
 
 namespace Claroline\CursusBundle\Entity;
 
+use Claroline\AppBundle\Entity\IdentifiableInterface;
 use Claroline\CoreBundle\Entity\Organization\Location;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Role;
@@ -21,7 +22,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="Claroline\CursusBundle\Repository\SessionRepository")
  * @ORM\Table(name="claro_cursusbundle_course_session")
  */
-class Session extends AbstractTraining
+class Session extends AbstractTraining implements IdentifiableInterface
 {
     const REGISTRATION_AUTO = 0;
     const REGISTRATION_MANUAL = 1;

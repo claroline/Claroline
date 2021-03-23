@@ -20,6 +20,7 @@ class Version20210310084309 extends AbstractMigration
                 done TINYINT(1) NOT NULL, 
                 uuid VARCHAR(36) NOT NULL, 
                 event_id INT NOT NULL,
+                workspace_id INT DEFAULT NULL,
                 UNIQUE INDEX UNIQ_3460253ED17F50A6 (uuid), 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB
@@ -32,6 +33,15 @@ class Version20210310084309 extends AbstractMigration
         ');
         $this->addSql('
             CREATE INDEX IDX_3460253E71F7E88B ON claro_task (event_id)
+        ');
+        $this->addSql('
+            ALTER TABLE claro_task 
+            ADD CONSTRAINT FK_3460253E82D40A1F FOREIGN KEY (workspace_id) 
+            REFERENCES claro_workspace (id) 
+            ON DELETE CASCADE
+        ');
+        $this->addSql('
+            CREATE INDEX IDX_3460253E82D40A1F ON claro_task (workspace_id)
         ');
         $this->addSql('
             ALTER TABLE claro_event 

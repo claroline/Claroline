@@ -35,6 +35,9 @@ const EventFormModal = withReducer(selectors.STORE_NAME, reducer)(
 
         dispatch(formActions.resetForm(selectors.STORE_NAME, formData, !event))
       },
+      updateEvent(prop, value) {
+        dispatch(formActions.updateProp(selectors.STORE_NAME, prop, value))
+      },
       saveEvent(eventId = null, onSave = () => true) {
         dispatch(formActions.saveForm(selectors.STORE_NAME, eventId ? ['apiv2_cursus_event_update', {id: eventId}] : ['apiv2_cursus_event_create'])).then((response) => {
           if (onSave) {

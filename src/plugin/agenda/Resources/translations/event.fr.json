@@ -1,4 +1,6 @@
 {
+  "event": "Evènement",
+  "event_desc": "Permet de planifier une évènement et d'y inviter des utilisateurs.",
   "task": "Tâche",
   "task_desc": "Permet de planifier une tâche à accomplir."
 }

@@ -22,7 +22,7 @@ const ParametersModal = withReducer(selectors.STORE_NAME, reducer)(
         dispatch(formActions.updateProp(selectors.STORE_NAME, prop, value))
       },
       save(event, onSave) {
-        dispatch(formActions.saveForm(selectors.STORE_NAME, event.id ? ['apiv2_event_update', {id: event.id}] : ['apiv2_event_create']))
+        dispatch(formActions.saveForm(selectors.STORE_NAME, event.id ? ['apiv2_planned_object_update', {id: event.id}] : ['apiv2_planned_object_create']))
           .then((response) => {
             if (onSave) {
               onSave(response)

@@ -12,6 +12,7 @@
 namespace Claroline\AgendaBundle\Listener\DataSource;
 
 use Claroline\AgendaBundle\Entity\Event;
+use Claroline\AgendaBundle\Entity\Task;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\CoreBundle\Entity\DataSource;
 use Claroline\CoreBundle\Event\DataSource\GetDataEvent;
@@ -36,7 +37,6 @@ class AgendaSource
     public function getEventsData(GetDataEvent $event)
     {
         $options = $event->getOptions() ? $event->getOptions() : [];
-        $options['hiddenFilters']['types'] = ['event'];
 
         if (DataSource::CONTEXT_WORKSPACE === $event->getContext()) {
             $options['hiddenFilters']['workspaces'] = [$event->getWorkspace()->getUuid()];
@@ -56,7 +56,6 @@ class AgendaSource
     public function getTasksData(GetDataEvent $event)
     {
         $options = $event->getOptions() ? $event->getOptions() : [];
-        $options['hiddenFilters']['types'] = ['task'];
 
         if (DataSource::CONTEXT_WORKSPACE === $event->getContext()) {
             $options['hiddenFilters']['workspaces'] = [$event->getWorkspace()->getUuid()];
@@ -67,7 +66,7 @@ class AgendaSource
         }
 
         $event->setData(
-            $this->finder->search(Event::class, $options)
+            $this->finder->search(Task::class, $options)
         );
 
         $event->stopPropagation();

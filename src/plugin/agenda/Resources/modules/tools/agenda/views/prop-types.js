@@ -16,7 +16,7 @@ const AgendaView = {
       EventTypes.propTypes
     )).isRequired,
     create: T.func.isRequired,
-    eventActions: T.func.isRequired
+    reload: T.func.isRequired
   },
   defaultProps: {
 

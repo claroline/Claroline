@@ -11,7 +11,6 @@
 
 namespace Claroline\AgendaBundle\Controller;
 
-use Claroline\AgendaBundle\Entity\Event;
 use Claroline\AgendaBundle\Entity\Task;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
@@ -64,7 +63,7 @@ class TaskController extends AbstractCrudController
 
         $this->om->flush();
 
-        return new JsonResponse(array_map(function (Event $task) {
+        return new JsonResponse(array_map(function (Task $task) {
             return $this->serializer->serialize($task);
         }, $tasks));
     }

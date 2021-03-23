@@ -11,11 +11,11 @@ import {LinkButton, ModalButton} from '#/main/app/buttons'
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
 import {CalendarView} from '#/plugin/agenda/tools/agenda/views/components/calendar'
-import {constants} from '#/plugin/agenda/event/constants'
 import {Event as EventTypes} from '#/plugin/agenda/prop-types'
 import {sortEvents, eventDuration} from '#/plugin/agenda/event/utils'
 import {route} from '#/plugin/agenda/tools/agenda/routing'
 import {MODAL_EVENT_ABOUT} from '#/plugin/agenda/event/modals/about'
+import {EventIcon} from '#/plugin/agenda/event/components/icon'
 
 const ScheduleDay = (props) =>
   <div className={classes('day', props.className)}>
@@ -40,12 +40,10 @@ const ScheduleDay = (props) =>
         return (
           <ModalButton
             key={event.id}
-            className={classes('agenda-event', {
-              'done': event.meta.done
-            })}
+            className="agenda-event"
             modal={[MODAL_EVENT_ABOUT, {
               event: event,
-              actions: props.eventActions(event)
+              reload: props.reload
             }]}
           >
             <span
@@ -59,11 +57,9 @@ const ScheduleDay = (props) =>
               {eventDuration(event)}
             </span>
 
-            {constants.EVENT_TYPE_TASK === event.meta.type &&
-              <span className="fa fa-fw fa-tasks icon-with-text-right" />
-            }
+            <EventIcon className="icon-with-text-right" type={event.meta.type} />
 
-            {event.title}
+            {event.name}
           </ModalButton>
         )
       })}
@@ -77,7 +73,7 @@ ScheduleDay.propTypes = {
   events: T.arrayOf(T.shape(
     EventTypes.propTypes
   )),
-  eventActions: T.func.isRequired
+  reload: T.func.isRequired
 }
 
 const AgendaViewSchedule = (props) => {
@@ -138,7 +134,7 @@ const AgendaViewSchedule = (props) => {
                   })}
                   current={current}
                   events={schedule[date]}
-                  eventActions={props.eventActions}
+                  reload={props.reload}
                 />
               )
             })
@@ -163,7 +159,7 @@ AgendaViewSchedule.propTypes = {
     EventTypes.propTypes
   )).isRequired,
   create: T.func.isRequired,
-  eventActions: T.func.isRequired
+  reload: T.func.isRequired
 }
 
 export {

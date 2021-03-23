@@ -7,5 +7,17 @@ services:
     Claroline\AgendaBundle\Crud\EventCrud:
         arguments:
             - '@security.token_storage'
+            - '@Claroline\CoreBundle\Manager\PlanningManager'
         tags:
             - { name: kernel.event_listener, event: crud_pre_create_object_claroline_agendabundle_entity_event, method: preCreate }
+            - { name: kernel.event_listener, event: crud_post_create_object_claroline_agendabundle_entity_event, method: postCreate }
+            - { name: kernel.event_listener, event: crud_pre_update_object_claroline_agendabundle_entity_event, method: preUpdate }
+
+    Claroline\AgendaBundle\Crud\TaskCrud:
+        arguments:
+            - '@security.token_storage'
+            - '@Claroline\CoreBundle\Manager\PlanningManager'
+        tags:
+            - { name: kernel.event_listener, event: crud_pre_create_object_claroline_agendabundle_entity_task, method: preCreate }
+            - { name: kernel.event_listener, event: crud_post_create_object_claroline_agendabundle_entity_task, method: postCreate }
+            - { name: kernel.event_listener, event: crud_pre_update_object_claroline_agendabundle_entity_task, method: preUpdate }

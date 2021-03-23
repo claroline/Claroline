@@ -8,7 +8,7 @@ import {selectors as securitySelectors} from '#/main/app/security/store'
 import {selectors as toolSelectors} from '#/main/core/tool/store'
 import {actions as modalActions} from '#/main/app/overlays/modal/store'
 
-import {MODAL_EVENT_PARAMETERS} from '#/plugin/agenda/event/modals/parameters'
+import {MODAL_EVENT_CREATION} from '#/plugin/agenda/event/modals/creation'
 import {AgendaCalendar as AgendaCalendarComponent} from '#/plugin/agenda/tools/agenda/components/calendar'
 import {actions, selectors} from '#/plugin/agenda/tools/agenda/store'
 
@@ -30,13 +30,13 @@ const AgendaCalendar = withRouter(
         dispatch(actions.changeView(view, referenceDate))
       },
       load(rangeDates) {
-        dispatch(actions.fetch(rangeDates))
+        return dispatch(actions.fetch(rangeDates))
       },
       create(event, context, user) {
         const end = moment(event.start, 'YYYY-MM-DDThh:mm:ss')
         // default event duration to 1 hour
         end.add(1, 'h')
-        dispatch(modalActions.showModal(MODAL_EVENT_PARAMETERS, {
+        dispatch(modalActions.showModal(MODAL_EVENT_CREATION, {
           event: merge({}, event, {
             workspace: !isEmpty(context) ? context : null,
             end: end.format('YYYY-MM-DDThh:mm:ss'),
@@ -44,21 +44,11 @@ const AgendaCalendar = withRouter(
               creator: user
             }
           }),
-          // TODO : only reload if event is created in the current range
-          onSave: () => dispatch(actions.setLoaded(false))
+          onSave: (newEvent) => dispatch(actions.reload(newEvent, true))
         }))
       },
-      update(/*event*/) {
-        dispatch(actions.setLoaded(false))
-      },
-      delete(event) {
-        dispatch(actions.delete(event))
-      },
-      markDone(event) {
-        dispatch(actions.markDone(event))
-      },
-      markTodo(event) {
-        dispatch(actions.markTodo(event))
+      reload(event) {
+        dispatch(actions.reload(event))
       }
     })
   )(AgendaCalendarComponent)

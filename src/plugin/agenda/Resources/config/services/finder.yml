@@ -19,3 +19,6 @@ services:
                      - '@Claroline\AppBundle\Event\StrictDispatcher'
 
     Claroline\AgendaBundle\Finder\EventFinder: ~
+
+    Claroline\AgendaBundle\Finder\TaskFinder: ~
+

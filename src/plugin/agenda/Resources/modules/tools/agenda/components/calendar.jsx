@@ -4,16 +4,13 @@ import moment from 'moment'
 import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
-import {hasPermission} from '#/main/app/security'
 import {Routes} from '#/main/app/router'
 import {now} from '#/main/app/intl/date'
-import {CALLBACK_BUTTON, LINK_BUTTON, MENU_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
+import {LINK_BUTTON, MENU_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {ToolPage} from '#/main/core/tool/containers/page'
 
 import {Event as EventTypes} from '#/plugin/agenda/prop-types'
-import {constants} from '#/plugin/agenda/event/constants'
 import {MODAL_EVENT_CREATION} from '#/plugin/agenda/event/modals/creation'
-import {MODAL_EVENT_PARAMETERS} from '#/plugin/agenda/event/modals/parameters'
 
 import {route} from '#/plugin/agenda/tools/agenda/routing'
 import {AGENDA_VIEWS} from '#/plugin/agenda/tools/agenda/views'
@@ -68,7 +65,8 @@ const AgendaCalendar = (props) => {
             event: {
               start: now(false),
               workspace: !isEmpty(props.contextData) ? props.contextData : null
-            }
+            },
+            onSave: (event) => props.reload(event, true)
           }],
           displayed: !isEmpty(props.currentUser),
           primary: true
@@ -103,54 +101,19 @@ const AgendaCalendar = (props) => {
 
               props.changeView(newView, newReference)
             },
-            render: () => {
-              const CurrentView = createElement(currentView.component, {
-                path: props.path,
-                loaded: props.loaded,
-                loadEvents: props.load,
-                view: props.view,
-                referenceDate: props.referenceDate,
-                range: currentRange,
-                previous: currentView.previous,
-                next: currentView.next,
-                create: (event) => props.create(event, props.contextData, props.currentUser),
-                events: props.events,
-                eventActions: (event) => [
-                  {
-                    name: 'mark-done',
-                    type: CALLBACK_BUTTON,
-                    icon: 'fa fa-fw fa-check',
-                    label: trans('mark-as-done', {}, 'actions'),
-                    callback: () => props.markDone(event),
-                    displayed: constants.EVENT_TYPE_TASK === event.meta.type && !event.meta.done
-                  }, {
-                    name: 'mark-todo',
-                    type: CALLBACK_BUTTON,
-                    label: trans('mark-as-todo', {}, 'actions'),
-                    callback: () => props.markTodo(event),
-                    displayed: constants.EVENT_TYPE_TASK === event.meta.type && event.meta.done
-                  }, {
-                    name: 'edit',
-                    type: MODAL_BUTTON,
-                    label: trans('edit', {}, 'actions'),
-                    modal: [MODAL_EVENT_PARAMETERS, {
-                      event: event,
-                      onSave: props.update
-                    }],
-                    displayed: hasPermission('edit', event)
-                  }, {
-                    name: 'delete',
-                    type: CALLBACK_BUTTON,
-                    label: trans('delete', {}, 'actions'),
-                    callback: () => props.delete(event),
-                    dangerous: true,
-                    displayed: hasPermission('delete', event)
-                  }
-                ]
-              })
-
-              return CurrentView
-            }
+            render: () => createElement(currentView.component, {
+              path: props.path,
+              loaded: props.loaded,
+              loadEvents: props.load,
+              view: props.view,
+              referenceDate: props.referenceDate,
+              range: currentRange,
+              previous: currentView.previous,
+              next: currentView.next,
+              create: (event) => props.create(event, props.contextData, props.currentUser),
+              events: props.events,
+              reload: props.reload
+            })
           }
         ]}
       />
@@ -184,10 +147,7 @@ AgendaCalendar.propTypes = {
   )).isRequired,
   load: T.func.isRequired,
   create: T.func.isRequired,
-  update: T.func.isRequired,
-  delete: T.func.isRequired,
-  markDone: T.func.isRequired,
-  markTodo: T.func.isRequired
+  reload: T.func.isRequired
 }
 
 export {

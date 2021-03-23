@@ -133,8 +133,7 @@ const Event = {
       Session.propTypes
     ),
     meta: T.shape({
-      type: T.number,
-      set: T.string
+      type: T.string.isRequired
     }),
     restrictions: T.shape({
       users: T.number,
@@ -145,9 +144,8 @@ const Event = {
     })
   },
   defaultProps: {
-    name: '',
     meta: {
-      type: constants.EVENT_TYPE_NONE
+      type: 'training_event'
     },
     registration: {
       registrationType: constants.REGISTRATION_AUTO

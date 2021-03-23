@@ -72,8 +72,8 @@ class AgendaManager
         $message = new SendMessageEvent(
             $this->translator->trans('send_message_content', [
                 '%Sender%' => $creator->getUserName(),
-                '%Start%' => $event->getStart(),
-                '%End%' => $event->getEnd(),
+                '%Start%' => $event->getStartDate(),
+                '%End%' => $event->getEndDate(),
                 '%Description%' => $event->getDescription(),
                 '%JoinAction%' => $this->router->generate(
                     'claro_agenda_invitation_action',

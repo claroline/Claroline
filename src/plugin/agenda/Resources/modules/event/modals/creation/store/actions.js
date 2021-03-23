@@ -1,3 +1,4 @@
+import isEmpty from 'lodash/isEmpty'
 import merge from 'lodash/merge'
 import moment from 'moment'
 
@@ -10,7 +11,7 @@ import {selectors} from '#/plugin/agenda/event/modals/creation/store/selectors'
 // action creators
 export const actions = {}
 
-actions.startCreation = (baseProps = {}, type, currentUser) => (dispatch) => {
+actions.startCreation = (baseProps = {}, type, currentUser, context = null) => (dispatch) => {
   // initialize the form with default values
   const start = baseProps.start || now(false)
   const end = moment(start, 'YYYY-MM-DDThh:mm:ss')
@@ -20,6 +21,7 @@ actions.startCreation = (baseProps = {}, type, currentUser) => (dispatch) => {
   dispatch(formActions.resetForm(selectors.STORE_NAME, merge({}, EventTypes.defaultProps, baseProps, {
     start: start,
     end: end.format('YYYY-MM-DDThh:mm:ss'),
+    workspace: !isEmpty(context) ? context : null,
     meta: {
       type: type,
       creator: merge({}, currentUser)

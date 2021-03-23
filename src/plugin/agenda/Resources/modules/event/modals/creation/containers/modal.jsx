@@ -12,13 +12,15 @@ const EventCreationModal = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
       currentUser: securitySelectors.currentUser(state),
-      currentContext: toolSelectors.context(state),
+      contextType: toolSelectors.contextType(state),
+      contextData: toolSelectors.contextData(state),
+      contextTools: toolSelectors.contextTools(state),
       formData: selectors.event(state),
       saveEnabled: selectors.saveEnabled(state)
     }),
     (dispatch) => ({
-      startCreation(baseProps, type, currentUser) {
-        dispatch(actions.startCreation(baseProps, type, currentUser))
+      startCreation(baseProps, type, currentUser, context) {
+        dispatch(actions.startCreation(baseProps, type, currentUser, context))
       },
       update(field, value) {
         dispatch(formActions.updateProp(selectors.STORE_NAME, field, value))

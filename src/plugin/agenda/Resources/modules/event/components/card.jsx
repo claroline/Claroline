@@ -6,15 +6,16 @@ import {asset} from '#/main/app/config/asset'
 import {getPlainText} from '#/main/app/data/types/html/utils'
 import {DataCard} from '#/main/app/data/components/card'
 
-import {constants} from '#/plugin/agenda/event/constants'
 import {Event as EventTypes} from '#/plugin/agenda/prop-types'
+import {EventIcon} from '#/plugin/agenda/event/components/icon'
 
 const EventCard = (props) =>
   <DataCard
     {...props}
     id={props.data.id}
-    title={props.data.title}
-    subtitle={displayDate(props.data.start, false, true) + (constants.EVENT_TYPE_EVENT === props.data.meta.type && props.data.end ? ' / ' + displayDate(props.data.end, false, true) : '')}
+    icon={<EventIcon type={props.data.meta.type} />}
+    title={props.data.name}
+    subtitle={displayDate(props.data.start, false, true) + (props.data.end ? ' / ' + displayDate(props.data.end, false, true) : '')}
     poster={props.data.thumbnail ? asset(props.data.thumbnail.url) : null}
     contentText={getPlainText(props.data.description)}
   />

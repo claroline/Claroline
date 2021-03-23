@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 const Event = {
   propTypes: {
     id: T.string.isRequired,
-    title: T.string,
+    name: T.string,
     start: T.string,
     end: T.string,
     description: T.string,

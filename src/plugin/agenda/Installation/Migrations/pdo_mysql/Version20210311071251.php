@@ -29,8 +29,8 @@ class Version20210311071251 extends AbstractMigration
         ');
 
         $this->addSql('
-            INSERT INTO claro_task (uuid, event_id, done)
-                SELECT UUID() AS uuid, e.id AS event_id, e.is_task_done AS done 
+            INSERT INTO claro_task (uuid, event_id, done, workspace_id)
+                SELECT UUID() AS uuid, e.id AS event_id, e.is_task_done AS done, e.workspace_id 
                 FROM claro_event AS e
                 WHERE event_type = "task"
         ');

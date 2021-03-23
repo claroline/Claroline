@@ -31,6 +31,11 @@ class Version20210311085511 extends AbstractMigration
         $this->addSql('
             ALTER TABLE claro_task CHANGE done is_task_done TINYINT(1) NOT NULL
         ');
+        $this->addSql('
+            ALTER TABLE claro_task 
+            DROP INDEX IDX_3460253E71F7E88B, 
+            ADD UNIQUE INDEX UNIQ_3460253E71F7E88B (event_id)
+        ');
     }
 
     public function down(Schema $schema)
@@ -49,6 +54,11 @@ class Version20210311085511 extends AbstractMigration
         ');
         $this->addSql('
             ALTER TABLE claro_task CHANGE is_task_done done TINYINT(1) NOT NULL
+        ');
+        $this->addSql('
+            ALTER TABLE claro_task 
+            DROP INDEX UNIQ_3460253E71F7E88B, 
+            ADD INDEX IDX_3460253E71F7E88B (event_id)
         ');
     }
 }

@@ -4,7 +4,7 @@ import {trans} from '#/main/app/intl/translation'
 
 import {route} from '#/main/core/tool/routing'
 import {route as workspaceRoute} from '#/main/core/workspace/routing'
-import {EventCard} from '#/plugin/agenda/data/components/event-card'
+import {EventCard} from '#/plugin/agenda/event/components/card'
 
 export default {
   name: 'events',
@@ -15,9 +15,9 @@ export default {
     }),
     definition: [
       {
-        name: 'title',
+        name: 'name',
         type: 'string',
-        label: trans('title'),
+        label: trans('name'),
         displayed: true,
         primary: true
       }, {
@@ -26,12 +26,14 @@ export default {
         label: trans('description'),
         displayed: true
       }, {
-        name: 'start',
+        name: 'startDate',
+        alias: 'start',
         type: 'date',
         label: trans('start_date'),
         displayed: true
       }, {
-        name: 'end',
+        name: 'endDate',
+        alias: 'end',
         type: 'date',
         label: trans('end_date'),
         displayed: true

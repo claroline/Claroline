@@ -43,7 +43,7 @@ const Day = props => {
         <EventMicro
           key={event.id}
           event={event}
-          actions={props.eventActions(event)}
+          reload={props.reload}
         />
       ))}
     </div>
@@ -58,7 +58,7 @@ Day.propTypes = {
     EventTypes.propTypes
   )),
   create: T.func.isRequired,
-  eventActions: T.func.isRequired
+  reload: T.func.isRequired
 }
 
 Day.defaultProps = {
@@ -155,7 +155,7 @@ class AgendaViewMonthComponent extends Component {
                     current={current}
                     events={events}
                     create={this.props.create}
-                    eventActions={this.props.eventActions}
+                    reload={this.props.reload}
                   />
                 )
               })}
@@ -184,7 +184,7 @@ AgendaViewMonthComponent.propTypes = {
     EventTypes.propTypes
   )).isRequired,
   create: T.func.isRequired,
-  eventActions: T.func.isRequired
+  reload: T.func.isRequired
 }
 
 const AgendaViewMonth = withRouter(AgendaViewMonthComponent)
