@@ -1,4 +1,4 @@
-version: "3.8"
+version: "3.7"
 services:
   web:
     container_name: claroline-web
@@ -11,8 +11,11 @@ services:
       - ./config:/var/www/html/claroline/config
       - ./files:/var/www/html/claroline/files
       - ./mysql:/var/www/html/claroline/mysql
-      - ./public:/var/www/html/claroline/public
+      - ./public/js:/var/www/html/claroline/public/js
+      - ./public/themes:/var/www/html/claroline/public/themes
       - ./var:/var/www/html/claroline/var
+      - ./VERSION.txt:/var/www/html/claroline/VERSION.txt
+      - ./src:/var/www/html/claroline/src
     depends_on:
       - db
     environment:
@@ -48,7 +51,7 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - ./mysql:/var/lib/mysql
+      - ../mysql:/var/lib/mysql
       - ./.docker/mysql:/etc/mysql/conf.d # TODO check why is world-writable config file ignored, shall we make it read-only? When and how?
     networks:
       claroline_network:

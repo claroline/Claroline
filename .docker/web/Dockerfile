@@ -32,13 +32,12 @@ RUN apt-get update && apt-get install -y \
 RUN docker-php-ext-install -j$(nproc) xml mysqli curl zip mbstring gettext pdo_mysql gd exif mbstring
 RUN docker-php-ext-configure intl
 RUN docker-php-ext-install intl
-RUN docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ && docker-php-ext-install ldap
 
 RUN curl -sS https://getcomposer.org/installer | php
 RUN mv composer.phar /usr/local/bin/composer
 
 RUN pecl install apcu-beta \
-&& echo extension=apcu.so > /usr/local/etc/php/conf.d/apcu.ini
+  && echo extension=apcu.so > /usr/local/etc/php/conf.d/apcu.ini
 
 COPY ./.docker/web/config/php.ini /usr/local/etc/php/
 COPY ./.docker/web/files/apache2/claroline.conf /etc/apache2/sites-available/

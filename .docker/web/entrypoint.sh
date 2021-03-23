@@ -23,9 +23,7 @@ if [ -f files/installed ]; then
     php bin/check
     composer enable-maintenance
     composer delete-cache
-    # composer bundles # we run it again to regenerate bundles.ini inside the volume
     php bin/console claroline:update -vvv
-    composer bundles
     composer disable-maintenance
     chmod -R 750 var files config
     chown -R www-data:www-data var files config
@@ -35,7 +33,7 @@ else
   echo "Installing Claroline..."
   php bin/configure # we run it again to generate parameters.yml inside the volume
   php bin/check
-  composer bundles # we run it again to generate bundles.ini inside the volume
+  composer bundles
   php bin/console claroline:install -vvv
 
   if [[ -v PLATFORM_NAME ]]; then
