@@ -2,8 +2,12 @@
 
 namespace Claroline\OpenBadgeBundle\Manager;
 
+use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Event\CatalogEvents\FunctionalEvents;
+use Claroline\CoreBundle\Event\Functional\AddBadgeEvent;
+use Claroline\CoreBundle\Event\Functional\RemoveBadgeEvent;
 use Claroline\CoreBundle\Manager\Template\TemplateManager;
 use Claroline\OpenBadgeBundle\Entity\Assertion;
 use Claroline\OpenBadgeBundle\Entity\BadgeClass;
@@ -17,15 +21,19 @@ class OpenBadgeManager
     private $templateManager;
     /** @var Environment */
     private $templating;
+    /** @var StrictDispatcher */
+    private $strictDispatcher;
 
     public function __construct(
         ObjectManager $om,
         TemplateManager $templateManager,
-        Environment $templating
+        Environment $templating,
+        StrictDispatcher $strictDispatcher
     ) {
         $this->om = $om;
         $this->templateManager = $templateManager;
         $this->templating = $templating;
+        $this->strictDispatcher = $strictDispatcher;
     }
 
     public function addAssertion(BadgeClass $badge, User $user)
@@ -43,6 +51,8 @@ class OpenBadgeManager
 
         $this->om->persist($assertion);
         $this->om->flush();
+
+        $this->strictDispatcher->dispatch(FunctionalEvents::ADD_BADGE, AddBadgeEvent::class, [$user, $badge]);
     }
 
     public function revokeAssertion(Assertion $assertion)
@@ -50,6 +60,8 @@ class OpenBadgeManager
         $assertion->setRevoked(true);
         $this->om->persist($assertion);
         $this->om->flush();
+
+        $this->strictDispatcher->dispatch(FunctionalEvents::REMOVE_BADGE, RemoveBadgeEvent::class, [$assertion->getRecipient(), $assertion->getBadge()]);
     }
 
     public function generateCertificate(Assertion $assertion, $basePath)

@@ -1,0 +1,4 @@
+{
+  "addBadge": "Le badge badgeName a été ajouté à l'utilisateur userName",
+  "removeBadge": "Le badge badgeName a été retiré de l'utilisateur userName"
+}
