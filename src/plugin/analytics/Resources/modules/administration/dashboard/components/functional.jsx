@@ -13,12 +13,12 @@ const DashboardFunctional = () =>
     <ListData
       name={selectors.FUNCTIONAL_NAME}
       fetch={{
-        url: ['apiv2_logs_security'],
+        url: ['apiv2_logs_functional'],
         autoload: true
       }}
       definition={[
         {
-          name: 'doer',
+          name: 'user',
           type: 'user',
           label: trans('user'),
           displayed: true

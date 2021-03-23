@@ -26,6 +26,12 @@ class FunctionalLogFinder extends AbstractFinder
     {
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
+                case 'user':
+                    $qb->leftJoin('obj.user', 'u');
+                    $qb->andWhere('u.uuid = :id');
+                    $qb->setParameter('id', $filterValue);
+                    break;
+
                 default:
                     $this->setDefaults($qb, $filterName, $filterValue);
             }
