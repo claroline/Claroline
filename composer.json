@@ -1,14 +1,19 @@
 {
     "name": "claroline/claroline",
     "description": "Claroline Learning Management System",
-    "keywords": ["Claroline", "LMS"],
+    "keywords": [
+        "Claroline",
+        "LMS"
+    ],
     "homepage": "http://www.claroline.net",
     "license": "GPL-3.0-or-later",
-    "authors": [{
-        "name": "Claroline development team",
-        "email": "dev@claroline.net",
-        "homepage": "http://github.com/claroline"
-    }],
+    "authors": [
+        {
+            "name": "Claroline development team",
+            "email": "dev@claroline.net",
+            "homepage": "http://github.com/claroline"
+        }
+    ],
     "require": {
         "php": ">=7.2",
         "ext-curl": "*",
@@ -37,7 +42,7 @@
         "lightsaml/sp-bundle": "1.2.1",
         "lightsaml/lightsaml-logout": "1.0.0",
         "php-http/httplug-bundle": "*",
-        "php-http/guzzle6-adapter":"*",
+        "php-http/guzzle6-adapter": "*",
         "postal/postal": "1.0",
         "psr/log": "1.0.2",
         "ramsey/uuid": "3.7.3",
@@ -145,8 +150,14 @@
         }
     },
     "scripts": {
+        "enable-maintenance": [
+            "Claroline\\CoreBundle\\Library\\Maintenance\\MaintenanceHandler::enableMaintenance"
+        ],
         "disable-maintenance": [
             "Claroline\\CoreBundle\\Library\\Maintenance\\MaintenanceHandler::disableMaintenance"
+        ],
+        "delete-cache": [
+            "rm -rf ./var/cache/*"
         ],
         "bundles": [
             "Claroline\\BundleRecorder\\ScriptHandler::buildBundleFile"
@@ -161,18 +172,23 @@
         "pre-update-cmd": [
             "php bin/configure",
             "php bin/check",
-            "Claroline\\CoreBundle\\Library\\Maintenance\\MaintenanceHandler::enableMaintenance",
-            "Claroline\\CoreBundle\\Library\\Installation\\Refresher::deleteCache"
+            "composer enable-maintenance",
+            "composer delete-cache"
         ],
         "post-update-cmd": [
             "composer bundles",
-            "composer disable-maintenance"
+            "composer disable-maintenance",
+            "composer delete-cache"
         ]
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
     "config": {
-        "github-protocols": ["https", "git", "ssh"],
+        "github-protocols": [
+            "https",
+            "git",
+            "ssh"
+        ],
         "process-timeout": 3600
     },
     "extra": {
