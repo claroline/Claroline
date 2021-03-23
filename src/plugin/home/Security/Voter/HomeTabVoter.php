@@ -62,7 +62,7 @@ class HomeTabVoter extends AbstractVoter
 
             case HomeTab::TYPE_DESKTOP:
                 $homeTool = $this->orderedToolRepo->findOneByNameAndDesktop('home');
-                $isOwner = $object->getUser() && $token->getUser() instanceof User && $object->getUser()->getId() === $token->getUser();
+                $isOwner = $object->getUser() && $token->getUser() instanceof User && $object->getUser()->getId() === $token->getUser()->getId();
 
                 $granted = $isOwner && $homeTool && $this->isGranted(self::OPEN, $homeTool);
                 break;
@@ -102,7 +102,7 @@ class HomeTabVoter extends AbstractVoter
 
             case HomeTab::TYPE_DESKTOP:
                 $homeTool = $this->orderedToolRepo->findOneByNameAndDesktop('home');
-                $isOwner = $object->getUser() && $token->getUser() instanceof User && $object->getUser()->getId() === $token->getUser();
+                $isOwner = $object->getUser() && $token->getUser() instanceof User && $object->getUser()->getId() === $token->getUser()->getId();
 
                 $granted = $isOwner && $homeTool && $this->isGranted(self::EDIT, $homeTool);
                 break;

@@ -149,7 +149,7 @@ class EditorTab extends Component {
           name={selectors.FORM_NAME}
           dataPart={getFormDataPart(this.props.currentTab.id, this.props.tabs)}
           buttons={true}
-          lock={this.props.currentTab && !get(this.props.currentTab, '_new', false) ? {
+          lock={!this.props.readOnly && this.props.currentTab && !get(this.props.currentTab, '_new', false) ? {
             id: this.props.currentTab.id,
             className: 'Claroline\\HomeBundle\\Entity\\HomeTab'
           } : undefined}
