@@ -44,7 +44,7 @@ const LessonMenu = props => {
           label: trans('export-pdf', {}, 'actions'),
           group: trans('transfer'),
           onClick: props.autoClose,
-          callback: () => props.downloadChapterPdf(chapter.id)
+          callback: () => props.downloadChapterPdf(props.lesson.id, chapter.id)
         }, {
           name: 'delete',
           type: CALLBACK_BUTTON,
