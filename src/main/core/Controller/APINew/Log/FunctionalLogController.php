@@ -46,9 +46,9 @@ class FunctionalLogController extends AbstractSecurityController
     }
 
     /**
-     * @Route("", name="apiv2_logs_functional_list_current", methods={"GET"})
+     * @Route("/list/current", name="apiv2_logs_functional_list_current", methods={"GET"})
      */
-    public function userListAction(): JsonResponse
+    public function userLogFunctionalAction(): JsonResponse
     {
         if (!$this->authorization->isGranted('IS_AUTHENTICATED_FULLY')) {
             throw new AccessDeniedException();
