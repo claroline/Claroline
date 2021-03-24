@@ -7,6 +7,7 @@ import {Button} from '#/main/app/action/components/button'
 import {MODAL_BUTTON} from '#/main/app/buttons'
 
 import {Course as CourseTypes} from '#/plugin/cursus/prop-types'
+import {route} from '#/plugin/cursus/routing'
 import {MODAL_SESSION_FORM} from '#/plugin/cursus/session/modals/parameters'
 import {SessionList} from '#/plugin/cursus/session/components/list'
 import {selectors} from '#/plugin/cursus/tools/trainings/catalog/store/selectors'
@@ -70,7 +71,11 @@ const CourseSessions = (props) =>
         label={trans('add_session', {}, 'cursus')}
         modal={[MODAL_SESSION_FORM, {
           course: props.course,
-          onSave: () => props.reload(props.course.slug)
+          onSave: (newSession) => {
+            // open created session, but let user on sessions list to allow multiples creations
+            props.history.push(route(props.path, props.course, newSession)+'/sessions')
+            props.reload(props.course.slug)
+          }
         }]}
         primary={true}
       />
@@ -79,6 +84,9 @@ const CourseSessions = (props) =>
 
 CourseSessions.propTypes = {
   path: T.string.isRequired,
+  history: T.shape({
+    push: T.func.isRequired
+  }).isRequired,
   course: T.shape(
     CourseTypes.propTypes
   ).isRequired,
