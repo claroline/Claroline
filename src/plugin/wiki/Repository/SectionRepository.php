@@ -10,7 +10,6 @@ use Icap\WikiBundle\Entity\Wiki;
 class SectionRepository extends NestedTreeRepository
 {
     /**
-     * @param Wiki $wiki
      * @param User $user
      * @param bool $isAdmin
      *
@@ -52,8 +51,6 @@ class SectionRepository extends NestedTreeRepository
     }
 
     /**
-     * @param Section $section
-     *
      * @return array
      */
     public function findSectionsForPosition(Section $section)

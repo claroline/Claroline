@@ -20,9 +20,6 @@ class LogListener
         $this->ch = $ch;
     }
 
-    /**
-     * @param LogGenericEvent $event
-     */
     public function onLog(LogGenericEvent $event)
     {
         if ($event instanceof NotifiableInterface && $this->ch->getParameter('is_notification_active')) {

@@ -36,9 +36,6 @@ class HistoryController
 
     /**
      * HistoryController constructor.
-     *
-     * @param SerializerProvider $serializer
-     * @param HistoryManager     $manager
      */
     public function __construct(
         SerializerProvider $serializer,
@@ -53,8 +50,6 @@ class HistoryController
      *
      * @Route("/", name="claro_user_history")
      * @EXT\ParamConverter("currentUser", converter="current_user")
-     *
-     * @param User $currentUser
      *
      * @return JsonResponse
      */

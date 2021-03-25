@@ -39,10 +39,6 @@ class MatchDefinition extends AbstractDefinition
 
     /**
      * MatchDefinition constructor.
-     *
-     * @param MatchQuestionValidator  $validator
-     * @param MatchAnswerValidator    $answerValidator
-     * @param MatchQuestionSerializer $serializer
      */
     public function __construct(
         MatchQuestionValidator $validator,

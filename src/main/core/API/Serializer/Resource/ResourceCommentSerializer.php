@@ -22,7 +22,6 @@ class ResourceCommentSerializer
     /**
      * ResourceCommentSerializer constructor.
      *
-     * @param ObjectManager      $om
      * @param SerializerProvider $serializer
      */
     public function __construct(ObjectManager $om, UserSerializer $userSerializer)
@@ -41,7 +40,6 @@ class ResourceCommentSerializer
      * Serializes a ResourceComment entity for the JSON api.
      *
      * @param ResourceComment $comment - the comment to serialize
-     * @param array           $options
      *
      * @return array - the serialized representation of the comment
      */
@@ -59,8 +57,7 @@ class ResourceCommentSerializer
     }
 
     /**
-     * @param array           $data
-     * @param ResourceComment $comment
+     * @param array $data
      *
      * @return ResourceComment $comment
      */

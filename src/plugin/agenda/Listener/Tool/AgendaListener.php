@@ -15,18 +15,12 @@ use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 
 class AgendaListener
 {
-    /**
-     * @param OpenToolEvent $event
-     */
     public function onDisplayWorkspace(OpenToolEvent $event)
     {
         $event->setData([]);
         $event->stopPropagation();
     }
 
-    /**
-     * @param OpenToolEvent $event
-     */
     public function onDisplayDesktop(OpenToolEvent $event)
     {
         $event->setData([]);

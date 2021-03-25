@@ -25,9 +25,6 @@ class ResourceNodeListener
 
     /**
      * ResourceNodeListener constructor.
-     *
-     * @param NotificationManager   $notificationManager
-     * @param TokenStorageInterface $tokenStorage
      */
     public function __construct(
         NotificationManager $notificationManager,
@@ -39,8 +36,6 @@ class ResourceNodeListener
 
     /**
      * Add notifications option to serialized resource node when requested through API.
-     *
-     * @param DecorateResourceNodeEvent $event
      */
     public function onSerialize(DecorateResourceNodeEvent $event)
     {

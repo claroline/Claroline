@@ -13,8 +13,6 @@ class LogConnectAdminToolSerializer
 
     /**
      * LogConnectAdminToolSerializer constructor.
-     *
-     * @param SerializerProvider $serializer
      */
     public function __construct(SerializerProvider $serializer)
     {
@@ -32,9 +30,6 @@ class LogConnectAdminToolSerializer
     }
 
     /**
-     * @param LogConnectAdminTool $log
-     * @param array               $options
-     *
      * @return array
      */
     public function serialize(LogConnectAdminTool $log, array $options = [])

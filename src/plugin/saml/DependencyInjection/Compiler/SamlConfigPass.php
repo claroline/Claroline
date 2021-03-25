@@ -58,8 +58,6 @@ class SamlConfigPass implements CompilerPassInterface
 
     /**
      * Appends SP credentials declared in platform_options.json.
-     *
-     * @param ContainerBuilder $container
      */
     private function configureOwnCredentials(ContainerBuilder $container)
     {
@@ -88,8 +86,6 @@ class SamlConfigPass implements CompilerPassInterface
 
     /**
      * Appends IDP metadata files declared in platform_options.json.
-     *
-     * @param ContainerBuilder $container
      */
     private function configureParty(ContainerBuilder $container)
     {

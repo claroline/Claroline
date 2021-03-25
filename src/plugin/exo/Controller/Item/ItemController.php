@@ -35,10 +35,6 @@ class ItemController extends AbstractController
 
     /**
      * ItemController constructor.
-     *
-     * @param FinderProvider           $finder
-     * @param ItemManager              $manager
-     * @param EventDispatcherInterface $eventDispatcher
      */
     public function __construct(
         FinderProvider $finder,
@@ -54,8 +50,6 @@ class ItemController extends AbstractController
      * Searches for questions.
      *
      * @Route("", name="question_list", methods={"GET"})
-     *
-     * @param Request $request
      *
      * @return JsonResponse
      */
@@ -74,8 +68,6 @@ class ItemController extends AbstractController
      * Creates a new Item.
      *
      * @Route("", name="question_create", methods={"POST"})
-     *
-     * @param Request $request
      *
      * @return JsonResponse
      */
@@ -117,9 +109,6 @@ class ItemController extends AbstractController
      * @Route("/{id}", name="question_update", methods={"PUT"})
      * @EXT\ParamConverter("question", class="UJMExoBundle:Item\Item", options={"mapping": {"id": "uuid"}})
      *
-     * @param Item    $question
-     * @param Request $request
-     *
      * @return JsonResponse
      */
     public function updateAction(Item $question, Request $request)
@@ -157,8 +146,6 @@ class ItemController extends AbstractController
      * Duplicates a list of items.
      *
      * @Route("/{id}", name="questions_duplicate", methods={"POST"})
-     *
-     * @param Request $request
      */
     public function duplicateBulkAction(Request $request)
     {
@@ -169,9 +156,6 @@ class ItemController extends AbstractController
      *
      * @Route("/{id}", name="questions_delete", methods={"DELETE"})
      * @EXT\ParamConverter("user", converter="current_user")
-     *
-     * @param Request $request
-     * @param User    $user
      *
      * @return JsonResponse
      */

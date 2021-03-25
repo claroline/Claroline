@@ -20,11 +20,6 @@ class LogConnectWorkspaceRepository extends EntityRepository
             ->getSingleScalarResult();
     }
 
-    /**
-     * @param Workspace $workspace
-     *
-     * @return int
-     */
     public function findAvgTime(Workspace $workspace): int
     {
         return (int) $this->createQueryBuilder('c')

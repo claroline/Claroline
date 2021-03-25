@@ -356,8 +356,7 @@ class PaperGeneratorTest extends TransactionalTestCase
      * Checks the structure of an exercise has been generated accordingly to the generation options.
      * The structure MUST be an array of step structures.
      *
-     * @param Exercise $exercise
-     * @param mixed    $exerciseStructure
+     * @param mixed $exerciseStructure
      */
     private function checkExerciseStructure(Exercise $exercise, $exerciseStructure)
     {
@@ -373,7 +372,6 @@ class PaperGeneratorTest extends TransactionalTestCase
      * Checks the structure of a step has been generated accordingly to the generation options.
      * The structure MUST be an object containing the step uuid and a list of picked questions.
      *
-     * @param Step  $step
      * @param mixed $stepStructure
      */
     private function checkStepStructure(Step $step, $stepStructure)

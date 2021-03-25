@@ -10,12 +10,6 @@ class LogChapterMoveEvent extends AbstractLogResourceEvent
 {
     const ACTION = 'resource-icap_lesson-chapter_move';
 
-    /**
-     * @param Lesson  $lesson
-     * @param Chapter $chapter
-     * @param Chapter $oldparent
-     * @param Chapter $newparent
-     */
     public function __construct(Lesson $lesson, Chapter $chapter, Chapter $oldparent, Chapter $newparent)
     {
         $details = [

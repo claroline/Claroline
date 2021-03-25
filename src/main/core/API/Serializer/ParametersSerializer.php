@@ -29,11 +29,7 @@ class ParametersSerializer
     /**
      * ParametersSerializer constructor.
      *
-     * @param SerializerProvider           $serializer
-     * @param FinderProvider               $finder
-     * @param ObjectManager                $om
-     * @param PlatformConfigurationHandler $configHandler
-     * @param string                       $archivePath
+     * @param string $archivePath
      */
     public function __construct(
         SerializerProvider $serializer, // bad

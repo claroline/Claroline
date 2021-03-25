@@ -23,8 +23,6 @@ class StepSerializer
 
     /**
      * StepSerializer constructor.
-     *
-     * @param ItemSerializer $itemSerializer
      */
     public function __construct(ItemSerializer $itemSerializer)
     {
@@ -38,9 +36,6 @@ class StepSerializer
 
     /**
      * Converts a Step into a JSON-encodable structure.
-     *
-     * @param Step  $step
-     * @param array $options
      *
      * @return array
      */
@@ -69,7 +64,6 @@ class StepSerializer
      *
      * @param array $data
      * @param Step  $step
-     * @param array $options
      *
      * @return Step
      */
@@ -108,8 +102,6 @@ class StepSerializer
     /**
      * Serializes Step parameters.
      *
-     * @param Step $step
-     *
      * @return array
      */
     private function serializeParameters(Step $step)
@@ -122,9 +114,6 @@ class StepSerializer
 
     /**
      * Deserializes Step parameters.
-     *
-     * @param Step  $step
-     * @param array $parameters
      */
     private function deserializeParameters(Step $step, array $parameters)
     {
@@ -160,9 +149,6 @@ class StepSerializer
      * Serializes Step items.
      * Forwards the item serialization to ItemSerializer.
      *
-     * @param Step  $step
-     * @param array $options
-     *
      * @return array
      */
     public function serializeItems(Step $step, array $options = [])
@@ -178,10 +164,6 @@ class StepSerializer
     /**
      * Deserializes Step items.
      * Forwards the item deserialization to ItemSerializer.
-     *
-     * @param Step  $step
-     * @param array $items
-     * @param array $options
      */
     public function deserializeItems(Step $step, array $items = [], array $options = [])
     {

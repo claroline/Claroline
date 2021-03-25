@@ -36,11 +36,6 @@ class ConnectionMessageSerializer
 
     /**
      * ConnectionMessageSerializer constructor.
-     *
-     * @param AuthorizationCheckerInterface $authorization
-     * @param ObjectManager                 $om
-     * @param PlatformManager               $platformManager
-     * @param RoleSerializer                $roleSerializer
      */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
@@ -76,9 +71,6 @@ class ConnectionMessageSerializer
 
     /**
      * Serializes a ConnectionMessage entity for the JSON api.
-     *
-     * @param ConnectionMessage $message
-     * @param array             $options
      *
      * @return array
      */
@@ -153,8 +145,7 @@ class ConnectionMessageSerializer
     /**
      * Deserializes ConnectionMessage data into entities.
      *
-     * @param array             $data
-     * @param ConnectionMessage $message
+     * @param array $data
      *
      * @return ConnectionMessage
      */

@@ -33,9 +33,8 @@ class MessageController extends AbstractCrudController
      *     }
      * )
      *
-     * @param string  $id
-     * @param string  $class
-     * @param Request $request
+     * @param string $id
+     * @param string $class
      *
      * @return JsonResponse
      */
@@ -67,9 +66,8 @@ class MessageController extends AbstractCrudController
      * @Route("forum/{forum}/messages/list/flagged", name="apiv2_forum_message_flagged_list", methods={"GET"})
      * @EXT\ParamConverter("forum", class = "ClarolineForumBundle:Forum",  options={"mapping": {"forum": "uuid"}})
      *
-     * @param string  $id
-     * @param string  $class
-     * @param Request $request
+     * @param string $id
+     * @param string $class
      *
      * @return JsonResponse
      */
@@ -87,9 +85,8 @@ class MessageController extends AbstractCrudController
      * @Route("forum/{forum}/messages/list/blocked", name="apiv2_forum_message_blocked_list", methods={"GET"})
      * @EXT\ParamConverter("forum", class = "ClarolineForumBundle:Forum",  options={"mapping": {"forum": "uuid"}})
      *
-     * @param string  $id
-     * @param string  $class
-     * @param Request $request
+     * @param string $id
+     * @param string $class
      *
      * @return JsonResponse
      */

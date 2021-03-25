@@ -19,7 +19,6 @@ class SetAnswerValidator extends JsonSchemaValidator
      * Performs additional validations.
      *
      * @param array $answerData
-     * @param array $options
      *
      * @return array
      */

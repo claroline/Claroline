@@ -23,11 +23,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
  */
 class File
 {
+    use Uuid;
     const STATUS_PENDING = 'pending';
     const STATUS_SUCCESS = 'success';
     const STATUS_ERROR = 'error';
-
-    use Uuid;
 
     /**
      * @ORM\Id

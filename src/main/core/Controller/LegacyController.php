@@ -22,9 +22,6 @@ class LegacyController
 
     /**
      * LegacyController constructor.
-     *
-     * @param ObjectManager $om
-     * @param RoutingHelper $routingHelper
      */
     public function __construct(ObjectManager $om, RoutingHelper $routingHelper)
     {

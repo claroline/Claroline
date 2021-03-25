@@ -18,7 +18,6 @@ use Doctrine\ORM\EntityRepository;
 class EntryRepository extends EntityRepository
 {
     /**
-     * @param ClacoForm   $clacoForm
      * @param string|null $startDate
      * @param string|null $endDate
      *
@@ -58,7 +57,6 @@ class EntryRepository extends EntityRepository
     }
 
     /**
-     * @param ClacoForm   $clacoForm
      * @param array       $categoriesIds
      * @param string|null $startDate
      * @param string|null $endDate

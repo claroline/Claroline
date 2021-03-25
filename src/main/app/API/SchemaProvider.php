@@ -119,7 +119,6 @@ class SchemaProvider
      * Gets the json schema of a class.
      *
      * @param string $class
-     * @param array  $options
      *
      * @return \stdClass
      */
@@ -157,7 +156,6 @@ class SchemaProvider
      * Gets the json schema examples.
      *
      * @param string $class
-     * @param array  $options
      *
      * @return array
      */

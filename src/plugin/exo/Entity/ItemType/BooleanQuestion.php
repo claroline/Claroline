@@ -60,9 +60,6 @@ class BooleanQuestion extends AbstractItem
         return $this->choices;
     }
 
-    /**
-     * @param BooleanChoice $choice
-     */
     public function addChoice(BooleanChoice $choice)
     {
         if (!$this->choices->contains($choice)) {
@@ -71,9 +68,6 @@ class BooleanQuestion extends AbstractItem
         }
     }
 
-    /**
-     * @param BooleanChoice $choice
-     */
     public function removeChoice(BooleanChoice $choice)
     {
         if ($this->choices->contains($choice)) {

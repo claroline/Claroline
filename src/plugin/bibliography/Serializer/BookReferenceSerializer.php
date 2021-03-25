@@ -28,9 +28,6 @@ class BookReferenceSerializer
     /**
      * Serializes a Book reference entity.
      *
-     * @param BookReference $bookReference
-     * @param array         $options
-     *
      * @return array
      */
     public function serialize(BookReference $bookReference, array $options = [])
@@ -55,7 +52,6 @@ class BookReferenceSerializer
      *
      * @param array         $data
      * @param BookReference $bookReference
-     * @param array         $options
      *
      * @return BookReference
      */

@@ -12,8 +12,6 @@ abstract class JsonSchemaTestCase extends JsonDataTestCase
     /**
      * Creates a mock object for JsonSchema and injects it into the validator.
      *
-     * @param JsonSchemaValidator $validator
-     *
      * @return JsonSchemaValidator
      */
     protected function injectJsonSchemaMock(JsonSchemaValidator $validator)

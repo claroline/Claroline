@@ -22,10 +22,6 @@ class ProfileSerializer
 
     /**
      * ProfileSerializer constructor.
-     *
-     * @param TokenStorageInterface $tokenStorage
-     * @param ObjectManager         $om
-     * @param FacetSerializer       $facetSerializer
      */
     public function __construct(
         TokenStorageInterface $tokenStorage,
@@ -44,8 +40,6 @@ class ProfileSerializer
 
     /**
      * Serializes the profile configuration.
-     *
-     * @param array $options
      *
      * @return array
      */

@@ -196,8 +196,6 @@ class SelectionQuestion extends AbstractItem
 
     /**
      * Adds a selection.
-     *
-     * @param Selection $selection
      */
     public function addSelection(Selection $selection)
     {
@@ -209,8 +207,6 @@ class SelectionQuestion extends AbstractItem
 
     /**
      * Removes a selection.
-     *
-     * @param Selection $selection
      */
     public function removeSelection(Selection $selection)
     {
@@ -247,8 +243,6 @@ class SelectionQuestion extends AbstractItem
 
     /**
      * Adds a color.
-     *
-     * @param Color $color
      */
     public function addColor(Color $color)
     {
@@ -260,8 +254,6 @@ class SelectionQuestion extends AbstractItem
 
     /**
      * Removes a color.
-     *
-     * @param Color $color
      */
     public function removeColor(Color $color)
     {

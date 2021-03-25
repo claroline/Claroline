@@ -21,9 +21,6 @@ class ResourceFavourite extends AbstractFavourite
      */
     private $resource;
 
-    /**
-     * @param ResourceNode $resourceNode
-     */
     public function setResource(ResourceNode $resourceNode)
     {
         $this->resource = $resourceNode;

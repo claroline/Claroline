@@ -43,9 +43,7 @@ class EntryUserSerializer
     }
 
     /**
-     * @param array     $data
-     * @param EntryUser $entryUser
-     * @param array     $options
+     * @param array $data
      *
      * @return EntryUser
      */

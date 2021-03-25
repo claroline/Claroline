@@ -23,11 +23,6 @@ class CompetencyManager
     private $levelRepo;
     private $scaleRepo;
 
-    /**
-     * @param Converter           $converter
-     * @param ObjectManager       $om
-     * @param TranslatorInterface $translator
-     */
     public function __construct(
         Converter $converter,
         ObjectManager $om,
@@ -78,8 +73,6 @@ class CompetencyManager
     /**
      * Ensures a competency is the root of the framework.
      *
-     * @param Competency $competency
-     *
      * @throws \LogicException
      */
     public function ensureIsRoot(Competency $competency)
@@ -91,8 +84,6 @@ class CompetencyManager
 
     /**
      * Returns the JSON representation of a competency framework.
-     *
-     * @param Competency $framework
      *
      * @return string
      */
@@ -163,8 +154,7 @@ class CompetencyManager
      * - the result is a *copy* of the original collection
      * - all the nodes are visited, not only the leafs
      *
-     * @param mixed    $collection
-     * @param \Closure $callback
+     * @param mixed $collection
      *
      * @return mixed
      */
@@ -185,9 +175,6 @@ class CompetencyManager
 
     /**
      * Associates a competency to several resource nodes.
-     *
-     * @param Competency $competency
-     * @param array      $nodes
      *
      * @return string
      */
@@ -210,9 +197,6 @@ class CompetencyManager
     /**
      * Dissociates a competency from several resource nodes.
      *
-     * @param Competency $competency
-     * @param array      $nodes
-     *
      * @return string
      */
     public function dissociateCompetencyFromResources(Competency $competency, array $nodes)
@@ -226,9 +210,6 @@ class CompetencyManager
 
     /**
      * Associates an ability to several resource nodes.
-     *
-     * @param Ability $ability
-     * @param array   $nodes
      *
      * @return string
      */
@@ -251,9 +232,6 @@ class CompetencyManager
     /**
      * Dissociates an ability from several resource nodes.
      *
-     * @param Ability $ability
-     * @param array   $nodes
-     *
      * @return string
      */
     public function dissociateAbilityFromResources(Ability $ability, array $nodes)
@@ -264,8 +242,6 @@ class CompetencyManager
         $this->om->persist($ability);
         $this->om->flush();
     }
-
-    /****************************************************************************************************************/
 
     /**
      * Returns the list of registered frameworks.
@@ -291,9 +267,6 @@ class CompetencyManager
 
     /**
      * Sets the level temporary attribute of an ability.
-     *
-     * @param Competency $parent
-     * @param Ability    $ability
      */
     public function loadAbility(Competency $parent, Ability $ability)
     {

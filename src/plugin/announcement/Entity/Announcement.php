@@ -206,8 +206,6 @@ class Announcement
 
     /**
      * Set creation date.
-     *
-     * @param \DateTime $creationDate
      */
     public function setCreationDate(\DateTime $creationDate)
     {
@@ -306,8 +304,6 @@ class Announcement
 
     /**
      * Set creator.
-     *
-     * @param User $creator
      */
     public function setCreator(User $creator)
     {

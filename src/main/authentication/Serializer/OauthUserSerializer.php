@@ -20,9 +20,6 @@ class OauthUserSerializer
 
     /**
      * OauthUserSerializer constructor.
-     *
-     * @param ObjectManager  $om
-     * @param UserSerializer $userSerializer
      */
     public function __construct(
         ObjectManager $om,

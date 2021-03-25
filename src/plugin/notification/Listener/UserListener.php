@@ -13,17 +13,11 @@ class UserListener
     /** @var NotificationUserParametersManager */
     private $manager;
 
-    /**
-     * @param NotificationUserParametersManager $manager
-     */
     public function __construct(NotificationUserParametersManager $manager)
     {
         $this->manager = $manager;
     }
 
-    /**
-     * @param MergeUsersEvent $event
-     */
     public function onMerge(MergeUsersEvent $event)
     {
         // Replace user of NotificationUserParameters nodes

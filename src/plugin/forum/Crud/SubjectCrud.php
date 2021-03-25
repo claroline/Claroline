@@ -26,10 +26,6 @@ class SubjectCrud
 
     /**
      * ForumSerializer constructor.
-     *
-     * @param ObjectManager                 $om
-     * @param ForumManager                  $forumManager
-     * @param AuthorizationCheckerInterface $authorization
      */
     public function __construct(
         ObjectManager $om,
@@ -42,8 +38,6 @@ class SubjectCrud
     }
 
     /**
-     * @param CreateEvent $event
-     *
      * @return Subject
      */
     public function preCreate(CreateEvent $event)
@@ -97,8 +91,6 @@ class SubjectCrud
 
     /**
      * Send notifications after creation.
-     *
-     * @param CreateEvent $event
      *
      * @return Subject
      */

@@ -29,9 +29,7 @@ class Operation
     public function __construct($type, $package, $bundleFqcn)
     {
         if (!in_array($type, [self::INSTALL, self::UPDATE])) {
-            throw new \InvalidArgumentException(
-                'Operation type must be an Operation::* class constant'
-            );
+            throw new \InvalidArgumentException('Operation type must be an Operation::* class constant');
         }
 
         $this->type = $type;

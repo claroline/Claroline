@@ -30,13 +30,13 @@ trait StubPluginTrait
         $this->requirePluginClass('Valid\WithCustomResources\Entity\ResourceB');
         $this->requirePluginClass('Valid\WithCustomActions\Entity\ResourceX');
 
-        return array(
-            array('Valid\Minimal\ValidMinimal'),
-            array('Valid\Simple\ValidSimple'),
-            array('Valid\Custom\ValidCustom'),
-            array('Valid\WithMigrations\ValidWithMigrations'),
-            array('Valid\WithCustomResources\ValidWithCustomResources'),
-        );
+        return [
+            ['Valid\Minimal\ValidMinimal'],
+            ['Valid\Simple\ValidSimple'],
+            ['Valid\Custom\ValidCustom'],
+            ['Valid\WithMigrations\ValidWithMigrations'],
+            ['Valid\WithCustomResources\ValidWithCustomResources'],
+        ];
     }
 
     private function getPluginClassPath($classFqcn)

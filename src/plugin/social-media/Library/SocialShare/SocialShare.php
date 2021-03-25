@@ -5,7 +5,7 @@
  * (c) Claroline Consortium <consortium@claroline.net>
  *
  * Author: Panagiotis TSAVDARIS
- * 
+ *
  * Date: 4/23/15
  */
 
@@ -19,7 +19,7 @@ use Icap\SocialmediaBundle\Library\SocialShare\Networks\Twitter;
 
 class SocialShare
 {
-    protected $networks = array();
+    protected $networks = [];
 
     public function __construct()
     {

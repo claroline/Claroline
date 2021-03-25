@@ -23,10 +23,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 class OrderedToolVoter extends AbstractVoter
 {
     /**
-     * @param TokenInterface $token
-     * @param OrderedTool    $object
-     * @param array          $attributes
-     * @param array          $options
+     * @param OrderedTool $object
      *
      * @return int
      */

@@ -28,9 +28,6 @@ class OrganizationFinder extends AbstractFinder
 
     /**
      * OrganizationFinder constructor.
-     *
-     * @param AuthorizationCheckerInterface $authChecker
-     * @param TokenStorageInterface         $tokenStorage
      */
     public function __construct(
         AuthorizationCheckerInterface $authChecker,

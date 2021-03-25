@@ -23,9 +23,6 @@ class ObjectiveProgressLog extends AbstractObjectiveProgress
         $this->refreshUuid();
     }
 
-    /**
-     * @param \DateTime $date
-     */
     public function setDate(\DateTime $date)
     {
         $this->date = $date;

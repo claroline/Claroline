@@ -21,8 +21,6 @@ class SetQuestionSerializer
 
     /**
      * SetQuestionSerializer constructor.
-     *
-     * @param ContentSerializer $contentSerializer
      */
     public function __construct(ContentSerializer $contentSerializer)
     {
@@ -36,9 +34,6 @@ class SetQuestionSerializer
 
     /**
      * Converts a Set question into a JSON-encodable structure.
-     *
-     * @param MatchQuestion $setQuestion
-     * @param array         $options
      *
      * @return array
      */
@@ -112,7 +107,6 @@ class SetQuestionSerializer
      *
      * @param array         $data
      * @param MatchQuestion $setQuestion
-     * @param array         $options
      *
      * @return MatchQuestion
      */
@@ -139,8 +133,7 @@ class SetQuestionSerializer
     /**
      * Deserializes Question labels.
      *
-     * @param MatchQuestion $setQuestion
-     * @param array         $sets        ie labels
+     * @param array $sets ie labels
      */
     private function deserializeLabels(MatchQuestion $setQuestion, array $sets)
     {
@@ -177,8 +170,7 @@ class SetQuestionSerializer
     /**
      * Deserializes Question proposals.
      *
-     * @param MatchQuestion $setQuestion
-     * @param array         $items       ie proposals
+     * @param array $items ie proposals
      */
     private function deserializeProposals(MatchQuestion $setQuestion, array $items)
     {
@@ -215,9 +207,6 @@ class SetQuestionSerializer
 
     /**
      * Deserializes Question solutions.
-     *
-     * @param MatchQuestion $setQuestion
-     * @param array         $solutionsAndOdd
      */
     private function deserializeSolutions(MatchQuestion $setQuestion, array $solutionsAndOdd)
     {

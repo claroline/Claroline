@@ -49,13 +49,6 @@ class ForumListener
 
     /**
      * ForumListener constructor.
-     *
-     * @param ObjectManager             $om
-     * @param SerializerProvider        $serializer
-     * @param Crud                      $crud
-     * @param ResourceEvaluationManager $evaluationManager
-     * @param ForumManager              $manager
-     * @param TokenStorageInterface     $tokenStorage
      */
     public function __construct(
         ObjectManager $om,
@@ -75,8 +68,6 @@ class ForumListener
 
     /**
      * Loads a Forum resource.
-     *
-     * @param LoadResourceEvent $event
      */
     public function onOpen(LoadResourceEvent $event)
     {
@@ -140,8 +131,6 @@ class ForumListener
 
     /**
      * Creates evaluation for forum resource.
-     *
-     * @param GenericDataEvent $event
      */
     public function onGenerateResourceTracking(GenericDataEvent $event)
     {

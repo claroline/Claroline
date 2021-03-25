@@ -14,11 +14,6 @@ class LogCorrectionUpdateEvent extends AbstractLogResourceEvent
 
     private $correction;
 
-    /**
-     * @param Dropzone   $dropzone
-     * @param Drop       $drop
-     * @param Correction $correction
-     */
     public function __construct(Dropzone $dropzone, Drop $drop, Correction $correction)
     {
         $this->correction = $correction;

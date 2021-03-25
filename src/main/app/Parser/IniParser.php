@@ -19,8 +19,6 @@ namespace Claroline\AppBundle\Parser;
 class IniParser
 {
     /**
-     * @param array  $parameters
-     *
      * @return string
      */
     public static function dump(array $parameters)

@@ -19,9 +19,6 @@ class UserListener
 
     /**
      * UserListener constructor.
-     *
-     * @param ObjectiveManager $objectiveManager
-     * @param ProgressManager  $progressManager
      */
     public function __construct(ObjectiveManager $objectiveManager, ProgressManager $progressManager)
     {
@@ -29,9 +26,6 @@ class UserListener
         $this->progressManager = $progressManager;
     }
 
-    /**
-     * @param MergeUsersEvent $event
-     */
     public function onMerge(MergeUsersEvent $event)
     {
         // Replace user of Objective nodes

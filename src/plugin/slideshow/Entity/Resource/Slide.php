@@ -17,7 +17,6 @@ class Slide
 {
     use Id;
     use Uuid;
-
     use Color;
 
     /**
@@ -74,8 +73,6 @@ class Slide
 
     /**
      * Get mime type.
-     *
-     * @return string
      */
     public function getMimeType(): string
     {
@@ -84,8 +81,6 @@ class Slide
 
     /**
      * Set mime type.
-     *
-     * @param string $mimeType
      */
     public function setMimeType(string $mimeType)
     {
@@ -94,8 +89,6 @@ class Slide
 
     /**
      * Get content.
-     *
-     * @return string
      */
     public function getContent(): string
     {
@@ -104,8 +97,6 @@ class Slide
 
     /**
      * Set content.
-     *
-     * @param string $content
      */
     public function setContent(string $content)
     {
@@ -154,8 +145,6 @@ class Slide
 
     /**
      * Get order.
-     *
-     * @return int
      */
     public function getOrder(): int
     {
@@ -164,8 +153,6 @@ class Slide
 
     /**
      * Set order.
-     *
-     * @param int $order
      */
     public function setOrder(int $order)
     {
@@ -174,8 +161,6 @@ class Slide
 
     /**
      * Get parent slideshow.
-     *
-     * @return Slideshow
      */
     public function getSlideshow(): Slideshow
     {

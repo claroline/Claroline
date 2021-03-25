@@ -24,12 +24,6 @@ class ObjectiveManager
     private $competencyProgressRepo;
     private $translator;
 
-    /**
-     * @param ObjectManager       $om
-     * @param CompetencyManager   $competencyManager
-     * @param ProgressManager     $progressManager
-     * @param TranslatorInterface $translator
-     */
     public function __construct(
         ObjectManager $om,
         CompetencyManager $competencyManager,
@@ -48,8 +42,6 @@ class ObjectiveManager
 
     /**
      * Persists a learning objective.
-     *
-     * @param Objective $objective
      *
      * @return Objective
      */
@@ -74,8 +66,6 @@ class ObjectiveManager
      * associated with an objective, including sub-competencies
      * and abilities, if any.
      *
-     * @param Objective $objective
-     *
      * @return array
      */
     public function loadObjectiveCompetencies(Objective $objective)
@@ -87,9 +77,6 @@ class ObjectiveManager
      * Returns an array representation of all the competencies associated
      * with a user objective, including sub-competencies and progress data
      * at each level.
-     *
-     * @param Objective $objective
-     * @param User      $user
      *
      * @return array
      */
@@ -122,7 +109,7 @@ class ObjectiveManager
         foreach ($competencies as $competency) {
             $competenciesWithProgress[] = $this->competencyManager->walkCollection(
                 $competency,
-                function ($collection) use ($user, $competencyProgressesById) {
+                function ($collection) use ($competencyProgressesById) {
                     if (isset($collection['id'])) {
                         $id = isset($collection['originalId']) ? $collection['originalId'] : $collection['id'];
 
@@ -148,8 +135,6 @@ class ObjectiveManager
 
     /**
      * Deletes an objective.
-     *
-     * @param Objective $objective
      */
     public function deleteObjective(Objective $objective)
     {
@@ -162,10 +147,6 @@ class ObjectiveManager
      * with an expected level. Returns a full array representation of
      * the newly associated competency if the link doesn't already exist.
      * Otherwise, returns false.
-     *
-     * @param Objective  $objective
-     * @param Competency $competency
-     * @param Level      $level
      *
      * @return mixed array|bool
      *
@@ -185,9 +166,7 @@ class ObjectiveManager
         $framework = $this->competencyRepo->findOneBy(['root' => $competency->getRoot()]);
 
         if ($level->getScale() !== $framework->getScale()) {
-            throw new \LogicException(
-                'Objective level must belong to the root competency scale'
-            );
+            throw new \LogicException('Objective level must belong to the root competency scale');
         }
 
         $link = new ObjectiveCompetency();
@@ -211,8 +190,6 @@ class ObjectiveManager
 
     /**
      * Deletes a link between an objective and a competency.
-     *
-     * @param ObjectiveCompetency $link
      */
     public function deleteCompetencyLink(ObjectiveCompetency $link)
     {
@@ -225,7 +202,6 @@ class ObjectiveManager
      * Assigns an objective to a user or a group. If the objective has already
      * been assigned, returns false. Otherwise, returns true.
      *
-     * @param Objective  $objective
      * @param User|Group $subject
      *
      * @return bool
@@ -270,9 +246,6 @@ class ObjectiveManager
     /**
      * Removes a group objective.
      *
-     * @param Objective $objective
-     * @param Group     $group
-     *
      * @return array
      */
     public function removeGroupObjective(Objective $objective, Group $group)
@@ -286,9 +259,6 @@ class ObjectiveManager
      * Removes a user objective. If the objective is not specifically assigned to
      * the user (e.g. coming from a group), return false. Otherwise, returns the
      * re-computed percentage of user progression.
-     *
-     * @param Objective $objective
-     * @param User      $user
      *
      * @return bool|int
      */
@@ -452,9 +422,6 @@ class ObjectiveManager
 
     /**
      * Find all content for a given user and replace him by another.
-     *
-     * @param User $from
-     * @param User $to
      *
      * @return int
      */

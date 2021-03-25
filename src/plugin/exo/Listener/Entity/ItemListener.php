@@ -19,8 +19,6 @@ class ItemListener
 
     /**
      * ItemListener constructor.
-     *
-     * @param ContainerInterface $container
      */
     public function __construct(ContainerInterface $container)
     {
@@ -29,9 +27,6 @@ class ItemListener
 
     /**
      * Loads the entity that holds the item type data when an Item is loaded.
-     *
-     * @param Item               $item
-     * @param LifecycleEventArgs $event
      */
     public function postLoad(Item $item, LifecycleEventArgs $event)
     {
@@ -53,9 +48,6 @@ class ItemListener
 
     /**
      * Persists the entity that holds the item type data when an Item is persisted.
-     *
-     * @param Item               $item
-     * @param LifecycleEventArgs $event
      */
     public function prePersist(Item $item, LifecycleEventArgs $event)
     {
@@ -67,9 +59,6 @@ class ItemListener
 
     /**
      * Deletes the entity that holds the item type data when an Item is deleted.
-     *
-     * @param Item               $item
-     * @param LifecycleEventArgs $event
      */
     public function preRemove(Item $item, LifecycleEventArgs $event)
     {

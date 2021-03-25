@@ -30,9 +30,6 @@ class ProgressManager
     private $cachedUserObjectives = null;
     private $cachedUserProgress = null;
 
-    /**
-     * @param ObjectManager $om
-     */
     public function __construct(ObjectManager $om)
     {
         $this->om = $om;
@@ -48,8 +45,6 @@ class ProgressManager
 
     /**
      * Computes and logs the progression of a user.
-     *
-     * @param ResourceUserEvaluation $evaluation
      */
     public function handleEvaluation(ResourceUserEvaluation $evaluation)
     {
@@ -108,9 +103,7 @@ class ProgressManager
                 $this->computeUserProgress($user);
             }
         } else {
-            throw new \InvalidArgumentException(
-                'Subject must be an instance of User or Group'
-            );
+            throw new \InvalidArgumentException('Subject must be an instance of User or Group');
         }
 
         $this->om->flush();
@@ -123,8 +116,6 @@ class ProgressManager
      * of users to which that objective is assigned.
      *
      * Note: this method doesn't compute competency progress.
-     *
-     * @param Objective $objective
      */
     public function recomputeObjectiveProgress(Objective $objective)
     {
@@ -141,9 +132,6 @@ class ProgressManager
 
     /**
      * Returns user evaluation data for a given leaf competency.
-     *
-     * @param Competency $competency
-     * @param User       $user
      *
      * @return mixed
      */
@@ -459,9 +447,6 @@ class ProgressManager
     /**
      * Find all content for a given user and replace him by another.
      *
-     * @param User $from
-     * @param User $to
-     *
      * @return int
      */
     public function replaceUserProgressUser(User $from, User $to)
@@ -481,9 +466,6 @@ class ProgressManager
 
     /**
      * Find all content for a given user and replace him by another.
-     *
-     * @param User $from
-     * @param User $to
      *
      * @return int
      */
@@ -505,9 +487,6 @@ class ProgressManager
     /**
      * Find all content for a given user and replace him by another.
      *
-     * @param User $from
-     * @param User $to
-     *
      * @return int
      */
     public function replaceCompetencyProgressUser(User $from, User $to)
@@ -527,9 +506,6 @@ class ProgressManager
 
     /**
      * Find all content for a given user and replace him by another.
-     *
-     * @param User $from
-     * @param User $to
      *
      * @return int
      */

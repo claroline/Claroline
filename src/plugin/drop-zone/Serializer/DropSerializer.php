@@ -21,12 +21,6 @@ class DropSerializer
 
     /**
      * DropSerializer constructor.
-     *
-     * @param CorrectionSerializer  $correctionSerializer
-     * @param DocumentSerializer    $documentSerializer
-     * @param DropCommentSerializer $dropCommentSerializer
-     * @param UserSerializer        $userSerializer
-     * @param ObjectManager         $om
      */
     public function __construct(
         CorrectionSerializer $correctionSerializer,
@@ -51,8 +45,6 @@ class DropSerializer
     }
 
     /**
-     * @param Drop $drop
-     *
      * @return array
      */
     public function serialize(Drop $drop)

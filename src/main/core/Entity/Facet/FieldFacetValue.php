@@ -96,9 +96,6 @@ class FieldFacetValue
         $this->refreshUuid();
     }
 
-    /**
-     * @param \DateTime|null $dateValue
-     */
     public function setDateValue(\DateTime $dateValue = null)
     {
         $this->dateValue = $dateValue;
@@ -118,9 +115,6 @@ class FieldFacetValue
         return $this->dateValue;
     }
 
-    /**
-     * @param FieldFacet $fieldFacet
-     */
     public function setFieldFacet(FieldFacet $fieldFacet)
     {
         $this->fieldFacet = $fieldFacet;
@@ -166,9 +160,6 @@ class FieldFacetValue
         return $this->stringValue;
     }
 
-    /**
-     * @param array|null $arrayValue
-     */
     public function setArrayValue(array $arrayValue = null)
     {
         $this->arrayValue = $arrayValue;
@@ -198,9 +189,6 @@ class FieldFacetValue
         return $this->boolValue;
     }
 
-    /**
-     * @param User|null $user
-     */
     public function setUser(User $user = null)
     {
         $this->user = $user;

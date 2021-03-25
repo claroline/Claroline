@@ -14,6 +14,7 @@ use UJM\ExoBundle\Entity\Item\Item;
  */
 class Answer
 {
+    use Uuid;
     /**
      * @var int
      *
@@ -22,8 +23,6 @@ class Answer
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-
-    use Uuid;
 
     /**
      * @var string

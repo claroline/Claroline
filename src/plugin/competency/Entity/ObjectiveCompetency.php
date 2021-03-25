@@ -60,9 +60,6 @@ class ObjectiveCompetency implements \JsonSerializable
         return $this->id;
     }
 
-    /**
-     * @param Objective $objective
-     */
     public function setObjective(Objective $objective)
     {
         $this->objective = $objective;
@@ -76,9 +73,6 @@ class ObjectiveCompetency implements \JsonSerializable
         return $this->objective;
     }
 
-    /**
-     * @param Competency $competency
-     */
     public function setCompetency(Competency $competency)
     {
         $this->competency = $competency;
@@ -92,9 +86,6 @@ class ObjectiveCompetency implements \JsonSerializable
         return $this->competency;
     }
 
-    /**
-     * @param Level $level
-     */
     public function setLevel(Level $level)
     {
         $this->level = $level;
@@ -108,9 +99,6 @@ class ObjectiveCompetency implements \JsonSerializable
         return $this->level;
     }
 
-    /**
-     * @param Competency $framework
-     */
     public function setFramework(Competency $framework)
     {
         $this->framework = $framework;

@@ -518,7 +518,7 @@ class ClacoFormController
 
         $fileName = TextNormalizer::toKey($entry->getTitle());
 
-        return new StreamedResponse(function () use ($domPdf, $fileName) {
+        return new StreamedResponse(function () use ($domPdf) {
             echo $domPdf->output();
         }, 200, [
             'Content-Type' => 'application/pdf',

@@ -21,10 +21,6 @@ class WorkspaceListener
 
     /**
      * WorkspaceListener constructor.
-     *
-     * @param TokenStorageInterface $tokenStorage
-     * @param SecurityManager       $securityManager
-     * @param HistoryManager        $manager
      */
     public function __construct(
         TokenStorageInterface $tokenStorage,
@@ -36,9 +32,6 @@ class WorkspaceListener
         $this->manager = $manager;
     }
 
-    /**
-     * @param OpenWorkspaceEvent $event
-     */
     public function onOpen(OpenWorkspaceEvent $event)
     {
         if (!$this->securityManager->isAnonymous() && !$this->securityManager->isImpersonated()) {

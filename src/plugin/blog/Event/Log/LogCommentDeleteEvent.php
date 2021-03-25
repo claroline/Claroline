@@ -3,7 +3,6 @@
 namespace Icap\BlogBundle\Event\Log;
 
 use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
-use Icap\BlogBundle\Entity\Blog;
 use Icap\BlogBundle\Entity\Comment;
 use Icap\BlogBundle\Entity\Post;
 
@@ -11,10 +10,6 @@ class LogCommentDeleteEvent extends AbstractLogResourceEvent
 {
     const ACTION = 'resource-icap_blog-comment_delete';
 
-    /**
-     * @param Post    $post
-     * @param Comment $comment
-     */
     public function __construct(Post $post, Comment $comment)
     {
         $author = $comment->getAuthor();
@@ -26,18 +21,18 @@ class LogCommentDeleteEvent extends AbstractLogResourceEvent
             $author = $comment->getAuthor()->getFirstName().' '.$comment->getAuthor()->getLastName();
         }
 
-        $details = array(
-            'post' => array(
+        $details = [
+            'post' => [
                 'blog' => $blog->getId(),
                 'title' => $post->getTitle(),
                 'slug' => $post->getSlug(),
-            ),
-            'comment' => array(
+            ],
+            'comment' => [
                 'id' => $comment->getId(),
                 'author' => $author,
                 'content' => $comment->getMessage(),
-            ),
-        );
+            ],
+        ];
 
         parent::__construct($blog->getResourceNode(), $details);
     }
@@ -47,6 +42,6 @@ class LogCommentDeleteEvent extends AbstractLogResourceEvent
      */
     public static function getRestriction()
     {
-        return array(self::DISPLAYED_WORKSPACE);
+        return [self::DISPLAYED_WORKSPACE];
     }
 }

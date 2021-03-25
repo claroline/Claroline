@@ -17,9 +17,6 @@ class RemoveUser extends AbstractAction
 
     /**
      * RemoveUser constructor.
-     *
-     * @param Crud          $crud
-     * @param ObjectManager $om
      */
     public function __construct(Crud $crud, ObjectManager $om)
     {

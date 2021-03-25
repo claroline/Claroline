@@ -13,9 +13,6 @@ class LogPostCreateEvent extends AbstractLogResourceEvent implements NotifiableI
     protected $post;
     protected $details;
 
-    /**
-     * @param Post $post
-     */
     public function __construct(Post $post)
     {
         $this->blog = $post->getBlog();

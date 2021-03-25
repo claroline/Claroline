@@ -14,8 +14,6 @@ class UserSource
 
     /**
      * UserSource constructor.
-     *
-     * @param FinderProvider $finder
      */
     public function __construct(
         FinderProvider $finder)
@@ -23,9 +21,6 @@ class UserSource
         $this->finder = $finder;
     }
 
-    /**
-     * @param GetDataEvent $event
-     */
     public function getData(GetDataEvent $event)
     {
         $options = $event->getOptions();

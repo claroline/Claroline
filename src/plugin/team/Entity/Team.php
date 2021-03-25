@@ -188,9 +188,6 @@ class Team
         return $this->workspace;
     }
 
-    /**
-     * @param Workspace $workspace
-     */
     public function setWorkspace(Workspace $workspace)
     {
         $this->workspace = $workspace;
@@ -204,9 +201,6 @@ class Team
         return $this->role;
     }
 
-    /**
-     * @param Role|null $role
-     */
     public function setRole(Role $role = null)
     {
         $this->role = $role;
@@ -223,8 +217,6 @@ class Team
     /**
      * Adds an user to team.
      *
-     * @param User $user
-     *
      * @return Team
      */
     public function addUser(User $user)
@@ -238,8 +230,6 @@ class Team
 
     /**
      * Removes an user to team.
-     *
-     * @param User $user
      *
      * @return Team
      */
@@ -260,9 +250,6 @@ class Team
         return $this->teamManager;
     }
 
-    /**
-     * @param User|null $teamManager
-     */
     public function setTeamManager(User $teamManager = null)
     {
         $this->teamManager = $teamManager;
@@ -276,9 +263,6 @@ class Team
         return $this->teamManagerRole;
     }
 
-    /**
-     * @param Role|null $teamManagerRole
-     */
     public function setTeamManagerRole(Role $teamManagerRole = null)
     {
         $this->teamManagerRole = $teamManagerRole;
@@ -340,9 +324,6 @@ class Team
         return $this->directory;
     }
 
-    /**
-     * @param Directory|null $directory
-     */
     public function setDirectory(Directory $directory = null)
     {
         $this->directory = $directory;

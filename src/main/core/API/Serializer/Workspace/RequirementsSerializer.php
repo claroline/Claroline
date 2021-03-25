@@ -20,10 +20,6 @@ class RequirementsSerializer
 
     /**
      * RequirementsSerializer constructor.
-     *
-     * @param ResourceNodeSerializer $resourceNodeSerializer
-     * @param RoleSerializer         $roleSerializer
-     * @param UserSerializer         $userSerializer
      */
     public function __construct(
         ResourceNodeSerializer $resourceNodeSerializer,
@@ -42,9 +38,6 @@ class RequirementsSerializer
 
     /**
      * Serializes an Requirements entity for the JSON api.
-     *
-     * @param Requirements $requirements
-     * @param array        $options
      *
      * @return array - the serialized representation of the workspace requirements
      */

@@ -146,9 +146,6 @@ class ItemManager
     /**
      * Serializes a question.
      *
-     * @param Item  $question
-     * @param array $options
-     *
      * @return array
      */
     public function serialize(Item $question, array $options = [])
@@ -275,7 +272,7 @@ class ItemManager
         $definition = $this->itemDefinitions->get($question->getMimeType());
 
         if ($definition instanceof AnswerableItemDefinitionInterface) {
-            return array_map(function ($answer) use ($question, $definition) {
+            return array_map(function ($answer) use ($question) {
                 $score = $this->calculateScore($question, $answer);
 
                 if ($score) {

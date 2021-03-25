@@ -24,10 +24,6 @@ class MessageCrud
 
     /**
      * MessageCrud constructor.
-     *
-     * @param ObjectManager                 $om
-     * @param ForumManager                  $forumManager
-     * @param AuthorizationCheckerInterface $authorization
      */
     public function __construct(
         ObjectManager $om,
@@ -41,8 +37,6 @@ class MessageCrud
 
     /**
      * Manage moderation on message create.
-     *
-     * @param CreateEvent $event
      *
      * @return ResourceNode
      */
@@ -80,8 +74,6 @@ class MessageCrud
 
     /**
      * Send notifications after creation.
-     *
-     * @param CreateEvent $event
      *
      * @return Message
      */

@@ -44,12 +44,7 @@ class ThemeManager
     /**
      * ThemeManager constructor.
      *
-     * @param ObjectManager                 $om
-     * @param AuthorizationCheckerInterface $authorization
-     * @param PlatformConfigurationHandler  $config
-     * @param string                        $kernelDir
-     * @param ThemeSerializer               $serializer
-     * @param PluginManager                 $pm
+     * @param string $kernelDir
      */
     public function __construct(
         ObjectManager $om,
@@ -83,8 +78,6 @@ class ThemeManager
     /**
      * Creates a new theme.
      *
-     * @param array $data
-     *
      * @return Theme
      */
     public function create(array $data)
@@ -94,9 +87,6 @@ class ThemeManager
 
     /**
      * Updates an existing theme.
-     *
-     * @param Theme $theme
-     * @param array $data
      *
      * @return Theme
      *
@@ -122,8 +112,6 @@ class ThemeManager
 
     /**
      * Validates theme data.
-     *
-     * @param array $data
      *
      * @return array
      */
@@ -169,9 +157,6 @@ class ThemeManager
     }
 
     /**
-     * @param Theme $theme
-     * @param User  $user
-     *
      * @return bool
      */
     public function canEdit(Theme $theme, User $user)
@@ -186,9 +171,7 @@ class ThemeManager
     /**
      * Deletes a theme, including its css directory.
      *
-     * @param Theme $theme
-     * @param User  $user
-     * @param bool  $skipErrors
+     * @param bool $skipErrors
      *
      * @throws \Exception if the theme is not a custom theme
      */
@@ -215,7 +198,6 @@ class ThemeManager
      * It's only possible if the User owns it.
      *
      * @param array $themes - the uuids of themes to delete
-     * @param User  $user
      */
     public function deleteBulk(array $themes, User $user)
     {

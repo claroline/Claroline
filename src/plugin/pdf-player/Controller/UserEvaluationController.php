@@ -29,10 +29,6 @@ class UserEvaluationController
 
     /**
      * UserEvaluationController constructor.
-     *
-     * @param AuthorizationCheckerInterface $authorization
-     * @param SerializerProvider            $serializer
-     * @param UserEvaluationManager         $userEvaluationManager
      */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
@@ -49,10 +45,8 @@ class UserEvaluationController
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      * @EXT\ParamConverter("pdf", class="Claroline\CoreBundle\Entity\Resource\File", options={"mapping": {"id": "id"}})
      *
-     * @param User $user
-     * @param File $pdf
-     * @param int  $page
-     * @param int  $total
+     * @param int $page
+     * @param int $total
      *
      * @return JsonResponse
      */

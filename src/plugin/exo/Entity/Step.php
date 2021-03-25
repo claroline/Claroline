@@ -19,6 +19,9 @@ use UJM\ExoBundle\Library\Model\AttemptParametersTrait;
  */
 class Step
 {
+    use AttemptParametersTrait;
+    use Order;
+    use Uuid;
     /**
      * @var int
      *
@@ -27,10 +30,6 @@ class Step
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-
-    use AttemptParametersTrait;
-    use Order;
-    use Uuid;
 
     /**
      * @var int

@@ -27,8 +27,6 @@ class ToolRightsManager
 
     /**
      * ToolRightsManager constructor.
-     *
-     * @param ObjectManager $om
      */
     public function __construct(ObjectManager $om)
     {

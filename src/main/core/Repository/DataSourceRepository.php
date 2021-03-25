@@ -20,7 +20,6 @@ class DataSourceRepository extends EntityRepository
      * Finds all available data sources in the platform.
      * It only grabs sources from enabled plugins.
      *
-     * @param array  $enabledPlugins
      * @param string $context
      *
      * @return array

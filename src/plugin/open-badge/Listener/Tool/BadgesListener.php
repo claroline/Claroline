@@ -20,8 +20,6 @@ class BadgesListener
 {
     /**
      * Displays home on Desktop.
-     *
-     * @param OpenToolEvent $event
      */
     public function onDisplayDesktop(OpenToolEvent $event)
     {
@@ -30,9 +28,6 @@ class BadgesListener
         $event->stopPropagation();
     }
 
-    /**
-     * @param OpenToolEvent $event
-     */
     public function onDisplayWorkspace(OpenToolEvent $event)
     {
         $event->setData([]);

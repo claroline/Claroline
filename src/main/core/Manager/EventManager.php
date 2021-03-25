@@ -63,7 +63,6 @@ class EventManager
     }
 
     /**
-     * @param Finder $finder
      * @param string $bundleNamespace
      * @param string $suffixLogNamespace
      * @param string $restriction

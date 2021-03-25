@@ -33,9 +33,6 @@ class RevisionSerializer
 
     /**
      * RevisionSerializer constructor.
-     *
-     * @param ObjectManager      $om
-     * @param SerializerProvider $serializer
      */
     public function __construct(ObjectManager $om, SerializerProvider $serializer)
     {
@@ -52,9 +49,6 @@ class RevisionSerializer
     }
 
     /**
-     * @param Revision $revision
-     * @param array    $options
-     *
      * @return array
      */
     public function serialize(Revision $revision, array $options = [])

@@ -31,9 +31,6 @@ class ResourceRecent extends AbstractRecent
         return $this->resource;
     }
 
-    /**
-     * @param ResourceNode $resource
-     */
     public function setResource(ResourceNode $resource)
     {
         $this->resource = $resource;

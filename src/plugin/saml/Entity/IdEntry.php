@@ -67,8 +67,6 @@ class IdEntry
     }
 
     /**
-     * @param \DateTime $expiryTime
-     *
      * @return IdEntry
      */
     public function setExpiryTime(\DateTime $expiryTime)

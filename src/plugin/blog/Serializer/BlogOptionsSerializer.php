@@ -44,9 +44,7 @@ class BlogOptionsSerializer
     }
 
     /**
-     * @param Blog        $blog
      * @param BlogOptions $options
-     * @param array       $options
      *
      * @return array - The serialized representation of blog options
      */
@@ -197,7 +195,6 @@ class BlogOptionsSerializer
     /**
      * @param array              $data
      * @param BlogOptions | null $blogOptions
-     * @param array              $options
      *
      * @return BlogOptions - The deserialized blogOptions entity
      */

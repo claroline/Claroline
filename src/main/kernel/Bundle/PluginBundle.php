@@ -12,7 +12,6 @@
 namespace Claroline\KernelBundle\Bundle;
 
 use Claroline\InstallationBundle\Bundle\InstallableBundle;
-use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 
 /**
  * Base class of all the plugin bundles on the claroline platform.

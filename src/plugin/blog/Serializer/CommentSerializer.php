@@ -34,9 +34,6 @@ class CommentSerializer
 
     /**
      * PostSerializer constructor.
-     *
-     * @param UserSerializer $userSerializer
-     * @param ObjectManager  $om
      */
     public function __construct(
         UserSerializer $userSerializer,
@@ -72,9 +69,6 @@ class CommentSerializer
     /**
      * Serialize post comments.
      *
-     * @param array $comments
-     * @param array $options
-     *
      * @return array - The serialized representation comments
      */
     public function serializeComments(array $comments, array $options = [])
@@ -88,9 +82,6 @@ class CommentSerializer
 
     /**
      * Serialize a post comment.
-     *
-     * @param Comment $comment
-     * @param array   $options
      *
      * @return array - The serialized representation of a comment
      */
@@ -113,7 +104,6 @@ class CommentSerializer
     /**
      * @param array          $data
      * @param Comment | null $comment
-     * @param array          $options
      *
      * @return Comment - The deserialized comment entity
      */

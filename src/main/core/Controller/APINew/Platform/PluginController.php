@@ -20,8 +20,6 @@ class PluginController extends AbstractSecurityController
 
     /**
      * PluginController constructor.
-     *
-     * @param PluginManager $pluginManager
      */
     public function __construct(PluginManager $pluginManager)
     {
@@ -45,8 +43,6 @@ class PluginController extends AbstractSecurityController
     /**
      * @Route("/configure", name="apiv2_plugin_configure", methods={"PUT"})
      *
-     * @param Plugin $plugin
-     *
      * @return JsonResponse
      */
     public function configureAction(Plugin $plugin)
@@ -62,8 +58,6 @@ class PluginController extends AbstractSecurityController
     /**
      * @Route("/enable", name="apiv2_plugin_enable", methods={"PUT"})
      *
-     * @param Plugin $plugin
-     *
      * @return JsonResponse
      */
     public function enableAction(Plugin $plugin)
@@ -78,8 +72,6 @@ class PluginController extends AbstractSecurityController
 
     /**
      * @Route("/disable", name="apiv2_plugin_disable", methods={"PUT"})
-     *
-     * @param Plugin $plugin
      *
      * @return JsonResponse
      */

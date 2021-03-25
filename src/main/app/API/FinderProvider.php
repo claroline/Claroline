@@ -30,9 +30,6 @@ class FinderProvider
 
     /**
      * FinderProvider constructor.
-     *
-     * @param ObjectManager      $om
-     * @param SerializerProvider $serializer
      */
     public function __construct(
         ObjectManager $om,
@@ -44,8 +41,6 @@ class FinderProvider
 
     /**
      * Registers a new finder.
-     *
-     * @param FinderInterface $finder
      */
     public function add(FinderInterface $finder)
     {
@@ -64,9 +59,7 @@ class FinderProvider
     public function get($class)
     {
         if (empty($this->finders[$class])) {
-            throw new FinderException(
-                sprintf('No finder found for class "%s" Maybe you forgot to add the "claroline.finder" tag to your finder.', $class)
-            );
+            throw new FinderException(sprintf('No finder found for class "%s" Maybe you forgot to add the "claroline.finder" tag to your finder.', $class));
         }
 
         return $this->finders[$class];
@@ -86,8 +79,6 @@ class FinderProvider
      * Builds and fires the query for a given class. The result will be serialized afterwards.
      *
      * @param string $class
-     * @param array  $finderParams
-     * @param array  $serializerOptions
      *
      * @return array
      */
@@ -104,7 +95,6 @@ class FinderProvider
 
     /**
      * @param $class
-     * @param array $finderParams
      *
      * @return array
      */
@@ -141,12 +131,10 @@ class FinderProvider
     /**
      * Builds and fires the query for a given class. There will be no serialization here.
      *
-     * @param string     $class
-     * @param int        $page
-     * @param int        $limit
-     * @param array      $filters
-     * @param array|null $sortBy
-     * @param bool       $count
+     * @param string $class
+     * @param int    $page
+     * @param int    $limit
+     * @param bool   $count
      *
      * @return mixed
      */
@@ -195,8 +183,6 @@ class FinderProvider
     /**
      * Properly convert the filters (boolean or integer for instance when they're displayed as string).
      *
-     * @param array $filters
-     *
      * @return array
      */
     public static function parseFilters(array $filters)
@@ -227,8 +213,6 @@ class FinderProvider
     }
 
     /**
-     * @param array $filters
-     *
      * @todo : we should make UI and API formats uniform to avoid such transformations
      *
      * @return array
@@ -245,8 +229,6 @@ class FinderProvider
 
     /**
      * Parses query params to their appropriate filter values.
-     *
-     * @param array $finderParams
      *
      * @return array
      */

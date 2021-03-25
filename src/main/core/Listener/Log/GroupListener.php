@@ -29,9 +29,6 @@ class GroupListener
 
     /**
      * GroupListener constructor.
-     *
-     * @param ObjectManager    $om
-     * @param StrictDispatcher $dispatcher
      */
     public function __construct(
         ObjectManager $om,

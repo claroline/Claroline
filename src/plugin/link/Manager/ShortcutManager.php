@@ -29,8 +29,6 @@ class ShortcutManager
 
     /**
      * ShortcutManager constructor.
-     *
-     * @param ObjectManager $om
      */
     public function __construct(ObjectManager $om)
     {
@@ -40,8 +38,6 @@ class ShortcutManager
 
     /**
      * Removes all shortcuts associated to a resource.
-     *
-     * @param ResourceNode $resourceNode
      *
      * @todo delete through the normal resource lifecycle
      */

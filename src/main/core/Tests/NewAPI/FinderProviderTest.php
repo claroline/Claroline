@@ -105,7 +105,7 @@ class FinderProviderTest extends TransactionalTestCase
             return method_exists($finder, 'getFilters') ? count($finder->getFilters()) > 0 : false;
         });
 
-        return array_map(function ($finder) use ($provider) {
+        return array_map(function ($finder) {
             return [$finder->getClass()];
         }, $finders);
     }

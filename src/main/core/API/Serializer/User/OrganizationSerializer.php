@@ -18,8 +18,6 @@ class OrganizationSerializer
 
     /**
      * OrganizationSerializer constructor.
-     *
-     * @param ObjectManager $om
      */
     public function __construct(ObjectManager $om)
     {
@@ -35,7 +33,6 @@ class OrganizationSerializer
      * Serializes an Organization entity for the JSON api.
      *
      * @param Organization $organization - the organization to serialize
-     * @param array        $options
      *
      * @return array - the serialized representation of the workspace
      */

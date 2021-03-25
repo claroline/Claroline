@@ -28,10 +28,6 @@ class FieldSerializer
 
     /**
      * FieldSerializer constructor.
-     *
-     * @param FieldFacetSerializer       $fieldFacetSerializer
-     * @param FieldFacetChoiceSerializer $fieldFacetChoiceSerializer
-     * @param ObjectManager              $om
      */
     public function __construct(
         FieldFacetSerializer $fieldFacetSerializer,
@@ -102,8 +98,6 @@ class FieldSerializer
 
     /**
      * @param array $data
-     * @param Field $field
-     * @param array $options
      *
      * @return Field
      */

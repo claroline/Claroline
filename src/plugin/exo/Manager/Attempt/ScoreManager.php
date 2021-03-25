@@ -10,9 +10,6 @@ class ScoreManager
     /**
      * Calculates the score obtained to a question based on a calculation rule.
      *
-     * @param array           $scoreRule
-     * @param CorrectedAnswer $correctedAnswer
-     *
      * @return float|null the calculated score or null if it cannot be calculated automatically
      */
     public function calculate(array $scoreRule, CorrectedAnswer $correctedAnswer)
@@ -128,7 +125,6 @@ class ScoreManager
      * Calculates the maximum score for a question based on a calculation rule
      * and the expected answer.
      *
-     * @param array                 $scoreRule
      * @param AnswerPartInterface[] $expectedAnswers
      * @param AnswerPartInterface[] $allAnswers
      *
@@ -225,8 +221,7 @@ class ScoreManager
     /**
      * Applies hint penalties to a score.
      *
-     * @param float           $score
-     * @param CorrectedAnswer $correctedAnswer
+     * @param float $score
      *
      * @return float
      */

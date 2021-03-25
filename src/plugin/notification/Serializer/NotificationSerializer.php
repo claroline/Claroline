@@ -23,10 +23,6 @@ class NotificationSerializer
 
     /**
      * NotificationSerializer constructor.
-     *
-     * @param ObjectManager            $om
-     * @param EventDispatcherInterface $eventDispatcher
-     * @param UserSerializer           $userSerializer
      */
     public function __construct(
         ObjectManager $om,

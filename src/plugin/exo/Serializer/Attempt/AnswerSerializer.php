@@ -17,9 +17,6 @@ class AnswerSerializer
     /**
      * Converts an Answer into a JSON-encodable structure.
      *
-     * @param Answer $answer
-     * @param array  $options
-     *
      * @return array
      */
     public function serialize(Answer $answer, array $options = [])
@@ -70,7 +67,6 @@ class AnswerSerializer
      *
      * @param array  $data
      * @param Answer $answer
-     * @param array  $options
      *
      * @return Answer
      */

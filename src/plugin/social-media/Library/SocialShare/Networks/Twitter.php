@@ -5,7 +5,7 @@
  * (c) Claroline Consortium <consortium@claroline.net>
  *
  * Author: Panagiotis TSAVDARIS
- * 
+ *
  * Date: 4/23/15
  */
 
@@ -33,11 +33,10 @@ class Twitter implements NetworkInterface
      * Gets the share link for provided URL.
      *
      * @param $url
-     * @param array $options
      *
      * @return string
      */
-    public function getShareLink($url, array $options = array())
+    public function getShareLink($url, array $options = [])
     {
         $options['url'] = $url;
 
@@ -61,7 +60,7 @@ class Twitter implements NetworkInterface
             $data = null;
         }
 
-        return ($data !== null && isset($data->count)) ? intval($data->count) : 0;
+        return (null !== $data && isset($data->count)) ? intval($data->count) : 0;
     }
 
     /**

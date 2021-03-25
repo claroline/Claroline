@@ -26,9 +26,6 @@ class ScheduledTaskFinder extends AbstractFinder
 
     /**
      * ScheduledTaskFinder constructor.
-     *
-     * @param AuthorizationCheckerInterface $authChecker
-     * @param TokenStorageInterface         $tokenStorage
      */
     public function __construct(
         AuthorizationCheckerInterface $authChecker,

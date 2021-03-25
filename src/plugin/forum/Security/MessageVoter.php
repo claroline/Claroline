@@ -37,6 +37,6 @@ class MessageVoter extends AbstractVoter
 
     public function getSupportedActions()
     {
-        return[self::CREATE, self::EDIT, self::DELETE, self::PATCH];
+        return [self::CREATE, self::EDIT, self::DELETE, self::PATCH];
     }
 }

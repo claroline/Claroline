@@ -32,7 +32,6 @@ class ObjectiveRepository extends EntityRepository
      * Returns the objectives assigned to a user. Objectives assigned to
      * groups whose the user is a member of are also returned.
      *
-     * @param User $user
      * @param bool $asArray
      *
      * @return array
@@ -84,8 +83,6 @@ class ObjectiveRepository extends EntityRepository
     /**
      * Returns an array representation of the objectives assigned to a group.
      *
-     * @param Group $group
-     *
      * @return array
      */
     public function findByGroup(Group $group)
@@ -104,9 +101,6 @@ class ObjectiveRepository extends EntityRepository
      * Returns the objectives assigned to a user which includes a
      * given competency. Objectives assigned to groups whose the
      * user is a member of are also returned.
-     *
-     * @param Competency $competency
-     * @param User       $user
      *
      * @return array
      */
@@ -139,8 +133,6 @@ class ObjectiveRepository extends EntityRepository
 
     /**
      * Returns all the users and group members who have a given objective.
-     *
-     * @param Objective $objective
      *
      * @return array
      */
@@ -228,8 +220,6 @@ class ObjectiveRepository extends EntityRepository
     /**
      * Returns the query object for counting all the members of a group.
      *
-     * @param Group $group
-     *
      * @return \Doctrine\ORM\Query
      */
     public function getGroupUsersQuery(Group $group)
@@ -240,8 +230,6 @@ class ObjectiveRepository extends EntityRepository
     /**
      * Returns the query object for fetching all the members of a group,
      * including progress data.
-     *
-     * @param Group $group
      *
      * @return \Doctrine\ORM\Query
      */

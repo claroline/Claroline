@@ -16,7 +16,6 @@ class SetQuestionValidator extends JsonSchemaValidator
      * Performs additional validations.
      *
      * @param array $question
-     * @param array $options
      *
      * @return array
      */
@@ -39,8 +38,6 @@ class SetQuestionValidator extends JsonSchemaValidator
      *  - The solution `setId` must match the `sets` IDs.
      *  - An odd `itemId` must match the `items` IDS.
      *  - There is at least one solution with a positive score.
-     *
-     * @param array $question
      *
      * @return array
      */

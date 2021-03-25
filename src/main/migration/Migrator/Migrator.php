@@ -34,8 +34,6 @@ class Migrator
 
     /**
      * Constructor.
-     *
-     * @param \Doctrine\DBAL\Connection $connection
      */
     public function __construct(Connection $connection)
     {
@@ -44,8 +42,6 @@ class Migrator
 
     /**
      * Returns the current version of a bundle.
-     *
-     * @param \Symfony\Component\HttpKernel\Bundle\Bundle $bundle
      *
      * @return string
      */
@@ -60,8 +56,6 @@ class Migrator
      * - the list of available versions for that bundle.
      *
      * Array values are index with Migrator::STATUS_* constants.
-     *
-     * @param \Symfony\Component\HttpKernel\Bundle\Bundle $bundle
      *
      * @return array
      */
@@ -90,9 +84,8 @@ class Migrator
      * either an explicit version string or Migrator::VERSION_* class constant.
      * Direction must be a Migrator::DIRECTION_* class constant.
      *
-     * @param \Symfony\Component\HttpKernel\Bundle\Bundle $bundle
-     * @param string                                      $version
-     * @param string                                      $direction
+     * @param string $version
+     * @param string $direction
      *
      * @return array The sql queries executed during the migration
      *

@@ -97,8 +97,6 @@ class ClozeQuestion extends AbstractItem
 
     /**
      * Adds a hole.
-     *
-     * @param Hole $hole
      */
     public function addHole(Hole $hole)
     {
@@ -110,8 +108,6 @@ class ClozeQuestion extends AbstractItem
 
     /**
      * Removes a hole.
-     *
-     * @param Hole $hole
      */
     public function removeHole(Hole $hole)
     {

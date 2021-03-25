@@ -55,9 +55,6 @@ class Walker extends JValWalker
 
     /**
      * Constructor.
-     *
-     * @param Registry $registry
-     * @param Resolver $resolver
      */
     public function __construct(Registry $registry, Resolver $resolver)
     {
@@ -75,7 +72,7 @@ class Walker extends JValWalker
      *
      * @return stdClass
      */
-    public function resolveReferences(\stdClass $schema, Uri $uri)
+    public function resolveReferences(stdClass $schema, Uri $uri)
     {
         $this->resolver->initialize($schema, $uri);
 
@@ -83,13 +80,11 @@ class Walker extends JValWalker
     }
 
     /**
-     * @param stdClass $schema
-     * @param Uri      $uri
-     * @param bool     $inProperties
+     * @param bool $inProperties
      *
      * @return stdClass
      */
-    private function doResolveReferences(\stdClass $schema, Uri $uri, $inProperties = false)
+    private function doResolveReferences(stdClass $schema, Uri $uri, $inProperties = false)
     {
         if ($this->isProcessed($schema, $this->resolvedSchemas)) {
             return $schema;
@@ -135,12 +130,9 @@ class Walker extends JValWalker
     /**
      * Recursively normalizes a given schema and validates its syntax.
      *
-     * @param stdClass $schema
-     * @param Context  $context
-     *
      * @return stdClass
      */
-    public function parseSchema(\stdClass $schema, Context $context)
+    public function parseSchema(stdClass $schema, Context $context)
     {
         if ($this->isProcessed($schema, $this->parsedSchemas)) {
             return $schema;
@@ -161,11 +153,9 @@ class Walker extends JValWalker
      * Validates an instance against a given schema, populating a context
      * with encountered violations.
      *
-     * @param mixed    $instance
-     * @param stdClass $schema
-     * @param Context  $context
+     * @param mixed $instance
      */
-    public function applyConstraints($instance, \stdClass $schema, Context $context, array $options = [])
+    public function applyConstraints($instance, stdClass $schema, Context $context, array $options = [])
     {
         $cacheKey = gettype($instance).spl_object_hash($schema);
         $constraints = &$this->constraintsCache[$cacheKey];
@@ -186,12 +176,9 @@ class Walker extends JValWalker
      * Returns whether a schema has already been processed and stored in
      * a given collection. This acts as an infinite recursion check.
      *
-     * @param stdClass         $schema
-     * @param SplObjectStorage $storage
-     *
      * @return bool
      */
-    private function isProcessed(\stdClass $schema, \SplObjectStorage $storage)
+    private function isProcessed(stdClass $schema, SplObjectStorage $storage)
     {
         if ($storage->contains($schema)) {
             return true;
@@ -204,8 +191,6 @@ class Walker extends JValWalker
 
     /**
      * Returns the version of a schema.
-     *
-     * @param stdClass $schema
      *
      * @return string
      */
@@ -220,11 +205,10 @@ class Walker extends JValWalker
      * Filters constraints which should be triggered for given schema.
      *
      * @param Constraint[] $constraints
-     * @param stdClass     $schema
      *
      * @return Constraint[]
      */
-    private function filterConstraintsForSchema(array $constraints, \stdClass $schema)
+    private function filterConstraintsForSchema(array $constraints, stdClass $schema)
     {
         $filtered = [];
 

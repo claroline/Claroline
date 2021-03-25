@@ -75,9 +75,6 @@ class CorrectedAnswer
         return $this->expected;
     }
 
-    /**
-     * @param AnswerPartInterface $expected
-     */
     public function addExpected(AnswerPartInterface $expected)
     {
         $found = false;
@@ -108,9 +105,6 @@ class CorrectedAnswer
         return $this->missing;
     }
 
-    /**
-     * @param AnswerPartInterface $missing
-     */
     public function addMissing(AnswerPartInterface $missing)
     {
         $this->missing[] = $missing;
@@ -126,9 +120,6 @@ class CorrectedAnswer
         return $this->unexpected;
     }
 
-    /**
-     * @param AnswerPartInterface $unexpected
-     */
     public function addUnexpected(AnswerPartInterface $unexpected)
     {
         $this->unexpected[] = $unexpected;
@@ -144,9 +135,6 @@ class CorrectedAnswer
         return $this->penalties;
     }
 
-    /**
-     * @param PenaltyItemInterface $penalty
-     */
     public function addPenalty(PenaltyItemInterface $penalty)
     {
         $this->penalties[] = $penalty;
@@ -162,9 +150,6 @@ class CorrectedAnswer
         return $this->expectedMissing;
     }
 
-    /**
-     * @param AnswerPartInterface $expectedMissing
-     */
     public function addExpectedMissing(AnswerPartInterface $expectedMissing)
     {
         $this->expectedMissing[] = $expectedMissing;

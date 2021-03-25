@@ -27,10 +27,6 @@ class TextListener
 
     /**
      * TextListener constructor.
-     *
-     * @param ObjectManager      $om
-     * @param SerializerProvider $serializer
-     * @param PlaceholderManager $placeholderManager
      */
     public function __construct(
         ObjectManager $om,
@@ -44,8 +40,6 @@ class TextListener
 
     /**
      * Loads a Text resource.
-     *
-     * @param LoadResourceEvent $event
      */
     public function load(LoadResourceEvent $event)
     {

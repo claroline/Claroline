@@ -27,10 +27,6 @@ class CommunityListener
 
     /**
      * CommunityListener constructor.
-     *
-     * @param ParametersSerializer $parametersSerializer
-     * @param ProfileSerializer    $profileSerializer
-     * @param UserManager          $userManager
      */
     public function __construct(
         ParametersSerializer $parametersSerializer,
@@ -44,8 +40,6 @@ class CommunityListener
 
     /**
      * Displays users on Workspace.
-     *
-     * @param OpenToolEvent $event
      */
     public function onDisplayWorkspace(OpenToolEvent $event)
     {
@@ -58,9 +52,6 @@ class CommunityListener
         $event->stopPropagation();
     }
 
-    /**
-     * @param OpenToolEvent $event
-     */
     public function onDisplayDesktop(OpenToolEvent $event)
     {
         $event->setData([

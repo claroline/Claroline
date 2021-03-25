@@ -11,11 +11,11 @@
 
 namespace Claroline\MigrationBundle\Command;
 
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
-use Claroline\MigrationBundle\Migrator\Migrator;
 use Claroline\MigrationBundle\Migrator\InvalidVersionException;
+use Claroline\MigrationBundle\Migrator\Migrator;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 
 abstract class AbstractMigrateCommand extends AbstractCommand
 {

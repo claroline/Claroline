@@ -6,7 +6,7 @@ use Doctrine\DBAL\Connection;
 
 trait ConditionalMigrationTrait
 {
-    private function checkTableExists(String $table, Connection $connection): bool
+    private function checkTableExists(string $table, Connection $connection): bool
     {
         try {
             $connection->executeQuery("SELECT 1 FROM $table");

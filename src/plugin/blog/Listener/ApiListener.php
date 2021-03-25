@@ -21,11 +21,6 @@ class ApiListener
     /** @var BlogManager */
     private $blogManager;
 
-    /**
-     * @param CommentManager $commentManager
-     * @param PostManager    $postManager
-     * @param BlogManager    $blogManager
-     */
     public function __construct(CommentManager $commentManager, PostManager $postManager, BlogManager $blogManager)
     {
         $this->commentManager = $commentManager;
@@ -33,9 +28,6 @@ class ApiListener
         $this->blogManager = $blogManager;
     }
 
-    /**
-     * @param MergeUsersEvent $event
-     */
     public function onMerge(MergeUsersEvent $event)
     {
         // Replace user of Comment nodes

@@ -47,11 +47,8 @@ class WebResourceListener
     /**
      * WebResourceListener constructor.
      *
-     * @param string             $filesDir
-     * @param ObjectManager      $om
-     * @param string             $uploadDir
-     * @param ResourceManager    $resourceManager
-     * @param WebResourceManager $webResourceManager
+     * @param string $filesDir
+     * @param string $uploadDir
      */
     public function __construct(
         $filesDir,
@@ -69,9 +66,6 @@ class WebResourceListener
         $this->resourceManager = $resourceManager;
     }
 
-    /**
-     * @param LoadResourceEvent $event
-     */
     public function onLoad(LoadResourceEvent $event)
     {
         $ds = DIRECTORY_SEPARATOR;
@@ -136,9 +130,6 @@ class WebResourceListener
         $fileSystem->mirror($bag->get($data['_path']), $filesPath);
     }
 
-    /**
-     * @param DeleteResourceEvent $event
-     */
     public function onDelete(DeleteResourceEvent $event)
     {
         $ds = DIRECTORY_SEPARATOR;
@@ -164,9 +155,6 @@ class WebResourceListener
         $event->stopPropagation();
     }
 
-    /**
-     * @param CopyResourceEvent $event
-     */
     public function onCopy(CopyResourceEvent $event)
     {
         /** @var File $webResource */
@@ -177,9 +165,6 @@ class WebResourceListener
         $event->stopPropagation();
     }
 
-    /**
-     * @param DownloadResourceEvent $event
-     */
     public function onDownload(DownloadResourceEvent $event)
     {
         /** @var File $resource */
@@ -211,8 +196,6 @@ class WebResourceListener
 
     /**
      * Copies a file (no persistence).
-     *
-     * @param File $resource
      *
      * @return File
      */
@@ -258,8 +241,6 @@ class WebResourceListener
 
     /**
      * Changes actual file associated to File resource.
-     *
-     * @param ResourceActionEvent $event
      */
     public function onFileChange(ResourceActionEvent $event)
     {

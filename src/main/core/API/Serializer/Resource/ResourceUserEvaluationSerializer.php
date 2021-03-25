@@ -13,9 +13,6 @@ class ResourceUserEvaluationSerializer
 
     /**
      * ResourceUserEvaluationSerializer constructor.
-     *
-     * @param ResourceNodeSerializer $resourceNodeSerializer
-     * @param UserSerializer         $userSerializer
      */
     public function __construct(ResourceNodeSerializer $resourceNodeSerializer, UserSerializer $userSerializer)
     {
@@ -30,8 +27,6 @@ class ResourceUserEvaluationSerializer
 
     /**
      * Serializes a ResourceUserEvaluation entity for the JSON api.
-     *
-     * @param ResourceUserEvaluation $resourceUserEvaluation
      *
      * @return array - the serialized representation of the resource evaluation
      */

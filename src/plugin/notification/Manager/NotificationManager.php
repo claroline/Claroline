@@ -28,11 +28,6 @@ class NotificationManager
 
     /**
      * NotificationManager constructor.
-     *
-     * @param ObjectManager                     $om
-     * @param TokenStorageInterface             $tokenStorage
-     * @param EventDispatcherInterface          $eventDispatcher
-     * @param NotificationUserParametersManager $notificationParametersManager
      */
     public function __construct(
         ObjectManager $om,
@@ -196,7 +191,6 @@ class NotificationManager
     /**
      * Creates a notification viewer for every user in the list of people to be notified.
      *
-     * @param Notification $notification
      * @param $userIds
      *
      * @internal param \Icap\NotificationBundle\Entity\NotifiableInterface $notifiable
@@ -223,8 +217,6 @@ class NotificationManager
 
     /**
      * Creates a notification and notifies the concerned users.
-     *
-     * @param NotifiableInterface $notifiable
      *
      * @return Notification
      */
@@ -275,7 +267,6 @@ class NotificationManager
     }
 
     /**
-     * @param User           $user
      * @param ResourceNode[] $resourceNodes
      * @param string         $mode
      */

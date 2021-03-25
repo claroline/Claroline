@@ -20,8 +20,6 @@ class TempFileManager
 
     /**
      * TempManager constructor.
-     *
-     * @param PlatformConfigurationHandler $config
      */
     public function __construct(
         PlatformConfigurationHandler $config)

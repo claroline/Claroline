@@ -26,30 +26,30 @@ class LogResourceMoveEvent extends LogGenericEvent
     {
         parent::__construct(
             self::ACTION,
-            array(
-                'resource' => array(
+            [
+                'resource' => [
                     'name' => $node->getName(),
                     'path' => $node->getPathForDisplay(),
-                ),
-                'workspace' => array(
+                ],
+                'workspace' => [
                     'name' => $node->getWorkspace()->getName(),
-                ),
-                'owner' => array(
+                ],
+                'owner' => [
                     'lastName' => $node->getCreator()->getLastName(),
                     'firstName' => $node->getCreator()->getFirstName(),
-                ),
-                'source' => array(
-                    'resource' => array(
+                ],
+                'source' => [
+                    'resource' => [
                         'id' => $source->getId(),
                         'name' => $source->getName(),
                         'path' => $source->getPathForDisplay(),
-                    ),
-                    'workspace' => array(
+                    ],
+                    'workspace' => [
                         'id' => $source->getWorkspace()->getId(),
                         'name' => $source->getWorkspace()->getName(),
-                    ),
-                ),
-            ),
+                    ],
+                ],
+            ],
             null,
             null,
             $node,

@@ -35,10 +35,6 @@ class BooleanDefinition extends AbstractDefinition
 
     /**
      * ChoiceDefinition constructor.
-     *
-     * @param BooleanQuestionValidator  $validator
-     * @param BooleanAnswerValidator    $answerValidator
-     * @param BooleanQuestionSerializer $serializer
      */
     public function __construct(
         BooleanQuestionValidator $validator,

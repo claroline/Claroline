@@ -58,8 +58,6 @@ class SecondaryResource
     /**
      * Set step.
      *
-     * @param Step $step
-     *
      * @return SecondaryResource
      */
     public function setStep(Step $step)
@@ -81,8 +79,6 @@ class SecondaryResource
 
     /**
      * Set resource.
-     *
-     * @param ResourceNode $resource
      *
      * @return SecondaryResource
      */

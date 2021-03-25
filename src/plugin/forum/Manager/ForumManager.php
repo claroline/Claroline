@@ -45,12 +45,6 @@ class ForumManager
 
     /**
      * ForumManager constructor.
-     *
-     * @param RoutingHelper   $helper
-     * @param FinderProvider  $finder
-     * @param ObjectManager   $om
-     * @param MessageManager  $messageManager
-     * @param TemplateManager $templateManager
      */
     public function __construct(
         RoutingHelper $helper,
@@ -164,9 +158,6 @@ class ForumManager
     /**
      * Find all content for a given user and the replace him by another.
      *
-     * @param User $from
-     * @param User $to
-     *
      * @return int
      */
     public function replaceSubjectUser(User $from, User $to)
@@ -184,9 +175,6 @@ class ForumManager
 
     /**
      * Find all content for a given user and the replace him by another.
-     *
-     * @param User $from
-     * @param User $to
      *
      * @return int
      */

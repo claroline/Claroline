@@ -26,11 +26,6 @@ class Create extends AbstractAction
 
     /**
      * Create constructor.
-     *
-     * @param ObjectManager       $om
-     * @param Crud                $crud
-     * @param WorkspaceManager    $workspaceManager
-     * @param WorkspaceSerializer $serializer
      */
     public function __construct(
         ObjectManager $om,

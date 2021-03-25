@@ -14,9 +14,7 @@ namespace Claroline\AppBundle\API;
 // todo : should be broken in multiple files or it will become very large with time.
 final class Options
 {
-    /*******************************/
     /* SERIALIZER PROVIDER OPTIONS */
-    /*******************************/
 
     const SERIALIZE_LIST = 'serialize_list';
 
@@ -27,9 +25,7 @@ final class Options
 
     const ABSOLUTE_URL = 'absolute_url';
 
-    /*******************************/
     /* SPECIFIC SERIALIZER OPTIONS */
-    /*******************************/
 
     /*
      * Do we want to recursively serialize ?
@@ -37,9 +33,7 @@ final class Options
      */
     const IS_RECURSIVE = 'is_recursive';
 
-    /****************/
     /* CRUD OPTIONS */
-    /****************/
 
     //do something better with these options
     const SOFT_DELETE = 'soft_delete';

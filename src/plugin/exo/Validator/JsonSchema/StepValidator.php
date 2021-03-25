@@ -22,9 +22,6 @@ class StepValidator extends JsonSchemaValidator
 
     /**
      * StepValidator constructor.
-     *
-     * @param ItemValidator    $itemValidator
-     * @param ContentValidator $contentValidator
      */
     public function __construct(
         ItemValidator $itemValidator,

@@ -23,8 +23,6 @@ class CompetencyRepository extends NestedTreeRepository
     /**
      * Returns the competencies associated with a resource.
      *
-     * @param ResourceNode $resource
-     *
      * @return array
      */
     public function findByResource(ResourceNode $resource)
@@ -91,8 +89,6 @@ class CompetencyRepository extends NestedTreeRepository
      * account when computing level/percentage of parent nodes
      * from a given start node. It includes the node's siblings
      * and parent, and the parent's siblings and parent, and so on.
-     *
-     * @param Competency $startNode
      *
      * @return array
      */

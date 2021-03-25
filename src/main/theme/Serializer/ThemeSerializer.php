@@ -16,9 +16,6 @@ class ThemeSerializer
 
     /**
      * ThemeSerializer constructor.
-     *
-     * @param PlatformConfigurationHandler $config
-     * @param UserSerializer               $userSerializer
      */
     public function __construct(
         PlatformConfigurationHandler $config,

@@ -56,9 +56,6 @@ abstract class AbstractResource
         return $this->id;
     }
 
-    /**
-     * @param ResourceNode $resourceNode
-     */
     public function setResourceNode(ResourceNode $resourceNode)
     {
         $this->resourceNode = $resourceNode;

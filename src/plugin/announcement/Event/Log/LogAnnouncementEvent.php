@@ -10,7 +10,6 @@ class LogAnnouncementEvent extends LogGenericEvent
 {
     /**
      * @param AnnouncementAggregate $aggregate
-     * @param Announcement          $announcement
      */
     public function __construct(
         Announcement $announcement,

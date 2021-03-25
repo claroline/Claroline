@@ -18,8 +18,6 @@ class WorkspaceValidator implements ValidatorInterface
 
     /**
      * WorkspaceValidator constructor.
-     *
-     * @param ObjectManager $om
      */
     public function __construct(ObjectManager $om)
     {

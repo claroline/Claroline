@@ -41,11 +41,6 @@ class CorrectionManager
 
     /**
      * ExerciseManager constructor.
-     *
-     * @param ObjectManager  $om
-     * @param AnswerManager  $answerManager
-     * @param PaperManager   $paperManager
-     * @param ItemSerializer $itemSerializer
      */
     public function __construct(
         ObjectManager $om,
@@ -90,8 +85,6 @@ class CorrectionManager
     /**
      * Save scores and feedback for questions.
      *
-     * @param array $correctedAnswers
-     *
      * @throws InvalidDataException
      */
     public function save(array $correctedAnswers = [])
@@ -105,10 +98,7 @@ class CorrectionManager
             ]);
 
             if (empty($answer)) {
-                throw new InvalidDataException('Submitted answers are invalid', [[
-                    'path' => "/{$index}",
-                    'message' => 'answer does not exists',
-                ]]);
+                throw new InvalidDataException('Submitted answers are invalid', [['path' => "/{$index}", 'message' => 'answer does not exists']]);
             }
 
             $question = $answer->getPaper()->getQuestion($answer->getQuestionId());

@@ -19,10 +19,6 @@ class LogExerciseUpdateEvent extends AbstractLogResourceEvent
 {
     const ACTION = 'resource-ujm_exercise-exercise_updated';
 
-    /**
-     * @param Exercise $exercise
-     * @param array    $details
-     */
     public function __construct(Exercise $exercise, array $details)
     {
         parent::__construct($exercise->getResourceNode(), $details);

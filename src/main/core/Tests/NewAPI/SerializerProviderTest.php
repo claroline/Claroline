@@ -85,7 +85,7 @@ class SerializerProviderTest extends TransactionalTestCase
             return [$provider->getSerializerHandledClass($serializer)];
         }, $provider->all());
 
-        $classes = array_filter($classes, function ($class) use ($provider, $schemaProvider) {
+        $classes = array_filter($classes, function ($class) use ($schemaProvider) {
             return $schemaProvider->has($class[0]) && $schemaProvider->getSampleDirectory($class[0]) && class_exists($class[0]);
         });
 

@@ -16,8 +16,6 @@ class ShortcutsSerializer
 
     /**
      * ShortcutsSerializer constructor.
-     *
-     * @param RoleSerializer $roleSerializer
      */
     public function __construct(RoleSerializer $roleSerializer)
     {
@@ -31,9 +29,6 @@ class ShortcutsSerializer
 
     /**
      * Serializes a Workspace Shortcuts entity for the JSON api.
-     *
-     * @param Shortcuts $shortcuts
-     * @param array     $options
      *
      * @return array
      */

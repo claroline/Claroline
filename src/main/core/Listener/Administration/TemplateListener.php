@@ -15,9 +15,6 @@ use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 
 class TemplateListener
 {
-    /**
-     * @param OpenToolEvent $event
-     */
     public function onAdministrationToolOpen(OpenToolEvent $event)
     {
         $event->setData([]);

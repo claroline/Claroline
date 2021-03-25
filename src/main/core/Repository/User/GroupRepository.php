@@ -21,8 +21,6 @@ class GroupRepository extends EntityRepository
     /**
      * Returns the groups which are member of a workspace.
      *
-     * @param Workspace $workspace
-     *
      * @return Group[]
      */
     public function findByWorkspace(Workspace $workspace)
@@ -43,8 +41,6 @@ class GroupRepository extends EntityRepository
     }
 
     /**
-     * @param array $organizations
-     *
      * @return Group[]
      */
     public function findByOrganizations(array $organizations = [])
@@ -82,8 +78,6 @@ class GroupRepository extends EntityRepository
 
     /**
      * Returns groups by their names.
-     *
-     * @param array $names
      *
      * @return Group[]
      */

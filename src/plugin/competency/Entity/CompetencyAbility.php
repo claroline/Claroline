@@ -50,9 +50,6 @@ class CompetencyAbility
         $this->refreshUuid();
     }
 
-    /**
-     * @param Competency $competency
-     */
     public function setCompetency(Competency $competency)
     {
         $this->competency = $competency;
@@ -67,9 +64,6 @@ class CompetencyAbility
         return $this->competency;
     }
 
-    /**
-     * @param Ability $ability
-     */
     public function setAbility(Ability $ability)
     {
         $this->ability = $ability;
@@ -83,9 +77,6 @@ class CompetencyAbility
         return $this->ability;
     }
 
-    /**
-     * @param Level $level
-     */
     public function setLevel(Level $level)
     {
         $this->level = $level;

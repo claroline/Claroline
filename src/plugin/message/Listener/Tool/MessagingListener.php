@@ -29,9 +29,6 @@ class MessagingListener
 
     /**
      * ContactsListener constructor.
-     *
-     * @param TokenStorageInterface $tokenStorage
-     * @param ContactManager        $contactManager
      */
     public function __construct(
         TokenStorageInterface $tokenStorage,
@@ -43,8 +40,6 @@ class MessagingListener
 
     /**
      * Displays messaging on Desktop.
-     *
-     * @param OpenToolEvent $event
      */
     public function onDisplayDesktop(OpenToolEvent $event)
     {
@@ -54,8 +49,6 @@ class MessagingListener
 
     /**
      * Configures messaging on Desktop.
-     *
-     * @param ConfigureToolEvent $event
      */
     public function onConfigureDesktop(ConfigureToolEvent $event)
     {

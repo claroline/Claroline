@@ -14,10 +14,6 @@ class TranslatableSerializer
 
     /**
      * GroupSerializer constructor.
-     *
-     * @param ObjectManager      $om
-     * @param LocaleManager      $localeManager
-     * @param ContainerInterface $container
      */
     public function __construct(
         ObjectManager $om,

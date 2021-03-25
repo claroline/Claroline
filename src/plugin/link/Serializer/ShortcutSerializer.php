@@ -21,9 +21,6 @@ class ShortcutSerializer
 
     /**
      * ShortcutSerializer constructor.
-     *
-     * @param ObjectManager          $om
-     * @param ResourceNodeSerializer $resourceNodeSerializer
      */
     public function __construct(
         ObjectManager $om,
@@ -46,9 +43,6 @@ class ShortcutSerializer
     /**
      * Serializes a Shortcut resource entity for the JSON api.
      *
-     * @param Shortcut $shortcut
-     * @param array    $options
-     *
      * @return array
      */
     public function serialize(Shortcut $shortcut, array $options = [])
@@ -60,9 +54,6 @@ class ShortcutSerializer
 
     /**
      * Deserializes shortcut data into an Entity.
-     *
-     * @param array    $data
-     * @param Shortcut $shortcut
      *
      * @return Shortcut
      */

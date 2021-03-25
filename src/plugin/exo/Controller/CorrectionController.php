@@ -34,9 +34,6 @@ class CorrectionController extends AbstractController
 
     /**
      * CorrectionController constructor.
-     *
-     * @param AuthorizationCheckerInterface $authorization
-     * @param CorrectionManager             $correctionManager
      */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
@@ -51,8 +48,6 @@ class CorrectionController extends AbstractController
      *
      * @Route("", name="exercise_correction_questions", methods={"GET"})
      *
-     * @param Exercise $exercise
-     *
      * @return JsonResponse
      */
     public function listQuestionsToCorrectAction(Exercise $exercise)
@@ -66,9 +61,6 @@ class CorrectionController extends AbstractController
      * Saves score & feedback for a bulk of answers.
      *
      * @Route("/{questionId}", name="exercise_correction_save", methods={"PUT"})
-     *
-     * @param Exercise $exercise
-     * @param Request  $request
      *
      * @return JsonResponse
      */

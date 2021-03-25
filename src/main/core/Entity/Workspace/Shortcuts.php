@@ -63,9 +63,6 @@ class Shortcuts
         return $this->workspace;
     }
 
-    /**
-     * @param Workspace $workspace
-     */
     public function setWorkspace(Workspace $workspace)
     {
         if ($this->workspace) {
@@ -84,9 +81,6 @@ class Shortcuts
         return $this->role;
     }
 
-    /**
-     * @param Role $role
-     */
     public function setRole(Role $role)
     {
         if ($this->role) {
@@ -105,9 +99,6 @@ class Shortcuts
         return $this->data;
     }
 
-    /**
-     * @param array $data
-     */
     public function setData(array $data)
     {
         $this->data = $data;

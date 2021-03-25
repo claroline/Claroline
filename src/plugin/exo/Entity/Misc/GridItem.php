@@ -14,6 +14,8 @@ use UJM\ExoBundle\Library\Model\ContentTrait;
  */
 class GridItem
 {
+    use ContentTrait;
+    use Uuid;
     /**
      * Unique identifier of the item.
      *
@@ -24,9 +26,6 @@ class GridItem
      * @var int
      */
     private $id;
-
-    use ContentTrait;
-    use Uuid;
 
     /**
      * X coordinate of the item in the grid.

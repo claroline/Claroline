@@ -34,12 +34,6 @@ class CommunityListener
 
     /**
      * CommunityListener constructor.
-     *
-     * @param FinderProvider       $finder
-     * @param ParametersSerializer $parametersSerializer
-     * @param ProfileSerializer    $profileSerializer
-     * @param ResourceManager      $resourceManager
-     * @param UserManager          $userManager
      */
     public function __construct(
         FinderProvider $finder,
@@ -57,8 +51,6 @@ class CommunityListener
 
     /**
      * Displays user administration tool.
-     *
-     * @param OpenToolEvent $event
      */
     public function onDisplayTool(OpenToolEvent $event)
     {
@@ -74,9 +66,6 @@ class CommunityListener
         $event->stopPropagation();
     }
 
-    /**
-     * @param MergeUsersEvent $event
-     */
     public function onMergeUsers(MergeUsersEvent $event)
     {
         // Replace creator of resource nodes

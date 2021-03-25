@@ -15,8 +15,6 @@ class ClozeQuestionValidator extends JsonSchemaValidator
 
     /**
      * WordsQuestionValidator constructor.
-     *
-     * @param KeywordValidator $keywordValidator
      */
     public function __construct(KeywordValidator $keywordValidator)
     {
@@ -43,8 +41,6 @@ class ClozeQuestionValidator extends JsonSchemaValidator
      * Checks :
      *  - The solutions IDs are consistent with holes IDs
      *  - There is at least one solution with a positive score for each Hole.
-     *
-     * @param array $question
      *
      * @return array
      */

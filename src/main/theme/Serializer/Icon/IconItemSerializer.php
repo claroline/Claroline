@@ -15,8 +15,6 @@ class IconItemSerializer
 
     /**
      * IconItemSerializer constructor.
-     *
-     * @param IconSetSerializer $iconSetSerializer
      */
     public function __construct(IconSetSerializer $iconSetSerializer)
     {
@@ -33,9 +31,6 @@ class IconItemSerializer
 
     /**
      * Serializes an IconItem entity for the JSON api.
-     *
-     * @param IconItem $iconItem
-     * @param array    $options
      *
      * @return array
      */

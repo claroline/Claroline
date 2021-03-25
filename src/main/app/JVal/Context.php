@@ -83,7 +83,6 @@ class Context extends JValContext
      * Adds a violation message for the current node.
      *
      * @param string $message
-     * @param array  $parameters
      */
     public function addViolation($message, array $parameters = [], $property = null)
     {

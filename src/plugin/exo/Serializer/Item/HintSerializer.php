@@ -16,9 +16,6 @@ class HintSerializer
     /**
      * Converts a Hint into a JSON-encodable structure.
      *
-     * @param Hint  $hint
-     * @param array $options
-     *
      * @return array
      */
     public function serialize(Hint $hint, array $options = [])
@@ -45,7 +42,6 @@ class HintSerializer
      *
      * @param array $data
      * @param Hint  $hint
-     * @param array $options
      *
      * @return Hint
      */

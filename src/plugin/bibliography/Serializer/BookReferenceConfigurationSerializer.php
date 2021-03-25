@@ -17,9 +17,6 @@ class BookReferenceConfigurationSerializer
     /**
      * Serializes a Book reference configuration entity.
      *
-     * @param BookReferenceConfiguration $bookReferenceConfiguration
-     * @param array                      $options
-     *
      * @return array
      */
     public function serialize(BookReferenceConfiguration $bookReferenceConfiguration, array $options = [])
@@ -39,8 +36,6 @@ class BookReferenceConfigurationSerializer
      * De-serializes a book reference configuration.
      *
      * @param $data
-     * @param BookReferenceConfiguration|null $bookReferenceConfiguration
-     * @param array                           $options
      *
      * @return BookReferenceConfiguration
      */

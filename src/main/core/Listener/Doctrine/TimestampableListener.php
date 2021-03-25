@@ -32,8 +32,6 @@ class TimestampableListener extends BaseListener
     /**
      * Forces this listener to set a specific time on subsequent
      * timestampable entities.
-     *
-     * @param \DateTime $time
      */
     public function forceTime(\DateTime $time)
     {
@@ -65,7 +63,7 @@ class TimestampableListener extends BaseListener
                 $hasSignificantChange = false;
 
                 foreach (array_keys($changeSet) as $changedField) {
-                    if ($changedField !== 'next' && $changedField !== 'previous') {
+                    if ('next' !== $changedField && 'previous' !== $changedField) {
                         $hasSignificantChange = true;
                         break;
                     }

@@ -16,7 +16,6 @@ class OrderingQuestionValidator extends JsonSchemaValidator
      * Performs additional validations.
      *
      * @param array $question
-     * @param array $options
      *
      * @return array
      */
@@ -37,8 +36,6 @@ class OrderingQuestionValidator extends JsonSchemaValidator
      * Checks :
      *  - The solutions IDs are consistent with item IDs
      *  - There is at least one solution with a positive score.
-     *
-     * @param array $question
      *
      * @return array
      */

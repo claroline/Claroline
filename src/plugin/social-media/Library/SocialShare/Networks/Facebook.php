@@ -7,6 +7,7 @@
  * Author: Panagiotis TSAVDARIS
  * Date: 4/23/15
  */
+
 namespace Icap\SocialmediaBundle\Library\SocialShare\Networks;
 
 class Facebook implements NetworkInterface
@@ -31,7 +32,6 @@ class Facebook implements NetworkInterface
      * Gets the share link for provided URL.
      *
      * @param $url
-     * @param array $options
      *
      * @return string
      */
@@ -57,7 +57,7 @@ class Facebook implements NetworkInterface
             $data = null;
         }
 
-        return ($data !== null && isset($data[0]->share_count)) ? intval($data[0]->share_count) : 0;
+        return (null !== $data && isset($data[0]->share_count)) ? intval($data[0]->share_count) : 0;
     }
 
     /**

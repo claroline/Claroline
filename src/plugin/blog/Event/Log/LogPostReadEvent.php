@@ -4,27 +4,23 @@ namespace Icap\BlogBundle\Event\Log;
 
 use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
 use Claroline\CoreBundle\Event\Log\LogNotRepeatableInterface;
-use Icap\BlogBundle\Entity\Blog;
 use Icap\BlogBundle\Entity\Post;
 
 class LogPostReadEvent extends AbstractLogResourceEvent implements LogNotRepeatableInterface
 {
     const ACTION = 'resource-icap_blog-post_read';
 
-    /**
-     * @param Post $post
-     */
     public function __construct(Post $post)
     {
         $blog = $post->getBlog();
 
-        $details = array(
-            'post' => array(
+        $details = [
+            'post' => [
                 'blog' => $blog->getId(),
                 'title' => $post->getTitle(),
                 'slug' => $post->getSlug(),
-            ),
-        );
+            ],
+        ];
 
         parent::__construct($blog->getResourceNode(), $details);
     }
@@ -39,6 +35,6 @@ class LogPostReadEvent extends AbstractLogResourceEvent implements LogNotRepeata
      */
     public static function getRestriction()
     {
-        return array(self::DISPLAYED_WORKSPACE);
+        return [self::DISPLAYED_WORKSPACE];
     }
 }

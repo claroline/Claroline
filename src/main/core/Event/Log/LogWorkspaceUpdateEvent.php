@@ -22,11 +22,11 @@ class LogWorkspaceUpdateEvent extends LogGenericEvent
     {
         parent::__construct(
             self::ACTION,
-            array(
-                'workspace' => array(
+            [
+                'workspace' => [
                     'name' => $workspace->getName(),
-                ),
-            ),
+                ],
+            ],
             null,
             null,
             null,

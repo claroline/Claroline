@@ -191,9 +191,6 @@ class EntityDescriptorProvider implements EntityDescriptorProviderInterface
         return $idpSso;
     }
 
-    /**
-     * @param RoleDescriptor $descriptor
-     */
     protected function addKeyDescriptors(RoleDescriptor $descriptor)
     {
         if ($this->use) {

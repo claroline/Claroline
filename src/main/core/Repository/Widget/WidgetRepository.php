@@ -19,7 +19,6 @@ class WidgetRepository extends EntityRepository
      * Finds all available widgets in the platform.
      * It only grabs widgets from enabled plugins.
      *
-     * @param array  $enabledPlugins
      * @param string $context
      *
      * @return array

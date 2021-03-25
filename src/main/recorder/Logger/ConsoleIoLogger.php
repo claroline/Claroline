@@ -21,9 +21,6 @@ class ConsoleIoLogger extends AbstractLogger
      */
     protected $consoleIo;
 
-    /**
-     * @param IOInterface $consoleIo
-     */
     public function __construct(IOInterface $consoleIo)
     {
         $this->consoleIo = $consoleIo;
@@ -34,9 +31,8 @@ class ConsoleIoLogger extends AbstractLogger
      *
      * @param mixed  $level
      * @param string $message
-     * @param array  $context
      */
-    public function log($level, $message, array $context = array())
+    public function log($level, $message, array $context = [])
     {
         $this->consoleIo->write($message);
     }

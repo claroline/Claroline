@@ -34,11 +34,6 @@ class WorkspacesListener
 
     /**
      * HomeListener constructor.
-     *
-     * @param TokenStorageInterface         $tokenStorage
-     * @param FinderProvider                $finder
-     * @param SerializerProvider            $serializer
-     * @param AuthorizationCheckerInterface $authorization
      */
     public function __construct(
         TokenStorageInterface $tokenStorage,
@@ -54,8 +49,6 @@ class WorkspacesListener
 
     /**
      * Displays workspaces on Desktop.
-     *
-     * @param OpenToolEvent $event
      */
     public function onDisplayDesktop(OpenToolEvent $event)
     {

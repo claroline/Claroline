@@ -30,8 +30,6 @@ class EntryController extends AbstractCrudController
 
     /**
      * EntryController constructor.
-     *
-     * @param ClacoFormManager $manager
      */
     public function __construct(ClacoFormManager $manager)
     {
@@ -63,9 +61,6 @@ class EntryController extends AbstractCrudController
      *     class="ClarolineClacoFormBundle:ClacoForm",
      *     options={"mapping": {"clacoForm": "uuid"}}
      * )
-     *
-     * @param ClacoForm $clacoForm
-     * @param Request   $request
      *
      * @return JsonResponse
      */
@@ -115,9 +110,6 @@ class EntryController extends AbstractCrudController
      *     options={"mapping": {"clacoForm": "uuid"}}
      * )
      *
-     * @param ClacoForm $clacoForm
-     * @param Request   $request
-     *
      * @return JsonResponse
      */
     public function uploadAction(ClacoForm $clacoForm, Request $request)
@@ -147,10 +139,6 @@ class EntryController extends AbstractCrudController
      *     class="ClarolineClacoFormBundle:Entry",
      *     options={"mapping": {"entry": "uuid"}}
      * )
-     *
-     * @param ClacoForm $clacoForm
-     * @param Entry     $entry
-     * @param Request   $request
      *
      * @return JsonResponse
      */
@@ -192,10 +180,6 @@ class EntryController extends AbstractCrudController
      *     class="ClarolineClacoFormBundle:Entry",
      *     options={"mapping": {"entry": "uuid"}}
      * )
-     *
-     * @param ClacoForm $clacoForm
-     * @param Entry     $entry
-     * @param Request   $request
      *
      * @return JsonResponse
      */

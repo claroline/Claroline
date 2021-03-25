@@ -13,7 +13,6 @@ namespace Claroline\CursusBundle\Event\Log;
 
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Claroline\CursusBundle\Entity\Registration\EventGroup;
-use Claroline\CursusBundle\Entity\Registration\SessionGroup;
 
 class LogSessionEventGroupUnregistrationEvent extends LogGenericEvent
 {

@@ -18,8 +18,7 @@ use Doctrine\ORM\EntityRepository;
 class FieldValueRepository extends EntityRepository
 {
     /**
-     * @param ClacoForm $clacoForm
-     * @param string    $type
+     * @param string $type
      *
      * @return FieldValue[]
      */

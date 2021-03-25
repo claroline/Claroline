@@ -21,8 +21,6 @@ class DashboardListener
 
     /**
      * DashboardListener constructor.
-     *
-     * @param AnalyticsManager $manager
      */
     public function __construct(
         AnalyticsManager $manager
@@ -32,8 +30,6 @@ class DashboardListener
 
     /**
      * Displays dashboard on Workspace.
-     *
-     * @param OpenToolEvent $event
      */
     public function onDisplayWorkspace(OpenToolEvent $event)
     {
@@ -46,8 +42,6 @@ class DashboardListener
 
     /**
      * Displays dashboard on Administration.
-     *
-     * @param OpenToolEvent $event
      */
     public function onDisplayAdministration(OpenToolEvent $event)
     {

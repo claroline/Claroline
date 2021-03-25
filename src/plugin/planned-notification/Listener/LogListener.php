@@ -24,10 +24,6 @@ class LogListener
     /** @var TokenStorageInterface */
     private $tokenStorage;
 
-    /**
-     * @param PlannedNotificationManager $manager
-     * @param TokenStorageInterface      $tokenStorage
-     */
     public function __construct(
         PlannedNotificationManager $manager,
         TokenStorageInterface $tokenStorage
@@ -36,9 +32,6 @@ class LogListener
         $this->tokenStorage = $tokenStorage;
     }
 
-    /**
-     * @param LogGenericEvent $event
-     */
     public function onLog(LogGenericEvent $event)
     {
         if ($event instanceof LogRoleSubscribeEvent) {

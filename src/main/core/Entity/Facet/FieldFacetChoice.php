@@ -102,9 +102,6 @@ class FieldFacetChoice
         return $this->name;
     }
 
-    /**
-     * @param FieldFacet $ff
-     */
     public function setFieldFacet(FieldFacet $ff)
     {
         $this->fieldFacet = $ff;
@@ -164,9 +161,6 @@ class FieldFacetChoice
         return $this->children->clear();
     }
 
-    /**
-     * @param FieldFacetChoice $child
-     */
     public function addChild(FieldFacetChoice $child)
     {
         if (!$this->children->contains($child)) {
@@ -174,9 +168,6 @@ class FieldFacetChoice
         }
     }
 
-    /**
-     * @param FieldFacetChoice $child
-     */
     public function removeChild(FieldFacetChoice $child)
     {
         if ($this->children->contains($child)) {

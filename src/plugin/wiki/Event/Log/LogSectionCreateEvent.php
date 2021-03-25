@@ -4,8 +4,8 @@ namespace Icap\WikiBundle\Event\Log;
 
 use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
 use Claroline\CoreBundle\Event\Log\NotifiableInterface;
-use Icap\WikiBundle\Entity\Wiki;
 use Icap\WikiBundle\Entity\Section;
+use Icap\WikiBundle\Entity\Wiki;
 
 class LogSectionCreateEvent extends AbstractLogResourceEvent implements NotifiableInterface
 {
@@ -13,22 +13,18 @@ class LogSectionCreateEvent extends AbstractLogResourceEvent implements Notifiab
     protected $wiki;
     protected $details;
 
-    /**
-     * @param Wiki    $wiki
-     * @param Section $section
-     */
     public function __construct(Wiki $wiki, Section $section)
     {
         $this->wiki = $wiki;
-        $this->details = array(
-            'section' => array(
+        $this->details = [
+            'section' => [
                 'wiki' => $wiki->getId(),
                 'id' => $section->getId(),
                 'title' => $section->getActiveContribution()->getTitle(),
                 'text' => $section->getActiveContribution()->getText(),
                 'visible' => $section->getVisible(),
-            ),
-        );
+            ],
+        ];
 
         parent::__construct($wiki->getResourceNode(), $this->details);
     }
@@ -38,7 +34,7 @@ class LogSectionCreateEvent extends AbstractLogResourceEvent implements Notifiab
      */
     public static function getRestriction()
     {
-        return array(self::DISPLAYED_WORKSPACE);
+        return [self::DISPLAYED_WORKSPACE];
     }
 
     /**
@@ -58,7 +54,7 @@ class LogSectionCreateEvent extends AbstractLogResourceEvent implements Notifiab
      */
     public function getIncludeUserIds()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -68,7 +64,7 @@ class LogSectionCreateEvent extends AbstractLogResourceEvent implements Notifiab
      */
     public function getExcludeUserIds()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -98,12 +94,12 @@ class LogSectionCreateEvent extends AbstractLogResourceEvent implements Notifiab
      */
     public function getNotificationDetails()
     {
-        $notificationDetails = array_merge($this->details, array());
-        $notificationDetails['resource'] = array(
+        $notificationDetails = array_merge($this->details, []);
+        $notificationDetails['resource'] = [
             'id' => $this->wiki->getId(),
             'name' => $this->resource->getName(),
             'type' => $this->resource->getResourceType()->getName(),
-        );
+        ];
 
         return $notificationDetails;
     }

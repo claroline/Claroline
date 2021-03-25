@@ -16,9 +16,6 @@ class PlaceholderManager
 
     /**
      * PlaceholderManager constructor.
-     *
-     * @param TokenStorageInterface        $tokenStorage
-     * @param PlatformConfigurationHandler $config
      */
     public function __construct(
         TokenStorageInterface $tokenStorage,
@@ -43,9 +40,6 @@ class PlaceholderManager
     }
 
     /**
-     * @param string $text
-     * @param array  $customPlaceholders
-     *
      * @return string
      */
     public function replacePlaceholders(string $text, array $customPlaceholders = [])

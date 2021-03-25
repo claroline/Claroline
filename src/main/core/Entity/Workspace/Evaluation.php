@@ -57,9 +57,6 @@ class Evaluation extends AbstractUserEvaluation
         return $this->workspace;
     }
 
-    /**
-     * @param Workspace $workspace
-     */
     public function setWorkspace(Workspace $workspace)
     {
         $this->workspace = $workspace;

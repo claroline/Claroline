@@ -14,8 +14,6 @@ class ApiController
 
     /**
      * ApiController constructor.
-     *
-     * @param ObjectManager $om
      */
     public function __construct(ObjectManager $om)
     {

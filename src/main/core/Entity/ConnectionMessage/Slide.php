@@ -154,9 +154,6 @@ class Slide
         return $this->shortcuts;
     }
 
-    /**
-     * @param array $shortcuts
-     */
     public function setShortcuts(array $shortcuts)
     {
         $this->shortcuts = $shortcuts;

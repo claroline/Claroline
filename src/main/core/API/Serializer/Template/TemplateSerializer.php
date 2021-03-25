@@ -37,10 +37,6 @@ class TemplateSerializer
 
     /**
      * TemplateSerializer constructor.
-     *
-     * @param ObjectManager        $om
-     * @param ParametersSerializer $parametersSerializer
-     * @param SerializerProvider   $serializer
      */
     public function __construct(
         ObjectManager $om,
@@ -61,9 +57,6 @@ class TemplateSerializer
     }
 
     /**
-     * @param Template $template
-     * @param array    $options
-     *
      * @return array
      */
     public function serialize(Template $template, array $options = [])
@@ -82,8 +75,7 @@ class TemplateSerializer
     }
 
     /**
-     * @param array    $data
-     * @param Template $template
+     * @param array $data
      *
      * @return Template
      */
@@ -134,8 +126,6 @@ class TemplateSerializer
     }
 
     /**
-     * @param Template $template
-     *
      * @return array
      */
     private function serializeLocalized(Template $template)

@@ -15,8 +15,6 @@ class TransferListener
 
     /**
      * TransferListener constructor.
-     *
-     * @param TransferProvider $transfer
      */
     public function __construct(TransferProvider $transfer)
     {
@@ -25,8 +23,6 @@ class TransferListener
 
     /**
      * Displays transfer tool.
-     *
-     * @param OpenToolEvent $event
      */
     public function onDisplayTool(OpenToolEvent $event)
     {

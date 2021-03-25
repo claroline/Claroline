@@ -25,10 +25,6 @@ class ValidatorProvider
      */
     private $validators = [];
 
-    /**
-     * @param ObjectManager  $om
-     * @param SchemaProvider $schema
-     */
     public function __construct(ObjectManager $om, SchemaProvider $schema)
     {
         $this->om = $om;
@@ -37,8 +33,6 @@ class ValidatorProvider
 
     /**
      * Registers a new validator.
-     *
-     * @param ValidatorInterface $validator
      */
     public function add(ValidatorInterface $validator)
     {
@@ -57,9 +51,7 @@ class ValidatorProvider
     public function get($class)
     {
         if (empty($this->validators[$class])) {
-            throw new \Exception(
-                sprintf('No validator found for class "%s" Maybe you forgot to add the "claroline.validator" tag to your validator.', $class)
-            );
+            throw new \Exception(sprintf('No validator found for class "%s" Maybe you forgot to add the "claroline.validator" tag to your validator.', $class));
         }
 
         return $this->validators[$class];
@@ -84,7 +76,6 @@ class ValidatorProvider
      * @param mixed  $data           - the data to validate
      * @param string $mode           - 'create', 'update'
      * @param bool   $throwException - if true an InvalidDataException is thrown instead of returning the errors
-     * @param array  $options
      *
      * @return array - the list of validation errors
      *
@@ -100,10 +91,7 @@ class ValidatorProvider
             $errors = $validator->validate($this->toObject($data), $schema, '', [$mode]);
             if (!empty($errors)) {
                 if ($throwException) {
-                    throw new InvalidDataException(
-                        sprintf('Invalid data for "%s".', $class),
-                        $errors
-                    );
+                    throw new InvalidDataException(sprintf('Invalid data for "%s".', $class), $errors);
                 }
 
                 return $errors;
@@ -126,10 +114,7 @@ class ValidatorProvider
 
             $errors = $this->validateUnique($uniqueFields, $data, $mode, $class);
             if (!empty($errors) && $throwException) {
-                throw new InvalidDataException(
-                    sprintf('Invalid data for "%s".', $class),
-                    $errors
-                );
+                throw new InvalidDataException(sprintf('Invalid data for "%s".', $class), $errors);
             }
 
             return $errors;
@@ -144,25 +129,20 @@ class ValidatorProvider
         $errors = array_merge($errors, $validator->validate($data, $mode, $options));
 
         if (!empty($errors) && $throwException) {
-            throw new InvalidDataException(
-                sprintf('Invalid data for "%s".', $class),
-                $errors
-            );
+            throw new InvalidDataException(sprintf('Invalid data for "%s".', $class), $errors);
         }
 
         return $errors;
     }
 
     /**
-     * @param array $data
-     *
      * @return \stdClass
      */
     public function toObject(array $data)
     {
         $data = json_decode(json_encode($data));
 
-        if ($data === []) {
+        if ([] === $data) {
             $data = new \StdClass();
         }
 

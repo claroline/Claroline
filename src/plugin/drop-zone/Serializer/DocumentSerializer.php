@@ -31,13 +31,6 @@ class DocumentSerializer
 
     /**
      * DocumentSerializer constructor.
-     *
-     * @param DropzoneToolDocumentSerializer $dropzoneToolDocumentSerializer
-     * @param RevisionSerializer             $revisionSerializer
-     * @param ResourceNodeSerializer         $resourceSerializer
-     * @param UserSerializer                 $userSerializer
-     * @param TokenStorageInterface          $tokenStorage
-     * @param ObjectManager                  $om
      */
     public function __construct(
         DropzoneToolDocumentSerializer $dropzoneToolDocumentSerializer,
@@ -65,9 +58,6 @@ class DocumentSerializer
     }
 
     /**
-     * @param Document $document
-     * @param array    $options
-     *
      * @return array
      */
     public function serialize(Document $document, array $options = [])

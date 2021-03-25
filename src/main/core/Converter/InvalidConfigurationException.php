@@ -17,18 +17,16 @@ class InvalidConfigurationException extends \Exception
     const MISSING_CLASS = 2;
     const MISSING_ID = 3;
 
-    private static $messages = array(
+    private static $messages = [
         self::MISSING_NAME => 'the controller parameter name is mandatory',
         self::MISSING_CLASS => 'the "class" field is mandatory',
         self::MISSING_ID => 'the "id" option is mandatory',
-    );
+    ];
 
     public function __construct($code)
     {
         if (!isset(self::$messages[$code])) {
-            throw new \InvalidArgumentException(
-                'The code parameter must be a MISSING_* class constant'
-            );
+            throw new \InvalidArgumentException('The code parameter must be a MISSING_* class constant');
         }
 
         $message = self::$messages[$code];

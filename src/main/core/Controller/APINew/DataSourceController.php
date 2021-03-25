@@ -28,10 +28,6 @@ class DataSourceController
 
     /**
      * DataSourceController constructor.
-     *
-     * @param StrictDispatcher   $eventDispatcher
-     * @param SerializerProvider $serializer
-     * @param DataSourceManager  $manager
      */
     public function __construct(
         StrictDispatcher $eventDispatcher,
@@ -66,10 +62,9 @@ class DataSourceController
      *
      * @Route("/{type}/{context}/{contextId}", name="apiv2_data_source", defaults={"contextId"=null}, methods={"GET"})
      *
-     * @param Request $request
-     * @param string  $type
-     * @param string  $context
-     * @param string  $contextId
+     * @param string $type
+     * @param string $context
+     * @param string $contextId
      *
      * @return JsonResponse
      */

@@ -22,11 +22,11 @@ class LogWorkspaceEnterEvent extends LogGenericEvent implements LogNotRepeatable
     {
         parent::__construct(
             self::ACTION,
-            array(
-                'workspace' => array(
+            [
+                'workspace' => [
                     'name' => $workspace->getName(),
-                ),
-            ),
+                ],
+            ],
             null,
             null,
             null,

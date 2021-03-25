@@ -40,9 +40,8 @@ class ContentManager
     private $translations;
 
     /**
-     * @param Registry      $manager,
-     * @param RequestStack  $requestStack,
-     * @param ObjectManager $persistence
+     * @param Registry     $manager,
+     * @param RequestStack $requestStack,
      */
     public function __construct(
         Registry $manager,
@@ -60,8 +59,6 @@ class ContentManager
      *
      * Example: $contentManager->getContent(array('id' => $id));
      *
-     * @param array $filter
-     *
      * @return Content
      */
     public function getContent(array $filter)
@@ -73,8 +70,6 @@ class ContentManager
      * Get translated Content.
      *
      * Example: $contentManager->getTranslatedContent(array('id' => $id));
-     *
-     * @param array $filter
      *
      * @return array
      */

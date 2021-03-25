@@ -10,17 +10,11 @@ class MergeUserListener
     /** @var AgendaManager */
     private $manager;
 
-    /**
-     * @param AgendaManager $manager
-     */
     public function __construct(AgendaManager $manager)
     {
         $this->manager = $manager;
     }
 
-    /**
-     * @param MergeUsersEvent $event
-     */
     public function onMerge(MergeUsersEvent $event)
     {
         // Replace user of Event nodes

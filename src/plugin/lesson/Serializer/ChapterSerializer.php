@@ -11,9 +11,8 @@ use Icap\LessonBundle\Repository\ChapterRepository;
 
 class ChapterSerializer
 {
-    const INCLUDE_INTERNAL_NOTES = 'include_internal_notes';
-
     use SerializerTrait;
+    const INCLUDE_INTERNAL_NOTES = 'include_internal_notes';
 
     /** @var ObjectManager */
     private $om;

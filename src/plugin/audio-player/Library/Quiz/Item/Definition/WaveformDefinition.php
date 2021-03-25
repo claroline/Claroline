@@ -37,10 +37,6 @@ class WaveformDefinition extends AbstractDefinition
 
     /**
      * WaveformDefinition constructor.
-     *
-     * @param WaveformQuestionValidator  $validator
-     * @param WaveformAnswerValidator    $answerValidator
-     * @param WaveformQuestionSerializer $serializer
      */
     public function __construct(
         WaveformQuestionValidator $validator,
@@ -160,8 +156,6 @@ class WaveformDefinition extends AbstractDefinition
     }
 
     /**
-     * @param AbstractItem $question
-     *
      * @return array
      */
     public function expectAnswer(AbstractItem $question)
@@ -182,9 +176,7 @@ class WaveformDefinition extends AbstractDefinition
     }
 
     /**
-     * @param AbstractItem $waveformQuestion
-     * @param array        $answersData
-     * @param int          $total
+     * @param int $total
      *
      * @return array
      */
@@ -225,8 +217,6 @@ class WaveformDefinition extends AbstractDefinition
 
     /**
      * No additional identifier to regenerate.
-     *
-     * @param AbstractItem $item
      */
     public function refreshIdentifiers(AbstractItem $item)
     {

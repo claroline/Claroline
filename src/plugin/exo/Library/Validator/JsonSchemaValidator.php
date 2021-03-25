@@ -54,7 +54,7 @@ abstract class JsonSchemaValidator implements ValidatorInterface
     {
         // convert data arrays to stdClass for JsonSchema validator
         $dataObject = json_decode(json_encode($data));
-        if ($dataObject === []) {
+        if ([] === $dataObject) {
             $dataObject = new \stdClass();
         }
 

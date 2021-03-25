@@ -17,9 +17,6 @@ class EvaluationSerializer
 
     /**
      * EvaluationSerializer constructor.
-     *
-     * @param UserSerializer      $userSerializer
-     * @param WorkspaceSerializer $workspaceSerializer
      */
     public function __construct(
         UserSerializer $userSerializer,
@@ -36,8 +33,6 @@ class EvaluationSerializer
 
     /**
      * Serializes an Evaluation entity for the JSON api.
-     *
-     * @param Evaluation $evaluation
      *
      * @return array - the serialized representation of the workspace evaluation
      */

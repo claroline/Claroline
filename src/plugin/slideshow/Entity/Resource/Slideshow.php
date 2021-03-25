@@ -89,8 +89,6 @@ class Slideshow extends AbstractResource
 
     /**
      * Get auto play.
-     *
-     * @return bool
      */
     public function getAutoPlay(): bool
     {
@@ -99,8 +97,6 @@ class Slideshow extends AbstractResource
 
     /**
      * Set auto play.
-     *
-     * @param bool $autoPlay
      */
     public function setAutoPlay(bool $autoPlay)
     {
@@ -109,8 +105,6 @@ class Slideshow extends AbstractResource
 
     /**
      * Is overview shown ?
-     *
-     * @return bool
      */
     public function getShowOverview(): bool
     {
@@ -119,8 +113,6 @@ class Slideshow extends AbstractResource
 
     /**
      * Set show overview.
-     *
-     * @param bool $showOverview
      */
     public function setShowOverview(bool $showOverview)
     {
@@ -129,8 +121,6 @@ class Slideshow extends AbstractResource
 
     /**
      * Get interval.
-     *
-     * @return int
      */
     public function getInterval(): int
     {
@@ -139,8 +129,6 @@ class Slideshow extends AbstractResource
 
     /**
      * Set interval.
-     *
-     * @param int $interval
      */
     public function setInterval(int $interval)
     {
@@ -149,8 +137,6 @@ class Slideshow extends AbstractResource
 
     /**
      * Are controls shown ?
-     *
-     * @return bool
      */
     public function getShowControls(): bool
     {
@@ -159,8 +145,6 @@ class Slideshow extends AbstractResource
 
     /**
      * Set show controls.
-     *
-     * @param bool $showControls
      */
     public function setShowControls(bool $showControls)
     {
@@ -199,8 +183,6 @@ class Slideshow extends AbstractResource
 
     /**
      * Add a slide to the slideshow.
-     *
-     * @param Slide $slide
      */
     public function addSlide(Slide $slide)
     {
@@ -212,8 +194,6 @@ class Slideshow extends AbstractResource
 
     /**
      * Remove a slide from the slideshow.
-     *
-     * @param Slide $slide
      */
     public function removeSlide(Slide $slide)
     {

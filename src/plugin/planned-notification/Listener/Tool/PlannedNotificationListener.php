@@ -32,11 +32,6 @@ class PlannedNotificationListener
 
     /**
      * PlannedNotificationListener constructor.
-     *
-     * @param AuthorizationCheckerInterface $authorization
-     * @param Crud                          $crud
-     * @param FinderProvider                $finder
-     * @param ObjectManager                 $om
      */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
@@ -50,9 +45,6 @@ class PlannedNotificationListener
         $this->finder = $finder;
     }
 
-    /**
-     * @param OpenToolEvent $event
-     */
     public function onWorkspaceToolOpen(OpenToolEvent $event)
     {
         $workspace = $event->getWorkspace();

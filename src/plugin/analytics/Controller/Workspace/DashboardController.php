@@ -241,7 +241,7 @@ class DashboardController
         $fileName = "progression-{$workspace->getName()}";
         $fileName = TextNormalizer::toKey($fileName);
 
-        return new StreamedResponse(function () use ($workspace, $workspaceEvaluations) {
+        return new StreamedResponse(function () use ($workspaceEvaluations) {
             // Prepare CSV file
             $handle = fopen('php://output', 'w+');
 

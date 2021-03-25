@@ -14,8 +14,6 @@ class RequestStateStore implements RequestStateStoreInterface
 
     /**
      * RequestStateStore constructor.
-     *
-     * @param ObjectManager $manager
      */
     public function __construct(ObjectManager $manager)
     {
@@ -23,8 +21,6 @@ class RequestStateStore implements RequestStateStoreInterface
     }
 
     /**
-     * @param RequestState $state
-     *
      * @return RequestStateStoreInterface
      */
     public function set(RequestState $state)

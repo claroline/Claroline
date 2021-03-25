@@ -26,30 +26,30 @@ class LogResourceCopyEvent extends LogGenericEvent
     {
         parent::__construct(
             self::ACTION,
-            array(
-                'resource' => array(
+            [
+                'resource' => [
                     'name' => $resource->getName(),
                     'path' => $resource->getPathForDisplay(),
-                ),
-                'workspace' => array(
+                ],
+                'workspace' => [
                     'name' => $resource->getWorkspace()->getName(),
-                ),
-                'owner' => array(
+                ],
+                'owner' => [
                     'lastName' => $resource->getCreator()->getLastName(),
                     'firstName' => $resource->getCreator()->getFirstName(),
-                ),
-                'source' => array(
-                    'resource' => array(
+                ],
+                'source' => [
+                    'resource' => [
                         'id' => $source->getId(),
                         'name' => $source->getName(),
                         'path' => $source->getPathForDisplay(),
-                    ),
-                    'workspace' => array(
+                    ],
+                    'workspace' => [
                         'id' => $source->getWorkspace()->getId(),
                         'name' => $source->getWorkspace()->getName(),
-                    ),
-                ),
-            ),
+                    ],
+                ],
+            ],
             null,
             null,
             $resource,

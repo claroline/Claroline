@@ -11,10 +11,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 interface VoterInterface
 {
     /**
-     * @param TokenInterface $token
-     * @param mixed          $object
-     * @param array          $attributes
-     * @param array          $options
+     * @param mixed $object
      *
      * @return int
      */

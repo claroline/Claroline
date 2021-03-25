@@ -16,9 +16,6 @@ class ResourceListener
 
     /**
      * ResourceListener constructor.
-     *
-     * @param TokenStorageInterface $tokenStorage
-     * @param HistoryManager        $manager
      */
     public function __construct(
         TokenStorageInterface $tokenStorage,
@@ -28,9 +25,6 @@ class ResourceListener
         $this->manager = $manager;
     }
 
-    /**
-     * @param LoadResourceEvent $event
-     */
     public function onLoad(LoadResourceEvent $event)
     {
         $user = $this->tokenStorage->getToken()->getUser();

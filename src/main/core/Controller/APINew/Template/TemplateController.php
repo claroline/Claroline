@@ -38,10 +38,6 @@ class TemplateController extends AbstractCrudController
 
     /**
      * TemplateController constructor.
-     *
-     * @param AuthorizationCheckerInterface $authorization
-     * @param TemplateManager               $templateManager
-     * @param ToolManager                   $toolManager
      */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
@@ -74,8 +70,7 @@ class TemplateController extends AbstractCrudController
      *     name="apiv2_lang_template_list"
      * )
      *
-     * @param string  $lang
-     * @param Request $request
+     * @param string $lang
      *
      * @return JsonResponse
      */
@@ -99,8 +94,6 @@ class TemplateController extends AbstractCrudController
      *     "/delete",
      *     name="apiv2_template_full_delete_bulk"
      * )
-     *
-     * @param Request $request
      *
      * @return JsonResponse
      */
@@ -141,8 +134,6 @@ class TemplateController extends AbstractCrudController
      *     class="ClarolineCoreBundle:Template\Template",
      *     options={"mapping": {"id": "uuid"}}
      * )
-     *
-     * @param Template $template
      *
      * @return JsonResponse
      */

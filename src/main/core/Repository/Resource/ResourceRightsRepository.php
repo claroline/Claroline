@@ -20,8 +20,7 @@ class ResourceRightsRepository extends EntityRepository
      * Returns the maximum rights on a given resource for a set of roles.
      * Used by the ResourceVoter.
      *
-     * @param string[]     $roles
-     * @param ResourceNode $resource
+     * @param string[] $roles
      *
      * @return int
      */
@@ -66,9 +65,6 @@ class ResourceRightsRepository extends EntityRepository
     /**
      * Returns the resource types a set of roles is allowed to create in a given
      * directory.
-     *
-     * @param array        $roles
-     * @param ResourceNode $node
      *
      * @return array
      */

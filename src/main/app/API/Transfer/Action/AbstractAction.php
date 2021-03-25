@@ -9,12 +9,11 @@ use Psr\Log\LoggerAwareInterface;
 
 abstract class AbstractAction implements LoggerAwareInterface
 {
+    use LoggableTrait;
     const MODE_CREATE = 'create';
     const MODE_UPDATE = 'update';
     const MODE_DELETE = 'delete';
     const MODE_DEFAULT = 'default';
-
-    use LoggableTrait;
 
     abstract public function execute(array $data, &$successData = []);
 

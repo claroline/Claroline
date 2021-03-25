@@ -28,23 +28,23 @@ class LogRoleUnsubscribeEvent extends LogGenericEvent
         $receiver = null;
         $receiverGroup = null;
 
-        $details = array('role' => array('name' => $role->getTranslationKey()));
+        $details = ['role' => ['name' => $role->getTranslationKey()]];
 
         if ($role->getWorkspace()) {
-            $details['workspace'] = array('name' => $role->getWorkspace()->getName());
+            $details['workspace'] = ['name' => $role->getWorkspace()->getName()];
         }
 
         if ($subject instanceof User) {
-            $details['receiverUser'] = array(
+            $details['receiverUser'] = [
                 'firstName' => $subject->getFirstName(),
                 'lastName' => $subject->getLastName(),
-            );
+            ];
             $action = self::ACTION_USER;
             $receiver = $subject;
         } else {
-            $details['receiverGroup'] = array(
+            $details['receiverGroup'] = [
                 'name' => $subject->getName(),
-            );
+            ];
             $action = self::ACTION_GROUP;
             $receiverGroup = $subject;
         }

@@ -24,9 +24,6 @@ class ContentItemDefinition implements ItemDefinitionInterface
 
     /**
      * ContentItemDefinition constructor.
-     *
-     * @param ContentItemValidator  $validator
-     * @param ContentItemSerializer $serializer
      */
     public function __construct(ContentItemValidator $validator, ContentItemSerializer $serializer)
     {
@@ -77,9 +74,6 @@ class ContentItemDefinition implements ItemDefinitionInterface
     /**
      * Validates a content item.
      *
-     * @param array $item
-     * @param array $options
-     *
      * @return array
      */
     public function validateQuestion(array $item, array $options = [])
@@ -89,9 +83,6 @@ class ContentItemDefinition implements ItemDefinitionInterface
 
     /**
      * Serializes a content item entity.
-     *
-     * @param AbstractItem $item
-     * @param array        $options
      *
      * @return array
      */
@@ -103,9 +94,7 @@ class ContentItemDefinition implements ItemDefinitionInterface
     /**
      * Deserializes content item data.
      *
-     * @param array        $itemData
      * @param AbstractItem $item
-     * @param array        $options
      *
      * @return AbstractItem
      */
@@ -116,8 +105,6 @@ class ContentItemDefinition implements ItemDefinitionInterface
 
     /**
      * No additional identifier to regenerate.
-     *
-     * @param AbstractItem $item
      */
     public function refreshIdentifiers(AbstractItem $item)
     {

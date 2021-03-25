@@ -18,9 +18,6 @@ class Dropzone
         $this->dropzoneManager = $dropzoneManager;
     }
 
-    /**
-     * @param UpdateEvent $event
-     */
     public function endUpdate(UpdateEvent $event)
     {
         $dropzone = $event->getObject();

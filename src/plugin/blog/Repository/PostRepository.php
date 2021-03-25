@@ -33,7 +33,6 @@ class PostRepository extends EntityRepository
     }
 
     /**
-     * @param Blog $blog
      * @param bool $executeQuery
      *
      * @return array|\Doctrine\ORM\AbstractQuery
@@ -54,7 +53,6 @@ class PostRepository extends EntityRepository
     }
 
     /**
-     * @param Blog   $blog
      * @param string $search
      * @param bool   $executeQuery
      *
@@ -128,7 +126,6 @@ class PostRepository extends EntityRepository
     }
 
     /**
-     * @param Blog $blog
      * @param int  $startDate
      * @param int  $endDate
      * @param bool $executeQuery
@@ -162,7 +159,6 @@ class PostRepository extends EntityRepository
     }
 
     /**
-     * @param Blog $blog
      * @param bool $executeQuery
      *
      * @return Post[]|\Doctrine\ORM\AbstractQuery
@@ -183,7 +179,6 @@ class PostRepository extends EntityRepository
     }
 
     /**
-     * @param Blog $blog
      * @param bool $executeQuery
      *
      * @return array|\Doctrine\ORM\AbstractQuery
@@ -215,8 +210,6 @@ class PostRepository extends EntityRepository
     }
 
     /**
-     * @param QueryBuilder $query
-     *
      * @return QueryBuilder
      */
     public function filterByPublishPost(QueryBuilder $query)
@@ -230,8 +223,7 @@ class PostRepository extends EntityRepository
     }
 
     /**
-     * @param array        $criterias
-     * @param QueryBuilder $query
+     * @param array $criterias
      *
      * @return QueryBuilder
      *

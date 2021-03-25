@@ -18,8 +18,6 @@ class ContentSerializer
 
     /**
      * ContentSerializer constructor.
-     *
-     * @param ResourceContentSerializer $resourceContentSerializer
      */
     public function __construct(ResourceContentSerializer $resourceContentSerializer)
     {
@@ -33,7 +31,6 @@ class ContentSerializer
 
     /**
      * @param mixed $content
-     * @param array $options
      *
      * @return array
      */
@@ -56,7 +53,6 @@ class ContentSerializer
     /**
      * @param array $data
      * @param mixed $content
-     * @param array $options
      *
      * @return mixed
      */

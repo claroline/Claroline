@@ -37,11 +37,6 @@ class ExerciseController extends AbstractController
 
     /**
      * ExerciseController constructor.
-     *
-     * @param AuthorizationCheckerInterface $authorization
-     * @param ExerciseManager               $exerciseManager
-     * @param DocimologyManager             $docimologyManager
-     * @param ItemManager                   $itemManager
      */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
@@ -61,8 +56,6 @@ class ExerciseController extends AbstractController
      * @Route("/{id}", name="exercise_get", methods={"GET"})
      * @EXT\ParamConverter("exercise", class="UJMExoBundle:Exercise", options={"mapping": {"id": "uuid"}})
      *
-     * @param Exercise $exercise
-     *
      * @return JsonResponse
      */
     public function getAction(Exercise $exercise)
@@ -79,9 +72,6 @@ class ExerciseController extends AbstractController
      *
      * @Route("/{id}", name="exercise_update", methods={"PUT"})
      * @EXT\ParamConverter("exercise", class="UJMExoBundle:Exercise", options={"mapping": {"id": "uuid"}})
-     *
-     * @param Exercise $exercise
-     * @param Request  $request
      *
      * @return JsonResponse
      */
@@ -124,8 +114,6 @@ class ExerciseController extends AbstractController
      * @Route("/{id}/docimology", name="exercise_docimology", methods={"GET"})
      * @EXT\ParamConverter("exercise", class="UJMExoBundle:Exercise", options={"mapping": {"id": "uuid"}})
      *
-     * @param Exercise $exercise
-     *
      * @return JsonResponse
      */
     public function docimologyAction(Exercise $exercise)
@@ -140,8 +128,6 @@ class ExerciseController extends AbstractController
      *
      * @Route("/{id}/statistics", name="exercise_statistics", methods={"GET"})
      * @EXT\ParamConverter("exercise", class="UJMExoBundle:Exercise", options={"mapping": {"id": "uuid"}})
-     *
-     * @param Exercise $exercise
      *
      * @return JsonResponse
      */

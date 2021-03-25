@@ -16,7 +16,6 @@ use Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Query;
 
 class RoleRepository extends EntityRepository
 {

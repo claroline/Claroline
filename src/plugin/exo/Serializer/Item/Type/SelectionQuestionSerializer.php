@@ -16,9 +16,6 @@ class SelectionQuestionSerializer
     /**
      * Converts a Selection question into a JSON-encodable structure.
      *
-     * @param SelectionQuestion $selectionQuestion
-     * @param array             $options
-     *
      * @return array
      */
     public function serialize(SelectionQuestion $selectionQuestion, array $options = [])
@@ -66,7 +63,6 @@ class SelectionQuestionSerializer
      *
      * @param array             $data
      * @param SelectionQuestion $selectionQuestion
-     * @param array             $options
      *
      * @return SelectionQuestion
      */
@@ -101,13 +97,11 @@ class SelectionQuestionSerializer
     /**
      * Serializes the Question holes.
      *
-     * @param SelectionQuestion $selectionQuestion
-     *
      * @return array
      */
     private function serializeSelections(SelectionQuestion $selectionQuestion)
     {
-        return array_values(array_map(function (Selection $selection) use ($selectionQuestion) {
+        return array_values(array_map(function (Selection $selection) {
             return [
                 'id' => $selection->getUuid(),
                 'begin' => $selection->getBegin(),
@@ -158,11 +152,6 @@ class SelectionQuestionSerializer
 
     /**
      * Deserializes Question selection.
-     *
-     * @param SelectionQuestion $selectionQuestion
-     * @param array             $selections
-     * @param array             $solutions
-     * @param array             $options
      */
     private function deserializeSelections(SelectionQuestion $selectionQuestion, array $selections, array $solutions, array $options = [])
     {
@@ -260,10 +249,6 @@ class SelectionQuestionSerializer
 
     /**
      * Deserializes Question solutions.
-     *
-     * @param SelectionQuestion $selectionQuestion
-     * @param array             $solutions
-     * @param array             $options
      */
     private function deserializeSolutions(SelectionQuestion $selectionQuestion, array $solutions, array $options = [])
     {

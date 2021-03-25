@@ -13,8 +13,6 @@ class CommentSerializer
 
     /**
      * CommentSerializer constructor.
-     *
-     * @param UserSerializer $userSerializer
      */
     public function __construct(UserSerializer $userSerializer)
     {

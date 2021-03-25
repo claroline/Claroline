@@ -13,8 +13,6 @@ class ResourceTypeSerializer
 
     /**
      * ResourceTypeSerializer constructor.
-     *
-     * @param ResourceActionManager $actionManager
      */
     public function __construct(ResourceActionManager $actionManager)
     {

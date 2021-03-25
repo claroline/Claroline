@@ -39,11 +39,6 @@ class DataSourceManager
 
     /**
      * WidgetManager constructor.
-     *
-     * @param TokenStorageInterface $tokenStorage
-     * @param ObjectManager         $om
-     * @param StrictDispatcher      $eventDispatcher
-     * @param PluginManager         $pluginManager
      */
     public function __construct(
         TokenStorageInterface $tokenStorage,
@@ -74,11 +69,6 @@ class DataSourceManager
 
     /**
      * Checks if a data source exists and is available for the given context.
-     *
-     * @param string $type
-     * @param string $context
-     *
-     * @return bool
      */
     public function check(string $type, string $context): bool
     {
@@ -99,8 +89,6 @@ class DataSourceManager
     /**
      * Loads data from a data source.
      *
-     * @param string $type
-     * @param string $context
      * @param string $contextId
      * @param array  $options
      *

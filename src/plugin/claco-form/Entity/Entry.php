@@ -227,8 +227,6 @@ class Entry
 
     /**
      * Set claco form.
-     *
-     * @param ClacoForm $clacoForm
      */
     public function setClacoForm(ClacoForm $clacoForm)
     {
@@ -247,8 +245,6 @@ class Entry
 
     /**
      * Set creation date.
-     *
-     * @param \DateTime $creationDate
      */
     public function setCreationDate(\DateTime $creationDate)
     {
@@ -267,8 +263,6 @@ class Entry
 
     /**
      * Set edition date.
-     *
-     * @param \DateTime|null $editionDate
      */
     public function setEditionDate(\DateTime $editionDate = null)
     {
@@ -287,8 +281,6 @@ class Entry
 
     /**
      * Set publication date.
-     *
-     * @param \DateTime|null $publicationDate
      */
     public function setPublicationDate(\DateTime $publicationDate = null)
     {
@@ -307,8 +299,6 @@ class Entry
 
     /**
      * Set user.
-     *
-     * @param User|null $user
      */
     public function setUser(User $user = null)
     {
@@ -327,8 +317,6 @@ class Entry
 
     /**
      * Add a field value.
-     *
-     * @param FieldValue $fieldValue
      */
     public function addFieldValue(FieldValue $fieldValue)
     {
@@ -339,8 +327,6 @@ class Entry
 
     /**
      * Remove a field value.
-     *
-     * @param FieldValue $fieldValue
      */
     public function removeValue(FieldValue $fieldValue)
     {
@@ -369,8 +355,6 @@ class Entry
 
     /**
      * Add comment.
-     *
-     * @param Comment $comment
      */
     public function addComment(Comment $comment)
     {
@@ -381,8 +365,6 @@ class Entry
 
     /**
      * Remove comment.
-     *
-     * @param Comment $comment
      */
     public function removeComment(Comment $comment)
     {
@@ -411,8 +393,6 @@ class Entry
 
     /**
      * Add category.
-     *
-     * @param Category $category
      */
     public function addCategory(Category $category)
     {
@@ -423,8 +403,6 @@ class Entry
 
     /**
      * Remove category.
-     *
-     * @param Category $category
      */
     public function removeCategory(Category $category)
     {
@@ -453,8 +431,6 @@ class Entry
 
     /**
      * Add keyword.
-     *
-     * @param Keyword $keyword
      */
     public function addKeyword(Keyword $keyword)
     {
@@ -465,8 +441,6 @@ class Entry
 
     /**
      * Remove keyword.
-     *
-     * @param Keyword $keyword
      */
     public function removeKeyword(Keyword $keyword)
     {
