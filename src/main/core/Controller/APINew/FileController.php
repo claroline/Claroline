@@ -30,8 +30,6 @@ class FileController extends AbstractCrudController
 
     /**
      * FileController constructor.
-     *
-     * @param StrictDispatcher $dispatcher
      */
     public function __construct(StrictDispatcher $dispatcher)
     {
@@ -56,8 +54,6 @@ class FileController extends AbstractCrudController
 
     /**
      * @Route("/upload", name="apiv2_file_upload", options={"method_prefix" = false}, methods={"POST"})
-     *
-     * @param Request $request
      *
      * @return JsonResponse
      */

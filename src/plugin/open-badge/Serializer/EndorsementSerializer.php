@@ -11,9 +11,6 @@ class EndorsementSerializer
 {
     use SerializerTrait;
 
-    /**
-     * @param RouterInterface $router
-     */
     public function __construct(RouterInterface $router)
     {
         $this->router = $router;
@@ -21,7 +18,7 @@ class EndorsementSerializer
 
     public function serialize(Endorsement $endorsement)
     {
-        return  [
+        return [
             'id' => $this->router->generate('apiv2_open_badge__endorsement', ['endorsement' => $endorsement->getUuid()], UrlGeneratorInterface::ABSOLUTE_URL),
         ];
     }

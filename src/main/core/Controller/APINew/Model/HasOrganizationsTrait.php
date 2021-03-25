@@ -28,9 +28,8 @@ trait HasOrganizationsTrait
      *     response={"$list=Claroline\CoreBundle\Entity\Organization\Organization"}
      * )
      *
-     * @param string  $id
-     * @param string  $class
-     * @param Request $request
+     * @param string $id
+     * @param string $class
      *
      * @return JsonResponse
      */
@@ -59,9 +58,8 @@ trait HasOrganizationsTrait
      *     }
      * )
      *
-     * @param string  $id
-     * @param string  $class
-     * @param Request $request
+     * @param string $id
+     * @param string $class
      *
      * @return JsonResponse
      */
@@ -91,9 +89,8 @@ trait HasOrganizationsTrait
      *     }
      * )
      *
-     * @param string  $id
-     * @param string  $class
-     * @param Request $request
+     * @param string $id
+     * @param string $class
      *
      * @return JsonResponse
      */

@@ -28,6 +28,6 @@ class AnnouncementVoter extends AbstractVoter
 
     public function getSupportedActions()
     {
-        return[self::OPEN, self::VIEW, self::CREATE, self::EDIT, self::DELETE, self::PATCH];
+        return [self::OPEN, self::VIEW, self::CREATE, self::EDIT, self::DELETE, self::PATCH];
     }
 }

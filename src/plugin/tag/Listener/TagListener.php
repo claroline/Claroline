@@ -27,9 +27,6 @@ class TagListener
 
     /**
      * TagListener constructor.
-     *
-     * @param ObjectManager $om
-     * @param TagManager    $tagManager
      */
     public function __construct(
         ObjectManager $om,
@@ -39,9 +36,6 @@ class TagListener
         $this->manager = $tagManager;
     }
 
-    /**
-     * @param SearchObjectsEvent $event
-     */
     public function onSearchObjects(SearchObjectsEvent $event)
     {
         // checks if there are filters managed by tag plugin in query
@@ -73,9 +67,6 @@ class TagListener
         }
     }
 
-    /**
-     * @param GenericDataEvent $event
-     */
     public function onObjectTag(GenericDataEvent $event)
     {
         $taggedObject = null;
@@ -89,9 +80,6 @@ class TagListener
         $event->setResponse($taggedObject);
     }
 
-    /**
-     * @param GenericDataEvent $event
-     */
     public function onDataTag(GenericDataEvent $event)
     {
         $taggedObject = null;
@@ -105,9 +93,6 @@ class TagListener
         $event->setResponse($taggedObject);
     }
 
-    /**
-     * @param GenericDataEvent $event
-     */
     public function onRetrieveUserWorkspacesByTag(GenericDataEvent $event)
     {
         $workspaces = [];
@@ -131,8 +116,6 @@ class TagListener
 
     /**
      * Used by serializers to retrieves tags.
-     *
-     * @param GenericDataEvent $event
      */
     public function onRetrieveUsedTagsByClassAndIds(GenericDataEvent $event)
     {
@@ -166,8 +149,6 @@ class TagListener
 
     /**
      * Used by serializers to retrieves tags object.
-     *
-     * @param GenericDataEvent $event
      */
     public function onRetrieveUsedTagsObjectByClassAndIds(GenericDataEvent $event)
     {

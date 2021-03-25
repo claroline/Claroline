@@ -17,9 +17,6 @@ class PluginSerializer
     /**
      * Serializes a Plugin entity.
      *
-     * @param Plugin $plugin
-     * @param array  $options
-     *
      * @return array
      */
     public function serialize(Plugin $plugin, array $options = [])
@@ -40,9 +37,7 @@ class PluginSerializer
     /**
      * Deserializes data into a Plugin entity.
      *
-     * @param array  $data
-     * @param Plugin $plugin
-     * @param array  $options
+     * @param array $data
      *
      * @return Plugin
      */

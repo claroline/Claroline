@@ -48,11 +48,6 @@ class LogConnectController
 
     /**
      * CourseController constructor.
-     *
-     * @param AuthorizationCheckerInterface $authorization
-     * @param FinderProvider                $finder
-     * @param LogConnectManager             $logConnectManager
-     * @param ToolManager                   $toolManager
      */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
@@ -77,9 +72,6 @@ class LogConnectController
      *     name="apiv2_log_connect_platform_list"
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @param User    $user
-     * @param Request $request
      *
      * @return JsonResponse
      */
@@ -110,9 +102,6 @@ class LogConnectController
      *     methods={"GET"}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @param User    $user
-     * @param Request $request
      *
      * @return StreamedResponse
      */
@@ -155,9 +144,6 @@ class LogConnectController
      *     options={"mapping": {"workspace": "uuid"}}
      * )
      *
-     * @param Workspace $workspace
-     * @param Request   $request
-     *
      * @return JsonResponse
      */
     public function logConnectWorkspaceListAction(Workspace $workspace, Request $request)
@@ -187,9 +173,6 @@ class LogConnectController
      *     class="ClarolineCoreBundle:Workspace\Workspace",
      *     options={"mapping": {"workspace": "uuid"}}
      * )
-     *
-     * @param Workspace $workspace
-     * @param Request   $request
      *
      * @return StreamedResponse
      */
@@ -228,10 +211,6 @@ class LogConnectController
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      *
-     * @param ResourceNode $resource
-     * @param User         $user
-     * @param Request      $request
-     *
      * @return JsonResponse
      */
     public function logConnectResourceListAction(ResourceNode $resource, User $user, Request $request)
@@ -262,10 +241,6 @@ class LogConnectController
      *     options={"mapping": {"resource": "id"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @param ResourceNode $resource
-     * @param User         $user
-     * @param Request      $request
      *
      * @return StreamedResponse
      */
@@ -308,8 +283,7 @@ class LogConnectController
     }
 
     /**
-     * @param Workspace $workspace
-     * @param string    $rights
+     * @param string $rights
      */
     private function checkWorkspaceToolAccess(Workspace $workspace, $rights = 'OPEN')
     {

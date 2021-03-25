@@ -30,9 +30,6 @@ class PublicFileSerializer
     /**
      * Serializes a PublicFile entity.
      *
-     * @param PublicFile $file
-     * @param array      $options
-     *
      * @return array
      */
     public function serialize(PublicFile $file, array $options = [])
@@ -55,9 +52,7 @@ class PublicFileSerializer
     /**
      * Deserializes data into a PublicFile into an entity.
      *
-     * @param \stdClass       $data
-     * @param PublicFile|null $file
-     * @param array           $options
+     * @param \stdClass $data
      *
      * @return PublicFile
      */

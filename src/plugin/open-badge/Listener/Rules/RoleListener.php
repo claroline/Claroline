@@ -37,11 +37,6 @@ class RoleListener
 
     /**
      * RuleListener constructor.
-     *
-     * @param ObjectManager         $om
-     * @param TranslatorInterface   $translator
-     * @param TokenStorageInterface $tokenStorage
-     * @param RuleManager           $manager
      */
     public function __construct(
         ObjectManager $om,
@@ -55,9 +50,6 @@ class RoleListener
         $this->manager = $manager;
     }
 
-    /**
-     * @param PatchEvent $event
-     */
     public function onUserPatch(PatchEvent $event)
     {
         if (Crud::COLLECTION_ADD === $event->getAction() && 'role' === $event->getProperty()) {
@@ -70,9 +62,6 @@ class RoleListener
         }
     }
 
-    /**
-     * @param PatchEvent $event
-     */
     public function onRolePatch(PatchEvent $event)
     {
         if (Crud::COLLECTION_ADD === $event->getAction() && 'user' === $event->getProperty()) {

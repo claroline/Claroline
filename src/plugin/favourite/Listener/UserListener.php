@@ -13,17 +13,11 @@ class UserListener
     /** @var FavouriteManager */
     private $favouriteManager;
 
-    /**
-     * @param FavouriteManager $favouriteManager
-     */
     public function __construct(FavouriteManager $favouriteManager)
     {
         $this->favouriteManager = $favouriteManager;
     }
 
-    /**
-     * @param MergeUsersEvent $event
-     */
     public function onMerge(MergeUsersEvent $event)
     {
         // Replace user of Favourite nodes

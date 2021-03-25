@@ -30,8 +30,6 @@ class RssFeed extends AbstractResource
 
     /**
      * Get rss feed url.
-     *
-     * @return string
      */
     public function getUrl(): string
     {
@@ -40,8 +38,6 @@ class RssFeed extends AbstractResource
 
     /**
      * Set rss feed url.
-     *
-     * @param string $url
      */
     public function setUrl(string $url)
     {

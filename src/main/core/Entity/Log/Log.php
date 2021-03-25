@@ -187,8 +187,6 @@ class Log
      *
      * NOTE : creation date is already handled by the timestamp listener; this
      *        setter exists mainly for testing purposes.
-     *
-     * @param \DateTime $date
      */
     public function setDateLog(\DateTime $date)
     {

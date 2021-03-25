@@ -17,8 +17,6 @@ class AllSource
 
     /**
      * AllSource constructor.
-     *
-     * @param FinderProvider $finder
      */
     public function __construct(
         FinderProvider $finder
@@ -26,9 +24,6 @@ class AllSource
         $this->finder = $finder;
     }
 
-    /**
-     * @param GetDataEvent $event
-     */
     public function getData(GetDataEvent $event)
     {
         $options = $event->getOptions();

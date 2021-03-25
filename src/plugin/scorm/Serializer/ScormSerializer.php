@@ -29,9 +29,6 @@ class ScormSerializer
 
     /**
      * ScormSerializer constructor.
-     *
-     * @param ObjectManager $om
-     * @param ScoSerializer $scoSerializer
      */
     public function __construct(ObjectManager $om, ScoSerializer $scoSerializer)
     {
@@ -47,8 +44,6 @@ class ScormSerializer
     }
 
     /**
-     * @param Scorm $scorm
-     *
      * @return array
      */
     public function serialize(Scorm $scorm)
@@ -64,7 +59,6 @@ class ScormSerializer
 
     /**
      * @param array $data
-     * @param Scorm $scorm
      *
      * @return Scorm
      */

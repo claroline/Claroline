@@ -40,10 +40,7 @@ class ResourceContentSerializer
     /**
      * ResourceContentSerializer constructor.
      *
-     * @param ObjectManager   $om
-     * @param string          $fileDir
-     * @param RouterInterface $router
-     * @param ResourceManager $resourceManager
+     * @param string $fileDir
      */
     public function __construct(
         ObjectManager $om,
@@ -63,9 +60,6 @@ class ResourceContentSerializer
     }
 
     /**
-     * @param ResourceNode $node
-     * @param array        $options
-     *
      * @return array
      */
     public function serialize(ResourceNode $node, array $options = [])
@@ -107,7 +101,6 @@ class ResourceContentSerializer
      *
      * @param array        $data
      * @param ResourceNode $resourceNode
-     * @param array        $options
      *
      * @return mixed
      */

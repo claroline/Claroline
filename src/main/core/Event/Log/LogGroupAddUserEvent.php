@@ -19,15 +19,15 @@ class LogGroupAddUserEvent extends LogGenericEvent
     {
         parent::__construct(
             self::ACTION,
-            array(
-                'receiverUser' => array(
+            [
+                'receiverUser' => [
                     'lastName' => $receiver->getLastName(),
                     'firstName' => $receiver->getFirstName(),
-                ),
-                'receiverGroup' => array(
+                ],
+                'receiverGroup' => [
                     'name' => $receiverGroup->getName(),
-                ),
-            ),
+                ],
+            ],
             $receiver,
             $receiverGroup
         );
@@ -38,6 +38,6 @@ class LogGroupAddUserEvent extends LogGenericEvent
      */
     public static function getRestriction()
     {
-        return array(self::DISPLAYED_ADMIN);
+        return [self::DISPLAYED_ADMIN];
     }
 }

@@ -104,8 +104,6 @@ class ExplanationBuilder
     }
 
     /**
-     * @param array $schemas
-     *
      * @return Explanation
      */
     public function explainIdentifiers(array $schemas)

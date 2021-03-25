@@ -24,10 +24,6 @@ class LogCommentPublishEvent extends AbstractLogResourceEvent implements Notifia
     protected $blog;
     protected $details;
 
-    /**
-     * @param Post    $post
-     * @param Comment $comment
-     */
     public function __construct(Post $post, Comment $comment, $translator = null)
     {
         $this->blog = $post->getBlog();

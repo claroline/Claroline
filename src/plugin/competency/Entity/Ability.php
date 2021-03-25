@@ -146,8 +146,6 @@ class Ability implements \JsonSerializable
 
     /**
      * @see $level
-     *
-     * @param Level $level
      */
     public function setLevel(Level $level)
     {
@@ -165,8 +163,6 @@ class Ability implements \JsonSerializable
     }
 
     /**
-     * @param ResourceNode $resource
-     *
      * @return bool
      */
     public function isLinkedToResource(ResourceNode $resource)
@@ -176,8 +172,6 @@ class Ability implements \JsonSerializable
 
     /**
      * Associates the ability with a resource.
-     *
-     * @param ResourceNode $resource
      */
     public function linkResource(ResourceNode $resource)
     {
@@ -189,8 +183,6 @@ class Ability implements \JsonSerializable
 
     /**
      * Removes an association with a resource.
-     *
-     * @param ResourceNode $resource
      */
     public function removeResource(ResourceNode $resource)
     {

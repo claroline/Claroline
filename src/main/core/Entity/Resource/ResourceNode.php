@@ -36,23 +36,20 @@ use Gedmo\Mapping\Annotation as Gedmo;
  */
 class ResourceNode
 {
-    const PATH_SEPARATOR = '/';
-    const PATH_OLDSEPARATOR = '`';
-
     // identifiers
     use Id;
     use Uuid;
-
     // meta
     use Thumbnail;
     use Poster;
     use Description;
     use Creator;
-
     // restrictions
     use Hidden;
     use AccessibleFrom;
     use AccessibleUntil;
+    const PATH_SEPARATOR = '/';
+    const PATH_OLDSEPARATOR = '`';
 
     /**
      * @var string

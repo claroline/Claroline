@@ -5,13 +5,12 @@
  * (c) Claroline Consortium <consortium@claroline.net>
  *
  * Author: Panagiotis TSAVDARIS
- * 
+ *
  * Date: 4/23/15
  */
 
 namespace Icap\SocialmediaBundle\Repository;
 
-use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
 
 class WallItemRepository extends EntityRepository

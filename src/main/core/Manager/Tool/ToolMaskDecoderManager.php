@@ -25,8 +25,6 @@ class ToolMaskDecoderManager
 
     /**
      * ToolMaskDecoderManager constructor.
-     *
-     * @param ObjectManager $om
      */
     public function __construct(ObjectManager $om)
     {
@@ -36,8 +34,6 @@ class ToolMaskDecoderManager
 
     /**
      * Create a mask decoder with default actions for a tool.
-     *
-     * @param Tool $tool
      */
     public function createDefaultToolMaskDecoders(Tool $tool)
     {
@@ -60,7 +56,6 @@ class ToolMaskDecoderManager
     /**
      * Create a specific mask decoder for a tool.
      *
-     * @param Tool   $tool
      * @param string $action
      * @param int    $value
      */
@@ -78,8 +73,7 @@ class ToolMaskDecoderManager
     /**
      * Returns an array containing the permission for a mask and a tool.
      *
-     * @param int  $mask
-     * @param Tool $tool
+     * @param int $mask
      *
      * @return array
      */
@@ -101,9 +95,6 @@ class ToolMaskDecoderManager
      *
      * array('open' => true, 'edit' => false, ...)
      *
-     * @param array $perms
-     * @param Tool  $tool
-     *
      * @return int
      */
     public function encodeMask(array $perms, Tool $tool)
@@ -121,8 +112,6 @@ class ToolMaskDecoderManager
     }
 
     /**
-     * @param Tool $tool
-     *
      * @return ToolMaskDecoder[]
      */
     public function getMaskDecodersByTool(Tool $tool)
@@ -131,7 +120,6 @@ class ToolMaskDecoderManager
     }
 
     /**
-     * @param Tool   $tool
      * @param string $name
      *
      * @return ToolMaskDecoder

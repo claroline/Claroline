@@ -17,19 +17,12 @@ class UserListener
     /** @var ContributionManager */
     private $contributionManager;
 
-    /**
-     * @param SectionManager      $sectionManager
-     * @param ContributionManager $contributionManager
-     */
     public function __construct(SectionManager $sectionManager, ContributionManager $contributionManager)
     {
         $this->sectionManager = $sectionManager;
         $this->contributionManager = $contributionManager;
     }
 
-    /**
-     * @param MergeUsersEvent $event
-     */
     public function onMerge(MergeUsersEvent $event)
     {
         // Replace user of Section nodes

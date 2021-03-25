@@ -42,9 +42,6 @@ class BlogSerializer
     }
 
     /**
-     * @param Blog  $blog
-     * @param array $options
-     *
      * @return array - The serialized representation of a blog
      */
     public function serialize(Blog $blog, array $options = [])
@@ -60,7 +57,6 @@ class BlogSerializer
     /**
      * @param array       $data
      * @param Blog | null $blog
-     * @param array       $options
      *
      * @return Blog - The deserialized blog entity
      */

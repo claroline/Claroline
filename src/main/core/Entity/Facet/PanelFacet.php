@@ -112,9 +112,6 @@ class PanelFacet
         $this->name = $name;
     }
 
-    /**
-     * @param Facet|null $facet
-     */
     public function setFacet(Facet $facet = null)
     {
         $this->facet = $facet;
@@ -140,17 +137,11 @@ class PanelFacet
         return $this->fieldsFacet;
     }
 
-    /**
-     * @param FieldFacet $fieldFacet
-     */
     public function addFieldFacet(FieldFacet $fieldFacet)
     {
         $this->fieldsFacet->add($fieldFacet);
     }
 
-    /**
-     * @param PanelFacetRole $pfr
-     */
     public function addPanelFacetRole(PanelFacetRole $pfr)
     {
         $this->panelFacetsRole->add($pfr);

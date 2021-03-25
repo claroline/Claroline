@@ -22,11 +22,11 @@ class LogGroupDeleteEvent extends LogGenericEvent
     {
         parent::__construct(
             self::ACTION,
-            array(
-                'receiverGroup' => array(
+            [
+                'receiverGroup' => [
                     'name' => $receiverGroup->getName(),
-                ),
-            ),
+                ],
+            ],
             null,
             $receiverGroup
         );
@@ -37,6 +37,6 @@ class LogGroupDeleteEvent extends LogGenericEvent
      */
     public static function getRestriction()
     {
-        return array(self::DISPLAYED_ADMIN);
+        return [self::DISPLAYED_ADMIN];
     }
 }

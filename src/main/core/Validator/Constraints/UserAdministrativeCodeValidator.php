@@ -33,11 +33,6 @@ class UserAdministrativeCodeValidator extends ConstraintValidator
      */
     private $translator;
 
-    /**
-     * @param PlatformConfigurationHandler $platformConfigHandler
-     * @param ObjectManager                $om
-     * @param TranslatorInterface          $translator
-     */
     public function setServices(
         PlatformConfigurationHandler $platformConfigHandler,
         ObjectManager $om,
@@ -51,8 +46,7 @@ class UserAdministrativeCodeValidator extends ConstraintValidator
     /**
      * Checks if administration code is unique.
      *
-     * @param User       $user
-     * @param Constraint $constraint
+     * @param User $user
      */
     public function validate($user, Constraint $constraint)
     {

@@ -17,8 +17,6 @@ use Doctrine\ORM\EntityRepository;
 class ToolMaskDecoderRepository extends EntityRepository
 {
     /**
-     * @param Tool $tool
-     *
      * @return ToolMaskDecoder[]
      */
     public function findMaskDecodersByTool(Tool $tool)
@@ -36,7 +34,6 @@ class ToolMaskDecoderRepository extends EntityRepository
     }
 
     /**
-     * @param Tool   $tool
      * @param string $name
      *
      * @return ToolMaskDecoder|null

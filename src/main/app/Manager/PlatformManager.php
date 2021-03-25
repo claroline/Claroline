@@ -15,9 +15,6 @@ class PlatformManager
 
     /**
      * PlatformManager constructor.
-     *
-     * @param RequestStack                 $requestStack
-     * @param PlatformConfigurationHandler $config
      */
     public function __construct(
         RequestStack $requestStack,

@@ -5,7 +5,7 @@
  * (c) Claroline Consortium <consortium@claroline.net>
  *
  * Author: Panagiotis TSAVDARIS
- * 
+ *
  * Date: 5/12/15
  */
 
@@ -22,11 +22,11 @@ class LogSocialmediaShareEvent extends AbstractLogResourceEvent implements Notif
 
     public function __construct(ShareAction $share)
     {
-        $this->details = array(
-            'share' => array(
+        $this->details = [
+            'share' => [
                 'network' => $share->getNetwork(),
-            ),
-        );
+            ],
+        ];
 
         parent::__construct($share->getResource(), $this->details);
     }
@@ -48,7 +48,7 @@ class LogSocialmediaShareEvent extends AbstractLogResourceEvent implements Notif
      */
     public function getIncludeUserIds()
     {
-        $userIds = array($this->getResource()->getCreator()->getId());
+        $userIds = [$this->getResource()->getCreator()->getId()];
 
         return $userIds;
     }
@@ -60,7 +60,7 @@ class LogSocialmediaShareEvent extends AbstractLogResourceEvent implements Notif
      */
     public function getExcludeUserIds()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -91,12 +91,12 @@ class LogSocialmediaShareEvent extends AbstractLogResourceEvent implements Notif
     public function getNotificationDetails()
     {
         $resource = $this->getResource();
-        $notificationDetails = array_merge($this->details, array());
-        $notificationDetails['resource'] = array(
+        $notificationDetails = array_merge($this->details, []);
+        $notificationDetails['resource'] = [
             'id' => $resource->getId(),
             'name' => $resource->getName(),
             'type' => $resource->getResourceType()->getName(),
-        );
+        ];
 
         return $notificationDetails;
     }
@@ -116,6 +116,6 @@ class LogSocialmediaShareEvent extends AbstractLogResourceEvent implements Notif
      */
     public static function getRestriction()
     {
-        return array(self::DISPLAYED_WORKSPACE);
+        return [self::DISPLAYED_WORKSPACE];
     }
 }

@@ -13,8 +13,6 @@ class ResourceNodeValidator implements ValidatorInterface
 
     /**
      * UserValidator constructor.
-     *
-     * @param ObjectManager $om
      */
     public function __construct(ObjectManager $om)
     {

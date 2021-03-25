@@ -11,8 +11,7 @@ class LogDropzoneConfigureEvent extends AbstractLogResourceEvent
     const ACTION = 'resource-claroline_dropzone-dropzone_configure';
 
     /**
-     * @param Dropzone $dropzone
-     * @param array    $changeSet
+     * @param array $changeSet
      */
     public function __construct(Dropzone $dropzone, $changeSet)
     {

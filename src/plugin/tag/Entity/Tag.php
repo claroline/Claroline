@@ -30,7 +30,6 @@ class Tag
 {
     use Id;
     use Uuid;
-
     // meta
     use Description;
     use Color;
@@ -106,8 +105,6 @@ class Tag
 
     /**
      * Set user.
-     *
-     * @param User|null $user
      */
     public function setUser(User $user = null)
     {

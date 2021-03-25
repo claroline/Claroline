@@ -12,11 +12,6 @@ class LogCorrectionStartEvent extends AbstractLogResourceEvent
 {
     const ACTION = 'resource-claroline_dropzone-correction_start';
 
-    /**
-     * @param Dropzone   $dropzone
-     * @param Drop       $drop
-     * @param Correction $correction
-     */
     public function __construct(Dropzone $dropzone, Drop $drop, Correction $correction)
     {
         $documentsDetails = [];

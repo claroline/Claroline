@@ -11,8 +11,8 @@
 
 namespace Valid\WithMigrations\Migrations;
 
-use Doctrine\DBAL\Schema\Schema;
 use Claroline\CoreBundle\Library\Installation\BundleMigration;
+use Doctrine\DBAL\Schema\Schema;
 
 class Version00000000000001 extends BundleMigration
 {
@@ -24,9 +24,9 @@ class Version00000000000001 extends BundleMigration
         $table->addColumn(
             'name',
             'string',
-            array(
+            [
                 'length' => 50,
-            )
+            ]
         );
     }
 

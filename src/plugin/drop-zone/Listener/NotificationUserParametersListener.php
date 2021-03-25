@@ -18,9 +18,6 @@ use Claroline\CoreBundle\Event\Notification\NotificationUserParametersEvent;
  */
 class NotificationUserParametersListener
 {
-    /**
-     * @param NotificationUserParametersEvent $event
-     */
     public function onGetTypesForParameters(NotificationUserParametersEvent $event)
     {
         $event->addTypes('claroline_dropzone');

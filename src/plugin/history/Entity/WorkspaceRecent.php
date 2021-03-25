@@ -31,9 +31,6 @@ class WorkspaceRecent extends AbstractRecent
         return $this->workspace;
     }
 
-    /**
-     * @param Workspace $workspace
-     */
     public function setWorkspace(Workspace $workspace)
     {
         $this->workspace = $workspace;

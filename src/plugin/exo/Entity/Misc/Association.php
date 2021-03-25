@@ -16,6 +16,8 @@ use UJM\ExoBundle\Library\Model\ScoreTrait;
  */
 class Association implements AnswerPartInterface
 {
+    use ScoreTrait;
+    use FeedbackTrait;
     /**
      * @var int
      *
@@ -43,10 +45,6 @@ class Association implements AnswerPartInterface
      */
     private $proposal;
 
-    use ScoreTrait;
-
-    use FeedbackTrait;
-
     /**
      * Get id.
      *
@@ -69,8 +67,6 @@ class Association implements AnswerPartInterface
 
     /**
      * Set MatchQuestion.
-     *
-     * @param MatchQuestion $question
      */
     public function setQuestion(MatchQuestion $question)
     {
@@ -79,8 +75,6 @@ class Association implements AnswerPartInterface
 
     /**
      * Set label.
-     *
-     * @param Label $label
      */
     public function setLabel(Label $label)
     {
@@ -99,8 +93,6 @@ class Association implements AnswerPartInterface
 
     /**
      * Set proposal.
-     *
-     * @param Proposal $proposal
      */
     public function setProposal(Proposal $proposal)
     {

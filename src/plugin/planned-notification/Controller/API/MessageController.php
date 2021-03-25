@@ -29,8 +29,6 @@ class MessageController extends AbstractCrudController
 
     /**
      * MessageController constructor.
-     *
-     * @param PlannedNotificationManager $manager
      */
     public function __construct(PlannedNotificationManager $manager)
     {
@@ -63,9 +61,6 @@ class MessageController extends AbstractCrudController
      *     options={"mapping": {"workspace": "uuid"}}
      * )
      *
-     * @param Workspace $workspace
-     * @param Request   $request
-     *
      * @return JsonResponse
      */
     public function messagesListAction(Workspace $workspace, Request $request)
@@ -87,8 +82,6 @@ class MessageController extends AbstractCrudController
      *     "/messages/send",
      *     name="apiv2_plannednotificationmessage_messages_send"
      * )
-     *
-     * @param Request $request
      *
      * @return JsonResponse
      */

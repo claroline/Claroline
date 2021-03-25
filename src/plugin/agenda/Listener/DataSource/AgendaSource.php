@@ -27,9 +27,6 @@ class AgendaSource
 
     /**
      * AgendaSource constructor.
-     *
-     * @param FinderProvider        $finder
-     * @param TokenStorageInterface $tokenStorage
      */
     public function __construct(
         FinderProvider $finder,
@@ -39,9 +36,6 @@ class AgendaSource
         $this->tokenStorage = $tokenStorage;
     }
 
-    /**
-     * @param GetDataEvent $event
-     */
     public function getEventsData(GetDataEvent $event)
     {
         $options = $event->getOptions() ? $event->getOptions() : [];
@@ -62,9 +56,6 @@ class AgendaSource
         $event->stopPropagation();
     }
 
-    /**
-     * @param GetDataEvent $event
-     */
     public function getTasksData(GetDataEvent $event)
     {
         $options = $event->getOptions() ? $event->getOptions() : [];

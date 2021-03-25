@@ -19,9 +19,6 @@ class AbilitySerializer
     use SerializerTrait;
 
     /**
-     * @param Ability $ability
-     * @param array   $options
-     *
      * @return array
      */
     public function serialize(Ability $ability, array $options = [])

@@ -17,6 +17,8 @@ use UJM\ExoBundle\Library\Model\ScoreTrait;
  */
 class GridRow implements AnswerPartInterface
 {
+    use ScoreTrait;
+    use FeedbackTrait;
     /**
      * Unique identifier of the row.
      *
@@ -27,10 +29,6 @@ class GridRow implements AnswerPartInterface
      * @var int
      */
     private $id;
-
-    use ScoreTrait;
-
-    use FeedbackTrait;
 
     /**
      * If set to true the items order in answer must match the order set by the author.
@@ -141,8 +139,7 @@ class GridRow implements AnswerPartInterface
     /**
      * Add item.
      *
-     * @param GridItem $item
-     * @param int      $order
+     * @param int $order
      */
     public function addItem(GridItem $item, $order = null)
     {
@@ -158,8 +155,6 @@ class GridRow implements AnswerPartInterface
 
     /**
      * Remove item.
-     *
-     * @param GridItem $item
      */
     public function removeItem(GridItem $item)
     {
@@ -183,8 +178,6 @@ class GridRow implements AnswerPartInterface
 
     /**
      * Set question.
-     *
-     * @param PairQuestion $pairQuestion
      */
     public function setQuestion(PairQuestion $pairQuestion)
     {

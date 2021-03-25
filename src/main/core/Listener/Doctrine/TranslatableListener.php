@@ -11,8 +11,8 @@
 
 namespace Claroline\CoreBundle\Listener\Doctrine;
 
-use Gedmo\Translatable\TranslatableListener as BaseListener;
 use Doctrine\Common\EventArgs;
+use Gedmo\Translatable\TranslatableListener as BaseListener;
 
 class TranslatableListener extends BaseListener
 {
@@ -50,7 +50,7 @@ class TranslatableListener extends BaseListener
                 }
                 // update translation
                 if ($this->isTranslatable($translated, $config, $field)) {
-                    if ($translated !== '') {
+                    if ('' !== $translated) {
                         $ea->setTranslationValue($object, $field, $translated);
                         // ensure clean changeset
                         $ea->setOriginalObjectProperty(

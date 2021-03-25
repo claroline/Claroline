@@ -33,11 +33,6 @@ class SavedSearchController extends AbstractApiController
 
     /**
      * SavedSearchController constructor.
-     *
-     * @param ObjectManager      $om
-     * @param SerializerProvider $serializer
-     * @param FinderProvider     $finder
-     * @param Crud               $crud
      */
     public function __construct(
         ObjectManager $om,
@@ -56,7 +51,6 @@ class SavedSearchController extends AbstractApiController
      *
      * @Route("/{list}", name="apiv2_saved_search_list", methods={"GET"})
      *
-     * @param User   $currentUser
      * @param string $list
      *
      * @return JsonResponse
@@ -81,9 +75,7 @@ class SavedSearchController extends AbstractApiController
      *
      * @Route("/{list}", name="apiv2_saved_search_create", methods={"GET"})
      *
-     * @param User    $currentUser
-     * @param string  $list
-     * @param Request $request
+     * @param string $list
      *
      * @return JsonResponse
      */

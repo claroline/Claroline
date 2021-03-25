@@ -140,7 +140,6 @@ class EventRepository extends EntityRepository
     }
 
     /**
-     * @param User $user
      * @param bool $isTask
      *
      * @return array

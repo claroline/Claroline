@@ -19,8 +19,6 @@ class ChoiceQuestionSerializer
 
     /**
      * ChoiceQuestionSerializer constructor.
-     *
-     * @param ContentSerializer $contentSerializer
      */
     public function __construct(ContentSerializer $contentSerializer)
     {
@@ -34,9 +32,6 @@ class ChoiceQuestionSerializer
 
     /**
      * Converts a Choice question into a JSON-encodable structure.
-     *
-     * @param ChoiceQuestion $choiceQuestion
-     * @param array          $options
      *
      * @return array
      */
@@ -70,7 +65,6 @@ class ChoiceQuestionSerializer
      *
      * @param array          $data
      * @param ChoiceQuestion $choiceQuestion
-     * @param array          $options
      *
      * @return ChoiceQuestion
      */
@@ -94,9 +88,6 @@ class ChoiceQuestionSerializer
      * Shuffles and serializes the Question choices.
      * To avoid shuffling, set `$options['randomize']` to false (eg. we don't want shuffle for papers).
      *
-     * @param ChoiceQuestion $choiceQuestion
-     * @param array          $options
-     *
      * @return array
      */
     private function serializeChoices(ChoiceQuestion $choiceQuestion, array $options = [])
@@ -112,11 +103,6 @@ class ChoiceQuestionSerializer
 
     /**
      * Deserializes Question choices.
-     *
-     * @param ChoiceQuestion $choiceQuestion
-     * @param array          $choices
-     * @param array          $solutions
-     * @param array          $options
      */
     private function deserializeChoices(ChoiceQuestion $choiceQuestion, array $choices, array $solutions, array $options = [])
     {
@@ -171,8 +157,6 @@ class ChoiceQuestionSerializer
 
     /**
      * Serializes Question solutions.
-     *
-     * @param ChoiceQuestion $choiceQuestion
      *
      * @return array
      */

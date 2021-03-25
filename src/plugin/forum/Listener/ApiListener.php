@@ -13,17 +13,11 @@ class ApiListener
     /** @var ForumManager */
     private $manager;
 
-    /**
-     * @param ForumManager $manager
-     */
     public function __construct(ForumManager $manager)
     {
         $this->manager = $manager;
     }
 
-    /**
-     * @param MergeUsersEvent $event
-     */
     public function onMerge(MergeUsersEvent $event)
     {
         // Replace user of Subject nodes

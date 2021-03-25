@@ -22,11 +22,11 @@ class LogWorkspaceDeleteEvent extends LogGenericEvent
     {
         parent::__construct(
             self::ACTION,
-            array(
-                'workspace' => array(
+            [
+                'workspace' => [
                     'name' => $workspace->getName(),
-                ),
-            ),
+                ],
+            ],
             null,
             null,
             null,
@@ -40,6 +40,6 @@ class LogWorkspaceDeleteEvent extends LogGenericEvent
      */
     public static function getRestriction()
     {
-        return array(self::DISPLAYED_ADMIN);
+        return [self::DISPLAYED_ADMIN];
     }
 }

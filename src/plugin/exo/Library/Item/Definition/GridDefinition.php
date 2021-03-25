@@ -39,10 +39,6 @@ class GridDefinition extends AbstractDefinition
 
     /**
      * PairDefinition constructor.
-     *
-     * @param GridQuestionValidator  $validator
-     * @param GridAnswerValidator    $answerValidator
-     * @param GridQuestionSerializer $serializer
      */
     public function __construct(
         GridQuestionValidator $validator,
@@ -481,8 +477,6 @@ class GridDefinition extends AbstractDefinition
     }
 
     /**
-     * @param Cell $cell
-     *
      * @return CellChoice|null
      */
     private function findCellExpectedAnswer(Cell $cell)

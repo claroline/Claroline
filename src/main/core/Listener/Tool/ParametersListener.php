@@ -15,9 +15,6 @@ use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 
 class ParametersListener
 {
-    /**
-     * @param OpenToolEvent $event
-     */
     public function onDisplayDesktopParameters(OpenToolEvent $event)
     {
         $event->setData([]);

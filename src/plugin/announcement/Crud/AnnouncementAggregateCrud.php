@@ -12,17 +12,12 @@ class AnnouncementAggregateCrud
 
     /**
      * AnnouncementAggregateCrud constructor.
-     *
-     * @param Crud $crud
      */
     public function __construct(Crud $crud)
     {
         $this->crud = $crud;
     }
 
-    /**
-     * @param DeleteEvent $event
-     */
     public function preDelete(DeleteEvent $event)
     {
         $aggregate = $event->getObject();

@@ -23,8 +23,6 @@ class AdminToolFinder extends AbstractFinder
 
     /**
      * AdminToolFinder constructor.
-     *
-     * @param PluginManager $pluginManager
      */
     public function __construct(PluginManager $pluginManager)
     {

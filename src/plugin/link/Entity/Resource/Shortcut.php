@@ -35,8 +35,6 @@ class Shortcut extends AbstractResource
 
     /**
      * Sets the target of the shortcut.
-     *
-     * @param ResourceNode $target
      */
     public function setTarget(ResourceNode $target)
     {

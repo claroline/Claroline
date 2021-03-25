@@ -32,9 +32,6 @@ class CommentActionController extends Controller
      * )
      * @Template()
      *
-     * @param ResourceNode $resource
-     * @param User         $user
-     *
      * @return array
      */
     public function viewAction(ResourceNode $resource, User $user)
@@ -51,8 +48,7 @@ class CommentActionController extends Controller
      * @ParamConverter("user", options={"authenticatedUser" = true})
      * @Template()
      *
-     * @param int  $resourceId
-     * @param User $user
+     * @param int $resourceId
      *
      * @return array
      */
@@ -70,7 +66,6 @@ class CommentActionController extends Controller
      * @ParamConverter("user", options={"authenticatedUser" = true})
      *
      * @param $resourceId
-     * @param User $user
      *
      * @return bool
      */
@@ -118,7 +113,6 @@ class CommentActionController extends Controller
      * @ParamConverter("user", options={"authenticatedUser" = true})
      *
      * @param $id
-     * @param User $user
      *
      * @return JsonResponse
      */

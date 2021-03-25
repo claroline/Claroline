@@ -35,8 +35,6 @@ abstract class AbstractWidget
 
     /**
      * Set widget instance.
-     *
-     * @param WidgetInstance $widgetInstance
      */
     public function setWidgetInstance(WidgetInstance $widgetInstance)
     {

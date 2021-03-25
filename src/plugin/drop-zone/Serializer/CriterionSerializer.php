@@ -12,8 +12,6 @@ class CriterionSerializer
 
     /**
      * CriterionSerializer constructor.
-     *
-     * @param ObjectManager $om
      */
     public function __construct(ObjectManager $om)
     {
@@ -27,8 +25,6 @@ class CriterionSerializer
     }
 
     /**
-     * @param Criterion $criterion
-     *
      * @return array
      */
     public function serialize(Criterion $criterion)

@@ -23,8 +23,6 @@ class MessageFinder extends AbstractFinder
 
     /**
      * MessageFinder constructor.
-     *
-     * @param TokenStorageInterface $tokenStorage
      */
     public function __construct(TokenStorageInterface $tokenStorage)
     {

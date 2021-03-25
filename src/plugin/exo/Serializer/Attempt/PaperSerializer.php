@@ -29,9 +29,6 @@ class PaperSerializer
 
     /**
      * PaperSerializer constructor.
-     *
-     * @param UserSerializer   $userSerializer
-     * @param AnswerSerializer $answerSerializer
      */
     public function __construct(UserSerializer $userSerializer, AnswerSerializer $answerSerializer)
     {
@@ -46,9 +43,6 @@ class PaperSerializer
 
     /**
      * Converts a Paper into a JSON-encodable structure.
-     *
-     * @param Paper $paper
-     * @param array $options
      *
      * @return array
      */
@@ -87,7 +81,6 @@ class PaperSerializer
      *
      * @param array $data
      * @param Paper $paper
-     * @param array $options
      *
      * @return Paper
      */
@@ -122,9 +115,6 @@ class PaperSerializer
 
     /**
      * Serializes paper answers.
-     *
-     * @param Paper $paper
-     * @param array $options
      *
      * @return array
      */

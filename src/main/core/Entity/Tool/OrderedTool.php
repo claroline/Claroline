@@ -137,9 +137,6 @@ class OrderedTool
         return $this->tool->getName();
     }
 
-    /**
-     * @param Workspace|null $ws
-     */
     public function setWorkspace(Workspace $ws = null)
     {
         $this->workspace = $ws;
@@ -153,9 +150,6 @@ class OrderedTool
         return $this->workspace;
     }
 
-    /**
-     * @param Tool $tool
-     */
     public function setTool(Tool $tool)
     {
         $this->tool = $tool;
@@ -185,9 +179,6 @@ class OrderedTool
         return $this->order;
     }
 
-    /**
-     * @param User|null $user
-     */
     public function setUser(User $user = null)
     {
         $this->user = $user;
@@ -209,9 +200,6 @@ class OrderedTool
         return $this->rights;
     }
 
-    /**
-     * @param ToolRights $right
-     */
     public function addRight(ToolRights $right)
     {
         if (!$this->rights->contains($right)) {
@@ -219,9 +207,6 @@ class OrderedTool
         }
     }
 
-    /**
-     * @param ToolRights $right
-     */
     public function removeRight(ToolRights $right)
     {
         if ($this->rights->contains($right)) {

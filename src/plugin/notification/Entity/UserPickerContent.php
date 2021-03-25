@@ -6,7 +6,7 @@ class UserPickerContent
 {
     private $originalText = '';
     private $finalText = '';
-    private $userIds = array();
+    private $userIds = [];
 
     public function __construct($text)
     {

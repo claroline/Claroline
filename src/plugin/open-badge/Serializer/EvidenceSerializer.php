@@ -25,10 +25,6 @@ class EvidenceSerializer
 
     /**
      * EvidenceSerializer constructor.
-     *
-     * @param RouterInterface        $router
-     * @param ResourceNodeSerializer $resourceNodeSerializer
-     * @param WorkspaceSerializer    $workspaceSerializer
      */
     public function __construct(
         RouterInterface $router,
@@ -52,9 +48,6 @@ class EvidenceSerializer
 
     /**
      * Serializes a Assertion entity.
-     *
-     * @param Evidence $evidence
-     * @param array    $options
      *
      * @return array
      */
@@ -89,9 +82,7 @@ class EvidenceSerializer
     /**
      * Deserializes a Evidence entity.
      *
-     * @param array    $data
      * @param Evidence $evidence
-     * @param array    $options
      *
      * @return Evidence
      */

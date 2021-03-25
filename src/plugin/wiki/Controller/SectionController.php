@@ -33,10 +33,6 @@ class SectionController
 
     /**
      * SectionController constructor.
-     *
-     * @param FinderProvider                $finder
-     * @param SectionManager                $sectionManager
-     * @param AuthorizationCheckerInterface $authorization
      */
     public function __construct(
         FinderProvider $finder,
@@ -62,7 +58,6 @@ class SectionController
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      *
-     * @param Wiki $wiki
      * @param User $user
      *
      * @return JsonResponse
@@ -86,9 +81,6 @@ class SectionController
      *     class="IcapWikiBundle:Section",
      *     options={"mapping": {"id": "uuid"}}
      * )
-     *
-     * @param Section $section
-     * @param Request $request
      *
      * @return JsonResponse
      */
@@ -114,10 +106,6 @@ class SectionController
      *     options={"mapping": {"id": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @param Section $section
-     * @param User    $user
-     * @param Request $request
      *
      * @return JsonResponse
      */
@@ -146,10 +134,6 @@ class SectionController
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      *
-     * @param Section $section
-     * @param User    $user
-     * @param Request $request
-     *
      * @return JsonResponse
      */
     public function updateAction(Section $section, User $user, Request $request)
@@ -176,10 +160,6 @@ class SectionController
      *     options={"mapping": {"wikiId": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @param Wiki    $wiki
-     * @param User    $user
-     * @param Request $request
      *
      * @return JsonResponse
      */
@@ -208,9 +188,6 @@ class SectionController
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      *
-     * @param Wiki    $wiki
-     * @param Request $request
-     *
      * @return JsonResponse
      */
     public function restoreAction(Wiki $wiki, Request $request)
@@ -229,9 +206,6 @@ class SectionController
      *     class="IcapWikiBundle:Wiki",
      *     options={"mapping": {"wikiId": "uuid"}}
      * )
-     *
-     * @param Wiki    $wiki
-     * @param Request $request
      *
      * @return JsonResponse
      */

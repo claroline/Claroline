@@ -20,8 +20,6 @@ class GridQuestionSerializer
 
     /**
      * GridQuestionSerializer constructor.
-     *
-     * @param CellChoiceSerializer $cellChoiceSerializer
      */
     public function __construct(CellChoiceSerializer $cellChoiceSerializer)
     {
@@ -35,9 +33,6 @@ class GridQuestionSerializer
 
     /**
      * Converts a Grid question into a JSON-encodable structure.
-     *
-     * @param GridQuestion $gridQuestion
-     * @param array        $options
      *
      * @return array
      */
@@ -60,14 +55,11 @@ class GridQuestionSerializer
     }
 
     /**
-     * @param GridQuestion $gridQuestion
-     * @param array        $options
-     *
      * @return array
      */
     private function serializeCells(GridQuestion $gridQuestion, array $options = [])
     {
-        return array_map(function (Cell $cell) use ($options) {
+        return array_map(function (Cell $cell) {
             $cellData = [
                 'id' => $cell->getUuid(),
                 'background' => $cell->getBackground(),
@@ -81,7 +73,7 @@ class GridQuestionSerializer
             // add a list of choice if needed
             if ($cell->isSelector()) {
                 // We want to render a list of choices
-                $cellData['choices'] = array_map(function (CellChoice $choice) use ($cellData) {
+                $cellData['choices'] = array_map(function (CellChoice $choice) {
                     return $choice->getText();
                 }, $cell->getChoices()->toArray());
             } else {
@@ -93,9 +85,6 @@ class GridQuestionSerializer
     }
 
     /**
-     * @param GridQuestion $gridQuestion
-     * @param array        $options
-     *
      * @return array
      */
     private function serializeSolutions(GridQuestion $gridQuestion, array $options = [])
@@ -126,7 +115,6 @@ class GridQuestionSerializer
      *
      * @param array        $data
      * @param GridQuestion $gridQuestion
-     * @param array        $options
      *
      * @return GridQuestion
      */
@@ -153,11 +141,6 @@ class GridQuestionSerializer
 
     /**
      * Deserializes Question cells.
-     *
-     * @param GridQuestion $gridQuestion
-     * @param array        $cells
-     * @param array        $solutions
-     * @param array        $options
      */
     private function deserializeCells(GridQuestion $gridQuestion, array $cells, array $solutions, array $options = [])
     {

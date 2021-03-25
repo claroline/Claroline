@@ -29,8 +29,6 @@ class ConnectionMessageController extends AbstractCrudController
 
     /**
      * ConnectionMessageController constructor.
-     *
-     * @param ConnectionMessageManager $manager
      */
     public function __construct(ConnectionMessageManager $manager)
     {
@@ -62,9 +60,6 @@ class ConnectionMessageController extends AbstractCrudController
      *     options={"mapping": {"id": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @param ConnectionMessage $message
-     * @param User              $user
      *
      * @return JsonResponse
      */

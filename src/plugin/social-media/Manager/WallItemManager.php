@@ -31,9 +31,6 @@ class WallItemManager
      */
     protected $wallItemRepository;
 
-    /**
-     * @param EntityManager $em
-     */
     public function __construct(EntityManager $em)
     {
         $this->em = $em;

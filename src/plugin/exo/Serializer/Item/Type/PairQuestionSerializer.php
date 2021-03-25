@@ -21,8 +21,6 @@ class PairQuestionSerializer
 
     /**
      * PairQuestionSerializer constructor.
-     *
-     * @param ContentSerializer $contentSerializer
      */
     public function __construct(ContentSerializer $contentSerializer)
     {
@@ -36,9 +34,6 @@ class PairQuestionSerializer
 
     /**
      * Converts a Match question into a JSON-encodable structure.
-     *
-     * @param PairQuestion $pairQuestion
-     * @param array        $options
      *
      * @return array
      */
@@ -107,7 +102,6 @@ class PairQuestionSerializer
      *
      * @param array        $data
      * @param PairQuestion $pairQuestion
-     * @param array        $options
      *
      * @return PairQuestion
      */
@@ -263,8 +257,6 @@ class PairQuestionSerializer
     }
 
     /**
-     * @param PairQuestion $pairQuestion
-     *
      * @return array
      */
     private function serializeSolutions(PairQuestion $pairQuestion)

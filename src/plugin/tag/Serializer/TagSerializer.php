@@ -26,9 +26,6 @@ class TagSerializer
 
     /**
      * TagSerializer constructor.
-     *
-     * @param ObjectManager  $om
-     * @param UserSerializer $userSerializer
      */
     public function __construct(
         ObjectManager $om,
@@ -52,11 +49,6 @@ class TagSerializer
 
     /**
      * Serializes a Tag entity into a serializable array.
-     *
-     * @param Tag   $tag
-     * @param array $options
-     *
-     * @return array
      */
     public function serialize(Tag $tag, array $options = []): array
     {
@@ -83,11 +75,6 @@ class TagSerializer
 
     /**
      * Deserializes tag data into an Entity.
-     *
-     * @param array $data
-     * @param Tag   $tag
-     *
-     * @return Tag
      */
     public function deserialize(array $data, Tag $tag): Tag
     {

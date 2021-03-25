@@ -43,11 +43,6 @@ class LogController
 
     /**
      * LogController constructor.
-     *
-     * @param AuthorizationCheckerInterface $authorizationChecker
-     * @param FinderProvider                $finder
-     * @param LogSerializer                 $serializer
-     * @param LogManager                    $logManager
      */
     public function __construct(
         AuthorizationCheckerInterface $authorizationChecker,
@@ -80,9 +75,6 @@ class LogController
      * @Route("/", name="apiv2_workspace_tool_logs_list", methods={"GET"})
      * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspaceId": "uuid"}})
      *
-     * @param Request   $request
-     * @param Workspace $workspace
-     *
      * @return JsonResponse
      */
     public function listAction(Request $request, Workspace $workspace)
@@ -99,9 +91,6 @@ class LogController
     /**
      * @Route("/csv", name="apiv2_workspace_tool_logs_list_csv", methods={"GET"})
      * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspaceId": "uuid"}})
-     *
-     * @param Request   $request
-     * @param Workspace $workspace
      *
      * @return StreamedResponse
      */
@@ -125,9 +114,6 @@ class LogController
      * @Route("/users/csv", name="apiv2_workspace_tool_logs_list_users_csv", methods={"GET"})
      * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspaceId": "uuid"}})
      *
-     * @param Request   $request
-     * @param Workspace $workspace
-     *
      * @return StreamedResponse
      */
     public function userActionsListCsvAction(Request $request, Workspace $workspace)
@@ -149,9 +135,6 @@ class LogController
     /**
      * Add workspace filter to request.
      *
-     * @param Request   $request
-     * @param Workspace $workspace
-     *
      * @return array
      */
     private function getWorkspaceFilteredQuery(Request $request, Workspace $workspace)
@@ -165,8 +148,6 @@ class LogController
 
     /**
      * Checks user rights to access logs tool.
-     *
-     * @param Workspace $workspace
      */
     private function checkLogToolAccess(Workspace $workspace)
     {

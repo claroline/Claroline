@@ -30,8 +30,6 @@ class LikeActionController extends Controller
 
     /**
      * LikeActionController constructor.
-     *
-     * @param ResourceNodeSerializer $serializer
      */
     public function __construct(ResourceNodeSerializer $serializer)
     {
@@ -43,8 +41,7 @@ class LikeActionController extends Controller
      * @ParamConverter("user", options={"authenticatedUser" = true})
      * @Template()
      *
-     * @param int  $resourceId
-     * @param User $user
+     * @param int $resourceId
      *
      * @return array
      */
@@ -62,9 +59,6 @@ class LikeActionController extends Controller
     /**
      * @Route("/like", name="icap_socialmedia_like", options={"expose"=true}, methods={"POST"})
      * @ParamConverter("user", options={"authenticatedUser" = true})
-     *
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param User                                      $user
      *
      * @return JsonResponse
      */
@@ -84,9 +78,6 @@ class LikeActionController extends Controller
      * @Route("/unlike", name="icap_socialmedia_unlike", options={"expose"=true})
      * @ParamConverter("user", options={"authenticatedUser" = true})
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param User                                      $user
-     *
      * @return JsonResponse
      */
     public function unlikeAction(Request $request, User $user)
@@ -105,7 +96,6 @@ class LikeActionController extends Controller
     /**
      * @Route("/like/list/{page}", name="icap_socialmedia_likelist", defaults={"page" = "1"}, methods={"GET"})
      *
-     * @param Request $request
      * @Template()
      *
      * @param $page

@@ -20,9 +20,6 @@ class SavedSearchSerializer
 
     /**
      * SavedSearchSerializer constructor.
-     *
-     * @param ObjectManager  $om
-     * @param UserSerializer $userSerializer
      */
     public function __construct(ObjectManager $om, UserSerializer $userSerializer)
     {
@@ -43,9 +40,6 @@ class SavedSearchSerializer
     /**
      * Serializes a SavedSearch entity.
      *
-     * @param SavedSearch $savedSearch
-     * @param array       $options
-     *
      * @return array
      */
     public function serialize(SavedSearch $savedSearch, array $options = [])
@@ -61,9 +55,7 @@ class SavedSearchSerializer
     /**
      * Deserializes data into a SavedSearch entity.
      *
-     * @param array       $data
-     * @param SavedSearch $savedSearch
-     * @param array       $options
+     * @param array $data
      *
      * @return SavedSearch
      */

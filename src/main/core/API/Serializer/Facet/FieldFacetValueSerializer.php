@@ -22,9 +22,6 @@ class FieldFacetValueSerializer
 
     /**
      * FieldFacetValueSerializer constructor.
-     *
-     * @param FieldFacetSerializer $fieldFacetSerializer
-     * @param ContainerInterface   $container
      */
     public function __construct(
         FieldFacetSerializer $fieldFacetSerializer,
@@ -71,9 +68,7 @@ class FieldFacetValueSerializer
     /**
      * Deserializes a FieldFacetValue entity for the JSON api.
      *
-     * @param array                $data
-     * @param FieldFacetValue|null $fieldFacetValue
-     * @param array                $options         - a list of serialization options
+     * @param array $options - a list of serialization options
      *
      * @return FieldFacetValue
      */

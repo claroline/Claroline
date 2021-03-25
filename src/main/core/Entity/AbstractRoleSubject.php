@@ -25,8 +25,6 @@ abstract class AbstractRoleSubject
     /**
      * Adds a role to the subject role collection. This method effectively add
      * the role only if it isn't in the collection yet.
-     *
-     * @param Role $role
      */
     public function addRole(Role $role)
     {
@@ -37,8 +35,6 @@ abstract class AbstractRoleSubject
 
     /**
      * Removes a role from the subject role collection.
-     *
-     * @param Role $role
      */
     public function removeRole(Role $role)
     {

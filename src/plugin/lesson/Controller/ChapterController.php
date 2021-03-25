@@ -211,7 +211,7 @@ class ChapterController
 
         $fileName = TextNormalizer::toKey($lesson->getResourceNode()->getName().'-'.$chapter->getTitle());
 
-        return new StreamedResponse(function () use ($domPdf, $fileName) {
+        return new StreamedResponse(function () use ($domPdf) {
             echo $domPdf->output();
         }, 200, [
             'Content-Type' => 'application/pdf',

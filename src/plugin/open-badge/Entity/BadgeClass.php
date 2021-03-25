@@ -32,7 +32,6 @@ class BadgeClass
     // identifiers
     use Id;
     use Uuid;
-
     // meta
     use Color;
 

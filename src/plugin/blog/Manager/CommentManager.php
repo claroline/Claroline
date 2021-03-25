@@ -24,13 +24,6 @@ class CommentManager
     protected $memberRepo;
     private $trackingManager;
 
-    /**
-     * @param ObjectManager       $om
-     * @param CommentRepository   $repo
-     * @param MemberRepository    $memberRepo
-     * @param FinderProvider      $finder
-     * @param BlogTrackingManager $trackingManager
-     */
     public function __construct(
         ObjectManager $om,
         CommentRepository $repo,
@@ -47,9 +40,6 @@ class CommentManager
 
     /**
      * Find all content for a given user and the replace him by another.
-     *
-     * @param User $from
-     * @param User $to
      *
      * @return int
      */
@@ -172,10 +162,7 @@ class CommentManager
     /**
      * Create a post comment.
      *
-     * @param Blog    $blog
-     * @param Post    $post
-     * @param Comment $comment
-     * @param bool    $forcePublication
+     * @param bool $forcePublication
      *
      * @return Comment
      */
@@ -213,8 +200,6 @@ class CommentManager
     /**
      * Update a comment.
      *
-     * @param Blog    $blog
-     * @param Comment $existingComment
      * @param $message
      *
      * @return Comment
@@ -242,9 +227,6 @@ class CommentManager
     /**
      * Publish a comment.
      *
-     * @param Blog    $blog
-     * @param Comment $existingComment
-     *
      * @return Comment
      */
     public function publishComment(Blog $blog, Comment $existingComment)
@@ -266,9 +248,6 @@ class CommentManager
     /**
      * Add a trusted member to the blog, can write comment without verification from a moderator.
      *
-     * @param Blog $blog
-     * @param User $user
-     *
      * @return Member
      */
     private function addTrustedMember(Blog $blog, User $user)
@@ -286,9 +265,6 @@ class CommentManager
 
     /**
      * Add a banned member to the blog, cannot write comment.
-     *
-     * @param Blog $blog
-     * @param User $user
      *
      * @return Member
      */
@@ -308,7 +284,6 @@ class CommentManager
     /**
      * Report a comment.
      *
-     * @param Blog    $blog
      * @param Comment $comment
      * @param User    $user
      *
@@ -325,7 +300,6 @@ class CommentManager
     /**
      * unpublish a comment.
      *
-     * @param Blog    $blog
      * @param Comment $comment
      * @param User    $user
      *
@@ -344,7 +318,6 @@ class CommentManager
     /**
      * Delete a comment.
      *
-     * @param Blog $blog
      * @param User $user
      *
      * @return Comment

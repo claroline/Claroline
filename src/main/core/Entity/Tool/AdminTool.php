@@ -47,9 +47,6 @@ class AdminTool extends AbstractTool
         $this->roles = new ArrayCollection();
     }
 
-    /**
-     * @param Role $role
-     */
     public function addRole(Role $role)
     {
         if (!$this->roles->contains($role)) {
@@ -57,9 +54,6 @@ class AdminTool extends AbstractTool
         }
     }
 
-    /**
-     * @param Role $role
-     */
     public function removeRole(Role $role)
     {
         if ($this->roles->contains($role)) {

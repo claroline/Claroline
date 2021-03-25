@@ -15,8 +15,6 @@ class GridQuestionValidator extends JsonSchemaValidator
 
     /**
      * WordsQuestionValidator constructor.
-     *
-     * @param KeywordValidator $keywordValidator
      */
     public function __construct(KeywordValidator $keywordValidator)
     {
@@ -32,7 +30,6 @@ class GridQuestionValidator extends JsonSchemaValidator
      * Performs additional validations.
      *
      * @param array $question
-     * @param array $options
      *
      * @return array
      */
@@ -49,8 +46,6 @@ class GridQuestionValidator extends JsonSchemaValidator
 
     /**
      * Validates the solution of the question.
-     *
-     * @param array $question
      *
      * @return array
      */

@@ -9,8 +9,6 @@ trait GroupsTrait
 {
     /**
      * Add an group.
-     *
-     * @param Group $group
      */
     public function addGroup(Group $group)
     {
@@ -21,9 +19,6 @@ trait GroupsTrait
         }
     }
 
-    /**
-     * @param Group $group
-     */
     public function hasGroup(Group $group)
     {
         $this->hasGroupsProperty();
@@ -33,8 +28,6 @@ trait GroupsTrait
 
     /**
      * Removes an group.
-     *
-     * @param Group $group
      */
     public function removeGroup(Group $group)
     {

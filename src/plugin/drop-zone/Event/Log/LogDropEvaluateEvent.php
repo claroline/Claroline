@@ -12,9 +12,7 @@ class LogDropEvaluateEvent extends AbstractLogResourceEvent
     const ACTION = 'resource-claroline_dropzone-drop_evaluate';
 
     /**
-     * @param Dropzone $dropzone
-     * @param Drop     $drop
-     * @param string   $grade
+     * @param string $grade
      */
     public function __construct(Dropzone $dropzone, Drop $drop, $grade)
     {

@@ -23,7 +23,7 @@ class LogSocialmediaCommentEvent extends AbstractLogResourceEvent implements Not
 
     public function __construct(CommentAction $comment, $userIds)
     {
-        $this->details = array();
+        $this->details = [];
         $this->userIds = $userIds;
 
         parent::__construct($comment->getResource(), $this->details);
@@ -61,7 +61,7 @@ class LogSocialmediaCommentEvent extends AbstractLogResourceEvent implements Not
      */
     public function getExcludeUserIds()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -92,12 +92,12 @@ class LogSocialmediaCommentEvent extends AbstractLogResourceEvent implements Not
     public function getNotificationDetails()
     {
         $resource = $this->getResource();
-        $notificationDetails = array_merge($this->details, array());
-        $notificationDetails['resource'] = array(
+        $notificationDetails = array_merge($this->details, []);
+        $notificationDetails['resource'] = [
             'id' => $resource->getId(),
             'name' => $resource->getName(),
             'type' => $resource->getResourceType()->getName(),
-        );
+        ];
 
         return $notificationDetails;
     }
@@ -117,6 +117,6 @@ class LogSocialmediaCommentEvent extends AbstractLogResourceEvent implements Not
      */
     public static function getRestriction()
     {
-        return array(self::DISPLAYED_WORKSPACE);
+        return [self::DISPLAYED_WORKSPACE];
     }
 }

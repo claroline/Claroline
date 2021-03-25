@@ -32,9 +32,6 @@ class RevisionCommentSerializer
 
     /**
      * RevisionCommentSerializer constructor.
-     *
-     * @param ObjectManager      $om
-     * @param SerializerProvider $serializer
      */
     public function __construct(ObjectManager $om, SerializerProvider $serializer)
     {
@@ -50,9 +47,6 @@ class RevisionCommentSerializer
     }
 
     /**
-     * @param RevisionComment $comment
-     * @param array           $options
-     *
      * @return array
      */
     public function serialize(RevisionComment $comment, array $options = [])
@@ -75,8 +69,7 @@ class RevisionCommentSerializer
     }
 
     /**
-     * @param array           $data
-     * @param RevisionComment $comment
+     * @param array $data
      *
      * @return RevisionComment
      */

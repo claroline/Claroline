@@ -61,8 +61,6 @@ class Validator
 
     /**
      * Constructor.
-     *
-     * @param Walker $walker
      */
     public function __construct(Walker $walker)
     {
@@ -77,7 +75,6 @@ class Validator
      * @param mixed    $instance
      * @param stdClass $schema
      * @param string   $schemaUri
-     * @param array    $options
      *
      * @return array
      */

@@ -37,11 +37,6 @@ class GroupListener
 
     /**
      * RuleListener constructor.
-     *
-     * @param ObjectManager         $om
-     * @param TranslatorInterface   $translator
-     * @param TokenStorageInterface $tokenStorage
-     * @param RuleManager           $manager
      */
     public function __construct(
         ObjectManager $om,
@@ -55,9 +50,6 @@ class GroupListener
         $this->manager = $manager;
     }
 
-    /**
-     * @param PatchEvent $event
-     */
     public function onUserPatch(PatchEvent $event)
     {
         if (Crud::COLLECTION_ADD === $event->getAction() && 'group' === $event->getProperty()) {
@@ -70,9 +62,6 @@ class GroupListener
         }
     }
 
-    /**
-     * @param PatchEvent $event
-     */
     public function onGroupPatch(PatchEvent $event)
     {
         if (Crud::COLLECTION_ADD === $event->getAction() && 'user' === $event->getProperty()) {

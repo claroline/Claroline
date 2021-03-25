@@ -13,12 +13,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class AudioParams
 {
+    use Uuid;
+    use Description;
     const MANAGER_TYPE = 'manager';
     const USER_TYPE = 'user';
     const NO_TYPE = 'none';
-
-    use Uuid;
-    use Description;
 
     /**
      * @ORM\Id

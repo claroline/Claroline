@@ -18,6 +18,8 @@ namespace Claroline\CoreBundle\Library\Installation;
 interface PackageInterface
 {
     public function getName();
+
     public function getVersion();
+
     public function isUpgraded();
 }

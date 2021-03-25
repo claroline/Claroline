@@ -62,8 +62,6 @@ class GraphicQuestion extends AbstractItem
 
     /**
      * Sets image.
-     *
-     * @param Image $image
      */
     public function setImage(Image $image)
     {
@@ -82,8 +80,6 @@ class GraphicQuestion extends AbstractItem
 
     /**
      * Adds an area.
-     *
-     * @param Area $area
      */
     public function addArea(Area $area)
     {
@@ -95,8 +91,6 @@ class GraphicQuestion extends AbstractItem
 
     /**
      * Removes an area.
-     *
-     * @param Area $area
      */
     public function removeArea(Area $area)
     {

@@ -19,7 +19,7 @@ class CryptographicKeySerializer
 
     public function serialize(CryptographicKey $crypto)
     {
-        return  [
+        return [
             'type' => 'CryptographicKey',
             'id' => $this->router->generate('apiv2_open_badge__profile', ['profile' => $crypto->getOrganization()->getUuid()], UrlGeneratorInterface::ABSOLUTE_URL),
             'publicKeyParam' => $crypto->getPublicKeyParam(),

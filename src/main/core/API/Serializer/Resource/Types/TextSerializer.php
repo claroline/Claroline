@@ -17,9 +17,6 @@ class TextSerializer
 
     /**
      * TextSerializer constructor.
-     *
-     * @param TokenStorageInterface $tokenStorage
-     * @param PlaceholderManager    $placeholderManager
      */
     public function __construct(
         TokenStorageInterface $tokenStorage,
@@ -42,8 +39,6 @@ class TextSerializer
     /**
      * Serializes a Text resource entity for the JSON api.
      *
-     * @param Text $text
-     *
      * @return array
      */
     public function serialize(Text $text)
@@ -60,7 +55,6 @@ class TextSerializer
 
     /**
      * @param array $data
-     * @param Text  $text
      *
      * @return Text
      */

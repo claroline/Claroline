@@ -16,7 +16,6 @@ use UJM\ExoBundle\Library\Model\ScoreTrait;
 class ColorSelection implements AnswerPartInterface
 {
     use ScoreTrait;
-
     use FeedbackTrait;
 
     /**
@@ -54,9 +53,6 @@ class ColorSelection implements AnswerPartInterface
         return $this->selection;
     }
 
-    /**
-     * @param Selection $selection
-     */
     public function setSelection(Selection $selection)
     {
         $this->selection = $selection;

@@ -19,7 +19,6 @@ class ProfileWidgetSerializer
      * WidgetInstanceSerializer constructor.
      *
      * @param TokenStorageInterface $tokenStorage,
-     * @param UserSerializer        $userSerializer
      */
     public function __construct(TokenStorageInterface $tokenStorage, UserSerializer $userSerializer)
     {
@@ -32,9 +31,6 @@ class ProfileWidgetSerializer
         return 'profile_widget';
     }
 
-    /**
-     * @return string
-     */
     public function getClass(): string
     {
         return ProfileWidget::class;

@@ -16,9 +16,6 @@ class LogDropReportEvent extends AbstractLogResourceEvent implements NotifiableI
     private $role_manager;
 
     /**
-     * @param DropZone   $dropzone
-     * @param Drop       $drop
-     * @param Correction $correction
      * @param $roleManager
      */
     public function __construct(Dropzone $dropzone, Drop $drop, Correction $correction, $roleManager)

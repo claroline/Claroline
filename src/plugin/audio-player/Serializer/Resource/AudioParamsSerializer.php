@@ -10,9 +10,6 @@ class AudioParamsSerializer
     use SerializerTrait;
 
     /**
-     * @param AudioParams $audioParams
-     * @param array       $options
-     *
      * @return array
      */
     public function serialize(AudioParams $audioParams, array $options = [])
@@ -26,9 +23,7 @@ class AudioParamsSerializer
     }
 
     /**
-     * @param array       $data
-     * @param AudioParams $audioParams
-     * @param array       $options
+     * @param array $data
      *
      * @return AudioParams
      */

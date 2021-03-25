@@ -33,11 +33,6 @@ class LogController extends AbstractSecurityController
 
     /**
      * LogController constructor.
-     *
-     * @param TokenStorageInterface $tokenStorage
-     * @param FinderProvider        $finder
-     * @param SerializerProvider    $serializer
-     * @param LogManager            $logManager
      */
     public function __construct(
         TokenStorageInterface $tokenStorage,
@@ -69,8 +64,6 @@ class LogController extends AbstractSecurityController
     /**
      * @Route("/", name="apiv2_admin_tool_logs_list", methods={"GET"})
      *
-     * @param Request $request
-     *
      * @return JsonResponse
      */
     public function listAction(Request $request)
@@ -87,8 +80,6 @@ class LogController extends AbstractSecurityController
 
     /**
      * @Route("/csv", name="apiv2_admin_tool_logs_list_csv", methods={"GET"})
-     *
-     * @param Request $request
      *
      * @return StreamedResponse
      */
@@ -109,8 +100,6 @@ class LogController extends AbstractSecurityController
 
     /**
      * @Route("/users/csv", name="apiv2_admin_tool_logs_list_users_csv", methods={"GET"})
-     *
-     * @param Request $request
      *
      * @return StreamedResponse
      */

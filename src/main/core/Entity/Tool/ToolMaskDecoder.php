@@ -27,14 +27,13 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ToolMaskDecoder
 {
+    use Id;
     public static $defaultActions = ['open', 'edit', 'administrate'];
     public static $defaultValues = [
         'open' => 1,
         'edit' => 2,
         'administrate' => 4,
     ];
-
-    use Id;
 
     /**
      * @ORM\Column(type="integer")

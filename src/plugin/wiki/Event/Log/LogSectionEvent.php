@@ -8,10 +8,6 @@ use Icap\WikiBundle\Entity\Wiki;
 
 class LogSectionEvent extends AbstractLogResourceEvent
 {
-    /**
-     * @param Wiki    $wiki
-     * @param Section $section
-     */
     public function __construct($action, Wiki $wiki, Section $section)
     {
         $node = $wiki->getResourceNode();

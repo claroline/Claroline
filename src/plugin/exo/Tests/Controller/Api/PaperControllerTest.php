@@ -275,7 +275,6 @@ class PaperControllerTest extends TransactionalTestCase
      * Checks the export of a paper has the correct format.
      * The paper detail MUST contain the paper itself and the list of used questions.
      *
-     * @param Paper $paper
      * @param $content
      */
     private function assertIsValidPaperDetail(Paper $paper, $content)

@@ -26,10 +26,6 @@ class ItemValidator extends JsonSchemaValidator
 
     /**
      * ItemValidator constructor.
-     *
-     * @param ItemDefinitionsCollection $itemDefinitions
-     * @param HintValidator             $hintValidator
-     * @param ContentValidator          $contentValidator
      */
     public function __construct(
         ItemDefinitionsCollection $itemDefinitions,
@@ -50,7 +46,6 @@ class ItemValidator extends JsonSchemaValidator
      * Delegates the validation to the correct question type handler.
      *
      * @param array $question
-     * @param array $options
      *
      * @return array
      */

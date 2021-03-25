@@ -91,8 +91,6 @@ class WidgetInstance
 
     /**
      * Set widget.
-     *
-     * @param Widget $widget
      */
     public function setWidget(Widget $widget)
     {
@@ -131,8 +129,6 @@ class WidgetInstance
 
     /**
      * Set data source.
-     *
-     * @param DataSource $dataSource
      */
     public function setDataSource(DataSource $dataSource)
     {

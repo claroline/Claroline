@@ -82,9 +82,6 @@ abstract class AbstractCompetencyProgress
         return $this->competency;
     }
 
-    /**
-     * @param Competency $competency
-     */
     public function setCompetency(Competency $competency)
     {
         $this->competency = $competency;
@@ -99,9 +96,6 @@ abstract class AbstractCompetencyProgress
         return $this->level;
     }
 
-    /**
-     * @param Level $level
-     */
     public function setLevel(Level $level)
     {
         $this->level = $level;
@@ -116,9 +110,6 @@ abstract class AbstractCompetencyProgress
         return $this->user;
     }
 
-    /**
-     * @param User $user
-     */
     public function setUser(User $user)
     {
         $this->user = $user;

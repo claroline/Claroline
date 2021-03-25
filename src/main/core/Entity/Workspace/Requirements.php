@@ -83,9 +83,6 @@ class Requirements
         return $this->workspace;
     }
 
-    /**
-     * @param Workspace $workspace
-     */
     public function setWorkspace(Workspace $workspace)
     {
         $this->workspace = $workspace;
@@ -131,9 +128,6 @@ class Requirements
         return $this->resources;
     }
 
-    /**
-     * @param ResourceNode $resourceNode
-     */
     public function addResource(ResourceNode $resourceNode)
     {
         if (!$this->resources->contains($resourceNode)) {
@@ -141,9 +135,6 @@ class Requirements
         }
     }
 
-    /**
-     * @param ResourceNode $resourceNode
-     */
     public function removeResource(ResourceNode $resourceNode)
     {
         if ($this->resources->contains($resourceNode)) {

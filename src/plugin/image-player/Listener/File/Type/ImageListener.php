@@ -18,9 +18,6 @@ use Claroline\CoreBundle\Event\Resource\File\LoadFileEvent;
  */
 class ImageListener
 {
-    /**
-     * @param LoadFileEvent $event
-     */
     public function onLoad(LoadFileEvent $event)
     {
         // setting empty data let the dispatcher know there is

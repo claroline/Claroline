@@ -25,9 +25,6 @@ class OrderedToolTransfer implements LoggerAwareInterface
     /** @var ToolSerializer */
     private $toolSerializer;
 
-    /**
-     * @param ToolSerializer $toolSerializer
-     */
     public function __construct(ToolSerializer $toolSerializer, RoleSerializer $roleSerializer, ContainerInterface $container)
     {
         $this->toolSerializer = $toolSerializer;

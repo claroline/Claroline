@@ -35,10 +35,6 @@ class WordsDefinition extends AbstractDefinition
 
     /**
      * WordsDefinition constructor.
-     *
-     * @param WordsQuestionValidator  $validator
-     * @param WordsAnswerValidator    $answerValidator
-     * @param WordsQuestionSerializer $serializer
      */
     public function __construct(
         WordsQuestionValidator $validator,
@@ -148,7 +144,6 @@ class WordsDefinition extends AbstractDefinition
 
     /**
      * @param OpenQuestion $wordsQuestion
-     * @param array        $answersData
      * @param int          $total
      *
      * @return array
@@ -175,8 +170,6 @@ class WordsDefinition extends AbstractDefinition
 
     /**
      * No additional identifier to regenerate.
-     *
-     * @param AbstractItem $item
      */
     public function refreshIdentifiers(AbstractItem $item)
     {

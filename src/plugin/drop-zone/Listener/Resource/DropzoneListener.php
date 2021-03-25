@@ -40,12 +40,6 @@ class DropzoneListener
 
     /**
      * DropzoneListener constructor.
-     *
-     * @param TokenStorageInterface $tokenStorage
-     * @param DropzoneManager       $dropzoneManager
-     * @param SerializerProvider    $serializer
-     * @param TeamManager           $teamManager
-     * @param TranslatorInterface   $translator
      */
     public function __construct(
         TokenStorageInterface $tokenStorage,
@@ -61,9 +55,6 @@ class DropzoneListener
         $this->translator = $translator;
     }
 
-    /**
-     * @param LoadResourceEvent $event
-     */
     public function onLoad(LoadResourceEvent $event)
     {
         /** @var Dropzone $dropzone */
@@ -75,9 +66,6 @@ class DropzoneListener
         $event->stopPropagation();
     }
 
-    /**
-     * @param CopyResourceEvent $event
-     */
     public function onCopy(CopyResourceEvent $event)
     {
         /** @var Dropzone $dropzone */
@@ -89,9 +77,6 @@ class DropzoneListener
         $event->stopPropagation();
     }
 
-    /**
-     * @param DeleteResourceEvent $event
-     */
     public function onDelete(DeleteResourceEvent $event)
     {
         /** @var Dropzone $dropzone */

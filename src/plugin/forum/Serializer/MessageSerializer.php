@@ -32,12 +32,6 @@ class MessageSerializer
 
     /**
      * MessageSerializer constructor.
-     *
-     * @param AbstractMessageSerializer $messageSerializer
-     * @param ObjectManager             $om
-     * @param SubjectSerializer         $subjectSerializer
-     * @param PublicFileSerializer      $fileSerializer
-     * @param ResourceNodeSerializer    $nodeSerializer
      */
     public function __construct(
         AbstractMessageSerializer $messageSerializer,
@@ -82,9 +76,6 @@ class MessageSerializer
     /**
      * Serializes a Message entity.
      *
-     * @param Message $message
-     * @param array   $options
-     *
      * @return array
      */
     public function serialize(Message $message, array $options = [])
@@ -114,9 +105,7 @@ class MessageSerializer
     /**
      * Deserializes data into a Message entity.
      *
-     * @param array   $data
-     * @param Message $message
-     * @param array   $options
+     * @param array $data
      *
      * @return Message
      */

@@ -32,9 +32,6 @@ class DropCommentSerializer
 
     /**
      * DropCommentSerializer constructor.
-     *
-     * @param ObjectManager      $om
-     * @param SerializerProvider $serializer
      */
     public function __construct(ObjectManager $om, SerializerProvider $serializer)
     {
@@ -50,9 +47,6 @@ class DropCommentSerializer
     }
 
     /**
-     * @param DropComment $comment
-     * @param array       $options
-     *
      * @return array
      */
     public function serialize(DropComment $comment, array $options = [])
@@ -75,8 +69,7 @@ class DropCommentSerializer
     }
 
     /**
-     * @param array       $data
-     * @param DropComment $comment
+     * @param array $data
      *
      * @return DropComment
      */

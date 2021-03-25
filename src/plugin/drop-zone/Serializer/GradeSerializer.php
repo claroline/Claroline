@@ -14,8 +14,6 @@ class GradeSerializer
 
     /**
      * GradeSerializer constructor.
-     *
-     * @param ObjectManager $om
      */
     public function __construct(ObjectManager $om)
     {
@@ -30,8 +28,6 @@ class GradeSerializer
     }
 
     /**
-     * @param Grade $grade
-     *
      * @return array
      */
     public function serialize(Grade $grade)

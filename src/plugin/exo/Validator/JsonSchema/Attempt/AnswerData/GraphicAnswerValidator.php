@@ -16,7 +16,6 @@ class GraphicAnswerValidator extends JsonSchemaValidator
      * Performs additional validations.
      *
      * @param \stdClass $answerData
-     * @param array     $options
      *
      * @return array
      */

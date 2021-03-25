@@ -16,6 +16,7 @@ use UJM\ExoBundle\Entity\ItemType\GridQuestion;
  */
 class Cell
 {
+    use Uuid;
     /**
      * Unique identifier of the item.
      *
@@ -26,8 +27,6 @@ class Cell
      * @var int
      */
     private $id;
-
-    use Uuid;
 
     /**
      * Data associated to the cell.

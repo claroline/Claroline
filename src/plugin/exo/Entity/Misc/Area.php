@@ -17,6 +17,9 @@ use UJM\ExoBundle\Library\Model\ScoreTrait;
  */
 class Area implements AnswerPartInterface
 {
+    use FeedbackTrait;
+    use ScoreTrait;
+    use Uuid;
     /**
      * @var int
      *
@@ -25,10 +28,6 @@ class Area implements AnswerPartInterface
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-
-    use FeedbackTrait;
-    use ScoreTrait;
-    use Uuid;
 
     /**
      * @var string

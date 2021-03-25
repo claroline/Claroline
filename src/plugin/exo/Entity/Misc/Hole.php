@@ -16,6 +16,7 @@ use UJM\ExoBundle\Entity\ItemType\ClozeQuestion;
  */
 class Hole
 {
+    use Uuid;
     /**
      * The identifier of the hole.
      *
@@ -26,8 +27,6 @@ class Hole
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-
-    use Uuid;
 
     /**
      * The display size of the hole input.

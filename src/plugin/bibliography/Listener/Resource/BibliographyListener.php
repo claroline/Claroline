@@ -16,9 +16,6 @@ class BibliographyListener
 
     /**
      * BibliographyListener constructor.
-     *
-     * @param ObjectManager      $objectManager
-     * @param SerializerProvider $serializer
      */
     public function __construct(
         ObjectManager $objectManager,
@@ -30,8 +27,6 @@ class BibliographyListener
 
     /**
      * Loads a Bibliography resource.
-     *
-     * @param LoadResourceEvent $event
      */
     public function load(LoadResourceEvent $event)
     {

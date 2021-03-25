@@ -23,9 +23,6 @@ class ScheduledTaskListener
 
     /**
      * ScheduledTaskListener constructor.
-     *
-     * @param MailManager          $mailManager
-     * @param ScheduledTaskManager $taskManager
      */
     public function __construct(
         MailManager $mailManager,
@@ -35,9 +32,6 @@ class ScheduledTaskListener
         $this->taskManager = $taskManager;
     }
 
-    /**
-     * @param GenericDataEvent $event
-     */
     public function onExecuteMailTask(GenericDataEvent $event)
     {
         /** @var ScheduledTask $task */

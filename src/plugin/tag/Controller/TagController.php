@@ -31,8 +31,6 @@ class TagController extends AbstractCrudController
 
     /**
      * TagController constructor.
-     *
-     * @param TagManager $tagManager
      */
     public function __construct(
         TagManager $tagManager
@@ -51,8 +49,7 @@ class TagController extends AbstractCrudController
     }
 
     /**
-     * @param Request $request
-     * @param string  $class
+     * @param string $class
      *
      * @return JsonResponse
      */
@@ -98,9 +95,6 @@ class TagController extends AbstractCrudController
      * @Route("/{id}/object", name="apiv2_tag_list_objects", methods={"GET"})
      * @EXT\ParamConverter("tag", class="ClarolineTagBundle:Tag", options={"mapping": {"id": "uuid"}})
      *
-     * @param Tag     $tag
-     * @param Request $request
-     *
      * @return JsonResponse
      */
     public function listObjectsAction(Tag $tag, Request $request)
@@ -120,9 +114,7 @@ class TagController extends AbstractCrudController
      * @Route("/{tag}/object", name="apiv2_tag_add_objects", methods={"POST"})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      *
-     * @param string  $tag
-     * @param User    $user
-     * @param Request $request
+     * @param string $tag
      *
      * @return JsonResponse
      */
@@ -139,9 +131,6 @@ class TagController extends AbstractCrudController
      * @Route("/{id}/object", name="apiv2_tag_remove_objects", methods={"DELETE"})
      * @EXT\ParamConverter("tag", class="ClarolineTagBundle:Tag", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @param Tag     $tag
-     * @param Request $request
      *
      * @return JsonResponse
      */

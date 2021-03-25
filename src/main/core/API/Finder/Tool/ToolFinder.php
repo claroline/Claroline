@@ -23,8 +23,6 @@ class ToolFinder extends AbstractFinder
 
     /**
      * ToolFinder constructor.
-     *
-     * @param PluginManager $pluginManager
      */
     public function __construct(PluginManager $pluginManager)
     {

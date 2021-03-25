@@ -18,8 +18,6 @@ class WorkspaceTeamParametersSerializer
 
     /**
      * WorkspaceTeamParametersSerializer constructor.
-     *
-     * @param ObjectManager $om
      */
     public function __construct(ObjectManager $om)
     {
@@ -33,8 +31,6 @@ class WorkspaceTeamParametersSerializer
 
     /**
      * Serializes a WorkspaceTeamParameters entity for the JSON api.
-     *
-     * @param WorkspaceTeamParameters $parameters
      *
      * @return array - the serialized representation of the WorkspaceTeamParameters entity
      */
@@ -54,8 +50,7 @@ class WorkspaceTeamParametersSerializer
     }
 
     /**
-     * @param array                   $data
-     * @param WorkspaceTeamParameters $parameters
+     * @param array $data
      *
      * @return WorkspaceTeamParameters
      */

@@ -20,8 +20,6 @@ class GraphicQuestionSerializer
 
     /**
      * GraphicQuestionSerializer constructor.
-     *
-     * @param FileUtilities $fileUtils
      */
     public function __construct(FileUtilities $fileUtils)
     {
@@ -35,9 +33,6 @@ class GraphicQuestionSerializer
 
     /**
      * Converts a Graphic question into a JSON-encodable structure.
-     *
-     * @param GraphicQuestion $graphicQuestion
-     * @param array           $options
      *
      * @return array
      */
@@ -61,7 +56,6 @@ class GraphicQuestionSerializer
      *
      * @param array           $data
      * @param GraphicQuestion $graphicQuestion
-     * @param array           $options
      *
      * @return GraphicQuestion
      */
@@ -78,8 +72,6 @@ class GraphicQuestionSerializer
 
     /**
      * Serializes the Question image.
-     *
-     * @param GraphicQuestion $graphicQuestion
      *
      * @return \stdClass
      */
@@ -109,9 +101,6 @@ class GraphicQuestionSerializer
 
     /**
      * Deserializes the Question image.
-     *
-     * @param GraphicQuestion $graphicQuestion
-     * @param array           $imageData
      */
     private function deserializeImage(GraphicQuestion $graphicQuestion, array $imageData)
     {
@@ -153,8 +142,6 @@ class GraphicQuestionSerializer
     /**
      * Serializes Question solutions.
      *
-     * @param GraphicQuestion $graphicQuestion
-     *
      * @return array
      */
     private function serializeSolutions(GraphicQuestion $graphicQuestion)
@@ -175,9 +162,6 @@ class GraphicQuestionSerializer
 
     /**
      * Deserializes Question areas.
-     *
-     * @param GraphicQuestion $graphicQuestion
-     * @param array           $solutions
      */
     private function deserializeAreas(GraphicQuestion $graphicQuestion, array $solutions)
     {
@@ -218,8 +202,6 @@ class GraphicQuestionSerializer
 
     /**
      * Serializes an Area.
-     *
-     * @param Area $area
      *
      * @return array
      */
@@ -269,9 +251,6 @@ class GraphicQuestionSerializer
 
     /**
      * Deserializes an Area.
-     *
-     * @param Area  $area
-     * @param array $data
      */
     private function deserializeArea(Area $area, array $data)
     {
@@ -304,8 +283,6 @@ class GraphicQuestionSerializer
 
     /**
      * Serializes Coordinates.
-     *
-     * @param array $coords
      *
      * @return array
      */

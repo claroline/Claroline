@@ -26,8 +26,6 @@ class QuestionFinder extends AbstractFinder
 
     /**
      * QuestionFinder constructor.
-     *
-     * @param TokenStorageInterface $tokenStorage
      */
     public function __construct(TokenStorageInterface $tokenStorage)
     {

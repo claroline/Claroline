@@ -41,19 +41,16 @@ class Workspace
     // identifiers
     use Id;
     use Uuid;
-
     // meta
     use Poster;
     use Thumbnail;
     use Description;
     use Creator;
-
     // restrictions
     use AccessibleFrom;
     use AccessibleUntil;
     use AccessCode;
     use AllowedIps;
-
     use OrganizationsTrait;
 
     /**

@@ -38,13 +38,6 @@ class ResourceListener
 
     /**
      * ResourceListener constructor.
-     *
-     * @param TokenStorageInterface     $tokenStorage
-     * @param Crud                      $crud
-     * @param SerializerProvider        $serializer
-     * @param ResourceManager           $manager
-     * @param ResourceLifecycleManager  $lifecycleManager
-     * @param ResourceEvaluationManager $evaluationManager
      */
     public function __construct(
         TokenStorageInterface $tokenStorage,
@@ -62,9 +55,6 @@ class ResourceListener
         $this->evaluationManager = $evaluationManager;
     }
 
-    /**
-     * @param LoadResourceEvent $event
-     */
     public function load(LoadResourceEvent $event)
     {
         $resourceNode = $event->getResourceNode();
@@ -95,18 +85,12 @@ class ResourceListener
         ], $subEvent->getData()));
     }
 
-    /**
-     * @param ResourceActionEvent $event
-     */
     public function create(ResourceActionEvent $event)
     {
         // forward to the resource type
         $this->lifecycleManager->create($event->getResourceNode());
     }
 
-    /**
-     * @param ResourceActionEvent $event
-     */
     public function about(ResourceActionEvent $event)
     {
         $event->setResponse(
@@ -115,9 +99,6 @@ class ResourceListener
         $event->stopPropagation();
     }
 
-    /**
-     * @param ResourceActionEvent $event
-     */
     public function configure(ResourceActionEvent $event)
     {
         $data = $event->getData();
@@ -127,9 +108,6 @@ class ResourceListener
         $event->stopPropagation();
     }
 
-    /**
-     * @param ResourceActionEvent $event
-     */
     public function rights(ResourceActionEvent $event)
     {
         // forward to the resource type
@@ -149,17 +127,11 @@ class ResourceListener
         ));
     }
 
-    /**
-     * @param ResourceActionEvent $event
-     */
     public function edit(ResourceActionEvent $event)
     {
         $this->lifecycleManager->edit($event->getResourceNode());
     }
 
-    /**
-     * @param ResourceActionEvent $event
-     */
     public function publish(ResourceActionEvent $event)
     {
         $nodes = $this->manager->setPublishedStatus([$event->getResourceNode()], true);
@@ -169,9 +141,6 @@ class ResourceListener
         );
     }
 
-    /**
-     * @param ResourceActionEvent $event
-     */
     public function unpublish(ResourceActionEvent $event)
     {
         $nodes = $this->manager->setPublishedStatus([$event->getResourceNode()], false);
@@ -181,17 +150,11 @@ class ResourceListener
         );
     }
 
-    /**
-     * @param ResourceActionEvent $event
-     */
     public function export(ResourceActionEvent $event)
     {
         $this->lifecycleManager->export($event->getResourceNode());
     }
 
-    /**
-     * @param ResourceActionEvent $event
-     */
     public function delete(ResourceActionEvent $event)
     {
         $options = $event->getOptions();
@@ -207,9 +170,6 @@ class ResourceListener
         );
     }
 
-    /**
-     * @param ResourceActionEvent $event
-     */
     public function restore(ResourceActionEvent $event)
     {
         $this->manager->restore($event->getResourceNode());
@@ -219,9 +179,6 @@ class ResourceListener
         );
     }
 
-    /**
-     * @param ResourceActionEvent $event
-     */
     public function copy(ResourceActionEvent $event)
     {
         $resourceNode = $event->getResourceNode();
@@ -245,9 +202,6 @@ class ResourceListener
         }
     }
 
-    /**
-     * @param ResourceActionEvent $event
-     */
     public function move(ResourceActionEvent $event)
     {
         $resourceNode = $event->getResourceNode();

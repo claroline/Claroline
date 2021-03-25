@@ -18,9 +18,6 @@ class MyBadgesSource
 
     /**
      * MyBadgesSource constructor.
-     *
-     * @param TokenStorageInterface $tokenStorage
-     * @param FinderProvider        $finder
      */
     public function __construct(
         TokenStorageInterface $tokenStorage,
@@ -30,9 +27,6 @@ class MyBadgesSource
         $this->finder = $finder;
     }
 
-    /**
-     * @param GetDataEvent $event
-     */
     public function getData(GetDataEvent $event)
     {
         $user = $this->tokenStorage->getToken()->getUser();

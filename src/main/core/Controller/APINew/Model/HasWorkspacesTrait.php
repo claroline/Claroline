@@ -28,9 +28,8 @@ trait HasWorkspacesTrait
      *     response={"$list=Claroline\CoreBundle\Entity\Workspace\Workspace"}
      * )
      *
-     * @param string  $id
-     * @param string  $class
-     * @param Request $request
+     * @param string $id
+     * @param string $class
      *
      * @return JsonResponse
      */
@@ -59,9 +58,8 @@ trait HasWorkspacesTrait
      *     }
      * )
      *
-     * @param string  $id
-     * @param string  $class
-     * @param Request $request
+     * @param string $id
+     * @param string $class
      *
      * @return JsonResponse
      */
@@ -91,9 +89,8 @@ trait HasWorkspacesTrait
      *     }
      * )
      *
-     * @param string  $id
-     * @param string  $class
-     * @param Request $request
+     * @param string $id
+     * @param string $class
      *
      * @return JsonResponse
      */

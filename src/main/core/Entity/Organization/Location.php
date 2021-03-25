@@ -33,7 +33,6 @@ class Location
 {
     use Id;
     use Uuid;
-
     use Description;
     use Thumbnail;
     use Poster;

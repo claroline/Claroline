@@ -31,8 +31,6 @@ class CompetencyAbilitySerializer
 
     /**
      * CompetencyAbilitySerializer constructor.
-     *
-     * @param ObjectManager $om
      */
     public function __construct(ObjectManager $om, AbilitySerializer $abilitySerializer, LevelSerializer $levelSerializer)
     {
@@ -60,9 +58,6 @@ class CompetencyAbilitySerializer
     }
 
     /**
-     * @param CompetencyAbility $competencyAbility
-     * @param array             $options
-     *
      * @return array
      */
     public function serialize(CompetencyAbility $competencyAbility, array $options = [])
@@ -80,8 +75,7 @@ class CompetencyAbilitySerializer
     }
 
     /**
-     * @param array             $data
-     * @param CompetencyAbility $competencyAbility
+     * @param array $data
      *
      * @return CompetencyAbility
      */

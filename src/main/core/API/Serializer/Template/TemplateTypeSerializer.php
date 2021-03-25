@@ -16,8 +16,6 @@ use Claroline\CoreBundle\Entity\Template\TemplateType;
 class TemplateTypeSerializer
 {
     /**
-     * @param TemplateType $templateType
-     *
      * @return array
      */
     public function serialize(TemplateType $templateType)

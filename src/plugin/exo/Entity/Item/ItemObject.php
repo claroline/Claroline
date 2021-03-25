@@ -15,6 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
 class ItemObject
 {
     use Order;
+    use Uuid;
 
     /**
      * @var int
@@ -24,8 +25,6 @@ class ItemObject
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-
-    use Uuid;
 
     /**
      * Owning Item.

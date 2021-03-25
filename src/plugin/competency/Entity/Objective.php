@@ -90,9 +90,6 @@ class Objective implements \JsonSerializable
         return $this->objectiveCompetencies;
     }
 
-    /**
-     * @param ObjectiveCompetency $link
-     */
     public function addObjectiveCompetency(ObjectiveCompetency $link)
     {
         if (!$this->objectiveCompetencies->contains($link)) {
@@ -102,8 +99,6 @@ class Objective implements \JsonSerializable
     }
 
     /**
-     * @param User $user
-     *
      * @return bool
      */
     public function hasUser(User $user)
@@ -111,9 +106,6 @@ class Objective implements \JsonSerializable
         return $this->users->contains($user);
     }
 
-    /**
-     * @param User $user
-     */
     public function addUser(User $user)
     {
         if (!$this->hasUser($user)) {
@@ -121,9 +113,6 @@ class Objective implements \JsonSerializable
         }
     }
 
-    /**
-     * @param User $user
-     */
     public function removeUser(User $user)
     {
         if ($this->hasUser($user)) {
@@ -132,8 +121,6 @@ class Objective implements \JsonSerializable
     }
 
     /**
-     * @param Group $group
-     *
      * @return bool
      */
     public function hasGroup(Group $group)
@@ -141,9 +128,6 @@ class Objective implements \JsonSerializable
         return $this->groups->contains($group);
     }
 
-    /**
-     * @param Group $group
-     */
     public function addGroup(Group $group)
     {
         if (!$this->hasGroup($group)) {
@@ -151,9 +135,6 @@ class Objective implements \JsonSerializable
         }
     }
 
-    /**
-     * @param Group $group
-     */
     public function removeGroup(Group $group)
     {
         if ($this->hasGroup($group)) {

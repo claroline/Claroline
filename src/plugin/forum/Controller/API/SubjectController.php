@@ -41,8 +41,7 @@ class SubjectController extends AbstractCrudController
      *     }
      * )
      *
-     * @param string  $id
-     * @param Request $request
+     * @param string $id
      *
      * @return JsonResponse
      */
@@ -70,9 +69,6 @@ class SubjectController extends AbstractCrudController
      *          {"name": "id", "type": {"string", "integer"},  "description": "The subject id or uuid"}
      *     }
      * )
-     *
-     * @param Subject $subject
-     * @param Request $request
      *
      * @return JsonResponse
      */
@@ -110,10 +106,6 @@ class SubjectController extends AbstractCrudController
      *     }
      * )
      *
-     * @param Subject $subject
-     * @param Message $message
-     * @param Request $request
-     *
      * @return JsonResponse
      */
     public function updateMessageAction(Subject $subject, Message $message, Request $request)
@@ -124,9 +116,6 @@ class SubjectController extends AbstractCrudController
     /**
      * @Route("/forum/{forum}/subjects/list/flagged", name="apiv2_forum_subject_flagged_list", methods={"GET"})
      * @EXT\ParamConverter("forum", class = "ClarolineForumBundle:Forum",  options={"mapping": {"forum": "uuid"}})
-     *
-     * @param Forum   $forum
-     * @param Request $request
      *
      * @return JsonResponse
      */
@@ -143,9 +132,6 @@ class SubjectController extends AbstractCrudController
     /**
      * @Route("/forum/{forum}/subjects/list/blocked", name="apiv2_forum_subject_blocked_list", methods={"GET"})
      * @EXT\ParamConverter("forum", class = "ClarolineForumBundle:Forum",  options={"mapping": {"forum": "uuid"}})
-     *
-     * @param Forum   $forum
-     * @param Request $request
      *
      * @return JsonResponse
      */

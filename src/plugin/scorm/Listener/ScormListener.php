@@ -51,14 +51,8 @@ class ScormListener
     private $scoTrackingRepo;
 
     /**
-     * @param string                    $filesDir
-     * @param Filesystem                $fileSystem
-     * @param ObjectManager             $om
-     * @param ScormManager              $scormManager
-     * @param SerializerProvider        $serializer
-     * @param TokenStorageInterface     $tokenStorage
-     * @param ResourceEvaluationManager $resourceEvalManager
-     * @param string                    $uploadDir
+     * @param string $filesDir
+     * @param string $uploadDir
      */
     public function __construct(
         $filesDir,
@@ -83,9 +77,6 @@ class ScormListener
         $this->scoTrackingRepo = $om->getRepository('ClarolineScormBundle:ScoTracking');
     }
 
-    /**
-     * @param LoadResourceEvent $event
-     */
     public function onLoad(LoadResourceEvent $event)
     {
         $scorm = $event->getResource();
@@ -106,9 +97,6 @@ class ScormListener
         $event->stopPropagation();
     }
 
-    /**
-     * @param DeleteResourceEvent $event
-     */
     public function onDelete(DeleteResourceEvent $event)
     {
         $ds = DIRECTORY_SEPARATOR;
@@ -195,9 +183,6 @@ class ScormListener
         }
     }
 
-    /**
-     * @param CopyResourceEvent $event
-     */
     public function onCopy(CopyResourceEvent $event)
     {
         $resource = $event->getResource();
@@ -239,9 +224,6 @@ class ScormListener
         $event->stopPropagation();
     }
 
-    /**
-     * @param DownloadResourceEvent $event
-     */
     public function onDownload(DownloadResourceEvent $event)
     {
         $scorm = $event->getResource();
@@ -322,9 +304,7 @@ class ScormListener
     /**
      * Copy given sco and its children.
      *
-     * @param Sco   $sco
-     * @param Scorm $resource
-     * @param Sco   $scoParent
+     * @param Sco $scoParent
      */
     private function copySco(Sco $sco, Scorm $resource, Sco $scoParent = null)
     {

@@ -16,9 +16,6 @@ class ClientListener
 
     /**
      * ClientListener constructor.
-     *
-     * @param PlatformConfigurationHandler $config
-     * @param IconSetManager               $iconManager
      */
     public function __construct(
         PlatformConfigurationHandler $config,
@@ -28,9 +25,6 @@ class ClientListener
         $this->iconManager = $iconManager;
     }
 
-    /**
-     * @param GenericDataEvent $event
-     */
     public function onConfig(GenericDataEvent $event)
     {
         $icons = $this->iconManager->getIconSetIconsByType(

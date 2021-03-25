@@ -28,9 +28,6 @@ class BooleanChoice extends AbstractChoice implements AnswerPartInterface
         return $this->question;
     }
 
-    /**
-     * @param BooleanQuestion $question
-     */
     public function setQuestion(BooleanQuestion $question)
     {
         $this->question = $question;

@@ -10,9 +10,6 @@ class VerificationObjectSerializer
 {
     use SerializerTrait;
 
-    /**
-     * @param RouterInterface $router
-     */
     public function __construct(RouterInterface $router)
     {
         $this->router = $router;

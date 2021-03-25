@@ -20,8 +20,6 @@ class ClozeQuestionSerializer
 
     /**
      * ClozeQuestionSerializer constructor.
-     *
-     * @param KeywordSerializer $keywordSerializer
      */
     public function __construct(KeywordSerializer $keywordSerializer)
     {
@@ -35,9 +33,6 @@ class ClozeQuestionSerializer
 
     /**
      * Converts a Cloze question into a JSON-encodable structure.
-     *
-     * @param ClozeQuestion $clozeQuestion
-     * @param array         $options
      *
      * @return array
      */
@@ -60,7 +55,6 @@ class ClozeQuestionSerializer
      *
      * @param array         $data
      * @param ClozeQuestion $clozeQuestion
-     * @param array         $options
      *
      * @return ClozeQuestion
      */
@@ -78,8 +72,6 @@ class ClozeQuestionSerializer
 
     /**
      * Serializes the Question holes.
-     *
-     * @param ClozeQuestion $clozeQuestion
      *
      * @return array
      */
@@ -109,11 +101,6 @@ class ClozeQuestionSerializer
 
     /**
      * Deserializes Question holes.
-     *
-     * @param ClozeQuestion $clozeQuestion
-     * @param array         $holes
-     * @param array         $solutions
-     * @param array         $options
      */
     private function deserializeHoles(ClozeQuestion $clozeQuestion, array $holes, array $solutions, array $options = [])
     {
@@ -164,10 +151,6 @@ class ClozeQuestionSerializer
 
     /**
      * Deserializes the keywords of a Hole.
-     *
-     * @param Hole  $hole
-     * @param array $keywords
-     * @param array $options
      */
     private function deserializeHoleKeywords(Hole $hole, array $keywords, array $options = [])
     {

@@ -13,8 +13,6 @@ class TagManager
 
     /**
      * Constructor.
-     *
-     * @param \Icap\BlogBundle\Repository\TagRepository $tagRepository
      */
     public function __construct(TagRepository $tagRepository)
     {
@@ -95,7 +93,6 @@ class TagManager
     /**
      * Load a blog tags, calculating their weights.
      *
-     * @param \Icap\BlogBundle\Entity\Blog $blog
      * @param int max
      *
      * @return array tags

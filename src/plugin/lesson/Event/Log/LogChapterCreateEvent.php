@@ -14,10 +14,6 @@ class LogChapterCreateEvent extends AbstractLogResourceEvent implements Notifiab
     protected $lesson;
     protected $details;
 
-    /**
-     * @param Lesson  $lesson
-     * @param Chapter $chapter
-     */
     public function __construct(Lesson $lesson, Chapter $chapter)
     {
         $this->lesson = $lesson;

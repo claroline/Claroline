@@ -16,9 +16,6 @@ class CategorySerializer
 
     /**
      * CategorySerializer constructor.
-     *
-     * @param UserSerializer $userSerializer
-     * @param ObjectManager  $om
      */
     public function __construct(UserSerializer $userSerializer, ObjectManager $om)
     {
@@ -29,8 +26,6 @@ class CategorySerializer
     }
 
     /**
-     * @param Category $category
-     *
      * @return array
      */
     public function serialize(Category $category)
@@ -49,9 +44,6 @@ class CategorySerializer
     }
 
     /**
-     * @param array         $data
-     * @param Category|null $category
-     *
      * @return Category
      */
     public function deserialize(array $data, Category $category = null)

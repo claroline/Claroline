@@ -22,10 +22,6 @@ class OrderedToolSerializer
 
     /**
      * OrderedToolSerializer constructor.
-     *
-     * @param ObjectManager        $om
-     * @param ToolManager          $toolManager
-     * @param PublicFileSerializer $fileSerializer
      */
     public function __construct(
         ObjectManager $om,
@@ -80,8 +76,6 @@ class OrderedToolSerializer
     /**
      * Serialize the tool poster.
      *
-     * @param OrderedTool $orderedTool
-     *
      * @return array|null
      */
     private function serializePoster(OrderedTool $orderedTool)
@@ -102,8 +96,6 @@ class OrderedToolSerializer
 
     /**
      * Serialize the tool thumbnail.
-     *
-     * @param OrderedTool $orderedTool
      *
      * @return array|null
      */

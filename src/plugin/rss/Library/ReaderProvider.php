@@ -51,8 +51,6 @@ class ReaderProvider
             }
         }
 
-        throw new UnknownFormatException(
-            "Parser has no support for '{$content->getName()}' feed format"
-        );
+        throw new UnknownFormatException("Parser has no support for '{$content->getName()}' feed format");
     }
 }

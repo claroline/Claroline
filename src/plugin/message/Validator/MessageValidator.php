@@ -14,8 +14,6 @@ class MessageValidator implements ValidatorInterface
 {
     /**
      * GroupValidator constructor.
-     *
-     * @param ObjectManager $om
      */
     public function __construct(ObjectManager $om)
     {

@@ -33,11 +33,6 @@ class CommentController
 
     /**
      * postController constructor.
-     *
-     * @param commentSerializer             $commentSerializer
-     * @param CommentManager                $commentManager
-     * @param BlogTrackingManager           $trackingManager
-     * @param AuthorizationCheckerInterface $authorization
      */
     public function __construct(
         CommentSerializer $commentSerializer,
@@ -58,10 +53,7 @@ class CommentController
      * @EXT\ParamConverter("post", class="IcapBlogBundle:Post", options={"mapping": {"postId": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      *
-     * @param Request $request
-     * @param Blog    $blog
-     * @param Post    $post
-     * @param User    $user
+     * @param User $user
      *
      * @return JsonResponse
      */
@@ -90,9 +82,6 @@ class CommentController
      *
      * @Route("/moderation/reported", name="apiv2_blog_comment_reported", methods={"GET"})
      *
-     * @param Request $request
-     * @param Blog    $blog
-     *
      * @return JsonResponse
      */
     public function listCommentReportedAction(Request $request, Blog $blog)
@@ -115,9 +104,6 @@ class CommentController
      * Get unpublished comments posts.
      *
      * @Route("/moderation/unpublished", name="apiv2_blog_comment_unpublished", methods={"GET"})
-     *
-     * @param Request $request
-     * @param Blog    $blog
      *
      * @return JsonResponse
      */
@@ -142,8 +128,6 @@ class CommentController
      *
      * @Route("/moderation/trusted", name="apiv2_blog_comment_trusted", methods={"GET"})
      *
-     * @param Blog $blog
-     *
      * @return JsonResponse
      */
     public function listTrustedUsersAction(Blog $blog)
@@ -165,10 +149,7 @@ class CommentController
      * @EXT\ParamConverter("post", class="IcapBlogBundle:Post", options={"mapping": {"postId": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      *
-     * @param Request $request
-     * @param Blog    $blog
-     * @param Post    $post
-     * @param User    $user
+     * @param User $user
      *
      * @return JsonResponse
      */
@@ -195,10 +176,7 @@ class CommentController
      * @EXT\ParamConverter("comment", class="IcapBlogBundle:Comment", options={"mapping": {"commentId": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      *
-     * @param Request $request
-     * @param Blog    $blog
-     * @param Comment $comment
-     * @param User    $user
+     * @param User $user
      *
      * @return JsonResponse
      */
@@ -226,10 +204,6 @@ class CommentController
      * @EXT\ParamConverter("comment", class="IcapBlogBundle:Comment", options={"mapping": {"commentId": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      *
-     * @param Blog    $blog
-     * @param Comment $comment
-     * @param User    $user
-     *
      * @return JsonResponse
      */
     public function publishCommentAction(Blog $blog, Comment $comment, User $user)
@@ -246,10 +220,6 @@ class CommentController
      * @Route("/{commentId}/unpublish", name="apiv2_blog_comment_unpublish", methods={"PUT"})
      * @EXT\ParamConverter("comment", class="IcapBlogBundle:Comment", options={"mapping": {"commentId": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @param Blog    $blog
-     * @param Comment $comment
-     * @param User    $user
      *
      * @return JsonResponse
      */
@@ -268,10 +238,6 @@ class CommentController
      * @EXT\ParamConverter("comment", class="IcapBlogBundle:Comment", options={"mapping": {"commentId": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      *
-     * @param Blog    $blog
-     * @param Comment $comment
-     * @param User    $user
-     *
      * @return JsonResponse
      */
     public function reportCommentAction(Blog $blog, Comment $comment, User $user)
@@ -287,10 +253,6 @@ class CommentController
      * @Route("/{commentId}/delete", name="apiv2_blog_comment_delete", methods={"DELETE"})
      * @EXT\ParamConverter("comment", class="IcapBlogBundle:Comment", options={"mapping": {"commentId": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @param Blog    $blog
-     * @param Comment $comment
-     * @param User    $user
      *
      * @return JsonResponse
      */
@@ -315,8 +277,6 @@ class CommentController
     /**
      * Is the user logged in or not ?
      *
-     * @param User $user
-     *
      * @return bool
      */
     private function isLoggedIn(User $user)
@@ -326,8 +286,6 @@ class CommentController
 
     /**
      * Gets and Deserializes JSON data from Request.
-     *
-     * @param Request $request
      *
      * @return mixed $data
      *

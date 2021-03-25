@@ -13,10 +13,6 @@ class MessageCrud
     /** @var TokenStorageInterface */
     private $tokenStorage;
 
-    /**
-     * @param TokenStorageInterface $tokenStorage
-     * @param MessageManager        $manager
-     */
     public function __construct(
         TokenStorageInterface $tokenStorage,
         MessageManager $manager
@@ -36,9 +32,6 @@ class MessageCrud
         }
     }
 
-    /**
-     * @param CreateEvent $event
-     */
     public function postCreate(CreateEvent $event)
     {
         $this->manager->send($event->getObject());

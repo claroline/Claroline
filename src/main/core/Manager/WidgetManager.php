@@ -27,9 +27,6 @@ class WidgetManager
 
     /**
      * WidgetManager constructor.
-     *
-     * @param ObjectManager $om
-     * @param PluginManager $pluginManager
      */
     public function __construct(
         ObjectManager $om,

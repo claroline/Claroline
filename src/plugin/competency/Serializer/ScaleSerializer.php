@@ -33,7 +33,6 @@ class ScaleSerializer
     /**
      * ScaleSerializer constructor.
      *
-     * @param ObjectManager      $om
      * @param SerializerProvider $serializer
      */
     public function __construct(ObjectManager $om)
@@ -59,9 +58,6 @@ class ScaleSerializer
     }
 
     /**
-     * @param Scale $scale
-     * @param array $options
-     *
      * @return array
      */
     public function serialize(Scale $scale, array $options = [])
@@ -82,7 +78,6 @@ class ScaleSerializer
 
     /**
      * @param array $data
-     * @param Scale $scale
      *
      * @return Scale
      */

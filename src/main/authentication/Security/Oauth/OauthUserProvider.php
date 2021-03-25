@@ -23,8 +23,6 @@ class OauthUserProvider implements OAuthAwareUserProviderInterface, UserProvider
 
     /**
      * @param $em
-     * @param SessionInterface             $session
-     * @param PlatformConfigurationHandler $platformConfigHandler
      */
     public function __construct(
         $em,
@@ -85,9 +83,7 @@ class OauthUserProvider implements OAuthAwareUserProviderInterface, UserProvider
                 'id' => $response->getUsername(),
             ]);
 
-            throw new UsernameNotFoundException(
-                sprintf('Unable to find an active user identified by "%s".', $response->getUsername())
-            );
+            throw new UsernameNotFoundException(sprintf('Unable to find an active user identified by "%s".', $response->getUsername()));
         }
 
         return $user;

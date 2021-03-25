@@ -43,7 +43,7 @@ class Home implements ToolImporterInterface, LoggerAwareInterface
 
         // but why ? finder should never give you an empty row
         $tabs = array_filter($tabs['data'], function ($data) {
-            return $data !== [];
+            return [] !== $data;
         });
 
         return ['tabs' => $tabs];

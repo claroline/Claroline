@@ -36,10 +36,6 @@ class SelectionDefinition extends AbstractDefinition
 
     /**
      * SelectionDefinition constructor.
-     *
-     * @param SelectionQuestionValidator  $validator
-     * @param SelectionAnswerValidator    $answerValidator
-     * @param SelectionQuestionSerializer $serializer
      */
     public function __construct(
         SelectionQuestionValidator $validator,
@@ -289,7 +285,6 @@ class SelectionDefinition extends AbstractDefinition
 
         switch ($item->getMode()) {
           case $item::MODE_FIND:
-
             $expected = $answers->getExpected();
 
             $strcsv = "[tries: {$data['tries']}, answers: [";

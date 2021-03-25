@@ -32,9 +32,6 @@ class LocaleController
 
     /**
      * LocaleController constructor.
-     *
-     * @param LocaleManager         $localeManager
-     * @param TokenStorageInterface $tokenStorage
      */
     public function __construct(
         LocaleManager $localeManager,
@@ -64,8 +61,7 @@ class LocaleController
      *
      * @Route("/{locale}", name="claroline_locale_change")
      *
-     * @param Request $request
-     * @param string  $locale
+     * @param string $locale
      *
      * @return RedirectResponse
      */

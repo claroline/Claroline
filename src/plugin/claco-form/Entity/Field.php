@@ -195,9 +195,7 @@ class Field
             //otherwise we use the integer
             $this->type = $type;
         } else {
-            throw new \InvalidArgumentException(
-                'Type must be a FieldFacet class constant'
-            );
+            throw new \InvalidArgumentException('Type must be a FieldFacet class constant');
         }
     }
 

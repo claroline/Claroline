@@ -33,9 +33,6 @@ class PostController
     /**
      * postController constructor.
      *
-     * @param PostSerializer      $postSerializer
-     * @param PostManager         $postManager
-     * @param BlogTrackingManager $trackingManager
      * @param $logThreshold
      */
     public function __construct(
@@ -67,8 +64,6 @@ class PostController
      *
      * @Route("/moderation", name="apiv2_blog_post_list_unpublished", methods={"GET"})
      *
-     * @param Blog $blog
-     *
      * @return array
      */
     public function listUnpublishedAction(Request $request, Blog $blog)
@@ -95,8 +90,6 @@ class PostController
      * Get blog posts.
      *
      * @Route("", name="apiv2_blog_post_list", methods={"GET"})
-     *
-     * @param Blog $blog
      *
      * @return array
      */
@@ -126,7 +119,6 @@ class PostController
      * @Route("/{postId}", name="apiv2_blog_post_get", methods={"GET"})
      * @EXT\ParamConverter("blog", options={"mapping": {"blogId": "uuid"}})
      *
-     * @param Blog $blog
      * @param Post $post
      *
      * @return array
@@ -160,9 +152,6 @@ class PostController
      * @Route("/new", name="apiv2_blog_post_new", methods={"POST", "PUT"})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      *
-     * @param Blog $blog
-     * @param User $user
-     *
      * @return array
      */
     public function createPostAction(Request $request, Blog $blog, User $user)
@@ -185,10 +174,6 @@ class PostController
      * @EXT\ParamConverter("post", class="IcapBlogBundle:Post", options={"mapping": {"postId": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      *
-     * @param Blog $blog
-     * @param Post $post
-     * @param User $user
-     *
      * @return array
      */
     public function updatePostAction(Request $request, Blog $blog, Post $post, User $user)
@@ -208,10 +193,6 @@ class PostController
      * @EXT\ParamConverter("post", class="IcapBlogBundle:Post", options={"mapping": {"postId": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      *
-     * @param Blog $blog
-     * @param Post $post
-     * @param User $user
-     *
      * @return array
      */
     public function deletePostAction(Request $request, Blog $blog, Post $post, User $user)
@@ -228,10 +209,6 @@ class PostController
      * @Route("/publish/{postId}", name="apiv2_blog_post_publish", methods={"PUT"})
      * @EXT\ParamConverter("post", class="IcapBlogBundle:Post", options={"mapping": {"postId": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @param Blog $blog
-     * @param Post $post
-     * @param User $user
      *
      * @return array
      */
@@ -253,10 +230,6 @@ class PostController
      * @Route("/pin/{postId}", name="apiv2_blog_post_pin", methods={"PUT"})
      * @EXT\ParamConverter("post", class="IcapBlogBundle:Post", options={"mapping": {"postId": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @param Blog $blog
-     * @param Post $post
-     * @param User $user
      *
      * @return array
      */

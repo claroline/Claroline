@@ -13,8 +13,6 @@ class LogConnectResourceSerializer
 
     /**
      * LogConnectResourceSerializer constructor.s.
-     *
-     * @param SerializerProvider $serializer
      */
     public function __construct(SerializerProvider $serializer)
     {
@@ -32,9 +30,6 @@ class LogConnectResourceSerializer
     }
 
     /**
-     * @param LogConnectResource $log
-     * @param array              $options
-     *
      * @return array
      */
     public function serialize(LogConnectResource $log, array $options = [])

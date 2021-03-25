@@ -5,7 +5,7 @@
  * (c) Claroline Consortium <consortium@claroline.net>
  *
  * Author: Panagiotis TSAVDARIS
- * 
+ *
  * Date: 5/12/15
  */
 
@@ -22,7 +22,7 @@ class LogSocialmediaLikeEvent extends AbstractLogResourceEvent implements Notifi
 
     public function __construct(LikeAction $like)
     {
-        $this->details = array();
+        $this->details = [];
 
         parent::__construct($like->getResource(), $this->details);
     }
@@ -44,7 +44,7 @@ class LogSocialmediaLikeEvent extends AbstractLogResourceEvent implements Notifi
      */
     public function getIncludeUserIds()
     {
-        $userIds = array($this->getResource()->getCreator()->getId());
+        $userIds = [$this->getResource()->getCreator()->getId()];
 
         return $userIds;
     }
@@ -56,7 +56,7 @@ class LogSocialmediaLikeEvent extends AbstractLogResourceEvent implements Notifi
      */
     public function getExcludeUserIds()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -87,12 +87,12 @@ class LogSocialmediaLikeEvent extends AbstractLogResourceEvent implements Notifi
     public function getNotificationDetails()
     {
         $resource = $this->getResource();
-        $notificationDetails = array_merge($this->details, array());
-        $notificationDetails['resource'] = array(
+        $notificationDetails = array_merge($this->details, []);
+        $notificationDetails['resource'] = [
             'id' => $resource->getId(),
             'name' => $resource->getName(),
             'type' => $resource->getResourceType()->getName(),
-        );
+        ];
 
         return $notificationDetails;
     }
@@ -112,6 +112,6 @@ class LogSocialmediaLikeEvent extends AbstractLogResourceEvent implements Notifi
      */
     public static function getRestriction()
     {
-        return array(self::DISPLAYED_WORKSPACE);
+        return [self::DISPLAYED_WORKSPACE];
     }
 }

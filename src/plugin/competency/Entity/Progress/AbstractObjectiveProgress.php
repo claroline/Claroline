@@ -68,9 +68,6 @@ abstract class AbstractObjectiveProgress
         return $this->objective;
     }
 
-    /**
-     * @param Objective $objective
-     */
     public function setObjective(Objective $objective)
     {
         $this->objective = $objective;
@@ -85,9 +82,6 @@ abstract class AbstractObjectiveProgress
         return $this->user;
     }
 
-    /**
-     * @param User $user
-     */
     public function setUser(User $user)
     {
         $this->user = $user;

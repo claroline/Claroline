@@ -62,8 +62,6 @@ class OpenQuestion extends AbstractItem
 
     /**
      * Sets keywords collection.
-     *
-     * @param array $keywords
      */
     public function setKeywords(array $keywords)
     {
@@ -83,8 +81,6 @@ class OpenQuestion extends AbstractItem
 
     /**
      * Adds a keyword.
-     *
-     * @param Keyword $keyword
      */
     public function addKeyword(Keyword $keyword)
     {
@@ -96,8 +92,6 @@ class OpenQuestion extends AbstractItem
 
     /**
      * Removes a keyword.
-     *
-     * @param Keyword $keyword
      */
     public function removeKeyword(Keyword $keyword)
     {

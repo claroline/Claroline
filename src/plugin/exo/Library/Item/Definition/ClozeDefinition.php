@@ -36,10 +36,6 @@ class ClozeDefinition extends AbstractDefinition
 
     /**
      * ClozeDefinition constructor.
-     *
-     * @param ClozeQuestionValidator  $validator
-     * @param ClozeAnswerValidator    $answerValidator
-     * @param ClozeQuestionSerializer $serializer
      */
     public function __construct(
         ClozeQuestionValidator $validator,
@@ -168,7 +164,6 @@ class ClozeDefinition extends AbstractDefinition
 
     /**
      * @param ClozeQuestion $clozeQuestion
-     * @param array         $answersData
      *
      * @return array
      */
@@ -256,8 +251,6 @@ class ClozeDefinition extends AbstractDefinition
     }
 
     /**
-     * @param Hole $hole
-     *
      * @return Keyword|null
      */
     private function findHoleExpectedAnswer(Hole $hole)

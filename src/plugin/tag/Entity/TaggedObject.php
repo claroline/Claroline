@@ -68,8 +68,6 @@ class TaggedObject
 
     /**
      * Set tag.
-     *
-     * @param Tag $tag
      */
     public function setTag(Tag $tag)
     {

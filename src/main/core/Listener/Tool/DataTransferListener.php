@@ -25,9 +25,6 @@ class DataTransferListener
 
     /**
      * DataTransferListener constructor.
-     *
-     * @param TransferProvider   $transfer
-     * @param SerializerProvider $serializer
      */
     public function __construct(TransferProvider $transfer, SerializerProvider $serializer)
     {
@@ -37,8 +34,6 @@ class DataTransferListener
 
     /**
      * Displays home on Workspace.
-     *
-     * @param OpenToolEvent $event
      */
     public function onDisplayWorkspace(OpenToolEvent $event)
     {

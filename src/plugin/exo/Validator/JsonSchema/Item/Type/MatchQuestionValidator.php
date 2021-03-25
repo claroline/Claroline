@@ -27,8 +27,6 @@ class MatchQuestionValidator extends JsonSchemaValidator
      * Checks :
      *  - The solutions IDs are consistent with proposals and labels IDs.
      *
-     * @param array $question
-     *
      * @return array
      */
     public function validateSolutions(array $question)

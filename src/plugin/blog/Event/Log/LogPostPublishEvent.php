@@ -5,7 +5,7 @@
  * (c) Claroline Consortium <consortium@claroline.net>
  *
  * Author: Panagiotis TSAVDARIS
- * 
+ *
  * Date: 4/21/15
  */
 
@@ -27,16 +27,16 @@ class LogPostPublishEvent extends AbstractLogResourceEvent implements Notifiable
         $this->blog = $post->getBlog();
         $this->post = $post;
 
-        $this->details = array(
-            'post' => array(
+        $this->details = [
+            'post' => [
                 'blog' => $this->blog->getId(),
                 'title' => $post->getTitle(),
                 'slug' => $post->getSlug(),
                 'published' => $post->isPublished(),
                 'author' => $post->getAuthor()->getFirstName().' '.$post->getAuthor()->getLastName(),
                 'authorId' => $post->getAuthor()->getId(),
-            ),
-        );
+            ],
+        ];
 
         parent::__construct($this->blog->getResourceNode(), $this->details);
     }
@@ -46,7 +46,7 @@ class LogPostPublishEvent extends AbstractLogResourceEvent implements Notifiable
      */
     public static function getRestriction()
     {
-        return array(self::DISPLAYED_WORKSPACE);
+        return [self::DISPLAYED_WORKSPACE];
     }
 
     /**
@@ -68,7 +68,7 @@ class LogPostPublishEvent extends AbstractLogResourceEvent implements Notifiable
      */
     public function getIncludeUserIds()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -78,7 +78,7 @@ class LogPostPublishEvent extends AbstractLogResourceEvent implements Notifiable
      */
     public function getExcludeUserIds()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -108,12 +108,12 @@ class LogPostPublishEvent extends AbstractLogResourceEvent implements Notifiable
      */
     public function getNotificationDetails()
     {
-        $notificationDetails = array_merge($this->details, array());
-        $notificationDetails['resource'] = array(
+        $notificationDetails = array_merge($this->details, []);
+        $notificationDetails['resource'] = [
             'id' => $this->blog->getId(),
             'name' => $this->resource->getName(),
             'type' => $this->resource->getResourceType()->getName(),
-        );
+        ];
 
         return $notificationDetails;
     }

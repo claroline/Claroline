@@ -14,11 +14,10 @@ use HeVinci\CompetencyBundle\Entity\Ability;
  */
 class AbilityProgress
 {
+    use Uuid;
     const STATUS_ACQUIRED = 'acquired';
     const STATUS_PENDING = 'pending';
     const STATUS_NOT_ATTEMPTED = 'not_attempted';
-
-    use Uuid;
 
     /**
      * @ORM\Id
@@ -94,9 +93,6 @@ class AbilityProgress
         return $this->ability;
     }
 
-    /**
-     * @param Ability $ability
-     */
     public function setAbility(Ability $ability)
     {
         $this->ability = $ability;
@@ -128,8 +124,6 @@ class AbilityProgress
     }
 
     /**
-     * @param ResourceNode $resource
-     *
      * @return bool
      */
     public function hasPassedResource(ResourceNode $resource)
@@ -137,9 +131,6 @@ class AbilityProgress
         return in_array($resource->getId(), $this->passedResourceIds);
     }
 
-    /**
-     * @param ResourceNode $resource
-     */
     public function addPassedResource(ResourceNode $resource)
     {
         if (!$this->hasPassedResource($resource)) {
@@ -150,8 +141,6 @@ class AbilityProgress
     }
 
     /**
-     * @param ResourceNode $resource
-     *
      * @return bool
      */
     public function hasFailedResource(ResourceNode $resource)
@@ -159,9 +148,6 @@ class AbilityProgress
         return !is_null($this->failedResourceIds) && in_array($resource->getId(), $this->failedResourceIds);
     }
 
-    /**
-     * @param ResourceNode $resource
-     */
     public function addFailedResource(ResourceNode $resource)
     {
         if (!$this->hasPassedResource($resource) && !$this->hasFailedResource($resource)) {
@@ -172,9 +158,6 @@ class AbilityProgress
         }
     }
 
-    /**
-     * @param ResourceNode $resource
-     */
     public function removeFailedResource(ResourceNode $resource)
     {
         if (!is_null($this->failedResourceIds)) {
@@ -210,9 +193,6 @@ class AbilityProgress
         return $this->user;
     }
 
-    /**
-     * @param User $user
-     */
     public function setUser(User $user)
     {
         $this->user = $user;

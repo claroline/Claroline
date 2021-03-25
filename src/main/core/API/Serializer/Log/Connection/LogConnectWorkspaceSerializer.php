@@ -13,8 +13,6 @@ class LogConnectWorkspaceSerializer
 
     /**
      * LogConnectWorkspaceSerializer constructor.
-     *
-     * @param SerializerProvider $serializer
      */
     public function __construct(SerializerProvider $serializer)
     {
@@ -32,9 +30,6 @@ class LogConnectWorkspaceSerializer
     }
 
     /**
-     * @param LogConnectWorkspace $log
-     * @param array               $options
-     *
      * @return array
      */
     public function serialize(LogConnectWorkspace $log, array $options = [])

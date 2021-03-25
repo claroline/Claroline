@@ -38,7 +38,6 @@ class ResourceCollection
     /**
      * ResourceCollection constructor.
      *
-     * @param array $resources
      * @param array $attributes
      */
     public function __construct(array $resources = [], $attributes = [])
@@ -48,9 +47,6 @@ class ResourceCollection
         $this->errors = [];
     }
 
-    /**
-     * @param ResourceNode $resource
-     */
     public function addResource(ResourceNode $resource)
     {
         $this->resources[] = $resource;

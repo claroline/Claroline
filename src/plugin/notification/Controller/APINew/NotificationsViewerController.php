@@ -42,12 +42,6 @@ class NotificationsViewerController
     /** @var NotificationManager */
     private $notificationManager;
 
-    /**
-     * @param ObjectManager       $om
-     * @param FinderProvider      $finder
-     * @param Crud                $crud
-     * @param NotificationManager $notificationManager
-     */
     public function __construct(
         ObjectManager $om,
         FinderProvider $finder,
@@ -64,9 +58,6 @@ class NotificationsViewerController
      * @Route("", name="apiv2_user_notifications_list", methods={"GET"})
      * @EXT\ParamConverter("user", converter="current_user")
      *
-     * @param User    $user
-     * @param Request $request
-     *
      * @return JsonResponse
      */
     public function listAction(User $user, Request $request)
@@ -82,8 +73,6 @@ class NotificationsViewerController
      * @Route("/unread/count", name="apiv2_user_notifications_count")
      * @EXT\ParamConverter("user", converter="current_user")
      *
-     * @param User $user
-     *
      * @return JsonResponse
      */
     public function countUnreadAction(User $user)
@@ -96,8 +85,6 @@ class NotificationsViewerController
     /**
      * @Route("/read", name="apiv2_user_notifications_read", methods={"PUT"})
      * @EXT\ParamConverter("user", converter="current_user")
-     *
-     * @param Request $request
      *
      * @return JsonResponse
      */
@@ -112,8 +99,6 @@ class NotificationsViewerController
      * @Route("/unread", name="apiv2_user_notifications_unread", methods={"PUT"})
      * @EXT\ParamConverter("user", converter="current_user")
      *
-     * @param Request $request
-     *
      * @return JsonResponse
      */
     public function markAsUnreadAction(Request $request)
@@ -126,9 +111,6 @@ class NotificationsViewerController
     /**
      * @Route("/", name="apiv2_user_notifications_delete", methods={"DELETE"})
      * @EXT\ParamConverter("user", converter="current_user")
-     *
-     * @param User    $user
-     * @param Request $request
      *
      * @return JsonResponse
      */

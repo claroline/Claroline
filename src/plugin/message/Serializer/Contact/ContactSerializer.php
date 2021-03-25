@@ -17,10 +17,6 @@ class ContactSerializer
 
     /**
      * ContactSerializer constructor.
-     *
-     * @param CategorySerializer $categorySerializer
-     * @param UserSerializer     $userSerializer
-     * @param ObjectManager      $om
      */
     public function __construct(
         CategorySerializer $categorySerializer,
@@ -50,9 +46,6 @@ class ContactSerializer
     }
 
     /**
-     * @param array        $data
-     * @param Contact|null $contact
-     *
      * @return Contact
      */
     public function deserialize(array $data, Contact $contact = null)

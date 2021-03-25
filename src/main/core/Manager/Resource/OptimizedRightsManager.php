@@ -12,8 +12,8 @@
 namespace Claroline\CoreBundle\Manager\Resource;
 
 use Claroline\AppBundle\Event\StrictDispatcher;
-use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AppBundle\Log\LoggableTrait;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
@@ -39,10 +39,6 @@ class OptimizedRightsManager implements LoggerAwareInterface
 
     /**
      * OptimizedRightsManager constructor.
-     *
-     * @param Connection       $conn
-     * @param StrictDispatcher $dispatcher
-     * @param ObjectManager    $om
      */
     public function __construct(Connection $conn, StrictDispatcher $dispatcher, ObjectManager $om)
     {
@@ -217,10 +213,8 @@ class OptimizedRightsManager implements LoggerAwareInterface
     }
 
     /**
-     * @param ResourceNode $node
-     * @param Role         $role
-     * @param int          $mask
-     * @param array        $types
+     * @param int   $mask
+     * @param array $types
      */
     public function logUpdate(ResourceNode $node, Role $role, $mask, $types)
     {

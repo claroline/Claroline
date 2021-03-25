@@ -10,9 +10,6 @@ class RssListener
     /** @var SerializerProvider */
     private $serializer;
 
-    /**
-     * @param SerializerProvider $serializer
-     */
     public function __construct(SerializerProvider $serializer)
     {
         $this->serializer = $serializer;
@@ -20,8 +17,6 @@ class RssListener
 
     /**
      * Loads an URL resource.
-     *
-     * @param LoadResourceEvent $event
      */
     public function onLoad(LoadResourceEvent $event)
     {

@@ -16,17 +16,12 @@ class CompetenciesListener
 
     /**
      * CompetenciesListener constructor.
-     *
-     * @param CompetencyManager $competencyManager
      */
     public function __construct(CompetencyManager $competencyManager)
     {
         $this->competencyManager = $competencyManager;
     }
 
-    /**
-     * @param OpenToolEvent $event
-     */
     public function onDisplayTool(OpenToolEvent $event)
     {
         $this->competencyManager->ensureHasScale();

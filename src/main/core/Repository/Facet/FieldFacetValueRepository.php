@@ -18,8 +18,6 @@ use Doctrine\ORM\EntityRepository;
 class FieldFacetValueRepository extends EntityRepository
 {
     /**
-     * @param User $user
-     *
      * @return FieldFacetValue[]
      */
     public function findPlatformValuesByUser(User $user)

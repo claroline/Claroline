@@ -8,8 +8,6 @@ use Icap\WikiBundle\Entity\Section;
 class ContributionRepository extends EntityRepository
 {
     /**
-     * @param Section $section
-     *
      * @return \Doctrine\ORM\Query
      */
     public function getSectionHistoryQuery(Section $section)
@@ -23,8 +21,6 @@ class ContributionRepository extends EntityRepository
     }
 
     /**
-     * @param Section $section
-     *
      * @return array $contributions
      */
     public function findAllButActiveForSection(Section $section)
@@ -40,8 +36,7 @@ class ContributionRepository extends EntityRepository
     }
 
     /**
-     * @param Section $section
-     * @param array   $uuids
+     * @param array $uuids
      *
      * @return array $contributions
      */

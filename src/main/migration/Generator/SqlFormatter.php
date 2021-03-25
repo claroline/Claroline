@@ -33,26 +33,24 @@ class SqlFormatter extends BaseFormatter
      */
     public static function setKeywordFormattingOptions(array $keywords)
     {
-        $keyword_map = array(
+        $keyword_map = [
             self::KEYWORD_NEWLINE => &self::$reserved_newline,
             self::KEYWORD_TOPLEVEL => &self::$reserved_toplevel,
-        );
+        ];
 
         foreach ($keywords as $keyword => $type) {
             if (!array_key_exists($type, $keyword_map)) {
-                throw new \InvalidArgumentException(
-                    "Unexpected type '{$type}' : type must be a KEYWORD_* class constant"
-                );
+                throw new \InvalidArgumentException("Unexpected type '{$type}' : type must be a KEYWORD_* class constant");
             }
 
             foreach ($keyword_map as $keyword_type => $registered_keywords) {
                 if (in_array($keyword, $registered_keywords)) {
                     if ($type === $keyword_type) {
-                        continue(2); // the keyword is already of the specified type
+                        continue 2; // the keyword is already of the specified type
                     }
 
                     // remove the keyword from its current type collection
-                    $keyword_map[$keyword_type] = array_diff($keyword_map[$keyword_type], array($keyword));
+                    $keyword_map[$keyword_type] = array_diff($keyword_map[$keyword_type], [$keyword]);
                 }
             }
 

@@ -21,8 +21,6 @@ class PlannedNotificationSerializer
 
     /**
      * PlannedNotificationSerializer constructor.
-     *
-     * @param ObjectManager $om
      */
     public function __construct(
         ObjectManager $om,
@@ -53,8 +51,6 @@ class PlannedNotificationSerializer
     }
 
     /**
-     * @param PlannedNotification $notification
-     *
      * @return array
      */
     public function serialize(PlannedNotification $notification, array $options)
@@ -76,8 +72,7 @@ class PlannedNotificationSerializer
     }
 
     /**
-     * @param array               $data
-     * @param PlannedNotification $notification
+     * @param array $data
      *
      * @return PlannedNotification
      */

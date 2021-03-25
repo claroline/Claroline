@@ -39,10 +39,6 @@ class SetDefinition extends AbstractDefinition
 
     /**
      * SetDefinition constructor.
-     *
-     * @param SetQuestionValidator  $validator
-     * @param SetAnswerValidator    $answerValidator
-     * @param SetQuestionSerializer $serializer
      */
     public function __construct(
         SetQuestionValidator $validator,

@@ -27,8 +27,6 @@ class GraphicQuestionValidator extends JsonSchemaValidator
      * Checks :
      *  - There is at least one solution with a positive score.
      *
-     * @param array $question
-     *
      * @return array
      */
     protected function validateSolutions(array $question)

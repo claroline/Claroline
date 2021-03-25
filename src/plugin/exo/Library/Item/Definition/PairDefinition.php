@@ -38,10 +38,6 @@ class PairDefinition extends AbstractDefinition
 
     /**
      * PairDefinition constructor.
-     *
-     * @param PairQuestionValidator  $validator
-     * @param PairAnswerValidator    $answerValidator
-     * @param PairQuestionSerializer $serializer
      */
     public function __construct(
         PairQuestionValidator $validator,
@@ -184,7 +180,6 @@ class PairDefinition extends AbstractDefinition
 
     /**
      * @param PairQuestion $pairQuestion
-     * @param array        $answersData
      * @param int          $total
      *
      * @return array

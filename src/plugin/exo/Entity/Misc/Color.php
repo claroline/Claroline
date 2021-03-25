@@ -15,6 +15,7 @@ use UJM\ExoBundle\Entity\ItemType\SelectionQuestion;
  */
 class Color
 {
+    use Uuid;
     /**
      * @var int
      *
@@ -32,8 +33,6 @@ class Color
      * @ORM\Column(type="string")
      */
     private $colorCode;
-
-    use Uuid;
 
     /**
      * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\ItemType\SelectionQuestion", inversedBy="colors")

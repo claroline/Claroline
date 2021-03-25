@@ -15,9 +15,6 @@ use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 
 class TrashListener
 {
-    /**
-     * @param OpenToolEvent $event
-     */
     public function onDisplayWorkspace(OpenToolEvent $event)
     {
         $event->setData([]);

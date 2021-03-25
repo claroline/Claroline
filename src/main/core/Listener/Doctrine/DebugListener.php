@@ -16,13 +16,12 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 class DebugListener implements LoggerAwareInterface
 {
     use ContainerAwareTrait;
+    use LoggableTrait;
 
     const DEBUG_NONE = 0;
     const DEBUG_CLAROLINE = 1;
     const DEBUG_ALL = 2;
     const DEBUG_VENDOR = 3;
-
-    use LoggableTrait;
 
     private $activateLog;
     private $debugLevel;

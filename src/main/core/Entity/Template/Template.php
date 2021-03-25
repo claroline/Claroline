@@ -108,8 +108,6 @@ class Template
 
     /**
      * Set type.
-     *
-     * @param TemplateType $type
      */
     public function setType(TemplateType $type)
     {

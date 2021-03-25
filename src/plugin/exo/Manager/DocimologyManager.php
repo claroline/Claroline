@@ -41,10 +41,6 @@ class DocimologyManager
 
     /**
      * ExerciseManager constructor.
-     *
-     * @param ObjectManager $om
-     * @param ItemManager   $itemManager
-     * @param PaperManager  $paperManager
      */
     public function __construct(
           ObjectManager $om,
@@ -61,8 +57,7 @@ class DocimologyManager
     /**
      * Serializes an Exercise.
      *
-     * @param Exercise $exercise
-     * @param float    $maxScore
+     * @param float $maxScore
      *
      * @return array
      */
@@ -86,8 +81,7 @@ class DocimologyManager
     /**
      * Returns the max min and average score for a given exercise.
      *
-     * @param Exercise $exercise
-     * @param float    $scoreOn
+     * @param float $scoreOn
      *
      * @return array
      */
@@ -112,8 +106,7 @@ class DocimologyManager
     /**
      * Returns the number of fully, partially successfull and missed papers for a given exercise.
      *
-     * @param Exercise $exercise
-     * @param float    $scoreOn
+     * @param float $scoreOn
      *
      * @return array
      */
@@ -150,8 +143,7 @@ class DocimologyManager
     /**
      * Returns the number of papers with a particular score for a given exercise.
      *
-     * @param Exercise $exercise
-     * @param float    $scoreOn
+     * @param float $scoreOn
      *
      * @return array
      */
@@ -218,8 +210,6 @@ class DocimologyManager
 
     /**
      * Get discrimination coefficient for an exercise.
-     *
-     * @param Exercise $exercise
      *
      * @return array
      */

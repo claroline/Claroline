@@ -16,6 +16,9 @@ use UJM\ExoBundle\Library\Model\ContentTrait;
  */
 class Label
 {
+    use ContentTrait;
+    use Order;
+    use Uuid;
     /**
      * @var int
      *
@@ -24,10 +27,6 @@ class Label
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-
-    use ContentTrait;
-    use Order;
-    use Uuid;
 
     /**
      * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\ItemType\MatchQuestion", inversedBy="labels")

@@ -15,8 +15,6 @@ class RuleManager
 
     /**
      * RuleManager constructor.
-     *
-     * @param ObjectManager $om
      */
     public function __construct(ObjectManager $om)
     {
@@ -25,9 +23,6 @@ class RuleManager
 
     /**
      * Checks if a User meets a Badge requirements and grants him if needed.
-     *
-     * @param User       $user
-     * @param BadgeClass $badge
      *
      * @return Assertion
      */

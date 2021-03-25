@@ -15,9 +15,6 @@ use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 
 class TagsListener
 {
-    /**
-     * @param OpenToolEvent $event
-     */
     public function onAdministrationToolOpen(OpenToolEvent $event)
     {
         $event->setData([]);

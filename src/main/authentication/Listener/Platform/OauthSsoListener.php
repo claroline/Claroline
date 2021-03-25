@@ -12,17 +12,12 @@ class OauthSsoListener
 
     /**
      * OauthSsoListener constructor.
-     *
-     * @param OauthManager $oauthManager
      */
     public function __construct(OauthManager $oauthManager)
     {
         $this->oauthManager = $oauthManager;
     }
 
-    /**
-     * @param GenericDataEvent $event
-     */
     public function onConfig(GenericDataEvent $event)
     {
         $event->setResponse([

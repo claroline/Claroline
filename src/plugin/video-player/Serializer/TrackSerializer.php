@@ -32,9 +32,6 @@ class TrackSerializer
 
     /**
      * PathSerializer constructor.
-     *
-     * @param ObjectManager $om
-     * @param FileManager   $fileManager
      */
     public function __construct(ObjectManager $om, FileManager $fileManager)
     {
@@ -58,8 +55,6 @@ class TrackSerializer
     }
 
     /**
-     * @param Track $track
-     *
      * @return array
      */
     public function serialize(Track $track)
@@ -83,7 +78,6 @@ class TrackSerializer
      * Deserializes data into a Track entity.
      *
      * @param \stdClass $data
-     * @param Track     $track
      *
      * @return Track
      */

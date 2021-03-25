@@ -17,9 +17,6 @@ class AnnouncementCrud
 
     /**
      * AnnouncementCrud constructor.
-     *
-     * @param ObjectManager       $om
-     * @param AnnouncementManager $manager
      */
     public function __construct(
         ObjectManager $om,
@@ -29,9 +26,6 @@ class AnnouncementCrud
         $this->om = $om;
     }
 
-    /**
-     * @param CreateEvent $event
-     */
     public function preCreate(CreateEvent $event)
     {
         $announcement = $event->getObject();
@@ -39,9 +33,6 @@ class AnnouncementCrud
         $announcement->setAggregate($options['announcement_aggregate']);
     }
 
-    /**
-     * @param DeleteEvent $event
-     */
     public function preDelete(DeleteEvent $event)
     {
         $announcement = $event->getObject();

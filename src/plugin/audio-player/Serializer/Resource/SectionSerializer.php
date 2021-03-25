@@ -18,9 +18,6 @@ class SectionSerializer
     private $resourceNodeRepo;
     private $userRepo;
 
-    /**
-     * @param ObjectManager $om
-     */
     public function __construct(ObjectManager $om)
     {
         $this->om = $om;
@@ -30,9 +27,6 @@ class SectionSerializer
     }
 
     /**
-     * @param Section $section
-     * @param array   $options
-     *
      * @return array
      */
     public function serialize(Section $section, array $options = [])
@@ -58,9 +52,7 @@ class SectionSerializer
     }
 
     /**
-     * @param array   $data
-     * @param Section $section
-     * @param array   $options
+     * @param array $data
      *
      * @return Section
      */

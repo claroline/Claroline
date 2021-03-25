@@ -16,8 +16,6 @@ class FavouriteManager
 
     /**
      * FavouriteManager constructor.
-     *
-     * @param ObjectManager $om
      */
     public function __construct(ObjectManager $om)
     {
@@ -26,8 +24,6 @@ class FavouriteManager
 
     /**
      * Get the list of favorited workspaces for a user.
-     *
-     * @param User $user
      *
      * @return Workspace[]
      */
@@ -45,8 +41,6 @@ class FavouriteManager
     /**
      * Get the list of favorited resources for a user.
      *
-     * @param User $user
-     *
      * @return ResourceNode[]
      */
     public function getResources(User $user)
@@ -62,9 +56,6 @@ class FavouriteManager
 
     /**
      * Find all content for a given user and the replace him by another.
-     *
-     * @param User $from
-     * @param User $to
      *
      * @return int
      */
@@ -102,7 +93,6 @@ class FavouriteManager
     /**
      * Creates or deletes (depending on the first resource) favourites for given user and list of resources.
      *
-     * @param User           $user
      * @param ResourceNode[] $resourceNodes
      */
     public function toggleResourceFavourites(User $user, array $resourceNodes)
@@ -133,7 +123,6 @@ class FavouriteManager
     /**
      * Creates or deletes (depending on the first resource) favourites for given user and list of workspaces.
      *
-     * @param User        $user
      * @param Workspace[] $workspaces
      */
     public function toggleWorkspaceFavourites(User $user, array $workspaces)
@@ -163,9 +152,6 @@ class FavouriteManager
 
     /**
      * Creates a favourite for given user and resource.
-     *
-     * @param User         $user
-     * @param ResourceNode $resourceNode
      */
     public function createResourceFavourite(User $user, ResourceNode $resourceNode)
     {
@@ -186,9 +172,6 @@ class FavouriteManager
 
     /**
      * Deletes favourite for given user and resource.
-     *
-     * @param User         $user
-     * @param ResourceNode $resourceNode
      */
     public function deleteResourceFavourite(User $user, ResourceNode $resourceNode)
     {
@@ -205,9 +188,6 @@ class FavouriteManager
 
     /**
      * Creates a favourite for given user and workspace.
-     *
-     * @param User      $user
-     * @param Workspace $workspace
      */
     public function createWorkspaceFavourite(User $user, Workspace $workspace)
     {
@@ -228,9 +208,6 @@ class FavouriteManager
 
     /**
      * Deletes favourite for given user and workspace.
-     *
-     * @param User      $user
-     * @param Workspace $workspace
      */
     public function deleteWorkspaceFavourite(User $user, Workspace $workspace)
     {

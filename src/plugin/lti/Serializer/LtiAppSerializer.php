@@ -33,9 +33,6 @@ class LtiAppSerializer
     }
 
     /**
-     * @param LtiApp $app
-     * @param array  $options
-     *
      * @return array
      */
     public function serialize(LtiApp $app, array $options = [])
@@ -58,8 +55,7 @@ class LtiAppSerializer
     }
 
     /**
-     * @param array  $data
-     * @param LtiApp $app
+     * @param array $data
      *
      * @return LtiApp
      */

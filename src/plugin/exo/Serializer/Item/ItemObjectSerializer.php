@@ -16,9 +16,6 @@ class ItemObjectSerializer
     /**
      * Converts a ItemObject into a JSON-encodable structure.
      *
-     * @param ItemObject $itemObject
-     * @param array      $options
-     *
      * @return array
      */
     public function serialize(ItemObject $itemObject, array $options = [])
@@ -47,7 +44,6 @@ class ItemObjectSerializer
      *
      * @param array      $data
      * @param ItemObject $itemObject
-     * @param array      $options
      *
      * @return ItemObject
      */

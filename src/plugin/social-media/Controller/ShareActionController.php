@@ -29,9 +29,6 @@ class ShareActionController extends Controller
      * @ParamConverter("resourceNode", class="ClarolineCoreBundle:Resource\ResourceNode", options={"id" = "resourceId"})
      * @Template()
      *
-     * @param ResourceNode $resourceNode
-     * @param User         $user
-     *
      * @return array
      */
     public function formAction(ResourceNode $resourceNode, User $user)
@@ -55,8 +52,7 @@ class ShareActionController extends Controller
      * @ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      * @Template()
      *
-     * @param Request $request
-     * @param User    $user
+     * @param User $user
      *
      * @return bool
      */

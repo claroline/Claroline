@@ -10,9 +10,6 @@ use Symfony\Component\Routing\RouterInterface;
 
 class ProfileSerializer
 {
-    /**
-     * @param RouterInterface $router
-     */
     public function __construct(RouterInterface $router, ObjectManager $om)
     {
         $this->router = $router;

@@ -31,11 +31,6 @@ class LogController
 
     /**
      * LogController constructor.
-     *
-     * @param AuthorizationCheckerInterface $authorizationChecker
-     * @param FinderProvider                $finder
-     * @param SerializerProvider            $serializer
-     * @param LogManager                    $logManager
      */
     public function __construct(
         AuthorizationCheckerInterface $authorizationChecker,
@@ -67,9 +62,6 @@ class LogController
      *     options={"mapping": {"resourceId": "id"}}
      * )
      *
-     * @param Request      $request
-     * @param ResourceNode $node
-     *
      * @return JsonResponse
      */
     public function listAction(Request $request, ResourceNode $node)
@@ -90,9 +82,6 @@ class LogController
      *     class="Claroline\CoreBundle\Entity\Resource\ResourceNode",
      *     options={"mapping": {"resourceId": "id"}}
      * )
-     *
-     * @param Request      $request
-     * @param ResourceNode $node
      *
      * @return StreamedResponse
      */
@@ -120,9 +109,6 @@ class LogController
      *     options={"mapping": {"resourceId": "id"}}
      * )
      *
-     * @param Request      $request
-     * @param ResourceNode $node
-     *
      * @return JsonResponse
      */
     public function listChartAction(Request $request, ResourceNode $node)
@@ -142,9 +128,6 @@ class LogController
      *     options={"mapping": {"resourceId": "id"}}
      * )
      *
-     * @param Request      $request
-     * @param ResourceNode $node
-     *
      * @return JsonResponse
      */
     public function userActionsListAction(Request $request, ResourceNode $node)
@@ -162,9 +145,6 @@ class LogController
      *     class="Claroline\CoreBundle\Entity\Resource\ResourceNode",
      *     options={"mapping": {"resourceId": "id"}}
      * )
-     *
-     * @param Request      $request
-     * @param ResourceNode $node
      *
      * @return StreamedResponse
      */
@@ -191,8 +171,6 @@ class LogController
      *     "id": "id"
      * }})
      *
-     * @param Log $log
-     *
      * @return JsonResponse
      */
     public function getAction(Log $log)
@@ -210,9 +188,6 @@ class LogController
     /**
      * Add resource node filter to request.
      *
-     * @param Request      $request
-     * @param ResourceNode $node
-     *
      * @return array
      */
     private function getResourceNodeFilteredQuery(Request $request, ResourceNode $node)
@@ -226,8 +201,6 @@ class LogController
 
     /**
      * Checks user rights to access logs tool.
-     *
-     * @param ResourceNode $node
      */
     private function checkLogsAccess(ResourceNode $node)
     {

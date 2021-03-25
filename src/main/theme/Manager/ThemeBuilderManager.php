@@ -55,9 +55,8 @@ class ThemeBuilderManager
     /**
      * BuildManager constructor.
      *
-     * @param KernelInterface $kernel
-     * @param string          $filesDir
-     * @param string          $kernelDir
+     * @param string $filesDir
+     * @param string $kernelDir
      */
     public function __construct(KernelInterface $kernel, $filesDir, $kernelDir)
     {
