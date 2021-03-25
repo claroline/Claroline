@@ -74,7 +74,7 @@ export default {
         label: trans('user_validation', {}, 'cursus'),
         displayed: false
       }, {
-        name: 'tags',
+        name: 'courseTags',
         type: 'tag',
         label: trans('tags'),
         displayed: false,
