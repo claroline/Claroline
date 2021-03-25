@@ -173,20 +173,12 @@ class RoleSerializer
         return $tools;
     }
 
-    public function deserialize(array $data, Role $role, array $options = []): Role
+    public function deserialize(array $data, Role $role): Role
     {
         if (!$role->isReadOnly()) {
             $this->sipe('name', 'setName', $data, $role);
-
             $this->sipe('type', 'setType', $data, $role);
-
-            if (isset($data['translationKey'])) {
-                $role->setTranslationKey($data['translationKey']);
-                //this is if it's not a workspace and we send the translationKey role
-                if (null === $role->getName() && !isset($data['workspace'])) {
-                    $role->setName('ROLE_'.str_replace(' ', '_', strtoupper($data['translationKey'])));
-                }
-            }
+            $this->sipe('translationKey', 'setTranslationKey', $data, $role);
         }
 
         $this->sipe('meta.personalWorkspaceCreationEnabled', 'setPersonalWorkspaceCreationEnabled', $data, $role);
@@ -195,12 +187,6 @@ class RoleSerializer
         if (!empty($data['workspace']) && !empty($data['workspace']['id'])) {
             $workspace = $this->om->getRepository('ClarolineCoreBundle:Workspace\Workspace')
                 ->findOneBy(['uuid' => $data['workspace']['id']]);
-
-            if (!$role->getName()) {
-                // TODO : should be done in WorkspaceCrud
-                $role->setName('ROLE_WS_'.str_replace(' ', '_', strtoupper($data['translationKey'])).'_'.$data['workspace']['id']);
-            }
-
             if ($workspace) {
                 $role->setWorkspace($workspace);
             }

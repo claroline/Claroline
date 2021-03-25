@@ -65,7 +65,7 @@ const dataType = {
         if (0 !== unknown.length) {
           return tval('This value is invalid.')
         }
-      } else if (-1 === Object.keys(choices).indexOf(value)) {
+      } else if (-1 === Object.keys(choices).indexOf(value+'')) {
         return tval('This value is invalid.')
       }
     }

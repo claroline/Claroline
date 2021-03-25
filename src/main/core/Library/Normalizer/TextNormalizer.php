@@ -93,10 +93,10 @@ class TextNormalizer
         // removes multiple whitespaces, new lines & tabs by single whitespace
         $key = preg_replace('/\s\s+/', ' ', $key);
         $key = trim($key);
-        // replaces dots by hyphen
+        $key = str_replace(' ', '_', $key);
         $key = str_replace('.', '-', $key);
         // removes all non alpha-numeric chars
-        $key = preg_replace('/[^a-zA-Z0-9\-]/', '', $key);
+        $key = preg_replace('/[^a-zA-Z0-9\-_]/', '', $key);
         // removes uppercase
         $key = strtolower($key);
 
