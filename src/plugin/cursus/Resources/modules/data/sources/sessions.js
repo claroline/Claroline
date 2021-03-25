@@ -1,6 +1,8 @@
 import {trans} from '#/main/app/intl/translation'
 import {URL_BUTTON} from '#/main/app/buttons'
 
+import {route as toolRoute} from '#/main/core/tool/routing'
+
 import {route} from '#/plugin/cursus/routing'
 import {SessionCard} from '#/plugin/cursus/session/components/card'
 
@@ -10,7 +12,7 @@ export default {
   parameters: {
     primaryAction: (session) => ({
       type: URL_BUTTON,
-      target: `#${route(session.id)}`
+      target: `#${route(toolRoute('trainings')+'/catalog', session.course, session)}`
     }),
     definition: [
       {
