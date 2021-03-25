@@ -195,17 +195,19 @@ class TransferManager implements LoggerAwareInterface
 
         /** @var Workspace $workspace */
         $workspace = $this->serializer->deserialize($data, $workspace, $options);
+        $this->om->persist($workspace);
 
         $this->log('Deserializing the roles...');
         $roles = [];
         foreach ($data['roles'] as $roleData) {
             $roleData['workspace']['id'] = $workspace->getUuid();
-            /** @var Role $role */
-            $role = $this->serializer->deserialize($roleData, new Role());
+            $role = new Role();
+            $this->om->persist($role);
+
             $role->setWorkspace($workspace);
             $workspace->addRole($role);
-            $this->om->persist($role);
-            $roles[] = $role;
+
+            $roles[] = $this->crud->create($role, $roleData, [Crud::NO_PERMISSIONS]);
         }
 
         foreach ($roles as $role) {
@@ -214,7 +216,6 @@ class TransferManager implements LoggerAwareInterface
             }
         }
 
-        $this->om->persist($workspace);
         $this->om->forceFlush();
 
         $data['root']['meta']['workspace']['id'] = $workspace->getUuid();

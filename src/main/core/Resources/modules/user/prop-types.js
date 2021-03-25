@@ -1,5 +1,7 @@
 import {PropTypes as T} from 'prop-types'
 
+import {constants} from '#/main/core/user/constants'
+
 const User = {
   propTypes: {
     id: T.string.isRequired,
@@ -69,7 +71,7 @@ const Role = {
     desktopTools: T.object
   },
   defaultProps: {
-
+    type: constants.ROLE_PLATFORM
   }
 }
 
@@ -78,9 +80,7 @@ const Group = {
     id: T.string,
     name: T.string
   },
-  defaultProps: {
-
-  }
+  defaultProps: {}
 }
 
 const Organization = {
@@ -129,9 +129,7 @@ const Location = {
       longitude: T.number
     })
   },
-  defaultProps: {
-
-  }
+  defaultProps: {}
 }
 
 export {

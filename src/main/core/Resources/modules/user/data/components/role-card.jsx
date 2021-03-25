@@ -19,7 +19,6 @@ const RoleCard = props =>
         secondary={classes({
           globe: constants.ROLE_PLATFORM === props.data.type,
           book: constants.ROLE_WORKSPACE === props.data.type,
-          asterisk: constants.ROLE_CUSTOM === props.data.type,
           user: constants.ROLE_USER === props.data.type
         })}
       />

@@ -107,7 +107,9 @@ class Role extends Component {
                 name: 'name',
                 type: 'string',
                 label: trans('code'),
-                readOnly: true
+                displayed: !this.props.new,
+                disabled: true,
+                required: true
               }
             ]
           }

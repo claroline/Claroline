@@ -15,6 +15,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
 use Claroline\CoreBundle\Event\Security\AddRoleEvent;
 use Claroline\CoreBundle\Event\Security\RemoveRoleEvent;
+use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Doctrine\DBAL\Driver\Connection;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -51,8 +52,23 @@ class RoleCrud
         /** @var Role $role */
         $role = $event->getObject();
 
-        if (!$role->getWorkspace()) {
-            $role->setName(strtoupper('role_'.$role->getTranslationKey()));
+        if (empty($role->getName())) {
+            switch ($role->getType()) {
+                case Role::WS_ROLE:
+                    if ($role->getWorkspace()) {
+                        $role->setName(strtoupper('role_ws_'.TextNormalizer::toKey($role->getTranslationKey())).'_'.$role->getWorkspace()->getUuid());
+                    }
+                    break;
+                case Role::USER_ROLE:
+                    if (!empty($role->getUsers())) {
+                        // user roles are only assigned to one user
+                        $owner = $role->getUsers()[0];
+                        $role->setName(strtoupper('role_user_'.strtoupper(TextNormalizer::toKey($owner->getUsername()))));
+                    }
+                    break;
+                default:
+                    $role->setName(strtoupper('role_'.TextNormalizer::toKey($role->getTranslationKey())));
+            }
         }
     }
 

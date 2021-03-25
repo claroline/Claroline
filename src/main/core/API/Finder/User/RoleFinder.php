@@ -60,9 +60,6 @@ class RoleFinder extends AbstractFinder
                         case 'user':
                             $filterValue = Role::USER_ROLE;
                             break;
-                        case 'custom':
-                            $filterValue = Role::CUSTOM_ROLE;
-                            break;
                         case 'platform':
                             $filterValue = Role::PLATFORM_ROLE;
                             break;
