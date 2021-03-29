@@ -48,7 +48,7 @@ jobs:
       - name: Repository Dispatch
         uses: peter-evans/repository-dispatch@v1
         with:
-          token: ${{ secrets.REPO_ACCESS_TOKEN }}
+          token: ${{ secrets.FL_REPO_ACCESS_TOKEN }}
           repository: FormaLibre/ClarolineBundle/
           event-type: newtag
           client-payload: '{"tag": "${{ steps.bump.outputs.tag }}"}'
