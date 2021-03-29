@@ -207,7 +207,7 @@ class TransferManager implements LoggerAwareInterface
             $role->setWorkspace($workspace);
             $workspace->addRole($role);
 
-            $roles[] = $this->crud->create($role, $roleData, [Crud::NO_PERMISSIONS]);
+            $roles[] = $this->crud->create($role, $roleData, [Crud::NO_PERMISSIONS, Options::FORCE_FLUSH]);
         }
 
         foreach ($roles as $role) {

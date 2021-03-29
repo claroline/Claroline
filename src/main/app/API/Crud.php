@@ -103,7 +103,12 @@ class Crud
         }
 
         if ($this->dispatch('create', 'pre', [$object, $options, $data])) {
-            $this->om->save($object);
+            $this->om->persist($object);
+            if (!in_array(Options::FORCE_FLUSH, $options)) {
+                $this->om->flush();
+            } else {
+                $this->om->forceFlush();
+            }
 
             $this->dispatch('create', 'post', [$object, $options, $data]);
         }
@@ -187,7 +192,11 @@ class Crud
             $this->dispatch('delete', 'post', [$object, $options]);
         }
 
-        $this->om->flush();
+        if (!in_array(Options::FORCE_FLUSH, $options)) {
+            $this->om->flush();
+        } else {
+            $this->om->forceFlush();
+        }
     }
 
     /**
@@ -249,7 +258,11 @@ class Crud
             $this->dispatch('copy', 'post', [$object, $options, $new, $extra]);
         }
 
-        $this->om->flush();
+        if (!in_array(Options::FORCE_FLUSH, $options)) {
+            $this->om->flush();
+        } else {
+            $this->om->forceFlush();
+        }
 
         return $new;
     }
@@ -304,7 +317,13 @@ class Crud
             if ($this->dispatch('patch', 'pre', [$object, $options, $property, $element, $action])) {
                 $object->$methodName($element);
 
-                $this->om->save($object);
+                $this->om->persist($object);
+                if (!in_array(Options::FORCE_FLUSH, $options)) {
+                    $this->om->flush();
+                } else {
+                    $this->om->forceFlush();
+                }
+
                 $this->dispatch('patch', 'post', [$object, $options, $property, $element, $action]);
             }
         }
@@ -341,7 +360,13 @@ class Crud
         if ($this->dispatch('patch', 'pre', [$object, $options, $property, $data, self::PROPERTY_SET])) {
             $object->$methodName($data);
 
-            $this->om->save($object);
+            $this->om->persist($object);
+            if (!in_array(Options::FORCE_FLUSH, $options)) {
+                $this->om->flush();
+            } else {
+                $this->om->forceFlush();
+            }
+
             $this->dispatch('patch', 'post', [$object, $options, $property, $data, self::PROPERTY_SET]);
         }
 
