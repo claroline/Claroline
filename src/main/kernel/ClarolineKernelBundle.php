@@ -11,6 +11,7 @@
 
 namespace Claroline\KernelBundle;
 
+use Claroline\CoreBundle\Library\Maintenance\MaintenanceHandler;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 use Claroline\KernelBundle\Manager\BundleManager;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -44,7 +45,7 @@ class ClarolineKernelBundle extends Bundle
     {
         $bundles = [];
 
-        foreach ($this->bundleManager->getActiveBundles('test' === $this->kernel->getEnvironment()) as $bundle) {
+        foreach ($this->bundleManager->getActiveBundles(MaintenanceHandler::isMaintenanceEnabled() || 'test' === $this->kernel->getEnvironment()) as $bundle) {
             $bundles[] = $bundle[BundleManager::BUNDLE_INSTANCE];
         }
 
@@ -57,7 +58,7 @@ class ClarolineKernelBundle extends Bundle
 
     public function loadConfigurations(LoaderInterface $loader)
     {
-        foreach ($this->bundleManager->getActiveBundles('test' === $this->kernel->getEnvironment()) as $bundle) {
+        foreach ($this->bundleManager->getActiveBundles(MaintenanceHandler::isMaintenanceEnabled() || 'test' === $this->kernel->getEnvironment()) as $bundle) {
             foreach ($bundle[BundleManager::BUNDLE_CONFIG]->getContainerResources() as $resource) {
                 $loader->load(
                     $resource[ConfigurationBuilder::RESOURCE_OBJECT],
