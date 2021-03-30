@@ -15,10 +15,13 @@ use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
+use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\MenuAction;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
+use Claroline\CoreBundle\Event\CatalogEvents\FunctionalEvents;
+use Claroline\CoreBundle\Event\Functional\ResourceOpenEvent;
 use Claroline\CoreBundle\Exception\ResourceNotFoundException;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Manager\Resource\ResourceActionManager;
@@ -68,6 +71,8 @@ class ResourceController
     private $finder;
     /** @var ResourceRightsRepository */
     private $rightsRepo;
+    /** @var StrictDispatcher */
+    private $strictDispatcher;
 
     public function __construct(
         TokenStorageInterface $tokenStorage,
@@ -78,7 +83,8 @@ class ResourceController
         ResourceActionManager $actionManager,
         ResourceRestrictionsManager $restrictionsManager,
         ObjectManager $om,
-        AuthorizationCheckerInterface $authorization
+        AuthorizationCheckerInterface $authorization,
+        StrictDispatcher $strictDispatcher
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->templating = $templating;
@@ -90,6 +96,7 @@ class ResourceController
         $this->rightsRepo = $om->getRepository(ResourceRights::class);
         $this->authorization = $authorization;
         $this->finder = $finder;
+        $this->strictDispatcher = $strictDispatcher;
     }
 
     /**
@@ -123,6 +130,15 @@ class ResourceController
                 // Not a 404 because we should not have ResourceNode without a linked AbstractResource
                 return new JsonResponse(['resource_not_found'], 500);
             }
+
+            $this->strictDispatcher->dispatch(
+                FunctionalEvents::RESOURCE_OPEN,
+                ResourceOpenEvent::class,
+                [
+                    $userRoles,
+                    $resourceNode,
+                ]
+            );
 
             return new JsonResponse(
                 array_merge($loaded, [

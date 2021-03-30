@@ -1,4 +1,7 @@
 {
   "addBadge": "Le badge badgeName a été ajouté à l'utilisateur userName",
-  "removeBadge": "Le badge badgeName a été retiré de l'utilisateur userName"
+  "removeBadge": "Le badge badgeName a été retiré de l'utilisateur userName",
+  "resourceOpen": "La resouce resourceName a été ouverte par l'utilisateur userName",
+  "resourceComplete": "La resource resourceName a été complétée par l'utilisateur userName",
+  "resourceEvaluation": "resourceName - statusName : L'utilisateur userName est actuellement à l'étape userProgression"
 }

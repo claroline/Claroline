@@ -11,20 +11,20 @@
 
 namespace Claroline\CoreBundle\Event\Functional;
 
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\OpenBadgeBundle\Entity\BadgeClass;
 use Symfony\Contracts\EventDispatcher\Event;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class RemoveBadgeEvent extends Event
+class ResourceOpenEvent extends Event
 {
     private $user;
-    private $badge;
+    private $resourceNode;
 
-    public function __construct(User $user, BadgeClass $badge)
+    public function __construct(User $user, ResourceNode $resourceNode)
     {
         $this->user = $user;
-        $this->badge = $badge;
+        $this->resourceNode = $resourceNode;
     }
 
     public function getUser(): User
@@ -32,13 +32,13 @@ class RemoveBadgeEvent extends Event
         return $this->user;
     }
 
-    public function getBadge(): BadgeClass
+    public function getResource(): ResourceNode
     {
-        return $this->badge;
+        return $this->resourceNode;
     }
 
     public function getMessage(TranslatorInterface $translator)
     {
-        return $translator->trans('removeBadge', ['userName' => $this->user->getUsername(), 'badgeName' => $this->badge->getName()], 'functional');
+        return $translator->trans('resourceOpen', ['userName' => $this->user->getUsername(), 'resourceName' => $this->resourceNode->getName()], 'functional');
     }
 }

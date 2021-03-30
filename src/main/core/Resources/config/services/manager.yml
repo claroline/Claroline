@@ -227,6 +227,7 @@ services:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@event_dispatcher'
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
 
     claroline.manager.workspace.evaluation:
         alias: Claroline\CoreBundle\Manager\Workspace\EvaluationManager
@@ -309,6 +310,7 @@ services:
         arguments:
             - '@event_dispatcher'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
 
     claroline.manager.resource_evaluation_manager:
         alias: Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager

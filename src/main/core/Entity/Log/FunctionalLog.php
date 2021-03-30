@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\Entity\Log;
 
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -41,6 +42,13 @@ class FunctionalLog
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="SET NULL")
      */
     private $user;
+
+    /**
+     * @var ResourceNode
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
+     * @ORM\JoinColumn(name="resource_id", referencedColumnName="id", onDelete="SET NULL")
+     */
+    private $resource;
 
     public function getId(): int
     {
@@ -91,6 +99,18 @@ class FunctionalLog
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getResource(): ?ResourceNode
+    {
+        return $this->resource;
+    }
+
+    public function setResource(?ResourceNode $resource): self
+    {
+        $this->resource = $resource;
 
         return $this;
     }

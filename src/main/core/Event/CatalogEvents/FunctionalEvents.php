@@ -14,7 +14,13 @@ final class FunctionalEvents
      */
     public const REMOVE_BADGE = 'event.funcitonal.remove_badge';
 
-    public const RESOURCE_ENTERING = 'event.functional.resource_entering';
+    /**
+     * @Event("Claroline\CoreBundle\Event\Functional\ResourceOpenEvent")
+     */
+    public const RESOURCE_OPEN = 'event.functional.resource_open';
 
-    public const RESOURCE_EXITING = 'event.functional.resource_exiting';
+    /**
+     * @Event("Claroline\CoreBundle\Event\Functional\ResourceEvaluationEvent")
+     */
+    public const RESOURCE_EVALUATION = 'event.functional.resource_evaluation';
 }

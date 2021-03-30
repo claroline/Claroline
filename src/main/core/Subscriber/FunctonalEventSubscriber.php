@@ -25,8 +25,8 @@ class FunctonalEventSubscriber implements EventSubscriberInterface
         return [
             FunctionalEvents::ADD_BADGE => 'logEvent',
             FunctionalEvents::REMOVE_BADGE => 'logEvent',
-            FunctionalEvents::RESOURCE_ENTERING => 'logEvent',
-            FunctionalEvents::RESOURCE_EXITING => 'logEvent',
+            FunctionalEvents::RESOURCE_EVALUATION => 'logEvent',
+            FunctionalEvents::RESOURCE_OPEN => 'logEvent',
         ];
     }
 
@@ -37,6 +37,10 @@ class FunctonalEventSubscriber implements EventSubscriberInterface
         $logEntry->setUser($event->getUser());
         $logEntry->setDetails($event->getMessage($this->translator));
         $logEntry->setEvent($eventName);
+
+        if (method_exists($event, 'getResourceNode')) {
+            $logEntry->setResource($event->getResourceNode());
+        }
 
         $this->em->persist($logEntry);
         $this->em->flush();

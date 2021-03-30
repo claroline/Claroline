@@ -32,7 +32,7 @@ class AddBadgeEvent extends Event
         return $this->user;
     }
 
-    public function getRole(): BadgeClass
+    public function getBadge(): BadgeClass
     {
         return $this->badge;
     }
