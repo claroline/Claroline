@@ -16,6 +16,7 @@ use Claroline\KernelBundle\Bundle\AutoConfigurableInterface;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 use Claroline\KernelBundle\Bundle\ConfigurationProviderInterface;
 use Claroline\KernelBundle\Bundle\PluginBundleInterface;
+use Claroline\KernelBundle\ClarolineKernelBundle;
 use Psr\Log\LoggerAwareInterface;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -55,10 +56,9 @@ class BundleManager implements LoggerAwareInterface
         $configProviderBundles = [];
         $nonAutoConfigurableBundles = [];
         $environment = $this->getEnvironment();
-        $updateMode = 'cli' === PHP_SAPI;
 
         foreach ($entries as $bundleClass => $isActive) {
-            if (((bool) $isActive || $fetchAll || $updateMode) && 'Claroline\KernelBundle\ClarolineKernelBundle' !== $bundleClass) {
+            if (((bool) $isActive || $fetchAll) && ClarolineKernelBundle::class !== $bundleClass) {
                 if (class_exists($bundleClass)) {
                     /** @var BundleInterface $bundle */
                     $bundle = new $bundleClass($this->kernel);
