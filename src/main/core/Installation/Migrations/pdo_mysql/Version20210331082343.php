@@ -14,7 +14,7 @@ class Version20210331082343 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
-        $this->addSql("
+        $this->addSql('
             CREATE TABLE claro_log_functionnal (
                 id INT AUTO_INCREMENT NOT NULL, 
                 user_id INT DEFAULT NULL, 
@@ -26,25 +26,25 @@ class Version20210331082343 extends AbstractMigration
                 INDEX IDX_29C2B64E89329D25 (resource_id), 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE claro_log_functionnal 
             ADD CONSTRAINT FK_29C2B64EA76ED395 FOREIGN KEY (user_id) 
             REFERENCES claro_user (id) 
             ON DELETE SET NULL
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE claro_log_functionnal 
             ADD CONSTRAINT FK_29C2B64E89329D25 FOREIGN KEY (resource_id) 
             REFERENCES claro_resource_node (id) 
             ON DELETE SET NULL
-        ");
+        ');
     }
 
     public function down(Schema $schema)
     {
-        $this->addSql("
+        $this->addSql('
             DROP TABLE claro_log_functionnal
-        ");
+        ');
     }
 }

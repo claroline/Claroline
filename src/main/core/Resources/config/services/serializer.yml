@@ -347,4 +347,5 @@ services:
         tags: [claroline.serializer]
         arguments:
             - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
 

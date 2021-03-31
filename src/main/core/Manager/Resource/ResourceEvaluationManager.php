@@ -140,7 +140,7 @@ class ResourceEvaluationManager
             [
                 $resourceUserEvaluation->getUser(),
                 $resourceUserEvaluation->getResourceNode(),
-                $evaluation
+                $evaluation,
             ]
         );
 

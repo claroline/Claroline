@@ -53,7 +53,7 @@ class ResourceEvaluationEvent extends Event
                 'userName' => $this->user->getUsername(),
                 'resourceName' => $this->resourceNode->getName(),
                 'statusName' => $this->evaluation->getStatus(),
-                'userProgression' => $this->evaluation->getProgression() . '/' . $this->evaluation->getProgressionMax()
+                'userProgression' => $this->evaluation->getProgression().'/'.$this->evaluation->getProgressionMax(),
             ],
             'functional'
         );
