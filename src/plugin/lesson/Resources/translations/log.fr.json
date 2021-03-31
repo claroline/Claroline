@@ -1,5 +1,5 @@
 {
-    "log.lesson.create_chapter": "a crée le chapitre %chapter% dans le cours %lesson%",
+    "log.lesson.create_chapter": "a créé le chapitre %chapter% dans le cours %lesson%",
     "log.lesson.delete_chapter": "a supprimé le chapitre %chapter% du cours %lesson%",
     "log.lesson.log_created_chapter": "Chapitre créé",
     "log.lesson.log_deleted_chapter": "Chapitre supprimé",
