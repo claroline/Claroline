@@ -4,7 +4,8 @@ import classes from 'classnames'
 import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
-import {LINK_BUTTON} from '#/main/app/buttons'
+import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
+import {Button} from '#/main/app/action/components/button'
 import {Menu} from '#/main/app/overlays/menu/components/menu'
 
 import {route as workspaceRoute} from '#/main/core/workspace/routing'
@@ -18,16 +19,15 @@ class SearchMenu extends Component {
     super(props)
 
     this.state = {
-      menuOpened: false,
       currentSearch: ''
     }
 
     this.updateSearch = this.updateSearch.bind(this)
+    this.reset = this.reset.bind(this)
   }
 
   updateSearch(searchStr) {
     this.setState({
-      menuOpened: !isEmpty(searchStr) && 3 <= searchStr.length,
       currentSearch: searchStr
     })
 
@@ -36,11 +36,19 @@ class SearchMenu extends Component {
     }
   }
 
+  reset() {
+    this.setState({
+      currentSearch: ''
+    })
+  }
+
   render() {
+    const menuOpened = !isEmpty(this.state.currentSearch) && 3 <= this.state.currentSearch.length && (!this.props.fetching || !this.props.empty)
+
     return (
       <div className="app-header-search">
         <div className={classes('dropdown', {
-          open: this.state.menuOpened
+          open: menuOpened
         })}>
           <input
             type="search"
@@ -50,27 +58,36 @@ class SearchMenu extends Component {
             onChange={(e) => this.updateSearch(e.target.value)}
           />
 
+          {this.props.fetching &&
+            <span className="app-header-search-loader fa fa-fw fa-spinner fa-spin"/>
+          }
+
+          {!this.props.fetching && menuOpened &&
+            <Button
+              className="app-header-search-close"
+              type={CALLBACK_BUTTON}
+              icon="fa fa-fw fa-times"
+              label={trans('close', {}, 'actions')}
+              tooltip="bottom"
+              callback={this.reset}
+            />
+          }
+
           <Menu
-            className="dropdown-menu dropdown-menu-full"
-            open={this.state.menuOpened}
-            onClose={() => this.setState({
-              menuOpened: false,
-              currentSearch: ''
-            })}
+            className="app-header-dropdown dropdown-menu dropdown-menu-full"
+            open={menuOpened}
+            onClose={this.reset}
           >
-            {this.props.fetching &&
-              <div>
-                loading
+            {this.props.empty &&
+              <div className="app-header-dropdown-empty">
+                {trans('no_search_results')}
+                <small>
+                  {trans('no_search_results_help')}
+                </small>
               </div>
             }
 
-            {!this.props.fetching && this.props.empty &&
-              <div>
-                empty
-              </div>
-            }
-
-            {!this.props.fetching && !this.props.empty && Object.keys(this.props.results)
+            {!this.props.empty && Object.keys(this.props.results)
               .filter(resultType => !isEmpty(this.props.results[resultType]))
               .map(resultType =>
                 <Fragment key={resultType}>
@@ -85,7 +102,8 @@ class SearchMenu extends Component {
                       primaryAction: {
                         type: LINK_BUTTON,
                         label: trans('open', {}, 'actions'),
-                        target: 'workspaces' === resultType ? workspaceRoute(result) : ('resources' === resultType ? resourceRoute(result) : userRoute(result))
+                        target: 'workspaces' === resultType ? workspaceRoute(result) : ('resources' === resultType ? resourceRoute(result) : userRoute(result)),
+                        onClick: this.reset
                       }
                     })
                   )}
