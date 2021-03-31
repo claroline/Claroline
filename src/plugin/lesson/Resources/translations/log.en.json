@@ -11,7 +11,7 @@
     "log.lesson.old_parent": "Former parent",
     "log.lesson.read_chapter": "has opened chapter %chapter% in lesson %lesson%",
     "log.lesson.update_chapter": "has updated chapter %chapter% in lesson %lesson%",
-    "log_resource-icap_lesson-chapter_create_filter": "Creating a chapter in a lesson\"",
+    "log_resource-icap_lesson-chapter_create_filter": "Creating a chapter in a lesson",
     "log_resource-icap_lesson-chapter_create_shortname": "Creating a chapter",
     "log_resource-icap_lesson-chapter_create_title": "Creating a chapter in a lesson",
     "log_resource-icap_lesson-chapter_delete_filter": "Removing a chapter in a lesson",
