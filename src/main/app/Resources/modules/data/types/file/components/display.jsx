@@ -2,16 +2,20 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 const FileDisplay = props => {
-  let file = props.data
-  if (Array.isArray(props.data)) {
-    file = file[0]
+  if (props.data) {
+    let file = props.data
+    if (Array.isArray(props.data)) {
+      file = file[0]
+    }
+
+    return (
+      <a href={file.url}>
+        {file.name || file.url}
+      </a>
+    )
   }
 
-  return (
-    <a href={file.url}>
-      {file.name || file.url}
-    </a>
-  )
+  return null
 }
 
 FileDisplay.propTypes = {
