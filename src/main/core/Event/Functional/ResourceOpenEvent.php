@@ -32,7 +32,7 @@ class ResourceOpenEvent extends Event
         return $this->user;
     }
 
-    public function getResource(): ResourceNode
+    public function getResourceNode(): ResourceNode
     {
         return $this->resourceNode;
     }

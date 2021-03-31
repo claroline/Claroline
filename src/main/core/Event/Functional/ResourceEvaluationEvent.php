@@ -35,14 +35,14 @@ class ResourceEvaluationEvent extends Event
         return $this->user;
     }
 
-    public function getResourceEvaluation(): ResourceEvaluation
-    {
-        return $this->evaluation;
-    }
-
     public function getResourceNode(): ResourceNode
     {
         return $this->resourceNode;
+    }
+
+    public function getResourceEvaluation(): ResourceEvaluation
+    {
+        return $this->evaluation;
     }
 
     public function getMessage(TranslatorInterface $translator)

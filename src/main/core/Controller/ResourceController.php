@@ -135,7 +135,7 @@ class ResourceController
                 FunctionalEvents::RESOURCE_OPEN,
                 ResourceOpenEvent::class,
                 [
-                    $userRoles,
+                    $this->tokenStorage->getToken()->getUser(),
                     $resourceNode,
                 ]
             );

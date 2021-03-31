@@ -2,5 +2,5 @@
   "addBadge": "The badge badgeName has been added to the user userName",
   "removeBadge": "The badge badgeName has been removed to the user userName",
   "resourceOpen": "The resource resourceName has been opened by user userName",
-  "resourceEvaluation": "The resource resourceName has been completed by user userName"
+  "resourceEvaluation": "resourceName - statusName : userName is currently in step userProgression"
 }

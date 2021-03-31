@@ -9,15 +9,15 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class FunctonalEventSubscriber implements EventSubscriberInterface
+class FunctionalEventSubscriber implements EventSubscriberInterface
 {
     private $translator;
     private $em;
 
     public function __construct(EntityManagerInterface $em, TranslatorInterface $translator)
     {
-        $this->translator = $translator;
         $this->em = $em;
+        $this->translator = $translator;
     }
 
     public static function getSubscribedEvents(): array

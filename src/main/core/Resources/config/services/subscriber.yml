@@ -9,3 +9,10 @@ services:
             - '@translator'
         tags:
             - { name: kernel.event_subscriber }
+
+    Claroline\CoreBundle\Subscriber\FunctionalEventSubscriber:
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@translator'
+        tags:
+            - { name: kernel.event_subscriber }

@@ -30,6 +30,7 @@ class FunctionalLogSerializer
             'user' => $user,
             'date' => DateNormalizer::normalize($functionalLog->getDate()),
             'details' => $functionalLog->getDetails(),
+            'resource' => $functionalLog->getResource(),
             'event' => $functionalLog->getEvent(),
         ];
     }
