@@ -187,10 +187,6 @@ services:
         tags:
             - { name: kernel.event_listener, event: open_tool_workspace_transfer, method: onDisplayWorkspace }
 
-    Claroline\CoreBundle\Listener\Tool\ParametersListener:
-        tags:
-            - { name: kernel.event_listener, event: open_tool_desktop_parameters, method: onDisplayDesktopParameters }
-
     Claroline\CoreBundle\Listener\Tool\ResourcesListener:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
