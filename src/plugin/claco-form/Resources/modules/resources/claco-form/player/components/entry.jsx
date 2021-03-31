@@ -232,7 +232,7 @@ class EntryComponent extends Component {
                   {}
               }
               break
-            case 'file':
+            /*case 'file':
               if (this.props.entry && this.props.entry.values && this.props.entry.values[f.id]) {
                 params['calculated'] = (data) => Object.assign(
                   {},
@@ -240,7 +240,7 @@ class EntryComponent extends Component {
                   {url: url(['claro_claco_form_field_value_file_download', {entry: data.id, field: f.id}])}
                 )
               }
-              break
+              break*/
           }
 
           return params

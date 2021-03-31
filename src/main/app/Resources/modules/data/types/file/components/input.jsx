@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import classes from 'classnames'
+import cloneDeep from 'lodash/cloneDeep'
 import isEmpty from 'lodash/isEmpty'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
@@ -62,21 +63,28 @@ class FileComponent extends Component {
     if (!this.props.multiple) {
       const file = files[0]
       if (this.props.autoUpload) {
+        // TODO : delete old file if exist
         this.props.uploadFile(file, this.props.uploadUrl, this.props.onChange)
       } else {
         this.props.onChange(file)
       }
     } else {
       // Only manages multiple files if autoUpload is false
+      // TODO : manage auto upload for multiple files
       if (this.props.autoUpload) {
         this.props.uploadFile(files[0], this.props.uploadUrl, this.props.onChange)
       } else {
-        this.props.onChange(files)
+        this.props.onChange(Object.values(files))
       }
     }
   }
 
   render() {
+    let files = []
+    if (!isEmpty(this.props.value)) {
+      files = this.props.multiple ? this.props.value : [this.props.value]
+    }
+
     return (
       <div
         className={classes('file-control', this.props.className, {
@@ -115,22 +123,29 @@ class FileComponent extends Component {
           </div>
         </button>
 
-        {this.props.value &&
+        {!isEmpty(files) &&
           <div className="file-thumbnails">
-            <FileThumbnail
-              type={getType(this.props.value.mimeType || this.props.value.type)}
-              data={this.props.value}
-              canEdit={false}
-              canExpand={false}
-              canDownload={false}
-              handleDelete={() => {
-                if (this.props.value.id) {
-                  this.props.deleteFile(this.props.value.id, this.props.onChange)
-                } else {
-                  this.props.onChange(null)
-                }
-              }}
-            />
+            {files.map((file, index) =>
+              <FileThumbnail
+                key={file.id || file.name || index}
+                type={getType(file.mimeType || file.type)}
+                data={file}
+                delete={() => {
+                  let newValue = null
+                  if (this.props.multiple) {
+                    newValue = cloneDeep(files)
+                    newValue.splice(index, 1)
+                  }
+
+                  if ((file.id || file.url) && this.props.autoUpload) {
+                    // only call delete api for auto input and already uploaded files
+                    this.props.deleteFile(file.id, () => this.props.onChange(newValue))
+                  } else {
+                    this.props.onChange(newValue)
+                  }
+                }}
+              />
+            )}
           </div>
         }
       </div>
@@ -160,7 +175,8 @@ implementPropTypes(FileComponent, DataInputTypes, {
   max: T.number,
 
   uploadUrl: T.oneOfType([T.string, T.array]),
-  autoUpload: T.bool,
+  downloadUrl: T.oneOfType([T.string, T.array]),
+  autoUpload: T.bool, // TODO : rename, it also manage audo delete in the api
 
   // async method for autoUpload
   uploadFile: T.func.isRequired,

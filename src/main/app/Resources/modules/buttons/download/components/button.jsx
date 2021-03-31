@@ -17,6 +17,7 @@ const DownloadButton = props =>
   <UrlButton
     {...omit(props, 'file')}
     target={props.file.url}
+    download={props.file.name}
   >
     {props.children || props.file.name || props.file.url}
   </UrlButton>
