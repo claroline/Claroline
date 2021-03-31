@@ -1,17 +1,31 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import isEmpty from 'lodash/isEmpty'
+
+import {getType} from '#/main/app/data/types/file/utils'
+import {FileThumbnail} from '#/main/app/data/types/file/components/thumbnail'
 
 const FileDisplay = props => {
-  let file = props.data
-  if (Array.isArray(props.data)) {
-    file = file[0]
+  let files = []
+  if (!isEmpty(props.data)) {
+    files = Array.isArray(props.data) ? props.data : [props.data]
   }
 
-  return (
-    <a href={file.url}>
-      {file.name || file.url}
-    </a>
-  )
+  if (!isEmpty(files)) {
+    return (
+      <div className="file-thumbnails">
+        {files.map((file, index) =>
+          <FileThumbnail
+            key={file.id || file.name || index}
+            type={getType(file.mimeType || file.type)}
+            data={file}
+          />
+        )}
+      </div>
+    )
+  }
+
+  return null
 }
 
 FileDisplay.propTypes = {

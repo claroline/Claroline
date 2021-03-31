@@ -49,12 +49,12 @@ class FieldValueSerializer
                 'field' => [
                     'id' => $fieldValue->getField()->getUuid(),
                 ],
-                'fieldFacetValue' => $this->fieldFacetValueSerializer->serialize($fieldValue->getFieldFacetValue(), ['minimal']),
+                'fieldFacetValue' => $this->fieldFacetValueSerializer->serialize($fieldValue->getFieldFacetValue(), [Options::SERIALIZE_MINIMAL]),
             ]);
         } else {
             $serialized = array_merge($serialized, [
                 'field' => $this->fieldSerializer->serialize($fieldValue->getField(), [Options::SERIALIZE_MINIMAL]),
-                'fieldFacetValue' => $this->fieldFacetValueSerializer->serialize($fieldValue->getFieldFacetValue(), ['minimal']),
+                'fieldFacetValue' => $this->fieldFacetValueSerializer->serialize($fieldValue->getFieldFacetValue(), [Options::SERIALIZE_MINIMAL]),
             ]);
         }
 
