@@ -11,7 +11,10 @@
 
 namespace Claroline\CoreBundle\Controller;
 
+use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Entity\Tool\AdminTool;
+use Claroline\CoreBundle\Event\CatalogEvents\FunctionalEvents;
+use Claroline\CoreBundle\Event\Functional\ToolOpenEvent;
 use Claroline\CoreBundle\Event\Log\LogAdminToolReadEvent;
 use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 use Claroline\CoreBundle\Manager\Tool\ToolManager;
@@ -40,19 +43,21 @@ class AdministrationController
     /** @var ToolManager */
     private $toolManager;
 
-    /**
-     * AdministrationController constructor.
-     */
+    /** @var StrictDispatcher */
+    private $strictDispatcher;
+
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         TokenStorageInterface $tokenStorage,
         EventDispatcherInterface $eventDispatcher,
-        ToolManager $toolManager
+        ToolManager $toolManager,
+        StrictDispatcher $strictDispatcher
     ) {
         $this->authorization = $authorization;
         $this->eventDispatcher = $eventDispatcher;
         $this->toolManager = $toolManager;
         $this->tokenStorage = $tokenStorage;
+        $this->strictDispatcher = $strictDispatcher;
     }
 
     /**
@@ -108,6 +113,16 @@ class AdministrationController
         $event = $this->eventDispatcher->dispatch(new OpenToolEvent(), 'administration_tool_'.$toolName);
 
         $this->eventDispatcher->dispatch(new LogAdminToolReadEvent($toolName), 'log');
+
+        $this->strictDispatcher->dispatch(
+            FunctionalEvents::TOOL_OPEN,
+            ToolOpenEvent::class,
+            [
+                $this->tokenStorage->getToken()->getUser(),
+                'Administration',
+                $toolName,
+            ]
+        );
 
         return new JsonResponse(array_merge($event->getData(), [
             'data' => [

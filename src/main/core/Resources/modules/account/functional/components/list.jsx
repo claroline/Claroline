@@ -34,6 +34,11 @@ const FunctionalLogList = (props) =>
         label: trans('resource'),
         displayed: true
       }, {
+        name: 'workspace',
+        type: 'workspace',
+        label: trans('workspace'),
+        displayed: true
+      }, {
         name: 'event',
         type: 'translation',
         label: trans('event'),

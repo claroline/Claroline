@@ -28,6 +28,7 @@ class FunctionalEventSubscriber implements EventSubscriberInterface
             FunctionalEvents::RESOURCE_EVALUATION => 'logEvent',
             FunctionalEvents::RESOURCE_OPEN => 'logEvent',
             FunctionalEvents::RESOURCE_SCORE => 'logEvent',
+            FunctionalEvents::TOOL_OPEN => 'logEvent',
         ];
     }
 
@@ -41,6 +42,8 @@ class FunctionalEventSubscriber implements EventSubscriberInterface
 
         if (method_exists($event, 'getResourceNode')) {
             $logEntry->setResource($event->getResourceNode());
+        } elseif (method_exists($event, 'getWorkspace')) {
+            $logEntry->setWorkspace($event->getWorkspace());
         }
 
         $this->em->persist($logEntry);

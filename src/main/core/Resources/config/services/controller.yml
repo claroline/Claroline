@@ -265,6 +265,7 @@ services:
             - '@security.token_storage'
             - '@event_dispatcher'
             - '@claroline.manager.tool_manager'
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
 
     Claroline\CoreBundle\Controller\AuthenticationController:
         arguments:
@@ -283,6 +284,7 @@ services:
             - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@claroline.manager.tool_manager'
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
 
     Claroline\CoreBundle\Controller\FileController:
         arguments:
@@ -328,6 +330,7 @@ services:
             - '@claroline.manager.workspace_manager'
             - '@claroline.manager.workspace_restrictions'
             - '@Claroline\CoreBundle\Manager\Workspace\EvaluationManager'
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
 
     Claroline\CoreBundle\Controller\APINew\Log\SecurityLogController:
         parent: Claroline\AppBundle\Controller\AbstractSecurityController

@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Controller;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Role;
@@ -21,6 +22,8 @@ use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Shortcuts;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Event\CatalogEvents\FunctionalEvents;
+use Claroline\CoreBundle\Event\Functional\ToolOpenEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceEnterEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceToolReadEvent;
 use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
@@ -65,10 +68,9 @@ class WorkspaceController
     private $restrictionsManager;
     /** @var EvaluationManager */
     private $evaluationManager;
+    /** @var StrictDispatcher */
+    private $strictDispatcher;
 
-    /**
-     * WorkspaceController constructor.
-     */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         ObjectManager $om,
@@ -79,7 +81,8 @@ class WorkspaceController
         TranslatorInterface $translator,
         WorkspaceManager $manager,
         WorkspaceRestrictionsManager $restrictionsManager,
-        EvaluationManager $evaluationManager
+        EvaluationManager $evaluationManager,
+        StrictDispatcher $strictDispatcher
     ) {
         $this->authorization = $authorization;
         $this->om = $om;
@@ -91,6 +94,7 @@ class WorkspaceController
         $this->manager = $manager;
         $this->restrictionsManager = $restrictionsManager;
         $this->evaluationManager = $evaluationManager;
+        $this->strictDispatcher = $strictDispatcher;
     }
 
     /**
@@ -185,6 +189,17 @@ class WorkspaceController
         $event = $this->eventDispatcher->dispatch(new OpenToolEvent($workspace), 'open_tool_workspace_'.$toolName);
 
         $this->eventDispatcher->dispatch(new LogWorkspaceToolReadEvent($workspace, $toolName), 'log');
+
+        $this->strictDispatcher->dispatch(
+            FunctionalEvents::TOOL_OPEN,
+            ToolOpenEvent::class,
+            [
+                $this->tokenStorage->getToken()->getUser(),
+                'Wokrspace',
+                $toolName,
+                $workspace,
+            ]
+        );
 
         return new JsonResponse(array_merge($event->getData(), [
             'data' => $this->serializer->serialize($orderedTool),

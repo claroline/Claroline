@@ -14,10 +14,13 @@ namespace Claroline\CoreBundle\Controller;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
+use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Event\CatalogEvents\FunctionalEvents;
+use Claroline\CoreBundle\Event\Functional\ToolOpenEvent;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Event\Log\LogDesktopToolReadEvent;
 use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
@@ -58,13 +61,17 @@ class DesktopController
     /** @var ToolManager */
     private $toolManager;
 
+    /** @var StrictDispatcher */
+    private $strictDispatcher;
+
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         TokenStorageInterface $tokenStorage,
         EventDispatcherInterface $eventDispatcher,
         ParametersSerializer $parametersSerializer,
         SerializerProvider $serializer,
-        ToolManager $toolManager
+        ToolManager $toolManager,
+        StrictDispatcher $strictDispatcher
     ) {
         $this->authorization = $authorization;
         $this->tokenStorage = $tokenStorage;
@@ -72,6 +79,7 @@ class DesktopController
         $this->parametersSerializer = $parametersSerializer;
         $this->serializer = $serializer;
         $this->toolManager = $toolManager;
+        $this->strictDispatcher = $strictDispatcher;
     }
 
     /**
@@ -122,6 +130,16 @@ class DesktopController
         $event = $this->eventDispatcher->dispatch(new OpenToolEvent(), 'open_tool_desktop_'.$toolName);
 
         $this->eventDispatcher->dispatch(new LogDesktopToolReadEvent($toolName), 'log');
+
+        $this->strictDispatcher->dispatch(
+            FunctionalEvents::TOOL_OPEN,
+            ToolOpenEvent::class,
+            [
+                $this->tokenStorage->getToken()->getUser(),
+                'Desktop',
+                $toolName,
+            ]
+        );
 
         return new JsonResponse(array_merge($event->getData(), [
             'data' => $this->serializer->serialize($orderedTool),
