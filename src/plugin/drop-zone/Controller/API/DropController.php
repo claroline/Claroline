@@ -119,6 +119,7 @@ class DropController
         if (!empty($team)) {
             $this->checkTeamUser($team, $user);
         }
+
         try {
             if (empty($team)) {
                 // creates a User drop

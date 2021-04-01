@@ -37,12 +37,10 @@ const Timeline = props =>
       title={constants.PLANNING_STATES.all[constants.STATE_NOT_STARTED]}
       active={constants.STATE_NOT_STARTED === props.state}
     >
-      <span>
-        {trans('dropzone_start', {}, 'dropzone')} : {props.planning.type === constants.PLANNING_TYPE_AUTO && props.planning.drop && props.planning.drop.length > 0 ?
-          <div><b>{displayDate(props.planning.drop[0], false, true)}</b></div> :
-          <b>-</b>
-        }
-      </span>
+      {trans('dropzone_start', {}, 'dropzone')} : {props.planning.type === constants.PLANNING_TYPE_AUTO && props.planning.drop && props.planning.drop.length > 0 ?
+        <div><b>{displayDate(props.planning.drop[0], false, true)}</b></div> :
+        <b>-</b>
+      }
     </EvaluationStatus>
 
     <EvaluationStatus
@@ -53,7 +51,13 @@ const Timeline = props =>
         constants.STATE_ALLOW_DROP_AND_PEER_REVIEW
       ].indexOf(props.state) > -1}
     >
-      {trans('manager_defined_period', {}, 'dropzone')}
+      {props.planning.type === constants.PLANNING_TYPE_AUTO && props.planning.drop && props.planning.drop.length > 0 ?
+        trans('date_range', {
+          start: displayDate(props.planning.drop[0], false, true),
+          end: displayDate(props.planning.drop[1], false, true)
+        }) :
+        trans('manager_defined_period', {}, 'dropzone')
+      }
     </EvaluationStatus>
 
     {constants.REVIEW_TYPE_PEER === props.reviewType &&
@@ -65,7 +69,13 @@ const Timeline = props =>
           constants.STATE_ALLOW_DROP_AND_PEER_REVIEW
         ].indexOf(props.state) > -1}
       >
-        {trans('manager_defined_period', {}, 'dropzone')}
+        {props.planning.type === constants.PLANNING_TYPE_AUTO && props.planning.review && props.planning.review.length > 0 ?
+          trans('date_range', {
+            start: displayDate(props.planning.review[0], false, true),
+            end: displayDate(props.planning.review[1], false, true)
+          }) :
+          trans('manager_defined_period', {}, 'dropzone')
+        }
       </EvaluationStatus>
     }
 
@@ -74,12 +84,10 @@ const Timeline = props =>
       title={constants.PLANNING_STATES.all[constants.STATE_FINISHED]}
       active={constants.STATE_FINISHED === props.state}
     >
-      <span>
-        {trans('dropzone_end', {}, 'dropzone')} : {props.planning.type === constants.PLANNING_TYPE_AUTO && props.planning.drop && props.planning.drop.length > 1 ?
-          <div><b>{displayDate(props.planning.drop[1], false, true)}</b></div> :
-          <b>-</b>
-        }
-      </span>
+      {trans('dropzone_end', {}, 'dropzone')} : {props.planning.type === constants.PLANNING_TYPE_AUTO && props.planning.review && props.planning.review.length > 1 ?
+        <div><b>{displayDate(props.planning.review[1], false, true)}</b></div> :
+        <b>-</b>
+      }
     </EvaluationStatus>
   </ul>
 

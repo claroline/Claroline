@@ -20,10 +20,11 @@ use Claroline\DropZoneBundle\Entity\Dropzone;
 use Claroline\DropZoneBundle\Manager\DropzoneManager;
 use Claroline\TeamBundle\Manager\TeamManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class DropzoneListener
 {
+    /** @var TokenStorageInterface */
     private $tokenStorage;
 
     /** @var DropzoneManager */
@@ -38,9 +39,6 @@ class DropzoneListener
     /** @var TranslatorInterface */
     private $translator;
 
-    /**
-     * DropzoneListener constructor.
-     */
     public function __construct(
         TokenStorageInterface $tokenStorage,
         DropzoneManager $dropzoneManager,
