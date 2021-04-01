@@ -111,7 +111,7 @@ OverviewComponent.propTypes = {
   }),
   errorMessage: T.string,
   teams: T.arrayOf(T.shape({
-    id: T.number.isRequired,
+    id: T.string.isRequired,
     name: T.string.isRequired
   })),
   startDrop: T.func.isRequired,

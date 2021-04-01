@@ -168,13 +168,13 @@ const currentState = createSelector(
           //finished if end deposit date is reached
           if (currentDate > dropzone.planning.drop[1]) {
             currentState = constants.STATE_FINISHED
-          } else if(currentDate <= dropzone.planning.drop[1]){
+          } else if (currentDate <= dropzone.planning.drop[1]){
             currentState = constants.STATE_ALLOW_DROP
           }
-        } else if(constants.REVIEW_TYPE_PEER === dropzone.parameters.reviewType){
+        } else if (constants.REVIEW_TYPE_PEER === dropzone.parameters.reviewType){
           //peer review mode
           //finished if end deposit date and review end date are reached
-          if(currentDate > dropzone.planning.drop[1] ) {
+          if (currentDate > dropzone.planning.drop[1] ) {
             if (currentDate < dropzone.planning.review[0]) {
               currentState = constants.STATE_WAITING_FOR_PEER_REVIEW
             } else if (currentDate >= dropzone.planning.review[0] && currentDate <= dropzone.planning.review[1]) {
@@ -182,12 +182,13 @@ const currentState = createSelector(
             } else {
               currentState = constants.STATE_FINISHED
             }
-          } else{
+          } else {
             currentState = constants.STATE_ALLOW_DROP
           }
         }
       }
     }
+
     return currentState
   }
 )
@@ -224,20 +225,9 @@ const dropDisabledMessages = createSelector(
         messages.push(trans('drop_disabled_finished', {}, 'dropzone'))
         break
 
-      // otherwise checks drop date boundaries
       default:
-        if (constants.PLANNING_TYPE_MANUAL === dropzone.planning.type) {
-          if (!isDropEnabledManual) {
+        if (constants.PLANNING_TYPE_MANUAL === dropzone.planning.type && !isDropEnabledManual) {
             messages.push(trans('drop_disabled_not_active', {}, 'dropzone'))
-          }
-        } else {
-          if (now(false) < dropzone.planning.drop[0]) {
-            // drop has not already started
-            messages.push(trans('drop_disabled_not_started', {}, 'dropzone'))
-          } else if (now(false) > dropzone.planning.drop[1]) {
-            // drop has already finished
-            messages.push(trans('drop_disabled_finished', {}, 'dropzone'))
-          }
         }
 
         break
@@ -279,20 +269,9 @@ const peerReviewDisabledMessages = createSelector(
           messages.push(trans('review_disabled_finished', {}, 'dropzone'))
           break
 
-        // otherwise checks drop date boundaries
         default:
-          if (constants.PLANNING_TYPE_MANUAL === dropzone.planning.type) {
-            if (!isPeerReviewEnabledManual) {
+          if (constants.PLANNING_TYPE_MANUAL === dropzone.planning.type && !isPeerReviewEnabledManual) {
               messages.push(trans('review_disabled_not_active', {}, 'dropzone'))
-            }
-          } else {
-            if (now(false) < dropzone.planning.review[0]) {
-              // drop has not already started
-              messages.push(trans('review_disabled_not_started', {}, 'dropzone'))
-            } else if (now(false) > dropzone.planning.review[1]) {
-              // drop has already finished
-              messages.push(trans('review_disabled_finished', {}, 'dropzone'))
-            }
           }
 
           break

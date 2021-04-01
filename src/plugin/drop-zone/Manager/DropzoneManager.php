@@ -277,7 +277,6 @@ class DropzoneManager
 
         if ($withCreation) {
             if (empty($drop)) {
-                $this->om->startFlushSuite();
                 $drop = new Drop();
                 $drop->setUser($user);
                 $drop->setDropzone($dropzone);
@@ -295,12 +294,9 @@ class DropzoneManager
                         ['status' => AbstractEvaluation::STATUS_INCOMPLETE]
                     );
                 }
-                $this->om->persist($drop);
-                $this->om->endFlushSuite();
 
                 $this->eventDispatcher->dispatch(new LogDropStartEvent($dropzone, $drop), 'log');
             } elseif (!$drop->hasUser($user)) {
-                $this->om->startFlushSuite();
                 $drop->addUser($user);
                 $this->resourceEvalManager->createResourceEvaluation(
                     $dropzone->getResourceNode(),
@@ -308,9 +304,10 @@ class DropzoneManager
                     null,
                     ['status' => AbstractEvaluation::STATUS_INCOMPLETE]
                 );
-                $this->om->persist($drop);
-                $this->om->endFlushSuite();
             }
+
+            $this->om->persist($drop);
+            $this->om->flush();
         }
 
         return $drop;
