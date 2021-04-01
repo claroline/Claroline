@@ -27,6 +27,7 @@ class FunctionalEventSubscriber implements EventSubscriberInterface
             FunctionalEvents::REMOVE_BADGE => 'logEvent',
             FunctionalEvents::RESOURCE_EVALUATION => 'logEvent',
             FunctionalEvents::RESOURCE_OPEN => 'logEvent',
+            FunctionalEvents::RESOURCE_SCORE => 'logEvent',
         ];
     }
 

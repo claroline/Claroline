@@ -23,4 +23,9 @@ final class FunctionalEvents
      * @Event("Claroline\CoreBundle\Event\Functional\ResourceEvaluationEvent")
      */
     public const RESOURCE_EVALUATION = 'event.functional.resource_evaluation';
+
+    /**
+     * @Event("Claroline\CoreBundle\Event\Functional\ResourceScoreEvent")
+     */
+    public const RESOURCE_SCORE = 'event.functional.resource_score';
 }

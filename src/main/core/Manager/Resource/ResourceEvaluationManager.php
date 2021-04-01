@@ -22,6 +22,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\CatalogEvents\FunctionalEvents;
 use Claroline\CoreBundle\Event\Functional\ResourceEvaluationEvent;
+use Claroline\CoreBundle\Event\Functional\ResourceScoreEvent;
 use Claroline\CoreBundle\Event\Resource\EvaluateResourceEvent;
 use Claroline\CoreBundle\Repository\Log\LogRepository;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -188,6 +189,15 @@ class ResourceEvaluationManager
                     $rue->setScoreMin($data['scoreMin']);
                 }
             }
+
+            $this->strictDispatcher->dispatch(
+                FunctionalEvents::RESOURCE_SCORE,
+                ResourceScoreEvent::class,
+                [
+                    $user,
+                    $rue,
+                ]
+            );
         }
 
         if (isset($data['progression'])) {

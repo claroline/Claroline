@@ -54,6 +54,7 @@ class ResourceEvaluationEvent extends Event
                 'resourceName' => $this->resourceNode->getName(),
                 'statusName' => $this->evaluation->getStatus(),
                 'userProgression' => $this->evaluation->getProgression().'/'.$this->evaluation->getProgressionMax(),
+                'durationTime' => $this->evaluation->getDuration(),
             ],
             'functional'
         );

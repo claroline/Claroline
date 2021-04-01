@@ -2,5 +2,6 @@
   "addBadge": "The badge badgeName has been added to the user userName",
   "removeBadge": "The badge badgeName has been removed to the user userName",
   "resourceOpen": "The resource resourceName has been opened by user userName",
-  "resourceEvaluation": "resourceName - statusName : userName is currently in step userProgression"
+  "resourceEvaluation": "resourceName - statusName : userName is currently in step userProgression for a duration of durationTime sec",
+  "resourceScore": "resourceName - statusName : userName scored currentScore out on scoreMax. The min score is scoreMin"
 }
