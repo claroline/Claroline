@@ -48,14 +48,14 @@ class FunctionalLogController extends AbstractSecurityController
     /**
      * @Route("/list/current", name="apiv2_logs_functional_list_current", methods={"GET"})
      */
-    public function userLogFunctionalAction(): JsonResponse
+    public function userLogFunctionalAction(Request $request): JsonResponse
     {
         if (!$this->authorization->isGranted('IS_AUTHENTICATED_FULLY')) {
             throw new AccessDeniedException();
         }
-
         $user = $this->tokenStorage->getToken()->getUser();
 
+        $query = $request->query->all();
         $query['hiddenFilters'] = [
             'user' => $user->getUuid(),
         ];

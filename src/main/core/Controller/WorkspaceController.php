@@ -195,7 +195,7 @@ class WorkspaceController
             ToolOpenEvent::class,
             [
                 $this->tokenStorage->getToken()->getUser(),
-                'Wokrspace',
+                'Workspace',
                 $toolName,
                 $workspace,
             ]
