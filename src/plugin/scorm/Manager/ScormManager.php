@@ -91,6 +91,8 @@ class ScormManager
 
         $isScormArchive = (true === $openValue) && $zip->getStream('imsmanifest.xml');
 
+        $zip->close();
+
         if (!$isScormArchive) {
             throw new InvalidScormArchiveException('invalid_scorm_archive_message');
         } else {
