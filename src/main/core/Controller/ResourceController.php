@@ -20,8 +20,8 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\MenuAction;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
-use Claroline\CoreBundle\Event\CatalogEvents\FunctionalEvents;
-use Claroline\CoreBundle\Event\Functional\ResourceOpenEvent;
+use Claroline\CoreBundle\Event\CatalogEvents\ResourceEvents;
+use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Exception\ResourceNotFoundException;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Manager\Resource\ResourceActionManager;
@@ -132,8 +132,8 @@ class ResourceController
             }
 
             $this->strictDispatcher->dispatch(
-                FunctionalEvents::RESOURCE_OPEN,
-                ResourceOpenEvent::class,
+                ResourceEvents::RESOURCE_OPEN,
+                LoadResourceEvent::class,
                 [
                     $this->tokenStorage->getToken()->getUser(),
                     $resourceNode,

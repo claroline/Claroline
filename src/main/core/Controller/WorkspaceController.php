@@ -17,15 +17,14 @@ use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\Tool\AbstractTool;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Shortcuts;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Event\CatalogEvents\FunctionalEvents;
-use Claroline\CoreBundle\Event\Functional\ToolOpenEvent;
+use Claroline\CoreBundle\Event\CatalogEvents\ToolEvents;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceEnterEvent;
-use Claroline\CoreBundle\Event\Log\LogWorkspaceToolReadEvent;
 use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 use Claroline\CoreBundle\Event\Workspace\OpenWorkspaceEvent;
 use Claroline\CoreBundle\Manager\Tool\ToolManager;
@@ -188,16 +187,14 @@ class WorkspaceController
         /** @var OpenToolEvent $event */
         $event = $this->eventDispatcher->dispatch(new OpenToolEvent($workspace), 'open_tool_workspace_'.$toolName);
 
-        $this->eventDispatcher->dispatch(new LogWorkspaceToolReadEvent($workspace, $toolName), 'log');
-
         $this->strictDispatcher->dispatch(
-            FunctionalEvents::TOOL_OPEN,
-            ToolOpenEvent::class,
+            ToolEvents::TOOL_OPEN,
+            OpenToolEvent::class,
             [
-                $this->tokenStorage->getToken()->getUser(),
-                'Workspace',
-                $toolName,
                 $workspace,
+                $this->tokenStorage->getToken()->getUser(),
+                AbstractTool::WORKSPACE,
+                $toolName,
             ]
         );
 

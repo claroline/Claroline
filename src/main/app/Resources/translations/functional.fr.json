@@ -1,8 +1,0 @@
-{
-  "addBadge": "Le badge badgeName a été ajouté à l'utilisateur userName",
-  "removeBadge": "Le badge badgeName a été retiré de l'utilisateur userName",
-  "resourceOpen": "La resouce resourceName a été ouverte par l'utilisateur userName",
-  "resourceEvaluation": "resourceName - statusName : userName est actuellement à l'étape userProgression pour une durée de durationTime sec",
-  "resourceScore": "resourceName - statusName : userName a eu un score de currentScore sur scoreMax. Le score min est de scoreMin",
-  "toolOpen": "context : L'utilisateur userName a ouvert l'outil toolName"
-}

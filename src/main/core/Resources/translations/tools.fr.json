@@ -15,5 +15,6 @@
     "templates_management": "Gestion des templates",
     "resource_trash": "Poubelle de ressources",
     "integration": "Intégration",
-    "workspaces": "Espaces d'activités"
+    "workspaces": "Espaces d'activités",
+    "toolOpen": "context : L'utilisateur userName a ouvert l'outil toolName"
 }

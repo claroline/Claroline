@@ -16,13 +16,12 @@ use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
+use Claroline\CoreBundle\Entity\Tool\AbstractTool;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\CatalogEvents\FunctionalEvents;
-use Claroline\CoreBundle\Event\Functional\ToolOpenEvent;
+use Claroline\CoreBundle\Event\CatalogEvents\ToolEvents;
 use Claroline\CoreBundle\Event\GenericDataEvent;
-use Claroline\CoreBundle\Event\Log\LogDesktopToolReadEvent;
 use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 use Claroline\CoreBundle\Manager\Tool\ToolManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -129,14 +128,13 @@ class DesktopController
         /** @var OpenToolEvent $event */
         $event = $this->eventDispatcher->dispatch(new OpenToolEvent(), 'open_tool_desktop_'.$toolName);
 
-        $this->eventDispatcher->dispatch(new LogDesktopToolReadEvent($toolName), 'log');
-
         $this->strictDispatcher->dispatch(
-            FunctionalEvents::TOOL_OPEN,
-            ToolOpenEvent::class,
+            ToolEvents::TOOL_OPEN,
+            OpenToolEvent::class,
             [
+                null,
                 $this->tokenStorage->getToken()->getUser(),
-                'Desktop',
+                AbstractTool::DESKTOP,
                 $toolName,
             ]
         );

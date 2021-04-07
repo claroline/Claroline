@@ -12,10 +12,9 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Claroline\AppBundle\Event\StrictDispatcher;
+use Claroline\CoreBundle\Entity\Tool\AbstractTool;
 use Claroline\CoreBundle\Entity\Tool\AdminTool;
-use Claroline\CoreBundle\Event\CatalogEvents\FunctionalEvents;
-use Claroline\CoreBundle\Event\Functional\ToolOpenEvent;
-use Claroline\CoreBundle\Event\Log\LogAdminToolReadEvent;
+use Claroline\CoreBundle\Event\CatalogEvents\ToolEvents;
 use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 use Claroline\CoreBundle\Manager\Tool\ToolManager;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -112,14 +111,13 @@ class AdministrationController
         /** @var OpenToolEvent $event */
         $event = $this->eventDispatcher->dispatch(new OpenToolEvent(), 'administration_tool_'.$toolName);
 
-        $this->eventDispatcher->dispatch(new LogAdminToolReadEvent($toolName), 'log');
-
         $this->strictDispatcher->dispatch(
-            FunctionalEvents::TOOL_OPEN,
-            ToolOpenEvent::class,
+            ToolEvents::TOOL_OPEN,
+            OpenToolEvent::class,
             [
+                null,
                 $this->tokenStorage->getToken()->getUser(),
-                'Administration',
+                AbstractTool::ADMINISTRATION,
                 $toolName,
             ]
         );

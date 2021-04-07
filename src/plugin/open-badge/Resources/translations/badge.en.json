@@ -55,5 +55,7 @@
   "badge_disabled_help": "This badge is disabled and cannot be granted.",
   "no_criteria": "No criteria has been defined",
   "hide_recipients": "Hide the list of badge recipients",
-  "score_above_help": "This value represents the percentage of the total score to be obtained."
+  "score_above_help": "This value represents the percentage of the total score to be obtained.",
+  "addBadge": "The badge badgeName has been added to the user userName",
+  "removeBadge": "The badge badgeName has been removed to the user userName"
 }

@@ -6,37 +6,13 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="claro_log_functionnal")
  */
-class FunctionalLog
+class FunctionalLog extends AbstractLog
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
-
-    /**
-     * @ORM\Column(type="datetime")
-     * @Gedmo\Timestampable(on="create")
-     */
-    private $date;
-
-    /**
-     * @ORM\Column(type="text")
-     */
-    private $details;
-
-    /**
-     * @ORM\Column(type="string")
-     */
-    private $event;
-
     /**
      * @var User
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
@@ -57,47 +33,6 @@ class FunctionalLog
      * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id", onDelete="SET NULL")
      */
     private $workspace;
-
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    public function getDate(): \DateTime
-    {
-        return $this->date;
-    }
-
-    public function setDate(\DateTime $dateTime): self
-    {
-        $this->date = $dateTime;
-
-        return $this;
-    }
-
-    public function getDetails(): string
-    {
-        return $this->details;
-    }
-
-    public function setDetails(string $details): self
-    {
-        $this->details = $details;
-
-        return $this;
-    }
-
-    public function getEvent(): string
-    {
-        return $this->event;
-    }
-
-    public function setEvent(string $event): self
-    {
-        $this->event = $event;
-
-        return $this;
-    }
 
     public function getUser(): ?User
     {

@@ -1,15 +1,16 @@
 <?php
 
-namespace Claroline\CoreBundle\Subscriber;
+namespace Claroline\CoreBundle\Subscriber\Log;
 
 use Claroline\CoreBundle\Entity\Log\FunctionalLog;
-use Claroline\CoreBundle\Event\CatalogEvents\FunctionalEvents;
+use Claroline\CoreBundle\Event\CatalogEvents\ResourceEvents;
+use Claroline\CoreBundle\Event\CatalogEvents\ToolEvents;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class FunctionalEventSubscriber implements EventSubscriberInterface
+class FunctionalLogSubscriber implements EventSubscriberInterface
 {
     private $translator;
     private $em;
@@ -23,12 +24,9 @@ class FunctionalEventSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            FunctionalEvents::ADD_BADGE => 'logEvent',
-            FunctionalEvents::REMOVE_BADGE => 'logEvent',
-            FunctionalEvents::RESOURCE_EVALUATION => 'logEvent',
-            FunctionalEvents::RESOURCE_OPEN => 'logEvent',
-            FunctionalEvents::RESOURCE_SCORE => 'logEvent',
-            FunctionalEvents::TOOL_OPEN => 'logEvent',
+            ResourceEvents::RESOURCE_EVALUATION => 'logEvent',
+            ResourceEvents::RESOURCE_OPEN => 'logEvent',
+            ToolEvents::TOOL_OPEN => 'logEvent',
         ];
     }
 

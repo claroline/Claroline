@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Event\Functional;
+namespace Claroline\OpenBadgeBundle\Event;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\OpenBadgeBundle\Entity\BadgeClass;

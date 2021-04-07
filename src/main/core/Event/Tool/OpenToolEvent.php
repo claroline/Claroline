@@ -12,12 +12,17 @@
 namespace Claroline\CoreBundle\Event\Tool;
 
 use Claroline\AppBundle\Event\DataConveyorEventInterface;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Symfony\Contracts\EventDispatcher\Event;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class OpenToolEvent extends Event implements DataConveyorEventInterface
 {
     private $workspace;
+    private $user;
+    private $context;
+    private $toolName;
 
     /** @var array */
     private $data = [];
@@ -25,14 +30,36 @@ class OpenToolEvent extends Event implements DataConveyorEventInterface
     /** @var bool */
     private $isPopulated = false;
 
-    public function __construct(Workspace $workspace = null)
-    {
+    public function __construct(
+        ?Workspace $workspace = null,
+        ?User $user = null,
+        ?string $context = null,
+        ?string $toolName = null
+    ) {
         $this->workspace = $workspace;
+        $this->user = $user;
+        $this->context = $context;
+        $this->toolName = $toolName;
     }
 
     public function getWorkspace()
     {
         return $this->workspace;
+    }
+
+    public function getUser(): User
+    {
+        return $this->user;
+    }
+
+    public function getContext(): string
+    {
+        return $this->context;
+    }
+
+    public function getToolName(): string
+    {
+        return $this->toolName;
     }
 
     /**
@@ -53,5 +80,10 @@ class OpenToolEvent extends Event implements DataConveyorEventInterface
     public function isPopulated()
     {
         return $this->isPopulated;
+    }
+
+    public function getMessage(TranslatorInterface $translator)
+    {
+        return $translator->trans('toolOpen', ['userName' => $this->user->getUsername(), 'context' => $this->context, 'toolName' => $this->toolName], 'tools');
     }
 }

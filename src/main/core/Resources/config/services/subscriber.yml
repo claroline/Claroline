@@ -1,6 +1,6 @@
 services:
 
-    Claroline\CoreBundle\Subscriber\SecurityEventSubscriber:
+    Claroline\CoreBundle\Subscriber\Log\SecurityLogSubscriber:
         arguments:
             - '@doctrine.orm.entity_manager'
             - '@http_client'
@@ -10,7 +10,7 @@ services:
         tags:
             - { name: kernel.event_subscriber }
 
-    Claroline\CoreBundle\Subscriber\FunctionalEventSubscriber:
+    Claroline\CoreBundle\Subscriber\Log\FunctionalLogSubscriber:
         arguments:
             - '@doctrine.orm.entity_manager'
             - '@translator'
