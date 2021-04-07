@@ -1,4 +1,10 @@
 plugin:
-  resources:
-    - name: claroline_scorm
-      class: Claroline\ScormBundle\Entity\Scorm
+    resources:
+        - name: claroline_scorm
+          class: Claroline\ScormBundle\Entity\Scorm
+          actions:
+              # Edits the underlying resource file
+              - name: change_file
+                decoder: edit
+                group: management
+                api: [ POST, PUT ]

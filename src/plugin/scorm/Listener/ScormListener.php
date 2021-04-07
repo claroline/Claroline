@@ -13,12 +13,14 @@ namespace Claroline\ScormBundle\Listener;
 
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Event\ExportObjectEvent;
 use Claroline\CoreBundle\Event\ImportObjectEvent;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DownloadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
+use Claroline\CoreBundle\Event\Resource\ResourceActionEvent;
 use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
 use Claroline\ScormBundle\Entity\Sco;
 use Claroline\ScormBundle\Entity\Scorm;
@@ -26,6 +28,7 @@ use Claroline\ScormBundle\Manager\ScormManager;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class ScormListener
@@ -226,13 +229,48 @@ class ScormListener
 
     public function onDownload(DownloadResourceEvent $event)
     {
+        /** @var Scorm $scorm */
         $scorm = $event->getResource();
+
         $event->setItem($this->getScormArchive($scorm));
         $event->setExtension('zip');
         $event->stopPropagation();
     }
 
-    public function getScormArchive(Scorm $scorm)
+    public function onFileChange(ResourceActionEvent $event)
+    {
+        /** @var ResourceNode $node */
+        $node = $event->getResourceNode();
+        /** @var Scorm $scorm */
+        $scorm = $event->getResource();
+
+        $parameters = $event->getData();
+        $filePath = $parameters['file']['url'];
+
+        if (!empty($filePath)) {
+            $data = $this->scormManager->uploadScormArchive($node->getWorkspace(), new File($this->filesDir.DIRECTORY_SEPARATOR.$filePath));
+            if ($data) {
+                $oldFile = $scorm->getHashName();
+                // removes old scos
+                $scorm->emptyScos();
+
+                // update scorm
+                $scorm = $this->serializer->deserialize($data, $scorm);
+
+                // remove old zip
+                unlink($this->filesDir.DIRECTORY_SEPARATOR.'scorm'.DIRECTORY_SEPARATOR.$node->getWorkspace()->getUuid().DIRECTORY_SEPARATOR.$oldFile);
+                // remove old unzipped scorm
+                $this->deleteFiles($this->uploadDir.DIRECTORY_SEPARATOR.'scorm'.DIRECTORY_SEPARATOR.$node->getWorkspace()->getUuid().DIRECTORY_SEPARATOR.$oldFile);
+
+                $this->om->persist($scorm);
+                $this->om->flush();
+            }
+        }
+
+        $event->setResponse(new JsonResponse($this->serializer->serialize($node)));
+    }
+
+    private function getScormArchive(Scorm $scorm)
     {
         $workspace = $scorm->getResourceNode()->getWorkspace();
         $ds = DIRECTORY_SEPARATOR;
@@ -271,25 +309,16 @@ class ScormListener
 
     /**
      * Gets the relative path between 2 instances (not optimized yet).
-     *
-     * @param ResourceNode $root
-     * @param ResourceNode $node
-     *
-     * @return string
      */
-    private function getRelativePath($current, $hashName, $wuid)
+    private function getRelativePath($current, $hashName, $wuid): string
     {
-        $path = substr($current, strlen(realpath($this->uploadDir).'/scorm/'.$wuid.'/'.$hashName.'/'));
-
-        return $path;
+        return substr($current, strlen(realpath($this->uploadDir).'/scorm/'.$wuid.'/'.$hashName.'/'));
     }
 
     /**
      * Deletes recursively a directory and its content.
-     *
-     * @param $dirPath The path to the directory to delete
      */
-    private function deleteFiles($dirPath)
+    private function deleteFiles(string $dirPath = '')
     {
         foreach (glob($dirPath.DIRECTORY_SEPARATOR.'{*,.[!.]*,..?*}', GLOB_BRACE) as $content) {
             if (is_dir($content)) {
@@ -303,8 +332,6 @@ class ScormListener
 
     /**
      * Copy given sco and its children.
-     *
-     * @param Sco $scoParent
      */
     private function copySco(Sco $sco, Scorm $resource, Sco $scoParent = null)
     {
