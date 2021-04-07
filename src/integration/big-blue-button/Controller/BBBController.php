@@ -162,8 +162,6 @@ class BBBController extends AbstractCrudController
      */
     public function deleteRecordingsAction(BBB $bbb, Request $request): JsonResponse
     {
-        $this->checkPermission('ADMINISTRATE', $bbb->getResourceNode(), [], true);
-
         $this->crud->deleteBulk(
             $this->decodeIdsString($request, Recording::class)
         );
