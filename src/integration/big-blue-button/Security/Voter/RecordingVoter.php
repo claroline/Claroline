@@ -11,16 +11,19 @@
 
 namespace Claroline\BigBlueButtonBundle\Security\Voter;
 
-use Claroline\BigBlueButtonBundle\Entity\BBB;
+use Claroline\BigBlueButtonBundle\Entity\Recording;
 use Claroline\CoreBundle\Security\Voter\AbstractVoter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
-class BBBVoter extends AbstractVoter
+class RecordingVoter extends AbstractVoter
 {
+    /**
+     * @param Recording $object
+     */
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
     {
-        if ($this->isGranted($attributes, $object->getResourceNode())) {
+        if ($this->isGranted(self::ADMINISTRATE, $object->getMeeting()) || $this->isGranted($attributes, $object->getMeeting())) {
             return VoterInterface::ACCESS_GRANTED;
         }
 
@@ -29,6 +32,6 @@ class BBBVoter extends AbstractVoter
 
     public function getClass()
     {
-        return BBB::class;
+        return Recording::class;
     }
 }

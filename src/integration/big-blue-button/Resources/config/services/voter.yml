@@ -14,3 +14,5 @@ services:
                   - '@service_container'
 
     Claroline\BigBlueButtonBundle\Security\Voter\BBBVoter: ~
+
+    Claroline\BigBlueButtonBundle\Security\Voter\RecordingVoter: ~
