@@ -1,0 +1,24 @@
+framework:
+    messenger:
+        failure_transport: failed
+        transports:
+            async:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+
+                # default configuration
+                retry_strategy:
+                    max_retries: 3
+                    # milliseconds delay
+                    delay: 1000
+                    # causes the delay to be higher before each retry
+                    # e.g. 1 second delay, 2 seconds, 4 seconds
+                    multiplier: 2
+                    max_delay: 0
+                    # override all of this with a service that
+                    # implements Symfony\Component\Messenger\Retry\RetryStrategyInterface
+                    # service: null
+
+            routing:
+                'Claroline\MessageBundle\Entity\Message': async
+
+            failed: '%env(MESSENGER_TRANSPORT_DSN)%?queue_name=failed'

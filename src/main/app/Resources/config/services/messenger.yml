@@ -1,0 +1,3 @@
+services:
+    Claroline\AppBundle\Messenger\MessageHandler:
+        tags: [messenger.message_handler]
