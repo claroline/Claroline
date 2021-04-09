@@ -131,12 +131,14 @@ class ResourceController
                 return new JsonResponse(['resource_not_found'], 500);
             }
 
+            $resource = $this->om->getRepository($resourceNode->getClass())->findOneBy(['resourceNode' => $resourceNode]);
+
             $this->strictDispatcher->dispatch(
                 ResourceEvents::RESOURCE_OPEN,
                 LoadResourceEvent::class,
                 [
+                    $resource,
                     $this->tokenStorage->getToken()->getUser(),
-                    $resourceNode,
                 ]
             );
 

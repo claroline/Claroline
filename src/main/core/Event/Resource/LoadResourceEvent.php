@@ -15,7 +15,9 @@ use Claroline\AppBundle\Event\DataConveyorEventInterface;
 use Claroline\AppBundle\Event\MandatoryEventInterface;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\User;
 use Symfony\Contracts\EventDispatcher\Event;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Event dispatched by the resource controller when a resource is loaded from the api.
@@ -34,15 +36,27 @@ class LoadResourceEvent extends Event implements MandatoryEventInterface, DataCo
     /** @var bool */
     private $populated = false;
 
+    /** @var User */
+    private $user;
+
     /**
      * LoadResourceEvent constructor.
      *
      * @param bool $embedded
      */
-    public function __construct(AbstractResource $resource, $embedded = false)
-    {
+    public function __construct(
+        AbstractResource $resource,
+        ?User $user = null,
+        $embedded = false
+    ) {
         $this->resource = $resource;
+        $this->user = $user;
         $this->embedded = $embedded;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
     }
 
     /**
@@ -88,5 +102,10 @@ class LoadResourceEvent extends Event implements MandatoryEventInterface, DataCo
     public function isPopulated()
     {
         return $this->populated;
+    }
+
+    public function getMessage(TranslatorInterface $translator)
+    {
+        return $translator->trans('resourceOpen', ['userName' => $this->user->getUsername(), 'resourceName' => $this->getResourceNode()->getName()], 'resource');
     }
 }

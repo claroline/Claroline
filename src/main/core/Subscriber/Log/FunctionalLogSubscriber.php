@@ -43,6 +43,9 @@ class FunctionalLogSubscriber implements EventSubscriberInterface
         } elseif (method_exists($event, 'getWorkspace')) {
             $logEntry->setWorkspace($event->getWorkspace());
         }
+        if (method_exists($event, 'setData')) {
+            $event->setData([]);
+        }
 
         $this->em->persist($logEntry);
         $this->em->flush();
