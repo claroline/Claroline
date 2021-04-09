@@ -78,6 +78,8 @@ class ScoTracking
 
     /**
      * @ORM\Column(name="lesson_status", nullable=true)
+     *
+     * @var string
      */
     protected $lessonStatus;
 

@@ -69,7 +69,24 @@ class ScormSerializer
         $this->sipe('ratio', 'setRatio', $data, $scorm);
 
         if (isset($data['scos'])) {
-            $this->deserializeScos($data['scos'], $scorm, null);
+            $existing = $scorm->getScos()->toArray();
+
+            $updated = $this->deserializeScos($data['scos'], $scorm);
+
+            // clean removed scos
+            foreach ($existing as $existingSco) {
+                $found = false;
+                foreach ($updated as $updatedSco) {
+                    if ($existingSco->getId() === $updatedSco->getId()) {
+                        $found = true;
+                        break;
+                    }
+                }
+
+                if (!$found) {
+                    $scorm->removeSco($existingSco);
+                }
+            }
         }
 
         return $scorm;
@@ -82,21 +99,32 @@ class ScormSerializer
         }, $scorm->getRootScos());
     }
 
-    private function deserializeScos($data, Scorm $scorm, Sco $parent = null)
+    private function deserializeScos($data, Scorm $scorm, Sco $parent = null): array
     {
+        $updated = [];
+
         foreach ($data as $scoData) {
-            $sco = $this->scoRepo->findOneBy(['uuid' => $scoData['id']]);
+            // search by identifier to be able to retrieve and update sco when we change scorm file
+            $sco = $this->scoRepo->findOneBy([
+                'scorm' => $scorm,
+                'identifier' => $scoData['data']['identifier'],
+            ]);
 
             if (empty($sco)) {
-                $sco = $this->deserializeSco($scoData, new Sco(), $scorm, $parent);
-                $sco->setScorm($scorm);
-                $sco->setScoParent($parent);
-                $this->om->persist($sco);
+                $sco = new Sco();
+                $scorm->addSco($sco);
             }
+
+            $sco->setScoParent($parent);
+            $sco->setScorm($scorm);
+
+            $updated = array_merge($updated, $this->deserializeSco($scoData, $sco, $scorm));
         }
+
+        return $updated;
     }
 
-    private function deserializeSco($data, Sco $sco, Scorm $scorm, Sco $parent = null)
+    private function deserializeSco($data, Sco $sco, Scorm $scorm): array
     {
         $this->sipe('id', 'setUuid', $data, $sco);
         $this->sipe('data.entryUrl', 'setEntryUrl', $data, $sco);
@@ -114,9 +142,9 @@ class ScormSerializer
         $this->sipe('data.prerequisites', 'setPrerequisites', $data, $sco);
 
         if (isset($data['children']) && 0 < count($data['children'])) {
-            $this->deserializeScos($data['children'], $scorm, $sco);
+            return array_merge([$sco], $this->deserializeScos($data['children'], $scorm, $sco));
         }
 
-        return $sco;
+        return [$sco];
     }
 }

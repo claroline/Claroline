@@ -238,6 +238,17 @@ class ScormManager
         $tracking = $this->generateScoTracking($sco, $user);
         $tracking->setLatestDate(new \DateTime());
 
+        $statusPriority = [
+            'unknown' => 0,
+            'not attempted' => 1,
+            'not_attempted' => 1,
+            'browsed' => 2,
+            'incomplete' => 3,
+            'completed' => 4,
+            'failed' => 5,
+            'passed' => 6,
+        ];
+
         switch ($sco->getScorm()->getVersion()) {
             case Scorm::SCORM_12:
                 $scoreRaw = isset($data['cmi.core.score.raw']) ? intval($data['cmi.core.score.raw']) : null;
@@ -255,42 +266,35 @@ class ScormManager
                 $tracking->setSessionTime($sessionTimeInHundredth);
                 $tracking->setSuspendData($data['cmi.suspend_data']);
 
+                // Compute total time
+                $totalTimeInHundredth = $this->convertTimeInHundredth($data['cmi.core.total_time']);
+                $totalTimeInHundredth += $sessionTimeInHundredth;
+                // Persist total time
+                $tracking->setTotalTime($totalTimeInHundredth);
+
+                $bestScore = $tracking->getScoreRaw();
+                $bestStatus = $tracking->getLessonStatus();
+
+                // Update best score if the current score is better than the previous best score
+                if (empty($bestScore) || (!is_null($scoreRaw) && $scoreRaw > $bestScore)) {
+                    $tracking->setScoreRaw($scoreRaw);
+                    $bestScore = $scoreRaw;
+                }
+
+                if (empty($bestStatus) || ($lessonStatus !== $bestStatus && $statusPriority[$lessonStatus] > $statusPriority[$bestStatus])) {
+                    $tracking->setLessonStatus($lessonStatus);
+                    $bestStatus = $lessonStatus;
+                }
+
+                if (empty($progression) && ('completed' === $bestStatus || 'passed' === $bestStatus)) {
+                    $progression = 100;
+                }
+
+                if ($progression > $tracking->getProgression()) {
+                    $tracking->setProgression($progression);
+                }
+
                 if ('log' === $mode) {
-                    // Compute total time
-                    $totalTimeInHundredth = $this->convertTimeInHundredth($data['cmi.core.total_time']);
-                    $totalTimeInHundredth += $sessionTimeInHundredth;
-                    // Persist total time
-                    $tracking->setTotalTime($totalTimeInHundredth);
-
-                    $bestScore = $tracking->getScoreRaw();
-                    $bestStatus = $tracking->getLessonStatus();
-
-                    // Update best score if the current score is better than the previous best score
-                    if (empty($bestScore) || (!is_null($scoreRaw) && $scoreRaw > $bestScore)) {
-                        $tracking->setScoreRaw($scoreRaw);
-                        $bestScore = $scoreRaw;
-                    }
-                    // Update best lesson status if :
-                    // - current best status = 'not attempted'
-                    // - current best status = 'browsed' or 'incomplete'
-                    //   and current status = 'failed' or 'passed' or 'completed'
-                    // - current best status = 'failed'
-                    //   and current status = 'passed' or 'completed'
-                    if ($lessonStatus !== $bestStatus && 'passed' !== $bestStatus && 'completed' !== $bestStatus) {
-                        if (('not attempted' === $bestStatus && !empty($lessonStatus)) ||
-                            (('browsed' === $bestStatus || 'incomplete' === $bestStatus)
-                                && ('failed' === $lessonStatus || 'passed' === $lessonStatus || 'completed' === $lessonStatus)) ||
-                            ('failed' === $bestStatus && ('passed' === $lessonStatus || 'completed' === $lessonStatus))
-                        ) {
-                            $tracking->setLessonStatus($lessonStatus);
-                            $bestStatus = $lessonStatus;
-                        }
-                    }
-
-                    if ($progression > $tracking->getProgression()) {
-                        $tracking->setProgression($progression);
-                    }
-
                     $data['sco'] = $sco->getUuid();
                     $data['lessonStatus'] = $lessonStatus;
                     $data['scoreMax'] = $scoreMax;
@@ -323,69 +327,75 @@ class ScormManager
                     $tracking->setSuspendData($data['cmi.suspend_data']);
                 }
 
+                $dataSessionTime = isset($data['cmi.session_time']) ?
+                    $this->formatSessionTime($data['cmi.session_time']) :
+                    'PT0S';
+                $completionStatus = isset($data['cmi.completion_status']) ? $data['cmi.completion_status'] : 'unknown';
+                $successStatus = isset($data['cmi.success_status']) ? $data['cmi.success_status'] : 'unknown';
+                $scoreRaw = isset($data['cmi.score.raw']) ? intval($data['cmi.score.raw']) : null;
+                $scoreMin = isset($data['cmi.score.min']) ? intval($data['cmi.score.min']) : null;
+                $scoreMax = isset($data['cmi.score.max']) ? intval($data['cmi.score.max']) : null;
+                $scoreScaled = isset($data['cmi.score.scaled']) ? floatval($data['cmi.score.scaled']) : null;
+                $progression = isset($data['cmi.progress_measure']) ? floatval($data['cmi.progress_measure']) : 0;
+                $bestScore = $tracking->getScoreRaw();
+
+                // Computes total time
+                $totalTime = new \DateInterval($tracking->getTotalTimeString());
+
+                try {
+                    $sessionTime = new \DateInterval($dataSessionTime);
+                } catch (\Exception $e) {
+                    $sessionTime = new \DateInterval('PT0S');
+                }
+                $computedTime = new \DateTime();
+                $computedTime->setTimestamp(0);
+                $computedTime->add($totalTime);
+                $computedTime->add($sessionTime);
+                $computedTimeInSecond = $computedTime->getTimestamp();
+                $totalTimeInterval = $this->retrieveIntervalFromSeconds($computedTimeInSecond);
+                $data['cmi.total_time'] = $totalTimeInterval;
+                $tracking->setTotalTimeString($totalTimeInterval);
+
+                // Update best score if the current score is better than the previous best score
+                if (empty($bestScore) || (!is_null($scoreRaw) && $scoreRaw > $bestScore)) {
+                    $tracking->setScoreRaw($scoreRaw);
+                    $tracking->setScoreMin($scoreMin);
+                    $tracking->setScoreMax($scoreMax);
+                    $tracking->setScoreScaled($scoreScaled);
+                }
+
+                // Update best success status and completion status
+                // merge both status in one prop to match the Claroline model
+                $lessonStatus = $completionStatus;
+                if (in_array($successStatus, ['passed', 'failed'])) {
+                    $lessonStatus = $successStatus;
+                }
+
+                $bestStatus = $tracking->getLessonStatus();
+                if (empty($bestStatus) || ($lessonStatus !== $bestStatus && $statusPriority[$lessonStatus] > $statusPriority[$bestStatus])) {
+                    $tracking->setLessonStatus($lessonStatus);
+                    $bestStatus = $lessonStatus;
+                }
+
+                if (empty($tracking->getCompletionStatus())
+                    || ($completionStatus !== $tracking->getCompletionStatus() && $statusPriority[$completionStatus] > $statusPriority[$tracking->getCompletionStatus()])
+                ) {
+                    // This is no longer needed as completionStatus and successStatus are merged together
+                    // I keep it for now for possible retro compatibility
+                    $tracking->setCompletionStatus($completionStatus);
+                }
+
+                if (empty($progression) && ('completed' === $bestStatus || 'passed' === $bestStatus)) {
+                    $progression = 100;
+                }
+
+                if ($progression > $tracking->getProgression()) {
+                    $tracking->setProgression($progression);
+                }
+
                 if ('log' === $mode) {
-                    $dataSessionTime = isset($data['cmi.session_time']) ?
-                        $this->formatSessionTime($data['cmi.session_time']) :
-                        'PT0S';
-                    $completionStatus = isset($data['cmi.completion_status']) ? $data['cmi.completion_status'] : 'unknown';
-                    $successStatus = isset($data['cmi.success_status']) ? $data['cmi.success_status'] : 'unknown';
-                    $scoreRaw = isset($data['cmi.score.raw']) ? intval($data['cmi.score.raw']) : null;
-                    $scoreMin = isset($data['cmi.score.min']) ? intval($data['cmi.score.min']) : null;
-                    $scoreMax = isset($data['cmi.score.max']) ? intval($data['cmi.score.max']) : null;
-                    $scoreScaled = isset($data['cmi.score.scaled']) ? floatval($data['cmi.score.scaled']) : null;
-                    $progression = isset($data['cmi.progress_measure']) ? floatval($data['cmi.progress_measure']) : 0;
-                    $bestScore = $tracking->getScoreRaw();
-
-                    // Computes total time
-                    $totalTime = new \DateInterval($tracking->getTotalTimeString());
-
-                    try {
-                        $sessionTime = new \DateInterval($dataSessionTime);
-                    } catch (\Exception $e) {
-                        $sessionTime = new \DateInterval('PT0S');
-                    }
-                    $computedTime = new \DateTime();
-                    $computedTime->setTimestamp(0);
-                    $computedTime->add($totalTime);
-                    $computedTime->add($sessionTime);
-                    $computedTimeInSecond = $computedTime->getTimestamp();
-                    $totalTimeInterval = $this->retrieveIntervalFromSeconds($computedTimeInSecond);
-                    $data['cmi.total_time'] = $totalTimeInterval;
-                    $tracking->setTotalTimeString($totalTimeInterval);
-
-                    // Update best score if the current score is better than the previous best score
-                    if (empty($bestScore) || (!is_null($scoreRaw) && $scoreRaw > $bestScore)) {
-                        $tracking->setScoreRaw($scoreRaw);
-                        $tracking->setScoreMin($scoreMin);
-                        $tracking->setScoreMax($scoreMax);
-                        $tracking->setScoreScaled($scoreScaled);
-                    }
-
-                    if ($progression > $tracking->getProgression()) {
-                        $tracking->setProgression($progression);
-                    }
-
-                    // Update best success status and completion status
-                    $currentCompletionStatus = $tracking->getCompletionStatus();
-                    $currentSuccessStatus = $tracking->getLessonStatus();
-                    $conditionCA = ('unknown' === $currentCompletionStatus) &&
-                        ('completed' === $completionStatus ||
-                        'incomplete' === $completionStatus ||
-                        'not_attempted' === $completionStatus);
-                    $conditionCB = ('not_attempted' === $currentCompletionStatus) && ('completed' === $completionStatus || 'incomplete' === $completionStatus);
-                    $conditionCC = ('incomplete' === $currentCompletionStatus) && ('completed' === $completionStatus);
-                    $conditionSA = ('unknown' === $currentSuccessStatus) && ('passed' === $successStatus || 'failed' === $successStatus);
-                    $conditionSB = ('failed' === $currentSuccessStatus) && ('passed' === $successStatus);
-
-                    if (is_null($currentCompletionStatus) || $conditionCA || $conditionCB || $conditionCC) {
-                        $tracking->setCompletionStatus($completionStatus);
-                    }
-
-                    if (is_null($currentSuccessStatus) || $conditionSA || $conditionSB) {
-                        $tracking->setLessonStatus($successStatus);
-                    }
                     $data['sco'] = $sco->getUuid();
-                    $data['lessonStatus'] = $successStatus;
+                    $data['lessonStatus'] = $lessonStatus;
                     $data['completionStatus'] = $completionStatus;
                     $data['scoreMax'] = $scoreMax;
                     $data['scoreMin'] = $scoreMin;
@@ -406,8 +416,7 @@ class ScormManager
                         $scoreMin,
                         $scoreMax,
                         $dataSessionTime,
-                        $successStatus,
-                        $completionStatus
+                        $lessonStatus
                     );
                 }
                 break;
@@ -418,15 +427,14 @@ class ScormManager
         return $tracking;
     }
 
-    public function generateScormEvaluation(
+    private function generateScormEvaluation(
         ScoTracking $tracking,
         array $data,
         $score = null,
         $scoreMin = null,
         $scoreMax = null,
         $sessionTime = null,
-        $successStatus = null,
-        $completionStatus = null
+        $successStatus = null
     ) {
         $scorm = $tracking->getSco()->getScorm();
 
@@ -459,16 +467,12 @@ class ScormManager
                     $computedTime->add($time);
                     $duration = $computedTime->getTimestamp();
                 }
-                switch ($completionStatus) {
-                    case 'incomplete':
-                        $status = $completionStatus;
-                        break;
+                switch ($successStatus) {
+                    case 'passed':
+                    case 'failed':
                     case 'completed':
-                        if (in_array($successStatus, ['passed', 'failed'])) {
-                            $status = $successStatus;
-                        } else {
-                            $status = $completionStatus;
-                        }
+                    case 'incomplete':
+                        $status = $successStatus;
                         break;
                     case 'not attempted':
                         $status = 'not_attempted';

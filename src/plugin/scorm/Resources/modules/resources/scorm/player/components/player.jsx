@@ -3,8 +3,10 @@ import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 
+import {trans} from '#/main/app/intl/translation'
 import {Routes} from '#/main/app/router'
 import {asset} from '#/main/app/config/asset'
+import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
 import {Scorm as ScormTypes, Sco as ScoTypes} from '#/plugin/scorm/resources/scorm/prop-types'
 import {getFirstOpenableSco} from '#/plugin/scorm/resources/scorm/utils'
@@ -32,14 +34,24 @@ ScormIframe.propTypes = {
 }
 
 const Player = (props) => {
+  if (isEmpty(props.scos)) {
+    return (
+      <ContentPlaceholder
+        size="lg"
+        icon="fa fa-frown-o"
+        title={trans('no_section')}
+      />
+    )
+  }
+
   const firstSco = getFirstOpenableSco(props.scos)
 
   return (
     <Routes
       path={props.path}
-      redirect={[
-        {from: '/play', to: `/play/${firstSco.id}`, disabled: isEmpty(firstSco)}
-      ]}
+      redirect={firstSco ? [
+        {from: '/play', to: `/play/${firstSco.id}`}
+      ] : undefined}
       routes={[
         {
           path: '/play/:id',
