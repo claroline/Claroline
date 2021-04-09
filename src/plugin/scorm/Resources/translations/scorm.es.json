@@ -2,10 +2,8 @@
     "best_score": "Mejor puntaje",
     "completed": "Completado",
     "failed": "Fallido",
-    "desktop": "Escritorio",
     "incomplete": "Incompleto",
     "not_attempted": "No intentado",
     "passed": "Logrado",
-    "unknown": "Desconocido",
-    "details": "Detalles"
+    "unknown": "Desconocido"
 }

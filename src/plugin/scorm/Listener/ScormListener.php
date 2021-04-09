@@ -251,8 +251,6 @@ class ScormListener
             $data = $this->scormManager->uploadScormArchive($node->getWorkspace(), new File($this->filesDir.DIRECTORY_SEPARATOR.$filePath));
             if ($data) {
                 $oldFile = $scorm->getHashName();
-                // removes old scos
-                $scorm->emptyScos();
 
                 // update scorm
                 $scorm = $this->serializer->deserialize($data, $scorm);
