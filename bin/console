@@ -40,7 +40,7 @@ if ($_SERVER['APP_DEBUG']) {
 
 // When installing or updating the platform, we need to enable the maintenance mode
 // before booting the kernel in order to enable all bundles.
-if (\in_array($input->getFirstArgument(), ['claroline:install', 'claroline:update', true])) {
+if (\in_array($input->getFirstArgument(), ['claroline:install', 'claroline:update'], true)) {
     MaintenanceHandler::enableMaintenance();
 }
 
