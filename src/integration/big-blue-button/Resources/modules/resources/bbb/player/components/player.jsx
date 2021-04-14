@@ -90,6 +90,12 @@ class Player extends Component {
               </AlertBlock>
             }
 
+            {this.props.bbb.moderatorRequired &&
+              <AlertBlock type="info" title={trans('moderator_help_title', {}, 'bbb')} className="component-container">
+                {trans('moderator_help_message', {}, 'bbb')}
+              </AlertBlock>
+            }
+
             <Button
               type={CALLBACK_BUTTON}
               className="btn btn-block btn-emphasis component-container"

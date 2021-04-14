@@ -104,7 +104,8 @@ const Editor = props =>
           }, {
             name: 'moderatorRequired',
             type: 'boolean',
-            label: trans('wait_for_moderator', {}, 'bbb')
+            label: trans('wait_for_moderator', {}, 'bbb'),
+            help: trans('moderator_help_message', {}, 'bbb')
           }, {
             name: 'forceServer',
             type: 'boolean',
