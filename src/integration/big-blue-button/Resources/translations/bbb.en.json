@@ -38,7 +38,7 @@
     "force_server": "Force server",
     "force_server_help": "By default, the meeting will be assigned to one of the servers available when it is opened for the first time.",
     "force_server_help2": "Activate this option to choose the server to use yourself.",
-    "force_server_help3": "Once the meeting has been assigned to a server, it is no longer possible to change it.",
+    "force_server_help_record": "Please wait while all recordings are published (publishing may take a few minutes after recordings are finished) before changing server.",
     "running_on_server": "The meeting is assigned to the server: %server%.",
     "meeting_disabled_help": "Disabled rooms can no longer be opened.",
 

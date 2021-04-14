@@ -38,7 +38,7 @@
     "force_server": "Forcer le serveur",
     "force_server_help": "Par défaut la salle sera attribuée à l'un des serveurs disponibles à la première ouverture.",
     "force_server_help2": "Activez cette option pour choisir vous-même le serveur à utiliser.",
-    "force_server_help3": "Une fois la salle attribuée à un serveur, il n'est plus possible d'en changer.",
+    "force_server_help_records": "Veuillez patienter le temps que tous les enregistrements soient publiés (la publication peut prendre quelques minutes après la fin des enregistrements) avant de changer de serveur.",
     "running_on_server": "La salle est attribuée au serveur : %server%.",
     "meeting_disabled_help": "Les salles désactivées ne peuvent plus être ouvertes.",
 

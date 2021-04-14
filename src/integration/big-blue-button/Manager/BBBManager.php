@@ -203,11 +203,11 @@ class BBBManager
         return $success;
     }
 
-    public function endMeeting(BBB $bbb)
+    public function endMeeting(BBB $bbb, string $serverName = null)
     {
         $meetingId = $bbb->getUuid();
 
-        $server = $this->getMeetingServer($bbb);
+        $server = empty($serverName) ? $this->getMeetingServer($bbb) : $this->serverManager->getServer($serverName);
         $serverUrl = $server['url'];
         $securitySalt = $server['token'];
 
