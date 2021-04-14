@@ -17,13 +17,28 @@ class BBBCrud
         $this->bbbManager = $bbbManager;
     }
 
+    public function preUpdate(UpdateEvent $event)
+    {
+        /** @var BBB $bbb */
+        $bbb = $event->getObject();
+        if ($bbb->getRunningOn() && $bbb->getServer() && ($bbb->getRunningOn() !== $bbb->getServer())) {
+            // we want to force a server for this room, we reinitialize attributed server to move the room
+            $bbb->setRunningOn(null);
+        }
+    }
+
     public function postUpdate(UpdateEvent $event)
     {
-        /** @var BBB */
+        /** @var BBB $bbb */
         $bbb = $event->getObject();
 
-        // close the room to recreate it with new params
-        $this->bbbManager->endMeeting($bbb);
+        $oldData = $event->getOldData();
+
+        if (!empty($oldData['runningOn'])) {
+            // room has already been created
+            // close the room to recreate it with new params
+            $this->bbbManager->endMeeting($bbb, $oldData['runningOn']);
+        }
     }
 
     public function postDelete(DeleteEvent $event)

@@ -109,19 +109,17 @@ const Editor = props =>
             name: 'forceServer',
             type: 'boolean',
             label: trans('force_server', {}, 'bbb'),
-            disabled: (bbb) => !!bbb.runningOn,
             calculated: (bbb) => bbb.forceServer || get(bbb, 'restrictions.server'),
             help: [
               trans('force_server_help', {}, 'bbb'),
               trans('force_server_help2', {}, 'bbb'),
-              trans('force_server_help3', {}, 'bbb')
-            ],
+              props.allowRecords && props.bbb.record ? trans('force_server_help_records', {}, 'bbb') : undefined
+            ].filter(value => !!value),
             linked: [
               {
                 name: 'restrictions.server',
                 type: 'choice',
                 label: trans('server', {}, 'bbb'),
-                disabled: (bbb) => !!bbb.runningOn,
                 displayed: (bbb) => bbb.forceServer || get(bbb, 'restrictions.server'),
                 required: true,
                 options: {
@@ -143,7 +141,9 @@ Editor.propTypes = {
   bbb: T.shape(
     BBBTypes.propTypes
   ),
-  servers: T.arrayOf(T.string),
+  servers: T.arrayOf(T.shape({
+    url: T.string.isRequired
+  })),
   allowRecords: T.bool,
   updateProp: T.func.isRequired
 }
