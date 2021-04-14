@@ -14,11 +14,10 @@
     "processed": "Bientôt disponible",
     "processing": "En cours de traitement...",
     "recordings": "Enregistrements",
-    "wait_for_moderator": "Attendre un modérateur",
+    "wait_for_moderator": "Attendre un gestionnaire",
     "welcome_message": "Message d'accueil",
 
     "meeting_is_closed": "Cette classe virtuelle est fermée.",
-    "waiting_for_moderator": "La salle requiert qu'au moins un modérateur soit présent. Veuillez patienter le temps qu'un modérateur rejoigne la salle.",
     "meeting_disabled": "La salle est actuellement désactivée. Veuillez patienter le temps qu'un gestionnaire la réactive.",
     "meetings_limit_reached": "Le nombre limite de salles a été atteint. Veuillez patienter le temps que des salles se libèrent.",
     "max_meeting_participants_reached": "Le nombre limite de participants de cette salle a été atteint. Veuillez patientez le temps que des places se libèrent.",
@@ -41,6 +40,8 @@
     "force_server_help_records": "Veuillez patienter le temps que tous les enregistrements soient publiés (la publication peut prendre quelques minutes après la fin des enregistrements) avant de changer de serveur.",
     "running_on_server": "La salle est attribuée au serveur : %server%.",
     "meeting_disabled_help": "Les salles désactivées ne peuvent plus être ouvertes.",
+    "moderator_help_title": "Les entrées dans la salle sont gérées par les gestionnaires.",
+    "moderator_help_message": "Les participants sont mis en salle d'attente temps qu'un gestionnaire n'a pas validé leur entrée.",
 
     "show_presentation": "Voir l'enregistrement",
     "show_podcast": "Ecouter le podcast",

@@ -78,10 +78,8 @@ class BBBController extends AbstractCrudController
 
         $created = $this->bbbManager->createMeeting($bbb);
         if ($created) {
-            $moderator = $this->checkPermission('ADMINISTRATE', $bbb->getResourceNode());
-
             return new JsonResponse([
-                'joinStatus' => $this->bbbManager->canJoinMeeting($bbb, $moderator),
+                'joinStatus' => $this->bbbManager->canJoinMeeting($bbb),
             ], 201);
         }
 
@@ -98,7 +96,7 @@ class BBBController extends AbstractCrudController
 
         $moderator = $this->checkPermission('ADMINISTRATE', $bbb->getResourceNode());
 
-        $errors = $this->bbbManager->canJoinMeeting($bbb, $moderator);
+        $errors = $this->bbbManager->canJoinMeeting($bbb);
         if (empty($errors)) {
             $url = $this->bbbManager->getMeetingUrl($bbb, $moderator, $username);
             if ($url) {
