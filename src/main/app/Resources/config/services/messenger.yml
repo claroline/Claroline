@@ -1,3 +1,6 @@
 services:
     Claroline\AppBundle\Messenger\MessageHandler:
         tags: [messenger.message_handler]
+        arguments:
+            - '@Claroline\CoreBundle\Library\Mailing\Client\SymfonyMailer'
+            - '@Psr\Log\LoggerInterface'
