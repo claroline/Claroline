@@ -24,38 +24,45 @@ jobs:
         run: |
           git fetch origin
           git diff --name-only --diff-filter=AM origin/${{ github.base_ref }} > git_diff_files.txt
-          echo "::set-output name=diff::$(cat git_diff_files.txt)"
+          echo "::set-output name=diff_php::$(cat git_diff_files.txt | grep '.\+\.php' | sed ':a;N;$!ba;s/\n/ /g')"
+          echo "::set-output name=diff_js::$(cat git_diff_files.txt | grep 'Resources/modules/.\+\.js' | sed ':a;N;$!ba;s/\n/ /g')"
 
       - name: "Install PHPMD"
-        run: if [ "$DIFF" != '' ]; then wget -c https://phpmd.org/static/latest/phpmd.phar -O phpmd; fi
+        if: ${{ env.DIFF != '' }}
+        run: wget -c https://phpmd.org/static/latest/phpmd.phar -O phpmd;
         env:
-          DIFF: ${{ steps.diff.outputs.diff }}
+          DIFF: ${{ steps.diff.outputs.diff_php}}
 
       - name: "Run PHPMD checks"
-        run: if [ "$DIFF" != '' ]; then php phpmd `echo "$DIFF" | xargs | sed -e :a -e '$!N; s/ /,/; ta'` text phpmd.xml; fi
+        if: ${{ env.DIFF != '' }}
+        run: php phpmd `echo "$DIFF" | tr ' ' ','` text phpmd.xml
         env:
-          DIFF: ${{ steps.diff.outputs.diff }}
+          DIFF: ${{ steps.diff.outputs.diff_php }}
 
       - name: "Install PHPCSFixer"
-        run: if [ "$DIFF" != '' ]; then wget https://cs.symfony.com/download/php-cs-fixer-v2.phar -O php-cs-fixer; fi
+        if: ${{ env.DIFF != '' }}
+        run: wget https://cs.symfony.com/download/php-cs-fixer-v2.phar -O php-cs-fixer
         env:
-          DIFF: ${{ steps.diff.outputs.diff }}
+          DIFF: ${{ steps.diff.outputs.diff_php }}
 
       - name: "Run PHPCSFixer checks"
-        run: if [ "$DIFF" != '' ]; then php php-cs-fixer fix --dry-run --diff --config=.php_cs; fi
+        if: ${{ env.DIFF != '' }}
+        run: php php-cs-fixer fix --dry-run --diff --config=.php_cs --path-mode=intersection `echo "$DIFF"`
         env:
           PHP_CS_FIXER_IGNORE_ENV: 1
-          DIFF: ${{ steps.diff.outputs.diff }}
+          DIFF: ${{ steps.diff.outputs.diff_php }}
 
       - name: "Install ESLint"
-        run: if [ "$DIFF" != '' ]; then npm install eslint eslint-plugin-react@7.21.5; fi
+        if: ${{ env.DIFF != '' }}
+        run: npm install eslint eslint-plugin-react@7.21.5
         env:
-          DIFF: ${{ steps.diff.outputs.diff }}
+          DIFF: ${{ steps.diff.outputs.diff_js }}
 
       - name: "Run ESLint checks"
-        run: if [ "$DIFF" != '' ]; then node_modules/.bin/eslint --ext js --ext jsx `echo "$DIFF" | grep 'Resources/modules/.\+\.js' | tr '\n' ' '`; fi
+        if: ${{ env.DIFF != '' }}
+        run: node_modules/.bin/eslint --ext js --ext jsx `echo "$DIFF"`
         env:
-          DIFF: ${{ steps.diff.outputs.diff }}
+          DIFF: ${{ steps.diff.outputs.diff_js }}
 
   php:
     name: "PHPUnit (PHP 7.4)"
