@@ -25,7 +25,6 @@ use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 use Claroline\CoreBundle\Manager\Tool\ToolManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
@@ -48,9 +47,6 @@ class DesktopController
     /** @var TokenStorageInterface */
     private $tokenStorage;
 
-    /** @var EventDispatcherInterface */
-    private $eventDispatcher;
-
     /** @var ParametersSerializer */
     private $parametersSerializer;
 
@@ -66,7 +62,6 @@ class DesktopController
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         TokenStorageInterface $tokenStorage,
-        EventDispatcherInterface $eventDispatcher,
         ParametersSerializer $parametersSerializer,
         SerializerProvider $serializer,
         ToolManager $toolManager,
@@ -74,7 +69,6 @@ class DesktopController
     ) {
         $this->authorization = $authorization;
         $this->tokenStorage = $tokenStorage;
-        $this->eventDispatcher = $eventDispatcher;
         $this->parametersSerializer = $parametersSerializer;
         $this->serializer = $serializer;
         $this->toolManager = $toolManager;
@@ -95,7 +89,7 @@ class DesktopController
         }
 
         /** @var GenericDataEvent $event */
-        $event = $this->eventDispatcher->dispatch(new GenericDataEvent(), 'desktop.open');
+        $event = $this->strictDispatcher->dispatch('desktop.open', GenericDataEvent::class);
 
         $parameters = $this->parametersSerializer->serialize([Options::SERIALIZE_MINIMAL]);
 
@@ -126,7 +120,7 @@ class DesktopController
         }
 
         /** @var OpenToolEvent $event */
-        $event = $this->eventDispatcher->dispatch(new OpenToolEvent(), 'open_tool_desktop_'.$toolName);
+        $event = $this->strictDispatcher->dispatch('open_tool_desktop_'.$toolName, OpenToolEvent::class);
 
         $this->strictDispatcher->dispatch(
             ToolEvents::TOOL_OPEN,

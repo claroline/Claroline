@@ -39,6 +39,7 @@ use Doctrine\ORM\NoResultException;
 use Psr\Log\LoggerAwareInterface;
 use Symfony\Component\Mime\MimeTypes;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Security;
 
 class ResourceManager implements LoggerAwareInterface
 {
@@ -58,6 +59,8 @@ class ResourceManager implements LoggerAwareInterface
     private $rightsManager;
     /** @var TempFileManager */
     private $tempManager;
+    /** @var Security */
+    private $security;
 
     /** @var ResourceTypeRepository */
     private $resourceTypeRepo;
@@ -73,7 +76,8 @@ class ResourceManager implements LoggerAwareInterface
         ObjectManager $om,
         ClaroUtilities $ut,
         Crud $crud,
-        TempFileManager $tempManager
+        TempFileManager $tempManager,
+        Security $security
     ) {
         $this->authorization = $authorization;
         $this->om = $om;
@@ -82,6 +86,7 @@ class ResourceManager implements LoggerAwareInterface
         $this->ut = $ut;
         $this->crud = $crud;
         $this->tempManager = $tempManager;
+        $this->security = $security;
 
         $this->resourceTypeRepo = $om->getRepository(ResourceType::class);
         $this->resourceNodeRepo = $om->getRepository(ResourceNode::class);
@@ -599,7 +604,7 @@ class ResourceManager implements LoggerAwareInterface
             $event = $this->dispatcher->dispatch(
                 'resource.load',
                 LoadResourceEvent::class,
-                [$resource, null, $embedded]
+                [$resource, $this->security->getUser(), $embedded]
             );
 
             return $event->getData();

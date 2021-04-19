@@ -31,10 +31,6 @@ class FunctionalLogFinder extends AbstractFinder
                     $qb->andWhere('u.uuid = :id');
                     $qb->setParameter('id', $filterValue);
                     break;
-                case 'details':
-                    $qb->andWhere('obj.details LIKE :details');
-                    $qb->setParameter('details', '%'.$filterValue.'%');
-                    break;
                 case 'workspace':
                     $qb->leftJoin('obj.workspace', 'w');
                     $qb->andWhere('w.uuid = :workspace');

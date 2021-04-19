@@ -73,6 +73,7 @@ services:
             - '@Claroline\CoreBundle\Library\Utilities\ClaroUtilities'
             - '@Claroline\AppBundle\API\Crud'
             - '@claroline.manager.temp_file'
+            - '@security.helper'
         calls:
             - setLogger: ['@logger']
 

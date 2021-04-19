@@ -263,7 +263,6 @@ services:
         arguments:
             - '@security.authorization_checker'
             - '@security.token_storage'
-            - '@event_dispatcher'
             - '@claroline.manager.tool_manager'
             - '@Claroline\AppBundle\Event\StrictDispatcher'
 
@@ -280,7 +279,6 @@ services:
         arguments:
             - '@security.authorization_checker'
             - '@security.token_storage'
-            - '@event_dispatcher'
             - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@claroline.manager.tool_manager'
@@ -310,7 +308,6 @@ services:
             - '@Claroline\CoreBundle\Manager\Resource\ResourceRestrictionsManager'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@security.authorization_checker'
-            - '@Claroline\AppBundle\Event\StrictDispatcher'
 
     Claroline\CoreBundle\Controller\SearchController:
         arguments:
@@ -322,7 +319,6 @@ services:
         arguments:
             - '@security.authorization_checker'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@event_dispatcher'
             - '@security.token_storage'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@claroline.manager.tool_manager'

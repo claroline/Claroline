@@ -7,7 +7,7 @@ final class ResourceEvents
     /**
      * @Event("Claroline\CoreBundle\Event\Resource\LoadResourceEvent")
      */
-    public const RESOURCE_OPEN = 'event.functional.resource_open';
+    public const RESOURCE_OPEN = 'resource.load';
 
     /**
      * @Event("Claroline\CoreBundle\Event\Functional\ResourceEvaluationEvent")

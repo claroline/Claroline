@@ -17,7 +17,6 @@ use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\Event\CatalogEvents\ToolEvents;
 use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 use Claroline\CoreBundle\Manager\Tool\ToolManager;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
@@ -36,9 +35,6 @@ class AdministrationController
     /** @var TokenStorageInterface */
     private $tokenStorage;
 
-    /** @var EventDispatcherInterface */
-    private $eventDispatcher;
-
     /** @var ToolManager */
     private $toolManager;
 
@@ -48,12 +44,10 @@ class AdministrationController
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         TokenStorageInterface $tokenStorage,
-        EventDispatcherInterface $eventDispatcher,
         ToolManager $toolManager,
         StrictDispatcher $strictDispatcher
     ) {
         $this->authorization = $authorization;
-        $this->eventDispatcher = $eventDispatcher;
         $this->toolManager = $toolManager;
         $this->tokenStorage = $tokenStorage;
         $this->strictDispatcher = $strictDispatcher;
@@ -109,7 +103,7 @@ class AdministrationController
         }
 
         /** @var OpenToolEvent $event */
-        $event = $this->eventDispatcher->dispatch(new OpenToolEvent(), 'administration_tool_'.$toolName);
+        $event = $this->strictDispatcher->dispatch('administration_tool_'.$toolName, OpenToolEvent::class);
 
         $this->strictDispatcher->dispatch(
             ToolEvents::TOOL_OPEN,

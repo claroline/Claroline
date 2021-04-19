@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Entity\Log;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -19,12 +20,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  */
 class AbstractLog
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
+    use Id;
 
     /**
      * @ORM\Column(type="datetime")
