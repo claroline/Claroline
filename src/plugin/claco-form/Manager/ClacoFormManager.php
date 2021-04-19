@@ -55,6 +55,7 @@ use Ramsey\Uuid\Uuid;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -84,6 +85,8 @@ class ClacoFormManager implements LoggerAwareInterface
     private $tokenStorage;
     /** @var TranslatorInterface */
     private $translator;
+    /** @var MessageBusInterface  */
+    private $messageBus;
 
     /** @var UserRepository */
     private $userRepo;
@@ -114,7 +117,8 @@ class ClacoFormManager implements LoggerAwareInterface
         ObjectManager $om,
         RouterInterface $router,
         TokenStorageInterface $tokenStorage,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        MessageBusInterface $messageBus
     ) {
         $this->authorization = $authorization;
         $this->eventDispatcher = $eventDispatcher;
@@ -125,6 +129,7 @@ class ClacoFormManager implements LoggerAwareInterface
         $this->router = $router;
         $this->tokenStorage = $tokenStorage;
         $this->translator = $translator;
+        $this->messageBus = $messageBus;
 
         $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
         $this->categoryRepo = $om->getRepository('ClarolineClacoFormBundle:Category');
@@ -865,7 +870,7 @@ class ClacoFormManager implements LoggerAwareInterface
 
         if ($sendMessage && count($receivers) > 0) {
             $message = $this->messageManager->create($content, $subject, $receivers);
-            $this->messageManager->send($message);
+            $this->messageBus->dispatch($message);
         }
     }
 

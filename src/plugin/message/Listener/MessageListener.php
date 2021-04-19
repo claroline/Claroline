@@ -15,6 +15,7 @@ use Claroline\CoreBundle\Entity\Task\ScheduledTask;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Manager\Task\ScheduledTaskManager;
 use Claroline\MessageBundle\Manager\MessageManager;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 class MessageListener
 {
@@ -42,6 +43,9 @@ class MessageListener
 
         if (!empty($users) && !empty($object) && !empty($content)) {
             $message = $this->messageManager->create($content, $object, $users);
+
+            // todo: fetches ready scheduled tasks from the db
+            // and moves them to the message queue with MessageBusInterface
             $this->messageManager->send($message);
             $this->taskManager->markAsExecuted($task);
         }

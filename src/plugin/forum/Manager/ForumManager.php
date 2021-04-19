@@ -21,6 +21,7 @@ use Claroline\ForumBundle\Entity\Message;
 use Claroline\ForumBundle\Entity\Subject;
 use Claroline\ForumBundle\Entity\Validation\User as UserValidation;
 use Claroline\MessageBundle\Manager\MessageManager;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 class ForumManager
 {
@@ -39,6 +40,9 @@ class ForumManager
     /** @var TemplateManager */
     private $templateManager;
 
+    /** @var MessageBusInterface */
+    private $messageBus;
+
     private $messageRepo;
 
     private $subjectRepo;
@@ -51,13 +55,15 @@ class ForumManager
         FinderProvider $finder,
         ObjectManager $om,
         MessageManager $messageManager,
-        TemplateManager $templateManager
+        TemplateManager $templateManager,
+        MessageBusInterface $messageBus
     ) {
         $this->helper = $helper;
         $this->finder = $finder;
         $this->om = $om;
         $this->messageManager = $messageManager;
         $this->templateManager = $templateManager;
+        $this->messageBus = $messageBus;
 
         $this->messageRepo = $om->getRepository(Message::class);
         $this->subjectRepo = $om->getRepository(Subject::class);
@@ -152,7 +158,7 @@ class ForumManager
             }, $usersValidate)
         );
 
-        $this->messageManager->send($toSend);
+        $this->messageBus->dispatch($toSend);
     }
 
     /**
