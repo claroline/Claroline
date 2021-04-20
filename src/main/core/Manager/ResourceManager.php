@@ -602,7 +602,7 @@ class ResourceManager implements LoggerAwareInterface
         if ($resource) {
             /** @var LoadResourceEvent $event */
             $event = $this->dispatcher->dispatch(
-                'resource.load',
+                'resource_load',
                 LoadResourceEvent::class,
                 [$resource, $this->security->getUser(), $embedded]
             );

@@ -7,10 +7,10 @@ final class BadgeEvents
     /**
      * @Event("Claroline\OpenBadgeBundle\Event\AddBadgeEvent")
      */
-    public const ADD_BADGE = 'event.funcitonal.add_badge';
+    public const BADGE_ADD = 'badge_add';
 
     /**
      * @Event("Claroline\OpenBadgeBundle\Event\RemoveBadgeEvent")
      */
-    public const REMOVE_BADGE = 'event.funcitonal.remove_badge';
+    public const BADGE_REMOVE = 'badge_remove';
 }
