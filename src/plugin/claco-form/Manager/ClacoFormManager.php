@@ -85,7 +85,7 @@ class ClacoFormManager implements LoggerAwareInterface
     private $tokenStorage;
     /** @var TranslatorInterface */
     private $translator;
-    /** @var MessageBusInterface  */
+    /** @var MessageBusInterface */
     private $messageBus;
 
     /** @var UserRepository */

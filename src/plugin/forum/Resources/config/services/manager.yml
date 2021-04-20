@@ -11,3 +11,4 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\MessageBundle\Manager\MessageManager'
             - '@Claroline\CoreBundle\Manager\Template\TemplateManager'
+            - '@messenger.default_bus'

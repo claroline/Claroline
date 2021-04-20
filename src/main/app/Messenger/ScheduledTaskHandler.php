@@ -9,33 +9,26 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\MessageBundle\Listener;
+namespace Claroline\AppBundle\Messenger;
 
 use Claroline\CoreBundle\Entity\Task\ScheduledTask;
-use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Manager\Task\ScheduledTaskManager;
 use Claroline\MessageBundle\Manager\MessageManager;
-use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
-class MessageListener
+class ScheduledTaskHandler implements MessageHandlerInterface
 {
-    /** @var MessageManager */
     private $messageManager;
-    /** @var ScheduledTaskManager */
     private $taskManager;
 
-    public function __construct(
-        MessageManager $messageManager,
-        ScheduledTaskManager $taskManager
-    ) {
+    public function __construct(MessageManager $messageManager, ScheduledTaskManager $taskManager)
+    {
         $this->messageManager = $messageManager;
         $this->taskManager = $taskManager;
     }
 
-    public function onExecuteMessageTask(GenericDataEvent $event)
+    public function __invoke(ScheduledTask $task)
     {
-        /** @var ScheduledTask $task */
-        $task = $event->getData();
         $data = $task->getData();
         $users = $task->getUsers();
         $object = isset($data['object']) ? $data['object'] : null;
@@ -44,12 +37,8 @@ class MessageListener
         if (!empty($users) && !empty($object) && !empty($content)) {
             $message = $this->messageManager->create($content, $object, $users);
 
-            // todo: fetches ready scheduled tasks from the db
-            // and moves them to the message queue with MessageBusInterface
             $this->messageManager->send($message);
             $this->taskManager->markAsExecuted($task);
         }
-
-        $event->stopPropagation();
     }
 }

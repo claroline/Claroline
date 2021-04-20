@@ -3,3 +3,9 @@ services:
         tags: [messenger.message_handler]
         arguments:
             - '@Claroline\MessageBundle\Manager\MessageManager'
+
+    Claroline\AppBundle\Messenger\ScheduledTaskHandler:
+        tags: [ messenger.message_handler ]
+        arguments:
+            - '@Claroline\MessageBundle\Manager\MessageManager'
+            - '@Claroline\CoreBundle\Manager\Task\ScheduledTaskManager'
