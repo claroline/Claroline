@@ -15,7 +15,7 @@ trait Code
      *
      * @var string
      */
-    private $code;
+    protected $code;
 
     public function getCode(): string
     {

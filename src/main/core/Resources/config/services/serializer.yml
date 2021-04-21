@@ -6,21 +6,29 @@ services:
 
     Claroline\CoreBundle\API\Serializer\ParametersSerializer:
         arguments:
-          - '@Claroline\AppBundle\API\SerializerProvider'
-          - '@Claroline\AppBundle\API\FinderProvider'
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-          - '%claroline.param.archive_directory%'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+            - '%claroline.param.archive_directory%'
 
     Claroline\CoreBundle\API\Serializer\ObjectLockSerializer:
         tags: [claroline.serializer]
         arguments:
-          - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
 
     Claroline\CoreBundle\API\Serializer\MessageSerializer:
         arguments:
-          - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+
+    Claroline\CoreBundle\API\Serializer\Planning\PlannedObjectSerializer:
+        tags: [ claroline.serializer ]
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\User\LocationSerializer'
 
     Claroline\CoreBundle\API\Serializer\DataSourceSerializer:
         tags: [claroline.serializer]
@@ -28,8 +36,8 @@ services:
     Claroline\CoreBundle\API\Serializer\SavedSearchSerializer:
         tags: [claroline.serializer]
         arguments:
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
 
     Claroline\CoreBundle\API\Serializer\Tool\AdminToolSerializer:
         tags: [claroline.serializer]
@@ -37,16 +45,16 @@ services:
     Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer:
         tags: [claroline.serializer]
         arguments:
-          - '@security.authorization_checker'
-          - '@security.token_storage'
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@claroline.manager.workspace_manager'
-          - '@claroline.manager.resource_manager'
-          - '@Claroline\CoreBundle\Library\Utilities\FileUtilities'
-          - '@Claroline\AppBundle\API\FinderProvider'
-          - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
-          - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
-          - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
+            - '@security.authorization_checker'
+            - '@security.token_storage'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@claroline.manager.workspace_manager'
+            - '@claroline.manager.resource_manager'
+            - '@Claroline\CoreBundle\Library\Utilities\FileUtilities'
+            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
 
     Claroline\CoreBundle\API\Serializer\Workspace\ShortcutsSerializer:
         tags: [claroline.serializer]
@@ -170,9 +178,9 @@ services:
     Claroline\CoreBundle\API\Serializer\Tool\OrderedToolSerializer:
         tags: [claroline.serializer]
         arguments:
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@Claroline\CoreBundle\Manager\Tool\ToolManager'
-          - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\Manager\Tool\ToolManager'
+            - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
 
     Claroline\CoreBundle\API\Serializer\Template\TemplateTypeSerializer:
         tags: [claroline.serializer]
@@ -349,4 +357,3 @@ services:
             - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
             - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
             - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'
-

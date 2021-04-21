@@ -8,7 +8,7 @@ import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {DetailsData} from '#/main/app/content/details/components/data'
 
 import {route} from '#/main/core/resource/routing'
-import {ResourceType} from '#/main/core/resource/components/type'
+import {ResourceIcon} from '#/main/core/resource/components/icon'
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
 
 const AboutModal = props =>
@@ -30,17 +30,13 @@ const AboutModal = props =>
             {
               name: 'meta.type',
               label: trans('type'),
-              type: 'string',
+              type: 'type',
               hideLabel: true,
-              render: (resourceNode) => {
-                const NodeType =
-                  <ResourceType
-                    name={resourceNode.meta.type}
-                    mimeType={resourceNode.meta.mimeType}
-                  />
-
-                return NodeType
-              }
+              calculated: (resourceNode) => ({
+                icon: <ResourceIcon mimeType={resourceNode.meta.mimeType} />,
+                name: trans(resourceNode.meta.type, {}, 'resource'),
+                description: trans(`${resourceNode.meta.type}_desc`, {}, 'resource')
+              })
             }, {
               name: 'url',
               type: 'url',

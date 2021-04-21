@@ -15,3 +15,9 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CursusBundle\DataFixtures\PostInstall\LoadTemplateData'
         tags: [ 'claroline.platform.updater' ]
+
+    Claroline\CursusBundle\Installation\Updater\Updater130013:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\Manager\PlanningManager'
+        tags: [ 'claroline.platform.updater' ]

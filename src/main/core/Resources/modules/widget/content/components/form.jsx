@@ -8,7 +8,7 @@ import {FormData} from '#/main/app/content/form/containers/data'
 import {selectors as formSelectors} from '#/main/app/content/form/store/selectors'
 
 import {getWidget} from '#/main/core/widget/types'
-import {WidgetContentType, WidgetSourceType} from '#/main/core/widget/content/components/type'
+import {WidgetContentIcon, WidgetSourceIcon} from '#/main/core/widget/content/components/icon'
 import {WidgetInstance as WidgetInstanceTypes} from '#/main/core/widget/content/prop-types'
 
 const WidgetContentFormComponent = (props) => {
@@ -29,32 +29,26 @@ const WidgetContentFormComponent = (props) => {
           fields: [
             {
               name: 'type',
-              type: 'string',
+              type: 'type',
               label: trans('widget'),
               hideLabel: true,
-              render: (widgetInstance) => {
-                const ContentType =
-                  <WidgetContentType
-                    {...widgetInstance}
-                  />
-
-                return ContentType
-              },
+              calculated: (widgetInstance) => ({
+                icon: <WidgetContentIcon type={widgetInstance.type} />,
+                name: trans(widgetInstance.type, {}, 'widget'),
+                description: trans(`${widgetInstance.type}_desc`, {}, 'widget')
+              }),
               linked: [
                 {
                   name: 'source',
-                  type: 'string',
+                  type: 'type',
                   label: trans('data_source'),
                   displayed: !!props.instance.source,
                   hideLabel: true,
-                  render: (widgetInstance) => {
-                    const SourceType =
-                      <WidgetSourceType
-                        {...widgetInstance}
-                      />
-
-                    return SourceType
-                  }
+                  calculated: (widgetInstance) => ({
+                    icon: <WidgetSourceIcon type={widgetInstance.source} />,
+                    name: trans(widgetInstance.source, {}, 'data_sources'),
+                    description: trans(`${widgetInstance.source}_desc`, {}, 'data_sources')
+                  })
                 }
               ]
             }

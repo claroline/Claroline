@@ -18,9 +18,9 @@ const SessionDisplay = (props) => props.data ?
   />
 
 SessionDisplay.propTypes = {
-  data: T.arrayOf(T.shape(
+  data: T.shape(
     SessionTypes.propTypes
-  ))
+  )
 }
 
 export {

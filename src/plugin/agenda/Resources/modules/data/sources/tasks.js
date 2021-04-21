@@ -4,7 +4,7 @@ import {trans} from '#/main/app/intl/translation'
 
 import {route} from '#/main/core/tool/routing'
 import {route as workspaceRoute} from '#/main/core/workspace/routing'
-import {EventCard} from '#/plugin/agenda/data/components/event-card'
+import {EventCard} from '#/plugin/agenda/event/components/card'
 
 export default {
   name: 'tasks',
@@ -15,9 +15,9 @@ export default {
     }),
     definition: [
       {
-        name: 'title',
+        name: 'name',
         type: 'string',
-        label: trans('title'),
+        label: trans('name'),
         displayed: true,
         primary: true
       }, {
@@ -40,7 +40,6 @@ export default {
         sortable: false
       }, {
         name: 'meta.done',
-        alias: 'isTaskDone',
         type: 'boolean',
         label: trans('task_done', {}, 'agenda'),
         displayed: true

@@ -9,6 +9,11 @@ const event = createSelector(
   (store) => store.event
 )
 
+const loaded = createSelector(
+  [store],
+  (store) => store.loaded
+)
+
 const registrations = createSelector(
   [store],
   (store) => store.registrations
@@ -17,5 +22,6 @@ const registrations = createSelector(
 export const selectors = {
   STORE_NAME,
   event,
+  loaded,
   registrations
 }

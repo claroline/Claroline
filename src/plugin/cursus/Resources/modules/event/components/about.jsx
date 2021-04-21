@@ -86,8 +86,8 @@ const EventAbout = (props) =>
           <li className="list-group-item">
             {trans('duration')}
             <span className="value">
-              {get(props.event, 'restrictions.dates[0]') && get(props.event, 'restrictions.dates[1]') ?
-                displayDuration(getTimeDiff(get(props.event, 'restrictions.dates[0]'), get(props.event, 'restrictions.date[1]')), true) :
+              {get(props.event, 'start') && get(props.event, 'end') ?
+                displayDuration(getTimeDiff(get(props.event, 'start'), get(props.event, 'end')), true) :
                 trans('empty_value')
               }
             </span>
@@ -156,19 +156,19 @@ const EventAbout = (props) =>
             {trans('status')}
           </span>
 
-          {get(props.event, 'restrictions.dates[0]') > now() &&
+          {get(props.event, 'start') > now() &&
             <h1 className="content-resume-title h2 text-muted">
               {trans('session_not_started', {}, 'cursus')}
             </h1>
           }
 
-          {(get(props.event, 'restrictions.dates[0]') <= now() && get(props.event, 'restrictions.dates[1]') >= now()) &&
+          {(get(props.event, 'start') <= now() && get(props.event, 'end') >= now()) &&
             <h1 className="content-resume-title h2 text-success">
               {trans('session_in_progress', {}, 'cursus')}
             </h1>
           }
 
-          {get(props.event, 'restrictions.dates[1]') < now() &&
+          {get(props.event, 'end') < now() &&
             <h1 className="content-resume-title h2 text-danger">
               {trans('session_closed', {}, 'cursus')}
             </h1>
@@ -180,9 +180,9 @@ const EventAbout = (props) =>
             {trans('start_date')}
           </span>
 
-          {get(props.event, 'restrictions.dates[0]') &&
+          {get(props.event, 'start') &&
             <h1 className="content-resume-title h2">
-              {displayDate(get(props.event, 'restrictions.dates[0]'), false, true)}
+              {displayDate(get(props.event, 'start'), false, true)}
             </h1>
           }
         </div>

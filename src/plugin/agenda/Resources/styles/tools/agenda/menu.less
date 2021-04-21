@@ -1,9 +1,10 @@
 
 .agenda-menu {
     text-align: center;
+
     .calendar-container {
-        //width: 100%;
-        margin-bottom: @component-margin-bottom;
+        margin-top: @component-margin-bottom;
+        margin-bottom: 10px; // @component-margin-bottom - h5 margin
     }
 
     .calendar {
@@ -20,5 +21,18 @@
             margin-top: 0;
             margin-right: @icon-text-spacer;
         }
+    }
+
+    .agenda-menu-title {
+        margin-left: floor(@grid-gutter-width / 2);
+        font-size: 16px;
+    }
+
+    .planning-loader {
+        margin-left: auto;
+    }
+
+    .colors-container {
+        height: auto;
     }
 }

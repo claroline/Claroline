@@ -1,0 +1,6 @@
+{
+  "event": "Event",
+  "event_desc": "Allows to plan an event and invite users.",
+  "task": "Task",
+  "task_desc": "Allows to plan a task to do."
+}

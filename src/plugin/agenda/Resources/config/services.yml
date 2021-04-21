@@ -5,5 +5,5 @@ imports:
     - { resource: services/crud.yml }
     - { resource: services/listener.yml }
     - { resource: services/manager.yml }
-    - { resource: services/validator.yml }
+    - { resource: services/updater.yml }
     - { resource: services/voter.yml }

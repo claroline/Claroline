@@ -16,6 +16,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\CatalogEvents\MessageEvents;
 use Claroline\CoreBundle\Event\SendMessageEvent;
+use Claroline\CoreBundle\Manager\PlanningManager;
 use Claroline\CoreBundle\Manager\Template\TemplateManager;
 use Claroline\CursusBundle\Entity\Event;
 use Claroline\CursusBundle\Entity\Registration\AbstractRegistration;
@@ -44,6 +45,8 @@ class EventManager
     private $tokenStorage;
     /** @var StrictDispatcher */
     private $dispatcher;
+    /** @var PlanningManager */
+    private $planningManager;
 
     private $eventUserRepo;
     private $eventGroupRepo;
@@ -54,7 +57,8 @@ class EventManager
         UrlGeneratorInterface $router,
         TemplateManager $templateManager,
         TokenStorageInterface $tokenStorage,
-        StrictDispatcher $dispatcher
+        StrictDispatcher $dispatcher,
+        PlanningManager $planningManager
     ) {
         $this->eventDispatcher = $eventDispatcher;
         $this->om = $om;
@@ -62,6 +66,7 @@ class EventManager
         $this->templateManager = $templateManager;
         $this->tokenStorage = $tokenStorage;
         $this->dispatcher = $dispatcher;
+        $this->planningManager = $planningManager;
 
         $this->eventUserRepo = $om->getRepository(EventUser::class);
         $this->eventGroupRepo = $om->getRepository(EventGroup::class);
@@ -102,6 +107,9 @@ class EventManager
                 $this->eventDispatcher->dispatch(new LogSessionEventUserRegistrationEvent($eventUser), 'log');
 
                 $results[] = $eventUser;
+
+                // add event to user planning
+                $this->planningManager->addToPlanning($event, $eventUser->getUser());
             }
         }
 
@@ -117,15 +125,20 @@ class EventManager
     /**
      * @param EventUser[] $eventUsers
      */
-    public function removeUsers(array $eventUsers)
+    public function removeUsers(Event $event, array $eventUsers)
     {
+        $this->om->startFlushSuite();
+
         foreach ($eventUsers as $eventUser) {
             $this->om->remove($eventUser);
 
             $this->eventDispatcher->dispatch(new LogSessionEventUserUnregistrationEvent($eventUser), 'log');
+
+            // remove event from user planning
+            $this->planningManager->removeFromPlanning($event, $eventUser->getUser());
         }
 
-        $this->om->flush();
+        $this->om->endFlushSuite();
     }
 
     /**
@@ -171,6 +184,9 @@ class EventManager
 
                 foreach ($group->getUsers() as $user) {
                     $users[$user->getUuid()] = $user;
+
+                    // add event to user planning
+                    $this->planningManager->addToPlanning($event, $user);
                 }
             }
         }
@@ -182,15 +198,26 @@ class EventManager
         return $results;
     }
 
+    /**
+     * @param EventGroup[] $eventGroups
+     */
     public function removeGroups(Event $event, array $eventGroups)
     {
+        $this->om->startFlushSuite();
+
         foreach ($eventGroups as $eventGroup) {
             $this->om->remove($eventGroup);
+
+            $group = $eventGroup->getGroup();
+            foreach ($group->getUsers() as $user) {
+                // remove event from user planning
+                $this->planningManager->removeFromPlanning($event, $user);
+            }
 
             $this->eventDispatcher->dispatch(new LogSessionEventGroupUnregistrationEvent($eventGroup), 'log');
         }
 
-        $this->om->flush();
+        $this->om->endFlushSuite();
     }
 
     /**

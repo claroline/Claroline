@@ -26,10 +26,15 @@ const EventForm = (props) =>
             label: trans('code'),
             required: true
           }, {
-            name: 'restrictions.dates',
+            name: 'dates',
             type: 'date-range',
-            label: trans('access_dates'),
+            label: trans('date'),
             required: true,
+            calculated: (event) => [event.start || null, event.end || null],
+            onChange: (datesRange) => {
+              props.update('start', datesRange[0])
+              props.update('end', datesRange[1])
+            },
             options: {
               time: true
             }
@@ -67,6 +72,10 @@ const EventForm = (props) =>
             name: 'thumbnail',
             type: 'image',
             label: trans('thumbnail')
+          }, {
+            name: 'display.color',
+            type: 'color',
+            label: trans('color')
           }
         ]
       }, {
@@ -106,6 +115,7 @@ const EventForm = (props) =>
 
 EventForm.propTypes = {
   name: T.string.isRequired,
+  update: T.func.isRequired,
   children: T.any
 }
 

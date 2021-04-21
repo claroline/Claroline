@@ -15,8 +15,8 @@ const EventCard = props =>
     icon="fa fa-clock-o"
     title={props.data.name}
     subtitle={trans('date_range', {
-      start: displayDate(props.data.restrictions.dates[0]),
-      end: displayDate(props.data.restrictions.dates[1])
+      start: displayDate(props.data.start),
+      end: displayDate(props.data.end)
     })}
     contentText={props.data.description}
   />

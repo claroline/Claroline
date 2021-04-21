@@ -47,7 +47,7 @@
     "registration_user_validation": "Demander à l'utilisateur de confirmer son inscription",
     "registration_user_validation_help": "L'utilisateur devra cliquer sur le lien envoyé dans l'email pour terminer son inscription.",
     "training_loading": "Nous chargeons la formation...",
-    "event_loading": "Nous chargeons la séance...",
+    "event_loading": "Nous chargeons la séance de formation...",
     "default_session_help": "La session par défaut est affichée à l'ouverture de la formation dans le catalogue.",
     "default_session_help_registration": "La session par défaut est utilisée lors de l'inscription automatique des utilisateurs depuis une formation parente.",
     "propagate_registration": "Inscrire automatiquement les utilisateurs aux formations liées",
@@ -96,5 +96,6 @@
     "no_course": "Aucune formation",
     "session_info": "Informations sur la session",
     "download_presence": "Télécharger l'attestation de présence (.pdf)",
-    "show_catalog": "Voir le catalogue de formations"
+    "show_catalog": "Voir le catalogue de formations",
+    "registration_auto": "Tous les participants de la session sont automatiquement insrit à cette séance."
 }

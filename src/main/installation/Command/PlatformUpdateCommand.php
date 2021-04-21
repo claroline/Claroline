@@ -130,11 +130,6 @@ class PlatformUpdateCommand extends Command
             $this->installer->installAll();
         }
 
-        // clear cache
-        if ($input->getOption('clear_cache')) {
-            $this->refresher->clearCache($this->environment);
-        }
-
         // dump static assets
         if (!$input->getOption('no_asset')) {
             $this->refresher->installAssets();
@@ -144,6 +139,11 @@ class PlatformUpdateCommand extends Command
         // build themes
         if (!$input->getOption('no_theme')) {
             $this->refresher->buildThemes();
+        }
+
+        // clear cache
+        if ($input->getOption('clear_cache')) {
+            $this->refresher->clearCache($this->environment);
         }
 
         MaintenanceHandler::disableMaintenance();

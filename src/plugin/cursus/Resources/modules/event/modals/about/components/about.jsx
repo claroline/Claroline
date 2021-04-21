@@ -25,9 +25,10 @@ const AboutModal = props =>
           primary: true,
           fields: [
             {
-              name: 'restrictions.dates',
+              name: 'dates',
               type: 'date-range',
               label: trans('date'),
+              calculated: (event) => [event.start || null, event.end || null],
               options: {
                 time: true
               }

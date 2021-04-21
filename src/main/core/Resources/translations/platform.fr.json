@@ -1494,7 +1494,6 @@
     "group_password_reset": "Réinitialiser le mot de passe des utilisateurs",
     "send_password_reset": "Voulez vous réinitialiser les mots de passe des utilisateurs des groupes suivant: %groups%",
     "guest": "Invité",
-    "guests": "Invités",
     "restricted_access": "Accès restreint",
     "sorting": "Tri",
     "modification_date": "Dernière modification",

@@ -6,8 +6,8 @@ import get from 'lodash/get'
 
 import {ModalButton} from '#/main/app/buttons'
 
-import {constants} from '#/plugin/agenda/event/constants'
-import {Event as EventTypes} from '#/plugin/agenda/event/prop-types'
+import {Event as EventTypes} from '#/plugin/agenda/prop-types'
+import {EventIcon} from '#/plugin/agenda/event/components/icon'
 import {MODAL_EVENT_ABOUT} from '#/plugin/agenda/event/modals/about'
 
 const EventMicro = props => {
@@ -20,22 +20,19 @@ const EventMicro = props => {
     <ModalButton
       className={classes('agenda-event-micro', props.className, {
         'text-light': color && color.isDark(),
-        'text-dark': color && color.isLight(),
-        'done': props.event.meta.done
+        'text-dark': color && color.isLight()
       })}
       style={color ? {
         backgroundColor: color.toRgbString()
       } : undefined}
       modal={[MODAL_EVENT_ABOUT, {
         event: props.event,
-        actions: props.actions
+        reload: props.reload
       }]}
     >
-      {constants.EVENT_TYPE_TASK === props.event.meta.type &&
-        <span className="fa fa-fw fa-tasks icon-with-text-right" />
-      }
+      <EventIcon className="icon-with-text-right" type={props.event.meta.type} />
 
-      {props.event.title}
+      {props.event.name}
     </ModalButton>
   )
 }
@@ -45,14 +42,9 @@ EventMicro.propTypes = {
   event: T.shape(
     EventTypes.propTypes
   ).isRequired,
-  actions: T.arrayOf(T.shape({
-    // TODO : action types
-  }))
+  reload: T.func.isRequired
 }
 
-EventMicro.defaultProps = {
-  actions: []
-}
 
 export {
   EventMicro

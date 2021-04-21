@@ -358,3 +358,7 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
             - '@Claroline\CoreBundle\Manager\CurlManager'
+
+    Claroline\CoreBundle\Manager\PlanningManager:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'

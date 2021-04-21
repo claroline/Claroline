@@ -38,6 +38,7 @@ services:
             - '@Claroline\CoreBundle\Manager\Template\TemplateManager'
             - '@security.token_storage'
             - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - '@Claroline\CoreBundle\Manager\PlanningManager'
 
     Claroline\CursusBundle\Manager\EventPresenceManager:
         arguments:

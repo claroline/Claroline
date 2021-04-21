@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Entity;
 
+use Claroline\AppBundle\Entity\IdentifiableInterface;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Description;
@@ -48,7 +49,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ClaroAssert\Username()
  * @ClaroAssert\UserAdministrativeCode()
  */
-class User extends AbstractRoleSubject implements \Serializable, UserInterface, EquatableInterface
+class User extends AbstractRoleSubject implements \Serializable, UserInterface, EquatableInterface, IdentifiableInterface
 {
     use Id;
     use Uuid;

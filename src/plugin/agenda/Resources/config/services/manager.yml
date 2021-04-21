@@ -7,10 +7,7 @@ services:
   Claroline\AgendaBundle\Manager\AgendaManager:
       arguments:
           - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '%kernel.project_dir%'
           - '@security.token_storage'
-          - '@security.authorization_checker'
-          - '@claroline.manager.role_manager'
+          - '@router'
+          - '@event_dispatcher'
           - '@translator'
-          - '@service_container'
-          - '@Claroline\AppBundle\Event\StrictDispatcher'
