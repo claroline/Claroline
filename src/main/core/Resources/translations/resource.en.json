@@ -62,6 +62,9 @@
     "evaluation_completed_status": "You have finished the resource.",
     "evaluation_passed_status": "You have passed the resource.",
     "show_resource_header" : "Show resource header",
+    "resourceOpen": "The resource resourceName has been opened by user userName",
+    "resourceEvaluation": "resourceName - statusName : userName is currently in step userProgression for a duration of durationTime sec",
+    "resourceScore": "resourceName - statusName : userName scored currentScore out on scoreMax. The min score is scoreMin",
 
     "restrictions": {
         "dismiss_help": "As a manager, you can still access the resource, even if the access conditions are not met.",

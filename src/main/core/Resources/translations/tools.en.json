@@ -15,5 +15,6 @@
     "templates_management": "Templates management",
     "resource_trash": "Resources trash",
     "integration": "Integration",
-    "workspaces": "Workspaces"
+    "workspaces": "Workspaces",
+    "toolOpen": "context : User userName open the tool toolName"
 }

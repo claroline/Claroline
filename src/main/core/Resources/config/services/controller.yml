@@ -270,8 +270,8 @@ services:
         arguments:
             - '@security.authorization_checker'
             - '@security.token_storage'
-            - '@event_dispatcher'
             - '@claroline.manager.tool_manager'
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
 
     Claroline\CoreBundle\Controller\AuthenticationController:
         arguments:
@@ -286,10 +286,10 @@ services:
         arguments:
             - '@security.authorization_checker'
             - '@security.token_storage'
-            - '@event_dispatcher'
             - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@claroline.manager.tool_manager'
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
 
     Claroline\CoreBundle\Controller\FileController:
         arguments:
@@ -326,7 +326,6 @@ services:
         arguments:
             - '@security.authorization_checker'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@event_dispatcher'
             - '@security.token_storage'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@claroline.manager.tool_manager'
@@ -334,6 +333,7 @@ services:
             - '@claroline.manager.workspace_manager'
             - '@claroline.manager.workspace_restrictions'
             - '@Claroline\CoreBundle\Manager\Workspace\EvaluationManager'
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
 
     Claroline\CoreBundle\Controller\APINew\Log\SecurityLogController:
         parent: Claroline\AppBundle\Controller\AbstractSecurityController
@@ -348,3 +348,11 @@ services:
         public: true
         arguments:
             - '@Claroline\AppBundle\API\FinderProvider'
+
+    Claroline\CoreBundle\Controller\APINew\Log\FunctionalLogController:
+        parent: Claroline\AppBundle\Controller\AbstractSecurityController
+        public: true
+        arguments:
+            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@security.authorization_checker'
+            - '@security.token_storage'

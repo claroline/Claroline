@@ -13,7 +13,12 @@ const reducer = combineReducers({
   securityLogs: makeListReducer(selectors.LIST_NAME, {
     sortBy: {property: 'date', direction: -1}
   }),
-  messageLogs: makeListReducer(selectors.MESSAGE_NAME)
+  messageLogs: makeListReducer(selectors.MESSAGE_NAME, {
+    sortBy: {property: 'date', direction: -1}
+  }),
+  functionalLogs: makeListReducer(selectors.FUNCTIONAL_NAME, {
+    sortBy: {property: 'date', direction: -1}
+  })
 })
 
 export {

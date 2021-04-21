@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Manager\Resource;
 
+use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Evaluation\AbstractEvaluation;
 use Claroline\CoreBundle\Entity\Log\Connection\LogConnectResource;
@@ -29,16 +30,19 @@ class ResourceEvaluationManager
     private $eventDispatcher;
     /** @var ObjectManager */
     private $om;
+    /** @var StrictDispatcher */
+    private $strictDispatcher;
 
     private $resourceUserEvaluationRepo;
     /** @var LogRepository */
     private $logRepo;
     private $logConnectResource;
 
-    public function __construct(EventDispatcherInterface $eventDispatcher, ObjectManager $om)
+    public function __construct(EventDispatcherInterface $eventDispatcher, ObjectManager $om, StrictDispatcher $strictDispatcher)
     {
         $this->eventDispatcher = $eventDispatcher;
         $this->om = $om;
+        $this->strictDispatcher = $strictDispatcher;
 
         $this->resourceUserEvaluationRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceUserEvaluation');
         $this->logRepo = $this->om->getRepository('ClarolineCoreBundle:Log\Log');

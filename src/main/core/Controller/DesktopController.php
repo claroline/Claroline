@@ -14,16 +14,17 @@ namespace Claroline\CoreBundle\Controller;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
+use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
+use Claroline\CoreBundle\Entity\Tool\AbstractTool;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Event\CatalogEvents\ToolEvents;
 use Claroline\CoreBundle\Event\GenericDataEvent;
-use Claroline\CoreBundle\Event\Log\LogDesktopToolReadEvent;
 use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 use Claroline\CoreBundle\Manager\Tool\ToolManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
@@ -46,9 +47,6 @@ class DesktopController
     /** @var TokenStorageInterface */
     private $tokenStorage;
 
-    /** @var EventDispatcherInterface */
-    private $eventDispatcher;
-
     /** @var ParametersSerializer */
     private $parametersSerializer;
 
@@ -58,20 +56,23 @@ class DesktopController
     /** @var ToolManager */
     private $toolManager;
 
+    /** @var StrictDispatcher */
+    private $strictDispatcher;
+
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         TokenStorageInterface $tokenStorage,
-        EventDispatcherInterface $eventDispatcher,
         ParametersSerializer $parametersSerializer,
         SerializerProvider $serializer,
-        ToolManager $toolManager
+        ToolManager $toolManager,
+        StrictDispatcher $strictDispatcher
     ) {
         $this->authorization = $authorization;
         $this->tokenStorage = $tokenStorage;
-        $this->eventDispatcher = $eventDispatcher;
         $this->parametersSerializer = $parametersSerializer;
         $this->serializer = $serializer;
         $this->toolManager = $toolManager;
+        $this->strictDispatcher = $strictDispatcher;
     }
 
     /**
@@ -88,7 +89,7 @@ class DesktopController
         }
 
         /** @var GenericDataEvent $event */
-        $event = $this->eventDispatcher->dispatch(new GenericDataEvent(), 'desktop.open');
+        $event = $this->strictDispatcher->dispatch('desktop.open', GenericDataEvent::class);
 
         $parameters = $this->parametersSerializer->serialize([Options::SERIALIZE_MINIMAL]);
 
@@ -119,9 +120,18 @@ class DesktopController
         }
 
         /** @var OpenToolEvent $event */
-        $event = $this->eventDispatcher->dispatch(new OpenToolEvent(), 'open_tool_desktop_'.$toolName);
+        $event = $this->strictDispatcher->dispatch('open_tool_desktop_'.$toolName, OpenToolEvent::class);
 
-        $this->eventDispatcher->dispatch(new LogDesktopToolReadEvent($toolName), 'log');
+        $this->strictDispatcher->dispatch(
+            ToolEvents::TOOL_OPEN,
+            OpenToolEvent::class,
+            [
+                null,
+                $this->tokenStorage->getToken()->getUser(),
+                AbstractTool::DESKTOP,
+                $toolName,
+            ]
+        );
 
         return new JsonResponse(array_merge($event->getData(), [
             'data' => $this->serializer->serialize($orderedTool),

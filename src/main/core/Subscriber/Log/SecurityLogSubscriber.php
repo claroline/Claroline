@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Subscriber;
+namespace Claroline\CoreBundle\Subscriber\Log;
 
 use Claroline\CoreBundle\Entity\Log\SecurityLog;
 use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
@@ -14,7 +14,7 @@ use Symfony\Contracts\EventDispatcher\Event;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class SecurityEventSubscriber implements EventSubscriberInterface
+class SecurityLogSubscriber implements EventSubscriberInterface
 {
     private $em;
     private $client;

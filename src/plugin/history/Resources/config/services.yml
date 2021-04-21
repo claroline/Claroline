@@ -23,7 +23,7 @@ services:
             - '@security.token_storage'
             - '@Claroline\HistoryBundle\Manager\HistoryManager'
         tags:
-            - { name: kernel.event_listener, event: resource.load, method: onLoad }
+            - { name: kernel.event_listener, event: resource_load, method: onLoad }
 
     Claroline\HistoryBundle\Controller\HistoryController:
         arguments:

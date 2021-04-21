@@ -13,16 +13,18 @@ namespace Claroline\CoreBundle\Controller;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\Tool\AbstractTool;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Shortcuts;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Event\CatalogEvents\ToolEvents;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceEnterEvent;
-use Claroline\CoreBundle\Event\Log\LogWorkspaceToolReadEvent;
 use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 use Claroline\CoreBundle\Event\Workspace\OpenWorkspaceEvent;
 use Claroline\CoreBundle\Manager\Tool\ToolManager;
@@ -30,7 +32,6 @@ use Claroline\CoreBundle\Manager\Workspace\EvaluationManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceRestrictionsManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -49,8 +50,6 @@ class WorkspaceController
     private $authorization;
     /** @var ObjectManager */
     private $om;
-    /** @var EventDispatcherInterface */
-    private $eventDispatcher;
     /** @var TokenStorageInterface */
     private $tokenStorage;
     /** @var SerializerProvider */
@@ -65,25 +64,23 @@ class WorkspaceController
     private $restrictionsManager;
     /** @var EvaluationManager */
     private $evaluationManager;
+    /** @var StrictDispatcher */
+    private $strictDispatcher;
 
-    /**
-     * WorkspaceController constructor.
-     */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         ObjectManager $om,
-        EventDispatcherInterface $eventDispatcher,
         TokenStorageInterface $tokenStorage,
         SerializerProvider $serializer,
         ToolManager $toolManager,
         TranslatorInterface $translator,
         WorkspaceManager $manager,
         WorkspaceRestrictionsManager $restrictionsManager,
-        EvaluationManager $evaluationManager
+        EvaluationManager $evaluationManager,
+        StrictDispatcher $strictDispatcher
     ) {
         $this->authorization = $authorization;
         $this->om = $om;
-        $this->eventDispatcher = $eventDispatcher;
         $this->tokenStorage = $tokenStorage;
         $this->serializer = $serializer;
         $this->toolManager = $toolManager;
@@ -91,6 +88,7 @@ class WorkspaceController
         $this->manager = $manager;
         $this->restrictionsManager = $restrictionsManager;
         $this->evaluationManager = $evaluationManager;
+        $this->strictDispatcher = $strictDispatcher;
     }
 
     /**
@@ -113,10 +111,18 @@ class WorkspaceController
         $isManager = $this->manager->isManager($workspace, $this->tokenStorage->getToken());
         $accessErrors = $this->restrictionsManager->getErrors($workspace, $user);
         if (empty($accessErrors) || $isManager) {
-            $this->eventDispatcher->dispatch(new OpenWorkspaceEvent($workspace), 'workspace.open');
+            $this->strictDispatcher->dispatch(
+                'workspace.open',
+                OpenWorkspaceEvent::class,
+                [$workspace]
+            );
 
             // Log workspace opening
-            $this->eventDispatcher->dispatch(new LogWorkspaceEnterEvent($workspace), 'log');
+            $this->strictDispatcher->dispatch(
+                'log',
+                LogWorkspaceEnterEvent::class,
+                [$workspace]
+            );
 
             $userEvaluation = null;
             if ($user) {
@@ -182,9 +188,22 @@ class WorkspaceController
         }
 
         /** @var OpenToolEvent $event */
-        $event = $this->eventDispatcher->dispatch(new OpenToolEvent($workspace), 'open_tool_workspace_'.$toolName);
+        $event = $this->strictDispatcher->dispatch(
+            'open_tool_workspace_'.$toolName,
+            OpenToolEvent::class,
+            [$workspace]
+        );
 
-        $this->eventDispatcher->dispatch(new LogWorkspaceToolReadEvent($workspace, $toolName), 'log');
+        $this->strictDispatcher->dispatch(
+            ToolEvents::TOOL_OPEN,
+            OpenToolEvent::class,
+            [
+                $workspace,
+                $this->tokenStorage->getToken()->getUser(),
+                AbstractTool::WORKSPACE,
+                $toolName,
+            ]
+        );
 
         return new JsonResponse(array_merge($event->getData(), [
             'data' => $this->serializer->serialize($orderedTool),

@@ -157,7 +157,7 @@ services:
             - '@Claroline\CoreBundle\Manager\Resource\ResourceLifecycleManager'
             - '@claroline.manager.resource_evaluation_manager'
         tags:
-            - { name: kernel.event_listener, event: resource.load, method: load }
+            - { name: kernel.event_listener, event: resource_load, method: load }
             - { name: kernel.event_listener, event: resource.create, method: create }
             - { name: kernel.event_listener, event: resource.about, method: about }
             - { name: kernel.event_listener, event: resource.configure, method: configure }
@@ -294,7 +294,7 @@ services:
             - '@Claroline\AppBundle\Event\StrictDispatcher'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
         tags:
-            - { name: kernel.event_listener, event: resource.load, method: onResourceLoad }
+            - { name: kernel.event_listener, event: resource_load, method: onResourceLoad }
             - { name: kernel.event_listener, event: crud.post.create.resource_node, method: onResourceCreate }
             - { name: kernel.event_listener, event: crud.pre.delete.resource_node, method: onResourceDelete }
             - { name: kernel.event_listener, event: crud.post.copy.resource_node, method: onResourceCopy }
