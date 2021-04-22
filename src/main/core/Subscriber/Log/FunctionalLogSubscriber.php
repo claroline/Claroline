@@ -24,9 +24,9 @@ class FunctionalLogSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            ResourceEvents::RESOURCE_EVALUATION => 'logEvent',
-            ResourceEvents::RESOURCE_OPEN => 'logEvent',
-            ToolEvents::TOOL_OPEN => 'logEvent',
+            ResourceEvents::RESOURCE_EVALUATION => ['logEvent', 10],
+            ResourceEvents::RESOURCE_OPEN => ['logEvent', 10],
+            ToolEvents::TOOL_OPEN => ['logEvent', 10],
         ];
     }
 
