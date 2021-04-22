@@ -27,6 +27,7 @@ Structure
     - [Themes][9]
     - [Logs][13]
 - [Development tools][10]
+- [Docker][19]
 
 [1]: ../../../../../../README.md
 [2]: sections/overview.md
@@ -45,3 +46,4 @@ Structure
 [16]: best-practices/front-end.md
 [17]: libraries/api.md
 [18]: libraries/front-end.md
+[19]: sections/docker.md

@@ -33,6 +33,16 @@ file. For an installation from scratch, the commands would be:
     
     php bin/console claroline:install -vvv
 
+### 2. Using Docker (development only - beginner-friendly guide)
+
+**Warning**: this is for development/testing purposes *only*, this must **NOT** be used in production environments as it represents huge security risks, maintainability issues and performance degradations.
+
+As a developer, by using Docker you can quickly get the platform running in DEV mode and experiment with code changes.
+
+You can also develop a custom theme in watch mode.
+
+To learn more: [Docker instructions](doc/sections/docker.md)
+
 Upgrade 13.x
 -------
 
