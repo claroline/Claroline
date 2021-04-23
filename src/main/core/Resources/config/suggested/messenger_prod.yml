@@ -21,5 +21,6 @@ framework:
             routing:
                 'Claroline\MessageBundle\Entity\Message': async
                 'Claroline\CoreBundle\Entity\Task\ScheduledTask': async
+                'Claroline\CoreBundle\Entity\ForumNotification': async
 
             failed: '%env(MESSENGER_TRANSPORT_DSN)%?queue_name=failed'

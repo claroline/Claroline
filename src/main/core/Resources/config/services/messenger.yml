@@ -1,0 +1,19 @@
+services:
+    Claroline\CoreBundle\Messenger\NotificationHandler:
+        tags: [messenger.message_handler]
+        arguments:
+            - '@Claroline\MessageBundle\Manager\MessageManager'
+
+    Claroline\CoreBundle\Messenger\ScheduledTaskHandler:
+        tags: [ messenger.message_handler ]
+        arguments:
+            - '@Claroline\MessageBundle\Manager\MessageManager'
+            - '@Claroline\CoreBundle\Manager\Task\ScheduledTaskManager'
+
+    Claroline\CoreBundle\Messenger\ForumNotificationHandler:
+        tags: [ messenger.message_handler ]
+        arguments:
+            - '@Claroline\MessageBundle\Manager\MessageManager'
+            - '@Claroline\CoreBundle\Manager\Template\TemplateManager'
+            - '@Claroline\CoreBundle\Library\RoutingHelper'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'

@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\AppBundle\Messenger;
+namespace Claroline\CoreBundle\Messenger;
 
 use Claroline\MessageBundle\Entity\Message;
 use Claroline\MessageBundle\Manager\MessageManager;

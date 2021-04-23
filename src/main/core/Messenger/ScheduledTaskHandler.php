@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\AppBundle\Messenger;
+namespace Claroline\CoreBundle\Messenger;
 
 use Claroline\CoreBundle\Entity\Task\ScheduledTask;
 use Claroline\CoreBundle\Manager\Task\ScheduledTaskManager;

@@ -4,11 +4,13 @@ namespace Claroline\ForumBundle\Crud;
 
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\ForumNotification;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\ForumBundle\Entity\Forum;
 use Claroline\ForumBundle\Entity\Subject;
 use Claroline\ForumBundle\Entity\Validation\User as UserValidation;
 use Claroline\ForumBundle\Manager\ForumManager;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class SubjectCrud
@@ -24,17 +26,22 @@ class SubjectCrud
     /** @var AuthorizationCheckerInterface */
     private $authorization;
 
+    /** @var MessageBusInterface */
+    private $messageBus;
+
     /**
      * ForumSerializer constructor.
      */
     public function __construct(
         ObjectManager $om,
         ForumManager $forumManager,
-        AuthorizationCheckerInterface $authorization
+        AuthorizationCheckerInterface $authorization,
+        MessageBusInterface $messageBus
     ) {
         $this->om = $om;
         $this->forumManager = $forumManager;
         $this->authorization = $authorization;
+        $this->messageBus = $messageBus;
     }
 
     /**
@@ -101,7 +108,7 @@ class SubjectCrud
 
         $message = $subject->getFirstMessage();
         if ($message) {
-            $this->forumManager->notifyMessage($message);
+            $this->messageBus->dispatch(new ForumNotification($message));
         }
 
         return $subject;

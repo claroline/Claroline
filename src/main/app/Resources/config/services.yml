@@ -5,7 +5,6 @@ imports:
     - { resource: services/adapter.yml }
     - { resource: services/persistence.yml }
     - { resource: services/routing.yml }
-    - { resource: services/messenger.yml }
 
 services:
     _defaults:
