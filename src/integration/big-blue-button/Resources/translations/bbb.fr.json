@@ -41,7 +41,7 @@
     "running_on_server": "La salle est attribuée au serveur : %server%.",
     "meeting_disabled_help": "Les salles désactivées ne peuvent plus être ouvertes.",
     "moderator_help_title": "Les entrées dans la salle sont gérées par les gestionnaires.",
-    "moderator_help_message": "Les participants sont mis en salle d'attente temps qu'un gestionnaire n'a pas validé leur entrée.",
+    "moderator_help_message": "Les participants sont mis en salle d'attente tant qu'un gestionnaire n'a pas validé leur entrée.",
 
     "show_presentation": "Voir l'enregistrement",
     "show_podcast": "Ecouter le podcast",
