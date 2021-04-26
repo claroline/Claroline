@@ -47,7 +47,7 @@ class OpenToolEvent extends Event implements DataConveyorEventInterface
         return $this->workspace;
     }
 
-    public function getUser(): User
+    public function getUser(): ?User
     {
         return $this->user;
     }
