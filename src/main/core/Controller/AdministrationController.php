@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Controller;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Entity\Tool\AbstractTool;
 use Claroline\CoreBundle\Entity\Tool\AdminTool;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\CatalogEvents\ToolEvents;
 use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 use Claroline\CoreBundle\Manager\Tool\ToolManager;
@@ -102,18 +103,25 @@ class AdministrationController
             throw new AccessDeniedException();
         }
 
-        /** @var OpenToolEvent $event */
-        $event = $this->strictDispatcher->dispatch('administration_tool_'.$toolName, OpenToolEvent::class);
+        $currentUser = $this->tokenStorage->getToken()->getUser();
+        $eventParams = [
+            null,
+            $currentUser instanceof User ? $currentUser : null,
+            AbstractTool::ADMINISTRATION,
+            $toolName,
+        ];
 
         $this->strictDispatcher->dispatch(
             ToolEvents::TOOL_OPEN,
             OpenToolEvent::class,
-            [
-                null,
-                $this->tokenStorage->getToken()->getUser(),
-                AbstractTool::ADMINISTRATION,
-                $toolName,
-            ]
+            $eventParams
+        );
+
+        /** @var OpenToolEvent $event */
+        $event = $this->strictDispatcher->dispatch(
+            'administration_tool_'.$toolName,
+            OpenToolEvent::class,
+            $eventParams
         );
 
         return new JsonResponse(array_merge($event->getData(), [
