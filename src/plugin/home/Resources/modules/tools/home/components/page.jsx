@@ -25,6 +25,7 @@ const HomePage = props =>
         prefix={props.basePath+props.path}
         tabs={props.tabs}
         currentContext={props.currentContext}
+        showSubMenu={props.showSubMenu}
       /> : undefined
     }
     icon={props.currentTab && props.currentTab.icon ?
@@ -75,6 +76,7 @@ const HomePage = props =>
   </ToolPage>
 
 HomePage.propTypes = {
+  showSubMenu: T.bool,
   path: T.string,
   breadcrumb: T.array,
   title: T.string.isRequired,
