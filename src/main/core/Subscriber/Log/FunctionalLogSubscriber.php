@@ -32,22 +32,26 @@ class FunctionalLogSubscriber implements EventSubscriberInterface
 
     public function logEvent(Event $event, string $eventName)
     {
-        $logEntry = new FunctionalLog();
+        if ($event->getUser()) {
+            // only create log for authenticated users
+            $logEntry = new FunctionalLog();
 
-        $logEntry->setUser($event->getUser());
-        $logEntry->setDetails($event->getMessage($this->translator));
-        $logEntry->setEvent($eventName);
+            $logEntry->setUser($event->getUser());
+            $logEntry->setDetails($event->getMessage($this->translator));
+            $logEntry->setEvent($eventName);
 
-        if (method_exists($event, 'getResourceNode')) {
-            $logEntry->setResource($event->getResourceNode());
-        } elseif (method_exists($event, 'getWorkspace')) {
-            $logEntry->setWorkspace($event->getWorkspace());
+            if (method_exists($event, 'getResourceNode')) {
+                $logEntry->setResource($event->getResourceNode());
+            } elseif (method_exists($event, 'getWorkspace')) {
+                $logEntry->setWorkspace($event->getWorkspace());
+            }
+
+            $this->em->persist($logEntry);
+            $this->em->flush();
         }
+
         if (method_exists($event, 'setData')) {
             $event->setData([]);
         }
-
-        $this->em->persist($logEntry);
-        $this->em->flush();
     }
 }
