@@ -227,13 +227,6 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onViewAs, priority: 2 }
 
-    Claroline\CoreBundle\Listener\ScheduledTaskListener:
-        arguments:
-            - '@Claroline\CoreBundle\Manager\MailManager'
-            - '@Claroline\CoreBundle\Manager\Task\ScheduledTaskManager'
-        tags:
-            - { name: kernel.event_listener, event: claroline_scheduled_task_execute_email, method: onExecuteMailTask }
-
     Claroline\CoreBundle\Listener\PlatformListener:
         arguments:
             - '@security.token_storage'

@@ -15,7 +15,7 @@ use Claroline\MessageBundle\Entity\Message;
 use Claroline\MessageBundle\Manager\MessageManager;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
-class NotificationHandler implements MessageHandlerInterface
+class MessageNotificationHandler implements MessageHandlerInterface
 {
     private $messageManager;
 

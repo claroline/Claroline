@@ -1,5 +1,5 @@
 services:
-    Claroline\CoreBundle\Messenger\NotificationHandler:
+    Claroline\CoreBundle\Messenger\MessageNotificationHandler:
         tags: [messenger.message_handler]
         arguments:
             - '@Claroline\MessageBundle\Manager\MessageManager'

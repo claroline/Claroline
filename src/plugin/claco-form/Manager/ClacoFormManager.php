@@ -536,7 +536,7 @@ class ClacoFormManager implements LoggerAwareInterface
                         'clacoform'
                     );
                     $message = $this->messageManager->create($content, $object, $managers);
-                    $this->messageManager->send($message);
+                    $this->messageBus->dispatch($message);
                 }
             }
         }
@@ -556,7 +556,7 @@ class ClacoFormManager implements LoggerAwareInterface
                         'clacoform'
                     );
                     $message = $this->messageManager->create($content, $object, $managers);
-                    $this->messageManager->send($message);
+                    $this->messageBus->dispatch($message);
                 }
             }
         }
@@ -576,7 +576,7 @@ class ClacoFormManager implements LoggerAwareInterface
                         'clacoform'
                     );
                     $message = $this->messageManager->create($content, $object, $managers);
-                    $this->messageManager->send($message);
+                    $this->messageBus->dispatch($message);
                 }
             }
         }
@@ -617,7 +617,7 @@ class ClacoFormManager implements LoggerAwareInterface
                     '</a><br><br>';
 
                 $message = $this->messageManager->create($content, $object, $receivers);
-                $this->messageManager->send($message);
+                $this->messageBus->dispatch($message);
             }
         }
     }
