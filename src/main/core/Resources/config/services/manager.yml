@@ -190,6 +190,7 @@ services:
         public: true
 
     Claroline\CoreBundle\Manager\Workspace\WorkspaceManager:
+        public: true
         arguments:
             - '@translator'
             - '@Claroline\AppBundle\API\Crud'

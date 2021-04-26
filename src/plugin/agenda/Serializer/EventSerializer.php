@@ -5,8 +5,10 @@ namespace Claroline\AgendaBundle\Serializer;
 use Claroline\AgendaBundle\Entity\Event;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\Planning\PlannedObjectSerializer;
 use Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class EventSerializer
@@ -15,6 +17,8 @@ class EventSerializer
 
     /** @var AuthorizationCheckerInterface */
     private $authorization;
+    /** @var ObjectManager */
+    private $om;
     /** @var WorkspaceSerializer */
     private $workspaceSerializer;
     /** @var PlannedObjectSerializer */
@@ -22,10 +26,12 @@ class EventSerializer
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
+        ObjectManager $om,
         WorkspaceSerializer $workspaceSerializer,
         PlannedObjectSerializer $plannedObjectSerializer
     ) {
         $this->authorization = $authorization;
+        $this->om = $om;
         $this->workspaceSerializer = $workspaceSerializer;
         $this->plannedObjectSerializer = $plannedObjectSerializer;
     }
@@ -51,6 +57,16 @@ class EventSerializer
         $this->plannedObjectSerializer->deserialize($data, $event->getPlannedObject());
 
         $this->sipe('id', 'setUuid', $data, $event);
+
+        if (isset($data['workspace'])) {
+            $workspace = null;
+            if (isset($data['workspace']['id'])) {
+                /** @var Workspace $workspace */
+                $workspace = $this->om->getObject($data['workspace'], Workspace::class);
+            }
+
+            $event->setWorkspace($workspace);
+        }
 
         return $event;
     }
