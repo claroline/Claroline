@@ -119,18 +119,25 @@ class DesktopController
             throw new AccessDeniedException();
         }
 
-        /** @var OpenToolEvent $event */
-        $event = $this->strictDispatcher->dispatch('open_tool_desktop_'.$toolName, OpenToolEvent::class);
+        $currentUser = $this->tokenStorage->getToken()->getUser();
+        $eventParams = [
+            null,
+            $currentUser instanceof User ? $currentUser : null,
+            AbstractTool::DESKTOP,
+            $toolName,
+        ];
 
         $this->strictDispatcher->dispatch(
             ToolEvents::TOOL_OPEN,
             OpenToolEvent::class,
-            [
-                null,
-                $this->tokenStorage->getToken()->getUser(),
-                AbstractTool::DESKTOP,
-                $toolName,
-            ]
+            $eventParams
+        );
+
+        /** @var OpenToolEvent $event */
+        $event = $this->strictDispatcher->dispatch(
+            'open_tool_desktop_'.$toolName,
+            OpenToolEvent::class,
+            $eventParams
         );
 
         return new JsonResponse(array_merge($event->getData(), [

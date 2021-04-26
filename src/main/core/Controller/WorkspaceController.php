@@ -187,22 +187,25 @@ class WorkspaceController
             throw new AccessDeniedException();
         }
 
-        /** @var OpenToolEvent $event */
-        $event = $this->strictDispatcher->dispatch(
-            'open_tool_workspace_'.$toolName,
-            OpenToolEvent::class,
-            [$workspace]
-        );
+        $currentUser = $this->tokenStorage->getToken()->getUser();
+        $eventParams = [
+            $workspace,
+            $currentUser instanceof User ? $currentUser : null,
+            AbstractTool::WORKSPACE,
+            $toolName,
+        ];
 
         $this->strictDispatcher->dispatch(
             ToolEvents::TOOL_OPEN,
             OpenToolEvent::class,
-            [
-                $workspace,
-                $this->tokenStorage->getToken()->getUser(),
-                AbstractTool::WORKSPACE,
-                $toolName,
-            ]
+            $eventParams
+        );
+
+        /** @var OpenToolEvent $event */
+        $event = $this->strictDispatcher->dispatch(
+            'open_tool_workspace_'.$toolName,
+            OpenToolEvent::class,
+            $eventParams
         );
 
         return new JsonResponse(array_merge($event->getData(), [
