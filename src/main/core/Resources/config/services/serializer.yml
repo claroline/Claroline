@@ -217,9 +217,7 @@ services:
             - '@Claroline\AppBundle\Event\StrictDispatcher'
             - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
             - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
-            - '@Claroline\CoreBundle\Manager\Resource\MaskManager'
-            - '@claroline.manager.optimized_rights_manager'
-            - '@claroline.manager.rights_manager'
+            - '@Claroline\CoreBundle\Manager\Resource\RightsManager'
             - '@Claroline\AppBundle\API\SerializerProvider'
 
     Claroline\CoreBundle\API\Serializer\Resource\ResourceEvaluationSerializer:

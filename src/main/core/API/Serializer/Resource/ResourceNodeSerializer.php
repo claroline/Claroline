@@ -18,8 +18,6 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\Resource\DecorateResourceNodeEvent;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
-use Claroline\CoreBundle\Manager\Resource\MaskManager;
-use Claroline\CoreBundle\Manager\Resource\OptimizedRightsManager;
 use Claroline\CoreBundle\Manager\Resource\RightsManager;
 
 class ResourceNodeSerializer
@@ -36,12 +34,8 @@ class ResourceNodeSerializer
     private $fileSerializer;
     /** @var UserSerializer */
     private $userSerializer;
-    /** @var OptimizedRightsManager */
-    private $newRightsManager;
     /** @var RightsManager */
     private $rightsManager;
-    /** @var MaskManager */
-    private $maskManager;
     /** @var SerializerProvider */
     private $serializer;
 
@@ -50,8 +44,6 @@ class ResourceNodeSerializer
         StrictDispatcher $eventDispatcher,
         PublicFileSerializer $fileSerializer,
         UserSerializer $userSerializer,
-        MaskManager $maskManager,
-        OptimizedRightsManager $newRightsManager,
         RightsManager $rightsManager,
         SerializerProvider $serializer
     ) {
@@ -59,8 +51,6 @@ class ResourceNodeSerializer
         $this->eventDispatcher = $eventDispatcher;
         $this->fileSerializer = $fileSerializer;
         $this->userSerializer = $userSerializer;
-        $this->newRightsManager = $newRightsManager;
-        $this->maskManager = $maskManager;
         $this->rightsManager = $rightsManager;
         $this->serializer = $serializer;
     }
@@ -353,12 +343,13 @@ class ResourceNodeSerializer
                     unset($right['permissions']['create']);
                 }
 
-                $this->newRightsManager->update(
-                    $resourceNode,
+                // this should not be done here, because it will do db changes
+                $this->rightsManager->update(
+                    $right['permissions'],
                     $role,
-                    $this->maskManager->encodeMask($right['permissions'], $resourceNode->getResourceType()),
-                    $creationPerms,
-                    in_array(Options::IS_RECURSIVE, $options)
+                    $resourceNode,
+                    in_array(Options::IS_RECURSIVE, $options),
+                    $creationPerms
                 );
 
                 $roles[] = $role->getName();

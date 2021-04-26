@@ -57,7 +57,8 @@ class PlannedNotification
 
     /**
      * @ORM\ManyToOne(
-     *     targetEntity="Claroline\PlannedNotificationBundle\Entity\Message"
+     *     targetEntity="Claroline\PlannedNotificationBundle\Entity\Message",
+     *     inversedBy="notifications"
      * )
      * @ORM\JoinColumn(name="message_id", nullable=false, onDelete="CASCADE")
      *

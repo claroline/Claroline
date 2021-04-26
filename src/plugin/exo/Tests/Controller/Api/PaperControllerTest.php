@@ -65,7 +65,7 @@ class PaperControllerTest extends TransactionalTestCase
         $this->om->flush();
 
         // add open permissions to all users
-        $this->rightsManager->editPerms(1, $this->roleManager->getRoleByName('ROLE_ANONYMOUS'), $this->exercise->getResourceNode());
+        $this->rightsManager->update(1, $this->roleManager->getRoleByName('ROLE_ANONYMOUS'), $this->exercise->getResourceNode());
 
         $this->om->flush();
     }
@@ -79,7 +79,7 @@ class PaperControllerTest extends TransactionalTestCase
         $this->om->persist($paper);
 
         // Removes permission
-        $this->rightsManager->editPerms(0, $this->roleManager->getRoleByName('ROLE_ANONYMOUS'), $this->exercise->getResourceNode());
+        $this->rightsManager->update(0, $this->roleManager->getRoleByName('ROLE_ANONYMOUS'), $this->exercise->getResourceNode());
 
         $this->om->flush();
 
@@ -97,7 +97,7 @@ class PaperControllerTest extends TransactionalTestCase
         $this->om->persist($paper);
 
         // Removes permission
-        $this->rightsManager->editPerms(0, $this->roleManager->getRoleByName('ROLE_ANONYMOUS'), $this->exercise->getResourceNode());
+        $this->rightsManager->update(0, $this->roleManager->getRoleByName('ROLE_ANONYMOUS'), $this->exercise->getResourceNode());
 
         $this->om->flush();
 
