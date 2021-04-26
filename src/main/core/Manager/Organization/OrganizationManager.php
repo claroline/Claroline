@@ -55,6 +55,7 @@ class OrganizationManager implements LoggerAwareInterface
 
         $organization = new Organization();
         $organization->setName('default');
+        $organization->setCode('default');
         $organization->setDefault(true);
         $organization->setPosition(1);
         $organization->setParent(null);

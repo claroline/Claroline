@@ -287,11 +287,14 @@ services:
 
     Claroline\CoreBundle\Manager\Resource\RightsManager:
         arguments:
+            - '@doctrine.dbal.default_connection'
             - '@security.token_storage'
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@claroline.manager.role_manager'
             - '@Claroline\CoreBundle\Manager\Resource\MaskManager'
             - '@service_container'
+        calls:
+            - setLogger: [ '@logger' ]
 
     claroline.manager.rights_manager:
         alias: Claroline\CoreBundle\Manager\Resource\RightsManager
@@ -325,18 +328,6 @@ services:
             - '@Claroline\AppBundle\Event\StrictDispatcher'
             - '@claroline.manager.resource_manager'
             - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
-
-    Claroline\CoreBundle\Manager\Resource\OptimizedRightsManager:
-        arguments:
-            - '@doctrine.dbal.default_connection'
-            - '@Claroline\AppBundle\Event\StrictDispatcher'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-        calls:
-            - setLogger: [ '@logger' ]
-
-    claroline.manager.optimized_rights_manager:
-        alias: Claroline\CoreBundle\Manager\Resource\OptimizedRightsManager
-        public: true
 
     Claroline\CoreBundle\Manager\Resource\MaskManager:
         arguments:

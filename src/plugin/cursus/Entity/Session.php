@@ -96,7 +96,6 @@ class Session extends AbstractTraining implements IdentifiableInterface
 
     /**
      * @ORM\OneToMany(targetEntity="Claroline\CursusBundle\Entity\Event", mappedBy="session")
-     * @ORM\OrderBy({"startDate" = "ASC"})
      */
     protected $events;
 

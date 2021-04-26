@@ -72,7 +72,7 @@ class AttemptControllerTest extends TransactionalTestCase
         $roleManager = $this->client->getContainer()->get('claroline.manager.role_manager');
 
         // add open permissions to all users
-        $rightsManager->editPerms(1, $roleManager->getRoleByName('ROLE_USER'), $this->ex1->getResourceNode());
+        $rightsManager->update(1, $roleManager->getRoleByName('ROLE_USER'), $this->ex1->getResourceNode());
 
         $this->om->flush();
     }

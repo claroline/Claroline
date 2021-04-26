@@ -284,16 +284,6 @@ class Role
         $group->removeRole($this);
     }
 
-    public function initUsers()
-    {
-        $this->users = new ArrayCollection();
-    }
-
-    public function initGroups()
-    {
-        $this->users = new ArrayCollection();
-    }
-
     /**
      * @return ArrayCollection|Group[]
      */

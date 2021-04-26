@@ -12,91 +12,107 @@
 namespace Claroline\CoreBundle\Manager\Resource;
 
 use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\Event\StrictDispatcher;
+use Claroline\AppBundle\Log\LoggableTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Manager\RoleManager;
-use Claroline\CoreBundle\Repository\Resource\ResourceNodeRepository;
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Event\Log\LogWorkspaceRoleChangeRightEvent;
+use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Claroline\CoreBundle\Repository\Resource\ResourceRightsRepository;
-use Claroline\CoreBundle\Repository\Resource\ResourceTypeRepository;
-use Claroline\CoreBundle\Repository\User\RoleRepository;
+use Doctrine\DBAL\Connection;
+use Psr\Log\LoggerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-/**
- * @deprecated use OptimizedRightsManager instead
- */
-class RightsManager
+class RightsManager implements LoggerAwareInterface
 {
+    use LoggableTrait;
+
+    /** @var Connection */
+    private $conn;
     /** @var TokenStorageInterface */
     private $tokenStorage;
-
+    /** @var StrictDispatcher */
+    private $dispatcher;
     /** @var MaskManager */
     private $maskManager;
     /** @var ResourceRightsRepository */
     private $rightsRepo;
-    /** @var ResourceNodeRepository */
-    private $resourceRepo;
-    /** @var RoleRepository */
-    private $roleRepo;
-    /** @var ResourceTypeRepository */
-    private $resourceTypeRepo;
     /** @var ObjectManager */
     private $om;
-    /** @var RoleManager */
-    private $roleManager;
 
     private $container;
 
     public function __construct(
+        Connection $conn,
         TokenStorageInterface $tokenStorage,
+        StrictDispatcher $dispatcher,
         ObjectManager $om,
-        RoleManager $roleManager,
         MaskManager $maskManager,
         ContainerInterface $container
     ) {
+        $this->conn = $conn;
         $this->tokenStorage = $tokenStorage;
+        $this->dispatcher = $dispatcher;
         $this->om = $om;
-        $this->roleManager = $roleManager;
         $this->maskManager = $maskManager;
         $this->container = $container; // todo remove me (required because of a circular dependency with claroline.manager.resource_manager)
 
-        $this->rightsRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceRights');
-        $this->resourceRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceNode');
-        $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
-        $this->resourceTypeRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceType');
+        $this->rightsRepo = $om->getRepository(ResourceRights::class);
     }
 
     /**
-     * Create a new ResourceRight. If the ResourceRight already exists, it's edited instead.
-     *
-     * @deprecated
-     *
-     * @todo remove me. This does the same thing than editPerms, this is just written a different way
+     * @param array|int $permissions - either an array of perms or an encoded mask
      */
-    public function create($permissions, Role $role, ResourceNode $node, $isRecursive, array $creations = [], $log = true)
+    public function create($permissions, Role $role, ResourceNode $node, bool $isRecursive, array $creations = [], bool $log = true)
     {
-        $this->editPerms($permissions, $role, $node, $isRecursive, $creations, $log);
+        $this->update($permissions, $role, $node, $isRecursive, $creations, $log);
     }
 
     /**
-     * @param array|int   $permissions - the permission mask
-     * @param Role|string $role
-     * @param bool        $isRecursive
-     * @param bool        $log
+     * @param array|int $permissions - either an array of perms or an encoded mask
      */
-    public function editPerms($permissions, $role, ResourceNode $node, $isRecursive = false, array $creations = [], $log = true)
+    public function update($permissions, Role $role, ResourceNode $node, bool $isRecursive = false, array $creations = [], bool $log = true)
     {
-        $newRightsManager = $this->container->get('claroline.manager.optimized_rights_manager');
-        $resourceType = $node->getResourceType();
+        if (!is_int($permissions)) {
+            $mask = $this->maskManager->encodeMask($permissions, $node->getResourceType());
+        } else {
+            $mask = $permissions;
+        }
 
-        $mask = !is_int($permissions) ?
-          $this->maskManager->encodeMask($permissions, $resourceType) :
-          $permissions;
+        if (!$node->getId() || !$role->getId()) {
+            if (!$node->getId()) {
+                $this->om->persist($node);
+            }
 
-        $newRightsManager->update($node, $role, $mask, $creations, $isRecursive, $log);
+            if (!$role->getId()) {
+                $this->om->persist($role);
+            }
+
+            // we really need it because we use ids to do pure SQL later
+            $this->om->forceFlush();
+        }
+
+        $logUpdate = true;
+
+        $right = $this->rightsRepo->findOneBy(['role' => $role, 'resourceNode' => $node]);
+        if ($right) {
+            $logUpdate = $right->getMask() !== $mask;
+        }
+
+        if ($isRecursive) {
+            $this->recursiveUpdate($node, $role, $mask, $creations);
+        } else {
+            $this->singleUpdate($node, $role, $mask, $creations);
+        }
+
+        if ($logUpdate && $log) {
+            $this->logUpdate($node, $role, $mask, $creations);
+        }
     }
 
     /**
@@ -121,15 +137,6 @@ class RightsManager
         $this->om->endFlushSuite();
 
         return $node;
-    }
-
-    public function getCreatableTypes(array $roles, ResourceNode $node): array
-    {
-        $creationRights = $this->rightsRepo->findCreationRights($roles, $node);
-
-        return array_map(function (array $type) {
-            return $type['name'];
-        }, $creationRights);
     }
 
     public function getMaximumRights(array $roles, ResourceNode $node)
@@ -180,43 +187,38 @@ class RightsManager
      *   - It is the creator of the resource
      *   - It is the manager of the parent workspace
      *   - It is a platform admin
-     *
-     * @return bool
      */
-    public function isManager(ResourceNode $resourceNode)
+    public function isManager(ResourceNode $resourceNode): bool
     {
         $token = $this->tokenStorage->getToken();
-
-        // if user is anonymous return false
-        if ('anon.' === $token) {
-            return false;
-        }
-
         $roleNames = $token->getRoleNames();
 
-        $isWorkspaceUsurp = in_array('ROLE_USURPATE_WORKSPACE_ROLE', $roleNames);
+        $workspaceManager = $this->container->get(WorkspaceManager::class);
 
-        $workspace = $resourceNode->getWorkspace();
-
-        //if we manage the workspace
-        if ($workspace && $this->container->get('claroline.manager.workspace_manager')->isManager($workspace, $token)) {
-            return true;
-        }
-
-        // If not workspace usurper
-        if (!$isWorkspaceUsurp && $token->getUser() === $resourceNode->getCreator()) {
-            return true;
+        if (!$token->getUser() instanceof User) {
+            return false;
         }
 
         if (in_array('ROLE_ADMIN', $roleNames)) {
             return true;
         }
 
+        // If not workspace usurper
+        if ($token->getUser() === $resourceNode->getCreator() && !$workspaceManager->isImpersonated($token)) {
+            return true;
+        }
+
+        $workspace = $resourceNode->getWorkspace();
+
+        //if we manage the workspace
+        if ($workspace && $workspaceManager->isManager($workspace, $token)) {
+            return true;
+        }
+
         return false;
     }
 
-    //maybe use that one in the voter later because it's going to be useful
-    public function getCurrentPermissionArray(ResourceNode $resourceNode)
+    public function getCurrentPermissionArray(ResourceNode $resourceNode): array
     {
         $roleNames = $this->tokenStorage->getToken()->getRoleNames();
 
@@ -240,5 +242,165 @@ class RightsManager
         }
 
         return array_merge($perms, ['create' => $creatable]);
+    }
+
+    private function getCreatableTypes(array $roles, ResourceNode $node): array
+    {
+        $creationRights = $this->rightsRepo->findCreationRights($roles, $node);
+
+        return array_map(function (array $type) {
+            return $type['name'];
+        }, $creationRights);
+    }
+
+    private function singleUpdate(ResourceNode $node, Role $role, $mask = 1, $types = [])
+    {
+        $sql = "
+            INSERT INTO claro_resource_rights (role_id, mask, resourceNode_id)
+            VALUES ({$role->getId()}, {$mask}, {$node->getId()})
+            ON DUPLICATE KEY UPDATE mask = {$mask};
+        ";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+
+        $sql = "
+            DELETE list FROM claro_list_type_creation list
+            JOIN claro_resource_rights rights ON list.resource_rights_id = rights.id
+            JOIN claro_role role ON rights.role_id = role.id
+            JOIN claro_resource_node node ON rights.resourceNode_id = node.id
+            WHERE node.id = {$node->getId()}
+            AND role.id = {$role->getId()}
+        ";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+
+        if (0 === count($types)) {
+            return;
+        }
+
+        $typeList = array_map(function ($type) {
+            return $type instanceof ResourceType ? $type->getName() : $type;
+        }, $types);
+
+        $sql = "
+            INSERT INTO claro_list_type_creation (resource_rights_id, resource_type_id)
+                SELECT r.id as rid, t.id as tid FROM (
+                SELECT rights.id
+                FROM claro_resource_rights rights
+                JOIN claro_resource_node node ON rights.resourceNode_id = node.id
+                JOIN claro_role role ON rights.role_id = role.id
+                WHERE node.id = {$node->getId()}
+                AND role.id = {$role->getId()}
+            ) AS r, (
+                SELECT id
+                FROM claro_resource_type
+                WHERE name IN
+                (?)
+            ) AS t GROUP BY tid
+        ";
+
+        $this->conn->executeQuery(
+            $sql,
+            [$typeList],
+            [Connection::PARAM_STR_ARRAY]
+        );
+    }
+
+    private function recursiveUpdate(ResourceNode $node, Role $role, $mask = 1, $types = [])
+    {
+        //take into account the fact that some node have type with extended permissions
+        //default actions should be set in stone with that way of doing it
+        $defaults = MaskManager::getDefaultActions();
+        $fullDirectoryMask = pow(2, count($defaults)) - 1;
+
+        /**
+         * For complexes resources the bits look like this.
+         *
+         * common      | custom
+         * 1 1 0 1 1 0 | 1 1
+         *
+         * We only want to change the first part
+         * How do we do that ?
+         * First we reset the common part with the bitwise NOT (~) operator because we know the full common mask.
+         * Then we use the bitwise AND (&) operator
+         *
+         * the php equivalent would be
+         *  newMask | oldMask &~ $fullDirectoryMask
+         */
+        $sql =
+            "
+            INSERT INTO claro_resource_rights (role_id, mask, resourceNode_id)
+            SELECT {$role->getId()}, {$mask}, node.id FROM claro_resource_node node
+            WHERE node.path LIKE ?
+            ON DUPLICATE KEY UPDATE mask = {$mask} | mask &~ {$fullDirectoryMask};
+          ";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindValue(1, $node->getPath().'%', \PDO::PARAM_STR);
+        $stmt->execute();
+
+        $sql = "
+          DELETE list FROM claro_list_type_creation list
+          JOIN claro_resource_rights rights ON list.resource_rights_id = rights.id
+          JOIN claro_role role ON rights.role_id = role.id
+          JOIN claro_resource_node node ON rights.resourceNode_id = node.id
+          WHERE node.path LIKE ?
+          AND role.id = {$role->getId()}
+        ";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindValue(1, $node->getPath().'%', \PDO::PARAM_STR);
+        $stmt->execute();
+
+        if (0 === count($types)) {
+            return;
+        }
+
+        $typeList = array_map(function ($type) {
+            return $type->getName();
+        }, $types);
+
+        $sql = "
+          INSERT IGNORE INTO claro_list_type_creation (resource_rights_id, resource_type_id)
+          SELECT r.id as rid, t.id as tid FROM (
+            SELECT rights.id
+            FROM claro_resource_rights AS rights
+            JOIN claro_resource_node AS node ON rights.resourceNode_id = node.id
+            JOIN claro_role role ON rights.role_id = role.id
+            JOIN claro_resource_type AS rType on node.resource_type_id = rType.id
+            WHERE node.path LIKE ?
+            AND role.id = {$role->getId()}
+            AND rType.name = 'directory'
+          ) as r, (
+            SELECT id
+            FROM claro_resource_type
+            WHERE name IN
+            (?)
+          ) as t
+        ";
+
+        $this->conn->executeQuery(
+            $sql,
+            [$node->getPath().'%', $typeList],
+            [\PDO::PARAM_STR, Connection::PARAM_STR_ARRAY]
+        );
+    }
+
+    /**
+     * @param int   $mask
+     * @param array $types
+     */
+    private function logUpdate(ResourceNode $node, Role $role, $mask, $types)
+    {
+        $this->dispatcher->dispatch(
+            'log',
+            LogWorkspaceRoleChangeRightEvent::class,
+            [$role, $node, [
+                'mask' => $mask,
+                'types' => $types,
+            ]]
+        );
     }
 }

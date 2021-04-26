@@ -129,7 +129,7 @@ class DirectoryListener
                     // only forward creation rights to resource which can handle it (only directories atm)
                     $creation = $rights['permissions']['create'];
                 }
-                $this->rightsManager->editPerms($rights['permissions'], $role, $resourceNode, false, $creation);
+                $this->rightsManager->update($rights['permissions'], $role, $resourceNode, false, $creation);
             }
         } else {
             // todo : initialize default rights

@@ -190,7 +190,7 @@ class TeamManager
         $role = $this->roleManager->createWorkspaceRole($roleName, $roleKey, $workspace);
 
         $root = $this->resourceManager->getWorkspaceRoot($workspace);
-        $this->rightsManager->editPerms(['open' => true], $role, $root);
+        $this->rightsManager->update(['open' => true], $role, $root);
         $tool = $this->om->getRepository(Tool::class)->findOneBy(['name' => 'resources']);
         $orderedTool = $this->om
             ->getRepository('ClarolineCoreBundle:Tool\OrderedTool')
@@ -347,7 +347,7 @@ class TeamManager
             foreach ($workspaceRoles as $role) {
                 if (!in_array($role->getUuid(), [$teamRole->getUuid(), $teamManagerRole->getUuid()])) {
                     $rights = ['open' => $team->isPublic()];
-                    $this->rightsManager->editPerms($rights, $role, $directory->getResourceNode(), true);
+                    $this->rightsManager->update($rights, $role, $directory->getResourceNode(), true);
                 }
             }
             $this->om->endFlushSuite();
@@ -377,7 +377,7 @@ class TeamManager
                     $creatable = [];
                 }
 
-                $this->rightsManager->editPerms($perms, $role, $node, true, $creatable, true);
+                $this->rightsManager->update($perms, $role, $node, true, $creatable, true);
             }
 
             $this->om->endFlushSuite();
@@ -582,7 +582,7 @@ class TeamManager
             if ($team->isPublic() && !is_null($directory)) {
                 $rights = [];
                 $rights['open'] = true;
-                $this->rightsManager->editPerms(
+                $this->rightsManager->update(
                     $rights,
                     $role,
                     $directory->getResourceNode(),
