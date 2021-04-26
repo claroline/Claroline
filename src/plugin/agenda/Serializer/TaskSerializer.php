@@ -5,8 +5,10 @@ namespace Claroline\AgendaBundle\Serializer;
 use Claroline\AgendaBundle\Entity\Task;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\Planning\PlannedObjectSerializer;
 use Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class TaskSerializer
@@ -15,6 +17,8 @@ class TaskSerializer
 
     /** @var AuthorizationCheckerInterface */
     private $authorization;
+    /** @var ObjectManager */
+    private $om;
     /** @var WorkspaceSerializer */
     private $workspaceSerializer;
     /** @var PlannedObjectSerializer */
@@ -22,10 +26,12 @@ class TaskSerializer
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
+        ObjectManager $om,
         WorkspaceSerializer $workspaceSerializer,
         PlannedObjectSerializer $plannedObjectSerializer
     ) {
         $this->authorization = $authorization;
+        $this->om = $om;
         $this->workspaceSerializer = $workspaceSerializer;
         $this->plannedObjectSerializer = $plannedObjectSerializer;
     }
@@ -55,6 +61,16 @@ class TaskSerializer
 
         $this->sipe('id', 'setUuid', $data, $task);
         $this->sipe('meta.done', 'setDone', $data, $task);
+
+        if (isset($data['workspace'])) {
+            $workspace = null;
+            if (isset($data['workspace']['id'])) {
+                /** @var Workspace $workspace */
+                $workspace = $this->om->getObject($data['workspace'], Workspace::class);
+            }
+
+            $task->setWorkspace($workspace);
+        }
 
         return $task;
     }

@@ -8,6 +8,7 @@ services:
         tags: [ claroline.serializer ]
         arguments:
             - '@security.authorization_checker'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'
             - '@Claroline\CoreBundle\API\Serializer\Planning\PlannedObjectSerializer'
 
@@ -15,5 +16,6 @@ services:
         tags: [ claroline.serializer ]
         arguments:
             - '@security.authorization_checker'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'
             - '@Claroline\CoreBundle\API\Serializer\Planning\PlannedObjectSerializer'
