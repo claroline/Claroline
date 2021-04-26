@@ -30,6 +30,7 @@ class PlatformDefaults implements ParameterProviderInterface
         return [
             'meta' => [],
             'home' => [
+                'show_sub_menu' => false,
                 'type' => 'none',
                 'data' => null,
                 'menu' => null,
