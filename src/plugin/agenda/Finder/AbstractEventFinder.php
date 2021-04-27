@@ -82,28 +82,21 @@ abstract class AbstractEventFinder extends AbstractFinder
                     $qb->leftJoin('ot.rights', 'otr');
                     $qb->leftJoin('otr.role', 'otrr');
                     $qb->leftJoin('otrr.users', 'otrru');
-                    // join for workspace manager role
-                    $qb->leftJoin('w.roles', 'wr');
-                    $qb->leftJoin('wr.users', 'wru');
 
                     $qb->andWhere($qb->expr()->orX(
+                        // creator of the event
                         $qb->expr()->eq('u.uuid', ':userId'),
+                        // or has open rights on agenda tool
                         $qb->expr()->andX(
                             $qb->expr()->eq('ott.name', ':agenda'),
                             $qb->expr()->eq('otrru.uuid', ':roleUserId'),
                             $qb->expr()->eq('BIT_AND(otr.mask, 1)', '1')
-                        ),
-                        $qb->expr()->andX(
-                            $qb->expr()->eq('wr.name', 'CONCAT(:managerRolePrefix, w.uuid)'),
-                            $qb->expr()->eq('wru.uuid', ':managerId')
                         )
                     ));
 
                     $qb->setParameter('userId', $filterValue);
                     $qb->setParameter('agenda', 'agenda');
                     $qb->setParameter('roleUserId', $filterValue);
-                    $qb->setParameter('managerRolePrefix', 'ROLE_WS_MANAGER_');
-                    $qb->setParameter('managerId', $filterValue);
 
                     break;
                 case '_group':
@@ -120,27 +113,12 @@ abstract class AbstractEventFinder extends AbstractFinder
                     $qb->leftJoin('otrr.groups', 'otrrg');
                     $qb->leftJoin('otrrg.users', 'otrru');
 
-                    // join for workspace manager role
-                    $qb->leftJoin('w.roles', 'r');
-                    $qb->leftJoin('r.groups', 'rg');
-                    $qb->leftJoin('rg.users', 'rgu');
-
-                    $qb->andWhere($qb->expr()->orX(
-                        $qb->expr()->andX(
-                            $qb->expr()->eq('ott.name', ':agenda'),
-                            $qb->expr()->eq('otrru.uuid', ':_groupUserId'),
-                            $qb->expr()->eq('BIT_AND(otr.mask, 1)', '1')
-                        ),
-                        $qb->expr()->andX(
-                            $qb->expr()->eq('r.name', 'CONCAT(:_managerRolePrefix, w.uuid)'),
-                            $qb->expr()->eq('rgu.uuid', ':_managerId')
-                        )
-                    ));
+                    $qb->andWhere('ott.name = :agenda');
+                    $qb->andWhere('otrru.uuid = :_groupUserId');
+                    $qb->andWhere('BIT_AND(otr.mask, 1) = 1');
 
                     $qb->setParameter('agenda', 'agenda');
                     $qb->setParameter('_groupUserId', $filterValue);
-                    $qb->setParameter('_managerId', $filterValue);
-                    $qb->setParameter('_managerRolePrefix', 'ROLE_WS_MANAGER_');
                     break;
                 case 'anonymous':
                     if (!$workspaceJoin) {

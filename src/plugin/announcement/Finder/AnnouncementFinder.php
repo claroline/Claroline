@@ -75,58 +75,25 @@ class AnnouncementFinder extends AbstractFinder
                 case 'visible':
                     if ($filterValue) {
                         $now = new \DateTime();
-                        $expr = [];
-                        $expr[] = $qb->expr()->orX(
-                            $qb->expr()->gte('obj.visibleFrom', $now),
-                            $qb->expr()->isNull('obj.visibleFrom')
+                        $qb->expr()->andX(
+                            $qb->expr()->orX(
+                                $qb->expr()->gte('obj.visibleFrom', $now),
+                                $qb->expr()->isNull('obj.visibleFrom')
+                            ),
+                            $qb->expr()->orX(
+                                $qb->expr()->lte('obj.visibleUntil', $now),
+                                $qb->expr()->isNull('obj.visibleUntil')
+                            )
                         );
-                        $expr[] = $qb->expr()->orX(
-                            $qb->expr()->lte('obj.visibleUntil', $now),
-                            $qb->expr()->isNull('obj.visibleUntil')
-                        );
-                        $qb->expr()->andX(...$expr);
                         $qb->andWhere('obj.visible = true');
                     }
                     break;
                 case 'roles':
-                    $managerRoles = [];
-                    $otherRoles = [];
-
-                    foreach ($filterValue as $roleName) {
-                        if (preg_match('/^ROLE_WS_MANAGER_/', $roleName)) {
-                            $managerRoles[] = $roleName;
-                        } else {
-                            $otherRoles[] = $roleName;
-                        }
-                    }
-
-                    $managerSearch = $roleSearch = $searches;
-                    $managerSearch['_managerRoles'] = $managerRoles;
-                    $roleSearch['_roles'] = $otherRoles;
-                    unset($managerSearch['roles']);
-                    unset($roleSearch['roles']);
-
-                    return $this->union($managerSearch, $roleSearch, $options, $sortBy);
-
-                    break;
-                case '_managerRoles':
-                    if (!$workspaceJoin) {
-                        $qb->join('node.workspace', 'w');
-
-                        $workspaceJoin = true;
-                    }
-
-                    $qb->leftJoin('w.roles', 'owr');
-                    $qb->andWhere('owr.name IN (:managerRoles)');
-
-                    $qb->setParameter('managerRoles', $filterValue);
-                    break;
-                case '_roles':
                     $qb->leftJoin('node.rights', 'rights');
                     $qb->join('rights.role', 'rightsr');
-                    $qb->andWhere('rightsr.name IN (:otherRoles)');
+                    $qb->andWhere('rightsr.name IN (:roles)');
                     $qb->andWhere('BIT_AND(rights.mask, 1) = 1');
-                    $qb->setParameter('otherRoles', $filterValue);
+                    $qb->setParameter('roles', $filterValue);
                     break;
                 default:
                     $this->setDefaults($qb, $filterName, $filterValue);
