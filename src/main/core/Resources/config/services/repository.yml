@@ -43,9 +43,3 @@ services:
         arguments:
           - '@Doctrine\Persistence\ManagerRegistry'
           - '@Claroline\CoreBundle\API\Finder\Log\LogFinder'
-
-    Claroline\CoreBundle\Repository\Resource\ResourceNodeRepository:
-        tags: [doctrine.repository_service]
-        arguments:
-          - '@Doctrine\Persistence\ManagerRegistry'
-          - '@Claroline\CoreBundle\Manager\PluginManager'

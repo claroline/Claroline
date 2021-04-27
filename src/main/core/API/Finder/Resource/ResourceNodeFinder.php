@@ -51,11 +51,13 @@ class ResourceNodeFinder extends AbstractFinder
                     $qb->andWhere('obj.published = :published');
                     $qb->setParameter('published', $filterValue);
                     break;
+
                 case 'meta.uploadDestination': // TODO : remove me. this should not be managed here
                     $qb->andWhere("ort.name = 'directory'");
                     $qb->join(Directory::class, 'dir', 'WITH', 'dir.resourceNode = obj.id');
                     $qb->andWhere('dir.uploadDestination = true');
                     break;
+
                 case 'meta.type': //should be the same as resourceType but something is wrong somewhere. It's an alias
                 case 'resourceType':
                     if (is_array($filterValue)) {
@@ -65,26 +67,31 @@ class ResourceNodeFinder extends AbstractFinder
                     }
                     $qb->setParameter('resourceType', $filterValue);
                     break;
+
                 case 'resourceTypeBlacklist':
                     if (is_array($filterValue)) {
                         $qb->andWhere("ort.name NOT IN (:{$filterName})");
                     }
                     $qb->setParameter($filterName, $filterValue);
                     break;
+
                 case 'resourceTypeEnabled':
                     $qb->andWhere("ort.isEnabled = :{$filterName}");
                     $qb->setParameter($filterName, $filterValue);
                     break;
+
                 case 'workspace':
                     $qb->andWhere('ow.uuid = :workspaceUuid');
                     $qb->setParameter('workspaceUuid', $filterValue);
                     break;
+
                 case 'path.after':
                     $qb->andWhere('UPPER(obj.path) != :path'); // required otherwise we also get the parent in the results
                     $qb->andWhere('UPPER(obj.path) LIKE :pathLike');
                     $qb->setParameter('path', strtoupper($filterValue));
                     $qb->setParameter('pathLike', strtoupper($filterValue).'%');
                     break;
+
                 case 'parent':
                     if (is_null($filterValue)) {
                         $qb->andWhere('obj.parent IS NULL');
@@ -95,54 +102,15 @@ class ResourceNodeFinder extends AbstractFinder
                         $this->usedJoin['parent'] = true;
                     }
                     break;
-                case 'managerRole':
-                    $managerRoles = [];
-                    foreach ($filterValue as $roleName) {
-                        if (preg_match('/^ROLE_WS_MANAGER_/', $roleName)) {
-                            $managerRoles[] = $roleName;
-                        }
-                    }
 
-                    $qb->leftJoin('ow.roles', 'owr');
-                    $qb->leftJoin('obj.rights', 'rights');
-                    $qb->join('rights.role', 'rightsr');
-                    $qb->andWhere('owr.name IN (:managerRoles)');
-                    $qb->setParameter('managerRoles', $managerRoles);
-                    break;
                 case 'roles':
-                    $managerRoles = [];
-                    $otherRoles = [];
-
-                    foreach ($filterValue as $roleName) {
-                        if (preg_match('/^ROLE_WS_MANAGER_/', $roleName)) {
-                            $managerRoles[] = $roleName;
-                        } else {
-                            $otherRoles[] = $roleName;
-                        }
-                    }
-
-                    $managerSearch = $roleSearch = $searches;
-                    $managerSearch['_managerRoles'] = $managerRoles;
-                    $roleSearch['_roles'] = $otherRoles;
-                    unset($managerSearch['roles']);
-                    unset($roleSearch['roles']);
-
-                    return $this->union($managerSearch, $roleSearch, $options, $sortBy);
-
-                    break;
-                case '_managerRoles':
-                    $qb->leftJoin('ow.roles', 'owr');
-                    $qb->andWhere('owr.name IN (:managerRoles)');
-
-                    $qb->setParameter('managerRoles', $filterValue);
-                    break;
-                case '_roles':
                     $qb->leftJoin('obj.rights', 'rights');
                     $qb->join('rights.role', 'rightsr');
-                    $qb->andWhere('rightsr.name IN (:otherRoles)');
+                    $qb->andWhere('rightsr.name IN (:roles)');
                     $qb->andWhere('BIT_AND(rights.mask, 1) = 1');
-                    $qb->setParameter('otherRoles', $filterValue);
+                    $qb->setParameter('roles', $filterValue);
                     break;
+
                 default:
                     $this->setDefaults($qb, $filterName, $filterValue);
                     break;
@@ -187,7 +155,6 @@ class ResourceNodeFinder extends AbstractFinder
         return $qb;
     }
 
-    //required for the unions
     public function getExtraFieldMapping()
     {
         return [
@@ -195,30 +162,6 @@ class ResourceNodeFinder extends AbstractFinder
             'meta.created' => 'modification_date',
             'meta.published' => 'published',
             'meta.views' => 'views',
-        ];
-    }
-
-    //required for the unions
-    public function getExtraSelect()
-    {
-        return [
-            //the alias is currently removed by doctrine
-            'ort.name',
-        ];
-    }
-
-    //add extra aliases for doctrine... not pretty
-    public function getAliases()
-    {
-        return [
-            'c1_.name' => 'resourceType',
-        ];
-    }
-
-    public function getFilters()
-    {
-        return [
-            '$defaults' => [],
         ];
     }
 }

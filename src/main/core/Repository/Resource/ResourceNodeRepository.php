@@ -14,29 +14,10 @@ namespace Claroline\CoreBundle\Repository\Resource;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Manager\PluginManager;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface;
-use Doctrine\Persistence\ManagerRegistry;
 use Gedmo\Tree\Entity\Repository\MaterializedPathRepository;
 
-/**
- * Repository for AbstractResource entities. The methods of this class may return
- * entities either as objects or as as arrays (see their respective documentation).
- */
-class ResourceNodeRepository extends MaterializedPathRepository implements ServiceEntityRepositoryInterface
+class ResourceNodeRepository extends MaterializedPathRepository
 {
-    /** @var ResourceQueryBuilder */
-    private $builder;
-
-    public function __construct(ManagerRegistry $managerRegistry, PluginManager $pluginManager)
-    {
-        $this->builder = new ResourceQueryBuilder();
-        $this->builder->setBundles($pluginManager->getEnabled(true));
-        $em = $managerRegistry->getManager();
-
-        parent::__construct($em, $em->getClassMetadata(ResourceNode::class));
-    }
-
     public function search(string $search, int $nbResults)
     {
         return $this->createQueryBuilder('n')
@@ -94,21 +75,19 @@ class ResourceNodeRepository extends MaterializedPathRepository implements Servi
      */
     public function findWorkspaceRoot(Workspace $workspace)
     {
-        $this->builder->selectAsEntity()
-            ->whereInWorkspace($workspace)
-            ->whereParentIsNull();
-        $query = $this->_em->createQuery($this->builder->getDql());
-        $query->setParameters($this->builder->getParameters());
+        $results = $this->createQueryBuilder('n')
+            ->where('n.parent IS NULL')
+            ->andWhere('n.workspace = :workspace')
+            ->setParameter('workspace', $workspace->getId())
+            ->getQuery()
+            ->getResult();
 
-        /** @var ResourceNode[] $results */
-        $results = $query->getResult();
-
-        //in case something was messed up at some point
+        // in case something was messed up at some point
         if (1 === count($results)) {
             return $results[0];
         }
 
-        //we find the one with the most children as a restoration trick
+        // we find the one with the most children as a restoration trick
         $maxChildren = 0;
         $toReturn = 1 < count($results) ? $results[0] : null;
 
@@ -130,16 +109,15 @@ class ResourceNodeRepository extends MaterializedPathRepository implements Servi
      *
      * @return ResourceNode[]
      */
-    public function findDescendants(
-        ResourceNode $resource
-    ) {
-        $this->builder->selectAsEntity(true)
-            ->wherePathLike($resource->getPath(), false);
-
-        $query = $this->_em->createQuery($this->builder->getDql());
-        $query->setParameters($this->builder->getParameters());
-
-        return $query->getResult();
+    public function findDescendants(ResourceNode $resource)
+    {
+        return $this->createQueryBuilder('n')
+            ->where('n.path LIKE :path_like')
+            ->andWhere('n.path != :path') // do not include current resource
+            ->setParameter('path_like', $resource->getPath().'%')
+            ->setParameter('path', $resource->getPath())
+            ->getQuery()
+            ->getResult();
     }
 
     /**

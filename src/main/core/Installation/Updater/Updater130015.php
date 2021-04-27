@@ -7,7 +7,7 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\InstallationBundle\Updater\Updater;
 use Doctrine\DBAL\Connection;
 
-class Updater130014 extends Updater
+class Updater130015 extends Updater
 {
     /** @var Connection */
     private $connection;

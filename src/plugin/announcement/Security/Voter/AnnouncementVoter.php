@@ -11,6 +11,7 @@
 
 namespace Claroline\AnnouncementBundle\Security\Voter;
 
+use Claroline\AnnouncementBundle\Entity\Announcement;
 use Claroline\CoreBundle\Security\Voter\AbstractVoter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
@@ -23,7 +24,7 @@ class AnnouncementVoter extends AbstractVoter
 
     public function getClass()
     {
-        return 'Claroline\AnnouncementBundle\Entity\Announcement';
+        return Announcement::class;
     }
 
     public function getSupportedActions()

@@ -257,19 +257,11 @@ class RoleManager
     }
 
     /**
-     * @param string $workspaceCode
-     * @param string $translationKey
-     * @param bool   $executeQuery
-     *
      * @return Role[]
      */
-    public function getRolesByWorkspaceCodeAndTranslationKey($workspaceCode, $translationKey, $executeQuery = true)
+    public function getRolesByWorkspaceCodeAndTranslationKey(string $workspaceCode, string $translationKey)
     {
-        return $this->roleRepo->findRolesByWorkspaceCodeAndTranslationKey(
-            $workspaceCode,
-            $translationKey,
-            $executeQuery
-        );
+        return $this->roleRepo->findRolesByWorkspaceCodeAndTranslationKey($workspaceCode, $translationKey);
     }
 
     /**

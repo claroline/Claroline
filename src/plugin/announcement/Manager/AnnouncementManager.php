@@ -13,19 +13,14 @@ namespace Claroline\AnnouncementBundle\Manager;
 
 use Claroline\AnnouncementBundle\Entity\Announcement;
 use Claroline\AnnouncementBundle\Entity\AnnouncementSend;
-use Claroline\AnnouncementBundle\Repository\AnnouncementRepository;
-use Claroline\AnnouncementBundle\Serializer\AnnouncementSerializer;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\CatalogEvents\MessageEvents;
 use Claroline\CoreBundle\Event\SendMessageEvent;
 use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\Task\ScheduledTaskManager;
-use Claroline\CoreBundle\Repository\User\RoleRepository;
-use Claroline\CoreBundle\Repository\User\UserRepository;
 
 class AnnouncementManager
 {
@@ -37,75 +32,21 @@ class AnnouncementManager
     private $mailManager;
     /** @var ScheduledTaskManager */
     private $taskManager;
-    /** @var AnnouncementSerializer */
-    private $serializer;
     /** @var FinderProvider */
     private $finder;
-    /** @var AnnouncementRepository */
-    private $announcementRepo;
-    /** @var RoleRepository */
-    private $roleRepo;
-    /** @var UserRepository */
-    private $userRepo;
 
     public function __construct(
         ObjectManager $om,
         StrictDispatcher $eventDispatcher,
-        AnnouncementSerializer $serializer,
         MailManager $mailManager,
         ScheduledTaskManager $taskManager,
         FinderProvider $finder
     ) {
         $this->om = $om;
         $this->eventDispatcher = $eventDispatcher;
-        $this->serializer = $serializer;
         $this->mailManager = $mailManager;
         $this->taskManager = $taskManager;
         $this->finder = $finder;
-
-        $this->announcementRepo = $om->getRepository('ClarolineAnnouncementBundle:Announcement');
-        $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
-        $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
-    }
-
-    /**
-     * Serializes an Announcement entity.
-     *
-     * @return array
-     */
-    public function serialize(Announcement $announcement)
-    {
-        return $this->serializer->serialize($announcement);
-    }
-
-    public function getVisibleAnnouncementsByWorkspace(Workspace $workspace, array $roles)
-    {
-        if (in_array('ROLE_ADMIN', $roles)
-            || in_array("ROLE_WS_MANAGER_{$workspace->getUuid()}", $roles)) {
-            return $this->announcementRepo->findVisibleByWorkspace($workspace);
-        }
-
-        return $this->announcementRepo->findVisibleByWorkspaceAndRoles($workspace, $roles);
-    }
-
-    public function getVisibleAnnouncementsByWorkspaces(array $workspaces, array $roles)
-    {
-        $managerWorkspaces = [];
-        $nonManagerWorkspaces = [];
-
-        foreach ($workspaces as $workspace) {
-            if (in_array("ROLE_WS_MANAGER_{$workspace->getUuid()}", $roles)) {
-                $managerWorkspaces[] = $workspace;
-            } else {
-                $nonManagerWorkspaces[] = $workspace;
-            }
-        }
-
-        return $this->announcementRepo->findVisibleByWorkspacesAndRoles(
-            $nonManagerWorkspaces,
-            $managerWorkspaces,
-            $roles
-        );
     }
 
     /**
@@ -140,7 +81,7 @@ class AnnouncementManager
 
         //it's kind of a hack because this is not using the crud... but wathever.
         $this->eventDispatcher->dispatch('crud.post.create.announcement_send', 'Claroline\\AppBundle\\Event\\Crud\\CreateEvent', [
-          $announcementSend, [], [],
+            $announcementSend, [], [],
         ]);
     }
 

@@ -8,7 +8,6 @@ services:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\Event\StrictDispatcher'
-            - '@Claroline\AnnouncementBundle\Serializer\AnnouncementSerializer'
             - '@Claroline\CoreBundle\Manager\MailManager'
             - '@Claroline\CoreBundle\Manager\Task\ScheduledTaskManager'
             - '@Claroline\AppBundle\API\FinderProvider'

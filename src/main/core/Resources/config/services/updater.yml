@@ -1,5 +1,5 @@
 services:
-    Claroline\CoreBundle\Installation\Updater\Updater130014:
+    Claroline\CoreBundle\Installation\Updater\Updater130015:
         arguments:
             - '@doctrine.dbal.default_connection'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
