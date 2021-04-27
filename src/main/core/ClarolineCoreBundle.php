@@ -125,7 +125,7 @@ class ClarolineCoreBundle extends DistributionPluginBundle implements Configurat
 
     public function getAdditionalInstaller()
     {
-        return new AdditionalInstaller();
+        return new AdditionalInstaller($this->getUpdaterServiceLocator());
     }
 
     private function buildPath($file, $folder = 'suggested')

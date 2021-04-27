@@ -18,6 +18,7 @@ imports:
     - { resource: services/session.yml }
     - { resource: services/checker.yml }
     - { resource: services/subscriber.yml }
+    - { resource: services/updater.yml }
 
 services:
     Claroline\CoreBundle\Listener\AuthenticationFailureHandler:

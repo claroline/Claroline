@@ -329,25 +329,24 @@ class RightsManager implements LoggerAwareInterface
          * the php equivalent would be
          *  newMask | oldMask &~ $fullDirectoryMask
          */
-        $sql =
-            "
+        $sql = "
             INSERT INTO claro_resource_rights (role_id, mask, resourceNode_id)
             SELECT {$role->getId()}, {$mask}, node.id FROM claro_resource_node node
             WHERE node.path LIKE ?
             ON DUPLICATE KEY UPDATE mask = {$mask} | mask &~ {$fullDirectoryMask};
-          ";
+        ";
 
         $stmt = $this->conn->prepare($sql);
         $stmt->bindValue(1, $node->getPath().'%', \PDO::PARAM_STR);
         $stmt->execute();
 
         $sql = "
-          DELETE list FROM claro_list_type_creation list
-          JOIN claro_resource_rights rights ON list.resource_rights_id = rights.id
-          JOIN claro_role role ON rights.role_id = role.id
-          JOIN claro_resource_node node ON rights.resourceNode_id = node.id
-          WHERE node.path LIKE ?
-          AND role.id = {$role->getId()}
+            DELETE list FROM claro_list_type_creation list
+            JOIN claro_resource_rights rights ON list.resource_rights_id = rights.id
+            JOIN claro_role role ON rights.role_id = role.id
+            JOIN claro_resource_node node ON rights.resourceNode_id = node.id
+            WHERE node.path LIKE ?
+            AND role.id = {$role->getId()}
         ";
 
         $stmt = $this->conn->prepare($sql);
@@ -363,22 +362,23 @@ class RightsManager implements LoggerAwareInterface
         }, $types);
 
         $sql = "
-          INSERT IGNORE INTO claro_list_type_creation (resource_rights_id, resource_type_id)
-          SELECT r.id as rid, t.id as tid FROM (
-            SELECT rights.id
-            FROM claro_resource_rights AS rights
-            JOIN claro_resource_node AS node ON rights.resourceNode_id = node.id
-            JOIN claro_role role ON rights.role_id = role.id
-            JOIN claro_resource_type AS rType on node.resource_type_id = rType.id
-            WHERE node.path LIKE ?
-            AND role.id = {$role->getId()}
-            AND rType.name = 'directory'
-          ) as r, (
-            SELECT id
-            FROM claro_resource_type
-            WHERE name IN
-            (?)
-          ) as t
+            INSERT IGNORE INTO claro_list_type_creation (resource_rights_id, resource_type_id)
+                SELECT r.id as rid, t.id as tid 
+                FROM (
+                    SELECT rights.id
+                    FROM claro_resource_rights AS rights
+                    JOIN claro_resource_node AS node ON rights.resourceNode_id = node.id
+                    JOIN claro_role role ON rights.role_id = role.id
+                    JOIN claro_resource_type AS rType on node.resource_type_id = rType.id
+                    WHERE node.path LIKE ?
+                    AND role.id = {$role->getId()}
+                    AND rType.name = 'directory'
+                ) as r, (
+                    SELECT id
+                    FROM claro_resource_type
+                    WHERE name IN
+                    (?)
+                ) as t
         ";
 
         $this->conn->executeQuery(
