@@ -1632,5 +1632,6 @@
     "sendMessage": "sender send a message to receveir",
     "claroline_message_sending": "Send a message",
     "planned_at": "Planned at",
-    "planning": "Planning"
+    "planning": "Planning",
+    "show_title": "Display title"
 }

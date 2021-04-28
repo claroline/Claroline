@@ -53,6 +53,7 @@ const ResourcePage = (props) => {
       }}
       embedded={props.embedded}
       showHeader={props.embedded ? props.showHeader : true}
+      showTitle={get(props.resourceNode, 'display.showTitle')}
       fullscreen={!props.embedded && get(props.resourceNode, 'display.fullscreen')}
       title={props.resourceNode.name}
       subtitle={props.subtitle}

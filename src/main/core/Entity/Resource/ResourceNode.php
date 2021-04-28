@@ -83,6 +83,13 @@ class ResourceNode
     private $resourceType;
 
     /**
+     * Display resource title when the resource is rendered.
+     *
+     * @ORM\Column(type="boolean", options={"default"=1})
+     */
+    private $showTitle = true;
+
+    /**
      * Display resource icon/evaluation when the resource is rendered.
      *
      * @var bool
@@ -942,5 +949,15 @@ class ResourceNode
     public function setSlug($slug = null)
     {
         $this->slug = $slug;
+    }
+
+    public function getShowTitle(): bool
+    {
+        return $this->showTitle;
+    }
+
+    public function setShowTitle(bool $showTitle)
+    {
+        $this->showTitle = $showTitle;
     }
 }
