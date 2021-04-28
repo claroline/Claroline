@@ -15,6 +15,7 @@ use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Order;
 use Claroline\AppBundle\Entity\Meta\Poster;
+use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -61,6 +62,47 @@ class HomeTab
     private $class = null;
 
     /**
+     * @ORM\Column(nullable=true)
+     */
+    private $name;
+
+    /**
+     * @ORM\Column(nullable=false, type="text")
+     */
+    private $longTitle = '';
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $centerTitle = false;
+
+    /**
+     * @ORM\Column(type="boolean", options={"default"=1})
+     */
+    private $showTitle = true;
+
+    /**
+     * @ORM\Column(nullable=true)
+     */
+    private $icon;
+
+    /**
+     * The color of the tab.
+     *
+     * @ORM\Column(nullable=true)
+     *
+     * @var string
+     */
+    private $color = null;
+
+    /**
+     * @ORM\Column(type="boolean", name="is_visible")
+     *
+     * @var bool
+     */
+    private $visible = true;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
      * @ORM\JoinColumn(name="user_id", nullable=true, onDelete="CASCADE")
      *
@@ -94,25 +136,22 @@ class HomeTab
      * @ORM\OneToMany(targetEntity="Claroline\HomeBundle\Entity\HomeTab", mappedBy="parent", cascade={"persist", "remove"})
      * @ORM\OrderBy({"order" = "ASC"})
      */
-    protected $children;
+    private $children;
 
     /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\HomeBundle\Entity\HomeTabConfig",
-     *     mappedBy="homeTab",
-     *     cascade={"persist", "remove"}
-     * )
+     * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\Role")
+     * @ORM\JoinTable(name="claro_home_tab_roles")
      *
-     * @var HomeTabConfig[]|ArrayCollection
+     * @var Role[]
      */
-    private $homeTabConfigs;
+    private $roles;
 
     public function __construct()
     {
         $this->refreshUuid();
 
         $this->children = new ArrayCollection();
-        $this->homeTabConfigs = new ArrayCollection();
+        $this->roles = new ArrayCollection();
     }
 
     public function getContext(): string
@@ -145,6 +184,86 @@ class HomeTab
         $this->class = $class;
     }
 
+    /**
+     * Get color.
+     *
+     * @return string
+     */
+    public function getColor()
+    {
+        return $this->color;
+    }
+
+    /**
+     * Set color.
+     *
+     * @param string $color
+     */
+    public function setColor($color)
+    {
+        $this->color = $color;
+    }
+
+    public function isVisible()
+    {
+        return $this->visible;
+    }
+
+    public function setVisible($visible)
+    {
+        $this->visible = $visible;
+    }
+
+    public function getIcon()
+    {
+        return $this->icon;
+    }
+
+    public function setIcon($icon)
+    {
+        $this->icon = $icon;
+    }
+
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    public function getLongTitle()
+    {
+        return $this->longTitle;
+    }
+
+    public function setLongTitle($longTitle)
+    {
+        $this->longTitle = $longTitle;
+    }
+
+    public function isCenterTitle()
+    {
+        return $this->centerTitle;
+    }
+
+    public function setCenterTitle($centerTitle)
+    {
+        $this->centerTitle = $centerTitle;
+    }
+
+    public function getShowTitle(): bool
+    {
+        return $this->showTitle;
+    }
+
+    public function setShowTitle(bool $showTitle)
+    {
+        $this->showTitle = $showTitle;
+    }
+
     public function getUser(): ?User
     {
         return $this->user;
@@ -165,34 +284,6 @@ class HomeTab
         $this->workspace = $workspace;
     }
 
-    public function getConfig(): ?HomeTabConfig
-    {
-        if (!empty($this->homeTabConfigs)) {
-            return $this->homeTabConfigs[0];
-        }
-
-        return null;
-    }
-
-    public function getHomeTabConfigs(): ArrayCollection
-    {
-        return $this->homeTabConfigs;
-    }
-
-    public function addHomeTabConfig(HomeTabConfig $config)
-    {
-        if (!$this->homeTabConfigs->contains($config)) {
-            $this->homeTabConfigs->add($config);
-        }
-    }
-
-    public function removeHomeTabConfig(HomeTabConfig $config)
-    {
-        if ($this->homeTabConfigs->contains($config)) {
-            $this->homeTabConfigs->removeElement($config);
-        }
-    }
-
     /**
      * Set parent.
      */
@@ -209,10 +300,8 @@ class HomeTab
 
     /**
      * Get parent.
-     *
-     * @return HomeTab
      */
-    public function getParent()
+    public function getParent(): ?HomeTab
     {
         return $this->parent;
     }
@@ -249,5 +338,30 @@ class HomeTab
         }
 
         return $this;
+    }
+
+    /**
+     * @return Role[]|ArrayCollection
+     */
+    public function getRoles()
+    {
+        return $this->roles;
+    }
+
+    public function addRole(Role $role)
+    {
+        if (!$this->roles->contains($role)) {
+            $this->roles->add($role);
+        }
+    }
+
+    public function removeRole(Role $role)
+    {
+        $this->roles->removeElement($role);
+    }
+
+    public function emptyRoles()
+    {
+        $this->roles->clear();
     }
 }
