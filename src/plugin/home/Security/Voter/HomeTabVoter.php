@@ -79,8 +79,7 @@ class HomeTabVoter extends AbstractVoter
         }
 
         if ($granted && $this->checkTabRestrictions($token, $object)) {
-            $config = $object->getConfig();
-            if (empty($config) || $config->isVisible() || VoterInterface::ACCESS_GRANTED === $this->checkEdit($token, $object)) {
+            if ($object->isVisible() || VoterInterface::ACCESS_GRANTED === $this->checkEdit($token, $object)) {
                 return VoterInterface::ACCESS_GRANTED;
             }
         }
@@ -127,12 +126,11 @@ class HomeTabVoter extends AbstractVoter
 
     private function checkTabRestrictions(TokenInterface $token, HomeTab $object): bool
     {
-        $config = $object->getConfig();
-        if (empty($config) || 0 === $config->getRoles()->count()) {
+        if (0 === $object->getRoles()->count()) {
             return true;
         }
 
-        foreach ($config->getRoles() as $role) {
+        foreach ($object->getRoles() as $role) {
             if (in_array($role->getName(), $token->getRoleNames())) {
                 return true;
             }
