@@ -1663,5 +1663,6 @@
     "sendMessage": "sender a envoyé un message à receveir",
     "claroline_message_sending": "Envoi d'un message",
     "planned_at": "Planifié le",
-    "planning": "Planification"
+    "planning": "Planification",
+    "show_title": "Afficher le titre"
 }

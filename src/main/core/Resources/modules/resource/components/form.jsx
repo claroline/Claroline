@@ -87,6 +87,10 @@ const ResourceFormComponent = (props) =>
             help: trans('resource_showIcon_help', {}, 'resource'),
             type: 'boolean'
           }, {
+            name: 'display.showTitle',
+            label: trans('show_title'),
+            type: 'boolean'
+          }, {
             name: 'display.fullscreen',
             label: trans('resource_fullscreen', {}, 'resource'),
             type: 'boolean'

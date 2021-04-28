@@ -221,6 +221,7 @@ class ResourceNodeSerializer
         return [
             'fullscreen' => $resourceNode->isFullscreen(),
             'showIcon' => $resourceNode->getShowIcon(),
+            'showTitle' => $resourceNode->getShowTitle(),
         ];
     }
 
@@ -294,6 +295,7 @@ class ResourceNodeSerializer
         // display
         $this->sipe('display.fullscreen', 'setFullscreen', $data, $resourceNode);
         $this->sipe('display.showIcon', 'setShowIcon', $data, $resourceNode);
+        $this->sipe('display.showTitle', 'setShowTitle', $data, $resourceNode);
 
         // restrictions
         $this->sipe('restrictions.code', 'setAccessCode', $data, $resourceNode);
