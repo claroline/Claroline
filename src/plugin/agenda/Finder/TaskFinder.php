@@ -15,7 +15,7 @@ use Claroline\AgendaBundle\Entity\Task;
 
 class TaskFinder extends AbstractEventFinder
 {
-    public function getClass()
+    public static function getClass(): string
     {
         return Task::class;
     }

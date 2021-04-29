@@ -17,7 +17,7 @@ use HeVinci\CompetencyBundle\Entity\Scale;
 
 class ScaleFinder extends AbstractFinder
 {
-    public function getClass()
+    public static function getClass(): string
     {
         return Scale::class;
     }

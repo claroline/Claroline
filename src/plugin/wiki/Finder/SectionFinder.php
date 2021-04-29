@@ -67,7 +67,7 @@ class SectionFinder extends AbstractFinder
     }
 
     /** @return $string */
-    public function getClass()
+    public static function getClass(): string
     {
         return 'Icap\WikiBundle\Entity\Section';
     }

@@ -51,7 +51,7 @@ class EntryFinder extends AbstractFinder
         $this->translator = $translator;
     }
 
-    public function getClass()
+    public static function getClass(): string
     {
         return 'Claroline\ClacoFormBundle\Entity\Entry';
     }

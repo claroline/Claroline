@@ -13,6 +13,7 @@ namespace Claroline\AppBundle\API;
 
 use Claroline\AppBundle\API\Finder\FinderInterface;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Psr\Container\ContainerInterface;
 
 class FinderProvider
 {
@@ -22,29 +23,21 @@ class FinderProvider
     private $serializer;
 
     /**
-     * The list of registered finders in the platform.
-     *
-     * @var array
+     * @var ContainerInterface A service locator of finders registered in the platform
      */
-    private $finders = [];
+    private $finders;
 
     /**
      * FinderProvider constructor.
      */
     public function __construct(
         ObjectManager $om,
+        ContainerInterface $finders,
         SerializerProvider $serializer
     ) {
         $this->om = $om;
+        $this->finders = $finders;
         $this->serializer = $serializer;
-    }
-
-    /**
-     * Registers a new finder.
-     */
-    public function add(FinderInterface $finder)
-    {
-        $this->finders[$finder->getClass()] = $finder;
     }
 
     /**
@@ -58,21 +51,11 @@ class FinderProvider
      */
     public function get($class)
     {
-        if (empty($this->finders[$class])) {
+        if (!$this->finders->has($class)) {
             throw new FinderException(sprintf('No finder found for class "%s" Maybe you forgot to add the "claroline.finder" tag to your finder.', $class));
         }
 
-        return $this->finders[$class];
-    }
-
-    /**
-     * Return the list of finders.
-     *
-     * @return mixed[];
-     */
-    public function all()
-    {
-        return $this->finders;
+        return $this->finders->get($class);
     }
 
     /**

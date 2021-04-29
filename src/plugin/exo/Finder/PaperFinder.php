@@ -20,7 +20,7 @@ use UJM\ExoBundle\Entity\Attempt\Paper;
  */
 class PaperFinder extends AbstractFinder
 {
-    public function getClass()
+    public static function getClass(): string
     {
         return Paper::class;
     }

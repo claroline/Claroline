@@ -29,7 +29,7 @@ class AdminToolFinder extends AbstractFinder
         $this->pluginManager = $pluginManager;
     }
 
-    public function getClass()
+    public static function getClass(): string
     {
         return AdminTool::class;
     }

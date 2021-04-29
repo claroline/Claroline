@@ -17,7 +17,7 @@ use HeVinci\CompetencyBundle\Entity\Ability;
 
 class AbilityFinder extends AbstractFinder
 {
-    public function getClass()
+    public static function getClass(): string
     {
         return Ability::class;
     }

@@ -16,7 +16,7 @@ use Doctrine\ORM\QueryBuilder;
 
 class PendingRegistrationFinder extends AbstractFinder
 {
-    public function getClass()
+    public static function getClass(): string
     {
         return 'Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue';
     }

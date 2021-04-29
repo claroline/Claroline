@@ -33,7 +33,7 @@ class BadgeClassFinder extends AbstractFinder
         $this->toolMaskDecoderManager = $toolMaskDecoderManager;
     }
 
-    public function getClass()
+    public static function getClass(): string
     {
         return BadgeClass::class;
     }

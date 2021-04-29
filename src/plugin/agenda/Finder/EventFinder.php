@@ -15,7 +15,7 @@ use Claroline\AgendaBundle\Entity\Event;
 
 class EventFinder extends AbstractEventFinder
 {
-    public function getClass()
+    public static function getClass(): string
     {
         return Event::class;
     }

@@ -15,6 +15,7 @@ services:
     Claroline\AppBundle\API\FinderProvider:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - !tagged_locator { tag: 'claroline.finder', default_index_method: 'getClass' }
             - '@Claroline\AppBundle\API\SerializerProvider'
 
     Claroline\AppBundle\API\Crud:
@@ -34,6 +35,7 @@ services:
     Claroline\AppBundle\API\SerializerProvider:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - !tagged_iterator claroline.serializer # Lazy collection of 'claroline.serializer' tagged services
             - '%kernel.project_dir%'
 
     Claroline\AppBundle\API\TransferProvider:

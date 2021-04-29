@@ -16,7 +16,7 @@ use Claroline\BookingBundle\Entity\Material;
 
 class MaterialFinder extends AbstractFinder
 {
-    public function getClass()
+    public static function getClass(): string
     {
         return Material::class;
     }

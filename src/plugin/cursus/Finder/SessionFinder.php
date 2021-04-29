@@ -18,7 +18,7 @@ use Doctrine\ORM\QueryBuilder;
 
 class SessionFinder extends AbstractFinder
 {
-    public function getClass()
+    public static function getClass(): string
     {
         return Session::class;
     }

@@ -35,7 +35,7 @@ class FieldFacetValueFinder extends AbstractFinder
         $this->tokenStorage = $tokenStorage;
     }
 
-    public function getClass()
+    public static function getClass(): string
     {
         return 'Claroline\CoreBundle\Entity\Facet\FieldFacetValue';
     }

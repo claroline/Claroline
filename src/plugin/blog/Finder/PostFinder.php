@@ -9,7 +9,7 @@ use Icap\BlogBundle\Entity\Post;
 
 class PostFinder extends AbstractFinder
 {
-    public function getClass()
+    public static function getClass(): string
     {
         return Post::class;
     }

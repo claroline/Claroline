@@ -8,7 +8,7 @@ use Icap\LessonBundle\Entity\Chapter;
 
 class ChapterFinder extends AbstractFinder
 {
-    public function getClass()
+    public static function getClass(): string
     {
         return Chapter::class;
     }

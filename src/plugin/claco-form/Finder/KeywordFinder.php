@@ -16,7 +16,7 @@ use Doctrine\ORM\QueryBuilder;
 
 class KeywordFinder extends AbstractFinder
 {
-    public function getClass()
+    public static function getClass(): string
     {
         return 'Claroline\ClacoFormBundle\Entity\Keyword';
     }
