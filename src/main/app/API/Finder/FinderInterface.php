@@ -27,10 +27,7 @@ interface FinderInterface
      */
     public function findOneBy(array $filters = []);
 
-    /**
-     * @return string
-     */
-    public function getClass();
+    public static function getClass(): string;
 
     /**
      * Allow us to make optimize sql directly by mapping serialized property path to their own database colum.

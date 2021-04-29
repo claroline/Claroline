@@ -21,7 +21,7 @@ class MessageFinder extends AbstractFinder
     /**
      * @return mixed
      */
-    public function getClass()
+    public static function getClass(): string
     {
         return Message::class;
     }

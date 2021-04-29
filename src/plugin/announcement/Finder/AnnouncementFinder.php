@@ -17,7 +17,7 @@ use Doctrine\ORM\QueryBuilder;
 
 class AnnouncementFinder extends AbstractFinder
 {
-    public function getClass()
+    public static function getClass(): string
     {
         return Announcement::class;
     }
@@ -75,6 +75,7 @@ class AnnouncementFinder extends AbstractFinder
                 case 'visible':
                     if ($filterValue) {
                         $now = new \DateTime();
+                        $expr = [];
                         $expr[] = $qb->expr()->orX(
                             $qb->expr()->gte('obj.visibleFrom', $now),
                             $qb->expr()->isNull('obj.visibleFrom')

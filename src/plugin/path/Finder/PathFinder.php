@@ -17,7 +17,7 @@ use Innova\PathBundle\Entity\Path\Path;
 
 class PathFinder extends AbstractFinder
 {
-    public function getClass()
+    public static function getClass(): string
     {
         return Path::class;
     }

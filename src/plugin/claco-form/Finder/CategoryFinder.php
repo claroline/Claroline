@@ -16,7 +16,7 @@ use Doctrine\ORM\QueryBuilder;
 
 class CategoryFinder extends AbstractFinder
 {
-    public function getClass()
+    public static function getClass(): string
     {
         return 'Claroline\ClacoFormBundle\Entity\Category';
     }

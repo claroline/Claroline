@@ -16,7 +16,7 @@ use Doctrine\ORM\QueryBuilder;
 
 class PlannedNotificationFinder extends AbstractFinder
 {
-    public function getClass()
+    public static function getClass(): string
     {
         return 'Claroline\PlannedNotificationBundle\Entity\PlannedNotification';
     }

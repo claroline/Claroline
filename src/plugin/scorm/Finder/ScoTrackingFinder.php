@@ -16,7 +16,7 @@ use Doctrine\ORM\QueryBuilder;
 
 class ScoTrackingFinder extends AbstractFinder
 {
-    public function getClass()
+    public static function getClass(): string
     {
         return 'Claroline\ScormBundle\Entity\ScoTracking';
     }

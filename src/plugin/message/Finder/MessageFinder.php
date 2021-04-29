@@ -29,7 +29,7 @@ class MessageFinder extends AbstractFinder
         $this->tokenStorage = $tokenStorage;
     }
 
-    public function getClass()
+    public static function getClass(): string
     {
         return Message::class;
     }

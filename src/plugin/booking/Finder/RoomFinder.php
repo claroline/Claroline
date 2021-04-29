@@ -16,7 +16,7 @@ use Claroline\BookingBundle\Entity\Room;
 
 class RoomFinder extends AbstractFinder
 {
-    public function getClass()
+    public static function getClass(): string
     {
         return Room::class;
     }

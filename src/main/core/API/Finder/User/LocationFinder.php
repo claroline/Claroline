@@ -16,7 +16,7 @@ use Doctrine\ORM\QueryBuilder;
 
 class LocationFinder extends AbstractFinder
 {
-    public function getClass()
+    public static function getClass(): string
     {
         return 'Claroline\CoreBundle\Entity\Organization\Location';
     }

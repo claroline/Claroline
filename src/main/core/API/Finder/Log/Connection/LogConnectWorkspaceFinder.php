@@ -17,7 +17,7 @@ use Doctrine\ORM\QueryBuilder;
 
 class LogConnectWorkspaceFinder extends AbstractFinder
 {
-    public function getClass()
+    public static function getClass(): string
     {
         return LogConnectWorkspace::class;
     }

@@ -155,7 +155,7 @@ class LogFinder extends AbstractFinder
     }
 
     /** @return $string */
-    public function getClass()
+    public static function getClass(): string
     {
         return Log::class;
     }

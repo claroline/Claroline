@@ -17,7 +17,7 @@ use Doctrine\ORM\QueryBuilder;
 
 class AssertionFinder extends AbstractFinder
 {
-    public function getClass()
+    public static function getClass(): string
     {
         return Assertion::class;
     }

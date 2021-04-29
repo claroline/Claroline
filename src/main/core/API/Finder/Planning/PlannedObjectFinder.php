@@ -18,7 +18,7 @@ use Doctrine\ORM\QueryBuilder;
 
 class PlannedObjectFinder extends AbstractFinder
 {
-    public function getClass()
+    public static function getClass(): string
     {
         return PlannedObject::class;
     }

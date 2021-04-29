@@ -41,7 +41,7 @@ class UserFinder extends AbstractFinder
         $this->workspaceManager = $workspaceManager;
     }
 
-    public function getClass()
+    public static function getClass(): string
     {
         return User::class;
     }
