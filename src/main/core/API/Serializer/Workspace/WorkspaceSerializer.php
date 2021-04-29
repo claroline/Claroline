@@ -147,24 +147,21 @@ class WorkspaceSerializer
 
             // TODO : remove me. Used by workspace transfer
             if (!in_array(Options::SERIALIZE_LIST, $options)) {
-                $workspaceRoles = array_values(array_unique(array_merge($this->workspaceManager->getRolesWithAccess($workspace), $workspace->getRoles()->toArray())));
-                if (in_array(Options::REFRESH_UUID, $options)) {
-                    $serialized['roles'] = array_map(function (Role $role) {
+                $serialized['roles'] = array_map(function (Role $role) use ($options) {
+                    if (in_array(Options::REFRESH_UUID, $options)) {
                         return [
-                          'translationKey' => $role->getTranslationKey(),
-                          'type' => $role->getType(),
-                        ];
-                    }, $workspaceRoles);
-                } else {
-                    $serialized['roles'] = array_map(function (Role $role) {
-                        return [
-                            'id' => $role->getUuid(),
-                            'name' => $role->getName(),
-                            'type' => $role->getType(), // TODO : should be a string for better data readability
                             'translationKey' => $role->getTranslationKey(),
+                            'type' => $role->getType(),
                         ];
-                    }, $workspaceRoles);
-                }
+                    }
+
+                    return [
+                        'id' => $role->getUuid(),
+                        'name' => $role->getName(),
+                        'type' => $role->getType(),
+                        'translationKey' => $role->getTranslationKey(),
+                    ];
+                }, $workspace->getRoles()->toArray());
             }
         }
 

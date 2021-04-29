@@ -134,23 +134,7 @@ class TransferManager implements LoggerAwareInterface
     {
         $serialized = $this->serializer->serialize($workspace, [Options::REFRESH_UUID]);
 
-        // if roles duplicates, remove them
-        $roles = $serialized['roles'];
-
-        $uniques = [];
-        foreach ($roles as $role) {
-            $uniques[$role['translationKey']] = ['type' => $role['type']];
-        }
-
-        $roles = [];
-        foreach ($uniques as $key => $val) {
-            $val['translationKey'] = $key;
-            $roles[] = $val;
-        }
-
-        $serialized['roles'] = $roles;
-
-        //we want to load the resources first
+        // we want to load the resources first
         /** @var OrderedTool[] $ot */
         $ot = $workspace->getOrderedTools()->toArray();
 

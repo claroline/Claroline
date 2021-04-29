@@ -2,7 +2,7 @@ import {connect} from 'react-redux'
 
 import {trans} from '#/main/app/intl/translation'
 import {actions as modalActions} from '#/main/app/overlays/modal/store'
-import {selectors as formSelectors} from '#/main/app/content/form/store/selectors'
+import {actions as formActions, selectors as formSelectors} from '#/main/app/content/form/store'
 import {MODAL_DATA_LIST} from '#/main/app/modals/list'
 
 import {selectors as toolSelectors} from '#/main/core/tool/store'
@@ -20,6 +20,9 @@ const TeamForm = connect(
     resourceTypes: selectors.resourceTypes(state)
   }),
   (dispatch) => ({
+    update(prop, value) {
+      dispatch(formActions.updateProp(selectors.STORE_NAME + '.teams.current', prop, value))
+    },
     pickUsers(teamId, workspaceId, pickManagers = false) {
       dispatch(modalActions.showModal(MODAL_DATA_LIST, {
         icon: 'fa fa-fw fa-user',

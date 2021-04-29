@@ -11,7 +11,6 @@
     "fill_teams": "Fill teams",
     "go_to_team_directory": "Go to teams directory",
     "max_teams": "Number of teams allowed by user",
-    "max_users": "Max number of users",
     "multiple_teams_creation": "Multiple teams creation",
     "nb_teams": "Number of teams",
     "public_directory": "Public directory",
@@ -26,9 +25,9 @@
     "team_edition": "Edit team",
     "team_managers": "Team managers",
     "team_members": "Team members",
-    "team_self_registration": "Allow user to register",
-    "team_self_unregistration": "Allow user to unregister",
     "unregister_from_team": "Unregister from team",
     "unregister_from_team_confirm_message": "Are you sure you want to unregister from this team ?",
-    "user_creatable_resources": "Resources that can be created by users"
+    "user_creatable_resources": "Resources that can be created by users",
+    "self_registration_help": "Users will be able to register themselves to the team.",
+    "self_unregistration_help": "Users will be able to unregister themselves from the team."
 }

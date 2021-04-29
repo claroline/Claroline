@@ -20,8 +20,10 @@ const Team = {
     id: T.string.isRequired,
     name: T.string,
     description: T.string,
-    selfRegistration: T.bool.isRequired,
-    selfUnregistration: T.bool.isRequired,
+    registration: T.shape({
+      selfRegistration: T.bool.isRequired,
+      selfUnregistration: T.bool.isRequired
+    }),
     publicDirectory: T.bool.isRequired,
     deletableDirectory: T.bool.isRequired,
     maxUsers: T.number,

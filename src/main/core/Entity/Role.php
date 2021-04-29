@@ -36,6 +36,7 @@ class Role
     use Id;
     use Uuid;
 
+    // TODO : should be a string for better data readability
     const PLATFORM_ROLE = 1;
     const WS_ROLE = 2;
     const USER_ROLE = 4;

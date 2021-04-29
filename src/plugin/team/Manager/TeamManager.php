@@ -90,8 +90,8 @@ class TeamManager
         $nbTeams = isset($data['nbTeams']) ? $data['nbTeams'] : 0;
         $name = isset($data['name']) ? $data['name'] : '';
         $description = isset($data['description']) ? $data['description'] : null;
-        $selfRegistration = isset($data['selfRegistration']) ? $data['selfRegistration'] : false;
-        $selfUnregistration = isset($data['selfUnregistration']) ? $data['selfUnregistration'] : false;
+        $selfRegistration = isset($data['registration']['selfRegistration']) && isset($data['selfRegistration']) ? $data['registration']['selfRegistration'] : false;
+        $selfUnregistration = isset($data['registration']) && isset($data['registration']['selfUnregistration']) ? $data['registration']['selfUnregistration'] : false;
         $publicDirectory = isset($data['publicDirectory']) ? $data['publicDirectory'] : false;
         $deletableDirectory = isset($data['deletableDirectory']) ? $data['deletableDirectory'] : false;
         $maxUsers = isset($data['maxUsers']) ? $data['maxUsers'] : null;
@@ -151,43 +151,6 @@ class TeamManager
     }
 
     /**
-     * Deletes multiple teams.
-     */
-    public function deleteTeams(array $teams)
-    {
-        $this->om->startFlushSuite();
-
-        foreach ($teams as $team) {
-            $this->deleteTeam($team);
-        }
-
-        $this->om->endFlushSuite();
-    }
-
-    /**
-     * Deletes a team.
-     */
-    public function deleteTeam(Team $team)
-    {
-        $teamRole = $team->getRole();
-        $teamManagerRole = $team->getTeamManagerRole();
-
-        if (!is_null($teamManagerRole)) {
-            $this->om->remove($teamManagerRole);
-        }
-        if (!is_null($teamRole)) {
-            $this->om->remove($teamRole);
-        }
-        $teamDirectory = $team->getDirectory();
-
-        if ($team->isDirDeletable() && !is_null($teamDirectory)) {
-            $this->resourceManager->delete($teamDirectory->getResourceNode());
-        }
-        $this->om->remove($team);
-        $this->om->flush();
-    }
-
-    /**
      * Checks if name already exists and returns a incremented version if it does.
      *
      * @param string $teamName
@@ -239,6 +202,19 @@ class TeamManager
         $this->setRightsForOldTeams($workspace, $role);
 
         return $role;
+    }
+
+    public function deleteTeamRoles(Team $team)
+    {
+        if (!empty($team->getRole())) {
+            $this->om->remove($team->getRole());
+        }
+
+        if (!empty($team->getTeamManagerRole())) {
+            $this->om->remove($team->getTeamManagerRole());
+        }
+
+        $this->om->flush();
     }
 
     /**
@@ -307,6 +283,13 @@ class TeamManager
         }
 
         return $directory;
+    }
+
+    public function deleteTeamDirectory(Team $team)
+    {
+        if ($team->isDirDeletable() && !empty($team->getDirectory())) {
+            $this->resourceManager->delete($team->getDirectory()->getResourceNode());
+        }
     }
 
     /**

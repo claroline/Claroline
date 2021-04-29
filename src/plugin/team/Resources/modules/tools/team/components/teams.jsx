@@ -1,6 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
+import {hasPermission} from '#/main/app/security/permissions'
 import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
@@ -28,13 +29,13 @@ const Teams = props =>
         type: 'string',
         primary: true
       }, {
-        name: 'selfRegistration',
+        name: 'registration.selfRegistration',
         label: trans('public_registration'),
         displayed: false,
         filterable: true,
         type: 'boolean'
       }, {
-        name: 'selfUnregistration',
+        name: 'registration.selfUnregistration',
         label: trans('public_unregistration'),
         displayed: false,
         filterable: true,
@@ -63,13 +64,13 @@ const Teams = props =>
     ]}
     delete={{
       url: ['apiv2_team_delete_bulk'],
-      displayed: () => props.canEdit
+      displayed: (rows) => -1 !== rows.map(row => hasPermission('delete', row))
     }}
     actions={(rows) => [
       {
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-pencil',
-        label: trans('edit'),
+        label: trans('edit', {}, 'actions'),
         displayed: props.canEdit,
         scope: ['object'],
         target: `${props.path}/team/form/${rows[0].id}`
@@ -77,7 +78,7 @@ const Teams = props =>
         type: CALLBACK_BUTTON,
         icon: 'fa fa-fw fa-sign-in',
         label: trans('self_register', {}, 'team'),
-        displayed: rows[0].selfRegistration &&
+        displayed: rows[0].registration && rows[0].registration.selfRegistration &&
           -1 === props.myTeams.findIndex(teamId => teamId === rows[0].id) &&
           (!rows[0].maxUsers || rows[0].maxUsers > rows[0].countUsers),
         scope: ['object'],
