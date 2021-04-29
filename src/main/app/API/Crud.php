@@ -161,13 +161,13 @@ class Crud
         }
 
         $object = $this->serializer->deserialize($data, $oldObject, $options);
-        if ($this->dispatch('update', 'pre', [$object, $options, $oldData])) {
+        if ($this->dispatch('update', 'pre', [$object, $options, $data, $oldData])) {
             $this->om->persist($object);
-            $this->dispatch('update', 'post', [$object, $options, $oldData]);
+            $this->dispatch('update', 'post', [$object, $options, $data, $oldData]);
             $this->om->flush();
         }
 
-        $this->dispatch('update', 'end', [$object, $options, $oldData]);
+        $this->dispatch('update', 'end', [$object, $options, $data, $oldData]);
 
         return $object;
     }

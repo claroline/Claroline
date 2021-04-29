@@ -54,26 +54,6 @@ class TeamController extends AbstractCrudController
         return 'team';
     }
 
-    public function deleteBulkAction(Request $request, $class): JsonResponse
-    {
-        $teams = parent::decodeIdsString($request, 'Claroline\TeamBundle\Entity\Team');
-        $workspace = 0 < count($teams) ? $teams[0]->getWorkspace() : null;
-
-        if ($workspace) {
-            foreach ($teams as $team) {
-                if ($workspace->getId() !== $team->getWorkspace()->getId()) {
-                    throw new AccessDeniedException();
-                }
-            }
-        } else {
-            throw new AccessDeniedException();
-        }
-        $this->checkToolAccess($workspace, 'edit');
-        $this->teamManager->deleteTeams($teams);
-
-        return new JsonResponse(null, 204);
-    }
-
     /**
      * @Route(
      *     "/workspace/{workspace}/teams/list",

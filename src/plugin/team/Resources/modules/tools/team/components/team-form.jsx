@@ -1,5 +1,6 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
@@ -48,60 +49,92 @@ const TeamForm = props =>
                 workspace: props.workspace
               }
             }, {
-              name: 'defaultResource',
+              name: 'directory',
               type: 'resource',
-              label: trans('default_resource', {}, 'team'),
-              displayed: props.isNew
+              label: trans('public_directory', {}, 'team'),
+              displayed: (team) => !!team.directory
             }, {
-              name: 'maxUsers',
-              type: 'number',
-              label: trans('max_users', {}, 'team')
-            },
-            {
               name: 'createPublicDirectory',
               type: 'boolean',
               label: trans('team_create_public_directory', {}, 'team'),
-              required: true,
+              displayed: (team) => !team.directory,
               linked: [
                 {
                   name: 'publicDirectory',
                   type: 'boolean',
                   label: trans('team_directory_public_access', {}, 'team'),
-                  required: true,
-                  displayed: props.team.createPublicDirectory
+                  displayed: !!props.team.createPublicDirectory
                 }, {
                   name: 'deletableDirectory',
                   type: 'boolean',
                   label: trans('delete_team_directory', {}, 'team'),
-                  required: true,
-                  displayed: props.team.createPublicDirectory
+                  displayed: !!props.team.createPublicDirectory
+                }, {
+                  name: 'defaultResource',
+                  type: 'resource',
+                  label: trans('default_resource', {}, 'team'),
+                  displayed: !!props.team.createPublicDirectory
+                }, {
+                  name: 'creatableResources',
+                  type: 'choice',
+                  label: trans('user_creatable_resources', {}, 'team'),
+                  displayed: !!props.team.createPublicDirectory,
+                  options: {
+                    multiple: true,
+                    condensed: false,
+                    inline: false,
+                    choices: props.resourceTypes.reduce((acc, type) => {
+                      acc[type.name] = trans(type.name, {}, 'resource')
+
+                      return acc
+                    }, {})
+                  }
                 }
               ]
-            }, {
-              name: 'selfRegistration',
+            }
+          ]
+        }, {
+          icon: 'fa fa-fw fa-sign-in',
+          title: trans('registration'),
+          fields: [
+            {
+              name: 'registration.selfRegistration',
               type: 'boolean',
-              label: trans('team_self_registration', {}, 'team'),
-              required: true
+              label: trans('activate_self_registration'),
+              help: trans('self_registration_help', {}, 'team')
             }, {
-              name: 'selfUnregistration',
+              name: 'registration.selfUnregistration',
               type: 'boolean',
-              label: trans('team_self_unregistration', {}, 'team'),
-              required: true
-            }, {
-              name: 'creatableResources',
-              type: 'choice',
-              label: trans('user_creatable_resources', {}, 'team'),
-              displayed: props.isNew,
-              options: {
-                multiple: true,
-                condensed: false,
-                inline: false,
-                choices: props.resourceTypes.reduce((acc, type) => {
-                  acc[type.name] = trans(type.name, {}, 'resource')
-
-                  return acc
-                }, {})
-              }
+              label: trans('activate_self_unregistration'),
+              help: trans('self_unregistration_help', {}, 'team')
+            }
+          ]
+        }, {
+          icon: 'fa fa-fw fa-key',
+          title: trans('access_restrictions'),
+          fields: [
+            {
+              name: '_restrictUsers',
+              type: 'boolean',
+              label: trans('restrict_users_count'),
+              calculated: (team) => get(team, 'maxUsers') || get(team, '_restrictUsers'),
+              onChange: (value) => {
+                if (!value) {
+                  props.update('maxUsers', null)
+                }
+              },
+              linked: [
+                {
+                  name: 'maxUsers',
+                  type: 'number',
+                  label: trans('users_count'),
+                  required: true,
+                  displayed: (team) => get(team, 'maxUsers') || get(team, '_restrictUsers'),
+                  options: {
+                    min: 0
+                  }
+                }
+              ]
             }
           ]
         }
@@ -181,6 +214,7 @@ TeamForm.propTypes = {
   history: T.shape({
     push: T.func.isRequired
   }).isRequired,
+  update: T.func.isRequired,
   pickUsers: T.func.isRequired
 }
 

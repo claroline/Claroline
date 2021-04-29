@@ -1,5 +1,6 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
@@ -52,43 +53,94 @@ const MultipleTeamForm = props =>
               type: 'resource',
               label: trans('default_resource', {}, 'team')
             }, {
-              name: 'maxUsers',
-              type: 'number',
-              label: trans('max_users', {}, 'team')
-            }, {
               name: 'publicDirectory',
               type: 'boolean',
-              label: trans('team_directory_public_access', {}, 'team'),
-              required: true
+              label: trans('team_directory_public_access', {}, 'team')
             }, {
               name: 'deletableDirectory',
               type: 'boolean',
-              label: trans('delete_team_directory', {}, 'team'),
-              required: true
+              label: trans('delete_team_directory', {}, 'team')
             }, {
-              name: 'selfRegistration',
+              name: 'createPublicDirectory',
               type: 'boolean',
-              label: trans('team_self_registration', {}, 'team'),
-              required: true
-            }, {
-              name: 'selfUnregistration',
-              type: 'boolean',
-              label: trans('team_self_unregistration', {}, 'team'),
-              required: true
-            }, {
-              name: 'creatableResources',
-              type: 'choice',
-              label: trans('user_creatable_resources', {}, 'team'),
-              options: {
-                multiple: true,
-                condensed: false,
-                inline: false,
-                choices: props.resourceTypes.reduce((acc, type) => {
-                  acc[type.name] = trans(type.name, {}, 'resource')
+              label: trans('team_create_public_directory', {}, 'team'),
+              linked: [
+                {
+                  name: 'publicDirectory',
+                  type: 'boolean',
+                  label: trans('team_directory_public_access', {}, 'team'),
+                  displayed: (team) => !!team.createPublicDirectory
+                }, {
+                  name: 'deletableDirectory',
+                  type: 'boolean',
+                  label: trans('delete_team_directory', {}, 'team'),
+                  displayed: (team) => !!team.createPublicDirectory
+                }, {
+                  name: 'defaultResource',
+                  type: 'resource',
+                  label: trans('default_resource', {}, 'team'),
+                  displayed: (team) => !!team.createPublicDirectory
+                }, {
+                  name: 'creatableResources',
+                  type: 'choice',
+                  label: trans('user_creatable_resources', {}, 'team'),
+                  displayed: (team) => !!team.createPublicDirectory,
+                  options: {
+                    multiple: true,
+                    condensed: false,
+                    inline: false,
+                    choices: props.resourceTypes.reduce((acc, type) => {
+                      acc[type.name] = trans(type.name, {}, 'resource')
 
-                  return acc
-                }, {})
-              }
+                      return acc
+                    }, {})
+                  }
+                }
+              ]
+            }
+          ]
+        }, {
+          icon: 'fa fa-fw fa-sign-in',
+          title: trans('registration'),
+          fields: [
+            {
+              name: 'registration.selfRegistration',
+              type: 'boolean',
+              label: trans('activate_self_registration'),
+              help: trans('self_registration_help', {}, 'team')
+            }, {
+              name: 'registration.selfUnregistration',
+              type: 'boolean',
+              label: trans('activate_self_unregistration'),
+              help: trans('self_unregistration_help', {}, 'team')
+            }
+          ]
+        }, {
+          icon: 'fa fa-fw fa-key',
+          title: trans('access_restrictions'),
+          fields: [
+            {
+              name: '_restrictUsers',
+              type: 'boolean',
+              label: trans('restrict_users_count'),
+              calculated: (team) => get(team, 'maxUsers') || get(team, '_restrictUsers'),
+              onChange: (value) => {
+                if (!value) {
+                  props.update('maxUsers', null)
+                }
+              },
+              linked: [
+                {
+                  name: 'maxUsers',
+                  type: 'number',
+                  label: trans('users_count'),
+                  required: true,
+                  displayed: (team) => get(team, 'maxUsers') || get(team, '_restrictUsers'),
+                  options: {
+                    min: 0
+                  }
+                }
+              ]
             }
           ]
         }
@@ -102,8 +154,10 @@ MultipleTeamForm.propTypes = {
     name: T.string,
     description: T.string,
     nbTeams: T.number,
-    selfRegistration: T.bool.isRequired,
-    selfUnregistration: T.bool.isRequired,
+    registrations: T.shape({
+      selfRegistration: T.bool.isRequired,
+      selfUnregistration: T.bool.isRequired
+    }),
     publicDirectory: T.bool.isRequired,
     deletableDirectory: T.bool.isRequired,
     maxUsers: T.number,
@@ -116,7 +170,8 @@ MultipleTeamForm.propTypes = {
   resourceTypes: T.arrayOf(T.object).isRequired,
   history: T.shape({
     push: T.func.isRequired
-  }).isRequired
+  }).isRequired,
+  update: T.func.isRequired
 }
 
 export {

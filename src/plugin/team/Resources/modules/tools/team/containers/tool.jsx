@@ -26,8 +26,10 @@ const TeamTool = withRouter(
           workspace: {
             id: workspaceId
           },
-          selfRegistration: teamParams.selfRegistration,
-          selfUnregistration: teamParams.selfUnregistration,
+          registration: {
+            selfRegistration: teamParams.selfRegistration,
+            selfUnregistration: teamParams.selfUnregistration
+          },
           publicDirectory: teamParams.publicDirectory,
           deletableDirectory: teamParams.deletableDirectory,
           creatableResources: resourceTypes.map(type => type.name)
