@@ -45,12 +45,9 @@ const roleHaveCustomPerms = (rolePerms) => {
 
           return true
         }
-
-        return false
       }
 
-      // open and download is enabled
-      return !rolePerms[permName]
+      return false
     })
 
   return 0 < customPerms.length
@@ -71,8 +68,10 @@ const hasCustomRules = (perms, workspace = null) => {
   }
 
   // checks if standard roles have custom perms (aka. other perms than `open`)
-  const standardPerms = perms.filter(rolePerm => isStandardRole(rolePerm.name, workspace))
+  const standardPerms = perms.filter(rolePerm => isStandardRole(rolePerm.name, workspace) && (!workspace || rolePerm.name !== roleWorkspace(workspace, true)))
   const roleWithCustomRules = standardPerms.filter(standardPerm => roleHaveCustomPerms(standardPerm.permissions))
+
+  console.log(roleWithCustomRules)
 
   return 0 < roleWithCustomRules.length
 }
@@ -121,26 +120,32 @@ const setSimpleAccessRule = (perms, rule, workspace = null) => {
     admin: 3
   }
 
-  return updatedPerms.map((rolePerms) => {
-    let roleLevel
-    if (rolePerms.name === roleAnonymous()) {
-      // perms for Anonymous
-      roleLevel = 0
-    } else if (rolePerms.name === roleUser()) {
-      // perms for User
-      roleLevel = 1
-    } else if (isWorkspaceRole(rolePerms.name, workspace)) {
-      // perms for Workspace roles
-      roleLevel = 2
-    } else {
-      // perms for Custom role
-      roleLevel = 1
-    }
+  return updatedPerms
+    .map((rolePerms) => {
+      if (!workspace || rolePerms.name === roleWorkspace(workspace, true)) {
+        // do not update workspace manager role
+        return rolePerms
+      }
 
-    rolePerms.permissions.open = roleLevel >= permsLevel[rule]
+      let roleLevel
+      if (rolePerms.name === roleAnonymous()) {
+        // perms for Anonymous
+        roleLevel = 0
+      } else if (rolePerms.name === roleUser()) {
+        // perms for User
+        roleLevel = 1
+      } else if (isWorkspaceRole(rolePerms.name, workspace)) {
+        // perms for Workspace roles
+        roleLevel = 2
+      } else {
+        // perms for Custom role
+        roleLevel = 1
+      }
 
-    return rolePerms
-  })
+      rolePerms.permissions.open = roleLevel >= permsLevel[rule]
+
+      return rolePerms
+    })
 }
 
 export {
