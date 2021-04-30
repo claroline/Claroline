@@ -15,6 +15,7 @@ use Bazinga\Bundle\JsTranslationBundle\BazingaJsTranslationBundle;
 use Claroline\CoreBundle\DependencyInjection\Compiler\DoctrineEntityListenerPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\DynamicConfigPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\MailingConfigPass;
+use Claroline\CoreBundle\DependencyInjection\Compiler\MessengerConfigPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\PlatformConfigPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\SessionConfigPass;
 use Claroline\CoreBundle\Installation\AdditionalInstaller;
@@ -48,6 +49,7 @@ class ClarolineCoreBundle extends DistributionPluginBundle implements Configurat
         $container->addCompilerPass(new DoctrineEntityListenerPass());
         $container->addCompilerPass(new MailingConfigPass());
         $container->addCompilerPass(new SessionConfigPass());
+        $container->addCompilerPass(new MessengerConfigPass());
     }
 
     public function supports($environment)

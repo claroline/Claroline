@@ -140,3 +140,23 @@ services:
             - '@doctrine.orm.entity_manager'
         tags:
             - { name: 'console.command', command: 'claroline:rich_texts:update' }
+
+    # Messenger
+
+    Claroline\CoreBundle\Command\Messenger\EnableAsyncCommand:
+        arguments:
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+        tags:
+            - { name: 'console.command', command: 'claroline:messenger:enable' }
+
+    Claroline\CoreBundle\Command\Messenger\DisableAsyncCommand:
+        arguments:
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+        tags:
+            - { name: 'console.command', command: 'claroline:messenger:disable' }
+
+    Claroline\CoreBundle\Command\Messenger\MessengerTransportCommand:
+        arguments:
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+        tags:
+            - { name: 'console.command', command: 'claroline:messenger:transport' }
