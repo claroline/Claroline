@@ -122,7 +122,7 @@ class MessageValidator implements ValidatorInterface
         return $error;
     }
 
-    public function getClass()
+    public static function getClass(): string
     {
         return Message::class;
     }

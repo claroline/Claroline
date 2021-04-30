@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\API\Validator;
 
 use Claroline\AppBundle\API\ValidatorInterface;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Group;
 
 class GroupValidator implements ValidatorInterface
 {
@@ -30,8 +31,8 @@ class GroupValidator implements ValidatorInterface
         ];
     }
 
-    public function getClass()
+    public static function getClass(): string
     {
-        return 'Claroline\CoreBundle\Entity\Group';
+        return Group::class;
     }
 }
