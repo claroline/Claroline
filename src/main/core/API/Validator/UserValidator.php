@@ -118,9 +118,9 @@ class UserValidator implements ValidatorInterface
         return 0 < $qb->getQuery()->getSingleScalarResult();
     }
 
-    public function getClass()
+    public static function getClass(): string
     {
-        return 'Claroline\CoreBundle\Entity\User';
+        return User::class;
     }
 
     public function getUniqueFields()

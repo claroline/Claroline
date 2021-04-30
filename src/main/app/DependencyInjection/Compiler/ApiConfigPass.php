@@ -12,7 +12,6 @@
 namespace Claroline\AppBundle\DependencyInjection\Compiler;
 
 use Claroline\AppBundle\API\TransferProvider;
-use Claroline\AppBundle\API\ValidatorProvider;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
@@ -21,7 +20,6 @@ class ApiConfigPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
-        $this->register($container, ValidatorProvider::class, 'claroline.validator');
         $this->register($container, TransferProvider::class, 'claroline.transfer.adapter');
         $this->register($container, TransferProvider::class, 'claroline.transfer.action');
     }

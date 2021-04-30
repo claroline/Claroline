@@ -72,7 +72,7 @@ class WorkspaceValidator implements ValidatorInterface
         return 0 < $qb->getQuery()->getSingleScalarResult();
     }
 
-    public function getClass()
+    public static function getClass(): string
     {
         return Workspace::class;
     }

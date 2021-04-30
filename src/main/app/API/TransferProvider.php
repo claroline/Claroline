@@ -11,7 +11,6 @@ use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 //should not be here because it's a corebundle dependency
 use Psr\Log\LoggerAwareInterface;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Translation\TranslatorInterface;
 
 class TransferProvider implements LoggerAwareInterface
 {
@@ -27,8 +26,6 @@ class TransferProvider implements LoggerAwareInterface
     private $logDir;
     /** @var SchemaProvider */
     private $schema;
-    /** @var TranslatorInterface */
-    private $translator;
 
     /** @var AdapterInterface[] */
     private $adapters = [];
@@ -40,15 +37,13 @@ class TransferProvider implements LoggerAwareInterface
         ObjectManager $om,
         SerializerProvider $serializer,
         SchemaProvider $schema,
-        string $logDir,
-        TranslatorInterface $translator
+        string $logDir
       ) {
         $this->projectDir = $projectDir;
         $this->om = $om;
         $this->serializer = $serializer;
         $this->logDir = $logDir;
         $this->schema = $schema;
-        $this->translator = $translator;
     }
 
     /**

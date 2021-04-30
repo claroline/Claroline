@@ -5,6 +5,7 @@ namespace Claroline\AppBundle\API;
 use Claroline\AppBundle\JVal\Validator;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
+use Psr\Container\ContainerInterface;
 
 class ValidatorProvider
 {
@@ -21,52 +22,32 @@ class ValidatorProvider
     /**
      * The list of registered validators in the platform.
      *
-     * @var array
+     * @var ContainerInterface
      */
-    private $validators = [];
+    private $validators;
 
-    public function __construct(ObjectManager $om, SchemaProvider $schema)
-    {
+    public function __construct(
+        ObjectManager $om,
+        ContainerInterface $validators,
+        SchemaProvider $schema
+    ) {
         $this->om = $om;
+        $this->validators = $validators;
         $this->schema = $schema;
-    }
-
-    /**
-     * Registers a new validator.
-     */
-    public function add(ValidatorInterface $validator)
-    {
-        $this->validators[$validator->getClass()] = $validator;
     }
 
     /**
      * Gets a registered validator instance.
      *
-     * @param string $class
-     *
-     * @return ValidatorInterface
-     *
      * @throws \Exception
      */
-    public function get($class)
+    public function get(string $class): ?ValidatorInterface
     {
-        if (empty($this->validators[$class])) {
+        if (!$this->validators->has($class)) {
             throw new \Exception(sprintf('No validator found for class "%s" Maybe you forgot to add the "claroline.validator" tag to your validator.', $class));
         }
 
-        return $this->validators[$class];
-    }
-
-    /**
-     * Checks if the provider has a registered validator for `class`.
-     *
-     * @param string $class
-     *
-     * @return bool
-     */
-    public function has($class)
-    {
-        return !empty($this->validators[$class]);
+        return $this->validators->get($class);
     }
 
     /**
