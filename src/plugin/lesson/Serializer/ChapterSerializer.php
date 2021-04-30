@@ -123,6 +123,7 @@ class ChapterSerializer
             'title' => $node['title'],
             'slug' => $node['slug'],
             'text' => $node['text'],
+            'poster' => $node['poster'],
             'children' => $children,
         ];
     }

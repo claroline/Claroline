@@ -106,7 +106,7 @@ class ChapterManager
 
     public function serializeChapterTree(Lesson $lesson)
     {
-        $tree = $this->entityManager->getRepository('IcapLessonBundle:Chapter')->buildChapterTree($lesson->getRoot(), 'chapter.uuid, chapter.level, chapter.title, chapter.slug, chapter.text');
+        $tree = $this->entityManager->getRepository('IcapLessonBundle:Chapter')->buildChapterTree($lesson->getRoot(), 'chapter.uuid, chapter.level, chapter.title, chapter.slug, chapter.text, chapter.poster');
 
         return $this->chapterSerializer->serializeChapterTree($tree[0]);
     }

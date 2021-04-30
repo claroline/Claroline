@@ -1,0 +1,6 @@
+# JSON API
+claro_documentation:
+    resource: "@ClarolineDocumentationBundle/Controller/"
+    type: annotation
+    options:
+        expose: true

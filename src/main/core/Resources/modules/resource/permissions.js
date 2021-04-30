@@ -71,8 +71,6 @@ const hasCustomRules = (perms, workspace = null) => {
   const standardPerms = perms.filter(rolePerm => isStandardRole(rolePerm.name, workspace) && (!workspace || rolePerm.name !== roleWorkspace(workspace, true)))
   const roleWithCustomRules = standardPerms.filter(standardPerm => roleHaveCustomPerms(standardPerm.permissions))
 
-  console.log(roleWithCustomRules)
-
   return 0 < roleWithCustomRules.length
 }
 

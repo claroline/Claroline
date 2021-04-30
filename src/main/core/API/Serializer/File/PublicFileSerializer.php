@@ -2,22 +2,30 @@
 
 namespace Claroline\CoreBundle\API\Serializer\File;
 
+use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\Manager\PlatformManager;
 use Claroline\CoreBundle\Entity\File\PublicFile;
+use Claroline\CoreBundle\Library\Utilities\FileUtilities;
 
 /**
  * @todo move me in AppBundle
  */
 class PublicFileSerializer
 {
+    /** @var PlatformManager */
+    private $platformManager;
+    /** @var FileUtilities */
     private $utilities;
 
-    public function __construct($utilities)
-    {
+    public function __construct(
+        PlatformManager $platformManager,
+        FileUtilities $utilities
+    ) {
+        $this->platformManager = $platformManager;
         $this->utilities = $utilities;
     }
 
-    /** @return string */
-    public function getClass()
+    public function getClass(): string
     {
         return PublicFile::class;
     }
@@ -27,13 +35,18 @@ class PublicFileSerializer
         return 'public_file';
     }
 
-    /**
-     * Serializes a PublicFile entity.
-     *
-     * @return array
-     */
-    public function serialize(PublicFile $file, array $options = [])
+    public function getSchema()
     {
+        return '#/main/core/publicFile.json';
+    }
+
+    public function serialize(PublicFile $file, array $options = []): array
+    {
+        $url = $file->getUrl();
+        if (in_array(Options::ABSOLUTE_URL, $options)) {
+            $url = $this->platformManager->getUrl().'/'.$url;
+        }
+
         return [
             'id' => $file->getId(),
             'type' => $file->getMimeType(),
@@ -41,31 +54,22 @@ class PublicFileSerializer
             'size' => $file->getSize(),
             'directory' => $file->getDirectoryName(), // I'm not sure this is needed
             'sourceType' => $file->getSourceType(),
-            'url' => $file->getUrl(),
+            'url' => $url,
 
             // deprecated use `type` / `name` (this is to be compliant with the js File API)
             'mimeType' => $file->getMimeType(),
             'filename' => $file->getFilename(),
-          ];
+        ];
     }
 
-    /**
-     * Deserializes data into a PublicFile into an entity.
-     *
-     * @param \stdClass $data
-     *
-     * @return PublicFile
-     */
-    public function deserialize($data, PublicFile $file = null, array $options = [])
+    public function deserialize($data, PublicFile $file = null, array $options = []): ?PublicFile
     {
-        //this is currently done in FileUtilities
+        // this is currently done in FileUtilities
+        // todo : write correctly
         if (isset($data['id'])) {
             return $this->utilities->getOneBy(['id' => $data['id']]);
         }
-    }
 
-    public function getSchema()
-    {
-        return '#/main/core/publicFile.json';
+        return null;
     }
 }

@@ -12,7 +12,7 @@ class ArrayUtils
      *
      * @throws \Exception
      */
-    public static function set(array &$object, $keys, $value)
+    public static function set(array &$object, string $keys, $value)
     {
         $keys = explode('.', $keys);
         $depth = count($keys);
@@ -31,7 +31,7 @@ class ArrayUtils
         }
     }
 
-    public static function remove(array &$object, $keys)
+    public static function remove(array &$object, string $keys)
     {
         // because sometimes there are keys with dot in it (eg. Scorm props cmi.*)
         // we check the whole key exist before starting the recursive search
@@ -60,10 +60,8 @@ class ArrayUtils
      * @param mixed  $default
      *
      * @return mixed
-     *
-     * @throws \Exception
      */
-    public static function get(array $object, $keys, $default = null)
+    public static function get(array $object, string $keys, $default = null)
     {
         // because sometimes there are keys with dot in it (eg. Scorm props cmi.*)
         // we check the whole key exist before starting the recursive search
@@ -86,28 +84,33 @@ class ArrayUtils
             return $object[$key];
         }
 
-        if (array_key_exists($key, $object)) {
-            return $default;
-        }
-
-        throw new \Exception("Key `{$keys}` doesn't exist for array keys [".implode(',', array_keys($object)).']');
+        return $default;
     }
 
     /**
      * @param array  $object - the array
      * @param string $keys   - the property path
-     *
-     * @return mixed
      */
-    public static function has(array $object, $keys)
+    public static function has(array $object, string $keys): bool
     {
-        try {
-            static::get($object, $keys);
+        // because sometimes there are keys with dot in it (eg. Scorm props cmi.*)
+        // we check the whole key exist before starting the recursive search
+        if (isset($object[$keys])) {
+            return true;
+        }
+
+        $parts = explode('.', $keys);
+        $key = array_shift($parts);
+
+        if (isset($object[$key])) {
+            if (!empty($parts) && is_array($object[$key])) {
+                return static::has($object[$key], implode('.', $parts));
+            }
 
             return true;
-        } catch (\Exception $e) {
-            return false;
         }
+
+        return false;
     }
 
     public static function getPropertiesName(array $object, $titles = [], $currentPos = null)
