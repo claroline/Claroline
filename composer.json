@@ -22,6 +22,7 @@
         "ext-gd": "*",
         "ext-intl": "*",
         "ext-mbstring": "*",
+        "ext-pdo": "*",
         "ext-pdo_mysql": "*",
         "ext-openssl": "*",
         "ext-json": "*",
@@ -146,7 +147,8 @@
             "Claroline\\AudioPlayerBundle\\": "src/plugin/audio-player",
             "Claroline\\CursusBundle\\": "src/plugin/cursus",
             "Claroline\\BookingBundle\\": "src/plugin/booking",
-            "Claroline\\BigBlueButtonBundle\\": "src/integration/big-blue-button"
+            "Claroline\\BigBlueButtonBundle\\": "src/integration/big-blue-button",
+            "Claroline\\DocumentationBundle\\": "src/plugin/documentation"
         }
     },
     "scripts": {

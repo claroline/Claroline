@@ -300,6 +300,7 @@ services:
     Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer:
         tags: [claroline.serializer]
         arguments:
+            - '@Claroline\AppBundle\Manager\PlatformManager'
             - '@Claroline\CoreBundle\Library\Utilities\FileUtilities'
 
     Claroline\CoreBundle\API\Serializer\Facet\PanelFacetSerializer:

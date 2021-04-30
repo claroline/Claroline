@@ -29,7 +29,7 @@ trait SerializerTrait
     public function sipe($prop, $setter, $data = [], $object, $trim = true)
     {
         if ($data && is_array($data)) {
-            try {
+            if (ArrayUtils::has($data, $prop)) {
                 $value = ArrayUtils::get($data, $prop);
 
                 if (is_string($value) && $trim) {
@@ -37,7 +37,6 @@ trait SerializerTrait
                 }
 
                 $object->{$setter}($value);
-            } catch (\Exception $e) {
             }
         }
     }

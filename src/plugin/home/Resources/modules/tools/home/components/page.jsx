@@ -3,30 +3,22 @@ import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
-import {PageFull} from '#/main/app/page'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
-import {getToolBreadcrumb, showToolBreadcrumb} from '#/main/core/tool/utils'
+import {ToolPage} from '#/main/core/tool/containers/page'
 
 import {getTabTitle} from '#/plugin/home/tools/home/utils'
 import {Tab as TabTypes} from '#/plugin/home/prop-types'
 import {Tabs} from '#/plugin/home/tools/home/components/tabs'
 
-// {get(props.currentTab, 'display.centerTitle') ? 'text-center' : undefined}
-
 const HomePage = props =>
-  <PageFull
+  <ToolPage
     className="home-tool"
-    showBreadcrumb={showToolBreadcrumb(props.currentContext.type, props.currentContext.data)}
-    path={[].concat(getToolBreadcrumb('home', props.currentContext.type, props.currentContext.data), props.currentTab ? [{
+    path={[].concat(props.currentTab ? [{
       id: props.currentTab.id,
       type: LINK_BUTTON,
       label: getTabTitle(props.currentContext, props.currentTab),
       target: props.basePath+props.path+'/'+props.currentTab.slug
     }] : [], props.breadcrumb || [])}
-    meta={{
-      title: `${trans('home', {}, 'tools')}${'workspace' === props.currentContext.type ? ' - ' + props.currentContext.data.code : ''}`,
-      description: get(props.currentContext, 'data.meta.description')
-    }}
 
     header={1 < props.tabs.length  ?
       <Tabs
@@ -42,7 +34,7 @@ const HomePage = props =>
     subtitle={props.subtitle}
     showTitle={get(props.currentTab, 'display.showTitle')}
     poster={props.poster || get(props.currentTab, 'poster.url')}
-    toolbar="add | edit | fullscreen more"
+    primaryAction="add"
     actions={props.currentTab ? [
       {
         name: 'edit',
@@ -80,7 +72,7 @@ const HomePage = props =>
     ].concat(props.actions) : undefined}
   >
     {props.children}
-  </PageFull>
+  </ToolPage>
 
 HomePage.propTypes = {
   path: T.string,

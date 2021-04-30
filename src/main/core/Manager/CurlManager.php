@@ -11,6 +11,10 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+
 class CurlManager
 {
     public function exec($url, $payload = null, $type = 'GET', $options = [], $autoClose = true, &$ch = null)
@@ -44,9 +48,22 @@ class CurlManager
         }
 
         $serverOutput = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
         if ($autoClose) {
             curl_close($ch);
+        }
+
+        switch ($httpCode) {
+            case 401:
+            case 403:
+                throw new AccessDeniedException($serverOutput);
+            case 404:
+                throw new NotFoundHttpException($serverOutput);
+            case 422:
+                throw new InvalidDataException($serverOutput);
+            case 500:
+                throw new \Exception($serverOutput);
         }
 
         return $serverOutput;

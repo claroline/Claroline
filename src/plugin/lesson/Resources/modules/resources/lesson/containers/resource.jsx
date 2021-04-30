@@ -2,6 +2,7 @@ import {connect} from 'react-redux'
 
 import {withRouter} from '#/main/app/router'
 import {withReducer} from '#/main/app/store/components/withReducer'
+import {selectors as resourceSelectors} from '#/main/core/resource/store'
 
 import {LessonResource as LessonResourceComponent} from '#/plugin/lesson/resources/lesson/components/resource'
 import {actions, reducer, selectors} from '#/plugin/lesson/resources/lesson/store'
@@ -10,6 +11,7 @@ const LessonResource = withRouter(
   withReducer(selectors.STORE_NAME, reducer)(
     connect(
       state => ({
+        resourceId: resourceSelectors.id(state),
         lesson: selectors.lesson(state),
         tree: selectors.treeData(state),
         invalidated: selectors.treeInvalidated(state),

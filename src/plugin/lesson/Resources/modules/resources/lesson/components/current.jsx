@@ -1,11 +1,12 @@
 import React, {Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
+import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
 import {LinkButton} from '#/main/app/buttons/link/components/button'
 import {ProgressBar} from '#/main/app/content/components/progress-bar'
 
-import {Lesson as LessonTypes} from '#/plugin/lesson/resources/lesson/prop-types'
+import {Chapter as ChapterTypes} from '#/plugin/lesson/resources/lesson/prop-types'
 
 const LessonCurrent = props => {
   const currentIndex = props.all.findIndex(chapter => props.current.id === chapter.id)
@@ -22,23 +23,33 @@ const LessonCurrent = props => {
       {props.children}
 
       <nav className="lesson-navigation">
-        {props.current.previousSlug &&
+        {!isEmpty(props.all[currentIndex - 1]) &&
           <LinkButton
             className="btn-link btn-previous"
             size="lg"
-            target={`${props.prefix}/${props.current.previousSlug}`}
+            target={`${props.prefix}/${props.all[currentIndex - 1].slug}`}
+            onClick={() => {
+              if (props.onNavigate) {
+                props.onNavigate(props.all[currentIndex - 1])
+              }
+            }}
           >
             <span className="fa fa-angle-double-left icon-with-text-right" />
             {trans('previous')}
           </LinkButton>
         }
 
-        {props.current.nextSlug &&
+        {!isEmpty(props.all[currentIndex + 1]) &&
           <LinkButton
             className="btn-link btn-next"
             primary={true}
             size="lg"
-            target={`${props.prefix}/${props.current.nextSlug}`}
+            target={`${props.prefix}/${props.all[currentIndex + 1].slug}`}
+            onClick={() => {
+              if (props.onNavigate) {
+                props.onNavigate(props.all[currentIndex + 1])
+              }
+            }}
           >
             {trans('next')}
             <span className="fa fa-angle-double-right icon-with-text-left" />
@@ -52,11 +63,12 @@ const LessonCurrent = props => {
 LessonCurrent.propTypes = {
   prefix: T.string.isRequired,
   current: T.shape(
-    LessonTypes.propTypes
+    ChapterTypes.propTypes
   ),
   all: T.arrayOf(T.shape(
-    LessonTypes.propTypes
+    ChapterTypes.propTypes
   )),
+  onNavigate: T.func,
   // the current step content
   children: T.node
 }
