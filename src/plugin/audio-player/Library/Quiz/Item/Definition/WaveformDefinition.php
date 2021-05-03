@@ -115,8 +115,8 @@ class WaveformDefinition extends AbstractDefinition
 
                 foreach ($answer as $selection) {
                     if ($selection['start'] >= $section->getStart() - $section->getStartTolerance() &&
-                        $selection['start'] <= $section->getStart() &&
-                        $selection['end'] >= $section->getEnd() &&
+                        $selection['start'] <= $section->getStart() + $section->getStartTolerance() &&
+                        $selection['end'] >= $section->getEnd() - $section->getEndTolerance() &&
                         $selection['end'] <= $section->getEnd() + $section->getEndTolerance()
                     ) {
                         $found = true;
@@ -138,8 +138,8 @@ class WaveformDefinition extends AbstractDefinition
 
                 foreach ($question->getSections() as $section) {
                     if ($selection['start'] >= $section->getStart() - $section->getStartTolerance() &&
-                        $selection['start'] <= $section->getStart() &&
-                        $selection['end'] >= $section->getEnd() &&
+                        $selection['start'] <= $section->getStart() + $section->getStartTolerance() &&
+                        $selection['end'] >= $section->getEnd() - $section->getEndTolerance() &&
                         $selection['end'] <= $section->getEnd() + $section->getEndTolerance()
                     ) {
                         $found = true;
@@ -191,8 +191,8 @@ class WaveformDefinition extends AbstractDefinition
 
                     foreach ($waveformQuestion->getSections() as $section) {
                         if ($sectionAnswer['start'] >= $section->getStart() - $section->getStartTolerance() &&
-                            $sectionAnswer['start'] <= $section->getStart() &&
-                            $sectionAnswer['end'] >= $section->getEnd() &&
+                            $sectionAnswer['start'] <= $section->getStart() + $section->getStartTolerance() &&
+                            $sectionAnswer['end'] >= $section->getEnd() - $section->getEndTolerance() &&
                             $sectionAnswer['end'] <= $section->getEnd() + $section->getEndTolerance()
                         ) {
                             $sectionId = $section->getUuid();
