@@ -1,14 +1,36 @@
 import get from 'lodash/get'
+import identity from 'lodash/identity'
 
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {showBreadcrumb} from '#/main/app/layout/utils'
+import {getApps} from '#/main/app/plugins'
 
 import {constants} from '#/main/core/tool/constants'
 
 import {route as toolRoute} from '#/main/core/tool/routing'
 import {route as workspaceRoute} from '#/main/core/workspace/routing'
 import {route as adminRoute} from '#/main/core/administration/routing'
+
+function getActions(tool, context, toolRefresher, path, currentUser) {
+  // adds default refresher actions
+  const refresher = Object.assign({
+    add: identity,
+    update: identity,
+    delete: identity
+  }, toolRefresher)
+
+  // get all actions declared for workspace
+  const actions = getApps('actions.tool')
+
+  return Promise.all(
+    // boot actions applications
+    Object.keys(actions).map(action => actions[action]())
+  ).then((loadedActions) => loadedActions
+    // generate action
+    .map(actionModule => actionModule.default(tool, context, refresher, path, currentUser))
+  )
+}
 
 /**
  * Gets the path of a tool based on its rendering context.
@@ -122,6 +144,7 @@ function showToolBreadcrumb(contextType, contextData) {
 }
 
 export {
+  getActions,
   getToolBreadcrumb,
   showToolBreadcrumb
 }

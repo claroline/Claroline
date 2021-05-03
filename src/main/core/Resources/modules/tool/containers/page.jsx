@@ -9,12 +9,13 @@ const ToolPage = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
       name: selectors.name(state),
+      basePath: selectors.path(state),
       toolData: selectors.toolData(state),
       currentContext: selectors.context(state)
     }),
     (dispatch) => ({
-      update(toolData, context) {
-        dispatch(actions.load(toolData, context))
+      reload() {
+        dispatch(actions.setLoaded(false))
       }
     }),
     undefined,

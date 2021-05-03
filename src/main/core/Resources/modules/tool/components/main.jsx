@@ -59,14 +59,15 @@ class ToolMain extends Component {
       component: null,
       styles: []
     }
+
+    this.open = this.open.bind(this)
   }
 
   componentDidMount() {
     this.loadApp().then(() => {
       if (!this.props.loaded) {
-        this.pending = makeCancelable(
-          this.props.open(this.props.toolName, this.props.toolContext)
-        )
+        // open current tool
+        this.open()
       }
     })
   }
@@ -102,12 +103,22 @@ class ToolMain extends Component {
           }
 
           // open current tool
-          this.pending = makeCancelable(
-            this.props.open(this.props.toolName, this.props.toolContext)
-          )
+          this.open()
         }
       }
     })
+  }
+
+  open() {
+    this.pending = makeCancelable(
+      this.props.open(this.props.toolName, this.props.toolContext)
+    )
+
+    this.pending.promise
+      .then(
+        () => this.pending = null,
+        () => this.pending = null
+      )
   }
 
   loadApp() {

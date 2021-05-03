@@ -38,6 +38,11 @@ registry.add('ClarolineCoreBundle', {
       'impersonation': () => { return import(/* webpackChunkName: "core-action-desktop-impersonation" */ '#/main/core/desktop/actions/impersonation') },
     },
 
+    tool: {
+      'configure'  : () => { return import(/* webpackChunkName: "core-action-tool-configure" */ '#/main/core/tool/actions/configure') },
+      'rights'     : () => { return import(/* webpackChunkName: "core-action-tool-rights" */    '#/main/core/tool/actions/rights') }
+    },
+
     resource: {
       // all resources
       'about'     : () => { return import(/* webpackChunkName: "core-action-resource-about" */       '#/main/core/resource/actions/about') },
