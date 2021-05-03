@@ -23,8 +23,8 @@ function isCorrectAnswer(solutions, start, end) {
   solutions.forEach(solution => {
     if (0 < solution.score &&
       start >= solution.section.start - solution.section.startTolerance &&
-      start <= solution.section.start &&
-      end >= solution.section.end &&
+      start <= solution.section.start + solution.section.startTolerance &&
+      end >= solution.section.end - solution.section.endTolerance &&
       end <= solution.section.end + solution.section.endTolerance
     ) {
       isCorrect = true
