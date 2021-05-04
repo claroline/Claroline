@@ -18,9 +18,7 @@ framework:
                     # implements Symfony\Component\Messenger\Retry\RetryStrategyInterface
                     # service: null
 
-            routing:
-                'Claroline\MessageBundle\Entity\Message': async
-                'Claroline\CoreBundle\Entity\Task\ScheduledTask': async
-                'Claroline\CoreBundle\Entity\ForumNotification': async
+        routing:
+            '*': async
 
-            failed: '%env(MESSENGER_TRANSPORT_DSN)%?queue_name=failed'
+        failed: '%env(MESSENGER_TRANSPORT_DSN)%?queue_name=failed'

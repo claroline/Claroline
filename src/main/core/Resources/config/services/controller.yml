@@ -342,6 +342,7 @@ services:
             - '@Claroline\AppBundle\API\FinderProvider'
             - '@security.authorization_checker'
             - '@security.token_storage'
+            - '@messenger.default_bus'
 
     Claroline\CoreBundle\Controller\APINew\Log\MessageLogController:
         parent: Claroline\AppBundle\Controller\AbstractSecurityController

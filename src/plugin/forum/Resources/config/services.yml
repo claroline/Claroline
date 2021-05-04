@@ -6,3 +6,4 @@ imports:
     - { resource: services/listener.yml }
     - { resource: services/crud.yml }
     - { resource: services/controller.yml }
+    - { resource: services/messenger.yml }

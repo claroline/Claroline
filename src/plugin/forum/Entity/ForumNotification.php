@@ -1,8 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Entity;
-
-use Claroline\ForumBundle\Entity\Message;
+namespace Claroline\ForumBundle\Entity;
 
 class ForumNotification
 {

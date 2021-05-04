@@ -9,17 +9,17 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Messenger;
+namespace Claroline\ForumBundle\Messenger;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\ForumNotification;
 use Claroline\CoreBundle\Library\RoutingHelper;
 use Claroline\CoreBundle\Manager\Template\TemplateManager;
+use Claroline\ForumBundle\Entity\ForumNotification;
 use Claroline\ForumBundle\Entity\Validation\User as UserValidation;
 use Claroline\MessageBundle\Manager\MessageManager;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
-class ForumNotificationHandler implements MessageHandlerInterface
+class SendForumNotification implements MessageHandlerInterface
 {
     private $messageManager;
     private $templateManager;

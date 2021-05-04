@@ -14,7 +14,6 @@ namespace Claroline\CoreBundle\DependencyInjection\Compiler;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Reference;
 
 class MessengerConfigPass implements CompilerPassInterface
 {
@@ -22,9 +21,9 @@ class MessengerConfigPass implements CompilerPassInterface
     {
         /** @var PlatformConfigurationHandler $platformConfig */
         $platformConfig = $container->get(PlatformConfigurationHandler::class);
-        
-        if($platformConfig->getParameter('job_queue.enabled')) {
-            switch ($platformConfig->getParameter('job_queue.transport')){
+
+        if ($platformConfig->getParameter('job_queue.enabled')) {
+            switch ($platformConfig->getParameter('job_queue.transport')) {
                 case 'doctrine':
                     $platformConfig->setParameter('job_queue.dsn', 'doctrine://default');
                     break;

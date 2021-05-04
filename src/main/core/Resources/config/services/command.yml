@@ -154,9 +154,3 @@ services:
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
         tags:
             - { name: 'console.command', command: 'claroline:messenger:disable' }
-
-    Claroline\CoreBundle\Command\Messenger\MessengerTransportCommand:
-        arguments:
-            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-        tags:
-            - { name: 'console.command', command: 'claroline:messenger:transport' }

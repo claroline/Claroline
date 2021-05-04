@@ -4,9 +4,9 @@ namespace Claroline\ForumBundle\Crud;
 
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\ForumNotification;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\ForumBundle\Entity\Forum;
+use Claroline\ForumBundle\Entity\ForumNotification;
 use Claroline\ForumBundle\Entity\Message;
 use Claroline\ForumBundle\Entity\Validation\User as UserValidation;
 use Claroline\ForumBundle\Manager\ForumManager;
