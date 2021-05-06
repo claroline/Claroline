@@ -19,6 +19,6 @@ framework:
                     # service: null
 
         routing:
-            '*': async
+            'Claroline\AppBundle\Entity\AsyncInterface': async
 
         failed: '%env(MESSENGER_TRANSPORT_DSN)%?queue_name=failed'
