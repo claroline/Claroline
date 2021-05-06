@@ -10,6 +10,7 @@ use Claroline\AppBundle\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\Workspace\Transfer\Tools\ToolImporterInterface;
 use Claroline\HomeBundle\Entity\HomeTab;
+use Claroline\HomeBundle\Manager\HomeManager;
 use Psr\Log\LoggerAwareInterface;
 
 class Home implements ToolImporterInterface, LoggerAwareInterface
@@ -22,31 +23,26 @@ class Home implements ToolImporterInterface, LoggerAwareInterface
     private $finder;
     /** @var Crud */
     private $crud;
+    /** @var HomeManager */
+    private $manager;
 
     public function __construct(
-          SerializerProvider $serializer,
-          FinderProvider $finder,
-          Crud $crud
-      ) {
+        SerializerProvider $serializer,
+        FinderProvider $finder,
+        Crud $crud,
+        HomeManager $manager
+    ) {
         $this->serializer = $serializer;
         $this->finder = $finder;
         $this->crud = $crud;
+        $this->manager = $manager;
     }
 
     public function serialize(Workspace $workspace, array $options): array
     {
-        $tabs = $this->finder->search(
-          HomeTab::class,
-          ['filters' => ['workspace' => $workspace->getUuid()]],
-          $options
-        );
-
-        // but why ? finder should never give you an empty row
-        $tabs = array_filter($tabs['data'], function ($data) {
-            return [] !== $data;
-        });
-
-        return ['tabs' => $tabs];
+        return [
+            'tabs' => $this->manager->getWorkspaceTabs($workspace, $options),
+        ];
     }
 
     public function prepareImport(array $orderedToolData, array $data): array
@@ -57,9 +53,10 @@ class Home implements ToolImporterInterface, LoggerAwareInterface
     public function deserialize(array $data, Workspace $workspace, array $options, FileBag $bag)
     {
         foreach ($data['tabs'] as $tab) {
-            // do not update tabs set by the administration tool
-            $new = $this->crud->create(HomeTab::class, $tab, $options);
+            $new = new HomeTab();
             $new->setWorkspace($workspace);
+
+            $this->crud->create($new, $tab, $options);
         }
     }
 }

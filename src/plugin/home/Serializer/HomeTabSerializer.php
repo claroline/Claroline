@@ -111,7 +111,7 @@ class HomeTabSerializer
             ],
             'user' => $homeTab->getUser() ? $this->userSerializer->serialize($homeTab->getUser(), [Options::SERIALIZE_MINIMAL]) : null,
 
-            // TODO : should no longer be exposed here (still required by update)
+            // TODO : should no longer be exposed here (still required by update and ws import)
             'children' => array_map(function (HomeTab $child) use ($options) {
                 return $this->serialize($child, $options);
             }, $homeTab->getChildren()->toArray()),
@@ -228,7 +228,7 @@ class HomeTabSerializer
         }
 
         // Set children tabs
-        // TODO : should no longer be exposed here (still required by update)
+        // TODO : should no longer be exposed here (still required by update and ws import)
         if (isset($data['children'])) {
             /** @var HomeTab[] $currentChildren */
             $currentChildren = $homeTab->getChildren()->toArray();
@@ -237,7 +237,7 @@ class HomeTabSerializer
             // updates tabs
             foreach ($data['children'] as $childIndex => $childData) {
                 $child = null;
-                if ($childData['id']) {
+                if ($childData['id'] && !in_array(Options::REFRESH_UUID, $options)) {
                     $child = $this->om->getRepository(HomeTab::class)->findOneBy(['uuid' => $childData['id']]);
                 }
 
@@ -246,9 +246,10 @@ class HomeTabSerializer
                 }
 
                 $child->setOrder($childIndex);
+                $child->setWorkspace($homeTab->getWorkspace());
                 $homeTab->addChild($child);
 
-                $this->deserialize($childData, $child, $options);
+                $child = $this->deserialize($childData, $child, $options);
                 $ids[] = $child->getUuid();
             }
 
