@@ -106,10 +106,7 @@ actions.selfRegister = (workspace) => ({
     request: {
       method: 'PUT'
     },
-    success: (response, dispatch) => {
-      dispatch(actions.setLoaded(false))
-      dispatch(actions.fetch(workspace.slug))
-    }
+    success: (response, dispatch) => dispatch(actions.reload(workspace))
   }
 })
 

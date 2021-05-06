@@ -1,9 +1,8 @@
-/* global window */
-
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {withRouter} from '#/main/app/router'
+import {param} from '#/main/app/config'
 import {PageSimple} from '#/main/app/page/components/simple'
 
 import {constants} from '#/main/app/security/login/constants'
@@ -20,7 +19,12 @@ const LoginPage = (props) =>
         if (response.redirect) {
           switch (response.redirect.type) {
             case constants.LOGIN_REDIRECT_LAST:
-              props.history.goBack()
+              if (document.referrer && -1 !== document.referrer.indexOf(param('serverUrl'))) {
+                // only redirect to previous url if it's part of the claroline platform
+                props.history.goBack()
+              } else {
+                props.history.push('/desktop')
+              }
               break
             case constants.LOGIN_REDIRECT_WORKSPACE:
               props.history.push(workspaceRoute(response.redirect.data))
