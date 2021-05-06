@@ -63,6 +63,8 @@ class WorkspaceMain extends Component {
     }
 
     if (!isEmpty(this.props.accessErrors)) {
+      const workspace = this.props.workspace
+
       return (
         <WorkspaceRestrictions
           errors={this.props.accessErrors}
@@ -70,10 +72,10 @@ class WorkspaceMain extends Component {
           authenticated={this.props.authenticated}
           managed={this.props.managed}
           workspace={this.props.workspace}
-          checkAccessCode={(code) => this.props.checkAccessCode(this.props.workspace, code)}
+          checkAccessCode={(code) => this.props.checkAccessCode(workspace, code)}
           platformSelfRegistration={this.props.platformSelfRegistration}
-          selfRegister={() => this.props.selfRegister(this.props.workspace)}
-          reload={() => this.props.reload(this.props.workspace)}
+          selfRegister={() => this.props.selfRegister(workspace)}
+          reload={() => this.props.reload(workspace)}
         />
       )
     }

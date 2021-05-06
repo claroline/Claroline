@@ -4,6 +4,7 @@ import get from 'lodash/get'
 
 import {withRouter}from '#/main/app/router'
 import {trans} from '#/main/app/intl/translation'
+import {param} from '#/main/app/config'
 import {PageFull} from '#/main/app/page/components/full'
 
 import {route as workspaceRoute} from '#/main/core/workspace/routing'
@@ -20,7 +21,13 @@ const HomeRegistrationComponent = (props) =>
         if (get(response, 'user') && get(response, 'redirect')) {
           switch (get(response, 'redirect.type')) {
             case constants.LOGIN_REDIRECT_LAST:
-              props.history.goBack()
+              if (document.referrer && -1 !== document.referrer.indexOf(param('serverUrl'))) {
+                // only redirect to previous url if it's part of the claroline platform
+                props.history.goBack()
+              } else {
+                props.history.push('/desktop')
+              }
+
               break
             case constants.LOGIN_REDIRECT_WORKSPACE:
               props.history.push(workspaceRoute(response.redirect.data))
