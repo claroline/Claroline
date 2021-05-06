@@ -4,6 +4,7 @@ services:
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\AppBundle\API\FinderProvider'
             - '@Claroline\AppBundle\API\Crud'
+            - '@Claroline\HomeBundle\Manager\HomeManager'
         calls:
             - setLogger: [ '@logger' ]
 

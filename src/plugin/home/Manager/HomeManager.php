@@ -31,7 +31,7 @@ class HomeManager
     /**
      * Get platform home tabs.
      */
-    public function getHomeTabs(): array
+    public function getHomeTabs(array $options = []): array
     {
         $tabs = $this->finder->searchEntities(HomeTab::class, [
             'filters' => [
@@ -39,20 +39,20 @@ class HomeManager
             ],
         ]);
 
-        return $this->formatTabs($tabs['data']);
+        return $this->formatTabs($tabs['data'], $options);
     }
 
     /**
      * Get user desktop tabs (owns + commons).
      */
-    public function getDesktopTabs(User $user = null): array
+    public function getDesktopTabs(User $user = null, array $options = []): array
     {
         // generate the final list of tabs
-        $tabs = $this->getCommonDesktopTabs();
+        $tabs = $this->getCommonDesktopTabs($options);
         if ($user) {
             $tabs = array_merge(
                 $tabs,
-                $this->getUserDesktopTabs($user)
+                $this->getUserDesktopTabs($user, $options)
             );
         }
 
@@ -67,7 +67,7 @@ class HomeManager
     /**
      * Get user desktop own tabs.
      */
-    public function getUserDesktopTabs(User $user): array
+    public function getUserDesktopTabs(User $user, array $options = []): array
     {
         $tabs = $this->finder->searchEntities(HomeTab::class, [
             'filters' => [
@@ -76,13 +76,13 @@ class HomeManager
             ],
         ]);
 
-        return $this->formatTabs($tabs['data']);
+        return $this->formatTabs($tabs['data'], $options);
     }
 
     /**
      * Get common desktop home tabs.
      */
-    public function getCommonDesktopTabs(): array
+    public function getCommonDesktopTabs(array $options = []): array
     {
         $tabs = $this->finder->searchEntities(HomeTab::class, [
             'filters' => [
@@ -90,13 +90,13 @@ class HomeManager
             ],
         ]);
 
-        return $this->formatTabs($tabs['data']);
+        return $this->formatTabs($tabs['data'], $options);
     }
 
     /**
      * Get workspace home tabs.
      */
-    public function getWorkspaceTabs(Workspace $workspace): array
+    public function getWorkspaceTabs(Workspace $workspace, array $options = []): array
     {
         $tabs = $this->finder->searchEntities(HomeTab::class, [
             'filters' => [
@@ -105,13 +105,13 @@ class HomeManager
             ],
         ]);
 
-        return $this->formatTabs($tabs['data']);
+        return $this->formatTabs($tabs['data'], $options);
     }
 
     /**
      * Get administration tabs.
      */
-    public function getAdministrationTabs(): array
+    public function getAdministrationTabs(array $options = []): array
     {
         $tabs = $this->finder->searchEntities(HomeTab::class, [
             'filters' => [
@@ -119,14 +119,14 @@ class HomeManager
             ],
         ]);
 
-        return $this->formatTabs($tabs['data']);
+        return $this->formatTabs($tabs['data'], $options);
     }
 
     /**
      * Create a tree from flatten tabs and exclude tabs with no access.
      * It's not done in finder nor serializer because of the complexity of access rules.
      */
-    private function formatTabs(array $tabs): array
+    private function formatTabs(array $tabs, array $options = []): array
     {
         $roots = [];
         $children = [];
@@ -151,18 +151,18 @@ class HomeManager
             }
         }
 
-        return array_map(function (HomeTab $root) use ($children) {
-            return $this->formatTab($root, $children);
+        return array_map(function (HomeTab $root) use ($children, $options) {
+            return $this->formatTab($root, $children, $options);
         }, $roots);
     }
 
-    private function formatTab(HomeTab $tab, array $allChildren = []): array
+    private function formatTab(HomeTab $tab, array $allChildren = [], array $options = []): array
     {
-        $serialized = $this->serializer->serialize($tab);
+        $serialized = $this->serializer->serialize($tab, $options);
         $children = [];
         if (!empty($allChildren[$tab->getUuid()])) {
-            $children = array_map(function (HomeTab $child) use ($allChildren) {
-                return $this->formatTab($child, $allChildren);
+            $children = array_map(function (HomeTab $child) use ($allChildren, $options) {
+                return $this->formatTab($child, $allChildren, $options);
             }, $allChildren[$tab->getUuid()]);
         }
 
