@@ -5,6 +5,7 @@ import {trans} from '#/main/app/intl/translation'
 import {FormData} from '#/main/app/content/form/containers/data'
 
 import {EventForm as BaseEventForm} from '#/plugin/agenda/event/containers/form'
+import {EventParticipants} from '#/plugin/agenda/events/event/containers/participants'
 
 const EventForm = (props) =>
   <BaseEventForm
@@ -70,25 +71,33 @@ const EventForm = (props) =>
               name: 'display.color',
               type: 'color',
               label: trans('color')
-            }
-          ]
-        }, {
-          icon: 'fa fa-fw fa-user',
-          title: trans('participants'),
-          fields: [
-            {
-              name: 'participants',
-              type: 'users',
-              hideLabel: true,
-              label: trans('users')
+            }, {
+              name: 'invitationTemplate',
+              type: 'template',
+              label: trans('event_invitation', {}, 'template'),
+              options: {
+                picker: {
+                  filters: [{property: 'typeName', value: 'event_invitation', locked: true}]
+                }
+              }
             }
           ]
         }
       ]}
-    />
+    >
+      <EventParticipants
+        isNew={props.isNew}
+        eventId={props.event.id}
+        canEdit={true}
+      />
+    </FormData>
   </BaseEventForm>
 
 EventForm.propTypes = {
+  isNew: T.bool.isRequired,
+  event: T.shape({
+    id: T.string
+  }),
   name: T.string.isRequired,
   update: T.func.isRequired,
   onSave: T.func

@@ -3,9 +3,6 @@
     "all_day": "the whole day",
     "event": "Event",
     "events": "Events",
-    "remove_event_confirm": "Are you sure you want to remove this event ?",
-    "send_message_content": "You have received an invitation to an event from %Sender%. This event will take place from %Start% to %End% : %Description%.<br><a href=\"%JoinAction%\" class=\"btn btn-success\">Participate</a> <a href=\"%MaybeAction%\" class=\"btn btn-primary\">Maybe</a> <a href=\"%ResignAction%\" class=\"btn btn-danger\">Do not participate</a>",
-    "send_message_object": "Invitation to an event : %EventName%",
     "task": "Task",
     "tasks": "Tasks",
     "display_modes": "View modes",
@@ -23,5 +20,9 @@
     "agendas": "Agendas",
     "my_agenda": "My agenda",
     "online_event": "Online event",
-    "event_loading": "We are loading the event..."
+    "event_loading": "We are loading the event...",
+    "event_add_participants_help": "You will be able to add participants once the event is created.",
+    "accept_invitation": "I will participate",
+    "accept_maybe_invitation": "I might participate",
+    "decline_invitation": "I will not participate"
 }

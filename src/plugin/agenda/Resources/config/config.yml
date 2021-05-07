@@ -15,3 +15,17 @@ plugin:
           type: list
           context: [workspace, desktop, home]
           tags: [event]
+
+    templates:
+        - name: event_invitation
+          placeholders:
+              - event_name
+              - event_start
+              - event_end
+              - event_description
+              - event_poster
+              - event_location_name
+              - event_location_address
+              - event_join_url
+              - event_maybe_url
+              - event_decline_url

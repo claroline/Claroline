@@ -24,6 +24,7 @@ use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Psr\Log\LoggerAwareInterface;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class TransferManager implements LoggerAwareInterface
 {
@@ -55,16 +56,17 @@ class TransferManager implements LoggerAwareInterface
      * TransferManager constructor.
      */
     public function __construct(
-      ObjectManager $om,
-      StrictDispatcher $dispatcher,
-      TempFileManager $tempFileManager,
-      SerializerProvider $serializer,
-      OrderedToolTransfer $ots,
-      FinderProvider $finder,
-      Crud $crud,
-      TokenStorageInterface $tokenStorage,
-      FileUtilities $fileUts,
-      LogListener $logListener
+        ObjectManager $om,
+        StrictDispatcher $dispatcher,
+        TempFileManager $tempFileManager,
+        SerializerProvider $serializer,
+        OrderedToolTransfer $ots,
+        FinderProvider $finder,
+        Crud $crud,
+        TokenStorageInterface $tokenStorage,
+        FileUtilities $fileUts,
+        LogListener $logListener,
+        AuthorizationCheckerInterface $authorization
     ) {
         $this->om = $om;
         $this->dispatcher = $dispatcher;
@@ -76,6 +78,7 @@ class TransferManager implements LoggerAwareInterface
         $this->ots = $ots;
         $this->fileUts = $fileUts;
         $this->logListener = $logListener;
+        $this->authorization = $authorization;
     }
 
     /**

@@ -12,8 +12,8 @@
 namespace Claroline\CoreBundle\Event\Workspace;
 
 /**
- * Event dispatched when a workspace is opened.
+ * Event dispatched when a workspace is closed.
  */
-class OpenWorkspaceEvent extends AbstractWorkspaceEvent
+class CloseWorkspaceEvent extends AbstractWorkspaceEvent
 {
 }
