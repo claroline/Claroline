@@ -11,7 +11,6 @@
 
 namespace Claroline\MessageBundle\Entity;
 
-use Claroline\AppBundle\Entity\AsyncInterface;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\User;
@@ -20,7 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/***
+/**
  * @ORM\Entity()
  * @ORM\Table(
  *     name="claro_message",
@@ -31,7 +30,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * )
  * @Gedmo\Tree(type="nested")
  */
-class Message implements AsyncInterface
+class Message
 {
     use Id;
     use Uuid;

@@ -11,38 +11,43 @@
 
 namespace Claroline\CoreBundle\Messenger;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Task\ScheduledTask;
 use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\Task\ScheduledTaskManager;
 use Claroline\MessageBundle\Manager\MessageManager;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
-class ScheduledTaskHandler implements MessageHandlerInterface
+class ExecuteScheduledTask implements MessageHandlerInterface
 {
     private $messageManager;
     private $taskManager;
     private $mailManager;
+    private $objectManager;
 
     public function __construct(
         MessageManager $messageManager,
         ScheduledTaskManager $taskManager,
-        MailManager $mailManager
+        MailManager $mailManager,
+        ObjectManager $objectManager
     ) {
         $this->messageManager = $messageManager;
         $this->taskManager = $taskManager;
         $this->mailManager = $mailManager;
+        $this->objectManager = $objectManager;
     }
 
-    public function __invoke(ScheduledTask $task)
+    public function __invoke(ScheduledTaskMessage $scheduledTaskMessage)
     {
+        $task = $this->objectManager->getRepository(ScheduledTask::class)->find($scheduledTaskMessage->getTaskId());
+
         $data = $task->getData();
         $users = $task->getUsers();
         $object = isset($data['object']) ? $data['object'] : null;
         $content = isset($data['content']) ? $data['content'] : null;
 
         if (!empty($users) && !empty($object) && !empty($content)) {
-
-            if ($task->getType() === 'message') {
+            if ('message' === $task->getType()) {
                 $message = $this->messageManager->create($content, $object, $users);
                 $this->messageManager->send($message);
             } else {

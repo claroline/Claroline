@@ -11,11 +11,10 @@
 
 namespace Claroline\CoreBundle\Messenger;
 
-use Claroline\MessageBundle\Entity\Message;
 use Claroline\MessageBundle\Manager\MessageManager;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
-class MessageNotificationHandler implements MessageHandlerInterface
+class SendMessage implements MessageHandlerInterface
 {
     private $messageManager;
 
@@ -26,6 +25,6 @@ class MessageNotificationHandler implements MessageHandlerInterface
 
     public function __invoke(Message $message)
     {
-        $this->messageManager->send($message);
+        $this->messageManager->send($message->getMessageData());
     }
 }

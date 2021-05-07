@@ -9,12 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\AppBundle\Entity;
+namespace Claroline\AppBundle\Messenger\Message;
 
 /**
  * Classes implementing this interface will
  * subscribe to the asynchronous transport.
  */
-interface AsyncInterface
+interface AsyncMessageInterface
 {
 }

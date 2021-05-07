@@ -48,7 +48,7 @@ class SecurityLogController extends AbstractSecurityController
     /**
      * @Route("/list/current", name="apiv2_logs_security_list_current", methods={"GET"})
      */
-    public function userLogSecurtiyAction(Request $request): JsonResponse
+    public function userLogSecurityAction(Request $request): JsonResponse
     {
         if (!$this->authorization->isGranted('IS_AUTHENTICATED_FULLY')) {
             throw new AccessDeniedException();
@@ -56,6 +56,7 @@ class SecurityLogController extends AbstractSecurityController
 
         $user = $this->tokenStorage->getToken()->getUser();
 
+        $query = $request->query->all();
         $query['hiddenFilters'] = [
             'user' => $user->getUuid(),
         ];

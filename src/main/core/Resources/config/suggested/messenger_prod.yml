@@ -3,7 +3,7 @@ framework:
         failure_transport: failed
         transports:
             async:
-                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                dsn: '%messenger.dsn%'
 
                 # default configuration
                 retry_strategy:
@@ -19,6 +19,6 @@ framework:
                     # service: null
 
         routing:
-            'Claroline\AppBundle\Entity\AsyncInterface': async
+            'Claroline\AppBundle\Message\AsyncInterface': async
 
-        failed: '%env(MESSENGER_TRANSPORT_DSN)%?queue_name=failed'
+        failed: 'doctrine://default?queue_name=failed'

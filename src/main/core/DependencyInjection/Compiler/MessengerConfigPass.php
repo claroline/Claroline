@@ -23,19 +23,9 @@ class MessengerConfigPass implements CompilerPassInterface
         $platformConfig = $container->get(PlatformConfigurationHandler::class);
 
         if ($platformConfig->getParameter('job_queue.enabled')) {
-            switch ($platformConfig->getParameter('job_queue.transport')) {
-                case 'doctrine':
-                    $platformConfig->setParameter('job_queue.dsn', 'doctrine://default');
-                    break;
-                case 'redis':
-                    $platformConfig->setParameter(
-                        'job_queue.dsn',
-                        'redis://password@localhost:6379?auto_setup=true&dbindex=1'
-                    );
-                    break;
-            }
+            $container->setParameter('messenger.dsn', 'doctrine://default');
         } else {
-            $platformConfig->setParameter('job_queue.dsn', 'sync://');
+            $container->setParameter('messenger.dsn', 'sync://');
         }
     }
 }

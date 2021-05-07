@@ -14,7 +14,7 @@ namespace Claroline\ForumBundle\Messenger;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\RoutingHelper;
 use Claroline\CoreBundle\Manager\Template\TemplateManager;
-use Claroline\ForumBundle\Entity\ForumNotification;
+use Claroline\ForumBundle\Entity\Message;
 use Claroline\ForumBundle\Entity\Validation\User as UserValidation;
 use Claroline\MessageBundle\Manager\MessageManager;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
@@ -40,7 +40,10 @@ class SendForumNotification implements MessageHandlerInterface
 
     public function __invoke(ForumNotification $forumNotification)
     {
-        $message = $forumNotification->getMessage();
+        $message = $this->om->getRepository(Message::class)->findOneBy([
+            'uuid' => $forumNotification->getMessageUuid(),
+        ]);
+
         $subject = $message->getSubject();
         $forum = $subject->getForum();
 

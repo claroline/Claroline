@@ -9,21 +9,20 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\ForumBundle\Entity;
+namespace Claroline\CoreBundle\Messenger;
 
-use Claroline\AppBundle\Entity\AsyncInterface;
+use Claroline\MessageBundle\Entity\Message as MessageData;
 
-class ForumNotification implements AsyncInterface
+class Message
 {
-    /** @var Message */
     private $message;
 
-    public function __construct(Message $message)
+    public function __construct(MessageData $message)
     {
         $this->message = $message;
     }
 
-    public function getMessage(): Message
+    public function getMessageData(): MessageData
     {
         return $this->message;
     }

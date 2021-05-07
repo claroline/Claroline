@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Entity\Task;
 
-use Claroline\AppBundle\Entity\AsyncInterface;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -23,7 +22,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Task\ScheduledTaskRepository")
  * @ORM\Table(name="claro_scheduled_task")
  */
-class ScheduledTask implements AsyncInterface
+class ScheduledTask
 {
     /**
      * @ORM\Id

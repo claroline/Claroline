@@ -6,10 +6,10 @@ use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\ForumBundle\Entity\Forum;
-use Claroline\ForumBundle\Entity\ForumNotification;
 use Claroline\ForumBundle\Entity\Message;
 use Claroline\ForumBundle\Entity\Validation\User as UserValidation;
 use Claroline\ForumBundle\Manager\ForumManager;
+use Claroline\ForumBundle\Messenger\ForumNotification;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -88,7 +88,7 @@ class MessageCrud
         /** @var Message $message */
         $message = $event->getObject();
 
-        $this->messageBus->dispatch(new ForumNotification($message));
+        $this->messageBus->dispatch(new ForumNotification($message->getUuid()));
 
         return $message;
     }

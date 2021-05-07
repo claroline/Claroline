@@ -45,6 +45,7 @@ use Claroline\CoreBundle\Entity\Facet\FieldFacetChoice;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Messenger\Message;
 use Claroline\CoreBundle\Repository\User\UserRepository;
 use Claroline\CoreBundle\Security\Collection\ResourceCollection;
 use Claroline\MessageBundle\Manager\MessageManager;
@@ -536,7 +537,7 @@ class ClacoFormManager implements LoggerAwareInterface
                         'clacoform'
                     );
                     $message = $this->messageManager->create($content, $object, $managers);
-                    $this->messageBus->dispatch($message);
+                    $this->messageBus->dispatch(new Message($message));
                 }
             }
         }
@@ -556,7 +557,7 @@ class ClacoFormManager implements LoggerAwareInterface
                         'clacoform'
                     );
                     $message = $this->messageManager->create($content, $object, $managers);
-                    $this->messageBus->dispatch($message);
+                    $this->messageBus->dispatch(new Message($message));
                 }
             }
         }
@@ -576,7 +577,7 @@ class ClacoFormManager implements LoggerAwareInterface
                         'clacoform'
                     );
                     $message = $this->messageManager->create($content, $object, $managers);
-                    $this->messageBus->dispatch($message);
+                    $this->messageBus->dispatch(new Message($message));
                 }
             }
         }
@@ -617,7 +618,7 @@ class ClacoFormManager implements LoggerAwareInterface
                     '</a><br><br>';
 
                 $message = $this->messageManager->create($content, $object, $receivers);
-                $this->messageBus->dispatch($message);
+                $this->messageBus->dispatch(new Message($message));
             }
         }
     }
