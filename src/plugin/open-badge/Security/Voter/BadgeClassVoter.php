@@ -21,7 +21,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class BadgeClassVoter extends AbstractVoter
 {
-    const GRANT = 'grant';
+    const GRANT = 'GRANT';
 
     private $om;
 
@@ -96,6 +96,6 @@ class BadgeClassVoter extends AbstractVoter
 
     public function getSupportedActions()
     {
-        return [self::OPEN, self::CREATE, self::EDIT, self::DELETE, self::PATCH];
+        return [self::OPEN, self::CREATE, self::ADMINISTRATE, self::EDIT, self::DELETE, self::PATCH, self::GRANT];
     }
 }
