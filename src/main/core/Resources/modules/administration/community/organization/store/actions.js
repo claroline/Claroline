@@ -10,8 +10,14 @@ import {Organization as OrganizationTypes} from '#/main/core/user/prop-types'
 export const actions = {}
 
 actions.open = (formName, id = null, defaultProps = {}) => (dispatch) => {
+  // invalidate embedded lists
+  dispatch(listActions.invalidateData(baseSelectors.STORE_NAME+'.organizations.current.groups'))
+  dispatch(listActions.invalidateData(baseSelectors.STORE_NAME+'.organizations.current.users'))
+  dispatch(listActions.invalidateData(baseSelectors.STORE_NAME+'.organizations.current.managers'))
+  dispatch(listActions.invalidateData(baseSelectors.STORE_NAME+'.organizations.current.workspaces'))
+
   if (id) {
-    dispatch({
+    return dispatch({
       [API_REQUEST]: {
         url: ['apiv2_organization_get', {id}],
         success: (response, dispatch) => {
@@ -19,10 +25,9 @@ actions.open = (formName, id = null, defaultProps = {}) => (dispatch) => {
         }
       }
     })
-  } else {
-    defaultProps = merge(defaultProps, OrganizationTypes.defaultProps)
-    dispatch(formActions.resetForm(formName, defaultProps, true))
   }
+
+  return dispatch(formActions.resetForm(formName, merge(defaultProps, OrganizationTypes.defaultProps), true))
 }
 
 actions.addUsers = (id, users) => ({

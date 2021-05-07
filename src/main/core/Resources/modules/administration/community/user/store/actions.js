@@ -11,17 +11,22 @@ export const USER_COMPARE = 'USER_COMPARE'
 
 export const actions = {}
 
-actions.open = (formName, id = null) => {
+actions.open = (formName, id = null) => (dispatch) => {
+  // invalidate embedded lists
+  dispatch(listActions.invalidateData(baseSelectors.STORE_NAME+'.users.current.groups'))
+  dispatch(listActions.invalidateData(baseSelectors.STORE_NAME+'.users.current.organizations'))
+  dispatch(listActions.invalidateData(baseSelectors.STORE_NAME+'.users.current.roles'))
+
   if (id) {
-    return {
+    return dispatch({
       [API_REQUEST]: {
         url: ['apiv2_user_get', {id}],
-        success: (response, dispatch) => dispatch(formActions.resetForm(formName, response, false))
+        success: (response) => dispatch(formActions.resetForm(formName, response, false))
       }
-    }
+    })
   }
 
-  return formActions.resetForm(formName, UserTypes.defaultProps, true)
+  return dispatch(formActions.resetForm(formName, UserTypes.defaultProps, true))
 }
 
 actions.close = (formName) => formActions.resetForm(formName)

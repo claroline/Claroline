@@ -10,8 +10,12 @@ import {Role as RoleTypes} from '#/main/core/user/prop-types'
 export const actions = {}
 
 actions.open = (formName, id = null) => (dispatch) => {
+  // invalidate embedded lists
+  dispatch(listActions.invalidateData(baseSelectors.STORE_NAME+'.roles.current.groups'))
+  dispatch(listActions.invalidateData(baseSelectors.STORE_NAME+'.roles.current.users'))
+
   if (id) {
-    dispatch({
+    return dispatch({
       [API_REQUEST]: {
         url: ['apiv2_role_get', {id}],
         silent: true,
@@ -20,9 +24,9 @@ actions.open = (formName, id = null) => (dispatch) => {
         }
       }
     })
-  } else {
-    dispatch(formActions.resetForm(formName, RoleTypes.defaultProps, true))
   }
+
+  return dispatch(formActions.resetForm(formName, RoleTypes.defaultProps, true))
 }
 
 actions.addUsers = (id, users) => ({

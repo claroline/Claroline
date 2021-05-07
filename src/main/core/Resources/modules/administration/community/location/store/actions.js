@@ -10,8 +10,13 @@ import {Location as LocationTypes} from '#/main/core/user/prop-types'
 export const actions = {}
 
 actions.open = (formName, id = null) => (dispatch) => {
+  // invalidate embedded lists
+  dispatch(listActions.invalidateData(baseSelectors.STORE_NAME+'.locations.current.groups'))
+  dispatch(listActions.invalidateData(baseSelectors.STORE_NAME+'.locations.current.organizations'))
+  dispatch(listActions.invalidateData(baseSelectors.STORE_NAME+'.locations.current.users'))
+
   if (id) {
-    dispatch({
+    return dispatch({
       [API_REQUEST]: {
         url: ['apiv2_location_get', {id}],
         success: (response, dispatch) => {
@@ -19,9 +24,9 @@ actions.open = (formName, id = null) => (dispatch) => {
         }
       }
     })
-  } else {
-    dispatch(formActions.resetForm(formName, LocationTypes.defaultProps, true))
   }
+
+  return dispatch(formActions.resetForm(formName, LocationTypes.defaultProps, true))
 }
 
 actions.addUsers = (id, users) => ({
