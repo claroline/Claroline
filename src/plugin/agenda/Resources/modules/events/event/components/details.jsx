@@ -2,6 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
+import {hasPermission} from '#/main/app/security/permissions'
 import {DetailsData} from '#/main/app/content/details/components/data'
 
 import {EventPage} from '#/plugin/agenda/event/containers/page'
@@ -9,6 +10,7 @@ import {Event as EventTypes} from '#/plugin/agenda/prop-types'
 import {EventIcon} from '#/plugin/agenda/event/components/icon'
 
 import {EventMain} from '#/plugin/agenda/events/event/containers/main'
+import {EventParticipants} from '#/plugin/agenda/events/event/containers/participants'
 
 const EventDetails = (props) =>
   <EventMain eventId={props.event.id}>
@@ -55,7 +57,13 @@ const EventDetails = (props) =>
             }
           ]
         }]}
-      />
+      >
+        <EventParticipants
+          isNew={false}
+          eventId={props.event.id}
+          canEdit={!!props.agendaEvent && hasPermission('edit', props.agendaEvent)}
+        />
+      </DetailsData>
     </EventPage>
   </EventMain>
 

@@ -12,6 +12,7 @@
 namespace Claroline\AgendaBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Planning\AbstractPlanned;
+use Claroline\CoreBundle\Entity\Template\Template;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -29,6 +30,16 @@ class Event extends AbstractPlanned
      * @var Workspace
      */
     private $workspace;
+
+    /**
+     * Template used to send invitations to Users.
+     *
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Template\Template")
+     * @ORM\JoinColumn(name="invitation_template_id", nullable=true, onDelete="SET NULL")
+     *
+     * @var Template
+     */
+    private $invitationTemplate;
 
     /**
      * @ORM\OneToMany(targetEntity="Claroline\AgendaBundle\Entity\EventInvitation", mappedBy="event")
@@ -71,5 +82,15 @@ class Event extends AbstractPlanned
     public function getEventInvitations()
     {
         return $this->eventInvitations;
+    }
+
+    public function getInvitationTemplate(): ?Template
+    {
+        return $this->invitationTemplate;
+    }
+
+    public function setInvitationTemplate(?Template $template = null)
+    {
+        $this->invitationTemplate = $template;
     }
 }

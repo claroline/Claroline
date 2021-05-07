@@ -16,10 +16,10 @@ class EventInvitation
 {
     use Id;
 
-    const UNKNOWN = 'unknown'; //0
-    const JOIN = 'join'; // 1
-    const MAYBE = 'maybe'; // 2
-    const RESIGN = 'resign'; // 3
+    const UNKNOWN = 'unknown';
+    const JOIN = 'join';
+    const MAYBE = 'maybe';
+    const RESIGN = 'resign';
 
     /**
      * @ORM\Column(type="string")
@@ -30,7 +30,7 @@ class EventInvitation
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\AgendaBundle\Entity\Event", inversedBy="eventInvitations")
-     * @ORM\JoinColumn(name="event", nullable=false, onDelete="cascade")
+     * @ORM\JoinColumn(name="event", nullable=false, onDelete="CASCADE")
      *
      * @var Event
      */
@@ -38,7 +38,7 @@ class EventInvitation
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
-     * @ORM\JoinColumn(nullable=false, onDelete="cascade")
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      *
      * @var User
      */

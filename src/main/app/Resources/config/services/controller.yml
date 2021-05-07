@@ -25,12 +25,6 @@ services:
             - method: setRouterDocumentator
               arguments:
                   - '@Claroline\AppBundle\Routing\Documentator'
-            - method: setDispatcher
-              arguments:
-                  - '@Claroline\AppBundle\Event\StrictDispatcher'
-            - method: setSecurity
-              arguments:
-                  - '@security.helper'
 
     Claroline\AppBundle\Controller\AbstractSecurityController:
         abstract: true

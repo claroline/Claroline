@@ -218,6 +218,7 @@ services:
             - '@security.token_storage'
             - '@Claroline\CoreBundle\Library\Utilities\FileUtilities'
             - '@Claroline\CoreBundle\Listener\Log\LogListener'
+            - '@security.authorization_checker'
         calls:
             - setLogger: [ '@logger' ]
 

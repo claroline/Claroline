@@ -8,11 +8,11 @@ use Claroline\AnnouncementBundle\Messenger\Message\SendAnnouncement;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\CatalogEvents\MessageEvents;
 use Claroline\CoreBundle\Event\SendMessageEvent;
+use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
-class SendAnnouncementHandler
+class SendAnnouncementHandler implements MessageHandlerInterface
 {
     private $objectManager;
     private $eventDispatcher;
@@ -25,39 +25,35 @@ class SendAnnouncementHandler
 
     public function __invoke(SendAnnouncement $sendAnnouncement)
     {
-        $data = [
-            'sender' => $sendAnnouncement->getSender(),
-            'receivers' => $sendAnnouncement->getReceivers(),
-            'object' => $sendAnnouncement->getObject(),
-            'content' => $sendAnnouncement->getContent(),
-        ];
         $announcement = $this->objectManager->getRepository(Announcement::class)->find($sendAnnouncement->getAnnouncementId());
+        if ($announcement) {
+            $announcementSend = new AnnouncementSend();
+            $announcementSend->setAnnouncement($announcement);
+            $announcementSend->setData([
+                'sender' => $sendAnnouncement->getSender(),
+                'receivers' => $sendAnnouncement->getReceivers(),
+                'object' => $sendAnnouncement->getObject(),
+                'content' => $sendAnnouncement->getContent(),
+            ]);
 
-        $announcementSend = new AnnouncementSend();
+            $this->objectManager->persist($announcementSend);
+            $this->objectManager->flush();
 
-        $data['receivers'] = array_map(function (User $receiver) {
-            return $receiver->getUsername();
-        }, $sendAnnouncement->getReceivers());
-        $data['sender'] = $sendAnnouncement->getSender()->getUsername();
-        $announcementSend->setAnnouncement($announcement);
-        $announcementSend->setData($data);
-        $this->objectManager->persist($announcementSend);
-        $this->objectManager->flush();
+            $this->eventDispatcher->dispatch(
+                MessageEvents::MESSAGE_SENDING,
+                SendMessageEvent::class,
+                [
+                    $sendAnnouncement->getContent(),
+                    $sendAnnouncement->getObject(),
+                    $sendAnnouncement->getReceivers(),
+                    $sendAnnouncement->getSender(),
+                ]
+            );
 
-        $this->eventDispatcher->dispatch(
-            MessageEvents::MESSAGE_SENDING,
-            SendMessageEvent::class,
-            [
-                $sendAnnouncement->getContent(),
-                $sendAnnouncement->getObject(),
-                $sendAnnouncement->getReceivers(),
-                $sendAnnouncement->getSender(),
-            ]
-        );
-
-        //it's kind of a hack because this is not using the crud... but wathever.
-        $this->eventDispatcher->dispatch('crud.post.create.announcement_send', CreateEvent::class, [
-            $announcementSend, [], [],
-        ]);
+            //it's kind of a hack because this is not using the crud... but wathever.
+            $this->eventDispatcher->dispatch('crud.post.create.announcement_send', CreateEvent::class, [
+                $announcementSend, [], [],
+            ]);
+        }
     }
 }

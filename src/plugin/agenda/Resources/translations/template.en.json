@@ -1,0 +1,13 @@
+{
+    "event_invitation": "Invitation to an event",
+    "event_invitation_desc": "Template used to send invitations to events.",
+
+    "event_name": "The name of the event",
+    "event_description_desc": "The description of the event",
+    "event_start_desc": "The start date of the event",
+    "event_end_desc": "The end date of the event",
+    "event_poster_desc": "The poster of the event",
+    "event_join_url": "URL allowing the user to indicate that he will participate in the event",
+    "event_maybe_url": "URL allowing the user to indicate that he may participate in the event",
+    "event_decline_url": "URL allowing the user to indicate that he will not participate in the event"
+}

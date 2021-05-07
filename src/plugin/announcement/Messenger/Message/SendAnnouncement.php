@@ -2,9 +2,10 @@
 
 namespace Claroline\AnnouncementBundle\Messenger\Message;
 
+use Claroline\AppBundle\Messenger\Message\AsyncMessageInterface;
 use Claroline\CoreBundle\Entity\User;
 
-class SendAnnouncement
+class SendAnnouncement implements AsyncMessageInterface
 {
     private $content;
     private $object;

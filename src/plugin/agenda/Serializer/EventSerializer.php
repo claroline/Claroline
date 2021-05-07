@@ -7,7 +7,9 @@ use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\Planning\PlannedObjectSerializer;
+use Claroline\CoreBundle\API\Serializer\Template\TemplateSerializer;
 use Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer;
+use Claroline\CoreBundle\Entity\Template\Template;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -23,17 +25,21 @@ class EventSerializer
     private $workspaceSerializer;
     /** @var PlannedObjectSerializer */
     private $plannedObjectSerializer;
+    /** @var TemplateSerializer */
+    private $templateSerializer;
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         ObjectManager $om,
         WorkspaceSerializer $workspaceSerializer,
-        PlannedObjectSerializer $plannedObjectSerializer
+        PlannedObjectSerializer $plannedObjectSerializer,
+        TemplateSerializer $templateSerializer
     ) {
         $this->authorization = $authorization;
         $this->om = $om;
         $this->workspaceSerializer = $workspaceSerializer;
         $this->plannedObjectSerializer = $plannedObjectSerializer;
+        $this->templateSerializer = $templateSerializer;
     }
 
     public function getName()
@@ -49,6 +55,9 @@ class EventSerializer
                 'edit' => $this->authorization->isGranted('EDIT', $event),
                 'delete' => $this->authorization->isGranted('DELETE', $event),
             ],
+            'invitationTemplate' => $event->getInvitationTemplate() ?
+                $this->templateSerializer->serialize($event->getInvitationTemplate(), [Options::SERIALIZE_MINIMAL]) :
+                null,
         ]);
     }
 
@@ -66,6 +75,16 @@ class EventSerializer
             }
 
             $event->setWorkspace($workspace);
+        }
+
+        if (isset($data['invitationTemplate'])) {
+            $template = null;
+            if (!empty($data['invitationTemplate']) && $data['invitationTemplate']['id']) {
+                /** @var Template $template */
+                $template = $this->om->getObject($data['invitationTemplate'], Template::class);
+            }
+
+            $event->setInvitationTemplate($template);
         }
 
         return $event;

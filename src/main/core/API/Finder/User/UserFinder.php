@@ -84,7 +84,7 @@ class UserFinder extends AbstractFinder
                     $qb->andWhere('UPPER(g.name) LIKE :groupName');
                     $qb->setParameter('groupName', '%'.strtoupper($filterValue).'%');
                     break;
-                case 'scheduledtask':
+                case 'scheduledtask': // TODO : should be removed
                     $qb->leftJoin('obj.scheduledTasks', 'st');
                     $qb->andWhere('st.id IN (:scheduledTasks)');
                     $qb->setParameter('scheduledTasks', is_array($filterValue) ? $filterValue : [$filterValue]);

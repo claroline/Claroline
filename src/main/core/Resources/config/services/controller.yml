@@ -170,6 +170,7 @@ services:
         arguments:
             - '@security.token_storage'
             - '@security.authorization_checker'
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
             - '@Claroline\CoreBundle\Manager\RoleManager'
             - '@Claroline\CoreBundle\Manager\ResourceManager'
             - '@translator'

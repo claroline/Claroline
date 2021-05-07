@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Controller\APINew\Workspace;
 
 use Claroline\AppBundle\Annotations\ApiDoc;
 use Claroline\AppBundle\Controller\AbstractCrudController;
+use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Log\JsonLogger;
 use Claroline\CoreBundle\Controller\APINew\Model\HasGroupsTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasOrganizationsTrait;
@@ -21,6 +22,8 @@ use Claroline\CoreBundle\Controller\APINew\Model\HasUsersTrait;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Event\CatalogEvents\WorkspaceEvents;
+use Claroline\CoreBundle\Event\Workspace\CloseWorkspaceEvent;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Manager\LogConnectManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
@@ -51,6 +54,7 @@ class WorkspaceController extends AbstractCrudController
     private $tokenStorage;
     /** @var AuthorizationCheckerInterface */
     private $authorization;
+    private $dispatcher;
     /** @var RoleManager */
     private $roleManager;
     /** @var ResourceManager */
@@ -69,6 +73,7 @@ class WorkspaceController extends AbstractCrudController
     public function __construct(
         TokenStorageInterface $tokenStorage,
         AuthorizationCheckerInterface $authorization,
+        StrictDispatcher $dispatcher,
         RoleManager $roleManager,
         ResourceManager $resourceManager,
         TranslatorInterface $translator,
@@ -79,6 +84,7 @@ class WorkspaceController extends AbstractCrudController
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->authorization = $authorization;
+        $this->dispatcher = $dispatcher;
         $this->roleManager = $roleManager;
         $this->importer = $importer;
         $this->resourceManager = $resourceManager;
@@ -461,7 +467,14 @@ class WorkspaceController extends AbstractCrudController
      */
     public function closeAction(Workspace $workspace, User $user = null): JsonResponse
     {
+        $this->dispatcher->dispatch(
+            WorkspaceEvents::CLOSE,
+            CloseWorkspaceEvent::class,
+            [$workspace]
+        );
+
         if ($user) {
+            // TODO : listen to the close event
             $this->logConnectManager->computeWorkspaceDuration($user, $workspace);
         }
 

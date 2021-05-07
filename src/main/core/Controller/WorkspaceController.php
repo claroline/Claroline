@@ -24,6 +24,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Shortcuts;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\CatalogEvents\ToolEvents;
+use Claroline\CoreBundle\Event\CatalogEvents\WorkspaceEvents;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceEnterEvent;
 use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 use Claroline\CoreBundle\Event\Workspace\OpenWorkspaceEvent;
@@ -112,7 +113,7 @@ class WorkspaceController
         $accessErrors = $this->restrictionsManager->getErrors($workspace, $user);
         if (empty($accessErrors) || $isManager) {
             $this->strictDispatcher->dispatch(
-                'workspace.open',
+                WorkspaceEvents::OPEN,
                 OpenWorkspaceEvent::class,
                 [$workspace]
             );
