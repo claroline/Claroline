@@ -38,6 +38,7 @@
         "dompdf/dompdf": "*",
         "friendsofsymfony/jsrouting-bundle": "^2.2",
         "gedmo/doctrine-extensions": "^3.1",
+        "geoip2/geoip2": "^2.11",
         "hwi/oauth-bundle": "^1.1",
         "icap/html-diff": "1.1.0",
         "jdorn/sql-formatter": "1.2.17",
@@ -72,6 +73,7 @@
         "symfony/http-client": "4.4.*",
         "symfony/intl": "4.4.*",
         "symfony/mailer": "4.4.*",
+        "symfony/messenger": "^5.2",
         "symfony/monolog-bridge": "4.4.*",
         "symfony/process": "4.4.*",
         "symfony/redis-messenger": "^5.2",
@@ -167,11 +169,15 @@
         "bundles": [
             "Claroline\\BundleRecorder\\ScriptHandler::buildBundleFile"
         ],
+        "setup-geoip": [
+            "php bin/console claroline:geoip:download"
+        ],
         "pre-install-cmd": [
             "php bin/configure"
         ],
         "post-install-cmd": [
-            "composer bundles"
+            "composer bundles",
+            "composer setup-geoip"
         ],
         "pre-update-cmd": [
             "php bin/configure",
@@ -180,6 +186,7 @@
         ],
         "post-update-cmd": [
             "composer bundles",
+            "composer setup-geoip",
             "composer disable-maintenance",
             "composer delete-cache"
         ]
