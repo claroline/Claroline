@@ -13,17 +13,17 @@ namespace Claroline\ForumBundle\Messenger;
 
 use Claroline\AppBundle\Messenger\Message\AsyncMessageInterface;
 
-class ForumNotification implements AsyncMessageInterface
+class NotifyUsersOnMessageCreated implements AsyncMessageInterface
 {
-    private $messageUuid;
+    private $messageId;
 
-    public function __construct(string $messageUuid)
+    public function __construct(string $messageId)
     {
-        $this->messageUuid = $messageUuid;
+        $this->messageId = $messageId;
     }
 
-    public function getMessageUuid(): string
+    public function getMessageId(): string
     {
-        return $this->messageUuid;
+        return $this->messageId;
     }
 }

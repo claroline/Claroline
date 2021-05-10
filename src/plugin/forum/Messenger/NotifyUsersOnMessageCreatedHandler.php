@@ -19,7 +19,7 @@ use Claroline\ForumBundle\Entity\Validation\User as UserValidation;
 use Claroline\MessageBundle\Manager\MessageManager;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
-class SendForumNotification implements MessageHandlerInterface
+class NotifyUsersOnMessageCreatedHandler implements MessageHandlerInterface
 {
     private $messageManager;
     private $templateManager;
@@ -38,11 +38,9 @@ class SendForumNotification implements MessageHandlerInterface
         $this->om = $om;
     }
 
-    public function __invoke(ForumNotification $forumNotification)
+    public function __invoke(NotifyUsersOnMessageCreated $forumNotification)
     {
-        $message = $this->om->getRepository(Message::class)->findOneBy([
-            'uuid' => $forumNotification->getMessageUuid(),
-        ]);
+        $message = $this->om->getRepository(Message::class)->find($forumNotification->getMessageId());
 
         $subject = $message->getSubject();
         $forum = $subject->getForum();

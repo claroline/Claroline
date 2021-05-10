@@ -9,7 +9,7 @@ use Claroline\ForumBundle\Entity\Forum;
 use Claroline\ForumBundle\Entity\Subject;
 use Claroline\ForumBundle\Entity\Validation\User as UserValidation;
 use Claroline\ForumBundle\Manager\ForumManager;
-use Claroline\ForumBundle\Messenger\ForumNotification;
+use Claroline\ForumBundle\Messenger\NotifyUsersOnMessageCreated;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -108,7 +108,7 @@ class SubjectCrud
 
         $message = $subject->getFirstMessage();
         if ($message) {
-            $this->messageBus->dispatch(new ForumNotification($message->getUuid()));
+            $this->messageBus->dispatch(new NotifyUsersOnMessageCreated($message->getId()));
         }
 
         return $subject;

@@ -18,7 +18,7 @@ framework:
                     # implements Symfony\Component\Messenger\Retry\RetryStrategyInterface
                     # service: null
 
+            failed: 'doctrine://default?queue_name=failed'
+
         routing:
             'Claroline\AppBundle\Message\AsyncInterface': async
-
-        failed: 'doctrine://default?queue_name=failed'
