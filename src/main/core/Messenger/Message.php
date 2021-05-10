@@ -11,19 +11,35 @@
 
 namespace Claroline\CoreBundle\Messenger;
 
+use Claroline\CoreBundle\Entity\User;
 use Claroline\MessageBundle\Entity\Message as MessageData;
 
 class Message
 {
-    private $message;
+    private $content;
+    private $object;
+    private $users;
 
-    public function __construct(MessageData $message)
+    public function __construct(string $content, string $object, array $users)
     {
-        $this->message = $message;
+        $this->content = $content;
+        $this->object = $object;
+        $this->users = $users;
     }
 
-    public function getMessageData(): MessageData
+    public function createMessage()
     {
-        return $this->message;
+        $message = new MessageData();
+
+        $message->setContent($this->content);
+        $message->setParent(null);
+        $message->setObject($this->object);
+        $message->setSender(null);
+
+        $message->setReceivers(array_map(function (User $user) {
+            return $user->getUsername();
+        }, $this->users));
+
+        return $message;
     }
 }

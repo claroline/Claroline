@@ -17,12 +17,12 @@ class NotifyUsersOnMessageCreated implements AsyncMessageInterface
 {
     private $messageId;
 
-    public function __construct(string $messageId)
+    public function __construct(int $messageId)
     {
         $this->messageId = $messageId;
     }
 
-    public function getMessageId(): string
+    public function getMessageId(): int
     {
         return $this->messageId;
     }

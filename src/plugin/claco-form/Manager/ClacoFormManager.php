@@ -536,8 +536,7 @@ class ClacoFormManager implements LoggerAwareInterface
                         ['%title%' => $entry->getTitle(), '%category%' => $category->getName(), '%clacoform%' => $clacoFormName],
                         'clacoform'
                     );
-                    $message = $this->messageManager->create($content, $object, $managers);
-                    $this->messageBus->dispatch(new Message($message));
+                    $this->messageBus->dispatch(new Message($content, $object, $managers));
                 }
             }
         }
@@ -556,8 +555,7 @@ class ClacoFormManager implements LoggerAwareInterface
                         ['%title%' => $entry->getTitle(), '%category%' => $category->getName(), '%clacoform%' => $clacoFormName, '%url%' => $url],
                         'clacoform'
                     );
-                    $message = $this->messageManager->create($content, $object, $managers);
-                    $this->messageBus->dispatch(new Message($message));
+                    $this->messageBus->dispatch(new Message($content, $object, $managers));
                 }
             }
         }
@@ -576,8 +574,7 @@ class ClacoFormManager implements LoggerAwareInterface
                         ['%title%' => $entry->getTitle(), '%category%' => $category->getName(), '%clacoform%' => $clacoFormName, '%url%' => $url],
                         'clacoform'
                     );
-                    $message = $this->messageManager->create($content, $object, $managers);
-                    $this->messageBus->dispatch(new Message($message));
+                    $this->messageBus->dispatch(new Message($content, $object, $managers));
                 }
             }
         }
@@ -617,8 +614,7 @@ class ClacoFormManager implements LoggerAwareInterface
                     $this->translator->trans('here', [], 'platform').
                     '</a><br><br>';
 
-                $message = $this->messageManager->create($content, $object, $receivers);
-                $this->messageBus->dispatch(new Message($message));
+                $this->messageBus->dispatch(new Message($content, $object, $receivers));
             }
         }
     }
@@ -870,8 +866,7 @@ class ClacoFormManager implements LoggerAwareInterface
         }
 
         if ($sendMessage && count($receivers) > 0) {
-            $message = $this->messageManager->create($content, $subject, $receivers);
-            $this->messageBus->dispatch($message);
+            $this->messageBus->dispatch(new Message($content, $subject, $receivers));
         }
     }
 

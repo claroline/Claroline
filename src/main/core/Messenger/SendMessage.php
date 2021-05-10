@@ -25,6 +25,6 @@ class SendMessage implements MessageHandlerInterface
 
     public function __invoke(Message $message)
     {
-        $this->messageManager->send($message->getMessageData());
+        $this->messageManager->send($message->createMessage());
     }
 }
