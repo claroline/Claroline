@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Messenger;
+namespace Claroline\CoreBundle\Messenger\Message;
 
 use Claroline\AppBundle\Messenger\Message\AsyncMessageInterface;
 
-class ScheduledTaskMessage implements AsyncMessageInterface
+class ExecuteScheduledTask implements AsyncMessageInterface
 {
     private $scheduledTaskId;
 

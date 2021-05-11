@@ -9,12 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Messenger;
+namespace Claroline\CoreBundle\Messenger\Message;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\MessageBundle\Entity\Message as MessageData;
 
-class Message
+class SendMessage
 {
     private $content;
     private $object;
