@@ -61,6 +61,13 @@ services:
         tags:
             - { name: 'console.command', command: 'claroline:user:create' }
 
+    Claroline\CoreBundle\Command\User\DisableInactiveCommand:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\Manager\UserManager'
+        tags:
+            - { name: 'console.command', command: 'claroline:user:disable-inactive' }
+
     Claroline\CoreBundle\Command\User\AddGroupCommand:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
