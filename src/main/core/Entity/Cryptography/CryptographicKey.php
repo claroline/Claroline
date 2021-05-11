@@ -36,6 +36,7 @@ class CryptographicKey
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Organization\Organization", inversedBy="keys")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $organization;
 
