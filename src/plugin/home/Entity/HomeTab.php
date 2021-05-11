@@ -279,7 +279,7 @@ class HomeTab
         return $this->workspace;
     }
 
-    public function setWorkspace(Workspace $workspace)
+    public function setWorkspace(Workspace $workspace = null)
     {
         $this->workspace = $workspace;
     }
