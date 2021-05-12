@@ -158,8 +158,8 @@ class ResourceNodeFinder extends AbstractFinder
     public function getExtraFieldMapping()
     {
         return [
-            'meta.updated' => 'creation_date',
-            'meta.created' => 'modification_date',
+            'meta.updated' => 'creationDate',
+            'meta.created' => 'modificationDate',
             'meta.published' => 'published',
             'meta.views' => 'views',
         ];

@@ -19,6 +19,7 @@ abstract class AbstractEventFinder extends AbstractFinder
 {
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
     {
+        $qb->select($options['count'] ? 'COUNT(DISTINCT obj)' : 'DISTINCT obj', 'p.startDate');
         $qb->leftJoin('obj.plannedObject', 'p');
         $workspaceJoin = false;
 
@@ -51,11 +52,6 @@ abstract class AbstractEventFinder extends AbstractFinder
                         $qb->andWhere("p.startDate >= :{$filterName}");
                         $qb->setParameter($filterName, new \DateTime());
                     }
-                    break;
-                case 'userId':
-                    $qb->leftJoin('p.creator', 'u');
-                    $qb->andWhere("u.uuid = :{$filterName}");
-                    $qb->setParameter($filterName, $filterValue);
                     break;
 
                 case 'user':
@@ -156,6 +152,45 @@ abstract class AbstractEventFinder extends AbstractFinder
 
         $qb->andWhere($qb->expr()->gte('p.endDate', 'p.startDate'));
 
+        if (!is_null($sortBy) && isset($sortBy['property']) && isset($sortBy['direction'])) {
+            $sortByProperty = $sortBy['property'];
+            if (array_key_exists($sortByProperty, $this->getExtraFieldMapping())) {
+                $sortByProperty = $this->getExtraFieldMapping()[$sortByProperty];
+            }
+
+            $sortByDirection = 1 === $sortBy['direction'] ? 'ASC' : 'DESC';
+
+            switch ($sortByProperty) {
+                // map sort on PlannedObject (There may be a better way to handle this).
+                case 'name':
+                case 'description':
+                case 'startDate':
+                case 'endDate':
+                    $qb->orderBy("p.{$sortByProperty}", $sortByDirection);
+                    break;
+            }
+        }
+
         return $qb;
+    }
+
+    public function getExtraFieldMapping()
+    {
+        return [
+            'start' => 'startDate',
+            'end' => 'endDate',
+        ];
+    }
+
+    // some black magic to be able to sort the union on a linked table.
+    // it works with $queryBuilder->select(..., 'p.startDate').
+    // it can be removed once we do not need the union anymore.
+    // this is slightly ugly to rely on the doctrine generated alias, but other implementations
+    // require to open lots of methods of AbstractFinder and override them here.
+    public function getAliases()
+    {
+        return [
+            'c1_.start_date' => 'startDate',
+        ];
     }
 }
