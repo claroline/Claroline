@@ -80,10 +80,7 @@ class ResourceNodeSerializer
             'permissions' => $this->rightsManager->getCurrentPermissionArray($resourceNode),
             'poster' => $this->serializePoster($resourceNode),
             'thumbnail' => $this->serializeThumbnail($resourceNode),
-            // TODO : it should not be available in minimal mode
-            // for now I need it to compute simple access rights (for display)
-            // we should compute simple access here to avoid exposing this big object
-            'rights' => array_values($this->rightsManager->getRights($resourceNode, $options)),
+            'access' => $this->rightsManager->getSimpleRights($resourceNode),
         ];
 
         if ($resourceNode->getWorkspace() && !in_array(Options::REFRESH_UUID, $options)) {
@@ -109,6 +106,11 @@ class ResourceNodeSerializer
                     return $this->serializer->serialize($comment);
                 }, $resourceNode->getComments()->toArray()),
             ]);
+
+            if (!in_array(Options::NO_RIGHTS, $options)) {
+                // export rights, only used by transfer feature. Should be moved later.
+                $serializedNode['rights'] = array_values($this->rightsManager->getRights($resourceNode, $options));
+            }
         }
 
         return $this->decorate($resourceNode, $serializedNode, $options);
@@ -299,7 +301,8 @@ class ResourceNodeSerializer
             $resourceNode->setAccessibleUntil($dateRange[1]);
         }
 
-        if (!in_array(OPTIONS::IGNORE_RIGHTS, $options) && isset($data['rights'])) {
+        if (!in_array(Options::NO_RIGHTS, $options) && isset($data['rights'])) {
+            // only used by transfer feature and creation. Should be moved later
             $this->deserializeRights($data['rights'], $resourceNode, $options);
         }
 

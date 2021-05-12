@@ -94,7 +94,7 @@ class ResourceListener
     public function about(ResourceActionEvent $event)
     {
         $event->setResponse(
-            new JsonResponse($this->serializer->serialize($event->getResourceNode()))
+            new JsonResponse($this->serializer->serialize($event->getResourceNode(), [Options::NO_RIGHTS]))
         );
         $event->stopPropagation();
     }
