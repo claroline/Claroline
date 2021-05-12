@@ -61,7 +61,7 @@ final class Options
     const REFRESH_UUID = 'refresh_uuid';
 
     //for resource node
-    const IGNORE_RIGHTS = 'ignore_rights';
+    const NO_RIGHTS = 'no_rights';
     const SERIALIZE_TOOL = 'serialize_tool';
 
     //finder options

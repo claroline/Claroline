@@ -1,10 +1,10 @@
 import React from 'react'
 import classes from 'classnames'
+import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
 import {MODAL_BUTTON} from '#/main/app/buttons'
 
-import {getSimpleAccessRule, hasCustomRules} from '#/main/core/resource/permissions'
 import {MODAL_RESOURCE_RIGHTS} from '#/main/core/resource/modals/rights'
 
 /**
@@ -18,18 +18,17 @@ export default (resourceNodes, nodesRefresher) => { // todo collection
   let icon = 'fa-lock'
   let customRules = false
   if (1 === resourceNodes.length) {
-    const rights = getSimpleAccessRule(resourceNodes[0].rights, resourceNodes[0].workspace)
-    customRules = hasCustomRules(resourceNodes[0].rights, resourceNodes[0].workspace)
+    customRules = get(resourceNodes[0], 'access.customRules')
 
-    switch (rights) {
+    switch (get(resourceNodes[0], 'access.mode')) {
       case 'all':
-        icon = 'fa-unlock'
+        icon = 'fa-lock-open'
         break
       case 'user':
-        icon = 'fa-unlock'
+        icon = 'fa-lock-open'
         break
       case 'workspace':
-        icon = 'fa-unlock-alt'
+        icon = 'fa-unlock'
         break
       case 'admin':
         icon = 'fa-lock'

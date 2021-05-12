@@ -296,7 +296,7 @@ class ResourceManager implements LoggerAwareInterface
         $this->log("Copying {$node->getName()} from type {$node->getResourceType()->getName()}");
 
         /** @var ResourceNode $newNode */
-        $newNode = $this->crud->copy($node, [Options::IGNORE_RIGHTS, Crud::NO_PERMISSIONS], ['user' => $user, 'parent' => $parent]);
+        $newNode = $this->crud->copy($node, [Options::NO_RIGHTS, Crud::NO_PERMISSIONS], ['user' => $user, 'parent' => $parent]);
 
         $this->om->persist($newNode);
         $this->om->flush();

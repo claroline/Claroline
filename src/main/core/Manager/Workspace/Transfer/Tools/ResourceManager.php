@@ -135,7 +135,7 @@ class ResourceManager implements ToolImporterInterface, LoggerAwareInterface
             // FIXME
             // I don't really understand why it's done like it but node should be deserialized in one time
             // I think it may be because the workspace is not flushed yet and the deserialize method do a db call to retrieve it
-            $node = $this->serializer->deserialize($data, $node, [Options::IGNORE_RIGHTS]);
+            $node = $this->serializer->deserialize($data, $node, [Options::NO_RIGHTS]);
             $node->setWorkspace($workspace);
             $node = $this->serializer->deserialize(['rights' => $rights], $node);
 
