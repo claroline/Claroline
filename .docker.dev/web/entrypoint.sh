@@ -20,8 +20,6 @@ if [ -f files/installed ]; then
 
     if [[ "$versionLastUsed" != "$currentVersion" ]]; then
       echo "New version detected, updating..."
-      php bin/configure
-      php bin/check
       composer install
       npm install
       php bin/console claroline:update --env=dev -vvv
@@ -33,8 +31,6 @@ if [ -f files/installed ]; then
   fi
 else
   echo "Installing Claroline..."
-  php bin/configure
-  php bin/check
   composer install
   npm install
   php bin/console claroline:install --env=dev -vvv

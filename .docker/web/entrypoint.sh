@@ -21,7 +21,6 @@ if [ -f files/installed ]; then
     if [[ "$versionLastUsed" != "$currentVersion" ]]; then
       echo "New version detected, updating..."
       php bin/configure # we run it again to regenerate parameters.yml inside the volume
-      php bin/check
       composer enable-maintenance
       composer delete-cache
       php bin/console claroline:update -vvv
@@ -36,7 +35,6 @@ if [ -f files/installed ]; then
 else
   echo "Installing Claroline..."
   php bin/configure # we run it again to generate parameters.yml inside the volume
-  php bin/check
   composer bundles # we run it again to generate bundles.ini inside the volume
   php bin/console claroline:install -vvv
 

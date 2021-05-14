@@ -166,15 +166,13 @@
             "Claroline\\BundleRecorder\\ScriptHandler::buildBundleFile"
         ],
         "pre-install-cmd": [
-            "php bin/configure",
-            "php bin/check"
+            "php bin/configure"
         ],
         "post-install-cmd": [
             "composer bundles"
         ],
         "pre-update-cmd": [
             "php bin/configure",
-            "php bin/check",
             "composer enable-maintenance",
             "composer delete-cache"
         ],
