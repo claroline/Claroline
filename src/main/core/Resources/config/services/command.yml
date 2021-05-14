@@ -39,7 +39,7 @@ services:
     Claroline\CoreBundle\Command\ExecuteScheduledTasksCommand:
         arguments:
             - '@Claroline\CoreBundle\Manager\Task\ScheduledTaskManager'
-            - '@event_dispatcher'
+            - '@messenger.default_bus'
         tags:
             - { name: 'console.command', command: 'claroline:tasks:execute' }
 

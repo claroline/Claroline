@@ -1,0 +1,13 @@
+services:
+    Claroline\CoreBundle\Messenger\SendMessageHandler:
+        tags: [messenger.message_handler]
+        arguments:
+            - '@Claroline\MessageBundle\Manager\MessageManager'
+
+    Claroline\CoreBundle\Messenger\ExecuteScheduledTaskHandler:
+        tags: [ messenger.message_handler ]
+        arguments:
+            - '@Claroline\MessageBundle\Manager\MessageManager'
+            - '@Claroline\CoreBundle\Manager\Task\ScheduledTaskManager'
+            - '@Claroline\CoreBundle\Manager\MailManager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'

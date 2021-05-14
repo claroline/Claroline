@@ -86,7 +86,8 @@
         "symfony/web-profiler-bundle": "4.4.*",
         "symfony/yaml": "4.4.*",
         "twig/twig": "^2.14",
-        "willdurand/js-translation-bundle": "3.0.*"
+        "willdurand/js-translation-bundle": "3.0.*",
+        "symfony/messenger": "^5.2"
     },
     "require-dev": {
         "symfony/dom-crawler": "4.4.*",

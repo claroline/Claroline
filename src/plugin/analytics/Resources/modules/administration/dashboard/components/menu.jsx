@@ -50,7 +50,7 @@ const DashboardMenu = (props) =>
         }, {
           name: 'message',
           type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-envelope-open-text',
+          icon: 'fa fa-fw fa-envelope',
           label: trans('message'),
           target: props.path + '/message'
         }, {

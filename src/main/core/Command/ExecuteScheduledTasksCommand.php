@@ -11,22 +11,22 @@
 
 namespace Claroline\CoreBundle\Command;
 
-use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Manager\Task\ScheduledTaskManager;
+use Claroline\CoreBundle\Messenger\Message\ExecuteScheduledTask;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 class ExecuteScheduledTasksCommand extends Command
 {
     private $taskManager;
-    private $eventDispatcher;
+    private $messageBus;
 
-    public function __construct(ScheduledTaskManager $taskManager, EventDispatcherInterface $eventDispatcher)
+    public function __construct(ScheduledTaskManager $taskManager, MessageBusInterface $messageBus)
     {
         $this->taskManager = $taskManager;
-        $this->eventDispatcher = $eventDispatcher;
+        $this->messageBus = $messageBus;
 
         parent::__construct();
     }
@@ -43,10 +43,8 @@ class ExecuteScheduledTasksCommand extends Command
 
         foreach ($tasks as $task) {
             $output->writeln('['.$task->getType().'] '.$task->getName().' : Requesting execution...');
-            $this->eventDispatcher->dispatch(
-                new GenericDataEvent($task),
-                'claroline_scheduled_task_execute_'.$task->getType()
-            );
+
+            $this->messageBus->dispatch(new ExecuteScheduledTask($task->getId()));
         }
 
         return 0;
