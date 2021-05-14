@@ -33,7 +33,7 @@ class PcreExtension extends AbstractExtension
     public function getFilters()
     {
         return [
-            'preg_replace' => new TwigFilter('preg_replace', [$this, '_preg_replace']),
+            'preg_replace' => new TwigFilter('preg_replace', [$this, 'replace']),
         ];
     }
 
@@ -52,12 +52,12 @@ class PcreExtension extends AbstractExtension
      *
      * @return string
      */
-    public function _preg_replace($subject, $pattern, $replacement = '', $limit = -1)
+    public function replace($subject, $pattern, $replacement = '', $limit = -1)
     {
-        if (!isset($subject)) {
-            return;
-        } else {
+        if (isset($subject)) {
             return preg_replace($pattern, $replacement, $subject, $limit);
         }
+
+        return '';
     }
 }

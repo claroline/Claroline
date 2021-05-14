@@ -40,7 +40,6 @@ services:
         tags: [claroline.serializer]
         arguments:
             - '@router'
-            - '@Claroline\OpenBadgeBundle\Serializer\ProfileSerializer'
 
     Claroline\OpenBadgeBundle\Serializer\EndorsementSerializer:
         tags: [claroline.serializer]
@@ -73,9 +72,6 @@ services:
         tags: [claroline.serializer]
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-
-    Claroline\OpenBadgeBundle\Serializer\SignedBadgeSerializer:
-        tags: [claroline.serializer]
 
     Claroline\OpenBadgeBundle\Serializer\VerificationObjectSerializer:
         arguments:

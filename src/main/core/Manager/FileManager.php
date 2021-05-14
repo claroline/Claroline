@@ -114,7 +114,7 @@ class FileManager
 
         //edit file
         $fileName = $upload->getClientOriginalName();
-        $size = @filesize($upload);
+        $size = filesize($upload) ?: 0;
         $extension = pathinfo($fileName, PATHINFO_EXTENSION);
         $mimeType = $upload->getClientMimeType();
         $hashName = 'WORKSPACE_'.$workspaceId.

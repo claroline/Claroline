@@ -31,9 +31,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  */
 class Log
 {
-    const doerTypeAnonymous = 'anonymous';
-    const doerTypeUser = 'user';
-    const doerTypePlatform = 'platform';
+    const DOER_ANONYMOUS = 'anonymous';
+    const DOER_USER = 'user';
+    const DOER_PLATFORM = 'platform';
 
     /**
      * @ORM\Id

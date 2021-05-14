@@ -87,14 +87,14 @@ class LogListener
             $token = $this->tokenStorage->getToken();
             if (null === $token) {
                 $doer = null;
-                $doerType = Log::doerTypePlatform;
+                $doerType = Log::DOER_PLATFORM;
             } else {
                 if ('anon.' === $token->getUser()) {
                     $doer = null;
-                    $doerType = Log::doerTypeAnonymous;
+                    $doerType = Log::DOER_ANONYMOUS;
                 } else {
                     $doer = $token->getUser();
-                    $doerType = Log::doerTypeUser;
+                    $doerType = Log::DOER_USER;
                 }
 
                 if ($this->request) {
@@ -106,10 +106,10 @@ class LogListener
             }
         } elseif (LogGenericEvent::PLATFORM_EVENT_TYPE === $event->getDoer()) {
             $doer = null;
-            $doerType = Log::doerTypePlatform;
+            $doerType = Log::DOER_PLATFORM;
         } else {
             $doer = $event->getDoer();
-            $doerType = Log::doerTypeUser;
+            $doerType = Log::DOER_USER;
         }
 
         $log = new Log();

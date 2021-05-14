@@ -26,9 +26,7 @@ use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Tool\ToolRights;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\RelWorkspaceTag;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Entity\Workspace\WorkspaceTag;
 use Claroline\MessageBundle\Entity\Message;
 use Claroline\MessageBundle\Entity\UserMessage;
 use Gedmo\Timestampable\TimestampableListener;
@@ -353,7 +351,7 @@ abstract class RepositoryTestCase extends WebTestCase
         $log = new Log();
         $log->setDoer($doer);
         $log->setAction($action);
-        $log->setDoerType(Log::doerTypeUser);
+        $log->setDoerType(Log::DOER_USER);
         $log->setDateLog(self::$time);
 
         if ($workspace) {
@@ -361,25 +359,6 @@ abstract class RepositoryTestCase extends WebTestCase
         }
 
         self::$om->persist($log);
-        self::$om->flush();
-    }
-
-    protected static function createWorkspaceTag($name, User $user = null)
-    {
-        $tag = new WorkspaceTag();
-        $tag->setName($name);
-        $tag->setUser($user);
-
-        self::create($name, $tag);
-    }
-
-    protected static function createWorkspaceTagRelation(WorkspaceTag $tag, Workspace $workspace)
-    {
-        $tagRelation = new RelWorkspaceTag();
-        $tagRelation->setTag($tag);
-        $tagRelation->setWorkspace($workspace);
-
-        self::$om->persist($tagRelation);
         self::$om->flush();
     }
 
