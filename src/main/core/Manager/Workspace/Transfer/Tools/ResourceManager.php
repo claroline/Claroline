@@ -68,7 +68,7 @@ class ResourceManager implements ToolImporterInterface, LoggerAwareInterface
 
     private function recursiveSerialize(ResourceNode $root, array $options, array $data = ['nodes' => [], 'resources' => []])
     {
-        $node = $this->serializer->serialize($root, array_merge($options, [Options::SERIALIZE_MINIMAL]));
+        $node = $this->serializer->serialize($root, $options);
         $resSerializer = $this->serializer->get($root->getClass());
         $resSerializeOptions = method_exists($resSerializer, 'getCopyOptions') ? $resSerializer->getCopyOptions() : [];
         $res = $this->om->getRepository($root->getClass())->findOneBy(['resourceNode' => $root]);
