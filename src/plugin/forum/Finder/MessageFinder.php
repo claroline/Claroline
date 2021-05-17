@@ -18,9 +18,6 @@ use Doctrine\ORM\QueryBuilder;
 
 class MessageFinder extends AbstractFinder
 {
-    /**
-     * @return mixed
-     */
     public static function getClass(): string
     {
         return Message::class;
@@ -151,7 +148,7 @@ class MessageFinder extends AbstractFinder
         return $qb;
     }
 
-    public function getFilters()
+    public function getFilters(): array
     {
         return [
             'subject' => [

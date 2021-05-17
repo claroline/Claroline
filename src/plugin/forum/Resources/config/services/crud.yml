@@ -9,6 +9,7 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\ForumBundle\Manager\ForumManager'
             - '@security.authorization_checker'
+            - '@messenger.default_bus'
         tags:
             - { name: kernel.event_listener, event: crud_pre_create_object_claroline_forumbundle_entity_subject, method: preCreate }
             - { name: kernel.event_listener, event: crud_post_create_object_claroline_forumbundle_entity_subject, method: postCreate }
@@ -18,6 +19,7 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\ForumBundle\Manager\ForumManager'
             - '@security.authorization_checker'
+            - '@messenger.default_bus'
         tags:
             - { name: kernel.event_listener, event: crud_pre_create_object_claroline_forumbundle_entity_message, method: preCreate }
             - { name: kernel.event_listener, event: crud_post_create_object_claroline_forumbundle_entity_message, method: postCreate }

@@ -124,11 +124,4 @@ class ResourceUserEvaluationFinder extends AbstractFinder
 
         return $qb;
     }
-
-    public function getFilters()
-    {
-        return [
-            '$defaults' => [],
-        ];
-    }
 }

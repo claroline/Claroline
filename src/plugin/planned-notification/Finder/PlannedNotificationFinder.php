@@ -24,13 +24,13 @@ class PlannedNotificationFinder extends AbstractFinder
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
     {
         $rolesJoin = false;
-        $qb->join('obj.workspace', 'w');
-        $qb->andWhere('w.uuid = :workspaceUuid');
-        $qb->setParameter('workspaceUuid', $searches['workspace']);
 
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
                 case 'workspace':
+                    $qb->join('obj.workspace', 'w');
+                    $qb->andWhere('w.uuid = :workspaceUuid');
+                    $qb->setParameter('workspaceUuid', $searches['workspace']);
                     break;
                 case 'roles':
                     $qb->leftJoin('obj.roles', 'r');

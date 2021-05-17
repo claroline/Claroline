@@ -61,17 +61,22 @@ class EntryFinder extends AbstractFinder
         $clacoFormRepo = $this->om->getRepository('ClarolineClacoFormBundle:ClacoForm');
         $fieldRepo = $this->om->getRepository('ClarolineClacoFormBundle:Field');
 
+        // TODO : rights should not be checked here
         $currentUser = $this->tokenStorage->getToken()->getUser();
 
         $isAnon = 'anon.' === $currentUser;
-        $clacoForm = $clacoFormRepo->findOneById($searches['clacoForm']);
-        $canEdit = $this->hasRight($clacoForm, 'EDIT');
-        $isCategoryManager = !$isAnon && $this->isCategoryManager($clacoForm, $currentUser);
-        $searchEnabled = $clacoForm->getSearchEnabled();
-
-        $qb->join('obj.clacoForm', 'cf');
-        $qb->andWhere('cf.id = :clacoFormId');
-        $qb->setParameter('clacoFormId', $searches['clacoForm']);
+        $clacoForm = null;
+        $canEdit = false;
+        $isCategoryManager = false;
+        $searchEnabled = false;
+        if (isset($searches['clacoForm'])) {
+            $clacoForm = $clacoFormRepo->findOneById($searches['clacoForm']);
+            if ($clacoForm) {
+                $canEdit = $this->hasRight($clacoForm, 'EDIT');
+                $isCategoryManager = !$isAnon && $this->isCategoryManager($clacoForm, $currentUser);
+                $searchEnabled = $clacoForm->getSearchEnabled();
+            }
+        }
 
         $type = isset($searches['type']) ? $searches['type'] : null;
 
@@ -91,7 +96,7 @@ class EntryFinder extends AbstractFinder
             }
         }
         if (is_null($type)) {
-            if ($searchEnabled || $this->hasRight($clacoForm, 'EDIT')) {
+            if ($searchEnabled || $canEdit) {
                 $type = 'all';
             } elseif (!$isAnon) {
                 $type = $isCategoryManager ? 'manager' : 'my';
@@ -156,8 +161,12 @@ class EntryFinder extends AbstractFinder
         }
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
-                case 'clacoForm':
                 case 'type':
+                    break;
+                case 'clacoForm':
+                    $qb->join('obj.clacoForm', 'cf');
+                    $qb->andWhere('cf.id = :clacoFormId');
+                    $qb->setParameter('clacoFormId', $searches['clacoForm']);
                     break;
                 case 'title':
                     $qb->andWhere('UPPER(obj.title) LIKE :title');

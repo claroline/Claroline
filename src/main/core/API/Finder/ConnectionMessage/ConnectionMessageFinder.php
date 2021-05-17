@@ -41,9 +41,4 @@ class ConnectionMessageFinder extends AbstractFinder
 
         return $qb;
     }
-
-    public function getFilters()
-    {
-        return [];
-    }
 }

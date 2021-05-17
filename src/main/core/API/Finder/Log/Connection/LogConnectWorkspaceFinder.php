@@ -84,9 +84,4 @@ class LogConnectWorkspaceFinder extends AbstractFinder
 
         return $qb;
     }
-
-    public function getFilters()
-    {
-        return [];
-    }
 }

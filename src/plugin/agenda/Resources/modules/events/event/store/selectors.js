@@ -2,7 +2,7 @@ import {createSelector} from 'reselect'
 
 const STORE_NAME = 'eventDetails'
 
-const store = (state) => state[STORE_NAME]
+const store = (state) => state[STORE_NAME] || {}
 
 const loaded = createSelector(
   [store],

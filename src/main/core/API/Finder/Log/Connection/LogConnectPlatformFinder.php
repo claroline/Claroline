@@ -97,9 +97,4 @@ class LogConnectPlatformFinder extends AbstractFinder
 
         return $qb;
     }
-
-    public function getFilters()
-    {
-        return [];
-    }
 }

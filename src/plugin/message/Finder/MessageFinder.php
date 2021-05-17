@@ -106,45 +106,45 @@ class MessageFinder extends AbstractFinder
         ];
     }
 
-    public function getFilters()
+    public function getFilters(): array
     {
         return [
-          'sent' => [
-            'type' => 'boolean',
-            'description' => 'The forum validation mode',
-          ],
-          'removed' => [
-            'type' => 'boolean',
-            'description' => 'The max amount of sub comments per messages',
-          ],
-          'read' => [
-            'type' => 'boolean',
-            'description' => 'The max amount of sub comments per messages',
-          ],
-          'after' => [
-            'type' => 'date',
-            'description' => 'The max amount of sub comments per messages',
-          ],
-          'before' => [
-            'type' => 'date',
-            'description' => 'The max amount of sub comments per messages',
-          ],
-          'from' => [
-            'type' => 'string',
-            'description' => 'The username ',
-          ],
-          'object' => [
-            'type' => 'string',
-            'description' => 'The message object',
-          ],
-          'content' => [
-            'type' => 'string',
-            'description' => 'The message content',
-          ],
-          'user' => [
-            'type' => ['string'],
-            'description' => 'The users uuid (default is current user)',
-          ],
+            'sent' => [
+                'type' => 'boolean',
+                'description' => 'The forum validation mode',
+            ],
+            'removed' => [
+                'type' => 'boolean',
+                'description' => 'The max amount of sub comments per messages',
+            ],
+            'read' => [
+                'type' => 'boolean',
+                'description' => 'The max amount of sub comments per messages',
+            ],
+            'after' => [
+                'type' => 'date',
+                'description' => 'The max amount of sub comments per messages',
+            ],
+            'before' => [
+                'type' => 'date',
+                'description' => 'The max amount of sub comments per messages',
+            ],
+            'from' => [
+                'type' => 'string',
+                'description' => 'The username ',
+            ],
+            'object' => [
+                'type' => 'string',
+                'description' => 'The message object',
+            ],
+            'content' => [
+                'type' => 'string',
+                'description' => 'The message content',
+            ],
+            'user' => [
+                'type' => ['string'],
+                'description' => 'The users uuid (default is current user)',
+            ],
         ];
     }
 }

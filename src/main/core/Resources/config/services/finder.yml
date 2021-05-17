@@ -80,10 +80,6 @@ services:
 
     Claroline\CoreBundle\API\Finder\Resource\ResourceUserEvaluationFinder: ~
 
-    Claroline\CoreBundle\API\Finder\Resource\ResourceTypeFinder: ~
-
-    Claroline\CoreBundle\API\Finder\Resource\ResourceRightsFinder: ~
-
     Claroline\CoreBundle\API\Finder\Resource\ResourceNodeFinder:
         arguments:
           - '@security.authorization_checker'

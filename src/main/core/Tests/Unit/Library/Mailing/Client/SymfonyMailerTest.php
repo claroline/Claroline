@@ -34,6 +34,7 @@ class SymfonyMailerTest extends MockeryTestCase
         $this->assertSame('bcc2@claroline.com', $message->getAttribute('bcc')[1]);
         $this->assertCount(2, $message->getAttribute('bcc'));
         $this->assertSame('to@claroline.com', $message->getAttribute('to')[0]);
-        $this->assertTrue($symfonyMailer->send($message));
+
+        $symfonyMailer->send($message);
     }
 }

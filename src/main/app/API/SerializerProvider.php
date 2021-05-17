@@ -115,12 +115,10 @@ class SerializerProvider
 
     /**
      * Return the list of serializers.
-     *
-     * @return mixed[];
      */
-    public function all()
+    public function all(): array
     {
-        return $this->serializers;
+        return $this->serializers instanceof \Traversable ? iterator_to_array($this->serializers) : $this->serializers;
     }
 
     /**

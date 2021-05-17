@@ -23,14 +23,14 @@ class CategoryFinder extends AbstractFinder
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
     {
-        $qb->join('obj.clacoForm', 'cf');
-        $qb->andWhere('cf.id = :clacoFormId');
-        $qb->setParameter('clacoFormId', $searches['clacoForm']);
         $managersJoin = false;
 
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
                 case 'clacoForm':
+                    $qb->join('obj.clacoForm', 'cf');
+                    $qb->andWhere('cf.id = :clacoFormId');
+                    $qb->setParameter('clacoFormId', $searches['clacoForm']);
                     break;
                 case 'managers':
                     $where = "CONCAT(UPPER(m.firstName), CONCAT(' ', UPPER(m.lastName))) LIKE :{$filterName}";
