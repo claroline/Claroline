@@ -17,7 +17,7 @@ class SendAnnouncement
         string $object,
         array $receivers,
         int $announcementId,
-        User $sender = null
+        ?User $sender = null
     ) {
         $this->content = $content;
         $this->object = $object;

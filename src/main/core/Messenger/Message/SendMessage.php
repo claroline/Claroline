@@ -21,7 +21,7 @@ class SendMessage
     private $users;
     private $sender;
 
-    public function __construct(string $content, string $object, array $users, User $sender = null)
+    public function __construct(string $content, string $object, array $users, ?User $sender = null)
     {
         $this->content = $content;
         $this->object = $object;

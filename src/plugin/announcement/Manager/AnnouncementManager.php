@@ -12,7 +12,6 @@
 namespace Claroline\AnnouncementBundle\Manager;
 
 use Claroline\AnnouncementBundle\Entity\Announcement;
-use Claroline\AnnouncementBundle\Entity\AnnouncementSend;
 use Claroline\AnnouncementBundle\Messenger\Message\SendAnnouncement;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\Event\StrictDispatcher;
@@ -60,23 +59,11 @@ class AnnouncementManager
     {
         $message = $this->getMessage($announcement, $users);
 
-        $announcementSend = new AnnouncementSend();
-
-        $data = $message;
-        $data['receivers'] = array_map(function (User $receiver) {
-            return $receiver->getUsername();
-        }, $message['receivers']);
-        $data['sender'] = $message['sender']->getUsername();
-        $announcementSend->setAnnouncement($announcement);
-        $announcementSend->setData($data);
-        $this->om->persist($announcementSend);
-        $this->om->flush();
-
         $this->messageBus->dispatch(new SendAnnouncement(
             $message['content'],
             $message['object'],
             $message['receivers'],
-            $announcementSend->getId(),
+            $announcement->getId(),
             $message['sender']
         ));
     }
