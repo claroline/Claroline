@@ -11,11 +11,12 @@
 
 namespace Claroline\AnnouncementBundle\Entity;
 
+use Claroline\AnnouncementBundle\Repository\AnnouncementSendRepository;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass=AnnouncementSendRepository::class)
  * @ORM\Table(name="claro_announcements_send")
  */
 class AnnouncementSend
