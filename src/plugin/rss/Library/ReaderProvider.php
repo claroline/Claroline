@@ -41,7 +41,7 @@ class ReaderProvider
      */
     public function getReaderFor($feedContent)
     {
-        @$content = new SimpleXMLElement($feedContent);
+        $content = new SimpleXMLElement($feedContent);
 
         foreach ($this->readers as $reader) {
             if ($reader->supports($content->getName())) {

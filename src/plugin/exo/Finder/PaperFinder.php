@@ -27,13 +27,13 @@ class PaperFinder extends AbstractFinder
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
     {
-        $qb->join('obj.exercise', 'e');
-        $qb->andWhere('e.id = :exerciseId');
-        $qb->setParameter('exerciseId', $searches['exercise']);
-        unset($searches['exercise']);
-
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
+                case 'exercise':
+                    $qb->join('obj.exercise', 'e');
+                    $qb->andWhere('e.id = :exerciseId');
+                    $qb->setParameter('exerciseId', $searches['exercise']);
+                    break;
                 case 'user':
                     $qb->join('obj.user', 'u');
                     $qb->andWhere('u.uuid = :userId');

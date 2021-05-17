@@ -382,4 +382,16 @@ abstract class AbstractFinder implements FinderInterface
     {
         return [];
     }
+
+    /**
+     * Gets the list of filters managed by the Finder.
+     * It is used by the auto-documentation for API and tests.
+     */
+    public function getFilters(): array
+    {
+        return [
+            // some black magic here : it will read annotations on Entity to retrieve all props defined.
+            '$defaults' => [],
+        ];
+    }
 }

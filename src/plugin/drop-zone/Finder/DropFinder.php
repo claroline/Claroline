@@ -24,13 +24,12 @@ class DropFinder extends AbstractFinder
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
     {
-        $qb->join('obj.dropzone', 'd');
-        $qb->andWhere('d.uuid = :dropzoneUuid');
-        $qb->setParameter('dropzoneUuid', $searches['dropzone']);
-
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
                 case 'dropzone':
+                    $qb->join('obj.dropzone', 'd');
+                    $qb->andWhere('d.uuid = :dropzoneUuid');
+                    $qb->setParameter('dropzoneUuid', $searches['dropzone']);
                     break;
                 case 'user':
                     $qb->join('obj.user', 'u');

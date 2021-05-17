@@ -176,7 +176,6 @@ class WorkspaceFinder extends AbstractFinder
         return $qb;
     }
 
-    //required for the unions
     public function getExtraFieldMapping()
     {
         return [
@@ -185,7 +184,7 @@ class WorkspaceFinder extends AbstractFinder
         ];
     }
 
-    public function getFilters()
+    public function getFilters(): array
     {
         return [
             'administrated' => [
@@ -219,7 +218,6 @@ class WorkspaceFinder extends AbstractFinder
             ],
 
             '$defaults' => [],
-            //random prop goes here
         ];
     }
 }

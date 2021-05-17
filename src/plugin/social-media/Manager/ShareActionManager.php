@@ -11,6 +11,7 @@
 
 namespace Icap\SocialmediaBundle\Manager;
 
+use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
 use Icap\SocialmediaBundle\Entity\ShareAction;
 use Symfony\Component\HttpFoundation\Request;

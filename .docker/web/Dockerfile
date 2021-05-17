@@ -47,8 +47,6 @@ RUN a2dissite 000-default && a2dissite default-ssl && a2ensite claroline.conf
 COPY . /var/www/html/claroline
 WORKDIR /var/www/html/claroline
 
-RUN php bin/configure
-RUN php bin/check
 RUN composer install --no-dev --optimize-autoloader
 
 RUN npm install

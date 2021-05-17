@@ -196,11 +196,17 @@ const CategoryFormModal = props => {
                     notify_pending_comment: trans('comment_to_moderate', {}, 'clacoform')
                   }
                 },
+                calculated: (category) => [
+                  'notify_addition',
+                  'notify_edition',
+                  'notify_removal',
+                  'notify_pending_comment'
+                ].filter(prop => category && category.details && category.details[prop]),
                 onChange: (value) => {
-                  props.updateProp('notify_addition', -1 !== value.indexOf('notify_addition'))
-                  props.updateProp('notify_edition', -1 !== value.indexOf('notify_edition'))
-                  props.updateProp('notify_removal', -1 !== value.indexOf('notify_removal'))
-                  props.updateProp('notify_pending_comment', -1 !== value.indexOf('notify_pending_comment'))
+                  props.updateProp('details.notify_addition', -1 !== value.indexOf('notify_addition'))
+                  props.updateProp('details.notify_edition', -1 !== value.indexOf('notify_edition'))
+                  props.updateProp('details.notify_removal', -1 !== value.indexOf('notify_removal'))
+                  props.updateProp('details.notify_pending_comment', -1 !== value.indexOf('notify_pending_comment'))
                 }
               }
             ]

@@ -18,7 +18,6 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Debug\Exception\ContextErrorException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use UJM\ExoBundle\Manager\ExerciseManager;
@@ -87,7 +86,7 @@ class ExportExoResultsCommand extends Command
                     $output->writeln('<comment>Debut export resultats exercice ID </comment>'.$exo->getResourceNode()->getId());
                     $this->exerciseManager->exportResultsToCsv($exercise, $path);
                     $output->writeln('<comment>Fin export resultats exercice ID </comment>'.$exo->getResourceNode()->getId().': '.$path);
-                } catch (ContextErrorException  $e) {
+                } catch (\Exception  $e) {
                     $output->writeln('<error>!!!!Erreur export resultats exercice ID '.$exo->getResourceNode()->getId().'</error>');
                 }
                 $output->writeln('------------------------------------------------------------------------------');

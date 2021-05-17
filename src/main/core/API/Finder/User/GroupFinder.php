@@ -79,11 +79,4 @@ class GroupFinder extends AbstractFinder
 
         return $qb;
     }
-
-    public function getFilters()
-    {
-        return [
-            '$defaults' => [],
-        ];
-    }
 }

@@ -26,12 +26,12 @@ class ContactFinder extends AbstractFinder
     {
         $qb->join('obj.user', 'u');
         $qb->join('obj.contact', 'c');
-        $qb->andWhere('u.id = :userId');
-        $qb->setParameter('userId', $searches['user']);
 
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
                 case 'user':
+                    $qb->andWhere('u.id = :userId');
+                    $qb->setParameter('userId', $searches['user']);
                     break;
                 case 'username':
                 case 'firstName':

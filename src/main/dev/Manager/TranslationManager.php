@@ -61,8 +61,6 @@ class TranslationManager implements LoggerAwareInterface
             if (!array_key_exists($key, $mainTranslations)) {
                 unset($translations[$key]);
             }
-            //this won't work but it's not really important.
-            //if (is_array($mainTranslation[$key])) $this->recursiveRemove($mainTranslations[$key], $translations[$key]);
         }
 
         return $translations;

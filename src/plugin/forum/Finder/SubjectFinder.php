@@ -102,7 +102,7 @@ class SubjectFinder extends AbstractFinder
         return $qb;
     }
 
-    public function getFilters()
+    public function getFilters(): array
     {
         return [
             'forum' => [

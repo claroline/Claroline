@@ -13,7 +13,6 @@ namespace Claroline\AppBundle\API;
 
 use Claroline\AppBundle\API\Finder\FinderInterface;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Psr\Container\ContainerInterface;
 
 class FinderProvider
 {
@@ -21,18 +20,12 @@ class FinderProvider
     private $om;
     /** @var SerializerProvider */
     private $serializer;
-
-    /**
-     * @var ContainerInterface A service locator of finders registered in the platform
-     */
+    /** @var iterable */
     private $finders;
 
-    /**
-     * FinderProvider constructor.
-     */
     public function __construct(
         ObjectManager $om,
-        ContainerInterface $finders,
+        iterable $finders,
         SerializerProvider $serializer
     ) {
         $this->om = $om;
@@ -51,11 +44,22 @@ class FinderProvider
      */
     public function get($class)
     {
-        if (!$this->finders->has($class)) {
+        $finders = $this->finders instanceof \Traversable ? iterator_to_array($this->finders) : $this->finders;
+        if (!isset($finders[$class])) {
             throw new FinderException(sprintf('No finder found for class "%s" Maybe you forgot to add the "claroline.finder" tag to your finder.', $class));
         }
 
-        return $this->finders->get($class);
+        return $finders[$class];
+    }
+
+    /**
+     * Gets all the finders defined in the app (required for test purpose).
+     */
+    public function all(): array
+    {
+        $finders = $this->finders instanceof \Traversable ? iterator_to_array($this->finders) : $this->finders;
+
+        return array_values($finders);
     }
 
     /**

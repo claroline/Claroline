@@ -317,11 +317,4 @@ class UserFinder extends AbstractFinder
 
         return $qb;
     }
-
-    public function getFilters()
-    {
-        return [
-            '$defaults' => [],
-        ];
-    }
 }

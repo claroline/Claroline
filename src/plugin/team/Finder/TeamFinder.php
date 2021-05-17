@@ -24,17 +24,17 @@ class TeamFinder extends AbstractFinder
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
     {
-        $qb->join('obj.workspace', 'w');
-        $qb->andWhere($qb->expr()->orX(
-            $qb->expr()->like('w.id', ':workspaceId'),
-            $qb->expr()->like('w.uuid', ':workspaceId')
-        ));
-        $qb->setParameter('workspaceId', $searches['workspace']);
         $managerJoin = false;
 
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
                 case 'workspace':
+                    $qb->join('obj.workspace', 'w');
+                    $qb->andWhere($qb->expr()->orX( // TODO : should only manage one. Can have false positive because of trans-typing
+                        $qb->expr()->like('w.id', ':workspaceId'),
+                        $qb->expr()->like('w.uuid', ':workspaceId')
+                    ));
+                    $qb->setParameter('workspaceId', $searches['workspace']);
                     break;
                 case 'teamManager':
                     $where = "CONCAT(UPPER(m.firstName), CONCAT(' ', UPPER(m.lastName))) LIKE :{$filterName}";

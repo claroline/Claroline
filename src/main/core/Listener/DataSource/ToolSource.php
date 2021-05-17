@@ -79,7 +79,8 @@ class ToolSource
         ];
         $tools = $this->finder->search(Tool::class, $options);
 
-        for ($i = 0; $i < count($tools['data']); ++$i) {
+        $nbTools = count($tools['data']);
+        for ($i = 0; $i < $nbTools; ++$i) {
             $tools['data'][$i]['context'] = $context;
         }
         $event->setData($tools);

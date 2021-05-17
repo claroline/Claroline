@@ -21,11 +21,12 @@
         "ext-fileinfo": "*",
         "ext-gd": "*",
         "ext-intl": "*",
+        "ext-json": "*",
         "ext-mbstring": "*",
         "ext-pdo": "*",
         "ext-pdo_mysql": "*",
         "ext-openssl": "*",
-        "ext-json": "*",
+        "ext-simplexml": "*",
         "ext-zip": "*",
         "claroline/json-quiz": "^1.0",
         "composer/composer": "^1.6|^2.0",
@@ -166,15 +167,13 @@
             "Claroline\\BundleRecorder\\ScriptHandler::buildBundleFile"
         ],
         "pre-install-cmd": [
-            "php bin/configure",
-            "php bin/check"
+            "php bin/configure"
         ],
         "post-install-cmd": [
             "composer bundles"
         ],
         "pre-update-cmd": [
             "php bin/configure",
-            "php bin/check",
             "composer enable-maintenance",
             "composer delete-cache"
         ],

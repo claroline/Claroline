@@ -28,7 +28,6 @@ class HomeTabFinder extends AbstractFinder
         array $sortBy = null,
         array $options = ['count' => false, 'page' => 0, 'limit' => -1]
     ) {
-        $configJoin = false;
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
                 case 'context':
@@ -58,21 +57,12 @@ class HomeTabFinder extends AbstractFinder
 
                     break;
                 case 'visible':
-                    if (!$configJoin) {
-                        $qb->leftJoin('obj.homeTabConfigs', 'config');
-                        $configJoin = true;
-                    }
-                    $qb->andWhere('config.visible = true');
+                    $qb->andWhere('obj.visible = true');
 
                     break;
                 case 'roles':
                     if (!empty($filterValue)) {
-                        if (!$configJoin) {
-                            $qb->leftJoin('obj.homeTabConfigs', 'config');
-                            $configJoin = true;
-                        }
-
-                        $qb->leftJoin('config.roles', 'r');
+                        $qb->leftJoin('obj.roles', 'r');
                         $qb->andWhere('(r.id IS NULL OR r.name IN (:roles))');
                         $qb->setParameter('roles', $filterValue);
                     }
@@ -86,13 +76,5 @@ class HomeTabFinder extends AbstractFinder
         $qb->orderBy('obj.order', 'ASC');
 
         return $qb;
-    }
-
-    public function getExtraFieldMapping()
-    {
-        return [
-            'config.roles' => 'roles',
-            'config.visible' => 'visible',
-        ];
     }
 }

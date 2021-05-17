@@ -5,16 +5,18 @@ namespace Claroline\CoreBundle\Tests\Unit\Library\Mailing\Client;
 use Claroline\CoreBundle\Library\Mailing\Client\SymfonyMailer;
 use Claroline\CoreBundle\Library\Mailing\Message;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Mailer\MailerInterface;
 
 class SymfonyMailerTest extends MockeryTestCase
 {
     public function testSend()
     {
+        $logger = $this->mock(LoggerInterface::class);
         $mailer = $this->mock(MailerInterface::class);
         $mailer->shouldReceive('send')->once();
 
-        $symfonyMailer = new SymfonyMailer($mailer);
+        $symfonyMailer = new SymfonyMailer($mailer, $logger);
 
         $message = new Message();
         $message->subject('Subject');
@@ -32,6 +34,7 @@ class SymfonyMailerTest extends MockeryTestCase
         $this->assertSame('bcc2@claroline.com', $message->getAttribute('bcc')[1]);
         $this->assertCount(2, $message->getAttribute('bcc'));
         $this->assertSame('to@claroline.com', $message->getAttribute('to')[0]);
-        $this->assertTrue($symfonyMailer->send($message));
+
+        $symfonyMailer->send($message);
     }
 }
