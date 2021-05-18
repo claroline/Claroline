@@ -83,7 +83,7 @@ class TagSerializer
         $this->sipe('meta.description', 'setDescription', $data, $tag);
 
         if (isset($data['meta']) && isset($data['meta']['creator'])) {
-            $user = $this->om->getRepository(User::class)->findBy(['uuid' => $data['meta']['creator']['id']]);
+            $user = $this->om->getRepository(User::class)->findOneBy(['uuid' => $data['meta']['creator']['id']]);
             if ($user) {
                 $tag->setUser($user);
             }
