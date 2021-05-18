@@ -13,8 +13,8 @@ namespace Claroline\AuthenticationBundle\Security\Oauth;
 
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AuthenticationBundle\Security\Oauth\Hwi\ResourceOwnerFactory;
-use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
-use Claroline\CoreBundle\Event\Security\UserLogoutEvent;
+use Claroline\LogBundle\Event\CatalogEvents\SecurityEvents;
+use Claroline\LogBundle\Event\Security\UserLogoutEvent;
 use HWI\Bundle\OAuthBundle\OAuth\ResourceOwner\AbstractResourceOwner;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

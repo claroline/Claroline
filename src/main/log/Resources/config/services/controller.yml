@@ -1,0 +1,22 @@
+services:
+    Claroline\LogBundle\Controller\APINew\Log\SecurityLogController:
+        parent: Claroline\AppBundle\Controller\AbstractSecurityController
+        public: true
+        arguments:
+            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@security.authorization_checker'
+            - '@security.token_storage'
+
+    Claroline\LogBundle\Controller\APINew\Log\MessageLogController:
+        parent: Claroline\AppBundle\Controller\AbstractSecurityController
+        public: true
+        arguments:
+            - '@Claroline\AppBundle\API\FinderProvider'
+
+    Claroline\LogBundle\Controller\APINew\Log\FunctionalLogController:
+        parent: Claroline\AppBundle\Controller\AbstractSecurityController
+        public: true
+        arguments:
+            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@security.authorization_checker'
+            - '@security.token_storage'

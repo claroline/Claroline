@@ -11,10 +11,10 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Cryptography\CryptographicKey;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
-use Claroline\CoreBundle\Event\Security\AddRoleEvent;
-use Claroline\CoreBundle\Event\Security\RemoveRoleEvent;
 use Claroline\CoreBundle\Manager\CryptographyManager;
+use Claroline\LogBundle\Event\CatalogEvents\SecurityEvents;
+use Claroline\LogBundle\Event\Security\AddRoleEvent;
+use Claroline\LogBundle\Event\Security\RemoveRoleEvent;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class OrganizationCrud

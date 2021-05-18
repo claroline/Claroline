@@ -1,0 +1,30 @@
+services:
+    Claroline\CoreBundle\Subscriber\Crud\Planning\AbstractPlannedSubscriber:
+        abstract: true
+        calls:
+            - method: setTokenStorage
+              arguments:
+                  - '@security.token_storage'
+            - method: setObjectManager
+              arguments:
+                  - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - method: setPlanningManager
+              arguments:
+                  - '@Claroline\CoreBundle\Manager\PlanningManager'
+
+    Claroline\LogBundle\Subscriber\Log\SecurityLogSubscriber:
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@http_client'
+            - '@security.helper'
+            - '@request_stack'
+            - '@translator'
+        tags:
+            - { name: kernel.event_subscriber }
+
+    Claroline\LogBundle\Subscriber\Log\FunctionalLogSubscriber:
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@translator'
+        tags:
+            - { name: kernel.event_subscriber }
