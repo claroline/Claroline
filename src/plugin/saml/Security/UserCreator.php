@@ -6,6 +6,7 @@ use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
 use Claroline\AuthenticationBundle\Security\Authentication\Authenticator;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use LightSaml\Model\Protocol\Response;
 use LightSaml\SpBundle\Security\User\UserCreatorInterface;
 use LightSaml\SpBundle\Security\User\UsernameMapperInterface;
@@ -22,17 +23,21 @@ class UserCreator implements UserCreatorInterface
     private $usernameMapper;
     /** @var Crud */
     private $crud;
+    /** @var PlatformConfigurationHandler */
+    private $config;
 
     public function __construct(
         TokenStorageInterface $tokenStorage,
         Authenticator $authenticator,
         UsernameMapperInterface $usernameMapper,
+        PlatformConfigurationHandler $config,
         Crud $crud
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->authenticator = $authenticator;
         $this->usernameMapper = $usernameMapper;
         $this->crud = $crud;
+        $this->config = $config;
     }
 
     /**
@@ -64,6 +69,12 @@ class UserCreator implements UserCreatorInterface
         // but it's not already filled and I can't rewrite the whole process to test token existence.
         $this->setToken();
 
+        // attach user to the defined organization
+        $organization = null;
+        if ($this->config->getParameter('saml.organization_id')) {
+            $organization = ['id' => $this->config->getParameter('saml.organization_id')];
+        }
+
         /** @var User $user */
         $user = $this->crud->create(User::class, [
             'username' => $username,
@@ -74,6 +85,7 @@ class UserCreator implements UserCreatorInterface
             'meta' => [
                 'mailValidated' => true, // because we receive a trusted email
             ],
+            'mainOrganization' => $organization,
             'restrictions' => [
                 'disabled' => false,
             ],

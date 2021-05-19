@@ -27,6 +27,7 @@ services:
             - '@security.token_storage'
             - '@Claroline\AuthenticationBundle\Security\Authentication\Authenticator'
             - '@lightsaml_sp.username_mapper.simple'
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
             - '@Claroline\AppBundle\API\Crud'
 
     Claroline\SamlBundle\Security\LogoutHandler:
