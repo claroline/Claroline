@@ -149,6 +149,11 @@ class EventPresenceManager
             'user_last_name' => $user->getLastName(),
         ];
 
+        if ($event->getPresenceTemplate()) {
+            return $this->templateManager->getTemplateContent($event->getPresenceTemplate(), $placeholders, $locale);
+        }
+
+        // use the default template
         return $this->templateManager->getTemplate('training_event_presence', $placeholders, $locale);
     }
 }

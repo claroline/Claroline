@@ -15,6 +15,8 @@ use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\Planning\PlannedObjectSerializer;
+use Claroline\CoreBundle\API\Serializer\Template\TemplateSerializer;
+use Claroline\CoreBundle\Entity\Template\Template;
 use Claroline\CursusBundle\Entity\Event;
 use Claroline\CursusBundle\Entity\Session;
 use Claroline\CursusBundle\Repository\EventRepository;
@@ -33,25 +35,32 @@ class EventSerializer
     private $plannedObjectSerializer;
     /** @var SessionSerializer */
     private $sessionSerializer;
+    /** @var TemplateSerializer */
+    private $templateSerializer;
 
     /** @var ObjectRepository */
     private $sessionRepo;
     /** @var EventRepository */
     private $eventRepo;
+    /** @var ObjectRepository */
+    private $templateRepo;
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         ObjectManager $om,
         PlannedObjectSerializer $plannedObjectSerializer,
-        SessionSerializer $sessionSerializer
+        SessionSerializer $sessionSerializer,
+        TemplateSerializer $templateSerializer
     ) {
         $this->authorization = $authorization;
         $this->om = $om;
         $this->plannedObjectSerializer = $plannedObjectSerializer;
         $this->sessionSerializer = $sessionSerializer;
+        $this->templateSerializer = $templateSerializer;
 
         $this->sessionRepo = $om->getRepository(Session::class);
         $this->eventRepo = $om->getRepository(Event::class);
+        $this->templateRepo = $om->getRepository(Template::class);
     }
 
     public function serialize(Event $event, array $options = []): array
@@ -75,6 +84,9 @@ class EventSerializer
                 'registration' => [
                     'registrationType' => $event->getRegistrationType(),
                 ],
+                'presenceTemplate' => $event->getPresenceTemplate() ?
+                    $this->templateSerializer->serialize($event->getPresenceTemplate(), [Options::SERIALIZE_MINIMAL]) :
+                    null,
             ]);
         }
 
@@ -98,6 +110,15 @@ class EventSerializer
             if ($session) {
                 $event->setSession($session);
             }
+        }
+
+        if (isset($data['presenceTemplate'])) {
+            $template = null;
+            if (!empty($data['presenceTemplate']) && $data['presenceTemplate']['id']) {
+                $template = $this->templateRepo->findOneBy(['uuid' => $data['presenceTemplate']['id']]);
+            }
+
+            $event->setPresenceTemplate($template);
         }
 
         return $event;

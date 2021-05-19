@@ -76,6 +76,15 @@ const EventForm = (props) =>
             name: 'display.color',
             type: 'color',
             label: trans('color')
+          }, {
+            name: 'presenceTemplate',
+            type: 'template',
+            label: trans('training_event_presence', {}, 'template'),
+            options: {
+              picker: {
+                filters: [{property: 'typeName', value: 'training_event_presence', locked: true}]
+              }
+            }
           }
         ]
       }, {

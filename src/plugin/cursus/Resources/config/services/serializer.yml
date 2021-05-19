@@ -35,6 +35,7 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\API\Serializer\Planning\PlannedObjectSerializer'
             - '@Claroline\CursusBundle\Serializer\SessionSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\Template\TemplateSerializer'
 
     Claroline\CursusBundle\Serializer\EventPresenceSerializer:
         arguments:
