@@ -19,6 +19,8 @@ class PlatformDefaults implements ParameterProviderInterface
     {
         return [
             'saml' => [
+                // an organization to bind users to when created from saml
+                'organization_id' => null,
                 'active' => false,
                 'entity_id' => 'claroline', // the sp name
                 'credentials' => [], // the app certificates and secrets
