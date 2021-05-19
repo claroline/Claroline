@@ -189,8 +189,7 @@ services:
         tags: [claroline.serializer]
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
-            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\CoreBundle\API\Serializer\Template\TemplateTypeSerializer'
 
     Claroline\CoreBundle\API\Serializer\Task\ScheduledTaskSerializer:
         tags: [claroline.serializer]

@@ -131,7 +131,7 @@ class ResourceNode
      *
      * @ORM\OneToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode",
-     *     mappedBy="parent",
+     *     mappedBy="parent"
      * )
      * @ORM\OrderBy({"index" = "ASC"})
      */

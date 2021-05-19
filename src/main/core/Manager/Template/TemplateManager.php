@@ -54,48 +54,46 @@ class TemplateManager
         $result = '';
         $templateType = $this->templateTypeRepo->findOneBy(['name' => $templateTypeName]);
 
+        if (!$locale) {
+            $locale = $this->config->getParameter('locales.default');
+        }
+
         // Checks if a template is associated to the template type
         if ($templateType && $templateType->getDefaultTemplate()) {
-            /** @var Template|null $template */
-            $template = null;
+            /** @var Template $template */
+            $template = $this->templateRepo->findOneBy([
+                'type' => $templateType,
+                'name' => $templateType->getDefaultTemplate(),
+            ]);
 
-            // Fetches template for the given type and locale
-            if ($locale) {
-                $template = $this->templateRepo->findOneBy([
-                    'type' => $templateType,
-                    'name' => $templateType->getDefaultTemplate(),
-                    'lang' => $locale,
-                ]);
-            }
-
-            // If no template is found for the given locale or locale is null, uses default locale
-            if (!$locale || !$template) {
-                $defaultLocale = $this->config->getParameter('locales.default');
-                if ($defaultLocale && $defaultLocale !== $locale) {
-                    $template = $this->templateRepo->findOneBy([
-                        'type' => $templateType,
-                        'name' => $templateType->getDefaultTemplate(),
-                        'lang' => $defaultLocale,
-                    ]);
-                }
-            }
-
-            // If a template is found
             if ($template) {
-                $result = $this->getTemplateContent($template, $placeholders, $mode);
+                $result = $this->getTemplateContent($template, $placeholders, $locale, $mode);
             }
         }
 
         return $result;
     }
 
-    public function getTemplateContent(Template $template, array $placeholders = [], string $mode = 'content'): string
+    public function getTemplateContent(Template $template, array $placeholders = [], string $locale = null, string $mode = 'content'): string
     {
-        switch ($mode) {
-            case 'content':
-                return $this->placeholderManager->replacePlaceholders($template->getContent(), $placeholders);
-            case 'title':
-                return $this->placeholderManager->replacePlaceholders($template->getTitle() ?? '', $placeholders);
+        $content = null;
+        if ($locale) {
+            $content = $template->getTemplateContent($locale);
+        }
+
+        // content for the requested locale does not exist. Try with platform default locale
+        $defaultLocale = $this->config->getParameter('locales.default');
+        if (empty($content) && $locale !== $defaultLocale) {
+            $content = $template->getTemplateContent($defaultLocale);
+        }
+
+        if ($content) {
+            switch ($mode) {
+                case 'content':
+                    return $this->placeholderManager->replacePlaceholders($content->getContent(), $placeholders);
+                case 'title':
+                    return $this->placeholderManager->replacePlaceholders($content->getTitle() ?? '', $placeholders);
+            }
         }
 
         return '';

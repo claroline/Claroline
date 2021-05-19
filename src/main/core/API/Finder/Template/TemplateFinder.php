@@ -41,8 +41,8 @@ class TemplateFinder extends AbstractFinder
                         $qb->join('obj.type', 't');
                         $typeJoin = true;
                     }
-                    $qb->andWhere("UPPER(t.name) LIKE :{$filterName}");
-                    $qb->setParameter($filterName, '%'.strtoupper($filterValue).'%');
+                    $qb->andWhere("UPPER(t.name) = :{$filterName}");
+                    $qb->setParameter($filterName, strtoupper($filterValue));
                     break;
                 default:
                     $this->setDefaults($qb, $filterName, $filterValue);

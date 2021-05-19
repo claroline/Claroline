@@ -22,6 +22,7 @@ const TemplateButton = (props) =>
     disabled={props.disabled}
     modal={[MODAL_TEMPLATES, {
       title: props.title,
+      filters: props.filters,
       selectAction: (selected) => ({
         type: CALLBACK_BUTTON,
         label: trans('select', {}, 'actions'),
@@ -33,6 +34,9 @@ const TemplateButton = (props) =>
 
 TemplateButton.propTypes = {
   title: T.string,
+  filters: T.arrayOf(T.shape({
+    // TODO : list filter types
+  })),
   disabled: T.bool,
   onChange: T.func.isRequired,
   size: T.string

@@ -23,21 +23,17 @@ const generateSections = (defaultLocale, locales) => {
           name: 'name',
           type: 'string',
           label: trans('name'),
-          required: true
+          required: true,
+          options: {
+            unique: {
+              name: 'name',
+              check: ['apiv2_template_exist']
+            }
+          }
         }, {
           name: 'type',
           type: 'template_type',
           label: trans('type'),
-          required: true
-        }, {
-          name: 'title',
-          type: 'string',
-          label: trans('title'),
-          required: true
-        }, {
-          name: 'content',
-          type: 'html',
-          label: trans('content'),
           required: true
         }, {
           name: 'defineAsDefault',
@@ -47,16 +43,18 @@ const generateSections = (defaultLocale, locales) => {
       ]
     }
   ]
-  locales.filter(locale => locale !== defaultLocale).forEach(locale => {
+  locales.map(locale => {
     const section = {
       title: trans(locale),
+      defaultOpened: locale === defaultLocale,
+      opened: locale === defaultLocale,
       fields: [
         {
-          name: `localized.${locale}.title`,
+          name: `contents.${locale}.title`,
           type: 'string',
           label: trans('title')
         }, {
-          name: `localized.${locale}.content`,
+          name: `contents.${locale}.content`,
           type: 'html',
           label: trans('content')
         }
