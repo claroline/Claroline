@@ -550,11 +550,11 @@ const EditorParameters = props => {
                 }
               }, {
                 name: 'parameters.successMessage',
-                label: trans('success_message', {}, 'quiz'),
+                label: trans('success_message'),
                 type: 'html'
               }, {
                 name: 'parameters.failureMessage',
-                label: trans('failure_message', {}, 'quiz'),
+                label: trans('failure_message'),
                 type: 'html'
               }
             ]

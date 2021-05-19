@@ -179,7 +179,7 @@ const EditorComponent = props =>
               {
                 name: 'display.successMessage',
                 type: 'html',
-                label: trans('success_message', {}, 'dropzone'),
+                label: trans('success_message'),
                 displayed: props.dropzone.display && props.dropzone.display.showFeedback,
                 required: true,
                 options: {
@@ -188,7 +188,7 @@ const EditorComponent = props =>
               }, {
                 name: 'display.failMessage',
                 type: 'html',
-                label: trans('fail_message', {}, 'dropzone'),
+                label: trans('failure_message'),
                 displayed: props.dropzone.display && props.dropzone.display.showFeedback,
                 required: true,
                 options: {

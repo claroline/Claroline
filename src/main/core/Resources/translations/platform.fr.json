@@ -1664,5 +1664,7 @@
     "claroline_message_sending": "Envoi d'un message",
     "planned_at": "Planifié le",
     "planning": "Planification",
-    "show_title": "Afficher le titre"
+    "show_title": "Afficher le titre",
+    "success_message": "Message de réussite",
+    "failure_message": "Message d'échec"
 }

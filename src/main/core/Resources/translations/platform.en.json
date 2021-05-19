@@ -1633,5 +1633,7 @@
     "claroline_message_sending": "Send a message",
     "planned_at": "Planned at",
     "planning": "Planning",
-    "show_title": "Display title"
+    "show_title": "Display title",
+    "success_message": "Success message",
+    "failure_message": "Failure message"
 }
