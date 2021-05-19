@@ -19,12 +19,14 @@ class SendMessage
     private $content;
     private $object;
     private $users;
+    private $sender;
 
-    public function __construct(string $content, string $object, array $users)
+    public function __construct(string $content, string $object, array $users, ?User $sender = null)
     {
         $this->content = $content;
         $this->object = $object;
         $this->users = $users;
+        $this->sender = $sender;
     }
 
     public function createMessage()
@@ -34,7 +36,7 @@ class SendMessage
         $message->setContent($this->content);
         $message->setParent(null);
         $message->setObject($this->object);
-        $message->setSender(null);
+        $message->setSender($this->sender);
 
         $message->setReceivers(array_map(function (User $user) {
             return $user->getUsername();

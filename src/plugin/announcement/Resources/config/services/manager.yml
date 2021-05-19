@@ -11,3 +11,4 @@ services:
             - '@Claroline\CoreBundle\Manager\MailManager'
             - '@Claroline\CoreBundle\Manager\Task\ScheduledTaskManager'
             - '@Claroline\AppBundle\API\FinderProvider'
+            - '@messenger.default_bus'

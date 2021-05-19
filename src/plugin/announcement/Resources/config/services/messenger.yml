@@ -1,0 +1,6 @@
+services:
+    Claroline\AnnouncementBundle\Messenger\SendAnnouncementHandler:
+        tags: [ messenger.message_handler ]
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\Event\StrictDispatcher'

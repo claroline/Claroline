@@ -12,15 +12,14 @@
 namespace Claroline\AnnouncementBundle\Manager;
 
 use Claroline\AnnouncementBundle\Entity\Announcement;
-use Claroline\AnnouncementBundle\Entity\AnnouncementSend;
+use Claroline\AnnouncementBundle\Messenger\Message\SendAnnouncement;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\CatalogEvents\MessageEvents;
-use Claroline\CoreBundle\Event\SendMessageEvent;
 use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\Task\ScheduledTaskManager;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 class AnnouncementManager
 {
@@ -34,19 +33,23 @@ class AnnouncementManager
     private $taskManager;
     /** @var FinderProvider */
     private $finder;
+    /** @var MessageBusInterface */
+    private $messageBus;
 
     public function __construct(
         ObjectManager $om,
         StrictDispatcher $eventDispatcher,
         MailManager $mailManager,
         ScheduledTaskManager $taskManager,
-        FinderProvider $finder
+        FinderProvider $finder,
+        MessageBusInterface $messageBus
     ) {
         $this->om = $om;
         $this->eventDispatcher = $eventDispatcher;
         $this->mailManager = $mailManager;
         $this->taskManager = $taskManager;
         $this->finder = $finder;
+        $this->messageBus = $messageBus;
     }
 
     /**
@@ -56,33 +59,13 @@ class AnnouncementManager
     {
         $message = $this->getMessage($announcement, $users);
 
-        $announcementSend = new AnnouncementSend();
-
-        $data = $message;
-        $data['receivers'] = array_map(function (User $receiver) {
-            return $receiver->getUsername();
-        }, $message['receivers']);
-        $data['sender'] = $message['sender']->getUsername();
-        $announcementSend->setAnnouncement($announcement);
-        $announcementSend->setData($data);
-        $this->om->persist($announcementSend);
-        $this->om->flush();
-
-        $this->eventDispatcher->dispatch(
-            MessageEvents::MESSAGE_SENDING,
-            SendMessageEvent::class,
-            [
-                $message['content'],
-                $message['object'],
-                $message['receivers'],
-                $message['sender'],
-            ]
-        );
-
-        //it's kind of a hack because this is not using the crud... but wathever.
-        $this->eventDispatcher->dispatch('crud.post.create.announcement_send', 'Claroline\\AppBundle\\Event\\Crud\\CreateEvent', [
-            $announcementSend, [], [],
-        ]);
+        $this->messageBus->dispatch(new SendAnnouncement(
+            $message['content'],
+            $message['object'],
+            $message['receivers'],
+            $announcement->getId(),
+            $message['sender']
+        ));
     }
 
     public function scheduleMessage(Announcement $announcement, \DateTime $scheduledDate, array $roles = [])
