@@ -81,13 +81,7 @@ class MessageManager
         return $message;
     }
 
-    /**
-     * @param bool $setAsSent
-     * @param bool $sendMail
-     *
-     * @return Message
-     */
-    public function send(Message $message, $setAsSent = true, $sendMail = true)
+    public function send(Message $message, bool $sendMail = true): Message
     {
         /** @var User[] $userReceivers */
         $userReceivers = [];
@@ -109,7 +103,7 @@ class MessageManager
             $workspaceReceivers = $this->workspaceRepo->findByCodes($receivers['workspaces']);
         }
 
-        if ($setAsSent && $message->getSender()) {
+        if ($message->getSender()) {
             $userMessage = new UserMessage();
             $userMessage->setIsSent(true);
             $userMessage->setUser($message->getSender());
@@ -158,6 +152,7 @@ class MessageManager
         }
 
         if ($sendMail) {
+            // TODO : subscribe to `SendMessageEvent` instead
             $replyToMail = !empty($message->getSender()) ? $message->getSender()->getEmail() : null;
 
             $this->mailManager->send(
@@ -200,7 +195,7 @@ class MessageManager
         }
 
         $message = $this->create($content, $object, $users, $sender);
-        $this->send($message, true, $withMail);
+        $this->send($message, $withMail);
 
         /*
          * Returns the table of users to be used in MessageSubscriber
