@@ -13,11 +13,11 @@ namespace Claroline\MessageBundle\Subscriber;
 
 use Claroline\CoreBundle\Entity\Log\MessageLog;
 use Claroline\CoreBundle\Event\CatalogEvents\MessageEvents;
+use Claroline\CoreBundle\Event\SendMessageEvent;
 use Claroline\MessageBundle\Manager\MessageManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Security;
-use Symfony\Contracts\EventDispatcher\Event;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class MessageSubscriber implements EventSubscriberInterface
@@ -46,7 +46,7 @@ class MessageSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function onMessageSending(Event $event, string $eventName)
+    public function onMessageSending(SendMessageEvent $event, string $eventName)
     {
         $users = $this->messageManager->sendMessage(
             $event->getContent(),
