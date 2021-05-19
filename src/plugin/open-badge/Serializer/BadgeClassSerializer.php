@@ -6,10 +6,12 @@ use Claroline\AppBundle\API\Options as APIOptions;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer;
+use Claroline\CoreBundle\API\Serializer\Template\TemplateSerializer;
 use Claroline\CoreBundle\API\Serializer\User\OrganizationSerializer;
 use Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer;
 use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Organization\Organization;
+use Claroline\CoreBundle\Entity\Template\Template;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
@@ -39,6 +41,7 @@ class BadgeClassSerializer
     private $publicFileSerializer;
     private $organizationSerializer;
     private $ruleSerializer;
+    private $templateSerializer;
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
@@ -52,7 +55,8 @@ class BadgeClassSerializer
         ImageSerializer $imageSerializer,
         OrganizationSerializer $organizationSerializer,
         PublicFileSerializer $publicFileSerializer,
-        RuleSerializer $ruleSerializer
+        RuleSerializer $ruleSerializer,
+        TemplateSerializer $templateSerializer
     ) {
         $this->authorization = $authorization;
         $this->router = $router;
@@ -66,6 +70,7 @@ class BadgeClassSerializer
         $this->publicFileSerializer = $publicFileSerializer;
         $this->organizationSerializer = $organizationSerializer;
         $this->ruleSerializer = $ruleSerializer;
+        $this->templateSerializer = $templateSerializer;
     }
 
     public function getName(): string
@@ -116,20 +121,27 @@ class BadgeClassSerializer
                 $data['image'] = $this->imageSerializer->serialize($image)['id'];
             }
         } else {
-            $data['issuingPeer'] = $badge->hasIssuingPeer();
+            $data['workspace'] = $badge->getWorkspace() ? $this->workspaceSerializer->serialize($badge->getWorkspace(), [APIOptions::SERIALIZE_MINIMAL]) : null;
             $data['meta'] = [
                 'created' => DateNormalizer::normalize($badge->getCreated()),
                 'updated' => DateNormalizer::normalize($badge->getUpdated()),
                 'enabled' => $badge->getEnabled(),
             ];
-            $data['restrictions'] = [
-                'hideRecipients' => $badge->getHideRecipients(),
-            ];
-            $data['permissions'] = $this->serializePermissions($badge);
-            $data['rules'] = array_map(function (Rule $rule) {
-                return $this->ruleSerializer->serialize($rule);
-            }, $badge->getRules()->toArray());
-            $data['workspace'] = $badge->getWorkspace() ? $this->workspaceSerializer->serialize($badge->getWorkspace(), [APIOptions::SERIALIZE_MINIMAL]) : null;
+
+            if (!in_array(APIOptions::SERIALIZE_MINIMAL, $options)) {
+                $data['issuingPeer'] = $badge->hasIssuingPeer();
+                $data['restrictions'] = [
+                    'hideRecipients' => $badge->getHideRecipients(),
+                ];
+                $data['permissions'] = $this->serializePermissions($badge);
+                $data['rules'] = array_map(function (Rule $rule) {
+                    return $this->ruleSerializer->serialize($rule);
+                }, $badge->getRules()->toArray());
+
+                if ($badge->getTemplate()) {
+                    $data['template'] = $this->templateSerializer->serialize($badge->getTemplate(), [APIOptions::SERIALIZE_MINIMAL]);
+                }
+            }
         }
 
         return $data;
@@ -171,6 +183,16 @@ class BadgeClassSerializer
             }
 
             $badge->setWorkspace($workspace);
+        }
+
+        if (isset($data['template'])) {
+            $template = null;
+            if (isset($data['template']['id'])) {
+                /** @var Template $template */
+                $template = $this->om->getRepository(Template::class)->findOneBy(['uuid' => $data['template']['id']]);
+            }
+
+            $badge->setTemplate($template);
         }
 
         if (isset($data['tags'])) {

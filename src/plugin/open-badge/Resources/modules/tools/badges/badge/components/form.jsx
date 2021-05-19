@@ -84,6 +84,17 @@ const BadgeFormComponent = (props) =>
             name: 'color',
             label: trans('color'),
             type: 'color'
+          }, {
+            name: 'template',
+            label: trans('badge_certificate', {}, 'template'),
+            type: 'template',
+            options: {
+              picker: {
+                filters: [
+                  {property: 'typeName', value: 'badge_certificate', locked: true}
+                ]
+              }
+            }
           }
         ]
       }, {
