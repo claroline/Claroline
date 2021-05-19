@@ -64,7 +64,6 @@ services:
         arguments:
             - '@security.authorization_checker'
             - '@Claroline\CoreBundle\Manager\Template\TemplateManager'
-            - '@Claroline\CoreBundle\Manager\Tool\ToolManager'
 
     Claroline\CoreBundle\Controller\APINew\Template\TemplateTypeController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController

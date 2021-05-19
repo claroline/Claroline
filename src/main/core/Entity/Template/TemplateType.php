@@ -62,9 +62,6 @@ class TemplateType
      */
     private $defaultTemplate;
 
-    /**
-     * Template constructor.
-     */
     public function __construct()
     {
         $this->refreshUuid();
