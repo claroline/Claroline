@@ -92,7 +92,12 @@ class OpenBadgeManager
             'issuer_country' => $location ? $location->getCountry() : null,
         ];
 
-        $content = $this->templateManager->getTemplate('badge_certificate', $placeholders);
+        if ($badge->getTemplate()) {
+            $content = $this->templateManager->getTemplateContent($badge->getTemplate(), $placeholders);
+        } else {
+            // use default template
+            $content = $this->templateManager->getTemplate('badge_certificate', $placeholders);
+        }
 
         return $this->templating->render('@ClarolineOpenBadge/pdf.html.twig', ['content' => $content]);
     }
