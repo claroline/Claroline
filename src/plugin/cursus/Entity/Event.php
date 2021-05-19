@@ -13,6 +13,7 @@ namespace Claroline\CursusBundle\Entity;
 
 use Claroline\AppBundle\Entity\Identifier\Code;
 use Claroline\CoreBundle\Entity\Planning\AbstractPlanned;
+use Claroline\CoreBundle\Entity\Template\Template;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -36,13 +37,27 @@ class Event extends AbstractPlanned
 
     /**
      * @ORM\Column(name="max_users", nullable=true, type="integer")
+     *
+     * @var int
      */
     private $maxUsers;
 
     /**
      * @ORM\Column(name="registration_type", type="integer", nullable=false, options={"default" = 0})
+     *
+     * @var int
      */
     private $registrationType = Session::REGISTRATION_AUTO;
+
+    /**
+     * Template used to print the presence of a User.
+     *
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Template\Template")
+     * @ORM\JoinColumn(name="presence_template_id", nullable=true, onDelete="SET NULL")
+     *
+     * @var Template
+     */
+    private $presenceTemplate;
 
     public static function getType(): string
     {
@@ -77,5 +92,15 @@ class Event extends AbstractPlanned
     public function setRegistrationType($registrationType)
     {
         $this->registrationType = $registrationType;
+    }
+
+    public function getPresenceTemplate(): ?Template
+    {
+        return $this->presenceTemplate;
+    }
+
+    public function setPresenceTemplate(?Template $template = null)
+    {
+        $this->presenceTemplate = $template;
     }
 }

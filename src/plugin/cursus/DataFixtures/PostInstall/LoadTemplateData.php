@@ -55,6 +55,7 @@ class LoadTemplateData extends AbstractFixture implements ContainerAwareInterfac
             $template = new Template();
             $template->setType($eventType);
             $template->setName('training_event');
+            $om->persist($template);
 
             foreach ($this->availableLocales as $locale) {
                 $templateContent = new TemplateContent();
