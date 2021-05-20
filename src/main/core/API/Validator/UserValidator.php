@@ -40,14 +40,14 @@ class UserValidator implements ValidatorInterface
         //the big chunk of code allows us to know if the identifiers are already taken
         //and prohibits the use of an already used address email in a username field
 
-        if ($this->exists('username', $data['username'], isset($data['id']) ? $data['id'] : null)) {
+        if (isset($data['username']) && $this->exists('username', $data['username'], isset($data['id']) ? $data['id'] : null)) {
             $errors[] = [
                 'path' => 'username',
                 'message' => 'The username '.$data['username'].' already exists.',
             ];
         }
 
-        if ($this->exists('email', $data['email'], isset($data['id']) ? $data['id'] : null)) {
+        if (isset($data['email']) && $this->exists('email', $data['email'], isset($data['id']) ? $data['id'] : null)) {
             $errors[] = [
                 'path' => 'email',
                 'message' => 'The email '.$data['email'].' already exists.',

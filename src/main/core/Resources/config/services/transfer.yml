@@ -101,6 +101,11 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\Manager\UserManager'
 
+    Claroline\CoreBundle\API\Transfer\Action\User\SetMainOrganization:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\Crud'
+
     # Workspaces
     Claroline\CoreBundle\API\Transfer\Action\Workspace\Create:
         arguments:

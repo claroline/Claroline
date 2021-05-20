@@ -7,6 +7,7 @@
     "delete": "Delete",
     "update": "Update",
     "create_or_update": "Create or update",
+    "set_main_organization": "Define main organization",
     "workspace": "Workspace",
     "group": "Group",
     "user": "User",
