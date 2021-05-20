@@ -26,7 +26,7 @@ use Claroline\CoreBundle\Event\Log\LogWorkspaceEnterEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceRoleDeleteEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceToolReadEvent;
 use Claroline\CoreBundle\Event\LogCreateEvent;
-use Claroline\CoreBundle\Event\Security\UserLoginEvent;
+use Claroline\LogBundle\Event\Security\UserLoginEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\LogConnectManager;
 use Claroline\CoreBundle\Manager\RoleManager;

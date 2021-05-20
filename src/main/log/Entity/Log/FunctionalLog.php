@@ -16,21 +16,21 @@ class FunctionalLog extends AbstractLog
 {
     /**
      * @var User
-     * @ORM\ManyToOne(targetEntity="Claroline\LogBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="SET NULL")
      */
     private $user;
 
     /**
      * @var ResourceNode
-     * @ORM\ManyToOne(targetEntity="Claroline\LogBundle\Entity\Resource\ResourceNode")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
      * @ORM\JoinColumn(name="resource_id", referencedColumnName="id", onDelete="SET NULL")
      */
     private $resource;
 
     /**
      * @var Workspace
-     * @ORM\ManyToOne(targetEntity="Claroline\LogBundle\Entity\Workspace\Workspace")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace")
      * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id", onDelete="SET NULL")
      */
     private $workspace;

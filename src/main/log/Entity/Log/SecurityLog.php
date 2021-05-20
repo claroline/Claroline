@@ -14,14 +14,14 @@ class SecurityLog extends AbstractLog
 {
     /**
      * @var User
-     * @ORM\ManyToOne(targetEntity="Claroline\LogBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
      * @ORM\JoinColumn(name="target_id", referencedColumnName="id", onDelete="SET NULL")
      */
     private $target;
 
     /**
      * @var User
-     * @ORM\ManyToOne(targetEntity="Claroline\LogBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
      * @ORM\JoinColumn(name="doer_id", referencedColumnName="id", onDelete="SET NULL")
      */
     private $doer;

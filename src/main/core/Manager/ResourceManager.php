@@ -23,7 +23,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Event\CatalogEvents\ResourceEvents;
+use Claroline\LogBundle\Event\CatalogEvents\ResourceEvents;
 use Claroline\CoreBundle\Event\Resource\DownloadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Exception\ExportResourceException;

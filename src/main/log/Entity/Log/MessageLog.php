@@ -37,14 +37,14 @@ class MessageLog
 
     /**
      * @var User
-     * @ORM\ManyToOne(targetEntity="Claroline\LogBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
      * @ORM\JoinColumn(name="receiver_id", referencedColumnName="id", onDelete="SET NULL")
      */
     private $receiver;
 
     /**
      * @var User
-     * @ORM\ManyToOne(targetEntity="Claroline\LogBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
      * @ORM\JoinColumn(name="sender_id", referencedColumnName="id", onDelete="SET NULL")
      */
     private $sender;
