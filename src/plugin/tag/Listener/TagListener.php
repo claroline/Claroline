@@ -52,7 +52,7 @@ class TagListener
                 ->innerJoin('to.tag', 't')
                 ->where('to.objectClass = :objectClass')
                 ->andWhere('to.objectId = obj.uuid') // this makes the UUID required on tagged objects
-                ->andWhere('(t.uuid IN (:tags) OR t.name IN (:tags))')
+                ->andWhere('(t.uuid IN (:tagIds) OR t.name IN (:tagNames))')
                 ->groupBy('to.objectId')
                 ->having('COUNT(to.id) = :expectedCount'); // this permits to make a AND between tags
 
@@ -60,7 +60,8 @@ class TagListener
             $queryBuilder = $event->getQueryBuilder();
             $queryBuilder->andWhere($queryBuilder->expr()->exists($tagQueryBuilder->getDql()))
                 ->setParameter('objectClass', $event->getObjectClass())
-                ->setParameter('tags', $tags)
+                ->setParameter('tagIds', $tags)
+                ->setParameter('tagNames', $tags)
                 ->setParameter('expectedCount', count($tags));
 
             $event->setFilters($filters);
