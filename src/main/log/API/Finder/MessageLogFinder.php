@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\LogBundle\API\Finder\Log;
+namespace Claroline\LogBundle\API\Finder;
 
 use Claroline\AppBundle\API\Finder\AbstractFinder;
-use Claroline\LogBundle\Entity\Log\MessageLog;
+use Claroline\LogBundle\Entity\MessageLog;
 use Doctrine\ORM\QueryBuilder;
 
 class MessageLogFinder extends AbstractFinder

@@ -12,17 +12,15 @@ services:
               arguments:
                   - '@Claroline\CoreBundle\Manager\PlanningManager'
 
-    Claroline\LogBundle\Subscriber\Log\SecurityLogSubscriber:
+    Claroline\LogBundle\Subscriber\SecurityLogSubscriber:
         arguments:
             - '@doctrine.orm.entity_manager'
-            - '@http_client'
             - '@security.helper'
-            - '@request_stack'
             - '@translator'
         tags:
             - { name: kernel.event_subscriber }
 
-    Claroline\LogBundle\Subscriber\Log\FunctionalLogSubscriber:
+    Claroline\LogBundle\Subscriber\FunctionalLogSubscriber:
         arguments:
             - '@doctrine.orm.entity_manager'
             - '@translator'

@@ -1,12 +1,12 @@
 <?php
 
-namespace Claroline\LogBundle\API\Serializer\Log;
+namespace Claroline\LogBundle\API\Serializer;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
-use Claroline\LogBundle\Entity\Log\SecurityLog;
+use Claroline\LogBundle\Entity\SecurityLog;
 
 class SecurityLogSerializer
 {

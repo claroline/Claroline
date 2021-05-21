@@ -1,15 +1,15 @@
 services:
-    Claroline\LogBundle\API\Serializer\Log\SecurityLogSerializer:
+    Claroline\LogBundle\API\Serializer\SecurityLogSerializer:
         tags: [ claroline.serializer ]
         arguments:
             - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
 
-    Claroline\LogBundle\API\Serializer\Log\MessageLogSerializer:
+    Claroline\LogBundle\API\Serializer\MessageLogSerializer:
         tags: [ claroline.serializer ]
         arguments:
             - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
 
-    Claroline\LogBundle\API\Serializer\Log\FunctionalLogSerializer:
+    Claroline\LogBundle\API\Serializer\FunctionalLogSerializer:
         tags: [ claroline.serializer ]
         arguments:
             - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'

@@ -13,12 +13,12 @@ namespace Claroline\CoreBundle\Manager;
 
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\LogBundle\Event\CatalogEvents\SecurityEvents;
-use Claroline\LogBundle\Event\Security\ForgotPasswordEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Mailing\Mailer;
 use Claroline\CoreBundle\Library\Mailing\Message;
 use Claroline\CoreBundle\Manager\Template\TemplateManager;
+use Claroline\LogBundle\Event\CatalogEvents\SecurityEvents;
+use Claroline\LogBundle\Event\Security\ForgotPasswordEvent;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class MailManager

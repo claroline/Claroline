@@ -1,38 +1,30 @@
 <?php
 
-namespace Claroline\LogBundle\Subscriber\Log;
+namespace Claroline\LogBundle\Subscriber;
 
-use Claroline\LogBundle\Entity\Log\SecurityLog;
+use Claroline\LogBundle\Entity\SecurityLog;
 use Claroline\LogBundle\Event\CatalogEvents\SecurityEvents;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\SwitchUserToken;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Http\Event\SwitchUserEvent;
 use Symfony\Contracts\EventDispatcher\Event;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SecurityLogSubscriber implements EventSubscriberInterface
 {
     private $em;
-    private $client;
     private $security;
-    private $requestStack;
     private $translator;
 
     public function __construct(
         EntityManagerInterface $em,
-        HttpClientInterface $client,
         Security $security,
-        RequestStack $requestStack,
         TranslatorInterface $translator
     ) {
         $this->em = $em;
-        $this->client = $client;
         $this->security = $security;
-        $this->requestStack = $requestStack;
         $this->translator = $translator;
     }
 

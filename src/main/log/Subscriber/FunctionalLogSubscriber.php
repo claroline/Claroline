@@ -1,8 +1,8 @@
 <?php
 
-namespace Claroline\LogBundle\Subscriber\Log;
+namespace Claroline\LogBundle\Subscriber;
 
-use Claroline\LogBundle\Entity\Log\FunctionalLog;
+use Claroline\LogBundle\Entity\FunctionalLog;
 use Claroline\LogBundle\Event\CatalogEvents\ResourceEvents;
 use Claroline\LogBundle\Event\CatalogEvents\ToolEvents;
 use Doctrine\ORM\EntityManagerInterface;

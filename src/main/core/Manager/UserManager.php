@@ -18,12 +18,12 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\LogBundle\Event\CatalogEvents\SecurityEvents;
-use Claroline\LogBundle\Event\Security\UserDisableEvent;
-use Claroline\LogBundle\Event\Security\UserEnableEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Repository\User\RoleRepository;
 use Claroline\CoreBundle\Repository\User\UserRepository;
+use Claroline\LogBundle\Event\CatalogEvents\SecurityEvents;
+use Claroline\LogBundle\Event\Security\UserDisableEvent;
+use Claroline\LogBundle\Event\Security\UserEnableEvent;
 
 class UserManager
 {

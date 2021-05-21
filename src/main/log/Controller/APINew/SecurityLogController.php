@@ -1,10 +1,10 @@
 <?php
 
-namespace Claroline\LogBundle\Controller\APINew\Log;
+namespace Claroline\LogBundle\Controller\APINew;
 
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\Controller\AbstractSecurityController;
-use Claroline\LogBundle\Entity\Log\SecurityLog;
+use Claroline\LogBundle\Entity\SecurityLog;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;

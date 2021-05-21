@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\LogBundle\Entity\Log;
+namespace Claroline\LogBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Log\AbstractLog;
 use Claroline\CoreBundle\Entity\User;
