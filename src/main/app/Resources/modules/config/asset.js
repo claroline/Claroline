@@ -8,7 +8,7 @@ import {param} from '#/main/app/config/parameters'
  * @returns {string}
  */
 function asset(assetName) {
-  if (0 === assetName.indexOf('http')) {
+  if (assetName && 0 === assetName.indexOf('http')) {
     // we already have an absolute url, there is nothing to do
     return assetName
   }
