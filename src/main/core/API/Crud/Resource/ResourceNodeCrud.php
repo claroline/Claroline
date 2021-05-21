@@ -64,10 +64,6 @@ class ResourceNodeCrud
         /** @var ResourceNode $resourceNode */
         $resourceNode = $event->getObject();
 
-        // compute unique name for resource
-        $name = $this->resourceManager->getUniqueName($resourceNode, $resourceNode->getParent());
-        $resourceNode->setName($name);
-
         // set the creator of the resource
         $user = $this->tokenStorage->getToken()->getUser();
         if ($user instanceof User) {
@@ -102,7 +98,7 @@ class ResourceNodeCrud
 
             if (null !== $resource) {
                 if (!$softDelete && !in_array($node->getResourceType()->getName(), $ignore)) {
-                    $event = $this->lifeCycleManager->delete($node);
+                    $event = $this->lifeCycleManager->delete($node, $softDelete);
 
                     foreach ($event->getFiles() as $file) {
                         if ($softDelete) {
@@ -147,11 +143,10 @@ class ResourceNodeCrud
 
                 if ($softDelete) {
                     $node->setActive(false);
-                    // Rename node to allow future nodes have the same name
-                    $node->setName($node->getName().uniqid('_'));
                     $this->om->persist($node);
                 } else {
                     //for tags
+                    // TODO : tags should directly listen to `resource.delete`
                     $this->dispatcher->dispatch(
                       'claroline_resources_delete',
                       'GenericData',
@@ -204,10 +199,6 @@ class ResourceNodeCrud
         $newNode->setWorkspace($newParent->getWorkspace());
         $newNode->setParent($newParent);
         $newParent->addChild($newNode);
-
-        // compute unique name for resource
-        $name = $this->resourceManager->getUniqueName($newNode, $newParent, true);
-        $newNode->setName($name);
 
         $this->om->persist($newNode);
 

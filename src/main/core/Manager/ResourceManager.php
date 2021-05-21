@@ -138,7 +138,6 @@ class ResourceManager implements LoggerAwareInterface
             $node->setWorkspace($workspace);
         }
         $node->setParent($parent);
-        $node->setName($this->getUniqueName($node, $parent));
         if ($parent) {
             $this->setLastIndex($parent, $node);
         }
@@ -160,61 +159,6 @@ class ResourceManager implements LoggerAwareInterface
         $this->om->endFlushSuite();
 
         return $resource;
-    }
-
-    /**
-     * Gets a unique name for a resource in a folder.
-     * If the name of the resource already exists here, ~*indice* will be appended
-     * to its name.
-     */
-    public function getUniqueName(ResourceNode $node, ResourceNode $parent = null, bool $isCopy = false): string
-    {
-        $candidateName = $node->getName();
-        $nodeType = $node->getResourceType();
-        //if the parent is null, then it's a workspace root and the name is always correct
-        //otherwise we fetch each workspace root with the findBy and the UnitOfWork won't be happy...
-        if (!$parent) {
-            return $candidateName;
-        }
-
-        $parent = $parent ?: $node->getParent();
-        $sameLevelNodes = $parent ?
-            $parent->getChildren() :
-            $this->resourceNodeRepo->findBy(['parent' => null]);
-        $siblingNames = [];
-
-        foreach ($sameLevelNodes as $levelNode) {
-            if (!$isCopy && $levelNode === $node) {
-                // without that condition, a node which is "renamed" with the
-                // same name is also incremented
-                continue;
-            }
-            if ($levelNode->getResourceType() === $nodeType) {
-                $siblingNames[] = $levelNode->getName();
-            }
-        }
-
-        if (!in_array($candidateName, $siblingNames)) {
-            return $candidateName;
-        }
-
-        $candidateRoot = pathinfo($candidateName, PATHINFO_FILENAME);
-        $candidateExt = ($ext = pathinfo($candidateName, PATHINFO_EXTENSION)) ? '.'.$ext : '';
-        $candidatePattern = '/^'
-            .preg_quote($candidateRoot)
-            .'~(\d+)'
-            .preg_quote($candidateExt)
-            .'$/';
-        $previousIndex = 0;
-
-        foreach ($siblingNames as $name) {
-            $matches = [];
-            if (preg_match($candidatePattern, $name, $matches) && $matches[1] > $previousIndex) {
-                $previousIndex = $matches[1];
-            }
-        }
-
-        return $candidateRoot.'~'.++$previousIndex.$candidateExt;
     }
 
     /**
@@ -271,7 +215,6 @@ class ResourceManager implements LoggerAwareInterface
         $this->om->startFlushSuite();
         $this->setLastIndex($parent, $child);
         $child->setParent($parent);
-        $child->setName($this->getUniqueName($child, $parent));
 
         if ($child->getWorkspace()->getId() !== $parent->getWorkspace()->getId()) {
             $this->updateWorkspace($child, $parent->getWorkspace());
@@ -587,12 +530,11 @@ class ResourceManager implements LoggerAwareInterface
         $this->setActive($resourceNode);
         $workspace = $resourceNode->getWorkspace();
         if ($workspace) {
+            // TODO : node should keep its parent when deleted and this should be done only if parent has been deleted too
             $root = $this->getWorkspaceRoot($workspace);
             $resourceNode->setParent($root);
         }
-        $name = substr($resourceNode->getName(), 0, strrpos($resourceNode->getName(), '_'));
-        $resourceNode->setName($name);
-        $resourceNode->setName($this->getUniqueName($resourceNode));
+
         $this->om->persist($resourceNode);
         $this->om->flush();
     }
