@@ -1,0 +1,6 @@
+claro_log_new_api:
+    resource: "@ClarolineLogBundle/Controller/APINew/"
+    prefix: apiv2
+    type: api
+    options:
+        expose: true

@@ -1,0 +1,10 @@
+plugin:
+    admin_tools:
+        - name: claroline_log_admin_tool
+          class: logs
+
+    resource_actions:
+        - name: logs
+          group: management
+          decoder: administrate
+          scope: [object, collection]

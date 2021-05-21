@@ -26,3 +26,7 @@ services:
             - '@translator'
         tags:
             - { name: kernel.event_subscriber }
+
+    Claroline\LogBundle\Subscriber\AdminLogToolSubscriber:
+        tags:
+            - { name: kernel.event_subscriber }
