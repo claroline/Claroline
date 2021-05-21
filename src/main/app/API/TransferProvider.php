@@ -421,6 +421,10 @@ class TransferProvider implements LoggerAwareInterface
         $data = str_replace("\r\n", PHP_EOL, $data);
         $data = str_replace("\r", PHP_EOL, $data);
 
+        // remove BOM if any
+        $bom = pack('H*', 'EFBBBF');
+        $data = preg_replace("/^$bom/", '', $data);
+
         return $data;
     }
 
