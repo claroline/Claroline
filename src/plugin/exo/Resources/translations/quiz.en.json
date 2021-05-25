@@ -520,5 +520,6 @@
     "per_tag": "Per tag",
     "show_step_titles": "Show title of steps",
     "show_question_titles": "Show title of questions",
-    "show_back": "Allow rollback"
+    "show_back": "Allow rollback",
+    "show_attempts_stats": "Display attempts statistics"
 }

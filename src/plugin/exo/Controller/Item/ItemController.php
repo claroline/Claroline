@@ -3,6 +3,7 @@
 namespace UJM\ExoBundle\Controller\Item;
 
 use Claroline\AppBundle\API\FinderProvider;
+use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -10,7 +11,6 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use UJM\ExoBundle\Controller\AbstractController;
 use UJM\ExoBundle\Entity\Item\Item;
 use UJM\ExoBundle\Library\Options\Transfer;
 use UJM\ExoBundle\Manager\Item\ItemManager;
@@ -18,12 +18,14 @@ use UJM\ExoBundle\Manager\Item\ItemManager;
 /**
  * Item Controller exposes REST API.
  *
- * @Route("/questions", options={"expose"=true})
+ * @Route("/questions")
  *
  * @todo : use a crud controller instead
  */
-class ItemController extends AbstractController
+class ItemController
 {
+    use RequestDecoderTrait;
+
     /** @var FinderProvider */
     private $finder;
 
@@ -76,7 +78,7 @@ class ItemController extends AbstractController
         $errors = [];
         $question = null;
 
-        $data = $this->decodeRequestData($request);
+        $data = $this->decodeRequest($request);
         if (empty($data)) {
             // Invalid or empty JSON data received
             $errors[] = [
@@ -115,7 +117,7 @@ class ItemController extends AbstractController
     {
         $errors = [];
 
-        $data = $this->decodeRequestData($request);
+        $data = $this->decodeRequest($request);
         if (empty($data)) {
             // Invalid or empty JSON data received
             $errors[] = [
@@ -163,7 +165,7 @@ class ItemController extends AbstractController
     {
         $errors = [];
 
-        $data = $this->decodeRequestData($request);
+        $data = $this->decodeRequest($request);
         if (empty($data) || !is_array($data)) {
             // Invalid or empty JSON data received
             $errors[] = [

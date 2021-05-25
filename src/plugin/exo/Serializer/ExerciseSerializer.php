@@ -125,10 +125,12 @@ class ExerciseSerializer
             'mandatoryQuestions' => $exercise->getMandatoryQuestions(),
             'answersEditable' => $exercise->isAnswersEditable(),
             'showOverview' => $exercise->getShowOverview(),
+            'overviewStats' => $exercise->getOverviewStats(),
             'showBack' => $exercise->getShowBack(),
             'showEndConfirm' => $exercise->getShowEndConfirm(),
             'showEndPage' => $exercise->getShowEndPage(),
             'endNavigation' => $exercise->hasEndNavigation(),
+            'endStats' => $exercise->getEndStats(),
             'intermediateScores' => $exercise->getIntermediateScores(),
             'showMetadata' => $exercise->isMetadataVisible(),
             'showStatistics' => $exercise->hasStatistics(),
@@ -164,12 +166,14 @@ class ExerciseSerializer
         $this->sipe('anonymizeAttempts', 'setAnonymizeAttempts', $parameters, $exercise);
         $this->sipe('interruptible', 'setInterruptible', $parameters, $exercise);
         $this->sipe('showOverview', 'setShowOverview', $parameters, $exercise);
+        $this->sipe('overviewStats', 'setOverviewStats', $parameters, $exercise);
         $this->sipe('showBack', 'setShowBack', $parameters, $exercise);
         $this->sipe('showEndConfirm', 'setShowEndConfirm', $parameters, $exercise);
         $this->sipe('showEndPage', 'setShowEndPage', $parameters, $exercise);
         $this->sipe('intermediateScores', 'setIntermediateScores', $parameters, $exercise);
         $this->sipe('endMessage', 'setEndMessage', $parameters, $exercise);
         $this->sipe('endNavigation', 'setEndNavigation', $parameters, $exercise);
+        $this->sipe('endStats', 'setEndStats', $parameters, $exercise);
         $this->sipe('showMetadata', 'setMetadataVisible', $parameters, $exercise);
         $this->sipe('showStatistics', 'setStatistics', $parameters, $exercise);
         $this->sipe('allPapersStatistics', 'setAllPapersStatistics', $parameters, $exercise);

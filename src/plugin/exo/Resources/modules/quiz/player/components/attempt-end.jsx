@@ -9,6 +9,7 @@ import {Toolbar} from '#/main/app/action/components/toolbar'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {route} from '#/main/core/workspace/routing'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
+import {selectors as securitySelectors} from '#/main/app/security/store/selectors'
 
 import {ContentHtml} from '#/main/app/content/components/html'
 import {ScoreGauge} from '#/main/core/layout/gauge/components/score'
@@ -18,6 +19,7 @@ import {isQuestionType} from '#/plugin/exo/items/item-types'
 
 import {select as playerSelect} from '#/plugin/exo/quiz/player/selectors'
 import {showCorrection, showScore} from '#/plugin/exo/resources/quiz/papers/restrictions'
+import {AttemptsChart} from '#/plugin/exo/charts/attempts/containers/chart'
 
 // TODO : merge with PlayerRestrictions
 // TODO : show number of attempts info
@@ -163,6 +165,15 @@ const AttemptEndComponent = props =>
           />
         }
 
+        {props.showEndStats &&
+          <AttemptsChart
+            quizId={props.paper.structure.id}
+            userId={'user' === get(props.paper, 'structure.parameters.overviewStats') ? props.currentUserId : null}
+            steps={props.paper.structure.steps}
+            questionNumberingType={get(props.paper, 'structure.parameters.questionNumbering')}
+          />
+        }
+
         {props.endNavigation &&
           <Toolbar
             buttonName="btn btn-block btn-emphasis"
@@ -220,6 +231,7 @@ const AttemptEndComponent = props =>
 AttemptEndComponent.propTypes = {
   path: T.string.isRequired,
   workspace: T.object,
+  currentUserId: T.string.isRequired,
   paper: T.shape({ // TODO : paper prop types
     id: T.string.isRequired,
     structure: T.object.isRequired,
@@ -233,7 +245,8 @@ AttemptEndComponent.propTypes = {
   endNavigation: T.bool.isRequired,
   showStatistics: T.bool.isRequired,
   showAttemptScore: T.bool.isRequired,
-  showAttemptCorrection: T.bool.isRequired
+  showAttemptCorrection: T.bool.isRequired,
+  showEndStats: T.bool.isRequired
 }
 
 const AttemptEnd = connect(
@@ -244,6 +257,7 @@ const AttemptEnd = connect(
     return {
       path: resourceSelect.path(state),
       workspace: resourceSelect.workspace(state),
+      currentUserId: securitySelectors.currentUserId(state),
       paper: paper,
       answers: playerSelect.answers(state),
       tags: playerSelect.tags(state),
@@ -254,7 +268,8 @@ const AttemptEnd = connect(
 
       showAttemptScore: showScore(paper, isAdmin),
       showAttemptCorrection: showCorrection(paper, isAdmin),
-      showStatistics: playerSelect.showStatistics(state)
+      showStatistics: playerSelect.showStatistics(state),
+      showEndStats: playerSelect.showEndStats(state)
     }
   }
 )(AttemptEndComponent)

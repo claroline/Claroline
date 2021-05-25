@@ -1,6 +1,6 @@
 <?php
 
-namespace UJM\ExoBundle\Tests\Controller\Api;
+namespace UJM\ExoBundle\Tests\Controller;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
@@ -66,7 +66,7 @@ class CorrectionControllerTest extends TransactionalTestCase
 
     public function testNonAdminListQuestions()
     {
-        $this->request('GET', "/api/exercises/{$this->exercise->getUuid()}/correction", $this->bob);
+        $this->request('GET', "/apiv2/exercises/{$this->exercise->getUuid()}/correction", $this->bob);
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
@@ -97,7 +97,7 @@ class CorrectionControllerTest extends TransactionalTestCase
         $this->om->persist($paper);
         $this->om->flush();
 
-        $this->request('GET', "/api/exercises/{$this->exercise->getUuid()}/correction", $this->admin);
+        $this->request('GET', "/apiv2/exercises/{$this->exercise->getUuid()}/correction", $this->admin);
 
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
@@ -122,7 +122,7 @@ class CorrectionControllerTest extends TransactionalTestCase
         /** @var Item $question */
         $question = $this->exercise->getSteps()->get(0)->getStepQuestions()->get(0)->getQuestion();
 
-        $this->request('PUT', "/api/exercises/{$this->exercise->getUuid()}/correction/{$question->getUuid()}", $this->bob);
+        $this->request('PUT', "/apiv2/exercises/{$this->exercise->getUuid()}/correction/{$question->getUuid()}", $this->bob);
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
@@ -132,7 +132,7 @@ class CorrectionControllerTest extends TransactionalTestCase
         $question = $this->exercise->getSteps()->get(1)->getStepQuestions()->get(0)->getQuestion();
 
         // Don't send anything to the server, this will throw a validation error
-        $this->request('PUT', "/api/exercises/{$this->exercise->getUuid()}/correction/{$question->getUuid()}", $this->admin);
+        $this->request('PUT', "/apiv2/exercises/{$this->exercise->getUuid()}/correction/{$question->getUuid()}", $this->admin);
 
         $this->assertEquals(422, $this->client->getResponse()->getStatusCode());
     }
@@ -150,7 +150,7 @@ class CorrectionControllerTest extends TransactionalTestCase
 
         $this->request(
             'PUT',
-            "/api/exercises/{$this->exercise->getUuid()}/correction/{$question->getUuid()}",
+            "/apiv2/exercises/{$this->exercise->getUuid()}/correction/{$question->getUuid()}",
             $this->admin,
             [],
             json_encode($answerData)
@@ -186,7 +186,7 @@ class CorrectionControllerTest extends TransactionalTestCase
 
         $this->request(
             'PUT',
-            "/api/exercises/{$this->exercise->getUuid()}/correction/{$question->getUuid()}",
+            "/apiv2/exercises/{$this->exercise->getUuid()}/correction/{$question->getUuid()}",
             $this->admin,
             [],
             json_encode($answerData)

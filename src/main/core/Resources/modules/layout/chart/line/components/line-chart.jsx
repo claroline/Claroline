@@ -6,6 +6,7 @@ import {AxisChart as ChartTypes} from '#/main/core/layout/chart/prop-types'
 import {AxisChart} from '#/main/core/layout/chart/components/axis-chart'
 
 import {DataSeries} from '#/main/core/layout/chart/line/components/data-series'
+import {scaleAxis} from '#/main/core/layout/chart/line/utils'
 
 /**
  * Draws a Bar chart
@@ -20,6 +21,7 @@ const LineChart = props =>
   <AxisChart
     {...props}
     dataSeries={DataSeries}
+    scaleAxis={scaleAxis}
   />
 
 implementPropTypes(LineChart, ChartTypes, {}, {

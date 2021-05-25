@@ -1,6 +1,8 @@
 import {createSelector} from 'reselect'
 import uniq from 'lodash/uniq'
 
+import {selectors as securitySelectors} from '#/main/app/security/store/selectors'
+
 import {selectors as quizSelectors} from '#/plugin/exo/resources/quiz/store/selectors'
 import {selectors as playerSelectors} from '#/plugin/exo/resources/quiz/player/store/selectors'
 
@@ -252,6 +254,25 @@ const tags = createSelector(
   (items) => uniq(items.reduce((tags, item) => tags.concat(item.tags), []))
 )
 
+const showEndStats = createSelector(
+  [securitySelectors.currentUser, paperParameters],
+  (currentUser, parameters) => {
+    if (!parameters.hasExpectedAnswers) {
+      return false
+    }
+
+    if ('none' === parameters.endStats) {
+      return false
+    }
+
+    if (!currentUser && 'user' === parameters.endStats) {
+      return false
+    }
+
+    return true
+  }
+)
+
 export const select = {
   quizId,
   testMode,
@@ -295,5 +316,6 @@ export const select = {
   correctionDate,
   tags,
   questionNumbering,
-  showQuestionTitles
+  showQuestionTitles,
+  showEndStats
 }
