@@ -1,5 +1,7 @@
 import {createSelector} from 'reselect'
 
+import {selectors as securitySelectors} from '#/main/app/security/store/selectors'
+
 const STORE_NAME = 'ujm_exercise'
 
 /**
@@ -79,17 +81,38 @@ const hasOverview = createSelector(
   (parameters) => parameters.showOverview || false
 )
 
+const showOverviewStats = createSelector(
+  [securitySelectors.currentUser, parameters],
+  (currentUser, parameters) => {
+    if (!parameters.hasExpectedAnswers) {
+      return false
+    }
+
+    if ('none' === parameters.overviewStats) {
+      return false
+    }
+
+    if (!currentUser && 'user' === parameters.overviewStats) {
+      return false
+    }
+
+    return true
+  }
+)
+
 export const selectors = {
   STORE_NAME,
 
   resource,
   quiz,
   id,
+  steps,
   empty,
   numbering,
   questionNumbering,
   showStatistics,
   showTitles,
   showQuestionTitles,
-  hasOverview
+  hasOverview,
+  showOverviewStats
 }

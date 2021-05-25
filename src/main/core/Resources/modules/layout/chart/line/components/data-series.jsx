@@ -5,24 +5,22 @@ import {line, area} from 'd3-shape'
 import {implementPropTypes} from '#/main/app/prop-types'
 import {formatData} from '#/main/core/layout/chart/utils'
 import {DataSeries as DataSeriesTypes} from '#/main/core/layout/chart/prop-types'
-import {Path} from '#/main/core/layout/chart/line/components/path.jsx'
+import {Path} from '#/main/core/layout/chart/line/components/path'
 
 /**
- * Represents data on a Bar chart.
+ * Represents data on a Line chart.
  */
 const DataSeries = props =>
   <Fragment>
     {props.data.map((raw, idx) => {
       const data = formatData(raw)
       const lineData = line()
-        //.curve(curveMonotoneX)
         .x(e => props.xScale(e.x))
         .y(e => props.yScale(e.y))(data.pairs) || ''
 
       let areaData = ''
       if (props.showArea) {
         areaData = area()
-          //.curve(curveMonotoneX)
           .x(e => props.xScale(e.x))
           .y0(props.height)
           .y1(e => props.yScale(e.y))(data.pairs) || ''

@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Controller;
 
+use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\CoreBundle\API\Serializer\Resource\ResourceUserEvaluationSerializer;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
@@ -21,11 +22,13 @@ use UJM\ExoBundle\Manager\AttemptManager;
 /**
  * Attempt Controller.
  *
- * @Route("/exercises/{exerciseId}/attempts", options={"expose"=true})
+ * @Route("/exercises/{exerciseId}/attempts")
  * @EXT\ParamConverter("exercise", class="UJMExoBundle:Exercise", options={"mapping": {"exerciseId": "uuid"}})
  */
-class AttemptController extends AbstractController
+class AttemptController
 {
+    use RequestDecoderTrait;
+
     /**
      * @var AuthorizationCheckerInterface
      */
@@ -116,7 +119,7 @@ class AttemptController extends AbstractController
 
         $errors = [];
 
-        $data = $this->decodeRequestData($request);
+        $data = $this->decodeRequest($request);
 
         if (empty($data) || !is_array($data)) {
             $errors[] = [

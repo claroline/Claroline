@@ -249,4 +249,38 @@ class PaperRepository extends EntityRepository
             ->getQuery()
             ->getSingleScalarResult();
     }
+
+    public function getAvgScoreByAttempts(Exercise $exercise, bool $finishedOnly = false, User $user = null)
+    {
+        $parameters = [
+            'exercise' => $exercise,
+        ];
+
+        $dql = '
+            SELECT p.number, AVG(p.score) AS score
+            FROM UJM\ExoBundle\Entity\Attempt\Paper AS p
+            WHERE p.exercise = :exercise
+              AND p.total IS NOT NULL
+        ';
+
+        if ($finishedOnly) {
+            $dql .= 'AND p.end IS NOT NULL ';
+        }
+
+        if ($user) {
+            $dql .= 'AND p.user = :user ';
+
+            $parameters['user'] = $user;
+        }
+
+        $dql .= '
+            GROUP BY p.number
+            ORDER BY p.number ASC
+        ';
+
+        return $this->getEntityManager()
+            ->createQuery($dql)
+            ->setParameters($parameters)
+            ->getArrayResult();
+    }
 }

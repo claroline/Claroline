@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Controller;
 
+use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\CoreBundle\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -17,24 +18,18 @@ use UJM\ExoBundle\Manager\CorrectionManager;
  * Correction API controller permits to a quiz creator to save scores and feedback
  * for answers to questions with manual correction.
  *
- * @Route("/exercises/{exerciseId}/correction", options={"expose"=true})
+ * @Route("/exercises/{exerciseId}/correction")
  * @EXT\ParamConverter("exercise", class="UJMExoBundle:Exercise", options={"mapping": {"exerciseId": "uuid"}})
  */
-class CorrectionController extends AbstractController
+class CorrectionController
 {
-    /**
-     * @var AuthorizationCheckerInterface
-     */
-    private $authorization;
+    use RequestDecoderTrait;
 
-    /**
-     * @var CorrectionManager
-     */
+    /** @var AuthorizationCheckerInterface */
+    private $authorization;
+    /** @var CorrectionManager */
     private $correctionManager;
 
-    /**
-     * CorrectionController constructor.
-     */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         CorrectionManager $correctionManager)
@@ -47,10 +42,8 @@ class CorrectionController extends AbstractController
      * Lists all questions with `manual` score rule that have answers to correct.
      *
      * @Route("", name="exercise_correction_questions", methods={"GET"})
-     *
-     * @return JsonResponse
      */
-    public function listQuestionsToCorrectAction(Exercise $exercise)
+    public function listQuestionsToCorrectAction(Exercise $exercise): JsonResponse
     {
         $toCorrect = $this->isAdmin($exercise) ? $this->correctionManager->getToCorrect($exercise) : [];
 
@@ -61,13 +54,11 @@ class CorrectionController extends AbstractController
      * Saves score & feedback for a bulk of answers.
      *
      * @Route("/{questionId}", name="exercise_correction_save", methods={"PUT"})
-     *
-     * @return JsonResponse
      */
-    public function saveAction(Exercise $exercise, Request $request)
+    public function saveAction(Exercise $exercise, Request $request): JsonResponse
     {
         if ($this->isAdmin($exercise)) {
-            $data = $this->decodeRequestData($request);
+            $data = $this->decodeRequest($request);
 
             if (null === $data) {
                 $errors[] = [

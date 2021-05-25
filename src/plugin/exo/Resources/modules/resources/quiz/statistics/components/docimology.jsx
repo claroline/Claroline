@@ -1,6 +1,7 @@
 import React, {Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
 import isEmpty from 'lodash/isEmpty'
+import {schemeCategory20c} from 'd3-scale'
 
 import {trans} from '#/main/app/intl/translation'
 import {ContentLoader} from '#/main/app/content/components/loader'
@@ -8,34 +9,33 @@ import {BarChart} from '#/main/core/layout/chart/bar/components/bar-chart'
 import {PieChart} from '#/main/core/layout/chart/pie/components/pie-chart'
 import {CircularGauge} from '#/main/core/layout/chart/gauge/components/circlular-gauge'
 
-import {selectors} from '#/plugin/exo/docimology/store/selectors'
-
 const COLOR_SUCCESS = '#4F7302'
 const COLOR_WARNING = '#F0AD4E'
 const COLOR_DANGER  = '#BF0404'
 
 const CountCard = props =>
-  <div className="count-card panel panel-default">
-    <span className={`icon ${props.icon}`} />
-    <div className="panel-body text-right">
-      {props.label}
-      <div className="h3 text-right text-info">{props.count}</div>
-    </div>
+  <div className="analytics-card">
+    <span className={props.icon} style={{backgroundColor: props.color}} />
+    <h1 className="h3">
+      <small>{props.label}</small>
+      {props.count}
+    </h1>
   </div>
 
 CountCard.propTypes = {
   icon: T.string.isRequired,
   label: T.string.isRequired,
-  count: T.number.isRequired
+  count: T.number.isRequired,
+  color: T.string.isRequired
 }
 
 const GeneralStats = props =>
-  <div className="general-stats">
-    <CountCard label={trans('steps', {}, 'quiz')} icon="fa fa-th-list" count={props.statistics.nbSteps} />
-    <CountCard label={trans('questions', {}, 'quiz')} icon="fa fa-question" count={props.statistics.nbQuestions} />
-    <CountCard label={trans('users')} icon="fa fa-user" count={props.statistics.nbRegisteredUsers} />
-    <CountCard label={trans('anonymous')} icon="fa fa-user-secret" count={props.statistics.nbAnonymousUsers} />
-    <CountCard label={trans('papers', {}, 'quiz')} icon="fa fa-file" count={props.statistics.nbPapers} />
+  <div className="row" style={{marginTop: '-20px'}}>
+    <CountCard label={trans('steps', {}, 'quiz')} icon="fa fa-th-list" count={props.statistics.nbSteps} color={schemeCategory20c[1]} />
+    <CountCard label={trans('questions', {}, 'quiz')} icon="fa fa-question" count={props.statistics.nbQuestions} color={schemeCategory20c[5]} />
+    <CountCard label={trans('users')} icon="fa fa-user" count={props.statistics.nbRegisteredUsers}  color={schemeCategory20c[9]} />
+    <CountCard label={trans('anonymous')} icon="fa fa-user-secret" count={props.statistics.nbAnonymousUsers}  color={schemeCategory20c[13]}/>
+    <CountCard label={trans('papers', {}, 'quiz')} icon="fa fa-file" count={props.statistics.nbPapers}  color={schemeCategory20c[17]}/>
   </div>
 
 GeneralStats.propTypes = {
@@ -116,7 +116,8 @@ const ScoreDistribution = props =>
               margin={{top: 20, right: 20, bottom: 80, left: 80}}
               yAxisLabel={{
                 show: true,
-                text: trans('docimology_nb_papers', {}, 'quiz')
+                text: trans('docimology_nb_papers', {}, 'quiz'),
+                grid: true
               }}
               xAxisLabel={{
                 show: true,
@@ -181,7 +182,8 @@ const DifficultyIndex = props =>
           margin={{top: 20, right: 20, bottom: 80, left: 80}}
           yAxisLabel={{
             show: true,
-            text: trans('docimology_difficulty_index', {}, 'quiz')
+            text: trans('docimology_difficulty_index', {}, 'quiz'),
+            grid: true
           }}
           xAxisLabel={{
             show: true,
@@ -223,7 +225,8 @@ const DiscriminationIndex = props =>
           margin={{top: 20, right: 20, bottom: 80, left: 80}}
           yAxisLabel={{
             show: true,
-            text: trans('docimology_discrimination_coefficient', {}, 'quiz')
+            text: trans('docimology_discrimination_coefficient', {}, 'quiz'),
+            grid: true
           }}
           xAxisLabel={{
             show: true,
@@ -254,11 +257,10 @@ DiscriminationIndex.propTypes = {
   discriminationCoefficient: T.object.isRequired
 }
 
-const DocimologyMain = props => {
+const Docimology = props => {
   if (isEmpty(props.statistics)) {
     return (
       <ContentLoader
-        className="row"
         size="lg"
         description="Nous chargeons la docimologie..."
       />
@@ -292,7 +294,7 @@ const DocimologyMain = props => {
   )
 }
 
-DocimologyMain.propTypes = {
+Docimology.propTypes = {
   statistics: T.shape({
     maxScore: T.number.isRequired,
     minMaxAndAvgScores: T.object.isRequired,
@@ -304,5 +306,5 @@ DocimologyMain.propTypes = {
 }
 
 export {
-  DocimologyMain
+  Docimology
 }
