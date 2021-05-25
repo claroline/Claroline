@@ -53,6 +53,8 @@ class EventManager
 
             // add event to user planning
             $this->planningManager->addToPlanning($event, $user);
+
+            $this->sendInvitation($event, [$user]);
         }
 
         return $eventInvitation;
