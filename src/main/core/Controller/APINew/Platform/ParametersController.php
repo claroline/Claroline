@@ -80,6 +80,16 @@ class ParametersController
     }
 
     /**
+     * @Route("/version", name="apiv2_platform_version", methods={"GET"})
+     */
+    public function getVersionAction(): JsonResponse
+    {
+        return new JsonResponse(
+            $this->versionManager->getCurrent()
+        );
+    }
+
+    /**
      * @Route("/info", name="apiv2_platform_info", methods={"GET"})
      */
     public function getAction(): JsonResponse
