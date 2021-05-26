@@ -17,11 +17,9 @@ function currentTheme() {
  * @param assetName
  *
  * @return {string}
- *
- * @todo manage versioning
  */
 function theme(assetName = 'bootstrap') {
-  return asset(`themes/${currentTheme()}/${assetName}.css`)
+  return asset(`themes/${currentTheme()}/${assetName}.css?v=${param('version')}`)
 }
 
 /**

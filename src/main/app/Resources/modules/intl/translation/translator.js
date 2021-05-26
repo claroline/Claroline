@@ -1,6 +1,7 @@
 import invariant from 'invariant'
 
 import {asset} from '#/main/app/config/asset'
+import {param} from '#/main/app/config/parameters'
 
 /**
  * This class was copied from BazingaJsTranslationBundle
@@ -360,7 +361,7 @@ function has_domain(locale, domain) {
 function load_domain(locale, domain) {
 
   if (!has_domain(locale, domain) && Translator.loaded_domains.indexOf(domain) === -1) {
-    load_domain_file(asset(`js/translations/${domain}/${locale}.js`))
+    load_domain_file(asset(`js/translations/${domain}/${locale}.js?v=${param('version')}`))
   }
 
   if (Translator.loaded_domains.indexOf(domain) === -1) {
