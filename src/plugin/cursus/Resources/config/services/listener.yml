@@ -28,3 +28,9 @@ services:
             - '@security.token_storage'
         tags:
             - { name: kernel.event_listener, event: data_source.my_course_sessions.load, method: getData }
+
+    Claroline\CursusBundle\Listener\DataSource\AllCourseSource:
+        arguments:
+            - '@Claroline\AppBundle\API\FinderProvider'
+        tags:
+            - { name: kernel.event_listener, event: data_source.all_courses.load, method: getData }
