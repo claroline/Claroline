@@ -1,6 +1,8 @@
 {
   "my_course_sessions": "Liste de mes sessions de formation",
   "my_course_sessions_desc": "Permet de lister les sessions auxquels l'utilisateur courant est inscrit.",
-  "public_course_sessions": "Liste des sessions de formation publics",
-  "public_course_sessions_desc": "Permet de lister les sessions avec inscriptions publiques."
+  "public_course_sessions": "Liste des sessions de formation publiques",
+  "public_course_sessions_desc": "Permet de lister les sessions avec inscriptions publiques.",
+  "all_courses": "Liste de toutes les formations",
+  "public_courses_desc": "Permet de lister l'ensemble des formations publiques"
 }
