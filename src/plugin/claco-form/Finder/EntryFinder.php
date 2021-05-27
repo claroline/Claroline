@@ -289,11 +289,21 @@ class EntryFinder extends AbstractFinder
                     } else {
                         $qb->andWhere("UPPER(fvffv{$parsedFilterName}.stringValue) LIKE :value{$parsedFilterName}");
                     }
-                    $qb->setParameter("value{$parsedFilterName}", '%'.strtoupper($filterValue).'%');
+
+                    // a little of black magic because Doctrine Json type stores unicode seq for special chars
+                    $value = json_encode($filterValue);
+                    $value = trim($value, '"'); // removes string delimiters added by json encode
+
+                    $qb->setParameter("value{$parsedFilterName}", '%'.addslashes(strtoupper($value)).'%');
                     break;
                 case FieldFacet::CASCADE_TYPE:
                     $qb->andWhere("UPPER(fvffv{$parsedFilterName}.arrayValue) LIKE :value{$parsedFilterName}");
-                    $qb->setParameter("value{$parsedFilterName}", '%'.strtoupper($filterValue).'%');
+
+                    // a little of black magic because Doctrine Json type stores unicode seq for special chars
+                    $value = json_encode($filterValue);
+                    $value = trim($value, '"'); // removes string delimiters added by json encode
+
+                    $qb->setParameter("value{$parsedFilterName}", '%'.addslashes(strtoupper($value)).'%');
                     break;
                 case FieldFacet::BOOLEAN_TYPE:
                     $qb->andWhere("fvffv{$parsedFilterName}.boolValue = :value{$parsedFilterName}");
