@@ -134,7 +134,7 @@ const ResourceFormComponent = (props) =>
             calculated: restrictedByCode,
             onChange: activated => {
               if (!activated) {
-                props.updateProp('restrictions.code', null)
+                props.updateProp('restrictions.code', '')
               }
             },
             linked: [

@@ -98,14 +98,17 @@ class ResourceNodeSerializer
             $serializedNode['parent'] = $this->serialize($resourceNode->getParent(), [Options::SERIALIZE_MINIMAL, static::NO_PARENT]);
         }
 
-        if (!in_array(Options::SERIALIZE_MINIMAL, $options) && !in_array(Options::SERIALIZE_LIST, $options)) {
-            $serializedNode = array_merge($serializedNode, [
-                'display' => $this->serializeDisplay($resourceNode),
-                'restrictions' => $this->serializeRestrictions($resourceNode),
-                'comments' => array_map(function (ResourceComment $comment) { // TODO : should not be exposed here
-                    return $this->serializer->serialize($comment);
-                }, $resourceNode->getComments()->toArray()),
-            ]);
+        if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
+            $serializedNode['restrictions'] = $this->serializeRestrictions($resourceNode);
+
+            if (!in_array(Options::SERIALIZE_LIST, $options)) {
+                $serializedNode = array_merge($serializedNode, [
+                    'display' => $this->serializeDisplay($resourceNode),
+                    'comments' => array_map(function (ResourceComment $comment) { // TODO : should not be exposed here
+                        return $this->serializer->serialize($comment);
+                    }, $resourceNode->getComments()->toArray()),
+                ]);
+            }
 
             if (!in_array(Options::NO_RIGHTS, $options)) {
                 // export rights, only used by transfer feature. Should be moved later.
