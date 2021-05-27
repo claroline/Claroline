@@ -47,7 +47,7 @@ class FieldFacetValue
     protected $dateValue;
 
     /**
-     * @ORM\Column(type="json_array", nullable=true)
+     * @ORM\Column(type="json", nullable=true)
      *
      * @var array
      */
