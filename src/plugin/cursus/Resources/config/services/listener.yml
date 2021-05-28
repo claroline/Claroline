@@ -29,7 +29,7 @@ services:
         tags:
             - { name: kernel.event_listener, event: data_source.my_course_sessions.load, method: getData }
 
-    Claroline\CursusBundle\Listener\DataSource\AllCourseSource:
+    Claroline\CursusBundle\Listener\DataSource\AllCoursesSource:
         arguments:
             - '@Claroline\AppBundle\API\FinderProvider'
         tags:

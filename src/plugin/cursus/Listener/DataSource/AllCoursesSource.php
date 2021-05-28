@@ -15,7 +15,7 @@ use Claroline\AppBundle\API\FinderProvider;
 use Claroline\CoreBundle\Event\DataSource\GetDataEvent;
 use Claroline\CursusBundle\Entity\Course;
 
-class AllCourseSource
+class AllCoursesSource
 {
     /** @var FinderProvider */
     private $finder;
