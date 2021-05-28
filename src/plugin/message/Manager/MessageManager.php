@@ -22,7 +22,6 @@ use Claroline\CoreBundle\Repository\User\UserRepository;
 use Claroline\CoreBundle\Repository\WorkspaceRepository;
 use Claroline\MessageBundle\Entity\Message;
 use Claroline\MessageBundle\Entity\UserMessage;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class MessageManager
 {
@@ -30,8 +29,6 @@ class MessageManager
     private $mailManager;
     /** @var ObjectManager */
     private $om;
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
 
     /** @var GroupRepository */
     private $groupRepo;
@@ -42,12 +39,10 @@ class MessageManager
 
     public function __construct(
         MailManager $mailManager,
-        ObjectManager $om,
-        TokenStorageInterface $tokenStorage
+        ObjectManager $om
     ) {
         $this->mailManager = $mailManager;
         $this->om = $om;
-        $this->tokenStorage = $tokenStorage;
 
         $this->groupRepo = $om->getRepository(Group::class);
         $this->userRepo = $om->getRepository(User::class);
@@ -55,54 +50,10 @@ class MessageManager
     }
 
     /**
-     * Create a message.
-     *
-     * @param string                $content The message content
-     * @param string                $object  The message object
-     * @param AbstractRoleSubject[] $users   The users receiving the message
-     * @param null                  $sender  The user sending the message
-     * @param null                  $parent  The message parent (is it's a discussion)
-     *
-     * @return Message
+     * @return array - the list of users to which the message has really been sent
      */
-    public function create($content, $object, array $users, $sender = null, $parent = null)
+    public function send(Message $message, bool $sendMail = true): array
     {
-        $message = new Message();
-
-        $message->setContent($content);
-        $message->setParent($parent);
-        $message->setObject($object);
-        $message->setSender($sender);
-
-        $message->setReceivers(array_map(function (User $user) {
-            return $user->getUsername();
-        }, $users));
-
-        return $message;
-    }
-
-    public function send(Message $message, bool $sendMail = true): Message
-    {
-        /** @var User[] $userReceivers */
-        $userReceivers = [];
-        /** @var Group[] $groupReceivers */
-        $groupReceivers = [];
-        /** @var Workspace[] $workspaceReceivers */
-        $workspaceReceivers = [];
-
-        $receivers = $message->getReceivers();
-        if (count($receivers['users']) > 0) {
-            $userReceivers = $this->userRepo->findByUsernames($receivers['users']);
-        }
-
-        if (count($receivers['groups']) > 0) {
-            $groupReceivers = $this->groupRepo->findByNames($receivers['groups']);
-        }
-
-        if (count($receivers['workspaces']) > 0) {
-            $workspaceReceivers = $this->workspaceRepo->findByCodes($receivers['workspaces']);
-        }
-
         if ($message->getSender()) {
             $userMessage = new UserMessage();
             $userMessage->setIsSent(true);
@@ -112,25 +63,38 @@ class MessageManager
             $this->om->persist($userMessage);
         }
 
-        $mailNotifiedUsers = [];
+        /** @var User[] $userReceivers */
+        $userReceivers = [];
 
-        //get every users which are going to be notified
-        foreach ($groupReceivers as $groupReceiver) {
-            $users = $this->userRepo->findByGroup($groupReceiver);
+        $receivers = $message->getReceivers();
+        if (count($receivers['users']) > 0) {
+            $userReceivers = $this->userRepo->findByUsernames($receivers['users']);
+        }
 
-            foreach ($users as $user) {
-                $userReceivers[] = $user;
+        if (count($receivers['groups']) > 0) {
+            /** @var Group[] $groupReceivers */
+            $groupReceivers = $this->groupRepo->findByNames($receivers['groups']);
+            foreach ($groupReceivers as $groupReceiver) {
+                $userReceivers = array_merge($userReceivers, $this->userRepo->findByGroup($groupReceiver));
             }
         }
 
-        //workspaces are going to be notified
-        if (!empty($workspaceReceivers)) {
-            $userReceivers = array_merge($userReceivers, $this->userRepo->findByWorkspaces($workspaceReceivers));
+        if (count($receivers['workspaces']) > 0) {
+            /** @var Workspace[] $workspaceReceivers */
+            $workspaceReceivers = $this->workspaceRepo->findByCodes($receivers['workspaces']);
+            if (!empty($workspaceReceivers)) {
+                $userReceivers = array_merge($userReceivers, $this->userRepo->findByWorkspaces($workspaceReceivers));
+            }
         }
 
         $ids = [];
-
         $filteredUsers = array_filter($userReceivers, function (User $user) use (&$ids) {
+            if (!$user->isEnabled() || $user->isRemoved() || !$user->isAccountNonExpired()) {
+                // never send messages to disabled users (we might need to manage it in repos instead)
+                return false;
+            }
+
+            // deduplicate list of users
             if (!in_array($user->getId(), $ids)) {
                 $ids[] = $user->getId();
 
@@ -140,6 +104,7 @@ class MessageManager
             return false;
         });
 
+        $mailNotifiedUsers = [];
         foreach ($filteredUsers as $filteredUser) {
             $userMessage = new UserMessage();
             $userMessage->setUser($filteredUser);
@@ -170,42 +135,58 @@ class MessageManager
 
         $this->om->flush();
 
-        return $message;
+        return $filteredUsers;
     }
 
     /**
      * @param AbstractRoleSubject[] $receivers
      */
-    public function sendMessage(
-        $content,
-        $object,
-        array $receivers = null,
-        $sender = null,
-        $withMail = true
-    ) {
+    public function sendMessage($content, $object, array $receivers = null, ?User $sender = null, bool $withMail = true)
+    {
         $users = [];
         foreach ($receivers as $receiver) {
             if ($receiver instanceof User) {
                 $users[] = $receiver;
             } elseif ($receiver instanceof Group) {
-                foreach ($receiver->getUsers() as $user) {
-                    $users[] = $user;
-                }
+                $users = array_merge($users, $receiver->getUsers()->toArray());
             }
         }
 
         $message = $this->create($content, $object, $users, $sender);
-        $this->send($message, $withMail);
 
-        /*
-         * Returns the table of users to be used in MessageSubscriber
-         */
-        return $users;
+        return $this->send($message, $withMail);
     }
 
     public function remove(UserMessage $message)
     {
         $this->om->remove($message);
         $this->om->flush();
+    }
+
+    /**
+     * Create a message.
+     *
+     * @param string                $content The message content
+     * @param string                $object  The message object
+     * @param AbstractRoleSubject[] $users   The users receiving the message
+     * @param null                  $sender  The user sending the message
+     * @param null                  $parent  The message parent (is it's a discussion)
+     *
+     * @return Message
+     */
+    private function create($content, $object, array $users, $sender = null, $parent = null)
+    {
+        $message = new Message();
+
+        $message->setContent($content);
+        $message->setParent($parent);
+        $message->setObject($object);
+        $message->setSender($sender);
+
+        $message->setReceivers(array_map(function (User $user) {
+            return $user->getUsername();
+        }, $users));
+
+        return $message;
     }
 }

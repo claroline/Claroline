@@ -11,30 +11,33 @@
 
 namespace Claroline\ForumBundle\Messenger;
 
+use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Event\CatalogEvents\MessageEvents;
+use Claroline\CoreBundle\Event\SendMessageEvent;
 use Claroline\CoreBundle\Library\RoutingHelper;
 use Claroline\CoreBundle\Manager\Template\TemplateManager;
 use Claroline\ForumBundle\Entity\Message;
 use Claroline\ForumBundle\Entity\Validation\User as UserValidation;
-use Claroline\MessageBundle\Manager\MessageManager;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class NotifyUsersOnMessageCreatedHandler implements MessageHandlerInterface
 {
-    private $messageManager;
+    /** @var StrictDispatcher */
+    private $dispatcher;
     private $templateManager;
-    private $helper;
+    private $routing;
     private $om;
 
     public function __construct(
-        MessageManager $messageManager,
+        StrictDispatcher $dispatcher,
         TemplateManager $templateManager,
-        RoutingHelper $helper,
+        RoutingHelper $routing,
         ObjectManager $om
     ) {
-        $this->messageManager = $messageManager;
+        $this->dispatcher = $dispatcher;
         $this->templateManager = $templateManager;
-        $this->helper = $helper;
+        $this->routing = $routing;
         $this->om = $om;
     }
 
@@ -52,27 +55,26 @@ class NotifyUsersOnMessageCreatedHandler implements MessageHandlerInterface
 
         $placeholders = [
             'forum' => $forum->getName(),
-            'forum_url' => $this->helper->resourcePath($forum->getResourceNode()),
+            'forum_url' => $this->routing->resourcePath($forum->getResourceNode()),
             'subject' => $subject->getTitle(),
-            'subject_url' => $this->helper->resourcePath($forum->getResourceNode()).'/subjects/show/'.$subject->getUuid(),
+            'subject_url' => $this->routing->resourcePath($forum->getResourceNode()).'/subjects/show/'.$subject->getUuid(),
             'message' => $message->getContent(),
             'date' => $message->getCreationDate() ? $message->getCreationDate()->format('d/m/Y H:m:s') : null,
             'author' => $message->getCreator() ? $message->getCreator()->getFullName() : $message->getAuthor(),
             'workspace' => $forum->getResourceNode()->getWorkspace()->getName(),
-            'workspace_url' => $this->helper->workspacePath($forum->getResourceNode()->getWorkspace()),
+            'workspace_url' => $this->routing->workspacePath($forum->getResourceNode()->getWorkspace()),
         ];
 
         $subject = $this->templateManager->getTemplate('forum_new_message', $placeholders, null, 'title');
         $body = $this->templateManager->getTemplate('forum_new_message', $placeholders);
 
-        $toSend = $this->messageManager->create(
+        $this->dispatcher->dispatch(MessageEvents::MESSAGE_SENDING, SendMessageEvent::class, [
             $body,
             $subject,
             array_map(function (UserValidation $userValidate) {
                 return $userValidate->getUser();
-            }, $usersValidate)
-        );
-
-        $this->messageManager->send($toSend);
+            }, $usersValidate),
+            $message->getCreator(),
+        ]);
     }
 }

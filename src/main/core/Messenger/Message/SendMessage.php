@@ -12,36 +12,43 @@
 namespace Claroline\CoreBundle\Messenger\Message;
 
 use Claroline\CoreBundle\Entity\User;
-use Claroline\MessageBundle\Entity\Message as MessageData;
 
 class SendMessage
 {
+    /** @var string */
     private $content;
+    /** @var string */
     private $object;
-    private $users;
+    /** @var array */
+    private $receivers;
+    /** @var User|null */
     private $sender;
 
-    public function __construct(string $content, string $object, array $users, ?User $sender = null)
+    public function __construct(string $content, string $object, array $receivers, ?User $sender = null)
     {
         $this->content = $content;
         $this->object = $object;
-        $this->users = $users;
+        $this->receivers = $receivers;
         $this->sender = $sender;
     }
 
-    public function createMessage()
+    public function getContent(): string
     {
-        $message = new MessageData();
+        return $this->content;
+    }
 
-        $message->setContent($this->content);
-        $message->setParent(null);
-        $message->setObject($this->object);
-        $message->setSender($this->sender);
+    public function getObject(): string
+    {
+        return $this->object;
+    }
 
-        $message->setReceivers(array_map(function (User $user) {
-            return $user->getUsername();
-        }, $this->users));
+    public function getReceivers(): array
+    {
+        return $this->receivers;
+    }
 
-        return $message;
+    public function getSender(): ?User
+    {
+        return $this->sender;
     }
 }

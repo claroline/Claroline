@@ -11,21 +11,28 @@
 
 namespace Claroline\CoreBundle\Messenger;
 
+use Claroline\AppBundle\Event\StrictDispatcher;
+use Claroline\CoreBundle\Event\CatalogEvents\MessageEvents;
+use Claroline\CoreBundle\Event\SendMessageEvent;
 use Claroline\CoreBundle\Messenger\Message\SendMessage;
-use Claroline\MessageBundle\Manager\MessageManager;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class SendMessageHandler implements MessageHandlerInterface
 {
-    private $messageManager;
+    /** @var StrictDispatcher */
+    private $dispatcher;
 
-    public function __construct(MessageManager $messageManager)
+    public function __construct(StrictDispatcher $dispatcher)
     {
-        $this->messageManager = $messageManager;
+        $this->dispatcher = $dispatcher;
     }
 
     public function __invoke(SendMessage $message)
     {
-        $this->messageManager->send($message->createMessage());
+        $this->dispatcher->dispatch(MessageEvents::MESSAGE_SENDING, SendMessageEvent::class, [
+            $message->getContent(),
+            $message->getObject(),
+            $message->getReceivers(),
+        ]);
     }
 }
