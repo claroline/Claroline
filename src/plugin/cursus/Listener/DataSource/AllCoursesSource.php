@@ -12,6 +12,7 @@
 namespace Claroline\CursusBundle\Listener\DataSource;
 
 use Claroline\AppBundle\API\FinderProvider;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Event\DataSource\GetDataEvent;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CursusBundle\Entity\Course;
@@ -51,11 +52,11 @@ class AllCoursesSource
 
         if (!$this->authorization->isGranted('ROLE_ADMIN')) {
             $user = $this->tokenStorage->getToken()->getUser();
-            $options['hiddenFilters']['organizations'] = $user instanceof User ? array_map(function(Organization $organization) {
+            $organizations = $user instanceof User ? $user->getOrganizations() : $this->om->getRepository(Organization::class)->findBy(['default' => true]);
+
+            $options['hiddenFilters']['organizations'] = array_map(function(Organization $organization) {
                 return $organization->getUuid();
-            }, $user->getOrganizations()) : [
-                $this->om->getRepository(Organization::class)->findBy(['default' => true])
-            ];
+            }, $organizations);
         }
 
         $event->setData(
