@@ -32,6 +32,7 @@ services:
     Claroline\CursusBundle\Listener\DataSource\AllCoursesSource:
         arguments:
             - '@Claroline\AppBundle\API\FinderProvider'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@security.token_storage'
             - '@Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface'
         tags:

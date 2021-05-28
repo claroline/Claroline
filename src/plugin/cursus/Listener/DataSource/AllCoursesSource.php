@@ -30,12 +30,17 @@ class AllCoursesSource
     /** @var AuthorizationCheckerInterface */
     private $authorization;
 
+    /** @var ObjectManager */
+    private $om;
+
     public function __construct(
         FinderProvider $finder,
+        ObjectManager $om,
         TokenStorageInterface $tokenStorage,
         AuthorizationCheckerInterface $authorization
     ) {
         $this->finder = $finder;
+        $this->om = $om;
         $this->tokenStorage = $tokenStorage;
         $this->authorization = $authorization;
     }
@@ -45,12 +50,12 @@ class AllCoursesSource
         $options = $event->getOptions();
 
         if (!$this->authorization->isGranted('ROLE_ADMIN')) {
-            /** @var User $user */
             $user = $this->tokenStorage->getToken()->getUser();
-
-            $options['hiddenFilters']['organizations'] = array_map(function(Organization $organization) {
+            $options['hiddenFilters']['organizations'] = $user instanceof User ? array_map(function(Organization $organization) {
                 return $organization->getUuid();
-            }, $user->getOrganizations());
+            }, $user->getOrganizations()) : [
+                $this->om->getRepository(Organization::class)->findBy(['default' => true])
+            ];
         }
 
         $event->setData(
