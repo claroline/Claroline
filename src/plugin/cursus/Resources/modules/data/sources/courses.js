@@ -21,6 +21,43 @@ export default {
         label: trans('name'),
         displayed: true,
         primary: true
+      }, {
+        name: 'code',
+        type: 'string',
+        label: trans('code'),
+        displayed: true
+      }, {
+        name: 'location',
+        type: 'location',
+        label: trans('location'),
+        placeholder: trans('online_session', {}, 'cursus'),
+        displayable: false,
+        sortable: false
+      }, {
+        name: 'tags',
+        type: 'tag',
+        label: trans('tags'),
+        displayed: true,
+        sortable: false,
+        options: {
+          objectClass: 'Claroline\\CursusBundle\\Entity\\Course'
+        }
+      }, {
+        name: 'pricing.price',
+        alias: 'price',
+        label: trans('price'),
+        type: 'currency',
+        displayable: param('pricing.enabled'),
+        displayed: param('pricing.enabled'),
+        filterable: param('pricing.enabled'),
+        sortable: param('pricing.enabled')
+      }, {
+        name: 'meta.order',
+        alias: 'order',
+        type: 'number',
+        label: trans('order'),
+        displayable: false,
+        filterable: false
       }
     ],
     card: CourseCard
