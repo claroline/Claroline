@@ -185,7 +185,7 @@ class WordsDefinition extends AbstractDefinition
             case 'text':
             default:
                 $flags = $keyword->isCaseSensitive() ? 'i' : '';
-                if (1 === preg_match('/'.$keyword->getText().'/'.$flags, $string)) {
+                if (1 === preg_match('/(?:\W|^)(\Q'.$keyword->getText().'\E)(?:\W|$)/'.$flags, $string)) {
                     $found = true;
                 }
                 break;
