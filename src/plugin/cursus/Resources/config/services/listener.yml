@@ -33,5 +33,6 @@ services:
         arguments:
             - '@Claroline\AppBundle\API\FinderProvider'
             - '@security.token_storage'
+            - '@Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface'
         tags:
             - { name: kernel.event_listener, event: data_source.all_courses.load, method: getData }

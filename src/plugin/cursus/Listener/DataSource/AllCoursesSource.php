@@ -16,6 +16,7 @@ use Claroline\CoreBundle\Event\DataSource\GetDataEvent;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CursusBundle\Entity\Course;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class AllCoursesSource
 {
@@ -25,22 +26,31 @@ class AllCoursesSource
     /** @var TokenStorageInterface */
     private $tokenStorage;
 
+    /** @var AuthorizationCheckerInterface */
+    private $authorization;
+
     public function __construct(
         FinderProvider $finder,
-        TokenStorageInterface $tokenStorage
+        TokenStorageInterface $tokenStorage,
+        AuthorizationCheckerInterface $authorization
     ) {
         $this->finder = $finder;
         $this->tokenStorage = $tokenStorage;
+        $this->authorization = $authorization;
     }
 
     public function getData(GetDataEvent $event)
     {
         $options = $event->getOptions();
 
-        $user = $this->tokenStorage->getToken()->getUser();
-        $options['organizations'] = array_map(function(Organization $organization) {
-            return $organization->getUuid();
-        }, $user->getOrganizations());
+        if (!$this->authorization->isGranted('ROLE_ADMIN')) {
+            /** @var User $user */
+            $user = $this->tokenStorage->getToken()->getUser();
+
+            $options['hiddenFilters']['organizations'] = array_map(function(Organization $organization) {
+                return $organization->getUuid();
+            }, $user->getOrganizations());
+        }
 
         $event->setData(
             $this->finder->search(Course::class, $options)
