@@ -3,6 +3,7 @@ import {URL_BUTTON} from '#/main/app/buttons'
 
 import {route as toolRoute} from '#/main/core/tool/routing'
 
+import {param} from '#/main/app/config'
 import {route} from '#/plugin/cursus/routing'
 import {CourseCard} from '#/plugin/cursus/course/components/card'
 

@@ -15,6 +15,7 @@ use Claroline\AppBundle\API\FinderProvider;
 use Claroline\CoreBundle\Event\DataSource\GetDataEvent;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CursusBundle\Entity\Course;
+use Claroline\CoreBundle\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
