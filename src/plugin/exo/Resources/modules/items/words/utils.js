@@ -1,110 +1,61 @@
 import classes from 'classnames'
 import {displayDate} from '#/main/app/intl/date'
 
-export const utils = {}
+function getKeywordRegex(keyword, caseSensitive = false) {
+  const escapedKeyword = keyword.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')
 
-utils.split = (text, contentType = 'text', solutions, highlight = true, hasExpectedAnswers = true) => {
-  if (!text) return [/*{
-    word: '#endoftext#',
-    position: null,
-    text,
-    score: null
-  }*/]
+  const pattern = '(?:\\W|^)('+escapedKeyword+')(?:\\W|$)'
 
-  const split = utils.getTextElements(text, solutions).filter(el => el.found)
-
-  //now we can reorder the array by position and split the text accordingly
-  split.sort((a, b) =>  a.position - b.position)
-
-  //now we can split the text accordingly
-  //This is a big mess of wtf computations but I swear it gives the correct result !
-  let currentPosition = 0
-  let prevPos = 0
-  let prevWordLength = 0
-
-  split.forEach(el => {
-    //we keep track of each text element
-    el.text = text.substr(0, el.position + el.word.length - currentPosition)
-    //now we trim the text
-    text = text.substr(el.position + el.word.length - currentPosition)
-    currentPosition += (el.position + el.word.length - prevPos - prevWordLength)
-    prevPos = el.position
-    prevWordLength = el.word.length
-  })
-
-  //now we highlight the text if required
-  if (highlight) {
-    split.forEach(el => {
-      let regexFlag = 'g'
-      if (!el.caseSensitive) regexFlag += 'i'
-      const regex = new RegExp('(\\b' + el.word + '\\b)', regexFlag)
-      const icon = classes({
-        'fa fa-fw fa-check': hasExpectedAnswers && el.score > 0,
-        'fa fa-fw fa-times': hasExpectedAnswers && el.score <= 0
-      })
-      const replacer = `<strong><span class="${icon}"></span>${'date' === contentType ? displayDate(el.word) : el.word}</strong>`
-      el.text = el.text.replace(regex, replacer)
-    })
+  let regexFlag = ''
+  if (!caseSensitive) {
+    regexFlag += 'i'
   }
 
-  //I want to remember the last element of the text so I add it as well to the array
-  /*split.push({
-    word: '#endoftext#',
-    position: null,
-    text,
-    score: null
-  })*/
-
-  return split
+  return new RegExp(pattern, regexFlag)
 }
 
-utils.getTextElements = (text, solutions) => {
+function containsKeyword(keyword, caseSensitive, text = '') {
+  return getKeywordRegex(keyword, caseSensitive).test(text)
+}
+
+function findSolutions(text, solutions) {
   if (!text) {
     return []
   }
-  const data = []
 
-  //first we find each occurence of a given word
-  solutions.forEach(solution => {
-    const word = solution.text
-    let regexFlag = 'g'
-    if (!solution.caseSensitive) regexFlag += 'i'
-    const regex = new RegExp('\\b' + word + '\\b', regexFlag)
-    const position = text.search(regex)
-    data.push({
-      caseSensitive: solution.caseSensitive,
-      word,
-      position,
-      score: solutions.find(el => el.text === word).score,
-      feedback: solutions.find(el => el.text === word).feedback,
-      found: position > -1
+  return solutions.filter(solution => containsKeyword(solution.text, solution.caseSensitive, text))
+}
+
+function highlight(text, contentType, solutions, hasExpectedAnswers) {
+  let highlightedText = text
+  solutions.map(solution => {
+    const status = classes({
+      'correct-answer': hasExpectedAnswers && solution.score > 0,
+      'incorrect-answer': hasExpectedAnswers && solution.score <= 0,
+      'selected-answer': !hasExpectedAnswers
     })
-  })
 
-  return data
-}
+    let replacer = `<strong class="${status}">`
+    if (hasExpectedAnswers) {
+      const icon = classes('fa fa-fw', {
+        'fa-check': hasExpectedAnswers && solution.score > 0,
+        'fa-times': hasExpectedAnswers && solution.score <= 0
+      })
 
-utils.getKey = (word, solutions) => {
-  let key = '_others'
-
-  solutions.forEach(s => {
-    const expected = s.caseSensitive ? s.text : s.text.toUpperCase()
-    const provided = s.caseSensitive ? word : word.toUpperCase()
-
-    if (expected === provided) {
-      key = s.text
+      replacer += `<span class="${icon}"></span> ` // final whitespace is not a typo ;)
     }
+
+    replacer += 'date' === contentType ? displayDate(solution.text) : solution.text
+    replacer += '</strong>'
+
+    highlightedText = highlightedText.replace(getKeywordRegex(solution.text, solution.caseSensitive), ' ' + replacer + ' ')
   })
 
-  return key
+  return highlightedText
 }
 
-utils.escapeRegExp = (str) => {
-  return str.replace(/[\-\[\]\/{}()*+?.\\\^$|]/g, '\\$&') // eslint-disable-line no-useless-escape
-}
-
-utils.containsKeyword = (keyword, caseSensitive, text = '') => {
-  const regex = new RegExp(utils.escapeRegExp(keyword), caseSensitive ? '': 'i')
-
-  return regex.test(text)
+export const utils = {
+  containsKeyword,
+  findSolutions,
+  highlight
 }
