@@ -11,28 +11,30 @@
 
 namespace Claroline\CoreBundle\Messenger;
 
+use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Task\ScheduledTask;
+use Claroline\CoreBundle\Event\CatalogEvents\MessageEvents;
+use Claroline\CoreBundle\Event\SendMessageEvent;
 use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\Task\ScheduledTaskManager;
 use Claroline\CoreBundle\Messenger\Message\ExecuteScheduledTask;
-use Claroline\MessageBundle\Manager\MessageManager;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class ExecuteScheduledTaskHandler implements MessageHandlerInterface
 {
-    private $messageManager;
+    private $dispatcher;
     private $taskManager;
     private $mailManager;
     private $objectManager;
 
     public function __construct(
-        MessageManager $messageManager,
+        StrictDispatcher $dispatcher,
         ScheduledTaskManager $taskManager,
         MailManager $mailManager,
         ObjectManager $objectManager
     ) {
-        $this->messageManager = $messageManager;
+        $this->dispatcher = $dispatcher;
         $this->taskManager = $taskManager;
         $this->mailManager = $mailManager;
         $this->objectManager = $objectManager;
@@ -49,8 +51,11 @@ class ExecuteScheduledTaskHandler implements MessageHandlerInterface
 
         if (!empty($users) && !empty($object) && !empty($content)) {
             if ('message' === $task->getType()) {
-                $message = $this->messageManager->create($content, $object, $users);
-                $this->messageManager->send($message);
+                $this->dispatcher->dispatch(MessageEvents::MESSAGE_SENDING, SendMessageEvent::class, [
+                    $content,
+                    $object,
+                    $users,
+                ]);
             } else {
                 $this->mailManager->send($object, $content, $users);
             }
