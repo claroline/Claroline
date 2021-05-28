@@ -23,7 +23,7 @@ plugin:
 
         - name: all_courses
           type: list
-          context: [workspace, desktop, home]
+          context: [desktop, home]
           tags: [community, event]
 
     templates:
