@@ -32,5 +32,6 @@ services:
     Claroline\CursusBundle\Listener\DataSource\AllCoursesSource:
         arguments:
             - '@Claroline\AppBundle\API\FinderProvider'
+            - '@security.token_storage'
         tags:
             - { name: kernel.event_listener, event: data_source.all_courses.load, method: getData }
