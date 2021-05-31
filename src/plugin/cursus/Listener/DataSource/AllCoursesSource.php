@@ -52,7 +52,15 @@ class AllCoursesSource
 
         if (!$this->authorization->isGranted('ROLE_ADMIN')) {
             $user = $this->tokenStorage->getToken()->getUser();
-            $organizations = $user instanceof User ? $user->getOrganizations() : $this->om->getRepository(Organization::class)->findBy(['default' => true]);
+            
+            $organizations = null;
+
+            if ($user instanceof User) {
+                $organizations = $user->getOrganizations();
+            }
+            else {
+                $organizations = $this->om->getRepository(Organization::class)->findBy(['default' => true]);
+            }
 
             $options['hiddenFilters']['organizations'] = array_map(function (Organization $organization) {
                 return $organization->getUuid();
