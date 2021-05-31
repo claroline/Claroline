@@ -54,7 +54,7 @@ class AllCoursesSource
             $user = $this->tokenStorage->getToken()->getUser();
             $organizations = $user instanceof User ? $user->getOrganizations() : $this->om->getRepository(Organization::class)->findBy(['default' => true]);
 
-            $options['hiddenFilters']['organizations'] = array_map(function(Organization $organization) {
+            $options['hiddenFilters']['organizations'] = array_map(function (Organization $organization) {
                 return $organization->getUuid();
             }, $organizations);
         }
