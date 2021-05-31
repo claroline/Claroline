@@ -53,6 +53,7 @@ class LoadTemplateData extends AbstractFixture implements ContainerAwareInterfac
                 $templateContent = new TemplateContent();
                 $templateContent->setLang($locale);
                 $templateContent->setTitle($this->translator->trans('event_invitation', [], 'template', $locale));
+                $template->addTemplateContent($templateContent);
 
                 $content = '%event_name%<br/>';
                 $content .= '[%event_start% -> %event_end%]<br/>';
