@@ -15,8 +15,8 @@ use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Event\DataSource\GetDataEvent;
 use Claroline\CoreBundle\Entity\Organization\Organization;
-use Claroline\CursusBundle\Entity\Course;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CursusBundle\Entity\Course;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -57,8 +57,7 @@ class AllCoursesSource
 
             if ($user instanceof User) {
                 $organizations = $user->getOrganizations();
-            }
-            else {
+            } else {
                 $organizations = $this->om->getRepository(Organization::class)->findBy(['default' => true]);
             }
 
