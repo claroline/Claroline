@@ -96,7 +96,7 @@ class EventFinder extends AbstractFinder
                     break;
 
                 case 'workspace':
-                    $qb->join('po.workspace', 'w');
+                    $qb->join('s.workspace', 'w');
                     $qb->andWhere("w.uuid = :{$filterName}");
                     $qb->setParameter($filterName, $filterValue);
                     break;
