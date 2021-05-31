@@ -13,9 +13,9 @@ namespace Claroline\CursusBundle\Listener\DataSource;
 
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Event\DataSource\GetDataEvent;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Event\DataSource\GetDataEvent;
 use Claroline\CursusBundle\Entity\Course;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
