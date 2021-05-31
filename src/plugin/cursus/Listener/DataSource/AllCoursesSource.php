@@ -52,7 +52,7 @@ class AllCoursesSource
 
         if (!$this->authorization->isGranted('ROLE_ADMIN')) {
             $user = $this->tokenStorage->getToken()->getUser();
-            
+
             $organizations = null;
 
             if ($user instanceof User) {
