@@ -23,4 +23,3 @@ services:
     Claroline\AgendaBundle\Finder\EventInvitationFinder: ~
 
     Claroline\AgendaBundle\Finder\TaskFinder: ~
-
