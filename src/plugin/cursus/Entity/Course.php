@@ -86,7 +86,7 @@ class Course extends AbstractTraining
     private $propagateRegistration = false;
 
     /**
-     * @ORM\Column(name="session_duration", nullable=false, type="integer", options={"default" = 1})
+     * @ORM\Column(name="session_duration", nullable=false, type="float", options={"default" = 1})
      */
     private $defaultSessionDuration = 1;
 
