@@ -19,7 +19,7 @@ abstract class AbstractEventFinder extends AbstractFinder
 {
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
     {
-        $qb->select($options['count'] ? 'COUNT(DISTINCT obj)' : 'DISTINCT obj', 'p.startDate');
+        $qb->select($options['count'] ? 'COUNT(DISTINCT obj)' : 'DISTINCT obj, p.startDate AS HIDDEN startDate');
         $qb->leftJoin('obj.plannedObject', 'p');
         $workspaceJoin = false;
 
