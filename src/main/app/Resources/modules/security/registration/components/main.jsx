@@ -12,6 +12,7 @@ import {Optional} from '#/main/app/security/registration/components/optional'
 import {Organization} from '#/main/app/security/registration/components/organization'
 import {Workspace} from '#/main/app/security/registration/components/workspace'
 import {Registration} from '#/main/app/security/registration/components/registration'
+import {OrganizationSelection} from '#/main/app/security/registration/containers/organization-selection'
 
 import {constants} from '#/main/app/security/registration/constants'
 
@@ -47,7 +48,7 @@ class RegistrationMain extends Component {
       }
     })))
 
-    if (this.props.options.forceOrganizationCreation) {
+    if (this.props.options.organizationSelection === constants.ORGANIZATION_SELECTION_CREATE) {
       steps.push({
         title: trans('organization'),
         component: Organization
@@ -58,6 +59,13 @@ class RegistrationMain extends Component {
       steps.push({
         title: trans('workspaces'),
         component: Workspace
+      })
+    }
+
+    if (this.props.options.organizationSelection === constants.ORGANIZATION_SELECTION_SELECT) {
+      steps.push({
+        title: trans('organization'),
+        component: OrganizationSelection
       })
     }
 
@@ -117,8 +125,8 @@ RegistrationMain.propTypes = {
   fetchRegistrationData: T.func.isRequired,
   options: T.shape({
     validation: T.bool,
-    forceOrganizationCreation: T.bool,
-    allowWorkspace: T.bool
+    allowWorkspace: T.bool,
+    organizationSelection: T.string
   }).isRequired,
   defaultWorkspaces: T.array,
   onRegister: T.func
