@@ -10,37 +10,30 @@ import {MenuSection} from '#/main/app/layout/menu/components/section'
 const DashboardMenu = (props) =>
   <MenuSection
     {...omit(props, 'path')}
-    title={trans('dashboard', {}, 'tools')}
+    title={trans('dashboard', {}, 'logs')}
   >
     <Toolbar
       className="list-group"
       buttonName="list-group-item"
       actions={[
         {
-          name: 'overview',
+          name: 'logs',
           type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-pie-chart',
-          label: trans('overview', {}, 'analytics'),
-          target: props.path,
-          exact: true
+          icon: 'fa fa-fw fa-shield',
+          label: trans('security'),
+          target: props.path + '/security'
         }, {
-          name: 'activity',
+          name: 'message',
           type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-chart-line',
-          label: trans('activity'),
-          target: props.path + '/activity'
+          icon: 'fa fa-fw fa-envelope',
+          label: trans('message'),
+          target: props.path + '/message'
         }, {
-          name: 'content',
+          name: 'functional',
           type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-folder',
-          label: trans('content'),
-          target: props.path + '/content'
-        }, {
-          name: 'community',
-          type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-users',
-          label: trans('community'),
-          target: props.path + '/community'
+          icon: 'fa fa-fw fa-cogs',
+          label: trans('functional'),
+          target: props.path + '/functional'
         }
       ]}
       onClick={props.autoClose}

@@ -7,6 +7,6 @@ import {registry} from '#/main/app/plugins/registry';
  */
 registry.add('ClarolineLogBundle', {
     administration: {
-        'claroline_log_admin_tool' : () => { return import(/* webpackChunkName: "plugin-log-admin-logs" */ '#/plugin/tag/administration/tags') }
+      'claroline_log_admin_tool' : () => { return import(/* webpackChunkName: "plugin-log-admin-logs" */ '#/main/log/administration/logs') }
     }
 })

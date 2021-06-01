@@ -4,7 +4,7 @@ import {ToolPage} from '#/main/core/tool/containers/page'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {trans} from '#/main/app/intl/translation'
 
-import {selectors} from '#/plugin/analytics/administration/dashboard/store/selectors'
+import {selectors} from '#/main/log/administration/logs/store/selectors'
 
 const DashboardFunctional = () =>
   <ToolPage

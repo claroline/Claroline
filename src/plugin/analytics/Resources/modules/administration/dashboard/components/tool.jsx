@@ -7,9 +7,6 @@ import {DashboardOverview} from '#/plugin/analytics/administration/dashboard/com
 import {DashboardActivity} from '#/plugin/analytics/administration/dashboard/components/activity'
 import {DashboardContent} from '#/plugin/analytics/administration/dashboard/components/content'
 import {DashboardCommunity} from '#/plugin/analytics/administration/dashboard/components/community'
-import {DashboardLog} from '#/plugin/analytics/administration/dashboard/components/log'
-import {DashboardMessage} from '#/plugin/analytics/administration/dashboard/components/message'
-import {DashboardFunctional} from '#/plugin/analytics/administration/dashboard/components/functional'
 
 const DashboardTool = (props) =>
   <Routes
@@ -52,15 +49,6 @@ const DashboardTool = (props) =>
 
           return Community
         }
-      }, {
-        path: '/security',
-        component: DashboardLog
-      }, {
-        path: '/message',
-        component: DashboardMessage
-      }, {
-        path: '/functional',
-        component: DashboardFunctional
       }
     ]}
   />
