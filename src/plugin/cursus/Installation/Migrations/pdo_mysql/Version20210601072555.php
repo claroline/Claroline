@@ -14,15 +14,15 @@ class Version20210601072555 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
-        $this->addSql("
+        $this->addSql('
             ALTER TABLE claro_cursusbundle_course CHANGE session_duration session_duration DOUBLE PRECISION DEFAULT '1' NOT NULL
-        ");
+        ');
     }
 
     public function down(Schema $schema)
     {
-        $this->addSql("
+        $this->addSql('
             ALTER TABLE claro_cursusbundle_course CHANGE session_duration session_duration INT DEFAULT 1 NOT NULL
-        ");
+        ');
     }
 }
