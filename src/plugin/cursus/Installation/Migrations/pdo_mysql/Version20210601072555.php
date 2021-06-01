@@ -15,7 +15,7 @@ class Version20210601072555 extends AbstractMigration
     public function up(Schema $schema)
     {
         $this->addSql('
-            ALTER TABLE claro_cursusbundle_course CHANGE session_duration session_duration DOUBLE PRECISION DEFAULT '1' NOT NULL
+            ALTER TABLE claro_cursusbundle_course CHANGE session_duration session_duration DOUBLE PRECISION DEFAULT 1 NOT NULL
         ');
     }
 
