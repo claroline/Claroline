@@ -30,6 +30,11 @@ const defaultWorkspaces = createSelector(
   (store) => store.defaultWorkspaces
 )
 
+const existingOrganizations = createSelector(
+  [store],
+  (store) => store.existingOrganizations
+)
+
 export const selectors = {
   STORE_NAME,
   FORM_NAME,
@@ -38,5 +43,6 @@ export const selectors = {
   options,
   facets,
   workspaces,
-  defaultWorkspaces
+  defaultWorkspaces,
+  existingOrganizations
 }

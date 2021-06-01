@@ -30,10 +30,24 @@ const registrationValidationTypes = {
   [REGISTRATION_MAIL_VALIDATION_FULL]: trans('force_mail_validation')
 }
 
+const ORGANIZATION_SELECTION_NONE = 'none'
+const ORGANIZATION_SELECTION_CREATE = 'create'
+const ORGANIZATION_SELECTION_SELECT = 'select'
+
+const ORGANIZATION_SELECTION_CHOICES = {
+  [ORGANIZATION_SELECTION_NONE]: trans('no_selection'),
+  [ORGANIZATION_SELECTION_CREATE]: trans('force_organization_creation'),
+  [ORGANIZATION_SELECTION_SELECT]: trans('allow_organization_selection')
+}
+
 export const constants = {
   ALERT_REGISTRATION,
   REGISTRATION_MAIL_VALIDATION_NONE,
   REGISTRATION_MAIL_VALIDATION_FULL,
   REGISTRATION_MAIL_VALIDATION_PARTIAL,
-  registrationValidationTypes
+  registrationValidationTypes,
+  ORGANIZATION_SELECTION_CHOICES,
+  ORGANIZATION_SELECTION_NONE,
+  ORGANIZATION_SELECTION_CREATE,
+  ORGANIZATION_SELECTION_SELECT
 }

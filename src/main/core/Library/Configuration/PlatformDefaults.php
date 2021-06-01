@@ -70,8 +70,8 @@ class PlatformDefaults implements ParameterProviderInterface
                 'validation' => self::REGISTRATION_MAIL_VALIDATION_PARTIAL,
                 'auto_logging' => false,
                 'allow_workspace' => false,
+                'organization_selection' => 'none',
                 'username_regex' => "/^[a-zA-Z0-9@\-_\.]*$/",
-                'force_organization_creation' => false,
             ],
             'security' => [
                 'account_duration' => null,
