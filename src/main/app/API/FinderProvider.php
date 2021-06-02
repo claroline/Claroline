@@ -182,7 +182,11 @@ class FinderProvider
                     // parse filter value
                     if (is_numeric($value)) {
                         // convert numbers
-                        $value = floatval($value);
+                        $floatValue = floatval($value);
+                        if ($value === $floatValue.'') {
+                            // dumb check to allow users search with strings like '001' without catching it as a number
+                            $value = $floatValue;
+                        }
                     } else {
                         // convert booleans
                         $booleanValue = filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);

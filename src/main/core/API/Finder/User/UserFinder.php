@@ -59,6 +59,12 @@ class UserFinder extends AbstractFinder
                     $qb->andWhere('UPPER(obj.publicUrl) = :publicUrl');
                     $qb->setParameter('publicUrl', strtoupper($filterValue));
                     break;
+                case 'username':
+                    // because some users use numeric username
+                    // if we let the default, the finder will add a strict check instead of a LIKE
+                    $qb->andWhere('UPPER(obj.username) LIKE :username');
+                    $qb->setParameter('username', '%'.strtoupper($filterValue).'%');
+                    break;
                 case 'name':
                     $qb->andWhere('UPPER(obj.username) LIKE :name OR UPPER(CONCAT(obj.firstName, \' \', obj.lastName)) LIKE :name');
                     $qb->setParameter('name', '%'.strtoupper($filterValue).'%');
