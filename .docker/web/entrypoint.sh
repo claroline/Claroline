@@ -20,16 +20,14 @@ if [ -f files/installed ]; then
 
     if [[ "$versionLastUsed" != "$currentVersion" ]]; then
       echo "New version detected, updating..."
-      php bin/configure # we run it again to regenerate parameters.yml inside the volume
-      composer enable-maintenance
-      composer delete-cache
       php bin/console claroline:update -vvv
-      composer disable-maintenance
+
       chmod -R 750 var files config
       chown -R www-data:www-data var files config
       composer delete-cache # fixes SAML errors
     else
-      echo "Claroline version is up to date"
+      echo "Claroline version is up to date, rebuilding themes"
+      php bin/console claroline:theme:build
     fi
   fi
 else

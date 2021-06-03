@@ -7,7 +7,12 @@ services:
       context: .
       dockerfile: .docker/web/Dockerfile
     ports:
+      - "25:25"
       - "80:80"
+      - "143:143"
+      - "465:465"
+      - "587:587"
+      - "993:993"
     volumes:
       - ./config:/var/www/html/claroline/config
       - ./files:/var/www/html/claroline/files
@@ -16,7 +21,6 @@ services:
       - ./public/themes:/var/www/html/claroline/public/themes
       - ./var:/var/www/html/claroline/var
       - ./VERSION.txt:/var/www/html/claroline/VERSION.txt
-      - ./src:/var/www/html/claroline/src
     depends_on:
       - db
     environment:
