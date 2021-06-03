@@ -21,6 +21,11 @@ plugin:
           context: [desktop]
           tags: [community, event]
 
+        - name: all_courses
+          type: list
+          context: [desktop, home]
+          tags: [community, event]
+
     templates:
         - name: training_course
           placeholders:
