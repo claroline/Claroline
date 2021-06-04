@@ -1,5 +1,5 @@
 import {reducer} from '#/main/log/administration/logs/store'
-import {LogsTool} from '#/plugin/tag/administration/tags/containers/tool'
+import {LogsTool} from '#/main/log/administration/logs/containers/tool'
 
 /**
  * Logs administration tool application.
