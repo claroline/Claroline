@@ -43,6 +43,8 @@ class Planning
 
     public function __construct()
     {
+        $this->refreshUuid();
+
         $this->plannedObjects = new ArrayCollection();
     }
 

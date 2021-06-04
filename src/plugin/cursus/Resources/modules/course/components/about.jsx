@@ -128,7 +128,11 @@ const CourseAbout = (props) => {
                       label={trans('show-info', {}, 'actions')}
                       tooltip="top"
                       popover={{
-                        content: getInfo(props.course, props.activeSession, 'pricing.description'),
+                        content: (
+                          <ContentHtml>
+                            {(getInfo(props.course, props.activeSession, 'pricing.description') || '')}
+                          </ContentHtml>
+                        ),
                         position: 'bottom'
                       }}
                     />
