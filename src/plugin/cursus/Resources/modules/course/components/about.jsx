@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 
-import {trans, displayDuration, displayDate, now} from '#/main/app/intl'
+import {trans, displayDate, now} from '#/main/app/intl'
 import {param} from '#/main/app/config'
 import {currency} from '#/main/app/intl/currency'
 import {hasPermission} from '#/main/app/security'
