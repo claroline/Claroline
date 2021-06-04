@@ -67,6 +67,7 @@ CurrentRegistration.propTypes = {
 const CourseAbout = (props) => {
   const availableSessions = props.availableSessions
     .filter(session => props.activeSession && props.activeSession.id !== session.id)
+  const duration = getInfo(props.course, props.activeSession, 'meta.duration')
 
   return (
     <div className="row">
@@ -103,8 +104,8 @@ const CourseAbout = (props) => {
             <li className="list-group-item">
               {trans('duration')}
               <span className="value">
-                {getInfo(props.course, props.activeSession, 'meta.duration') ?
-                  displayDuration(getInfo(props.course, props.activeSession, 'meta.duration') * 3600 * 24, true) :
+                {duration ?
+                  duration + ' ' + (duration > 1.0 ? trans('days') : trans('day')) :
                   trans('empty_value')
                 }
               </span>
