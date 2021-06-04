@@ -4,5 +4,7 @@
   "public_course_sessions": "List of public training sessions",
   "public_course_sessions_desc": "Allows to list sessions with public registrations.",
   "all_courses": "List of courses",
-  "public_courses_desc": "Allow to list all public courses."
+  "public_courses_desc": "Allow to list all public courses.",
+  "session_events": "List of session events",
+  "session_events_desc": "Allow to list all events of session."
 }

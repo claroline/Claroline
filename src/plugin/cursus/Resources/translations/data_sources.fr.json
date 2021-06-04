@@ -4,5 +4,7 @@
   "public_course_sessions": "Liste des sessions de formation publiques",
   "public_course_sessions_desc": "Permet de lister les sessions avec inscriptions publiques.",
   "all_courses": "Liste de toutes les formations",
-  "public_courses_desc": "Permet de lister l'ensemble des formations publiques"
+  "public_courses_desc": "Permet de lister l'ensemble des formations publiques",
+  "session_events": "Liste des scéances",
+  "session_events_desc": "Permet de lister les scéances d'une session"
 }
