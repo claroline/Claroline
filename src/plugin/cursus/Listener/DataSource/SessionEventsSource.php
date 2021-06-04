@@ -15,8 +15,9 @@ use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;
 use Claroline\CoreBundle\Event\DataSource\GetDataEvent;
 use Claroline\CursusBundle\Entity\Event;
+use Claroline\CursusBundle\Entity\Session;
 
-class EventsSource
+class SessionEventsSource
 {
     /** @var FinderProvider */
     private $finder;
@@ -28,9 +29,9 @@ class EventsSource
 
     public function getData(GetDataEvent $event)
     {
-        $sessions = $this->finder->search(Session::class, [
+        /*$sessions = $this->finder->search(Session::class, [
             'filters' => ['workspace' => $event->getWorkspace()->getUuid()],
-        ], [Options::SERIALIZE_MINIMAL]);
+        ], [Options::SERIALIZE_MINIMAL]);*/
 
         $options = $event->getOptions();
         $options['hiddenFilters']['publicRegistration'] = true;
