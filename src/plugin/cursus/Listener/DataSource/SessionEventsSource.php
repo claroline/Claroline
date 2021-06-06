@@ -36,7 +36,7 @@ class SessionEventsSource
         $options = $event->getOptions();
         $options['hiddenFilters']['publicRegistration'] = true;
         $options['hiddenFilters']['terminated'] = true;
-        //$options['session'] = 
+        //$options['session'] =
 
         $event->setData(
             $this->finder->search(Event::class, $options)
