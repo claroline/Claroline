@@ -105,33 +105,23 @@ function displayDate(apiDate, long = false, withTime = false) {
 function displayDuration(seconds, long = false) {
   const time = moment.duration({seconds: seconds})
 
-  const timeParts = []
-  if ( 0 !== time.years()) {
-    timeParts.push(time.years())
-    timeParts.push(trans(long ? 'years':'years_short'))
+  if (time.years() > 0) {
+    return (time.years() + (time.months() / 12)).toFixed(2) + ' ' + trans(long ? 'years' : 'years_short');
   }
-  if (0 !== time.months()) {
-    timeParts.push(time.months())
-    timeParts.push(trans(long ? 'months':'months_short'))
+  if (time.months() > 0) {
+    return (time.months() + (time.days() / 30)).toFixed(2) + ' ' + trans(long ? 'months' : 'months_short');
   }
-  if (0 !== time.days()) {
-    timeParts.push(time.days())
-    timeParts.push(trans(long ? 'days':'days_short'))
+  if (time.days() > 0) {
+    return (time.days() + (time.hours() / 24)).toFixed(2) + ' ' + trans(long ? 'days' : 'days_short');
   }
-  if (0 !== time.hours()) {
-    timeParts.push(time.hours())
-    timeParts.push(trans(long ? 'hours':'hours_short'))
+  if (time.hours() > 0) {
+    return (time.hours() + (time.minutes() / 60)).toFixed(2) + ' ' + trans(long ? 'hours' : 'hours_short');
   }
-  if (0 !== time.minutes()) {
-    timeParts.push(time.minutes())
-    timeParts.push(trans(long ? 'minutes':'minutes_short'))
-  }
-  if (0 !== time.seconds()) {
-    timeParts.push(time.seconds())
-    timeParts.push(trans(long ? 'seconds':'seconds_short'))
+  if (time.minutes() > 0) {
+    return (time.minutes() + (time.seconds() / 60)).toFixed(2) + ' ' + trans(long ? 'minutes' : 'minutes_short');
   }
 
-  return timeParts.join(long ? ' ' : '')
+  return time.seconds().toFixed(2) + ' ' + trans(long ? 'seconds' : 'seconds_short');
 }
 
 /**
