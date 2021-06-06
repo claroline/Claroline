@@ -1,9 +1,6 @@
 import {trans} from '#/main/app/intl/translation'
 import {URL_BUTTON} from '#/main/app/buttons'
 
-import {route as toolRoute} from '#/main/core/tool/routing'
-
-import {route} from '#/plugin/cursus/routing'
 import {EventCard} from '#/plugin/cursus/event/components/card'
 
 export default {
@@ -13,7 +10,6 @@ export default {
     primaryAction: (event) => ({
       type: URL_BUTTON,
       target: '#'
-      //target: `#${route(toolRoute('trainings')+'/catalog', session.course, session)}`
     }),
     definition: [
       {
