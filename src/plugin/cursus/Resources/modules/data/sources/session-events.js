@@ -7,7 +7,7 @@ export default {
   name: 'session-events',
   icon: 'fa fa-fw fa-cubes',
   parameters: {
-    primaryAction: (event) => ({
+    primaryAction: () => ({
       type: URL_BUTTON,
       target: '#'
     }),
