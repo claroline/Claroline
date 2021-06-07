@@ -16,7 +16,6 @@ services:
       - ./public/themes:/var/www/html/claroline/public/themes
       - ./var:/var/www/html/claroline/var
       - ./VERSION.txt:/var/www/html/claroline/VERSION.txt
-      - ./src:/var/www/html/claroline/src
     depends_on:
       - db
     environment:
