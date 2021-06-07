@@ -38,7 +38,7 @@ services:
         tags:
             - { name: kernel.event_listener, event: data_source.all_courses.load, method: getData }
 
-    Claroline\CursusBundle\Listener\DataSource\SessionEventsSource:
+    Claroline\CursusBundle\Listener\DataSource\EventsSource:
         arguments:
             - '@Claroline\AppBundle\API\FinderProvider'
         tags:
