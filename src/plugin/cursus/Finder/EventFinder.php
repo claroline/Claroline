@@ -49,8 +49,8 @@ class EventFinder extends AbstractFinder
                     break;
 
                 case 'session':
-                    $qb->andWhere("s.uuid = :{$filterName}");
-                    $qb->setParameter($filterName, $filterValue);
+                    $qb->andWhere("s.uuid IN (:{$filterName})");
+                    $qb->setParameter($filterName, is_array($filterValue) ? $filterValue : [$filterValue]);
                     break;
 
                 case 'course':

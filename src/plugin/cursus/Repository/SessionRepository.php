@@ -11,12 +11,49 @@
 
 namespace Claroline\CursusBundle\Repository;
 
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CursusBundle\Entity\Registration\AbstractRegistration;
 use Claroline\CursusBundle\Entity\Session;
 use Doctrine\ORM\EntityRepository;
 
 class SessionRepository extends EntityRepository
 {
+    public function findByWorkspace(Workspace $workspace)
+    {
+        return $this->_em
+            ->createQuery('
+                SELECT s FROM Claroline\CursusBundle\Entity\Session AS s
+                WHERE s.workspace = :workspace
+                  AND s.endDate >= :now
+            ')
+            ->setParameters([
+                'workspace' => $workspace,
+                'now' => new \DateTime()
+            ])
+            ->getResult();
+    }
+
+    public function findTutors(Session $session)
+    {
+        return $this->findUsers($session, AbstractRegistration::TUTOR);
+    }
+
+    private function findUsers(Session $session, string $type)
+    {
+        return $this->_em
+            ->createQuery('
+                SELECT su FROM Claroline\CursusBundle\Entity\Registration\SessionUser AS su
+                WHERE su.type = :registrationType
+                  AND su.session = :session
+                  AND (su.confirmed = 1 AND su.validated = 1)
+            ')
+            ->setParameters([
+                'registrationType' => $type,
+                'session' => $session,
+            ])
+            ->getResult();
+    }
+
     public function countParticipants(Session $session)
     {
         return [

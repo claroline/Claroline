@@ -12,17 +12,28 @@
 namespace Claroline\CursusBundle\Listener\DataSource;
 
 use Claroline\AppBundle\API\FinderProvider;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Event\DataSource\GetDataEvent;
 use Claroline\CursusBundle\Entity\Event;
+use Claroline\CursusBundle\Repository\SessionRepository;
 
 class EventsSource
 {
     /** @var FinderProvider */
     private $finder;
 
-    public function __construct(FinderProvider $finder)
+    /** @var ObjectManager */
+    private $om;
+
+    /** @var SessionRepository */
+    private $sessionRepo;
+
+    public function __construct(FinderProvider $finder, ObjectManager $om)
     {
         $this->finder = $finder;
+        $this->om = $om;
+
+        $this->sessionRepo = $om->getRepository(Session::class);
     }
 
     public function getData(GetDataEvent $event)
@@ -30,6 +41,7 @@ class EventsSource
         $options = $event->getOptions();
 
         $options['hiddenFilters']['terminated'] = true;
+        $options['hiddenFilters']['session'] = $this->sessionRepo->findByWorkspace($event->getWorkspace());
 
         $event->setData(
             $this->finder->search(Event::class, $options)
