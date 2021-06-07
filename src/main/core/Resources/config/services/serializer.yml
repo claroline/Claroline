@@ -34,12 +34,6 @@ services:
     Claroline\CoreBundle\API\Serializer\DataSourceSerializer:
         tags: [claroline.serializer]
 
-    Claroline\CoreBundle\API\Serializer\SavedSearchSerializer:
-        tags: [claroline.serializer]
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
-
     Claroline\CoreBundle\API\Serializer\Tool\AdminToolSerializer:
         tags: [claroline.serializer]
 
@@ -245,8 +239,6 @@ services:
 
     Claroline\CoreBundle\API\Serializer\Resource\ResourceEvaluationSerializer:
         tags: [claroline.serializer]
-        arguments:
-            - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceUserEvaluationSerializer'
 
     Claroline\CoreBundle\API\Serializer\Resource\ResourceCommentSerializer:
         tags: [claroline.serializer]

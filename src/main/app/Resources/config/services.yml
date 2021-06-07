@@ -37,7 +37,6 @@ services:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - !tagged_iterator claroline.serializer # Lazy collection of 'claroline.serializer' tagged services
-            - '%kernel.project_dir%'
 
     Claroline\AppBundle\API\TransferProvider:
         arguments:

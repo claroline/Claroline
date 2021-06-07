@@ -1,6 +1,5 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import get from 'lodash/get'
 import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
@@ -49,7 +48,7 @@ const ResourceEvaluationsModal = props =>
           label: trans('progression'),
           displayed: true,
           filterable: false,
-          calculated: (row) => (get(row, 'progression', 0) / get(row, 'progressionMax', 1)) * 100,
+          calculated: (row) => ((row.progression || 0) / (row.progressionMax || 1)) * 100,
           options: {
             type: 'user'
           }

@@ -5,7 +5,6 @@ namespace Icap\BlogBundle\Listener\Resource;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Evaluation\AbstractEvaluation;
 use Claroline\CoreBundle\Event\ExportObjectEvent;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Event\ImportObjectEvent;
@@ -14,6 +13,7 @@ use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
+use Claroline\EvaluationBundle\Entity\AbstractEvaluation;
 use Icap\BlogBundle\Entity\Blog;
 use Icap\BlogBundle\Entity\Comment;
 use Icap\BlogBundle\Entity\Post;
@@ -99,11 +99,11 @@ class BlogListener
         $blog = $exportEvent->getObject();
 
         $data = [
-          'posts' => array_map(function (Post $post) {
-              return $this->serializer->serialize($post, [
-                CommentSerializer::INCLUDE_COMMENTS, CommentSerializer::FETCH_COMMENTS,
-              ]);
-          }, $blog->getPosts()->toArray()),
+            'posts' => array_map(function (Post $post) {
+                return $this->serializer->serialize($post, [
+                    CommentSerializer::INCLUDE_COMMENTS, CommentSerializer::FETCH_COMMENTS,
+                ]);
+            }, $blog->getPosts()->toArray()),
         ];
         $exportEvent->overwrite('_data', $data);
     }
@@ -130,7 +130,7 @@ class BlogListener
             }
 
             $post->setBlog($blog)
-              ->setAuthor($this->tokenStorage->getToken()->getUser());
+                ->setAuthor($this->tokenStorage->getToken()->getUser());
 
             foreach ($postData['comments'] as $commentData) {
                 /** @var Comment $comment */

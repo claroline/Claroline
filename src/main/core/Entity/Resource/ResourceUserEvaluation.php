@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Entity\Resource;
 
-use Claroline\CoreBundle\Entity\Evaluation\AbstractUserEvaluation;
+use Claroline\EvaluationBundle\Entity\AbstractUserEvaluation;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;

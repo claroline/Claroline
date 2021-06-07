@@ -50,7 +50,7 @@ const ProgressionUsers = (props) =>
         label: trans('progression'),
         displayed: true,
         filterable: false,
-        calculated: (row) => (get(row, 'progression', 0) / get(row, 'progressionMax', 1)) * 100,
+        calculated: (row) => ((row.progression || 0) / (row.progressionMax || 1)) * 100,
         options: {
           type: 'user'
         }
