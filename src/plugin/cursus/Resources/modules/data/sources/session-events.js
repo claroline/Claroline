@@ -29,11 +29,6 @@ export default {
         label: trans('description'),
         displayed: true
       }, {
-        name: 'meta.type',
-        type: 'string',
-        label: trans('event_type'),
-        displayed: false
-      }, {
         name: 'restrictions.users',
         alias: 'maxUsers',
         type: 'number',
