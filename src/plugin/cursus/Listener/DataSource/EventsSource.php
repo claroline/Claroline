@@ -22,17 +22,12 @@ class EventsSource
     /** @var FinderProvider */
     private $finder;
 
-    /** @var ObjectManager */
-    private $om;
-
     /** @var SessionRepository */
     private $sessionRepo;
 
     public function __construct(FinderProvider $finder, ObjectManager $om)
     {
         $this->finder = $finder;
-        $this->om = $om;
-
         $this->sessionRepo = $om->getRepository(Session::class);
     }
 

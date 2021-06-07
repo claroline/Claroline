@@ -28,7 +28,7 @@ class SessionRepository extends EntityRepository
             ')
             ->setParameters([
                 'workspace' => $workspace,
-                'now' => new \DateTime()
+                'now' => new \DateTime(),
             ])
             ->getResult();
     }
