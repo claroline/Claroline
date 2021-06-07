@@ -106,22 +106,22 @@ function displayDuration(seconds, long = false) {
   const time = moment.duration({seconds: seconds})
 
   if (time.years() > 0) {
-    return (time.years() + (time.months() / 12)).toFixed(2) + ' ' + trans(long ? 'years' : 'years_short')
+    return (time.years() + time.months() / 12).toFixed(1) + ' ' + trans(long ? 'years' : 'years_short')
   }
   if (time.months() > 0) {
-    return (time.months() + (time.days() / 30)).toFixed(2) + ' ' + trans(long ? 'months' : 'months_short')
+    return (time.months() + time.days() / 30).toFixed(1) + ' ' + trans(long ? 'months' : 'months_short')
   }
   if (time.days() > 0) {
-    return (time.days() + (time.hours() / 24)).toFixed(2) + ' ' + trans(long ? 'days' : 'days_short')
+    return (time.days() + time.hours() / 24).toFixed(1) + ' ' + trans(long ? 'days' : 'days_short')
   }
   if (time.hours() > 0) {
-    return (time.hours() + (time.minutes() / 60)).toFixed(2) + ' ' + trans(long ? 'hours' : 'hours_short')
+    return (time.hours() + time.minutes() / 60).toFixed(1) + ' ' + trans(long ? 'hours' : 'hours_short')
   }
   if (time.minutes() > 0) {
-    return (time.minutes() + (time.seconds() / 60)).toFixed(2) + ' ' + trans(long ? 'minutes' : 'minutes_short')
+    return (time.minutes() + time.seconds() / 60).toFixed(1) + ' ' + trans(long ? 'minutes' : 'minutes_short')
   }
 
-  return time.seconds().toFixed(2) + ' ' + trans(long ? 'seconds' : 'seconds_short')
+  return time.seconds().toFixed(1) + ' ' + trans(long ? 'seconds' : 'seconds_short')
 }
 
 /**
