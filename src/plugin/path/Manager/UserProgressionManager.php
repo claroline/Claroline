@@ -2,12 +2,12 @@
 
 namespace Innova\PathBundle\Manager;
 
-use Claroline\CoreBundle\Entity\Evaluation\AbstractEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
 use Claroline\CoreBundle\Repository\Resource\ResourceEvaluationRepository;
+use Claroline\EvaluationBundle\Entity\AbstractEvaluation;
 use Doctrine\Persistence\ObjectManager;
 use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\Step;
@@ -152,15 +152,9 @@ class UserProgressionManager
             /** @var Step[] $steps */
             $steps = $this->stepRepo->findBy(['resource' => $resourceNode, 'evaluated' => true]);
 
-            $pathAttempts = [];
             foreach ($steps as $step) {
                 // get the current attempt of the path
-                if (!empty($pathAttempts[$step->getPath()->getUuid()])) {
-                    $pathAttempt = $pathAttempts[$step->getPath()->getUuid()];
-                } else {
-                    $pathAttempt = $this->resourceEvalRepo->findLast($step->getPath()->getResourceNode(), $user);
-                }
-
+                $pathAttempt = $this->resourceEvalRepo->findLast($step->getPath()->getResourceNode(), $user);
                 if ($pathAttempt) {
                     $attemptData = $pathAttempt->getData();
                     if (empty($attemptData['resources'])) {

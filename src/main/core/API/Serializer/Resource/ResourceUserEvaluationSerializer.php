@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\API\Serializer\Resource;
 
+use Claroline\AppBundle\API\Options;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
@@ -11,9 +12,6 @@ class ResourceUserEvaluationSerializer
     private $resourceNodeSerializer;
     private $userSerializer;
 
-    /**
-     * ResourceUserEvaluationSerializer constructor.
-     */
     public function __construct(ResourceNodeSerializer $resourceNodeSerializer, UserSerializer $userSerializer)
     {
         $this->resourceNodeSerializer = $resourceNodeSerializer;
@@ -47,9 +45,8 @@ class ResourceUserEvaluationSerializer
             'scoreMax' => $resourceUserEvaluation->getScoreMax(),
             'progression' => $resourceUserEvaluation->getProgression(),
             'progressionMax' => $resourceUserEvaluation->getProgressionMax(),
-            'resourceNode' => $this->resourceNodeSerializer->serialize($resourceUserEvaluation->getResourceNode()), // TODO : remove me or add an option
-            'user' => $this->userSerializer->serialize($resourceUserEvaluation->getUser()),
-            'userName' => $resourceUserEvaluation->getUserName(),
+            'resourceNode' => $this->resourceNodeSerializer->serialize($resourceUserEvaluation->getResourceNode(), [Options::SERIALIZE_MINIMAL]), // TODO : remove me or add an option
+            'user' => $this->userSerializer->serialize($resourceUserEvaluation->getUser(), [Options::SERIALIZE_MINIMAL]),
             'nbAttempts' => $resourceUserEvaluation->getNbAttempts(),
             'nbOpenings' => $resourceUserEvaluation->getNbOpenings(),
             'required' => $resourceUserEvaluation->isRequired(),

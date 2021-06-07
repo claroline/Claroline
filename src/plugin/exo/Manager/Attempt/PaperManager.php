@@ -3,11 +3,11 @@
 namespace UJM\ExoBundle\Manager\Attempt;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Evaluation\AbstractEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
 use Claroline\CoreBundle\Security\Collection\ResourceCollection;
+use Claroline\EvaluationBundle\Entity\AbstractEvaluation;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use UJM\ExoBundle\Entity\Attempt\Answer;
@@ -424,7 +424,8 @@ class PaperManager
                 'status' => $status,
                 'score' => $score,
                 'scoreMax' => $paper->getTotal(),
-                'progression' => $nbQuestions > 0 ? floor(($nbAnswers / $nbQuestions) * 100) : null,
+                'progression' => $nbAnswers,
+                'progressionMax' => $nbQuestions,
                 'data' => $data,
             ]
         );

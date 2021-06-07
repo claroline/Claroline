@@ -5,6 +5,7 @@ Claroline\CoreBundle\ClarolineCoreBundle = true
 Claroline\TagBundle\ClarolineTagBundle = true
 Claroline\AppBundle\ClarolineAppBundle = true
 Claroline\AuthenticationBundle\ClarolineAuthenticationBundle = true
+Claroline\EvaluationBundle\ClarolineEvaluationBundle = true
 Claroline\ThemeBundle\ClarolineThemeBundle = true
 Claroline\AgendaBundle\ClarolineAgendaBundle = true
 Claroline\AnalyticsBundle\ClarolineAnalyticsBundle = true

@@ -14,24 +14,15 @@ class SerializerProvider
     private $serializers;
     /** @var ObjectManager */
     private $om;
-    /** @var string */
-    private $rootDir;
-    /** @var string */
-    private $baseUri;
 
-    /**
-     * Injects Serializer service.
-     */
-    public function __construct(ObjectManager $om, iterable $serializers, string $rootDir)
+    public function __construct(ObjectManager $om, iterable $serializers)
     {
         $this->om = $om;
         $this->serializers = $serializers;
-        $this->rootDir = $rootDir;
-        $this->baseUri = 'https://github.com/claroline/Distribution/tree/master';
     }
 
     /**
-     * Returns the class handled by the serializer.
+     * Returns the class handled by the serializer (It's public because of tests).
      *
      * @param mixed $serializer
      *

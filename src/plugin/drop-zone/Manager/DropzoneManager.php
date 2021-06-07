@@ -14,7 +14,6 @@ namespace Claroline\DropZoneBundle\Manager;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Evaluation\AbstractEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
@@ -44,6 +43,7 @@ use Claroline\DropZoneBundle\Event\Log\LogDropzoneConfigureEvent;
 use Claroline\DropZoneBundle\Repository\CorrectionRepository;
 use Claroline\DropZoneBundle\Repository\DocumentRepository;
 use Claroline\DropZoneBundle\Repository\DropRepository;
+use Claroline\EvaluationBundle\Entity\AbstractEvaluation;
 use Claroline\TeamBundle\Entity\Team;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -926,7 +926,7 @@ class DropzoneManager
      * @param string $teamName
      * @param bool   $withCreation
      *
-     * @return Drop | null
+     * @return Drop|null
      */
     public function getPeerDrop(Dropzone $dropzone, User $user = null, $teamId = null, $teamName = null, $withCreation = true)
     {
@@ -965,7 +965,7 @@ class DropzoneManager
      * @param string $teamId
      * @param string $teamName
      *
-     * @return Drop | null
+     * @return Drop|null
      */
     public function getAvailableDropForPeer(Dropzone $dropzone, User $user = null, $teamId = null, $teamName = null)
     {
