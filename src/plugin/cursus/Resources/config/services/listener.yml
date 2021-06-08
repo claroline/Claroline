@@ -37,3 +37,10 @@ services:
             - '@Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface'
         tags:
             - { name: kernel.event_listener, event: data_source.all_courses.load, method: getData }
+
+    Claroline\CursusBundle\Listener\DataSource\EventsSource:
+        arguments:
+            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+        tags:
+            - { name: kernel.event_listener, event: data_source.session_events.load, method: getData }
