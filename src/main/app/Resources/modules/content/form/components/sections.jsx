@@ -17,6 +17,7 @@ const FormSection = props =>
   <Section
     {...omit(props, 'validating', 'errors')}
     className={classes('form-section', props.className)}
+    bsStyle={!isEmpty(props.errors) ? (props.validating ? 'danger': 'warning') : 'default'}
     status={!isEmpty(props.errors) ?
       <FormStatus id={props.id} validating={props.validating} position="left" /> :
       undefined

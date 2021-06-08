@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Planning\PlanningRepository")
  * @ORM\Table(name="claro_planning")
  */
 class Planning

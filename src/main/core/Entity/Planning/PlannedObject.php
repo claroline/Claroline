@@ -20,7 +20,8 @@ use Claroline\AppBundle\Entity\Meta\Name;
 use Claroline\AppBundle\Entity\Meta\Poster;
 use Claroline\AppBundle\Entity\Meta\Thumbnail;
 use Claroline\AppBundle\Entity\Meta\UpdatedAt;
-use Claroline\CoreBundle\Entity\Organization\Location;
+use Claroline\CoreBundle\Entity\Location\Location;
+use Claroline\CoreBundle\Entity\Location\Room;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -68,12 +69,27 @@ class PlannedObject
     private $color;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Organization\Location")
+     * @ORM\Column(nullable=true)
+     *
+     * @var string
+     */
+    private $locationUrl;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Location\Location")
      * @ORM\JoinColumn(name="location_id", nullable=true, onDelete="SET NULL")
      *
      * @var Location
      */
     private $location;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Location\Room")
+     * @ORM\JoinColumn(name="room_id", nullable=true, onDelete="SET NULL")
+     *
+     * @var Room
+     */
+    private $room;
 
     public function __construct()
     {
@@ -127,6 +143,16 @@ class PlannedObject
         $this->color = $color;
     }
 
+    public function getLocationUrl(): ?string
+    {
+        return $this->locationUrl;
+    }
+
+    public function setLocationUrl(string $locationUrl = null)
+    {
+        $this->locationUrl = $locationUrl;
+    }
+
     public function getLocation(): ?Location
     {
         return $this->location;
@@ -135,5 +161,15 @@ class PlannedObject
     public function setLocation(Location $location = null)
     {
         $this->location = $location;
+    }
+
+    public function getRoom(): ?Room
+    {
+        return $this->room;
+    }
+
+    public function setRoom(Room $room = null)
+    {
+        $this->room = $room;
     }
 }

@@ -14,11 +14,13 @@ const EventForm = (props) =>
       name={props.name}
       embedded={true}
       update={props.update}
+      event={props.event}
     />
   </BaseEventForm>
 
 EventForm.propTypes = {
   name: T.string.isRequired,
+  event: T.object,
   update: T.func.isRequired,
   onSave: T.func
 }

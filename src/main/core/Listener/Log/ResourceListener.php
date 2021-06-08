@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Listener\Log;
 
+use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Event\Crud\CopyEvent;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
@@ -26,17 +27,21 @@ class ResourceListener
 {
     /** @var StrictDispatcher */
     private $dispatcher;
-
     /** @var ObjectManager */
     private $om;
-
+    /** @var SerializerProvider */
+    private $serializer;
     /** @var UserRepository */
     private $userRepo;
 
-    public function __construct(StrictDispatcher $dispatcher, ObjectManager $om)
-    {
+    public function __construct(
+        StrictDispatcher $dispatcher,
+        ObjectManager $om,
+        SerializerProvider $serializer
+    ) {
         $this->dispatcher = $dispatcher;
         $this->om = $om;
+        $this->serializer = $serializer;
 
         $this->userRepo = $this->om->getRepository(User::class);
     }
@@ -76,10 +81,6 @@ class ResourceListener
     public function onResourceUpdate(UpdateEvent $event)
     {
         $node = $event->getObject();
-        $uow = $this->om->getUnitOfWork();
-        $uow->computeChangeSets();
-        $changeSet = $uow->getEntityChangeSet($node);
-
         $old = $event->getOldData();
 
         if ($old['meta']['published'] !== $node->isPublished() && $node->isPublished()) {
@@ -90,6 +91,9 @@ class ResourceListener
             $this->dispatcher->dispatch('log', 'Log\LogResourcePublish', [$node, $usersToNotify]);
         }
 
+        // we don't directly use data from event because it can contain only partial data.
+        $newData = $this->serializer->serialize($node);
+        $changeSet = array_diff_assoc($old, $newData);
         if (count($changeSet) > 0) {
             $this->dispatcher->dispatch('log', 'Log\LogResourceUpdate', [$node, $changeSet]);
         }

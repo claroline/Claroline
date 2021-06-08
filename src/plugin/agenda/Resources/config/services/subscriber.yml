@@ -1,0 +1,10 @@
+services:
+    Claroline\AgendaBundle\Subscriber\Crud\EventSubscriber:
+        parent: Claroline\CoreBundle\Subscriber\Crud\Planning\AbstractPlannedSubscriber
+        tags:
+            - { name: kernel.event_subscriber}
+
+    Claroline\AgendaBundle\Subscriber\Crud\TaskSubscriber:
+        parent: Claroline\CoreBundle\Subscriber\Crud\Planning\AbstractPlannedSubscriber
+        tags:
+            - { name: kernel.event_subscriber }

@@ -1,5 +1,6 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
 import {hasPermission} from '#/main/app/security/permissions'
@@ -24,39 +25,79 @@ const EventDetails = (props) =>
       <DetailsData
         data={props.agendaEvent}
         meta={true}
-        sections={[{
-          title: trans('general'),
-          primary: true,
-          fields: [
-            {
-              name: 'meta.type',
-              type: 'type',
-              label: trans('type'),
-              hideLabel: true,
-              calculated: (event) => ({
-                icon: <EventIcon type={event.meta.type} />,
-                name: trans(event.meta.type, {}, 'event'),
-                description: trans(`${event.meta.type}_desc`, {}, 'event')
-              })
-            }, {
-              name: 'dates',
-              type: 'date-range',
-              label: trans('date'),
-              calculated: (event) => [event.start || null, event.end || null],
-              options: {
-                time: true
+        sections={[
+          {
+            title: trans('general'),
+            primary: true,
+            fields: [
+              {
+                name: 'meta.type',
+                type: 'type',
+                label: trans('type'),
+                hideLabel: true,
+                calculated: (event) => ({
+                  icon: <EventIcon type={event.meta.type} />,
+                  name: trans(event.meta.type, {}, 'event'),
+                  description: trans(`${event.meta.type}_desc`, {}, 'event')
+                })
+              }, {
+                name: 'dates',
+                type: 'date-range',
+                label: trans('date'),
+                calculated: (event) => [event.start || null, event.end || null],
+                options: {
+                  time: true
+                }
+              }, {
+                name: 'description',
+                type: 'html',
+                label: trans('description')
               }
-            }, {
-              name: 'description',
-              type: 'html',
-              label: trans('description')
-            }, {
-              name: 'location',
-              type: 'location',
-              label: trans('location')
-            }
-          ]
-        }]}
+            ]
+          }, {
+            icon: 'fa fa-fw fa-map-marker-alt',
+            title: trans('location'),
+            fields: [
+              {
+                name: '_locationType',
+                type: 'choice',
+                label: trans('type'),
+                hideLabel: true,
+                calculated: (event) => {
+                  if (event.location) {
+                    return 'irl'
+                  }
+
+                  return 'online'
+                },
+                options: {
+                  choices: {
+                    online: trans('online'),
+                    irl: trans('irl')
+                  }
+                },
+                linked: [
+                  {
+                    name: 'locationUrl',
+                    label: trans('url'),
+                    type: 'url',
+                    displayed: (event) => !isEmpty(event.locationUrl)
+                  }, {
+                    name: 'location',
+                    label: trans('location'),
+                    type: 'location',
+                    displayed: (event) => !isEmpty(event.location)
+                  }, {
+                    name: 'room',
+                    label: trans('room'),
+                    type: 'room',
+                    displayed: (event) => !isEmpty(event.location)
+                  }
+                ]
+              }
+            ]
+          }
+        ]}
       >
         <EventParticipants
           isNew={false}

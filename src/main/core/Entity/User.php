@@ -303,7 +303,7 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
      * @var ArrayCollection
      *
      * @ORM\ManyToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Organization\Location",
+     *     targetEntity="Claroline\CoreBundle\Entity\Location\Location",
      *     inversedBy="users"
      * )
      *

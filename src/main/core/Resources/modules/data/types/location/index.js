@@ -8,7 +8,7 @@ const dataType = {
   name: 'location',
   meta: {
     creatable: false,
-    icon: 'fa fa-fw fa fa-location-arrow',
+    icon: 'fa fa-fw fa-map-marker-alt',
     label: trans('location', {}, 'data'),
     description: trans('location_desc', {}, 'data')
   },

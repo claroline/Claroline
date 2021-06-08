@@ -78,14 +78,21 @@
     .panel-title.opened,
     .panel-title[aria-expanded=true],
     .panel-title > *[aria-expanded=true] {
-        color: @brand-primary;
         font-weight: bold;
+    }
 
-        .panel-title-icon {
+    .panel-default {
+        .panel-title.opened,
+        .panel-title[aria-expanded=true],
+        .panel-title > *[aria-expanded=true] {
             color: @brand-primary;
-            // for svg icons
-            fill: @brand-primary;
-            stroke: @brand-primary;
+
+            .panel-title-icon {
+                color: @brand-primary;
+                // for svg icons
+                fill: @brand-primary;
+                stroke: @brand-primary;
+            }
         }
     }
 }

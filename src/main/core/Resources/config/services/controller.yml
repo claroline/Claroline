@@ -88,12 +88,6 @@ services:
             - '@security.authorization_checker'
             - '@Claroline\CoreBundle\Manager\MailManager'
 
-    Claroline\CoreBundle\Controller\APINew\User\LocationController:
-        parent: Claroline\AppBundle\Controller\AbstractCrudController
-        public: true
-        arguments:
-            - '@Claroline\CoreBundle\Manager\Organization\LocationManager'
-
     Claroline\CoreBundle\Controller\APINew\User\OrganizationController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
         public: true
@@ -330,8 +324,8 @@ services:
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@claroline.manager.tool_manager'
             - '@translator'
-            - '@claroline.manager.workspace_manager'
-            - '@claroline.manager.workspace_restrictions'
+            - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
+            - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceRestrictionsManager'
             - '@Claroline\CoreBundle\Manager\Workspace\EvaluationManager'
             - '@Claroline\AppBundle\Event\StrictDispatcher'
 
@@ -356,3 +350,15 @@ services:
             - '@Claroline\AppBundle\API\FinderProvider'
             - '@security.authorization_checker'
             - '@security.token_storage'
+
+    Claroline\CoreBundle\Controller\APINew\Location\LocationController:
+        parent: Claroline\AppBundle\Controller\AbstractCrudController
+        public: true
+        arguments:
+            - '@Claroline\CoreBundle\Manager\LocationManager'
+
+    Claroline\CoreBundle\Controller\APINew\Location\RoomController:
+        parent: Claroline\AppBundle\Controller\AbstractCrudController
+        public: true
+        arguments:
+            - '@security.authorization_checker'

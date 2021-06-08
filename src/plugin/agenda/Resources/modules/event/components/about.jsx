@@ -1,5 +1,6 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl'
 import {hasPermission} from '#/main/app/security'
@@ -15,23 +16,67 @@ const EventAbout = (props) =>
   <DetailsData
     data={props.event}
     meta={true}
-    sections={[{
-      title: trans('general'),
-      primary: true,
-      fields: [
-        {
-          name: 'meta.type',
-          type: 'type',
-          label: trans('type'),
-          hideLabel: true,
-          calculated: (event) => ({
-            icon: <EventIcon type={event.meta.type} />,
-            name: trans(event.meta.type, {}, 'event'),
-            description: trans(`${event.meta.type}_desc`, {}, 'event')
-          })
-        }
-      ].concat(props.sections)
-    }]}
+    sections={[
+      {
+        title: trans('general'),
+        primary: true,
+        fields: [
+          {
+            name: 'meta.type',
+            type: 'type',
+            label: trans('type'),
+            hideLabel: true,
+            calculated: (event) => ({
+              icon: <EventIcon type={event.meta.type} />,
+              name: trans(event.meta.type, {}, 'event'),
+              description: trans(`${event.meta.type}_desc`, {}, 'event')
+            })
+          }
+        ].concat(props.sections)
+      }, {
+        icon: 'fa fa-fw fa-map-marker-alt',
+        title: trans('location'),
+        fields: [
+          {
+            name: '_locationType',
+            type: 'choice',
+            label: trans('type'),
+            hideLabel: true,
+            calculated: (event) => {
+              if (event.location) {
+                return 'irl'
+              }
+
+              return 'online'
+            },
+            options: {
+              choices: {
+                online: trans('online'),
+                irl: trans('irl')
+              }
+            },
+            linked: [
+              {
+                name: 'locationUrl',
+                label: trans('url'),
+                type: 'url',
+                displayed: (event) => !isEmpty(event.locationUrl)
+              }, {
+                name: 'location',
+                label: trans('location'),
+                type: 'location',
+                displayed: (event) => !isEmpty(event.location)
+              }, {
+                name: 'room',
+                label: trans('room'),
+                type: 'room',
+                displayed: (event) => !isEmpty(event.location)
+              }
+            ]
+          }
+        ]
+      }
+    ]}
   >
     {props.children}
 

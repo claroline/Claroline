@@ -5,7 +5,7 @@ namespace Claroline\CoreBundle\API\Serializer\User;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Organization\Location;
+use Claroline\CoreBundle\Entity\Location\Location;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
 

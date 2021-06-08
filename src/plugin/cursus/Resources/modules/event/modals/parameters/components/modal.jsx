@@ -22,6 +22,7 @@ const EventFormModal = props =>
     <EventForm
       name={selectors.STORE_NAME}
       update={props.updateEvent}
+      event={props.formData}
     >
       <Button
         className="modal-btn btn"
@@ -46,6 +47,7 @@ EventFormModal.propTypes = {
   session: T.shape({
 
   }),
+  formData: T.object,
   saveEnabled: T.bool.isRequired,
   loadEvent: T.func.isRequired,
   updateEvent: T.func.isRequired,

@@ -28,7 +28,8 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
             - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
-            - '@Claroline\CoreBundle\API\Serializer\User\LocationSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\Location\LocationSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\Location\RoomSerializer'
 
     Claroline\CoreBundle\API\Serializer\DataSourceSerializer:
         tags: [claroline.serializer]
@@ -146,11 +147,19 @@ services:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
 
-    Claroline\CoreBundle\API\Serializer\User\LocationSerializer:
+    Claroline\CoreBundle\API\Serializer\Location\LocationSerializer:
         tags: [claroline.serializer]
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
+
+    Claroline\CoreBundle\API\Serializer\Location\RoomSerializer:
+        tags: [claroline.serializer]
+        arguments:
+            - '@security.authorization_checker'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\Location\LocationSerializer'
 
     Claroline\CoreBundle\API\Serializer\User\GroupSerializer:
         tags: [claroline.serializer]

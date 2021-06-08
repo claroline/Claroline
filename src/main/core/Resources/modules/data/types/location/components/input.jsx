@@ -70,7 +70,7 @@ const LocationInput = props => {
 
   return (
     <ContentPlaceholder
-      icon="fa fa-location-arrow"
+      icon="fa fa-map-marker-alt"
       title={trans('no_location')}
       size={props.size}
     >

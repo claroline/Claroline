@@ -1636,5 +1636,10 @@
     "planning": "Planning",
     "show_title": "Display title",
     "success_message": "Success message",
-    "failure_message": "Failure message"
+    "failure_message": "Failure message",
+    "room": "Room",
+    "rooms": "Rooms",
+    "online": "Online",
+    "irl": "Face-to-face",
+    "add_room": "Add a room"
 }

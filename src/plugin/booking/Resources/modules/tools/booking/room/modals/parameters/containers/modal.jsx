@@ -17,7 +17,7 @@ const RoomParametersModal = withReducer(selectors.STORE_NAME, reducer)(
         dispatch(formActions.resetForm(selectors.STORE_NAME, room || RoomTypes.defaultProps, !room))
       },
       saveRoom(eventId = null, onSave = () => true) {
-        dispatch(formActions.saveForm(selectors.STORE_NAME, eventId ? ['apiv2_booking_room_update', {id: eventId}] : ['apiv2_booking_room_create'])).then((response) => {
+        dispatch(formActions.saveForm(selectors.STORE_NAME, eventId ? ['apiv2_location_room_update', {id: eventId}] : ['apiv2_location_room_create'])).then((response) => {
           if (onSave) {
             onSave(response)
           }

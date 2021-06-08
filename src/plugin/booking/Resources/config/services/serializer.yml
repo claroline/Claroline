@@ -11,13 +11,6 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
 
-    Claroline\BookingBundle\Serializer\RoomSerializer:
-        arguments:
-            - '@security.authorization_checker'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
-            - '@Claroline\CoreBundle\API\Serializer\User\LocationSerializer'
-
     Claroline\BookingBundle\Serializer\MaterialBookingSerializer: ~
 
     Claroline\BookingBundle\Serializer\RoomBookingSerializer: ~

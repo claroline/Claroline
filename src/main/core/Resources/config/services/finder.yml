@@ -51,7 +51,9 @@ services:
           - '@security.authorization_checker'
           - '@security.token_storage'
 
-    Claroline\CoreBundle\API\Finder\User\LocationFinder: ~
+    Claroline\CoreBundle\API\Finder\Location\LocationFinder: ~
+
+    Claroline\CoreBundle\API\Finder\Location\RoomFinder: ~
 
     Claroline\CoreBundle\API\Finder\User\GroupFinder:
         arguments:

@@ -24,7 +24,7 @@ services:
             - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
             - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
             - '@Claroline\CoreBundle\API\Serializer\User\RoleSerializer'
-            - '@Claroline\CoreBundle\API\Serializer\User\LocationSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\Location\LocationSerializer'
             - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'
             - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
             - '@Claroline\CursusBundle\Serializer\CourseSerializer'

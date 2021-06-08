@@ -32,5 +32,9 @@ services:
             - '@security.authorization_checker'
 
     Claroline\BookingBundle\Controller\RoomController:
-        arguments:
-            - '@security.authorization_checker'
+      arguments:
+        - '@security.authorization_checker'
+        - '@Claroline\AppBundle\Persistence\ObjectManager'
+        - '@Claroline\AppBundle\API\FinderProvider'
+        - '@Claroline\AppBundle\API\SerializerProvider'
+        - '@Claroline\AppBundle\API\Crud'

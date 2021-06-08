@@ -33,10 +33,10 @@ function getSectionErrors(sectionFields = [], errors = {}) {
   sectionFields.map(field => {
     if (get(errors, field.name)) {
       sectionErrors.push(get(errors, field.name))
+    }
 
-      if (field.linked) {
-        sectionErrors = sectionErrors.concat(getSectionErrors(field.linked), errors)
-      }
+    if (field.linked) {
+      sectionErrors = sectionErrors.concat(getSectionErrors(field.linked, errors))
     }
   })
 
