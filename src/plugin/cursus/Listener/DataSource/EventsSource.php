@@ -15,6 +15,7 @@ use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Event\DataSource\GetDataEvent;
 use Claroline\CursusBundle\Entity\Event;
+use Claroline\CursusBundle\Entity\Session;
 use Claroline\CursusBundle\Repository\SessionRepository;
 
 class EventsSource
@@ -35,8 +36,10 @@ class EventsSource
     {
         $options = $event->getOptions();
 
-        $options['hiddenFilters']['terminated'] = true;
-        $options['hiddenFilters']['session'] = $this->sessionRepo->findByWorkspace($event->getWorkspace());
+        $options['hiddenFilters']['terminated'] = false;
+        $options['hiddenFilters']['session'] = array_map(function (Session $session) {
+            return $session->getUuid();
+        }, $this->sessionRepo->findByWorkspace($event->getWorkspace()));
 
         $event->setData(
             $this->finder->search(Event::class, $options)

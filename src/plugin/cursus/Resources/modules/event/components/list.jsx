@@ -5,6 +5,7 @@ import {trans} from '#/main/app/intl/translation'
 import {hasPermission} from '#/main/app/security'
 import {LINK_BUTTON, MODAL_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
+import {constants as listConst} from '#/main/app/content/list/constants'
 
 import {constants} from '#/plugin/cursus/constants'
 import {EventCard} from '#/plugin/cursus/event/components/card'
@@ -113,6 +114,10 @@ const EventList = (props) =>
         },
         displayed: true
       }, {
+        name: 'tutors',
+        type: 'users',
+        label: trans('tutors', {}, 'cursus')
+      }, {
         name: 'restrictions.users',
         alias: 'maxUsers',
         type: 'number',
@@ -130,6 +135,9 @@ const EventList = (props) =>
       }
     ].concat(props.definition)}
     card={EventCard}
+    display={{
+      current: listConst.DISPLAY_LIST
+    }}
   />
 
 EventList.propTypes = {

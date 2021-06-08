@@ -108,13 +108,13 @@ class SessionSerializer
                 'users' => $session->getMaxUsers(),
                 'dates' => DateRangeNormalizer::normalize($session->getStartDate(), $session->getEndDate()),
             ],
+            'workspace' => $session->getWorkspace() ?
+                $this->workspaceSerializer->serialize($session->getWorkspace(), [Options::SERIALIZE_MINIMAL]) :
+                null,
         ];
 
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
             $serialized = array_merge($serialized, [
-                'workspace' => $session->getWorkspace() ?
-                    $this->workspaceSerializer->serialize($session->getWorkspace(), [Options::SERIALIZE_MINIMAL]) :
-                    null,
                 'location' => $session->getLocation() ?
                     $this->locationSerializer->serialize($session->getLocation(), [Options::SERIALIZE_MINIMAL]) :
                     null,

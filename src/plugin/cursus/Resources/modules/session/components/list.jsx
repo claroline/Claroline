@@ -8,6 +8,7 @@ import {param} from '#/main/app/config'
 import {hasPermission} from '#/main/app/security'
 import {LINK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
+import {constants as listConst} from '#/main/app/content/list/constants'
 
 import {route} from '#/plugin/cursus/routing'
 import {SessionCard} from '#/plugin/cursus/session/components/card'
@@ -148,6 +149,9 @@ const SessionList = (props) =>
       }
 
       return actions
+    }}
+    display={{
+      current: listConst.DISPLAY_LIST
     }}
   />
 
