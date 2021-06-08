@@ -41,10 +41,6 @@ const EventAbout = (props) =>
           type: 'html',
           label: trans('description')
         }, {
-          name: 'location',
-          type: 'location',
-          label: trans('location')
-        }, {
           name: 'code',
           label: trans('code'),
           type: 'string'

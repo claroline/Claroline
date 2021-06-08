@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Listener\Log;
 
+use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\PatchEvent;
@@ -26,16 +27,20 @@ class GroupListener
     private $om;
     /** @var StrictDispatcher */
     private $dispatcher;
+    /** @var SerializerProvider */
+    private $serializer;
 
     /**
      * GroupListener constructor.
      */
     public function __construct(
         ObjectManager $om,
-        StrictDispatcher $dispatcher
+        StrictDispatcher $dispatcher,
+        SerializerProvider $serializer
     ) {
         $this->om = $om;
         $this->dispatcher = $dispatcher;
+        $this->serializer = $serializer;
     }
 
     public function onGroupCreate(CreateEvent $event)
@@ -56,11 +61,10 @@ class GroupListener
     {
         $group = $event->getObject();
 
-        $uow = $this->om->getUnitOfWork();
-        $uow->computeChangeSets();
-        $changeSet = $uow->getEntityChangeSet($group);
-
-        if (count($changeSet) > 0) {
+        // we don't directly use data from event because it can contain only partial data.
+        $newData = $this->serializer->serialize($group);
+        $changeSet = array_diff_assoc($event->getOldData(), $newData);
+        if (!empty($changeSet)) {
             $this->dispatcher->dispatch('log', 'Log\LogGroupUpdate', [$group, $changeSet]);
         }
     }

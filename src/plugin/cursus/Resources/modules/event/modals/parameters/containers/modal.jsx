@@ -12,6 +12,7 @@ import {Event as EventTypes} from '#/plugin/cursus/prop-types'
 const EventFormModal = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
+      formData: formSelectors.data(formSelectors.form(state, selectors.STORE_NAME)),
       saveEnabled: formSelectors.saveEnabled(formSelectors.form(state, selectors.STORE_NAME))
     }),
     (dispatch) => ({

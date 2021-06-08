@@ -16,7 +16,7 @@ use Claroline\ClacoFormBundle\Entity\ClacoForm;
 use Claroline\ClacoFormBundle\Entity\Entry;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Manager\Organization\LocationManager;
+use Claroline\CoreBundle\Manager\LocationManager;
 use Claroline\CoreBundle\Security\Collection\ResourceCollection;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;

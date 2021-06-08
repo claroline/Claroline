@@ -36,7 +36,7 @@ class CourseFinder extends AbstractFinder
                     $qb->andWhere("EXISTS (
                         SELECT s.id 
                         FROM Claroline\CursusBundle\Entity\Session AS s
-                        LEFT JOIN Claroline\CoreBundle\Entity\Organization\Location AS l WITH s.location = l
+                        LEFT JOIN Claroline\CoreBundle\Entity\Location\Location AS l WITH s.location = l
                         WHERE s.course = obj.id
                           AND l.uuid = :{$filterName}
                     )");

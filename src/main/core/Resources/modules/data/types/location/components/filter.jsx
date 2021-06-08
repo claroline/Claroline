@@ -17,7 +17,7 @@ const LocationFilter = (props) =>
       className="btn btn-filter"
       type={MODAL_BUTTON}
       tooltip="left"
-      icon="fa fa-fw fa-location-arrow"
+      icon="fa fa-fw fa-map-marker-alt"
       label={props.placeholder || trans('select', {}, 'actions')}
       size="sm"
       modal={[MODAL_LOCATIONS, {

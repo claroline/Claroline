@@ -1,0 +1,7 @@
+services:
+    Claroline\CursusBundle\Subscriber\Crud\EventSubscriber:
+        parent: Claroline\CoreBundle\Subscriber\Crud\Planning\AbstractPlannedSubscriber
+        arguments:
+            - '@event_dispatcher'
+        tags:
+            - { name: kernel.event_subscriber}

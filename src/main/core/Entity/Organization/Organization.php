@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Entity\Organization;
 use Claroline\AppBundle\Entity\Identifier\Code;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\Group;
+use Claroline\CoreBundle\Entity\Location\Location;
 use Claroline\CoreBundle\Entity\Model\GroupsTrait;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -75,7 +76,7 @@ class Organization
 
     /**
      * @ORM\ManyToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Organization\Location",
+     *     targetEntity="Claroline\CoreBundle\Entity\Location\Location",
      *     cascade={"persist"},
      *     inversedBy="organizations"
      * )

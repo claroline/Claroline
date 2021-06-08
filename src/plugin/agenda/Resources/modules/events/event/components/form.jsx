@@ -1,5 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import isEmpty from 'lodash/isEmpty'
+import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
 import {FormData} from '#/main/app/content/form/containers/data'
@@ -49,10 +51,61 @@ const EventForm = (props) =>
               name: 'description',
               type: 'html',
               label: trans('description')
-            }, {
-              name: 'location',
-              type: 'location',
-              label: trans('location')
+            }
+          ]
+        }, {
+          icon: 'fa fa-fw fa-map-marker-alt',
+          title: trans('location'),
+          fields: [
+            {
+              name: '_locationType',
+              type: 'choice',
+              label: trans('type'),
+              hideLabel: true,
+              calculated: (event) => {
+                if (event.location || 'irl' === event._locationType) {
+                  return 'irl'
+                }
+
+                return 'online'
+              },
+              onChange: (value) => {
+                if ('irl' === value) {
+                  props.update('locationUrl', null)
+                } else {
+                  props.update('location', null)
+                  props.update('room', null)
+                }
+              },
+              options: {
+                choices: {
+                  online: trans('online'),
+                  irl: trans('irl')
+                }
+              },
+              linked: [
+                {
+                  name: 'locationUrl',
+                  label: trans('url'),
+                  type: 'url',
+                  displayed: (event) => event.locationUrl || !event._locationType || 'online' === event._locationType
+                }, {
+                  name: 'location',
+                  label: trans('location'),
+                  type: 'location',
+                  displayed: (event) => event.location || 'irl' === event._locationType
+                }, {
+                  name: 'room',
+                  label: trans('room'),
+                  type: 'room',
+                  displayed: (event) => !isEmpty(event.location),
+                  options: {
+                    picker: {
+                      filters: [{property: 'location', value: get(props.event, 'location.id'), locked: true}]
+                    }
+                  }
+                }
+              ]
             }
           ]
         }, {

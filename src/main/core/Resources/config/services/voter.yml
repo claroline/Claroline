@@ -39,7 +39,9 @@ services:
 
     Claroline\CoreBundle\Security\Voter\ImportFileVoter: ~
 
-    Claroline\CoreBundle\Security\Voter\LocationVoter: ~
+    Claroline\CoreBundle\Security\Voter\Location\LocationVoter: ~
+
+    Claroline\CoreBundle\Security\Voter\Location\RoomVoter: ~
 
     Claroline\CoreBundle\Security\Voter\OrganizationVoter: ~
 
@@ -68,4 +70,7 @@ services:
         arguments:
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
 
-    Claroline\CoreBundle\Security\Voter\WorkspaceVoter: ~
+    Claroline\CoreBundle\Security\Voter\WorkspaceVoter:
+        arguments:
+            - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
+            - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceRestrictionsManager'

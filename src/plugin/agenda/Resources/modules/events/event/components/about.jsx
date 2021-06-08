@@ -42,10 +42,6 @@ const EventAbout = (props) =>
             name: 'description',
             type: 'html',
             label: trans('description')
-          }, {
-            name: 'location',
-            type: 'location',
-            label: trans('location')
           }
         ]}
         reload={props.reload}

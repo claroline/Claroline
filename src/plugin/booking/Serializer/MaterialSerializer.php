@@ -58,7 +58,6 @@ class MaterialSerializer
                 'open' => $this->authorization->isGranted('OPEN', $material),
                 'edit' => $this->authorization->isGranted('EDIT', $material),
                 'delete' => $this->authorization->isGranted('DELETE', $material),
-                'book' => $this->authorization->isGranted('BOOK', $material),
             ],
         ];
     }

@@ -7,7 +7,7 @@ import {ListData} from '#/main/app/content/list/containers/data'
 import {ToolPage} from '#/main/core/tool/containers/page'
 
 import {selectors} from '#/plugin/booking/tools/booking/room/store'
-import {RoomCard} from '#/plugin/booking/tools/booking/room/components/card'
+import {RoomCard} from '#/main/core/data/types/room/components/card'
 import {MODAL_ROOM_PARAMETERS} from '#/plugin/booking/tools/booking/room/modals/parameters'
 
 const RoomList = (props) =>
@@ -31,11 +31,11 @@ const RoomList = (props) =>
     <ListData
       name={selectors.LIST_NAME}
       fetch={{
-        url: ['apiv2_booking_room_list'],
+        url: ['apiv2_location_room_list'],
         autoload: true
       }}
       delete={{
-        url: ['apiv2_booking_room_delete_bulk']
+        url: ['apiv2_location_room_delete_bulk']
       }}
       definition={[
         {

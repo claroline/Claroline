@@ -29,7 +29,7 @@ use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
-use Claroline\CoreBundle\Manager\Organization\LocationManager;
+use Claroline\CoreBundle\Manager\LocationManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Dompdf\Dompdf;
 use Ramsey\Uuid\Uuid;

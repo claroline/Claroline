@@ -30,7 +30,7 @@ services:
             - '@Claroline\ClacoFormBundle\Manager\ClacoFormManager'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
             - '%claroline.param.files_directory%'
-            - '@Claroline\CoreBundle\Manager\Organization\LocationManager'
+            - '@Claroline\CoreBundle\Manager\LocationManager'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@request_stack'
             - '@twig'

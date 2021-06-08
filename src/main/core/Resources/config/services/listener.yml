@@ -277,6 +277,7 @@ services:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - '@Claroline\AppBundle\API\SerializerProvider'
         tags:
             - { name: kernel.event_listener, event: crud.post.create.group, method: onGroupCreate }
             - { name: kernel.event_listener, event: crud.post.update.group, method: onGroupUpdate }
@@ -287,12 +288,13 @@ services:
         arguments:
             - '@Claroline\AppBundle\Event\StrictDispatcher'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\SerializerProvider'
         tags:
             - { name: kernel.event_listener, event: resource_load, method: onResourceLoad }
             - { name: kernel.event_listener, event: crud.post.create.resource_node, method: onResourceCreate }
             - { name: kernel.event_listener, event: crud.pre.delete.resource_node, method: onResourceDelete }
             - { name: kernel.event_listener, event: crud.post.copy.resource_node, method: onResourceCopy }
-            - { name: kernel.event_listener, event: crud.end.update.resource_node, method: onResourceUpdate }
+            - { name: kernel.event_listener, event: crud.post.update.resource_node, method: onResourceUpdate }
 
     Claroline\CoreBundle\Listener\Log\WorkspaceListener:
         arguments:

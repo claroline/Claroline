@@ -12,7 +12,7 @@
 namespace Claroline\CursusBundle\Entity;
 
 use Claroline\AppBundle\Entity\IdentifiableInterface;
-use Claroline\CoreBundle\Entity\Organization\Location;
+use Claroline\CoreBundle\Entity\Location\Location;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Role;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -87,7 +87,7 @@ class Session extends AbstractTraining implements IdentifiableInterface
     protected $resources;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Organization\Location")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Location\Location")
      * @ORM\JoinColumn(name="location_id", nullable=true, onDelete="SET NULL")
      *
      * @var Location

@@ -155,19 +155,20 @@ class Crud
             $this->checkPermission('EDIT', $oldObject, [], true);
         }
 
-        $oldData = $this->serializer->serialize($oldObject);
-        if (!$oldData) {
-            $oldData = [];
-        }
+        $oldData = $this->serializer->serialize($oldObject) ?? [];
 
         $object = $this->serializer->deserialize($data, $oldObject, $options);
         if ($this->dispatch('update', 'pre', [$object, $options, $data, $oldData])) {
             $this->om->persist($object);
-            $this->dispatch('update', 'post', [$object, $options, $data, $oldData]);
-            $this->om->flush();
-        }
 
-        $this->dispatch('update', 'end', [$object, $options, $data, $oldData]);
+            if (!in_array(Options::FORCE_FLUSH, $options)) {
+                $this->om->flush();
+            } else {
+                $this->om->forceFlush();
+            }
+
+            $this->dispatch('update', 'post', [$object, $options, $data, $oldData]);
+        }
 
         return $object;
     }
@@ -189,13 +190,13 @@ class Crud
                 $this->om->remove($object);
             }
 
-            $this->dispatch('delete', 'post', [$object, $options]);
-        }
+            if (!in_array(Options::FORCE_FLUSH, $options)) {
+                $this->om->flush();
+            } else {
+                $this->om->forceFlush();
+            }
 
-        if (!in_array(Options::FORCE_FLUSH, $options)) {
-            $this->om->flush();
-        } else {
-            $this->om->forceFlush();
+            $this->dispatch('delete', 'post', [$object, $options]);
         }
     }
 
@@ -253,15 +254,13 @@ class Crud
 
         //first event is the pre one
         if ($this->dispatch('copy', 'pre', [$object, $options, $new, $extra])) {
-            //second event is the post one
-            //we could use only one event afaik
-            $this->dispatch('copy', 'post', [$object, $options, $new, $extra]);
-        }
+            if (!in_array(Options::FORCE_FLUSH, $options)) {
+                $this->om->flush();
+            } else {
+                $this->om->forceFlush();
+            }
 
-        if (!in_array(Options::FORCE_FLUSH, $options)) {
-            $this->om->flush();
-        } else {
-            $this->om->forceFlush();
+            $this->dispatch('copy', 'post', [$object, $options, $new, $extra]);
         }
 
         return $new;
@@ -402,15 +401,12 @@ class Crud
     {
         $className = $this->getRealClass($args[0]);
 
-        $name = 'crud_'.$when.'_'.$action.'_object';
         $eventClass = ucfirst($action);
         /** @var CrudEvent $generic */
-        $generic = $this->dispatcher->dispatch($name, 'Claroline\\AppBundle\\Event\\Crud\\'.$eventClass.'Event', $args);
-
-        $serializedName = $name.'_'.strtolower(str_replace('\\', '_', $className));
+        $generic = $this->dispatcher->dispatch(static::getEventName($action, $when), 'Claroline\\AppBundle\\Event\\Crud\\'.$eventClass.'Event', $args);
 
         /** @var CrudEvent $specific */
-        $specific = $this->dispatcher->dispatch($serializedName, 'Claroline\\AppBundle\\Event\\Crud\\'.$eventClass.'Event', $args);
+        $specific = $this->dispatcher->dispatch(static::getEventName($action, $when, $className), 'Claroline\\AppBundle\\Event\\Crud\\'.$eventClass.'Event', $args);
         $isAllowed = $specific->isAllowed();
 
         if ($this->serializer->has($className)) {
@@ -425,6 +421,17 @@ class Crud
         // TODO : let the event explain why it has blocked the process
         // for now we will do nothing and the user will not know why.
         return $generic->isAllowed() && $specific->isAllowed() && $isAllowed;
+    }
+
+    public static function getEventName(string $action, string $when, string $className = null): string
+    {
+        // TODO : find a way to make shortcut work (will require to inject the service to make it work for now)
+        $name = 'crud_'.$when.'_'.$action.'_object';
+        if ($className) {
+            $name = $name.'_'.strtolower(str_replace('\\', '_', $className));
+        }
+
+        return $name;
     }
 
     private function getRealClass($object)

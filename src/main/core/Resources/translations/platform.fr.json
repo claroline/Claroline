@@ -1667,5 +1667,10 @@
     "planning": "Planification",
     "show_title": "Afficher le titre",
     "success_message": "Message de réussite",
-    "failure_message": "Message d'échec"
+    "failure_message": "Message d'échec",
+    "room": "Salle",
+    "rooms": "Salles",
+    "online": "En ligne",
+    "irl": "En présentiel",
+    "add_room": "Ajouter une salle"
 }
