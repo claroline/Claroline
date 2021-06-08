@@ -10,7 +10,7 @@ import {SessionCard} from '#/plugin/cursus/session/components/card'
 
 export default {
   name: 'my-sessions',
-  icon: 'fa fa-fw fa-cubes',
+  icon: 'fa fa-fw fa-calendar-week',
   parameters: {
     primaryAction: (session) => ({
       type: URL_BUTTON,

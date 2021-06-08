@@ -26,9 +26,9 @@ plugin:
           context: [desktop, home]
           tags: [community, event]
 
-        - name: session_events
+        - name: training_events
           type: list
-          context: [workspace]
+          context: [workspace, desktop]
           tags: [community, event]
 
     templates:

@@ -34,6 +34,7 @@ services:
             - '@security.authorization_checker'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\API\Serializer\Planning\PlannedObjectSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
             - '@Claroline\CursusBundle\Serializer\SessionSerializer'
             - '@Claroline\CoreBundle\API\Serializer\Template\TemplateSerializer'
 

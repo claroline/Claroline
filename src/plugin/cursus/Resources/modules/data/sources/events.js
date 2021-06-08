@@ -1,15 +1,21 @@
+import get from 'lodash/get'
+
 import {trans} from '#/main/app/intl/translation'
 import {URL_BUTTON} from '#/main/app/buttons'
+import {route as workspaceRoute} from '#/main/core/workspace/routing'
+import {route as toolRoute} from '#/main/core/tool/routing'
 
 import {EventCard} from '#/plugin/cursus/event/components/card'
 
 export default {
   name: 'session-events',
-  icon: 'fa fa-fw fa-cubes',
+  icon: 'fa fa-fw fa-clock-o',
   parameters: {
-    primaryAction: () => ({
+    primaryAction: (event) => ({
       type: URL_BUTTON,
-      target: '#'
+      target: get(event, 'session.workspace') ?
+        '#' + workspaceRoute(get(event, 'session.workspace'), 'training_events') + '/' + event.id :
+        '#' + toolRoute('trainings') + '/events/' + event.id
     }),
     definition: [
       {
@@ -29,6 +35,10 @@ export default {
         label: trans('description'),
         displayed: true
       }, {
+        name: 'tutors',
+        type: 'users',
+        label: trans('tutors', {}, 'cursus')
+      }, {
         name: 'restrictions.users',
         alias: 'maxUsers',
         type: 'number',
@@ -45,6 +55,11 @@ export default {
         alias: 'endDate',
         type: 'date',
         label: trans('end_date'),
+        displayed: true
+      }, {
+        name: 'session',
+        label: trans('session', {}, 'cursus'),
+        type: 'training_session',
         displayed: true
       }
     ],

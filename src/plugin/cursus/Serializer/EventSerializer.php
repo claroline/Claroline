@@ -16,8 +16,11 @@ use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\Planning\PlannedObjectSerializer;
 use Claroline\CoreBundle\API\Serializer\Template\TemplateSerializer;
+use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\Entity\Template\Template;
 use Claroline\CursusBundle\Entity\Event;
+use Claroline\CursusBundle\Entity\Registration\AbstractRegistration;
+use Claroline\CursusBundle\Entity\Registration\EventUser;
 use Claroline\CursusBundle\Entity\Session;
 use Claroline\CursusBundle\Repository\EventRepository;
 use Doctrine\Common\Persistence\ObjectRepository;
@@ -33,6 +36,8 @@ class EventSerializer
     private $om;
     /** @var PlannedObjectSerializer */
     private $plannedObjectSerializer;
+    /** @var UserSerializer */
+    private $userSerializer;
     /** @var SessionSerializer */
     private $sessionSerializer;
     /** @var TemplateSerializer */
@@ -49,12 +54,14 @@ class EventSerializer
         AuthorizationCheckerInterface $authorization,
         ObjectManager $om,
         PlannedObjectSerializer $plannedObjectSerializer,
+        UserSerializer $userSerializer,
         SessionSerializer $sessionSerializer,
         TemplateSerializer $templateSerializer
     ) {
         $this->authorization = $authorization;
         $this->om = $om;
         $this->plannedObjectSerializer = $plannedObjectSerializer;
+        $this->userSerializer = $userSerializer;
         $this->sessionSerializer = $sessionSerializer;
         $this->templateSerializer = $templateSerializer;
 
@@ -76,11 +83,21 @@ class EventSerializer
         ]);
 
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
+            $tutors = $this->om->getRepository(EventUser::class)->findBy([
+                'event' => $event,
+                'type' => AbstractRegistration::TUTOR,
+                'validated' => true,
+                'confirmed' => true,
+            ]);
+
             $serialized = array_merge($serialized, [
                 'restrictions' => [
                     'users' => $event->getMaxUsers(),
                 ],
                 'participants' => $this->eventRepo->countParticipants($event),
+                'tutors' => array_map(function (EventUser $eventUser) {
+                    return $this->userSerializer->serialize($eventUser->getUser(), [Options::SERIALIZE_MINIMAL]);
+                }, $tutors),
                 'registration' => [
                     'registrationType' => $event->getRegistrationType(),
                 ],
