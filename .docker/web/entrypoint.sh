@@ -28,6 +28,7 @@ if [ -f files/installed ]; then
     else
       echo "Claroline version is up to date, rebuilding themes"
       php bin/console claroline:theme:build
+      composer delete-cache
     fi
   fi
 else
@@ -63,7 +64,7 @@ else
   chown -R www-data:www-data var files config
 
   echo "Clean cache after setting correct permissions, fixes SAML issues"
-  rm -rf var/cache/prod
+  composer delete-cache
   touch files/installed
 fi
 
