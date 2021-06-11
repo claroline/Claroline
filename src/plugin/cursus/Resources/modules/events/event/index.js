@@ -9,15 +9,12 @@ export default {
   name: 'training_event',
   icon: 'fa fa-fw fa-graduation-cap',
   canCreate: (contextType, contextData, contextTools) => {
-    let tool
     if ('workspace' === contextType) {
-      tool = contextTools.find(tool => 'training_events' === tool.name)
-    } else {
-      tool = contextTools.find(tool => 'trainings' === tool.name)
-    }
-
-    if (tool) {
-      return hasPermission('edit', tool)
+      // training events creation is only enabled in workspace
+      const tool = contextTools.find(tool => 'training_events' === tool.name)
+      if (tool) {
+        return hasPermission('edit', tool)
+      }
     }
 
     return false

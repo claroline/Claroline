@@ -47,8 +47,8 @@ const AgendaCalendar = withRouter(
           onSave: (newEvent) => dispatch(actions.reload(newEvent, true))
         }))
       },
-      reload(event) {
-        dispatch(actions.reload(event))
+      reload(event, all = false) {
+        dispatch(actions.reload(event, all))
       }
     })
   )(AgendaCalendarComponent)

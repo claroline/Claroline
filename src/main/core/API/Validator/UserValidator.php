@@ -9,6 +9,7 @@ use Claroline\AppBundle\API\ValidatorProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\User\ProfileSerializer;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Repository\User\UserRepository;
 use Doctrine\ORM\QueryBuilder;
 
@@ -16,14 +17,20 @@ class UserValidator implements ValidatorInterface
 {
     /** @var ObjectManager */
     private $om;
+    /** @var PlatformConfigurationHandler */
+    private $config;
     /** @var ProfileSerializer */
     private $profileSerializer;
     /** @var UserRepository */
     private $repo;
 
-    public function __construct(ObjectManager $om, ProfileSerializer $profileSerializer)
-    {
+    public function __construct(
+        ObjectManager $om,
+        PlatformConfigurationHandler $config,
+        ProfileSerializer $profileSerializer
+    ) {
         $this->om = $om;
+        $this->config = $config;
         $this->repo = $this->om->getRepository(User::class);
         $this->profileSerializer = $profileSerializer;
     }
@@ -37,9 +44,16 @@ class UserValidator implements ValidatorInterface
             return $errors;
         }
 
-        //the big chunk of code allows us to know if the identifiers are already taken
-        //and prohibits the use of an already used address email in a username field
+        // validate username format
+        $regex = $this->config->getParameter('username_regex');
+        if ($regex && !preg_match($regex, $data['username'])) {
+            $errors[] = [
+                'path' => 'username',
+                'message' => 'The username '.$data['username'].' contains illegal characters.',
+            ];
+        }
 
+        // checks username is available
         if (isset($data['username']) && $this->exists('username', $data['username'], isset($data['id']) ? $data['id'] : null)) {
             $errors[] = [
                 'path' => 'username',
@@ -47,6 +61,7 @@ class UserValidator implements ValidatorInterface
             ];
         }
 
+        // check email is not already used
         if (isset($data['email']) && $this->exists('email', $data['email'], isset($data['id']) ? $data['id'] : null)) {
             $errors[] = [
                 'path' => 'email',
@@ -54,12 +69,23 @@ class UserValidator implements ValidatorInterface
             ];
         }
 
+        // check public url is not already used
         if (isset($data['meta']) && isset($data['meta']['publicUrl'])) {
             if ($this->exists('publicUrl', $data['meta']['publicUrl'], isset($data['id']) ? $data['id'] : null)) {
                 $errors[] = [
                   'path' => 'meta/publicUrl',
                   'message' => 'The public url '.$data['meta']['publicUrl'].' already exists.',
               ];
+            }
+        }
+
+        // check if the administrative code is unique if the platform is configured to
+        if (isset($data['administrativeCode']) && $this->config->getParameter('is_user_admin_code_unique')) {
+            if ($this->exists('publicUrl', $data['administrativeCode'], isset($data['id']) ? $data['id'] : null)) {
+                $errors[] = [
+                    'path' => 'meta/publicUrl',
+                    'message' => 'The administrative code '.$data['administrativeCode'].' already exists.',
+                ];
             }
         }
 

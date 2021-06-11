@@ -33,10 +33,10 @@ actions.reload = (event, all = false) => (dispatch, getState) => {
   if (!all) {
     const planningsToRefresh = selectors.eventPlannings(getState(), event.id)
 
-    planningsToRefresh.map(planning => dispatch(actions.setPlanningLoaded(planning, false)))
+    planningsToRefresh.map(planningId => dispatch(actions.setPlanningLoaded(planningId, false)))
   } else {
     // this is for creation, we don't know in which planning the event should appear so we reload all
-    // this may be improved to avoid unwanted reloades
+    // this may be improved to avoid unwanted reloads
     const allPlannings = selectors.plannings(getState())
 
     allPlannings.map(planning => dispatch(actions.setPlanningLoaded(planning.id, false)))

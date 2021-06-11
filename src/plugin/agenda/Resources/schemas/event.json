@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "The event uuid"
+    },
+    "name": {
+      "type": "string",
+      "description": "The event name",
+      "minLength": 1
+    },
+    "start": {
+      "type": "string",
+      "description": "The event start date"
+    },
+    "end": {
+      "type": "string",
+      "description": "The event end date"
+    },
+    "description": {
+      "type": ["string", "null"],
+      "description": "The event description"
+    }
+  },
+  "required": ["name", "start", "end"],
+  "claroline": {
+    "ids": ["id"]
+  }
+}

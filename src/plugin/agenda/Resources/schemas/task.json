@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "The task uuid"
+    },
+    "name": {
+      "type": "string",
+      "description": "The task name",
+      "minLength": 1
+    },
+    "start": {
+      "type": "string",
+      "description": "The task start date"
+    },
+    "end": {
+      "type": "string",
+      "description": "The task end date"
+    },
+    "description": {
+      "type": ["string", "null"],
+      "description": "The task description"
+    }
+  },
+  "required": ["name", "start", "end"],
+  "claroline": {
+    "ids": ["id"]
+  }
+}

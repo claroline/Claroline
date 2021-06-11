@@ -47,6 +47,11 @@ class EventSerializer
         return 'event';
     }
 
+    public function getSchema()
+    {
+        return '#/plugin/agenda/event.json';
+    }
+
     public function serialize(Event $event, array $options = []): array
     {
         return array_merge_recursive($this->plannedObjectSerializer->serialize($event->getPlannedObject(), $options), [
