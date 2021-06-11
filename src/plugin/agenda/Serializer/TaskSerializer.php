@@ -41,6 +41,11 @@ class TaskSerializer
         return 'task';
     }
 
+    public function getSchema()
+    {
+        return '#/plugin/agenda/task.json';
+    }
+
     public function serialize(Task $task, array $options = []): array
     {
         return array_merge_recursive($this->plannedObjectSerializer->serialize($task->getPlannedObject(), $options), [

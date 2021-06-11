@@ -132,7 +132,15 @@ class Calendar extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.selected !== this.props.selected) {
+    const triggerRefresh  = [
+      'selected',
+      'minDate',
+      'maxDate',
+      'minTime',
+      'maxTime'
+    ]
+
+    if (-1 !== triggerRefresh.findIndex(prop => prevProps[prop] !== this.props[prop])) {
       this.setState(this.init())
     }
   }
