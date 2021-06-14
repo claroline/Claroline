@@ -7,10 +7,10 @@ import {showBreadcrumb} from '#/main/app/layout/utils'
 
 import {UserPage} from '#/main/core/user/components/page'
 import {User as UserTypes} from '#/main/core/user/prop-types'
-import {selectors} from '#/main/core/account/functional/store/selectors'
-import {FunctionalLogList} from '#/main/core/account/functional/components/list'
+import {selectors} from '#/main/log/account/security/store/selectors'
+import {SecurityLogList} from '#/main/log/account/security/components/list'
 
-const FunctionalMain = (props) =>
+const SecurityMain = (props) =>
   <UserPage
     showBreadcrumb={showBreadcrumb()}
     breadcrumb={[
@@ -20,30 +20,30 @@ const FunctionalMain = (props) =>
         target: '/account'
       }, {
         type: LINK_BUTTON,
-        label: trans('functional'),
-        target: '/account/functional'
+        label: trans('security'),
+        target: '/account/security'
       }
     ]}
-    title={trans('functional')}
+    title={trans('security')}
     user={props.currentUser}
   >
     <div style={{
       marginTop: 60 // TODO : manage spacing correctly
     }}>
-      <FunctionalLogList
+      <SecurityLogList
         name={selectors.STORE_NAME}
-        url={['apiv2_logs_functional_list_current']}
+        url={['apiv2_logs_security_list_current']}
       />
     </div>
 
   </UserPage>
 
-FunctionalMain.propTypes = {
+SecurityMain.propTypes = {
   currentUser: T.shape(
     UserTypes.propTypes
   ).isRequired
 }
 
 export {
-  FunctionalMain
+  SecurityMain
 }

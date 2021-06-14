@@ -1,6 +1,6 @@
 import {trans} from '#/main/app/intl/translation'
 
-import {SecurityMain} from '#/main/core/account/security/containers/main'
+import {SecurityMain} from '#/main/log/account/security/containers/main'
 
 export default {
   name: 'security',

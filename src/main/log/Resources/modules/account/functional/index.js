@@ -1,6 +1,6 @@
 import {trans} from '#/main/app/intl/translation'
 
-import {FunctionalMain} from '#/main/core/account/functional/containers/main'
+import {FunctionalMain} from '#/main/log/account/functional/containers/main'
 
 export default {
   name: 'functional',
