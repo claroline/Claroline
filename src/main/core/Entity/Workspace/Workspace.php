@@ -227,6 +227,13 @@ class Workspace implements IdentifiableInterface
     private $showProgression = true;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $contactEmail;
+
+    /**
      * @ORM\OneToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\User",
      *     mappedBy="personalWorkspace",
@@ -647,6 +654,16 @@ class Workspace implements IdentifiableInterface
     public function setShowProgression($showProgression)
     {
         $this->showProgression = $showProgression;
+    }
+
+    public function getContactEmail(): ?string
+    {
+        return $this->contactEmail;
+    }
+
+    public function setContactEmail(?string $email = null)
+    {
+        $this->contactEmail = $email;
     }
 
     public function setArchived($archived)

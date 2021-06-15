@@ -39,7 +39,7 @@
     "can_access": "You are registered to this workspace.",
     "cannot_access": "You are not registered to this workspace.",
     "code_required": "Access requires a code.",
-    "contact_manager": "Please contact a manager if you think you should have access to this workspace.",
+    "contact_manager": "Please contact a manager %manager_email% if you think you should have access to this workspace.",
     "ended": "The workspace is not available anymore.",
     "enter_code": "Please enter the code you have received to access the workspace.",
     "manager_info": "As manager you can always access the workspace even if the access conditions are not met.",

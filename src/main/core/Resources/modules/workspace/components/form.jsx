@@ -75,6 +75,11 @@ const WorkspaceFormComponent = (props) =>
             },
             mode: 'standard'
           }, {
+            name: 'contactEmail',
+            label: trans('contact'),
+            type: 'email',
+            mode: 'standard'
+          }, {
             name: 'meta.model',
             label: trans('define_as_model'),
             type: 'boolean',
