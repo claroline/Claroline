@@ -132,6 +132,7 @@ class WorkspaceSerializer
                 'export' => $this->authorization->isGranted('EXPORT', $workspace),
             ],
             'meta' => $this->getMeta($workspace, $options),
+            'contactEmail' => $workspace->getContactEmail(),
         ];
 
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
@@ -313,6 +314,7 @@ class WorkspaceSerializer
     {
         $this->sipe('code', 'setCode', $data, $workspace);
         $this->sipe('name', 'setName', $data, $workspace);
+        $this->sipe('contactEmail', 'setContactEmail', $data, $workspace);
 
         if (isset($data['thumbnail']) && isset($data['thumbnail']['id'])) {
             /** @var PublicFile $thumbnail */

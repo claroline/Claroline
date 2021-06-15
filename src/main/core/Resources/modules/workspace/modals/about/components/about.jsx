@@ -37,6 +37,11 @@ const AboutModal = props =>
               label: trans('description'),
               type: 'string'
             }, {
+              name: 'contactEmail',
+              label: trans('contact'),
+              type: 'email',
+              displayed: (workspace) => !!workspace.contactEmail
+            }, {
               name: 'code',
               label: trans('code'),
               type: 'string'
