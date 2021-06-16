@@ -28,7 +28,13 @@ class SamlConfigPass implements CompilerPassInterface
         $container->setParameter('entity_id', $configHandler->getParameter('saml.entity_id'));
         $container->setParameter('lightsaml.own.entity_id', $configHandler->getParameter('saml.entity_id'));
         $container->setParameter('credentials', $configHandler->getParameter('saml.credentials'));
-        $container->setParameter('idp', $configHandler->getParameter('saml.idp'));
+
+        $idp = $configHandler->getParameter('saml.idp');
+        if (!empty($idp)) {
+            $container->setParameter('idp', array_map(function (array $provider) {
+                return $provider['metadata'];
+            }, $idp));
+        }
 
         // I need to reconfigure LightSaml to inject config form platform_options.json
         // There should be a better approach as I c/c code from base bundle and config in .yml is partially incorrect
@@ -93,8 +99,11 @@ class SamlConfigPass implements CompilerPassInterface
             /** @var PlatformConfigurationHandler $configHandler */
             $configHandler = $container->get(PlatformConfigurationHandler::class);
 
-            $idpFiles = $configHandler->getParameter('saml.idp');
-            if (isset($idpFiles)) {
+            $idp = $configHandler->getParameter('saml.idp');
+            if (!empty($idp)) {
+                $idpFiles = array_map(function (array $provider) {
+                    return $provider['metadata'];
+                }, $idp);
                 $store = $container->getDefinition('lightsaml.party.idp_entity_descriptor_store');
                 foreach ($idpFiles as $id => $file) {
                     $id = sprintf('lightsaml.party.idp_entity_descriptor_store.file.%s', $id);

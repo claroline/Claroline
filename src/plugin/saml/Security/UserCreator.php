@@ -4,7 +4,9 @@ namespace Claroline\SamlBundle\Security;
 
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AuthenticationBundle\Security\Authentication\Authenticator;
+use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use LightSaml\Model\Protocol\Response;
@@ -21,6 +23,8 @@ class UserCreator implements UserCreatorInterface
     private $tokenStorage;
     /** @var UsernameMapperInterface */
     private $usernameMapper;
+    /** @var ObjectManager */
+    private $om;
     /** @var Crud */
     private $crud;
     /** @var PlatformConfigurationHandler */
@@ -31,11 +35,13 @@ class UserCreator implements UserCreatorInterface
         Authenticator $authenticator,
         UsernameMapperInterface $usernameMapper,
         PlatformConfigurationHandler $config,
+        ObjectManager $om,
         Crud $crud
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->authenticator = $authenticator;
         $this->usernameMapper = $usernameMapper;
+        $this->om = $om;
         $this->crud = $crud;
         $this->config = $config;
     }
@@ -45,6 +51,16 @@ class UserCreator implements UserCreatorInterface
      */
     public function createUser(Response $response)
     {
+        // get the config of the idp currently used
+        $idpConfig = [];
+        $issuer = $response->getIssuer()->getValue();
+        if (!empty($issuer)) {
+            $idp = $this->config->get('saml.idp');
+            if (!empty($idp[$issuer])) {
+                $idpConfig = $idp[$issuer];
+            }
+        }
+
         $username = $this->usernameMapper->getUsername($response);
 
         $email = $response
@@ -71,8 +87,8 @@ class UserCreator implements UserCreatorInterface
 
         // attach user to the defined organization
         $organization = null;
-        if ($this->config->getParameter('saml.organization_id')) {
-            $organization = ['id' => $this->config->getParameter('saml.organization_id')];
+        if (!empty($idpConfig['organization'])) {
+            $organization = ['id' => $idpConfig['organization']];
         }
 
         /** @var User $user */
@@ -90,6 +106,20 @@ class UserCreator implements UserCreatorInterface
                 'disabled' => false,
             ],
         ], [Crud::THROW_EXCEPTION, Options::NO_EMAIL]);
+
+        if (!empty($idpConfig['groups'])) {
+            $groups = [];
+            foreach ($idpConfig['groups'] as $groupId) {
+                $group = $this->om->getRepository(Group::class)->findOneBy(['uuid' => $groupId]);
+                if (!empty($group)) {
+                    $groups[] = $group;
+                }
+            }
+
+            if (!empty($groups)) {
+                $this->crud->patch($user, 'group', 'add', $groups, [Crud::THROW_EXCEPTION, Options::NO_EMAIL]);
+            }
+        }
 
         $this->tokenStorage->setToken(null);
 
