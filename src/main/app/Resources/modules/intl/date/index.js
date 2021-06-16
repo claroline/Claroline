@@ -102,6 +102,36 @@ function displayDate(apiDate, long = false, withTime = false) {
   return moment.utc(apiDate).local().format(getDisplayFormat(long, withTime))
 }
 
+/**
+ * Converts time of a datetime from the api format to the displayed one.
+ *
+ * @param {string}  apiDate - the api date to convert.
+ *
+ * @return {string} - the time in display format.
+ */
+function displayTime(apiDate) {
+  return moment.utc(apiDate).local().format('LT')
+}
+
+function displayDateRange(start, end) {
+  let date = displayDate(start, true)
+  if (end) {
+    if (moment(start).isSame(end, 'day')) {
+      date += ' | ' + trans('time_range', {
+        start: displayTime(start),
+        end: displayTime(end)
+      })
+    } else {
+      date = trans('date_range', {
+        start: displayDate(start, true),
+        end: displayDate(end, true)
+      })
+    }
+  }
+
+  return date
+}
+
 function displayDuration(seconds, long = false) {
   const time = moment.duration({seconds: seconds})
 
@@ -172,5 +202,7 @@ export {
   computeElapsedTime,
   getTimeDiff,
   nowAdd,
-  displayDuration
+  displayDuration,
+  displayTime,
+  displayDateRange
 }

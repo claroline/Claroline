@@ -1,7 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {displayDate} from '#/main/app/intl/date'
+import {displayDateRange} from '#/main/app/intl/date'
 import {asset} from '#/main/app/config/asset'
 import {getPlainText} from '#/main/app/data/types/html/utils'
 import {DataCard} from '#/main/app/data/components/card'
@@ -15,7 +15,7 @@ const EventCard = (props) =>
     id={props.data.id}
     icon={<EventIcon type={props.data.meta.type} />}
     title={props.data.name}
-    subtitle={displayDate(props.data.start, false, true) + (props.data.end ? ' / ' + displayDate(props.data.end, false, true) : '')}
+    subtitle={displayDateRange(props.data.start, props.data.end)}
     poster={props.data.thumbnail ? asset(props.data.thumbnail.url) : null}
     contentText={getPlainText(props.data.description)}
   />
