@@ -12,6 +12,13 @@ const LogsTool = (props) =>
   <ToolPage>
     <Routes
       path={props.path}
+      redirect={[
+        {
+          from: '/',
+          exact: true,
+          to : '/security'
+        }
+      ]}
       routes={[
         {
           path: '/security',

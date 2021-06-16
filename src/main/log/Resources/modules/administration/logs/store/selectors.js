@@ -1,4 +1,4 @@
-const STORE_NAME = 'claroline_log_admin_tool'
+const STORE_NAME = 'logs'
 const LIST_NAME = STORE_NAME + '.securityLogs'
 const MESSAGE_NAME = STORE_NAME + '.messageLogs'
 const FUNCTIONAL_NAME = STORE_NAME + '.functionalLogs'

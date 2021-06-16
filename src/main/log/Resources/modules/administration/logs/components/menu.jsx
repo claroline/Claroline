@@ -7,7 +7,7 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 import {Toolbar} from '#/main/app/action/components/toolbar'
 import {MenuSection} from '#/main/app/layout/menu/components/section'
 
-const DashboardMenu = (props) =>
+const LogsMenu = (props) =>
   <MenuSection
     {...omit(props, 'path')}
     title={trans('dashboard', {}, 'logs')}
@@ -40,7 +40,7 @@ const DashboardMenu = (props) =>
     />
   </MenuSection>
 
-DashboardMenu.propTypes = {
+LogsMenu.propTypes = {
   path: T.string,
 
   // from menu
@@ -50,5 +50,5 @@ DashboardMenu.propTypes = {
 }
 
 export {
-  DashboardMenu
+  LogsMenu
 }

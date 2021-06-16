@@ -1,6 +1,6 @@
 plugin:
     admin_tools:
-        - name: claroline_log_admin_tool
+        - name: logs
           class: logs
 
     resource_actions:

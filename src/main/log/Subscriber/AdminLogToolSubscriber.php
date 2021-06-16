@@ -7,12 +7,12 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class AdminLogToolSubscriber implements EventSubscriberInterface
 {
-    private const ADMINNISTRATION_TOOL_CLAROLINE_LOG_ADMIN_TOOL = 'administration_tool_claroline_log_admin_tool';
+    private const ADMINNISTRATION_TOOL_LOGS = 'administration_tool_logs';
 
     public static function getSubscribedEvents(): array
     {
         return [
-            self::ADMINNISTRATION_TOOL_CLAROLINE_LOG_ADMIN_TOOL => 'onAdministrationToolOpen',
+            self::ADMINNISTRATION_TOOL_LOGS => 'onAdministrationToolOpen',
         ];
     }
 

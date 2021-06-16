@@ -10,7 +10,7 @@ registry.add('ClarolineLogBundle', {
      * Provides Administration tools.
      */
     administration: {
-      'claroline_log_admin_tool' : () => { return import(/* webpackChunkName: "main-log-admin-logs" */ '#/main/log/administration/logs') }
+      'logs' : () => { return import(/* webpackChunkName: "main-log-admin-logs" */ '#/main/log/administration/logs') }
     },
 
     /**
