@@ -10,6 +10,8 @@ import {
   apiDate,
   displayDate,
   displayDuration,
+  displayTime,
+  displayDateRange,
   now
 } from '#/main/app/intl/date'
 import {locale} from '#/main/app/intl/locale'
@@ -25,6 +27,8 @@ export {
   apiDate,
   displayDate,
   displayDuration,
+  displayTime,
+  displayDateRange,
   now,
   // locale
   locale,
