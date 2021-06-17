@@ -114,6 +114,11 @@ class ClientController
                     ],
                 ],
 
+                // additional assets for the platform
+                // assets defined by users in the platform configuration
+                'javascripts' => $this->configHandler->getParameter('javascripts'),
+                'stylesheets' => $this->configHandler->getParameter('stylesheets'),
+                // assets injected from plugins
                 'injectedJavascripts' => $this->injectJavascript(),
                 'injectedStylesheets' => $this->injectStylesheet(),
             ])

@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Library\Configuration;
 
 use Claroline\AppBundle\API\Utils\ArrayUtils;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Service used for accessing or modifying the platform configuration parameters.
@@ -20,41 +21,69 @@ class PlatformConfigurationHandler
 {
     /** @var string */
     private $configFile;
+    /** @var RequestStack */
+    private $requestStack;
     /** @var array */
-    private $parameters;
+    private $parameters = [];
     /** @var array */
-    private $defaultConfigs;
+    private $defaultConfigs = [];
     /** @var string[] */
-    private $mapping;
+    private $mapping = [];
 
-    /**
-     * PlatformConfigurationHandler constructor.
-     *
-     * @param string $configFile
-     */
-    public function __construct($configFile)
+    public function __construct(string $configFile, RequestStack $requestStack)
     {
-        $this->parameters = [];
-        $this->defaultConfigs = [];
         $this->configFile = $configFile;
-        $this->parameters = $this->mergeParameters();
-        //just in case init went wrong
-        $mapping = new LegacyParametersMapping();
-        $this->mapping = $mapping->getMapping();
+        $this->requestStack = $requestStack;
+        if (file_exists($this->configFile)) {
+            $this->parameters = json_decode(file_get_contents($this->configFile), true);
+        }
     }
 
-    public function hasParameter($parameter)
+    public function hasParameter(string $parameter): bool
     {
         return ArrayUtils::has($this->parameters, $parameter);
     }
 
     /**
-     * @param string $parameter
+     * @param string $parameter  - The path of the parameter inside the parameters array
+     * @param bool   $fromDomain - Get the parameter value for the client IP domain (return the platform one if no override)
      *
-     * @return mixed
+     * @return mixed|null
      */
-    public function getParameter($parameter)
+    public function getParameter(string $parameter, bool $fromDomain = true)
     {
+        if ($fromDomain) {
+            $request = $this->requestStack->getMasterRequest();
+
+            // check if there is a custom configuration for the current request ip
+            $ip = $request ? $request->getClientIp() : null;
+            $forwarded = $request ? $request->server->get('X-Forwarded-For') : null; // I can only get trusted proxies if I use symfony getClientIps()
+            $domains = ArrayUtils::get($this->parameters, 'domains');
+            if (!empty($domains) && $ip) {
+                $callerDomain = null;
+                foreach ($domains as $domain) {
+                    if ((empty($domain['ips']) || in_array($ip, $domain['ips'])) && (empty($domain['xForwardedFor']) || in_array($forwarded, $domain['xForwardedFor']))) {
+                        $callerDomain = $domain;
+                        break;
+                    }
+                }
+
+                // check if there is a custom configuration for this domain
+                if ($callerDomain && !empty($callerDomain['config']) && ArrayUtils::has($callerDomain['config'], $parameter)) {
+                    $value = ArrayUtils::get($callerDomain['config'], $parameter);
+                    if (ArrayUtils::isAssociative($value)) {
+                        // merge the domain param with the default one in order to get the full value
+                        // even if the domain does not override the full array
+                        $appValue = $this->getParameter($parameter, false);
+
+                        return array_replace_recursive($appValue, $value);
+                    }
+
+                    return $value;
+                }
+            }
+        }
+
         // parameter is defined
         if ($this->hasParameter($parameter)) {
             return ArrayUtils::get($this->parameters, $parameter);
@@ -65,39 +94,15 @@ class PlatformConfigurationHandler
             return ArrayUtils::get($this->parameters, $this->mapping[$parameter]);
         }
 
-        // otherwise let's go default
-        $defaults = [];
-        foreach ($this->defaultConfigs as $default) {
-            $defaults = array_merge($default, $defaults);
-        }
-
-        if (ArrayUtils::has($defaults, $parameter)) {
-            return ArrayUtils::get($defaults, $parameter);
-        }
-
-        if (array_key_exists($parameter, $this->mapping) && ArrayUtils::has($defaults, $this->mapping[$parameter])) {
-            return ArrayUtils::get($defaults, $this->mapping[$parameter]);
-        }
-
         return null;
     }
 
-    public function getParameters()
+    public function getParameters(): array
     {
         return $this->parameters;
     }
 
-    public function addLegacyMapping(LegacyParametersMappingInterface $mapping)
-    {
-        $this->mapping = array_merge($this->mapping, $mapping->getMapping());
-    }
-
-    public function getDefaultsConfigs()
-    {
-        return $this->defaultConfigs;
-    }
-
-    public function setParameter($parameter, $value)
+    public function setParameter(string $parameter, $value)
     {
         if (!is_writable($this->configFile)) {
             throw new \RuntimeException('Platform options is not writable');
@@ -130,30 +135,17 @@ class PlatformConfigurationHandler
         }
 
         $this->defaultConfigs[$newDefaultClass] = $newDefault;
-        $this->parameters = array_merge($newDefault, $this->parameters);
+        $this->parameters = array_replace_recursive($newDefault, $this->parameters);
     }
 
-    protected function mergeParameters()
+    public function addLegacyMapping(LegacyParametersMappingInterface $mapping)
     {
-        $defaults = new PlatformDefaults();
-
-        if (!file_exists($this->configFile)) {
-            file_put_contents($this->configFile, json_encode($defaults->getDefaultParameters(), JSON_PRETTY_PRINT));
-        }
-
-        $parameters = json_decode(file_get_contents($this->configFile), true);
-
-        if ($parameters) {
-            return array_replace_recursive($defaults->getDefaultParameters(), $parameters);
-        }
-
-        return $this->parameters;
+        $this->mapping = array_merge($this->mapping, $mapping->getMapping());
     }
 
-    protected function saveParameters()
+    public function saveParameters()
     {
         ksort($this->parameters);
-        $parameters = json_encode($this->parameters, JSON_PRETTY_PRINT);
-        file_put_contents($this->configFile, $parameters);
+        file_put_contents($this->configFile, json_encode($this->parameters, JSON_PRETTY_PRINT));
     }
 }

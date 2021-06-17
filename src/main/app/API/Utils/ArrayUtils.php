@@ -95,7 +95,7 @@ class ArrayUtils
     {
         // because sometimes there are keys with dot in it (eg. Scorm props cmi.*)
         // we check the whole key exist before starting the recursive search
-        if (isset($object[$keys])) {
+        if (array_key_exists($keys, $object)) {
             return true;
         }
 
@@ -138,5 +138,10 @@ class ArrayUtils
         }
 
         return $titles;
+    }
+
+    public static function isAssociative(array $array)
+    {
+        return count(array_filter(array_keys($array), 'is_string')) > 0;
     }
 }
