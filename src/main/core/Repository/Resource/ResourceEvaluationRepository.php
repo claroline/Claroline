@@ -11,10 +11,10 @@
 
 namespace Claroline\CoreBundle\Repository\Resource;
 
-use Claroline\CoreBundle\Entity\Evaluation\AbstractEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\EvaluationBundle\Entity\Evaluation\AbstractEvaluation;
 use Doctrine\ORM\EntityRepository;
 
 class ResourceEvaluationRepository extends EntityRepository

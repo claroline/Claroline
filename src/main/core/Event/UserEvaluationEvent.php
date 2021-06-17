@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Event;
 
-use Claroline\CoreBundle\Entity\Evaluation\AbstractUserEvaluation;
+use Claroline\EvaluationBundle\Entity\Evaluation\AbstractUserEvaluation;
 use Symfony\Contracts\EventDispatcher\Event;
 
 /**

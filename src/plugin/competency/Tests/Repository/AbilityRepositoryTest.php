@@ -2,9 +2,9 @@
 
 namespace HeVinci\CompetencyBundle\Tests\Repository;
 
-use Claroline\CoreBundle\Entity\Evaluation\AbstractEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\EvaluationBundle\Entity\Evaluation\AbstractEvaluation;
 use HeVinci\CompetencyBundle\Util\RepositoryTestCase;
 
 class AbilityRepositoryTest extends RepositoryTestCase

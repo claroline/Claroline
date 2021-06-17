@@ -2,11 +2,11 @@
 
 namespace Icap\BlogBundle\Manager;
 
-use Claroline\CoreBundle\Entity\Evaluation\AbstractEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Log\LogResourceUpdateEvent;
 use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
+use Claroline\EvaluationBundle\Entity\Evaluation\AbstractEvaluation;
 use Icap\BlogBundle\Entity\Blog;
 use Icap\BlogBundle\Entity\BlogOptions;
 use Icap\BlogBundle\Entity\Comment;

@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Entity\Resource;
 
-use Claroline\CoreBundle\Entity\Evaluation\AbstractEvaluation;
+use Claroline\EvaluationBundle\Entity\Evaluation\AbstractEvaluation;
 use Doctrine\ORM\Mapping as ORM;
 
 /**

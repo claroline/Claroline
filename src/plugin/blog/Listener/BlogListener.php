@@ -3,7 +3,6 @@
 namespace Icap\BlogBundle\Listener;
 
 use Claroline\AppBundle\API\Options;
-use Claroline\CoreBundle\Entity\Evaluation\AbstractEvaluation;
 use Claroline\CoreBundle\Event\ExportObjectEvent;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Event\ImportObjectEvent;
@@ -11,6 +10,7 @@ use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
+use Claroline\EvaluationBundle\Entity\Evaluation\AbstractEvaluation;
 use Icap\BlogBundle\Entity\Blog;
 use Icap\BlogBundle\Entity\Comment;
 use Icap\BlogBundle\Entity\Post;
@@ -57,6 +57,7 @@ class BlogListener
         $postManager = $this->container->get('Icap\BlogBundle\Manager\PostManager');
         $blogManager = $this->container->get('Icap\BlogBundle\Manager\BlogManager');
 
+        $parameters = [];
         $parameters['limit'] = -1;
 
         $posts = $postManager->getPosts(

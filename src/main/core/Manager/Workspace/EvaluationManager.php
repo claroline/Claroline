@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Manager\Workspace;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Evaluation\AbstractEvaluation;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Log\Connection\LogConnectWorkspace;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
@@ -23,6 +22,7 @@ use Claroline\CoreBundle\Entity\Workspace\Evaluation;
 use Claroline\CoreBundle\Entity\Workspace\Requirements;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\UserEvaluationEvent;
+use Claroline\EvaluationBundle\Entity\Evaluation\AbstractEvaluation;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class EvaluationManager

@@ -21,7 +21,6 @@ class LocaleManager
 {
     private $defaultLocale;
     private $finder;
-    private $locales;
     private $userManager;
     private $tokenStorage;
     private $configHandler;
@@ -33,7 +32,7 @@ class LocaleManager
     ) {
         $this->configHandler = $configHandler;
         $this->userManager = $userManager;
-        $this->defaultLocale = $configHandler->getParameter('locale_language');
+        $this->defaultLocale = $configHandler->getParameter('locales.default');
         $this->finder = new Finder();
         $this->tokenStorage = $tokenStorage;
     }
@@ -78,19 +77,17 @@ class LocaleManager
 
     /**
      * Get a list of available languages in the platform.
-     *
-     * @return array
      */
-    public function getAvailableLocales()
+    public function getAvailableLocales(): array
     {
-        if (!$this->locales) {
-            $data = $this->configHandler->getParameter('locales.available');
-            foreach ($data as $locale) {
-                $this->locales[$locale] = $locale;
-            }
+        $locales = [];
+
+        $data = $this->configHandler->getParameter('locales.available');
+        foreach ($data as $locale) {
+            $locales[$locale] = $locale;
         }
 
-        return $this->locales;
+        return $locales;
     }
 
     /**

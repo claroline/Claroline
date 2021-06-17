@@ -13,7 +13,6 @@ namespace Claroline\CoreBundle\Manager\Resource;
 
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Evaluation\AbstractEvaluation;
 use Claroline\CoreBundle\Entity\Log\Connection\LogConnectResource;
 use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
@@ -22,6 +21,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Resource\EvaluateResourceEvent;
 use Claroline\CoreBundle\Repository\Log\LogRepository;
+use Claroline\EvaluationBundle\Entity\Evaluation\AbstractEvaluation;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class ResourceEvaluationManager

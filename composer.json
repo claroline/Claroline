@@ -109,6 +109,7 @@
             "Claroline\\MigrationBundle\\": "src/main/migration",
             "Claroline\\KernelBundle\\": "src/main/kernel",
             "Claroline\\ThemeBundle\\": "src/main/theme",
+            "Claroline\\EvaluationBundle\\": "src/main/evaluation",
             "Claroline\\AgendaBundle\\": "src/plugin/agenda",
             "Claroline\\AnalyticsBundle\\": "src/plugin/analytics",
             "Claroline\\AnnouncementBundle\\": "src/plugin/announcement",

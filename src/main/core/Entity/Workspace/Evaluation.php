@@ -12,7 +12,7 @@
 namespace Claroline\CoreBundle\Entity\Workspace;
 
 use Claroline\AppBundle\Entity\Identifier\Uuid;
-use Claroline\CoreBundle\Entity\Evaluation\AbstractUserEvaluation;
+use Claroline\EvaluationBundle\Entity\Evaluation\AbstractUserEvaluation;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 

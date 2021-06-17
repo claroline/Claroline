@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Entity\Evaluation;
+namespace Claroline\EvaluationBundle\Entity\Evaluation;
 
 use Doctrine\ORM\Mapping as ORM;
 

@@ -27,18 +27,12 @@ class PlatformConfigurationHandler
     /** @var string[] */
     private $mapping;
 
-    /**
-     * PlatformConfigurationHandler constructor.
-     *
-     * @param string $configFile
-     */
-    public function __construct($configFile)
+    public function __construct(string $configFile)
     {
-        $this->parameters = [];
         $this->defaultConfigs = [];
         $this->configFile = $configFile;
         $this->parameters = $this->mergeParameters();
-        //just in case init went wrong
+
         $mapping = new LegacyParametersMapping();
         $this->mapping = $mapping->getMapping();
     }
@@ -147,7 +141,7 @@ class PlatformConfigurationHandler
             return array_replace_recursive($defaults->getDefaultParameters(), $parameters);
         }
 
-        return $this->parameters;
+        return $parameters;
     }
 
     protected function saveParameters()

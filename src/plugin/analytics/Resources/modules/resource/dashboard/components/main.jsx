@@ -6,10 +6,9 @@ import {Await} from '#/main/app/components/await'
 import {Routes} from '#/main/app/router'
 import {Vertical} from '#/main/app/content/tabs/components/vertical'
 import {ContentLoader} from '#/main/app/content/components/loader'
-
-import {getAnalytics} from '#/main/core/analytics/resource/utils'
 import {LogDetails} from '#/main/core/layout/logs'
 
+import {getAnalytics} from '#/plugin/analytics/resource/utils'
 import {Logs} from '#/plugin/analytics/resource/dashboard/containers/logs'
 import {UserLogs} from '#/plugin/analytics/resource/dashboard/containers/logs-user'
 
