@@ -1672,5 +1672,6 @@
     "rooms": "Salles",
     "online": "En ligne",
     "irl": "En présentiel",
-    "add_room": "Ajouter une salle"
+    "add_room": "Ajouter une salle",
+    "security": "Sécurité"
 }

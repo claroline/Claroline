@@ -27,7 +27,7 @@ const DashboardMessage = () =>
       }, {
         name: 'details',
         type: 'string',
-        label: trans('details'),
+        label: trans('description'),
         displayed: true
       }, {
         name: 'receiver',

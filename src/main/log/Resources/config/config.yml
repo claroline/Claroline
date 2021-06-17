@@ -1,7 +1,7 @@
 plugin:
     admin_tools:
         - name: logs
-          class: logs
+          class: shoe-prints
 
     resource_actions:
         - name: logs

@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\LogBundle\API\Finder;
+namespace Claroline\LogBundle\Finder;
 
 use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\LogBundle\Entity\MessageLog;

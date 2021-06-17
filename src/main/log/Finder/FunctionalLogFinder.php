@@ -9,17 +9,17 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\LogBundle\API\Finder;
+namespace Claroline\LogBundle\Finder;
 
 use Claroline\AppBundle\API\Finder\AbstractFinder;
-use Claroline\LogBundle\Entity\SecurityLog;
+use Claroline\LogBundle\Entity\FunctionalLog;
 use Doctrine\ORM\QueryBuilder;
 
-class SecurityLogFinder extends AbstractFinder
+class FunctionalLogFinder extends AbstractFinder
 {
     public static function getClass(): string
     {
-        return SecurityLog::class;
+        return FunctionalLog::class;
     }
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
@@ -27,9 +27,14 @@ class SecurityLogFinder extends AbstractFinder
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
                 case 'user':
-                    $qb->leftJoin('obj.doer', 'd');
-                    $qb->andWhere('d.uuid = :id');
+                    $qb->leftJoin('obj.user', 'u');
+                    $qb->andWhere('u.uuid = :id');
                     $qb->setParameter('id', $filterValue);
+                    break;
+                case 'workspace':
+                    $qb->leftJoin('obj.workspace', 'w');
+                    $qb->andWhere('w.uuid = :workspace');
+                    $qb->setParameter('workspace', $filterValue);
                     break;
 
                 default:
