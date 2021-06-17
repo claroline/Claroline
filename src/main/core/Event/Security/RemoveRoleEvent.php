@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\LogBundle\Event\Security;
+namespace Claroline\CoreBundle\Event\Security;
 
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Symfony\Contracts\EventDispatcher\Event;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class AddRoleEvent extends Event
+class RemoveRoleEvent extends Event
 {
     private $user;
     private $role;
@@ -39,6 +39,6 @@ class AddRoleEvent extends Event
 
     public function getMessage(TranslatorInterface $translator)
     {
-        return $translator->trans('addRole', ['username' => $this->user->getUsername(), 'role' => $this->role->getName()], 'security');
+        return $translator->trans('removeRole', ['username' => $this->user->getUsername(), 'role' => $this->role->getName()], 'security');
     }
 }

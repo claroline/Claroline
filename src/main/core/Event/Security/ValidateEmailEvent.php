@@ -9,13 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\LogBundle\Event\Security;
+namespace Claroline\CoreBundle\Event\Security;
 
 use Claroline\CoreBundle\Entity\User;
 use Symfony\Contracts\EventDispatcher\Event;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class UserDisableEvent extends Event
+class ValidateEmailEvent extends Event
 {
     private $user;
 
@@ -29,8 +29,8 @@ class UserDisableEvent extends Event
         return $this->user;
     }
 
-    public function getMessage(TranslatorInterface $translator)
+    public function getMessage(TranslatorInterface $translator): string
     {
-        return $translator->trans('userDisable', ['username' => $this->user->getUsername()], 'security');
+        return $translator->trans('validateEmail', ['username' => $this->user->getUsername()], 'security');
     }
 }

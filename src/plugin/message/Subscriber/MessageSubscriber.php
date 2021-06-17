@@ -11,9 +11,9 @@
 
 namespace Claroline\MessageBundle\Subscriber;
 
+use Claroline\CoreBundle\Event\CatalogEvents\MessageEvents;
 use Claroline\CoreBundle\Event\SendMessageEvent;
-use Claroline\LogBundle\Entity\Log\MessageLog;
-use Claroline\LogBundle\Event\CatalogEvents\MessageEvents;
+use Claroline\LogBundle\Entity\MessageLog;
 use Claroline\MessageBundle\Manager\MessageManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;

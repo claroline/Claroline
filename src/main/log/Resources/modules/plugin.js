@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-import {registry} from '#/main/app/plugins/registry';
+import {registry} from '#/main/app/plugins/registry'
 
 /**
  * Declares applications provided by the Log plugin.

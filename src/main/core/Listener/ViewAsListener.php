@@ -13,9 +13,9 @@ namespace Claroline\CoreBundle\Listener;
 
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AuthenticationBundle\Security\Authentication\Authenticator;
+use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
+use Claroline\CoreBundle\Event\Security\ViewAsEvent;
 use Claroline\CoreBundle\Manager\RoleManager;
-use Claroline\LogBundle\Event\CatalogEvents\SecurityEvents;
-use Claroline\LogBundle\Event\Security\ViewAsEvent;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;

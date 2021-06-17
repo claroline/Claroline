@@ -1,11 +1,11 @@
 <?php
 
-namespace Claroline\LogBundle\Subscriber;
+namespace Claroline\LogBundle\Subscriber\Administration;
 
 use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class AdminLogToolSubscriber implements EventSubscriberInterface
+class LogsSubscriber implements EventSubscriberInterface
 {
     private const ADMINNISTRATION_TOOL_LOGS = 'administration_tool_logs';
 

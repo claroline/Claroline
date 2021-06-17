@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\LogBundle\Controller\APINew;
+namespace Claroline\LogBundle\Controller;
 
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\Controller\AbstractSecurityController;

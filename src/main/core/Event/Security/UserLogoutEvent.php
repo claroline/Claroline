@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\LogBundle\Event\Security;
+namespace Claroline\CoreBundle\Event\Security;
 
 use Claroline\CoreBundle\Entity\User;
 use Symfony\Contracts\EventDispatcher\Event;

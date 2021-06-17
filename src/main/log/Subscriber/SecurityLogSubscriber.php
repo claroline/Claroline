@@ -3,7 +3,7 @@
 namespace Claroline\LogBundle\Subscriber;
 
 use Claroline\LogBundle\Entity\SecurityLog;
-use Claroline\LogBundle\Event\CatalogEvents\SecurityEvents;
+use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Authentication\Token\SwitchUserToken;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\LogBundle\Event\CatalogEvents;
+namespace Claroline\CoreBundle\Event\CatalogEvents;
 
 final class ToolEvents
 {

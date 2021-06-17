@@ -3,8 +3,8 @@
 namespace Claroline\LogBundle\Subscriber;
 
 use Claroline\LogBundle\Entity\FunctionalLog;
-use Claroline\LogBundle\Event\CatalogEvents\ResourceEvents;
-use Claroline\LogBundle\Event\CatalogEvents\ToolEvents;
+use Claroline\CoreBundle\Event\CatalogEvents\ResourceEvents;
+use Claroline\CoreBundle\Event\CatalogEvents\ToolEvents;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Contracts\EventDispatcher\Event;

@@ -14,6 +14,6 @@ services:
         tags:
             - { name: kernel.event_subscriber }
 
-    Claroline\LogBundle\Subscriber\AdminLogToolSubscriber:
+    Claroline\LogBundle\Subscriber\Administration\LogsSubscriber:
         tags:
             - { name: kernel.event_subscriber }

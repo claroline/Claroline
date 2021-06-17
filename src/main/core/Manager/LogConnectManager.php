@@ -26,16 +26,16 @@ use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
 use Claroline\CoreBundle\Event\Log\LogAdminToolReadEvent;
 use Claroline\CoreBundle\Event\Log\LogDesktopToolReadEvent;
 use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceEnterEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceToolReadEvent;
+use Claroline\CoreBundle\Event\Security\UserLoginEvent;
 use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
 use Claroline\CoreBundle\Manager\Workspace\EvaluationManager;
 use Claroline\CoreBundle\Repository\Tool\OrderedToolRepository;
-use Claroline\LogBundle\Event\CatalogEvents\SecurityEvents;
-use Claroline\LogBundle\Event\Security\UserLoginEvent;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**

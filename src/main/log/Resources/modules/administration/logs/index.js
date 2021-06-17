@@ -1,5 +1,5 @@
 import {reducer} from '#/main/log/administration/logs/store'
-import {LogsTool} from '#/main/log/administration/logs/containers/tool'
+import {LogsTool} from '#/main/log/administration/logs/components/tool'
 import {LogsMenu} from '#/main/log/administration/logs/components/menu'
 
 /**
