@@ -1641,5 +1641,6 @@
     "rooms": "Rooms",
     "online": "Online",
     "irl": "Face-to-face",
-    "add_room": "Add a room"
+    "add_room": "Add a room",
+    "security": "Security"
 }

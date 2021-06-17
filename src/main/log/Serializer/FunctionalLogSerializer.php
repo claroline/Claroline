@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\LogBundle\API\Serializer;
+namespace Claroline\LogBundle\Serializer;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;

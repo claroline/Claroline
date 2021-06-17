@@ -26,7 +26,7 @@ const FunctionalLogList = (props) =>
       }, {
         name: 'details',
         type: 'string',
-        label: trans('details'),
+        label: trans('description'),
         displayed: true
       }, {
         name: 'resource',
