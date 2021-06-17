@@ -32,7 +32,7 @@ use Claroline\CoreBundle\Event\Log\LogDesktopToolReadEvent;
 use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceEnterEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceToolReadEvent;
-use Claroline\CoreBundle\Event\Log\UserLoginEvent;
+use Claroline\CoreBundle\Event\Security\UserLoginEvent;
 use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
 use Claroline\CoreBundle\Manager\Workspace\EvaluationManager;
 use Claroline\CoreBundle\Repository\Tool\OrderedToolRepository;

@@ -41,24 +41,6 @@ const DashboardMenu = (props) =>
           icon: 'fa fa-fw fa-users',
           label: trans('community'),
           target: props.path + '/community'
-        }, {
-          name: 'logs',
-          type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-shield',
-          label: trans('security'),
-          target: props.path + '/security'
-        }, {
-          name: 'message',
-          type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-envelope',
-          label: trans('message'),
-          target: props.path + '/message'
-        }, {
-          name: 'functional',
-          type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-cogs',
-          label: trans('functional'),
-          target: props.path + '/functional'
         }
       ]}
       onClick={props.autoClose}

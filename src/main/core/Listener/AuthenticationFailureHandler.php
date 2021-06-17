@@ -56,7 +56,8 @@ class AuthenticationFailureHandler extends DefaultAuthenticationFailureHandler
 
     private function dispatchAuthenticationFailureEvent(string $username, string $message): void
     {
-        if ($user = $this->objectManager->getRepository(User::class)->findByName($username)) {
+        $user = $this->objectManager->getRepository(User::class)->findByName($username);
+        if ($user) {
             $username = $user[0];
         }
 

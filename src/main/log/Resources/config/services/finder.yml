@@ -1,0 +1,6 @@
+services:
+    Claroline\LogBundle\API\Finder\SecurityLogFinder: ~
+
+    Claroline\LogBundle\API\Finder\MessageLogFinder: ~
+
+    Claroline\LogBundle\API\Finder\FunctionalLogFinder: ~

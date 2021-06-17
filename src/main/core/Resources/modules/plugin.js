@@ -138,9 +138,7 @@ registry.add('ClarolineCoreBundle', {
    */
   account: {
     'profile': () => { return import(/* webpackChunkName: "core-account-profile" */ '#/main/core/account/profile') },
-    'privacy': () => { return import(/* webpackChunkName: "core-account-privacy" */ '#/main/core/account/privacy') },
-    'security': () => { return import(/* webpackChunkName: "core-account-privacy" */ '#/main/core/account/security') },
-    'functional': () => { return import(/* webpackChunkName: "core-account-privacy" */ '#/main/core/account/functional') }
+    'privacy': () => { return import(/* webpackChunkName: "core-account-privacy" */ '#/main/core/account/privacy') }
   },
 
   /**
