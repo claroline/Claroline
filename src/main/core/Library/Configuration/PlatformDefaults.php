@@ -16,14 +16,6 @@ class PlatformDefaults implements ParameterProviderInterface
     const REGISTRATION_MAIL_VALIDATION_NONE = 0;
     const REGISTRATION_MAIL_VALIDATION_PARTIAL = 1;
     const REGISTRATION_MAIL_VALIDATION_FULL = 2;
-    const DEFAULT_REDIRECT_OPTION = 'DESKTOP';
-
-    const REDIRECT_OPTIONS = [
-        'DESKTOP' => 'DESKTOP',
-        'LAST' => 'LAST',
-        'URL' => 'URL',
-        'WORKSPACE_TAG' => 'WORKSPACE_TAG',
-    ];
 
     public function getDefaultParameters()
     {
@@ -71,13 +63,6 @@ class PlatformDefaults implements ParameterProviderInterface
                 'max_upload_resources' => 10000,
                 'max_workspace_users' => 10000,
                 'default_tag' => null,
-            ],
-            'authentication' => [
-                'help' => null,
-                'changePassword' => true,
-                'redirect_after_login_option' => self::DEFAULT_REDIRECT_OPTION,
-                'redirect_after_login_url' => null,
-                'direct_third_party' => false,
             ],
             'registration' => [
                 'self' => false,

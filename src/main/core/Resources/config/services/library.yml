@@ -10,6 +10,7 @@ services:
     Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler:
         arguments:
             - '%claroline.param.platform_options%'
+            - '@request_stack'
 
     Claroline\CoreBundle\Library\Configuration\LegacyParametersMapping:
         tags: ['claroline.configuration.mapping.legacy']

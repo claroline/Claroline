@@ -92,8 +92,8 @@ class ClientSerializer
                 'url' => $this->config->getParameter('logo'),
             ]);
         }
-        $usersLimitReached = false;
 
+        $usersLimitReached = false;
         if ($this->config->getParameter('restrictions.users') && $this->config->getParameter('restrictions.max_users')) {
             $maxUsers = $this->config->getParameter('restrictions.max_users');
             /** @var UserRepository $userRepo */
@@ -106,17 +106,13 @@ class ClientSerializer
         }
 
         $data = [
-            'logo' => $logo ? $logo->getUrl() : null, // TODO : to move (maybe not can be considered platform meta)
+            'logo' => $logo ? $logo->getUrl() : null,
             'name' => $this->config->getParameter('name'),
             'secondaryName' => $this->config->getParameter('secondary_name'),
             'description' => null, // the one for the current locale
             'version' => $this->versionManager->getCurrent(),
             'environment' => $this->env,
             'helpUrl' => $this->config->getParameter('help_url'),
-            'authentication' => [ // TODO : move in AuthenticationBundle
-                'help' => $this->config->getParameter('authentication.help'),
-                'changePassword' => $this->config->getParameter('authentication.changePassword'),
-            ],
             'selfRegistration' => $this->config->getParameter('registration.self') && !$usersLimitReached,
             'serverUrl' => $this->platformManager->getUrl(),
             'locale' => $this->serializeLocale(),
@@ -146,8 +142,6 @@ class ClientSerializer
             'privacy' => $this->config->getParameter('privacy'),
             'pricing' => $this->config->getParameter('pricing'),
             'plugins' => $this->pluginManager->getEnabled(true),
-            'javascripts' => $this->config->getParameter('javascripts'), // TODO : this should not be exposed here
-            'stylesheets' => $this->config->getParameter('stylesheets'), // TODO : this should not be exposed here
         ];
 
         $event = new GenericDataEvent();

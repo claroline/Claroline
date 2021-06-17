@@ -43,7 +43,7 @@
         {{ injectedStylesheets | raw }}
 
         {# Styles from plateform configuration #}
-        {% for file in parameters.stylesheets %}
+        {% for file in stylesheets %}
             <link rel="stylesheet" type="text/css" href="{{ asset(file) }}" />
         {% endfor %}
     </head>
@@ -87,7 +87,7 @@
         {{ injectedJavascripts | raw }}
 
         {# JS from plateform configuration #}
-        {% for file in parameters.javascripts %}
+        {% for file in javascripts %}
             <script src="{{ asset(file) }}"></script>
         {% endfor %}
     </body>

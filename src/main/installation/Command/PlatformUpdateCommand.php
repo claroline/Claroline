@@ -99,6 +99,9 @@ class PlatformUpdateCommand extends Command
             sprintf('<comment>%s - Updating the platform...</comment>', date('H:i:s'))
         );
 
+        // generate platform_options with default parameters if it does not exist
+        $this->platformConfigurationHandler->saveParameters();
+
         $this->setLocale();
 
         if (!$input->getOption('no_symlink')) {
