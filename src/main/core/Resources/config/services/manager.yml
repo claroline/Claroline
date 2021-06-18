@@ -101,6 +101,8 @@ services:
             - '@Claroline\CoreBundle\Manager\LocaleManager'
             - '@Claroline\CoreBundle\Manager\UserManager'
             - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - '@messenger.default_bus'
+            - '@security.helper'
 
     Claroline\CoreBundle\Manager\LogManager:
         arguments:

@@ -30,11 +30,6 @@ final class SecurityEvents
     public const NEW_PASSWORD = 'event.security.new_password';
 
     /**
-     * @Event("Claroline\CoreBundle\Event\Security\ForgotPasswordEvent")
-     */
-    public const FORGOT_PASSWORD = 'event.security.forgot_password';
-
-    /**
      * @Event("Claroline\CoreBundle\Event\Security\AddRoleEvent")
      */
     public const ADD_ROLE = 'event.security.add_role';

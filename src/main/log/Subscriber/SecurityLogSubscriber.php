@@ -2,9 +2,15 @@
 
 namespace Claroline\LogBundle\Subscriber;
 
+<<<<<<< HEAD
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
 use Claroline\LogBundle\Entity\SecurityLog;
+=======
+use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
+use Claroline\LogBundle\Entity\SecurityLog;
+use Doctrine\ORM\EntityManagerInterface;
+>>>>>>> log async - WIP:
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\SwitchUserToken;
@@ -40,7 +46,6 @@ class SecurityLogSubscriber implements EventSubscriberInterface
             SecurityEvents::USER_DISABLE => 'logEvent',
             SecurityEvents::USER_ENABLE => 'logEvent',
             SecurityEvents::NEW_PASSWORD => 'logEvent',
-            SecurityEvents::FORGOT_PASSWORD => 'logEvent',
             SecurityEvents::ADD_ROLE => 'logEvent',
             SecurityEvents::REMOVE_ROLE => 'logEvent',
             SecurityEvents::VIEW_AS => 'logEvent',

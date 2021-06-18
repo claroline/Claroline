@@ -1,0 +1,7 @@
+services:
+    Claroline\LogBundle\Messenger\Security\LogForgotPasswordHandler:
+        tags: [messenger.message_handler]
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@translator'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'

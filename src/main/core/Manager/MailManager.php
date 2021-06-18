@@ -13,13 +13,14 @@ namespace Claroline\CoreBundle\Manager;
 
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
-use Claroline\CoreBundle\Event\Security\ForgotPasswordEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Mailing\Mailer;
 use Claroline\CoreBundle\Library\Mailing\Message;
 use Claroline\CoreBundle\Manager\Template\TemplateManager;
+use Claroline\LogBundle\Messenger\Security\Message\ForgotPasswordMessage;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Security;
 
 class MailManager
 {
@@ -37,6 +38,10 @@ class MailManager
     private $userManager;
     /** @var StrictDispatcher */
     private $dispatcher;
+    /** @var MessageBusInterface */
+    private $messageBus;
+    /** @var Security */
+    private $security;
 
     public function __construct(
         Mailer $mailer,
@@ -45,7 +50,9 @@ class MailManager
         TemplateManager $templateManager,
         LocaleManager $localeManager,
         UserManager $userManager,
-        StrictDispatcher $dispatcher
+        StrictDispatcher $dispatcher,
+        MessageBusInterface $messageBus,
+        Security $security
     ) {
         $this->mailer = $mailer;
         $this->router = $router;
@@ -54,6 +61,8 @@ class MailManager
         $this->localeManager = $localeManager;
         $this->userManager = $userManager;
         $this->dispatcher = $dispatcher;
+        $this->messageBus = $messageBus;
+        $this->security = $security;
     }
 
     public function isMailerAvailable(): bool
@@ -63,7 +72,14 @@ class MailManager
 
     public function sendForgotPassword(User $user): bool
     {
-        $this->dispatcher->dispatch(SecurityEvents::FORGOT_PASSWORD, ForgotPasswordEvent::class, [$user]);
+        $doerId = $this->security->getUser() ? $this->security->getUser()->getId() : $user->getId();
+
+        $this->messageBus->dispatch(
+            new ForgotPasswordMessage(
+                $user->getId(),
+                $doerId,
+                'event.security.forgot_password'
+        ));
 
         $this->userManager->initializePassword($user);
         $hash = $user->getResetPasswordHash();
