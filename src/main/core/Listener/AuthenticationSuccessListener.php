@@ -30,15 +30,12 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
 
 class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInterface
 {
-    /** @var SessionInterface */
-    private $session;
     /** @var TokenStorageInterface */
     private $tokenStorage;
     /** @var PlatformConfigurationHandler */
@@ -59,7 +56,6 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
     private $messageManager;
 
     public function __construct(
-        SessionInterface $session,
         TokenStorageInterface $tokenStorage,
         PlatformConfigurationHandler $config,
         StrictDispatcher $eventDispatcher,
@@ -70,7 +66,6 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
         ToolManager $toolManager,
         ConnectionMessageManager $messageManager
     ) {
-        $this->session = $session;
         $this->tokenStorage = $tokenStorage;
         $this->config = $config;
         $this->eventDispatcher = $eventDispatcher;
@@ -96,10 +91,6 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
         $this->eventDispatcher->dispatch(SecurityEvents::USER_LOGIN, UserLoginEvent::class, [$user]);
 
         $redirect = $this->getRedirection($request);
-
-        var_dump($this->session->get('redirectPath'));
-        //var_dump($request->getSession()->get('redirectPath'));
-        die();
 
         if ($request->isXmlHttpRequest()) {
             return new JsonResponse([

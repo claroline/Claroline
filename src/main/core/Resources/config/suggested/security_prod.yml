@@ -1,5 +1,4 @@
 security:
-    session_fixation_strategy: 'migrate'
     providers:
         user_db:
             entity: { class: Claroline\CoreBundle\Entity\User }

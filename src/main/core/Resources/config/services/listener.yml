@@ -247,7 +247,6 @@ services:
 
     Claroline\CoreBundle\Listener\AuthenticationSuccessListener:
         arguments:
-            - '@session'
             - '@security.token_storage'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
             - '@Claroline\AppBundle\Event\StrictDispatcher'
