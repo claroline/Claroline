@@ -23,6 +23,9 @@ class AuthenticationController extends AbstractController
             $this->container->get('session')->set('redirectPath', $request->get('redirectPath'));
         }
 
+        var_dump($this->container->get('session')->get('redirectPath'));
+        die();
+
         $idpEntityId = $request->get('idp');
         if (null === $idpEntityId) {
             return $this->redirect($this->generateUrl($this->container->getParameter('lightsaml_sp.route.discovery')));
