@@ -31,9 +31,11 @@ class SamlConfigPass implements CompilerPassInterface
 
         $idp = $configHandler->getParameter('saml.idp');
         if (!empty($idp)) {
-            $container->setParameter('idp', array_map(function (array $provider) {
-                return $provider['metadata'];
-            }, $idp));
+            $files = [];
+            foreach ($idp as $provider) {
+                $files[] = $provider['metadata'];
+            }
+            $container->setParameter('idp', $files);
         }
 
         // I need to reconfigure LightSaml to inject config form platform_options.json
