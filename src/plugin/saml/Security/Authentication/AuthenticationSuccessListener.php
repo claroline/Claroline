@@ -30,9 +30,6 @@ class AuthenticationSuccessListener extends BaseAuthenticationSuccessListener
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token): Response
     {
-        var_dump($request->query->get('redirectPath'));
-        die();
-
         /** @var User $user */
         $user = $token->getUser();
         if (!$user->isEnabled()) {
