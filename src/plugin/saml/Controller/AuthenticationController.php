@@ -21,6 +21,7 @@ class AuthenticationController extends AbstractController
         if (!empty($request->get('redirectPath'))) {
             // store it in session before leaving claroline for authentication
             $this->container->get('session')->set('redirectPath', $request->get('redirectPath'));
+            $this->container->get('session')->save();
         }
 
         $idpEntityId = $request->get('idp');
