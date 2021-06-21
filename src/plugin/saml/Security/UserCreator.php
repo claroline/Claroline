@@ -55,7 +55,7 @@ class UserCreator implements UserCreatorInterface
         $idpConfig = [];
         $issuer = $response->getIssuer()->getValue();
         if (!empty($issuer)) {
-            $idp = $this->config->get('saml.idp');
+            $idp = $this->config->getParameter('saml.idp');
             if (!empty($idp[$issuer])) {
                 $idpConfig = $idp[$issuer];
             }
