@@ -97,8 +97,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
 
         $redirect = $this->getRedirection($request);
 
-        var_dump($this->session->get('redirectPath'));
-        var_dump($request->getSession()->get('redirectPath'));
+        var_dump($this->session->getId());
         die();
 
         if ($request->isXmlHttpRequest()) {
