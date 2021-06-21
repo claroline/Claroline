@@ -35,5 +35,6 @@ security:
                 check_path: /saml/login_check
                 default_target_path: /
                 require_previous_session: false
+                user_checker: Claroline\SamlBundle\Security\UserChecker
                 success_handler: Claroline\CoreBundle\Listener\AuthenticationSuccessListener
                 failure_handler: Claroline\CoreBundle\Listener\AuthenticationFailureHandler

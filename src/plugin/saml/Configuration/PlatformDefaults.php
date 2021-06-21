@@ -21,6 +21,7 @@ class PlatformDefaults implements ParameterProviderInterface
             'saml' => [
                 'active' => false,
                 'entity_id' => 'claroline', // the sp name
+                'reactivate_on_login' => false, // will automatically reactivate disabled users when they log through saml
                 'credentials' => [], // the app certificates and secrets
                 // The list of defined idp.
                 // Array is indexed by IDPs entityId.
