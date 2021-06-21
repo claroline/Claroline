@@ -33,7 +33,7 @@ class UserChecker extends BaseUserChecker
             return;
         }
 
-        if (($this->config->getParameter('saml.reactivate_on_login') && !$user->isEnabled()) || $user->isRemoved()) {
+        if ((!$this->config->getParameter('saml.reactivate_on_login') && !$user->isEnabled()) || $user->isRemoved()) {
             throw new AccessDeniedException('Your user account no longer exists.');
         }
     }
