@@ -18,7 +18,7 @@ class AuthenticationController extends AbstractController
 {
     public function loginAction(Request $request)
     {
-        if (isset($request->get('redirectPath'))) {
+        if (!empty($request->get('redirectPath'))) {
             // store it in session before leaving claroline for authentication
             $this->container->get('session')->set('redirectPath', $request->get('redirectPath'));
         }

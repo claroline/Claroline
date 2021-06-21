@@ -97,9 +97,6 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
 
         $redirect = $this->getRedirection($request);
 
-        var_dump($this->session->get('redirectPath'));
-        die();
-
         if ($request->isXmlHttpRequest()) {
             return new JsonResponse([
                 'user' => $this->serializer->serialize($user),
