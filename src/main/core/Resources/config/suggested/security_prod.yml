@@ -1,5 +1,5 @@
 security:
-    session_fixation_strategy: Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy::MIGRATE
+    session_fixation_strategy: 'migrate'
     providers:
         user_db:
             entity: { class: Claroline\CoreBundle\Entity\User }
