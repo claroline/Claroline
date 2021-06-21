@@ -12,7 +12,7 @@ const SamlButton = props =>
     type={SSO_BUTTON}
     icon={constants.SERVICE_ICON}
     service={constants.SERVICE_NAME}
-    target={url(['lightsaml_sp.login', {idp: props.idp}, {redirectPath: window.location.hash}])}
+    target={url(['lightsaml_sp.login', {idp: props.idp}], {redirectPath: window.location.hash})}
   />
 
 export {
