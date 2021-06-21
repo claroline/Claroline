@@ -108,6 +108,9 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
             case 'workspace':
                 $redirectUrl = $this->routingHelper->workspacePath($redirect['data']);
                 break;
+            case 'last':
+                $redirectUrl = filter_var($request->headers->get('referer'), FILTER_SANITIZE_URL);
+                break;
             case 'desktop':
             default:
                 $redirectUrl = $this->routingHelper->desktopPath();
