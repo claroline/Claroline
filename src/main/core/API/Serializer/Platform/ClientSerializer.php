@@ -146,7 +146,7 @@ class ClientSerializer
 
         $event = new GenericDataEvent();
         $this->eventDispatcher->dispatch($event, 'claroline_populate_client_config');
-        $data = array_merge($data, $event->getResponse() ?? []);
+        $data = array_merge_recursive($data, $event->getResponse() ?? []);
 
         return $data;
     }
