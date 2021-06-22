@@ -74,8 +74,7 @@ class UserRepository extends ServiceEntityRepository implements UserProviderInte
             $dql .= '
                 OR u.administrativeCode LIKE :username';
         }
-        $dql .= '
-            AND u.isEnabled = true';
+
         $query = $this->_em->createQuery($dql);
         $query->setParameter('username', $username);
 

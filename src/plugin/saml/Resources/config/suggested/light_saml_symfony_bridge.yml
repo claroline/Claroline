@@ -22,6 +22,7 @@ security:
     firewalls:
         main:
             # Allows SAML authentication
+            user_checker: Claroline\SamlBundle\Security\UserChecker
             logout:
                 invalidate_session: false
                 success_handler: Claroline\SamlBundle\Security\LogoutHandler
@@ -35,5 +36,5 @@ security:
                 check_path: /saml/login_check
                 default_target_path: /
                 require_previous_session: false
-                success_handler: Claroline\CoreBundle\Listener\AuthenticationSuccessListener
+                success_handler: Claroline\SamlBundle\Security\Authentication\AuthenticationSuccessListener
                 failure_handler: Claroline\CoreBundle\Listener\AuthenticationFailureHandler
