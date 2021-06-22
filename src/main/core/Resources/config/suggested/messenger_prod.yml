@@ -22,3 +22,4 @@ framework:
 
         routing:
             'Claroline\AppBundle\Message\AsyncInterface': async
+            'Claroline\LogBundle\Messenger\Security\Message\SecurityMessageInterface': async

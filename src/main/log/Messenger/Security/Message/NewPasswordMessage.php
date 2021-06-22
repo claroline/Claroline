@@ -11,7 +11,7 @@
 
 namespace Claroline\LogBundle\Messenger\Security\Message;
 
-class ForgotPasswordMessage implements SecurityMessageInterface
+class NewPasswordMessage implements SecurityMessageInterface
 {
     private $targetId;
     private $doerId;

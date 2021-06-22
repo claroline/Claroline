@@ -6,16 +6,16 @@ use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\PatchEvent;
-use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Cryptography\CryptographicKey;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
-use Claroline\CoreBundle\Event\Security\AddRoleEvent;
-use Claroline\CoreBundle\Event\Security\RemoveRoleEvent;
 use Claroline\CoreBundle\Manager\CryptographyManager;
+use Claroline\LogBundle\Messenger\Security\Message\AddRoleMessage;
+use Claroline\LogBundle\Messenger\Security\Message\RemoveRoleMessage;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class OrganizationCrud
 {
@@ -23,20 +23,23 @@ class OrganizationCrud
     private $om;
     private $cryptoManager;
     private $crud;
-    private $dispatcher;
+    private $messageBus;
+    private $translator;
 
     public function __construct(
         TokenStorageInterface $tokenStorage,
         ObjectManager $om,
         CryptographyManager $cryptoManager,
         Crud $crud,
-        StrictDispatcher $dispatcher
+        MessageBusInterface $messageBus,
+        TranslatorInterface $translator
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->om = $om;
         $this->crud = $crud;
         $this->cryptoManager = $cryptoManager;
-        $this->dispatcher = $dispatcher;
+        $this->messageBus = $messageBus;
+        $this->translator = $translator;
     }
 
     public function preCreate(CreateEvent $event)
@@ -89,12 +92,26 @@ class OrganizationCrud
                     foreach ($users as $user) {
                         $user->addRole($roleAdminOrga);
                         $this->om->persist($user);
-                        $this->dispatcher->dispatch(SecurityEvents::ADD_ROLE, AddRoleEvent::class, [$user, $roleAdminOrga]);
+                        $this->messageBus->dispatch(
+                            new AddRoleMessage(
+                                $user->getId(),
+                                $this->tokenStorage->getToken()->getUser()->getId(),
+                                'event.security.add_role',
+                                $this->translator->trans('addRole', ['username' => $user->getUsername(), 'role' => $roleAdminOrga->getName()], 'security')
+                            )
+                        );
                     }
                 } else {
                     $users->addRole($roleAdminOrga);
                     $this->om->persist($users);
-                    $this->dispatcher->dispatch(SecurityEvents::ADD_ROLE, AddRoleEvent::class, [$users, $roleAdminOrga]);
+                    $this->messageBus->dispatch(
+                        new AddRoleMessage(
+                            $users->getId(),
+                            $this->tokenStorage->getToken()->getUser()->getId(),
+                            'event.security.add_role',
+                            $this->translator->trans('addRole', ['username' => $users->getUsername(), 'role' => $roleAdminOrga->getName()], 'security')
+                        )
+                    );
                 }
             } elseif (Crud::COLLECTION_REMOVE === $action) {
                 if (is_array($users)) {
@@ -102,12 +119,26 @@ class OrganizationCrud
                     foreach ($users as $user) {
                         $user->removeRole($roleAdminOrga);
                         $this->om->persist($user);
-                        $this->dispatcher->dispatch(SecurityEvents::REMOVE_ROLE, RemoveRoleEvent::class, [$user, $roleAdminOrga]);
+                        $this->messageBus->dispatch(
+                            new RemoveRoleMessage(
+                                $user->getId(),
+                                $this->tokenStorage->getToken()->getUser()->getId(),
+                                'event.security.remove_role',
+                                $this->translator->trans('removeRole', ['username' => $user->getUsername(), 'role' => $roleAdminOrga->getName()], 'security')
+                            )
+                        );
                     }
                 } else {
                     $users->removeRole($roleAdminOrga);
                     $this->om->persist($users);
-                    $this->dispatcher->dispatch(SecurityEvents::REMOVE_ROLE, RemoveRoleEvent::class, [$users, $roleAdminOrga]);
+                    $this->messageBus->dispatch(
+                        new RemoveRoleMessage(
+                            $users->getId(),
+                            $this->tokenStorage->getToken()->getUser()->getId(),
+                            'event.security.remove_role',
+                            $this->translator->trans('removeRole', ['username' => $users->getUsername(), 'role' => $roleAdminOrga->getName()], 'security')
+                        )
+                    );
                 }
             }
 

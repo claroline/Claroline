@@ -6,19 +6,18 @@ use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\PatchEvent;
-use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AuthenticationBundle\Security\Authentication\Authenticator;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
-use Claroline\CoreBundle\Event\Security\AddRoleEvent;
-use Claroline\CoreBundle\Event\Security\RemoveRoleEvent;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\LogBundle\Messenger\Security\Message\AddRoleMessage;
 use Doctrine\DBAL\Driver\Connection;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class RoleCrud
 {
@@ -30,21 +29,25 @@ class RoleCrud
     private $authenticator;
     /** @var RoleManager */
     private $manager;
-    /** @var StrictDispatcher */
-    private $dispatcher;
+    /** @var MessageBusInterface */
+    private $messageBus;
+    /** @var TranslatorInterface */
+    private $translator;
 
     public function __construct(
         Connection $conn,
         TokenStorageInterface $tokenStorage,
         Authenticator $authenticator,
         RoleManager $manager,
-        StrictDispatcher $dispatcher
+        MessageBusInterface $messageBus,
+        TranslatorInterface $translator
     ) {
         $this->conn = $conn;
         $this->tokenStorage = $tokenStorage;
         $this->authenticator = $authenticator;
         $this->manager = $manager;
-        $this->dispatcher = $dispatcher;
+        $this->messageBus = $messageBus;
+        $this->translator = $translator;
     }
 
     public function preCreate(CreateEvent $event)
@@ -154,19 +157,47 @@ class RoleCrud
 
             // Dispatch event for User
             if ('add' === $event->getAction() && $event->getValue() instanceof User && $event->getObject() instanceof Role) {
-                $this->dispatcher->dispatch(SecurityEvents::ADD_ROLE, AddRoleEvent::class, [$event->getValue(), $event->getObject()]);
+                $this->messageBus->dispatch(
+                    new AddRoleMessage(
+                        $event->getValue()->getId(),
+                        $this->tokenStorage->getToken()->getUser()->getId(),
+                        'event.security.add_role',
+                        $this->translator->trans('addRole', ['username' => $event->getValue()->getUsername(), 'role' => $event->getObject()->getName()], 'security')
+                    )
+                );
             } elseif ('remove' === $event->getAction() && $event->getValue() instanceof User && $event->getObject() instanceof Role) {
-                $this->dispatcher->dispatch(SecurityEvents::REMOVE_ROLE, RemoveRoleEvent::class, [$event->getValue(), $event->getObject()]);
+                $this->messageBus->dispatch(
+                    new AddRoleMessage(
+                        $event->getValue()->getId(),
+                        $this->tokenStorage->getToken()->getUser()->getId(),
+                        'event.security.remove_role',
+                        $this->translator->trans('removeRole', ['username' => $event->getValue()->getUsername(), 'role' => $event->getObject()->getName()], 'security')
+                    )
+                );
             }
 
             // Dispatch event for Group
             if ('add' === $event->getAction() && $event->getValue() instanceof Group && $event->getObject() instanceof Role) {
                 foreach ($event->getValue()->getUsers() as $user) {
-                    $this->dispatcher->dispatch(SecurityEvents::ADD_ROLE, AddRoleEvent::class, [$user, $event->getObject()]);
+                    $this->messageBus->dispatch(
+                        new AddRoleMessage(
+                            $user->getId(),
+                            $this->tokenStorage->getToken()->getUser()->getId(),
+                            'event.security.add_role',
+                            $this->translator->trans('addRole', ['username' => $user->getUsername(), 'role' => $event->getObject()->getName()], 'security')
+                        )
+                    );
                 }
             } elseif ('remove' === $event->getAction() && $event->getValue() instanceof Group && $event->getObject() instanceof Role) {
                 foreach ($event->getValue()->getUsers() as $user) {
-                    $this->dispatcher->dispatch(SecurityEvents::REMOVE_ROLE, RemoveRoleEvent::class, [$user, $event->getObject()]);
+                    $this->messageBus->dispatch(
+                        new AddRoleMessage(
+                            $user->getId(),
+                            $this->tokenStorage->getToken()->getUser()->getId(),
+                            'event.security.remove_role',
+                            $this->translator->trans('removeRole', ['username' => $user->getUsername(), 'role' => $event->getObject()->getName()], 'security')
+                        )
+                    );
                 }
             }
         }

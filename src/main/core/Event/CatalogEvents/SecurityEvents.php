@@ -25,21 +25,6 @@ final class SecurityEvents
     public const USER_DISABLE = 'event.security.user_disable';
 
     /**
-     * @Event("Claroline\CoreBundle\Event\Security\NewPasswordEvent")
-     */
-    public const NEW_PASSWORD = 'event.security.new_password';
-
-    /**
-     * @Event("Claroline\CoreBundle\Event\Security\AddRoleEvent")
-     */
-    public const ADD_ROLE = 'event.security.add_role';
-
-    /**
-     * @Event("Claroline\CoreBundle\Event\Security\RemoveRoleEvent")
-     */
-    public const REMOVE_ROLE = 'event.security.remove_role';
-
-    /**
      * @Event("Claroline\CoreBundle\Event\Security\ViewAsEvent")
      */
     public const VIEW_AS = 'event.security.view_as';

@@ -24,17 +24,18 @@ use Claroline\CoreBundle\Entity\Workspace\Shortcuts;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceOptions;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue;
-use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
-use Claroline\CoreBundle\Event\Security\AddRoleEvent;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Repository\User\UserRepository;
 use Claroline\CoreBundle\Repository\WorkspaceRepository;
+use Claroline\LogBundle\Messenger\Security\Message\AddRoleMessage;
 use Doctrine\Persistence\ObjectRepository;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class WorkspaceManager implements LoggerAwareInterface
@@ -62,6 +63,10 @@ class WorkspaceManager implements LoggerAwareInterface
     private $workspaceRepo;
     /** @var ObjectRepository */
     private $workspaceOptionsRepo;
+    /** @var MessageBusInterface */
+    private $messageBus;
+    /** @var Security */
+    private $security;
 
     public function __construct(
         TranslatorInterface $translator,
@@ -70,7 +75,9 @@ class WorkspaceManager implements LoggerAwareInterface
         ResourceManager $resourceManager,
         StrictDispatcher $dispatcher,
         ObjectManager $om,
-        ContainerInterface $container
+        ContainerInterface $container,
+        MessageBusInterface $messageBus,
+        Security $security
     ) {
         $this->translator = $translator;
         $this->roleManager = $roleManager;
@@ -79,6 +86,8 @@ class WorkspaceManager implements LoggerAwareInterface
         $this->dispatcher = $dispatcher;
         $this->container = $container;
         $this->crud = $crud;
+        $this->messageBus = $messageBus;
+        $this->security = $security;
 
         $this->userRepo = $om->getRepository(User::class);
         $this->workspaceRepo = $om->getRepository(Workspace::class);
@@ -135,7 +144,14 @@ class WorkspaceManager implements LoggerAwareInterface
 
         $user->setPersonalWorkspace($workspace);
         $user->addRole($workspace->getManagerRole());
-        $this->dispatcher->dispatch(SecurityEvents::ADD_ROLE, AddRoleEvent::class, [$user, $workspace->getManagerRole()]);
+        $this->messageBus->dispatch(
+            new AddRoleMessage(
+                $user->getId(),
+                $this->security->getUser()->getId(),
+                'event.security.add_role',
+                $this->translator->trans('addRole', ['username' => $user->getUsername(), 'role' => $workspace->getManagerRole()->getName()], 'security')
+            )
+        );
 
         $this->om->persist($user);
         $this->om->flush();
@@ -478,7 +494,14 @@ class WorkspaceManager implements LoggerAwareInterface
             $user = $workspaceCopy->getCreator();
             $user->addRole($managerRole);
             $this->om->persist($user);
-            $this->dispatcher->dispatch(SecurityEvents::ADD_ROLE, AddRoleEvent::class, [$user, $managerRole]);
+            $this->messageBus->dispatch(
+                new AddRoleMessage(
+                    $user->getId(),
+                    $this->security->getUser()->getId(),
+                    'event.security.add_role',
+                    $this->translator->trans('addRole', ['username' => $user->getUsername(), 'role' => $managerRole->getName()], 'security')
+                )
+            );
         }
 
         $root = $this->resourceManager->getWorkspaceRoot($workspaceCopy);

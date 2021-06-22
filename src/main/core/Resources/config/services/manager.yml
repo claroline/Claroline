@@ -100,9 +100,8 @@ services:
             - '@Claroline\CoreBundle\Manager\Template\TemplateManager'
             - '@Claroline\CoreBundle\Manager\LocaleManager'
             - '@Claroline\CoreBundle\Manager\UserManager'
-            - '@Claroline\AppBundle\Event\StrictDispatcher'
             - '@messenger.default_bus'
-            - '@security.helper'
+            - '@translator'
 
     Claroline\CoreBundle\Manager\LogManager:
         arguments:
@@ -197,6 +196,8 @@ services:
             - '@Claroline\AppBundle\Event\StrictDispatcher'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@service_container'
+            - '@messenger.default_bus'
+            - '@security.helper'
         calls:
             - setLogger: [ '@logger' ]
 

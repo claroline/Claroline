@@ -8,14 +8,11 @@ use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\PatchEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
-use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AuthenticationBundle\Security\Authentication\Authenticator;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
-use Claroline\CoreBundle\Event\Security\NewPasswordEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Configuration\PlatformDefaults;
 use Claroline\CoreBundle\Manager\MailManager;
@@ -24,9 +21,12 @@ use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Claroline\CoreBundle\Security\PlatformRoles;
+use Claroline\LogBundle\Messenger\Security\Message\NewPasswordMessage;
 use Icap\NotificationBundle\Manager\NotificationUserParametersManager;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class UserCrud
 {
@@ -50,8 +50,10 @@ class UserCrud
     private $workspaceManager;
     /** @var NotificationUserParametersManager */
     private $notificationManager;
-    /** @var StrictDispatcher */
-    private $dispatcher;
+    /** @var MessageBusInterface */
+    private $messageBus;
+    /** @var TranslatorInterface */
+    private $translator;
 
     public function __construct(
         TokenStorageInterface $tokenStorage,
@@ -64,7 +66,8 @@ class UserCrud
         OrganizationManager $organizationManager,
         WorkspaceManager $workspaceManager,
         NotificationUserParametersManager $notificationManager,
-        StrictDispatcher $dispatcher
+        MessageBusInterface $messageBus,
+        TranslatorInterface $translator
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->authenticator = $authenticator;
@@ -76,7 +79,8 @@ class UserCrud
         $this->organizationManager = $organizationManager;
         $this->workspaceManager = $workspaceManager;
         $this->notificationManager = $notificationManager;
-        $this->dispatcher = $dispatcher;
+        $this->messageBus = $messageBus;
+        $this->translator = $translator;
     }
 
     public function preCreate(CreateEvent $event)
@@ -230,7 +234,12 @@ class UserCrud
         $user = $event->getObject();
 
         if ($user->getPlainpassword()) {
-            $this->dispatcher->dispatch(SecurityEvents::NEW_PASSWORD, NewPasswordEvent::class, [$user]);
+            $this->messageBus->dispatch(new NewPasswordMessage(
+                $user->getId(),
+                $user->getId(),
+                'event.security.new_password',
+                $this->translator->trans('newPassword', ['username' => $user->getUsername()], 'security')
+            ));
         }
     }
 
