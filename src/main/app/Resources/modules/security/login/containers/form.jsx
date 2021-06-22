@@ -16,6 +16,7 @@ const LoginForm = withReducer(selectors.STORE_NAME, reducer)(
       help: configSelectors.param(state, 'authentication.help'),
       registration: configSelectors.param(state, 'selfRegistration'),
       resetPassword: configSelectors.param(state, 'authentication.changePassword'),
+      internalAccount: selectors.internalAccount(state),
       sso: selectors.sso(state)
     }),
     (dispatch) => ({
