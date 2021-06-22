@@ -34,7 +34,9 @@ class SamlSsoListener
             }
 
             $event->setResponse([
-                'sso' => $sso,
+                'authentication' => [
+                    'sso' => $sso,
+                ],
             ]);
         }
     }

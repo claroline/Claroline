@@ -71,7 +71,7 @@ class PlatformConfigurationHandler
                 // check if there is a custom configuration for this domain
                 if ($callerDomain && !empty($callerDomain['config']) && ArrayUtils::has($callerDomain['config'], $parameter)) {
                     $value = ArrayUtils::get($callerDomain['config'], $parameter);
-                    if (ArrayUtils::isAssociative($value)) {
+                    if (is_array($value) && ArrayUtils::isAssociative($value)) {
                         // merge the domain param with the default one in order to get the full value
                         // even if the domain does not override the full array
                         $appValue = $this->getParameter($parameter, false);
