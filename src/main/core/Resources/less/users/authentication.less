@@ -113,6 +113,21 @@
     .account-authentication-column {
         + .external-authentication-column {
             border-left: 1px solid @panel-default-border;
+            background-color: @panel-footer-bg;
+
+            // create shadow for the "or" circle
+            &::before {
+                position: absolute;
+                content: " ";
+                left: 0;
+                top: 50%;
+                transform: translate(0, -50%);
+
+                height: @auth-or-size;
+                width: floor(@auth-or-size / 2);
+                border: 1px solid @panel-default-border;
+                border-radius: 0 floor(@auth-or-size / 2) floor(@auth-or-size / 2) 0;
+            }
         }
     }
 
@@ -135,22 +150,6 @@
         height: @auth-or-size;
         width: @auth-or-size;
     }
-
-    .external-authentication-column {
-        background-color: @panel-footer-bg;
-        &::before {
-            position: absolute;
-            content: " ";
-            left: 0;
-            top: 50%;
-            transform: translate(0, -50%);
-
-            height: @auth-or-size;
-            width: floor(@auth-or-size / 2);
-            border: 1px solid @panel-default-border;
-            border-radius: 0 floor(@auth-or-size / 2) floor(@auth-or-size / 2) 0;
-        }
-    }
 }
 
 @media (max-width: @screen-sm-min) {
@@ -159,12 +158,29 @@
     .login-container {
         flex-direction: column;
 
+        +.login-with-sso {
+            max-width: floor(@login-max-width / 2);
+        }
+
         .account-authentication-column {
             padding-bottom: 45px;
 
             + .external-authentication-column {
                 border-left: none;
                 border-top: 1px solid @panel-default-border;
+                padding-top: 45px;
+
+                // create shadow for the "or" circle
+                &::before {
+                    position: absolute;
+                    content: " ";
+                    left: 50%;
+                    top: 0;
+                    width: @auth-or-size;
+                    height: floor(@auth-or-size / 2);
+                    transform: translate(-50%, 0);
+                    border-radius: 0 0 floor(@auth-or-size / 2) floor(@auth-or-size / 2);
+                }
             }
         }
 
@@ -175,17 +191,9 @@
             transform: translate(50%, 50%);
         }
 
-        .external-authentication-column {
-            padding-top: 45px;
-            &::before {
-                position: absolute;
-                content: " ";
-                left: 50%;
-                top: 0;
-                width: @auth-or-size;
-                height: floor(@auth-or-size / 2);
-                transform: translate(-50%, 0);
-                border-radius: 0 0 floor(@auth-or-size / 2) floor(@auth-or-size / 2);
+        .btn-registration {
+            &.login-with-sso {
+                max-width: floor(@login-max-width / 2);
             }
         }
     }
@@ -193,6 +201,7 @@
 
 .btn-registration {
     align-self: center;
+    margin-bottom: @component-margin-bottom;
     // for cases when the auth block is not displayed in the login page
     max-width: floor(@login-max-width / 2);
     &.login-with-sso {

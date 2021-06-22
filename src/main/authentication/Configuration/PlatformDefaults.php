@@ -15,7 +15,7 @@ use Claroline\CoreBundle\Library\Configuration\ParameterProviderInterface;
 
 class PlatformDefaults implements ParameterProviderInterface
 {
-    const DEFAULT_REDIRECT_OPTION = 'DESKTOP';
+    const DEFAULT_REDIRECT_OPTION = 'LAST';
 
     const REDIRECT_OPTIONS = [
         'DESKTOP' => 'DESKTOP',
@@ -28,10 +28,17 @@ class PlatformDefaults implements ParameterProviderInterface
     {
         $parameters = [
             'authentication' => [
+                // a html text to display with the login form
                 'help' => null,
+                // allow users to change their own password
                 'changePassword' => true,
+                // display a form to login into the app using a claroline user
+                'internalAccount' => true,
+                // configure how the user is redirected after successful login
                 'redirect_after_login_option' => self::DEFAULT_REDIRECT_OPTION,
                 'redirect_after_login_url' => null,
+                // when true, it will automatically try to link on existing claroline account
+                // when a user log with an oauth account for the first time
                 'direct_third_party' => false,
             ],
             'external_authentication' => [],
