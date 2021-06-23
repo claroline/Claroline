@@ -26,7 +26,9 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\Crud'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-            - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - '@messenger.default_bus'
+            - '@security.helper'
+            - '@translator'
 
     claroline.manager.user_manager:
         alias: Claroline\CoreBundle\Manager\UserManager
@@ -118,7 +120,8 @@ services:
             - '@Claroline\CoreBundle\Manager\Workspace\EvaluationManager'
             - '@claroline.manager.resource_evaluation_manager'
             - '@translator'
-            - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - '@messenger.default_bus'
+            - '@security.helper'
 
     Claroline\CoreBundle\Manager\LockManager:
         arguments:

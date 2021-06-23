@@ -13,17 +13,18 @@ namespace Claroline\CoreBundle\Manager;
 
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
-use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
-use Claroline\CoreBundle\Event\Security\UserDisableEvent;
-use Claroline\CoreBundle\Event\Security\UserEnableEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Repository\User\RoleRepository;
 use Claroline\CoreBundle\Repository\User\UserRepository;
+use Claroline\LogBundle\Messenger\Security\Message\UserDisableMessage;
+use Claroline\LogBundle\Messenger\Security\Message\UserEnableMessage;
+use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Security\Core\Security;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class UserManager
 {
@@ -37,19 +38,27 @@ class UserManager
     private $userRepo;
     /** @var RoleRepository */
     private $roleRepo;
-    /** @var StrictDispatcher */
-    private $dispatcher;
+    /** @var MessageBusInterface */
+    private $messageBus;
+    /** @var Security */
+    private $security;
+    /** @var TranslatorInterface */
+    private $translator;
 
     public function __construct(
         ObjectManager $om,
         Crud $crud,
         PlatformConfigurationHandler $platformConfigHandler,
-        StrictDispatcher $dispatcher
+        MessageBusInterface $messageBus,
+        Security $security,
+        TranslatorInterface $translator
     ) {
         $this->crud = $crud;
         $this->om = $om;
         $this->platformConfigHandler = $platformConfigHandler;
-        $this->dispatcher = $dispatcher;
+        $this->messageBus = $messageBus;
+        $this->security = $security;
+        $this->translator = $translator;
 
         $this->userRepo = $om->getRepository(User::class);
         $this->roleRepo = $om->getRepository(Role::class);
@@ -257,7 +266,12 @@ class UserManager
         $this->om->persist($user);
         $this->om->flush();
 
-        $this->dispatcher->dispatch(SecurityEvents::USER_ENABLE, UserEnableEvent::class, [$user]);
+        $this->messageBus->dispatch(new UserEnableMessage(
+            $user->getId(),
+            $this->security->getUser()->getId(),
+            'event.security.user_enable',
+            $this->translator->trans('userEnable', ['username' => $user->getUsername()], 'security')
+        ));
 
         return $user;
     }
@@ -268,7 +282,12 @@ class UserManager
         $this->om->persist($user);
         $this->om->flush();
 
-        $this->dispatcher->dispatch(SecurityEvents::USER_DISABLE, UserDisableEvent::class, [$user]);
+        $this->messageBus->dispatch(new UserDisableMessage(
+            $user->getId(),
+            $this->security->getUser()->getId(),
+            'event.security.user_disable',
+            $this->translator->trans('userDisable', ['username' => $user->getUsername()], 'security')
+        ));
 
         return $user;
     }

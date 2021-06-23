@@ -11,14 +11,13 @@
 
 namespace Claroline\AuthenticationBundle\Security\Authentication;
 
-use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
-use Claroline\CoreBundle\Event\Security\UserLoginEvent;
 use Claroline\CoreBundle\Listener\AuthenticationSuccessListener;
 use Claroline\CoreBundle\Security\PlatformRoles;
+use Claroline\LogBundle\Messenger\Security\Message\UserLoginMessage;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\SwitchUserToken;
@@ -27,6 +26,7 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Allows to manually manage user authentication and token.
@@ -45,8 +45,10 @@ class Authenticator
     private $authenticationHandler;
     /** @var UserProviderInterface */
     private $userRepo;
-    /** @var StrictDispatcher */
-    private $eventDispatcher;
+    /** @var MessageBusInterface */
+    private $messageBus;
+    /** @var TranslatorInterface */
+    private $translator;
 
     public function __construct(
         string $secret,
@@ -54,14 +56,16 @@ class Authenticator
         ObjectManager $om,
         EncoderFactoryInterface $encodeFactory,
         AuthenticationSuccessListener $authenticationHandler,
-        StrictDispatcher $eventDispatcher
+        MessageBusInterface $messageBus,
+        TranslatorInterface $translator
     ) {
         $this->secret = $secret;
         $this->tokenStorage = $tokenStorage;
         $this->om = $om;
         $this->encodeFactory = $encodeFactory;
         $this->authenticationHandler = $authenticationHandler;
-        $this->eventDispatcher = $eventDispatcher;
+        $this->messageBus = $messageBus;
+        $this->translator = $translator;
 
         $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
     }
@@ -86,7 +90,12 @@ class Authenticator
         if ($passwordValidated) {
             $this->createToken($user);
 
-            $this->eventDispatcher->dispatch(SecurityEvents::USER_LOGIN, UserLoginEvent::class, [$user]);
+            $this->messageBus->dispatch(new UserLoginMessage(
+                $user->getId(),
+                $this->tokenStorage->getToken()->getUser()->getId(),
+                'event.security.user_login',
+                $this->translator->trans('userLogin', ['username' => $user->getUsername()], 'security')
+            ));
 
             return $user;
         }

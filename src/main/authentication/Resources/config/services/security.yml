@@ -12,7 +12,8 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@security.encoder_factory'
             - '@Claroline\CoreBundle\Listener\AuthenticationSuccessListener'
-            - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - '@messenger.default_bus'
+            - '@translator'
 
     Claroline\AuthenticationBundle\Security\Authentication\Guard\IpAuthenticator:
         arguments:
@@ -39,7 +40,8 @@ services:
         arguments:
             - '@session'
             - '@Claroline\AuthenticationBundle\Security\Oauth\Hwi\ResourceOwnerFactory'
-            - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - '@messenger.default_bus'
+            - '@translator'
 
     Claroline\AuthenticationBundle\Security\Oauth\OauthUserProvider:
         arguments:
@@ -49,7 +51,8 @@ services:
 
     Claroline\AuthenticationBundle\Security\Logout\LogoutHandler:
         arguments:
-            - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - '@messenger.default_bus'
+            - '@translator'
 
     guzzle_client.hwi_oauth:
         class: Http\Adapter\Guzzle6\Client

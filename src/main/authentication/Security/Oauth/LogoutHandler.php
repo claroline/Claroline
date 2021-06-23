@@ -11,17 +11,17 @@
 
 namespace Claroline\AuthenticationBundle\Security\Oauth;
 
-use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AuthenticationBundle\Security\Oauth\Hwi\ResourceOwnerFactory;
-use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
-use Claroline\CoreBundle\Event\Security\UserLogoutEvent;
+use Claroline\LogBundle\Messenger\Security\Message\UserLogoutMessage;
 use HWI\Bundle\OAuthBundle\OAuth\ResourceOwner\AbstractResourceOwner;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Logout\LogoutHandlerInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class LogoutHandler implements LogoutHandlerInterface
 {
@@ -32,13 +32,19 @@ class LogoutHandler implements LogoutHandlerInterface
 
     private $resourceOwnerFactory;
 
-    private $eventDispatcher;
+    private $messageBus;
+    private $translator;
 
-    public function __construct(SessionInterface $session, ResourceOwnerFactory $resourceOwnerFactory, StrictDispatcher $eventDispatcher)
-    {
+    public function __construct(
+        SessionInterface $session,
+        ResourceOwnerFactory $resourceOwnerFactory,
+        MessageBusInterface $messageBus,
+        TranslatorInterface $translator
+    ) {
         $this->session = $session;
         $this->resourceOwnerFactory = $resourceOwnerFactory;
-        $this->eventDispatcher = $eventDispatcher;
+        $this->messageBus = $messageBus;
+        $this->translator = $translator;
     }
 
     /**
@@ -60,7 +66,12 @@ class LogoutHandler implements LogoutHandlerInterface
                 // Do nothing
             }
 
-            $this->eventDispatcher->dispatch(SecurityEvents::USER_LOGOUT, UserLogoutEvent::class, [$token->getUser()]);
+            $this->messageBus->dispatch(new UserLogoutMessage(
+               $token->getUser()->getId(),
+               $token->getUser()->getId(),
+                'event.security.user_logout',
+                $this->translator->trans('userLogout', ['username' => $token->getUser()->getUsername()], 'security')
+            ));
         }
     }
 }

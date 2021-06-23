@@ -49,7 +49,7 @@ services:
             - '@Claroline\AuthenticationBundle\Security\Authentication\Authenticator'
             - '@Claroline\CoreBundle\Manager\RoleManager'
             - '@messenger.default_bus'
-            - '@security.helper'
+            - '@translator'
         tags:
             - { name: kernel.event_listener, event: crud_pre_create_object_claroline_corebundle_entity_role, method: preCreate }
             - { name: kernel.event_listener, event: crud_post_create_object_claroline_corebundle_entity_role, method: postCreate }

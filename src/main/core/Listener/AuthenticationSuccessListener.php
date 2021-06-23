@@ -18,21 +18,22 @@ use Claroline\AppBundle\Manager\PlatformManager;
 use Claroline\AuthenticationBundle\Configuration\PlatformDefaults;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
 use Claroline\CoreBundle\Event\GenericDataEvent;
-use Claroline\CoreBundle\Event\Security\UserLoginEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\RoutingHelper;
 use Claroline\CoreBundle\Manager\ConnectionMessageManager;
 use Claroline\CoreBundle\Manager\Tool\ToolManager;
 use Claroline\CoreBundle\Manager\UserManager;
+use Claroline\LogBundle\Messenger\Security\Message\UserLoginMessage;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInterface
 {
@@ -54,6 +55,10 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
     private $toolManager;
     /** @var ConnectionMessageManager */
     private $messageManager;
+    /** @var MessageBusInterface */
+    private $messageBus;
+    /** @var TranslatorInterface */
+    private $translator;
 
     public function __construct(
         TokenStorageInterface $tokenStorage,
@@ -64,7 +69,9 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
         PlatformManager $platformManager,
         UserManager $userManager,
         ToolManager $toolManager,
-        ConnectionMessageManager $messageManager
+        ConnectionMessageManager $messageManager,
+        MessageBusInterface $messageBus,
+        TranslatorInterface $translator
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->config = $config;
@@ -75,6 +82,8 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
         $this->userManager = $userManager;
         $this->toolManager = $toolManager;
         $this->messageManager = $messageManager;
+        $this->messageBus = $messageBus;
+        $this->translator = $translator;
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token): Response
@@ -88,7 +97,12 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
             $request->setLocale($user->getLocale());
         }
 
-        $this->eventDispatcher->dispatch(SecurityEvents::USER_LOGIN, UserLoginEvent::class, [$user]);
+        $this->messageBus->dispatch(new UserLoginMessage(
+           $user->getId(),
+           $this->tokenStorage->getToken()->getUser()->getId(),
+           'event.security.user_login',
+            $this->translator->trans('userLogin', ['username' => $user->getUsername()], 'security')
+        ));
 
         $redirect = $this->getRedirection($request);
 

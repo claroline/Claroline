@@ -223,7 +223,8 @@ services:
             - '@security.token_storage'
             - '@Claroline\AuthenticationBundle\Security\Authentication\Authenticator'
             - '@claroline.manager.role_manager'
-            - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - '@messenger.default_bus'
+            - '@translator'
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onViewAs, priority: 2 }
 
@@ -256,6 +257,8 @@ services:
             - '@Claroline\CoreBundle\Manager\UserManager'
             - '@Claroline\CoreBundle\Manager\Tool\ToolManager'
             - '@Claroline\CoreBundle\Manager\ConnectionMessageManager'
+            - '@messenger.default_bus'
+            - '@translator'
 
     Claroline\CoreBundle\Listener\Entity\UserListener:
         arguments:

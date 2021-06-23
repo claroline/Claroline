@@ -12,21 +12,22 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
-use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AuthenticationBundle\Security\Authentication\Authenticator;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
-use Claroline\CoreBundle\Event\Security\ValidateEmailEvent;
 use Claroline\CoreBundle\Library\RoutingHelper;
 use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\UserManager;
+use Claroline\LogBundle\Messenger\Security\Message\ValidateEmailMessage;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Security;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AuthenticationController
 {
@@ -37,7 +38,9 @@ class AuthenticationController
     private $mailManager;
     private $routingHelper;
     private $authenticator;
-    private $eventDispatcher;
+    private $messageBus;
+    private $security;
+    private $translator;
 
     public function __construct(
         UserManager $userManager,
@@ -45,14 +48,18 @@ class AuthenticationController
         MailManager $mailManager,
         RoutingHelper $routingHelper,
         Authenticator $authenticator,
-        StrictDispatcher $eventDispatcher
+        MessageBusInterface $messageBus,
+        Security $security,
+        TranslatorInterface $translator
     ) {
         $this->userManager = $userManager;
         $this->om = $om;
         $this->mailManager = $mailManager;
         $this->routingHelper = $routingHelper;
         $this->authenticator = $authenticator;
-        $this->eventDispatcher = $eventDispatcher;
+        $this->messageBus = $messageBus;
+        $this->security = $security;
+        $this->translator = $translator;
     }
 
     /**
@@ -147,7 +154,12 @@ class AuthenticationController
             throw new NotFoundHttpException('User not found.');
         }
 
-        $this->eventDispatcher->dispatch(SecurityEvents::VALIDATE_EMAIL, ValidateEmailEvent::class, [$this->userManager->getByEmailValidationHash($hash)]);
+        $this->messageBus->dispatch(new ValidateEmailMessage(
+            $this->userManager->getByEmailValidationHash($hash)->getId(),
+            $this->security->getUser()->getId(),
+            'event.security.validate_email',
+            $this->translator->trans('validateEmail', ['username' => $this->userManager->getByEmailValidationHash($hash)->getUsername()], 'security')
+        ));
 
         return new RedirectResponse(
             $this->routingHelper->indexPath()

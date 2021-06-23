@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Manager;
 
 use Claroline\AppBundle\API\FinderProvider;
-use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Log\Connection\AbstractLogConnect;
 use Claroline\CoreBundle\Entity\Log\Connection\LogConnectAdminTool;
@@ -26,16 +25,17 @@ use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
 use Claroline\CoreBundle\Event\Log\LogAdminToolReadEvent;
 use Claroline\CoreBundle\Event\Log\LogDesktopToolReadEvent;
 use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceEnterEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceToolReadEvent;
-use Claroline\CoreBundle\Event\Security\UserLoginEvent;
 use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
 use Claroline\CoreBundle\Manager\Workspace\EvaluationManager;
 use Claroline\CoreBundle\Repository\Tool\OrderedToolRepository;
+use Claroline\LogBundle\Messenger\Security\Message\UserLoginMessage;
+use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -43,6 +43,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class LogConnectManager
 {
+    private const USER_LOGIN = 'event.security.user_login';
+
     /** @var FinderProvider */
     private $finder;
 
@@ -58,6 +60,12 @@ class LogConnectManager
     /** @var TranslatorInterface */
     private $translator;
 
+    /** @var MessageBusInterface */
+    private $messageBus;
+
+    /** @var Security */
+    private $security;
+
     private $logRepo;
     /** @var OrderedToolRepository */
     private $orderedToolRepo;
@@ -69,7 +77,6 @@ class LogConnectManager
     private $logToolRepo;
     private $logResourceRepo;
     private $logAdminToolRepo;
-    private $eventDispatcher;
 
     public function __construct(
         FinderProvider $finder,
@@ -77,14 +84,16 @@ class LogConnectManager
         EvaluationManager $workspaceEvaluationManager,
         ResourceEvaluationManager $resourceEvaluationManager,
         TranslatorInterface $translator,
-        StrictDispatcher $eventDispatcher
+        MessageBusInterface $messageBus,
+        Security $security
     ) {
         $this->finder = $finder;
         $this->om = $om;
         $this->workspaceEvaluationManager = $workspaceEvaluationManager;
         $this->resourceEvaluationManager = $resourceEvaluationManager;
         $this->translator = $translator;
-        $this->eventDispatcher = $eventDispatcher;
+        $this->messageBus = $messageBus;
+        $this->security = $security;
 
         $this->logRepo = $om->getRepository(Log::class);
         $this->orderedToolRepo = $om->getRepository(OrderedTool::class);
@@ -106,13 +115,18 @@ class LogConnectManager
 
         if (!is_null($user)) {
             switch ($action) {
-                case SecurityEvents::USER_LOGIN:
+                case self::USER_LOGIN:
                     $this->om->startFlushSuite();
 
                     $this->createLogConnectPlatform($user, $dateLog);
 
                     $this->om->endFlushSuite();
-                    $this->eventDispatcher->dispatch(SecurityEvents::USER_LOGIN, UserLoginEvent::class, [$user]);
+                    $this->messageBus->dispatch(new UserLoginMessage(
+                        $user->getId(),
+                        $this->security->getUser()->getId(),
+                        'event.security.user_login',
+                        $this->translator->trans('userLogin', ['username' => $user->getUsername()], 'security')
+                    ));
                     break;
                 case LogWorkspaceEnterEvent::ACTION:
                     $this->om->startFlushSuite();

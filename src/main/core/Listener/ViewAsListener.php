@@ -11,15 +11,15 @@
 
 namespace Claroline\CoreBundle\Listener;
 
-use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AuthenticationBundle\Security\Authentication\Authenticator;
-use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
-use Claroline\CoreBundle\Event\Security\ViewAsEvent;
 use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\LogBundle\Messenger\Security\Message\ViewAsMessage;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ViewAsListener
 {
@@ -31,21 +31,25 @@ class ViewAsListener
     private $authenticator;
     /** @var RoleManager */
     private $roleManager;
-    /** @var StrictDispatcher */
-    private $eventDispatcher;
+    /** @var MessageBusInterface */
+    private $messageBus;
+    /** @var TranslatorInterface */
+    private $translator;
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         TokenStorageInterface $tokenStorage,
         Authenticator $authenticator,
         RoleManager $roleManager,
-        StrictDispatcher $eventDispatcher
+        MessageBusInterface $messageBus,
+        TranslatorInterface $translator
     ) {
         $this->authorization = $authorization;
         $this->tokenStorage = $tokenStorage;
         $this->authenticator = $authenticator;
         $this->roleManager = $roleManager;
-        $this->eventDispatcher = $eventDispatcher;
+        $this->messageBus = $messageBus;
+        $this->translator = $translator;
     }
 
     public function onViewAs(RequestEvent $event)
@@ -81,7 +85,13 @@ class ViewAsListener
                             $this->authenticator->createAnonymousToken();
                         } else {
                             $this->authenticator->createToken($this->tokenStorage->getToken()->getUser(), ['ROLE_USER', $viewAs, 'ROLE_USURPATE_WORKSPACE_ROLE']);
-                            $this->eventDispatcher->dispatch(SecurityEvents::VIEW_AS, ViewAsEvent::class, [$this->tokenStorage->getToken()->getUser(), $viewAs]);
+                            $user = $this->tokenStorage->getToken()->getUser();
+                            $this->messageBus->dispatch(new ViewAsMessage(
+                                $user->getId(),
+                                $user->getId(),
+                               'event.security.view_as',
+                               $this->translator->trans('viewAs', ['username' => $user->getUsername(), 'role' => $viewAs], 'security')
+                            ));
                         }
                     } else {
                         throw new AccessDeniedException(sprintf('You do not have the right to usurp the role %s.', $viewAs));

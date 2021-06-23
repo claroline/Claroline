@@ -274,7 +274,9 @@ services:
           - '@Claroline\CoreBundle\Manager\MailManager'
           - '@Claroline\CoreBundle\Library\RoutingHelper'
           - '@Claroline\AuthenticationBundle\Security\Authentication\Authenticator'
-          - '@Claroline\AppBundle\Event\StrictDispatcher'
+          - '@messenger.default_bus'
+          - '@security.helper'
+          - '@translator'
 
     Claroline\CoreBundle\Controller\DesktopController:
         arguments:
