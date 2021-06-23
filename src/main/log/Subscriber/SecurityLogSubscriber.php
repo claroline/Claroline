@@ -2,10 +2,11 @@
 
 namespace Claroline\LogBundle\Subscriber;
 
-use Claroline\LogBundle\Entity\SecurityLog;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
-use Doctrine\ORM\EntityManagerInterface;
+use Claroline\LogBundle\Entity\SecurityLog;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\SwitchUserToken;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Http\Event\SwitchUserEvent;
@@ -14,17 +15,20 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SecurityLogSubscriber implements EventSubscriberInterface
 {
-    private $em;
+    private $om;
     private $security;
+    private $requestStack;
     private $translator;
 
     public function __construct(
-        EntityManagerInterface $em,
+        ObjectManager $om,
         Security $security,
+        RequestStack $requestStack,
         TranslatorInterface $translator
     ) {
-        $this->em = $em;
+        $this->om = $om;
         $this->security = $security;
+        $this->requestStack = $requestStack;
         $this->translator = $translator;
     }
 
@@ -53,9 +57,10 @@ class SecurityLogSubscriber implements EventSubscriberInterface
         $logEntry->setEvent($eventName);
         $logEntry->setTarget($event->getUser());
         $logEntry->setDoer($this->security->getUser() ?? $event->getUser());
+        $logEntry->setDoerIp($this->getDoerIp());
 
-        $this->em->persist($logEntry);
-        $this->em->flush();
+        $this->om->persist($logEntry);
+        $this->om->flush();
     }
 
     public function logEventSwitchUser(SwitchUserEvent $event, string $eventName): void
@@ -73,9 +78,22 @@ class SecurityLogSubscriber implements EventSubscriberInterface
             $logEntry->setEvent($eventName);
             $logEntry->setTarget($event->getTargetUser());
             $logEntry->setDoer($this->security->getUser());
+            $logEntry->setDoerIp($this->getDoerIp());
 
-            $this->em->persist($logEntry);
-            $this->em->flush();
+            $this->om->persist($logEntry);
+            $this->om->flush();
         }
+    }
+
+    private function getDoerIp(): string
+    {
+        $doerIp = 'CLI';
+
+        $request = $this->requestStack->getCurrentRequest();
+        if ($request) {
+            $doerIp = $request->getClientIp();
+        }
+
+        return $doerIp;
     }
 }

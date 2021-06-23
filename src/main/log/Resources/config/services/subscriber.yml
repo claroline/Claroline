@@ -1,15 +1,16 @@
 services:
     Claroline\LogBundle\Subscriber\SecurityLogSubscriber:
         arguments:
-            - '@doctrine.orm.entity_manager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@security.helper'
+            - '@request_stack'
             - '@translator'
         tags:
             - { name: kernel.event_subscriber }
 
     Claroline\LogBundle\Subscriber\FunctionalLogSubscriber:
         arguments:
-            - '@doctrine.orm.entity_manager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@translator'
         tags:
             - { name: kernel.event_subscriber }

@@ -41,6 +41,11 @@ const SecurityLogList = (props) =>
         options: {
           domain: 'security'
         }
+      }, {
+        name: 'doer_ip',
+        label: trans('ip_address'),
+        type: 'ip',
+        displayed: false
       }
     ]}
   />
