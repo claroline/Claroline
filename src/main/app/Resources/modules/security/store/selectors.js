@@ -78,6 +78,18 @@ const hasAdministration = createSelector(
   (store) => store.administration
 )
 
+const clientIp = createSelector(
+  [store],
+  (store) => {
+    let ip = store.client.ip
+    if (store.client.forwarded) {
+      ip += ' / ' + store.client.forwarded
+    }
+
+    return ip
+  }
+)
+
 export const selectors = {
   STORE_NAME,
 
@@ -87,5 +99,6 @@ export const selectors = {
   isImpersonated,
   isAuthenticated,
   isAdmin,
-  hasAdministration
+  hasAdministration,
+  clientIp
 }

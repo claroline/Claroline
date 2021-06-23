@@ -2,7 +2,7 @@ import {connect} from 'react-redux'
 
 import {trans} from '#/main/app/intl/translation'
 import {withReducer} from '#/main/app/store/components/withReducer'
-import {actions as securityActions} from '#/main/app/security/store'
+import {actions as securityActions, selectors as securitySelectors} from '#/main/app/security/store'
 import {selectors as configSelectors} from '#/main/app/config/store'
 import {actions as formActions, selectors as formSelectors} from '#/main/app/content/form/store'
 
@@ -17,7 +17,9 @@ const LoginForm = withReducer(selectors.STORE_NAME, reducer)(
       registration: configSelectors.param(state, 'selfRegistration'),
       resetPassword: configSelectors.param(state, 'authentication.changePassword'),
       internalAccount: selectors.internalAccount(state),
-      sso: selectors.sso(state)
+      showClientIp: selectors.showClientIp(state),
+      sso: selectors.sso(state),
+      clientIp: securitySelectors.clientIp(state)
     }),
     (dispatch) => ({
       login(callback) {

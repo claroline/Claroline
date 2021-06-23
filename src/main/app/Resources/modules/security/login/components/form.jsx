@@ -143,6 +143,12 @@ class LoginForm extends Component {
           }
         </div>
 
+        {this.props.showClientIp &&
+          <div className={classes('authentication-client-ip', {
+            'login-with-sso': this.props.internalAccount && otherSso.length
+          })}>{trans('location')} : {this.props.clientIp}</div>
+        }
+
         {this.props.registration &&
           <Button
             className={classes('btn btn-lg btn-block btn-registration', {
@@ -162,6 +168,8 @@ LoginForm.propTypes = {
   platformName: T.string.isRequired,
   help: T.string,
   internalAccount: T.bool.isRequired,
+  showClientIp: T.bool.isRequired,
+  clientIp: T.string,
   sso: T.arrayOf(T.shape({
     service: T.string.isRequired,
     label: T.string,

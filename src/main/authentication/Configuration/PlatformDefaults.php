@@ -34,6 +34,8 @@ class PlatformDefaults implements ParameterProviderInterface
                 'changePassword' => true,
                 // display a form to login into the app using a claroline user
                 'internalAccount' => true,
+                // display the client ip on the login page
+                'showClientIp' => false,
                 // configure how the user is redirected after successful login
                 'redirect_after_login_option' => self::DEFAULT_REDIRECT_OPTION,
                 'redirect_after_login_url' => null,

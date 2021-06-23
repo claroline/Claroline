@@ -13,7 +13,8 @@ export default {
     security: {
       impersonated: initialData.impersonated,
       currentUser: initialData.currentUser,
-      administration: initialData.administration
+      administration: initialData.administration,
+      client: initialData.client
     }
   })
 }
