@@ -2,10 +2,10 @@
 
 namespace Claroline\LogBundle\Subscriber;
 
-use Claroline\LogBundle\Entity\FunctionalLog;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Event\CatalogEvents\ResourceEvents;
 use Claroline\CoreBundle\Event\CatalogEvents\ToolEvents;
-use Doctrine\ORM\EntityManagerInterface;
+use Claroline\LogBundle\Entity\FunctionalLog;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -13,11 +13,11 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class FunctionalLogSubscriber implements EventSubscriberInterface
 {
     private $translator;
-    private $em;
+    private $om;
 
-    public function __construct(EntityManagerInterface $em, TranslatorInterface $translator)
+    public function __construct(ObjectManager $om, TranslatorInterface $translator)
     {
-        $this->em = $em;
+        $this->om = $om;
         $this->translator = $translator;
     }
 
@@ -46,8 +46,8 @@ class FunctionalLogSubscriber implements EventSubscriberInterface
                 $logEntry->setWorkspace($event->getWorkspace());
             }
 
-            $this->em->persist($logEntry);
-            $this->em->flush();
+            $this->om->persist($logEntry);
+            $this->om->flush();
         }
 
         if (method_exists($event, 'setData')) {
