@@ -13,6 +13,7 @@ namespace Claroline\AudioPlayerBundle\Security\Voter\Resource;
 
 use Claroline\AudioPlayerBundle\Entity\Resource\AudioParams;
 use Claroline\AudioPlayerBundle\Entity\Resource\Section;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Security\Voter\AbstractVoter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
@@ -48,7 +49,7 @@ class SectionVoter extends AbstractVoter
         $user = $token->getUser();
 
         if ((AudioParams::MANAGER_TYPE === $section->getType() && $this->isGranted(self::EDIT, $resourceNode)) ||
-            (AudioParams::USER_TYPE === $section->getType() && 'anon.' !== $user && $this->isGranted(self::OPEN, $resourceNode))
+            (AudioParams::USER_TYPE === $section->getType() && $user instanceof User && $this->isGranted(self::OPEN, $resourceNode))
         ) {
             return VoterInterface::ACCESS_GRANTED;
         }
@@ -65,7 +66,7 @@ class SectionVoter extends AbstractVoter
         if ((AudioParams::MANAGER_TYPE === $section->getType() && $this->isGranted(self::EDIT, $resourceNode)) ||
             (
                 AudioParams::USER_TYPE === $section->getType() &&
-                'anon.' !== $user &&
+                $user instanceof User &&
                 $this->isGranted(self::OPEN, $resourceNode) &&
                 $sectionUser &&
                 $sectionUser->getUuid() === $user->getUuid()

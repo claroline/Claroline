@@ -11,6 +11,7 @@
 
 namespace Claroline\PlannedNotificationBundle\Listener;
 
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Claroline\CoreBundle\Event\Log\LogRoleSubscribeEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceEnterEvent;
@@ -50,7 +51,7 @@ class LogListener
         } elseif ($event instanceof LogWorkspaceEnterEvent) {
             $user = $this->tokenStorage->getToken()->getUser();
 
-            if ('anon.' !== $user) {
+            if ($user instanceof User) {
                 $this->manager->generateScheduledTasks($event->getAction(), $user, $event->getWorkspace());
             }
         }

@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Command\Logs;
 
-use Claroline\AppBundle\Command\BaseCommandTrait;
 use Claroline\CoreBundle\Manager\LogManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -20,8 +19,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class LogsFetcherCommand extends Command
 {
-    use BaseCommandTrait;
-
     private $logManager;
 
     public function __construct(LogManager $logManager)

@@ -12,6 +12,7 @@
 namespace Claroline\ClacoFormBundle\Security\Voter;
 
 use Claroline\ClacoFormBundle\Entity\Entry;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Security\Voter\AbstractVoter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
@@ -56,14 +57,14 @@ class EntryVoter extends AbstractVoter
         $user = $token->getUser();
 
         if ($this->isGranted(self::EDIT, $clacoForm->getResourceNode()) ||
-            ($clacoForm->isEditionEnabled() && 'anon.' !== $user && $entry->getUser()->getUuid() === $token->getUser()->getUuid())
+            ($clacoForm->isEditionEnabled() && $user instanceof User && $entry->getUser()->getUuid() === $user->getUuid())
         ) {
             return VoterInterface::ACCESS_GRANTED;
-        } elseif ($clacoForm->isEditionEnabled() && 'anon.' !== $user) {
+        } elseif ($clacoForm->isEditionEnabled() && $user instanceof User) {
             $entryUsers = $entry->getEntryUsers();
 
             foreach ($entryUsers as $entryUser) {
-                if ($entryUser->isShared() && $entryUser->getUser()->getUuid() === $token->getUser()->getUuid()) {
+                if ($entryUser->isShared() && $entryUser->getUser()->getUuid() === $user->getUuid()) {
                     return VoterInterface::ACCESS_GRANTED;
                 }
             }

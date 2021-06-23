@@ -123,6 +123,19 @@ class Authenticator
         return $token;
     }
 
+    public function createAdminToken(User $user = null)
+    {
+        if (!empty($user)) {
+            $token = new UsernamePasswordToken($user, $user->getPassword(), 'main', [PlatformRoles::ADMIN]);
+        } else {
+            $token = new UsernamePasswordToken('admin', '', 'main', [PlatformRoles::ADMIN]);
+        }
+
+        $this->tokenStorage->setToken($token);
+
+        return $token;
+    }
+
     public function createToken(UserInterface $user, array $customRoles = [])
     {
         $token = new UsernamePasswordToken($user, $user->getPassword(), 'main', !empty($customRoles) ? $customRoles : $user->getRoles());

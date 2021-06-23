@@ -453,8 +453,7 @@ class WorkspaceSerializer
     private function waitingForRegistration(Workspace $workspace)
     {
         $user = $this->tokenStorage->getToken()->getUser();
-
-        if ('anon.' === $user) {
+        if (!$user instanceof User) {
             return false;
         }
 

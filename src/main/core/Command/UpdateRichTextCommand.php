@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Command;
 
-use Claroline\AppBundle\Command\BaseCommandTrait;
 use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
@@ -25,8 +24,6 @@ use Symfony\Component\Console\Question\Question;
 
 class UpdateRichTextCommand extends Command
 {
-    use BaseCommandTrait;
-
     private $params = [
         'old_string' => 'The string to match',
         'new_string' => 'The string to replace',
