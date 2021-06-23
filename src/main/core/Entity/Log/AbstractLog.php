@@ -26,22 +26,17 @@ class AbstractLog
      * @ORM\Column(type="datetime")
      * @Gedmo\Timestampable(on="create")
      */
-    private $date;
+    protected $date;
 
     /**
      * @ORM\Column(type="text")
      */
-    private $details;
+    protected $details;
 
     /**
      * @ORM\Column(type="string")
      */
-    private $event;
-
-    public function getId(): int
-    {
-        return $this->id;
-    }
+    protected $event;
 
     public function getDate(): \DateTime
     {
