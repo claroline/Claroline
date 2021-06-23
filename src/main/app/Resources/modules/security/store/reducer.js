@@ -15,5 +15,6 @@ export const reducer = combineReducers({
   }),
   administration: makeReducer(false, {
     [SECURITY_USER_CHANGE]: (state, action) => action.administration
-  })
+  }),
+  client: makeReducer({ip: null, forwarded: null})
 })

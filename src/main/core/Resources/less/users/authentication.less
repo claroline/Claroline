@@ -32,6 +32,10 @@
         background: none !important;
         box-shadow: none !important;
     }
+
+    .authentication-client-ip {
+        .text-movie-subtitles();
+    }
 }
 
 
@@ -152,6 +156,19 @@
     }
 }
 
+.authentication-client-ip {
+    font-size: @font-size-small;
+    font-style: italic;
+    text-align: right;
+    max-width: floor(@login-max-width / 2);
+    width: floor(@login-max-width / 2);
+    margin: -(@component-margin-bottom - 5) auto @component-margin-bottom;
+    &.login-with-sso {
+        max-width: @login-max-width;
+        width: @login-max-width;
+    }
+}
+
 @media (max-width: @screen-sm-min) {
     // In screen < SM, Claroline login form and SSO btns
     // are displayed vertically
@@ -190,11 +207,18 @@
             bottom: 0;
             transform: translate(50%, 50%);
         }
+    }
 
-        .btn-registration {
-            &.login-with-sso {
-                max-width: floor(@login-max-width / 2);
-            }
+    .btn-registration {
+        &.login-with-sso {
+            max-width: floor(@login-max-width / 2);
+        }
+    }
+
+    .authentication-client-ip {
+        &.login-with-sso {
+            max-width: floor(@login-max-width / 2);
+            width: floor(@login-max-width / 2);
         }
     }
 }

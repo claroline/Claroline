@@ -28,6 +28,7 @@ class OauthSsoListener
                 'help' => $this->config->getParameter('authentication.help'),
                 'changePassword' => $this->config->getParameter('authentication.changePassword'),
                 'internalAccount' => $this->config->getParameter('authentication.internalAccount'),
+                'showClientIp' => $this->config->getParameter('authentication.showClientIp'),
                 'sso' => array_map(function (array $sso) {
                     return [
                         'service' => $sso['service'],

@@ -12,6 +12,7 @@ use Claroline\CoreBundle\Event\Layout\InjectStylesheetEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Maintenance\MaintenanceHandler;
 use Claroline\CoreBundle\Manager\Tool\ToolManager;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -74,10 +75,8 @@ class ClientController
      * Renders the Claroline web application.
      *
      * @Route("/", name="claro_index")
-     *
-     * @return Response
      */
-    public function indexAction()
+    public function indexAction(Request $request): Response
     {
         $currentUser = null;
         if ($this->tokenStorage->getToken()->getUser() instanceof User) {
@@ -96,7 +95,10 @@ class ClientController
                 'currentUser' => $currentUser,
                 'impersonated' => $this->securityManager->isImpersonated(),
                 'administration' => !empty($this->toolManager->getAdminToolsByRoles($this->tokenStorage->getToken()->getRoleNames())),
-
+                'client' => [
+                    'ip' => $request->getClientIp(),
+                    'forwarded' => $request->server->get('X-Forwarded-For'), // I can only get trusted proxies if I use symfony getClientIps()
+                ],
                 'header' => [
                     'menus' => array_unique(array_values($this->configHandler->getParameter('header'))),
                     'display' => [
@@ -127,10 +129,8 @@ class ClientController
 
     /**
      * Gets the javascript injected by the plugins if any.
-     *
-     * @return string
      */
-    private function injectJavascript()
+    private function injectJavascript(): string
     {
         /** @var InjectJavascriptEvent $event */
         $event = $this->dispatcher->dispatch('layout.inject.javascript', InjectJavascriptEvent::class);
@@ -140,10 +140,8 @@ class ClientController
 
     /**
      * Gets the styles injected by the plugins if any.
-     *
-     * @return string
      */
-    private function injectStylesheet()
+    private function injectStylesheet(): string
     {
         /** @var InjectStylesheetEvent $event */
         $event = $this->dispatcher->dispatch('layout.inject.stylesheet', InjectStylesheetEvent::class);
