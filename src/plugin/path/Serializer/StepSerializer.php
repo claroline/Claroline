@@ -9,6 +9,7 @@ use Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer;
 use Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer;
 use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\User;
 use Innova\PathBundle\Entity\SecondaryResource;
 use Innova\PathBundle\Entity\Step;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -185,7 +186,7 @@ class StepSerializer
     private function serializeUserProgression(Step $step): array
     {
         $user = $this->tokenStorage->getToken()->getUser();
-        $userProgression = 'anon.' !== $user ?
+        $userProgression = $user instanceof User ?
             $this->userProgressionRepo->findOneBy(['step' => $step, 'user' => $user]) :
             null;
 

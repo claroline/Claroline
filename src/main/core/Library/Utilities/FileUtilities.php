@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Library\Utilities;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\File\PublicFileUse;
+use Claroline\CoreBundle\Entity\User;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
@@ -75,8 +76,8 @@ class FileUtilities
         $publicFile->setUrl($url);
         $publicFile->setSourceType($sourceType);
 
-        if ($this->tokenStorage->getToken() && 'anon.' !== $this->tokenStorage->getToken()->getUser()) {
-            $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()->getUser();
+        if ($this->tokenStorage->getToken() && $user instanceof User) {
             $publicFile->setCreator($user);
         }
 
@@ -131,8 +132,8 @@ class FileUtilities
         $publicFile->setUrl($url);
         $publicFile->setSourceType($sourceType);
 
-        if ($this->tokenStorage->getToken() && 'anon.' !== $this->tokenStorage->getToken()->getUser()) {
-            $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()->getUser();
+        if ($this->tokenStorage->getToken() && $user instanceof User) {
             $publicFile->setCreator($user);
         }
 

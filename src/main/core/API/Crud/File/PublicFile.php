@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\API\Crud\File;
 
 use Claroline\AppBundle\Event\Crud\CreateEvent;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Utilities\FileUtilities;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -54,8 +55,9 @@ class PublicFile
         $publicFile->setCreationDate(new \DateTime());
         $publicFile->setUrl($url);
 
-        if (empty($publicFile->getCreator()) && $this->tokenStorage->getToken() && 'anon.' !== $this->tokenStorage->getToken()->getUser()) {
-            $publicFile->setCreator($this->tokenStorage->getToken()->getUser());
+        $user = $this->tokenStorage->getToken()->getUser();
+        if (empty($publicFile->getCreator()) && $user instanceof User) {
+            $publicFile->setCreator($user);
         }
 
         $tmpFile->move($this->filesDir.DIRECTORY_SEPARATOR.$prefix, $hashName);

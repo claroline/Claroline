@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Listener\Log;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Log\Log;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Log\LogAdminToolReadEvent;
 use Claroline\CoreBundle\Event\Log\LogCreateDelegateViewEvent;
 use Claroline\CoreBundle\Event\Log\LogDesktopToolReadEvent;
@@ -89,7 +90,7 @@ class LogListener
                 $doer = null;
                 $doerType = Log::DOER_PLATFORM;
             } else {
-                if ('anon.' === $token->getUser()) {
+                if (!$token->getUser() instanceof User) {
                     $doer = null;
                     $doerType = Log::DOER_ANONYMOUS;
                 } else {

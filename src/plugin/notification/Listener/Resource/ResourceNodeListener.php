@@ -11,6 +11,7 @@
 
 namespace Icap\NotificationBundle\Listener\Resource;
 
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Resource\DecorateResourceNodeEvent;
 use Icap\NotificationBundle\Manager\NotificationManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -41,7 +42,7 @@ class ResourceNodeListener
     {
         $node = $event->getResourceNode();
         $user = $this->tokenStorage->getToken()->getUser();
-        $followResource = 'anon.' !== $user ?
+        $followResource = $user instanceof User ?
             $this->notificationManager->getFollowerResource(
                 $user->getId(),
                 $node->getId(),

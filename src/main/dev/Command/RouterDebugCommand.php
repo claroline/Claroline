@@ -11,7 +11,6 @@
 
 namespace Claroline\DevBundle\Command;
 
-use Claroline\AppBundle\Command\BaseCommandTrait;
 use Claroline\AppBundle\Routing\Finder;
 use Symfony\Bundle\FrameworkBundle\Console\Helper\DescriptorHelper;
 use Symfony\Component\Console\Command\Command;
@@ -22,11 +21,6 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class RouterDebugCommand extends Command
 {
-    use BaseCommandTrait;
-
-    /** @var array */
-    private $params = ['class' => 'The class managed by the api'];
-
     /** @var Finder */
     private $finder;
 

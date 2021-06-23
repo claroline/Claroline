@@ -57,7 +57,7 @@ class PlannedObjectController extends AbstractCrudController
         if (!isset($query['filters']['workspaces'])) {
             /** @var User $user */
             $user = $this->tokenStorage->getToken()->getUser();
-            if ('anon.' !== $user) {
+            if ($user instanceof User) {
                 $hiddenFilters['user'] = $user->getUuid();
             } else {
                 $hiddenFilters['anonymous'] = true;

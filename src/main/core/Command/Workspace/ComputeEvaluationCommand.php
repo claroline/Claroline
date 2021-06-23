@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Command\Workspace;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Command\AdminCliCommand;
 use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\Workspace\Evaluation;
 use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
@@ -21,7 +20,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class ComputeEvaluationCommand extends Command implements AdminCliCommand
+class ComputeEvaluationCommand extends Command
 {
     private $om;
     private $evaluationManager;
