@@ -18,7 +18,7 @@ const Day = props =>
       selected: props.selected && props.current.isSame(props.selected, 'day'),
       fill:     props.month !== props.current.get('month')
     })}
-    disabled={props.current.isBefore(props.calendarRange[0]) || props.current.isAfter(props.calendarRange[1])}
+    disabled={props.current.isBefore(props.calendarRange[0], 'day') || props.current.isAfter(props.calendarRange[1], 'day')}
     callback={() => {
       if (props.month !== props.current.get('month')) {
         // set calendar view to the correct month
