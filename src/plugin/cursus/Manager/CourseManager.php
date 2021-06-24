@@ -67,7 +67,8 @@ class CourseManager
             'course_code' => $course->getCode(),
             'course_description' => $course->getDescription(),
             'course_poster' => $course->getPoster() ? '<img src="'.$this->platformManager->getUrl().'/'.$course->getPoster().'" style="max-width: 100%;"/>' : '',
-            'course_default_duration' => $course->getDefaultSessionDuration(),
+            'course_default_days' => $course->getDefaultSessionDays(),
+            'course_default_hours' => $course->getDefaultSessionHours(),
             'course_public_registration' => $this->translator->trans($course->getPublicRegistration() ? 'yes' : 'no', [], 'platform'),
             'course_max_users' => $course->getMaxUsers(),
         ];

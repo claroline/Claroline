@@ -59,13 +59,23 @@ const CourseForm = (props) =>
             options: {long: true},
             help: trans('plain_description_help')
           }, {
-            name: 'meta.duration',
+            name: 'meta.days',
             type: 'number',
-            label: trans('duration'),
+            label: trans('days'),
             required: true,
             options: {
               min: 0,
               unit: trans('days')
+            }
+          }, {
+            name: 'meta.hours',
+            type: 'number',
+            label: trans('hours'),
+            required: true,
+            options: {
+              min: 0,
+              max: 24,
+              unit: trans('hours')
             }
           }, {
             name: 'tags',

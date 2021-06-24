@@ -115,7 +115,8 @@ class CourseSerializer
                     'updated' => DateNormalizer::normalize($course->getUpdatedAt()),
                     'tutorRoleName' => $course->getTutorRoleName(),
                     'learnerRoleName' => $course->getLearnerRoleName(),
-                    'duration' => $course->getDefaultSessionDuration(),
+                    'days' => $course->getDefaultSessionDays(),
+                    'hours' => $course->getDefaultSessionHours(),
                     'order' => $course->getOrder(),
                 ],
                 'restrictions' => [
@@ -164,7 +165,8 @@ class CourseSerializer
         $this->sipe('meta.tutorRoleName', 'setTutorRoleName', $data, $course);
         $this->sipe('meta.learnerRoleName', 'setLearnerRoleName', $data, $course);
         $this->sipe('meta.icon', 'setIcon', $data, $course);
-        $this->sipe('meta.duration', 'setDefaultSessionDuration', $data, $course);
+        $this->sipe('meta.days', 'setDefaultSessionDays', $data, $course);
+        $this->sipe('meta.hours', 'setDefaultSessionHours', $data, $course);
         $this->sipe('meta.order', 'setOrder', $data, $course);
 
         $this->sipe('restrictions.users', 'setMaxUsers', $data, $course);

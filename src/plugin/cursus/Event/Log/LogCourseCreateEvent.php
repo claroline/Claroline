@@ -31,7 +31,8 @@ class LogCourseCreateEvent extends LogGenericEvent
         $details['learnerRoleName'] = $course->getLearnerRoleName();
         $details['userValidation'] = $course->getUserValidation();
         $details['maxUsers'] = $course->getMaxUsers();
-        $details['defaultSessionDuration'] = $course->getDefaultSessionDuration();
+        $details['defaultSessionDays'] = $course->getDefaultSessionDays();
+        $details['defaultSessionHours'] = $course->getDefaultSessionHours();
         $details['organizations'] = [];
         $workspace = $course->getWorkspace();
         $workspaceModel = $course->getWorkspaceModel();

@@ -86,9 +86,14 @@ class Course extends AbstractTraining
     private $propagateRegistration = false;
 
     /**
-     * @ORM\Column(name="session_duration", nullable=false, type="float", options={"default" = 1})
+     * @ORM\Column(name="session_days", nullable=false, type="float", options={"default" = 1})
      */
-    private $defaultSessionDuration = 1;
+    private $defaultSessionDays = 1;
+
+    /**
+     * @ORM\Column(name="session_hours", nullable=false, type="float", options={"default" = 0})
+     */
+    private $defaultSessionHours = 0;
 
     /**
      * @ORM\ManyToMany(
@@ -191,14 +196,24 @@ class Course extends AbstractTraining
         return false;
     }
 
-    public function getDefaultSessionDuration()
+    public function getDefaultSessionDays()
     {
-        return $this->defaultSessionDuration;
+        return $this->defaultSessionDays;
     }
 
-    public function setDefaultSessionDuration($defaultSessionDuration)
+    public function setDefaultSessionDays($defaultSessionDays)
     {
-        $this->defaultSessionDuration = $defaultSessionDuration;
+        $this->defaultSessionDays = $defaultSessionDays;
+    }
+
+    public function getDefaultSessionHours()
+    {
+        return $this->defaultSessionHours;
+    }
+
+    public function setDefaultSessionHours($defaultSessionHours)
+    {
+        $this->defaultSessionHours = $defaultSessionHours;
     }
 
     public function getOrganizations()

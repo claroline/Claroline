@@ -124,7 +124,8 @@ class SessionSerializer
                         null,
                     'created' => DateNormalizer::normalize($session->getCreatedAt()),
                     'updated' => DateNormalizer::normalize($session->getUpdatedAt()),
-                    'duration' => $session->getCourse() ? $session->getCourse()->getDefaultSessionDuration() : null,
+                    'days' => $session->getCourse() ? $session->getCourse()->getDefaultSessionDays() : null,
+                    'hours' => $session->getCourse() ? $session->getCourse()->getDefaultSessionHours() : null,
                     'default' => $session->isDefaultSession(),
                     'order' => $session->getOrder(),
                     'learnerRole' => $session->getLearnerRole() ?
