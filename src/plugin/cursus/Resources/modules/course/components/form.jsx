@@ -61,8 +61,7 @@ const CourseForm = (props) =>
           }, {
             name: 'meta.days',
             type: 'number',
-            label: trans('days'),
-            required: true,
+            label: trans('session_days', {}, 'cursus'),
             options: {
               min: 0,
               unit: trans('days')
@@ -70,8 +69,7 @@ const CourseForm = (props) =>
           }, {
             name: 'meta.hours',
             type: 'number',
-            label: trans('hours'),
-            required: true,
+            label: trans('session_hours', {}, 'cursus'),
             options: {
               min: 0,
               max: 24,

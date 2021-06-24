@@ -97,5 +97,7 @@
     "session_info": "Session information",
     "download_presence": "Download the certificate of presence (.pdf)",
     "show_catalog": "Show training catalog",
-    "registration_auto": "All session participants are automatically registered for this event."
+    "registration_auto": "All session participants are automatically registered for this event.",
+    "session_days": "Days",
+    "session_hours": "Hours"
 }

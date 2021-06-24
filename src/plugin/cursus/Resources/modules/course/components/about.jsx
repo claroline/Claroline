@@ -110,11 +110,11 @@ const CourseAbout = (props) => {
 
                   if (days) {
                     output.push(days)
-                    output.push(trans('days'))
+                    output.push(trans(days < 2 ? 'day' : 'days'))
                   }
                   if (hours) {
                     output.push(hours)
-                    output.push(trans('hours'))
+                    output.push(trans(hours < 2 ? 'hour' : 'hours'))
                   }
 
                   return output.length == 0 ? trans('empty_value') : output.join(' ')
