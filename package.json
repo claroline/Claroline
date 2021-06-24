@@ -11,26 +11,28 @@
   "scripts": {
     "themes": "node src/main/core/Resources/server/themes/bin build",
     "webpack": "node_modules/.bin/webpack --config=webpack.config.prod.js --progress --bail",
-    "webpack:dev": "node_modules/.bin/webpack-dev-server --config=webpack.config.dev.js --color"
+    "webpack:dev": "node_modules/.bin/webpack-dev-server --config=webpack.config.dev.js --color",
+    "test": "docker run -it -v $PWD:/test -w /test cypress/included:7.6.0"
   },
   "dependencies": {
-    "assets-webpack-plugin": "3.9.7",
-    "autoprefixer": "^8.5.0",
     "@babel/core": "^7.4.1",
     "@babel/plugin-syntax-dynamic-import": "^7.8.3",
-    "@babel/preset-react": "^7.10.1",
     "@babel/preset-env": "^7.10.2",
+    "@babel/preset-react": "^7.10.1",
+    "@fortawesome/fontawesome-free": "^5",
+    "assets-webpack-plugin": "3.9.7",
+    "autoprefixer": "^8.5.0",
     "babel-loader": "^8.0.0",
     "bootstrap": "^3.4.1",
     "classnames": "^2.2.5",
     "codemirror": "^5.34.0",
     "core-js": "^3.0.1",
     "cssnano": "^4.1",
+    "cypress-terminal-report": "^3.2.2",
     "d3": "^4.4.0",
     "html-react-parser": "^0.9.1",
     "html2pdf.js": "^0.9.1",
     "invariant": "^2.2.4",
-    "@fortawesome/fontawesome-free": "^5",
     "jquery": "2.2.4",
     "jsplumb": "^2.2.11",
     "less": "3.0.4",
@@ -69,6 +71,7 @@
     "package.json"
   ],
   "devDependencies": {
+    "@testing-library/cypress": "^7.0.6",
     "circular-dependency-plugin": "^4",
     "eslint": "^7.15.0",
     "eslint-plugin-react": "^7.21.5",

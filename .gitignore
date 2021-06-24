@@ -32,3 +32,4 @@ package-lock.json
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
+.idea
