@@ -10,7 +10,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\SwitchUserToken;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Http\Event\SwitchUserEvent;
-use Symfony\Contracts\EventDispatcher\Event;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SecurityLogSubscriber implements EventSubscriberInterface
@@ -35,22 +34,8 @@ class SecurityLogSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            SecurityEvents::AUTHENTICATION_FAILURE => 'logEvent',
             SecurityEvents::SWITCH_USER => 'logEventSwitchUser',
         ];
-    }
-
-    public function logEvent(Event $event, string $eventName): void
-    {
-        $logEntry = new SecurityLog();
-        $logEntry->setDetails($event->getMessage($this->translator));
-        $logEntry->setEvent($eventName);
-        $logEntry->setTarget($event->getUser());
-        $logEntry->setDoer($this->security->getUser() ?? $event->getUser());
-        $logEntry->setDoerIp($this->getDoerIp());
-
-        $this->om->persist($logEntry);
-        $this->om->flush();
     }
 
     public function logEventSwitchUser(SwitchUserEvent $event, string $eventName): void

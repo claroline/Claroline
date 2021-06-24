@@ -11,31 +11,46 @@
 
 namespace Claroline\CoreBundle\Listener;
 
-use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
-use Claroline\CoreBundle\Event\Security\AuthenticationFailureEvent;
+use Claroline\LogBundle\Messenger\Security\Message\AuthenticationFailureMessage;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Http\Authentication\DefaultAuthenticationFailureHandler;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AuthenticationFailureHandler extends DefaultAuthenticationFailureHandler
 {
-    /** @var StrictDispatcher */
-    private $dispatcher;
     /** @var ObjectManager */
     private $objectManager;
-
-    public function setDispatcher(StrictDispatcher $dispatcher)
-    {
-        $this->dispatcher = $dispatcher;
-    }
+    /** @var MessageBusInterface */
+    private $messageBus;
+    /** @var TranslatorInterface */
+    private $translator;
+    /** @var Security */
+    private $security;
 
     public function setObjectManager(ObjectManager $objectManager)
     {
         $this->objectManager = $objectManager;
+    }
+
+    public function setMessageBus(MessageBusInterface $messageBus)
+    {
+        $this->messageBus = $messageBus;
+    }
+
+    public function setTranslator(TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
+    }
+
+    public function setSecurity(Security $security)
+    {
+        $this->security = $security;
     }
 
     /**
@@ -57,17 +72,16 @@ class AuthenticationFailureHandler extends DefaultAuthenticationFailureHandler
     private function dispatchAuthenticationFailureEvent(string $username, string $message): void
     {
         $user = $this->objectManager->getRepository(User::class)->findByName($username);
+
         if ($user) {
-            $username = $user[0];
+            $user = $user[0]->getId();
         }
 
-        $this->dispatcher->dispatch(
-            SecurityEvents::AUTHENTICATION_FAILURE,
-            AuthenticationFailureEvent::class,
-            [
-                $username,
-                $message,
-            ]
-        );
+        $this->messageBus->dispatch(new AuthenticationFailureMessage(
+            $user ?: null,
+            $user ?: null,
+            'event.security.authentication_failure',
+            $this->translator->trans('authenticationFailure', ['username' => $username, 'message' => $message], 'security')
+        ));
     }
 }

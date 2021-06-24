@@ -25,12 +25,18 @@ services:
     Claroline\CoreBundle\Listener\AuthenticationFailureHandler:
         parent: security.authentication.failure_handler
         calls:
-            - method: setDispatcher
-              arguments:
-                - '@Claroline\AppBundle\Event\StrictDispatcher'
             - method: setObjectManager
               arguments:
                 - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - method: setMessageBus
+              arguments:
+                - '@messenger.default_bus'
+            - method: setTranslator
+              arguments:
+                - '@translator'
+            - method: setSecurity
+              arguments:
+                - '@security.helper'
 
     # array injection with annotations is not supported
     claroline.plugin.validator:
