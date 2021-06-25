@@ -237,7 +237,6 @@ class UserCrud
             $this->messageBus->dispatch(new NewPasswordMessage(
                 $user->getId(),
                 $user->getId(),
-                'event.security.new_password',
                 $this->translator->trans('newPassword', ['username' => $user->getUsername()], 'security')
             ));
         }

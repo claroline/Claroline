@@ -93,7 +93,6 @@ class Authenticator
             $this->messageBus->dispatch(new UserLoginMessage(
                 $user->getId(),
                 $this->tokenStorage->getToken()->getUser()->getId(),
-                'event.security.user_login',
                 $this->translator->trans('userLogin', ['username' => $user->getUsername()], 'security')
             ));
 

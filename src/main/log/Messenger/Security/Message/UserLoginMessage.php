@@ -13,20 +13,19 @@ namespace Claroline\LogBundle\Messenger\Security\Message;
 
 class UserLoginMessage implements SecurityMessageInterface
 {
+    public const EVENT_NAME = 'event.security.user_login';
+
     private $targetId;
     private $doerId;
-    private $eventName;
     private $message;
 
     public function __construct(
         int $targetId,
         int $doerId,
-        string $eventName,
         string $message
     ) {
         $this->targetId = $targetId;
         $this->doerId = $doerId;
-        $this->eventName = $eventName;
         $this->message = $message;
     }
 
@@ -40,9 +39,9 @@ class UserLoginMessage implements SecurityMessageInterface
         return $this->doerId;
     }
 
-    public function getName(): string
+    public function getEventName(): string
     {
-        return $this->eventName;
+        return self::EVENT_NAME;
     }
 
     public function getMessage(): string

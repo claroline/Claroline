@@ -266,6 +266,8 @@ services:
             - '@security.token_storage'
             - '@claroline.manager.tool_manager'
             - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - '@messenger.default_bus'
+            - '@translator'
 
     Claroline\CoreBundle\Controller\AuthenticationController:
         arguments:
@@ -286,6 +288,8 @@ services:
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@claroline.manager.tool_manager'
             - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - '@messenger.default_bus'
+            - '@translator'
 
     Claroline\CoreBundle\Controller\FileController:
         arguments:
@@ -330,6 +334,7 @@ services:
             - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceRestrictionsManager'
             - '@Claroline\CoreBundle\Manager\Workspace\EvaluationManager'
             - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - '@messenger.default_bus'
 
     Claroline\CoreBundle\Controller\APINew\Location\LocationController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController

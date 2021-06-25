@@ -69,7 +69,6 @@ class LogoutHandler implements LogoutHandlerInterface
             $this->messageBus->dispatch(new UserLogoutMessage(
                $token->getUser()->getId(),
                $token->getUser()->getId(),
-                'event.security.user_logout',
                 $this->translator->trans('userLogout', ['username' => $token->getUser()->getUsername()], 'security')
             ));
         }

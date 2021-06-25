@@ -161,7 +161,6 @@ class RoleCrud
                     new AddRoleMessage(
                         $event->getValue()->getId(),
                         $this->tokenStorage->getToken()->getUser()->getId(),
-                        'event.security.add_role',
                         $this->translator->trans('addRole', ['username' => $event->getValue()->getUsername(), 'role' => $event->getObject()->getName()], 'security')
                     )
                 );
@@ -170,7 +169,6 @@ class RoleCrud
                     new AddRoleMessage(
                         $event->getValue()->getId(),
                         $this->tokenStorage->getToken()->getUser()->getId(),
-                        'event.security.remove_role',
                         $this->translator->trans('removeRole', ['username' => $event->getValue()->getUsername(), 'role' => $event->getObject()->getName()], 'security')
                     )
                 );
@@ -183,7 +181,6 @@ class RoleCrud
                         new AddRoleMessage(
                             $user->getId(),
                             $this->tokenStorage->getToken()->getUser()->getId(),
-                            'event.security.add_role',
                             $this->translator->trans('addRole', ['username' => $user->getUsername(), 'role' => $event->getObject()->getName()], 'security')
                         )
                     );
@@ -194,7 +191,6 @@ class RoleCrud
                         new AddRoleMessage(
                             $user->getId(),
                             $this->tokenStorage->getToken()->getUser()->getId(),
-                            'event.security.remove_role',
                             $this->translator->trans('removeRole', ['username' => $user->getUsername(), 'role' => $event->getObject()->getName()], 'security')
                         )
                     );

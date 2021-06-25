@@ -4,7 +4,6 @@ namespace Claroline\LogBundle\Subscriber;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Event\CatalogEvents\ResourceEvents;
-use Claroline\CoreBundle\Event\CatalogEvents\ToolEvents;
 use Claroline\LogBundle\Entity\FunctionalLog;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Contracts\EventDispatcher\Event;
@@ -26,7 +25,6 @@ class FunctionalLogSubscriber implements EventSubscriberInterface
         return [
             ResourceEvents::RESOURCE_EVALUATION => ['logEvent', 10],
             ResourceEvents::RESOURCE_OPEN => ['logEvent', 10],
-            ToolEvents::TOOL_OPEN => ['logEvent', 10],
         ];
     }
 

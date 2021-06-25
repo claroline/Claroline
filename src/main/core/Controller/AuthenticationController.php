@@ -157,7 +157,6 @@ class AuthenticationController
         $this->messageBus->dispatch(new ValidateEmailMessage(
             $this->userManager->getByEmailValidationHash($hash)->getId(),
             $this->security->getUser()->getId(),
-            'event.security.validate_email',
             $this->translator->trans('validateEmail', ['username' => $this->userManager->getByEmailValidationHash($hash)->getUsername()], 'security')
         ));
 

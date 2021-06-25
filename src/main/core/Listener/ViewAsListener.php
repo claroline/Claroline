@@ -89,7 +89,6 @@ class ViewAsListener
                             $this->messageBus->dispatch(new ViewAsMessage(
                                 $user->getId(),
                                 $user->getId(),
-                               'event.security.view_as',
                                $this->translator->trans('viewAs', ['username' => $user->getUsername(), 'role' => $viewAs], 'security')
                             ));
                         }

@@ -43,8 +43,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class LogConnectManager
 {
-    private const USER_LOGIN = 'event.security.user_login';
-
     /** @var FinderProvider */
     private $finder;
 
@@ -115,7 +113,7 @@ class LogConnectManager
 
         if (!is_null($user)) {
             switch ($action) {
-                case self::USER_LOGIN:
+                case UserLoginMessage::EVENT_NAME:
                     $this->om->startFlushSuite();
 
                     $this->createLogConnectPlatform($user, $dateLog);
@@ -124,7 +122,6 @@ class LogConnectManager
                     $this->messageBus->dispatch(new UserLoginMessage(
                         $user->getId(),
                         $this->security->getUser()->getId(),
-                        'event.security.user_login',
                         $this->translator->trans('userLogin', ['username' => $user->getUsername()], 'security')
                     ));
                     break;

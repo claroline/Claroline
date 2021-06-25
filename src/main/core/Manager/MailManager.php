@@ -71,7 +71,6 @@ class MailManager
             new ForgotPasswordMessage(
                 $user->getId(),
                 $user->getId(),
-                'event.security.forgot_password',
                 $this->translator->trans('forgotPassword', ['username' => $user->getUsername()], 'security')
         ));
 

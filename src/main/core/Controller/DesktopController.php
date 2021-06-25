@@ -20,17 +20,19 @@ use Claroline\CoreBundle\Entity\Tool\AbstractTool;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\CatalogEvents\ToolEvents;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 use Claroline\CoreBundle\Manager\Tool\ToolManager;
+use Claroline\LogBundle\Messenger\Functional\Message\OpenToolMessage;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * User desktop.
@@ -59,13 +61,21 @@ class DesktopController
     /** @var StrictDispatcher */
     private $strictDispatcher;
 
+    /** @var MessageBusInterface */
+    private $messageBus;
+
+    /** @var TranslatorInterface */
+    private $translator;
+
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         TokenStorageInterface $tokenStorage,
         ParametersSerializer $parametersSerializer,
         SerializerProvider $serializer,
         ToolManager $toolManager,
-        StrictDispatcher $strictDispatcher
+        StrictDispatcher $strictDispatcher,
+        MessageBusInterface $messageBus,
+        TranslatorInterface $translator
     ) {
         $this->authorization = $authorization;
         $this->tokenStorage = $tokenStorage;
@@ -73,6 +83,8 @@ class DesktopController
         $this->serializer = $serializer;
         $this->toolManager = $toolManager;
         $this->strictDispatcher = $strictDispatcher;
+        $this->messageBus = $messageBus;
+        $this->translator = $translator;
     }
 
     /**
@@ -127,11 +139,11 @@ class DesktopController
             $toolName,
         ];
 
-        $this->strictDispatcher->dispatch(
-            ToolEvents::TOOL_OPEN,
-            OpenToolEvent::class,
-            $eventParams
-        );
+        $this->messageBus->dispatch(new OpenToolMessage(
+            $this->translator->trans('toolOpen', ['userName' => $currentUser->getUsername(), 'context' => AbstractTool::DESKTOP, 'toolName' => $toolName], 'tools'),
+            $currentUser->getId(),
+            null
+        ));
 
         /** @var OpenToolEvent $event */
         $event = $this->strictDispatcher->dispatch(

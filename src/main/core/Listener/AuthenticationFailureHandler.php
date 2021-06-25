@@ -80,7 +80,6 @@ class AuthenticationFailureHandler extends DefaultAuthenticationFailureHandler
         $this->messageBus->dispatch(new AuthenticationFailureMessage(
             $user ?: null,
             $user ?: null,
-            'event.security.authentication_failure',
             $this->translator->trans('authenticationFailure', ['username' => $username, 'message' => $message], 'security')
         ));
     }

@@ -148,7 +148,6 @@ class WorkspaceManager implements LoggerAwareInterface
             new AddRoleMessage(
                 $user->getId(),
                 $this->security->getUser()->getId(),
-                'event.security.add_role',
                 $this->translator->trans('addRole', ['username' => $user->getUsername(), 'role' => $workspace->getManagerRole()->getName()], 'security')
             )
         );
@@ -498,7 +497,6 @@ class WorkspaceManager implements LoggerAwareInterface
                 new AddRoleMessage(
                     $user->getId(),
                     $this->security->getUser()->getId(),
-                    'event.security.add_role',
                     $this->translator->trans('addRole', ['username' => $user->getUsername(), 'role' => $managerRole->getName()], 'security')
                 )
             );

@@ -23,7 +23,6 @@ use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Shortcuts;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Event\CatalogEvents\ToolEvents;
 use Claroline\CoreBundle\Event\CatalogEvents\WorkspaceEvents;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceEnterEvent;
 use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
@@ -32,10 +31,12 @@ use Claroline\CoreBundle\Manager\Tool\ToolManager;
 use Claroline\CoreBundle\Manager\Workspace\EvaluationManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceRestrictionsManager;
+use Claroline\LogBundle\Messenger\Functional\Message\OpenToolMessage;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -67,6 +68,8 @@ class WorkspaceController
     private $evaluationManager;
     /** @var StrictDispatcher */
     private $strictDispatcher;
+    /** @var MessageBusInterface */
+    private $messageBus;
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
@@ -78,7 +81,8 @@ class WorkspaceController
         WorkspaceManager $manager,
         WorkspaceRestrictionsManager $restrictionsManager,
         EvaluationManager $evaluationManager,
-        StrictDispatcher $strictDispatcher
+        StrictDispatcher $strictDispatcher,
+        MessageBusInterface $messageBus
     ) {
         $this->authorization = $authorization;
         $this->om = $om;
@@ -90,6 +94,7 @@ class WorkspaceController
         $this->restrictionsManager = $restrictionsManager;
         $this->evaluationManager = $evaluationManager;
         $this->strictDispatcher = $strictDispatcher;
+        $this->messageBus = $messageBus;
     }
 
     /**
@@ -196,11 +201,11 @@ class WorkspaceController
             $toolName,
         ];
 
-        $this->strictDispatcher->dispatch(
-            ToolEvents::TOOL_OPEN,
-            OpenToolEvent::class,
-            $eventParams
-        );
+        $this->messageBus->dispatch(new OpenToolMessage(
+            $this->translator->trans('toolOpen', ['userName' => $currentUser->getUsername(), 'context' => AbstractTool::WORKSPACE, 'toolName' => $toolName], 'tools'),
+            $currentUser->getId(),
+            $workspace->getId()
+        ));
 
         /** @var OpenToolEvent $event */
         $event = $this->strictDispatcher->dispatch(

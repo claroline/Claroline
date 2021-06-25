@@ -269,7 +269,6 @@ class UserManager
         $this->messageBus->dispatch(new UserEnableMessage(
             $user->getId(),
             $this->security->getUser()->getId(),
-            'event.security.user_enable',
             $this->translator->trans('userEnable', ['username' => $user->getUsername()], 'security')
         ));
 
@@ -285,7 +284,6 @@ class UserManager
         $this->messageBus->dispatch(new UserDisableMessage(
             $user->getId(),
             $this->security->getUser()->getId(),
-            'event.security.user_disable',
             $this->translator->trans('userDisable', ['username' => $user->getUsername()], 'security')
         ));
 
