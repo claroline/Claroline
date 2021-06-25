@@ -14,7 +14,6 @@ namespace Claroline\CoreBundle\Manager;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Location\Location;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Manager\CurlManager;
 
 class LocationManager
 {

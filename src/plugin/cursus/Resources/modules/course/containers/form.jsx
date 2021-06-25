@@ -7,7 +7,7 @@ import {CourseForm as CourseFormComponent} from '#/plugin/cursus/course/componen
 const CourseForm = connect(
   (state, ownProps) =>({
     isNew: formSelectors.isNew(formSelectors.form(state, ownProps.name)),
-    course: formSelectors.data(formSelectors.form(state, ownProps.name)),
+    course: formSelectors.data(formSelectors.form(state, ownProps.name))
   }),
   (dispatch) => ({
     update(name, prop, value) {
