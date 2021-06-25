@@ -106,7 +106,7 @@ const CourseAbout = (props) => {
                 {(() => {
                   const days = getInfo(props.course, props.activeSession, 'meta.days')
                   const hours = getInfo(props.course, props.activeSession, 'meta.hours')
-                  const output = [];
+                  const output = []
 
                   if (days) {
                     output.push(days)
