@@ -106,6 +106,25 @@ class EventFinder extends AbstractFinder
             }
         }
 
+        if (!is_null($sortBy) && isset($sortBy['property']) && isset($sortBy['direction'])) {
+            $sortByProperty = $sortBy['property'];
+            if (array_key_exists($sortByProperty, $this->getExtraFieldMapping())) {
+                $sortByProperty = $this->getExtraFieldMapping()[$sortByProperty];
+            }
+
+            $sortByDirection = 1 === $sortBy['direction'] ? 'ASC' : 'DESC';
+
+            switch ($sortByProperty) {
+                // map sort on PlannedObject (There may be a better way to handle this).
+                case 'name':
+                case 'description':
+                case 'startDate':
+                case 'endDate':
+                    $qb->orderBy("po.{$sortByProperty}", $sortByDirection);
+                    break;
+            }
+        }
+
         return $qb;
     }
 }
