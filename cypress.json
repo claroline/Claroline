@@ -1,4 +1,5 @@
 {
+  "baseUrl": "http://192.168.3.6",
   "fixturesFolder": false,
   "projectId": "1b7u2t"
 }

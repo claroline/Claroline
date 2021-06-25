@@ -12,7 +12,7 @@
     "themes": "node src/main/core/Resources/server/themes/bin build",
     "webpack": "node_modules/.bin/webpack --config=webpack.config.prod.js --progress --bail",
     "webpack:dev": "node_modules/.bin/webpack-dev-server --config=webpack.config.dev.js --color",
-    "test": "docker run -it -v $PWD:/test -w /test cypress/included:7.6.0"
+    "test": "docker run -it -v $PWD:/test -w /test -e CYPRESS_baseUrl=http://192.168.3.6 cypress/included:7.6.0"
   },
   "dependencies": {
     "@babel/core": "^7.4.1",

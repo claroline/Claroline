@@ -1,10 +1,17 @@
 // https://github.com/testing-library/cypress-testing-library#installation
 import '@testing-library/cypress/add-commands'
 
-it('works', () => {
-  cy.visit('index.html')
-  cy.contains('Page').should('be.visible')
+describe('test', () => {
+  beforeEach( () => {
+    cy.visit('/')
+    cy.wait(5000)
+  })
 
-  // use command from cypress-testing-library
-  cy.findByText('Page').should('be.visible')
+  it('works', () => {
+    cy.contains('Connect with your Claroline Connect account:').should('be.visible')
+
+    // use command from cypress-testing-library
+    cy.findByText('Connect with your Claroline Connect account:').should('be.visible')
+  })
 })
+
