@@ -1,6 +1,6 @@
 name: Cypress
 
-on: workflow_dispatch
+on: push
 
 jobs:
   docker-start:
