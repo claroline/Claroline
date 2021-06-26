@@ -15,7 +15,7 @@ jobs:
   #       run: docker run --network container:claroline-web curlimages/curl -s  --connect-timeout 500 --max-time 1000 --retry 5000 --retry-delay 10 --retry-max-time 4000 --retry-all-errors http://127.0.0.1/
 
   cypress-run:
-    needs: docker-start
+    # needs: docker-start
     runs-on: ubuntu-20.04
     # Docker image with Cypress pre-installed
     # https://github.com/cypress-io/cypress-docker-images/tree/master/included
