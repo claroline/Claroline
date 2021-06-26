@@ -4,15 +4,11 @@
   "description": "Claroline distribution frontend dependencies",
   "license": "GPL-3.0",
   "repository": "https://github.com/claroline/Claroline",
-  "engines": {
-    "node": ">=10",
-    "npm": ">=6,<7"
-  },
   "scripts": {
     "themes": "node src/main/core/Resources/server/themes/bin build",
     "webpack": "node_modules/.bin/webpack --config=webpack.config.prod.js --progress --bail",
     "webpack:dev": "node_modules/.bin/webpack-dev-server --config=webpack.config.dev.js --color",
-    "test": "docker run -it -v $PWD:/test -w /test -e CYPRESS_baseUrl=http://192.168.3.6 cypress/included:7.6.0"
+    "test": "docker run --network container:claroline-web -it -v $PWD:/test -w /test -e CYPRESS_baseUrl=http://localhost/ cypress/included:7.6.0"
   },
   "dependencies": {
     "@babel/core": "^7.4.1",

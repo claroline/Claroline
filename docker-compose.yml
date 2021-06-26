@@ -3,7 +3,7 @@ version: "3.7"
 services:
   web:
     container_name: claroline-web
-    image: ghcr.io/maieutiquer/claroline:docker-publish
+    image: ghcr.io/claroline/claroline:13.x
     ports:
       - "80:80"
     volumes:
