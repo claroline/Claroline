@@ -23,7 +23,6 @@ use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 use Claroline\KernelBundle\Bundle\ConfigurationProviderInterface;
 use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
-use Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle;
 use FOS\JsRoutingBundle\FOSJsRoutingBundle;
 use Http\HttplugBundle\HttplugBundle;
 use Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle;
@@ -142,7 +141,6 @@ class ClarolineCoreBundle extends DistributionPluginBundle implements Configurat
             new SecurityBundle(),
             new MonologBundle(),
             new DoctrineBundle(),
-            new DoctrineCacheBundle(),
             new FOSJsRoutingBundle(),
             new TwigBundle(),
             new HttplugBundle(),
