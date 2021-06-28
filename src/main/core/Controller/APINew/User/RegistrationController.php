@@ -92,7 +92,7 @@ class RegistrationController
         $organizationRepository = $this->om->getRepository(Organization::class);
 
         $organization = null;
-        $autoOrganization = $this->config->getParameter('registration.force_organization_creation');
+        $autoOrganization = 'create' === $this->config->getParameter('registration.organization_selection');
         // step one: creation the organization if it's here. If it exists, we fetch it.
         if ($autoOrganization) {
             // try to find orga first
