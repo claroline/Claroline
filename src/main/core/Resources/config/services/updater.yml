@@ -4,3 +4,8 @@ services:
             - '@doctrine.dbal.default_connection'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
         tags: [ 'claroline.platform.updater' ]
+
+    Claroline\CoreBundle\Installation\Updater\Updater130023:
+        arguments:
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+        tags: [ 'claroline.platform.updater' ]

@@ -43,7 +43,9 @@ services:
 
     Claroline\CoreBundle\Security\Voter\Location\RoomVoter: ~
 
-    Claroline\CoreBundle\Security\Voter\OrganizationVoter: ~
+    Claroline\CoreBundle\Security\Voter\OrganizationVoter:
+        arguments:
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
 
     Claroline\CoreBundle\Security\Voter\PublicFileVoter: ~
 
