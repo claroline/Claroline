@@ -117,15 +117,11 @@ class BBBManager
         return true;
     }
 
-    public function canJoinMeeting(BBB $bbb, bool $moderator = false)
+    public function canJoinMeeting(BBB $bbb): ?string
     {
         $info = $this->getMeetingInfo($bbb);
         if (!$bbb->isActivated() || (empty($info) || !isset($info['running']) || !$info['running'])) {
             return 'closed';
-        }
-
-        if (!$moderator && $bbb->isModeratorRequired() && empty($info['moderatorCount'])) {
-            return 'no_moderator';
         }
 
         $maxMeetingParticipants = $this->config->getParameter('bbb.max_meeting_participants');
@@ -178,6 +174,15 @@ class BBBManager
                 $queryString .= $roomName ? '&name='.urlencode($roomName) : '';
                 $queryString .= $welcomeMessage ? '&welcome='.urlencode($welcomeMessage) : '';
                 $queryString .= $maxParticipants ? '&maxParticipants='.$maxParticipants : '';
+
+                if (!$bbb->isActivated()) {
+                    $queryString .= '&guestPolicy=ALWAYS_DENY';
+                } elseif ($bbb->isModeratorRequired()) {
+                    $queryString .= '&guestPolicy=ASK_MODERATOR';
+                } else {
+                    $queryString .= '&guestPolicy=ALWAYS_ACCEPT';
+                }
+
                 $queryString .= '&logoutURL='.urlencode($endUrl);
                 $queryString .= $tag ? '&meta_platform='.$tag : '';
                 $checksum = sha1("create$queryString$securitySalt");
@@ -203,11 +208,11 @@ class BBBManager
         return $success;
     }
 
-    public function endMeeting(BBB $bbb)
+    public function endMeeting(BBB $bbb, string $serverName = null)
     {
         $meetingId = $bbb->getUuid();
 
-        $server = $this->getMeetingServer($bbb);
+        $server = empty($serverName) ? $this->getMeetingServer($bbb) : $this->serverManager->getServer($serverName);
         $serverUrl = $server['url'];
         $securitySalt = $server['token'];
 

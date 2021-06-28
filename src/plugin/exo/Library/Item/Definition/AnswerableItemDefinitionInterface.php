@@ -15,9 +15,7 @@ interface AnswerableItemDefinitionInterface
     /**
      * Validates question answer.
      *
-     * @param mixed        $answer
-     * @param AbstractItem $question
-     * @param array        $options
+     * @param mixed $answer
      *
      * @return array
      */
@@ -28,7 +26,6 @@ interface AnswerableItemDefinitionInterface
      * This method formats the user answers into an array that can be used to calculate the obtained score.
      * The outputted array MUST have the following structure.
      *
-     * @param AbstractItem $question
      * @param $answer
      *
      * @return CorrectedAnswer
@@ -38,16 +35,12 @@ interface AnswerableItemDefinitionInterface
     /**
      * Returns the expected answers of the question.
      *
-     * @param AbstractItem $question
-     *
      * @return AnswerPartInterface[]
      */
     public function expectAnswer(AbstractItem $question);
 
     /**
      * Returns all the defined answers of a the question.
-     *
-     * @param AbstractItem $question
      *
      * @return AnswerPartInterface[]
      */
@@ -56,9 +49,7 @@ interface AnswerableItemDefinitionInterface
     /**
      * Gets statistics on answers given to a question.
      *
-     * @param AbstractItem $question
-     * @param array        $answersData
-     * @param int          $total
+     * @param int $total
      *
      * @return array
      */

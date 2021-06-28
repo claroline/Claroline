@@ -76,7 +76,7 @@ class LessonController
 
     /**
      * @Route("/lesson/{id}/pdf", name="icap_lesson_export_pdf")
-     * @EXT\ParamConverter("lesson", class="IcapLessonBundle:Lesson", options={"mapping": {"lesson": "uuid"}})
+     * @EXT\ParamConverter("lesson", class="IcapLessonBundle:Lesson", options={"mapping": {"id": "uuid"}})
      */
     public function downloadPdfAction(Lesson $lesson): StreamedResponse
     {
@@ -96,7 +96,7 @@ class LessonController
 
         $fileName = TextNormalizer::toKey($lesson->getResourceNode()->getName());
 
-        return new StreamedResponse(function () use ($domPdf, $fileName) {
+        return new StreamedResponse(function () use ($domPdf) {
             echo $domPdf->output();
         }, 200, [
             'Content-Type' => 'application/pdf',

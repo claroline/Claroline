@@ -45,14 +45,6 @@ class WikiListener
 
     /**
      * WikiListener constructor.
-     *
-     * @param TokenStorageInterface         $tokenStorage
-     * @param ObjectManager                 $objectManager
-     * @param WikiSerializer                $serializer
-     * @param WikiManager                   $wikiManager
-     * @param SectionManager                $sectionManager
-     * @param ResourceEvaluationManager     $evaluationManager
-     * @param AuthorizationCheckerInterface $authorization
      */
     public function __construct(
         TokenStorageInterface $tokenStorage,
@@ -74,8 +66,6 @@ class WikiListener
 
     /**
      * Loads a Wiki resource.
-     *
-     * @param LoadResourceEvent $event
      */
     public function load(LoadResourceEvent $event)
     {
@@ -97,9 +87,6 @@ class WikiListener
         $event->stopPropagation();
     }
 
-    /**
-     * @param CopyResourceEvent $event
-     */
     public function onCopy(CopyResourceEvent $event)
     {
         /** @var Wiki $wiki */
@@ -168,9 +155,6 @@ class WikiListener
         return $section;
     }
 
-    /**
-     * @param GenericDataEvent $event
-     */
     public function onGenerateResourceTracking(GenericDataEvent $event)
     {
         $data = $event->getData();

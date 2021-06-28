@@ -14,8 +14,6 @@ class KeywordSerializer
 
     /**
      * KeywordSerializer constructor.
-     *
-     * @param ObjectManager $om
      */
     public function __construct(ObjectManager $om)
     {
@@ -46,8 +44,7 @@ class KeywordSerializer
     }
 
     /**
-     * @param array   $data
-     * @param Keyword $keyword
+     * @param array $data
      *
      * @return Keyword
      */

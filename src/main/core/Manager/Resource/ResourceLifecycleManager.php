@@ -90,7 +90,7 @@ class ResourceLifecycleManager
     {
         /** @var DownloadResourceEvent $event */
         $event = $this->dispatcher->dispatch(
-            static::eventName('export', $resourceNode), // old download
+            static::eventName('export', $resourceNode),
             DownloadResourceEvent::class,
             [$this->getResourceFromNode($resourceNode)]
         );
@@ -98,13 +98,13 @@ class ResourceLifecycleManager
         return $event;
     }
 
-    public function delete(ResourceNode $resourceNode)
+    public function delete(ResourceNode $resourceNode, bool $soft = true)
     {
         /** @var DeleteResourceEvent $event */
         $event = $this->dispatcher->dispatch(
-            static::eventName('delete', $resourceNode), // old download
+            static::eventName('delete', $resourceNode),
             DeleteResourceEvent::class,
-            [$this->getResourceFromNode($resourceNode)]
+            [$this->getResourceFromNode($resourceNode), $soft]
         );
 
         return $event;

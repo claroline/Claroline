@@ -11,12 +11,3 @@ services:
         tags:
             - { name: kernel.event_listener, event: open_tool_desktop_messaging, method: onDisplayDesktop }
             - { name: kernel.event_listener, event: desktop.messaging.configure, method: onConfigureDesktop }
-
-    Claroline\MessageBundle\Listener\MessageListener:
-        arguments:
-            - '@Claroline\MessageBundle\Manager\MessageManager'
-            - '@claroline.manager.scheduled_task_manager'
-        tags:
-            - { name: kernel.event_listener, event: claroline_message_sending, method: onMessageSending }
-            - { name: kernel.event_listener, event: claroline_message_sending_to_users, method: onMessageSendingToUsers }
-            - { name: kernel.event_listener, event: claroline_scheduled_task_execute_message, method: onExecuteMessageTask }

@@ -31,13 +31,6 @@ class DocumentSerializer
 
     /**
      * DocumentSerializer constructor.
-     *
-     * @param DropzoneToolDocumentSerializer $dropzoneToolDocumentSerializer
-     * @param RevisionSerializer             $revisionSerializer
-     * @param ResourceNodeSerializer         $resourceSerializer
-     * @param UserSerializer                 $userSerializer
-     * @param TokenStorageInterface          $tokenStorage
-     * @param ObjectManager                  $om
      */
     public function __construct(
         DropzoneToolDocumentSerializer $dropzoneToolDocumentSerializer,
@@ -65,19 +58,19 @@ class DocumentSerializer
     }
 
     /**
-     * @param Document $document
-     * @param array    $options
-     *
      * @return array
      */
     public function serialize(Document $document, array $options = [])
     {
+        $documentData = $document->getData();
+        if (Document::DOCUMENT_TYPE_RESOURCE === $document->getType() && !empty($documentData)) {
+            $documentData = $this->resourceSerializer->serialize($documentData);
+        }
+
         return [
             'id' => $document->getUuid(),
             'type' => $document->getType(),
-            'data' => Document::DOCUMENT_TYPE_RESOURCE === $document->getType() ?
-                $this->resourceSerializer->serialize($document->getData()) :
-                $document->getData(),
+            'data' => $documentData,
             'drop' => $document->getDrop()->getUuid(),
             'user' => $document->getUser() ? $this->userSerializer->serialize($document->getUser()) : null,
             'dropDate' => $document->getDropDate() ? $document->getDropDate()->format('Y-m-d H:i') : null,

@@ -1,10 +1,6 @@
-import {max, min, extent} from 'd3-array'
-import {scaleLinear, scaleBand, scaleTime} from 'd3-scale'
 import {isEmpty, zipWith} from 'lodash'
 import {apiToDateObject, getApiFormat, isValidDate} from '#/main/app/intl/date'
 import {
-  AXIS_TYPE_X,
-  AXIS_TYPE_Y,
   DATE_DATA_TYPE,
   NUMBER_DATA_TYPE,
   STRING_DATA_TYPE
@@ -14,6 +10,8 @@ const formatValue = (value, type) => {
   switch (type) {
     case DATE_DATA_TYPE:
       return apiToDateObject(value)
+    case NUMBER_DATA_TYPE:
+      return parseFloat(value)
     default:
       value = value.toString()
       return value.length > 23 ? `${value.substring(0, 20)}...` : value
@@ -64,72 +62,24 @@ const formatData = (data) => {
     }
     return generateDataObject([], STRING_DATA_TYPE, data, yType)
   }
+
   //Find x data type (date, string, number)
   let xVal = data[Object.keys(data)[0]].xData
   let xType = STRING_DATA_TYPE
   // If x is date or number
   if (isValidDate(xVal, getApiFormat())) {
     xType = DATE_DATA_TYPE
+  } else if (!isNaN(xVal)) {
+    xType = NUMBER_DATA_TYPE
   }
   
-  let xValues = Object.keys(data).map(key => { return formatValue(data[key].xData, xType) })
+  let xValues = Object.keys(data).map(key => formatValue(data[key].xData, xType))
   // y values always numbers
-  let yValues = Object.keys(data).map(key => { return parseFloat(data[key].yData) })
+  let yValues = Object.keys(data).map(key => formatValue(data[key].yData, NUMBER_DATA_TYPE))
   
   return generateDataObject(xValues, xType, yValues)
 }
 
-/**
- * Performs axis scaling depending on dataType
- *
- * @param values
- * @param type
- * @param dataType
- * @param length
- * @param minMaxAsDomain
- * @return {func} - the scale function
- */
-const scaleAxis = (values, type, dataType, length = null, minMaxAsDomain = false) => {
-  let scale = null
-  let minValue, maxValue
-  switch (dataType) {
-    case STRING_DATA_TYPE:
-      scale = scaleBand()
-        .domain(values)
-        .rangeRound([0, length])
-        .paddingInner([0.2])
-      break
-
-    case NUMBER_DATA_TYPE:
-      minValue = minMaxAsDomain ? min(values) : 0
-      maxValue = max(values)
-      if (!minMaxAsDomain) {
-        const step = (maxValue - (maxValue % 5)) / 5
-        maxValue = step*5 < maxValue ? step*6 : step*5
-      }
-
-      scale = scaleLinear().domain([minValue, maxValue])
-      break
-
-    case DATE_DATA_TYPE:
-      scale = scaleTime().domain(extent(values))
-      break
-  }
-  
-  if (type !== STRING_DATA_TYPE) {
-    switch (type) {
-      case AXIS_TYPE_X:
-        scale.range([0, length])
-        break
-      case AXIS_TYPE_Y:
-        scale.range([length, 0])
-    }
-  }
-
-  return scale
-}
-
 export {
-  scaleAxis,
   formatData
 }

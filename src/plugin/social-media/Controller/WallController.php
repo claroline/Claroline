@@ -73,7 +73,6 @@ class WallController extends Controller
      * @ParamConverter("user", options={"authenticatedUser" = true})
      *
      * @param $id
-     * @param User $user
      *
      * @return array
      */

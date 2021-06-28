@@ -3,6 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
+import {param} from '#/main/app/config'
 import {FormData} from '#/main/app/content/form/containers/data'
 
 import {constants} from '#/plugin/cursus/constants'
@@ -41,6 +42,12 @@ const SessionForm = (props) =>
             name: 'description',
             type: 'html',
             label: trans('description')
+          }, {
+            name: 'plainDescription',
+            type: 'string',
+            label: trans('plain_description'),
+            options: {long: true},
+            help: trans('plain_description_help')
           }, {
             name: 'meta.default',
             type: 'boolean',
@@ -126,6 +133,27 @@ const SessionForm = (props) =>
               multiple: false,
               choices: constants.REGISTRATION_TYPES
             }
+          }
+        ]
+      }, {
+        icon: 'fa fa-fw fa-credit-card',
+        title: trans('pricing'),
+        displayed: param('pricing.enabled'),
+        fields: [
+          {
+            name: 'pricing.price',
+            label: trans('price'),
+            type: 'currency',
+            linked: [
+              {
+                name: 'pricing.description',
+                label: trans('comment'),
+                type: 'string',
+                options: {
+                  long: true
+                }
+              }
+            ]
           }
         ]
       }, {

@@ -36,9 +36,9 @@ class Role
     use Id;
     use Uuid;
 
+    // TODO : should be a string for better data readability
     const PLATFORM_ROLE = 1;
     const WS_ROLE = 2;
-    const CUSTOM_ROLE = 3;
     const USER_ROLE = 4;
 
     /**
@@ -123,13 +123,6 @@ class Role
      * @var Workspace
      */
     protected $workspace;
-
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     *
-     * @var int
-     */
-    protected $maxUsers;
 
     /**
      * should be unidirectional.
@@ -291,16 +284,6 @@ class Role
         $group->removeRole($this);
     }
 
-    public function initUsers()
-    {
-        $this->users = new ArrayCollection();
-    }
-
-    public function initGroups()
-    {
-        $this->users = new ArrayCollection();
-    }
-
     /**
      * @return ArrayCollection|Group[]
      */
@@ -337,16 +320,6 @@ class Role
     public function getWorkspace()
     {
         return $this->workspace;
-    }
-
-    public function setMaxUsers($maxUsers)
-    {
-        $this->maxUsers = $maxUsers;
-    }
-
-    public function getMaxUsers()
-    {
-        return $this->maxUsers;
     }
 
     public function addToolRights(ToolRights $tr)

@@ -2,8 +2,11 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
+import {param} from '#/main/app/config'
+import {LINK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 
+import {route} from '#/plugin/cursus/routing'
 import {Course as CourseTypes} from '#/plugin/cursus/prop-types'
 
 const CourseForm = (props) =>
@@ -15,7 +18,11 @@ const CourseForm = (props) =>
       ['apiv2_cursus_course_create'] :
       ['apiv2_cursus_course_update', {id: data.id}]
     }
-    cancel={props.cancel}
+    cancel={{
+      type: LINK_BUTTON,
+      target: props.isNew ? props.path : route(props.path, props.course),
+      exact: true
+    }}
     sections={[
       {
         title: trans('general'),
@@ -45,6 +52,21 @@ const CourseForm = (props) =>
             name: 'description',
             type: 'html',
             label: trans('description')
+          }, {
+            name: 'plainDescription',
+            type: 'string',
+            label: trans('plain_description'),
+            options: {long: true},
+            help: trans('plain_description_help')
+          }, {
+            name: 'meta.duration',
+            type: 'number',
+            label: trans('duration'),
+            required: true,
+            options: {
+              min: 0,
+              unit: trans('days')
+            }
           }, {
             name: 'tags',
             label: trans('tags'),
@@ -226,14 +248,27 @@ const CourseForm = (props) =>
                 }, {}) :
                 {}
             }
-          }, {
-            name: 'meta.duration',
-            type: 'number',
-            label: trans('default_session_duration_label', {}, 'cursus'),
-            required: true,
-            options: {
-              min: 0
-            }
+          }
+        ]
+      }, {
+        icon: 'fa fa-fw fa-credit-card',
+        title: trans('pricing'),
+        displayed: param('pricing.enabled'),
+        fields: [
+          {
+            name: 'pricing.price',
+            label: trans('price'),
+            type: 'currency',
+            linked: [
+              {
+                name: 'pricing.description',
+                label: trans('comment'),
+                type: 'string',
+                options: {
+                  long: true
+                }
+              }
+            ]
           }
         ]
       }, {
@@ -274,12 +309,15 @@ const CourseForm = (props) =>
   />
 
 CourseForm.propTypes = {
+  path: T.string.isRequired,
   name: T.string.isRequired,
+
+  // from store
+  isNew: T.bool.isRequired,
   course: T.shape(
     CourseTypes.propTypes
   ),
-  update: T.func.isRequired,
-  cancel: T.object
+  update: T.func.isRequired
 }
 
 export {

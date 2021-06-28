@@ -109,15 +109,21 @@ class ResourceVoter implements VoterInterface
                     return VoterInterface::ACCESS_GRANTED;
                 }
             } elseif ('move' === strtolower($attributes[0])) {
-                $errors = array_merge(
-                    $errors,
-                    $this->checkMove($object->getAttribute('parent'), $object->getResources(), $token)
-                );
+                // this should not be done here (required by ResourceController::executeAction/ResourceController::executeCollectionAction)
+                // it directly forward the query string without knowing what there is inside
+                $parent = $object->getAttribute('parent');
+                if (is_string($parent)) {
+                    $parent = $this->em->getRepository(ResourceNode::class)->findOneBy(['uuid' => $parent]);
+                }
+
+                $errors = array_merge($errors, $this->checkMove($parent, $object->getResources(), $token));
             } elseif ('copy' === strtolower($attributes[0])) {
-                $errors = array_merge(
-                    $errors,
-                    $this->checkCopy($object->getAttribute('parent'), $object->getResources(), $token)
-                );
+                $parent = $object->getAttribute('parent');
+                if (is_string($parent)) {
+                    $parent = $this->em->getRepository(ResourceNode::class)->findOneBy(['uuid' => $parent]);
+                }
+
+                $errors = array_merge($errors, $this->checkCopy($parent, $object->getResources(), $token));
             } else {
                 $errors = array_merge(
                     $errors,

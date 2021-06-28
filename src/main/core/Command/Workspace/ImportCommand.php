@@ -13,8 +13,6 @@ namespace Claroline\CoreBundle\Command\Workspace;
 
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\SerializerProvider;
-use Claroline\AppBundle\Command\BaseCommandTrait;
-use Claroline\CoreBundle\Command\AdminCliCommand;
 use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Utilities\FileUtilities;
@@ -28,15 +26,8 @@ use Symfony\Component\HttpFoundation\File\File;
 /**
  * Creates an user, optionally with a specific role (default to simple user).
  */
-class ImportCommand extends Command implements AdminCliCommand
+class ImportCommand extends Command
 {
-    use BaseCommandTrait;
-
-    private $params = [
-        'path' => 'Absolute path to the archive file: ',
-        'code' => 'The new code ',
-    ];
-
     private $crud;
     private $fileUtils;
     private $serializerProvider;
@@ -64,11 +55,11 @@ class ImportCommand extends Command implements AdminCliCommand
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $destination = @tempnam('claro', '_wscopy');
+        $destination = tempnam('claro', '_wscopy');
         $file = $input->getArgument('path');
         copy($file, $destination);
         $file = file_get_contents($file);
-        $tmp = @tempnam('claro', '_zip');
+        $tmp = tempnam('claro', '_zip');
         file_put_contents($tmp, $file);
         $file = new File($tmp);
 

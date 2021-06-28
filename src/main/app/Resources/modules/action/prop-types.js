@@ -83,6 +83,11 @@ const Toolbar = {
 
     /**
      * The base class of the toolbar (it's used to generate classNames which can be used for styling).
+     */
+    name: T.string,
+
+    /**
+     * The additional classes to add to the toolbar.
      *
      * @type {string}
      */

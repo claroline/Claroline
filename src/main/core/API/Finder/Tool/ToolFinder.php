@@ -23,15 +23,13 @@ class ToolFinder extends AbstractFinder
 
     /**
      * ToolFinder constructor.
-     *
-     * @param PluginManager $pluginManager
      */
     public function __construct(PluginManager $pluginManager)
     {
         $this->pluginManager = $pluginManager;
     }
 
-    public function getClass()
+    public static function getClass(): string
     {
         return Tool::class;
     }
@@ -85,12 +83,5 @@ class ToolFinder extends AbstractFinder
         }
 
         return $qb;
-    }
-
-    public function getFilters()
-    {
-        return [
-            '$defaults' => [],
-        ];
     }
 }

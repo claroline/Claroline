@@ -11,32 +11,9 @@
 
 namespace Claroline\CoreBundle\Event\Workspace;
 
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Symfony\Contracts\EventDispatcher\Event;
-
 /**
  * Event dispatched when a workspace is opened.
  */
-class OpenWorkspaceEvent extends Event
+class OpenWorkspaceEvent extends AbstractWorkspaceEvent
 {
-    /** @var Workspace */
-    private $workspace;
-
-    /**
-     * OpenWorkspaceEvent constructor.
-     */
-    public function __construct(Workspace $workspace)
-    {
-        $this->workspace = $workspace;
-    }
-
-    /**
-     * Gets the loaded workspace Entity.
-     *
-     * @return Workspace
-     */
-    public function getWorkspace()
-    {
-        return $this->workspace;
-    }
 }

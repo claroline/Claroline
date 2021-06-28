@@ -19,8 +19,6 @@ class WordsQuestionSerializer
 
     /**
      * WordsQuestionSerializer constructor.
-     *
-     * @param KeywordSerializer $keywordSerializer
      */
     public function __construct(KeywordSerializer $keywordSerializer)
     {
@@ -34,9 +32,6 @@ class WordsQuestionSerializer
 
     /**
      * Converts a Words question into a JSON-encodable structure.
-     *
-     * @param OpenQuestion $wordsQuestion
-     * @param array        $options
      *
      * @return array
      */
@@ -58,7 +53,6 @@ class WordsQuestionSerializer
      *
      * @param array        $data
      * @param OpenQuestion $wordsQuestion
-     * @param array        $options
      *
      * @return OpenQuestion
      */
@@ -84,10 +78,6 @@ class WordsQuestionSerializer
 
     /**
      * Deserializes Question solutions (= a collection of keywords).
-     *
-     * @param OpenQuestion $wordsQuestion
-     * @param array        $solutions
-     * @param array        $options
      */
     private function deserializeSolutions(OpenQuestion $wordsQuestion, array $solutions, array $options = [])
     {

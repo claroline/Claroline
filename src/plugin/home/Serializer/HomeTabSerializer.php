@@ -15,12 +15,10 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\HomeBundle\Entity\HomeTab;
-use Claroline\HomeBundle\Entity\HomeTabConfig;
 use Claroline\HomeBundle\Entity\Type\AbstractTab;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
- * @todo simplify relationships (there are lots of duplicates)
  * @todo simplify serialized structure
  */
 class HomeTabSerializer
@@ -72,13 +70,6 @@ class HomeTabSerializer
 
     public function serialize(HomeTab $homeTab, array $options = []): array
     {
-        $homeTabConfig = $this->getConfig($homeTab);
-
-        if (!$homeTabConfig) {
-            //something went wrong
-            return [];
-        }
-
         $poster = null;
         if ($homeTab->getPoster()) {
             /** @var PublicFile $file */
@@ -93,11 +84,11 @@ class HomeTabSerializer
 
         $data = [
             'id' => $homeTab->getUuid(),
-            'title' => $homeTabConfig->getName(),
-            'slug' => $homeTabConfig->getLongTitle() ? substr(strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $homeTabConfig->getLongTitle()))), 0, 128) : 'new',
-            'longTitle' => $homeTabConfig->getLongTitle(),
+            'title' => $homeTab->getName(),
+            'slug' => $homeTab->getLongTitle() ? substr(strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $homeTab->getLongTitle()))), 0, 128) : 'new',
+            'longTitle' => $homeTab->getLongTitle(),
             'poster' => $poster,
-            'icon' => $homeTabConfig->getIcon(),
+            'icon' => $homeTab->getIcon(),
             'context' => $homeTab->getContext(),
             'type' => $homeTab->getType(),
             'class' => $homeTab->getClass(),
@@ -108,16 +99,19 @@ class HomeTabSerializer
                 'delete' => $this->authorization->isGranted('DELETE', $homeTab),
             ],
             'restrictions' => [
-                'hidden' => !$homeTabConfig->isVisible(),
+                'hidden' => !$homeTab->isVisible(),
                 'roles' => array_map(function (Role $role) {
                     return $this->roleSerializer->serialize($role, [Options::SERIALIZE_MINIMAL]);
-                }, $homeTabConfig->getRoles()->toArray()),
+                }, $homeTab->getRoles()->toArray()),
             ],
             'display' => [
-                'color' => $homeTabConfig->getColor(),
-                'centerTitle' => $homeTabConfig->isCenterTitle(),
+                'color' => $homeTab->getColor(),
+                'centerTitle' => $homeTab->isCenterTitle(),
+                'showTitle' => $homeTab->getShowTitle(),
             ],
             'user' => $homeTab->getUser() ? $this->userSerializer->serialize($homeTab->getUser(), [Options::SERIALIZE_MINIMAL]) : null,
+
+            // TODO : should no longer be exposed here (still required by update and ws import)
             'children' => array_map(function (HomeTab $child) use ($options) {
                 return $this->serialize($child, $options);
             }, $homeTab->getChildren()->toArray()),
@@ -156,36 +150,32 @@ class HomeTabSerializer
             $homeTab->refreshUuid();
         }
 
-        $homeTabConfig = $this->getConfig($homeTab);
-        if (!$homeTabConfig) {
-            $homeTabConfig = new HomeTabConfig();
-            $homeTabConfig->setHomeTab($homeTab);
-        }
-
-        $this->sipe('title', 'setName', $data, $homeTabConfig);
+        $this->sipe('title', 'setName', $data, $homeTab);
         $this->sipe('position', 'setOrder', $data, $homeTab);
-        $this->sipe('longTitle', 'setLongTitle', $data, $homeTabConfig);
+        $this->sipe('longTitle', 'setLongTitle', $data, $homeTab);
         $this->sipe('poster.url', 'setPoster', $data, $homeTab);
-        $this->sipe('icon', 'setIcon', $data, $homeTabConfig);
+        $this->sipe('icon', 'setIcon', $data, $homeTab);
         $this->sipe('context', 'setContext', $data, $homeTab);
         $this->sipe('type', 'setType', $data, $homeTab);
         $this->sipe('class', 'setClass', $data, $homeTab);
-        $this->sipe('display.color', 'setColor', $data, $homeTabConfig);
-        $this->sipe('display.centerTitle', 'setCenterTitle', $data, $homeTabConfig);
+        $this->sipe('display.color', 'setColor', $data, $homeTab);
+        $this->sipe('display.centerTitle', 'setCenterTitle', $data, $homeTab);
+        $this->sipe('display.showTitle', 'setShowTitle', $data, $homeTab);
 
         if (isset($data['restrictions'])) {
             if (isset($data['restrictions']['hidden'])) {
-                $homeTabConfig->setVisible(!$data['restrictions']['hidden']);
+                $homeTab->setVisible(!$data['restrictions']['hidden']);
             }
 
             if (isset($data['restrictions']['roles'])) {
-                $existingRoles = $homeTabConfig->getRoles()->toArray();
+                $existingRoles = $homeTab->getRoles()->toArray();
 
                 foreach ($data['restrictions']['roles'] as $roleData) {
                     /** @var Role $role */
                     $role = $this->om->getRepository(Role::class)->findOneBy(['uuid' => $roleData['id']]);
-
-                    $homeTabConfig->addRole($role);
+                    if ($role) {
+                        $homeTab->addRole($role);
+                    }
                 }
 
                 $roles = array_map(function (array $role) {
@@ -195,7 +185,7 @@ class HomeTabSerializer
                 foreach ($existingRoles as $role) {
                     if (!in_array($role->getUuid(), $roles)) {
                         // the role no longer exist we can remove it
-                        $homeTabConfig->removeRole($role);
+                        $homeTab->removeRole($role);
                     }
                 }
             }
@@ -237,7 +227,8 @@ class HomeTabSerializer
             $this->om->persist($typeParameters);
         }
 
-        // Set children steps
+        // Set children tabs
+        // TODO : should no longer be exposed here (still required by update and ws import)
         if (isset($data['children'])) {
             /** @var HomeTab[] $currentChildren */
             $currentChildren = $homeTab->getChildren()->toArray();
@@ -246,47 +237,30 @@ class HomeTabSerializer
             // updates tabs
             foreach ($data['children'] as $childIndex => $childData) {
                 $child = null;
-                if ($childData['id']) {
+                if ($childData['id'] && !in_array(Options::REFRESH_UUID, $options)) {
                     $child = $this->om->getRepository(HomeTab::class)->findOneBy(['uuid' => $childData['id']]);
-                    // TODO manage tabs moving
-                    /*foreach ($currentChildren as $currentChild) {
-                        if ($currentChild->getUuid() === $childData['id']) {
-                            $child = $currentChild;
-                            break;
-                        }
-                    }*/
                 }
 
                 if (empty($child)) {
                     $child = new HomeTab();
-                    //$this->om->persist($child);
                 }
 
                 $child->setOrder($childIndex);
+                $child->setWorkspace($homeTab->getWorkspace());
                 $homeTab->addChild($child);
 
-                $this->deserialize($childData, $child, $options);
+                $child = $this->deserialize($childData, $child, $options);
                 $ids[] = $child->getUuid();
             }
 
             // removes tabs which no longer exists
             foreach ($currentChildren as $currentTab) {
                 if (!in_array($currentTab->getUuid(), $ids)) {
-                    //$this->om->remove($currentTab);
                     $homeTab->removeChild($currentTab);
                 }
             }
         }
 
         return $homeTab;
-    }
-
-    private function getConfig(HomeTab $tab): ?HomeTabConfig
-    {
-        /** @var HomeTabConfig $homeTabConfig */
-        $homeTabConfig = $this->om->getRepository(HomeTabConfig::class)
-            ->findOneBy(['homeTab' => $tab]);
-
-        return $homeTabConfig;
     }
 }

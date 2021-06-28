@@ -31,10 +31,6 @@ class AudioPlayerManager
     private $sectionRepo;
     private $sectionCommentRepo;
 
-    /**
-     * @param ObjectManager     $om
-     * @param SectionSerializer $sectionSerializer
-     */
     public function __construct(ObjectManager $om, SectionSerializer $sectionSerializer)
     {
         $this->om = $om;

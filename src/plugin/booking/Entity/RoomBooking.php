@@ -14,6 +14,7 @@ namespace Claroline\BookingBundle\Entity;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Description;
+use Claroline\CoreBundle\Entity\Location\Room;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -27,7 +28,7 @@ class RoomBooking
     use Uuid;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\BookingBundle\Entity\Room")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Location\Room")
      * @ORM\JoinColumn(name="room_id", nullable=false, onDelete="CASCADE")
      *
      * @var Room

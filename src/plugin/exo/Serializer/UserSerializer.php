@@ -26,9 +26,6 @@ class UserSerializer
 
     /**
      * UserSerializer constructor.
-     *
-     * @param ObjectManager        $om
-     * @param PublicFileSerializer $fileSerializer
      */
     public function __construct(ObjectManager $om, PublicFileSerializer $fileSerializer)
     {
@@ -43,9 +40,6 @@ class UserSerializer
 
     /**
      * Converts a User into a JSON-encodable structure.
-     *
-     * @param User  $user
-     * @param array $options
      *
      * @return array
      */
@@ -75,7 +69,6 @@ class UserSerializer
      *
      * @param \array $data
      * @param User   $user
-     * @param array  $options
      *
      * @return User
      */
@@ -91,8 +84,6 @@ class UserSerializer
 
     /**
      * Serialize the user picture.
-     *
-     * @param User $user
      *
      * @return array|null
      */

@@ -11,7 +11,7 @@
 
 namespace Invalid\UnloadableResourceClass2;
 
-use Claroline\CoreBundle\Library\DistributionPluginBundle;
+use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
 
 /*
  * Invalid because it declares a resource but doesn't extend abstract resource

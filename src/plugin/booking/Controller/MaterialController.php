@@ -15,6 +15,8 @@ use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\BookingBundle\Entity\Material;
 use Claroline\BookingBundle\Entity\MaterialBooking;
+use Claroline\CoreBundle\Entity\Tool\OrderedTool;
+use Claroline\CoreBundle\Repository\Tool\OrderedToolRepository;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -53,7 +55,7 @@ class MaterialController extends AbstractCrudController
      */
     public function bookAction(Material $material, Request $request): JsonResponse
     {
-        $this->checkPermission('BOOK', $material, [], true);
+        $this->canBook();
 
         // TODO : check availability
         $this->om->startFlushSuite();
@@ -92,12 +94,22 @@ class MaterialController extends AbstractCrudController
      */
     public function deleteBookingAction(Material $material, Request $request): JsonResponse
     {
-        $this->checkPermission('BOOK', $material, [], true);
+        $this->canBook();
 
         $this->crud->deleteBulk(
             $this->decodeIdsString($request, MaterialBooking::class)
         );
 
         return new JsonResponse(null, 204);
+    }
+
+    private function canBook()
+    {
+        /** @var OrderedToolRepository $orderedToolRepo */
+        $orderedToolRepo = $this->om->getRepository(OrderedTool::class);
+
+        $bookingTool = $orderedToolRepo->findOneByNameAndDesktop('booking');
+
+        $this->checkPermission('BOOK', $bookingTool, [], true);
     }
 }

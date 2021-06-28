@@ -75,7 +75,7 @@ plugin:
 
         # Creates a copy of one or more resources
         - name: copy
-          decoder: administrate
+          decoder: copy
           group: management
           scope: [object, collection] # The action can be executed on multiple resources at once.
           api: [POST]

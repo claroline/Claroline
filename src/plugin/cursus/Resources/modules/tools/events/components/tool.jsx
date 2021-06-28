@@ -7,8 +7,9 @@ import {Routes} from '#/main/app/router'
 import {EventsAll} from '#/plugin/cursus/tools/events/components/all'
 import {EventsRegistered} from '#/plugin/cursus/tools/events/components/registered'
 import {EventsPublic} from '#/plugin/cursus/tools/events/components/public'
-import {EventsPending} from '#/plugin/cursus/tools/events/components/pending'
 import {EventsDetails} from '#/plugin/cursus/tools/events/containers/details'
+
+import {selectors} from '#/plugin/cursus/tools/events/store'
 
 const EventsTool = (props) =>
   <Routes
@@ -19,43 +20,36 @@ const EventsTool = (props) =>
     routes={[
       {
         path: '/registered',
-        onEnter: () => props.invalidateList(),
+        onEnter: props.invalidateList,
         render: () => (
           <EventsRegistered
             path={props.path}
-            contextId={props.contextId}
+            name={selectors.LIST_NAME}
+            contextId={get(props.currentContext, 'data.id')}
             invalidateList={props.invalidateList}
           />
         )
       }, {
         path: '/public',
-        onEnter: () => props.invalidateList(),
+        onEnter: props.invalidateList,
         render: () => (
           <EventsPublic
             path={props.path}
+            name={selectors.LIST_NAME}
             contextId={get(props.currentContext, 'data.id')}
           />
         )
       }, {
         path: '/all',
-        onEnter: () => props.invalidateList(),
+        onEnter: props.invalidateList,
         render: () => (
           <EventsAll
             path={props.path}
+            name={selectors.LIST_NAME}
             contextId={get(props.currentContext, 'data.id')}
           />
         ),
         disabled: !props.canEdit
-      }, {
-        path: '/pending',
-        onEnter: () => props.invalidateList(),
-        render: () => (
-          <EventsPending
-            path={props.path}
-            contextId={get(props.currentContext, 'data.id')}
-          />
-        ),
-        disabled: !props.canAdministrate
       }, {
         path: '/:id',
         component: EventsDetails,
@@ -71,7 +65,6 @@ EventsTool.propTypes = {
     data: T.object
   }).isRequired,
   canEdit: T.bool.isRequired,
-  canAdministrate: T.bool.isRequired,
   invalidateList: T.func.isRequired,
   open: T.func.isRequired
 }

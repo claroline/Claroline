@@ -15,21 +15,14 @@ use Claroline\CoreBundle\Entity\Template\TemplateType;
 
 class TemplateTypeSerializer
 {
-    /**
-     * @param TemplateType $templateType
-     *
-     * @return array
-     */
-    public function serialize(TemplateType $templateType)
+    public function serialize(TemplateType $templateType): array
     {
-        $serialized = [
+        return [
             'id' => $templateType->getUuid(),
             'name' => $templateType->getName(),
             'placeholders' => $templateType->getPlaceholders(),
             'defaultTemplate' => $templateType->getDefaultTemplate(),
         ];
-
-        return $serialized;
     }
 
     public function getName()

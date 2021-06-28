@@ -9,7 +9,7 @@ import {trans} from '#/main/app/intl/translation'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {actions as formActions} from '#/main/app/content/form/store/actions'
 
-import {ResourceType} from '#/main/core/resource/components/type'
+import {ResourceIcon} from '#/main/core/resource/components/icon'
 
 const restrictedByDates = (node) => get(node, 'restrictions.enableDates') || !isEmpty(get(node, 'restrictions.dates'))
 const restrictedByCode = (node) => get(node, 'restrictions.enableCode') || !!get(node, 'restrictions.code')
@@ -29,17 +29,13 @@ const ResourceFormComponent = (props) =>
           {
             name: 'meta.type',
             label: trans('type'),
-            type: 'string',
+            type: 'type',
             hideLabel: true,
-            render: (resourceNode) => {
-              const NodeType =
-                <ResourceType
-                  name={resourceNode.meta.type}
-                  mimeType={resourceNode.meta.mimeType}
-                />
-
-              return NodeType
-            }
+            calculated: (resourceNode) => ({
+              icon: <ResourceIcon mimeType={resourceNode.meta.mimeType} />,
+              name: trans(resourceNode.meta.type, {}, 'resource'),
+              description: trans(`${resourceNode.meta.type}_desc`, {}, 'resource')
+            })
           }, {
             name: 'name',
             label: trans('name'),
@@ -91,6 +87,10 @@ const ResourceFormComponent = (props) =>
             help: trans('resource_showIcon_help', {}, 'resource'),
             type: 'boolean'
           }, {
+            name: 'display.showTitle',
+            label: trans('show_title'),
+            type: 'boolean'
+          }, {
             name: 'display.fullscreen',
             label: trans('resource_fullscreen', {}, 'resource'),
             type: 'boolean'
@@ -134,7 +134,7 @@ const ResourceFormComponent = (props) =>
             calculated: restrictedByCode,
             onChange: activated => {
               if (!activated) {
-                props.updateProp('restrictions.code', null)
+                props.updateProp('restrictions.code', '')
               }
             },
             linked: [

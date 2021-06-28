@@ -9,9 +9,9 @@ class SerializerProvider
     /**
      * The list of registered serializers in the platform.
      *
-     * @var array
+     * @var iterable
      */
-    private $serializers = [];
+    private $serializers;
     /** @var ObjectManager */
     private $om;
     /** @var string */
@@ -22,27 +22,12 @@ class SerializerProvider
     /**
      * Injects Serializer service.
      */
-    public function __construct(ObjectManager $om, string $rootDir)
+    public function __construct(ObjectManager $om, iterable $serializers, string $rootDir)
     {
         $this->om = $om;
+        $this->serializers = $serializers;
         $this->rootDir = $rootDir;
         $this->baseUri = 'https://github.com/claroline/Distribution/tree/master';
-    }
-
-    /**
-     * Registers a new serializer.
-     *
-     * @param mixed $serializer
-     *
-     * @throws \Exception
-     */
-    public function add($serializer)
-    {
-        if (!method_exists($serializer, 'serialize')) {
-            throw new \Exception('The serializer '.get_class($serializer).' must implement the method serialize');
-        }
-
-        $this->serializers[] = $serializer;
     }
 
     /**
@@ -87,7 +72,9 @@ class SerializerProvider
     {
         // search for the correct serializer
         if (is_string($object)) {
-            if ($meta = $this->om->getClassMetaData($object)) {
+            $meta = $this->om->getClassMetaData($object);
+
+            if ($meta) {
                 $object = $meta->name;
             }
         }
@@ -128,12 +115,10 @@ class SerializerProvider
 
     /**
      * Return the list of serializers.
-     *
-     * @return mixed[];
      */
-    public function all()
+    public function all(): array
     {
-        return $this->serializers;
+        return $this->serializers instanceof \Traversable ? iterator_to_array($this->serializers) : $this->serializers;
     }
 
     /**
@@ -172,11 +157,13 @@ class SerializerProvider
     public function deserialize($data, $object, $options = [])
     {
         // search for the correct serializer
-        if ($meta = $this->om->getClassMetaData(get_class($object))) {
+        $meta = $this->om->getClassMetaData(get_class($object));
+
+        if ($meta) {
             $class = $meta->name;
         }
 
-        if (!empty($class)) {
+        if ($class ?? false) {
             $serializer = $this->get($class);
             if (method_exists($serializer, 'deserialize')) {
                 $serializer->deserialize($data, $object, $options);

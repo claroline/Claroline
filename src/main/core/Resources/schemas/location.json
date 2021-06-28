@@ -43,7 +43,7 @@
           "description": "The location state"
         },
         "country": {
-          "type": "string",
+          "type": ["null", "string"],
           "description": "The location country"
         }
       }

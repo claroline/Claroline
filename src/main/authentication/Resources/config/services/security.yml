@@ -12,11 +12,11 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@security.encoder_factory'
             - '@Claroline\CoreBundle\Listener\AuthenticationSuccessListener'
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
 
     Claroline\AuthenticationBundle\Security\Authentication\Guard\IpAuthenticator:
         arguments:
-            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-            - '@claroline.manager.ip_white_list_manager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     Claroline\AuthenticationBundle\Security\Authentication\Guard\ApiTokenAuthenticator:
         arguments:
@@ -39,12 +39,17 @@ services:
         arguments:
             - '@session'
             - '@Claroline\AuthenticationBundle\Security\Oauth\Hwi\ResourceOwnerFactory'
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
 
     Claroline\AuthenticationBundle\Security\Oauth\OauthUserProvider:
         arguments:
             - '@doctrine.orm.entity_manager'
             - '@session'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+
+    Claroline\AuthenticationBundle\Security\Logout\LogoutHandler:
+        arguments:
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
 
     guzzle_client.hwi_oauth:
         class: Http\Adapter\Guzzle6\Client

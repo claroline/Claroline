@@ -39,7 +39,7 @@
     "can_access": "Vous êtes inscrit à cet espace d'activités.",
     "cannot_access": "Vous n'êtes pas inscrit à cet espace d'activités.",
     "code_required": "L'accès requiert un code.",
-    "contact_manager": "Veuillez contacter un gestionnaire si vous pensez que vous devriez avoir accès à cet espace d'activités.",
+    "contact_manager": "Veuillez contacter un gestionnaire %manager_email% si vous pensez que vous devriez avoir accès à cet espace d'activités.",
     "enter_code": "Veuillez saisir le code qui vous a été remis afin d'accéder à l'espace d'activités.",
     "manager_info": "En tant que gestionnaire vous pouvez toujours accéder à l'espace d'activités, même si les conditions d'accès ne sont pas satisfaites.",
     "manager_rights_access": "Vos droits de gestionnaires vous permettents d'accéder à toutes les fonctions de l'espace d'activités.",

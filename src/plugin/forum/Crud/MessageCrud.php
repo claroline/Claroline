@@ -4,12 +4,13 @@ namespace Claroline\ForumBundle\Crud;
 
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\ForumBundle\Entity\Forum;
 use Claroline\ForumBundle\Entity\Message;
 use Claroline\ForumBundle\Entity\Validation\User as UserValidation;
 use Claroline\ForumBundle\Manager\ForumManager;
+use Claroline\ForumBundle\Messenger\NotifyUsersOnMessageCreated;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class MessageCrud
@@ -22,29 +23,28 @@ class MessageCrud
     /** @var ForumManager */
     private $forumManager;
 
+    /** @var MessageBusInterface */
+    private $messageBus;
+
     /**
      * MessageCrud constructor.
-     *
-     * @param ObjectManager                 $om
-     * @param ForumManager                  $forumManager
-     * @param AuthorizationCheckerInterface $authorization
      */
     public function __construct(
         ObjectManager $om,
         ForumManager $forumManager,
-        AuthorizationCheckerInterface $authorization
+        AuthorizationCheckerInterface $authorization,
+        MessageBusInterface $messageBus
     ) {
         $this->om = $om;
         $this->forumManager = $forumManager;
         $this->authorization = $authorization;
+        $this->messageBus = $messageBus;
     }
 
     /**
      * Manage moderation on message create.
      *
-     * @param CreateEvent $event
-     *
-     * @return ResourceNode
+     * @return Message
      */
     public function preCreate(CreateEvent $event)
     {
@@ -81,8 +81,6 @@ class MessageCrud
     /**
      * Send notifications after creation.
      *
-     * @param CreateEvent $event
-     *
      * @return Message
      */
     public function postCreate(CreateEvent $event)
@@ -90,7 +88,7 @@ class MessageCrud
         /** @var Message $message */
         $message = $event->getObject();
 
-        $this->forumManager->notifyMessage($message);
+        $this->messageBus->dispatch(new NotifyUsersOnMessageCreated($message->getId()));
 
         return $message;
     }

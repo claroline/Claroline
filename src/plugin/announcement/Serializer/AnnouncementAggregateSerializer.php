@@ -9,17 +9,14 @@ use Claroline\AppBundle\API\Serializer\SerializerTrait;
 
 class AnnouncementAggregateSerializer
 {
-    const VISIBLE_POSTS_ONLY = 'visiblePostsOnly';
-
     use SerializerTrait;
+    const VISIBLE_POSTS_ONLY = 'visiblePostsOnly';
 
     /** @var AnnouncementSerializer */
     private $announcementSerializer;
 
     /**
      * AnnouncementAggregateSerializer constructor.
-     *
-     * @param AnnouncementSerializer $announcementSerializer
      */
     public function __construct(
         AnnouncementSerializer $announcementSerializer
@@ -38,9 +35,6 @@ class AnnouncementAggregateSerializer
     }
 
     /**
-     * @param AnnouncementAggregate $announcements
-     * @param array                 $options
-     *
      * @return array
      */
     public function serialize(AnnouncementAggregate $announcements, array $options = [])
@@ -68,9 +62,7 @@ class AnnouncementAggregateSerializer
     }
 
     /**
-     * @param array                 $data
      * @param AnnouncementAggregate $aggregate
-     * @param array                 $options
      *
      * @return AnnouncementAggregate
      */

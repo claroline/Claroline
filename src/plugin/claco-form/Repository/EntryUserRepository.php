@@ -19,9 +19,6 @@ use Doctrine\ORM\EntityRepository;
 class EntryUserRepository extends EntityRepository
 {
     /**
-     * @param ClacoForm $clacoForm
-     * @param User      $user
-     *
      * @return EntryUser[]
      */
     public function findSharedEntryUserByClacoFormAndUser(ClacoForm $clacoForm, User $user)
@@ -43,8 +40,6 @@ class EntryUserRepository extends EntityRepository
     }
 
     /**
-     * @param ClacoForm $clacoForm
-     *
      * @return EntryUser[]
      */
     public function findSharedEntriesUsersByClacoForm(ClacoForm $clacoForm)

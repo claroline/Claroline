@@ -7,7 +7,7 @@ use Doctrine\ORM\QueryBuilder;
 
 class CommentFinder extends AbstractFinder
 {
-    public function getClass()
+    public static function getClass(): string
     {
         return 'Icap\BlogBundle\Entity\Comment';
     }

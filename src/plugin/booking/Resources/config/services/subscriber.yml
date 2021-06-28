@@ -1,0 +1,6 @@
+services:
+    Claroline\BookingBundle\Subscriber\RoomPlanningSubscriber:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+        tags:
+            - { name: kernel.event_subscriber}

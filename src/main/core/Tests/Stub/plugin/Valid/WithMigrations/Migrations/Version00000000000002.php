@@ -12,9 +12,9 @@
 namespace Valid\WithMigrations\Migrations;
 
 use Doctrine\DBAL\Schema\Schema;
-use Claroline\CoreBundle\Library\Installation\BundleMigration;
+use Doctrine\Migrations\AbstractMigration;
 
-class Version00000000000002 extends BundleMigration
+class Version00000000000002 extends AbstractMigration
 {
     public function up(Schema $schema)
     {

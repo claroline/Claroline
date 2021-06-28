@@ -23,7 +23,6 @@ class ConnectionMessage
     // identifiers
     use Id;
     use Uuid;
-
     // restrictions
     use Hidden;
     use AccessibleFrom;
@@ -167,8 +166,6 @@ class ConnectionMessage
 
     /**
      * Add a slide to the message.
-     *
-     * @param Slide $slide
      */
     public function addSlide(Slide $slide)
     {
@@ -180,8 +177,6 @@ class ConnectionMessage
 
     /**
      * Remove a slide from the message.
-     *
-     * @param Slide $slide
      */
     public function removeSlide(Slide $slide)
     {
@@ -203,8 +198,6 @@ class ConnectionMessage
 
     /**
      * Add a role to the message.
-     *
-     * @param Role $role
      */
     public function addRole(Role $role)
     {
@@ -215,8 +208,6 @@ class ConnectionMessage
 
     /**
      * Remove a role from the message.
-     *
-     * @param Role $role
      */
     public function removeRole(Role $role)
     {
@@ -245,8 +236,6 @@ class ConnectionMessage
 
     /**
      * Add an user to the message.
-     *
-     * @param User $user
      */
     public function addUser(User $user)
     {
@@ -257,8 +246,6 @@ class ConnectionMessage
 
     /**
      * Remove an user from the message.
-     *
-     * @param User $user
      */
     public function removeUser(User $user)
     {

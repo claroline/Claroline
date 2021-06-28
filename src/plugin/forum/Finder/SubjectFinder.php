@@ -18,7 +18,7 @@ use Doctrine\ORM\QueryBuilder;
 
 class SubjectFinder extends AbstractFinder
 {
-    public function getClass()
+    public static function getClass(): string
     {
         return Subject::class;
     }
@@ -102,7 +102,7 @@ class SubjectFinder extends AbstractFinder
         return $qb;
     }
 
-    public function getFilters()
+    public function getFilters(): array
     {
         return [
             'forum' => [

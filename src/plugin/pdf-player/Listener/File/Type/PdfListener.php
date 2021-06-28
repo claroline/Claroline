@@ -34,10 +34,6 @@ class PdfListener
 
     /**
      * PdfListener constructor.
-     *
-     * @param TokenStorageInterface $tokenStorage
-     * @param SerializerProvider    $serializer
-     * @param UserEvaluationManager $userEvaluationManager
      */
     public function __construct(
         TokenStorageInterface $tokenStorage,
@@ -49,9 +45,6 @@ class PdfListener
         $this->userEvaluationManager = $userEvaluationManager;
     }
 
-    /**
-     * @param LoadFileEvent $event
-     */
     public function onLoad(LoadFileEvent $event)
     {
         /** @var File $pdf */

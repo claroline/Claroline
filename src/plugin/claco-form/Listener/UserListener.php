@@ -10,17 +10,11 @@ class UserListener
     /** @var ClacoFormManager */
     private $clacoFormManager;
 
-    /**
-     * @param ClacoFormManager $clacoFormManager
-     */
     public function __construct(ClacoFormManager $clacoFormManager)
     {
         $this->clacoFormManager = $clacoFormManager;
     }
 
-    /**
-     * @param MergeUsersEvent $event
-     */
     public function onMerge(MergeUsersEvent $event)
     {
         // Replace manager of Category nodes

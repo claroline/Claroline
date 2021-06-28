@@ -9,6 +9,7 @@ const NumberField = props =>
     id={props.id}
     type="number"
     className={classes('form-control', props.className)}
+    style={props.style}
     value={props.value}
     disabled={props.disabled}
     min={props.min}
@@ -21,6 +22,7 @@ const NumberField = props =>
 NumberField.propTypes = {
   id: T.string.isRequired,
   className: T.string,
+  style: T.object,
   disabled: T.bool,
   placeholder: T.string,
   autoComplete: T.string,
@@ -51,6 +53,7 @@ class NumberInput extends PureComponent {
       disabled: this.props.disabled,
       placeholder: this.props.placeholder,
       autoComplete: this.props.autoComplete,
+      style: this.props.style,
       value: null === this.props.value || isNaN(this.props.value) ? '' : this.props.value,
       min: this.props.min,
       max: this.props.max,

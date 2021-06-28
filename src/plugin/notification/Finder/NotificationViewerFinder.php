@@ -17,7 +17,7 @@ use Icap\NotificationBundle\Entity\NotificationViewer;
 
 class NotificationViewerFinder extends AbstractFinder
 {
-    public function getClass()
+    public static function getClass(): string
     {
         return NotificationViewer::class;
     }

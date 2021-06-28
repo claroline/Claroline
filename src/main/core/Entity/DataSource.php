@@ -127,8 +127,6 @@ class DataSource
 
     /**
      * Set context.
-     *
-     * @param array $context
      */
     public function setContext(array $context)
     {
@@ -147,8 +145,6 @@ class DataSource
 
     /**
      * Set tags.
-     *
-     * @param array $tags
      */
     public function setTags(array $tags)
     {

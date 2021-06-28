@@ -104,12 +104,10 @@ abstract class AbstractCrudController extends AbstractApiController
         switch (count($data)) {
             case 0:
                 return new JsonResponse('No object found', 404);
-                break;
             case 1:
                 return new JsonResponse(
                     $this->serializer->serialize($data[0], $options)
                 );
-                break;
             default:
                 return new JsonResponse('Multiple results, use "list" instead', 400);
         }
@@ -491,6 +489,8 @@ abstract class AbstractCrudController extends AbstractApiController
 
     /**
      * @return array
+     *
+     * @todo this should get the current request as param.
      */
     protected function getDefaultHiddenFilters()
     {

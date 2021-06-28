@@ -14,6 +14,7 @@ namespace Claroline\OpenBadgeBundle\Entity;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Color;
+use Claroline\CoreBundle\Entity\Model\Template;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\OpenBadgeBundle\Entity\Rules\Rule;
@@ -29,12 +30,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
  */
 class BadgeClass
 {
-    // identifiers
-    use Id;
-    use Uuid;
-
-    // meta
     use Color;
+    use Id;
+    use Template;
+    use Uuid;
 
     /**
      * @ORM\Column()

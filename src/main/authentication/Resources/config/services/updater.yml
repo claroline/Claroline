@@ -1,0 +1,8 @@
+services:
+    Claroline\AuthenticationBundle\Installation\Updater\Updater130002:
+        tags: ['claroline.platform.updater']
+        arguments:
+            - '%claroline.param.config_directory%'
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@logger'

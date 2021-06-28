@@ -13,9 +13,6 @@ class Converter
 {
     private $om;
 
-    /**
-     * @param ObjectManager $om
-     */
     public function __construct(ObjectManager $om)
     {
         $this->om = $om;
@@ -58,8 +55,6 @@ class Converter
      * Converts an array representation of a competency framework (as
      * returned by CompetencyManager#loadCompetency) into its JSON
      * representation.
-     *
-     * @param array $framework
      *
      * @return string
      */

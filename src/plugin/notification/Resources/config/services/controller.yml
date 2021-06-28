@@ -4,12 +4,13 @@ services:
 
     Icap\NotificationBundle\Controller\API\FollowerResourceController:
         arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Icap\NotificationBundle\Manager\NotificationManager'
 
     Icap\NotificationBundle\Controller\APINew\NotificationsViewerController:
         arguments:
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@Claroline\AppBundle\API\FinderProvider'
-          - '@Claroline\AppBundle\API\Crud'
-          - '@Icap\NotificationBundle\Manager\NotificationManager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@Claroline\AppBundle\API\Crud'
+            - '@Icap\NotificationBundle\Manager\NotificationManager'

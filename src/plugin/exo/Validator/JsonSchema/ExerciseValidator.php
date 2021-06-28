@@ -16,8 +16,6 @@ class ExerciseValidator extends JsonSchemaValidator
 
     /**
      * ExerciseValidator constructor.
-     *
-     * @param StepValidator $stepValidator
      */
     public function __construct(StepValidator $stepValidator)
     {

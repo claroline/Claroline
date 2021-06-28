@@ -24,6 +24,7 @@ const reducer = combineReducers({
   }),
   pathForm: editorReducer,
   attempt: makeReducer(null, {
+    [makeInstanceAction(RESOURCE_LOAD, 'innova_path')]: (state, action) => action.resourceData.attempt || state,
     [ATTEMPT_LOAD]: (state, action) => action.attempt
   }),
   path: makeReducer({}, {

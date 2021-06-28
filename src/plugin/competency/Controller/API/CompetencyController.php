@@ -14,8 +14,8 @@ namespace HeVinci\CompetencyBundle\Controller\API;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Manager\Tool\ToolManager;
+use Claroline\CoreBundle\Security\Collection\ResourceCollection;
 use HeVinci\CompetencyBundle\Entity\Competency;
 use HeVinci\CompetencyBundle\Manager\CompetencyManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -41,11 +41,6 @@ class CompetencyController extends AbstractCrudController
     /** @var ToolManager */
     private $toolManager;
 
-    /**
-     * @param AuthorizationCheckerInterface $authorization
-     * @param CompetencyManager             $manager
-     * @param ToolManager                   $toolManager
-     */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         CompetencyManager $manager,
@@ -77,8 +72,6 @@ class CompetencyController extends AbstractCrudController
      *     name="apiv2_competency_root_list"
      * )
      *
-     * @param Request $request
-     *
      * @return JsonResponse
      */
     public function competenciesRootListAction(Request $request)
@@ -104,9 +97,6 @@ class CompetencyController extends AbstractCrudController
      *     class="HeVinciCompetencyBundle:Competency",
      *     options={"mapping": {"id": "uuid"}}
      * )
-     *
-     * @param Competency $competency
-     * @param Request    $request
      *
      * @return JsonResponse
      */
@@ -139,8 +129,6 @@ class CompetencyController extends AbstractCrudController
      *     options={"mapping": {"id": "uuid"}}
      * )
      *
-     * @param Competency $framework
-     *
      * @return Response
      */
     public function frameworkExportAction(Competency $framework)
@@ -163,8 +151,6 @@ class CompetencyController extends AbstractCrudController
      *    "/framework/file/upload",
      *     name="apiv2_competency_framework_file_upload"
      * )
-     *
-     * @param Request $request
      *
      * @return JsonResponse
      */
@@ -192,8 +178,6 @@ class CompetencyController extends AbstractCrudController
      *     name="apiv2_competency_framework_import"
      * )
      *
-     * @param Request $request
-     *
      * @return JsonResponse
      */
     public function frameworkImportAction(Request $request)
@@ -217,8 +201,6 @@ class CompetencyController extends AbstractCrudController
      *     class="ClarolineCoreBundle:Resource\ResourceNode",
      *     options={"mapping": {"node": "uuid"}}
      * )
-     *
-     * @param ResourceNode $node
      *
      * @return JsonResponse
      */
@@ -252,9 +234,6 @@ class CompetencyController extends AbstractCrudController
      *     options={"mapping": {"competency": "uuid"}},
      * )
      *
-     * @param ResourceNode $node
-     * @param Competency   $competency
-     *
      * @return JsonResponse
      */
     public function resourceCompetencyAssociateAction(ResourceNode $node, Competency $competency)
@@ -285,9 +264,6 @@ class CompetencyController extends AbstractCrudController
      *     class="HeVinciCompetencyBundle:Competency",
      *     options={"mapping": {"competency": "uuid"}}
      * )
-     *
-     * @param ResourceNode $node
-     * @param Competency   $competency
      *
      * @return JsonResponse
      */
@@ -320,8 +296,7 @@ class CompetencyController extends AbstractCrudController
     }
 
     /**
-     * @param ResourceNode $node
-     * @param string       $rights
+     * @param string $rights
      */
     private function checkResourceAccess(ResourceNode $node, $rights = 'OPEN')
     {

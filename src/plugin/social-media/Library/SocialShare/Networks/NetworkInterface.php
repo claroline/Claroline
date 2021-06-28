@@ -8,6 +8,7 @@
  *
  * Date: 4/23/15
  */
+
 namespace Icap\SocialmediaBundle\Library\SocialShare\Networks;
 
 interface NetworkInterface
@@ -37,7 +38,6 @@ interface NetworkInterface
      * Gets the share link for provided URL.
      *
      * @param $url
-     * @param array $options
      *
      * @return string
      */

@@ -1,6 +1,4 @@
 plugin:
-  has_options: true
-
   tools:
     - name: claroline_planned_notification_tool
       class: bell

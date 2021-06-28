@@ -74,8 +74,7 @@ class UserRepository extends ServiceEntityRepository implements UserProviderInte
             $dql .= '
                 OR u.administrativeCode LIKE :username';
         }
-        $dql .= '
-            AND u.isEnabled = true';
+
         $query = $this->_em->createQuery($dql);
         $query->setParameter('username', $username);
 
@@ -534,31 +533,6 @@ class UserRepository extends ServiceEntityRepository implements UserProviderInte
         return $query->getSingleScalarResult();
     }
 
-    public function countUsersOfGroupByRole(Group $group, Role $role)
-    {
-        $dql = '
-            SELECT count(u) FROM Claroline\CoreBundle\Entity\User u
-            JOIN u.groups g
-            WHERE g.name = :groupName
-            AND u.id in
-                (
-                    SELECT u2.id FROM Claroline\CoreBundle\Entity\User u2
-                    LEFT JOIN u2.roles r1
-                    LEFT JOIN u2.groups g2
-                    LEFT JOIN g2.roles r2
-                    WHERE r1.name = :roleName
-                    OR r2.name = :roleName
-                )
-
-        ';
-
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('roleName', $role->getName());
-        $query->setParameter('groupName', $group->getName());
-
-        return $query->getSingleScalarResult();
-    }
-
     public function findAllEnabledUsers($executeQuery = true)
     {
         $dql = '
@@ -571,58 +545,13 @@ class UserRepository extends ServiceEntityRepository implements UserProviderInte
         return $executeQuery ? $query->getResult() : $query;
     }
 
-    public function countUsersNotManagersOfPersonalWorkspace()
+    public function findInactiveSince(string $dateLastLogin)
     {
-        $query = $this->getEntityManager()
-            ->createQuery('
-                SELECT COUNT(u.id) AS cnt FROM Claroline\CoreBundle\Entity\User u
-                INNER JOIN u.personalWorkspace ws
-                WHERE u.isRemoved = :notRemoved
-                AND ws.personal = :personal
-                AND u.id NOT IN (
-                    SELECT u1.id FROM Claroline\CoreBundle\Entity\User u1
-                    INNER JOIN u1.personalWorkspace ws1
-                    INNER JOIN ws1.roles r1
-                    INNER JOIN r1.users us1
-                    WHERE us1.id = u1.id
-                    AND u1.isRemoved = :notRemoved
-                    AND ws1.personal = :personal
-                    AND r1.name LIKE \'%ROLE_WS_MANAGER_%\'
-                )
-            ')
-            ->setParameter('notRemoved', false)
-            ->setParameter('personal', true);
-
-        return intval($query->getResult()[0]['cnt']);
-    }
-
-    public function findUsersNotManagersOfPersonalWorkspace($offset = null, $limit = null)
-    {
-        $query = $this->getEntityManager()
-            ->createQuery('
-                SELECT u, ws FROM Claroline\CoreBundle\Entity\User u
-                INNER JOIN u.personalWorkspace ws
-                WHERE u.isRemoved = :notRemoved
-                AND ws.personal = :personal
-                AND u.id NOT IN (
-                    SELECT u1.id FROM Claroline\CoreBundle\Entity\User u1
-                    INNER JOIN u1.personalWorkspace ws1
-                    INNER JOIN ws1.roles r1
-                    INNER JOIN r1.users us1
-                    WHERE us1.id = u1.id
-                    AND u1.isRemoved = :notRemoved
-                    AND ws1.personal = :personal
-                    AND r1.name LIKE \'%ROLE_WS_MANAGER_%\'
-                )
-            ')
-            ->setParameter('notRemoved', false)
-            ->setParameter('personal', true)
-            ->setMaxResults($limit);
-
-        if ($offset) {
-            $query->setFirstResult($offset);
-        }
-
-        return $query->getResult();
+        return $this->createQueryBuilder('u')
+            ->where('(u.lastLogin IS NULL OR u.lastLogin < :dateLastLogin)')
+            ->andWhere('u.isEnabled = true AND u.isRemoved = false')
+            ->setParameter('dateLastLogin', $dateLastLogin)
+            ->getQuery()
+            ->getResult();
     }
 }

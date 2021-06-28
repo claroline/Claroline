@@ -12,6 +12,7 @@
 namespace Claroline\CursusBundle\DataFixtures\PostInstall;
 
 use Claroline\CoreBundle\Entity\Template\Template;
+use Claroline\CoreBundle\Entity\Template\TemplateContent;
 use Claroline\CoreBundle\Entity\Template\TemplateType;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Doctrine\Common\DataFixtures\AbstractFixture;
@@ -48,43 +49,106 @@ class LoadTemplateData extends AbstractFixture implements ContainerAwareInterfac
         $this->createCourseTemplates();
         $this->createSessionTemplates();
 
-        $eventInvitationType = $this->templateTypeRepo->findOneBy(['name' => 'training_event_invitation']);
-        $templates = $this->templateRepo->findBy(['name' => 'training_event_invitation']);
-        if ($eventInvitationType && empty($templates)) {
+        $eventType = $this->templateTypeRepo->findOneBy(['name' => 'training_event']);
+        $templates = $this->templateRepo->findBy(['name' => 'training_event']);
+        if ($eventType && empty($templates)) {
+            $template = new Template();
+            $template->setType($eventType);
+            $template->setName('training_event');
+            $om->persist($template);
+
             foreach ($this->availableLocales as $locale) {
-                $template = new Template();
-                $template->setType($eventInvitationType);
-                $template->setName('training_event_invitation');
-                $template->setLang($locale);
-                $template->setTitle($this->translator->trans('training_event_invitation', [], 'template', $locale));
+                $templateContent = new TemplateContent();
+                $template->addTemplateContent($templateContent);
+
+                $templateContent->setLang($locale);
+                $templateContent->setTitle($this->translator->trans('training_event', [], 'template', $locale));
                 $content = '%event_name%<br/>';
                 $content .= '[%event_start% -> %event_end%]<br/>';
                 $content .= '%event_description%<br/><br/>';
                 $content .= '%event_location_address%<br/>';
-                $template->setContent($content);
-                $om->persist($template);
+                $templateContent->setContent($content);
+                $om->persist($templateContent);
+            }
+            $eventType->setDefaultTemplate('training_event');
+            $om->persist($eventType);
+        }
+
+        $eventInvitationType = $this->templateTypeRepo->findOneBy(['name' => 'training_event_invitation']);
+        $templates = $this->templateRepo->findBy(['name' => 'training_event_invitation']);
+        if ($eventInvitationType && empty($templates)) {
+            $template = new Template();
+            $template->setType($eventInvitationType);
+            $template->setName('training_event_invitation');
+            $om->persist($template);
+
+            foreach ($this->availableLocales as $locale) {
+                $templateContent = new TemplateContent();
+                $template->addTemplateContent($templateContent);
+
+                $templateContent->setLang($locale);
+                $templateContent->setTitle($this->translator->trans('training_event_invitation', [], 'template', $locale));
+                $content = '%event_name%<br/>';
+                $content .= '[%event_start% -> %event_end%]<br/>';
+                $content .= '%event_description%<br/><br/>';
+                $content .= '%event_location_address%<br/>';
+                $templateContent->setContent($content);
+                $om->persist($templateContent);
             }
             $eventInvitationType->setDefaultTemplate('training_event_invitation');
             $om->persist($eventInvitationType);
         }
 
-        $eventPresenceType = $this->templateTypeRepo->findOneBy(['name' => 'training_event_presences']);
+        $eventPresencesType = $this->templateTypeRepo->findOneBy(['name' => 'training_event_presences']);
         $templates = $this->templateRepo->findBy(['name' => 'training_event_presences']);
-        if ($eventPresenceType && empty($templates)) {
+        if ($eventPresencesType && empty($templates)) {
+            $template = new Template();
+            $template->setType($eventPresencesType);
+            $template->setName('training_event_presences');
+            $om->persist($template);
+
             foreach ($this->availableLocales as $locale) {
-                $template = new Template();
-                $template->setType($eventPresenceType);
-                $template->setName('training_event_presences');
-                $template->setLang($locale);
-                $template->setTitle($this->translator->trans('training_event_presences', [], 'template', $locale));
+                $templateContent = new TemplateContent();
+                $template->addTemplateContent($templateContent);
+
+                $templateContent->setLang($locale);
+                $templateContent->setTitle($this->translator->trans('training_event_presences', [], 'template', $locale));
                 $content = '%event_name%<br/>';
                 $content .= '[%event_start% -> %event_end%]<br/>';
                 $content .= '%event_description%<br/><br/>';
                 $content .= '%event_presences_table%<br/>';
-                $template->setContent($content);
-                $om->persist($template);
+                $templateContent->setContent($content);
+                $om->persist($templateContent);
             }
-            $eventPresenceType->setDefaultTemplate('training_event_presences');
+            $eventPresencesType->setDefaultTemplate('training_event_presences');
+            $om->persist($eventPresencesType);
+        }
+
+        $eventPresenceType = $this->templateTypeRepo->findOneBy(['name' => 'training_event_presence']);
+        $templates = $this->templateRepo->findBy(['name' => 'training_event_presence']);
+        if ($eventPresenceType && empty($templates)) {
+            $template = new Template();
+            $template->setType($eventPresenceType);
+            $template->setName('training_event_presence');
+            $om->persist($template);
+
+            foreach ($this->availableLocales as $locale) {
+                $templateContent = new TemplateContent();
+                $template->addTemplateContent($templateContent);
+
+                $templateContent->setLang($locale);
+                $templateContent->setTitle($this->translator->trans('training_event_presence', [], 'template', $locale));
+                $content = '%event_name%<br/>';
+                $content .= '[%event_start% -> %event_end%]<br/>';
+                $content .= '%event_description%<br/><br/>';
+                $content .= '<ul>';
+                $content .= '<li><b>'.$this->translator->trans('user', [], 'platform', $locale).'</b> : %user_first_name% %user_last_name%</li>';
+                $content .= '<li><b>'.$this->translator->trans('status', [], 'platform', $locale).'</b> : %event_presence_status%</li>';
+                $content .= '</ul>';
+                $templateContent->setContent($content);
+                $om->persist($templateContent);
+            }
+            $eventPresenceType->setDefaultTemplate('training_event_presence');
             $om->persist($eventPresenceType);
         }
 
@@ -98,12 +162,17 @@ class LoadTemplateData extends AbstractFixture implements ContainerAwareInterfac
         $templates = $this->templateRepo->findBy(['name' => 'training_course']);
 
         if ($templateType && empty($templates)) {
+            $template = new Template();
+            $template->setType($templateType);
+            $template->setName('training_course');
+            $this->om->persist($template);
+
             foreach ($this->availableLocales as $locale) {
-                $template = new Template();
-                $template->setType($templateType);
-                $template->setName('training_course');
-                $template->setLang($locale);
-                $template->setTitle($this->translator->trans('training_course', [], 'template', $locale));
+                $templateContent = new TemplateContent();
+                $template->addTemplateContent($templateContent);
+
+                $templateContent->setLang($locale);
+                $templateContent->setTitle($this->translator->trans('training_course', [], 'template', $locale));
 
                 $content = "
                     %course_poster%
@@ -118,9 +187,9 @@ class LoadTemplateData extends AbstractFixture implements ContainerAwareInterfac
                         <li><b>{$this->translator->trans('max_participants', [], 'cursus')} : </b> %course_max_users%</li>
                     </ul>
                 ";
-                $template->setContent($content);
+                $templateContent->setContent($content);
 
-                $this->om->persist($template);
+                $this->om->persist($templateContent);
             }
 
             $templateType->setDefaultTemplate('training_course');
@@ -135,12 +204,17 @@ class LoadTemplateData extends AbstractFixture implements ContainerAwareInterfac
         $templates = $this->templateRepo->findBy(['name' => 'training_session']);
 
         if ($templateType && empty($templates)) {
+            $template = new Template();
+            $template->setType($templateType);
+            $template->setName('training_session');
+            $this->om->persist($template);
+
             foreach ($this->availableLocales as $locale) {
-                $template = new Template();
-                $template->setType($templateType);
-                $template->setName('training_session');
-                $template->setLang($locale);
-                $template->setTitle($this->translator->trans('training_session', [], 'template', $locale));
+                $templateContent = new TemplateContent();
+                $template->addTemplateContent($templateContent);
+
+                $templateContent->setLang($locale);
+                $templateContent->setTitle($this->translator->trans('training_session', [], 'template', $locale));
 
                 $content = "
                     %session_poster%
@@ -156,9 +230,9 @@ class LoadTemplateData extends AbstractFixture implements ContainerAwareInterfac
                         <li><b>{$this->translator->trans('max_participants', [], 'cursus')} : </b> %session_max_users%</li>
                     </ul>
                 ";
-                $template->setContent($content);
+                $templateContent->setContent($content);
 
-                $this->om->persist($template);
+                $this->om->persist($templateContent);
             }
 
             $templateType->setDefaultTemplate('training_session');
@@ -168,17 +242,22 @@ class LoadTemplateData extends AbstractFixture implements ContainerAwareInterfac
         $sessionInvitationType = $this->templateTypeRepo->findOneBy(['name' => 'training_session_invitation']);
         $templates = $this->templateRepo->findBy(['name' => 'training_session_invitation']);
         if ($sessionInvitationType && empty($templates)) {
+            $template = new Template();
+            $template->setType($sessionInvitationType);
+            $template->setName('training_session_invitation');
+            $this->om->persist($template);
+
             foreach ($this->availableLocales as $locale) {
-                $template = new Template();
-                $template->setType($sessionInvitationType);
-                $template->setName('training_session_invitation');
-                $template->setLang($locale);
-                $template->setTitle($this->translator->trans('training_session_invitation', [], 'template', $locale));
+                $templateContent = new TemplateContent();
+                $template->addTemplateContent($templateContent);
+
+                $templateContent->setLang($locale);
+                $templateContent->setTitle($this->translator->trans('training_session_invitation', [], 'template', $locale));
                 $content = '%session_name%<br/>';
                 $content .= '[%session_start% -> %session_end%]<br/>';
                 $content .= '%session_description%';
-                $template->setContent($content);
-                $this->om->persist($template);
+                $templateContent->setContent($content);
+                $this->om->persist($templateContent);
             }
             $sessionInvitationType->setDefaultTemplate('training_session_invitation');
             $this->om->persist($sessionInvitationType);
@@ -187,18 +266,23 @@ class LoadTemplateData extends AbstractFixture implements ContainerAwareInterfac
         $sessionInvitationType = $this->templateTypeRepo->findOneBy(['name' => 'training_session_confirmation']);
         $templates = $this->templateRepo->findBy(['name' => 'training_session_confirmation']);
         if ($sessionInvitationType && empty($templates)) {
+            $template = new Template();
+            $template->setType($sessionInvitationType);
+            $template->setName('training_session_confirmation');
+            $this->om->persist($template);
+
             foreach ($this->availableLocales as $locale) {
-                $template = new Template();
-                $template->setType($sessionInvitationType);
-                $template->setName('training_session_confirmation');
-                $template->setLang($locale);
-                $template->setTitle($this->translator->trans('training_session_confirmation', [], 'template', $locale));
+                $templateContent = new TemplateContent();
+                $template->addTemplateContent($templateContent);
+
+                $templateContent->setLang($locale);
+                $templateContent->setTitle($this->translator->trans('training_session_confirmation', [], 'template', $locale));
                 $content = '%session_name%<br/>';
                 $content .= '[%session_start% -> %session_end%]<br/>';
                 $content .= '%session_description%<br/><br/>';
                 $content .= '<a href="%registration_confirmation_url%">'.$this->translator->trans('confirm_registration', [], 'actions').'</a>';
-                $template->setContent($content);
-                $this->om->persist($template);
+                $templateContent->setContent($content);
+                $this->om->persist($templateContent);
             }
             $sessionInvitationType->setDefaultTemplate('training_session_confirmation');
             $this->om->persist($sessionInvitationType);

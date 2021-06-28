@@ -18,6 +18,8 @@ services:
                   arguments:
                      - '@Claroline\AppBundle\Event\StrictDispatcher'
 
+    Claroline\CoreBundle\API\Finder\Planning\PlannedObjectFinder: ~
+
     Claroline\CoreBundle\API\Finder\TransferFinder: ~
 
     Claroline\CoreBundle\API\Finder\Workspace\WorkspaceFinder:
@@ -49,7 +51,9 @@ services:
           - '@security.authorization_checker'
           - '@security.token_storage'
 
-    Claroline\CoreBundle\API\Finder\User\LocationFinder: ~
+    Claroline\CoreBundle\API\Finder\Location\LocationFinder: ~
+
+    Claroline\CoreBundle\API\Finder\Location\RoomFinder: ~
 
     Claroline\CoreBundle\API\Finder\User\GroupFinder:
         arguments:
@@ -63,11 +67,11 @@ services:
 
     Claroline\CoreBundle\API\Finder\Tool\ToolFinder:
         arguments:
-          - '@claroline.manager.plugin_manager'
+          - '@Claroline\CoreBundle\Manager\PluginManager'
 
     Claroline\CoreBundle\API\Finder\Tool\AdminToolFinder:
         arguments:
-          - '@claroline.manager.plugin_manager'
+          - '@Claroline\CoreBundle\Manager\PluginManager'
 
     Claroline\CoreBundle\API\Finder\Template\TemplateFinder: ~
 
@@ -77,10 +81,6 @@ services:
           - '@security.token_storage'
 
     Claroline\CoreBundle\API\Finder\Resource\ResourceUserEvaluationFinder: ~
-
-    Claroline\CoreBundle\API\Finder\Resource\ResourceTypeFinder: ~
-
-    Claroline\CoreBundle\API\Finder\Resource\ResourceRightsFinder: ~
 
     Claroline\CoreBundle\API\Finder\Resource\ResourceNodeFinder:
         arguments:

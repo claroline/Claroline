@@ -2,7 +2,7 @@
 
 namespace Claroline\ThemeBundle;
 
-use Claroline\CoreBundle\Library\DistributionPluginBundle;
+use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
 
 class ClarolineThemeBundle extends DistributionPluginBundle
 {

@@ -11,7 +11,6 @@
 
 namespace Claroline\DevBundle\Command;
 
-use Claroline\AppBundle\Command\BaseCommandTrait;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -25,14 +24,7 @@ use Symfony\Component\Yaml\Yaml;
  */
 class CreatePluginCommand extends Command
 {
-    use BaseCommandTrait;
-
     private $langs = ['fr', 'en', 'es'];
-
-    private $params = [
-        'vendor' => 'The vendor name (camel case required)',
-        'bundle' => 'The bundle name (camel case required)',
-    ];
 
     private $vendorDir;
 
@@ -138,9 +130,7 @@ class CreatePluginCommand extends Command
         $fmime = $input->getOption('file_player_mime');
 
         $config = [
-            'plugin' => [
-                'has_options' => false,
-            ],
+            'plugin' => [],
         ];
 
         if ($rType) {
@@ -429,7 +419,7 @@ class CreatePluginCommand extends Command
         }
     }
 
-    private function addAuthentication($rootDir, $vendor, $bundle, $tType, &$config)
+    private function addAuthentication($rootDir, $vendor, $bundle, $eAuth, &$config)
     {
         $this->addAuthenticationListener($rootDir, $vendor, $bundle, $eAuth);
         $this->addAuthenticationController($rootDir, $vendor, $bundle, $eAuth);
@@ -531,10 +521,12 @@ class CreatePluginCommand extends Command
 
     private function getNormalizedBundleName($ibundle)
     {
+        $results = [];
         preg_match_all('/[A-Z][^A-Z]*/', $ibundle, $results);
         $baseDirName = strtolower($results[0][0]);
 
-        for ($i = 1; $i < count($results[0]); ++$i) {
+        $count = count($results[0]);
+        for ($i = 1; $i < $count; ++$i) {
             $baseDirName .= '-'.strtolower($results[0][$i]);
         }
 

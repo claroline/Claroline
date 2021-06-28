@@ -31,6 +31,7 @@ services:
             - '@Claroline\CoreBundle\API\Serializer\User\OrganizationSerializer'
             - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
             - '@Claroline\OpenBadgeBundle\Serializer\RuleSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\Template\TemplateSerializer'
 
     Claroline\OpenBadgeBundle\Serializer\CriteriaSerializer:
         arguments:
@@ -40,7 +41,6 @@ services:
         tags: [claroline.serializer]
         arguments:
             - '@router'
-            - '@Claroline\OpenBadgeBundle\Serializer\ProfileSerializer'
 
     Claroline\OpenBadgeBundle\Serializer\EndorsementSerializer:
         tags: [claroline.serializer]
@@ -73,9 +73,6 @@ services:
         tags: [claroline.serializer]
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-
-    Claroline\OpenBadgeBundle\Serializer\SignedBadgeSerializer:
-        tags: [claroline.serializer]
 
     Claroline\OpenBadgeBundle\Serializer\VerificationObjectSerializer:
         arguments:

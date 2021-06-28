@@ -11,10 +11,10 @@
 
 namespace Claroline\KernelBundle\Routing;
 
+use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
+use Claroline\KernelBundle\Manager\BundleManager;
 use Symfony\Component\Config\Loader\Loader as Loader;
 use Symfony\Component\Routing\RouteCollection;
-use Claroline\KernelBundle\Manager\BundleManager;
-use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 
 class DynamicLoader extends Loader
 {
@@ -42,6 +42,6 @@ class DynamicLoader extends Loader
 
     public function supports($resource, $type = null)
     {
-        return $type === 'dynamic';
+        return 'dynamic' === $type;
     }
 }

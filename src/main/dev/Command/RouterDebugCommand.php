@@ -11,47 +11,41 @@
 
 namespace Claroline\DevBundle\Command;
 
-use Claroline\AppBundle\Command\BaseCommandTrait;
+use Claroline\AppBundle\Routing\Finder;
+use Symfony\Bundle\FrameworkBundle\Console\Helper\DescriptorHelper;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
-/**
- * Debug a manager.
- */
 class RouterDebugCommand extends Command
 {
-    use BaseCommandTrait;
+    /** @var Finder */
+    private $finder;
 
-    private $params = ['route' => 'The route name: '];
-
-    private $urlGenerator;
-
-    public function __construct(UrlGeneratorInterface $urlGenerator)
+    public function __construct(Finder $finder)
     {
-        $this->urlGenerator = $urlGenerator;
+        $this->finder = $finder;
 
         parent::__construct();
     }
 
     protected function configure()
     {
-        $this->setDescription('Generate a route');
+        $this->setName('claroline:api:router:debug')->setDescription('Shows the api route');
         $this->setDefinition(
-            [
-                new InputArgument('route', InputArgument::REQUIRED, 'The route'),
-                new InputArgument('parameters', InputArgument::IS_ARRAY, 'The method parameters'),
-            ]
+            [new InputArgument('class', InputArgument::REQUIRED, 'The class managed by the api.')]
         );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $route = $input->getArgument('route');
-        $parameters = $input->getArgument('parameters');
-        $output->writeln($this->urlGenerator->generate($route, $parameters));
+        $class = $input->getArgument('class');
+        $describeCollection = $this->finder->find($class);
+        $io = new SymfonyStyle($input, $output);
+        $helper = new DescriptorHelper();
+        $helper->describe($io, $describeCollection, []);
 
         return 0;
     }

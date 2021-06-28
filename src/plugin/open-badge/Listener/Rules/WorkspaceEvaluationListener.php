@@ -34,10 +34,6 @@ class WorkspaceEvaluationListener
 
     /**
      * RuleListener constructor.
-     *
-     * @param ObjectManager       $om
-     * @param TranslatorInterface $translator
-     * @param RuleManager         $manager
      */
     public function __construct(
         ObjectManager $om,
@@ -49,9 +45,6 @@ class WorkspaceEvaluationListener
         $this->manager = $manager;
     }
 
-    /**
-     * @param UserEvaluationEvent $event
-     */
     public function onWorkspaceEvaluation(UserEvaluationEvent $event)
     {
         /** @var Evaluation $evaluation */

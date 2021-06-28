@@ -26,15 +26,13 @@ class QuestionFinder extends AbstractFinder
 
     /**
      * QuestionFinder constructor.
-     *
-     * @param TokenStorageInterface $tokenStorage
      */
     public function __construct(TokenStorageInterface $tokenStorage)
     {
         $this->tokenStorage = $tokenStorage;
     }
 
-    public function getClass()
+    public static function getClass(): string
     {
         return 'UJM\ExoBundle\Entity\Item\Item';
     }

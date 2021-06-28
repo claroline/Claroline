@@ -13,19 +13,12 @@ namespace Claroline\CoreBundle\Entity\Template;
 
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(
- *     name="claro_template",
- *     uniqueConstraints={
- *         @ORM\UniqueConstraint(
- *             name="template_unique_name",
- *             columns={"template_name", "lang"}
- *         )
- *     }
- * )
+ * @ORM\Table(name="claro_template")
  */
 class Template
 {
@@ -33,7 +26,7 @@ class Template
     use Uuid;
 
     /**
-     * @ORM\Column(name="template_name")
+     * @ORM\Column(name="template_name", unique=true)
      *
      * @var string
      */
@@ -48,131 +41,73 @@ class Template
     private $type;
 
     /**
-     * @var string
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Template\TemplateContent",
+     *     mappedBy="template",
+     *     cascade={"persist", "remove"},
+     *     orphanRemoval=true
+     * )
      *
-     * @ORM\Column(nullable=true)
+     * @var ArrayCollection|TemplateContent[]
      */
-    private $title;
+    private $contents;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $content;
-
-    /**
-     * @ORM\Column()
-     *
-     * @var string
-     */
-    private $lang = 'en';
-
-    /**
-     * Template constructor.
-     */
     public function __construct()
     {
         $this->refreshUuid();
+
+        $this->contents = new ArrayCollection();
     }
 
-    /**
-     * Get name.
-     *
-     * @return string
-     */
-    public function getName()
+    public function getName(): ?string
     {
         return $this->name;
     }
 
-    /**
-     * Set name.
-     *
-     * @param string $name
-     */
-    public function setName($name)
+    public function setName(string $name)
     {
         $this->name = $name;
     }
 
-    /**
-     * Get type.
-     *
-     * @return TemplateType
-     */
-    public function getType()
+    public function getType(): ?TemplateType
     {
         return $this->type;
     }
 
-    /**
-     * Set type.
-     *
-     * @param TemplateType $type
-     */
     public function setType(TemplateType $type)
     {
         $this->type = $type;
     }
 
-    /**
-     * Get title.
-     *
-     * @return string
-     */
-    public function getTitle()
+    public function getTemplateContents()
     {
-        return $this->title;
+        return $this->contents;
     }
 
-    /**
-     * Set title.
-     *
-     * @param string $title
-     */
-    public function setTitle($title)
+    public function getTemplateContent(string $lang): ?TemplateContent
     {
-        $this->title = $title;
+        foreach ($this->contents as $content) {
+            if ($content->getLang() === $lang) {
+                return $content;
+            }
+        }
+
+        return null;
     }
 
-    /**
-     * Get content.
-     *
-     * @return string
-     */
-    public function getContent()
+    public function addTemplateContent(TemplateContent $content)
     {
-        return $this->content;
+        if (!$this->contents->contains($content)) {
+            $this->contents->add($content);
+            $content->setTemplate($this);
+        }
     }
 
-    /**
-     * Set content.
-     *
-     * @param string $content
-     */
-    public function setContent($content)
+    public function removeTemplateContent(TemplateContent $content)
     {
-        $this->content = $content;
-    }
-
-    /**
-     * Get lang.
-     *
-     * @return string
-     */
-    public function getLang()
-    {
-        return $this->lang;
-    }
-
-    /**
-     * Set lang.
-     *
-     * @param string $lang
-     */
-    public function setLang($lang)
-    {
-        $this->lang = $lang;
+        if ($this->contents->contains($content)) {
+            $this->contents->removeElement($content);
+            $content->setTemplate(null);
+        }
     }
 }

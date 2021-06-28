@@ -32,10 +32,6 @@ class OpenDefinition extends AbstractDefinition
 
     /**
      * OpenDefinition constructor.
-     *
-     * @param OpenQuestionValidator  $validator
-     * @param OpenAnswerValidator    $answerValidator
-     * @param OpenQuestionSerializer $serializer
      */
     public function __construct(
         OpenQuestionValidator $validator,
@@ -100,7 +96,6 @@ class OpenDefinition extends AbstractDefinition
     /**
      * Not implemented for open questions as it's not auto corrected.
      *
-     * @param AbstractItem $question
      * @param $answer
      *
      * @return bool
@@ -113,8 +108,6 @@ class OpenDefinition extends AbstractDefinition
     /**
      * Not implemented for open questions as it's not auto corrected.
      *
-     * @param AbstractItem $question
-     *
      * @return AnswerPartInterface[]
      */
     public function expectAnswer(AbstractItem $question)
@@ -123,8 +116,6 @@ class OpenDefinition extends AbstractDefinition
     }
 
     /**
-     * @param AbstractItem $question
-     *
      * @return AnswerPartInterface[]
      */
     public function allAnswers(AbstractItem $question)
@@ -135,9 +126,7 @@ class OpenDefinition extends AbstractDefinition
     /**
      * Not implemented because not relevant.
      *
-     * @param AbstractItem $openQuestion
-     * @param array        $answersData
-     * @param int          $total
+     * @param int $total
      *
      * @return array
      */
@@ -148,8 +137,6 @@ class OpenDefinition extends AbstractDefinition
 
     /**
      * No additional identifier to regenerate.
-     *
-     * @param AbstractItem $item
      */
     public function refreshIdentifiers(AbstractItem $item)
     {

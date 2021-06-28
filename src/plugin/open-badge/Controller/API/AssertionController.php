@@ -126,7 +126,7 @@ class AssertionController extends AbstractCrudController
         $fileName = trim($badge->getName().''.$user->getFirstName().$user->getLastName());
         $fileName = str_replace(' ', '_', $fileName);
 
-        return new StreamedResponse(function () use ($dompdf, $fileName) {
+        return new StreamedResponse(function () use ($dompdf) {
             echo $dompdf->output();
         }, 200, [
             'Content-Type' => 'application/pdf',

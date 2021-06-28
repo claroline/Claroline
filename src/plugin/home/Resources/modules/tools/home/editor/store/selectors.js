@@ -1,10 +1,9 @@
 import {createSelector} from 'reselect'
 
-import {trans} from '#/main/app/intl/translation'
 import {selectors as formSelectors} from '#/main/app/content/form/store/selectors'
 import {selectors as homeSelectors} from '#/plugin/home/tools/home/store/selectors'
 
-import {flattenTabs} from '#/plugin/home/tools/home/utils'
+import {flattenTabs, getTabTitle} from '#/plugin/home/tools/home/utils'
 
 const FORM_NAME = `${homeSelectors.STORE_NAME}.editor`
 
@@ -22,21 +21,7 @@ const currentTab = (state) => {
 
 const currentTabTitle = createSelector(
   [homeSelectors.context, currentTab],
-  (context, currentTab) => {
-    if (currentTab) {
-      return currentTab.longTitle
-    }
-
-    if (context.data && context.data.name) {
-      return context.data.name
-    }
-
-    if ('desktop' === context.type) {
-      return trans('desktop')
-    }
-
-    return trans('home')
-  }
+  (context, currentTab) => getTabTitle(context, currentTab)
 )
 
 const readOnly = createSelector(

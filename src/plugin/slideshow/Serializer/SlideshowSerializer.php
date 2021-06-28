@@ -22,9 +22,6 @@ class SlideshowSerializer
 
     /**
      * SlideshowSerializer constructor.
-     *
-     * @param ObjectManager        $om
-     * @param PublicFileSerializer $fileSerializer
      */
     public function __construct(
         ObjectManager $om,
@@ -57,8 +54,6 @@ class SlideshowSerializer
 
     /**
      * Serializes a Slideshow entity for the JSON api.
-     *
-     * @param Slideshow $slideshow
      *
      * @return array
      */
@@ -105,8 +100,7 @@ class SlideshowSerializer
     /**
      * Deserializes Slideshow data into entities.
      *
-     * @param array     $data
-     * @param Slideshow $slideshow
+     * @param array $data
      *
      * @return Slideshow
      */

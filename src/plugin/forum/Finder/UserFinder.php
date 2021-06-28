@@ -16,7 +16,7 @@ use Doctrine\ORM\QueryBuilder;
 
 class UserFinder extends AbstractFinder
 {
-    public function getClass()
+    public static function getClass(): string
     {
         return 'Claroline\ForumBundle\Entity\Validation\User';
     }

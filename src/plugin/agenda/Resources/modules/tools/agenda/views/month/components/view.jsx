@@ -9,7 +9,7 @@ import {LinkButton} from '#/main/app/buttons/link'
 import {now, getApiFormat} from '#/main/app/intl/date'
 
 import {CalendarView} from '#/plugin/agenda/tools/agenda/views/components/calendar'
-import {Event as EventTypes} from '#/plugin/agenda/event/prop-types'
+import {Event as EventTypes} from '#/plugin/agenda/prop-types'
 import {EventMicro} from '#/plugin/agenda/event/components/micro'
 import {sortEvents} from '#/plugin/agenda/event/utils'
 import {route} from '#/plugin/agenda/tools/agenda/routing'
@@ -43,7 +43,7 @@ const Day = props => {
         <EventMicro
           key={event.id}
           event={event}
-          actions={props.eventActions(event)}
+          reload={props.reload}
         />
       ))}
     </div>
@@ -58,7 +58,7 @@ Day.propTypes = {
     EventTypes.propTypes
   )),
   create: T.func.isRequired,
-  eventActions: T.func.isRequired
+  reload: T.func.isRequired
 }
 
 Day.defaultProps = {
@@ -155,7 +155,7 @@ class AgendaViewMonthComponent extends Component {
                     current={current}
                     events={events}
                     create={this.props.create}
-                    eventActions={this.props.eventActions}
+                    reload={this.props.reload}
                   />
                 )
               })}
@@ -184,7 +184,7 @@ AgendaViewMonthComponent.propTypes = {
     EventTypes.propTypes
   )).isRequired,
   create: T.func.isRequired,
-  eventActions: T.func.isRequired
+  reload: T.func.isRequired
 }
 
 const AgendaViewMonth = withRouter(AgendaViewMonthComponent)

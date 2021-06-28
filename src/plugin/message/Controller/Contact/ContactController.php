@@ -42,12 +42,6 @@ class ContactController extends AbstractCrudController
 
     /**
      * ContactController constructor.
-     *
-     * @param ContactManager        $contactManager
-     * @param ContactSerializer     $contactSerializer
-     * @param FinderProvider        $finder
-     * @param TokenStorageInterface $tokenStorage
-     * @param UserSerializer        $userSerializer
      */
     public function __construct(
         ContactManager $contactManager,
@@ -73,7 +67,7 @@ class ContactController extends AbstractCrudController
         $user = $this->tokenStorage->getToken()->getUser();
 
         return [
-            'user' => 'anon.' !== $user ? $user->getId() : null,
+            'user' => $user instanceof User ? $user->getId() : null,
         ];
     }
 
@@ -83,9 +77,6 @@ class ContactController extends AbstractCrudController
      *     name="apiv2_contacts_create"
      * )
      * @EXT\ParamConverter("currentUser", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @param User    $currentUser
-     * @param Request $request
      *
      * @return JsonResponse
      */

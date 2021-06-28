@@ -19,8 +19,6 @@ class BooleanQuestionSerializer
 
     /**
      * BooleanQuestionSerializer constructor.
-     *
-     * @param ContentSerializer $contentSerializer
      */
     public function __construct(ContentSerializer $contentSerializer)
     {
@@ -34,9 +32,6 @@ class BooleanQuestionSerializer
 
     /**
      * Converts a Boolean question into a JSON-encodable structure.
-     *
-     * @param BooleanQuestion $question
-     * @param array           $options
      *
      * @return array
      */
@@ -63,7 +58,6 @@ class BooleanQuestionSerializer
      *
      * @param array           $data
      * @param BooleanQuestion $question
-     * @param array           $options
      *
      * @return BooleanQuestion
      */
@@ -81,9 +75,6 @@ class BooleanQuestionSerializer
     /**
      * Serializes the Question choices.
      *
-     * @param BooleanQuestion $question
-     * @param array           $options
-     *
      * @return array
      */
     private function serializeChoices(BooleanQuestion $question, array $options = [])
@@ -98,11 +89,6 @@ class BooleanQuestionSerializer
 
     /**
      * Deserializes Question choices.
-     *
-     * @param BooleanQuestion $question
-     * @param array           $choices
-     * @param array           $solutions
-     * @param array           $options
      */
     private function deserializeChoices(BooleanQuestion $question, array $choices, array $solutions, array $options = [])
     {
@@ -153,8 +139,6 @@ class BooleanQuestionSerializer
 
     /**
      * Serializes Question solutions.
-     *
-     * @param BooleanQuestion $question
      *
      * @return array
      */

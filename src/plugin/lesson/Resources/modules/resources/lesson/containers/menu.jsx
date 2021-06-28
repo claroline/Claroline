@@ -20,8 +20,8 @@ const LessonMenu = withRouter(
       canExport: selectors.canExport(state)
     }),
     (dispatch) => ({
-      downloadChapterPdf(chapterId) {
-        return dispatch(actions.downloadChapterPdf(chapterId))
+      downloadChapterPdf(lessonId, chapterId) {
+        return dispatch(actions.downloadChapterPdf(lessonId, chapterId))
       },
       delete: (lessonId, chapterSlug, chapterTitle, history, path) => {
         dispatch(modalActions.showModal(MODAL_LESSON_CHAPTER_DELETE, {

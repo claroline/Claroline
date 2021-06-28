@@ -2,8 +2,8 @@
 
 namespace Claroline\AuthenticationBundle\Security\Authentication\Guard;
 
-use Claroline\AuthenticationBundle\Manager\IPWhiteListManager;
-use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\AuthenticationBundle\Entity\IpUser;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -17,44 +17,54 @@ use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
  */
 class IpAuthenticator extends AbstractGuardAuthenticator
 {
-    /** @var PlatformConfigurationHandler */
-    private $config;
+    /** @var ObjectManager */
+    private $om;
 
-    /** @var IPWhiteListManager */
-    private $whiteListManager;
-
-    public function __construct(PlatformConfigurationHandler $config, IPWhiteListManager $whiteListManager)
+    public function __construct(ObjectManager $om)
     {
-        $this->config = $config;
-        $this->whiteListManager = $whiteListManager;
+        $this->om = $om;
     }
 
     /**
-     * (@inheritdoc}.
+     * {@inheritdoc}.
      */
     public function supports(Request $request)
     {
-        return $this->whiteListManager->isWhiteListed() && !empty($this->config->getParameter('security.default_root_anon_id'));
+        return true;
     }
 
     /**
-     * (@inheritdoc}.
+     * {@inheritdoc}.
      */
     public function getCredentials(Request $request)
     {
-        return $this->config->getParameter('security.default_root_anon_id');
+        return $request->getClientIp();
     }
 
     /**
-     * (@inheritdoc}.
+     * {@inheritdoc}.
      */
     public function getUser($credentials, UserProviderInterface $userProvider)
     {
-        return $userProvider->loadUserByUsername($this->config->getParameter('security.default_root_anon_id'));
+        // check if there is a user attached to this ip
+        $ipUser = $this->om->getRepository(IpUser::class)->findOneBy(['ip' => $credentials]);
+        if ($ipUser) {
+            return $ipUser->getUser();
+        }
+
+        // check ip ranges
+        $ranges = $this->om->getRepository(IpUser::class)->findBy(['range' => true]);
+        foreach ($ranges as $range) {
+            if ($range->inRange($credentials)) {
+                return $range->getUser();
+            }
+        }
+
+        return null;
     }
 
     /**
-     * (@inheritdoc}.
+     * {@inheritdoc}.
      */
     public function checkCredentials($credentials, UserInterface $user)
     {
@@ -63,7 +73,7 @@ class IpAuthenticator extends AbstractGuardAuthenticator
     }
 
     /**
-     * (@inheritdoc}.
+     * {@inheritdoc}.
      */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
     {
@@ -72,7 +82,7 @@ class IpAuthenticator extends AbstractGuardAuthenticator
     }
 
     /**
-     * (@inheritdoc}.
+     * {@inheritdoc}.
      */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
@@ -81,7 +91,7 @@ class IpAuthenticator extends AbstractGuardAuthenticator
     }
 
     /**
-     * (@inheritdoc}.
+     * {@inheritdoc}.
      */
     public function start(Request $request, AuthenticationException $authException = null)
     {
@@ -89,7 +99,7 @@ class IpAuthenticator extends AbstractGuardAuthenticator
     }
 
     /**
-     * (@inheritdoc}.
+     * {@inheritdoc}.
      */
     public function supportsRememberMe()
     {

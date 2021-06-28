@@ -22,7 +22,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass="Claroline\AnnouncementBundle\Repository\AnnouncementRepository")
+ * @ORM\Entity()
  * @ORM\Table(name="claro_announcement")
  */
 class Announcement
@@ -206,8 +206,6 @@ class Announcement
 
     /**
      * Set creation date.
-     *
-     * @param \DateTime $creationDate
      */
     public function setCreationDate(\DateTime $creationDate)
     {
@@ -306,8 +304,6 @@ class Announcement
 
     /**
      * Set creator.
-     *
-     * @param User $creator
      */
     public function setCreator(User $creator)
     {

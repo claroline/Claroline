@@ -18,10 +18,8 @@ services:
                   arguments:
                      - '@Claroline\AppBundle\Event\StrictDispatcher'
 
-    # Rooms
-    Claroline\BookingBundle\Finder\RoomFinder: ~
     Claroline\BookingBundle\Finder\RoomBookingFinder: ~
 
-    # Materials
     Claroline\BookingBundle\Finder\MaterialFinder: ~
+
     Claroline\BookingBundle\Finder\MaterialBookingFinder: ~

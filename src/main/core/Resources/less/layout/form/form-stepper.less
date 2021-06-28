@@ -2,15 +2,11 @@
  * Multi steps Forms styles.
  */
 
-@form-stepper-nav-color:         @text-color;
-@form-stepper-nav-bg:            @gray-lighter; // same grey than data-lists
-@form-stepper-nav-active-color:  white;
-@form-stepper-nav-active-bg:     @brand-secondary;
-@form-stepper-nav-border-radius: 100%;
-@form-stepper-nav-size:          @font-size-large*3;
-@form-stepper-nav-font-size:     @font-size-large;
-@form-stepper-connector-size:    4px;
-@form-stepper-margin-bottom:     @component-margin-bottom;
+.form-stepper {
+    .progress + .h-title {
+        margin-top: @line-height-computed - 4px; // 4px is to absorb progress bar height
+    }
+}
 
 .form-stepper-footer {
     text-align: right;
@@ -21,83 +17,5 @@
 
     .btn-next {
         min-width: 240px;
-    }
-}
-
-.form-stepper-nav {
-    display: flex;
-    margin-bottom: @form-stepper-margin-bottom;
-}
-
-.form-stepper-link {
-    position: relative;
-    flex: 1;
-    color: @text-muted;
-    font-size: @font-size-small;
-    text-align: center;
-
-    &:before,
-    &:after {
-        position: absolute;
-        z-index: 1;
-        display: block;
-        content: " ";
-        border-bottom: @form-stepper-connector-size solid @form-stepper-nav-bg;
-        width: 50%;
-        top: @form-stepper-nav-size/2 - (@form-stepper-connector-size / 2);
-    }
-
-    // connect link with previous one
-    &:before {
-        left: 0;
-    }
-
-    // connect link with next one
-    &:after {
-        right: 0;
-    }
-
-    .form-step-badge {
-        position: relative;
-        z-index: 2;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: @form-stepper-nav-font-size;
-        height: @form-stepper-nav-size;
-        width: @form-stepper-nav-size;
-        margin-left: auto;
-        margin-right: auto;
-        margin-bottom: @form-stepper-margin-bottom/2;
-        border-radius: @form-stepper-nav-border-radius;
-        background: @form-stepper-nav-bg;
-        color: @form-stepper-nav-color;
-    }
-
-    &.done {
-        &:after,
-        &:before {
-            border-color: @form-stepper-nav-active-bg;
-        }
-
-        .form-step-badge {
-            color: @form-stepper-nav-active-color;
-            background: @form-stepper-nav-active-bg;
-        }
-    }
-
-    &.active {
-        color: @text-color;
-        font-weight: bold;
-
-        &:before {
-            border-bottom: @form-stepper-connector-size dashed @form-stepper-nav-active-bg;
-        }
-
-        .form-step-badge {
-            color: @form-stepper-nav-active-bg;
-            background: @panel-bg;
-            border: @form-stepper-connector-size solid @form-stepper-nav-active-bg;
-        }
     }
 }

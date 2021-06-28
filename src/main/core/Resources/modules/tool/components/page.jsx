@@ -3,52 +3,13 @@ import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 import omit from 'lodash/omit'
 
-import {hasPermission} from '#/main/app/security'
 import {trans} from '#/main/app/intl/translation'
-import {MODAL_BUTTON} from '#/main/app/buttons'
 import {PageFull} from '#/main/app/page/components/full'
 
 import {ToolIcon} from '#/main/core/tool/components/icon'
-import {getToolBreadcrumb, showToolBreadcrumb} from '#/main/core/tool/utils'
-import {MODAL_TOOL_RIGHTS} from '#/main/core/tool/modals/rights'
-import {MODAL_TOOL_PARAMETERS} from '#/main/core/tool/modals/parameters'
+import {getActions, getToolBreadcrumb, showToolBreadcrumb} from '#/main/core/tool/utils'
 
 const ToolPage = props => {
-  const baseActions = [
-    {
-      name: 'configure',
-      type: MODAL_BUTTON,
-      icon: 'fa fa-fw fa-cog',
-      label: trans('configure', {}, 'actions'),
-      modal: [MODAL_TOOL_PARAMETERS, {
-        toolName: props.name,
-        currentContext: props.currentContext,
-        data: props.toolData,
-        onSave: (updatedData) => props.update(updatedData, props.currentContext)
-      }],
-      displayed: 'administration' !== props.currentContext.type && hasPermission('edit', props.toolData),
-      group: trans('management')
-    }, {
-      name: 'rights',
-      type: MODAL_BUTTON,
-      icon: 'fa fa-fw fa-lock',
-      label: trans('edit-rights', {}, 'actions'),
-      modal: [MODAL_TOOL_RIGHTS, {
-        toolName: props.name,
-        currentContext: props.currentContext
-      }],
-      displayed: 'administration' !== props.currentContext.type && hasPermission('administrate', props.toolData),
-      group: trans('management')
-    }
-  ]
-
-  let actions
-  if (props.actions instanceof Promise) {
-    actions = props.actions.then(promisedActions => promisedActions.concat(baseActions))
-  } else {
-    actions = (props.actions || []).concat(baseActions)
-  }
-
   let toolbar = 'edit rights'
   if (props.primaryAction) {
     toolbar = props.primaryAction + ' | ' + toolbar
@@ -72,9 +33,17 @@ const ToolPage = props => {
         description: get(props.currentContext.data, 'meta.description')
       }}
 
-      {...omit(props, 'name', 'currentContext', 'path', 'toolData', 'update')}
-      actions={actions}
+      {...omit(props, 'name', 'currentContext', 'path', 'basePath', 'toolData', 'reload')}
       toolbar={toolbar}
+      actions={getActions(props.toolData, props.currentContext, {
+        update: () => props.reload()
+      }, props.basePath).then(baseActions => {
+        if (props.actions instanceof Promise) {
+          return props.actions.then(promisedActions => promisedActions.concat(baseActions))
+        }
+
+        return (props.actions || []).concat(baseActions)
+      })}
     >
       {props.children}
     </PageFull>
@@ -103,7 +72,8 @@ ToolPage.propTypes = {
   primaryAction: T.string,
 
   // from store
-  update: T.func.isRequired,
+  basePath: T.string,
+  reload: T.func.isRequired,
 
   // page props
   subtitle: T.node,

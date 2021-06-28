@@ -14,11 +14,10 @@
     "processed": "Available soon",
     "processing": "Processing...",
     "recordings": "Recordings",
-    "wait_for_moderator": "Wait for moderator",
+    "wait_for_moderator": "Wait for manager",
     "welcome_message": "Welcome message",
 
     "meeting_is_closed": "The meeting is closed.",
-    "waiting_for_moderator": "The meeting requires that at least one moderator be present. Please wait for a moderator to join the meeting.",
     "meeting_disabled": "The meeting is currently deactivated. Please wait while a manager reactivates it.",
     "meetings_limit_reached": "The limit number of meetings has been reached. Please wait while the meetings become available.",
     "max_meeting_participants_reached": "The limit number of participants in this meeting has been reached. Please wait while places become available.",
@@ -28,6 +27,7 @@
     "join": "Join the meeting",
     "meeting_cannot_join": "You can not join this meeting.",
     "no_record": "No recordings were made in this room.",
+    "no_active_meeting": "No room is open for now.",
 
     "allow_custom_usernames": "Allow users to change their username in the room",
     "open_meeting_in_new_tab": "Open in a new tab",
@@ -37,9 +37,11 @@
     "force_server": "Force server",
     "force_server_help": "By default, the meeting will be assigned to one of the servers available when it is opened for the first time.",
     "force_server_help2": "Activate this option to choose the server to use yourself.",
-    "force_server_help3": "Once the meeting has been assigned to a server, it is no longer possible to change it.",
+    "force_server_help_record": "Please wait while all recordings are published (publishing may take a few minutes after recordings are finished) before changing server.",
     "running_on_server": "The meeting is assigned to the server: %server%.",
     "meeting_disabled_help": "Disabled rooms can no longer be opened.",
+    "moderator_help_title": "Entrances to the room are managed by the managers.",
+    "moderator_help_message": "Participants are placed in the waiting room while a manager has not validated their entry.",
 
     "show_presentation": "Show recording",
     "show_podcast": "Listen to the podcast",

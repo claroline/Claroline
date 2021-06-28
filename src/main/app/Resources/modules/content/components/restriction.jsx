@@ -2,6 +2,8 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
+import {ContentHtml} from '#/main/app/content/components/html'
+
 const ContentRestriction = props => {
   let title, help
   if (props.failed) {
@@ -24,7 +26,7 @@ const ContentRestriction = props => {
         <h5 className="alert-title h4">{title}</h5>
 
         {help &&
-          <p className="alert-text">{help}</p>
+          <ContentHtml className="alert-text">{help}</ContentHtml>
         }
 
         {props.failed && props.children}

@@ -5,6 +5,9 @@ services:
         public: false
 
     Claroline\AgendaBundle\Listener\Tool\AgendaListener:
+        arguments:
+            - '@security.token_storage'
+            - '@translator'
         tags:
             - { name: kernel.event_listener, event: open_tool_workspace_agenda, method: onDisplayWorkspace }
             - { name: kernel.event_listener, event: open_tool_desktop_agenda, method: onDisplayDesktop }
@@ -16,9 +19,3 @@ services:
         tags:
             - { name: kernel.event_listener, event: data_source.events.load, method: getEventsData }
             - { name: kernel.event_listener, event: data_source.tasks.load, method: getTasksData }
-
-    Claroline\AgendaBundle\Listener\MergeUserListener:
-        arguments:
-            - '@Claroline\AgendaBundle\Manager\AgendaManager'
-        tags:
-            - { name: kernel.event_listener, event: merge_users, method: onMerge }

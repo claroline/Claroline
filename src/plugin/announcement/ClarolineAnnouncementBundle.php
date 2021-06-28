@@ -12,7 +12,7 @@
 namespace Claroline\AnnouncementBundle;
 
 use Claroline\AnnouncementBundle\Installation\AdditionalInstaller;
-use Claroline\CoreBundle\Library\DistributionPluginBundle;
+use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
 
 /**
  * Bundle class.

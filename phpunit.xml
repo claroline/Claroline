@@ -6,7 +6,7 @@
     colors                      = "true"
     convertErrorsToExceptions   = "true"
     convertNoticesToExceptions  = "false"
-    convertWarningsToExceptions = "false"
+    convertWarningsToExceptions = "true"
     processIsolation            = "false"
     stopOnFailure               = "false"
     bootstrap                   = "./vendor/autoload.php" >
@@ -17,43 +17,13 @@
 
     <testsuites>
         <testsuite name="Claroline test suite">
-            <directory>src/main/core/Tests/API/</directory>
-            <directory>src/main/core/Tests/NewAPI/</directory>
-            <directory>src/main/core/Tests/Security/</directory>
-            <directory>src/main/migration/Tests/</directory>
-            <directory>src/plugin/announcement/Tests/</directory>
-            <directory>src/plugin/collecticiel/Tests/</directory>
-            <directory>src/plugin/message/Tests/</directory>
-            <directory>src/plugin/notification/Tests/</directory>
-            <directory>src/plugin/competency/Tests/</directory>
-            <directory>src/plugin/dropzone/Tests/</directory>
-            <directory>src/plugin/favourite/Tests/</directory>
-            <directory>src/plugin/forum/Tests/</directory>
-            <directory>src/plugin/website/Tests/</directory>
-            <directory>src/plugin/result/Tests/</directory>
-            <directory>src/plugin/rss-reader/Tests/</directory>
-            <directory>src/plugin/url/Tests/</directory>
-            <directory>src/plugin/exo/Tests/</directory>
-            <directory>src/plugin/chat/Tests/</directory>
-            <directory>src/main/core/Tests/Unit/Converter/</directory>
-            <directory>src/main/core/Tests/Unit/Entity/</directory>
-            <directory>src/main/core/Tests/Unit/Event/</directory>
-            <directory>src/main/core/Tests/Unit/Form/</directory>
-            <directory>src/main/core/Tests/Unit/Library/Configuration/</directory>
-            <directory>src/main/core/Tests/Unit/Library/HttpFoundation/</directory>
-            <directory>src/main/core/Tests/Unit/Library/Installation/</directory>
-            <directory>src/main/core/Tests/Unit/Library/Utilities/</directory>
-            <directory>src/main/core/Tests/Unit/Persistence/</directory>
-            <directory>src/plugin/badge/Tests/Unit/Rule/Constraints</directory>
-            <directory>src/main/core/Tests/Database/</directory>
-            <directory>src/main/authentication/Tests/</directory>
+            <directory suffix=".php">./src/*/*/Tests</directory>
         </testsuite>
     </testsuites>
 
     <filter>
         <whitelist>
-            <directory>./src/main</directory>
-            <directory>./src/plugin</directory>
+            <directory suffix=".php">./src</directory>
             <exclude>
                 <directory>./src/*/*/Migrations</directory>
                 <directory>./src/*/*/Resources</directory>
@@ -61,5 +31,4 @@
             </exclude>
         </whitelist>
     </filter>
-
 </phpunit>

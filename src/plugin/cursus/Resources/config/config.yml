@@ -1,6 +1,4 @@
 plugin:
-    has_options: false
-
     tools:
         - name: training_events
           is_displayable_in_workspace: true
@@ -21,6 +19,16 @@ plugin:
         - name: my_course_sessions
           type: list
           context: [desktop]
+          tags: [community, event]
+
+        - name: all_courses
+          type: list
+          context: [desktop, home]
+          tags: [community, event]
+
+        - name: training_events
+          type: list
+          context: [workspace, desktop]
           tags: [community, event]
 
     templates:
@@ -76,6 +84,25 @@ plugin:
               - session_trainers
               - registration_confirmation_url
 
+        - name: training_event
+          placeholders:
+              - course_name
+              - course_code
+              - course_description
+              - session_name
+              - session_description
+              - session_code
+              - session_start
+              - session_end
+              - event_name
+              - event_code
+              - event_description
+              - event_start
+              - event_end
+              - event_location_name
+              - event_location_address
+              - event_trainers
+
         - name: training_event_invitation
           placeholders:
               - course_name
@@ -103,3 +130,16 @@ plugin:
               - event_start
               - event_end
               - event_presences_table
+
+        - name: training_event_presence
+          placeholders:
+              - event_name
+              - event_code
+              - event_description
+              - event_start
+              - event_end
+              - event_presence_status
+              - user_username
+              - user_first_name
+              - user_last_name
+

@@ -16,6 +16,9 @@ use UJM\ExoBundle\Library\Model\ScoreTrait;
  */
 class CellChoice implements AnswerPartInterface
 {
+    use FeedbackTrait;
+    use ScoreTrait;
+    use Uuid;
     /**
      * @var int
      *
@@ -24,10 +27,6 @@ class CellChoice implements AnswerPartInterface
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-
-    use FeedbackTrait;
-    use ScoreTrait;
-    use Uuid;
 
     /**
      * @var string

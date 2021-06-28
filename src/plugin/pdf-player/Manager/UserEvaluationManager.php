@@ -24,9 +24,6 @@ class UserEvaluationManager
 
     /**
      * UserEvaluationManager constructor.
-     *
-     * @param ObjectManager             $om
-     * @param ResourceEvaluationManager $resourceEvalManager
      */
     public function __construct(
         ObjectManager $om,
@@ -40,9 +37,6 @@ class UserEvaluationManager
 
     /**
      * Fetch or create resource user evaluation.
-     *
-     * @param ResourceNode $node
-     * @param User         $user
      *
      * @return ResourceUserEvaluation
      */
@@ -92,8 +86,7 @@ class UserEvaluationManager
     /**
      * Compute current resource evaluation status.
      *
-     * @param int   $total
-     * @param array $data
+     * @param int $total
      *
      * @return array
      */

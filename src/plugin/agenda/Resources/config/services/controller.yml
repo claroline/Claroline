@@ -8,5 +8,12 @@ services:
         arguments:
             - '@security.authorization_checker'
             - '@security.token_storage'
-            - '@Claroline\CoreBundle\Library\Utilities\FileUtilities'
-            - '@Claroline\AgendaBundle\Manager\AgendaManager'
+            - '@request_stack'
+            - '@Claroline\AgendaBundle\Manager\EventManager'
+            - '@Claroline\CoreBundle\Library\RoutingHelper'
+
+    Claroline\AgendaBundle\Controller\TaskController:
+        parent: Claroline\AppBundle\Controller\AbstractCrudController
+        public: true
+        arguments:
+            - '@security.authorization_checker'

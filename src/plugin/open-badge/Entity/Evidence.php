@@ -252,9 +252,6 @@ class Evidence
         return $this;
     }
 
-    /**
-     * @param ResourceUserEvaluation $resourceEvidence
-     */
     public function setResourceEvidence(ResourceUserEvaluation $resourceEvidence)
     {
         $this->resourceEvidence = $resourceEvidence;
@@ -268,9 +265,6 @@ class Evidence
         return $this->resourceEvidence;
     }
 
-    /**
-     * @param Evaluation $workspaceEvidence
-     */
     public function setWorkspaceEvidence(Evaluation $workspaceEvidence)
     {
         $this->workspaceEvidence = $workspaceEvidence;
@@ -284,9 +278,6 @@ class Evidence
         return $this->workspaceEvidence;
     }
 
-    /**
-     * @param Rule $rule
-     */
     public function setRule(Rule $rule)
     {
         $this->rule = $rule;
@@ -300,9 +291,6 @@ class Evidence
         return $this->rule;
     }
 
-    /**
-     * @param User $user
-     */
     public function setUser(User $user)
     {
         $this->user = $user;

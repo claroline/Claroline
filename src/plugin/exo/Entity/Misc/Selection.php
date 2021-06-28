@@ -18,6 +18,9 @@ use UJM\ExoBundle\Library\Model\ScoreTrait;
  */
 class Selection implements AnswerPartInterface
 {
+    use FeedbackTrait;
+    use ScoreTrait;
+    use Uuid;
     /**
      * @var int
      *
@@ -26,10 +29,6 @@ class Selection implements AnswerPartInterface
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-
-    use FeedbackTrait;
-    use ScoreTrait;
-    use Uuid;
 
     /**
      * The starting position.

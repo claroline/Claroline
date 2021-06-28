@@ -1,0 +1,20 @@
+services:
+    Claroline\LogBundle\Subscriber\SecurityLogSubscriber:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@security.helper'
+            - '@request_stack'
+            - '@translator'
+        tags:
+            - { name: kernel.event_subscriber }
+
+    Claroline\LogBundle\Subscriber\FunctionalLogSubscriber:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@translator'
+        tags:
+            - { name: kernel.event_subscriber }
+
+    Claroline\LogBundle\Subscriber\Administration\LogsSubscriber:
+        tags:
+            - { name: kernel.event_subscriber }

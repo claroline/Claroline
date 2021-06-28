@@ -25,8 +25,6 @@ class OauthConfigPass implements CompilerPassInterface
      * Rewrites previous service definitions in order to force the dumped container to use
      * dynamic configuration parameters. Technique may vary depending on the target service
      * (see for example https://github.com/opensky/OpenSkyRuntimeConfigBundle).
-     *
-     * @param ContainerBuilder $container
      */
     public function process(ContainerBuilder $container)
     {

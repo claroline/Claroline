@@ -7,7 +7,7 @@ services:
 
     Claroline\CoreBundle\Twig\ContentExtension:
        arguments:
-          - '@claroline.manager.content_manager'
+          - '@Claroline\CoreBundle\Manager\ContentManager'
 
     Claroline\CoreBundle\Twig\RoutingExtension:
        arguments:

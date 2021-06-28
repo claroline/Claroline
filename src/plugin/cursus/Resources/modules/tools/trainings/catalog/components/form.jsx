@@ -34,13 +34,8 @@ const CatalogForm = (props) => {
         course={props.course}
       >
         <CourseForm
+          path={props.path}
           name={selectors.FORM_NAME}
-          course={props.formData}
-          cancel={{
-            type: LINK_BUTTON,
-            target: route(props.path, props.course),
-            exact: true
-          }}
         />
       </CoursePage>
     )
@@ -73,12 +68,8 @@ const CatalogForm = (props) => {
       ]}
     >
       <CourseForm
+        path={props.path}
         name={selectors.FORM_NAME}
-        cancel={{
-          type: LINK_BUTTON,
-          target: props.path,
-          exact: true
-        }}
       />
     </ToolPage>
   )
@@ -91,9 +82,6 @@ CatalogForm.propTypes = {
     data: T.object
   }).isRequired,
   isNew: T.bool.isRequired,
-  formData: T.shape(
-    CourseTypes.propTypes
-  ),
   course: T.shape(
     CourseTypes.propTypes
   )

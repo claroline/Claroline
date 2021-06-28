@@ -50,7 +50,7 @@
           "description": "The course role for learner"
         },
         "duration": {
-          "type": "integer",
+          "type": "number",
           "description": "The default duration in days of session"
         },
         "order": {

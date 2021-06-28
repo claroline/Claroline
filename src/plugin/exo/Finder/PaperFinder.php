@@ -13,29 +13,30 @@ namespace UJM\ExoBundle\Finder;
 
 use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Doctrine\ORM\QueryBuilder;
+use UJM\ExoBundle\Entity\Attempt\Paper;
 
 /**
  * Quiz papers finder.
  */
 class PaperFinder extends AbstractFinder
 {
-    public function getClass()
+    public static function getClass(): string
     {
-        return 'UJM\ExoBundle\Entity\Attempt\Paper';
+        return Paper::class;
     }
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
     {
-        $qb->join('obj.exercise', 'e');
-        $qb->andWhere('e.id = :exerciseId');
-        $qb->setParameter('exerciseId', $searches['exercise']);
-        unset($searches['exercise']);
-
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
+                case 'exercise':
+                    $qb->join('obj.exercise', 'e');
+                    $qb->andWhere('e.id = :exerciseId');
+                    $qb->setParameter('exerciseId', $searches['exercise']);
+                    break;
                 case 'user':
                     $qb->join('obj.user', 'u');
-                    $qb->andWhere('u.id = :userId');
+                    $qb->andWhere('u.uuid = :userId');
                     $qb->setParameter('userId', $filterValue);
                     break;
 
@@ -48,6 +49,7 @@ class PaperFinder extends AbstractFinder
                     $this->setDefaults($qb, $filterName, $filterValue);
             }
         }
+
         if (!is_null($sortBy) && isset($sortBy['property']) && isset($sortBy['direction'])) {
             $sortByProperty = $sortBy['property'];
             $sortByDirection = 1 === $sortBy['direction'] ? 'ASC' : 'DESC';

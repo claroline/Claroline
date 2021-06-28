@@ -54,11 +54,8 @@ actions.fetch = (slug) => (dispatch, getState) => {
           // and store is up-to-date
           dispatch(actions.setLoaded(true))
 
-          if (get(response, 'workspace.display.showMenu')) {
-            dispatch(menuActions.open())
-          } else {
-            dispatch(menuActions.close())
-          }
+          // set menu state based on ws configuration
+          dispatch(menuActions.setState(get(response, 'workspace.opening.menu')))
         },
         error: (response, status) => {
           switch (status) {
@@ -109,10 +106,7 @@ actions.selfRegister = (workspace) => ({
     request: {
       method: 'PUT'
     },
-    success: (response, dispatch) => {
-      dispatch(actions.setLoaded(false))
-      dispatch(actions.fetch(workspace.slug))
-    }
+    success: (response, dispatch) => dispatch(actions.reload(workspace))
   }
 })
 
@@ -141,4 +135,3 @@ actions.removeShortcut = (workspaceId, roleId, type, name) => ({
     }
   }
 })
-

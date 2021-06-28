@@ -6,8 +6,8 @@ import {Routes} from '#/main/app/router'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ToolPage} from '#/main/core/tool/containers/page'
 
-import {Role} from '#/main/core/tools/community/role/components/role'
-import {Roles} from '#/main/core/tools/community/role/components/roles'
+import {Role} from '#/main/core/tools/community/role/containers/role'
+import {Roles} from '#/main/core/tools/community/role/containers/roles'
 
 const RoleTab = props =>
   <ToolPage

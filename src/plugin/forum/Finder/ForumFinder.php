@@ -12,38 +12,26 @@
 namespace Claroline\ForumBundle\Finder;
 
 use Claroline\AppBundle\API\Finder\AbstractFinder;
-use Doctrine\ORM\QueryBuilder;
+use Claroline\ForumBundle\Entity\Forum;
 
 class ForumFinder extends AbstractFinder
 {
-    public function getClass()
+    public static function getClass(): string
     {
-        return 'Claroline\ForumBundle\Entity\Forum';
+        return Forum::class;
     }
 
-    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
-    {
-        foreach ($searches as $filterName => $filterValue) {
-            switch ($filterName) {
-              default:
-                $this->setDefaults($qb, $filterName, $filterValue);
-            }
-        }
-
-        return $qb;
-    }
-
-    public function getFilters()
+    public function getFilters(): array
     {
         return [
-          'validationMode' => [
-            'type' => 'integer',
-            'description' => 'The forum validation mode',
-          ],
-          'maxComment' => [
-            'type' => 'integer',
-            'description' => 'The max amount of sub comments per messages',
-          ],
+            'validationMode' => [
+                'type' => 'integer',
+                'description' => 'The forum validation mode',
+            ],
+            'maxComment' => [
+                'type' => 'integer',
+                'description' => 'The max amount of sub comments per messages',
+            ],
         ];
     }
 }

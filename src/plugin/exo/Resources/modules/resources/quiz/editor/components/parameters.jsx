@@ -126,6 +126,34 @@ const EditorParameters = props => {
                     type: 'boolean',
                     label: trans('metadata_visible', {}, 'quiz'),
                     displayed: hasOverview
+                  }, {
+                    name: 'parameters._showOverviewStats',
+                    type: 'boolean',
+                    label: trans('show_attempts_stats', {}, 'quiz'),
+                    displayed: (quiz) => get(quiz, 'parameters.hasExpectedAnswers'),
+                    calculated: (quiz) => 'none' !== get(quiz, 'parameters.overviewStats'),
+                    onChange: (checked) => {
+                      if (checked) {
+                        props.update('parameters.overviewStats', 'user')
+                      } else {
+                        props.update('parameters.overviewStats', 'none')
+                      }
+                    },
+                    linked: [
+                      {
+                        name: 'parameters.overviewStats',
+                        type: 'choice',
+                        label: trans('calculation_mode', {}, 'quiz'),
+                        hideLabel: true,
+                        displayed: (quiz) => 'none' !== get(quiz, 'parameters.overviewStats'),
+                        options: {
+                          choices: {
+                            user: trans('user'),
+                            all: trans('all')
+                          }
+                        }
+                      }
+                    ]
                   }
                 ]
               }
@@ -407,6 +435,34 @@ const EditorParameters = props => {
                     label: trans('show_end_navigation', {}, 'quiz'),
                     help: trans('show_end_navigation_help', {}, 'quiz'),
                     displayed: hasEnd
+                  }, {
+                    name: 'parameters._showEndStats',
+                    type: 'boolean',
+                    label: trans('show_attempts_stats', {}, 'quiz'),
+                    displayed: (quiz) => get(quiz, 'parameters.hasExpectedAnswers'),
+                    calculated: (quiz) => 'none' !== get(quiz, 'parameters.endStats'),
+                    onChange: (checked) => {
+                      if (checked) {
+                        props.update('parameters.endStats', 'user')
+                      } else {
+                        props.update('parameters.endStats', 'none')
+                      }
+                    },
+                    linked: [
+                      {
+                        name: 'parameters.endStats',
+                        type: 'choice',
+                        label: trans('calculation_mode', {}, 'quiz'),
+                        hideLabel: true,
+                        displayed: (quiz) => 'none' !== get(quiz, 'parameters.endStats'),
+                        options: {
+                          choices: {
+                            user: trans('user'),
+                            all: trans('all')
+                          }
+                        }
+                      }
+                    ]
                   }
                 ]
               }
@@ -550,11 +606,11 @@ const EditorParameters = props => {
                 }
               }, {
                 name: 'parameters.successMessage',
-                label: trans('success_message', {}, 'quiz'),
+                label: trans('success_message'),
                 type: 'html'
               }, {
                 name: 'parameters.failureMessage',
-                label: trans('failure_message', {}, 'quiz'),
+                label: trans('failure_message'),
                 type: 'html'
               }
             ]

@@ -3,7 +3,6 @@
 namespace UJM\ExoBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Query\Expr\Join;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Entity\Item\Item;
 
@@ -16,8 +15,6 @@ class ItemRepository extends EntityRepository
      * Returns all the questions linked to a given exercise.
      *
      * @deprecated this is not used
-     *
-     * @param Exercise $exercise
      *
      * @return Item[]
      */
@@ -36,8 +33,6 @@ class ItemRepository extends EntityRepository
 
     /**
      * Returns the questions corresponding to an array of UUIDs.
-     *
-     * @param array $uuids
      *
      * @return Item[]
      */

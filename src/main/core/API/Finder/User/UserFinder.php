@@ -41,7 +41,7 @@ class UserFinder extends AbstractFinder
         $this->workspaceManager = $workspaceManager;
     }
 
-    public function getClass()
+    public static function getClass(): string
     {
         return User::class;
     }
@@ -58,6 +58,12 @@ class UserFinder extends AbstractFinder
                 case 'publicUrl':
                     $qb->andWhere('UPPER(obj.publicUrl) = :publicUrl');
                     $qb->setParameter('publicUrl', strtoupper($filterValue));
+                    break;
+                case 'username':
+                    // because some users use numeric username
+                    // if we let the default, the finder will add a strict check instead of a LIKE
+                    $qb->andWhere('UPPER(obj.username) LIKE :username');
+                    $qb->setParameter('username', '%'.strtoupper($filterValue).'%');
                     break;
                 case 'name':
                     $qb->andWhere('UPPER(obj.username) LIKE :name OR UPPER(CONCAT(obj.firstName, \' \', obj.lastName)) LIKE :name');
@@ -84,7 +90,7 @@ class UserFinder extends AbstractFinder
                     $qb->andWhere('UPPER(g.name) LIKE :groupName');
                     $qb->setParameter('groupName', '%'.strtoupper($filterValue).'%');
                     break;
-                case 'scheduledtask':
+                case 'scheduledtask': // TODO : should be removed
                     $qb->leftJoin('obj.scheduledTasks', 'st');
                     $qb->andWhere('st.id IN (:scheduledTasks)');
                     $qb->setParameter('scheduledTasks', is_array($filterValue) ? $filterValue : [$filterValue]);
@@ -316,12 +322,5 @@ class UserFinder extends AbstractFinder
         $qb->setParameter('workspacesIds', $workspacesIds);
 
         return $qb;
-    }
-
-    public function getFilters()
-    {
-        return [
-            '$defaults' => [],
-        ];
     }
 }

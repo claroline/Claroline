@@ -15,8 +15,6 @@ class WordsQuestionValidator extends JsonSchemaValidator
 
     /**
      * WordsQuestionValidator constructor.
-     *
-     * @param KeywordValidator $keywordValidator
      */
     public function __construct(KeywordValidator $keywordValidator)
     {
@@ -42,8 +40,6 @@ class WordsQuestionValidator extends JsonSchemaValidator
     /**
      * Validates the solution of the question.
      * Sends the keywords collection to the keyword validator.
-     *
-     * @param array $question
      *
      * @return array
      */

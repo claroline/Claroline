@@ -13,7 +13,7 @@ import {selectors as workspaceSelectors} from '#/main/core/workspace/store/selec
 import {FormData} from '#/main/app/content/form/containers/data'
 import {
   actions as formActions,
-  selectors as formSelect
+  selectors as formSelectors
 } from '#/main/app/content/form/store'
 
 import {route} from '#/main/core/workspace/routing'
@@ -75,6 +75,11 @@ const WorkspaceFormComponent = (props) =>
             },
             mode: 'standard'
           }, {
+            name: 'contactEmail',
+            label: trans('contact'),
+            type: 'email',
+            mode: 'standard'
+          }, {
             name: 'meta.model',
             label: trans('define_as_model'),
             type: 'boolean',
@@ -118,15 +123,36 @@ const WorkspaceFormComponent = (props) =>
             type: 'image',
             label: trans('thumbnail')
           }, {
-            name: 'display.showMenu',
-            type: 'boolean',
-            label: trans('showTools'),
-            mode: 'expert'
-          }, {
             name: 'display.showProgression',
             type: 'boolean',
             label: trans('showProgression'),
             mode: 'advanced'
+          }, {
+            name: 'breadcrumb.displayed',
+            type: 'boolean',
+            label: trans('showBreadcrumbs'),
+            displayed: props.hasBreadcrumb, // only show breadcrumb config if it's not disabled at platform level
+            mode: 'advanced',
+            linked: [
+              {
+                name: 'breadcrumb.items',
+                type: 'choice',
+                label: trans('links'),
+                required: true,
+                displayed: (workspace) => get(workspace, 'breadcrumb.displayed') || false,
+                options: {
+                  choices: {
+                    desktop: trans('desktop'),
+                    workspaces: trans('workspace_list'),
+                    current: trans('current_workspace'),
+                    tool: trans('tool')
+                  },
+                  inline: false,
+                  condensed: false,
+                  multiple: true
+                }
+              }
+            ]
           }
         ]
       }, {
@@ -181,38 +207,20 @@ const WorkspaceFormComponent = (props) =>
                 }
               }
             ]
-          }
-        ]
-      }, {
-        icon: 'fa fa-fw fa-map-signs',
-        title: trans('breadcrumb'),
-        mode: 'advanced',
-        displayed: props.hasBreadcrumb, // only show breadcrumb config if it's not disabled at platform level
-        fields: [
-          {
-            name: 'breadcrumb.displayed',
-            type: 'boolean',
-            label: trans('showBreadcrumbs'),
-            linked: [
-              {
-                name: 'breadcrumb.items',
-                type: 'choice',
-                label: trans('links'),
-                required: true,
-                displayed: (workspace) => get(workspace, 'breadcrumb.displayed') || false,
-                options: {
-                  choices: {
-                    desktop: trans('desktop'),
-                    workspaces: trans('workspace_list'),
-                    current: trans('current_workspace'),
-                    tool: trans('tool')
-                  },
-                  inline: false,
-                  condensed: false,
-                  multiple: true
-                }
+          }, {
+            name: 'opening.menu',
+            type: 'choice',
+            label: trans('tools_menu'),
+            mode: 'expert',
+            placeholder: trans('do_nothing'),
+            options: {
+              condensed: false,
+              noEmpty: false,
+              choices: {
+                open: trans('open_tools_menu'),
+                close: trans('close_tools_menu')
               }
-            ]
+            }
           }
         ]
       }, {
@@ -242,6 +250,18 @@ const WorkspaceFormComponent = (props) =>
                 displayed: (workspace) => workspace.registration && workspace.registration.selfRegistration
               }
             ]
+          }, {
+            name: 'registration.defaultRole',
+            type: 'role',
+            label: trans('default_role'),
+            displayed: !props.new,
+            required: true,
+            options: {
+              picker: {
+                url: ['apiv2_workspace_list_roles', {id: props.id}],
+                filters: []
+              }
+            }
           }, {
             name: 'registration.selfUnregistration',
             type: 'boolean',
@@ -426,6 +446,7 @@ WorkspaceFormComponent.propTypes = {
   isAdmin: T.bool.isRequired,
   hasBreadcrumb: T.bool.isRequired,
   new: T.bool.isRequired,
+  id: T.string,
   updateProp: T.func.isRequired
 }
 
@@ -433,7 +454,8 @@ const WorkspaceForm = connect(
   (state, ownProps) => ({
     isAdmin: securitySelectors.isAdmin(state),
     hasBreadcrumb: configSelectors.param(state, 'display.breadcrumb'),
-    new: formSelect.isNew(formSelect.form(state, ownProps.name)),
+    new: formSelectors.isNew(formSelectors.form(state, ownProps.name)),
+    id: formSelectors.data(formSelectors.form(state, ownProps.name)).id,
     tools: workspaceSelectors.tools(state),
     root: workspaceSelectors.root(state)
   }),

@@ -49,9 +49,6 @@ class KeywordController extends AbstractCrudController
      *     options={"mapping": {"clacoForm": "uuid"}}
      * )
      *
-     * @param ClacoForm $clacoForm
-     * @param Request   $request
-     *
      * @return JsonResponse
      */
     public function categoriesListAction(ClacoForm $clacoForm, Request $request)

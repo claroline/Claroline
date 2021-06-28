@@ -4,12 +4,8 @@ services:
       autoconfigure: false
       public: true
 
-  Claroline\AgendaBundle\Manager\AgendaManager:
+  Claroline\AgendaBundle\Manager\EventManager:
       arguments:
           - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '%kernel.project_dir%'
-          - '@security.token_storage'
-          - '@security.authorization_checker'
-          - '@claroline.manager.role_manager'
-          - '@translator'
-          - '@service_container'
+          - '@messenger.default_bus'
+          - '@Claroline\CoreBundle\Manager\PlanningManager'

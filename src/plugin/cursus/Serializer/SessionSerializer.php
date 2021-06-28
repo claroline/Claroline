@@ -15,13 +15,13 @@ use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer;
+use Claroline\CoreBundle\API\Serializer\Location\LocationSerializer;
 use Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer;
-use Claroline\CoreBundle\API\Serializer\User\LocationSerializer;
 use Claroline\CoreBundle\API\Serializer\User\RoleSerializer;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer;
 use Claroline\CoreBundle\Entity\File\PublicFile;
-use Claroline\CoreBundle\Entity\Organization\Location;
+use Claroline\CoreBundle\Entity\Location\Location;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
@@ -95,6 +95,7 @@ class SessionSerializer
             'code' => $session->getCode(),
             'name' => $session->getName(),
             'description' => $session->getDescription(),
+            'plainDescription' => $session->getPlainDescription(),
             'poster' => $this->serializePoster($session),
             'thumbnail' => $this->serializeThumbnail($session),
             'permissions' => [
@@ -102,37 +103,30 @@ class SessionSerializer
                 'edit' => $this->authorization->isGranted('EDIT', $session),
                 'delete' => $this->authorization->isGranted('DELETE', $session),
             ],
-            'workspace' => $session->getWorkspace() ?
-                $this->workspaceSerializer->serialize($session->getWorkspace(), [Options::SERIALIZE_MINIMAL]) :
-                null,
-            'location' => $session->getLocation() ?
-                $this->locationSerializer->serialize($session->getLocation(), [Options::SERIALIZE_MINIMAL]) :
-                null,
+            'course' => $this->courseSerializer->serialize($session->getCourse(), [Options::SERIALIZE_MINIMAL]),
             'restrictions' => [
                 'users' => $session->getMaxUsers(),
                 'dates' => DateRangeNormalizer::normalize($session->getStartDate(), $session->getEndDate()),
             ],
+            'workspace' => $session->getWorkspace() ?
+                $this->workspaceSerializer->serialize($session->getWorkspace(), [Options::SERIALIZE_MINIMAL]) :
+                null,
         ];
 
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
-            $duration = null;
-            if ($session->getStartDate() && $session->getEndDate()) {
-                // this is just to expose the same schema than course
-                $duration = $session->getEndDate()->diff($session->getStartDate())->format('%a');
-            }
-
             $serialized = array_merge($serialized, [
+                'location' => $session->getLocation() ?
+                    $this->locationSerializer->serialize($session->getLocation(), [Options::SERIALIZE_MINIMAL]) :
+                    null,
                 'meta' => [
                     'creator' => $session->getCreator() ?
                         $this->userSerializer->serialize($session->getCreator(), [Options::SERIALIZE_MINIMAL]) :
                         null,
                     'created' => DateNormalizer::normalize($session->getCreatedAt()),
                     'updated' => DateNormalizer::normalize($session->getUpdatedAt()),
-                    'duration' => $duration,
+                    'duration' => $session->getCourse() ? $session->getCourse()->getDefaultSessionDuration() : null,
                     'default' => $session->isDefaultSession(),
                     'order' => $session->getOrder(),
-
-                    'course' => $this->courseSerializer->serialize($session->getCourse(), [Options::SERIALIZE_MINIMAL]),
                     'learnerRole' => $session->getLearnerRole() ?
                         $this->roleSerializer->serialize($session->getLearnerRole(), [Options::SERIALIZE_MINIMAL]) :
                         null,
@@ -147,6 +141,10 @@ class SessionSerializer
                     'userValidation' => $session->getUserValidation(),
                     'mail' => $session->getRegistrationMail(),
                     'eventRegistrationType' => $session->getEventRegistrationType(),
+                ],
+                'pricing' => [
+                    'price' => $session->getPrice(),
+                    'description' => $session->getPriceDescription(),
                 ],
                 'participants' => $this->sessionRepo->countParticipants($session),
                 'resources' => array_map(function (ResourceNode $resource) {
@@ -164,6 +162,7 @@ class SessionSerializer
         $this->sipe('code', 'setCode', $data, $session);
         $this->sipe('name', 'setName', $data, $session);
         $this->sipe('description', 'setDescription', $data, $session);
+        $this->sipe('plainDescription', 'setPlainDescription', $data, $session);
 
         $this->sipe('meta.default', 'setDefaultSession', $data, $session);
         $this->sipe('meta.order', 'setOrder', $data, $session);
@@ -176,6 +175,9 @@ class SessionSerializer
         $this->sipe('registration.userValidation', 'setUserValidation', $data, $session);
         $this->sipe('registration.mail', 'setRegistrationMail', $data, $session);
         $this->sipe('registration.eventRegistrationType', 'setEventRegistrationType', $data, $session);
+
+        $this->sipe('pricing.price', 'setPrice', $data, $session);
+        $this->sipe('pricing.description', 'setPriceDescription', $data, $session);
 
         if (isset($data['meta'])) {
             if (isset($data['meta']['created'])) {
@@ -210,9 +212,9 @@ class SessionSerializer
 
         $course = $session->getCourse();
         // Sets course at creation
-        if (empty($course) && isset($data['meta']['course']['id'])) {
+        if (empty($course) && isset($data['course']['id'])) {
             /** @var Course $course */
-            $course = $this->courseRepo->findOneBy(['uuid' => $data['meta']['course']['id']]);
+            $course = $this->courseRepo->findOneBy(['uuid' => $data['course']['id']]);
             if ($course) {
                 $session->setCourse($course);
             }

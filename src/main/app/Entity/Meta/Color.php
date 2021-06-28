@@ -11,24 +11,14 @@ trait Color
      *
      * @var string
      */
-    private $color;
+    protected $color;
 
-    /**
-     * Get color.
-     *
-     * @return string
-     */
-    public function getColor()
+    public function getColor(): ?string
     {
         return $this->color;
     }
 
-    /**
-     * Set color.
-     *
-     * @param string $color
-     */
-    public function setColor($color)
+    public function setColor(string $color = null)
     {
         $this->color = $color;
     }

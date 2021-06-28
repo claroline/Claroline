@@ -2,7 +2,7 @@ import {trans} from '#/main/app/intl/translation'
 import {currency} from '#/main/app/intl/currency'
 import {chain, number, inRange} from '#/main/app/data/types/validators'
 
-import {NumberInput} from '#/main/app/data/types/number/components/input'
+import {CurrencyInput} from '#/main/app/data/types/currency/components/input'
 
 /**
  * Currency definition.
@@ -22,7 +22,7 @@ const dataType = {
    *
    * @return {string}
    */
-  render: (raw, options) => raw || 0 === raw ? currency(raw, options.unit) : null,
+  render: (raw, options) => raw || 0 === raw ? currency(raw, options.currency) : null,
 
   /**
    * Validates a currency value.
@@ -38,7 +38,7 @@ const dataType = {
    * Custom components for numbers rendering.
    */
   components: {
-    input: NumberInput
+    input: CurrencyInput
   }
 }
 

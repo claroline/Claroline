@@ -13,7 +13,7 @@ import {CALLBACK_BUTTON} from '#/main/app/buttons'
 
 import {constants} from '#/main/core/user/constants'
 import {MODAL_ROLES} from '#/main/core/modals/roles'
-import {isStandardRole, hasCustomRoles} from '#/main/core/user/permissions'
+import {isStandardRole, hasCustomRoles, roleWorkspace} from '#/main/core/user/permissions'
 
 const CreatePermission = props =>
   <td key="create-cell" className="create-cell">
@@ -27,6 +27,7 @@ const CreatePermission = props =>
           <label className="checkbox-inline">
             <input
               type="checkbox"
+              disabled={!props.editable}
               checked={props.permission && 0 < props.permission.length}
               onChange={(e) => {
                 if (e.target.checked) {
@@ -46,6 +47,7 @@ const CreatePermission = props =>
                 <label className="checkbox-inline">
                   <input
                     type="checkbox"
+                    disabled={!props.editable}
                     checked={props.permission && -1 !== props.permission.indexOf(type)}
                     onChange={(e) => {
                       if (e.target.checked) {
@@ -77,6 +79,7 @@ const CreatePermission = props =>
 CreatePermission.propTypes = {
   id: T.string.isRequired,
   creatable: T.object.isRequired,
+  editable: T.bool.isRequired,
   permission: T.oneOfType([T.array, T.bool]).isRequired,
   onChange: T.func.isRequired
 }
@@ -99,6 +102,7 @@ const RolePermissions = props =>
           <input
             type="checkbox"
             checked={props.permissions[permission]}
+            disabled={!props.editable}
             onChange={() => props.update(merge({}, props.permissions, {[permission]: !props.permissions[permission]}))}
           />
         </td>
@@ -107,6 +111,7 @@ const RolePermissions = props =>
           key={permission}
           id={props.name}
           permission={props.permissions[permission]}
+          editable={props.editable}
           creatable={props.creatable}
           onChange={(creationPerms) => {
             const newPerms = merge({}, props.permissions)
@@ -140,6 +145,7 @@ RolePermissions.propTypes = {
   permissions: T.object.isRequired,
   hasNonStandardPerms: T.bool,
   deletable: T.bool,
+  editable: T.bool,
   creatable: T.object,
   update: T.func.isRequired,
   delete: T.func.isRequired
@@ -178,35 +184,46 @@ const ContentRights = props => {
       </thead>
 
       <tbody>
-        {props.rights.map((rolePerm, index) => {
-          const workspaceCode = rolePerm.workspace ? rolePerm.workspace.code : null
-          const displayName = trans(rolePerm.translationKey) + (workspaceCode ? ' (' + workspaceCode + ')' : '')
+        {[]
+          // create new array to be able to modify it
+          .concat(props.rights)
+          // move workspace manager role to the top of the list
+          .sort((a, b) => props.workspace && roleWorkspace(props.workspace, true) === b.name ? 1 : 0)
+          .map((rolePerm, index) => {
+            const workspaceCode = rolePerm.workspace ? rolePerm.workspace.code : null
+            const displayName = trans(rolePerm.translationKey) + (workspaceCode ? ' (' + workspaceCode + ')' : '')
+            let managerRole = null
+            if (props.workspace) {
+              managerRole = roleWorkspace(props.workspace, true)
+            }
 
-          return (
-            <RolePermissions
-              key={rolePerm.id}
-              name={rolePerm.name}
-              translationKey={displayName}
-              permissions={Object.assign({}, defaultPerms, rolePerm.permissions)}
-              deletable={!isStandardRole(rolePerm.name, props.workspace)}
-              creatable={props.creatable}
-              hasNonStandardPerms={hasNonStandardPerms}
-              update={(permissions) => {
-                const newPerms = merge([], props.rights)
-                const rights = newPerms.find(perm => perm.name === rolePerm.name)
-                rights.permissions = permissions
+            return (
+              <RolePermissions
+                key={rolePerm.id}
+                name={rolePerm.name}
+                translationKey={displayName}
+                permissions={Object.assign({}, defaultPerms, rolePerm.permissions)}
+                deletable={!isStandardRole(rolePerm.name, props.workspace)}
+                creatable={props.creatable}
+                editable={!managerRole || rolePerm.name !== managerRole}
+                hasNonStandardPerms={hasNonStandardPerms}
+                update={(permissions) => {
+                  const newPerms = merge([], props.rights)
+                  const rights = newPerms.find(perm => perm.name === rolePerm.name)
+                  rights.permissions = permissions
 
-                props.updateRights(newPerms)
-              }}
-              delete={() => {
-                const newPerms = merge([], props.rights)
-                newPerms.splice(index, 1)
+                  props.updateRights(newPerms)
+                }}
+                delete={() => {
+                  const newPerms = merge([], props.rights)
+                  newPerms.splice(index, 1)
 
-                props.updateRights(newPerms)
-              }}
-            />
-          )
-        })}
+                  props.updateRights(newPerms)
+                }}
+              />
+            )
+          })
+        }
       </tbody>
 
       <tfoot>

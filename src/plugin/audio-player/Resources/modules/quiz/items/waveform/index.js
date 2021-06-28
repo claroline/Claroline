@@ -65,8 +65,8 @@ export default {
       if (answers && answers.data) {
         answers.data.forEach(selection => {
           if (selection.start >= solution.section.start - solution.section.startTolerance &&
-            selection.start <= solution.section.start &&
-            selection.end >= solution.section.end &&
+            selection.start <= solution.section.start + solution.section.startTolerance &&
+            selection.end >= solution.section.end - solution.section.endTolerance &&
             selection.end <= solution.section.end + solution.section.endTolerance
           ) {
             found = true
@@ -90,8 +90,8 @@ export default {
 
         item.solutions.forEach(solution => {
           if (selection.start >= solution.section.start - solution.section.startTolerance &&
-            selection.start <= solution.section.start &&
-            selection.end >= solution.section.end &&
+            selection.start <= solution.section.start + solution.section.startTolerance &&
+            selection.end >= solution.section.end - solution.section.endTolerance &&
             selection.end <= solution.section.end + solution.section.endTolerance
           ) {
             found = true

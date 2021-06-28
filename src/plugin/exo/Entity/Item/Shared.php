@@ -54,8 +54,6 @@ class Shared
 
     /**
      * Sets user.
-     *
-     * @param User $user
      */
     public function setUser(User $user)
     {
@@ -74,8 +72,6 @@ class Shared
 
     /**
      * Sets question.
-     *
-     * @param Item $question
      */
     public function setQuestion(Item $question)
     {

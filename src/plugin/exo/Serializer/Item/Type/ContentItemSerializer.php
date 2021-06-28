@@ -12,9 +12,6 @@ class ContentItemSerializer
     /**
      * Converts a content item into a JSON-encodable structure.
      *
-     * @param ContentItem $contentItem
-     * @param array       $options
-     *
      * @return array
      */
     public function serialize(ContentItem $contentItem, array $options = [])
@@ -42,7 +39,6 @@ class ContentItemSerializer
      *
      * @param array       $data
      * @param ContentItem $contentItem
-     * @param array       $options
      *
      * @return ContentItem
      */

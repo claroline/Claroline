@@ -157,16 +157,6 @@ const Technical = props =>
           }
         ]
       }, {
-        icon: 'fa fa-fw fa-user-shield',
-        title: trans('security'),
-        fields: [
-          {
-            name: 'security.default_root_anon_id',
-            type: 'string',
-            label: trans('default_admin')
-          }
-        ]
-      }, {
         icon: 'fa fa-fw fa-envelope',
         title: trans('email'),
         fields: [

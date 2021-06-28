@@ -28,6 +28,19 @@ services:
 
     Claroline\DevBundle\Command\RouterDebugCommand:
         arguments:
-            - '@router'
+            - '@Claroline\AppBundle\Routing\Finder'
         tags:
-            - { name: 'console.command', command: 'claroline:debug:router' }
+            - { name: 'console.command', command: 'claroline:router:debug' }
+
+    Claroline\DevBundle\Command\ApiDumpCommand:
+        arguments:
+            - '@Claroline\AppBundle\Routing\Finder'
+            - '@Claroline\AppBundle\Routing\Documentator'
+        tags:
+            - { name: 'console.command', command: 'claroline:api:dump' }
+
+    Claroline\DevBundle\Command\RefreshCommand:
+        arguments:
+            - '@Claroline\CoreBundle\Library\Installation\Refresher'
+        tags:
+            - { name: 'console.command', command: 'claroline:refresh' }

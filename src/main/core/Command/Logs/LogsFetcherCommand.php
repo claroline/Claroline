@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Command\Logs;
 
-use Claroline\AppBundle\Command\BaseCommandTrait;
 use Claroline\CoreBundle\Manager\LogManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -20,12 +19,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class LogsFetcherCommand extends Command
 {
-    use BaseCommandTrait;
-
-    private $params = [
-        'from' => 'from',
-        'filePath' => 'filePath',
-    ];
     private $logManager;
 
     public function __construct(LogManager $logManager)
@@ -43,6 +36,7 @@ class LogsFetcherCommand extends Command
                 //1472688000 1st sept 2016
                 new InputArgument('from', InputArgument::REQUIRED, 'date from (Y-m-d)'),
                 new InputArgument('filePath', InputArgument::REQUIRED, 'path to exported file'),
+                new InputArgument('doer', InputArgument::OPTIONAL, 'the uuid of the user.'),
             ]
         );
     }
@@ -53,6 +47,7 @@ class LogsFetcherCommand extends Command
         $this->logManager->exportLogsToCsv([
             'filters' => [
                 'dateLog' => $input->getArgument('from') ?? null,
+                'doer' => $input->getArgument('doer') ?? null,
             ],
         ], $input->getArgument('filePath'));
 

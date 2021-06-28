@@ -32,11 +32,6 @@ class ApiManager
 
     /**
      * ApiManager constructor.
-     *
-     * @param ObjectManager    $om
-     * @param TransferProvider $transfer
-     * @param FileUtilities    $fileUt
-     * @param Crud             $crud
      */
     public function __construct(
         ObjectManager $om,

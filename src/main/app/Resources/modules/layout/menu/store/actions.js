@@ -13,3 +13,21 @@ actions.open = makeActionCreator(MENU_OPEN)
 actions.close = makeActionCreator(MENU_CLOSE)
 actions.toggle = makeActionCreator(MENU_TOGGLE)
 actions.changeSection = makeActionCreator(MENU_CHANGE_SECTION, 'section')
+
+
+actions.setState = (state = null) => (dispatch) => {
+  switch (state) {
+    case 'open':
+      // force open the menu
+      dispatch(actions.open())
+      break
+
+    case 'close':
+      // force close the menu
+      dispatch(actions.close())
+      break
+
+    default:
+      // let the menu in its previous state
+  }
+}

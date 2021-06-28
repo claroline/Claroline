@@ -11,12 +11,26 @@
 
 namespace Claroline\CursusBundle\Repository;
 
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CursusBundle\Entity\Registration\AbstractRegistration;
 use Claroline\CursusBundle\Entity\Session;
 use Doctrine\ORM\EntityRepository;
 
 class SessionRepository extends EntityRepository
 {
+    public function findByWorkspace(Workspace $workspace)
+    {
+        return $this->_em
+            ->createQuery('
+                SELECT s FROM Claroline\CursusBundle\Entity\Session AS s
+                WHERE s.workspace = :workspace
+            ')
+            ->setParameters([
+                'workspace' => $workspace,
+            ])
+            ->getResult();
+    }
+
     public function countParticipants(Session $session)
     {
         return [

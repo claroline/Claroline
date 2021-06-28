@@ -20,6 +20,11 @@ class WorkspaceMain extends Component {
     if (!this.props.notFound && prevProps.workspace && this.props.workspace && this.props.workspace.slug !== prevProps.workspace.slug) {
       this.props.close(prevProps.workspace.slug)
     }
+
+    // reload workspace when needed (eg. at user login, we need to reload the workspace to grab its correct rights)
+    if (this.props.workspace && prevProps.loaded !== this.props.loaded && !this.props.loaded) {
+      this.props.reload(this.props.workspace)
+    }
   }
 
   componentWillUnmount() {
@@ -58,6 +63,8 @@ class WorkspaceMain extends Component {
     }
 
     if (!isEmpty(this.props.accessErrors)) {
+      const workspace = this.props.workspace
+
       return (
         <WorkspaceRestrictions
           errors={this.props.accessErrors}
@@ -65,10 +72,10 @@ class WorkspaceMain extends Component {
           authenticated={this.props.authenticated}
           managed={this.props.managed}
           workspace={this.props.workspace}
-          checkAccessCode={(code) => this.props.checkAccessCode(this.props.workspace, code)}
+          checkAccessCode={(code) => this.props.checkAccessCode(workspace, code)}
           platformSelfRegistration={this.props.platformSelfRegistration}
-          selfRegister={() => this.props.selfRegister(this.props.workspace)}
-          reload={() => this.props.reload(this.props.workspace)}
+          selfRegister={() => this.props.selfRegister(workspace)}
+          reload={() => this.props.reload(workspace)}
         />
       )
     }
@@ -82,14 +89,12 @@ class WorkspaceMain extends Component {
               path: '/:toolName',
               onEnter: (params = {}) => {
                 if (-1 !== this.props.tools.findIndex(tool => tool.name === params.toolName)) {
-                  // tool is enabled for the desktop
+                  // tool is enabled for the workspace
                   this.props.openTool(params.toolName, this.props.workspace)
                 } else {
-                  // tool is disabled (or does not exist) for the desktop
-                  // let's go to the default opening of the desktop
-                  if (this.props.workspace.opening.type === 'tool') {
-                    this.props.openTool(this.props.workspace.opening.target, this.props.workspace)
-                  }
+                  // tool is disabled (or does not exist) for the workspace
+                  // let's go to the default opening of the workspace
+                  this.props.history.replace(workspaceRoute(this.props.workspace)+'/')
                 }
               },
               component: ToolMain

@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, {createElement, Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
@@ -7,9 +7,9 @@ import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {HtmlGroup} from '#/main/core/layout/form/components/group/html-group'
 import {TextGroup} from '#/main/core/layout/form/components/group/text-group'
+import {ContentMessage} from '#/main/app/content/components/message'
 
 import {User as UserTypes} from '#/main/core/user/prop-types'
-import {UserAvatar} from '#/main/core/user/components/avatar'
 
 class UserMessageForm extends Component {
   constructor(props) {
@@ -32,65 +32,45 @@ class UserMessageForm extends Component {
 
   render() {
     return (
-      <div className={classes('user-message-container user-message-form-container', this.props.className, {
-        'user-message-left': 'left' === this.props.position,
-        'user-message-right': 'right' === this.props.position
-      })}>
-        {'left' === this.props.position && this.props.user &&
-          <UserAvatar picture={this.props.user.picture} alt={false} />
-        }
+      <ContentMessage
+        className={classes('user-message-form-container', this.props.className)}
+        user={this.props.user}
+        date={this.props.date}
+        position={this.props.position}
+        actions={[
+          {
+            name: 'cancel',
+            type: CALLBACK_BUTTON,
+            icon: 'fa fa-fw fa-times',
+            label: trans('cancel', {}, 'actions'),
+            callback: this.props.cancel
+          }
+        ]}
+      >
+        {createElement(
+          this.props.allowHtml ? HtmlGroup : TextGroup,
+          {
+            id: 'user-message-content',
+            label: trans('message'),
+            hideLabel: true,
+            value: this.state.content,
+            long: true,
+            onChange: this.updateContent
+          }
+        )}
 
-        <div className="user-message">
-          <div className="user-message-meta">
-            <div className="user-message-info">
-              {this.props.user && this.props.user.name ?
-                this.props.user.name : trans('unknown')
-              }
-            </div>
-
-            {this.props.cancel &&
-              <div className="user-message-actions">
-                <Button
-                  type={CALLBACK_BUTTON}
-                  className="btn btn-link"
-                  tooltip="bottom"
-                  icon="fa fa-fw fa-times"
-                  label={trans('cancel', {}, 'actions')}
-                  callback={this.props.cancel}
-                />
-              </div>
-            }
-          </div>
-
-          {React.createElement(
-            this.props.allowHtml ? HtmlGroup : TextGroup,
-            {
-              id: 'user-message-content',
-              label: trans('message'),
-              hideLabel: true,
-              value: this.state.content,
-              long: true,
-              onChange: this.updateContent
-            }
-          )}
-
-          <Button
-            type={CALLBACK_BUTTON}
-            className="btn btn-block btn-save btn-emphasis"
-            disabled={!this.state.pendingChanges || !this.state.content}
-            label={this.props.submitLabel}
-            callback={() => {
-              this.props.submit(this.state.content)
-              this.setState({pendingChanges: false, content: ''})
-            }}
-            primary={true}
-          />
-        </div>
-
-        {'right' === this.props.position && this.props.user &&
-          <UserAvatar picture={this.props.user.picture} alt={false} />
-        }
-      </div>
+        <Button
+          type={CALLBACK_BUTTON}
+          className="btn btn-block btn-save btn-emphasis"
+          disabled={!this.state.pendingChanges || !this.state.content}
+          label={this.props.submitLabel}
+          callback={() => {
+            this.props.submit(this.state.content)
+            this.setState({pendingChanges: false, content: ''})
+          }}
+          primary={true}
+        />
+      </ContentMessage>
     )
   }
 }

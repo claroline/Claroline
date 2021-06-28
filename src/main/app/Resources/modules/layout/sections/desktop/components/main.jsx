@@ -50,13 +50,10 @@ class DesktopMain extends Component {
               if (-1 !== this.props.tools.findIndex(tool => tool.name === params.toolName)) {
                 // tool is enabled for the desktop
                 this.props.openTool(params.toolName)
-              } else if (0 !== this.props.tools.length) {
+              } else {
                 // tool is disabled (or does not exist) for the desktop
                 // let's go to the default opening of the desktop
                 this.props.history.replace('/desktop')
-              } else {
-                // user has access to no desktop tool send him back to home
-                this.props.history.replace('/')
               }
             },
             component: ToolMain

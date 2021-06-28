@@ -26,11 +26,6 @@ class SectionCommentSerializer
     private $sectionRepo;
     private $userRepo;
 
-    /**
-     * @param ObjectManager     $om
-     * @param SectionSerializer $sectionSerializer
-     * @param UserSerializer    $userSerializer
-     */
     public function __construct(ObjectManager $om, SectionSerializer $sectionSerializer, UserSerializer $userSerializer)
     {
         $this->om = $om;
@@ -42,9 +37,6 @@ class SectionCommentSerializer
     }
 
     /**
-     * @param SectionComment $sectionComment
-     * @param array          $options
-     *
      * @return array
      */
     public function serialize(SectionComment $sectionComment, array $options = [])
@@ -68,9 +60,7 @@ class SectionCommentSerializer
     }
 
     /**
-     * @param array          $data
-     * @param SectionComment $sectionComment
-     * @param array          $options
+     * @param array $data
      *
      * @return SectionComment
      */

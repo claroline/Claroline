@@ -11,17 +11,17 @@ class CryptographicKeySerializer
 {
     use SerializerTrait;
 
-    public function __construct(RouterInterface $router, ProfileSerializer $profileSerializer)
+    private $router;
+
+    public function __construct(RouterInterface $router)
     {
         $this->router = $router;
-        $this->profileSerializer = $profileSerializer;
     }
 
     public function serialize(CryptographicKey $crypto)
     {
-        return  [
+        return [
             'type' => 'CryptographicKey',
-            'id' => $this->router->generate('apiv2_open_badge__profile', ['profile' => $crypto->getOrganization()->getUuid()], UrlGeneratorInterface::ABSOLUTE_URL),
             'publicKeyParam' => $crypto->getPublicKeyParam(),
             'id' => $this->router->generate('apiv2_open_badge__cryptographic_key', ['key' => $crypto->getUuid()], UrlGeneratorInterface::ABSOLUTE_URL),
         ];

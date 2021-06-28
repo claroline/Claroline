@@ -3,7 +3,7 @@
 namespace Claroline\AuthenticationBundle\Security\Authentication\Guard;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Cryptography\ApiToken;
+use Claroline\AuthenticationBundle\Entity\ApiToken;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -17,6 +17,9 @@ use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
  */
 class ApiTokenAuthenticator extends AbstractGuardAuthenticator
 {
+    public const QUERY_PARAM = 'apitoken';
+    public const HEADER_NAME = 'CLAROLINE-API-TOKEN';
+
     /** @var ObjectManager */
     private $om;
 
@@ -26,27 +29,27 @@ class ApiTokenAuthenticator extends AbstractGuardAuthenticator
     }
 
     /**
-     * (@inheritdoc}.
+     * {@inheritdoc}.
      */
     public function supports(Request $request)
     {
-        return $request->query->has('apitoken');
+        return $request->headers->has(self::HEADER_NAME) || $request->query->has(self::QUERY_PARAM);
     }
 
     /**
-     * (@inheritdoc}.
+     * {@inheritdoc}.
      */
     public function getCredentials(Request $request)
     {
-        return $request->query->get('apitoken');
+        return $request->headers->get(self::HEADER_NAME) ?: $request->query->get(self::QUERY_PARAM);
     }
 
     /**
-     * (@inheritdoc}.
+     * {@inheritdoc}.
      */
     public function getUser($credentials, UserProviderInterface $userProvider)
     {
-        $apiToken = $this->om->getRepository(ApiToken::class)->findOneByToken($credentials);
+        $apiToken = $this->om->getRepository(ApiToken::class)->findOneBy(['token' => $credentials]);
 
         if (!$apiToken instanceof ApiToken) {
             return null;
@@ -56,7 +59,7 @@ class ApiTokenAuthenticator extends AbstractGuardAuthenticator
     }
 
     /**
-     * (@inheritdoc}.
+     * {@inheritdoc}.
      */
     public function checkCredentials($credentials, UserInterface $user)
     {
@@ -65,7 +68,7 @@ class ApiTokenAuthenticator extends AbstractGuardAuthenticator
     }
 
     /**
-     * (@inheritdoc}.
+     * {@inheritdoc}.
      */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
     {
@@ -74,7 +77,7 @@ class ApiTokenAuthenticator extends AbstractGuardAuthenticator
     }
 
     /**
-     * (@inheritdoc}.
+     * {@inheritdoc}.
      */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
@@ -83,7 +86,7 @@ class ApiTokenAuthenticator extends AbstractGuardAuthenticator
     }
 
     /**
-     * (@inheritdoc}.
+     * {@inheritdoc}.
      */
     public function start(Request $request, AuthenticationException $authException = null)
     {
@@ -91,7 +94,7 @@ class ApiTokenAuthenticator extends AbstractGuardAuthenticator
     }
 
     /**
-     * (@inheritdoc}.
+     * {@inheritdoc}.
      */
     public function supportsRememberMe()
     {

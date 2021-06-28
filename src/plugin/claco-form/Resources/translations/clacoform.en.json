@@ -180,5 +180,12 @@
     "disable_comments_notification": "Disable notifications on comments",
     "enable_comments_notification": "Enable notifications on comments",
     "display_categories_help": "The categories are always accessible to managers.",
-    "entry_creation_not_allowed": "You cannot add a new entry in this database."
+    "entry_creation_not_allowed": "You cannot add a new entry in this database.",
+    "show_confirm": "Confirm the submission of new entries",
+    "show_confirm_help": "If checked, a confirmation request will be shown to users before submitting the entry.",
+    "confirm_message": "Confirm message",
+    "confirm_new_entry": "Submit entry",
+    "confirm_new_entry_message": "Are you sure you want to save this entry ?",
+    "help_message": "Help message",
+    "help_message_help": "The help message is displayed on all the entries of the database."
 }

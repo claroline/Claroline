@@ -21,16 +21,9 @@ class RoleFinder extends AbstractFinder
 {
     /** @var AuthorizationCheckerInterface */
     private $authChecker;
-
     /** @var TokenStorageInterface */
     private $tokenStorage;
 
-    /**
-     * RoleFinder constructor.
-     *
-     * @param AuthorizationCheckerInterface $authChecker
-     * @param TokenStorageInterface         $tokenStorage
-     */
     public function __construct(
         AuthorizationCheckerInterface $authChecker,
         TokenStorageInterface $tokenStorage
@@ -39,7 +32,7 @@ class RoleFinder extends AbstractFinder
         $this->tokenStorage = $tokenStorage;
     }
 
-    public function getClass()
+    public static function getClass(): string
     {
         return Role::class;
     }
@@ -66,9 +59,6 @@ class RoleFinder extends AbstractFinder
                             break;
                         case 'user':
                             $filterValue = Role::USER_ROLE;
-                            break;
-                        case 'custom':
-                            $filterValue = Role::CUSTOM_ROLE;
                             break;
                         case 'platform':
                             $filterValue = Role::PLATFORM_ROLE;
@@ -116,12 +106,5 @@ class RoleFinder extends AbstractFinder
         }
 
         return $qb;
-    }
-
-    public function getFilters()
-    {
-        return [
-            '$defaults' => [],
-        ];
     }
 }

@@ -33,10 +33,6 @@ class AbilityController extends AbstractCrudController
     /** @var CompetencyManager */
     private $manager;
 
-    /**
-     * @param AuthorizationCheckerInterface $authorization
-     * @param CompetencyManager             $manager
-     */
     public function __construct(AuthorizationCheckerInterface $authorization, CompetencyManager $manager)
     {
         $this->authorization = $authorization;
@@ -68,8 +64,6 @@ class AbilityController extends AbstractCrudController
      *     class="ClarolineCoreBundle:Resource\ResourceNode",
      *     options={"mapping": {"node": "uuid"}}
      * )
-     *
-     * @param ResourceNode $node
      *
      * @return JsonResponse
      */
@@ -103,9 +97,6 @@ class AbilityController extends AbstractCrudController
      *     options={"mapping": {"ability": "uuid"}},
      * )
      *
-     * @param ResourceNode $node
-     * @param Ability      $ability
-     *
      * @return JsonResponse
      */
     public function resourceAbilityAssociateAction(ResourceNode $node, Ability $ability)
@@ -137,9 +128,6 @@ class AbilityController extends AbstractCrudController
      *     options={"mapping": {"ability": "uuid"}},
      * )
      *
-     * @param ResourceNode $node
-     * @param Ability      $ability
-     *
      * @return JsonResponse
      */
     public function resourceAbilityDissociateAction(ResourceNode $node, Ability $ability)
@@ -152,8 +140,7 @@ class AbilityController extends AbstractCrudController
     }
 
     /**
-     * @param ResourceNode $node
-     * @param string       $rights
+     * @param string $rights
      */
     private function checkResourceAccess(ResourceNode $node, $rights = 'OPEN')
     {

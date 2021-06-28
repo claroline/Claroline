@@ -31,7 +31,7 @@ const RightsModal = props =>
       label={trans('save', {}, 'actions')}
       disabled={!props.saveEnabled}
       callback={() => {
-        props.save(props.toolName, props.currentContext)
+        props.save(props.toolName, props.currentContext, props.onSave)
         props.fadeModal()
       }}
     />
@@ -49,6 +49,7 @@ RightsModal.propTypes = {
   updateRights: T.func.isRequired,
   saveEnabled: T.bool.isRequired,
   save: T.func.isRequired,
+  onSave: T.func,
   fadeModal: T.func.isRequired
 }
 

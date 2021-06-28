@@ -16,8 +16,6 @@ class AbilityRepository extends EntityRepository
      * to a given competency tree. Result includes information
      * about ability level as well.
      *
-     * @param Competency $competency
-     *
      * @return array
      */
     public function findByCompetency(Competency $competency)
@@ -52,9 +50,6 @@ class AbilityRepository extends EntityRepository
      * Returns the abilities directly linked to a given competency and
      * a particular level, excluding a given ability.
      *
-     * @param Competency $competency
-     * @param Level      $level
-     *
      * @return array
      */
     public function findOthersByCompetencyAndLevel(
@@ -82,9 +77,6 @@ class AbilityRepository extends EntityRepository
 
     /**
      * Returns the abilities directly linked to a given competency and a particular level.
-     *
-     * @param Competency $competency
-     * @param Level      $level
      *
      * @return array
      */
@@ -135,8 +127,7 @@ class AbilityRepository extends EntityRepository
      * Returns the first five abilities whose name begins by a given
      * string, excluding abilities linked to a particular competency.
      *
-     * @param string     $name
-     * @param Competency $excludedParent
+     * @param string $name
      *
      * @return array
      */
@@ -164,8 +155,6 @@ class AbilityRepository extends EntityRepository
      * Returns the abilities associated with a resource, pre-loading
      * level information.
      *
-     * @param ResourceNode $resource
-     *
      * @return array
      */
     public function findByResource(ResourceNode $resource)
@@ -186,9 +175,6 @@ class AbilityRepository extends EntityRepository
      * Returns an array representation of resource evaluation data for
      * a given user and a given competency, including information about
      * the resource and the related abilities.
-     *
-     * @param Competency $competency
-     * @param User       $user
      *
      * @return array
      *

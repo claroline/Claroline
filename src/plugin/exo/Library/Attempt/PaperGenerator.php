@@ -31,11 +31,6 @@ class PaperGenerator
 
     /**
      * PaperGenerator constructor.
-     *
-     *
-     * @param ExerciseSerializer $exerciseSerializer
-     * @param StepSerializer     $stepSerializer
-     * @param ItemSerializer     $itemSerializer
      */
     public function __construct(
         ExerciseSerializer $exerciseSerializer,
@@ -82,8 +77,7 @@ class PaperGenerator
     /**
      * Generates the structure of the attempt based on Exercise and Steps parameters.
      *
-     * @param Exercise $exercise
-     * @param Paper    $previousPaper
+     * @param Paper $previousPaper
      *
      * @return array
      */
@@ -154,8 +148,7 @@ class PaperGenerator
      * Generates steps based on the quiz configuration and a list of items.
      * In this kind of quiz all items are stored in a single step.
      *
-     * @param Exercise $exercise
-     * @param array    $previousExercise
+     * @param array $previousExercise
      *
      * @return array
      */
@@ -226,9 +219,6 @@ class PaperGenerator
 
     /**
      * Pick items for a step according to the step configuration.
-     *
-     * @param Step       $step
-     * @param array|null $previousStep
      *
      * @return Item[]
      */

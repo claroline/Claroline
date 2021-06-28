@@ -156,7 +156,7 @@ class Sco
         return $this->scorm;
     }
 
-    public function setScorm(Scorm $scorm)
+    public function setScorm(Scorm $scorm = null)
     {
         $this->scorm = $scorm;
     }

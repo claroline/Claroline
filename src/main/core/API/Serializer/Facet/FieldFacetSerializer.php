@@ -19,7 +19,6 @@ class FieldFacetSerializer
 
     /**
      * @param SerializerProvider $serializer
-     * @param ObjectManager      $om
      */
     public function __construct(ObjectManager $om, FieldFacetChoiceSerializer $ffcSerializer)
     {

@@ -10,7 +10,7 @@ trait AccessibleUntil
      * @var \DateTime
      * @ORM\Column(name="accessible_until", type="datetime", nullable=true)
      */
-    private $accessibleUntil;
+    protected $accessibleUntil;
 
     /**
      * Returns the resource accessible until date.

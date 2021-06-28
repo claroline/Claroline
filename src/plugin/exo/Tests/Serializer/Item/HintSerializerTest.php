@@ -128,9 +128,6 @@ class HintSerializerTest extends JsonDataTestCase
 
     /**
      * Compares the data between a hint entity and a hint raw object.
-     *
-     * @param Hint  $hint
-     * @param array $hintData
      */
     private function compareHintAndData(Hint $hint, array $hintData)
     {

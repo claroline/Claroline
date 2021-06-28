@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\API\Serializer\Resource\Types;
 
 use Claroline\CoreBundle\Entity\Resource\Revision;
 use Claroline\CoreBundle\Entity\Resource\Text;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\Template\PlaceholderManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -17,9 +18,6 @@ class TextSerializer
 
     /**
      * TextSerializer constructor.
-     *
-     * @param TokenStorageInterface $tokenStorage
-     * @param PlaceholderManager    $placeholderManager
      */
     public function __construct(
         TokenStorageInterface $tokenStorage,
@@ -39,14 +37,7 @@ class TextSerializer
         return 'text';
     }
 
-    /**
-     * Serializes a Text resource entity for the JSON api.
-     *
-     * @param Text $text
-     *
-     * @return array
-     */
-    public function serialize(Text $text)
+    public function serialize(Text $text): array
     {
         return [
             'id' => $text->getId(),
@@ -58,20 +49,14 @@ class TextSerializer
         ];
     }
 
-    /**
-     * @param array $data
-     * @param Text  $text
-     *
-     * @return Text
-     */
-    public function deserialize($data, Text $text)
+    public function deserialize(array $data, Text $text): Text
     {
         $user = $this->tokenStorage->getToken()->getUser();
 
         if (isset($data['raw'])) {
             $revision = new Revision();
             $revision->setContent($data['raw']);
-            $revision->setUser('anon.' === $user ? null : $user);
+            $revision->setUser($user instanceof User ? $user : null);
             $revision->setText($text);
             $version = $text->getVersion() + 1;
             $revision->setVersion($version);

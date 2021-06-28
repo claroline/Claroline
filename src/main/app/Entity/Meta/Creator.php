@@ -15,22 +15,18 @@ trait Creator
      *
      * @var User
      */
-    private $creator;
+    protected $creator;
 
     /**
      * Returns the entity creator.
-     *
-     * @return User
      */
-    public function getCreator()
+    public function getCreator(): ?User
     {
         return $this->creator;
     }
 
     /**
      * Sets the entity creator.
-     *
-     * @param User $creator
      */
     public function setCreator(User $creator = null)
     {

@@ -47,22 +47,6 @@ class MaskManager implements LoggerAwareInterface
         $this->menuRepo = $om->getRepository('ClarolineCoreBundle:Resource\MenuAction');
     }
 
-    public function checkIntegrity()
-    {
-        $this->log('Checking resource mask decoders integrity...');
-        $ids = $this->maskRepo->findDuplicateMasksIds();
-        $duplicates = count($ids);
-        if ($duplicates > 0) {
-            $this->log("Removing {$duplicates} mask decoder duplicates...");
-            $this->maskRepo->removeMasksByIds($ids);
-        }
-    }
-
-    public function restoreIntegrity()
-    {
-        throw new \Exception('Not implemented yet.');
-    }
-
     public function createDecoder($action, ResourceType $resourceType = null)
     {
         /** @var ResourceType[] $resourceTypes */

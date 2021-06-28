@@ -20,9 +20,6 @@ abstract class AbstractFavourite
      */
     private $user;
 
-    /**
-     * @param User $user
-     */
     public function setUser(User $user)
     {
         $this->user = $user;

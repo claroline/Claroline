@@ -28,8 +28,8 @@ const WaveformFeedback = props =>
         title={trans('your_answers', {}, 'quiz')}
         sections={props.answer.map(a => {
           const solution = props.item.solutions.find(s => a.start >= s.section.start - s.section.startTolerance &&
-            a.start <= s.section.start &&
-            a.end >= s.section.end &&
+            a.start <= s.section.start + s.section.startTolerance &&
+            a.end >= s.section.end - s.section.endTolerance &&
             a.end <= s.section.end + s.section.endTolerance
           )
 

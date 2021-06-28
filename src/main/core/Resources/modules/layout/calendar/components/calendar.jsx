@@ -22,7 +22,7 @@ const TimeInput = props =>
     <CallbackButton
       className="btn btn-link btn-sm"
       disabled={props.max === props.value}
-      callback={() => props.onChange(calculateTime(props.value + props.step, props.max))}
+      callback={() => props.onChange(calculateTime((((props.value / props.step) | 0) + 1) * props.step, props.max))}
     >
       <span className="fa fa-fw fa-caret-up" />
     </CallbackButton>
@@ -41,7 +41,7 @@ const TimeInput = props =>
     <CallbackButton
       className="btn btn-link btn-sm"
       disabled={0 === props.value}
-      callback={() => props.onChange(calculateTime(props.value - props.step, props.max))}
+      callback={() => props.onChange(calculateTime((((props.value / props.step) | 0) - 1) * props.step, props.max))}
     >
       <span className="fa fa-fw fa-caret-down" />
     </CallbackButton>
@@ -132,7 +132,15 @@ class Calendar extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.selected !== this.props.selected) {
+    const triggerRefresh  = [
+      'selected',
+      'minDate',
+      'maxDate',
+      'minTime',
+      'maxTime'
+    ]
+
+    if (-1 !== triggerRefresh.findIndex(prop => prevProps[prop] !== this.props[prop])) {
       this.setState(this.init())
     }
   }

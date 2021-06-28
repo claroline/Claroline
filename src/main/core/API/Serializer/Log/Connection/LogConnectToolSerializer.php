@@ -13,8 +13,6 @@ class LogConnectToolSerializer
 
     /**
      * LogConnectToolSerializer constructor.
-     *
-     * @param SerializerProvider $serializer
      */
     public function __construct(SerializerProvider $serializer)
     {
@@ -32,9 +30,6 @@ class LogConnectToolSerializer
     }
 
     /**
-     * @param LogConnectTool $log
-     * @param array          $options
-     *
      * @return array
      */
     public function serialize(LogConnectTool $log, array $options = [])

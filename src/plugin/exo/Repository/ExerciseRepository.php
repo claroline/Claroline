@@ -14,8 +14,6 @@ class ExerciseRepository extends EntityRepository
     /**
      * Lists scores obtained to an exercise.
      *
-     * @param Exercise $exercise
-     *
      * @return array
      */
     public function findScores(Exercise $exercise)
@@ -24,8 +22,6 @@ class ExerciseRepository extends EntityRepository
 
     /**
      * Retrieves exercises using a question.
-     *
-     * @param Item $question
      *
      * @return array
      */

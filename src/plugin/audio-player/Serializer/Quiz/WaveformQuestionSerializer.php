@@ -14,9 +14,6 @@ class WaveformQuestionSerializer
     /**
      * Converts a Waveform question into a JSON-encodable structure.
      *
-     * @param WaveformQuestion $waveformQuestion
-     * @param array            $options
-     *
      * @return array
      */
     public function serialize(WaveformQuestion $waveformQuestion, array $options = [])
@@ -45,7 +42,6 @@ class WaveformQuestionSerializer
      *
      * @param array            $data
      * @param WaveformQuestion $waveformQuestion
-     * @param array            $options
      *
      * @return WaveformQuestion
      */
@@ -65,8 +61,6 @@ class WaveformQuestionSerializer
 
     /**
      * Serializes Question solutions.
-     *
-     * @param WaveformQuestion $waveformQuestion
      *
      * @return array
      */
@@ -88,9 +82,6 @@ class WaveformQuestionSerializer
 
     /**
      * Deserializes Question sections.
-     *
-     * @param WaveformQuestion $waveformQuestion
-     * @param array            $solutions
      */
     private function deserializeSections(WaveformQuestion $waveformQuestion, array $solutions)
     {
@@ -136,8 +127,6 @@ class WaveformQuestionSerializer
     /**
      * Serializes a Section.
      *
-     * @param Section $section
-     *
      * @return array
      */
     private function serializeSection(Section $section)
@@ -159,9 +148,6 @@ class WaveformQuestionSerializer
 
     /**
      * Deserializes a Section.
-     *
-     * @param Section $section
-     * @param array   $data
      */
     private function deserializeSection(Section $section, array $data)
     {

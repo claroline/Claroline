@@ -19,8 +19,6 @@ class ScoSerializer
     use SerializerTrait;
 
     /**
-     * @param Sco $sco
-     *
      * @return array
      */
     public function serialize(Sco $sco)

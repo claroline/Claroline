@@ -14,5 +14,3 @@ services:
                   - '@service_container'
 
     Claroline\BookingBundle\Security\Voter\MaterialVoter: ~
-
-    Claroline\BookingBundle\Security\Voter\RoomVoter: ~

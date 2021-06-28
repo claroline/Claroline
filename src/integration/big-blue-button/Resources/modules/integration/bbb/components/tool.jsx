@@ -9,7 +9,8 @@ import {ToolPage} from '#/main/core/tool/containers/page'
 import {Vertical} from '#/main/app/content/tabs/components/vertical'
 
 import {BBBMetrics} from '#/integration/big-blue-button/integration/bbb/components/metrics'
-import {BBBMeetings} from '#/integration/big-blue-button/integration/bbb/components/meetings'
+import {BBBResources} from '#/integration/big-blue-button/integration/bbb/components/resources'
+import {BBBRooms} from '#/integration/big-blue-button/integration/bbb/components/rooms'
 import {BBBRecordings} from '#/integration/big-blue-button/integration/bbb/components/recordings'
 import {BBBServers} from '#/integration/big-blue-button/integration/bbb/components/servers'
 
@@ -58,10 +59,14 @@ class BBBTool extends Component {
               }}
               tabs={[
                 {
-                  icon: 'fa fa-fw fa-chalkboard',
-                  title: trans('meetings', {}, 'bbb'),
+                  icon: 'fa fa-fw fa-folder',
+                  title: trans('resources'),
                   path: '/',
                   exact: true
+                }, {
+                  icon: 'fa fa-fw fa-chalkboard',
+                  title: trans('meetings', {}, 'bbb'),
+                  path: '/rooms'
                 }, {
                   icon: 'fa fa-fw fa-video',
                   title: trans('recordings', {}, 'bbb'),
@@ -83,9 +88,16 @@ class BBBTool extends Component {
                   path: '/',
                   exact: true,
                   render: () => (
-                    <BBBMeetings
+                    <BBBResources
                       servers={this.props.servers}
                       endMeetings={this.props.endMeetings}
+                    />
+                  )
+                }, {
+                  path: '/rooms',
+                  render: () => (
+                    <BBBRooms
+                      meetings={this.props.activeMeetings}
                     />
                   )
                 }, {
@@ -116,6 +128,7 @@ BBBTool.propTypes = {
   maxMeetings: T.number,
   maxMeetingParticipants: T.number,
   maxParticipants: T.number,
+  activeMeetings: T.array,
   activeMeetingsCount: T.number,
   participantsCount: T.number,
   servers: T.arrayOf(T.shape({

@@ -36,10 +36,6 @@ class ChoiceDefinition extends AbstractDefinition
 
     /**
      * ChoiceDefinition constructor.
-     *
-     * @param ChoiceQuestionValidator  $validator
-     * @param ChoiceAnswerValidator    $answerValidator
-     * @param ChoiceQuestionSerializer $serializer
      */
     public function __construct(
         ChoiceQuestionValidator $validator,
@@ -186,7 +182,6 @@ class ChoiceDefinition extends AbstractDefinition
      * Exports choice answers.
      *
      * @param ChoiceQuestion $item
-     * @param Answer         $answer
      */
     public function getCsvAnswers(AbstractItem $item, Answer $answer)
     {

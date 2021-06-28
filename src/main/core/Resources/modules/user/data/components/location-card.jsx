@@ -12,7 +12,7 @@ const LocationCard = props =>
     {...props}
     id={props.data.id}
     poster={props.data.thumbnail ? asset(props.data.thumbnail.url) : null}
-    icon="fa fa-location-arrow"
+    icon="fa fa-map-marker-alt"
     title={props.data.name}
     subtitle={getAddressString(props.data.address, true)}
     contentText={props.data.meta.description}

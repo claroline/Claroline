@@ -14,25 +14,17 @@ class UserListener
 
     /**
      * UserListener constructor.
-     *
-     * @param OauthManager $oauthManager
      */
     public function __construct(OauthManager $oauthManager)
     {
         $this->oauthManager = $oauthManager;
     }
 
-    /**
-     * @param MergeUsersEvent $event
-     */
     public function onMerge(MergeUsersEvent $event)
     {
         // TODO : implement
     }
 
-    /**
-     * @param LogGenericEvent $event
-     */
     public function onDelete(LogGenericEvent $event)
     {
         if ($event instanceof LogUserDeleteEvent) {

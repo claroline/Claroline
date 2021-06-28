@@ -137,6 +137,7 @@ class DataInput extends Component {
       // the props to pass to the group
       {
         id: this.props.id,
+        className: this.props.className,
         label: this.props.label,
         hideLabel: this.props.hideLabel,
         help: this.props.help,
@@ -151,6 +152,7 @@ class DataInput extends Component {
 
 DataInput.propTypes = {
   id: T.string.isRequired,
+  className: T.string,
   type: T.string,
   label: T.string.isRequired,
   hideLabel: T.bool,

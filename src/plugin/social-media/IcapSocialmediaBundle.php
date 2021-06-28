@@ -2,7 +2,7 @@
 
 namespace Icap\SocialmediaBundle;
 
-use Claroline\CoreBundle\Library\DistributionPluginBundle;
+use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
 
 /**
  * Bundle class.

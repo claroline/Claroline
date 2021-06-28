@@ -12,11 +12,9 @@
 namespace Claroline\CoreBundle\Repository\User;
 
 use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Query;
 
 class RoleRepository extends EntityRepository
 {
@@ -47,13 +45,17 @@ class RoleRepository extends EntityRepository
      */
     public function findPlatformRoles(User $user)
     {
-        $dql = "
-            SELECT r FROM Claroline\\CoreBundle\\Entity\\Role r
-            JOIN r.users u
-            WHERE u.id = {$user->getId()} AND r.type = ".Role::PLATFORM_ROLE;
-        $query = $this->_em->createQuery($dql);
-
-        return $query->getResult();
+        return $this->_em
+            ->createQuery('
+                SELECT r 
+                FROM Claroline\CoreBundle\Entity\Role r
+                JOIN r.users u
+                WHERE u.id = :userId 
+                  AND r.type = :type
+            ')
+            ->setParameter('userId', $user->getId())
+            ->setParameter('type', Role::PLATFORM_ROLE)
+            ->getResult();
     }
 
     /**
@@ -83,62 +85,34 @@ class RoleRepository extends EntityRepository
      */
     public function findWorkspaceRolesForUser(User $user, Workspace $workspace)
     {
-        $dql = "
-            SELECT r FROM Claroline\\CoreBundle\\Entity\\Role r
-            JOIN r.workspace ws
-            JOIN r.users user
-            WHERE ws.uuid = '{$workspace->getUuid()}'
-            AND r.name != 'ROLE_ADMIN'
-            AND user.id = {$user->getId()}
-        ";
-
-        $query = $this->_em->createQuery($dql);
-
-        return $query->getResult();
+        return $this->_em
+            ->createQuery('
+                SELECT r 
+                FROM Claroline\CoreBundle\Entity\Role r
+                JOIN r.users AS u
+                WHERE r.workspace = :workspaceId
+                  AND r.name != :admin_role
+                  AND u.id = :userId
+            ')
+            ->setParameter('workspaceId', $workspace->getId())
+            ->setParameter('admin_role', 'ROLE_ADMIN')
+            ->setParameter('userId', $user->getId())
+            ->getResult();
     }
 
-    private function findBaseWorkspaceRole($roleType, Workspace $workspace)
+    public function findRolesByWorkspaceCodeAndTranslationKey(string $workspaceCode, string $translationKey)
     {
-        $dql = "
-            SELECT r FROM Claroline\\CoreBundle\\Entity\\Role r
-            WHERE r.name LIKE '%ROLE_WS_{$roleType}_{$workspace->getUuid()}%'
-        ";
-        $query = $this->_em->createQuery($dql);
-
-        return $query->getOneOrNullResult();
-    }
-
-    public function findAll()
-    {
-        $dql = '
-            SELECT r, w
-            FROM Claroline\CoreBundle\Entity\Role r
-            LEFT JOIN r.workspace w
-        ';
-
-        $query = $this->_em->createQuery($dql);
-
-        return $query->getResult();
-    }
-
-    public function findRolesByWorkspaceCodeAndTranslationKey(
-        $workspaceCode,
-        $translationKey,
-        $executeQuery = true
-    ) {
-        $dql = '
-            SELECT r
-            FROM Claroline\CoreBundle\Entity\Role r
-            INNER JOIN r.workspace w
-            WHERE w.code = :code
-            AND r.translationKey = :key
-        ';
-
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('code', $workspaceCode);
-        $query->setParameter('key', $translationKey);
-
-        return $executeQuery ? $query->getResult() : $query;
+        return $this->_em
+            ->createQuery('
+                SELECT r
+                FROM Claroline\CoreBundle\Entity\Role r
+                INNER JOIN r.workspace w
+                WHERE w.code = :code
+                AND r.translationKey = :key
+            ')
+            ->setParameter('code', $workspaceCode)
+            ->setParameter('key', $translationKey)
+            ->getResult();
     }
 
     /**
@@ -162,27 +136,32 @@ class RoleRepository extends EntityRepository
 
     public function findWorkspaceRoleWithToolAccess(Workspace $workspace)
     {
-        $dql = '
-            SELECT r
-            FROM Claroline\CoreBundle\Entity\Role r
-            WHERE
-                r.name = :managerRoleName
-                OR EXISTS (
+        return $this->_em
+            ->createQuery('
+                SELECT r
+                FROM Claroline\CoreBundle\Entity\Role r
+                WHERE EXISTS (
                     SELECT ot
                     FROM Claroline\CoreBundle\Entity\Tool\OrderedTool ot
                     JOIN ot.rights otr
                     JOIN otr.role otrr
                     WHERE ot.workspace = :workspace
                     AND otrr = r
-                    AND BIT_AND(otr.mask, :openValue) = :openValue
+                    AND BIT_AND(otr.mask, 1) = 1
+                )
+            ')
+            ->setParameter('workspace', $workspace)
+            ->getResult();
+    }
+
+    private function findBaseWorkspaceRole(string $roleType, Workspace $workspace)
+    {
+        return $this->_em
+            ->createQuery('
+                SELECT r FROM Claroline\CoreBundle\Entity\Role r
+                WHERE r.name LIKE :role_pattern'
             )
-        ';
-
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('workspace', $workspace);
-        $query->setParameter('managerRoleName', 'ROLE_WS_MANAGER_'.$workspace->getUuid());
-        $query->setParameter('openValue', ToolMaskDecoder::$defaultValues['open']);
-
-        return $query->getResult();
+            ->setParameter('role_pattern', "ROLE_WS_{$roleType}_{$workspace->getUuid()}%")
+            ->getOneOrNullResult();
     }
 }

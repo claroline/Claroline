@@ -22,14 +22,14 @@ class LogWorkspaceRoleCreateEvent extends LogGenericEvent
     {
         parent::__construct(
             self::ACTION,
-            array(
-                'role' => array(
+            [
+                'role' => [
                     'name' => $role->getName(),
-                ),
-                'workspace' => array(
+                ],
+                'workspace' => [
                     'name' => $role->getWorkspace()->getName(),
-                ),
-            ),
+                ],
+            ],
             null,
             null,
             null,

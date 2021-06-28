@@ -14,12 +14,20 @@ namespace Claroline\CoreBundle\Installation;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Installation\Updater\Updater130015;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\InstallationBundle\Additional\AdditionalInstaller as BaseInstaller;
 
 class AdditionalInstaller extends BaseInstaller
 {
+    public static function getUpdaters(): array
+    {
+        return [
+            '13.0.15' => Updater130015::class,
+        ];
+    }
+
     public function postInstall()
     {
         parent::postInstall();

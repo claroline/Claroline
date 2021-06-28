@@ -68,7 +68,7 @@ class FileController extends AbstractCrudController
 
         $data = $this->manager->download([$fileResource->getResourceNode()], false);
 
-        $file = $data['file'] ?: @tempnam('tmp', 'tmp');
+        $file = $data['file'] ?: tempnam('tmp', 'tmp');
         if (!file_exists($file)) {
             return new JsonResponse(['file_not_found'], 500);
         }

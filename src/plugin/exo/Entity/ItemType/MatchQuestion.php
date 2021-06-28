@@ -19,7 +19,6 @@ use UJM\ExoBundle\Library\Model\ShuffleTrait;
 class MatchQuestion extends AbstractItem
 {
     use ShuffleTrait;
-
     /*
      * The penalty to apply to each wrong association
      */
@@ -85,8 +84,6 @@ class MatchQuestion extends AbstractItem
 
     /**
      * Adds an association.
-     *
-     * @param Association $association
      */
     public function addAssociation(Association $association)
     {
@@ -98,8 +95,6 @@ class MatchQuestion extends AbstractItem
 
     /**
      * Removes an association.
-     *
-     * @param Association $association
      */
     public function removeAssociation(Association $association)
     {
@@ -120,8 +115,6 @@ class MatchQuestion extends AbstractItem
 
     /**
      * Adds a label.
-     *
-     * @param Label $label
      */
     public function addLabel(Label $label)
     {
@@ -133,8 +126,6 @@ class MatchQuestion extends AbstractItem
 
     /**
      * Removes a label.
-     *
-     * @param Label $label
      */
     public function removeLabel(Label $label)
     {
@@ -155,8 +146,6 @@ class MatchQuestion extends AbstractItem
 
     /**
      * Adds a proposal.
-     *
-     * @param Proposal $proposal
      */
     public function addProposal(Proposal $proposal)
     {
@@ -168,8 +157,6 @@ class MatchQuestion extends AbstractItem
 
     /**
      * Removes a proposal.
-     *
-     * @param Proposal $proposal
      */
     public function removeProposal(Proposal $proposal)
     {

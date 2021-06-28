@@ -58,9 +58,6 @@ abstract class AbstractLogConnect
         return $this->user;
     }
 
-    /**
-     * @param User $user
-     */
     public function setUser(User $user)
     {
         $this->user = $user;
@@ -74,9 +71,6 @@ abstract class AbstractLogConnect
         return $this->connectionDate;
     }
 
-    /**
-     * @param \DateTime $connectionDate
-     */
     public function setConnectionDate(\DateTime $connectionDate)
     {
         $this->connectionDate = $connectionDate;

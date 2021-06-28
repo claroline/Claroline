@@ -16,7 +16,6 @@ class SelectionQuestionValidator extends JsonSchemaValidator
      * Performs additional validations.
      *
      * @param array $question
-     * @param array $options
      *
      * @return array
      */
@@ -33,8 +32,6 @@ class SelectionQuestionValidator extends JsonSchemaValidator
 
     /**
      * Validates the solution of the question.
-     *
-     * @param array $question
      *
      * @return array
      */

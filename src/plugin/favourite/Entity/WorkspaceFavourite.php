@@ -44,8 +44,6 @@ class WorkspaceFavourite extends AbstractFavourite
 
     /**
      * Set workspace.
-     *
-     * @param Workspace $workspace
      */
     public function setWorkspace(Workspace $workspace)
     {

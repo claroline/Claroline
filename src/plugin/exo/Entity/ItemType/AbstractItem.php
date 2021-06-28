@@ -35,9 +35,6 @@ abstract class AbstractItem
         return $this->id;
     }
 
-    /**
-     * @param Item $question
-     */
     final public function setQuestion(Item $question)
     {
         $this->question = $question;

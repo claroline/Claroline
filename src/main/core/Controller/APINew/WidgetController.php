@@ -37,10 +37,6 @@ class WidgetController
 
     /**
      * WidgetController constructor.
-     *
-     * @param SerializerProvider $serializer
-     * @param WidgetManager      $widgetManager
-     * @param DataSourceManager  $dataSourceManager
      */
     public function __construct(
         SerializerProvider $serializer,

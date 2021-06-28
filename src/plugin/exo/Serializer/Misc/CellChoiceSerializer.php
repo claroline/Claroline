@@ -15,9 +15,6 @@ class CellChoiceSerializer
     /**
      * Converts a CellChoice into a JSON-encodable structure.
      *
-     * @param CellChoice $choice
-     * @param array      $options
-     *
      * @return array
      */
     public function serialize(CellChoice $choice, array $options = [])
@@ -46,7 +43,6 @@ class CellChoiceSerializer
      *
      * @param array      $data
      * @param CellChoice $choice
-     * @param array      $options
      *
      * @return CellChoice
      */
@@ -68,9 +64,7 @@ class CellChoiceSerializer
      * Updates a collection of cel choices entities from raw data.
      * The one which are not in `$cellChoiceCollection` are removed from the entity collection.
      *
-     * @param array        $cellChoiceCollection
      * @param CellChoice[] $cellChoiceEntities
-     * @param array        $options
      *
      * @return Keyword[] - the list of updated Keyword entities (and without the one no longer in `$keywordCollection`)
      */

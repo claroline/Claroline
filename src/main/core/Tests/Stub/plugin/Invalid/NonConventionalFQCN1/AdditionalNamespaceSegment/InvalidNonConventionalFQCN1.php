@@ -11,7 +11,7 @@
 
 namespace Invalid\NonConventionalFQCN1\AdditionalNamespaceSegment;
 
-use Claroline\CoreBundle\Library\DistributionPluginBundle;
+use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
 
 class InvalidNonConventionalFQCN1 extends DistributionPluginBundle
 {

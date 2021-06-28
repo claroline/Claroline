@@ -3,8 +3,8 @@
 namespace Claroline\AuthenticationBundle\Tests\Security\Authentication\Guard;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\AuthenticationBundle\Entity\ApiToken;
 use Claroline\AuthenticationBundle\Security\Authentication\Guard\ApiTokenAuthenticator;
-use Claroline\CoreBundle\Entity\Cryptography\ApiToken;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 use Doctrine\ORM\EntityRepository;
@@ -23,6 +23,10 @@ class ApiTokenAuthenticatorTest extends MockeryTestCase
 
         $this->assertFalse($authenticator->supports(new Request()));
         $this->assertTrue($authenticator->supports(new Request(['apitoken' => 'foo'])));
+
+        $request = new Request();
+        $request->headers->set(ApiTokenAuthenticator::HEADER_NAME, 'foo');
+        $this->assertTrue($authenticator->supports($request));
     }
 
     public function testGetCredentials()
@@ -30,6 +34,10 @@ class ApiTokenAuthenticatorTest extends MockeryTestCase
         $authenticator = new ApiTokenAuthenticator($this->mock(ObjectManager::class));
 
         $this->assertSame('foo', $authenticator->getCredentials(new Request(['apitoken' => 'foo'])));
+
+        $request = new Request();
+        $request->headers->set(ApiTokenAuthenticator::HEADER_NAME, 'foo');
+        $this->assertSame('foo', $authenticator->getCredentials($request));
     }
 
     public function testGetUser()
@@ -42,7 +50,7 @@ class ApiTokenAuthenticatorTest extends MockeryTestCase
         $apiToken->setUser($user);
 
         $apiTokenRepository = $this->mock(EntityRepository::class);
-        $apiTokenRepository->shouldReceive('findOneByToken')->with('foo')->once()->andReturn($apiToken);
+        $apiTokenRepository->shouldReceive('findOneBy')->with(['token' => 'foo'])->once()->andReturn($apiToken);
 
         $om = $this->mock(ObjectManager::class);
         $om->shouldReceive('getRepository')->with(ApiToken::class)->andReturn($apiTokenRepository);
@@ -81,7 +89,7 @@ class ApiTokenAuthenticatorTest extends MockeryTestCase
 
     public function testSupportsRememberMe()
     {
-        $authenticator = new ApiTokenAuthenticator($this->createMock(ObjectManager::class));
+        $authenticator = new ApiTokenAuthenticator($this->mock(ObjectManager::class));
         $this->assertFalse($authenticator->supportsRememberMe());
     }
 }

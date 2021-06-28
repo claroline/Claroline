@@ -15,9 +15,6 @@ class KeywordSerializer
     /**
      * Converts a Keyword into a JSON-encodable structure.
      *
-     * @param Keyword $keyword
-     * @param array   $options
-     *
      * @return array
      */
     public function serialize(Keyword $keyword, array $options = [])
@@ -45,7 +42,6 @@ class KeywordSerializer
      *
      * @param array   $data
      * @param Keyword $keyword
-     * @param array   $options
      *
      * @return Keyword
      */
@@ -68,9 +64,7 @@ class KeywordSerializer
      * Updates a collection of keywords entities from raw data.
      * The one which are not in `$keywordCollection` are removed from the entity collection.
      *
-     * @param array     $keywordCollection
      * @param Keyword[] $keywordEntities
-     * @param array     $options
      *
      * @return Keyword[] - the list of updated Keyword entities (and without the one no longer in `$keywordCollection`)
      */

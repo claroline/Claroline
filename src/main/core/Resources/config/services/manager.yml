@@ -1,46 +1,32 @@
 services:
     _defaults:
         autoconfigure: false
-        public: false #because lazy
+        public: false
 
     Claroline\CoreBundle\Manager\Workspace\WorkspaceUserQueueManager:
         arguments:
-          - '@Claroline\AppBundle\Event\StrictDispatcher'
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@claroline.manager.role_manager'
-
-    claroline.manager.workspace_user_queue_manager:
-        alias: Claroline\CoreBundle\Manager\Workspace\WorkspaceUserQueueManager
-        public: true
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\Crud'
 
     Claroline\CoreBundle\Manager\WidgetManager:
         arguments:
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@claroline.manager.plugin_manager'
-
-    claroline.manager.widget_manager:
-        alias: Claroline\CoreBundle\Manager\WidgetManager
-        public: true
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\Manager\PluginManager'
 
     Claroline\CoreBundle\Manager\VersionManager:
         arguments:
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '%kernel.project_dir%'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '%kernel.project_dir%'
         calls:
-          - setLogger: [ '@logger' ]
-
-    claroline.manager.version_manager:
-        alias: Claroline\CoreBundle\Manager\VersionManager
-        public: true
+            - setLogger: [ '@logger' ]
 
     Claroline\CoreBundle\Manager\UserManager:
         arguments:
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@Claroline\AppBundle\API\Crud'
-          - '@claroline.manager.organization.organization_manager'
-          - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-        calls:
-          - setLogger: [ '@logger' ]
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\Crud'
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
 
     claroline.manager.user_manager:
         alias: Claroline\CoreBundle\Manager\UserManager
@@ -48,21 +34,21 @@ services:
 
     Claroline\CoreBundle\Manager\Tool\ToolRightsManager:
         arguments:
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     Claroline\CoreBundle\Manager\Tool\ToolMaskDecoderManager:
         arguments:
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     Claroline\CoreBundle\Manager\Tool\ToolManager:
         public: true
         arguments:
-          - '@security.authorization_checker'
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@Claroline\CoreBundle\Manager\Tool\ToolMaskDecoderManager'
-          - '@Claroline\CoreBundle\Manager\Tool\ToolRightsManager'
+            - '@security.authorization_checker'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\Manager\Tool\ToolMaskDecoderManager'
+            - '@Claroline\CoreBundle\Manager\Tool\ToolRightsManager'
         calls:
-          - setLogger: [ '@logger' ]
+            - setLogger: [ '@logger' ]
 
     claroline.manager.tool_manager:
         alias: Claroline\CoreBundle\Manager\Tool\ToolManager
@@ -71,15 +57,8 @@ services:
     Claroline\CoreBundle\Manager\RoleManager:
         public: true
         arguments:
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@Claroline\AppBundle\Event\StrictDispatcher'
-          - '@service_container'
-          - '@Claroline\AuthenticationBundle\Security\Authentication\Authenticator'
-          - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-          - '@claroline.manager.template_manager'
-          - '@Claroline\AppBundle\API\Crud'
-        calls:
-          - setLogger: [ '@logger' ]
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\FinderProvider'
 
     claroline.manager.role_manager:
         alias: Claroline\CoreBundle\Manager\RoleManager
@@ -87,15 +66,16 @@ services:
 
     Claroline\CoreBundle\Manager\ResourceManager:
         arguments:
-          - '@security.authorization_checker'
-          - '@claroline.manager.rights_manager'
-          - '@Claroline\AppBundle\Event\StrictDispatcher'
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@Claroline\CoreBundle\Library\Utilities\ClaroUtilities'
-          - '@Claroline\AppBundle\API\Crud'
-          - '@claroline.manager.temp_file'
+            - '@security.authorization_checker'
+            - '@claroline.manager.rights_manager'
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\Library\Utilities\ClaroUtilities'
+            - '@Claroline\AppBundle\API\Crud'
+            - '@claroline.manager.temp_file'
+            - '@security.helper'
         calls:
-          - setLogger: ['@logger']
+            - setLogger: ['@logger']
 
     claroline.manager.resource_manager:
         alias: Claroline\CoreBundle\Manager\ResourceManager
@@ -103,10 +83,10 @@ services:
 
     Claroline\CoreBundle\Manager\PluginManager:
         arguments:
-          - '%kernel.project_dir%/app'
-          - '%claroline.param.bundle_file%'
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@kernel'
+            - '%kernel.project_dir%/app'
+            - '%claroline.param.bundle_file%'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@kernel'
 
     claroline.manager.plugin_manager:
         alias: Claroline\CoreBundle\Manager\PluginManager
@@ -114,162 +94,109 @@ services:
 
     Claroline\CoreBundle\Manager\MailManager:
         arguments:
-          - '@Claroline\CoreBundle\Library\Mailing\Mailer'
-          - '@router'
-          - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-          - '@claroline.manager.template_manager'
-          - '@Claroline\CoreBundle\Manager\LocaleManager'
-          - '@Claroline\CoreBundle\Manager\UserManager'
-
-    claroline.manager.mail_manager:
-        alias: Claroline\CoreBundle\Manager\MailManager
-        public: true
+            - '@Claroline\CoreBundle\Library\Mailing\Mailer'
+            - '@router'
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+            - '@Claroline\CoreBundle\Manager\Template\TemplateManager'
+            - '@Claroline\CoreBundle\Manager\LocaleManager'
+            - '@Claroline\CoreBundle\Manager\UserManager'
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
 
     Claroline\CoreBundle\Manager\LogManager:
         arguments:
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@Claroline\AppBundle\API\FinderProvider'
-          - '@translator'
-          - '@Claroline\CoreBundle\Library\Utilities\ClaroUtilities'
-          - '@event_dispatcher'
-
-    claroline.log.manager:
-        alias: Claroline\CoreBundle\Manager\LogManager
-        public: true
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@translator'
+            - '@Claroline\CoreBundle\Library\Utilities\ClaroUtilities'
+            - '@event_dispatcher'
 
     Claroline\CoreBundle\Manager\LogConnectManager:
         arguments:
-          - '@Claroline\AppBundle\API\FinderProvider'
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@Claroline\CoreBundle\Manager\Workspace\EvaluationManager'
-          - '@claroline.manager.resource_evaluation_manager'
-          - '@translator'
-
-    claroline.manager.log_connect:
-        alias: Claroline\CoreBundle\Manager\LogConnectManager
-        public: true
+            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\Manager\Workspace\EvaluationManager'
+            - '@claroline.manager.resource_evaluation_manager'
+            - '@translator'
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
 
     Claroline\CoreBundle\Manager\LockManager:
         arguments:
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@security.authorization_checker'
-          - '@security.token_storage'
-
-    claroline.manager.lock_manager:
-        alias: Claroline\CoreBundle\Manager\LockManager
-        public: true
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@security.authorization_checker'
+            - '@security.token_storage'
 
     Claroline\CoreBundle\Manager\LocaleManager:
         arguments:
-          - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-          - '@claroline.manager.user_manager'
-          - '@security.token_storage'
-
-    claroline.manager.locale_manager:
-        alias: Claroline\CoreBundle\Manager\LocaleManager
-        public: true
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+            - '@Claroline\CoreBundle\Manager\UserManager'
+            - '@security.token_storage'
 
     Claroline\CoreBundle\Manager\FileManager:
         arguments:
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '%claroline.param.files_directory%'
-          - '@claroline.manager.resource_manager'
-          - '@Claroline\AppBundle\Event\StrictDispatcher'
-          - '%claroline.param.uploads_directory%'
-          - '@security.token_storage'
-          - '@claroline.manager.workspace_manager'
-
-    claroline.manager.file_manager:
-        alias: Claroline\CoreBundle\Manager\FileManager
-        public: true
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '%claroline.param.files_directory%'
+            - '@claroline.manager.resource_manager'
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - '%claroline.param.uploads_directory%'
+            - '@security.token_storage'
+            - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
 
     Claroline\CoreBundle\Manager\EventManager:
         arguments:
-          - '@kernel'
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@translator'
-
-    claroline.event.manager:
-        alias: Claroline\CoreBundle\Manager\EventManager
-        public: true
+            - '@kernel'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@translator'
 
     Claroline\CoreBundle\Manager\DataSourceManager:
         arguments:
-          - '@security.token_storage'
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@Claroline\AppBundle\Event\StrictDispatcher'
-          - '@claroline.manager.plugin_manager'
-
-    claroline.manager.data_source:
-        alias: Claroline\CoreBundle\Manager\DataSourceManager
-        public: true
+            - '@security.token_storage'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - '@Claroline\CoreBundle\Manager\PluginManager'
 
     Claroline\CoreBundle\Manager\CurlManager: ~
 
-    claroline.manager.curl_manager:
-        alias: Claroline\CoreBundle\Manager\CurlManager
-        public: true
-
     Claroline\CoreBundle\Manager\CryptographyManager:
         arguments:
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
-
-    claroline.manager.cryptography_manager:
-        alias: Claroline\CoreBundle\Manager\CryptographyManager
-        public: true
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     Claroline\CoreBundle\Manager\ContentManager:
         arguments:
-          - '@doctrine'
-          - '@request_stack'
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
-
-    claroline.manager.content_manager:
-        alias: Claroline\CoreBundle\Manager\ContentManager
-        public: true
+            - '@doctrine'
+            - '@request_stack'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     Claroline\CoreBundle\Manager\ConnectionMessageManager:
         arguments:
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@event_dispatcher'
-          - '@Claroline\AppBundle\API\SerializerProvider'
-
-    claroline.manager.connection_message_manager:
-        alias: Claroline\CoreBundle\Manager\ConnectionMessageManager
-        public: true
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@event_dispatcher'
+            - '@Claroline\AppBundle\API\SerializerProvider'
 
     Claroline\CoreBundle\Manager\ApiManager:
         arguments:
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@Claroline\AppBundle\API\TransferProvider'
-          - '@Claroline\CoreBundle\Library\Utilities\FileUtilities'
-          - '@Claroline\AppBundle\API\Crud'
-
-    claroline.manager.api_manager:
-        alias: Claroline\CoreBundle\Manager\ApiManager
-        public: true
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\TransferProvider'
+            - '@Claroline\CoreBundle\Library\Utilities\FileUtilities'
+            - '@Claroline\AppBundle\API\Crud'
 
     Claroline\CoreBundle\Manager\Workspace\WorkspaceRestrictionsManager:
         arguments:
-          - '@session'
-          - '@security.authorization_checker'
-          - '@claroline.manager.workspace_manager'
-
-    claroline.manager.workspace_restrictions:
-        alias: Claroline\CoreBundle\Manager\Workspace\WorkspaceRestrictionsManager
-        public: true
+            - '@session'
+            - '@security.authorization_checker'
+            - '@claroline.manager.workspace_manager'
 
     Claroline\CoreBundle\Manager\Workspace\WorkspaceManager:
+        public: true
         arguments:
-          - '@translator'
-          - '@Claroline\AppBundle\API\Crud'
-          - '@claroline.manager.role_manager'
-          - '@claroline.manager.resource_manager'
-          - '@Claroline\AppBundle\Event\StrictDispatcher'
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@service_container'
+            - '@translator'
+            - '@Claroline\AppBundle\API\Crud'
+            - '@claroline.manager.role_manager'
+            - '@claroline.manager.resource_manager'
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@service_container'
         calls:
-          - setLogger: [ '@logger' ]
+            - setLogger: [ '@logger' ]
 
     claroline.manager.workspace_manager:
         alias: Claroline\CoreBundle\Manager\Workspace\WorkspaceManager
@@ -277,18 +204,19 @@ services:
 
     Claroline\CoreBundle\Manager\Workspace\TransferManager:
         arguments:
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@Claroline\AppBundle\Event\StrictDispatcher'
-          - '@claroline.manager.temp_file'
-          - '@Claroline\AppBundle\API\SerializerProvider'
-          - '@claroline.transfer.ordered_tool'
-          - '@Claroline\AppBundle\API\FinderProvider'
-          - '@Claroline\AppBundle\API\Crud'
-          - '@security.token_storage'
-          - '@Claroline\CoreBundle\Library\Utilities\FileUtilities'
-          - '@Claroline\CoreBundle\Listener\Log\LogListener'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - '@claroline.manager.temp_file'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@claroline.transfer.ordered_tool'
+            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@Claroline\AppBundle\API\Crud'
+            - '@security.token_storage'
+            - '@Claroline\CoreBundle\Library\Utilities\FileUtilities'
+            - '@Claroline\CoreBundle\Listener\Log\LogListener'
+            - '@security.authorization_checker'
         calls:
-          - setLogger: [ '@logger' ]
+            - setLogger: [ '@logger' ]
 
     claroline.manager.workspace.transfer:
         alias: Claroline\CoreBundle\Manager\Workspace\TransferManager
@@ -296,8 +224,9 @@ services:
 
     Claroline\CoreBundle\Manager\Workspace\EvaluationManager:
         arguments:
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@event_dispatcher'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@event_dispatcher'
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
 
     claroline.manager.workspace.evaluation:
         alias: Claroline\CoreBundle\Manager\Workspace\EvaluationManager
@@ -305,9 +234,9 @@ services:
 
     Claroline\CoreBundle\Manager\Workspace\Transfer\OrderedToolTransfer:
         arguments:
-          - '@Claroline\CoreBundle\API\Serializer\Tool\ToolSerializer'
-          - '@Claroline\CoreBundle\API\Serializer\User\RoleSerializer'
-          - '@service_container'
+            - '@Claroline\CoreBundle\API\Serializer\Tool\ToolSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\User\RoleSerializer'
+            - '@service_container'
         calls:
           - setLogger: [ '@logger' ]
 
@@ -318,15 +247,15 @@ services:
 
     Claroline\CoreBundle\Manager\Workspace\Transfer\Tools\ResourceManager:
         arguments:
-          - '@Claroline\AppBundle\API\SerializerProvider'
-          - '@Claroline\AppBundle\API\FinderProvider'
-          - '@Claroline\AppBundle\API\Crud'
-          - '@security.token_storage'
-          - '@claroline.manager.resource_manager'
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@Claroline\AppBundle\API\Crud'
+            - '@security.token_storage'
+            - '@claroline.manager.resource_manager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
         calls:
-          - setLogger: [ '@logger' ]
+            - setLogger: [ '@logger' ]
         tags:
             - { name: kernel.event_listener, event: export_tool_resources, method: onExport }
             - { name: kernel.event_listener, event: import_tool_resources, method: onImport }
@@ -338,38 +267,31 @@ services:
 
     Claroline\CoreBundle\Manager\Template\PlaceholderManager:
         arguments:
-          - '@security.token_storage'
-          - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+            - '@security.token_storage'
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
 
     Claroline\CoreBundle\Manager\Template\TemplateManager:
         arguments:
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-          - '@Claroline\CoreBundle\Manager\Template\PlaceholderManager'
-
-    claroline.manager.template_manager:
-        alias: Claroline\CoreBundle\Manager\Template\TemplateManager
-        public: true
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+            - '@Claroline\CoreBundle\Manager\Template\PlaceholderManager'
 
     Claroline\CoreBundle\Manager\Task\ScheduledTaskManager:
         arguments:
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-          - '@Claroline\CoreBundle\API\Serializer\Task\ScheduledTaskSerializer'
-
-    claroline.manager.scheduled_task_manager:
-        alias: Claroline\CoreBundle\Manager\Task\ScheduledTaskManager
-        public: true
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+            - '@Claroline\CoreBundle\API\Serializer\Task\ScheduledTaskSerializer'
 
     Claroline\CoreBundle\Manager\Resource\RightsManager:
         arguments:
-          - '@security.token_storage'
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@claroline.manager.role_manager'
-          - '@claroline.manager.mask_manager'
-          - '@service_container'
+            - '@doctrine.dbal.default_connection'
+            - '@security.token_storage'
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\Manager\Resource\MaskManager'
+            - '@service_container'
         calls:
-          - setLogger: [ '@logger' ]
+            - setLogger: [ '@logger' ]
 
     claroline.manager.rights_manager:
         alias: Claroline\CoreBundle\Manager\Resource\RightsManager
@@ -377,28 +299,20 @@ services:
 
     Claroline\CoreBundle\Manager\Resource\ResourceRestrictionsManager:
         arguments:
-          - '@session'
-          - '@claroline.manager.rights_manager'
-          - '@security.authorization_checker'
-
-    claroline.manager.resource_restrictions:
-        alias: Claroline\CoreBundle\Manager\Resource\ResourceRestrictionsManager
-        public: true
-
+            - '@session'
+            - '@claroline.manager.rights_manager'
+            - '@security.authorization_checker'
 
     Claroline\CoreBundle\Manager\Resource\ResourceLifecycleManager:
         arguments:
-          - '@Claroline\AppBundle\Event\StrictDispatcher'
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
-
-    claroline.manager.resource_lifecycle:
-        alias: Claroline\CoreBundle\Manager\Resource\ResourceLifecycleManager
-        public: true
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager:
         arguments:
-          - '@event_dispatcher'
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@event_dispatcher'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
 
     claroline.manager.resource_evaluation_manager:
         alias: Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager
@@ -406,55 +320,35 @@ services:
 
     Claroline\CoreBundle\Manager\Resource\ResourceActionManager:
         arguments:
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@security.authorization_checker'
-          - '@Claroline\AppBundle\Event\StrictDispatcher'
-          - '@claroline.manager.resource_manager'
-          - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
-
-    claroline.manager.resource_action:
-        alias: Claroline\CoreBundle\Manager\Resource\ResourceActionManager
-        public: true
-
-    Claroline\CoreBundle\Manager\Resource\OptimizedRightsManager:
-        public: true
-        arguments:
-          - '@doctrine.dbal.default_connection'
-          - '@Claroline\AppBundle\Event\StrictDispatcher'
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
-        calls:
-          - setLogger: [ '@logger' ]
-
-    claroline.manager.optimized_rights_manager:
-        alias: Claroline\CoreBundle\Manager\Resource\OptimizedRightsManager
-        public: true
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@security.authorization_checker'
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - '@claroline.manager.resource_manager'
+            - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
 
     Claroline\CoreBundle\Manager\Resource\MaskManager:
         arguments:
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
         calls:
-          - setLogger: [ '@logger' ]
-
-    claroline.manager.mask_manager:
-        alias: Claroline\CoreBundle\Manager\Resource\MaskManager
-        public: true
+            - setLogger: [ '@logger' ]
 
     Claroline\CoreBundle\Manager\Organization\OrganizationManager:
         arguments:
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
         calls:
-          - setLogger: [ '@logger' ]
+            - setLogger: [ '@logger' ]
 
     claroline.manager.organization.organization_manager:
         alias: Claroline\CoreBundle\Manager\Organization\OrganizationManager
         public: true
 
-    Claroline\CoreBundle\Manager\Organization\LocationManager:
+    Claroline\CoreBundle\Manager\LocationManager:
         arguments:
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-          - '@claroline.manager.curl_manager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+            - '@Claroline\CoreBundle\Manager\CurlManager'
 
-    claroline.manager.organization.location_manager:
-        alias: Claroline\CoreBundle\Manager\Organization\LocationManager
-        public: true
+    Claroline\CoreBundle\Manager\PlanningManager:
+        arguments:
+            - '@event_dispatcher'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'

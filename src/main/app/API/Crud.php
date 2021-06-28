@@ -63,16 +63,26 @@ class Crud
     /**
      * Creates a new entry for `class` and populates it with `data`.
      *
-     * @param string $class   - the class of the entity to create
-     * @param mixed  $data    - the serialized data of the object to create
-     * @param array  $options - additional creation options
+     * @param mixed $classOrObject - the class of the entity to create or an instance of the entity
+     * @param mixed $data          - the serialized data of the object to create
+     * @param array $options       - additional creation options
      *
      * @return object|array
      *
      * @throws InvalidDataException
      */
-    public function create($class, $data, array $options = [])
+    public function create($classOrObject, $data, array $options = [])
     {
+        if (is_string($classOrObject)) {
+            // class name received
+            $class = $classOrObject;
+            $object = new $classOrObject();
+        } else {
+            // object instance received
+            $class = get_class($classOrObject);
+            $object = $classOrObject;
+        }
+
         // validates submitted data.
         $errors = $this->validate($class, $data, ValidatorProvider::CREATE, $options);
         if (count($errors) > 0) {
@@ -85,7 +95,6 @@ class Crud
         }
 
         // gets entity from raw data.
-        $object = new $class();
         $object = $this->serializer->deserialize($data, $object, $options);
 
         if (!in_array(static::NO_PERMISSIONS, $options)) {
@@ -94,7 +103,12 @@ class Crud
         }
 
         if ($this->dispatch('create', 'pre', [$object, $options, $data])) {
-            $this->om->save($object);
+            $this->om->persist($object);
+            if (!in_array(Options::FORCE_FLUSH, $options)) {
+                $this->om->flush();
+            } else {
+                $this->om->forceFlush();
+            }
 
             $this->dispatch('create', 'post', [$object, $options, $data]);
         }
@@ -105,16 +119,27 @@ class Crud
     /**
      * Updates an entry of `class` with `data`.
      *
-     * @param string $class   - the class of the entity to updates
-     * @param mixed  $data    - the serialized data of the object to create
-     * @param array  $options - additional update options
+     * @param mixed $classOrObject - the class of the entity to update or an instance of the entity
+     * @param mixed $data          - the serialized data of the object to create
+     * @param array $options       - additional update options
      *
      * @return array|object
      *
      * @throws InvalidDataException
      */
-    public function update($class, $data, array $options = [])
+    public function update($classOrObject, $data, array $options = [])
     {
+        if (is_string($classOrObject)) {
+            // class name received
+            $class = $classOrObject;
+            // grab object from db
+            $oldObject = $this->om->getObject($data, $class, $this->schema->getIdentifiers($class) ?? []) ?? new $class();
+        } else {
+            // object instance received
+            $class = get_class($classOrObject);
+            $oldObject = $classOrObject;
+        }
+
         // validates submitted data.
         $errors = $this->validate($class, $data, ValidatorProvider::UPDATE);
         if (count($errors) > 0) {
@@ -126,24 +151,24 @@ class Crud
             }
         }
 
-        $oldObject = $this->om->getObject($data, $class, $this->schema->getIdentifiers($class) ?? []) ?? new $class();
         if (!in_array(static::NO_PERMISSIONS, $options)) {
             $this->checkPermission('EDIT', $oldObject, [], true);
         }
-        $oldData = $this->serializer->serialize($oldObject);
 
-        if (!$oldData) {
-            $oldData = [];
-        }
+        $oldData = $this->serializer->serialize($oldObject) ?? [];
 
         $object = $this->serializer->deserialize($data, $oldObject, $options);
-        if ($this->dispatch('update', 'pre', [$object, $options, $oldData])) {
+        if ($this->dispatch('update', 'pre', [$object, $options, $data, $oldData])) {
             $this->om->persist($object);
-            $this->dispatch('update', 'post', [$object, $options, $oldData]);
-            $this->om->flush();
-        }
 
-        $this->dispatch('update', 'end', [$object, $options, $oldData]);
+            if (!in_array(Options::FORCE_FLUSH, $options)) {
+                $this->om->flush();
+            } else {
+                $this->om->forceFlush();
+            }
+
+            $this->dispatch('update', 'post', [$object, $options, $data, $oldData]);
+        }
 
         return $object;
     }
@@ -165,10 +190,14 @@ class Crud
                 $this->om->remove($object);
             }
 
+            if (!in_array(Options::FORCE_FLUSH, $options)) {
+                $this->om->flush();
+            } else {
+                $this->om->forceFlush();
+            }
+
             $this->dispatch('delete', 'post', [$object, $options]);
         }
-
-        $this->om->flush();
     }
 
     /**
@@ -225,12 +254,14 @@ class Crud
 
         //first event is the pre one
         if ($this->dispatch('copy', 'pre', [$object, $options, $new, $extra])) {
-            //second event is the post one
-            //we could use only one event afaik
+            if (!in_array(Options::FORCE_FLUSH, $options)) {
+                $this->om->flush();
+            } else {
+                $this->om->forceFlush();
+            }
+
             $this->dispatch('copy', 'post', [$object, $options, $new, $extra]);
         }
-
-        $this->om->flush();
 
         return $new;
     }
@@ -285,7 +316,13 @@ class Crud
             if ($this->dispatch('patch', 'pre', [$object, $options, $property, $element, $action])) {
                 $object->$methodName($element);
 
-                $this->om->save($object);
+                $this->om->persist($object);
+                if (!in_array(Options::FORCE_FLUSH, $options)) {
+                    $this->om->flush();
+                } else {
+                    $this->om->forceFlush();
+                }
+
                 $this->dispatch('patch', 'post', [$object, $options, $property, $element, $action]);
             }
         }
@@ -322,7 +359,13 @@ class Crud
         if ($this->dispatch('patch', 'pre', [$object, $options, $property, $data, self::PROPERTY_SET])) {
             $object->$methodName($data);
 
-            $this->om->save($object);
+            $this->om->persist($object);
+            if (!in_array(Options::FORCE_FLUSH, $options)) {
+                $this->om->flush();
+            } else {
+                $this->om->forceFlush();
+            }
+
             $this->dispatch('patch', 'post', [$object, $options, $property, $data, self::PROPERTY_SET]);
         }
 
@@ -358,15 +401,12 @@ class Crud
     {
         $className = $this->getRealClass($args[0]);
 
-        $name = 'crud_'.$when.'_'.$action.'_object';
         $eventClass = ucfirst($action);
         /** @var CrudEvent $generic */
-        $generic = $this->dispatcher->dispatch($name, 'Claroline\\AppBundle\\Event\\Crud\\'.$eventClass.'Event', $args);
-
-        $serializedName = $name.'_'.strtolower(str_replace('\\', '_', $className));
+        $generic = $this->dispatcher->dispatch(static::getEventName($action, $when), 'Claroline\\AppBundle\\Event\\Crud\\'.$eventClass.'Event', $args);
 
         /** @var CrudEvent $specific */
-        $specific = $this->dispatcher->dispatch($serializedName, 'Claroline\\AppBundle\\Event\\Crud\\'.$eventClass.'Event', $args);
+        $specific = $this->dispatcher->dispatch(static::getEventName($action, $when, $className), 'Claroline\\AppBundle\\Event\\Crud\\'.$eventClass.'Event', $args);
         $isAllowed = $specific->isAllowed();
 
         if ($this->serializer->has($className)) {
@@ -378,7 +418,20 @@ class Crud
             }
         }
 
+        // TODO : let the event explain why it has blocked the process
+        // for now we will do nothing and the user will not know why.
         return $generic->isAllowed() && $specific->isAllowed() && $isAllowed;
+    }
+
+    public static function getEventName(string $action, string $when, string $className = null): string
+    {
+        // TODO : find a way to make shortcut work (will require to inject the service to make it work for now)
+        $name = 'crud_'.$when.'_'.$action.'_object';
+        if ($className) {
+            $name = $name.'_'.strtolower(str_replace('\\', '_', $className));
+        }
+
+        return $name;
     }
 
     private function getRealClass($object)

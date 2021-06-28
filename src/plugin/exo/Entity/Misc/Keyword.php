@@ -16,6 +16,8 @@ use UJM\ExoBundle\Library\Model\ScoreTrait;
  */
 class Keyword implements AnswerPartInterface
 {
+    use ScoreTrait;
+    use FeedbackTrait;
     /**
      * @var int
      *
@@ -24,10 +26,6 @@ class Keyword implements AnswerPartInterface
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-
-    use ScoreTrait;
-
-    use FeedbackTrait;
 
     /**
      * @var string
@@ -125,8 +123,6 @@ class Keyword implements AnswerPartInterface
 
     /**
      * @deprecated this entity do not need to know open question as they also can be linked to holes
-     *
-     * @param OpenQuestion $interactionOpen
      */
     public function setInteractionOpen(OpenQuestion $interactionOpen)
     {
@@ -145,8 +141,6 @@ class Keyword implements AnswerPartInterface
 
     /**
      * @deprecated this entity do not need to know holes as they also can be linked to open questions
-     *
-     * @param Hole $hole
      */
     public function setHole(Hole $hole)
     {

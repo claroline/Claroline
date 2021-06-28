@@ -1,6 +1,7 @@
 #!/usr/bin/env php
 <?php
 
+use Claroline\CoreBundle\Library\Maintenance\MaintenanceHandler;
 use Claroline\KernelBundle\Kernel;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArgvInput;
@@ -35,6 +36,12 @@ if ($_SERVER['APP_DEBUG']) {
     if (class_exists(Debug::class)) {
         Debug::enable();
     }
+}
+
+// When installing or updating the platform, we need to enable the maintenance mode
+// before booting the kernel in order to enable all bundles.
+if (\in_array($input->getFirstArgument(), ['claroline:install', 'claroline:update'], true)) {
+    MaintenanceHandler::enableMaintenance();
 }
 
 $kernel = new Kernel($_SERVER['APP_ENV'], (bool) $_SERVER['APP_DEBUG']);

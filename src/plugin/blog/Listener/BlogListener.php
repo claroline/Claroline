@@ -35,10 +35,6 @@ class BlogListener
 
     /**
      * BlogListener constructor.
-     *
-     * @param HttpKernelInterface $httpKernel
-     * @param RequestStack        $requestStack
-     * @param ContainerInterface  $container
      */
     public function __construct(
         HttpKernelInterface $httpKernel,
@@ -52,9 +48,6 @@ class BlogListener
         $this->authorization = $authorization;
     }
 
-    /**
-     * @param LoadResourceEvent $event
-     */
     public function onLoad(LoadResourceEvent $event)
     {
         /** @var Blog $blog */
@@ -156,9 +149,6 @@ class BlogListener
         }
     }
 
-    /**
-     * @param CopyResourceEvent $event
-     */
     public function onCopy(CopyResourceEvent $event)
     {
         $entityManager = $this->container->get('Claroline\AppBundle\Persistence\ObjectManager');
@@ -213,9 +203,6 @@ class BlogListener
         $event->stopPropagation();
     }
 
-    /**
-     * @param GenericDataEvent $event
-     */
     public function onGenerateResourceTracking(GenericDataEvent $event)
     {
         $om = $this->container->get('Claroline\AppBundle\Persistence\ObjectManager');

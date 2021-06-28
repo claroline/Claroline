@@ -55,13 +55,6 @@ class PathTrackingController
 
     /**
      * PathTrackingController constructor.
-     *
-     * @param AuthorizationCheckerInterface $authorization
-     * @param FinderProvider                $finder
-     * @param ObjectManager                 $om
-     * @param SerializerProvider            $serializer
-     * @param ToolManager                   $toolManager
-     * @param UserProgressionManager        $userProgressionManager
      */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
@@ -94,8 +87,6 @@ class PathTrackingController
      *     class="ClarolineCoreBundle:Workspace\Workspace",
      *     options={"mapping": {"workspace": "uuid"}}
      * )
-     *
-     * @param Workspace $workspace
      *
      * @return JsonResponse
      */
@@ -192,9 +183,6 @@ class PathTrackingController
      *     class="ClarolineCoreBundle:Resource\ResourceNode",
      *     options={"mapping": {"resourceNode": "uuid"}}
      * )
-     *
-     * @param ResourceNode $resourceNode
-     * @param Request      $request
      *
      * @return JsonResponse
      */

@@ -15,6 +15,9 @@ use UJM\ExoBundle\Library\Model\ScoreTrait;
  */
 class Section implements AnswerPartInterface
 {
+    use FeedbackTrait;
+    use ScoreTrait;
+    use Uuid;
     /**
      * @var int
      *
@@ -23,10 +26,6 @@ class Section implements AnswerPartInterface
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-
-    use FeedbackTrait;
-    use ScoreTrait;
-    use Uuid;
 
     /**
      * @ORM\Column(name="section_start", type="float", nullable=false)

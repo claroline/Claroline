@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Entity\Workspace;
 
+use Claroline\AppBundle\Entity\IdentifiableInterface;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Creator;
@@ -36,24 +37,21 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     @ORM\Index(name="name_idx", columns={"name"})
  * })
  */
-class Workspace
+class Workspace implements IdentifiableInterface
 {
     // identifiers
     use Id;
     use Uuid;
-
     // meta
     use Poster;
     use Thumbnail;
     use Description;
     use Creator;
-
     // restrictions
     use AccessibleFrom;
     use AccessibleUntil;
     use AccessCode;
     use AllowedIps;
-
     use OrganizationsTrait;
 
     /**
@@ -227,6 +225,13 @@ class Workspace
      * @ORM\Column(type="boolean")
      */
     private $showProgression = true;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $contactEmail;
 
     /**
      * @ORM\OneToOne(
@@ -649,6 +654,16 @@ class Workspace
     public function setShowProgression($showProgression)
     {
         $this->showProgression = $showProgression;
+    }
+
+    public function getContactEmail(): ?string
+    {
+        return $this->contactEmail;
+    }
+
+    public function setContactEmail(?string $email = null)
+    {
+        $this->contactEmail = $email;
     }
 
     public function setArchived($archived)

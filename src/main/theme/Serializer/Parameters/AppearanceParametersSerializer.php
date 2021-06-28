@@ -18,7 +18,6 @@ class AppearanceParametersSerializer
      * Serializes an Organization entity for the JSON api.
      *
      * @param AppearanceParameters $parameters - the parameters to serialize
-     * @param array                $options
      *
      * @return array - the serialized representation of the workspace
      */

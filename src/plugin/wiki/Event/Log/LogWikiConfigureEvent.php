@@ -10,18 +10,17 @@ class LogWikiConfigureEvent extends AbstractLogResourceEvent
     const ACTION = 'resource-icap_wiki-configure';
 
     /**
-     * @param Wiki    $wiki
      * @param Section $section
      * @param array   $changeSet
      */
     public function __construct(Wiki $wiki, $changeSet)
     {
-        $details = array(
-            'wiki' => array(
+        $details = [
+            'wiki' => [
                 'wiki' => $wiki->getId(),
                 'changeSet' => $changeSet,
-            ),
-        );
+            ],
+        ];
 
         parent::__construct($wiki->getResourceNode(), $details);
     }
@@ -31,6 +30,6 @@ class LogWikiConfigureEvent extends AbstractLogResourceEvent
      */
     public static function getRestriction()
     {
-        return array(self::DISPLAYED_WORKSPACE);
+        return [self::DISPLAYED_WORKSPACE];
     }
 }

@@ -1,66 +1,68 @@
-import React from 'react'
+import React, {Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
-import Panel from 'react-bootstrap/lib/Panel'
 
 import {trans} from '#/main/app/intl/translation'
-import {ContentTitle} from '#/main/app/content/components/title'
+import {Routes} from '#/main/app/router/components/routes'
+import {LINK_BUTTON} from '#/main/app/buttons'
+import {ContentTabs} from '#/main/app/content/components/tabs'
 
-import {getDefinition, isQuestionType} from '#/plugin/exo/items/item-types'
-import {Metadata as ItemMetadata} from '#/plugin/exo/items/components/metadata'
-import {constants} from '#/plugin/exo/resources/quiz/constants'
-import {getNumbering} from '#/plugin/exo/utils/numbering'
+import {AnswersStats} from '#/plugin/exo/resources/quiz/statistics/containers/answers'
+import {AttemptsStats} from '#/plugin/exo/resources/quiz/statistics/containers/attempts'
+import {Docimology} from '#/plugin/exo/resources/quiz/statistics/containers/docimology'
 
 const StatisticsMain = props =>
-  <div className="quiz-statistics">
-    {props.quiz.steps
-      .filter(step => step.items && 0 < step.items.length)
-      .map((step, idx) => {
-        const numbering = getNumbering(props.numbering, idx)
+  <Fragment>
+    <header className="row content-heading">
+      <ContentTabs
+        sections={[
+          {
+            name: 'answers',
+            type: LINK_BUTTON,
+            label: trans('Réponses des utilisateurs'),
+            target: `${props.path}/statistics/answers`,
+            exact: true
+          }, {
+            name: 'attempts',
+            type: LINK_BUTTON,
+            label: trans('Evolution des tentatives', {}, 'quiz'),
+            target: `${props.path}/statistics/attempts`
+          }, {
+            name: 'docimology',
+            type: LINK_BUTTON,
+            label: trans('Docimologie', {}, 'quiz'),
+            target: `${props.path}/statistics/docimology`
+          }
+        ]}
+      />
+    </header>
 
-        return (
-          <div key={idx} className="quiz-item item-paper">
-            {props.showTitles &&
-              <ContentTitle
-                level={3}
-                displayLevel={2}
-                numbering={numbering}
-                title={step.title || trans('step', {number: idx + 1}, 'quiz')}
-              />
-            }
-
-            {step.items.map((item, idxItem) => {
-              return isQuestionType(item.type) && props.stats && props.stats[item.id] &&
-                <Panel key={item.id}>
-                  {item.title &&
-                    <h4 className="item-title">{item.title}</h4>
-                  }
-
-                  <ItemMetadata
-                    item={item}
-                    numbering={props.numbering !== constants.NUMBERING_NONE ? (idx + 1) + '.' + getNumbering(props.numbering, idxItem): null}
-                  />
-
-                  {React.createElement(getDefinition(item.type).paper, {
-                    item,
-                    showYours: false,
-                    showExpected: false,
-                    showStats: true,
-                    showScore: false,
-                    stats: props.stats && props.stats[item.id] ? props.stats[item.id] : {}
-                  })}
-                </Panel>
-            })}
-          </div>
-        )
-      })
-    }
-  </div>
+    <Routes
+      path={`${props.path}/statistics`}
+      redirect={[
+        {from: '/', exact: true, to: '/answers'}
+      ]}
+      routes={[
+        {
+          path: '/answers',
+          component: AnswersStats,
+          onEnter: () => props.statistics(props.quizId)
+        }, {
+          path: '/attempts',
+          component: AttemptsStats
+        }, {
+          path: '/docimology',
+          component: Docimology,
+          onEnter: () => props.docimology(props.quizId)
+        }
+      ]}
+    />
+  </Fragment>
 
 StatisticsMain.propTypes = {
-  numbering: T.string,
-  showTitles: T.bool,
-  quiz: T.object.isRequired,
-  stats: T.object
+  path: T.string.isRequired,
+  quizId: T.string.isRequired,
+  statistics: T.func.isRequired,
+  docimology: T.func.isRequired
 }
 
 export {

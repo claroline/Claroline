@@ -29,9 +29,6 @@ class CacheManager
 
     /**
      * CacheManager constructor.
-     *
-     * @param StrictDispatcher $eventDispatcher
-     * @param KernelInterface  $kernel
      */
     public function __construct(StrictDispatcher $eventDispatcher, KernelInterface $kernel)
     {
@@ -119,9 +116,6 @@ class CacheManager
         return file_exists($this->cachePath);
     }
 
-    /**
-     * @param array $parameters
-     */
     public function writeCache(array $parameters)
     {
         IniParser::dumpFile($parameters, $this->cachePath);

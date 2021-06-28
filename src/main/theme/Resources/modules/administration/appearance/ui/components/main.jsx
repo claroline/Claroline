@@ -52,6 +52,10 @@ class UiMain extends Component {
                   condensed: true,
                   choices: this.props.iconSetChoices
                 }
+              }, {
+                name: 'display.breadcrumb',
+                type: 'boolean',
+                label: trans('showBreadcrumbs')
               }
             ]
           }, {
@@ -76,16 +80,6 @@ class UiMain extends Component {
                   condensed: false,
                   choices: this.state.headerWidgets
                 }
-              }
-            ]
-          }, {
-            icon: 'fa fa-fw fa-map-signs',
-            title: trans('breadcrumb'),
-            fields: [
-              {
-                name: 'display.breadcrumb',
-                type: 'boolean',
-                label: trans('showBreadcrumbs')
               }
             ]
           }, {

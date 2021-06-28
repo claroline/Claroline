@@ -17,7 +17,7 @@ use UJM\LtiBundle\Entity\LtiApp;
 
 class LtiAppFinder extends AbstractFinder
 {
-    public function getClass()
+    public static function getClass(): string
     {
         return LtiApp::class;
     }

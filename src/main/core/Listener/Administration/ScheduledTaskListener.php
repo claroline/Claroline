@@ -16,8 +16,6 @@ class ScheduledTaskListener
 
     /**
      * ScheduledTaskListener constructor.
-     *
-     * @param ParametersSerializer $parametersSerializer
      */
     public function __construct(ParametersSerializer $parametersSerializer)
     {
@@ -26,8 +24,6 @@ class ScheduledTaskListener
 
     /**
      * Displays scheduled tasks administration tool.
-     *
-     * @param OpenToolEvent $event
      */
     public function onDisplayTool(OpenToolEvent $event)
     {

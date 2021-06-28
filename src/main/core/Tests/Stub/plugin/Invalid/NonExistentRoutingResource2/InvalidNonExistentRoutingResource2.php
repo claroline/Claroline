@@ -11,7 +11,7 @@
 
 namespace Invalid\NonExistentRoutingResource2;
 
-use Claroline\CoreBundle\Library\DistributionPluginBundle;
+use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
 
 class InvalidNonExistentRoutingResource2 extends DistributionPluginBundle
 {

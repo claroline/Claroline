@@ -36,23 +36,20 @@ use Gedmo\Mapping\Annotation as Gedmo;
  */
 class ResourceNode
 {
-    const PATH_SEPARATOR = '/';
-    const PATH_OLDSEPARATOR = '`';
-
     // identifiers
     use Id;
     use Uuid;
-
     // meta
     use Thumbnail;
     use Poster;
     use Description;
     use Creator;
-
     // restrictions
     use Hidden;
     use AccessibleFrom;
     use AccessibleUntil;
+    const PATH_SEPARATOR = '/';
+    const PATH_OLDSEPARATOR = '`';
 
     /**
      * @var string
@@ -84,6 +81,13 @@ class ResourceNode
      * @ORM\JoinColumn(name="resource_type_id", onDelete="CASCADE", nullable=false)
      */
     private $resourceType;
+
+    /**
+     * Display resource title when the resource is rendered.
+     *
+     * @ORM\Column(type="boolean", options={"default"=1})
+     */
+    private $showTitle = true;
 
     /**
      * Display resource icon/evaluation when the resource is rendered.
@@ -127,7 +131,7 @@ class ResourceNode
      *
      * @ORM\OneToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode",
-     *     mappedBy="parent",
+     *     mappedBy="parent"
      * )
      * @ORM\OrderBy({"index" = "ASC"})
      */
@@ -945,5 +949,15 @@ class ResourceNode
     public function setSlug($slug = null)
     {
         $this->slug = $slug;
+    }
+
+    public function getShowTitle(): bool
+    {
+        return $this->showTitle;
+    }
+
+    public function setShowTitle(bool $showTitle)
+    {
+        $this->showTitle = $showTitle;
     }
 }

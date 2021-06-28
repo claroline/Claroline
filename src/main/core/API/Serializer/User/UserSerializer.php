@@ -10,7 +10,7 @@ use Claroline\CoreBundle\API\Serializer\Facet\FieldFacetValueSerializer;
 use Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;
-use  Claroline\CoreBundle\Entity\File\PublicFile;
+use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Role;
@@ -125,11 +125,10 @@ class UserSerializer
             'lastName' => $user->getLastName(),
             'username' => $user->getUsername(),
             'picture' => $this->serializePicture($user),
-            'poster' => $this->serializePoster($user),
             'thumbnail' => $this->serializeThumbnail($user),
             'email' => $showEmail ? $user->getEmail() : null,
             'administrativeCode' => $user->getAdministrativeCode(),
-            'phone' => $user->getPhone(),
+            'phone' => $showEmail ? $user->getPhone() : null,
             'meta' => $this->serializeMeta($user),
             'publicUrl' => $user->getPublicUrl(), // todo : merge with the one from meta (I do it to have it in minimal)
             'permissions' => $this->serializePermissions($user),
@@ -159,6 +158,7 @@ class UserSerializer
             }, $user->getGroupRoles());
 
             $serializedUser = array_merge($serializedUser, [
+                'poster' => $this->serializePoster($user),
                 'meta' => $this->serializeMeta($user),
                 'restrictions' => $this->serializeRestrictions($user),
                 'roles' => array_merge($userRoles, $groupRoles),

@@ -10,7 +10,6 @@ use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Exception\ResourceAccessException;
 use Claroline\CoreBundle\Manager\LogConnectManager;
 use Claroline\CoreBundle\Manager\Resource\ResourceActionManager;
 use Claroline\CoreBundle\Manager\Resource\RightsManager;
@@ -111,19 +110,35 @@ class ResourceNodeController extends AbstractCrudController
         $options['hiddenFilters']['active'] = true;
         $options['hiddenFilters']['resourceTypeEnabled'] = true;
 
-        //fix the very large list at the root
-        //todo: when impersonating is fixed for easy testing, do that kind of stuff everywhere (not only at the root level)
-        //directly in the finder
-        //it currently work (altough we can see stuff we shouldnt do through the api)
-
         $roles = $this->token->getToken()->getRoleNames();
-
         if (!in_array('ROLE_ADMIN', $roles) || empty($options['hiddenFilters']['parent'])) {
             $options['hiddenFilters']['roles'] = $roles;
         }
 
         return new JsonResponse(
-            $this->finder->search(ResourceNode::class, $options)
+            $this->finder->search(ResourceNode::class, $options, $this->getOptions()['list'])
+        );
+    }
+
+    /**
+     * Get the list of rights for a resource node.
+     * This may be directly managed by the standard action system (rights edition already is) instead.
+     *
+     * @Route("/{id}/rights", name="apiv2_resource_get_rights")
+     * @EXT\ParamConverter("resourceNode", class="ClarolineCoreBundle:Resource\ResourceNode", options={"mapping": {"id": "uuid"}})
+     */
+    public function getRightsAction(ResourceNode $resourceNode): JsonResponse
+    {
+        // only give access to users which have the right to edit the resource rights
+        $rightsAction = $this->actionManager->get($resourceNode, 'rights');
+
+        $collection = new ResourceCollection([$resourceNode]);
+        if (!$this->actionManager->hasPermission($rightsAction, $collection)) {
+            throw new AccessDeniedException($collection->getErrorsForDisplay());
+        }
+
+        return new JsonResponse(
+            array_values($this->rightsManager->getRights($resourceNode))
         );
     }
 
@@ -152,7 +167,7 @@ class ResourceNodeController extends AbstractCrudController
         $add = $this->actionManager->get($parent, 'add');
 
         if (!$this->actionManager->hasPermission($add, $collection)) {
-            throw new ResourceAccessException($collection->getErrorsForDisplay(), $collection->getResources());
+            throw new AccessDeniedException($collection->getErrorsForDisplay());
         }
 
         $filesData = $request->files->all();
@@ -193,7 +208,7 @@ class ResourceNodeController extends AbstractCrudController
         $this->om->endFlushSuite();
 
         return new JsonResponse(array_map(function (File $file) {
-            return $this->serializer->serialize($file->getResourceNode());
+            return $this->serializer->serialize($file->getResourceNode(), $this->getOptions()['get']);
         }, $resources));
     }
 
@@ -228,5 +243,15 @@ class ResourceNodeController extends AbstractCrudController
         }
 
         return new JsonResponse(null, 204);
+    }
+
+    public function getOptions()
+    {
+        return [
+            'list' => [Options::NO_RIGHTS, Options::SERIALIZE_LIST],
+            'get' => [Options::NO_RIGHTS],
+            'update' => [Options::NO_RIGHTS],
+            'find' => [Options::NO_RIGHTS],
+        ];
     }
 }

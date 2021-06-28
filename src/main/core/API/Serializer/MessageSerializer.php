@@ -21,9 +21,6 @@ class MessageSerializer
 
     /**
      * MessageSerializer constructor.
-     *
-     * @param UserSerializer $userSerializer
-     * @param ObjectManager  $om
      */
     public function __construct(UserSerializer $userSerializer, ObjectManager $om)
     {
@@ -51,9 +48,6 @@ class MessageSerializer
 
     /**
      * Serializes a AbstractMessage entity.
-     *
-     * @param AbstractMessage $message
-     * @param array           $options
      *
      * @return array
      */
@@ -106,9 +100,7 @@ class MessageSerializer
     /**
      * Deserializes data into a Forum entity.
      *
-     * @param array           $data
-     * @param AbstractMessage $message
-     * @param array           $options
+     * @param array $data
      *
      * @return AbstractMessage
      */

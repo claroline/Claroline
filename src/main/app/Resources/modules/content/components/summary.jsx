@@ -52,14 +52,14 @@ class SummaryLink extends Component {
 
           {(collapsible || 0 !== this.props.additional.length) &&
             <Toolbar
-              className="summary-link-actions"
+              name="summary-link-actions"
               buttonName="btn-summary"
               tooltip="bottom"
               toolbar="collapse more"
               actions={(this.props.additional || []).concat([
                 {
-                  type: CALLBACK_BUTTON,
                   name: 'collapse',
+                  type: CALLBACK_BUTTON,
                   icon: classes('fa fa-fw', {
                     'fa-caret-right': this.state.collapsed,
                     'fa-caret-down': !this.state.collapsed

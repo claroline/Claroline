@@ -17,15 +17,15 @@ class ConfigurationBuilder
     const RESOURCE_TYPE = 'type';
     const ROUTING_PREFIX = 'prefix';
 
-    private $containerResources = array();
-    private $routingResources = array();
+    private $containerResources = [];
+    private $routingResources = [];
 
     public function addContainerResource($resource, $type = null)
     {
-        $this->containerResources[] = array(
+        $this->containerResources[] = [
             self::RESOURCE_OBJECT => $resource,
             self::RESOURCE_TYPE => $type,
-        );
+        ];
 
         return $this;
     }
@@ -37,11 +37,11 @@ class ConfigurationBuilder
 
     public function addRoutingResource($resource, $type = null, $prefix = null)
     {
-        $this->routingResources[] = array(
+        $this->routingResources[] = [
             self::RESOURCE_OBJECT => $resource,
             self::RESOURCE_TYPE => $type,
             self::ROUTING_PREFIX => $prefix,
-        );
+        ];
 
         return $this;
     }

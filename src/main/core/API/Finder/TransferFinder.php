@@ -17,7 +17,7 @@ use Doctrine\ORM\QueryBuilder;
 
 class TransferFinder extends AbstractFinder
 {
-    public function getClass()
+    public static function getClass(): string
     {
         return File::class;
     }
@@ -38,12 +38,5 @@ class TransferFinder extends AbstractFinder
         }
 
         return $qb;
-    }
-
-    public function getFilters()
-    {
-        return [
-            '$defaults' => [],
-        ];
     }
 }

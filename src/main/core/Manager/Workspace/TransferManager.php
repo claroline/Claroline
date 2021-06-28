@@ -8,9 +8,9 @@ use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\API\Utils\FileBag;
 use Claroline\AppBundle\Event\StrictDispatcher;
+use Claroline\AppBundle\Log\LoggableTrait;
 use Claroline\AppBundle\Manager\File\TempFileManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\AppBundle\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
@@ -24,6 +24,7 @@ use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Psr\Log\LoggerAwareInterface;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class TransferManager implements LoggerAwareInterface
 {
@@ -55,16 +56,17 @@ class TransferManager implements LoggerAwareInterface
      * TransferManager constructor.
      */
     public function __construct(
-      ObjectManager $om,
-      StrictDispatcher $dispatcher,
-      TempFileManager $tempFileManager,
-      SerializerProvider $serializer,
-      OrderedToolTransfer $ots,
-      FinderProvider $finder,
-      Crud $crud,
-      TokenStorageInterface $tokenStorage,
-      FileUtilities $fileUts,
-      LogListener $logListener
+        ObjectManager $om,
+        StrictDispatcher $dispatcher,
+        TempFileManager $tempFileManager,
+        SerializerProvider $serializer,
+        OrderedToolTransfer $ots,
+        FinderProvider $finder,
+        Crud $crud,
+        TokenStorageInterface $tokenStorage,
+        FileUtilities $fileUts,
+        LogListener $logListener,
+        AuthorizationCheckerInterface $authorization
     ) {
         $this->om = $om;
         $this->dispatcher = $dispatcher;
@@ -76,6 +78,7 @@ class TransferManager implements LoggerAwareInterface
         $this->ots = $ots;
         $this->fileUts = $fileUts;
         $this->logListener = $logListener;
+        $this->authorization = $authorization;
     }
 
     /**
@@ -134,23 +137,7 @@ class TransferManager implements LoggerAwareInterface
     {
         $serialized = $this->serializer->serialize($workspace, [Options::REFRESH_UUID]);
 
-        // if roles duplicates, remove them
-        $roles = $serialized['roles'];
-
-        $uniques = [];
-        foreach ($roles as $role) {
-            $uniques[$role['translationKey']] = ['type' => $role['type']];
-        }
-
-        $roles = [];
-        foreach ($uniques as $key => $val) {
-            $val['translationKey'] = $key;
-            $roles[] = $val;
-        }
-
-        $serialized['roles'] = $roles;
-
-        //we want to load the resources first
+        // we want to load the resources first
         /** @var OrderedTool[] $ot */
         $ot = $workspace->getOrderedTools()->toArray();
 
@@ -195,17 +182,19 @@ class TransferManager implements LoggerAwareInterface
 
         /** @var Workspace $workspace */
         $workspace = $this->serializer->deserialize($data, $workspace, $options);
+        $this->om->persist($workspace);
 
         $this->log('Deserializing the roles...');
         $roles = [];
         foreach ($data['roles'] as $roleData) {
             $roleData['workspace']['id'] = $workspace->getUuid();
-            /** @var Role $role */
-            $role = $this->serializer->deserialize($roleData, new Role());
+            $role = new Role();
+            $this->om->persist($role);
+
             $role->setWorkspace($workspace);
             $workspace->addRole($role);
-            $this->om->persist($role);
-            $roles[] = $role;
+
+            $roles[] = $this->crud->create($role, $roleData, [Crud::NO_PERMISSIONS, Options::FORCE_FLUSH]);
         }
 
         foreach ($roles as $role) {
@@ -214,7 +203,6 @@ class TransferManager implements LoggerAwareInterface
             }
         }
 
-        $this->om->persist($workspace);
         $this->om->forceFlush();
 
         $data['root']['meta']['workspace']['id'] = $workspace->getUuid();

@@ -19,3 +19,7 @@ services:
                      - '@Claroline\AppBundle\Event\StrictDispatcher'
 
     Claroline\AgendaBundle\Finder\EventFinder: ~
+
+    Claroline\AgendaBundle\Finder\EventInvitationFinder: ~
+
+    Claroline\AgendaBundle\Finder\TaskFinder: ~

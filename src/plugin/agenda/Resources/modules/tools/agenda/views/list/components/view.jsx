@@ -4,41 +4,38 @@ import {PropTypes as T} from 'prop-types'
 import {trans} from '#/main/app/intl/translation'
 import {ListData} from '#/main/app/content/list/containers/data'
 
-import {EventCard} from '#/plugin/agenda/data/components/event-card'
+import {EventCard} from '#/plugin/agenda/event/components/card'
+import {EventIcon} from '#/plugin/agenda/event/components/icon'
 import {selectors} from '#/plugin/agenda/tools/agenda/views/list/store'
-import {constants} from '#/plugin/agenda/event/constants'
 
-const AgendaViewList = props =>
+const AgendaViewList = () =>
   <ListData
     name={selectors.STORE_NAME}
     fetch={{
-      url: ['apiv2_event_list'],
+      url: ['apiv2_planned_object_list'],
       autoload: true
     }}
     definition={[
       {
-        name: 'title',
+        name: 'name',
         type: 'string',
-        label: trans('title'),
+        label: trans('name'),
         displayed: true,
         primary: true
       }, {
         name: 'meta.type',
-        type: 'choice',
+        type: 'type',
         label: trans('type'),
         displayed: true,
-        options: {
-          choices: constants.EVENT_TYPES
-        }
+        calculated: (event) => ({
+          icon: <EventIcon type={event.meta.type} />,
+          name: trans(event.meta.type, {}, 'event'),
+          description: trans(`${event.meta.type}_desc`, {}, 'event')
+        })
       }, {
         name: 'description',
         type: 'html',
         label: trans('description'),
-        displayed: true
-      }, {
-        name: 'allDay',
-        type: 'boolean',
-        label: trans('all_day', {}, 'agenda'),
         displayed: true
       }, {
         name: 'start',
@@ -58,12 +55,6 @@ const AgendaViewList = props =>
         filterable: true,
         sortable: false
       }, {
-        name: 'meta.done',
-        alias: 'isTaskDone',
-        type: 'boolean',
-        label: trans('task_done', {}, 'agenda'),
-        displayed: true
-      }, {
         name: 'workspace',
         type: 'workspace',
         label: trans('workspace'),
@@ -72,17 +63,14 @@ const AgendaViewList = props =>
         sortable: false
       }
     ]}
-    actions={(events) => props.eventActions(events[0]).map(action => Object.assign({}, action, {scope: 'object'}))}
     card={EventCard}
   />
 
 AgendaViewList.propTypes = {
   create: T.func.isRequired,
-  eventActions: T.func.isRequired,
 
   invalidate: T.func.isRequired
 }
-
 
 export {
   AgendaViewList

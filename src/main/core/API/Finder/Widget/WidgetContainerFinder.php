@@ -17,7 +17,7 @@ use Doctrine\ORM\QueryBuilder;
 
 class WidgetContainerFinder extends AbstractFinder
 {
-    public function getClass()
+    public static function getClass(): string
     {
         return WidgetContainer::class;
     }
@@ -34,12 +34,5 @@ class WidgetContainerFinder extends AbstractFinder
         }
 
         return $qb;
-    }
-
-    public function getFilters()
-    {
-        return [
-            '$defaults' => [],
-        ];
     }
 }

@@ -4,7 +4,6 @@ namespace Icap\BlogBundle\Event\Log;
 
 use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
 use Claroline\CoreBundle\Event\Log\NotifiableInterface;
-use Icap\BlogBundle\Entity\Blog;
 use Icap\BlogBundle\Entity\Comment;
 use Icap\BlogBundle\Entity\Post;
 
@@ -16,10 +15,6 @@ class LogCommentUpdateEvent extends AbstractLogResourceEvent implements Notifiab
     protected $blog;
     protected $details;
 
-    /**
-     * @param Post    $post
-     * @param Comment $comment
-     */
     public function __construct(Post $post, Comment $comment, $changeSet, $translator = null)
     {
         $this->blog = $post->getBlog();

@@ -51,9 +51,6 @@ class CompetencyAbilityController extends AbstractCrudController
      *     options={"mapping": {"competency": "uuid"}}
      * )
      *
-     * @param Competency $competency
-     * @param Request    $request
-     *
      * @return JsonResponse
      */
     public function competencyListAction(Competency $competency, Request $request)

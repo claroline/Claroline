@@ -50,9 +50,6 @@ class WebResourceController extends AbstractCrudController
      *     options={"mapping": {"workspace": "uuid"}}
      * )
      *
-     * @param Workspace $workspace
-     * @param Request   $request
-     *
      * @return JsonResponse
      */
     public function uploadFile(Workspace $workspace, Request $request)

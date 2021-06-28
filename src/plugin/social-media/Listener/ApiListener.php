@@ -15,8 +15,6 @@ class ApiListener
 
     /**
      * ApiListener constructor.
-     *
-     * @param ObjectManager $om
      */
     public function __construct(ObjectManager $om)
     {
@@ -25,8 +23,6 @@ class ApiListener
 
     /**
      * Add like count to serialized resource node when requested through API.
-     *
-     * @param DecorateResourceNodeEvent $event
      */
     public function onSerialize(DecorateResourceNodeEvent $event)
     {

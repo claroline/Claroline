@@ -17,7 +17,7 @@ use Doctrine\ORM\QueryBuilder;
 
 class ResourceUserEvaluationFinder extends AbstractFinder
 {
-    public function getClass()
+    public static function getClass(): string
     {
         return ResourceUserEvaluation::class;
     }
@@ -123,12 +123,5 @@ class ResourceUserEvaluationFinder extends AbstractFinder
         }
 
         return $qb;
-    }
-
-    public function getFilters()
-    {
-        return [
-            '$defaults' => [],
-        ];
     }
 }

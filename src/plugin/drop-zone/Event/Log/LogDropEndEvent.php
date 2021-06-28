@@ -15,8 +15,6 @@ class LogDropEndEvent extends AbstractLogResourceEvent implements NotifiableInte
     private $role_manager;
 
     /**
-     * @param Dropzone $dropzone
-     * @param Drop     $drop
      * @param $roleManager
      */
     public function __construct(Dropzone $dropzone, Drop $drop, $roleManager)

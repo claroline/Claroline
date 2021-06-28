@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by JetBrains PhpStorm.
- * User: gaetan
- * Date: 26/06/13
- * Time: 15:52
- * To change this template use File | Settings | File Templates.
- */
 
 namespace Icap\LessonBundle\Entity;
 

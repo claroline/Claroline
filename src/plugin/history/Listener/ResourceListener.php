@@ -2,6 +2,7 @@
 
 namespace Claroline\HistoryBundle\Listener;
 
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\HistoryBundle\Manager\HistoryManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -16,9 +17,6 @@ class ResourceListener
 
     /**
      * ResourceListener constructor.
-     *
-     * @param TokenStorageInterface $tokenStorage
-     * @param HistoryManager        $manager
      */
     public function __construct(
         TokenStorageInterface $tokenStorage,
@@ -28,14 +26,11 @@ class ResourceListener
         $this->manager = $manager;
     }
 
-    /**
-     * @param LoadResourceEvent $event
-     */
     public function onLoad(LoadResourceEvent $event)
     {
         $user = $this->tokenStorage->getToken()->getUser();
 
-        if (!$event->isEmbedded() && 'anon.' !== $user) {
+        if (!$event->isEmbedded() && $user instanceof User) {
             $this->manager->addResource($event->getResourceNode(), $user);
         }
     }

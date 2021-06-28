@@ -21,11 +21,6 @@ class PanelFacetSerializer
     /** @var FieldFacetSerializer */
     private $ffSerializer;
 
-    /**
-     * @param ObjectManager        $om
-     * @param RoleSerializer       $roleSerializer
-     * @param FieldFacetSerializer $ffSerializer
-     */
     public function __construct(ObjectManager $om, RoleSerializer $roleSerializer, FieldFacetSerializer $ffSerializer)
     {
         $this->om = $om;
@@ -76,10 +71,6 @@ class PanelFacetSerializer
     }
 
     /**
-     * @param array      $data
-     * @param PanelFacet $panel
-     * @param array      $options
-     *
      * @return array - the serialized representation of the field facet
      */
     public function deserialize(array $data, PanelFacet $panel, array $options = [])

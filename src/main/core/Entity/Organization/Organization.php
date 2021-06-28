@@ -11,9 +11,10 @@
 
 namespace Claroline\CoreBundle\Entity\Organization;
 
+use Claroline\AppBundle\Entity\Identifier\Code;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\Group;
-use Claroline\CoreBundle\Entity\Model\CodeTrait;
+use Claroline\CoreBundle\Entity\Location\Location;
 use Claroline\CoreBundle\Entity\Model\GroupsTrait;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -21,6 +22,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Event\PreFlushEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Ramsey\Uuid\Uuid as BaseUuid;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -33,7 +35,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Organization
 {
-    use CodeTrait;
+    use Code;
     use GroupsTrait;
     use Uuid;
 
@@ -74,7 +76,7 @@ class Organization
 
     /**
      * @ORM\ManyToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Organization\Location",
+     *     targetEntity="Claroline\CoreBundle\Entity\Location\Location",
      *     cascade={"persist"},
      *     inversedBy="organizations"
      * )
@@ -213,7 +215,8 @@ class Organization
         $this->type = self::TYPE_EXTERNAL;
 
         $this->refreshUuid();
-        $this->refreshCode();
+        // todo : generate unique from name for a more beautiful code
+        $this->code = BaseUuid::uuid4()->toString();
 
         $this->locations = new ArrayCollection();
         $this->workspaces = new ArrayCollection();

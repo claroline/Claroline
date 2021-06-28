@@ -11,11 +11,6 @@ class LogFinder extends AbstractFinder
     /**
      * The queried object is already named "obj".
      *
-     * @param QueryBuilder $qb
-     * @param array        $searches
-     * @param array|null   $sortBy
-     * @param array        $options
-     *
      * @return QueryBuilder
      */
     public function configureQueryBuilder(QueryBuilder $qb, array $searches, array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
@@ -160,7 +155,7 @@ class LogFinder extends AbstractFinder
     }
 
     /** @return $string */
-    public function getClass()
+    public static function getClass(): string
     {
         return Log::class;
     }

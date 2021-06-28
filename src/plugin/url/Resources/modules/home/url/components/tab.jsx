@@ -11,7 +11,7 @@ const UrlTab = props =>
   <HomePage
     tabs={props.tabs}
     currentTab={props.currentTab}
-    currentTabTitle={props.currentTabTitle}
+    title={props.title}
   >
     <UrlDisplay
       url={get(props.currentTab, 'parameters.url')}
@@ -25,7 +25,7 @@ UrlTab.propTypes = {
   tabs: T.arrayOf(T.shape(
     TabTypes.propTypes
   )),
-  currentTabTitle: T.string.isRequired,
+  title: T.string.isRequired,
   currentTab: T.shape(
     TabTypes.propTypes
   )

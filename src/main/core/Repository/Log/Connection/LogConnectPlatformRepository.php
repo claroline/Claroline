@@ -27,8 +27,6 @@ class LogConnectPlatformRepository extends EntityRepository
 
     /**
      * @param Organization[] $organizations
-     *
-     * @return int
      */
     public function findAvgTime(array $organizations = []): int
     {

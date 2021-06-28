@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\Tests\NewAPI;
 
 use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 
@@ -80,7 +81,7 @@ class FinderProviderTest extends TransactionalTestCase
         }
 
         $value = 'abcdef';
-        $aDate = new \DateTime();
+        $aDate = DateNormalizer::normalize(new \DateTime());
 
         switch ($type) {
           case 'bool': $value = true; break;
@@ -105,7 +106,7 @@ class FinderProviderTest extends TransactionalTestCase
             return method_exists($finder, 'getFilters') ? count($finder->getFilters()) > 0 : false;
         });
 
-        return array_map(function ($finder) use ($provider) {
+        return array_map(function ($finder) {
             return [$finder->getClass()];
         }, $finders);
     }

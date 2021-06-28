@@ -27,9 +27,6 @@ class StrictDispatcher
     /** @var EventDispatcher */
     private $eventDispatcher;
 
-    /**
-     * Constructor.
-     */
     public function __construct(EventDispatcherInterface $ed)
     {
         $this->eventDispatcher = $ed;

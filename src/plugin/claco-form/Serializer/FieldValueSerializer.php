@@ -16,9 +16,6 @@ class FieldValueSerializer
 
     /**
      * FieldValueSerializer constructor.
-     *
-     * @param FieldSerializer           $fieldSerializer
-     * @param FieldFacetValueSerializer $fieldFacetValueSerializer
      */
     public function __construct(
         FieldSerializer $fieldSerializer,

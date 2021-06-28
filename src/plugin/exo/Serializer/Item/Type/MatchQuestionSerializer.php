@@ -21,8 +21,6 @@ class MatchQuestionSerializer
 
     /**
      * MatchQuestionSerializer constructor.
-     *
-     * @param ContentSerializer $contentSerializer
      */
     public function __construct(ContentSerializer $contentSerializer)
     {
@@ -36,9 +34,6 @@ class MatchQuestionSerializer
 
     /**
      * Converts a Match question into a JSON-encodable structure.
-     *
-     * @param MatchQuestion $matchQuestion
-     * @param array         $options
      *
      * @return array
      */
@@ -104,7 +99,6 @@ class MatchQuestionSerializer
      *
      * @param array         $data
      * @param MatchQuestion $matchQuestion
-     * @param array         $options
      *
      * @return MatchQuestion
      */
@@ -131,9 +125,7 @@ class MatchQuestionSerializer
     /**
      * Deserializes Question labels.
      *
-     * @param MatchQuestion $matchQuestion
-     * @param array         $secondSets    ie labels
-     * @param array         $options
+     * @param array $secondSets ie labels
      */
     private function deserializeLabels(MatchQuestion $matchQuestion, array $secondSets, array $options = [])
     {
@@ -169,9 +161,7 @@ class MatchQuestionSerializer
     /**
      * Deserializes Question proposals.
      *
-     * @param MatchQuestion $matchQuestion
-     * @param array         $firstSets     ie proposals
-     * @param array         $options
+     * @param array $firstSets ie proposals
      */
     private function deserializeProposals(MatchQuestion $matchQuestion, array $firstSets, array $options = [])
     {
@@ -208,9 +198,6 @@ class MatchQuestionSerializer
 
     /**
      * Deserializes Question solutions.
-     *
-     * @param MatchQuestion $matchQuestion
-     * @param array         $solutions
      */
     private function deserializeSolutions(MatchQuestion $matchQuestion, array $solutions)
     {

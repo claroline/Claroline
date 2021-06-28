@@ -2,41 +2,76 @@
 
 namespace Claroline\CoreBundle\API\Crud\User;
 
+use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
+use Claroline\AppBundle\Event\Crud\DeleteEvent;
+use Claroline\AppBundle\Event\Crud\PatchEvent;
+use Claroline\AppBundle\Event\StrictDispatcher;
+use Claroline\AuthenticationBundle\Security\Authentication\Authenticator;
+use Claroline\CoreBundle\Entity\AbstractRoleSubject;
+use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
+use Claroline\CoreBundle\Event\Security\AddRoleEvent;
+use Claroline\CoreBundle\Event\Security\RemoveRoleEvent;
+use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
+use Claroline\CoreBundle\Manager\RoleManager;
 use Doctrine\DBAL\Driver\Connection;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class RoleCrud
 {
     /** @var Connection */
     private $conn;
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
+    /** @var Authenticator */
+    private $authenticator;
+    /** @var RoleManager */
+    private $manager;
+    /** @var StrictDispatcher */
+    private $dispatcher;
 
-    /**
-     * RoleCrud constructor.
-     *
-     * @param Connection $conn
-     */
-    public function __construct(Connection $conn)
-    {
+    public function __construct(
+        Connection $conn,
+        TokenStorageInterface $tokenStorage,
+        Authenticator $authenticator,
+        RoleManager $manager,
+        StrictDispatcher $dispatcher
+    ) {
         $this->conn = $conn;
+        $this->tokenStorage = $tokenStorage;
+        $this->authenticator = $authenticator;
+        $this->manager = $manager;
+        $this->dispatcher = $dispatcher;
     }
 
-    /**
-     * @param CreateEvent $event
-     */
     public function preCreate(CreateEvent $event)
     {
         /** @var Role $role */
         $role = $event->getObject();
 
-        if (!$role->getWorkspace()) {
-            $role->setName(strtoupper('role_'.$role->getTranslationKey()));
+        if (empty($role->getName())) {
+            switch ($role->getType()) {
+                case Role::WS_ROLE:
+                    if ($role->getWorkspace()) {
+                        $role->setName(strtoupper('role_ws_'.TextNormalizer::toKey($role->getTranslationKey())).'_'.$role->getWorkspace()->getUuid());
+                    }
+                    break;
+                case Role::USER_ROLE:
+                    if (!empty($role->getUsers())) {
+                        // user roles are only assigned to one user
+                        $owner = $role->getUsers()[0];
+                        $role->setName(strtoupper('role_user_'.strtoupper(TextNormalizer::toKey($owner->getUsername()))));
+                    }
+                    break;
+                default:
+                    $role->setName(strtoupper('role_'.TextNormalizer::toKey($role->getTranslationKey())));
+            }
         }
     }
 
-    /**
-     * @param CreateEvent $event
-     */
     public function postCreate(CreateEvent $event)
     {
         /** @var Role $role */
@@ -71,6 +106,69 @@ class RoleCrud
                     WHERE ot.workspace_id IS NULL AND user_id IS NULL
                 ")
                 ->execute();
+        }
+    }
+
+    public function preDelete(DeleteEvent $event)
+    {
+        /** @var Role $role */
+        $role = $event->getObject();
+
+        if ($role->isReadOnly()) {
+            // abort delete
+            $event->block();
+        }
+    }
+
+    public function prePatch(PatchEvent $event)
+    {
+        /** @var Role $role */
+        $role = $event->getObject();
+
+        // checks if we can add users/groups to the role
+        if (Crud::COLLECTION_ADD === $event->getAction() && in_array($event->getProperty(), ['user', 'group'])) {
+            /** @var AbstractRoleSubject $ars */
+            $ars = $event->getValue();
+            if ($ars->hasRole($role->getName()) || !$this->manager->validateRoleInsert($ars, $role)) {
+                $event->block();
+            }
+        }
+    }
+
+    public function postPatch(PatchEvent $event)
+    {
+        // refresh token to get updated roles if this is the current user or if he is in the group
+        if (in_array($event->getProperty(), ['user', 'group'])) {
+            $currentUser = $this->tokenStorage->getToken()->getUser();
+
+            $refresh = false;
+            if ($event->getValue() instanceof User) {
+                $refresh = $this->authenticator->isAuthenticatedUser($event->getValue());
+            } elseif ($event->getValue() instanceof Group && $currentUser instanceof User) {
+                $refresh = $currentUser->hasGroup($event->getValue());
+            }
+
+            if ($refresh) {
+                $this->authenticator->createToken($currentUser);
+            }
+
+            // Dispatch event for User
+            if ('add' === $event->getAction() && $event->getValue() instanceof User && $event->getObject() instanceof Role) {
+                $this->dispatcher->dispatch(SecurityEvents::ADD_ROLE, AddRoleEvent::class, [$event->getValue(), $event->getObject()]);
+            } elseif ('remove' === $event->getAction() && $event->getValue() instanceof User && $event->getObject() instanceof Role) {
+                $this->dispatcher->dispatch(SecurityEvents::REMOVE_ROLE, RemoveRoleEvent::class, [$event->getValue(), $event->getObject()]);
+            }
+
+            // Dispatch event for Group
+            if ('add' === $event->getAction() && $event->getValue() instanceof Group && $event->getObject() instanceof Role) {
+                foreach ($event->getValue()->getUsers() as $user) {
+                    $this->dispatcher->dispatch(SecurityEvents::ADD_ROLE, AddRoleEvent::class, [$user, $event->getObject()]);
+                }
+            } elseif ('remove' === $event->getAction() && $event->getValue() instanceof Group && $event->getObject() instanceof Role) {
+                foreach ($event->getValue()->getUsers() as $user) {
+                    $this->dispatcher->dispatch(SecurityEvents::REMOVE_ROLE, RemoveRoleEvent::class, [$user, $event->getObject()]);
+                }
+            }
         }
     }
 }

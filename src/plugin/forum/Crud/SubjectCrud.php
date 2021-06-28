@@ -9,6 +9,8 @@ use Claroline\ForumBundle\Entity\Forum;
 use Claroline\ForumBundle\Entity\Subject;
 use Claroline\ForumBundle\Entity\Validation\User as UserValidation;
 use Claroline\ForumBundle\Manager\ForumManager;
+use Claroline\ForumBundle\Messenger\NotifyUsersOnMessageCreated;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class SubjectCrud
@@ -24,26 +26,25 @@ class SubjectCrud
     /** @var AuthorizationCheckerInterface */
     private $authorization;
 
+    /** @var MessageBusInterface */
+    private $messageBus;
+
     /**
      * ForumSerializer constructor.
-     *
-     * @param ObjectManager                 $om
-     * @param ForumManager                  $forumManager
-     * @param AuthorizationCheckerInterface $authorization
      */
     public function __construct(
         ObjectManager $om,
         ForumManager $forumManager,
-        AuthorizationCheckerInterface $authorization
+        AuthorizationCheckerInterface $authorization,
+        MessageBusInterface $messageBus
     ) {
         $this->om = $om;
         $this->forumManager = $forumManager;
         $this->authorization = $authorization;
+        $this->messageBus = $messageBus;
     }
 
     /**
-     * @param CreateEvent $event
-     *
      * @return Subject
      */
     public function preCreate(CreateEvent $event)
@@ -98,8 +99,6 @@ class SubjectCrud
     /**
      * Send notifications after creation.
      *
-     * @param CreateEvent $event
-     *
      * @return Subject
      */
     public function postCreate(CreateEvent $event)
@@ -109,7 +108,7 @@ class SubjectCrud
 
         $message = $subject->getFirstMessage();
         if ($message) {
-            $this->forumManager->notifyMessage($message);
+            $this->messageBus->dispatch(new NotifyUsersOnMessageCreated($message->getId()));
         }
 
         return $subject;

@@ -15,13 +15,13 @@ use Bazinga\Bundle\JsTranslationBundle\BazingaJsTranslationBundle;
 use Claroline\CoreBundle\DependencyInjection\Compiler\DoctrineEntityListenerPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\DynamicConfigPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\MailingConfigPass;
+use Claroline\CoreBundle\DependencyInjection\Compiler\MessengerConfigPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\PlatformConfigPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\SessionConfigPass;
 use Claroline\CoreBundle\Installation\AdditionalInstaller;
-use Claroline\CoreBundle\Library\DistributionPluginBundle;
-use Claroline\KernelBundle\Bundle\AutoConfigurableInterface;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 use Claroline\KernelBundle\Bundle\ConfigurationProviderInterface;
+use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle;
 use FOS\JsRoutingBundle\FOSJsRoutingBundle;
@@ -38,7 +38,7 @@ use Symfony\Bundle\WebProfilerBundle\WebProfilerBundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class ClarolineCoreBundle extends DistributionPluginBundle implements AutoConfigurableInterface, ConfigurationProviderInterface
+class ClarolineCoreBundle extends DistributionPluginBundle implements ConfigurationProviderInterface
 {
     public function build(ContainerBuilder $container)
     {
@@ -49,6 +49,7 @@ class ClarolineCoreBundle extends DistributionPluginBundle implements AutoConfig
         $container->addCompilerPass(new DoctrineEntityListenerPass());
         $container->addCompilerPass(new MailingConfigPass());
         $container->addCompilerPass(new SessionConfigPass());
+        $container->addCompilerPass(new MessengerConfigPass());
     }
 
     public function supports($environment)
@@ -63,8 +64,8 @@ class ClarolineCoreBundle extends DistributionPluginBundle implements AutoConfig
         $routingFile = 'test' === $environment ? 'routing_test.yml' : 'routing.yml';
 
         return $config
-            ->addContainerResource(__DIR__."/Resources/config/app/{$configFile}")
-            ->addRoutingResource(__DIR__."/Resources/config/{$routingFile}");
+            ->addContainerResource($this->getPath()."/Resources/config/app/{$configFile}")
+            ->addRoutingResource($this->getPath()."/Resources/config/{$routingFile}");
     }
 
     public function suggestConfigurationFor(Bundle $bundle, $environment)
@@ -114,24 +115,24 @@ class ClarolineCoreBundle extends DistributionPluginBundle implements AutoConfig
         return false;
     }
 
-    public function getRequiredFixturesDirectory($environment)
+    public function getRequiredFixturesDirectory(string $environment): string
     {
         return 'DataFixtures/Required';
     }
 
-    public function getPostInstallFixturesDirectory($environment)
+    public function getPostInstallFixturesDirectory(string $environment): string
     {
         return 'DataFixtures/PostInstall';
     }
 
     public function getAdditionalInstaller()
     {
-        return new AdditionalInstaller();
+        return new AdditionalInstaller($this->getUpdaterServiceLocator());
     }
 
     private function buildPath($file, $folder = 'suggested')
     {
-        return __DIR__."/Resources/config/{$folder}/{$file}.yml";
+        return $this->getPath()."/Resources/config/{$folder}/{$file}.yml";
     }
 
     public function getRequiredThirdPartyBundles(string $environment): array

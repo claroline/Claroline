@@ -10,7 +10,7 @@ function collectConfig() {
     if (packages.isMetaPackage(el.path)) {
       config = config.concat(getMetaEntries(el.path))
     } else {
-      console.log('No implementation for client configuration file for the usual package.')
+      console.log('No implementation for client configuration file for the usual package.' + el.path)
     }
   })
 

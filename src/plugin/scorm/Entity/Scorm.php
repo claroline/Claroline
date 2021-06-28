@@ -50,10 +50,7 @@ class Scorm extends AbstractResource
     private $ratio = 56.25;
 
     /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\ScormBundle\Entity\Sco",
-     *     mappedBy="scorm"
-     * )
+     * @ORM\OneToMany(targetEntity="Claroline\ScormBundle\Entity\Sco", mappedBy="scorm", orphanRemoval=true, cascade={"persist"})
      */
     protected $scos;
 
@@ -127,6 +124,22 @@ class Scorm extends AbstractResource
         $this->ratio = $ratio;
     }
 
+    public function addSco(Sco $sco)
+    {
+        if (!$this->scos->contains($sco)) {
+            $this->scos->add($sco);
+            $sco->setScorm($this);
+        }
+    }
+
+    public function removeSco(Sco $sco)
+    {
+        if ($this->scos->contains($sco)) {
+            $this->scos->removeElement($sco);
+            $sco->setScorm(null);
+        }
+    }
+
     /**
      * @return Sco[]
      */
@@ -152,5 +165,10 @@ class Scorm extends AbstractResource
         }
 
         return $roots;
+    }
+
+    public function emptyScos()
+    {
+        $this->scos->clear();
     }
 }

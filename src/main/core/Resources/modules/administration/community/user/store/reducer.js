@@ -11,6 +11,7 @@ import {USER_COMPARE} from '#/main/core/administration/community/user/store/acti
 
 const reducer = combineReducers({
   list: makeListReducer(baseSelectors.STORE_NAME+'.users.list', {
+    filters: [{property: 'isDisabled', value: false}],
     sortBy: {property: 'created', direction: -1}
   }, {
     invalidated: makeReducer(false, {

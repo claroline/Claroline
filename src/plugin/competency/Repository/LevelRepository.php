@@ -13,8 +13,6 @@ class LevelRepository extends EntityRepository
      *
      * Note: this method is used in the ability form type.
      *
-     * @param Competency $competency
-     *
      * @return \Doctrine\ORM\QueryBuilder
      */
     public function getFindByCompetencyBuilder(Competency $competency)

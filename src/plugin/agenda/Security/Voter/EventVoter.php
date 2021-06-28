@@ -13,6 +13,7 @@ namespace Claroline\AgendaBundle\Security\Voter;
 
 use Claroline\AgendaBundle\Entity\Event;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Repository\Tool\OrderedToolRepository;
 use Claroline\CoreBundle\Security\Voter\AbstractVoter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -32,19 +33,15 @@ class EventVoter extends AbstractVoter
         return VoterInterface::ACCESS_ABSTAIN;
     }
 
-    public function checkEdit(TokenInterface $token, $object)
+    public function checkEdit(TokenInterface $token, Event $object)
     {
-        if (!$object->isEditable()) {
-            return VoterInterface::ACCESS_DENIED;
-        }
-
         $workspace = $object->getWorkspace();
 
         $currentUser = $token->getUser();
-        $user = $object->getUser();
+        $user = $object->getCreator();
 
         // the user is the creator of the event
-        if ('anon.' !== $currentUser && (!$user || $currentUser->getUuid() === $user->getUuid())) {
+        if ($currentUser instanceof User && (!$user || $currentUser->getUuid() === $user->getUuid())) {
             return VoterInterface::ACCESS_GRANTED;
         }
 

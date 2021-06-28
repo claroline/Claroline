@@ -1,2 +1,6 @@
 plugin:
-    has_options: false
+    data_sources:
+        - name: my_tokens
+          type: list
+          context: [ desktop, administration ]
+          tags: [ structure ]

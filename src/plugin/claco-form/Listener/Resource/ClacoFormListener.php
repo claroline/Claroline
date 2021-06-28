@@ -23,6 +23,7 @@ use Claroline\ClacoFormBundle\Entity\FieldValue;
 use Claroline\ClacoFormBundle\Entity\Keyword;
 use Claroline\ClacoFormBundle\Manager\ClacoFormManager;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\ExportObjectEvent;
 use Claroline\CoreBundle\Event\ImportObjectEvent;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
@@ -73,7 +74,7 @@ class ClacoFormListener
         /** @var ClacoForm $clacoForm */
         $clacoForm = $event->getResource();
         $user = $this->tokenStorage->getToken()->getUser();
-        $isAnon = 'anon.' === $user;
+        $isAnon = !$user instanceof User;
         $myEntries = $isAnon ? [] : $this->clacoFormManager->getUserEntries($clacoForm, $user);
         $canGeneratePdf = !$isAnon;
         $cascadeLevelMax = $this->platformConfigHandler->hasParameter('claco_form_cascade_select_level_max') ?

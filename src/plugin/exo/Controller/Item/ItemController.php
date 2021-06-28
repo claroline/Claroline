@@ -3,6 +3,7 @@
 namespace UJM\ExoBundle\Controller\Item;
 
 use Claroline\AppBundle\API\FinderProvider;
+use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -10,7 +11,6 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use UJM\ExoBundle\Controller\AbstractController;
 use UJM\ExoBundle\Entity\Item\Item;
 use UJM\ExoBundle\Library\Options\Transfer;
 use UJM\ExoBundle\Manager\Item\ItemManager;
@@ -18,12 +18,14 @@ use UJM\ExoBundle\Manager\Item\ItemManager;
 /**
  * Item Controller exposes REST API.
  *
- * @Route("/questions", options={"expose"=true})
+ * @Route("/questions")
  *
  * @todo : use a crud controller instead
  */
-class ItemController extends AbstractController
+class ItemController
 {
+    use RequestDecoderTrait;
+
     /** @var FinderProvider */
     private $finder;
 
@@ -35,10 +37,6 @@ class ItemController extends AbstractController
 
     /**
      * ItemController constructor.
-     *
-     * @param FinderProvider           $finder
-     * @param ItemManager              $manager
-     * @param EventDispatcherInterface $eventDispatcher
      */
     public function __construct(
         FinderProvider $finder,
@@ -54,8 +52,6 @@ class ItemController extends AbstractController
      * Searches for questions.
      *
      * @Route("", name="question_list", methods={"GET"})
-     *
-     * @param Request $request
      *
      * @return JsonResponse
      */
@@ -75,8 +71,6 @@ class ItemController extends AbstractController
      *
      * @Route("", name="question_create", methods={"POST"})
      *
-     * @param Request $request
-     *
      * @return JsonResponse
      */
     public function createAction(Request $request)
@@ -84,7 +78,7 @@ class ItemController extends AbstractController
         $errors = [];
         $question = null;
 
-        $data = $this->decodeRequestData($request);
+        $data = $this->decodeRequest($request);
         if (empty($data)) {
             // Invalid or empty JSON data received
             $errors[] = [
@@ -117,16 +111,13 @@ class ItemController extends AbstractController
      * @Route("/{id}", name="question_update", methods={"PUT"})
      * @EXT\ParamConverter("question", class="UJMExoBundle:Item\Item", options={"mapping": {"id": "uuid"}})
      *
-     * @param Item    $question
-     * @param Request $request
-     *
      * @return JsonResponse
      */
     public function updateAction(Item $question, Request $request)
     {
         $errors = [];
 
-        $data = $this->decodeRequestData($request);
+        $data = $this->decodeRequest($request);
         if (empty($data)) {
             // Invalid or empty JSON data received
             $errors[] = [
@@ -157,8 +148,6 @@ class ItemController extends AbstractController
      * Duplicates a list of items.
      *
      * @Route("/{id}", name="questions_duplicate", methods={"POST"})
-     *
-     * @param Request $request
      */
     public function duplicateBulkAction(Request $request)
     {
@@ -170,16 +159,13 @@ class ItemController extends AbstractController
      * @Route("/{id}", name="questions_delete", methods={"DELETE"})
      * @EXT\ParamConverter("user", converter="current_user")
      *
-     * @param Request $request
-     * @param User    $user
-     *
      * @return JsonResponse
      */
     public function deleteBulkAction(Request $request, User $user)
     {
         $errors = [];
 
-        $data = $this->decodeRequestData($request);
+        $data = $this->decodeRequest($request);
         if (empty($data) || !is_array($data)) {
             // Invalid or empty JSON data received
             $errors[] = [

@@ -160,9 +160,6 @@ class Competency implements \JsonSerializable
         return $this->description;
     }
 
-    /**
-     * @param Scale $scale
-     */
     public function setScale(Scale $scale)
     {
         $this->scale = $scale;
@@ -201,8 +198,6 @@ class Competency implements \JsonSerializable
     /**
      * Note: DON'T USE THIS METHOD DIRECTLY. It's only required when
      *       building an import tree. Use *setParent* instead.
-     *
-     * @param Competency $competency
      */
     public function addChild(Competency $competency)
     {
@@ -250,8 +245,6 @@ class Competency implements \JsonSerializable
     }
 
     /**
-     * @param ResourceNode $resource
-     *
      * @return bool
      */
     public function isLinkedToResource(ResourceNode $resource)
@@ -261,8 +254,6 @@ class Competency implements \JsonSerializable
 
     /**
      * Associates the ability with a resource.
-     *
-     * @param ResourceNode $resource
      */
     public function linkResource(ResourceNode $resource)
     {
@@ -274,8 +265,6 @@ class Competency implements \JsonSerializable
 
     /**
      * Removes an association with an resource.
-     *
-     * @param ResourceNode $resource
      */
     public function removeResource(ResourceNode $resource)
     {
@@ -301,9 +290,6 @@ class Competency implements \JsonSerializable
         return $this->competencyAbilities;
     }
 
-    /**
-     * @param CompetencyAbility $link
-     */
     public function addCompetencyAbility(CompetencyAbility $link)
     {
         $this->competencyAbilities->add($link);

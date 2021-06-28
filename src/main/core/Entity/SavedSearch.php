@@ -56,8 +56,6 @@ class SavedSearch
 
     /**
      * Get name.
-     *
-     * @return string
      */
     public function getName(): string
     {
@@ -66,8 +64,6 @@ class SavedSearch
 
     /**
      * Set name.
-     *
-     * @param string $name
      */
     public function setName(string $name)
     {
@@ -76,8 +72,6 @@ class SavedSearch
 
     /**
      * Get the list.
-     *
-     * @return string
      */
     public function getList(): string
     {
@@ -86,8 +80,6 @@ class SavedSearch
 
     /**
      * Set the list.
-     *
-     * @param string $list
      */
     public function setList(string $list)
     {
@@ -96,8 +88,6 @@ class SavedSearch
 
     /**
      * Get saved filters.
-     *
-     * @return array
      */
     public function getFilters(): array
     {
@@ -106,8 +96,6 @@ class SavedSearch
 
     /**
      * Set saved filters.
-     *
-     * @param array $filters
      */
     public function setFilters(array $filters)
     {
@@ -116,8 +104,6 @@ class SavedSearch
 
     /**
      * Get the search user.
-     *
-     * @return User
      */
     public function getUser(): User
     {
@@ -126,8 +112,6 @@ class SavedSearch
 
     /**
      * Set the search user.
-     *
-     * @param User $user
      */
     public function setUser(User $user)
     {

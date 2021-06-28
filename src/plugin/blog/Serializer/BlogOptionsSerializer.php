@@ -44,9 +44,7 @@ class BlogOptionsSerializer
     }
 
     /**
-     * @param Blog        $blog
      * @param BlogOptions $options
-     * @param array       $options
      *
      * @return array - The serialized representation of blog options
      */
@@ -170,7 +168,8 @@ class BlogOptionsSerializer
         $panelInfo = $this->blogManager->getPanelInfos();
         $panelOldInfo = $this->blogManager->getOldPanelInfos();
         $orderPanelsTable = [];
-        for ($maskPosition = 0, $entreTableau = 0; $maskPosition < strlen($mask); $maskPosition += 2, $entreTableau++) {
+        $maskLength = strlen($mask);
+        for ($maskPosition = 0, $entreTableau = 0; $maskPosition < $maskLength; $maskPosition += 2, $entreTableau++) {
             $i = $mask[$maskPosition];
             if (in_array($panelOldInfo[$i], $panelInfo)) {
                 $orderPanelsTable[] = [
@@ -197,7 +196,6 @@ class BlogOptionsSerializer
     /**
      * @param array              $data
      * @param BlogOptions | null $blogOptions
-     * @param array              $options
      *
      * @return BlogOptions - The deserialized blogOptions entity
      */

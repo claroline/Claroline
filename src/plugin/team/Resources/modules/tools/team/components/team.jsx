@@ -1,11 +1,13 @@
-import React from 'react'
+import React, {Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
+import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
-import {CALLBACK_BUTTON} from '#/main/app/buttons'
+import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
+import {ContentTitle} from '#/main/app/content/components/title'
+import {ContentLoader} from '#/main/app/content/components/loader'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {DetailsData} from '#/main/app/content/details/containers/data'
-import {LinkButton} from '#/main/app/buttons/link/components/button'
 import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
 
 import {UserList} from '#/main/core/administration/community/user/components/user-list'
@@ -24,6 +26,7 @@ const getUserActions = (team, myTeams, totalUsers, allowedTeams, register, unreg
       callback: () => register(team.id)
     })
   }
+
   if (canUnregister(team, myTeams)) {
     actions.push({
       type: CALLBACK_BUTTON,
@@ -37,7 +40,7 @@ const getUserActions = (team, myTeams, totalUsers, allowedTeams, register, unreg
 }
 
 const canRegister = (team, myTeams, totalUsers, allowedTeams) => {
-  return team.selfRegistration &&
+  return team.registration && team.registration.selfRegistration &&
     -1 === myTeams.indexOf(team.id) &&
     (!team.maxUsers || totalUsers < team.maxUsers) &&
     (!allowedTeams || allowedTeams > myTeams.length)
@@ -47,84 +50,112 @@ const canUnregister = (team, myTeams) => {
   return team.selfUnregistration && 0 <= myTeams.indexOf(team.id)
 }
 
-const Team = props =>
-  <div>
-    {props.canEdit &&
-      <LinkButton
-        className="btn-link page-actions-btn pull-right"
-        disabled={!props.canEdit}
-        target={`${props.path}/team/form/${props.team.id}`}
-      >
-        <span className="fa fa-fw fa-pencil" />
-      </LinkButton>
-    }
-    <DetailsData
-      name={selectors.STORE_NAME + '.teams.current'}
-      title={props.team.name}
-      sections={[
-        {
-          id: 'general',
-          icon: 'fa fa-fw fa-cogs',
-          title: trans('general'),
-          primary: true,
-          fields: [
-            {
-              name: 'description',
-              type: 'html',
-              label: trans('description'),
-              options: {
-                workspace: props.workspace
+const Team = props => {
+  if (isEmpty(props.team)) {
+    return (
+      <ContentLoader
+        size="lg"
+        description="Nous chargeons l'équipe..."
+      />
+    )
+  }
+
+  return (
+    <Fragment>
+      <ContentTitle
+        title={props.team.name}
+        backAction={{
+          type: LINK_BUTTON,
+          target: `${props.path}/teams`,
+          exact: true
+        }}
+        actions={[
+          {
+            name: 'edit',
+            type: LINK_BUTTON,
+            icon: 'fa fa-fw fa-pencil',
+            label: trans('edit', {}, 'actions'),
+            displayed: props.canEdit,
+            target: `${props.path}/team/form/${props.team.id}`
+          }
+        ]}
+      />
+
+      <DetailsData
+        name={selectors.STORE_NAME + '.teams.current'}
+        sections={[
+          {
+            id: 'general',
+            icon: 'fa fa-fw fa-cogs',
+            title: trans('general'),
+            primary: true,
+            fields: [
+              {
+                name: 'description',
+                type: 'html',
+                label: trans('description'),
+                options: {
+                  workspace: props.workspace
+                }
+              }, {
+                name: 'directory',
+                type: 'resource',
+                label: trans('public_directory', {}, 'team'),
+                displayed: (team) => !!team.directory
               }
-            }
-          ]
+            ]
+          }
+        ]}
+      />
+
+      <FormSections level={3}>
+        {props.team.role &&
+          <FormSection
+            className="embedded-list-section"
+            icon="fa fa-fw fa-users"
+            title={trans('team_members', {}, 'team')}
+            actions={getUserActions(
+              props.team,
+              props.myTeams,
+              props.teamTotalUsers,
+              props.allowedTeams,
+              props.selfRegister,
+              props.selfUnregister
+            )}
+          >
+            <ListData
+              name={selectors.STORE_NAME + '.teams.current.users'}
+              fetch={{
+                url: ['apiv2_role_list_users', {id: props.team.role.id}],
+                autoload: true
+              }}
+              definition={UserList.definition}
+              card={UserList.card}
+            />
+          </FormSection>
         }
-      ]}
-    />
-    <FormSections level={3}>
-      {props.team.role &&
-        <FormSection
-          className="embedded-list-section"
-          icon="fa fa-fw fa-users"
-          title={trans('team_members', {}, 'team')}
-          actions={getUserActions(
-            props.team,
-            props.myTeams,
-            props.teamTotalUsers,
-            props.allowedTeams,
-            props.selfRegister,
-            props.selfUnregister
-          )}
-        >
-          <ListData
-            name={selectors.STORE_NAME + '.teams.current.users'}
-            fetch={{
-              url: ['apiv2_role_list_users', {id: props.team.role.id}],
-              autoload: true
-            }}
-            definition={UserList.definition}
-            card={UserList.card}
-          />
-        </FormSection>
-      }
-      {props.team.teamManagerRole &&
-        <FormSection
-          className="embedded-list-section"
-          icon="fa fa-fw fa-atom"
-          title={trans('team_managers', {}, 'team')}
-        >
-          <ListData
-            name={selectors.STORE_NAME + '.teams.current.managers'}
-            fetch={{
-              url: ['apiv2_role_list_users', {id: props.team.teamManagerRole.id}],
-              autoload: true
-            }}
-            definition={UserList.definition}
-            card={UserList.card}
-          />
-        </FormSection>
-      }
-    </FormSections>
-  </div>
+
+        {props.team.teamManagerRole &&
+          <FormSection
+            className="embedded-list-section"
+            icon="fa fa-fw fa-atom"
+            title={trans('team_managers', {}, 'team')}
+          >
+            <ListData
+              name={selectors.STORE_NAME + '.teams.current.managers'}
+              fetch={{
+                url: ['apiv2_role_list_users', {id: props.team.teamManagerRole.id}],
+                autoload: true
+              }}
+              definition={UserList.definition}
+              card={UserList.card}
+            />
+          </FormSection>
+        }
+      </FormSections>
+    </Fragment>
+  )
+}
 
 Team.propTypes = {
   path: T.string.isRequired,

@@ -40,7 +40,6 @@ Plugins.propTypes = {
     ready: T.bool.isRequired,
     enabled: T.bool.isRequired,
     locked: T.bool.isRequired,
-    hasOptions: T.bool.isRequired,
     requirements: T.shape({
       extensions: T.array,
       plugins: T.array,

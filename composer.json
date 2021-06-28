@@ -1,24 +1,32 @@
 {
     "name": "claroline/claroline",
     "description": "Claroline Learning Management System",
-    "keywords": ["Claroline", "LMS"],
+    "keywords": [
+        "Claroline",
+        "LMS"
+    ],
     "homepage": "http://www.claroline.net",
     "license": "GPL-3.0-or-later",
-    "authors": [{
-        "name": "Claroline development team",
-        "email": "dev@claroline.net",
-        "homepage": "http://github.com/claroline"
-    }],
+    "authors": [
+        {
+            "name": "Claroline development team",
+            "email": "dev@claroline.net",
+            "homepage": "http://github.com/claroline"
+        }
+    ],
     "require": {
-        "php": ">=7.1",
+        "php": ">=7.2",
         "ext-curl": "*",
+        "ext-dom": "*",
         "ext-fileinfo": "*",
         "ext-gd": "*",
         "ext-intl": "*",
+        "ext-json": "*",
         "ext-mbstring": "*",
+        "ext-pdo": "*",
         "ext-pdo_mysql": "*",
         "ext-openssl": "*",
-        "ext-json": "*",
+        "ext-simplexml": "*",
         "ext-zip": "*",
         "claroline/json-quiz": "^1.0",
         "composer/composer": "^1.6|^2.0",
@@ -36,7 +44,7 @@
         "lightsaml/sp-bundle": "1.2.1",
         "lightsaml/lightsaml-logout": "1.0.0",
         "php-http/httplug-bundle": "*",
-        "php-http/guzzle6-adapter":"*",
+        "php-http/guzzle6-adapter": "*",
         "postal/postal": "1.0",
         "psr/log": "1.0.2",
         "ramsey/uuid": "3.7.3",
@@ -79,7 +87,8 @@
         "symfony/web-profiler-bundle": "4.4.*",
         "symfony/yaml": "4.4.*",
         "twig/twig": "^2.14",
-        "willdurand/js-translation-bundle": "3.0.*"
+        "willdurand/js-translation-bundle": "3.0.*",
+        "symfony/messenger": "^5.2"
     },
     "require-dev": {
         "symfony/dom-crawler": "4.4.*",
@@ -140,38 +149,49 @@
             "Claroline\\AudioPlayerBundle\\": "src/plugin/audio-player",
             "Claroline\\CursusBundle\\": "src/plugin/cursus",
             "Claroline\\BookingBundle\\": "src/plugin/booking",
-            "Claroline\\BigBlueButtonBundle\\": "src/integration/big-blue-button"
+            "Claroline\\BigBlueButtonBundle\\": "src/integration/big-blue-button",
+            "Claroline\\DocumentationBundle\\": "src/plugin/documentation",
+            "Claroline\\LogBundle\\": "src/main/log"
         }
     },
     "scripts": {
+        "enable-maintenance": [
+            "Claroline\\CoreBundle\\Library\\Maintenance\\MaintenanceHandler::enableMaintenance"
+        ],
         "disable-maintenance": [
             "Claroline\\CoreBundle\\Library\\Maintenance\\MaintenanceHandler::disableMaintenance"
+        ],
+        "delete-cache": [
+            "rm -rf ./var/cache/*"
         ],
         "bundles": [
             "Claroline\\BundleRecorder\\ScriptHandler::buildBundleFile"
         ],
         "pre-install-cmd": [
-            "php bin/configure",
-            "php bin/check"
+            "php bin/configure"
         ],
         "post-install-cmd": [
             "composer bundles"
         ],
         "pre-update-cmd": [
             "php bin/configure",
-            "php bin/check",
-            "Claroline\\CoreBundle\\Library\\Maintenance\\MaintenanceHandler::enableMaintenance",
-            "Claroline\\CoreBundle\\Library\\Installation\\Refresher::deleteCache"
+            "composer enable-maintenance",
+            "composer delete-cache"
         ],
         "post-update-cmd": [
             "composer bundles",
-            "composer disable-maintenance"
+            "composer disable-maintenance",
+            "composer delete-cache"
         ]
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
     "config": {
-        "github-protocols": ["https", "git", "ssh"],
+        "github-protocols": [
+            "https",
+            "git",
+            "ssh"
+        ],
         "process-timeout": 3600
     },
     "extra": {

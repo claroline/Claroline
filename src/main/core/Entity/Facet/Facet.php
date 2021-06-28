@@ -102,17 +102,11 @@ class Facet
         return $this->name;
     }
 
-    /**
-     * @param PanelFacet $panelFacet
-     */
     public function addPanelFacet(PanelFacet $panelFacet)
     {
         $this->panelFacets->add($panelFacet);
     }
 
-    /**
-     * @param PanelFacet $panelFacet
-     */
     public function removePanelFacet(PanelFacet $panelFacet)
     {
         $this->panelFacets->removeElement($panelFacet);
@@ -154,17 +148,11 @@ class Facet
         return $this->position;
     }
 
-    /**
-     * @param Role $role
-     */
     public function addRole(Role $role)
     {
         $this->roles->add($role);
     }
 
-    /**
-     * @param Role $role
-     */
     public function removeRole(Role $role)
     {
         $this->roles->removeElement($role);
@@ -178,9 +166,6 @@ class Facet
         return $this->roles;
     }
 
-    /**
-     * @param array $roles
-     */
     public function setRoles(array $roles)
     {
         $this->roles = $roles;

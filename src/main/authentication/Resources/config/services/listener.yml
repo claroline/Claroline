@@ -1,11 +1,18 @@
 services:
     _defaults:
-        autowire: false #change to true
+        autowire: false
         autoconfigure: false
-        public: true #because controller
+        public: false
+
+    Claroline\AuthenticationBundle\Listener\Crud\ApiTokenListener:
+        arguments:
+            - '@security.token_storage'
+        tags:
+            - { name: kernel.event_listener, event: crud.pre.create.api_token, method: preCreate }
 
     Claroline\AuthenticationBundle\Listener\Platform\OauthSsoListener:
         arguments:
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
             - '@Claroline\AuthenticationBundle\Manager\OauthManager'
         tags:
             - { name: kernel.event_listener, event: claroline_populate_client_config, method: onConfig }
@@ -16,3 +23,10 @@ services:
         tags:
             - { name: kernel.event_listener, event: merge_users, method: onMerge }
             - { name: kernel.event_listener, event: log, method: onDelete }
+
+    Claroline\AuthenticationBundle\Listener\DataSource\MyTokensSource:
+        arguments:
+            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@security.token_storage'
+        tags:
+            - { name: kernel.event_listener, event: data_source.my_tokens.load, method: getData }

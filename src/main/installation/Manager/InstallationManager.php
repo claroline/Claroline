@@ -12,10 +12,11 @@
 namespace Claroline\InstallationBundle\Manager;
 
 use Claroline\AppBundle\Log\LoggableTrait;
-use Claroline\CoreBundle\Library\PluginBundleInterface;
+use Claroline\CoreBundle\Library\Installation\Plugin\Recorder;
 use Claroline\InstallationBundle\Additional\AdditionalInstallerInterface;
 use Claroline\InstallationBundle\Bundle\InstallableInterface;
 use Claroline\InstallationBundle\Fixtures\FixtureLoader;
+use Claroline\KernelBundle\Bundle\PluginBundleInterface;
 use Claroline\MigrationBundle\Manager\Manager;
 use Claroline\MigrationBundle\Migrator\Migrator;
 use Psr\Log\LoggerAwareInterface;
@@ -26,25 +27,16 @@ class InstallationManager implements LoggerAwareInterface
 {
     use LoggableTrait;
 
-    /**
-     * @var ContainerInterface
-     */
+    /** @var ContainerInterface */
     private $container;
-
-    /**
-     * @var string
-     */
+    /** @var string */
     private $environment;
-
-    /**
-     * @var Manager
-     */
+    /** @var Manager */
     private $migrationManager;
-
-    /**
-     * @var FixtureLoader
-     */
+    /** @var FixtureLoader */
     private $fixtureLoader;
+    /** @var Recorder */
+    private $recorder;
 
     /**
      * @var bool whether additional installers should re-execute updaters that have been previously executed
@@ -55,11 +47,13 @@ class InstallationManager implements LoggerAwareInterface
         ContainerInterface $container,
         Manager $migrationManager,
         FixtureLoader $fixtureLoader,
-        $environment
+        Recorder $recorder,
+        string $environment
     ) {
         $this->container = $container;
         $this->migrationManager = $migrationManager;
         $this->fixtureLoader = $fixtureLoader;
+        $this->recorder = $recorder;
         $this->environment = $environment;
     }
 
@@ -88,7 +82,7 @@ class InstallationManager implements LoggerAwareInterface
         // Load configuration
         if ($bundle instanceof PluginBundleInterface) {
             $this->log('Saving configuration...');
-            $this->container->get('Claroline\CoreBundle\Library\Installation\Plugin\Recorder')->register($bundle);
+            $this->recorder->register($bundle);
         }
 
         if ($additionalInstaller) {
@@ -105,19 +99,13 @@ class InstallationManager implements LoggerAwareInterface
 
     public function update(InstallableInterface $bundle, $currentVersion, $targetVersion)
     {
-        if (0 === strpos($currentVersion, 'dev')) {
-            $currentVersion = '9999999-'.$currentVersion;
-        }
-        if (0 === strpos($targetVersion, 'dev')) {
-            $targetVersion = '9999999-'.$targetVersion;
-        }
-
         $this->log(sprintf(
             '<comment>Updating %s from %s to %s...</comment>',
             $bundle->getName(),
             $currentVersion,
             $targetVersion
         ));
+
         $additionalInstaller = $this->getAdditionalInstaller($bundle);
 
         if ($additionalInstaller) {
@@ -131,10 +119,16 @@ class InstallationManager implements LoggerAwareInterface
             $this->migrationManager->upgradeBundle($bundle, Migrator::VERSION_FARTHEST);
         }
 
+        $fixturesDir = $bundle->getRequiredFixturesDirectory($this->environment);
+        if ($fixturesDir) {
+            $this->log("Loading required fixtures ($fixturesDir)...");
+            $this->fixtureLoader->load($bundle, $fixturesDir);
+        }
+
         // Update configuration
         if ($bundle instanceof PluginBundleInterface) {
             $this->log('Updating configuration...');
-            $this->container->get('Claroline\CoreBundle\Library\Installation\Plugin\Recorder')->update($bundle);
+            $this->recorder->update($bundle);
         }
 
         if ($additionalInstaller) {
@@ -181,10 +175,7 @@ class InstallationManager implements LoggerAwareInterface
         $this->shouldReplayUpdaters = $shouldReplayUpdaters;
     }
 
-    /**
-     * @return AdditionalInstallerInterface|bool
-     */
-    private function getAdditionalInstaller(InstallableInterface $bundle)
+    private function getAdditionalInstaller(InstallableInterface $bundle): ?AdditionalInstallerInterface
     {
         $installer = $bundle->getAdditionalInstaller();
 
@@ -199,6 +190,6 @@ class InstallationManager implements LoggerAwareInterface
             return $installer;
         }
 
-        return false;
+        return null;
     }
 }

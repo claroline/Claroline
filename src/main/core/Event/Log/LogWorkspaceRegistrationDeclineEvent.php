@@ -30,15 +30,15 @@ class LogWorkspaceRegistrationDeclineEvent extends LogGenericEvent implements No
         $this->workspace = $queue->getWorkspace();
         $this->role = $queue->getRole();
 
-        $details = array('role' => array('name' => $this->role->getTranslationKey()));
-        $details['workspace'] = array(
+        $details = ['role' => ['name' => $this->role->getTranslationKey()]];
+        $details['workspace'] = [
             'name' => $this->workspace->getName(),
             'id' => $this->workspace->getId(),
-        );
-        $details['receiverUser'] = array(
+        ];
+        $details['receiverUser'] = [
             'firstName' => $this->user->getFirstName(),
             'lastName' => $this->user->getLastName(),
-        );
+        ];
         $this->details = $details;
 
         parent::__construct(
@@ -67,7 +67,7 @@ class LogWorkspaceRegistrationDeclineEvent extends LogGenericEvent implements No
 
     public function getExcludeUserIds()
     {
-        return array();
+        return [];
     }
 
     public function getIconKey()
@@ -77,12 +77,12 @@ class LogWorkspaceRegistrationDeclineEvent extends LogGenericEvent implements No
 
     public function getIncludeUserIds()
     {
-        return array($this->user->getId());
+        return [$this->user->getId()];
     }
 
     public function getNotificationDetails()
     {
-        $notificationDetails = array_merge($this->details, array());
+        $notificationDetails = array_merge($this->details, []);
 
         return $notificationDetails;
     }

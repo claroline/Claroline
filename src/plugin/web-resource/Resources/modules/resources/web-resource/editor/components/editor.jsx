@@ -69,7 +69,7 @@ const WebResourceEdit = connect(
 
     },
     saveForm(node) {
-      dispatch(formActions.saveForm(selectors.FORM_NAME, ['claro_resource_action_short', {action: 'change_file', id: node.id}]))
+      dispatch(formActions.saveForm(selectors.FORM_NAME, ['claro_resource_action', {action: 'change_file', id: node.id}]))
     }
   })
 )(WebResourceForm)

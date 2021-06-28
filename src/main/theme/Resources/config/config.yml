@@ -1,6 +1,4 @@
 plugin:
-    has_options: false
-
     themes:
         - name: Claroline
         - name: Claroline Black

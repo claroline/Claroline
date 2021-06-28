@@ -58,7 +58,6 @@ const UsersList = props =>
         displayed: true
       }, {
         name: 'email',
-        alias: 'mail',
         type: 'email',
         label: trans('email'),
         displayed: true
@@ -72,6 +71,7 @@ const UsersList = props =>
         alias: 'lastLogin',
         label: trans('last_login'),
         displayed: true,
+        filterable: false,
         options: {
           time: true
         }
@@ -85,8 +85,13 @@ const UsersList = props =>
           :
           user.roles.filter(role => constants.ROLE_PLATFORM === role.type),
         displayed: true,
-        filterable: true,
-        sortable: false
+        sortable: false,
+        options: {
+          picker: !isEmpty(props.workspace) ? {
+            url: ['apiv2_workspace_list_roles_configurable', {workspace: props.workspace.id}],
+            filters: []
+          } : undefined
+        }
       }
     ]}
     card={UserCard}

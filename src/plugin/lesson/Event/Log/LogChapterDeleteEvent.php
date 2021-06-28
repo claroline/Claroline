@@ -10,7 +10,6 @@ class LogChapterDeleteEvent extends AbstractLogResourceEvent
     const ACTION = 'resource-icap_lesson-chapter_delete';
 
     /**
-     * @param Lesson $lesson
      * @param string $chapterName
      */
     public function __construct(Lesson $lesson, $chapterName)

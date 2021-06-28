@@ -185,16 +185,18 @@ class AnnouncementSerializer
 
         if (isset($data['poster']) && isset($data['poster']['id'])) {
             $publicFile = $this->om->getRepository(PublicFile::class)->find($data['poster']['id']);
-            $poster = $this->publicFileSerializer->deserialize(
-                $data['poster'],
-                $publicFile
-            );
-            $announce->setPoster($data['poster']['url']);
-            $this->fileUt->createFileUse(
-                $poster,
-                Announcement::class,
-                $announce->getUuid()
-            );
+            if ($publicFile) {
+                $poster = $this->publicFileSerializer->deserialize(
+                    $data['poster'],
+                    $publicFile
+                );
+                $announce->setPoster($data['poster']['url']);
+                $this->fileUt->createFileUse(
+                    $poster,
+                    Announcement::class,
+                    $announce->getUuid()
+                );
+            }
         }
 
         return $announce;

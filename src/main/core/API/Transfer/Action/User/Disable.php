@@ -16,9 +16,6 @@ class Disable extends AbstractAction
 
     /**
      * Disable constructor.
-     *
-     * @param ObjectManager $om
-     * @param UserManager   $userManager
      */
     public function __construct(ObjectManager $om, UserManager $userManager)
     {

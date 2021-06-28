@@ -17,9 +17,6 @@ class PaperRepository extends EntityRepository
      * Returns the last paper (finished or not) done by a User.
      * Mostly use to know the next paper number.
      *
-     * @param Exercise $exercise
-     * @param User     $user
-     *
      * @return Paper
      */
     public function findLastPaper(Exercise $exercise, User $user)
@@ -40,9 +37,6 @@ class PaperRepository extends EntityRepository
     /**
      * Returns the unfinished papers of a user for a given exercise, if any.
      *
-     * @param Exercise $exercise
-     * @param User     $user
-     *
      * @return Paper[]
      */
     public function findUnfinishedPapers(Exercise $exercise, User $user)
@@ -62,9 +56,6 @@ class PaperRepository extends EntityRepository
 
     /**
      * Returns the unfinished papers of a user for a given exercise for the current day, if any.
-     *
-     * @param Exercise $exercise
-     * @param User     $user
      *
      * @return int
      */
@@ -96,8 +87,6 @@ class PaperRepository extends EntityRepository
     /**
      * Finds the score of a paper by summing the score of each answer.
      *
-     * @param Paper $paper
-     *
      * @return float
      */
     public function findScore(Paper $paper)
@@ -117,8 +106,6 @@ class PaperRepository extends EntityRepository
 
     /**
      * Checks that all the answers of a Paper have been marked.
-     *
-     * @param Paper $paper
      *
      * @return bool
      */
@@ -140,8 +127,6 @@ class PaperRepository extends EntityRepository
     /**
      * Returns the number of papers for an exercise.
      *
-     * @param Exercise $exercise
-     *
      * @return int the number of exercise papers
      */
     public function countExercisePapers(Exercise $exercise)
@@ -160,8 +145,6 @@ class PaperRepository extends EntityRepository
 
     /**
      * Returns the number of registered users associated to a given exercise.
-     *
-     * @param Exercise $exercise
      *
      * @return int the number of registered users
      */
@@ -183,8 +166,6 @@ class PaperRepository extends EntityRepository
     /**
      * Returns the number of annymous users associated to a given exercise.
      *
-     * @param Exercise $exercise
-     *
      * @return int the number of registered users
      */
     public function countAnonymousPapers(Exercise $exercise)
@@ -204,8 +185,6 @@ class PaperRepository extends EntityRepository
 
     /**
      * Finds papers of an exercise that needs correction (aka papers that have answers with `null` score).
-     *
-     * @param Exercise $exercise
      *
      * @return Paper[]
      */
@@ -230,9 +209,6 @@ class PaperRepository extends EntityRepository
     /**
      * Counts the number of finished paper for a user and an exercise.
      *
-     * @param Exercise $exercise
-     * @param User     $user
-     *
      * @return int the number of finished papers
      */
     public function countUserFinishedPapers(Exercise $exercise, User $user)
@@ -255,9 +231,6 @@ class PaperRepository extends EntityRepository
     /**
      * Returns whether a hint is related to a paper.
      *
-     * @param Paper $paper
-     * @param Hint  $hint
-     *
      * @return bool
      */
     public function hasHint(Paper $paper, Hint $hint)
@@ -275,5 +248,39 @@ class PaperRepository extends EntityRepository
             ])
             ->getQuery()
             ->getSingleScalarResult();
+    }
+
+    public function getAvgScoreByAttempts(Exercise $exercise, bool $finishedOnly = false, User $user = null)
+    {
+        $parameters = [
+            'exercise' => $exercise,
+        ];
+
+        $dql = '
+            SELECT p.number, AVG(p.score) AS score
+            FROM UJM\ExoBundle\Entity\Attempt\Paper AS p
+            WHERE p.exercise = :exercise
+              AND p.total IS NOT NULL
+        ';
+
+        if ($finishedOnly) {
+            $dql .= 'AND p.end IS NOT NULL ';
+        }
+
+        if ($user) {
+            $dql .= 'AND p.user = :user ';
+
+            $parameters['user'] = $user;
+        }
+
+        $dql .= '
+            GROUP BY p.number
+            ORDER BY p.number ASC
+        ';
+
+        return $this->getEntityManager()
+            ->createQuery($dql)
+            ->setParameters($parameters)
+            ->getArrayResult();
     }
 }

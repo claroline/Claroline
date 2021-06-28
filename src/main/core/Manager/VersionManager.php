@@ -14,9 +14,9 @@ namespace Claroline\CoreBundle\Manager;
 use Claroline\AppBundle\Log\LoggableTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Update\Version;
-use Claroline\CoreBundle\Library\PluginBundleInterface;
 use Claroline\CoreBundle\Repository\VersionRepository;
 use Claroline\InstallationBundle\Bundle\InstallableInterface;
+use Claroline\KernelBundle\Bundle\PluginBundleInterface;
 use Psr\Log\LoggerAwareInterface;
 
 class VersionManager implements LoggerAwareInterface

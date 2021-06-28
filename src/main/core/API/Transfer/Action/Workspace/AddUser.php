@@ -22,10 +22,6 @@ class AddUser extends AbstractAction
 
     /**
      * AddUser constructor.
-     *
-     * @param Crud               $crud
-     * @param SerializerProvider $serializer
-     * @param ObjectManager      $om
      */
     public function __construct(Crud $crud, SerializerProvider $serializer, ObjectManager $om)
     {

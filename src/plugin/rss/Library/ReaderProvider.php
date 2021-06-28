@@ -41,7 +41,7 @@ class ReaderProvider
      */
     public function getReaderFor($feedContent)
     {
-        @$content = new SimpleXMLElement($feedContent);
+        $content = new SimpleXMLElement($feedContent);
 
         foreach ($this->readers as $reader) {
             if ($reader->supports($content->getName())) {
@@ -51,8 +51,6 @@ class ReaderProvider
             }
         }
 
-        throw new UnknownFormatException(
-            "Parser has no support for '{$content->getName()}' feed format"
-        );
+        throw new UnknownFormatException("Parser has no support for '{$content->getName()}' feed format");
     }
 }

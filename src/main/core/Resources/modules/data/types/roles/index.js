@@ -2,6 +2,7 @@ import {trans} from '#/main/app/intl/translation'
 
 import {RolesDisplay} from '#/main/core/data/types/roles/components/display'
 import {RolesInput} from '#/main/core/data/types/roles/components/input'
+import {RolesFilter} from '#/main/core/data/types/roles/components/filter'
 
 const dataType = {
   name: 'roles',
@@ -13,7 +14,8 @@ const dataType = {
   render: (raw) => raw && raw.map(r => trans(r.translationKey)).join(', '),
   components: {
     details: RolesDisplay,
-    input: RolesInput
+    input: RolesInput,
+    search: RolesFilter
   }
 }
 

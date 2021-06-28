@@ -29,14 +29,6 @@ class ClacoFormSerializer
 
     private $fieldRepo;
 
-    /**
-     * ClacoFormSerializer constructor.
-     *
-     * @param CategorySerializer $categorySerializer
-     * @param FieldSerializer    $fieldSerializer
-     * @param KeywordSerializer  $keywordSerializer
-     * @param ObjectManager      $om
-     */
     public function __construct(
         CategorySerializer $categorySerializer,
         FieldSerializer $fieldSerializer,
@@ -64,7 +56,7 @@ class ClacoFormSerializer
      *
      * @return array - the serialized representation of the ClacoForm resource
      */
-    public function serialize(ClacoForm $clacoForm, array $options = [])
+    public function serialize(ClacoForm $clacoForm, array $options = []): array
     {
         $serialized = [
             'id' => $clacoForm->getUuid(),
@@ -106,10 +98,13 @@ class ClacoFormSerializer
                 'display_subtitle' => $clacoForm->getDisplaySubtitle(),
                 'display_content' => $clacoForm->getDisplayContent(),
                 'title_field_label' => $clacoForm->getTitleFieldLabel(),
+                'helpMessage' => $clacoForm->getHelpMessage(),
             ],
 
             'display' => [
                 'showEntryNav' => $clacoForm->getShowEntryNav(),
+                'showConfirm' => $clacoForm->getShowConfirm(),
+                'confirmMessage' => $clacoForm->getConfirmMessage(),
             ],
 
             'random' => [
@@ -182,19 +177,16 @@ class ClacoFormSerializer
         return $serialized;
     }
 
-    /**
-     * @param array     $data
-     * @param ClacoForm $clacoForm
-     *
-     * @return ClacoForm
-     */
-    public function deserialize($data, ClacoForm $clacoForm, array $options = [])
+    public function deserialize(array $data, ClacoForm $clacoForm, array $options = []): ClacoForm
     {
         // TODO : remove and call all setters individually
         $this->sipe('details', 'setDetails', $data, $clacoForm);
+        $this->sipe('details.helpMessage', 'setHelpMessage', $data, $clacoForm);
 
         // display
         $this->sipe('display.showEntryNav', 'setShowEntryNav', $data, $clacoForm);
+        $this->sipe('display.showConfirm', 'setShowConfirm', $data, $clacoForm);
+        $this->sipe('display.confirmMessage', 'setConfirmMessage', $data, $clacoForm);
 
         // random feature
         $this->sipe('random.enabled', 'setRandomEnabled', $data, $clacoForm);
@@ -277,9 +269,6 @@ class ClacoFormSerializer
         return $clacoForm;
     }
 
-    /**
-     * @param Field $field
-     */
     private function deleteField(Field $field)
     {
         $fieldFacet = $field->getFieldFacet();

@@ -39,10 +39,6 @@ class ContributionController
 
     /**
      * SectionController constructor.
-     *
-     * @param FinderProvider      $finder
-     * @param SectionManager      $sectionManager
-     * @param ContributionManager $contributionManager
      */
     public function __construct(
         FinderProvider $finder,
@@ -59,10 +55,6 @@ class ContributionController
     /**
      * @Route("/history", name="apiv2_wiki_section_contribution_history", methods={"GET"})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
-     *
-     * @param Section $section
-     * @param User    $user
-     * @param Request $request
      *
      * @return JsonResponse
      */
@@ -90,10 +82,6 @@ class ContributionController
      *     options={"mapping": {"id": "uuid"}}
      * )
      *
-     * @param Section      $section
-     * @param Contribution $contribution
-     * @param User         $user
-     *
      * @return JsonResponse
      */
     public function getAction(Section $section, Contribution $contribution, User $user)
@@ -112,10 +100,6 @@ class ContributionController
      *     options={"mapping": {"id": "uuid"}}
      * )
      *
-     * @param Section      $section
-     * @param Contribution $contribution
-     * @param User         $user
-     *
      * @return JsonResponse
      */
     public function setActiveContributionAction(Section $section, Contribution $contribution, User $user)
@@ -130,10 +114,8 @@ class ContributionController
      * @Route("/compare/{id1}/{id2}", name="apiv2_wiki_section_contribution_compare", methods={"GET"})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      *
-     * @param Section $section
      * @param $id1
      * @param $id2
-     * @param User $user
      *
      * @return JsonResponse
      */

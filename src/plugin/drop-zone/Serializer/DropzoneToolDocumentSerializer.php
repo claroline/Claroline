@@ -13,8 +13,6 @@ class DropzoneToolDocumentSerializer
 
     /**
      * DropzoneToolDocumentSerializer constructor.
-     *
-     * @param ObjectManager $om
      */
     public function __construct(ObjectManager $om)
     {
@@ -29,8 +27,6 @@ class DropzoneToolDocumentSerializer
     }
 
     /**
-     * @param DropzoneToolDocument $dropzoneToolDocument
-     *
      * @return array
      */
     public function serialize(DropzoneToolDocument $dropzoneToolDocument)

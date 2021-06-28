@@ -17,7 +17,7 @@ use Doctrine\ORM\QueryBuilder;
 
 class ConnectionMessageFinder extends AbstractFinder
 {
-    public function getClass()
+    public static function getClass(): string
     {
         return ConnectionMessage::class;
     }
@@ -40,10 +40,5 @@ class ConnectionMessageFinder extends AbstractFinder
         }
 
         return $qb;
-    }
-
-    public function getFilters()
-    {
-        return [];
     }
 }

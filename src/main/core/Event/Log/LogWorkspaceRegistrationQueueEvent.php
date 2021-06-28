@@ -31,15 +31,15 @@ class LogWorkspaceRegistrationQueueEvent extends LogGenericEvent implements Noti
         $this->workspace = $queue->getWorkspace();
         $this->role = $queue->getRole();
 
-        $details = array('role' => array('name' => $this->role->getTranslationKey()));
-        $details['workspace'] = array(
+        $details = ['role' => ['name' => $this->role->getTranslationKey()]];
+        $details['workspace'] = [
             'name' => $this->workspace->getName(),
             'id' => $this->workspace->getId(),
-        );
-        $details['receiverUser'] = array(
+        ];
+        $details['receiverUser'] = [
             'firstName' => $this->user->getFirstName(),
             'lastName' => $this->user->getLastName(),
-        );
+        ];
         $this->details = $details;
 
         $this->managers = $this->workspace->getManagerRole()->getUsers();
@@ -70,7 +70,7 @@ class LogWorkspaceRegistrationQueueEvent extends LogGenericEvent implements Noti
 
     public function getExcludeUserIds()
     {
-        return array();
+        return [];
     }
 
     public function getIconKey()
@@ -80,7 +80,7 @@ class LogWorkspaceRegistrationQueueEvent extends LogGenericEvent implements Noti
 
     public function getIncludeUserIds()
     {
-        $ids = array();
+        $ids = [];
 
         foreach ($this->managers as $manager) {
             $ids[] = $manager->getId();
@@ -91,7 +91,7 @@ class LogWorkspaceRegistrationQueueEvent extends LogGenericEvent implements Noti
 
     public function getNotificationDetails()
     {
-        $notificationDetails = array_merge($this->details, array());
+        $notificationDetails = array_merge($this->details, []);
 
         return $notificationDetails;
     }

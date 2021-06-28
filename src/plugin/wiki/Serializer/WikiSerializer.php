@@ -19,8 +19,6 @@ class WikiSerializer
     }
 
     /**
-     * @param Wiki $wiki
-     *
      * @return array - The serialized representation of a wiki
      */
     public function serialize(Wiki $wiki)
@@ -82,7 +80,6 @@ class WikiSerializer
 
     /**
      * @param $data
-     * @param Wiki|null $wiki
      *
      * @return Wiki - The deserialized wiki object
      */

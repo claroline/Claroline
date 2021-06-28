@@ -14,7 +14,6 @@ namespace Claroline\CoreBundle\Command\User;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Command\AdminCliCommand;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
 use Symfony\Component\Console\Command\Command;
@@ -22,7 +21,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class AddGroupCommand extends Command implements AdminCliCommand
+class AddGroupCommand extends Command
 {
     /** @var ObjectManager */
     private $om;

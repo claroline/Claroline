@@ -1,12 +1,12 @@
 {
-  "name": "claroline-distribution",
+  "name": "claroline-app",
   "version": "1.0.0",
   "description": "Claroline distribution frontend dependencies",
   "license": "GPL-3.0",
   "repository": "https://github.com/claroline/Claroline",
   "engines": {
     "node": ">=10",
-    "npm": ">=6"
+    "npm": ">=6,<7"
   },
   "scripts": {
     "themes": "node src/main/core/Resources/server/themes/bin build",

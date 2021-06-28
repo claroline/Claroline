@@ -11,7 +11,8 @@
 
 namespace Claroline\CursusBundle\Entity;
 
-use Claroline\CoreBundle\Entity\Organization\Location;
+use Claroline\AppBundle\Entity\IdentifiableInterface;
+use Claroline\CoreBundle\Entity\Location\Location;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Role;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -21,7 +22,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="Claroline\CursusBundle\Repository\SessionRepository")
  * @ORM\Table(name="claro_cursusbundle_course_session")
  */
-class Session extends AbstractTraining
+class Session extends AbstractTraining implements IdentifiableInterface
 {
     const REGISTRATION_AUTO = 0;
     const REGISTRATION_MANUAL = 1;
@@ -86,7 +87,7 @@ class Session extends AbstractTraining
     protected $resources;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Organization\Location")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Location\Location")
      * @ORM\JoinColumn(name="location_id", nullable=true, onDelete="SET NULL")
      *
      * @var Location
@@ -95,7 +96,6 @@ class Session extends AbstractTraining
 
     /**
      * @ORM\OneToMany(targetEntity="Claroline\CursusBundle\Entity\Event", mappedBy="session")
-     * @ORM\OrderBy({"startDate" = "ASC"})
      */
     protected $events;
 

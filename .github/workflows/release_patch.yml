@@ -1,0 +1,54 @@
+name: Patch Release (scheduled)
+
+on:
+  workflow_dispatch:
+#  schedule:
+#    - cron: "0 */1 * * *" # every wednesday
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.RELEASER_TOKEN }}
+
+      - name: Update VERSION/CHANGELOG
+        id: bump
+        run: |
+          export CURRENT_TAG=$(cat VERSION.txt | sed -n 1p)
+          ./update-version.sh ${CURRENT_TAG%.*} $RELEASE_BRANCH
+          export NEW_TAG=$(head -n 1 VERSION.txt)
+          echo "::set-output name=tag::${NEW_TAG}"
+          git config --global user.name ClaroBot
+          git config --global user.email ClaroBot@users.noreply.github.com
+          git add changelogs/ VERSION.txt
+          git commit -m "Release version ${NEW_TAG}"
+          git push origin $RELEASE_BRANCH
+        env:
+          RELEASE_BRANCH: 13.x
+
+      - name: Create Tag
+        uses: anothrNick/github-tag-action@1.34.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_BRANCHES: 13.x
+          CUSTOM_TAG: ${{ steps.bump.outputs.tag }}
+
+      - name: Create Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.bump.outputs.tag }}
+          release_name: v${{ steps.bump.outputs.tag }}
+
+      - name: Repository Dispatch
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.FL_REPO_ACCESS_TOKEN }}
+          repository: FormaLibre/ClarolineBundle/
+          event-type: newtag
+          client-payload: '{"tag": "${{ steps.bump.outputs.tag }}"}'

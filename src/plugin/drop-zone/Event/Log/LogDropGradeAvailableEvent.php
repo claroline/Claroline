@@ -14,10 +14,6 @@ class LogDropGradeAvailableEvent extends AbstractLogResourceEvent implements Not
     protected $drop;
     protected $details;
 
-    /**
-     * @param \Claroline\DropZoneBundle\Entity\Dropzone $dropzone
-     * @param \Claroline\DropZoneBundle\Entity\Drop     $drop
-     */
     public function __construct(Dropzone $dropzone, Drop $drop)
     {
         $this->dropzone = $dropzone;

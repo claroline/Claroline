@@ -1,6 +1,4 @@
 plugin:
-  has_options: false
-  
   tools:
     - name: claroline_team_tool
       class: users

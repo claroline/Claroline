@@ -88,6 +88,79 @@ const Meta = (props) =>
                 displayed: (data) => constants.HOME_TYPE_HTML === data.home.type
               }
             ]
+          }, {
+            name: 'home.menu',
+            type: 'choice',
+            label: trans('tools_menu'),
+            mode: 'expert',
+            placeholder: trans('do_nothing'),
+            options: {
+              condensed: false,
+              noEmpty: false,
+              choices: {
+                open: trans('open_tools_menu'),
+                close: trans('close_tools_menu')
+              }
+            }
+          }
+        ]
+      }, {
+        icon: 'fa fa-fw fa-atlas',
+        title: trans('desktop'),
+        fields: [
+          {
+            name: 'desktop.menu',
+            type: 'choice',
+            label: trans('tools_menu'),
+            mode: 'expert',
+            placeholder: trans('do_nothing'),
+            options: {
+              condensed: false,
+              noEmpty: false,
+              choices: {
+                open: trans('open_tools_menu'),
+                close: trans('close_tools_menu')
+              }
+            }
+          }
+        ]
+      }, {
+        icon: 'fa fa-fw fa-life-ring',
+        title: trans('support'),
+        fields: [
+          {
+            name: 'help.support_email',
+            label: trans('support_email'),
+            type: 'email'
+          }, {
+            name: 'help.url',
+            label: trans('help_url'),
+            type: 'url'
+          }
+        ]
+      }, {
+        icon: 'fa fa-fw fa-credit-card',
+        title: trans('pricing'),
+        fields: [
+          {
+            name: 'pricing.enabled',
+            label: trans('enable_pricing'),
+            type: 'boolean',
+            linked: [
+              {
+                name: 'pricing.currency',
+                label: trans('currency'),
+                type: 'choice',
+                displayed: (params) => params.pricing && params.pricing.enabled,
+                options: {
+                  choices: {
+                    euro: trans('currency.euro'),
+                    us_dollar: trans('currency.us_dollar'),
+                    chf: trans('currency.chf')
+                  }
+                }
+              }
+            ]
           }
         ]
       }, {

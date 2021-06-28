@@ -12,9 +12,6 @@ class CompetencyProgressRepository extends EntityRepository
      * Returns every competency progress entity related to a
      * given user and whose id is in a given set.
      *
-     * @param User  $user
-     * @param array $competencyIds
-     *
      * @return array
      */
     public function findByUserAndCompetencyIds(User $user, array $competencyIds)

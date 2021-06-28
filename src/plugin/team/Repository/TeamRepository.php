@@ -50,6 +50,11 @@ class TeamRepository extends EntityRepository
         return $query->getResult();
     }
 
+    /**
+     * Gets the list of Workspace users which are not in a team excluding the managers of the workspace.
+     *
+     * @return array
+     */
     public function findUsersWithNoTeamByWorkspace(Workspace $workspace, array $teams)
     {
         $dql = "

@@ -1,14 +1,17 @@
-import React, {Component} from 'react'
+import React, {Component, Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
 import {PDFJS} from 'pdfjs-dist/build/pdf.combined'
 
-import {transChoice} from '#/main/app/intl/translation'
+import {trans, transChoice} from '#/main/app/intl/translation'
+import {ContentLoader} from '#/main/app/content/components/loader'
+
 import {Pdf as PdfTypes} from '#/plugin/pdf-player/files/pdf/prop-types'
 
 class PdfPlayer extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      loaded: false,
       pdf: null,
       page: 1,
       scale: 100,
@@ -21,6 +24,7 @@ class PdfPlayer extends Component {
     PDFJS.disableWorker = true
     PDFJS.getDocument(this.props.file.url).then((pdf) => {
       this.setState({
+        loaded: true,
         pdf: pdf,
         context: document.getElementById('pdf-canvas-' + this.props.file.id).getContext('2d')
       }, () => this.renderPage())
@@ -69,65 +73,78 @@ class PdfPlayer extends Component {
   }
 
   render() {
+    // NB : canvas is only hidden while loading because we need the DOM node to be present to bind the pdf renderer
     return (
-      <div className="pdf-player-component">
-        <div className="pdf-player-menu">
-          <div className="pdf-pages">
-            <button
-              className="btn btn-link-default"
-              disabled={!this.state.page || 1 >= this.state.page}
-              onClick={() => this.changePage(this.state.page - 1)}
-            >
-              <span className="fa fa-fw fa-backward" />
-            </button>
-            <button
-              className="btn btn-link-default"
-              disabled={!this.state.pdf || !this.state.page || this.state.pdf.numPages <= this.state.page}
-              onClick={() => this.changePage(this.state.page + 1)}
-            >
-              <span className="fa fa-fw fa-forward" />
-            </button>
+      <Fragment>
+        {!this.state.loaded &&
+          <ContentLoader
+            className="row"
+            size="lg"
+            description={trans('loading', {}, 'file')}
+          />
+        }
 
-            <input
-              type="number"
-              className="form-control input-sm"
-              value={this.state.page}
-              onChange={(e) => this.changePage(e.currentTarget.value)}
-            />
-            {transChoice('count_pages', this.state.pdf ? this.state.pdf.numPages : 0, {count: this.state.pdf ? this.state.pdf.numPages : 0}, 'resource')}
+        {this.state.loaded &&
+          <div className="row">
+            <div className="pdf-player-menu">
+              <div className="pdf-pages">
+                <button
+                  className="btn btn-link-default"
+                  disabled={!this.state.page || 1 >= this.state.page}
+                  onClick={() => this.changePage(this.state.page - 1)}
+                >
+                  <span className="fa fa-fw fa-backward"/>
+                </button>
+                <button
+                  className="btn btn-link-default"
+                  disabled={!this.state.pdf || !this.state.page || this.state.pdf.numPages <= this.state.page}
+                  onClick={() => this.changePage(this.state.page + 1)}
+                >
+                  <span className="fa fa-fw fa-forward"/>
+                </button>
+
+                <input
+                  type="number"
+                  className="form-control input-sm"
+                  value={this.state.page}
+                  onChange={(e) => this.changePage(e.currentTarget.value)}
+                />
+                {transChoice('count_pages', this.state.pdf ? this.state.pdf.numPages : 0, {count: this.state.pdf ? this.state.pdf.numPages : 0}, 'resource')}
+              </div>
+
+              <div className="pdf-zoom">
+                <button
+                  disabled={!this.state.pdf || !this.state.scale}
+                  className="btn btn-link-default"
+                  onClick={() => this.zoom(this.state.scale + 25)}
+                >
+                  <span className="fa fa-fw fa-search-plus"/>
+                </button>
+                <button
+                  className="btn btn-link-default"
+                  disabled={!this.state.pdf || !this.state.scale || 1 >= this.state.scale}
+                  onClick={() => this.zoom(this.state.scale - 25)}
+                >
+                  <span className="fa fa-fw fa-search-minus"/>
+                </button>
+
+                <input
+                  type="number"
+                  min="5"
+                  className="form-control input-sm"
+                  value={this.state.scale}
+                  onChange={(e) => this.zoom(e.currentTarget.value)}
+                />
+                <span className="pdf-zoom-unit">%</span>
+              </div>
+            </div>
           </div>
+        }
 
-          <div className="pdf-zoom">
-            <button
-              disabled={!this.state.pdf || !this.state.scale}
-              className="btn btn-link-default"
-              onClick={() => this.zoom(this.state.scale + 25)}
-            >
-              <span className="fa fa-fw fa-search-plus" />
-            </button>
-            <button
-              className="btn btn-link-default"
-              disabled={!this.state.pdf || !this.state.scale || 1 >= this.state.scale}
-              onClick={() => this.zoom(this.state.scale - 25)}
-            >
-              <span className="fa fa-fw fa-search-minus" />
-            </button>
-
-            <input
-              type="number"
-              min="5"
-              className="form-control input-sm"
-              value={this.state.scale}
-              onChange={(e) => this.zoom(e.currentTarget.value)}
-            />
-            <span className="pdf-zoom-unit">%</span>
-          </div>
-        </div>
-
-        <div className="pdf-player">
+        <div className="pdf-player component-container" style={!this.state.loaded ? {display: 'none'} : {}}>
           <canvas id={'pdf-canvas-' + this.props.file.id} className="pdf-player-page" />
         </div>
-      </div>
+      </Fragment>
     )
   }
 }

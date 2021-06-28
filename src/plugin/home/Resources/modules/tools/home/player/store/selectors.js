@@ -1,7 +1,6 @@
 import {createSelector} from 'reselect'
 
-import {trans} from '#/main/app/intl/translation'
-import {flattenTabs} from '#/plugin/home/tools/home/utils'
+import {flattenTabs, getTabTitle} from '#/plugin/home/tools/home/utils'
 import {selectors as homeSelectors} from '#/plugin/home/tools/home/store/selectors'
 
 const tabs = (state) => {
@@ -21,21 +20,7 @@ const currentTab = createSelector(
 
 const currentTabTitle = createSelector(
   [homeSelectors.context, currentTab],
-  (context, currentTab) => {
-    if (currentTab) {
-      return currentTab.longTitle
-    }
-
-    if (context.data && context.data.name) {
-      return context.data.name
-    }
-
-    if ('desktop' === context.type) {
-      return trans('desktop')
-    }
-
-    return trans('home')
-  }
+  (context, currentTab) => getTabTitle(context, currentTab)
 )
 
 export const selectors = {

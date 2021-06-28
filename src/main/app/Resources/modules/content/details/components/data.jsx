@@ -27,7 +27,7 @@ const DetailsData = props => {
     hDisplay = props.displayLevel + (props.title ? 1 : 0)
   }
 
-  const sections = createDetailsDefinition(props.sections)
+  const sections = createDetailsDefinition(props.sections, props.data)
 
   const primarySections = 1 === sections.length ? [sections[0]] : sections.filter(section => section.primary)
   const otherSections = 1 !== sections.length ? sections.filter(section => !section.primary) : []

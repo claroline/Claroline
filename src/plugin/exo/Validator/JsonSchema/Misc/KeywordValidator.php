@@ -32,9 +32,6 @@ class KeywordValidator extends JsonSchemaValidator
      *  - There is no more than one keyword with the same text and case sensitiveness
      *  - There is at least one keyword with a positive score.
      *
-     * @param array $keywords
-     * @param array $options
-     *
      * @return array
      */
     public function validateCollection(array $keywords, array $options = [])

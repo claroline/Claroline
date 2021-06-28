@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Entity;
 
+use Claroline\AppBundle\Entity\IdentifiableInterface;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Description;
@@ -24,7 +25,6 @@ use Claroline\CoreBundle\Entity\Organization\UserOrganizationReference;
 use Claroline\CoreBundle\Entity\Task\ScheduledTask;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
-use Claroline\CoreBundle\Validator\Constraints as ClaroAssert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -45,18 +45,14 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\EntityListeners({"Claroline\CoreBundle\Listener\Entity\UserListener"})
  * @DoctrineAssert\UniqueEntity("username")
  * @DoctrineAssert\UniqueEntity("email")
- * @ClaroAssert\Username()
- * @ClaroAssert\UserAdministrativeCode()
  */
-class User extends AbstractRoleSubject implements \Serializable, UserInterface, EquatableInterface
+class User extends AbstractRoleSubject implements \Serializable, UserInterface, EquatableInterface, IdentifiableInterface
 {
     use Id;
     use Uuid;
-
     use Poster;
     use Thumbnail;
     use Description;
-
     use GroupsTrait;
     use OrganizationsTrait;
 
@@ -307,7 +303,7 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
      * @var ArrayCollection
      *
      * @ORM\ManyToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Organization\Location",
+     *     targetEntity="Claroline\CoreBundle\Entity\Location\Location",
      *     inversedBy="users"
      * )
      *
@@ -400,9 +396,9 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
 
         $this->id = $user['id'];
         $this->username = $user['username'];
-        $this->rolesStringAsArray = $user['roles'];
         $this->roles = new ArrayCollection();
         $this->groups = new ArrayCollection();
+        $this->administratedOrganizations = new ArrayCollection();
     }
 
     /**

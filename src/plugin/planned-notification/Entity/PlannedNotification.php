@@ -23,11 +23,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class PlannedNotification
 {
+    use Uuid;
     const TYPE_WORKSPACE_USER_REGISTRATION = 'workspace-role-subscribe_user';
     const TYPE_WORKSPACE_GROUP_REGISTRATION = 'workspace-role-subscribe_group';
     const TYPE_WORKSPACE_FIRST_CONNECTION = 'workspace-enter';
-
-    use Uuid;
 
     /**
      * @ORM\Id
@@ -58,7 +57,8 @@ class PlannedNotification
 
     /**
      * @ORM\ManyToOne(
-     *     targetEntity="Claroline\PlannedNotificationBundle\Entity\Message"
+     *     targetEntity="Claroline\PlannedNotificationBundle\Entity\Message",
+     *     inversedBy="notifications"
      * )
      * @ORM\JoinColumn(name="message_id", nullable=false, onDelete="CASCADE")
      *

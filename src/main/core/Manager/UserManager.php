@@ -13,41 +13,43 @@ namespace Claroline\CoreBundle\Manager;
 
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
-use Claroline\AppBundle\Log\LoggableTrait;
+use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
+use Claroline\CoreBundle\Event\Security\UserDisableEvent;
+use Claroline\CoreBundle\Event\Security\UserEnableEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Manager\Organization\OrganizationManager;
 use Claroline\CoreBundle\Repository\User\RoleRepository;
 use Claroline\CoreBundle\Repository\User\UserRepository;
-use Psr\Log\LoggerAwareInterface;
-use Psr\Log\LogLevel;
 
-class UserManager implements LoggerAwareInterface
+class UserManager
 {
-    use LoggableTrait;
-
+    /** @var Crud */
     private $crud;
+    /** @var ObjectManager */
     private $om;
-    private $organizationManager;
+    /** @var PlatformConfigurationHandler */
     private $platformConfigHandler;
     /** @var UserRepository */
     private $userRepo;
     /** @var RoleRepository */
     private $roleRepo;
+    /** @var StrictDispatcher */
+    private $dispatcher;
 
     public function __construct(
         ObjectManager $om,
         Crud $crud,
-        OrganizationManager $organizationManager,
-        PlatformConfigurationHandler $platformConfigHandler
+        PlatformConfigurationHandler $platformConfigHandler,
+        StrictDispatcher $dispatcher
     ) {
         $this->crud = $crud;
         $this->om = $om;
-        $this->organizationManager = $organizationManager;
         $this->platformConfigHandler = $platformConfigHandler;
+        $this->dispatcher = $dispatcher;
 
         $this->userRepo = $om->getRepository(User::class);
         $this->roleRepo = $om->getRepository(Role::class);
@@ -249,61 +251,13 @@ class UserManager implements LoggerAwareInterface
         $this->om->flush();
     }
 
-    /**
-     * This method will bind each users who don't already have an organization to the default one.
-     */
-    public function bindUserToOrganization()
-    {
-        $limit = 250;
-        $offset = 0;
-        $this->log('Add organizations to users...');
-        $this->om->startFlushSuite();
-        $countUsers = $this->om->count('ClarolineCoreBundle:User');
-        $default = $this->organizationManager->getDefault();
-        $i = 0;
-
-        while ($offset < $countUsers) {
-            $users = $this->userRepo->findBy([], null, $limit, $offset);
-
-            /** @var User $user */
-            foreach ($users as $user) {
-                $this->log('Setting user administrated organization...');
-
-                foreach ($user->getAdministratedOrganizations() as $organization) {
-                    //I know this is weird but the setter is now in this method (it used to not exist)
-                    $user->addAdministratedOrganization($organization);
-                }
-
-                if (0 === count($user->getOrganizations())) {
-                    ++$i;
-                    $this->log('Add default organization for user '.$user->getUsername());
-                    $user->addOrganization($default);
-                    $this->om->persist($user);
-
-                    if (0 === $i % 250) {
-                        $this->log("Flushing... [UOW = {$this->om->getUnitOfWork()->size()}]");
-                        $this->om->forceFlush();
-                    }
-                } else {
-                    $this->log("Organization for user {$user->getUsername()} already exists");
-                }
-            }
-
-            $this->log("Flushing... [UOW = {$this->om->getUnitOfWork()->size()}]");
-            $this->om->forceFlush();
-            $default = $this->organizationManager->getDefault();
-
-            $offset += $limit;
-        }
-
-        $this->om->endFlushSuite();
-    }
-
     public function enable(User $user)
     {
         $user->enable();
         $this->om->persist($user);
         $this->om->flush();
+
+        $this->dispatcher->dispatch(SecurityEvents::USER_ENABLE, UserEnableEvent::class, [$user]);
 
         return $user;
     }
@@ -313,6 +267,8 @@ class UserManager implements LoggerAwareInterface
         $user->disable();
         $this->om->persist($user);
         $this->om->flush();
+
+        $this->dispatcher->dispatch(SecurityEvents::USER_DISABLE, UserDisableEvent::class, [$user]);
 
         return $user;
     }
@@ -344,55 +300,6 @@ class UserManager implements LoggerAwareInterface
         }
 
         return $user;
-    }
-
-    public function checkPersonalWorkspaceIntegrity()
-    {
-        // Get all users having problem seeing their personal workspace
-        $cntUsers = $this->userRepo->countUsersNotManagersOfPersonalWorkspace();
-        $this->log("Found $cntUsers users whose personal workspace needs to get fixed");
-        $batchSize = 1000;
-        $flushSize = 250;
-        $i = 0;
-        $flushed = true;
-        $this->om->startFlushSuite();
-
-        for ($batch = 0; $batch < ceil($cntUsers / $batchSize); ++$batch) {
-            $users = $this->userRepo->findUsersNotManagersOfPersonalWorkspace(0, $batchSize);
-            $nb = count($users);
-            $this->log("Fetched {$nb} users for checking");
-            foreach ($users as $user) {
-                ++$i;
-                $flushed = false;
-                $this->checkPersonalWorkspaceIntegrityForUser($user, $i, $cntUsers);
-
-                if (0 === $i % $flushSize) {
-                    $this->log('Flushing, this may be very long for large databases');
-                    $this->om->forceFlush();
-                    $flushed = true;
-                }
-            }
-            if (!$flushed) {
-                $this->log('Flushing, this may be very long for large databases');
-                $this->om->forceFlush();
-            }
-            $this->om->clear();
-        }
-        $this->om->endFlushSuite();
-    }
-
-    public function checkPersonalWorkspaceIntegrityForUser(User $user, $i = 1, $totalUsers = 1)
-    {
-        $this->log('Checking personal workspace for '.$user->getUsername()." ($i/$totalUsers)");
-        $ws = $user->getPersonalWorkspace();
-        $managerRole = $ws->getManagerRole();
-        if (!$user->hasRole($managerRole->getRole())) {
-            $this->log('Adding user as manager to his personal workspace', LogLevel::DEBUG);
-            $this->om->startFlushSuite();
-            $user->addRole($managerRole);
-            $this->om->persist($user);
-            $this->om->endFlushSuite();
-        }
     }
 
     /**

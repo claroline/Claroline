@@ -103,9 +103,6 @@ class WebResourceManager
     /**
      * Try to retrieve root file of the WebResource from the zip archive.
      *
-     * @param Workspace    $workspace
-     * @param UploadedFile $file
-     *
      * @return string
      *
      * @throws \Exception
@@ -197,8 +194,6 @@ class WebResourceManager
     /**
      * Checks if a UploadedFile is a zip and contains index.html file.
      *
-     * @param \Symfony\Component\HttpFoundation\File\UploadedFile $file
-     *
      * @return bool
      */
     public function isZip(UploadedFile $file, $workspace)
@@ -221,8 +216,7 @@ class WebResourceManager
      *
      * Use first $this->getZip()->open($file) or $this->isZip($file)
      *
-     * @param Workspace $workspace
-     * @param string    $hash      The hash name of the resource
+     * @param string $hash The hash name of the resource
      */
     public function unzip($hash, Workspace $workspace)
     {

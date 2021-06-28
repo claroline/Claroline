@@ -42,6 +42,6 @@ class ImportFileVoter extends AbstractVoter
 
     public function getSupportedActions()
     {
-        return[self::CREATE, self::EDIT, self::DELETE, self::PATCH];
+        return [self::CREATE, self::EDIT, self::DELETE, self::PATCH];
     }
 }

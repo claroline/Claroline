@@ -11,6 +11,7 @@
 
 namespace Claroline\TeamBundle\Manager;
 
+use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
@@ -28,6 +29,7 @@ use Claroline\TeamBundle\Entity\WorkspaceTeamParameters;
 class TeamManager
 {
     private $om;
+    private $crud;
     private $resourceManager;
     private $rightsManager;
     private $roleManager;
@@ -39,12 +41,14 @@ class TeamManager
 
     public function __construct(
         ObjectManager $om,
+        Crud $crud,
         ResourceManager $resourceManager,
         RightsManager $rightsManager,
         RoleManager $roleManager,
         ToolRightsManager $toolRightsManager
     ) {
         $this->om = $om;
+        $this->crud = $crud;
         $this->resourceManager = $resourceManager;
         $this->rightsManager = $rightsManager;
         $this->roleManager = $roleManager;
@@ -57,8 +61,6 @@ class TeamManager
 
     /**
      * Gets team parameters for a workspace.
-     *
-     * @param Workspace $workspace
      *
      * @return WorkspaceTeamParameters
      */
@@ -78,10 +80,6 @@ class TeamManager
 
     /**
      * Creates several teams from data.
-     *
-     * @param Workspace $workspace
-     * @param User      $user
-     * @param array     $data
      */
     public function createMultipleTeams(Workspace $workspace, User $user, array $data)
     {
@@ -92,12 +90,13 @@ class TeamManager
         $nbTeams = isset($data['nbTeams']) ? $data['nbTeams'] : 0;
         $name = isset($data['name']) ? $data['name'] : '';
         $description = isset($data['description']) ? $data['description'] : null;
-        $selfRegistration = isset($data['selfRegistration']) ? $data['selfRegistration'] : false;
-        $selfUnregistration = isset($data['selfUnregistration']) ? $data['selfUnregistration'] : false;
+        $selfRegistration = isset($data['registration']['selfRegistration']) && isset($data['selfRegistration']) ? $data['registration']['selfRegistration'] : false;
+        $selfUnregistration = isset($data['registration']) && isset($data['registration']['selfUnregistration']) ? $data['registration']['selfUnregistration'] : false;
         $publicDirectory = isset($data['publicDirectory']) ? $data['publicDirectory'] : false;
         $deletableDirectory = isset($data['deletableDirectory']) ? $data['deletableDirectory'] : false;
         $maxUsers = isset($data['maxUsers']) ? $data['maxUsers'] : null;
 
+        // TODO : this should use CRUD
         for ($i = 0; $i < $nbTeams; ++$i) {
             $team = new Team();
             $validName = $this->computeValidTeamName($workspace, $name, $index);
@@ -113,7 +112,6 @@ class TeamManager
 
             // Creates team role
             $teamRole = $this->createTeamRole($team);
-            $teamRole->setMaxUsers($maxUsers);
             $team->setRole($teamRole);
             $this->om->persist($teamRole);
 
@@ -153,52 +151,10 @@ class TeamManager
     }
 
     /**
-     * Deletes multiple teams.
-     *
-     * @param array $teams
-     */
-    public function deleteTeams(array $teams)
-    {
-        $this->om->startFlushSuite();
-
-        foreach ($teams as $team) {
-            $this->deleteTeam($team);
-        }
-
-        $this->om->endFlushSuite();
-    }
-
-    /**
-     * Deletes a team.
-     *
-     * @param Team $team
-     */
-    public function deleteTeam(Team $team)
-    {
-        $teamRole = $team->getRole();
-        $teamManagerRole = $team->getTeamManagerRole();
-
-        if (!is_null($teamManagerRole)) {
-            $this->om->remove($teamManagerRole);
-        }
-        if (!is_null($teamRole)) {
-            $this->om->remove($teamRole);
-        }
-        $teamDirectory = $team->getDirectory();
-
-        if ($team->isDirDeletable() && !is_null($teamDirectory)) {
-            $this->resourceManager->delete($teamDirectory->getResourceNode());
-        }
-        $this->om->remove($team);
-        $this->om->flush();
-    }
-
-    /**
      * Checks if name already exists and returns a incremented version if it does.
      *
-     * @param Workspace $workspace
-     * @param string    $teamName
-     * @param int       $index
+     * @param string $teamName
+     * @param int    $index
      *
      * @return array
      */
@@ -220,9 +176,6 @@ class TeamManager
     /**
      * Creates role for team members.
      *
-     * @param Team $team
-     * @param bool $isManager
-     *
      * @return Role
      */
     public function createTeamRole(Team $team, $isManager = false)
@@ -237,8 +190,8 @@ class TeamManager
         $role = $this->roleManager->createWorkspaceRole($roleName, $roleKey, $workspace);
 
         $root = $this->resourceManager->getWorkspaceRoot($workspace);
-        $this->rightsManager->editPerms(['open' => true], $role, $root);
-        $tool = $this->om->getRepository(Tool::class)->findOneByName('resources');
+        $this->rightsManager->update(['open' => true], $role, $root);
+        $tool = $this->om->getRepository(Tool::class)->findOneBy(['name' => 'resources']);
         $orderedTool = $this->om
             ->getRepository('ClarolineCoreBundle:Tool\OrderedTool')
             ->findOneBy(['workspace' => $workspace, 'tool' => $tool]);
@@ -251,13 +204,21 @@ class TeamManager
         return $role;
     }
 
+    public function deleteTeamRoles(Team $team)
+    {
+        if (!empty($team->getRole())) {
+            $this->om->remove($team->getRole());
+        }
+
+        if (!empty($team->getTeamManagerRole())) {
+            $this->om->remove($team->getTeamManagerRole());
+        }
+
+        $this->om->flush();
+    }
+
     /**
      * Creates team directory.
-     *
-     * @param Team         $team
-     * @param User         $user
-     * @param ResourceNode $resource
-     * @param array        $creatableResources
      *
      * @return Directory
      */
@@ -303,7 +264,7 @@ class TeamManager
             }
         }
 
-        $teamDirectory = $this->resourceManager->create(
+        $this->resourceManager->create(
             $directory,
             $directoryType,
             $user,
@@ -316,21 +277,23 @@ class TeamManager
         if (!is_null($resource)) {
             $this->resourceManager->copy(
                 $resource,
-                $teamDirectory->getResourceNode(),
-                $user,
-                true,
-                false
+                $directory->getResourceNode(),
+                $user
             );
         }
 
-        return $teamDirectory;
+        return $directory;
+    }
+
+    public function deleteTeamDirectory(Team $team)
+    {
+        if ($team->isDirDeletable() && !empty($team->getDirectory())) {
+            $this->resourceManager->delete($team->getDirectory()->getResourceNode());
+        }
     }
 
     /**
      * Gets user teams in a workspace.
-     *
-     * @param User      $user
-     * @param Workspace $workspace
      *
      * @return array
      */
@@ -341,8 +304,6 @@ class TeamManager
 
     /**
      * Sets rights to team directory for all workspace roles.
-     *
-     * @param Team $team
      */
     public function initializeTeamRights(Team $team)
     {
@@ -370,8 +331,6 @@ class TeamManager
 
     /**
      * Updates permissions of team directory..
-     *
-     * @param Team $team
      */
     public function updateTeamDirectoryPerms(Team $team)
     {
@@ -388,7 +347,7 @@ class TeamManager
             foreach ($workspaceRoles as $role) {
                 if (!in_array($role->getUuid(), [$teamRole->getUuid(), $teamManagerRole->getUuid()])) {
                     $rights = ['open' => $team->isPublic()];
-                    $this->rightsManager->editPerms($rights, $role, $directory->getResourceNode(), true);
+                    $this->rightsManager->update($rights, $role, $directory->getResourceNode(), true);
                 }
             }
             $this->om->endFlushSuite();
@@ -397,9 +356,6 @@ class TeamManager
 
     /**
      * Initializes directory permissions. Used in command.
-     *
-     * @param Team  $team
-     * @param array $roles
      */
     public function initializeTeamPerms(Team $team, array $roles)
     {
@@ -421,7 +377,7 @@ class TeamManager
                     $creatable = [];
                 }
 
-                $this->rightsManager->editPerms($perms, $role, $node, true, $creatable, true);
+                $this->rightsManager->update($perms, $role, $node, true, $creatable, true);
             }
 
             $this->om->endFlushSuite();
@@ -430,9 +386,6 @@ class TeamManager
 
     /**
      * Registers users to a team.
-     *
-     * @param Team  $team
-     * @param array $users
      */
     public function registerUsersToTeam(Team $team, array $users)
     {
@@ -443,7 +396,9 @@ class TeamManager
 
             foreach ($users as $user) {
                 $team->addUser($user);
-                $this->roleManager->associateRole($user, $teamRole);
+                if (!$user->hasRole($teamRole->getName())) {
+                    $this->crud->patch($user, 'role', Crud::COLLECTION_ADD, [$teamRole], [Crud::NO_PERMISSIONS]);
+                }
             }
             $this->om->persist($team);
             $this->om->endFlushSuite();
@@ -452,9 +407,6 @@ class TeamManager
 
     /**
      * Unregisters users from a team.
-     *
-     * @param Team  $team
-     * @param array $users
      */
     public function unregisterUsersFromTeam(Team $team, array $users)
     {
@@ -465,7 +417,9 @@ class TeamManager
 
             foreach ($users as $user) {
                 $team->removeUser($user);
-                $this->roleManager->dissociateRole($user, $teamRole);
+                if ($user->hasRole($teamRole->getName())) {
+                    $this->crud->patch($user, 'role', Crud::COLLECTION_REMOVE, [$teamRole], [Crud::NO_PERMISSIONS]);
+                }
             }
             $this->om->persist($team);
             $this->om->endFlushSuite();
@@ -474,9 +428,6 @@ class TeamManager
 
     /**
      * Registers users as team managers.
-     *
-     * @param Team  $team
-     * @param array $users
      */
     public function registerManagersToTeam(Team $team, array $users)
     {
@@ -488,7 +439,9 @@ class TeamManager
             $team->setTeamManager($users[0]);
 
             foreach ($users as $user) {
-                $this->roleManager->associateRole($user, $teamManagerRole);
+                if (!$user->hasRole($teamManagerRole->getName())) {
+                    $this->crud->patch($user, 'role', Crud::COLLECTION_ADD, [$teamManagerRole], [Crud::NO_PERMISSIONS]);
+                }
             }
             $this->om->persist($team);
             $this->om->endFlushSuite();
@@ -497,9 +450,6 @@ class TeamManager
 
     /**
      * Unregisters team managers.
-     *
-     * @param Team  $team
-     * @param array $users
      */
     public function unregisterManagersFromTeam(Team $team, array $users)
     {
@@ -511,9 +461,11 @@ class TeamManager
             $teamManager = $team->getTeamManager();
 
             foreach ($users as $user) {
-                $this->roleManager->dissociateRole($user, $teamManagerRole);
+                if ($user->hasRole($teamManagerRole->getName())) {
+                    $this->crud->patch($user, 'role', Crud::COLLECTION_REMOVE, [$teamManagerRole], [Crud::NO_PERMISSIONS]);
+                }
 
-                if ($teamManager && $teamManager->getid() === $user->getId()) {
+                if ($teamManager && $teamManager->getId() === $user->getId()) {
                     $team->setTeamManager(null);
                 }
             }
@@ -524,8 +476,6 @@ class TeamManager
 
     /**
      * Empty teams from all members.
-     *
-     * @param array $teams
      */
     public function emptyTeams(array $teams)
     {
@@ -540,9 +490,6 @@ class TeamManager
 
     /**
      * Fills teams with workspace users who belong to no team.
-     *
-     * @param Workspace $workspace
-     * @param array     $teams
      */
     public function fillTeams(Workspace $workspace, array $teams)
     {
@@ -602,8 +549,7 @@ class TeamManager
     /**
      * Checks and updates role translation key for unicity.
      *
-     * @param Workspace $workspace
-     * @param string    $key
+     * @param string $key
      *
      * @return string
      */
@@ -624,9 +570,6 @@ class TeamManager
 
     /**
      * Grants access to all directories of existing teams which are set as public for role.
-     *
-     * @param Workspace $workspace
-     * @param Role      $role
      */
     private function setRightsForOldTeams(Workspace $workspace, Role $role)
     {
@@ -639,7 +582,7 @@ class TeamManager
             if ($team->isPublic() && !is_null($directory)) {
                 $rights = [];
                 $rights['open'] = true;
-                $this->rightsManager->editPerms(
+                $this->rightsManager->update(
                     $rights,
                     $role,
                     $directory->getResourceNode(),
@@ -650,10 +593,6 @@ class TeamManager
         $this->om->endFlushSuite();
     }
 
-    /**
-     * @param ResourceNode $node
-     * @param array        $rights
-     */
     private function applyRightsToResourceNode(ResourceNode $node, array $rights)
     {
         $this->om->startFlushSuite();
@@ -667,10 +606,6 @@ class TeamManager
         $this->om->endFlushSuite();
     }
 
-    /**
-     * @param Workspace $workspace
-     * @param array     $nodes
-     */
     private function linkResourceNodesArray(Workspace $workspace, array $nodes)
     {
         if (0 < count($nodes)) {
@@ -690,9 +625,8 @@ class TeamManager
      ******************/
 
     /**
-     * @param Workspace $workspace
-     * @param string    $orderedBy
-     * @param string    $order
+     * @param string $orderedBy
+     * @param string $order
      *
      * @return array
      */
@@ -702,7 +636,6 @@ class TeamManager
     }
 
     /**
-     * @param User   $user
      * @param string $orderedBy
      * @param string $order
      *
@@ -715,9 +648,6 @@ class TeamManager
 
     /**
      * Find all content for a given user and replace him by another.
-     *
-     * @param User $from
-     * @param User $to
      *
      * @return int
      */
@@ -738,9 +668,6 @@ class TeamManager
 
     /**
      * Find all content for a given user and replace him by another.
-     *
-     * @param User $from
-     * @param User $to
      *
      * @return int
      */

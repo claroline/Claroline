@@ -19,16 +19,16 @@ class StringUtils
             $lengthBeforeWithoutHtml = strlen(trim(strip_tags($text)));
             $htmlSplitMask = '#</?([a-zA-Z1-6]+)(?: +[a-zA-Z]+="[^"]*")*( ?/)?>#';
             $htmlMatchMask = '#<(?:/([a-zA-Z1-6]+)|([a-zA-Z1-6]+)(?: +[a-zA-Z]+="[^"]*")*( ?/)?)>#';
-            $text                   .= ' ';
+            $text .= ' ';
             $textPieces = preg_split($htmlSplitMask, $text, -1, PREG_SPLIT_OFFSET_CAPTURE | PREG_SPLIT_NO_EMPTY);
             $pieceNumber = count($textPieces);
 
-            if ($pieceNumber == 1) {
-                $text        .= ' ';
+            if (1 == $pieceNumber) {
+                $text .= ' ';
                 $lenghtBefore = strlen($text);
                 $text = substr($text, 0, strpos($text, ' ', $lenghtBefore > $nbCaracter ? $nbCaracter : $lenghtBefore));
 
-                if ($readMoreText != '' && $lenghtBefore > $nbCaracter) {
+                if ('' != $readMoreText && $lenghtBefore > $nbCaracter) {
                     $text .= $readMoreText;
                 }
             } else {
@@ -54,7 +54,7 @@ class StringUtils
                     }
                 }
 
-                if ($searchSpace === true) {
+                if (true === $searchSpace) {
                     for ($i = $indexPiece; $i <= $indexLastPiece; ++$i) {
                         $position = $textPieces[$i][1];
                         if (($positionSpace = strpos($textPieces[$i][0], ' ')) !== false) {
@@ -66,13 +66,13 @@ class StringUtils
 
                 $text = substr($text, 0, $position);
                 preg_match_all($htmlMatchMask, $text, $return, PREG_OFFSET_CAPTURE);
-                $tagPieces = array();
+                $tagPieces = [];
 
                 foreach ($return[0] as $index => $tag) {
                     if (isset($return[3][$index][0])) {
                         continue;
                     }
-                    if ($return[0][$index][0][1] != '/') {
+                    if ('/' != $return[0][$index][0][1]) {
                         array_unshift($tagPieces, $return[2][$index][0]);
                     } else {
                         array_shift($tagPieces);
@@ -85,8 +85,8 @@ class StringUtils
                     }
                 }
 
-                if ($readMoreText != '' && $lengthBeforeWithoutHtml > $nbCaracter) {
-                    $text   .= 'SuspensionPoint';
+                if ('' != $readMoreText && $lengthBeforeWithoutHtml > $nbCaracter) {
+                    $text .= 'SuspensionPoint';
                     $pattern = '#((</[^>]*>[\n\t\r ]*)?(</[^>]*>[\n\t\r ]*)?(</[^>]*>[\n\t\r ]*)?(</[^>]*>[\n\t\r ]*)?(</[^>]*>)[\n\t\r ]*SuspensionPoint)#i';
                     $text = preg_replace($pattern, $readMoreText.'${2}${3}${4}${5}${6}', $text);
                 }

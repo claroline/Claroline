@@ -38,7 +38,7 @@ class TemplatesModal extends Component {
         <ListData
           name={selectors.STORE_NAME}
           fetch={{
-            url: ['apiv2_lang_template_list', {lang: this.props.currentLocale}],
+            url: ['apiv2_template_list'],
             autoload: this.state.initialized
           }}
           definition={[

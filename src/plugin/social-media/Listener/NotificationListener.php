@@ -29,9 +29,6 @@ class NotificationListener
         $this->router = $router;
     }
 
-    /**
-     * @param NotificationCreateDelegateViewEvent $event
-     */
     public function onCreateNotificationItem(NotificationCreateDelegateViewEvent $event)
     {
         $notificationView = $event->getNotificationView();

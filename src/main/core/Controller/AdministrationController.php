@@ -11,11 +11,13 @@
 
 namespace Claroline\CoreBundle\Controller;
 
+use Claroline\AppBundle\Event\StrictDispatcher;
+use Claroline\CoreBundle\Entity\Tool\AbstractTool;
 use Claroline\CoreBundle\Entity\Tool\AdminTool;
-use Claroline\CoreBundle\Event\Log\LogAdminToolReadEvent;
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Event\CatalogEvents\ToolEvents;
 use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 use Claroline\CoreBundle\Manager\Tool\ToolManager;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
@@ -34,25 +36,22 @@ class AdministrationController
     /** @var TokenStorageInterface */
     private $tokenStorage;
 
-    /** @var EventDispatcherInterface */
-    private $eventDispatcher;
-
     /** @var ToolManager */
     private $toolManager;
 
-    /**
-     * AdministrationController constructor.
-     */
+    /** @var StrictDispatcher */
+    private $strictDispatcher;
+
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         TokenStorageInterface $tokenStorage,
-        EventDispatcherInterface $eventDispatcher,
-        ToolManager $toolManager
+        ToolManager $toolManager,
+        StrictDispatcher $strictDispatcher
     ) {
         $this->authorization = $authorization;
-        $this->eventDispatcher = $eventDispatcher;
         $this->toolManager = $toolManager;
         $this->tokenStorage = $tokenStorage;
+        $this->strictDispatcher = $strictDispatcher;
     }
 
     /**
@@ -104,10 +103,26 @@ class AdministrationController
             throw new AccessDeniedException();
         }
 
-        /** @var OpenToolEvent $event */
-        $event = $this->eventDispatcher->dispatch(new OpenToolEvent(), 'administration_tool_'.$toolName);
+        $currentUser = $this->tokenStorage->getToken()->getUser();
+        $eventParams = [
+            null,
+            $currentUser instanceof User ? $currentUser : null,
+            AbstractTool::ADMINISTRATION,
+            $toolName,
+        ];
 
-        $this->eventDispatcher->dispatch(new LogAdminToolReadEvent($toolName), 'log');
+        $this->strictDispatcher->dispatch(
+            ToolEvents::TOOL_OPEN,
+            OpenToolEvent::class,
+            $eventParams
+        );
+
+        /** @var OpenToolEvent $event */
+        $event = $this->strictDispatcher->dispatch(
+            'administration_tool_'.$toolName,
+            OpenToolEvent::class,
+            $eventParams
+        );
 
         return new JsonResponse(array_merge($event->getData(), [
             'data' => [

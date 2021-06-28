@@ -28,9 +28,6 @@ class OrganizationFinder extends AbstractFinder
 
     /**
      * OrganizationFinder constructor.
-     *
-     * @param AuthorizationCheckerInterface $authChecker
-     * @param TokenStorageInterface         $tokenStorage
      */
     public function __construct(
         AuthorizationCheckerInterface $authChecker,
@@ -40,7 +37,7 @@ class OrganizationFinder extends AbstractFinder
         $this->tokenStorage = $tokenStorage;
     }
 
-    public function getClass()
+    public static function getClass(): string
     {
         return Organization::class;
     }
@@ -98,12 +95,5 @@ class OrganizationFinder extends AbstractFinder
         }
 
         return $qb;
-    }
-
-    public function getFilters()
-    {
-        return [
-            '$defaults' => [],
-        ];
     }
 }

@@ -11,9 +11,6 @@ abstract class AbstractCreateAction extends AbstractAction
 
     abstract public function getClass();
 
-    /**
-     * @param Crud $crud
-     */
     public function setCrud(Crud $crud)
     {
         $this->crud = $crud;

@@ -2,13 +2,12 @@
 
 namespace Claroline\CoreBundle\Command\Workspace;
 
-use Claroline\CoreBundle\Command\AdminCliCommand;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class BuildDefaultsCommand extends Command implements AdminCliCommand
+class BuildDefaultsCommand extends Command
 {
     private $workspaceManager;
 

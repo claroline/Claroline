@@ -50,14 +50,6 @@ class EntrySerializer
 
     /**
      * EntrySerializer constructor.
-     *
-     * @param ClacoFormManager     $clacoFormManager
-     * @param CategorySerializer   $categorySerializer
-     * @param CommentSerializer    $commentSerializer
-     * @param FieldValueSerializer $fieldValueSerializer
-     * @param KeywordSerializer    $keywordSerializer
-     * @param UserSerializer       $userSerializer
-     * @param ObjectManager        $om
      */
     public function __construct(
         ClacoFormManager $clacoFormManager,
@@ -135,7 +127,6 @@ class EntrySerializer
 
     /**
      * @param array $data
-     * @param Entry $entry
      *
      * @return Entry
      */

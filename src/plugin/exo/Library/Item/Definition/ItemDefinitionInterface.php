@@ -31,18 +31,12 @@ interface ItemDefinitionInterface
     /**
      * Validates question data.
      *
-     * @param array $question
-     * @param array $options
-     *
      * @return array
      */
     public function validateQuestion(array $question, array $options = []);
 
     /**
      * Serializes question entity.
-     *
-     * @param AbstractItem $question
-     * @param array        $options
      *
      * @return array
      */
@@ -51,9 +45,7 @@ interface ItemDefinitionInterface
     /**
      * Deserializes question data.
      *
-     * @param array        $data
      * @param AbstractItem $question
-     * @param array        $options
      *
      * @return AbstractItem
      */
@@ -63,8 +55,6 @@ interface ItemDefinitionInterface
      * Generates new UUIDs for the Item entities.
      *
      * This is used for duplication features as we don't know the internal structure of a type
-     *
-     * @param AbstractItem $item
      */
     public function refreshIdentifiers(AbstractItem $item);
 }

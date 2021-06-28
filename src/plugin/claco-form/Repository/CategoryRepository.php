@@ -19,9 +19,6 @@ use Doctrine\ORM\EntityRepository;
 class CategoryRepository extends EntityRepository
 {
     /**
-     * @param ClacoForm $clacoForm
-     * @param User      $manager
-     *
      * @return Category[]
      */
     public function findCategoriesByManager(ClacoForm $clacoForm, User $manager)
@@ -42,8 +39,6 @@ class CategoryRepository extends EntityRepository
     }
 
     /**
-     * @param User $manager
-     *
      * @return Category[]
      */
     public function findAllCategoriesByManager(User $manager)

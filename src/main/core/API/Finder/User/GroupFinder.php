@@ -26,9 +26,6 @@ class GroupFinder extends AbstractFinder
 
     /**
      * GroupFinder constructor.
-     *
-     * @param AuthorizationCheckerInterface $authChecker
-     * @param TokenStorageInterface         $tokenStorage
      */
     public function __construct(
         AuthorizationCheckerInterface $authChecker,
@@ -38,7 +35,7 @@ class GroupFinder extends AbstractFinder
         $this->tokenStorage = $tokenStorage;
     }
 
-    public function getClass()
+    public static function getClass(): string
     {
         return 'Claroline\CoreBundle\Entity\Group';
     }
@@ -81,12 +78,5 @@ class GroupFinder extends AbstractFinder
         }
 
         return $qb;
-    }
-
-    public function getFilters()
-    {
-        return [
-            '$defaults' => [],
-        ];
     }
 }

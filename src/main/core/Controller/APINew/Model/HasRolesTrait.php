@@ -37,9 +37,8 @@ trait HasRolesTrait
      *     response={"$list=Claroline\CoreBundle\Entity\Role"}
      * )
      *
-     * @param string  $id
-     * @param string  $class
-     * @param Request $request
+     * @param string $id
+     * @param string $class
      *
      * @return JsonResponse
      */
@@ -66,10 +65,9 @@ trait HasRolesTrait
      *     }
      * )
      *
-     * @param string  $id
-     * @param string  $class
-     * @param Request $request
-     * @param string  $env
+     * @param string $id
+     * @param string $class
+     * @param string $env
      *
      * @return JsonResponse
      */
@@ -97,9 +95,8 @@ trait HasRolesTrait
      *     }
      * )
      *
-     * @param string  $id
-     * @param string  $class
-     * @param Request $request
+     * @param string $id
+     * @param string $class
      *
      * @return JsonResponse
      */

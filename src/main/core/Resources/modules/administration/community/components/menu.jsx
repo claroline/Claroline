@@ -44,7 +44,7 @@ const CommunityMenu = (props) =>
         }, {
           name: 'locations',
           type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-location-arrow',
+          icon: 'fa fa-fw fa-map-marker-alt',
           label: trans('locations'),
           target: `${props.path}/locations`
         }, {

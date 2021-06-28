@@ -1,0 +1,7 @@
+plugin:
+  resource_actions:
+    # Show documentation of a resource
+    - name: documentation
+      decoder: open
+      scope: [object]
+      group: help

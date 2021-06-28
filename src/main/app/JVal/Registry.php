@@ -73,9 +73,7 @@ class Registry extends JValRegistry
                     )
                 ), $this->customConstraints);
             default:
-                throw new UnsupportedVersionException(
-                    "Schema version '{$version}' not supported"
-                );
+                throw new UnsupportedVersionException("Schema version '{$version}' not supported");
         }
     }
 

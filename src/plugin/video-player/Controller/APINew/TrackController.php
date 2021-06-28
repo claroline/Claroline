@@ -29,8 +29,7 @@ class TrackController extends AbstractCrudController
     }
 
     /**
-     * @param Request $request
-     * @param string  $class
+     * @param string $class
      *
      * @return JsonResponse
      */
@@ -57,8 +56,7 @@ class TrackController extends AbstractCrudController
     }
 
     /**
-     * @param Request $request
-     * @param string  $class
+     * @param string $class
      *
      * @return JsonResponse
      */

@@ -20,9 +20,6 @@ class FieldChoiceCategorySerializer
 
     /**
      * FieldChoiceCategorySerializer constructor.
-     *
-     * @param FieldSerializer $fieldSerializer
-     * @param ObjectManager   $om
      */
     public function __construct(FieldSerializer $fieldSerializer, ObjectManager $om)
     {
@@ -39,8 +36,6 @@ class FieldChoiceCategorySerializer
 
     /**
      * Serializes a FieldChoiceCategory entity for the JSON api.
-     *
-     * @param FieldChoiceCategory $fieldChoiceCategory
      *
      * @return array - the serialized representation of the field
      */
@@ -59,8 +54,7 @@ class FieldChoiceCategorySerializer
     }
 
     /**
-     * @param array               $data
-     * @param FieldChoiceCategory $fieldChoiceCategory
+     * @param array $data
      *
      * @return FieldChoiceCategory
      */

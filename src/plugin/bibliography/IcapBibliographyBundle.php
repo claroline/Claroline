@@ -2,7 +2,7 @@
 
 namespace Icap\BibliographyBundle;
 
-use Claroline\CoreBundle\Library\DistributionPluginBundle;
+use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
 
 class IcapBibliographyBundle extends DistributionPluginBundle
 {

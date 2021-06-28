@@ -12,13 +12,14 @@
 namespace Claroline\CoreBundle\DataFixtures\PostInstall;
 
 use Claroline\CoreBundle\Entity\Template\Template;
+use Claroline\CoreBundle\Entity\Template\TemplateContent;
 use Claroline\CoreBundle\Entity\Template\TemplateType;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class LoadTemplateData extends AbstractFixture implements ContainerAwareInterface
 {
@@ -55,9 +56,14 @@ class LoadTemplateData extends AbstractFixture implements ContainerAwareInterfac
         $platformRoleRegistrationType = $templateTypeRepo->findOneBy(['name' => 'platform_role_registration']);
 
         if ($mailRegistrationType) {
-            $mailRegistrationFR = new Template();
-            $mailRegistrationFR->setName('claro_mail_registration');
-            $mailRegistrationFR->setType($mailRegistrationType);
+            $mailRegistration = new Template();
+            $mailRegistration->setName('claro_mail_registration');
+            $mailRegistration->setType($mailRegistrationType);
+            $om->persist($mailRegistration);
+
+            $mailRegistrationFR = new TemplateContent();
+            $mailRegistration->addTemplateContent($mailRegistrationFR);
+
             $mailRegistrationFR->setTitle('Inscription à %platform_name%');
             $content = "<div>Votre nom d'utilisateur est %username%</div></br>";
             $content .= '<div>Votre mot de passe est %password%</div>';
@@ -66,11 +72,11 @@ class LoadTemplateData extends AbstractFixture implements ContainerAwareInterfac
             $mailRegistrationFR->setLang('fr');
             $om->persist($mailRegistrationFR);
 
-            $mailRegistrationEN = new Template();
-            $mailRegistrationEN->setName('claro_mail_registration');
-            $mailRegistrationEN->setType($mailRegistrationType);
+            $mailRegistrationEN = new TemplateContent();
+            $mailRegistration->addTemplateContent($mailRegistrationEN);
+
             $mailRegistrationEN->setTitle('Registration to %platform_name%');
-            $content = '<div>You username is %username%</div></br>';
+            $content = '<div>Your username is %username%</div></br>';
             $content .= '<div>Your password is %password%</div>';
             $content .= '<div>%validation_mail%</div>';
             $mailRegistrationEN->setContent($content);
@@ -82,16 +88,21 @@ class LoadTemplateData extends AbstractFixture implements ContainerAwareInterfac
         }
 
         if ($mailLayoutType) {
-            $mailLayoutFR = new Template();
-            $mailLayoutFR->setName('claro_mail_layout');
-            $mailLayoutFR->setType($mailLayoutType);
+            $mailLayout = new Template();
+            $mailLayout->setName('claro_mail_layout');
+            $mailLayout->setType($mailLayoutType);
+            $om->persist($mailLayout);
+
+            $mailLayoutFR = new TemplateContent();
+            $mailLayout->addTemplateContent($mailLayoutFR);
+
             $mailLayoutFR->setContent('<div></div>%content%<div></hr>Powered by %platform_name%</div>');
             $mailLayoutFR->setLang('fr');
             $om->persist($mailLayoutFR);
 
-            $mailLayoutEN = new Template();
-            $mailLayoutEN->setName('claro_mail_layout');
-            $mailLayoutEN->setType($mailLayoutType);
+            $mailLayoutEN = new TemplateContent();
+            $mailLayout->addTemplateContent($mailLayoutEN);
+
             $mailLayoutEN->setContent('<div></div>%content%<div></hr>Powered by %platform_name%</div>');
             $mailLayoutEN->setLang('en');
             $om->persist($mailLayoutEN);
@@ -101,73 +112,89 @@ class LoadTemplateData extends AbstractFixture implements ContainerAwareInterfac
         }
 
         if ($forgottenPasswordType) {
+            $template = new Template();
+            $template->setType($forgottenPasswordType);
+            $template->setName('forgotten_password');
+            $om->persist($template);
+
             foreach ($this->config->getParameter('locales.available') as $locale) {
-                $template = new Template();
-                $template->setType($forgottenPasswordType);
-                $template->setName('forgotten_password');
-                $template->setLang($locale);
+                $templateContent = new TemplateContent();
+                $template->addTemplateContent($templateContent);
+                $templateContent->setLang($locale);
 
                 $title = $this->translator->trans('resetting_your_password', [], 'platform', $locale);
-                $template->setTitle($title);
+                $templateContent->setTitle($title);
 
                 $content = '<div>'.$this->translator->trans('reset_password_txt', [], 'platform', $locale).'</div>';
                 $content .= '<div>'.$this->translator->trans('your_username', [], 'platform', $locale).' : %username%</div>';
                 $content .= '<a href="%password_reset_link%">'.$this->translator->trans('mail_click', [], 'platform', $locale).'</a>';
-                $template->setContent($content);
-                $om->persist($template);
+                $templateContent->setContent($content);
+                $om->persist($templateContent);
             }
             $forgottenPasswordType->setDefaultTemplate('forgotten_password');
             $om->persist($forgottenPasswordType);
         }
 
         if ($passwordInitializationType) {
+            $template = new Template();
+            $template->setType($passwordInitializationType);
+            $template->setName('password_initialization');
+            $om->persist($template);
+
             foreach ($this->config->getParameter('locales.available') as $locale) {
-                $template = new Template();
-                $template->setType($passwordInitializationType);
-                $template->setName('password_initialization');
-                $template->setLang($locale);
+                $templateContent = new TemplateContent();
+                $template->addTemplateContent($templateContent);
+                $templateContent->setLang($locale);
 
                 $title = $this->translator->trans('initialize_your_password', [], 'platform', $locale);
-                $template->setTitle($title);
+                $templateContent->setTitle($title);
 
                 $content = '<div>'.$this->translator->trans('initialize_your_password', [], 'platform', $locale).'</div>';
                 $content .= '<div>'.$this->translator->trans('your_username', [], 'platform', $locale).' : %username%</div>';
                 $content .= '<a href="%password_initialization_link%">'.$this->translator->trans('mail_click', [], 'platform', $locale).'</a>';
-                $template->setContent($content);
-                $om->persist($template);
+                $templateContent->setContent($content);
+                $om->persist($templateContent);
             }
             $passwordInitializationType->setDefaultTemplate('password_initialization');
             $om->persist($passwordInitializationType);
         }
 
         if ($userActivationType) {
+            $template = new Template();
+            $template->setType($userActivationType);
+            $template->setName('user_activation');
+            $om->persist($template);
+
             foreach ($this->config->getParameter('locales.available') as $locale) {
-                $template = new Template();
-                $template->setType($userActivationType);
-                $template->setName('user_activation');
-                $template->setLang($locale);
+                $templateContent = new TemplateContent();
+                $template->addTemplateContent($templateContent);
+                $templateContent->setLang($locale);
 
                 $title = $this->translator->trans('activate_account', [], 'platform', $locale);
-                $template->setTitle($title);
+                $templateContent->setTitle($title);
 
                 $content = '<div>'.$this->translator->trans('activate_account', [], 'platform', $locale).'</div>';
                 $content .= '<a href="%user_activation_link%">'.$this->translator->trans('activate_account_click', [], 'platform', $locale).'</a>';
-                $template->setContent($content);
-                $om->persist($template);
+                $templateContent->setContent($content);
+                $om->persist($templateContent);
             }
             $userActivationType->setDefaultTemplate('user_activation');
             $om->persist($userActivationType);
         }
 
         if ($mailValidationType) {
+            $template = new Template();
+            $template->setType($mailValidationType);
+            $template->setName('claro_mail_validation');
+            $om->persist($template);
+
             foreach ($this->config->getParameter('locales.available') as $locale) {
-                $template = new Template();
-                $template->setType($mailValidationType);
-                $template->setName('claro_mail_validation');
-                $template->setLang($locale);
+                $templateContent = new TemplateContent();
+                $template->addTemplateContent($templateContent);
+                $templateContent->setLang($locale);
 
                 $title = $this->translator->trans('email_validation', [], 'platform', $locale);
-                $template->setTitle($title);
+                $templateContent->setTitle($title);
 
                 $content = $this->translator->trans(
                     'email_validation_url_display',
@@ -175,19 +202,23 @@ class LoadTemplateData extends AbstractFixture implements ContainerAwareInterfac
                     'platform',
                     $locale
                 );
-                $template->setContent($content);
-                $om->persist($template);
+                $templateContent->setContent($content);
+                $om->persist($templateContent);
             }
             $mailValidationType->setDefaultTemplate('claro_mail_validation');
             $om->persist($mailValidationType);
         }
 
         if ($workspaceRegistrationType) {
+            $template = new Template();
+            $template->setType($workspaceRegistrationType);
+            $template->setName('workspace_registration');
+            $om->persist($template);
+
             foreach ($this->config->getParameter('locales.available') as $locale) {
-                $template = new Template();
-                $template->setType($workspaceRegistrationType);
-                $template->setName('workspace_registration');
-                $template->setLang($locale);
+                $templateContent = new TemplateContent();
+                $template->addTemplateContent($templateContent);
+                $templateContent->setLang($locale);
 
                 $title = $this->translator->trans(
                     'workspace_registration_message_object',
@@ -195,7 +226,7 @@ class LoadTemplateData extends AbstractFixture implements ContainerAwareInterfac
                     'platform',
                     $locale
                 );
-                $template->setTitle($title);
+                $templateContent->setTitle($title);
 
                 $content = $this->translator->trans(
                     'workspace_registration_message',
@@ -203,26 +234,30 @@ class LoadTemplateData extends AbstractFixture implements ContainerAwareInterfac
                     'platform',
                     $locale
                 );
-                $template->setContent($content);
-                $om->persist($template);
+                $templateContent->setContent($content);
+                $om->persist($templateContent);
             }
             $workspaceRegistrationType->setDefaultTemplate('workspace_registration');
             $om->persist($workspaceRegistrationType);
         }
 
         if ($platformRoleRegistrationType) {
+            $template = new Template();
+            $template->setType($platformRoleRegistrationType);
+            $template->setName('platform_role_registration');
+            $om->persist($template);
+
             foreach ($this->config->getParameter('locales.available') as $locale) {
-                $template = new Template();
-                $template->setType($platformRoleRegistrationType);
-                $template->setName('platform_role_registration');
-                $template->setLang($locale);
+                $templateContent = new TemplateContent();
+                $template->addTemplateContent($templateContent);
+                $templateContent->setLang($locale);
 
                 $title = $this->translator->trans('new_role_message_object', [], 'platform', $locale);
-                $template->setTitle($title);
+                $templateContent->setTitle($title);
 
                 $content = $this->translator->trans('new_role_message', ['%name%' => '%role_name%'], 'platform', $locale);
-                $template->setContent($content);
-                $om->persist($template);
+                $templateContent->setContent($content);
+                $om->persist($templateContent);
             }
             $platformRoleRegistrationType->setDefaultTemplate('platform_role_registration');
             $om->persist($platformRoleRegistrationType);

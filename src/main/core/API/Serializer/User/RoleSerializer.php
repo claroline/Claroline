@@ -90,7 +90,6 @@ class RoleSerializer
 
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
             $serialized['meta'] = $this->serializeMeta($role);
-            $serialized['restrictions'] = $this->serializeRestrictions($role);
 
             if ($role->getWorkspace()) {
                 $serialized['workspace'] = $this->workspaceSerializer->serialize($role->getWorkspace(), [Options::SERIALIZE_MINIMAL]);
@@ -105,7 +104,7 @@ class RoleSerializer
                 }
             }
 
-            // TODO: Fix option for workspace uuid. For the moment the uuid of the workspace is prefixed with `workspace_id_`.
+            // TODO: remove this block later. For now it's still used by the UI
             if (in_array(Options::SERIALIZE_ROLE_TOOLS_RIGHTS, $options)) {
                 $workspaceId = null;
 
@@ -151,13 +150,6 @@ class RoleSerializer
         return $meta;
     }
 
-    public function serializeRestrictions(Role $role): array
-    {
-        return [
-            'maxUsers' => $role->getMaxUsers(),
-        ];
-    }
-
     private function serializeTools(Role $role, string $workspaceId = null): array
     {
         $tools = [];
@@ -181,34 +173,20 @@ class RoleSerializer
         return $tools;
     }
 
-    public function deserialize(array $data, Role $role, array $options = []): Role
+    public function deserialize(array $data, Role $role): Role
     {
         if (!$role->isReadOnly()) {
             $this->sipe('name', 'setName', $data, $role);
-
             $this->sipe('type', 'setType', $data, $role);
-
-            if (isset($data['translationKey'])) {
-                $role->setTranslationKey($data['translationKey']);
-                //this is if it's not a workspace and we send the translationKey role
-                if (null === $role->getName() && !isset($data['workspace'])) {
-                    $role->setName('ROLE_'.str_replace(' ', '_', strtoupper($data['translationKey'])));
-                }
-            }
+            $this->sipe('translationKey', 'setTranslationKey', $data, $role);
         }
 
         $this->sipe('meta.personalWorkspaceCreationEnabled', 'setPersonalWorkspaceCreationEnabled', $data, $role);
-        $this->sipe('restrictions.maxUsers', 'setMaxUsers', $data, $role);
 
         // we should test role type before trying to set the workspace
         if (!empty($data['workspace']) && !empty($data['workspace']['id'])) {
             $workspace = $this->om->getRepository('ClarolineCoreBundle:Workspace\Workspace')
                 ->findOneBy(['uuid' => $data['workspace']['id']]);
-
-            if (!$role->getName()) {
-                $role->setName('ROLE_WS_'.str_replace(' ', '_', strtoupper($data['translationKey'])).'_'.$data['workspace']['id']);
-            }
-
             if ($workspace) {
                 $role->setWorkspace($workspace);
             }
@@ -232,40 +210,6 @@ class RoleSerializer
                     $adminTool->addRole($role);
                 } else {
                     $adminTool->removeRole($role);
-                }
-            }
-        }
-
-        // sets rights for workspace tools
-        if (isset($data['tools']) && in_array(Options::SERIALIZE_ROLE_TOOLS_RIGHTS, $options)) {
-            foreach ($data['tools'] as $toolName => $toolData) {
-                $tool = $this->om->getRepository('ClarolineCoreBundle:Tool\Tool')->findOneBy(['name' => $toolName]);
-
-                if ($tool) {
-                    // TODO: Fix option for workspace uuid. For the moment the uuid of the workspace is prefixed with `workspace_id_`.
-                    $workspaceId = null;
-
-                    foreach ($options as $option) {
-                        if ('workspace_id_' === substr($option, 0, 13)) {
-                            $workspaceId = substr($option, 13);
-                            break;
-                        }
-                    }
-
-                    if ($workspaceId) {
-                        $workspace = $this->om->getRepository(Workspace::class)->findOneBy(['uuid' => $workspaceId]);
-                        $tool = $this->om->getRepository(Tool::class)->findOneBy(['name' => $toolName]);
-
-                        /** @var OrderedTool $orderedTool */
-                        $orderedTool = $this->orderedToolRepo->findOneBy([
-                            'tool' => $tool,
-                            'workspace' => $workspace,
-                        ]);
-
-                        if ($orderedTool) {
-                            $this->rightsManager->setToolRights($orderedTool, $role, $this->maskManager->encodeMask($toolData, $orderedTool->getTool()));
-                        }
-                    }
                 }
             }
         }

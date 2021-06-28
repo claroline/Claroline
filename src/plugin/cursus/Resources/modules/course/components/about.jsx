@@ -1,16 +1,19 @@
-import React from 'react'
+import React, {Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 
 import {trans, displayDuration, displayDate, now} from '#/main/app/intl'
+import {param} from '#/main/app/config'
+import {currency} from '#/main/app/intl/currency'
 import {hasPermission} from '#/main/app/security'
 import {Alert} from '#/main/app/alert/components/alert'
 import {AlertBlock} from '#/main/app/alert/components/alert-block'
 import {Button} from '#/main/app/action/components/button'
-import {LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
+import {LINK_BUTTON, MODAL_BUTTON, POPOVER_BUTTON} from '#/main/app/buttons'
 import {ContentHtml} from '#/main/app/content/components/html'
 import {ContentTitle} from '#/main/app/content/components/title'
+import {isHtmlEmpty} from '#/main/app/data/types/html/validators'
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 import {LocationCard} from '#/main/core/user/data/components/location-card'
 import {ResourceCard} from '#/main/core/resource/components/card'
@@ -106,6 +109,36 @@ const CourseAbout = (props) => {
                 }
               </span>
             </li>
+
+            {param('pricing.enabled') &&
+              <li className="list-group-item">
+                {trans('price')}
+                <span className="value">
+                  {getInfo(props.course, props.activeSession, 'pricing.price') || 0 === getInfo(props.course, props.activeSession, 'pricing.price') ?
+                    currency(getInfo(props.course, props.activeSession, 'pricing.price')) :
+                    trans('empty_value')
+                  }
+
+                  {getInfo(props.course, props.activeSession, 'pricing.description') &&
+                    <Button
+                      className="icon-with-text-left"
+                      type={POPOVER_BUTTON}
+                      icon="fa fa-fw fa-info-circle"
+                      label={trans('show-info', {}, 'actions')}
+                      tooltip="top"
+                      popover={{
+                        content: (
+                          <ContentHtml>
+                            {(getInfo(props.course, props.activeSession, 'pricing.description') || '')}
+                          </ContentHtml>
+                        ),
+                        position: 'bottom'
+                      }}
+                    />
+                  }
+                </span>
+              </li>
+            }
           </ul>
         </div>
 
@@ -235,11 +268,13 @@ const CourseAbout = (props) => {
           </AlertBlock>
         }
 
-        <div className="panel panel-default">
-          <ContentHtml className="panel-body">
-            {getInfo(props.course, props.activeSession, 'description') || trans('no_description')}
-          </ContentHtml>
-        </div>
+        {!isHtmlEmpty(get(props.course, 'description')) &&
+          <div className="panel panel-default">
+            <ContentHtml className="panel-body">
+              {get(props.course, 'description')}
+            </ContentHtml>
+          </div>
+        }
 
         {!isEmpty(props.course.tags) &&
           <div className="component-container tags">
@@ -250,6 +285,21 @@ const CourseAbout = (props) => {
               </span>
             )}
           </div>
+        }
+
+        {props.activeSession && !isHtmlEmpty(get(props.activeSession, 'description')) &&
+          <Fragment>
+            <ContentTitle
+              level={3}
+              displayLevel={2}
+              title={trans('session_info', {}, 'cursus')}
+            />
+            <div className="panel panel-default">
+              <ContentHtml className="panel-body">
+                {get(props.activeSession, 'description')}
+              </ContentHtml>
+            </div>
+          </Fragment>
         }
 
         {props.activeSession && !isEmpty(get(props.activeSession, 'resources')) &&

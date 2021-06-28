@@ -16,8 +16,6 @@ class MessageSerializer
 
     /**
      * MessageSerializer constructor.
-     *
-     * @param ObjectManager $om
      */
     public function __construct(ObjectManager $om)
     {
@@ -38,8 +36,6 @@ class MessageSerializer
     }
 
     /**
-     * @param Message $message
-     *
      * @return array
      */
     public function serialize(Message $message)
@@ -52,9 +48,7 @@ class MessageSerializer
     }
 
     /**
-     * @param array   $data
-     * @param Message $message
-     * @param array   $options
+     * @param array $data
      *
      * @return Message
      */

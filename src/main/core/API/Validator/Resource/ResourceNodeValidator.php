@@ -5,6 +5,7 @@ namespace Claroline\CoreBundle\API\Validator\Resource;
 use Claroline\AppBundle\API\ValidatorInterface;
 use Claroline\AppBundle\API\ValidatorProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 
 class ResourceNodeValidator implements ValidatorInterface
 {
@@ -13,17 +14,15 @@ class ResourceNodeValidator implements ValidatorInterface
 
     /**
      * UserValidator constructor.
-     *
-     * @param ObjectManager $om
      */
     public function __construct(ObjectManager $om)
     {
         $this->om = $om;
     }
 
-    public function getClass()
+    public static function getClass(): string
     {
-        return 'Claroline\CoreBundle\Entity\Resource\ResourceNode';
+        return ResourceNode::class;
     }
 
     public function getUniqueFields()

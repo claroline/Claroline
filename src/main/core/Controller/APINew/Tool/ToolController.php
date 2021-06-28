@@ -81,12 +81,8 @@ class ToolController extends AbstractApiController
 
     /**
      * @Route("/configure/{name}/{context}/{contextId}", name="apiv2_tool_configure", methods={"PUT"})
-     *
-     * @param string $name
-     * @param string $context
-     * @param string $contextId
      */
-    public function configureAction(Request $request, $name, $context, $contextId = null): JsonResponse
+    public function configureAction(Request $request, string $name, string $context, string $contextId = null): JsonResponse
     {
         /** @var OrderedTool|null $orderedTool */
         $orderedTool = $this->toolManager->getOrderedTool($name, $context, $contextId);
@@ -117,12 +113,8 @@ class ToolController extends AbstractApiController
 
     /**
      * @Route("/rights/{name}/{context}/{contextId}", name="apiv2_tool_get_rights", methods={"GET"})
-     *
-     * @param string $name
-     * @param string $context
-     * @param string $contextId
      */
-    public function getRightsAction($name, $context, $contextId = null): JsonResponse
+    public function getRightsAction(string $name, string $context, string $contextId = null): JsonResponse
     {
         /** @var OrderedTool|null $orderedTool */
         $orderedTool = $this->toolManager->getOrderedTool($name, $context, $contextId);
@@ -155,12 +147,8 @@ class ToolController extends AbstractApiController
 
     /**
      * @Route("/rights/{name}/{context}/{contextId}", name="apiv2_tool_update_rights", methods={"PUT"})
-     *
-     * @param string $name
-     * @param string $context
-     * @param string $contextId
      */
-    public function updateRightsAction(Request $request, $name, $context, $contextId = null): JsonResponse
+    public function updateRightsAction(Request $request, string $name, string $context, string $contextId = null): JsonResponse
     {
         /** @var OrderedTool|null $orderedTool */
         $orderedTool = $this->toolManager->getOrderedTool($name, $context, $contextId);
@@ -202,13 +190,8 @@ class ToolController extends AbstractApiController
     /**
      * @Route("/close/{name}/{context}/{contextId}", name="apiv2_tool_close", methods={"PUT"})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
-     *
-     * @param User   $user
-     * @param string $name
-     * @param string $context
-     * @param string $contextId
      */
-    public function closeAction($name, $context, $contextId = null, User $user = null): JsonResponse
+    public function closeAction(string $name, string $context, string $contextId = null, User $user = null): JsonResponse
     {
         if ($user) {
             $this->logConnectManager->computeToolDuration($user, $name, $context, $contextId);

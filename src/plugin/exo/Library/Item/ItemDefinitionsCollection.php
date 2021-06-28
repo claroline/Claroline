@@ -22,8 +22,6 @@ class ItemDefinitionsCollection
     /**
      * Adds a item definition to the collection.
      *
-     * @param ItemDefinitionInterface $definition
-     *
      * @throws UnregisterableDefinitionException
      */
     public function addDefinition(ItemDefinitionInterface $definition)
@@ -82,10 +80,7 @@ class ItemDefinitionsCollection
             return $this->definitions[$type];
         }
 
-        throw new UnregisteredDefinitionException(
-            $type,
-            UnregisteredDefinitionException::TARGET_MIME_TYPE
-        );
+        throw new UnregisteredDefinitionException($type, UnregisteredDefinitionException::TARGET_MIME_TYPE);
     }
 
     /**

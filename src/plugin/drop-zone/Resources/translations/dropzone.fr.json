@@ -49,7 +49,7 @@
     "drop_comments": "Commentaires sur la production",
     "drop_date": "Date de dépôt",
     "drop_disabled_finished": "Le dépôt de productions est terminé.",
-    "drop_disabled_not_active": "Lé dépôt n'est pas activé.",
+    "drop_disabled_not_active": "Le dépôt n'est pas activé.",
     "drop_disabled_not_started": "Le dépôt de productions n'a pas encore commencé.",
     "drop_disabled_team_required": "Une équipe est requise.",
     "drop_disabled_user_required": "Un utilisateur est requis.",
@@ -66,7 +66,6 @@
     "evaluation_criteria": "Critères d'évaluation",
     "existing_unfinished_team_drop_error": "Une production existe déjà pour votre équipe mais vous n'avez pas les droits pour y accéder. Veuillez contacter un gestionnaire.",
     "expected_correction_total_label": "Nombre de corrections attendues par production",
-    "fail_message": "Message en cas d'échec",
     "file_type": "Fichier envoyé",
     "final_drop": "Déposer définitivement",
     "finished": "Terminé",
@@ -118,7 +117,6 @@
     "submit_for_revision": "Demander un feedback",
     "submit_for_revision_confirm": "Êtes-vous sûr de vouloir demander un feedback ? L'ajout ultérieur de documents remplacera ceux-ci.",
     "submitted": "Remis",
-    "success_message": "Message en cas de réussite",
     "team_selection_title": "Choisissez pour laquelle de vos équipes vous souhaitez participer",
     "text_type": "Zone de texte libre",
     "to_drop": "Déposer",
@@ -159,5 +157,7 @@
     "submit_my_drop_confirm": "Êtes-vous sûr de vouloir déposer votre production ? Cette action est définitive et plus aucune modification ne sera possible.",
     "evaluation_status_not_attempted": "Vous n'avez pas commencé votre production",
     "evaluation_status_opened": "Vous avez commencé votre production" ,
-    "evaluation_status_completed": "Vous avez terminé votre production"
+    "evaluation_status_completed": "Vous avez terminé votre production",
+    "lock_drops": "Protéger les dépôts des utilisateurs",
+    "lock_drops_help": "Il n'est plus possible de supprimer les dépôts des utilisateurs si ils sont protégés."
 }

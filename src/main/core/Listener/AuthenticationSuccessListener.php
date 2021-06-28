@@ -14,12 +14,14 @@ namespace Claroline\CoreBundle\Listener;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Event\StrictDispatcher;
+use Claroline\AppBundle\Manager\PlatformManager;
+use Claroline\AuthenticationBundle\Configuration\PlatformDefaults;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
 use Claroline\CoreBundle\Event\GenericDataEvent;
-use Claroline\CoreBundle\Event\Log\LogUserLoginEvent;
+use Claroline\CoreBundle\Event\Security\UserLoginEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Library\Configuration\PlatformDefaults;
 use Claroline\CoreBundle\Library\RoutingHelper;
 use Claroline\CoreBundle\Manager\ConnectionMessageManager;
 use Claroline\CoreBundle\Manager\Tool\ToolManager;
@@ -44,6 +46,8 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
     private $serializer;
     /** @var RoutingHelper */
     private $routingHelper;
+    /** @var PlatformManager */
+    private $platformManager;
     /** @var UserManager */
     private $userManager;
     /** @var ToolManager */
@@ -57,6 +61,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
         StrictDispatcher $eventDispatcher,
         SerializerProvider $serializer,
         RoutingHelper $routingHelper,
+        PlatformManager $platformManager,
         UserManager $userManager,
         ToolManager $toolManager,
         ConnectionMessageManager $messageManager
@@ -66,6 +71,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
         $this->eventDispatcher = $eventDispatcher;
         $this->serializer = $serializer;
         $this->routingHelper = $routingHelper;
+        $this->platformManager = $platformManager;
         $this->userManager = $userManager;
         $this->toolManager = $toolManager;
         $this->messageManager = $messageManager;
@@ -82,9 +88,9 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
             $request->setLocale($user->getLocale());
         }
 
-        $this->eventDispatcher->dispatch('log', LogUserLoginEvent::class, [$user]);
+        $this->eventDispatcher->dispatch(SecurityEvents::USER_LOGIN, UserLoginEvent::class, [$user]);
 
-        $redirect = $this->getRedirection();
+        $redirect = $this->getRedirection($request);
 
         if ($request->isXmlHttpRequest()) {
             return new JsonResponse([
@@ -102,6 +108,9 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
             case 'workspace':
                 $redirectUrl = $this->routingHelper->workspacePath($redirect['data']);
                 break;
+            case 'last':
+                $redirectUrl = filter_var($request->headers->get('referer'), FILTER_SANITIZE_URL);
+                break;
             case 'desktop':
             default:
                 $redirectUrl = $this->routingHelper->desktopPath();
@@ -111,12 +120,14 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
         return new RedirectResponse($redirectUrl);
     }
 
-    private function getRedirection()
+    private function getRedirection(Request $request)
     {
         $user = $this->tokenStorage->getToken()->getUser();
 
         $redirect = $this->config->getParameter('authentication.redirect_after_login_option');
-        if (PlatformDefaults::REDIRECT_OPTIONS['LAST'] === $redirect) {
+        $referer = filter_var($request->headers->get('referer'), FILTER_SANITIZE_URL);
+        if (PlatformDefaults::REDIRECT_OPTIONS['LAST'] === $redirect && $referer && false !== strpos($referer, $this->platformManager->getUrl())) {
+            // only redirect to previous url if it's part of the claroline platform
             return [
                 'type' => 'last',
             ];

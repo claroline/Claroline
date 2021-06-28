@@ -20,8 +20,6 @@ class IconSetSerializer
     /**
      * Serializes an IconSet entity for the JSON api.
      *
-     * @param IconSet $iconSet
-     *
      * @return array
      */
     public function serialize(IconSet $iconSet)
@@ -39,8 +37,7 @@ class IconSetSerializer
     /**
      * Deserializes IconSet data into entities.
      *
-     * @param array   $data
-     * @param IconSet $iconSet
+     * @param array $data
      *
      * @return IconSet
      */

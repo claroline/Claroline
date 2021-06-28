@@ -1,6 +1,4 @@
 plugin:
-    has_options: false
-
     resources:
         - name: claroline_forum
           class: Claroline\ForumBundle\Entity\Forum
@@ -8,6 +6,7 @@ plugin:
           exportable: true
           actions:
               - name: post
+                decoder: post
               
     data_sources:
         - name: forum_messages

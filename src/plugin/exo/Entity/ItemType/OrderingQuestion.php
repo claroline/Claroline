@@ -133,8 +133,6 @@ class OrderingQuestion extends AbstractItem
 
     /**
      * Add item.
-     *
-     * @param OrderingItem $item
      */
     public function addItem(OrderingItem $item)
     {
@@ -146,8 +144,6 @@ class OrderingQuestion extends AbstractItem
 
     /**
      * Remove item.
-     *
-     * @param OrderingItem $item
      */
     public function removeItem(OrderingItem $item)
     {

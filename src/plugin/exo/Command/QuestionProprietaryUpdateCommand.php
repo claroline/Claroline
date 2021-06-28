@@ -2,7 +2,6 @@
 
 namespace  UJM\ExoBundle\Command;
 
-use Claroline\AppBundle\Command\BaseCommandTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -16,13 +15,6 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
  */
 class QuestionProprietaryUpdateCommand extends Command
 {
-    use BaseCommandTrait;
-
-    protected $params = [
-        'new_owner' => 'The new owner username: ',
-        'question_id' => 'The question id: ',
-    ];
-
     private $om;
 
     public function __construct(ObjectManager $om)

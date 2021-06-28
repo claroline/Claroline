@@ -148,7 +148,7 @@ class LogoutHandler implements LogoutSuccessHandlerInterface
             $session = $sessions[count($sessions) - 1];
             /* @var $session SsoSessionState */
 
-            $idp = $this->buildContainer->getPartyContainer()->getIdpEntityDescriptorStore()->get(0);
+            $idp = $this->buildContainer->getPartyContainer()->getIdpEntityDescriptorStore()->get($session->getIdpEntityId());
             /* @var $idp EntityDescriptor */
 
             $slo = $idp->getFirstIdpSsoDescriptor()->getFirstSingleLogoutService();

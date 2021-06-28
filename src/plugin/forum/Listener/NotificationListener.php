@@ -24,9 +24,6 @@ class NotificationListener
         $this->router = $router;
     }
 
-    /**
-     * @param NotificationCreateDelegateViewEvent $event
-     */
     public function onCreateNotificationItem(NotificationCreateDelegateViewEvent $event)
     {
         $notificationView = $event->getNotificationView();
@@ -51,9 +48,6 @@ class NotificationListener
         $event->setText($text);
     }
 
-    /**
-     * @param NotificationUserParametersEvent $event
-     */
     public function onGetTypesForParameters(NotificationUserParametersEvent $event)
     {
         $event->addTypes('forum');

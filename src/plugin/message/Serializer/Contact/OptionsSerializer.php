@@ -16,9 +16,6 @@ class OptionsSerializer
 
     /**
      * OptionsSerializer constructor.
-     *
-     * @param UserSerializer $userSerializer
-     * @param ObjectManager  $om
      */
     public function __construct(UserSerializer $userSerializer, ObjectManager $om)
     {
@@ -34,8 +31,6 @@ class OptionsSerializer
     }
 
     /**
-     * @param Options $options
-     *
      * @return array
      */
     public function serialize(Options $options)
@@ -48,9 +43,6 @@ class OptionsSerializer
     }
 
     /**
-     * @param array        $data
-     * @param Options|null $options
-     *
      * @return Options
      */
     public function deserialize(array $data, Options $options = null)

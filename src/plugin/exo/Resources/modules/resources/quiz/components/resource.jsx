@@ -15,7 +15,6 @@ import {OverviewMain}   from '#/plugin/exo/resources/quiz/overview/containers/ma
 import {PapersMain}     from '#/plugin/exo/resources/quiz/papers/containers/main'
 import {CorrectionMain} from '#/plugin/exo/resources/quiz/correction/containers/main'
 import {StatisticsMain} from '#/plugin/exo/resources/quiz/statistics/containers/main'
-import {DocimologyMain} from '#/plugin/exo/docimology/containers/main'
 
 const QuizResource = props =>
   <ResourcePage
@@ -80,14 +79,8 @@ const QuizResource = props =>
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-bar-chart',
         label: trans('show-statistics', {}, 'actions'),
-        displayed: props.papersAdmin && props.showStatistics,
+        displayed: props.papersAdmin && props.showStatistics, // props.docimologyAdmin
         target: `${props.path}/statistics`
-      }, {
-        type: LINK_BUTTON,
-        icon: 'fa fa-fw fa-pie-chart',
-        label: trans('view_docimology', {}, 'actions'),
-        displayed: props.docimologyAdmin,
-        target: `${props.path}/docimology`
       }
     ]}
 
@@ -122,15 +115,9 @@ const QuizResource = props =>
         component: CorrectionMain,
         disabled: !props.papersAdmin
       }, {
-        path: '/docimology',
-        component: DocimologyMain,
-        disabled: !props.docimologyAdmin,
-        onEnter: () => props.docimology(props.quizId)
-      }, {
         path: '/statistics',
         component: StatisticsMain,
-        disabled: !props.papersAdmin && !props.showStatistics,
-        onEnter: () => props.statistics(props.quizId)
+        disabled: !props.papersAdmin && !props.showStatistics // !props.docimologyAdmin
       }
     ]}
     redirect={[
@@ -151,9 +138,7 @@ QuizResource.propTypes = {
   showStatistics: T.bool.isRequired,
   registeredUser: T.bool.isRequired,
   hasOverview: T.bool.isRequired,
-  testMode: T.func.isRequired,
-  statistics: T.func.isRequired,
-  docimology: T.func.isRequired
+  testMode: T.func.isRequired
 }
 
 export {

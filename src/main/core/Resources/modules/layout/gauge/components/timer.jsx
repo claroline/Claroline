@@ -6,7 +6,6 @@ import {computeElapsedTime} from '#/main/app/intl/date'
 
 import{CountGauge} from '#/main/core/layout/gauge/components/count-gauge'
 
-
 class Timer extends Component {
   constructor(props) {
     super(props)

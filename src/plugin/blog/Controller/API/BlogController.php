@@ -32,12 +32,6 @@ class BlogController
 
     /**
      * BlogController constructor.
-     *
-     * @param FinderProvider        $finder
-     * @param BlogSerializer        $blogSerializer
-     * @param BlogOptionsSerializer $blogOptionsSerializer
-     * @param BlogManager           $blogManager
-     * @param PostManager           $postManager
      */
     public function __construct(
         FinderProvider $finder,
@@ -70,8 +64,6 @@ class BlogController
      *
      * @Route("options", name="apiv2_blog_options", methods={"GET"})
      *
-     * @param Blog $blog
-     *
      * @return array
      */
     public function getOptionsAction(Request $request, Blog $blog)
@@ -85,8 +77,6 @@ class BlogController
      * Update blog options.
      *
      * @Route("options/update", name="apiv2_blog_options_update", methods={"PUT"})
-     *
-     * @param Blog $blog
      *
      * @return array
      */

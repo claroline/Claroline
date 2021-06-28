@@ -12,6 +12,7 @@
 namespace Claroline\MessageBundle\Finder;
 
 use Claroline\AppBundle\API\Finder\AbstractFinder;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\MessageBundle\Entity\Message;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -23,15 +24,13 @@ class MessageFinder extends AbstractFinder
 
     /**
      * MessageFinder constructor.
-     *
-     * @param TokenStorageInterface $tokenStorage
      */
     public function __construct(TokenStorageInterface $tokenStorage)
     {
         $this->tokenStorage = $tokenStorage;
     }
 
-    public function getClass()
+    public static function getClass(): string
     {
         return Message::class;
     }
@@ -42,7 +41,7 @@ class MessageFinder extends AbstractFinder
         $qb->leftJoin('um.user', 'currentUser');
         $userId = null;
 
-        if ($this->tokenStorage && $this->tokenStorage->getToken() && 'anon.' !== $this->tokenStorage->getToken()->getUser()) {
+        if ($this->tokenStorage->getToken() && $this->tokenStorage->getToken()->getUser() instanceof User) {
             $userId = $this->tokenStorage->getToken()->getUser()->getId();
             $qb->andWhere('currentUser.id = :userId');
             $qb->setParameter('userId', $userId);
@@ -108,45 +107,45 @@ class MessageFinder extends AbstractFinder
         ];
     }
 
-    public function getFilters()
+    public function getFilters(): array
     {
         return [
-          'sent' => [
-            'type' => 'boolean',
-            'description' => 'The forum validation mode',
-          ],
-          'removed' => [
-            'type' => 'boolean',
-            'description' => 'The max amount of sub comments per messages',
-          ],
-          'read' => [
-            'type' => 'boolean',
-            'description' => 'The max amount of sub comments per messages',
-          ],
-          'after' => [
-            'type' => 'date',
-            'description' => 'The max amount of sub comments per messages',
-          ],
-          'before' => [
-            'type' => 'date',
-            'description' => 'The max amount of sub comments per messages',
-          ],
-          'from' => [
-            'type' => 'string',
-            'description' => 'The username ',
-          ],
-          'object' => [
-            'type' => 'string',
-            'description' => 'The message object',
-          ],
-          'content' => [
-            'type' => 'string',
-            'description' => 'The message content',
-          ],
-          'user' => [
-            'type' => ['string'],
-            'description' => 'The users uuid (default is current user)',
-          ],
+            'sent' => [
+                'type' => 'boolean',
+                'description' => 'The forum validation mode',
+            ],
+            'removed' => [
+                'type' => 'boolean',
+                'description' => 'The max amount of sub comments per messages',
+            ],
+            'read' => [
+                'type' => 'boolean',
+                'description' => 'The max amount of sub comments per messages',
+            ],
+            'after' => [
+                'type' => 'date',
+                'description' => 'The max amount of sub comments per messages',
+            ],
+            'before' => [
+                'type' => 'date',
+                'description' => 'The max amount of sub comments per messages',
+            ],
+            'from' => [
+                'type' => 'string',
+                'description' => 'The username ',
+            ],
+            'object' => [
+                'type' => 'string',
+                'description' => 'The message object',
+            ],
+            'content' => [
+                'type' => 'string',
+                'description' => 'The message content',
+            ],
+            'user' => [
+                'type' => ['string'],
+                'description' => 'The users uuid (default is current user)',
+            ],
         ];
     }
 }

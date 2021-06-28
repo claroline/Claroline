@@ -13,17 +13,12 @@ class ResourceListener
 
     /**
      * ResourceListener constructor.
-     *
-     * @param TagManager $manager
      */
     public function __construct(TagManager $manager)
     {
         $this->manager = $manager;
     }
 
-    /**
-     * @param GenericDataEvent $event
-     */
     public function onDelete(GenericDataEvent $event)
     {
         /** @var ResourceNode[] $resources */

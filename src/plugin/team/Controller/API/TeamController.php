@@ -12,6 +12,7 @@
 namespace Claroline\TeamBundle\Controller\API;
 
 use Claroline\AppBundle\API\FinderProvider;
+use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -38,13 +39,6 @@ class TeamController extends AbstractCrudController
     /** @var TeamManager */
     protected $teamManager;
 
-    /**
-     * TeamController constructor.
-     *
-     * @param AuthorizationCheckerInterface $authorization
-     * @param FinderProvider                $finder
-     * @param TeamManager                   $teamManager
-     */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         FinderProvider $finder,
@@ -61,32 +55,6 @@ class TeamController extends AbstractCrudController
     }
 
     /**
-     * @param Request $request
-     * @param string  $class
-     *
-     * @return JsonResponse
-     */
-    public function deleteBulkAction(Request $request, $class)
-    {
-        $teams = parent::decodeIdsString($request, 'Claroline\TeamBundle\Entity\Team');
-        $workspace = 0 < count($teams) ? $teams[0]->getWorkspace() : null;
-
-        if ($workspace) {
-            foreach ($teams as $team) {
-                if ($workspace->getId() !== $team->getWorkspace()->getId()) {
-                    throw new AccessDeniedException();
-                }
-            }
-        } else {
-            throw new AccessDeniedException();
-        }
-        $this->checkToolAccess($workspace, 'edit');
-        $this->teamManager->deleteTeams($teams);
-
-        return new JsonResponse(null, 204);
-    }
-
-    /**
      * @Route(
      *     "/workspace/{workspace}/teams/list",
      *     name="apiv2_workspace_team_list"
@@ -96,13 +64,8 @@ class TeamController extends AbstractCrudController
      *     class="ClarolineCoreBundle:Workspace\Workspace",
      *     options={"mapping": {"workspace": "uuid"}}
      * )
-     *
-     * @param Workspace $workspace
-     * @param Request   $request
-     *
-     * @return JsonResponse
      */
-    public function teamsListAction(Workspace $workspace, Request $request)
+    public function teamsListAction(Workspace $workspace, Request $request): JsonResponse
     {
         $this->checkToolAccess($workspace, 'open');
         $params = $request->query->all();
@@ -111,9 +74,10 @@ class TeamController extends AbstractCrudController
             $params['hiddenFilters'] = [];
         }
         $params['hiddenFilters']['workspace'] = $workspace->getId();
-        $data = $this->finder->search('Claroline\TeamBundle\Entity\Team', $params);
 
-        return new JsonResponse($data, 200);
+        return new JsonResponse(
+            $this->finder->search(Team::class, $params, [Options::SERIALIZE_LIST])
+        );
     }
 
     /**
@@ -126,14 +90,8 @@ class TeamController extends AbstractCrudController
      *     class="ClarolineTeamBundle:Team",
      *     options={"mapping": {"team": "uuid"}}
      * )
-     *
-     * @param Team    $team
-     * @param string  $role    (user|manager)
-     * @param Request $request
-     *
-     * @return JsonResponse
      */
-    public function teamRegisterAction(Team $team, $role, Request $request)
+    public function teamRegisterAction(Team $team, string $role, Request $request): JsonResponse
     {
         $this->checkToolAccess($team->getWorkspace(), 'edit');
         $users = parent::decodeIdsString($request, 'Claroline\CoreBundle\Entity\User');
@@ -176,14 +134,8 @@ class TeamController extends AbstractCrudController
      *     class="ClarolineTeamBundle:Team",
      *     options={"mapping": {"team": "uuid"}}
      * )
-     *
-     * @param Team    $team
-     * @param string  $role    (user|manager)
-     * @param Request $request
-     *
-     * @return JsonResponse
      */
-    public function teamUnregisterAction(Team $team, $role, Request $request)
+    public function teamUnregisterAction(Team $team, string $role, Request $request): JsonResponse
     {
         $this->checkToolAccess($team->getWorkspace(), 'edit');
         $users = parent::decodeIdsString($request, 'Claroline\CoreBundle\Entity\User');
@@ -211,13 +163,8 @@ class TeamController extends AbstractCrudController
      *     options={"mapping": {"team": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @param Team $team
-     * @param User $user
-     *
-     * @return JsonResponse
      */
-    public function teamSelfRegisterAction(Team $team, User $user)
+    public function teamSelfRegisterAction(Team $team, User $user): JsonResponse
     {
         $workspace = $team->getWorkspace();
         $this->checkToolAccess($workspace, 'open');
@@ -253,13 +200,8 @@ class TeamController extends AbstractCrudController
      *     options={"mapping": {"team": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @param Team $team
-     * @param User $user
-     *
-     * @return JsonResponse
      */
-    public function teamSelfUnregisterAction(Team $team, User $user)
+    public function teamSelfUnregisterAction(Team $team, User $user): JsonResponse
     {
         $this->checkToolAccess($team->getWorkspace(), 'open');
 
@@ -282,14 +224,8 @@ class TeamController extends AbstractCrudController
      *     options={"mapping": {"workspace": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @param Workspace $workspace
-     * @param User      $user
-     * @param Request   $request
-     *
-     * @return JsonResponse
      */
-    public function multipleTeamsCreateAction(Workspace $workspace, User $user, Request $request)
+    public function multipleTeamsCreateAction(Workspace $workspace, User $user, Request $request): JsonResponse
     {
         $this->checkToolAccess($workspace, 'edit');
         $data = $this->decodeRequest($request);
@@ -303,12 +239,8 @@ class TeamController extends AbstractCrudController
      *     "/teams/fill",
      *     name="apiv2_team_fill"
      * )
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
      */
-    public function teamsFillAction(Request $request)
+    public function teamsFillAction(Request $request): JsonResponse
     {
         $teams = parent::decodeIdsString($request, 'Claroline\TeamBundle\Entity\Team');
         $workspace = 0 < count($teams) ? $teams[0]->getWorkspace() : null;
@@ -333,12 +265,8 @@ class TeamController extends AbstractCrudController
      *     "/teams/empty",
      *     name="apiv2_team_empty"
      * )
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
      */
-    public function teamsEmptyAction(Request $request)
+    public function teamsEmptyAction(Request $request): JsonResponse
     {
         $teams = parent::decodeIdsString($request, 'Claroline\TeamBundle\Entity\Team');
         $workspace = 0 < count($teams) ? $teams[0]->getWorkspace() : null;

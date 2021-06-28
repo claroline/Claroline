@@ -31,8 +31,6 @@ class PlannedNotificationController extends AbstractCrudController
 
     /**
      * PlannedNotificationController constructor.
-     *
-     * @param PlannedNotificationManager $manager
      */
     public function __construct(PlannedNotificationManager $manager)
     {
@@ -65,9 +63,6 @@ class PlannedNotificationController extends AbstractCrudController
      *     options={"mapping": {"workspace": "uuid"}}
      * )
      *
-     * @param Workspace $workspace
-     * @param Request   $request
-     *
      * @return JsonResponse
      */
     public function plannedNotificationsListAction(Workspace $workspace, Request $request)
@@ -95,9 +90,6 @@ class PlannedNotificationController extends AbstractCrudController
      *     options={"mapping": {"workspace": "uuid"}}
      * )
      *
-     * @param Workspace $workspace
-     * @param Request   $request
-     *
      * @return JsonResponse
      */
     public function workspaceRolesListAction(Workspace $workspace, Request $request)
@@ -120,8 +112,6 @@ class PlannedNotificationController extends AbstractCrudController
      *     "/manual/notifications/trigger",
      *     name="apiv2_plannednotification_manual_notifications_trigger"
      * )
-     *
-     * @param Request $request
      *
      * @return JsonResponse
      */

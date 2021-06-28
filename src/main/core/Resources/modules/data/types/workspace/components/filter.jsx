@@ -19,7 +19,7 @@ const WorkspaceFilter = (props) =>
       className="btn btn-filter"
       type={MODAL_BUTTON}
       tooltip="left"
-      icon="fa fa-fw fa-folder"
+      icon="fa fa-fw fa-book"
       label={props.placeholder || trans('select', {}, 'actions')}
       size="sm"
       modal={[MODAL_WORKSPACES, {

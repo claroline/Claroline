@@ -26,8 +26,6 @@ interface FeedReaderInterface
 
     /**
      * Sets the feed content.
-     *
-     * @param SimpleXMLElement $feed
      */
     public function setFeed(SimpleXMLElement $feed);
 

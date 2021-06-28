@@ -22,14 +22,10 @@ Plugin configuration file
 -------------------------
 
 Your plugin must define its properties in *Resources/config/config.yml file*.
-This file must at least include:
 
 ```yml
 plugin:
-    # Set this to "true" if your plugin must have an entry in the plugin configuration page.
-    has_options: 'true'
-    # You can set an icon for your plugin. The icon must be in your public/images/icons folder.
-    icon: 'icon.png'
+    # ... plugin options
 ```
 
 Translations
@@ -65,36 +61,27 @@ Full plugin configuration file example:
 
 ```yml
 plugin:
-    has_options: 'false'
-    #icon: 'icon.png'
-
-widgets:
-   - name: 'claroline_mywidget1'
-     #is_configurable: 'false'
-     is_exportable: 'true'
-     #- name: 'claroline_mywidget2'
-     #is_configurable: 'false'
-     #is_displayable_in_workspace: 'true'
-     #is_displayable_in_desktop: 'true'
-
-resources:
-    - class: 'Claroline\ExampleBundle\Entity\Example'
-      name: 'claroline_example'
-      is_exportable: 'false'
-      icon: 'res_text.png'
-
-tools:
-    - name: 'claroline_mytool'
-      #class: 'res_text.png'
-      #is_exportable: 'true'
-      is_displayable_in_workspace: 'true'
-      is_displayable_in_desktop: 'true'
+    widgets:
+       - name: 'claroline_mywidget1'
+         #is_configurable: 'false'
+         is_exportable: 'true'
+         #- name: 'claroline_mywidget2'
+         #is_configurable: 'false'
+         #is_displayable_in_workspace: 'true'
+         #is_displayable_in_desktop: 'true'
+    
+    resources:
+        - class: 'Claroline\ExampleBundle\Entity\Example'
+          name: 'claroline_example'
+          is_exportable: 'false'
+    
+    tools:
+        - name: 'claroline_mytool'
+          #class: 'res_text.png'
+          #is_exportable: 'true'
+          is_displayable_in_workspace: 'true'
+          is_displayable_in_desktop: 'true'
 ```
-
-The plugin section contains the general options of the plugin.
-The has_options field is required. This field will generate a link in the
-platform administrations wich will fire an event in wich you can send a form
-and set some general parameters of your plugin.
 
 [[Documentation index]][index_path]
 

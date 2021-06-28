@@ -2,6 +2,7 @@
 
 namespace Claroline\BigBlueButtonBundle\Manager;
 
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\CurlManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -103,7 +104,7 @@ class ServerManager
 
                             $moderatorPwd = null;
                             $joinUrl = null;
-                            if ('anon.' !== $user) { // TODO : check against BBB rights
+                            if ($user instanceof User) { // TODO : check against BBB rights
                                 $moderatorPwd = $meetingEl->getElementsByTagName('moderatorPW')->item(0)->textContent;
                                 $userId = $user->getUuid();
                                 $userName = urlencode($user->getFirstName().' '.$user->getLastName());

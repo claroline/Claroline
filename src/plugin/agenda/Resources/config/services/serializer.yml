@@ -5,10 +5,23 @@ services:
         public: true
 
     Claroline\AgendaBundle\Serializer\EventSerializer:
-        tags: [claroline.serializer]
+        tags: [ claroline.serializer ]
         arguments:
             - '@security.authorization_checker'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
             - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\Planning\PlannedObjectSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\Template\TemplateSerializer'
+
+    Claroline\AgendaBundle\Serializer\EventInvitationSerializer:
+        tags: [ claroline.serializer ]
+        arguments:
             - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
+
+    Claroline\AgendaBundle\Serializer\TaskSerializer:
+        tags: [ claroline.serializer ]
+        arguments:
+            - '@security.authorization_checker'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\Planning\PlannedObjectSerializer'

@@ -40,10 +40,6 @@ class IconItemController extends AbstractCrudController
 
     /**
      * IconItemController constructor.
-     *
-     * @param AuthorizationCheckerInterface $authorization
-     * @param IconSetManager                $iconSetManager
-     * @param ToolManager                   $toolManager
      */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
@@ -82,9 +78,6 @@ class IconItemController extends AbstractCrudController
      *     options={"mapping": {"iconSet": "uuid"}}
      * )
      *
-     * @param IconSet $iconSet
-     * @param Request $request
-     *
      * @return JsonResponse
      */
     public function iconSetItemListAction(IconSet $iconSet, Request $request)
@@ -107,9 +100,6 @@ class IconItemController extends AbstractCrudController
      *     class="ClarolineCoreBundle:Icon\IconSet",
      *     options={"mapping": {"iconSet": "uuid"}}
      * )
-     *
-     * @param IconSet $iconSet
-     * @param Request $request
      *
      * @return JsonResponse
      *

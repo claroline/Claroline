@@ -32,10 +32,6 @@ class AnswerManager
 
     /**
      * AnswerManager constructor.
-     *
-     * @param ObjectManager    $om
-     * @param AnswerValidator  $validator
-     * @param AnswerSerializer $serializer
      */
     public function __construct(
         ObjectManager $om,
@@ -50,9 +46,6 @@ class AnswerManager
     /**
      * Validates and creates a new Answer from raw data.
      *
-     * @param Item  $question
-     * @param array $answerData
-     *
      * @return Answer
      *
      * @throws InvalidDataException
@@ -65,10 +58,7 @@ class AnswerManager
     /**
      * Validates and updates an Answer entity with raw data.
      *
-     * @param Item   $question
-     * @param Answer $answer
-     * @param array  $answerData
-     * @param bool   $noFlush
+     * @param bool $noFlush
      *
      * @return Answer
      *
@@ -96,9 +86,6 @@ class AnswerManager
 
     /**
      * Serializes an answer.
-     *
-     * @param Answer $answer
-     * @param array  $options
      *
      * @return array
      */

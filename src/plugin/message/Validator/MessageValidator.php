@@ -14,8 +14,6 @@ class MessageValidator implements ValidatorInterface
 {
     /**
      * GroupValidator constructor.
-     *
-     * @param ObjectManager $om
      */
     public function __construct(ObjectManager $om)
     {
@@ -124,7 +122,7 @@ class MessageValidator implements ValidatorInterface
         return $error;
     }
 
-    public function getClass()
+    public static function getClass(): string
     {
         return Message::class;
     }

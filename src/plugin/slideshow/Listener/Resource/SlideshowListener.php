@@ -16,8 +16,6 @@ class SlideshowListener
 
     /**
      * SlideshowListener constructor.
-     *
-     * @param SerializerProvider $serializer
      */
     public function __construct(SerializerProvider $serializer)
     {
@@ -26,8 +24,6 @@ class SlideshowListener
 
     /**
      * Loads the Slideshow resource.
-     *
-     * @param LoadResourceEvent $event
      */
     public function onLoad(LoadResourceEvent $event)
     {

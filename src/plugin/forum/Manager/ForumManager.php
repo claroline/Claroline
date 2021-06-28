@@ -14,30 +14,18 @@ namespace Claroline\ForumBundle\Manager;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Library\RoutingHelper;
-use Claroline\CoreBundle\Manager\Template\TemplateManager;
 use Claroline\ForumBundle\Entity\Forum;
 use Claroline\ForumBundle\Entity\Message;
 use Claroline\ForumBundle\Entity\Subject;
 use Claroline\ForumBundle\Entity\Validation\User as UserValidation;
-use Claroline\MessageBundle\Manager\MessageManager;
 
 class ForumManager
 {
-    /** @var RoutingHelper */
-    private $helper;
-
     /** @var ObjectManager */
     private $om;
 
     /** @var FinderProvider */
     private $finder;
-
-    /** @var MessageManager */
-    private $messageManager;
-
-    /** @var TemplateManager */
-    private $templateManager;
 
     private $messageRepo;
 
@@ -45,25 +33,13 @@ class ForumManager
 
     /**
      * ForumManager constructor.
-     *
-     * @param RoutingHelper   $helper
-     * @param FinderProvider  $finder
-     * @param ObjectManager   $om
-     * @param MessageManager  $messageManager
-     * @param TemplateManager $templateManager
      */
     public function __construct(
-        RoutingHelper $helper,
         FinderProvider $finder,
-        ObjectManager $om,
-        MessageManager $messageManager,
-        TemplateManager $templateManager
+        ObjectManager $om
     ) {
-        $this->helper = $helper;
         $this->finder = $finder;
         $this->om = $om;
-        $this->messageManager = $messageManager;
-        $this->templateManager = $templateManager;
 
         $this->messageRepo = $om->getRepository(Message::class);
         $this->subjectRepo = $om->getRepository(Subject::class);
@@ -125,47 +101,8 @@ class ForumManager
         return $user;
     }
 
-    public function notifyMessage(Message $message)
-    {
-        $subject = $message->getSubject();
-        $forum = $subject->getForum();
-
-        /** @var UserValidation[] $usersValidate */
-        $usersValidate = $this->om
-            ->getRepository(UserValidation::class)
-            ->findBy(['forum' => $forum, 'notified' => true]);
-
-        $placeholders = [
-            'forum' => $forum->getName(),
-            'forum_url' => $this->helper->resourcePath($forum->getResourceNode()),
-            'subject' => $subject->getTitle(),
-            'subject_url' => $this->helper->resourcePath($forum->getResourceNode()).'/subjects/show/'.$subject->getUuid(),
-            'message' => $message->getContent(),
-            'date' => $message->getCreationDate() ? $message->getCreationDate()->format('d/m/Y H:m:s') : null,
-            'author' => $message->getCreator() ? $message->getCreator()->getFullName() : $message->getAuthor(),
-            'workspace' => $forum->getResourceNode()->getWorkspace()->getName(),
-            'workspace_url' => $this->helper->workspacePath($forum->getResourceNode()->getWorkspace()),
-        ];
-
-        $subject = $this->templateManager->getTemplate('forum_new_message', $placeholders, null, 'title');
-        $body = $this->templateManager->getTemplate('forum_new_message', $placeholders);
-
-        $toSend = $this->messageManager->create(
-            $body,
-            $subject,
-            array_map(function (UserValidation $userValidate) {
-                return $userValidate->getUser();
-            }, $usersValidate)
-        );
-
-        $this->messageManager->send($toSend);
-    }
-
     /**
      * Find all content for a given user and the replace him by another.
-     *
-     * @param User $from
-     * @param User $to
      *
      * @return int
      */
@@ -184,9 +121,6 @@ class ForumManager
 
     /**
      * Find all content for a given user and the replace him by another.
-     *
-     * @param User $from
-     * @param User $to
      *
      * @return int
      */

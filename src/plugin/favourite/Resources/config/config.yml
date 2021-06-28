@@ -1,6 +1,4 @@
 plugin:
-    has_options: false
-
     resource_actions:
         - name: favourite
           decoder: open

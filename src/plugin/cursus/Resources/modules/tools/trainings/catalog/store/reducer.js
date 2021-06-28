@@ -40,7 +40,8 @@ const reducer = combineReducers({
     sortBy: {property: 'startDate', direction: 1}
   }, {
     invalidated: makeReducer(false, {
-      [LOAD_COURSE]: () => true
+      [LOAD_COURSE]: () => true,
+      [LOAD_COURSE_SESSION]: () => true
     })
   }),
 

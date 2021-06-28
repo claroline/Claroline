@@ -11,8 +11,7 @@ class LogExerciseEvaluatedEvent extends AbstractLogResourceEvent
     const ACTION = 'resource-ujm_exercise-exercise_evaluated';
 
     /**
-     * @param Exercise $exercise
-     * @param array    $details
+     * @param array $details
      */
     public function __construct(Exercise $exercise, $details)
     {

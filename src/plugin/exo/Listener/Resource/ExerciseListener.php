@@ -7,8 +7,8 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
-use Claroline\CoreBundle\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
+use Claroline\CoreBundle\Security\Collection\ResourceCollection;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use UJM\ExoBundle\Entity\Exercise;
@@ -48,15 +48,6 @@ class ExerciseListener
 
     /**
      * ExerciseListener constructor.
-     *
-     * @param AuthorizationCheckerInterface $authorization
-     * @param ExerciseManager               $exerciseManager
-     * @param PaperManager                  $paperManager
-     * @param AttemptManager                $attemptManager
-     * @param ObjectManager                 $om
-     * @param ResourceEvaluationManager     $resourceEvalManager
-     * @param TokenStorageInterface         $tokenStorage
-     * @param SerializerProvider            $serializer
      */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
@@ -80,8 +71,6 @@ class ExerciseListener
 
     /**
      * Loads the Exercise resource.
-     *
-     * @param LoadResourceEvent $event
      */
     public function onLoad(LoadResourceEvent $event)
     {
@@ -126,8 +115,6 @@ class ExerciseListener
 
     /**
      * Deletes an Exercise resource.
-     *
-     * @param DeleteResourceEvent $event
      */
     public function onDelete(DeleteResourceEvent $event)
     {

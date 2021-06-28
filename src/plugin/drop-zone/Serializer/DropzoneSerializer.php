@@ -22,13 +22,6 @@ class DropzoneSerializer
     /** @var ObjectManager */
     private $om;
 
-    /**
-     * DropzoneSerializer constructor.
-     *
-     * @param CriterionSerializer $criterionSerializer
-     * @param DropzoneManager     $dropzoneManager
-     * @param ObjectManager       $om
-     */
     public function __construct(
         CriterionSerializer $criterionSerializer,
         DropzoneManager $dropzoneManager,
@@ -44,12 +37,7 @@ class DropzoneSerializer
         return 'dropzone';
     }
 
-    /**
-     * @param Dropzone $dropzone
-     *
-     * @return array
-     */
-    public function serialize(Dropzone $dropzone)
+    public function serialize(Dropzone $dropzone): array
     {
         return [
             'id' => $dropzone->getUuid(),
@@ -58,21 +46,18 @@ class DropzoneSerializer
             'display' => $this->serializeDisplay($dropzone),
             'planning' => $this->serializePlanning($dropzone),
             'notifications' => $this->serializeNotifications($dropzone),
+            'restrictions' => [
+                'lockDrops' => $dropzone->hasLockDrops(),
+            ],
         ];
     }
 
-    /**
-     * @param array    $data
-     * @param Dropzone $dropzone
-     *
-     * @return Dropzone
-     */
-    public function deserialize($data, Dropzone $dropzone, array $options = [])
+    public function deserialize(array $data, Dropzone $dropzone): Dropzone
     {
         $this->sipe('instruction', 'setInstruction', $data, $dropzone);
 
         if (isset($data['parameters'])) {
-            $this->deserializeParameters($data, $dropzone, $options);
+            $this->deserializeParameters($data, $dropzone);
         }
 
         $this->sipe('display.correctionInstruction', 'setCorrectionInstruction', $data, $dropzone);
@@ -82,6 +67,7 @@ class DropzoneSerializer
         $this->sipe('display.showFeedback', 'setDisplayNotationMessageToLearners', $data, $dropzone);
         $this->sipe('display.displayCorrectionsToLearners', 'setDisplayCorrectionsToLearners', $data, $dropzone);
         $this->sipe('display.correctorDisplayed', 'setCorrectorDisplayed', $data, $dropzone);
+        $this->sipe('restrictions.lockDrops', 'setLockDrops', $data, $dropzone);
 
         if (isset($data['planning'])) {
             $this->deserializePlanning($data['planning'], $dropzone);
@@ -119,7 +105,7 @@ class DropzoneSerializer
         ];
     }
 
-    private function deserializeParameters(array $data, Dropzone $dropzone, array $options = [])
+    private function deserializeParameters(array $data, Dropzone $dropzone)
     {
         if (isset($data['parameters']['reviewType'])) {
             $dropzone->setPeerReview('peer' === $data['parameters']['reviewType']);

@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Listener\Log;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Log\Log;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Log\LogAdminToolReadEvent;
 use Claroline\CoreBundle\Event\Log\LogCreateDelegateViewEvent;
 use Claroline\CoreBundle\Event\Log\LogDesktopToolReadEvent;
@@ -22,11 +23,11 @@ use Claroline\CoreBundle\Event\Log\LogNotRepeatableInterface;
 use Claroline\CoreBundle\Event\Log\LogResourceDeleteEvent;
 use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
 use Claroline\CoreBundle\Event\Log\LogUserDeleteEvent;
-use Claroline\CoreBundle\Event\Log\LogUserLoginEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceEnterEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceRoleDeleteEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceToolReadEvent;
 use Claroline\CoreBundle\Event\LogCreateEvent;
+use Claroline\CoreBundle\Event\Security\UserLoginEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\LogConnectManager;
 use Claroline\CoreBundle\Manager\RoleManager;
@@ -87,14 +88,14 @@ class LogListener
             $token = $this->tokenStorage->getToken();
             if (null === $token) {
                 $doer = null;
-                $doerType = Log::doerTypePlatform;
+                $doerType = Log::DOER_PLATFORM;
             } else {
-                if ('anon.' === $token->getUser()) {
+                if (!$token->getUser() instanceof User) {
                     $doer = null;
-                    $doerType = Log::doerTypeAnonymous;
+                    $doerType = Log::DOER_ANONYMOUS;
                 } else {
                     $doer = $token->getUser();
-                    $doerType = Log::doerTypeUser;
+                    $doerType = Log::DOER_USER;
                 }
 
                 if ($this->request) {
@@ -106,10 +107,10 @@ class LogListener
             }
         } elseif (LogGenericEvent::PLATFORM_EVENT_TYPE === $event->getDoer()) {
             $doer = null;
-            $doerType = Log::doerTypePlatform;
+            $doerType = Log::DOER_PLATFORM;
         } else {
             $doer = $event->getDoer();
-            $doerType = Log::doerTypeUser;
+            $doerType = Log::DOER_USER;
         }
 
         $log = new Log();
@@ -328,7 +329,7 @@ class LogListener
         }
 
         if ($logCreated && $log && (
-            $event instanceof LogUserLoginEvent ||
+            $event instanceof UserLoginEvent ||
             $event instanceof LogWorkspaceEnterEvent ||
             $event instanceof LogResourceReadEvent ||
             $event instanceof LogWorkspaceToolReadEvent ||

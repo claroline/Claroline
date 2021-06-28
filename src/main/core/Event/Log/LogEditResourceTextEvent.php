@@ -106,7 +106,7 @@ class LogEditResourceTextEvent extends LogGenericEvent implements NotifiableInte
      */
     public function getExcludeUserIds()
     {
-        //return $this->getDoer()->getId();
+        return [];
     }
 
     /**

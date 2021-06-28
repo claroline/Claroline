@@ -18,7 +18,6 @@ use Doctrine\ORM\UnitOfWork;
 use Doctrine\Persistence\ObjectManager as ObjectManagerInterface;
 use Doctrine\Persistence\ObjectManagerDecorator;
 use Psr\Log\LoggerAwareInterface;
-use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 
 class ObjectManager extends ObjectManagerDecorator implements LoggerAwareInterface
@@ -35,8 +34,6 @@ class ObjectManager extends ObjectManagerDecorator implements LoggerAwareInterfa
 
     /**
      * ObjectManager constructor.
-     *
-     * @param ObjectManagerInterface $om
      */
     public function __construct(ObjectManagerInterface $om)
     {
@@ -223,8 +220,7 @@ class ObjectManager extends ObjectManagerDecorator implements LoggerAwareInterfa
      * Finds a set of objects by their ids.
      *
      * @param $class
-     * @param array $ids
-     * @param bool  $orderStrict keep the same order as ids array
+     * @param bool $orderStrict keep the same order as ids array
      *
      * @return array [object]
      *
@@ -244,8 +240,7 @@ class ObjectManager extends ObjectManagerDecorator implements LoggerAwareInterfa
      *
      * @param $class
      * @param $property
-     * @param array $list
-     * @param bool  $orderStrict keep the same order as ids array
+     * @param bool $orderStrict keep the same order as ids array
      *
      * @return array [object]
      *
@@ -301,9 +296,7 @@ class ObjectManager extends ObjectManagerDecorator implements LoggerAwareInterfa
     private function assertIsSupported($isSupportedFlag, $method)
     {
         if (!$isSupportedFlag) {
-            throw new UnsupportedMethodException(
-                "The method '{$method}' is not supported by the underlying object manager"
-            );
+            throw new UnsupportedMethodException("The method '{$method}' is not supported by the underlying object manager");
         }
     }
 
@@ -388,9 +381,7 @@ class ObjectManager extends ObjectManagerDecorator implements LoggerAwareInterfa
     /**
      * Fetch an object from database according to the class and the id/uuid of the data.
      *
-     * @param array  $data
      * @param string $class
-     * @param array  $identifiers
      *
      * @return object|null
      */

@@ -1,33 +1,61 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import omit from 'lodash/omit'
 
-//import {trans} from '#/main/app/intl/translation'
+import {Routes} from '#/main/app/router'
 
-//import {HomePage} from '#/plugin/home/tools/home/containers/page'
 import {Tab as TabTypes} from '#/plugin/home/prop-types'
 
-import {CatalogMain} from '#/plugin/cursus/tools/trainings/catalog/containers/main'
+import {CatalogList} from '#/plugin/cursus/home/catalog/components/list'
+import {CatalogDetails} from '#/plugin/cursus/home/catalog/containers/details'
+import {CatalogForm} from '#/plugin/cursus/home/catalog/containers/form'
 
 const CatalogTab = props =>
-  <CatalogMain path={props.path} />
-  /*<HomePage
-    tabs={props.tabs}
-    currentTab={props.currentTab}
-    currentTabTitle={props.currentTabTitle}
-  >
-    Catalog
-  </HomePage>*/
+  <Routes
+    path={props.path}
+    routes={[
+      {
+        path: '/',
+        exact: true,
+        render: () => (
+          <CatalogList
+            path={props.path}
+            {...omit(props, 'open')}
+          />
+        )
+      }, {
+        path: '/:slug/edit',
+        onEnter: (params = {}) => props.openForm(params.slug),
+        render: () => (
+          <CatalogForm
+            path={props.path}
+            {...omit(props, 'open')}
+          />
+        )
+      }, {
+        path: '/:slug',
+        onEnter: (params = {}) => props.open(params.slug),
+        render: () => (
+          <CatalogDetails
+            path={props.path}
+            {...omit(props, 'open')}
+          />
+        )
+      }
+    ]}
+  />
 
 CatalogTab.propTypes = {
   path: T.string.isRequired,
-  currentContext: T.object,
+  title: T.string.isRequired,
   tabs: T.arrayOf(T.shape(
     TabTypes.propTypes
   )),
-  currentTabTitle: T.string.isRequired,
   currentTab: T.shape(
     TabTypes.propTypes
-  )
+  ),
+  open: T.func.isRequired,
+  openForm: T.func.isRequired
 }
 
 export {

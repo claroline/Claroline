@@ -8,6 +8,13 @@ import {param} from '#/main/app/config/parameters'
  * @returns {string}
  */
 function asset(assetName) {
+  if (assetName && 0 === assetName.indexOf('http')) {
+    // we already have an absolute url, there is nothing to do
+    return assetName
+  }
+
+  // for retro compatibility
+  // api should always serve absolute urls
   return `${param('serverUrl')}/${assetName}`
 }
 

@@ -94,9 +94,6 @@ class Scale implements \JsonSerializable
         return $this->name;
     }
 
-    /**
-     * @param Level $level
-     */
     public function addLevel(Level $level)
     {
         $this->levels->add($level);
@@ -110,9 +107,6 @@ class Scale implements \JsonSerializable
         return $this->levels;
     }
 
-    /**
-     * @param ArrayCollection $levels
-     */
     public function setLevels(ArrayCollection $levels)
     {
         $this->levels->clear();

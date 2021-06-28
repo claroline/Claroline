@@ -18,10 +18,7 @@ use Doctrine\ORM\QueryBuilder;
 
 class MessageFinder extends AbstractFinder
 {
-    /**
-     * @return mixed
-     */
-    public function getClass()
+    public static function getClass(): string
     {
         return Message::class;
     }
@@ -123,44 +120,11 @@ class MessageFinder extends AbstractFinder
                     $qb->setParameter($filterName, $filterValue);
                     break;
                 case 'roles':
-                    $managerRoles = [];
-                    $otherRoles = [];
-
-                    foreach ($filterValue as $roleName) {
-                        if (preg_match('/^ROLE_WS_MANAGER_/', $roleName)) {
-                            $managerRoles[] = $roleName;
-                        } else {
-                            $otherRoles[] = $roleName;
-                        }
-                    }
-
-                    $managerSearch = $roleSearch = $searches;
-                    $managerSearch['_managerRoles'] = $managerRoles;
-                    $roleSearch['_roles'] = $otherRoles;
-                    unset($managerSearch['roles']);
-                    unset($roleSearch['roles']);
-
-                    return $this->union($managerSearch, $roleSearch, $options, $sortBy);
-
-                    break;
-                case '_managerRoles':
-                    if (!$workspaceJoin) {
-                        $qb->join('node.workspace', 'w');
-
-                        $workspaceJoin = true;
-                    }
-
-                    $qb->leftJoin('w.roles', 'owr');
-                    $qb->andWhere('owr.name IN (:managerRoles)');
-
-                    $qb->setParameter('managerRoles', $filterValue);
-                    break;
-                case '_roles':
                     $qb->leftJoin('node.rights', 'rights');
                     $qb->join('rights.role', 'rightsr');
-                    $qb->andWhere('rightsr.name IN (:otherRoles)');
+                    $qb->andWhere('rightsr.name IN (:roles)');
                     $qb->andWhere('BIT_AND(rights.mask, 1) = 1');
-                    $qb->setParameter('otherRoles', $filterValue);
+                    $qb->setParameter('roles', $filterValue);
                     break;
                 default:
                     $this->setDefaults($qb, $filterName, $filterValue);
@@ -184,7 +148,7 @@ class MessageFinder extends AbstractFinder
         return $qb;
     }
 
-    public function getFilters()
+    public function getFilters(): array
     {
         return [
             'subject' => [

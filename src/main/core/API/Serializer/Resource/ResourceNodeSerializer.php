@@ -18,8 +18,6 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\Resource\DecorateResourceNodeEvent;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
-use Claroline\CoreBundle\Manager\Resource\MaskManager;
-use Claroline\CoreBundle\Manager\Resource\OptimizedRightsManager;
 use Claroline\CoreBundle\Manager\Resource\RightsManager;
 
 class ResourceNodeSerializer
@@ -36,12 +34,8 @@ class ResourceNodeSerializer
     private $fileSerializer;
     /** @var UserSerializer */
     private $userSerializer;
-    /** @var OptimizedRightsManager */
-    private $newRightsManager;
     /** @var RightsManager */
     private $rightsManager;
-    /** @var MaskManager */
-    private $maskManager;
     /** @var SerializerProvider */
     private $serializer;
 
@@ -50,8 +44,6 @@ class ResourceNodeSerializer
         StrictDispatcher $eventDispatcher,
         PublicFileSerializer $fileSerializer,
         UserSerializer $userSerializer,
-        MaskManager $maskManager,
-        OptimizedRightsManager $newRightsManager,
         RightsManager $rightsManager,
         SerializerProvider $serializer
     ) {
@@ -59,8 +51,6 @@ class ResourceNodeSerializer
         $this->eventDispatcher = $eventDispatcher;
         $this->fileSerializer = $fileSerializer;
         $this->userSerializer = $userSerializer;
-        $this->newRightsManager = $newRightsManager;
-        $this->maskManager = $maskManager;
         $this->rightsManager = $rightsManager;
         $this->serializer = $serializer;
     }
@@ -90,10 +80,7 @@ class ResourceNodeSerializer
             'permissions' => $this->rightsManager->getCurrentPermissionArray($resourceNode),
             'poster' => $this->serializePoster($resourceNode),
             'thumbnail' => $this->serializeThumbnail($resourceNode),
-            // TODO : it should not be available in minimal mode
-            // for now I need it to compute simple access rights (for display)
-            // we should compute simple access here to avoid exposing this big object
-            'rights' => array_values($this->rightsManager->getRights($resourceNode, $options)),
+            'access' => $this->rightsManager->getSimpleRights($resourceNode),
         ];
 
         if ($resourceNode->getWorkspace() && !in_array(Options::REFRESH_UUID, $options)) {
@@ -108,17 +95,25 @@ class ResourceNodeSerializer
 
         $parent = $resourceNode->getParent();
         if (!empty($parent) && !in_array(static::NO_PARENT, $options)) {
-            $serializedNode['parent'] = $this->serialize($resourceNode->getParent(), [static::NO_PARENT]);
+            $serializedNode['parent'] = $this->serialize($resourceNode->getParent(), [Options::SERIALIZE_MINIMAL, static::NO_PARENT]);
         }
 
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
-            $serializedNode = array_merge($serializedNode, [
-                'display' => $this->serializeDisplay($resourceNode),
-                'restrictions' => $this->serializeRestrictions($resourceNode),
-                'comments' => array_map(function (ResourceComment $comment) {
-                    return $this->serializer->serialize($comment);
-                }, $resourceNode->getComments()->toArray()),
-            ]);
+            $serializedNode['restrictions'] = $this->serializeRestrictions($resourceNode);
+
+            if (!in_array(Options::SERIALIZE_LIST, $options)) {
+                $serializedNode = array_merge($serializedNode, [
+                    'display' => $this->serializeDisplay($resourceNode),
+                    'comments' => array_map(function (ResourceComment $comment) { // TODO : should not be exposed here
+                        return $this->serializer->serialize($comment);
+                    }, $resourceNode->getComments()->toArray()),
+                ]);
+            }
+
+            if (!in_array(Options::NO_RIGHTS, $options)) {
+                // export rights, only used by transfer feature. Should be moved later.
+                $serializedNode['rights'] = array_values($this->rightsManager->getRights($resourceNode, $options));
+            }
         }
 
         return $this->decorate($resourceNode, $serializedNode, $options);
@@ -221,6 +216,7 @@ class ResourceNodeSerializer
         return [
             'fullscreen' => $resourceNode->isFullscreen(),
             'showIcon' => $resourceNode->getShowIcon(),
+            'showTitle' => $resourceNode->getShowTitle(),
         ];
     }
 
@@ -243,10 +239,10 @@ class ResourceNodeSerializer
     public function deserialize(array $data, ResourceNode $resourceNode, array $options = []): ResourceNode
     {
         $this->sipe('name', 'setName', $data, $resourceNode);
-        $this->sipe('slug', 'setSlug', $data, $resourceNode);
 
         if (!in_array(Options::REFRESH_UUID, $options)) {
             $this->sipe('id', 'setUuid', $data, $resourceNode);
+            $this->sipe('slug', 'setSlug', $data, $resourceNode);
         } else {
             $resourceNode->refreshUuid();
         }
@@ -294,6 +290,7 @@ class ResourceNodeSerializer
         // display
         $this->sipe('display.fullscreen', 'setFullscreen', $data, $resourceNode);
         $this->sipe('display.showIcon', 'setShowIcon', $data, $resourceNode);
+        $this->sipe('display.showTitle', 'setShowTitle', $data, $resourceNode);
 
         // restrictions
         $this->sipe('restrictions.code', 'setAccessCode', $data, $resourceNode);
@@ -307,7 +304,8 @@ class ResourceNodeSerializer
             $resourceNode->setAccessibleUntil($dateRange[1]);
         }
 
-        if (!in_array(OPTIONS::IGNORE_RIGHTS, $options) && isset($data['rights'])) {
+        if (!in_array(Options::NO_RIGHTS, $options) && isset($data['rights'])) {
+            // only used by transfer feature and creation. Should be moved later
             $this->deserializeRights($data['rights'], $resourceNode, $options);
         }
 
@@ -351,12 +349,13 @@ class ResourceNodeSerializer
                     unset($right['permissions']['create']);
                 }
 
-                $this->newRightsManager->update(
-                    $resourceNode,
+                // this should not be done here, because it will do db changes
+                $this->rightsManager->update(
+                    $right['permissions'],
                     $role,
-                    $this->maskManager->encodeMask($right['permissions'], $resourceNode->getResourceType()),
-                    $creationPerms,
-                    in_array(Options::IS_RECURSIVE, $options)
+                    $resourceNode,
+                    in_array(Options::IS_RECURSIVE, $options),
+                    $creationPerms
                 );
 
                 $roles[] = $role->getName();

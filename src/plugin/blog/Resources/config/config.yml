@@ -1,6 +1,4 @@
 plugin:
-    has_options: false
-
     resources:
         - name: icap_blog
           class: Icap\BlogBundle\Entity\Blog

@@ -163,8 +163,8 @@ class RegistrationController
             'options' => [
                 'validation' => $this->config->getParameter('registration.validation'),
                 'locale' => $request->getLocale(),
-                'forceOrganizationCreation' => $this->config->getParameter('registration.force_organization_creation'),
                 'allowWorkspace' => $this->config->getParameter('registration.allow_workspace'),
+                'organizationSelection' => $this->config->getParameter('registration.organization_selection'),
             ],
         ]);
     }

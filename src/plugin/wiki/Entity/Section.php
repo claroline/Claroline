@@ -476,9 +476,7 @@ class Section
     /**
      * Returns the changeSet data when a section has been moved.
      *
-     * @param Section $oldParent
-     * @param int     $oldLeft
-     * @param Section $newParent
+     * @param int $oldLeft
      *
      * @return array $changeSet
      */

@@ -25,8 +25,6 @@ class ResourceListener
 
     /**
      * ShortcutListener constructor.
-     *
-     * @param ShortcutManager $shortcutManager
      */
     public function __construct(
         ShortcutManager $shortcutManager
@@ -36,8 +34,6 @@ class ResourceListener
 
     /**
      * Gets all shortcuts of a resource.
-     *
-     * @param ResourceActionEvent $event
      */
     public function shortcuts(ResourceActionEvent $event)
     {
@@ -45,8 +41,6 @@ class ResourceListener
 
     /**
      * Removes all linked shortcuts when a resource is deleted.
-     *
-     * @param ResourceActionEvent $event
      */
     public function delete(ResourceActionEvent $event)
     {

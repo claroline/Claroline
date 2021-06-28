@@ -9,10 +9,13 @@ services:
             autowire: false
             tags: [security.voter]
             calls:
-              - method: setContainer
-                arguments:
-                  - '@service_container'
-            #this will have to change one day I think
+                - method: setContainer
+                  arguments:
+                      - '@service_container'
+
+        Claroline\CoreBundle\Security\Voter\AbstractRoleSubjectVoter:
+            autowire: false
+            tags: [security.voter]
 
     Claroline\CoreBundle\Security\Voter\ConnectionMessage\ConnectionMessageVoter: ~
 
@@ -30,20 +33,15 @@ services:
     Claroline\CoreBundle\Security\Voter\AdministratorVoter:
         tags: [security.voter]
 
-    Claroline\CoreBundle\Security\Voter\ApiTokenVoter: ~
-
     Claroline\CoreBundle\Security\Voter\FacetVoter: ~
 
     Claroline\CoreBundle\Security\Voter\GroupVoter: ~
 
     Claroline\CoreBundle\Security\Voter\ImportFileVoter: ~
 
-    Claroline\CoreBundle\Security\Voter\IPWhiteListVoter:
-        tags: [security.voter]
-        arguments:
-            - '@claroline.manager.ip_white_list_manager'
+    Claroline\CoreBundle\Security\Voter\Location\LocationVoter: ~
 
-    Claroline\CoreBundle\Security\Voter\LocationVoter: ~
+    Claroline\CoreBundle\Security\Voter\Location\RoomVoter: ~
 
     Claroline\CoreBundle\Security\Voter\OrganizationVoter: ~
 
@@ -56,11 +54,11 @@ services:
         arguments:
             - '@doctrine.orm.entity_manager'
             - '@translator'
-            - '@claroline.manager.mask_manager'
+            - '@Claroline\CoreBundle\Manager\Resource\MaskManager'
             - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
             - '@claroline.manager.resource_manager'
             - '@claroline.manager.rights_manager'
-            - '@claroline.manager.resource_restrictions'
+            - '@Claroline\CoreBundle\Manager\Resource\ResourceRestrictionsManager'
 
     Claroline\CoreBundle\Security\Voter\RoleVoter: ~
 
@@ -72,4 +70,7 @@ services:
         arguments:
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
 
-    Claroline\CoreBundle\Security\Voter\WorkspaceVoter: ~
+    Claroline\CoreBundle\Security\Voter\WorkspaceVoter:
+        arguments:
+            - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
+            - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceRestrictionsManager'

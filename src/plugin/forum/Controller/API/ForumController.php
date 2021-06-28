@@ -24,8 +24,6 @@ class ForumController extends AbstractCrudController
 
     /**
      * ForumController constructor.
-     *
-     * @param ForumManager $manager
      */
     public function __construct(ForumManager $manager)
     {
@@ -53,8 +51,7 @@ class ForumController extends AbstractCrudController
      *     }
      * )
      *
-     * @param string  $id
-     * @param Request $request
+     * @param string $id
      *
      * @return JsonResponse
      */
@@ -78,9 +75,6 @@ class ForumController extends AbstractCrudController
      *          {"name": "id", "type": {"string", "integer"},  "description": "The forum id or uuid"}
      *     }
      * )
-     *
-     * @param Forum   $forum
-     * @param Request $request
      *
      * @return JsonResponse
      */
@@ -111,9 +105,6 @@ class ForumController extends AbstractCrudController
      * @Route("/unlock/{user}/forum/{forum}", methods={"PATCH"})
      * @EXT\ParamConverter("user", class = "ClarolineCoreBundle:User",  options={"mapping": {"user": "uuid"}})
      * @EXT\ParamConverter("forum", class = "ClarolineForumBundle:Forum",  options={"mapping": {"forum": "uuid"}})
-     *
-     * @param User  $user
-     * @param Forum $forum
      *
      * @return JsonResponse
      */
@@ -153,9 +144,6 @@ class ForumController extends AbstractCrudController
      * @EXT\ParamConverter("user", class = "ClarolineCoreBundle:User",  options={"mapping": {"user": "uuid"}})
      * @EXT\ParamConverter("forum", class = "ClarolineForumBundle:Forum",  options={"mapping": {"forum": "uuid"}})
      *
-     * @param User  $user
-     * @param Forum $forum
-     *
      * @return JsonResponse
      */
     public function lockAction(User $user, Forum $forum)
@@ -172,9 +160,6 @@ class ForumController extends AbstractCrudController
      * @Route("/ban/{user}/forum/{forum}", methods={"PATCH"})
      * @EXT\ParamConverter("user", class = "ClarolineCoreBundle:User",  options={"mapping": {"user": "uuid"}})
      * @EXT\ParamConverter("forum", class = "ClarolineForumBundle:Forum",  options={"mapping": {"forum": "uuid"}})
-     *
-     * @param User  $user
-     * @param Forum $forum
      *
      * @return JsonResponse
      */
@@ -193,9 +178,6 @@ class ForumController extends AbstractCrudController
      * @EXT\ParamConverter("user", class = "ClarolineCoreBundle:User",  options={"mapping": {"user": "uuid"}})
      * @EXT\ParamConverter("forum", class = "ClarolineForumBundle:Forum",  options={"mapping": {"forum": "uuid"}})
      *
-     * @param User  $user
-     * @param Forum $forum
-     *
      * @return JsonResponse
      */
     public function unbanAction(User $user, Forum $forum)
@@ -213,9 +195,6 @@ class ForumController extends AbstractCrudController
      * @EXT\ParamConverter("user", class = "ClarolineCoreBundle:User",  options={"mapping": {"user": "uuid"}})
      * @EXT\ParamConverter("forum", class = "ClarolineForumBundle:Forum",  options={"mapping": {"forum": "uuid"}})
      *
-     * @param User  $user
-     * @param Forum $forum
-     *
      * @return JsonResponse
      */
     public function notifyAction(User $user, Forum $forum)
@@ -232,9 +211,6 @@ class ForumController extends AbstractCrudController
      * @Route("/unnotify/{user}/forum/{forum}", methods={"PATCH"})
      * @EXT\ParamConverter("user", class = "ClarolineCoreBundle:User",  options={"mapping": {"user": "uuid"}})
      * @EXT\ParamConverter("forum", class = "ClarolineForumBundle:Forum",  options={"mapping": {"forum": "uuid"}})
-     *
-     * @param User  $user
-     * @param Forum $forum
      *
      * @return JsonResponse
      */

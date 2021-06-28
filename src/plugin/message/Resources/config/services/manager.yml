@@ -10,6 +10,6 @@ services:
 
     Claroline\MessageBundle\Manager\MessageManager:
         arguments:
-            - '@claroline.manager.mail_manager'
+            - '@Claroline\CoreBundle\Manager\MailManager'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@security.token_storage'

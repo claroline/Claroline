@@ -4,3 +4,9 @@ lightsaml_sp:
     prefix: /saml
     options:
         expose: true
+
+lightsaml_sp.login:
+    path: /saml/login
+    defaults: { _controller: Claroline\SamlBundle\Controller\AuthenticationController::loginAction}
+    options:
+        expose: true

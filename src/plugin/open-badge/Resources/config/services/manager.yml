@@ -8,6 +8,7 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\Manager\Template\TemplateManager'
             - '@twig'
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
 
     Claroline\OpenBadgeBundle\Manager\RuleManager:
         arguments:

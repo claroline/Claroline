@@ -102,30 +102,56 @@ function displayDate(apiDate, long = false, withTime = false) {
   return moment.utc(apiDate).local().format(getDisplayFormat(long, withTime))
 }
 
+/**
+ * Converts time of a datetime from the api format to the displayed one.
+ *
+ * @param {string}  apiDate - the api date to convert.
+ *
+ * @return {string} - the time in display format.
+ */
+function displayTime(apiDate) {
+  return moment.utc(apiDate).local().format('LT')
+}
+
+function displayDateRange(start, end) {
+  let date = displayDate(start, true)
+  if (end) {
+    if (moment(start).isSame(end, 'day')) {
+      date += ' | ' + trans('time_range', {
+        start: displayTime(start),
+        end: displayTime(end)
+      })
+    } else {
+      date = trans('date_range', {
+        start: displayDate(start, true),
+        end: displayDate(end, true)
+      })
+    }
+  }
+
+  return date
+}
+
 function displayDuration(seconds, long = false) {
   const time = moment.duration({seconds: seconds})
 
-  const timeParts = []
-  if ( 0 !== time.years()) {
-    timeParts.push(time.years() + trans(long ? 'years':'years_short'))
+  if (time.years() > 0) {
+    return (time.years() + time.months() / 12).toFixed(1) + ' ' + trans(long ? 'years' : 'years_short')
   }
-  if (0 !== time.months()) {
-    timeParts.push(time.months() + trans(long ? 'months':'months_short'))
+  if (time.months() > 0) {
+    return (time.months() + time.days() / 30).toFixed(1) + ' ' + trans(long ? 'months' : 'months_short')
   }
-  if (0 !== time.days()) {
-    timeParts.push(time.days() + trans(long ? 'days':'days_short'))
+  if (time.days() > 0) {
+    return (time.days() + time.hours() / 24).toFixed(1) + ' ' + trans(long ? 'days' : 'days_short')
   }
-  if (0 !== time.hours()) {
-    timeParts.push(time.hours() + trans(long ? 'hours':'hours_short'))
+  if (time.hours() > 0) {
+    return (time.hours() + time.minutes() / 60).toFixed(1) + ' ' + trans(long ? 'hours' : 'hours_short')
   }
-  if (0 !== time.minutes()) {
-    timeParts.push(time.minutes() + trans(long ? 'minutes':'minutes_short'))
-  }
-  if (0 !== time.seconds()) {
-    timeParts.push(time.seconds() + trans(long ? 'seconds':'seconds_short'))
+  if (time.minutes() > 0) {
+    return (time.minutes() + time.seconds() / 60).toFixed(1) + ' ' + trans(long ? 'minutes' : 'minutes_short')
   }
 
-  return timeParts.join(long ? ' ' : '')
+  return time.seconds().toFixed(1) + ' ' + trans(long ? 'seconds' : 'seconds_short')
 }
 
 /**
@@ -176,5 +202,7 @@ export {
   computeElapsedTime,
   getTimeDiff,
   nowAdd,
-  displayDuration
+  displayDuration,
+  displayTime,
+  displayDateRange
 }

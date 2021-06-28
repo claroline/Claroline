@@ -22,7 +22,6 @@ const ParametersModal = withReducer(selectors.STORE_NAME, reducer)(
 
       save(resourceNode, update) {
         dispatch(formActions.saveForm(selectors.STORE_NAME, ['claro_resource_action', {
-          type: resourceNode.meta.type,
           action: 'configure',
           id: resourceNode.id
         }])).then((response) => update(response))

@@ -1,13 +1,16 @@
-import {trans} from '#/main/app/intl/translation'
-import {URL_BUTTON} from '#/main/app/buttons'
+import React from 'react'
+import classes from 'classnames'
+import get from 'lodash/get'
 
+import {trans, now} from '#/main/app/intl'
+import {URL_BUTTON} from '#/main/app/buttons'
 import {route as workspaceRoute} from '#/main/core/workspace/routing'
 
 import {SessionCard} from '#/plugin/cursus/session/components/card'
 
 export default {
   name: 'my-sessions',
-  icon: 'fa fa-fw fa-cubes',
+  icon: 'fa fa-fw fa-calendar-week',
   parameters: {
     primaryAction: (session) => ({
       type: URL_BUTTON,
@@ -15,6 +18,42 @@ export default {
     }),
     definition: [
       {
+        name: 'status',
+        type: 'choice',
+        label: trans('status'),
+        displayed: true,
+        order: 1,
+        options: {
+          noEmpty: true,
+          choices: {
+            not_started: trans('session_not_started', {}, 'cursus'),
+            in_progress: trans('session_in_progress', {}, 'cursus'),
+            closed: trans('session_closed', {}, 'cursus')
+          }
+        },
+        render: (row) => {
+          let status
+          if (get(row, 'restrictions.dates[0]') > now(false)) {
+            status = 'not_started'
+          } else if (get(row, 'restrictions.dates[0]') <= now(false) && get(row, 'restrictions.dates[1]') >= now(false)) {
+            status = 'in_progress'
+          } else if (get(row, 'restrictions.dates[1]') < now(false)) {
+            status = 'closed'
+          }
+
+          const SessionStatus = (
+            <span className={classes('label', {
+              'label-success': 'not_started' === status,
+              'label-info': 'in_progress' === status,
+              'label-danger': 'closed' === status
+            })}>
+              {trans('session_'+status, {}, 'cursus')}
+            </span>
+          )
+
+          return SessionStatus
+        }
+      }, {
         name: 'name',
         type: 'string',
         label: trans('name'),
@@ -31,6 +70,12 @@ export default {
         label: trans('course', {}, 'cursus'),
         displayed: true
       }, {
+        name: 'location',
+        type: 'location',
+        label: trans('location'),
+        placeholder: trans('online_session', {}, 'cursus'),
+        displayed: true
+      }, {
         name: 'restrictions.dates[0]',
         alias: 'startDate',
         type: 'date',
@@ -43,11 +88,25 @@ export default {
         label: trans('end_date'),
         displayed: true
       }, {
-        name: 'restrictions.users',
-        alias: 'maxUsers',
-        type: 'number',
-        label: trans('max_participants', {}, 'cursus'),
-        displayed: true
+        name: 'workspace',
+        type: 'workspace',
+        label: trans('workspace'),
+        sortable: false
+      }, {
+        name: 'restrictions.users', // for retro compatibility with existing data sources
+        alias: 'maxUsers', // for retro compatibility with existing data sources
+        type: 'string',
+        label: trans('available_seats', {}, 'cursus'),
+        calculated: (row) => {
+          if (get(row, 'restrictions.users')) {
+            return (get(row, 'restrictions.users') - get(row, 'participants.learners', 0)) + ' / ' + get(row, 'restrictions.users')
+          }
+
+          return trans('not_limited', {}, 'cursus')
+        },
+        displayed: true,
+        filterable: false,
+        sortable: false
       }, {
         name: 'registration.selfRegistration',
         alias: 'publicRegistration',
@@ -72,6 +131,16 @@ export default {
         type: 'boolean',
         label: trans('user_validation', {}, 'cursus'),
         displayed: false
+      }, {
+        name: 'courseTags',
+        type: 'tag',
+        label: trans('tags'),
+        displayed: false,
+        displayable: false,
+        sortable: false,
+        options: {
+          objectClass: 'Claroline\\CursusBundle\\Entity\\Course'
+        }
       }
     ],
     card: SessionCard

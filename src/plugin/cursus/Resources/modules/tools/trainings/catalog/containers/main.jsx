@@ -8,8 +8,8 @@ import {CatalogMain as CatalogMainComponent} from '#/plugin/cursus/tools/trainin
 
 const CatalogMain = withReducer(selectors.STORE_NAME, reducer)(
   connect(
-    (state, ownProps) => ({
-      path: ownProps.path || toolSelectors.path(state)
+    (state) => ({
+      path: toolSelectors.path(state)
     }),
     (dispatch) => ({
       open(slug) {

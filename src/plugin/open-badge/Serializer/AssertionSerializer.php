@@ -28,13 +28,6 @@ class AssertionSerializer
 
     /**
      * AssertionSerializer constructor.
-     *
-     * @param UserSerializer               $userSerializer
-     * @param BadgeClassSerializer         $badgeSerializer
-     * @param ProfileSerializer            $profileSerializer
-     * @param RouterInterface              $router
-     * @param VerificationObjectSerializer $verificationObjectSerializer
-     * @param IdentityObjectSerializer     $identityObjectSerializer
      */
     public function __construct(
         UserSerializer $userSerializer,
@@ -59,9 +52,6 @@ class AssertionSerializer
 
     /**
      * Serializes a Assertion entity.
-     *
-     * @param Assertion $assertion
-     * @param array     $options
      *
      * @return array
      */

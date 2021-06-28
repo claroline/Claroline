@@ -11,14 +11,11 @@
 
 namespace Claroline\AnalyticsBundle;
 
-use Claroline\CoreBundle\Library\DistributionPluginBundle;
+use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
 
-/**
- * Bundle class.
- */
 class ClarolineAnalyticsBundle extends DistributionPluginBundle
 {
-    public function hasMigrations()
+    public function hasMigrations(): bool
     {
         return false;
     }

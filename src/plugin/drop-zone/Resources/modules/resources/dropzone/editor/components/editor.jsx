@@ -179,7 +179,7 @@ const EditorComponent = props =>
               {
                 name: 'display.successMessage',
                 type: 'html',
-                label: trans('success_message', {}, 'dropzone'),
+                label: trans('success_message'),
                 displayed: props.dropzone.display && props.dropzone.display.showFeedback,
                 required: true,
                 options: {
@@ -188,7 +188,7 @@ const EditorComponent = props =>
               }, {
                 name: 'display.failMessage',
                 type: 'html',
-                label: trans('fail_message', {}, 'dropzone'),
+                label: trans('failure_message'),
                 displayed: props.dropzone.display && props.dropzone.display.showFeedback,
                 required: true,
                 options: {
@@ -293,6 +293,17 @@ const EditorComponent = props =>
             name: 'notifications.enabled',
             type: 'boolean',
             label: trans('notify_managers_on_drop', {}, 'dropzone')
+          }
+        ]
+      }, {
+        icon: 'fa fa-fw fa-key',
+        title: trans('access_restrictions'),
+        fields: [
+          {
+            name: 'restrictions.lockDrops',
+            type: 'boolean',
+            label: trans('lock_drops', {}, 'dropzone'),
+            help: trans('lock_drops_help', {}, 'dropzone')
           }
         ]
       }

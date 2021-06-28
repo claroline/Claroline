@@ -20,36 +20,17 @@ class FinderProvider
     private $om;
     /** @var SerializerProvider */
     private $serializer;
+    /** @var iterable */
+    private $finders;
 
-    /**
-     * The list of registered finders in the platform.
-     *
-     * @var array
-     */
-    private $finders = [];
-
-    /**
-     * FinderProvider constructor.
-     *
-     * @param ObjectManager      $om
-     * @param SerializerProvider $serializer
-     */
     public function __construct(
         ObjectManager $om,
+        iterable $finders,
         SerializerProvider $serializer
     ) {
         $this->om = $om;
+        $this->finders = $finders;
         $this->serializer = $serializer;
-    }
-
-    /**
-     * Registers a new finder.
-     *
-     * @param FinderInterface $finder
-     */
-    public function add(FinderInterface $finder)
-    {
-        $this->finders[$finder->getClass()] = $finder;
     }
 
     /**
@@ -63,31 +44,28 @@ class FinderProvider
      */
     public function get($class)
     {
-        if (empty($this->finders[$class])) {
-            throw new FinderException(
-                sprintf('No finder found for class "%s" Maybe you forgot to add the "claroline.finder" tag to your finder.', $class)
-            );
+        $finders = $this->finders instanceof \Traversable ? iterator_to_array($this->finders) : $this->finders;
+        if (!isset($finders[$class])) {
+            throw new FinderException(sprintf('No finder found for class "%s" Maybe you forgot to add the "claroline.finder" tag to your finder.', $class));
         }
 
-        return $this->finders[$class];
+        return $finders[$class];
     }
 
     /**
-     * Return the list of finders.
-     *
-     * @return mixed[];
+     * Gets all the finders defined in the app (required for test purpose).
      */
-    public function all()
+    public function all(): array
     {
-        return $this->finders;
+        $finders = $this->finders instanceof \Traversable ? iterator_to_array($this->finders) : $this->finders;
+
+        return array_values($finders);
     }
 
     /**
      * Builds and fires the query for a given class. The result will be serialized afterwards.
      *
      * @param string $class
-     * @param array  $finderParams
-     * @param array  $serializerOptions
      *
      * @return array
      */
@@ -104,7 +82,6 @@ class FinderProvider
 
     /**
      * @param $class
-     * @param array $finderParams
      *
      * @return array
      */
@@ -141,12 +118,10 @@ class FinderProvider
     /**
      * Builds and fires the query for a given class. There will be no serialization here.
      *
-     * @param string     $class
-     * @param int        $page
-     * @param int        $limit
-     * @param array      $filters
-     * @param array|null $sortBy
-     * @param bool       $count
+     * @param string $class
+     * @param int    $page
+     * @param int    $limit
+     * @param bool   $count
      *
      * @return mixed
      */
@@ -195,8 +170,6 @@ class FinderProvider
     /**
      * Properly convert the filters (boolean or integer for instance when they're displayed as string).
      *
-     * @param array $filters
-     *
      * @return array
      */
     public static function parseFilters(array $filters)
@@ -209,7 +182,11 @@ class FinderProvider
                     // parse filter value
                     if (is_numeric($value)) {
                         // convert numbers
-                        $value = floatval($value);
+                        $floatValue = floatval($value);
+                        if ($value === $floatValue.'') {
+                            // dumb check to allow users search with strings like '001' without catching it as a number
+                            $value = $floatValue;
+                        }
                     } else {
                         // convert booleans
                         $booleanValue = filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
@@ -227,8 +204,6 @@ class FinderProvider
     }
 
     /**
-     * @param array $filters
-     *
      * @todo : we should make UI and API formats uniform to avoid such transformations
      *
      * @return array
@@ -245,8 +220,6 @@ class FinderProvider
 
     /**
      * Parses query params to their appropriate filter values.
-     *
-     * @param array $finderParams
      *
      * @return array
      */

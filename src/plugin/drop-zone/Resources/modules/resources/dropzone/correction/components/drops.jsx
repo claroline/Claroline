@@ -1,10 +1,13 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
+import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
+import {hasPermission} from '#/main/app/security'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
+import {selectors as resourceSelectors} from '#/main/core/resource/store'
 
 import {DropzoneType} from '#/plugin/drop-zone/resources/dropzone/prop-types'
 import {selectors} from '#/plugin/drop-zone/resources/dropzone/store/selectors'
@@ -28,6 +31,10 @@ const DropsList = props =>
         target: `${props.path}/drop/${row.id}`,
         label: trans('correct_a_copy', {}, 'dropzone')
       })}
+      delete={{
+        url: ['claro_dropzone_drop_delete', {id: props.dropzone.id}],
+        displayed: () => !get(props.dropzone, 'restrictions.lockDrops', false) && props.canDelete
+      }}
       definition={[
         {
           name: 'user',
@@ -125,6 +132,7 @@ DropsList.propTypes = {
   dropzone: T.shape(
     DropzoneType.propTypes
   ).isRequired,
+  canDelete: T.bool.isRequired,
   unlockDrop: T.func.isRequired,
   cancelDrop: T.func.isRequired,
   downloadDrops: T.func.isRequired
@@ -132,7 +140,8 @@ DropsList.propTypes = {
 
 const Drops = connect(
   (state) => ({
-    dropzone: selectors.dropzone(state)
+    dropzone: selectors.dropzone(state),
+    canDelete: hasPermission('edit', resourceSelectors.resourceNode(state))
   }),
   (dispatch) => ({
     unlockDrop: (dropId) => dispatch(actions.unlockDrop(dropId)),

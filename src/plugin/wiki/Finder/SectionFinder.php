@@ -9,10 +9,6 @@ class SectionFinder extends AbstractFinder
 {
     /**
      * The queried object is already named "obj".
-     *
-     * @param QueryBuilder $qb
-     * @param array        $searches
-     * @param array|null   $sortBy
      */
     public function configureQueryBuilder(QueryBuilder $qb, array $searches, array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
     {
@@ -71,7 +67,7 @@ class SectionFinder extends AbstractFinder
     }
 
     /** @return $string */
-    public function getClass()
+    public static function getClass(): string
     {
         return 'Icap\WikiBundle\Entity\Section';
     }

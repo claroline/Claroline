@@ -13,6 +13,10 @@ use UJM\ExoBundle\Library\Model\ScoreTrait;
  */
 abstract class AbstractChoice
 {
+    use ContentTrait;
+    use FeedbackTrait;
+    use ScoreTrait;
+    use Uuid;
     /**
      * @var int
      *
@@ -21,11 +25,6 @@ abstract class AbstractChoice
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
-
-    use ContentTrait;
-    use FeedbackTrait;
-    use ScoreTrait;
-    use Uuid;
 
     public function __construct()
     {

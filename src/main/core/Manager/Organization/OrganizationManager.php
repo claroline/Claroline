@@ -11,8 +11,8 @@
 
 namespace Claroline\CoreBundle\Manager\Organization;
 
-use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AppBundle\Log\LoggableTrait;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Psr\Log\LoggerAwareInterface;
 
@@ -25,8 +25,6 @@ class OrganizationManager implements LoggerAwareInterface
 
     /**
      * OrganizationManager constructor.
-     *
-     * @param ObjectManager $om
      */
     public function __construct(ObjectManager $om)
     {
@@ -57,6 +55,7 @@ class OrganizationManager implements LoggerAwareInterface
 
         $organization = new Organization();
         $organization->setName('default');
+        $organization->setCode('default');
         $organization->setDefault(true);
         $organization->setPosition(1);
         $organization->setParent(null);

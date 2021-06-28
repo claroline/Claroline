@@ -18,9 +18,6 @@ use Claroline\CoreBundle\Event\Resource\File\LoadFileEvent;
  */
 class TextListener
 {
-    /**
-     * @param LoadFileEvent $event
-     */
     public function onLoad(LoadFileEvent $event)
     {
         $event->setData([

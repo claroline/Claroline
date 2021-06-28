@@ -11,7 +11,9 @@ const ToolMain = withReducer(selectors.STORE_NAME, reducer)(
       path: selectors.path(state),
       toolName: selectors.name(state),
       toolContext: selectors.context(state),
-      loaded: selectors.loaded(state)
+      loaded: selectors.loaded(state),
+      accessDenied: selectors.accessDenied(state),
+      notFound: selectors.notFound(state)
     }),
     (dispatch) => ({
       open(toolName, context) {

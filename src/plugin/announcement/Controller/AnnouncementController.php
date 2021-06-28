@@ -90,6 +90,7 @@ class AnnouncementController
 
         /** @var Announcement $announcement */
         $announcement = $this->crud->create($this->getClass(), $data, [
+            Crud::NO_PERMISSIONS, // this has already been checked
             'announcement_aggregate' => $aggregate,
         ]);
 
@@ -166,15 +167,11 @@ class AnnouncementController
 
         if (0 === count($roles)) {
             foreach ($rights as $right) {
-                //1 is the default "open" mask
+                // 1 is the default "open" mask (there should be a better way to do it)
                 if ($right->getMask() & 1) {
                     $roles[] = $right->getRole();
                 }
             }
-
-            $roles[] = $this->roleRepo->findOneBy([
-                'name' => 'ROLE_WS_MANAGER_'.$node->getWorkspace()->getUuid(),
-            ]);
         }
 
         $all = $request->query->all();
@@ -200,8 +197,13 @@ class AnnouncementController
     {
         $this->checkPermission('EDIT', $aggregate->getResourceNode(), [], true);
 
-        /** @var Role[] $roles */
-        $roles = $this->decodeIdsString($request, Role::class);
+        $data = $this->decodeRequest($request);
+
+        $roles = [];
+        if (!empty($data) && !empty($data['ids'])) {
+            /** @var Role[] $roles */
+            $roles = $this->om->findList(Role::class, 'uuid', $data['ids']);
+        }
 
         $node = $announcement->getAggregate()->getResourceNode();
 
@@ -209,15 +211,11 @@ class AnnouncementController
 
         if (0 === count($roles)) {
             foreach ($rights as $right) {
-                //1 is the default "open" mask
+                // 1 is the default "open" mask (there should be a better way to do it)
                 if ($right->getMask() & 1) {
                     $roles[] = $right->getRole();
                 }
             }
-
-            $roles[] = $this->roleRepo->findOneBy([
-              'name' => 'ROLE_WS_MANAGER_'.$node->getWorkspace()->getUuid(),
-          ]);
         }
 
         $users = $this->finder->fetch(

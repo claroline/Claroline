@@ -12,11 +12,6 @@ class LogDocumentCreateEvent extends AbstractLogResourceEvent
 {
     const ACTION = 'resource-claroline_dropzone-document_create';
 
-    /**
-     * @param Dropzone $dropzone
-     * @param Drop     $drop
-     * @param Document $document
-     */
     public function __construct(Dropzone $dropzone, Drop $drop, Document $document)
     {
         $documentsDetails = [];

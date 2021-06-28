@@ -13,16 +13,19 @@ namespace Claroline\CoreBundle\Controller;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\Tool\AbstractTool;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Shortcuts;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Event\CatalogEvents\ToolEvents;
+use Claroline\CoreBundle\Event\CatalogEvents\WorkspaceEvents;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceEnterEvent;
-use Claroline\CoreBundle\Event\Log\LogWorkspaceToolReadEvent;
 use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 use Claroline\CoreBundle\Event\Workspace\OpenWorkspaceEvent;
 use Claroline\CoreBundle\Manager\Tool\ToolManager;
@@ -30,7 +33,6 @@ use Claroline\CoreBundle\Manager\Workspace\EvaluationManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceRestrictionsManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -38,7 +40,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @Route("/workspaces", options={"expose" = true})
@@ -49,8 +51,6 @@ class WorkspaceController
     private $authorization;
     /** @var ObjectManager */
     private $om;
-    /** @var EventDispatcherInterface */
-    private $eventDispatcher;
     /** @var TokenStorageInterface */
     private $tokenStorage;
     /** @var SerializerProvider */
@@ -65,25 +65,23 @@ class WorkspaceController
     private $restrictionsManager;
     /** @var EvaluationManager */
     private $evaluationManager;
+    /** @var StrictDispatcher */
+    private $strictDispatcher;
 
-    /**
-     * WorkspaceController constructor.
-     */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         ObjectManager $om,
-        EventDispatcherInterface $eventDispatcher,
         TokenStorageInterface $tokenStorage,
         SerializerProvider $serializer,
         ToolManager $toolManager,
         TranslatorInterface $translator,
         WorkspaceManager $manager,
         WorkspaceRestrictionsManager $restrictionsManager,
-        EvaluationManager $evaluationManager
+        EvaluationManager $evaluationManager,
+        StrictDispatcher $strictDispatcher
     ) {
         $this->authorization = $authorization;
         $this->om = $om;
-        $this->eventDispatcher = $eventDispatcher;
         $this->tokenStorage = $tokenStorage;
         $this->serializer = $serializer;
         $this->toolManager = $toolManager;
@@ -91,6 +89,7 @@ class WorkspaceController
         $this->manager = $manager;
         $this->restrictionsManager = $restrictionsManager;
         $this->evaluationManager = $evaluationManager;
+        $this->strictDispatcher = $strictDispatcher;
     }
 
     /**
@@ -113,19 +112,18 @@ class WorkspaceController
         $isManager = $this->manager->isManager($workspace, $this->tokenStorage->getToken());
         $accessErrors = $this->restrictionsManager->getErrors($workspace, $user);
         if (empty($accessErrors) || $isManager) {
-            $this->eventDispatcher->dispatch(new OpenWorkspaceEvent($workspace), 'workspace.open');
+            $this->strictDispatcher->dispatch(
+                WorkspaceEvents::OPEN,
+                OpenWorkspaceEvent::class,
+                [$workspace]
+            );
 
             // Log workspace opening
-            $this->eventDispatcher->dispatch(new LogWorkspaceEnterEvent($workspace), 'log');
-
-            // Get the list of enabled workspace tool
-            if ($isManager) {
-                // gets all available tools
-                $orderedTools = $this->toolManager->getOrderedToolsByWorkspace($workspace);
-            } else {
-                // gets accessible tools by user
-                $orderedTools = $this->toolManager->getOrderedToolsByWorkspace($workspace, $this->tokenStorage->getToken()->getRoleNames());
-            }
+            $this->strictDispatcher->dispatch(
+                'log',
+                LogWorkspaceEnterEvent::class,
+                [$workspace]
+            );
 
             $userEvaluation = null;
             if ($user) {
@@ -146,12 +144,13 @@ class WorkspaceController
                 // to let the manager knows that other users can not enter the workspace
                 'accessErrors' => $accessErrors,
                 'userEvaluation' => $userEvaluation,
+                // get the list of enabled workspace tool
                 'tools' => array_values(array_map(function (OrderedTool $orderedTool) {
-                    return $this->serializer->serialize($orderedTool->getTool(), [Options::SERIALIZE_MINIMAL]);
-                }, $orderedTools)),
+                    return $this->serializer->serialize($orderedTool, [Options::SERIALIZE_MINIMAL]);
+                }, $this->toolManager->getOrderedToolsByWorkspace($workspace))),
                 'root' => $this->serializer->serialize($this->om->getRepository(ResourceNode::class)->findOneBy(['workspace' => $workspace, 'parent' => null]), [Options::SERIALIZE_MINIMAL]),
                 // TODO : only export current user shortcuts (we get all roles for the configuration in community/editor)
-                //'shortcuts' => $this->manager->getShortcuts($workspace, $user),
+                //'shortcuts' => $this->manager->getShortcuts($workspace, $this->tokenStorage->getToken()->getRoleNames()),
                 'shortcuts' => array_values(array_map(function (Shortcuts $shortcuts) {
                     return $this->serializer->serialize($shortcuts);
                 }, $workspace->getShortcuts()->toArray())),
@@ -189,10 +188,26 @@ class WorkspaceController
             throw new AccessDeniedException();
         }
 
-        /** @var OpenToolEvent $event */
-        $event = $this->eventDispatcher->dispatch(new OpenToolEvent($workspace), 'open_tool_workspace_'.$toolName);
+        $currentUser = $this->tokenStorage->getToken()->getUser();
+        $eventParams = [
+            $workspace,
+            $currentUser instanceof User ? $currentUser : null,
+            AbstractTool::WORKSPACE,
+            $toolName,
+        ];
 
-        $this->eventDispatcher->dispatch(new LogWorkspaceToolReadEvent($workspace, $toolName), 'log');
+        $this->strictDispatcher->dispatch(
+            ToolEvents::TOOL_OPEN,
+            OpenToolEvent::class,
+            $eventParams
+        );
+
+        /** @var OpenToolEvent $event */
+        $event = $this->strictDispatcher->dispatch(
+            'open_tool_workspace_'.$toolName,
+            OpenToolEvent::class,
+            $eventParams
+        );
 
         return new JsonResponse(array_merge($event->getData(), [
             'data' => $this->serializer->serialize($orderedTool),

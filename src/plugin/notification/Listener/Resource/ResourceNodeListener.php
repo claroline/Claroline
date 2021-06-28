@@ -11,6 +11,7 @@
 
 namespace Icap\NotificationBundle\Listener\Resource;
 
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Resource\DecorateResourceNodeEvent;
 use Icap\NotificationBundle\Manager\NotificationManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -25,9 +26,6 @@ class ResourceNodeListener
 
     /**
      * ResourceNodeListener constructor.
-     *
-     * @param NotificationManager   $notificationManager
-     * @param TokenStorageInterface $tokenStorage
      */
     public function __construct(
         NotificationManager $notificationManager,
@@ -39,14 +37,12 @@ class ResourceNodeListener
 
     /**
      * Add notifications option to serialized resource node when requested through API.
-     *
-     * @param DecorateResourceNodeEvent $event
      */
     public function onSerialize(DecorateResourceNodeEvent $event)
     {
         $node = $event->getResourceNode();
         $user = $this->tokenStorage->getToken()->getUser();
-        $followResource = 'anon.' !== $user ?
+        $followResource = $user instanceof User ?
             $this->notificationManager->getFollowerResource(
                 $user->getId(),
                 $node->getId(),

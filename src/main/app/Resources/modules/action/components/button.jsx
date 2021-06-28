@@ -19,7 +19,7 @@ const ButtonComponent = props => {
     (props.icon && typeof props.icon === 'string') &&
       <span key="button-icon" className={classes('action-icon', props.icon, !props.hideLabel && 'icon-with-text-right')} aria-hidden={true} />,
     (props.icon && typeof props.icon !== 'string') && cloneElement(props.icon, {key: 'button-icon'}),
-    props.hideLabel ? <span key="button-label" className="sr-only">{props.label}</span> : props.label,
+    props.hideLabel ? <span key="button-label" className="action-label sr-only">{props.label}</span> : props.label,
     props.children,
     props.subscript &&
       <span key="button-subscript" className={classes('action-subscript', `${props.subscript.type} ${props.subscript.type}-${props.subscript.status || 'primary'}`)}>{props.subscript.value}</span>

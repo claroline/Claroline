@@ -14,11 +14,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Wiki extends AbstractResource
 {
+    use Uuid;
     const OPEN_MODE = 0;
     const MODERATE_MODE = 1;
     const READ_ONLY_MODE = 2;
-
-    use Uuid;
 
     /**
      * @ORM\OneToOne(targetEntity="Icap\WikiBundle\Entity\Section", cascade={"all"})

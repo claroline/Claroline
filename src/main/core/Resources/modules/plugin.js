@@ -38,6 +38,11 @@ registry.add('ClarolineCoreBundle', {
       'impersonation': () => { return import(/* webpackChunkName: "core-action-desktop-impersonation" */ '#/main/core/desktop/actions/impersonation') },
     },
 
+    tool: {
+      'configure'  : () => { return import(/* webpackChunkName: "core-action-tool-configure" */ '#/main/core/tool/actions/configure') },
+      'rights'     : () => { return import(/* webpackChunkName: "core-action-tool-rights" */    '#/main/core/tool/actions/rights') }
+    },
+
     resource: {
       // all resources
       'about'     : () => { return import(/* webpackChunkName: "core-action-resource-about" */       '#/main/core/resource/actions/about') },
@@ -156,6 +161,7 @@ registry.add('ClarolineCoreBundle', {
       'organizations'     : () => { return import(/* webpackChunkName: "core-data-type-organizations" */      '#/main/core/data/types/organizations') },
       'resource'          : () => { return import(/* webpackChunkName: "core-data-type-resource" */           '#/main/core/data/types/resource') },
       'resources'         : () => { return import(/* webpackChunkName: "core-data-type-resources" */          '#/main/core/data/types/resources') },
+      'room'              : () => { return import(/* webpackChunkName: "core-data-type-room" */               '#/main/core/data/types/room') },
       'role'              : () => { return import(/* webpackChunkName: "core-data-type-role" */               '#/main/core/data/types/role') },
       'roles'             : () => { return import(/* webpackChunkName: "core-data-type-roles" */              '#/main/core/data/types/roles') },
       'template'          : () => { return import(/* webpackChunkName: "core-data-type-template" */           '#/main/core/data/types/template') },

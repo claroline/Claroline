@@ -10,7 +10,6 @@ use Icap\BlogBundle\Entity\Statusable;
 class TagRepository extends EntityRepository
 {
     /**
-     * @param Blog     $blog
      * @param bool     $executeQuery
      * @param int|null $max
      *
@@ -41,8 +40,6 @@ class TagRepository extends EntityRepository
     }
 
     /**
-     * @param Post $post
-     *
      * @return array|\Doctrine\ORM\AbstractQuery
      */
     public function findByPost(Post $post)

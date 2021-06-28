@@ -2,14 +2,14 @@
 
 namespace Icap\FormulaPluginBundle;
 
-use Claroline\CoreBundle\Library\DistributionPluginBundle;
+use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
 
 /**
  * Formula Plugin bundle class.
  */
 class IcapFormulaPluginBundle extends DistributionPluginBundle
 {
-    public function hasMigrations()
+    public function hasMigrations(): bool
     {
         return false;
     }

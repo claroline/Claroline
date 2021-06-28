@@ -1,8 +1,7 @@
-import React, {Fragment} from 'react'
+import React, {createElement, Component, Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {theme} from '#/main/app/config'
-import {Await} from '#/main/app/components/await'
 
 import {getResource} from '#/main/core/resources'
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
@@ -10,32 +9,56 @@ import {ResourceForm} from '#/main/core/resource/components/form'
 
 import {selectors} from '#/main/core/resource/modals/creation/store'
 
-const ResourceParameters = (props) =>
-  <ResourceForm
-    level={5}
-    meta={true}
-    name={selectors.STORE_NAME}
-    dataPart={selectors.FORM_NODE_PART}
-  >
-    <Await
-      for={getResource(props.resourceNode.meta.type)}
-      then={module => {
-        if (module.Creation) {
-          const creationApp = module.Creation()
+class ResourceParameters extends Component {
+  constructor(props) {
+    super(props)
 
-          return (
-            <Fragment>
-              {React.createElement(creationApp.component)}
+    this.state = {
+      customForm: null
+    }
+  }
 
-              {creationApp.styles && creationApp.styles.map(styleName =>
-                <link key={styleName} rel="stylesheet" type="text/css" href={theme(styleName)} />
-              )}
-            </Fragment>
-          )
-        }
-      }}
-    />
-  </ResourceForm>
+  componentDidMount() {
+    getResource(this.props.resourceNode.meta.type).then((module) => {
+      let creationApp = null
+      if (module.Creation) {
+        creationApp = module.Creation()
+      }
+
+      this.setState({customForm: creationApp})
+    })
+  }
+
+  renderCustomForm() {
+    if (this.state.customForm) {
+      return (
+        <Fragment>
+          {createElement(this.state.customForm.component)}
+
+          {this.state.customForm.styles && this.state.customForm.styles.map(styleName =>
+            <link key={styleName} rel="stylesheet" type="text/css" href={theme(styleName)} />
+          )}
+        </Fragment>
+      )
+    }
+
+    return null
+  }
+
+  render() {
+    return (
+      <ResourceForm
+        level={5}
+        meta={true}
+        name={selectors.STORE_NAME}
+        dataPart={selectors.FORM_NODE_PART}
+      >
+        {this.renderCustomForm()}
+      </ResourceForm>
+    )
+  }
+}
+
 
 ResourceParameters.propTypes = {
   resourceNode: T.shape(

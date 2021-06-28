@@ -2,11 +2,12 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 
+import {scrollTo} from '#/main/app/dom/scroll'
 import {trans} from '#/main/app/intl/translation'
-import {CALLBACK_BUTTON} from '#/main/app/buttons'
+import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {ResourcePage} from '#/main/core/resource/containers/page'
 
-import {ChapterResource} from '#/plugin/lesson/resources/lesson/components/chapter'
+import {Chapter} from '#/plugin/lesson/resources/lesson/containers/chapter'
 import {ChapterForm} from '#/plugin/lesson/resources/lesson/components/chapter-form'
 import {Editor} from '#/plugin/lesson/resources/lesson/editor/containers/editor'
 import {LessonOverview} from '#/plugin/lesson/resources/lesson/containers/overview'
@@ -37,6 +38,13 @@ class LessonResource extends Component {
         primaryAction="chapter"
         customActions={[
           {
+            type: LINK_BUTTON,
+            icon: 'fa fa-fw fa-home',
+            label: trans('show_overview'),
+            displayed: this.props.overview,
+            target: this.props.path,
+            exact: true
+          }, {
             type: CALLBACK_BUTTON,
             icon: 'fa fa-fw fa-file-pdf-o',
             displayed: this.props.canExport,
@@ -61,9 +69,18 @@ class LessonResource extends Component {
             onEnter: () => this.props.createChapter(this.props.lesson.id, this.props.root.slug)
           }, {
             path: '/:slug',
-            component: ChapterResource,
             exact: true,
-            onEnter: params => this.props.loadChapter(this.props.lesson.id, params.slug)
+            onEnter: params => this.props.loadChapter(this.props.lesson.id, params.slug),
+            render: () => (
+              <Chapter
+                backAction={this.props.overview ? {
+                  type: LINK_BUTTON,
+                  target: this.props.path,
+                  exact: true
+                } : undefined}
+                onNavigate={() => scrollTo(`#resource-${this.props.resourceId} > .page-content`)}
+              />
+            )
           }, {
             path: '/:slug/edit',
             component: ChapterForm,
@@ -86,6 +103,7 @@ class LessonResource extends Component {
 
 LessonResource.propTypes = {
   path: T.string.isRequired,
+  resourceId: T.string,
   invalidated: T.bool.isRequired,
   fetchChapterTree: T.func.isRequired,
   lesson: T.any.isRequired,

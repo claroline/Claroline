@@ -12,7 +12,7 @@
 namespace Claroline\ClacoFormBundle;
 
 use Claroline\ClacoFormBundle\Installation\AdditionalInstaller;
-use Claroline\CoreBundle\Library\DistributionPluginBundle;
+use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
 
 class ClarolineClacoFormBundle extends DistributionPluginBundle
 {

@@ -11,6 +11,7 @@ const Course = {
     code: T.string,
     name: T.string,
     description: T.string,
+    plainDescription: T.string,
     parent: T.shape({ // This is a minimal Course
       id: T.string,
       code: T.string,
@@ -26,6 +27,7 @@ const Course = {
       order: T.number
     }),
     restrictions: T.shape({
+      active: T.bool,
       users: T.number
     }),
     registration: T.shape({
@@ -62,11 +64,12 @@ const Session = {
     code: T.string,
     name: T.string,
     description: T.string,
+    plainDescription: T.string,
+    course: T.shape(
+      Course.propTypes
+    ),
     meta: T.shape({
       default: T.bool,
-      course: T.shape(
-        Course.propTypes
-      ),
       workspace: T.shape(
         WorkspaceTypes.propTypes
       ),
@@ -126,10 +129,11 @@ const Event = {
     code: T.string,
     name: T.string,
     description: T.string,
+    session: T.shape(
+      Session.propTypes
+    ),
     meta: T.shape({
-      type: T.number,
-      session: T.shape(Session.propTypes),
-      set: T.string
+      type: T.string.isRequired
     }),
     restrictions: T.shape({
       users: T.number,
@@ -140,9 +144,8 @@ const Event = {
     })
   },
   defaultProps: {
-    name: '',
     meta: {
-      type: constants.EVENT_TYPE_NONE
+      type: 'training_event'
     },
     registration: {
       registrationType: constants.REGISTRATION_AUTO

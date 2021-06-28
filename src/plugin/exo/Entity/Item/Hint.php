@@ -16,6 +16,9 @@ use UJM\ExoBundle\Library\Model\PenaltyTrait;
  */
 class Hint implements PenaltyItemInterface
 {
+    use ContentTrait;
+    use PenaltyTrait;
+    use Uuid;
     /**
      * @ORM\Column(type="integer")
      * @ORM\Id
@@ -24,10 +27,6 @@ class Hint implements PenaltyItemInterface
      * @var int
      */
     private $id;
-
-    use ContentTrait;
-    use PenaltyTrait;
-    use Uuid;
 
     /**
      * @ORM\ManyToOne(targetEntity="Item", inversedBy="hints")

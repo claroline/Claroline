@@ -37,7 +37,7 @@ class PlayerTab extends Component {
         currentContext: this.props.currentContext,
         tabs: this.props.tabs,
         currentTab: this.props.currentTab,
-        currentTabTitle: this.props.currentTabTitle
+        title: this.props.currentTabTitle
       })
     }
 

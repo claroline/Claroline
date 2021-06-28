@@ -11,12 +11,8 @@
 
 namespace Claroline\TeamBundle;
 
-use Claroline\CoreBundle\Library\DistributionPluginBundle;
+use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
 
 class ClarolineTeamBundle extends DistributionPluginBundle
 {
-    public function hasMigrations()
-    {
-        return true;
-    }
 }

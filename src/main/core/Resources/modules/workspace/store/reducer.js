@@ -39,23 +39,29 @@ const reducer = combineReducers({
     [WORKSPACE_LOAD]: (state, action) => action.workspaceData.managed || false
   }),
   workspace: makeReducer(null, {
+    [WORKSPACE_OPEN]: () => null,
     [WORKSPACE_LOAD]: (state, action) => action.workspaceData.workspace
   }),
   tools: makeReducer([], {
+    [WORKSPACE_OPEN]: () => [],
     [WORKSPACE_LOAD]: (state, action) => action.workspaceData.tools || []
   }),
   root: makeReducer({}, {
+    [WORKSPACE_OPEN]: () => ({}),
     [WORKSPACE_LOAD]: (state, action) => action.workspaceData.root || {}
   }),
   shortcuts: makeReducer([], {
+    [WORKSPACE_OPEN]: () => [],
     [WORKSPACE_LOAD]: (state, action) => action.workspaceData.shortcuts || [],
     [SHORTCUTS_LOAD]: (state, action) => action.shortcuts || []
   }),
   userEvaluation: makeReducer(null, {
+    [WORKSPACE_OPEN]: () => null,
     [WORKSPACE_LOAD]: (state, action) => action.workspaceData.userEvaluation || state
   }),
   accessErrors: combineReducers({
     dismissed: makeReducer(false, {
+      [WORKSPACE_OPEN]: () => false,
       [WORKSPACE_RESTRICTIONS_DISMISS]: () => true//,
       /*[WORKSPACE_LOAD]: (state, action) => {
        //+ date check and ips and the hidden flag most likely but I have no example now
@@ -68,6 +74,7 @@ const reducer = combineReducers({
        }*/
     }),
     details: makeReducer({}, {
+      [WORKSPACE_OPEN]: () => ({}),
       [WORKSPACE_LOAD]: (state, action) => action.workspaceData.accessErrors || {},
       [WORKSPACE_RESTRICTIONS_ERROR]: (state, action) => action.errors,
       [WORKSPACE_RESTRICTIONS_UNLOCKED]: (state) => {
@@ -79,6 +86,7 @@ const reducer = combineReducers({
   }),
 
   serverErrors: makeReducer([], {
+    [WORKSPACE_OPEN]: () => [],
     [WORKSPACE_SERVER_ERRORS]: (state, action) => action.errors
   })
 })

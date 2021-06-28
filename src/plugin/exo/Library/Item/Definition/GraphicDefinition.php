@@ -36,10 +36,6 @@ class GraphicDefinition extends AbstractDefinition
 
     /**
      * GraphicDefinition constructor.
-     *
-     * @param GraphicQuestionValidator  $validator
-     * @param GraphicAnswerValidator    $answerValidator
-     * @param GraphicQuestionSerializer $serializer
      */
     public function __construct(
         GraphicQuestionValidator $validator,

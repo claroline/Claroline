@@ -49,6 +49,7 @@
     "not_found": "Ressource non trouvée",
     "not_found_desc": "Nous sommes désolés, nous n'avons pas pu trouver votre ressource. Il est possible qu'elle n'existe pas (ou plus) ou que l'URL utilisée soit incorrecte.",
     "loading": "Nous chargeons votre ressource...",
+    "rights_loading": "Nous chargeons les droits de la ressource...",
     "no_started_resource": "Vous n'avez commencé aucune ressource.",
     "no_started_resource_help": "Parcourez vos ressources pour voir apparaître votre progression dans chacune d'elles ici.",
 
@@ -62,6 +63,10 @@
     "evaluation_completed_status": "Vous avez terminé la ressource.",
     "evaluation_passed_status": "Vous avez réussi la ressource.",
     "show_resource_header" : "Afficher l'entête de la ressource",
+
+    "resourceOpen": "La resouce resourceName a été ouverte par l'utilisateur userName",
+    "resourceEvaluation": "resourceName - statusName : userName est actuellement à l'étape userProgression pour une durée de durationTime sec",
+    "resourceScore": "resourceName - statusName : userName a eu un score de currentScore sur scoreMax. Le score min est de scoreMin",
 
     "restrictions": {
         "dismiss_help": "En tant que gestionnaire vous pouvez toujours accéder à la ressource, même si les conditions d'accès ne sont pas satisfaites.",

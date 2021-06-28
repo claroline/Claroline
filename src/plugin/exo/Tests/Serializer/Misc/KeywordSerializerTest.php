@@ -110,9 +110,6 @@ class KeywordSerializerTest extends JsonDataTestCase
 
     /**
      * Compares the data between a keyword entity and a keyword raw object.
-     *
-     * @param Keyword $keyword
-     * @param array   $keywordData
      */
     private function compareKeywordAndData(Keyword $keyword, array $keywordData)
     {

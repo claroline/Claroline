@@ -39,10 +39,6 @@ class GridDefinition extends AbstractDefinition
 
     /**
      * PairDefinition constructor.
-     *
-     * @param GridQuestionValidator  $validator
-     * @param GridAnswerValidator    $answerValidator
-     * @param GridQuestionSerializer $serializer
      */
     public function __construct(
         GridQuestionValidator $validator,
@@ -224,7 +220,8 @@ class GridDefinition extends AbstractDefinition
 
         if (!is_null($answer)) {
             // correct answers per row
-            for ($i = 0; $i < $question->getRows(); ++$i) {
+            $nbRows = $question->getRows();
+            for ($i = 0; $i < $nbRows; ++$i) {
                 // get cells where there is at least 1 expected answer for the current row (none possible)
                 $rowCellsUuids = [];
 
@@ -285,7 +282,8 @@ class GridDefinition extends AbstractDefinition
 
         if (!is_null($answer)) {
             // correct answers per row
-            for ($i = 0; $i < $question->getColumns(); ++$i) {
+            $nbColumns = $question->getColumns();
+            for ($i = 0; $i < $nbColumns; ++$i) {
                 // get cells where there is at least 1 expected answers for the current column (none possible)
                 $colCellsUuids = [];
 
@@ -361,7 +359,8 @@ class GridDefinition extends AbstractDefinition
                 }
                 break;
             case GridQuestion::SUM_COLUMN:
-                for ($i = 0; $i < $question->getColumns(); ++$i) {
+                $nbColumns = $question->getColumns();
+                for ($i = 0; $i < $nbColumns; ++$i) {
                     // get cells where there is at least 1 expected answers for the current column (none possible)
                     foreach ($question->getCells() as $cell) {
                         // found a cell in this col with an expected answer
@@ -375,7 +374,8 @@ class GridDefinition extends AbstractDefinition
                 }
                 break;
             case GridQuestion::SUM_ROW:
-                for ($i = 0; $i < $question->getRows(); ++$i) {
+                $nbRows = $question->getRows();
+                for ($i = 0; $i < $nbRows; ++$i) {
                     // get cells where there is at least 1 expected answers for the current row (none possible)
                     foreach ($question->getCells() as $cell) {
                         // found a cell in this row with an expected answer
@@ -481,8 +481,6 @@ class GridDefinition extends AbstractDefinition
     }
 
     /**
-     * @param Cell $cell
-     *
      * @return CellChoice|null
      */
     private function findCellExpectedAnswer(Cell $cell)

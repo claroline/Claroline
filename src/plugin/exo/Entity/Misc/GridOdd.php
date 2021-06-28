@@ -16,6 +16,8 @@ use UJM\ExoBundle\Library\Model\ScoreTrait;
  */
 class GridOdd implements AnswerPartInterface
 {
+    use ScoreTrait;
+    use FeedbackTrait;
     /**
      * Unique identifier of the odd.
      *
@@ -26,10 +28,6 @@ class GridOdd implements AnswerPartInterface
      * @var int
      */
     private $id;
-
-    use ScoreTrait;
-
-    use FeedbackTrait;
 
     /**
      * The item which is odd.
@@ -73,8 +71,6 @@ class GridOdd implements AnswerPartInterface
 
     /**
      * Set item.
-     *
-     * @param GridItem $item
      */
     public function setItem(GridItem $item)
     {
@@ -93,8 +89,6 @@ class GridOdd implements AnswerPartInterface
 
     /**
      * Set question.
-     *
-     * @param PairQuestion $pairQuestion
      */
     public function setQuestion(PairQuestion $pairQuestion)
     {

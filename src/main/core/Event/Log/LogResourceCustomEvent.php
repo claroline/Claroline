@@ -24,20 +24,20 @@ class LogResourceCustomEvent extends LogGenericEvent
     {
         parent::__construct(
             self::ACTION.'_'.$action,
-            array(
-                'resource' => array(
+            [
+                'resource' => [
                     'name' => $node->getName(),
                     'path' => $node->getPathForCreationLog(),
-                ),
-                'workspace' => array(
+                ],
+                'workspace' => [
                     'name' => $node->getWorkspace()->getName(),
-                ),
-                'owner' => array(
+                ],
+                'owner' => [
                     'lastName' => $node->getCreator()->getLastName(),
                     'firstName' => $node->getCreator()->getFirstName(),
-                ),
+                ],
                 'action' => $action,
-            ),
+            ],
             null,
             null,
             $node,

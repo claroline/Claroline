@@ -30,15 +30,15 @@ class LogWorkspaceRoleUpdateEvent extends LogGenericEvent
     {
         parent::__construct(
             self::ACTION,
-            array(
-                'role' => array(
+            [
+                'role' => [
                     'name' => $role->getName(),
                     'changeSet' => $changeSet,
-                ),
-                'workspace' => array(
+                ],
+                'workspace' => [
                     'name' => $role->getWorkspace()->getName(),
-                ),
-            ),
+                ],
+            ],
             null,
             null,
             null,

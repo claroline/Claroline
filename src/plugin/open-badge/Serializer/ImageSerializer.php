@@ -7,9 +7,6 @@ use Symfony\Component\Routing\RouterInterface;
 
 class ImageSerializer
 {
-    /**
-     * @param RouterInterface $router
-     */
     public function __construct(RouterInterface $router)
     {
         $this->router = $router;
@@ -25,7 +22,7 @@ class ImageSerializer
         $context = $this->router->getContext();
         $schemeAndHttpHost = $context->getScheme().'://'.$context->getHost().'/';
 
-        return  [
+        return [
             'type' => 'Image',
             'id' => $schemeAndHttpHost.$file->getUrl(),
             //no captions atm

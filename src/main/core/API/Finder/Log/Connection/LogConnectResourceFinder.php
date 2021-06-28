@@ -17,7 +17,7 @@ use Doctrine\ORM\QueryBuilder;
 
 class LogConnectResourceFinder extends AbstractFinder
 {
-    public function getClass()
+    public static function getClass(): string
     {
         return LogConnectResource::class;
     }
@@ -84,10 +84,5 @@ class LogConnectResourceFinder extends AbstractFinder
         }
 
         return $qb;
-    }
-
-    public function getFilters()
-    {
-        return [];
     }
 }

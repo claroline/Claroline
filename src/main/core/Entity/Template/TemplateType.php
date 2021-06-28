@@ -62,9 +62,6 @@ class TemplateType
      */
     private $defaultTemplate;
 
-    /**
-     * Template constructor.
-     */
     public function __construct()
     {
         $this->refreshUuid();
@@ -102,8 +99,6 @@ class TemplateType
 
     /**
      * Set plugin.
-     *
-     * @param Plugin $plugin
      */
     public function setPlugin(Plugin $plugin)
     {
@@ -122,8 +117,6 @@ class TemplateType
 
     /**
      * Set placeholders.
-     *
-     * @param array|null $placeholders
      */
     public function setPlaceholders(array $placeholders = null)
     {

@@ -93,19 +93,20 @@ class CourseSerializer
             'name' => $course->getName(),
             'slug' => $course->getSlug(),
             'description' => $course->getDescription(),
-            'poster' => $this->serializePoster($course),
+            'plainDescription' => $course->getPlainDescription(),
             'thumbnail' => $this->serializeThumbnail($course),
             'permissions' => [
                 'open' => $this->authorization->isGranted('OPEN', $course),
                 'edit' => $this->authorization->isGranted('EDIT', $course),
                 'delete' => $this->authorization->isGranted('DELETE', $course),
             ],
-            'parent' => $course->getParent() ? $this->serialize($course->getParent(), [Options::SERIALIZE_MINIMAL]) : null,
             'tags' => $this->serializeTags($course),
         ];
 
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
             $serialized = array_merge($serialized, [
+                'poster' => $this->serializePoster($course),
+                'parent' => $course->getParent() ? $this->serialize($course->getParent(), [Options::SERIALIZE_MINIMAL]) : null,
                 'meta' => [
                     'creator' => $course->getCreator() ?
                         $this->userSerializer->serialize($course->getCreator(), [Options::SERIALIZE_MINIMAL]) :
@@ -118,6 +119,8 @@ class CourseSerializer
                     'order' => $course->getOrder(),
                 ],
                 'restrictions' => [
+                    'hidden' => $course->isHidden(),
+                    'active' => $course->hasAvailableSession(),
                     'users' => $course->getMaxUsers(),
                 ],
                 'registration' => [
@@ -127,6 +130,10 @@ class CourseSerializer
                     'validation' => $course->getRegistrationValidation(),
                     'userValidation' => $course->getUserValidation(),
                     'mail' => $course->getRegistrationMail(),
+                ],
+                'pricing' => [
+                    'price' => $course->getPrice(),
+                    'description' => $course->getPriceDescription(),
                 ],
                 'workspace' => $course->getWorkspace() ?
                     $this->workspaceSerializer->serialize($course->getWorkspace(), [Options::SERIALIZE_MINIMAL]) :
@@ -152,6 +159,7 @@ class CourseSerializer
         $this->sipe('code', 'setCode', $data, $course);
         $this->sipe('name', 'setName', $data, $course);
         $this->sipe('description', 'setDescription', $data, $course);
+        $this->sipe('plainDescription', 'setPlainDescription', $data, $course);
 
         $this->sipe('meta.tutorRoleName', 'setTutorRoleName', $data, $course);
         $this->sipe('meta.learnerRoleName', 'setLearnerRoleName', $data, $course);
@@ -160,6 +168,7 @@ class CourseSerializer
         $this->sipe('meta.order', 'setOrder', $data, $course);
 
         $this->sipe('restrictions.users', 'setMaxUsers', $data, $course);
+        $this->sipe('restrictions.hidden', 'setHidden', $data, $course);
 
         $this->sipe('registration.propagate', 'setPropagateRegistration', $data, $course);
         $this->sipe('registration.selfRegistration', 'setPublicRegistration', $data, $course);
@@ -167,6 +176,9 @@ class CourseSerializer
         $this->sipe('registration.validation', 'setRegistrationValidation', $data, $course);
         $this->sipe('registration.userValidation', 'setUserValidation', $data, $course);
         $this->sipe('registration.mail', 'setRegistrationMail', $data, $course);
+
+        $this->sipe('pricing.price', 'setPrice', $data, $course);
+        $this->sipe('pricing.description', 'setPriceDescription', $data, $course);
 
         if (isset($data['meta'])) {
             if (isset($data['meta']['created'])) {

@@ -15,9 +15,8 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 
 class LogResourcePublishEvent extends LogGenericEvent implements NotifiableInterface
 {
-    const ACTION = 'resource-publish';
-
     use ResourceNotifiableTrait;
+    const ACTION = 'resource-publish';
 
     /**
      * Constructor.

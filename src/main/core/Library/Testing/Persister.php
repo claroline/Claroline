@@ -4,7 +4,7 @@ namespace Claroline\CoreBundle\Library\Testing;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Group;
-use Claroline\CoreBundle\Entity\Organization\Location;
+use Claroline\CoreBundle\Entity\Location\Location;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\File;

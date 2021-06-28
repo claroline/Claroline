@@ -1,0 +1,10 @@
+plugin:
+    admin_tools:
+        - name: logs
+          class: shoe-prints
+
+    resource_actions:
+        - name: logs
+          group: management
+          decoder: administrate
+          scope: [object, collection]

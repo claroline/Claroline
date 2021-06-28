@@ -17,7 +17,7 @@ use Doctrine\ORM\QueryBuilder;
 
 class TemplateFinder extends AbstractFinder
 {
-    public function getClass()
+    public static function getClass(): string
     {
         return Template::class;
     }
@@ -41,8 +41,8 @@ class TemplateFinder extends AbstractFinder
                         $qb->join('obj.type', 't');
                         $typeJoin = true;
                     }
-                    $qb->andWhere("UPPER(t.name) LIKE :{$filterName}");
-                    $qb->setParameter($filterName, '%'.strtoupper($filterValue).'%');
+                    $qb->andWhere("UPPER(t.name) = :{$filterName}");
+                    $qb->setParameter($filterName, strtoupper($filterValue));
                     break;
                 default:
                     $this->setDefaults($qb, $filterName, $filterValue);
@@ -66,7 +66,7 @@ class TemplateFinder extends AbstractFinder
         return $qb;
     }
 
-    public function getFilters()
+    public function getFilters(): array
     {
         return [
             'type' => [

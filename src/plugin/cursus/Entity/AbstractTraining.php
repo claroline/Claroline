@@ -32,7 +32,6 @@ class AbstractTraining
 {
     use Id;
     use Uuid;
-
     use Code;
     use Description;
     use Order;
@@ -49,6 +48,13 @@ class AbstractTraining
      * @var string
      */
     protected $name;
+
+    /**
+     * @ORM\Column(nullable=true)
+     *
+     * @var string
+     */
+    protected $plainDescription;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace")
@@ -86,6 +92,20 @@ class AbstractTraining
      */
     protected $maxUsers;
 
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     *
+     * @var float
+     */
+    protected $price = null;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     *
+     * @var string
+     */
+    protected $priceDescription = null;
+
     public function getName()
     {
         return $this->name;
@@ -94,6 +114,16 @@ class AbstractTraining
     public function setName($name)
     {
         $this->name = $name;
+    }
+
+    public function getPlainDescription(): ?string
+    {
+        return $this->plainDescription;
+    }
+
+    public function setPlainDescription(string $description = null)
+    {
+        $this->plainDescription = $description;
     }
 
     public function getWorkspace()
@@ -169,5 +199,25 @@ class AbstractTraining
     public function setMaxUsers($maxUsers)
     {
         $this->maxUsers = $maxUsers;
+    }
+
+    public function getPrice(): ?float
+    {
+        return $this->price;
+    }
+
+    public function setPrice(float $price = null)
+    {
+        $this->price = $price;
+    }
+
+    public function getPriceDescription(): ?string
+    {
+        return $this->priceDescription;
+    }
+
+    public function setPriceDescription(string $description = null)
+    {
+        $this->priceDescription = $description;
     }
 }

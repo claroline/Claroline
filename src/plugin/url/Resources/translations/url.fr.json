@@ -1,4 +1,5 @@
 {
+    "button_desc": "Afficher un bouton pour ouvrir l'URL",
     "iframe_desc": "Afficher l'URL au sein de la ressource",
     "redirect_desc": "Ouvrir l'URL dans l'onglet courant",
     "tab_desc": "Ouvrir l'URL dans un nouvel onglet",

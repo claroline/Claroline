@@ -140,9 +140,6 @@ class Section
         return $this->resourceNode;
     }
 
-    /**
-     * @param ResourceNode $resourceNode
-     */
     public function setResourceNode(ResourceNode $resourceNode)
     {
         $this->resourceNode = $resourceNode;

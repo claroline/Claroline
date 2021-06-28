@@ -9,8 +9,7 @@ interface AdapterInterface
     /**
      * Build the list of object from the content submitted by a user and the data Schema.
      *
-     * @param mixed       $content
-     * @param Explanation $explanation
+     * @param mixed $content
      *
      * @return array
      */
@@ -26,8 +25,7 @@ interface AdapterInterface
     /**
      * Explain how to build the content for the specified mime-type from the json-schema.
      *
-     * @param \stdClass $json
-     * @param string    $mode
+     * @param string $mode
      *
      * @return Explanation
      */

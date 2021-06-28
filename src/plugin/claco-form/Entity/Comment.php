@@ -109,8 +109,6 @@ class Comment
 
     /**
      * Set user.
-     *
-     * @param User|null $user
      */
     public function setUser(User $user = null)
     {
@@ -129,8 +127,6 @@ class Comment
 
     /**
      * Set entry.
-     *
-     * @param Entry $entry
      */
     public function setEntry(Entry $entry)
     {
@@ -149,8 +145,6 @@ class Comment
 
     /**
      * Set creation date.
-     *
-     * @param \DateTime $creationDate
      */
     public function setCreationDate(\DateTime $creationDate)
     {
@@ -169,8 +163,6 @@ class Comment
 
     /**
      * Set edition date.
-     *
-     * @param \DateTime|null $editionDate
      */
     public function setEditionDate(\DateTime $editionDate = null)
     {

@@ -12,6 +12,7 @@ import {LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {ContentHtml} from '#/main/app/content/components/html'
 import {ContentTitle} from '#/main/app/content/components/title'
 import {LocationCard} from '#/main/core/user/data/components/location-card'
+import {RoomCard} from '#/main/core/data/types/room/components/card'
 import {ResourceCard} from '#/main/core/resource/components/card'
 import {route as resourceRoute} from '#/main/core/resource/routing'
 
@@ -86,8 +87,8 @@ const EventAbout = (props) =>
           <li className="list-group-item">
             {trans('duration')}
             <span className="value">
-              {get(props.event, 'restrictions.dates[0]') && get(props.event, 'restrictions.dates[1]') ?
-                displayDuration(getTimeDiff(get(props.event, 'restrictions.dates[0]'), get(props.event, 'restrictions.date[1]')), true) :
+              {get(props.event, 'start') && get(props.event, 'end') ?
+                displayDuration(getTimeDiff(get(props.event, 'start'), get(props.event, 'end')), true) :
                 trans('empty_value')
               }
             </span>
@@ -103,7 +104,13 @@ const EventAbout = (props) =>
 
       {isEmpty(get(props.event, 'location')) &&
         <div className="component-container">
-          <em className="text-muted">{trans('online_session', {}, 'cursus')}</em>
+          {isEmpty(get(props.event, 'locationUrl')) &&
+            <em className="text-muted">{trans('online_session', {}, 'cursus')}</em>
+          }
+
+          {!isEmpty(get(props.event, 'locationUrl')) &&
+            <a href={get(props.event, 'locationUrl')}>{get(props.event, 'locationUrl')}</a>
+          }
         </div>
       }
 
@@ -113,6 +120,15 @@ const EventAbout = (props) =>
           size="xs"
           orientation="row"
           data={get(props.event, 'location')}
+        />
+      }
+
+      {!isEmpty(get(props.event, 'room')) &&
+        <RoomCard
+          className="component-container"
+          size="xs"
+          orientation="row"
+          data={get(props.event, 'room')}
         />
       }
 
@@ -156,19 +172,19 @@ const EventAbout = (props) =>
             {trans('status')}
           </span>
 
-          {get(props.event, 'restrictions.dates[0]') > now() &&
+          {get(props.event, 'start') > now() &&
             <h1 className="content-resume-title h2 text-muted">
               {trans('session_not_started', {}, 'cursus')}
             </h1>
           }
 
-          {(get(props.event, 'restrictions.dates[0]') <= now() && get(props.event, 'restrictions.dates[1]') >= now()) &&
+          {(get(props.event, 'start') <= now() && get(props.event, 'end') >= now()) &&
             <h1 className="content-resume-title h2 text-success">
               {trans('session_in_progress', {}, 'cursus')}
             </h1>
           }
 
-          {get(props.event, 'restrictions.dates[1]') < now() &&
+          {get(props.event, 'end') < now() &&
             <h1 className="content-resume-title h2 text-danger">
               {trans('session_closed', {}, 'cursus')}
             </h1>
@@ -180,9 +196,9 @@ const EventAbout = (props) =>
             {trans('start_date')}
           </span>
 
-          {get(props.event, 'restrictions.dates[0]') &&
+          {get(props.event, 'start') &&
             <h1 className="content-resume-title h2">
-              {displayDate(get(props.event, 'restrictions.dates[0]'), false, true)}
+              {displayDate(get(props.event, 'start'), false, true)}
             </h1>
           }
         </div>
@@ -241,7 +257,7 @@ const EventAbout = (props) =>
         style={{marginBottom: 20}}
         orientation="row"
         size="xs"
-        data={props.event.meta.session}
+        data={props.event.session}
       />
     </div>
   </div>

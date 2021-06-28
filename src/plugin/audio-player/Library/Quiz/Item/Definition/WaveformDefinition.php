@@ -37,10 +37,6 @@ class WaveformDefinition extends AbstractDefinition
 
     /**
      * WaveformDefinition constructor.
-     *
-     * @param WaveformQuestionValidator  $validator
-     * @param WaveformAnswerValidator    $answerValidator
-     * @param WaveformQuestionSerializer $serializer
      */
     public function __construct(
         WaveformQuestionValidator $validator,
@@ -119,8 +115,8 @@ class WaveformDefinition extends AbstractDefinition
 
                 foreach ($answer as $selection) {
                     if ($selection['start'] >= $section->getStart() - $section->getStartTolerance() &&
-                        $selection['start'] <= $section->getStart() &&
-                        $selection['end'] >= $section->getEnd() &&
+                        $selection['start'] <= $section->getStart() + $section->getStartTolerance() &&
+                        $selection['end'] >= $section->getEnd() - $section->getEndTolerance() &&
                         $selection['end'] <= $section->getEnd() + $section->getEndTolerance()
                     ) {
                         $found = true;
@@ -142,8 +138,8 @@ class WaveformDefinition extends AbstractDefinition
 
                 foreach ($question->getSections() as $section) {
                     if ($selection['start'] >= $section->getStart() - $section->getStartTolerance() &&
-                        $selection['start'] <= $section->getStart() &&
-                        $selection['end'] >= $section->getEnd() &&
+                        $selection['start'] <= $section->getStart() + $section->getStartTolerance() &&
+                        $selection['end'] >= $section->getEnd() - $section->getEndTolerance() &&
                         $selection['end'] <= $section->getEnd() + $section->getEndTolerance()
                     ) {
                         $found = true;
@@ -160,8 +156,6 @@ class WaveformDefinition extends AbstractDefinition
     }
 
     /**
-     * @param AbstractItem $question
-     *
      * @return array
      */
     public function expectAnswer(AbstractItem $question)
@@ -182,9 +176,7 @@ class WaveformDefinition extends AbstractDefinition
     }
 
     /**
-     * @param AbstractItem $waveformQuestion
-     * @param array        $answersData
-     * @param int          $total
+     * @param int $total
      *
      * @return array
      */
@@ -199,8 +191,8 @@ class WaveformDefinition extends AbstractDefinition
 
                     foreach ($waveformQuestion->getSections() as $section) {
                         if ($sectionAnswer['start'] >= $section->getStart() - $section->getStartTolerance() &&
-                            $sectionAnswer['start'] <= $section->getStart() &&
-                            $sectionAnswer['end'] >= $section->getEnd() &&
+                            $sectionAnswer['start'] <= $section->getStart() + $section->getStartTolerance() &&
+                            $sectionAnswer['end'] >= $section->getEnd() - $section->getEndTolerance() &&
                             $sectionAnswer['end'] <= $section->getEnd() + $section->getEndTolerance()
                         ) {
                             $sectionId = $section->getUuid();
@@ -225,8 +217,6 @@ class WaveformDefinition extends AbstractDefinition
 
     /**
      * No additional identifier to regenerate.
-     *
-     * @param AbstractItem $item
      */
     public function refreshIdentifiers(AbstractItem $item)
     {

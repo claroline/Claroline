@@ -22,12 +22,12 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\ResourceActionEvent;
-use Claroline\CoreBundle\Exception\ResourceAccessException;
 use Claroline\CoreBundle\Manager\Resource\ResourceActionManager;
 use Claroline\CoreBundle\Manager\Resource\RightsManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Security\Collection\ResourceCollection;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * Integrates the "Directory" resource.
@@ -99,7 +99,7 @@ class DirectoryListener
         // checks if the current user can add
         $collection = new ResourceCollection([$parent], ['type' => $data['resourceNode']['meta']['type']]);
         if (!$this->actionManager->hasPermission($add, $collection)) {
-            throw new ResourceAccessException($collection->getErrorsForDisplay(), $collection->getResources());
+            throw new AccessDeniedException($collection->getErrorsForDisplay());
         }
 
         $options = $event->getOptions();
@@ -129,7 +129,7 @@ class DirectoryListener
                     // only forward creation rights to resource which can handle it (only directories atm)
                     $creation = $rights['permissions']['create'];
                 }
-                $this->rightsManager->editPerms($rights['permissions'], $role, $resourceNode, false, $creation);
+                $this->rightsManager->update($rights['permissions'], $role, $resourceNode, false, $creation);
             }
         } else {
             // todo : initialize default rights

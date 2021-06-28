@@ -14,7 +14,7 @@ const TemplatesComponent = (props) =>
   <ListData
     name={selectors.STORE_NAME + '.templates'}
     fetch={{
-      url: ['apiv2_lang_template_list', {lang: props.defaultLocale}],
+      url: ['apiv2_template_list'],
       autoload: true
     }}
     primaryAction={(row) => ({
@@ -38,7 +38,7 @@ const TemplatesComponent = (props) =>
       }
     ]}
     delete={{
-      url: ['apiv2_template_full_delete_bulk']
+      url: ['apiv2_template_delete_bulk']
     }}
     definition={[
       {

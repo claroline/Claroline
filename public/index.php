@@ -1,5 +1,6 @@
 <?php
 
+use Claroline\CoreBundle\Library\Maintenance\MaintenanceHandler;
 use Claroline\KernelBundle\Kernel;
 use Symfony\Component\ErrorHandler\Debug;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,8 +21,14 @@ if ($trustedHosts = $_SERVER['TRUSTED_HOSTS'] ?? false) {
     Request::setTrustedHosts([$trustedHosts]);
 }
 
-$kernel = new Kernel($_SERVER['APP_ENV'], (bool) $_SERVER['APP_DEBUG']);
-$request = Request::createFromGlobals();
-$response = $kernel->handle($request);
-$response->send();
-$kernel->terminate($request, $response);
+if (!MaintenanceHandler::isMaintenanceEnabled()) {
+    $kernel = new Kernel($_SERVER['APP_ENV'], (bool) $_SERVER['APP_DEBUG']);
+    $request = Request::createFromGlobals();
+    $response = $kernel->handle($request);
+    $response->send();
+    $kernel->terminate($request, $response);
+} else {
+    $protocol = isset($_SERVER['HTTPS']) ? 'https://' : 'http://';
+    $url = $protocol.$_SERVER['HTTP_HOST'].$_SERVER['SCRIPT_NAME'].'/../maintenance.php';
+    header("Location: {$url}");
+}

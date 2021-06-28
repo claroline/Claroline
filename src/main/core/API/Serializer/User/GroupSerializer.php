@@ -41,9 +41,6 @@ class GroupSerializer
     /**
      * Serializes a Group entity.
      *
-     * @param Group $group
-     * @param array $options
-     *
      * @return array
      */
     public function serialize(Group $group, array $options = [])
@@ -65,7 +62,6 @@ class GroupSerializer
      *
      * @param \stdClass $data
      * @param Group     $group
-     * @param array     $options
      *
      * @return Group
      */

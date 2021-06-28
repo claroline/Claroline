@@ -10,8 +10,6 @@ class ThemeRepository extends EntityRepository
     /**
      * Returns the themes corresponding to an array of UUIDs.
      *
-     * @param array $uuids
-     *
      * @return Theme[]
      */
     public function findByUuids(array $uuids)

@@ -35,8 +35,6 @@ class NotificationViewer
     /**
      * Set notification.
      *
-     * @param Notification $notification
-     *
      * @return NotificationViewer
      */
     public function setNotification(Notification $notification)

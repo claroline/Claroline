@@ -21,11 +21,6 @@ class FacetSerializer
     /** @var PanelFacetSerializer */
     private $pfSerializer;
 
-    /**
-     * @param ObjectManager        $om
-     * @param RoleSerializer       $roleSerializer
-     * @param PanelFacetSerializer $pfSerializer
-     */
     public function __construct(ObjectManager $om, RoleSerializer $roleSerializer, PanelFacetSerializer $pfSerializer)
     {
         $this->om = $om;
@@ -47,9 +42,6 @@ class FacetSerializer
     }
 
     /**
-     * @param Facet $facet
-     * @param array $options
-     *
      * @return array
      */
     public function serialize(Facet $facet, array $options = [])
@@ -73,11 +65,6 @@ class FacetSerializer
         ];
     }
 
-    /**
-     * @param array $data
-     * @param Facet $facet
-     * @param array $options
-     */
     public function deserialize(array $data, Facet $facet, array $options = [])
     {
         $this->sipe('id', 'setUuid', $data, $facet);

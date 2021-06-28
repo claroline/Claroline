@@ -15,7 +15,6 @@ class OpenAnswerValidator extends JsonSchemaValidator
      * Performs additional validations.
      *
      * @param \stdClass $question
-     * @param array     $options
      *
      * @return array
      */

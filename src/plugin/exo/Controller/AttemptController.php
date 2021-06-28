@@ -2,10 +2,11 @@
 
 namespace UJM\ExoBundle\Controller;
 
+use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\CoreBundle\API\Serializer\Resource\ResourceUserEvaluationSerializer;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
+use Claroline\CoreBundle\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -21,11 +22,13 @@ use UJM\ExoBundle\Manager\AttemptManager;
 /**
  * Attempt Controller.
  *
- * @Route("/exercises/{exerciseId}/attempts", options={"expose"=true})
+ * @Route("/exercises/{exerciseId}/attempts")
  * @EXT\ParamConverter("exercise", class="UJMExoBundle:Exercise", options={"mapping": {"exerciseId": "uuid"}})
  */
-class AttemptController extends AbstractController
+class AttemptController
 {
+    use RequestDecoderTrait;
+
     /**
      * @var AuthorizationCheckerInterface
      */
@@ -53,12 +56,6 @@ class AttemptController extends AbstractController
 
     /**
      * AttemptController constructor.
-     *
-     * @param AuthorizationCheckerInterface    $authorization
-     * @param AttemptManager                   $attemptManager
-     * @param PaperManager                     $paperManager
-     * @param ResourceEvaluationManager        $resourceEvalManager
-     * @param ResourceUserEvaluationSerializer $userEvalSerializer
      */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
@@ -81,8 +78,7 @@ class AttemptController extends AbstractController
      * @Route("", name="exercise_attempt_start", methods={"POST"})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      *
-     * @param Exercise $exercise
-     * @param User     $user
+     * @param User $user
      *
      * @return JsonResponse
      */
@@ -112,9 +108,7 @@ class AttemptController extends AbstractController
      * @EXT\ParamConverter("paper", class="UJMExoBundle:Attempt\Paper", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      *
-     * @param User    $user
-     * @param Paper   $paper
-     * @param Request $request
+     * @param User $user
      *
      * @return JsonResponse
      */
@@ -125,7 +119,7 @@ class AttemptController extends AbstractController
 
         $errors = [];
 
-        $data = $this->decodeRequestData($request);
+        $data = $this->decodeRequest($request);
 
         if (empty($data) || !is_array($data)) {
             $errors[] = [
@@ -154,8 +148,7 @@ class AttemptController extends AbstractController
      * @EXT\ParamConverter("paper", class="UJMExoBundle:Attempt\Paper", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      *
-     * @param Paper $paper
-     * @param User  $user
+     * @param User $user
      *
      * @return JsonResponse
      */
@@ -183,11 +176,9 @@ class AttemptController extends AbstractController
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      * @EXT\ParamConverter("paper", class="UJMExoBundle:Attempt\Paper", options={"mapping": {"id": "uuid"}})
      *
-     * @param Paper   $paper
-     * @param string  $questionId
-     * @param string  $hintId
-     * @param User    $user
-     * @param Request $request
+     * @param string $questionId
+     * @param string $hintId
+     * @param User   $user
      *
      * @return JsonResponse
      */
@@ -211,8 +202,7 @@ class AttemptController extends AbstractController
     /**
      * Checks whether a User has access to a Paper.
      *
-     * @param Paper $paper
-     * @param User  $user
+     * @param User $user
      *
      * @throws AccessDeniedException
      */

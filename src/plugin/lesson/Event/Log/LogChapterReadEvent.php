@@ -11,10 +11,6 @@ class LogChapterReadEvent extends AbstractLogResourceEvent implements LogNotRepe
 {
     const ACTION = 'resource-icap_lesson-chapter_read';
 
-    /**
-     * @param Lesson  $lesson
-     * @param Chapter $chapter
-     */
     public function __construct(Lesson $lesson, Chapter $chapter)
     {
         $details = [

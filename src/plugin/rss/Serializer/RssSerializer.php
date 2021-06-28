@@ -13,9 +13,6 @@ class RssSerializer
     /** @var ReaderProvider */
     private $rssReader;
 
-    /**
-     * @param ReaderProvider $rssReader
-     */
     public function __construct(ReaderProvider $rssReader)
     {
         $this->rssReader = $rssReader;

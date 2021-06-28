@@ -2,7 +2,7 @@
 
 namespace Innova\PathBundle;
 
-use Claroline\CoreBundle\Library\DistributionPluginBundle;
+use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
 use Innova\PathBundle\Installation\AdditionalInstaller;
 
 /**

@@ -11,7 +11,7 @@
 
 namespace Claroline\MessageBundle;
 
-use Claroline\CoreBundle\Library\DistributionPluginBundle;
+use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
 use Claroline\MessageBundle\Installation\AdditionalInstaller;
 
 class ClarolineMessageBundle extends DistributionPluginBundle
@@ -19,10 +19,5 @@ class ClarolineMessageBundle extends DistributionPluginBundle
     public function getAdditionalInstaller()
     {
         return new AdditionalInstaller();
-    }
-
-    public function hasMigrations()
-    {
-        return true;
     }
 }

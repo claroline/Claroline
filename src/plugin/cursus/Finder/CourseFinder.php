@@ -17,7 +17,7 @@ use Doctrine\ORM\QueryBuilder;
 
 class CourseFinder extends AbstractFinder
 {
-    public function getClass()
+    public static function getClass(): string
     {
         return Course::class;
     }
@@ -32,11 +32,15 @@ class CourseFinder extends AbstractFinder
                     $qb->setParameter($filterName, $filterValue);
                     break;
 
-                case 'available':
-                    $qb->leftJoin('obj.sessions', 's');
-                    $qb->andWhere('s.id IS NOT NULL');
-                    $qb->andWhere('s.endDate > :now');
-                    $qb->setParameter('now', new \DateTime());
+                case 'location':
+                    $qb->andWhere("EXISTS (
+                        SELECT s.id 
+                        FROM Claroline\CursusBundle\Entity\Session AS s
+                        LEFT JOIN Claroline\CoreBundle\Entity\Location\Location AS l WITH s.location = l
+                        WHERE s.course = obj.id
+                          AND l.uuid = :{$filterName}
+                    )");
+                    $qb->setParameter($filterName, $filterValue);
                     break;
 
                 case 'organizations':

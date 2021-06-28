@@ -11,6 +11,7 @@
 
 namespace Claroline\DropZoneBundle\Security\Voter;
 
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Security\Voter\AbstractVoter;
 use Claroline\DropZoneBundle\Entity\DropComment;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -41,7 +42,7 @@ class DropCommentVoter extends AbstractVoter
 
     public function getSupportedActions()
     {
-        return[self::OPEN, self::VIEW, self::CREATE, self::EDIT, self::DELETE];
+        return [self::OPEN, self::VIEW, self::CREATE, self::EDIT, self::DELETE];
     }
 
     private function canEditResource(DropComment $comment)
@@ -56,7 +57,7 @@ class DropCommentVoter extends AbstractVoter
         $isOwner = false;
         $user = $token->getUser();
 
-        if ('anon.' !== $user) {
+        if ($user instanceof User) {
             $drop = $comment->getDrop();
             $dropUsers = $drop->getUsers();
 

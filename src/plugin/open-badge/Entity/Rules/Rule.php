@@ -22,6 +22,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Rule
 {
+    use Uuid;
+    use Id;
     const RESOURCE_PASSED = 'resource_passed';
     const RESOURCE_SCORE_ABOVE = 'resource_score_above';
     const RESOURCE_COMPLETED_ABOVE = 'resource_completed_above';
@@ -35,9 +37,6 @@ class Rule
     const IN_GROUP = 'in_group';
     const IN_ROLE = 'in_role';
     const PROFILE_COMPLETED = 'profile_completed';
-
-    use Uuid;
-    use Id;
 
     /**
      * @var string

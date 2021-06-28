@@ -26,9 +26,6 @@ class FieldFacetValueFinder extends AbstractFinder
 
     /**
      * FieldFacetValueFinder constructor.
-     *
-     * @param AuthorizationCheckerInterface $authChecker
-     * @param TokenStorageInterface         $tokenStorage
      */
     public function __construct(
         AuthorizationCheckerInterface $authChecker,
@@ -38,7 +35,7 @@ class FieldFacetValueFinder extends AbstractFinder
         $this->tokenStorage = $tokenStorage;
     }
 
-    public function getClass()
+    public static function getClass(): string
     {
         return 'Claroline\CoreBundle\Entity\Facet\FieldFacetValue';
     }

@@ -11,6 +11,7 @@ const Workspace = {
     poster: T.shape({
       url: T.string
     }),
+    contactEmail: T.string,
     meta: T.shape({
       slug: T.string,
       description: T.string,

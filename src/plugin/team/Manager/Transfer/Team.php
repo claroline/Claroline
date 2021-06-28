@@ -27,6 +27,21 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class Team implements ToolImporterInterface
 {
+    /** @var AuthorizationCheckerInterface */
+    private $authorization;
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
+    /** @var ObjectManager */
+    private $om;
+    /** @var FinderProvider */
+    private $finder;
+    /** @var TeamSerializer */
+    private $teamSerializer;
+    /** @var TeamManager */
+    private $teamManager;
+    /** @var WorkspaceTeamParametersSerializer */
+    private $parametersSerializer;
+
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         TokenStorageInterface $tokenStorage,

@@ -14,9 +14,7 @@ class LogChapterUpdateEvent extends AbstractLogResourceEvent implements Notifiab
     protected $lesson;
 
     /**
-     * @param Lesson  $lesson
-     * @param Chapter $chapter
-     * @param array   $changeSet
+     * @param array $changeSet
      */
     public function __construct(Lesson $lesson, Chapter $chapter, $changeSet)
     {

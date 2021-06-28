@@ -21,11 +21,6 @@ class ApiListener
     /** @var PaperManager */
     private $paperManager;
 
-    /**
-     * @param ItemManager  $itemManager
-     * @param ShareManager $sharedManager
-     * @param PaperManager $paperManager
-     */
     public function __construct(
         ItemManager $itemManager,
         ShareManager $sharedManager,
@@ -36,9 +31,6 @@ class ApiListener
         $this->paperManager = $paperManager;
     }
 
-    /**
-     * @param MergeUsersEvent $event
-     */
     public function onMerge(MergeUsersEvent $event)
     {
         // Replace user of Item nodes

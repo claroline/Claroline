@@ -94,10 +94,11 @@ class AnnouncementListener
         $announcements = $aggregate->getAnnouncements();
 
         foreach ($announcements as $announcement) {
-            $newAnnouncement = $this->manager->serialize($announcement);
+            $newAnnouncement = $this->serializer->serialize($announcement);
             $newAnnouncement['id'] = Uuid::uuid4()->toString();
-            $this->crud->create('Claroline\AnnouncementBundle\Entity\Announcement', $newAnnouncement, [
-              'announcement_aggregate' => $copy,
+            $this->crud->create(Announcement::class, $newAnnouncement, [
+                Crud::NO_PERMISSIONS, // this has already been checked by the core before forwarding the copy
+                'announcement_aggregate' => $copy,
             ]);
         }
 

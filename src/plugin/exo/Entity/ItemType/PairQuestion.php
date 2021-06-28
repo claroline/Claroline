@@ -19,7 +19,6 @@ use UJM\ExoBundle\Library\Model\ShuffleTrait;
 class PairQuestion extends AbstractItem
 {
     use ShuffleTrait;
-
     /*
      * The penalty to apply to each wrong association
      */
@@ -105,8 +104,6 @@ class PairQuestion extends AbstractItem
 
     /**
      * Add item.
-     *
-     * @param GridItem $gridItem
      */
     public function addItem(GridItem $gridItem)
     {
@@ -117,8 +114,6 @@ class PairQuestion extends AbstractItem
 
     /**
      * Remove item.
-     *
-     * @param GridItem $gridItem
      */
     public function removeItem(GridItem $gridItem)
     {
@@ -139,8 +134,6 @@ class PairQuestion extends AbstractItem
 
     /**
      * Add row.
-     *
-     * @param GridRow $row
      */
     public function addRow(GridRow $row)
     {
@@ -152,8 +145,6 @@ class PairQuestion extends AbstractItem
 
     /**
      * Remove row.
-     *
-     * @param GridRow $row
      */
     public function removeRow(GridRow $row)
     {
@@ -194,8 +185,6 @@ class PairQuestion extends AbstractItem
 
     /**
      * Add odd item.
-     *
-     * @param GridOdd $gridOdd
      */
     public function addOddItem(GridOdd $gridOdd)
     {
@@ -207,8 +196,6 @@ class PairQuestion extends AbstractItem
 
     /**
      * Remove odd item.
-     *
-     * @param GridOdd $gridOdd
      */
     public function removeOddItem(GridOdd $gridOdd)
     {

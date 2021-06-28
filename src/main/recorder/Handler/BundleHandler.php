@@ -41,12 +41,30 @@ class BundleHandler implements LoggerAwareInterface
 
     public function writeBundleFile()
     {
-        // The bundle file should not be overwritten, it's versioned.
+        $this->logger->info('Writing bundle file...');
+
         if ($this->fs->exists($this->targetFile)) {
+            // checks if there are new plugins in the main distribution
+            $currentBundles = parse_ini_file($this->targetFile);
+            $sourceBundles = parse_ini_file($this->sourceFile);
+
+            foreach ($sourceBundles as $bundle => $bundleEnabled) {
+                if (!isset($currentBundles[$bundle])) {
+                    // new bundle found
+                    $currentBundles[$bundle] = $bundleEnabled;
+                }
+            }
+
+            // dump new bundles list
+            $bundles = '';
+            foreach ($currentBundles as $bundle => $bundleEnabled) {
+                $bundles .= $bundle.'='.($bundleEnabled ? 'true' : 'false').PHP_EOL;
+            }
+
+            $this->fs->dumpFile($this->targetFile, $bundles);
+
             return;
         }
-
-        $this->logger->info('Writing bundle file...');
 
         $this->fs->copy($this->sourceFile, $this->targetFile);
     }

@@ -47,8 +47,7 @@ const EditorComponent = (props) =>
                 options: {
                   workspace: props.workspace
                 }
-              },
-              {
+              }, {
                 name: 'display.lastMessagesCount',
                 type: 'number',
                 label: trans('show_last_messages', {}, 'forum'),
@@ -72,6 +71,21 @@ const EditorComponent = (props) =>
                 [displayMode]: listConst.DISPLAY_MODES[displayMode].label
               }), {})
             }
+          }, {
+            name: 'display.messageOrder',
+            type: 'choice',
+            label: trans('message_order', {}, 'forum'),
+            options: {
+              noEmpty: true,
+              choices: {
+                ASC: trans('from_older_to_newer', {}, 'forum'),
+                DESC: trans('from_newer_to_older', {}, 'forum')
+              }
+            }
+          }, {
+            name: 'display.expandComments',
+            type: 'boolean',
+            label: trans('expand_comments', {}, 'forum')
           }
         ]
       }, {

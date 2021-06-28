@@ -33,7 +33,7 @@ class BadgeClassFinder extends AbstractFinder
         $this->toolMaskDecoderManager = $toolMaskDecoderManager;
     }
 
-    public function getClass()
+    public static function getClass(): string
     {
         return BadgeClass::class;
     }
@@ -94,17 +94,10 @@ class BadgeClassFinder extends AbstractFinder
                         ;
 
                         $qb->andWhere($qb->expr()->orX(
-                        // always assignable by organization managers
+                            // always assignable by organization managers
                             $qb->expr()->in('o.id', array_map(function (Organization $organization) {
                                 return $organization->getId();
                             }, $user->getAdministratedOrganizations()->toArray())),
-
-                            // always assignable by workspaces managers
-                            $qb->expr()->andX(
-                                $qb->expr()->isNotNull('w'),
-                                // ATTENTION : Doctrine does not allow strings to be double quoted
-                                $qb->expr()->in('CONCAT(\'ROLE_WS_MANAGER_\', w.uuid)', $this->tokenStorage->getToken()->getRoleNames())
-                            ),
 
                             // assignable by users with GRANT rights on the tool
                             $qb->expr()->exists($subQb),

@@ -11,9 +11,12 @@
 
 namespace Claroline\CursusBundle\Manager;
 
+use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Manager\MailManager;
+use Claroline\CoreBundle\Event\CatalogEvents\MessageEvents;
+use Claroline\CoreBundle\Event\SendMessageEvent;
+use Claroline\CoreBundle\Manager\PlanningManager;
 use Claroline\CoreBundle\Manager\Template\TemplateManager;
 use Claroline\CursusBundle\Entity\Event;
 use Claroline\CursusBundle\Entity\Registration\AbstractRegistration;
@@ -32,8 +35,6 @@ class EventManager
 {
     /** @var EventDispatcherInterface */
     private $eventDispatcher;
-    /** @var MailManager */
-    private $mailManager;
     /** @var ObjectManager */
     private $om;
     /** @var UrlGeneratorInterface */
@@ -42,32 +43,40 @@ class EventManager
     private $templateManager;
     /** @var TokenStorageInterface */
     private $tokenStorage;
+    /** @var StrictDispatcher */
+    private $dispatcher;
+    /** @var PlanningManager */
+    private $planningManager;
 
     private $eventUserRepo;
     private $eventGroupRepo;
 
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
-        MailManager $mailManager,
         ObjectManager $om,
         UrlGeneratorInterface $router,
         TemplateManager $templateManager,
-        TokenStorageInterface $tokenStorage
+        TokenStorageInterface $tokenStorage,
+        StrictDispatcher $dispatcher,
+        PlanningManager $planningManager
     ) {
         $this->eventDispatcher = $eventDispatcher;
-        $this->mailManager = $mailManager;
         $this->om = $om;
         $this->router = $router;
         $this->templateManager = $templateManager;
         $this->tokenStorage = $tokenStorage;
+        $this->dispatcher = $dispatcher;
+        $this->planningManager = $planningManager;
 
         $this->eventUserRepo = $om->getRepository(EventUser::class);
         $this->eventGroupRepo = $om->getRepository(EventGroup::class);
     }
 
-    public function generateFromTemplate(Event $sessionEvent, string $locale)
+    public function generateFromTemplate(Event $event, string $locale)
     {
-        // TODO : implement
+        $placeholders = $this->getTemplatePlaceholders($event);
+
+        return $this->templateManager->getTemplate('training_event', $placeholders, $locale);
     }
 
     /**
@@ -98,6 +107,9 @@ class EventManager
                 $this->eventDispatcher->dispatch(new LogSessionEventUserRegistrationEvent($eventUser), 'log');
 
                 $results[] = $eventUser;
+
+                // add event to user planning
+                $this->planningManager->addToPlanning($event, $eventUser->getUser());
             }
         }
 
@@ -113,15 +125,20 @@ class EventManager
     /**
      * @param EventUser[] $eventUsers
      */
-    public function removeUsers(array $eventUsers)
+    public function removeUsers(Event $event, array $eventUsers)
     {
+        $this->om->startFlushSuite();
+
         foreach ($eventUsers as $eventUser) {
             $this->om->remove($eventUser);
 
             $this->eventDispatcher->dispatch(new LogSessionEventUserUnregistrationEvent($eventUser), 'log');
+
+            // remove event from user planning
+            $this->planningManager->removeFromPlanning($event, $eventUser->getUser());
         }
 
-        $this->om->flush();
+        $this->om->endFlushSuite();
     }
 
     /**
@@ -167,6 +184,9 @@ class EventManager
 
                 foreach ($group->getUsers() as $user) {
                     $users[$user->getUuid()] = $user;
+
+                    // add event to user planning
+                    $this->planningManager->addToPlanning($event, $user);
                 }
             }
         }
@@ -178,15 +198,26 @@ class EventManager
         return $results;
     }
 
+    /**
+     * @param EventGroup[] $eventGroups
+     */
     public function removeGroups(Event $event, array $eventGroups)
     {
+        $this->om->startFlushSuite();
+
         foreach ($eventGroups as $eventGroup) {
             $this->om->remove($eventGroup);
+
+            $group = $eventGroup->getGroup();
+            foreach ($group->getUsers() as $user) {
+                // remove event from user planning
+                $this->planningManager->removeFromPlanning($event, $user);
+            }
 
             $this->eventDispatcher->dispatch(new LogSessionEventGroupUnregistrationEvent($eventGroup), 'log');
         }
 
-        $this->om->flush();
+        $this->om->endFlushSuite();
     }
 
     /**
@@ -226,54 +257,7 @@ class EventManager
      */
     public function sendSessionEventInvitation(Event $event, array $users)
     {
-        $session = $event->getSession();
-        $course = $session->getCourse();
-
-        $trainersList = '';
-        $eventTrainers = $this->eventUserRepo->findBy([
-            'event' => $event,
-            'type' => AbstractRegistration::TUTOR,
-        ]);
-
-        if (0 < count($eventTrainers)) {
-            $trainersList = '<ul>';
-
-            foreach ($eventTrainers as $eventTrainer) {
-                $user = $eventTrainer->getUser();
-                $trainersList .= '<li>'.$user->getFirstName().' '.$user->getLastName().'</li>';
-            }
-            $trainersList .= '</ul>';
-        }
-        $location = $event->getLocation();
-        $locationName = '';
-        $locationAddress = '';
-
-        if ($location) {
-            $locationName = $location->getName();
-            $locationAddress = $location->getAddress();
-            if ($location->getPhone()) {
-                $locationAddress .= '<br>'.$location->getPhone();
-            }
-        }
-
-        $basicPlaceholders = [
-            'course_name' => $course->getName(),
-            'course_code' => $course->getCode(),
-            'course_description' => $course->getDescription(),
-            'session_name' => $session->getName(),
-            'session_description' => $session->getDescription(),
-            'session_code' => $session->getCode(),
-            'session_start' => $session->getStartDate()->format('d/m/Y'),
-            'session_end' => $session->getEndDate()->format('d/m/Y'),
-            'event_name' => $event->getName(),
-            'event_description' => $event->getDescription(),
-            'event_code' => $event->getCode(),
-            'event_start' => $event->getStartDate()->format('d/m/Y H:i'),
-            'event_end' => $event->getEndDate()->format('d/m/Y H:i'),
-            'event_location_name' => $locationName,
-            'event_location_address' => $locationAddress,
-            'event_trainers' => $trainersList,
-        ];
+        $basicPlaceholders = $this->getTemplatePlaceholders($event);
 
         foreach ($users as $user) {
             $locale = $user->getLocale();
@@ -286,7 +270,15 @@ class EventManager
             $title = $this->templateManager->getTemplate('training_event_invitation', $placeholders, $locale, 'title');
             $content = $this->templateManager->getTemplate('training_event_invitation', $placeholders, $locale);
 
-            $this->mailManager->send($title, $content, [$user]);
+            $this->dispatcher->dispatch(
+                MessageEvents::MESSAGE_SENDING,
+                SendMessageEvent::class,
+                [
+                    $content,
+                    $title,
+                    [$user],
+                ]
+            );
         }
     }
 
@@ -325,5 +317,57 @@ class EventManager
         }
 
         return array_values($users);
+    }
+
+    private function getTemplatePlaceholders(Event $event): array
+    {
+        $session = $event->getSession();
+        $course = $session->getCourse();
+
+        $trainersList = '';
+        $eventTrainers = $this->eventUserRepo->findBy([
+            'event' => $event,
+            'type' => AbstractRegistration::TUTOR,
+        ]);
+
+        if (0 < count($eventTrainers)) {
+            $trainersList = '<ul>';
+
+            foreach ($eventTrainers as $eventTrainer) {
+                $user = $eventTrainer->getUser();
+                $trainersList .= '<li>'.$user->getFirstName().' '.$user->getLastName().'</li>';
+            }
+            $trainersList .= '</ul>';
+        }
+        $location = $event->getLocation();
+        $locationName = '';
+        $locationAddress = '';
+
+        if ($location) {
+            $locationName = $location->getName();
+            $locationAddress = $location->getAddress();
+            if ($location->getPhone()) {
+                $locationAddress .= '<br>'.$location->getPhone();
+            }
+        }
+
+        return [
+            'course_name' => $course->getName(),
+            'course_code' => $course->getCode(),
+            'course_description' => $course->getDescription(),
+            'session_name' => $session->getName(),
+            'session_description' => $session->getDescription(),
+            'session_code' => $session->getCode(),
+            'session_start' => $session->getStartDate()->format('d/m/Y'),
+            'session_end' => $session->getEndDate()->format('d/m/Y'),
+            'event_name' => $event->getName(),
+            'event_description' => $event->getDescription(),
+            'event_code' => $event->getCode(),
+            'event_start' => $event->getStartDate()->format('d/m/Y H:i'),
+            'event_end' => $event->getEndDate()->format('d/m/Y H:i'),
+            'event_location_name' => $locationName,
+            'event_location_address' => $locationAddress,
+            'event_trainers' => $trainersList,
+        ];
     }
 }

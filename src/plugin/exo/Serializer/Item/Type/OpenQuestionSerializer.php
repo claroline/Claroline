@@ -13,9 +13,6 @@ class OpenQuestionSerializer
     /**
      * Converts a Open question into a JSON-encodable structure.
      *
-     * @param OpenQuestion $openQuestion
-     * @param array        $options
-     *
      * @return array
      */
     public function serialize(OpenQuestion $openQuestion, array $options = [])
@@ -42,7 +39,6 @@ class OpenQuestionSerializer
      *
      * @param array        $data
      * @param OpenQuestion $openQuestion
-     * @param array        $options
      *
      * @return OpenQuestion
      */

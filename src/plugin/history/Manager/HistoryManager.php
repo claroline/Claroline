@@ -2,8 +2,8 @@
 
 namespace Claroline\HistoryBundle\Manager;
 
-use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AppBundle\Log\LoggableTrait;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -27,8 +27,6 @@ class HistoryManager implements LoggerAwareInterface
 
     /**
      * HistoryManager constructor.
-     *
-     * @param ObjectManager $om
      */
     public function __construct(ObjectManager $om)
     {
@@ -37,8 +35,6 @@ class HistoryManager implements LoggerAwareInterface
 
     /**
      * Get the list of recent workspaces for a user.
-     *
-     * @param User $user
      *
      * @return Workspace[]
      */
@@ -57,8 +53,6 @@ class HistoryManager implements LoggerAwareInterface
     /**
      * Get the list of recent resources for a user.
      *
-     * @param User $user
-     *
      * @return ResourceNode[]
      */
     public function getResources(User $user)
@@ -75,9 +69,6 @@ class HistoryManager implements LoggerAwareInterface
 
     /**
      * Add a workspace to the user history.
-     *
-     * @param Workspace $workspace
-     * @param User      $user
      */
     public function addWorkspace(Workspace $workspace, User $user)
     {
@@ -103,9 +94,6 @@ class HistoryManager implements LoggerAwareInterface
 
     /**
      * Add a resource to the user history.
-     *
-     * @param ResourceNode $resource
-     * @param User         $user
      */
     public function addResource(ResourceNode $resource, User $user)
     {

@@ -15,5 +15,6 @@ services:
             - '@router'
             - '@security.token_storage'
             - '@translator'
+            - '@messenger.default_bus'
         calls:
             - setLogger: [ '@logger' ]

@@ -11,7 +11,7 @@
 
 namespace Claroline\SlideshowBundle;
 
-use Claroline\CoreBundle\Library\DistributionPluginBundle;
+use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
 
 class ClarolineSlideshowBundle extends DistributionPluginBundle
 {

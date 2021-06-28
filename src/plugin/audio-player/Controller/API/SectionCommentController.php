@@ -33,10 +33,6 @@ class SectionCommentController extends AbstractCrudController
     /** @var TranslatorInterface */
     private $translator;
 
-    /**
-     * @param ClaroUtilities      $claroUtils
-     * @param TranslatorInterface $translator
-     */
     public function __construct(ClaroUtilities $claroUtils, TranslatorInterface $translator)
     {
         $this->claroUtils = $claroUtils;
@@ -65,9 +61,7 @@ class SectionCommentController extends AbstractCrudController
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      *
-     * @param ResourceNode $resourceNode
-     * @param string       $type
-     * @param Request      $request
+     * @param string $type
      *
      * @return JsonResponse
      */
@@ -92,8 +86,6 @@ class SectionCommentController extends AbstractCrudController
      *     name="apiv2_audioresourcesectioncomment_list_comments_csv"
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @param ResourceNode $resourceNode
      *
      * @return StreamedResponse
      */

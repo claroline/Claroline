@@ -16,15 +16,12 @@ import {buildToolbar} from '#/main/app/action/utils'
 
 /**
  * Creates a toolbar of actions.
- *
- * @param props
- * @constructor
  */
 const StaticToolbar = props => {
   const toolbar = buildToolbar(props.toolbar, props.actions, props.scope)
 
   return (0 !== toolbar.length &&
-    <nav role="toolbar" className={props.className} style={props.style}>
+    <nav role="toolbar" className={classes(props.className, props.name)} style={props.style}>
       {toolbar.map((group, groupIndex) => [
         0 !== groupIndex &&
           <span
@@ -33,11 +30,11 @@ const StaticToolbar = props => {
           />,
         ...group.map((action) =>
           <Button
-            {...omit(action, 'name')}
-            id={`${props.id}${action.id || action.name}`}
+            {...omit(action, 'name', 'className')}
+            id={`${props.id || props.name || ''}${action.id || action.name}`}
             key={action.id || action.name}
             disabled={props.disabled || action.disabled}
-            className={classes(`${props.className}-btn`, props.buttonName, action.className)}
+            className={classes(`${props.name || props.className}-btn`, props.buttonName, action.className)}
             tooltip={props.tooltip}
             size={props.size}
             onClick={action.onClick ? () => {

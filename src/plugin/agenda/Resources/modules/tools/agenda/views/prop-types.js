@@ -1,6 +1,6 @@
 import {PropTypes as T} from 'prop-types'
 
-import {Event as EventTypes} from '#/plugin/agenda/event/prop-types'
+import {Event as EventTypes} from '#/plugin/agenda/prop-types'
 
 const AgendaView = {
   propTypes: {
@@ -16,7 +16,7 @@ const AgendaView = {
       EventTypes.propTypes
     )).isRequired,
     create: T.func.isRequired,
-    eventActions: T.func.isRequired
+    reload: T.func.isRequired
   },
   defaultProps: {
 

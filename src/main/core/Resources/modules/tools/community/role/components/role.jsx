@@ -1,9 +1,7 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
-import {connect} from 'react-redux'
 
 import {trans} from '#/main/app/intl/translation'
-import {actions as formActions, selectors as formSelect} from '#/main/app/content/form/store'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
@@ -11,12 +9,6 @@ import {ListData} from '#/main/app/content/list/containers/data'
 import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
 import {Checkbox} from '#/main/app/input/components/checkbox'
 
-import {actions} from '#/main/core/tools/community/role/store'
-import {selectors as toolSelectors} from '#/main/core/tool/store'
-import {
-  actions as workspaceActions,
-  selectors as workspaceSelectors
-} from '#/main/core/workspace/store'
 import {getActions as getWorkspaceActions} from '#/main/core/workspace/utils'
 import {MODAL_WORKSPACE_SHORTCUTS} from '#/main/core/workspace/modals/shortcuts'
 import {constants as workspaceConstants} from '#/main/core/workspace/constants'
@@ -28,32 +20,10 @@ import {UserList} from '#/main/core/administration/community/user/components/use
 import {MODAL_USERS} from '#/main/core/modals/users'
 import {MODAL_GROUPS} from '#/main/core/modals/groups'
 
+import {RoleTools} from '#/main/core/tools/community/role/components/tools'
+import {MODAL_ROLE_RIGHTS} from '#/main/core/tools/community/role/modals/rights'
+
 // TODO : merge with main/core/administration/community/role/components/role
-
-const ToolRightsRow = props =>
-  <div className="tool-rights-row list-group-item">
-    <div className="tool-rights-title">
-      {trans(props.toolName, {}, 'tools')}
-    </div>
-
-    <div className="tool-rights-actions">
-      {Object.keys(props.permissions).map((permName) =>
-        <Checkbox
-          key={permName}
-          id={`${props.toolName}-${permName}`}
-          label={trans(permName, {}, 'actions')}
-          checked={props.permissions[permName]}
-          onChange={checked => props.update(permName, checked)}
-        />
-      )}
-    </div>
-  </div>
-
-ToolRightsRow.propTypes = {
-  toolName: T.string.isRequired,
-  permissions: T.object,
-  update: T.func.isRequired
-}
 
 const ShortcutRow = props =>
   <div className="tool-rights-row list-group-item">
@@ -80,7 +50,7 @@ ShortcutRow.propTypes = {
   removeShortcut: T.func.isRequired
 }
 
-class RoleForm extends Component {
+class Role extends Component {
   constructor(props) {
     super(props)
 
@@ -116,10 +86,7 @@ class RoleForm extends Component {
         level={3}
         name={selectors.STORE_NAME + '.roles.current'}
         buttons={true}
-        target={(role, isNew) => isNew ?
-          ['apiv2_role_create', {options: ['serialize_role_tools_rights', `workspace_id_${this.props.workspace.id}`]}] :
-          ['apiv2_role_update', {id: role.id, options: ['serialize_role_tools_rights', `workspace_id_${this.props.workspace.id}`]}]
-        }
+        target={(role, isNew) => isNew ? ['apiv2_role_create'] : ['apiv2_role_update', {id: role.id}]}
         cancel={{
           type: LINK_BUTTON,
           target: `${this.props.path}/roles`,
@@ -140,7 +107,9 @@ class RoleForm extends Component {
                 name: 'name',
                 type: 'string',
                 label: trans('code'),
-                readOnly: true
+                displayed: !this.props.new,
+                disabled: true,
+                required: true
               }
             ]
           }
@@ -148,21 +117,28 @@ class RoleForm extends Component {
       >
         <FormSections level={3}>
           <FormSection
-            className="embedded-list-section"
             icon="fa fa-fw fa-cogs"
             title={trans('tools')}
             disabled={this.props.new}
+            actions={[
+              {
+                name: 'set-rights',
+                type: MODAL_BUTTON,
+                icon: 'fa fa-fw fa-pencil',
+                label: trans('edit', {}, 'actions'),
+                modal: [MODAL_ROLE_RIGHTS, {
+                  role: this.props.role,
+                  rights: this.props.role.tools,
+                  workspace: this.props.workspace,
+                  onSave: () => this.props.reload(this.props.role.id, this.props.workspace)
+                }]
+              }
+            ]}
           >
-            <div className="list-group" fill={true}>
-              {Object.keys(this.props.role.tools || {}).map(toolName =>
-                <ToolRightsRow
-                  key={`tool-rights-${toolName}`}
-                  toolName={toolName}
-                  permissions={this.props.role.tools[toolName]}
-                  update={(perm, value) => this.props.updateProp(`tools.${toolName}.${perm}`, value)}
-                />
-              )}
-            </div>
+            <RoleTools
+              fill={true}
+              tools={this.props.role.tools}
+            />
           </FormSection>
 
           {-1 === ['ROLE_ANONYMOUS', 'ROLE_USER'].indexOf(this.props.role.name) &&
@@ -177,7 +153,6 @@ class RoleForm extends Component {
                   type: MODAL_BUTTON,
                   icon: 'fa fa-fw fa-plus',
                   label: trans('add_user'),
-                  disabled: this.props.role.restrictions && null !== this.props.role.restrictions.maxUsers && this.props.role.restrictions.maxUsers <= this.props.role.meta.users,
                   modal: [MODAL_USERS, {
                     selectAction: (selected) => ({
                       type: CALLBACK_BUTTON,
@@ -292,7 +267,7 @@ class RoleForm extends Component {
   }
 }
 
-RoleForm.propTypes = {
+Role.propTypes = {
   path: T.string.isRequired,
   new: T.bool.isRequired,
   role: T.shape(RoleTypes.propTypes).isRequired,
@@ -304,39 +279,12 @@ RoleForm.propTypes = {
       name: T.string
     }))
   })),
-  updateProp: T.func.isRequired,
+  reload: T.func.isRequired,
   addUsers: T.func.isRequired,
   addGroups: T.func.isRequired,
   addShortcuts: T.func.isRequired,
   removeShortcut: T.func.isRequired
 }
-
-const Role = connect(
-  state => ({
-    new: formSelect.isNew(formSelect.form(state, selectors.STORE_NAME + '.roles.current')),
-    role: formSelect.data(formSelect.form(state, selectors.STORE_NAME + '.roles.current')),
-    path: toolSelectors.path(state),
-    workspace: toolSelectors.contextData(state) ? toolSelectors.contextData(state) : null,
-    shortcuts: toolSelectors.contextData(state) ? workspaceSelectors.shortcuts(state) : null
-  }),
-  dispatch => ({
-    updateProp(propName, propValue) {
-      dispatch(formActions.updateProp(selectors.STORE_NAME + '.roles.current', propName, propValue))
-    },
-    addUsers(roleId, selected) {
-      dispatch(actions.addUsers(roleId, selected.map(row => row.id)))
-    },
-    addGroups(roleId, selected) {
-      dispatch(actions.addGroups(roleId, selected.map(row => row.id)))
-    },
-    addShortcuts(workspaceId, roleId, shortcuts) {
-      dispatch(workspaceActions.addShortcuts(workspaceId, roleId, shortcuts))
-    },
-    removeShortcut(workspaceId, roleId, type, name) {
-      dispatch(workspaceActions.removeShortcut(workspaceId, roleId, type, name))
-    }
-  })
-)(RoleForm)
 
 export {
   Role

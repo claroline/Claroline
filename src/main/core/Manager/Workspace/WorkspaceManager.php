@@ -24,6 +24,8 @@ use Claroline\CoreBundle\Entity\Workspace\Shortcuts;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceOptions;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue;
+use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
+use Claroline\CoreBundle\Event\Security\AddRoleEvent;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Repository\User\UserRepository;
@@ -133,6 +135,7 @@ class WorkspaceManager implements LoggerAwareInterface
 
         $user->setPersonalWorkspace($workspace);
         $user->addRole($workspace->getManagerRole());
+        $this->dispatcher->dispatch(SecurityEvents::ADD_ROLE, AddRoleEvent::class, [$user, $workspace->getManagerRole()]);
 
         $this->om->persist($user);
         $this->om->flush();
@@ -244,20 +247,17 @@ class WorkspaceManager implements LoggerAwareInterface
 
     public function isUserInValidationQueue(Workspace $workspace, User $user) // TODO : move in WorkspaceUserQueueManager
     {
-        $workspaceRegistrationQueueRepo =
-            $this->om->getRepository('ClarolineCoreBundle:Workspace\WorkspaceRegistrationQueue');
+        $workspaceRegistrationQueueRepo = $this->om->getRepository(WorkspaceRegistrationQueue::class);
         $userQueued = $workspaceRegistrationQueueRepo->findOneBy(['workspace' => $workspace, 'user' => $user]);
 
         return !empty($userQueued);
     }
 
-    /**
-     * @return User
-     */
-    public function addUser(Workspace $workspace, User $user)
+    public function addUser(Workspace $workspace, User $user): User
     {
-        $role = $workspace->getDefaultRole();
-        $this->roleManager->associateRole($user, $role);
+        if ($workspace->getDefaultRole() && !$user->hasRole($workspace->getDefaultRole()->getName())) {
+            $this->crud->patch($user, 'role', Crud::COLLECTION_ADD, [$workspace->getDefaultRole()]);
+        }
 
         return $user;
     }
@@ -316,7 +316,7 @@ class WorkspaceManager implements LoggerAwareInterface
             $workspaceOptions = new WorkspaceOptions();
             $workspaceOptions->setWorkspace($workspace);
             $details = [
-                'hide_tools_menu' => false,
+                'hide_tools_menu' => null,
                 'background_color' => null,
                 'hide_breadcrumb' => false,
                 'use_workspace_opening_resource' => false,
@@ -378,6 +378,17 @@ class WorkspaceManager implements LoggerAwareInterface
             return false;
         }
 
+        if (in_array('ROLE_ADMIN', $token->getRoleNames())) {
+            // this should be checked at a higher level
+            return true;
+        }
+
+        //or we have the role_manager
+        $managerRole = $workspace->getManagerRole();
+        if ($managerRole && in_array($managerRole->getName(), $token->getRoleNames())) {
+            return true;
+        }
+
         if (!$this->isImpersonated($token)) {
             /** @var User $user */
             $user = $token->getUser();
@@ -398,17 +409,6 @@ class WorkspaceManager implements LoggerAwareInterface
                     }
                 }
             }
-        }
-
-        if (in_array('ROLE_ADMIN', $token->getRoleNames())) {
-            // this should be check at a higher level
-            return true;
-        }
-
-        //or we have the role_manager
-        $managerRole = $workspace->getManagerRole();
-        if ($managerRole && in_array($managerRole->getName(), $token->getRoleNames())) {
-            return true;
         }
 
         return false;
@@ -478,6 +478,7 @@ class WorkspaceManager implements LoggerAwareInterface
             $user = $workspaceCopy->getCreator();
             $user->addRole($managerRole);
             $this->om->persist($user);
+            $this->dispatcher->dispatch(SecurityEvents::ADD_ROLE, AddRoleEvent::class, [$user, $managerRole]);
         }
 
         $root = $this->resourceManager->getWorkspaceRoot($workspaceCopy);
@@ -572,8 +573,7 @@ class WorkspaceManager implements LoggerAwareInterface
             $workspace->setModel(true);
             $this->log('Add tools...');
             $this->container->get('claroline.manager.tool_manager')->addMissingWorkspaceTools($workspace);
-            $this->log('Build and set default admin');
-            $workspace->setCreator($this->container->get('claroline.manager.user_manager')->getDefaultClarolineAdmin());
+            $this->log('Build...');
             $this->container->get('Claroline\CoreBundle\Listener\Log\LogListener')->setDefaults();
 
             if (0 === count($this->shortcutsRepo->findBy(['workspace' => $workspace]))) {
@@ -629,7 +629,9 @@ class WorkspaceManager implements LoggerAwareInterface
         });
 
         foreach ($rolesToRemove as $role) {
-            $this->roleManager->dissociateRole($subject, $role);
+            if ($subject->hasRole($role->getName())) {
+                $this->crud->patch($subject, 'role', Crud::COLLECTION_REMOVE, [$role]);
+            }
         }
     }
 
@@ -648,44 +650,12 @@ class WorkspaceManager implements LoggerAwareInterface
         return $usersInRoles;
     }
 
-    public function setWorkspacesFlag()
-    {
-        /** @var Workspace[] $workspaces */
-        $workspaces = $this->container->get('Claroline\AppBundle\API\FinderProvider')->fetch(Workspace::class, [
-            'name' => 'Espace personnel',
-            'meta.personal' => false,
-            //maybe add personal user here
-        ]);
-
-        $i = 0;
-        $total = count($workspaces);
-
-        foreach ($workspaces as $workspace) {
-            $workspace->setPersonal(true);
-            $this->om->persist($workspace);
-
-            ++$i;
-
-            $this->log('Restore workspace personal flag for '.$workspace->getName().' '.$i.'/'.$total);
-
-            if (0 === $i % 500) {
-                $this->log('Flushing...');
-                $this->om->flush();
-            }
-        }
-
-        $this->log('Flushing...');
-        $this->om->flush();
-    }
-
-    public function getShortcuts(Workspace $workspace, User $user = null)
+    public function getShortcuts(Workspace $workspace, array $roleNames = [])
     {
         $shortcuts = [];
-        if ($user) {
-            foreach ($workspace->getShortcuts() as $shortcut) {
-                if ($user->hasRole($shortcut->getRole()->getName())) {
-                    $shortcuts = array_merge($shortcuts, $shortcut->getData());
-                }
+        foreach ($workspace->getShortcuts() as $shortcut) {
+            if (in_array($shortcut->getRole()->getName(), $roleNames)) {
+                $shortcuts = array_merge($shortcuts, $shortcut->getData());
             }
         }
 

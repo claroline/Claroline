@@ -37,9 +37,8 @@ trait PermissionCheckerTrait
      */
     private function checkPermission($permission, $object, $options = [], $throwException = false)
     {
-        if ('cli' === php_sapi_name()) {
-            // TODO : this should not be checked here (maybe create a Voter for that)
-            return true;
+        if (!$this->authorization instanceof AuthorizationCheckerInterface) {
+            throw new \RuntimeException('PermissionCheckerTrait requires the AuthorizationChecker (@security.authorization_checker) to be injected in your service.');
         }
 
         switch ($object) {

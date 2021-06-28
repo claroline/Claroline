@@ -41,9 +41,6 @@ class RevisionController extends AbstractCrudController
 
     /**
      * RevisionController constructor.
-     *
-     * @param AuthorizationCheckerInterface $authorization
-     * @param DropzoneManager               $manager
      */
     public function __construct(AuthorizationCheckerInterface $authorization, DropzoneManager $manager)
     {
@@ -77,9 +74,6 @@ class RevisionController extends AbstractCrudController
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      *
-     * @param Drop $drop
-     * @param User $user
-     *
      * @return JsonResponse
      */
     public function submitForRevisionAction(Drop $drop, User $user)
@@ -109,9 +103,6 @@ class RevisionController extends AbstractCrudController
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      *
-     * @param Dropzone $dropzone
-     * @param Request  $request
-     *
      * @return JsonResponse
      */
     public function revisionsListAction(Dropzone $dropzone, Request $request)
@@ -134,10 +125,6 @@ class RevisionController extends AbstractCrudController
      *     options={"mapping": {"drop": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @param Drop    $drop
-     * @param User    $user
-     * @param Request $request
      *
      * @return JsonResponse
      */
@@ -167,9 +154,6 @@ class RevisionController extends AbstractCrudController
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      *
-     * @param Revision $revision
-     * @param User     $user
-     *
      * @return JsonResponse
      */
     public function dropFromRevisionFetcAction(Revision $revision, User $user)
@@ -195,9 +179,6 @@ class RevisionController extends AbstractCrudController
      *     class="ClarolineDropZoneBundle:Revision",
      *     options={"mapping": {"id": "uuid"}}
      * )
-     *
-     * @param Revision $revision
-     * @param Request  $request
      *
      * @return JsonResponse
      */
@@ -238,9 +219,6 @@ class RevisionController extends AbstractCrudController
      *     class="ClarolineDropZoneBundle:Revision",
      *     options={"mapping": {"id": "uuid"}}
      * )
-     *
-     * @param Revision $revision
-     * @param Request  $request
      *
      * @return JsonResponse
      */

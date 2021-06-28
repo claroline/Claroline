@@ -2,14 +2,19 @@ import {connect} from 'react-redux'
 
 import {selectors as toolSelectors} from '#/main/core/tool/store'
 
-import {selectors} from '#/plugin/cursus/event/store'
+import {actions, selectors} from '#/plugin/cursus/event/store'
 import {EventsDetails as EventsDetailsComponent} from '#/plugin/cursus/tools/events/components/details'
 
 const EventsDetails = connect(
-  (state) => ({
-    path: toolSelectors.path(state),
+  (state, ownProps) => ({
+    path: ownProps.path || toolSelectors.path(state),
     currentContext: toolSelectors.context(state),
     event: selectors.event(state)
+  }),
+  (dispatch) => ({
+    reload(id, force = true) {
+      dispatch(actions.open(id, force))
+    }
   })
 )(EventsDetailsComponent)
 

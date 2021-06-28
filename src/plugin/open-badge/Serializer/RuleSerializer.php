@@ -17,9 +17,6 @@ class RuleSerializer
     /** @var ObjectManager */
     private $om;
 
-    /**
-     * @param ObjectManager $om
-     */
     public function __construct(ObjectManager $om)
     {
         $this->om = $om;
@@ -49,7 +46,6 @@ class RuleSerializer
      *
      * @param array $data
      * @param Rule  $rule
-     * @param array $options
      *
      * @return Rule
      */

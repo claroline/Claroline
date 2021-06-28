@@ -14,6 +14,7 @@ const UrlDisplay = (props) =>
       className="btn-link"
       target={props.data}
       primary={true}
+      onClick={props.onClick}
     />
 
     <Button
@@ -31,7 +32,8 @@ const UrlDisplay = (props) =>
 UrlDisplay.propTypes = {
   id: T.string.isRequired,
   data: T.string.isRequired,
-  size: T.string
+  size: T.string,
+  onClick: T.func
 }
 
 export {

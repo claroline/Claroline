@@ -26,7 +26,6 @@ class FieldFacet
 {
     use Id;
     use Uuid;
-
     // Restrictions
     use Hidden;
 
@@ -175,9 +174,6 @@ class FieldFacet
         return $this->id;
     }
 
-    /**
-     * @param PanelFacet|null $panelFacet
-     */
     public function setPanelFacet(PanelFacet $panelFacet = null)
     {
         $this->panelFacet = $panelFacet;
@@ -235,9 +231,7 @@ class FieldFacet
             //otherwise we use the integer
             $this->type = $type;
         } else {
-            throw new \InvalidArgumentException(
-                'Type must be a FieldFacet class constant'
-            );
+            throw new \InvalidArgumentException('Type must be a FieldFacet class constant');
         }
     }
 
@@ -249,9 +243,6 @@ class FieldFacet
         return $this->type;
     }
 
-    /**
-     * @param FieldFacetChoice $choice
-     */
     public function addFieldChoice(FieldFacetChoice $choice)
     {
         if (!$this->fieldFacetChoices->contains($choice)) {
@@ -259,9 +250,6 @@ class FieldFacet
         }
     }
 
-    /**
-     * @param FieldFacetChoice $choice
-     */
     public function removeFieldChoice(FieldFacetChoice $choice)
     {
         if ($this->fieldFacetChoices->contains($choice)) {
@@ -392,9 +380,6 @@ class FieldFacet
         return $this->resourceNode;
     }
 
-    /**
-     * @param ResourceNode|null $resourceNode
-     */
     public function setResourceNode(ResourceNode $resourceNode = null)
     {
         $this->resourceNode = $resourceNode;
@@ -408,9 +393,6 @@ class FieldFacet
         return $this->options;
     }
 
-    /**
-     * @param array $options
-     */
     public function setOptions(array $options)
     {
         $this->options = $options;

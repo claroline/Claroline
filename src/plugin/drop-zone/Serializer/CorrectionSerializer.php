@@ -17,10 +17,6 @@ class CorrectionSerializer
 
     /**
      * CorrectionSerializer constructor.
-     *
-     * @param GradeSerializer $gradeSerializer
-     * @param UserSerializer  $userSerializer
-     * @param ObjectManager   $om
      */
     public function __construct(
         GradeSerializer $gradeSerializer,
@@ -41,8 +37,6 @@ class CorrectionSerializer
     }
 
     /**
-     * @param Correction $correction
-     *
      * @return array
      */
     public function serialize(Correction $correction)

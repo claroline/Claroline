@@ -23,15 +23,13 @@ class AdminToolFinder extends AbstractFinder
 
     /**
      * AdminToolFinder constructor.
-     *
-     * @param PluginManager $pluginManager
      */
     public function __construct(PluginManager $pluginManager)
     {
         $this->pluginManager = $pluginManager;
     }
 
-    public function getClass()
+    public static function getClass(): string
     {
         return AdminTool::class;
     }
@@ -65,12 +63,5 @@ class AdminToolFinder extends AbstractFinder
         }
 
         return $qb;
-    }
-
-    public function getFilters()
-    {
-        return [
-            '$defaults' => [],
-        ];
     }
 }

@@ -4,13 +4,13 @@ services:
         autoconfigure: false
         public: false
 
-    Claroline\TeamBundle\Listener\ApiListener:
+    Claroline\TeamBundle\Listener\UserListener:
         arguments:
             - '@Claroline\TeamBundle\Manager\TeamManager'
         tags:
             - { name: kernel.event_listener, event: merge_users, method: onMerge }
 
-    Claroline\TeamBundle\Listener\TeamListener:
+    Claroline\TeamBundle\Listener\Tool\TeamListener:
         arguments:
             - '@security.authorization_checker'
             - '@Claroline\AppBundle\API\SerializerProvider'

@@ -37,10 +37,6 @@ class OrderingDefinition extends AbstractDefinition
 
     /**
      * OrderingDefinition constructor.
-     *
-     * @param OrderingQuestionValidator  $validator
-     * @param OrderingAnswerValidator    $answerValidator
-     * @param OrderingQuestionSerializer $serializer
      */
     public function __construct(
         OrderingQuestionValidator $validator,

@@ -83,7 +83,7 @@ class Group extends AbstractRoleSubject
      * @var ArrayCollection
      *
      * @ORM\ManyToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Organization\Location",
+     *     targetEntity="Claroline\CoreBundle\Entity\Location\Location",
      *     inversedBy="groups"
      * )
      */

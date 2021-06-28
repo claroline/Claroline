@@ -88,7 +88,7 @@ class EntityDescriptorProvider implements EntityDescriptorProviderInterface
         $this->logoutBindings = [SamlConstants::BINDING_SAML2_HTTP_POST];
 
         // we don't use Claroline as IDP for know so there is no SSO declared
-        //$this->ssoUrl = $ssoRouteName ? $router->generate($ssoRouteName, [], RouterInterface::ABSOLUTE_URL) : null;
+        $this->ssoUrl = null;
         $this->ssoBindings = [SamlConstants::BINDING_SAML2_HTTP_POST, SamlConstants::BINDING_SAML2_HTTP_REDIRECT];
     }
 
@@ -191,9 +191,6 @@ class EntityDescriptorProvider implements EntityDescriptorProviderInterface
         return $idpSso;
     }
 
-    /**
-     * @param RoleDescriptor $descriptor
-     */
     protected function addKeyDescriptors(RoleDescriptor $descriptor)
     {
         if ($this->use) {

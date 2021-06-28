@@ -1,6 +1,5 @@
 imports:
     - { resource: services/controller.yml }
-    - { resource: services/command.yml }
     - { resource: services/finder.yml }
     - { resource: services/manager.yml }
     - { resource: services/adapter.yml }
@@ -16,6 +15,7 @@ services:
     Claroline\AppBundle\API\FinderProvider:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - !tagged_iterator { tag: 'claroline.finder', default_index_method: 'getClass' }
             - '@Claroline\AppBundle\API\SerializerProvider'
 
     Claroline\AppBundle\API\Crud:
@@ -35,6 +35,7 @@ services:
     Claroline\AppBundle\API\SerializerProvider:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - !tagged_iterator claroline.serializer # Lazy collection of 'claroline.serializer' tagged services
             - '%kernel.project_dir%'
 
     Claroline\AppBundle\API\TransferProvider:
@@ -44,13 +45,13 @@ services:
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\AppBundle\API\SchemaProvider'
             - '%claroline.param.import_log_dir%'
-            - '@translator'
         calls:
             - setLogger: ['@logger']
 
     Claroline\AppBundle\API\ValidatorProvider:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - !tagged_locator { tag: 'claroline.validator', default_index_method: 'getClass' }
             - '@Claroline\AppBundle\API\SchemaProvider'
 
     Claroline\AppBundle\Listener\ApiListener:

@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Security\Voter;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceComment;
+use Claroline\CoreBundle\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
@@ -39,7 +40,7 @@ class ResourceCommentVoter extends AbstractVoter
 
     public function getSupportedActions()
     {
-        return[self::OPEN, self::VIEW, self::CREATE, self::EDIT, self::DELETE];
+        return [self::OPEN, self::VIEW, self::CREATE, self::EDIT, self::DELETE];
     }
 
     private function checkEdit(TokenInterface $token, ResourceComment $comment)
@@ -48,7 +49,7 @@ class ResourceCommentVoter extends AbstractVoter
         $commentUser = $comment->getUser();
 
         if ($this->isGranted(['edit'], $comment->getResourceNode()) ||
-            ('anon.' !== $user && $commentUser && $user->getUuid() === $commentUser->getUuid())
+            ($user instanceof User && $commentUser && $user->getUuid() === $commentUser->getUuid())
         ) {
             return VoterInterface::ACCESS_GRANTED;
         }

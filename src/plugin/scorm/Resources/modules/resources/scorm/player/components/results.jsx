@@ -44,7 +44,7 @@ const ResultsComponent = props =>
           type: 'user',
           displayed: true
         }, {
-          name: 'user.email',
+          name: 'userEmail',
           label: trans('email'),
           type: 'email'
         }, {
@@ -122,7 +122,7 @@ const ResultsComponent = props =>
         }, {
           name: 'progression',
           type: 'string',
-          label: trans('completion_status', {}, 'scorm'),
+          label: trans('progression'),
           displayed: true,
           filterable: false,
           sortable: constants.SCORM_2004 === props.scorm.version,

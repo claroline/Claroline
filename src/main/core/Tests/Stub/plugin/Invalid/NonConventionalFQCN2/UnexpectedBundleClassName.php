@@ -11,7 +11,7 @@
 
 namespace Invalid\NonConventionalFQCN2;
 
-use Claroline\CoreBundle\Library\DistributionPluginBundle;
+use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
 
 class UnexpectedBundleClassName extends DistributionPluginBundle
 {

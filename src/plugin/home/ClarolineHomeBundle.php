@@ -2,11 +2,11 @@
 
 namespace Claroline\HomeBundle;
 
-use Claroline\CoreBundle\Library\DistributionPluginBundle;
+use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
 
 class ClarolineHomeBundle extends DistributionPluginBundle
 {
-    public function getPostInstallFixturesDirectory($environment)
+    public function getPostInstallFixturesDirectory(string $environment): string
     {
         return 'DataFixtures/PostInstall';
     }

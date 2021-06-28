@@ -76,6 +76,11 @@ const EditorComponent = props =>
         title: trans('general'),
         fields: [
           {
+            name: 'details.helpMessage',
+            label: trans('help_message', {}, 'clacoform'),
+            type: 'html',
+            help: trans('help_message_help', {}, 'clacoform')
+          }, {
             name: 'details.keywords_enabled',
             type: 'boolean',
             label: trans('label_keywords_enabled', {}, 'clacoform'),
@@ -131,6 +136,19 @@ const EditorComponent = props =>
                 displayed: (clacoForm) => get(clacoForm, 'template.enabled'),
                 required: true,
                 onChange: (template) => props.validateTemplate(template, props.clacoForm.fields, props.errors)
+              }
+            ]
+          }, {
+            name: 'display.showConfirm',
+            label: trans('show_confirm', {}, 'clacoform'),
+            type: 'boolean',
+            help: trans('show_confirm_help', {}, 'clacoform'),
+            linked: [
+              {
+                name: 'display.confirmMessage',
+                label: trans('confirm_message', {}, 'clacoform'),
+                type: 'html',
+                displayed: (resource) => get(resource, 'display.showConfirm')
               }
             ]
           }, {

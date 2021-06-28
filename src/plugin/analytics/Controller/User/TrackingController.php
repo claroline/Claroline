@@ -31,8 +31,6 @@ class TrackingController extends AbstractApiController
 
     /**
      * UserTrackingController constructor.
-     *
-     * @param FinderProvider $finder
      */
     public function __construct(FinderProvider $finder)
     {
@@ -54,9 +52,6 @@ class TrackingController extends AbstractApiController
      * )
      * @Route("/{user}/tracking/list", name="apiv2_user_tracking_list")
      * @EXT\ParamConverter("user", class="ClarolineCoreBundle:User", options={"mapping": {"user": "uuid"}})
-     *
-     * @param User    $user
-     * @param Request $request
      *
      * @return JsonResponse
      */

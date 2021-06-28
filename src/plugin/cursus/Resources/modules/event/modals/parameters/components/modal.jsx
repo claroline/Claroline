@@ -13,7 +13,7 @@ import {selectors} from '#/plugin/cursus/event/modals/parameters/store'
 
 const EventFormModal = props =>
   <Modal
-    {...omit(props, 'event', 'session', 'saveEnabled', 'loadEvent', 'saveEvent', 'onSave')}
+    {...omit(props, 'event', 'session', 'saveEnabled', 'loadEvent', 'saveEvent', 'updateEvent', 'onSave')}
     icon={props.event && props.event.id ? 'fa fa-fw fa-cog' : 'fa fa-fw fa-plus'}
     title={trans('session_events', {}, 'cursus')}
     subtitle={props.event && props.event.id ? props.event.name : trans('new_event', {}, 'cursus')}
@@ -21,6 +21,8 @@ const EventFormModal = props =>
   >
     <EventForm
       name={selectors.STORE_NAME}
+      update={props.updateEvent}
+      event={props.formData}
     >
       <Button
         className="modal-btn btn"
@@ -45,8 +47,10 @@ EventFormModal.propTypes = {
   session: T.shape({
 
   }),
+  formData: T.object,
   saveEnabled: T.bool.isRequired,
   loadEvent: T.func.isRequired,
+  updateEvent: T.func.isRequired,
   saveEvent: T.func.isRequired,
   onSave: T.func.isRequired,
 

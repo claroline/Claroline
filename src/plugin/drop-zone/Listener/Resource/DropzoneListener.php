@@ -20,10 +20,11 @@ use Claroline\DropZoneBundle\Entity\Dropzone;
 use Claroline\DropZoneBundle\Manager\DropzoneManager;
 use Claroline\TeamBundle\Manager\TeamManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class DropzoneListener
 {
+    /** @var TokenStorageInterface */
     private $tokenStorage;
 
     /** @var DropzoneManager */
@@ -38,15 +39,6 @@ class DropzoneListener
     /** @var TranslatorInterface */
     private $translator;
 
-    /**
-     * DropzoneListener constructor.
-     *
-     * @param TokenStorageInterface $tokenStorage
-     * @param DropzoneManager       $dropzoneManager
-     * @param SerializerProvider    $serializer
-     * @param TeamManager           $teamManager
-     * @param TranslatorInterface   $translator
-     */
     public function __construct(
         TokenStorageInterface $tokenStorage,
         DropzoneManager $dropzoneManager,
@@ -61,9 +53,6 @@ class DropzoneListener
         $this->translator = $translator;
     }
 
-    /**
-     * @param LoadResourceEvent $event
-     */
     public function onLoad(LoadResourceEvent $event)
     {
         /** @var Dropzone $dropzone */
@@ -75,9 +64,6 @@ class DropzoneListener
         $event->stopPropagation();
     }
 
-    /**
-     * @param CopyResourceEvent $event
-     */
     public function onCopy(CopyResourceEvent $event)
     {
         /** @var Dropzone $dropzone */
@@ -89,9 +75,6 @@ class DropzoneListener
         $event->stopPropagation();
     }
 
-    /**
-     * @param DeleteResourceEvent $event
-     */
     public function onDelete(DeleteResourceEvent $event)
     {
         /** @var Dropzone $dropzone */

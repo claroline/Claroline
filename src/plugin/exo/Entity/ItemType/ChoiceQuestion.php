@@ -17,6 +17,7 @@ use UJM\ExoBundle\Library\Options\ExerciseNumbering;
  */
 class ChoiceQuestion extends AbstractItem
 {
+    use ShuffleTrait;
     /**
      * Is it a multiple or a unique choice question ?
      *
@@ -25,8 +26,6 @@ class ChoiceQuestion extends AbstractItem
      * @var bool
      */
     private $multiple = false;
-
-    use ShuffleTrait;
 
     /**
      * @ORM\OneToMany(
@@ -94,9 +93,6 @@ class ChoiceQuestion extends AbstractItem
         $this->choices = $choices;
     }
 
-    /**
-     * @param Choice $choice
-     */
     public function addChoice(Choice $choice)
     {
         if (!$this->choices->contains($choice)) {
@@ -105,9 +101,6 @@ class ChoiceQuestion extends AbstractItem
         }
     }
 
-    /**
-     * @param Choice $choice
-     */
     public function removeChoice(Choice $choice)
     {
         if ($this->choices->contains($choice)) {

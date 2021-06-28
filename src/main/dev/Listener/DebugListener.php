@@ -10,8 +10,6 @@ class DebugListener
 {
     /**
      * If we're returning a JsonResponse, we can get the debug bar by passing ?debug=true on the query string.
-     *
-     * @param FilterResponseEvent $event
      */
     public function onResponse(FilterResponseEvent $event)
     {

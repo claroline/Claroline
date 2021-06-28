@@ -19,8 +19,6 @@ class OrderingQuestionSerializer
 
     /**
      * OrderingQuestionSerializer constructor.
-     *
-     * @param ContentSerializer $contentSerializer
      */
     public function __construct(ContentSerializer $contentSerializer)
     {
@@ -34,9 +32,6 @@ class OrderingQuestionSerializer
 
     /**
      * Converts an Ordering question into a JSON-encodable structure.
-     *
-     * @param OrderingQuestion $question
-     * @param array            $options
      *
      * @return array
      */
@@ -67,9 +62,6 @@ class OrderingQuestionSerializer
     /**
      * Serializes the question items.
      *
-     * @param OrderingQuestion $question
-     * @param array            $options
-     *
      * @return array
      */
     private function serializeItems(OrderingQuestion $question, array $options = [])
@@ -84,8 +76,6 @@ class OrderingQuestionSerializer
 
     /**
      * Serializes Question solutions.
-     *
-     * @param OrderingQuestion $question
      *
      * @return array
      */
@@ -114,7 +104,6 @@ class OrderingQuestionSerializer
      *
      * @param array            $data
      * @param OrderingQuestion $question
-     * @param array            $options
      *
      * @return OrderingQuestion
      */
@@ -138,11 +127,6 @@ class OrderingQuestionSerializer
 
     /**
      * Deserializes Question items.
-     *
-     * @param OrderingQuestion $question
-     * @param array            $items
-     * @param array            $solutions
-     * @param array            $options
      */
     private function deserializeItems(OrderingQuestion $question, array $items, array $solutions, array $options = [])
     {

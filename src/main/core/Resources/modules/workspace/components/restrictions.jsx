@@ -70,7 +70,9 @@ class WorkspaceRestrictions extends Component {
               fail={{
                 title: trans('restricted_workspace.cannot_access', {}, 'workspace'),
                 help: classes({
-                  [trans('restricted_workspace.contact_manager', {}, 'workspace')]: !this.props.errors.selfRegistration,
+                  [trans('restricted_workspace.contact_manager', {
+                    'manager_email': this.props.workspace.contactEmail ? `(<a href="mailto:${this.props.workspace.contactEmail}">${this.props.workspace.contactEmail}</a>)` : ''
+                  }, 'workspace')]: !this.props.errors.selfRegistration,
                   [trans('restricted_workspace.self_registration', {}, 'workspace')]: this.props.errors.selfRegistration
                 })
               }}
@@ -111,7 +113,7 @@ class WorkspaceRestrictions extends Component {
                   type={MODAL_BUTTON}
                   label={trans('self-register', {}, 'actions')}
                   modal={[MODAL_REGISTRATION, {
-                    onRegister: () => this.props.selfRegister()
+                    onRegister: this.props.selfRegister
                   }]}
                 />
               }

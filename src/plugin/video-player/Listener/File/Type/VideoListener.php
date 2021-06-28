@@ -18,9 +18,6 @@ class VideoListener
 
     /**
      * VideoListener constructor.
-     *
-     * @param TrackSerializer    $serializer
-     * @param VideoPlayerManager $manager
      */
     public function __construct(TrackSerializer $serializer, VideoPlayerManager $manager)
     {
@@ -28,9 +25,6 @@ class VideoListener
         $this->manager = $manager;
     }
 
-    /**
-     * @param LoadFileEvent $event
-     */
     public function onLoad(LoadFileEvent $event)
     {
         /** @var File $resource */

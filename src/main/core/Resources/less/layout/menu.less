@@ -69,10 +69,22 @@
                 text-transform: uppercase;
                 padding: 0;
                 border: none;
+                color: @toolbar-link-color;
+
+                &:hover {
+                    color: @toolbar-link-hover-color;
+                }
+                &:focus {
+                    color: @toolbar-link-active-color;
+                }
             }
         }
 
         + .app-menu-shortcuts {
+            margin-top: 2px;
+        }
+
+        + .app-menu-section .app-menu-section-toggle {
             margin-top: 2px;
         }
     }
@@ -99,6 +111,10 @@
                 margin-left: 2px;
             }
         }
+
+        + .app-menu-section .app-menu-section-toggle {
+            margin-top: 2px;
+        }
     }
 
     .app-menu-section {
@@ -110,14 +126,23 @@
             flex: 1;
         }
 
-        > h2 {
+        .app-menu-section-title {
             margin: 0;
+        }
 
-            > button {
-                text-align: left;
-                padding: floor(@grid-gutter-width / 2);
-                display: block;
-                width: 100%;
+        .app-menu-section-toggle {
+            text-align: left;
+            padding: floor(@grid-gutter-width / 2);
+            display: flex;
+            align-items: center;
+            width: 100%;
+
+            margin-bottom: 2px;
+            background: @toolbar-link-hover-bg;
+
+            .toggle {
+                font-size: 12px;
+                margin-left: auto;
             }
         }
     }
@@ -214,7 +239,6 @@
 
 .app-menu-search {
     margin: floor(@grid-gutter-width / 2);
-    margin-top: 0;
 
     .form-control {
         color: @toolbar-link-hover-color;

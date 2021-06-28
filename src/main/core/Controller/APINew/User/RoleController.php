@@ -41,9 +41,6 @@ class RoleController extends AbstractCrudController
 
     /**
      * RoleController constructor.
-     *
-     * @param AuthorizationCheckerInterface $authorization
-     * @param LogManager                    $logManager
      */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
@@ -75,8 +72,7 @@ class RoleController extends AbstractCrudController
      *     response={"$list"}
      * )
      *
-     * @param Request $request
-     * @param string  $class
+     * @param string $class
      *
      * @return JsonResponse
      */
@@ -94,8 +90,6 @@ class RoleController extends AbstractCrudController
      * @EXT\ParamConverter("role", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("currentUser", converter="current_user", options={"allowAnonymous"=false})
      *
-     * @param User   $currentUser
-     * @param Role   $role
      * @param string $year
      *
      * @return JsonResponse

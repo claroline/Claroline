@@ -29,10 +29,6 @@ class CategorySerializer
 
     /**
      * CategorySerializer constructor.
-     *
-     * @param FieldChoiceCategorySerializer $fieldChoiceCategorySerializer
-     * @param UserSerializer                $userSerializer
-     * @param ObjectManager                 $om
      */
     public function __construct(
         FieldChoiceCategorySerializer $fieldChoiceCategorySerializer,
@@ -86,8 +82,7 @@ class CategorySerializer
     }
 
     /**
-     * @param array    $data
-     * @param Category $category
+     * @param array $data
      *
      * @return Category
      */
@@ -123,8 +118,7 @@ class CategorySerializer
     }
 
     /**
-     * @param array    $valuesData
-     * @param Category $category
+     * @param array $valuesData
      */
     private function deserializeFieldChoiceCategory($valuesData, Category $category)
     {

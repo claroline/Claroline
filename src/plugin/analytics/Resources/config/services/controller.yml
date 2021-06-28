@@ -6,7 +6,7 @@ services:
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\AppBundle\API\FinderProvider'
             - '@Claroline\AnalyticsBundle\Manager\AnalyticsManager'
-            - '@claroline.event.manager'
+            - '@Claroline\CoreBundle\Manager\EventManager'
 
     Claroline\AnalyticsBundle\Controller\Administration\LogController:
         parent: Claroline\AppBundle\Controller\AbstractSecurityController
@@ -14,7 +14,7 @@ services:
             - '@security.token_storage'
             - '@Claroline\AppBundle\API\FinderProvider'
             - '@Claroline\AppBundle\API\SerializerProvider'
-            - '@claroline.log.manager'
+            - '@Claroline\CoreBundle\Manager\LogManager'
 
     Claroline\AnalyticsBundle\Controller\Resource\LogController:
         public: true # required by controllers
@@ -22,7 +22,7 @@ services:
             - '@security.authorization_checker'
             - '@Claroline\AppBundle\API\FinderProvider'
             - '@Claroline\AppBundle\API\SerializerProvider'
-            - '@claroline.log.manager'
+            - '@Claroline\CoreBundle\Manager\LogManager'
 
     Claroline\AnalyticsBundle\Controller\User\TrackingController:
         public: true # required by controllers
@@ -39,7 +39,7 @@ services:
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\AppBundle\API\FinderProvider'
             - '@Claroline\AnalyticsBundle\Manager\AnalyticsManager'
-            - '@claroline.event.manager'
+            - '@Claroline\CoreBundle\Manager\EventManager'
 
     Claroline\AnalyticsBundle\Controller\Workspace\LogController:
         public: true # required by controllers
@@ -47,4 +47,4 @@ services:
             - '@security.authorization_checker'
             - '@Claroline\AppBundle\API\FinderProvider'
             - '@Claroline\CoreBundle\API\Serializer\Log\LogSerializer'
-            - '@claroline.log.manager'
+            - '@Claroline\CoreBundle\Manager\LogManager'

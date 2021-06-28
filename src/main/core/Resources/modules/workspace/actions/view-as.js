@@ -16,7 +16,7 @@ export default (workspaces) => ({
   displayed: hasPermission('administrate', workspaces[0]),
   // load the list of Workspace roles (may not be loaded when action is rendered in a list)
   request: {
-    url: ['apiv2_workspace_list_roles_configurable', {id: workspaces[0].id}],
+    url: ['apiv2_workspace_list_roles_configurable', {workspace: workspaces[0].id}],
     // open the roles modal to let the user choose one
     success: (response, dispatch) => dispatch(modalActions.showModal(MODAL_WORKSPACE_ROLES, {
       icon: 'fa fa-fw fa-mask',

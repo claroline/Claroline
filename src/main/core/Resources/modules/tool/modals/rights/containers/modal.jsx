@@ -24,12 +24,16 @@ const RightsModal = withReducer(selectors.STORE_NAME, reducer)(
       updateRights(perms) {
         dispatch(formActions.update(selectors.STORE_NAME, perms))
       },
-      save(toolName, context) {
+      save(toolName, context, onSave) {
         dispatch(formActions.saveForm(selectors.STORE_NAME, ['apiv2_tool_update_rights', {
           name: toolName,
           context: context.type,
           contextId: get(context, 'data.id', null)
-        }]))
+        }])).then((response) => {
+          if (onSave) {
+            onSave(response)
+          }
+        })
       }
     })
   )(RightsModalComponent)

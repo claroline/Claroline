@@ -15,7 +15,6 @@
     "create_session": "Create training session",
     "create_session_event": "Create session event",
     "default_session": "Default training session",
-    "default_session_duration_label": "Default training session duration (day)",
     "event_registration_automatic": "Automatic",
     "event_registration_manual": "Manual",
     "event_registration_public": "Public",
@@ -93,5 +92,10 @@
     "presence_absent_unjustified": "Absent (not justified)",
     "presence_absent_unjustified_help": "The user is absent from the event and has not justified his absence.",
     "export-presences-empty": "Download the attendance list (empty)",
-    "export-presences-filled": "Download the attendance list (filled)"
+    "export-presences-filled": "Download the attendance list (filled)",
+    "no_course": "No training",
+    "session_info": "Session information",
+    "download_presence": "Download the certificate of presence (.pdf)",
+    "show_catalog": "Show training catalog",
+    "registration_auto": "All session participants are automatically registered for this event."
 }

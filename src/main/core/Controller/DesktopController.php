@@ -14,19 +14,21 @@ namespace Claroline\CoreBundle\Controller;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
+use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
+use Claroline\CoreBundle\Entity\Tool\AbstractTool;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Event\CatalogEvents\ToolEvents;
 use Claroline\CoreBundle\Event\GenericDataEvent;
-use Claroline\CoreBundle\Event\Log\LogDesktopToolReadEvent;
 use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 use Claroline\CoreBundle\Manager\Tool\ToolManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -42,8 +44,8 @@ class DesktopController
     /** @var AuthorizationCheckerInterface */
     private $authorization;
 
-    /** @var EventDispatcherInterface */
-    private $eventDispatcher;
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
 
     /** @var ParametersSerializer */
     private $parametersSerializer;
@@ -54,21 +56,23 @@ class DesktopController
     /** @var ToolManager */
     private $toolManager;
 
-    /**
-     * DesktopController constructor.
-     */
+    /** @var StrictDispatcher */
+    private $strictDispatcher;
+
     public function __construct(
         AuthorizationCheckerInterface $authorization,
-        EventDispatcherInterface $eventDispatcher,
+        TokenStorageInterface $tokenStorage,
         ParametersSerializer $parametersSerializer,
         SerializerProvider $serializer,
-        ToolManager $toolManager
+        ToolManager $toolManager,
+        StrictDispatcher $strictDispatcher
     ) {
         $this->authorization = $authorization;
-        $this->eventDispatcher = $eventDispatcher;
+        $this->tokenStorage = $tokenStorage;
         $this->parametersSerializer = $parametersSerializer;
         $this->serializer = $serializer;
         $this->toolManager = $toolManager;
+        $this->strictDispatcher = $strictDispatcher;
     }
 
     /**
@@ -76,33 +80,25 @@ class DesktopController
      *
      * @Route("/", name="claro_desktop_open")
      * @EXT\ParamConverter("currentUser", converter="current_user", options={"allowAnonymous"=true})
-     *
-     * @param User $currentUser
-     *
-     * @return JsonResponse
      */
-    public function openAction(User $currentUser = null)
+    public function openAction(User $currentUser = null): JsonResponse
     {
         // TODO : manage anonymous. This will break like this imo but they need to have access to tools opened to them.
         if (empty($currentUser)) {
             throw new AccessDeniedException();
         }
 
-        $orderedTools = $this->toolManager->getOrderedToolsByDesktop($currentUser);
-        if (0 === count($orderedTools)) {
-            throw new AccessDeniedException('no tools');
-        }
-
         /** @var GenericDataEvent $event */
-        $event = $this->eventDispatcher->dispatch(new GenericDataEvent(), 'desktop.open');
+        $event = $this->strictDispatcher->dispatch('desktop.open', GenericDataEvent::class);
 
         $parameters = $this->parametersSerializer->serialize([Options::SERIALIZE_MINIMAL]);
 
         return new JsonResponse(array_merge($event->getResponse() ?? [], [
             'userProgression' => null,
+            // get all enabled tools for the desktop
             'tools' => array_values(array_map(function (OrderedTool $orderedTool) {
-                return $this->serializer->serialize($orderedTool->getTool(), [Options::SERIALIZE_MINIMAL]);
-            }, $orderedTools)),
+                return $this->serializer->serialize($orderedTool, [Options::SERIALIZE_MINIMAL]);
+            }, $this->toolManager->getOrderedToolsByDesktop())),
             'shortcuts' => isset($parameters['desktop_shortcuts']) ? $parameters['desktop_shortcuts'] : [],
         ]));
     }
@@ -111,12 +107,8 @@ class DesktopController
      * Opens a tool.
      *
      * @Route("/tool/{toolName}", name="claro_desktop_open_tool")
-     *
-     * @param string $toolName
-     *
-     * @return JsonResponse
      */
-    public function openToolAction($toolName)
+    public function openToolAction(string $toolName): JsonResponse
     {
         $orderedTool = $this->toolManager->getOrderedTool($toolName, Tool::DESKTOP);
         if (!$orderedTool) {
@@ -127,10 +119,26 @@ class DesktopController
             throw new AccessDeniedException();
         }
 
-        /** @var OpenToolEvent $event */
-        $event = $this->eventDispatcher->dispatch(new OpenToolEvent(), 'open_tool_desktop_'.$toolName);
+        $currentUser = $this->tokenStorage->getToken()->getUser();
+        $eventParams = [
+            null,
+            $currentUser instanceof User ? $currentUser : null,
+            AbstractTool::DESKTOP,
+            $toolName,
+        ];
 
-        $this->eventDispatcher->dispatch(new LogDesktopToolReadEvent($toolName), 'log');
+        $this->strictDispatcher->dispatch(
+            ToolEvents::TOOL_OPEN,
+            OpenToolEvent::class,
+            $eventParams
+        );
+
+        /** @var OpenToolEvent $event */
+        $event = $this->strictDispatcher->dispatch(
+            'open_tool_desktop_'.$toolName,
+            OpenToolEvent::class,
+            $eventParams
+        );
 
         return new JsonResponse(array_merge($event->getData(), [
             'data' => $this->serializer->serialize($orderedTool),
@@ -141,16 +149,13 @@ class DesktopController
      * Lists desktop tools accessible by the current user.
      *
      * @Route("/tools", name="claro_desktop_tools")
-     * @EXT\ParamConverter("currentUser", converter="current_user", options={"allowAnonymous"=true})
-     *
-     * @return JsonResponse
      */
-    public function listToolsAction(User $currentUser = null)
+    public function listToolsAction(): JsonResponse
     {
-        $orderedTools = $this->toolManager->getOrderedToolsByDesktop($currentUser);
+        $orderedTools = $this->toolManager->getOrderedToolsByDesktop($this->tokenStorage->getToken()->getRoleNames());
 
         return new JsonResponse(array_values(array_map(function (OrderedTool $orderedTool) {
-            return $this->serializer->serialize($orderedTool->getTool(), [Options::SERIALIZE_MINIMAL]);
+            return $this->serializer->serialize($orderedTool, [Options::SERIALIZE_MINIMAL]);
         }, $orderedTools)));
     }
 }

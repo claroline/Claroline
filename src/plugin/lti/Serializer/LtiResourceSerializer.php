@@ -14,6 +14,7 @@ namespace UJM\LtiBundle\Serializer;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -39,12 +40,7 @@ class LtiResourceSerializer
     /**
      * LtiResourceSerializer constructor.
      *
-     * @param ObjectManager         $om
-     * @param RequestStack          $requestStack
-     * @param SerializerProvider    $serializer
-     * @param TokenStorageInterface $tokenStorage
-     * @param TranslatorInterface   $translator
-     * @param WorkspaceManager      $workspaceManager
+     * @param SerializerProvider $serializer
      */
     public function __construct(
         ObjectManager $om,
@@ -92,8 +88,7 @@ class LtiResourceSerializer
     }
 
     /**
-     * @param array       $data
-     * @param LtiResource $ltiResource
+     * @param array $data
      *
      * @return LtiResource
      */
@@ -111,8 +106,6 @@ class LtiResourceSerializer
     }
 
     /**
-     * @param LtiResource $ltiResource
-     *
      * @return array
      */
     private function serializeLtiData(LtiResource $ltiResource)
@@ -123,7 +116,7 @@ class LtiResourceSerializer
         if ($app) {
             $workspace = $ltiResource->getResourceNode()->getWorkspace();
             $user = $this->tokenStorage->getToken()->getUser();
-            $isAnon = 'anon.' === $user;
+            $isAnon = !$user instanceof User;
             $anonymous = $this->translator->trans('anonymous', [], 'platform');
             $isWorkspaceManager = $this->workspaceManager->isManager($workspace, $this->tokenStorage->getToken());
             $now = new \DateTime();

@@ -56,20 +56,6 @@ class WorkspaceSerializer
     /** @var ResourceNodeSerializer */
     private $resNodeSerializer;
 
-    /**
-     * WorkspaceSerializer constructor.
-     *
-     * @param AuthorizationCheckerInterface $authorization
-     * @param TokenStorageInterface         $tokenStorage
-     * @param ObjectManager                 $om
-     * @param WorkspaceManager              $workspaceManager
-     * @param ResourceManager               $resourceManager
-     * @param FileUtilities                 $fileUt
-     * @param FinderProvider                $finder
-     * @param UserSerializer                $userSerializer
-     * @param PublicFileSerializer          $publicFileSerializer
-     * @param ResourceNodeSerializer        $resNodeSerializer
-     */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         TokenStorageInterface $tokenStorage,
@@ -99,17 +85,11 @@ class WorkspaceSerializer
         return 'workspace';
     }
 
-    /**
-     * @return string
-     */
     public function getSchema()
     {
         return '#/main/core/workspace.json';
     }
 
-    /**
-     * @return string
-     */
     public function getSamples()
     {
         return '#/main/core/workspace';
@@ -117,13 +97,8 @@ class WorkspaceSerializer
 
     /**
      * Serializes a Workspace entity for the JSON api.
-     *
-     * @param Workspace $workspace - the workspace to serialize
-     * @param array     $options   - a list of serialization options
-     *
-     * @return array - the serialized representation of the workspace
      */
-    public function serialize(Workspace $workspace, array $options = [])
+    public function serialize(Workspace $workspace, array $options = []): array
     {
         $thumbnail = null;
         if ($workspace->getThumbnail()) {
@@ -157,6 +132,7 @@ class WorkspaceSerializer
                 'export' => $this->authorization->isGranted('EXPORT', $workspace),
             ],
             'meta' => $this->getMeta($workspace, $options),
+            'contactEmail' => $workspace->getContactEmail(),
         ];
 
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
@@ -172,24 +148,21 @@ class WorkspaceSerializer
 
             // TODO : remove me. Used by workspace transfer
             if (!in_array(Options::SERIALIZE_LIST, $options)) {
-                $workspaceRoles = array_values(array_unique(array_merge($this->workspaceManager->getRolesWithAccess($workspace), $workspace->getRoles()->toArray())));
-                if (in_array(Options::REFRESH_UUID, $options)) {
-                    $serialized['roles'] = array_map(function (Role $role) {
+                $serialized['roles'] = array_map(function (Role $role) use ($options) {
+                    if (in_array(Options::REFRESH_UUID, $options)) {
                         return [
-                          'translationKey' => $role->getTranslationKey(),
-                          'type' => $role->getType(),
-                        ];
-                    }, $workspaceRoles);
-                } else {
-                    $serialized['roles'] = array_map(function (Role $role) {
-                        return [
-                            'id' => $role->getUuid(),
-                            'name' => $role->getName(),
-                            'type' => $role->getType(), // TODO : should be a string for better data readability
                             'translationKey' => $role->getTranslationKey(),
+                            'type' => $role->getType(),
                         ];
-                    }, $workspaceRoles);
-                }
+                    }
+
+                    return [
+                        'id' => $role->getUuid(),
+                        'name' => $role->getName(),
+                        'type' => $role->getType(),
+                        'translationKey' => $role->getTranslationKey(),
+                    ];
+                }, $workspace->getRoles()->toArray());
             }
         }
 
@@ -207,13 +180,7 @@ class WorkspaceSerializer
         return false;
     }
 
-    /**
-     * @param Workspace $workspace
-     * @param array     $options
-     *
-     * @return array
-     */
-    private function getMeta(Workspace $workspace, array $options)
+    private function getMeta(Workspace $workspace, array $options): array
     {
         return [
             'lang' => $workspace->getLang(),
@@ -234,7 +201,17 @@ class WorkspaceSerializer
         $openingData = [
             'type' => 'tool',
             'target' => 'home',
+            'menu' => null,
         ];
+
+        if ($details && isset($details['hide_tools_menu'])) {
+            // test for bool values is for retro-compatibility to avoid having to migrate a json col in a huge table
+            if (is_string($details['hide_tools_menu'])) {
+                $openingData['menu'] = $details['hide_tools_menu'];
+            } else {
+                $openingData['menu'] = !$details['hide_tools_menu'] ? 'open' : 'close';
+            }
+        }
 
         if ($details && isset($details['opening_type'])) {
             $openingData['type'] = $details['opening_type'];
@@ -256,31 +233,13 @@ class WorkspaceSerializer
         return $openingData;
     }
 
-    /**
-     * @param Workspace $workspace
-     *
-     * @return array
-     */
-    private function getDisplay(Workspace $workspace)
+    private function getDisplay(Workspace $workspace): array
     {
         $options = $workspace->getOptions()->getDetails();
 
-        $openResource = null;
-        if (isset($options['workspace_opening_resource']) && $options['workspace_opening_resource']) {
-            $resource = $this->om
-                ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceNode')
-                ->findOneBy(['id' => $options['workspace_opening_resource']]);
-
-            if (!empty($resource)) {
-                $openResource = $this->resNodeSerializer->serialize($resource);
-            }
-        }
-
         return [
             'color' => !empty($options['background_color']) ? $options['background_color'] : null,
-            'showMenu' => !isset($options['hide_tools_menu']) || !$options['hide_tools_menu'],
             'showProgression' => $workspace->getShowProgression(),
-            'openResource' => $openResource,
         ];
     }
 
@@ -294,12 +253,7 @@ class WorkspaceSerializer
         ];
     }
 
-    /**
-     * @param Workspace $workspace
-     *
-     * @return array
-     */
-    private function getRestrictions(Workspace $workspace)
+    private function getRestrictions(Workspace $workspace): array
     {
         return [
             'hidden' => $workspace->isHidden(),
@@ -316,15 +270,10 @@ class WorkspaceSerializer
         ];
     }
 
-    /**
-     * @param Workspace $workspace
-     * @param array     $options
-     *
-     * @return array
-     */
-    private function getRegistration(Workspace $workspace, array $options)
+    private function getRegistration(Workspace $workspace, array $options): array
     {
         if ($workspace->getDefaultRole()) {
+            // this should use RoleSerializer but we will get a circular reference if we do it
             if (in_array(Options::REFRESH_UUID, $options)) {
                 $defaultRole = [
                   'translationKey' => $workspace->getDefaultRole()->getTranslationKey(),
@@ -360,30 +309,29 @@ class WorkspaceSerializer
 
     /**
      * Deserializes Workspace data into entities.
-     *
-     * @param array     $data
-     * @param Workspace $workspace
-     * @param array     $options
-     *
-     * @return Workspace
      */
-    public function deserialize(array $data, Workspace $workspace, array $options = [])
+    public function deserialize(array $data, Workspace $workspace, array $options = []): Workspace
     {
         $this->sipe('code', 'setCode', $data, $workspace);
         $this->sipe('name', 'setName', $data, $workspace);
+        $this->sipe('contactEmail', 'setContactEmail', $data, $workspace);
 
         if (isset($data['thumbnail']) && isset($data['thumbnail']['id'])) {
             /** @var PublicFile $thumbnail */
             $thumbnail = $this->om->getObject($data['thumbnail'], PublicFile::class);
-            $workspace->setThumbnail($data['thumbnail']['url']);
-            $this->fileUt->createFileUse($thumbnail, Workspace::class, $workspace->getUuid());
+            if ($thumbnail) {
+                $workspace->setThumbnail($data['thumbnail']['url']);
+                $this->fileUt->createFileUse($thumbnail, Workspace::class, $workspace->getUuid());
+            }
         }
 
         if (isset($data['poster']) && isset($data['poster']['id'])) {
             /** @var PublicFile $poster */
             $poster = $this->om->getObject($data['poster'], PublicFile::class);
-            $workspace->setPoster($data['poster']['url']);
-            $this->fileUt->createFileUse($poster, Workspace::class, $workspace->getUuid());
+            if ($poster) {
+                $workspace->setPoster($data['poster']['url']);
+                $this->fileUt->createFileUse($poster, Workspace::class, $workspace->getUuid());
+            }
         }
 
         if (empty($workspace->getCreator()) && isset($data['meta']) && !empty($data['meta']['creator'])) {
@@ -459,22 +407,18 @@ class WorkspaceSerializer
         $workspaceOptions = $workspace->getOptions();
 
         if (isset($data['display']) || isset($data['opening'])) {
-            $this->sipe('display.showProgression', 'setShowProgression', $data, $workspace);
-
             $details = $workspaceOptions->getDetails();
             if (empty($details)) {
                 $details = [];
             }
 
             if (isset($data['display'])) {
+                $this->sipe('display.showProgression', 'setShowProgression', $data, $workspace);
                 $details['background_color'] = !empty($data['display']['color']) ? $data['display']['color'] : null;
-                $details['hide_tools_menu'] = isset($data['display']['showMenu']) ? !$data['display']['showMenu'] : true;
-                $details['use_workspace_opening_resource'] = !empty($data['display']['openResource']);
-                $details['workspace_opening_resource'] = !empty($data['display']['openResource']) && !empty($data['display']['openResource']['autoId']) ?
-                    $data['display']['openResource']['autoId'] :
-                    null;
             }
+
             if (isset($data['opening'])) {
+                $details['hide_tools_menu'] = isset($data['opening']['menu']) ? $data['opening']['menu'] : null;
                 $details['opening_type'] = isset($data['opening']['type']) && isset($data['opening']['target']) && !empty($data['opening']['target']) ?
                     $data['opening']['type'] :
                     'tool';
@@ -509,8 +453,7 @@ class WorkspaceSerializer
     private function waitingForRegistration(Workspace $workspace)
     {
         $user = $this->tokenStorage->getToken()->getUser();
-
-        if ('anon.' === $user) {
+        if (!$user instanceof User) {
             return false;
         }
 

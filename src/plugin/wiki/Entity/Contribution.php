@@ -197,8 +197,6 @@ class Contribution
     }
 
     /**
-     * @param UserPickerContent $userPicker
-     *
      * @return $this
      */
     public function setUserPicker(UserPickerContent $userPicker)

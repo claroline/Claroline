@@ -62,8 +62,6 @@ class WorkspaceOptions
 
     /**
      * Set workspace.
-     *
-     * @param Workspace $workspace
      */
     public function setWorkspace(Workspace $workspace)
     {
@@ -82,8 +80,6 @@ class WorkspaceOptions
 
     /**
      * Set all workspace options.
-     *
-     * @param array $details
      */
     public function setDetails(array $details)
     {

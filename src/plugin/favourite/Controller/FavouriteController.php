@@ -31,10 +31,6 @@ class FavouriteController extends AbstractApiController
 
     /**
      * FavouriteController constructor.
-     *
-     * @param ObjectManager      $om
-     * @param SerializerProvider $serializer
-     * @param FavouriteManager   $manager
      */
     public function __construct(
         ObjectManager $om,
@@ -51,8 +47,6 @@ class FavouriteController extends AbstractApiController
      *
      * @Route("/", name="claro_user_favourites")
      * @EXT\ParamConverter("currentUser", converter="current_user")
-     *
-     * @param User $currentUser
      *
      * @return JsonResponse
      */
@@ -77,9 +71,6 @@ class FavouriteController extends AbstractApiController
      * @Route("/resources/toggle", name="hevinci_favourite_resources_toggle", methods={"PUT"})
      * @EXT\ParamConverter("user", converter="current_user")
      *
-     * @param User    $user
-     * @param Request $request
-     *
      * @return JsonResponse
      */
     public function toggleResourcesAction(User $user, Request $request)
@@ -95,9 +86,6 @@ class FavouriteController extends AbstractApiController
      *
      * @Route("/workspaces/toggle", name="hevinci_favourite_workspaces_toggle", methods={"PUT"})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @param User    $user
-     * @param Request $request
      *
      * @return JsonResponse
      */

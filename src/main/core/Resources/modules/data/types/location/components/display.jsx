@@ -13,7 +13,7 @@ const LocationDisplay = (props) => props.data ?
     size="xs"
   /> :
   <ContentPlaceholder
-    icon="fa fa-location-arrow"
+    icon="fa fa-map-marker-alt"
     title={trans('no_location')}
   />
 

@@ -13,6 +13,7 @@ namespace Claroline\OpenBadgeBundle\DataFixtures\PostInstall;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\CoreBundle\Entity\Template\Template;
+use Claroline\CoreBundle\Entity\Template\TemplateContent;
 use Claroline\CoreBundle\Entity\Template\TemplateType;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Persistence\ObjectManager;
@@ -21,6 +22,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class LoadTemplateData extends AbstractFixture implements ContainerAwareInterface
 {
+    /** @var ContainerInterface */
+    private $container;
+
     public function load(ObjectManager $om)
     {
         $translator = $this->container->get('translator');
@@ -31,11 +35,16 @@ class LoadTemplateData extends AbstractFixture implements ContainerAwareInterfac
         $templateType = $templateTypeRepo->findOneBy(['name' => 'badge_certificate']);
 
         if ($templateType) {
+            $template = new Template();
+            $template->setType($templateType);
+            $template->setName('badge_certificate');
+            $om->persist($template);
+
             foreach ($parameters['locales']['available'] as $locale) {
-                $template = new Template();
-                $template->setType($templateType);
-                $template->setName('badge_certificate');
-                $template->setLang($locale);
+                $templateContent = new TemplateContent();
+                $template->addTemplateContent($templateContent);
+
+                $templateContent->setLang($locale);
                 $content = '<div style="background-color: #f2ede7; padding: 20px;">'.
                     '<div style="text-align: left;"><strong>%issuer_name%</strong></div>'.
                     '<br /><hr /><br />'.
@@ -45,8 +54,8 @@ class LoadTemplateData extends AbstractFixture implements ContainerAwareInterfac
                     '<div style="text-align: center;">'.$translator->trans('badge_awarded_to', [], 'template', $locale).'</div>'.
                     '<h2 style="text-align: center;">%first_name% %last_name%</h2>'.
                     '</div>';
-                $template->setContent($content);
-                $om->persist($template);
+                $templateContent->setContent($content);
+                $om->persist($templateContent);
             }
             $templateType->setDefaultTemplate('badge_certificate');
             $om->persist($templateType);

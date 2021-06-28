@@ -16,22 +16,16 @@ class PlatformDefaults implements ParameterProviderInterface
     const REGISTRATION_MAIL_VALIDATION_NONE = 0;
     const REGISTRATION_MAIL_VALIDATION_PARTIAL = 1;
     const REGISTRATION_MAIL_VALIDATION_FULL = 2;
-    const DEFAULT_REDIRECT_OPTION = 'DESKTOP';
-
-    const REDIRECT_OPTIONS = [
-        'DESKTOP' => 'DESKTOP',
-        'LAST' => 'LAST',
-        'URL' => 'URL',
-        'WORKSPACE_TAG' => 'WORKSPACE_TAG',
-    ];
 
     public function getDefaultParameters()
     {
         return [
             'meta' => [],
             'home' => [
+                'show_sub_menu' => false,
                 'type' => 'none',
                 'data' => null,
+                'menu' => null,
             ],
             'profile' => [
                 'roles_confidential' => [],
@@ -70,23 +64,17 @@ class PlatformDefaults implements ParameterProviderInterface
                 'max_workspace_users' => 10000,
                 'default_tag' => null,
             ],
-            'authentication' => [
-                'redirect_after_login_option' => self::DEFAULT_REDIRECT_OPTION,
-                'redirect_after_login_url' => null,
-                'direct_third_party' => false,
-            ],
             'registration' => [
                 'self' => false,
                 'default_role' => 'ROLE_USER',
                 'validation' => self::REGISTRATION_MAIL_VALIDATION_PARTIAL,
                 'auto_logging' => false,
                 'allow_workspace' => false,
+                'organization_selection' => 'none',
                 'username_regex' => "/^[a-zA-Z0-9@\-_\.]*$/",
-                'force_organization_creation' => false,
             ],
             'security' => [
                 'account_duration' => null,
-                'default_root_anon_id' => null,
             ],
             'session' => [
                 'storage_type' => 'file',
@@ -158,12 +146,19 @@ class PlatformDefaults implements ParameterProviderInterface
                 'favourites',
                 'notifications',
             ],
+            'header_search' => [
+                'user' => true,
+                'workspace' => true,
+                'resource' => true,
+            ],
             'admin' => [
                 'default_tool' => 'home',
+                'menu' => null,
             ],
             'desktop' => [
                 'default_tool' => 'home',
                 'show_progression' => false,
+                'menu' => null,
             ],
             'show_about_button' => true,
             'notifications_refresh_delay' => 0, // in ms
@@ -191,6 +186,10 @@ class PlatformDefaults implements ParameterProviderInterface
                         'country' => null,
                     ],
                 ],
+            ],
+            'pricing' => [
+                'enabled' => false,
+                'currency' => 'euro',
             ],
         ];
     }

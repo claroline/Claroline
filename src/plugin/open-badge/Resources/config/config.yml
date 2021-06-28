@@ -1,6 +1,4 @@
 plugin:
-    has_options: false
-
     tools:
         - name: badges
           class: trophy

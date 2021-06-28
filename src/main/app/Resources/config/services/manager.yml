@@ -54,4 +54,4 @@ services:
     Claroline\AppBundle\Manager\TermsOfServiceManager:
         arguments:
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-            - '@claroline.manager.content_manager'
+            - '@Claroline\CoreBundle\Manager\ContentManager'

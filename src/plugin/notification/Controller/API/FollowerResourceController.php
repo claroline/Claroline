@@ -4,6 +4,7 @@ namespace Icap\NotificationBundle\Controller\API;
 
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Icap\NotificationBundle\Manager\NotificationManager;
@@ -19,14 +20,19 @@ class FollowerResourceController
 {
     use RequestDecoderTrait;
 
+    /** @var ObjectManager */
+    private $om;
+    /** @var SerializerProvider */
     private $serializer;
     /** @var NotificationManager */
     private $manager;
 
     public function __construct(
+        ObjectManager $om,
         SerializerProvider $serializer,
         NotificationManager $manager
     ) {
+        $this->om = $om;
         $this->serializer = $serializer;
         $this->manager = $manager;
     }

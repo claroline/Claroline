@@ -111,7 +111,7 @@ export default {
   expectAnswer: (item) => {
     if (item.solutions) {
       return item.solutions
-        .filter(solution => 0 < solution.score && undefined !== item.position && null !== item.position)
+        .filter(solution => 0 < solution.score && undefined !== solution.position && null !== solution.position)
         .map(solution => new Answerable(solution.score, solution.id))
     }
 

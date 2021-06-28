@@ -11,10 +11,10 @@
 
 namespace Claroline\CoreBundle\Manager\Workspace;
 
+use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue;
-use Claroline\CoreBundle\Manager\RoleManager;
 
 class WorkspaceUserQueueManager
 {
@@ -22,34 +22,29 @@ class WorkspaceUserQueueManager
     private $dispatcher;
     /** @var ObjectManager */
     private $om;
-    /** @var RoleManager */
-    private $roleManager;
+    /** @var Crud */
+    private $crud;
 
-    /**
-     * WorkspaceUserQueueManager constructor.
-     *
-     * @param StrictDispatcher $dispatcher
-     * @param ObjectManager    $om
-     * @param RoleManager      $roleManager
-     */
     public function __construct(
         StrictDispatcher $dispatcher,
         ObjectManager $om,
-        RoleManager $roleManager
+        Crud $crud
     ) {
         $this->dispatcher = $dispatcher;
         $this->om = $om;
-        $this->roleManager = $roleManager;
+        $this->crud = $crud;
     }
 
     /**
      * Validates a pending workspace registration.
-     *
-     * @param WorkspaceRegistrationQueue $workspaceRegistration
      */
     public function validateRegistration(WorkspaceRegistrationQueue $workspaceRegistration)
     {
-        $this->roleManager->associateRole($workspaceRegistration->getUser(), $workspaceRegistration->getRole());
+        if (!$workspaceRegistration->getUser()->hasRole($workspaceRegistration->getRole())) {
+            $this->crud->patch($workspaceRegistration->getUser(), 'role', Crud::COLLECTION_ADD, [
+                $workspaceRegistration->getRole(),
+            ]);
+        }
 
         $this->om->remove($workspaceRegistration);
         $this->om->flush();
@@ -57,8 +52,6 @@ class WorkspaceUserQueueManager
 
     /**
      * Removes a pending workspace registration.
-     *
-     * @param WorkspaceRegistrationQueue $workspaceRegistration
      */
     public function removeRegistration(WorkspaceRegistrationQueue $workspaceRegistration)
     {

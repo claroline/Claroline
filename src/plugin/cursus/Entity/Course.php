@@ -86,7 +86,7 @@ class Course extends AbstractTraining
     private $propagateRegistration = false;
 
     /**
-     * @ORM\Column(name="session_duration", nullable=false, type="integer", options={"default" = 1})
+     * @ORM\Column(name="session_duration", nullable=false, type="float", options={"default" = 1})
      */
     private $defaultSessionDuration = 1;
 
@@ -177,6 +177,18 @@ class Course extends AbstractTraining
         }
 
         return $defaultSession;
+    }
+
+    public function hasAvailableSession()
+    {
+        $now = new \DateTime();
+        foreach ($this->sessions as $session) {
+            if (empty($session->getEndDate()) || $session->getEndDate() > $now) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function getDefaultSessionDuration()

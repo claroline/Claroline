@@ -3,6 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import isEmpty from 'lodash/isEmpty'
 
 import {trans, number} from '#/main/app/intl'
+import {hasPermission} from '#/main/app/security/permissions'
 import {Toolbar} from '#/main/app/action/components/toolbar'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {LiquidGauge} from '#/main/core/layout/gauge/components/liquid-gauge'
@@ -56,11 +57,14 @@ const DesktopMenu = props => {
         target: '/',
         exact: true
       }}
-      tools={props.tools.map(tool => ({
-        name: tool.name,
-        icon: tool.icon,
-        path: toolRoute(tool.name)
-      }))}
+      tools={props.tools
+        .filter((tool) => hasPermission('open', tool))
+        .map(tool => ({
+          name: tool.name,
+          icon: tool.icon,
+          path: toolRoute(tool.name)
+        }))
+      }
       actions={desktopActions}
     >
       {props.showProgression &&
@@ -113,7 +117,8 @@ DesktopMenu.propTypes = {
   })),
   tools: T.arrayOf(T.shape({
     icon: T.string.isRequired,
-    name: T.string.isRequired
+    name: T.string.isRequired,
+    permissions: T.object
   })),
   changeSection: T.func.isRequired
 }

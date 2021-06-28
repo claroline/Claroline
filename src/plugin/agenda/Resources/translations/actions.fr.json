@@ -1,4 +1,7 @@
 {
   "add-event": "Ajouter un évènement",
-  "change-calendar-view": "Changer le mode de vue"
+  "change-calendar-view": "Changer le mode de vue",
+  "add_agenda": "Ajouter un agenda",
+  "send_invitation": "Envoyer une invitation",
+  "add_participants": "Ajouter des participants"
 }

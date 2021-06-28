@@ -27,9 +27,6 @@ class TagListener
 
     /**
      * TagListener constructor.
-     *
-     * @param ObjectManager $om
-     * @param TagManager    $tagManager
      */
     public function __construct(
         ObjectManager $om,
@@ -39,9 +36,6 @@ class TagListener
         $this->manager = $tagManager;
     }
 
-    /**
-     * @param SearchObjectsEvent $event
-     */
     public function onSearchObjects(SearchObjectsEvent $event)
     {
         // checks if there are filters managed by tag plugin in query
@@ -58,7 +52,7 @@ class TagListener
                 ->innerJoin('to.tag', 't')
                 ->where('to.objectClass = :objectClass')
                 ->andWhere('to.objectId = obj.uuid') // this makes the UUID required on tagged objects
-                ->andWhere('t.uuid IN (:tags)')
+                ->andWhere('(t.uuid IN (:tagIds) OR t.name IN (:tagNames))')
                 ->groupBy('to.objectId')
                 ->having('COUNT(to.id) = :expectedCount'); // this permits to make a AND between tags
 
@@ -66,16 +60,14 @@ class TagListener
             $queryBuilder = $event->getQueryBuilder();
             $queryBuilder->andWhere($queryBuilder->expr()->exists($tagQueryBuilder->getDql()))
                 ->setParameter('objectClass', $event->getObjectClass())
-                ->setParameter('tags', $tags)
+                ->setParameter('tagIds', $tags)
+                ->setParameter('tagNames', $tags)
                 ->setParameter('expectedCount', count($tags));
 
             $event->setFilters($filters);
         }
     }
 
-    /**
-     * @param GenericDataEvent $event
-     */
     public function onObjectTag(GenericDataEvent $event)
     {
         $taggedObject = null;
@@ -89,9 +81,6 @@ class TagListener
         $event->setResponse($taggedObject);
     }
 
-    /**
-     * @param GenericDataEvent $event
-     */
     public function onDataTag(GenericDataEvent $event)
     {
         $taggedObject = null;
@@ -105,9 +94,6 @@ class TagListener
         $event->setResponse($taggedObject);
     }
 
-    /**
-     * @param GenericDataEvent $event
-     */
     public function onRetrieveUserWorkspacesByTag(GenericDataEvent $event)
     {
         $workspaces = [];
@@ -131,8 +117,6 @@ class TagListener
 
     /**
      * Used by serializers to retrieves tags.
-     *
-     * @param GenericDataEvent $event
      */
     public function onRetrieveUsedTagsByClassAndIds(GenericDataEvent $event)
     {
@@ -166,8 +150,6 @@ class TagListener
 
     /**
      * Used by serializers to retrieves tags object.
-     *
-     * @param GenericDataEvent $event
      */
     public function onRetrieveUsedTagsObjectByClassAndIds(GenericDataEvent $event)
     {

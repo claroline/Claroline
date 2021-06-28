@@ -21,9 +21,6 @@ class AnswerValidator extends JsonSchemaValidator
 
     /**
      * AnswerValidator constructor.
-     *
-     * @param ObjectManager             $om
-     * @param ItemDefinitionsCollection $itemDefinitions
      */
     public function __construct(
         ObjectManager $om,
@@ -42,7 +39,6 @@ class AnswerValidator extends JsonSchemaValidator
      * Performs additional validations.
      *
      * @param \stdClass $answer
-     * @param array     $options
      *
      * @return array
      */

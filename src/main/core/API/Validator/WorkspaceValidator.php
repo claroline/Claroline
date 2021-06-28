@@ -18,8 +18,6 @@ class WorkspaceValidator implements ValidatorInterface
 
     /**
      * WorkspaceValidator constructor.
-     *
-     * @param ObjectManager $om
      */
     public function __construct(ObjectManager $om)
     {
@@ -74,7 +72,7 @@ class WorkspaceValidator implements ValidatorInterface
         return 0 < $qb->getQuery()->getSingleScalarResult();
     }
 
-    public function getClass()
+    public static function getClass(): string
     {
         return Workspace::class;
     }

@@ -72,7 +72,6 @@ actions.updateResource = (prop, value) => formActions.updateProp(selectors.STORE
  * @param {object} parent - the parent of the new resource
  */
 actions.create = (parent) => formActions.saveForm(selectors.STORE_NAME, ['claro_resource_action', {
-  type: parent.meta.type,
   action: 'add',
   id: parent.id
 }])

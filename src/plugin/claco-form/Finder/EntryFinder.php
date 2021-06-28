@@ -16,7 +16,7 @@ use Claroline\ClacoFormBundle\Entity\ClacoForm;
 use Claroline\ClacoFormBundle\Entity\Entry;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Manager\Organization\LocationManager;
+use Claroline\CoreBundle\Manager\LocationManager;
 use Claroline\CoreBundle\Security\Collection\ResourceCollection;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -51,7 +51,7 @@ class EntryFinder extends AbstractFinder
         $this->translator = $translator;
     }
 
-    public function getClass()
+    public static function getClass(): string
     {
         return 'Claroline\ClacoFormBundle\Entity\Entry';
     }
@@ -61,17 +61,22 @@ class EntryFinder extends AbstractFinder
         $clacoFormRepo = $this->om->getRepository('ClarolineClacoFormBundle:ClacoForm');
         $fieldRepo = $this->om->getRepository('ClarolineClacoFormBundle:Field');
 
+        // TODO : rights should not be checked here
         $currentUser = $this->tokenStorage->getToken()->getUser();
 
-        $isAnon = 'anon.' === $currentUser;
-        $clacoForm = $clacoFormRepo->findOneById($searches['clacoForm']);
-        $canEdit = $this->hasRight($clacoForm, 'EDIT');
-        $isCategoryManager = !$isAnon && $this->isCategoryManager($clacoForm, $currentUser);
-        $searchEnabled = $clacoForm->getSearchEnabled();
-
-        $qb->join('obj.clacoForm', 'cf');
-        $qb->andWhere('cf.id = :clacoFormId');
-        $qb->setParameter('clacoFormId', $searches['clacoForm']);
+        $isAnon = !$currentUser instanceof User;
+        $clacoForm = null;
+        $canEdit = false;
+        $isCategoryManager = false;
+        $searchEnabled = false;
+        if (isset($searches['clacoForm'])) {
+            $clacoForm = $clacoFormRepo->findOneById($searches['clacoForm']);
+            if ($clacoForm) {
+                $canEdit = $this->hasRight($clacoForm, 'EDIT');
+                $isCategoryManager = !$isAnon && $this->isCategoryManager($clacoForm, $currentUser);
+                $searchEnabled = $clacoForm->getSearchEnabled();
+            }
+        }
 
         $type = isset($searches['type']) ? $searches['type'] : null;
 
@@ -91,7 +96,7 @@ class EntryFinder extends AbstractFinder
             }
         }
         if (is_null($type)) {
-            if ($searchEnabled || $this->hasRight($clacoForm, 'EDIT')) {
+            if ($searchEnabled || $canEdit) {
                 $type = 'all';
             } elseif (!$isAnon) {
                 $type = $isCategoryManager ? 'manager' : 'my';
@@ -156,8 +161,12 @@ class EntryFinder extends AbstractFinder
         }
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
-                case 'clacoForm':
                 case 'type':
+                    break;
+                case 'clacoForm':
+                    $qb->join('obj.clacoForm', 'cf');
+                    $qb->andWhere('cf.id = :clacoFormId');
+                    $qb->setParameter('clacoFormId', $searches['clacoForm']);
                     break;
                 case 'title':
                     $qb->andWhere('UPPER(obj.title) LIKE :title');
@@ -280,11 +289,21 @@ class EntryFinder extends AbstractFinder
                     } else {
                         $qb->andWhere("UPPER(fvffv{$parsedFilterName}.stringValue) LIKE :value{$parsedFilterName}");
                     }
-                    $qb->setParameter("value{$parsedFilterName}", '%'.strtoupper($filterValue).'%');
+
+                    // a little of black magic because Doctrine Json type stores unicode seq for special chars
+                    $value = json_encode($filterValue);
+                    $value = trim($value, '"'); // removes string delimiters added by json encode
+
+                    $qb->setParameter("value{$parsedFilterName}", '%'.addslashes(strtoupper($value)).'%');
                     break;
                 case FieldFacet::CASCADE_TYPE:
                     $qb->andWhere("UPPER(fvffv{$parsedFilterName}.arrayValue) LIKE :value{$parsedFilterName}");
-                    $qb->setParameter("value{$parsedFilterName}", '%'.strtoupper($filterValue).'%');
+
+                    // a little of black magic because Doctrine Json type stores unicode seq for special chars
+                    $value = json_encode($filterValue);
+                    $value = trim($value, '"'); // removes string delimiters added by json encode
+
+                    $qb->setParameter("value{$parsedFilterName}", '%'.addslashes(strtoupper($value)).'%');
                     break;
                 case FieldFacet::BOOLEAN_TYPE:
                     $qb->andWhere("fvffv{$parsedFilterName}.boolValue = :value{$parsedFilterName}");

@@ -8,8 +8,6 @@ class IntegrationListener
 {
     /**
      * Displays integration administration tool.
-     *
-     * @param OpenToolEvent $event
      */
     public function onDisplayTool(OpenToolEvent $event)
     {

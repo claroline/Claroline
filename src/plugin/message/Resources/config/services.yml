@@ -7,3 +7,4 @@ imports:
     - { resource: services/listener.yml }
     - { resource: services/manager.yml }
     - { resource: services/validator.yml }
+    - { resource: services/subscriber.yml }

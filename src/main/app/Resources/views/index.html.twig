@@ -43,7 +43,7 @@
         {{ injectedStylesheets | raw }}
 
         {# Styles from plateform configuration #}
-        {% for file in parameters.stylesheets %}
+        {% for file in stylesheets %}
             <link rel="stylesheet" type="text/css" href="{{ asset(file) }}" />
         {% endfor %}
     </head>
@@ -58,6 +58,7 @@
             data-maintenance="{{ maintenance | json_encode | raw | escape }}"
             data-impersonated="{{ impersonated ? 'true' : 'false' }}"
             data-current-user="{{ currentUser | json_encode | raw | escape }}"
+            data-client="{{ client | json_encode | raw | escape }}"
             data-administration="{{ administration ? 'true' : 'false' }}"
             data-header="{{ header | json_encode | raw | escape }}"
             data-footer="{{ footer | json_encode | raw | escape }}"
@@ -87,7 +88,7 @@
         {{ injectedJavascripts | raw }}
 
         {# JS from plateform configuration #}
-        {% for file in parameters.javascripts %}
+        {% for file in javascripts %}
             <script src="{{ asset(file) }}"></script>
         {% endfor %}
     </body>

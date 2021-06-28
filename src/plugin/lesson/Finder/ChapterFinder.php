@@ -8,7 +8,7 @@ use Icap\LessonBundle\Entity\Chapter;
 
 class ChapterFinder extends AbstractFinder
 {
-    public function getClass()
+    public static function getClass(): string
     {
         return Chapter::class;
     }
@@ -24,13 +24,19 @@ class ChapterFinder extends AbstractFinder
                     break;
 
                 case 'content':
-                    $qb->andWhere("(UPPER(obj.title) LIKE :{$filterName} OR UPPER(obj.text) LIKE :{$filterName})");
-                    $qb->setParameter($filterName, '%'.strtoupper($filterValue).'%');
+                    $values = explode('+', $filterValue);
+                    foreach ($values as $index => $value) {
+                        $qb->andWhere("(UPPER(obj.title) LIKE :content{$index} OR UPPER(obj.text) LIKE :content{$index})");
+                        $qb->setParameter('content'.$index, '%'.strtoupper($value).'%');
+                    }
                     break;
 
                 case 'contentAndNote':
-                    $qb->andWhere("(UPPER(obj.title) LIKE :{$filterName} OR UPPER(obj.text) LIKE :{$filterName} OR UPPER(obj.internalNote) LIKE :{$filterName})");
-                    $qb->setParameter($filterName, '%'.strtoupper($filterValue).'%');
+                    $values = explode('+', $filterValue);
+                    foreach ($values as $index => $value) {
+                        $qb->andWhere("(UPPER(obj.title) LIKE :content{$index} OR UPPER(obj.text) LIKE :content{$index} OR UPPER(obj.internalNote) LIKE :content{$index})");
+                        $qb->setParameter('content'.$index, '%'.strtoupper($value).'%');
+                    }
                     break;
 
                 default:

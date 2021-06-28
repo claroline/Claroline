@@ -28,12 +28,6 @@ class PluginListener
 
     /**
      * PluginListener constructor.
-     *
-     * @param CompetencyManager     $competencyManager
-     * @param ObjectiveManager      $objectiveManager
-     * @param TokenStorageInterface $tokenStorage
-     * @param RequestStack          $stack
-     * @param HttpKernelInterface   $kernel
      */
     public function __construct(
         CompetencyManager $competencyManager,
@@ -49,9 +43,6 @@ class PluginListener
         $this->kernel = $kernel;
     }
 
-    /**
-     * @param OpenToolEvent $event
-     */
     public function onOpenLearningObjectivesTool(OpenToolEvent $event)
     {
         $this->competencyManager->ensureHasScale();
@@ -59,14 +50,11 @@ class PluginListener
         $event->stopPropagation();
     }
 
-    /**
-     * @param OpenToolEvent $event
-     */
     public function onOpenMyLearningObjectivesTool(OpenToolEvent $event)
     {
         /** @var User $user */
         $user = $this->tokenStorage->getToken()->getUser();
-        $objectives = 'anon.' !== $user ? $this->objectiveManager->loadSubjectObjectives($user) : [];
+        $objectives = $user instanceof User ? $this->objectiveManager->loadSubjectObjectives($user) : [];
         $objectivesCompetencies = [];
         $competencies = [];
 

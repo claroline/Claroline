@@ -12,9 +12,6 @@ class AdminToolSerializer
     }
 
     /**
-     * @param AdminTool $tool
-     * @param array     $options
-     *
      * @return array
      */
     public function serialize(AdminTool $tool, array $options = [])

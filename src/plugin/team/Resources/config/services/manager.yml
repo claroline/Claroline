@@ -10,9 +10,9 @@ services:
             - '@security.token_storage'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\FinderProvider'
-            - '@claroline.serializer.team'
+            - '@Claroline\TeamBundle\Serializer\TeamSerializer'
             - '@Claroline\TeamBundle\Manager\TeamManager'
-            - '@claroline.serializer.team.parameters'
+            - '@Claroline\TeamBundle\Serializer\WorkspaceTeamParametersSerializer'
 
       #alias is required: todo: use tags
     claroline.transfer.claroline_team_tool:
@@ -22,6 +22,7 @@ services:
     Claroline\TeamBundle\Manager\TeamManager:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\Crud'
             - '@claroline.manager.resource_manager'
             - '@claroline.manager.rights_manager'
             - '@claroline.manager.role_manager'

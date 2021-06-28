@@ -1,5 +1,7 @@
 import get from 'lodash/get'
 
+import {trans} from '#/main/app/intl/translation'
+
 /**
  * Flattens a tree of tabs into a one-level array.
  *
@@ -33,6 +35,23 @@ function flattenTabs(tabs) {
   return tabs.reduce((acc, tab) => acc.concat(flatten(tab)), [])
 }
 
+function getTabTitle(context, tab) {
+  if (tab) {
+    return tab.longTitle
+  }
+
+  if (context.data && context.data.name) {
+    return context.data.name
+  }
+
+  if ('desktop' === context.type) {
+    return trans('desktop')
+  }
+
+  return trans('home')
+}
+
 export {
-  flattenTabs
+  flattenTabs,
+  getTabTitle
 }

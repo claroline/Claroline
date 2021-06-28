@@ -2,7 +2,7 @@ services:
     _defaults:
         autowire: false
         autoconfigure: false
-        public: true #because lazy
+        public: false
         tags: [claroline.crud]
 
     Claroline\CoreBundle\API\Crud\WorkspaceCrud:
@@ -18,11 +18,12 @@ services:
             - { name: kernel.event_listener, event: crud_pre_delete_object_claroline_corebundle_entity_workspace_workspace, method: preDelete }
             - { name: kernel.event_listener, event: crud_pre_create_object_claroline_corebundle_entity_workspace_workspace, method: preCreate }
             - { name: kernel.event_listener, event: crud_pre_copy_object_claroline_corebundle_entity_workspace_workspace, method: preCopy }
-            - { name: kernel.event_listener, event: crud_end_update_object_claroline_corebundle_entity_workspace_workspace, method: endUpdate }
+            - { name: kernel.event_listener, event: crud_post_update_object_claroline_corebundle_entity_workspace_workspace, method: endUpdate }
 
     Claroline\CoreBundle\API\Crud\User\UserCrud:
         arguments:
             - '@security.token_storage'
+            - '@Claroline\AuthenticationBundle\Security\Authentication\Authenticator'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
             - '@Claroline\CoreBundle\Manager\RoleManager'
@@ -31,35 +32,51 @@ services:
             - '@Claroline\CoreBundle\Manager\Organization\OrganizationManager'
             - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
             - '@Icap\NotificationBundle\Manager\NotificationUserParametersManager'
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
         tags:
-          - { name: kernel.event_listener, event: crud_pre_create_object_claroline_corebundle_entity_user, method: preCreate }
-          - { name: kernel.event_listener, event: crud.pre.delete.user, method: preDelete }
-          - { name: kernel.event_listener, event: crud_pre_update_object_claroline_corebundle_entity_user, method: preUpdate }
+            - { name: kernel.event_listener, event: crud_pre_create_object_claroline_corebundle_entity_user, method: preCreate }
+            - { name: kernel.event_listener, event: crud_pre_delete_object_claroline_corebundle_entity_user, method: preDelete }
+            - { name: kernel.event_listener, event: crud_pre_update_object_claroline_corebundle_entity_user, method: preUpdate }
+            - { name: kernel.event_listener, event: crud_post_update_object_claroline_corebundle_entity_user, method: postUpdate }
+            - { name: kernel.event_listener, event: crud_pre_patch_object_claroline_corebundle_entity_user, method: prePatch }
+            - { name: kernel.event_listener, event: crud_post_patch_object_claroline_corebundle_entity_user, method: postPatch }
 
     Claroline\CoreBundle\API\Crud\User\RoleCrud:
         arguments:
             - '@doctrine.dbal.default_connection'
+            - '@security.token_storage'
+            - '@Claroline\AuthenticationBundle\Security\Authentication\Authenticator'
+            - '@Claroline\CoreBundle\Manager\RoleManager'
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
         tags:
-          - { name: kernel.event_listener, event: crud_pre_create_object_claroline_corebundle_entity_role, method: preCreate }
-          - { name: kernel.event_listener, event: crud_post_create_object_claroline_corebundle_entity_role, method: postCreate }
+            - { name: kernel.event_listener, event: crud_pre_create_object_claroline_corebundle_entity_role, method: preCreate }
+            - { name: kernel.event_listener, event: crud_post_create_object_claroline_corebundle_entity_role, method: postCreate }
+            - { name: kernel.event_listener, event: crud_pre_delete_object_claroline_corebundle_entity_role, method: preDelete }
+            - { name: kernel.event_listener, event: crud_pre_patch_object_claroline_corebundle_entity_role, method: prePatch }
+            - { name: kernel.event_listener, event: crud_post_patch_object_claroline_corebundle_entity_role, method: postPatch }
 
     Claroline\CoreBundle\API\Crud\User\OrganizationCrud:
         arguments:
             - '@security.token_storage'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@claroline.manager.cryptography_manager'
+            - '@Claroline\CoreBundle\Manager\CryptographyManager'
             - '@Claroline\AppBundle\API\Crud'
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
         tags:
-          - { name: kernel.event_listener, event: crud_pre_create_object_claroline_corebundle_entity_organization_organization, method: preCreate }
-          - { name: kernel.event_listener, event: crud_post_create_object_claroline_corebundle_entity_organization_organization, method: postCreate }
-          - { name: kernel.event_listener, event: crud_pre_delete_object_claroline_corebundle_entity_organization_organization, method: preDelete }
-          - { name: kernel.event_listener, event: crud_post_patch_object_claroline_corebundle_entity_organization_organization, method: postPatch }
+            - { name: kernel.event_listener, event: crud_pre_create_object_claroline_corebundle_entity_organization_organization, method: preCreate }
+            - { name: kernel.event_listener, event: crud_post_create_object_claroline_corebundle_entity_organization_organization, method: postCreate }
+            - { name: kernel.event_listener, event: crud_pre_delete_object_claroline_corebundle_entity_organization_organization, method: preDelete }
+            - { name: kernel.event_listener, event: crud_post_patch_object_claroline_corebundle_entity_organization_organization, method: postPatch }
 
     Claroline\CoreBundle\API\Crud\User\GroupCrud:
         arguments:
             - '@security.token_storage'
+            - '@Claroline\AuthenticationBundle\Security\Authentication\Authenticator'
+            - '@Claroline\CoreBundle\Manager\RoleManager'
         tags:
-          - { name: kernel.event_listener, event: crud_pre_create_object_claroline_corebundle_entity_group, method: preCreate }
+            - { name: kernel.event_listener, event: crud_pre_create_object_claroline_corebundle_entity_group, method: preCreate }
+            - { name: kernel.event_listener, event: crud_pre_patch_object_claroline_corebundle_entity_group, method: prePatch }
+            - { name: kernel.event_listener, event: crud_post_patch_object_claroline_corebundle_entity_group, method: postPatch }
 
     Claroline\CoreBundle\API\Crud\Resource\ResourceNodeCrud:
         arguments:
@@ -72,9 +89,9 @@ services:
             - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
             - '%claroline.param.files_directory%'
         tags:
-          - { name: kernel.event_listener, event: crud.pre.create.resource_node, method: preCreate }
-          - { name: kernel.event_listener, event: crud.pre.delete.resource_node, method: preDelete }
-          - { name: kernel.event_listener, event: crud.pre.copy.resource_node, method: preCopy }
+            - { name: kernel.event_listener, event: crud.pre.create.resource_node, method: preCreate }
+            - { name: kernel.event_listener, event: crud.pre.delete.resource_node, method: preDelete }
+            - { name: kernel.event_listener, event: crud.pre.copy.resource_node, method: preCopy }
 
     Claroline\CoreBundle\API\Crud\File\PublicFile:
         arguments:
@@ -82,10 +99,4 @@ services:
             - '@security.token_storage'
             - '@Claroline\CoreBundle\Library\Utilities\FileUtilities'
         tags:
-          - { name: kernel.event_listener, event: crud_pre_create_object_claroline_corebundle_entity_file_publicfile, method: preCreate }
-
-    Claroline\CoreBundle\API\Crud\Cryptography\ApiTokenCrud:
-        arguments:
-            - '@security.token_storage'
-        tags:
-          - { name: kernel.event_listener, event: crud_pre_create_object_claroline_corebundle_entity_cryptography_apitoken, method: preCreate }
+            - { name: kernel.event_listener, event: crud_pre_create_object_claroline_corebundle_entity_file_publicfile, method: preCreate }

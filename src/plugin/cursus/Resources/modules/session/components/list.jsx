@@ -3,11 +3,12 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import get from 'lodash/get'
 
-import {trans} from '#/main/app/intl/translation'
-import {now} from '#/main/app/intl/date'
+import {trans, now} from '#/main/app/intl'
+import {param} from '#/main/app/config'
 import {hasPermission} from '#/main/app/security'
 import {LINK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
+import {constants as listConst} from '#/main/app/content/list/constants'
 
 import {route} from '#/plugin/cursus/routing'
 import {SessionCard} from '#/plugin/cursus/session/components/card'
@@ -21,7 +22,7 @@ const SessionList = (props) =>
     }}
     primaryAction={(row) => ({
       type: LINK_BUTTON,
-      target: route(props.path, row.meta.course, row),
+      target: route(props.path, row.course, row),
       label: trans('open', {}, 'actions')
     })}
     delete={props.delete}
@@ -111,6 +112,15 @@ const SessionList = (props) =>
         filterable: false,
         sortable: false
       }, {
+        name: 'pricing.price',
+        alias: 'price',
+        label: trans('price'),
+        type: 'currency',
+        displayable: param('pricing.enabled'),
+        displayed: param('pricing.enabled'),
+        filterable: param('pricing.enabled'),
+        sortable: param('pricing.enabled')
+      }, {
         name: 'meta.order',
         alias: 'order',
         type: 'number',
@@ -139,6 +149,9 @@ const SessionList = (props) =>
       }
 
       return actions
+    }}
+    display={{
+      current: listConst.DISPLAY_LIST
     }}
   />
 

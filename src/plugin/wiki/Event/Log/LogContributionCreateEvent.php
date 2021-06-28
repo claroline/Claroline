@@ -14,11 +14,6 @@ class LogContributionCreateEvent extends AbstractLogResourceEvent implements Not
     protected $wiki;
     protected $details;
 
-    /**
-     * @param Wiki         $wiki
-     * @param Section      $section
-     * @param Contribution $contribution
-     */
     public function __construct(Wiki $wiki, Section $section, Contribution $contribution)
     {
         $this->wiki = $wiki;

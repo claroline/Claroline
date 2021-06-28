@@ -1,0 +1,47 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+
+    Claroline\InstallationBundle\Command\PlatformInstallCommand:
+        arguments:
+            - '%claroline.param.files_directory%'
+        tags:
+            - { name: 'console.command', command: 'claroline:install' }
+
+    Claroline\InstallationBundle\Command\PlatformUpdateCommand:
+        arguments:
+            - '@Claroline\CoreBundle\Library\Installation\Refresher'
+            - '@Claroline\CoreBundle\Library\Installation\PlatformInstaller'
+            - '@Claroline\CoreBundle\Manager\VersionManager'
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+            - '@translator'
+            - '%kernel.environment%'
+        tags:
+            - { name: 'console.command', command: 'claroline:update' }
+
+    Claroline\InstallationBundle\Command\ExecuteUpdaterCommand:
+        arguments:
+            - '@Claroline\InstallationBundle\Repository\UpdaterExecutionRepository'
+            - !tagged_locator
+                  tag: 'claroline.platform.updater'
+        tags:
+            - { name: 'console.command', command: 'claroline:updater:execute' }
+
+    Claroline\InstallationBundle\Command\UpdateConfigCommand:
+        arguments:
+            - '@Claroline\CoreBundle\Library\Installation\Plugin\Installer'
+        tags:
+            - { name: 'console.command', command: 'claroline:update_config' }
+
+    Claroline\InstallationBundle\Command\PluginInstallCommand:
+        arguments:
+            - '@Claroline\CoreBundle\Library\Installation\Plugin\Installer'
+        tags:
+            - { name: 'console.command', command: 'claroline:plugin:install' }
+
+    Claroline\InstallationBundle\Command\PluginUninstallCommand:
+        arguments:
+            - '@Claroline\CoreBundle\Library\Installation\Plugin\Installer'
+        tags:
+            - { name: 'console.command', command: 'claroline:plugin:uninstall' }

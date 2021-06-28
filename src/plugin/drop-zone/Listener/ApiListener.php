@@ -13,17 +13,11 @@ class ApiListener
     /** @var DropzoneManager */
     private $dropzoneManager;
 
-    /**
-     * @param DropzoneManager $dropzoneManager
-     */
     public function __construct(DropzoneManager $dropzoneManager)
     {
         $this->dropzoneManager = $dropzoneManager;
     }
 
-    /**
-     * @param MergeUsersEvent $event
-     */
     public function onMerge(MergeUsersEvent $event)
     {
         // Replace user of Drop nodes

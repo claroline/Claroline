@@ -72,7 +72,6 @@ class IconItem
     /**
      * IconItem constructor.
      *
-     * @param IconSet $iconSet
      * @param $relativeUrl
      * @param null $name
      * @param null $mimeType

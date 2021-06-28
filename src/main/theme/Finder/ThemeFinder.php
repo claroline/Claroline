@@ -17,7 +17,7 @@ use Doctrine\ORM\QueryBuilder;
 
 class ThemeFinder extends AbstractFinder
 {
-    public function getClass()
+    public static function getClass(): string
     {
         return Theme::class;
     }
@@ -29,12 +29,5 @@ class ThemeFinder extends AbstractFinder
         }
 
         return $qb;
-    }
-
-    public function getFilters()
-    {
-        return [
-            '$defaults' => [],
-        ];
     }
 }

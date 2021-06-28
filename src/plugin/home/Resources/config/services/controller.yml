@@ -6,9 +6,11 @@ services:
 
   Claroline\HomeBundle\Controller\HomeController:
     arguments:
+      - '@security.token_storage'
       - '@security.authorization_checker'
       - '@Claroline\AppBundle\Persistence\ObjectManager'
       - '@Claroline\AppBundle\API\FinderProvider'
       - '@Claroline\AppBundle\API\Crud'
-      - '@claroline.manager.lock_manager'
+      - '@Claroline\CoreBundle\Manager\LockManager'
       - '@Claroline\HomeBundle\Serializer\HomeTabSerializer'
+      - '@Claroline\HomeBundle\Manager\HomeManager'

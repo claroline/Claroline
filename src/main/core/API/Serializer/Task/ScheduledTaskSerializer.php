@@ -20,7 +20,6 @@ class ScheduledTaskSerializer
     /**
      * ScheduledTaskSerializer constructor.
      *
-     * @param ObjectManager      $om
      * @param SerializerProvider $serializer
      */
     public function __construct(

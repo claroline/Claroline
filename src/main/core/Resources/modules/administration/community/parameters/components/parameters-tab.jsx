@@ -55,11 +55,6 @@ const Parameters = (props) => {
                 help: trans('self_registration_platform_help'),
                 linked: [
                   {
-                    name: 'registration.force_organization_creation',
-                    type: 'boolean',
-                    label: trans('force_organization_creation'),
-                    displayed: props.parameters.registration && props.parameters.registration.self
-                  }, {
                     name: 'registration.allow_workspace',
                     type: 'boolean',
                     label: trans('allow_workspace_registration'),
@@ -68,6 +63,17 @@ const Parameters = (props) => {
                     name: 'registration.auto_logging',
                     type: 'boolean',
                     label: trans('auto_logging_after_registration'),
+                    displayed: props.parameters.registration && props.parameters.registration.self
+                  },
+                  {
+                    name: 'registration.organization_selection',
+                    type: 'choice',
+                    label: 'Organizations',
+                    options: {
+                      multiple: false,
+                      condensed: false,
+                      choices: registrationConst.ORGANIZATION_SELECTION_CHOICES
+                    },
                     displayed: props.parameters.registration && props.parameters.registration.self
                   }
                 ]
@@ -103,6 +109,10 @@ const Parameters = (props) => {
             title: trans('login'),
             fields: [
               {
+                name: 'authentication.help',
+                type: 'html',
+                label: trans('message')
+              }, {
                 name: 'authentication.redirect_after_login_option',
                 type: 'choice',
                 label: trans('redirect_after_login_option'),
@@ -133,6 +143,10 @@ const Parameters = (props) => {
                 type: 'boolean',
                 label: trans('auto_logging_after_registration'),
                 displayed: false // FIXME
+              }, {
+                name: 'authentication.changePassword',
+                type: 'boolean',
+                label: trans('allow_change_password')
               }
             ]
           }, {

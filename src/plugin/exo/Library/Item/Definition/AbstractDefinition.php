@@ -35,9 +35,6 @@ abstract class AbstractDefinition implements ItemDefinitionInterface, Answerable
     /**
      * Validates a choice question.
      *
-     * @param array $question
-     * @param array $options
-     *
      * @return array
      */
     public function validateQuestion(array $question, array $options = [])
@@ -48,9 +45,7 @@ abstract class AbstractDefinition implements ItemDefinitionInterface, Answerable
     /**
      * Validates the answer data for a question.
      *
-     * @param mixed        $answer
-     * @param AbstractItem $question
-     * @param array        $options
+     * @param mixed $answer
      *
      * @return array
      */
@@ -64,9 +59,6 @@ abstract class AbstractDefinition implements ItemDefinitionInterface, Answerable
     /**
      * Serializes a question entity.
      *
-     * @param AbstractItem $question
-     * @param array        $options
-     *
      * @return array
      */
     public function serializeQuestion(AbstractItem $question, array $options = [])
@@ -77,9 +69,7 @@ abstract class AbstractDefinition implements ItemDefinitionInterface, Answerable
     /**
      * Deserializes question data.
      *
-     * @param array        $questionData
      * @param AbstractItem $question
-     * @param array        $options
      *
      * @return AbstractItem
      */

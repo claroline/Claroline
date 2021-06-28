@@ -21,6 +21,19 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class WorkspaceVoter extends AbstractVoter
 {
+    /** @var WorkspaceManager */
+    private $workspaceManager;
+    /** @var WorkspaceRestrictionsManager */
+    private $restrictionsManager;
+
+    public function __construct(
+        WorkspaceManager $workspaceManager,
+        WorkspaceRestrictionsManager $restrictionsManager
+    ) {
+        $this->workspaceManager = $workspaceManager;
+        $this->restrictionsManager = $restrictionsManager;
+    }
+
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
     {
         if ($this->isWorkspaceManaged($token, $object)) {
@@ -38,12 +51,10 @@ class WorkspaceVoter extends AbstractVoter
             case self::PATCH:  return $this->checkPatch($token, $object, $collection);
         }
 
-        /** @var WorkspaceRestrictionsManager $restrictionsManager */
-        $restrictionsManager = $this->container->get('claroline.manager.workspace_restrictions');
-        if (!$restrictionsManager->isStarted($object)
-            || $restrictionsManager->isEnded($object)
-            || !$restrictionsManager->isUnlocked($object)
-            || !$restrictionsManager->isIpAuthorized($object)) {
+        if (!$this->restrictionsManager->isStarted($object)
+            || $this->restrictionsManager->isEnded($object)
+            || !$this->restrictionsManager->isUnlocked($object)
+            || !$this->restrictionsManager->isIpAuthorized($object)) {
             return VoterInterface::ACCESS_DENIED;
         }
 
@@ -52,11 +63,8 @@ class WorkspaceVoter extends AbstractVoter
             $attributes[0] :
             null;
 
-        /** @var WorkspaceManager $wm */
-        $wm = $this->getContainer()->get('claroline.manager.workspace_manager');
-
         $action = isset($attributes[1]) ? strtolower($attributes[1]) : 'open';
-        $accesses = $wm->getAccesses($token, [$object], $toolName, $action);
+        $accesses = $this->workspaceManager->getAccesses($token, [$object], $toolName, $action);
         //this is for the tools, probably change it later
         return isset($accesses[$object->getId()]) && true === $accesses[$object->getId()] ?
             VoterInterface::ACCESS_GRANTED :
@@ -131,10 +139,7 @@ class WorkspaceVoter extends AbstractVoter
 
     private function isWorkspaceManaged(TokenInterface $token, Workspace $workspace)
     {
-        /** @var WorkspaceManager $wm */
-        $wm = $this->getContainer()->get('claroline.manager.workspace_manager');
-
-        return $wm->isManager($workspace, $token);
+        return $this->workspaceManager->isManager($workspace, $token);
     }
 
     public function getClass()
@@ -150,12 +155,6 @@ class WorkspaceVoter extends AbstractVoter
 
     protected function isWorkspaceCreator(TokenInterface $token)
     {
-        foreach ($token->getRoleNames() as $role) {
-            if (PlatformRoles::WS_CREATOR === $role) {
-                return true;
-            }
-        }
-
-        return false;
+        return in_array(PlatformRoles::WS_CREATOR, $token->getRoleNames());
     }
 }

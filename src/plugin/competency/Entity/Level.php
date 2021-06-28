@@ -89,9 +89,6 @@ class Level implements \JsonSerializable
         return $this->value;
     }
 
-    /**
-     * @param Scale $scale
-     */
     public function setScale(Scale $scale)
     {
         $this->scale = $scale;

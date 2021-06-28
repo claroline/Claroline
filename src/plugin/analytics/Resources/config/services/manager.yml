@@ -3,7 +3,7 @@ services:
         arguments:
           - '@security.token_storage'
           - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@claroline.log.manager'
-          - '@claroline.manager.user_manager'
+          - '@Claroline\CoreBundle\Manager\LogManager'
+          - '@Claroline\CoreBundle\Manager\UserManager'
           - '@claroline.manager.workspace_manager'
           - '@Claroline\CoreBundle\Manager\FileManager'

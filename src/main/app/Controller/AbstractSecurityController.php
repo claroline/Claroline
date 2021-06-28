@@ -38,17 +38,13 @@ abstract class AbstractSecurityController
             ->findOneBy(['name' => $toolName]);
 
         if (!$tool) {
-            throw new \LogicException(
-                "Annotation error: cannot found admin tool '{$toolName}'"
-            );
+            throw new \LogicException("Annotation error: cannot found admin tool '{$toolName}'");
         }
 
         $granted = $this->authorization->isGranted('OPEN', $tool);
 
         if (!$granted) {
-            throw new AccessDeniedException(
-                sprintf('%s cannot be opened', $toolName)
-            );
+            throw new AccessDeniedException(sprintf('%s cannot be opened', $toolName));
         }
     }
 }

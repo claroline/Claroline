@@ -58,6 +58,8 @@ const PlayerMain = props => {
                 props.updateProgression(step.id)
               }
             },
+            // force navigation in case the user as navigated with the summary without finishing an opened resource
+            onLeave: () => props.enableNavigation(),
             render: (routeProps) => {
               const step = props.steps.find(step => routeProps.match.params.slug === step.slug)
               if (step) {

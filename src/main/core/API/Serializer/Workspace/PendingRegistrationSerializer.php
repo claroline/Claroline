@@ -12,8 +12,6 @@ class PendingRegistrationSerializer
 
     /**
      * PendingRegistrationSerializer constructor.
-     *
-     * @param UserSerializer $serializer
      */
     public function __construct(UserSerializer $serializer)
     {
@@ -35,9 +33,6 @@ class PendingRegistrationSerializer
 
     /**
      * Serialize a user waiting for WS registration.
-     *
-     * @param WorkspaceRegistrationQueue $pending
-     * @param array                      $options
      *
      * @return array
      */

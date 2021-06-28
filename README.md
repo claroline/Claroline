@@ -2,7 +2,7 @@ README
 ======
 
 [![Join the chat at https://gitter.im/claroline/Claroline](https://badges.gitter.im/claroline/Claroline.svg)](https://gitter.im/claroline/Claroline?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![Build Status](https://github.com/claroline/Claroline/workflows/ci/badge.svg)](https://github.com/claroline/Claroline/actions)
+[![Build Status](https://github.com/claroline/Claroline/workflows/CI/badge.svg)](https://github.com/claroline/Claroline/actions)
 
 This repository provides the source code of the Claroline platform.
 
@@ -24,14 +24,22 @@ file. For an installation from scratch, the commands would be:
 
     git clone -b 13.x http://github.com/claroline/Claroline
     cd Claroline
-    php bin/configure
-    php bin/check
     composer install --no-dev --optimize-autoloader
 
     npm install
     npm run webpack
     
     php bin/console claroline:install -vvv
+
+### 2. Using Docker (development only - beginner-friendly guide)
+
+**Warning**: this is for development/testing purposes *only*, this must **NOT** be used in production environments as it represents huge security risks, maintainability issues and performance degradations.
+
+As a developer, by using Docker you can quickly get the platform running in DEV mode and experiment with code changes.
+
+You can also develop a custom theme in watch mode.
+
+To learn more: [Docker instructions](doc/sections/docker.md)
 
 Upgrade 13.x
 -------
@@ -220,7 +228,6 @@ For user documentation, see [here](https://support.claroline.com/#/desktop/works
 
 [distribution]: https://github.com/claroline/Distribution
 [gd]:           http://www.php.net/manual/en/book.image.php
-[ffmpeg]:       http://ffmpeg-php.sourceforge.net
 [composer]:     https://getcomposer.org
 [node]:         https://nodejs.org
 [npm]:          https://docs.npmjs.com

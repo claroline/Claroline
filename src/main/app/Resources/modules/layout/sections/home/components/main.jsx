@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {Routes} from '#/main/app/router/components/routes'
@@ -13,83 +13,80 @@ import {HomeExternalAccount} from '#/main/app/layout/sections/home/components/ex
 
 // TODO : move all security sections in main/authentication
 
-const HomeMain = (props) =>
-  <Routes
-    redirect={[
-      {from: '/', exact: true, to: '/unavailable', disabled: !props.unavailable},
-      {from: '/home', to: '/unavailable', disabled: !props.unavailable},
-      {from: '/unavailable', to: '/', disabled: props.unavailable},
+class HomeMain extends Component {
+  componentDidMount() {
+    this.props.open()
+  }
 
-      {from: '/', exact: true, to: '/login',   disabled: props.hasHome || props.authenticated},
-      {from: '/', exact: true, to: '/home',    disabled: props.unavailable || !props.hasHome},
-      {from: '/', exact: true, to: '/desktop', disabled: props.unavailable || props.hasHome || !props.authenticated},
+  render() {
+    return (
+      <Routes
+        redirect={[
+          {from: '/', exact: true, to: '/unavailable', disabled: !this.props.unavailable},
+          {from: '/home', to: '/unavailable', disabled: !this.props.unavailable},
+          {from: '/unavailable', to: '/', disabled: this.props.unavailable},
 
-      {from: '/login', to: '/', disabled: !props.authenticated}
-    ]}
-    routes={[
-      {
-        path: '/unavailable',
-        disabled: !props.unavailable,
-        render: () => {
-          const Disabled = (
-            <HomeDisabled
-              disabled={props.disabled}
-              maintenance={props.maintenance}
-              maintenanceMessage={props.maintenanceMessage}
-              authenticated={props.authenticated}
-              restrictions={props.restrictions}
-              reactivate={props.reactivate}
-            />
-          )
+          {from: '/', exact: true, to: '/login',   disabled: this.props.hasHome || this.props.authenticated},
+          {from: '/', exact: true, to: '/home',    disabled: this.props.unavailable || !this.props.hasHome},
+          {from: '/', exact: true, to: '/desktop', disabled: this.props.unavailable || this.props.hasHome || !this.props.authenticated},
 
-          return Disabled
-        }
-      }, {
-        path: '/reset_password',
-        disabled: props.authenticated,
-        component: SendPassword
-      }, {
-        path: '/newpassword/:hash',
-        component: NewPassword
-      }, {
-        path: '/login',
-        disabled: props.authenticated,
-        component: HomeLogin
-      }, {
-        path: '/registration',
-        disabled: props.unavailable || !props.selfRegistration || props.authenticated,
-        component: HomeRegistration
-      }, { // TODO : disable if no sso
-        path: '/external/:app',
-        render: (routeProps) => {
-          const LinkAccount = (
-            <HomeExternalAccount
-              isAuthenticated={props.authenticated}
-              selfRegistration={props.selfRegistration}
-              serviceName={routeProps.match.params.app}
-              linkExternalAccount={props.linkExternalAccount}
-            />
-          )
-
-          return LinkAccount
-        }
-      }, {
-        path: '/home',
-        disabled: props.unavailable || !props.hasHome,
-        onEnter: () => props.openHome(props.homeType, props.homeData),
-        render: () => {
-          const Home = (
-            <HomeContent
-              type={props.homeType}
-              content={props.homeData}
-            />
-          )
-
-          return Home
-        }
-      }
-    ]}
-  />
+          {from: '/login', to: '/', disabled: !this.props.authenticated}
+        ]}
+        routes={[
+          {
+            path: '/unavailable',
+            disabled: !this.props.unavailable,
+            render: () => (
+              <HomeDisabled
+                disabled={this.props.disabled}
+                maintenance={this.props.maintenance}
+                maintenanceMessage={this.props.maintenanceMessage}
+                authenticated={this.props.authenticated}
+                restrictions={this.props.restrictions}
+                reactivate={this.props.reactivate}
+              />
+            )
+          }, {
+            path: '/reset_password',
+            disabled: this.props.authenticated || !this.props.changePassword,
+            component: SendPassword
+          }, {
+            path: '/newpassword/:hash',
+            component: NewPassword
+          }, {
+            path: '/login',
+            disabled: this.props.authenticated,
+            component: HomeLogin
+          }, {
+            path: '/registration',
+            disabled: this.props.unavailable || !this.props.selfRegistration || this.props.authenticated,
+            component: HomeRegistration
+          }, { // TODO : disable if no sso
+            path: '/external/:app',
+            render: (routeProps) => (
+              <HomeExternalAccount
+                isAuthenticated={this.props.authenticated}
+                selfRegistration={this.props.selfRegistration}
+                serviceName={routeProps.match.params.app}
+                linkExternalAccount={this.props.linkExternalAccount}
+              />
+            )
+          }, {
+            path: '/home',
+            disabled: this.props.unavailable || !this.props.hasHome,
+            onEnter: () => this.props.openHome(this.props.homeType, this.props.homeData),
+            render: () => (
+              <HomeContent
+                type={this.props.homeType}
+                content={this.props.homeData}
+              />
+            )
+          }
+        ]}
+      />
+    )
+  }
+}
 
 HomeMain.propTypes = {
   unavailable: T.bool.isRequired,
@@ -98,9 +95,11 @@ HomeMain.propTypes = {
   maintenanceMessage: T.string,
   authenticated: T.bool.isRequired,
   selfRegistration: T.bool.isRequired,
+  changePassword: T.bool.isRequired,
   hasHome: T.bool.isRequired,
   homeType: T.string.isRequired,
   homeData: T.string,
+  open: T.func.isRequired,
   openHome: T.func.isRequired,
   linkExternalAccount: T.func.isRequired,
   restrictions: T.shape({

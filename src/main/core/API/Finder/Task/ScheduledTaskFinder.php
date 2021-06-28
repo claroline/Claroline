@@ -26,9 +26,6 @@ class ScheduledTaskFinder extends AbstractFinder
 
     /**
      * ScheduledTaskFinder constructor.
-     *
-     * @param AuthorizationCheckerInterface $authChecker
-     * @param TokenStorageInterface         $tokenStorage
      */
     public function __construct(
         AuthorizationCheckerInterface $authChecker,
@@ -38,7 +35,7 @@ class ScheduledTaskFinder extends AbstractFinder
         $this->tokenStorage = $tokenStorage;
     }
 
-    public function getClass()
+    public static function getClass(): string
     {
         return 'Claroline\CoreBundle\Entity\Task\ScheduledTask';
     }
@@ -50,12 +47,5 @@ class ScheduledTaskFinder extends AbstractFinder
         }
 
         return $qb;
-    }
-
-    public function getFilters()
-    {
-        return [
-            '$defaults' => [],
-        ];
     }
 }

@@ -35,8 +35,6 @@ class LogSessionEventUserRegistrationEvent extends LogGenericEvent
         $details['courseId'] = $course->getUuid();
         $details['courseTitle'] = $course->getName();
         $details['courseCode'] = $course->getCode();
-        //$details['registrationStatus'] = $sessionEventUser->getStatus();
-        //$details['applicationDate'] = $sessionEventUser->getApplicationDate();
         $details['registrationDate'] = $sessionEventUser->getDate();
 
         parent::__construct(

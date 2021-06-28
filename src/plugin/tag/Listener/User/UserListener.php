@@ -23,9 +23,6 @@ class UserListener
 
     /**
      * UserListener constructor.
-     *
-     * @param ObjectManager $om
-     * @param TagManager    $manager
      */
     public function __construct(
         ObjectManager $om,
@@ -37,9 +34,6 @@ class UserListener
         $this->repository = $om->getRepository(Tag::class);
     }
 
-    /**
-     * @param DeleteEvent $event
-     */
     public function onDelete(DeleteEvent $event)
     {
         /** @var UserEntity $user */
@@ -48,9 +42,6 @@ class UserListener
         $this->manager->removeTaggedObjectsByClassAndIds(UserEntity::class, [$user->getId()]);
     }
 
-    /**
-     * @param MergeUsersEvent $event
-     */
     public function onMerge(MergeUsersEvent $event)
     {
         $tags = $this->repository->findBy([

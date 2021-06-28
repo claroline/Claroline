@@ -21,10 +21,6 @@ class ContributionManager
     /** @var ContributionSerializer */
     private $contributionSerializer;
 
-    /**
-     * @param ObjectManager          $om
-     * @param ContributionSerializer $contributionSerializer
-     */
     public function __construct(
         ObjectManager $om,
         ContributionSerializer $contributionSerializer
@@ -58,8 +54,7 @@ class ContributionManager
     }
 
     /**
-     * @param Section $section
-     * @param array   $uuids
+     * @param array $uuids
      *
      * @return array $contributions
      */
@@ -81,9 +76,6 @@ class ContributionManager
 
     /**
      * Find all content for a given user and the replace him by another.
-     *
-     * @param User $from
-     * @param User $to
      *
      * @return int
      */

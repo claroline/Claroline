@@ -17,10 +17,20 @@ imports:
     - { resource: services/converter.yml }
     - { resource: services/session.yml }
     - { resource: services/checker.yml }
+    - { resource: services/updater.yml }
+    - { resource: services/messenger.yml }
+    - { resource: services/subscriber.yml }
 
 services:
     Claroline\CoreBundle\Listener\AuthenticationFailureHandler:
         parent: security.authentication.failure_handler
+        calls:
+            - method: setDispatcher
+              arguments:
+                - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - method: setObjectManager
+              arguments:
+                - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     # array injection with annotations is not supported
     claroline.plugin.validator:

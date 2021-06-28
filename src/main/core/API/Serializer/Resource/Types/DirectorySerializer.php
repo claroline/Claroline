@@ -11,10 +11,6 @@ class DirectorySerializer
 
     /**
      * Serializes a Directory entity for the JSON api.
-     *
-     * @param Directory $directory
-     *
-     * @return array
      */
     public function serialize(Directory $directory): array
     {
@@ -65,11 +61,6 @@ class DirectorySerializer
 
     /**
      * Deserializes directory data into an Entity.
-     *
-     * @param array     $data
-     * @param Directory $directory
-     *
-     * @return Directory
      */
     public function deserialize(array $data, Directory $directory): Directory
     {

@@ -252,6 +252,10 @@
     .app-current-user-body {
         padding: floor(@grid-gutter-width / 2);
         border-top: 1px solid @list-group-border;
+
+        + .app-current-user-footer {
+            border-top: 1px solid @list-group-border;
+        }
     }
 
     .app-current-user-footer {
@@ -304,10 +308,6 @@
         align-items: center;
     }
 
-    .dropdown-menu {
-        padding: 0;
-    }
-
     .form-control {
         font-family: @headings-font-family;
         color: @top-bar-link-color;
@@ -316,6 +316,12 @@
         box-shadow: none;
 
         .placeholder(@top-bar-color);
+    }
+
+    .app-header-search-loader,
+    .app-header-search-close {
+        position: absolute;
+        right: @padding-large-horizontal;
     }
 
     .result-header {

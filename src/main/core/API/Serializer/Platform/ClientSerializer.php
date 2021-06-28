@@ -92,8 +92,8 @@ class ClientSerializer
                 'url' => $this->config->getParameter('logo'),
             ]);
         }
-        $usersLimitReached = false;
 
+        $usersLimitReached = false;
         if ($this->config->getParameter('restrictions.users') && $this->config->getParameter('restrictions.max_users')) {
             $maxUsers = $this->config->getParameter('restrictions.max_users');
             /** @var UserRepository $userRepo */
@@ -106,7 +106,7 @@ class ClientSerializer
         }
 
         $data = [
-            'logo' => $logo ? $logo->getUrl() : null, // TODO : to move (maybe not can be considered platform meta)
+            'logo' => $logo ? $logo->getUrl() : null,
             'name' => $this->config->getParameter('name'),
             'secondaryName' => $this->config->getParameter('secondary_name'),
             'description' => null, // the one for the current locale
@@ -133,19 +133,20 @@ class ClientSerializer
             'desktop' => [ // TODO : find a better way to store and expose this
                 'defaultTool' => $this->config->getParameter('desktop.default_tool'),
                 'showProgression' => $this->config->getParameter('desktop.show_progression'),
+                'menu' => $this->config->getParameter('desktop.menu'),
             ],
             'admin' => [ // TODO : find a better way to store and expose this
                 'defaultTool' => $this->config->getParameter('admin.default_tool'),
+                'menu' => $this->config->getParameter('admin.menu'),
             ],
             'privacy' => $this->config->getParameter('privacy'),
+            'pricing' => $this->config->getParameter('pricing'),
             'plugins' => $this->pluginManager->getEnabled(true),
-            'javascripts' => $this->config->getParameter('javascripts'), // TODO : this should not be exposed here
-            'stylesheets' => $this->config->getParameter('stylesheets'), // TODO : this should not be exposed here
         ];
 
         $event = new GenericDataEvent();
         $this->eventDispatcher->dispatch($event, 'claroline_populate_client_config');
-        $data = array_merge($data, $event->getResponse() ?? []);
+        $data = array_merge_recursive($data, $event->getResponse() ?? []);
 
         return $data;
     }

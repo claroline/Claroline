@@ -19,9 +19,6 @@ class LevelSerializer
     use SerializerTrait;
 
     /**
-     * @param Level $level
-     * @param array $options
-     *
      * @return array
      */
     public function serialize(Level $level, array $options = [])

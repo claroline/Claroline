@@ -31,9 +31,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  */
 class Log
 {
-    const doerTypeAnonymous = 'anonymous';
-    const doerTypeUser = 'user';
-    const doerTypePlatform = 'platform';
+    const DOER_ANONYMOUS = 'anonymous';
+    const DOER_USER = 'user';
+    const DOER_PLATFORM = 'platform';
 
     /**
      * @ORM\Id
@@ -187,8 +187,6 @@ class Log
      *
      * NOTE : creation date is already handled by the timestamp listener; this
      *        setter exists mainly for testing purposes.
-     *
-     * @param \DateTime $date
      */
     public function setDateLog(\DateTime $date)
     {

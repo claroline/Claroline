@@ -11,7 +11,7 @@ trait Hidden
      *
      * @var bool
      */
-    private $hidden = false;
+    protected $hidden = false;
 
     /**
      * Is the entity hidden ?

@@ -9,6 +9,9 @@ import {RoomMain} from '#/plugin/booking/tools/booking/room/containers/main'
 const BookingTool = (props) =>
   <Routes
     path={props.path}
+    redirect={[
+      {from: '/', exact: true, to: '/materials'}
+    ]}
     routes={[
       {
         path: '/materials',
