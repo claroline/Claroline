@@ -61,6 +61,7 @@
         "symfony/debug-bundle": "4.4.*",
         "symfony/dependency-injection": "4.4.*",
         "symfony/doctrine-bridge": "4.4.*",
+        "symfony/doctrine-messenger": "^5.2",
         "symfony/dotenv": "4.4.*",
         "symfony/error-handler": "4.4.*",
         "symfony/event-dispatcher": "4.4.*",
@@ -73,6 +74,7 @@
         "symfony/mailer": "4.4.*",
         "symfony/monolog-bridge": "4.4.*",
         "symfony/process": "4.4.*",
+        "symfony/redis-messenger": "^5.2",
         "symfony/routing": "4.4.*",
         "symfony/security-bundle": "4.4.*",
         "symfony/security-core": "4.4.*",
@@ -86,8 +88,7 @@
         "symfony/web-profiler-bundle": "4.4.*",
         "symfony/yaml": "4.4.*",
         "twig/twig": "^2.14",
-        "willdurand/js-translation-bundle": "3.0.*",
-        "symfony/messenger": "^5.2"
+        "willdurand/js-translation-bundle": "3.0.*"
     },
     "require-dev": {
         "symfony/dom-crawler": "4.4.*",
