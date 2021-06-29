@@ -39,7 +39,7 @@ final class FunctionalLogHandler implements MessageHandlerInterface
             if (method_exists($message, 'getResourceId')) {
                 $resource = $this->objectManager->getRepository(ResourceNode::class)->find($message->getResourceId());
                 $logEntry->setResource($resource);
-            } elseif (method_exists($message, 'getWorkspaceId')) {
+            } elseif (method_exists($message, 'getWorkspaceId') && $message->getWorkspaceId()) {
                 $workspace = $this->objectManager->getRepository(Workspace::class)->find($message->getWorkspaceId());
                 $logEntry->setWorkspace($workspace);
             }

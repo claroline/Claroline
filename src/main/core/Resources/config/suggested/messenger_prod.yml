@@ -22,5 +22,6 @@ framework:
 
         routing:
             'Claroline\AppBundle\Message\AsyncInterface': async
+            'Claroline\AppBundle\Message\BadgeMessageInterface': async
             'Claroline\LogBundle\Messenger\Security\Message\SecurityMessageInterface': async
             'Claroline\LogBundle\Messenger\Functional\Message\FunctionalMessageInterface': async

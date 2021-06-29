@@ -4,6 +4,7 @@ services:
         arguments:
             - '@doctrine.orm.entity_manager'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@request_stack'
 
     Claroline\LogBundle\Messenger\Functional\FunctionalLogHandler:
         tags: [ messenger.message_handler ]

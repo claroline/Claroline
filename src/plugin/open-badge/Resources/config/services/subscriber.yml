@@ -1,8 +1,0 @@
-services:
-
-    Claroline\OpenBadgeBundle\Subscriber\BadgeLogSubscriber:
-        arguments:
-            - '@doctrine.orm.entity_manager'
-            - '@translator'
-        tags:
-            - { name: kernel.event_subscriber }

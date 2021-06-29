@@ -8,9 +8,9 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\Template\TemplateManager;
 use Claroline\OpenBadgeBundle\Entity\Assertion;
 use Claroline\OpenBadgeBundle\Entity\BadgeClass;
-use Claroline\OpenBadgeBundle\Event\AddBadgeEvent;
-use Claroline\OpenBadgeBundle\Event\BadgeEvents;
-use Claroline\OpenBadgeBundle\Event\RemoveBadgeEvent;
+use Claroline\OpenBadgeBundle\Messenger\Message\AddBadgeMessage;
+use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
 class OpenBadgeManager
@@ -21,19 +21,24 @@ class OpenBadgeManager
     private $templateManager;
     /** @var Environment */
     private $templating;
-    /** @var StrictDispatcher */
-    private $strictDispatcher;
+    /** @var MessageBusInterface */
+    private $messageBus;
+    /** @var TranslatorInterface */
+    private $translator;
 
     public function __construct(
         ObjectManager $om,
         TemplateManager $templateManager,
         Environment $templating,
-        StrictDispatcher $strictDispatcher
+        StrictDispatcher $strictDispatcher,
+        MessageBusInterface $messageBus,
+        TranslatorInterface $translator
     ) {
         $this->om = $om;
         $this->templateManager = $templateManager;
         $this->templating = $templating;
-        $this->strictDispatcher = $strictDispatcher;
+        $this->messageBus = $messageBus;
+        $this->translator = $translator;
     }
 
     public function addAssertion(BadgeClass $badge, User $user)
@@ -52,7 +57,10 @@ class OpenBadgeManager
         $this->om->persist($assertion);
         $this->om->flush();
 
-        $this->strictDispatcher->dispatch(BadgeEvents::ADD_BADGE, AddBadgeEvent::class, [$user, $badge]);
+        $this->messageBus->dispatch(new AddBadgeMessage(
+            $this->translator->trans('addBadge', ['userName' => $user->getUsername(), 'badgeName' => $badge->getName()], 'functional'),
+            $user->getId()
+        ));
     }
 
     public function revokeAssertion(Assertion $assertion)
@@ -61,7 +69,10 @@ class OpenBadgeManager
         $this->om->persist($assertion);
         $this->om->flush();
 
-        $this->strictDispatcher->dispatch(BadgeEvents::REMOVE_BADGE, RemoveBadgeEvent::class, [$assertion->getRecipient(), $assertion->getBadge()]);
+        $this->messageBus->dispatch(new AddBadgeMessage(
+            $this->translator->trans('removeBadge', ['userName' => $assertion->getRecipient()->getUsername(), 'badgeName' => $assertion->getBadge()->getName()], 'functional'),
+            $assertion->getRecipient()->getId()
+        ));
     }
 
     public function generateCertificate(Assertion $assertion, $basePath)
