@@ -76,6 +76,8 @@ services:
             - '@Claroline\AppBundle\API\Crud'
             - '@claroline.manager.temp_file'
             - '@security.helper'
+            - '@messenger.default_bus'
+            - '@translator'
         calls:
             - setLogger: ['@logger']
 
@@ -313,12 +315,15 @@ services:
         arguments:
             - '@Claroline\AppBundle\Event\StrictDispatcher'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@messenger.default_bus'
+            - '@translator'
 
     Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager:
         arguments:
             - '@event_dispatcher'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - '@messenger.default_bus'
+            - '@translator'
 
     claroline.manager.resource_evaluation_manager:
         alias: Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager

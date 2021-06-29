@@ -8,13 +8,6 @@ services:
         tags:
             - { name: kernel.event_subscriber }
 
-    Claroline\LogBundle\Subscriber\FunctionalLogSubscriber:
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@translator'
-        tags:
-            - { name: kernel.event_subscriber }
-
     Claroline\LogBundle\Subscriber\Administration\LogsSubscriber:
         tags:
             - { name: kernel.event_subscriber }

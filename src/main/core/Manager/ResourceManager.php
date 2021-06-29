@@ -23,7 +23,6 @@ use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Event\CatalogEvents\ResourceEvents;
 use Claroline\CoreBundle\Event\Resource\DownloadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Exception\ExportResourceException;
@@ -35,12 +34,15 @@ use Claroline\CoreBundle\Manager\Resource\RightsManager;
 use Claroline\CoreBundle\Repository\Resource\ResourceNodeRepository;
 use Claroline\CoreBundle\Repository\Resource\ResourceTypeRepository;
 use Claroline\CoreBundle\Repository\User\RoleRepository;
+use Claroline\LogBundle\Messenger\Functional\Message\LoadResourceMessage;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Psr\Log\LoggerAwareInterface;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Mime\MimeTypes;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ResourceManager implements LoggerAwareInterface
 {
@@ -70,6 +72,11 @@ class ResourceManager implements LoggerAwareInterface
     /** @var RoleRepository */
     private $roleRepo;
 
+    /** @var MessageBusInterface */
+    private $messengerBus;
+    /** @var TranslatorInterface */
+    private $translator;
+
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         RightsManager $rightsManager,
@@ -78,7 +85,9 @@ class ResourceManager implements LoggerAwareInterface
         ClaroUtilities $ut,
         Crud $crud,
         TempFileManager $tempManager,
-        Security $security
+        Security $security,
+        MessageBusInterface $messageBus,
+        TranslatorInterface $translator
     ) {
         $this->authorization = $authorization;
         $this->om = $om;
@@ -88,6 +97,8 @@ class ResourceManager implements LoggerAwareInterface
         $this->crud = $crud;
         $this->tempManager = $tempManager;
         $this->security = $security;
+        $this->messengerBus = $messageBus;
+        $this->translator = $translator;
 
         $this->resourceTypeRepo = $om->getRepository(ResourceType::class);
         $this->resourceNodeRepo = $om->getRepository(ResourceNode::class);
@@ -545,10 +556,23 @@ class ResourceManager implements LoggerAwareInterface
         if ($resource) {
             /** @var LoadResourceEvent $event */
             $event = $this->dispatcher->dispatch(
-                ResourceEvents::RESOURCE_OPEN,
+                LoadResourceEvent::EVENT_NAME,
                 LoadResourceEvent::class,
                 [$resource, $this->security->getUser(), $embedded]
             );
+
+            $this->messengerBus->dispatch(new LoadResourceMessage(
+                $this->translator->trans(
+                    'resourceOpen',
+                    [
+                        'userName' => $this->security->getUser()->getUsername(),
+                        'resourceName' => $resource->getResourceNode()->getName(),
+                    ],
+                    'resource'
+                ),
+                $resource->getResourceNode()->getId(),
+                $this->security->getUser()->getId()
+            ));
 
             return $event->getData();
         }

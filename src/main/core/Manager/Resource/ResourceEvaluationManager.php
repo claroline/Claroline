@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Manager\Resource;
 
-use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Evaluation\AbstractEvaluation;
 use Claroline\CoreBundle\Entity\Log\Connection\LogConnectResource;
@@ -22,7 +21,10 @@ use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Resource\EvaluateResourceEvent;
 use Claroline\CoreBundle\Repository\Log\LogRepository;
+use Claroline\LogBundle\Messenger\Functional\Message\EvaluateResourceMessage;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ResourceEvaluationManager
 {
@@ -30,19 +32,27 @@ class ResourceEvaluationManager
     private $eventDispatcher;
     /** @var ObjectManager */
     private $om;
-    /** @var StrictDispatcher */
-    private $strictDispatcher;
+
+    /** @var MessageBusInterface */
+    private $messageBus;
+    /** @var TranslatorInterface */
+    private $translator;
 
     private $resourceUserEvaluationRepo;
     /** @var LogRepository */
     private $logRepo;
     private $logConnectResource;
 
-    public function __construct(EventDispatcherInterface $eventDispatcher, ObjectManager $om, StrictDispatcher $strictDispatcher)
-    {
+    public function __construct(
+        EventDispatcherInterface $eventDispatcher,
+        ObjectManager $om,
+        MessageBusInterface $messageBus,
+        TranslatorInterface $translator
+    ) {
         $this->eventDispatcher = $eventDispatcher;
         $this->om = $om;
-        $this->strictDispatcher = $strictDispatcher;
+        $this->messageBus = $messageBus;
+        $this->translator = $translator;
 
         $this->resourceUserEvaluationRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceUserEvaluation');
         $this->logRepo = $this->om->getRepository('ClarolineCoreBundle:Log\Log');
@@ -131,6 +141,22 @@ class ResourceEvaluationManager
         $this->om->endFlushSuite();
 
         $this->eventDispatcher->dispatch(new EvaluateResourceEvent($resourceUserEvaluation, $evaluation), 'resource_evaluation');
+
+        $this->messageBus->dispatch(new EvaluateResourceMessage(
+            $this->translator->trans(
+                'resourceEvaluation',
+                [
+                    'userName' => $resourceUserEvaluation->getUser()->getUsername(),
+                    'resourceName' => $resourceUserEvaluation->getResourceNode()->getName(),
+                    'statusName' => $resourceUserEvaluation->getStatus(),
+                    'userProgression' => $resourceUserEvaluation->getProgression().'/'.$resourceUserEvaluation->getProgressionMax(),
+                    'durationTime' => $resourceUserEvaluation->getDuration(),
+                ],
+                'resource'
+            ),
+            $resourceUserEvaluation->getResourceNode()->getId(),
+            $resourceUserEvaluation->getUser()->getId()
+        ));
 
         return $evaluation;
     }

@@ -12,8 +12,10 @@ use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\CreateResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DownloadResourceEvent;
-use Claroline\CoreBundle\Event\Resource\EvaluateResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
+use Claroline\LogBundle\Messenger\Functional\Message\EvaluateResourceMessage;
+use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Centralizes events dispatched for resources integration.
@@ -28,12 +30,22 @@ class ResourceLifecycleManager
     /** @var ObjectManager */
     private $om;
 
+    /** @var MessageBusInterface */
+    private $messageBus;
+
+    /** @var TranslatorInterface */
+    private $translator;
+
     public function __construct(
         StrictDispatcher $eventDispatcher,
-        ObjectManager $om)
-    {
+        ObjectManager $om,
+        MessageBusInterface $messageBus,
+        TranslatorInterface $translator
+    ) {
         $this->dispatcher = $eventDispatcher;
         $this->om = $om;
+        $this->messageBus = $messageBus;
+        $this->translator = $translator;
     }
 
     public function load(ResourceNode $resourceNode)
@@ -112,14 +124,21 @@ class ResourceLifecycleManager
 
     public function evaluate(ResourceUserEvaluation $resourceUserEvaluation, ResourceEvaluation $attempt)
     {
-        /** @var EvaluateResourceEvent $event */
-        $event = $this->dispatcher->dispatch(
-            'evaluate', // old : resource_evaluation
-            EvaluateResourceEvent::class,
-            [$resourceUserEvaluation, $attempt]
-        );
-
-        return $event;
+        $this->messageBus->dispatch(new EvaluateResourceMessage(
+            $this->translator->trans(
+                'resourceEvaluation',
+                [
+                    'userName' => $resourceUserEvaluation->getUser()->getUsername(),
+                    'resourceName' => $resourceUserEvaluation->getResourceNode()->getName(),
+                    'statusName' => $resourceUserEvaluation->getStatus(),
+                    'userProgression' => $resourceUserEvaluation->getProgression().'/'.$resourceUserEvaluation->getProgressionMax(),
+                    'durationTime' => $resourceUserEvaluation->getDuration(),
+                ],
+                'resource'
+            ),
+            $resourceUserEvaluation->getResourceNode()->getId(),
+            $resourceUserEvaluation->getUser()->getId()
+        ));
     }
 
     /**

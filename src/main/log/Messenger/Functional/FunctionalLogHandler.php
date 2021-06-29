@@ -3,6 +3,7 @@
 namespace Claroline\LogBundle\Messenger\Functional;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\LogBundle\Entity\FunctionalLog;
@@ -25,7 +26,7 @@ final class FunctionalLogHandler implements MessageHandlerInterface
 
     public function __invoke(FunctionalMessageInterface $message): void
     {
-        $user = $this->objectManager->getRepository(User::class)->find($message->getUser());
+        $user = $this->objectManager->getRepository(User::class)->find($message->getUserId());
 
         if ($user) {
             // only create log for authenticated users
@@ -35,10 +36,11 @@ final class FunctionalLogHandler implements MessageHandlerInterface
             $logEntry->setDetails($message->getMessage());
             $logEntry->setEvent($message->getEventName());
 
-            if (method_exists($message, 'getResourceNode')) {
-                $logEntry->setResource($message->getResourceNode());
-            } elseif (method_exists($message, 'getWorkspace')) {
-                $workspace = $this->objectManager->getRepository(Workspace::class)->find($message->getWorkspace());
+            if (method_exists($message, 'getResourceId')) {
+                $resource = $this->objectManager->getRepository(ResourceNode::class)->find($message->getResourceId());
+                $logEntry->setResource($resource);
+            } elseif (method_exists($message, 'getWorkspaceId')) {
+                $workspace = $this->objectManager->getRepository(Workspace::class)->find($message->getWorkspaceId());
                 $logEntry->setWorkspace($workspace);
             }
 

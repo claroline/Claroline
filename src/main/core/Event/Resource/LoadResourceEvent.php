@@ -17,13 +17,14 @@ use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Symfony\Contracts\EventDispatcher\Event;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Event dispatched by the resource controller when a resource is loaded from the api.
  */
 class LoadResourceEvent extends Event implements MandatoryEventInterface, DataConveyorEventInterface
 {
+    public const EVENT_NAME = 'resource_load';
+
     /** @var AbstractResource */
     private $resource;
 
@@ -102,10 +103,5 @@ class LoadResourceEvent extends Event implements MandatoryEventInterface, DataCo
     public function isPopulated()
     {
         return $this->populated;
-    }
-
-    public function getMessage(TranslatorInterface $translator)
-    {
-        return $translator->trans('resourceOpen', ['userName' => $this->user->getUsername(), 'resourceName' => $this->getResourceNode()->getName()], 'resource');
     }
 }

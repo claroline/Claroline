@@ -66,7 +66,6 @@
 
     "resourceOpen": "La resouce resourceName a été ouverte par l'utilisateur userName",
     "resourceEvaluation": "resourceName - statusName : userName est actuellement à l'étape userProgression pour une durée de durationTime sec",
-    "resourceScore": "resourceName - statusName : userName a eu un score de currentScore sur scoreMax. Le score min est de scoreMin",
 
     "restrictions": {
         "dismiss_help": "En tant que gestionnaire vous pouvez toujours accéder à la ressource, même si les conditions d'accès ne sont pas satisfaites.",

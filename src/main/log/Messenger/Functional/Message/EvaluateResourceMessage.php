@@ -11,27 +11,22 @@
 
 namespace Claroline\LogBundle\Messenger\Functional\Message;
 
-class OpenToolMessage implements FunctionalMessageInterface
+class EvaluateResourceMessage implements FunctionalMessageInterface
 {
-    public const EVENT_NAME = 'tool_open';
+    public const EVENT_NAME = 'resource_evaluation';
 
     private $message;
+    private $resourceId;
     private $userId;
-    private $workspaceId;
 
     public function __construct(
         string $message,
-        int $userId,
-        ?int $workspaceId = null
+        int $resourceId,
+        int $userId
     ) {
         $this->message = $message;
+        $this->resourceId = $resourceId;
         $this->userId = $userId;
-        $this->workspaceId = $workspaceId;
-    }
-
-    public function getMessage(): string
-    {
-        return $this->message;
     }
 
     public function getEventName(): string
@@ -39,13 +34,18 @@ class OpenToolMessage implements FunctionalMessageInterface
         return self::EVENT_NAME;
     }
 
+    public function getMessage(): string
+    {
+        return $this->message;
+    }
+
+    public function getResourceId(): int
+    {
+        return $this->resourceId;
+    }
+
     public function getUserId(): int
     {
         return $this->userId;
-    }
-
-    public function getWorkspaceId(): ?int
-    {
-        return $this->workspaceId;
     }
 }
