@@ -32,8 +32,6 @@ class TransferController extends AbstractCrudController
 {
     /** @var TransferProvider */
     private $provider;
-    /** @var string */
-    private $schemaDir;
     /** @var StrictDispatcher */
     private $dispatcher;
     /** @var ApiManager */
@@ -41,12 +39,10 @@ class TransferController extends AbstractCrudController
 
     public function __construct(
         TransferProvider $provider,
-        string $schemaDir,
         StrictDispatcher $dispatcher,
         ApiManager $apiManager
     ) {
         $this->provider = $provider;
-        $this->schemaDir = $schemaDir;
         $this->dispatcher = $dispatcher;
         $this->apiManager = $apiManager;
     }

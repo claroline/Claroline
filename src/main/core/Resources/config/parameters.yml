@@ -26,7 +26,6 @@ parameters:
 
     # Core plugin API descriptors
     claroline.api.sample.dir:      "%kernel.project_dir%/src/main/core/Resources/samples"
-    claroline.api.core_schema.dir: "%kernel.project_dir%/src/main/core/Resources/schema"
 
     # Disable symfony legacy autowiring
     container.autowiring.strict_mode: true

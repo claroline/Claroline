@@ -10,7 +10,6 @@ import {GroupTab} from '#/main/core/administration/community/group/components/gr
 import {RoleTab} from '#/main/core/administration/community/role/components/role-tab'
 import {OrganizationTab} from '#/main/core/administration/community/organization/components/organization-tab'
 import {ProfileTab} from '#/main/core/administration/community/profile/components/profile-tab'
-import {LocationTab} from '#/main/core/administration/community/location/components/location-tab'
 
 const CommunityTool = (props) =>
   <Routes
@@ -28,9 +27,6 @@ const CommunityTool = (props) =>
       }, {
         path: '/organizations',
         component: OrganizationTab
-      }, {
-        path: '/locations',
-        component: LocationTab
       }, {
         path: '/roles',
         component: RoleTab,

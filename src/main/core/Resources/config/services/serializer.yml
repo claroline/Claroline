@@ -150,6 +150,7 @@ services:
     Claroline\CoreBundle\API\Serializer\Location\LocationSerializer:
         tags: [claroline.serializer]
         arguments:
+            - '@security.authorization_checker'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
 
@@ -160,6 +161,20 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
             - '@Claroline\CoreBundle\API\Serializer\Location\LocationSerializer'
+
+    Claroline\CoreBundle\API\Serializer\Location\MaterialSerializer:
+        tags: [ claroline.serializer ]
+        arguments:
+            - '@security.authorization_checker'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\Location\LocationSerializer'
+
+    Claroline\CoreBundle\API\Serializer\Location\MaterialBookingSerializer:
+        tags: [ claroline.serializer ]
+
+    Claroline\CoreBundle\API\Serializer\Location\RoomBookingSerializer:
+        tags: [ claroline.serializer ]
 
     Claroline\CoreBundle\API\Serializer\User\GroupSerializer:
         tags: [claroline.serializer]

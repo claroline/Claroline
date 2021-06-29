@@ -17,9 +17,11 @@ use Claroline\CoreBundle\Controller\APINew\Model\HasOrganizationsTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasUsersTrait;
 use Claroline\CoreBundle\Entity\Location\Location;
 use Claroline\CoreBundle\Manager\LocationManager;
+use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * @Route("/location")
@@ -29,12 +31,18 @@ class LocationController extends AbstractCrudController
     use HasUsersTrait;
     use HasGroupsTrait;
     use HasOrganizationsTrait;
+    use PermissionCheckerTrait;
 
+    /** @var AuthorizationCheckerInterface */
+    private $authorization;
     /** @var LocationManager */
     private $manager;
 
-    public function __construct(LocationManager $manager)
-    {
+    public function __construct(
+        AuthorizationCheckerInterface $authorization,
+        LocationManager $manager
+    ) {
+        $this->authorization = $authorization;
         $this->manager = $manager;
     }
 
@@ -54,6 +62,8 @@ class LocationController extends AbstractCrudController
      */
     public function geolocateAction(Location $location)
     {
+        $this->checkPermission('EDIT', $location, [], true);
+
         $this->manager->setCoordinates($location);
 
         return new JsonResponse(

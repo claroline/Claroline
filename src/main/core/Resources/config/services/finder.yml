@@ -55,6 +55,12 @@ services:
 
     Claroline\CoreBundle\API\Finder\Location\RoomFinder: ~
 
+    Claroline\CoreBundle\API\Finder\Location\RoomBookingFinder: ~
+
+    Claroline\CoreBundle\API\Finder\Location\MaterialFinder: ~
+
+    Claroline\CoreBundle\API\Finder\Location\MaterialBookingFinder: ~
+
     Claroline\CoreBundle\API\Finder\User\GroupFinder:
         arguments:
           - '@security.authorization_checker'

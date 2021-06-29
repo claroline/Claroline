@@ -5,7 +5,7 @@ import get from 'lodash/get'
 import {asset} from '#/main/app/config/asset'
 
 import {DataCard} from '#/main/app/data/components/card'
-import {Room as RoomTypes} from '#/plugin/booking/prop-types'
+import {Room as RoomTypes} from '#/main/core/tools/locations/prop-types'
 
 const RoomCard = props =>
   <DataCard

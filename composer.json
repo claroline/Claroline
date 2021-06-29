@@ -150,7 +150,6 @@
             "Claroline\\SlideshowBundle\\": "src/plugin/slideshow",
             "Claroline\\AudioPlayerBundle\\": "src/plugin/audio-player",
             "Claroline\\CursusBundle\\": "src/plugin/cursus",
-            "Claroline\\BookingBundle\\": "src/plugin/booking",
             "Claroline\\BigBlueButtonBundle\\": "src/integration/big-blue-button",
             "Claroline\\DocumentationBundle\\": "src/plugin/documentation",
             "Claroline\\LogBundle\\": "src/main/log"

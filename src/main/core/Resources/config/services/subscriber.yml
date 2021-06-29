@@ -11,3 +11,9 @@ services:
             - method: setPlanningManager
               arguments:
                   - '@Claroline\CoreBundle\Manager\PlanningManager'
+
+    Claroline\CoreBundle\Subscriber\Location\RoomPlanningSubscriber:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+        tags:
+            - { name: kernel.event_subscriber }

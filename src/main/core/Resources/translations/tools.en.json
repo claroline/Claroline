@@ -16,5 +16,6 @@
     "resource_trash": "Resources trash",
     "integration": "Integration",
     "workspaces": "Workspaces",
-    "toolOpen": "context : User userName open the tool toolName"
+    "toolOpen": "context : User userName open the tool toolName",
+    "locations": "Locations"
 }

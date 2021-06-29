@@ -7,46 +7,45 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer;
 use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Location\Location;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class LocationSerializer
 {
     use SerializerTrait;
 
+    /** @var AuthorizationCheckerInterface */
+    private $authorization;
     /** @var ObjectManager */
     private $om;
     /** @var PublicFileSerializer */
     private $fileSerializer;
 
     public function __construct(
+        AuthorizationCheckerInterface $authorization,
         ObjectManager $om,
         PublicFileSerializer $fileSerializer
     ) {
+        $this->authorization = $authorization;
         $this->om = $om;
         $this->fileSerializer = $fileSerializer;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'location';
     }
 
-    /**
-     * @return string
-     */
-    public function getClass()
+    public function getClass(): string
     {
         return Location::class;
     }
 
-    /**
-     * @return string
-     */
-    public function getSchema()
+    public function getSchema(): string
     {
-        return '#/main/core/location.json';
+        return '#/main/core/location/location.json';
     }
 
-    public function serialize(Location $location, array $options = []): array
+    public function serialize(Location $location): array
     {
         return [
             'autoId' => $location->getId(),
@@ -54,6 +53,11 @@ class LocationSerializer
             'name' => $location->getName(),
             'poster' => $this->serializePoster($location),
             'thumbnail' => $this->serializeThumbnail($location),
+            'permissions' => [
+                'open' => $this->authorization->isGranted('OPEN', $location),
+                'edit' => $this->authorization->isGranted('EDIT', $location),
+                'delete' => $this->authorization->isGranted('DELETE', $location),
+            ],
             'meta' => [
                 'type' => $location->getType(),
                 'description' => $location->getDescription(),
@@ -74,7 +78,7 @@ class LocationSerializer
         ];
     }
 
-    public function deserialize(array $data, Location $location, array $options = []): Location
+    public function deserialize(array $data, Location $location): Location
     {
         $this->sipe('name', 'setName', $data, $location);
         $this->sipe('meta.type', 'setType', $data, $location);

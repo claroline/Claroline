@@ -42,12 +42,6 @@ const CommunityMenu = (props) =>
           label: trans('organizations'),
           target: `${props.path}/organizations`
         }, {
-          name: 'locations',
-          type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-map-marker-alt',
-          label: trans('locations'),
-          target: `${props.path}/locations`
-        }, {
           name: 'profile',
           type: LINK_BUTTON,
           icon: 'fa fa-fw fa-id-card',

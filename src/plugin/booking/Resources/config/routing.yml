@@ -1,7 +1,0 @@
-# JSON API
-claro_booking_bundle_api:
-    resource: "@ClarolineBookingBundle/Controller/"
-    prefix: apiv2
-    type: api
-    options:
-        expose: true

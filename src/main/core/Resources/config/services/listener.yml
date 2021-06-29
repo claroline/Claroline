@@ -199,6 +199,10 @@ services:
         tags:
             - { name: kernel.event_listener, event: open_tool_workspace_resource_trash, method: onDisplayWorkspace }
 
+    Claroline\CoreBundle\Listener\Tool\LocationsListener:
+        tags:
+            - { name: kernel.event_listener, event: open_tool_desktop_locations, method: onDisplayDesktop }
+
     Claroline\CoreBundle\Listener\Tool\WorkspacesListener:
         arguments:
             - '@security.token_storage'
