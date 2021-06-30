@@ -109,7 +109,13 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
                 $redirectUrl = $this->routingHelper->workspacePath($redirect['data']);
                 break;
             case 'last':
-                $redirectUrl = filter_var($request->headers->get('referer'), FILTER_SANITIZE_URL);
+                // use the fragment sent by the ui to redirect user
+                $redirectPath = $request->getSession()->get('redirectPath');
+                if (!empty($redirectPath)) {
+                    $redirectUrl = $this->routingHelper->indexUrl().$redirectPath;
+                } else {
+                    $redirectUrl = filter_var($request->headers->get('referer'), FILTER_SANITIZE_URL);
+                }
                 break;
             case 'desktop':
             default:
@@ -126,8 +132,10 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
 
         $redirect = $this->config->getParameter('authentication.redirect_after_login_option');
         $referer = filter_var($request->headers->get('referer'), FILTER_SANITIZE_URL);
-        if (PlatformDefaults::REDIRECT_OPTIONS['LAST'] === $redirect && $referer && false !== strpos($referer, $this->platformManager->getUrl())) {
-            // only redirect to previous url if it's part of the claroline platform
+        $redirectPath = $request->getSession()->get('redirectPath');
+        if (PlatformDefaults::REDIRECT_OPTIONS['LAST'] === $redirect
+            && ($redirectPath || ($referer && false !== strpos($referer, $this->platformManager->getUrl())))) {
+            // only redirect to previous url if it's part of the claroline platform or the ui has sent us a path to redirect to
             return [
                 'type' => 'last',
             ];

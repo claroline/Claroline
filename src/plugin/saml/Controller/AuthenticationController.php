@@ -18,8 +18,9 @@ class AuthenticationController extends AbstractController
 {
     public function loginAction(Request $request)
     {
-        if (!empty($request->get('redirectPath'))) {
+        if (!empty($request->get('redirectPath')) && '#/login' !== $request->get('redirectPath')) {
             // store it in session before leaving claroline for authentication
+            // this will allow use to redirect to the correct ui fragment when going back to claroline
             $request->getSession()->set('redirectPath', $request->get('redirectPath'));
         }
 
