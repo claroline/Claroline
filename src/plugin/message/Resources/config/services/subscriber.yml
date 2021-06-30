@@ -3,8 +3,8 @@ services:
     Claroline\MessageBundle\Subscriber\MessageSubscriber:
         arguments:
             - '@Claroline\MessageBundle\Manager\MessageManager'
-            - '@doctrine.orm.entity_manager'
             - '@security.helper'
             - '@translator'
+            - '@messenger.default_bus'
         tags:
             - { name: kernel.event_subscriber }

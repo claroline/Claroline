@@ -1,0 +1,6 @@
+services:
+    Claroline\MessageBundle\Messenger\SendMessageHandler:
+        tags: [ messenger.message_handler ]
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
