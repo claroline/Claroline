@@ -22,9 +22,9 @@ class MaxMindGeoIpDatabaseDownloader
     private $filesystem;
     private $tempDir;
 
-    public function __construct(string $licenseKey, ?LoggerInterface $logger = null, ?HttpClientInterface $httpClient = null, ?Filesystem $filesystem = null, PlatformConfigurationHandler $config)
+    public function __construct(?LoggerInterface $logger = null, ?HttpClientInterface $httpClient = null, ?Filesystem $filesystem = null, PlatformConfigurationHandler $config)
     {
-        $this->licenseKey = $licenseKey;
+        $this->licenseKey = $config->getParameter('geoip.maxmind_license_key');
         $this->logger = $logger ?? new NullLogger();
         $this->httpClient = $httpClient ?? HttpClient::create();
         $this->filesystem = $filesystem ?? new Filesystem();
@@ -45,7 +45,7 @@ class MaxMindGeoIpDatabaseDownloader
         // Download and dump the archive as a temp file (chunk-by-chunk)
         $tempDir = "$this->tempDir/claroline-geoip";
         $this->filesystem->mkdir($tempDir);
-        $tmpArchive = $this->filesystem->tempnam(sys_get_temp_dir().'/claroline-geoip', 'maxmind-geoip').'.tar.gz';
+        $tmpArchive = $this->filesystem->tempnam($tempDir, 'maxmind-geoip').'.tar.gz';
 
         foreach ($this->httpClient->stream($response) as $chunk) {
             try {
@@ -82,6 +82,6 @@ class MaxMindGeoIpDatabaseDownloader
         $this->logger->info('GeoIp database successfully downloaded.');
 
         // Cleanup filesystem
-        $this->filesystem->remove("$this->tempDir/claroline-geoip");
+        $this->filesystem->remove($tempDir);
     }
 }

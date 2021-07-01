@@ -17,6 +17,7 @@ services:
 
     Claroline\CoreBundle\Command\GeoIp\DownloadGeoIpDatabaseCommand:
         arguments:
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
             - '@Claroline\CoreBundle\Library\GeoIp\Database\MaxMindGeoIpDatabaseDownloader'
             - '%claroline.param.geoip_db_path%'
         tags:

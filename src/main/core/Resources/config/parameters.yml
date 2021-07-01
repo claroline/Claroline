@@ -30,3 +30,6 @@ parameters:
 
     # Disable symfony legacy autowiring
     container.autowiring.strict_mode: true
+
+    # Geoip
+    claroline.param.geoip_db_path: '%kernel.project_dir%/var/geoip/GeoLite2-City.mmdb'
