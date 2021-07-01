@@ -134,7 +134,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
         $referer = filter_var($request->headers->get('referer'), FILTER_SANITIZE_URL);
         $redirectPath = $request->getSession()->get('redirectPath');
         if (PlatformDefaults::REDIRECT_OPTIONS['LAST'] === $redirect
-            && ($redirectPath || ($referer && false !== strpos($referer, $this->platformManager->getUrl())))) {
+            && ($redirectPath || ($referer && 0 === strpos($referer, $this->platformManager->getUrl())))) {
             // only redirect to previous url if it's part of the claroline platform or the ui has sent us a path to redirect to
             return [
                 'type' => 'last',
