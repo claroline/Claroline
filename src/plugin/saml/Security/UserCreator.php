@@ -105,7 +105,7 @@ class UserCreator implements UserCreatorInterface
             'restrictions' => [
                 'disabled' => false,
             ],
-        ], [Crud::THROW_EXCEPTION, Options::NO_EMAIL]);
+        ], [Crud::THROW_EXCEPTION, Crud::NO_PERMISSIONS, Options::NO_EMAIL]);
 
         if (!empty($idpConfig['groups'])) {
             $groups = [];
@@ -117,7 +117,7 @@ class UserCreator implements UserCreatorInterface
             }
 
             if (!empty($groups)) {
-                $this->crud->patch($user, 'group', 'add', $groups, [Crud::THROW_EXCEPTION, Options::NO_EMAIL]);
+                $this->crud->patch($user, 'group', 'add', $groups, [Crud::THROW_EXCEPTION, Crud::NO_PERMISSIONS, Options::NO_EMAIL]);
             }
         }
 
