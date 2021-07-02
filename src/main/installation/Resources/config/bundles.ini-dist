@@ -48,3 +48,4 @@ Claroline\CursusBundle\ClarolineCursusBundle = true
 Claroline\BookingBundle\ClarolineBookingBundle = false
 Claroline\BigBlueButtonBundle\ClarolineBigBlueButtonBundle = false
 Claroline\LogBundle\ClarolineLogBundle=true
+Claroline\DolibarrBundle\ClarolineDolibarrBundle=true

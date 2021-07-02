@@ -151,7 +151,8 @@
             "Claroline\\BookingBundle\\": "src/plugin/booking",
             "Claroline\\BigBlueButtonBundle\\": "src/integration/big-blue-button",
             "Claroline\\DocumentationBundle\\": "src/plugin/documentation",
-            "Claroline\\LogBundle\\": "src/main/log"
+            "Claroline\\LogBundle\\": "src/main/log",
+            "Claroline\\DolibarrBundle\\": "src/integration/dolibarr"
         }
     },
     "scripts": {

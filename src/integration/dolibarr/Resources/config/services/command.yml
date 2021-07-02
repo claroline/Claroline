@@ -1,0 +1,11 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+
+    Claroline\DolibarrBundle\Command\SynchronizeCommand:
+        arguments:
+           - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+           - '@Claroline\AppBundle\API\Crud'
+        tags:
+            - { name: 'console.command', command: 'claroline:dolibarr:sync' }

@@ -1,0 +1,11 @@
+imports:
+    - { resource: services/command.yml }
+
+services:
+    _defaults:
+        autowire: false #change to true
+        autoconfigure: false
+        public: true
+
+    Claroline\DolibarrBundle\Configuration\PlatformDefaults:
+        tags: ['claroline.configuration']
