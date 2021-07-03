@@ -21,13 +21,12 @@ light_saml_symfony_bridge:
 security:
     firewalls:
         main:
-            # Allows SAML authentication
+            # share the same context for all our firewalls to be able to retrieve the user session when we switch between firewalls
+            context: claroline
             user_checker: Claroline\SamlBundle\Security\UserChecker
             logout:
                 invalidate_session: false
                 success_handler: Claroline\SamlBundle\Security\LogoutHandler
-                #handlers:
-                #    - Claroline\SamlBundle\Security\LogoutHandler
 
             light_saml_sp:
                 provider: user_db # use the standard user provider

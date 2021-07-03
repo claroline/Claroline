@@ -49,7 +49,7 @@ class TeamListener
         $canEdit = $this->authorization->isGranted(['claroline_team_tool', 'edit'], $workspace);
         /** @var string|User $user */
         $user = $this->tokenStorage->getToken()->getUser();
-        $myTeams = 'anon.' !== $user ?
+        $myTeams = $user instanceof User ?
             $this->teamManager->getTeamsByUserAndWorkspace($user, $workspace) :
             [];
         $event->setData([

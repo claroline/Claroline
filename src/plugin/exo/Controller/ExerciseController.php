@@ -2,52 +2,40 @@
 
 namespace UJM\ExoBundle\Controller;
 
-use Claroline\CoreBundle\Security\Collection\ResourceCollection;
+use Claroline\AppBundle\Controller\RequestDecoderTrait;
+use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Library\Options\Transfer;
-use UJM\ExoBundle\Manager\DocimologyManager;
 use UJM\ExoBundle\Manager\ExerciseManager;
-use UJM\ExoBundle\Manager\Item\ItemManager;
 
 /**
- * Exercise API Controller exposes REST API.
+ * @Route("/exercises")
  *
- * @Route("/exercises", options={"expose"=true})
+ * @todo : use Crud
  */
-class ExerciseController extends AbstractController
+class ExerciseController
 {
+    use PermissionCheckerTrait;
+    use RequestDecoderTrait;
+
     /** @var AuthorizationCheckerInterface */
     private $authorization;
 
     /** @var ExerciseManager */
     private $exerciseManager;
 
-    /** @var DocimologyManager */
-    private $docimologyManager;
-
-    /** @var ItemManager */
-    private $itemManager;
-
-    /**
-     * ExerciseController constructor.
-     */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
-        ExerciseManager $exerciseManager,
-        DocimologyManager $docimologyManager,
-        ItemManager $itemManager
+        ExerciseManager $exerciseManager
     ) {
         $this->authorization = $authorization;
         $this->exerciseManager = $exerciseManager;
-        $this->docimologyManager = $docimologyManager;
-        $this->itemManager = $itemManager;
     }
 
     /**
@@ -55,12 +43,10 @@ class ExerciseController extends AbstractController
      *
      * @Route("/{id}", name="exercise_get", methods={"GET"})
      * @EXT\ParamConverter("exercise", class="UJMExoBundle:Exercise", options={"mapping": {"id": "uuid"}})
-     *
-     * @return JsonResponse
      */
-    public function getAction(Exercise $exercise)
+    public function getAction(Exercise $exercise): JsonResponse
     {
-        $this->assertHasPermission('ADMINISTRATE', $exercise);
+        $this->checkPermission('ADMINISTRATE', $exercise->getResourceNode(), [], true);
 
         return new JsonResponse(
             $this->exerciseManager->serialize($exercise, [Transfer::INCLUDE_SOLUTIONS])
@@ -72,16 +58,14 @@ class ExerciseController extends AbstractController
      *
      * @Route("/{id}", name="exercise_update", methods={"PUT"})
      * @EXT\ParamConverter("exercise", class="UJMExoBundle:Exercise", options={"mapping": {"id": "uuid"}})
-     *
-     * @return JsonResponse
      */
-    public function updateAction(Exercise $exercise, Request $request)
+    public function updateAction(Exercise $exercise, Request $request): JsonResponse
     {
-        $this->assertHasPermission('EDIT', $exercise);
+        $this->checkPermission('EDIT', $exercise->getResourceNode(), [], true);
 
         $errors = [];
 
-        $data = $this->decodeRequestData($request);
+        $data = $this->decodeRequest($request);
 
         if (null === $data) {
             $errors[] = [
@@ -106,55 +90,5 @@ class ExerciseController extends AbstractController
         return new JsonResponse(
             $this->exerciseManager->serialize($exercise, [Transfer::INCLUDE_SOLUTIONS])
         );
-    }
-
-    /**
-     * Opens the docimology of a quiz.
-     *
-     * @Route("/{id}/docimology", name="exercise_docimology", methods={"GET"})
-     * @EXT\ParamConverter("exercise", class="UJMExoBundle:Exercise", options={"mapping": {"id": "uuid"}})
-     *
-     * @return JsonResponse
-     */
-    public function docimologyAction(Exercise $exercise)
-    {
-        return new JsonResponse(
-            $this->docimologyManager->getStatistics($exercise, 100)
-        );
-    }
-
-    /**
-     * Gets statistics of an Exercise.
-     *
-     * @Route("/{id}/statistics", name="exercise_statistics", methods={"GET"})
-     * @EXT\ParamConverter("exercise", class="UJMExoBundle:Exercise", options={"mapping": {"id": "uuid"}})
-     *
-     * @return JsonResponse
-     */
-    public function statisticsAction(Exercise $exercise)
-    {
-        if (!$exercise->hasStatistics()) {
-            $this->assertHasPermission('EDIT', $exercise);
-        }
-        $statistics = [];
-        $finishedOnly = !$exercise->isAllPapersStatistics();
-
-        foreach ($exercise->getSteps() as $step) {
-            foreach ($step->getQuestions() as $question) {
-                $itemStats = $this->itemManager->getStatistics($question, $exercise, $finishedOnly);
-                $statistics[$question->getUuid()] = !empty($itemStats['solutions']) ? $itemStats['solutions'] : new \stdClass();
-            }
-        }
-
-        return new JsonResponse($statistics);
-    }
-
-    private function assertHasPermission($permission, Exercise $exercise)
-    {
-        $collection = new ResourceCollection([$exercise->getResourceNode()]);
-
-        if (!$this->authorization->isGranted($permission, $collection)) {
-            throw new AccessDeniedException($collection->getErrorsForDisplay());
-        }
     }
 }

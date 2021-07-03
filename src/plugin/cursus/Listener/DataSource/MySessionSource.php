@@ -30,7 +30,7 @@ class MySessionSource
 
         /** @var User|string $user */
         $user = $this->tokenStorage->getToken()->getUser();
-        $options['hiddenFilters']['user'] = 'anon.' !== $user ? $user->getUuid() : null;
+        $options['hiddenFilters']['user'] = $user instanceof User ? $user->getUuid() : null;
 
         $event->setData(
             $this->finder->search(Session::class, $options)

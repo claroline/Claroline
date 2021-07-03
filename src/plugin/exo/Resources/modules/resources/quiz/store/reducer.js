@@ -11,7 +11,6 @@ import {reducer as playerReducer, selectors as playerSelectors} from '#/plugin/e
 import {reducer as papersReducer, selectors as papersSelectors} from '#/plugin/exo/resources/quiz/papers/store'
 import {reducer as correctionReducer, selectors as correctionSelectors} from '#/plugin/exo/resources/quiz/correction/store'
 import {reducer as statisticsReducer, selectors as statisticsSelectors} from '#/plugin/exo/resources/quiz/statistics/store'
-import {reducer as docimologyReducer, selectors as docimologySelectors} from '#/plugin/exo/docimology/store'
 
 export const reducer = combineReducers({
   quiz: makeReducer({}, {
@@ -29,7 +28,6 @@ export const reducer = combineReducers({
   [papersSelectors.STORE_NAME]: papersReducer,
   [correctionSelectors.STORE_NAME]: correctionReducer,
   [statisticsSelectors.STORE_NAME]: statisticsReducer,
-  [docimologySelectors.STORE_NAME]: docimologyReducer,
 
   // TODO : combine in a sub object for cleaner store
   testMode: playerReducers.testMode,

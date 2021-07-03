@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Command\User;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Command\AdminCliCommand;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\UserManager;
 use Symfony\Component\Console\Command\Command;
@@ -23,7 +22,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Disables users which have not logged in the app since a date.
  */
-class DisableInactiveCommand extends Command implements AdminCliCommand
+class DisableInactiveCommand extends Command
 {
     /** @var ObjectManager */
     private $om;

@@ -27,13 +27,9 @@ class AdminToolSource
     public function getData(GetDataEvent $event)
     {
         $options = $event->getOptions();
-        $user = $this->tokenStorage->getToken()->getUser();
-        $roles = 'anon.' === $user ?
-            ['ROLE_ANONYMOUS'] :
-            $user->getRoles();
 
-        if (!in_array('ROLE_ADMIN', $roles)) {
-            $options['hiddenFilters']['roles'] = $roles;
+        if (!in_array('ROLE_ADMIN', $this->tokenStorage->getToken()->getRoleNames())) {
+            $options['hiddenFilters']['roles'] = $this->tokenStorage->getToken()->getRoleNames();
         }
 
         $event->setData($this->finder->search(AdminTool::class, $options));

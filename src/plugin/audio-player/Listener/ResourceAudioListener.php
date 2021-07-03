@@ -54,7 +54,7 @@ class ResourceAudioListener
                 $audioData['sections'] = array_values(array_map(function (Section $section) use ($user) {
                     $serializedSection = $this->serializer->serialize($section);
 
-                    if ('anon.' !== $user) {
+                    if ($user instanceof User) {
                         $userComment = $this->manager->getSectionUserComment($section, $user);
 
                         if ($userComment) {
@@ -66,7 +66,7 @@ class ResourceAudioListener
                 }, $this->manager->getManagerSections($resourceNode)));
                 break;
             case AudioParams::USER_TYPE:
-                if ('anon.' !== $user) {
+                if ($user instanceof User) {
                     $audioData['sections'] = array_values(array_map(function (Section $section) use ($user) {
                         $serializedSection = $this->serializer->serialize($section);
                         $userComment = $this->manager->getSectionUserComment($section, $user);

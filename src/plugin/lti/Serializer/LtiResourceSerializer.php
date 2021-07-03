@@ -14,6 +14,7 @@ namespace UJM\LtiBundle\Serializer;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -115,7 +116,7 @@ class LtiResourceSerializer
         if ($app) {
             $workspace = $ltiResource->getResourceNode()->getWorkspace();
             $user = $this->tokenStorage->getToken()->getUser();
-            $isAnon = 'anon.' === $user;
+            $isAnon = !$user instanceof User;
             $anonymous = $this->translator->trans('anonymous', [], 'platform');
             $isWorkspaceManager = $this->workspaceManager->isManager($workspace, $this->tokenStorage->getToken());
             $now = new \DateTime();

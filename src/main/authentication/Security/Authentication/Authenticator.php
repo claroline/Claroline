@@ -17,6 +17,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
 use Claroline\CoreBundle\Event\Security\UserLoginEvent;
 use Claroline\CoreBundle\Listener\AuthenticationSuccessListener;
+use Claroline\CoreBundle\Security\PlatformRoles;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -116,7 +117,20 @@ class Authenticator
 
     public function createAnonymousToken()
     {
-        $token = new AnonymousToken($this->secret, 'anon.', ['ROLE_ANONYMOUS']);
+        $token = new AnonymousToken($this->secret, 'anon.', [PlatformRoles::ANONYMOUS]);
+        $this->tokenStorage->setToken($token);
+
+        return $token;
+    }
+
+    public function createAdminToken(User $user = null)
+    {
+        if (!empty($user)) {
+            $token = new UsernamePasswordToken($user, $user->getPassword(), 'main', [PlatformRoles::ADMIN]);
+        } else {
+            $token = new UsernamePasswordToken('admin', '', 'main', [PlatformRoles::ADMIN]);
+        }
+
         $this->tokenStorage->setToken($token);
 
         return $token;

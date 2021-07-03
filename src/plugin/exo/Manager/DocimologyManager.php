@@ -3,55 +3,50 @@
 namespace UJM\ExoBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\User;
+use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Entity\Attempt\Paper;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Entity\Item\Item;
 use UJM\ExoBundle\Library\Item\ItemType;
 use UJM\ExoBundle\Manager\Attempt\PaperManager;
 use UJM\ExoBundle\Manager\Item\ItemManager;
+use UJM\ExoBundle\Repository\AnswerRepository;
 use UJM\ExoBundle\Repository\ExerciseRepository;
 use UJM\ExoBundle\Repository\PaperRepository;
 
 class DocimologyManager
 {
-    /**
-     * @var ObjectManager
-     */
+    /** @var ObjectManager */
     private $om;
 
-    /**
-     * @var ExerciseRepository
-     */
-    private $exerciseRepository;
-
-    /**
-     * @var PaperRepository
-     */
-    private $paperRepository;
-
-    /**
-     * @var ItemManager
-     */
+    /** @var ItemManager */
     private $itemManager;
 
-    /**
-     * @var PaperManager
-     */
+    /** @var PaperManager */
     private $paperManager;
 
-    /**
-     * ExerciseManager constructor.
-     */
+    /** @var ExerciseRepository */
+    private $exerciseRepository;
+
+    /** @var PaperRepository */
+    private $paperRepository;
+
+    /** @var AnswerRepository */
+    private $answerRepository;
+
     public function __construct(
           ObjectManager $om,
           ItemManager $itemManager,
           PaperManager $paperManager
     ) {
         $this->om = $om;
-        $this->exerciseRepository = $this->om->getRepository('UJMExoBundle:Exercise');
-        $this->paperRepository = $this->om->getRepository('UJMExoBundle:Attempt\Paper');
         $this->paperManager = $paperManager;
         $this->itemManager = $itemManager;
+
+        $this->exerciseRepository = $this->om->getRepository(Exercise::class);
+        $this->paperRepository = $this->om->getRepository(Paper::class);
+        $this->answerRepository = $this->om->getRepository(Answer::class);
     }
 
     /**
@@ -208,6 +203,53 @@ class DocimologyManager
         return $questionStatistics;
     }
 
+    public function getAttemptsScores(Exercise $exercise, bool $finishedOnly = false, User $user = null)
+    {
+        $data = [
+            'total' => [],
+        ];
+
+        $totalScores = $this->paperRepository->getAvgScoreByAttempts($exercise, $finishedOnly, $user);
+        foreach ($totalScores as $totalScore) {
+            // create associative array because D3 charts expect objects
+            $data['total']['attempt'.$totalScore['number']] = [
+                'xData' => $totalScore['number'],
+                'yData' => (float) $totalScore['score'],
+            ];
+        }
+
+        $scoreOn = null;
+        $exerciseScore = $exercise->getScoreRule() ? json_decode($exercise->getScoreRule(), true) : null;
+        if (!empty($exerciseScore) && !empty($exerciseScore['total'])) {
+            $scoreOn = $exerciseScore['total'];
+        }
+
+        $itemsScores = $this->answerRepository->getAvgScoreByAttempts($exercise, $finishedOnly, $user);
+        foreach ($itemsScores as $itemsScore) {
+            $question = $exercise->getQuestion($itemsScore['questionId']);
+            if (empty($question)) {
+                // do not show deleted questions
+                continue;
+            }
+
+            if (!isset($data[$itemsScore['questionId']])) {
+                $data[$itemsScore['questionId']] = [];
+            }
+
+            $score = $itemsScore['score'];
+            if (!empty($scoreOn)) {
+                $score = ($itemsScore['score'] / $this->itemManager->calculateTotal($question)) * $scoreOn;
+            }
+
+            $data[$itemsScore['questionId']]['attempt'.$itemsScore['number']] = [
+                'xData' => $itemsScore['number'],
+                'yData' => $score,
+            ];
+        }
+
+        return $data;
+    }
+
     /**
      * Get discrimination coefficient for an exercise.
      *
@@ -321,13 +363,15 @@ class DocimologyManager
         $scores = [];
         /** @var Paper $paper */
         foreach ($papers as $paper) {
-            $score = $this->paperManager->calculateScore($paper);
-            // since totalScoreOn might have change through papers report all scores on a define value
-            if ($scoreOn) {
-                $score = floatval(($scoreOn * $score) / $paper->getTotal());
-            }
+            if ($paper->getTotal()) {
+                $score = $this->paperManager->calculateScore($paper);
+                // since totalScoreOn might have change through papers report all scores on a define value
+                if ($scoreOn) {
+                    $score = floatval(($scoreOn * $score) / $paper->getTotal());
+                }
 
-            $scores[] = $score !== floor($score) ? floatval(number_format($score, 2)) : $score;
+                $scores[] = $score !== floor($score) ? floatval(number_format($score, 2)) : $score;
+            }
         }
 
         return $scores;

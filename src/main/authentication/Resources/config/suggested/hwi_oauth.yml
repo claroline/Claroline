@@ -58,6 +58,8 @@ hwi_oauth:
 security:
     firewalls:
         main:
+            # share the same context for all our firewalls to be able to retrieve the user session when we switch between firewalls
+            context: claroline
             logout:
                 handlers:
                     - Claroline\AuthenticationBundle\Security\Oauth\LogoutHandler

@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Command\Workspace;
 
-use Claroline\CoreBundle\Command\AdminCliCommand;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\Workspace\TransferManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -20,7 +19,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class ExportCommand extends Command implements AdminCliCommand
+class ExportCommand extends Command
 {
     private $em;
     private $transferManager;

@@ -24,7 +24,7 @@ use UJM\ExoBundle\Manager\ExerciseManager;
  * Paper Controller.
  * Manages the submitted papers to an exercise.
  *
- * @Route("exercises/{exerciseId}/papers", options={"expose"=true})
+ * @Route("exercises/{exerciseId}/papers")
  * @EXT\ParamConverter("exercise", class="UJMExoBundle:Exercise", options={"mapping": {"exerciseId": "uuid"}})
  */
 class PaperController

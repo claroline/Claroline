@@ -13,7 +13,6 @@ namespace Claroline\CoreBundle\Command\Workspace;
 
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\SerializerProvider;
-use Claroline\CoreBundle\Command\AdminCliCommand;
 use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Utilities\FileUtilities;
@@ -27,7 +26,7 @@ use Symfony\Component\HttpFoundation\File\File;
 /**
  * Creates an user, optionally with a specific role (default to simple user).
  */
-class ImportCommand extends Command implements AdminCliCommand
+class ImportCommand extends Command
 {
     private $crud;
     private $fileUtils;

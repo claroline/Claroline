@@ -1,6 +1,6 @@
 <?php
 
-namespace UJM\ExoBundle\Tests\Controller\Api;
+namespace UJM\ExoBundle\Tests\Controller;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
@@ -65,25 +65,31 @@ class ExerciseControllerTest extends TransactionalTestCase
 
     public function testAnonymousGet()
     {
-        $this->request('GET', "/api/exercises/{$this->exercise->getUuid()}");
+        $this->request('GET', "/apiv2/exercises/{$this->exercise->getUuid()}");
+
+        /*var_dump($this->client->getResponse()->getContent());
+        die();*/
+
         $this->assertEquals(401, $this->client->getResponse()->getStatusCode());
+
+
     }
 
     public function testNonCreatorGet()
     {
-        $this->request('GET', "/api/exercises/{$this->exercise->getUuid()}", $this->bob);
+        $this->request('GET', "/apiv2/exercises/{$this->exercise->getUuid()}", $this->bob);
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
     public function testAdminGet()
     {
-        $this->request('GET', "/api/exercises/{$this->exercise->getUuid()}", $this->admin);
+        $this->request('GET', "/apiv2/exercises/{$this->exercise->getUuid()}", $this->admin);
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
     public function testCreatorGet()
     {
-        $this->request('GET', "/api/exercises/{$this->exercise->getUuid()}", $this->john);
+        $this->request('GET', "/apiv2/exercises/{$this->exercise->getUuid()}", $this->john);
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
         $content = json_decode($this->client->getResponse()->getContent());
@@ -97,7 +103,7 @@ class ExerciseControllerTest extends TransactionalTestCase
         // Send exercise data
         $data = [];
 
-        $this->request('PUT', "/api/exercises/{$this->exercise->getUuid()}", $this->bob, [], json_encode($data));
+        $this->request('PUT', "/apiv2/exercises/{$this->exercise->getUuid()}", $this->bob, [], json_encode($data));
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 

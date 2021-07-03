@@ -161,6 +161,30 @@ class Exercise extends AbstractResource
     private $endNavigation = true;
 
     /**
+     * Show attempts stats on the end page.
+     *  - none : no stats displayed.
+     *  - user : only current user stats displayed.
+     *  - all : all participants stats displayed.
+     *
+     * @ORM\Column(type="string")
+     *
+     * @var string
+     */
+    private $endStats = 'none';
+
+    /**
+     * Show attempts stats on the overview page.
+     *  - none : no stats displayed.
+     *  - user : only current user stats displayed.
+     *  - all : all participants stats displayed.
+     *
+     * @ORM\Column(type="string")
+     *
+     * @var string
+     */
+    private $overviewStats = 'none';
+
+    /**
      * Show the Exercise meta in the overview of the Exercise.
      *
      * @ORM\Column(name="metadata_visible", type="boolean")
@@ -481,6 +505,26 @@ class Exercise extends AbstractResource
     public function setEndMessage($endMessage)
     {
         $this->endMessage = $endMessage;
+    }
+
+    public function getOverviewStats(): string
+    {
+        return $this->overviewStats;
+    }
+
+    public function setOverviewStats(string $overviewStats)
+    {
+        $this->overviewStats = $overviewStats;
+    }
+
+    public function getEndStats(): string
+    {
+        return $this->endStats;
+    }
+
+    public function setEndStats(string $endStats)
+    {
+        $this->endStats = $endStats;
     }
 
     public function getIntermediateScores()

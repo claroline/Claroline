@@ -1,5 +1,6 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
 import {displayDuration, displayDate} from '#/main/app/intl/date'
@@ -8,6 +9,7 @@ import {UserEvaluation as UserEvaluationType} from '#/main/core/resource/prop-ty
 import {ResourceOverview} from '#/main/core/resource/components/overview'
 
 import {correctionModes, markModes, SHOW_CORRECTION_AT_DATE, SHOW_SCORE_AT_NEVER} from '#/plugin/exo/quiz/enums'
+import {AttemptsChart} from '#/plugin/exo/charts/attempts/containers/chart'
 
 // TODO : show info about number of attempts
 
@@ -121,6 +123,15 @@ const OverviewMain = props =>
         />
       </section>
     }
+
+    {props.showStats &&
+      <AttemptsChart
+        quizId={props.quiz.id}
+        userId={'user' === get(props.quiz, 'parameters.overviewStats') ? props.currentUserId : null}
+        steps={props.quiz.steps}
+        questionNumberingType={get(props.quiz, 'parameters.questionNumbering')}
+      />
+    }
   </ResourceOverview>
 
 OverviewMain.propTypes = {
@@ -128,13 +139,17 @@ OverviewMain.propTypes = {
   empty: T.bool.isRequired,
   editable: T.bool.isRequired,
   quiz: T.shape({
+    id: T.string.isRequired,
     description: T.string,
     parameters: T.object.isRequired,
-    picking: T.object.isRequired
+    picking: T.object.isRequired,
+    steps: T.array
   }).isRequired,
   userEvaluation: T.shape(
     UserEvaluationType.propTypes
-  )
+  ),
+  currentUserId: T.string,
+  showStats: T.bool.isRequired
 }
 
 export {

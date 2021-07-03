@@ -17,6 +17,8 @@ security:
             security: false
 
         main:
+            # share the same context for all our firewalls to be able to retrieve the user session when we switch between firewalls
+            context: claroline
             pattern: ^/
             anonymous: ~
             logout:

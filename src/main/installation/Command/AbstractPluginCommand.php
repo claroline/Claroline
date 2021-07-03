@@ -11,7 +11,6 @@
 
 namespace Claroline\InstallationBundle\Command;
 
-use Claroline\AppBundle\Command\BaseCommandTrait;
 use Claroline\CoreBundle\Library\Installation\Plugin\Installer;
 use Claroline\KernelBundle\Bundle\PluginBundle;
 use Symfony\Component\Console\Command\Command;
@@ -25,8 +24,6 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 abstract class AbstractPluginCommand extends Command
 {
-    use BaseCommandTrait;
-
     protected $pluginInstaller;
 
     public function __construct(Installer $pluginInstaller)

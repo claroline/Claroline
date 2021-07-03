@@ -41,11 +41,6 @@ trait PermissionCheckerTrait
             throw new \RuntimeException('PermissionCheckerTrait requires the AuthorizationChecker (@security.authorization_checker) to be injected in your service.');
         }
 
-        if ('cli' === php_sapi_name()) {
-            // TODO : this should not be checked here (maybe create a Voter for that)
-            return true;
-        }
-
         switch ($object) {
             //@todo Remove that line once we can
             case $object instanceof ResourceNode:

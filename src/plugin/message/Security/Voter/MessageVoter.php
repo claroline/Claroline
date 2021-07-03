@@ -11,6 +11,7 @@
 
 namespace Claroline\MessageBundle\Security\Voter;
 
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Security\Voter\AbstractVoter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
@@ -26,7 +27,7 @@ class MessageVoter extends AbstractVoter
             case self::PATCH:
             case self::OPEN:
             case self::VIEW:
-                return 'anon.' !== $token->getUser() ? VoterInterface::ACCESS_GRANTED : VoterInterface::ACCESS_DENIED;
+                return $token->getUser() instanceof User ? VoterInterface::ACCESS_GRANTED : VoterInterface::ACCESS_DENIED;
         }
 
         return VoterInterface::ACCESS_ABSTAIN;

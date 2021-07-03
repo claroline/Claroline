@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Listener;
 
 use Claroline\AuthenticationBundle\Security\Authentication\Authenticator;
-use Claroline\CoreBundle\Command\AdminCliCommand;
 use Claroline\CoreBundle\Manager\UserManager;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
 
@@ -34,11 +33,13 @@ class CliListener
      */
     public function setDefaultUser(ConsoleCommandEvent $event)
     {
-        $command = $event->getCommand();
-
-        if ($command instanceof AdminCliCommand) {
+        try {
+            // try catch is here because in the install command, DB does not exist and will break the whole process
             $user = $this->userManager->getDefaultClarolineAdmin();
-            $this->authenticator->createToken($user);
+        } catch (\Exception $e) {
+            $user = null;
         }
+
+        $this->authenticator->createAdminToken($user);
     }
 }

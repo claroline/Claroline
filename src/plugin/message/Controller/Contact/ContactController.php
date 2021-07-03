@@ -67,7 +67,7 @@ class ContactController extends AbstractCrudController
         $user = $this->tokenStorage->getToken()->getUser();
 
         return [
-            'user' => 'anon.' !== $user ? $user->getId() : null,
+            'user' => $user instanceof User ? $user->getId() : null,
         ];
     }
 

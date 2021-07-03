@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Controller\Item;
 
+use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Repository\User\UserRepository;
@@ -10,17 +11,18 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use UJM\ExoBundle\Controller\AbstractController;
 use UJM\ExoBundle\Manager\Item\ShareManager;
 use UJM\ExoBundle\Serializer\UserSerializer;
 
 /**
  * Share Controller exposes REST API.
  *
- * @Route("/questions/share", options={"expose"=true})
+ * @Route("/questions/share")
  */
-class ShareController extends AbstractController
+class ShareController
 {
+    use RequestDecoderTrait;
+
     /** @var UserRepository */
     private $userRepository;
 
@@ -50,7 +52,7 @@ class ShareController extends AbstractController
     {
         $errors = [];
 
-        $data = $this->decodeRequestData($request);
+        $data = $this->decodeRequest($request);
         if (empty($data)) {
             $errors[] = [
                 'path' => '',

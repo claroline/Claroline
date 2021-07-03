@@ -11,7 +11,6 @@
 
 namespace Claroline\DevBundle\Command;
 
-use Claroline\AppBundle\Command\BaseCommandTrait;
 use Claroline\DevBundle\Manager\TranslationManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -22,12 +21,6 @@ use Symfony\Component\Yaml\Yaml;
 
 class TranslationDebugCommand extends Command
 {
-    use BaseCommandTrait;
-
-    private $params = [
-        'locale' => 'locale to fill: ',
-    ];
-
     private $translationManager;
 
     public function __construct(TranslationManager $translationManager)

@@ -54,7 +54,7 @@ class PluginListener
     {
         /** @var User $user */
         $user = $this->tokenStorage->getToken()->getUser();
-        $objectives = 'anon.' !== $user ? $this->objectiveManager->loadSubjectObjectives($user) : [];
+        $objectives = $user instanceof User ? $this->objectiveManager->loadSubjectObjectives($user) : [];
         $objectivesCompetencies = [];
         $competencies = [];
 

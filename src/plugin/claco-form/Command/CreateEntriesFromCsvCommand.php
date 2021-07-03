@@ -11,8 +11,8 @@
 
 namespace Claroline\ClacoFormBundle\Command;
 
-use Claroline\AppBundle\Command\BaseCommandTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\ClacoFormBundle\Entity\ClacoForm;
 use Claroline\ClacoFormBundle\Manager\ClacoFormManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
@@ -24,17 +24,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class CreateEntriesFromCsvCommand extends Command
 {
-    use BaseCommandTrait;
-
     private $om;
     private $resourceManager;
     private $formManager;
-
-    private $params = [
-        'username' => 'The username of the creator ',
-        'clacoform_node_id' => 'The uuid of the ClacoForm resource node ',
-        'csv_path' => 'Absolute path to the csv file ',
-    ];
 
     public function __construct(ObjectManager $om, ResourceManager $resourceManager, ClacoFormManager $formManager)
     {
@@ -57,7 +49,6 @@ class CreateEntriesFromCsvCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $resourceManager = $this->getContainer()->get('claroline.manager.resource_manager');
         $userRepo = $this->om->getRepository(User::class);
         $resourceNodeRepo = $this->om->getRepository(ResourceNode::class);
 
@@ -70,7 +61,8 @@ class CreateEntriesFromCsvCommand extends Command
 
         $nodeId = $input->getArgument('clacoform_node_id');
         $node = $resourceNodeRepo->findOneBy(['uuid' => $nodeId]);
-        $clacoForm = $node ? $resourceManager->getResourceFromNode($node) : null;
+        /** @var ClacoForm $clacoForm */
+        $clacoForm = $node ? $this->resourceManager->getResourceFromNode($node) : null;
 
         if (!$user) {
             $output->writeln("<error>Coudn't find user.</error>");
@@ -102,8 +94,8 @@ class CreateEntriesFromCsvCommand extends Command
                     $data[] = $lineData;
                 }
             }
-            $manager = $this->getContainer()->get('Claroline\ClacoFormBundle\Manager\ClacoFormManager');
-            $manager->importEntryFromCsv($clacoForm, $user, $data);
+
+            $this->formManager->importEntryFromCsv($clacoForm, $user, $data);
 
             return 0;
         }
