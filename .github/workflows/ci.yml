@@ -124,14 +124,8 @@ jobs:
       - name: "Run PHPUnit Tests"
         run: SYMFONY_DEPRECATIONS_HELPER=weak vendor/bin/simple-phpunit --dont-report-useless-tests
 
-      - name: "Install Symfony"
-        run: wget https://get.symfony.com/cli/installer -O - | bash
-
-      - name: "Start the symfony server"
-        run: /root/.symfony/bin/symfony server:start --port=80 -d
+      - name: "Start the server"
+        run: php -S 0.0.0.0:80 -t public/
 
       - name: "Run Cypress Tests"
         run: npm test
-
-      - name: "Stop the symfony server"
-        run: /root/.symfony/bin/symfony server:stop
