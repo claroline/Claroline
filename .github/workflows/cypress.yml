@@ -1,0 +1,35 @@
+name: Cypress
+
+on: push
+
+jobs:
+  cypress-run:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout 🛎
+        uses: actions/checkout@v2
+
+      # normally we would NOT need to install NPM dependencies
+      # but in this repo we are using additional plugins listed in package.json
+      # thus we need to install them
+      - name: Install dependencies 📦
+        run: npm install
+
+      - name: Start docker containers 🐋
+        run: docker-compose up -d
+
+      - name: Wait for Claroline to be installed and started 💤
+        run: |
+          docker run \
+            --network container:claroline-web \
+            curlimages/curl -s \
+            --connect-timeout 500 \
+            --max-time 1000 \
+            --retry 5000 \
+            --retry-delay 10 \
+            --retry-max-time 4000 \
+            --retry-all-errors \
+            http://127.0.0.1/
+
+      - name: Run cypress tests 🧪
+        run: npm test
