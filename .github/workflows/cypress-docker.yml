@@ -1,6 +1,6 @@
 name: Cypress Docker
 
-on: push
+on: pull_request
 
 jobs:
   cypress-run:
@@ -16,7 +16,7 @@ jobs:
         run: npm install
 
       - name: Start docker containers 🐋
-        run: docker-compose up -d
+        run: docker-compose -f docker-compose.prod.yml up -d
 
       - name: Wait for Claroline to be installed and started 💤
         run: |
