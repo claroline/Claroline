@@ -126,6 +126,8 @@ jobs:
 
       - name: "Install Symfony"
         run: wget https://get.symfony.com/cli/installer -O - | bash
+
+      - name: "Add Symfony to path"
         run: export PATH="$HOME/.symfony/bin:$PATH"
 
       - name: "Start the symfony server"
