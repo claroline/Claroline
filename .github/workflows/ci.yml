@@ -125,10 +125,10 @@ jobs:
         run: SYMFONY_DEPRECATIONS_HELPER=weak vendor/bin/simple-phpunit --dont-report-useless-tests
 
       - name: "Start the symfony server"
-        run: symfony server:start -d
+        run: php bin/console server:start --port=80 -d
 
       - name: "Run Cypress Tests"
         run: npm test
 
       - name: "Stop the symfony server"
-        run: symfony server:stop
+        run: php bin/console server:stop

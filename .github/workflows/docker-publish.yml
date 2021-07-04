@@ -8,7 +8,7 @@ name: Docker Publish
 on:
   workflow_dispatch:
   release:
-    types: [published]
+    types: [released]
 
 env:
   # Use docker.io for Docker Hub if empty
