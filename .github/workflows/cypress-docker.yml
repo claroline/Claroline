@@ -1,4 +1,4 @@
-name: Cypress
+name: Cypress Docker
 
 on: push
 
@@ -21,15 +21,15 @@ jobs:
       - name: Wait for Claroline to be installed and started 💤
         run: |
           docker run \
-            --network container:claroline-web \
-            curlimages/curl -s \
-            --connect-timeout 500 \
-            --max-time 1000 \
-            --retry 5000 \
-            --retry-delay 10 \
-            --retry-max-time 4000 \
-            --retry-all-errors \
-            http://127.0.0.1/
+          --network container:claroline-web \
+          curlimages/curl -s \
+          --connect-timeout 30 \
+          --max-time 600 \
+          --retry 20 \
+          --retry-delay 30 \
+          --retry-max-time 600 \
+          --retry-all-errors \
+          http://127.0.0.1/
 
       - name: Run cypress tests 🧪
         run: npm test
