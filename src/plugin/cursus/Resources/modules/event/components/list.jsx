@@ -1,7 +1,10 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import classes from 'classnames'
+import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
+import {now} from '#/main/app/intl/date'
 import {hasPermission} from '#/main/app/security'
 import {LINK_BUTTON, MODAL_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
@@ -79,6 +82,45 @@ const EventList = (props) =>
     }}
     definition={[
       {
+        name: 'status',
+        type: 'choice',
+        label: trans('status'),
+        sortable: false,
+        displayed: true,
+        filterable: true,
+        order: 1,
+        options: {
+          noEmpty: true,
+          choices: {
+            not_started: trans('session_not_started', {}, 'cursus'),
+            in_progress: trans('session_in_progress', {}, 'cursus'),
+            ended: trans('session_ended', {}, 'cursus'),
+            not_ended: trans('session_not_ended', {}, 'cursus')
+          }
+        },
+        render: (row) => {
+          let status
+          if (get(row, 'start') > now(false)) {
+            status = 'not_started'
+          } else if (get(row, 'start') <= now(false) && get(row, 'end') >= now(false)) {
+            status = 'in_progress'
+          } else if (get(row, 'end') < now(false)) {
+            status = 'ended'
+          }
+
+          const EventStatus = (
+            <span className={classes('label', {
+              'label-success': 'not_started' === status,
+              'label-info': 'in_progress' === status,
+              'label-danger': 'ended' === status
+            })}>
+              {trans('session_'+status, {}, 'cursus')}
+            </span>
+          )
+
+          return EventStatus
+        }
+      }, {
         name: 'name',
         type: 'string',
         label: trans('name'),

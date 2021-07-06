@@ -27,6 +27,8 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
 use Claroline\CursusBundle\Entity\Course;
+use Claroline\CursusBundle\Entity\Registration\AbstractRegistration;
+use Claroline\CursusBundle\Entity\Registration\SessionUser;
 use Claroline\CursusBundle\Entity\Session;
 use Claroline\CursusBundle\Repository\SessionRepository;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -114,6 +116,13 @@ class SessionSerializer
         ];
 
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
+            $tutors = $this->om->getRepository(SessionUser::class)->findBy([
+                'session' => $session,
+                'type' => AbstractRegistration::TUTOR,
+                'validated' => true,
+                'confirmed' => true,
+            ]);
+
             $serialized = array_merge($serialized, [
                 'location' => $session->getLocation() ?
                     $this->locationSerializer->serialize($session->getLocation(), [Options::SERIALIZE_MINIMAL]) :
@@ -147,6 +156,9 @@ class SessionSerializer
                     'description' => $session->getPriceDescription(),
                 ],
                 'participants' => $this->sessionRepo->countParticipants($session),
+                'tutors' => array_map(function (SessionUser $sessionUser) {
+                    return $this->userSerializer->serialize($sessionUser->getUser(), [Options::SERIALIZE_MINIMAL]);
+                }, $tutors),
                 'resources' => array_map(function (ResourceNode $resource) {
                     return $this->resourceSerializer->serialize($resource, [Options::SERIALIZE_MINIMAL]);
                 }, $session->getResources()->toArray()),

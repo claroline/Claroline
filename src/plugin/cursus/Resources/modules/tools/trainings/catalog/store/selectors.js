@@ -52,5 +52,6 @@ export const selectors = {
   course,
   activeSession,
   availableSessions,
+  sessionRegistrations,
   activeSessionRegistration
 }
