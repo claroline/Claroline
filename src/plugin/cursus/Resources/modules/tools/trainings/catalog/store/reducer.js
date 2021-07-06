@@ -1,5 +1,3 @@
-import get from 'lodash/get'
-
 import {makeReducer, combineReducers} from '#/main/app/store/reducer'
 import {makeFormReducer, FORM_SUBMIT_SUCCESS} from '#/main/app/content/form/store'
 import {makeListReducer} from '#/main/app/content/list/store'
@@ -23,13 +21,14 @@ const reducer = combineReducers({
     [LOAD_COURSE]: (state, action) => action.course
   }),
   courseActiveSession: makeReducer(null, {
-    [LOAD_COURSE]: (state, action) => action.defaultSession ? action.defaultSession : get(action, 'availableSessions[0]', null),
+    [LOAD_COURSE]: (state, action) => action.defaultSession || null,
     [LOAD_COURSE_SESSION]: (state, action) => action.session
   }),
   courseAvailableSessions: makeReducer([], {
     [LOAD_COURSE]: (state, action) => action.availableSessions
   }),
   courseSessions: makeListReducer(selectors.STORE_NAME+'.courseSessions', {
+    filters: [{property: 'status', value: 'not_ended'}],
     sortBy: {property: 'order', direction: 1}
   }, {
     invalidated: makeReducer(false, {
@@ -37,6 +36,7 @@ const reducer = combineReducers({
     })
   }),
   courseEvents: makeListReducer(selectors.STORE_NAME+'.courseEvents', {
+    filters: [{property: 'status', value: 'not_ended'}],
     sortBy: {property: 'startDate', direction: 1}
   }, {
     invalidated: makeReducer(false, {

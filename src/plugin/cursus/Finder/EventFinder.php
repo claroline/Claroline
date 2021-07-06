@@ -81,6 +81,25 @@ class EventFinder extends AbstractFinder
                     break;
 
                 // map search on PlannedObject (There may be a better way to handle this).
+                case 'status':
+                    switch ($filterValue) {
+                        case 'not_started':
+                            $qb->andWhere('po.startDate < :now');
+                            break;
+                        case 'in_progress':
+                            $qb->andWhere('(po.startDate <= :now AND po.endDate >= :now)');
+                            break;
+                        case 'ended':
+                            $qb->andWhere('po.endDate < :now');
+                            break;
+                        case 'not_ended':
+                            $qb->andWhere('po.endDate >= :now');
+                            break;
+                    }
+
+                    $qb->setParameter('now', new \DateTime());
+                    break;
+
                 case 'name':
                 case 'description':
                 case 'startDate':

@@ -186,7 +186,7 @@ const EventAbout = (props) =>
 
           {get(props.event, 'end') < now() &&
             <h1 className="content-resume-title h2 text-danger">
-              {trans('session_closed', {}, 'cursus')}
+              {trans('session_ended', {}, 'cursus')}
             </h1>
           }
         </div>

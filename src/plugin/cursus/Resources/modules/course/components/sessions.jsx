@@ -11,6 +11,8 @@ import {route} from '#/plugin/cursus/routing'
 import {MODAL_SESSION_FORM} from '#/plugin/cursus/session/modals/parameters'
 import {SessionList} from '#/plugin/cursus/session/components/list'
 import {selectors} from '#/plugin/cursus/tools/trainings/catalog/store/selectors'
+import {getInfo, isRegistered, isFull} from '#/plugin/cursus/utils'
+import {MODAL_COURSE_REGISTRATION} from '#/plugin/cursus/course/modals/registration'
 
 const CourseSessions = (props) =>
   <Fragment>
@@ -60,6 +62,20 @@ const CourseSessions = (props) =>
           }],
           scope: ['object'],
           group: trans('management')
+        }, {
+          name: 'register',
+          type: MODAL_BUTTON,
+          icon: 'fa fa-fw fa-user-plus',
+          label: trans(isFull(rows[0]) ? 'register_waiting_list' : 'self-register', {}, 'actions'),
+          displayed: getInfo(props.course, rows[0], 'registration.selfRegistration') && !isRegistered(rows[0], props.registrations),
+          modal: [MODAL_COURSE_REGISTRATION, {
+            path: props.path,
+            course: props.course,
+            session: rows[0],
+            register: props.register
+          }],
+          tooltip: null,
+          scope: ['object']
         }
       ]}
     />
@@ -90,7 +106,12 @@ CourseSessions.propTypes = {
   course: T.shape(
     CourseTypes.propTypes
   ).isRequired,
-  reload: T.func.isRequired
+  registrations: T.shape({
+    users: T.array,
+    groups: T.array
+  }),
+  reload: T.func.isRequired,
+  register: T.func.isRequired
 }
 
 export {

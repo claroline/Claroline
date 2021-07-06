@@ -1,4 +1,5 @@
 import get from 'lodash/get'
+import isEmpty from 'lodash/isEmpty'
 
 function getInfo(course, session, path) {
   if (session && undefined !== get(session, path)) {
@@ -22,6 +23,20 @@ function isFullyRegistered(registration) {
   return false
 }
 
+function isRegistered(session, registrations) {
+  let registration = null
+
+  if (registrations.users) {
+    registration = registrations.users.find(registration => session.id === registration.session.id)
+  }
+
+  if (!registration && registrations.groups) {
+    registration = registrations.groups.find(registration => session.id === registration.session.id)
+  }
+
+  return !isEmpty(registration)
+}
+
 function isFull(session) {
   if (get(session, 'restrictions.users')) {
     return get(session, 'restrictions.users') <= get(session, 'participants.learners')
@@ -33,5 +48,6 @@ function isFull(session) {
 export {
   getInfo,
   isFull,
-  isFullyRegistered
+  isFullyRegistered,
+  isRegistered
 }

@@ -4,7 +4,9 @@ import {PropTypes as T} from 'prop-types'
 import {trans} from '#/main/app/intl/translation'
 import {hasPermission} from '#/main/app/security'
 import {Button} from '#/main/app/action/components/button'
-import {MODAL_BUTTON, URL_BUTTON} from '#/main/app/buttons'
+import {LINK_BUTTON, MODAL_BUTTON, URL_BUTTON} from '#/main/app/buttons'
+import {route} from '#/main/core/tool/routing'
+
 import {
   Course as CourseTypes,
   Session as SessionTypes
@@ -28,6 +30,14 @@ const CourseEvents = (props) =>
       })}
       actions={(rows) => [
         {
+          name: 'open',
+          type: LINK_BUTTON,
+          icon: 'fa fa-fw fa-external-link-alt',
+          label: trans('open', 'actions'),
+          target: route('trainings') + '/events/' + rows[0].id,
+          scope: ['object'],
+          primary: true
+        }, {
           name: 'export-pdf',
           type: URL_BUTTON,
           icon: 'fa fa-fw fa-file-pdf-o',

@@ -100,6 +100,9 @@ class CourseSerializer
                 'edit' => $this->authorization->isGranted('EDIT', $course),
                 'delete' => $this->authorization->isGranted('DELETE', $course),
             ],
+            'opening' => [
+                'session' => $course->getSessionOpening(),
+            ],
             'tags' => $this->serializeTags($course),
         ];
 
@@ -176,6 +179,8 @@ class CourseSerializer
         $this->sipe('registration.validation', 'setRegistrationValidation', $data, $course);
         $this->sipe('registration.userValidation', 'setUserValidation', $data, $course);
         $this->sipe('registration.mail', 'setRegistrationMail', $data, $course);
+
+        $this->sipe('opening.session', 'setSessionOpening', $data, $course);
 
         $this->sipe('pricing.price', 'setPrice', $data, $course);
         $this->sipe('pricing.description', 'setPriceDescription', $data, $course);

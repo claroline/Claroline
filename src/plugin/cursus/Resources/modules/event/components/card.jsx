@@ -26,7 +26,7 @@ const EventCard = props =>
           justifyContent: 'space-between'
         }}
       >
-        {0 !== props.data.tutors.length &&
+        {props.data.tutors && 0 !== props.data.tutors.length &&
           <UserMicroList
             id={`event-tutors-${props.data.id}`}
             label={trans('tutors', {}, 'cursus')}
@@ -34,7 +34,7 @@ const EventCard = props =>
           />
         }
 
-        {get(props.data, 'location.name') || get(props.data, 'locationUrl') ? <a href={get(props.data, 'locationUrl')}>{get(props.data, 'locationUrl')}</a> : trans('online_session', {}, 'cursus')}
+        {get(props.data, 'location.name') || (get(props.data, 'locationUrl') ? <a href={get(props.data, 'locationUrl')}>{get(props.data, 'locationUrl')}</a> : trans('online_session', {}, 'cursus'))}
       </span>
     }
   />

@@ -35,7 +35,7 @@ const StaticToolbar = props => {
             key={action.id || action.name}
             disabled={props.disabled || action.disabled}
             className={classes(`${props.name || props.className}-btn`, props.buttonName, action.className)}
-            tooltip={props.tooltip}
+            tooltip={undefined !== action.tooltip ? action.tooltip : props.tooltip}
             size={props.size}
             onClick={action.onClick ? () => {
               action.onClick()
