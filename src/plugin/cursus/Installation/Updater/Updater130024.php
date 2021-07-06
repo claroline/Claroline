@@ -2,9 +2,9 @@
 
 namespace Claroline\CursusBundle\Installation\Updater;
 
-use Claroline\InstallationBundle\Updater\Updater;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CursusBundle\Entity\Course;
+use Claroline\InstallationBundle\Updater\Updater;
 
 class Updater130024 extends Updater
 {
