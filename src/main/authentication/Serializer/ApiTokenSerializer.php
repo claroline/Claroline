@@ -8,7 +8,6 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AuthenticationBundle\Entity\ApiToken;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Repository\User\UserRepository;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class ApiTokenSerializer
@@ -17,10 +16,10 @@ class ApiTokenSerializer
 
     /** @var AuthorizationCheckerInterface */
     private $authorization;
+    /** @var ObjectManager */
+    private $om;
     /** @var UserSerializer */
     private $userSerializer;
-    /** @var UserRepository */
-    private $userRepo;
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
@@ -29,7 +28,7 @@ class ApiTokenSerializer
     ) {
         $this->authorization = $authorization;
         $this->userSerializer = $userSerializer;
-        $this->userRepo = $om->getRepository(User::class);
+        $this->om = $om;
     }
 
     public function getName(): string
@@ -67,7 +66,8 @@ class ApiTokenSerializer
         $this->sipe('restrictions.locked', 'setLocked', $data, $token);
 
         if (isset($data['user'])) {
-            $user = $this->userRepo->findOneBy(['username' => $data['user']['username']]);
+            /** @var User $user */
+            $user = $this->om->getObject($data['user'], User::class, ['id', 'email', 'username']);
             $token->setUser($user);
         }
 
