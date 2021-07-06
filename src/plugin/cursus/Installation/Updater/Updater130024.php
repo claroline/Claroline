@@ -17,7 +17,7 @@ class Updater130024 extends Updater
         $this->om = $om;
     }
 
-    public function preUpdate()
+    public function postUpdate()
     {
         $this->om->startFlushSuite();
 
@@ -36,9 +36,5 @@ class Updater130024 extends Updater
         }
 
         $this->om->endFlushSuite();
-    }
-
-    public function postUpdate()
-    {
     }
 }
