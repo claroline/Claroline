@@ -126,7 +126,7 @@ For a development installation, you'll need at least:
     - zip
 - MySQL/MariaDB >= 8.0
 - [composer][composer] (recent version)
-- [node.js][node] >= 10
+- [node.js][node] >= 12
 - [npm][npm] >= 6
 
 It's also highly recommended to develop on an UNIX-like OS.

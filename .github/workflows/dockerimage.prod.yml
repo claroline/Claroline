@@ -1,4 +1,4 @@
-name: Docker DEV
+name: Docker Compose Actions Workflow
 
 on: workflow_dispatch
 
@@ -10,7 +10,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Build the stack
         # run: docker-compose up # remove -d in order to see the build output in gh actions for debugging - you'll need to cancel the run manually once it's done
-        run: docker-compose -f docker-compose.dev.yml up -d
+        run: docker-compose -f docker-compose.prod.yml up -d
       - name: Test 127.0.0.1
         run: |
           docker run \

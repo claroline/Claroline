@@ -23,6 +23,9 @@ symfony.lock
 package-lock.json
 .php_cs.cache
 .phpunit.result.cache
+cypress/videos
+cypress/fixtures
+cypress/screenshots
 ###> symfony/framework-bundle ###
 /.env.local
 /.env.local.php

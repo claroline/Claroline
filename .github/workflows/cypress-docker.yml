@@ -1,0 +1,35 @@
+name: Cypress Docker
+
+on: workflow_dispatch
+
+jobs:
+  cypress-run:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout 🛎
+        uses: actions/checkout@v2
+
+      # normally we would NOT need to install NPM dependencies
+      # but in this repo we are using additional plugins listed in package.json
+      # thus we need to install them
+      - name: Install dependencies 📦
+        run: npm install
+
+      - name: Start docker containers 🐋
+        run: docker-compose -f docker-compose.prod.yml up -d
+
+      - name: Wait for Claroline to be installed and started 💤
+        run: |
+          docker run \
+          --network container:claroline-web \
+          curlimages/curl -s \
+          --connect-timeout 30 \
+          --max-time 600 \
+          --retry 20 \
+          --retry-delay 30 \
+          --retry-max-time 600 \
+          --retry-all-errors \
+          http://127.0.0.1/
+
+      - name: Run cypress tests 🧪
+        run: npm test

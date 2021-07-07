@@ -123,3 +123,9 @@ jobs:
 
       - name: "Run PHPUnit Tests"
         run: SYMFONY_DEPRECATIONS_HELPER=weak vendor/bin/simple-phpunit --dont-report-useless-tests
+
+      - name: "Start the server"
+        run: php -S 0.0.0.0:80 -t public/
+
+      - name: "Run Cypress Tests"
+        run: npm test
