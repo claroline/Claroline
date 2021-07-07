@@ -108,16 +108,10 @@ const CourseAbout = (props) => {
                   const hours = getInfo(props.course, props.activeSession, 'meta.hours')
                   const output = []
 
-                  if (days) {
-                    output.push(days)
-                    output.push(trans(days < 2 ? 'day' : 'days'))
-                  }
-                  if (hours) {
-                    output.push(hours)
-                    output.push(trans(hours < 2 ? 'hour' : 'hours'))
-                  }
+                  if (days) output.push(days + ' ' + trans(days < 2 ? 'day' : 'days'))
+                  if (hours) output.push(hours + ' ' + trans(hours < 2 ? 'hour' : 'hours'))
 
-                  return output.length == 0 ? trans('empty_value') : output.join(' ')
+                  return output.length == 0 ? trans('empty_value') : output.join(' + ')
                 })()}
               </span>
             </li>
