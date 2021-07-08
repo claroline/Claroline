@@ -50,12 +50,13 @@ class SerializerProvider
             //    this is not always possible, because some serializers can not use type hint (mostly because of an Interface),
             //    so for this case the `getClass` method is required
             $p = new \ReflectionParameter([get_class($serializer), 'serialize'], 0);
+            $type = method_exists($p, 'getType') ? $p->getType() : $p->getClass();
 
-            if (!$p->getClass()) {
+            if (!$type) {
                 throw new \Exception(get_class($serializer).' is missing type hinting or getClass method');
             }
 
-            return $p->getClass()->getName();
+            return $type->getName();
         }
     }
 

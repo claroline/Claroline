@@ -232,13 +232,15 @@ class ApiLoader extends Loader
         }
         for ($i = 0; isset($tokens[$i]); ++$i) {
             $token = $tokens[$i];
+            if (!isset($token[1])) {
+                continue;
+            }
             if (true === $class && T_STRING === $token[0]) {
                 return $namespace.'\\'.$token[1];
             }
             if (true === $namespace && defined('T_NAME_QUALIFIED') && \T_NAME_QUALIFIED === $token[0]) {
                 $namespace = $token[1];
-            }
-            if (true === $namespace && T_STRING === $token[0]) {
+            } elseif (true === $namespace && T_STRING === $token[0]) {
                 $namespace = $token[1];
                 while (isset($tokens[++$i][1]) && in_array($tokens[$i][0], [T_NS_SEPARATOR, T_STRING])) {
                     $namespace .= $tokens[$i][1];
