@@ -12,7 +12,7 @@ use Doctrine\Migrations\AbstractMigration;
  */
 class Version20201001093627 extends AbstractMigration
 {
-    public function up(Schema $schema)
+    public function up(Schema $schema): void
     {
         $this->addSql('
             CREATE TABLE claro_cursusbundle_course_course_user (
@@ -133,7 +133,7 @@ class Version20201001093627 extends AbstractMigration
         ');
     }
 
-    public function down(Schema $schema)
+    public function down(Schema $schema): void
     {
         $this->addSql('
             DROP TABLE claro_cursusbundle_course_course_user

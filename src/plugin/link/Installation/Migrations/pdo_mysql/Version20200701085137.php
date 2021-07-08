@@ -15,7 +15,7 @@ class Version20200701085137 extends AbstractMigration
 {
     use ConditionalMigrationTrait;
 
-    public function up(Schema $schema)
+    public function up(Schema $schema): void
     {
         // if not exists because the table was originally created by CoreBundle
         if (!$this->checkTableExists('claro_resource_shortcut', $this->connection)) {
@@ -44,7 +44,7 @@ class Version20200701085137 extends AbstractMigration
         }
     }
 
-    public function down(Schema $schema)
+    public function down(Schema $schema): void
     {
         $this->addSql('
             DROP TABLE claro_resource_shortcut

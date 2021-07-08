@@ -15,7 +15,7 @@ class Version20200701075813 extends AbstractMigration
 {
     use ConditionalMigrationTrait;
 
-    public function up(Schema $schema)
+    public function up(Schema $schema): void
     {
         // because tables were originally created by CoreBundle
         $this->addSql('
@@ -134,7 +134,7 @@ class Version20200701075813 extends AbstractMigration
         }
     }
 
-    public function down(Schema $schema)
+    public function down(Schema $schema): void
     {
         $this->addSql('
             DROP TABLE claro_theme_color_collection

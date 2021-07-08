@@ -16,7 +16,7 @@ use Doctrine\Migrations\AbstractMigration;
 
 class Version00000000000002 extends AbstractMigration
 {
-    public function up(Schema $schema)
+    public function up(Schema $schema): void
     {
         $table = $schema->getTable($this->getTablePrefix().'_stuffs');
         $table->addColumn(
@@ -25,7 +25,7 @@ class Version00000000000002 extends AbstractMigration
         );
     }
 
-    public function down(Schema $schema)
+    public function down(Schema $schema): void
     {
         $table = $schema->getTable($this->getTablePrefix().'_stuffs');
         $table->dropColumn('last_modified');

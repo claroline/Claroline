@@ -12,8 +12,7 @@
 namespace Claroline\MigrationBundle\Migrator;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Migrations\Configuration\Configuration;
-use Doctrine\DBAL\Migrations\Migration;
+use Doctrine\Migrations\Configuration\Configuration;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
@@ -96,7 +95,7 @@ class Migrator
     {
         $config = $this->getConfiguration($bundle);
         $currentVersion = $config->getCurrentVersion();
-        $migration = new Migration($config);
+        $migration = $config->getDependencyFactory()->getMigrator();
 
         if (self::VERSION_FARTHEST === $version) {
             return $migration->migrate(self::DIRECTION_UP === $direction ? null : '0');
