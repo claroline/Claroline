@@ -2,12 +2,12 @@
 
 namespace Claroline\LogBundle\Subscriber;
 
-use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
 use Claroline\CoreBundle\Library\GeoIp\GeoIpInfoProviderInterface;
-use Claroline\LogBundle\Entity\SecurityLog;
+use Claroline\LogBundle\Messenger\Message\CreateSecurityLog;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Security\Core\Authentication\Token\SwitchUserToken;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Http\Event\SwitchUserEvent;
@@ -16,23 +16,28 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SecurityLogSubscriber implements EventSubscriberInterface
 {
-    private $om;
+    /** @var Security */
     private $security;
+    /** @var RequestStack */
     private $requestStack;
+    /** @var TranslatorInterface */
     private $translator;
+    /** @var MessageBusInterface */
+    private $messageBus;
+    /** @var GeoIpInfoProviderInterface|null */
     private $geoIpInfoProvider;
 
     public function __construct(
-        ObjectManager $om,
         Security $security,
         RequestStack $requestStack,
         TranslatorInterface $translator,
+        MessageBusInterface $messageBus,
         ?GeoIpInfoProviderInterface $geoIpInfoProvider = null
     ) {
-        $this->om = $om;
         $this->security = $security;
         $this->requestStack = $requestStack;
         $this->translator = $translator;
+        $this->messageBus = $messageBus;
         $this->geoIpInfoProvider = $geoIpInfoProvider;
     }
 
@@ -56,26 +61,27 @@ class SecurityLogSubscriber implements EventSubscriberInterface
 
     public function logEvent(Event $event, string $eventName): void
     {
-        $logEntry = new SecurityLog();
-        $logEntry->setDetails($event->getMessage($this->translator));
-        $logEntry->setEvent($eventName);
-        $logEntry->setTarget($event->getUser());
-        $logEntry->setDoer($this->security->getUser() ?? $event->getUser());
-
         $doerIp = $this->getDoerIp();
-        $logEntry->setDoerIp($doerIp);
-
+        $doerCountry = null;
+        $doerCity = null;
         if ($this->geoIpInfoProvider && 'CLI' !== $doerIp) {
             $geoIpInfo = $this->geoIpInfoProvider->getGeoIpInfo($doerIp);
 
             if ($geoIpInfo) {
-                $logEntry->setCountry($geoIpInfo->getCountry());
-                $logEntry->setCity($geoIpInfo->getCity());
+                $doerCountry = $geoIpInfo->getCountry();
+                $doerCity = $geoIpInfo->getCity();
             }
         }
 
-        $this->om->persist($logEntry);
-        $this->om->flush();
+        $this->messageBus->dispatch(new CreateSecurityLog(
+            $eventName,
+            $event->getMessage($this->translator), // this should not be done by the symfony event
+            $this->security->getUser() ?? $event->getUser(),
+            $event->getUser(),
+            $doerIp,
+            $doerCity,
+            $doerCountry
+        ));
     }
 
     public function logEventSwitchUser(SwitchUserEvent $event, string $eventName): void
@@ -84,34 +90,34 @@ class SecurityLogSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $logEntry = new SecurityLog();
-        $logEntry->setDetails($this->translator->trans(
-            'switchUser',
-            [
-                'username' => $this->security->getUser(),
-                'target' => $event->getTargetUser(),
-            ],
-            'security'
-        ));
-
         $doerIp = $this->getDoerIp();
-
-        $logEntry->setEvent($eventName);
-        $logEntry->setTarget($event->getTargetUser());
-        $logEntry->setDoer($this->security->getUser());
-        $logEntry->setDoerIp($doerIp);
-
+        $doerCountry = null;
+        $doerCity = null;
         if ($this->geoIpInfoProvider && 'CLI' !== $doerIp) {
             $geoIpInfo = $this->geoIpInfoProvider->getGeoIpInfo($doerIp);
 
             if ($geoIpInfo) {
-                $logEntry->setCountry($geoIpInfo->getCountry());
-                $logEntry->setCity($geoIpInfo->getCity());
+                $doerCountry = $geoIpInfo->getCountry();
+                $doerCity = $geoIpInfo->getCity();
             }
         }
 
-        $this->em->persist($logEntry);
-        $this->em->flush();
+        $this->messageBus->dispatch(new CreateSecurityLog(
+            $eventName,
+            $this->translator->trans(
+                'switchUser',
+                [
+                    'username' => $this->security->getUser(),
+                    'target' => $event->getTargetUser(),
+                ],
+                'security'
+            ), // this should not be done by the symfony event
+            $this->security->getUser(),
+            $event->getTargetUser(),
+            $doerIp,
+            $doerCity,
+            $doerCountry
+        ));
     }
 
     private function getDoerIp(): string

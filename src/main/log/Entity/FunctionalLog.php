@@ -2,7 +2,6 @@
 
 namespace Claroline\LogBundle\Entity;
 
-use Claroline\CoreBundle\Entity\Log\AbstractLog;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;

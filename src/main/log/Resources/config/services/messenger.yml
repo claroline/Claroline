@@ -1,0 +1,10 @@
+services:
+    Claroline\LogBundle\Messenger\CreateFunctionalLogHandler:
+        tags: [ messenger.message_handler ]
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+
+    Claroline\LogBundle\Messenger\CreateSecurityLogHandler:
+        tags: [ messenger.message_handler ]
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'

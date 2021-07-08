@@ -2,7 +2,6 @@
 
 namespace Claroline\LogBundle\Entity;
 
-use Claroline\CoreBundle\Entity\Log\AbstractLog;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
