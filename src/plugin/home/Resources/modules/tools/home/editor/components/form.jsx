@@ -33,7 +33,7 @@ const TabForm = props =>
             label: trans('title'),
             help: trans('menu_title_help'),
             options: {
-              maxLength: 20
+              maxLength: 64
             },
             onChange: (value) => {
               if (isEmpty(value) && 0 === props.currentTab.icon.length) {
