@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Entity\Log;
+namespace Claroline\LogBundle\Entity;
 
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Doctrine\ORM\Mapping as ORM;
@@ -18,13 +18,15 @@ use Gedmo\Mapping\Annotation as Gedmo;
 /**
  * @ORM\MappedSuperclass
  */
-class AbstractLog
+abstract class AbstractLog
 {
     use Id;
 
     /**
      * @ORM\Column(type="datetime")
      * @Gedmo\Timestampable(on="create")
+     *
+     * @var \DateTimeInterface
      */
     protected $date;
 
@@ -38,12 +40,12 @@ class AbstractLog
      */
     protected $event;
 
-    public function getDate(): \DateTime
+    public function getDate(): \DateTimeInterface
     {
         return $this->date;
     }
 
-    public function setDate(\DateTime $dateTime): self
+    public function setDate(\DateTimeInterface $dateTime): self
     {
         $this->date = $dateTime;
 

@@ -8,11 +8,8 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Log\LogResourceUpdateEvent;
 use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
 use Icap\BlogBundle\Entity\Blog;
-use Icap\BlogBundle\Entity\BlogOptions;
 use Icap\BlogBundle\Entity\Comment;
 use Icap\BlogBundle\Entity\Post;
-use Icap\BlogBundle\Event\Log\LogBlogConfigureBannerEvent;
-use Icap\BlogBundle\Event\Log\LogBlogConfigureEvent;
 use Icap\BlogBundle\Event\Log\LogCommentCreateEvent;
 use Icap\BlogBundle\Event\Log\LogCommentDeleteEvent;
 use Icap\BlogBundle\Event\Log\LogCommentPublishEvent;
@@ -66,30 +63,6 @@ class BlogTrackingManager
         $logEvent = new LogResourceUpdateEvent($blog->getResourceNode(), $changeSet);
 
         return $this->dispatch($logEvent);
-    }
-
-    /**
-     * @param array $changeSet
-     *
-     * @return Controller
-     */
-    public function dispatchBlogConfigureEvent(BlogOptions $blogOptions, $changeSet)
-    {
-        $event = new LogBlogConfigureEvent($blogOptions, $changeSet);
-
-        return $this->dispatch($event);
-    }
-
-    /**
-     * @param array $changeSet
-     *
-     * @return Controller
-     */
-    public function dispatchBlogConfigureBannerEvent(BlogOptions $blogOptions, $changeSet)
-    {
-        $event = new LogBlogConfigureBannerEvent($blogOptions, $changeSet);
-
-        return $this->dispatch($event);
     }
 
     /**

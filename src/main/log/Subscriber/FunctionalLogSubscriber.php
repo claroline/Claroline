@@ -2,23 +2,27 @@
 
 namespace Claroline\LogBundle\Subscriber;
 
-use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Event\CatalogEvents\ResourceEvents;
 use Claroline\CoreBundle\Event\CatalogEvents\ToolEvents;
-use Claroline\LogBundle\Entity\FunctionalLog;
+use Claroline\LogBundle\Messenger\Message\CreateFunctionalLog;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class FunctionalLogSubscriber implements EventSubscriberInterface
 {
+    /** @var TranslatorInterface */
     private $translator;
-    private $om;
+    /** @var MessageBusInterface */
+    private $messageBus;
 
-    public function __construct(ObjectManager $om, TranslatorInterface $translator)
-    {
-        $this->om = $om;
+    public function __construct(
+        TranslatorInterface $translator,
+        MessageBusInterface $messageBus
+    ) {
         $this->translator = $translator;
+        $this->messageBus = $messageBus;
     }
 
     public static function getSubscribedEvents(): array
@@ -33,23 +37,16 @@ class FunctionalLogSubscriber implements EventSubscriberInterface
     public function logEvent(Event $event, string $eventName)
     {
         if ($event->getUser()) {
-            // only create log for authenticated users
-            $logEntry = new FunctionalLog();
-
-            $logEntry->setUser($event->getUser());
-            $logEntry->setDetails($event->getMessage($this->translator));
-            $logEntry->setEvent($eventName);
-
-            if (method_exists($event, 'getResourceNode')) {
-                $logEntry->setResource($event->getResourceNode());
-            } elseif (method_exists($event, 'getWorkspace')) {
-                $logEntry->setWorkspace($event->getWorkspace());
-            }
-
-            $this->om->persist($logEntry);
-            $this->om->flush();
+            $this->messageBus->dispatch(new CreateFunctionalLog(
+                $eventName,
+                $event->getMessage($this->translator), // this should not be done by the symfony event
+                $event->getUser(),
+                method_exists($event, 'getWorkspace') ? $event->getWorkspace() : null,
+                method_exists($event, 'getResourceNode') ? $event->getResourceNode() : null
+            ));
         }
 
+        // Hack because of ToolEvents::TOOL_OPEN implements the DataConveyorEventInterface
         if (method_exists($event, 'setData')) {
             $event->setData([]);
         }

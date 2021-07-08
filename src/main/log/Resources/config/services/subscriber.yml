@@ -1,18 +1,18 @@
 services:
     Claroline\LogBundle\Subscriber\SecurityLogSubscriber:
         arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@security.helper'
             - '@request_stack'
             - '@translator'
-            - '@?Claroline\CoreBundle\GeoIp\MaxMindGeoIpInfoProvider'
+            - '@message_bus'
+            - '@?Claroline\CoreBundle\Library\GeoIp\MaxMindGeoIpInfoProvider'
         tags:
             - { name: kernel.event_subscriber }
 
     Claroline\LogBundle\Subscriber\FunctionalLogSubscriber:
         arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@translator'
+            - '@message_bus'
         tags:
             - { name: kernel.event_subscriber }
 
