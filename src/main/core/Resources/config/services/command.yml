@@ -13,6 +13,16 @@ services:
         tags:
             - { name: 'console.command', command: 'claroline:maintenance:enable' }
 
+    # GeoIp
+
+    Claroline\CoreBundle\Command\GeoIp\DownloadGeoIpDatabaseCommand:
+        arguments:
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+            - '@Claroline\CoreBundle\Library\GeoIp\Database\MaxMindGeoIpDatabaseDownloader'
+            - '%claroline.param.geoip_db_path%'
+        tags:
+            - { name: 'console.command', command: 'claroline:geoip:download' }
+
     # Logs
 
     Claroline\CoreBundle\Command\Logs\LogConnectionComputeCommand:

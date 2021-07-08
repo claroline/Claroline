@@ -5,6 +5,7 @@ services:
             - '@security.helper'
             - '@request_stack'
             - '@translator'
+            - '@?Claroline\CoreBundle\GeoIp\MaxMindGeoIpInfoProvider'
         tags:
             - { name: kernel.event_subscriber }
 

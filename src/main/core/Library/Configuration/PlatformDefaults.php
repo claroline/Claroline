@@ -191,6 +191,9 @@ class PlatformDefaults implements ParameterProviderInterface
                 'enabled' => false,
                 'currency' => 'euro',
             ],
+            'geoip' => [
+                'maxmind_license_key' => null,
+            ],
         ];
     }
 }

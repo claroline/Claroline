@@ -4,6 +4,7 @@ namespace Claroline\LogBundle\Subscriber;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
+use Claroline\CoreBundle\Library\GeoIp\GeoIpInfoProviderInterface;
 use Claroline\LogBundle\Entity\SecurityLog;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -19,17 +20,20 @@ class SecurityLogSubscriber implements EventSubscriberInterface
     private $security;
     private $requestStack;
     private $translator;
+    private $geoIpInfoProvider;
 
     public function __construct(
         ObjectManager $om,
         Security $security,
         RequestStack $requestStack,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        ?GeoIpInfoProviderInterface $geoIpInfoProvider = null
     ) {
         $this->om = $om;
         $this->security = $security;
         $this->requestStack = $requestStack;
         $this->translator = $translator;
+        $this->geoIpInfoProvider = $geoIpInfoProvider;
     }
 
     public static function getSubscribedEvents(): array
@@ -57,7 +61,18 @@ class SecurityLogSubscriber implements EventSubscriberInterface
         $logEntry->setEvent($eventName);
         $logEntry->setTarget($event->getUser());
         $logEntry->setDoer($this->security->getUser() ?? $event->getUser());
-        $logEntry->setDoerIp($this->getDoerIp());
+
+        $doerIp = $this->getDoerIp();
+        $logEntry->setDoerIp($doerIp);
+
+        if ($this->geoIpInfoProvider && 'CLI' !== $doerIp) {
+            $geoIpInfo = $this->geoIpInfoProvider->getGeoIpInfo($doerIp);
+
+            if ($geoIpInfo) {
+                $logEntry->setCountry($geoIpInfo->getCountry());
+                $logEntry->setCity($geoIpInfo->getCity());
+            }
+        }
 
         $this->om->persist($logEntry);
         $this->om->flush();
@@ -65,24 +80,38 @@ class SecurityLogSubscriber implements EventSubscriberInterface
 
     public function logEventSwitchUser(SwitchUserEvent $event, string $eventName): void
     {
-        if (!$this->security->getToken() instanceof SwitchUserToken) {
-            $logEntry = new SecurityLog();
-            $logEntry->setDetails($this->translator->trans(
-                'switchUser',
-                [
-                    'username' => $this->security->getUser(),
-                    'target' => $event->getTargetUser(),
-                ],
-                'security'
-            ));
-            $logEntry->setEvent($eventName);
-            $logEntry->setTarget($event->getTargetUser());
-            $logEntry->setDoer($this->security->getUser());
-            $logEntry->setDoerIp($this->getDoerIp());
-
-            $this->om->persist($logEntry);
-            $this->om->flush();
+        if ($this->security->getToken() instanceof SwitchUserToken) {
+            return;
         }
+
+        $logEntry = new SecurityLog();
+        $logEntry->setDetails($this->translator->trans(
+            'switchUser',
+            [
+                'username' => $this->security->getUser(),
+                'target' => $event->getTargetUser(),
+            ],
+            'security'
+        ));
+
+        $doerIp = $this->getDoerIp();
+
+        $logEntry->setEvent($eventName);
+        $logEntry->setTarget($event->getTargetUser());
+        $logEntry->setDoer($this->security->getUser());
+        $logEntry->setDoerIp($doerIp);
+
+        if ($this->geoIpInfoProvider && 'CLI' !== $doerIp) {
+            $geoIpInfo = $this->geoIpInfoProvider->getGeoIpInfo($doerIp);
+
+            if ($geoIpInfo) {
+                $logEntry->setCountry($geoIpInfo->getCountry());
+                $logEntry->setCity($geoIpInfo->getCity());
+            }
+        }
+
+        $this->em->persist($logEntry);
+        $this->em->flush();
     }
 
     private function getDoerIp(): string

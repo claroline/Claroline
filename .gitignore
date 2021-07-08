@@ -29,6 +29,7 @@ package-lock.json
 /.env.*.local
 /config/secrets/prod/prod.decrypt.private.php
 /public/bundles/
-/var/
+/var/*
+!/var/geoip/.gitkeep
 /vendor/
 ###< symfony/framework-bundle ###
