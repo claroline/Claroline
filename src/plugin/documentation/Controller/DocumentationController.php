@@ -50,7 +50,7 @@ class DocumentationController
         );
     }
 
-    private function callDocumentationApi($path, array $query = []): array
+    private function callDocumentationApi($path, array $query = []): ?array
     {
         $response = $this->curlManager->exec('https://support.claroline.com'.$path, $query, 'GET', [
             CURLOPT_HTTPHEADER => [

@@ -33,7 +33,7 @@ class CurlManager
             curl_setopt($ch, $option, $value);
         }
 
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 
         switch ($type) {
             case 'POST':
