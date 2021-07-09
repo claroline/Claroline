@@ -12,7 +12,7 @@ use Doctrine\Migrations\AbstractMigration;
  */
 class Version20210614101040 extends AbstractMigration
 {
-    public function up(Schema $schema)
+    public function up(Schema $schema): void
     {
         $this->addSql('
             RENAME TABLE claro_booking_room TO claro_location_room
@@ -62,7 +62,7 @@ class Version20210614101040 extends AbstractMigration
         ');
     }
 
-    public function down(Schema $schema)
+    public function down(Schema $schema): void
     {
         $this->addSql('
             ALTER TABLE claro_location_room 

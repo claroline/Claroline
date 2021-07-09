@@ -12,7 +12,7 @@ use Doctrine\Migrations\AbstractMigration;
  */
 class Version20201123073353 extends AbstractMigration
 {
-    public function up(Schema $schema)
+    public function up(Schema $schema): void
     {
         $this->addSql('
             CREATE TABLE claro_home_tab_training_catalog (
@@ -29,7 +29,7 @@ class Version20201123073353 extends AbstractMigration
         ');
     }
 
-    public function down(Schema $schema)
+    public function down(Schema $schema): void
     {
         $this->addSql('
             DROP TABLE claro_home_tab_training_catalog

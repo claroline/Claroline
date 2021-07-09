@@ -117,8 +117,7 @@ class PlatformInstaller implements LoggerAwareInterface
             $cn->query('SELECT 1');
         } catch (\Exception $ex) {
             $this->log('Unable to connect to database: trying to create database...');
-            $command = new CreateDatabaseDoctrineCommand();
-            $command->setContainer($this->container);
+            $command = new CreateDatabaseDoctrineCommand($this->container->get('doctrine'));
             $code = $command->run(new ArrayInput([]), $this->output ?: new NullOutput());
 
             if (0 !== $code) {

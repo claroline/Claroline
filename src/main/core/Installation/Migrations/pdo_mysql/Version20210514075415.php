@@ -12,14 +12,14 @@ use Doctrine\Migrations\AbstractMigration;
  */
 class Version20210514075415 extends AbstractMigration
 {
-    public function up(Schema $schema)
+    public function up(Schema $schema): void
     {
         $this->addSql('
             ALTER TABLE claro__organization CHANGE code code VARCHAR(255) NOT NULL
         ');
     }
 
-    public function down(Schema $schema)
+    public function down(Schema $schema): void
     {
         $this->addSql('
             ALTER TABLE claro__organization CHANGE code code VARCHAR(36) CHARACTER SET utf8 NOT NULL COLLATE `utf8_unicode_ci`

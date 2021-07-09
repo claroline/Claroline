@@ -51,7 +51,7 @@ class SchemaProvider
             //    so for this case the `getClass` method is required
             $p = new \ReflectionParameter([get_class($serializer), 'serialize'], 0);
 
-            return $p->getClass()->getName();
+            return method_exists($p, 'getType') ? $p->getType()->getName() : $p->getClass()->getName();
         }
     }
 

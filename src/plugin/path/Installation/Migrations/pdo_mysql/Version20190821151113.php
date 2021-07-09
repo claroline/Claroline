@@ -12,7 +12,7 @@ use Doctrine\Migrations\AbstractMigration;
  */
 class Version20190821151113 extends AbstractMigration
 {
-    public function up(Schema $schema)
+    public function up(Schema $schema): void
     {
         $this->addSql('
             CREATE TABLE innova_step (
@@ -147,7 +147,7 @@ class Version20190821151113 extends AbstractMigration
         ');
     }
 
-    public function down(Schema $schema)
+    public function down(Schema $schema): void
     {
         $this->addSql('
             ALTER TABLE innova_step 

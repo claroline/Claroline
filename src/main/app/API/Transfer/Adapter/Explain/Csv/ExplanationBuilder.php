@@ -31,6 +31,10 @@ class ExplanationBuilder
         foreach ($data->properties as $name => $property) {
             $whereAmI = '' === $currentPath ? $name : $currentPath.'.'.$name;
 
+            if (!isset($property->type)) {
+                return;
+            }
+
             if ('array' === $property->type) {
                 $this->explainSchema($property->items, $explanation, $whereAmI, true);
             } elseif ('object' === $property->type) {

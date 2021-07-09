@@ -12,7 +12,7 @@ use Doctrine\Migrations\AbstractMigration;
  */
 class Version20210104100750 extends AbstractMigration
 {
-    public function up(Schema $schema)
+    public function up(Schema $schema): void
     {
         $this->addSql('
             ALTER TABLE innova_path 
@@ -29,7 +29,7 @@ class Version20210104100750 extends AbstractMigration
         ');
     }
 
-    public function down(Schema $schema)
+    public function down(Schema $schema): void
     {
         $this->addSql('
             ALTER TABLE innova_path 

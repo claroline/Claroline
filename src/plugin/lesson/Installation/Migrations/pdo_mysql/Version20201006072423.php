@@ -12,7 +12,7 @@ use Doctrine\Migrations\AbstractMigration;
  */
 class Version20201006072423 extends AbstractMigration
 {
-    public function up(Schema $schema)
+    public function up(Schema $schema): void
     {
         $this->addSql('
             ALTER TABLE icap__lesson_chapter 
@@ -26,7 +26,7 @@ class Version20201006072423 extends AbstractMigration
         ');
     }
 
-    public function down(Schema $schema)
+    public function down(Schema $schema): void
     {
         $this->addSql('
             ALTER TABLE icap__lesson 
