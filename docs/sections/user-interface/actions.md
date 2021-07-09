@@ -55,7 +55,7 @@ const actions = {
 
 ### Commons
 
-- **type** [async|callback|download|email|link|modal|popover|url] _(required)_
+- **type** [async\|callback\|download\|email\|link\|modal\|popover\|url] _(required)_
 
 The type of the action. Each action type have custom props for configuration (see below).
 

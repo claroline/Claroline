@@ -1,27 +1,30 @@
-OAuthBundle
-============
+---
+layout: default
+title: Authentication
+---
 
-Provides a plugin for Claroline Connect platform that enables users to connect through social login (facebook, twitter, google, linkedin, windows live, office 365).
+# Authentication
 
-Plugin Activation
--------------------
+## API Token
 
-Make sure the Oauth plugin is activated. 
-In `Administration -> Parameters -> Plugins` make sure the **IcapOAuthBundle** plugin is checked.
+## Saml
 
-Configuration
---------------
+## OAuth
+
+Enables users to connect through social login (facebook, twitter, google, linkedin, windows live, office 365).
+
+### Configuration
 
 In order to enable 3rd party connection (social login) using the OAuth service, you will need to generate a pair of **App key** + **App Secret** for every provider available (for the moment _facebook_, _twitter_, _google_, _linkedin_, _windows live_, _office 365_)
 
 Click on the following links to learn how to configure your App for every provider and eventually retrieve your App key & secret
 
-- [Facebook](doc/facebookAppConfig.md)
-- [Twitter](doc/twitterAppConfig.md)
-- [Google](doc/googleAppConfig.md)
-- [LinkedIn](doc/linkedinAppConfig.md)
-- [Windows Live](doc/windowsAppConfig.md)
-- [Office 365](doc/office365AppConfig.md)
+- [Facebook](sections/api/authentication/facebookAppConfig.md)
+- [Twitter](sections/api/authentication/twitterAppConfig.md)
+- [Google](sections/api/authentication/googleAppConfig.md)
+- [LinkedIn](sections/api/authentication/linkedinAppConfig.md)
+- [Windows Live](sections/api/authentication/windowsAppConfig.md)
+- [Office 365](sections/api/authentication/office365AppConfig.md)
 
 Once you've created your App and got your keys, it's time to enable login to your Claroline platform.
 

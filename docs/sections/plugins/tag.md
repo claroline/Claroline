@@ -1,9 +1,9 @@
-# TagBundle
+---
+layout: default
+title: Tag plugin
+---
 
-
-########################
-# HOW TO TAG AN ENTITY #
-########################
+# Tag plugin
 
 To tag an Object, a "Claroline\CoreBundle\Event\GenericDataEvent" event has to be dispatched.
 Event name must be "claroline_tag_object".

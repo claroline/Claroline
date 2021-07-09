@@ -30,7 +30,7 @@ title: Browser support
 | Mozilla Firefox              | latest  
 | Chromium                     | latest
 | Google Chrome                | latest
-| Microsoft Internet Explorer  | >= 11  
+| Microsoft Internet Explorer  | \>= 11  
 | Microsoft Internet Edge      | latest
 | Safari                       | latest
 

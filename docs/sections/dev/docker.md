@@ -1,3 +1,10 @@
+---
+layout: default
+title: Docker
+---
+
+# Docker
+
 ## Using Docker (development only - beginner-friendly guide)
 
 **Warning**: this is for development/testing purposes *only*, this must **NOT** be used in production environments as it represents huge security risks, maintainability issues and performance degradations.

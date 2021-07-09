@@ -1,6 +1,9 @@
-[[Documentation index]][1]
+---
+layout: default
+title: Resource actions
+---
 
-# Resource actions plugin
+# Resource actions
 
 ## Plugin configuration file
 
@@ -14,15 +17,14 @@ plugin:
     resource_actions:
         # You can define as many resource actions as you want in this file
       - name: actionname1
-        is_form: true (optional)
       - name: actionname2
-        is_form: false
 ```
 
 First, define the *name* of the action you'll want to add to your resource.
 Then define the *is_form* parameter. If it's set to true, a popup form will show when you click an the action. If not, you'll be redirect to a new page you define in your Listener.
 
 ## Listener implementation class
+
 Define your listener class in the *Listener* folder of your plugin.
 As describe above, there are two possibles types of action when you click on the resource action, be redirected to a new page or create a form popup.
 
@@ -30,17 +32,15 @@ Replace actionName by the name of the action you define in your *Resource/config
 
 ## Translation
 
-* resource.xx.yml
+* resource.xx.json
 
 We use lower case for every translation keys.
 You must translate your resource actions names in this file.
 
-```yml
-actionName: 'My first action'
+```json
+{
+    "actionName": "My first action"
+}
 ```
 
 Replace actionName by the name of the action.
-
-[[Documentation index]][1]
-
-[1]: ../../index.md

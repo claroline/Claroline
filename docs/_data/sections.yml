@@ -13,15 +13,11 @@
     - title: Core concepts
       doc: getting-started/core-concepts
 
-
 - title: Application
   home: application/index
   docs:
     - title: Dependencies
       doc: application/dependencies
-
-    - title: Commands
-      doc: application/commands
 
     - title: Plugins
       doc: application/plugins
@@ -32,8 +28,12 @@
     - title: Resources
       doc: application/resources
 
+    - title: Resource actions
+      doc: application/resource-actions
+
     - title: Widgets
       doc: application/widgets
+
 
 - title: JSON API
   home: json/index
@@ -48,6 +48,9 @@
 - title: API
   home: api/index
   docs:
+      - title: Authentication
+        doc: api/authentication/index
+
       - title: Serializer
         doc: api/serializer
 
@@ -93,20 +96,42 @@
       - title: Core
         doc: plugins/core
 
+      - title: Badge
+        doc: plugins/badge
+
       - title: Quiz
         doc: plugins/quiz
 
       - title: Path
         doc: plugins/path
 
+      - title: Tag
+        doc: plugins/tag
+
+- title: Development
+  home: dev/index
+  docs:
+      - title: Best practices
+        doc: dev/best-practices
+
+      - title: Commands
+        doc: dev/commands
+
+      - title: Testing
+        doc: dev/testing
+
+      - title: Code analysis
+        doc: dev/code-analysis
+
+      - title: Continuous integration
+        doc: dev/ci
+
+      - title: Docker
+        doc: dev/docker
 
 - title: Contributing
   doc: contributing
 
 
-- title: Cookbook
-  doc: cookbook
-
-
-- title: Glossary
-  doc: glossary
+#- title: Cookbook
+#  doc: cookbook

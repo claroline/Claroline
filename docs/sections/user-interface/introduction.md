@@ -19,6 +19,7 @@ title: Introduction
 > - [ES6 syntax](http://es6-features.org) 
 > - [immutability](https://en.wikipedia.org/wiki/Immutable_object)
 > - [functional programming](https://en.wikipedia.org/wiki/Functional_programming)
+> - [webpack](https://webpack.js.org/)
 > - [lodash](https://lodash.com) library
 > - [reselect](https://github.com/reactjs/reselect#reselect) library
 >
@@ -32,6 +33,9 @@ title: Introduction
 
 
 ## Export
+
+
+### Webpack
 
 
 ## React integration

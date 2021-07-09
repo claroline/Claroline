@@ -39,7 +39,7 @@ As a developer, by using Docker you can quickly get the platform running in DEV 
 
 You can also develop a custom theme in watch mode.
 
-To learn more: [Docker instructions](doc/sections/docker.md)
+To learn more: [Docker instructions](docs/sections/dev/docker.md)
 
 Upgrade 13.x
 -------

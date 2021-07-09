@@ -11,20 +11,21 @@ For a development installation, you'll need at least:
     - curl
     - dom
     - fileinfo
-    - [gd][gd]
+    - gd
     - intl
+    - json
     - mbstring
     - openssl
+    - pdo
     - pdo_mysql
-    - xml
-    - json
+    - simplexml
     - zip
 - MySQL/MariaDB >= 8.0
-- [composer][composer] (recent version)
-- [node.js][node] >= 10
-- [npm][npm] >= 6
+- composer >= 2
+- node.js >= 10
+- npm >= 6
 
-It's also highly recommended to develop on an UNIX-like OS.
+It's also highly recommended developing on an UNIX-like OS.
 
 > **For mysql >= 8.0**, there is an additional step.
 >  
