@@ -21,9 +21,12 @@ use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Manager\VersionManager;
+use Claroline\CoreBundle\Security\PlatformRoles;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * REST API to manage platform parameters.
@@ -32,6 +35,8 @@ class ParametersController
 {
     use RequestDecoderTrait;
 
+    /** @var AuthorizationCheckerInterface */
+    private $authorization;
     /** @var StrictDispatcher */
     private $dispatcher;
     /** @var PlatformConfigurationHandler */
@@ -44,12 +49,14 @@ class ParametersController
     private $serializer;
 
     public function __construct(
+        AuthorizationCheckerInterface $authorization,
         StrictDispatcher $dispatcher,
         PlatformConfigurationHandler $ch,
         AnalyticsManager $analyticsManager,
         VersionManager $versionManager,
         ParametersSerializer $serializer
     ) {
+        $this->authorization = $authorization;
         $this->dispatcher = $dispatcher;
         $this->config = $ch;
         $this->serializer = $serializer;
@@ -120,6 +127,10 @@ class ParametersController
      */
     public function enableAction(): JsonResponse
     {
+        if (!$this->authorization->isGranted(PlatformRoles::ADMIN)) {
+            throw new AccessDeniedException();
+        }
+
         /** @var EnableEvent $event */
         $event = $this->dispatcher->dispatch('platform.enable', EnableEvent::class);
         if ($event->isCanceled()) {
@@ -138,6 +149,10 @@ class ParametersController
      */
     public function extendAction(): JsonResponse
     {
+        if (!$this->authorization->isGranted(PlatformRoles::ADMIN)) {
+            throw new AccessDeniedException();
+        }
+
         $newEnd = null;
 
         $dates = $this->config->getParameter('restrictions.dates');
@@ -169,6 +184,10 @@ class ParametersController
      */
     public function disableAction(): JsonResponse
     {
+        if (!$this->authorization->isGranted(PlatformRoles::ADMIN)) {
+            throw new AccessDeniedException();
+        }
+
         $this->config->setParameter('restrictions.disabled', true);
 
         return new JsonResponse(null, 204);
@@ -179,6 +198,10 @@ class ParametersController
      */
     public function enableMaintenanceAction(Request $request): JsonResponse
     {
+        if (!$this->authorization->isGranted(PlatformRoles::ADMIN)) {
+            throw new AccessDeniedException();
+        }
+
         $this->config->setParameter('maintenance.enable', true);
         if (!empty($request->getContent())) {
             $this->config->setParameter('maintenance.message', $request->getContent());
@@ -194,6 +217,10 @@ class ParametersController
      */
     public function disableMaintenanceAction(): JsonResponse
     {
+        if (!$this->authorization->isGranted(PlatformRoles::ADMIN)) {
+            throw new AccessDeniedException();
+        }
+
         $this->config->setParameter('maintenance.enable', false);
 
         return new JsonResponse(null, 204);
