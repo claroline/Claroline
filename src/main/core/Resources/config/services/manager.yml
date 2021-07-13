@@ -181,7 +181,7 @@ services:
 
     Claroline\CoreBundle\Manager\Workspace\WorkspaceRestrictionsManager:
         arguments:
-            - '@session'
+            - '@request_stack'
             - '@security.authorization_checker'
             - '@claroline.manager.workspace_manager'
 
@@ -299,7 +299,7 @@ services:
 
     Claroline\CoreBundle\Manager\Resource\ResourceRestrictionsManager:
         arguments:
-            - '@session'
+            - '@request_stack'
             - '@claroline.manager.rights_manager'
             - '@security.authorization_checker'
 
