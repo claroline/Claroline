@@ -43,6 +43,8 @@ services:
 
     Claroline\CoreBundle\Security\Voter\Location\RoomVoter: ~
 
+    Claroline\CoreBundle\Security\Voter\Location\MaterialVoter: ~
+
     Claroline\CoreBundle\Security\Voter\OrganizationVoter:
         arguments:
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'

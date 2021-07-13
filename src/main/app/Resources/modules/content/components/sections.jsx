@@ -126,6 +126,9 @@ Sections.defaultProps = {
 }
 
 export {
-  Section,
-  Sections
+  Section, // for retro-compatibility
+  Sections, // for retro-compatibility
+
+  Section as ContentSection,
+  Sections as ContentSections
 }

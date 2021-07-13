@@ -8,8 +8,8 @@ import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {ListData} from '#/main/app/content/list/containers/data'
 
 import {selectors} from '#/main/core/modals/locations/store'
-import {LocationList} from '#/main/core/administration/community/location/components/location-list'
 import {Location as LocationType} from '#/main/core/user/prop-types'
+import {LocationCard} from '#/main/core/data/types/location/components/card'
 
 const LocationsModal = props => {
   const selectAction = props.selectAction(props.selected)
@@ -28,8 +28,36 @@ const LocationsModal = props => {
           url: props.url,
           autoload: true
         }}
-        definition={LocationList.definition}
-        card={LocationList.card}
+        definition={[
+          {
+            name: 'name',
+            type: 'string',
+            label: trans('name'),
+            displayed: true,
+            primary: true
+          }, {
+            name: 'address',
+            type: 'address',
+            label: trans('address'),
+            displayed: true
+          }, {
+            name: 'phone',
+            type: 'string',
+            label: trans('phone'),
+            displayed: true
+          }, {
+            name: 'coordinates',
+            type: 'string',
+            label: trans('coordinates'),
+            filterable: false,
+            render: (location) => {
+              if (location.gps.latitude && location.gps.longitude) {
+                return location.gps.latitude + ' - ' + location.gps.longitude
+              }
+            }
+          }
+        ]}
+        card={LocationCard}
       />
 
       <Button

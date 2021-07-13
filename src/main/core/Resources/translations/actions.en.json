@@ -5,5 +5,7 @@
   "browse-workspaces": "Browse workspaces",
   "show-workspace": "Show workspace",
   "create_user": "Register a user",
-  "export-results": "Export results (.csv)"
+  "export-results": "Export results (.csv)",
+  "geolocate": "Geolocate",
+  "book": "Book"
 }

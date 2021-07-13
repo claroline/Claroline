@@ -10,14 +10,12 @@ import {reducer as groupsReducer} from '#/main/core/administration/community/gro
 import {reducer as rolesReducer} from '#/main/core/administration/community/role/store/reducer'
 import {reducer as profileReducer} from '#/main/core/administration/community/profile/store/reducer'
 import {reducer as organizationReducer} from '#/main/core/administration/community/organization/store/reducer'
-import {reducer as locationReducer} from '#/main/core/administration/community/location/store/reducer'
 
 const reducer = combineReducers({
   parameters: parametersReducer,
   users: usersReducer,
   groups: groupsReducer,
   roles: rolesReducer,
-  locations: locationReducer,
   profile: profileReducer,
   organizations: organizationReducer,
   platformRoles: makeReducer([], {

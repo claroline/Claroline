@@ -20,8 +20,23 @@ class LocationVoter extends AbstractVoter
 {
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
     {
-        return $this->hasAdminToolAccess($token, 'community') ?
-          VoterInterface::ACCESS_GRANTED : VoterInterface::ACCESS_DENIED;
+        switch ($attributes[0]) {
+            case self::CREATE:
+            case self::EDIT:
+            case self::PATCH:
+            case self::DELETE:
+                if ($this->isToolGranted(self::EDIT, 'locations')) {
+                    return VoterInterface::ACCESS_GRANTED;
+                }
+                break;
+            default:
+                if ($this->isToolGranted($attributes[0], 'locations')) {
+                    return VoterInterface::ACCESS_GRANTED;
+                }
+                break;
+        }
+
+        return VoterInterface::ACCESS_DENIED;
     }
 
     public function getClass()
@@ -31,6 +46,6 @@ class LocationVoter extends AbstractVoter
 
     public function getSupportedActions()
     {
-        return [self::CREATE, self::EDIT, self::DELETE, self::PATCH];
+        return [self::OPEN, self::CREATE, self::EDIT, self::DELETE, self::PATCH];
     }
 }
