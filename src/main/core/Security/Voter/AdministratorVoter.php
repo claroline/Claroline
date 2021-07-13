@@ -25,19 +25,11 @@ class AdministratorVoter implements VoterInterface
     public function vote(TokenInterface $token, $object, array $attributes)
     {
         $isImpersonating = $this->isUsurpingWorkspaceRole($token);
-
-        return $this->isAdmin($token) && !$isImpersonating ? VoterInterface::ACCESS_GRANTED : VoterInterface::ACCESS_ABSTAIN;
-    }
-
-    protected function isAdmin(TokenInterface $token)
-    {
-        foreach ($token->getRoleNames() as $role) {
-            if (PlatformRoles::ADMIN === $role) {
-                return true;
-            }
+        if ($this->isAdmin($token) && !$isImpersonating) {
+            return VoterInterface::ACCESS_GRANTED;
         }
 
-        return false;
+        return VoterInterface::ACCESS_ABSTAIN;
     }
 
     public function supportsAttribute($attribute)
@@ -50,14 +42,13 @@ class AdministratorVoter implements VoterInterface
         return true;
     }
 
+    private function isAdmin(TokenInterface $token)
+    {
+        return in_array(PlatformRoles::ADMIN, $token->getRoleNames());
+    }
+
     private function isUsurpingWorkspaceRole(TokenInterface $token)
     {
-        foreach ($token->getRoleNames() as $role) {
-            if ('ROLE_USURPATE_WORKSPACE_ROLE' === $role) {
-                return true;
-            }
-        }
-
-        return false;
+        return in_array('ROLE_USURPATE_WORKSPACE_ROLE', $token->getRoleNames());
     }
 }

@@ -12,14 +12,14 @@ use Doctrine\Migrations\AbstractMigration;
  */
 class Version20200924102700 extends AbstractMigration
 {
-    public function up(Schema $schema)
+    public function up(Schema $schema): void
     {
         $this->addSql('
             DROP TABLE IF EXISTS icap__blog_widget_blog
         ');
     }
 
-    public function down(Schema $schema)
+    public function down(Schema $schema): void
     {
     }
 }

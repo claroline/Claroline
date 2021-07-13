@@ -28,9 +28,6 @@ class FileController extends AbstractCrudController
     /** @var StrictDispatcher */
     private $dispatcher;
 
-    /**
-     * FileController constructor.
-     */
     public function __construct(StrictDispatcher $dispatcher)
     {
         $this->dispatcher = $dispatcher;

@@ -24,10 +24,6 @@
     {{ 'log.blog.delete_comment'|trans({'%blog%': resource, '%post%': post}, 'log')|raw }}
 {% elseif constant('Icap\\BlogBundle\\Event\\Log\\LogCommentPublishEvent::ACTION') == log.action %}
     {{ 'log.blog.publish_comment'|trans({'%blog%': resource, '%post%': post}, 'log')|raw }}
-{% elseif constant('Icap\\BlogBundle\\Event\\Log\\LogBlogConfigureEvent::ACTION') == log.action %}
-    {{ 'log.blog.configure'|trans({'%blog%': resource}, 'log')|raw }}
-{% elseif constant('Icap\\BlogBundle\\Event\\Log\\LogBlogConfigureBannerEvent::ACTION') == log.action %}
-    {{ 'log.blog.configure_banner'|trans({'%blog%': resource}, 'log')|raw }}
 {% else %}
     no default text
 {% endif %}

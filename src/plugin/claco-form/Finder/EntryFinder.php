@@ -64,7 +64,7 @@ class EntryFinder extends AbstractFinder
         // TODO : rights should not be checked here
         $currentUser = $this->tokenStorage->getToken()->getUser();
 
-        $isAnon = 'anon.' === $currentUser;
+        $isAnon = !$currentUser instanceof User;
         $clacoForm = null;
         $canEdit = false;
         $isCategoryManager = false;

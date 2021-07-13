@@ -1,13 +1,14 @@
-import React from 'react'
+import React, {createElement} from 'react'
 import {PropTypes as T} from 'prop-types'
 import isArray from 'lodash/isArray'
+import uniq from 'lodash/uniq'
 import {schemeCategory20c} from 'd3-scale'
 
 import { implementPropTypes } from '#/main/app/prop-types'
 import {AxisChart as ChartTypes} from '#/main/core/layout/chart/prop-types'
 import {Chart} from '#/main/core/layout/chart/components/chart.jsx'
 import {Axis} from '#/main/core/layout/chart/components/axis.jsx'
-import {scaleAxis, formatData} from '#/main/core/layout/chart/utils'
+import {formatData} from '#/main/core/layout/chart/utils'
 import {
   AXIS_TYPE_X,
   AXIS_TYPE_Y
@@ -23,13 +24,30 @@ import {
  * }
  */
 const AxisChart = props => {
-  // TODO : allowing only one data serie is only for retro compatibility
-  const formattedData = formatData(isArray(props.data) ? props.data[0] : props.data)
+  // allowing only one data serie is for retro compatibility
+  let data = props.data
+  if (!isArray(data)) {
+    data = [data]
+  }
+
+  // merge all data series to be able to compute axis
+  let yValues = []
+  let yType
+  let xValues = []
+  let xType
+  data.map((d) => {
+    const formattedData = formatData(d)
+    yValues = uniq(yValues.concat(formattedData.y.values))
+    yType = formattedData.y.type
+    xValues = uniq(xValues.concat(formattedData.x.values))
+    xType = formattedData.x.type
+  })
+
   const width = props.width - props.margin.left - props.margin.right
   const height = props.height - props.margin.top - props.margin.bottom
 
-  const yScale = scaleAxis(formattedData.y.values, AXIS_TYPE_Y, formattedData.y.type, height, props.minMaxAsYDomain)
-  const xScale = scaleAxis(formattedData.x.values, AXIS_TYPE_X, formattedData.x.type, width)
+  const yScale = props.scaleAxis(yValues, AXIS_TYPE_Y, yType, height, props.minMaxAsYDomain)
+  const xScale = props.scaleAxis(xValues, AXIS_TYPE_X, xType, width, true)
 
   return (
     <Chart
@@ -43,26 +61,27 @@ const AxisChart = props => {
         height={height}
         width={width}
         margin={props.margin}
-        values={formattedData.x.values}
+        values={xValues}
         scale={xScale}
         type={AXIS_TYPE_X}
-        dataType={formattedData.x.type}
+        dataType={xType}
         label={props.xAxisLabel}
+        ticksAsValues={true}
       />
       <Axis
         height={height}
         width={width}
         margin={props.margin}
-        values={formattedData.y.values}
+        values={yValues}
         scale={yScale}
         type={AXIS_TYPE_Y}
-        dataType={formattedData.y.type}
+        dataType={yType}
         label={props.yAxisLabel}
         ticksAsValues={props.ticksAsYValues}
       />
 
-      {React.createElement(props.dataSeries, {
-        data: isArray(props.data) ? props.data : [props.data],
+      {createElement(props.dataSeries, {
+        data: data,
         height: height,
         yScale: yScale,
         xScale: xScale,
@@ -77,7 +96,8 @@ const AxisChart = props => {
 }
 
 implementPropTypes(AxisChart, ChartTypes, {
-  dataSeries: T.func.isRequired
+  dataSeries: T.func.isRequired,
+  scaleAxis: T.func.isRequired // provided by implementation (eg. line, bar)
 }, {
   colors: schemeCategory20c, // TODO : only for retro compatibility. Should be defined by caller
   width: 550,

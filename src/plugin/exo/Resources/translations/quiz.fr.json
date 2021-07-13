@@ -202,7 +202,6 @@
     "no_answer": "Pas de réponse.",
     "no_answer_to_correct": "Il n'y a aucune réponse à cette question à corriger actuellement.",
     "no_answer_zone": "Vous n'avez mis aucune zone de réponse",
-    "no_finish": "Non terminé",
     "no_hint_info": "Aucun indice n'est associé à cette question.",
     "no_odd_info": "Aucun intrus n'est défini.",
     "no_img": "Vous devez télécharger une image",
@@ -523,5 +522,6 @@
     "per_tag": "Par tag",
     "show_step_titles": "Afficher le titre des étapes",
     "show_question_titles": "Afficher le titre des questions",
-    "show_back": "Autoriser le retour en arrière"
+    "show_back": "Autoriser le retour en arrière",
+    "show_attempts_stats": "Afficher le graphique d'évolution des tentatives'"
 }

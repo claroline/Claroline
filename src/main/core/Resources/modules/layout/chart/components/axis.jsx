@@ -126,7 +126,7 @@ class Axis extends Component {
     return (
       <g className="axis" ref={(node) => {this.axisNode = node}} transform={transform} vectorEffect="non-scaling-stroke">
         {this.props.label.show &&
-        <text className="axis-label" fill="#000" transform={labelTransform}>{this.props.label.text}</text>
+          <text className="axis-label" fill="#000" transform={labelTransform}>{this.props.label.text}</text>
         }
       </g>
     )

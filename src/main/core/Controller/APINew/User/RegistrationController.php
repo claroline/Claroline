@@ -92,7 +92,7 @@ class RegistrationController
         $organizationRepository = $this->om->getRepository(Organization::class);
 
         $organization = null;
-        $autoOrganization = $this->config->getParameter('registration.force_organization_creation');
+        $autoOrganization = 'create' === $this->config->getParameter('registration.organization_selection');
         // step one: creation the organization if it's here. If it exists, we fetch it.
         if ($autoOrganization) {
             // try to find orga first
@@ -163,8 +163,8 @@ class RegistrationController
             'options' => [
                 'validation' => $this->config->getParameter('registration.validation'),
                 'locale' => $request->getLocale(),
-                'forceOrganizationCreation' => $this->config->getParameter('registration.force_organization_creation'),
                 'allowWorkspace' => $this->config->getParameter('registration.allow_workspace'),
+                'organizationSelection' => $this->config->getParameter('registration.organization_selection'),
             ],
         ]);
     }

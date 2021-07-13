@@ -274,7 +274,7 @@ class ClacoFormController
         /** @var User|string $user */
         $user = $this->tokenStorage->getToken()->getUser();
 
-        if ('anon.' === $user) {
+        if (!$user instanceof User) {
             $comments = $this->clacoFormManager->getCommentsByEntryAndStatus($entry, Comment::VALIDATED);
         } elseif ($this->clacoFormManager->hasEntryModerationRight($entry)) {
             $comments = $this->clacoFormManager->getCommentsByEntry($entry);
@@ -310,7 +310,7 @@ class ClacoFormController
 
         $decodedRequest = $this->decodeRequest($request);
         $authenticatedUser = $this->tokenStorage->getToken()->getUser();
-        $user = 'anon.' !== $authenticatedUser ? $authenticatedUser : null;
+        $user = $authenticatedUser instanceof User ? $authenticatedUser : null;
 
         $comment = $this->clacoFormManager->createComment($entry, $decodedRequest['message'], $user);
 
@@ -914,7 +914,7 @@ class ClacoFormController
         $template = $clacoForm->getTemplate();
         $useTemplate = $clacoForm->getUseTemplate();
         $displayMeta = $clacoForm->getDisplayMetadata();
-        $isEntryManager = 'anon.' !== $user && $this->clacoFormManager->isEntryManager($entry, $user);
+        $isEntryManager = $user instanceof User && $this->clacoFormManager->isEntryManager($entry, $user);
         $withMeta = $canEdit || 'all' === $displayMeta || ('manager' === $displayMeta && $isEntryManager);
         $countries = $this->locationManager->getCountries();
 

@@ -11,6 +11,7 @@
 
 namespace Claroline\AppBundle\Controller\Platform;
 
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\LocaleManager;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -67,7 +68,8 @@ class LocaleController
      */
     public function changeAction(Request $request, $locale)
     {
-        if (($token = $this->tokenStorage->getToken()) && 'anon.' !== $token->getUser()) {
+        $user = $this->tokenStorage->getToken()->getUser();
+        if ($user instanceof User) {
             $this->localeManager->setUserLocale($locale);
         }
 

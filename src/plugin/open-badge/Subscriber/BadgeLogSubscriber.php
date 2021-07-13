@@ -11,7 +11,7 @@
 
 namespace Claroline\OpenBadgeBundle\Subscriber;
 
-use Claroline\CoreBundle\Entity\Log\FunctionalLog;
+use Claroline\LogBundle\Entity\FunctionalLog;
 use Claroline\OpenBadgeBundle\Event\BadgeEvents;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;

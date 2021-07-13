@@ -86,16 +86,32 @@ class ResourceListener
         if ($old['meta']['published'] !== $node->isPublished() && $node->isPublished()) {
             $workspace = $node->getWorkspace();
             $usersToNotify = $node->getWorkspace() && !$node->getWorkspace()->isDisabledNotifications() ?
-                $this->userRepo->findByWorkspaces([$workspace]) :
+                $this->userRepo->findByWorkspaces([$workspace->getId()]) :
                 [];
             $this->dispatcher->dispatch('log', 'Log\LogResourcePublish', [$node, $usersToNotify]);
         }
 
         // we don't directly use data from event because it can contain only partial data.
         $newData = $this->serializer->serialize($node);
-        $changeSet = array_diff_assoc($old, $newData);
+        $changeSet = $this->getUpdateDiff($old, $newData);
         if (count($changeSet) > 0) {
             $this->dispatcher->dispatch('log', 'Log\LogResourceUpdate', [$node, $changeSet]);
         }
+    }
+
+    private function getUpdateDiff(array $old, array $new): array
+    {
+        $result = [];
+        foreach ($old as $key => $val) {
+            if (isset($new[$key])) {
+                if (is_array($val) && $new[$key]) {
+                    $result[$key] = $this->getUpdateDiff($val, $new[$key]);
+                }
+            } else {
+                $result[$key] = $val;
+            }
+        }
+
+        return $result;
     }
 }

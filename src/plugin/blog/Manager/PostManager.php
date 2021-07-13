@@ -108,7 +108,7 @@ class PostManager
 
         //tracking
         $this->trackingManager->dispatchPostCreateEvent($blog, $post);
-        if ('anon.' !== $user) {
+        if ($user instanceof User) {
             $this->trackingManager->updateResourceTracking($blog->getResourceNode(), $user, new \DateTime());
         }
 
@@ -142,7 +142,7 @@ class PostManager
 
         $this->trackingManager->dispatchPostUpdateEvent($existingPost, $changeSet);
 
-        if ('anon.' !== $user) {
+        if ($user instanceof User) {
             $this->trackingManager->updateResourceTracking($blog->getResourceNode(), $user, new \DateTime());
         }
 

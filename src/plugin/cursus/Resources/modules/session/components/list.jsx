@@ -38,7 +38,8 @@ const SessionList = (props) =>
           choices: {
             not_started: trans('session_not_started', {}, 'cursus'),
             in_progress: trans('session_in_progress', {}, 'cursus'),
-            closed: trans('session_closed', {}, 'cursus')
+            ended: trans('session_ended', {}, 'cursus'),
+            not_ended: trans('session_not_ended', {}, 'cursus')
           }
         },
         render: (row) => {
@@ -48,14 +49,14 @@ const SessionList = (props) =>
           } else if (get(row, 'restrictions.dates[0]') <= now(false) && get(row, 'restrictions.dates[1]') >= now(false)) {
             status = 'in_progress'
           } else if (get(row, 'restrictions.dates[1]') < now(false)) {
-            status = 'closed'
+            status = 'ended'
           }
 
           const SessionStatus = (
             <span className={classes('label', {
               'label-success': 'not_started' === status,
               'label-info': 'in_progress' === status,
-              'label-danger': 'closed' === status
+              'label-danger': 'ended' === status
             })}>
               {trans('session_'+status, {}, 'cursus')}
             </span>

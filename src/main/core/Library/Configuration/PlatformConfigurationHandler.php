@@ -57,12 +57,13 @@ class PlatformConfigurationHandler
 
             // check if there is a custom configuration for the current request ip
             $ip = $request ? $request->getClientIp() : null;
-            $forwarded = $request ? $request->server->get('X-Forwarded-For') : null; // I can only get trusted proxies if I use symfony getClientIps()
+            $forwarded = $request ? $request->headers->get('X-Forwarded-For') : ''; // I can only get trusted proxies if I use symfony getClientIps()
             $domains = ArrayUtils::get($this->parameters, 'domains');
             if (!empty($domains) && $ip) {
+                $forwardedList = explode(', ', $forwarded);
                 $callerDomain = null;
                 foreach ($domains as $domain) {
-                    if ((empty($domain['ips']) || in_array($ip, $domain['ips'])) && (empty($domain['xForwardedFor']) || in_array($forwarded, $domain['xForwardedFor']))) {
+                    if ((empty($domain['ips']) || in_array($ip, $domain['ips'])) && (empty($domain['xForwardedFor']) || empty(array_diff($forwardedList, $domain['xForwardedFor'])))) {
                         $callerDomain = $domain;
                         break;
                     }

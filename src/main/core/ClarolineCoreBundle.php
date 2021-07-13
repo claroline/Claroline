@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle;
 use Bazinga\Bundle\JsTranslationBundle\BazingaJsTranslationBundle;
 use Claroline\CoreBundle\DependencyInjection\Compiler\DoctrineEntityListenerPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\DynamicConfigPass;
+use Claroline\CoreBundle\DependencyInjection\Compiler\GeoipPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\MailingConfigPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\MessengerConfigPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\PlatformConfigPass;
@@ -23,7 +24,6 @@ use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 use Claroline\KernelBundle\Bundle\ConfigurationProviderInterface;
 use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
-use Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle;
 use FOS\JsRoutingBundle\FOSJsRoutingBundle;
 use Http\HttplugBundle\HttplugBundle;
 use Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle;
@@ -50,6 +50,7 @@ class ClarolineCoreBundle extends DistributionPluginBundle implements Configurat
         $container->addCompilerPass(new MailingConfigPass());
         $container->addCompilerPass(new SessionConfigPass());
         $container->addCompilerPass(new MessengerConfigPass());
+        $container->addCompilerPass(new GeoipPass());
     }
 
     public function supports($environment)
@@ -142,7 +143,6 @@ class ClarolineCoreBundle extends DistributionPluginBundle implements Configurat
             new SecurityBundle(),
             new MonologBundle(),
             new DoctrineBundle(),
-            new DoctrineCacheBundle(),
             new FOSJsRoutingBundle(),
             new TwigBundle(),
             new HttplugBundle(),

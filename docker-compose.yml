@@ -3,15 +3,12 @@ version: "3.7"
 services:
   web:
     container_name: claroline-web
-    build:
-      context: .
-      dockerfile: .docker/web/Dockerfile
+    image: ghcr.io/maieutiquer/claroline:docker-publish
     ports:
       - "80:80"
     volumes:
       - ./config:/var/www/html/claroline/config
       - ./files:/var/www/html/claroline/files
-      - ./mysql:/var/www/html/claroline/mysql
       - ./public/js:/var/www/html/claroline/public/js
       - ./public/themes:/var/www/html/claroline/public/themes
       - ./var:/var/www/html/claroline/var

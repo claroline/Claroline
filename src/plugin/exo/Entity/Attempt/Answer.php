@@ -15,6 +15,7 @@ use UJM\ExoBundle\Entity\Item\Item;
 class Answer
 {
     use Uuid;
+
     /**
      * @var int
      *

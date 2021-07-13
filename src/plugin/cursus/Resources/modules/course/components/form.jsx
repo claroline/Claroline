@@ -108,6 +108,27 @@ const CourseForm = (props) =>
           }
         ]
       }, {
+        icon: 'fa fa-fw fa-sign-in',
+        title: trans('opening_parameters'),
+        fields: [
+          {
+            name: 'opening.session',
+            label: trans('opening_session', {}, 'cursus'),
+            type: 'choice',
+            required: true,
+            options: {
+              noEmpty: true,
+              condensed: true,
+              choices: {
+                none: trans('opening_session_none', {}, 'cursus'),
+                first_available: trans('opening_session_first_available', {}, 'cursus'),
+                default: trans('opening_session_default', {}, 'cursus')
+              }
+            },
+            help: trans('opening_session_help', {}, 'cursus')
+          }
+        ]
+      }, {
         icon: 'fa fa-fw fa-user-plus',
         title: trans('registration'),
         fields: [
@@ -162,7 +183,7 @@ const CourseForm = (props) =>
         ]
       }, {
         icon: 'fa fa-fw fa-calendar-week',
-        title: trans('sessions', {}, 'cursus'),
+        title: trans('training_sessions', {}, 'cursus'),
         fields: [
           {
             name: 'workspace',

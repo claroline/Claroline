@@ -10,7 +10,7 @@ import {
   Course as CourseTypes,
   Session as SessionTypes
 } from '#/plugin/cursus/prop-types'
-
+import {route} from '#/plugin/cursus/routing'
 import {CourseAbout} from '#/plugin/cursus/course/components/about'
 import {CourseParticipants} from '#/plugin/cursus/course/containers/participants'
 import {CourseSessions} from '#/plugin/cursus/course/containers/sessions'
@@ -30,28 +30,28 @@ const CourseDetails = (props) =>
             name: 'about',
             type: LINK_BUTTON,
             icon: 'fa fa-fw fa-info',
-            label: trans('about'),
-            target: `${props.path}/${props.course.slug}${props.activeSession ? '/'+props.activeSession.id : ''}`,
+            label: props.activeSession ? trans('session_about', {}, 'cursus') : trans('about'),
+            target: route(props.path, props.course, props.activeSession),
             exact: true
           }, {
             name: 'sessions',
             type: LINK_BUTTON,
             icon: 'fa fa-fw fa-calendar-week',
-            label: trans('Sessions', {}, 'cursus'),
-            target: `${props.path}/${props.course.slug}${props.activeSession ? '/'+props.activeSession.id : ''}/sessions`
+            label: trans('sessions', {}, 'cursus'),
+            target: `${route(props.path, props.course, props.activeSession)}/sessions`
           }, {
             name: 'participants',
             type: LINK_BUTTON,
             icon: 'fa fa-fw fa-users',
-            label: trans('Participants', {}, 'cursus'),
-            target: `${props.path}/${props.course.slug}${props.activeSession ? '/'+props.activeSession.id : ''}/participants`,
+            label: trans('participants'),
+            target: `${route(props.path, props.course, props.activeSession)}/participants`,
             displayed: !!props.activeSession
           }, {
             name: 'events',
             type: LINK_BUTTON,
             icon: 'fa fa-fw fa-clock',
             label: trans('session_events', {}, 'cursus'),
-            target: `${props.path}/${props.course.slug}${props.activeSession ? '/'+props.activeSession.id : ''}/events`,
+            target: `${route(props.path, props.course, props.activeSession)}/events`,
             displayed: !!props.activeSession
           }
         ]}
@@ -59,7 +59,7 @@ const CourseDetails = (props) =>
     </header>
 
     <Routes
-      path={props.path+'/'+props.course.slug+(props.activeSession ? '/'+props.activeSession.id : '')}
+      path={route(props.path, props.course, props.activeSession)}
       routes={[
         {
           path: '/',

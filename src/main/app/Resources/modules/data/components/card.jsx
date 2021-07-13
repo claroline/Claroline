@@ -224,7 +224,7 @@ const DataCard = props =>
         className="data-card-toolbar"
         buttonName="btn btn-link"
         tooltip="left"
-        toolbar="more"
+        toolbar={props.toolbar}
         actions={props.actions}
         scope="object"
       />

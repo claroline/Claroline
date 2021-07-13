@@ -189,7 +189,7 @@ class ResourceListener
         /** @var User $user */
         $user = $this->tokenStorage->getToken()->getUser();
 
-        if (!empty($parent) && 'anon.' !== $user) {
+        if (!empty($parent) && $user instanceof User) {
             $newNode = $this->manager->copy($resourceNode, $parent, $user);
 
             $event->setResponse(

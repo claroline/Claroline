@@ -14,6 +14,7 @@ namespace Claroline\ScormBundle\Listener;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\ExportObjectEvent;
 use Claroline\CoreBundle\Event\ImportObjectEvent;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
@@ -84,10 +85,10 @@ class ScormListener
     {
         $scorm = $event->getResource();
         $user = $this->tokenStorage->getToken()->getUser();
-
-        if ('anon.' === $user) {
+        if (!$user instanceof User) {
             $user = null;
         }
+
         $event->setData([
             'scorm' => $this->serializer->serialize($scorm),
             'userEvaluation' => is_null($user) ?

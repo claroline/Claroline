@@ -15,7 +15,7 @@ const SessionFormModal = props =>
   <Modal
     {...omit(props, 'session', 'course', 'saveEnabled', 'update', 'loadSession', 'saveSession', 'onSave')}
     icon={props.session && props.session.id ? 'fa fa-fw fa-cog' : 'fa fa-fw fa-plus'}
-    title={trans('sessions', {}, 'cursus')}
+    title={trans('training_sessions', {}, 'cursus')}
     subtitle={props.session && props.session.id ? props.session.name : trans('new_session', {}, 'cursus')}
     onEntering={() => props.loadSession(props.session, props.course)}
   >

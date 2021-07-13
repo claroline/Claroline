@@ -16,7 +16,7 @@ use Doctrine\Migrations\AbstractMigration;
 
 class Version00000000000001 extends AbstractMigration
 {
-    public function up(Schema $schema)
+    public function up(Schema $schema): void
     {
         $table = $schema->createTable($this->getTablePrefix().'_stuffs');
 
@@ -30,7 +30,7 @@ class Version00000000000001 extends AbstractMigration
         );
     }
 
-    public function down(Schema $schema)
+    public function down(Schema $schema): void
     {
         $schema->dropTable($this->getTablePrefix().'_stuffs');
     }

@@ -60,8 +60,11 @@ class SessionFinder extends AbstractFinder
                         case 'in_progress':
                             $qb->andWhere('(obj.startDate <= :now AND obj.endDate >= :now)');
                             break;
-                        case 'closed':
+                        case 'ended':
                             $qb->andWhere('obj.endDate < :now');
+                            break;
+                        case 'not_ended':
+                            $qb->andWhere('obj.endDate >= :now');
                             break;
                     }
 
@@ -102,8 +105,8 @@ class SessionFinder extends AbstractFinder
                     $qb->setParameter('userId', $filterValue);
                     break;
 
-                case 'courseTags':// it's not named tags because it will be handle by the default tag search otherwise
-                    // I need to handle it manually because the tags search by claroline event does not allow
+                case 'courseTags':// it's not named tags because it will be handled by the default tag search otherwise
+                    // I need to handle it manually because the tags are linked to the parent course (not the session)
                     $tags = is_string($filterValue) ? [$filterValue] : $filterValue;
 
                     // generate query for tags filter

@@ -71,7 +71,7 @@ SessionsModal.propTypes = {
 
 SessionsModal.defaultProps = {
   url: ['apiv2_cursus_session_list'],
-  title: trans('sessions', {}, 'cursus')
+  title: trans('training_sessions', {}, 'cursus')
 }
 
 export {

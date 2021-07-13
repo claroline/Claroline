@@ -77,7 +77,7 @@ class ForumListener
         $user = $this->tokenStorage->getToken()->getUser();
         $isValidatedUser = false;
 
-        if ('anon.' !== $user) {
+        if ($user instanceof User) {
             $validationUser = $this->manager->getValidationUser($user, $forum);
             $isValidatedUser = $validationUser->getAccess();
         }

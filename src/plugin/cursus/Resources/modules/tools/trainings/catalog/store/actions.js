@@ -43,16 +43,20 @@ actions.openForm = (courseSlug = null, defaultProps = {}) => (dispatch) => {
   })
 }
 
-actions.openSession = (sessionId, force = false) => (dispatch, getState) => {
-  const currentSession = selectors.activeSession(getState())
-  if (force || isEmpty(currentSession) || currentSession.id !== sessionId) {
-    return dispatch({
-      [API_REQUEST]: {
-        url: ['apiv2_cursus_session_get', {id: sessionId}],
-        silent: true,
-        success: (data) => dispatch(actions.loadSession(data))
-      }
-    })
+actions.openSession = (sessionId = null, force = false) => (dispatch, getState) => {
+  if (sessionId) {
+    const currentSession = selectors.activeSession(getState())
+    if (force || isEmpty(currentSession) || currentSession.id !== sessionId) {
+      return dispatch({
+        [API_REQUEST]: {
+          url: ['apiv2_cursus_session_get', {id: sessionId}],
+          silent: true,
+          success: (data) => dispatch(actions.loadSession(data))
+        }
+      })
+    }
+  } else {
+    dispatch(actions.loadSession(null))
   }
 }
 

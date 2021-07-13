@@ -12,6 +12,7 @@
 namespace Claroline\MessageBundle\Finder;
 
 use Claroline\AppBundle\API\Finder\AbstractFinder;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\MessageBundle\Entity\Message;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -40,7 +41,7 @@ class MessageFinder extends AbstractFinder
         $qb->leftJoin('um.user', 'currentUser');
         $userId = null;
 
-        if ($this->tokenStorage && $this->tokenStorage->getToken() && 'anon.' !== $this->tokenStorage->getToken()->getUser()) {
+        if ($this->tokenStorage->getToken() && $this->tokenStorage->getToken()->getUser() instanceof User) {
             $userId = $this->tokenStorage->getToken()->getUser()->getId();
             $qb->andWhere('currentUser.id = :userId');
             $qb->setParameter('userId', $userId);

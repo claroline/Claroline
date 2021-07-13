@@ -97,7 +97,7 @@ class ClientController
                 'administration' => !empty($this->toolManager->getAdminToolsByRoles($this->tokenStorage->getToken()->getRoleNames())),
                 'client' => [
                     'ip' => $request->getClientIp(),
-                    'forwarded' => $request->server->get('X-Forwarded-For'), // I can only get trusted proxies if I use symfony getClientIps()
+                    'forwarded' => $request->headers->get('X-Forwarded-For'), // I can only get trusted proxies if I use symfony getClientIps()
                 ],
                 'header' => [
                     'menus' => array_unique(array_values($this->configHandler->getParameter('header'))),

@@ -11,16 +11,28 @@
 
 namespace Claroline\CoreBundle\Security\Voter;
 
+use Claroline\CoreBundle\Entity\Organization\Organization;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class OrganizationVoter extends AbstractVoter
 {
+    /** @var PlatformConfigurationHandler */
+    private $config;
+
+    public function __construct(PlatformConfigurationHandler $config)
+    {
+        $this->config = $config;
+    }
+
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
     {
-        $parameters = $this->container->get('Claroline\CoreBundle\API\Serializer\ParametersSerializer')->serialize();
+        if ('create' === $this->config->getParameter('registration.organization_selection')) {
+            return VoterInterface::ACCESS_GRANTED;
+        }
 
-        if ($this->hasAdminToolAccess($token, 'community') || $parameters['registration']['force_organization_creation']) {
+        if ($this->hasAdminToolAccess($token, 'community')) {
             return VoterInterface::ACCESS_GRANTED;
         }
 
@@ -30,7 +42,7 @@ class OrganizationVoter extends AbstractVoter
 
     public function getClass()
     {
-        return 'Claroline\CoreBundle\Entity\Organization\Organization';
+        return Organization::class;
     }
 
     public function getSupportedActions()

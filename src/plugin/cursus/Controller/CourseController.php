@@ -116,20 +116,42 @@ class CourseController extends AbstractCrudController
     public function openAction(Course $course): JsonResponse
     {
         $this->checkPermission('OPEN', $course, [], true);
+        $defaultSession = null;
 
+        $defaultSession = null;
+
+        // search for sessions in which the current user is registered
         $user = $this->tokenStorage->getToken()->getUser();
         $registrations = [];
         if ($user instanceof User) {
+            $registeredSessions = [];
+            $userRegistrations = $this->finder->fetch(SessionUser::class, [
+                'user' => $user->getUuid(),
+                'course' => $course->getUuid(),
+            ]);
+
+            $groupRegistrations = $this->finder->fetch(SessionGroup::class, [
+                'user' => $user->getUuid(),
+                'course' => $course->getUuid(),
+            ]);
+
             $registrations = [
-                'users' => $this->finder->search(SessionUser::class, ['filters' => [
-                    'user' => $user->getUuid(),
-                    'course' => $course->getUuid(),
-                ]])['data'],
-                'groups' => $this->finder->search(SessionGroup::class, ['filters' => [
-                    'user' => $user->getUuid(),
-                    'course' => $course->getUuid(),
-                ]])['data'],
+                'users' => array_map(function (SessionUser $sessionUser) use ($registeredSessions) {
+                    $registeredSessions[] = $sessionUser->getSession();
+
+                    return $this->serializer->serialize($sessionUser);
+                }, $userRegistrations),
+                'groups' => array_map(function (SessionGroup $sessionGroup) use ($registeredSessions) {
+                    $registeredSessions[] = $sessionGroup->getSession();
+
+                    return $this->serializer->serialize($sessionGroup);
+                }, $groupRegistrations),
             ];
+
+            if (!empty($registeredSessions)) {
+                // by default display one of the session the user is registered to
+                $defaultSession = $this->serializer->serialize($registeredSessions[0]);
+            }
         }
 
         $sessions = $this->finder->search(Session::class, [
@@ -137,11 +159,27 @@ class CourseController extends AbstractCrudController
                 'terminated' => false,
                 'course' => $course->getUuid(),
             ],
+            'sortBy' => 'startDate',
         ]);
+
+        if (empty($defaultSession)) {
+            // current user is not registered to any session yet
+            // get the default session to open
+            switch ($course->getSessionOpening()) {
+                case 'default':
+                    $defaultSession = $this->serializer->serialize($course->getDefaultSession());
+                    break;
+                case 'first_available':
+                    if (!empty($sessions['data'])) {
+                        $defaultSession = $sessions['data'][0];
+                    }
+                    break;
+            }
+        }
 
         return new JsonResponse([
             'course' => $this->serializer->serialize($course),
-            'defaultSession' => $course->getDefaultSession() ? $this->serializer->serialize($course->getDefaultSession()) : null,
+            'defaultSession' => $defaultSession,
             'availableSessions' => $sessions['data'],
             'registrations' => $registrations,
         ]);

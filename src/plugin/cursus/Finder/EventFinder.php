@@ -81,6 +81,25 @@ class EventFinder extends AbstractFinder
                     break;
 
                 // map search on PlannedObject (There may be a better way to handle this).
+                case 'status':
+                    switch ($filterValue) {
+                        case 'not_started':
+                            $qb->andWhere('po.startDate < :now');
+                            break;
+                        case 'in_progress':
+                            $qb->andWhere('(po.startDate <= :now AND po.endDate >= :now)');
+                            break;
+                        case 'ended':
+                            $qb->andWhere('po.endDate < :now');
+                            break;
+                        case 'not_ended':
+                            $qb->andWhere('po.endDate >= :now');
+                            break;
+                    }
+
+                    $qb->setParameter('now', new \DateTime());
+                    break;
+
                 case 'name':
                 case 'description':
                 case 'startDate':
@@ -103,6 +122,25 @@ class EventFinder extends AbstractFinder
 
                 default:
                     $this->setDefaults($qb, $filterName, $filterValue);
+            }
+        }
+
+        if (!is_null($sortBy) && isset($sortBy['property']) && isset($sortBy['direction'])) {
+            $sortByProperty = $sortBy['property'];
+            if (array_key_exists($sortByProperty, $this->getExtraFieldMapping())) {
+                $sortByProperty = $this->getExtraFieldMapping()[$sortByProperty];
+            }
+
+            $sortByDirection = 1 === $sortBy['direction'] ? 'ASC' : 'DESC';
+
+            switch ($sortByProperty) {
+                // map sort on PlannedObject (There may be a better way to handle this).
+                case 'name':
+                case 'description':
+                case 'startDate':
+                case 'endDate':
+                    $qb->orderBy("po.{$sortByProperty}", $sortByDirection);
+                    break;
             }
         }
 

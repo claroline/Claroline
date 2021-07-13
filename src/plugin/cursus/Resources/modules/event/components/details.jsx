@@ -31,7 +31,7 @@ const EventDetails = (props) =>
             name: 'participants',
             type: LINK_BUTTON,
             icon: 'fa fa-fw fa-users',
-            label: trans('Participants', {}, 'cursus'),
+            label: trans('participants'),
             target: `${props.path}/${props.event.id}/participants`
           }
         ]}

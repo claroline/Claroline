@@ -86,6 +86,15 @@ class Course extends AbstractTraining
     private $propagateRegistration = false;
 
     /**
+     * Configure which session to open when opening the course.
+     *
+     * @ORM\Column(nullable=true)
+     *
+     * @var string
+     */
+    private $sessionOpening = 'first_available';
+
+    /**
      * @ORM\Column(name="session_days", nullable=false, type="float", options={"default" = 1})
      */
     private $defaultSessionDays = 1;
@@ -214,6 +223,16 @@ class Course extends AbstractTraining
     public function setDefaultSessionHours($defaultSessionHours)
     {
         $this->defaultSessionHours = $defaultSessionHours;
+    }
+
+    public function getSessionOpening(): ?string
+    {
+        return $this->sessionOpening;
+    }
+
+    public function setSessionOpening(string $sessionOpening)
+    {
+        $this->sessionOpening = $sessionOpening;
     }
 
     public function getOrganizations()

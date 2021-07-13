@@ -48,6 +48,7 @@ COPY . /var/www/html/claroline
 WORKDIR /var/www/html/claroline
 
 RUN composer install --no-dev --optimize-autoloader
+RUN rm ./config/parameters.yml
 
 RUN npm install
 RUN npm run webpack

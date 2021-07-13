@@ -12,13 +12,12 @@
 namespace Claroline\CoreBundle\Command\User;
 
 use Claroline\AppBundle\API\Crud;
-use Claroline\AppBundle\Command\BaseCommandTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Command\AdminCliCommand;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User as UserEntity;
 use Claroline\CoreBundle\Security\PlatformRoles;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -26,17 +25,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Creates an user, optionally with a specific role (default to simple user).
  */
-class CreateCommand extends Command implements AdminCliCommand
+class CreateCommand extends Command
 {
-    use BaseCommandTrait;
-
-    private $params = [
-        'user_first_name' => 'first name',
-        'user_last_name' => 'last name',
-        'user_username' => 'username',
-        'user_password' => 'password',
-        'user_email' => 'email',
-    ];
     private $om;
     private $crud;
 
@@ -51,7 +41,15 @@ class CreateCommand extends Command implements AdminCliCommand
     protected function configure()
     {
         $this->setDescription('Creates a new user.');
-        $this->configureParams();
+        $this->setDefinition(
+            [
+                new InputArgument('user_first_name', InputArgument::REQUIRED, 'The user first name'),
+                new InputArgument('user_last_name', InputArgument::REQUIRED, 'The user last name'),
+                new InputArgument('user_username', InputArgument::REQUIRED, 'The user username'),
+                new InputArgument('user_password', InputArgument::REQUIRED, 'The user password'),
+                new InputArgument('user_email', InputArgument::REQUIRED, 'The user email'),
+            ]
+        );
         $this->addOption(
             'ws_creator',
             'w',

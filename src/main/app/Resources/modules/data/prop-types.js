@@ -53,6 +53,7 @@ const DataCard = {
         PromisedAction.propTypes
       )
     ]),
+    toolbar: T.string,
 
     footer: T.node,
     // ATTENTION : use it will caution because it can break grid displays
@@ -64,6 +65,7 @@ const DataCard = {
     level: 2,
     actions: [],
     flags: [],
+    toolbar: 'more',
     display: [
       'icon',
       'flags',
