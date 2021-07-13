@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\Installation\Migrations\pdo_mysql;
 
+use Claroline\MigrationBundle\Migrations\ConditionalMigrationTrait;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
 
@@ -12,9 +13,11 @@ use Doctrine\Migrations\AbstractMigration;
  */
 class Version20210713070725 extends AbstractMigration
 {
+    use ConditionalMigrationTrait;
+
     public function up(Schema $schema): void
     {
-        try {
+        if ($this->checkTableExists('claro_booking_room', $this->connection) && !$this->checkTableExists('claro_location_room', $this->connection)) {
             $this->addSql('
                 RENAME TABLE claro_booking_room TO claro_location_room
             ');
@@ -61,9 +64,6 @@ class Version20210713070725 extends AbstractMigration
             $this->addSql('
                 CREATE INDEX IDX_5F6CC1D754177093 ON claro_planned_object (room_id)
             ');
-        } catch (\Exception $e) {
-            // if one of this fails, it's because it's a migration moved from a plugin and it's already executed.
-            // I have no better way to avoid it to be executed after moving it in the core
         }
     }
 
