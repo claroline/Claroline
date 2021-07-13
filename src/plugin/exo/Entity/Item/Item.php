@@ -12,7 +12,6 @@ use UJM\ExoBundle\Entity\ItemType\AbstractItem;
 /**
  * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\ItemRepository")
  * @ORM\Table(name="ujm_question")
- * @ORM\EntityListeners({"UJM\ExoBundle\Listener\Entity\ItemListener"})
  * @ORM\HasLifecycleCallbacks()
  */
 class Item

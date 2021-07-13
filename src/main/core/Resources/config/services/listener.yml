@@ -264,18 +264,16 @@ services:
     Claroline\CoreBundle\Listener\Entity\UserListener:
         arguments:
             - '@security.encoder_factory'
-        tags: ['doctrine.entity_listener']
+        tags:
+            - { name: 'doctrine.orm.entity_listener', entity: 'Claroline\CoreBundle\Entity\User', event: 'prePersist' }
+            - { name: 'doctrine.orm.entity_listener', entity: 'Claroline\CoreBundle\Entity\User', event: 'preUpdate' }
 
     Claroline\CoreBundle\Listener\Doctrine\DebugListener:
         public: true
         calls:
             - setLogger: [ '@logger' ]
         tags:
-            - { name: doctrine.event_listener, event: onFLush }
-
-    Claroline\CoreBundle\Doctrine\EntityListenerResolver:
-        arguments:
-            - '@service_container'
+            - { name: doctrine.event_listener, event: onFlush }
 
     Claroline\CoreBundle\Listener\Log\GroupListener:
         arguments:

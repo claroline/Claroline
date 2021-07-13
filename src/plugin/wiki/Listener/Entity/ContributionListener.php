@@ -11,13 +11,15 @@
 
 namespace Icap\WikiBundle\Listener\Entity;
 
-use Doctrine\ORM\Event\LifecycleEventArgs;
-use Icap\NotificationBundle\Manager\NotificationManager as NotificationManager;
+use Icap\NotificationBundle\Manager\NotificationManager;
 use Icap\WikiBundle\Entity\Contribution;
 
+/**
+ * TODO : listen to crud events instead.
+ */
 class ContributionListener
 {
-    /** @var \Icap\NotificationBundle\Manager\NotificationManager */
+    /** @var NotificationManager */
     private $notificationManager;
 
     public function __construct(NotificationManager $notificationManager)
@@ -25,7 +27,7 @@ class ContributionListener
         $this->notificationManager = $notificationManager;
     }
 
-    public function postPersist(Contribution $contribution, LifecycleEventArgs $event)
+    public function postPersist(Contribution $contribution)
     {
         $userPicker = $contribution->getUserPicker();
         $section = $contribution->getSection();

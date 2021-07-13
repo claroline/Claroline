@@ -13,7 +13,6 @@ use Icap\NotificationBundle\Entity\UserPickerContent;
 /**
  * @ORM\Table(name="icap__blog_post")
  * @ORM\Entity(repositoryClass="Icap\BlogBundle\Repository\PostRepository")
- * @ORM\EntityListeners({"Icap\BlogBundle\Listener\PostListener"})
  * @ORM\HasLifecycleCallbacks()
  */
 class Post extends Statusable

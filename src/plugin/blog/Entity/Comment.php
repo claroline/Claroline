@@ -11,7 +11,6 @@ use Icap\NotificationBundle\Entity\UserPickerContent;
 /**
  * @ORM\Table(name="icap__blog_comment")
  * @ORM\Entity(repositoryClass="Icap\BlogBundle\Repository\CommentRepository")
- * @ORM\EntityListeners({"Icap\BlogBundle\Listener\CommentListener"})
  * @ORM\HasLifecycleCallbacks()
  */
 class Comment extends Statusable

@@ -11,7 +11,6 @@ use Icap\NotificationBundle\Entity\UserPickerContent;
 
 /**
  * @ORM\Entity(repositoryClass="Icap\WikiBundle\Repository\ContributionRepository")
- * @ORM\EntityListeners({"Icap\WikiBundle\Listener\Entity\ContributionListener"})
  * @ORM\Table(name="icap__wiki_contribution")
  * @ORM\HasLifecycleCallbacks()
  */
