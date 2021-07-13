@@ -5,7 +5,7 @@ namespace Claroline\CoreBundle\Manager\Resource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
@@ -15,8 +15,8 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
  */
 class ResourceRestrictionsManager
 {
-    /** @var SessionInterface */
-    private $session;
+    /** @var RequestStack */
+    private $requestStack;
 
     /** @var RightsManager */
     private $rightsManager;
@@ -25,11 +25,11 @@ class ResourceRestrictionsManager
     private $authorization;
 
     public function __construct(
-        SessionInterface $session,
+        RequestStack $requestStack,
         RightsManager $rightsManager,
         AuthorizationCheckerInterface $authorization
     ) {
-        $this->session = $session;
+        $this->requestStack = $requestStack;
         $this->rightsManager = $rightsManager;
         $this->authorization = $authorization;
     }
@@ -96,7 +96,8 @@ class ResourceRestrictionsManager
     {
         $isAdmin = false;
 
-        if ($workspace = $resourceNode->getWorkspace()) {
+        $workspace = $resourceNode->getWorkspace();
+        if ($workspace) {
             $isAdmin = $this->authorization->isGranted('administrate', $workspace);
         }
 
@@ -128,20 +129,23 @@ class ResourceRestrictionsManager
     {
         $allowed = $resourceNode->getAllowedIps();
         if (!empty($allowed)) {
-            $currentParts = explode('.', $_SERVER['REMOTE_ADDR']);
+            $currentRequest = $this->requestStack->getCurrentRequest();
+            if ($currentRequest && $currentRequest->getClientIp()) {
+                $currentParts = explode('.', $currentRequest->getClientIp());
 
-            foreach ($allowed as $allowedIp) {
-                $allowedParts = explode('.', $allowedIp);
-                $allowBlock = [];
+                foreach ($allowed as $allowedIp) {
+                    $allowedParts = explode('.', $allowedIp);
+                    $allowBlock = [];
 
-                foreach ($allowedParts as $key => $val) {
-                    if (isset($currentParts[$key])) {
-                        $allowBlock[] = ($val === $currentParts[$key] || '*' === $val);
+                    foreach ($allowedParts as $key => $val) {
+                        if (isset($currentParts[$key])) {
+                            $allowBlock[] = ($val === $currentParts[$key] || '*' === $val);
+                        }
                     }
-                }
 
-                if (!in_array(false, $allowBlock)) {
-                    return true;
+                    if (!in_array(false, $allowBlock)) {
+                        return true;
+                    }
                 }
             }
 
@@ -160,9 +164,11 @@ class ResourceRestrictionsManager
     public function isUnlocked(ResourceNode $resourceNode): bool
     {
         if ($resourceNode->getAccessCode()) {
+            $currentRequest = $this->requestStack->getCurrentRequest();
+
             // check if the current user already has unlocked the resource
             // maybe store it another way to avoid require it each time the user session expires
-            return !empty($this->session->get($resourceNode->getUuid()));
+            return !empty($currentRequest->getSession()->get($resourceNode->getUuid()));
         }
 
         // the current resource does not require a code
@@ -175,15 +181,17 @@ class ResourceRestrictionsManager
      */
     public function unlock(ResourceNode $resourceNode, string $code = null)
     {
-        //if a code is defined
-        if ($accessCode = $resourceNode->getAccessCode()) {
+        $accessCode = $resourceNode->getAccessCode();
+        if ($accessCode) {
+            $currentRequest = $this->requestStack->getCurrentRequest();
+
             if (empty($code) || $accessCode !== $code) {
-                $this->session->set($resourceNode->getUuid(), false);
+                $currentRequest->getSession()->set($resourceNode->getUuid(), false);
 
                 throw new InvalidDataException('Invalid code sent');
             }
 
-            $this->session->set($resourceNode->getUuid(), true);
+            $currentRequest->getSession()->set($resourceNode->getUuid(), true);
         }
     }
 }

@@ -6,7 +6,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
@@ -18,19 +18,19 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
  */
 class WorkspaceRestrictionsManager
 {
-    /** @var SessionInterface */
-    private $session;
+    /** @var RequestStack */
+    private $requestStack;
     /** @var AuthorizationCheckerInterface */
     private $authorization;
     /** @var WorkspaceManager */
     private $workspaceManager;
 
     public function __construct(
-        SessionInterface $session,
+        RequestStack $requestStack,
         AuthorizationCheckerInterface $authorization,
         WorkspaceManager $workspaceManager
     ) {
-        $this->session = $session;
+        $this->requestStack = $requestStack;
         $this->authorization = $authorization;
         $this->workspaceManager = $workspaceManager;
     }
@@ -121,20 +121,23 @@ class WorkspaceRestrictionsManager
     {
         $allowed = $workspace->getAllowedIps();
         if (!empty($allowed)) {
-            $currentParts = explode('.', $_SERVER['REMOTE_ADDR']);
+            $currentRequest = $this->requestStack->getCurrentRequest();
+            if ($currentRequest && $currentRequest->getClientIp()) {
+                $currentParts = explode('.', $currentRequest->getClientIp());
 
-            foreach ($allowed as $allowedIp) {
-                $allowedParts = explode('.', $allowedIp);
-                $allowBlock = [];
+                foreach ($allowed as $allowedIp) {
+                    $allowedParts = explode('.', $allowedIp);
+                    $allowBlock = [];
 
-                foreach ($allowedParts as $key => $val) {
-                    if (isset($currentParts[$key])) {
-                        $allowBlock[] = ($val === $currentParts[$key] || '*' === $val);
+                    foreach ($allowedParts as $key => $val) {
+                        if (isset($currentParts[$key])) {
+                            $allowBlock[] = ($val === $currentParts[$key] || '*' === $val);
+                        }
                     }
-                }
 
-                if (!in_array(false, $allowBlock)) {
-                    return true;
+                    if (!in_array(false, $allowBlock)) {
+                        return true;
+                    }
                 }
             }
 
@@ -153,9 +156,11 @@ class WorkspaceRestrictionsManager
     public function isUnlocked(Workspace $workspace): bool
     {
         if ($workspace->getAccessCode()) {
+            $currentRequest = $this->requestStack->getCurrentRequest();
+
             // check if the current user already has unlocked the workspace
             // maybe store it another way to avoid require it each time the user session expires
-            return !empty($this->session->get($workspace->getUuid()));
+            return !empty($currentRequest->getSession()->get($workspace->getUuid()));
         }
 
         // the current workspace does not require a code
@@ -175,13 +180,15 @@ class WorkspaceRestrictionsManager
     {
         $accessCode = $workspace->getAccessCode();
         if ($accessCode) {
+            $currentRequest = $this->requestStack->getCurrentRequest();
+
             if (empty($code) || $accessCode !== $code) {
-                $this->session->set($workspace->getUuid(), false);
+                $currentRequest->getSession()->set($workspace->getUuid(), false);
 
                 throw new InvalidDataException('Invalid code sent');
             }
 
-            $this->session->set($workspace->getUuid(), true);
+            $currentRequest->getSession()->set($workspace->getUuid(), true);
         }
     }
 }
