@@ -46,7 +46,6 @@ class ClarolineCoreBundle extends DistributionPluginBundle implements Configurat
 
         $container->addCompilerPass(new PlatformConfigPass());
         $container->addCompilerPass(new DynamicConfigPass());
-        $container->addCompilerPass(new DoctrineEntityListenerPass());
         $container->addCompilerPass(new MailingConfigPass());
         $container->addCompilerPass(new SessionConfigPass());
         $container->addCompilerPass(new MessengerConfigPass());

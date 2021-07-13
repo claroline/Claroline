@@ -1,13 +1,16 @@
 services:
     _defaults:
-        autowire: false #change to true
+        autowire: false
         autoconfigure: false
-        public: true #because controller
+        public: true
 
     UJM\ExoBundle\Listener\Entity\ItemListener:
         arguments:
-            - '@service_container'
-        tags: ['doctrine.entity_listener']
+            - '@UJM\ExoBundle\Library\Item\ItemDefinitionsCollection'
+        tags:
+            - { name: 'doctrine.orm.entity_listener', entity: 'UJM\ExoBundle\Entity\Item\Item', event: 'postLoad' }
+            - { name: 'doctrine.orm.entity_listener', entity: 'UJM\ExoBundle\Entity\Item\Item', event: 'prePersist' }
+            - { name: 'doctrine.orm.entity_listener', entity: 'UJM\ExoBundle\Entity\Item\Item', event: 'preRemove' }
 
     UJM\ExoBundle\Listener\Log\DisplayLogListener:
         arguments:
@@ -28,7 +31,6 @@ services:
         tags:
             - { name: kernel.event_listener, event: resource.ujm_exercise.load, method: onLoad }
             - { name: kernel.event_listener, event: resource.ujm_exercise.delete, method: onDelete }
-            - { name: kernel.event_listener, event: docimology_ujm_exercise, method: onDocimology }
 
     UJM\ExoBundle\Listener\Tool\QuestionBankListener:
         tags:

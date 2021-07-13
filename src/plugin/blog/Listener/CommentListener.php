@@ -11,14 +11,16 @@
 
 namespace Icap\BlogBundle\Listener;
 
-use Doctrine\ORM\Event\LifecycleEventArgs;
 use Icap\BlogBundle\Entity\Comment;
 use Icap\NotificationBundle\Entity\UserPickerContent;
-use Icap\NotificationBundle\Manager\NotificationManager as NotificationManager;
+use Icap\NotificationBundle\Manager\NotificationManager;
 
+/**
+ * TODO : listen to crud events instead.
+ */
 class CommentListener
 {
-    /** @var \Icap\NotificationBundle\Manager\NotificationManager */
+    /** @var NotificationManager */
     private $notificationManager;
 
     public function __construct(NotificationManager $notificationManager)
@@ -26,7 +28,7 @@ class CommentListener
         $this->notificationManager = $notificationManager;
     }
 
-    public function postPersist(Comment $comment, LifecycleEventArgs $event)
+    public function postPersist(Comment $comment)
     {
         $userPicker = $comment->getUserPicker();
         $post = $comment->getPost();
@@ -67,7 +69,7 @@ class CommentListener
         }
     }
 
-    public function prePersist(Comment $comment, LifecycleEventArgs $event)
+    public function prePersist(Comment $comment)
     {
         if (null !== $comment->getMessage()) {
             $userPicker = new UserPickerContent($comment->getMessage());
@@ -76,13 +78,13 @@ class CommentListener
         }
     }
 
-    public function preUpdate(Comment $comment, LifecycleEventArgs $event)
+    public function preUpdate(Comment $comment)
     {
-        $this->prePersist($comment, $event);
+        $this->prePersist($comment);
     }
 
-    public function postUpdate(Comment $comment, LifecycleEventArgs $event)
+    public function postUpdate(Comment $comment)
     {
-        $this->postPersist($comment, $event);
+        $this->postPersist($comment);
     }
 }

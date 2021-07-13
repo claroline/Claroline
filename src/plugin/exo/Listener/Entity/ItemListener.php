@@ -3,8 +3,8 @@
 namespace UJM\ExoBundle\Listener\Entity;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use UJM\ExoBundle\Entity\Item\Item;
+use UJM\ExoBundle\Entity\ItemType\AbstractItem;
 use UJM\ExoBundle\Library\Item\ItemDefinitionsCollection;
 
 /**
@@ -17,12 +17,9 @@ class ItemListener
      */
     private $itemDefinitions;
 
-    /**
-     * ItemListener constructor.
-     */
-    public function __construct(ContainerInterface $container)
+    public function __construct(ItemDefinitionsCollection $itemDefinitions)
     {
-        $this->itemDefinitions = $container->get('ujm_exo.collection.item_definitions');
+        $this->itemDefinitions = $itemDefinitions;
     }
 
     /**
@@ -36,7 +33,7 @@ class ItemListener
             ->getEntityManager()
             ->getRepository($definition->getEntityClass());
 
-        /** @var \UJM\ExoBundle\Entity\ItemType\AbstractItem $typeEntity */
+        /** @var AbstractItem $typeEntity */
         $typeEntity = $repository->findOneBy([
             'question' => $item,
         ]);
