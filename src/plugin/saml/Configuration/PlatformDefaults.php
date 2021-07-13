@@ -32,6 +32,8 @@ class PlatformDefaults implements ParameterProviderInterface
                 //   - organization : An organization UUID to register users created from this idp
                 //   - groups       : A list of groups UUID to register users created from this idp
                 'idp' => [],
+                // logout from idp when logout from claroline
+                'logout' => true,
             ],
         ];
     }
