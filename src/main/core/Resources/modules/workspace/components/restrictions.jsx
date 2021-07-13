@@ -130,6 +130,7 @@ class WorkspaceRestrictions extends Component {
             <ContentRestriction
               icon="fa fa-fw fa-id-badge"
               failed={this.props.errors.noRights}
+              onlyWarn={true}
               success={{
                 title: classes({
                   [trans('restricted_workspace.you_are_manager', {}, 'workspace')]: this.props.managed,
@@ -142,7 +143,13 @@ class WorkspaceRestrictions extends Component {
               }}
               fail={{
                 title: this.props.managed ? trans('restricted_workspace.you_are_manager', {}, 'workspace') : trans('restricted_workspace.pending_registration', {}, 'workspace'),
-                help: this.props.managed ? trans('restricted_workspace.manager_rights_access', {}, 'workspace') : trans('restricted_workspace.wait_validation', {}, 'workspace')
+                help: classes({
+                  [trans('restricted_workspace.wait_validation', {}, 'workspace')]: !this.props.managed,
+                  [trans('restricted_workspace.contact_manager', {
+                    'manager_email': this.props.workspace.contactEmail ? `(<a href="mailto:${this.props.workspace.contactEmail}">${this.props.workspace.contactEmail}</a>)` : ''
+                  }, 'workspace')]: !this.props.managed,
+                  [trans('restricted_workspace.manager_rights_access', {}, 'workspace')]: this.props.managed
+                })
               }}
             />
           }
