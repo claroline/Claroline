@@ -19,7 +19,6 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\Log\LogResourceExportEvent;
 use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceToolReadEvent;
-use Claroline\CoreBundle\Event\Log\UserLoginEvent;
 use Claroline\CoreBundle\Manager\FileManager;
 use Claroline\CoreBundle\Manager\LogManager;
 use Claroline\CoreBundle\Manager\UserManager;
@@ -275,7 +274,7 @@ class AnalyticsManager
                 break;
             case 'top_users_connections':
             default:
-                $finderParams['filters']['action'] = UserLoginEvent::ACTION;
+                $finderParams['filters']['action'] = 'user-login';
                 $finderParams['sortBy'] = '-actions';
                 $listData = $this->logManager->getUserActionsList($finderParams);
                 $listData = $listData['data'];
