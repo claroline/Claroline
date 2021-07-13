@@ -1,0 +1,20 @@
+<nav class="app-nav">
+    <a href="{{ "/" | absolute_url }}">Home</a>
+
+{% for section in site.data.sections %}
+    {% if section.doc %}
+    <a href="{{ "/sections/" | append: section.doc | absolute_url }}.html">{{ section.title }}</a>
+    {% else %}
+    <header>
+        <a href="{{ "/sections/" | append: section.home | absolute_url }}.html">{{ section.title }}</a>
+    </header>
+    <ul>
+        {% for subSection in section.docs %}
+        <li>
+            <a href="{{ "/sections/" | append: subSection.doc | absolute_url }}.html">{{ subSection.title }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+{% endfor %}
+</nav>

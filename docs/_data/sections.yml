@@ -1,0 +1,137 @@
+- title: Getting started
+  home: getting-started/index
+  docs:
+    - title: Browser support
+      doc: getting-started/browser-support
+
+    - title: Requirements
+      doc: getting-started/requirements
+
+    - title: Installation & Upgrades
+      doc: getting-started/installation
+
+    - title: Core concepts
+      doc: getting-started/core-concepts
+
+- title: Application
+  home: application/index
+  docs:
+    - title: Dependencies
+      doc: application/dependencies
+
+    - title: Plugins
+      doc: application/plugins
+
+    - title: Tools
+      doc: application/tools
+
+    - title: Resources
+      doc: application/resources
+
+    - title: Resource actions
+      doc: application/resource-actions
+
+    - title: Widgets
+      doc: application/widgets
+
+
+- title: JSON API
+  home: json/index
+  docs:
+    - title: Schemas
+      doc: json/schemas
+
+    - title: Endpoints
+      doc: json/endpoints
+
+
+- title: API
+  home: api/index
+  docs:
+      - title: Authentication
+        doc: api/authentication/index
+
+      - title: Serializer
+        doc: api/serializer
+
+      - title: Finder
+        doc: api/finder
+
+      - title: CRUD
+        doc: api/crud
+
+
+- title: User Interface
+  home: user-interface/index
+  docs:
+      - title: Introduction
+        doc: user-interface/introduction
+
+      - title: Localization
+        doc: user-interface/localization
+
+      - title: Pages
+        doc: user-interface/pages
+
+      - title: Modal
+        doc: user-interface/modal
+
+      - title: Data
+        doc: user-interface/data
+
+      - title: Actions
+        doc: user-interface/actions
+
+      - title: API
+        doc: user-interface/api
+
+
+- title: Themes
+  doc: themes
+
+
+- title: Plugins
+  home: plugins/index
+  docs:
+      - title: Core
+        doc: plugins/core
+
+      - title: Badge
+        doc: plugins/badge
+
+      - title: Quiz
+        doc: plugins/quiz
+
+      - title: Path
+        doc: plugins/path
+
+      - title: Tag
+        doc: plugins/tag
+
+- title: Development
+  home: dev/index
+  docs:
+      - title: Best practices
+        doc: dev/best-practices
+
+      - title: Commands
+        doc: dev/commands
+
+      - title: Testing
+        doc: dev/testing
+
+      - title: Code analysis
+        doc: dev/code-analysis
+
+      - title: Continuous integration
+        doc: dev/ci
+
+      - title: Docker
+        doc: dev/docker
+
+- title: Contributing
+  doc: contributing
+
+
+#- title: Cookbook
+#  doc: cookbook

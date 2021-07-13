@@ -1,0 +1,311 @@
+Claroline\CoreBundle\Entity\Group:
+    apiv2_group_list_registerable: { url: /apiv2/group/list/registerable, method: [GET] }
+    apiv2_group_list_managed: { url: /apiv2/group/list/managed, method: [GET] }
+    apiv2_group_schema: { url: /apiv2/group/schema, method: [GET], description: 'Return the schema of class Claroline\CoreBundle\Entity\Group.' }
+    apiv2_group_find: { url: /apiv2/group/find, method: [GET], description: 'Find a single object of class Claroline\CoreBundle\Entity\Group.' }
+    apiv2_group_create: { url: /apiv2/group, method: [POST], description: 'Create an object class Claroline\CoreBundle\Entity\Group.', body: { schema: { $schema: 'http://json-schema.org/draft-04/schema#', type: object, properties: { id: { type: string, description: 'The group id' }, name: { type: string, description: 'The group name', minLength: 1 } }, claroline: { requiredAtCreation: [name], ids: [id, name] }, additionalProperties: {  }, patternProperties: {  } } } }
+    apiv2_group_doc: { url: /apiv2/group/doc, method: [GET], description: 'Display the current informations' }
+    apiv2_group_update: { url: '/apiv2/group/{id}', method: [PUT], description: 'Update an object class Claroline\CoreBundle\Entity\Group.', parameters: { id: { type: [string, integer], description: 'The object id or uuid' } }, body: { schema: { $schema: 'http://json-schema.org/draft-04/schema#', type: object, properties: { id: { type: string, description: 'The group id' }, name: { type: string, description: 'The group name', minLength: 1 } }, claroline: { requiredAtCreation: [name], ids: [id, name] }, additionalProperties: {  }, patternProperties: {  } } } }
+    apiv2_group_delete_bulk: { url: /apiv2/group, method: [DELETE], description: 'Remove an array of object of class Claroline\CoreBundle\Entity\Group.', queryString: [{ name: 'ids[]', type: [string, integer], description: 'The object id or uuid.' }] }
+    apiv2_group_copy_bulk: { url: /apiv2/group/copy, method: [GET], description: 'Copy an array of object of class Claroline\CoreBundle\Entity\Group.', queryString: [{ name: 'ids[]', type: [string, integer], description: 'The object id or uuid.' }] }
+    apiv2_group_list: { url: /apiv2/group, method: [GET], description: 'List the objects of class Claroline\CoreBundle\Entity\Group.', queryString: [{ name: page, type: integer, description: 'The queried page.' }, { name: limit, type: integer, description: 'The max amount of objects per page.' }, { name: sortBy, type: string, description: 'Sort by the property if you want to.' }] }
+    apiv2_group_get: { url: '/apiv2/group/{id}', method: [GET], description: 'Finds an object class Claroline\CoreBundle\Entity\Group.', parameters: { id: { type: [string, integer], description: 'The object id or uuid' } } }
+    apiv2_group_exist: { url: '/apiv2/group/exist/{field}/{value}', method: [GET], description: 'Check if an object exists (it''ll eventually fire a doctrine findBy method)', parameters: [{ name: field, type: string, description: 'The queried field.' }, { name: value, type: mixed, description: 'The value of the field' }] }
+    apiv2_group_list_users: { url: '/apiv2/group/{id}/user', method: [GET] }
+    apiv2_group_add_users: { url: '/apiv2/group/{id}/user', method: [PATCH] }
+    apiv2_group_remove_users: { url: '/apiv2/group/{id}/user', method: [DELETE] }
+    apiv2_group_list_roles: { url: '/apiv2/group/{id}/role', method: [GET] }
+    apiv2_group_add_roles: { url: '/apiv2/group/{id}/role', method: [PATCH] }
+    apiv2_group_remove_roles: { url: '/apiv2/group/{id}/role', method: [DELETE] }
+    apiv2_group_list_organizations: { url: '/apiv2/group/{id}/organization', method: [GET] }
+    apiv2_group_add_organizations: { url: '/apiv2/group/{id}/organization', method: [PATCH] }
+    apiv2_group_remove_organizations: { url: '/apiv2/group/{id}/organization', method: [DELETE] }
+Claroline\CoreBundle\Entity\Organization\Location:
+    apiv2_location_geolocate: { url: '/apiv2/location/{id}/geolocate', method: [GET] }
+    apiv2_location_schema: { url: /apiv2/location/schema, method: [GET], description: 'Return the schema of class Claroline\CoreBundle\Entity\Organization\Location.' }
+    apiv2_location_find: { url: /apiv2/location/find, method: [GET], description: 'Find a single object of class Claroline\CoreBundle\Entity\Organization\Location.' }
+    apiv2_location_create: { url: /apiv2/location, method: [POST], description: 'Create an object class Claroline\CoreBundle\Entity\Organization\Location.', body: { schema: null } }
+    apiv2_location_doc: { url: /apiv2/location/doc, method: [GET], description: 'Display the current informations' }
+    apiv2_location_update: { url: '/apiv2/location/{id}', method: [PUT], description: 'Update an object class Claroline\CoreBundle\Entity\Organization\Location.', parameters: { id: { type: [string, integer], description: 'The object id or uuid' } }, body: { schema: null } }
+    apiv2_location_delete_bulk: { url: /apiv2/location, method: [DELETE], description: 'Remove an array of object of class Claroline\CoreBundle\Entity\Organization\Location.', queryString: [{ name: 'ids[]', type: [string, integer], description: 'The object id or uuid.' }] }
+    apiv2_location_copy_bulk: { url: /apiv2/location/copy, method: [GET], description: 'Copy an array of object of class Claroline\CoreBundle\Entity\Organization\Location.', queryString: [{ name: 'ids[]', type: [string, integer], description: 'The object id or uuid.' }] }
+    apiv2_location_list: { url: /apiv2/location, method: [GET], description: 'List the objects of class Claroline\CoreBundle\Entity\Organization\Location.', queryString: [{ name: page, type: integer, description: 'The queried page.' }, { name: limit, type: integer, description: 'The max amount of objects per page.' }, { name: sortBy, type: string, description: 'Sort by the property if you want to.' }] }
+    apiv2_location_get: { url: '/apiv2/location/{id}', method: [GET], description: 'Finds an object class Claroline\CoreBundle\Entity\Organization\Location.', parameters: { id: { type: [string, integer], description: 'The object id or uuid' } } }
+    apiv2_location_exist: { url: '/apiv2/location/exist/{field}/{value}', method: [GET], description: 'Check if an object exists (it''ll eventually fire a doctrine findBy method)', parameters: [{ name: field, type: string, description: 'The queried field.' }, { name: value, type: mixed, description: 'The value of the field' }] }
+    apiv2_location_list_users: { url: '/apiv2/location/{id}/user', method: [GET] }
+    apiv2_location_add_users: { url: '/apiv2/location/{id}/user', method: [PATCH] }
+    apiv2_location_remove_users: { url: '/apiv2/location/{id}/user', method: [DELETE] }
+    apiv2_location_list_groups: { url: '/apiv2/location/{id}/group', method: [GET] }
+    apiv2_location_add_groups: { url: '/apiv2/location/{id}/group', method: [PATCH] }
+    apiv2_location_remove_groups: { url: '/apiv2/location/{id}/group', method: [DELETE] }
+    apiv2_location_list_organizations: { url: '/apiv2/location/{id}/organization', method: [GET] }
+    apiv2_location_add_organizations: { url: '/apiv2/location/{id}/organization', method: [PATCH] }
+    apiv2_location_remove_organizations: { url: '/apiv2/location/{id}/organization', method: [DELETE] }
+Claroline\CoreBundle\Entity\Organization\Organization:
+    apiv2_organization_list_recursive: { url: /apiv2/organization/list/recursive, method: {  } }
+    apiv2_organization_list_managers: { url: '/apiv2/organization/{id}/managers', method: [GET] }
+    apiv2_organization_add_managers: { url: '/apiv2/organization/{id}/manager', method: [PATCH] }
+    apiv2_organization_remove_managers: { url: '/apiv2/organization/{id}/manager', method: [DELETE] }
+    apiv2_organization_schema: { url: /apiv2/organization/schema, method: [GET], description: 'Return the schema of class Claroline\CoreBundle\Entity\Organization\Organization.' }
+    apiv2_organization_find: { url: /apiv2/organization/find, method: [GET], description: 'Find a single object of class Claroline\CoreBundle\Entity\Organization\Organization.' }
+    apiv2_organization_create: { url: /apiv2/organization, method: [POST], description: 'Create an object class Claroline\CoreBundle\Entity\Organization\Organization.', body: { schema: { $schema: 'http://json-schema.org/draft-04/schema#', type: object, properties: { id: { type: string, description: 'The organization id' }, name: { type: ['null', string], description: 'The organization name', minLength: 1 }, code: { type: string, description: 'The organization code', minLength: 1 }, email: { type: ['null', string], description: 'The organization email' } }, claroline: { ids: [id, code, email] }, additionalProperties: {  }, patternProperties: {  } } } }
+    apiv2_organization_doc: { url: /apiv2/organization/doc, method: [GET], description: 'Display the current informations' }
+    apiv2_organization_update: { url: '/apiv2/organization/{id}', method: [PUT], description: 'Update an object class Claroline\CoreBundle\Entity\Organization\Organization.', parameters: { id: { type: [string, integer], description: 'The object id or uuid' } }, body: { schema: { $schema: 'http://json-schema.org/draft-04/schema#', type: object, properties: { id: { type: string, description: 'The organization id' }, name: { type: ['null', string], description: 'The organization name', minLength: 1 }, code: { type: string, description: 'The organization code', minLength: 1 }, email: { type: ['null', string], description: 'The organization email' } }, claroline: { ids: [id, code, email] }, additionalProperties: {  }, patternProperties: {  } } } }
+    apiv2_organization_delete_bulk: { url: /apiv2/organization, method: [DELETE], description: 'Remove an array of object of class Claroline\CoreBundle\Entity\Organization\Organization.', queryString: [{ name: 'ids[]', type: [string, integer], description: 'The object id or uuid.' }] }
+    apiv2_organization_copy_bulk: { url: /apiv2/organization/copy, method: [GET], description: 'Copy an array of object of class Claroline\CoreBundle\Entity\Organization\Organization.', queryString: [{ name: 'ids[]', type: [string, integer], description: 'The object id or uuid.' }] }
+    apiv2_organization_list: { url: /apiv2/organization, method: [GET], description: 'List the objects of class Claroline\CoreBundle\Entity\Organization\Organization.', queryString: [{ name: page, type: integer, description: 'The queried page.' }, { name: limit, type: integer, description: 'The max amount of objects per page.' }, { name: sortBy, type: string, description: 'Sort by the property if you want to.' }] }
+    apiv2_organization_get: { url: '/apiv2/organization/{id}', method: [GET], description: 'Finds an object class Claroline\CoreBundle\Entity\Organization\Organization.', parameters: { id: { type: [string, integer], description: 'The object id or uuid' } } }
+    apiv2_organization_exist: { url: '/apiv2/organization/exist/{field}/{value}', method: [GET], description: 'Check if an object exists (it''ll eventually fire a doctrine findBy method)', parameters: [{ name: field, type: string, description: 'The queried field.' }, { name: value, type: mixed, description: 'The value of the field' }] }
+    apiv2_organization_move: { url: '/apiv2/organization/{parent}/move/{child}', method: [PATCH] }
+    apiv2_organization_list_users: { url: '/apiv2/organization/{id}/user', method: [GET] }
+    apiv2_organization_add_users: { url: '/apiv2/organization/{id}/user', method: [PATCH] }
+    apiv2_organization_remove_users: { url: '/apiv2/organization/{id}/user', method: [DELETE] }
+    apiv2_organization_list_groups: { url: '/apiv2/organization/{id}/group', method: [GET] }
+    apiv2_organization_add_groups: { url: '/apiv2/organization/{id}/group', method: [PATCH] }
+    apiv2_organization_remove_groups: { url: '/apiv2/organization/{id}/group', method: [DELETE] }
+    apiv2_organization_list_workspaces: { url: '/apiv2/organization/{id}/workspace', method: [GET] }
+    apiv2_organization_add_workspaces: { url: '/apiv2/organization/{id}/workspace', method: [PATCH] }
+    apiv2_organization_remove_workspaces: { url: '/apiv2/organization/{id}/workspace', method: [DELETE] }
+Claroline\CoreBundle\Entity\Role:
+    apiv2_role_platform_list: { url: /apiv2/roleplatform, method: [GET] }
+    apiv2_role_platform_grantable_list: { url: /apiv2/roleplatform/grantable, method: [GET] }
+    apiv2_role_schema: { url: /apiv2/role/schema, method: [GET], description: 'Return the schema of class Claroline\CoreBundle\Entity\Role.' }
+    apiv2_role_find: { url: /apiv2/role/find, method: [GET], description: 'Find a single object of class Claroline\CoreBundle\Entity\Role.' }
+    apiv2_role_create: { url: /apiv2/role, method: [POST], description: 'Create an object class Claroline\CoreBundle\Entity\Role.', body: { schema: { $schema: 'http://json-schema.org/draft-04/schema#', type: object, properties: { id: { type: [string, 'null'], description: 'The role id' }, name: { type: [string, 'null'], description: 'The role name', minLength: 1 }, translationKey: { type: [string, 'null'], description: 'The role displayed value', minLength: 1 } }, claroline: { requiredAtCreation: [translationKey], ids: [id, name] }, additionalProperties: {  }, patternProperties: {  } } } }
+    apiv2_role_doc: { url: /apiv2/role/doc, method: [GET], description: 'Display the current informations' }
+    apiv2_role_update: { url: '/apiv2/role/{id}', method: [PUT], description: 'Update an object class Claroline\CoreBundle\Entity\Role.', parameters: { id: { type: [string, integer], description: 'The object id or uuid' } }, body: { schema: { $schema: 'http://json-schema.org/draft-04/schema#', type: object, properties: { id: { type: [string, 'null'], description: 'The role id' }, name: { type: [string, 'null'], description: 'The role name', minLength: 1 }, translationKey: { type: [string, 'null'], description: 'The role displayed value', minLength: 1 } }, claroline: { requiredAtCreation: [translationKey], ids: [id, name] }, additionalProperties: {  }, patternProperties: {  } } } }
+    apiv2_role_delete_bulk: { url: /apiv2/role, method: [DELETE], description: 'Remove an array of object of class Claroline\CoreBundle\Entity\Role.', queryString: [{ name: 'ids[]', type: [string, integer], description: 'The object id or uuid.' }] }
+    apiv2_role_copy_bulk: { url: /apiv2/role/copy, method: [GET], description: 'Copy an array of object of class Claroline\CoreBundle\Entity\Role.', queryString: [{ name: 'ids[]', type: [string, integer], description: 'The object id or uuid.' }] }
+    apiv2_role_list: { url: /apiv2/role, method: [GET], description: 'List the objects of class Claroline\CoreBundle\Entity\Role.', queryString: [{ name: page, type: integer, description: 'The queried page.' }, { name: limit, type: integer, description: 'The max amount of objects per page.' }, { name: sortBy, type: string, description: 'Sort by the property if you want to.' }] }
+    apiv2_role_get: { url: '/apiv2/role/{id}', method: [GET], description: 'Finds an object class Claroline\CoreBundle\Entity\Role.', parameters: { id: { type: [string, integer], description: 'The object id or uuid' } } }
+    apiv2_role_exist: { url: '/apiv2/role/exist/{field}/{value}', method: [GET], description: 'Check if an object exists (it''ll eventually fire a doctrine findBy method)', parameters: [{ name: field, type: string, description: 'The queried field.' }, { name: value, type: mixed, description: 'The value of the field' }] }
+    apiv2_role_list_users: { url: '/apiv2/role/{id}/user', method: [GET] }
+    apiv2_role_add_users: { url: '/apiv2/role/{id}/user', method: [PATCH] }
+    apiv2_role_remove_users: { url: '/apiv2/role/{id}/user', method: [DELETE] }
+    apiv2_role_list_groups: { url: '/apiv2/role/{id}/group', method: [GET] }
+    apiv2_role_add_groups: { url: '/apiv2/role/{id}/group', method: [PATCH] }
+    apiv2_role_remove_groups: { url: '/apiv2/role/{id}/group', method: [DELETE] }
+Claroline\CoreBundle\Entity\User:
+    apiv2_user_pws_create: { url: '/apiv2/user/{id}/pws/create', method: [POST] }
+    apiv2_user_pws_delete: { url: '/apiv2/user/{id}/pws/delete', method: [DELETE] }
+    apiv2_user_create_and_login: { url: /apiv2/user/user/login, method: [POST] }
+    apiv2_user_currentworkspace: { url: /apiv2/user/currentworkspaces, method: [GET] }
+    apiv2_user_list_registerable: { url: /apiv2/user/list/registerable, method: [GET] }
+    apiv2_user_list_managed: { url: /apiv2/user/list/managed, method: [GET] }
+    apiv2_user_schema: { url: /apiv2/user/schema, method: [GET], description: 'Return the schema of class Claroline\CoreBundle\Entity\User.' }
+    apiv2_user_find: { url: /apiv2/user/find, method: [GET], description: 'Find a single object of class Claroline\CoreBundle\Entity\User.' }
+    apiv2_user_create: { url: /apiv2/user, method: [POST], description: 'Create an object class Claroline\CoreBundle\Entity\User.', body: { schema: { $schema: 'http://json-schema.org/draft-04/schema#', type: object, properties: { id: { type: string, description: 'The user id' }, email: { type: string, description: 'The user email adress', minLength: 1 }, firstName: { type: string, description: 'The user first name', minLength: 1 }, lastName: { type: string, description: 'The user last name', minLength: 1 }, username: { type: string, description: 'The user username', minLength: 1 }, plainPassword: { type: string, description: 'The plain login password', minLength: 1 }, groups: { type: array, uniqueItems: true, items: { oneOf: [{ $schema: 'http://json-schema.org/draft-04/schema#', type: object, properties: { id: { type: string, description: 'The group id' }, name: { type: string, description: 'The group name', minLength: 1 } }, claroline: { requiredAtCreation: [name], ids: [id, name] }, additionalProperties: {  }, patternProperties: {  } }] }, additionalItems: {  } }, roles: { type: array, uniqueItems: true, items: { oneOf: [{ $schema: 'http://json-schema.org/draft-04/schema#', type: object, properties: { id: { type: [string, 'null'], description: 'The role id' }, name: { type: [string, 'null'], description: 'The role name', minLength: 1 }, translationKey: { type: [string, 'null'], description: 'The role displayed value', minLength: 1 } }, claroline: { requiredAtCreation: [translationKey], ids: [id, name] }, additionalProperties: {  }, patternProperties: {  } }] }, additionalItems: {  } } }, claroline: { requiredAtCreation: [email, firstName, lastName, username, plainPassword], ids: [id, email, username] }, additionalProperties: {  }, patternProperties: {  } } } }
+    apiv2_user_doc: { url: /apiv2/user/doc, method: [GET], description: 'Display the current informations' }
+    apiv2_user_update: { url: '/apiv2/user/{id}', method: [PUT], description: 'Update an object class Claroline\CoreBundle\Entity\User.', parameters: { id: { type: [string, integer], description: 'The object id or uuid' } }, body: { schema: { $schema: 'http://json-schema.org/draft-04/schema#', type: object, properties: { id: { type: string, description: 'The user id' }, email: { type: string, description: 'The user email adress', minLength: 1 }, firstName: { type: string, description: 'The user first name', minLength: 1 }, lastName: { type: string, description: 'The user last name', minLength: 1 }, username: { type: string, description: 'The user username', minLength: 1 }, plainPassword: { type: string, description: 'The plain login password', minLength: 1 }, groups: { type: array, uniqueItems: true, items: { oneOf: [{ $schema: 'http://json-schema.org/draft-04/schema#', type: object, properties: { id: { type: string, description: 'The group id' }, name: { type: string, description: 'The group name', minLength: 1 } }, claroline: { requiredAtCreation: [name], ids: [id, name] }, additionalProperties: {  }, patternProperties: {  } }] }, additionalItems: {  } }, roles: { type: array, uniqueItems: true, items: { oneOf: [{ $schema: 'http://json-schema.org/draft-04/schema#', type: object, properties: { id: { type: [string, 'null'], description: 'The role id' }, name: { type: [string, 'null'], description: 'The role name', minLength: 1 }, translationKey: { type: [string, 'null'], description: 'The role displayed value', minLength: 1 } }, claroline: { requiredAtCreation: [translationKey], ids: [id, name] }, additionalProperties: {  }, patternProperties: {  } }] }, additionalItems: {  } } }, claroline: { requiredAtCreation: [email, firstName, lastName, username, plainPassword], ids: [id, email, username] }, additionalProperties: {  }, patternProperties: {  } } } }
+    apiv2_user_delete_bulk: { url: /apiv2/user, method: [DELETE], description: 'Remove an array of object of class Claroline\CoreBundle\Entity\User.', queryString: [{ name: 'ids[]', type: [string, integer], description: 'The object id or uuid.' }] }
+    apiv2_user_copy_bulk: { url: /apiv2/user/copy, method: [GET], description: 'Copy an array of object of class Claroline\CoreBundle\Entity\User.', queryString: [{ name: 'ids[]', type: [string, integer], description: 'The object id or uuid.' }] }
+    apiv2_user_list: { url: /apiv2/user, method: [GET], description: 'List the objects of class Claroline\CoreBundle\Entity\User.', queryString: [{ name: page, type: integer, description: 'The queried page.' }, { name: limit, type: integer, description: 'The max amount of objects per page.' }, { name: sortBy, type: string, description: 'Sort by the property if you want to.' }] }
+    apiv2_user_get: { url: '/apiv2/user/{id}', method: [GET], description: 'Finds an object class Claroline\CoreBundle\Entity\User.', parameters: { id: { type: [string, integer], description: 'The object id or uuid' } } }
+    apiv2_user_exist: { url: '/apiv2/user/exist/{field}/{value}', method: [GET], description: 'Check if an object exists (it''ll eventually fire a doctrine findBy method)', parameters: [{ name: field, type: string, description: 'The queried field.' }, { name: value, type: mixed, description: 'The value of the field' }] }
+    apiv2_user_list_roles: { url: '/apiv2/user/{id}/role', method: [GET] }
+    apiv2_user_add_roles: { url: '/apiv2/user/{id}/role', method: [PATCH] }
+    apiv2_user_remove_roles: { url: '/apiv2/user/{id}/role', method: [DELETE] }
+    apiv2_user_list_organizations: { url: '/apiv2/user/{id}/organization', method: [GET] }
+    apiv2_user_add_organizations: { url: '/apiv2/user/{id}/organization', method: [PATCH] }
+    apiv2_user_remove_organizations: { url: '/apiv2/user/{id}/organization', method: [DELETE] }
+    apiv2_user_list_groups: { url: '/apiv2/user/{id}/group', method: [GET] }
+    apiv2_user_add_groups: { url: '/apiv2/user/{id}/group', method: [PATCH] }
+    apiv2_user_remove_groups: { url: '/apiv2/user/{id}/group', method: [DELETE] }
+Claroline\CoreBundle\Entity\File\PublicFile:
+    apiv2_uploadedfile_schema: { url: /apiv2/uploadedfile/schema, method: [GET] }
+    apiv2_uploadedfile_find: { url: /apiv2/uploadedfile/find, method: [GET] }
+    apiv2_uploadedfile_create: { url: /apiv2/uploadedfile, method: [POST] }
+    apiv2_uploadedfile_doc: { url: /apiv2/uploadedfile/doc, method: [GET] }
+    apiv2_uploadedfile_delete_bulk: { url: /apiv2/uploadedfile, method: [DELETE] }
+    apiv2_uploadedfile_get: { url: '/apiv2/uploadedfile/{id}', method: [GET] }
+Claroline\CoreBundle\Entity\Workspace\Workspace:
+    apiv2_workspace_schema: { url: /apiv2/workspace/schema, method: [GET] }
+    apiv2_workspace_find: { url: /apiv2/workspace/find, method: [GET] }
+    apiv2_workspace_create: { url: /apiv2/workspace, method: [POST] }
+    apiv2_workspace_doc: { url: /apiv2/workspace/doc, method: [GET] }
+    apiv2_workspace_update: { url: '/apiv2/workspace/{id}', method: [PUT] }
+    apiv2_workspace_delete_bulk: { url: /apiv2/workspace, method: [DELETE] }
+    apiv2_workspace_copy_bulk: { url: /apiv2/workspace/copy, method: [GET] }
+    apiv2_workspace_list: { url: /apiv2/workspace, method: [GET] }
+    apiv2_workspace_get: { url: '/apiv2/workspace/{id}', method: [GET] }
+    apiv2_workspace_exist: { url: '/apiv2/workspace/exist/{field}/{value}', method: [GET] }
+    apiv2_workspace_list_organizations: { url: '/apiv2/workspace/{id}/organization', method: [GET] }
+    apiv2_workspace_add_organizations: { url: '/apiv2/workspace/{id}/organization', method: [PATCH] }
+    apiv2_workspace_remove_organizations: { url: '/apiv2/workspace/{id}/organization', method: [DELETE] }
+    apiv2_workspace_list_roles: { url: '/apiv2/workspace/{id}/role', method: [GET] }
+    apiv2_workspace_add_roles: { url: '/apiv2/workspace/{id}/role', method: [PATCH] }
+    apiv2_workspace_remove_roles: { url: '/apiv2/workspace/{id}/role', method: [DELETE] }
+    apiv2_workspace_list_users: { url: '/apiv2/workspace/{id}/user', method: [GET] }
+    apiv2_workspace_add_users: { url: '/apiv2/workspace/{id}/user', method: [PATCH] }
+    apiv2_workspace_remove_users: { url: '/apiv2/workspace/{id}/user', method: [DELETE] }
+    apiv2_workspace_list_groups: { url: '/apiv2/workspace/{id}/group', method: [GET] }
+    apiv2_workspace_add_groups: { url: '/apiv2/workspace/{id}/group', method: [PATCH] }
+    apiv2_workspace_remove_groups: { url: '/apiv2/workspace/{id}/group', method: [DELETE] }
+Claroline\CoreBundle\Entity\Resource\Text:
+    apiv2_resource_text_doc: { url: /apiv2/resource_text/doc, method: [GET] }
+    apiv2_resource_text_update: { url: '/apiv2/resource_text/{id}', method: [PUT] }
+Claroline\CoreBundle\Entity\Task\ScheduledTask:
+    apiv2_scheduledtask_schema: { url: /apiv2/scheduledtask/schema, method: [GET] }
+    apiv2_scheduledtask_find: { url: /apiv2/scheduledtask/find, method: [GET] }
+    apiv2_scheduledtask_create: { url: /apiv2/scheduledtask, method: [POST] }
+    apiv2_scheduledtask_doc: { url: /apiv2/scheduledtask/doc, method: [GET] }
+    apiv2_scheduledtask_update: { url: '/apiv2/scheduledtask/{id}', method: [PUT] }
+    apiv2_scheduledtask_delete_bulk: { url: /apiv2/scheduledtask, method: [DELETE] }
+    apiv2_scheduledtask_list: { url: /apiv2/scheduledtask, method: [GET] }
+    apiv2_scheduledtask_get: { url: '/apiv2/scheduledtask/{id}', method: [GET] }
+    apiv2_scheduledtask_exist: { url: '/apiv2/scheduledtask/exist/{field}/{value}', method: [GET] }
+    apiv2_scheduledtask_list_users: { url: '/apiv2/scheduledtask/{id}/user', method: [GET] }
+    apiv2_scheduledtask_add_users: { url: '/apiv2/scheduledtask/{id}/user', method: [PATCH] }
+    apiv2_scheduledtask_remove_users: { url: '/apiv2/scheduledtask/{id}/user', method: [DELETE] }
+Claroline\CoreBundle\Entity\Contact\Contact:
+    apiv2_contact_schema: { url: /apiv2/contact/schema, method: [GET] }
+    apiv2_contact_find: { url: /apiv2/contact/find, method: [GET] }
+    apiv2_contact_create: { url: /apiv2/contact, method: [POST] }
+    apiv2_contact_doc: { url: /apiv2/contact/doc, method: [GET] }
+    apiv2_contact_update: { url: '/apiv2/contact/{id}', method: [PUT] }
+    apiv2_contact_delete_bulk: { url: /apiv2/contact, method: [DELETE] }
+    apiv2_contact_list: { url: /apiv2/contact, method: [GET] }
+    apiv2_contact_get: { url: '/apiv2/contact/{id}', method: [GET] }
+    apiv2_contact_exist: { url: '/apiv2/contact/exist/{field}/{value}', method: [GET] }
+Claroline\CoreBundle\Entity\Contact\Options:
+    apiv2_contact_options_schema: { url: /apiv2/contact_options/schema, method: [GET] }
+    apiv2_contact_options_find: { url: /apiv2/contact_options/find, method: [GET] }
+    apiv2_contact_options_create: { url: /apiv2/contact_options, method: [POST] }
+    apiv2_contact_options_doc: { url: /apiv2/contact_options/doc, method: [GET] }
+    apiv2_contact_options_update: { url: '/apiv2/contact_options/{id}', method: [PUT] }
+    apiv2_contact_options_delete_bulk: { url: /apiv2/contact_options, method: [DELETE] }
+    apiv2_contact_options_list: { url: /apiv2/contact_options, method: [GET] }
+    apiv2_contact_options_get: { url: '/apiv2/contact_options/{id}', method: [GET] }
+    apiv2_contact_options_exist: { url: '/apiv2/contact_options/exist/{field}/{value}', method: [GET] }
+Claroline\CoreBundle\Entity\Theme\Theme:
+    apiv2_theme_schema: { url: /apiv2/theme/schema, method: [GET] }
+    apiv2_theme_find: { url: /apiv2/theme/find, method: [GET] }
+    apiv2_theme_create: { url: /apiv2/theme, method: [POST] }
+    apiv2_theme_doc: { url: /apiv2/theme/doc, method: [GET] }
+    apiv2_theme_update: { url: '/apiv2/theme/{id}', method: [PUT] }
+    apiv2_theme_delete_bulk: { url: /apiv2/theme, method: [DELETE] }
+    apiv2_theme_list: { url: /apiv2/theme, method: [GET] }
+    apiv2_theme_get: { url: '/apiv2/theme/{id}', method: [GET] }
+    apiv2_theme_exist: { url: '/apiv2/theme/exist/{field}/{value}', method: [GET] }
+FormaLibre\ReservationBundle\Entity\ResourceType:
+    apiv2_reservationresourcetype_schema: { url: /reservation/apiv2/reservationresourcetype/schema, method: [GET] }
+    apiv2_reservationresourcetype_find: { url: /reservation/apiv2/reservationresourcetype/find, method: [GET] }
+    apiv2_reservationresourcetype_create: { url: /reservation/apiv2/reservationresourcetype, method: [POST] }
+    apiv2_reservationresourcetype_doc: { url: /reservation/apiv2/reservationresourcetype/doc, method: [GET] }
+    apiv2_reservationresourcetype_update: { url: '/reservation/apiv2/reservationresourcetype/{id}', method: [PUT] }
+    apiv2_reservationresourcetype_delete_bulk: { url: /reservation/apiv2/reservationresourcetype, method: [DELETE] }
+    apiv2_reservationresourcetype_list: { url: /reservation/apiv2/reservationresourcetype, method: [GET] }
+    apiv2_reservationresourcetype_get: { url: '/reservation/apiv2/reservationresourcetype/{id}', method: [GET] }
+    apiv2_reservationresourcetype_exist: { url: '/reservation/apiv2/reservationresourcetype/exist/{field}/{value}', method: [GET] }
+FormaLibre\ReservationBundle\Entity\Resource:
+    apiv2_reservationresource_schema: { url: /reservation/apiv2/reservationresource/schema, method: [GET] }
+    apiv2_reservationresource_find: { url: /reservation/apiv2/reservationresource/find, method: [GET] }
+    apiv2_reservationresource_create: { url: /reservation/apiv2/reservationresource, method: [POST] }
+    apiv2_reservationresource_doc: { url: /reservation/apiv2/reservationresource/doc, method: [GET] }
+    apiv2_reservationresource_update: { url: '/reservation/apiv2/reservationresource/{id}', method: [PUT] }
+    apiv2_reservationresource_delete_bulk: { url: /reservation/apiv2/reservationresource, method: [DELETE] }
+    apiv2_reservationresource_list: { url: /reservation/apiv2/reservationresource, method: [GET] }
+    apiv2_reservationresource_get: { url: '/reservation/apiv2/reservationresource/{id}', method: [GET] }
+    apiv2_reservationresource_exist: { url: '/reservation/apiv2/reservationresource/exist/{field}/{value}', method: [GET] }
+    apiv2_reservationresource_list_organizations: { url: '/reservation/apiv2/reservationresource/{id}/organization', method: [GET] }
+    apiv2_reservationresource_add_organizations: { url: '/reservation/apiv2/reservationresource/{id}/organization', method: [PATCH] }
+    apiv2_reservationresource_remove_organizations: { url: '/reservation/apiv2/reservationresource/{id}/organization', method: [DELETE] }
+FormaLibre\ReservationBundle\Entity\ResourceRights:
+    apiv2_reservationresourcerights_schema: { url: /reservation/apiv2/reservationresourcerights/schema, method: [GET] }
+    apiv2_reservationresourcerights_find: { url: /reservation/apiv2/reservationresourcerights/find, method: [GET] }
+    apiv2_reservationresourcerights_create: { url: /reservation/apiv2/reservationresourcerights, method: [POST] }
+    apiv2_reservationresourcerights_doc: { url: /reservation/apiv2/reservationresourcerights/doc, method: [GET] }
+    apiv2_reservationresourcerights_update: { url: '/reservation/apiv2/reservationresourcerights/{id}', method: [PUT] }
+    apiv2_reservationresourcerights_delete_bulk: { url: /reservation/apiv2/reservationresourcerights, method: [DELETE] }
+    apiv2_reservationresourcerights_list: { url: /reservation/apiv2/reservationresourcerights, method: [GET] }
+    apiv2_reservationresourcerights_get: { url: '/reservation/apiv2/reservationresourcerights/{id}', method: [GET] }
+    apiv2_reservationresourcerights_exist: { url: '/reservation/apiv2/reservationresourcerights/exist/{field}/{value}', method: [GET] }
+Claroline\ForumBundle\Entity\Forum:
+    claroline_forum_api_forum_getsubjects: { url: '/forum/apiv2/forum/{id}/subjects', method: [GET], description: 'Get the subjects of a forum', queryString: [{ name: 'filter[title]', type: string, description: 'The subject content' }, { name: 'filter[creationDate]', type: datetime, description: 'The creation date' }, { name: 'filter[updated]', type: datetime, description: 'The last update date' }, { name: 'filter[author]', type: string, description: 'the author name' }, { name: 'filter[isSticked]', type: boolean, description: 'is the subject sticked' }, { name: 'filter[isClosed]', type: boolean, description: 'is the subject closed' }, { name: 'filter[viewCount]', type: integer, description: 'The number of views' }, { name: page, type: integer, description: 'The queried page.' }, { name: limit, type: integer, description: 'The max amount of objects per page.' }, { name: sortBy, type: string, description: 'Sort by the property if you want to.' }], parameters: { id: { type: [string, integer], description: 'The forum id or uuid' } } }
+    claroline_forum_api_forum_createsubject: { url: '/forum/apiv2/forum/{id}/subject', method: [POST], description: 'Create a subject in a forum', parameters: { id: { type: [string, integer], description: 'The forum id or uuid' } } }
+    apiv2_forum_schema: { url: /forum/apiv2/forum/schema, method: [GET], description: 'Return the schema of class Claroline\ForumBundle\Entity\Forum.' }
+    apiv2_forum_find: { url: /forum/apiv2/forum/find, method: [GET], description: 'Find a single object of class Claroline\ForumBundle\Entity\Forum.', queryString: [{ name: 'filter[validationMode]', type: integer, description: 'The forum validation mode' }, { name: 'filter[maxComment]', type: integer, description: 'The max amount of sub comments per messages' }] }
+    apiv2_forum_create: { url: /forum/apiv2/forum, method: [POST], description: 'Create an object class Claroline\ForumBundle\Entity\Forum.', body: { schema: { $schema: 'http://json-schema.org/draft-04/schema#', type: object, properties: { id: { type: string, description: 'The forum id' }, validationMode: { type: integer, description: 'The validation mode' }, maxComment: { type: integer, description: 'The max amount of comment per post' } }, additionalProperties: {  }, patternProperties: {  } } } }
+    apiv2_forum_doc: { url: /forum/apiv2/forum/doc, method: [GET], description: 'Display the current informations' }
+    apiv2_forum_update: { url: '/forum/apiv2/forum/{id}', method: [PUT], description: 'Update an object class Claroline\ForumBundle\Entity\Forum.', parameters: { id: { type: [string, integer], description: 'The object id or uuid' } }, body: { schema: { $schema: 'http://json-schema.org/draft-04/schema#', type: object, properties: { id: { type: string, description: 'The forum id' }, validationMode: { type: integer, description: 'The validation mode' }, maxComment: { type: integer, description: 'The max amount of comment per post' } }, additionalProperties: {  }, patternProperties: {  } } } }
+    apiv2_forum_delete_bulk: { url: /forum/apiv2/forum, method: [DELETE], description: 'Remove an array of object of class Claroline\ForumBundle\Entity\Forum.', queryString: [{ name: 'ids[]', type: [string, integer], description: 'The object id or uuid.' }] }
+    apiv2_forum_copy_bulk: { url: /forum/apiv2/forum/copy, method: [GET], description: 'Copy an array of object of class Claroline\ForumBundle\Entity\Forum.', queryString: [{ name: 'ids[]', type: [string, integer], description: 'The object id or uuid.' }] }
+    apiv2_forum_list: { url: /forum/apiv2/forum, method: [GET], description: 'List the objects of class Claroline\ForumBundle\Entity\Forum.', queryString: [{ name: 'filter[validationMode]', type: integer, description: 'The forum validation mode' }, { name: 'filter[maxComment]', type: integer, description: 'The max amount of sub comments per messages' }, { name: page, type: integer, description: 'The queried page.' }, { name: limit, type: integer, description: 'The max amount of objects per page.' }, { name: sortBy, type: string, description: 'Sort by the property if you want to.' }] }
+    apiv2_forum_get: { url: '/forum/apiv2/forum/{id}', method: [GET], description: 'Finds an object class Claroline\ForumBundle\Entity\Forum.', parameters: { id: { type: [string, integer], description: 'The object id or uuid' } } }
+    apiv2_forum_exist: { url: '/forum/apiv2/forum/exist/{field}/{value}', method: [GET], description: 'Check if an object exists (it''ll eventually fire a doctrine findBy method)', parameters: [{ name: field, type: string, description: 'The queried field.' }, { name: value, type: mixed, description: 'The value of the field' }] }
+Claroline\ForumBundle\Entity\Message:
+    claroline_forum_api_message_createsubject: { url: '/forum/apiv2/forum_message/{id}/comment', method: [POST], description: 'Create a comment in a message', parameters: { id: { type: [string, integer], description: 'The message id or uuid' } } }
+    apiv2_forum_message_schema: { url: /forum/apiv2/forum_message/schema, method: [GET], description: 'Return the schema of class Claroline\ForumBundle\Entity\Message.' }
+    apiv2_forum_message_find: { url: /forum/apiv2/forum_message/find, method: [GET], description: 'Find a single object of class Claroline\ForumBundle\Entity\Message.', queryString: [{ name: 'filter[subject]', type: [integer, string], description: 'The parent subject id (int) or uuid (string)' }, { name: 'filter[parent]', type: [integer, string], description: 'The parent message id (int) or uuid (string)' }, { name: 'filter[isVisible]', type: boolean, description: 'If the message is visible' }, { name: 'filter[content]', type: string, description: 'The message content' }, { name: 'filter[creationDate]', type: datetime, description: 'The creation date' }, { name: 'filter[updated]', type: datetime, description: 'The last update date' }, { name: 'filter[author]', type: string, description: 'the author name' }] }
+    apiv2_forum_message_create: { url: /forum/apiv2/forum_message, method: [POST], description: 'Create an object class Claroline\ForumBundle\Entity\Message.', body: { schema: { $schema: 'http://json-schema.org/draft-04/schema#', type: object, properties: { id: { type: string, description: 'The message id' }, content: { type: string, description: 'The message content' }, meta: { type: [object], properties: { creator: {  }, created: { type: [string], description: 'The subject creation date' }, updated: { type: [string], description: 'The subject update date' } }, additionalProperties: {  }, patternProperties: {  } } }, additionalProperties: {  }, patternProperties: {  } } } }
+    apiv2_forum_message_doc: { url: /forum/apiv2/forum_message/doc, method: [GET], description: 'Display the current informations' }
+    apiv2_forum_message_update: { url: '/forum/apiv2/forum_message/{id}', method: [PUT], description: 'Update an object class Claroline\ForumBundle\Entity\Message.', parameters: { id: { type: [string, integer], description: 'The object id or uuid' } }, body: { schema: { $schema: 'http://json-schema.org/draft-04/schema#', type: object, properties: { id: { type: string, description: 'The message id' }, content: { type: string, description: 'The message content' }, meta: { type: [object], properties: { creator: {  }, created: { type: [string], description: 'The subject creation date' }, updated: { type: [string], description: 'The subject update date' } }, additionalProperties: {  }, patternProperties: {  } } }, additionalProperties: {  }, patternProperties: {  } } } }
+    apiv2_forum_message_delete_bulk: { url: /forum/apiv2/forum_message, method: [DELETE], description: 'Remove an array of object of class Claroline\ForumBundle\Entity\Message.', queryString: [{ name: 'ids[]', type: [string, integer], description: 'The object id or uuid.' }] }
+    apiv2_forum_message_copy_bulk: { url: /forum/apiv2/forum_message/copy, method: [GET], description: 'Copy an array of object of class Claroline\ForumBundle\Entity\Message.', queryString: [{ name: 'ids[]', type: [string, integer], description: 'The object id or uuid.' }] }
+    apiv2_forum_message_list: { url: /forum/apiv2/forum_message, method: [GET], description: 'List the objects of class Claroline\ForumBundle\Entity\Message.', queryString: [{ name: 'filter[subject]', type: [integer, string], description: 'The parent subject id (int) or uuid (string)' }, { name: 'filter[parent]', type: [integer, string], description: 'The parent message id (int) or uuid (string)' }, { name: 'filter[isVisible]', type: boolean, description: 'If the message is visible' }, { name: 'filter[content]', type: string, description: 'The message content' }, { name: 'filter[creationDate]', type: datetime, description: 'The creation date' }, { name: 'filter[updated]', type: datetime, description: 'The last update date' }, { name: 'filter[author]', type: string, description: 'the author name' }, { name: page, type: integer, description: 'The queried page.' }, { name: limit, type: integer, description: 'The max amount of objects per page.' }, { name: sortBy, type: string, description: 'Sort by the property if you want to.' }] }
+    apiv2_forum_message_get: { url: '/forum/apiv2/forum_message/{id}', method: [GET], description: 'Finds an object class Claroline\ForumBundle\Entity\Message.', parameters: { id: { type: [string, integer], description: 'The object id or uuid' } } }
+    apiv2_forum_message_exist: { url: '/forum/apiv2/forum_message/exist/{field}/{value}', method: [GET], description: 'Check if an object exists (it''ll eventually fire a doctrine findBy method)', parameters: [{ name: field, type: string, description: 'The queried field.' }, { name: value, type: mixed, description: 'The value of the field' }] }
+Claroline\ForumBundle\Entity\Subject:
+    claroline_forum_api_subject_getmessages: { url: '/forum/apiv2/forum_subject/{id}/messages', method: [GET], description: 'Get the messages of a subject', queryString: [{ name: 'filter[isVisible]', type: boolean, description: 'If the message is visible' }, { name: 'filter[content]', type: string, description: 'The message content' }, { name: 'filter[creationDate]', type: datetime, description: 'The creation date' }, { name: 'filter[updated]', type: datetime, description: 'The last update date' }, { name: 'filter[author]', type: string, description: 'the author name' }, { name: page, type: integer, description: 'The queried page.' }, { name: limit, type: integer, description: 'The max amount of objects per page.' }, { name: sortBy, type: string, description: 'Sort by the property if you want to.' }], parameters: { id: { type: [string, integer], description: 'The subject id or uuid' } } }
+    claroline_forum_api_subject_createmessage: { url: '/forum/apiv2/forum_subject/{id}/message', method: [POST], description: 'Create a message in a subject', parameters: { id: { type: [string, integer], description: 'The subject id or uuid' } } }
+    apiv2_forum_subject_schema: { url: /forum/apiv2/forum_subject/schema, method: [GET], description: 'Return the schema of class Claroline\ForumBundle\Entity\Subject.' }
+    apiv2_forum_subject_find: { url: /forum/apiv2/forum_subject/find, method: [GET], description: 'Find a single object of class Claroline\ForumBundle\Entity\Subject.', queryString: [{ name: 'filter[forum]', type: [integer, string], description: 'The parent forum id (int) or uuid (string)' }, { name: 'filter[title]', type: string, description: 'The subject content' }, { name: 'filter[creationDate]', type: datetime, description: 'The creation date' }, { name: 'filter[updated]', type: datetime, description: 'The last update date' }, { name: 'filter[author]', type: string, description: 'the author name' }, { name: 'filter[isSticked]', type: boolean, description: 'is the subject sticked' }, { name: 'filter[isClosed]', type: boolean, description: 'is the subject closed' }, { name: 'filter[viewCount]', type: integer, description: 'The number of views' }] }
+    apiv2_forum_subject_create: { url: /forum/apiv2/forum_subject, method: [POST], description: 'Create an object class Claroline\ForumBundle\Entity\Subject.', body: { schema: { $schema: 'http://json-schema.org/draft-04/schema#', type: object, properties: { id: { type: string, description: 'The subject id' }, title: { type: string, description: 'The subject title' }, forum: { $schema: 'http://json-schema.org/draft-04/schema#', type: object, properties: { id: { type: string, description: 'The forum id' }, validationMode: { type: integer, description: 'The validation mode' }, maxComment: { type: integer, description: 'The max amount of comment per post' } }, additionalProperties: {  }, patternProperties: {  } }, meta: { type: [object], properties: { views: { type: integer, description: 'The number of views' }, creator: {  }, created: { type: [string], description: 'The subject creation date' }, updated: { type: [string], description: 'The subject update date' }, sticky: { type: boolean, description: 'The subject should be on the front page' }, closed: { type: boolean, description: 'The subject is closed' } }, additionalProperties: {  }, patternProperties: {  } } }, additionalProperties: {  }, patternProperties: {  } } } }
+    apiv2_forum_subject_doc: { url: /forum/apiv2/forum_subject/doc, method: [GET], description: 'Display the current informations' }
+    apiv2_forum_subject_update: { url: '/forum/apiv2/forum_subject/{id}', method: [PUT], description: 'Update an object class Claroline\ForumBundle\Entity\Subject.', parameters: { id: { type: [string, integer], description: 'The object id or uuid' } }, body: { schema: { $schema: 'http://json-schema.org/draft-04/schema#', type: object, properties: { id: { type: string, description: 'The subject id' }, title: { type: string, description: 'The subject title' }, forum: { $schema: 'http://json-schema.org/draft-04/schema#', type: object, properties: { id: { type: string, description: 'The forum id' }, validationMode: { type: integer, description: 'The validation mode' }, maxComment: { type: integer, description: 'The max amount of comment per post' } }, additionalProperties: {  }, patternProperties: {  } }, meta: { type: [object], properties: { views: { type: integer, description: 'The number of views' }, creator: {  }, created: { type: [string], description: 'The subject creation date' }, updated: { type: [string], description: 'The subject update date' }, sticky: { type: boolean, description: 'The subject should be on the front page' }, closed: { type: boolean, description: 'The subject is closed' } }, additionalProperties: {  }, patternProperties: {  } } }, additionalProperties: {  }, patternProperties: {  } } } }
+    apiv2_forum_subject_delete_bulk: { url: /forum/apiv2/forum_subject, method: [DELETE], description: 'Remove an array of object of class Claroline\ForumBundle\Entity\Subject.', queryString: [{ name: 'ids[]', type: [string, integer], description: 'The object id or uuid.' }] }
+    apiv2_forum_subject_copy_bulk: { url: /forum/apiv2/forum_subject/copy, method: [GET], description: 'Copy an array of object of class Claroline\ForumBundle\Entity\Subject.', queryString: [{ name: 'ids[]', type: [string, integer], description: 'The object id or uuid.' }] }
+    apiv2_forum_subject_list: { url: /forum/apiv2/forum_subject, method: [GET], description: 'List the objects of class Claroline\ForumBundle\Entity\Subject.', queryString: [{ name: 'filter[forum]', type: [integer, string], description: 'The parent forum id (int) or uuid (string)' }, { name: 'filter[title]', type: string, description: 'The subject content' }, { name: 'filter[creationDate]', type: datetime, description: 'The creation date' }, { name: 'filter[updated]', type: datetime, description: 'The last update date' }, { name: 'filter[author]', type: string, description: 'the author name' }, { name: 'filter[isSticked]', type: boolean, description: 'is the subject sticked' }, { name: 'filter[isClosed]', type: boolean, description: 'is the subject closed' }, { name: 'filter[viewCount]', type: integer, description: 'The number of views' }, { name: page, type: integer, description: 'The queried page.' }, { name: limit, type: integer, description: 'The max amount of objects per page.' }, { name: sortBy, type: string, description: 'Sort by the property if you want to.' }] }
+    apiv2_forum_subject_get: { url: '/forum/apiv2/forum_subject/{id}', method: [GET], description: 'Finds an object class Claroline\ForumBundle\Entity\Subject.', parameters: { id: { type: [string, integer], description: 'The object id or uuid' } } }
+    apiv2_forum_subject_exist: { url: '/forum/apiv2/forum_subject/exist/{field}/{value}', method: [GET], description: 'Check if an object exists (it''ll eventually fire a doctrine findBy method)', parameters: [{ name: field, type: string, description: 'The queried field.' }, { name: value, type: mixed, description: 'The value of the field' }] }
+Claroline\VideoPlayerBundle\Entity\Track:
+    apiv2_videotrack_schema: { url: /video-player/apiv2/videotrack/schema, method: [GET] }
+    apiv2_videotrack_find: { url: /video-player/apiv2/videotrack/find, method: [GET] }
+    apiv2_videotrack_create: { url: /video-player/apiv2/videotrack, method: [POST] }
+    apiv2_videotrack_doc: { url: /video-player/apiv2/videotrack/doc, method: [GET] }
+    apiv2_videotrack_update: { url: '/video-player/apiv2/videotrack/{id}', method: [PUT] }
+    apiv2_videotrack_delete_bulk: { url: /video-player/apiv2/videotrack, method: [DELETE] }
+    apiv2_videotrack_list: { url: /video-player/apiv2/videotrack, method: [GET] }
+    apiv2_videotrack_get: { url: '/video-player/apiv2/videotrack/{id}', method: [GET] }
+    apiv2_videotrack_exist: { url: '/video-player/apiv2/videotrack/exist/{field}/{value}', method: [GET] }
+Icap\OAuthBundle\Entity\OauthUser:
+    apiv2_oauth_schema: { url: /apiv2/oauth/schema, method: [GET] }
+    apiv2_oauth_find: { url: /apiv2/oauth/find, method: [GET] }
+    apiv2_oauth_create: { url: /apiv2/oauth, method: [POST] }
+    apiv2_oauth_doc: { url: /apiv2/oauth/doc, method: [GET] }
+    apiv2_oauth_update: { url: '/apiv2/oauth/{id}', method: [PUT] }
+    apiv2_oauth_delete_bulk: { url: /apiv2/oauth, method: [DELETE] }
+    apiv2_oauth_list: { url: /apiv2/oauth, method: [GET] }
+    apiv2_oauth_get: { url: '/apiv2/oauth/{id}', method: [GET] }
+    apiv2_oauth_exist: { url: '/apiv2/oauth/exist/{field}/{value}', method: [GET] }
+Innova\PathBundle\Entity\Path\Path:
+    apiv2_path_schema: { url: /innovapathbundle/apiv2/path/schema, method: [GET] }
+    apiv2_path_find: { url: /innovapathbundle/apiv2/path/find, method: [GET] }
+    apiv2_path_create: { url: /innovapathbundle/apiv2/path, method: [POST] }
+    apiv2_path_doc: { url: /innovapathbundle/apiv2/path/doc, method: [GET] }
+    apiv2_path_update: { url: '/innovapathbundle/apiv2/path/{id}', method: [PUT] }
+    apiv2_path_delete_bulk: { url: /innovapathbundle/apiv2/path, method: [DELETE] }
+    apiv2_path_list: { url: /innovapathbundle/apiv2/path, method: [GET] }
+    apiv2_path_get: { url: '/innovapathbundle/apiv2/path/{id}', method: [GET] }
+    apiv2_path_exist: { url: '/innovapathbundle/apiv2/path/exist/{field}/{value}', method: [GET] }
+Icap\BibliographyBundle\Entity\BookReference:
+    apiv2_book_reference_schema: { url: /bibliography/apiv2/book_reference/schema, method: [GET] }
+    apiv2_book_reference_find: { url: /bibliography/apiv2/book_reference/find, method: [GET] }
+    apiv2_book_reference_create: { url: /bibliography/apiv2/book_reference, method: [POST] }
+    apiv2_book_reference_doc: { url: /bibliography/apiv2/book_reference/doc, method: [GET] }
+    apiv2_book_reference_update: { url: '/bibliography/apiv2/book_reference/{id}', method: [PUT] }
+    apiv2_book_reference_delete_bulk: { url: /bibliography/apiv2/book_reference, method: [DELETE] }
+    apiv2_book_reference_list: { url: /bibliography/apiv2/book_reference, method: [GET] }
+    apiv2_book_reference_get: { url: '/bibliography/apiv2/book_reference/{id}', method: [GET] }
+    apiv2_book_reference_exist: { url: '/bibliography/apiv2/book_reference/exist/{field}/{value}', method: [GET] }
+Claroline\DropZoneBundle\Entity\DropzoneTool:
+    apiv2_dropzonetool_schema: { url: /clarolinedropzonebundle/apiv2/dropzonetool/schema, method: [GET] }
+    apiv2_dropzonetool_find: { url: /clarolinedropzonebundle/apiv2/dropzonetool/find, method: [GET] }
+    apiv2_dropzonetool_create: { url: /clarolinedropzonebundle/apiv2/dropzonetool, method: [POST] }
+    apiv2_dropzonetool_doc: { url: /clarolinedropzonebundle/apiv2/dropzonetool/doc, method: [GET] }
+    apiv2_dropzonetool_update: { url: '/clarolinedropzonebundle/apiv2/dropzonetool/{id}', method: [PUT] }
+    apiv2_dropzonetool_delete_bulk: { url: /clarolinedropzonebundle/apiv2/dropzonetool, method: [DELETE] }
+    apiv2_dropzonetool_list: { url: /clarolinedropzonebundle/apiv2/dropzonetool, method: [GET] }
+    apiv2_dropzonetool_get: { url: '/clarolinedropzonebundle/apiv2/dropzonetool/{id}', method: [GET] }
+    apiv2_dropzonetool_exist: { url: '/clarolinedropzonebundle/apiv2/dropzonetool/exist/{field}/{value}', method: [GET] }
+

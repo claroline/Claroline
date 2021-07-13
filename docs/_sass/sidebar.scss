@@ -1,0 +1,51 @@
+/*
+ * Sidebar
+ */
+
+.app-nav {
+  width: 20%;
+  background: #f0f0f0;
+  padding: 20px 0;
+
+  a {
+    display: block;
+    text-decoration: none;
+
+    &.active {
+      color: $primary-color;
+      padding-left: 26px;
+    }
+  }
+
+  > a,
+  header a {
+    display: block;
+    padding: 10px 15px;
+    font-family: $headings-font-family;
+    text-transform: uppercase;
+    color: #444;
+
+    font-weight: 900;
+    font-size: 20px;
+  }
+
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  li a {
+    padding: 5px 15px 5px 30px;
+    color: #999;
+
+    &:hover {
+      color: darken(#999, 20%);
+    }
+
+    &.active {
+      padding-left: 26px;
+      border-left: 4px solid $primary-color;
+    }
+  }
+}

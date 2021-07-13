@@ -28,12 +28,6 @@ services:
         tags:
             - { name: 'console.command', command: 'claroline:updater:execute' }
 
-    Claroline\InstallationBundle\Command\UpdateConfigCommand:
-        arguments:
-            - '@Claroline\CoreBundle\Library\Installation\Plugin\Installer'
-        tags:
-            - { name: 'console.command', command: 'claroline:update_config' }
-
     Claroline\InstallationBundle\Command\PluginInstallCommand:
         arguments:
             - '@Claroline\CoreBundle\Library\Installation\Plugin\Installer'
