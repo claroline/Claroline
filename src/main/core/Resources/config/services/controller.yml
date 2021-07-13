@@ -210,6 +210,7 @@ services:
 
     Claroline\CoreBundle\Controller\APINew\Platform\ParametersController:
         arguments:
+            - '@security.authorization_checker'
             - '@Claroline\AppBundle\Event\StrictDispatcher'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
             - '@Claroline\AnalyticsBundle\Manager\AnalyticsManager'
