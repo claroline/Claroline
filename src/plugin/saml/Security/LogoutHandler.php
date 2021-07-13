@@ -70,9 +70,11 @@ class LogoutHandler implements LogoutSuccessHandlerInterface
             $bindingType = $bindingFactory->detectBindingType($request);
             if (empty($bindingType)) {
                 // no SAML request: initiate logout
-                $response = $this->sendLogoutRequest();
-                if ($response) {
-                    return $response;
+                if ($this->config->getParameter('saml.logout')) {
+                    $response = $this->sendLogoutRequest();
+                    if ($response) {
+                        return $response;
+                    }
                 }
             } else {
                 $messageContext = new MessageContext();
