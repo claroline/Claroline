@@ -105,6 +105,9 @@
       - title: Path
         doc: plugins/path
 
+      - title: Scorm
+        doc: plugins/scorm
+
       - title: Tag
         doc: plugins/tag
 
