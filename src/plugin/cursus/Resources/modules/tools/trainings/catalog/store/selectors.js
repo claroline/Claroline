@@ -21,6 +21,11 @@ const availableSessions = createSelector(
   (catalog) => catalog.courseAvailableSessions
 )
 
+const defaultSession = createSelector(
+  [catalog],
+  (catalog) => catalog.courseDefaultSession
+)
+
 const activeSession = createSelector(
   [catalog],
   (catalog) => catalog.courseActiveSession
@@ -51,6 +56,7 @@ export const selectors = {
 
   course,
   activeSession,
+  defaultSession,
   availableSessions,
   sessionRegistrations,
   activeSessionRegistration
