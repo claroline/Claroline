@@ -36,7 +36,7 @@ class TranslatableSerializer
 
     public function getClass(): string
     {
-        return 'Claroline\CoreBundle\Entity\Content';
+        return Content::class;
     }
 
     public function serialize(Content $content, array $options = [])

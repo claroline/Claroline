@@ -17,7 +17,10 @@ class LegacyParametersMapping implements LegacyParametersMappingInterface
 {
     public function getMapping()
     {
-        $parameters = [];
+        $parameters = [
+            'redirect_after_login_option' => 'authentication.redirect_after_login_option',
+            'redirect_after_login_url' => 'authentication.redirect_after_login_url',
+        ];
 
         foreach (OauthConfiguration::resourceOwners() as $resourceOwner) {
             $resourceOwnerStr = str_replace(' ', '_', strtolower($resourceOwner));

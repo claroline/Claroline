@@ -58,13 +58,12 @@ class ClarolineCoreBundle extends DistributionPluginBundle implements Configurat
 
     public function getConfiguration($environment)
     {
-        $config = new ConfigurationBuilder();
+        $config = parent::getConfiguration($environment);
+
         $configFile = 'test' === $environment ? 'config_test.yml' : 'config.yml';
-        $routingFile = 'test' === $environment ? 'routing_test.yml' : 'routing.yml';
 
         return $config
-            ->addContainerResource($this->getPath()."/Resources/config/app/{$configFile}")
-            ->addRoutingResource($this->getPath()."/Resources/config/{$routingFile}");
+            ->addContainerResource($this->getPath()."/Resources/config/app/{$configFile}");
     }
 
     public function suggestConfigurationFor(Bundle $bundle, $environment)
