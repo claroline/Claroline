@@ -2,7 +2,7 @@ imports:
     - { resource: framework_dev.yml }
 
 framework:
-    test: ~
+    test: true
     csrf_protection: false
     session:
         storage_id: session.storage.mock_file

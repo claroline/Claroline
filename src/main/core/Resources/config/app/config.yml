@@ -1,7 +1,0 @@
-# This file gathers container configuration that must be loaded at the application level
-
-parameters:
-    security.exception_listener.class: Claroline\CoreBundle\Security\Firewall\ExceptionListener
-
-framework:
-    test: true

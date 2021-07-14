@@ -18,9 +18,6 @@ use InvalidArgumentException;
  * This class is used to perform various validation checks upon a plugin,
  * calling dedicated checkers. If the validation succeed, the plugin could
  * be considered as safe to install by the plugin installer.
- *
- * Note: this class is defined as a service in config/services.yml (array injection is
- * not supported by the di extra bundle).
  */
 class Validator
 {

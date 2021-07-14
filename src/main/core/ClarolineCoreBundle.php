@@ -56,16 +56,6 @@ class ClarolineCoreBundle extends DistributionPluginBundle implements Configurat
         return in_array($environment, ['prod', 'dev', 'test']);
     }
 
-    public function getConfiguration($environment)
-    {
-        $config = parent::getConfiguration($environment);
-
-        $configFile = 'test' === $environment ? 'config_test.yml' : 'config.yml';
-
-        return $config
-            ->addContainerResource($this->getPath()."/Resources/config/app/{$configFile}");
-    }
-
     public function suggestConfigurationFor(Bundle $bundle, $environment)
     {
         $bundleClass = get_class($bundle);
@@ -75,7 +65,6 @@ class ClarolineCoreBundle extends DistributionPluginBundle implements Configurat
         $emptyConfigs = [
             'Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle',
             'FOS\JsRoutingBundle\FOSJsRoutingBundle',
-            'Claroline\MigrationBundle\ClarolineMigrationBundle',
         ];
         // simple container configuration, same for every environment
         $simpleConfigs = [
@@ -128,11 +117,6 @@ class ClarolineCoreBundle extends DistributionPluginBundle implements Configurat
         return new AdditionalInstaller($this->getUpdaterServiceLocator());
     }
 
-    private function buildPath($file, $folder = 'suggested')
-    {
-        return $this->getPath()."/Resources/config/{$folder}/{$file}.yml";
-    }
-
     public function getRequiredThirdPartyBundles(string $environment): array
     {
         $bundles = [
@@ -155,5 +139,10 @@ class ClarolineCoreBundle extends DistributionPluginBundle implements Configurat
         }
 
         return $bundles;
+    }
+
+    private function buildPath($file, $folder = 'suggested')
+    {
+        return $this->getPath()."/Resources/config/{$folder}/{$file}.yml";
     }
 }
