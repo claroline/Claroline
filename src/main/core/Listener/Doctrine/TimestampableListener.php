@@ -12,7 +12,7 @@
 namespace Claroline\CoreBundle\Listener\Doctrine;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Doctrine\Common\NotifyPropertyChanged;
+use Doctrine\Persistence\NotifyPropertyChanged;
 use Gedmo\Timestampable\TimestampableListener as BaseListener;
 
 /**

@@ -242,7 +242,7 @@ services:
             - { name: kernel.event_listener, event: kernel.request, method: checkAvailability }
             - { name: kernel.event_listener, event: kernel.terminate, method: clearTemp }
 
-    Claroline\CoreBundle\Listener\CliListener:
+    Claroline\CoreBundle\Listener\CommandListener:
         arguments:
             - '@Claroline\AuthenticationBundle\Security\Authentication\Authenticator'
             - '@Claroline\CoreBundle\Manager\UserManager'
@@ -267,13 +267,6 @@ services:
         tags:
             - { name: 'doctrine.orm.entity_listener', entity: 'Claroline\CoreBundle\Entity\User', event: 'prePersist' }
             - { name: 'doctrine.orm.entity_listener', entity: 'Claroline\CoreBundle\Entity\User', event: 'preUpdate' }
-
-    Claroline\CoreBundle\Listener\Doctrine\DebugListener:
-        public: true
-        calls:
-            - setLogger: [ '@logger' ]
-        tags:
-            - { name: doctrine.event_listener, event: onFlush }
 
     Claroline\CoreBundle\Listener\Log\GroupListener:
         arguments:
