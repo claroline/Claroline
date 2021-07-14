@@ -11,10 +11,11 @@
     "not_attempted": "Pas tenté",
     "passed": "Réussi",
     "play_scorm": "Commencer le Scorm",
-    "results_list": "Liste des résultats",
     "sco": "SCO",
     "scorm_results": "Résultats SCORM",
     "session_time": "Durée de la dernière session",
     "success_status": "Statut",
-    "unknown": "Inconnu"
+    "unknown": "Inconnu",
+    "scorm_12": "Scorm 1.2",
+    "scorm_2004": "Scorm 2004"
 }

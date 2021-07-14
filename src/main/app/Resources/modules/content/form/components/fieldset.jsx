@@ -7,10 +7,8 @@ import set from 'lodash/set'
 
 import {Alert} from '#/main/app/alert/components/alert'
 import {DataInput} from '#/main/app/data/components/input'
+import {DataDisplay} from '#/main/app/data/components/display'
 import {toKey} from '#/main/core/scaffolding/text'
-
-// todo : restore readOnly
-// todo : add auto focus
 
 /**
  * ATTENTION : as it's only be used in the FormData component, the `fields` are not defaulted by the component.
@@ -68,28 +66,48 @@ class FormFieldset extends Component {
       }
 
       rendered.push(
-        <DataInput
-          key={field.name}
-          id={this.getFieldId(field)}
-          name={field.name}
-          type={field.type}
-          label={field.label}
-          hideLabel={field.hideLabel}
-          options={field.options}
-          help={field.help}
-          placeholder={field.placeholder}
-          size={this.props.size}
-          required={field.required}
-          disabled={this.props.disabled || (typeof field.disabled === 'function' ? field.disabled(this.props.data) : field.disabled)}
-          validating={this.props.validating}
+        field.readOnly ?
+          <DataDisplay
+            key={field.name}
+            id={this.getFieldId(field)}
+            name={field.name}
+            type={field.type}
+            label={field.label}
+            hideLabel={field.hideLabel}
+            options={field.options}
+            help={field.help}
+            placeholder={field.placeholder}
+            size={this.props.size}
+            required={field.required}
 
-          value={value}
-          error={get(this.props.errors, field.name)}
-          onChange={(value) => this.update(field.name, value, field.onChange)}
-          onError={(error) => this.setErrors(field.name, error, field.onError)}
-        >
-          {customInput}
-        </DataInput>
+            value={value}
+          >
+            {customInput}
+          </DataDisplay>
+          :
+          <DataInput
+            key={field.name}
+            id={this.getFieldId(field)}
+            name={field.name}
+            type={field.type}
+            label={field.label}
+            hideLabel={field.hideLabel}
+            options={field.options}
+            help={field.help}
+            placeholder={field.placeholder}
+            size={this.props.size}
+            required={field.required}
+            disabled={this.props.disabled || (typeof field.disabled === 'function' ? field.disabled(this.props.data) : field.disabled)}
+            validating={this.props.validating}
+            autoFocus={field.autoFocus}
+
+            value={value}
+            error={get(this.props.errors, field.name)}
+            onChange={(value) => this.update(field.name, value, field.onChange)}
+            onError={(error) => this.setErrors(field.name, error, field.onError)}
+          >
+            {customInput}
+          </DataInput>
       )
 
       if (field.linked && 0 !== field.linked.length) {

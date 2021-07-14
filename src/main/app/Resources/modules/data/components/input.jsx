@@ -122,6 +122,7 @@ class DataInput extends Component {
           error: this.props.error,
           placeholder: this.props.placeholder,
           disabled: this.props.disabled,
+          autoFocus: this.props.autoFocus,
           size: this.props.size,
           validating: this.props.validating,
           onChange: this.onChange,
@@ -162,6 +163,7 @@ DataInput.propTypes = {
   size: T.oneOf(['sm', 'lg']),
 
   // field state
+  autoFocus: T.bool,
   required: T.bool,
   disabled: T.bool,
   validating: T.bool,

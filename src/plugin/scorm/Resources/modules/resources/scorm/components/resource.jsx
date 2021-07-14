@@ -14,15 +14,17 @@ const ScormResource = props =>
   <ResourcePage
     customActions={[
       {
+        name: 'play',
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-play',
-        label: trans('play_scorm', {}, 'scorm'),
+        label: trans('start', {}, 'actions'),
         target: `${props.path}/play`,
         exact: true
       }, {
+        name: 'show-results',
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-list',
-        label: trans('results_list', {}, 'scorm'),
+        label: trans('show-results', {}, 'actions'),
         displayed: props.editable,
         target: `${props.path}/results`,
         exact: true

@@ -7,5 +7,6 @@
   "create_user": "Register a user",
   "export-results": "Export results (.csv)",
   "geolocate": "Geolocate",
-  "book": "Book"
+  "book": "Book",
+  "show-results": "Show results"
 }
