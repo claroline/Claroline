@@ -5,6 +5,7 @@ import {CourseMain as CourseMainComponent} from '#/plugin/cursus/course/componen
 
 const CourseMain = connect(
   (state) => ({
+    defaultSession: selectors.defaultSession(state),
     activeSession: selectors.activeSession(state),
     activeSessionRegistration: selectors.activeSessionRegistration(state),
     availableSessions: selectors.availableSessions(state)

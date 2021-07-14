@@ -20,8 +20,10 @@ const reducer = combineReducers({
   course: makeReducer(null, {
     [LOAD_COURSE]: (state, action) => action.course
   }),
+  courseDefaultSession: makeReducer(null, {
+    [LOAD_COURSE]: (state, action) => action.defaultSession || null
+  }),
   courseActiveSession: makeReducer(null, {
-    [LOAD_COURSE]: (state, action) => action.defaultSession || null,
     [LOAD_COURSE_SESSION]: (state, action) => action.session
   }),
   courseAvailableSessions: makeReducer([], {
