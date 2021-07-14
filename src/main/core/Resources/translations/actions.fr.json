@@ -7,5 +7,6 @@
   "create_user": "Inscrire un utilisateur",
   "export-results": "Exporter les résultats (.csv)",
   "geolocate": "Géolocaliser",
-  "book": "Réserver"
+  "book": "Réserver",
+  "show-results": "Voir les résultats"
 }

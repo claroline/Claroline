@@ -20,6 +20,7 @@ const DataFormProperty = {
       T.func // a function that receives the whole form data and returns the new state
     ]),
     readOnly: T.bool,
+    autoFocus: T.bool,
 
     // field methods
     onChange: T.func,

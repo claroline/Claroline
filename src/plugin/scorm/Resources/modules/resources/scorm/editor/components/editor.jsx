@@ -26,10 +26,23 @@ const EditorComponent = props =>
     }}
     sections={[
       {
-        id: 'display',
-        icon: 'fa fa-fw fa-th-list',
-        title: trans('display'),
+        title: trans('general'),
         primary: true,
+        fields: [
+          {
+            name: 'version',
+            label: trans('version'),
+            type: 'translation',
+            readOnly: true,
+            options: {
+              domain: 'scorm'
+            }
+          }
+        ]
+      }, {
+        id: 'display',
+        icon: 'fa fa-fw fa-desktop',
+        title: trans('display_parameters'),
         fields: [
           {
             name: 'ratioList',
