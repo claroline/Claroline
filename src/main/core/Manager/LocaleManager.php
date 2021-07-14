@@ -13,15 +13,11 @@ namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class LocaleManager
 {
-    private $defaultLocale;
-    private $finder;
-    private $locales;
     private $userManager;
     private $tokenStorage;
     private $configHandler;
@@ -33,64 +29,41 @@ class LocaleManager
     ) {
         $this->configHandler = $configHandler;
         $this->userManager = $userManager;
-        $this->defaultLocale = $configHandler->getParameter('locale_language');
-        $this->finder = new Finder();
         $this->tokenStorage = $tokenStorage;
     }
 
-    public function getLocales()
+    public function getLocales(): array
     {
+        $enabled = $this->getEnabledLocales();
         $available = $this->getAvailableLocales();
-        $implemented = array_keys($this->getImplementedLocales());
 
-        return array_map(function ($locale) use ($available) {
+        return array_map(function ($locale) use ($enabled) {
             return [
                 'name' => $locale,
-                'enabled' => array_key_exists($locale, $available),
+                'enabled' => in_array($locale, $enabled),
             ];
-        }, $implemented);
+        }, $available);
     }
 
-    /**
-     * Get a list of available languages in the platform.
-     *
-     * @param string $path The path of translations files
-     *
-     * @return array
-     */
-    public function getImplementedLocales($path = '/../Resources/translations/')
-    {
-        $locales = [];
-        $finder = $this->finder->files()->in(__DIR__.$path)->name('/platform\.[^.]*\.json/');
-
-        foreach ($finder as $file) {
-            $locale = str_replace(['platform.', '.json'], '', $file->getRelativePathname());
-            $locales[$locale] = $locale;
-        }
-
-        return $locales;
-    }
-
-    public function getDefault()
+    public function getDefault(): ?string
     {
         return $this->configHandler->getParameter('locales.default');
     }
 
     /**
-     * Get a list of available languages in the platform.
-     *
-     * @return array
+     * Get the list of all available languages in the platform.
      */
-    public function getAvailableLocales()
+    public function getAvailableLocales(): array
     {
-        if (!$this->locales) {
-            $data = $this->configHandler->getParameter('locales.available');
-            foreach ($data as $locale) {
-                $this->locales[$locale] = $locale;
-            }
-        }
+        return ['de', 'en', 'es', 'fr', 'it', 'nl'];
+    }
 
-        return $this->locales;
+    /**
+     * Get the list of enabled languages in the platform.
+     */
+    public function getEnabledLocales(): array
+    {
+        return $this->configHandler->getParameter('locales.available') ?? [];
     }
 
     /**
@@ -98,7 +71,7 @@ class LocaleManager
      *
      * @param string $locale The locale string as en, fr, es, etc
      */
-    public function setUserLocale($locale)
+    public function setUserLocale(string $locale): void
     {
         $this->userManager->setLocale($this->getCurrentUser(), $locale);
     }
@@ -111,7 +84,7 @@ class LocaleManager
      */
     public function getUserLocale(Request $request)
     {
-        $locales = $this->getAvailableLocales();
+        $locales = $this->getEnabledLocales();
         $preferred = explode('_', $request->getPreferredLanguage());
 
         if ($request->query->get('_locale')) {
@@ -122,10 +95,10 @@ class LocaleManager
             $locale = $this->getCurrentUser()->getLocale();
         } elseif ($request->getSession() && $request->getSession()->get('_locale')) {
             $locale = $request->getSession()->get('_locale');
-        } elseif (count($preferred) > 0 && isset($locales[$preferred[0]])) {
+        } elseif (count($preferred) > 0 && in_array($preferred[0], $locales)) {
             $locale = $preferred[0];
         } else {
-            $locale = $this->defaultLocale;
+            $locale = $this->getDefault();
         }
 
         $session = $request->getSession();
@@ -136,12 +109,7 @@ class LocaleManager
         return $locale;
     }
 
-    /**
-     * Get Current User.
-     *
-     * @return User|null
-     */
-    private function getCurrentUser()
+    private function getCurrentUser(): ?User
     {
         $token = $this->tokenStorage->getToken();
         if (is_object($token)) { // not sure this check is still required
@@ -154,8 +122,8 @@ class LocaleManager
         return null;
     }
 
-    public function getLocale(User $user)
+    public function getLocale(User $user): string
     {
-        return $user->getLocale() ? $user->getLocale() : $this->defaultLocale;
+        return $user->getLocale() ? $user->getLocale() : $this->getDefault();
     }
 }

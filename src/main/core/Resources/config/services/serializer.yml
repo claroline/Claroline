@@ -188,7 +188,7 @@ services:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\Manager\LocaleManager'
-            - '@service_container'
+            - '@request_stack'
 
     Claroline\CoreBundle\API\Serializer\Transfer\FileSerializer:
         tags: [claroline.serializer]

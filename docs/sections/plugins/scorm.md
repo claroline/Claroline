@@ -5,7 +5,7 @@ title: Scorm plugin
 
 # Scorm plugin
 
-The Scorm plugins allows to create Scorm resources in Claroline platform.
+The Scorm plugin allows to create Scorm resources in Claroline platform.
 It supports Scorm 1.2 and Scorm 2004.
 
 ## Scorm API integration
