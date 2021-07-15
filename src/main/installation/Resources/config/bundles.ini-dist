@@ -1,6 +1,5 @@
 Claroline\InstallationBundle\ClarolineInstallationBundle = true
 Claroline\MigrationBundle\ClarolineMigrationBundle = true
-Claroline\KernelBundle\ClarolineKernelBundle = true
 Claroline\CoreBundle\ClarolineCoreBundle = true
 Claroline\TagBundle\ClarolineTagBundle = true
 Claroline\AppBundle\ClarolineAppBundle = true

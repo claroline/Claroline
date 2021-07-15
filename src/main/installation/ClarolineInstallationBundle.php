@@ -16,6 +16,7 @@ use Claroline\KernelBundle\Bundle\AutoConfigurableInterface;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Symfony\Component\Routing\RouteCollectionBuilder;
 
 class ClarolineInstallationBundle extends Bundle implements AutoConfigurableInterface
 {
@@ -34,5 +35,9 @@ class ClarolineInstallationBundle extends Bundle implements AutoConfigurableInte
         parent::build($container);
 
         $container->addCompilerPass(new CollectUpdatersPass());
+    }
+
+    public function configureRoutes(RouteCollectionBuilder $routes)
+    {
     }
 }

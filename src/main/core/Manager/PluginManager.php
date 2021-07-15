@@ -54,7 +54,7 @@ class PluginManager
         $this->kernel = $kernel;
 
         $this->loadedBundles = IniParser::parseFile($this->bundleFile);
-        BundleManager::initialize($kernel, $this->bundleFile);
+        BundleManager::initialize($kernel->getEnvironment(), $this->bundleFile);
         $this->bundleManager = BundleManager::getInstance();
     }
 

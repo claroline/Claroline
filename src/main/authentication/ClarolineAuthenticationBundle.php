@@ -47,7 +47,7 @@ class ClarolineAuthenticationBundle extends DistributionPluginBundle implements 
         $bundleClass = get_class($bundle);
 
         $simpleConfigs = [
-            'HWI\Bundle\OAuthBundle\HWIOAuthBundle' => 'hwi_oauth',
+            HWIOAuthBundle::class => 'hwi_oauth',
         ];
 
         if (isset($simpleConfigs[$bundleClass])) {

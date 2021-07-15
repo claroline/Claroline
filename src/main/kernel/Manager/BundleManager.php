@@ -16,10 +16,8 @@ use Claroline\KernelBundle\Bundle\AutoConfigurableInterface;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 use Claroline\KernelBundle\Bundle\ConfigurationProviderInterface;
 use Claroline\KernelBundle\Bundle\PluginBundleInterface;
-use Claroline\KernelBundle\ClarolineKernelBundle;
 use Psr\Log\LoggerAwareInterface;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
-use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * The KernelBundle probably should do all of that.
@@ -31,13 +29,14 @@ class BundleManager implements LoggerAwareInterface
     const BUNDLE_INSTANCE = 'instance';
     const BUNDLE_CONFIG = 'config';
 
-    private $kernel;
+    private $env;
     private $bundlesFile;
+
     private static $selfInstance;
 
-    public static function initialize(KernelInterface $kernel, $bundlesFile)
+    public static function initialize(string $env, string $bundlesFile)
     {
-        static::$selfInstance = new self($kernel, $bundlesFile);
+        static::$selfInstance = new self($env, $bundlesFile);
     }
 
     public static function getInstance()
@@ -55,13 +54,13 @@ class BundleManager implements LoggerAwareInterface
         $activeBundles = [];
         $configProviderBundles = [];
         $nonAutoConfigurableBundles = [];
-        $environment = $this->getEnvironment();
+        $environment = $this->env;
 
         foreach ($entries as $bundleClass => $isActive) {
-            if (((bool) $isActive || $fetchAll) && ClarolineKernelBundle::class !== $bundleClass) {
+            if ((bool) $isActive || $fetchAll) {
                 if (class_exists($bundleClass)) {
                     /** @var BundleInterface $bundle */
-                    $bundle = new $bundleClass($this->kernel);
+                    $bundle = new $bundleClass();
 
                     if ($bundle instanceof PluginBundleInterface) {
                         foreach ($bundle->getRequiredThirdPartyBundles($environment) as $thirdPartyBundle) {
@@ -105,20 +104,13 @@ class BundleManager implements LoggerAwareInterface
         return $activeBundles;
     }
 
-    private function __construct(KernelInterface $kernel, $bundlesFile)
+    private function __construct(string $env, $bundlesFile)
     {
         if (!file_exists($bundlesFile)) {
             throw new \InvalidArgumentException("'{$bundlesFile}' does not exist");
         }
 
-        $this->kernel = $kernel;
+        $this->env = $env;
         $this->bundlesFile = $bundlesFile;
-    }
-
-    public function getEnvironment()
-    {
-        $environment = $this->kernel->getEnvironment();
-
-        return preg_match('#tmp\d+#', $environment) ? 'dev' : $environment;
     }
 }

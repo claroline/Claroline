@@ -12,6 +12,7 @@
 namespace Claroline\KernelBundle\Bundle;
 
 use Claroline\InstallationBundle\Bundle\InstallableBundle;
+use Symfony\Component\Routing\RouteCollectionBuilder;
 
 /**
  * Base class of all the plugin bundles on the claroline platform.
@@ -52,29 +53,15 @@ abstract class PluginBundle extends InstallableBundle implements PluginBundleInt
 
     public function getConfiguration($environment)
     {
-        $config = new ConfigurationBuilder();
-        $routingFile = $this->getPath().'/Resources/config/routing.yml';
-
-        if (file_exists($routingFile)) {
-            $config->addRoutingResource($routingFile, null, null);
-        }
-
-        return $config;
+        return new ConfigurationBuilder();
     }
 
-    /**
-     * @deprecated use getConfiguration instead
-     */
-    public function getRoutingResourcesPaths()
+    public function configureRoutes(RouteCollectionBuilder $routes)
     {
-        $ds = DIRECTORY_SEPARATOR;
-        $path = $this->getPath().$ds.'Resources'.$ds.'config'.$ds.'routing.yml';
-
-        if (file_exists($path)) {
-            return [$path];
+        $routingFile = $this->getPath().'/Resources/config/routing.yml';
+        if (file_exists($routingFile)) {
+            $routes->import($routingFile);
         }
-
-        return [];
     }
 
     public function getConfigFile()
