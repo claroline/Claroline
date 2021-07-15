@@ -17,6 +17,7 @@ use Claroline\KernelBundle\Bundle\AutoConfigurableInterface;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Symfony\Component\Routing\RouteCollectionBuilder;
 
 class ClarolineAppBundle extends Bundle implements AutoConfigurableInterface
 {
@@ -35,13 +36,11 @@ class ClarolineAppBundle extends Bundle implements AutoConfigurableInterface
 
     public function getConfiguration($environment)
     {
-        $config = new ConfigurationBuilder();
+        return new ConfigurationBuilder();
+    }
 
-        $routingFile = $this->getPath().'/Resources/config/routing.yml';
-        if (file_exists($routingFile)) {
-            $config->addRoutingResource($routingFile);
-        }
-
-        return $config;
+    public function configureRoutes(RouteCollectionBuilder $routes)
+    {
+        $routes->import($this->getPath().'/Resources/config/routing.yml');
     }
 }

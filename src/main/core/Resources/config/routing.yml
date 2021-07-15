@@ -1,5 +1,20 @@
+# External dep routes
+bazinga_js_translation:
+    resource: "@BazingaJsTranslationBundle/Resources/config/routing/routing.yml"
+
 fos_js_routing:
     resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
+
+# Dev routes
+_wdt:
+    resource: "@WebProfilerBundle/Resources/config/routing/wdt.xml"
+    prefix:   /_wdt
+
+_profiler:
+    resource: "@WebProfilerBundle/Resources/config/routing/profiler.xml"
+    prefix:   /_profiler
+
+# Core routes
 
 claro_authentication:
     resource: "@ClarolineCoreBundle/Controller/AuthenticationController.php"

@@ -14,6 +14,7 @@ namespace Claroline\MigrationBundle;
 use Claroline\KernelBundle\Bundle\AutoConfigurableInterface;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Symfony\Component\Routing\RouteCollectionBuilder;
 
 class ClarolineMigrationBundle extends Bundle implements AutoConfigurableInterface
 {
@@ -25,5 +26,9 @@ class ClarolineMigrationBundle extends Bundle implements AutoConfigurableInterfa
     public function getConfiguration($environment)
     {
         return new ConfigurationBuilder();
+    }
+
+    public function configureRoutes(RouteCollectionBuilder $routes)
+    {
     }
 }

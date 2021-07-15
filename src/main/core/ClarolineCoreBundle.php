@@ -63,22 +63,25 @@ class ClarolineCoreBundle extends DistributionPluginBundle implements Configurat
 
         // no special configuration, work in any environment
         $emptyConfigs = [
-            'Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle',
-            'FOS\JsRoutingBundle\FOSJsRoutingBundle',
+            FOSJsRoutingBundle::class,
+            BazingaJsTranslationBundle::class,
         ];
+
         // simple container configuration, same for every environment
         $simpleConfigs = [
-            'Symfony\Bundle\TwigBundle\TwigBundle' => 'twig',
-            'Http\HttplugBundle\HttplugBundle' => 'httplug',
-            'Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle' => 'stof_doctrine_extensions',
-            'Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle' => 'sensio_framework_extra',
+            TwigBundle::class => 'twig',
+            HttplugBundle::class => 'httplug',
+            StofDoctrineExtensionsBundle::class => 'stof_doctrine_extensions',
+            SensioFrameworkExtraBundle::class => 'sensio_framework_extra',
+            WebProfilerBundle::class => 'web_profiler',
         ];
+
         // one configuration file for every standard environment (prod, dev, test)
         $envConfigs = [
-            'Symfony\Bundle\FrameworkBundle\FrameworkBundle' => 'framework',
-            'Symfony\Bundle\SecurityBundle\SecurityBundle' => 'security',
-            'Symfony\Bundle\MonologBundle\MonologBundle' => 'monolog',
-            'Doctrine\Bundle\DoctrineBundle\DoctrineBundle' => 'doctrine',
+            FrameworkBundle::class => 'framework',
+            SecurityBundle::class => 'security',
+            MonologBundle::class => 'monolog',
+            DoctrineBundle::class => 'doctrine',
         ];
 
         if (in_array($bundleClass, $emptyConfigs)) {
@@ -86,17 +89,7 @@ class ClarolineCoreBundle extends DistributionPluginBundle implements Configurat
         } elseif (isset($simpleConfigs[$bundleClass])) {
             return $config->addContainerResource($this->buildPath($simpleConfigs[$bundleClass]));
         } elseif (isset($envConfigs[$bundleClass])) {
-            if (in_array($environment, ['prod', 'dev', 'test'])) {
-                return $config->addContainerResource($this->buildPath("{$envConfigs[$bundleClass]}_{$environment}"));
-            }
-        } elseif ($bundle instanceof BazingaJsTranslationBundle) {
-            return $config->addRoutingResource($this->buildPath('bazinga_routing'));
-        } elseif (in_array($environment, ['dev', 'test'])) {
-            if ($bundle instanceof WebProfilerBundle) {
-                return $config
-                    ->addContainerResource($this->buildPath('web_profiler'))
-                    ->addRoutingResource($this->buildPath('web_profiler_routing'));
-            }
+            return $config->addContainerResource($this->buildPath("{$envConfigs[$bundleClass]}_{$environment}"));
         }
 
         return false;
@@ -132,7 +125,7 @@ class ClarolineCoreBundle extends DistributionPluginBundle implements Configurat
             new BazingaJsTranslationBundle(),
         ];
 
-        if (\in_array($environment, ['dev', 'test'], true)) {
+        if (in_array($environment, ['dev', 'test'], true)) {
             $bundles[] = new WebProfilerBundle();
             $bundles[] = new DebugBundle();
             $bundles[] = new MakerBundle();

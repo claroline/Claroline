@@ -1,3 +1,0 @@
-services:
-    Claroline\KernelBundle\Routing\DynamicLoader:
-        tags: [routing.loader]

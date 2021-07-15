@@ -5,6 +5,7 @@ namespace Claroline\DevBundle;
 use Claroline\KernelBundle\Bundle\AutoConfigurableInterface;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Symfony\Component\Routing\RouteCollectionBuilder;
 
 class ClarolineDevBundle extends Bundle implements AutoConfigurableInterface
 {
@@ -16,5 +17,9 @@ class ClarolineDevBundle extends Bundle implements AutoConfigurableInterface
     public function getConfiguration($environment)
     {
         return new ConfigurationBuilder();
+    }
+
+    public function configureRoutes(RouteCollectionBuilder $routes)
+    {
     }
 }

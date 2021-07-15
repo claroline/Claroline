@@ -1,8 +1,6 @@
 framework:
     secret: "%secret%"
     router:
-        resource: .
-        type: dynamic
         utf8: true
     form: false
     validation:
