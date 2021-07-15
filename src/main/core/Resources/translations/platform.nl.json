@@ -688,8 +688,6 @@
     "property": "Propriété",
     "public": "Openbaar",
     "public_profile": "Openbaar profiel",
-    "public_profile_preferences_allow_mail_sending": "Verzenden van een e-email",
-    "public_profile_preferences_allow_message_sending": "Verzenden van een bericht",
     "public_profile_undiscoverable": "Onvindbaar profiel",
     "public_profile_undiscoverable_anonymously": "U moet ingelogd zijn om toegang te krijgen tot uw profiel.",
     "public_profile_undiscoverable_anonymously_text": "U moet <a href=\"%loginUrl%\" title=\"Connexion\">ingelogd</a> zijn om toegang te krijgen tot uw profiel %publicUrl%.",
