@@ -3,8 +3,10 @@
 namespace Claroline\DevBundle;
 
 use Claroline\KernelBundle\Bundle\AutoConfigurableInterface;
-use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
+use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Symfony\Component\Routing\RouteCollectionBuilder;
 
 class ClarolineDevBundle extends Bundle implements AutoConfigurableInterface
 {
@@ -13,8 +15,15 @@ class ClarolineDevBundle extends Bundle implements AutoConfigurableInterface
         return 'prod' !== $environment;
     }
 
-    public function getConfiguration($environment)
+    public function configureContainer(ContainerBuilder $container, LoaderInterface $loader)
     {
-        return new ConfigurationBuilder();
+    }
+
+    public function configureRoutes(RouteCollectionBuilder $routes)
+    {
+        $routingFile = $this->getPath().'/Resources/config/routing.yml';
+        if (file_exists($routingFile)) {
+            $routes->import($routingFile);
+        }
     }
 }

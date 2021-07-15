@@ -13,13 +13,9 @@ namespace Claroline\KernelBundle\Manager;
 
 use Claroline\AppBundle\Log\LoggableTrait;
 use Claroline\KernelBundle\Bundle\AutoConfigurableInterface;
-use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
-use Claroline\KernelBundle\Bundle\ConfigurationProviderInterface;
 use Claroline\KernelBundle\Bundle\PluginBundleInterface;
-use Claroline\KernelBundle\ClarolineKernelBundle;
 use Psr\Log\LoggerAwareInterface;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
-use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * The KernelBundle probably should do all of that.
@@ -31,13 +27,14 @@ class BundleManager implements LoggerAwareInterface
     const BUNDLE_INSTANCE = 'instance';
     const BUNDLE_CONFIG = 'config';
 
-    private $kernel;
+    private $env;
     private $bundlesFile;
+
     private static $selfInstance;
 
-    public static function initialize(KernelInterface $kernel, $bundlesFile)
+    public static function initialize(string $env, string $bundlesFile)
     {
-        static::$selfInstance = new self($kernel, $bundlesFile);
+        static::$selfInstance = new self($env, $bundlesFile);
     }
 
     public static function getInstance()
@@ -49,37 +46,27 @@ class BundleManager implements LoggerAwareInterface
         throw new \LogicException('Manager has not been initialized: call BundleManager::initialize() first');
     }
 
-    public function getActiveBundles($fetchAll = false)
+    public function getActiveBundles(?bool $fetchAll = false): array
     {
         $entries = parse_ini_file($this->bundlesFile);
-        $activeBundles = [];
-        $configProviderBundles = [];
-        $nonAutoConfigurableBundles = [];
-        $environment = $this->getEnvironment();
 
+        $bundles = [];
         foreach ($entries as $bundleClass => $isActive) {
-            if (((bool) $isActive || $fetchAll) && ClarolineKernelBundle::class !== $bundleClass) {
+            if ((bool) $isActive || $fetchAll) {
                 if (class_exists($bundleClass)) {
                     /** @var BundleInterface $bundle */
-                    $bundle = new $bundleClass($this->kernel);
-
-                    if ($bundle instanceof PluginBundleInterface) {
-                        foreach ($bundle->getRequiredThirdPartyBundles($environment) as $thirdPartyBundle) {
-                            $nonAutoConfigurableBundles[\get_class($thirdPartyBundle)] = $thirdPartyBundle;
-                        }
-                    }
-
-                    if ($bundle instanceof ConfigurationProviderInterface) {
-                        $configProviderBundles[] = $bundle;
-                    }
+                    $bundle = new $bundleClass();
 
                     if (!$bundle instanceof AutoConfigurableInterface) {
-                        $nonAutoConfigurableBundles[$bundleClass] = $bundle;
-                    } elseif ($bundle->supports($environment)) {
-                        $activeBundles[] = [
-                          self::BUNDLE_INSTANCE => $bundle,
-                          self::BUNDLE_CONFIG => $bundle->getConfiguration($environment),
-                      ];
+                        $bundles[$bundleClass] = $bundle;
+                    } elseif ($bundle->supports($this->env)) {
+                        $bundles[] = $bundle;
+                    }
+
+                    if ($bundle instanceof PluginBundleInterface) {
+                        foreach ($bundle->getRequiredThirdPartyBundles($this->env) as $thirdPartyBundle) {
+                            $bundles[\get_class($thirdPartyBundle)] = $thirdPartyBundle;
+                        }
                     }
                 } else {
                     $this->log("Class {$bundleClass} was not loaded");
@@ -87,38 +74,16 @@ class BundleManager implements LoggerAwareInterface
             }
         }
 
-        foreach ($nonAutoConfigurableBundles as $bundle) {
-            foreach ($configProviderBundles as $provider) {
-                $config = $provider->suggestConfigurationFor($bundle, $environment);
-
-                if ($config instanceof ConfigurationBuilder) {
-                    $activeBundles[] = [
-                        self::BUNDLE_INSTANCE => $bundle,
-                        self::BUNDLE_CONFIG => $config,
-                    ];
-
-                    break;
-                }
-            }
-        }
-
-        return $activeBundles;
+        return $bundles;
     }
 
-    private function __construct(KernelInterface $kernel, $bundlesFile)
+    private function __construct(string $env, $bundlesFile)
     {
         if (!file_exists($bundlesFile)) {
             throw new \InvalidArgumentException("'{$bundlesFile}' does not exist");
         }
 
-        $this->kernel = $kernel;
+        $this->env = $env;
         $this->bundlesFile = $bundlesFile;
-    }
-
-    public function getEnvironment()
-    {
-        $environment = $this->kernel->getEnvironment();
-
-        return preg_match('#tmp\d+#', $environment) ? 'dev' : $environment;
     }
 }

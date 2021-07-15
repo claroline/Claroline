@@ -13,14 +13,12 @@ namespace Claroline\AuthenticationBundle;
 
 use Claroline\AuthenticationBundle\DependencyInjection\Compiler\OauthConfigPass;
 use Claroline\AuthenticationBundle\Installation\AdditionalInstaller;
-use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
-use Claroline\KernelBundle\Bundle\ConfigurationProviderInterface;
 use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
 use HWI\Bundle\OAuthBundle\HWIOAuthBundle;
+use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class ClarolineAuthenticationBundle extends DistributionPluginBundle implements ConfigurationProviderInterface
+class ClarolineAuthenticationBundle extends DistributionPluginBundle
 {
     public function getAdditionalInstaller()
     {
@@ -41,24 +39,15 @@ class ClarolineAuthenticationBundle extends DistributionPluginBundle implements 
         ];
     }
 
-    public function suggestConfigurationFor(Bundle $bundle, $environment)
+    public function configureContainer(ContainerBuilder $container, LoaderInterface $loader)
     {
-        $config = new ConfigurationBuilder();
-        $bundleClass = get_class($bundle);
-
+        // simple container configuration, same for every environment
         $simpleConfigs = [
-            'HWI\Bundle\OAuthBundle\HWIOAuthBundle' => 'hwi_oauth',
+            'hwi_oauth',
         ];
 
-        if (isset($simpleConfigs[$bundleClass])) {
-            return $config->addContainerResource($this->buildPath($simpleConfigs[$bundleClass]));
+        foreach ($simpleConfigs as $configKey) {
+            $loader->load($this->getPath()."/Resources/config/suggested/{$configKey}.yml");
         }
-
-        return false;
-    }
-
-    private function buildPath($file, $folder = 'suggested')
-    {
-        return __DIR__."/Resources/config/{$folder}/{$file}.yml";
     }
 }
