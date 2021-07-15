@@ -57,14 +57,14 @@ class OperationExecutor implements LoggerAwareInterface
         $isFreshInstall = !$fromVersion && !$toVersion;
         $operations = [];
         foreach ($bundles as $bundle) {
-            $bundleFqcn = get_class($bundle['instance']);
+            $bundleFqcn = get_class($bundle);
             // If plugin is installed, update it. Otherwise, install it.
             if (!$isFreshInstall && $this->isBundleAlreadyInstalled($bundleFqcn, false)) {
-                $operations[$bundleFqcn] = new Operation(Operation::UPDATE, $bundle['instance'], $bundleFqcn);
+                $operations[$bundleFqcn] = new Operation(Operation::UPDATE, $bundle, $bundleFqcn);
                 $operations[$bundleFqcn]->setFromVersion($fromVersion);
                 $operations[$bundleFqcn]->setToVersion($toVersion);
             } else {
-                $operations[$bundleFqcn] = new Operation(Operation::INSTALL, $bundle['instance'], $bundleFqcn);
+                $operations[$bundleFqcn] = new Operation(Operation::INSTALL, $bundle, $bundleFqcn);
             }
         }
 

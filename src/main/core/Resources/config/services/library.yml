@@ -19,10 +19,6 @@ services:
         calls:
             - setLogger: ['@logger']
 
-    Claroline\CoreBundle\Library\Installation\Plugin\RoutingChecker:
-        arguments:
-            - '@claroline.symfony_yaml'
-
     Claroline\CoreBundle\Library\Installation\Plugin\Recorder:
         arguments:
             - '@Claroline\CoreBundle\Library\Installation\Plugin\DatabaseWriter'

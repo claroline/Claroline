@@ -43,7 +43,7 @@ class TranslationIntegrityCommand extends Command
         $translationFiles = [];
 
         foreach ($bundles as $bundle) {
-            $parts = explode('\\', get_class($bundle['instance']));
+            $parts = explode('\\', get_class($bundle));
             $shortName = end($parts);
 
             if ($pluginManager->isLoaded($shortName)) {
