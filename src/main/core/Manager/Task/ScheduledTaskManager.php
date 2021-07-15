@@ -18,6 +18,9 @@ use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Repository\Task\ScheduledTaskRepository;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 
+/**
+ * @todo use CRUD instead.
+ */
 class ScheduledTaskManager
 {
     /** @var ObjectManager */
@@ -56,12 +59,7 @@ class ScheduledTaskManager
      */
     public function create(array $data): ?ScheduledTask
     {
-        if ($this->configHandler->hasParameter('is_cron_configured') &&
-            $this->configHandler->getParameter('is_cron_configured')) {
-            return $this->update($data, new ScheduledTask());
-        }
-
-        return null;
+        return $this->update($data, new ScheduledTask());
     }
 
     /**

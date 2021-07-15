@@ -8,5 +8,6 @@
   "export-results": "Exporter les résultats (.csv)",
   "geolocate": "Géolocaliser",
   "book": "Réserver",
-  "show-results": "Voir les résultats"
+  "show-results": "Voir les résultats",
+  "plan-sending": "Planifier l'envoi"
 }

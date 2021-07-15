@@ -14,6 +14,7 @@ services:
             - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
             - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
             - '@Claroline\CoreBundle\Library\Utilities\FileUtilities'
+            - '@Claroline\CoreBundle\API\Serializer\User\RoleSerializer'
 
     Claroline\AnnouncementBundle\Serializer\AnnouncementAggregateSerializer:
         tags: [claroline.serializer]

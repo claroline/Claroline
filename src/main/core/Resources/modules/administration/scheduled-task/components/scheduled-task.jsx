@@ -84,6 +84,7 @@ const ScheduledTaskForm = props =>
     <FormSections level={3}>
       <FormSection
         icon="fa fa-fw fa-user"
+        className="embedded-list-section"
         title={trans('users')}
         disabled={props.new}
         actions={[

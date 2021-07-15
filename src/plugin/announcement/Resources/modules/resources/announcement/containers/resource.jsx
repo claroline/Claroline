@@ -11,8 +11,7 @@ const AnnouncementResource = withRouter(
   withReducer(selectors.STORE_NAME, reducer)(
     connect(
       state => ({
-        posts: selectors.posts(state),
-        roles: selectors.workspaceRoles(state)
+        posts: selectors.posts(state)
       }),
       dispatch => ({
         openDetail(id) {

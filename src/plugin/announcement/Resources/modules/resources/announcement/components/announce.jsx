@@ -15,9 +15,10 @@ import {AnnouncePost} from '#/plugin/announcement/resources/announcement/compone
 
 const AnnounceDetail = props =>
   <AnnouncePost
-    {...props.announcement}
     active={true}
-    sendPost={() => props.sendPost(props.aggregateId, props.announcement)}
+    aggredateId={props.aggregateId}
+    announcement={props.announcement}
+    workspaceRoles={props.workspaceRoles}
     removePost={() => props.removePost(props.aggregateId, props.announcement)}
     editable={props.editable}
     deletable={props.deletable}
@@ -30,7 +31,7 @@ AnnounceDetail.propTypes = {
   announcement: T.shape(
     AnnouncementTypes.propTypes
   ).isRequired,
-  sendPost: T.func.isRequired,
+  workspaceRoles: T.array,
   removePost: T.func.isRequired,
   editable: T.bool.isRequired,
   deletable: T.bool.isRequired
@@ -41,6 +42,7 @@ const Announce = connect(
     path: resourceSelect.path(state),
     aggregateId: selectors.aggregateId(state),
     announcement: selectors.detail(state),
+    workspaceRoles: selectors.workspaceRoles(state),
     editable: hasPermission('edit', resourceSelect.resourceNode(state)),
     deletable: hasPermission('delete', resourceSelect.resourceNode(state))
   }),
@@ -53,15 +55,6 @@ const Announce = connect(
           question: trans('remove_announce_confirm', {}, 'announcement'),
           dangerous: true,
           handleConfirm: () => dispatch(actions.removeAnnounce(aggregateId, announcePost))
-        })
-      )
-    },
-    sendPost(aggregateId, announcePost) {
-      dispatch(
-        modalActions.showModal(MODAL_CONFIRM, {
-          title: trans('send_announce', {}, 'announcement'),
-          question: trans('send_announce_confirm', {}, 'announcement'),
-          handleConfirm: () => dispatch(actions.sendAnnounce(aggregateId, announcePost))
         })
       )
     }

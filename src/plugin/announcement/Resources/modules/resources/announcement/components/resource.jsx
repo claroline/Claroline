@@ -12,7 +12,6 @@ import {Announcement as AnnouncementTypes} from '#/plugin/announcement/resources
 import {Announces} from '#/plugin/announcement/resources/announcement/components/announces'
 import {Announce} from '#/plugin/announcement/resources/announcement/components/announce'
 import {AnnounceForm} from '#/plugin/announcement/resources/announcement/components/announce-form'
-import {AnnounceSend} from '#/plugin/announcement/resources/announcement/components/announce-send'
 
 const AnnouncementResource = props =>
   <ResourcePage
@@ -48,13 +47,6 @@ const AnnouncementResource = props =>
         path: '/:id/edit',
         component: AnnounceForm,
         onEnter: (params) => props.resetForm(props.posts.find(post => post.id === params.id))
-      }, {
-        path: '/:id/send',
-        component: AnnounceSend,
-        onEnter: (params) => {
-          props.resetForm(props.posts.find(post => post.id === params.id))
-          props.initFormDefaultRoles(props.roles.map(r => r.id))
-        }
       }
     ]}
   />
@@ -64,13 +56,9 @@ AnnouncementResource.propTypes = {
   posts: T.arrayOf(
     T.shape(AnnouncementTypes.propTypes)
   ).isRequired,
-  roles: T.arrayOf(T.shape({
-    id: T.string.isRequired
-  })),
   openDetail: T.func.isRequired,
   resetDetail: T.func.isRequired,
-  resetForm: T.func.isRequired,
-  initFormDefaultRoles: T.func.isRequired
+  resetForm: T.func.isRequired
 }
 
 export {

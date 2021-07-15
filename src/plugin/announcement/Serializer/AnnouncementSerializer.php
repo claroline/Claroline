@@ -9,6 +9,7 @@ use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer;
 use Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer;
+use Claroline\CoreBundle\API\Serializer\User\RoleSerializer;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer;
 use Claroline\CoreBundle\Entity\File\PublicFile;
@@ -48,6 +49,9 @@ class AnnouncementSerializer
     /** @var ResourceNodeSerializer */
     private $nodeSerializer;
 
+    /** @var RoleSerializer */
+    private $roleSerializer;
+
     public function __construct(
         TokenStorageInterface $tokenStorage,
         UserSerializer $userSerializer,
@@ -55,7 +59,8 @@ class AnnouncementSerializer
         WorkspaceSerializer $wsSerializer,
         ResourceNodeSerializer $nodeSerializer,
         PublicFileSerializer $publicFileSerializer,
-        FileUtilities $fileUt
+        FileUtilities $fileUt,
+        RoleSerializer $roleSerializer
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->userSerializer = $userSerializer;
@@ -64,12 +69,18 @@ class AnnouncementSerializer
         $this->wsSerializer = $wsSerializer;
         $this->nodeSerializer = $nodeSerializer;
         $this->publicFileSerializer = $publicFileSerializer;
+        $this->roleSerializer = $roleSerializer;
 
         $this->aggregateRepo = $om->getRepository('ClarolineAnnouncementBundle:AnnouncementAggregate');
         $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
     }
 
-    public function getName()
+    public function getClass(): string
+    {
+        return Announcement::class;
+    }
+
+    public function getName(): string
     {
         return 'announcement';
     }
@@ -109,7 +120,7 @@ class AnnouncementSerializer
                 ),
             ],
             'roles' => array_map(function (Role $role) {
-                return $role->getUuid();
+                return $this->roleSerializer->serialize($role, [Options::SERIALIZE_MINIMAL]);
             }, $announce->getRoles()),
             'poster' => $poster ? $this->publicFileSerializer->serialize($poster) : null,
         ];
@@ -173,9 +184,9 @@ class AnnouncementSerializer
         $announce->emptyRoles();
 
         if (!empty($data['roles'])) {
-            foreach ($data['roles'] as $roleUuid) {
+            foreach ($data['roles'] as $roleData) {
                 /** @var Role $role */
-                $role = $this->roleRepo->findOneBy(['uuid' => $roleUuid]);
+                $role = $this->roleRepo->findOneBy(['uuid' => $roleData['id']]);
 
                 if (!empty($role)) {
                     $announce->addRole($role);
@@ -200,10 +211,5 @@ class AnnouncementSerializer
         }
 
         return $announce;
-    }
-
-    public function getClass()
-    {
-        return Announcement::class;
     }
 }

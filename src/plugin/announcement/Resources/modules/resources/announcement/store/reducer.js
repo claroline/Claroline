@@ -2,7 +2,6 @@ import cloneDeep from 'lodash/cloneDeep'
 
 import {makeInstanceAction} from '#/main/app/store/actions'
 import {combineReducers, makeReducer} from '#/main/app/store/reducer'
-import {makeListReducer} from '#/main/app/content/list/store'
 import {makeFormReducer} from '#/main/app/content/form/store/reducer'
 
 import {RESOURCE_LOAD} from '#/main/core/resource/store/actions'
@@ -84,14 +83,6 @@ const reducer = combineReducers({
   announcementForm: makeFormReducer(selectors.STORE_NAME+'.announcementForm'),
   announcementDetail: announcementDetailReducer,
 
-  selected: combineReducers({
-    list: makeListReducer(selectors.STORE_NAME+'.selected.list', {}, {
-      invalidated: makeReducer(false, {
-        ['MODAL_HIDE']: () => true, // todo : find better
-        [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: () => true
-      })
-    })
-  }),
   workspaceRoles: makeReducer([], {
     [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.workspaceRoles
   })
