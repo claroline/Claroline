@@ -7,11 +7,12 @@ import {displayDate} from '#/main/app/intl/date'
 
 import {ContentHtml} from '#/main/app/content/components/html'
 import {Button} from '#/main/app/action/components/button'
-import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
+import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 
 import {UserMicro} from '#/main/core/user/components/micro'
 
 import {Announcement as AnnouncementTypes} from '#/plugin/announcement/resources/announcement/prop-types'
+import {MODAL_ANNOUNCEMENT_SENDING} from '#/plugin/announcement/resources/announcement/modals/sending'
 
 const AnnouncePost = props =>
   <div className={classes('announce-post panel panel-default', {
@@ -53,11 +54,15 @@ const AnnouncePost = props =>
             <Button
               id={`${props.id}-send`}
               className="btn-link"
-              type={LINK_BUTTON}
+              type={MODAL_BUTTON}
               icon="fa fa-fw fa-paper-plane"
               label={trans('send-announce', {}, 'actions')}
               tooltip="top"
               target={`${props.path}/${props.id}/send`}
+              modal={[MODAL_ANNOUNCEMENT_SENDING, {
+                aggregateId: props.aggregateId,
+                announcementId: props.id
+              }]}
             />
           }
 
@@ -96,10 +101,10 @@ const AnnouncePost = props =>
 
 implementPropTypes(AnnouncePost, AnnouncementTypes, {
   path: T.string.isRequired,
+  aggregateId: T.string.isRequired,
   active: T.bool,
   deletable: T.bool.isRequired,
   editable: T.bool.isRequired,
-  sendPost: T.func.isRequired,
   removePost: T.func.isRequired
 }, {
   active: false
