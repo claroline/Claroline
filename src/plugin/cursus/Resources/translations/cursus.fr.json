@@ -101,8 +101,9 @@
     "download_presence": "Télécharger l'attestation de présence (.pdf)",
     "show_catalog": "Voir le catalogue de formations",
     "registration_auto": "Tous les participants de la session sont automatiquement insrit à cette séance.",
+    "session_days": "Jours",
+    "session_hours": "Heures",
     "session_about": "A propos de la session",
-
     "opening_session": "Session affichée",
     "opening_session_none": "Aucune (Seule les informations relatives à la formation sont affichées)",
     "opening_session_first_available": "La première session en cours ou la prochaine disponible",

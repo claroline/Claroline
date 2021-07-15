@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 
-import {trans, displayDuration, displayDate, now} from '#/main/app/intl'
+import {trans, displayDate, now} from '#/main/app/intl'
 import {param} from '#/main/app/config'
 import {currency} from '#/main/app/intl/currency'
 import {hasPermission} from '#/main/app/security'
@@ -153,10 +153,16 @@ const CourseAbout = (props) => {
             <li className="list-group-item">
               {trans('duration')}
               <span className="value">
-                {getInfo(props.course, props.activeSession, 'meta.duration') ?
-                  displayDuration(getInfo(props.course, props.activeSession, 'meta.duration') * 3600 * 24, true) :
-                  trans('empty_value')
-                }
+                {(() => {
+                  const days = getInfo(props.course, props.activeSession, 'meta.days')
+                  const hours = getInfo(props.course, props.activeSession, 'meta.hours')
+                  const output = []
+
+                  if (days) output.push(days + ' ' + trans(days < 2 ? 'day' : 'days'))
+                  if (hours) output.push(hours + ' ' + trans(hours < 2 ? 'hour' : 'hours'))
+
+                  return output.length == 0 ? trans('empty_value') : output.join(' + ')
+                })()}
               </span>
             </li>
 

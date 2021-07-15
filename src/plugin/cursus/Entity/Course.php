@@ -95,9 +95,14 @@ class Course extends AbstractTraining
     private $sessionOpening = 'first_available';
 
     /**
-     * @ORM\Column(name="session_duration", nullable=false, type="float", options={"default" = 1})
+     * @ORM\Column(name="session_days", nullable=false, type="float", options={"default" = 1})
      */
-    private $defaultSessionDuration = 1;
+    private $defaultSessionDays = 1;
+
+    /**
+     * @ORM\Column(name="session_hours", nullable=false, type="float", options={"default" = 0})
+     */
+    private $defaultSessionHours = 0;
 
     /**
      * @ORM\ManyToMany(
@@ -200,6 +205,26 @@ class Course extends AbstractTraining
         return false;
     }
 
+    public function getDefaultSessionDays()
+    {
+        return $this->defaultSessionDays;
+    }
+
+    public function setDefaultSessionDays($defaultSessionDays)
+    {
+        $this->defaultSessionDays = $defaultSessionDays;
+    }
+
+    public function getDefaultSessionHours()
+    {
+        return $this->defaultSessionHours;
+    }
+
+    public function setDefaultSessionHours($defaultSessionHours)
+    {
+        $this->defaultSessionHours = $defaultSessionHours;
+    }
+
     public function getSessionOpening(): ?string
     {
         return $this->sessionOpening;
@@ -208,16 +233,6 @@ class Course extends AbstractTraining
     public function setSessionOpening(string $sessionOpening)
     {
         $this->sessionOpening = $sessionOpening;
-    }
-
-    public function getDefaultSessionDuration()
-    {
-        return $this->defaultSessionDuration;
-    }
-
-    public function setDefaultSessionDuration($defaultSessionDuration)
-    {
-        $this->defaultSessionDuration = $defaultSessionDuration;
     }
 
     public function getOrganizations()
