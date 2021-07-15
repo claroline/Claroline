@@ -139,24 +139,6 @@ const Technical = props =>
           }
         ]
       }, {
-        icon: 'fa fa-fw fa-book',
-        title: trans('workspaces'),
-        fields: [
-          {
-            name: 'workspace.max_storage_size',
-            label: trans('available_storage'),
-            type: 'string'
-          }, {
-            name: 'workspace.max_upload_resources',
-            label: trans('count_resources'),
-            type: 'number'
-          }, {
-            name: 'workspace.max_workspace_users',
-            label: trans('workspaces_max_users'),
-            type: 'number'
-          }
-        ]
-      }, {
         icon: 'fa fa-fw fa-envelope',
         title: trans('email'),
         fields: [

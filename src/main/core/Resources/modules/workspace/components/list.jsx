@@ -77,20 +77,6 @@ const Workspaces = (props) => {
           type: 'boolean',
           alias: 'selfUnregistration'
         }, {
-          name: 'restrictions.maxStorage',
-          label: trans('available_storage'),
-          alias: 'maxStorage'
-        }, {
-          name: 'restrictions.maxResources',
-          label: trans('max_amount_resources'),
-          type: 'number',
-          alias: 'maxResources'
-        }, {
-          name: 'restrictions.maxUsers',
-          label: trans('workspace_max_users'),
-          type: 'number',
-          alias: 'maxUsers'
-        }, {
           name: 'tags',
           type: 'tag',
           label: trans('tags'),

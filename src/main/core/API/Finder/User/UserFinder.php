@@ -14,7 +14,6 @@ namespace Claroline\CoreBundle\API\Finder\User;
 use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -48,11 +47,6 @@ class UserFinder extends AbstractFinder
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
     {
-        if (isset($searches['contactable'])) {
-            $qb = $this->getContactableUsers($qb);
-            unset($searches['contactable']);
-        }
-
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
                 case 'publicUrl':
@@ -74,8 +68,8 @@ class UserFinder extends AbstractFinder
                     $qb->setParameter('userUuids', is_array($filterValue) ? $filterValue : [$filterValue]);
                     break;
                 case 'isDisabled':
-                    $qb->andWhere('obj.isEnabled = :isEnabled');
-                    $qb->setParameter('isEnabled', !$filterValue);
+                    $qb->andWhere('obj.isEnabled = :enabled');
+                    $qb->setParameter('enabled', !$filterValue);
                     break;
                 case 'hasPersonalWorkspace':
                     $qb->andWhere('obj.personalWorkspace IS NOT NULL');
@@ -242,6 +236,11 @@ class UserFinder extends AbstractFinder
             }
         }
 
+        // if we don't explicitly request for it, we will not return disabled or removed users
+        if (!in_array('isDisabled', array_keys($searches)) && !in_array('isEnabled', array_keys($searches))) {
+            $qb->andWhere('obj.isEnabled = TRUE');
+        }
+
         if (!in_array('isRemoved', array_keys($searches))) {
             $qb->andWhere('obj.isRemoved = FALSE');
         }
@@ -276,51 +275,5 @@ class UserFinder extends AbstractFinder
             'name' => 'last_name',
             'isDisabled' => 'is_enabled',
         ];
-    }
-
-    private function getContactableUsers(QueryBuilder $qb)
-    {
-        $currentUser = $this->tokenStorage->getToken()->getUser();
-        $organizationsIds = array_map(function (Organization $organization) {
-            return $organization->getUuid();
-        }, []);
-
-        $administratedOrganizationsIds = array_map(function (Organization $organization) {
-            return $organization->getUuid();
-        }, []);
-
-        foreach ($administratedOrganizationsIds as $id) {
-            if (!in_array($id, $organizationsIds)) {
-                $organizationsIds[] = $id;
-            }
-        }
-        $workspacesIds = array_map(function (Workspace $workspace) {
-            return $workspace->getUuid();
-        }, $this->workspaceManager->getWorkspacesByUser($currentUser));
-
-        // not him
-        $qb
-            ->andWhere('obj.id != :currentId')
-            ->setParameter('currentId', $currentUser->getId());
-
-        // same organizations
-        $qb->leftJoin('obj.userOrganizationReferences', 'oref');
-        $qb->leftJoin('oref.organization', 'o');
-        $qb->orWhere('o.uuid IN (:organizationIds)');
-        $qb->setParameter('organizationIds', $organizationsIds);
-
-        // same workspaces
-        $qb->leftJoin('obj.roles', 'ur');
-        $qb->leftJoin('obj.groups', 'ug');
-        $qb->leftJoin('ug.roles', 'ugr');
-        $qb->leftJoin('ur.workspace', 'urw');
-        $qb->leftJoin('ugr.workspace', 'ugrw');
-        $qb->orWhere($qb->expr()->orX(
-            $qb->expr()->in('urw.uuid', ':workspacesIds'),
-            $qb->expr()->in('ugrw.uuid', ':workspacesIds')
-        ));
-        $qb->setParameter('workspacesIds', $workspacesIds);
-
-        return $qb;
     }
 }

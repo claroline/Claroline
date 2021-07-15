@@ -61,9 +61,6 @@ class PlatformDefaults implements ParameterProviderInterface
                 'google_meta_tag' => null,
             ],
             'workspace' => [
-                'max_storage_size' => '1 TB',
-                'max_upload_resources' => 10000,
-                'max_workspace_users' => 10000,
                 'default_tag' => null,
             ],
             'registration' => [

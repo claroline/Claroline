@@ -25,10 +25,6 @@ const restrictByDates   = (workspace) => get(workspace, 'restrictions.enableDate
 const restrictByCode    = (workspace) => get(workspace, 'restrictions.enableCode') || !!get(workspace, 'restrictions.code')
 const restrictByIps     = (workspace) => get(workspace, 'restrictions.enableIps') || !isEmpty(get(workspace, 'restrictions.allowedIps'))
 
-const restrictResources = (workspace) => workspace.restrictions && (workspace.restrictions.enableMaxResources || 0 === workspace.restrictions.maxResources || !!workspace.restrictions.maxResources)
-const restrictUsers     = (workspace) => workspace.restrictions && (workspace.restrictions.enableMaxUsers     || 0 === workspace.restrictions.maxUsers || !!workspace.restrictions.maxUsers)
-const restrictStorage   = (workspace) => workspace.restrictions && (workspace.restrictions.enableMaxStorage   || !!workspace.restrictions.maxStorage)
-
 const WorkspaceFormComponent = (props) =>
   <FormData
     {...props}
@@ -344,78 +340,6 @@ const WorkspaceFormComponent = (props) =>
                   type: 'ip',
                   placeholder: trans('no_allowed_ip'),
                   button: trans('add_ip')
-                }
-              }
-            ]
-          }, {
-            name: 'restrictions.enableMaxUsers',
-            type: 'boolean',
-            label: trans('restrict_users_count'),
-            calculated: restrictUsers,
-            displayed: props.isAdmin,
-            onChange: activated => {
-              if (!activated) {
-                // reset max users field
-                props.updateProp('restrictions.maxUsers', null)
-              }
-            },
-            linked: [
-              {
-                name: 'restrictions.maxUsers',
-                type: 'number',
-                label: trans('users_count'),
-                displayed: restrictUsers,
-                required: true,
-                options: {
-                  min: 0
-                }
-              }
-            ]
-          }, {
-            name: 'restrictions.enableMaxResources',
-            type: 'boolean',
-            label: trans('restrict_max_resources'),
-            calculated: restrictResources,
-            displayed: props.isAdmin,
-            onChange: activated => {
-              if (!activated) {
-                // reset max users field
-                props.updateProp('restrictions.maxResources', null)
-              }
-            },
-            linked: [
-              {
-                name: 'restrictions.maxResources',
-                type: 'number',
-                label: trans('max_amount_resources'),
-                displayed: restrictResources,
-                required: true,
-                options: {
-                  min: 0
-                }
-              }
-            ]
-          }, {
-            name: 'restrictions.enableMaxStorage',
-            type: 'boolean',
-            label: trans('restrict_storage'),
-            calculated: restrictStorage,
-            displayed: props.isAdmin,
-            onChange: activated => {
-              if (!activated) {
-                // reset max users field
-                props.updateProp('restrictions.maxStorage', null)
-              }
-            },
-            linked: [
-              {
-                name: 'restrictions.maxStorage',
-                type: 'storage',
-                label: trans('available_storage'),
-                displayed: restrictStorage,
-                required: true,
-                options: {
-                  min: 0
                 }
               }
             ]
