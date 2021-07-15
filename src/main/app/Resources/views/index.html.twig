@@ -23,11 +23,6 @@
             {% endif %}
         </title>
 
-        {% set description = getContent('platformDescription') %}
-        {% if not description is empty %}
-            <meta name="description" content="{{ description.content | striptags }}" />
-        {% endif %}
-
         {% if config.getParameter('google_meta_tag') is not empty %}
             {{ config.getParameter('google_meta_tag') | raw }}
         {% endif %}

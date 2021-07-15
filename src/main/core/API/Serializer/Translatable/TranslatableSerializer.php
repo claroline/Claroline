@@ -6,29 +6,37 @@ use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Content;
 use Claroline\CoreBundle\Manager\LocaleManager;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class TranslatableSerializer
 {
     use SerializerTrait;
 
-    /**
-     * GroupSerializer constructor.
-     */
+    private $om;
+    private $localeManager;
+    private $requestStack;
+    private $translations;
+
     public function __construct(
         ObjectManager $om,
         LocaleManager $localeManager,
-        ContainerInterface $container
+        RequestStack $requestStack
     ) {
         $this->om = $om;
         $this->localeManager = $localeManager;
-        $this->container = $container;
+        $this->requestStack = $requestStack;
+
         $this->translations = $om->getRepository('ClarolineCoreBundle:ContentTranslation');
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'translatable_content';
+    }
+
+    public function getClass(): string
+    {
+        return Content::class;
     }
 
     public function serialize(Content $content, array $options = [])
@@ -46,10 +54,10 @@ class TranslatableSerializer
                 }
             }
         } else {
-            $locales = $this->localeManager->getAvailableLocales();
+            $locales = $this->localeManager->getEnabledLocales();
 
             foreach ($locales as $locale) {
-                //there is an inconcistency here atm.
+                //there is an inconsistency here atm.
                 if ('fr' === $locale) {
                     $locale = 'fr_FR';
                 }
@@ -87,14 +95,8 @@ class TranslatableSerializer
         $this->om->flush();
 
         $this->sipe('type', 'setType', $data, $content);
-        $content->setTranslatableLocale($this->localeManager->getUserLocale($this->container->get('request_stack')->getMasterRequest()));
-    }
-
-    /**
-     * @return string
-     */
-    public function getClass()
-    {
-        return 'Claroline\CoreBundle\Entity\Content';
+        $content->setTranslatableLocale(
+            $this->localeManager->getUserLocale($this->requestStack->getMasterRequest())
+        );
     }
 }

@@ -46,7 +46,7 @@ class ParametersListener
         $event->setData([
             'lockedParameters' => $parameters['lockedParameters'] ?? [],
             'parameters' => $parameters,
-            'availableLocales' => array_keys($this->localeManager->getImplementedLocales()),
+            'availableLocales' => $this->localeManager->getAvailableLocales(),
             'iconSetChoices' => array_map(function (IconSet $iconSet) {
                 return $iconSet->getName(); // TODO : create a serializer
             }, $iconSets),

@@ -9,17 +9,18 @@ imports:
     - { resource: services/validator.yml }
     - { resource: services/crud.yml }
     - { resource: services/twig.yml }
-    - { resource: services/voter.yml }
+    - { resource: services/checker.yml }
     - { resource: services/command.yml }
+    - { resource: services/configuration.yml }
     - { resource: services/controller.yml }
+    - { resource: services/converter.yml }
     - { resource: services/listener.yml }
     - { resource: services/library.yml }
-    - { resource: services/converter.yml }
     - { resource: services/session.yml }
-    - { resource: services/checker.yml }
     - { resource: services/updater.yml }
     - { resource: services/messenger.yml }
     - { resource: services/subscriber.yml }
+    - { resource: services/voter.yml }
 
 services:
     Claroline\CoreBundle\Listener\AuthenticationFailureHandler:

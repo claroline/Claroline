@@ -82,10 +82,9 @@ class TranslatableListener extends BaseListener
      */
     private function setLocale()
     {
-        if (isset($_SESSION['_sf2_attributes'])) {
-            if (isset($_SESSION['_sf2_attributes']['_locale'])) {
-                $this->setTranslatableLocale($_SESSION['_sf2_attributes']['_locale']);
-            }
+        $attrs = isset($_SESSION['_sf2_attributes']) ? $_SESSION['_sf2_attributes'] : null;
+        if (!empty($attrs) && isset($attrs['_locale'])) {
+            $this->setTranslatableLocale($attrs['_locale']);
         }
     }
 }

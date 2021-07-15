@@ -39,10 +39,6 @@ services:
             - '@Claroline\AppBundle\Event\StrictDispatcher'
             - '@kernel'
 
-    claroline.manager.cache_manager:
-        alias: Claroline\AppBundle\Manager\CacheManager
-        public: true
-
     Claroline\AppBundle\Manager\File\TempFileManager:
         arguments:
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'

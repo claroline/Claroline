@@ -7,7 +7,7 @@ services:
     Claroline\AuthenticationBundle\Manager\OauthManager:
         arguments:
             - '@doctrine.orm.entity_manager'
-            - '@claroline.manager.cache_manager'
+            - '@Claroline\AppBundle\Manager\CacheManager'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
             - '@security.token_storage'
             - '@Claroline\AuthenticationBundle\Security\Authentication\Authenticator'

@@ -11,26 +11,28 @@
 
 namespace Claroline\CoreBundle\Library\Testing;
 
-use Symfony\Bundle\FrameworkBundle\Client;
+use Doctrine\DBAL\Driver\Connection;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\BrowserKit\CookieJar;
 use Symfony\Component\BrowserKit\History;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * @see http://alexandre-salome.fr/blog/Symfony2-Isolation-Of-Tests
  */
-class TransactionalTestClient extends Client
+class TransactionalTestClient extends KernelBrowser
 {
-    /** @var \Doctrine\DBAL\Connection */
+    /** @var Connection */
     protected $connection;
 
     public function __construct(
-        HttpKernelInterface $kernel,
+        KernelInterface $kernel,
         array $server = [],
         History $history = null,
         CookieJar $cookieJar = null
     ) {
         parent::__construct($kernel, $server, $history, $cookieJar);
+
         $this->connection = $this->getContainer()->get('doctrine.dbal.default_connection');
     }
 

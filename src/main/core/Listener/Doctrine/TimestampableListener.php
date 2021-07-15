@@ -12,7 +12,7 @@
 namespace Claroline\CoreBundle\Listener\Doctrine;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Doctrine\Common\NotifyPropertyChanged;
+use Doctrine\Persistence\NotifyPropertyChanged;
 use Gedmo\Timestampable\TimestampableListener as BaseListener;
 
 /**
@@ -59,7 +59,8 @@ class TimestampableListener extends BaseListener
             $uow = $ea->getObjectManager()->getUnitOfWork();
             $changeSet = $uow->getEntityChangeSet($object);
 
-            if (($count = count($changeSet)) !== 0 && $count < 3) {
+            $count = count($changeSet);
+            if (0 !== $count && $count < 3) {
                 $hasSignificantChange = false;
 
                 foreach (array_keys($changeSet) as $changedField) {

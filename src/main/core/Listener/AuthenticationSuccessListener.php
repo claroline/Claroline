@@ -167,11 +167,11 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
             }
         } elseif (
             PlatformDefaults::REDIRECT_OPTIONS['URL'] === $redirect
-            && $this->config->getParameter('redirect_after_login_url')
+            && $this->config->getParameter('authentication.redirect_after_login_url')
         ) {
             return [
                 'type' => 'url',
-                'data' => $this->config->getParameter('redirect_after_login_url'),
+                'data' => $this->config->getParameter('authentication.redirect_after_login_url'),
             ];
         }
 

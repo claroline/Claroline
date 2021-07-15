@@ -9,7 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Library\Configuration;
+namespace Claroline\CoreBundle\Configuration;
+
+use Claroline\CoreBundle\Library\Configuration\ParameterProviderInterface;
 
 class PlatformDefaults implements ParameterProviderInterface
 {

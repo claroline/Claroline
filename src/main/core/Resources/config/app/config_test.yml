@@ -1,7 +1,0 @@
-# This file gathers container configuration that must be loaded at the application level
-
-imports:
-    - { resource: config.yml }
-
-parameters:
-    test.client.class: Claroline\CoreBundle\Library\Testing\TransactionalTestClient

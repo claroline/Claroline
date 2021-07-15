@@ -1,0 +1,11 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+
+    Claroline\CoreBundle\Configuration\PlatformDefaults:
+        tags: [ 'claroline.configuration' ]
+
+    Claroline\CoreBundle\Configuration\LegacyParametersMapping:
+        tags: [ 'claroline.configuration.mapping.legacy' ]

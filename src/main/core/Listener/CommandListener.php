@@ -15,7 +15,7 @@ use Claroline\AuthenticationBundle\Security\Authentication\Authenticator;
 use Claroline\CoreBundle\Manager\UserManager;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
 
-class CliListener
+class CommandListener
 {
     private $authenticator;
     private $userManager;

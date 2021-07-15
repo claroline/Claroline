@@ -9,7 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Library\Configuration;
+namespace Claroline\CoreBundle\Configuration;
+
+use Claroline\CoreBundle\Library\Configuration\LegacyParametersMappingInterface;
 
 class LegacyParametersMapping implements LegacyParametersMappingInterface
 {
@@ -37,8 +39,6 @@ class LegacyParametersMapping implements LegacyParametersMappingInterface
             'mailer_tag' => 'mailer.tag',
             'terms_of_service' => 'tos.enabled',
             'google_meta_tag' => 'internet.google_meta_tag',
-            'redirect_after_login_option' => 'authentication.redirect_after_login_option',
-            'redirect_after_login_url' => 'authentication.redirect_after_login_url',
             'account_duration' => 'security.account_duration',
             'username_regex' => 'registration.username_regex',
             'footer_login' => 'display.footer_login',

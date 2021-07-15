@@ -1,4 +1,3 @@
 services:
-    claroline.installation.loader:
-        class: "%claroline.installation_loader.class%"
+    Claroline\KernelBundle\Routing\DynamicLoader:
         tags: [routing.loader]

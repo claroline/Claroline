@@ -5,10 +5,6 @@ services:
         public: true
         tags: [twig.extension]
 
-    Claroline\CoreBundle\Twig\ContentExtension:
-       arguments:
-          - '@Claroline\CoreBundle\Manager\ContentManager'
-
     Claroline\CoreBundle\Twig\RoutingExtension:
        arguments:
           - '@Claroline\CoreBundle\Library\RoutingHelper'
