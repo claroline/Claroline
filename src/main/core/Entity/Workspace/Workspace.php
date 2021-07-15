@@ -81,32 +81,11 @@ class Workspace implements IdentifiableInterface
     private $slug;
 
     /**
-     * @ORM\Column(type="string", nullable=false)
-     *
-     * @var string
-     */
-    protected $maxStorageSize = '1 TB';
-
-    /**
      * @ORM\Column(type="string", nullable=true)
      *
      * @var string
      */
     protected $lang = null;
-
-    /**
-     * @ORM\Column(type="integer", nullable=false)
-     *
-     * @var int
-     */
-    protected $maxUploadResources = 10000;
-
-    /**
-     * @ORM\Column(type="integer", nullable=false)
-     *
-     * @var int
-     */
-    protected $maxUsers = 10000;
 
     /**
      * @ORM\Column(type="boolean")
@@ -462,36 +441,6 @@ class Workspace implements IdentifiableInterface
     }
 
     /**
-     * Sets how many MB can be stored in the workspace.
-     *
-     * @param $maxSize
-     */
-    public function setMaxStorageSize($maxSize)
-    {
-        $this->maxStorageSize = $maxSize;
-    }
-
-    /**
-     * Returns how many MB can be stored in the workspace.
-     *
-     * @return int
-     */
-    public function getMaxStorageSize()
-    {
-        return $this->maxStorageSize;
-    }
-
-    public function setMaxUploadResources($maxSize)
-    {
-        $this->maxUploadResources = $maxSize;
-    }
-
-    public function getMaxUploadResources()
-    {
-        return $this->maxUploadResources;
-    }
-
-    /**
      * @param $isPersonal
      *
      * @deprecated use `setPersonal()` instead
@@ -511,23 +460,8 @@ class Workspace implements IdentifiableInterface
         return $this->personal;
     }
 
-    public function setMaxUsers($maxUsers)
-    {
-        $this->maxUsers = $maxUsers;
-    }
-
-    public function getMaxUsers()
-    {
-        return $this->maxUsers;
-    }
-
-    public function getNameAndCode()
-    {
-        return $this->name.' ['.$this->code.']';
-    }
-
     /**
-     * @return \Claroline\CoreBundle\Entity\Workspace\WorkspaceOptions
+     * @return WorkspaceOptions
      */
     public function getOptions()
     {

@@ -263,10 +263,6 @@ class WorkspaceSerializer
             ),
             'code' => $workspace->getAccessCode(),
             'allowedIps' => $workspace->getAllowedIps(),
-            'maxUsers' => $workspace->getMaxUsers(),
-            // TODO : store raw file size to avoid this
-            'maxStorage' => $this->fileUt->getRealFileSize($workspace->getMaxStorageSize()),
-            'maxResources' => $workspace->getMaxUploadResources(),
         ];
     }
 
@@ -366,35 +362,22 @@ class WorkspaceSerializer
 
         $this->sipe('notifications.enabled', 'setNotifications', $data, $workspace);
 
-        $this->sipe('restrictions.hidden', 'setHidden', $data, $workspace);
-        $this->sipe('restrictions.code', 'setAccessCode', $data, $workspace);
-        $this->sipe('restrictions.allowedIps', 'setAllowedIps', $data, $workspace);
+        if (isset($data['registration'])) {
+            $this->sipe('registration.validation', 'setRegistrationValidation', $data, $workspace);
+            $this->sipe('registration.selfRegistration', 'setSelfRegistration', $data, $workspace);
+            $this->sipe('registration.selfUnregistration', 'setSelfUnregistration', $data, $workspace);
 
-        $this->sipe('registration.validation', 'setRegistrationValidation', $data, $workspace);
-        $this->sipe('registration.selfRegistration', 'setSelfRegistration', $data, $workspace);
-        $this->sipe('registration.selfUnregistration', 'setSelfUnregistration', $data, $workspace);
-
-        if (isset($data['registration']) && isset($data['registration']['defaultRole'])) {
-            /** @var Role $defaultRole */
-            $defaultRole = $this->om->getObject($data['registration']['defaultRole'], Role::class);
-            $workspace->setDefaultRole($defaultRole);
+            if (isset($data['registration']['defaultRole'])) {
+                /** @var Role $defaultRole */
+                $defaultRole = $this->om->getObject($data['registration']['defaultRole'], Role::class);
+                $workspace->setDefaultRole($defaultRole);
+            }
         }
 
         if (!empty($data['restrictions'])) {
-            // TODO : store raw file size to avoid this
-            if (isset($data['restrictions']['maxStorage'])) {
-                $workspace->setMaxStorageSize(
-                    $this->fileUt->formatFileSize($data['restrictions']['maxStorage'] ?? 0)
-                );
-            }
-
-            if (isset($data['restrictions']['maxUsers'])) {
-                $workspace->setMaxUsers($data['restrictions']['maxUsers'] ?? 0);
-            }
-
-            if (isset($data['restrictions']['maxResources'])) {
-                $workspace->setMaxUploadResources($data['restrictions']['maxResources'] ?? 0);
-            }
+            $this->sipe('restrictions.hidden', 'setHidden', $data, $workspace);
+            $this->sipe('restrictions.code', 'setAccessCode', $data, $workspace);
+            $this->sipe('restrictions.allowedIps', 'setAllowedIps', $data, $workspace);
 
             if (isset($data['restrictions']['dates'])) {
                 $dateRange = DateRangeNormalizer::denormalize($data['restrictions']['dates']);

@@ -10,7 +10,6 @@ import {selectors} from '#/main/core/tools/community/store/selectors'
 
 const reducer = combineReducers({
   list: makeListReducer(selectors.STORE_NAME + '.users.list', {
-    filters: [{property: 'isDisabled', value: false}],
     sortBy: {property: 'created', direction: -1}
   }, {
     invalidated: makeReducer(false, {

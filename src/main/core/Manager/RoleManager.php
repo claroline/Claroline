@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Manager;
 
-use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\Group;
@@ -25,8 +24,6 @@ class RoleManager
 {
     /** @var ObjectManager */
     private $om;
-    /** @var FinderProvider */
-    private $finder;
 
     /** @var RoleRepository */
     private $roleRepo;
@@ -34,11 +31,9 @@ class RoleManager
     private $userRepo;
 
     public function __construct(
-        ObjectManager $om,
-        FinderProvider $finder
+        ObjectManager $om
     ) {
         $this->om = $om;
-        $this->finder = $finder;
 
         $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
         $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
@@ -227,22 +222,6 @@ class RoleManager
 
         if ($ars instanceof Group && 'ROLE_USER' === $role->getName()) {
             return false;
-        }
-
-        if ($role->getWorkspace() && $role->getWorkspace()->getMaxUsers()) {
-            // TODO : use a repo method instead
-            $countByWorkspace = $this->finder->fetch(
-                User::class,
-                ['workspace' => $role->getWorkspace()->getUuid()],
-                null,
-                0,
-                -1,
-                true
-            );
-
-            if ($role->getWorkspace()->getMaxUsers() <= $countByWorkspace) {
-                return false;
-            }
         }
 
         return true;
