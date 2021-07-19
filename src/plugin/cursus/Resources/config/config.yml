@@ -143,3 +143,7 @@ plugin:
               - user_first_name
               - user_last_name
 
+        - name: training_quota
+          placeholders:
+              - quota_quota
+              - quota_organisation
