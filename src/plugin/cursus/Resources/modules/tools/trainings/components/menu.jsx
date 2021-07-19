@@ -46,7 +46,7 @@ const TrainingsMenu = (props) =>
           name: 'quotas',
           type: LINK_BUTTON,
           label: trans('quotas', {}, 'cursus'),
-          target: props.path + '/quotas'
+          target: props.path + '/quota'
         }, {
           name: 'validations',
           type: LINK_BUTTON,

@@ -25,7 +25,7 @@ const TrainingsTool = (props) =>
         path: '/events',
         component: EventMain
       }, {
-        path: '/quotas',
+        path: '/quota',
         component: QuotaMain
       }
     ]}

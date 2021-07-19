@@ -1,65 +1,40 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-
 import {trans} from '#/main/app/intl/translation'
-import {LINK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
-import {ListData} from '#/main/app/content/list/containers/data'
-import {constants as listConst} from '#/main/app/content/list/constants'
-
-import {route} from '#/plugin/cursus/routing'
-import {QuotaCard} from '#/plugin/cursus/tools/trainings/quota/components/card'
+import {LINK_BUTTON} from '#/main/app/buttons'
+import {ToolPage} from '#/main/core/tool/containers/page'
+import {QuotaList as QuotaDataList} from '#/plugin/cursus/quota/components/list'
+import {selectors} from '#/plugin/cursus/tools/trainings/quota/store/selectors'
 
 const QuotaList = (props) =>
-  <ListData
-    name={props.name}
-    fetch={{
-      url: props.url,
-      autoload: true
-    }}
-    delete={{
-      url: ['apiv2_cursus_quota_delete_bulk'],
-      displayed: () => true
-    }}
-    primaryAction={(row) => ({
+  <ToolPage
+    path={[{
       type: LINK_BUTTON,
-      label: trans('open', {}, 'actions'),
-      target: route(props.path, row)
-    })}
-    definition={[
+      label: trans('quotas', {}, 'cursus'),
+      target: props.path
+    }]}
+    subtitle={trans('quotas', {}, 'cursus')}
+    primaryAction="add"
+    actions={[
       {
-        name: 'name',
-        type: 'string',
-        label: trans('name'),
-        displayed: true,
+        name: 'add',
+        type: LINK_BUTTON,
+        icon: 'fa fa-fw fa-plus',
+        label: trans('add_quota', {}, 'cursus'),
+        target: `${props.path}/new`,
+        group: trans('management'),
         primary: true
       }
     ]}
-    actions={(rows) => [
-      {
-        name: 'edit',
-        type: LINK_BUTTON,
-        icon: 'fa fa-fw fa-pencil',
-        label: trans('edit', {}, 'actions'),
-        target: route(props.path, rows[0]) + '/edit',
-        displayed: true,
-        group: trans('management'),
-        scope: ['object']
-      }
-    ]}
-    card={QuotaCard}
-    display={{
-      current: listConst.DISPLAY_LIST
-    }}
-  />
+  >
+    <QuotaDataList
+      name={selectors.STORE_NAME}
+      path={props.path}
+    />
+  </ToolPage>
 
 QuotaList.propTypes = {
-  path: T.string.isRequired,
-  name: T.string.isRequired,
-  url: T.oneOfType([T.string, T.array])
-}
-
-QuotaList.defaultProps = {
-  url: ['apiv2_cursus_quota_list']
+  path: T.string.isRequired
 }
 
 export {
