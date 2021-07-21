@@ -28,10 +28,8 @@ class Quota
     use Uuid;
 
     /**
-     * @ORM\OneToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Organization\Organization"
-     * )
-     * @ORM\JoinColumn(name="organization_id", onDelete="CASCADE")
+     * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Organization\Organization")
+     * @ORM\JoinColumn(name="organization_id", nullable=false, onDelete="CASCADE")
      * 
      * @var Organization
      */
@@ -42,7 +40,7 @@ class Quota
      *
      * @var float
      */
-    private $limit = 0.0;
+    private $threshold = 0.0;
 
     public function __construct()
     {
@@ -60,18 +58,18 @@ class Quota
     /**
      * @return float
      */
-    public function getLimit()
+    public function getThreshold()
     {
-        return $this->limit;
+        return $this->threshold;
     }
 
-    public function setOrganisation(Organization $organization)
+    public function setOrganization(Organization $organization)
     {
         $this->organization = $organization;
     }
 
-    public function setLimit(float $limit)
+    public function setThreshold(float $threshold)
     {
-        $this->limit = $limit;
+        $this->threshold = $threshold;
     }
 }

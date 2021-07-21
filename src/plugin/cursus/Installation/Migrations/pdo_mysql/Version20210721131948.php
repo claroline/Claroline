@@ -8,17 +8,17 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated migration based on mapping information: modify it with caution.
  *
- * Generation date: 2021/07/19 09:54:50
+ * Generation date: 2021/07/21 01:19:50
  */
-class Version20210719095448 extends AbstractMigration
+class Version20210721131948 extends AbstractMigration
 {
     public function up(Schema $schema): void
     {
         $this->addSql("
             CREATE TABLE claro_cursusbundle_quota (
                 id INT AUTO_INCREMENT NOT NULL, 
-                organization_id INT DEFAULT NULL, 
-                `limit` DOUBLE PRECISION NOT NULL, 
+                organization_id INT NOT NULL, 
+                threshold DOUBLE PRECISION NOT NULL, 
                 uuid VARCHAR(36) NOT NULL, 
                 UNIQUE INDEX UNIQ_C4725F5FD17F50A6 (uuid), 
                 UNIQUE INDEX `unique` (organization_id), 
