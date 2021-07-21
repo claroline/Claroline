@@ -158,7 +158,7 @@ const Quota = {
   propTypes: {
     id: T.string,
     organization: T.shape(OrganizationTypes.propTypes),
-    limit: T.number
+    threshold: T.number
   }
 }
 

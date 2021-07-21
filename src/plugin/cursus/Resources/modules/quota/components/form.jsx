@@ -33,9 +33,9 @@ const QuotaForm = (props) =>
             label: trans('organization'),
             required: true
           }, {
-            name: 'limit',
-            type: 'string',
-            label: trans('limit'),
+            name: 'threshold',
+            type: 'number',
+            label: trans('threshold'),
             required: true
           }
         ]

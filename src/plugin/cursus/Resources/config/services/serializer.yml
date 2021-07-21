@@ -43,6 +43,10 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
 
+    Claroline\CursusBundle\Serializer\QuotaSerializer:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\API\Serializer\User\OrganizationSerializer'
+
     # Registrations
     Claroline\CursusBundle\Serializer\Registration\CourseUserSerializer:
         arguments:
