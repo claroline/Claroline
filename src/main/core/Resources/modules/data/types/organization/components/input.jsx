@@ -17,7 +17,7 @@ const OrganizationButton = props =>
     style={{marginTop: 10}}
     type={MODAL_BUTTON}
     icon="fa fa-fw fa-plus"
-    label={trans('add_organization')}
+    label={trans('set_organization')}
     disabled={props.disabled}
     modal={[MODAL_ORGANIZATIONS, {
       url: ['apiv2_organization_list'],
