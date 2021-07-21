@@ -2,6 +2,7 @@ import {PropTypes as T} from 'prop-types'
 
 import {Role as RoleTypes} from '#/main/core/user/prop-types'
 import {Workspace as WorkspaceTypes} from '#/main/core/workspace/prop-types'
+import {Organization as OrganizationTypes} from '#/main/core/user/prop-types'
 
 import {constants} from '#/plugin/cursus/constants'
 
@@ -153,8 +154,17 @@ const Event = {
   }
 }
 
+const Quota = {
+  propTypes: {
+    id: T.string,
+    organization: T.shape(OrganizationTypes.propTypes),
+    limit: T.number
+  }
+}
+
 export {
   Course,
   Session,
-  Event
+  Event,
+  Quota
 }

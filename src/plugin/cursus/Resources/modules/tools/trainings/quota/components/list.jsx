@@ -28,7 +28,7 @@ const QuotaList = (props) =>
     ]}
   >
     <QuotaDataList
-      name={selectors.STORE_NAME}
+      name={selectors.LIST_NAME}
       path={props.path}
     />
   </ToolPage>
