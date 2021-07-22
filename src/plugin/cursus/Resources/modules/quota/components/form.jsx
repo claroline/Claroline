@@ -11,7 +11,7 @@ import {Quota as QuotaTypes} from '#/plugin/cursus/prop-types'
 const QuotaForm = (props) =>
   <FormData
     name={props.name}
-    meta={true}
+    meta={false}
     buttons={true}
     target={(data, isNew) => isNew ?
       ['apiv2_cursus_quota_create'] :
@@ -19,7 +19,7 @@ const QuotaForm = (props) =>
     }
     cancel={{
       type: LINK_BUTTON,
-      target: props.isNew ? props.path : route(props.path, props.quota),
+      target: props.path,
       exact: true
     }}
     sections={[

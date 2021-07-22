@@ -5,7 +5,6 @@ import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ToolPage} from '#/main/core/tool/containers/page'
 
-import {route} from '#/plugin/cursus/routing'
 import {Quota as QuotaTypes} from '#/plugin/cursus/prop-types'
 import {QuotaPage} from '#/plugin/cursus/quota/components/page'
 import {QuotaForm as QuotaFormContainer} from '#/plugin/cursus/quota/containers/form'
@@ -24,8 +23,8 @@ const QuotaForm = (props) => {
             target: props.path
           }, {
             type: LINK_BUTTON,
-            label: props.course.name,
-            target: route(props.path, props.course)
+            label: props.quota.id,
+            target: `${props.path}/${props.quota}`
           }, {
             label: trans('edit', {}, 'actions')
           }

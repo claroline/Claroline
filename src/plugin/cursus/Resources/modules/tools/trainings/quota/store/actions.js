@@ -33,7 +33,7 @@ actions.openForm = (id = null, defaultProps = {}) => (dispatch) => {
 
   return dispatch({
     [API_REQUEST]: {
-      url: url(['apiv2_cursus_quota_find'], {filters: {id: id}}),
+      url: url(['apiv2_cursus_quota_find'], {filters: {uuid: id}}),
       silent: true,
       success: (data) => dispatch(formActions.resetForm(selectors.FORM_NAME, data))
     }

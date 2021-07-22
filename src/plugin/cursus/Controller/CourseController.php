@@ -109,7 +109,7 @@ class CourseController extends AbstractCrudController
         return $filters;
     }
 
-    /**
+    /*
      * @Route("/{slug}/open", name="apiv2_cursus_course_open", methods={"GET"})
      * @EXT\ParamConverter("course", class="ClarolineCursusBundle:Course", options={"mapping": {"slug": "slug"}})
      */

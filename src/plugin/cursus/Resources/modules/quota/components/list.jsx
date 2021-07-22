@@ -6,7 +6,6 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {constants as listConst} from '#/main/app/content/list/constants'
 
-import {route} from '#/plugin/cursus/routing'
 import {QuotaCard} from '#/plugin/cursus/quota/components/card'
 
 const QuotaList = (props) =>
@@ -23,27 +22,20 @@ const QuotaList = (props) =>
     primaryAction={(row) => ({
       type: LINK_BUTTON,
       label: trans('open', {}, 'actions'),
-      target: route(props.path, row)
+      target: `${props.path}/${row.id}/edit`
     })}
     definition={[
       {
-        name: 'name',
+        name: 'organization.name',
         type: 'string',
-        label: trans('name'),
+        label: trans('organization'),
         displayed: true,
         primary: true
-      }
-    ]}
-    actions={(rows) => [
-      {
-        name: 'edit',
-        type: LINK_BUTTON,
-        icon: 'fa fa-fw fa-pencil',
-        label: trans('edit', {}, 'actions'),
-        target: route(props.path, rows[0]) + '/edit',
-        displayed: true,
-        group: trans('management'),
-        scope: ['object']
+      }, {
+        name: 'threshold',
+        type: 'string',
+        label: trans('threshold'),
+        displayed: true
       }
     ]}
     card={QuotaCard}

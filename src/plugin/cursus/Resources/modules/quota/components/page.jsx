@@ -26,7 +26,7 @@ const QuotaPage = (props) => {
     <PageFull
       showBreadcrumb={showToolBreadcrumb(props.currentContext.type, props.currentContext.data)}
       path={[].concat(getToolBreadcrumb('trainings', props.currentContext.type, props.currentContext.data), props.path)}
-      title={props.quota.id}
+      title={props.quota.organization.name}
       toolbar="edit | fullscreen more"
       actions={[
         {
