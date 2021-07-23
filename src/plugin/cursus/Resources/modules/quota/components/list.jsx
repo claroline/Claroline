@@ -4,7 +4,6 @@ import {PropTypes as T} from 'prop-types'
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
-import {constants as listConst} from '#/main/app/content/list/constants'
 
 import {QuotaCard} from '#/plugin/cursus/quota/components/card'
 
@@ -27,15 +26,18 @@ const QuotaList = (props) =>
     definition={[
       {
         name: 'organization.name',
+        alias: 'organization',
         type: 'string',
         label: trans('organization'),
         displayed: true,
-        primary: true
+        primary: true,
+        sortable: false
       }, {
         name: 'threshold',
         type: 'string',
         label: trans('threshold'),
-        displayed: true
+        displayed: true,
+        filterable: false
       }
     ]}
     card={QuotaCard}

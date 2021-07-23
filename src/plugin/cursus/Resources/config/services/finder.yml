@@ -25,6 +25,8 @@ services:
 
     Claroline\CursusBundle\Finder\EventFinder: ~
 
+    Claroline\CursusBundle\Finder\QuotaFinder: ~
+
     # Registrations
     Claroline\CursusBundle\Finder\SessionGroupFinder: ~
 
