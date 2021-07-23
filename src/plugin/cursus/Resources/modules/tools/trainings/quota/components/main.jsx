@@ -25,7 +25,7 @@ const QuotaMain = (props) =>
           <QuotaForm path={`${props.path}/quota`} />
         )
       }, {
-        path: '/:id/edit',
+        path: '/:id',
         onEnter: (params = {}) => props.openForm(params.id),
         render: () => (
           <QuotaForm path={`${props.path}/quota`} />

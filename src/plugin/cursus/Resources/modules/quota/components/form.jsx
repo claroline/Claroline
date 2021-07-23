@@ -5,7 +5,6 @@ import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 
-import {route} from '#/plugin/cursus/routing'
 import {Quota as QuotaTypes} from '#/plugin/cursus/prop-types'
 
 const QuotaForm = (props) =>

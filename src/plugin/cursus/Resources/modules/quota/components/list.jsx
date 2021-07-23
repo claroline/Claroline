@@ -21,7 +21,7 @@ const QuotaList = (props) =>
     primaryAction={(row) => ({
       type: LINK_BUTTON,
       label: trans('open', {}, 'actions'),
-      target: `${props.path}/${row.id}/edit`
+      target: `${props.path}/${row.id}`
     })}
     definition={[
       {

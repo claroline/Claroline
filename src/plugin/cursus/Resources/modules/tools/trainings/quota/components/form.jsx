@@ -22,11 +22,7 @@ const QuotaForm = (props) => {
             label: trans('quota', {}, 'cursus'),
             target: props.path
           }, {
-            type: LINK_BUTTON,
             label: props.quota.id,
-            target: `${props.path}/${props.quota}`
-          }, {
-            label: trans('edit', {}, 'actions')
           }
         ]}
         currentContext={props.currentContext}

@@ -1,11 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import classes from 'classnames'
-import get from 'lodash/get'
-import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
-import {asset} from '#/main/app/config/asset'
 import {DataCard} from '#/main/app/data/components/card'
 
 import {Quota as QuotaTypes} from '#/plugin/cursus/prop-types'
