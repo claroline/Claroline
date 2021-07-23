@@ -39,9 +39,6 @@ const QuotaList = (props) =>
       }
     ]}
     card={QuotaCard}
-    display={{
-      current: listConst.DISPLAY_LIST
-    }}
   />
 
 QuotaList.propTypes = {
