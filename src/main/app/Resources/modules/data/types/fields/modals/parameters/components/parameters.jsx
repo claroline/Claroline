@@ -113,6 +113,20 @@ class ParametersModal extends Component {
                 displayed: !this.state.restrictions.locked || this.state.restrictions.lockedEditionOnly
               }
             ]
+          }, {
+            id: 'conditions',
+            icon: 'fa fa-fw fa-cog',
+            title: 'Conditional Rendering',
+            fields: [
+              {
+                name: 'help',
+                type: 'string',
+                label: trans('message'),
+                options: {
+                  long: true
+                }
+              }
+            ]
           }, this.state.typeDef && {
             id: 'parameters',
             icon: 'fa fa-fw fa-cog',
