@@ -66,6 +66,14 @@ class QuotaController extends AbstractCrudController
     }
 
     /**
+     * @Route("/validation", name="apiv2_cursus_validation_list", methods={"GET"})
+     */
+    public function listValidationAction(Request $request, $class = Quota::class): JsonResponse
+    {
+        return parent::listAction($request, $class);
+    }
+
+    /**
      * @Route("/{id}/open", name="apiv2_cursus_quota_open", methods={"GET"})
      * @EXT\ParamConverter("quota", class="Claroline\CursusBundle\Entity\Quota", options={"mapping": {"id": "uuid"}})
      */
