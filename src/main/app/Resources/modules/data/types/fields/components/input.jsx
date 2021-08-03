@@ -7,6 +7,7 @@ import uuid from 'uuid'
 import {trans} from '#/main/app/intl/translation'
 
 import {actions as modalActions} from '#/main/app/overlays/modal/store'
+import {actions as formActions} from '#/main/app/content/form/store/actions'
 import {MODAL_SELECTION} from '#/main/app/modals/selection'
 import {MODAL_FIELD_PARAMETERS} from '#/main/app/data/types/fields/modals/parameters'
 
@@ -130,7 +131,8 @@ class FieldList extends Component {
                     tooltip="top"
                     modal={[MODAL_FIELD_PARAMETERS, {
                       data: field,
-                      save: (data) => this.update(fieldIndex, data)
+                      save: (data) => this.update(fieldIndex, data),
+                      formFields: this.props.formFields
                     }]}
                   />
 
@@ -190,13 +192,15 @@ FieldList.propTypes = {
   value: T.arrayOf(T.shape({
 
   })),
+  formFields: T.array.isRequired,
   onChange: T.func.isRequired,
   showModal: T.func.isRequired
 }
 
 FieldList.defaultProps = {
   placeholder: trans('empty_fields_list'),
-  value: []
+  value: [],
+  formFields: []
 }
 
 const FieldsInput = connect(
@@ -204,7 +208,8 @@ const FieldsInput = connect(
   (dispatch) => ({
     showModal(modalType, modalProps) {
       dispatch(modalActions.showModal(modalType, modalProps))
-    }
+    },
+    formFields: dispatch(formActions.getFormFields('community.profile'))
   })
 )(FieldList)
 

@@ -14,11 +14,15 @@ class ParametersModal extends Component {
     this.state = {
       options: props.data.options ? props.data.options : {},
       restrictions: props.data.restrictions ? props.data.restrictions : {},
-      typeDef: null
+      typeDef: null,
+      selectedField: {}
     }
 
     this.updateOptions = this.updateOptions.bind(this)
     this.updateRestrictions = this.updateRestrictions.bind(this)
+    this.getFieldsNames = this.getFieldsNames.bind(this)
+    this.normalizeFormOptions = this.normalizeFormOptions.bind(this)
+    this.updateSelectedField = this.updateSelectedField.bind(this)
   }
 
   componentDidMount() {
@@ -63,7 +67,42 @@ class ParametersModal extends Component {
     }))
   }
 
+  getFieldsNames(formFields) {
+    return formFields.flatMap(({sections}) => sections).flatMap(({fields})=> fields)
+  }
+
+  normalizeFormOptions(fieldData = {}) {
+    console.log('fieldData', fieldData)
+
+    let normalizedOptions
+
+    switch (fieldData.type) {
+      case 'choice':
+        normalizedOptions = fieldData.options.choices.reduce((acc, current) => ({...acc, ...{[current.name]: current.label}}), {})
+        break
+      case 'boolean':
+        normalizedOptions = {true: 'True', false: 'False'}
+        break
+      default:
+        normalizedOptions = fieldData.map(({label, name, id}) => ({name, label, value: id}))
+    }
+
+    console.log('normalizedOptions', normalizedOptions)
+    return normalizedOptions
+  
+  }
+
+  updateSelectedField(fieldId) {
+    const {formFields} = this.props
+
+    const newField = this.getFieldsNames(formFields).find(field => field.id === fieldId[0])
+
+    return this.setState({selectedField: newField})
+  }
+
   render() {
+    const {selectedField} = this.state
+
     return (
       <FormDataModal
         {...this.props}
@@ -119,12 +158,33 @@ class ParametersModal extends Component {
             title: 'Conditional Rendering',
             fields: [
               {
-                name: 'help',
-                type: 'string',
-                label: trans('message'),
+                name: 'field',
+                type: 'cascade',
+                label: 'Field',
                 options: {
-                  long: true
+                  choices: this.normalizeFormOptions(this.getFieldsNames(this.props.formFields)),
+                  condensed: true,
+                  required: true
+                },
+                onChange: (value) => this.updateSelectedField(value)
+              }, {
+                name: 'condition',
+                type: 'cascade',
+                label: 'Condition',
+                options: {
+                  choices: [{name: 'equals', label: 'Equals', value: 'equals'}, {name: 'does-not-equal', label: 'Does not equal', value: 'does-not-equal'}],
+                  condensed: true,
+                  required: true
                 }
+              }, {
+                name: 'value',
+                type: selectedField.type === 'boolean' ? 'choice' : selectedField.type,
+                label: 'Value',
+                ...(selectedField.type === 'cascade' || selectedField.type === 'choice' || selectedField.type === 'boolean' ? {options: {
+                  choices: this.normalizeFormOptions(selectedField),
+                  condensed: !selectedField.type === 'boolean',
+                  required: true
+                }} : {})
               }
             ]
           }, this.state.typeDef && {
@@ -193,6 +253,7 @@ class ParametersModal extends Component {
 }
 
 ParametersModal.propTypes = {
+  formFields: T.array.isRequired,
   data: T.shape({
     type: T.string.isRequired,
     options: T.object,
@@ -200,6 +261,10 @@ ParametersModal.propTypes = {
   }),
   fadeModal: T.func.isRequired,
   save: T.func.isRequired
+}
+
+ParametersModal.defaultProps = {
+  formFields: []
 }
 
 export {

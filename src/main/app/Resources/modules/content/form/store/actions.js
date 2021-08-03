@@ -162,6 +162,8 @@ actions.save = (formName, target) => (dispatch, getState) => {
   })
 }
 
+actions.getFormFields = (formName) => (_dispatch, getState) => formSelect.data(formSelect.form(getState(), formName))
+
 actions.cancelChanges = (formName) => (dispatch, getState) => {
   const formNew = formSelect.isNew(formSelect.form(getState(), formName))
   const originalData = formSelect.originalData(formSelect.form(getState(), formName))
