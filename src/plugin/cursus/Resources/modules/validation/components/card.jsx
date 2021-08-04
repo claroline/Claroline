@@ -4,7 +4,7 @@ import {PropTypes as T} from 'prop-types'
 import {trans} from '#/main/app/intl/translation'
 import {DataCard} from '#/main/app/data/components/card'
 
-import {Quota as QuotaTypes} from '#/plugin/cursus/prop-types'
+import {Validation as ValidationTypes} from '#/plugin/cursus/prop-types'
 
 /**
  * Remove unless code
@@ -23,7 +23,7 @@ const ValidationCard = props =>
 
 ValidationCard.propTypes = {
   data: T.shape(
-    QuotaTypes.propTypes
+    ValidationTypes.propTypes
   ).isRequired
 }
 

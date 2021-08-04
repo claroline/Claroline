@@ -29,8 +29,14 @@ const ValidationList = (props) =>
         primary: true,
         sortable: false
       }, {
+        name: 'validated',
+        type: 'number',
+        label: trans('validated'),
+        displayed: true,
+        filterable: false
+      }, {
         name: 'threshold',
-        type: 'string',
+        type: 'number',
         label: trans('threshold'),
         displayed: true,
         filterable: false

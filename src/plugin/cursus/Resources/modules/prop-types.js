@@ -162,9 +162,19 @@ const Quota = {
   }
 }
 
+const Validation = {
+  propTypes: {
+    id: T.string,
+    organization: T.shape(OrganizationTypes.propTypes),
+    validated: T.number,
+    threshold: T.number
+  }
+}
+
 export {
   Course,
   Session,
   Event,
-  Quota
+  Quota,
+  Validation
 }
