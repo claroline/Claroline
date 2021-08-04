@@ -17,10 +17,14 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\User\OrganizationSerializer;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CursusBundle\Entity\Quota;
+use Claroline\CursusBundle\Repository\QuotaRepository;
 
 class QuotaSerializer
 {
     use SerializerTrait;
+
+    /** @var ObjectManager */
+    private $om;
 
     /** @var OrganizationSerializer */
     private $organizationSerializer;
@@ -28,10 +32,16 @@ class QuotaSerializer
     /** @var OrganizationRepository */
     private $organizationRepo;
 
+    /** @var QuotaRepository */
+    private $quotaRepo;
+
     public function __construct(ObjectManager $om, OrganizationSerializer $organizationSerializer)
     {
+        $this->om = $om;
         $this->organizationSerializer = $organizationSerializer;
         $this->organizationRepo = $om->getRepository(Organization::class);
+
+        $this->quotaRepo = $om->getRepository(Quota::class);
     }
 
     public function getSchema()
@@ -46,6 +56,10 @@ class QuotaSerializer
             'organization' => $this->organizationSerializer->serialize($quota->getOrganization(), [Options::SERIALIZE_MINIMAL]),
             'threshold' => $quota->getThreshold()
         ];
+
+        if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
+            $serialized['validated'] = $this->quotaRepo->countValidated($quota);
+        }
 
         return $serialized;
     }

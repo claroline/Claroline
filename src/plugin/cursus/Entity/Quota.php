@@ -17,7 +17,7 @@ use Claroline\CoreBundle\Entity\Organization\Organization;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\CursusBundle\Repository\QuotaRepository")
  * @ORM\Table(name="claro_cursusbundle_quota", uniqueConstraints={
  *     @ORM\UniqueConstraint(name="unique", columns={"organization_id"})
  * })

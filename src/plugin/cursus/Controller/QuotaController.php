@@ -11,6 +11,7 @@
 
 namespace Claroline\CursusBundle\Controller;
 
+use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\CursusBundle\Entity\Quota;
@@ -62,7 +63,18 @@ class QuotaController extends AbstractCrudController
      */
     public function listAction(Request $request, $class = Quota::class): JsonResponse
     {
-        return parent::listAction($request, $class);
+        $query = $request->query->all();
+
+        if (isset($query['options'])) {
+            $options = $query['options'];
+            $options[] = Options::SERIALIZE_MINIMAL;
+        }
+
+        $query['hiddenFilters'] = $this->getDefaultHiddenFilters();
+
+        return new JsonResponse(
+            $this->finder->search($class, $query, $options ?? [Options::SERIALIZE_MINIMAL])
+        );
     }
 
     /**
