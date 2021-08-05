@@ -2,6 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import omit from 'lodash/omit'
 
+import {param} from '#/main/app/config'
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {Toolbar} from '#/main/app/action/components/toolbar'
@@ -46,12 +47,14 @@ const TrainingsMenu = (props) =>
           name: 'quotas',
           type: LINK_BUTTON,
           label: trans('quotas', {}, 'cursus'),
-          target: props.path + '/quota'
+          target: props.path + '/quota',
+          displayed: param('quotas.enabled')
         }, {
           name: 'validations',
           type: LINK_BUTTON,
           label: trans('validation', {}, 'cursus'),
-          target: props.path + '/validation'
+          target: props.path + '/validation',
+          displayed: param('quotas.enabled')
         }
       ]}
       onClick={props.autoClose}

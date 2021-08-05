@@ -141,6 +141,7 @@ class ClientSerializer
             ],
             'privacy' => $this->config->getParameter('privacy'),
             'pricing' => $this->config->getParameter('pricing'),
+            'quotas' => $this->config->getParameter('quotas'),
             'plugins' => $this->pluginManager->getEnabled(true),
         ];
 

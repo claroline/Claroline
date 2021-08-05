@@ -150,6 +150,7 @@ class CourseSerializer
                 'children' => array_map(function (Course $child) {
                     return $this->serialize($child, [Options::SERIALIZE_MINIMAL]);
                 }, $course->getChildren()->toArray()),
+                'usedByQuotas' => $course->usedByQuotas()
             ]);
         }
 
@@ -184,6 +185,8 @@ class CourseSerializer
 
         $this->sipe('pricing.price', 'setPrice', $data, $course);
         $this->sipe('pricing.description', 'setPriceDescription', $data, $course);
+
+        $this->sipe('usedByQuotas', 'setUsedByQuotas', $data, $course);
 
         if (isset($data['meta'])) {
             if (isset($data['meta']['created'])) {

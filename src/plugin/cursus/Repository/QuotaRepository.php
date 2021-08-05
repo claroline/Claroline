@@ -24,7 +24,8 @@ class QuotaRepository extends EntityRepository
             INNER JOIN su.session s
             INNER JOIN s.course c
             INNER JOIN c.organizations o
-            WHERE su.type = \'learner\'
+            WHERE c.usedByQuotas = 1
+                AND su.type = \'learner\'
                 AND su.confirmed = 1
                 AND su.validated = 1
                 AND o IN (:organization)
