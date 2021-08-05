@@ -132,7 +132,7 @@ class FieldList extends Component {
                     modal={[MODAL_FIELD_PARAMETERS, {
                       data: field,
                       save: (data) => this.update(fieldIndex, data),
-                      formFields: this.props.formFields
+                      getFormFields: this.props.getFormFields
                     }]}
                   />
 
@@ -194,13 +194,13 @@ FieldList.propTypes = {
   })),
   formFields: T.array.isRequired,
   onChange: T.func.isRequired,
-  showModal: T.func.isRequired
+  showModal: T.func.isRequired,
+  getFormFields: T.func.isRequired
 }
 
 FieldList.defaultProps = {
   placeholder: trans('empty_fields_list'),
-  value: [],
-  formFields: []
+  value: []
 }
 
 const FieldsInput = connect(
@@ -209,7 +209,9 @@ const FieldsInput = connect(
     showModal(modalType, modalProps) {
       dispatch(modalActions.showModal(modalType, modalProps))
     },
-    formFields: dispatch(formActions.getFormFields('community.profile'))
+    getFormFields() {
+      return dispatch(formActions.getFormFields('community.profile'))
+    }
   })
 )(FieldList)
 

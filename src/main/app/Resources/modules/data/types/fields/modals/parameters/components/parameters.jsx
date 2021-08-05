@@ -15,7 +15,8 @@ class ParametersModal extends Component {
       options: props.data.options ? props.data.options : {},
       restrictions: props.data.restrictions ? props.data.restrictions : {},
       typeDef: null,
-      selectedField: {}
+      selectedField: {},
+      formFields: []
     }
 
     this.updateOptions = this.updateOptions.bind(this)
@@ -26,6 +27,7 @@ class ParametersModal extends Component {
   }
 
   componentDidMount() {
+    this.setState({formFields: this.props.getFormFields()})
     getType(this.props.data.type).then(definition => this.setState({typeDef: definition}))
   }
 
@@ -76,24 +78,26 @@ class ParametersModal extends Component {
 
     let normalizedOptions
 
-    switch (fieldData.type) {
-      case 'choice':
-        normalizedOptions = fieldData.options.choices.reduce((acc, current) => ({...acc, ...{[current.name]: current.label}}), {})
-        break
-      case 'boolean':
-        normalizedOptions = {true: 'True', false: 'False'}
-        break
-      default:
-        normalizedOptions = fieldData.map(({label, name, id}) => ({name, label, value: id}))
+    if(Array.isArray(fieldData)) {
+      normalizedOptions = fieldData.map(({label, name, id}) => ({name, label, value: id}))
+    } else {
+      switch (fieldData.type) {
+        case 'cascade':
+        case 'choice':
+          normalizedOptions = fieldData.options.choices.reduce((acc, current) => ({...acc, ...{[current.name]: current.label}}), {})
+          break
+        case 'boolean':
+          normalizedOptions = {true: 'True', false: 'False'}
+          break
+      }
     }
 
     console.log('normalizedOptions', normalizedOptions)
     return normalizedOptions
-  
   }
 
   updateSelectedField(fieldId) {
-    const {formFields} = this.props
+    const {formFields} = this.state
 
     const newField = this.getFieldsNames(formFields).find(field => field.id === fieldId[0])
 
@@ -101,7 +105,7 @@ class ParametersModal extends Component {
   }
 
   render() {
-    const {selectedField} = this.state
+    const {selectedField, formFields} = this.state
 
     return (
       <FormDataModal
@@ -162,7 +166,7 @@ class ParametersModal extends Component {
                 type: 'cascade',
                 label: 'Field',
                 options: {
-                  choices: this.normalizeFormOptions(this.getFieldsNames(this.props.formFields)),
+                  choices: this.normalizeFormOptions(this.getFieldsNames(formFields)),
                   condensed: true,
                   required: true
                 },
@@ -178,11 +182,11 @@ class ParametersModal extends Component {
                 }
               }, {
                 name: 'value',
-                type: selectedField.type === 'boolean' ? 'choice' : selectedField.type,
+                type: selectedField.type === 'boolean' || selectedField.type === 'cascade' ? 'choice' : selectedField.type,
                 label: 'Value',
                 ...(selectedField.type === 'cascade' || selectedField.type === 'choice' || selectedField.type === 'boolean' ? {options: {
                   choices: this.normalizeFormOptions(selectedField),
-                  condensed: !selectedField.type === 'boolean',
+                  condensed: selectedField.type !== 'boolean',
                   required: true
                 }} : {})
               }
@@ -253,18 +257,14 @@ class ParametersModal extends Component {
 }
 
 ParametersModal.propTypes = {
-  formFields: T.array.isRequired,
   data: T.shape({
     type: T.string.isRequired,
     options: T.object,
     restrictions: T.object
   }),
   fadeModal: T.func.isRequired,
-  save: T.func.isRequired
-}
-
-ParametersModal.defaultProps = {
-  formFields: []
+  save: T.func.isRequired,
+  getFormFields: T.func.isRequired
 }
 
 export {
