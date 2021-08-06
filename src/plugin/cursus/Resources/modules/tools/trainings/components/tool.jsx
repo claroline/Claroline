@@ -7,7 +7,7 @@ import {CatalogMain} from '#/plugin/cursus/tools/trainings/catalog/containers/ma
 import {SessionMain} from '#/plugin/cursus/tools/trainings/session/containers/main'
 import {EventMain} from '#/plugin/cursus/tools/trainings/event/containers/main'
 import {QuotaMain} from '#/plugin/cursus/tools/trainings/quota/containers/main'
-import {ValidationMain} from '#/plugin/cursus/tools/trainings/validation/containers/main'
+import {ValidationMain} from '#/plugin/cursus/tools/trainings/quota/validation/containers/main'
 
 const TrainingsTool = (props) =>
   <Routes

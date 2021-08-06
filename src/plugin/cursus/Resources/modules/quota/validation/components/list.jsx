@@ -5,7 +5,7 @@ import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
 
-import {ValidationCard} from '#/plugin/cursus/validation/components/card'
+import {ValidationCard} from '#/plugin/cursus/quota/validation/components/card'
 
 const ValidationList = (props) =>
   <ListData

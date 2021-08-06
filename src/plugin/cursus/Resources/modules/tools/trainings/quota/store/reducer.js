@@ -3,7 +3,7 @@ import {makeFormReducer, FORM_SUBMIT_SUCCESS} from '#/main/app/content/form/stor
 import {makeListReducer} from '#/main/app/content/list/store'
 
 import {selectors} from '#/plugin/cursus/tools/trainings/quota/store/selectors'
-import {LOAD_QUOTA} from '#/plugin/cursus/tools/trainings/catalog/store/actions'
+import {LOAD_QUOTA} from '#/plugin/cursus/tools/trainings/quota/store/actions'
 
 export const reducer = combineReducers({
 	quotas: makeListReducer(selectors.LIST_NAME, {
@@ -14,6 +14,6 @@ export const reducer = combineReducers({
   	}),
   	quotaForm: makeFormReducer(selectors.FORM_NAME),
   	quota: makeReducer(null, {
-    	[LOAD_QUOTA]: (state, action) => action.course
-  	}),
+    	[LOAD_QUOTA]: (state, action) => action.quota
+  	})
 })

@@ -13,11 +13,11 @@ export const actions = {}
 actions.loadQuota = makeActionCreator(LOAD_QUOTA, 'quota')
 
 actions.open = (id, force = false) => (dispatch, getState) => {
-  const currentQuota = selectors.course(getState())
+  const currentQuota = selectors.quota(getState())
   if (force || isEmpty(currentQuota) || currentQuota.id !== id) {
     return dispatch({
       [API_REQUEST]: {
-        url: ['apiv2_cursus_quota_open', {id: id}],
+        url: ['apiv2_cursus_quota_open', {id}],
         silent: true,
         before: () => dispatch(actions.loadQuota(null)),
         success: (data) => dispatch(actions.loadQuota(data.quota))

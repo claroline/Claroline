@@ -33,6 +33,6 @@ class QuotaRepository extends EntityRepository
         ->setParameters([
             'organization' => $quota->getOrganization()
         ])
-        ->getSingleScalarResult();
+        ->getSingleScalarResult() ?? 0;
     }
 }

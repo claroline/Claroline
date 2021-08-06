@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ToolPage} from '#/main/core/tool/containers/page'
-import {ValidationList as ValidationDataList} from '#/plugin/cursus/validation/components/list'
+import {ValidationList as ValidationDataList} from '#/plugin/cursus/quota/validation/components/list'
 import {selectors} from '#/plugin/cursus/tools/trainings/quota/store/selectors'
 
 const ValidationList = (props) =>
