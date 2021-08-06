@@ -175,7 +175,8 @@ class FieldList extends Component {
                 restrictions: {
                   locked: false,
                   lockedEditionOnly: false
-                }
+                },
+                getFormFields: this.props.getFormFields
               }, this.add)
             })
           })}
@@ -192,7 +193,6 @@ FieldList.propTypes = {
   value: T.arrayOf(T.shape({
 
   })),
-  formFields: T.array.isRequired,
   onChange: T.func.isRequired,
   showModal: T.func.isRequired,
   getFormFields: T.func.isRequired
