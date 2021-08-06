@@ -66,8 +66,6 @@ class ParametersModal extends Component {
   }
 
   updateConditions(conditionName, conditionValue) {
-    console.log(conditionValue)
-
     this.setState({
       conditions: {...this.state.conditions, [conditionName]: Array.isArray(conditionValue) ? conditionValue[0] : conditionValue}
     })
