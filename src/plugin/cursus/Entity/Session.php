@@ -113,6 +113,11 @@ class Session extends AbstractTraining implements IdentifiableInterface
     }
 
     /**
+     * @ORM\Column(name="used_by_quotas", type="boolean")
+     */
+    private $usedByQuotas = false;
+
+    /**
      * @return Course
      */
     public function getCourse()
@@ -226,7 +231,7 @@ class Session extends AbstractTraining implements IdentifiableInterface
     }
 
     /**
-     * @return Event[]|ArrayCollection
+     * @return Event[]|ArrayCollectioe
      */
     public function getEvents()
     {
@@ -241,6 +246,16 @@ class Session extends AbstractTraining implements IdentifiableInterface
     public function setEventRegistrationType($eventRegistrationType)
     {
         $this->eventRegistrationType = $eventRegistrationType;
+    }
+
+    public function setUsedByQuotas(bool $usedByQuotas)
+    {
+        $this->usedByQuotas = $usedByQuotas;
+    }
+
+    public function usedByQuotas()
+    {
+        return $this->usedByQuotas;
     }
 
     public function __toString()

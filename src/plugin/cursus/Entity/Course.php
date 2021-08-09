@@ -100,11 +100,6 @@ class Course extends AbstractTraining
     private $defaultSessionDuration = 1;
 
     /**
-     * @ORM\Column(name="used_by_quotas", type="boolean")
-     */
-    private $usedByQuotas = false;
-
-    /**
      * @ORM\ManyToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Organization\Organization"
      * )
@@ -223,16 +218,6 @@ class Course extends AbstractTraining
     public function setDefaultSessionDuration($defaultSessionDuration)
     {
         $this->defaultSessionDuration = $defaultSessionDuration;
-    }
-
-    public function setUsedByQuotas(bool $usedByQuotas)
-    {
-        $this->usedByQuotas = $usedByQuotas;
-    }
-
-    public function usedByQuotas()
-    {
-        return $this->usedByQuotas;
     }
 
     public function getOrganizations()

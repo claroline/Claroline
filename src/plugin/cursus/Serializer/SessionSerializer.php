@@ -155,6 +155,7 @@ class SessionSerializer
                     'price' => $session->getPrice(),
                     'description' => $session->getPriceDescription(),
                 ],
+                'usedByQuotas' => $session->usedByQuotas(),
                 'participants' => $this->sessionRepo->countParticipants($session),
                 'tutors' => array_map(function (SessionUser $sessionUser) {
                     return $this->userSerializer->serialize($sessionUser->getUser(), [Options::SERIALIZE_MINIMAL]);
@@ -190,6 +191,8 @@ class SessionSerializer
 
         $this->sipe('pricing.price', 'setPrice', $data, $session);
         $this->sipe('pricing.description', 'setPriceDescription', $data, $session);
+
+        $this->sipe('usedByQuotas', 'setUsedByQuotas', $data, $session);
 
         if (isset($data['meta'])) {
             if (isset($data['meta']['created'])) {

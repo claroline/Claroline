@@ -184,6 +184,17 @@ const SessionForm = (props) =>
             ]
           }
         ]
+      }, {
+        icon: 'fa fa-fw fa-chart-pie',
+        title: trans('quotas'),
+        displayed: param('quotas.enabled'),
+        fields: [
+          {
+            name: 'usedByQuotas',
+            label: trans('used_by_quotas'),
+            type: 'boolean'
+          }
+        ]
       }
     ]}
   >
