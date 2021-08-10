@@ -19,7 +19,7 @@ const QuotaForm = (props) => {
         path={[
           {
             type: LINK_BUTTON,
-            label: trans('quota', {}, 'cursus'),
+            label: trans('quotas', {}, 'cursus'),
             target: props.path
           }, {
             label: props.quota.id,

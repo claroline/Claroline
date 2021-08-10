@@ -4,16 +4,12 @@ import {PropTypes as T} from 'prop-types'
 import {trans} from '#/main/app/intl/translation'
 import {DataCard} from '#/main/app/data/components/card'
 
-import {Validation as ValidationTypes} from '#/plugin/cursus/prop-types'
+import {Subscription as SubscriptionTypes} from '#/plugin/cursus/prop-types'
 
-/**
- * Remove unless code
- */
-
-const ValidationCard = props =>
+const SubscriptionCard = props =>
   <DataCard
     {...props}
-    className="validation"
+    className="subscription"
     id={props.data.id}
     poster={null}
     icon="fa fa-graduation-cap"
@@ -21,12 +17,12 @@ const ValidationCard = props =>
     subtitle={trans('threshold') + ' ' + props.data.threshold}
   />
 
-ValidationCard.propTypes = {
+SubscriptionCard.propTypes = {
   data: T.shape(
-    ValidationTypes.propTypes
+    SubscriptionTypes.propTypes
   ).isRequired
 }
 
 export {
-  ValidationCard
+  SubscriptionCard
 }

@@ -3,40 +3,40 @@ import {PropTypes as T} from 'prop-types'
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ToolPage} from '#/main/core/tool/containers/page'
-import {ValidationList as ValidationDataList} from '#/plugin/cursus/quota/validation/components/list'
+import {SubscriptionList as SubscriptionDataList} from '#/plugin/cursus/quota/subscription/components/list'
 import {selectors} from '#/plugin/cursus/tools/trainings/quota/store/selectors'
 
-const ValidationList = (props) =>
+const SubscriptionList = (props) =>
   <ToolPage
     path={[{
       type: LINK_BUTTON,
-      label: trans('validation', {}, 'cursus'),
+      label: trans('subscriptions', {}, 'cursus'),
       target: props.path
     }]}
-    subtitle={trans('validation', {}, 'cursus')}
+    subtitle={trans('subscriptions', {}, 'cursus')}
     primaryAction="export"
     actions={[
       {
         name: 'export',
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-download',
-        label: trans('export_validation', {}, 'cursus'),
+        label: trans('export_subscription', {}, 'cursus'),
         target: `${props.path}/export`,
         group: trans('management'),
         primary: true
       }
     ]}
   >
-    <ValidationDataList
+    <SubscriptionDataList
       name={selectors.LIST_NAME}
       path={props.path}
     />
   </ToolPage>
 
-ValidationList.propTypes = {
+SubscriptionList.propTypes = {
   path: T.string.isRequired
 }
 
 export {
-  ValidationList
+  SubscriptionList
 }

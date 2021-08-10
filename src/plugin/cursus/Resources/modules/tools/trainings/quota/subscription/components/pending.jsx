@@ -5,18 +5,14 @@ import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
 
-import {QuotaCard} from '#/plugin/cursus/quota/components/card'
+import {SubscriptionCard} from '#/plugin/cursus/quota/subscription/components/card'
 
-const QuotaList = (props) =>
+const SubscriptionPending = (props) =>
   <ListData
     name={props.name}
     fetch={{
       url: props.url,
       autoload: true
-    }}
-    delete={{
-      url: ['apiv2_cursus_quota_delete_bulk'],
-      displayed: () => true
     }}
     primaryAction={(row) => ({
       type: LINK_BUTTON,
@@ -33,6 +29,13 @@ const QuotaList = (props) =>
         primary: true,
         sortable: false
       }, {
+        name: 'validated',
+        type: 'number',
+        label: trans('validated'),
+        displayed: true,
+        filterable: false,
+        sortable: false
+      }, {
         name: 'threshold',
         type: 'number',
         label: trans('threshold'),
@@ -41,19 +44,19 @@ const QuotaList = (props) =>
         sortable: false
       }
     ]}
-    card={QuotaCard}
+    card={SubscriptionCard}
   />
 
-QuotaList.propTypes = {
+SubscriptionPending.propTypes = {
   path: T.string.isRequired,
   name: T.string.isRequired,
   url: T.oneOfType([T.string, T.array])
 }
 
-QuotaList.defaultProps = {
-  url: ['apiv2_cursus_quota_list']
+SubscriptionPending.defaultProps = {
+  url: ['apiv2_cursus_subscription_pending_list']
 }
 
 export {
-  QuotaList
+  SubscriptionPending
 }

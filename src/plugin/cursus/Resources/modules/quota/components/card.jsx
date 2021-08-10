@@ -6,10 +6,6 @@ import {DataCard} from '#/main/app/data/components/card'
 
 import {Quota as QuotaTypes} from '#/plugin/cursus/prop-types'
 
-/**
- * Remove unless code
- */
-
 const QuotaCard = props =>
   <DataCard
     {...props}

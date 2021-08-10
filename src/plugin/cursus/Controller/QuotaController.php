@@ -65,22 +65,28 @@ class QuotaController extends AbstractCrudController
     {
         $query = $request->query->all();
 
-        if (isset($query['options'])) {
-            $options = $query['options'];
-            $options[] = Options::SERIALIZE_MINIMAL;
-        }
+        $options = isset($query['options']) ? $query['options'] : [];
+        $options[] = Options::SERIALIZE_MINIMAL;
 
         $query['hiddenFilters'] = $this->getDefaultHiddenFilters();
 
         return new JsonResponse(
-            $this->finder->search($class, $query, $options ?? [Options::SERIALIZE_MINIMAL])
+            $this->finder->search($class, $query, $options)
         );
     }
 
     /**
-     * @Route("/validation", name="apiv2_cursus_validation_list", methods={"GET"})
+     * @Route("/subscription", name="apiv2_cursus_subscription_list", methods={"GET"})
      */
-    public function listValidationAction(Request $request, $class = Quota::class): JsonResponse
+    public function listSubscriptionAction(Request $request, $class = Quota::class): JsonResponse
+    {
+        return parent::listAction($request, $class);
+    }
+
+    /**
+     * @Route("/subscription/pending", name="apiv2_cursus_subscription_pending_list", methods={"GET"})
+     */
+    public function listSubscriptionPendingAction(Request $request, $class = Quota::class): JsonResponse
     {
         return parent::listAction($request, $class);
     }

@@ -50,10 +50,10 @@ const TrainingsMenu = (props) =>
           target: props.path + '/quota',
           displayed: param('quotas.enabled')
         }, {
-          name: 'validations',
+          name: 'subscriptions',
           type: LINK_BUTTON,
-          label: trans('validation', {}, 'cursus'),
-          target: props.path + '/validation',
+          label: trans('subscriptions', {}, 'cursus'),
+          target: props.path + '/subscription',
           displayed: param('quotas.enabled')
         }
       ]}

@@ -2,9 +2,9 @@ import {connect} from 'react-redux'
 import {withReducer} from '#/main/app/store/reducer'
 import {selectors, actions, reducer} from '#/plugin/cursus/tools/trainings/quota/store'
 import {selectors as toolSelectors} from '#/main/core/tool/store'
-import {ValidationMain as ValidationComponent} from '#/plugin/cursus/tools/trainings/quota/validation/components/main'
+import {SubscriptionMain as SubscriptionComponent} from '#/plugin/cursus/tools/trainings/quota/subscription/components/main'
 
-const ValidationMain = withReducer(selectors.STORE_NAME, reducer)(
+const SubscriptionMain = withReducer(selectors.STORE_NAME, reducer)(
 	connect(
     	(state) => ({
       		path: toolSelectors.path(state),
@@ -14,9 +14,9 @@ const ValidationMain = withReducer(selectors.STORE_NAME, reducer)(
        			dispatch(actions.open(id))
       		}
 		})
-	)(ValidationComponent)
+	)(SubscriptionComponent)
 )
 
 export {
-  ValidationMain
+  SubscriptionMain
 }

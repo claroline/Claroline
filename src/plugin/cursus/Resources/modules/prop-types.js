@@ -162,7 +162,7 @@ const Quota = {
   }
 }
 
-const Validation = {
+const Subscription = {
   propTypes: {
     id: T.string,
     organization: T.shape(OrganizationTypes.propTypes),
@@ -176,5 +176,5 @@ export {
   Session,
   Event,
   Quota,
-  Validation
+  Subscription
 }

@@ -7,7 +7,7 @@ import {CatalogMain} from '#/plugin/cursus/tools/trainings/catalog/containers/ma
 import {SessionMain} from '#/plugin/cursus/tools/trainings/session/containers/main'
 import {EventMain} from '#/plugin/cursus/tools/trainings/event/containers/main'
 import {QuotaMain} from '#/plugin/cursus/tools/trainings/quota/containers/main'
-import {ValidationMain} from '#/plugin/cursus/tools/trainings/quota/validation/containers/main'
+import {SubscriptionMain} from '#/plugin/cursus/tools/trainings/quota/subscription/containers/main'
 
 const TrainingsTool = (props) =>
   <Routes
@@ -29,8 +29,8 @@ const TrainingsTool = (props) =>
         path: '/quota',
         component: QuotaMain
       }, {
-        path: '/validation',
-        component: ValidationMain
+        path: '/subscription',
+        component: SubscriptionMain
       }
     ]}
   />

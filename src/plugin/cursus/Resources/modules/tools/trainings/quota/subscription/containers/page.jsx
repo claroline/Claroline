@@ -1,15 +1,15 @@
 import {connect} from 'react-redux'
 import {selectors} from '#/plugin/cursus/tools/trainings/quota/store'
 import {selectors as toolSelectors} from '#/main/core/tool/store'
-import {ValidationDetail as ValidationComponent} from '#/plugin/cursus/tools/trainings/quota/validation/components/detail'
+import {SubscriptionPage as SubscriptionComponent} from '#/plugin/cursus/tools/trainings/quota/subscription/components/page'
 
-const ValidationDetail = connect(
+const SubscriptionPage = connect(
 	(state) => ({
     	currentContext: toolSelectors.context(state),
 		quota: selectors.quota(state)
 	})
-)(ValidationComponent)
+)(SubscriptionComponent)
 
 export {
-  ValidationDetail
+  SubscriptionPage
 }
