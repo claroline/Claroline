@@ -126,7 +126,7 @@ class ParametersModal extends Component {
           if (!fieldData.restrictions.locked) {
             restrictions['lockedEditionOnly'] = false
           }
-          const conditions = merge({}, fieldData.conditions)
+          const conditions = merge({}, this.state.conditions)
 
           this.props.save(merge({}, fieldData, {
             name: normalizedName,
@@ -178,8 +178,8 @@ class ParametersModal extends Component {
                 },
                 onChange: (value) => {
                   this.setState({selectedField: this.getFieldsNames(this.state.formFields).find(field => field.id === value[0])})
-                  this.updateConditions('conditions.field', value)
                   this.updateConditions('conditions.value', null)
+                  this.updateConditions('conditions.field', value)
                 }
               }, {
                 name: 'conditions.condition',
@@ -193,14 +193,14 @@ class ParametersModal extends Component {
                 onChange: (value) => this.updateConditions('conditions.condition', value)
               }, {
                 name: 'conditions.value',
-                type: selectedField && (selectedField.type === 'boolean' || selectedField.type === 'cascade' ? 'choice' : selectedField.type),
+                type: selectedField.type === 'boolean' || selectedField.type === 'cascade' ? 'choice' : selectedField.type,
                 label: 'Value',
                 onChange: (value) => this.updateConditions('conditions.value', value),
-                ...(selectedField && (selectedField.type === 'cascade' || selectedField.type === 'choice' || selectedField.type === 'boolean' ? {options: {
+                ...(selectedField.type === 'cascade' || selectedField.type === 'choice' || selectedField.type === 'boolean' ? {options: {
                   choices: this.normalizeFormOptions(selectedField),
                   condensed: selectedField.type !== 'boolean',
                   required: true
-                }} : {}))
+                }} : {})
               }
             ]
           }, this.state.typeDef && {
