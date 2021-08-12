@@ -40,6 +40,10 @@ class FieldList extends Component {
   constructor(props) {
     super(props)
 
+    this.state = {
+      selectedField: {}
+    }
+
     this.add       = this.add.bind(this)
     this.update    = this.update.bind(this)
     this.remove    = this.remove.bind(this)
@@ -81,6 +85,9 @@ class FieldList extends Component {
   open(field, callback) {
     this.props.showModal(MODAL_FIELD_PARAMETERS, {
       data: field,
+      getFormFields: this.props.getFormFields,
+      selectedField: this.state.selectedField,
+      updateSelectedField: (value) => this.setState({selectedField: value}),
       save: callback
     })
   }
@@ -132,7 +139,9 @@ class FieldList extends Component {
                     modal={[MODAL_FIELD_PARAMETERS, {
                       data: field,
                       save: (data) => this.update(fieldIndex, data),
-                      getFormFields: this.props.getFormFields
+                      getFormFields: this.props.getFormFields,
+                      selectedField: this.state.selectedField,
+                      updateSelectedField: (value) => this.setState({selectedField: value})
                     }]}
                   />
 
@@ -175,8 +184,7 @@ class FieldList extends Component {
                 restrictions: {
                   locked: false,
                   lockedEditionOnly: false
-                },
-                getFormFields: this.props.getFormFields
+                }
               }, this.add)
             })
           })}

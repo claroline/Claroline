@@ -16,7 +16,7 @@ class ParametersModal extends Component {
       restrictions: props.data.restrictions ? props.data.restrictions : {},
       conditions: props.data.conditions ? props.data.conditions : {},
       typeDef: null,
-      selectedField: {},
+      selectedField: props.selectedField,
       formFields: [],
       currentFieldId: this.props.data.id
     }
@@ -26,7 +26,6 @@ class ParametersModal extends Component {
     this.updateConditions = this.updateConditions.bind(this)
     this.getFieldsNames = this.getFieldsNames.bind(this)
     this.normalizeFormOptions = this.normalizeFormOptions.bind(this)
-    this.updateSelectedField = this.updateSelectedField.bind(this)
     this.omitCurrentField = this.omitCurrentField.bind(this)
   }
 
@@ -102,19 +101,6 @@ class ParametersModal extends Component {
     return normalizedOptions
   }
 
-  updateSelectedField(fieldId) {
-    // const {formFields, currentFieldId, conditions} = this.state
-
-    // const newSelectedField = this.getFieldsNames(formFields).find(field => field.id === fieldId[0])
-    // const newConditions = {...conditions, [currentFieldId] : {}}
-
-    // return this.setState({selectedField: newSelectedField, conditions: newConditions})
-
-    const {formFields} = this.state
-
-    return this.setState({selectedField: this.getFieldsNames(formFields).find(field => field.id === fieldId[0])})
-  }
-
   omitCurrentField(fieldData) {
     const {currentFieldId} = this.state
     return fieldData.filter(({id}) => id !== currentFieldId)
@@ -148,6 +134,8 @@ class ParametersModal extends Component {
             restrictions: restrictions,
             conditions: conditions
           }))
+
+          this.props.updateSelectedField(this.state.selectedField)
         }}
         title={trans('edit_field')}
         sections={[
@@ -189,8 +177,9 @@ class ParametersModal extends Component {
                   required: true
                 },
                 onChange: (value) => {
-                  this.updateSelectedField(value)
+                  this.setState({selectedField: this.getFieldsNames(this.state.formFields).find(field => field.id === value[0])})
                   this.updateConditions('conditions.field', value)
+                  this.updateConditions('conditions.value', null)
                 }
               }, {
                 name: 'conditions.condition',
@@ -204,14 +193,14 @@ class ParametersModal extends Component {
                 onChange: (value) => this.updateConditions('conditions.condition', value)
               }, {
                 name: 'conditions.value',
-                type: selectedField.type === 'boolean' || selectedField.type === 'cascade' ? 'choice' : selectedField.type,
+                type: selectedField && (selectedField.type === 'boolean' || selectedField.type === 'cascade' ? 'choice' : selectedField.type),
                 label: 'Value',
                 onChange: (value) => this.updateConditions('conditions.value', value),
-                ...(selectedField.type === 'cascade' || selectedField.type === 'choice' || selectedField.type === 'boolean' ? {options: {
+                ...(selectedField && (selectedField.type === 'cascade' || selectedField.type === 'choice' || selectedField.type === 'boolean' ? {options: {
                   choices: this.normalizeFormOptions(selectedField),
                   condensed: selectedField.type !== 'boolean',
                   required: true
-                }} : {})
+                }} : {}))
               }
             ]
           }, this.state.typeDef && {
@@ -280,6 +269,7 @@ class ParametersModal extends Component {
 }
 
 ParametersModal.propTypes = {
+  selectedField: T.object.isRequired,
   data: T.shape({
     type: T.string.isRequired,
     options: T.object,
@@ -289,7 +279,8 @@ ParametersModal.propTypes = {
   }),
   fadeModal: T.func.isRequired,
   save: T.func.isRequired,
-  getFormFields: T.func.isRequired
+  getFormFields: T.func.isRequired,
+  updateSelectedField: T.func.isRequired
 }
 
 export {
