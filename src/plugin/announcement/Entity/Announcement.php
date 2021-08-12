@@ -117,7 +117,7 @@ class Announcement
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Task\ScheduledTask"
      * )
-     * @ORM\JoinColumn(name="task_id", nullable=true)
+     * @ORM\JoinColumn(name="task_id", nullable=true, onDelete="SET NULL")
      */
     private $task;
 

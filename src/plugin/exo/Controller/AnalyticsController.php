@@ -94,7 +94,8 @@ class AnalyticsController
 
     /**
      * @Route("/attempts/{userId}", name="exercise_statistics_attempts", methods={"GET"})
-     * @EXT\ParamConverter("user", class="UJMExoBundle:Exercise", options={"mapping": {"userId": "uuid"}})
+     * @Route("/attempts", name="exercise_statistics_attempts", methods={"GET"})
+     * @EXT\ParamConverter("user", class="Claroline\CoreBundle\Entity\User", options={"mapping": {"userId": "uuid"}})
      */
     public function getAttemptsAction(Exercise $exercise, User $user = null): JsonResponse
     {

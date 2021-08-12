@@ -54,12 +54,12 @@ function validate(quiz) {
   paramErrors.duration = chainSync(parameters.duration, {}, [notBlank, number, gteZero])
   paramErrors.maxAttempts = chainSync(parameters.maxAttempts, {}, [notBlank, number, gteZero])
   paramErrors.maxAttemptsPerDay = chainSync(parameters.maxAttemptsPerDay, {}, [notBlank, number, gteZero, (value) => {
-    if (value > parameters.maxAttempts) {
+    if (parameters.maxAttempts && value > parameters.maxAttempts) {
       return trans('must_be_less_than_max_attempts', {}, 'quiz')
     }
   }])
   paramErrors.maxPapers = chainSync(parameters.maxPapers, {}, [notBlank, number, gteZero, (value) => {
-    if (value < parameters.maxAttempts && value !== 0) {
+    if (parameters.maxAttempts && value < parameters.maxAttempts && value !== 0) {
       return trans('must_be_more_than_max_attempts', {}, 'quiz')
     }
   }])

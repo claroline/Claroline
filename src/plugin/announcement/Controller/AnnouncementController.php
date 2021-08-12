@@ -13,7 +13,6 @@ use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Repository\User\RoleRepository;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -51,9 +50,6 @@ class AnnouncementController
     /** @var FinderProvider */
     private $finder;
 
-    /** @var RoleRepository */
-    private $roleRepo;
-
     public function __construct(
         AnnouncementManager $manager,
         AnnouncementSerializer $serializer,
@@ -68,8 +64,6 @@ class AnnouncementController
         $this->om = $om;
         $this->finder = $finder;
         $this->authorization = $authorization;
-
-        $this->roleRepo = $om->getRepository(Role::class);
     }
 
     public function getClass()
@@ -157,7 +151,7 @@ class AnnouncementController
     public function validateSendAction(AnnouncementAggregate $aggregate, Announcement $announcement, Request $request): JsonResponse
     {
         $this->checkPermission('EDIT', $aggregate->getResourceNode(), [], true);
-        $ids = $request->query->all()['filters']['roles'];
+        $ids = isset($request->query->all()['filters']) ? $request->query->all()['filters']['roles'] : [];
 
         /** @var Role[] $roles */
         $roles = $this->om->findList(Role::class, 'uuid', $ids);
@@ -181,52 +175,5 @@ class AnnouncementController
         }, $roles)]]);
 
         return new JsonResponse($this->finder->search(User::class, $parameters, [Options::SERIALIZE_MINIMAL]));
-    }
-
-    /**
-     * Sends an announce (in current implementation, it's sent by email).
-     *
-     * @Route("/{id}/send", name="claro_announcement_send", methods={"POST"})
-     * @EXT\ParamConverter(
-     *      "announcement",
-     *      class="ClarolineAnnouncementBundle:Announcement",
-     *      options={"mapping": {"id": "uuid"}}
-     * )
-     */
-    public function sendAction(AnnouncementAggregate $aggregate, Announcement $announcement, Request $request): JsonResponse
-    {
-        $this->checkPermission('EDIT', $aggregate->getResourceNode(), [], true);
-
-        $data = $this->decodeRequest($request);
-
-        $roles = [];
-        if (!empty($data) && !empty($data['ids'])) {
-            /** @var Role[] $roles */
-            $roles = $this->om->findList(Role::class, 'uuid', $data['ids']);
-        }
-
-        $node = $announcement->getAggregate()->getResourceNode();
-
-        $rights = $node->getRights();
-
-        if (0 === count($roles)) {
-            foreach ($rights as $right) {
-                // 1 is the default "open" mask (there should be a better way to do it)
-                if ($right->getMask() & 1) {
-                    $roles[] = $right->getRole();
-                }
-            }
-        }
-
-        $users = $this->finder->fetch(
-            User::class,
-            ['unionRole' => array_map(function (Role $role) {
-                return $role->getUuid();
-            }, $roles),
-        ]);
-
-        $this->manager->sendMessage($announcement, $users);
-
-        return new JsonResponse(null, 200);
     }
 }

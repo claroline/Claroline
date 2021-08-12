@@ -29,12 +29,13 @@ const AnnouncesList = props =>
 
     {props.posts.map(post =>
       <AnnouncePost
-        {...post}
         key={post.id}
+        announcement={post}
+        workspaceRoles={props.workspaceRoles}
+        aggregateId={props.aggregateId}
         editable={props.editable}
         deletable={props.deletable}
         removePost={() => props.removePost(props.aggregateId, post)}
-        sendPost={() => props.sendPost(props.aggregateId, post)}
         path={props.path}
       />
     )}
@@ -85,11 +86,11 @@ AnnouncesList.propTypes = {
   posts: T.arrayOf(T.shape({
     id: T.string.isRequired
   })).isRequired,
+  workspaceRoles: T.array,
   toggleSort: T.func.isRequired,
   changePage: T.func.isRequired,
   editable: T.bool,
   deletable: T.bool,
-  sendPost: T.func.isRequired,
   removePost: T.func.isRequired
 }
 
@@ -101,6 +102,7 @@ const Announces = connect(
     pages: selectors.pages(state),
     aggregateId: selectors.aggregateId(state),
     posts: selectors.visibleSortedPosts(state),
+    workspaceRoles: selectors.workspaceRoles(state),
     editable: hasPermission('edit', resourceSelect.resourceNode(state)),
     deletable: hasPermission('delete', resourceSelect.resourceNode(state))
   }),
@@ -113,15 +115,6 @@ const Announces = connect(
           question: trans('remove_announce_confirm', {}, 'announcement'),
           dangerous: true,
           handleConfirm: () => dispatch(actions.removeAnnounce(aggregateId, announcePost))
-        })
-      )
-    },
-    sendPost(aggregateId, announcePost) {
-      dispatch(
-        modalActions.showModal(MODAL_CONFIRM, {
-          title: trans('send_announce', {}, 'announcement'),
-          question: trans('send_announce_confirm', {}, 'announcement'),
-          handleConfirm: () => dispatch(actions.sendAnnounce(aggregateId, announcePost))
         })
       )
     },

@@ -48,6 +48,7 @@ class Version20201117064352 extends AbstractMigration
             INSERT INTO claro_home_tab_widgets_containers (container_id, tab_id)
                 SELECT id as container_id, hometab_id as tab_id
                 FROM claro_widget_container
+                WHERE hometab_id IS NOT NULL
         ');
 
         $this->addSql('

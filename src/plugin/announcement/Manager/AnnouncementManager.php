@@ -14,10 +14,9 @@ namespace Claroline\AnnouncementBundle\Manager;
 use Claroline\AnnouncementBundle\Entity\Announcement;
 use Claroline\AnnouncementBundle\Messenger\Message\SendAnnouncement;
 use Claroline\AppBundle\API\FinderProvider;
-use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\Task\ScheduledTaskManager;
 use Symfony\Component\Messenger\MessageBusInterface;
 
@@ -25,10 +24,6 @@ class AnnouncementManager
 {
     /** @var ObjectManager */
     private $om;
-    /** @var StrictDispatcher */
-    private $eventDispatcher;
-    /** @var MailManager */
-    private $mailManager;
     /** @var ScheduledTaskManager */
     private $taskManager;
     /** @var FinderProvider */
@@ -38,15 +33,11 @@ class AnnouncementManager
 
     public function __construct(
         ObjectManager $om,
-        StrictDispatcher $eventDispatcher,
-        MailManager $mailManager,
         ScheduledTaskManager $taskManager,
         FinderProvider $finder,
         MessageBusInterface $messageBus
     ) {
         $this->om = $om;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->mailManager = $mailManager;
         $this->taskManager = $taskManager;
         $this->finder = $finder;
         $this->messageBus = $messageBus;
@@ -55,9 +46,9 @@ class AnnouncementManager
     /**
      * Sends an Announcement by message to Users that can access it.
      */
-    public function sendMessage(Announcement $announcement, array $users = [])
+    public function sendMessage(Announcement $announcement, array $roles)
     {
-        $message = $this->getMessage($announcement, $users);
+        $message = $this->getMessage($announcement, $roles);
 
         $this->messageBus->dispatch(new SendAnnouncement(
             $message['content'],
@@ -68,7 +59,7 @@ class AnnouncementManager
         ));
     }
 
-    public function scheduleMessage(Announcement $announcement, \DateTime $scheduledDate, array $roles = [])
+    public function scheduleMessage(Announcement $announcement, array $roles, \DateTimeInterface $scheduledDate)
     {
         $this->om->startFlushSuite();
 
@@ -84,6 +75,9 @@ class AnnouncementManager
                     return ['id' => $user->getId()];
                 }, $message['receivers']),
             ],
+            'users' => array_map(function (User $user) {
+                return ['id' => $user->getUuid()];
+            }, $message['receivers']),
         ];
 
         if (empty($announcement->getTask())) {
@@ -117,12 +111,17 @@ class AnnouncementManager
     /**
      * Gets the data which will be sent by message (internal &email) to Users.
      */
-    private function getMessage(Announcement $announce, array $users = []): array
+    private function getMessage(Announcement $announce, array $roles = []): array
     {
         $resourceNode = $announce->getAggregate()->getResourceNode();
 
-        $object = !empty($announce->getTitle()) ? $announce->getTitle() : $announce->getAggregate()->getName();
+        $users = $this->finder->fetch(User::class, [
+            'unionRole' => array_map(function (Role $role) {
+                return $role->getUuid();
+            }, $roles),
+        ]);
 
+        $object = !empty($announce->getTitle()) ? $announce->getTitle() : $announce->getAggregate()->getName();
         if (empty($announce->getTitle()) && !empty($announce->getVisibleFrom())) {
             $object .= ' ['.$announce->getVisibleFrom()->format('Y-m-d H:i').']';
         }
