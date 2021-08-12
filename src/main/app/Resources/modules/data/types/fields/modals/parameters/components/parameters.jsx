@@ -103,7 +103,7 @@ class ParametersModal extends Component {
 
   omitCurrentField(fieldData) {
     const {currentFieldId} = this.state
-    return fieldData.filter(({id}) => id !== currentFieldId)
+    return fieldData.filter(({id, type}) => id !== currentFieldId && (type === 'boolean' || type === 'choice'))
   }
 
   render() {
