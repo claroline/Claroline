@@ -11,10 +11,13 @@
 
 namespace Claroline\CursusBundle\Controller;
 
+use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\CursusBundle\Entity\Quota;
+use Claroline\CursusBundle\Entity\Registration\SessionUser;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -37,10 +40,12 @@ class QuotaController extends AbstractCrudController
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
-        TokenStorageInterface $tokenStorage
+        TokenStorageInterface $tokenStorage,
+        ObjectManager $om
     ) {
         $this->authorization = $authorization;
         $this->tokenStorage = $tokenStorage;
+        $this->om = $om;
     }
 
     public function getName()
@@ -64,11 +69,10 @@ class QuotaController extends AbstractCrudController
     public function listAction(Request $request, $class = Quota::class): JsonResponse
     {
         $query = $request->query->all();
+        $query['hiddenFilters'] = $this->getDefaultHiddenFilters();
 
         $options = isset($query['options']) ? $query['options'] : [];
         $options[] = Options::SERIALIZE_MINIMAL;
-
-        $query['hiddenFilters'] = $this->getDefaultHiddenFilters();
 
         return new JsonResponse(
             $this->finder->search($class, $query, $options)
@@ -76,19 +80,21 @@ class QuotaController extends AbstractCrudController
     }
 
     /**
-     * @Route("/subscription", name="apiv2_cursus_subscription_list", methods={"GET"})
+     * @Route("/{id}/subscriptions", name="apiv2_cursus_quota_list_subscriptions", methods={"GET"})
+     * @EXT\ParamConverter("quota", class="Claroline\CursusBundle\Entity\Quota", options={"mapping": {"id": "uuid"}})
      */
-    public function listSubscriptionAction(Request $request, $class = Quota::class): JsonResponse
+    public function listSubscriptionsAction(Quota $quota, Request $request): JsonResponse
     {
-        return parent::listAction($request, $class);
-    }
+        $query = $request->query->all();
+        $query['hiddenFilters'] = [
+            'organization' => $quota->getOrganization()
+        ];
 
-    /**
-     * @Route("/subscription/pending", name="apiv2_cursus_subscription_pending_list", methods={"GET"})
-     */
-    public function listSubscriptionPendingAction(Request $request, $class = Quota::class): JsonResponse
-    {
-        return parent::listAction($request, $class);
+        $options = isset($query['options']) ? $query['options'] : [];
+
+        return new JsonResponse(
+            $this->finder->search(SessionUser::class, $query, $options)
+        );
     }
 
     /**

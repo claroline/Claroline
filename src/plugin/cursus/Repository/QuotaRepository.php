@@ -16,10 +16,9 @@ use Doctrine\ORM\EntityRepository;
 
 class QuotaRepository extends EntityRepository
 {
-    // TEST
     public function countValidated(Quota $quota)
     {
-        return $this->_em->createQuery('
+        return (int)$this->_em->createQuery('
             SELECT COUNT(DISTINCT su) * c.defaultSessionDuration FROM Claroline\CursusBundle\Entity\Registration\SessionUser su
             INNER JOIN su.session s
             INNER JOIN s.course c

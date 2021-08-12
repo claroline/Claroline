@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ToolPage} from '#/main/core/tool/containers/page'
-import {SubscriptionList as SubscriptionDataList} from '#/plugin/cursus/quota/subscription/components/list'
+import {SubscriptionList as SubscriptionDataList} from '#/plugin/cursus/subscription/components/list'
 import {selectors} from '#/plugin/cursus/tools/trainings/quota/store/selectors'
 
 const SubscriptionList = (props) =>

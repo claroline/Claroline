@@ -28,6 +28,14 @@ class SessionUserFinder extends AbstractFinder
 
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
+                case 'organization':
+                    $qb->join('obj.session', 's');
+                    $qb->join('s.course', 'c');
+                    $qb->join('c.organizations', 'o');
+                    $qb->andWhere('o IN (:organization)');
+                    $qb->setParameter($filterName, $filterValue);
+                    break;
+
                 case 'course':
                     if (!$sessionJoin) {
                         $qb->join('obj.session', 's');

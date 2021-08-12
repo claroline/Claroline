@@ -5,9 +5,9 @@ import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
 
-import {SubscriptionCard} from '#/plugin/cursus/quota/subscription/components/card'
+import {SubscriptionCard} from '#/plugin/cursus/subscription/components/card'
 
-const SubscriptionList = (props) =>
+const SubscriptionPending = (props) =>
   <ListData
     name={props.name}
     fetch={{
@@ -33,28 +33,30 @@ const SubscriptionList = (props) =>
         type: 'number',
         label: trans('validated'),
         displayed: true,
-        filterable: false
+        filterable: false,
+        sortable: false
       }, {
         name: 'threshold',
         type: 'number',
         label: trans('threshold'),
         displayed: true,
-        filterable: false
+        filterable: false,
+        sortable: false
       }
     ]}
     card={SubscriptionCard}
   />
 
-SubscriptionList.propTypes = {
+SubscriptionPending.propTypes = {
   path: T.string.isRequired,
   name: T.string.isRequired,
   url: T.oneOfType([T.string, T.array])
 }
 
-SubscriptionList.defaultProps = {
-  url: ['apiv2_cursus_subscription_list']
+SubscriptionPending.defaultProps = {
+  url: ['apiv2_cursus_subscription_pending_list']
 }
 
 export {
-  SubscriptionList
+  SubscriptionPending
 }

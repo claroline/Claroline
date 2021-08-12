@@ -1,0 +1,48 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "The session-user uuid"
+    },
+    "type": {
+      "type": "string",
+      "description": "The session-user type"
+    },
+    "validated": {
+      "type": "boolean",
+      "description": "The session-user validated state"
+    },
+    "confirmed": {
+      "type": "boolean",
+      "description": "The session-user confirmed state"
+    },
+    "date": {
+      "type": "string",
+      "description": "The session-user date"
+    },
+    "user": {
+      "type": "object",
+      "properties": {
+        "uuid": {
+          "type": "string",
+          "description": "The user id"
+        }
+      }
+    },
+    "session": {
+      "type": "object",
+      "properties": {
+        "uuid": {
+          "type": "string",
+          "description": "The session id"
+        }
+      }
+    }
+  },
+  "required": ["user", "session"],
+  "claroline": {
+    "ids": ["id"]
+  }
+}

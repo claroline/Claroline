@@ -60,7 +60,7 @@ class QuotaSerializer
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
             $serialized['validated'] = $this->quotaRepo->countValidated($quota);
         }
-
+        
         return $serialized;
     }
 

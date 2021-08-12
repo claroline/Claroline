@@ -9,12 +9,12 @@ import {ContentLoader} from '#/main/app/content/components/loader'
 import {PageFull} from '#/main/app/page/components/full'
 import {getToolBreadcrumb, showToolBreadcrumb} from '#/main/core/tool/utils'
 
-import {SubscriptionPending} from '#/plugin/cursus/tools/trainings/quota/subscription/components/pending'
-import {SubscriptionAll} from '#/plugin/cursus/tools/trainings/quota/subscription/components/all'
+import {SubscriptionPending} from '#/plugin/cursus/tools/trainings/subscription/components/pending'
+import {SubscriptionAll} from '#/plugin/cursus/tools/trainings/subscription/components/all'
 import {Routes} from '#/main/app/router/components/routes'
 import {Vertical} from '#/main/app/content/tabs/components/vertical'
 import {Quota as QuotaTypes} from '#/plugin/cursus/prop-types'
-import {selectors} from '#/plugin/cursus/tools/trainings/quota/store/selectors'
+import {selectors} from '#/plugin/cursus/tools/trainings/subscription/store/selectors'
 
 const SubscriptionPage = (props) => {
   if (isEmpty(props.quota)) {
@@ -80,10 +80,11 @@ const SubscriptionPage = (props) => {
                   exact: true,
                   render() {
                     return (
-                      <SubscriptionPending
-                        name={selectors.LIST_NAME}
+                      <h1>Pendings coming soon !</h1>
+                      /*<SubscriptionPending
+                        name={selectors.PENDING_NAME}
                         path={props.path}
-                      />
+                      />*/
                     )
                   }
                 }, {
@@ -93,6 +94,7 @@ const SubscriptionPage = (props) => {
                     return (
                       <SubscriptionAll
                         name={selectors.LIST_NAME}
+                        url={['apiv2_cursus_quota_list_subscriptions', {id: props.quota.id}]}
                         path={props.path}
                       />
                     )

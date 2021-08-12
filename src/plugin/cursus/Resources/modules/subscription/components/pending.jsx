@@ -5,7 +5,7 @@ import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
 
-import {SubscriptionCard} from '#/plugin/cursus/quota/subscription/components/card'
+import {SubscriptionCard} from '#/plugin/cursus/subscription/components/card'
 
 const SubscriptionList = (props) =>
   <ListData
@@ -33,15 +33,13 @@ const SubscriptionList = (props) =>
         type: 'number',
         label: trans('validated'),
         displayed: true,
-        filterable: false,
-        sortable: false
+        filterable: false
       }, {
         name: 'threshold',
         type: 'number',
         label: trans('threshold'),
         displayed: true,
-        filterable: false,
-        sortable: false
+        filterable: false
       }
     ]}
     card={SubscriptionCard}

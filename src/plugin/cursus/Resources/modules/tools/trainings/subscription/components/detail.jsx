@@ -8,8 +8,8 @@ import {trans} from '#/main/app/intl/translation'
 import {Routes} from '#/main/app/router/components/routes'
 import {Vertical} from '#/main/app/content/tabs/components/vertical'
 import {QuotaPage} from '#/plugin/cursus/quota/components/page'
-import {SubscriptionPending} from '#/plugin/cursus/tools/trainings/quota/subscription/components/pending'
-import {SubscriptionAll} from '#/plugin/cursus/tools/trainings/quota/subscription/components/all'
+import {SubscriptionPending} from '#/plugin/cursus/tools/trainings/subscription/components/pending'
+import {SubscriptionAll} from '#/plugin/cursus/tools/trainings/subscription/components/all'
 import {selectors} from '#/plugin/cursus/tools/trainings/quota/store/selectors'
 
 const SubscriptionDetail = (props) => (

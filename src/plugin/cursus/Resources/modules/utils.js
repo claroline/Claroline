@@ -45,9 +45,15 @@ function isFull(session) {
   return false
 }
 
+function getSubscriptionStatus(subscription) {
+  if (subscription.confirmed && subscription.validated) return 'validated';
+  return 'unvalidated';
+}
+
 export {
   getInfo,
   isFull,
   isFullyRegistered,
-  isRegistered
+  isRegistered,
+  getSubscriptionStatus
 }

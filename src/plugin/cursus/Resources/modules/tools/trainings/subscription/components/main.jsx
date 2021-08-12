@@ -3,8 +3,8 @@ import {PropTypes as T} from 'prop-types'
 
 import {Routes} from '#/main/app/router'
 
-import {SubscriptionList} from '#/plugin/cursus/tools/trainings/quota/subscription/components/list'
-import {SubscriptionPage} from '#/plugin/cursus/tools/trainings/quota/subscription/containers/page'
+import {SubscriptionList} from '#/plugin/cursus/tools/trainings/subscription/components/list'
+import {SubscriptionPage} from '#/plugin/cursus/tools/trainings/subscription/containers/page'
 
 const SubscriptionMain = (props) =>
   <Routes
