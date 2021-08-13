@@ -7,8 +7,7 @@ import {LOAD_QUOTA} from '#/plugin/cursus/tools/trainings/quota/store/actions'
 import {reducer as subscriptionReducer} from '#/plugin/cursus/tools/trainings/subscription/store/reducer'
 
 export const reducer = combineReducers({
-	quotas: makeListReducer(selectors.LIST_NAME, {
-	}, {
+	quotas: makeListReducer(selectors.LIST_NAME, {}, {
     	invalidated: makeReducer(false, {
       		[FORM_SUBMIT_SUCCESS + '/' + selectors.FORM_NAME]: () => true
     	})

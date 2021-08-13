@@ -96,6 +96,7 @@ const SubscriptionPage = (props) => {
                         name={selectors.LIST_NAME}
                         url={['apiv2_cursus_quota_list_subscriptions', {id: props.quota.id}]}
                         path={props.path}
+                        setSubscriptionStatus={props.setSubscriptionStatus}
                       />
                     )
                   }
@@ -119,7 +120,8 @@ SubscriptionPage.propTypes = {
   actions: T.array,
   quota: T.shape(
     QuotaTypes.propTypes
-  )
+  ),
+  setSubscriptionStatus: T.func.isRequired
 }
 
 export {

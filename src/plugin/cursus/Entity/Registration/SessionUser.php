@@ -33,6 +33,24 @@ class SessionUser extends AbstractUserRegistration
      */
     private $session;
 
+    /**
+     * The registration has to be managed by another service
+     *
+     * @ORM\Column(type="boolean")
+     *
+     * @var bool
+     */
+    protected $managed = false;
+
+    /**
+     * The registration has to be refused by human resource
+     *
+     * @ORM\Column(type="boolean")
+     *
+     * @var bool
+     */
+    protected $refused = false;
+
     public function getSession(): Session
     {
         return $this->session;
@@ -41,5 +59,25 @@ class SessionUser extends AbstractUserRegistration
     public function setSession(Session $session)
     {
         $this->session = $session;
+    }
+
+    public function isManaged(): bool
+    {
+        return $this->managed;
+    }
+
+    public function setManaged(bool $managed)
+    {
+        $this->managed = $managed;
+    }
+
+    public function isRefused(): bool
+    {
+        return $this->refused;
+    }
+
+    public function setRefused(bool $refused)
+    {
+        $this->refused = $refused;
     }
 }

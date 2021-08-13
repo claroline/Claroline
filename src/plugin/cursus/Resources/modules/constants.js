@@ -31,14 +31,23 @@ const PRESENCE_STATUS_COLORS = {
   [PRESENCE_STATUS_ABSENT_UNJUSTIFIED]: 'danger'
 }
 
-const SUBSCRIPTION_STATUS_UNVALIDATED = 'unvalidated'
+const SUBSCRIPTION_STATUS_PENDING = 'pending'
 const SUBSCRIPTION_STATUS_VALIDATED = 'validated'
-const SUBSCRIPTION_STATUS_MANAGED = 'pris en charge'
+const SUBSCRIPTION_STATUS_MANAGED = 'managed'
+const SUBSCRIPTION_STATUS_REFUSED = 'refused'
 
 const SUBSCRIPTION_STATUSES = {
-  [SUBSCRIPTION_STATUS_UNVALIDATED]: trans('subscription_unvalidated', {}, 'cursus'),
+  [SUBSCRIPTION_STATUS_PENDING]: trans('subscription_pending', {}, 'cursus'),
   [SUBSCRIPTION_STATUS_VALIDATED]: trans('subscription_validated', {}, 'cursus'),
   [SUBSCRIPTION_STATUS_MANAGED]: trans('subscription_managed', {}, 'cursus'),
+  [SUBSCRIPTION_STATUS_REFUSED]: trans('subscription_refused', {}, 'cursus')
+}
+
+const SUBSCRIPTION_STATUS_COLORS = {
+  [SUBSCRIPTION_STATUS_PENDING]: 'default',
+  [SUBSCRIPTION_STATUS_VALIDATED]: 'success',
+  [SUBSCRIPTION_STATUS_MANAGED]: 'warning',
+  [SUBSCRIPTION_STATUS_REFUSED]: 'danger'
 }
 
 const LEARNER_TYPE = 'learner'
@@ -53,6 +62,7 @@ export const constants = {
   PRESENCE_STATUSES,
   PRESENCE_STATUS_COLORS,
   SUBSCRIPTION_STATUSES,
+  SUBSCRIPTION_STATUS_COLORS,
   LEARNER_TYPE,
   TEACHER_TYPE
 }

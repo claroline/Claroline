@@ -11,7 +11,6 @@
 
 namespace Claroline\CursusBundle\Controller;
 
-use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AppBundle\Persistence\ObjectManager;
@@ -96,6 +95,32 @@ class QuotaController extends AbstractCrudController
             $this->finder->search(SessionUser::class, $query, $options)
         );
     }
+    
+    /**
+     * @Route("subscriptions/{id}", name="apiv2_cursus_subscription_status", methods={"PATCH"})
+     * @EXT\ParamConverter("sessionUser", class="Claroline\CursusBundle\Entity\Registration\SessionUser", options={"mapping": {"id": "uuid"}})
+     */
+    public function setSubscriptionStatus(SessionUser $sessionUser, Request $request): JsonResponse
+    {
+        $status = $request->query->get('status', null);
+        if (!$status) return new JsonResponse('The status is missing.', 401);
+
+        $validated = ['pending' => false, 'validated' => true, 'managed' => true, 'refused' => false];
+        $managed = ['pending' => false, 'validated' => false, 'managed' => true, 'refused' => false];
+        $refused = ['pending' => false, 'validated' => false, 'managed' => false, 'refused' => true];
+        if (!isset($validated[$status])) return new JsonResponse('The status don\'t have been updated.', 401);
+
+        $sessionUser->setValidated($validated[$status]);
+        $sessionUser->setManaged($managed[$status]);
+        $sessionUser->setRefused($refused[$status]);
+
+        $this->om->persist($sessionUser);
+        $this->om->flush();
+
+        return new JsonResponse([
+            'subscription' => $this->serializer->serialize($sessionUser)
+        ]);
+    }
 
     /**
      * @Route("/{id}/open", name="apiv2_cursus_quota_open", methods={"GET"})
@@ -104,7 +129,7 @@ class QuotaController extends AbstractCrudController
     public function openAction(Quota $quota): JsonResponse
     {
         return new JsonResponse([
-            'quota' => $this->serializer->serialize($quota),
+            'quota' => $this->serializer->serialize($quota)
         ]);
     }
 }
