@@ -22,7 +22,7 @@ const QuotaForm = (props) => {
             label: trans('quotas', {}, 'cursus'),
             target: props.path
           }, {
-            label: props.quota.id,
+            label: props.quota.id
           }
         ]}
         currentContext={props.currentContext}

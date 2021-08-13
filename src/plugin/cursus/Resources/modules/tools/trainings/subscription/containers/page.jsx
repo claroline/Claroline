@@ -5,15 +5,15 @@ import {selectors as toolSelectors} from '#/main/core/tool/store'
 import {SubscriptionPage as SubscriptionComponent} from '#/plugin/cursus/tools/trainings/subscription/components/page'
 
 const SubscriptionPage = connect(
-	(state) => ({
+  (state) => ({
     	currentContext: toolSelectors.context(state),
-		quota: selectors.quota(state)
-	}),
-	(dispatch) => ({
+    quota: selectors.quota(state)
+  }),
+  (dispatch) => ({
 	 	setSubscriptionStatus(id, status) {
-			dispatch(actions.setSubscriptionStatus(id, status))
+      dispatch(actions.setSubscriptionStatus(id, status))
 	 	}
-	})
+  })
 )(SubscriptionComponent)
 
 export {

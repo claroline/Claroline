@@ -47,12 +47,12 @@ function isFull(session) {
 
 function getSubscriptionStatus(subscription) {
   if (subscription.validated) {
-    return subscription.managed ? 'managed' : 'validated';
+    return subscription.managed ? 'managed' : 'validated'
   }
   if (subscription.refused) {
-    return 'refused';
+    return 'refused'
   }
-  return 'pending';
+  return 'pending'
 }
 
 export {

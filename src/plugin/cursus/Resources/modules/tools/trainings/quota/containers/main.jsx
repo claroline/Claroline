@@ -5,10 +5,10 @@ import {selectors as toolSelectors, reducer} from '#/main/core/tool/store'
 import {QuotaMain as QuotaComponent} from '#/plugin/cursus/tools/trainings/quota/components/main'
 
 const QuotaMain = withReducer(selectors.STORE_NAME, reducer)(
-	connect(
+  connect(
     	(state) => ({
-      		path: toolSelectors.path(state),
-		}),
+      		path: toolSelectors.path(state)
+    }),
     	(dispatch) => ({
       		open(id) {
         		dispatch(actions.open(id))
@@ -17,7 +17,7 @@ const QuotaMain = withReducer(selectors.STORE_NAME, reducer)(
         		dispatch(actions.openForm(id, defaultProps))
       		}
     	})
-	)(QuotaComponent)
+  )(QuotaComponent)
 )
 
 export {

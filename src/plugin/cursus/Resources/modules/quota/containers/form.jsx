@@ -7,7 +7,7 @@ import {QuotaForm as QuotaFormComponent} from '#/plugin/cursus/quota/components/
 const QuotaForm = connect(
   (state, ownProps) =>({
     isNew: formSelectors.isNew(formSelectors.form(state, ownProps.name)),
-    quota: formSelectors.data(formSelectors.form(state, ownProps.name)),
+    quota: formSelectors.data(formSelectors.form(state, ownProps.name))
   }),
   (dispatch) => ({
     update(name, prop, value) {

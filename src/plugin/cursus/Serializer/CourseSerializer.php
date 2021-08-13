@@ -149,7 +149,7 @@ class CourseSerializer
                 }, $course->getOrganizations()->toArray()),
                 'children' => array_map(function (Course $child) {
                     return $this->serialize($child, [Options::SERIALIZE_MINIMAL]);
-                }, $course->getChildren()->toArray())
+                }, $course->getChildren()->toArray()),
             ]);
         }
 

@@ -18,7 +18,7 @@ class QuotaRepository extends EntityRepository
 {
     public function countValidated(Quota $quota)
     {
-        return (int)$this->_em->createQuery('
+        return (int) $this->_em->createQuery('
             SELECT COUNT(DISTINCT su) * c.defaultSessionDuration FROM Claroline\CursusBundle\Entity\Registration\SessionUser su
             INNER JOIN su.session s
             INNER JOIN s.course c
@@ -30,7 +30,7 @@ class QuotaRepository extends EntityRepository
                 AND o IN (:organization)
         ')
         ->setParameters([
-            'organization' => $quota->getOrganization()
+            'organization' => $quota->getOrganization(),
         ])
         ->getSingleScalarResult() ?? 0;
     }

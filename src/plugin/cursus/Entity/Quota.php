@@ -30,7 +30,7 @@ class Quota
     /**
      * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Organization\Organization")
      * @ORM\JoinColumn(name="organization_id", nullable=false, onDelete="CASCADE")
-     * 
+     *
      * @var Organization
      */
     private $organization;

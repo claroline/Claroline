@@ -34,7 +34,7 @@ class SessionUser extends AbstractUserRegistration
     private $session;
 
     /**
-     * The registration has to be managed by another service
+     * The registration has to be managed by another service.
      *
      * @ORM\Column(type="boolean")
      *
@@ -43,7 +43,7 @@ class SessionUser extends AbstractUserRegistration
     protected $managed = false;
 
     /**
-     * The registration has to be refused by human resource
+     * The registration has to be refused by human resource.
      *
      * @ORM\Column(type="boolean")
      *

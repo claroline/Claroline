@@ -54,13 +54,13 @@ class QuotaSerializer
         $serialized = [
             'id' => $quota->getUuid(),
             'organization' => $this->organizationSerializer->serialize($quota->getOrganization(), [Options::SERIALIZE_MINIMAL]),
-            'threshold' => $quota->getThreshold()
+            'threshold' => $quota->getThreshold(),
         ];
 
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
             $serialized['validated'] = $this->quotaRepo->countValidated($quota);
         }
-        
+
         return $serialized;
     }
 

@@ -19,8 +19,8 @@ class PlatformDefaults implements ParameterProviderInterface
     {
         return [
             'quotas' => [
-                'enabled' => false
-            ]
+                'enabled' => false,
+            ],
         ];
     }
 }

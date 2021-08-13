@@ -5,16 +5,16 @@ import {selectors as toolSelectors} from '#/main/core/tool/store'
 import {SubscriptionMain as SubscriptionComponent} from '#/plugin/cursus/tools/trainings/subscription/components/main'
 
 const SubscriptionMain = withReducer(selectors.STORE_NAME, reducer)(
-	connect(
+  connect(
     	(state) => ({
-      		path: toolSelectors.path(state),
-		}),
+      		path: toolSelectors.path(state)
+    }),
     	(dispatch) => ({
       		open(id) {
        			dispatch(actions.open(id))
       		}
-		})
-	)(SubscriptionComponent)
+    })
+  )(SubscriptionComponent)
 )
 
 export {

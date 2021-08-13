@@ -23,7 +23,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @Route("/cursus_quota")
@@ -34,8 +33,6 @@ class QuotaController extends AbstractCrudController
 
     /** @var TokenStorageInterface */
     private $tokenStorage;
-    /** @var TranslatorInterface */
-    private $translator;
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
@@ -61,7 +58,7 @@ class QuotaController extends AbstractCrudController
     {
         return ['copyBulk', 'doc', 'exist'];
     }
-    
+
     /**
      * @Route("/", name="apiv2_cursus_quota_list", methods={"GET"})
      */
@@ -86,7 +83,7 @@ class QuotaController extends AbstractCrudController
     {
         $query = $request->query->all();
         $query['hiddenFilters'] = [
-            'organization' => $quota->getOrganization()
+            'organization' => $quota->getOrganization(),
         ];
 
         $options = isset($query['options']) ? $query['options'] : [];
@@ -95,7 +92,7 @@ class QuotaController extends AbstractCrudController
             $this->finder->search(SessionUser::class, $query, $options)
         );
     }
-    
+
     /**
      * @Route("subscriptions/{id}", name="apiv2_cursus_subscription_status", methods={"PATCH"})
      * @EXT\ParamConverter("sessionUser", class="Claroline\CursusBundle\Entity\Registration\SessionUser", options={"mapping": {"id": "uuid"}})
@@ -103,12 +100,16 @@ class QuotaController extends AbstractCrudController
     public function setSubscriptionStatus(SessionUser $sessionUser, Request $request): JsonResponse
     {
         $status = $request->query->get('status', null);
-        if (!$status) return new JsonResponse('The status is missing.', 401);
+        if (!$status) {
+            return new JsonResponse('The status is missing.', 401);
+        }
 
         $validated = ['pending' => false, 'validated' => true, 'managed' => true, 'refused' => false];
         $managed = ['pending' => false, 'validated' => false, 'managed' => true, 'refused' => false];
         $refused = ['pending' => false, 'validated' => false, 'managed' => false, 'refused' => true];
-        if (!isset($validated[$status])) return new JsonResponse('The status don\'t have been updated.', 401);
+        if (!isset($validated[$status])) {
+            return new JsonResponse('The status don\'t have been updated.', 401);
+        }
 
         $sessionUser->setValidated($validated[$status]);
         $sessionUser->setManaged($managed[$status]);
@@ -118,7 +119,7 @@ class QuotaController extends AbstractCrudController
         $this->om->flush();
 
         return new JsonResponse([
-            'subscription' => $this->serializer->serialize($sessionUser)
+            'subscription' => $this->serializer->serialize($sessionUser),
         ]);
     }
 
@@ -129,7 +130,7 @@ class QuotaController extends AbstractCrudController
     public function openAction(Quota $quota): JsonResponse
     {
         return new JsonResponse([
-            'quota' => $this->serializer->serialize($quota)
+            'quota' => $this->serializer->serialize($quota),
         ]);
     }
 }

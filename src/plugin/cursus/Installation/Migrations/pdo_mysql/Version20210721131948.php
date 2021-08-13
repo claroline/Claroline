@@ -14,7 +14,7 @@ class Version20210721131948 extends AbstractMigration
 {
     public function up(Schema $schema): void
     {
-        $this->addSql("
+        $this->addSql('
             CREATE TABLE claro_cursusbundle_quota (
                 id INT AUTO_INCREMENT NOT NULL, 
                 organization_id INT NOT NULL, 
@@ -24,19 +24,19 @@ class Version20210721131948 extends AbstractMigration
                 UNIQUE INDEX `unique` (organization_id), 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE claro_cursusbundle_quota 
             ADD CONSTRAINT FK_C4725F5F32C8A3DE FOREIGN KEY (organization_id) 
             REFERENCES claro__organization (id) 
             ON DELETE CASCADE
-        ");
+        ');
     }
 
     public function down(Schema $schema): void
     {
-        $this->addSql("
+        $this->addSql('
             DROP TABLE claro_cursusbundle_quota
-        ");
+        ');
     }
 }
