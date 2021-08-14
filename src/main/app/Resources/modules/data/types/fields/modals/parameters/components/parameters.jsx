@@ -205,7 +205,6 @@ class ParametersModal extends Component {
                 onChange: (value) => this.updateConditions('comparisonValue', value),
                 options: {
                   choices: this.getDependencyFieldOptions(),
-                  // condensed: true, //TODO: should be false when dependencyField.type !== boolean
                   condensed: dependencyFieldData && dependencyFieldData.type !== 'boolean',
                   required: true
                 }

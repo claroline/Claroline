@@ -21,6 +21,12 @@ class RegistrationMain extends Component {
     this.props.fetchRegistrationData()
   }
 
+  getAllFields() {
+    const {facets} = this.props
+
+    return facets.flatMap(({sections}) => sections).flatMap(({fields})=> fields)
+  }
+
   render() {
     let steps = []
 
@@ -39,14 +45,45 @@ class RegistrationMain extends Component {
         title: 'Configuration',
         component: Optional
       }
-    ], this.props.facets.map(facet => ({
-      title: facet.title,
-      component: () => {
-        const currentFacet = <Facet facet={facet}/>
+    ], this.props.facets.map((facet) => ({
+      ...facet,
+      sections:
+        facet.sections !== undefined
+          ? [
+            ...facet.sections.map((section) => ({
+              ...section,
+              fields: section.fields.filter(
+                ({
+                  conditions: {
+                    dependencyField,
+                    validationType,
+                    comparisonValue
+                  }
+                }) =>
+                  !this.getAllFields().some(
+                    ({ id: fieldId, value }) => {
+                      if(fieldId === dependencyField && true) {
+                        if(validationType === 'equals') {
+                          return comparisonValue === value
+                        } else if (validationType === 'does-not-equal') {
+                          return comparisonValue !== value
+                        }
+                      }
+                    }
+                  )
+              )
+            }))
+          ]
+          : undefined
+    }))
+      .map(facet => ({
+        title: facet.title,
+        component: () => {
+          const currentFacet = <Facet facet={facet}/>
 
-        return currentFacet
-      }
-    })))
+          return currentFacet
+        }
+      })))
 
     if (this.props.options.organizationSelection === constants.ORGANIZATION_SELECTION_CREATE) {
       steps.push({
