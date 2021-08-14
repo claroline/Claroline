@@ -16,8 +16,6 @@ class ParametersModal extends Component {
       restrictions: props.data.restrictions ? props.data.restrictions : {},
       conditions: props.data.conditions ? props.data.conditions : {},
       typeDef: null,
-      selectedField: props.conditionalFields && props.conditionalFields[this.props.data.id] ? props.conditionalFields[this.props.data.id] : {},
-      conditionalFields: props.conditionalFields ? props.conditionalFields : {},
       formFields: [],
       currentFieldId: this.props.data.id
     }
@@ -25,9 +23,9 @@ class ParametersModal extends Component {
     this.updateOptions = this.updateOptions.bind(this)
     this.updateRestrictions = this.updateRestrictions.bind(this)
     this.updateConditions = this.updateConditions.bind(this)
-    this.getFieldsNames = this.getFieldsNames.bind(this)
-    this.normalizeFormOptions = this.normalizeFormOptions.bind(this)
-    this.omitCurrentField = this.omitCurrentField.bind(this)
+    this.getAllFields = this.getAllFields.bind(this)
+    this.getDependencyFieldOptions = this.getDependencyFieldOptions.bind(this)
+    this.getDependencyFields = this.getDependencyFields.bind(this)
   }
 
   componentDidMount() {
@@ -66,9 +64,6 @@ class ParametersModal extends Component {
   }
 
   updateConditions(conditionName, conditionValue) {
-    // this.setState({
-    //   conditions: {...this.state.conditions, [conditionName]: Array.isArray(conditionValue) ? conditionValue[0] : conditionValue}
-    // })
     const newConditions = merge({}, this.state.conditions)
 
     set(newConditions, conditionName, conditionValue)
@@ -86,36 +81,43 @@ class ParametersModal extends Component {
     }))
   }
 
-  getFieldsNames(formFields) {
+  getAllFields() {
+    const {formFields} = this.state
+
     return formFields.flatMap(({sections}) => sections).flatMap(({fields})=> fields)
   }
 
-  normalizeFormOptions(fieldData = {}) {
-    let normalizedOptions
-
-    if(Array.isArray(fieldData)) {
-      normalizedOptions = fieldData.reduce((acc, current) => ({...acc, ...{[current.name]: current.label}}), {})
-    } else {
-      switch (fieldData.type) {
-        case 'cascade':
-        case 'choice':
-          normalizedOptions = fieldData.options.choices.reduce((acc, current) => ({...acc, ...{[current.name]: current.label}}), {})
-          break
-        case 'boolean':
-          normalizedOptions = {true: 'True', false: 'False'}
-          break
-      }
-    }
-    return normalizedOptions
+  findDependencyFieldData() {
+    const {conditions: {dependencyField}} = this.state
+    
+    return this.getAllFields().find(({id}) => id === dependencyField)
   }
 
-  omitCurrentField(fieldData) {
+  getDependencyFieldOptions() { 
+    const field = this.findDependencyFieldData()
+
+    if (field !== undefined) {
+      if (field.type === 'choice') {
+        return field.options.choices.reduce((acc, current) => ({...acc, ...{[current.id]: current.label}}), {})
+      } else {
+        return {true: 'True', false: 'False'}
+      }
+    } else {
+      return []
+    }
+  }
+
+  mapFieldsToOptions(fields) {
+    return fields.reduce((acc, current) => ({...acc, ...{[current.id]: current.label}}), {})
+  }
+
+  getDependencyFields(fieldData) {
     const {currentFieldId} = this.state
     return fieldData.filter(({id, type}) => id !== currentFieldId && (type === 'boolean' || type === 'choice'))
   }
 
   render() {
-    const {selectedField, formFields} = this.state
+    const dependencyFieldData = this.findDependencyFieldData()
 
     return (
       <FormDataModal
@@ -142,8 +144,6 @@ class ParametersModal extends Component {
             restrictions: restrictions,
             conditions: conditions
           }))
-
-          // this.props.updateConditionalFields(this.state.currentFieldId, this.state.selectedField)
         }}
         title={trans('edit_field')}
         sections={[
@@ -180,12 +180,11 @@ class ParametersModal extends Component {
                 type: 'choice',
                 label: 'Field',
                 onChange: (value) => {
-                  this.setState({selectedField: this.getFieldsNames(this.state.formFields).find(field => field.name === value)})
-                  this.updateConditions('conditions.comparisonValue', null)
-                  this.updateConditions('conditions.dependencyField', value)
+                  this.updateConditions('comparisonValue', null)
+                  this.updateConditions('dependencyField', value)
                 },
                 options: {
-                  choices: this.normalizeFormOptions(this.omitCurrentField(this.getFieldsNames(formFields))),
+                  choices: this.mapFieldsToOptions(this.getDependencyFields(this.getAllFields())),
                   condensed: true,
                   required: true
                 }
@@ -193,7 +192,7 @@ class ParametersModal extends Component {
                 name: 'conditions.validationType',
                 type: 'choice',
                 label: 'Condition',
-                onChange: (value) => this.updateConditions('conditions.validationType', value),
+                onChange: (value) => this.updateConditions('validationType', value),
                 options: {
                   choices: {equals: 'Equals', 'does-not-equal': 'Does not equal'},
                   condensed: true,
@@ -201,12 +200,13 @@ class ParametersModal extends Component {
                 }
               }, {
                 name: 'conditions.comparisonValue',
-                type: selectedField.type === 'boolean' ? 'choice' : selectedField.type,
+                type: 'choice',
                 label: 'Value',
-                onChange: (value) => this.updateConditions('conditions.comparisonValue', value),
+                onChange: (value) => this.updateConditions('comparisonValue', value),
                 options: {
-                  choices: this.normalizeFormOptions(selectedField),
-                  condensed: selectedField.type !== 'boolean',
+                  choices: this.getDependencyFieldOptions(),
+                  // condensed: true, //TODO: should be false when dependencyField.type !== boolean
+                  condensed: dependencyFieldData && dependencyFieldData.type !== 'boolean',
                   required: true
                 }
               }
@@ -277,7 +277,6 @@ class ParametersModal extends Component {
 }
 
 ParametersModal.propTypes = {
-  conditionalFields: T.object.isRequired,
   data: T.shape({
     type: T.string.isRequired,
     options: T.object,
@@ -287,8 +286,7 @@ ParametersModal.propTypes = {
   }),
   fadeModal: T.func.isRequired,
   save: T.func.isRequired,
-  getFormFields: T.func.isRequired,
-  updateConditionalFields: T.func.isRequired
+  getFormFields: T.func.isRequired
 }
 
 export {

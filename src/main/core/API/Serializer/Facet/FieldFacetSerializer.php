@@ -57,9 +57,9 @@ class FieldFacetSerializer
                 'order' => $fieldFacet->getPosition(),
             ],
             'conditions' => [
-                'dependencyField' => $field->getDependencyField(),
-                'validationType' => $field->getValidationType(),
-                'comparisonValue' => $field->getComparisonValue(),
+                'dependencyField' => $fieldFacet->getDependencyField(),
+                'validationType' => $fieldFacet->getValidationType(),
+                'comparisonValue' => $fieldFacet->getComparisonValue(),
             ],
         ];
 
