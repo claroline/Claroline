@@ -135,6 +135,27 @@ class Field
     protected $help;
 
     /**
+     * @ORM\Column(name="dependency_field", type="string")
+     *
+     * @var string
+     */
+    protected $dependencyField;
+
+    /**
+     * @ORM\Column(name="validation_type", type="string")
+     *
+     * @var string
+     */
+    protected $validationType;
+
+    /**
+     * @ORM\Column(name="comparison_value", type="string")
+     *
+     * @var string
+     */
+    protected $comparisonValue;
+
+    /**
      * Field constructor.
      */
     public function __construct()
@@ -323,5 +344,35 @@ class Field
             $this->details = [];
         }
         $this->details['nb_files_max'] = $nbFilesMax;
+    }
+
+    public function getDependencyField()
+    {
+        return $this->dependencyField;
+    }
+
+    public function setDependencyField($dependencyField)
+    {
+        $this->dependencyField = $dependencyField;
+    }
+
+    public function getValidationType()
+    {
+        return $this->validationType;
+    }
+
+    public function setValidationType($validationType)
+    {
+        $this->validationType = $validationType;
+    }
+
+    public function getComparisonValue()
+    {
+        return $this->comparisonValue;
+    }
+
+    public function setComparisonValue($comparisonValue)
+    {
+        $this->comparisonValue = $comparisonValue;
     }
 }

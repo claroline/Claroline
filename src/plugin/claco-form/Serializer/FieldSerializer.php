@@ -73,8 +73,8 @@ class FieldSerializer
             ],
             'conditions' => [
                 'dependencyField' => $field->getDependencyField(),
-                'comparisonType' => $field->getComparisonType(),
-                'dependencyValue' => $field->getDependencyValue(),
+                'validationType' => $field->getValidationType(),
+                'comparisonValue' => $field->getComparisonValue(),
             ],
         ];
 
@@ -122,8 +122,8 @@ class FieldSerializer
         $this->sipe('restrictions.order', 'setOrder', $data, $field);
         $this->sipe('help', 'setHelp', $data, $field);
         $this->sipe('conditions.dependencyField', 'setDependencyField', $data, $field);
-        $this->sipe('conditions.comparisonType', 'setComparisonType', $data, $field);
-        $this->sipe('conditions.dependencyValue', 'setDependencyValue', $data, $field);
+        $this->sipe('conditions.validationType', 'setValidationType', $data, $field);
+        $this->sipe('conditions.comparisonValue', 'setComparisonValue', $data, $field);
 
         $fieldFacet = $field->getFieldFacet();
 
