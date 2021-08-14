@@ -176,13 +176,13 @@ class ParametersModal extends Component {
             title: 'Conditional Rendering',
             fields: [
               {
-                name: 'conditions.field',
+                name: 'conditions.dependencyField',
                 type: 'choice',
                 label: 'Field',
                 onChange: (value) => {
                   this.setState({selectedField: this.getFieldsNames(this.state.formFields).find(field => field.name === value)})
-                  this.updateConditions('conditions.value', null)
-                  this.updateConditions('conditions.field', value)
+                  this.updateConditions('conditions.comparisonValue', null)
+                  this.updateConditions('conditions.dependencyField', value)
                 },
                 options: {
                   choices: this.normalizeFormOptions(this.omitCurrentField(this.getFieldsNames(formFields))),
@@ -190,20 +190,20 @@ class ParametersModal extends Component {
                   required: true
                 }
               }, {
-                name: 'conditions.condition',
+                name: 'conditions.validationType',
                 type: 'choice',
                 label: 'Condition',
-                onChange: (value) => this.updateConditions('conditions.condition', value),
+                onChange: (value) => this.updateConditions('conditions.validationType', value),
                 options: {
                   choices: {equals: 'Equals', 'does-not-equal': 'Does not equal'},
                   condensed: true,
                   required: true
                 }
               }, {
-                name: 'conditions.value',
+                name: 'conditions.comparisonValue',
                 type: selectedField.type === 'boolean' ? 'choice' : selectedField.type,
                 label: 'Value',
-                onChange: (value) => this.updateConditions('conditions.value', value),
+                onChange: (value) => this.updateConditions('conditions.comparisonValue', value),
                 options: {
                   choices: this.normalizeFormOptions(selectedField),
                   condensed: selectedField.type !== 'boolean',

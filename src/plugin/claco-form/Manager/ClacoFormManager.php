@@ -1100,6 +1100,9 @@ class ClacoFormManager implements LoggerAwareInterface
         $newField->setHelp($field->getHelp());
         $newField->setNbFilesMax($field->getNbFilesMax());
         $newField->setOrder($field->getOrder());
+        $newField->setDependencyField($field->getDependencyField());
+        $newField->setValidationType($field->getValidationType());
+        $newField->setComparisonValue($field->getComparisonValue());
 
         $fieldFacet = $field->getFieldFacet();
         $newFieldFacet = new FieldFacet();

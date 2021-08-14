@@ -56,6 +56,11 @@ class FieldFacetSerializer
                 'lockedEditionOnly' => $fieldFacet->getLockedEditionOnly(),
                 'order' => $fieldFacet->getPosition(),
             ],
+            'conditions' => [
+                'dependencyField' => $field->getDependencyField(),
+                'validationType' => $field->getValidationType(),
+                'comparisonValue' => $field->getComparisonValue(),
+            ],
         ];
 
         if (!empty($fieldFacet->getOptions())) {
@@ -86,6 +91,9 @@ class FieldFacetSerializer
         $this->sipe('restrictions.locked', 'setLocked', $data, $field);
         $this->sipe('restrictions.lockedEditionOnly', 'setLockedEditionOnly', $data, $field);
         $this->sipe('restrictions.order', 'setPosition', $data, $field);
+        $this->sipe('conditions.dependencyField', 'setDependencyField', $data, $field);
+        $this->sipe('conditions.validationType', 'setValidationType', $data, $field);
+        $this->sipe('conditions.comparisonValue', 'setComparisonValue', $data, $field);
 
         if (isset($data['options'])) {
             if (isset($data['options']['choices'])) {

@@ -135,21 +135,21 @@ class Field
     protected $help;
 
     /**
-     * @ORM\Column(name="dependency_field", type="string")
+     * @ORM\Column(name="dependency_field")
      *
      * @var string
      */
     protected $dependencyField;
 
     /**
-     * @ORM\Column(name="validation_type", type="string")
+     * @ORM\Column(name="validation_type")
      *
      * @var string
      */
     protected $validationType;
 
     /**
-     * @ORM\Column(name="comparison_value", type="string")
+     * @ORM\Column(name="comparison_value")
      *
      * @var string
      */

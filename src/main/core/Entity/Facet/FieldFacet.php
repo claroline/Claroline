@@ -158,6 +158,27 @@ class FieldFacet
     protected $help;
 
     /**
+     * @ORM\Column(name="dependency_field")
+     *
+     * @var string
+     */
+    protected $dependencyField;
+
+    /**
+     * @ORM\Column(name="validation_type")
+     *
+     * @var string
+     */
+    protected $validationType;
+
+    /**
+     * @ORM\Column(name="comparison_value")
+     *
+     * @var string
+     */
+    protected $comparisonValue;
+
+    /**
      * Constructor.
      */
     public function __construct()
@@ -460,5 +481,53 @@ class FieldFacet
     public function setHelp($help)
     {
         $this->help = $help;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDependencyField()
+    {
+        return $this->dependencyField;
+    }
+
+    /**
+     * @param string $dependencyField
+     */
+    public function setDependencyField($dependencyField)
+    {
+        $this->dependencyField = $dependencyField;
+    }
+
+    /**
+     * @return string
+     */
+    public function getValidationType()
+    {
+        return $this->validationType;
+    }
+
+    /**
+     * @param string $validationType
+     */
+    public function setValidationType($validationType)
+    {
+        $this->validationType = $validationType;
+    }
+
+    /**
+     * @return string
+     */
+    public function getComparisonValue()
+    {
+        return $this->comparisonValue;
+    }
+
+    /**
+     * @param string $comparisonValue
+     */
+    public function setComparisonValue($comparisonValue)
+    {
+        $this->comparisonValue = $comparisonValue;
     }
 }
