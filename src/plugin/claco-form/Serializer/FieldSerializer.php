@@ -71,6 +71,11 @@ class FieldSerializer
                 'hidden' => $field->isHidden(),
                 'order' => $field->getOrder(),
             ],
+            'conditions' => [
+                'dependencyField' => $field->getDependencyField(),
+                'comparisonType' => $field->getComparisonType(),
+                'dependencyValue' => $field->getDependencyValue(),
+            ],
         ];
 
         if (count($field->getDetails()) > 0) {
@@ -116,6 +121,9 @@ class FieldSerializer
         $this->sipe('restrictions.lockedEditionOnly', 'setLockedEditionOnly', $data, $field);
         $this->sipe('restrictions.order', 'setOrder', $data, $field);
         $this->sipe('help', 'setHelp', $data, $field);
+        $this->sipe('conditions.dependencyField', 'setDependencyField', $data, $field);
+        $this->sipe('conditions.comparisonType', 'setComparisonType', $data, $field);
+        $this->sipe('conditions.dependencyValue', 'setDependencyValue', $data, $field);
 
         $fieldFacet = $field->getFieldFacet();
 

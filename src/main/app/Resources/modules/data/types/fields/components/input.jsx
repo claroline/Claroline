@@ -41,7 +41,7 @@ class FieldList extends Component {
     super(props)
 
     this.state = {
-      selectedField: {}
+      conditionalFields: {}
     }
 
     this.add       = this.add.bind(this)
@@ -86,8 +86,8 @@ class FieldList extends Component {
     this.props.showModal(MODAL_FIELD_PARAMETERS, {
       data: field,
       getFormFields: this.props.getFormFields,
-      selectedField: this.state.selectedField,
-      updateSelectedField: (value) => this.setState({selectedField: value}),
+      conditionalFields: this.state.conditionalFields,
+      // updateConditionalFields: (currentFieldId, dependencyField) => this.setState({...this.state.conditionalFields, [currentFieldId]: dependencyField}),
       save: callback
     })
   }
@@ -140,8 +140,8 @@ class FieldList extends Component {
                       data: field,
                       save: (data) => this.update(fieldIndex, data),
                       getFormFields: this.props.getFormFields,
-                      selectedField: this.state.selectedField,
-                      updateSelectedField: (value) => this.setState({selectedField: value})
+                      conditionalFields: this.state.conditionalFields
+                      // updateConditionalFields: (currentFieldId, dependencyField) => this.setState({...this.state.conditionalFields, [currentFieldId]: dependencyField})
                     }]}
                   />
 

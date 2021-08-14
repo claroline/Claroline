@@ -16,7 +16,8 @@ class ParametersModal extends Component {
       restrictions: props.data.restrictions ? props.data.restrictions : {},
       conditions: props.data.conditions ? props.data.conditions : {},
       typeDef: null,
-      selectedField: props.selectedField,
+      selectedField: props.conditionalFields && props.conditionalFields[this.props.data.id] ? props.conditionalFields[this.props.data.id] : {},
+      conditionalFields: props.conditionalFields ? props.conditionalFields : {},
       formFields: [],
       currentFieldId: this.props.data.id
     }
@@ -65,8 +66,15 @@ class ParametersModal extends Component {
   }
 
   updateConditions(conditionName, conditionValue) {
+    // this.setState({
+    //   conditions: {...this.state.conditions, [conditionName]: Array.isArray(conditionValue) ? conditionValue[0] : conditionValue}
+    // })
+    const newConditions = merge({}, this.state.conditions)
+
+    set(newConditions, conditionName, conditionValue)
+
     this.setState({
-      conditions: {...this.state.conditions, [conditionName]: Array.isArray(conditionValue) ? conditionValue[0] : conditionValue}
+      conditions: newConditions
     })
   }
 
@@ -86,7 +94,7 @@ class ParametersModal extends Component {
     let normalizedOptions
 
     if(Array.isArray(fieldData)) {
-      normalizedOptions = fieldData.map(({label, name, id}) => ({name, label, value: id}))
+      normalizedOptions = fieldData.reduce((acc, current) => ({...acc, ...{[current.name]: current.label}}), {})
     } else {
       switch (fieldData.type) {
         case 'cascade':
@@ -126,7 +134,7 @@ class ParametersModal extends Component {
           if (!fieldData.restrictions.locked) {
             restrictions['lockedEditionOnly'] = false
           }
-          const conditions = merge({}, this.state.conditions)
+          const conditions = merge({}, fieldData.conditions)
 
           this.props.save(merge({}, fieldData, {
             name: normalizedName,
@@ -135,7 +143,7 @@ class ParametersModal extends Component {
             conditions: conditions
           }))
 
-          this.props.updateSelectedField(this.state.selectedField)
+          // this.props.updateConditionalFields(this.state.currentFieldId, this.state.selectedField)
         }}
         title={trans('edit_field')}
         sections={[
@@ -169,38 +177,38 @@ class ParametersModal extends Component {
             fields: [
               {
                 name: 'conditions.field',
-                type: 'cascade',
+                type: 'choice',
                 label: 'Field',
+                onChange: (value) => {
+                  this.setState({selectedField: this.getFieldsNames(this.state.formFields).find(field => field.name === value)})
+                  this.updateConditions('conditions.value', null)
+                  this.updateConditions('conditions.field', value)
+                },
                 options: {
                   choices: this.normalizeFormOptions(this.omitCurrentField(this.getFieldsNames(formFields))),
                   condensed: true,
                   required: true
-                },
-                onChange: (value) => {
-                  this.setState({selectedField: this.getFieldsNames(this.state.formFields).find(field => field.id === value[0])})
-                  this.updateConditions('conditions.value', null)
-                  this.updateConditions('conditions.field', value)
                 }
               }, {
                 name: 'conditions.condition',
-                type: 'cascade',
+                type: 'choice',
                 label: 'Condition',
+                onChange: (value) => this.updateConditions('conditions.condition', value),
                 options: {
-                  choices: [{name: 'equals', label: 'Equals', value: 'equals'}, {name: 'does-not-equal', label: 'Does not equal', value: 'does-not-equal'}],
+                  choices: {equals: 'Equals', 'does-not-equal': 'Does not equal'},
                   condensed: true,
                   required: true
-                },
-                onChange: (value) => this.updateConditions('conditions.condition', value)
+                }
               }, {
                 name: 'conditions.value',
-                type: selectedField.type === 'boolean' || selectedField.type === 'cascade' ? 'choice' : selectedField.type,
+                type: selectedField.type === 'boolean' ? 'choice' : selectedField.type,
                 label: 'Value',
                 onChange: (value) => this.updateConditions('conditions.value', value),
-                ...(selectedField.type === 'cascade' || selectedField.type === 'choice' || selectedField.type === 'boolean' ? {options: {
+                options: {
                   choices: this.normalizeFormOptions(selectedField),
                   condensed: selectedField.type !== 'boolean',
                   required: true
-                }} : {})
+                }
               }
             ]
           }, this.state.typeDef && {
@@ -269,7 +277,7 @@ class ParametersModal extends Component {
 }
 
 ParametersModal.propTypes = {
-  selectedField: T.object.isRequired,
+  conditionalFields: T.object.isRequired,
   data: T.shape({
     type: T.string.isRequired,
     options: T.object,
@@ -280,7 +288,7 @@ ParametersModal.propTypes = {
   fadeModal: T.func.isRequired,
   save: T.func.isRequired,
   getFormFields: T.func.isRequired,
-  updateSelectedField: T.func.isRequired
+  updateConditionalFields: T.func.isRequired
 }
 
 export {
