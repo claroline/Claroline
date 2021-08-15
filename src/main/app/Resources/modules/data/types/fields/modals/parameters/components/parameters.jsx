@@ -14,9 +14,8 @@ class ParametersModal extends Component {
     this.state = {
       options: props.data.options ? props.data.options : {},
       restrictions: props.data.restrictions ? props.data.restrictions : {},
-      conditions: props.data.conditions ? props.data.conditions : {},
       typeDef: null,
-      formFields: [],
+      conditions: props.data.conditions ? props.data.conditions : {},
       currentFieldId: this.props.data.id
     }
 
@@ -29,7 +28,6 @@ class ParametersModal extends Component {
   }
 
   componentDidMount() {
-    this.setState({formFields: this.props.getFormFields()})
     getType(this.props.data.type).then(definition => this.setState({typeDef: definition}))
   }
 
@@ -82,9 +80,7 @@ class ParametersModal extends Component {
   }
 
   getAllFields() {
-    const {formFields} = this.state
-
-    return formFields.flatMap(({sections}) => sections).flatMap(({fields})=> fields)
+    return this.props.formFields.flatMap(({sections}) => sections).flatMap(({fields})=> fields)
   }
 
   findDependencyFieldData() {
@@ -285,7 +281,7 @@ ParametersModal.propTypes = {
   }),
   fadeModal: T.func.isRequired,
   save: T.func.isRequired,
-  getFormFields: T.func.isRequired
+  formFields: T.array.isRequired
 }
 
 export {

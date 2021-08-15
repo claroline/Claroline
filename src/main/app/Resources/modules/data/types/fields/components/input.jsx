@@ -7,7 +7,7 @@ import uuid from 'uuid'
 import {trans} from '#/main/app/intl/translation'
 
 import {actions as modalActions} from '#/main/app/overlays/modal/store'
-import {actions as formActions} from '#/main/app/content/form/store/actions'
+import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
 import {MODAL_SELECTION} from '#/main/app/modals/selection'
 import {MODAL_FIELD_PARAMETERS} from '#/main/app/data/types/fields/modals/parameters'
 
@@ -39,10 +39,6 @@ FieldPreview.defaultProps = {
 class FieldList extends Component {
   constructor(props) {
     super(props)
-
-    this.state = {
-      conditionalFields: {}
-    }
 
     this.add       = this.add.bind(this)
     this.update    = this.update.bind(this)
@@ -85,9 +81,7 @@ class FieldList extends Component {
   open(field, callback) {
     this.props.showModal(MODAL_FIELD_PARAMETERS, {
       data: field,
-      getFormFields: this.props.getFormFields,
-      conditionalFields: this.state.conditionalFields,
-      // updateConditionalFields: (currentFieldId, dependencyField) => this.setState({...this.state.conditionalFields, [currentFieldId]: dependencyField}),
+      formFields: this.props.formFields,
       save: callback
     })
   }
@@ -139,9 +133,7 @@ class FieldList extends Component {
                     modal={[MODAL_FIELD_PARAMETERS, {
                       data: field,
                       save: (data) => this.update(fieldIndex, data),
-                      getFormFields: this.props.getFormFields,
-                      conditionalFields: this.state.conditionalFields
-                      // updateConditionalFields: (currentFieldId, dependencyField) => this.setState({...this.state.conditionalFields, [currentFieldId]: dependencyField})
+                      formFields: this.props.formFields
                     }]}
                   />
 
@@ -203,7 +195,7 @@ FieldList.propTypes = {
   })),
   onChange: T.func.isRequired,
   showModal: T.func.isRequired,
-  getFormFields: T.func.isRequired
+  formFields: T.array.isRequired
 }
 
 FieldList.defaultProps = {
@@ -212,13 +204,12 @@ FieldList.defaultProps = {
 }
 
 const FieldsInput = connect(
-  null,
+  (state) => ({
+    formFields: formSelect.data(formSelect.form(state, 'community.profile'))
+  }),
   (dispatch) => ({
     showModal(modalType, modalProps) {
       dispatch(modalActions.showModal(modalType, modalProps))
-    },
-    getFormFields() {
-      return dispatch(formActions.getFormFields('community.profile'))
     }
   })
 )(FieldList)

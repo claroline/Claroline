@@ -24,10 +24,11 @@ class RegistrationMain extends Component {
   getAllFields() {
     const {facets} = this.props
 
-    return facets.flatMap(({sections}) => sections).flatMap(({fields})=> fields)
+    return facets.flatMap(({sections}) => sections).flatMap(({fields}) => fields)
   }
 
   render() {
+    const {formData} = this.props
     let steps = []
 
     if (!this.props.options.allowWorkspace && this.props.defaultWorkspaces) {
@@ -66,9 +67,8 @@ class RegistrationMain extends Component {
                     const field = this.getAllFields().find(({ id: fieldId }) => fieldId === dependencyField)
 
                     if (typeof field !== 'undefined') {
-                      const value =
-                        this.props.formData.profile &&
-                        `${this.props.formData.profile[field.id]}`
+                      const value = formData.profile && `${formData.profile[field.id]}`
+ 
                       if (validationType === 'equals') {
                         return comparisonValue === value
                       } else if (validationType === 'does-not-equal') {
