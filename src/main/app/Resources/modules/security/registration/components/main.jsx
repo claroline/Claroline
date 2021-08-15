@@ -59,18 +59,24 @@ class RegistrationMain extends Component {
                     validationType,
                     comparisonValue
                   }
-                }) =>
-                  !this.getAllFields().some(
-                    ({ id: fieldId, value }) => {
-                      if(fieldId === dependencyField && true) {
-                        if(validationType === 'equals') {
-                          return comparisonValue === value
-                        } else if (validationType === 'does-not-equal') {
-                          return comparisonValue !== value
-                        }
+                }) => {
+                  if (dependencyField === '' || validationType === '') {
+                    return true
+                  } else {
+                    const field = this.getAllFields().find(({ id: fieldId }) => fieldId === dependencyField)
+
+                    if (typeof field !== 'undefined') {
+                      const value =
+                        this.props.formData.profile &&
+                        `${this.props.formData.profile[field.id]}`
+                      if (validationType === 'equals') {
+                        return comparisonValue === value
+                      } else if (validationType === 'does-not-equal') {
+                        return comparisonValue !== value
                       }
                     }
-                  )
+                  }
+                }  
               )
             }))
           ]
@@ -166,6 +172,7 @@ RegistrationMain.propTypes = {
     organizationSelection: T.string
   }).isRequired,
   defaultWorkspaces: T.array,
+  formData: T.array,
   onRegister: T.func
 }
 

@@ -20,7 +20,8 @@ const RegistrationMain = withRouter(
         termOfService: selectors.termOfService(state),
         options: selectors.options(state),
         workspaces: selectors.workspaces(state),
-        defaultWorkspaces: selectors.defaultWorkspaces(state)
+        defaultWorkspaces: selectors.defaultWorkspaces(state),
+        formData: selectors.formData(state)
       }),
       (dispatch) => ({
         register(user, termOfService, onRegister) {

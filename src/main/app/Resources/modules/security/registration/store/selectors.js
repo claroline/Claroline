@@ -35,6 +35,11 @@ const existingOrganizations = createSelector(
   (store) => store.existingOrganizations
 )
 
+const formData = createSelector(
+  [store],
+  (store) => store.form.data
+)
+
 export const selectors = {
   STORE_NAME,
   FORM_NAME,
@@ -44,5 +49,6 @@ export const selectors = {
   facets,
   workspaces,
   defaultWorkspaces,
-  existingOrganizations
+  existingOrganizations,
+  formData
 }
