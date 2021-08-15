@@ -181,8 +181,7 @@ class ParametersModal extends Component {
                 },
                 options: {
                   choices: this.mapFieldsToOptions(this.getDependencyFields(this.getAllFields())),
-                  condensed: true,
-                  required: true
+                  condensed: true
                 }
               }, {
                 name: 'conditions.validationType',
@@ -191,8 +190,7 @@ class ParametersModal extends Component {
                 onChange: (value) => this.updateConditions('validationType', value),
                 options: {
                   choices: {equals: 'Equals', 'does-not-equal': 'Does not equal'},
-                  condensed: true,
-                  required: true
+                  condensed: true
                 }
               }, {
                 name: 'conditions.comparisonValue',
@@ -201,8 +199,7 @@ class ParametersModal extends Component {
                 onChange: (value) => this.updateConditions('comparisonValue', value),
                 options: {
                   choices: this.getDependencyFieldOptions(),
-                  condensed: dependencyFieldData && dependencyFieldData.type !== 'boolean',
-                  required: true
+                  condensed: dependencyFieldData && dependencyFieldData.type !== 'boolean'
                 }
               }
             ]
