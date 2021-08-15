@@ -169,7 +169,7 @@ class ParametersModal extends Component {
           }, {
             id: 'conditions',
             icon: 'fa fa-fw fa-cog',
-            title: 'Conditional Rendering',
+            title: 'Conditional rendering',
             fields: [
               {
                 name: 'conditions.dependencyField',
