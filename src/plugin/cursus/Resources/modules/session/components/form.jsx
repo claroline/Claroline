@@ -193,6 +193,25 @@ const SessionForm = (props) =>
             name: 'usedByQuotas',
             label: trans('used_by_quotas'),
             type: 'boolean'
+          },
+          {
+            name: 'quotaDays',
+            type: 'number',
+            label: trans('quota_days', {}, 'cursus'),
+            options: {
+              min: 0,
+              unit: trans('days')
+            }
+          },
+          {
+            name: 'quotaHours',
+            type: 'number',
+            label: trans('quota_hours', {}, 'cursus'),
+            options: {
+              min: 0,
+              max: 24,
+              unit: trans('hours')
+            }
           }
         ]
       }

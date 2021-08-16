@@ -33,6 +33,8 @@ class LogSessionEditEvent extends LogGenericEvent
         $details['registrationValidation'] = $session->getRegistrationValidation();
         $details['startDate'] = $session->getStartDate();
         $details['endDate'] = $session->getEndDate();
+        $details['quotaDays'] = $session->getQuotaDays();
+        $details['quotaHours'] = $session->getQuotaHours();
         $details['userValidation'] = $session->getUserValidation();
         $details['maxUsers'] = $session->getMaxUsers();
 
