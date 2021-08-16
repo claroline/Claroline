@@ -7,6 +7,8 @@ use Claroline\CoreBundle\Entity\User;
 
 class CreateSecurityLogs implements AsyncMessageInterface
 {
+    /** @var \DateTimeInterface */
+    private $date;
     /** @var string */
     private $action;
     /** @var string */
@@ -23,6 +25,7 @@ class CreateSecurityLogs implements AsyncMessageInterface
     private $doerCity;
 
     public function __construct(
+        \DateTimeInterface $date,
         string $action,
         string $details,
         string $doerIp,
@@ -31,6 +34,7 @@ class CreateSecurityLogs implements AsyncMessageInterface
         ?string $doerCountry = null,
         ?string $doerCity = null
     ) {
+        $this->date = $date;
         $this->action = $action;
         $this->details = $details;
         $this->doerIp = $doerIp;
@@ -38,6 +42,11 @@ class CreateSecurityLogs implements AsyncMessageInterface
         $this->targets = $targets;
         $this->doerCountry = $doerCountry;
         $this->doerCity = $doerCity;
+    }
+
+    public function getDate(): \DateTimeInterface
+    {
+        return $this->date;
     }
 
     public function getAction(): string

@@ -22,6 +22,7 @@ class CreateSecurityLogsHandler implements MessageHandlerInterface
         foreach ($createLog->getTargets() as $target) {
             $logEntry = new SecurityLog();
 
+            $logEntry->setDate($createLog->getDate());
             $logEntry->setEvent($createLog->getAction());
             $logEntry->setDetails($createLog->getDetails());
             $logEntry->setDoer($createLog->getDoer());

@@ -75,6 +75,7 @@ class SecurityLogSubscriber implements EventSubscriberInterface
         }
 
         $this->messageBus->dispatch(new CreateSecurityLog(
+            new \DateTime(),
             $eventName,
             $event->getMessage($this->translator), // this should not be done by the symfony event
             $doerIp,
@@ -100,6 +101,7 @@ class SecurityLogSubscriber implements EventSubscriberInterface
         }
 
         $this->messageBus->dispatch(new CreateSecurityLogs(
+            new \DateTime(),
             $eventName,
             'test messenger', // this should not be done by the symfony event
             $doerIp,
@@ -129,6 +131,7 @@ class SecurityLogSubscriber implements EventSubscriberInterface
         }
 
         $this->messageBus->dispatch(new CreateSecurityLog(
+            new \DateTime(),
             $eventName,
             $this->translator->trans(
                 'switchUser',
