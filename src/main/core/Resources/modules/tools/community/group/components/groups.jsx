@@ -28,7 +28,7 @@ const GroupsList = props =>
         name: 'unregister',
         type: CALLBACK_BUTTON,
         icon: 'fa fa-fw fa-trash-o',
-        label: trans('unregister'),
+        label: trans('unregister', {}, 'actions'),
         callback: () => props.unregister(rows, props.workspace),
         confirm: {
           title: trans('unregister_groups'),
