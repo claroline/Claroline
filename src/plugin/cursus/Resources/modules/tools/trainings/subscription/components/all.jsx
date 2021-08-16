@@ -6,7 +6,8 @@ import {constants} from '#/plugin/cursus/constants'
 import {getSubscriptionStatus} from '#/plugin/cursus/utils'
 import {trans} from '#/main/app/intl/translation'
 import {MODAL_SUBSCRIPTION_STATUS} from '#/plugin/cursus/subscription/modals/status'
-import {LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
+import {MODAL_BUTTON} from '#/main/app/buttons'
+import {MODAL_SUBSCRIPTION_ABOUT} from '#/plugin/cursus/subscription/modals/about'
 import {ListData} from '#/main/app/content/list/containers/data'
 
 import {SubscriptionCard} from '#/plugin/cursus/subscription/components/card'
@@ -19,9 +20,14 @@ const SubscriptionAll = (props) =>
       autoload: true
     }}
     primaryAction={(row) => ({
-      type: LINK_BUTTON,
-      label: trans('open', {}, 'actions'),
-      target: `${props.path}/${row.id}`
+      name: 'about',
+      type: MODAL_BUTTON,
+      icon: 'fa fa-fw fa-info',
+      label: trans('show-info', {}, 'actions'),
+      modal: [MODAL_SUBSCRIPTION_ABOUT, {
+        subscription: row
+      }],
+      scope: ['object']
     })}
     actions={(row) => [
       {
@@ -65,7 +71,7 @@ const SubscriptionAll = (props) =>
         name: 'date',
         alias: 'date',
         type: 'date',
-        label: trans('registred', {}, 'cursus'),
+        label: trans('registered', {}, 'cursus'),
         displayed: true,
         filterable: false,
         sortable: false
