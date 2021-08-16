@@ -7,6 +7,8 @@ import {trans} from '#/main/app/intl/translation'
 import {getType} from '#/main/app/data/types'
 import {FormDataModal} from '#/main/app/modals/form/components/data'
 
+import {constants} from '#/main/app/data/types/constants'
+
 class ParametersModal extends Component {
   constructor(props) {
     super(props)
@@ -114,6 +116,7 @@ class ParametersModal extends Component {
 
   render() {
     const dependencyFieldData = this.findDependencyFieldData()
+    const {EQUALS_TYPE, DOES_NOT_EQUAL_TYPE} = constants
 
     return (
       <FormDataModal
@@ -189,7 +192,7 @@ class ParametersModal extends Component {
                 label: trans('validation_type'),
                 onChange: (value) => this.updateConditions('validationType', value),
                 options: {
-                  choices: {equals: trans('equals'), 'does-not-equal': trans('does-not-equal')},
+                  choices: {[EQUALS_TYPE]: trans('equals'), [DOES_NOT_EQUAL_TYPE]: trans('does-not-equal')},
                   condensed: true
                 }
               }, {

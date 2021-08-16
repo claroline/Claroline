@@ -14,7 +14,9 @@ import {Workspace} from '#/main/app/security/registration/components/workspace'
 import {Registration} from '#/main/app/security/registration/components/registration'
 import {OrganizationSelection} from '#/main/app/security/registration/containers/organization-selection'
 
-import {constants} from '#/main/app/security/registration/constants'
+import {constants as registrationConstants} from '#/main/app/security/registration/constants'
+import {constants as dataConstants} from '#/main/app/data/types/constants'
+
 
 class RegistrationMain extends Component {
   componentDidMount() {
@@ -28,6 +30,13 @@ class RegistrationMain extends Component {
   }
 
   render() {
+    const {EQUALS_TYPE, DOES_NOT_EQUAL_TYPE} = dataConstants
+    const {
+      ORGANIZATION_SELECTION_CREATE,
+      ORGANIZATION_SELECTION_SELECT,
+      REGISTRATION_MAIL_VALIDATION_NONE,
+      REGISTRATION_MAIL_VALIDATION_FULL
+    } = registrationConstants
     const {formData} = this.props
     let steps = []
 
@@ -69,9 +78,9 @@ class RegistrationMain extends Component {
                     if (typeof field !== 'undefined') {
                       const value = formData.profile && `${formData.profile[field.id]}`
  
-                      if (validationType === 'equals') {
+                      if (validationType === EQUALS_TYPE) {
                         return comparisonValue === value
-                      } else if (validationType === 'does-not-equal') {
+                      } else if (validationType === DOES_NOT_EQUAL_TYPE) {
                         return comparisonValue !== value
                       }
                     }
@@ -91,7 +100,7 @@ class RegistrationMain extends Component {
         }
       })))
 
-    if (this.props.options.organizationSelection === constants.ORGANIZATION_SELECTION_CREATE) {
+    if (this.props.options.organizationSelection === ORGANIZATION_SELECTION_CREATE) {
       steps.push({
         title: trans('organization'),
         component: Organization
@@ -105,7 +114,7 @@ class RegistrationMain extends Component {
       })
     }
 
-    if (this.props.options.organizationSelection === constants.ORGANIZATION_SELECTION_SELECT) {
+    if (this.props.options.organizationSelection === ORGANIZATION_SELECTION_SELECT) {
       steps.push({
         title: trans('organization'),
         component: OrganizationSelection
@@ -121,13 +130,13 @@ class RegistrationMain extends Component {
             title: trans('registration'),
             message: trans('register_confirm_message'),
             button: trans('registration_confirm'),
-            additional: constants.REGISTRATION_MAIL_VALIDATION_NONE !== this.props.options.validation ? (
+            additional: REGISTRATION_MAIL_VALIDATION_NONE !== this.props.options.validation ? (
               <div className="modal-body">
                 <Alert type="info">
                   {trans('registration_mail_help')}
                 </Alert>
 
-                {constants.REGISTRATION_MAIL_VALIDATION_FULL === this.props.options.validation &&
+                {REGISTRATION_MAIL_VALIDATION_FULL === this.props.options.validation &&
                   <Alert type="warning">
                     {trans('registration_validation_help')}
                   </Alert>
