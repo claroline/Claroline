@@ -37,7 +37,7 @@ class RemoveRoleEvent extends Event
         return $this->role;
     }
 
-    public function getMessage($user, TranslatorInterface $translator)
+    public function getMessage(User $user, TranslatorInterface $translator)
     {
         return $translator->trans('removeRole', ['username' => $user->getUsername(), 'role' => $this->role->getName()], 'security');
     }

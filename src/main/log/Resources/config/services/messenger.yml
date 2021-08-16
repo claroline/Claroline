@@ -8,3 +8,8 @@ services:
         tags: [ messenger.message_handler ]
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
+
+    Claroline\LogBundle\Messenger\CreateSecurityLogsHandler:
+        tags: [ messenger.message_handler ]
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'

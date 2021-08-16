@@ -5,6 +5,7 @@ namespace Claroline\LogBundle\Subscriber;
 use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
 use Claroline\CoreBundle\Library\GeoIp\GeoIpInfoProviderInterface;
 use Claroline\LogBundle\Messenger\Message\CreateSecurityLog;
+use Claroline\LogBundle\Messenger\Message\CreateSecurityLogs;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -98,17 +99,15 @@ class SecurityLogSubscriber implements EventSubscriberInterface
             }
         }
 
-        foreach ($event->getUsers() as $user) {
-            $this->messageBus->dispatch(new CreateSecurityLog(
-                $eventName,
-                $event->getMessage($user, $this->translator), // this should not be done by the symfony event
-                $doerIp,
-                $this->security->getUser() ?? $user,
-                $user,
-                $doerCity,
-                $doerCountry
-            ));
-        }
+        $this->messageBus->dispatch(new CreateSecurityLogs(
+            $eventName,
+            'test messenger', // this should not be done by the symfony event
+            $doerIp,
+            $this->security->getUser(),
+            $event->getUsers(),
+            $doerCity,
+            $doerCountry
+        ));
     }
 
     public function logEventSwitchUser(SwitchUserEvent $event, string $eventName): void
