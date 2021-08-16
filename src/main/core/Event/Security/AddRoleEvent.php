@@ -18,18 +18,18 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AddRoleEvent extends Event
 {
-    private $user;
+    private $users;
     private $role;
 
-    public function __construct(User $user, Role $role)
+    public function __construct(array $users, Role $role)
     {
-        $this->user = $user;
+        $this->users = $users;
         $this->role = $role;
     }
 
-    public function getUser(): User
+    public function getUsers(): array
     {
-        return $this->user;
+        return $this->users;
     }
 
     public function getRole()
@@ -37,8 +37,8 @@ class AddRoleEvent extends Event
         return $this->role;
     }
 
-    public function getMessage(TranslatorInterface $translator)
+    public function getMessage(User $user, TranslatorInterface $translator)
     {
-        return $translator->trans('addRole', ['username' => $this->user->getUsername(), 'role' => $this->role->getName()], 'security');
+        return $translator->trans('addRole', ['username' => $user->getUsername(), 'role' => $this->role->getName()], 'security');
     }
 }

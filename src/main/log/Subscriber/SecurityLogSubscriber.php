@@ -50,8 +50,8 @@ class SecurityLogSubscriber implements EventSubscriberInterface
             SecurityEvents::USER_ENABLE => 'logEvent',
             SecurityEvents::NEW_PASSWORD => 'logEvent',
             SecurityEvents::FORGOT_PASSWORD => 'logEvent',
-            SecurityEvents::ADD_ROLE => 'logEvent',
-            SecurityEvents::REMOVE_ROLE => 'logEvent',
+            SecurityEvents::ADD_ROLE => 'logRoleChanges',
+            SecurityEvents::REMOVE_ROLE => 'logRoleChanges',
             SecurityEvents::VIEW_AS => 'logEvent',
             SecurityEvents::VALIDATE_EMAIL => 'logEvent',
             SecurityEvents::AUTHENTICATION_FAILURE => 'logEvent',
@@ -82,6 +82,33 @@ class SecurityLogSubscriber implements EventSubscriberInterface
             $doerCity,
             $doerCountry
         ));
+    }
+
+    public function logRoleChanges(Event $event, string $eventName)
+    {
+        $doerIp = $this->getDoerIp();
+        $doerCountry = null;
+        $doerCity = null;
+        if ($this->geoIpInfoProvider && 'CLI' !== $doerIp) {
+            $geoIpInfo = $this->geoIpInfoProvider->getGeoIpInfo($doerIp);
+
+            if ($geoIpInfo) {
+                $doerCountry = $geoIpInfo->getCountry();
+                $doerCity = $geoIpInfo->getCity();
+            }
+        }
+
+        foreach ($event->getUsers() as $user) {
+            $this->messageBus->dispatch(new CreateSecurityLog(
+                $eventName,
+                $event->getMessage($user, $this->translator), // this should not be done by the symfony event
+                $doerIp,
+                $this->security->getUser() ?? $user,
+                $user,
+                $doerCity,
+                $doerCountry
+            ));
+        }
     }
 
     public function logEventSwitchUser(SwitchUserEvent $event, string $eventName): void

@@ -266,9 +266,9 @@ class UserCrud
             }
 
             if ('add' === $event->getAction()) {
-                $this->dispatcher->dispatch(SecurityEvents::ADD_ROLE, AddRoleEvent::class, [$event->getObject(), $event->getValue()]);
+                $this->dispatcher->dispatch(SecurityEvents::ADD_ROLE, AddRoleEvent::class, [[$event->getObject()], $event->getValue()]);
             } elseif ('remove' === $event->getAction()) {
-                $this->dispatcher->dispatch(SecurityEvents::REMOVE_ROLE, RemoveRoleEvent::class, [$event->getObject(), $event->getValue()]);
+                $this->dispatcher->dispatch(SecurityEvents::REMOVE_ROLE, RemoveRoleEvent::class, [[$event->getObject()], $event->getValue()]);
             }
         }
     }
