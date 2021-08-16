@@ -71,8 +71,6 @@ class ExerciseControllerTest extends TransactionalTestCase
         die();*/
 
         $this->assertEquals(401, $this->client->getResponse()->getStatusCode());
-
-
     }
 
     public function testNonCreatorGet()

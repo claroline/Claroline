@@ -14,10 +14,10 @@ namespace Claroline\CoreBundle\API\Serializer\Location;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Location\Material;
 use Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer;
 use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Location\Location;
+use Claroline\CoreBundle\Entity\Location\Material;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class MaterialSerializer
