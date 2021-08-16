@@ -11,13 +11,12 @@
 
 namespace Claroline\CoreBundle\Event\Tool;
 
-use Claroline\AppBundle\Event\DataConveyorEventInterface;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Symfony\Contracts\EventDispatcher\Event;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class OpenToolEvent extends Event implements DataConveyorEventInterface
+class OpenToolEvent extends Event
 {
     private $workspace;
     private $user;
@@ -26,9 +25,6 @@ class OpenToolEvent extends Event implements DataConveyorEventInterface
 
     /** @var array */
     private $data = [];
-
-    /** @var bool */
-    private $isPopulated = false;
 
     public function __construct(
         ?Workspace $workspace = null,
@@ -69,17 +65,11 @@ class OpenToolEvent extends Event implements DataConveyorEventInterface
     public function setData(array $data)
     {
         $this->data = $data;
-        $this->isPopulated = true;
     }
 
     public function getData()
     {
         return $this->data;
-    }
-
-    public function isPopulated()
-    {
-        return $this->isPopulated;
     }
 
     public function getMessage(TranslatorInterface $translator)
