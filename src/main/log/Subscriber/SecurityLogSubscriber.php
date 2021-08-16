@@ -76,9 +76,9 @@ class SecurityLogSubscriber implements EventSubscriberInterface
         $this->messageBus->dispatch(new CreateSecurityLog(
             $eventName,
             $event->getMessage($this->translator), // this should not be done by the symfony event
+            $doerIp,
             $this->security->getUser() ?? $event->getUser(),
             $event->getUser(),
-            $doerIp,
             $doerCity,
             $doerCountry
         ));
@@ -112,9 +112,9 @@ class SecurityLogSubscriber implements EventSubscriberInterface
                 ],
                 'security'
             ), // this should not be done by the symfony event
+            $doerIp,
             $this->security->getUser(),
             $event->getTargetUser(),
-            $doerIp,
             $doerCity,
             $doerCountry
         ));
