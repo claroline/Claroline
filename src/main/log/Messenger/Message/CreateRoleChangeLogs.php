@@ -3,16 +3,17 @@
 namespace Claroline\LogBundle\Messenger\Message;
 
 use Claroline\AppBundle\Messenger\Message\AsyncMessageInterface;
+use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 
-class CreateSecurityLogs implements AsyncMessageInterface
+class CreateRoleChangeLogs implements AsyncMessageInterface
 {
     /** @var \DateTimeInterface */
     private $date;
     /** @var string */
     private $action;
-    /** @var string */
-    private $details;
+    /** @var Role */
+    private $role;
     /** @var string */
     private $doerIp;
     /** @var User */
@@ -27,7 +28,7 @@ class CreateSecurityLogs implements AsyncMessageInterface
     public function __construct(
         \DateTimeInterface $date,
         string $action,
-        string $details,
+        Role $role,
         string $doerIp,
         ?User $doer = null,
         array $targets = [],
@@ -36,7 +37,7 @@ class CreateSecurityLogs implements AsyncMessageInterface
     ) {
         $this->date = $date;
         $this->action = $action;
-        $this->details = $details;
+        $this->role = $role;
         $this->doerIp = $doerIp;
         $this->doer = $doer;
         $this->targets = $targets;
@@ -54,9 +55,9 @@ class CreateSecurityLogs implements AsyncMessageInterface
         return $this->action;
     }
 
-    public function getDetails(): string
+    public function getRole(): Role
     {
-        return $this->details;
+        return $this->role;
     }
 
     public function getDoerIp(): string

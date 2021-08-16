@@ -3,9 +3,11 @@
 namespace Claroline\LogBundle\Subscriber;
 
 use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
+use Claroline\CoreBundle\Event\Security\AddRoleEvent;
+use Claroline\CoreBundle\Event\Security\RemoveRoleEvent;
 use Claroline\CoreBundle\Library\GeoIp\GeoIpInfoProviderInterface;
+use Claroline\LogBundle\Messenger\Message\CreateRoleChangeLogs;
 use Claroline\LogBundle\Messenger\Message\CreateSecurityLog;
-use Claroline\LogBundle\Messenger\Message\CreateSecurityLogs;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -51,64 +53,47 @@ class SecurityLogSubscriber implements EventSubscriberInterface
             SecurityEvents::USER_ENABLE => 'logEvent',
             SecurityEvents::NEW_PASSWORD => 'logEvent',
             SecurityEvents::FORGOT_PASSWORD => 'logEvent',
-            SecurityEvents::ADD_ROLE => 'logRoleChanges',
-            SecurityEvents::REMOVE_ROLE => 'logRoleChanges',
             SecurityEvents::VIEW_AS => 'logEvent',
             SecurityEvents::VALIDATE_EMAIL => 'logEvent',
             SecurityEvents::AUTHENTICATION_FAILURE => 'logEvent',
+            SecurityEvents::ADD_ROLE => 'logRoleChanges',
+            SecurityEvents::REMOVE_ROLE => 'logRoleChanges',
             SecurityEvents::SWITCH_USER => 'logEventSwitchUser',
         ];
     }
 
     public function logEvent(Event $event, string $eventName): void
     {
-        $doerIp = $this->getDoerIp();
-        $doerCountry = null;
-        $doerCity = null;
-        if ($this->geoIpInfoProvider && 'CLI' !== $doerIp) {
-            $geoIpInfo = $this->geoIpInfoProvider->getGeoIpInfo($doerIp);
-
-            if ($geoIpInfo) {
-                $doerCountry = $geoIpInfo->getCountry();
-                $doerCity = $geoIpInfo->getCity();
-            }
-        }
+        $doerInfo = $this->getDoerInfo();
 
         $this->messageBus->dispatch(new CreateSecurityLog(
             new \DateTime(),
             $eventName,
             $event->getMessage($this->translator), // this should not be done by the symfony event
-            $doerIp,
+            $doerInfo['ip'],
             $this->security->getUser() ?? $event->getUser(),
             $event->getUser(),
-            $doerCity,
-            $doerCountry
+            $doerInfo['city'],
+            $doerInfo['country']
         ));
     }
 
+    /**
+     * @param AddRoleEvent|RemoveRoleEvent $event
+     */
     public function logRoleChanges(Event $event, string $eventName)
     {
-        $doerIp = $this->getDoerIp();
-        $doerCountry = null;
-        $doerCity = null;
-        if ($this->geoIpInfoProvider && 'CLI' !== $doerIp) {
-            $geoIpInfo = $this->geoIpInfoProvider->getGeoIpInfo($doerIp);
+        $doerInfo = $this->getDoerInfo();
 
-            if ($geoIpInfo) {
-                $doerCountry = $geoIpInfo->getCountry();
-                $doerCity = $geoIpInfo->getCity();
-            }
-        }
-
-        $this->messageBus->dispatch(new CreateSecurityLogs(
+        $this->messageBus->dispatch(new CreateRoleChangeLogs(
             new \DateTime(),
             $eventName,
-            'test messenger', // this should not be done by the symfony event
-            $doerIp,
+            $event->getRole(),
+            $doerInfo['ip'],
             $this->security->getUser(),
             $event->getUsers(),
-            $doerCity,
-            $doerCountry
+            $doerInfo['city'],
+            $doerInfo['country']
         ));
     }
 
@@ -118,17 +103,7 @@ class SecurityLogSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $doerIp = $this->getDoerIp();
-        $doerCountry = null;
-        $doerCity = null;
-        if ($this->geoIpInfoProvider && 'CLI' !== $doerIp) {
-            $geoIpInfo = $this->geoIpInfoProvider->getGeoIpInfo($doerIp);
-
-            if ($geoIpInfo) {
-                $doerCountry = $geoIpInfo->getCountry();
-                $doerCity = $geoIpInfo->getCity();
-            }
-        }
+        $doerInfo = $this->getDoerInfo();
 
         $this->messageBus->dispatch(new CreateSecurityLog(
             new \DateTime(),
@@ -141,12 +116,34 @@ class SecurityLogSubscriber implements EventSubscriberInterface
                 ],
                 'security'
             ), // this should not be done by the symfony event
-            $doerIp,
+            $doerInfo['ip'],
             $this->security->getUser(),
             $event->getTargetUser(),
-            $doerCity,
-            $doerCountry
+            $doerInfo['city'],
+            $doerInfo['country']
         ));
+    }
+
+    private function getDoerInfo(): array
+    {
+        $doerIp = $this->getDoerIp();
+
+        $doerCountry = null;
+        $doerCity = null;
+        if ($this->geoIpInfoProvider && 'CLI' !== $doerIp) {
+            $geoIpInfo = $this->geoIpInfoProvider->getGeoIpInfo($doerIp);
+
+            if ($geoIpInfo) {
+                $doerCountry = $geoIpInfo->getCountry();
+                $doerCity = $geoIpInfo->getCity();
+            }
+        }
+
+        return [
+            'ip' => $doerIp,
+            'city' => $doerCity,
+            'country' => $doerCountry,
+        ];
     }
 
     private function getDoerIp(): string

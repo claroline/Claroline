@@ -9,7 +9,8 @@ services:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
 
-    Claroline\LogBundle\Messenger\CreateSecurityLogsHandler:
+    Claroline\LogBundle\Messenger\CreateRoleChangeLogsHandler:
         tags: [ messenger.message_handler ]
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@translator'
