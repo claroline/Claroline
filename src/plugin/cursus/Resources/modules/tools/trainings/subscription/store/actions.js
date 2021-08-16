@@ -11,13 +11,13 @@ actions.setSubscriptionStatus = (id, status) => (dispatch) => {
   return dispatch({
     [API_REQUEST]: {
       url: url(['apiv2_cursus_subscription_status', {id}], {status}),
-		  request: {
+      request: {
         method: 'PATCH'
-		  },
+      },
       silent: true,
-      success: (data) => {
+      success: () => {
         dispatch(actions.updateSubscriptionStatus({id, status}))
-		  }
+      }
     }
   })
 }

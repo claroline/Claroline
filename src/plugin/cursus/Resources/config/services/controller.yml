@@ -39,6 +39,7 @@ services:
             - '@security.authorization_checker'
             - '@security.token_storage'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CursusBundle\Manager\SessionManager'
 
     Claroline\CursusBundle\Controller\EventPresenceController:
         arguments:

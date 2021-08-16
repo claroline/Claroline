@@ -17,6 +17,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\CursusBundle\Entity\Quota;
 use Claroline\CursusBundle\Entity\Registration\SessionUser;
+use Claroline\CursusBundle\Manager\SessionManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,14 +35,19 @@ class QuotaController extends AbstractCrudController
     /** @var TokenStorageInterface */
     private $tokenStorage;
 
+    /** @var SessionManager */
+    private $sessionManager;
+
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         TokenStorageInterface $tokenStorage,
-        ObjectManager $om
+        ObjectManager $om,
+        SessionManager $sessionManager
     ) {
         $this->authorization = $authorization;
         $this->tokenStorage = $tokenStorage;
         $this->om = $om;
+        $this->sessionManager = $sessionManager;
     }
 
     public function getName()
@@ -104,16 +110,50 @@ class QuotaController extends AbstractCrudController
             return new JsonResponse('The status is missing.', 401);
         }
 
-        $validated = ['pending' => false, 'validated' => true, 'managed' => true, 'refused' => false];
-        $managed = ['pending' => false, 'validated' => false, 'managed' => true, 'refused' => false];
-        $refused = ['pending' => false, 'validated' => false, 'managed' => false, 'refused' => true];
-        if (!isset($validated[$status])) {
+        $STATUS = [
+            'managed' => [
+                'validated' => true,
+                'managed' => true,
+                'refused' => false
+            ],
+            'validated' => [
+                'validated' => true,
+                'managed' => false,
+                'refused' => false
+            ],
+            'refused' => [
+                'validated' => false,
+                'managed' => false,
+                'refused' => true
+            ],
+            'pending' => [
+                'validated' => false,
+                'managed' => false,
+                'refused' => false
+            ]
+        ];
+        if (!isset($STATUS[$status])) {
             return new JsonResponse('The status don\'t have been updated.', 401);
         }
 
-        $sessionUser->setValidated($validated[$status]);
-        $sessionUser->setManaged($managed[$status]);
-        $sessionUser->setRefused($refused[$status]);
+        // Execute action, dispatch event, send mail, etc
+        switch ($status) {
+            case 'validated':
+                $this->sessionManager->addUsers($sessionUser->getSession(), [ $sessionUser->getUser() ]);
+                break;
+            case 'refused':
+                $this->sessionManager->removeUsers($sessionUser->getSession(), [ $sessionUser ]);
+                break;
+            case 'pending':
+                $this->sessionManager->removeUsers($sessionUser->getSession(), [ $sessionUser ]);
+                break;
+        }
+
+        // Set flags in DB
+        $flags = $STATUS[$status];
+
+        $sessionUser->setManaged($flags['managed']);
+        $sessionUser->setRefused($flags['refused']);
 
         $this->om->persist($sessionUser);
         $this->om->flush();
