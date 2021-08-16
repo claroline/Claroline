@@ -96,7 +96,7 @@ class ParametersModal extends Component {
       if (field.type === 'choice') {
         return field.options.choices.reduce((acc, current) => ({...acc, ...{[current.id]: current.label}}), {})
       } else {
-        return {true: 'True', false: 'False'}
+        return {true: trans('true'), false: trans('false')}
       }
     } else {
       return []
@@ -169,12 +169,12 @@ class ParametersModal extends Component {
           }, {
             id: 'conditions',
             icon: 'fa fa-fw fa-cog',
-            title: 'Conditional rendering',
+            title: trans('conditional_rendering'),
             fields: [
               {
                 name: 'conditions.dependencyField',
                 type: 'choice',
-                label: 'Field',
+                label: trans('dependency_field'),
                 onChange: (value) => {
                   this.updateConditions('comparisonValue', null)
                   this.updateConditions('dependencyField', value)
@@ -186,16 +186,16 @@ class ParametersModal extends Component {
               }, {
                 name: 'conditions.validationType',
                 type: 'choice',
-                label: 'Condition',
+                label: trans('validation_type'),
                 onChange: (value) => this.updateConditions('validationType', value),
                 options: {
-                  choices: {equals: 'Equals', 'does-not-equal': 'Does not equal'},
+                  choices: {equals: trans('equals'), 'does-not-equal': trans('does-not-equal')},
                   condensed: true
                 }
               }, {
                 name: 'conditions.comparisonValue',
                 type: 'choice',
-                label: 'Value',
+                label: trans('comparison_value'),
                 onChange: (value) => this.updateConditions('comparisonValue', value),
                 options: {
                   choices: this.getDependencyFieldOptions(),
@@ -244,6 +244,8 @@ class ParametersModal extends Component {
                 options: {
                   help: trans('required_locked_conflict')
                 },
+
+
                 onChange: (value) => this.updateRestrictions('locked', value),
                 linked: [
                   {
