@@ -67,7 +67,9 @@ TrainingsMenu.propTypes = {
   // from menu
   opened: T.bool.isRequired,
   toggle: T.func.isRequired,
-  autoClose: T.func.isRequired
+  autoClose: T.func.isRequired,
+
+  canEdit: T.bool.isRequired
 }
 
 export {
