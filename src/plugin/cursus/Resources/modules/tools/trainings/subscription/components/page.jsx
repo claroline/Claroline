@@ -1,6 +1,7 @@
 import React, {Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
 import isEmpty from 'lodash/isEmpty'
+import get from 'lodash/get'
 import {schemeCategory20c} from 'd3-scale'
 
 import {LINK_BUTTON} from '#/main/app/buttons'
@@ -47,6 +48,7 @@ const SubscriptionPage = (props) => {
             <span className="fa fa-chalkboard-teacher" style={{backgroundColor: schemeCategory20c[1]}} />
             <h1 className="h3">
               <small>{trans('tutors', {}, 'cursus')}</small>
+              {0} / {get(props.quota, 'threshold')} 
             </h1>
           </div>
         </div>

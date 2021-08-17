@@ -29,13 +29,6 @@ const SubscriptionList = (props) =>
         primary: true,
         sortable: false
       }, {
-        name: 'validated',
-        type: 'number',
-        label: trans('validated'),
-        displayed: true,
-        filterable: false,
-        sortable: false
-      }, {
         name: 'threshold',
         type: 'number',
         label: trans('threshold'),
