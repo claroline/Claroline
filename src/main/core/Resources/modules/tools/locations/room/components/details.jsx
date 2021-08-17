@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
-import {LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
+import {LINK_BUTTON} from '#/main/app/buttons'
 import {Routes} from '#/main/app/router/components/routes'
 import {ContentTabs} from '#/main/app/content/components/tabs'
 import {Sections, Section} from '#/main/app/content/components/sections'
@@ -12,7 +12,6 @@ import {DetailsData} from '#/main/app/content/details/containers/data'
 import {Room as RoomTypes} from '#/main/core/tools/locations/prop-types'
 import {RoomPage} from '#/main/core/tools/locations/room/containers/page'
 import {selectors} from '#/main/core/tools/locations/room/store/selectors'
-import {MODAL_ROOM_BOOKING} from '#/main/core/tools/locations/room/modals/booking'
 
 const RoomAbout = (props) =>
   <DetailsData
@@ -39,7 +38,7 @@ const RoomAbout = (props) =>
             name: 'location',
             type: 'location',
             label: trans('location')
-          },
+          }
         ]
       }
     ]}
@@ -51,49 +50,37 @@ const RoomAbout = (props) =>
         className="embedded-list-section"
         icon="fa fa-fw fa-calendar"
         title={trans('bookings', {}, 'location')}
-        actions={[
-          {
-            name: 'book',
-            type: MODAL_BUTTON,
-            icon: 'fa fa-fw fa-plus',
-            label: trans('book', {}, 'actions'),
-            modal: [MODAL_ROOM_BOOKING, {
-              room: props.room,
-              onSave: () => props.invalidateBookings()
-            }]
-          }
-        ]}
       >
         <ListData
-          name={`${selectors.FORM_NAME}.bookings`}
+          name={`${selectors.FORM_NAME}.events`}
           fetch={{
-            url: ['apiv2_booking_room_list_booking', {room: props.room.id}],
+            url: ['apiv2_location_room_list_event', {room: props.room.id}],
             autoload: true
-          }}
-          delete={{
-            url: ['apiv2_booking_room_delete_booking', {room: props.room.id}]
           }}
           definition={[
             {
-              name: 'dates[0]',
-              alias: 'startDate',
-              type: 'date',
-              label: trans('start_date'),
-              options: {time: true},
-              displayed: true
-            }, {
-              name: 'dates[1]',
-              alias: 'endDate',
-              type: 'date',
-              label: trans('end_date'),
-              options: {time: true},
-              displayed: true
+              name: 'name',
+              type: 'string',
+              label: trans('name'),
+              displayed: true,
+              primary: true
             }, {
               name: 'description',
-              type: 'string',
+              type: 'html',
               label: trans('description'),
-              options: {long: true},
               displayed: true
+            }, {
+              name: 'start',
+              type: 'date',
+              label: trans('start_date'),
+              displayed: true,
+              options: {time: true}
+            }, {
+              name: 'end',
+              type: 'date',
+              label: trans('end_date'),
+              displayed: true,
+              options: {time: true}
             }
           ]}
         />
