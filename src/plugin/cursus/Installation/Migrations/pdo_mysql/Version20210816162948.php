@@ -23,10 +23,10 @@ class Version20210816162948 extends AbstractMigration
 
     public function down(Schema $schema): void
     {
-        $this->addSql("
+        $this->addSql('
             ALTER TABLE claro_cursusbundle_course_session 
             DROP quota_days, 
             DROP quota_hours
-        ");
+        ');
     }
 }

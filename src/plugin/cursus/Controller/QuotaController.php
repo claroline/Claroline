@@ -91,26 +91,27 @@ class QuotaController extends AbstractCrudController
 
         return new JsonResponse([
             'total' => count($sessionUsers),
-            'pending' => array_reduce($sessionUsers, function($accum, $subscription) {
+            'pending' => array_reduce($sessionUsers, function ($accum, $subscription) {
                 return $accum + (!$subscription->isValidated() && !$subscription->isManaged() && !$subscription->isRefused() ? 1 : 0);
             }, 0),
-            'refused' => array_reduce($sessionUsers, function($accum, $subscription) {
+            'refused' => array_reduce($sessionUsers, function ($accum, $subscription) {
                 return $accum + (!$subscription->isValidated() && !$subscription->isManaged() && $subscription->isRefused() ? 1 : 0);
             }, 0),
-            'validated' => array_reduce($sessionUsers, function($accum, $subscription) {
+            'validated' => array_reduce($sessionUsers, function ($accum, $subscription) {
                 return $accum + ($subscription->isValidated() && !$subscription->isManaged() && !$subscription->isRefused() ? 1 : 0);
             }, 0),
-            'managed' => array_reduce($sessionUsers, function($accum, $subscription) {
+            'managed' => array_reduce($sessionUsers, function ($accum, $subscription) {
                 return $accum + ($subscription->isValidated() && $subscription->isManaged() && !$subscription->isRefused() ? 1 : 0);
             }, 0),
-            'calculated' => array_reduce($sessionUsers, function($accum, $subscription) {
+            'calculated' => array_reduce($sessionUsers, function ($accum, $subscription) {
                 if (!$subscription->isManaged()) {
                     return $accum;
                 }
 
                 $session = $subscription->getSession();
+
                 return $accum + $session->getQuotaDays() + 1 / 24 * $session->getQuotaHours();
-            }, 0)
+            }, 0),
         ]);
     }
 
@@ -123,7 +124,7 @@ class QuotaController extends AbstractCrudController
         $query = $request->query->all();
         $query['hiddenFilters'] = [
             'organization' => $quota->getOrganization(),
-            'used_by_quotas' => true
+            'used_by_quotas' => true,
         ];
 
         $options = isset($query['options']) ? $query['options'] : [];
@@ -148,23 +149,23 @@ class QuotaController extends AbstractCrudController
             'managed' => [
                 'managed' => true,
                 'validated' => true,
-                'refused' => false
+                'refused' => false,
             ],
             'validated' => [
                 'managed' => false,
                 'validated' => true,
-                'refused' => false
+                'refused' => false,
             ],
             'refused' => [
                 'managed' => false,
                 'validated' => false,
-                'refused' => true
+                'refused' => true,
             ],
             'pending' => [
                 'managed' => false,
                 'validated' => false,
-                'refused' => false
-            ]
+                'refused' => false,
+            ],
         ];
         if (!isset($STATUS[$status])) {
             return new JsonResponse('The status don\'t have been updated.', 401);
@@ -173,13 +174,13 @@ class QuotaController extends AbstractCrudController
         // Execute action, dispatch event, send mail, etc
         switch ($status) {
             case 'validated':
-                $this->sessionManager->addUsers($sessionUser->getSession(), [ $sessionUser->getUser() ]);
+                $this->sessionManager->addUsers($sessionUser->getSession(), [$sessionUser->getUser()]);
                 break;
             case 'refused':
-                $this->sessionManager->removeUsers($sessionUser->getSession(), [ $sessionUser ]);
+                $this->sessionManager->removeUsers($sessionUser->getSession(), [$sessionUser]);
                 break;
             case 'pending':
-                $this->sessionManager->removeUsers($sessionUser->getSession(), [ $sessionUser ]);
+                $this->sessionManager->removeUsers($sessionUser->getSession(), [$sessionUser]);
                 break;
         }
 
