@@ -18,6 +18,14 @@
       "type": "boolean",
       "description": "The session-user confirmed state"
     },
+    "managed": {
+      "type": "boolean",
+      "description": "The session-user managed state"
+    },
+    "refused": {
+      "type": "boolean",
+      "description": "The session-user refused state"
+    },
     "date": {
       "type": "string",
       "description": "The session-user date"

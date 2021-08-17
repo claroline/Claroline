@@ -104,9 +104,13 @@ class QuotaController extends AbstractCrudController
                 return $accum + ($subscription->isValidated() && $subscription->isManaged() && !$subscription->isRefused() ? 1 : 0);
             }, 0),
             'calculated' => array_reduce($sessionUsers, function($accum, $subscription) {
-                //return $accum + ($subscription->validated == false && $subscription->managed == false && $subscription->refused == true ? 1 : 0);
-                return 0;
-            })
+                if (!$subscription->isManaged()) {
+                    return $accum;
+                }
+
+                $session = $subscription->getSession();
+                return $accum + $session->getQuotaDays() + 1 / 24 * $session->getQuotaHours();
+            }, 0)
         ]);
     }
 
@@ -119,6 +123,7 @@ class QuotaController extends AbstractCrudController
         $query = $request->query->all();
         $query['hiddenFilters'] = [
             'organization' => $quota->getOrganization(),
+            'used_by_quotas' => true
         ];
 
         $options = isset($query['options']) ? $query['options'] : [];

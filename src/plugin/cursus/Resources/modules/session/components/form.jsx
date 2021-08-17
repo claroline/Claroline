@@ -190,12 +190,12 @@ const SessionForm = (props) =>
         displayed: param('quotas.enabled'),
         fields: [
           {
-            name: 'usedByQuotas',
+            name: 'quotas.used',
             label: trans('used_by_quotas'),
             type: 'boolean'
           },
           {
-            name: 'quotaDays',
+            name: 'quotas.days',
             type: 'number',
             label: trans('quota_days', {}, 'cursus'),
             options: {
@@ -204,7 +204,7 @@ const SessionForm = (props) =>
             }
           },
           {
-            name: 'quotaHours',
+            name: 'quotas.hours',
             type: 'number',
             label: trans('quota_hours', {}, 'cursus'),
             options: {

@@ -113,10 +113,6 @@ class SessionSerializer
             'workspace' => $session->getWorkspace() ?
                 $this->workspaceSerializer->serialize($session->getWorkspace(), [Options::SERIALIZE_MINIMAL]) :
                 null,
-            'quotas' => [
-                'days' => $session->getQuotaDays(),
-                'hours' => $session->getQuotaHours(),
-            ]
         ];
 
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
@@ -161,6 +157,8 @@ class SessionSerializer
                 ],
                 'quotas' => [
                     'used' => $session->usedByQuotas(),
+                    'days' => $session->getQuotaDays(),
+                    'hours' => $session->getQuotaHours(),
                 ],
                 'participants' => $this->sessionRepo->countParticipants($session),
                 'tutors' => array_map(function (SessionUser $sessionUser) {

@@ -59,14 +59,23 @@ class SessionUserFinder extends AbstractFinder
                     }
                     break;
 
-                case 'year':
+                case 'used_by_quotas':
+                    if (!$sessionJoin) {
+                        $qb->join('obj.session', 's');
+                        $sessionJoin = true;
+                    }
+                    $qb->andWhere("s.usedByQuotas = :{$filterName}");
+                    $qb->setParameter($filterName, $filterValue);
                     break;
 
                 case 'organization':
-                    $qb->join('obj.session', 's');
+                    if (!$sessionJoin) {
+                        $qb->join('obj.session', 's');
+                        $sessionJoin = true;
+                    }
                     $qb->join('s.course', 'c');
                     $qb->join('c.organizations', 'o');
-                    $qb->andWhere('o IN (:organization)');
+                    $qb->andWhere("o IN (:{$filterName})");
                     $qb->setParameter($filterName, $filterValue);
                     break;
 
