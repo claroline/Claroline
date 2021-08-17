@@ -88,7 +88,7 @@ const UserMenu = props =>
           <Button
             type={LINK_BUTTON}
             className="btn btn-block"
-            label={trans('self-register', {}, 'actions')}
+            label={trans('create-account', {}, 'actions')}
             target="/registration"
             onClick={props.closeMenu}
             active={false}
