@@ -79,9 +79,9 @@ const HomeActions = (props) =>
         target: '/login',
         displayed: !props.authenticated
       }, {
-        name: 'self-register',
+        name: 'create-account',
         type: LINK_BUTTON,
-        label: trans('self-register', {}, 'actions'),
+        label: trans('create-account', {}, 'actions'),
         target: '/registration',
         displayed: props.selfRegistration && !props.authenticated && !props.unavailable
       }
