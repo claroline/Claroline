@@ -3,22 +3,23 @@
 namespace Claroline\LogBundle\Messenger\Message;
 
 use Claroline\AppBundle\Messenger\Message\AsyncMessageInterface;
+use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 
-class CreateSecurityLog implements AsyncMessageInterface
+class CreateRoleChangeLogs implements AsyncMessageInterface
 {
     /** @var \DateTimeInterface */
     private $date;
     /** @var string */
     private $action;
-    /** @var string */
-    private $details;
+    /** @var Role */
+    private $role;
     /** @var string */
     private $doerIp;
     /** @var User */
     private $doer;
-    /** @var User */
-    private $target;
+    /** @var array */
+    private $targets;
     /** @var string|null */
     private $doerCountry;
     /** @var string|null */
@@ -27,19 +28,19 @@ class CreateSecurityLog implements AsyncMessageInterface
     public function __construct(
         \DateTimeInterface $date,
         string $action,
-        string $details,
+        Role $role,
         string $doerIp,
         ?User $doer = null,
-        ?User $target = null,
+        array $targets = [],
         ?string $doerCountry = null,
         ?string $doerCity = null
     ) {
         $this->date = $date;
         $this->action = $action;
-        $this->details = $details;
+        $this->role = $role;
         $this->doerIp = $doerIp;
         $this->doer = $doer;
-        $this->target = $target;
+        $this->targets = $targets;
         $this->doerCountry = $doerCountry;
         $this->doerCity = $doerCity;
     }
@@ -54,9 +55,9 @@ class CreateSecurityLog implements AsyncMessageInterface
         return $this->action;
     }
 
-    public function getDetails(): string
+    public function getRole(): Role
     {
-        return $this->details;
+        return $this->role;
     }
 
     public function getDoerIp(): string
@@ -69,9 +70,9 @@ class CreateSecurityLog implements AsyncMessageInterface
         return $this->doer;
     }
 
-    public function getTarget(): ?User
+    public function getTargets(): array
     {
-        return $this->target;
+        return $this->targets;
     }
 
     public function getDoerCountry(): ?string

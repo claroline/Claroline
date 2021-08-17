@@ -32,6 +32,12 @@ class SecurityLogFinder extends AbstractFinder
                     $qb->setParameter('id', $filterValue);
                     break;
 
+                case 'target':
+                    $qb->leftJoin('obj.target', 't');
+                    $qb->andWhere('t.uuid = :id');
+                    $qb->setParameter('id', $filterValue);
+                    break;
+
                 default:
                     $this->setDefaults($qb, $filterName, $filterValue);
             }

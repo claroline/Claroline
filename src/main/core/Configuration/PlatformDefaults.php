@@ -193,6 +193,9 @@ class PlatformDefaults implements ParameterProviderInterface
             'geoip' => [
                 'maxmind_license_key' => null,
             ],
+            'job_queue' => [
+                'enabled' => false,
+            ],
         ];
     }
 }

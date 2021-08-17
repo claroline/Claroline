@@ -166,12 +166,10 @@ class RoleCrud
                 }
             }
 
-            foreach ($users as $user) {
-                if ('add' === $event->getAction()) {
-                    $this->dispatcher->dispatch(SecurityEvents::ADD_ROLE, AddRoleEvent::class, [$user, $event->getObject()]);
-                } elseif ('remove' === $event->getAction()) {
-                    $this->dispatcher->dispatch(SecurityEvents::REMOVE_ROLE, RemoveRoleEvent::class, [$user, $event->getObject()]);
-                }
+            if ('add' === $event->getAction()) {
+                $this->dispatcher->dispatch(SecurityEvents::ADD_ROLE, AddRoleEvent::class, [$users, $event->getObject()]);
+            } elseif ('remove' === $event->getAction()) {
+                $this->dispatcher->dispatch(SecurityEvents::REMOVE_ROLE, RemoveRoleEvent::class, [$users, $event->getObject()]);
             }
         }
     }
