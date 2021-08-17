@@ -1,4 +1,4 @@
-import React, {Fragment} from 'react'
+import React, {Fragment, useEffect} from 'react'
 import {PropTypes as T} from 'prop-types'
 import isEmpty from 'lodash/isEmpty'
 import get from 'lodash/get'
@@ -27,6 +27,12 @@ const SubscriptionPage = (props) => {
     )
   }
 
+  useEffect(() => {
+    if (!isEmpty(props.quota)) {
+      props.getStatistics(props.quota.id)
+    }
+  }, [props.quota])
+
   return (
     <PageFull
       showBreadcrumb={showToolBreadcrumb(props.currentContext.type, props.currentContext.data)}
@@ -47,8 +53,43 @@ const SubscriptionPage = (props) => {
           <div className="analytics-card">
             <span className="fa fa-chalkboard-teacher" style={{backgroundColor: schemeCategory20c[1]}} />
             <h1 className="h3">
-              <small>{trans('tutors', {}, 'cursus')}</small>
-              {0} / {get(props.quota, 'threshold')} 
+              <small>{trans('total', {}, 'cursus')}</small>
+              {props.statistics.total}
+            </h1>
+          </div>
+          <div className="analytics-card">
+            <span className="fa fa-pause" style={{backgroundColor: schemeCategory20c[1]}} />
+            <h1 className="h3">
+              <small>{trans('pending', {}, 'cursus')}</small>
+              {props.statistics.pending}
+            </h1>
+          </div>
+          <div className="analytics-card">
+            <span className="fa fa-times" style={{backgroundColor: schemeCategory20c[1]}} />
+            <h1 className="h3">
+              <small>{trans('refused', {}, 'cursus')}</small>
+              {props.statistics.refused}
+            </h1>
+          </div>
+          <div className="analytics-card">
+            <span className="fa fa-check" style={{backgroundColor: schemeCategory20c[1]}} />
+            <h1 className="h3">
+              <small>{trans('validated', {}, 'cursus')}</small>
+              {props.statistics.validated}
+            </h1>
+          </div>
+          <div className="analytics-card">
+            <span className="fa fa-check-double" style={{backgroundColor: schemeCategory20c[1]}} />
+            <h1 className="h3">
+              <small>{trans('managed', {}, 'cursus')}</small>
+              {props.statistics.managed}
+            </h1>
+          </div>
+          <div className="analytics-card">
+            <span className="fa fa-chart-pie" style={{backgroundColor: schemeCategory20c[1]}} />
+            <h1 className="h3">
+              <small>{trans('quota', {}, 'cursus')}</small>
+              {props.statistics.calculated} / {get(props.quota, 'threshold')} 
             </h1>
           </div>
         </div>
@@ -99,6 +140,7 @@ const SubscriptionPage = (props) => {
                         url={['apiv2_cursus_quota_list_subscriptions', {id: props.quota.id}]}
                         path={props.path}
                         setSubscriptionStatus={props.setSubscriptionStatus}
+                        quota={props.quota}
                       />
                     )
                   }
@@ -123,6 +165,15 @@ SubscriptionPage.propTypes = {
   quota: T.shape(
     QuotaTypes.propTypes
   ),
+  statistics: T.shape({
+    total: T.number,
+    pending: T.number,
+    refused: T.number,
+    validated: T.number,
+    managed: T.number,
+    calculated: T.number
+  }).isRequired,
+  getStatistics: T.func.isRequired,
   setSubscriptionStatus: T.func.isRequired
 }
 

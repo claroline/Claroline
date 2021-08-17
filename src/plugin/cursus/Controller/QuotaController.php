@@ -82,6 +82,35 @@ class QuotaController extends AbstractCrudController
     }
 
     /**
+     * @Route("/{id}/statistics", name="apiv2_cursus_quota_statistics", methods={"GET"})
+     * @EXT\ParamConverter("quota", class="Claroline\CursusBundle\Entity\Quota", options={"mapping": {"id": "uuid"}})
+     */
+    public function getStatisticsAction(Quota $quota): JsonResponse
+    {
+        $sessionUsers = $this->om->getRepository(SessionUser::class)->findByQuota($quota);
+
+        return new JsonResponse([
+            'total' => count($sessionUsers),
+            'pending' => array_reduce($sessionUsers, function($accum, $subscription) {
+                return $accum + (!$subscription->isValidated() && !$subscription->isManaged() && !$subscription->isRefused() ? 1 : 0);
+            }, 0),
+            'refused' => array_reduce($sessionUsers, function($accum, $subscription) {
+                return $accum + (!$subscription->isValidated() && !$subscription->isManaged() && $subscription->isRefused() ? 1 : 0);
+            }, 0),
+            'validated' => array_reduce($sessionUsers, function($accum, $subscription) {
+                return $accum + ($subscription->isValidated() && !$subscription->isManaged() && !$subscription->isRefused() ? 1 : 0);
+            }, 0),
+            'managed' => array_reduce($sessionUsers, function($accum, $subscription) {
+                return $accum + ($subscription->isValidated() && $subscription->isManaged() && !$subscription->isRefused() ? 1 : 0);
+            }, 0),
+            'calculated' => array_reduce($sessionUsers, function($accum, $subscription) {
+                //return $accum + ($subscription->validated == false && $subscription->managed == false && $subscription->refused == true ? 1 : 0);
+                return 0;
+            })
+        ]);
+    }
+
+    /**
      * @Route("/{id}/subscriptions", name="apiv2_cursus_quota_list_subscriptions", methods={"GET"})
      * @EXT\ParamConverter("quota", class="Claroline\CursusBundle\Entity\Quota", options={"mapping": {"id": "uuid"}})
      */
@@ -100,7 +129,7 @@ class QuotaController extends AbstractCrudController
     }
 
     /**
-     * @Route("subscriptions/{id}", name="apiv2_cursus_subscription_status", methods={"PATCH"})
+     * @Route("/subscriptions/{id}", name="apiv2_cursus_subscription_status", methods={"PATCH"})
      * @EXT\ParamConverter("sessionUser", class="Claroline\CursusBundle\Entity\Registration\SessionUser", options={"mapping": {"id": "uuid"}})
      */
     public function setSubscriptionStatus(SessionUser $sessionUser, Request $request): JsonResponse
@@ -112,23 +141,23 @@ class QuotaController extends AbstractCrudController
 
         $STATUS = [
             'managed' => [
-                'validated' => true,
                 'managed' => true,
+                'validated' => true,
                 'refused' => false
             ],
             'validated' => [
-                'validated' => true,
                 'managed' => false,
+                'validated' => true,
                 'refused' => false
             ],
             'refused' => [
-                'validated' => false,
                 'managed' => false,
+                'validated' => false,
                 'refused' => true
             ],
             'pending' => [
-                'validated' => false,
                 'managed' => false,
+                'validated' => false,
                 'refused' => false
             ]
         ];
@@ -153,6 +182,7 @@ class QuotaController extends AbstractCrudController
         $flags = $STATUS[$status];
 
         $sessionUser->setManaged($flags['managed']);
+        $sessionUser->setValidated($flags['validated']);
         $sessionUser->setRefused($flags['refused']);
 
         $this->om->persist($sessionUser);

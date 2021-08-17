@@ -15,7 +15,7 @@ use Claroline\CursusBundle\Entity\Session;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\CursusBundle\Repository\SessionUserRepository")
  * @ORM\Table(
  *     name="claro_cursusbundle_course_session_user",
  *     uniqueConstraints={
