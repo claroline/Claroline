@@ -16,7 +16,7 @@ const RoomPage = connect(
   }),
   (dispatch) => ({
     invalidateBookings() {
-      dispatch(listActions.invalidateData(selectors.FORM_NAME+'.bookings'))
+      dispatch(listActions.invalidateData(selectors.FORM_NAME+'.events'))
     }
   })
 )(RoomPageComponent)
