@@ -86,7 +86,7 @@ const SubscriptionPage = (props) => {
             <span className="fa fa-chart-pie" style={{backgroundColor: schemeCategory20c[1]}} />
             <h1 className="h3">
               <small>{trans('quota', {}, 'cursus')}</small>
-              {props.statistics.calculated} / {get(props.quota, 'threshold')} 
+              {props.statistics.calculated.toFixed(2)} / {get(props.quota, 'threshold')} 
             </h1>
           </div>
         </div>
