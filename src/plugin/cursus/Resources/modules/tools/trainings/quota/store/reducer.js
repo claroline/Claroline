@@ -8,13 +8,13 @@ import {reducer as subscriptionReducer} from '#/plugin/cursus/tools/trainings/su
 
 export const reducer = combineReducers({
   quotas: makeListReducer(selectors.LIST_NAME, {}, {
-    	invalidated: makeReducer(false, {
-      		[FORM_SUBMIT_SUCCESS + '/' + selectors.FORM_NAME]: () => true
-    	})
-  	}),
-  	quotaForm: makeFormReducer(selectors.FORM_NAME),
-  	quota: makeReducer(null, {
-    	[LOAD_QUOTA]: (state, action) => action.quota
-  	}),
-  	subscription: subscriptionReducer
+    invalidated: makeReducer(false, {
+      [FORM_SUBMIT_SUCCESS + '/' + selectors.FORM_NAME]: () => true
+    })
+  }),
+  quotaForm: makeFormReducer(selectors.FORM_NAME),
+  quota: makeReducer(null, {
+    [LOAD_QUOTA]: (state, action) => action.quota
+  }),
+  subscription: subscriptionReducer
 })

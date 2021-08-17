@@ -96,6 +96,10 @@ const SubscriptionDetail = (props) => (
 )
 
 SubscriptionDetail.propTypes = {
+  currentContext: T.shape({
+    type: T.oneOf(['desktop']),
+    data: T.object
+  }).isRequired,
   path: T.string.isRequired,
   quota: T.shape(
     QuotaTypes.propTypes

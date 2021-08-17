@@ -15,7 +15,7 @@ const QuotaMain = (props) =>
         path: '/',
         exact: true,
         render: () => (
-			    <QuotaList path={`${props.path}/quota`} />
+          <QuotaList path={`${props.path}/quota`} />
         )
       }, {
         path: '/new',

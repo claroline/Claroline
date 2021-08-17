@@ -6,20 +6,21 @@ import {QuotaMain as QuotaComponent} from '#/plugin/cursus/tools/trainings/quota
 
 const QuotaMain = withReducer(selectors.STORE_NAME, reducer)(
   connect(
-    	(state) => ({
-      		path: toolSelectors.path(state)
+    (state) => ({
+      path: toolSelectors.path(state)
     }),
-    	(dispatch) => ({
-      		open(id) {
-        		dispatch(actions.open(id))
-      		},
-      		openForm(id, defaultProps) {
-        		dispatch(actions.openForm(id, defaultProps))
-      		}
-    	})
+    (dispatch) => ({
+      open(id) {
+        dispatch(actions.open(id))
+      },
+      openForm(id, defaultProps) {
+        dispatch(actions.openForm(id, defaultProps))
+      }
+    })
   )(QuotaComponent)
 )
-
+		
 export {
   QuotaMain
 }
+		

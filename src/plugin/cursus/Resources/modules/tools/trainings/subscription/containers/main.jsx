@@ -6,17 +6,18 @@ import {SubscriptionMain as SubscriptionComponent} from '#/plugin/cursus/tools/t
 
 const SubscriptionMain = withReducer(selectors.STORE_NAME, reducer)(
   connect(
-    	(state) => ({
-      		path: toolSelectors.path(state)
+    (state) => ({
+      path: toolSelectors.path(state)
     }),
-    	(dispatch) => ({
-      		open(id) {
-       			dispatch(actions.open(id))
-      		}
+    (dispatch) => ({
+      open(id) {
+        dispatch(actions.open(id))
+      }
     })
   )(SubscriptionComponent)
 )
-
+		
 export {
   SubscriptionMain
 }
+		

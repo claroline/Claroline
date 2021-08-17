@@ -14,13 +14,13 @@ const SubscriptionMain = (props) =>
         path: '/',
         exact: true,
         render: () => (
-			    <SubscriptionList path={`${props.path}/subscription`} />
+          <SubscriptionList path={`${props.path}/subscription`} />
         )
       }, {
         path: '/:id',
         onEnter: (params = {}) => props.open(params.id),
         render: () => (
-			    <SubscriptionPage path={`${props.path}/subscription`} />
+          <SubscriptionPage path={`${props.path}/subscription`} />
         )
       }
     ]}
