@@ -2,6 +2,7 @@ import {trans} from '#/main/app/intl/translation'
 
 import {WorkspacesDisplay} from '#/main/core/data/types/workspaces/components/display'
 import {WorkspacesInput} from '#/main/core/data/types/workspaces/components/input'
+import {WorkspacesFilter} from '#/main/core/data/types/workspaces/components/filter'
 
 const dataType = {
   name: 'workspaces',
@@ -12,7 +13,8 @@ const dataType = {
   },
   components: {
     details: WorkspacesDisplay,
-    input: WorkspacesInput
+    input: WorkspacesInput,
+    search: WorkspacesFilter
   }
 }
 

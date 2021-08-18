@@ -11,8 +11,10 @@
 
 namespace Claroline\CoreBundle\Controller\APINew\Workspace;
 
+use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\AppBundle\Controller\AbstractSecurityController;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
@@ -21,6 +23,7 @@ use Claroline\CoreBundle\Entity\Workspace\Requirements;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\Workspace\EvaluationManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -30,12 +33,14 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 /**
  * @Route("/workspace")
  */
-class EvaluationController
+class EvaluationController extends AbstractSecurityController
 {
     /** @var AuthorizationCheckerInterface */
     private $authorization;
     /** @var ObjectManager */
     private $om;
+    /** @var Crud */
+    private $crud;
     /** @var FinderProvider */
     private $finder;
     /** @var SerializerProvider */
@@ -46,22 +51,65 @@ class EvaluationController
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         ObjectManager $om,
+        Crud $crud,
         FinderProvider $finder,
         SerializerProvider $serializer,
         EvaluationManager $manager
     ) {
         $this->authorization = $authorization;
         $this->om = $om;
+        $this->crud = $crud;
         $this->finder = $finder;
         $this->serializer = $serializer;
         $this->manager = $manager;
     }
 
     /**
+     * @Route("/evaluations", name="apiv2_workspace_evaluations_all", methods={"GET"})
+     * @EXT\ParamConverter("workspace", options={"mapping": {"workspace": "uuid"}})
+     */
+    public function listAction(Request $request): JsonResponse
+    {
+        $this->canOpenAdminTool('dashboard');
+
+        return new JsonResponse(
+            $this->crud->list(Evaluation::class, $request->query->all())
+        );
+    }
+
+    /**
+     * @Route("/evaluations/csv", name="apiv2_workspace_evaluation_csv", methods={"GET"})
+     * @EXT\ParamConverter("workspace", options={"mapping": {"workspace": "uuid"}})
+     */
+    public function exportAction(Request $request): BinaryFileResponse
+    {
+        $this->canOpenAdminTool('dashboard');
+
+        $query = $request->query->all();
+        // remove pagination if any
+        $query['page'] = 0;
+        $query['limit'] = -1;
+
+        $csvFilename = $this->crud->csv(Evaluation::class, [
+            'workspace.name',
+            'user.lastName',
+            'user.firstName',
+            'date',
+            'status',
+            'score',
+        ], $query);
+
+        return new BinaryFileResponse($csvFilename, 200, [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename=workspace-evaluations.csv',
+        ]);
+    }
+
+    /**
      * @Route("/{workspace}/evaluations", name="apiv2_workspace_evaluations_list", methods={"GET"})
      * @EXT\ParamConverter("workspace", options={"mapping": {"workspace": "uuid"}})
      */
-    public function listAction(Workspace $workspace, Request $request): JsonResponse
+    public function listByWorkspaceAction(Workspace $workspace, Request $request): JsonResponse
     {
         if (!$this->authorization->isGranted(['dashboard', 'OPEN'], $workspace)) {
             throw new AccessDeniedException();
