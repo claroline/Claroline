@@ -65,7 +65,7 @@ trait HasUsersTrait
      */
     public function addUsersAction($id, $class, Request $request)
     {
-        $object = $this->find($class, $id);
+        $object = $this->crud->get($class, $id);
         $users = $this->decodeIdsString($request, 'Claroline\CoreBundle\Entity\User');
         $this->crud->patch($object, 'user', Crud::COLLECTION_ADD, $users);
 
@@ -96,7 +96,7 @@ trait HasUsersTrait
      */
     public function removeUsersAction($id, $class, Request $request)
     {
-        $object = $this->find($class, $id);
+        $object = $this->crud->get($class, $id);
         $users = $this->decodeIdsString($request, 'Claroline\CoreBundle\Entity\User');
         $this->crud->patch($object, 'user', Crud::COLLECTION_REMOVE, $users);
 
