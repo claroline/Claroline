@@ -65,7 +65,7 @@ trait HasWorkspacesTrait
      */
     public function addWorkspacesAction($id, $class, Request $request)
     {
-        $object = $this->find($class, $id);
+        $object = $this->crud->get($class, $id);
         $workspaces = $this->decodeIdsString($request, 'Claroline\CoreBundle\Entity\Workspace\Workspace');
         $this->crud->patch($object, 'workspace', Crud::COLLECTION_ADD, $workspaces);
 
@@ -96,7 +96,7 @@ trait HasWorkspacesTrait
      */
     public function removeWorkspacesAction($id, $class, Request $request)
     {
-        $object = $this->find($class, $id);
+        $object = $this->crud->get($class, $id);
         $workspaces = $this->decodeIdsString($request, 'Claroline\CoreBundle\Entity\Workspace\Workspace');
         $this->crud->patch($object, 'workspace', Crud::COLLECTION_REMOVE, $workspaces);
 

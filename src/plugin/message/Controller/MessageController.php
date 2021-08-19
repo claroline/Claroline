@@ -263,7 +263,7 @@ class MessageController extends AbstractCrudController
      */
     public function getRootAction($id): JsonResponse
     {
-        $message = $this->find($this->getClass(), $id);
+        $message = $this->crud->get($this->getClass(), $id);
         $rootId = $message->getRoot();
         $root = $this->om->getRepository($this->getClass())->find($rootId);
 
@@ -275,7 +275,7 @@ class MessageController extends AbstractCrudController
         $currentUser = $this->tokenStorage->getToken()->getUser();
 
         $query = $request->query->all();
-        $object = $this->find($class, $id);
+        $object = $this->crud->get($class, $id);
         $um = $this->om->getRepository(UserMessage::class)->findOneBy(['message' => $object, 'user' => $currentUser]);
         $this->crud->replace($um, 'isRead', true);
         $options = $this->options['get'];

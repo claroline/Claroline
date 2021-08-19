@@ -73,7 +73,7 @@ trait HasRolesTrait
      */
     public function addRolesAction($id, $class, Request $request)
     {
-        $object = $this->find($class, $id);
+        $object = $this->crud->get($class, $id);
         $roles = $this->decodeIdsString($request, Role::class);
         $this->crud->patch($object, 'role', Crud::COLLECTION_ADD, $roles);
 
@@ -102,7 +102,7 @@ trait HasRolesTrait
      */
     public function removeRolesAction($id, $class, Request $request)
     {
-        $object = $this->find($class, $id);
+        $object = $this->crud->get($class, $id);
         $roles = $this->decodeIdsString($request, Role::class);
         $this->crud->patch($object, 'role', Crud::COLLECTION_REMOVE, $roles);
 
