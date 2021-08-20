@@ -8,7 +8,6 @@ import {DetailsData} from '#/main/app/content/details/components/data'
 
 import classes from 'classnames'
 import {constants} from '#/plugin/cursus/constants'
-import {getSubscriptionStatus} from '#/plugin/cursus/utils'
 import {Subscription as SubscriptionTypes} from '#/plugin/cursus/prop-types'
 
 const SubscriptionModal = props =>
@@ -42,8 +41,8 @@ const SubscriptionModal = props =>
                 choices: constants.SUBSCRIPTION_STATUSES
               },
               render: (row) => (
-                <span className={classes('label', `label-${constants.SUBSCRIPTION_STATUS_COLORS[getSubscriptionStatus(row)]}`)}>
-                  {getSubscriptionStatus(row)}
+                <span className={classes('label', `label-${constants.SUBSCRIPTION_STATUS_COLORS[row.status]}`)}>
+                  {constants.SUBSCRIPTION_STATUSES[row.status]}
                 </span>
               )
             }
