@@ -1635,5 +1635,6 @@
     "online": "Online",
     "irl": "Face-to-face",
     "add_room": "Add a room",
-    "security": "Security"
+    "security": "Security",
+    "both": "Both"
 }
