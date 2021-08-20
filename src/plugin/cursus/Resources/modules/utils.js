@@ -45,20 +45,9 @@ function isFull(session) {
   return false
 }
 
-function getSubscriptionStatus(subscription) {
-  if (subscription.validated) {
-    return subscription.managed ? 'managed' : 'validated'
-  }
-  if (subscription.refused) {
-    return 'refused'
-  }
-  return 'pending'
-}
-
 export {
   getInfo,
   isFull,
   isFullyRegistered,
-  isRegistered,
-  getSubscriptionStatus
+  isRegistered
 }

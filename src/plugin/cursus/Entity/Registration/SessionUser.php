@@ -25,6 +25,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class SessionUser extends AbstractUserRegistration
 {
+    const STATUS_PENDING = 0;
+    const STATUS_REFUSED = 1;
+    const STATUS_VALIDATED = 2;
+    const STATUS_MANAGED = 3;
+
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CursusBundle\Entity\Session")
      * @ORM\JoinColumn(name="session_id", nullable=false, onDelete="CASCADE")
@@ -36,20 +41,11 @@ class SessionUser extends AbstractUserRegistration
     /**
      * The registration has to be managed by another service.
      *
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="integer")
      *
-     * @var bool
+     * @var int
      */
-    protected $managed = false;
-
-    /**
-     * The registration has to be refused by human resource.
-     *
-     * @ORM\Column(type="boolean")
-     *
-     * @var bool
-     */
-    protected $refused = false;
+    protected $status = self::STATUS_PENDING;
 
     public function getSession(): Session
     {
@@ -61,23 +57,13 @@ class SessionUser extends AbstractUserRegistration
         $this->session = $session;
     }
 
-    public function isManaged(): bool
+    public function getStatus(): int
     {
-        return $this->managed;
+        return $this->status;
     }
 
-    public function setManaged(bool $managed)
+    public function setStatus(int $status)
     {
-        $this->managed = $managed;
-    }
-
-    public function isRefused(): bool
-    {
-        return $this->refused;
-    }
-
-    public function setRefused(bool $refused)
-    {
-        $this->refused = $refused;
+        $this->status = $status;
     }
 }

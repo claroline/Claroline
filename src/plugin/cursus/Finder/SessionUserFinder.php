@@ -29,34 +29,8 @@ class SessionUserFinder extends AbstractFinder
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
                 case 'status':
-                    $status = [
-                        'managed' => [
-                            'validated' => '1',
-                            'managed' => '1',
-                            'refused' => '0',
-                        ],
-                        'validated' => [
-                            'validated' => '1',
-                            'managed' => '0',
-                            'refused' => '0',
-                        ],
-                        'refused' => [
-                            'validated' => '0',
-                            'managed' => '0',
-                            'refused' => '1',
-                        ],
-                        'pending' => [
-                            'validated' => '0',
-                            'managed' => '0',
-                            'refused' => '0',
-                        ],
-                    ];
-                    if (isset($status[$filterValue])) {
-                        $qb->andWhere('(obj.validated = :validated)');
-                        $qb->andWhere('(obj.managed = :managed)');
-                        $qb->andWhere('(obj.refused = :refused)');
-                        $qb->setParameters($status[$filterValue]);
-                    }
+                    $qb->andWhere("(obj.status = :{$filterName})");
+                    $qb->setParameter($filterName, $filterValue);
                     break;
 
                 case 'used_by_quotas':

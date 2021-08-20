@@ -92,25 +92,22 @@ class QuotaController extends AbstractCrudController
         return new JsonResponse([
             'total' => count($sessionUsers),
             'pending' => array_reduce($sessionUsers, function ($accum, $subscription) {
-                return $accum + (!$subscription->isValidated() && !$subscription->isManaged() && !$subscription->isRefused() ? 1 : 0);
+                return $accum + ($subscription->getStatus() == SessionUser::STATUS_PENDING ? 1 : 0);
             }, 0),
             'refused' => array_reduce($sessionUsers, function ($accum, $subscription) {
-                return $accum + (!$subscription->isValidated() && !$subscription->isManaged() && $subscription->isRefused() ? 1 : 0);
+                return $accum + ($subscription->getStatus() == SessionUser::STATUS_REFUSED ? 1 : 0);
             }, 0),
             'validated' => array_reduce($sessionUsers, function ($accum, $subscription) {
-                return $accum + ($subscription->isValidated() && !$subscription->isManaged() && !$subscription->isRefused() ? 1 : 0);
+                return $accum + ($subscription->getStatus() == SessionUser::STATUS_VALIDATED ? 1 : 0);
             }, 0),
             'managed' => array_reduce($sessionUsers, function ($accum, $subscription) {
-                return $accum + ($subscription->isValidated() && $subscription->isManaged() && !$subscription->isRefused() ? 1 : 0);
+                return $accum + ($subscription->getStatus() == SessionUser::STATUS_MANAGED ? 1 : 0);
             }, 0),
             'calculated' => array_reduce($sessionUsers, function ($accum, $subscription) {
-                if (!$subscription->isManaged()) {
+                if ($subscription->getStatus() != SessionUser::STATUS_MANAGED) {
                     return $accum;
                 }
-
-                $session = $subscription->getSession();
-
-                return $accum + $session->getQuotaDays();
+                return $accum + $subscription->getSession()->getQuotaDays();
             }, 0),
         ]);
     }
@@ -141,56 +138,27 @@ class QuotaController extends AbstractCrudController
     public function setSubscriptionStatus(SessionUser $sessionUser, Request $request): JsonResponse
     {
         $status = $request->query->get('status', null);
-        if (!$status) {
+        if ($status == null) {
             return new JsonResponse('The status is missing.', 401);
         }
 
-        $STATUS = [
-            'managed' => [
-                'managed' => true,
-                'validated' => true,
-                'refused' => false,
-            ],
-            'validated' => [
-                'managed' => false,
-                'validated' => true,
-                'refused' => false,
-            ],
-            'refused' => [
-                'managed' => false,
-                'validated' => false,
-                'refused' => true,
-            ],
-            'pending' => [
-                'managed' => false,
-                'validated' => false,
-                'refused' => false,
-            ],
-        ];
-        if (!isset($STATUS[$status])) {
+        if ($status < SessionUser::STATUS_PENDING || $status > SessionUser::STATUS_MANAGED) {
             return new JsonResponse('The status don\'t have been updated.', 401);
         }
 
         // Execute action, dispatch event, send mail, etc
         switch ($status) {
-            case 'validated':
+            case SessionUser::STATUS_VALIDATED:
+            case SessionUser::STATUS_MANAGED:
                 $this->sessionManager->addUsers($sessionUser->getSession(), [$sessionUser->getUser()]);
                 break;
-            case 'refused':
-                $this->sessionManager->removeUsers($sessionUser->getSession(), [$sessionUser]);
-                break;
-            case 'pending':
+            case SessionUser::STATUS_PENDING:
+            case SessionUser::STATUS_REFUSED:
                 $this->sessionManager->removeUsers($sessionUser->getSession(), [$sessionUser]);
                 break;
         }
 
-        // Set flags in DB
-        $flags = $STATUS[$status];
-
-        $sessionUser->setManaged($flags['managed']);
-        $sessionUser->setValidated($flags['validated']);
-        $sessionUser->setRefused($flags['refused']);
-
+        $sessionUser->setStatus($status);
         $this->om->persist($sessionUser);
         $this->om->flush();
 

@@ -3,7 +3,6 @@ import {PropTypes as T} from 'prop-types'
 
 import classes from 'classnames'
 import {constants} from '#/plugin/cursus/constants'
-import {getSubscriptionStatus} from '#/plugin/cursus/utils'
 import {trans} from '#/main/app/intl/translation'
 import {MODAL_SUBSCRIPTION_STATUS} from '#/plugin/cursus/subscription/modals/status'
 import {MODAL_BUTTON} from '#/main/app/buttons'
@@ -102,8 +101,8 @@ const SubscriptionAll = (props) =>
           choices: constants.SUBSCRIPTION_STATUSES
         },
         render: (row) => (
-          <span className={classes('label', `label-${constants.SUBSCRIPTION_STATUS_COLORS[getSubscriptionStatus(row)]}`)}>
-            {getSubscriptionStatus(row)}
+          <span className={classes('label', `label-${constants.SUBSCRIPTION_STATUS_COLORS[row.status]}`)}>
+            {constants.SUBSCRIPTION_STATUSES[row.status]}
           </span>
         )
       }
