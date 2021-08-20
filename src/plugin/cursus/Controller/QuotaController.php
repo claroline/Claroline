@@ -110,7 +110,7 @@ class QuotaController extends AbstractCrudController
 
                 $session = $subscription->getSession();
 
-                return $accum + $session->getQuotaDays() + 1 / 24 * $session->getQuotaHours();
+                return $accum + $session->getQuotaDays();
             }, 0),
         ]);
     }

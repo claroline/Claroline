@@ -81,11 +81,6 @@ class Session extends AbstractTraining implements IdentifiableInterface
     protected $quotaDays;
 
     /**
-     * @ORM\Column(name="quota_hours", type="float", nullable=true, options={"default" = 0})
-     */
-    protected $quotaHours;
-
-    /**
      * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode", orphanRemoval=true)
      * @ORM\JoinTable(name="claro_cursusbundle_course_session_resources",
      *      joinColumns={@ORM\JoinColumn(name="resource_id", referencedColumnName="id")},
@@ -204,16 +199,6 @@ class Session extends AbstractTraining implements IdentifiableInterface
     public function setQuotaDays($quotaDays)
     {
         $this->quotaDays = $quotaDays;
-    }
-
-    public function getQuotaHours()
-    {
-        return $this->quotaHours;
-    }
-
-    public function setQuotaHours($quotaHours)
-    {
-        $this->quotaHours = $quotaHours;
     }
 
     public function isTerminated()
