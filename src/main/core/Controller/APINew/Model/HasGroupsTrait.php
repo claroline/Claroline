@@ -65,7 +65,7 @@ trait HasGroupsTrait
      */
     public function addGroupsAction($id, $class, Request $request)
     {
-        $object = $this->find($class, $id);
+        $object = $this->crud->get($class, $id);
         $groups = $this->decodeIdsString($request, 'Claroline\CoreBundle\Entity\Group');
         $this->crud->patch($object, 'group', Crud::COLLECTION_ADD, $groups);
 
@@ -96,7 +96,7 @@ trait HasGroupsTrait
      */
     public function removeGroupsAction($id, $class, Request $request)
     {
-        $object = $this->find($class, $id);
+        $object = $this->crud->get($class, $id);
         $groups = $this->decodeIdsString($request, 'Claroline\CoreBundle\Entity\Group');
         $this->crud->patch($object, 'group', Crud::COLLECTION_REMOVE, $groups);
 

@@ -73,7 +73,7 @@ class RegistrationMain extends Component {
       <FormStepper
         submit={{
           type: CALLBACK_BUTTON,
-          label: trans('self-register', {}, 'actions'),
+          label: trans('create-account', {}, 'actions'),
           confirm: {
             title: trans('registration'),
             message: trans('register_confirm_message'),

@@ -12,33 +12,26 @@
 namespace Claroline\CoreBundle\Event\Security;
 
 use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Entity\User;
 use Symfony\Contracts\EventDispatcher\Event;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class RemoveRoleEvent extends Event
 {
-    private $user;
+    private $users;
     private $role;
 
-    public function __construct(User $user, Role $role)
+    public function __construct(array $users, Role $role)
     {
-        $this->user = $user;
+        $this->users = $users;
         $this->role = $role;
     }
 
-    public function getUser(): User
+    public function getUsers(): array
     {
-        return $this->user;
+        return $this->users;
     }
 
     public function getRole()
     {
         return $this->role;
-    }
-
-    public function getMessage(TranslatorInterface $translator)
-    {
-        return $translator->trans('removeRole', ['username' => $this->user->getUsername(), 'role' => $this->role->getName()], 'security');
     }
 }

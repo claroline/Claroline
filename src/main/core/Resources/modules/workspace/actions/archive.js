@@ -12,7 +12,7 @@ import {trans, transChoice} from '#/main/app/intl/translation'
  * @param {object} refresher  - an object containing methods to update context in response to action (eg. add, update, delete).
  */
 export default (workspaces, refresher) => {
-  const processable = workspaces.filter(workspace => hasPermission('administrate', workspace) && !get(workspace, 'meta.model') && !get(workspace, 'meta.archived'))
+  const processable = workspaces.filter(workspace => hasPermission('administrate', workspace) && !get(workspace, 'meta.archived'))
 
   return {
     name: 'archive',

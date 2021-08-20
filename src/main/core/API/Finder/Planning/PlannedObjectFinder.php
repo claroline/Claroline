@@ -69,6 +69,12 @@ class PlannedObjectFinder extends AbstractFinder
                     $qb->setParameter($filterName, $filterValue);
                     break;
 
+                case 'room':
+                    $qb->join('obj.room', 'r');
+                    $qb->andWhere("r.uuid = :{$filterName}");
+                    $qb->setParameter($filterName, $filterValue);
+                    break;
+
                 default:
                     $this->setDefaults($qb, $filterName, $filterValue);
            }

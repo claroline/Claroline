@@ -89,26 +89,26 @@ class OrganizationCrud
                     foreach ($users as $user) {
                         $user->addRole($roleAdminOrga);
                         $this->om->persist($user);
-                        $this->dispatcher->dispatch(SecurityEvents::ADD_ROLE, AddRoleEvent::class, [$user, $roleAdminOrga]);
                     }
                 } else {
                     $users->addRole($roleAdminOrga);
                     $this->om->persist($users);
-                    $this->dispatcher->dispatch(SecurityEvents::ADD_ROLE, AddRoleEvent::class, [$users, $roleAdminOrga]);
                 }
+
+                $this->dispatcher->dispatch(SecurityEvents::ADD_ROLE, AddRoleEvent::class, [$users, $roleAdminOrga]);
             } elseif (Crud::COLLECTION_REMOVE === $action) {
                 if (is_array($users)) {
                     /** @var User $user */
                     foreach ($users as $user) {
                         $user->removeRole($roleAdminOrga);
                         $this->om->persist($user);
-                        $this->dispatcher->dispatch(SecurityEvents::REMOVE_ROLE, RemoveRoleEvent::class, [$user, $roleAdminOrga]);
                     }
                 } else {
                     $users->removeRole($roleAdminOrga);
                     $this->om->persist($users);
-                    $this->dispatcher->dispatch(SecurityEvents::REMOVE_ROLE, RemoveRoleEvent::class, [$users, $roleAdminOrga]);
                 }
+
+                $this->dispatcher->dispatch(SecurityEvents::REMOVE_ROLE, RemoveRoleEvent::class, [$users, $roleAdminOrga]);
             }
 
             $this->om->flush();

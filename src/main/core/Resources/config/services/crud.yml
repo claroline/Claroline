@@ -72,6 +72,7 @@ services:
         arguments:
             - '@security.token_storage'
             - '@Claroline\AuthenticationBundle\Security\Authentication\Authenticator'
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
             - '@Claroline\CoreBundle\Manager\RoleManager'
         tags:
             - { name: kernel.event_listener, event: crud_pre_create_object_claroline_corebundle_entity_group, method: preCreate }

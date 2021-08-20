@@ -37,6 +37,11 @@ class EvaluationFinder extends AbstractFinder
                     $qb->andWhere("w.uuid = :{$filterName}");
                     $qb->setParameter($filterName, $filterValue);
                     break;
+                case 'workspaces':
+                    $qb->join('obj.workspace', 'w');
+                    $qb->andWhere("w.uuid IN (:{$filterName})");
+                    $qb->setParameter($filterName, $filterValue);
+                    break;
                 case 'user':
                     if (!$userJoin) {
                         $qb->join('obj.user', 'u');

@@ -155,7 +155,7 @@ class LoginForm extends Component {
               'login-with-sso': this.props.internalAccount && 0 !== otherSso.length
             })}
             type={LINK_BUTTON}
-            label={trans('self-register', {}, 'actions')}
+            label={trans('create-account', {}, 'actions')}
             target="/registration"
           />
         }
