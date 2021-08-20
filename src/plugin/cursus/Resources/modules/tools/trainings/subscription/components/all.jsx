@@ -69,10 +69,18 @@ const SubscriptionAll = (props) =>
         filterable: false,
         sortable: false
       }, {
-        name: 'date',
-        alias: 'date',
-        type: 'date',
-        label: trans('registered', {}, 'cursus'),
+        name: 'session.quotas.days',
+        alias: 'days',
+        type: 'number',
+        label: trans('days', {}, 'cursus'),
+        displayed: true,
+        filterable: false,
+        sortable: false
+      }, {
+        name: 'session.pricing.price',
+        alias: 'price',
+        type: 'number',
+        label: trans('price', {}, 'cursus'),
         displayed: true,
         filterable: false,
         sortable: false
