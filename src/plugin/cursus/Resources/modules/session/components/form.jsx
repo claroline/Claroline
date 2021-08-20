@@ -202,16 +202,6 @@ const SessionForm = (props) =>
               min: 0,
               unit: trans('days')
             }
-          },
-          {
-            name: 'quotas.hours',
-            type: 'number',
-            label: trans('quota_hours', {}, 'cursus'),
-            options: {
-              min: 0,
-              max: 24,
-              unit: trans('hours')
-            }
           }
         ]
       }
