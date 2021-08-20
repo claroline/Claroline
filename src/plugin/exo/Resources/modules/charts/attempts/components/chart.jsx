@@ -1,6 +1,6 @@
 import React, {Component, Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
-import {schemeCategory20c} from 'd3-scale'
+import {schemeCategory20} from 'd3-scale'
 
 import {trans} from '#/main/app/intl/translation'
 import {LineChart} from '#/main/core/layout/chart/line/components/line-chart'
@@ -52,12 +52,12 @@ class AttemptsChart extends Component {
       {
         id: 'total',
         label: trans('total'),
-        color: schemeCategory20c[0]
+        color: schemeCategory20[0]
       }
     ].concat(
       ...this.props.steps.map((step, stepIndex) => step.items.map((item, idx) => ({
         id: item.id,
-        color: schemeCategory20c[(idx + 1) % schemeCategory20c.length],
+        color: schemeCategory20[(idx + 1) % schemeCategory20.length],
         label: item.title || trans(getDefinition(item.type).name, {}, 'question_types'),
         stepIndex: stepIndex,
         index: idx
@@ -68,8 +68,11 @@ class AttemptsChart extends Component {
       <Fragment>
         <div className="panel panel-default panel-analytics">
           <div className="panel-heading">
-            <h2 className="panel-title">Evolution des tentatives</h2>
+            <h2 className="panel-title">
+              {trans(this.props.userId ? 'attempts_chart_user' : 'attempts_chart_all', {}, 'quiz')}
+            </h2>
           </div>
+
           <div className="panel-body">
             <LineChart
               data={chartData

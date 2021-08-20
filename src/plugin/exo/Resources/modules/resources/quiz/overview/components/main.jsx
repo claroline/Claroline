@@ -124,10 +124,18 @@ const OverviewMain = props =>
       </section>
     }
 
-    {props.showStats &&
+    {props.showStats && ['user', 'both'].includes(get(props.quiz, 'parameters.overviewStats')) &&
       <AttemptsChart
         quizId={props.quiz.id}
-        userId={'user' === get(props.quiz, 'parameters.overviewStats') ? props.currentUserId : null}
+        userId={props.currentUserId}
+        steps={props.quiz.steps}
+        questionNumberingType={get(props.quiz, 'parameters.questionNumbering')}
+      />
+    }
+
+    {props.showStats && ['all', 'both'].includes(get(props.quiz, 'parameters.overviewStats')) &&
+      <AttemptsChart
+        quizId={props.quiz.id}
         steps={props.quiz.steps}
         questionNumberingType={get(props.quiz, 'parameters.questionNumbering')}
       />
