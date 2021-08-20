@@ -85,6 +85,14 @@ const SubscriptionAll = (props) =>
         filterable: false,
         sortable: false
       }, {
+        name: 'session.restrictions.dates[0]',
+        alias: 'start_date',
+        type: 'date',
+        label: trans('start_date', {}, 'cursus'),
+        displayed: true,
+        filterable: false,
+        sortable: false
+      }, {
         name: 'status',
         type: 'choice',
         label: trans('status'),
