@@ -123,6 +123,8 @@ services:
             - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
 
     Claroline\CoreBundle\Controller\APINew\Workspace\EvaluationController:
+        parent: Claroline\AppBundle\Controller\AbstractSecurityController
+        public: true
         arguments:
             - '@security.authorization_checker'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
