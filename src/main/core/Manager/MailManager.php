@@ -233,8 +233,10 @@ class MailManager
                 $message->to($to);
             }
 
-            if (isset($extra['attachment'])) {
-                $message->attach($extra['attachment'], 'application/octet-stream');
+            if (isset($extra['attachments'])) {
+                foreach ($extra['attachments'] as $attachment) {
+                    $message->attach($attachment['name'], $attachment['url'], $attachment['type']);
+                }
             }
 
             return $this->mailer->send($message);

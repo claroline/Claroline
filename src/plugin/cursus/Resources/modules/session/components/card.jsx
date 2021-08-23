@@ -46,11 +46,12 @@ const SessionCard = props =>
       </span>
     }
     flags={[
-      get(props.data, 'restrictions.hidden') && ['fa fa-eye-slash', trans('session_hidden', {}, 'workspace')],
+      get(props.data, 'restrictions.hidden') && ['fa fa-eye-slash', trans('session_hidden', {}, 'workspace')]
     ].filter(flag => !!flag)}
   />
 
 SessionCard.propTypes = {
+  className: T.string,
   data: T.shape(
     SessionTypes.propTypes
   ).isRequired

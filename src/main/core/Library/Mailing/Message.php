@@ -71,11 +71,12 @@ class Message
         $this->attributes['headers'][$key] = $value;
     }
 
-    public function attach($filename, $contentType)
+    public function attach(string $name, string $url, ?string $contentType = 'application/octet-stream')
     {
         $attachment = [
-            'path' => $filename,
-            'content_type' => $contentType,
+            'name' => $name,
+            'url' => $url,
+            'type' => $contentType,
         ];
 
         $this->attributes['attachments'][] = $attachment;

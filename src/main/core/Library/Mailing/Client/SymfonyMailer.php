@@ -39,7 +39,7 @@ class SymfonyMailer implements MailClientInterface
         }
 
         foreach ($message->getAttribute('attachments') as $attachment) {
-            $email->attachFromPath($attachment['path']);
+            $email->attach(file_get_contents($attachment['url']), $attachment['name'], $attachment['type']);
         }
 
         $this->mailer->send($email);
