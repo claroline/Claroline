@@ -39,8 +39,7 @@ const EventPage = (props) => {
           label: trans('show-info', {}, 'actions'),
           modal: [MODAL_TRAINING_EVENT_ABOUT, {
             event: props.event
-          }],
-          scope: ['object'],
+          }]
         }, {
           name: 'edit',
           type: MODAL_BUTTON,
@@ -50,7 +49,6 @@ const EventPage = (props) => {
             event: props.event,
             onSave: () => props.reload(props.event.id)
           }],
-          scope: ['object'],
           group: trans('management'),
           displayed: hasPermission('edit', props.event),
           primary: true
@@ -62,6 +60,14 @@ const EventPage = (props) => {
           displayed: hasPermission('open', props.event),
           group: trans('transfer'),
           target: ['apiv2_cursus_event_download_pdf', {id: props.event.id}]
+        }, {
+          name: 'export-ics',
+          type: URL_BUTTON,
+          icon: 'fa fa-fw fa-calendar',
+          label: trans('export-ics', {}, 'actions'),
+          displayed: hasPermission('open', props.event),
+          group: trans('transfer'),
+          target: ['apiv2_cursus_event_download_ics', {id: props.event.id}]
         }, {
           name: 'export-presences-empty',
           type: URL_BUTTON,
@@ -103,6 +109,7 @@ EventPage.propTypes = {
   event: T.shape(
     EventTypes.propTypes
   ),
+  reload: T.func.isRequired,
   children: T.any
 }
 

@@ -186,6 +186,22 @@ class EventController extends AbstractCrudController
     }
 
     /**
+     * @Route("/{id}/ics", name="apiv2_cursus_event_download_ics", methods={"GET"})
+     * @EXT\ParamConverter("sessionEvent", class="Claroline\CursusBundle\Entity\Event", options={"mapping": {"id": "uuid"}})
+     */
+    public function downloadICSAction(Event $sessionEvent): StreamedResponse
+    {
+        $this->checkPermission('OPEN', $sessionEvent, [], true);
+
+        return new StreamedResponse(function () use ($sessionEvent) {
+            echo $this->manager->getICS($sessionEvent);
+        }, 200, [
+            'Content-Type' => 'text/calendar',
+            'Content-Disposition' => 'attachment; filename='.TextNormalizer::toKey($sessionEvent->getName()).'.ics',
+        ]);
+    }
+
+    /**
      * @Route("/{id}/self/register", name="apiv2_cursus_session_event_self_register", methods={"PUT"})
      * @EXT\ParamConverter("sessionEvent", class="Claroline\CursusBundle\Entity\Event", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})

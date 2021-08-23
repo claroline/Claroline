@@ -1623,7 +1623,7 @@
     "currency": "Currency",
     "price": "Price",
     "allow_change_password": "Allow users to change their password",
-    "sendMessage": "sender send a message to receveir",
+    "sendMessage": "sender send a message to receiver",
     "claroline_message_sending": "Send a message",
     "planned_at": "Planned at",
     "planning": "Planning",

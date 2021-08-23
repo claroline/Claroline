@@ -72,14 +72,16 @@ class EventManager
     public function sendInvitation(Event $event, array $users = [])
     {
         foreach ($users as $user) {
-            $invitation = $this->om->getRepository('ClarolineAgendaBundle:EventInvitation')->findOneBy([
+            $invitation = $this->om->getRepository(EventInvitation::class)->findOneBy([
                 'user' => $user,
                 'event' => $event,
             ]);
 
-            $this->messageBus->dispatch(new SendEventInvitation(
-                $invitation->getId()
-            ));
+            if ($invitation) {
+                $this->messageBus->dispatch(new SendEventInvitation(
+                    $invitation->getId()
+                ));
+            }
         }
     }
 }

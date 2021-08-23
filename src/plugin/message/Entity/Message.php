@@ -144,6 +144,13 @@ class Message
     protected $to;
 
     /**
+     * @ORM\Column(type="json", nullable=true)
+     *
+     * @var array
+     */
+    protected $attachments = [];
+
+    /**
      * Message constructor.
      */
     public function __construct()
@@ -328,5 +335,15 @@ class Message
         $receiversString = implode(';', $receivers);
 
         $this->setTo($receiversString);
+    }
+
+    public function getAttachments(): ?array
+    {
+        return $this->attachments;
+    }
+
+    public function setAttachments(array $attachments)
+    {
+        $this->attachments = $attachments;
     }
 }

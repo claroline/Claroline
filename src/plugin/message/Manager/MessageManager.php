@@ -52,7 +52,7 @@ class MessageManager
     /**
      * @return array - the list of users to which the message has really been sent
      */
-    public function send(Message $message, bool $sendMail = true): array
+    public function send(Message $message): array
     {
         if ($message->getSender()) {
             $userMessage = new UserMessage();
@@ -104,6 +104,8 @@ class MessageManager
             return false;
         });
 
+        // also send message by email
+        // TODO : subscribe to `SendMessageEvent` instead
         $mailNotifiedUsers = [];
         foreach ($filteredUsers as $filteredUser) {
             $userMessage = new UserMessage();
@@ -116,23 +118,26 @@ class MessageManager
             }
         }
 
-        if ($sendMail) {
-            // TODO : subscribe to `SendMessageEvent` instead
+        if (!empty($mailNotifiedUsers)) {
             $replyToMail = !empty($message->getSender()) ? $message->getSender()->getEmail() : null;
+
+            $extra = [];
+            if (!empty($message->getAttachments())) {
+                $extra['attachments'] = $message->getAttachments();
+            }
 
             $this->mailManager->send(
                 $message->getObject(),
                 $message->getContent(),
                 $mailNotifiedUsers,
                 $message->getSender(),
-                [],
+                $extra,
                 false,
                 $replyToMail
             );
         }
 
         $this->om->persist($message);
-
         $this->om->flush();
 
         return $filteredUsers;
@@ -141,8 +146,13 @@ class MessageManager
     /**
      * @param AbstractRoleSubject[] $receivers
      */
-    public function sendMessage($content, $object, array $receivers = null, ?User $sender = null, bool $withMail = true)
-    {
+    public function sendMessage(
+        $content,
+        $object,
+        array $receivers = null,
+        ?User $sender = null,
+        array $attachments = []
+    ) {
         $users = [];
         foreach ($receivers as $receiver) {
             if ($receiver instanceof User) {
@@ -152,9 +162,9 @@ class MessageManager
             }
         }
 
-        $message = $this->create($content, $object, $users, $sender);
+        $message = $this->create($content, $object, $users, $sender, null, $attachments);
 
-        return $this->send($message, $withMail);
+        return $this->send($message);
     }
 
     public function remove(UserMessage $message)
@@ -174,7 +184,7 @@ class MessageManager
      *
      * @return Message
      */
-    private function create($content, $object, array $users, $sender = null, $parent = null)
+    private function create($content, $object, array $users, $sender = null, $parent = null, array $attachments = [])
     {
         $message = new Message();
 
@@ -182,6 +192,7 @@ class MessageManager
         $message->setParent($parent);
         $message->setObject($object);
         $message->setSender($sender);
+        $message->setAttachments($attachments);
 
         $message->setReceivers(array_map(function (User $user) {
             return $user->getUsername();
