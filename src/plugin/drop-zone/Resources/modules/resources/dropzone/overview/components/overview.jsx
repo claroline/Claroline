@@ -12,7 +12,7 @@ import {ResourceOverview} from '#/main/core/resource/components/overview'
 
 import {constants} from '#/plugin/drop-zone/resources/dropzone/constants'
 import {selectors} from '#/plugin/drop-zone/resources/dropzone/store/selectors'
-import {actions} from '#/plugin/drop-zone/resources/dropzone/player/actions'
+import {actions} from '#/plugin/drop-zone/resources/dropzone/player/store/actions'
 import {DropzoneType, DropType} from '#/plugin/drop-zone/resources/dropzone/prop-types'
 
 import {Parameters} from '#/plugin/drop-zone/resources/dropzone/overview/components/parameters'
@@ -50,8 +50,8 @@ const OverviewComponent = props =>
     ].filter(value => !!value)}
 
     actions={[
-      // todo add show Drop
       {
+        name: 'participate',
         type: !props.myDrop ? CALLBACK_BUTTON : LINK_BUTTON,
         icon: 'fa fa-fw fa-upload icon-with-text-right',
         label: trans(!props.myDrop ? 'start_evaluation' : (!props.myDrop.finished ? 'continue_evaluation' : 'show_evaluation'), {}, 'dropzone'),
@@ -63,6 +63,7 @@ const OverviewComponent = props =>
         disabled: !props.dropEnabled,
         disabledMessages: props.dropDisabledMessages
       }, {
+        name: 'correct',
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-check-square-o icon-with-text-right',
         label: trans('correct_a_copy', {}, 'dropzone'),

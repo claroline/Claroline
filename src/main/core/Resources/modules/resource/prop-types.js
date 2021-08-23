@@ -138,7 +138,6 @@ const UserEvaluation = {
     user: T.shape(
       User.propTypes
     ),
-    userName: T.string.isRequired,
     nbAttempts: T.number,
     nbOpenings: T.number,
     required: T.bool

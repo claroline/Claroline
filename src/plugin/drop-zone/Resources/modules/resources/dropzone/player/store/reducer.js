@@ -26,7 +26,7 @@ import {
   REVISION_COMMENT_UPDATE,
   MY_DROP_COMMENT_UPDATE,
   MANAGER_DOCUMENTS_ADD
-} from '#/plugin/drop-zone/resources/dropzone/player/actions'
+} from '#/plugin/drop-zone/resources/dropzone/player/store/actions'
 import {
   DROP_UPDATE,
   CORRECTION_UPDATE

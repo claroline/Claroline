@@ -3,16 +3,13 @@
 namespace Claroline\DropZoneBundle\Crud;
 
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
-use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Claroline\DropZoneBundle\Manager\DropzoneManager;
 
 class Dropzone
 {
-    /**
-     * WorkspaceCrud constructor.
-     *
-     * @param WorkspaceManager $manager
-     */
+    /** @var DropzoneManager */
+    private $dropzoneManager;
+
     public function __construct(DropzoneManager $dropzoneManager)
     {
         $this->dropzoneManager = $dropzoneManager;
@@ -21,10 +18,10 @@ class Dropzone
     public function endUpdate(UpdateEvent $event)
     {
         $dropzone = $event->getObject();
-        $oldDatas = $event->getOldData();
+        $oldData = $event->getOldData();
 
-        if ($oldDatas['parameters']['scoreMax'] !== $dropzone->getScoreMax()) {
-            $this->dropzoneManager->updateScoreByScoreMax($dropzone, $oldDatas['parameters']['scoreMax'], $dropzone->getScoreMax());
+        if ($oldData['parameters']['scoreMax'] !== $dropzone->getScoreMax()) {
+            $this->dropzoneManager->updateScoreByScoreMax($dropzone, $oldData['parameters']['scoreMax'], $dropzone->getScoreMax());
         }
     }
 }

@@ -6,7 +6,8 @@ import isEqual from 'lodash/isEqual'
 import uniq from 'lodash/uniq'
 
 import {trans} from '#/main/app/intl/translation'
-import {CallbackButton} from '#/main/app/buttons/callback/components/button'
+import {Button} from '#/main/app/action/components/button'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
 
 // todo : enhance implementation (make it more generic)
 // todo : find better naming and location
@@ -89,29 +90,42 @@ class GridSelection extends Component {
 
         <div className="modal-body">
           <ul className="types-list" role="listbox">
-            {filteredItems.map((type, index) =>
-              <li
-                key={type.id || `type-${index}`}
-                className={classes('type-entry', {
-                  selected: isEqual(this.state.currentType, type)
-                })}
-                onMouseOver={() => this.handleItemMouseOver(type)}
-              >
-                <CallbackButton
-                  id={type.id}
-                  className="type-entry-btn"
-                  role="option"
-                  callback={() => this.props.handleSelect(type)}
+            {filteredItems.map((type, index) => {
+              let selectAction
+              if (this.props.selectAction) {
+                selectAction = this.props.selectAction(type)
+              } else {
+                selectAction = {
+                  type: CALLBACK_BUTTON,
+                  callback: () => this.props.handleSelect(type)
+                }
+              }
+
+              return (
+                <li
+                  key={type.id || `type-${index}`}
+                  className={classes('type-entry', {
+                    selected: isEqual(this.state.currentType, type)
+                  })}
+                  onMouseOver={() => this.handleItemMouseOver(type)}
                 >
-                  {typeof type.icon === 'string' ?
-                    <span className={classes('type-icon', type.icon)} /> :
-                    cloneElement(type.icon, {
-                      className: 'type-icon'
-                    })
-                  }
-                </CallbackButton>
-              </li>
-            )}
+                  <Button
+                    id={type.id}
+                    className="type-entry-btn"
+                    role="option"
+                    icon={typeof type.icon === 'string' ?
+                      <span className={classes('type-icon', type.icon)} /> :
+                      cloneElement(type.icon, {
+                        className: 'type-icon'
+                      })
+                    }
+                    label={type.label}
+                    hideLabel={true}
+                    {...selectAction}
+                  />
+                </li>
+              )
+            })}
           </ul>
 
           {this.state.currentType &&
@@ -138,7 +152,8 @@ GridSelection.propTypes = {
     description: T.string,
     tags: T.arrayOf(T.string)
   })).isRequired,
-  handleSelect: T.func.isRequired
+  selectAction: T.func,
+  handleSelect: T.func // for retro-compatibility only. Use selectAction
 }
 
 export {

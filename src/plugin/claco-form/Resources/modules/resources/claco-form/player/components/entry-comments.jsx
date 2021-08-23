@@ -100,12 +100,12 @@ class EntryCommentsComponent extends Component {
                 onClick={() => this.setState({showNewCommentForm: true})}
               >
                 <span className="fa fa-fw fa-edit" style={{marginRight: '7px'}} />
-                {trans('add_comment', {}, 'clacoform')}
+                {trans('add_comment')}
               </button>
             }
 
             {this.state.showNewCommentForm &&
-              <h4 className="sr-only">{trans('add_comment', {}, 'clacoform')}</h4>
+              <h4 className="sr-only">{trans('add_comment')}</h4>
             }
 
             {this.state.showNewCommentForm &&

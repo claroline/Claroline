@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, {Component, Fragment} from 'react'
 import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 
@@ -9,7 +9,7 @@ import {DropzoneType, DropType} from '#/plugin/drop-zone/resources/dropzone/prop
 import {selectors} from '#/plugin/drop-zone/resources/dropzone/store/selectors'
 import {constants} from '#/plugin/drop-zone/resources/dropzone/constants'
 import {generateCorrectionGrades} from '#/plugin/drop-zone/resources/dropzone/utils'
-import {actions} from '#/plugin/drop-zone/resources/dropzone/player/actions'
+import {actions} from '#/plugin/drop-zone/resources/dropzone/player/store/actions'
 import {actions as correctionActions} from '#/plugin/drop-zone/resources/dropzone/correction/actions'
 import {Documents} from '#/plugin/drop-zone/resources/dropzone/components/documents'
 import {CorrectionForm} from '#/plugin/drop-zone/resources/dropzone/correction/components/correction-form'
@@ -48,24 +48,29 @@ class PeerDrop extends Component {
   }
 
   render() {
-    return (this.props.drop ?
-      <div className="drop-panel">
-        <Documents
-          documents={this.props.drop.documents}
-          canEdit={false}
-          showMeta={false}
-          {...this.props}
-        />
-        <CorrectionForm
-          navigate={this.props.history.push}
-          correction={generateCorrectionGrades(this.getCorrection(), this.props.dropzone)}
-          dropzone={this.props.dropzone}
-          saveCorrection={this.saveCorrection}
-          showSubmitButton={true}
-          submitCorrection={(correctionId, navigate) => this.props.submitCorrection(correctionId, navigate, this.props.path)}
-          cancelCorrection={this.cancelCorrection}
-        />
-      </div> :
+    if (this.props.drop) {
+      return (
+        <Fragment>
+          <Documents
+            documents={this.props.drop.documents}
+            canEdit={false}
+            showMeta={false}
+            {...this.props}
+          />
+          <CorrectionForm
+            navigate={this.props.history.push}
+            correction={generateCorrectionGrades(this.getCorrection(), this.props.dropzone)}
+            dropzone={this.props.dropzone}
+            saveCorrection={this.saveCorrection}
+            showSubmitButton={true}
+            submitCorrection={(correctionId, navigate) => this.props.submitCorrection(correctionId, navigate, this.props.path)}
+            cancelCorrection={this.cancelCorrection}
+          />
+        </Fragment>
+      )
+    }
+
+    return (
       <div className="alert alert-warning">
         {trans('no_copy_to_correct', {}, 'dropzone')}
       </div>
