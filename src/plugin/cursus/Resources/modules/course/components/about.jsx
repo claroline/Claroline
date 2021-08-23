@@ -226,7 +226,7 @@ const CourseAbout = (props) => {
             <Button
               className="btn btn-block btn-emphasis"
               type={MODAL_BUTTON}
-              label={trans(isFull(props.activeSession) ? 'register_waiting_list' : 'self-register', {}, 'actions')}
+              label={trans(isFull(props.activeSession) ? 'register_waiting_list' : 'self_register', {}, 'actions')}
               modal={[MODAL_COURSE_REGISTRATION, {
                 path: props.path,
                 course: props.course,

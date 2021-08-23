@@ -14,9 +14,11 @@ namespace Claroline\CursusBundle\Controller;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Organization\Organization;
+use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Library\RoutingHelper;
+use Claroline\CoreBundle\Manager\Tool\ToolManager;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\CursusBundle\Entity\Event;
 use Claroline\CursusBundle\Entity\Registration\AbstractRegistration;
@@ -49,6 +51,8 @@ class SessionController extends AbstractCrudController
     private $translator;
     /** @var RoutingHelper */
     private $routingHelper;
+    /** @var ToolManager */
+    private $toolManager;
     /** @var SessionManager */
     private $manager;
 
@@ -57,12 +61,14 @@ class SessionController extends AbstractCrudController
         TokenStorageInterface $tokenStorage,
         TranslatorInterface $translator,
         RoutingHelper $routingHelper,
+        ToolManager $toolManager,
         SessionManager $manager
     ) {
         $this->authorization = $authorization;
         $this->tokenStorage = $tokenStorage;
         $this->translator = $translator;
         $this->routingHelper = $routingHelper;
+        $this->toolManager = $toolManager;
         $this->manager = $manager;
     }
 
@@ -83,18 +89,24 @@ class SessionController extends AbstractCrudController
 
     protected function getDefaultHiddenFilters()
     {
+        $filters = [];
         if (!$this->authorization->isGranted('ROLE_ADMIN')) {
             /** @var User $user */
             $user = $this->tokenStorage->getToken()->getUser();
 
-            return [
-                'organizations' => array_map(function (Organization $organization) {
+            if ($user instanceof User) {
+                $filters['organizations'] = array_map(function (Organization $organization) {
                     return $organization->getUuid();
-                }, $user->getOrganizations()),
-            ];
+                }, $user->getOrganizations());
+            }
+
+            // hide hidden sessions for non admin
+            if (!$this->checkToolAccess('EDIT')) {
+                $filters['hidden'] = false;
+            }
         }
 
-        return [];
+        return $filters;
     }
 
     /**
@@ -108,6 +120,11 @@ class SessionController extends AbstractCrudController
         $params['hiddenFilters'] = $this->getDefaultHiddenFilters();
         $params['hiddenFilters']['publicRegistration'] = true;
         $params['hiddenFilters']['terminated'] = false;
+
+        // hide hidden sessions for non admin
+        if (!$this->checkToolAccess('EDIT')) {
+            $params['hiddenFilters']['hidden'] = false;
+        }
 
         return new JsonResponse(
             $this->finder->search(Session::class, $params, $options ?? [])
@@ -434,5 +451,16 @@ class SessionController extends AbstractCrudController
         $this->manager->sendSessionInvitation($session, $users, false);
 
         return new JsonResponse(null, 204);
+    }
+
+    private function checkToolAccess(string $rights = 'OPEN'): bool
+    {
+        $trainingsTool = $this->toolManager->getOrderedTool('trainings', Tool::DESKTOP);
+
+        if (is_null($trainingsTool) || !$this->authorization->isGranted($rights, $trainingsTool)) {
+            return false;
+        }
+
+        return true;
     }
 }
