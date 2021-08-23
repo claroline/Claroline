@@ -18,6 +18,8 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class SessionVoter extends AbstractVoter
 {
+    const SELF_REGISTER = 'SELF_REGISTER';
+
     public function getClass()
     {
         return Session::class;
@@ -35,6 +37,9 @@ class SessionVoter extends AbstractVoter
                 return $this->isGranted('OPEN', $object->getCourse());
             case self::VIEW:
                 return $this->isGranted('VIEW', $object->getCourse());
+
+            case self::SELF_REGISTER:
+                return $this->isGranted('SELF_REGISTER', $object->getCourse());
         }
 
         return VoterInterface::ACCESS_ABSTAIN;

@@ -104,6 +104,7 @@ class SessionSerializer
                 'open' => $this->authorization->isGranted('OPEN', $session),
                 'edit' => $this->authorization->isGranted('EDIT', $session),
                 'delete' => $this->authorization->isGranted('DELETE', $session),
+                'self_register' => $this->authorization->isGranted('SELF_REGISTER', $session),
             ],
             'course' => $this->courseSerializer->serialize($session->getCourse(), [Options::SERIALIZE_MINIMAL]),
             'restrictions' => [

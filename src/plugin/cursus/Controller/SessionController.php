@@ -369,7 +369,7 @@ class SessionController extends AbstractCrudController
      */
     public function selfRegisterAction(Session $session, User $user): JsonResponse
     {
-        $this->checkPermission('OPEN', $session, [], true);
+        $this->checkPermission('SELF_REGISTER', $session, [], true);
 
         if (!$session->getPublicRegistration()) {
             throw new AccessDeniedException();
