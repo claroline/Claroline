@@ -67,7 +67,7 @@ const CourseSessions = (props) =>
           type: MODAL_BUTTON,
           icon: 'fa fa-fw fa-user-plus',
           label: trans(isFull(rows[0]) ? 'register_waiting_list' : 'self_register', {}, 'actions'),
-          displayed: getInfo(props.course, rows[0], 'registration.selfRegistration') && !isRegistered(rows[0], props.registrations),
+          displayed: getInfo(props.course, rows[0], 'registration.selfRegistration') && getInfo(props.course, rows[0], 'permissions.self_register') && !isRegistered(rows[0], props.registrations),
           modal: [MODAL_COURSE_REGISTRATION, {
             path: props.path,
             course: props.course,
