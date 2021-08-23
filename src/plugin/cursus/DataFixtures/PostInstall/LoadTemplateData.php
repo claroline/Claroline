@@ -48,6 +48,7 @@ class LoadTemplateData extends AbstractFixture implements ContainerAwareInterfac
 
         $this->createCourseTemplates();
         $this->createSessionTemplates();
+        $this->createQuotaTemplate();
 
         $eventType = $this->templateTypeRepo->findOneBy(['name' => 'training_event']);
         $templates = $this->templateRepo->findBy(['name' => 'training_event']);
@@ -286,6 +287,31 @@ class LoadTemplateData extends AbstractFixture implements ContainerAwareInterfac
             }
             $sessionInvitationType->setDefaultTemplate('training_session_confirmation');
             $this->om->persist($sessionInvitationType);
+        }
+    }
+
+    private function createQuotaTemplate()
+    {
+        $eventType = $this->templateTypeRepo->findOneBy(['name' => 'training_quota']);
+        $templates = $this->templateRepo->findBy(['name' => 'training_quota']);
+        if ($eventType && empty($templates)) {
+            $template = new Template();
+            $template->setType($eventType);
+            $template->setName('training_quota');
+            $this->om->persist($template);
+
+            foreach ($this->availableLocales as $locale) {
+                $templateContent = new TemplateContent();
+                $template->addTemplateContent($templateContent);
+
+                $templateContent->setLang($locale);
+                $templateContent->setTitle($this->translator->trans('training_quota', [], 'template', $locale));
+                $content = '%organization_name%<br/>';
+                $templateContent->setContent($content);
+                $this->om->persist($templateContent);
+            }
+            $eventType->setDefaultTemplate('training_quota');
+            $this->om->persist($eventType);
         }
     }
 }

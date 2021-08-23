@@ -15,17 +15,6 @@ const SubscriptionList = (props) =>
     }]}
     subtitle={trans('subscriptions', {}, 'cursus')}
     primaryAction="export"
-    actions={[
-      {
-        name: 'export',
-        type: LINK_BUTTON,
-        icon: 'fa fa-fw fa-download',
-        label: trans('export_subscription', {}, 'cursus'),
-        target: `${props.path}/export`,
-        group: trans('management'),
-        primary: true
-      }
-    ]}
   >
     <SubscriptionDataList
       name={selectors.LIST_NAME}

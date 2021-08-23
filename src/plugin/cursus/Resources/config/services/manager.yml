@@ -46,3 +46,7 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\Manager\Template\TemplateManager'
             - '@Claroline\CursusBundle\Manager\EventManager'
+
+    Claroline\CursusBundle\Manager\QuotaManager:
+        arguments:
+            - '@Claroline\CoreBundle\Manager\Template\TemplateManager'

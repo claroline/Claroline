@@ -14,16 +14,21 @@ namespace Claroline\CursusBundle\Controller;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\CursusBundle\Entity\Quota;
 use Claroline\CursusBundle\Entity\Registration\SessionUser;
+use Claroline\CursusBundle\Manager\QuotaManager;
 use Claroline\CursusBundle\Manager\SessionManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Dompdf\Dompdf;
 
 /**
  * @Route("/cursus_quota")
@@ -34,19 +39,24 @@ class QuotaController extends AbstractCrudController
 
     /** @var TokenStorageInterface */
     private $tokenStorage;
-
+    /** @var PlatformConfigurationHandler */
+    private $config;
     /** @var SessionManager */
     private $sessionManager;
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         TokenStorageInterface $tokenStorage,
+        PlatformConfigurationHandler $config,
         ObjectManager $om,
+        QuotaManager $manager,
         SessionManager $sessionManager
     ) {
         $this->authorization = $authorization;
         $this->tokenStorage = $tokenStorage;
+        $this->config = $config;
         $this->om = $om;
+        $this->manager = $manager;
         $this->sessionManager = $sessionManager;
     }
 
@@ -109,6 +119,40 @@ class QuotaController extends AbstractCrudController
                 }
                 return $accum + $subscription->getSession()->getQuotaDays();
             }, 0),
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/pdf", name="apiv2_cursus_quota_export", methods={"GET"})
+     * @EXT\ParamConverter("quota", class="Claroline\CursusBundle\Entity\Quota", options={"mapping": {"id": "uuid"}})
+     */
+    public function exportAction(Quota $quota, Request $request): StreamedResponse
+    {
+        $this->checkPermission('OPEN', $quota, [], true);
+
+        $query = $request->query->all();
+        $query['hiddenFilters'] = [
+            'organization' => $quota->getOrganization(),
+            'used_by_quotas' => true,
+        ];
+        $subscriptions = $this->finder->searchEntities(SessionUser::class, $query);
+
+        $domPdf = new Dompdf([
+            'isHtml5ParserEnabled' => true,
+            'isRemoteEnabled' => true,
+            'tempDir' => $this->config->getParameter('server.tmp_dir'),
+        ]);
+
+        $domPdf->loadHtml($this->manager->generateFromTemplate($quota, $subscriptions, $request->getLocale()));
+
+        // Render the HTML as PDF
+        $domPdf->render();
+
+        return new StreamedResponse(function () use ($domPdf) {
+            echo $domPdf->output();
+        }, 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename='.TextNormalizer::toKey($quota->getOrganization()->getName()).'.pdf',
         ]);
     }
 

@@ -145,5 +145,4 @@ plugin:
 
         - name: training_quota
           placeholders:
-              - quota_quota
-              - quota_organisation
+              - organization_name
