@@ -107,6 +107,7 @@ class SessionSerializer
             ],
             'course' => $this->courseSerializer->serialize($session->getCourse(), [Options::SERIALIZE_MINIMAL]),
             'restrictions' => [
+                'hidden' => $session->isHidden(),
                 'users' => $session->getMaxUsers(),
                 'dates' => DateRangeNormalizer::normalize($session->getStartDate(), $session->getEndDate()),
             ],
@@ -180,6 +181,7 @@ class SessionSerializer
         $this->sipe('meta.order', 'setOrder', $data, $session);
 
         $this->sipe('restrictions.users', 'setMaxUsers', $data, $session);
+        $this->sipe('restrictions.hidden', 'setHidden', $data, $session);
 
         $this->sipe('registration.selfRegistration', 'setPublicRegistration', $data, $session);
         $this->sipe('registration.selfUnregistration', 'setPublicUnregistration', $data, $session);

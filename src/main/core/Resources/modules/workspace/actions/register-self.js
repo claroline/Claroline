@@ -12,7 +12,7 @@ export default (workspaces, refresher, path, currentUser) => ({
   name: 'register-self',
   type: ASYNC_BUTTON,
   icon: 'fa fa-fw fa-sign-in',
-  label: trans('self-register', {}, 'actions'),
+  label: trans('self_register', {}, 'actions'),
   // TODO : replace by workspace.permissions.register later
   displayed: !!currentUser && -1 !== workspaces.findIndex(workspace =>
     !workspace.registered && !workspace.meta.archived && !get(workspace, 'registration.waitingForRegistration') && (get(workspace, 'registration.selfRegistration') || isAdmin(currentUser))

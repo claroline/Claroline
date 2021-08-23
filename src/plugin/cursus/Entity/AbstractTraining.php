@@ -21,6 +21,7 @@ use Claroline\AppBundle\Entity\Meta\Order;
 use Claroline\AppBundle\Entity\Meta\Poster;
 use Claroline\AppBundle\Entity\Meta\Thumbnail;
 use Claroline\AppBundle\Entity\Meta\UpdatedAt;
+use Claroline\AppBundle\Entity\Restriction\Hidden;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -34,6 +35,7 @@ class AbstractTraining
     use Uuid;
     use Code;
     use Description;
+    use Hidden;
     use Order;
     use CreatedAt;
     use UpdatedAt;
