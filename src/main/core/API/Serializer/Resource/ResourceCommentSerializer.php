@@ -4,7 +4,6 @@ namespace Claroline\CoreBundle\API\Serializer\Resource;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
-use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\Entity\Resource\ResourceComment;
@@ -16,52 +15,37 @@ class ResourceCommentSerializer
 {
     use SerializerTrait;
 
+    /** @var UserSerializer */
+    private $userSerializer;
+
     private $resourceNodeRepo;
     private $userRepo;
 
-    /**
-     * ResourceCommentSerializer constructor.
-     *
-     * @param SerializerProvider $serializer
-     */
     public function __construct(ObjectManager $om, UserSerializer $userSerializer)
     {
+        $this->userSerializer = $userSerializer;
+
         $this->resourceNodeRepo = $om->getRepository(ResourceNode::class);
         $this->userRepo = $om->getRepository(User::class);
-        $this->userSerializer = $userSerializer;
     }
 
     public function getName()
     {
-        return 'resource_commment';
+        return 'resource_comment';
     }
 
-    /**
-     * Serializes a ResourceComment entity for the JSON api.
-     *
-     * @param ResourceComment $comment - the comment to serialize
-     *
-     * @return array - the serialized representation of the comment
-     */
-    public function serialize(ResourceComment $comment, array $options = [])
+    public function serialize(ResourceComment $comment): array
     {
-        $serialized = [
+        return [
             'id' => $comment->getUuid(),
             'content' => $comment->getContent(),
             'user' => $comment->getUser() ? $this->userSerializer->serialize($comment->getUser(), [Options::SERIALIZE_MINIMAL]) : null,
-            'creationDate' => $comment->getCreationDate() ? DateNormalizer::normalize($comment->getCreationDate()) : null,
-            'editionDate' => $comment->getEditionDate() ? DateNormalizer::normalize($comment->getEditionDate()) : null,
+            'creationDate' => DateNormalizer::normalize($comment->getCreationDate()),
+            'editionDate' => DateNormalizer::normalize($comment->getEditionDate()),
         ];
-
-        return $serialized;
     }
 
-    /**
-     * @param array $data
-     *
-     * @return ResourceComment $comment
-     */
-    public function deserialize($data, ResourceComment $comment)
+    public function deserialize(array $data, ResourceComment $comment): ResourceComment
     {
         $this->sipe('id', 'setUuid', $data, $comment);
         $this->sipe('content', 'setContent', $data, $comment);

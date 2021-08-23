@@ -44,12 +44,9 @@ class DropSerializer
         return 'dropzone_drop';
     }
 
-    /**
-     * @return array
-     */
-    public function serialize(Drop $drop)
+    public function serialize(Drop $drop): array
     {
-        $serialized = [
+        return [
             'id' => $drop->getUuid(),
             'user' => $drop->getUser() ? $this->userSerializer->serialize($drop->getUser()) : null,
             'dropDate' => $drop->getDropDate() ? $drop->getDropDate()->format('Y-m-d H:i') : null,
@@ -66,8 +63,6 @@ class DropSerializer
             'users' => $this->getUsers($drop),
             'comments' => $this->getComments($drop),
         ];
-
-        return $serialized;
     }
 
     /**

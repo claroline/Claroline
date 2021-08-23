@@ -9,7 +9,7 @@ import {actions as formActions} from '#/main/app/content/form/store/actions'
 
 import {DropzoneResource as DropzoneResourceComponent} from '#/plugin/drop-zone/resources/dropzone/components/resource'
 import {reducer, selectors} from '#/plugin/drop-zone/resources/dropzone/store'
-import {actions as playerActions} from '#/plugin/drop-zone/resources/dropzone/player/actions'
+import {actions as playerActions} from '#/plugin/drop-zone/resources/dropzone/player/store/actions'
 import {actions as correctionActions} from '#/plugin/drop-zone/resources/dropzone/correction/actions'
 
 const DropzoneResource = withRouter(

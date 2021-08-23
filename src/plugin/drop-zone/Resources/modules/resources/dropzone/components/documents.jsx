@@ -9,28 +9,12 @@ import {LinkButton} from '#/main/app/buttons/link'
 
 import {route as resourceRoute} from '#/main/core/resource/routing'
 import {ContentHtml} from '#/main/app/content/components/html'
+import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
 import {constants} from '#/plugin/drop-zone/resources/dropzone/constants'
 import {getToolDocumentType} from '#/plugin/drop-zone/resources/dropzone/utils'
 import {constants as configConstants} from '#/plugin/drop-zone/plugin/configuration/constants'
 import {DocumentType} from '#/plugin/drop-zone/resources/dropzone/prop-types'
-
-const Document = props =>
-  <li className="document">
-    <span className={classes('fa', {
-      'fa-file-o': constants.DOCUMENT_TYPE_FILE === props.type,
-      'fa-pencil': constants.DOCUMENT_TYPE_TEXT === props.type,
-      'fa-link': constants.DOCUMENT_TYPE_URL === props.type,
-      'fa-folder-open': constants.DOCUMENT_TYPE_RESOURCE === props.type
-    })} />
-
-    {constants.DOCUMENT_TYPES[props.type]}
-  </li>
-
-Document.propTypes = {
-  user: T.shape({}),
-  type: T.string.isRequired
-}
 
 const formatUrl = (url) => !url || url.startsWith('http') ? url : `http://${url}`
 
@@ -135,49 +119,51 @@ DocumentRow.propTypes = {
   showModal: T.func
 }
 
-const Documents = props =>
-  <section className="dropzone-documents">
-    <h3>{trans('documents_added_to_copy', {}, 'dropzone')}</h3>
+const Documents = props => {
+  if (0 === props.documents.length) {
+    return (
+      <ContentPlaceholder
+        icon="fa fa-fw fa-upload"
+        title={trans('no_document', {}, 'dropzone')}
+        help={trans('no_document_help', {}, 'dropzone')}
+        size="lg"
+      />
+    )
+  }
 
-    {0 !== props.documents.length &&
-      <table className="table">
-        <thead>
-          <tr>
-            <th>{trans('drop_type', {}, 'dropzone')}</th>
-            {props.showUser &&
-              <th>{trans('user', {}, 'platform')}</th>
-            }
-            {props.showMeta &&
-              <th>{trans('drop_date', {}, 'dropzone')}</th>
-            }
-            <th>{trans('document', {}, 'dropzone')}</th>
-            {props.canEdit &&
-              <th>{trans('actions', {}, 'platform')}</th>
-            }
-            {props.showTools && props.tools.length > 0 &&
-              <th>{trans('tools', {}, 'platform')}</th>
-            }
-          </tr>
-        </thead>
+  return (
+    <table className="table">
+      <thead>
+        <tr>
+          <th>{trans('drop_type', {}, 'dropzone')}</th>
+          {props.showUser &&
+            <th>{trans('user', {}, 'platform')}</th>
+          }
+          {props.showMeta &&
+            <th>{trans('drop_date', {}, 'dropzone')}</th>
+          }
+          <th>{trans('document', {}, 'dropzone')}</th>
+          {props.canEdit &&
+            <th>{trans('actions', {}, 'platform')}</th>
+          }
+          {props.showTools && props.tools.length > 0 &&
+            <th>{trans('tools', {}, 'platform')}</th>
+          }
+        </tr>
+      </thead>
 
-        <tbody>
-          {props.documents.map(d =>
-            <DocumentRow
-              key={`document-${d.id}`}
-              document={d}
-              {...props}
-            />
-          )}
-        </tbody>
-      </table>
-    }
-
-    {0 === props.documents.length &&
-      <div className="alert alert-warning">
-        {trans('no_document', {}, 'dropzone')}
-      </div>
-    }
-  </section>
+      <tbody>
+        {props.documents.map(d =>
+          <DocumentRow
+            key={`document-${d.id}`}
+            document={d}
+            {...props}
+          />
+        )}
+      </tbody>
+    </table>
+  )
+}
 
 Documents.propTypes = {
   canEdit: T.bool.isRequired,
@@ -190,6 +176,7 @@ Documents.propTypes = {
 }
 
 Documents.defaultProps = {
+  documents: [],
   canEdit: false,
   isManager: false,
   showUser: false,

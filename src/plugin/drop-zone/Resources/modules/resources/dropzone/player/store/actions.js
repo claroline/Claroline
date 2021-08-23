@@ -1,3 +1,5 @@
+import merge from 'lodash/merge'
+
 import {makeActionCreator} from '#/main/app/store/actions'
 import {actions as listActions} from '#/main/app/content/list/store'
 import {API_REQUEST} from '#/main/app/api'
@@ -51,6 +53,7 @@ actions.saveDocument = (dropId, documentType, documentData) => {
 
   formData.append('fileName', 'test')
   formData.append('sourceType', 'uploadedfile')
+
   return {
     [API_REQUEST]: {
       url: ['claro_dropzone_documents_add', {id: dropId, type: documentType}],
@@ -192,23 +195,27 @@ actions.updateRevisionComment = makeActionCreator(REVISION_COMMENT_UPDATE, 'comm
 actions.updateMyDropComment = makeActionCreator(MY_DROP_COMMENT_UPDATE, 'comment')
 actions.removeRevisionDocument = makeActionCreator(REVISION_DOCUMENT_REMOVE, 'documentId')
 
-actions.saveRevisionComment = (comment) => ({
+actions.saveRevisionComment = (revisionId, comment) => ({
   [API_REQUEST]: {
     url: comment.id ? ['apiv2_revisioncomment_update', {id: comment.id}] : ['apiv2_revisioncomment_create'],
     request: {
       method: comment.id ? 'PUT' : 'POST',
-      body: JSON.stringify(comment)
+      body: JSON.stringify(merge({}, comment, {
+        revision: {id: revisionId}
+      }))
     },
     success: (data, dispatch) => dispatch(actions.updateRevisionComment(data))
   }
 })
 
-actions.saveDropComment = (comment, myDrop = false) => ({
+actions.saveDropComment = (dropId, comment, myDrop = false) => ({
   [API_REQUEST]: {
     url: comment.id ? ['apiv2_dropcomment_update', {id: comment.id}] : ['apiv2_dropcomment_create'],
     request: {
       method: comment.id ? 'PUT' : 'POST',
-      body: JSON.stringify(comment)
+      body: JSON.stringify(merge({}, comment, {
+        drop: {id: dropId}
+      }))
     },
     success: (data, dispatch) => myDrop?
       dispatch(actions.updateMyDropComment(data)) :

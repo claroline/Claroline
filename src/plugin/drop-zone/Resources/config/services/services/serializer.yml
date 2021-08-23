@@ -2,53 +2,38 @@ services:
     _defaults:
         autowire: false
         autoconfigure: false
-        public: true
+        public: false
+        tags: [claroline.serializer]
 
     Claroline\DropZoneBundle\Serializer\RevisionSerializer:
-        tags: [claroline.serializer]
-        public: false
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\SerializerProvider'
 
     Claroline\DropZoneBundle\Serializer\RevisionCommentSerializer:
-        tags: [claroline.serializer]
-        public: false
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
 
     Claroline\DropZoneBundle\Serializer\GradeSerializer:
-        tags: [claroline.serializer]
-        public: false
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     Claroline\DropZoneBundle\Serializer\DropzoneToolSerializer:
-        tags: [claroline.serializer]
-        public: false
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     Claroline\DropZoneBundle\Serializer\DropzoneToolDocumentSerializer:
-        tags: [claroline.serializer]
-        public: false
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     Claroline\DropZoneBundle\Serializer\DropzoneSerializer:
-        tags: [claroline.serializer]
         arguments:
             - '@Claroline\DropZoneBundle\Serializer\CriterionSerializer'
             - '@Claroline\DropZoneBundle\Manager\DropzoneManager'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
 
-    claroline.serializer.dropzone:
-         alias: Claroline\DropZoneBundle\Serializer\DropzoneSerializer
-         public: true
-
     Claroline\DropZoneBundle\Serializer\DropSerializer:
-        tags: [claroline.serializer]
         arguments:
             - '@Claroline\DropZoneBundle\Serializer\CorrectionSerializer'
             - '@Claroline\DropZoneBundle\Serializer\DocumentSerializer'
@@ -57,15 +42,11 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     Claroline\DropZoneBundle\Serializer\DropCommentSerializer:
-        tags: [claroline.serializer]
-        public: false
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
 
     Claroline\DropZoneBundle\Serializer\DocumentSerializer:
-        tags: [claroline.serializer]
-        public: false
         arguments:
             - '@Claroline\DropZoneBundle\Serializer\DropzoneToolDocumentSerializer'
             - '@Claroline\DropZoneBundle\Serializer\RevisionSerializer'
@@ -75,14 +56,10 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     Claroline\DropZoneBundle\Serializer\CriterionSerializer:
-        tags: [claroline.serializer]
-        public: false
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     Claroline\DropZoneBundle\Serializer\CorrectionSerializer:
-        tags: [claroline.serializer]
-        public: false
         arguments:
             - '@Claroline\DropZoneBundle\Serializer\GradeSerializer'
             - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'

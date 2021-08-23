@@ -367,14 +367,13 @@ class DropzoneManager
     /**
      * Creates a Document.
      *
-     * @param int      $documentType
      * @param mixed    $documentData
      * @param Revision $revision
      * @param bool     $isManager
      *
      * @return Document
      */
-    public function createDocument(Drop $drop, User $user, $documentType, $documentData, Revision $revision = null, $isManager = false)
+    public function createDocument(Drop $drop, User $user, string $documentType, $documentData, Revision $revision = null, $isManager = false)
     {
         $document = new Document();
         $document->setDrop($drop);
