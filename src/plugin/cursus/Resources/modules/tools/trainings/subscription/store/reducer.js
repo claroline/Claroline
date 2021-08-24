@@ -1,11 +1,19 @@
 import {combineReducers, makeReducer} from '#/main/app/store/reducer'
 import {makeListReducer} from '#/main/app/content/list/store'
 
+import {constants} from '#/plugin/cursus/constants'
 import {selectors} from '#/plugin/cursus/tools/trainings/subscription/store/selectors'
 import {UPDATE_SUBSCRIPTION_STATUS, SET_STATISTICS} from '#/plugin/cursus/tools/trainings/subscription/store/actions'
 
 export const reducer = combineReducers({
-  subscriptions: makeListReducer(selectors.LIST_NAME, false, {
+  subscriptions: makeListReducer(selectors.LIST_NAME, {
+    filters: [
+      {
+        property: 'status',
+        value: constants.SUBSCRIPTION_STATUS_PENDING
+      }
+    ]
+  }, {
     invalidated: makeReducer(false, {
       [UPDATE_SUBSCRIPTION_STATUS]: () => true
     })

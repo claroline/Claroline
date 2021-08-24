@@ -29,7 +29,7 @@ const SubscriptionAll = (props) =>
       }],
       scope: ['object']
     })}
-    actions={(row) => [
+    actions={(rows) => [
       {
         name: 'edit',
         type: MODAL_BUTTON,
@@ -37,7 +37,7 @@ const SubscriptionAll = (props) =>
         label: trans('edit', {}, 'actions'),
         modal: [MODAL_SUBSCRIPTION_STATUS, {
           changeStatus: (status) => {
-            props.setSubscriptionStatus(props.quota.id, row[0].id, status)
+            props.setSubscriptionStatus(props.quota.id, rows[0].id, status)
           }
         }]
       }
