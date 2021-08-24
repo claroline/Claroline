@@ -99,9 +99,12 @@ class EvaluationController extends AbstractSecurityController
             'score',
         ], $query);
 
+        $now = new \DateTime();
+        $fileName = "workspace-evaluations{$now->format('Y-m-d-His')}.csv";
+
         return new BinaryFileResponse($csvFilename, 200, [
             'Content-Type' => 'text/csv',
-            'Content-Disposition' => 'attachment; filename=workspace-evaluations.csv',
+            'Content-Disposition' => "attachment; filename={$fileName}",
         ]);
     }
 
