@@ -38,6 +38,7 @@ const SubscriptionList = (props) =>
       }
     ]}
     card={SubscriptionCard}
+    selectable={false}
   />
 
 SubscriptionList.propTypes = {

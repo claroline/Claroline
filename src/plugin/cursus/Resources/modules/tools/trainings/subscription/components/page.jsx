@@ -2,7 +2,6 @@ import React, {Fragment, useEffect} from 'react'
 import {PropTypes as T} from 'prop-types'
 import isEmpty from 'lodash/isEmpty'
 import get from 'lodash/get'
-import {schemeCategory20c} from 'd3-scale'
 
 import {LINK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 import {trans} from '#/main/app/intl/translation'
@@ -51,49 +50,48 @@ const SubscriptionPage = (props) => {
         label: trans('export-pdf', {}, 'actions'),
         group: trans('transfer'),
         target: ['apiv2_cursus_quota_export', {id: props.quota.id}],
-        //displayed: hasPermission('open', props.quota),
         displayed: true
       }]}
     >
       <Fragment>
         <div className="row">
           <div className="analytics-card">
-            <span className="fa fa-chalkboard-teacher" style={{backgroundColor: schemeCategory20c[1]}} />
+            <span className="fa fa-chalkboard-teacher label-info" />
             <h1 className="h3">
               <small>{trans('total', {}, 'cursus')}</small>
               {props.statistics.total}
             </h1>
           </div>
           <div className="analytics-card">
-            <span className="fa fa-pause" style={{backgroundColor: schemeCategory20c[1]}} />
+            <span className="fa fa-pause label-default" />
             <h1 className="h3">
               <small>{trans('pending', {}, 'cursus')}</small>
               {props.statistics.pending}
             </h1>
           </div>
           <div className="analytics-card">
-            <span className="fa fa-times" style={{backgroundColor: schemeCategory20c[1]}} />
+            <span className="fa fa-times label-danger" />
             <h1 className="h3">
               <small>{trans('refused', {}, 'cursus')}</small>
               {props.statistics.refused}
             </h1>
           </div>
           <div className="analytics-card">
-            <span className="fa fa-check" style={{backgroundColor: schemeCategory20c[1]}} />
+            <span className="fa fa-check label-warning" />
             <h1 className="h3">
               <small>{trans('validated', {}, 'cursus')}</small>
               {props.statistics.validated}
             </h1>
           </div>
           <div className="analytics-card">
-            <span className="fa fa-check-double" style={{backgroundColor: schemeCategory20c[1]}} />
+            <span className="fa fa-check-double label-success" />
             <h1 className="h3">
               <small>{trans('managed', {}, 'cursus')}</small>
               {props.statistics.managed}
             </h1>
           </div>
           <div className="analytics-card">
-            <span className="fa fa-chart-pie" style={{backgroundColor: schemeCategory20c[1]}} />
+            <span className="fa fa-chart-pie label-primary" />
             <h1 className="h3">
               <small>{trans('quota', {}, 'cursus')}</small>
               {props.statistics.calculated.toFixed(2)} / {get(props.quota, 'threshold')} 

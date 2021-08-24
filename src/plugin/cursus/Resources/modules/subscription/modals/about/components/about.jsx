@@ -14,11 +14,10 @@ const SubscriptionModal = props =>
   <Modal
     {...omit(props, 'event')}
     icon="fa fa-fw fa-info"
-    title={trans('about')}
-    subtitle={props.subscription.name}
+    title={props.subscription.session.name}
+    subtitle={props.subscription.session.course.name}
   >
     <DetailsData
-      meta={true}
       data={props.subscription}
       sections={[
         {

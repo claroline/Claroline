@@ -2,6 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import classes from 'classnames'
+import {constants as constList} from '#/main/app/content/list/constants'
 import {constants} from '#/plugin/cursus/constants'
 import {trans} from '#/main/app/intl/translation'
 import {MODAL_SUBSCRIPTION_STATUS} from '#/plugin/cursus/subscription/modals/status'
@@ -108,6 +109,14 @@ const SubscriptionAll = (props) =>
       }
     ]}
     card={SubscriptionCard}
+    display={{
+      available: [
+        constList.DISPLAY_TABLE,
+        constList.DISPLAY_TABLE_SM
+      ],
+      current: constList.DISPLAY_TABLE
+    }}
+    selectable={false}
   />
 
 SubscriptionAll.propTypes = {

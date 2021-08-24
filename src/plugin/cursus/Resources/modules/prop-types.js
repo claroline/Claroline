@@ -169,13 +169,8 @@ const Quota = {
 const Subscription = {
   propTypes: {
     id: T.string,
-    organization: T.shape(OrganizationTypes.propTypes),
     session: T.shape(Session.propTypes),
-    user: T.shape(UserTypes.propTypes),
-    registration: T.shape({
-      id: T.string,
-      status: T.string
-    })
+    user: T.shape(UserTypes.propTypes)
   }
 }
 

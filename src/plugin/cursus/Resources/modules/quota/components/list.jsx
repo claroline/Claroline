@@ -42,6 +42,7 @@ const QuotaList = (props) =>
       }
     ]}
     card={QuotaCard}
+    selectable={false}
   />
 
 QuotaList.propTypes = {
