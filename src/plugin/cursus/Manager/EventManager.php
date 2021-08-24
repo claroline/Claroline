@@ -283,7 +283,7 @@ class EventManager
                 $content,
                 $title,
                 [$user],
-                null,
+                $event->getCreator(),
                 [
                     ['name' => 'invitation.ics', 'url' => $icsPath, 'type' => 'text/calendar'],
                 ],
@@ -313,7 +313,7 @@ class EventManager
         ];
 
         if ($toFile) {
-            return $this->ics->createFile($icsProps);
+            return $this->ics->createFile($icsProps, $event->getUuid());
         }
 
         return $this->ics->create($icsProps);

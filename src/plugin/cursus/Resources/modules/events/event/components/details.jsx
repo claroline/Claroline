@@ -4,6 +4,8 @@ import {PropTypes as T} from 'prop-types'
 import {EventPage} from '#/plugin/agenda/event/containers/page'
 import {Event as BaseEventTypes} from '#/plugin/agenda/prop-types'
 
+import {trans} from '#/main/app/intl'
+import {URL_BUTTON} from '#/main/app/buttons'
 import {Event as EventTypes} from '#/plugin/cursus/prop-types'
 import {EventMain} from '#/plugin/cursus/events/event/containers/main'
 import {EventDetails as TrainingEventDetails} from '#/plugin/cursus/event/containers/details'
@@ -16,6 +18,16 @@ const EventDetails = (props) =>
         props.reload(event)
         props.open(event.id, true)
       }}
+      actions={props.trainingEvent ? [
+        {
+          name: 'export-ics',
+          type: URL_BUTTON,
+          icon: 'fa fa-fw fa-calendar',
+          label: trans('export-ics', {}, 'actions'),
+          group: trans('transfer'),
+          target: ['apiv2_cursus_event_download_ics', {id: props.trainingEvent.id}]
+        }
+      ] : []}
     >
       <TrainingEventDetails path={props.path} />
     </EventPage>

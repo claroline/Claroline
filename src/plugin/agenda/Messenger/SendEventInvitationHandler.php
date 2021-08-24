@@ -112,6 +112,9 @@ class SendEventInvitationHandler implements MessageHandlerInterface
                 $title,
                 [$user],
                 $event->getCreator(),
+                [
+                    ['name' => 'invitation.ics', 'type' => 'text/calendar', 'url' => $sendEventInvitation->getICSPath()],
+                ],
             ]);
         }
     }
