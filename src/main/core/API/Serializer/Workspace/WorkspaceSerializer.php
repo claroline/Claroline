@@ -308,6 +308,13 @@ class WorkspaceSerializer
      */
     public function deserialize(array $data, Workspace $workspace, array $options = []): Workspace
     {
+        //not sure if keep that. Might be troublesome later for rich texts
+        if (!in_array(Options::REFRESH_UUID, $options)) {
+            $this->sipe('id', 'setUuid', $data, $workspace);
+        } else {
+            $workspace->refreshUuid();
+        }
+
         $this->sipe('code', 'setCode', $data, $workspace);
         $this->sipe('name', 'setName', $data, $workspace);
         $this->sipe('contactEmail', 'setContactEmail', $data, $workspace);
@@ -330,7 +337,7 @@ class WorkspaceSerializer
             }
         }
 
-        if (empty($workspace->getCreator()) && isset($data['meta']) && !empty($data['meta']['creator'])) {
+        if (isset($data['meta']) && !empty($data['meta']['creator'])) {
             /** @var User $creator */
             $creator = $this->om->getObject($data['meta']['creator'], User::class);
             $workspace->setCreator($creator);
@@ -340,13 +347,6 @@ class WorkspaceSerializer
             /** @var Workspace $model */
             $model = $this->om->getRepository(Workspace::class)->findOneBy(['code' => $data['extra']['model']['code']]);
             $workspace->setWorkspaceModel($model);
-        }
-
-        //not sure if keep that. Might be troublesome later for rich texts
-        if (!in_array(Options::REFRESH_UUID, $options)) {
-            $this->sipe('id', 'setUuid', $data, $workspace);
-        } else {
-            $workspace->refreshUuid();
         }
 
         if (isset($data['meta'])) {

@@ -10,7 +10,6 @@ services:
             - '@claroline.manager.workspace_manager'
             - '@security.token_storage'
             - '@claroline.manager.resource_manager'
-            - '@claroline.manager.role_manager'
             - '@claroline.manager.organization.organization_manager'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\Listener\Log\LogListener'
