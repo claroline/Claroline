@@ -21,6 +21,7 @@ use Claroline\CursusBundle\Entity\Quota;
 use Claroline\CursusBundle\Entity\Registration\SessionUser;
 use Claroline\CursusBundle\Manager\QuotaManager;
 use Claroline\CursusBundle\Manager\SessionManager;
+use Dompdf\Dompdf;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,7 +29,6 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Dompdf\Dompdf;
 
 /**
  * @Route("/cursus_quota")
@@ -102,21 +102,22 @@ class QuotaController extends AbstractCrudController
         return new JsonResponse([
             'total' => count($sessionUsers),
             'pending' => array_reduce($sessionUsers, function ($accum, $subscription) {
-                return $accum + ($subscription->getStatus() == SessionUser::STATUS_PENDING ? 1 : 0);
+                return $accum + (SessionUser::STATUS_PENDING == $subscription->getStatus() ? 1 : 0);
             }, 0),
             'refused' => array_reduce($sessionUsers, function ($accum, $subscription) {
-                return $accum + ($subscription->getStatus() == SessionUser::STATUS_REFUSED ? 1 : 0);
+                return $accum + (SessionUser::STATUS_REFUSED == $subscription->getStatus() ? 1 : 0);
             }, 0),
             'validated' => array_reduce($sessionUsers, function ($accum, $subscription) {
-                return $accum + ($subscription->getStatus() == SessionUser::STATUS_VALIDATED ? 1 : 0);
+                return $accum + (SessionUser::STATUS_VALIDATED == $subscription->getStatus() ? 1 : 0);
             }, 0),
             'managed' => array_reduce($sessionUsers, function ($accum, $subscription) {
-                return $accum + ($subscription->getStatus() == SessionUser::STATUS_MANAGED ? 1 : 0);
+                return $accum + (SessionUser::STATUS_MANAGED == $subscription->getStatus() ? 1 : 0);
             }, 0),
             'calculated' => array_reduce($sessionUsers, function ($accum, $subscription) {
-                if ($subscription->getStatus() != SessionUser::STATUS_MANAGED) {
+                if (SessionUser::STATUS_MANAGED != $subscription->getStatus()) {
                     return $accum;
                 }
+
                 return $accum + $subscription->getSession()->getQuotaDays();
             }, 0),
         ]);
@@ -182,7 +183,7 @@ class QuotaController extends AbstractCrudController
     public function setSubscriptionStatus(SessionUser $sessionUser, Request $request): JsonResponse
     {
         $status = $request->query->get('status', null);
-        if ($status == null) {
+        if (null == $status) {
             return new JsonResponse('The status is missing.', 401);
         }
 

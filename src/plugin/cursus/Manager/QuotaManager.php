@@ -28,7 +28,7 @@ class QuotaManager
     public function generateFromTemplate(Quota $quota, array $subscriptions, string $locale): string
     {
         $placeholders = [
-            'organization_name' => $quota->getOrganization()->getName()
+            'organization_name' => $quota->getOrganization()->getName(),
         ];
 
         return $this->templateManager->getTemplate('training_quota', $placeholders, $locale);
