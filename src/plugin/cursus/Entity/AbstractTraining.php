@@ -70,6 +70,11 @@ class AbstractTraining
     protected $publicRegistration = false;
 
     /**
+     * @ORM\Column(name="auto_registration", type="boolean")
+     */
+    protected $autoRegistration = false;
+
+    /**
      * @ORM\Column(name="public_unregistration", type="boolean")
      */
     protected $publicUnregistration = false;
@@ -146,6 +151,16 @@ class AbstractTraining
     public function setPublicRegistration($publicRegistration)
     {
         $this->publicRegistration = $publicRegistration;
+    }
+
+    public function getAutoRegistration(): bool
+    {
+        return $this->autoRegistration;
+    }
+
+    public function setAutoRegistration(bool $autoRegistration)
+    {
+        $this->autoRegistration = $autoRegistration;
     }
 
     public function getPublicUnregistration()

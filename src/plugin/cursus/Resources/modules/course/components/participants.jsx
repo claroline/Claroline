@@ -249,9 +249,9 @@ const CourseParticipants = (props) =>
                 const Pending = (
                   <Fragment>
                     {isFull(props.activeSession) && hasPermission('edit', props.activeSession) &&
-                    <AlertBlock type="warning" title={trans('La session est complète.', {}, 'cursus')}>
-                      {trans('Il n\'est plus possible de valider les inscriptions en attente.', {}, 'cursus')}
-                    </AlertBlock>
+                      <AlertBlock type="warning" title={trans('La session est complète.', {}, 'cursus')}>
+                        {trans('Il n\'est plus possible de valider les inscriptions en attente.', {}, 'cursus')}
+                      </AlertBlock>
                     }
 
                     <SessionUsers

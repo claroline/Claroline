@@ -41,6 +41,15 @@
         }
     }
 
+    .radio,
+    .checkbox {
+        label {
+            // reset fixed height added by .input-size() to allow long text to expand properly
+            min-height: @input-height-base;
+            height: auto;
+        }
+    }
+
     .radio + .radio,
     .checkbox + .checkbox {
         margin-top: 5px;

@@ -232,7 +232,7 @@ class CourseController extends AbstractCrudController
         if (!$this->authorization->isGranted('ROLE_ADMIN')) {
             $params['hiddenFilters']['organizations'] = array_map(function (Organization $organization) {
                 return $organization->getUuid();
-            }, $user->getAdministratedOrganizations()->toArray());
+            }, $user->getOrganizations());
         }
 
         // hide hidden sessions for non admin

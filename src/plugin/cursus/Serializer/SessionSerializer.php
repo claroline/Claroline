@@ -147,6 +147,7 @@ class SessionSerializer
                 ],
                 'registration' => [
                     'selfRegistration' => $session->getPublicRegistration(),
+                    'autoRegistration' => $session->getAutoRegistration(),
                     'selfUnregistration' => $session->getPublicUnregistration(),
                     'validation' => $session->getRegistrationValidation(),
                     'userValidation' => $session->getUserValidation(),
@@ -185,6 +186,7 @@ class SessionSerializer
         $this->sipe('restrictions.hidden', 'setHidden', $data, $session);
 
         $this->sipe('registration.selfRegistration', 'setPublicRegistration', $data, $session);
+        $this->sipe('registration.autoRegistration', 'setAutoRegistration', $data, $session);
         $this->sipe('registration.selfUnregistration', 'setPublicUnregistration', $data, $session);
         $this->sipe('registration.validation', 'setRegistrationValidation', $data, $session);
         $this->sipe('registration.userValidation', 'setUserValidation', $data, $session);
