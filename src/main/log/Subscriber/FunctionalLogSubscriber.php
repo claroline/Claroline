@@ -38,6 +38,7 @@ class FunctionalLogSubscriber implements EventSubscriberInterface
     {
         if ($event->getUser()) {
             $this->messageBus->dispatch(new CreateFunctionalLog(
+                new \DateTime(),
                 $eventName,
                 $event->getMessage($this->translator), // this should not be done by the symfony event
                 $event->getUser(),

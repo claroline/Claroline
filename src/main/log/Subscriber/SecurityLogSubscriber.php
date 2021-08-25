@@ -3,7 +3,10 @@
 namespace Claroline\LogBundle\Subscriber;
 
 use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
+use Claroline\CoreBundle\Event\Security\AddRoleEvent;
+use Claroline\CoreBundle\Event\Security\RemoveRoleEvent;
 use Claroline\CoreBundle\Library\GeoIp\GeoIpInfoProviderInterface;
+use Claroline\LogBundle\Messenger\Message\CreateRoleChangeLogs;
 use Claroline\LogBundle\Messenger\Message\CreateSecurityLog;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -50,37 +53,47 @@ class SecurityLogSubscriber implements EventSubscriberInterface
             SecurityEvents::USER_ENABLE => 'logEvent',
             SecurityEvents::NEW_PASSWORD => 'logEvent',
             SecurityEvents::FORGOT_PASSWORD => 'logEvent',
-            SecurityEvents::ADD_ROLE => 'logEvent',
-            SecurityEvents::REMOVE_ROLE => 'logEvent',
             SecurityEvents::VIEW_AS => 'logEvent',
             SecurityEvents::VALIDATE_EMAIL => 'logEvent',
             SecurityEvents::AUTHENTICATION_FAILURE => 'logEvent',
+            SecurityEvents::ADD_ROLE => 'logRoleChanges',
+            SecurityEvents::REMOVE_ROLE => 'logRoleChanges',
             SecurityEvents::SWITCH_USER => 'logEventSwitchUser',
         ];
     }
 
     public function logEvent(Event $event, string $eventName): void
     {
-        $doerIp = $this->getDoerIp();
-        $doerCountry = null;
-        $doerCity = null;
-        if ($this->geoIpInfoProvider && 'CLI' !== $doerIp) {
-            $geoIpInfo = $this->geoIpInfoProvider->getGeoIpInfo($doerIp);
-
-            if ($geoIpInfo) {
-                $doerCountry = $geoIpInfo->getCountry();
-                $doerCity = $geoIpInfo->getCity();
-            }
-        }
+        $doerInfo = $this->getDoerInfo();
 
         $this->messageBus->dispatch(new CreateSecurityLog(
+            new \DateTime(),
             $eventName,
             $event->getMessage($this->translator), // this should not be done by the symfony event
+            $doerInfo['ip'],
             $this->security->getUser() ?? $event->getUser(),
             $event->getUser(),
-            $doerIp,
-            $doerCity,
-            $doerCountry
+            $doerInfo['city'],
+            $doerInfo['country']
+        ));
+    }
+
+    /**
+     * @param AddRoleEvent|RemoveRoleEvent $event
+     */
+    public function logRoleChanges(Event $event, string $eventName)
+    {
+        $doerInfo = $this->getDoerInfo();
+
+        $this->messageBus->dispatch(new CreateRoleChangeLogs(
+            new \DateTime(),
+            $eventName,
+            $event->getRole(),
+            $doerInfo['ip'],
+            $this->security->getUser(),
+            $event->getUsers(),
+            $doerInfo['city'],
+            $doerInfo['country']
         ));
     }
 
@@ -90,7 +103,31 @@ class SecurityLogSubscriber implements EventSubscriberInterface
             return;
         }
 
+        $doerInfo = $this->getDoerInfo();
+
+        $this->messageBus->dispatch(new CreateSecurityLog(
+            new \DateTime(),
+            $eventName,
+            $this->translator->trans(
+                'switchUser',
+                [
+                    'username' => $this->security->getUser(),
+                    'target' => $event->getTargetUser(),
+                ],
+                'security'
+            ), // this should not be done by the symfony event
+            $doerInfo['ip'],
+            $this->security->getUser(),
+            $event->getTargetUser(),
+            $doerInfo['city'],
+            $doerInfo['country']
+        ));
+    }
+
+    private function getDoerInfo(): array
+    {
         $doerIp = $this->getDoerIp();
+
         $doerCountry = null;
         $doerCity = null;
         if ($this->geoIpInfoProvider && 'CLI' !== $doerIp) {
@@ -102,22 +139,11 @@ class SecurityLogSubscriber implements EventSubscriberInterface
             }
         }
 
-        $this->messageBus->dispatch(new CreateSecurityLog(
-            $eventName,
-            $this->translator->trans(
-                'switchUser',
-                [
-                    'username' => $this->security->getUser(),
-                    'target' => $event->getTargetUser(),
-                ],
-                'security'
-            ), // this should not be done by the symfony event
-            $this->security->getUser(),
-            $event->getTargetUser(),
-            $doerIp,
-            $doerCity,
-            $doerCountry
-        ));
+        return [
+            'ip' => $doerIp,
+            'city' => $doerCity,
+            'country' => $doerCountry,
+        ];
     }
 
     private function getDoerIp(): string

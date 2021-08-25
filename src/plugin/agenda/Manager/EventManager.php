@@ -16,6 +16,8 @@ use Claroline\AgendaBundle\Entity\EventInvitation;
 use Claroline\AgendaBundle\Messenger\Message\SendEventInvitation;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Library\ICS\ICSGenerator;
+use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Manager\PlanningManager;
 use Symfony\Component\Messenger\MessageBusInterface;
 
@@ -23,6 +25,8 @@ class EventManager
 {
     /** @var ObjectManager */
     private $om;
+    /** @var ICSGenerator */
+    private $ics;
     /** @var MessageBusInterface */
     private $messageBus;
     /** @var PlanningManager */
@@ -30,12 +34,42 @@ class EventManager
 
     public function __construct(
         ObjectManager $om,
+        ICSGenerator $ics,
         MessageBusInterface $messageBus,
         PlanningManager $planningManager
     ) {
         $this->om = $om;
+        $this->ics = $ics;
         $this->messageBus = $messageBus;
         $this->planningManager = $planningManager;
+    }
+
+    public function getICS(Event $event, bool $toFile = false): string
+    {
+        $location = $event->getLocation();
+        $locationAddress = '';
+        if ($location) {
+            $locationAddress = $location->getName();
+            $locationAddress .= '<br>'.$location->getAddress();
+            if ($location->getPhone()) {
+                $locationAddress .= '<br>'.$location->getPhone();
+            }
+        }
+
+        $icsProps = [
+            'summary' => $event->getName(),
+            'description' => $event->getDescription(),
+            'location' => $locationAddress,
+            'dtstart' => DateNormalizer::normalize($event->getStartDate()),
+            'dtend' => DateNormalizer::normalize($event->getEndDate()),
+            'url' => null,
+        ];
+
+        if ($toFile) {
+            return $this->ics->createFile($icsProps, $event->getUuid());
+        }
+
+        return $this->ics->create($icsProps);
     }
 
     public function createInvitation(Event $event, User $user)
@@ -71,15 +105,22 @@ class EventManager
 
     public function sendInvitation(Event $event, array $users = [])
     {
+        // create ics file to attach to the message
+        $icsPath = $this->getICS($event, true);
+
         foreach ($users as $user) {
-            $invitation = $this->om->getRepository('ClarolineAgendaBundle:EventInvitation')->findOneBy([
+            /** @var EventInvitation $invitation */
+            $invitation = $this->om->getRepository(EventInvitation::class)->findOneBy([
                 'user' => $user,
                 'event' => $event,
             ]);
 
-            $this->messageBus->dispatch(new SendEventInvitation(
-                $invitation->getId()
-            ));
+            if ($invitation) {
+                $this->messageBus->dispatch(new SendEventInvitation(
+                    $invitation->getId(),
+                    $icsPath
+                ));
+            }
         }
     }
 }

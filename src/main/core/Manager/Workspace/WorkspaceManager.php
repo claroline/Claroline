@@ -135,7 +135,7 @@ class WorkspaceManager implements LoggerAwareInterface
 
         $user->setPersonalWorkspace($workspace);
         $user->addRole($workspace->getManagerRole());
-        $this->dispatcher->dispatch(SecurityEvents::ADD_ROLE, AddRoleEvent::class, [$user, $workspace->getManagerRole()]);
+        $this->dispatcher->dispatch(SecurityEvents::ADD_ROLE, AddRoleEvent::class, [[$user], $workspace->getManagerRole()]);
 
         $this->om->persist($user);
         $this->om->flush();
@@ -478,7 +478,7 @@ class WorkspaceManager implements LoggerAwareInterface
             $user = $workspaceCopy->getCreator();
             $user->addRole($managerRole);
             $this->om->persist($user);
-            $this->dispatcher->dispatch(SecurityEvents::ADD_ROLE, AddRoleEvent::class, [$user, $managerRole]);
+            $this->dispatcher->dispatch(SecurityEvents::ADD_ROLE, AddRoleEvent::class, [[$user], $managerRole]);
         }
 
         $root = $this->resourceManager->getWorkspaceRoot($workspaceCopy);

@@ -145,7 +145,7 @@ const EventAbout = (props) =>
           <Button
             className="btn btn-block btn-emphasis"
             type={MODAL_BUTTON}
-            label={trans('self-register', {}, 'actions')}
+            label={trans('self_register', {}, 'actions')}
             modal={[MODAL_COURSE_REGISTRATION, {
               event: props.event,
               register: props.register

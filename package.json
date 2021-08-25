@@ -54,7 +54,7 @@
     "reselect": "^4.0.0",
     "shelljs": "^0.5.3",
     "svg4everybody": "^2.1.2",
-    "swagger-ui-react": "3.51.0",
+    "swagger-ui-react": "3.51.2",
     "tinycolor2": "^1.4.1",
     "tinymce": "^4.9.3",
     "tinymce-codemirror": "git://github.com/christiaan/tinymce-codemirror.git#20c1bbe708",

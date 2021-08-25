@@ -16,7 +16,9 @@ use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
+use Claroline\CoreBundle\Event\Security\AddRoleEvent;
 use Claroline\CoreBundle\Event\Security\NewPasswordEvent;
+use Claroline\CoreBundle\Event\Security\RemoveRoleEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\Organization\OrganizationManager;
@@ -240,7 +242,7 @@ class UserCrud
         $user = $event->getObject();
 
         // trying to add a new role to a user
-        if (Crud::COLLECTION_ADD === $event->getAction() && 'role' === $event->getProperty()) {
+        if (Crud::COLLECTION_ADD === $event->getAction() && $event->getValue() instanceof Role) {
             /** @var Role $role */
             $role = $event->getValue();
 
@@ -257,9 +259,17 @@ class UserCrud
         /** @var User $currentUser */
         $currentUser = $this->tokenStorage->getToken()->getUser();
 
-        // refresh token to get updated roles if the current user has changes in his roles
-        if ('role' === $event->getProperty() && $this->authenticator->isAuthenticatedUser($user)) {
-            $this->authenticator->createToken($currentUser);
+        if ($event->getValue() instanceof Role) {
+            // refresh token to get updated roles if the current user has changes in his roles
+            if ($this->authenticator->isAuthenticatedUser($user)) {
+                $this->authenticator->createToken($currentUser);
+            }
+
+            if ('add' === $event->getAction()) {
+                $this->dispatcher->dispatch(SecurityEvents::ADD_ROLE, AddRoleEvent::class, [[$event->getObject()], $event->getValue()]);
+            } elseif ('remove' === $event->getAction()) {
+                $this->dispatcher->dispatch(SecurityEvents::REMOVE_ROLE, RemoveRoleEvent::class, [[$event->getObject()], $event->getValue()]);
+            }
         }
     }
 }

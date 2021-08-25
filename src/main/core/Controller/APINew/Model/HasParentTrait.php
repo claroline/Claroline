@@ -13,8 +13,9 @@ trait HasParentTrait
      */
     public function moveAction($child, $parent, $class, Request $request)
     {
-        $child = $this->find($class, $child);
-        $parent = $this->find($class, $parent);
+        $child = $this->crud->get($class, $child);
+        $parent = $this->crud->get($class, $parent);
+
         $this->crud->replace($child, 'parent', $parent);
 
         return new JsonResponse($this->serializer->serialize($child));

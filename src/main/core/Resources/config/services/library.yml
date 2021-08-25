@@ -110,6 +110,11 @@ services:
         arguments:
             - '@router'
 
+    Claroline\CoreBundle\Library\ICS\ICSGenerator:
+        arguments:
+            - '%claroline.param.files_directory%'
+            - '@filesystem'
+
     # GeoIp
     Claroline\CoreBundle\Library\GeoIp\Database\MaxMindGeoIpDatabaseDownloader:
         arguments:

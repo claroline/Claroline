@@ -14,7 +14,7 @@ const reducer = combineReducers({
   }),
   // TODO : a form reducer is no longer required here
   current: makeFormReducer(selectors.FORM_NAME, {}, {
-    bookings: makeListReducer(selectors.FORM_NAME+'.bookings', {
+    events: makeListReducer(selectors.FORM_NAME+'.events', {
       sortBy: {property: 'startDate', direction: -1}
     })
   })

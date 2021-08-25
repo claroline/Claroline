@@ -7,6 +7,7 @@ import {DashboardOverview} from '#/plugin/analytics/administration/dashboard/com
 import {DashboardActivity} from '#/plugin/analytics/administration/dashboard/components/activity'
 import {DashboardContent} from '#/plugin/analytics/administration/dashboard/components/content'
 import {DashboardCommunity} from '#/plugin/analytics/administration/dashboard/components/community'
+import {DashboardWorkspaces} from '#/plugin/analytics/administration/dashboard/containers/workspaces'
 
 const DashboardTool = (props) =>
   <Routes
@@ -49,6 +50,9 @@ const DashboardTool = (props) =>
 
           return Community
         }
+      }, {
+        path: '/workspaces',
+        component: DashboardWorkspaces
       }
     ]}
   />

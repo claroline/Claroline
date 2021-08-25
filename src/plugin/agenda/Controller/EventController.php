@@ -16,6 +16,7 @@ use Claroline\AgendaBundle\Entity\EventInvitation;
 use Claroline\AgendaBundle\Manager\EventManager;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Library\RoutingHelper;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -24,6 +25,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -91,6 +93,22 @@ class EventController extends AbstractCrudController
         }
 
         return $hiddenFilters;
+    }
+
+    /**
+     * @Route("/{id}/ics", name="apiv2_event_download_ics", methods={"GET"})
+     * @EXT\ParamConverter("event", options={"mapping": {"id": "uuid"}})
+     */
+    public function downloadICSAction(Event $event): StreamedResponse
+    {
+        $this->checkPermission('OPEN', $event, [], true);
+
+        return new StreamedResponse(function () use ($event) {
+            echo $this->manager->getICS($event);
+        }, 200, [
+            'Content-Type' => 'text/calendar',
+            'Content-Disposition' => 'attachment; filename='.TextNormalizer::toKey($event->getName()).'.ics',
+        ]);
     }
 
     /**

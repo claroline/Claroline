@@ -7,7 +7,6 @@ use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
-use Claroline\AppBundle\API\Utils\ArrayUtils;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AppBundle\Routing\Documentator;
 use Claroline\AppBundle\Routing\Finder;
@@ -144,7 +143,7 @@ abstract class AbstractCrudController extends AbstractApiController
     public function getAction(Request $request, $id, $class)
     {
         $query = $request->query->all();
-        $object = $this->find($class, $id);
+        $object = $this->crud->get($class, $id);
 
         $options = $this->options['get'];
         if (isset($query['options'])) {
@@ -214,7 +213,7 @@ abstract class AbstractCrudController extends AbstractApiController
         $query['hiddenFilters'] = $this->getDefaultHiddenFilters();
 
         return new JsonResponse(
-            $this->finder->search($class, $query, $options ?? [])
+            $this->crud->list($class, $query, $options ?? [])
         );
     }
 
@@ -231,10 +230,8 @@ abstract class AbstractCrudController extends AbstractApiController
      * )
      *
      * @param string $class
-     *
-     * @return BinaryFileResponse
      */
-    public function csvAction(Request $request, $class)
+    public function csvAction(Request $request, $class): BinaryFileResponse
     {
         $query = $request->query->all();
         $options = $this->options['list'];
@@ -246,42 +243,10 @@ abstract class AbstractCrudController extends AbstractApiController
         $hiddenFilters = isset($query['hiddenFilters']) ? $query['hiddenFilters'] : [];
         $query['hiddenFilters'] = array_merge($hiddenFilters, $this->getDefaultHiddenFilters());
 
-        $data = $this->finder->search(
-            $class,
-            $query,
-            $options ?? []
-        )['data'];
+        $csvFilename = $this->crud->csv($class, $query, $options ?? []);
 
-        $titles = [];
-        $formatted = [];
-        if (!empty($data[0])) {
-            $firstRow = $data[0];
-            //get the title list
-            $titles = !empty($query['columns']) ? $query['columns'] : ArrayUtils::getPropertiesName($firstRow);
-
-            foreach ($data as $el) {
-                $formattedData = [];
-                foreach ($titles as $title) {
-                    $formattedData[$title] = ArrayUtils::has($el, $title) ?
-                        ArrayUtils::get($el, $title) : null;
-                    $formattedData[$title] = !is_array($formattedData[$title]) ? $formattedData[$title] : json_encode($formattedData[$title]);
-                }
-                $formatted[] = $formattedData;
-            }
-        }
-
-        $tmpFile = tempnam(sys_get_temp_dir(), 'CSVCLARO').'.csv';
-        $fp = fopen($tmpFile, 'w');
-
-        fputcsv($fp, $titles, ';');
-
-        foreach ($formatted as $item) {
-            fputcsv($fp, $item, ';');
-        }
-
-        fclose($fp);
-
-        return new BinaryFileResponse($tmpFile, 200, [
+        return new BinaryFileResponse($csvFilename, 200, [
+            'Content-Type' => 'text/csv',
             'Content-Disposition' => "attachment; filename={$this->getName()}.csv",
         ]);
     }
@@ -438,21 +403,6 @@ abstract class AbstractCrudController extends AbstractApiController
     public function docAction($class)
     {
         return new JsonResponse($this->routerDocumentator->documentClass($class));
-    }
-
-    /**
-     * @param string     $class
-     * @param string|int $id
-     *
-     * @return object|null
-     */
-    protected function find($class, $id)
-    {
-        if (!is_numeric($id) && property_exists($class, 'uuid')) {
-            return $this->om->getRepository($class)->findOneBy(['uuid' => $id]);
-        }
-
-        return $this->om->getRepository($class)->findOneBy(['id' => $id]);
     }
 
     /**

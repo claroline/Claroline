@@ -277,7 +277,7 @@ class RegistrationController extends AbstractApiController
 
     /**
      * @ApiDoc(
-     *     description="Register users in different workspaces.",
+     *     description="Register groups in different workspaces.",
      *     queryString={
      *         {"name": "groups", "type": "array", "description": "The list of group uuids."},
      *         {"name": "workspaces", "type": "array", "description": "The list of workspace uuids."},

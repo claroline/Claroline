@@ -7,37 +7,46 @@ use Claroline\CoreBundle\Entity\User;
 
 class CreateSecurityLog implements AsyncMessageInterface
 {
+    /** @var \DateTimeInterface */
+    private $date;
     /** @var string */
     private $action;
     /** @var string */
     private $details;
+    /** @var string */
+    private $doerIp;
     /** @var User */
     private $doer;
     /** @var User */
     private $target;
-    /** @var string */
-    private $doerIp;
     /** @var string|null */
     private $doerCountry;
     /** @var string|null */
     private $doerCity;
 
     public function __construct(
+        \DateTimeInterface $date,
         string $action,
         string $details,
-        User $doer,
-        User $target,
         string $doerIp,
+        ?User $doer = null,
+        ?User $target = null,
         ?string $doerCountry = null,
         ?string $doerCity = null
     ) {
+        $this->date = $date;
         $this->action = $action;
         $this->details = $details;
+        $this->doerIp = $doerIp;
         $this->doer = $doer;
         $this->target = $target;
-        $this->doerIp = $doerIp;
         $this->doerCountry = $doerCountry;
         $this->doerCity = $doerCity;
+    }
+
+    public function getDate(): \DateTimeInterface
+    {
+        return $this->date;
     }
 
     public function getAction(): string
@@ -50,19 +59,19 @@ class CreateSecurityLog implements AsyncMessageInterface
         return $this->details;
     }
 
-    public function getDoer(): User
+    public function getDoerIp(): string
+    {
+        return $this->doerIp;
+    }
+
+    public function getDoer(): ?User
     {
         return $this->doer;
     }
 
-    public function getTarget(): User
+    public function getTarget(): ?User
     {
         return $this->target;
-    }
-
-    public function getDoerIp(): string
-    {
-        return $this->doerIp;
     }
 
     public function getDoerCountry(): ?string

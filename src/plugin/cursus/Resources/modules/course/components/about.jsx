@@ -222,11 +222,14 @@ const CourseAbout = (props) => {
             <Alert type="warning">{trans('registration_requires_manager', {}, 'cursus')}</Alert>
           }
 
-          {!isEmpty(props.activeSession) && isEmpty(props.activeSessionRegistration) && getInfo(props.course, props.activeSession, 'registration.selfRegistration') &&
+          {!isEmpty(props.activeSession)
+            && isEmpty(props.activeSessionRegistration)
+            && getInfo(props.course, props.activeSession, 'registration.selfRegistration')
+            && getInfo(props.course, props.activeSession, 'permissions.self_register') &&
             <Button
               className="btn btn-block btn-emphasis"
               type={MODAL_BUTTON}
-              label={trans(isFull(props.activeSession) ? 'register_waiting_list' : 'self-register', {}, 'actions')}
+              label={trans(isFull(props.activeSession) ? 'register_waiting_list' : 'self_register', {}, 'actions')}
               modal={[MODAL_COURSE_REGISTRATION, {
                 path: props.path,
                 course: props.course,

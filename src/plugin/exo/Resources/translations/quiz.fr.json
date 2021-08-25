@@ -523,5 +523,7 @@
     "show_step_titles": "Afficher le titre des étapes",
     "show_question_titles": "Afficher le titre des questions",
     "show_back": "Autoriser le retour en arrière",
-    "show_attempts_stats": "Afficher le graphique d'évolution des tentatives'"
+    "show_attempts_stats": "Afficher le graphique d'évolution des tentatives",
+    "attempts_chart_all": "Evolution de toutes les tentatives",
+    "attempts_chart_user": "Evolution de mes tentatives"
 }

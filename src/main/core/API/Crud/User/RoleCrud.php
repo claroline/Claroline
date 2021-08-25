@@ -140,34 +140,36 @@ class RoleCrud
         // refresh token to get updated roles if this is the current user or if he is in the group
         if (in_array($event->getProperty(), ['user', 'group'])) {
             $currentUser = $this->tokenStorage->getToken()->getUser();
+            if ($currentUser instanceof User) {
+                // checks if we are modifying roles of the current user
+                // if we do, we will need to refresh its token
+                $refresh = false;
+                if ($event->getValue() instanceof User) {
+                    $refresh = $this->authenticator->isAuthenticatedUser($event->getValue());
+                } elseif ($event->getValue() instanceof Group) {
+                    $refresh = $currentUser->hasGroup($event->getValue());
+                }
 
-            $refresh = false;
+                if ($refresh) {
+                    $this->authenticator->createToken($currentUser);
+                }
+            }
+
+            $users = [];
             if ($event->getValue() instanceof User) {
-                $refresh = $this->authenticator->isAuthenticatedUser($event->getValue());
-            } elseif ($event->getValue() instanceof Group && $currentUser instanceof User) {
-                $refresh = $currentUser->hasGroup($event->getValue());
-            }
-
-            if ($refresh) {
-                $this->authenticator->createToken($currentUser);
-            }
-
-            // Dispatch event for User
-            if ('add' === $event->getAction() && $event->getValue() instanceof User && $event->getObject() instanceof Role) {
-                $this->dispatcher->dispatch(SecurityEvents::ADD_ROLE, AddRoleEvent::class, [$event->getValue(), $event->getObject()]);
-            } elseif ('remove' === $event->getAction() && $event->getValue() instanceof User && $event->getObject() instanceof Role) {
-                $this->dispatcher->dispatch(SecurityEvents::REMOVE_ROLE, RemoveRoleEvent::class, [$event->getValue(), $event->getObject()]);
-            }
-
-            // Dispatch event for Group
-            if ('add' === $event->getAction() && $event->getValue() instanceof Group && $event->getObject() instanceof Role) {
+                $users[] = $event->getValue();
+            } elseif ($event->getValue() instanceof Group) {
                 foreach ($event->getValue()->getUsers() as $user) {
-                    $this->dispatcher->dispatch(SecurityEvents::ADD_ROLE, AddRoleEvent::class, [$user, $event->getObject()]);
+                    if ($user->isEnabled() && !$user->isRemoved()) {
+                        $users[] = $user;
+                    }
                 }
-            } elseif ('remove' === $event->getAction() && $event->getValue() instanceof Group && $event->getObject() instanceof Role) {
-                foreach ($event->getValue()->getUsers() as $user) {
-                    $this->dispatcher->dispatch(SecurityEvents::REMOVE_ROLE, RemoveRoleEvent::class, [$user, $event->getObject()]);
-                }
+            }
+
+            if ('add' === $event->getAction()) {
+                $this->dispatcher->dispatch(SecurityEvents::ADD_ROLE, AddRoleEvent::class, [$users, $event->getObject()]);
+            } elseif ('remove' === $event->getAction()) {
+                $this->dispatcher->dispatch(SecurityEvents::REMOVE_ROLE, RemoveRoleEvent::class, [$users, $event->getObject()]);
             }
         }
     }

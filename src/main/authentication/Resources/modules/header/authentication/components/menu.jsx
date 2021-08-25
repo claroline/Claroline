@@ -23,7 +23,7 @@ const AuthenticationMenu = (props) => {
         <Button
           type={LINK_BUTTON}
           className="app-header-item app-header-btn"
-          label={trans('self-register', {}, 'actions')}
+          label={trans('create-account', {}, 'actions')}
           target="/registration"
         />
       }

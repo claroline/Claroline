@@ -4,6 +4,7 @@ import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
 import {hasPermission} from '#/main/app/security/permissions'
+import {URL_BUTTON} from '#/main/app/buttons'
 import {DetailsData} from '#/main/app/content/details/components/data'
 
 import {EventPage} from '#/plugin/agenda/event/containers/page'
@@ -21,6 +22,16 @@ const EventDetails = (props) =>
         props.reload(event)
         props.open(event.id)
       }}
+      actions={props.agendaEvent ? [
+        {
+          name: 'export-ics',
+          type: URL_BUTTON,
+          icon: 'fa fa-fw fa-calendar',
+          label: trans('export-ics', {}, 'actions'),
+          group: trans('transfer'),
+          target: ['apiv2_event_download_ics', {id: props.agendaEvent.id}]
+        }
+      ] : []}
     >
       <DetailsData
         data={props.agendaEvent}
