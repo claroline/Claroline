@@ -11,7 +11,7 @@ import {
   Session as SessionTypes
 } from '#/plugin/cursus/prop-types'
 import {route} from '#/plugin/cursus/routing'
-import {CourseAbout} from '#/plugin/cursus/course/components/about'
+import {CourseAbout} from '#/plugin/cursus/course/containers/about'
 import {CourseParticipants} from '#/plugin/cursus/course/containers/participants'
 import {CourseSessions} from '#/plugin/cursus/course/containers/sessions'
 import {CourseEvents} from '#/plugin/cursus/course/containers/events'
@@ -72,7 +72,6 @@ const CourseDetails = (props) =>
                 activeSession={props.activeSession}
                 activeSessionRegistration={props.activeSessionRegistration}
                 availableSessions={props.availableSessions}
-                register={props.register}
               />
             )
           }
@@ -128,8 +127,7 @@ CourseDetails.propTypes = {
   }),
   availableSessions: T.arrayOf(T.shape(
     SessionTypes.propTypes
-  )),
-  register: T.func.isRequired
+  ))
 }
 
 export {

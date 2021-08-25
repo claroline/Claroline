@@ -10,7 +10,7 @@ import {hasPermission} from '#/main/app/security'
 import {Alert} from '#/main/app/alert/components/alert'
 import {AlertBlock} from '#/main/app/alert/components/alert-block'
 import {Button} from '#/main/app/action/components/button'
-import {LINK_BUTTON, MODAL_BUTTON, POPOVER_BUTTON} from '#/main/app/buttons'
+import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON, POPOVER_BUTTON} from '#/main/app/buttons'
 import {ContentHtml} from '#/main/app/content/components/html'
 import {ContentTitle} from '#/main/app/content/components/title'
 import {isHtmlEmpty} from '#/main/app/data/types/html/validators'
@@ -225,6 +225,7 @@ const CourseAbout = (props) => {
           {!isEmpty(props.activeSession)
             && isEmpty(props.activeSessionRegistration)
             && getInfo(props.course, props.activeSession, 'registration.selfRegistration')
+            && !get(props.activeSession, 'registration.autoRegistration')
             && getInfo(props.course, props.activeSession, 'permissions.self_register') &&
             <Button
               className="btn btn-block btn-emphasis"
@@ -259,12 +260,22 @@ const CourseAbout = (props) => {
             />
           }
 
-          {(isFullyRegistered(props.activeSessionRegistration) || hasPermission('edit', props.course)) && !isEmpty(getInfo(props.course, props.activeSession, 'workspace')) &&
+          {(isFullyRegistered(props.activeSessionRegistration)
+            || get(props.activeSession, 'registration.autoRegistration')
+            || hasPermission('edit', props.course)
+          ) && !isEmpty(getInfo(props.course, props.activeSession, 'workspace')) &&
             <Button
               className="btn btn-block"
-              type={LINK_BUTTON}
+              type={CALLBACK_BUTTON}
               label={trans('open-training', {}, 'actions')}
-              target={workspaceRoute(getInfo(props.course, props.activeSession, 'workspace'))}
+              callback={() => {
+                const workspaceUrl = workspaceRoute(getInfo(props.course, props.activeSession, 'workspace'))
+                if (get(props.activeSession, 'registration.autoRegistration') && !isFullyRegistered(props.activeSessionRegistration)) {
+                  props.register(props.course, props.activeSession.id).then(() => props.history.push(workspaceUrl))
+                } else {
+                  props.history.push(workspaceUrl)
+                }
+              }}
             />
           }
         </section>
@@ -437,7 +448,10 @@ CourseAbout.propTypes = {
   availableSessions: T.arrayOf(T.shape(
     SessionTypes.propTypes
   )),
-  register: T.func.isRequired
+  register: T.func.isRequired,
+  history: T.shape({
+    push: T.func.isRequired
+  }).isRequired
 }
 
 export {

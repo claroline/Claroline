@@ -34,7 +34,7 @@ function isRegistered(session, registrations) {
     registration = registrations.groups.find(registration => session.id === registration.session.id)
   }
 
-  return !isEmpty(registration)
+  return !isEmpty(registration) && isFullyRegistered(registration)
 }
 
 function isFull(session) {

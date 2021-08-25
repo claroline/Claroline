@@ -27,21 +27,31 @@ class SessionVoter extends AbstractVoter
 
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
     {
+        $granted = null;
         switch ($attributes[0]) {
             case self::CREATE:
             case self::EDIT:
             case self::DELETE:
             case self::PATCH:
-                return $this->isGranted('EDIT', $object->getCourse());
+                $granted = $this->isGranted('EDIT', $object->getCourse());
+                break;
             case self::OPEN:
-                return $this->isGranted('OPEN', $object->getCourse());
+                $granted = $this->isGranted('OPEN', $object->getCourse());
+                break;
             case self::VIEW:
-                return $this->isGranted('VIEW', $object->getCourse());
-
+                $granted = $this->isGranted('VIEW', $object->getCourse());
+                break;
             case self::SELF_REGISTER:
-                return $this->isGranted('SELF_REGISTER', $object->getCourse());
+                $granted = $this->isGranted('SELF_REGISTER', $object->getCourse());
+                break;
         }
 
-        return VoterInterface::ACCESS_ABSTAIN;
+        if ($granted) {
+            return VoterInterface::ACCESS_GRANTED;
+        } elseif (false === $granted) {
+            return VoterInterface::ACCESS_DENIED;
+        }
+
+        return VoterInterface::ACCESS_DENIED;
     }
 }

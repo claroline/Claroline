@@ -15,7 +15,7 @@ const CourseSessions = withRouter(
         return dispatch(actions.open(courseSlug, true))
       },
       register(course, sessionId) {
-        dispatch(actions.register(course, sessionId))
+        return dispatch(actions.register(course, sessionId))
       }
     })
   )(CourseSessionsComponent)

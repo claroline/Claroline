@@ -32,6 +32,7 @@ const Course = {
     }),
     registration: T.shape({
       selfRegistration: T.bool,
+      autoRegistration: T.bool,
       selfUnregistration: T.bool,
       validation: T.bool,
       mail: T.bool,
@@ -50,6 +51,7 @@ const Course = {
     },
     registration: {
       selfRegistration: false,
+      autoRegistration: false,
       selfUnregistration: false,
       validation: false,
       mail: false,
@@ -95,6 +97,7 @@ const Session = {
     }),
     registration: T.shape({
       selfRegistration: T.bool,
+      autoRegistration: T.bool,
       selfUnregistration: T.bool,
       validation: T.bool,
       mail: T.bool,
@@ -110,6 +113,7 @@ const Session = {
     },
     registration: {
       selfRegistration: false,
+      autoRegistration: false,
       selfUnregistration: false,
       validation: false,
       mail: false,
