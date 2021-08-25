@@ -10,7 +10,7 @@
     "target": "esnext",
     "moduleResolution": "node",
     "paths": {
-    "#/main/app/*": ["./src/main/app/Resources/modules/*"]
+      "#/main/app/*": ["./src/main/app/Resources/modules/*"]
     }
   }
 }
