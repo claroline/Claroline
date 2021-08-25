@@ -55,7 +55,7 @@ class AnswerRepository extends EntityRepository
         ';
 
         if ($finishedOnly) {
-            $dql .= 'AND p.end IS NOT NULL';
+            $dql .= 'AND p.end IS NOT NULL ';
         }
 
         if ($user) {

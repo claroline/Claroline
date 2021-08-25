@@ -19,7 +19,7 @@ import {isQuestionType} from '#/plugin/exo/items/item-types'
 
 import {select as playerSelect} from '#/plugin/exo/quiz/player/selectors'
 import {showCorrection, showScore} from '#/plugin/exo/resources/quiz/papers/restrictions'
-import {AttemptsChart} from '#/plugin/exo/charts/attempts/containers/chart'
+import {AttemptsChart} from '#/plugin/exo/charts/attempts/components/chart'
 
 // TODO : merge with PlayerRestrictions
 // TODO : show number of attempts info
