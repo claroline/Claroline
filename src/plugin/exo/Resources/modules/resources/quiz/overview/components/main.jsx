@@ -9,7 +9,7 @@ import {UserEvaluation as UserEvaluationType} from '#/main/core/resource/prop-ty
 import {ResourceOverview} from '#/main/core/resource/components/overview'
 
 import {correctionModes, markModes, SHOW_CORRECTION_AT_DATE, SHOW_SCORE_AT_NEVER} from '#/plugin/exo/quiz/enums'
-import {AttemptsChart} from '#/plugin/exo/charts/attempts/containers/chart'
+import {AttemptsChart} from '#/plugin/exo/charts/attempts/components/chart'
 
 // TODO : show info about number of attempts
 
