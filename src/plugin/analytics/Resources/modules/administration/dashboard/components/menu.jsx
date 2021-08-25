@@ -32,7 +32,7 @@ const DashboardMenu = (props) =>
         }, {
           name: 'content',
           type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-folder',
+          icon: 'fa fa-fw fa-photo-video',
           label: trans('content'),
           target: props.path + '/content'
         }, {
@@ -41,6 +41,12 @@ const DashboardMenu = (props) =>
           icon: 'fa fa-fw fa-users',
           label: trans('community'),
           target: props.path + '/community'
+        }, {
+          name: 'workspaces',
+          type: LINK_BUTTON,
+          icon: 'fa fa-fw fa-folder',
+          label: trans('workspaces'),
+          target: props.path + '/workspaces'
         }
       ]}
       onClick={props.autoClose}

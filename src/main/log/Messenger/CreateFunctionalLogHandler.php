@@ -21,6 +21,7 @@ class CreateFunctionalLogHandler implements MessageHandlerInterface
     {
         $logEntry = new FunctionalLog();
 
+        $logEntry->setDate($createLog->getDate());
         $logEntry->setEvent($createLog->getAction());
         $logEntry->setDetails($createLog->getDetails());
         $logEntry->setUser($createLog->getDoer());

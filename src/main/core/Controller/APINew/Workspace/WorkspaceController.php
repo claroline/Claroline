@@ -30,6 +30,7 @@ use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\Workspace\TransferManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
+use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -49,6 +50,7 @@ class WorkspaceController extends AbstractCrudController
     use HasOrganizationsTrait;
     use HasRolesTrait;
     use HasUsersTrait;
+    use PermissionCheckerTrait;
 
     /** @var TokenStorageInterface */
     private $tokenStorage;
@@ -271,6 +273,8 @@ class WorkspaceController extends AbstractCrudController
      */
     public function exportAction(Workspace $workspace): BinaryFileResponse
     {
+        $this->checkPermission('OPEN', $workspace, [], true);
+
         $pathArch = $this->importer->export($workspace);
         $filename = TextNormalizer::toKey($workspace->getCode()).'.zip';
 
@@ -343,7 +347,7 @@ class WorkspaceController extends AbstractCrudController
         /** @var Workspace[] $workspaces */
         $workspaces = parent::decodeIdsString($request, Workspace::class);
         foreach ($workspaces as $workspace) {
-            if ($this->authorization->isGranted('EDIT', $workspace) && !$workspace->isModel() && !$workspace->isArchived()) {
+            if ($this->authorization->isGranted('ADMINISTRATE', $workspace) && !$workspace->isArchived()) {
                 $processed[] = $this->workspaceManager->archive($workspace);
             }
         }
@@ -371,7 +375,7 @@ class WorkspaceController extends AbstractCrudController
         /** @var Workspace[] $workspaces */
         $workspaces = parent::decodeIdsString($request, Workspace::class);
         foreach ($workspaces as $workspace) {
-            if ($this->authorization->isGranted('EDIT', $workspace) && !$workspace->isModel() && $workspace->isArchived()) {
+            if ($this->authorization->isGranted('ADMINISTRATE', $workspace) && $workspace->isArchived()) {
                 $processed[] = $this->workspaceManager->unarchive($workspace);
             }
         }
@@ -401,6 +405,8 @@ class WorkspaceController extends AbstractCrudController
      */
     public function listManagersAction(Workspace $workspace, Request $request): JsonResponse
     {
+        $this->checkPermission('OPEN', $workspace, [], true);
+
         $role = $this->roleManager->getManagerRole($workspace);
 
         return new JsonResponse($this->finder->search(

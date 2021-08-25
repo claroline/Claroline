@@ -33,7 +33,6 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @Route("/cursus_course")
@@ -95,10 +94,12 @@ class CourseController extends AbstractCrudController
             /** @var User $user */
             $user = $this->tokenStorage->getToken()->getUser();
 
-            // filter by organizations
-            $filters['organizations'] = array_map(function (Organization $organization) {
-                return $organization->getUuid();
-            }, $user->getOrganizations());
+            if ($user instanceof User) {
+                // filter by organizations
+                $filters['organizations'] = array_map(function (Organization $organization) {
+                    return $organization->getUuid();
+                }, $user->getOrganizations());
+            }
 
             // hide hidden trainings for non admin
             if (!$this->checkToolAccess('EDIT')) {
@@ -234,17 +235,24 @@ class CourseController extends AbstractCrudController
             }, $user->getAdministratedOrganizations()->toArray());
         }
 
+        // hide hidden sessions for non admin
+        if (!$this->checkToolAccess('EDIT')) {
+            $params['hiddenFilters']['hidden'] = false;
+        }
+
         return new JsonResponse(
             $this->finder->search(Session::class, $params)
         );
     }
 
-    private function checkToolAccess(string $rights = 'OPEN')
+    private function checkToolAccess(string $rights = 'OPEN'): bool
     {
         $trainingsTool = $this->toolManager->getOrderedTool('trainings', Tool::DESKTOP);
 
         if (is_null($trainingsTool) || !$this->authorization->isGranted($rights, $trainingsTool)) {
-            throw new AccessDeniedException();
+            return false;
         }
+
+        return true;
     }
 }

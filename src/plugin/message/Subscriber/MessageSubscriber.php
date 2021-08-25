@@ -53,7 +53,7 @@ class MessageSubscriber implements EventSubscriberInterface
             $event->getObject(),
             $event->getReceivers(),
             $event->getSender(),
-            $event->getWithMail()
+            $event->getAttachments()
         );
 
         $sender = $event->getSender() ?? $this->security->getUser();

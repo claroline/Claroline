@@ -1655,7 +1655,7 @@
     "currency": "Devise",
     "price": "Prix",
     "allow_change_password": "Autoriser les utilisateurs à changer leur mot de passe",
-    "sendMessage": "sender a envoyé un message à receveir",
+    "sendMessage": "sender a envoyé un message à receiver",
     "claroline_message_sending": "Envoi d'un message",
     "planned_at": "Planifié le",
     "planning": "Planification",
@@ -1667,5 +1667,6 @@
     "online": "En ligne",
     "irl": "En présentiel",
     "add_room": "Ajouter une salle",
-    "security": "Sécurité"
+    "security": "Sécurité",
+    "both": "Tous les deux"
 }

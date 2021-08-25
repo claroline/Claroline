@@ -59,6 +59,15 @@ const EventList = (props) =>
         group: trans('transfer'),
         target: ['apiv2_cursus_event_download_pdf', {id: rows[0].id}]
       }, {
+        name: 'export-ics',
+        type: URL_BUTTON,
+        icon: 'fa fa-fw fa-calendar',
+        label: trans('export-ics', {}, 'actions'),
+        displayed: hasPermission('open', rows[0]),
+        scope: ['object'],
+        group: trans('transfer'),
+        target: ['apiv2_cursus_event_download_ics', {id: rows[0].id}]
+      }, {
         name: 'export-presences-empty',
         type: URL_BUTTON,
         icon: 'fa fa-fw fa-border-none',

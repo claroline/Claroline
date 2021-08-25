@@ -35,7 +35,7 @@ const EventUsers = (props) =>
         type: CALLBACK_BUTTON,
         icon: 'fa fa-fw fa-envelope',
         label: trans('send_invitation', {}, 'actions'),
-        callback: () => props.inviteUsers(props.event.id, rows[0].user.id),
+        callback: () => props.inviteUsers(props.event.id, rows),
         displayed: hasPermission('edit', props.event)
       }, {
         name: 'download-presence',

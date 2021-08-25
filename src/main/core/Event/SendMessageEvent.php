@@ -18,11 +18,16 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SendMessageEvent extends Event
 {
+    /** @var string */
     private $content;
+    /** @var string */
     private $object;
+    /** @var AbstractRoleSubject[] */
     private $receivers;
+    /** @var User|null */
     private $sender;
-    private $withMail;
+    /** @var array */
+    private $attachments;
 
     /**
      * @param AbstractRoleSubject[] $receivers
@@ -32,16 +37,16 @@ class SendMessageEvent extends Event
         $object,
         array $receivers,
         ?User $sender = null,
-        $withMail = true
+        array $attachments = []
     ) {
         $this->content = $content;
         $this->object = $object;
         $this->receivers = $receivers;
         $this->sender = $sender;
-        $this->withMail = $withMail;
+        $this->attachments = $attachments;
     }
 
-    public function getContent()
+    public function getContent(): ?string
     {
         return $this->content;
     }
@@ -51,7 +56,7 @@ class SendMessageEvent extends Event
         $this->content = $content;
     }
 
-    public function getObject()
+    public function getObject(): ?string
     {
         return $this->object;
     }
@@ -61,7 +66,7 @@ class SendMessageEvent extends Event
         $this->object = $object;
     }
 
-    public function getReceivers()
+    public function getReceivers(): array
     {
         return $this->receivers;
     }
@@ -74,7 +79,7 @@ class SendMessageEvent extends Event
         $this->receivers = $receivers;
     }
 
-    public function getSender()
+    public function getSender(): ?User
     {
         return $this->sender;
     }
@@ -84,23 +89,23 @@ class SendMessageEvent extends Event
         $this->sender = $sender;
     }
 
-    public function getWithMail()
+    public function getAttachments(): array
     {
-        return $this->withMail;
+        return $this->attachments;
     }
 
-    public function setWithMail($withMail)
+    public function addAttachment($attachment)
     {
-        $this->withMail = $withMail;
+        $this->attachments[] = $attachment;
     }
 
-    public function getMessage(TranslatorInterface $translator, $sender, User $receveir)
+    public function getMessage(TranslatorInterface $translator, $sender, User $receiver): string
     {
         return $translator->trans(
             'sendMessage',
             [
                 'sender' => $sender,
-                'receveir' => $receveir,
+                'receiver' => $receiver,
             ],
             'platform'
         );

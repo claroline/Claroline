@@ -1,5 +1,6 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import classes from 'classnames'
 import get from 'lodash/get'
 
 import {asset} from '#/main/app/config/asset'
@@ -13,6 +14,9 @@ const SessionCard = props =>
   <DataCard
     {...props}
     id={props.data.id}
+    className={classes(props.className, {
+      'data-card-muted': get(props.data, 'restrictions.hidden', false)
+    })}
     poster={props.data.thumbnail ? asset(props.data.thumbnail.url) : null}
     icon="fa fa-calendar-week"
     title={trans('date_range', {
@@ -41,9 +45,13 @@ const SessionCard = props =>
         {get(props.data, 'location.name') || trans('online_session', {}, 'cursus')}
       </span>
     }
+    flags={[
+      get(props.data, 'restrictions.hidden') && ['fa fa-eye-slash', trans('session_hidden', {}, 'workspace')]
+    ].filter(flag => !!flag)}
   />
 
 SessionCard.propTypes = {
+  className: T.string,
   data: T.shape(
     SessionTypes.propTypes
   ).isRequired

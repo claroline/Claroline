@@ -35,7 +35,8 @@ class PostalMailer implements MailClientInterface
         $sendMessage->to($message->getAttribute('to'));
         $sendMessage->from($message->getAttribute('from'));
 
-        if ($tag = $this->ch->getParameter('mailer_tag')) {
+        $tag = $this->ch->getParameter('mailer_tag');
+        if ($tag) {
             $sendMessage->tag($tag);
         }
 
@@ -44,6 +45,10 @@ class PostalMailer implements MailClientInterface
 
         if ($message->hasAttribute('reply_to')) {
             $sendMessage->replyTo($message->getAttribute('reply_to'));
+        }
+
+        foreach ($message->getAttribute('attachments') as $attachment) {
+            $sendMessage->attach($attachment['name'], $attachment['type'], file_get_contents($attachment['url']));
         }
 
         return $sendMessage->send();

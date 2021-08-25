@@ -111,7 +111,7 @@ class WorkspaceRestrictions extends Component {
                 <Button
                   className="btn btn-block"
                   type={MODAL_BUTTON}
-                  label={trans('self-register', {}, 'actions')}
+                  label={trans('self_register', {}, 'actions')}
                   modal={[MODAL_REGISTRATION, {
                     onRegister: this.props.selfRegister
                   }]}

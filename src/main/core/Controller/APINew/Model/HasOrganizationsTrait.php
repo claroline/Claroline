@@ -65,7 +65,7 @@ trait HasOrganizationsTrait
      */
     public function addOrganizationsAction($id, $class, Request $request)
     {
-        $object = $this->find($class, $id);
+        $object = $this->crud->get($class, $id);
         $organizations = $this->decodeIdsString($request, 'Claroline\CoreBundle\Entity\Organization\Organization');
         $this->crud->patch($object, 'organization', Crud::COLLECTION_ADD, $organizations);
 
@@ -96,7 +96,7 @@ trait HasOrganizationsTrait
      */
     public function removeOrganizationsAction($id, $class, Request $request)
     {
-        $object = $this->find($class, $id);
+        $object = $this->crud->get($class, $id);
         $organizations = $this->decodeIdsString($request, 'Claroline\CoreBundle\Entity\Organization\Organization');
         $this->crud->patch($object, 'organization', Crud::COLLECTION_REMOVE, $organizations);
 

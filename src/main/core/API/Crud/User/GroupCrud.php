@@ -82,9 +82,9 @@ class GroupCrud
             foreach ($group->getUsers() as $user) {
                 if ($user->isEnabled() && !$user->isRemoved()) {
                     if ('add' === $event->getAction()) {
-                        $this->dispatcher->dispatch(SecurityEvents::ADD_ROLE, AddRoleEvent::class, [$user, $event->getValue()]);
+                        $this->dispatcher->dispatch(SecurityEvents::ADD_ROLE, AddRoleEvent::class, [[$user], $event->getValue()]);
                     } elseif ('remove' === $event->getAction()) {
-                        $this->dispatcher->dispatch(SecurityEvents::REMOVE_ROLE, RemoveRoleEvent::class, [$user, $event->getValue()]);
+                        $this->dispatcher->dispatch(SecurityEvents::REMOVE_ROLE, RemoveRoleEvent::class, [[$user], $event->getValue()]);
                     }
                 }
             }

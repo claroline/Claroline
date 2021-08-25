@@ -73,7 +73,7 @@ class HomeExternalAccountComponent extends Component {
                 <Button
                   className="btn btn-block"
                   type={MODAL_BUTTON}
-                  label={trans('self-register', {}, 'actions')}
+                  label={trans('create-account', {}, 'actions')}
                   modal={[MODAL_REGISTRATION, {
                     onRegister: (user) => this.props.linkExternalAccount(this.props.serviceName, user.username).then(() => {
                       // TODO : redirect

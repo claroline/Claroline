@@ -7,5 +7,6 @@ services:
   Claroline\AgendaBundle\Manager\EventManager:
       arguments:
           - '@Claroline\AppBundle\Persistence\ObjectManager'
+          - '@Claroline\CoreBundle\Library\ICS\ICSGenerator'
           - '@messenger.default_bus'
           - '@Claroline\CoreBundle\Manager\PlanningManager'
