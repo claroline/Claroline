@@ -11,11 +11,10 @@
 
 namespace Claroline\CursusBundle\Controller;
 
-use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Organization\Organization;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
@@ -232,9 +231,12 @@ class QuotaController extends AbstractCrudController
 
     private function canSeeQuota(Organization $organization): bool
     {
-        if ($this->authorization->isGranted('ROLE_ADMIN')) return true;
+        if ($this->authorization->isGranted('ROLE_ADMIN')) {
+            return true;
+        }
 
         $user = $this->tokenStorage->getToken()->getUser();
+
         return $user instanceof User && $organization->getAdministrators()->contains($user);
     }
 }

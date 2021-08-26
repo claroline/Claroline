@@ -43,9 +43,10 @@ class QuotaManager
             'organization_name' => $quota->getOrganization()->getName(),
             'quota_threshold' => $quota->getThreshold(),
             'subscriptions_count' => count($subscriptions),
-            'subscriptions' => array_reduce($subscriptions, function($accum, $subscription) use($status) {
+            'subscriptions' => array_reduce($subscriptions, function ($accum, $subscription) use ($status) {
                 $user = $subscription->getUser();
                 $session = $subscription->getSession();
+
                 return $accum.sprintf('
                 <tr>
                     <td style="border:solid 1px #888;padding:.5rem;">%s</td>
@@ -75,7 +76,7 @@ class QuotaManager
                     <th style="border:solid 1px #888;padding:.5rem;">'.$this->translator->trans('status', [], 'cursus').'</th>
                 </tr>
             </thead>
-            <tbody>').'</tbody></table>'
+            <tbody>').'</tbody></table>',
         ];
 
         return $this->templateManager->getTemplate('training_quota', $placeholders, $locale);

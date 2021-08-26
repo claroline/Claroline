@@ -11,8 +11,8 @@
 
 namespace Claroline\CursusBundle\Finder;
 
-use Claroline\CoreBundle\Entity\User;
 use Claroline\AppBundle\API\Finder\AbstractFinder;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CursusBundle\Entity\Quota;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;

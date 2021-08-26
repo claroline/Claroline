@@ -45,7 +45,7 @@ class Quota
     /**
      * @ORM\Column(name="use_quotas", type="boolean")
      *
-     * @var boolean
+     * @var bool
      */
     private $useQuotas = false;
 
@@ -81,7 +81,7 @@ class Quota
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function useQuotas()
     {

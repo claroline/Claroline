@@ -14,17 +14,17 @@ class Version20210826161310 extends AbstractMigration
 {
     public function up(Schema $schema): void
     {
-        $this->addSql("
+        $this->addSql('
             ALTER TABLE claro_cursusbundle_quota 
             ADD use_quotas TINYINT(1) NOT NULL
-        ");
+        ');
     }
 
     public function down(Schema $schema): void
     {
-        $this->addSql("
+        $this->addSql('
             ALTER TABLE claro_cursusbundle_quota 
             DROP use_quotas
-        ");
+        ');
     }
 }

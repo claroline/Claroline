@@ -126,6 +126,7 @@ SubscriptionPage.propTypes = {
   quota: T.shape(
     QuotaTypes.propTypes
   ),
+  filters: T.shape({}).isRequired, // Add PropType for filters
   statistics: T.shape({
     total: T.number,
     pending: T.number,

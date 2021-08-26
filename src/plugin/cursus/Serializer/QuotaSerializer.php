@@ -56,8 +56,8 @@ class QuotaSerializer
             'organization' => $this->organizationSerializer->serialize($quota->getOrganization(), [Options::SERIALIZE_MINIMAL]),
             'threshold' => $quota->getThreshold(),
             'quotas' => [
-                'use' => $quota->useQuotas()
-            ]
+                'use' => $quota->useQuotas(),
+            ],
         ];
 
         return $serialized;
