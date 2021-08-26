@@ -448,29 +448,6 @@ class ResourceManager implements LoggerAwareInterface
         return null;
     }
 
-    /**
-     * Check if a ResourceNode can be added in a Workspace (resource amount limit).
-     *
-     * @return bool
-     */
-    public function checkResourceLimitExceeded(Workspace $workspace)
-    {
-        return $workspace->getMaxUploadResources() < $this->countActiveResources($workspace);
-    }
-
-    /**
-     * Count the number of resources in a workspace.
-     *
-     * @return int
-     */
-    public function countActiveResources(Workspace $workspace = null)
-    {
-        return $this->resourceNodeRepo->count([
-            'workspace' => $workspace,
-            'active' => true,
-        ]);
-    }
-
     public function getLastIndex(ResourceNode $parent)
     {
         try {
