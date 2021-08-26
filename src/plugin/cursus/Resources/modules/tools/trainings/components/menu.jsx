@@ -31,7 +31,7 @@ const TrainingsMenu = (props) =>
           type: LINK_BUTTON,
           label: trans('all_events', {}, 'cursus'),
           target: props.path + '/events/all',
-          displayed: props.authenticated && props.canEdit
+          displayed: props.authenticated && (props.canEdit || props.canRegister)
         }, {
           name: 'registered',
           type: LINK_BUTTON,
@@ -53,6 +53,7 @@ const TrainingsMenu = (props) =>
 TrainingsMenu.propTypes = {
   path: T.string,
   canEdit: T.bool.isRequired,
+  canRegister: T.bool.isRequired,
   authenticated: T.bool.isRequired,
 
   // from menu

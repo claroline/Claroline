@@ -22,7 +22,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class CourseVoter extends AbstractVoter
 {
-    const SELF_REGISTER = 'SELF_REGISTER';
+    const REGISTER = 'REGISTER';
 
     public function getClass()
     {
@@ -64,8 +64,8 @@ class CourseVoter extends AbstractVoter
 
                 return VoterInterface::ACCESS_DENIED;
 
-            case self::SELF_REGISTER:
-                if ($this->isGranted('SELF_REGISTER', $trainingsTool) && $this->checkOrganization($token, $object)) {
+            case self::REGISTER:
+                if ($this->isGranted('REGISTER', $trainingsTool) || $this->isOrganizationManager($token, $object)) {
                     return VoterInterface::ACCESS_GRANTED;
                 }
 

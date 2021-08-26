@@ -72,7 +72,7 @@ const EventMain = (props) =>
             ]}
           />
         ),
-        disabled: !props.authenticated || !props.canEdit
+        disabled: !props.authenticated || !props.canEdit || !props.canRegister
       }, {
         path: '/:id',
         onEnter: (params = {}) => props.open(params.id),
@@ -89,6 +89,7 @@ EventMain.propTypes = {
   path: T.string.isRequired,
   authenticated: T.bool.isRequired,
   canEdit: T.bool.isRequired,
+  canRegister: T.bool.isRequired,
   invalidateList: T.func.isRequired,
   open: T.func.isRequired
 }

@@ -225,8 +225,7 @@ const CourseAbout = (props) => {
           {!isEmpty(props.activeSession)
             && isEmpty(props.activeSessionRegistration)
             && getInfo(props.course, props.activeSession, 'registration.selfRegistration')
-            && !get(props.activeSession, 'registration.autoRegistration')
-            && getInfo(props.course, props.activeSession, 'permissions.self_register') &&
+            && !get(props.activeSession, 'registration.autoRegistration') &&
             <Button
               className="btn btn-block btn-emphasis"
               type={MODAL_BUTTON}

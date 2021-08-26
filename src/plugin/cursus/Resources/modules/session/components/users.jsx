@@ -21,7 +21,7 @@ const SessionUsers = (props) =>
       delete={{
         url: props.unregisterUrl,
         label: trans('unregister', {}, 'actions'),
-        displayed: () => hasPermission('edit', props.session)
+        displayed: () => hasPermission('register', props.session)
       }}
       definition={[
         {
@@ -44,7 +44,7 @@ const SessionUsers = (props) =>
       }}
     />
 
-    {props.add && hasPermission('edit', props.session) &&
+    {props.add && hasPermission('register', props.session) &&
       <Button
         className="btn btn-block btn-emphasis component-container"
         primary={true}

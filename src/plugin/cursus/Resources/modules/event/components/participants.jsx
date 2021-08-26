@@ -36,7 +36,7 @@ const EventUsers = (props) =>
         icon: 'fa fa-fw fa-envelope',
         label: trans('send_invitation', {}, 'actions'),
         callback: () => props.inviteUsers(props.event.id, rows),
-        displayed: hasPermission('edit', props.event)
+        displayed: hasPermission('register', props.event)
       }, {
         name: 'download-presence',
         type: DOWNLOAD_BUTTON,
@@ -85,7 +85,7 @@ const EventGroups = (props) =>
         icon: 'fa fa-fw fa-envelope',
         label: trans('send_invitation', {}, 'actions'),
         callback: () => props.inviteGroups(props.event.id, rows),
-        displayed: hasPermission('edit', props.event)
+        displayed: hasPermission('register', props.event)
       }
     ]}
     add={{

@@ -49,7 +49,7 @@ const EventsTool = (props) =>
             contextId={get(props.currentContext, 'data.id')}
           />
         ),
-        disabled: !props.canEdit
+        disabled: !props.canEdit && !props.canRegister
       }, {
         path: '/:id',
         component: EventsDetails,
@@ -65,6 +65,7 @@ EventsTool.propTypes = {
     data: T.object
   }).isRequired,
   canEdit: T.bool.isRequired,
+  canRegister: T.bool.isRequired,
   invalidateList: T.func.isRequired,
   open: T.func.isRequired
 }

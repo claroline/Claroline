@@ -99,7 +99,7 @@ class CourseSerializer
                 'open' => $this->authorization->isGranted('OPEN', $course),
                 'edit' => $this->authorization->isGranted('EDIT', $course),
                 'delete' => $this->authorization->isGranted('DELETE', $course),
-                'self_register' => $this->authorization->isGranted('SELF_REGISTER', $course),
+                'register' => $this->authorization->isGranted('REGISTER', $course),
             ],
             'opening' => [
                 'session' => $course->getSessionOpening(),

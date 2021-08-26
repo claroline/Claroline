@@ -10,7 +10,8 @@ import {TrainingsMenu as TrainingsMenuComponent} from '#/plugin/cursus/tools/tra
 const TrainingsMenu = connect(
   (state) => ({
     authenticated: securitySelectors.isAuthenticated(state),
-    canEdit: hasPermission('edit', toolSelectors.toolData(state))
+    canEdit: hasPermission('edit', toolSelectors.toolData(state)),
+    canRegister: hasPermission('register', toolSelectors.toolData(state))
   })
 )(TrainingsMenuComponent)
 

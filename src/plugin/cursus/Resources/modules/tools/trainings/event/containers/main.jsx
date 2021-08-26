@@ -16,7 +16,8 @@ const EventMain = withReducer(eventSelectors.STORE_NAME, eventReducer)( // not t
       path: toolSelectors.path(state),
       currentContext: toolSelectors.context(state),
       authenticated: securitySelectors.isAuthenticated(state),
-      canEdit: hasPermission('edit', toolSelectors.toolData(state))
+      canEdit: hasPermission('edit', toolSelectors.toolData(state)),
+      canRegister: hasPermission('register', toolSelectors.toolData(state))
     }),
     (dispatch) => ({
       open(id) {

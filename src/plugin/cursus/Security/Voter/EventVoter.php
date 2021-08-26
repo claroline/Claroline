@@ -20,6 +20,8 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class EventVoter extends AbstractVoter
 {
+    const REGISTER = 'REGISTER';
+
     public function getClass()
     {
         return Event::class;
@@ -62,6 +64,13 @@ class EventVoter extends AbstractVoter
             case self::OPEN:
             case self::VIEW:
                 if ($this->isGranted('OPEN', $trainingsTool) || ($object->getSession() && $this->isGranted('OPEN', $object->getSession()))) {
+                    return VoterInterface::ACCESS_GRANTED;
+                }
+
+                return VoterInterface::ACCESS_DENIED;
+
+            case self::REGISTER:
+                if ($this->isGranted('REGISTER', $trainingsTool) || ($object->getSession() && $this->isGranted('REGISTER', $object->getSession()))) {
                     return VoterInterface::ACCESS_GRANTED;
                 }
 
