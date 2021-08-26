@@ -11,6 +11,7 @@
 
 namespace Claroline\CursusBundle\Controller;
 
+use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
@@ -137,7 +138,7 @@ class QuotaController extends AbstractCrudController
             'organization' => $organization,
             'used_by_quotas' => true,
         ];
-        $subscriptions = $this->finder->searchEntities(SessionUser::class, $query);
+        $subscriptions = $this->finder->searchEntities(SessionUser::class, $query)['data'];
 
         $domPdf = new Dompdf([
             'isHtml5ParserEnabled' => true,

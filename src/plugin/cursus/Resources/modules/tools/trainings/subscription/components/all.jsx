@@ -95,7 +95,7 @@ const SubscriptionAll = (props) =>
       }, {
         name: 'status',
         type: 'choice',
-        label: trans('status'),
+        label: trans('status', {}, 'cursus'),
         displayed: true,
         sortable: false,
         options: {

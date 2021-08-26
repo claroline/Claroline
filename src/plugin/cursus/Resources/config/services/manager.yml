@@ -49,4 +49,5 @@ services:
 
     Claroline\CursusBundle\Manager\QuotaManager:
         arguments:
+            - '@translator'
             - '@Claroline\CoreBundle\Manager\Template\TemplateManager'

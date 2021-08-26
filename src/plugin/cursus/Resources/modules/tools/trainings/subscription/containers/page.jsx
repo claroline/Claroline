@@ -8,7 +8,8 @@ const SubscriptionPage = connect(
   (state) => ({
     currentContext: toolSelectors.context(state),
     quota: quotaSelectors.quota(state),
-    statistics: selectors.statistics(state)
+    statistics: selectors.statistics(state),
+    filters: selectors.filters(state)
   }),
   (dispatch) => ({
     getStatistics(id) {

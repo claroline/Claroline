@@ -307,6 +307,9 @@ class LoadTemplateData extends AbstractFixture implements ContainerAwareInterfac
                 $templateContent->setLang($locale);
                 $templateContent->setTitle($this->translator->trans('training_quota', [], 'template', $locale));
                 $content = '%organization_name%<br/>';
+                $content .= '%quota_threshold%<br/>';
+                $content .= '%subscriptions_count%<br/>';
+                $content .= '%subscriptions%<br/>';
                 $templateContent->setContent($content);
                 $this->om->persist($templateContent);
             }

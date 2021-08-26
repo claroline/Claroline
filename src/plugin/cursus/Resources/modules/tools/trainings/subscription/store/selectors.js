@@ -12,9 +12,18 @@ const statistics = createSelector(
   (state) => state.statistics
 )
 
+const filters = createSelector(
+  store,
+  (state) => state.subscriptions.filters.reduce((accum, filter) => {
+    accum[filter.property] = filter.value
+    return accum
+  }, {})
+)
+
 export const selectors = {
   STORE_NAME,
   LIST_NAME,
   STATISTICS_NAME,
-  statistics
+  statistics,
+  filters
 }

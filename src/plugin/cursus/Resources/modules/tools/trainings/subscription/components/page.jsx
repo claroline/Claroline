@@ -49,7 +49,7 @@ const SubscriptionPage = (props) => {
         icon: 'fa fa-fw fa-file-pdf-o',
         label: trans('export-pdf', {}, 'actions'),
         group: trans('transfer'),
-        target: ['apiv2_cursus_quota_export', {id: props.quota.id}],
+        target: ['apiv2_cursus_quota_export', {id: props.quota.id, filters: props.filters}],
         displayed: true
       }]}
     >
