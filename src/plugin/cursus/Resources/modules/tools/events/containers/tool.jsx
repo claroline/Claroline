@@ -14,7 +14,8 @@ const EventsTool = withReducer(eventSelectors.STORE_NAME, eventReducer)( // not 
     (state) => ({
       path: toolSelectors.path(state),
       currentContext: toolSelectors.context(state),
-      canEdit: hasPermission('edit', toolSelectors.toolData(state))
+      canEdit: hasPermission('edit', toolSelectors.toolData(state)),
+      canRegister: hasPermission('register', toolSelectors.toolData(state))
     }),
     (dispatch) => ({
       open(id) {

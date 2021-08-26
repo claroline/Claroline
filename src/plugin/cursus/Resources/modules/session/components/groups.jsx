@@ -14,7 +14,7 @@ import {Session as SessionTypes} from '#/plugin/cursus/prop-types'
 
 const SessionGroups = (props) =>
   <Fragment>
-    {isFull(props.session) && hasPermission('edit', props.session) &&
+    {isFull(props.session) && hasPermission('register', props.session) &&
       <AlertBlock type="warning" title={trans('La session est complète.', {}, 'cursus')}>
         {trans('Il n\'est plus possible d\'inscrire de nouveaux groupes.', {}, 'cursus')}
       </AlertBlock>
@@ -29,7 +29,7 @@ const SessionGroups = (props) =>
       delete={{
         url: props.unregisterUrl,
         label: trans('unregister', {}, 'actions'),
-        displayed: () => hasPermission('edit', props.session)
+        displayed: () => hasPermission('register', props.session)
       }}
       definition={[
         {
@@ -52,7 +52,7 @@ const SessionGroups = (props) =>
       }}
     />
 
-    {props.add && hasPermission('edit', props.session) &&
+    {props.add && hasPermission('register', props.session) &&
       <Button
         className="btn btn-block btn-emphasis component-container"
         primary={true}

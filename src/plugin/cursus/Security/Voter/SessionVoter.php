@@ -18,7 +18,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class SessionVoter extends AbstractVoter
 {
-    const SELF_REGISTER = 'SELF_REGISTER';
+    const REGISTER = 'REGISTER';
 
     public function getClass()
     {
@@ -41,8 +41,8 @@ class SessionVoter extends AbstractVoter
             case self::VIEW:
                 $granted = $this->isGranted('VIEW', $object->getCourse());
                 break;
-            case self::SELF_REGISTER:
-                $granted = $this->isGranted('SELF_REGISTER', $object->getCourse());
+            case self::REGISTER:
+                $granted = $this->isGranted('REGISTER', $object->getCourse());
                 break;
         }
 
