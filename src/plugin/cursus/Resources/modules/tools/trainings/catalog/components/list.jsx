@@ -25,6 +25,7 @@ const CatalogList = (props) =>
         label: trans('add_course', {}, 'cursus'),
         target: `${props.path}/new`,
         group: trans('management'),
+        displayed: props.canEdit,
         primary: true
       }
     ]}
@@ -37,7 +38,8 @@ const CatalogList = (props) =>
   </ToolPage>
 
 CatalogList.propTypes = {
-  path: T.string.isRequired
+  path: T.string.isRequired,
+  canEdit: T.bool.isRequired
 }
 
 export {

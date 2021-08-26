@@ -36,7 +36,7 @@ class EventVoter extends AbstractVoter
         $orderedToolRepo = $this->getObjectManager()->getRepository(OrderedTool::class);
 
         if ($object->getSession() && $object->getSession()->getWorkspace()) {
-            $trainingsTool = $orderedToolRepo->findOneByNameAndWorkspace('trainings', $object->getSession()->getWorkspace());
+            $trainingsTool = $orderedToolRepo->findOneByNameAndWorkspace('training_events', $object->getSession()->getWorkspace());
         } else {
             $trainingsTool = $orderedToolRepo->findOneByNameAndDesktop('trainings');
         }

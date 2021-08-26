@@ -16,18 +16,20 @@ const CatalogMain = (props) =>
         path: '/',
         exact: true,
         render: () => (
-          <CatalogList path={`${props.path}/catalog`} />
+          <CatalogList path={`${props.path}/catalog`} canEdit={props.canEdit} />
         )
       }, {
         path: '/new',
         exact: true,
         onEnter: () => props.openForm(null, CourseTypes.defaultProps),
+        disabled: !props.canEdit,
         render: () => (
           <CatalogForm path={`${props.path}/catalog`} />
         )
       }, {
         path: '/:slug/edit',
         onEnter: (params = {}) => props.openForm(params.slug),
+        disabled: !props.canEdit,
         render: () => (
           <CatalogForm path={`${props.path}/catalog`} />
         )
@@ -43,6 +45,7 @@ const CatalogMain = (props) =>
 
 CatalogMain.propTypes = {
   path: T.string.isRequired,
+  canEdit: T.bool.isRequired,
   open: T.func.isRequired,
   openForm: T.func.isRequired
 }

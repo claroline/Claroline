@@ -94,12 +94,16 @@ class CourseController extends AbstractCrudController
             /** @var User $user */
             $user = $this->tokenStorage->getToken()->getUser();
 
+            // filter by organizations
             if ($user instanceof User) {
-                // filter by organizations
-                $filters['organizations'] = array_map(function (Organization $organization) {
-                    return $organization->getUuid();
-                }, $user->getOrganizations());
+                $organizations = $user->getOrganizations();
+            } else {
+                $organizations = $this->om->getRepository(Organization::class)->findBy(['default' => true]);
             }
+
+            $filters['organizations'] = array_map(function (Organization $organization) {
+                return $organization->getUuid();
+            }, $organizations);
 
             // hide hidden trainings for non admin
             if (!$this->checkToolAccess('EDIT')) {
@@ -117,7 +121,6 @@ class CourseController extends AbstractCrudController
     public function openAction(Course $course): JsonResponse
     {
         $this->checkPermission('OPEN', $course, [], true);
-        $defaultSession = null;
 
         $defaultSession = null;
 
@@ -216,9 +219,8 @@ class CourseController extends AbstractCrudController
     /**
      * @Route("/{id}/sessions", name="apiv2_cursus_course_list_sessions", methods={"GET"})
      * @EXT\ParamConverter("course", class="ClarolineCursusBundle:Course", options={"mapping": {"id": "uuid"}})
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
-    public function listSessionsAction(User $user, Course $course, Request $request): JsonResponse
+    public function listSessionsAction(Course $course, Request $request): JsonResponse
     {
         $this->checkPermission('OPEN', $course, [], true);
 
@@ -228,12 +230,6 @@ class CourseController extends AbstractCrudController
             $params['hiddenFilters'] = [];
         }
         $params['hiddenFilters']['course'] = $course->getUuid();
-
-        if (!$this->authorization->isGranted('ROLE_ADMIN')) {
-            $params['hiddenFilters']['organizations'] = array_map(function (Organization $organization) {
-                return $organization->getUuid();
-            }, $user->getOrganizations());
-        }
 
         // hide hidden sessions for non admin
         if (!$this->checkToolAccess('EDIT')) {

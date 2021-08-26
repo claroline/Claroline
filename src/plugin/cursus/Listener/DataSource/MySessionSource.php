@@ -3,6 +3,7 @@
 namespace Claroline\CursusBundle\Listener\DataSource;
 
 use Claroline\AppBundle\API\FinderProvider;
+use Claroline\CoreBundle\Entity\DataSource;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\DataSource\GetDataEvent;
 use Claroline\CursusBundle\Entity\Session;
@@ -31,6 +32,10 @@ class MySessionSource
         /** @var User|string $user */
         $user = $this->tokenStorage->getToken()->getUser();
         $options['hiddenFilters']['user'] = $user instanceof User ? $user->getUuid() : null;
+
+        if (DataSource::CONTEXT_WORKSPACE === $event->getContext()) {
+            $options['hiddenFilters']['workspace'] = $event->getWorkspace()->getUuid();
+        }
 
         $event->setData(
             $this->finder->search(Session::class, $options)

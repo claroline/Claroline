@@ -11,7 +11,9 @@
 
 namespace Claroline\CursusBundle\Security\Voter;
 
+use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Repository\Tool\OrderedToolRepository;
 use Claroline\CoreBundle\Security\Voter\AbstractVoter;
 use Claroline\CursusBundle\Entity\Course;
@@ -27,17 +29,19 @@ class CourseVoter extends AbstractVoter
         return Course::class;
     }
 
+    /**
+     * @param Course $object
+     */
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
     {
         /** @var OrderedToolRepository $orderedToolRepo */
         $orderedToolRepo = $this->getObjectManager()->getRepository(OrderedTool::class);
 
         $trainingsTool = $orderedToolRepo->findOneByNameAndDesktop('trainings');
-        $toolEdit = $this->isGranted('EDIT', $trainingsTool);
 
         switch ($attributes[0]) {
             case self::CREATE: // EDIT right on tool
-                if ($toolEdit) {
+                if ($this->isGranted('EDIT', $trainingsTool)) {
                     return VoterInterface::ACCESS_GRANTED;
                 }
 
@@ -46,7 +50,7 @@ class CourseVoter extends AbstractVoter
             case self::EDIT: // admin of organization | EDIT right on tool
             case self::PATCH:
             case self::DELETE:
-                if ($toolEdit || $this->isOrganizationManager($token, $object)) {
+                if ($this->isGranted('EDIT', $trainingsTool) || $this->isOrganizationManager($token, $object)) {
                     return VoterInterface::ACCESS_GRANTED;
                 }
 
@@ -54,14 +58,14 @@ class CourseVoter extends AbstractVoter
 
             case self::OPEN: // member of organization & OPEN right on tool
             case self::VIEW:
-                if ($this->isGranted('OPEN', $trainingsTool) && $this->isOrganizationMember($token, $object)) {
+                if ($this->isGranted('OPEN', $trainingsTool) && $this->checkOrganization($token, $object)) {
                     return VoterInterface::ACCESS_GRANTED;
                 }
 
                 return VoterInterface::ACCESS_DENIED;
 
             case self::SELF_REGISTER:
-                if ($this->isGranted('SELF_REGISTER', $trainingsTool) && $this->isOrganizationMember($token, $object)) {
+                if ($this->isGranted('SELF_REGISTER', $trainingsTool) && $this->checkOrganization($token, $object)) {
                     return VoterInterface::ACCESS_GRANTED;
                 }
 
@@ -69,5 +73,21 @@ class CourseVoter extends AbstractVoter
         }
 
         return VoterInterface::ACCESS_ABSTAIN;
+    }
+
+    private function checkOrganization(TokenInterface $token, Course $object)
+    {
+        $currentUser = $token->getUser();
+
+        if ($currentUser instanceof User) {
+            $sameOrganization = $this->isOrganizationMember($token, $object);
+        } else {
+            // show things from default organizations to anonymous
+            $sameOrganization = !empty(array_filter($object->getOrganizations()->toArray(), function (Organization $organization) {
+                return $organization->isDefault();
+            }));
+        }
+
+        return $sameOrganization;
     }
 }

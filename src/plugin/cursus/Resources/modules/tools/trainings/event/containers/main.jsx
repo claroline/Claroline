@@ -4,6 +4,7 @@ import {withReducer} from '#/main/app/store/reducer'
 import {hasPermission} from '#/main/app/security'
 import {actions as listActions} from '#/main/app/content/list/store'
 import {selectors as toolSelectors} from '#/main/core/tool/store'
+import {selectors as securitySelectors} from '#/main/app/security/store'
 
 import {actions as eventActions, reducer as eventReducer, selectors as eventSelectors} from '#/plugin/cursus/event/store'
 import {EventMain as EventMainComponent} from '#/plugin/cursus/tools/trainings/event/components/main'
@@ -14,6 +15,7 @@ const EventMain = withReducer(eventSelectors.STORE_NAME, eventReducer)( // not t
     (state) => ({
       path: toolSelectors.path(state),
       currentContext: toolSelectors.context(state),
+      authenticated: securitySelectors.isAuthenticated(state),
       canEdit: hasPermission('edit', toolSelectors.toolData(state))
     }),
     (dispatch) => ({
