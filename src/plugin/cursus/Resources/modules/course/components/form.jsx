@@ -163,27 +163,27 @@ const CourseForm = (props) =>
                 onChange: (registrationMode) => {
                   switch (registrationMode) {
                     case 'simple':
-                      props.update('registration.autoRegistration', false)
-                      props.update('registration.validation', false)
+                      props.update(props.name, 'registration.autoRegistration', false)
+                      props.update(props.name, 'registration.validation', false)
                       break
 
                     case 'auto':
-                      props.update('registration.autoRegistration', true)
+                      props.update(props.name, 'registration.autoRegistration', true)
 
                       // reset incompatible options
-                      props.update('restrictions._restrictUsers', false)
-                      props.update('restrictions.users', null)
-                      props.update('registration.mail', false)
-                      props.update('registration.validation', false)
-                      props.update('registration.userValidation', false)
-                      props.update('registration.selfUnregistration', false)
+                      props.update(props.name, 'restrictions._restrictUsers', false)
+                      props.update(props.name, 'restrictions.users', null)
+                      props.update(props.name, 'registration.mail', false)
+                      props.update(props.name, 'registration.validation', false)
+                      props.update(props.name, 'registration.userValidation', false)
+                      props.update(props.name, 'registration.selfUnregistration', false)
                       break
 
                     case 'validation':
-                      props.update('registration.validation', true)
+                      props.update(props.name, 'registration.validation', true)
 
                       // reset incompatible options
-                      props.update('registration.autoRegistration', false)
+                      props.update(props.name, 'registration.autoRegistration', false)
                       break
                   }
                 }
