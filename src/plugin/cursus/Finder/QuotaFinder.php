@@ -41,16 +41,15 @@ class QuotaFinder extends AbstractFinder
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
     {
-        /*if (!$this->authChecker->isGranted('ROLE_ADMIN')) {
+        if (!$this->authChecker->isGranted('ROLE_ADMIN')) {
             $currentUser = $this->tokenStorage->getToken()->getUser();
             if ($currentUser instanceof User) {
                 $qb->join('obj.organization', 'o');
                 $qb->join('o.administrators', 'a');
-                $qb->andWhere('o.parent IS NULL');
                 $qb->andWhere('a.id = :userId');
                 $qb->setParameter('userId', $currentUser->getId());
             }
-        }*/
+        }
 
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
