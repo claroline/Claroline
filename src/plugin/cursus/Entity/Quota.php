@@ -42,6 +42,13 @@ class Quota
      */
     private $threshold = 0.0;
 
+    /**
+     * @ORM\Column(name="use_quotas", type="boolean")
+     *
+     * @var boolean
+     */
+    private $useQuotas = false;
+
     public function __construct()
     {
         $this->refreshUuid();
@@ -55,6 +62,11 @@ class Quota
         return $this->organization;
     }
 
+    public function setOrganization(Organization $organization)
+    {
+        $this->organization = $organization;
+    }
+
     /**
      * @return float
      */
@@ -63,13 +75,21 @@ class Quota
         return $this->threshold;
     }
 
-    public function setOrganization(Organization $organization)
-    {
-        $this->organization = $organization;
-    }
-
     public function setThreshold(float $threshold)
     {
         $this->threshold = $threshold;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function useQuotas()
+    {
+        return $this->useQuotas;
+    }
+
+    public function setUseQuotas(float $useQuotas)
+    {
+        $this->useQuotas = $useQuotas;
     }
 }
