@@ -11,9 +11,10 @@
 
 namespace Claroline\CursusBundle\Controller;
 
-use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
@@ -83,12 +84,33 @@ class QuotaController extends AbstractCrudController
         $query = $request->query->all();
         $query['hiddenFilters'] = $this->getDefaultHiddenFilters();
 
-        $options = isset($query['options']) ? $query['options'] : [];
-        $options[] = Options::SERIALIZE_MINIMAL;
+        $results = $this->finder->searchEntities($class, $query);
 
-        return new JsonResponse(
-            $this->finder->search($class, $query, $options)
-        );
+        if (!$this->authorization->isGranted('ROLE_ADMIN')) {
+            $user = $this->tokenStorage->getToken()->getUser();
+            if ($user instanceof User) {
+                $quotas = [];
+                $children = [];
+                foreach ($results['data'] as $quota) {
+                    if ($quota->getOrganization()->getAdministrators()->contains($user)) {
+                        $quotas[] = $quota;
+                        foreach ($quota->getOrganization()->getChildren() as $child) {
+                            $children[] = $child->getId();
+                        }
+                    }
+                }
+                $quotas = array_merge($quotas, array_filter($results['data'], function($quota) use($children) {
+                    return in_array($quota->getOrganization()->getId(), $children);
+                }));
+                $results['data'] = $quotas;
+            }
+        }
+
+        return new JsonResponse(array_merge($results, [
+            'data' => array_map(function($result) {
+                return $this->serializer->serialize($result);
+            }, $results['data']),
+        ]));
     }
 
     /**
@@ -129,11 +151,14 @@ class QuotaController extends AbstractCrudController
      */
     public function exportAction(Quota $quota, Request $request): StreamedResponse
     {
-        $this->checkPermission('OPEN', $quota, [], true);
+        $organization = $quota->getOrganization();
+        if (!$this->canSeeSubscription($organization)) {
+            return new JsonResponse('The user hasn\'t authorization for view this organization.', 401);
+        }
 
         $query = $request->query->all();
         $query['hiddenFilters'] = [
-            'organization' => $quota->getOrganization(),
+            'organization' => $organization,
             'used_by_quotas' => true,
         ];
         $subscriptions = $this->finder->searchEntities(SessionUser::class, $query);
@@ -163,9 +188,14 @@ class QuotaController extends AbstractCrudController
      */
     public function listSubscriptionsAction(Quota $quota, Request $request): JsonResponse
     {
+        $organization = $quota->getOrganization();
+        if (!$this->canSeeSubscription($organization)) {
+            return new JsonResponse('The user hasn\'t authorization for view this organization.', 401);
+        }
+
         $query = $request->query->all();
         $query['hiddenFilters'] = [
-            'organization' => $quota->getOrganization(),
+            'organization' => $organization,
             'used_by_quotas' => true,
         ];
 
@@ -221,5 +251,19 @@ class QuotaController extends AbstractCrudController
         return new JsonResponse([
             'quota' => $this->serializer->serialize($quota),
         ]);
+    }
+
+    private function canSeeSubscription(Organization $organization): bool
+    {
+        if ($this->authorization->isGranted('ROLE_ADMIN')) return true;
+
+        $user = $this->tokenStorage->getToken()->getUser();
+        if (!($user instanceof User)) return false;
+
+        for ($parent = $organization; $parent != null; $parent = $parent->getParent()) {
+            if ($parent->getAdministrators()->contains($user)) return true;
+        }
+
+        return false;
     }
 }

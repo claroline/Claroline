@@ -24,7 +24,7 @@ class SessionUserFinder extends AbstractFinder
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
     {
-        $sessionJoin = false;
+        $qb->join('obj.session', 's');
 
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
@@ -34,19 +34,11 @@ class SessionUserFinder extends AbstractFinder
                     break;
 
                 case 'used_by_quotas':
-                    if (!$sessionJoin) {
-                        $qb->join('obj.session', 's');
-                        $sessionJoin = true;
-                    }
                     $qb->andWhere("s.usedByQuotas = :{$filterName}");
                     $qb->setParameter($filterName, $filterValue);
                     break;
 
                 case 'organization':
-                    if (!$sessionJoin) {
-                        $qb->join('obj.session', 's');
-                        $sessionJoin = true;
-                    }
                     $qb->join('s.course', 'c');
                     $qb->join('c.organizations', 'o');
                     $qb->andWhere("o IN (:{$filterName})");
@@ -54,20 +46,12 @@ class SessionUserFinder extends AbstractFinder
                     break;
 
                 case 'course':
-                    if (!$sessionJoin) {
-                        $qb->join('obj.session', 's');
-                        $sessionJoin = true;
-                    }
                     $qb->join('s.course', 'c');
                     $qb->andWhere("c.uuid = :{$filterName}");
                     $qb->setParameter($filterName, $filterValue);
                     break;
 
                 case 'session':
-                    if (!$sessionJoin) {
-                        $qb->join('obj.session', 's');
-                        $sessionJoin = true;
-                    }
                     $qb->andWhere("s.uuid = :{$filterName}");
                     $qb->setParameter($filterName, $filterValue);
                     break;

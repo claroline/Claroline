@@ -25,7 +25,10 @@ services:
 
     Claroline\CursusBundle\Finder\EventFinder: ~
 
-    Claroline\CursusBundle\Finder\QuotaFinder: ~
+    Claroline\CursusBundle\Finder\QuotaFinder:
+        arguments:
+          - '@security.authorization_checker'
+          - '@security.token_storage'
 
     # Registrations
     Claroline\CursusBundle\Finder\SessionGroupFinder: ~
