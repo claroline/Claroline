@@ -20,7 +20,7 @@ plugin:
 
         - name: my_course_sessions
           type: list
-          context: [desktop]
+          context: [workspace, desktop]
           tags: [community, event]
 
         - name: all_courses

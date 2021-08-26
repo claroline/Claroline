@@ -94,11 +94,16 @@ class SessionController extends AbstractCrudController
             /** @var User $user */
             $user = $this->tokenStorage->getToken()->getUser();
 
+            // filter by organization
             if ($user instanceof User) {
-                $filters['organizations'] = array_map(function (Organization $organization) {
-                    return $organization->getUuid();
-                }, $user->getOrganizations());
+                $organizations = $user->getOrganizations();
+            } else {
+                $organizations = $this->om->getRepository(Organization::class)->findBy(['default' => true]);
             }
+
+            $filters['organizations'] = array_map(function (Organization $organization) {
+                return $organization->getUuid();
+            }, $organizations);
 
             // hide hidden sessions for non admin
             if (!$this->checkToolAccess('EDIT')) {

@@ -23,9 +23,6 @@ class OrganizationManager implements LoggerAwareInterface
     /** @var ObjectManager */
     private $om;
 
-    /**
-     * OrganizationManager constructor.
-     */
     public function __construct(ObjectManager $om)
     {
         $this->om = $om;

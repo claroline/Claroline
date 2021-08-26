@@ -12,17 +12,36 @@
 namespace Claroline\CursusBundle\Listener\DataSource;
 
 use Claroline\AppBundle\API\FinderProvider;
+use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\DataSource;
+use Claroline\CoreBundle\Entity\Organization\Organization;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\DataSource\GetDataEvent;
 use Claroline\CursusBundle\Entity\Session;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class PublicSessionSource
 {
+    /** @var AuthorizationCheckerInterface */
+    private $authorization;
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
     /** @var FinderProvider */
     private $finder;
+    /** @var ObjectManager */
+    private $om;
 
-    public function __construct(FinderProvider $finder)
-    {
+    public function __construct(
+        AuthorizationCheckerInterface $authorization,
+        TokenStorageInterface $tokenStorage,
+        FinderProvider $finder,
+        ObjectManager $om
+    ) {
+        $this->authorization = $authorization;
+        $this->tokenStorage = $tokenStorage;
         $this->finder = $finder;
+        $this->om = $om;
     }
 
     public function getData(GetDataEvent $event)
@@ -30,6 +49,30 @@ class PublicSessionSource
         $options = $event->getOptions();
         $options['hiddenFilters']['publicRegistration'] = true;
         $options['hiddenFilters']['terminated'] = false;
+
+        if (DataSource::CONTEXT_WORKSPACE === $event->getContext()) {
+            $options['hiddenFilters']['workspace'] = $event->getWorkspace()->getUuid();
+        } elseif (DataSource::CONTEXT_HOME === $event->getContext()) {
+            // only display sessions of the default organization on home
+            $organizations = $this->om->getRepository(Organization::class)->findBy(['default' => true]);
+            $options['hiddenFilters']['organizations'] = array_map(function (Organization $organization) {
+                return $organization->getUuid();
+            }, $organizations);
+        } else {
+            // filter by organization for desktop
+            if (!$this->authorization->isGranted('ROLE_ADMIN')) {
+                $user = $this->tokenStorage->getToken()->getUser();
+                if ($user instanceof User) {
+                    $organizations = $user->getOrganizations();
+                } else {
+                    $organizations = $this->om->getRepository(Organization::class)->findBy(['default' => true]);
+                }
+
+                $options['hiddenFilters']['organizations'] = array_map(function (Organization $organization) {
+                    return $organization->getUuid();
+                }, $organizations);
+            }
+        }
 
         $event->setData(
             $this->finder->search(Session::class, $options)

@@ -19,7 +19,8 @@ const TrainingsTool = (props) =>
         component: CatalogMain
       }, {
         path: '/registered',
-        component: SessionMain
+        component: SessionMain,
+        disabled: !props.authenticated
       }, {
         path: '/events',
         component: EventMain
@@ -28,7 +29,8 @@ const TrainingsTool = (props) =>
   />
 
 TrainingsTool.propTypes = {
-  path: T.string.isRequired
+  path: T.string.isRequired,
+  authenticated: T.bool.isRequired
 }
 
 export {

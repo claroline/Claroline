@@ -80,11 +80,16 @@ class EventController extends AbstractCrudController
     {
         if (!$this->authorization->isGranted('ROLE_ADMIN')) {
             $user = $this->tokenStorage->getToken()->getUser();
+            if ($user instanceof User) {
+                $organizations = $user->getOrganizations();
+            } else {
+                $organizations = $this->om->getRepository(Organization::class)->findBy(['default' => true]);
+            }
 
             return [
                 'organizations' => array_map(function (Organization $organization) {
                     return $organization->getUuid();
-                }, $user->getOrganizations()),
+                }, $organizations),
             ];
         }
 

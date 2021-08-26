@@ -31,17 +31,19 @@ const TrainingsMenu = (props) =>
           type: LINK_BUTTON,
           label: trans('all_events', {}, 'cursus'),
           target: props.path + '/events/all',
-          displayed: props.canEdit
+          displayed: props.authenticated && props.canEdit
         }, {
           name: 'registered',
           type: LINK_BUTTON,
           label: trans('my_courses', {}, 'cursus'),
-          target: `${props.path}/registered`
+          target: `${props.path}/registered`,
+          displayed: props.authenticated
         }, {
           name: 'registered-events',
           type: LINK_BUTTON,
           label: trans('my_events', {}, 'cursus'),
-          target: props.path + '/events/registered'
+          target: props.path + '/events/registered',
+          displayed: props.authenticated
         }
       ]}
       onClick={props.autoClose}
@@ -50,6 +52,8 @@ const TrainingsMenu = (props) =>
 
 TrainingsMenu.propTypes = {
   path: T.string,
+  canEdit: T.bool.isRequired,
+  authenticated: T.bool.isRequired,
 
   // from menu
   opened: T.bool.isRequired,
