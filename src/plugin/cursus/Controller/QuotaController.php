@@ -22,8 +22,10 @@ use Claroline\CursusBundle\Entity\Quota;
 use Claroline\CursusBundle\Entity\Registration\SessionUser;
 use Claroline\CursusBundle\Manager\QuotaManager;
 use Claroline\CursusBundle\Manager\SessionManager;
+use Claroline\CursusBundle\Event\Log\LogSubscriptionSetStatusEvent;
 use Dompdf\Dompdf;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -38,6 +40,8 @@ class QuotaController extends AbstractCrudController
 {
     use PermissionCheckerTrait;
 
+    /** @var EventDispatcherInterface */
+    private $eventDispatcher;
     /** @var TokenStorageInterface */
     private $tokenStorage;
     /** @var PlatformConfigurationHandler */
@@ -46,6 +50,7 @@ class QuotaController extends AbstractCrudController
     private $sessionManager;
 
     public function __construct(
+        EventDispatcherInterface $eventDispatcher,
         AuthorizationCheckerInterface $authorization,
         TokenStorageInterface $tokenStorage,
         PlatformConfigurationHandler $config,
@@ -53,6 +58,7 @@ class QuotaController extends AbstractCrudController
         QuotaManager $manager,
         SessionManager $sessionManager
     ) {
+        $this->eventDispatcher = $eventDispatcher;
         $this->authorization = $authorization;
         $this->tokenStorage = $tokenStorage;
         $this->config = $config;
@@ -212,6 +218,8 @@ class QuotaController extends AbstractCrudController
         $sessionUser->setStatus($status);
         $this->om->persist($sessionUser);
         $this->om->flush();
+        
+        $this->eventDispatcher->dispatch(new LogSubscriptionSetStatusEvent($sessionUser), 'log');
 
         return new JsonResponse([
             'subscription' => $this->serializer->serialize($sessionUser),
