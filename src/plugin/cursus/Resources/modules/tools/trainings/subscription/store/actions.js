@@ -21,16 +21,16 @@ actions.getStatistics = (id) => (dispatch) => {
   })
 }
 
-actions.setSubscriptionStatus = (quotaId, subscriptionId, status) => (dispatch) => {
+actions.setSubscriptionStatus = (quotaId, subscriptionId, status, remark) => (dispatch) => {
   return dispatch({
     [API_REQUEST]: {
-      url: url(['apiv2_cursus_subscription_status', {id:subscriptionId}], {status}),
+      url: url(['apiv2_cursus_subscription_status', {id:subscriptionId}], {status, remark}),
       request: {
         method: 'PATCH'
       },
       silent: true,
       success: () => {
-        dispatch(actions.updateSubscriptionStatus({id:subscriptionId, status}))
+        dispatch(actions.updateSubscriptionStatus({id:subscriptionId, status, remark}))
         dispatch(actions.getStatistics(quotaId))
       }
     }

@@ -34,8 +34,8 @@ const SubscriptionModal = props =>
               type: 'training_session'
             }, {
               name: 'status',
-              type: 'choice',
               label: trans('status'),
+              type: 'choice',
               options: {
                 choices: constants.SUBSCRIPTION_STATUSES
               },
@@ -44,6 +44,10 @@ const SubscriptionModal = props =>
                   {constants.SUBSCRIPTION_STATUSES[row.status]}
                 </span>
               )
+            }, {
+              name: 'remark',
+              label: trans('remark', {}, 'cursus'),
+              type: 'string'
             }
           ]
         }

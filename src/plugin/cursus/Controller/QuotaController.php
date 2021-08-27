@@ -192,8 +192,10 @@ class QuotaController extends AbstractCrudController
      * @Route("/subscriptions/{id}", name="apiv2_cursus_subscription_status", methods={"PATCH"})
      * @EXT\ParamConverter("sessionUser", class="Claroline\CursusBundle\Entity\Registration\SessionUser", options={"mapping": {"id": "uuid"}})
      */
-    public function setSubscriptionStatus(SessionUser $sessionUser, Request $request): JsonResponse
+    public function setSubscriptionStatusAction(SessionUser $sessionUser, Request $request): JsonResponse
     {
+        $remark = $request->query->get('remark', '');
+
         $status = $request->query->get('status', null);
         if (null == $status) {
             return new JsonResponse('The status is missing.', 500);
@@ -222,6 +224,7 @@ class QuotaController extends AbstractCrudController
                     break;
             }
 
+            $sessionUser->setRemark($remark);
             $sessionUser->setStatus($status);
             $this->om->persist($sessionUser);
             $this->om->flush();

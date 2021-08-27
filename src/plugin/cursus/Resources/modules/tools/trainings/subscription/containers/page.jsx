@@ -15,8 +15,8 @@ const SubscriptionPage = connect(
     getStatistics(id) {
       dispatch(actions.getStatistics(id))
     },
-    setSubscriptionStatus(quotaId, subscriptionId, status) {
-      dispatch(actions.setSubscriptionStatus(quotaId, subscriptionId, status))
+    setSubscriptionStatus(quotaId, subscriptionId, status, remark) {
+      dispatch(actions.setSubscriptionStatus(quotaId, subscriptionId, status, remark))
     }
   })
 )(SubscriptionComponent)

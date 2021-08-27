@@ -47,6 +47,13 @@ class SessionUser extends AbstractUserRegistration
      */
     protected $status = self::STATUS_PENDING;
 
+    /**
+     * @ORM\Column(type="text")
+     *
+     * @var string
+     */
+    private $remark = '';
+
     public function getSession(): Session
     {
         return $this->session;
@@ -65,5 +72,18 @@ class SessionUser extends AbstractUserRegistration
     public function setStatus(int $status)
     {
         $this->status = $status;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRemark()
+    {
+        return $this->remark;
+    }
+
+    public function setRemark(string $remark)
+    {
+        $this->remark = $remark;
     }
 }
