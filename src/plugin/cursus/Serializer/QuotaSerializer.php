@@ -55,9 +55,7 @@ class QuotaSerializer
             'id' => $quota->getUuid(),
             'organization' => $this->organizationSerializer->serialize($quota->getOrganization(), [Options::SERIALIZE_MINIMAL]),
             'threshold' => $quota->getThreshold(),
-            'quotas' => [
-                'use' => $quota->useQuotas(),
-            ],
+            'useQuotas' => $quota->useQuotas(),
         ];
 
         return $serialized;
@@ -67,7 +65,7 @@ class QuotaSerializer
     {
         $this->sipe('id', 'setUuid', $data, $quota);
         $this->sipe('threshold', 'setThreshold', $data, $quota);
-        $this->sipe('quotas.use', 'setUseQuotas', $data, $quota);
+        $this->sipe('useQuotas', 'setUseQuotas', $data, $quota);
 
         if (isset($data['organization'])) {
             $organization = $this->organizationRepo->findOneBy(['uuid' => $data['organization']['id']]);

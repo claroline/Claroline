@@ -90,13 +90,14 @@ const SubscriptionPage = (props) => {
               {props.statistics.managed}
             </h1>
           </div>
-          <div className="analytics-card">
-            <span className="fa fa-chart-pie label-primary" />
-            <h1 className="h3">
-              <small>{trans('quota', {}, 'cursus')}</small>
-              {props.statistics.calculated.toFixed(2)} / {get(props.quota, 'threshold')} 
-            </h1>
-          </div>
+          {props.quota.useQuotas && props.statistics.calculated &&
+            <div className="analytics-card">
+              <span className="fa fa-chart-pie label-primary" />
+              <h1 className="h3">
+                <small>{trans('quota', {}, 'cursus')}</small>
+                {props.statistics.calculated.toFixed(2)} / {get(props.quota, 'threshold')} 
+              </h1>
+            </div>}
         </div>
 
         <div className="row">

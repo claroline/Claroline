@@ -20,9 +20,9 @@ use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\CursusBundle\Entity\Quota;
 use Claroline\CursusBundle\Entity\Registration\SessionUser;
+use Claroline\CursusBundle\Event\Log\LogSubscriptionSetStatusEvent;
 use Claroline\CursusBundle\Manager\QuotaManager;
 use Claroline\CursusBundle\Manager\SessionManager;
-use Claroline\CursusBundle\Event\Log\LogSubscriptionSetStatusEvent;
 use Dompdf\Dompdf;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -102,8 +102,7 @@ class QuotaController extends AbstractCrudController
     public function getStatisticsAction(Quota $quota): JsonResponse
     {
         $sessionUsers = $this->om->getRepository(SessionUser::class)->findByQuota($quota);
-
-        return new JsonResponse([
+        $statistics = [
             'total' => count($sessionUsers),
             'pending' => array_reduce($sessionUsers, function ($accum, $subscription) {
                 return $accum + (SessionUser::STATUS_PENDING == $subscription->getStatus() ? 1 : 0);
@@ -117,14 +116,15 @@ class QuotaController extends AbstractCrudController
             'managed' => array_reduce($sessionUsers, function ($accum, $subscription) {
                 return $accum + (SessionUser::STATUS_MANAGED == $subscription->getStatus() ? 1 : 0);
             }, 0),
-            'calculated' => array_reduce($sessionUsers, function ($accum, $subscription) {
-                if (SessionUser::STATUS_MANAGED != $subscription->getStatus()) {
-                    return $accum;
-                }
+        ];
 
-                return $accum + $subscription->getSession()->getQuotaDays();
-            }, 0),
-        ]);
+        if ($quota->useQuotas()) {
+            $statistics['calculated'] = array_reduce($sessionUsers, function ($accum, $subscription) {
+                return SessionUser::STATUS_MANAGED == $subscription->getStatus() ? $accum + $subscription->getSession()->getQuotaDays() : $accum;
+            }, 0);
+        }
+
+        return new JsonResponse($statistics);
     }
 
     /**
@@ -196,30 +196,38 @@ class QuotaController extends AbstractCrudController
     {
         $status = $request->query->get('status', null);
         if (null == $status) {
-            return new JsonResponse('The status is missing.', 401);
+            return new JsonResponse('The status is missing.', 500);
         }
 
         if ($status < SessionUser::STATUS_PENDING || $status > SessionUser::STATUS_MANAGED) {
-            return new JsonResponse('The status don\'t have been updated.', 401);
+            return new JsonResponse('The status don\'t have been updated.', 500);
         }
 
-        // Execute action, dispatch event, send mail, etc
-        switch ($status) {
-            case SessionUser::STATUS_VALIDATED:
-            case SessionUser::STATUS_MANAGED:
-                $this->sessionManager->addUsers($sessionUser->getSession(), [$sessionUser->getUser()]);
-                break;
-            case SessionUser::STATUS_PENDING:
-            case SessionUser::STATUS_REFUSED:
-                $this->sessionManager->removeUsers($sessionUser->getSession(), [$sessionUser]);
-                break;
-        }
+        if ($sessionUser->getStatus() != $status) {
+            // Execute action, dispatch event, send mail, etc
+            switch ($status) {
+                case SessionUser::STATUS_VALIDATED:
+                    $this->sessionManager->addUsers($sessionUser->getSession(), [$sessionUser->getUser()]);
+                    break;
+                case SessionUser::STATUS_MANAGED:
+                    $quota = $this->om->getRepository(Quota::class)->findOneByOrganizations($sessionUser->getSession()->getCourse()->getOrganizations()->toArray());
+                    if (null == $quota || !$quota->useQuotas()) {
+                        return new JsonResponse('The status don\'t can be changed to managed.', 500);
+                    }
+                    $this->sessionManager->addUsers($sessionUser->getSession(), [$sessionUser->getUser()]);
+                    break;
+                case SessionUser::STATUS_PENDING:
+                case SessionUser::STATUS_REFUSED:
+                    $this->sessionManager->removeUsers($sessionUser->getSession(), [$sessionUser]);
+                    break;
+            }
 
-        $sessionUser->setStatus($status);
-        $this->om->persist($sessionUser);
-        $this->om->flush();
-        
-        $this->eventDispatcher->dispatch(new LogSubscriptionSetStatusEvent($sessionUser), 'log');
+            $sessionUser->setStatus($status);
+            $this->om->persist($sessionUser);
+            $this->om->flush();
+
+            $this->eventDispatcher->dispatch(new LogSubscriptionSetStatusEvent($sessionUser), 'log');
+        }
 
         return new JsonResponse([
             'subscription' => $this->serializer->serialize($sessionUser),

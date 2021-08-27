@@ -11,27 +11,18 @@
 
 namespace Claroline\CursusBundle\Repository;
 
-use Claroline\CursusBundle\Entity\Quota;
 use Doctrine\ORM\EntityRepository;
 
 class QuotaRepository extends EntityRepository
 {
-    public function countValidated(Quota $quota)
+    public function findOneByOrganizations(array $organizations)
     {
-        return (int) $this->_em->createQuery('
-            SELECT COUNT(DISTINCT su) * c.defaultSessionDuration FROM Claroline\CursusBundle\Entity\Registration\SessionUser su
-            INNER JOIN su.session s
-            INNER JOIN s.course c
-            INNER JOIN c.organizations o
-            WHERE s.usedByQuotas = 1
-                AND su.type = \'learner\'
-                AND su.confirmed = 1
-                AND su.validated = 1
-                AND o IN (:organization)
+        return $this->_em->createQuery('
+            SELECT q FROM Claroline\CursusBundle\Entity\Quota q
+            INNER JOIN q.organization o
+            WHERE o IN (:organizations)
         ')
-        ->setParameters([
-            'organization' => $quota->getOrganization(),
-        ])
-        ->getSingleScalarResult() ?? 0;
+        ->setParameter('organizations', $organizations)
+        ->getSingleResult();
     }
 }

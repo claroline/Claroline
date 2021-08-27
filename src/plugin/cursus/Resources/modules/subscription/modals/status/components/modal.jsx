@@ -15,7 +15,7 @@ const StatusModal = props =>
     title={trans('status', {}, 'cursus')}
   >
     <div className="list-group">
-      {Object.keys(constants.SUBSCRIPTION_STATUSES).map(status =>
+      {props.status.map(status =>
         <CallbackButton
           key={status}
           className="list-group-item"
@@ -34,6 +34,7 @@ const StatusModal = props =>
   </Modal>
 
 StatusModal.propTypes = {
+  status: T.arrayOf(T.number).isRequired,
   changeStatus: T.func.isRequired,
 
   // from modal

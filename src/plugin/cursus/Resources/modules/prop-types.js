@@ -162,7 +162,7 @@ const Quota = {
     id: T.string,
     organization: T.shape(OrganizationTypes.propTypes),
     threshold: T.number,
-    validated: T.number
+    useQuotas: T.bool
   }
 }
 
