@@ -1,0 +1,8 @@
+services:
+    _defaults:
+        autowire: false #change to true
+        autoconfigure: false
+        public: true #because controller
+
+    Claroline\CursusBundle\Configuration\PlatformDefaults:
+        tags: ['claroline.configuration']
