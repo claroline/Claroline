@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\SamlBundle\Configuration;
+namespace Claroline\CursusBundle\Configuration;
 
 use Claroline\CoreBundle\Library\Configuration\ParameterProviderInterface;
 
