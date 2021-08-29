@@ -25,9 +25,9 @@ const QuotaList = (props) =>
     })}
     definition={[
       {
-        name: 'organization.name',
+        name: 'organization',
         alias: 'organization',
-        type: 'string',
+        type: 'organization',
         label: trans('organization'),
         displayed: true,
         primary: true,

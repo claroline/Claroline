@@ -11,12 +11,12 @@
 
 namespace Claroline\CursusBundle\Repository;
 
-use Claroline\CursusBundle\Entity\Quota;
+use Claroline\CoreBundle\Entity\Organization\Organization;
 use Doctrine\ORM\EntityRepository;
 
 class SessionUserRepository extends EntityRepository
 {
-    public function findByQuota(Quota $quota)
+    public function findByOrganization(Organization $organization)
     {
         return $this->_em
             ->createQuery('
@@ -26,7 +26,7 @@ class SessionUserRepository extends EntityRepository
                 INNER JOIN c.organizations o
                 WHERE o IN (:organization)
             ')
-            ->setParameter('organization', $quota->getOrganization())
+            ->setParameter('organization', $organization)
             ->getResult();
     }
 }

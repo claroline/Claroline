@@ -83,25 +83,12 @@ class QuotaController extends AbstractCrudController
     }
 
     /**
-     * @Route("/", name="apiv2_cursus_quota_list", methods={"GET"})
-     */
-    public function listAction(Request $request, $class = Quota::class): JsonResponse
-    {
-        $query = $request->query->all();
-        $query['hiddenFilters'] = $this->getDefaultHiddenFilters();
-
-        return new JsonResponse(
-            $this->finder->search($class, $query)
-        );
-    }
-
-    /**
      * @Route("/{id}/statistics", name="apiv2_cursus_quota_statistics", methods={"GET"})
      * @EXT\ParamConverter("quota", class="Claroline\CursusBundle\Entity\Quota", options={"mapping": {"id": "uuid"}})
      */
     public function getStatisticsAction(Quota $quota): JsonResponse
     {
-        $sessionUsers = $this->om->getRepository(SessionUser::class)->findByQuota($quota);
+        $sessionUsers = $this->om->getRepository(SessionUser::class)->findByOrganization($quota->getOrganization());
         $statistics = [
             'total' => count($sessionUsers),
             'pending' => array_reduce($sessionUsers, function ($accum, $subscription) {
