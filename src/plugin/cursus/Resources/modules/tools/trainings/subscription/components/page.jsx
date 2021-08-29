@@ -58,35 +58,35 @@ const SubscriptionPage = (props) => {
           <div className="analytics-card">
             <span className="fa fa-chalkboard-teacher label-info" />
             <h1 className="h3">
-              <small>{trans('total', {}, 'cursus')}</small>
+              <small>{trans('subscription_total', {}, 'cursus')}</small>
               {props.statistics.total}
             </h1>
           </div>
           <div className="analytics-card">
             <span className="fa fa-pause label-default" />
             <h1 className="h3">
-              <small>{trans('pending', {}, 'cursus')}</small>
+              <small>{trans('subscription_pending', {}, 'cursus')}</small>
               {props.statistics.pending}
             </h1>
           </div>
           <div className="analytics-card">
             <span className="fa fa-times label-danger" />
             <h1 className="h3">
-              <small>{trans('refused', {}, 'cursus')}</small>
+              <small>{trans('subscription_refused', {}, 'cursus')}</small>
               {props.statistics.refused}
             </h1>
           </div>
           <div className="analytics-card">
             <span className="fa fa-check label-warning" />
             <h1 className="h3">
-              <small>{trans('validated', {}, 'cursus')}</small>
+              <small>{trans('subscription_validated', {}, 'cursus')}</small>
               {props.statistics.validated}
             </h1>
           </div>
           <div className="analytics-card">
             <span className="fa fa-check-double label-success" />
             <h1 className="h3">
-              <small>{trans('managed', {}, 'cursus')}</small>
+              <small>{trans('subscription_managed', {}, 'cursus')}</small>
               {props.statistics.managed}
             </h1>
           </div>
@@ -94,7 +94,7 @@ const SubscriptionPage = (props) => {
             <div className="analytics-card">
               <span className="fa fa-chart-pie label-primary" />
               <h1 className="h3">
-                <small>{trans('quota', {}, 'cursus')}</small>
+                <small>{trans('subscription_quota', {}, 'cursus')}</small>
                 {props.statistics.calculated.toFixed(2)} / {get(props.quota, 'threshold')} 
               </h1>
             </div>}

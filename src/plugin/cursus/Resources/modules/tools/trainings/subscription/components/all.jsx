@@ -71,15 +71,15 @@ const SubscriptionAll = (props) =>
         name: 'session.quotas.days',
         alias: 'days',
         type: 'number',
-        label: trans('days', {}, 'cursus'),
+        label: trans('days'),
         displayed: true,
         filterable: false,
         sortable: false
       }, {
         name: 'session.pricing.price',
         alias: 'price',
-        type: 'number',
-        label: trans('price', {}, 'cursus'),
+        type: 'currency',
+        label: trans('price'),
         displayed: true,
         filterable: false,
         sortable: false
@@ -87,14 +87,14 @@ const SubscriptionAll = (props) =>
         name: 'session.restrictions.dates[0]',
         alias: 'start_date',
         type: 'date',
-        label: trans('start_date', {}, 'cursus'),
+        label: trans('start_date'),
         displayed: true,
         filterable: false,
         sortable: false
       }, {
         name: 'status',
         type: 'choice',
-        label: trans('status', {}, 'cursus'),
+        label: trans('status'),
         displayed: true,
         sortable: false,
         options: {

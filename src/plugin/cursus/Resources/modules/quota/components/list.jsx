@@ -35,7 +35,7 @@ const QuotaList = (props) =>
       }, {
         name: 'threshold',
         type: 'number',
-        label: trans('threshold'),
+        label: trans('threshold', {}, 'cursus'),
         displayed: true,
         filterable: false,
         sortable: false

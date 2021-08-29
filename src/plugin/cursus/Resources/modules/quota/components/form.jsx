@@ -34,12 +34,12 @@ const QuotaForm = (props) =>
           }, {
             name: 'threshold',
             type: 'number',
-            label: trans('threshold'),
+            label: trans('threshold', {}, 'cursus'),
             required: true
           }, {
             name: 'useQuotas',
             type: 'boolean',
-            label: trans('use_quotas'),
+            label: trans('use_quotas', {}, 'cursus'),
             required: false
           }
         ]

@@ -14,7 +14,7 @@ const QuotaCard = props =>
     poster={null}
     icon="fa fa-graduation-cap"
     title={props.data.organization.name}
-    subtitle={trans('threshold') + ' ' + props.data.threshold}
+    subtitle={trans('threshold', {}, 'cursus') + ' ' + props.data.threshold}
   />
 
 QuotaCard.propTypes = {
