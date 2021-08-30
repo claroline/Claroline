@@ -12,6 +12,9 @@ const SessionsModal = withReducer(selectors.STORE_NAME, reducer)(
       selected: listSelectors.selectedFull(listSelectors.list(state, selectors.STORE_NAME))
     }),
     (dispatch) => ({
+      resetFilters(filters) {
+        dispatch(listActions.resetFilters(selectors.STORE_NAME, filters))
+      },
       reset() {
         dispatch(listActions.resetSelect(selectors.STORE_NAME))
         dispatch(listActions.invalidateData(selectors.STORE_NAME))

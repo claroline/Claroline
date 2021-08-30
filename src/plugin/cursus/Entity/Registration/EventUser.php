@@ -15,7 +15,7 @@ use Claroline\CursusBundle\Entity\Event;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\CursusBundle\Repository\Registration\EventUserRepository")
  * @ORM\Table(
  *     name="claro_cursusbundle_session_event_user",
  *     uniqueConstraints={

@@ -83,6 +83,23 @@ actions.inviteUsers = (sessionId, users) => ({
   }
 })
 
+actions.moveUsers = (sessionId, targetId, sessionUsers, type) => ({
+  [API_REQUEST]: {
+    url: ['apiv2_cursus_session_move_users', {id: sessionId, type: type}],
+    request: {
+      method: 'PUT',
+      body: JSON.stringify({
+        target: targetId,
+        sessionUsers: sessionUsers.map(sessionUser => sessionUser.id)
+      })
+    },
+    success: (data, dispatch) => {
+      // TODO : do something better (I need it to recompute session available space)
+      dispatch(actions.openSession(sessionId, true))
+    }
+  }
+})
+
 actions.addGroups = (sessionId, groups, type) => ({
   [API_REQUEST]: {
     url: url(['apiv2_cursus_session_add_groups', {id: sessionId, type: type}], {ids: groups.map(group => group.id)}),
@@ -102,6 +119,23 @@ actions.inviteGroups = (sessionId, groups) => ({
     url: url(['apiv2_cursus_session_invite_groups', {id: sessionId}], {ids: groups.map(group => group.id)}),
     request: {
       method: 'PUT'
+    }
+  }
+})
+
+actions.moveGroups = (sessionId, targetId, sessionGroups, type) => ({
+  [API_REQUEST]: {
+    url: ['apiv2_cursus_session_move_groups', {id: sessionId, type: type}],
+    request: {
+      method: 'PUT',
+      body: JSON.stringify({
+        target: targetId,
+        sessionGroups: sessionGroups.map(sessionGroup => sessionGroup.id)
+      })
+    },
+    success: (data, dispatch) => {
+      // TODO : do something better (I need it to recompute session available space)
+      dispatch(actions.openSession(sessionId, true))
     }
   }
 })
