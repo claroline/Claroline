@@ -78,6 +78,7 @@ class EventSerializer
                 'open' => $this->authorization->isGranted('OPEN', $event),
                 'edit' => $this->authorization->isGranted('EDIT', $event),
                 'delete' => $this->authorization->isGranted('DELETE', $event),
+                'register' => $this->authorization->isGranted('REGISTER', $event),
             ],
             'session' => $event->getSession() ? $this->sessionSerializer->serialize($event->getSession(), [Options::SERIALIZE_MINIMAL]) : null,
         ]);

@@ -243,6 +243,9 @@ class SessionManager
         return $results;
     }
 
+    /**
+     * @param SessionUser[] $sessionUsers
+     */
     public function removeUsers(Session $session, array $sessionUsers)
     {
         foreach ($sessionUsers as $sessionUser) {
@@ -253,12 +256,34 @@ class SessionManager
                 $this->workspaceManager->unregister($sessionUser->getUser(), $session->getWorkspace());
             }
 
-            // TODO : unregister from events
+            // unregister user from linked events
+            $eventRegistrations = $this->sessionEventManager->getBySessionAndUser($session, $sessionUser->getUser());
+            foreach ($eventRegistrations as $eventRegistration) {
+                $this->sessionEventManager->removeUsers($eventRegistration->getEvent(), [$eventRegistration]);
+            }
 
             $this->eventDispatcher->dispatch(new LogSessionUserUnregistrationEvent($sessionUser), 'log');
         }
 
         $this->om->flush();
+    }
+
+    /**
+     * @param SessionUser[] $sessionUsers
+     */
+    public function moveUsers(Session $originalSession, Session $targetSession, array $sessionUsers, string $type = AbstractRegistration::LEARNER)
+    {
+        $this->om->startFlushSuite();
+
+        // unregister users from current session
+        $this->removeUsers($originalSession, $sessionUsers);
+
+        // register to the new session
+        $this->addUsers($targetSession, array_map(function (SessionUser $sessionUser) {
+            return $sessionUser->getUser();
+        }, $sessionUsers), $type, true);
+
+        $this->om->endFlushSuite();
     }
 
     /**
@@ -348,6 +373,25 @@ class SessionManager
             }
         }
 
+        // registers groups to linked trainings
+        $course = $session->getCourse();
+        if ($course->getPropagateRegistration() && !empty($course->getChildren())) {
+            foreach ($course->getChildren() as $childCourse) {
+                $childSession = $childCourse->getDefaultSession();
+                if ($childSession && !$childSession->isTerminated()) {
+                    $this->addGroups($childSession, $groups);
+                }
+            }
+        }
+
+        // registers groups to linked events
+        $events = $session->getEvents();
+        foreach ($events as $event) {
+            if (Session::REGISTRATION_AUTO === $event->getRegistrationType() && !$event->isTerminated()) {
+                $this->sessionEventManager->addGroups($event, $groups);
+            }
+        }
+
         if ($session->getRegistrationMail()) {
             $this->sendSessionInvitation($session, $users, false);
         }
@@ -357,6 +401,9 @@ class SessionManager
         return $results;
     }
 
+    /**
+     * @param SessionGroup[] $sessionGroups
+     */
     public function removeGroups(Session $session, array $sessionGroups)
     {
         foreach ($sessionGroups as $sessionGroup) {
@@ -367,12 +414,34 @@ class SessionManager
                 $this->workspaceManager->unregister($sessionGroup->getGroup(), $session->getWorkspace());
             }
 
-            // TODO : unregister from events
+            // unregister group from linked events
+            $eventRegistrations = $this->sessionEventManager->getBySessionAndGroup($session, $sessionGroup->getGroup());
+            foreach ($eventRegistrations as $eventRegistration) {
+                $this->sessionEventManager->removeGroups($eventRegistration->getEvent(), [$eventRegistration]);
+            }
 
             $this->eventDispatcher->dispatch(new LogSessionGroupUnregistrationEvent($sessionGroup), 'log');
         }
 
         $this->om->flush();
+    }
+
+    /**
+     * @param SessionGroup[] $sessionGroups
+     */
+    public function moveGroups(Session $originalSession, Session $targetSession, array $sessionGroups, string $type = AbstractRegistration::LEARNER)
+    {
+        $this->om->startFlushSuite();
+
+        // unregister users from current session
+        $this->removeGroups($originalSession, $sessionGroups);
+
+        // register to the new session
+        $this->addGroups($targetSession, array_map(function (SessionGroup $sessionGroup) {
+            return $sessionGroup->getGroup();
+        }, $sessionGroups), $type);
+
+        $this->om->endFlushSuite();
     }
 
     /**
