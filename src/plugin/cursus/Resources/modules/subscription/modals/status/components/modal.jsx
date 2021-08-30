@@ -16,7 +16,7 @@ const StatusModal = props => {
   return <Modal
     {...omit(props, 'ticket', 'changeStatus', 'onSave')}
     icon="fa fa-fw fa-check-double"
-    title={trans('status', {}, 'cursus')}
+    title={trans('status')}
   >
     <div>
       <div className="list-group">
