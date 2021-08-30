@@ -90,7 +90,7 @@ const SubscriptionPage = (props) => {
               {props.statistics.managed}
             </h1>
           </div>
-          {props.quota.useQuotas && props.statistics.calculated &&
+          {props.quota.useQuotas && props.statistics.calculated != undefined &&
             <div className="analytics-card">
               <span className="fa fa-chart-pie label-primary" />
               <h1 className="h3">
