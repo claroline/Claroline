@@ -21,10 +21,9 @@ class SessionUserRepository extends EntityRepository
         return $this->_em
             ->createQuery('
                 SELECT su FROM Claroline\CursusBundle\Entity\Registration\SessionUser AS su
-                INNER JOIN su.session s
-                INNER JOIN s.course c
-                INNER JOIN c.organizations o
-                WHERE o IN (:organization)
+                INNER JOIN su.user u
+                LEFT JOIN u.userOrganizationReferences oref
+                WHERE oref.organization = :organization
             ')
             ->setParameter('organization', $organization)
             ->getResult();

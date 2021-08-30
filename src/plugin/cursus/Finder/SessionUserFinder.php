@@ -24,6 +24,7 @@ class SessionUserFinder extends AbstractFinder
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
     {
+        $qb->join('obj.user', 'u');
         $qb->join('obj.session', 's');
         $qb->join('s.course', 'c');
 
@@ -40,8 +41,8 @@ class SessionUserFinder extends AbstractFinder
                     break;
 
                 case 'organization':
-                    $qb->join('c.organizations', 'o');
-                    $qb->andWhere("o IN (:{$filterName})");
+                    $qb->leftJoin('u.userOrganizationReferences', 'oref');
+                    $qb->andWhere("oref.organization = :{$filterName}");
                     $qb->setParameter($filterName, $filterValue);
                     break;
 
@@ -56,7 +57,6 @@ class SessionUserFinder extends AbstractFinder
                     break;
 
                 case 'user':
-                    $qb->join('obj.user', 'u');
                     $qb->andWhere("u.uuid = :{$filterName}");
                     $qb->setParameter($filterName, $filterValue);
                     break;
