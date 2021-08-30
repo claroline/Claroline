@@ -6,7 +6,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CursusBundle\DataFixtures\PostInstall\LoadTemplateData;
 use Claroline\InstallationBundle\Updater\Updater;
 
-class Updater130028 extends Updater
+class Updater130027 extends Updater
 {
     private $om;
     private $dataFixtures;
