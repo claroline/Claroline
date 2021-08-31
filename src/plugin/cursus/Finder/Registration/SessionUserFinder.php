@@ -9,23 +9,23 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CursusBundle\Finder;
+namespace Claroline\CursusBundle\Finder\Registration;
 
 use Claroline\AppBundle\API\Finder\AbstractFinder;
-use Claroline\CursusBundle\Entity\Registration\SessionGroup;
+use Claroline\CursusBundle\Entity\Registration\SessionUser;
 use Doctrine\ORM\QueryBuilder;
 
-class SessionGroupFinder extends AbstractFinder
+class SessionUserFinder extends AbstractFinder
 {
     public static function getClass(): string
     {
-        return SessionGroup::class;
+        return SessionUser::class;
     }
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
     {
         $sessionJoin = false;
-        $groupJoin = false;
+
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
                 case 'course':
@@ -47,25 +47,18 @@ class SessionGroupFinder extends AbstractFinder
                     $qb->setParameter($filterName, $filterValue);
                     break;
 
-                case 'group':
-                    if (!$groupJoin) {
-                        $qb->join('obj.group', 'g');
-                        $groupJoin = true;
-                    }
-
-                    $qb->andWhere("g.uuid = :{$filterName}");
+                case 'user':
+                    $qb->join('obj.user', 'u');
+                    $qb->andWhere("u.uuid = :{$filterName}");
                     $qb->setParameter($filterName, $filterValue);
                     break;
 
-                case 'user':
-                    if (!$groupJoin) {
-                        $qb->join('obj.group', 'g');
-                        $groupJoin = true;
+                case 'pending':
+                    if ($filterValue) {
+                        $qb->andWhere('(obj.confirmed = 0 OR obj.validated = 0)');
+                    } else {
+                        $qb->andWhere('(obj.confirmed = 1 AND obj.validated = 1)');
                     }
-
-                    $qb->leftJoin('g.users', 'gu');
-                    $qb->andWhere("gu.uuid = :{$filterName}");
-                    $qb->setParameter($filterName, $filterValue);
                     break;
 
                 default:

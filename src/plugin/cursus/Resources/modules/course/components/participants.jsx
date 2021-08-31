@@ -220,7 +220,7 @@ const CourseParticipants = (props) =>
                   <CourseUsers
                     type={constants.TEACHER_TYPE}
                     activeSession={props.activeSession}
-                    name={selectors.STORE_NAME+'.courseTutors'}
+                    name={selectors.STORE_NAME+'.sessionTutors'}
                     addUsers={props.addUsers}
                     inviteUsers={props.inviteUsers}
                     moveUsers={props.moveUsers}
@@ -235,24 +235,24 @@ const CourseParticipants = (props) =>
                 const Users = (
                   <Fragment>
                     {isFull(props.activeSession) &&
-                    <AlertBlock type="warning" title={trans('La session est complète.', {}, 'cursus')}>
-                      {trans('Toutes les nouvelles inscriptions seront automatiquement ajoutées en liste d\'attente.', {}, 'cursus')}
-                    </AlertBlock>
+                      <AlertBlock type="warning" title={trans('La session est complète.', {}, 'cursus')}>
+                        {trans('Toutes les nouvelles inscriptions seront automatiquement ajoutées en liste d\'attente.', {}, 'cursus')}
+                      </AlertBlock>
                     }
 
                     {get(props.activeSession, 'registration.userValidation') &&
-                    <AlertBlock title={trans('registration_user_confirmation_title', {}, 'cursus')}>
-                      {trans('registration_user_confirmation_pending_help', {}, 'cursus')}
-                      <br/>
-                      {trans('registration_user_confirmation_manager_help', {}, 'cursus')}
-                      (<LinkButton target={props.path+'/'+props.course.slug+(props.activeSession ? '/'+props.activeSession.id : '')+'/participants/pending'}>{trans('show_pending_list', {}, 'cursus')}</LinkButton>)
-                    </AlertBlock>
+                      <AlertBlock title={trans('registration_user_confirmation_title', {}, 'cursus')}>
+                        {trans('registration_user_confirmation_pending_help', {}, 'cursus')}
+                        <br/>
+                        {trans('registration_user_confirmation_manager_help', {}, 'cursus')}
+                        (<LinkButton target={props.path+'/'+props.course.slug+(props.activeSession ? '/'+props.activeSession.id : '')+'/participants/pending'}>{trans('show_pending_list', {}, 'cursus')}</LinkButton>)
+                      </AlertBlock>
                     }
 
                     <CourseUsers
                       type={constants.LEARNER_TYPE}
                       activeSession={props.activeSession}
-                      name={selectors.STORE_NAME+'.courseUsers'}
+                      name={selectors.STORE_NAME+'.sessionUsers'}
                       addUsers={props.addUsers}
                       inviteUsers={props.inviteUsers}
                       moveUsers={props.moveUsers}
@@ -269,7 +269,7 @@ const CourseParticipants = (props) =>
                   <CourseGroups
                     type={constants.LEARNER_TYPE}
                     activeSession={props.activeSession}
-                    name={selectors.STORE_NAME+'.courseGroups'}
+                    name={selectors.STORE_NAME+'.sessionGroups'}
                     addGroups={props.addGroups}
                     inviteGroups={props.inviteGroups}
                     moveGroups={props.moveGroups}
@@ -292,7 +292,7 @@ const CourseParticipants = (props) =>
 
                     <SessionUsers
                       session={props.activeSession}
-                      name={selectors.STORE_NAME+'.coursePending'}
+                      name={selectors.STORE_NAME+'.sessionPending'}
                       url={['apiv2_cursus_session_list_pending', {id: props.activeSession.id}]}
                       unregisterUrl={['apiv2_cursus_session_remove_users', {type: constants.LEARNER_TYPE, id: props.activeSession.id}]}
                       actions={(rows) => [

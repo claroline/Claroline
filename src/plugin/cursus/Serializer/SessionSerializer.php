@@ -152,6 +152,7 @@ class SessionSerializer
                     'validation' => $session->getRegistrationValidation(),
                     'userValidation' => $session->getUserValidation(),
                     'mail' => $session->getRegistrationMail(),
+                    'pendingRegistrations' => $session->getPendingRegistrations(),
                     'eventRegistrationType' => $session->getEventRegistrationType(),
                 ],
                 'pricing' => [
@@ -191,6 +192,7 @@ class SessionSerializer
         $this->sipe('registration.validation', 'setRegistrationValidation', $data, $session);
         $this->sipe('registration.userValidation', 'setUserValidation', $data, $session);
         $this->sipe('registration.mail', 'setRegistrationMail', $data, $session);
+        $this->sipe('registration.pendingRegistrations', 'setPendingRegistrations', $data, $session);
         $this->sipe('registration.eventRegistrationType', 'setEventRegistrationType', $data, $session);
 
         $this->sipe('pricing.price', 'setPrice', $data, $session);

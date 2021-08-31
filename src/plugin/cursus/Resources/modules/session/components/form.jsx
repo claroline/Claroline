@@ -101,6 +101,7 @@ const SessionForm = (props) =>
               if (!checked) {
                 props.update('registration.autoRegistration', false)
                 props.update('registration.validation', false)
+                props.update('registration.pendingRegistrations', false)
               }
             },
             linked: [
@@ -144,6 +145,7 @@ const SessionForm = (props) =>
                       props.update('registration.validation', false)
                       props.update('registration.userValidation', false)
                       props.update('registration.selfUnregistration', false)
+                      props.update('registration.pendingRegistrations', false)
                       break
 
                     case 'validation':
@@ -154,6 +156,13 @@ const SessionForm = (props) =>
                       break
                   }
                 }
+              }, {
+                name: 'registrations.pendingRegistrations',
+                type: 'boolean',
+                label: trans('enable_session_pending_list', {}, 'cursus'),
+                displayed: (session) => get(session, 'registration.selfRegistration')
+                  && !get(session, 'registration.autoRegistration')
+                  && (get(session, 'restrictions.users') || get(session, 'restrictions._restrictUsers'))
               }
             ]
           }, {
@@ -221,7 +230,7 @@ const SessionForm = (props) =>
             name: 'restrictions._restrictUsers',
             type: 'boolean',
             label: trans('restrict_users_count'),
-            calculated: (course) => get(course, 'restrictions.users') || get(course, 'restrictions._restrictUsers'),
+            calculated: (session) => get(session, 'restrictions.users') || get(session, 'restrictions._restrictUsers'),
             onChange: (value) => {
               if (!value) {
                 props.update('restrictions.users', null)
@@ -233,7 +242,7 @@ const SessionForm = (props) =>
                 type: 'number',
                 label: trans('users_count'),
                 required: true,
-                displayed: (course) => get(course, 'restrictions.users') || get(course, 'restrictions._restrictUsers'),
+                displayed: (session) => get(session, 'restrictions.users') || get(session, 'restrictions._restrictUsers'),
                 options: {
                   min: 0
                 }
