@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\API\Serializer\Template;
 
+use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Template\Template;
@@ -45,22 +46,27 @@ class TemplateSerializer
         return 'template';
     }
 
-    public function serialize(Template $template): array
+    public function serialize(Template $template, array $options = []): array
     {
-        $contents = [];
-        foreach ($template->getTemplateContents() as $content) {
-            $contents[$content->getLang()] = [
-                'title' => $content->getTitle(),
-                'content' => $content->getContent(),
-            ];
-        }
-
-        return [
+        $serialized = [
             'id' => $template->getUuid(),
             'name' => $template->getName(),
             'type' => $this->typeSerializer->serialize($template->getType()),
-            'contents' => $contents,
         ];
+
+        if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
+            $contents = [];
+            foreach ($template->getTemplateContents() as $content) {
+                $contents[$content->getLang()] = [
+                    'title' => $content->getTitle(),
+                    'content' => $content->getContent(),
+                ];
+            }
+
+            $serialized['contents'] = $contents;
+        }
+
+        return $serialized;
     }
 
     public function deserialize(array $data, Template $template): Template

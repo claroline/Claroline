@@ -9,27 +9,41 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CursusBundle\Finder;
+namespace Claroline\CursusBundle\Finder\Registration;
 
 use Claroline\AppBundle\API\Finder\AbstractFinder;
-use Claroline\CursusBundle\Entity\Registration\EventGroup;
+use Claroline\CursusBundle\Entity\Registration\SessionGroup;
 use Doctrine\ORM\QueryBuilder;
 
-class EventGroupFinder extends AbstractFinder
+class SessionGroupFinder extends AbstractFinder
 {
     public static function getClass(): string
     {
-        return EventGroup::class;
+        return SessionGroup::class;
     }
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
     {
+        $sessionJoin = false;
         $groupJoin = false;
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
-                case 'event':
-                    $qb->join('obj.event', 'e');
-                    $qb->andWhere("e.uuid = :{$filterName}");
+                case 'course':
+                    if (!$sessionJoin) {
+                        $qb->join('obj.session', 's');
+                        $sessionJoin = true;
+                    }
+                    $qb->join('s.course', 'c');
+                    $qb->andWhere("c.uuid = :{$filterName}");
+                    $qb->setParameter($filterName, $filterValue);
+                    break;
+
+                case 'session':
+                    if (!$sessionJoin) {
+                        $qb->join('obj.session', 's');
+                        $sessionJoin = true;
+                    }
+                    $qb->andWhere("s.uuid = :{$filterName}");
                     $qb->setParameter($filterName, $filterValue);
                     break;
 

@@ -135,6 +135,7 @@ class CourseSerializer
                     'validation' => $course->getRegistrationValidation(),
                     'userValidation' => $course->getUserValidation(),
                     'mail' => $course->getRegistrationMail(),
+                    'pendingRegistrations' => $course->getPendingRegistrations(),
                 ],
                 'pricing' => [
                     'price' => $course->getPrice(),
@@ -182,6 +183,7 @@ class CourseSerializer
         $this->sipe('registration.validation', 'setRegistrationValidation', $data, $course);
         $this->sipe('registration.userValidation', 'setUserValidation', $data, $course);
         $this->sipe('registration.mail', 'setRegistrationMail', $data, $course);
+        $this->sipe('registration.pendingRegistrations', 'setPendingRegistrations', $data, $course);
 
         $this->sipe('opening.session', 'setSessionOpening', $data, $course);
 

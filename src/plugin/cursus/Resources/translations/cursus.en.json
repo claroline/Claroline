@@ -105,5 +105,7 @@
     "registration_auto": "All session participants are automatically registered for this event.",
     "session_about": "Abbout session",
 
-    "opening_session": "Displayed session"
+    "opening_session": "Displayed session",
+    "course_registration_pending": "You are on the pending list for this training.",
+    "course_registration_pending_help": "Please wait till a manager register you to a session."
 }

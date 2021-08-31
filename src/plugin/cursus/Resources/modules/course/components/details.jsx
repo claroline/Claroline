@@ -1,7 +1,9 @@
 import React, {Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
+import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl'
+import {hasPermission} from '#/main/app/security'
 import {Routes} from '#/main/app/router/components/routes'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ContentTabs} from '#/main/app/content/components/tabs'
@@ -15,6 +17,7 @@ import {CourseAbout} from '#/plugin/cursus/course/containers/about'
 import {CourseParticipants} from '#/plugin/cursus/course/containers/participants'
 import {CourseSessions} from '#/plugin/cursus/course/containers/sessions'
 import {CourseEvents} from '#/plugin/cursus/course/containers/events'
+import {CoursePending} from '#/plugin/cursus/course/containers/pending'
 
 const CourseDetails = (props) =>
   <Fragment>
@@ -39,6 +42,13 @@ const CourseDetails = (props) =>
             icon: 'fa fa-fw fa-calendar-week',
             label: trans('sessions', {}, 'cursus'),
             target: `${route(props.path, props.course, props.activeSession)}/sessions`
+          }, {
+            name: 'pending',
+            type: LINK_BUTTON,
+            icon: 'fa fa-fw fa-hourglass-half',
+            label: trans('En attente'),
+            displayed: hasPermission('register', props.course) && get(props.course, 'registration.pendingRegistrations'),
+            target: `${route(props.path, props.course, props.activeSession)}/pending`
           }, {
             name: 'participants',
             type: LINK_BUTTON,
@@ -71,6 +81,7 @@ const CourseDetails = (props) =>
                 course={props.course}
                 activeSession={props.activeSession}
                 activeSessionRegistration={props.activeSessionRegistration}
+                courseRegistration={props.courseRegistration}
                 availableSessions={props.availableSessions}
               />
             )
@@ -80,6 +91,17 @@ const CourseDetails = (props) =>
           render() {
             return (
               <CourseSessions
+                path={props.path}
+                course={props.course}
+              />
+            )
+          }
+        }, {
+          path: '/pending',
+          disabled: !hasPermission('register', props.course) || !get(props.course, 'registration.pendingRegistrations'),
+          render() {
+            return (
+              <CoursePending
                 path={props.path}
                 course={props.course}
               />
@@ -123,6 +145,9 @@ CourseDetails.propTypes = {
     SessionTypes.propTypes
   ),
   activeSessionRegistration: T.shape({
+
+  }),
+  courseRegistration: T.shape({
 
   }),
   availableSessions: T.arrayOf(T.shape(

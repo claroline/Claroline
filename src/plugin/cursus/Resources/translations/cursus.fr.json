@@ -109,5 +109,9 @@
     "opening_session_none": "Aucune (Seule les informations relatives à la formation sont affichées)",
     "opening_session_first_available": "La première session en cours ou la prochaine disponible",
     "opening_session_default": "La session par défaut",
-    "opening_session_help": "Permet d'ouvrir automatiquement une session lors de l'ouverture de la formation."
+    "opening_session_help": "Permet d'ouvrir automatiquement une session lors de l'ouverture de la formation.",
+    "enable_course_pending_list": "Autoriser les utilisateurs à s'inscrire en liste d'attente si aucune session n'est disponible",
+    "enable_session_pending_list": "Autoriser les utilisateurs à s'inscrire en liste d'attente si la session est complète",
+    "course_registration_pending": "Vous êtes en liste d'attente pour cette formation.",
+    "course_registration_pending_help": "Veuillez patienter le temps qu'un gestionnaire vous inscrive à une session."
 }

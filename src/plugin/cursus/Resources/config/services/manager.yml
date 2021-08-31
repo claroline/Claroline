@@ -6,13 +6,11 @@ services:
 
     Claroline\CursusBundle\Manager\CourseManager:
         arguments:
-            - '@security.token_storage'
             - '@event_dispatcher'
             - '@translator'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\Manager\PlatformManager'
             - '@Claroline\CoreBundle\Manager\Template\TemplateManager'
-            - '@Claroline\CoreBundle\Manager\RoleManager'
             - '@Claroline\CursusBundle\Manager\SessionManager'
 
     Claroline\CursusBundle\Manager\SessionManager:

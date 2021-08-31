@@ -95,6 +95,13 @@ class AbstractTraining
     protected $userValidation = false;
 
     /**
+     * Enables the waiting list for the training.
+     *
+     * @ORM\Column(name="pending_registrations", type="boolean")
+     */
+    protected $pendingRegistrations = false;
+
+    /**
      * @ORM\Column(name="max_users", nullable=true, type="integer")
      */
     protected $maxUsers;
@@ -206,6 +213,16 @@ class AbstractTraining
     public function hasValidation()
     {
         return $this->registrationValidation || $this->userValidation;
+    }
+
+    public function getPendingRegistrations(): bool
+    {
+        return $this->pendingRegistrations;
+    }
+
+    public function setPendingRegistrations(bool $pendingRegistrations)
+    {
+        $this->pendingRegistrations = $pendingRegistrations;
     }
 
     public function getMaxUsers()

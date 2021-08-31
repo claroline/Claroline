@@ -20,7 +20,9 @@ use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Manager\Tool\ToolManager;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
+use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Claroline\CursusBundle\Entity\Course;
+use Claroline\CursusBundle\Entity\Registration\CourseUser;
 use Claroline\CursusBundle\Entity\Registration\SessionGroup;
 use Claroline\CursusBundle\Entity\Registration\SessionUser;
 use Claroline\CursusBundle\Entity\Session;
@@ -33,6 +35,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @Route("/cursus_course")
@@ -139,6 +142,11 @@ class CourseController extends AbstractCrudController
                 'course' => $course->getUuid(),
             ]);
 
+            $courseRegistrations = $this->finder->fetch(CourseUser::class, [
+                'user' => $user->getUuid(),
+                'course' => $course->getUuid(),
+            ]);
+
             $registrations = [
                 'users' => array_map(function (SessionUser $sessionUser) use ($registeredSessions) {
                     $registeredSessions[] = $sessionUser->getSession();
@@ -150,6 +158,9 @@ class CourseController extends AbstractCrudController
 
                     return $this->serializer->serialize($sessionGroup);
                 }, $groupRegistrations),
+                'pending' => array_map(function (CourseUser $courseUser) {
+                    return $this->serializer->serialize($courseUser);
+                }, $courseRegistrations),
             ];
 
             if (!empty($registeredSessions)) {
@@ -239,6 +250,107 @@ class CourseController extends AbstractCrudController
         return new JsonResponse(
             $this->finder->search(Session::class, $params)
         );
+    }
+
+    /**
+     * @Route("/{id}/users", name="apiv2_cursus_course_list_users", methods={"GET"})
+     * @EXT\ParamConverter("course", class="Claroline\CursusBundle\Entity\Course", options={"mapping": {"id": "uuid"}})
+     */
+    public function listUsersAction(Course $course, Request $request): JsonResponse
+    {
+        $this->checkPermission('OPEN', $course, [], true);
+
+        $params = $request->query->all();
+        if (!isset($params['hiddenFilters'])) {
+            $params['hiddenFilters'] = [];
+        }
+        $params['hiddenFilters']['course'] = $course->getUuid();
+
+        return new JsonResponse(
+            $this->finder->search(CourseUser::class, $params)
+        );
+    }
+
+    /**
+     * @Route("/{id}/users", name="apiv2_cursus_course_add_users", methods={"PATCH"})
+     * @EXT\ParamConverter("course", class="Claroline\CursusBundle\Entity\Course", options={"mapping": {"id": "uuid"}})
+     */
+    public function addUsersAction(Course $course, Request $request): JsonResponse
+    {
+        $this->checkPermission('REGISTER', $course, [], true);
+
+        $users = $this->decodeIdsString($request, User::class);
+
+        $sessionUsers = $this->manager->addUsers($course, $users);
+
+        return new JsonResponse(array_map(function (CourseUser $courseUser) {
+            return $this->serializer->serialize($courseUser);
+        }, $sessionUsers));
+    }
+
+    /**
+     * @Route("/{id}/users", name="apiv2_cursus_course_remove_users", methods={"DELETE"})
+     * @EXT\ParamConverter("course", class="Claroline\CursusBundle\Entity\Course", options={"mapping": {"id": "uuid"}})
+     */
+    public function removeUsersAction(Course $course, Request $request): JsonResponse
+    {
+        $this->checkPermission('REGISTER', $course, [], true);
+
+        $courseUsers = $this->decodeIdsString($request, CourseUser::class);
+        $this->manager->removeUsers($courseUsers);
+
+        return new JsonResponse(null, 204);
+    }
+
+    /**
+     * @Route("/{id}/move/users", name="apiv2_cursus_course_move_users", methods={"PUT"})
+     * @EXT\ParamConverter("course", class="Claroline\CursusBundle\Entity\Course", options={"mapping": {"id": "uuid"}})
+     */
+    public function moveUsersAction(Course $course, Request $request): JsonResponse
+    {
+        $this->checkPermission('REGISTER', $course, [], true);
+
+        $data = $this->decodeRequest($request);
+        if (empty($data['target']) || empty($data['courseUsers'])) {
+            throw new InvalidDataException('Missing either target session or registrations to move.');
+        }
+
+        $targetSession = $this->om->getRepository(Session::class)->findOneBy([
+            'uuid' => $data['target'],
+        ]);
+
+        $courseUsers = [];
+        foreach ($data['courseUsers'] as $courseUserId) {
+            $courseUser = $this->om->getRepository(CourseUser::class)->findOneBy([
+                'uuid' => $courseUserId,
+            ]);
+
+            if (!empty($courseUser)) {
+                $courseUsers[] = $courseUser;
+            }
+        }
+
+        $this->manager->moveUsers($targetSession, $courseUsers);
+
+        return new JsonResponse();
+    }
+
+    /**
+     * @Route("/{id}/self/register", name="apiv2_cursus_course_self_register", methods={"PUT"})
+     * @EXT\ParamConverter("course", class="Claroline\CursusBundle\Entity\Course", options={"mapping": {"id": "uuid"}})
+     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
+     */
+    public function selfRegisterAction(Course $course, User $user): JsonResponse
+    {
+        $this->checkPermission('OPEN', $course, [], true);
+
+        if (!$course->getPendingRegistrations()) {
+            throw new AccessDeniedException();
+        }
+
+        $courseUsers = $this->manager->addUsers($course, [$user]);
+
+        return new JsonResponse($this->serializer->serialize($courseUsers[0]));
     }
 
     private function checkToolAccess(string $rights = 'OPEN'): bool

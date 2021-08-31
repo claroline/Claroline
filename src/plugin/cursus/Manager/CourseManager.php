@@ -13,18 +13,16 @@ namespace Claroline\CursusBundle\Manager;
 
 use Claroline\AppBundle\Manager\PlatformManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\Template\TemplateManager;
 use Claroline\CursusBundle\Entity\Course;
+use Claroline\CursusBundle\Entity\Registration\AbstractRegistration;
+use Claroline\CursusBundle\Entity\Registration\CourseUser;
+use Claroline\CursusBundle\Entity\Session;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CourseManager
 {
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
     /** @var EventDispatcherInterface */
     private $eventDispatcher;
     /** @var TranslatorInterface */
@@ -35,29 +33,27 @@ class CourseManager
     private $platformManager;
     /** @var TemplateManager */
     private $templateManager;
-    /** @var RoleManager */
-    private $roleManager;
     /** @var SessionManager */
     private $sessionManager;
 
+    private $courseUserRepo;
+
     public function __construct(
-        TokenStorageInterface $tokenStorage,
         EventDispatcherInterface $eventDispatcher,
         TranslatorInterface $translator,
         ObjectManager $om,
         PlatformManager $platformManager,
         TemplateManager $templateManager,
-        RoleManager $roleManager,
         SessionManager $sessionManager
     ) {
         $this->eventDispatcher = $eventDispatcher;
         $this->om = $om;
         $this->translator = $translator;
         $this->platformManager = $platformManager;
-        $this->roleManager = $roleManager;
-        $this->tokenStorage = $tokenStorage;
         $this->templateManager = $templateManager;
         $this->sessionManager = $sessionManager;
+
+        $this->courseUserRepo = $this->om->getRepository(CourseUser::class);
     }
 
     public function generateFromTemplate(Course $course, string $locale)
@@ -84,8 +80,68 @@ class CourseManager
         return $content;
     }
 
-    public function getRegistrations(Course $course, User $user)
+    public function addUsers(Course $course, array $users): array
     {
-        return [];
+        $results = [];
+
+        $registrationDate = new \DateTime();
+
+        $this->om->startFlushSuite();
+
+        foreach ($users as $user) {
+            $courseUser = $this->courseUserRepo->findOneBy(['course' => $course, 'user' => $user]);
+
+            if (empty($courseUser)) {
+                $courseUser = new CourseUser();
+                $courseUser->setCourse($course);
+                $courseUser->setUser($user);
+                $courseUser->setType(AbstractRegistration::LEARNER);
+                $courseUser->setDate($registrationDate);
+
+                $this->om->persist($courseUser);
+
+                $results[] = $courseUser;
+            }
+        }
+
+        /*if ($course->getRegistrationMail()) {
+            $this->sendSessionInvitation($session, array_map(function (SessionUser $sessionUser) {
+                return $sessionUser->getUser();
+            }, $results), AbstractRegistration::LEARNER === $type);
+        }*/
+
+        $this->om->endFlushSuite();
+
+        return $results;
+    }
+
+    /**
+     * @param CourseUser[] $courseUsers
+     */
+    public function removeUsers(array $courseUsers)
+    {
+        foreach ($courseUsers as $courseUser) {
+            $this->om->remove($courseUser);
+        }
+
+        $this->om->flush();
+    }
+
+    /**
+     * @param CourseUser[] $courseUsers
+     */
+    public function moveUsers(Session $targetSession, array $courseUsers)
+    {
+        $this->om->startFlushSuite();
+
+        // unregister users from course pending list
+        $this->removeUsers($courseUsers);
+
+        // register to the new session
+        $this->sessionManager->addUsers($targetSession, array_map(function (CourseUser $sessionUser) {
+            return $sessionUser->getUser();
+        }, $courseUsers), AbstractRegistration::LEARNER, true);
+
+        $this->om->endFlushSuite();
     }
 }

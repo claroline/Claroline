@@ -23,33 +23,27 @@
     "meta": {
       "type": ["object"],
       "properties": {
-        "session": {
-          "type": ["object"],
-          "properties": {
-            "id": {
-              "type": "string",
-              "description": "The session event session"
-            }
-          }
-        },
         "type": {
-          "type": "integer",
-          "description": "The session event type"
+          "type": "string",
+          "description": "The event type"
+        }
+      }
+    },
+    "session": {
+      "type": ["object"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The session id"
         }
       }
     },
     "restrictions": {
       "type": "object",
       "properties": {
-        "maxUsers": {
+        "users": {
           "type": ["integer", "null"],
           "description": "The maximum amount of users the session event can have"
-        },
-        "dates": {
-          "type": "array",
-          "items": {
-            "type": ["string", "null"]
-          }
         }
       }
     },
@@ -63,9 +57,9 @@
       "required": ["registrationType"]
     }
   },
-  "required": ["name", "code"],
+  "required": ["name", "code", "session"],
   "claroline": {
-    "requiredAtCreation": ["name", "code"],
+    "requiredAtCreation": ["name", "code", "session"],
     "ids": ["id"]
   }
 }

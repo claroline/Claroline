@@ -17,6 +17,13 @@ import {selectors} from '#/plugin/cursus/tools/trainings/catalog/store/selectors
 import {getInfo, isRegistered, isFull} from '#/plugin/cursus/utils'
 import {MODAL_COURSE_REGISTRATION} from '#/plugin/cursus/course/modals/registration'
 
+function canSelfRegister(course, session, registrations) {
+  return getInfo(course, session, 'registration.selfRegistration')
+    && !getInfo(course, session, 'registration.autoRegistration')
+    && !isRegistered(session, registrations)
+    && (getInfo(course, session, 'registration.pendingRegistrations') || !isFull(session))
+}
+
 const CourseSessions = (props) =>
   <Fragment>
     <SessionList
@@ -87,7 +94,7 @@ const CourseSessions = (props) =>
           type: MODAL_BUTTON,
           icon: 'fa fa-fw fa-user-plus',
           label: trans(isFull(rows[0]) ? 'register_waiting_list' : 'self_register', {}, 'actions'),
-          displayed: getInfo(props.course, rows[0], 'registration.selfRegistration') && !getInfo(props.course, rows[0], 'registration.autoRegistration') && !isRegistered(rows[0], props.registrations),
+          displayed: canSelfRegister(props.course, rows[0], props.registrations),
           modal: [MODAL_COURSE_REGISTRATION, {
             path: props.path,
             course: props.course,
