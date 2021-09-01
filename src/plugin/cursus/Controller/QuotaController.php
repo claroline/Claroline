@@ -100,17 +100,22 @@ class QuotaController extends AbstractCrudController
             'validated' => array_reduce($sessionUsers, function ($accum, $subscription) {
                 return $accum + (SessionUser::STATUS_VALIDATED == $subscription->getStatus() ? 1 : 0);
             }, 0),
-            'managed' => array_reduce($sessionUsers, function ($accum, $subscription) {
-                return $accum + (SessionUser::STATUS_MANAGED == $subscription->getStatus() ? 1 : 0);
-            }, 0),
         ];
-
-        if ($quota->useQuotas()) {
+        if ($quota->useQuotas())
+        {
+            $statistics['managed'] = array_reduce($sessionUsers, function ($accum, $subscription) {
+                return $accum + (SessionUser::STATUS_MANAGED == $subscription->getStatus() ? 1 : 0);
+            }, 0);
             $statistics['calculated'] = array_reduce($sessionUsers, function ($accum, $subscription) {
                 return SessionUser::STATUS_MANAGED == $subscription->getStatus() ? $accum + $subscription->getSession()->getQuotaDays() : $accum;
             }, 0);
         }
-
+        else
+        {
+            $statistics['total'] = array_reduce($sessionUsers, function ($accum, $subscription) {
+                return $accum + (SessionUser::STATUS_MANAGED != $subscription->getStatus() ? 1 : 0);
+            }, 0);
+        }
         return new JsonResponse($statistics);
     }
 
@@ -130,6 +135,9 @@ class QuotaController extends AbstractCrudController
             'organization' => $organization,
             'used_by_quotas' => true,
         ];
+
+        if (!$quota->useQuotas()) $query['hiddenFilters']['ignored_status'] = SessionUser::STATUS_MANAGED;
+
         $subscriptions = $this->finder->searchEntities(SessionUser::class, $query)['data'];
 
         $domPdf = new Dompdf([
@@ -167,6 +175,8 @@ class QuotaController extends AbstractCrudController
             'organization' => $organization,
             'used_by_quotas' => true,
         ];
+        
+        if (!$quota->useQuotas()) $query['hiddenFilters']['ignored_status'] = SessionUser::STATUS_MANAGED;
 
         $options = isset($query['options']) ? $query['options'] : [];
 
@@ -176,10 +186,11 @@ class QuotaController extends AbstractCrudController
     }
 
     /**
-     * @Route("/subscriptions/{id}", name="apiv2_cursus_subscription_status", methods={"PATCH"})
-     * @EXT\ParamConverter("sessionUser", class="Claroline\CursusBundle\Entity\Registration\SessionUser", options={"mapping": {"id": "uuid"}})
+     * @Route("/{id}/subscriptions/{sid}", name="apiv2_cursus_subscription_status", methods={"PATCH"})
+     * @EXT\ParamConverter("quota", class="Claroline\CursusBundle\Entity\Quota", options={"mapping": {"id": "uuid"}})
+     * @EXT\ParamConverter("sessionUser", class="Claroline\CursusBundle\Entity\Registration\SessionUser", options={"mapping": {"sid": "uuid"}})
      */
-    public function setSubscriptionStatusAction(SessionUser $sessionUser, Request $request): JsonResponse
+    public function setSubscriptionStatusAction(Quota $quota, SessionUser $sessionUser, Request $request): JsonResponse
     {
         $remark = $request->query->get('remark', '');
 
@@ -199,7 +210,6 @@ class QuotaController extends AbstractCrudController
                     $this->sessionManager->addUsers($sessionUser->getSession(), [$sessionUser->getUser()]);
                     break;
                 case SessionUser::STATUS_MANAGED:
-                    $quota = $this->om->getRepository(Quota::class)->findOneByOrganizations($sessionUser->getSession()->getCourse()->getOrganizations()->toArray());
                     if (null == $quota || !$quota->useQuotas()) {
                         return new JsonResponse('The status don\'t can be changed to managed.', 500);
                     }

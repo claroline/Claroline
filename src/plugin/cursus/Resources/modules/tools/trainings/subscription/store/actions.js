@@ -24,7 +24,7 @@ actions.getStatistics = (id) => (dispatch) => {
 actions.setSubscriptionStatus = (quotaId, subscriptionId, status, remark) => (dispatch) => {
   return dispatch({
     [API_REQUEST]: {
-      url: url(['apiv2_cursus_subscription_status', {id:subscriptionId}], {status, remark}),
+      url: url(['apiv2_cursus_subscription_status', {id:quotaId, sid:subscriptionId}], {status, remark}),
       request: {
         method: 'PATCH'
       },

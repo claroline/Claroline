@@ -52,7 +52,7 @@ const TrainingsMenu = (props) =>
         }, {
           name: 'subscriptions',
           type: LINK_BUTTON,
-          label: trans('subscriptions', {}, 'cursus'),
+          label: trans('validations', {}, 'cursus'),
           target: props.path + '/subscription',
           displayed: param('quotas.enabled')
         }

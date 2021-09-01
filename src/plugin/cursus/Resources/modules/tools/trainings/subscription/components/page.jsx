@@ -83,13 +83,15 @@ const SubscriptionPage = (props) => {
               {props.statistics.validated}
             </h1>
           </div>
-          <div className="analytics-card">
-            <span className="fa fa-check-double label-success" />
-            <h1 className="h3">
-              <small>{trans('subscription_managed', {}, 'cursus')}</small>
-              {props.statistics.managed}
-            </h1>
-          </div>
+          {props.quota.useQuotas && props.statistics.calculated != undefined &&
+            <div className="analytics-card">
+              <span className="fa fa-check-double label-success" />
+              <h1 className="h3">
+                <small>{trans('subscription_managed', {}, 'cursus')}</small>
+                {props.statistics.managed}
+              </h1>
+            </div>
+          }
           {props.quota.useQuotas && props.statistics.calculated != undefined &&
             <div className="analytics-card">
               <span className="fa fa-chart-pie label-primary" />
@@ -97,7 +99,8 @@ const SubscriptionPage = (props) => {
                 <small>{trans('subscription_quota', {}, 'cursus')}</small>
                 {props.statistics.calculated.toFixed(2)} / {get(props.quota, 'threshold')} 
               </h1>
-            </div>}
+            </div>
+          }
         </div>
 
         <div className="row">

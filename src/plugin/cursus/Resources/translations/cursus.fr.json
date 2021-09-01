@@ -118,11 +118,12 @@
     "used_by_quotas": "Utilisé par quota",
     "remark": "Remarques",
     "confirm": "Confirmer",
+    "validations": "Validations",
     "subscriptions": "Inscriptions",
     "subscription_total": "Total",
-    "subscription_pending": "à traité",
+    "subscription_pending": "à traiter",
     "subscription_refused": "refusé",
     "subscription_validated": "validé",
-    "subscription_managed": "validé avec quotas",
+    "subscription_managed": "validé sur quotas",
     "subscription_quota": "Nombre de quotas"
 }

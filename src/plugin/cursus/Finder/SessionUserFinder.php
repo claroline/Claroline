@@ -40,6 +40,11 @@ class SessionUserFinder extends AbstractFinder
                     $qb->setParameter($filterName, $filterValue);
                     break;
 
+                case 'ignored_status':
+                    $qb->andWhere("obj.status != :{$filterName}");
+                    $qb->setParameter($filterName, $filterValue);
+                    break;
+
                 case 'organization':
                     $qb->leftJoin('u.userOrganizationReferences', 'oref');
                     $qb->andWhere("oref.organization = :{$filterName}");
