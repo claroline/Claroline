@@ -879,8 +879,13 @@ class ClacoFormController
                         $value = $this->locationManager->getCountryByCode($val);
                         break;
                     case FieldFacet::FILE_TYPE:
-                        /* TODO: change this when FILE_TYPE can accept an array of files again */
-                        $value = is_array($val) ? '['.implode(', ', $val).']' : '['.$val.']';
+                        if (!empty($val) && is_array($val)) {
+                            $fileUrl = preg_replace('#^\.\.\/files\/#', '', $val['url']); // TODO : files part should not be stored in the DB
+                            $filePath = $this->filesDir.DIRECTORY_SEPARATOR.$fileUrl;
+
+                            $ext = pathinfo($filePath, PATHINFO_EXTENSION);
+                            $value = TextNormalizer::toKey($entry->getTitle()).'-'.TextNormalizer::toKey($field->getName()).'.'.$ext;
+                        }
                         break;
                     default:
                         $value = $val;
@@ -1011,11 +1016,13 @@ class ClacoFormController
                     if (!empty($file) && is_array($file)) {
                         $fileUrl = preg_replace('#^\.\.\/files\/#', '', $file['url']); // TODO : files part should not be stored in the DB
                         $filePath = $this->filesDir.DIRECTORY_SEPARATOR.$fileUrl;
-                        $fileParts = explode('/', $file['url']);
-                        $fileName = count($fileParts) > 0 ? $fileParts[count($fileParts) - 1] : $file['name'];
+
+                        $ext = pathinfo($filePath, PATHINFO_EXTENSION);
+                        $fileName = TextNormalizer::toKey($entry->getTitle()).'-'.TextNormalizer::toKey($field->getName()).'.'.$ext;
+
                         $archive->addFile(
                             $filePath,
-                            'files'.DIRECTORY_SEPARATOR.$entry->getId().DIRECTORY_SEPARATOR.$fileName
+                            'files'.DIRECTORY_SEPARATOR.TextNormalizer::toKey($entry->getTitle()).DIRECTORY_SEPARATOR.$fileName
                         );
                     }
                 }
