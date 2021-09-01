@@ -94,7 +94,9 @@ class TransferManager implements LoggerAwareInterface
         $this->checkPermission('CREATE', $workspace, [], true);
 
         if ($this->dispatch('create', 'pre', [$workspace, $options])) {
-            $this->om->save($workspace);
+            $this->om->persist($workspace);
+            $this->om->flush();
+
             $this->dispatch('create', 'post', [$workspace, $options]);
         }
 

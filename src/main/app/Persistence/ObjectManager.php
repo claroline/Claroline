@@ -219,38 +219,19 @@ class ObjectManager extends ObjectManagerDecorator implements LoggerAwareInterfa
     /**
      * Finds a set of objects by their ids.
      *
-     * @param $class
-     * @param bool $orderStrict keep the same order as ids array
-     *
-     * @return array [object]
-     *
-     * @throws MissingObjectException if any of the requested objects cannot be found
-     *
-     * @internal param string $objectClass
-     *
-     * @todo make this method compatible with odm implementations
+     * @return array
      */
-    public function findByIds($class, array $ids, $orderStrict = false)
+    public function findByIds(string $class, array $ids)
     {
-        return $this->findList($class, 'id', $ids, $orderStrict);
+        return $this->findList($class, 'id', $ids);
     }
 
     /**
      * Finds a set of objects.
      *
-     * @param $class
-     * @param $property
-     * @param bool $orderStrict keep the same order as ids array
-     *
-     * @return array [object]
-     *
-     * @throws MissingObjectException if any of the requested objects cannot be found
-     *
-     * @internal param string $objectClass
-     *
-     * @todo make this method compatible with odm implementations
+     * @return array
      */
-    public function findList($class, $property, array $list = [], $orderStrict = false)
+    public function findList(string $class, string $property, ?array $list = [])
     {
         if (0 === count($list)) {
             return [];
@@ -259,21 +240,8 @@ class ObjectManager extends ObjectManagerDecorator implements LoggerAwareInterfa
         $dql = "SELECT object FROM {$class} object WHERE object.{$property} IN (:list)";
         $query = $this->wrapped->createQuery($dql);
         $query->setParameter('list', $list);
-        $objects = $query->getResult();
 
-        if (($entityCount = count($objects)) !== ($idCount = count($list))) {
-            $this->log("{$entityCount} out of {$idCount} ids don't match any existing object", LogLevel::WARNING);
-        }
-
-        if ($orderStrict) {
-            // Sort objects to have the same order as given $ids array
-            $sortIds = array_flip($list);
-            usort($objects, function ($a, $b) use ($sortIds) {
-                return $sortIds[$a->getId()] - $sortIds[$b->getId()];
-            });
-        }
-
-        return $objects;
+        return $query->getResult();
     }
 
     /**
@@ -282,8 +250,6 @@ class ObjectManager extends ObjectManagerDecorator implements LoggerAwareInterfa
      * @param string $class
      *
      * @return int
-     *
-     * @todo make this method compatible with odm implementations
      */
     public function count($class)
     {
@@ -346,21 +312,7 @@ class ObjectManager extends ObjectManagerDecorator implements LoggerAwareInterfa
             }
         }
 
-        if (method_exists($this, 'log')) {
-            $this->log('Flush level: '.$this->flushSuiteLevel.'.');
-        } else {
-        }
-    }
-
-    public function save($object, $options = [], $log = true)
-    {
-        $this->persist($object);
-
-        if ($log) {
-            //maybe log some stuff according to the options
-        }
-
-        $this->flush();
+        $this->log('Flush level: '.$this->flushSuiteLevel.'.');
     }
 
     /**
@@ -381,14 +333,13 @@ class ObjectManager extends ObjectManagerDecorator implements LoggerAwareInterfa
     /**
      * Fetch an object from database according to the class and the id/uuid of the data.
      *
-     * @param string $class
-     *
      * @return object|null
      */
-    public function getObject(array $data, $class, array $identifiers = [])
+    public function getObject(array $data, string $class, array $identifiers = [])
     {
         $object = null;
 
+        // try to retrieve object with its id
         if (isset($data['id']) || isset($data['uuid'])) {
             if (isset($data['uuid'])) {
                 $object = $this->getRepository($class)->findOneBy(['uuid' => $data['uuid']]);
@@ -397,36 +348,21 @@ class ObjectManager extends ObjectManagerDecorator implements LoggerAwareInterfa
                 $this->getRepository($class)->findOneBy(['uuid' => $data['id']]) :
                 $this->getRepository($class)->findOneBy(['id' => $data['id']]);
             }
-
-            return $object;
         }
 
-        foreach (array_keys($data) as $property) {
-            if (in_array($property, $identifiers) && !$object) {
-                $object = $this->getRepository($class)->findOneBy([$property => $data[$property]]);
+        // try other object identifiers if any
+        if (empty($object) && !empty($identifiers)) {
+            foreach (array_keys($data) as $property) {
+                if (in_array($property, $identifiers) && !$object) {
+                    $object = $this->getRepository($class)->findOneBy([$property => $data[$property]]);
 
-                if ($object) {
-                    return $object;
+                    if ($object) {
+                        break;
+                    }
                 }
             }
         }
 
         return $object;
-    }
-
-    public function ignoreForeignKeys()
-    {
-        $conn = $this->wrapped->getConnection();
-        $sql = 'SET FOREIGN_KEY_CHECKS=0;';
-        $stmt = $conn->prepare($sql);
-        $stmt->execute();
-    }
-
-    public function restoreForeignKeys()
-    {
-        $conn = $this->wrapped->getConnection();
-        $sql = 'SET FOREIGN_KEY_CHECKS=1;';
-        $stmt = $conn->prepare($sql);
-        $stmt->execute();
     }
 }
