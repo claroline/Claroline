@@ -97,33 +97,85 @@ const SessionForm = (props) =>
             type: 'boolean',
             label: trans('activate_self_registration'),
             help: trans('self_registration_training_help', {}, 'cursus'),
+            onChange: (checked) => {
+              if (!checked) {
+                props.update('registration.autoRegistration', false)
+                props.update('registration.validation', false)
+              }
+            },
             linked: [
               {
-                name: 'registration.validation',
-                type: 'boolean',
-                label: trans('validate_registration'),
-                help: trans('validate_registration_help', {}, 'cursus'),
-                displayed: (course) => course.registration && course.registration.selfRegistration
+                name: 'registration._selfRegistrationMode',
+                type: 'choice',
+                label: trans('mode'),
+                displayed: (session) => get(session, 'registration.selfRegistration'),
+                calculated: (session) => {
+                  if (get(session, 'registration.autoRegistration')) {
+                    return 'auto'
+                  } else if (get(session, 'registration.validation')) {
+                    return 'validation'
+                  }
+
+                  return 'simple'
+                },
+                required: true,
+                options: {
+                  condensed: false,
+                  choices: {
+                    simple: trans('simple_registration', {}, 'cursus'),
+                    validation: trans('validate_registration', {}, 'cursus'),
+                    auto: trans('auto_registration', {}, 'cursus')
+                  }
+                },
+                onChange: (registrationMode) => {
+                  switch (registrationMode) {
+                    case 'simple':
+                      props.update('registration.autoRegistration', false)
+                      props.update('registration.validation', false)
+                      break
+
+                    case 'auto':
+                      props.update('registration.autoRegistration', true)
+
+                      // reset incompatible options
+                      props.update('restrictions._restrictUsers', false)
+                      props.update('restrictions.users', null)
+                      props.update('registration.mail', false)
+                      props.update('registration.validation', false)
+                      props.update('registration.userValidation', false)
+                      props.update('registration.selfUnregistration', false)
+                      break
+
+                    case 'validation':
+                      props.update('registration.validation', true)
+
+                      // reset incompatible options
+                      props.update('registration.autoRegistration', false)
+                      break
+                  }
+                }
               }
             ]
-          }, {
-            name: 'registration.selfUnregistration',
-            type: 'boolean',
-            label: trans('activate_self_unregistration'),
-            help: trans('self_unregistration_training_help', {}, 'cursus')
           }, {
             name: 'registration.mail',
             type: 'boolean',
             label: trans('registration_send_mail', {}, 'cursus'),
+            displayed: (session) => !get(session, 'registration.autoRegistration'),
             linked: [
               {
                 name: 'registration.userValidation',
                 type: 'boolean',
                 label: trans('registration_user_validation', {}, 'cursus'),
                 help: trans('registration_user_validation_help', {}, 'cursus'),
-                displayed: (course) => course.registration && course.registration.mail
+                displayed: (session) => get(session, 'registration.mail')
               }
             ]
+          }, {
+            name: 'registration.selfUnregistration',
+            type: 'boolean',
+            label: trans('activate_self_unregistration'),
+            displayed: (session) => !get(session, 'registration.autoRegistration'),
+            help: trans('self_unregistration_training_help', {}, 'cursus')
           }, {
             name: 'registration.eventRegistrationType',
             type: 'choice',
@@ -161,6 +213,11 @@ const SessionForm = (props) =>
         title: trans('access_restrictions'),
         fields: [
           {
+            name: 'restrictions.hidden',
+            type: 'boolean',
+            label: trans('restrict_hidden'),
+            help: trans('restrict_hidden_help')
+          }, {
             name: 'restrictions._restrictUsers',
             type: 'boolean',
             label: trans('restrict_users_count'),

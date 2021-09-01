@@ -4,11 +4,15 @@ plugin:
           is_displayable_in_workspace: true
           is_displayable_in_desktop: false
           class: clock
+          tool_rights:
+              - name: register
 
         - name: trainings
           is_displayable_in_workspace: false
           is_displayable_in_desktop: true
           class: graduation-cap
+          tool_rights:
+              - name: register
 
     data_sources:
         - name: public_course_sessions
@@ -18,7 +22,7 @@ plugin:
 
         - name: my_course_sessions
           type: list
-          context: [desktop]
+          context: [workspace, desktop]
           tags: [community, event]
 
         - name: all_courses

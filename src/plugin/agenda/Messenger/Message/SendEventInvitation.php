@@ -16,13 +16,26 @@ class SendEventInvitation implements AsyncMessageInterface
      */
     private $invitationId;
 
-    public function __construct(int $invitationId)
+    /**
+     * The path to the exported ICS of the event which will be sent as attachment.
+     *
+     * @var string
+     */
+    private $icsPath;
+
+    public function __construct(int $invitationId, string $icsPath)
     {
         $this->invitationId = $invitationId;
+        $this->icsPath = $icsPath;
     }
 
     public function getInvitationId(): int
     {
         return $this->invitationId;
+    }
+
+    public function getICSPath(): string
+    {
+        return $this->icsPath;
     }
 }

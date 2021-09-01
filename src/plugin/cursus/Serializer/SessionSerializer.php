@@ -104,9 +104,11 @@ class SessionSerializer
                 'open' => $this->authorization->isGranted('OPEN', $session),
                 'edit' => $this->authorization->isGranted('EDIT', $session),
                 'delete' => $this->authorization->isGranted('DELETE', $session),
+                'register' => $this->authorization->isGranted('REGISTER', $session),
             ],
             'course' => $this->courseSerializer->serialize($session->getCourse(), [Options::SERIALIZE_MINIMAL]),
             'restrictions' => [
+                'hidden' => $session->isHidden(),
                 'users' => $session->getMaxUsers(),
                 'dates' => DateRangeNormalizer::normalize($session->getStartDate(), $session->getEndDate()),
             ],
@@ -152,6 +154,7 @@ class SessionSerializer
                 ],
                 'registration' => [
                     'selfRegistration' => $session->getPublicRegistration(),
+                    'autoRegistration' => $session->getAutoRegistration(),
                     'selfUnregistration' => $session->getPublicUnregistration(),
                     'validation' => $session->getRegistrationValidation(),
                     'userValidation' => $session->getUserValidation(),
@@ -186,8 +189,10 @@ class SessionSerializer
         $this->sipe('meta.order', 'setOrder', $data, $session);
 
         $this->sipe('restrictions.users', 'setMaxUsers', $data, $session);
+        $this->sipe('restrictions.hidden', 'setHidden', $data, $session);
 
         $this->sipe('registration.selfRegistration', 'setPublicRegistration', $data, $session);
+        $this->sipe('registration.autoRegistration', 'setAutoRegistration', $data, $session);
         $this->sipe('registration.selfUnregistration', 'setPublicUnregistration', $data, $session);
         $this->sipe('registration.validation', 'setRegistrationValidation', $data, $session);
         $this->sipe('registration.userValidation', 'setUserValidation', $data, $session);

@@ -12,7 +12,6 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Listener\Log\LogListener;
 use Claroline\CoreBundle\Manager\Organization\OrganizationManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
-use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -22,7 +21,6 @@ class WorkspaceCrud
     private $tokenStorage;
     private $resourceManager;
     private $organizationManager;
-    private $roleManager;
     private $om;
     private $logListener;
 
@@ -30,7 +28,6 @@ class WorkspaceCrud
         WorkspaceManager $manager,
         TokenStorageInterface $tokenStorage,
         ResourceManager $resourceManager,
-        RoleManager $roleManager,
         OrganizationManager $orgaManager,
         ObjectManager $om,
         LogListener $logListener
@@ -39,7 +36,6 @@ class WorkspaceCrud
         $this->tokenStorage = $tokenStorage;
         $this->resourceManager = $resourceManager;
         $this->organizationManager = $orgaManager;
-        $this->roleManager = $roleManager;
         $this->om = $om;
         $this->logListener = $logListener;
     }
@@ -55,12 +51,10 @@ class WorkspaceCrud
 
         $user = $this->tokenStorage->getToken() ? $this->tokenStorage->getToken()->getUser() : null;
         if ($user instanceof User && empty($workspace->getCreator())) {
-            if (empty($workspace->getCreator())) {
-                $workspace->setCreator($user);
+            $workspace->setCreator($user);
 
-                if (empty($workspace->getOrganizations()) && !empty($user->getMainOrganization())) {
-                    $workspace->addOrganization($user->getMainOrganization());
-                }
+            if (empty($workspace->getOrganizations()) && !empty($user->getMainOrganization())) {
+                $workspace->addOrganization($user->getMainOrganization());
             }
         }
 

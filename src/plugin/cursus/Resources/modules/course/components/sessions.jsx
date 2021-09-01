@@ -1,10 +1,13 @@
 import React, {Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
+import get from 'lodash/get'
+import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
 import {hasPermission} from '#/main/app/security'
 import {Button} from '#/main/app/action/components/button'
-import {MODAL_BUTTON} from '#/main/app/buttons'
+import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
+import {route as workspaceRoute} from '#/main/core/workspace/routing'
 
 import {Course as CourseTypes} from '#/plugin/cursus/prop-types'
 import {route} from '#/plugin/cursus/routing'
@@ -52,6 +55,22 @@ const CourseSessions = (props) =>
       ]}
       actions={(rows) => [
         {
+          name: 'open-workspace',
+          type: CALLBACK_BUTTON,
+          icon: 'fa fa-fw fa-arrow-circle-o-right',
+          label: trans('open-training', {}, 'actions'),
+          displayed: !isEmpty(getInfo(props.course, rows[0], 'workspace')) && (hasPermission('edit', rows[0]) || getInfo(props.course, rows[0], 'registration.autoRegistration') || isRegistered(rows[0], props.registrations)),
+          callback: () => {
+            const workspaceUrl = workspaceRoute(getInfo(props.course, rows[0], 'workspace'))
+            if (get(rows[0], 'registration.autoRegistration') && !isRegistered(rows[0], props.registrations)) {
+              props.register(props.course, rows[0].id).then(() => props.history.push(workspaceUrl))
+            } else {
+              props.history.push(workspaceUrl)
+            }
+          },
+          scope: ['object'],
+          primary: true
+        }, {
           name: 'edit',
           type: MODAL_BUTTON,
           icon: 'fa fa-fw fa-pencil',
@@ -61,13 +80,14 @@ const CourseSessions = (props) =>
             onSave: () => props.reload(props.course.slug)
           }],
           scope: ['object'],
+          displayed: hasPermission('edit', rows[0]),
           group: trans('management')
         }, {
-          name: 'register',
+          name: 'self-register',
           type: MODAL_BUTTON,
           icon: 'fa fa-fw fa-user-plus',
-          label: trans(isFull(rows[0]) ? 'register_waiting_list' : 'self-register', {}, 'actions'),
-          displayed: getInfo(props.course, rows[0], 'registration.selfRegistration') && !isRegistered(rows[0], props.registrations),
+          label: trans(isFull(rows[0]) ? 'register_waiting_list' : 'self_register', {}, 'actions'),
+          displayed: getInfo(props.course, rows[0], 'registration.selfRegistration') && !getInfo(props.course, rows[0], 'registration.autoRegistration') && !isRegistered(rows[0], props.registrations),
           modal: [MODAL_COURSE_REGISTRATION, {
             path: props.path,
             course: props.course,

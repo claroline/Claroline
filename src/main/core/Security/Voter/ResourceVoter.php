@@ -272,28 +272,14 @@ class ResourceVoter implements VoterInterface
      */
     protected function checkCreation($type, ResourceNode $node, TokenInterface $token)
     {
-        if (null === $type) {
-            return [];
-        }
-
         $errors = [];
 
-        //even the workspace manager can't break the file limit.
-        $workspace = $node->getWorkspace();
-        $isLimitExceeded = $this->resourceManager
-            ->checkResourceLimitExceeded($workspace);
-
-        if ($isLimitExceeded) {
-            $currentCount = $this->resourceManager->countActiveResources($workspace);
-            $errors[] = $this->translator
-                ->trans(
-                    'resource_limit_exceeded',
-                    ['%current%' => $currentCount, '%max%' => $workspace->getMaxUploadResources()],
-                    'platform'
-                );
+        if (null === $type) {
+            return $errors;
         }
 
-        //if I am the manager, I can do whatever I want
+        // if I am the manager, I can do whatever I want
+        $workspace = $node->getWorkspace();
         if ($this->workspaceManager->isManager($workspace, $token)) {
             return $errors;
         }

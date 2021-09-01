@@ -13,9 +13,6 @@ const CourseMain = connect(
   (dispatch) => ({
     openSession(sessionId) {
       dispatch(actions.openSession(sessionId))
-    },
-    register(course, sessionId) {
-      dispatch(actions.register(course, sessionId))
     }
   })
 )(CourseMainComponent)

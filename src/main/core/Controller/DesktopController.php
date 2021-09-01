@@ -13,9 +13,7 @@ namespace Claroline\CoreBundle\Controller;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
-use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Event\StrictDispatcher;
-use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
 use Claroline\CoreBundle\Entity\Tool\AbstractTool;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Tool\Tool;
@@ -23,8 +21,8 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\CatalogEvents\ToolEvents;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\Tool\ToolManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
@@ -39,16 +37,14 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 class DesktopController
 {
-    use RequestDecoderTrait;
-
     /** @var AuthorizationCheckerInterface */
     private $authorization;
 
     /** @var TokenStorageInterface */
     private $tokenStorage;
 
-    /** @var ParametersSerializer */
-    private $parametersSerializer;
+    /** @var PlatformConfigurationHandler */
+    private $config;
 
     /** @var SerializerProvider */
     private $serializer;
@@ -62,14 +58,14 @@ class DesktopController
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         TokenStorageInterface $tokenStorage,
-        ParametersSerializer $parametersSerializer,
+        PlatformConfigurationHandler $config,
         SerializerProvider $serializer,
         ToolManager $toolManager,
         StrictDispatcher $strictDispatcher
     ) {
         $this->authorization = $authorization;
         $this->tokenStorage = $tokenStorage;
-        $this->parametersSerializer = $parametersSerializer;
+        $this->config = $config;
         $this->serializer = $serializer;
         $this->toolManager = $toolManager;
         $this->strictDispatcher = $strictDispatcher;
@@ -79,27 +75,20 @@ class DesktopController
      * Opens the desktop.
      *
      * @Route("/", name="claro_desktop_open")
-     * @EXT\ParamConverter("currentUser", converter="current_user", options={"allowAnonymous"=true})
      */
-    public function openAction(User $currentUser = null): JsonResponse
+    public function openAction(): JsonResponse
     {
-        // TODO : manage anonymous. This will break like this imo but they need to have access to tools opened to them.
-        if (empty($currentUser)) {
-            throw new AccessDeniedException();
-        }
-
         /** @var GenericDataEvent $event */
         $event = $this->strictDispatcher->dispatch('desktop.open', GenericDataEvent::class);
 
-        $parameters = $this->parametersSerializer->serialize([Options::SERIALIZE_MINIMAL]);
-
         return new JsonResponse(array_merge($event->getResponse() ?? [], [
             'userProgression' => null,
-            // get all enabled tools for the desktop
+            // get all enabled tools for the desktop, even those inaccessible to the current user
+            // this will allow the ui to know if a user try to access a closed tool or an non existent one.
             'tools' => array_values(array_map(function (OrderedTool $orderedTool) {
                 return $this->serializer->serialize($orderedTool, [Options::SERIALIZE_MINIMAL]);
             }, $this->toolManager->getOrderedToolsByDesktop())),
-            'shortcuts' => isset($parameters['desktop_shortcuts']) ? $parameters['desktop_shortcuts'] : [],
+            'shortcuts' => $this->config->getParameter('desktop.shortcuts') ?? [],
         ]));
     }
 

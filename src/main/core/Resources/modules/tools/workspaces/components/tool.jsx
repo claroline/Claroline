@@ -49,6 +49,7 @@ const WorkspacesTool = (props) =>
           onEnter: () => props.resetForm('workspaces.creation', merge({}, WorkspaceType.defaultProps, {meta: {creator: props.currentUser}}))
         }, {
           path: '/registered',
+          disabled: isEmpty(props.currentUser),
           render: () => {
             const Registered = (
               <WorkspaceList
@@ -73,6 +74,7 @@ const WorkspacesTool = (props) =>
           }
         }, {
           path: '/managed',
+          disabled: isEmpty(props.currentUser),
           render: () => {
             const ManagedList = (
               <WorkspaceList

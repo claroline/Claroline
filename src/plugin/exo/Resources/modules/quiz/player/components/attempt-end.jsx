@@ -19,7 +19,7 @@ import {isQuestionType} from '#/plugin/exo/items/item-types'
 
 import {select as playerSelect} from '#/plugin/exo/quiz/player/selectors'
 import {showCorrection, showScore} from '#/plugin/exo/resources/quiz/papers/restrictions'
-import {AttemptsChart} from '#/plugin/exo/charts/attempts/containers/chart'
+import {AttemptsChart} from '#/plugin/exo/charts/attempts/components/chart'
 
 // TODO : merge with PlayerRestrictions
 // TODO : show number of attempts info
@@ -165,10 +165,18 @@ const AttemptEndComponent = props =>
           />
         }
 
-        {props.showEndStats &&
+        {props.showEndStats && ['user', 'both'].includes(get(props.paper, 'structure.parameters.overviewStats')) &&
           <AttemptsChart
             quizId={props.paper.structure.id}
-            userId={'user' === get(props.paper, 'structure.parameters.overviewStats') ? props.currentUserId : null}
+            userId={props.currentUserId}
+            steps={props.paper.structure.steps}
+            questionNumberingType={get(props.paper, 'structure.parameters.questionNumbering')}
+          />
+        }
+
+        {props.showEndStats && ['all', 'both'].includes(get(props.paper, 'structure.parameters.overviewStats')) &&
+          <AttemptsChart
+            quizId={props.paper.structure.id}
             steps={props.paper.structure.steps}
             questionNumberingType={get(props.paper, 'structure.parameters.questionNumbering')}
           />

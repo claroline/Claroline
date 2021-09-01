@@ -149,7 +149,8 @@ const EditorParameters = props => {
                         options: {
                           choices: {
                             user: trans('user'),
-                            all: trans('all')
+                            all: trans('all'),
+                            both: trans('both')
                           }
                         }
                       }
@@ -458,7 +459,8 @@ const EditorParameters = props => {
                         options: {
                           choices: {
                             user: trans('user'),
-                            all: trans('all')
+                            all: trans('all'),
+                            both: trans('both')
                           }
                         }
                       }

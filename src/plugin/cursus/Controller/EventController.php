@@ -80,11 +80,16 @@ class EventController extends AbstractCrudController
     {
         if (!$this->authorization->isGranted('ROLE_ADMIN')) {
             $user = $this->tokenStorage->getToken()->getUser();
+            if ($user instanceof User) {
+                $organizations = $user->getOrganizations();
+            } else {
+                $organizations = $this->om->getRepository(Organization::class)->findBy(['default' => true]);
+            }
 
             return [
                 'organizations' => array_map(function (Organization $organization) {
                     return $organization->getUuid();
-                }, $user->getOrganizations()),
+                }, $organizations),
             ];
         }
 
@@ -186,6 +191,22 @@ class EventController extends AbstractCrudController
     }
 
     /**
+     * @Route("/{id}/ics", name="apiv2_cursus_event_download_ics", methods={"GET"})
+     * @EXT\ParamConverter("sessionEvent", class="Claroline\CursusBundle\Entity\Event", options={"mapping": {"id": "uuid"}})
+     */
+    public function downloadICSAction(Event $sessionEvent): StreamedResponse
+    {
+        $this->checkPermission('OPEN', $sessionEvent, [], true);
+
+        return new StreamedResponse(function () use ($sessionEvent) {
+            echo $this->manager->getICS($sessionEvent);
+        }, 200, [
+            'Content-Type' => 'text/calendar',
+            'Content-Disposition' => 'attachment; filename='.TextNormalizer::toKey($sessionEvent->getName()).'.ics',
+        ]);
+    }
+
+    /**
      * @Route("/{id}/self/register", name="apiv2_cursus_session_event_self_register", methods={"PUT"})
      * @EXT\ParamConverter("sessionEvent", class="Claroline\CursusBundle\Entity\Event", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
@@ -231,7 +252,7 @@ class EventController extends AbstractCrudController
      */
     public function inviteAllAction(Event $sessionEvent): JsonResponse
     {
-        $this->checkPermission('EDIT', $sessionEvent, [], true);
+        $this->checkPermission('REGISTER', $sessionEvent, [], true);
 
         $this->manager->inviteAllSessionEventLearners($sessionEvent);
 
@@ -265,7 +286,7 @@ class EventController extends AbstractCrudController
      */
     public function addUsersAction(Event $sessionEvent, string $type, Request $request): JsonResponse
     {
-        $this->checkPermission('EDIT', $sessionEvent, [], true);
+        $this->checkPermission('REGISTER', $sessionEvent, [], true);
 
         $users = $this->decodeIdsString($request, User::class);
         $nbUsers = count($users);
@@ -289,7 +310,7 @@ class EventController extends AbstractCrudController
      */
     public function removeUsersAction(Event $sessionEvent, Request $request): JsonResponse
     {
-        $this->checkPermission('EDIT', $sessionEvent, [], true);
+        $this->checkPermission('REGISTER', $sessionEvent, [], true);
 
         $sessionEventUsers = $this->decodeIdsString($request, EventUser::class);
         $this->manager->removeUsers($sessionEvent, $sessionEventUsers);
@@ -303,7 +324,7 @@ class EventController extends AbstractCrudController
      */
     public function inviteUsersAction(Event $sessionEvent, Request $request): JsonResponse
     {
-        $this->checkPermission('EDIT', $sessionEvent, [], true);
+        $this->checkPermission('REGISTER', $sessionEvent, [], true);
 
         $sessionUsers = $this->decodeIdsString($request, EventUser::class);
         $this->manager->sendSessionEventInvitation($sessionEvent, array_map(function (EventUser $sessionUser) {
@@ -339,7 +360,7 @@ class EventController extends AbstractCrudController
      */
     public function addGroupsAction(Event $sessionEvent, string $type, Request $request): JsonResponse
     {
-        $this->checkPermission('EDIT', $sessionEvent, [], true);
+        $this->checkPermission('REGISTER', $sessionEvent, [], true);
 
         $groups = $this->decodeIdsString($request, Group::class);
         $nbUsers = 0;
@@ -367,7 +388,7 @@ class EventController extends AbstractCrudController
      */
     public function removeGroupsAction(Event $sessionEvent, Request $request): JsonResponse
     {
-        $this->checkPermission('EDIT', $sessionEvent, [], true);
+        $this->checkPermission('REGISTER', $sessionEvent, [], true);
 
         $sessionGroups = $this->decodeIdsString($request, EventGroup::class);
         $this->manager->removeGroups($sessionEvent, $sessionGroups);
@@ -381,7 +402,7 @@ class EventController extends AbstractCrudController
      */
     public function inviteGroupsAction(Event $sessionEvent, Request $request): JsonResponse
     {
-        $this->checkPermission('EDIT', $sessionEvent, [], true);
+        $this->checkPermission('REGISTER', $sessionEvent, [], true);
 
         $sessionGroups = $this->decodeIdsString($request, EventGroup::class);
         $users = [];

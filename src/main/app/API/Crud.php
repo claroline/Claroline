@@ -91,7 +91,7 @@ class Crud
         ]);
     }
 
-    public function csv(string $class, array $columns = [], array $query = [], array $options = [])
+    public function csv(string $class, array $query = [], array $options = [])
     {
         $data = $this->list($class, $query, $options)['data'];
 
@@ -100,7 +100,7 @@ class Crud
         if (!empty($data[0])) {
             $firstRow = $data[0];
             //get the title list
-            $titles = !empty($columns) ? $columns : ArrayUtils::getPropertiesName($firstRow);
+            $titles = !empty($query['columns']) ? $query['columns'] : ArrayUtils::getPropertiesName($firstRow);
 
             foreach ($data as $el) {
                 $formattedData = [];

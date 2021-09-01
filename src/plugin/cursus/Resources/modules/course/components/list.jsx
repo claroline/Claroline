@@ -80,7 +80,7 @@ const CourseList = (props) =>
         icon: 'fa fa-fw fa-pencil',
         label: trans('edit', {}, 'actions'),
         target: route(props.path, rows[0]) + '/edit',
-        displayed: hasPermission('delete', rows[0]),
+        displayed: hasPermission('edit', rows[0]),
         group: trans('management'),
         scope: ['object']
       }, {

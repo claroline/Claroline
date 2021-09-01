@@ -7,7 +7,8 @@ import {EventsMenu as EventsMenuComponent} from '#/plugin/cursus/tools/events/co
 
 const EventsMenu = connect(
   (state) => ({
-    canEdit: hasPermission('edit', toolSelectors.toolData(state))
+    canEdit: hasPermission('edit', toolSelectors.toolData(state)),
+    canRegister: hasPermission('register', toolSelectors.toolData(state))
   })
 )(EventsMenuComponent)
 

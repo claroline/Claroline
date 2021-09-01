@@ -1,5 +1,6 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
 import {param} from '#/main/app/config'
@@ -131,27 +132,68 @@ const CourseForm = (props) =>
             help: trans('self_registration_training_help', {}, 'cursus'),
             onChange: (checked) => {
               if (!checked) {
+                props.update(props.name, 'registration.autoRegistration', false)
                 props.update(props.name, 'registration.validation', false)
               }
             },
             linked: [
               {
-                name: 'registration.validation',
-                type: 'boolean',
-                label: trans('validate_registration'),
-                help: trans('validate_registration_help', {}, 'cursus'),
-                displayed: (course) => course.registration && course.registration.selfRegistration
+                name: 'registration._selfRegistrationMode',
+                type: 'choice',
+                label: trans('mode'),
+                displayed: (course) => get(course, 'registration.selfRegistration'),
+                calculated: (course) => {
+                  if (get(course, 'registration.autoRegistration')) {
+                    return 'auto'
+                  } else if (get(course, 'registration.validation')) {
+                    return 'validation'
+                  }
+
+                  return 'simple'
+                },
+                required: true,
+                options: {
+                  condensed: false,
+                  choices: {
+                    simple: trans('simple_registration', {}, 'cursus'),
+                    validation: trans('validate_registration', {}, 'cursus'),
+                    auto: trans('auto_registration', {}, 'cursus')
+                  }
+                },
+                onChange: (registrationMode) => {
+                  switch (registrationMode) {
+                    case 'simple':
+                      props.update(props.name, 'registration.autoRegistration', false)
+                      props.update(props.name, 'registration.validation', false)
+                      break
+
+                    case 'auto':
+                      props.update(props.name, 'registration.autoRegistration', true)
+
+                      // reset incompatible options
+                      props.update(props.name, 'restrictions._restrictUsers', false)
+                      props.update(props.name, 'restrictions.users', null)
+                      props.update(props.name, 'registration.mail', false)
+                      props.update(props.name, 'registration.validation', false)
+                      props.update(props.name, 'registration.userValidation', false)
+                      props.update(props.name, 'registration.selfUnregistration', false)
+                      break
+
+                    case 'validation':
+                      props.update(props.name, 'registration.validation', true)
+
+                      // reset incompatible options
+                      props.update(props.name, 'registration.autoRegistration', false)
+                      break
+                  }
+                }
               }
             ]
-          }, {
-            name: 'registration.selfUnregistration',
-            type: 'boolean',
-            label: trans('activate_self_unregistration'),
-            help: trans('self_unregistration_training_help', {}, 'cursus')
           }, {
             name: 'registration.mail',
             type: 'boolean',
             label: trans('registration_send_mail', {}, 'cursus'),
+            displayed: (course) => !get(course, 'registration.autoRegistration'),
             onChange: (checked) => {
               if (!checked) {
                 props.update(props.name, 'registration.userValidation', false)
@@ -163,9 +205,15 @@ const CourseForm = (props) =>
                 type: 'boolean',
                 label: trans('registration_user_validation', {}, 'cursus'),
                 help: trans('registration_user_validation_help', {}, 'cursus'),
-                displayed: (course) => course.registration && course.registration.mail
+                displayed: (course) => get(course, 'registration.mail')
               }
             ]
+          }, {
+            name: 'registration.selfUnregistration',
+            type: 'boolean',
+            label: trans('activate_self_unregistration'),
+            help: trans('self_unregistration_training_help', {}, 'cursus'),
+            displayed: (course) => !get(course, 'registration.autoRegistration')
           }, {
             name: 'registration.propagate',
             type: 'boolean',

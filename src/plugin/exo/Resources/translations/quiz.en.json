@@ -520,5 +520,7 @@
     "show_step_titles": "Show title of steps",
     "show_question_titles": "Show title of questions",
     "show_back": "Allow rollback",
-    "show_attempts_stats": "Display attempts statistics"
+    "show_attempts_stats": "Display attempts statistics",
+    "attempts_chart_all": "Evolution of all attempts",
+    "attempts_chart_user": "Evolution of my attempts"
 }

@@ -45,7 +45,7 @@
           "description": "The workspace creation date"
         },
         "creator": {
-          "type": "object",
+          "type": ["null", "object"],
           "properties": {
             "id": {
               "type": "string",

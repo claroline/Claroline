@@ -12,28 +12,31 @@ const Vertical = (props) =>
     {...omit(props, 'tabs', 'basePath')}
     className={classes('lateral-nav', props.className)}
   >
-    {props.tabs.map((tab) =>
-      <NavLink
-        to={props.basePath+tab.path}
-        key={toKey(tab.title)}
-        className="lateral-link"
-        exact={tab.exact}
-      >
-        {tab.icon &&
-          <span className={classes(tab.icon, tab.title && 'icon-with-text-right')} />
-        }
-        {tab.title}
+    {props.tabs
+      .filter(tab => undefined === tab.displayed || tab.displayed)
+      .map((tab) =>
+        <NavLink
+          to={props.basePath+tab.path}
+          key={toKey(tab.title)}
+          className="lateral-link"
+          exact={tab.exact}
+        >
+          {tab.icon &&
+            <span className={classes(tab.icon, tab.title && 'icon-with-text-right')} />
+          }
+          {tab.title}
 
-        {tab.actions && 0 !== tab.actions.length &&
-          <Toolbar
-            className="lateral-nav-actions"
-            buttonName='btn btn-link'
-            tooltip="right"
-            actions={tab.actions}
-          />
-        }
-      </NavLink>
-    )}
+          {tab.actions && 0 !== tab.actions.length &&
+            <Toolbar
+              className="lateral-nav-actions"
+              buttonName='btn btn-link'
+              tooltip="right"
+              actions={tab.actions}
+            />
+          }
+        </NavLink>
+      )
+    }
   </nav>
 
 Vertical.propTypes= {
@@ -44,6 +47,7 @@ Vertical.propTypes= {
     exact: T.bool,
     icon: T.string,
     title: T.string.isRequired,
+    displayed: T.bool,
     actions: T.arrayOf(T.shape({
       // TODO : action types
     }))

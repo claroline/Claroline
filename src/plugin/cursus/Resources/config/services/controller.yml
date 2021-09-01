@@ -21,6 +21,7 @@ services:
             - '@security.token_storage'
             - '@translator'
             - '@Claroline\CoreBundle\Library\RoutingHelper'
+            - '@Claroline\CoreBundle\Manager\Tool\ToolManager'
             - '@Claroline\CursusBundle\Manager\SessionManager'
 
     Claroline\CursusBundle\Controller\EventController:

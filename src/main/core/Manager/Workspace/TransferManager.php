@@ -14,7 +14,6 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\ExportObjectEvent;
 use Claroline\CoreBundle\Library\Utilities\FileUtilities;
@@ -95,7 +94,9 @@ class TransferManager implements LoggerAwareInterface
         $this->checkPermission('CREATE', $workspace, [], true);
 
         if ($this->dispatch('create', 'pre', [$workspace, $options])) {
-            $this->om->save($workspace);
+            $this->om->persist($workspace);
+            $this->om->flush();
+
             $this->dispatch('create', 'post', [$workspace, $options]);
         }
 
@@ -226,10 +227,6 @@ class TransferManager implements LoggerAwareInterface
             $orderedTool = new OrderedTool();
             $this->ots->setLogger($this->logger);
             $this->ots->deserialize($orderedToolData, $orderedTool, [], $workspace, $bag);
-        }
-
-        if (!$workspace->getCreator() && $this->tokenStorage->getToken() && $this->tokenStorage->getToken()->getUser() instanceof User) {
-            $workspace->setCreator($this->tokenStorage->getToken()->getUser());
         }
 
         $this->logListener->enable();

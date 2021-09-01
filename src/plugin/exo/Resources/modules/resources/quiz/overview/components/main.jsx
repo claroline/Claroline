@@ -9,7 +9,7 @@ import {UserEvaluation as UserEvaluationType} from '#/main/core/resource/prop-ty
 import {ResourceOverview} from '#/main/core/resource/components/overview'
 
 import {correctionModes, markModes, SHOW_CORRECTION_AT_DATE, SHOW_SCORE_AT_NEVER} from '#/plugin/exo/quiz/enums'
-import {AttemptsChart} from '#/plugin/exo/charts/attempts/containers/chart'
+import {AttemptsChart} from '#/plugin/exo/charts/attempts/components/chart'
 
 // TODO : show info about number of attempts
 
@@ -124,10 +124,18 @@ const OverviewMain = props =>
       </section>
     }
 
-    {props.showStats &&
+    {props.showStats && ['user', 'both'].includes(get(props.quiz, 'parameters.overviewStats')) &&
       <AttemptsChart
         quizId={props.quiz.id}
-        userId={'user' === get(props.quiz, 'parameters.overviewStats') ? props.currentUserId : null}
+        userId={props.currentUserId}
+        steps={props.quiz.steps}
+        questionNumberingType={get(props.quiz, 'parameters.questionNumbering')}
+      />
+    }
+
+    {props.showStats && ['all', 'both'].includes(get(props.quiz, 'parameters.overviewStats')) &&
+      <AttemptsChart
+        quizId={props.quiz.id}
         steps={props.quiz.steps}
         questionNumberingType={get(props.quiz, 'parameters.questionNumbering')}
       />

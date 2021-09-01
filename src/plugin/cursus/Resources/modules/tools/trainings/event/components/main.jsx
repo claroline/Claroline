@@ -15,12 +15,14 @@ const EventMain = (props) =>
   <Routes
     path={props.path+'/events'}
     redirect={[
-      {from: '/', exact: true, to: '/registered'}
+      {from: '/', exact: true, to: '/registered', disabled: !props.authenticated},
+      {from: '/', exact: true, to: '/public', disabled: props.authenticated}
     ]}
     routes={[
       {
         path: '/registered',
         onEnter: props.invalidateList,
+        disabled: !props.authenticated,
         render: () => (
           <EventsRegistered
             path={props.path+'/events'}
@@ -70,7 +72,7 @@ const EventMain = (props) =>
             ]}
           />
         ),
-        disabled: !props.canEdit
+        disabled: !props.authenticated || !props.canEdit || !props.canRegister
       }, {
         path: '/:id',
         onEnter: (params = {}) => props.open(params.id),
@@ -85,7 +87,9 @@ const EventMain = (props) =>
 
 EventMain.propTypes = {
   path: T.string.isRequired,
+  authenticated: T.bool.isRequired,
   canEdit: T.bool.isRequired,
+  canRegister: T.bool.isRequired,
   invalidateList: T.func.isRequired,
   open: T.func.isRequired
 }

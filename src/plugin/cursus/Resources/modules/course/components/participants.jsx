@@ -34,7 +34,7 @@ const CourseUsers = (props) =>
         icon: 'fa fa-fw fa-envelope',
         label: trans('send_invitation', {}, 'actions'),
         callback: () => props.inviteUsers(props.activeSession.id, rows),
-        displayed: hasPermission('edit', props.activeSession)
+        displayed: hasPermission('register', props.activeSession)
       }
     ]}
     add={{
@@ -74,7 +74,7 @@ const CourseGroups = (props) =>
         icon: 'fa fa-fw fa-envelope',
         label: trans('send_invitation', {}, 'actions'),
         callback: () => props.inviteGroups(props.activeSession.id, rows),
-        displayed: hasPermission('edit', props.activeSession)
+        displayed: hasPermission('register', props.activeSession)
       }
     ]}
     add={{
@@ -123,15 +123,15 @@ const CourseParticipants = (props) =>
         </h1>
       </div>
 
-      {hasPermission('edit', props.activeSession) &&
-      <div className="analytics-card">
-        <span className="fa fa-hourglass-half" style={{backgroundColor: schemeCategory20c[9]}} />
+      {hasPermission('register', props.activeSession) &&
+        <div className="analytics-card">
+          <span className="fa fa-hourglass-half" style={{backgroundColor: schemeCategory20c[9]}} />
 
-        <h1 className="h3">
-          <small>{trans('En attente')}</small>
-          {get(props.activeSession, 'participants.pending', 0)}
-        </h1>
-      </div>
+          <h1 className="h3">
+            <small>{trans('En attente')}</small>
+            {get(props.activeSession, 'participants.pending', 0)}
+          </h1>
+        </div>
       }
 
       <div className="analytics-card">
@@ -169,7 +169,7 @@ const CourseParticipants = (props) =>
               icon: 'fa fa-fw fa-hourglass-half',
               title: trans('En attente'),
               path: '/pending',
-              displayed: hasPermission('edit', props.activeSession)
+              displayed: hasPermission('register', props.activeSession)
             }
           ]}
         />
@@ -244,14 +244,14 @@ const CourseParticipants = (props) =>
               }
             }, {
               path: '/pending',
-              disabled: !hasPermission('edit', props.activeSession),
+              disabled: !hasPermission('register', props.activeSession),
               render() {
                 const Pending = (
                   <Fragment>
-                    {isFull(props.activeSession) && hasPermission('edit', props.activeSession) &&
-                    <AlertBlock type="warning" title={trans('La session est complète.', {}, 'cursus')}>
-                      {trans('Il n\'est plus possible de valider les inscriptions en attente.', {}, 'cursus')}
-                    </AlertBlock>
+                    {isFull(props.activeSession) && hasPermission('register', props.activeSession) &&
+                      <AlertBlock type="warning" title={trans('La session est complète.', {}, 'cursus')}>
+                        {trans('Il n\'est plus possible de valider les inscriptions en attente.', {}, 'cursus')}
+                      </AlertBlock>
                     }
 
                     <SessionUsers
@@ -267,7 +267,7 @@ const CourseParticipants = (props) =>
                           label: trans('confirm_registration', {}, 'actions'),
                           callback: () => props.confirmPending(props.activeSession.id, rows),
                           disabled: isFull(props.activeSession),
-                          displayed: hasPermission('edit', props.activeSession) && get (props.activeSession, 'registration.userValidation') && -1 !== rows.findIndex(row => !row.confirmed),
+                          displayed: hasPermission('register', props.activeSession) && get (props.activeSession, 'registration.userValidation') && -1 !== rows.findIndex(row => !row.confirmed),
                           group: trans('management')
                         }, {
                           name: 'validate',
@@ -276,7 +276,7 @@ const CourseParticipants = (props) =>
                           label: trans('validate_registration', {}, 'actions'),
                           callback: () => props.validatePending(props.activeSession.id, rows),
                           disabled: isFull(props.activeSession),
-                          displayed: hasPermission('edit', props.activeSession) && -1 !== rows.findIndex(row => !row.validated),
+                          displayed: hasPermission('register', props.activeSession) && -1 !== rows.findIndex(row => !row.validated),
                           group: trans('management')
                         }
                       ]}

@@ -1,7 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {AttemptsChart} from '#/plugin/exo/charts/attempts/containers/chart'
+import {AttemptsChart} from '#/plugin/exo/charts/attempts/components/chart'
 
 const AttemptsStats = (props) =>
   <AttemptsChart

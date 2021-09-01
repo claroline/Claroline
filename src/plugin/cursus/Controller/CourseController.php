@@ -33,7 +33,6 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @Route("/cursus_course")
@@ -96,9 +95,15 @@ class CourseController extends AbstractCrudController
             $user = $this->tokenStorage->getToken()->getUser();
 
             // filter by organizations
+            if ($user instanceof User) {
+                $organizations = $user->getOrganizations();
+            } else {
+                $organizations = $this->om->getRepository(Organization::class)->findBy(['default' => true]);
+            }
+
             $filters['organizations'] = array_map(function (Organization $organization) {
                 return $organization->getUuid();
-            }, $user->getOrganizations());
+            }, $organizations);
 
             // hide hidden trainings for non admin
             if (!$this->checkToolAccess('EDIT')) {
@@ -116,7 +121,6 @@ class CourseController extends AbstractCrudController
     public function openAction(Course $course): JsonResponse
     {
         $this->checkPermission('OPEN', $course, [], true);
-        $defaultSession = null;
 
         $defaultSession = null;
 
@@ -215,9 +219,8 @@ class CourseController extends AbstractCrudController
     /**
      * @Route("/{id}/sessions", name="apiv2_cursus_course_list_sessions", methods={"GET"})
      * @EXT\ParamConverter("course", class="ClarolineCursusBundle:Course", options={"mapping": {"id": "uuid"}})
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
-    public function listSessionsAction(User $user, Course $course, Request $request): JsonResponse
+    public function listSessionsAction(Course $course, Request $request): JsonResponse
     {
         $this->checkPermission('OPEN', $course, [], true);
 
@@ -228,10 +231,9 @@ class CourseController extends AbstractCrudController
         }
         $params['hiddenFilters']['course'] = $course->getUuid();
 
-        if (!$this->authorization->isGranted('ROLE_ADMIN')) {
-            $params['hiddenFilters']['organizations'] = array_map(function (Organization $organization) {
-                return $organization->getUuid();
-            }, $user->getAdministratedOrganizations()->toArray());
+        // hide hidden sessions for non admin
+        if (!$this->checkToolAccess('EDIT')) {
+            $params['hiddenFilters']['hidden'] = false;
         }
 
         return new JsonResponse(
@@ -239,12 +241,14 @@ class CourseController extends AbstractCrudController
         );
     }
 
-    private function checkToolAccess(string $rights = 'OPEN')
+    private function checkToolAccess(string $rights = 'OPEN'): bool
     {
         $trainingsTool = $this->toolManager->getOrderedTool('trainings', Tool::DESKTOP);
 
         if (is_null($trainingsTool) || !$this->authorization->isGranted($rights, $trainingsTool)) {
-            throw new AccessDeniedException();
+            return false;
         }
+
+        return true;
     }
 }

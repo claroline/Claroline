@@ -99,6 +99,7 @@ class CourseSerializer
                 'open' => $this->authorization->isGranted('OPEN', $course),
                 'edit' => $this->authorization->isGranted('EDIT', $course),
                 'delete' => $this->authorization->isGranted('DELETE', $course),
+                'register' => $this->authorization->isGranted('REGISTER', $course),
             ],
             'opening' => [
                 'session' => $course->getSessionOpening(),
@@ -129,6 +130,7 @@ class CourseSerializer
                 'registration' => [
                     'propagate' => $course->getPropagateRegistration(),
                     'selfRegistration' => $course->getPublicRegistration(),
+                    'autoRegistration' => $course->getAutoRegistration(),
                     'selfUnregistration' => $course->getPublicUnregistration(),
                     'validation' => $course->getRegistrationValidation(),
                     'userValidation' => $course->getUserValidation(),
@@ -175,6 +177,7 @@ class CourseSerializer
 
         $this->sipe('registration.propagate', 'setPropagateRegistration', $data, $course);
         $this->sipe('registration.selfRegistration', 'setPublicRegistration', $data, $course);
+        $this->sipe('registration.autoRegistration', 'setAutoRegistration', $data, $course);
         $this->sipe('registration.selfUnregistration', 'setPublicUnregistration', $data, $course);
         $this->sipe('registration.validation', 'setRegistrationValidation', $data, $course);
         $this->sipe('registration.userValidation', 'setUserValidation', $data, $course);

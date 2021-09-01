@@ -89,19 +89,23 @@ class EvaluationController extends AbstractSecurityController
         // remove pagination if any
         $query['page'] = 0;
         $query['limit'] = -1;
-
-        $csvFilename = $this->crud->csv(Evaluation::class, [
+        $query['columns'] = [
             'workspace.name',
             'user.lastName',
             'user.firstName',
             'date',
             'status',
             'score',
-        ], $query);
+        ];
+
+        $csvFilename = $this->crud->csv(Evaluation::class, $query);
+
+        $now = new \DateTime();
+        $fileName = "workspace-evaluations{$now->format('Y-m-d-His')}.csv";
 
         return new BinaryFileResponse($csvFilename, 200, [
             'Content-Type' => 'text/csv',
-            'Content-Disposition' => 'attachment; filename=workspace-evaluations.csv',
+            'Content-Disposition' => "attachment; filename={$fileName}",
         ]);
     }
 

@@ -791,7 +791,6 @@
     "resource_creation_denied": "U bent niet toegelaten een bron in de map ''%path%'' te maken: toegang geweigerd.",
     "resource_creation_wrong_type": "U bent niet toegelaten een %type% in de directory ''%path%'' te maken: toegang geweigerd.",
     "resource_delete": "Bent u er zeker van dat u deze bron wenst te verwijderen ?",
-    "resource_limit_exceeded": "De limiet (%max%) voor de bronnen is overschreden. U hebt %current% bronnen gemaakt.",
     "resource_picker": "Bronnen kiezen",
     "resource_to_open": "Bron te openen",
     "resource_type": "Soort bron",

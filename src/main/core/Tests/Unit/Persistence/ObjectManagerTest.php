@@ -109,18 +109,6 @@ class ObjectManagerTest extends MockeryTestCase
         $om->endFlushSuite();
     }
 
-    public function testFindByLogsStuff()
-    {
-        $oom = $this->mock('Doctrine\ORM\EntityManager');
-        $logger = $this->mock('Psr\Log\LoggerInterface');
-        $logger->shouldReceive('warning')->once();
-        $query = $this->getQuery();
-        $oom->shouldReceive('createQuery')->once()->andReturn($query);
-        $query->shouldReceive('getResult')->once()->andReturn(['object 1']);
-        $om = new ObjectManager($oom, $logger);
-        $om->findByIds('Foo\Bar', [1, 2]);
-    }
-
     public function testFindByIds()
     {
         $oom = $this->mock('Doctrine\ORM\EntityManager');

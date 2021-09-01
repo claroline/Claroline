@@ -31,7 +31,7 @@ const EventsMenu = (props) =>
           type: LINK_BUTTON,
           label: trans('all_events', {}, 'cursus'),
           target: props.path + '/all',
-          displayed: props.canEdit
+          displayed: props.canEdit || props.canRegister
         }
       ]}
       onClick={props.autoClose}
@@ -40,6 +40,7 @@ const EventsMenu = (props) =>
 
 EventsMenu.propTypes = {
   canEdit: T.bool.isRequired,
+  canRegister: T.bool.isRequired,
 
   // from menu
   path: T.string,

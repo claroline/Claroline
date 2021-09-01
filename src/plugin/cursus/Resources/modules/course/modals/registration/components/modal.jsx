@@ -86,7 +86,7 @@ const RegistrationModal = props =>
       className="btn modal-btn"
       type={CALLBACK_BUTTON}
       primary={true}
-      label={trans(!props.session || isFull(props.session) ? 'register_waiting_list' : 'self-register', {}, 'actions')}
+      label={trans(!props.session || isFull(props.session) ? 'register_waiting_list' : 'self_register', {}, 'actions')}
       callback={() => {
         props.register(props.course, props.session ? props.session.id : null)
         props.fadeModal()

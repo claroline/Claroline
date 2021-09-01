@@ -123,6 +123,8 @@ services:
             - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
 
     Claroline\CoreBundle\Controller\APINew\Workspace\EvaluationController:
+        parent: Claroline\AppBundle\Controller\AbstractSecurityController
+        public: true
         arguments:
             - '@security.authorization_checker'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
@@ -281,7 +283,7 @@ services:
         arguments:
             - '@security.authorization_checker'
             - '@security.token_storage'
-            - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@claroline.manager.tool_manager'
             - '@Claroline\AppBundle\Event\StrictDispatcher'

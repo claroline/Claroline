@@ -866,7 +866,6 @@
     "resource_icon_set_illustrator_options": "<strong>Profile:</strong> SVG 1.1 <br/> <strong>Fonts:</strong> Convert to outline <br/> <strong>Image location:</strong> Embed <br/> <strong>CSS Properties:</strong> Style Attributes",
     "resource_icon_set_info_text": "Please provide the pack's name and a .zip file containing your icons as well. You can use the list of icons below to guide you through.<br/>ATTENTION! Name your files using the same filename as the one indicated in this list. The filename is used to match your icon with the appropriate resource type.<br/>Fox example the icon 'text.png' will be attributed by the system to the resource type 'text'.<br/>It is not necessary to include all the icons in your file. For all the missing icons, the ones by default will be used instead.<br/>You are not required to use a particular image extension. You are advised however to use .svg (or .png if the .svg option is not possible) for an optimum displaying result.<br/>The advised image dimensions are: 71px X 80px.",
     "resource_icon_set_management": "Manage icon packs for resources",
-    "resource_limit_exceeded": "The maximmum amount of resources (%max%) has been reached. You already have %current% resources.",
     "resource_picker": "Resource picker",
     "resource_to_open": "Resource to open",
     "resource_type": "Resource type",
@@ -1624,7 +1623,7 @@
     "currency": "Currency",
     "price": "Price",
     "allow_change_password": "Allow users to change their password",
-    "sendMessage": "sender send a message to receveir",
+    "sendMessage": "sender send a message to receiver",
     "claroline_message_sending": "Send a message",
     "planned_at": "Planned at",
     "planning": "Planning",
@@ -1636,5 +1635,6 @@
     "online": "Online",
     "irl": "Face-to-face",
     "add_room": "Add a room",
-    "security": "Security"
+    "security": "Security",
+    "both": "Both"
 }
