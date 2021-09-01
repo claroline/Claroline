@@ -32,7 +32,7 @@ function getUrl(target) {
  *
  * @return {string}
  */
-function getQueryString(queryParams = {}, prefix = null) {
+function queryString(queryParams = {}, prefix = null) {
   if (!isEmpty(queryParams)) {
     const params = []
 
@@ -42,7 +42,7 @@ function getQueryString(queryParams = {}, prefix = null) {
 
       let paramString
       if (paramValue && typeof paramValue === 'object') {
-        paramString = getQueryString(paramValue, paramKey)
+        paramString = queryString(paramValue, paramKey)
       } else {
         paramString = encodeURIComponent(paramKey) + '=' + encodeURIComponent(paramValue)
       }
@@ -68,15 +68,16 @@ function getQueryString(queryParams = {}, prefix = null) {
  * @return {string}
  */
 function url(target, queryParams = {}) {
-  const queryString = getQueryString(queryParams)
+  const queryStr = queryString(queryParams)
 
-  if (queryString) {
-    return getUrl(target) + '?' + queryString
+  if (queryStr) {
+    return getUrl(target) + '?' + queryStr
   }
 
   return getUrl(target)
 }
 
 export {
-  url
+  url,
+  queryString
 }
