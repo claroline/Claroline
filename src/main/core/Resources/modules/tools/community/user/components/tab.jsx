@@ -67,8 +67,7 @@ const UserTab = props =>
         type: URL_BUTTON,
         icon: 'fa fa-fw fa-download',
         label: trans('export', {}, 'actions'),
-        target: url(['apiv2_user_csv'])+props.listQueryString+'&filters[workspace]='+get(props.contextData, 'id', null)
-          +'&columns[]=firstName&columns[]=lastName&columns[]=username&columns[]=email',
+        target: url(['apiv2_user_csv'])+props.listQueryString,
         group: trans('transfer')
       }
     ]}
