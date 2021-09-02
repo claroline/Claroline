@@ -16,7 +16,7 @@ import {AnnouncePost} from '#/plugin/announcement/resources/announcement/compone
 const AnnounceDetail = props =>
   <AnnouncePost
     active={true}
-    aggredateId={props.aggregateId}
+    aggregateId={props.aggregateId}
     announcement={props.announcement}
     workspaceRoles={props.workspaceRoles}
     removePost={() => props.removePost(props.aggregateId, props.announcement)}
