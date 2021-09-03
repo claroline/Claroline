@@ -26,6 +26,14 @@ class LogResourcePublishEvent extends LogGenericEvent implements NotifiableInter
         $this->usersToNotify = $usersToNotify;
         $this->node = $node;
 
+        $owner = [];
+        if (!empty($node->getCreator())) {
+            $owner = [
+                'lastName' => $node->getCreator()->getLastName(),
+                'firstName' => $node->getCreator()->getFirstName(),
+            ];
+        }
+
         parent::__construct(
             self::ACTION,
             [
@@ -40,10 +48,7 @@ class LogResourcePublishEvent extends LogGenericEvent implements NotifiableInter
                     'guid' => $node->getWorkspace() ? $node->getWorkspace()->getUuid() : null,
                     'name' => $node->getWorkspace() ? $node->getWorkspace()->getName() : ' - ',
                 ],
-                'owner' => [
-                    'lastName' => $node->getCreator()->getLastName(),
-                    'firstName' => $node->getCreator()->getFirstName(),
-                ],
+                'owner' => $owner,
             ],
             null,
             null,
