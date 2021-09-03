@@ -157,7 +157,11 @@ class CreateOrUpdate extends AbstractAction
         }
 
         if ($resourceNode) {
-            $resourceNode = $this->serializer->deserialize($dataResourceNode, $resourceNode);
+            $options = [];
+            if (isset($data['recursive']) && $data['recursive']) {
+                $options[] = Options::IS_RECURSIVE;
+            }
+            $this->crud->update($resourceNode, $dataResourceNode, $options);
         } else {
             $resourceNode = $this->crud->create(ResourceNode::class, $dataResourceNode);
             $resource = $this->crud->create(Directory::class, []);
@@ -250,6 +254,10 @@ class CreateOrUpdate extends AbstractAction
                             ],
                         ],
                     ],
+                ],
+                'recursive' => [
+                    'type' => 'boolean',
+                    'description' => $this->translator->trans('apply_recursively_to_directories', [], 'platform'),
                 ],
             ],
 
