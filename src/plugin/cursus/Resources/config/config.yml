@@ -27,7 +27,7 @@ plugin:
 
         - name: all_courses
           type: list
-          context: [desktop, home]
+          context: [workspace, desktop, home]
           tags: [community, event]
 
         - name: training_events
