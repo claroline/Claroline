@@ -180,13 +180,16 @@ class EvaluationManager
             $statusCount[AbstractEvaluation::STATUS_COMPLETED] +
             $statusCount[AbstractEvaluation::STATUS_PARTICIPATED];
 
-        $status = AbstractEvaluation::STATUS_INCOMPLETE;
+        $status = $evaluation->getStatus();
         if (0 !== $statusCount[AbstractEvaluation::STATUS_FAILED]) {
             // if there is one failed resource the workspace is considered as failed also
             $status = AbstractEvaluation::STATUS_FAILED;
         } elseif ($progression === $progressionMax) {
             // if all resources have been done without failure the workspace is completed
             $status = AbstractEvaluation::STATUS_COMPLETED;
+        } elseif ((0 !== $progression && $progression < $progressionMax) || 0 < $statusCount[AbstractEvaluation::STATUS_INCOMPLETE]) {
+            // if all resources have been done without failure the workspace is completed
+            $status = AbstractEvaluation::STATUS_INCOMPLETE;
         }
 
         $evaluation->setProgressionMax($progressionMax);
@@ -374,7 +377,7 @@ class EvaluationManager
         $this->om->startFlushSuite();
 
         foreach ($roleRequirements as $requirements) {
-            foreach ($requirements->getResources()->toArray() as $resourceNode) {
+            foreach ($requirements->getResources() as $resourceNode) {
                 foreach ($users as $user) {
                     switch ($type) {
                         case 'add':
