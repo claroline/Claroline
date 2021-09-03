@@ -122,7 +122,7 @@ class Step
     private $evaluated = false;
 
     /**
-     * @Gedmo\Slug(fields={"title"}, unique=false)
+     * @Gedmo\Slug(fields={"title"}, unique=false, updatable=false)
      * @ORM\Column(length=128)
      */
     private $slug;
