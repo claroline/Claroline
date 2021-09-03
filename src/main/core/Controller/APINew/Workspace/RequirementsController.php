@@ -31,6 +31,8 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @Route("/workspace")
+ *
+ * @todo use AbstractCrudController
  */
 class RequirementsController
 {
