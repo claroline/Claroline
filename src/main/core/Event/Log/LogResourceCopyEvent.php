@@ -24,6 +24,14 @@ class LogResourceCopyEvent extends LogGenericEvent
      */
     public function __construct(ResourceNode $resource, ResourceNode $source)
     {
+        $owner = [];
+        if (!empty($resource->getCreator())) {
+            $owner = [
+                'lastName' => $resource->getCreator()->getLastName(),
+                'firstName' => $resource->getCreator()->getFirstName(),
+            ];
+        }
+
         parent::__construct(
             self::ACTION,
             [
@@ -34,10 +42,7 @@ class LogResourceCopyEvent extends LogGenericEvent
                 'workspace' => [
                     'name' => $resource->getWorkspace()->getName(),
                 ],
-                'owner' => [
-                    'lastName' => $resource->getCreator()->getLastName(),
-                    'firstName' => $resource->getCreator()->getFirstName(),
-                ],
+                'owner' => $owner,
                 'source' => [
                     'resource' => [
                         'id' => $source->getId(),

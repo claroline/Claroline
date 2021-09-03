@@ -27,6 +27,14 @@ class LogResourceCreateEvent extends LogGenericEvent implements NotifiableInterf
         $this->usersToNotify = $usersToNotify;
         $this->node = $node;
 
+        $owner = [];
+        if (!empty($node->getCreator())) {
+            $owner = [
+                'lastName' => $node->getCreator()->getLastName(),
+                'firstName' => $node->getCreator()->getFirstName(),
+            ];
+        }
+
         parent::__construct(
             self::ACTION,
             [
@@ -41,10 +49,7 @@ class LogResourceCreateEvent extends LogGenericEvent implements NotifiableInterf
                     'guid' => $node->getWorkspace() ? $node->getWorkspace()->getUuid() : null,
                     'name' => $node->getWorkspace() ? $node->getWorkspace()->getName() : ' - ',
                 ],
-                'owner' => [
-                    'lastName' => $node->getCreator()->getLastName(),
-                    'firstName' => $node->getCreator()->getFirstName(),
-                ],
+                'owner' => $owner,
             ],
             null,
             null,
