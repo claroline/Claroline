@@ -8,8 +8,7 @@ use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Library\Utilities\FileUtilities;
 use Icap\BlogBundle\Entity\Blog;
 use Icap\BlogBundle\Entity\BlogOptions;
-use Icap\BlogBundle\Repository\BlogRepository;
-use Icap\BlogBundle\Repository\MemberRepository;
+use Icap\BlogBundle\Entity\Member;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class BlogManager
@@ -23,18 +22,17 @@ class BlogManager
 
     public function __construct(
         ObjectManager $objectManager,
-        BlogRepository $repo,
-        MemberRepository $memberRepo,
         EventDispatcherInterface $eventDispatcher,
         PostManager $postManager,
         FileUtilities $fileUtils)
     {
         $this->objectManager = $objectManager;
-        $this->repo = $repo;
-        $this->memberRepo = $memberRepo;
         $this->eventDispatcher = $eventDispatcher;
         $this->postManager = $postManager;
         $this->fileUtils = $fileUtils;
+
+        $this->repo = $this->objectManager->getRepository(Blog::class);
+        $this->memberRepo = $this->objectManager->getRepository(Member::class);
     }
 
     public function getPanelInfos()
@@ -71,7 +69,6 @@ class BlogManager
         $currentOptions->setAutoPublishPost($options->getAutoPublishPost());
         $currentOptions->setAutoPublishComment($options->getAutoPublishComment());
         $currentOptions->setDisplayTitle($options->getDisplayTitle());
-        $currentOptions->setBannerActivate($options->isBannerActivate());
         $currentOptions->setDisplayPostViewCounter($options->getDisplayPostViewCounter());
         $currentOptions->setBannerBackgroundColor($options->getBannerBackgroundColor());
         $currentOptions->setBannerHeight($options->getBannerHeight());
@@ -89,28 +86,6 @@ class BlogManager
         $this->objectManager->flush();
 
         return $this->objectManager->getUnitOfWork();
-    }
-
-    /**
-     * Get blog by its ID or UUID.
-     *
-     * @param string $id
-     *
-     * @return Blog
-     */
-    public function getBlogByIdOrUuid($id)
-    {
-        if (preg_match('/^\d+$/', $id)) {
-            $blog = $this->repo->findOneBy([
-                'id' => $id,
-            ]);
-        } else {
-            $blog = $this->repo->findOneBy([
-                'uuid' => $id,
-            ]);
-        }
-
-        return $blog;
     }
 
     /**

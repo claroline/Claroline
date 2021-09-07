@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\BlogBundle\Controller\API;
+namespace Icap\BlogBundle\Controller;
 
 use Claroline\AppBundle\Security\ObjectCollection;
 use Claroline\CoreBundle\Entity\User;

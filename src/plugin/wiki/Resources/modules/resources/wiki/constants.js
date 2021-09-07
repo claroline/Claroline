@@ -12,7 +12,7 @@ const WIKI_MODES = {
 
 const WIKI_MODE_CHOICES = {
   [WIKI_MODE_NORMAL]: trans('normal', {}, 'icap_wiki'),
-  [WIKI_MODE_MODERATE]: trans('moderate', {}, 'icap_wiki'),
+  [WIKI_MODE_MODERATE]: trans('moderate', {}, 'actions'),
   [WIKI_MODE_READ_ONLY]: trans('read_only', {}, 'icap_wiki')
 }
 

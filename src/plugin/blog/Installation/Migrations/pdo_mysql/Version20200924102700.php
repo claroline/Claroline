@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\BlogBundle\Migrations\pdo_mysql;
+namespace Icap\BlogBundle\Installation\Migrations\pdo_mysql;
 
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;

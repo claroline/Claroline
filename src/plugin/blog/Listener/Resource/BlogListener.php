@@ -1,8 +1,10 @@
 <?php
 
-namespace Icap\BlogBundle\Listener;
+namespace Icap\BlogBundle\Listener\Resource;
 
 use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Evaluation\AbstractEvaluation;
 use Claroline\CoreBundle\Event\ExportObjectEvent;
 use Claroline\CoreBundle\Event\GenericDataEvent;
@@ -10,58 +12,65 @@ use Claroline\CoreBundle\Event\ImportObjectEvent;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
+use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Icap\BlogBundle\Entity\Blog;
 use Icap\BlogBundle\Entity\Comment;
 use Icap\BlogBundle\Entity\Post;
+use Icap\BlogBundle\Manager\BlogManager;
+use Icap\BlogBundle\Manager\CommentManager;
 use Icap\BlogBundle\Manager\PostManager;
 use Icap\BlogBundle\Serializer\CommentSerializer;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class BlogListener
 {
     use PermissionCheckerTrait;
 
-    /** @var HttpKernelInterface */
-    private $httpKernel;
-    /** @var Request */
-    private $request;
-    /** @var ContainerInterface */
-    private $container;
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
+    /** @var ObjectManager */
+    private $om;
+    /** @var SerializerProvider */
+    private $serializer;
+    /** @var ResourceEvaluationManager */
+    private $evaluationManager;
+    /** @var BlogManager */
+    private $blogManager;
+    /** @var PostManager */
+    private $postManager;
+    /** @var CommentManager */
+    private $commentManager;
 
-    /**
-     * BlogListener constructor.
-     */
     public function __construct(
-        HttpKernelInterface $httpKernel,
-        RequestStack $requestStack,
-        ContainerInterface $container,
-        AuthorizationCheckerInterface $authorization
+        AuthorizationCheckerInterface $authorization,
+        TokenStorageInterface $tokenStorage,
+        ObjectManager $om,
+        SerializerProvider $serializer,
+        ResourceEvaluationManager $evaluationManager,
+        BlogManager $blogManager,
+        PostManager $postManager,
+        CommentManager $commentManager
     ) {
-        $this->httpKernel = $httpKernel;
-        $this->request = $requestStack->getCurrentRequest();
-        $this->container = $container;
         $this->authorization = $authorization;
+        $this->tokenStorage = $tokenStorage;
+        $this->om = $om;
+        $this->serializer = $serializer;
+        $this->evaluationManager = $evaluationManager;
+        $this->blogManager = $blogManager;
+        $this->postManager = $postManager;
+        $this->commentManager = $commentManager;
     }
 
     public function onLoad(LoadResourceEvent $event)
     {
         /** @var Blog $blog */
         $blog = $event->getResource();
-        $this->checkPermission('OPEN', $blog->getResourceNode(), [], true);
 
-        $postManager = $this->container->get('Icap\BlogBundle\Manager\PostManager');
-        $blogManager = $this->container->get('Icap\BlogBundle\Manager\BlogManager');
-
-        $parameters['limit'] = -1;
-
-        $posts = $postManager->getPosts(
+        $posts = $this->postManager->getPosts(
             $blog->getId(),
-            $parameters,
+            ['limit' => -1],
             $this->checkPermission('ADMINISTRATE', $blog->getResourceNode())
             || $this->checkPermission('EDIT', $blog->getResourceNode())
             || $this->checkPermission('MODERATE', $blog->getResourceNode())
@@ -75,10 +84,10 @@ class BlogListener
         }
 
         $event->setData([
-          'authors' => $postManager->getAuthors($blog),
-          'archives' => $postManager->getArchives($blog),
-          'tags' => $blogManager->getTags($blog, $postsData),
-          'blog' => $this->container->get('Claroline\AppBundle\API\SerializerProvider')->serialize($blog),
+            'authors' => $this->postManager->getAuthors($blog),
+            'archives' => $this->postManager->getArchives($blog),
+            'tags' => $this->blogManager->getTags($blog, $postsData),
+            'blog' => $this->serializer->serialize($blog),
         ]);
 
         $event->stopPropagation();
@@ -86,10 +95,12 @@ class BlogListener
 
     public function onExport(ExportObjectEvent $exportEvent)
     {
+        /** @var Blog $blog */
         $blog = $exportEvent->getObject();
+
         $data = [
           'posts' => array_map(function (Post $post) {
-              return $this->container->get('Icap\BlogBundle\Serializer\PostSerializer')->serialize($post, [
+              return $this->serializer->serialize($post, [
                 CommentSerializer::INCLUDE_COMMENTS, CommentSerializer::FETCH_COMMENTS,
               ]);
           }, $blog->getPosts()->toArray()),
@@ -101,11 +112,10 @@ class BlogListener
     {
         $data = $event->getData();
         $blog = $event->getObject();
-        $om = $this->container->get('Claroline\AppBundle\Persistence\ObjectManager');
 
         foreach ($data['_data']['posts'] as $postData) {
             /** @var Post $post */
-            $post = $this->container->get('Icap\BlogBundle\Serializer\PostSerializer')->deserialize($postData, new Post(), [Options::REFRESH_UUID]);
+            $post = $this->serializer->deserialize($postData, new Post(), [Options::REFRESH_UUID]);
 
             if (isset($postData['creationDate'])) {
                 $post->setCreationDate(DateNormalizer::denormalize($postData['creationDate']));
@@ -120,14 +130,13 @@ class BlogListener
             }
 
             $post->setBlog($blog)
-              ->setAuthor($this->container->get('security.token_storage')->getToken()->getUser());
+              ->setAuthor($this->tokenStorage->getToken()->getUser());
 
             foreach ($postData['comments'] as $commentData) {
                 /** @var Comment $comment */
-                $comment = $this->container->get('Icap\BlogBundle\Serializer\CommentSerializer')->deserialize($commentData, new Comment(), [Options::REFRESH_UUID]);
+                $comment = $this->serializer->deserialize($commentData, new Comment(), [Options::REFRESH_UUID]);
 
-                $this->container->get('Icap\BlogBundle\Manager\CommentManager')
-                  ->createComment($blog, $post, $this->commentSerializer->deserialize($data, null), $comment['isPublished']);
+                $this->commentManager->createComment($blog, $post, $this->serializer->deserialize($data, null), $comment['isPublished']);
 
                 if (isset($commentData['creationDate'])) {
                     $comment->setCreationDate(DateNormalizer::denormalize($commentData['creationDate']));
@@ -141,27 +150,24 @@ class BlogListener
                     $comment->setUpdateDate(DateNormalizer::denormalize($commentData['updateDate']));
                 }
 
-                $om->persist($comment);
+                $this->om->persist($comment);
             }
 
             $post->setBlog($blog);
-            $om->persist($post);
+            $this->om->persist($post);
         }
     }
 
     public function onCopy(CopyResourceEvent $event)
     {
-        $entityManager = $this->container->get('Claroline\AppBundle\Persistence\ObjectManager');
-        $postManager = $this->container->get('Icap\BlogBundle\Manager\PostManager');
-        /** @var \Icap\BlogBundle\Entity\Blog $blog */
+        /** @var Blog $blog */
         $blog = $event->getResource();
-
+        /** @var Blog $newBlog */
         $newBlog = $event->getCopy();
 
-        $this->container->get('Icap\BlogBundle\Manager\BlogManager')->updateOptions($newBlog, $blog->getOptions(), $blog->getInfos());
+        $this->blogManager->updateOptions($newBlog, $blog->getOptions(), $blog->getInfos());
 
         foreach ($blog->getPosts() as $post) {
-            /** @var Post $newPost */
             $newPost = new Post();
             $newPost
                 ->setTitle($post->getTitle())
@@ -175,16 +181,15 @@ class BlogListener
                 ->setBlog($newBlog)
             ;
 
-            $entityManager->persist($newPost);
-            $entityManager->flush($newPost);
+            $this->om->persist($newPost);
+            $this->om->flush();
 
             //get existing tags
-            $tags = $postManager->getTags($post->getUuid());
+            $tags = $this->postManager->getTags($post->getUuid());
             //add tags to copy
-            $postManager->setTags($newPost, $tags);
+            $this->postManager->setTags($newPost, $tags);
 
             foreach ($post->getComments() as $comment) {
-                /** @var \Icap\BlogBundle\Entity\Comment $newComment */
                 $newComment = new Comment();
                 $newComment
                     ->setCreationDate($comment->getCreationDate())
@@ -197,7 +202,7 @@ class BlogListener
             }
         }
 
-        $entityManager->persist($newBlog);
+        $this->om->persist($newBlog);
 
         $event->setCopy($newBlog);
         $event->stopPropagation();
@@ -205,14 +210,12 @@ class BlogListener
 
     public function onGenerateResourceTracking(GenericDataEvent $event)
     {
-        $om = $this->container->get('Claroline\AppBundle\Persistence\ObjectManager');
-        $resourceEvalManager = $this->container->get('claroline.manager.resource_evaluation_manager');
         $data = $event->getData();
         $node = $data['resourceNode'];
         $user = $data['user'];
         $startDate = $data['startDate'];
 
-        $logs = $resourceEvalManager->getLogsForResourceTracking(
+        $logs = $this->evaluationManager->getLogsForResourceTracking(
             $node,
             $user,
             ['resource-read', 'resource-icap_blog-post_create', 'resource-icap_blog-post_update', 'resource-icap_blog-comment_create'],
@@ -221,8 +224,8 @@ class BlogListener
         $nbLogs = count($logs);
 
         if ($nbLogs > 0) {
-            $om->startFlushSuite();
-            $tracking = $resourceEvalManager->getResourceUserEvaluation($node, $user);
+            $this->om->startFlushSuite();
+            $tracking = $this->evaluationManager->getResourceUserEvaluation($node, $user);
             $tracking->setDate($logs[0]->getDateLog());
             $status = AbstractEvaluation::STATUS_UNKNOWN;
             $nbAttempts = 0;
@@ -248,9 +251,11 @@ class BlogListener
             $tracking->setStatus($status);
             $tracking->setNbAttempts($nbAttempts);
             $tracking->setNbOpenings($nbOpenings);
-            $om->persist($tracking);
-            $om->endFlushSuite();
+
+            $this->om->persist($tracking);
+            $this->om->endFlushSuite();
         }
+
         $event->stopPropagation();
     }
 }

@@ -38,10 +38,9 @@ class CommentSerializer
     public function __construct(
         UserSerializer $userSerializer,
         ObjectManager $om
-        ) {
+    ) {
         $this->userSerializer = $userSerializer;
         $this->userRepo = $om->getRepository('Claroline\CoreBundle\Entity\User');
-        $this->tagRepo = $om->getRepository('Icap\BlogBundle\Entity\Tag');
         $this->om = $om;
     }
 
@@ -95,19 +94,12 @@ class CommentSerializer
             'publicationDate' => $comment->getPublicationDate() ? DateNormalizer::normalize($comment->getPublicationDate()) : null,
             'author' => $comment->getAuthor() ? $this->userSerializer->serialize($comment->getAuthor()) : null,
             'authorName' => null !== $comment->getAuthor() ? $comment->getAuthor()->getFullName() : null,
-            'authorPicture' => null !== $comment->getAuthor() ? $comment->getAuthor()->getPicture() : null,
             'isPublished' => $comment->isPublished(),
             'reported' => $comment->getReported(),
         ];
     }
 
-    /**
-     * @param array          $data
-     * @param Comment | null $comment
-     *
-     * @return Comment - The deserialized comment entity
-     */
-    public function deserialize($data, Comment $comment = null, User $user = null, array $options = [])
+    public function deserialize(array $data, Comment $comment = null, User $user = null, array $options = []): Comment
     {
         if (empty($comment)) {
             $comment = new Comment();

@@ -42,7 +42,6 @@
     "log_section_author": "Auteur",
     "log_section_text": "Tekst",
     "log_section_title": "Titel",
-    "moderate": "Matigen",
     "moved_down_section": "De sectie %section% is naar beneden verplaatst.",
     "moved_from_section_to_section": "De sectie \"%section%\" is verplaatst van %oldParent% naar %newParent%.",
     "moved_from_section_to_wiki": "De sectie %section% is verplaatst van\"%oldParent% naar de root van de wiki.",

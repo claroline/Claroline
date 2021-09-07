@@ -61,7 +61,6 @@
     "icap_wiki_set_active_contribution_error": "La version n'a pas pu être publiée en tant que contribution active.",
     "icap_wiki_type_name": "Nom",
     "items_per_page": "Affichage par :",
-    "moderate": "Modéré",
     "moderate_message": "Les nouvelles contributions ne sont pas publiées automatiquement et attendent validation d'un administrateur du wiki.",
     "moderate_mode_warning": "<div><strong>Ce Wiki est en mode modéré</strong></div> <div>Toutes les modifications seront disponibles après leur autorisation par un administrateur. L'historique complet d'une section est disponible dans la page 'historique'.</div>",
     "moderation": "Moderation",

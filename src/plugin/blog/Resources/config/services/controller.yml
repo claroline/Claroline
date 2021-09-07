@@ -4,38 +4,29 @@ services:
         autoconfigure: false
         public: true #because controller
 
-    Icap\BlogBundle\Controller\API\BlogController:
+    Icap\BlogBundle\Controller\BlogController:
         arguments:
+          - '@security.authorization_checker'
+          - '@router'
+          - '@twig'
           - '@Claroline\AppBundle\API\FinderProvider'
-          - '@Icap\BlogBundle\Serializer\BlogSerializer'
-          - '@Icap\BlogBundle\Serializer\BlogOptionsSerializer'
           - '@Icap\BlogBundle\Manager\BlogManager'
           - '@Icap\BlogBundle\Manager\PostManager'
-          - '@security.authorization_checker'
+          - '@Icap\BlogBundle\Serializer\BlogSerializer'
+          - '@Icap\BlogBundle\Serializer\BlogOptionsSerializer'
 
-    Icap\BlogBundle\Controller\API\CommentController:
+
+    Icap\BlogBundle\Controller\CommentController:
         arguments:
           - '@Icap\BlogBundle\Serializer\CommentSerializer'
           - '@Icap\BlogBundle\Manager\CommentManager'
           - '@Icap\BlogBundle\Manager\BlogTrackingManager'
           - '@security.authorization_checker'
 
-    Icap\BlogBundle\Controller\API\PostController:
+    Icap\BlogBundle\Controller\PostController:
         arguments:
           - '@Icap\BlogBundle\Serializer\PostSerializer'
           - '@Icap\BlogBundle\Manager\PostManager'
           - '@Icap\BlogBundle\Manager\BlogTrackingManager'
           - '%non_repeatable_log_time_in_seconds%'
-          - '@security.authorization_checker'
-
-    Icap\BlogBundle\Controller\Resource\BlogController:
-        arguments:
-          - '@Icap\BlogBundle\Serializer\BlogSerializer'
-          - '@Icap\BlogBundle\Serializer\BlogOptionsSerializer'
-          - '@Icap\BlogBundle\Manager\BlogManager'
-          - '@Icap\BlogBundle\Manager\PostManager'
-          - '@router'
-          - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-          - '@security.token_storage'
-          - '@twig'
           - '@security.authorization_checker'

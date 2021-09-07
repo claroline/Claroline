@@ -3,7 +3,8 @@ import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
-import {url} from '#/main/app/api'
+import {Button} from '#/main/app/action/components/button'
+import {CALLBACK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 
 import {selectors} from '#/plugin/blog/resources/blog/store/selectors'
 import {actions} from '#/plugin/blog/resources/blog/store/actions'
@@ -12,27 +13,32 @@ import {actions} from '#/plugin/blog/resources/blog/store/actions'
 import html2pdf from 'html2pdf.js'
 
 const ExportersComponent = props =>
-  <div className="panel panel-default">
-    <div className="panel-heading">
-      <a target="_blank" rel="noopener noreferrer" href={url(['icap_blog_rss', {blogId: props.blogId}])} className="label label-warning white export-links">
-        <span className="fa fa-rss" /> {trans('rss_label', {}, 'icap_blog')}
-      </a>
-      <a target="_blank" rel="noopener noreferrer"
-        onClick={() => props.downloadBlogPdf(props.blogId).then(pdfContent => {
-          html2pdf()
-            .set({
-              filename: pdfContent.name,
-              image: { type: 'jpeg', quality: 1 },
-              html2canvas: { scale: 4 },
-              enableLinks: true
-            })
-            .from(pdfContent.content, 'string')
-            .save()
-        })}
-        className="label label-pdf white export-links">
-        <span className="fa fa-file-pdf-o" /> {trans('export-pdf', {}, 'actions')}
-      </a>
-    </div>
+  <div className="component-container">
+    <Button
+      className="btn btn-block btn-emphasis"
+      type={URL_BUTTON}
+      icon="fa fa-fw fa-rss"
+      label={trans('show_rss', {}, 'actions')}
+      target={['icap_blog_rss', {blogId: props.blogId}]}
+    />
+
+    <Button
+      className="btn btn-block btn-emphasis"
+      type={CALLBACK_BUTTON}
+      icon="fa fa-fw fa-file-pdf-o"
+      label={trans('export-pdf', {}, 'actions')}
+      callback={() => props.downloadBlogPdf(props.blogId).then(pdfContent => {
+        html2pdf()
+          .set({
+            filename: pdfContent.name,
+            image: { type: 'jpeg', quality: 1 },
+            html2canvas: { scale: 4 },
+            enableLinks: true
+          })
+          .from(pdfContent.content, 'string')
+          .save()
+      })}
+    />
   </div>
 
 ExportersComponent.propTypes = {

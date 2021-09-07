@@ -1,86 +1,149 @@
 <?php
 
-namespace Icap\BlogBundle\Controller\Resource;
+namespace Icap\BlogBundle\Controller;
 
-use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\AppBundle\API\FinderProvider;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Icap\BlogBundle\Entity\Blog;
 use Icap\BlogBundle\Manager\BlogManager;
 use Icap\BlogBundle\Manager\PostManager;
 use Icap\BlogBundle\Serializer\BlogOptionsSerializer;
 use Icap\BlogBundle\Serializer\BlogSerializer;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Twig\Environment;
 
 /**
- * @Route("/blog", options={"expose"=true})
+ * @Route("blog/{blogId}", options={"expose"=true})
+ * @EXT\ParamConverter("blog", class="IcapBlogBundle:Blog", options={"mapping": {"blogId": "uuid"}})
  */
 class BlogController
 {
     use PermissionCheckerTrait;
 
-    private $blogSerializer;
-    private $blogOptionsSerializer;
-    private $blogManager;
-    private $postManager;
+    /** @var FinderProvider */
+    private $finder;
+    /** @var UrlGeneratorInterface */
     private $router;
-    private $configHandler;
-    private $tokenStorage;
+    /** @var Environment */
+    private $templating;
+    /** @var BlogManager */
+    private $blogManager;
+    /** @var PostManager */
+    private $postManager;
+    /** @var BlogSerializer */
+    private $blogSerializer;
+    /** @var BlogOptionsSerializer */
+    private $blogOptionsSerializer;
 
-    /**
-     * BlogController constructor.
-     */
     public function __construct(
-        BlogSerializer $blogSerializer,
-        BlogOptionsSerializer $blogOptionsSerializer,
+        AuthorizationCheckerInterface $authorization,
+        UrlGeneratorInterface $router,
+        Environment $templating,
+        FinderProvider $finder,
         BlogManager $blogManager,
         PostManager $postManager,
-        UrlGeneratorInterface $router,
-        PlatformConfigurationHandler $configHandler,
-        TokenStorageInterface $tokenStorage,
-        Environment $templating,
-        AuthorizationCheckerInterface $authorization
+        BlogSerializer $blogSerializer,
+        BlogOptionsSerializer $blogOptionsSerializer
       ) {
-        $this->blogSerializer = $blogSerializer;
-        $this->blogOptionsSerializer = $blogOptionsSerializer;
+        $this->authorization = $authorization;
+        $this->router = $router;
+        $this->templating = $templating;
+        $this->finder = $finder;
         $this->blogManager = $blogManager;
         $this->postManager = $postManager;
-        $this->router = $router;
-        $this->configHandler = $configHandler;
-        $this->tokenStorage = $tokenStorage;
-        $this->templating = $templating;
-        $this->authorization = $authorization;
+        $this->blogSerializer = $blogSerializer;
+        $this->blogOptionsSerializer = $blogOptionsSerializer;
     }
 
     /**
-     * @Route("/rss/{blogId}", name="icap_blog_rss")
+     * Get the name of the managed entity.
+     *
+     * @return string
      */
-    public function rssAction($blogId)
+    public function getName()
     {
-        //for backwards compatibility with older url using id and not uuid
-        $blog = $this->blogManager->getBlogByIdOrUuid($blogId);
+        return 'blog';
+    }
+
+    /**
+     * Get blog options.
+     *
+     * @Route("/options", name="apiv2_blog_options", methods={"GET"})
+     */
+    public function getOptionsAction(Blog $blog): JsonResponse
+    {
+        $this->checkPermission('EDIT', $blog->getResourceNode(), [], true);
+
+        return new JsonResponse($this->blogOptionsSerializer->serialize($blog, $blog->getOptions(), $this->blogManager->getPanelInfos()));
+    }
+
+    /**
+     * Update blog options.
+     *
+     * @Route("/options", name="apiv2_blog_options_update", methods={"PUT"})
+     */
+    public function updateOptionsAction(Request $request, Blog $blog): JsonResponse
+    {
+        $this->checkPermission('EDIT', $blog->getResourceNode(), [], true);
+        $data = json_decode($request->getContent(), true);
+        $this->blogManager->updateOptions($blog, $this->blogOptionsSerializer->deserialize($data), $data['infos']);
+
+        return new JsonResponse($this->blogOptionsSerializer->serialize($blog, $blog->getOptions()));
+    }
+
+    /**
+     * Get tag cloud, tags used in blog posts.
+     *
+     * @Route("/tags", name="apiv2_blog_tags", methods={"GET"})
+     */
+    public function getTagsAction(Blog $blog): JsonResponse
+    {
+        $this->checkPermission('OPEN', $blog->getResourceNode(), [], true);
+
+        $parameters['limit'] = -1;
+        $posts = $this->postManager->getPosts(
+            $blog->getId(),
+            $parameters,
+            $this->checkPermission('ADMINISTRATE', $blog->getResourceNode())
+            || $this->checkPermission('EDIT', $blog->getResourceNode())
+            || $this->checkPermission('MODERATE', $blog->getResourceNode())
+                ? PostManager::GET_ALL_POSTS
+                : PostManager::GET_PUBLISHED_POSTS,
+            true);
+
+        $postsData = [];
+        if (!empty($posts)) {
+            $postsData = $posts['data'];
+        }
+
+        return new JsonResponse($this->blogManager->getTags($blog, $postsData));
+    }
+
+
+    /**
+     * @Route("/rss", name="icap_blog_rss", methods={"GET"})
+     */
+    public function rssAction(Blog $blog, Request $request): Response
+    {
         $node = $blog->getResourceNode();
         $workspace = $node->getWorkspace();
+
         $this->checkPermission('OPEN', $node, [], true);
 
-        if (is_null($blog)) {
-            throw new NotFoundHttpException();
-        }
         $feed = [
             'title' => $blog->getResourceNode()->getName(),
             'description' => $blog->getInfos(),
             'siteUrl' => $this->router->generate('claro_index', [], UrlGeneratorInterface::ABSOLUTE_URL).'#/desktop/workspaces/open/'.$workspace->getSlug().'/resources/'.$node->getSlug(),
             'feedUrl' => $this->router->generate('icap_blog_rss', ['blogId' => $blog->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
-            'lang' => $this->configHandler->getParameter('locale_language'),
+            'lang' => $request->getLocale(),
         ];
 
-        /** @var \Icap\BlogBundle\Entity\Post[] $posts */
         $posts = $this->postManager->getPosts(
             $blog->getId(),
             [],
@@ -115,15 +178,12 @@ class BlogController
     }
 
     /**
-     * @Route("/pdf/{blogId}", name="icap_blog_pdf")
+     * @Route("/pdf", name="icap_blog_pdf", methods={"GET"})
      */
-    public function viewPdfAction($blogId)
+    public function viewPdfAction(Blog $blog): JsonResponse
     {
-        //for backwards compatibility with older url using id and not uuid
-        $blog = $this->blogManager->getBlogByIdOrUuid($blogId);
         $this->checkPermission('OPEN', $blog->getResourceNode(), [], true);
 
-        /** @var \Icap\BlogBundle\Entity\Post[] $posts */
         $posts = $this->postManager->getPosts(
             $blog->getId(),
             [],
@@ -133,6 +193,7 @@ class BlogController
                 ? PostManager::GET_ALL_POSTS
                 : PostManager::GET_PUBLISHED_POSTS,
             false);
+
         $items = [];
         if (isset($posts)) {
             foreach ($posts['data'] as $post) {
@@ -151,8 +212,8 @@ class BlogController
         );
 
         return new JsonResponse([
-          'name' => $blog->getResourceNode()->getSlug(),
-          'content' => $content,
+            'name' => $blog->getResourceNode()->getSlug(),
+            'content' => $content,
         ]);
     }
 }

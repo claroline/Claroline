@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table(name="icap__blog")
- * @ORM\Entity(repositoryClass="Icap\BlogBundle\Repository\BlogRepository")
+ * @ORM\Entity()
  * @ORM\HasLifecycleCallbacks
  */
 class Blog extends AbstractResource

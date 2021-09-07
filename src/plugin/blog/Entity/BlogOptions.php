@@ -9,7 +9,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="icap__blog_options")
- * @ORM\Entity(repositoryClass="Icap\BlogBundle\Repository\BlogOptionsRepository")
+ * @ORM\Entity()
  * @ORM\HasLifecycleCallbacks
  */
 class BlogOptions
@@ -87,21 +87,9 @@ class BlogOptions
 
     /**
      * @var bool
-     * @ORM\Column(type="boolean", name="display_title")
-     */
-    protected $displayTitle = true;
-
-    /**
-     * @var bool
      * @ORM\Column(type="boolean", name="display_full_posts")
      */
     protected $displayFullPosts = false;
-
-    /**
-     * @var bool
-     * @ORM\Column(type="boolean", name="banner_activate")
-     */
-    protected $bannerActivate = true;
 
     /**
      * @var bool
@@ -327,26 +315,6 @@ class BlogOptions
     }
 
     /**
-     * @param bool $displayTitle
-     *
-     * @return BlogOptions
-     */
-    public function setDisplayTitle($displayTitle)
-    {
-        $this->displayTitle = $displayTitle;
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function getDisplayTitle()
-    {
-        return $this->displayTitle;
-    }
-
-    /**
      * @param bool $displayFullPosts
      *
      * @return BlogOptions
@@ -464,26 +432,6 @@ class BlogOptions
     public function getBannerBackgroundImageRepeat()
     {
         return $this->bannerBackgroundImageRepeat;
-    }
-
-    /**
-     * @param bool $bannerActivate
-     *
-     * @return BlogOptions
-     */
-    public function setBannerActivate($bannerActivate)
-    {
-        $this->bannerActivate = $bannerActivate;
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isBannerActivate()
-    {
-        return $this->bannerActivate;
     }
 
     /**

@@ -1,9 +1,5 @@
-icap_blog:
-    resource: "@IcapBlogBundle/Controller/Resource/BlogController.php"
-    type:     annotation
-        
 icap_blog_api:
-    resource: "@IcapBlogBundle/Controller/API"
+    resource: "@IcapBlogBundle/Controller"
     prefix: apiv2
     type: api
     options:

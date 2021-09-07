@@ -2,7 +2,7 @@ services:
     _defaults:
         autowire: false
         autoconfigure: false
-        public: true
+        public: false
 
     Icap\BlogBundle\Serializer\PostSerializer:
         tags: [claroline.serializer]
@@ -12,10 +12,10 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@event_dispatcher'
             - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
 
     Icap\BlogBundle\Serializer\CommentSerializer:
         tags: [claroline.serializer]
-        public: true
         arguments:
             - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
