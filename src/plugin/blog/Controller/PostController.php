@@ -181,7 +181,7 @@ class PostController
         $this->checkPermission('EDIT', $blog->getResourceNode(), [], true);
 
         $data = json_decode($request->getContent(), true);
-        $post = $this->postManager->updatePost($blog, $post, $this->postSerializer->deserialize($data), $user);
+        $post = $this->postManager->updatePost($blog, $post, $this->postSerializer->deserialize($data, $post), $user);
 
         return new JsonResponse($this->postSerializer->serialize($post));
     }
