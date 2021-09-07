@@ -52,7 +52,6 @@
     "icap_wiki_set_active_contribution_error": "Fout tijdens het publiceren van de herziening",
     "icap_wiki_type_name": "Naam",
     "items_per_page": "Items per pagina:",
-    "moderate": "Matigen",
     "moderate_message": "Iedereen mag bijdragen. Nochtans mogen alleen de beheerder and de moderator publioceren.",
     "moderate_mode_warning": "<div><strong>De Wiki wordt uitgevoerd in de moderator mode.</strong></div> <div>De wijzigingen zullen alleen beschikbaar zijn na het goedkeuren van de beheerder. Een complete geschiedenis van de herzieningen van een sectie kunnen worden gevonden in de \"Geschiedenis\" pagina.</div>",
     "move_section": "Sectie verplaatsen",

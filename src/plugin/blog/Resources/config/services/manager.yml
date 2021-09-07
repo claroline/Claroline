@@ -1,14 +1,12 @@
 services:
     _defaults:
-        autowire: false #change to true
+        autowire: false
         autoconfigure: false
-        public: true #because controller
+        public: false
 
     Icap\BlogBundle\Manager\BlogManager:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@icap.blog.blog_repository'
-            - '@icap.blog.member_repository'
             - '@event_dispatcher'
             - '@Icap\BlogBundle\Manager\PostManager'
             - '@Claroline\CoreBundle\Library\Utilities\FileUtilities'
@@ -22,18 +20,14 @@ services:
     Icap\BlogBundle\Manager\CommentManager:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@icap.blog.comment_repository'
-            - '@icap.blog.member_repository'
             - '@Claroline\AppBundle\API\FinderProvider'
             - '@Icap\BlogBundle\Manager\BlogTrackingManager'
-
 
     Icap\BlogBundle\Manager\PostManager:
         arguments:
             - '@Claroline\AppBundle\API\FinderProvider'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Icap\BlogBundle\Manager\BlogTrackingManager'
-            - '@icap.blog.post_repository'
             - '@translator'
             - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
             - '@event_dispatcher'

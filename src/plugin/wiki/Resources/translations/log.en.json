@@ -42,7 +42,6 @@
     "log_section_author": "Author",
     "log_section_text": "Text",
     "log_section_title": "Title",
-    "moderate": "Moderate",
     "moved_down_section": "section %section% has been moved down",
     "moved_from_section_to_section": "%section% has been moved from %oldParent% section to %newParent% section",
     "moved_from_section_to_wiki": "%section% has been moved from %oldParent% section to wiki's root",

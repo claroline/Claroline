@@ -27,8 +27,9 @@ const BlogResource = props =>
         displayed : props.canEdit || props.canModerate,
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-gavel',
-        label: trans('moderation', {}, 'icap_blog'),
-        target: `${props.path}/moderation/posts`
+        label: trans('moderate', {}, 'actions'),
+        target: `${props.path}/moderation/posts`,
+        group: trans('management')
       }, {
         type: CALLBACK_BUTTON,
         icon: 'fa fa-fw fa-file-pdf-o',
@@ -49,7 +50,7 @@ const BlogResource = props =>
       }, {
         type: URL_BUTTON,
         icon: 'fa fa-fw fa-rss',
-        label: trans('rss_label', {}, 'icap_blog'),
+        label: trans('show_rss', {}, 'actions'),
         target: url(['icap_blog_rss', {blogId: props.blogId}])
       }
     ]}

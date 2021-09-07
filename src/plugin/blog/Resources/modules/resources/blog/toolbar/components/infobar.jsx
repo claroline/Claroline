@@ -8,16 +8,21 @@ import {ContentHtml} from '#/main/app/content/components/html'
 
 import {selectors} from '#/plugin/blog/resources/blog/store/selectors'
 
-const InfobarComponent = props =>
-  <div className="panel panel-default">
-    <div className="panel-heading">
-      <h2 className="panel-title">{trans('infobar', {}, 'icap_blog')}</h2>
-    </div>
-    {!isEmpty(props.infos) &&
-      <ContentHtml className="panel-body">{props.infos}</ContentHtml>
-    }
+const InfobarComponent = props => {
+  if (!isEmpty(props.infos)) {
+    return (
+      <div className="panel panel-default">
+        <div className="panel-heading">
+          <h2 className="panel-title">{trans('information')}</h2>
+        </div>
 
-  </div>
+        <ContentHtml className="panel-body">{props.infos}</ContentHtml>
+      </div>
+    )
+  }
+
+  return null
+}
 
 InfobarComponent.propTypes = {
   infos: T.string

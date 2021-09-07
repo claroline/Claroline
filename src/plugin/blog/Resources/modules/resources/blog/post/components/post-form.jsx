@@ -28,8 +28,7 @@ const PostFormComponent = props =>
         name={selectors.STORE_NAME + '.post_edit'}
         sections={[
           {
-            id: 'Post',
-            title: 'Post form',
+            title: trans('information'),
             primary: true,
             fields: [
               {
@@ -63,6 +62,20 @@ const PostFormComponent = props =>
                 options: {
                   minRows: 6
                 }
+              }
+            ]
+          }, {
+            icon: 'fa fa-fw fa-desktop',
+            title: trans('display_parameters'),
+            fields: [
+              {
+                name: 'poster',
+                type: 'image',
+                label: trans('poster')
+              }, {
+                name: 'thumbnail',
+                type: 'image',
+                label: trans('thumbnail')
               }
             ]
           }
@@ -101,7 +114,6 @@ PostFormComponent.propTypes = {
   postId: T.string,
   history: T.shape({}),
   originalTags: T.string,
-  goHome: T.bool,
   saveEnabled: T.bool,
   post: T.shape(PostType.propTypes).isRequired,
   save: T.func.isRequired,
@@ -118,7 +130,6 @@ const PostForm = withRouter(connect(
     originalTags: formSelect.originalData(formSelect.form(state, selectors.STORE_NAME + '.post_edit')).tags,
     postId: !isEmpty(selectors.postEdit(state)) ? selectors.postEdit(state).data.id : null,
     post: selectors.postEdit(state),
-    goHome: selectors.goHome(state),
     saveEnabled: formSelect.saveEnabled(formSelect.form(state, selectors.STORE_NAME + '.post_edit'))
   }), dispatch => ({
     save: (blogId, mode, postId, history, originalTags, path, currentUser) => {
@@ -130,7 +141,7 @@ const PostForm = withRouter(connect(
             //update tag list
             dispatch(toolbarActions.addTags('', response.tags))
           }
-          //upate author list
+          //update author list
           dispatch(toolbarActions.addAuthor(currentUser, response.tags))
           history.push(path)
         })

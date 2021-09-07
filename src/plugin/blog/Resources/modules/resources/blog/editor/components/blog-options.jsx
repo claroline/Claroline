@@ -13,7 +13,7 @@ import {FormSection} from '#/main/app/content/form/components/sections'
 import {actions as formActions, selectors as formSelect} from '#/main/app/content/form/store'
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
 
-import {BlogOptionsType} from '#/plugin/blog/resources/blog/editor/components/prop-types'
+import {BlogOptions as BlogOptionsType} from '#/plugin/blog/resources/blog/prop-types'
 import {ToolManager} from '#/plugin/blog/resources/blog/editor/components/tool-manager'
 import {actions as toolbarActions} from '#/plugin/blog/resources/blog/toolbar/store'
 import {selectors} from '#/plugin/blog/resources/blog/store'

@@ -61,7 +61,6 @@
     "icap_wiki_set_active_contribution_error": "Error while publishing revision.",
     "icap_wiki_type_name": "Name",
     "items_per_page": "Items per page:",
-    "moderate": "Moderate",
     "moderate_message": "Every one can contribute. However, only the administrator and the moderator are allowed to publish.",
     "moderate_mode_warning": "<div><strong>The wiki runs in moderate mode.</strong></div> <div>The changes will only be available after administrator's approval. A complete history of a section's revisions can be found in the \"history\" page.</div>",
     "moderation": "Modération",

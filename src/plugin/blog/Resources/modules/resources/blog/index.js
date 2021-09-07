@@ -3,12 +3,14 @@ import get from 'lodash/get'
 
 import {reducer} from '#/plugin/blog/resources/blog/store'
 import {BlogResource} from '#/plugin/blog/resources/blog/containers/resource'
+import {BlogMenu} from '#/plugin/blog/resources/blog/components/menu'
 
 /**
  * Blog resource application.
  */
 export default {
   component: BlogResource,
+  menu: BlogMenu,
   store: reducer,
   styles: ['claroline-distribution-plugin-blog-blog-resource'],
 

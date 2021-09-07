@@ -3,6 +3,8 @@
 namespace Icap\BlogBundle\Entity;
 
 use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Claroline\AppBundle\Entity\Meta\Poster;
+use Claroline\AppBundle\Entity\Meta\Thumbnail;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -17,6 +19,8 @@ use Icap\NotificationBundle\Entity\UserPickerContent;
  */
 class Post extends Statusable
 {
+    use Poster;
+    use Thumbnail;
     use Uuid;
 
     /**
@@ -102,20 +106,13 @@ class Post extends Statusable
      */
     protected $blog;
 
-    /**
-     * @var Tag[]|ArrayCollection
-     * @ORM\ManyToMany(targetEntity="Icap\BlogBundle\Entity\Tag", inversedBy="posts", cascade={"persist"})
-     * @ORM\JoinTable(name="icap__blog_post_tag")
-     */
-    protected $tags;
-
     protected $userPicker = null;
 
     public function __construct()
     {
         $this->refreshUuid();
+
         $this->comments = new ArrayCollection();
-        $this->tags = new ArrayCollection();
     }
 
     /**
@@ -218,7 +215,7 @@ class Post extends Statusable
      *
      * @return Post
      */
-    public function setCreationDate(\DateTime $creationDate)
+    public function setCreationDate(\DateTimeInterface $creationDate)
     {
         $this->creationDate = $creationDate;
 
@@ -240,7 +237,7 @@ class Post extends Statusable
      *
      * @return Post
      */
-    public function setModificationDate(\DateTime $modificationDate)
+    public function setModificationDate(\DateTimeInterface $modificationDate)
     {
         $this->modificationDate = $modificationDate;
 
@@ -262,7 +259,7 @@ class Post extends Statusable
      *
      * @return Post
      */
-    public function setPublicationDate(\DateTime $publicationDate = null)
+    public function setPublicationDate(\DateTimeInterface $publicationDate = null)
     {
         $this->publicationDate = $publicationDate;
 
@@ -372,46 +369,6 @@ class Post extends Statusable
     public function getBlog()
     {
         return $this->blog;
-    }
-
-    /**
-     * @param Tag[]|ArrayCollection $tags
-     *
-     * @return Post
-     */
-    public function setTags($tags)
-    {
-        $this->tags = $tags;
-
-        return $this;
-    }
-
-    /**
-     * @return Tag[]|ArrayCollection
-     */
-    public function getTags()
-    {
-        return $this->tags;
-    }
-
-    /**
-     * @return Post
-     */
-    public function addTag(Tag $tag)
-    {
-        $this->tags->add($tag);
-
-        return $this;
-    }
-
-    /**
-     * @return Post
-     */
-    public function removeTag(Tag $tag)
-    {
-        $this->tags->removeElement($tag);
-
-        return $this;
     }
 
     /**

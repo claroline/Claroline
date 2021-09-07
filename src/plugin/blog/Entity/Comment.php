@@ -10,7 +10,7 @@ use Icap\NotificationBundle\Entity\UserPickerContent;
 
 /**
  * @ORM\Table(name="icap__blog_comment")
- * @ORM\Entity(repositoryClass="Icap\BlogBundle\Repository\CommentRepository")
+ * @ORM\Entity()
  * @ORM\HasLifecycleCallbacks()
  */
 class Comment extends Statusable
@@ -124,11 +124,11 @@ class Comment extends Statusable
     /**
      * Set creationDate.
      *
-     * @param \DateTime $creationDate
+     * @param \DateTimeInterface $creationDate
      *
      * @return Comment
      */
-    public function setCreationDate($creationDate)
+    public function setCreationDate(\DateTimeInterface $creationDate = null)
     {
         $this->creationDate = $creationDate;
 
@@ -138,7 +138,7 @@ class Comment extends Statusable
     /**
      * Get creationDate.
      *
-     * @return \DateTime
+     * @return \DateTimeInterface
      */
     public function getCreationDate()
     {
@@ -190,11 +190,11 @@ class Comment extends Statusable
     }
 
     /**
-     * @param \Datetime $publicationDate
+     * @param \DateTimeInterface $publicationDate
      *
      * @return Comment
      */
-    public function setPublicationDate($publicationDate)
+    public function setPublicationDate(\DateTimeInterface $publicationDate = null)
     {
         $this->publicationDate = $publicationDate;
 
@@ -210,11 +210,11 @@ class Comment extends Statusable
     }
 
     /**
-     * @param \Datetime $updateDate
+     * @param \DateTimeInterface $updateDate
      *
      * @return Comment
      */
-    public function setUpdateDate($updateDate)
+    public function setUpdateDate(\DateTimeInterface $updateDate = null)
     {
         $this->updateDate = $updateDate;
 

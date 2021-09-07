@@ -27,6 +27,7 @@ import {PostType} from '#/plugin/blog/resources/blog/post/components/prop-types'
 import {actions as postActions} from '#/plugin/blog/resources/blog/post/store'
 import {splitArray} from '#/plugin/blog/resources/blog/utils'
 import {updateQueryParameters} from '#/plugin/blog/resources/blog/utils'
+import {asset} from '#/main/app/config'
 
 const CardMeta = props =>
   <ul className="list-inline post-infos">
@@ -202,6 +203,10 @@ CardFooter.propTypes = {
 
 const PostCardComponent = props =>
   <div className="data-card data-card-col">
+    {props.data.poster &&
+      <img className="img-responsive" alt={props.data.title} src={asset(props.data.poster.url)} />
+    }
+
     <div className="post-header">
       <h2 className="post-title">
         <LinkButton target={`${props.path}/${props.data.slug}`}>{props.data.title}</LinkButton>
