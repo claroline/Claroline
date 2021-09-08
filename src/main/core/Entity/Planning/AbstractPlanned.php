@@ -66,6 +66,7 @@ abstract class AbstractPlanned
         if (empty($this->plannedObject)) {
             $this->plannedObject = new PlannedObject();
             $this->plannedObject->setType(static::getType());
+            $this->plannedObject->setClass(static::class);
             $this->plannedObject->setUuid($this->uuid);
         }
 
