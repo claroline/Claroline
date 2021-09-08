@@ -42,7 +42,7 @@ class PlannedObjectController extends AbstractCrudController
 
     public function getIgnore()
     {
-        return ['create', 'update', 'delete'];
+        return ['create', 'update'];
     }
 
     protected function getDefaultHiddenFilters(): array
