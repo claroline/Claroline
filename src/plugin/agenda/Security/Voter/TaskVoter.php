@@ -11,12 +11,12 @@
 
 namespace Claroline\AgendaBundle\Security\Voter;
 
-use Claroline\AgendaBundle\Entity\Event;
+use Claroline\AgendaBundle\Entity\Task;
 
-class EventVoter extends AbstractEventVoter
+class TaskVoter extends AbstractEventVoter
 {
     public function getClass()
     {
-        return Event::class;
+        return Task::class;
     }
 }
