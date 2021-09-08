@@ -28,7 +28,12 @@ class EvaluationFinder extends AbstractFinder
         array $sortBy = null,
         array $options = ['count' => false, 'page' => 0, 'limit' => -1]
     ) {
-        $userJoin = false;
+        if (!array_key_exists('user', $searches)) {
+            // don't show evaluation of disabled/deleted users
+            $qb->join('obj.user', 'u');
+            $qb->andWhere('u.isEnabled = TRUE');
+            $qb->andWhere('u.isRemoved = FALSE');
+        }
 
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
@@ -43,10 +48,7 @@ class EvaluationFinder extends AbstractFinder
                     $qb->setParameter($filterName, $filterValue);
                     break;
                 case 'user':
-                    if (!$userJoin) {
-                        $qb->join('obj.user', 'u');
-                        $userJoin = true;
-                    }
+                    $qb->join('obj.user', 'u');
                     $qb->andWhere("u.uuid = :{$filterName}");
                     $qb->setParameter($filterName, $filterValue);
                     break;
