@@ -14,3 +14,5 @@ services:
                   - '@service_container'
 
     Claroline\AgendaBundle\Security\Voter\EventVoter: ~
+
+    Claroline\AgendaBundle\Security\Voter\TaskVoter: ~
