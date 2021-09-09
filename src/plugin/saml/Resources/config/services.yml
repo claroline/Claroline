@@ -2,15 +2,4 @@ imports:
     - { resource: services/configuration.yml }
     - { resource: services/security.yml }
     - { resource: services/listener.yml }
-
-services:
-    Claroline\SamlBundle\Security\UserChecker:
-        arguments:
-            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-
-    Claroline\SamlBundle\Security\Authentication\AuthenticationSuccessListener:
-        parent: Claroline\CoreBundle\Listener\AuthenticationSuccessListener
-        calls:
-            - method: setObjectManager
-              arguments:
-                  - '@Claroline\AppBundle\Persistence\ObjectManager'
+    - { resource: services/manager.yml }

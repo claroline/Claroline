@@ -401,6 +401,7 @@ class Crud
 
     /**
      * Patches a property in `object`.
+     * This may use 'update' permission and events.
      *
      * @param object $object   - the entity to update
      * @param string $property - the property to update
@@ -409,7 +410,7 @@ class Crud
      *
      * @return object
      */
-    public function replace($object, $property, $data, array $options = [])
+    public function replace($object, string $property, $data, array $options = [])
     {
         $methodName = 'set'.ucfirst($property);
 
