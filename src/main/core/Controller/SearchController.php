@@ -49,7 +49,7 @@ class SearchController
     {
         $results = [];
 
-        $searchConfig = $this->config->getParameter('header_search');
+        $searchConfig = $this->config->getParameter('header.search');
         if (isset($searchConfig['user']) && $searchConfig['user']) {
             $users = $this->om->getRepository(User::class)->search($search, 5);
 

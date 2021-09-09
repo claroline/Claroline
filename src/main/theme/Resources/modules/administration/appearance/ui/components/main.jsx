@@ -74,6 +74,7 @@ class UiMain extends Component {
                 name: 'header',
                 type: 'choice',
                 label: trans('header_widgets'),
+                displayed: false, // implement new format
                 options: {
                   inline: false,
                   multiple: true,
