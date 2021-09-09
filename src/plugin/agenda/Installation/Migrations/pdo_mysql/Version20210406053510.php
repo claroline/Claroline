@@ -30,9 +30,16 @@ class Version20210406053510 extends AbstractMigration
         ');
         // move data in new table in CoreBundle
         $this->addSql('
-            INSERT INTO claro_planned_object (id, location_id, creator_id, event_type, start_date, end_date, color, description, uuid, entity_name, poster, thumbnail)
-                SELECT id, location_id, creator_id, event_type, start_date, end_date, color, description, uuid, entity_name, poster, thumbnail 
+            INSERT INTO claro_planned_object (id, location_id, creator_id, event_type, start_date, end_date, color, description, uuid, entity_name, poster, thumbnail, event_class)
+                SELECT id, location_id, creator_id, event_type, start_date, end_date, color, description, uuid, entity_name, poster, thumbnail, "Claroline\\\AgendaBundle\\\Entity\\\Event" AS event_class 
                 FROM claro_event
+                WHERE event_type = "event"
+        ');
+        $this->addSql('
+            INSERT INTO claro_planned_object (id, location_id, creator_id, event_type, start_date, end_date, color, description, uuid, entity_name, poster, thumbnail, event_class)
+                SELECT id, location_id, creator_id, event_type, start_date, end_date, color, description, uuid, entity_name, poster, thumbnail, "Claroline\\\AgendaBundle\\\Entity\\\Task" AS event_class
+                FROM claro_event
+                WHERE event_type = "task"
         ');
         $this->addSql('
             ALTER TABLE claro_event 
