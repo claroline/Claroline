@@ -68,7 +68,6 @@ class BlogManager
         $currentOptions->setPostPerPage($options->getPostPerPage());
         $currentOptions->setAutoPublishPost($options->getAutoPublishPost());
         $currentOptions->setAutoPublishComment($options->getAutoPublishComment());
-        $currentOptions->setDisplayTitle($options->getDisplayTitle());
         $currentOptions->setDisplayPostViewCounter($options->getDisplayPostViewCounter());
         $currentOptions->setBannerBackgroundColor($options->getBannerBackgroundColor());
         $currentOptions->setBannerHeight($options->getBannerHeight());
