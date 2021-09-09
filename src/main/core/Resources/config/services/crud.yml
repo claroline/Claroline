@@ -27,7 +27,6 @@ services:
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
             - '@Claroline\CoreBundle\Manager\RoleManager'
             - '@Claroline\CoreBundle\Manager\MailManager'
-            - '@Claroline\CoreBundle\Manager\UserManager'
             - '@Claroline\CoreBundle\Manager\Organization\OrganizationManager'
             - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
             - '@Icap\NotificationBundle\Manager\NotificationUserParametersManager'
