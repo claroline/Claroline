@@ -138,9 +138,9 @@ class UserCrud
             $token = $this->tokenStorage->getToken();
             //we want a main organization
             if ($token && $token->getUser() instanceof User && $token->getUser()->getMainOrganization()) {
-                $user->addOrganization($token->getUser()->getMainOrganization(), true);
+                $user->setMainOrganization($token->getUser()->getMainOrganization());
             } else {
-                $user->addOrganization($this->organizationManager->getDefault(), true);
+                $user->setMainOrganization($this->organizationManager->getDefault());
             }
         }
 

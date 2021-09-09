@@ -411,7 +411,6 @@ class UserSerializer
             $organization = $this->om->getObject($data['mainOrganization'], Organization::class, ['id', 'code', 'name', 'email']);
 
             if ($organization) {
-                $user->addOrganization($organization);
                 $user->setMainOrganization($organization);
             }
         }

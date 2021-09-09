@@ -26,11 +26,13 @@ class PlatformDefaults implements ParameterProviderInterface
                 // The list of defined idp.
                 // Array is indexed by IDPs entityId.
                 // Each idp is an array with the following props :
-                //   - metadata     : the path to the metadata file (either URL or local files are allowed)
-                //   - active       : enable or disable a single idp
-                //   - label        : the label to display when displaying the login button
-                //   - organization : An organization UUID to register users created from this idp
-                //   - groups       : A list of groups UUID to register users created from this idp
+                //   - metadata      : the path to the metadata file (either URL or local files are allowed)
+                //   - active        : enable or disable a single idp
+                //   - label         : the label to display when displaying the login button
+                //   - email_domains : an array of email domains. If specified, only users with matching emails will be registered to idp groups and organization
+                //   - organization  : An organization UUID to register users created from this idp
+                //   - groups        : A list of groups UUID to register users created from this idp
+                //   - mapping       : an associative array to know which saml props should be used for email, firstName and lastName at creation
                 'idp' => [],
                 // logout from idp when logout from claroline
                 'logout' => true,

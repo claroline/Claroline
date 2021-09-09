@@ -1000,15 +1000,15 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
             }
         }
 
-        $userOrgas = $this->userOrganizationReferences->toArray();
-        $userOrgas = array_map(function (UserOrganizationReference $ref) {
+        $userOrganizations = $this->userOrganizationReferences->toArray();
+        $userOrganizations = array_map(function (UserOrganizationReference $ref) {
             return $ref->getOrganization();
-        }, $userOrgas);
+        }, $userOrganizations);
 
-        return array_merge($organizations, $userOrgas);
+        return array_merge($organizations, $userOrganizations);
     }
 
-    public function addOrganization(Organization $organization, $main = false)
+    public function addOrganization(Organization $organization)
     {
         if ($organization->getMaxUsers() > -1) {
             $totalUsers = count($organization->getUserOrganizationReferecnes());
@@ -1018,10 +1018,10 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
         }
 
         $found = false;
-
         foreach ($this->userOrganizationReferences as $userOrgaRef) {
             if ($userOrgaRef->getOrganization() === $organization && $userOrgaRef->getUser() === $this) {
                 $found = true;
+                break;
             }
         }
 
@@ -1029,7 +1029,6 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
             $ref = new UserOrganizationReference();
             $ref->setOrganization($organization);
             $ref->setUser($this);
-            $ref->setIsMain($main);
 
             $this->userOrganizationReferences->add($ref);
         }
@@ -1089,6 +1088,8 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
 
     public function setMainOrganization(Organization $organization)
     {
+        $this->addOrganization($organization);
+
         foreach ($this->userOrganizationReferences as $ref) {
             if ($ref->isMain()) {
                 $ref->setIsMain(false);
