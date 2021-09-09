@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\API\Crud\User;
 
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\API\Utils\ArrayUtils;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\PatchEvent;
@@ -23,12 +24,10 @@ use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\Organization\OrganizationManager;
 use Claroline\CoreBundle\Manager\RoleManager;
-use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Claroline\CoreBundle\Security\PlatformRoles;
 use Icap\NotificationBundle\Manager\NotificationUserParametersManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class UserCrud
 {
@@ -44,8 +43,6 @@ class UserCrud
     private $roleManager;
     /** @var MailManager */
     private $mailManager;
-    /** @var UserManager */
-    private $userManager;
     /** @var OrganizationManager */
     private $organizationManager;
     /** @var WorkspaceManager */
@@ -62,7 +59,6 @@ class UserCrud
         PlatformConfigurationHandler $config,
         RoleManager $roleManager,
         MailManager $mailManager,
-        UserManager $userManager,
         OrganizationManager $organizationManager,
         WorkspaceManager $workspaceManager,
         NotificationUserParametersManager $notificationManager,
@@ -74,7 +70,6 @@ class UserCrud
         $this->config = $config;
         $this->roleManager = $roleManager;
         $this->mailManager = $mailManager;
-        $this->userManager = $userManager;
         $this->organizationManager = $organizationManager;
         $this->workspaceManager = $workspaceManager;
         $this->notificationManager = $notificationManager;
@@ -83,22 +78,11 @@ class UserCrud
 
     public function preCreate(CreateEvent $event)
     {
-        $restrictions = $this->config->getParameter('restrictions') ?? [];
-        if (isset($restrictions['users']) && isset($restrictions['max_users']) && $restrictions['users'] && $restrictions['max_users']) {
-            $usersCount = $this->userManager->countEnabledUsers();
-            if ($usersCount >= $restrictions['max_users']) {
-                throw new AccessDeniedException();
-            }
-        }
+        /** @var User $user */
+        $user = $event->getObject();
+        $options = $event->getOptions();
+        $data = $event->getData();
 
-        $user = $this->create($event->getObject(), $event->getOptions());
-
-        $this->om->persist($user);
-        $this->om->flush();
-    }
-
-    public function create(User $user, $options = [])
-    {
         $this->om->startFlushSuite();
 
         if (empty($user->getLocale())) {
@@ -121,9 +105,12 @@ class UserCrud
             $user->addRole($roleUser);
         }
 
-        $mailValidated = $user->isMailValidated() ?? $this->config->getParameter('auto_validate_email');
-        $user->setIsMailNotified($this->config->getParameter('auto_enable_email_redirect'));
-        $user->setIsMailValidated($mailValidated);
+        $user->setIsMailNotified(
+            ArrayUtils::get($data, 'meta.mailNotified', $this->config->getParameter('auto_enable_email_redirect'))
+        );
+        $user->setIsMailValidated(
+            ArrayUtils::get($data, 'meta.mailValidated', $this->config->getParameter('auto_validate_email'))
+        );
 
         if ($this->mailManager->isMailerAvailable() && !in_array(Options::NO_EMAIL, $options)) {
             // send a validation by hash
@@ -147,19 +134,9 @@ class UserCrud
             $this->notificationManager->processUpdate($notifications, $user);
         }
 
-        $createWs = false;
-
-        if (!in_array(Options::NO_PERSONAL_WORKSPACE, $options)) {
-            foreach ($user->getEntityRoles() as $role) {
-                if ($role->getPersonalWorkspaceCreationEnabled()) {
-                    $createWs = true;
-                }
-            }
-        }
-
         if (null === $user->getMainOrganization()) {
             $token = $this->tokenStorage->getToken();
-            //we want a min organization
+            //we want a main organization
             if ($token && $token->getUser() instanceof User && $token->getUser()->getMainOrganization()) {
                 $user->addOrganization($token->getUser()->getMainOrganization(), true);
             } else {
@@ -167,13 +144,21 @@ class UserCrud
             }
         }
 
-        if ($createWs) {
-            $this->workspaceManager->setPersonalWorkspace($user);
+        if (!in_array(Options::NO_PERSONAL_WORKSPACE, $options)) {
+            $createWs = false;
+            foreach ($user->getEntityRoles() as $role) {
+                if ($role->getPersonalWorkspaceCreationEnabled()) {
+                    $createWs = true;
+                    break;
+                }
+            }
+
+            if ($createWs) {
+                $this->workspaceManager->setPersonalWorkspace($user);
+            }
         }
 
         $this->om->endFlushSuite();
-
-        return $user;
     }
 
     public function preDelete(DeleteEvent $event)
@@ -256,13 +241,11 @@ class UserCrud
     {
         /** @var User $user */
         $user = $event->getObject();
-        /** @var User $currentUser */
-        $currentUser = $this->tokenStorage->getToken()->getUser();
 
         if ($event->getValue() instanceof Role) {
             // refresh token to get updated roles if the current user has changes in his roles
             if ($this->authenticator->isAuthenticatedUser($user)) {
-                $this->authenticator->createToken($currentUser);
+                $this->authenticator->createToken($user);
             }
 
             if ('add' === $event->getAction()) {
