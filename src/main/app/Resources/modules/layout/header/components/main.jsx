@@ -32,16 +32,21 @@ const HeaderMain = props =>
         />
       }
 
-      {!props.unavailable && props.menus.map((menu) => (
-        <Await
-          key={menu}
-          for={getMenu(menu)}
-          then={(menuApp) => createElement(menuApp.default.component, {
-            authenticated: props.authenticated,
-            user: props.currentUser
-          })}
-        />
-      ))}
+      {!props.unavailable && Object.keys(props.menus)
+        .filter(menuName => undefined === props.menus[menuName].displayed || props.menus[menuName].displayed)
+        .sort((a, b) => props.menus[a].order - props.menus[b].order)
+        .map((menuName) => (
+          <Await
+            key={menuName}
+            for={getMenu(menuName)}
+            then={(menuApp) => createElement(menuApp.default.component, {
+              authenticated: props.authenticated,
+              user: props.currentUser,
+              parameters: props.menus[menuName]
+            })}
+          />
+        ))
+      }
 
       <HeaderUser
         unavailable={props.unavailable}
@@ -82,7 +87,7 @@ const HeaderMain = props =>
 HeaderMain.propTypes = {
   unavailable: T.bool.isRequired,
 
-  menus: T.arrayOf(T.string),
+  menus: T.object,
   locale: T.shape({
     current: T.string.isRequired,
     available: T.arrayOf(T.string).isRequired
@@ -119,7 +124,7 @@ HeaderMain.propTypes = {
 }
 
 HeaderMain.defaultProps = {
-  menus: [],
+  menus: {},
   impersonated: true,
   administration: false,
   currentUser: null,
