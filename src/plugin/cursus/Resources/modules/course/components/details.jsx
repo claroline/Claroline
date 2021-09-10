@@ -41,7 +41,8 @@ const CourseDetails = (props) =>
             type: LINK_BUTTON,
             icon: 'fa fa-fw fa-calendar-week',
             label: trans('sessions', {}, 'cursus'),
-            target: `${route(props.path, props.course, props.activeSession)}/sessions`
+            target: `${route(props.path, props.course, props.activeSession)}/sessions`,
+            displayed: !get(props.course, 'display.hideSessions')
           }, {
             name: 'pending',
             type: LINK_BUTTON,
@@ -88,6 +89,7 @@ const CourseDetails = (props) =>
           }
         }, {
           path: '/sessions',
+          disabled: get(props.course, 'display.hideSessions', false),
           render() {
             return (
               <CourseSessions

@@ -79,7 +79,7 @@ const SessionForm = (props) =>
             type: 'image',
             label: trans('thumbnail')
           }, {
-            name: 'meta.order',
+            name: 'display.order',
             type: 'number',
             label: trans('order'),
             required: true,

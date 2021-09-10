@@ -39,10 +39,15 @@
         "default": {
           "type": "boolean",
           "description": "Whether the session is the default one"
-        },
+        }
+      }
+    },
+    "display": {
+      "type": "object",
+      "properties": {
         "order": {
           "type": "integer",
-          "description": "The cursus order"
+          "description": "The session order"
         }
       }
     },

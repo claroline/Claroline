@@ -247,7 +247,7 @@ const CourseAbout = (props) => {
             />
           }
 
-          {isEmpty(props.activeSession) &&
+          {isEmpty(props.activeSession) && !get(props.course, 'display.hideSessions') &&
             <Button
               className="btn btn-block btn-emphasis"
               type={LINK_BUTTON}
@@ -417,32 +417,36 @@ const CourseAbout = (props) => {
           />
         )}
 
-        <ContentTitle
-          level={3}
-          displayLevel={2}
-          title={trans(!props.activeSession ? 'available_sessions' : 'other_available_sessions', {}, 'cursus')}
-        />
+        {!get(props.course, 'display.hideSessions') &&
+          <Fragment>
+            <ContentTitle
+              level={3}
+              displayLevel={2}
+              title={trans(!props.activeSession ? 'available_sessions' : 'other_available_sessions', {}, 'cursus')}
+            />
 
-        {availableSessions.map((session, index) =>
-          <SessionCard
-            key={session.id}
-            style={{marginBottom: index === availableSessions.length - 1 ? 20 : 5}}
-            orientation="row"
-            size="xs"
-            data={session}
-            primaryAction={{
-              type: LINK_BUTTON,
-              target: route(props.path, props.course, session)
-            }}
-          />
-        )}
+            {availableSessions.map((session, index) =>
+              <SessionCard
+                key={session.id}
+                style={{marginBottom: index === availableSessions.length - 1 ? 20 : 5}}
+                orientation="row"
+                size="xs"
+                data={session}
+                primaryAction={{
+                  type: LINK_BUTTON,
+                  target: route(props.path, props.course, session)
+                }}
+              />
+            )}
 
-        {isEmpty(availableSessions) &&
-          <ContentPlaceholder
-            icon="fa fa-fw fa-calendar-week"
-            title={trans('no_available_session', {}, 'cursus')}
-            help={trans('no_available_session_help', {}, 'cursus')}
-          />
+            {isEmpty(availableSessions) &&
+            <ContentPlaceholder
+              icon="fa fa-fw fa-calendar-week"
+              title={trans('no_available_session', {}, 'cursus')}
+              help={trans('no_available_session_help', {}, 'cursus')}
+            />
+            }
+          </Fragment>
         }
       </div>
     </div>
