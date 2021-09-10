@@ -91,13 +91,17 @@ const CourseForm = (props) =>
             type: 'image',
             label: trans('thumbnail')
           }, {
-            name: 'meta.order',
+            name: 'display.order',
             type: 'number',
             label: trans('order'),
             required: true,
             options: {
               min: 0
             }
+          }, {
+            name: 'display.hideSessions',
+            type: 'boolean',
+            label: trans('hide_sessions', {}, 'cursus')
           }
         ]
       }, {

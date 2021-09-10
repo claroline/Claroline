@@ -57,8 +57,20 @@
           "type": "integer",
           "description": "The course display order"
         }
-      },
-      "required": ["order"]
+      }
+    },
+    "display": {
+      "type": "object",
+      "properties": {
+        "order": {
+          "type": "integer",
+          "description": "The course display order"
+        },
+        "hideSessions": {
+          "type": "boolean",
+          "description": "Display or hide sessions to users"
+        }
+      }
     },
     "restrictions": {
       "type": "object",

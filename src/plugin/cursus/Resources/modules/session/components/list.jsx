@@ -122,7 +122,7 @@ const SessionList = (props) =>
         filterable: param('pricing.enabled'),
         sortable: param('pricing.enabled')
       }, {
-        name: 'meta.order',
+        name: 'display.order',
         alias: 'order',
         type: 'number',
         label: trans('order'),
