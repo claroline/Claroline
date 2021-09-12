@@ -16,7 +16,7 @@ class Version20210908090043 extends AbstractMigration
     {
         $this->addSql('
             ALTER TABLE claro_planned_object 
-            ADD event_class VARCHAR(255) NOT NULL
+            ADD event_class VARCHAR(255) DEFAULT "" NOT NULL
         ');
 
         $this->addSql('
