@@ -20,6 +20,9 @@ services:
             - method: setIdpManager
               arguments:
                   - '@Claroline\SamlBundle\Manager\IdpManager'
+            - method: setCrud
+              arguments:
+                  - '@Claroline\AppBundle\API\Crud'
 
     # SAML
     Claroline\SamlBundle\Security\EntityDescriptorProvider:

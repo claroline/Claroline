@@ -41,6 +41,11 @@ class AuthenticationSuccessListener extends BaseAuthenticationSuccessListener
         $this->idpManager = $idpManager;
     }
 
+    public function setCrud(Crud $crud)
+    {
+        $this->crud = $crud;
+    }
+
     public function onAuthenticationSuccess(Request $request, TokenInterface $token): Response
     {
         /** @var User $user */
