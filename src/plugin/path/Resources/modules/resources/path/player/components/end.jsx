@@ -7,7 +7,7 @@ import {trans, number} from '#/main/app/intl'
 import {ContentSummary} from '#/main/app/content/components/summary'
 import {scrollTo} from '#/main/app/dom/scroll'
 import {Toolbar} from '#/main/app/action/components/toolbar'
-import {LINK_BUTTON} from '#/main/app/buttons'
+import {LINK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 import {ContentHtml} from '#/main/app/content/components/html'
 import {ScoreGauge} from '#/main/core/layout/gauge/components/score'
 import {ScoreBox} from '#/main/core/layout/evaluation/components/score-box'
@@ -96,10 +96,10 @@ class PlayerEnd extends Component {
                 primary: true
               }, {
                 name: 'home',
-                type: LINK_BUTTON,
+                type: URL_BUTTON, // we require an URL_BUTTON here to escape the embedded resource router
                 icon: 'fa fa-fw fa-home',
                 label: trans('return-home', {}, 'actions'),
-                target: route(this.props.workspace),
+                target: '#'+route(this.props.workspace),
                 displayed: !!this.props.workspace,
                 exact: true
               }
