@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\DevBundle\Command;
+namespace Claroline\InstallationBundle\Command;
 
-use Claroline\CoreBundle\Library\Installation\Refresher;
+use Claroline\InstallationBundle\Manager\RefreshManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -20,7 +20,7 @@ class RefreshCommand extends Command
 {
     private $refresher;
 
-    public function __construct(Refresher $refresher)
+    public function __construct(RefreshManager $refresher)
     {
         $this->refresher = $refresher;
 

@@ -1,0 +1,20 @@
+services:
+    Claroline\InstallationBundle\Manager\InstallationManager:
+        arguments:
+            - '@service_container'
+            - '@claroline.migration.manager'
+            - '@claroline.installation.fixture_loader'
+            - '@Claroline\CoreBundle\Library\Installation\Plugin\Recorder'
+            - '%kernel.environment%'
+        calls:
+            - setLogger: [ '@logger' ]
+
+    Claroline\InstallationBundle\Manager\RefreshManager:
+        arguments:
+            - '@filesystem'
+            - '@Claroline\AppBundle\Manager\CommandManager'
+            - '%%kernel.project_dir%'
+            - '%kernel.cache_dir%'
+            - '%claroline.param.public_directory%'
+            - '%claroline.param.data_web_dir%'
+            - '%claroline.param.public_files_directory%'

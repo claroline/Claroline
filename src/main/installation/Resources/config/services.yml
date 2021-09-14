@@ -1,18 +1,8 @@
 imports:
     - { resource: services/command.yml }
+    - { resource: services/manager.yml }
 
 services:
-    claroline.installation.manager:
-        class: '%claroline.installation_manager.class%'
-        arguments:
-            - '@service_container'
-            - '@claroline.migration.manager'
-            - '@claroline.installation.fixture_loader'
-            - '@Claroline\CoreBundle\Library\Installation\Plugin\Recorder'
-            - '%kernel.environment%'
-        calls:
-            - setLogger: [ '@logger' ]
-
     claroline.installation.fixture_loader:
         class: '%claroline.installation_fixture_loader.class%'
         arguments:
