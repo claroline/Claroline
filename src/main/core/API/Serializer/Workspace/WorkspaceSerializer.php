@@ -337,7 +337,7 @@ class WorkspaceSerializer
             }
         }
 
-        if (isset($data['meta']) && !empty($data['meta']['creator'])) {
+        if (empty($workspace->getCreator()) && isset($data['meta']) && !empty($data['meta']['creator'])) {
             /** @var User $creator */
             $creator = $this->om->getObject($data['meta']['creator'], User::class);
             $workspace->setCreator($creator);

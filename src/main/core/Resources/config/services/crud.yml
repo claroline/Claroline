@@ -22,7 +22,6 @@ services:
     Claroline\CoreBundle\API\Crud\User\UserCrud:
         arguments:
             - '@security.token_storage'
-            - '@Claroline\AuthenticationBundle\Security\Authentication\Authenticator'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
             - '@Claroline\CoreBundle\Manager\RoleManager'
@@ -42,8 +41,6 @@ services:
     Claroline\CoreBundle\API\Crud\User\RoleCrud:
         arguments:
             - '@doctrine.dbal.default_connection'
-            - '@security.token_storage'
-            - '@Claroline\AuthenticationBundle\Security\Authentication\Authenticator'
             - '@Claroline\CoreBundle\Manager\RoleManager'
             - '@Claroline\AppBundle\Event\StrictDispatcher'
         tags:
@@ -69,7 +66,6 @@ services:
     Claroline\CoreBundle\API\Crud\User\GroupCrud:
         arguments:
             - '@security.token_storage'
-            - '@Claroline\AuthenticationBundle\Security\Authentication\Authenticator'
             - '@Claroline\AppBundle\Event\StrictDispatcher'
             - '@Claroline\CoreBundle\Manager\RoleManager'
         tags:

@@ -1,0 +1,6 @@
+services:
+    Claroline\AuthenticationBundle\Subscriber\RefreshTokenSubscriber:
+        arguments:
+            - '@Claroline\AuthenticationBundle\Security\Authentication\Authenticator'
+        tags:
+            - { name: kernel.event_subscriber }

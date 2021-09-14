@@ -11,27 +11,6 @@
 
 namespace Claroline\CoreBundle\Event\Security;
 
-use Claroline\CoreBundle\Entity\Role;
-use Symfony\Contracts\EventDispatcher\Event;
-
-class AddRoleEvent extends Event
+class AddRoleEvent extends AbstractRoleEvent
 {
-    private $users;
-    private $role;
-
-    public function __construct(array $users, Role $role)
-    {
-        $this->users = $users;
-        $this->role = $role;
-    }
-
-    public function getUsers(): array
-    {
-        return $this->users;
-    }
-
-    public function getRole()
-    {
-        return $this->role;
-    }
 }
