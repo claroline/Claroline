@@ -7,7 +7,6 @@ use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\PatchEvent;
 use Claroline\AppBundle\Event\StrictDispatcher;
-use Claroline\AuthenticationBundle\Security\Authentication\Authenticator;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
@@ -18,16 +17,11 @@ use Claroline\CoreBundle\Event\Security\RemoveRoleEvent;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Doctrine\DBAL\Driver\Connection;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class RoleCrud
 {
     /** @var Connection */
     private $conn;
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var Authenticator */
-    private $authenticator;
     /** @var RoleManager */
     private $manager;
     /** @var StrictDispatcher */
@@ -35,14 +29,10 @@ class RoleCrud
 
     public function __construct(
         Connection $conn,
-        TokenStorageInterface $tokenStorage,
-        Authenticator $authenticator,
         RoleManager $manager,
         StrictDispatcher $dispatcher
     ) {
         $this->conn = $conn;
-        $this->tokenStorage = $tokenStorage;
-        $this->authenticator = $authenticator;
         $this->manager = $manager;
         $this->dispatcher = $dispatcher;
     }
@@ -137,24 +127,7 @@ class RoleCrud
 
     public function postPatch(PatchEvent $event)
     {
-        // refresh token to get updated roles if this is the current user or if he is in the group
         if (in_array($event->getProperty(), ['user', 'group'])) {
-            $currentUser = $this->tokenStorage->getToken()->getUser();
-            if ($currentUser instanceof User) {
-                // checks if we are modifying roles of the current user
-                // if we do, we will need to refresh its token
-                $refresh = false;
-                if ($event->getValue() instanceof User) {
-                    $refresh = $this->authenticator->isAuthenticatedUser($event->getValue());
-                } elseif ($event->getValue() instanceof Group) {
-                    $refresh = $currentUser->hasGroup($event->getValue());
-                }
-
-                if ($refresh) {
-                    $this->authenticator->createToken($currentUser);
-                }
-            }
-
             $users = [];
             if ($event->getValue() instanceof User) {
                 $users[] = $event->getValue();

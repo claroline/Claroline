@@ -6,7 +6,6 @@ use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\PatchEvent;
 use Claroline\AppBundle\Event\StrictDispatcher;
-use Claroline\AuthenticationBundle\Security\Authentication\Authenticator;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
@@ -20,8 +19,6 @@ class GroupCrud
 {
     /** @var TokenStorageInterface */
     private $tokenStorage;
-    /** @var Authenticator */
-    private $authenticator;
     /** @var StrictDispatcher */
     private $dispatcher;
     /** @var RoleManager */
@@ -29,12 +26,10 @@ class GroupCrud
 
     public function __construct(
         TokenStorageInterface $tokenStorage,
-        Authenticator $authenticator,
         StrictDispatcher $dispatcher,
         RoleManager $roleManager
     ) {
         $this->tokenStorage = $tokenStorage;
-        $this->authenticator = $authenticator;
         $this->dispatcher = $dispatcher;
         $this->roleManager = $roleManager;
     }
@@ -70,15 +65,8 @@ class GroupCrud
     {
         /** @var Group $group */
         $group = $event->getObject();
-        /** @var User $currentUser */
-        $currentUser = $this->tokenStorage->getToken()->getUser();
 
         if ($event->getValue() instanceof Role) {
-            // refresh token to get updated roles if the current user is in the group
-            if ($currentUser instanceof User && $group->containsUser($currentUser)) {
-                $this->authenticator->createToken($currentUser);
-            }
-
             foreach ($group->getUsers() as $user) {
                 if ($user->isEnabled() && !$user->isRemoved()) {
                     if ('add' === $event->getAction()) {
