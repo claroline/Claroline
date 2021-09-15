@@ -200,7 +200,7 @@ class PlatformDefaults implements ParameterProviderInterface
                 'maxmind_license_key' => null,
             ],
             'job_queue' => [
-                'enabled' => false,
+                'enabled' => true,
             ],
         ];
     }

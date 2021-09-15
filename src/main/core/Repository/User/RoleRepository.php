@@ -134,26 +134,6 @@ class RoleRepository extends EntityRepository
             ->getOneOrNullResult();
     }
 
-    public function findWorkspaceRoleWithToolAccess(Workspace $workspace)
-    {
-        return $this->_em
-            ->createQuery('
-                SELECT r
-                FROM Claroline\CoreBundle\Entity\Role r
-                WHERE EXISTS (
-                    SELECT ot
-                    FROM Claroline\CoreBundle\Entity\Tool\OrderedTool ot
-                    JOIN ot.rights otr
-                    JOIN otr.role otrr
-                    WHERE ot.workspace = :workspace
-                    AND otrr = r
-                    AND BIT_AND(otr.mask, 1) = 1
-                )
-            ')
-            ->setParameter('workspace', $workspace)
-            ->getResult();
-    }
-
     private function findBaseWorkspaceRole(string $roleType, Workspace $workspace)
     {
         return $this->_em

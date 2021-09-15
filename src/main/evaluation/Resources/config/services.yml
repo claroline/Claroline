@@ -1,2 +1,3 @@
-#imports:
-#  - { resource: services/controller.yml }
+imports:
+    - { resource: services/messenger.yml }
+    - { resource: services/subscriber.yml }

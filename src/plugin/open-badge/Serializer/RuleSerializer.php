@@ -66,7 +66,6 @@ class RuleSerializer
             case Rule::RESOURCE_PASSED:
             case Rule::RESOURCE_PARTICIPATED:
                 $rule->setResourceNode($this->om->getObject($data['data'], ResourceNode::class));
-                $rule->setResourceNode($this->om->getObject($data['data'], ResourceNode::class));
                 break;
             case Rule::WORKSPACE_PASSED:
                 $rule->setWorkspace($this->om->getObject($data['data'], Workspace::class));

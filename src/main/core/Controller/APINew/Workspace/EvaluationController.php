@@ -142,7 +142,7 @@ class EvaluationController extends AbstractSecurityController
 
         $this->om->startFlushSuite();
         foreach ($users as $user) {
-            // this will automatically create missing evaluation
+            // this will automatically create missing workspace evaluation
             $this->manager->getEvaluation($workspace, $user, true);
         }
 

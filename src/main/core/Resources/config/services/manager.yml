@@ -227,10 +227,6 @@ services:
             - '@event_dispatcher'
             - '@Claroline\AppBundle\Event\StrictDispatcher'
 
-    claroline.manager.workspace.evaluation:
-        alias: Claroline\CoreBundle\Manager\Workspace\EvaluationManager
-        public: true
-
     Claroline\CoreBundle\Manager\Workspace\Transfer\OrderedToolTransfer:
         arguments:
             - '@Claroline\CoreBundle\API\Serializer\Tool\ToolSerializer'

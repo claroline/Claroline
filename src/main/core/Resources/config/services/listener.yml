@@ -217,9 +217,6 @@ services:
             - '@Claroline\CoreBundle\Manager\Workspace\EvaluationManager'
         tags:
             - { name: kernel.event_listener, event: resource_evaluation, method: onResourceEvaluation }
-            - { name: kernel.event_listener, event: log, method: onLog }
-            - { name: kernel.event_listener, event: crud_post_collection_patch_object_claroline_corebundle_entity_role, method: onRoleChange }
-            - { name: kernel.event_listener, event: crud_post_collection_patch_object_claroline_corebundle_entity_group, method: groupUsersPostCollectionPatch }
 
     Claroline\CoreBundle\Listener\ViewAsListener:
         arguments:
