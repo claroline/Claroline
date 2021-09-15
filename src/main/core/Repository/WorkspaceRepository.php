@@ -86,9 +86,9 @@ class WorkspaceRepository extends EntityRepository
     public function checkAccess(Workspace $workspace, array $roleNames, ?string $toolName = null, ?string $action = 'open')
     {
         $dql = '
-            SELECT DISTINCT w.id
-            FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
-            JOIN w.orderedTools ot
+            SELECT COUNT(ot)
+            FROM Claroline\CoreBundle\Entity\Tool\OrderedTool ot
+            JOIN ot.workspace w
             JOIN ot.tool t
             JOIN ot.rights r
             JOIN r.role rr
@@ -116,7 +116,7 @@ class WorkspaceRepository extends EntityRepository
             $query->setParameter('toolName', $toolName);
         }
 
-        return $query->getResult();
+        return 0 < (int) $query->getSingleScalarResult();
     }
 
     /**

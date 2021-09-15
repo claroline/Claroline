@@ -141,4 +141,10 @@ class WorkspaceVoter extends AbstractVoter
     {
         return in_array(PlatformRoles::WS_CREATOR, $token->getRoleNames());
     }
+
+    public function getSupportedActions()
+    {
+        //atm, null means "everything is supported... implement this later"
+        return null;
+    }
 }

@@ -149,7 +149,7 @@ class WorkspaceManager implements LoggerAwareInterface
         return $this->workspaceRepo->countNonPersonalWorkspaces($organizations);
     }
 
-    public function hasAccess(Workspace $workspace, TokenInterface $token, string $toolName = null, string $permission = 'OPEN'): bool
+    public function hasAccess(Workspace $workspace, TokenInterface $token, string $toolName = null, string $permission = 'open'): bool
     {
         $roles = $token->getRoleNames();
         if (!empty($roles)) {
