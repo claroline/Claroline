@@ -10,7 +10,7 @@ const Field = {
     type: T.string,
     required: T.bool,
     restrictions: T.shape({
-      isMetadata: T.bool,
+      metadata: T.bool,
       locked: T.bool,
       lockedEditionOnly: T.bool,
       hidden: T.bool,
@@ -23,20 +23,7 @@ const Field = {
         nb_files_max: T.number
       }),
       T.array
-    ]),
-    fieldFacet: T.shape({
-      id: T.string,
-      name: T.string,
-      type: T.string,
-      required: T.bool,
-      restrictions: T.shape({
-        hidden: T.bool.isRequired,
-        isMetadata: T.bool.isRequired,
-        locked: T.bool.isRequired,
-        lockedEditionOnly: T.bool.isRequired,
-        order: T.number
-      })
-    })
+    ])
   }
 }
 

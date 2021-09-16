@@ -193,7 +193,7 @@ class FieldChoiceCategory
                 $value = $this->getBoolValue();
                 break;
             case FieldFacet::CHOICE_TYPE:
-                $options = $this->field->getDetails();
+                $options = $this->field->getOptions();
                 $value = isset($options['multiple']) && $options['multiple'] ?
                     $this->getArrayValue() :
                     $this->getStringValue();
@@ -227,7 +227,7 @@ class FieldChoiceCategory
                 $this->setBoolValue($value);
                 break;
             case FieldFacet::CHOICE_TYPE:
-                $options = $this->field->getDetails();
+                $options = $this->field->getOptions();
 
                 if (isset($options['multiple']) && $options['multiple']) {
                     $this->setArrayValue($value);

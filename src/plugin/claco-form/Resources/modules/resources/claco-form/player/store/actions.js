@@ -39,19 +39,15 @@ actions.addKeyword = makeActionCreator(ENTRY_KEYWORD_ADD, 'keyword')
 actions.removeKeyword = makeActionCreator(ENTRY_KEYWORD_REMOVE, 'keywordId')
 actions.loadUsedCountries = makeActionCreator(USED_COUNTRIES_LOAD, 'countries')
 
-actions.deleteEntries = (entries) => (dispatch) => {
-  dispatch({
-    [API_REQUEST]: {
-      url: url(['claro_claco_form_entries_delete', {ids: entries.map(e => e.id)}]),
-      request: {
-        method: 'PATCH'
-      },
-      success: (data, dispatch) => {
-        dispatch(listActions.deleteItems(selectors.STORE_NAME+'.entries.list', entries))
-      }
-    }
-  })
-}
+actions.deleteEntry = (entry) => (dispatch) => dispatch({
+  [API_REQUEST]: {
+    url: url(['apiv2_clacoformentry_delete_bulk', {ids: [entry.id]}]),
+    request: {
+      method: 'DELETE'
+    },
+    success: (data, dispatch) => dispatch(listActions.invalidateData(selectors.STORE_NAME+'.entries.list'))
+  }
+})
 
 actions.switchEntryStatus = (entryId) => ({
   [API_REQUEST]: {

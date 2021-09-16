@@ -28,9 +28,10 @@ class FieldValueRepository extends EntityRepository
             SELECT fv
             FROM Claroline\ClacoFormBundle\Entity\FieldValue fv
             JOIN fv.field f
+            JOIN f.fieldFacet ff
             JOIN f.clacoForm c
             WHERE c = :clacoForm
-            AND f.type = :type
+            AND ff.type = :type
         ';
         $query = $this->_em->createQuery($dql);
         $query->setParameter('clacoForm', $clacoForm);

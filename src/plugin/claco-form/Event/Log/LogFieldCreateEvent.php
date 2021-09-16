@@ -23,7 +23,7 @@ class LogFieldCreateEvent extends LogGenericEvent
         $clacoForm = $field->getClacoForm();
         $resourceNode = $clacoForm->getResourceNode();
         $fieldFacet = $field->getFieldFacet();
-        $fieldFacetChoices = !is_null($fieldFacet) ? $fieldFacet->getFieldFacetChoicesArray() : [];
+        $fieldFacetChoices = !is_null($fieldFacet) ? $fieldFacet->getFieldFacetChoices() : [];
         $choices = [];
 
         foreach ($fieldFacetChoices as $fieldFacetChoice) {
@@ -34,7 +34,7 @@ class LogFieldCreateEvent extends LogGenericEvent
         $details['type'] = $field->getType();
         $details['name'] = $field->getName();
         $details['required'] = $field->isRequired();
-        $details['isMetadata'] = $field->getIsMetadata();
+        $details['isMetadata'] = $field->isMetadata();
         $details['locked'] = $field->isLocked();
         $details['lockedEditionOnly'] = $field->getLockedEditionOnly();
         $details['hidden'] = $field->isHidden();

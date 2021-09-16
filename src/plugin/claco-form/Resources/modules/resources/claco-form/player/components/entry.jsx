@@ -199,7 +199,7 @@ class EntryComponent extends Component {
   }
 
   isFieldDisplayable(field) {
-    return this.canViewMetadata() || !field.restrictions.isMetadata
+    return this.canViewMetadata() || !field.restrictions.metadata
   }
 
   getSections(fields) {
@@ -341,7 +341,7 @@ class EntryComponent extends Component {
                             .save()
                         })}
                         share={(users) => this.props.shareEntry(this.props.entryId, users)}
-                        delete={() => this.props.deleteEntry(this.props.entry)}
+                        delete={() => this.props.deleteEntry(this.props.entry).then(() => this.props.history.push(`${this.props.path}/entries`))}
                         toggleStatus={() => this.props.switchEntryStatus(this.props.entry.id)}
                         toggleLock={() => this.props.switchEntryLock(this.props.entry.id)}
                         updateEntryUserProp={this.props.updateEntryUserProp}
@@ -548,10 +548,9 @@ const Entry = withRouter(connect(
     template: selectors.template(state),
     titleLabel: selectors.params(state).title_field_label
   }),
-  (dispatch, ownProps) => ({
+  (dispatch) => ({
     deleteEntry(entry) {
-      dispatch(actions.deleteEntries([entry]))
-      ownProps.history.push('/entries')
+      return dispatch(actions.deleteEntry(entry))
     },
     switchEntryStatus(entryId) {
       dispatch(actions.switchEntryStatus(entryId))
