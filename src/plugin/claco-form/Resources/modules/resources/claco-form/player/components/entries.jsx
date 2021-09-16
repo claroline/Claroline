@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 import merge from 'lodash/merge'
 
-import {trans, transChoice} from '#/main/app/intl/translation'
+import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {selectors as securitySelectors} from '#/main/app/security/store'
 import {ListSource} from '#/main/app/content/list/containers/source'
@@ -29,7 +29,10 @@ const EntriesComponent = props =>
       url: ['apiv2_clacoformentry_list', {clacoForm: props.clacoForm.id}],
       autoload: true
     }}
-
+    delete={{
+      url: ['apiv2_clacoformentry_delete_bulk'],
+      displayed: (rows) => rows.filter(e => !e.locked && canManageEntry(e, props.canEdit, props.currentUser)).length === rows.length
+    }}
     source={merge({}, entriesSource(props.clacoForm, props.canViewMetadata, props.canEdit, props.canAdministrate, props.isCategoryManager, props.path, props.currentUser), {
       parameters: {
         actions: (rows) => [
@@ -87,17 +90,6 @@ const EntriesComponent = props =>
             callback: () => props.switchEntriesLock(rows, false),
             displayed: props.canAdministrate && rows.filter(e => !e.locked).length !== rows.length,
             group: trans('management')
-          }, {
-            type: CALLBACK_BUTTON,
-            icon: 'fa fa-w fa-trash-o',
-            label: trans('delete', {}, 'actions'),
-            confirm: {
-              title: transChoice('delete_selected_entries', rows.length, {count: rows.length}, 'clacoform'),
-              message: transChoice('delete_selected_entries_confirm_message', rows.length, {count: rows.length}, 'clacoform')
-            },
-            callback: () => props.deleteEntries(rows),
-            displayed: rows.filter(e => !e.locked && canManageEntry(e, props.canEdit, props.currentUser)).length === rows.length,
-            dangerous: true
           }
         ]
       }
@@ -123,7 +115,6 @@ EntriesComponent.propTypes = {
   downloadEntryPdf: T.func.isRequired,
   switchEntriesStatus: T.func.isRequired,
   switchEntriesLock: T.func.isRequired,
-  deleteEntries: T.func.isRequired,
   downloadFieldValueFile: T.func.isRequired
 }
 
@@ -148,9 +139,6 @@ const Entries = connect(
     },
     switchEntriesLock(entries, locked) {
       dispatch(actions.switchEntriesLock(entries, locked))
-    },
-    deleteEntries(entries) {
-      dispatch(actions.deleteEntries(entries))
     },
     downloadFieldValueFile(fieldValueId) {
       dispatch(actions.downloadFieldValueFile(fieldValueId))

@@ -214,7 +214,7 @@ class ClacoFormSerializer
                 if (isset($fieldData['id'])) {
                     $newFieldsUuids[] = $fieldData['id'];
                 }
-                $field = isset($fieldData['id']) ? $this->fieldRepo->findOneBy(['uuid' => $fieldData['id']]) : null;
+                $field = isset($fieldData['id']) ? $this->fieldRepo->findByFieldFacetUuid($fieldData['id']) : null;
 
                 if (empty($field)) {
                     $field = new Field();

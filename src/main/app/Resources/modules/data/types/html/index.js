@@ -12,8 +12,8 @@ const dataType = {
   meta: {
     creatable: true,
     icon: 'fa fa-fw fa fa-code',
-    label: trans('html'),
-    description: trans('html_desc')
+    label: trans('html', {}, 'data'),
+    description: trans('html_desc', {}, 'data')
   },
   // nothing special to do
   parse: (display) => display,

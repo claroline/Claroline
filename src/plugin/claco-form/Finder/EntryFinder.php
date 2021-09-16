@@ -281,7 +281,7 @@ class EntryFinder extends AbstractFinder
                 case FieldFacet::FILE_TYPE:
                     break;
                 case FieldFacet::CHOICE_TYPE:
-                    $options = $field->getDetails();
+                    $options = $field->getOptions();
                     $multiple = isset($options['multiple']) && $options['multiple'];
 
                     if ($multiple) {
@@ -338,7 +338,7 @@ class EntryFinder extends AbstractFinder
                     $qb->orderBy("fvffv{$parsedSortBy}.dateValue", $direction);
                     break;
                 case FieldFacet::CHOICE_TYPE:
-                    $options = $field->getDetails();
+                    $options = $field->getOptions();
 
                     if (isset($options['multiple']) && $options['multiple']) {
                         $qb->orderBy("fvffv{$parsedSortBy}.arrayValue", $direction);

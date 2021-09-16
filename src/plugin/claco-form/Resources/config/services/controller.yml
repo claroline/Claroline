@@ -26,18 +26,13 @@ services:
 
     Claroline\ClacoFormBundle\Controller\ClacoFormController:
         arguments:
+            - '@security.authorization_checker'
             - '@Claroline\AppBundle\API\FinderProvider'
             - '@Claroline\ClacoFormBundle\Manager\ClacoFormManager'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
             - '%claroline.param.files_directory%'
             - '@Claroline\CoreBundle\Manager\LocationManager'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@request_stack'
             - '@twig'
             - '@translator'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@security.token_storage'
-            - '@Claroline\CoreBundle\Manager\UserManager'
-            - '@Claroline\ClacoFormBundle\Serializer\EntrySerializer'
-            - '@Claroline\ClacoFormBundle\Serializer\CommentSerializer'
-            - '@Claroline\ClacoFormBundle\Serializer\EntryUserSerializer'

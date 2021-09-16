@@ -14,7 +14,6 @@ namespace Claroline\CoreBundle\Entity\Facet;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Restriction\Hidden;
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -101,7 +100,7 @@ class FieldFacet
      *
      * @var int
      */
-    private $position;
+    private $position = 0;
 
     /**
      * @ORM\OneToMany(
@@ -121,17 +120,7 @@ class FieldFacet
     private $required = false;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
-     * @ORM\JoinColumn(name="resource_node", onDelete="CASCADE", nullable=true)
-     *
-     * @var ResourceNode
-     *
-     * @todo should not be declared here (not used in Profile)
-     */
-    private $resourceNode;
-
-    /**
-     * @ORM\Column(type="json_array")
+     * @ORM\Column(type="json")
      *
      * @var array
      */
@@ -140,7 +129,7 @@ class FieldFacet
     /**
      * @ORM\Column(name="is_metadata", type="boolean", options={"default" = 0})
      */
-    protected $isMetadata = false;
+    protected $metadata = false;
 
     /**
      * @ORM\Column(name="locked", type="boolean", options={"default" = 0})
@@ -157,24 +146,13 @@ class FieldFacet
      */
     protected $help;
 
-    /**
-     * Constructor.
-     */
     public function __construct()
     {
         $this->refreshUuid();
         $this->fieldFacetChoices = new ArrayCollection();
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    public function setPanelFacet(PanelFacet $panelFacet = null)
+    public function setPanelFacet(?PanelFacet $panelFacet = null)
     {
         $this->panelFacet = $panelFacet;
 
@@ -183,18 +161,12 @@ class FieldFacet
         }
     }
 
-    /**
-     * @return PanelFacet
-     */
-    public function getPanelFacet()
+    public function getPanelFacet(): ?PanelFacet
     {
         return $this->panelFacet;
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         $string = str_replace(' ', '-', $this->label); // Replaces all spaces with hyphens.
         $string = preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
@@ -203,10 +175,7 @@ class FieldFacet
         return $this->id.'-'.strtolower($string);
     }
 
-    /**
-     * @param string $label
-     */
-    public function setLabel($label)
+    public function setLabel(string $label)
     {
         $this->label = $label;
     }
@@ -214,7 +183,7 @@ class FieldFacet
     /**
      * @return string
      */
-    public function getLabel()
+    public function getLabel(): ?string
     {
         return $this->label;
     }
@@ -235,10 +204,7 @@ class FieldFacet
         }
     }
 
-    /**
-     * @return int
-     */
-    public function getType()
+    public function getType(): ?int
     {
         return $this->type;
     }
@@ -257,26 +223,17 @@ class FieldFacet
         }
     }
 
-    /**
-     * @param int $position
-     */
-    public function setPosition($position)
+    public function setPosition(?int $position = null)
     {
         $this->position = $position;
     }
 
-    /**
-     * @return int
-     */
-    public function getPosition()
+    public function getPosition(): ?int
     {
         return $this->position;
     }
 
-    /**
-     * @return string
-     */
-    public function getFieldType()
+    public function getFieldType(): string
     {
         switch ($this->type) {
             case self::NUMBER_TYPE: return 'number';
@@ -294,41 +251,11 @@ class FieldFacet
     }
 
     /**
-     * @deprecated
-     *
-     * @return string
-     */
-    public function getInputType()
-    {
-        switch ($this->type) {
-            case self::NUMBER_TYPE: return 'number';
-            case self::DATE_TYPE: return 'date';
-            case self::STRING_TYPE: return 'string';
-            case self::COUNTRY_TYPE: return 'country';
-            case self::EMAIL_TYPE: return 'email';
-            case self::HTML_TYPE: return 'html';
-            case self::CASCADE_TYPE: return 'cascade_select';
-            case self::FILE_TYPE: return 'file';
-            case self::BOOLEAN_TYPE: return 'boolean';
-            case self::CHOICE_TYPE: return 'choice';
-            default: return 'error';
-        }
-    }
-
-    /**
      * @return ArrayCollection
      */
     public function getFieldFacetChoices()
     {
         return $this->fieldFacetChoices;
-    }
-
-    /**
-     * @return array
-     */
-    public function getFieldFacetChoicesArray()
-    {
-        return $this->fieldFacetChoices->toArray();
     }
 
     /**
@@ -353,42 +280,20 @@ class FieldFacet
 
     public function emptyFieldFacetChoices()
     {
-        return $this->fieldFacetChoices->clear();
+        $this->fieldFacetChoices->clear();
     }
 
-    /**
-     * @return bool
-     */
-    public function isRequired()
+    public function isRequired(): bool
     {
         return $this->required;
     }
 
-    /**
-     * @param bool $required
-     */
-    public function setRequired($required)
+    public function setRequired(bool $required)
     {
         $this->required = $required;
     }
 
-    /**
-     * @return ResourceNode
-     */
-    public function getResourceNode()
-    {
-        return $this->resourceNode;
-    }
-
-    public function setResourceNode(ResourceNode $resourceNode = null)
-    {
-        $this->resourceNode = $resourceNode;
-    }
-
-    /**
-     * @return array
-     */
-    public function getOptions()
+    public function getOptions(): ?array
     {
         return $this->options;
     }
@@ -398,66 +303,42 @@ class FieldFacet
         $this->options = $options;
     }
 
-    /**
-     * @return bool
-     */
-    public function getIsMetadata()
+    public function isMetadata(): bool
     {
-        return $this->isMetadata;
+        return $this->metadata;
     }
 
-    /**
-     * @param bool $isMetadata
-     */
-    public function setIsMetadata($isMetadata)
+    public function setMetadata(bool $isMetadata)
     {
-        $this->isMetadata = $isMetadata;
+        $this->metadata = $isMetadata;
     }
 
-    /**
-     * @return bool
-     */
-    public function isLocked()
+    public function isLocked(): bool
     {
         return $this->locked;
     }
 
-    /**
-     * @param bool $locked
-     */
-    public function setLocked($locked)
+    public function setLocked(bool $locked)
     {
         $this->locked = $locked;
     }
 
-    /**
-     * @return bool
-     */
-    public function getLockedEditionOnly()
+    public function getLockedEditionOnly(): bool
     {
         return $this->lockedEditionOnly;
     }
 
-    /**
-     * @param bool $lockedEditionOnly
-     */
-    public function setLockedEditionOnly($lockedEditionOnly)
+    public function setLockedEditionOnly(bool $lockedEditionOnly)
     {
         $this->lockedEditionOnly = $lockedEditionOnly;
     }
 
-    /**
-     * @return string
-     */
-    public function getHelp()
+    public function getHelp(): ?string
     {
         return $this->help;
     }
 
-    /**
-     * @param string $help
-     */
-    public function setHelp($help)
+    public function setHelp(string $help)
     {
         $this->help = $help;
     }

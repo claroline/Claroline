@@ -55,6 +55,7 @@ class FieldFacetValueSerializer
             'name' => $fieldFacetValue->getFieldFacet()->getName(),
         ];
 
+        // I don't think this is needed
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
             $serialized = array_merge($serialized, [
                 'user' => $fieldFacetValue->getUser() ? $this->container->get(UserSerializer::class)->serialize($fieldFacetValue->getUser(), [Options::SERIALIZE_MINIMAL]) : null,

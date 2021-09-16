@@ -30,7 +30,6 @@ use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\RoleManager;
-use Claroline\CoreBundle\Security\Collection\ResourceCollection;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -94,7 +93,7 @@ class ClacoFormListener
         $serializedClacoForm = $this->serializer->serialize($clacoForm);
         $canEdit = $isAnon ?
             false :
-            $this->authorization->isGranted('EDIT', new ResourceCollection([$clacoForm->getResourceNode()]));
+            $this->authorization->isGranted('EDIT', $clacoForm->getResourceNode());
 
         if ($canEdit) {
             foreach ($serializedClacoForm['list']['filters'] as $key => $filter) {
@@ -108,6 +107,7 @@ class ClacoFormListener
             'canGeneratePdf' => $canGeneratePdf,
             'cascadeLevelMax' => $cascadeLevelMax,
             'myEntriesCount' => count($myEntries),
+            // do not expose this and pre calculate missing user rights
             'roles' => $roles,
             'myRoles' => $myRoles,
         ]);
@@ -118,6 +118,7 @@ class ClacoFormListener
     {
         /** @var ClacoForm $clacoForm */
         $clacoForm = $event->getResource();
+        /** @var ClacoForm $copy */
         $copy = $event->getCopy();
         $copy = $this->clacoFormManager->copyClacoForm($clacoForm, $copy);
 

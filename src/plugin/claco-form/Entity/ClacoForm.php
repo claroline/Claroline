@@ -18,7 +18,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="Claroline\ClacoFormBundle\Repository\ClacoFormRepository")
+ * @ORM\Entity()
  * @ORM\Table(name="claro_clacoformbundle_claco_form")
  */
 class ClacoForm extends AbstractResource
@@ -39,7 +39,6 @@ class ClacoForm extends AbstractResource
      *     targetEntity="Claroline\ClacoFormBundle\Entity\Field",
      *     mappedBy="clacoForm"
      * )
-     * @ORM\OrderBy({"order" = "ASC"})
      *
      * @var Field[]
      */
