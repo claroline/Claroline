@@ -1425,7 +1425,7 @@
     "poster": "Image de couverture",
     "external": "Externe",
     "internal": "Interne",
-    "force_organization_creation": "Forcer l'ajout d'une organization à l'utilisateur lors de l'inscription",
+    "force_organization_creation": "Forcer l'ajout d'une organisation à l'utilisateur lors de l'inscription",
     "no_selection": "Pas de selection",
     "allow_workspace_registration": "Permettre l'inscription aux espaces d'activités lors de l'inscription",
     "workspace_user_register_validation_message": "Voulez-vous vraiment inscrire les utilisateurs suivants: [%users%] ?",
