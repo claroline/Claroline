@@ -15,6 +15,7 @@ use Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer;
 use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
 use Claroline\CoreBundle\Library\Utilities\FileUtilities;
 use Claroline\CoreBundle\Repository\User\RoleRepository;
@@ -105,12 +106,12 @@ class AnnouncementSerializer
             'meta' => [
                 // required to be able to open the announce from the data source
                 'resource' => $this->nodeSerializer->serialize($announce->getAggregate()->getResourceNode(), [Options::SERIALIZE_MINIMAL]),
-                'created' => $announce->getCreationDate()->format('Y-m-d\TH:i:s'),
+                'created' => DateNormalizer::normalize($announce->getCreationDate()),
                 'creator' => $announce->getCreator() ? $this->userSerializer->serialize($announce->getCreator(), [Options::SERIALIZE_MINIMAL]) : null,
-                'publishedAt' => $announce->getPublicationDate() ? $announce->getPublicationDate()->format('Y-m-d\TH:i:s') : null,
+                'publishedAt' => DateNormalizer::normalize($announce->getPublicationDate()),
                 'author' => $announce->getAnnouncer(),
                 'notifyUsers' => !empty($announce->getTask()) ? 2 : 0,
-                'notificationDate' => !empty($announce->getTask()) ? $announce->getTask()->getScheduledDate()->format('Y-m-d\TH:i:s') : null,
+                'notificationDate' => !empty($announce->getTask()) ? DateNormalizer::normalize($announce->getTask()->getScheduledDate()) : null,
             ],
             'restrictions' => [
                 'hidden' => !$announce->isVisible(),
@@ -140,12 +141,10 @@ class AnnouncementSerializer
         $announce->setContent($data['content']);
         $announce->setAnnouncer($data['meta']['author']);
 
-        if (empty($announce->getCreator())) {
-            $currentUser = $this->tokenStorage->getToken()->getUser();
-            if ($currentUser instanceof User) {
-                // only get authenticated user
-                $announce->setCreator($currentUser);
-            }
+        if (isset($data['meta']) && !empty($data['meta']['creator'])) {
+            /** @var User $creator */
+            $creator = $this->om->getObject($data['meta']['creator'], User::class);
+            $announce->setCreator($creator);
         }
 
         // calculate visibility restrictions
@@ -161,7 +160,7 @@ class AnnouncementSerializer
         // calculate publication date
         if (!$announce->isVisible()) {
             $announce->setPublicationDate(null);
-        } else {
+        } elseif (empty($announce->getPublicationDate())) {
             $now = new \DateTime();
             if (empty($announce->getVisibleFrom()) || $announce->getVisibleFrom() < $now) {
                 $announce->setPublicationDate($now);
