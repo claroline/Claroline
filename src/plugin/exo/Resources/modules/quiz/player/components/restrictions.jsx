@@ -5,7 +5,7 @@ import get from 'lodash/get'
 import {trans} from '#/main/app/intl/translation'
 import {ContentHtml} from '#/main/app/content/components/html'
 import {Toolbar} from '#/main/app/action/components/toolbar'
-import {LINK_BUTTON} from '#/main/app/buttons'
+import {LINK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 import {route} from '#/main/core/workspace/routing'
 import {ScoreGauge} from '#/main/core/layout/gauge/components/score'
 
@@ -64,10 +64,10 @@ const PlayerRestrictions = props => {
                 displayed: props.showStatistics
               }, {
                 name: 'home',
-                type: LINK_BUTTON,
+                type: URL_BUTTON,
                 icon: 'fa fa-fw fa-home',
                 label: trans('return-home', {}, 'actions'),
-                target: route(props.workspace),
+                target: '#'+route(props.workspace),
                 displayed: !!props.workspace
               }
             ]}
