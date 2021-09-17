@@ -11,6 +11,7 @@
 
 namespace Claroline\ScormBundle\Serializer;
 
+use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\ScormBundle\Entity\Sco;
@@ -43,26 +44,23 @@ class ScormSerializer
         return 'scorm';
     }
 
-    /**
-     * @return array
-     */
-    public function serialize(Scorm $scorm)
+    public function serialize(Scorm $scorm, array $options = []): array
     {
-        return [
+        $serialized = [
             'id' => $scorm->getUuid(),
             'version' => $scorm->getVersion(),
             'hashName' => $scorm->getHashName(),
             'ratio' => $scorm->getRatio(),
-            'scos' => $this->serializeScos($scorm),
         ];
+
+        if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
+            $serialized['scos'] = $this->serializeScos($scorm);
+        }
+
+        return $serialized;
     }
 
-    /**
-     * @param array $data
-     *
-     * @return Scorm
-     */
-    public function deserialize($data, Scorm $scorm)
+    public function deserialize(array $data, Scorm $scorm, array $options = []): Scorm
     {
         $this->sipe('hashName', 'setHashName', $data, $scorm);
         $this->sipe('version', 'setVersion', $data, $scorm);
@@ -71,7 +69,7 @@ class ScormSerializer
         if (isset($data['scos'])) {
             $existing = $scorm->getScos()->toArray();
 
-            $updated = $this->deserializeScos($data['scos'], $scorm);
+            $updated = $this->deserializeScos($data['scos'], $scorm, null, $options);
 
             // clean removed scos
             foreach ($existing as $existingSco) {
@@ -99,7 +97,7 @@ class ScormSerializer
         }, $scorm->getRootScos());
     }
 
-    private function deserializeScos($data, Scorm $scorm, Sco $parent = null): array
+    private function deserializeScos($data, Scorm $scorm, Sco $parent = null, array $options = []): array
     {
         $updated = [];
 
@@ -118,15 +116,21 @@ class ScormSerializer
             $sco->setScoParent($parent);
             $sco->setScorm($scorm);
 
-            $updated = array_merge($updated, $this->deserializeSco($scoData, $sco, $scorm));
+            $updated = array_merge($updated, $this->deserializeSco($scoData, $sco, $scorm, $options));
         }
 
         return $updated;
     }
 
-    private function deserializeSco($data, Sco $sco, Scorm $scorm): array
+    // TODO : move to ScoSerializer
+    private function deserializeSco($data, Sco $sco, Scorm $scorm, array $options = []): array
     {
-        $this->sipe('id', 'setUuid', $data, $sco);
+        if (!in_array(Options::REFRESH_UUID, $options)) {
+            $this->sipe('id', 'setUuid', $data, $sco);
+        } else {
+            $sco->refreshUuid();
+        }
+
         $this->sipe('data.entryUrl', 'setEntryUrl', $data, $sco);
         $this->sipe('data.identifier', 'setIdentifier', $data, $sco);
         $this->sipe('data.title', 'setTitle', $data, $sco);
@@ -142,7 +146,7 @@ class ScormSerializer
         $this->sipe('data.prerequisites', 'setPrerequisites', $data, $sco);
 
         if (isset($data['children']) && 0 < count($data['children'])) {
-            return array_merge([$sco], $this->deserializeScos($data['children'], $scorm, $sco));
+            return array_merge([$sco], $this->deserializeScos($data['children'], $scorm, $sco, $options));
         }
 
         return [$sco];
