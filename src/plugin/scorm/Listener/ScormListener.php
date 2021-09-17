@@ -192,21 +192,9 @@ class ScormListener
         $resource = $event->getResource();
         $workspace = $resource->getResourceNode()->getWorkspace();
         $newWorkspace = $event->getCopy()->getResourceNode()->getWorkspace();
-        $copy = $event->getCopy();
+
         $hashName = $resource->getHashName();
-        $copy->setHashName($hashName);
-        $copy->setName($resource->getName());
-        $copy->setVersion($resource->getVersion());
-        $copy->setRatio($resource->getRatio());
-        $this->om->persist($copy);
 
-        $scos = $resource->getScos();
-
-        foreach ($scos as $sco) {
-            if (is_null($sco->getScoParent())) {
-                $this->copySco($sco, $copy);
-            }
-        }
         if ($workspace->getId() !== $newWorkspace->getId()) {
             $ds = DIRECTORY_SEPARATOR;
             /* Copies archive file & unzipped files */
@@ -224,7 +212,6 @@ class ScormListener
             }
         }
 
-        $event->setCopy($copy);
         $event->stopPropagation();
     }
 
