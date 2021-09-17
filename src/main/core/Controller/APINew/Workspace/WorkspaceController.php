@@ -344,6 +344,8 @@ class WorkspaceController extends AbstractCrudController
     {
         $processed = [];
 
+        $this->om->startFlushSuite();
+
         /** @var Workspace[] $workspaces */
         $workspaces = parent::decodeIdsString($request, Workspace::class);
         foreach ($workspaces as $workspace) {
@@ -352,7 +354,7 @@ class WorkspaceController extends AbstractCrudController
             }
         }
 
-        $this->om->flush();
+        $this->om->endFlushSuite();
 
         return new JsonResponse(array_map(function (Workspace $workspace) {
             return $this->serializer->serialize($workspace);
@@ -372,6 +374,8 @@ class WorkspaceController extends AbstractCrudController
     {
         $processed = [];
 
+        $this->om->startFlushSuite();
+
         /** @var Workspace[] $workspaces */
         $workspaces = parent::decodeIdsString($request, Workspace::class);
         foreach ($workspaces as $workspace) {
@@ -380,7 +384,7 @@ class WorkspaceController extends AbstractCrudController
             }
         }
 
-        $this->om->flush();
+        $this->om->endFlushSuite();
 
         return new JsonResponse(array_map(function (Workspace $workspace) {
             return $this->serializer->serialize($workspace);
