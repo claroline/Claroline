@@ -128,21 +128,25 @@ class RoleCrud
     public function postPatch(PatchEvent $event)
     {
         if (in_array($event->getProperty(), ['user', 'group'])) {
+            $role = $event->getObject();
             $users = [];
+
             if ($event->getValue() instanceof User) {
                 $users[] = $event->getValue();
             } elseif ($event->getValue() instanceof Group) {
                 foreach ($event->getValue()->getUsers() as $user) {
-                    if ($user->isEnabled() && !$user->isRemoved()) {
+                    if ($user->isEnabled() && !$user->isRemoved() && !$user->hasRole($role->getName(), false)) {
                         $users[] = $user;
                     }
                 }
             }
 
-            if ('add' === $event->getAction()) {
-                $this->dispatcher->dispatch(SecurityEvents::ADD_ROLE, AddRoleEvent::class, [$users, $event->getObject()]);
-            } elseif ('remove' === $event->getAction()) {
-                $this->dispatcher->dispatch(SecurityEvents::REMOVE_ROLE, RemoveRoleEvent::class, [$users, $event->getObject()]);
+            if (!empty($users)) {
+                if ('add' === $event->getAction()) {
+                    $this->dispatcher->dispatch(SecurityEvents::ADD_ROLE, AddRoleEvent::class, [$users, $role]);
+                } elseif ('remove' === $event->getAction()) {
+                    $this->dispatcher->dispatch(SecurityEvents::REMOVE_ROLE, RemoveRoleEvent::class, [$users, $role]);
+                }
             }
         }
     }
