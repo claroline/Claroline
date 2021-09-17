@@ -422,6 +422,7 @@ class WorkspaceManager implements LoggerAwareInterface
         $workspace->setArchived(true);
 
         $this->om->persist($workspace);
+        $this->om->flush();
 
         return $workspace;
     }
@@ -431,6 +432,7 @@ class WorkspaceManager implements LoggerAwareInterface
         $workspace->setArchived(false);
 
         $this->om->persist($workspace);
+        $this->om->flush();
 
         return $workspace;
     }

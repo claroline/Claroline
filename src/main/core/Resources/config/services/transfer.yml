@@ -116,6 +116,16 @@ services:
 
     Claroline\CoreBundle\API\Transfer\Action\Workspace\Delete: ~
 
+    Claroline\CoreBundle\API\Transfer\Action\Workspace\Archive:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
+
+    Claroline\CoreBundle\API\Transfer\Action\Workspace\Unarchive:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
+
     Claroline\CoreBundle\API\Transfer\Action\Workspace\AddUser:
         arguments:
             - '@Claroline\AppBundle\API\Crud'

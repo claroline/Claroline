@@ -18,6 +18,8 @@
     "schema_all_properties": "Toutes les colonnes disponibles",
     "schema_required_properties": "Uniquement les colonnes requises",
     "one_of_field_list": "Une des colonnes suivantes :",
+    "archive": "Archiver",
+    "unarchive": "Désarchiver",
 
     "directory_id": "L'id du dossier",
     "directory_name": "Le nom du répertoire",

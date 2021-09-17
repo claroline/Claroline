@@ -18,6 +18,8 @@
     "schema_all_properties": "All available columns",
     "schema_required_properties": "Only required columns",
     "one_of_field_list": "One of the following columns:",
+    "archive": "Archive",
+    "unarchive": "Unarchive",
 
     "directory_id": "The directory id",
     "directory_name": "The directory name",
