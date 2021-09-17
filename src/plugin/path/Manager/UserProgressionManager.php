@@ -161,7 +161,10 @@ class UserProgressionManager
                         $attemptData['resources'] = [];
                     }
 
-                    if (empty($attemptData['resources'][$step->getUuid()]) || $resourceAttempt->getScore() > $attemptData['resources'][$step->getUuid()]['score']) {
+                    if (empty($attemptData['resources'][$step->getUuid()])
+                        || $resourceAttempt->getScore() > $attemptData['resources'][$step->getUuid()]['score']
+                        || $resourceAttempt->getScoreMax() !== $attemptData['resources'][$step->getUuid()]['max']
+                    ) {
                         // only update path attempt if it's the first time the user do the resource
                         // or if he gets a better score
                         $attemptData['resources'][$step->getUuid()] = [
@@ -174,7 +177,7 @@ class UserProgressionManager
                         $data = array_merge(['data' => $attemptData], $this->computeScore($step->getPath(), $attemptData['resources']));
 
                         // forward update to core to let him recompute the ResourceUserEvaluation if needed
-                        $this->resourceEvalManager->updateResourceEvaluation($pathAttempt, $resourceAttempt->getDate(), $data, false, false);
+                        $this->resourceEvalManager->updateResourceEvaluation($pathAttempt, $resourceAttempt->getDate(), $data, false, false, true);
                     }
                 }
             }
