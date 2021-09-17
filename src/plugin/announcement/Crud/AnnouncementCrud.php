@@ -9,24 +9,27 @@ use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class AnnouncementCrud
 {
-    /** @var AnnouncementManager */
-    private $manager;
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
     /** @var ObjectManager */
     private $om;
+    /** @var AnnouncementManager */
+    private $manager;
 
-    /**
-     * AnnouncementCrud constructor.
-     */
     public function __construct(
+        TokenStorageInterface $tokenStorage,
         ObjectManager $om,
         AnnouncementManager $manager
     ) {
-        $this->manager = $manager;
+        $this->tokenStorage = $tokenStorage;
         $this->om = $om;
+        $this->manager = $manager;
     }
 
     public function preCreate(CreateEvent $event)
@@ -34,6 +37,14 @@ class AnnouncementCrud
         $announcement = $event->getObject();
         $options = $event->getOptions();
         $announcement->setAggregate($options['announcement_aggregate']);
+
+        if (empty($announcement->getCreator())) {
+            $currentUser = $this->tokenStorage->getToken()->getUser();
+            if ($currentUser instanceof User) {
+                // only get authenticated user
+                $announcement->setCreator($currentUser);
+            }
+        }
     }
 
     public function postUpdate(UpdateEvent $event)
