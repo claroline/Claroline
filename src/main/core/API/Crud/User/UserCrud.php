@@ -234,11 +234,28 @@ class UserCrud
 
     public function postPatch(PatchEvent $event)
     {
+        $user = $event->getObject();
+
         if ($event->getValue() instanceof Role) {
-            if ('add' === $event->getAction()) {
-                $this->dispatcher->dispatch(SecurityEvents::ADD_ROLE, AddRoleEvent::class, [[$event->getObject()], $event->getValue()]);
-            } elseif ('remove' === $event->getAction()) {
-                $this->dispatcher->dispatch(SecurityEvents::REMOVE_ROLE, RemoveRoleEvent::class, [[$event->getObject()], $event->getValue()]);
+            $role = $event->getValue();
+
+            $hasRoleFromGroup = $user->hasRole($role->getName(), true) && !$user->hasRole($role->getName(), false);
+            if (!$hasRoleFromGroup) {
+                if ('add' === $event->getAction()) {
+                    $this->dispatcher->dispatch(SecurityEvents::ADD_ROLE, AddRoleEvent::class, [[$user], $role]);
+                } elseif ('remove' === $event->getAction()) {
+                    $this->dispatcher->dispatch(SecurityEvents::REMOVE_ROLE, RemoveRoleEvent::class, [[$user], $role]);
+                }
+            }
+        } elseif ($event->getValue() instanceof Group) {
+            foreach ($event->getValue()->getRoles() as $role) {
+                if (!$user->hasRole($role->getName(), false)) {
+                    if ('add' === $event->getAction()) {
+                        $this->dispatcher->dispatch(SecurityEvents::ADD_ROLE, AddRoleEvent::class, [[$user], $role]);
+                    } elseif ('remove' === $event->getAction()) {
+                        $this->dispatcher->dispatch(SecurityEvents::REMOVE_ROLE, RemoveRoleEvent::class, [[$user], $role]);
+                    }
+                }
             }
         }
     }

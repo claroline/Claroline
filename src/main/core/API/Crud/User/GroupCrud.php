@@ -67,12 +67,26 @@ class GroupCrud
         $group = $event->getObject();
 
         if ($event->getValue() instanceof Role) {
-            foreach ($group->getUsers() as $user) {
-                if ($user->isEnabled() && !$user->isRemoved()) {
+            $role = $event->getValue();
+
+            $users = array_filter($group->getUsers()->toArray(), function (User $user) use ($role) {
+                return $user->isEnabled() && !$user->isRemoved() && !$user->hasRole($role->getName(), false);
+            });
+
+            if ('add' === $event->getAction()) {
+                $this->dispatcher->dispatch(SecurityEvents::ADD_ROLE, AddRoleEvent::class, [$users, $role]);
+            } elseif ('remove' === $event->getAction()) {
+                $this->dispatcher->dispatch(SecurityEvents::REMOVE_ROLE, RemoveRoleEvent::class, [$users, $role]);
+            }
+        } elseif ($event->getValue() instanceof User) {
+            $user = $event->getValue();
+
+            foreach ($group->getEntityRoles() as $role) {
+                if (!$user->hasRole($role->getName(), false)) {
                     if ('add' === $event->getAction()) {
-                        $this->dispatcher->dispatch(SecurityEvents::ADD_ROLE, AddRoleEvent::class, [[$user], $event->getValue()]);
+                        $this->dispatcher->dispatch(SecurityEvents::ADD_ROLE, AddRoleEvent::class, [[$user], $role]);
                     } elseif ('remove' === $event->getAction()) {
-                        $this->dispatcher->dispatch(SecurityEvents::REMOVE_ROLE, RemoveRoleEvent::class, [[$user], $event->getValue()]);
+                        $this->dispatcher->dispatch(SecurityEvents::REMOVE_ROLE, RemoveRoleEvent::class, [[$user], $role]);
                     }
                 }
             }
