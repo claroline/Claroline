@@ -160,13 +160,15 @@ class ResourceEvaluationManager
         }
 
         if (isset($data['score'])) {
+            $newScoreMax = !empty($data['scoreMax']) ? $data['scoreMax'] : null;
             $newScore = empty($data['scoreMax']) ? $data['score'] : $data['score'] / $data['scoreMax'];
 
             $rueScore = $rue->getScore();
             $rueScoreMax = $rue->getScoreMax();
             $oldScore = empty($rueScoreMax) ? $rueScore : $rueScore / $rueScoreMax;
 
-            if (is_null($oldScore) || $newScore >= $oldScore) {
+            // update evaluation score if the user has never been evaluated, has a better score or if the max score has changed
+            if (is_null($oldScore) || $newScore >= $oldScore || $newScoreMax !== $rueScoreMax) {
                 $rue->setScore($data['score']);
 
                 if (isset($data['scoreMax'])) {
