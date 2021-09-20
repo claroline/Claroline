@@ -248,7 +248,7 @@ class UserCrud
                 }
             }
         } elseif ($event->getValue() instanceof Group) {
-            foreach ($event->getValue()->getRoles() as $role) {
+            foreach ($event->getValue()->getEntityRoles() as $role) {
                 if (!$user->hasRole($role->getName(), false)) {
                     if ('add' === $event->getAction()) {
                         $this->dispatcher->dispatch(SecurityEvents::ADD_ROLE, AddRoleEvent::class, [[$user], $role]);
