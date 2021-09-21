@@ -11,6 +11,7 @@
 
 namespace Claroline\DropZoneBundle\Listener\Resource;
 
+use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
@@ -172,7 +173,7 @@ class DropzoneListener
             'myDrop' => $mySerializedDrop,
             'nbCorrections' => count($finishedPeerDrops),
             'tools' => $serializedTools,
-            'userEvaluation' => $this->serializer->serialize($userEvaluation),
+            'userEvaluation' => $this->serializer->serialize($userEvaluation, [Options::SERIALIZE_MINIMAL]),
             'teams' => $serializedTeams,
             'errorMessage' => $errorMessage,
             'currentRevisionId' => $currentRevisionId,

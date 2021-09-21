@@ -9,13 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\API\Finder\Workspace;
+namespace Claroline\EvaluationBundle\Finder;
 
 use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\CoreBundle\Entity\Workspace\Requirements;
 use Doctrine\ORM\QueryBuilder;
 
-class RequirementsFinder extends AbstractFinder
+class WorkspaceRequirementsFinder extends AbstractFinder
 {
     public static function getClass(): string
     {

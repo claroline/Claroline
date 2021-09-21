@@ -4,6 +4,7 @@ namespace Claroline\LogBundle\Subscriber;
 
 use Claroline\CoreBundle\Event\CatalogEvents\ResourceEvents;
 use Claroline\CoreBundle\Event\CatalogEvents\ToolEvents;
+use Claroline\EvaluationBundle\Event\EvaluationEvents;
 use Claroline\LogBundle\Messenger\Message\CreateFunctionalLog;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -28,7 +29,7 @@ class FunctionalLogSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            ResourceEvents::RESOURCE_EVALUATION => ['logEvent', 10],
+            EvaluationEvents::RESOURCE => ['logEvent', 10],
             ResourceEvents::RESOURCE_OPEN => ['logEvent', 10],
             ToolEvents::TOOL_OPEN => ['logEvent', 10],
         ];

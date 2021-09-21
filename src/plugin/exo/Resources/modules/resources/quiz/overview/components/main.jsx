@@ -75,25 +75,23 @@ Parameters.defaultProps = {
 const OverviewMain = props =>
   <ResourceOverview
     contentText={props.quiz.description}
-    progression={{
-      status: props.userEvaluation ? props.userEvaluation.status : undefined,
-      statusTexts: {
-        opened: trans('exercise_status_opened_message', {}, 'quiz'),
-        completed: trans('exercise_status_completed_message', {}, 'quiz'),
-        passed: trans('exercise_status_passed_message', {}, 'quiz'),
-        failed: trans('exercise_status_failed_message', {}, 'quiz')
-      },
-      score: {
-        displayed: props.quiz.parameters.showScoreAt !== SHOW_SCORE_AT_NEVER,
-        current: props.userEvaluation ? props.userEvaluation.score : undefined,
-        total: props.userEvaluation ? props.userEvaluation.scoreMax : undefined
-      },
-      feedback: {
-        displayed: false, // FIXME
-        success: props.quiz.parameters.successMessage,
-        failure: props.quiz.parameters.failureMessage
-      }
+    evaluation={props.userEvaluation}
+    display={{
+      score: props.quiz.parameters.showScoreAt !== SHOW_SCORE_AT_NEVER,
+      scoreMax: get(props.quiz, 'score.total'),
+      feedback: !!props.quiz.parameters.successMessage || !!props.quiz.parameters.failureMessage
     }}
+    feedbacks={{
+      success: props.quiz.parameters.successMessage,
+      failure: props.quiz.parameters.failureMessage
+    }}
+    statusTexts={{
+      opened: trans('exercise_status_opened_message', {}, 'quiz'),
+      completed: trans('exercise_status_completed_message', {}, 'quiz'),
+      passed: trans('exercise_status_passed_message', {}, 'quiz'),
+      failed: trans('exercise_status_failed_message', {}, 'quiz')
+    }}
+
     actions={[
       {
         type: LINK_BUTTON,

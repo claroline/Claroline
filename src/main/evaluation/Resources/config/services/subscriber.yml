@@ -1,4 +1,17 @@
 services:
+    Claroline\EvaluationBundle\Subscriber\ResourceEvaluationSubscriber:
+        arguments:
+            - '@Claroline\EvaluationBundle\Manager\ResourceEvaluationManager'
+        tags:
+            - { name: kernel.event_subscriber }
+
+    Claroline\EvaluationBundle\Subscriber\WorkspaceEvaluationSubscriber:
+        arguments:
+            - '@security.token_storage'
+            - '@Claroline\EvaluationBundle\Manager\WorkspaceEvaluationManager'
+        tags:
+            - { name: kernel.event_subscriber }
+
     Claroline\EvaluationBundle\Subscriber\WorkspaceRequirementsSubscriber:
         arguments:
             - '@message_bus'

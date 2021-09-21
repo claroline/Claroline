@@ -2,8 +2,7 @@
 
 namespace HeVinci\CompetencyBundle\Listener;
 
-use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
-use Claroline\CoreBundle\Event\Resource\EvaluateResourceEvent;
+use Claroline\EvaluationBundle\Event\ResourceEvaluationEvent;
 use HeVinci\CompetencyBundle\Manager\ProgressManager;
 
 /**
@@ -19,9 +18,8 @@ class ResourceListener
         $this->manager = $manager;
     }
 
-    public function onResourceEvaluation(EvaluateResourceEvent $event)
+    public function onResourceEvaluation(ResourceEvaluationEvent $event)
     {
-        /** @var ResourceUserEvaluation $evaluation */
         $evaluation = $event->getEvaluation();
 
         $this->manager->handleEvaluation($evaluation);

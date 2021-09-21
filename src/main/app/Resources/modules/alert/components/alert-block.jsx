@@ -1,9 +1,13 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
+import omit from 'lodash/omit'
 
 const AlertBlock = props =>
-  <div className={classes('alert alert-detailed', 'alert-'+props.type, props.className)}>
+  <div
+    {...omit(props, 'className', 'icon', 'type', 'title', 'children')}
+    className={classes('alert alert-detailed', 'alert-'+props.type, props.className)}
+  >
     <span className={classes('alert-icon', !props.icon && 'fa fa-fw', props.icon || {
       'fa-info-circle':          'info' === props.type,
       'fa-check-circle':         'success' === props.type,

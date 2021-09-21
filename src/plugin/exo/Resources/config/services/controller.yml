@@ -19,8 +19,8 @@ services:
             - '@security.authorization_checker'
             - '@UJM\ExoBundle\Manager\AttemptManager'
             - '@UJM\ExoBundle\Manager\Attempt\PaperManager'
-            - '@claroline.manager.resource_evaluation_manager'
-            - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceUserEvaluationSerializer'
+            - '@Claroline\EvaluationBundle\Manager\ResourceEvaluationManager'
+            - '@Claroline\EvaluationBundle\Serializer\ResourceUserEvaluationSerializer'
 
     UJM\ExoBundle\Controller\CorrectionController:
         arguments:

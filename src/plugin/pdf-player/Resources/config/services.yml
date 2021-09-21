@@ -24,4 +24,4 @@ services:
     Claroline\PdfPlayerBundle\Manager\UserEvaluationManager:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@claroline.manager.resource_evaluation_manager'
+            - '@Claroline\EvaluationBundle\Manager\ResourceEvaluationManager'

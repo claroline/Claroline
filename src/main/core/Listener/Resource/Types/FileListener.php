@@ -17,7 +17,6 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Event\ExportObjectEvent;
-use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Event\ImportObjectEvent;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
@@ -26,9 +25,7 @@ use Claroline\CoreBundle\Event\Resource\File\LoadFileEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\ResourceActionEvent;
 use Claroline\CoreBundle\Library\Utilities\FileUtilities;
-use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
-use Claroline\EvaluationBundle\Entity\AbstractEvaluation;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -61,9 +58,6 @@ class FileListener
     /** @var SerializerProvider */
     private $serializer;
 
-    /** @var ResourceEvaluationManager */
-    private $resourceEvalManager;
-
     /** @var FileUtilities */
     private $fileUtils;
 
@@ -74,7 +68,6 @@ class FileListener
         string $filesDir,
         SerializerProvider $serializer,
         ResourceManager $resourceManager,
-        ResourceEvaluationManager $resourceEvalManager,
         FileUtilities $fileUtils
     ) {
         $this->tokenStorage = $tokenStorage;
@@ -83,7 +76,6 @@ class FileListener
         $this->filesDir = $filesDir;
         $this->serializer = $serializer;
         $this->resourceManager = $resourceManager;
-        $this->resourceEvalManager = $resourceEvalManager;
         $this->fileUtils = $fileUtils;
     }
 
@@ -270,32 +262,5 @@ class FileListener
         $eventName = str_replace('"', '', $eventName);
 
         return 'file.'.$eventName.'.'.$event;
-    }
-
-    public function onGenerateResourceTracking(GenericDataEvent $event)
-    {
-        $data = $event->getData();
-        $node = $data['resourceNode'];
-        $user = $data['user'];
-        $startDate = $data['startDate'];
-
-        $logs = $this->resourceEvalManager->getLogsForResourceTracking(
-            $node,
-            $user,
-            ['resource-read'],
-            $startDate
-        );
-        $nbLogs = count($logs);
-
-        if ($nbLogs > 0) {
-            $this->om->startFlushSuite();
-            $tracking = $this->resourceEvalManager->getResourceUserEvaluation($node, $user);
-            $tracking->setDate($logs[0]->getDateLog());
-            $tracking->setStatus(AbstractEvaluation::STATUS_OPENED);
-            $tracking->setNbOpenings($nbLogs);
-            $this->om->persist($tracking);
-            $this->om->endFlushSuite();
-        }
-        $event->stopPropagation();
     }
 }

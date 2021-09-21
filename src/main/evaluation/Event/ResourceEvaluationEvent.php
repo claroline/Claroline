@@ -1,43 +1,49 @@
 <?php
 
-namespace Claroline\CoreBundle\Event\Resource;
+namespace Claroline\EvaluationBundle\Event;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\UserEvaluationEvent;
+use Symfony\Contracts\EventDispatcher\Event;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Event dispatched when a resource evaluation is created or updated.
  */
-class EvaluateResourceEvent extends UserEvaluationEvent
+class ResourceEvaluationEvent extends Event
 {
-    /** @var ResourceEvaluation */
-    private $attempt;
     /** @var ResourceUserEvaluation */
     private $evaluation;
+    /** @var ResourceEvaluation */
+    private $attempt;
 
-    public function __construct(ResourceUserEvaluation $evaluation, ResourceEvaluation $attempt)
+    public function __construct(ResourceUserEvaluation $evaluation, ?ResourceEvaluation $attempt = null)
     {
-        parent::__construct($evaluation);
-
         $this->evaluation = $evaluation;
         $this->attempt = $attempt;
     }
 
     /**
-     * Get the current attempt.
+     * Get the current evaluation.
      */
-    public function getAttempt(): ResourceEvaluation
+    public function getEvaluation(): ResourceUserEvaluation
     {
-        return $this->attempt;
+        return $this->evaluation;
     }
 
     public function getUser(): User
     {
         return $this->evaluation->getUser();
+    }
+
+    /**
+     * Get the current attempt.
+     */
+    public function getAttempt(): ?ResourceEvaluation
+    {
+        return $this->attempt;
     }
 
     public function getResourceNode(): ResourceNode

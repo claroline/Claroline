@@ -16,7 +16,7 @@ use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Maintenance\MaintenanceHandler;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Manager\LocaleManager;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -70,7 +70,7 @@ class PlatformListener
     /**
      * Sets the platform language.
      */
-    public function setLocale(GetResponseEvent $event)
+    public function setLocale(RequestEvent $event)
     {
         if ($event->isMasterRequest()) {
             $request = $event->getRequest();
@@ -83,7 +83,7 @@ class PlatformListener
     /**
      * Checks the app availability before displaying the platform.
      */
-    public function checkAvailability(GetResponseEvent $event)
+    public function checkAvailability(RequestEvent $event)
     {
         if (!$event->isMasterRequest() || in_array($event->getRequest()->get('_route'), static::PUBLIC_ROUTES)) {
             return;

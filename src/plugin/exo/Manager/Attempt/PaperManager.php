@@ -5,9 +5,9 @@ namespace UJM\ExoBundle\Manager\Attempt;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
 use Claroline\CoreBundle\Security\Collection\ResourceCollection;
 use Claroline\EvaluationBundle\Entity\AbstractEvaluation;
+use Claroline\EvaluationBundle\Manager\ResourceEvaluationManager;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use UJM\ExoBundle\Entity\Attempt\Answer;
@@ -419,7 +419,6 @@ class PaperManager
         return $this->resourceEvalManager->createResourceEvaluation(
             $paper->getExercise()->getResourceNode(),
             $paper->getUser(),
-            null,
             [
                 'status' => $status,
                 'score' => $score,

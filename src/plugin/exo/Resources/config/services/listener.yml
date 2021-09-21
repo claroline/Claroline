@@ -25,7 +25,7 @@ services:
             - '@UJM\ExoBundle\Manager\Attempt\PaperManager'
             - '@UJM\ExoBundle\Manager\AttemptManager'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@claroline.manager.resource_evaluation_manager'
+            - '@Claroline\EvaluationBundle\Manager\ResourceEvaluationManager'
             - '@security.token_storage'
             - '@Claroline\AppBundle\API\SerializerProvider'
         tags:

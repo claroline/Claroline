@@ -1,0 +1,6 @@
+claro_evaluation:
+    resource: "@ClarolineEvaluationBundle/Controller/"
+    prefix: apiv2
+    type: api
+    options:
+        expose: true

@@ -88,9 +88,10 @@ const WorkspaceFormComponent = (props) =>
             disabled: true,
             mode: 'expert'
           }, {
-            name: 'meta.forceLang',
+            name: 'meta._forceLang',
             type: 'boolean',
             label: trans('default_language'),
+            calculated: (workspace) => get(workspace, 'meta._forceLang') || get(workspace, 'meta.lang'),
             onChange: activated => {
               if (!activated) {
                 // reset lang field
@@ -102,7 +103,7 @@ const WorkspaceFormComponent = (props) =>
               name: 'meta.lang',
               label: trans('lang'),
               type: 'locale',
-              displayed: (workspace) => workspace.meta && workspace.meta.forceLang
+              displayed: (workspace) => get(workspace, 'meta._forceLang') || get(workspace, 'meta.lang')
             }]
           }
         ]

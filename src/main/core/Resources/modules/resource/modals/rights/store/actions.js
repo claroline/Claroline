@@ -14,6 +14,7 @@ actions.setRecursive = makeActionCreator(SET_RIGHTS_RECURSIVE, 'recursiveEnabled
 actions.fetchRights = (resourceNode) => (dispatch) => dispatch({
   [API_REQUEST]: {
     url: ['apiv2_resource_get_rights', {id: resourceNode.id}],
+    silent: true,
     request: {
       method: 'GET'
     },

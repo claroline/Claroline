@@ -11,14 +11,12 @@ services:
             - '@Icap\WikiBundle\Serializer\WikiSerializer'
             - '@Icap\WikiBundle\Manager\WikiManager'
             - '@Icap\WikiBundle\Manager\SectionManager'
-            - '@claroline.manager.resource_evaluation_manager'
             - '@security.authorization_checker'
         tags:
             - { name: kernel.event_listener, event: resource.icap_wiki.load, method: load }
             - { name: kernel.event_listener, event: resource.icap_wiki.copy, method: onCopy }
             - { name: kernel.event_listener, event: transfer.icap_wiki.export, method: onExport }
             - { name: kernel.event_listener, event: transfer.icap_wiki.import.after, method: onImport }
-            - { name: kernel.event_listener, event: generate_resource_user_evaluation_icap_wiki, method: onGenerateResourceTracking }
 
     Icap\WikiBundle\Listener\LogListener:
         arguments:

@@ -25,8 +25,7 @@ class ResourceEvaluation extends AbstractEvaluation
 {
     /**
      * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation",
-     *     inversedBy="evaluations"
+     *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation"
      * )
      * @ORM\JoinColumn(name="resource_user_evaluation", onDelete="CASCADE")
      *

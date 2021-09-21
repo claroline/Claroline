@@ -9,83 +9,39 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Manager\Workspace;
+namespace Claroline\EvaluationBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Log\Connection\LogConnectWorkspace;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\Evaluation;
 use Claroline\CoreBundle\Entity\Workspace\Requirements;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Event\UserEvaluationEvent;
 use Claroline\EvaluationBundle\Entity\AbstractEvaluation;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-class EvaluationManager
+class WorkspaceRequirementsManager
 {
     /** @var ObjectManager */
     private $om;
-    /** @var EventDispatcherInterface */
-    private $eventDispatcher;
 
-    private $logConnectRepo;
-    private $evaluationRepo;
     private $requirementsRepo;
     private $resourceUserEvalRepo;
 
-    /**
-     * EvaluationManager constructor.
-     */
-    public function __construct(
-        ObjectManager $om,
-        EventDispatcherInterface $eventDispatcher
-    ) {
+    public function __construct(ObjectManager $om)
+    {
         $this->om = $om;
-        $this->eventDispatcher = $eventDispatcher;
 
-        $this->logConnectRepo = $this->om->getRepository(LogConnectWorkspace::class);
-        $this->evaluationRepo = $om->getRepository(Evaluation::class);
         $this->requirementsRepo = $om->getRepository(Requirements::class);
         $this->resourceUserEvalRepo = $om->getRepository(ResourceUserEvaluation::class);
     }
 
     /**
-     * Retrieve or create evaluation for a workspace and an user.
-     *
-     * @param bool $withCreation
-     *
-     * @return Evaluation|null
-     *
-     * @throws \Exception
-     */
-    public function getEvaluation(Workspace $workspace, User $user, $withCreation = true)
-    {
-        $evaluation = $this->evaluationRepo->findOneBy(['workspace' => $workspace, 'user' => $user]);
-
-        if ($withCreation && empty($evaluation)) {
-            $evaluation = new Evaluation();
-            $evaluation->setWorkspace($workspace);
-            $evaluation->setWorkspaceCode($workspace->getCode());
-            $evaluation->setUser($user);
-            $evaluation->setUserName($user->getLastName().' '.$user->getFirstName());
-            $evaluation->setDate(new \DateTime());
-            $evaluation->setStatus(AbstractEvaluation::STATUS_NOT_ATTEMPTED);
-            $this->om->persist($evaluation);
-            $this->om->flush();
-        }
-
-        return $evaluation;
-    }
-
-    /**
      * Retrieve the list of resources an user has to do in the workspace.
      *
-     * @return array
+     * @return ResourceNode[]
      */
-    public function computeResourcesToDo(Workspace $workspace, User $user)
+    public function getRequiredResources(Workspace $workspace, User $user): array
     {
         $resources = [];
 
@@ -117,99 +73,6 @@ class EvaluationManager
         }
 
         return $resources;
-    }
-
-    /**
-     * Compute evaluation status and progression of an user in a workspace.
-     *
-     * @param \DateTime $date
-     *
-     * @return Evaluation|null
-     *
-     * @throws \Exception
-     */
-    public function computeEvaluation(Workspace $workspace, User $user, ResourceUserEvaluation $currentRue = null, $date = null)
-    {
-        $evaluation = $this->getEvaluation($workspace, $user);
-
-        $statusCount = [
-            AbstractEvaluation::STATUS_PASSED => 0,
-            AbstractEvaluation::STATUS_FAILED => 0,
-            AbstractEvaluation::STATUS_COMPLETED => 0,
-            AbstractEvaluation::STATUS_INCOMPLETE => 0,
-            AbstractEvaluation::STATUS_NOT_ATTEMPTED => 0,
-            AbstractEvaluation::STATUS_UNKNOWN => 0,
-            AbstractEvaluation::STATUS_OPENED => 0,
-            AbstractEvaluation::STATUS_PARTICIPATED => 0,
-            AbstractEvaluation::STATUS_TODO => 0,
-        ];
-        $resources = $this->computeResourcesToDo($workspace, $user);
-
-        $score = 0;
-        $scoreMax = 0;
-        $progressionMax = count($resources);
-
-        // if there is a triggering resource evaluation checks if is part of the workspace requirements
-        // if not, no evaluation is computed
-        if ($currentRue) {
-            $currentResourceId = $currentRue->getResourceNode()->getUuid();
-
-            if (isset($resources[$currentResourceId])) {
-                if ($currentRue->getStatus()) {
-                    ++$statusCount[$currentRue->getStatus()];
-                    $score += $currentRue->getScore() ?? 0;
-                    $scoreMax += $currentRue->getScoreMax() ?? 0;
-                }
-                unset($resources[$currentResourceId]);
-            }
-        }
-
-        foreach ($resources as $resource) {
-            $resourceEval = $this->resourceUserEvalRepo->findOneBy(['resourceNode' => $resource, 'user' => $user]);
-
-            if ($resourceEval && $resourceEval->getStatus()) {
-                ++$statusCount[$resourceEval->getStatus()];
-                $score += $resourceEval->getScore() ?? 0;
-                $scoreMax += $resourceEval->getScoreMax() ?? 0;
-            }
-        }
-
-        $progression = $statusCount[AbstractEvaluation::STATUS_PASSED] +
-            $statusCount[AbstractEvaluation::STATUS_FAILED] +
-            $statusCount[AbstractEvaluation::STATUS_COMPLETED] +
-            $statusCount[AbstractEvaluation::STATUS_PARTICIPATED];
-
-        $status = $evaluation->getStatus();
-        if (0 !== $statusCount[AbstractEvaluation::STATUS_FAILED]) {
-            // if there is one failed resource the workspace is considered as failed also
-            $status = AbstractEvaluation::STATUS_FAILED;
-        } elseif ($progression === $progressionMax) {
-            // if all resources have been done without failure the workspace is completed
-            $status = AbstractEvaluation::STATUS_COMPLETED;
-        } elseif ((0 !== $progression && $progression < $progressionMax) || 0 < $statusCount[AbstractEvaluation::STATUS_INCOMPLETE]) {
-            // if all resources have been done without failure the workspace is completed
-            $status = AbstractEvaluation::STATUS_INCOMPLETE;
-        }
-
-        $evaluation->setProgressionMax($progressionMax);
-        $evaluation->setProgression($progression);
-        $evaluation->setStatus($status);
-
-        if ($date) {
-            $evaluation->setDate($date);
-        }
-
-        if ($scoreMax) {
-            $evaluation->setScore($score);
-            $evaluation->setScoreMax($scoreMax);
-        }
-
-        $this->om->persist($evaluation);
-        $this->om->flush();
-
-        $this->eventDispatcher->dispatch(new UserEvaluationEvent($evaluation), 'workspace.evaluate');
-
-        return $evaluation;
     }
 
     /**
@@ -474,54 +337,5 @@ class EvaluationManager
             $this->om->persist($resourceUserEval);
         }
         $this->om->flush();
-    }
-
-    /**
-     * Add duration to a workspace user evaluation.
-     *
-     * @param int $duration
-     */
-    public function addDurationToWorkspaceEvaluation(Workspace $workspace, User $user, $duration)
-    {
-        $this->om->startFlushSuite();
-
-        $workspaceEval = $this->getEvaluation($workspace, $user);
-
-        $evaluationDuration = $workspaceEval->getDuration();
-        if (is_null($workspaceEval->getDuration())) {
-            $evaluationDuration = $this->computeDuration($workspaceEval);
-        }
-
-        $workspaceEval->setDuration($evaluationDuration + $duration);
-
-        $this->om->persist($workspaceEval);
-        $this->om->flush();
-
-        $this->om->endFlushSuite();
-    }
-
-    /**
-     * Compute duration for a workspace user evaluation.
-     *
-     * @return int
-     */
-    public function computeDuration(Evaluation $workspaceEvaluation)
-    {
-        /** @var LogConnectWorkspace[] $workspaceLogs */
-        $workspaceLogs = $this->logConnectRepo->findBy(['workspace' => $workspaceEvaluation->getWorkspace(), 'user' => $workspaceEvaluation->getUser()]);
-
-        $duration = 0;
-        foreach ($workspaceLogs as $log) {
-            if ($log->getDuration()) {
-                $duration += $log->getDuration();
-            }
-        }
-
-        $workspaceEvaluation->setDuration($duration);
-
-        $this->om->persist($workspaceEvaluation);
-        $this->om->flush();
-
-        return $duration;
     }
 }

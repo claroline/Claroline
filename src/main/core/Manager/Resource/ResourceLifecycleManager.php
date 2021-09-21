@@ -12,8 +12,8 @@ use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\CreateResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DownloadResourceEvent;
-use Claroline\CoreBundle\Event\Resource\EvaluateResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
+use Claroline\EvaluationBundle\Event\ResourceEvaluationEvent;
 
 /**
  * Centralizes events dispatched for resources integration.
@@ -112,10 +112,10 @@ class ResourceLifecycleManager
 
     public function evaluate(ResourceUserEvaluation $resourceUserEvaluation, ResourceEvaluation $attempt)
     {
-        /** @var EvaluateResourceEvent $event */
+        /** @var ResourceEvaluationEvent $event */
         $event = $this->dispatcher->dispatch(
             'evaluate', // old : resource_evaluation
-            EvaluateResourceEvent::class,
+            ResourceEvaluationEvent::class,
             [$resourceUserEvaluation, $attempt]
         );
 

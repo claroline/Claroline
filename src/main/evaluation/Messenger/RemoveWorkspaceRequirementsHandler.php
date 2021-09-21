@@ -2,17 +2,17 @@
 
 namespace Claroline\EvaluationBundle\Messenger;
 
-use Claroline\CoreBundle\Manager\Workspace\EvaluationManager;
+use Claroline\EvaluationBundle\Manager\WorkspaceRequirementsManager;
 use Claroline\EvaluationBundle\Messenger\Message\RemoveWorkspaceRequirements;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class RemoveWorkspaceRequirementsHandler implements MessageHandlerInterface
 {
-    /** @var EvaluationManager */
+    /** @var WorkspaceRequirementsManager */
     private $manager;
 
     public function __construct(
-        EvaluationManager $manager
+        WorkspaceRequirementsManager $manager
     ) {
         $this->manager = $manager;
     }

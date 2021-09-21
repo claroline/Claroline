@@ -14,7 +14,7 @@ namespace Claroline\ScormBundle\Manager;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
+use Claroline\EvaluationBundle\Manager\ResourceEvaluationManager;
 use Claroline\ScormBundle\Entity\Sco;
 use Claroline\ScormBundle\Entity\Scorm;
 use Claroline\ScormBundle\Entity\ScoTracking;
@@ -486,7 +486,6 @@ class ScormManager
         $this->resourceEvalManager->createResourceEvaluation(
             $scorm->getResourceNode(),
             $tracking->getUser(),
-            $tracking->getLatestDate(),
             [
                 'progression' => $data['progression'],
                 'status' => $status,
@@ -495,7 +494,8 @@ class ScormManager
                 'scoreMax' => $scoreMax,
                 'duration' => $duration,
                 'data' => $data,
-            ]
+            ],
+            $tracking->getLatestDate()
         );
     }
 

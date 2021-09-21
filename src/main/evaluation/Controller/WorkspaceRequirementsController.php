@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Controller\APINew\Workspace;
+namespace Claroline\EvaluationBundle\Controller;
 
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;
@@ -21,7 +21,7 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Requirements;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Manager\Workspace\EvaluationManager;
+use Claroline\EvaluationBundle\Manager\WorkspaceRequirementsManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,40 +34,40 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  *
  * @todo use AbstractCrudController
  */
-class RequirementsController
+class WorkspaceRequirementsController
 {
     use RequestDecoderTrait;
 
     /** @var AuthorizationCheckerInterface */
     private $authorization;
-    /** @var EvaluationManager */
-    private $evaluationManager;
-    /** @var FinderProvider */
-    private $finder;
     /** @var ObjectManager */
     private $om;
+    /** @var FinderProvider */
+    private $finder;
     /** @var SerializerProvider */
     private $serializer;
+    /** @var WorkspaceRequirementsManager */
+    private $requirementsManager;
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
-        EvaluationManager $evaluationManager,
-        FinderProvider $finder,
         ObjectManager $om,
-        SerializerProvider $serializer
+        FinderProvider $finder,
+        SerializerProvider $serializer,
+        WorkspaceRequirementsManager $requirementsManager
     ) {
-        $this->authorization = $authorization;
-        $this->evaluationManager = $evaluationManager;
-        $this->finder = $finder;
         $this->om = $om;
+        $this->authorization = $authorization;
+        $this->finder = $finder;
         $this->serializer = $serializer;
+        $this->requirementsManager = $requirementsManager;
     }
 
     /**
      * @Route("/{workspace}/requirements/{type}/list", name="apiv2_workspace_requirements_list", methods={"GET"})
      * @ParamConverter("workspace", options={"mapping": {"workspace": "uuid"}})
      */
-    public function requirementsListAction(Workspace $workspace, string $type, Request $request): JsonResponse
+    public function listAction(Workspace $workspace, string $type, Request $request): JsonResponse
     {
         if (!$this->authorization->isGranted(['dashboard', 'OPEN'], $workspace)) {
             throw new AccessDeniedException();
@@ -92,17 +92,17 @@ class RequirementsController
      * @Route("/{workspace}/requirements/{type}/create", name="apiv2_workspace_requirements_create", methods={"PUT"})
      * @ParamConverter("workspace", options={"mapping": {"workspace": "uuid"}})
      */
-    public function requirementsCreateAction(Workspace $workspace, string $type, Request $request): JsonResponse
+    public function createAction(Workspace $workspace, string $type, Request $request): JsonResponse
     {
         if (!$this->authorization->isGranted(['dashboard', 'OPEN'], $workspace)) {
             throw new AccessDeniedException();
         }
         if ('role' === $type) {
             $roles = $this->decodeIdsString($request, Role::class);
-            $this->evaluationManager->createRolesRequirements($workspace, $roles);
+            $this->requirementsManager->createRolesRequirements($workspace, $roles);
         } elseif ('user' === $type) {
             $users = $this->decodeIdsString($request, User::class);
-            $this->evaluationManager->createUsersRequirements($workspace, $users);
+            $this->requirementsManager->createUsersRequirements($workspace, $users);
         }
 
         return new JsonResponse();
@@ -118,7 +118,7 @@ class RequirementsController
             throw new AccessDeniedException();
         }
         $requirementsToDelete = $this->decodeIdsString($request, Requirements::class);
-        $this->evaluationManager->deleteMultipleRequirements($requirementsToDelete);
+        $this->requirementsManager->deleteMultipleRequirements($requirementsToDelete);
 
         return new JsonResponse();
     }
@@ -174,7 +174,7 @@ class RequirementsController
             throw new AccessDeniedException();
         }
         $resourceNodes = $this->decodeIdsString($request, ResourceNode::class);
-        $updatedRequirements = $this->evaluationManager->addResourcesToRequirements($requirements, $resourceNodes);
+        $updatedRequirements = $this->requirementsManager->addResourcesToRequirements($requirements, $resourceNodes);
 
         return new JsonResponse($this->serializer->serialize($updatedRequirements));
     }
@@ -189,7 +189,7 @@ class RequirementsController
             throw new AccessDeniedException();
         }
         $resourceNodes = $this->decodeIdsString($request, ResourceNode::class);
-        $updatedRequirements = $this->evaluationManager->removeResourcesFromRequirements($requirements, $resourceNodes);
+        $updatedRequirements = $this->requirementsManager->removeResourcesFromRequirements($requirements, $resourceNodes);
 
         return new JsonResponse($this->serializer->serialize($updatedRequirements));
     }
@@ -206,7 +206,7 @@ class RequirementsController
         $selectedRequirements = $this->decodeIdsString($request, Requirements::class);
 
         foreach ($selectedRequirements as $requirements) {
-            $this->evaluationManager->removeResourcesFromRequirements($requirements, [$resourceNode]);
+            $this->requirementsManager->removeResourcesFromRequirements($requirements, [$resourceNode]);
         }
 
         return new JsonResponse();
@@ -227,10 +227,10 @@ class RequirementsController
 
         if ('role' === $type) {
             $roles = $this->decodeIdsString($request, Role::class);
-            $this->evaluationManager->createRolesRequirements($workspace, $roles, [$resourceNode]);
+            $this->requirementsManager->createRolesRequirements($workspace, $roles, [$resourceNode]);
         } elseif ('user' === $type) {
             $users = $this->decodeIdsString($request, User::class);
-            $this->evaluationManager->createUsersRequirements($workspace, $users, [$resourceNode]);
+            $this->requirementsManager->createUsersRequirements($workspace, $users, [$resourceNode]);
         }
 
         return new JsonResponse();

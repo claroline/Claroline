@@ -1,0 +1,8 @@
+services:
+    Claroline\EvaluationBundle\Command\ComputeWorkspaceEvaluationCommand:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\EvaluationBundle\Manager\WorkspaceEvaluationManager'
+            - '@Claroline\EvaluationBundle\Manager\ResourceEvaluationManager'
+        tags:
+            - { name: 'console.command', command: 'claroline:workspace:compute_evaluation' }

@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Entity\Resource;
 
 use Claroline\EvaluationBundle\Entity\AbstractUserEvaluation;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
@@ -40,31 +39,21 @@ class ResourceUserEvaluation extends AbstractUserEvaluation
      *
      * @var ResourceNode
      */
-    protected $resourceNode;
-
-    /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceEvaluation",
-     *     mappedBy="resourceUserEvaluation"
-     * )
-     *
-     * @var ResourceEvaluation[]|ArrayCollection
-     */
-    protected $evaluations;
+    private $resourceNode;
 
     /**
      * @ORM\Column(name="nb_attempts", type="integer")
      *
      * @var int
      */
-    protected $nbAttempts = 0;
+    private $nbAttempts = 0;
 
     /**
      * @ORM\Column(name="nb_openings", type="integer")
      *
      * @var int
      */
-    protected $nbOpenings = 0;
+    private $nbOpenings = 0;
 
     /**
      * Is the evaluation used to compute the workspace evaluation ?
@@ -73,20 +62,9 @@ class ResourceUserEvaluation extends AbstractUserEvaluation
      *
      * @var bool
      */
-    protected $required = false;
+    private $required = false;
 
-    /**
-     * ResourceUserEvaluation constructor.
-     */
-    public function __construct()
-    {
-        $this->evaluations = new ArrayCollection();
-    }
-
-    /**
-     * @return ResourceNode
-     */
-    public function getResourceNode()
+    public function getResourceNode(): ?ResourceNode
     {
         return $this->resourceNode;
     }
@@ -96,37 +74,32 @@ class ResourceUserEvaluation extends AbstractUserEvaluation
         $this->resourceNode = $resourceNode;
     }
 
-    public function getEvaluations()
-    {
-        return $this->evaluations->toArray();
-    }
-
-    public function getNbAttempts()
+    public function getNbAttempts(): int
     {
         return $this->nbAttempts ?? 0;
     }
 
-    public function setNbAttempts($nbAttempts)
+    public function setNbAttempts(int $nbAttempts)
     {
         $this->nbAttempts = $nbAttempts;
     }
 
-    public function getNbOpenings()
+    public function getNbOpenings(): int
     {
         return $this->nbOpenings ?? 0;
     }
 
-    public function setNbOpenings($nbOpenings)
+    public function setNbOpenings(int $nbOpenings)
     {
         $this->nbOpenings = $nbOpenings;
     }
 
-    public function isRequired()
+    public function isRequired(): bool
     {
         return $this->required;
     }
 
-    public function setRequired($required)
+    public function setRequired(bool $required)
     {
         $this->required = $required;
     }

@@ -53,15 +53,6 @@ services:
         tags:
             - { name: 'console.command', command: 'claroline:tasks:execute' }
 
-    # Tracking
-
-    Claroline\CoreBundle\Command\Tracking\GenerateResourceTrackingCommand:
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@event_dispatcher'
-        tags:
-            - { name: 'console.command', command: 'claroline:tracking:generate' }
-
     # User
 
     Claroline\CoreBundle\Command\User\CreateCommand:
@@ -136,14 +127,6 @@ services:
             - '@Claroline\CoreBundle\Listener\Log\LogListener'
         tags:
             - { name: 'console.command', command: 'claroline:storage:compute' }
-
-    Claroline\CoreBundle\Command\Workspace\ComputeEvaluationCommand:
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CoreBundle\Manager\Workspace\EvaluationManager'
-            - '@Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager'
-        tags:
-            - { name: 'console.command', command: 'claroline:workspace:compute_evaluation' }
 
     Claroline\CoreBundle\Command\UpdateRichTextCommand:
         arguments:

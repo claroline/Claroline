@@ -68,16 +68,6 @@ services:
         arguments:
             - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
 
-    Claroline\CoreBundle\API\Serializer\Workspace\EvaluationSerializer:
-        tags: [claroline.serializer]
-        arguments:
-            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
-            - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'
-
-    claroline.serializer.workspace.evaluation:
-        alias: Claroline\CoreBundle\API\Serializer\Workspace\EvaluationSerializer
-        public: true
-
     Claroline\CoreBundle\API\Serializer\Widget\WidgetSerializer:
         tags: [claroline.serializer]
 
@@ -216,12 +206,6 @@ services:
             - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'
             - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
 
-    Claroline\CoreBundle\API\Serializer\Resource\ResourceUserEvaluationSerializer:
-        tags: [claroline.serializer]
-        arguments:
-            - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
-            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
-
     Claroline\CoreBundle\API\Serializer\Resource\ResourceTypeSerializer:
         tags: [claroline.serializer]
         arguments:
@@ -236,9 +220,6 @@ services:
             - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
             - '@Claroline\CoreBundle\Manager\Resource\RightsManager'
             - '@Claroline\AppBundle\API\SerializerProvider'
-
-    Claroline\CoreBundle\API\Serializer\Resource\ResourceEvaluationSerializer:
-        tags: [claroline.serializer]
 
     Claroline\CoreBundle\API\Serializer\Resource\ResourceCommentSerializer:
         tags: [claroline.serializer]
