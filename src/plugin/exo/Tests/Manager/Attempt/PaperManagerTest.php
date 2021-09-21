@@ -30,7 +30,7 @@ class PaperManagerTest extends TestCase
             $this->serializer,
             $this->mock('UJM\ExoBundle\Manager\Item\ItemManager'),
             $this->mock('UJM\ExoBundle\Manager\Attempt\ScoreManager'),
-            $this->mock('Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager')
+            $this->mock('Claroline\EvaluationBundle\Manager\ResourceEvaluationManager')
         );
     }
 

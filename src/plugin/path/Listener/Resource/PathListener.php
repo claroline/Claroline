@@ -9,12 +9,11 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
-use Claroline\CoreBundle\Event\Resource\EvaluateResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Manager\ResourceManager;
+use Claroline\EvaluationBundle\Event\ResourceEvaluationEvent;
 use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\Step;
 use Innova\PathBundle\Manager\UserProgressionManager;
@@ -79,7 +78,8 @@ class PathListener
         if ($user instanceof User) {
             // retrieve user progression
             $evaluation = $this->serializer->serialize(
-                $this->userProgressionManager->getResourceUserEvaluation($path, $user)
+                $this->userProgressionManager->getResourceUserEvaluation($path, $user),
+                [Options::SERIALIZE_MINIMAL]
             );
 
             $currentAttempt = $this->serializer->serialize($this->userProgressionManager->getCurrentAttempt($path, $user));
@@ -133,12 +133,11 @@ class PathListener
      * Fired when a Resource Evaluation with a score is created.
      * We will update progression for all paths using this resource.
      */
-    public function onEvaluation(EvaluateResourceEvent $event)
+    public function onEvaluation(ResourceEvaluationEvent $event)
     {
-        /** @var ResourceUserEvaluation $evaluation */
-        $evaluation = $event->getEvaluation();
-
-        $this->userProgressionManager->handleResourceEvaluation($evaluation, $event->getAttempt());
+        if ($event->getAttempt()) {
+            $this->userProgressionManager->handleResourceEvaluation($event->getEvaluation(), $event->getAttempt());
+        }
     }
 
     /**

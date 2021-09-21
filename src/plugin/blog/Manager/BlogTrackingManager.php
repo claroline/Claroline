@@ -5,8 +5,8 @@ namespace Icap\BlogBundle\Manager;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Log\LogResourceUpdateEvent;
-use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
 use Claroline\EvaluationBundle\Entity\AbstractEvaluation;
+use Claroline\EvaluationBundle\Manager\ResourceEvaluationManager;
 use Icap\BlogBundle\Entity\Blog;
 use Icap\BlogBundle\Entity\Comment;
 use Icap\BlogBundle\Entity\Post;
@@ -164,11 +164,11 @@ class BlogTrackingManager
      */
     public function updateResourceTracking(ResourceNode $node, User $user, \DateTime $date)
     {
-        $this->evalutionManager->updateResourceUserEvaluationData(
+        $this->evalutionManager->updateUserEvaluation(
             $node,
             $user,
-            $date,
-            ['status' => AbstractEvaluation::STATUS_PARTICIPATED]
+            ['status' => AbstractEvaluation::STATUS_PARTICIPATED],
+            $date
         );
     }
 }

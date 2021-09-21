@@ -9,25 +9,28 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Command\Workspace;
+namespace Claroline\EvaluationBundle\Command;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\Workspace\Evaluation;
-use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
-use Claroline\CoreBundle\Manager\Workspace\EvaluationManager;
+use Claroline\EvaluationBundle\Manager\ResourceEvaluationManager;
+use Claroline\EvaluationBundle\Manager\WorkspaceEvaluationManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class ComputeEvaluationCommand extends Command
+class ComputeWorkspaceEvaluationCommand extends Command
 {
     private $om;
     private $evaluationManager;
     private $resourceEvaluationManager;
 
-    public function __construct(ObjectManager $om, EvaluationManager $evaluationManager, ResourceEvaluationManager $resourceEvaluationManager)
-    {
+    public function __construct(
+        ObjectManager $om,
+        WorkspaceEvaluationManager $evaluationManager,
+        ResourceEvaluationManager $resourceEvaluationManager
+    ) {
         $this->om = $om;
         $this->evaluationManager = $evaluationManager;
         $this->resourceEvaluationManager = $resourceEvaluationManager;

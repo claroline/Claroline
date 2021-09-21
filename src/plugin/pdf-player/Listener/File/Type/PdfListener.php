@@ -11,6 +11,7 @@
 
 namespace Claroline\PdfPlayerBundle\Listener\File\Type;
 
+use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\User;
@@ -53,7 +54,8 @@ class PdfListener
 
         $event->setData([
             'userEvaluation' => $user instanceof User ? $this->serializer->serialize(
-                $this->userEvaluationManager->getResourceUserEvaluation($pdf->getResourceNode(), $user)
+                $this->userEvaluationManager->getResourceUserEvaluation($pdf->getResourceNode(), $user),
+                [Options::SERIALIZE_MINIMAL]
             ) : null,
         ]);
         $event->stopPropagation();

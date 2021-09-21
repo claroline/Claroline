@@ -8,10 +8,8 @@ use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\ResourceActionEvent;
-use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
 use Claroline\CoreBundle\Manager\Resource\ResourceLifecycleManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
-use Claroline\EvaluationBundle\Entity\AbstractEvaluation;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -32,56 +30,34 @@ class ResourceListener
     /** @var ResourceLifecycleManager */
     private $lifecycleManager;
 
-    /** @var ResourceEvaluationManager */
-    private $evaluationManager;
-
-    /**
-     * ResourceListener constructor.
-     */
     public function __construct(
         TokenStorageInterface $tokenStorage,
         Crud $crud,
         SerializerProvider $serializer,
         ResourceManager $manager,
-        ResourceLifecycleManager $lifecycleManager,
-        ResourceEvaluationManager $evaluationManager
+        ResourceLifecycleManager $lifecycleManager
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->crud = $crud;
         $this->serializer = $serializer;
         $this->manager = $manager;
         $this->lifecycleManager = $lifecycleManager;
-        $this->evaluationManager = $evaluationManager;
     }
 
     public function load(LoadResourceEvent $event)
     {
         $resourceNode = $event->getResourceNode();
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $event->getUser();
 
         // Increment view count if viewer is not creator of the resource
         if (!($user instanceof User) || $user !== $resourceNode->getCreator()) {
             $this->manager->addView($resourceNode);
         }
 
-        // Update current user evaluation
-        if ($user instanceof User) {
-            $this->evaluationManager->updateResourceUserEvaluationData(
-                $resourceNode,
-                $user,
-                new \DateTime(),
-                ['status' => AbstractEvaluation::STATUS_OPENED],
-                false,
-                true
-            );
-        }
-
         // propagate event to resource type
         $subEvent = $this->lifecycleManager->load($resourceNode);
 
-        $event->setData(array_merge([
-            'userEvaluation' => null, // TODO : find a way to get current user evaluation here
-        ], $subEvent->getData()));
+        $event->setData(array_merge($event->getData(), $subEvent->getData()));
     }
 
     public function create(ResourceActionEvent $event)

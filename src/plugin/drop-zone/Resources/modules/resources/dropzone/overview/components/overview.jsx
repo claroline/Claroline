@@ -20,39 +20,35 @@ import {Timeline} from '#/plugin/drop-zone/resources/dropzone/overview/component
 
 const OverviewComponent = props =>
   <ResourceOverview
-    contentText={props.dropzone.instruction ||
-      <span className="empty-text">{trans('no_instruction', {}, 'dropzone')}</span>
-    }
-    progression={{
-      status: props.dropStatus,
-      statusTexts: constants.DROP_STATUS,
-      score: {
-        displayed: props.dropzone.display.showScore,
-        current: props.myDrop ? props.myDrop.score : null,
-        total: props.dropzone.parameters.scoreMax
-      },
-      feedback: {
-        displayed: props.dropzone.display.showFeedback,
-        success: props.dropzone.display.successMessage,
-        failure: props.dropzone.display.failMessage
-      },
-      details: [
-        [
-          trans('drop_date', {}, 'dropzone'),
-          props.myDrop && props.myDrop.dropDate ?
-            displayDate(props.myDrop.dropDate, false, true) :
-            trans('not_submitted', {}, 'dropzone')
-        ],
-        constants.REVIEW_TYPE_PEER === props.dropzone.parameters.reviewType && [
-          'Nbre de corrections reçues',
-          `${props.myDrop ? props.myDrop.corrections.length : '0'} / ${props.dropzone.parameters.expectedCorrectionTotal}`
-        ],
-        constants.REVIEW_TYPE_PEER === props.dropzone.parameters.reviewType && [
-          'Nbre de corrections faîtes',
-          `${props.nbCorrections} / ${props.dropzone.parameters.expectedCorrectionTotal}`
-        ]
-      ].filter(value => !!value)
+    contentText={props.dropzone.instruction}
+    evaluation={props.userEvaluation}
+    display={{
+      score: props.dropzone.display.showScore,
+      scoreMax: props.dropzone.parameters.scoreMax,
+      feedback: props.dropzone.display.showFeedback
     }}
+    feedbacks={{
+      success: props.dropzone.display.successMessage,
+      failure: props.dropzone.display.failMessage
+    }}
+    statusTexts={constants.DROP_STATUS}
+    details={[
+      [
+        trans('drop_date', {}, 'dropzone'),
+        props.myDrop && props.myDrop.dropDate ?
+          displayDate(props.myDrop.dropDate, false, true) :
+          trans('not_submitted', {}, 'dropzone')
+      ],
+      constants.REVIEW_TYPE_PEER === props.dropzone.parameters.reviewType && [
+        'Nbre de corrections reçues',
+        `${props.myDrop ? props.myDrop.corrections.length : '0'} / ${props.dropzone.parameters.expectedCorrectionTotal}`
+      ],
+      constants.REVIEW_TYPE_PEER === props.dropzone.parameters.reviewType && [
+        'Nbre de corrections faîtes',
+        `${props.nbCorrections} / ${props.dropzone.parameters.expectedCorrectionTotal}`
+      ]
+    ].filter(value => !!value)}
+
     actions={[
       // todo add show Drop
       {

@@ -122,17 +122,6 @@ services:
             - '@Claroline\CoreBundle\Manager\MailManager'
             - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
 
-    Claroline\CoreBundle\Controller\APINew\Workspace\EvaluationController:
-        parent: Claroline\AppBundle\Controller\AbstractSecurityController
-        public: true
-        arguments:
-            - '@security.authorization_checker'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\AppBundle\API\Crud'
-            - '@Claroline\AppBundle\API\FinderProvider'
-            - '@Claroline\AppBundle\API\SerializerProvider'
-            - '@Claroline\CoreBundle\Manager\Workspace\EvaluationManager'
-
     Claroline\CoreBundle\Controller\APINew\Workspace\RegistrationController:
         arguments:
             - '@security.authorization_checker'
@@ -142,14 +131,6 @@ services:
             - '@Claroline\AppBundle\API\Crud'
             - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
             - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceUserQueueManager'
-
-    Claroline\CoreBundle\Controller\APINew\Workspace\RequirementsController:
-        arguments:
-            - '@security.authorization_checker'
-            - '@Claroline\CoreBundle\Manager\Workspace\EvaluationManager'
-            - '@Claroline\AppBundle\API\FinderProvider'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\AppBundle\API\SerializerProvider'
 
     Claroline\CoreBundle\Controller\APINew\Workspace\RoleController:
         arguments:
@@ -298,7 +279,6 @@ services:
         arguments:
             - '@security.token_storage'
             - '@twig'
-            - '@Claroline\AppBundle\API\FinderProvider'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@claroline.manager.resource_manager'
             - '@Claroline\CoreBundle\Manager\Resource\ResourceActionManager'
@@ -321,7 +301,7 @@ services:
             - '@translator'
             - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
             - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceRestrictionsManager'
-            - '@Claroline\CoreBundle\Manager\Workspace\EvaluationManager'
+            - '@Claroline\EvaluationBundle\Manager\WorkspaceEvaluationManager'
             - '@Claroline\AppBundle\Event\StrictDispatcher'
 
     Claroline\CoreBundle\Controller\APINew\Location\LocationController:

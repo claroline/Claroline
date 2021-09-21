@@ -83,9 +83,7 @@ class ResourceNodeSerializer
             'path' => $resourceNode->getAncestors(),
             'meta' => $this->serializeMeta($resourceNode, $options),
             'permissions' => $this->rightsManager->getCurrentPermissionArray($resourceNode),
-            'poster' => $this->serializePoster($resourceNode),
             'thumbnail' => $this->serializeThumbnail($resourceNode),
-            'access' => $this->rightsManager->getSimpleRights($resourceNode),
         ];
 
         if ($resourceNode->getWorkspace()/* && !in_array(Options::REFRESH_UUID, $options)*/) {
@@ -104,6 +102,7 @@ class ResourceNodeSerializer
         }
 
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
+            $serializedNode['poster'] = $this->serializePoster($resourceNode);
             $serializedNode['restrictions'] = $this->serializeRestrictions($resourceNode);
 
             if (!in_array(Options::SERIALIZE_LIST, $options)) {

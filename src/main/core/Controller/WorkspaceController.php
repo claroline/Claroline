@@ -29,9 +29,9 @@ use Claroline\CoreBundle\Event\Log\LogWorkspaceEnterEvent;
 use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 use Claroline\CoreBundle\Event\Workspace\OpenWorkspaceEvent;
 use Claroline\CoreBundle\Manager\Tool\ToolManager;
-use Claroline\CoreBundle\Manager\Workspace\EvaluationManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceRestrictionsManager;
+use Claroline\EvaluationBundle\Manager\WorkspaceEvaluationManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -63,7 +63,7 @@ class WorkspaceController
     private $manager;
     /** @var WorkspaceRestrictionsManager */
     private $restrictionsManager;
-    /** @var EvaluationManager */
+    /** @var WorkspaceEvaluationManager */
     private $evaluationManager;
     /** @var StrictDispatcher */
     private $strictDispatcher;
@@ -77,7 +77,7 @@ class WorkspaceController
         TranslatorInterface $translator,
         WorkspaceManager $manager,
         WorkspaceRestrictionsManager $restrictionsManager,
-        EvaluationManager $evaluationManager,
+        WorkspaceEvaluationManager $evaluationManager,
         StrictDispatcher $strictDispatcher
     ) {
         $this->authorization = $authorization;
@@ -128,7 +128,8 @@ class WorkspaceController
             $userEvaluation = null;
             if ($user) {
                 $userEvaluation = $this->serializer->serialize(
-                    $this->evaluationManager->getEvaluation($workspace, $user)
+                    $this->evaluationManager->getUserEvaluation($workspace, $user),
+                    [Options::SERIALIZE_MINIMAL]
                 );
             }
 

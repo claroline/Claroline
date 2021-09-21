@@ -1,15 +1,18 @@
 <?php
 
-namespace Claroline\CoreBundle\API\Serializer\Resource;
+namespace Claroline\EvaluationBundle\Serializer;
 
 use Claroline\AppBundle\API\Options;
+use Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 
 class ResourceUserEvaluationSerializer
 {
+    /** @var ResourceNodeSerializer */
     private $resourceNodeSerializer;
+    /** @var UserSerializer */
     private $userSerializer;
 
     public function __construct(ResourceNodeSerializer $resourceNodeSerializer, UserSerializer $userSerializer)
@@ -18,24 +21,24 @@ class ResourceUserEvaluationSerializer
         $this->userSerializer = $userSerializer;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'resource_user_evaluation';
     }
 
-    /**
-     * Serializes a ResourceUserEvaluation entity for the JSON api.
-     *
-     * @return array - the serialized representation of the resource evaluation
-     */
-    public function serialize(ResourceUserEvaluation $resourceUserEvaluation)
+    public function getClass(): string
+    {
+        return ResourceUserEvaluation::class;
+    }
+
+    public function serialize(ResourceUserEvaluation $resourceUserEvaluation, ?array $options = []): array
     {
         $score = $resourceUserEvaluation->getScore();
         if ($score) {
             $score = round($score, 2);
         }
 
-        return [
+        $serialized = [
             'id' => $resourceUserEvaluation->getId(),
             'date' => DateNormalizer::normalize($resourceUserEvaluation->getDate()),
             'status' => $resourceUserEvaluation->getStatus(),
@@ -45,11 +48,16 @@ class ResourceUserEvaluationSerializer
             'scoreMax' => $resourceUserEvaluation->getScoreMax(),
             'progression' => $resourceUserEvaluation->getProgression(),
             'progressionMax' => $resourceUserEvaluation->getProgressionMax(),
-            'resourceNode' => $this->resourceNodeSerializer->serialize($resourceUserEvaluation->getResourceNode(), [Options::SERIALIZE_MINIMAL]), // TODO : remove me or add an option
-            'user' => $this->userSerializer->serialize($resourceUserEvaluation->getUser(), [Options::SERIALIZE_MINIMAL]),
             'nbAttempts' => $resourceUserEvaluation->getNbAttempts(),
             'nbOpenings' => $resourceUserEvaluation->getNbOpenings(),
             'required' => $resourceUserEvaluation->isRequired(),
         ];
+
+        if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
+            $serialized['resourceNode'] = $this->resourceNodeSerializer->serialize($resourceUserEvaluation->getResourceNode(), [Options::SERIALIZE_MINIMAL]);
+            $serialized['user'] = $this->userSerializer->serialize($resourceUserEvaluation->getUser(), [Options::SERIALIZE_MINIMAL]);
+        }
+
+        return $serialized;
     }
 }

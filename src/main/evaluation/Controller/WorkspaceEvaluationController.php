@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Controller\APINew\Workspace;
+namespace Claroline\EvaluationBundle\Controller;
 
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\FinderProvider;
@@ -21,7 +21,8 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Evaluation;
 use Claroline\CoreBundle\Entity\Workspace\Requirements;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Manager\Workspace\EvaluationManager;
+use Claroline\EvaluationBundle\Manager\WorkspaceEvaluationManager;
+use Claroline\EvaluationBundle\Manager\WorkspaceRequirementsManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -33,7 +34,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 /**
  * @Route("/workspace")
  */
-class EvaluationController extends AbstractSecurityController
+class WorkspaceEvaluationController extends AbstractSecurityController
 {
     /** @var AuthorizationCheckerInterface */
     private $authorization;
@@ -45,8 +46,10 @@ class EvaluationController extends AbstractSecurityController
     private $finder;
     /** @var SerializerProvider */
     private $serializer;
-    /** @var EvaluationManager */
+    /** @var WorkspaceEvaluationManager */
     private $manager;
+    /** @var WorkspaceRequirementsManager */
+    private $requirementsManager;
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
@@ -54,7 +57,8 @@ class EvaluationController extends AbstractSecurityController
         Crud $crud,
         FinderProvider $finder,
         SerializerProvider $serializer,
-        EvaluationManager $manager
+        WorkspaceEvaluationManager $manager,
+        WorkspaceRequirementsManager $requirementsManager
     ) {
         $this->authorization = $authorization;
         $this->om = $om;
@@ -62,6 +66,7 @@ class EvaluationController extends AbstractSecurityController
         $this->finder = $finder;
         $this->serializer = $serializer;
         $this->manager = $manager;
+        $this->requirementsManager = $requirementsManager;
     }
 
     /**
@@ -143,7 +148,7 @@ class EvaluationController extends AbstractSecurityController
         $this->om->startFlushSuite();
         foreach ($users as $user) {
             // this will automatically create missing workspace evaluation
-            $this->manager->getEvaluation($workspace, $user, true);
+            $this->manager->getUserEvaluation($workspace, $user, true);
         }
 
         // updates resource evaluation with workspace requirements
@@ -153,7 +158,7 @@ class EvaluationController extends AbstractSecurityController
         $requirements = $this->om->getRepository(Requirements::class)->findOneBy(['workspace' => $workspace, 'role' => $role]);
         if ($requirements) {
             foreach ($requirements->getResources() as $resource) {
-                $this->manager->addRequirementToResourceEvaluationByRole($resource, $role);
+                $this->requirementsManager->addRequirementToResourceEvaluationByRole($resource, $role);
             }
         }
 

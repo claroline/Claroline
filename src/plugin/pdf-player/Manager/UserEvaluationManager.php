@@ -7,9 +7,9 @@ use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
 use Claroline\CoreBundle\Repository\Resource\ResourceEvaluationRepository;
 use Claroline\EvaluationBundle\Entity\AbstractEvaluation;
+use Claroline\EvaluationBundle\Manager\ResourceEvaluationManager;
 
 class UserEvaluationManager
 {
@@ -22,9 +22,6 @@ class UserEvaluationManager
     /** @var ResourceEvaluationRepository */
     private $resourceEvalRepo;
 
-    /**
-     * UserEvaluationManager constructor.
-     */
     public function __construct(
         ObjectManager $om,
         ResourceEvaluationManager $resourceEvalManager
@@ -42,7 +39,7 @@ class UserEvaluationManager
      */
     public function getResourceUserEvaluation(ResourceNode $node, User $user)
     {
-        return $this->resourceEvalManager->getResourceUserEvaluation($node, $user);
+        return $this->resourceEvalManager->getUserEvaluation($node, $user);
     }
 
     public function update(ResourceNode $node, User $user, $page, $total)
@@ -72,13 +69,12 @@ class UserEvaluationManager
         ];
 
         if ($evaluation) {
-            return $this->resourceEvalManager->updateResourceEvaluation($evaluation, null, $evaluationData, false, false);
+            return $this->resourceEvalManager->updateResourceEvaluation($evaluation, $evaluationData);
         }
 
         return $this->resourceEvalManager->createResourceEvaluation(
             $node,
             $user,
-            null,
             $evaluationData
         );
     }

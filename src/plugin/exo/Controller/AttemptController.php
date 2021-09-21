@@ -2,12 +2,13 @@
 
 namespace UJM\ExoBundle\Controller;
 
+use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
-use Claroline\CoreBundle\API\Serializer\Resource\ResourceUserEvaluationSerializer;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
 use Claroline\CoreBundle\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
+use Claroline\EvaluationBundle\Manager\ResourceEvaluationManager;
+use Claroline\EvaluationBundle\Serializer\ResourceUserEvaluationSerializer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -159,12 +160,12 @@ class AttemptController
 
         $this->attemptManager->end($paper, true, !empty($user));
         $userEvaluation = !empty($user) ?
-            $this->resourceEvalManager->getResourceUserEvaluation($paper->getExercise()->getResourceNode(), $user) :
+            $this->resourceEvalManager->getUserEvaluation($paper->getExercise()->getResourceNode(), $user) :
             null;
 
         return new JsonResponse([
             'paper' => $this->paperManager->serialize($paper),
-            'userEvaluation' => !empty($userEvaluation) ? $this->userEvalSerializer->serialize($userEvaluation) : null,
+            'userEvaluation' => !empty($userEvaluation) ? $this->userEvalSerializer->serialize($userEvaluation, [Options::SERIALIZE_MINIMAL]) : null,
         ]);
     }
 

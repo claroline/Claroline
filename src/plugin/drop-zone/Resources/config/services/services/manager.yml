@@ -11,7 +11,7 @@ services:
             - '@filesystem'
             - '%claroline.param.files_directory%'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@claroline.manager.resource_evaluation_manager'
+            - '@Claroline\EvaluationBundle\Manager\ResourceEvaluationManager'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
             - '@event_dispatcher'
             - '@claroline.manager.role_manager'

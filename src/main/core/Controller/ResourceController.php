@@ -11,20 +11,17 @@
 
 namespace Claroline\CoreBundle\Controller;
 
-use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\MenuAction;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 use Claroline\CoreBundle\Exception\ResourceNotFoundException;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Manager\Resource\ResourceActionManager;
 use Claroline\CoreBundle\Manager\Resource\ResourceRestrictionsManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
-use Claroline\CoreBundle\Repository\Resource\ResourceRightsRepository;
 use Claroline\CoreBundle\Security\Collection\ResourceCollection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -64,15 +61,10 @@ class ResourceController
     private $restrictionsManager;
     /** @var ObjectManager */
     private $om;
-    /** @var FinderProvider */
-    private $finder;
-    /** @var ResourceRightsRepository */
-    private $rightsRepo;
 
     public function __construct(
         TokenStorageInterface $tokenStorage,
         Environment $templating,
-        FinderProvider $finder,
         SerializerProvider $serializer,
         ResourceManager $manager,
         ResourceActionManager $actionManager,
@@ -87,9 +79,7 @@ class ResourceController
         $this->actionManager = $actionManager;
         $this->restrictionsManager = $restrictionsManager;
         $this->om = $om;
-        $this->rightsRepo = $om->getRepository(ResourceRights::class);
         $this->authorization = $authorization;
-        $this->finder = $finder;
     }
 
     /**

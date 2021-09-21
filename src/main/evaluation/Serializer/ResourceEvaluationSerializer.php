@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\API\Serializer\Resource;
+namespace Claroline\EvaluationBundle\Serializer;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
@@ -8,9 +8,14 @@ use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 
 class ResourceEvaluationSerializer
 {
-    public function getName()
+    public function getName(): string
     {
         return 'resource_evaluation';
+    }
+
+    public function getClass(): string
+    {
+        return ResourceEvaluation::class;
     }
 
     public function serialize(ResourceEvaluation $resourceEvaluation, array $options = []): array

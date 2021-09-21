@@ -1,13 +1,14 @@
 <?php
 
-namespace Claroline\CoreBundle\API\Serializer\Workspace;
+namespace Claroline\EvaluationBundle\Serializer;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
+use Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer;
 use Claroline\CoreBundle\Entity\Workspace\Evaluation;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 
-class EvaluationSerializer
+class WorkspaceEvaluationSerializer
 {
     /** @var UserSerializer */
     private $userSerializer;
@@ -23,14 +24,19 @@ class EvaluationSerializer
         $this->workspaceSerializer = $workspaceSerializer;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'workspace_evaluation';
     }
 
-    public function serialize(Evaluation $evaluation): array
+    public function getClass(): string
     {
-        return [
+        return Evaluation::class;
+    }
+
+    public function serialize(Evaluation $evaluation, ?array $options = []): array
+    {
+        $serialized = [
             'id' => $evaluation->getUuid(),
             'date' => DateNormalizer::normalize($evaluation->getDate()),
             'status' => $evaluation->getStatus(),
@@ -40,12 +46,22 @@ class EvaluationSerializer
             'scoreMax' => $evaluation->getScoreMax(),
             'progression' => $evaluation->getProgression(),
             'progressionMax' => $evaluation->getProgressionMax(),
-            'user' => $evaluation->getUser() ?
-                $this->userSerializer->serialize($evaluation->getUser(), [Options::SERIALIZE_MINIMAL]) :
-                ['userName' => $evaluation->getUserName()],
-            'workspace' => $evaluation->getWorkspace() ?
-                $this->workspaceSerializer->serialize($evaluation->getWorkspace(), [Options::SERIALIZE_MINIMAL]) :
-                ['code' => $evaluation->getWorkspaceCode()],
         ];
+
+        if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
+            if ($evaluation->getUser()) {
+                $serialized['user'] = $this->userSerializer->serialize($evaluation->getUser(), [Options::SERIALIZE_MINIMAL]);
+            } else {
+                $serialized['user'] = ['userName' => $evaluation->getUserName()];
+            }
+
+            if ($evaluation->getWorkspace()) {
+                $serialized['workspace'] = $this->workspaceSerializer->serialize($evaluation->getWorkspace(), [Options::SERIALIZE_MINIMAL]);
+            } else {
+                $serialized['workspace'] = ['code' => $evaluation->getWorkspaceCode()];
+            }
+        }
+
+        return $serialized;
     }
 }

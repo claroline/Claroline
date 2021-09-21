@@ -113,8 +113,8 @@ services:
         arguments:
             - '@Claroline\AppBundle\API\FinderProvider'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CoreBundle\Manager\Workspace\EvaluationManager'
-            - '@claroline.manager.resource_evaluation_manager'
+            - '@Claroline\EvaluationBundle\Manager\WorkspaceEvaluationManager'
+            - '@Claroline\EvaluationBundle\Manager\ResourceEvaluationManager'
             - '@translator'
             - '@Claroline\AppBundle\Event\StrictDispatcher'
 
@@ -221,12 +221,6 @@ services:
         alias: Claroline\CoreBundle\Manager\Workspace\TransferManager
         public: true
 
-    Claroline\CoreBundle\Manager\Workspace\EvaluationManager:
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@event_dispatcher'
-            - '@Claroline\AppBundle\Event\StrictDispatcher'
-
     Claroline\CoreBundle\Manager\Workspace\Transfer\OrderedToolTransfer:
         arguments:
             - '@Claroline\CoreBundle\API\Serializer\Tool\ToolSerializer'
@@ -302,16 +296,6 @@ services:
         arguments:
             - '@Claroline\AppBundle\Event\StrictDispatcher'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-
-    Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager:
-        arguments:
-            - '@event_dispatcher'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\AppBundle\Event\StrictDispatcher'
-
-    claroline.manager.resource_evaluation_manager:
-        alias: Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager
-        public: true
 
     Claroline\CoreBundle\Manager\Resource\ResourceActionManager:
         arguments:

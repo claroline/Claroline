@@ -2,10 +2,12 @@ import React, {Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import get from 'lodash/get'
+import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
 import {scrollTo} from '#/main/app/dom/scroll'
 import {LINK_BUTTON} from '#/main/app/buttons'
+import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 import {ContentSummary} from '#/main/app/content/components/summary'
 import {ScoreBox} from '#/main/core/layout/evaluation/components/score-box'
 import {ResourceOverview} from '#/main/core/resource/components/overview'
@@ -40,27 +42,15 @@ const PathOverview = props => {
     }
   }
 
-  let score = {
-    displayed: true,
-    current: get(props.evaluation, 'progression', 0),
-    total: get(props.evaluation, 'progressionMax', get(props.path, 'steps', []).length)
-  }
-
-  if (get(props.path, 'display.showScore')) {
-    score = {
-      displayed: true,
-      current: get(props.evaluation, 'score', 0),
-      total: get(props.evaluation, 'scoreMax', get(props.path, 'score.total', 0))
-    }
-  }
-
   return (
     <ResourceOverview
       contentText={get(props.path, 'meta.description')}
-      progression={{
-        status: props.evaluation ? props.evaluation.status : undefined,
-        score: score
+      evaluation={props.evaluation}
+      display={{
+        score: get(props.path, 'display.showScore'),
+        scoreMax: get(props.path, 'score.total')
       }}
+
       actions={[
         { // TODO : implement continue and restart
           type: LINK_BUTTON,
@@ -76,10 +66,19 @@ const PathOverview = props => {
       <section className="resource-parameters">
         <h3 className="h2">{trans('summary')}</h3>
 
-        <ContentSummary
-          className="component-container"
-          links={props.path.steps.map(getStepSummary)}
-        />
+        {!isEmpty(props.path.steps) &&
+          <ContentSummary
+            className="component-container"
+            links={props.path.steps.map(getStepSummary)}
+          />
+        }
+
+        {isEmpty(props.path.steps) &&
+          <ContentPlaceholder
+            size="lg"
+            title={trans('no_step', {}, 'path')}
+          />
+        }
       </section>
     </ResourceOverview>
   )

@@ -8,21 +8,18 @@ const Workspace = {
     id: T.string,
     autoId: T.number,
     name: T.string,
+    slug: T.string,
     poster: T.shape({
       url: T.string
     }),
     contactEmail: T.string,
     meta: T.shape({
-      slug: T.string,
       description: T.string,
       creator: T.shape(
         User.propTypes
       ),
       model: T.bool,
-      personal: T.bool,
-      usedStorage: T.number,
-      totalUsers: T.number,
-      totalResources: T.number
+      personal: T.bool
     }).isRequired,
     opening: T.shape({
       type: T.oneOf(['resource', 'tool']),
@@ -42,9 +39,6 @@ const Workspace = {
     }),
     restrictions: T.shape({
       hidden: T.bool,
-      maxUsers: T.number,
-      maxResources: T.number,
-      maxStorage: T.number,
       dates: T.arrayOf(T.string)
     }),
     notifications: T.shape({
@@ -59,11 +53,7 @@ const Workspace = {
   defaultProps: {
     meta: {
       model: false,
-      personal: false,
-      usedStorage: 0,
-      totalUsers: 0,
-      totalResources: 0,
-      forceLang: false
+      personal: false
     },
     roles: [],
     opening: {

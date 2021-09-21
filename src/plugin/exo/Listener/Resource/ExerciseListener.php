@@ -2,13 +2,14 @@
 
 namespace UJM\ExoBundle\Listener\Resource;
 
+use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
-use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
 use Claroline\CoreBundle\Security\Collection\ResourceCollection;
+use Claroline\EvaluationBundle\Manager\ResourceEvaluationManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use UJM\ExoBundle\Entity\Exercise;
@@ -96,7 +97,8 @@ class ExerciseListener
             $nbUserPapers = (int) $this->paperManager->countUserFinishedPapers($exercise, $currentUser);
             $nbUserPapersDayCount = (int) $this->paperManager->countUserFinishedDayPapers($exercise, $currentUser);
             $userEvaluation = $this->serializer->serialize(
-                $this->resourceEvalManager->getResourceUserEvaluation($exercise->getResourceNode(), $currentUser)
+                $this->resourceEvalManager->getUserEvaluation($exercise->getResourceNode(), $currentUser),
+                [Options::SERIALIZE_MINIMAL]
             );
         }
 

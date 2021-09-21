@@ -159,8 +159,6 @@ class UserSerializer
 
             $serializedUser = array_merge($serializedUser, [
                 'poster' => $this->serializePoster($user),
-                'meta' => $this->serializeMeta($user),
-                'restrictions' => $this->serializeRestrictions($user),
                 'roles' => array_merge($userRoles, $groupRoles),
                 'groups' => array_values(array_map(function (Group $group) { // todo use group serializer with minimal option
                     return [

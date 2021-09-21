@@ -3,9 +3,10 @@ services:
         tags: [ messenger.message_handler ]
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CoreBundle\Manager\Workspace\EvaluationManager'
+            - '@Claroline\EvaluationBundle\Manager\WorkspaceEvaluationManager'
+            - '@Claroline\EvaluationBundle\Manager\WorkspaceRequirementsManager'
 
     Claroline\EvaluationBundle\Messenger\RemoveWorkspaceRequirementsHandler:
         tags: [ messenger.message_handler ]
         arguments:
-            - '@Claroline\CoreBundle\Manager\Workspace\EvaluationManager'
+            - '@Claroline\EvaluationBundle\Manager\WorkspaceRequirementsManager'

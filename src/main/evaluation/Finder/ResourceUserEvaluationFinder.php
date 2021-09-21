@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\API\Finder\Resource;
+namespace Claroline\EvaluationBundle\Finder;
 
 use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
@@ -30,6 +30,15 @@ class ResourceUserEvaluationFinder extends AbstractFinder
     ) {
         $userJoin = false;
         $nodeJoin = false;
+
+        if (!array_key_exists('user', $searches)) {
+            // don't show evaluation of disabled/deleted users
+            $qb->join('obj.user', 'u');
+            $userJoin = true;
+
+            $qb->andWhere('u.isEnabled = TRUE');
+            $qb->andWhere('u.isRemoved = FALSE');
+        }
 
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
@@ -102,6 +111,7 @@ class ResourceUserEvaluationFinder extends AbstractFinder
                     break;
             }
         }
+
         if (!is_null($sortBy) && isset($sortBy['property']) && isset($sortBy['direction'])) {
             $sortByProperty = $sortBy['property'];
             $sortByDirection = 1 === $sortBy['direction'] ? 'ASC' : 'DESC';
