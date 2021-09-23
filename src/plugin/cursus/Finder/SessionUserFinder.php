@@ -40,6 +40,13 @@ class SessionUserFinder extends AbstractFinder
                     $qb->setParameter($filterName, $filterValue);
                     break;
 
+                case 'available':
+                    if ($filterValue) {
+                        $qb->andWhere('s.startDate > :now');
+                    }
+                    $qb->setParameter('now', new \DateTime());
+                    break;
+
                 case 'ignored_status':
                     $qb->andWhere("obj.status != :{$filterName}");
                     $qb->setParameter($filterName, $filterValue);
