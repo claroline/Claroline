@@ -15,6 +15,7 @@ use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\ClacoFormBundle\Entity\ClacoForm;
 use Claroline\ClacoFormBundle\Entity\Comment;
 use Claroline\ClacoFormBundle\Entity\Entry;
@@ -50,6 +51,8 @@ class ClacoFormController
 
     /** @var TokenStorageInterface */
     private $tokenStorage;
+    /** @var ObjectManager */
+    private $om;
     /** @var FinderProvider */
     private $finder;
     /** @var ClacoFormManager */
@@ -69,6 +72,7 @@ class ClacoFormController
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
+        ObjectManager $om,
         FinderProvider $finder,
         ClacoFormManager $clacoFormManager,
         PlatformConfigurationHandler $configHandler,
@@ -80,6 +84,7 @@ class ClacoFormController
         TokenStorageInterface $tokenStorage
     ) {
         $this->authorization = $authorization;
+        $this->om = $om;
         $this->finder = $finder;
         $this->clacoFormManager = $clacoFormManager;
         $this->configHandler = $configHandler;
@@ -488,16 +493,16 @@ class ClacoFormController
      *
      * @Route("/entry/{entry}/field/{field}/file/download", name="claro_claco_form_field_value_file_download")
      * @EXT\ParamConverter("entry", class="ClarolineClacoFormBundle:Entry", options={"mapping": {"entry": "uuid"}})
-     * @EXT\ParamConverter("field", class="ClarolineClacoFormBundle:Field", options={"mapping": {"field": "uuid"}})
      *
      * @return StreamedResponse|JsonResponse
      */
-    public function downloadAction(Entry $entry, Field $field)
+    public function downloadAction(Entry $entry, string $field)
     {
-        if (FieldFacet::FILE_TYPE !== $field->getType()) {
+        $formField = $this->om->getRepository(Field::class)->findByFieldFacetUuid($field);
+        if (empty($formField) || FieldFacet::FILE_TYPE !== $formField->getType()) {
             return new JsonResponse(null, 404);
         }
-        $fieldValue = $this->clacoFormManager->getFieldValueByEntryAndField($entry, $field);
+        $fieldValue = $this->clacoFormManager->getFieldValueByEntryAndField($entry, $formField);
         $data = $fieldValue->getFieldFacetValue()->getValue();
 
         if (empty($data)) {
