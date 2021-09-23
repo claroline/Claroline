@@ -4,6 +4,7 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import {constants as constList} from '#/main/app/content/list/constants'
 import {constants} from '#/plugin/cursus/constants'
+import {now} from '#/main/app/intl/date'
 import {trans} from '#/main/app/intl/translation'
 import {MODAL_SUBSCRIPTION_STATUS} from '#/plugin/cursus/subscription/modals/status'
 import {MODAL_BUTTON} from '#/main/app/buttons'
@@ -37,7 +38,7 @@ const SubscriptionAll = (props) =>
         icon: 'fa fa-fw fa-pencil',
         label: trans('edit', {}, 'actions'),
         modal: [MODAL_SUBSCRIPTION_STATUS, {
-          status: (rows[0].session.quotas.used && props.quota.useQuotas ? [0, 1, 2, 3] : [0, 1, 2]).filter(status => status != rows[0].status),
+          status: (rows[0].session.quotas.used && props.quota.useQuotas ? [0, 1, 2, 3] : rows[0].session.restrictions.dates[0] >= now() ? [0, 1, 2] : [0, 1]).filter(status => status != rows[0].status),
           changeStatus: (status, remark) => props.setSubscriptionStatus(props.quota.id, rows[0].id, status, remark)
         }]
       }
