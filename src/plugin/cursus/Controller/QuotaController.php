@@ -133,7 +133,6 @@ class QuotaController extends AbstractCrudController
         $query = $request->query->all();
         $query['hiddenFilters'] = [
             'organization' => $organization,
-            'used_by_quotas' => true,
         ];
 
         if (!$quota->useQuotas()) $query['hiddenFilters']['ignored_status'] = SessionUser::STATUS_MANAGED;
@@ -173,8 +172,6 @@ class QuotaController extends AbstractCrudController
         $query = $request->query->all();
         $query['hiddenFilters'] = [
             'organization' => $organization,
-            'used_by_quotas' => true,
-            'available' => true,
         ];
         
         if (!$quota->useQuotas()) $query['hiddenFilters']['ignored_status'] = SessionUser::STATUS_MANAGED;

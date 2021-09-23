@@ -37,7 +37,7 @@ const SubscriptionAll = (props) =>
         icon: 'fa fa-fw fa-pencil',
         label: trans('edit', {}, 'actions'),
         modal: [MODAL_SUBSCRIPTION_STATUS, {
-          status: (props.quota.useQuotas ? [0, 1, 2, 3] : [0, 1, 2]).filter(status => status != rows[0].status),
+          status: (rows[0].session.quotas.used && props.quota.useQuotas ? [0, 1, 2, 3] : [0, 1, 2]).filter(status => status != rows[0].status),
           changeStatus: (status, remark) => props.setSubscriptionStatus(props.quota.id, rows[0].id, status, remark)
         }]
       }
