@@ -43,7 +43,7 @@ class FieldFacetRepository extends EntityRepository
         $dql = '
             SELECT ff
             FROM Claroline\CoreBundle\Entity\Facet\FieldFacet ff
-            WHERE ff.resourceNode IS NULL
+            WHERE ff.panelFacet IS NOT NULL
         ';
 
         $query = $this->_em->createQuery($dql);
