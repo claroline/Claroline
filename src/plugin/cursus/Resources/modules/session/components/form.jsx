@@ -255,7 +255,9 @@ const SessionForm = (props) =>
             name: 'quotas.days',
             type: 'number',
             label: trans('days'),
+            required: true,
             options: {
+              value: 0,
               min: 0,
               unit: trans('days')
             }
