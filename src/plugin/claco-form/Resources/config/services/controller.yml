@@ -27,6 +27,7 @@ services:
     Claroline\ClacoFormBundle\Controller\ClacoFormController:
         arguments:
             - '@security.authorization_checker'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\FinderProvider'
             - '@Claroline\ClacoFormBundle\Manager\ClacoFormManager'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
