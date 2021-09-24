@@ -105,5 +105,27 @@
     "registration_auto": "All session participants are automatically registered for this event.",
     "session_about": "Abbout session",
 
-    "opening_session": "Displayed session"
+    "opening_session": "Displayed session",
+
+    "new_quota": "New quota",
+    "add_quota": "Add quota",
+    "quota": "Quota",
+    "quotas": "Quotas",
+    "use_quotas": "Use quotas",
+    "threshold": "Number of quotas",
+    "used_by_quotas": "Used by quota",
+    "remark": "Remark",
+    "confirm": "Confirm",
+    "validations": "Validations",
+    "subscriptions": "Subscriptions",
+    "subscription_total": "Total",
+    "subscription_pending": "pending",
+    "subscription_refused": "refused",
+    "subscription_validated": "validated",
+    "subscription_managed": "validated with quota",
+    "subscription_quota": "Number of quotas",
+    "subscription_pending_help": "The status will be pending.",
+    "subscription_refused_help": "The status will be refused.",
+    "subscription_validated_help": "The status will be validated.",
+    "subscription_managed_help": "The status will be validated with quota"
 }

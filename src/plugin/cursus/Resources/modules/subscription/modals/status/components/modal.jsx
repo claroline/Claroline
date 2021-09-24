@@ -28,7 +28,7 @@ const StatusModal = props => {
           >
             <h1 className="h2" style={{margin: 0}}>
               <span className={`label label-${constants.SUBSCRIPTION_STATUS_COLORS[status]}`} style={{display: 'inline-block'}}>{constants.SUBSCRIPTION_STATUSES[status]}</span>
-              <small style={{color: status==selectedStatus ? '#fff' : '#000', display: 'block', marginTop: '5px'}}>{trans('status_'+constants.SUBSCRIPTION_STATUSES[status]+'_help', {}, 'cursus')}</small>
+              <small style={{color: status==selectedStatus ? '#fff' : '#000', display: 'block', marginTop: '5px'}}>{trans(constants.SUBSCRIPTION_STRINGS[status]+'_help', {}, 'cursus')}</small>
             </h1>
           </CallbackButton>
         )}

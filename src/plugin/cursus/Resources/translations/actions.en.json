@@ -6,5 +6,7 @@
   "confirm_registration": "Confirm registration",
   "validate_registration": "Validate registration",
   "send_invitation": "Send an invitation",
-  "open-training": "Open training"
+  "open-training": "Open training",
+  "manage_quotas": "Manage quotas",
+  "validate_subscriptions": "Validate subscription"
 }
