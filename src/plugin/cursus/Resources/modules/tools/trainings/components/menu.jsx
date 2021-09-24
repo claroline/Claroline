@@ -50,13 +50,13 @@ const TrainingsMenu = (props) =>
           type: LINK_BUTTON,
           label: trans('quotas', {}, 'cursus'),
           target: props.path + '/quota',
-          displayed: param('quotas.enabled')
+          displayed: param('quotas.enabled') && props.canManageQuotas
         }, {
           name: 'subscriptions',
           type: LINK_BUTTON,
           label: trans('validations', {}, 'cursus'),
           target: props.path + '/subscription',
-          displayed: param('quotas.enabled')
+          displayed: param('quotas.enabled') && props.canValidateSubscriptions
         }
       ]}
       onClick={props.autoClose}
@@ -67,6 +67,8 @@ TrainingsMenu.propTypes = {
   path: T.string,
   canEdit: T.bool,
   canRegister: T.bool.isRequired,
+  canManageQuotas: T.bool.isRequired,
+  canValidateSubscriptions: T.bool.isRequired,
   authenticated: T.bool.isRequired,
 
   // from menu

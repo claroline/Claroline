@@ -88,6 +88,8 @@ class QuotaController extends AbstractCrudController
      */
     public function getStatisticsAction(Quota $quota): JsonResponse
     {
+        $this->checkPermission('VALIDATE_SUBSCRIPTIONS', null, [], true);
+
         $sessionUsers = $this->om->getRepository(SessionUser::class)->findByOrganization($quota->getOrganization());
         $statistics = [
             'total' => count($sessionUsers),

@@ -28,17 +28,21 @@ const TrainingsTool = (props) =>
         component: EventMain
       }, {
         path: '/quota',
-        component: QuotaMain
+        component: QuotaMain,
+        disabled: !props.canManageQuotas
       }, {
         path: '/subscription',
-        component: SubscriptionMain
+        component: SubscriptionMain,
+        disabled: !props.canValidateSubscriptions
       }
     ]}
   />
 
 TrainingsTool.propTypes = {
   path: T.string.isRequired,
-  authenticated: T.bool.isRequired
+  authenticated: T.bool.isRequired,
+  canManageQuotas: T.bool.isRequired,
+  canValidateSubscriptions: T.bool.isRequired
 }
 
 export {

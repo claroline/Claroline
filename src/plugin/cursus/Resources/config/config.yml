@@ -13,6 +13,8 @@ plugin:
           class: graduation-cap
           tool_rights:
               - name: register
+              - name: manage_quotas
+              - name: validate_subscriptions
 
     data_sources:
         - name: public_course_sessions

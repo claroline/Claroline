@@ -11,7 +11,9 @@ const TrainingsMenu = connect(
   (state) => ({
     authenticated: securitySelectors.isAuthenticated(state),
     canEdit: hasPermission('edit', toolSelectors.toolData(state)),
-    canRegister: hasPermission('register', toolSelectors.toolData(state))
+    canRegister: hasPermission('register', toolSelectors.toolData(state)),
+    canManageQuotas: hasPermission('manage_quotas', toolSelectors.toolData(state)),
+    canValidateSubscriptions: hasPermission('validate_subscriptions', toolSelectors.toolData(state))
   })
 )(TrainingsMenuComponent)
 
