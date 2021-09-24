@@ -46,12 +46,6 @@ class WorkspaceRepositoryTest extends RepositoryTestCase
         self::createDirectory('dir_1', self::get('t_dir'), self::get('john'), self::get('ws_2'));
     }
 
-    public function testFindByUser()
-    {
-        $workspaces = self::$repo->findByUser(self::get('john'));
-        $this->assertEquals(2, count($workspaces));
-    }
-
     public function testCount()
     {
         $this->assertEquals(7, self::$repo->count([]));
@@ -60,7 +54,7 @@ class WorkspaceRepositoryTest extends RepositoryTestCase
     public function testFindByRoles()
     {
         $workspaces = self::$repo->findByRoles(['ROLE_2', 'ROLE_ANONYMOUS']);
-        $this->assertEquals(1, count($workspaces));
+        $this->assertEquals(2, count($workspaces)); // ws_1 and ws_2
     }
 
     public function testFindWorkspacesWithMostResources()

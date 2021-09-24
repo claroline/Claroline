@@ -10,9 +10,9 @@
                 {% if values[0] is null or values[0] is sameas(0)%}
                     <dd>{{ "normal"|trans({}, 'log') }}</dd>
                 {% elseif values[0] is sameas(1) %}
-                    <dd>{{ "moderate"|trans({}, 'log') }}</dd>
+                    <dd>{{ "moderate"|trans({}, 'actions') }}</dd>
                 {% elseif values[0] is sameas(2) %}
-                    <dd>{{ "read_only"|trans({}, 'log') }}</dd>
+                    <dd>{{ "read_only"|trans({}, 'actions') }}</dd>
                 {% else %}
                     <dd>{{ values[0]|raw }}</dd>
                 {% endif %}

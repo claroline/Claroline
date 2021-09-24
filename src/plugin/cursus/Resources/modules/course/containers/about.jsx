@@ -9,7 +9,7 @@ const CourseAbout = withRouter(
   connect(
     null,
     (dispatch) => ({
-      register(course, sessionId) {
+      register(course, sessionId = null) {
         return dispatch(actions.register(course, sessionId))
       }
     })

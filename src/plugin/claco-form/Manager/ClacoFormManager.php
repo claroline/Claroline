@@ -22,22 +22,17 @@ use Claroline\ClacoFormBundle\Entity\Field;
 use Claroline\ClacoFormBundle\Entity\FieldChoiceCategory;
 use Claroline\ClacoFormBundle\Entity\FieldValue;
 use Claroline\ClacoFormBundle\Entity\Keyword;
-use Claroline\ClacoFormBundle\Event\Log\LogClacoFormConfigureEvent;
 use Claroline\ClacoFormBundle\Event\Log\LogCommentCreateEvent;
 use Claroline\ClacoFormBundle\Event\Log\LogCommentDeleteEvent;
 use Claroline\ClacoFormBundle\Event\Log\LogCommentEditEvent;
 use Claroline\ClacoFormBundle\Event\Log\LogCommentStatusChangeEvent;
-use Claroline\ClacoFormBundle\Event\Log\LogEntryDeleteEvent;
 use Claroline\ClacoFormBundle\Event\Log\LogEntryLockSwitchEvent;
 use Claroline\ClacoFormBundle\Event\Log\LogEntryStatusChangeEvent;
 use Claroline\ClacoFormBundle\Event\Log\LogEntryUserChangeEvent;
-use Claroline\ClacoFormBundle\Event\Log\LogKeywordCreateEvent;
 use Claroline\ClacoFormBundle\Repository\CategoryRepository;
-use Claroline\ClacoFormBundle\Repository\ClacoFormRepository;
 use Claroline\ClacoFormBundle\Repository\CommentRepository;
 use Claroline\ClacoFormBundle\Repository\EntryRepository;
 use Claroline\ClacoFormBundle\Repository\EntryUserRepository;
-use Claroline\ClacoFormBundle\Repository\FieldRepository;
 use Claroline\ClacoFormBundle\Repository\FieldValueRepository;
 use Claroline\ClacoFormBundle\Repository\KeywordRepository;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
@@ -48,13 +43,11 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Messenger\Message\SendMessage;
 use Claroline\CoreBundle\Repository\User\UserRepository;
 use Claroline\CoreBundle\Security\Collection\ResourceCollection;
-use Claroline\MessageBundle\Manager\MessageManager;
 use Doctrine\Common\Collections\ArrayCollection;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LogLevel;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -62,7 +55,7 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ClacoFormManager implements LoggerAwareInterface
 {
@@ -72,12 +65,8 @@ class ClacoFormManager implements LoggerAwareInterface
     private $authorization;
     /** @var EventDispatcherInterface */
     private $eventDispatcher;
-    /** @var Filesystem */
-    private $fileSystem;
     /** @var string */
     private $filesDir;
-    /** @var MessageManager */
-    private $messageManager;
     /** @var ObjectManager */
     private $om;
     /** @var RouterInterface */
@@ -93,17 +82,12 @@ class ClacoFormManager implements LoggerAwareInterface
     private $userRepo;
     /** @var CategoryRepository */
     private $categoryRepo;
-    /** @var ClacoFormRepository */
-    private $clacoFormRepo;
     /** @var CommentRepository */
     private $commentRepo;
     /** @var EntryRepository */
     private $entryRepo;
     /** @var EntryUserRepository */
     private $entryUserRepo;
-    private $fieldChoiceCategoryRepo;
-    /** @var FieldRepository */
-    private $fieldRepo;
     /** @var FieldValueRepository */
     private $fieldValueRepo;
     /** @var KeywordRepository */
@@ -112,9 +96,7 @@ class ClacoFormManager implements LoggerAwareInterface
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         EventDispatcherInterface $eventDispatcher,
-        Filesystem $fileSystem,
         string $filesDir,
-        MessageManager $messageManager,
         ObjectManager $om,
         RouterInterface $router,
         TokenStorageInterface $tokenStorage,
@@ -123,9 +105,7 @@ class ClacoFormManager implements LoggerAwareInterface
     ) {
         $this->authorization = $authorization;
         $this->eventDispatcher = $eventDispatcher;
-        $this->fileSystem = $fileSystem;
         $this->filesDir = $filesDir;
-        $this->messageManager = $messageManager;
         $this->om = $om;
         $this->router = $router;
         $this->tokenStorage = $tokenStorage;
@@ -134,153 +114,17 @@ class ClacoFormManager implements LoggerAwareInterface
 
         $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
         $this->categoryRepo = $om->getRepository('ClarolineClacoFormBundle:Category');
-        $this->clacoFormRepo = $om->getRepository('ClarolineClacoFormBundle:ClacoForm');
         $this->commentRepo = $om->getRepository('ClarolineClacoFormBundle:Comment');
         $this->entryRepo = $om->getRepository('ClarolineClacoFormBundle:Entry');
         $this->entryUserRepo = $om->getRepository('ClarolineClacoFormBundle:EntryUser');
-        $this->fieldChoiceCategoryRepo = $om->getRepository('ClarolineClacoFormBundle:FieldChoiceCategory');
-        $this->fieldRepo = $om->getRepository('ClarolineClacoFormBundle:Field');
         $this->fieldValueRepo = $om->getRepository('ClarolineClacoFormBundle:FieldValue');
         $this->keywordRepo = $om->getRepository('ClarolineClacoFormBundle:Keyword');
-    }
-
-    public function initializeClacoForm(ClacoForm $clacoForm)
-    {
-        $clacoForm->setMaxEntries(0);
-        $clacoForm->setCreationEnabled(true);
-        $clacoForm->setEditionEnabled(true);
-        $clacoForm->setModerated(false);
-
-        $clacoForm->setDefaultHome('menu');
-        $clacoForm->setDisplayNbEntries('none');
-        $clacoForm->setMenuPosition('down');
-
-        $clacoForm->setRandomEnabled(false);
-        $clacoForm->setRandomCategories([]);
-        $clacoForm->setRandomStartDate(null);
-        $clacoForm->setRandomEndDate(null);
-
-        $clacoForm->setSearchEnabled(true);
-        $clacoForm->setSearchColumnEnabled(true);
-        $clacoForm->setSearchColumns([
-            'title',
-            'date',
-            'user',
-            'categories',
-            'keywords',
-        ]);
-
-        $clacoForm->setDisplayMetadata('none');
-
-        $clacoForm->setLockedFieldsFor('user');
-
-        $clacoForm->setDisplayCategories(false);
-        $clacoForm->setOpenCategories(false);
-
-        $clacoForm->setCommentsEnabled(false);
-        $clacoForm->setAnonymousCommentsEnabled(false);
-        $clacoForm->setModerateComments('none');
-        $clacoForm->setDisplayComments(false);
-        $clacoForm->setOpenComments(false);
-        $clacoForm->setDisplayCommentAuthor(true);
-        $clacoForm->setDisplayCommentDate(true);
-        $clacoForm->setCommentsRoles(['ROLE_USER']);
-        $clacoForm->setCommentsDisplayRoles(['ROLE_USER']);
-
-        $clacoForm->setVotesEnabled(false);
-        $clacoForm->setDisplayVotes(false);
-        $clacoForm->setOpenVotes(false);
-        $clacoForm->setVotesStartDate(null);
-        $clacoForm->setVotesEndDate(null);
-
-        $clacoForm->setKeywordsEnabled(false);
-        $clacoForm->setNewKeywordsEnabled(false);
-        $clacoForm->setDisplayKeywords(false);
-        $clacoForm->setOpenKeywords(false);
-
-        $clacoForm->setUseTemplate(false);
-        $clacoForm->setDefaultDisplayMode('table');
-        $clacoForm->setDisplayTitle('title');
-        $clacoForm->setDisplaySubtitle('title');
-        $clacoForm->setDisplayContent('title');
-
-        $clacoForm->setTitleFieldLabel(null);
-
-        $clacoForm->setSearchRestricted(false);
-        $clacoForm->setSearchRestrictedColumns(['title']);
-
-        return $clacoForm;
-    }
-
-    public function persistClacoForm(ClacoForm $clacoForm)
-    {
-        $this->om->persist($clacoForm);
-        $this->om->flush();
-    }
-
-    public function saveClacoFormConfig(ClacoForm $clacoForm, array $configData)
-    {
-        $clacoForm->setDetails($configData);
-        $randomStartDate = isset($configData['random_start_date']) ? new \DateTime($configData['random_start_date']) : null;
-        $randomEndDate = isset($configData['random_end_date']) ? new \DateTime($configData['random_end_date']) : null;
-        $votesStartDate = isset($configData['votes_start_date']) ? new \DateTime($configData['votes_start_date']) : null;
-        $votesEndDate = isset($configData['votes_end_date']) ? new \DateTime($configData['votes_end_date']) : null;
-        $clacoForm->setRandomStartDate($randomStartDate);
-        $clacoForm->setRandomEndDate($randomEndDate);
-        $clacoForm->setVotesStartDate($votesStartDate);
-        $clacoForm->setVotesEndDate($votesEndDate);
-        $this->persistClacoForm($clacoForm);
-        $details = $clacoForm->getDetails();
-        $event = new LogClacoFormConfigureEvent($clacoForm, $details);
-        $this->eventDispatcher->dispatch($event, 'log');
-
-        return $details;
-    }
-
-    public function persistKeyword(Keyword $keyword)
-    {
-        $this->om->persist($keyword);
-        $this->om->flush();
-    }
-
-    public function createKeyword(ClacoForm $clacoForm, $name)
-    {
-        $keyword = $this->getKeywordByName($clacoForm, $name);
-
-        if (is_null($keyword)) {
-            $keyword = new Keyword();
-            $keyword->setClacoForm($clacoForm);
-            $keyword->setName($name);
-            $this->persistKeyword($keyword);
-            $event = new LogKeywordCreateEvent($keyword);
-            $this->eventDispatcher->dispatch($event, 'log');
-        }
-
-        return $keyword;
     }
 
     public function persistEntry(Entry $entry)
     {
         $this->om->persist($entry);
         $this->om->flush();
-    }
-
-    public function canCreateEntry(ClacoForm $clacoForm, User $user = null)
-    {
-        if ($this->hasRight($clacoForm, 'EDIT')) {
-            $canCreate = true;
-        } else {
-            $maxEntries = $clacoForm->getMaxEntries();
-
-            if (is_null($user)) {
-                $canCreate = $clacoForm->isCreationEnabled() && (0 === $maxEntries);
-            } else {
-                $userEntries = $this->getEntriesByUser($clacoForm, $user);
-                $canCreate = $clacoForm->isCreationEnabled() && ((0 === $maxEntries) || ($maxEntries > count($userEntries)));
-            }
-        }
-
-        return $canCreate;
     }
 
     public function getRandomEntryId(ClacoForm $clacoForm)
@@ -337,82 +181,6 @@ class ClacoFormManager implements LoggerAwareInterface
         }
 
         return sort($values) ? $values : [];
-    }
-
-    public function deleteEntry(Entry $entry)
-    {
-        $details = [];
-        $details['id'] = $entry->getId();
-        $details['title'] = $entry->getTitle();
-        $details['status'] = $entry->getStatus();
-        $details['creationDate'] = $entry->getCreationDate();
-        $details['editionDate'] = $entry->getEditionDate();
-        $details['publicationDate'] = $entry->getPublicationDate();
-        $user = $entry->getUser();
-
-        if (!is_null($user)) {
-            $details['userId'] = $user->getId();
-            $details['username'] = $user->getUsername();
-            $details['firstName'] = $user->getFirstName();
-            $details['lastName'] = $user->getLastName();
-        }
-        $fieldValues = $entry->getFieldValues();
-        $details['values'] = [];
-
-        foreach ($fieldValues as $fieldValue) {
-            $fieldFacetValue = $fieldValue->getFieldFacetValue();
-            $fieldFacet = $fieldFacetValue->getFieldFacet();
-            $details['values'][] = [
-                'id' => $fieldFacetValue->getId(),
-                'value' => $fieldFacetValue->getValue(),
-                'name' => $fieldFacet->getName(),
-                'type' => $fieldFacet->getType(),
-                'typeName' => $fieldFacet->getInputType(),
-            ];
-        }
-        $categories = $entry->getCategories();
-        $details['categories'] = [];
-
-        foreach ($categories as $category) {
-            $details['categories'][] = ['id' => $category->getId(), 'name' => $category->getName()];
-        }
-        $keywords = $entry->getKeywords();
-        $details['keywords'] = [];
-
-        foreach ($keywords as $keyword) {
-            $details['keywords'][] = ['id' => $keyword->getId(), 'name' => $keyword->getName()];
-        }
-        $clacoForm = $entry->getClacoForm();
-        $resourceNode = $clacoForm->getResourceNode();
-        $details['resourceId'] = $clacoForm->getId();
-        $details['resourceNodeId'] = $resourceNode->getId();
-        $details['resourceName'] = $resourceNode->getName();
-
-        foreach ($fieldValues as $fieldValue) {
-            $this->om->remove($fieldValue->getFieldFacetValue());
-            $this->om->remove($fieldValue);
-        }
-        $this->notifyCategoriesManagers($entry, $categories);
-        $this->notifyUsers($entry, 'deletion');
-        $entryUsers = $entry->getEntryUsers();
-
-        foreach ($entryUsers as $entryUser) {
-            $this->om->remove($entryUser);
-        }
-        $this->om->remove($entry);
-        $this->om->flush();
-        $event = new LogEntryDeleteEvent($details);
-        $this->eventDispatcher->dispatch($event, 'log');
-    }
-
-    public function deleteEntries(array $entries)
-    {
-        $this->om->startFlushSuite();
-
-        foreach ($entries as $entry) {
-            $this->deleteEntry($entry);
-        }
-        $this->om->endFlushSuite();
     }
 
     public function changeEntryStatus(Entry $entry)
@@ -717,33 +485,6 @@ class ClacoFormManager implements LoggerAwareInterface
         $this->eventDispatcher->dispatch($event, 'log');
     }
 
-    public function getNRandomEntries(ClacoForm $clacoForm, $nbEntries, array $categoriesIds)
-    {
-        $randomEntries = $this->getRandomEntriesByCategories($clacoForm, $categoriesIds);
-        $count = count($randomEntries);
-
-        if ($count > $nbEntries) {
-            $entries = [];
-            $indexes = [];
-
-            for ($i = 0; $i < $nbEntries; ++$i) {
-                $rand = rand(0, $count - 1);
-
-                while (in_array($rand, $indexes)) {
-                    $rand = ++$rand % $count;
-                }
-                $indexes[] = $rand;
-            }
-            foreach ($indexes as $index) {
-                $entries[] = $randomEntries[$index];
-            }
-        } else {
-            $entries = $randomEntries;
-        }
-
-        return $entries;
-    }
-
     public function createEntryUser(
         Entry $entry,
         User $user,
@@ -885,71 +626,6 @@ class ClacoFormManager implements LoggerAwareInterface
         return $hasFiles;
     }
 
-    public function removeQuote($str)
-    {
-        return str_replace('\'', ' ', $str);
-    }
-
-    public function removeAccent($str)
-    {
-        $convertedStr = $str;
-        $convertedStr = str_replace('Ç', 'C', $convertedStr);
-        $convertedStr = str_replace('ç', 'c', $convertedStr);
-        $convertedStr = str_replace('è', 'e', $convertedStr);
-        $convertedStr = str_replace('é', 'e', $convertedStr);
-        $convertedStr = str_replace('ê', 'e', $convertedStr);
-        $convertedStr = str_replace('ë', 'e', $convertedStr);
-        $convertedStr = str_replace('È', 'E', $convertedStr);
-        $convertedStr = str_replace('É', 'E', $convertedStr);
-        $convertedStr = str_replace('Ê', 'E', $convertedStr);
-        $convertedStr = str_replace('Ë', 'E', $convertedStr);
-        $convertedStr = str_replace('à', 'a', $convertedStr);
-        $convertedStr = str_replace('á', 'a', $convertedStr);
-        $convertedStr = str_replace('â', 'a', $convertedStr);
-        $convertedStr = str_replace('ã', 'a', $convertedStr);
-        $convertedStr = str_replace('ä', 'a', $convertedStr);
-        $convertedStr = str_replace('ä', 'a', $convertedStr);
-        $convertedStr = str_replace('@', 'A', $convertedStr);
-        $convertedStr = str_replace('À', 'A', $convertedStr);
-        $convertedStr = str_replace('Á', 'A', $convertedStr);
-        $convertedStr = str_replace('Â', 'A', $convertedStr);
-        $convertedStr = str_replace('Ã', 'A', $convertedStr);
-        $convertedStr = str_replace('Ä', 'A', $convertedStr);
-        $convertedStr = str_replace('Å', 'A', $convertedStr);
-        $convertedStr = str_replace('ì', 'i', $convertedStr);
-        $convertedStr = str_replace('í', 'i', $convertedStr);
-        $convertedStr = str_replace('î', 'i', $convertedStr);
-        $convertedStr = str_replace('ï', 'i', $convertedStr);
-        $convertedStr = str_replace('Ì', 'I', $convertedStr);
-        $convertedStr = str_replace('Í', 'I', $convertedStr);
-        $convertedStr = str_replace('Î', 'I', $convertedStr);
-        $convertedStr = str_replace('Ï', 'I', $convertedStr);
-        $convertedStr = str_replace('ð', 'o', $convertedStr);
-        $convertedStr = str_replace('ò', 'o', $convertedStr);
-        $convertedStr = str_replace('ó', 'o', $convertedStr);
-        $convertedStr = str_replace('ô', 'o', $convertedStr);
-        $convertedStr = str_replace('õ', 'o', $convertedStr);
-        $convertedStr = str_replace('ö', 'o', $convertedStr);
-        $convertedStr = str_replace('Ò', 'O', $convertedStr);
-        $convertedStr = str_replace('Ó', 'O', $convertedStr);
-        $convertedStr = str_replace('Ô', 'O', $convertedStr);
-        $convertedStr = str_replace('Õ', 'O', $convertedStr);
-        $convertedStr = str_replace('Ö', 'O', $convertedStr);
-        $convertedStr = str_replace('ù', 'u', $convertedStr);
-        $convertedStr = str_replace('ú', 'u', $convertedStr);
-        $convertedStr = str_replace('û', 'u', $convertedStr);
-        $convertedStr = str_replace('ü', 'u', $convertedStr);
-        $convertedStr = str_replace('Ù', 'U', $convertedStr);
-        $convertedStr = str_replace('Ú', 'U', $convertedStr);
-        $convertedStr = str_replace('Û', 'U', $convertedStr);
-        $convertedStr = str_replace('Ü', 'U', $convertedStr);
-        $convertedStr = str_replace('ý', 'y', $convertedStr);
-        $convertedStr = str_replace('ÿ', 'y', $convertedStr);
-        $convertedStr = str_replace('Ý', 'Y', $convertedStr);
-
-        return $convertedStr;
-    }
-
     public function switchEntryUserShared(Entry $entry, User $user, $shared)
     {
         $this->om->startFlushSuite();
@@ -977,7 +653,7 @@ class ClacoFormManager implements LoggerAwareInterface
     public function getUserEntries(ClacoForm $clacoForm, User $user)
     {
         $entries = [];
-        $userEntries = $this->getEntriesByUser($clacoForm, $user);
+        $userEntries = $this->entryRepo->findBy(['clacoForm' => $clacoForm, 'user' => $user]);
         $sharedEntryUser = $this->entryUserRepo->findSharedEntryUserByClacoFormAndUser($clacoForm, $user);
 
         foreach ($userEntries as $entry) {
@@ -991,24 +667,7 @@ class ClacoFormManager implements LoggerAwareInterface
         return array_values($entries);
     }
 
-    public function generateSharedEntriesData(ClacoForm $clacoForm)
-    {
-        $data = [];
-        $sharedEntriesUsers = $this->entryUserRepo->findSharedEntriesUsersByClacoForm($clacoForm);
-
-        foreach ($sharedEntriesUsers as $entryUser) {
-            $entryId = $entryUser->getEntry()->getId();
-            $userId = $entryUser->getUser()->getId();
-
-            if (!isset($data[$entryId])) {
-                $data[$entryId] = [];
-            }
-            $data[$entryId][$userId] = true;
-        }
-
-        return $data;
-    }
-
+    // TODO : use serializers
     public function copyClacoForm(ClacoForm $clacoForm, ClacoForm $newClacoForm)
     {
         $categoryLinks = [];
@@ -1086,31 +745,24 @@ class ClacoFormManager implements LoggerAwareInterface
             'fieldFacets' => [],
             'fieldFacetChoices' => [],
         ];
+
+        $fieldFacet = $field->getFieldFacet();
+
         $newField = new Field();
         $newField->setClacoForm($newClacoForm);
-        $newField->setName($field->getName());
+        $newField->setLabel($field->getLabel());
         $newField->setType($field->getType());
+        $newField->setPosition($field->getPosition());
         $newField->setRequired($field->isRequired());
-        $newField->setIsMetadata($field->getIsMetadata());
+        $newField->setMetadata($field->isMetadata());
         $newField->setLocked($field->isLocked());
         $newField->setLockedEditionOnly($field->getLockedEditionOnly());
         $newField->setHidden($field->isHidden());
-        $newField->setDetails($field->getDetails());
-        $newField->setFileTypes($field->getFileTypes());
+        $newField->setOptions($field->getOptions());
         $newField->setHelp($field->getHelp());
-        $newField->setNbFilesMax($field->getNbFilesMax());
-        $newField->setOrder($field->getOrder());
 
-        $fieldFacet = $field->getFieldFacet();
-        $newFieldFacet = new FieldFacet();
-        $newFieldFacet->setLabel($fieldFacet->getLabel());
-        $newFieldFacet->setType($fieldFacet->getType());
-        $newFieldFacet->setPosition($fieldFacet->getPosition());
-        $newFieldFacet->setRequired($fieldFacet->isRequired());
-        $newFieldFacet->setResourceNode($newNode);
-        $this->om->persist($newFieldFacet);
-        $links['fieldFacets'][$fieldFacet->getId()] = $newFieldFacet;
-        $newField->setFieldFacet($newFieldFacet);
+        $links['fieldFacets'][$fieldFacet->getId()] = $newField->getFieldFacet();
+
         $this->om->persist($newField);
         $links['fields'][$field->getUuid()] = $newField;
 
@@ -1118,7 +770,7 @@ class ClacoFormManager implements LoggerAwareInterface
 
         foreach ($fieldFacetChoices as $fieldFacetChoice) {
             $newFieldFacetChoice = new FieldFacetChoice();
-            $newFieldFacetChoice->setFieldFacet($newFieldFacet);
+            $newFieldFacetChoice->setFieldFacet($newField->getFieldFacet());
             $newFieldFacetChoice->setLabel($fieldFacetChoice->getLabel());
             $newFieldFacetChoice->setPosition($fieldFacetChoice->getPosition());
             $this->om->persist($newFieldFacetChoice);
@@ -1228,55 +880,9 @@ class ClacoFormManager implements LoggerAwareInterface
         }
     }
 
-    /*****************************************
-     * Access to ClacoFormRepository methods *
-     *****************************************/
-
-    public function getClacoFormByResourceNode(ResourceNode $resourceNode)
-    {
-        return $this->clacoFormRepo->findOneBy(['resourceNode' => $resourceNode]);
-    }
-
-    public function getClacoFormByResourceNodeId($resourceNodeId)
-    {
-        return $this->clacoFormRepo->findClacoFormByResourceNodeId($resourceNodeId);
-    }
-
-    /****************************************
-     * Access to CategoryRepository methods *
-     ****************************************/
-
-    public function getCategoriesByIds(array $ids)
-    {
-        return count($ids) > 0 ? $this->categoryRepo->findCategoriesByIds($ids) : [];
-    }
-
-    /*************************************
-     * Access to FieldRepository methods *
-     *************************************/
-
-    public function getFieldByClacoFormAndId(ClacoForm $clacoForm, $id)
-    {
-        return $this->fieldRepo->findOneBy(['clacoForm' => $clacoForm, 'id' => $id]);
-    }
-
-    public function getNonConfidentialFieldsByResourceNode(ResourceNode $resourceNode)
-    {
-        return $this->fieldRepo->findNonConfidentialFieldsByResourceNode($resourceNode);
-    }
-
-    /******************************************
-     * Access to FieldValueRepository methods *
-     ******************************************/
-
     public function getFieldValueByEntryAndField(Entry $entry, Field $field)
     {
         return $this->fieldValueRepo->findOneBy(['entry' => $entry, 'field' => $field]);
-    }
-
-    public function getFieldValueByEntryAndFieldId(Entry $entry, $fieldId)
-    {
-        return $this->fieldValueRepo->findOneBy(['entry' => $entry, 'field' => $fieldId]);
     }
 
     public function getFieldValuesByType(ClacoForm $clacoForm, $type)
@@ -1284,27 +890,9 @@ class ClacoFormManager implements LoggerAwareInterface
         return $this->fieldValueRepo->findFieldValuesByType($clacoForm, $type);
     }
 
-    /***************************************
-     * Access to KeywordRepository methods *
-     ***************************************/
-
-    public function getKeywordByName(ClacoForm $clacoForm, $name)
-    {
-        return $this->keywordRepo->findKeywordByName($clacoForm, $name);
-    }
-
     public function getKeywordByNameExcludingUuid(ClacoForm $clacoForm, $name, $uuid)
     {
         return $this->keywordRepo->findKeywordByNameExcludingUuid($clacoForm, $name, $uuid);
-    }
-
-    /*************************************
-     * Access to EntryRepository methods *
-     *************************************/
-
-    public function getEntriesByUser(ClacoForm $clacoForm, User $user)
-    {
-        return $this->entryRepo->findBy(['clacoForm' => $clacoForm, 'user' => $user]);
     }
 
     /**
@@ -1325,10 +913,6 @@ class ClacoFormManager implements LoggerAwareInterface
         return $this->entryRepo->findPublishedEntriesByCategoriesAndDates($clacoForm, $categoriesIds, $startDate, $endDate);
     }
 
-    /***************************************
-     * Access to CommentRepository methods *
-     ***************************************/
-
     public function getCommentsByEntry(Entry $entry)
     {
         return $this->commentRepo->findBy(['entry' => $entry], ['creationDate' => 'DESC']);
@@ -1342,38 +926,6 @@ class ClacoFormManager implements LoggerAwareInterface
     public function getAvailableCommentsForUser(Entry $entry, User $user)
     {
         return $this->commentRepo->findAvailableCommentsForUser($entry, $user);
-    }
-
-    /***************************************************
-     * Access to FieldChoiceCategoryRepository methods *
-     ***************************************************/
-
-    public function getFieldChoicesCategoriesByField(Field $field)
-    {
-        return $this->fieldChoiceCategoryRepo->findBy(['field' => $field]);
-    }
-
-    public function getFieldChoiceCategoryByFieldAndChoice(Field $field, FieldFacetChoice $choice)
-    {
-        return $this->fieldChoiceCategoryRepo->findOneBy(['field' => $field, 'fieldFacetChoice' => $choice]);
-    }
-
-    public function getFieldChoicesCategoriesByFieldAndValue(Field $field, $value)
-    {
-        return $this->fieldChoiceCategoryRepo->findBy(['field' => $field, 'value' => $value]);
-    }
-
-    /******************
-     * Rights methods *
-     ******************/
-
-    public function checkRight(ClacoForm $clacoForm, $right)
-    {
-        $collection = new ResourceCollection([$clacoForm->getResourceNode()]);
-
-        if (!$this->authorization->isGranted($right, $collection)) {
-            throw new AccessDeniedException($collection->getErrorsForDisplay());
-        }
     }
 
     public function hasRight(ClacoForm $clacoForm, $right)
@@ -1417,6 +969,7 @@ class ClacoFormManager implements LoggerAwareInterface
         return false;
     }
 
+    // TODO : move to Voter
     public function hasEntryAccessRight(Entry $entry)
     {
         $clacoForm = $entry->getClacoForm();
@@ -1436,6 +989,7 @@ class ClacoFormManager implements LoggerAwareInterface
         );
     }
 
+    // TODO : move to Voter
     public function hasEntryEditionRight(Entry $entry)
     {
         /** @var User|string $user */
@@ -1455,6 +1009,7 @@ class ClacoFormManager implements LoggerAwareInterface
         );
     }
 
+    // TODO : move to Voter
     public function hasEntryModerationRight(Entry $entry)
     {
         /** @var User|string $user */
@@ -1532,7 +1087,7 @@ class ClacoFormManager implements LoggerAwareInterface
         return !empty($entryUser);
     }
 
-    public function hasEntryOwnership(Entry $entry)
+    private function hasEntryOwnership(Entry $entry)
     {
         /** @var User|string $user */
         $user = $this->tokenStorage->getToken()->getUser();

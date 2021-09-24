@@ -18,5 +18,6 @@ export default (users, refresher) => ({
     },
     success: (users) => refresher.update(users)
   },
-  group: trans('management')
+  group: trans('management'),
+  primary: true
 })

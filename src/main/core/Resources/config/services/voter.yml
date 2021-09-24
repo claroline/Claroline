@@ -49,6 +49,10 @@ services:
         arguments:
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
 
+    Claroline\CoreBundle\Security\Voter\Planning\PlannedObjectVoter:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+
     Claroline\CoreBundle\Security\Voter\PublicFileVoter: ~
 
     Claroline\CoreBundle\Security\Voter\ResourceCommentVoter: ~

@@ -13,9 +13,9 @@ namespace Claroline\InstallationBundle\Command;
 
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Installation\PlatformInstaller;
-use Claroline\CoreBundle\Library\Installation\Refresher;
 use Claroline\CoreBundle\Library\Maintenance\MaintenanceHandler;
 use Claroline\CoreBundle\Manager\VersionManager;
+use Claroline\InstallationBundle\Manager\RefreshManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -35,8 +35,14 @@ class PlatformUpdateCommand extends Command
     private $translator;
     private $environment;
 
-    public function __construct(Refresher $refresher, PlatformInstaller $installer, VersionManager $versionManager, PlatformConfigurationHandler $platformConfigurationHandler, TranslatorInterface $translator, string $environment)
-    {
+    public function __construct(
+        RefreshManager $refresher,
+        PlatformInstaller $installer,
+        VersionManager $versionManager,
+        PlatformConfigurationHandler $platformConfigurationHandler,
+        TranslatorInterface $translator,
+        string $environment
+    ) {
         $this->refresher = $refresher;
         $this->installer = $installer;
         $this->versionManager = $versionManager;
@@ -136,7 +142,7 @@ class PlatformUpdateCommand extends Command
         // dump static assets
         if (!$input->getOption('no_asset')) {
             $this->refresher->installAssets();
-            $this->refresher->dumpAssets($this->environment);
+            $this->refresher->dumpAssets();
         }
 
         // build themes

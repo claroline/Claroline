@@ -21,7 +21,6 @@ use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * Entry point of platform installation/update, ensuring that minimal requirements
@@ -34,8 +33,6 @@ class PlatformInstaller implements LoggerAwareInterface
     private $operationExecutor;
     private $baseInstaller;
     private $pluginInstaller;
-    private $refresher;
-    private $kernel;
     private $container;
     private $output;
 
@@ -43,22 +40,14 @@ class PlatformInstaller implements LoggerAwareInterface
         OperationExecutor $opExecutor,
         InstallationManager $baseInstaller,
         Installer $pluginInstaller,
-        Refresher $refresher,
-        KernelInterface $kernel,
         ContainerInterface $container
     ) {
         $this->operationExecutor = $opExecutor;
         $this->baseInstaller = $baseInstaller;
         $this->pluginInstaller = $pluginInstaller;
-        $this->refresher = $refresher;
-        $this->kernel = $kernel;
         $this->container = $container;
-        $this->bundles = parse_ini_file($this->container->getParameter('claroline.param.bundle_file'));
     }
 
-    /**
-     * @param LoggerInterface $logger
-     */
     public function setLogger(LoggerInterface $logger = null)
     {
         $this->logger = $logger;
@@ -75,7 +64,6 @@ class PlatformInstaller implements LoggerAwareInterface
     public function setOutput(OutputInterface $output)
     {
         $this->output = $output;
-        $this->refresher->setOutput($output);
     }
 
     /**

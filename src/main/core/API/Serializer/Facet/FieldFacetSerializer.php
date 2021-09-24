@@ -14,14 +14,15 @@ class FieldFacetSerializer
 
     /** @var ObjectManager */
     private $om;
+    /** @var FieldFacetChoiceSerializer */
+    private $ffcSerializer;
 
     private $fieldFacetChoiceRepo;
 
-    /**
-     * @param SerializerProvider $serializer
-     */
-    public function __construct(ObjectManager $om, FieldFacetChoiceSerializer $ffcSerializer)
-    {
+    public function __construct(
+        ObjectManager $om,
+        FieldFacetChoiceSerializer $ffcSerializer
+    ) {
         $this->om = $om;
         $this->ffcSerializer = $ffcSerializer;
         $this->fieldFacetChoiceRepo = $om->getRepository(FieldFacetChoice::class);
@@ -51,10 +52,10 @@ class FieldFacetSerializer
             'help' => $fieldFacet->getHelp(),
             'restrictions' => [
                 'hidden' => $fieldFacet->isHidden(),
-                'isMetadata' => $fieldFacet->getIsMetadata(),
+                'metadata' => $fieldFacet->isMetadata(),
                 'locked' => $fieldFacet->isLocked(),
                 'lockedEditionOnly' => $fieldFacet->getLockedEditionOnly(),
-                'order' => $fieldFacet->getPosition(),
+                'order' => $fieldFacet->getPosition(), // should be in `display` sub-object
             ],
         ];
 
@@ -82,7 +83,7 @@ class FieldFacetSerializer
         $this->sipe('required', 'setRequired', $data, $field);
         $this->sipe('help', 'setHelp', $data, $field);
         $this->sipe('restrictions.hidden', 'setHidden', $data, $field);
-        $this->sipe('restrictions.isMetadata', 'setIsMetadata', $data, $field);
+        $this->sipe('restrictions.metadata', 'setMetadata', $data, $field);
         $this->sipe('restrictions.locked', 'setLocked', $data, $field);
         $this->sipe('restrictions.lockedEditionOnly', 'setLockedEditionOnly', $data, $field);
         $this->sipe('restrictions.order', 'setPosition', $data, $field);

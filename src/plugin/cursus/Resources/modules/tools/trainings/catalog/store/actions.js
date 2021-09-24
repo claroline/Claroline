@@ -4,6 +4,7 @@ import {API_REQUEST, url} from '#/main/app/api'
 import {makeActionCreator} from '#/main/app/store/actions'
 import {constants as actionConstants} from '#/main/app/action/constants'
 import {actions as formActions} from '#/main/app/content/form/store/actions'
+import {actions as listActions} from '#/main/app/content/list/store/actions'
 
 import {selectors} from '#/plugin/cursus/tools/trainings/catalog/store/selectors'
 
@@ -60,6 +61,36 @@ actions.openSession = (sessionId = null, force = false) => (dispatch, getState) 
   }
 }
 
+actions.addCourseUsers = (courseId, users) => ({
+  [API_REQUEST]: {
+    url: url(['apiv2_cursus_course_add_users', {id: courseId}], {ids: users.map(user => user.id)}),
+    request: {
+      method: 'PATCH'
+    },
+    success: (data, dispatch) => {
+      dispatch(listActions.invalidateData(selectors.STORE_NAME+'.coursePending'))
+    }
+  }
+})
+
+actions.moveCourseUsers = (courseId, targetId, courseUsers) => ({
+  [API_REQUEST]: {
+    url: ['apiv2_cursus_course_move_users', {id: courseId}],
+    request: {
+      method: 'PUT',
+      body: JSON.stringify({
+        target: targetId,
+        courseUsers: courseUsers.map(courseUser => courseUser.id)
+      })
+    },
+    success: (data, dispatch) => {
+      dispatch(listActions.invalidateData(selectors.STORE_NAME+'.coursePending'))
+    }
+  }
+})
+
+// Sessions registration management
+
 actions.addUsers = (sessionId, users, type) => ({
   [API_REQUEST]: {
     url: url(['apiv2_cursus_session_add_users', {id: sessionId, type: type}], {ids: users.map(user => user.id)}),
@@ -83,6 +114,23 @@ actions.inviteUsers = (sessionId, users) => ({
   }
 })
 
+actions.moveUsers = (sessionId, targetId, sessionUsers, type) => ({
+  [API_REQUEST]: {
+    url: ['apiv2_cursus_session_move_users', {id: sessionId, type: type}],
+    request: {
+      method: 'PUT',
+      body: JSON.stringify({
+        target: targetId,
+        sessionUsers: sessionUsers.map(sessionUser => sessionUser.id)
+      })
+    },
+    success: (data, dispatch) => {
+      // TODO : do something better (I need it to recompute session available space)
+      dispatch(actions.openSession(sessionId, true))
+    }
+  }
+})
+
 actions.addGroups = (sessionId, groups, type) => ({
   [API_REQUEST]: {
     url: url(['apiv2_cursus_session_add_groups', {id: sessionId, type: type}], {ids: groups.map(group => group.id)}),
@@ -102,6 +150,23 @@ actions.inviteGroups = (sessionId, groups) => ({
     url: url(['apiv2_cursus_session_invite_groups', {id: sessionId}], {ids: groups.map(group => group.id)}),
     request: {
       method: 'PUT'
+    }
+  }
+})
+
+actions.moveGroups = (sessionId, targetId, sessionGroups, type) => ({
+  [API_REQUEST]: {
+    url: ['apiv2_cursus_session_move_groups', {id: sessionId, type: type}],
+    request: {
+      method: 'PUT',
+      body: JSON.stringify({
+        target: targetId,
+        sessionGroups: sessionGroups.map(sessionGroup => sessionGroup.id)
+      })
+    },
+    success: (data, dispatch) => {
+      // TODO : do something better (I need it to recompute session available space)
+      dispatch(actions.openSession(sessionId, true))
     }
   }
 })
@@ -145,9 +210,11 @@ actions.validatePending = (sessionId, users) => ({
   }
 })
 
-actions.register = (course, sessionId) => ({
+actions.register = (course, sessionId = null) => ({
   [API_REQUEST]: {
-    url: ['apiv2_cursus_session_self_register', {id: sessionId}],
+    url: sessionId ?
+      ['apiv2_cursus_session_self_register', {id: sessionId}] :
+      ['apiv2_cursus_course_self_register', {id: course.id}],
     request: {
       method: 'PUT'
     },

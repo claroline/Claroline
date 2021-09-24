@@ -1,7 +1,6 @@
 import {makeInstanceAction} from '#/main/app/store/actions'
 import {makeReducer, combineReducers} from '#/main/app/store/reducer'
 
-import {FORM_SUBMIT_SUCCESS} from '#/main/app/content/form/store/actions'
 import {SEARCH_FILTER_ADD, SEARCH_FILTER_REMOVE} from '#/main/app/content/search/store/actions'
 
 import {RESOURCE_LOAD} from '#/main/core/resource/store/actions'
@@ -29,13 +28,6 @@ const reducer = combineReducers({
       return state
     }
   }),
-  goHome: makeReducer(false, {
-    [FORM_SUBMIT_SUCCESS + '/' + selectors.STORE_NAME + '.post_edit']: () => true,
-    [SWITCH_MODE]: () => false
-  }),
-  user: makeReducer({}, {
-    [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.user || state
-  }),
   mode: makeReducer(selectors.STORE_NAME + '.list_posts', {
     [SWITCH_MODE]: (state, action) => action.mode
   }),
@@ -46,7 +38,6 @@ const reducer = combineReducers({
   showEditCommentForm: commentReducer.showEditCommentForm,
   post: postReducer.post,
   post_edit: postReducer.post_edit,
-  resourceNode: makeReducer({}, {}),
   moderationComments: moderationReducer.moderationComments,
   reportedComments: moderationReducer.reportedComments,
   moderationPosts: moderationReducer.moderationPosts,

@@ -1,12 +1,31 @@
 services:
     _defaults:
-        autowire: false #change to true
+        autowire: false
         autoconfigure: false
-        public: true #because controller
+        public: true
+
+    Claroline\SamlBundle\Security\UserChecker:
+        arguments:
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+
+    Claroline\SamlBundle\Security\Authentication\AuthenticationSuccessListener:
+        parent: Claroline\CoreBundle\Listener\AuthenticationSuccessListener
+        autowire: false
+        autoconfigure: false
+        public: true
+        calls:
+            - method: setObjectManager
+              arguments:
+                  - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - method: setIdpManager
+              arguments:
+                  - '@Claroline\SamlBundle\Manager\IdpManager'
+            - method: setCrud
+              arguments:
+                  - '@Claroline\AppBundle\API\Crud'
 
     # SAML
     Claroline\SamlBundle\Security\EntityDescriptorProvider:
-        #factory: ['LightSaml\SymfonyBridgeBundle\Factory\OwnEntityDescriptorProviderFactory', 'build']
         arguments:
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
             - '@router'
@@ -15,21 +34,20 @@ services:
 
     Claroline\SamlBundle\Security\Store\IdStore:
         arguments:
-            - '@doctrine.orm.entity_manager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@lightsaml.system.time_provider'
 
     Claroline\SamlBundle\Security\Store\RequestStateStore:
         arguments:
-            - '@doctrine.orm.entity_manager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     Claroline\SamlBundle\Security\UserCreator:
         arguments:
             - '@security.token_storage'
             - '@Claroline\AuthenticationBundle\Security\Authentication\Authenticator'
             - '@lightsaml_sp.username_mapper.simple'
-            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\Crud'
+            - '@Claroline\SamlBundle\Manager\IdpManager'
 
     Claroline\SamlBundle\Security\LogoutHandler:
         arguments:

@@ -86,7 +86,7 @@ class FieldChoiceCategorySerializer
                     $fieldChoiceCategory->setDateValue($date);
                     break;
                 case FieldFacet::CHOICE_TYPE:
-                    $options = $field->getDetails();
+                    $options = $field->getOptions();
 
                     if (isset($options['multiple']) && $options['multiple']) {
                         $this->sipe('value', 'setArrayValue', $data, $fieldChoiceCategory);

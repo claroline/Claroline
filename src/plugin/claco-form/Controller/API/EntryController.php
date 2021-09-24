@@ -28,9 +28,6 @@ class EntryController extends AbstractCrudController
     /* @var ClacoFormManager */
     protected $manager;
 
-    /**
-     * EntryController constructor.
-     */
     public function __construct(ClacoFormManager $manager)
     {
         $this->manager = $manager;
@@ -38,7 +35,7 @@ class EntryController extends AbstractCrudController
 
     public function getClass()
     {
-        return 'Claroline\ClacoFormBundle\Entity\Entry';
+        return Entry::class;
     }
 
     public function getIgnore()
@@ -52,19 +49,10 @@ class EntryController extends AbstractCrudController
     }
 
     /**
-     * @Route(
-     *     "/clacoform/{clacoForm}/entries/list",
-     *     name="apiv2_clacoformentry_list"
-     * )
-     * @EXT\ParamConverter(
-     *     "clacoForm",
-     *     class="ClarolineClacoFormBundle:ClacoForm",
-     *     options={"mapping": {"clacoForm": "uuid"}}
-     * )
-     *
-     * @return JsonResponse
+     * @Route("/clacoform/{clacoForm}/entries/list", name="apiv2_clacoformentry_list")
+     * @EXT\ParamConverter("clacoForm", class="ClarolineClacoFormBundle:ClacoForm", options={"mapping": {"clacoForm": "uuid"}})
      */
-    public function entriesListAction(ClacoForm $clacoForm, Request $request)
+    public function entriesListAction(ClacoForm $clacoForm, Request $request): JsonResponse
     {
         $params = $request->query->all();
         if (!isset($params['hiddenFilters'])) {
@@ -100,19 +88,10 @@ class EntryController extends AbstractCrudController
     }
 
     /**
-     * @Route(
-     *    "/clacoform/{clacoForm}/file/upload",
-     *    name="apiv2_clacoformentry_file_upload"
-     * )
-     * @EXT\ParamConverter(
-     *     "clacoForm",
-     *     class="ClarolineClacoFormBundle:ClacoForm",
-     *     options={"mapping": {"clacoForm": "uuid"}}
-     * )
-     *
-     * @return JsonResponse
+     * @Route("/clacoform/{clacoForm}/file/upload", name="apiv2_clacoformentry_file_upload")
+     * @EXT\ParamConverter("clacoForm", class="ClarolineClacoFormBundle:ClacoForm", options={"mapping": {"clacoForm": "uuid"}})
      */
-    public function uploadAction(ClacoForm $clacoForm, Request $request)
+    public function uploadAction(ClacoForm $clacoForm, Request $request): JsonResponse
     {
         $files = $request->files->all();
         $data = [];
@@ -125,24 +104,11 @@ class EntryController extends AbstractCrudController
     }
 
     /**
-     * @Route(
-     *     "/clacoform/{clacoForm}/{entry}/next",
-     *     name="apiv2_clacoformentry_next"
-     * )
-     * @EXT\ParamConverter(
-     *     "clacoForm",
-     *     class="ClarolineClacoFormBundle:ClacoForm",
-     *     options={"mapping": {"clacoForm": "uuid"}}
-     * )
-     * @EXT\ParamConverter(
-     *     "entry",
-     *     class="ClarolineClacoFormBundle:Entry",
-     *     options={"mapping": {"entry": "uuid"}}
-     * )
-     *
-     * @return JsonResponse
+     * @Route("/clacoform/{clacoForm}/{entry}/next", name="apiv2_clacoformentry_next")
+     * @EXT\ParamConverter("clacoForm", class="ClarolineClacoFormBundle:ClacoForm", options={"mapping": {"clacoForm": "uuid"}})
+     * @EXT\ParamConverter("entry", class="ClarolineClacoFormBundle:Entry", options={"mapping": {"entry": "uuid"}})
      */
-    public function nextAction(ClacoForm $clacoForm, Entry $entry, Request $request)
+    public function nextAction(ClacoForm $clacoForm, Entry $entry, Request $request): JsonResponse
     {
         $params = $request->query->all();
         $filters = array_key_exists('filters', $params) ? $params['filters'] : [];
@@ -166,24 +132,11 @@ class EntryController extends AbstractCrudController
     }
 
     /**
-     * @Route(
-     *     "/clacoform/{clacoForm}/{entry}/previous",
-     *     name="apiv2_clacoformentry_previous"
-     * )
-     * @EXT\ParamConverter(
-     *     "clacoForm",
-     *     class="ClarolineClacoFormBundle:ClacoForm",
-     *     options={"mapping": {"clacoForm": "uuid"}}
-     * )
-     * @EXT\ParamConverter(
-     *     "entry",
-     *     class="ClarolineClacoFormBundle:Entry",
-     *     options={"mapping": {"entry": "uuid"}}
-     * )
-     *
-     * @return JsonResponse
+     * @Route("/clacoform/{clacoForm}/{entry}/previous", name="apiv2_clacoformentry_previous")
+     * @EXT\ParamConverter("clacoForm", class="ClarolineClacoFormBundle:ClacoForm", options={"mapping": {"clacoForm": "uuid"}})
+     * @EXT\ParamConverter("entry", class="ClarolineClacoFormBundle:Entry", options={"mapping": {"entry": "uuid"}})
      */
-    public function previousAction(ClacoForm $clacoForm, Entry $entry, Request $request)
+    public function previousAction(ClacoForm $clacoForm, Entry $entry, Request $request): JsonResponse
     {
         $params = $request->query->all();
         $filters = array_key_exists('filters', $params) ? $params['filters'] : [];
@@ -204,5 +157,56 @@ class EntryController extends AbstractCrudController
         $previousEntry = array_key_exists($prev, $data) ? $data[$prev] : end($data);
 
         return new JsonResponse($this->serializer->serialize($previousEntry), 200);
+    }
+
+    /**
+     * Changes status of an entry.
+     *
+     * @Route("/entry/{entry}/status/change", name="claro_claco_form_entry_status_change")
+     * @EXT\ParamConverter("entry", class="ClarolineClacoFormBundle:Entry", options={"mapping": {"entry": "uuid"}})
+     */
+    public function entryStatusChangeAction(Entry $entry): JsonResponse
+    {
+        if ($entry->isLocked()) {
+            $serializedEntry = $this->serializer->serialize($entry);
+        } else {
+            $this->manager->checkEntryModeration($entry);
+            $updatedEntry = $this->manager->changeEntryStatus($entry);
+            $serializedEntry = $this->serializer->serialize($updatedEntry);
+        }
+
+        return new JsonResponse($serializedEntry, 200);
+    }
+
+    /**
+     * Changes status of entries.
+     *
+     * @Route("/entries/status/{status}/change", name="claro_claco_form_entries_status_change")
+     *
+     * @param int $status
+     */
+    public function entriesStatusChangeAction($status, Request $request): JsonResponse
+    {
+        $entries = [];
+        $serializedEntries = [];
+
+        /** @var Entry[] $entriesParams */
+        $entriesParams = $this->decodeIdsString($request, Entry::class);
+        foreach ($entriesParams as $entryParam) {
+            if (!$entryParam->isLocked()) {
+                $entries[] = $entryParam;
+            }
+        }
+
+        foreach ($entries as $entry) {
+            $this->manager->checkEntryModeration($entry);
+        }
+
+        $updatedEntries = $this->manager->changeEntriesStatus($entries, intval($status));
+        foreach ($updatedEntries as $entry) {
+            $serializedEntries[] = $this->serializer->serialize($entry);
+        }
+
+        return new JsonResponse($serializedEntries, 200);
     }
 }

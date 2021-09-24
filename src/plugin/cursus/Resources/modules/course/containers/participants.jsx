@@ -13,11 +13,17 @@ const CourseParticipants = connect(
     inviteUsers(sessionId, users) {
       dispatch(actions.inviteUsers(sessionId, users))
     },
-    inviteGroups(sessionId, groups) {
-      dispatch(actions.inviteGroups(sessionId, groups))
+    moveUsers(sessionId, targetId, sessionUsers, type) {
+      dispatch(actions.moveUsers(sessionId, targetId, sessionUsers, type))
     },
     addGroups(sessionId, groups, type = constants.LEARNER_TYPE) {
       dispatch(actions.addGroups(sessionId, groups, type))
+    },
+    inviteGroups(sessionId, groups) {
+      dispatch(actions.inviteGroups(sessionId, groups))
+    },
+    moveGroups(sessionId, targetId, sessionGroups, type) {
+      dispatch(actions.moveGroups(sessionId, targetId, sessionGroups, type))
     },
     addPending(sessionId, users) {
       dispatch(actions.addPending(sessionId, users))

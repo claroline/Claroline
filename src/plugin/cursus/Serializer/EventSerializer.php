@@ -23,7 +23,7 @@ use Claroline\CursusBundle\Entity\Registration\AbstractRegistration;
 use Claroline\CursusBundle\Entity\Registration\EventUser;
 use Claroline\CursusBundle\Entity\Session;
 use Claroline\CursusBundle\Repository\EventRepository;
-use Doctrine\Common\Persistence\ObjectRepository;
+use Doctrine\Persistence\ObjectRepository;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class EventSerializer
@@ -70,6 +70,11 @@ class EventSerializer
         $this->templateRepo = $om->getRepository(Template::class);
     }
 
+    public function getSchema()
+    {
+        return '#/plugin/cursus/session-event.json';
+    }
+
     public function serialize(Event $event, array $options = []): array
     {
         $serialized = array_merge_recursive($this->plannedObjectSerializer->serialize($event->getPlannedObject(), $options), [
@@ -78,6 +83,7 @@ class EventSerializer
                 'open' => $this->authorization->isGranted('OPEN', $event),
                 'edit' => $this->authorization->isGranted('EDIT', $event),
                 'delete' => $this->authorization->isGranted('DELETE', $event),
+                'register' => $this->authorization->isGranted('REGISTER', $event),
             ],
             'session' => $event->getSession() ? $this->sessionSerializer->serialize($event->getSession(), [Options::SERIALIZE_MINIMAL]) : null,
         ]);

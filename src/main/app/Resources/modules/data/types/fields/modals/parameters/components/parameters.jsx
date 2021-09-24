@@ -97,10 +97,14 @@ class ParametersModal extends Component {
             fields: [
               {
                 name: 'type',
-                type: 'string',
                 label: trans('type'),
+                type: 'type',
                 hideLabel: true,
-                render: () => this.state.typeDef ? this.state.typeDef.meta.label : ''
+                calculated: () => this.state.typeDef ? ({
+                  icon: <span className={this.state.typeDef.meta.icon} />,
+                  name: this.state.typeDef.meta.label,
+                  description: this.state.typeDef.meta.description
+                }) : null
               }, {
                 name: 'label',
                 type: 'string',
@@ -133,15 +137,27 @@ class ParametersModal extends Component {
               }
             ]
           }, {
+            id: 'display',
+            icon: 'fa fa-fw fa-desktop',
+            title: trans('display_parameters'),
+            fields: [
+              {
+                name: 'restrictions.order',
+                type: 'number',
+                label: trans('order'),
+                onChange: (value) => this.updateRestrictions('order', value)
+              }
+            ]
+          }, {
             id: 'restrictions',
             icon: 'fa fa-fw fa-key',
             title: trans('access_restrictions'),
             fields: [
               {
-                name: 'restrictions.isMetadata',
+                name: 'restrictions.metadata',
                 type: 'boolean',
                 label: trans('confidential_data'),
-                onChange: (value) => this.updateRestrictions('isMetadata', value)
+                onChange: (value) => this.updateRestrictions('metadata', value)
               }, {
                 name: 'restrictions.hidden',
                 type: 'boolean',
@@ -164,11 +180,6 @@ class ParametersModal extends Component {
                     onChange: (value) => this.updateRestrictions('lockedEditionOnly', value)
                   }
                 ]
-              }, {
-                name: 'restrictions.order',
-                type: 'number',
-                label: trans('order'),
-                onChange: (value) => this.updateRestrictions('order', value)
               }
             ]
           }

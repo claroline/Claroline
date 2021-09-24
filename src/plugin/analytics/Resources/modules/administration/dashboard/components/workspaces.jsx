@@ -1,6 +1,5 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import get from 'lodash/get'
 
 import {url} from '#/main/app/api'
 import {trans} from '#/main/app/intl'
@@ -74,7 +73,7 @@ const DashboardWorkspaces = (props) =>
           label: trans('progression'),
           displayed: true,
           filterable: false,
-          calculated: (row) => (get(row, 'progression', 0) / get(row, 'progressionMax', 1)) * 100,
+          calculated: (row) => ((row.progression || 0) / (row.progressionMax || 1)) * 100,
           options: {
             type: 'user'
           }

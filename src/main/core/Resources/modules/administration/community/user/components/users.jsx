@@ -32,7 +32,8 @@ const UsersList = props =>
         autoload: true
       }}
       delete={{
-        url: ['apiv2_user_delete_bulk']
+        url: ['apiv2_user_delete_bulk'],
+        displayed: (users) => 0 < users.filter(user => hasPermission('delete', user) && user.restrictions.disabled).length
       }}
       primaryAction={(row) => ({
         type: LINK_BUTTON,

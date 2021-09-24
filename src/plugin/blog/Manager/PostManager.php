@@ -10,9 +10,8 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Icap\BlogBundle\Entity\Blog;
 use Icap\BlogBundle\Entity\Post;
-use Icap\BlogBundle\Repository\PostRepository;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PostManager
 {
@@ -33,19 +32,19 @@ class PostManager
         FinderProvider $finder,
         ObjectManager $om,
         BlogTrackingManager $trackingManager,
-        PostRepository $repo,
         TranslatorInterface $translator,
         UserSerializer $userSerializer,
         EventDispatcherInterface $eventDispatcher)
     {
         $this->finder = $finder;
         $this->om = $om;
-        $this->repo = $repo;
         $this->trackingManager = $trackingManager;
         $this->translator = $translator;
         $this->userSerializer = $userSerializer;
-        $this->userRepo = $om->getRepository('Claroline\CoreBundle\Entity\User');
         $this->eventDispatcher = $eventDispatcher;
+
+        $this->userRepo = $om->getRepository('Claroline\CoreBundle\Entity\User');
+        $this->repo = $om->getRepository(Post::class);
     }
 
     /**
@@ -289,7 +288,7 @@ class PostManager
      */
     public function getArchives($blog)
     {
-        $postDatas = $this->repo->findArchiveDatasByBlog($blog);
+        $postDatas = $this->repo->findArchiveDataByBlog($blog);
         $archiveDatas = [];
 
         foreach ($postDatas as $postData) {

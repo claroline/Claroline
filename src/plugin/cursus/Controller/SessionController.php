@@ -20,6 +20,7 @@ use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Library\RoutingHelper;
 use Claroline\CoreBundle\Manager\Tool\ToolManager;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
+use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Claroline\CursusBundle\Entity\Event;
 use Claroline\CursusBundle\Entity\Registration\AbstractRegistration;
 use Claroline\CursusBundle\Entity\Registration\SessionGroup;
@@ -36,7 +37,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @Route("/cursus_session")
@@ -456,6 +457,72 @@ class SessionController extends AbstractCrudController
         $this->manager->sendSessionInvitation($session, $users, false);
 
         return new JsonResponse(null, 204);
+    }
+
+    /**
+     * @Route("/{id}/move/users/{type}", name="apiv2_cursus_session_move_users", methods={"PUT"})
+     * @EXT\ParamConverter("session", class="Claroline\CursusBundle\Entity\Session", options={"mapping": {"id": "uuid"}})
+     */
+    public function moveUsersAction(Session $session, string $type, Request $request): JsonResponse
+    {
+        $this->checkPermission('REGISTER', $session, [], true);
+
+        $data = $this->decodeRequest($request);
+        if (empty($data['target']) || empty($data['sessionUsers'])) {
+            throw new InvalidDataException('Missing either target session or registrations to move.');
+        }
+
+        $targetSession = $this->om->getRepository(Session::class)->findOneBy([
+            'uuid' => $data['target'],
+        ]);
+
+        $sessionUsers = [];
+        foreach ($data['sessionUsers'] as $sessionUserId) {
+            $sessionUser = $this->om->getRepository(SessionUser::class)->findOneBy([
+                'uuid' => $sessionUserId,
+            ]);
+
+            if (!empty($sessionUser)) {
+                $sessionUsers[] = $sessionUser;
+            }
+        }
+
+        $this->manager->moveUsers($session, $targetSession, $sessionUsers, $type);
+
+        return new JsonResponse();
+    }
+
+    /**
+     * @Route("/{id}/move/groups/{type}", name="apiv2_cursus_session_move_groups", methods={"PUT"})
+     * @EXT\ParamConverter("session", class="Claroline\CursusBundle\Entity\Session", options={"mapping": {"id": "uuid"}})
+     */
+    public function moveGroupsAction(Session $session, string $type, Request $request): JsonResponse
+    {
+        $this->checkPermission('REGISTER', $session, [], true);
+
+        $data = $this->decodeRequest($request);
+        if (empty($data['target']) || empty($data['sessionGroups'])) {
+            throw new InvalidDataException('Missing either target session or registrations to move.');
+        }
+
+        $targetSession = $this->om->getRepository(Session::class)->findOneBy([
+            'uuid' => $data['target'],
+        ]);
+
+        $sessionGroups = [];
+        foreach ($data['sessionGroups'] as $sessionGroupId) {
+            $sessionGroup = $this->om->getRepository(SessionGroup::class)->findOneBy([
+                'uuid' => $sessionGroupId,
+            ]);
+
+            if (!empty($sessionGroup)) {
+                $sessionGroups[] = $sessionGroup;
+            }
+        }
+
+        $this->manager->moveGroups($session, $targetSession, $sessionGroups, $type);
+
+        return new JsonResponse();
     }
 
     private function checkToolAccess(string $rights = 'OPEN'): bool

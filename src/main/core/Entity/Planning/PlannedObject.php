@@ -48,6 +48,16 @@ class PlannedObject
     private $type;
 
     /**
+     * The FQCN of the AbstractPlanned implementation.
+     * It allows us to retrieve the event from the core (used for PlannedObjectVoter).
+     *
+     * @ORM\Column(name="event_class")
+     *
+     * @var string
+     */
+    private $class;
+
+    /**
      * @ORM\Column(name="start_date", type="datetime", nullable=true)
      *
      * @var \DateTimeInterface
@@ -104,6 +114,16 @@ class PlannedObject
     public function setType(string $type)
     {
         $this->type = $type;
+    }
+
+    public function getClass(): ?string
+    {
+        return $this->class;
+    }
+
+    public function setClass(string $class)
+    {
+        $this->class = $class;
     }
 
     public function getStartDate(): ?\DateTimeInterface

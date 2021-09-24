@@ -120,7 +120,10 @@ class CourseSerializer
                     'tutorRoleName' => $course->getTutorRoleName(),
                     'learnerRoleName' => $course->getLearnerRoleName(),
                     'duration' => $course->getDefaultSessionDuration(),
+                ],
+                'display' => [
                     'order' => $course->getOrder(),
+                    'hideSessions' => $course->getHideSessions(),
                 ],
                 'restrictions' => [
                     'hidden' => $course->isHidden(),
@@ -135,6 +138,7 @@ class CourseSerializer
                     'validation' => $course->getRegistrationValidation(),
                     'userValidation' => $course->getUserValidation(),
                     'mail' => $course->getRegistrationMail(),
+                    'pendingRegistrations' => $course->getPendingRegistrations(),
                 ],
                 'pricing' => [
                     'price' => $course->getPrice(),
@@ -170,7 +174,9 @@ class CourseSerializer
         $this->sipe('meta.learnerRoleName', 'setLearnerRoleName', $data, $course);
         $this->sipe('meta.icon', 'setIcon', $data, $course);
         $this->sipe('meta.duration', 'setDefaultSessionDuration', $data, $course);
-        $this->sipe('meta.order', 'setOrder', $data, $course);
+
+        $this->sipe('display.order', 'setOrder', $data, $course);
+        $this->sipe('display.hideSessions', 'setHideSessions', $data, $course);
 
         $this->sipe('restrictions.users', 'setMaxUsers', $data, $course);
         $this->sipe('restrictions.hidden', 'setHidden', $data, $course);
@@ -182,6 +188,7 @@ class CourseSerializer
         $this->sipe('registration.validation', 'setRegistrationValidation', $data, $course);
         $this->sipe('registration.userValidation', 'setUserValidation', $data, $course);
         $this->sipe('registration.mail', 'setRegistrationMail', $data, $course);
+        $this->sipe('registration.pendingRegistrations', 'setPendingRegistrations', $data, $course);
 
         $this->sipe('opening.session', 'setSessionOpening', $data, $course);
 

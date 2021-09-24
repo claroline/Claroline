@@ -4,7 +4,6 @@ const PostType = {
   propTypes: {
     id: T.string,
     title: T.string,
-    authorPicture: T.string,
     creationDate: T.string,
     author: T.Object,
     viewCounter: T.number,

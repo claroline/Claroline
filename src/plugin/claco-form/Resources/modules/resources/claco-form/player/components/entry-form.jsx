@@ -74,7 +74,7 @@ class EntryFormComponent extends Component {
           isShared ||
           this.props.displayMetadata === 'all' ||
           (this.props.displayMetadata === 'manager' && this.props.isManager) ||
-          !f.restrictions.isMetadata ||
+          !f.restrictions.metadata ||
           (this.props.entry.user && this.props.entry.user.id === this.props.currentUser.id),
         disabled: !this.props.isManager && ((this.props.isNew && f.restrictions.locked && !f.restrictions.lockedEditionOnly) || (!this.props.isNew && f.restrictions.locked)),
         options: f.options ? f.options : {}

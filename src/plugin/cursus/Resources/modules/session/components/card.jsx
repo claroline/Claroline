@@ -25,7 +25,7 @@ const SessionCard = props =>
     })}
     subtitle={props.data.name}
     contentText={props.data.plainDescription || props.data.description}
-    toolbar="register | more"
+    toolbar="self-register | more"
     footer={
       <span
         style={{

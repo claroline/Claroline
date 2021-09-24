@@ -10,8 +10,6 @@ use Icap\BlogBundle\Entity\BlogOptions;
 use Icap\BlogBundle\Entity\Comment;
 use Icap\BlogBundle\Entity\Member;
 use Icap\BlogBundle\Entity\Post;
-use Icap\BlogBundle\Repository\CommentRepository;
-use Icap\BlogBundle\Repository\MemberRepository;
 
 class CommentManager
 {
@@ -26,16 +24,15 @@ class CommentManager
 
     public function __construct(
         ObjectManager $om,
-        CommentRepository $repo,
-        MemberRepository $memberRepo,
         FinderProvider $finder,
         BlogTrackingManager $trackingManager)
     {
         $this->om = $om;
-        $this->repo = $repo;
-        $this->memberRepo = $memberRepo;
         $this->finder = $finder;
         $this->trackingManager = $trackingManager;
+
+        $this->repo = $this->om->getRepository(Comment::class);
+        $this->memberRepo = $this->om->getRepository(Member::class);
     }
 
     /**
@@ -317,10 +314,6 @@ class CommentManager
 
     /**
      * Delete a comment.
-     *
-     * @param User $user
-     *
-     * @return Comment
      */
     public function deleteComment(Blog $blog, Comment $existingComment)
     {

@@ -13,6 +13,7 @@ namespace Claroline\CursusBundle\Manager;
 
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\CatalogEvents\MessageEvents;
 use Claroline\CoreBundle\Event\SendMessageEvent;
@@ -29,6 +30,8 @@ use Claroline\CursusBundle\Event\Log\LogSessionEventGroupRegistrationEvent;
 use Claroline\CursusBundle\Event\Log\LogSessionEventGroupUnregistrationEvent;
 use Claroline\CursusBundle\Event\Log\LogSessionEventUserRegistrationEvent;
 use Claroline\CursusBundle\Event\Log\LogSessionEventUserUnregistrationEvent;
+use Claroline\CursusBundle\Repository\Registration\EventGroupRepository;
+use Claroline\CursusBundle\Repository\Registration\EventUserRepository;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -52,7 +55,9 @@ class EventManager
     /** @var PlanningManager */
     private $planningManager;
 
+    /** @var EventUserRepository */
     private $eventUserRepo;
+    /** @var EventGroupRepository */
     private $eventGroupRepo;
 
     public function __construct(
@@ -76,6 +81,16 @@ class EventManager
 
         $this->eventUserRepo = $om->getRepository(EventUser::class);
         $this->eventGroupRepo = $om->getRepository(EventGroup::class);
+    }
+
+    public function getBySessionAndUser(Session $session, User $user)
+    {
+        return $this->eventUserRepo->findBySessionAndUser($session, $user);
+    }
+
+    public function getBySessionAndGroup(Session $session, Group $group)
+    {
+        return $this->eventGroupRepo->findBySessionAndUser($session, $group);
     }
 
     public function generateFromTemplate(Event $event, string $locale)

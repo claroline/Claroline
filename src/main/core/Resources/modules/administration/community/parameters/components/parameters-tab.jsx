@@ -68,7 +68,7 @@ const Parameters = (props) => {
                   {
                     name: 'registration.organization_selection',
                     type: 'choice',
-                    label: 'Organizations',
+                    label: trans('organizations'),
                     options: {
                       multiple: false,
                       condensed: false,

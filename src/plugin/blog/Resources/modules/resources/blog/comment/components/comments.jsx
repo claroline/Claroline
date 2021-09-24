@@ -134,7 +134,6 @@ CommentsComponent.propTypes = {
 const Comments = connect(
   state => ({
     currentUser: securitySelectors.currentUser(state),
-    user: selectors.user(state),
     opened: selectors.showComments(state),
     isModerated: selectors.blog(state).data.options.data.commentModerationMode !== constants.COMMENT_MODERATION_MODE_NONE,
     showForm: selectors.showCommentForm(state),

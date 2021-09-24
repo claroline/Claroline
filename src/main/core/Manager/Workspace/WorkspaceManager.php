@@ -142,14 +142,6 @@ class WorkspaceManager implements LoggerAwareInterface
     }
 
     /**
-     * @return Workspace[]
-     */
-    public function getWorkspacesByUser(User $user)
-    {
-        return $this->workspaceRepo->findByUser($user);
-    }
-
-    /**
      * @return int
      */
     public function getNbNonPersonalWorkspaces($organizations = null)
@@ -157,66 +149,14 @@ class WorkspaceManager implements LoggerAwareInterface
         return $this->workspaceRepo->countNonPersonalWorkspaces($organizations);
     }
 
-    /**
-     * Returns the accesses rights of a given token for a set of workspaces.
-     * If a tool name is passed in, the check will be limited to that tool,
-     * otherwise workspaces with at least one accessible tool will be
-     * considered open. Access to any tool is always granted to platform
-     * administrators and workspace managers.
-     *
-     * The returned value is an associative array in which
-     * keys are workspace ids and values are boolean indicating if the
-     * workspace is open.
-     *
-     * @param Workspace[] $workspaces
-     * @param string|null $toolName
-     * @param string      $action
-     *
-     * @return bool[]
-     */
-    public function getAccesses(
-        TokenInterface $token,
-        array $workspaces,
-        $toolName = null,
-        $action = 'open'
-    ) {
-        $userRoleNames = $token->getRoleNames();
-        $accesses = [];
-
-        if (in_array('ROLE_ADMIN', $userRoleNames)) {
-            foreach ($workspaces as $workspace) {
-                $accesses[$workspace->getId()] = true;
-            }
-
-            return $accesses;
+    public function hasAccess(Workspace $workspace, TokenInterface $token, string $toolName = null, string $permission = 'open'): bool
+    {
+        $roles = $token->getRoleNames();
+        if (!empty($roles)) {
+            return $this->workspaceRepo->checkAccess($workspace, $roles, $toolName, $permission);
         }
 
-        $hasAllAccesses = true;
-        $workspacesWithoutManagerRole = [];
-
-        foreach ($workspaces as $workspace) {
-            if (in_array('ROLE_WS_MANAGER_'.$workspace->getUuid(), $userRoleNames)) {
-                $accesses[$workspace->getId()] = true;
-            } else {
-                $accesses[$workspace->getId()] = $hasAllAccesses = false;
-                $workspacesWithoutManagerRole[] = $workspace;
-            }
-        }
-
-        if (!$hasAllAccesses) {
-            $openWsIds = $this->workspaceRepo->findOpenWorkspaceIds(
-                $userRoleNames,
-                $workspacesWithoutManagerRole,
-                $toolName,
-                $action
-            );
-
-            foreach ($openWsIds as $idRow) {
-                $accesses[$idRow['id']] = true;
-            }
-        }
-
-        return $accesses;
+        return false;
     }
 
     /**
@@ -338,38 +278,9 @@ class WorkspaceManager implements LoggerAwareInterface
         $this->resourceManager->setLogger($logger);
     }
 
-    public function getPersonalWorkspaceExcludingRoles(array $roles, $includeOrphans, $empty = false, $offset = null, $limit = null)
-    {
-        return $this->workspaceRepo->findPersonalWorkspaceExcludingRoles($roles, $includeOrphans, $empty, $offset, $limit);
-    }
-
-    public function getPersonalWorkspaceByRolesIncludingGroups(array $roles, $includeOrphans, $empty = false, $offset = null, $limit = null)
-    {
-        return $this->workspaceRepo->findPersonalWorkspaceByRolesIncludingGroups($roles, $includeOrphans, $empty, $offset, $limit);
-    }
-
-    public function getNonPersonalByCodeAndName($code, $name, $offset = null, $limit = null)
-    {
-        return !$code && !$name ?
-            $this->workspaceRepo->findBy(['personal' => false]) :
-            $this->workspaceRepo->findNonPersonalByCodeAndName($code, $name, $offset, $limit);
-    }
-
-    //this is not a very effective method =/
     public function isRegistered(Workspace $workspace, User $user)
     {
-        $userRoles = $user->getRoles();
-        $workspaceRoles = $workspace->getRoles();
-
-        foreach ($userRoles as $userRole) {
-            foreach ($workspaceRoles as $workspaceRole) {
-                if ($workspaceRole->getName() === $userRole) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
+        return $this->workspaceRepo->checkAccess($workspace, $user->getRoles());
     }
 
     public function isManager(Workspace $workspace, TokenInterface $token)
@@ -424,17 +335,6 @@ class WorkspaceManager implements LoggerAwareInterface
         return array_values(array_filter($workspace->getRoles()->toArray(), function (Role $role) use ($token) {
             return in_array($role->getName(), $token->getRoleNames());
         }));
-    }
-
-    /**
-     * Gets the list of role which have access to the workspace.
-     * (either workspace roles or a platform role with ws tool access).
-     *
-     * @return Role[]
-     */
-    public function getRolesWithAccess(Workspace $workspace)
-    {
-        return $this->roleManager->getWorkspaceRoleWithToolAccess($workspace);
     }
 
     /**
@@ -522,6 +422,7 @@ class WorkspaceManager implements LoggerAwareInterface
         $workspace->setArchived(true);
 
         $this->om->persist($workspace);
+        $this->om->flush();
 
         return $workspace;
     }
@@ -531,6 +432,7 @@ class WorkspaceManager implements LoggerAwareInterface
         $workspace->setArchived(false);
 
         $this->om->persist($workspace);
+        $this->om->flush();
 
         return $workspace;
     }

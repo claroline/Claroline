@@ -2,7 +2,7 @@ services:
     _defaults:
         autowire: false
         autoconfigure: false
-        public: true
+        public: false
 
     Icap\BlogBundle\Listener\DataSource\BlogPostsSource:
         arguments:
@@ -47,23 +47,16 @@ services:
             - { name: kernel.event_listener, event: create_log_list_item_resource-icap_blog-comment_update,   method: onCreateLogListItem }
             - { name: kernel.event_listener, event: create_log_list_item_resource-icap_blog-comment_publish,  method: onCreateLogListItem }
 
-    Icap\BlogBundle\Listener\BadgeListener:
+    Icap\BlogBundle\Listener\Resource\BlogListener:
         arguments:
-            - '@router'
-        tags:
-            - { name: kernel.event_listener, event: badge-resource-icap_blog-post_create-generate_validation_link, method: onBagdeCreateValidationLink }
-            - { name: kernel.event_listener, event: badge-resource-icap_blog-post_read-generate_validation_link, method: onBagdeCreateValidationLink }
-            - { name: kernel.event_listener, event: badge-resource-icap_blog-post_update-generate_validation_link, method: onBagdeCreateValidationLink }
-            - { name: kernel.event_listener, event: badge-resource-icap_blog-post_delete-generate_validation_link, method: onBagdeCreateValidationLink }
-            - { name: kernel.event_listener, event: badge-resource-icap_blog-comment_create-generate_validation_link, method: onBagdeCreateValidationLink }
-            - { name: kernel.event_listener, event: badge-resource-icap_blog-comment_delete-generate_validation_link, method: onBagdeCreateValidationLink }
-
-    Icap\BlogBundle\Listener\BlogListener:
-        arguments:
-            - '@http_kernel'
-            - '@request_stack'
-            - '@service_container'
             - '@security.authorization_checker'
+            - '@security.token_storage'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager'
+            - '@Icap\BlogBundle\Manager\BlogManager'
+            - '@Icap\BlogBundle\Manager\PostManager'
+            - '@Icap\BlogBundle\Manager\CommentManager'
         tags:
             - { name: kernel.event_listener, event: resource.icap_blog.load, method: onLoad }
             - { name: kernel.event_listener, event: transfer.icap_blog.export, method: onExport }

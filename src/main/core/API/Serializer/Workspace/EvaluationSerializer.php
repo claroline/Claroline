@@ -15,9 +15,6 @@ class EvaluationSerializer
     /** @var WorkspaceSerializer */
     private $workspaceSerializer;
 
-    /**
-     * EvaluationSerializer constructor.
-     */
     public function __construct(
         UserSerializer $userSerializer,
         WorkspaceSerializer $workspaceSerializer
@@ -31,12 +28,7 @@ class EvaluationSerializer
         return 'workspace_evaluation';
     }
 
-    /**
-     * Serializes an Evaluation entity for the JSON api.
-     *
-     * @return array - the serialized representation of the workspace evaluation
-     */
-    public function serialize(Evaluation $evaluation)
+    public function serialize(Evaluation $evaluation): array
     {
         return [
             'id' => $evaluation->getUuid(),

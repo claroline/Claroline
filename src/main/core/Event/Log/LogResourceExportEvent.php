@@ -22,6 +22,14 @@ class LogResourceExportEvent extends LogGenericEvent
      */
     public function __construct(ResourceNode $node)
     {
+        $owner = [];
+        if (!empty($node->getCreator())) {
+            $owner = [
+                'lastName' => $node->getCreator()->getLastName(),
+                'firstName' => $node->getCreator()->getFirstName(),
+            ];
+        }
+
         parent::__construct(
             self::ACTION,
             [
@@ -32,10 +40,7 @@ class LogResourceExportEvent extends LogGenericEvent
                 'workspace' => [
                     'name' => $node->getWorkspace()->getName(),
                 ],
-                'owner' => [
-                    'lastName' => $node->getCreator()->getLastName(),
-                    'firstName' => $node->getCreator()->getFirstName(),
-                ],
+                'owner' => $owner,
             ],
             null,
             null,

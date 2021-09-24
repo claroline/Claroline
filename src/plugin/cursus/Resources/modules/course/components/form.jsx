@@ -91,13 +91,17 @@ const CourseForm = (props) =>
             type: 'image',
             label: trans('thumbnail')
           }, {
-            name: 'meta.order',
+            name: 'display.order',
             type: 'number',
             label: trans('order'),
             required: true,
             options: {
               min: 0
             }
+          }, {
+            name: 'display.hideSessions',
+            type: 'boolean',
+            label: trans('hide_sessions', {}, 'cursus')
           }
         ]
       }, {
@@ -134,6 +138,7 @@ const CourseForm = (props) =>
               if (!checked) {
                 props.update(props.name, 'registration.autoRegistration', false)
                 props.update(props.name, 'registration.validation', false)
+                props.update(props.name, 'registration.pendingRegistrations', false)
               }
             },
             linked: [
@@ -177,6 +182,7 @@ const CourseForm = (props) =>
                       props.update(props.name, 'registration.validation', false)
                       props.update(props.name, 'registration.userValidation', false)
                       props.update(props.name, 'registration.selfUnregistration', false)
+                      props.update(props.name, 'registration.pendingRegistrations', false)
                       break
 
                     case 'validation':
@@ -187,6 +193,11 @@ const CourseForm = (props) =>
                       break
                   }
                 }
+              }, {
+                name: 'registration.pendingRegistrations',
+                type: 'boolean',
+                label: trans('enable_course_pending_list', {}, 'cursus'),
+                displayed: (course) => get(course, 'registration.selfRegistration') && !get(course, 'registration.autoRegistration')
               }
             ]
           }, {

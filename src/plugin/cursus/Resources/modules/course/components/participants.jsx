@@ -17,6 +17,7 @@ import {selectors} from '#/plugin/cursus/tools/trainings/catalog/store/selectors
 import {Course as CourseTypes, Session as SessionTypes} from '#/plugin/cursus/prop-types'
 import {constants} from '#/plugin/cursus/constants'
 import {isFull} from '#/plugin/cursus/utils'
+import {MODAL_SESSIONS} from '#/plugin/cursus/modals/sessions'
 
 import {SessionGroups} from '#/plugin/cursus/session/components/groups'
 import {SessionUsers} from '#/plugin/cursus/session/components/users'
@@ -35,6 +36,21 @@ const CourseUsers = (props) =>
         label: trans('send_invitation', {}, 'actions'),
         callback: () => props.inviteUsers(props.activeSession.id, rows),
         displayed: hasPermission('register', props.activeSession)
+      }, {
+        name: 'move',
+        type: MODAL_BUTTON,
+        icon: 'fa fa-fw fa-arrows',
+        label: trans('move', {}, 'actions'),
+        displayed: hasPermission('register', props.activeSession),
+        group: trans('management'),
+        modal: [MODAL_SESSIONS, {
+          url: ['apiv2_cursus_course_list_sessions', {id: get(props.activeSession, 'course.id')}],
+          filters: [{property: 'status', value: 'not_ended'}],
+          selectAction: (selected) => ({
+            type: CALLBACK_BUTTON,
+            callback: () => props.moveUsers(props.activeSession.id, selected[0].id, rows, props.type)
+          })
+        }]
       }
     ]}
     add={{
@@ -58,6 +74,7 @@ CourseUsers.propTypes = {
     SessionTypes.propTypes
   ),
   addUsers: T.func.isRequired,
+  moveUsers: T.func.isRequired,
   inviteUsers: T.func.isRequired
 }
 
@@ -75,6 +92,21 @@ const CourseGroups = (props) =>
         label: trans('send_invitation', {}, 'actions'),
         callback: () => props.inviteGroups(props.activeSession.id, rows),
         displayed: hasPermission('register', props.activeSession)
+      }, {
+        name: 'move',
+        type: MODAL_BUTTON,
+        icon: 'fa fa-fw fa-arrows',
+        label: trans('move', {}, 'actions'),
+        displayed: hasPermission('register', props.activeSession),
+        group: trans('management'),
+        modal: [MODAL_SESSIONS, {
+          url: ['apiv2_cursus_course_list_sessions', {id: get(props.activeSession, 'course.id')}],
+          filters: [{property: 'status', value: 'not_ended'}],
+          selectAction: (selected) => ({
+            type: CALLBACK_BUTTON,
+            callback: () => props.moveGroups(props.activeSession.id, selected[0].id, rows, props.type)
+          })
+        }]
       }
     ]}
     add={{
@@ -99,7 +131,8 @@ CourseGroups.propTypes = {
     SessionTypes.propTypes
   ),
   addGroups: T.func.isRequired,
-  inviteGroups: T.func.isRequired
+  inviteGroups: T.func.isRequired,
+  moveGroups: T.func.isRequired
 }
 
 const CourseParticipants = (props) =>
@@ -187,9 +220,10 @@ const CourseParticipants = (props) =>
                   <CourseUsers
                     type={constants.TEACHER_TYPE}
                     activeSession={props.activeSession}
-                    name={selectors.STORE_NAME+'.courseTutors'}
+                    name={selectors.STORE_NAME+'.sessionTutors'}
                     addUsers={props.addUsers}
                     inviteUsers={props.inviteUsers}
+                    moveUsers={props.moveUsers}
                   />
                 )
 
@@ -201,26 +235,27 @@ const CourseParticipants = (props) =>
                 const Users = (
                   <Fragment>
                     {isFull(props.activeSession) &&
-                    <AlertBlock type="warning" title={trans('La session est complète.', {}, 'cursus')}>
-                      {trans('Toutes les nouvelles inscriptions seront automatiquement ajoutées en liste d\'attente.', {}, 'cursus')}
-                    </AlertBlock>
+                      <AlertBlock type="warning" title={trans('La session est complète.', {}, 'cursus')}>
+                        {trans('Toutes les nouvelles inscriptions seront automatiquement ajoutées en liste d\'attente.', {}, 'cursus')}
+                      </AlertBlock>
                     }
 
                     {get(props.activeSession, 'registration.userValidation') &&
-                    <AlertBlock title={trans('registration_user_confirmation_title', {}, 'cursus')}>
-                      {trans('registration_user_confirmation_pending_help', {}, 'cursus')}
-                      <br/>
-                      {trans('registration_user_confirmation_manager_help', {}, 'cursus')}
-                      (<LinkButton target={props.path+'/'+props.course.slug+(props.activeSession ? '/'+props.activeSession.id : '')+'/participants/pending'}>{trans('show_pending_list', {}, 'cursus')}</LinkButton>)
-                    </AlertBlock>
+                      <AlertBlock title={trans('registration_user_confirmation_title', {}, 'cursus')}>
+                        {trans('registration_user_confirmation_pending_help', {}, 'cursus')}
+                        <br/>
+                        {trans('registration_user_confirmation_manager_help', {}, 'cursus')}
+                        (<LinkButton target={props.path+'/'+props.course.slug+(props.activeSession ? '/'+props.activeSession.id : '')+'/participants/pending'}>{trans('show_pending_list', {}, 'cursus')}</LinkButton>)
+                      </AlertBlock>
                     }
 
                     <CourseUsers
                       type={constants.LEARNER_TYPE}
                       activeSession={props.activeSession}
-                      name={selectors.STORE_NAME+'.courseUsers'}
+                      name={selectors.STORE_NAME+'.sessionUsers'}
                       addUsers={props.addUsers}
                       inviteUsers={props.inviteUsers}
+                      moveUsers={props.moveUsers}
                     />
                   </Fragment>
                 )
@@ -234,9 +269,10 @@ const CourseParticipants = (props) =>
                   <CourseGroups
                     type={constants.LEARNER_TYPE}
                     activeSession={props.activeSession}
-                    name={selectors.STORE_NAME+'.courseGroups'}
+                    name={selectors.STORE_NAME+'.sessionGroups'}
                     addGroups={props.addGroups}
                     inviteGroups={props.inviteGroups}
+                    moveGroups={props.moveGroups}
                   />
                 )
 
@@ -256,7 +292,7 @@ const CourseParticipants = (props) =>
 
                     <SessionUsers
                       session={props.activeSession}
-                      name={selectors.STORE_NAME+'.coursePending'}
+                      name={selectors.STORE_NAME+'.sessionPending'}
                       url={['apiv2_cursus_session_list_pending', {id: props.activeSession.id}]}
                       unregisterUrl={['apiv2_cursus_session_remove_users', {type: constants.LEARNER_TYPE, id: props.activeSession.id}]}
                       actions={(rows) => [
@@ -278,6 +314,21 @@ const CourseParticipants = (props) =>
                           disabled: isFull(props.activeSession),
                           displayed: hasPermission('register', props.activeSession) && -1 !== rows.findIndex(row => !row.validated),
                           group: trans('management')
+                        }, {
+                          name: 'move',
+                          type: MODAL_BUTTON,
+                          icon: 'fa fa-fw fa-arrows',
+                          label: trans('move', {}, 'actions'),
+                          displayed: hasPermission('register', props.activeSession),
+                          group: trans('management'),
+                          modal: [MODAL_SESSIONS, {
+                            url: ['apiv2_cursus_course_list_sessions', {id: get(props.activeSession, 'course.id')}],
+                            filters: [{property: 'status', value: 'not_ended'}],
+                            selectAction: (selected) => ({
+                              type: CALLBACK_BUTTON,
+                              callback: () => props.moveUsers(props.activeSession.id, selected[0].id, rows, constants.LEARNER_TYPE)
+                            })
+                          }]
                         }
                       ]}
                       add={{
@@ -315,8 +366,10 @@ CourseParticipants.propTypes = {
   ),
   addUsers: T.func.isRequired,
   inviteUsers: T.func.isRequired,
+  moveUsers: T.func.isRequired,
   addGroups: T.func.isRequired,
   inviteGroups: T.func.isRequired,
+  moveGroups: T.func.isRequired,
   addPending: T.func.isRequired,
   confirmPending: T.func.isRequired,
   validatePending: T.func.isRequired

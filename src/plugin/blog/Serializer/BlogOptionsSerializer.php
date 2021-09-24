@@ -43,12 +43,7 @@ class BlogOptionsSerializer
         return 'blog_options';
     }
 
-    /**
-     * @param BlogOptions $options
-     *
-     * @return array - The serialized representation of blog options
-     */
-    public function serialize(Blog $blog, BlogOptions $blogOptions, array $options = [])
+    public function serialize(Blog $blog, BlogOptions $blogOptions, array $options = []): array
     {
         return [
             'authorizeComment' => $blogOptions->getAuthorizeComment(),
@@ -56,12 +51,10 @@ class BlogOptionsSerializer
             'postPerPage' => $blogOptions->getPostPerPage(),
             'autoPublishPost' => $blogOptions->getAutoPublishPost(),
             'commentModerationMode' => $this->getModerationModeStringValue($blogOptions->getCommentModerationMode()),
-            'displayTitle' => $blogOptions->getDisplayTitle(),
-            'bannerActivate' => $blogOptions->isBannerActivate(),
             'displayPostViewCounter' => $blogOptions->getDisplayPostViewCounter(),
             'tagCloud' => null !== $blogOptions->getTagCloud() ? $this->getTagModeStringValue($blogOptions->getTagCloud()) : '0',
             'widgetOrder' => $this->serializeWidgetOrder($blogOptions->getListWidgetBlog()),
-            'widgetList' => $this->serializeWidgetList($this->blogManager->getPanelInfos()),
+            'widgetList' => $this->serializeWidgetList(),
             'tagTopMode' => $blogOptions->isTagTopMode(),
             'maxTag' => $blogOptions->getMaxTag(),
             'displayFullPosts' => $blogOptions->getDisplayFullPosts(),
@@ -193,13 +186,7 @@ class BlogOptionsSerializer
         return $mask;
     }
 
-    /**
-     * @param array              $data
-     * @param BlogOptions | null $blogOptions
-     *
-     * @return BlogOptions - The deserialized blogOptions entity
-     */
-    public function deserialize($data, BlogOptions $blogOptions = null, array $options = [])
+    public function deserialize(array $data, BlogOptions $blogOptions = null, array $options = []): BlogOptions
     {
         if (empty($blogOptions)) {
             $blogOptions = new BlogOptions();
@@ -213,8 +200,6 @@ class BlogOptionsSerializer
         $this->sipe('authorizeAnonymousComment', 'setAuthorizeAnonymousComment', $data, $blogOptions);
         $this->sipe('postPerPage', 'setPostPerPage', $data, $blogOptions);
         $this->sipe('autoPublishPost', 'setAutoPublishPost', $data, $blogOptions);
-        $this->sipe('displayTitle', 'setDisplayTitle', $data, $blogOptions);
-        $this->sipe('bannerActivate', 'setBannerActivate', $data, $blogOptions);
         $this->sipe('displayPostViewCounter', 'setDisplayPostViewCounter', $data, $blogOptions);
         $this->sipe('tagTopMode', 'setTagTopMode', $data, $blogOptions);
         $this->sipe('maxTag', 'setMaxTag', $data, $blogOptions);

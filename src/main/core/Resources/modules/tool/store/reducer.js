@@ -1,5 +1,6 @@
 import {combineReducers, makeReducer} from '#/main/app/store/reducer'
 
+import {SECURITY_USER_CHANGE} from '#/main/app/security/store/actions'
 import {
   TOOL_OPEN,
   TOOL_CLOSE,
@@ -11,6 +12,7 @@ import {
 
 const reducer = combineReducers({
   loaded: makeReducer(false, {
+    [SECURITY_USER_CHANGE]: () => false,
     [TOOL_SET_LOADED]: (state, action) => action.loaded,
     [TOOL_CLOSE]: () => false
   }),

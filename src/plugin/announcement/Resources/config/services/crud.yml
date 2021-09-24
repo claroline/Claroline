@@ -12,6 +12,7 @@ services:
 
     Claroline\AnnouncementBundle\Crud\AnnouncementCrud:
         arguments:
+            - '@security.token_storage'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AnnouncementBundle\Manager\AnnouncementManager'
         tags:

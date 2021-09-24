@@ -1,0 +1,10 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: false
+
+    Claroline\SamlBundle\Manager\IdpManager:
+        arguments:
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'

@@ -9,14 +9,10 @@ services:
             - '%claroline.param.platform_options%'
             - '@request_stack'
 
-    Claroline\CoreBundle\Library\Installation\Refresher:
-        arguments:
-            - '@service_container'
-
     Claroline\CoreBundle\Library\Installation\OperationExecutor:
         arguments:
             - '@kernel'
-            - '@claroline.installation.manager'
+            - '@Claroline\InstallationBundle\Manager\InstallationManager'
             - '@Claroline\CoreBundle\Library\Installation\Plugin\Installer'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\Manager\VersionManager'
@@ -38,7 +34,7 @@ services:
         arguments:
             - '@claroline.plugin.validator'
             - '@Claroline\CoreBundle\Library\Installation\Plugin\Recorder'
-            - '@claroline.installation.manager'
+            - '@Claroline\InstallationBundle\Manager\InstallationManager'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\Manager\PluginManager'
             - '@translator'
@@ -66,10 +62,8 @@ services:
     Claroline\CoreBundle\Library\Installation\PlatformInstaller:
         arguments:
             - '@Claroline\CoreBundle\Library\Installation\OperationExecutor'
-            - '@claroline.installation.manager'
+            - '@Claroline\InstallationBundle\Manager\InstallationManager'
             - '@Claroline\CoreBundle\Library\Installation\Plugin\Installer'
-            - '@Claroline\CoreBundle\Library\Installation\Refresher'
-            - '@kernel'
             - '@service_container'
         calls:
             - setLogger: [ '@logger' ]

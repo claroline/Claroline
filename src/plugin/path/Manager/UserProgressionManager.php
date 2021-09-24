@@ -2,12 +2,12 @@
 
 namespace Innova\PathBundle\Manager;
 
-use Claroline\CoreBundle\Entity\Evaluation\AbstractEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
 use Claroline\CoreBundle\Repository\Resource\ResourceEvaluationRepository;
+use Claroline\EvaluationBundle\Entity\AbstractEvaluation;
 use Doctrine\Persistence\ObjectManager;
 use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\Step;
@@ -152,33 +152,33 @@ class UserProgressionManager
             /** @var Step[] $steps */
             $steps = $this->stepRepo->findBy(['resource' => $resourceNode, 'evaluated' => true]);
 
-            $pathAttempts = [];
             foreach ($steps as $step) {
                 // get the current attempt of the path
-                if (!empty($pathAttempts[$step->getPath()->getUuid()])) {
-                    $pathAttempt = $pathAttempts[$step->getPath()->getUuid()];
-                } else {
-                    $pathAttempt = $this->resourceEvalRepo->findLast($step->getPath()->getResourceNode(), $user);
-                }
-
+                $pathAttempt = $this->resourceEvalRepo->findLast($step->getPath()->getResourceNode(), $user);
                 if ($pathAttempt) {
-                    // only update the path attempt if there is no evaluation for this resource yet
                     $attemptData = $pathAttempt->getData();
                     if (empty($attemptData['resources'])) {
                         $attemptData['resources'] = [];
                     }
 
-                    $attemptData['resources'][$step->getUuid()] = [
-                        'id' => $resourceAttempt->getId(),
-                        'score' => $resourceAttempt->getScore(),
-                        'max' => $resourceAttempt->getScoreMax(),
-                    ];
+                    if (empty($attemptData['resources'][$step->getUuid()])
+                        || $resourceAttempt->getScore() > $attemptData['resources'][$step->getUuid()]['score']
+                        || $resourceAttempt->getScoreMax() !== $attemptData['resources'][$step->getUuid()]['max']
+                    ) {
+                        // only update path attempt if it's the first time the user do the resource
+                        // or if he gets a better score
+                        $attemptData['resources'][$step->getUuid()] = [
+                            'id' => $resourceAttempt->getId(),
+                            'score' => $resourceAttempt->getScore(),
+                            'max' => $resourceAttempt->getScoreMax(),
+                        ];
 
-                    // recompute path attempt score
-                    $data = array_merge(['data' => $attemptData], $this->computeScore($step->getPath(), $attemptData['resources']));
+                        // recompute path attempt score
+                        $data = array_merge(['data' => $attemptData], $this->computeScore($step->getPath(), $attemptData['resources']));
 
-                    // forward update to core to let him recompute the ResourceUserEvaluation if needed
-                    $this->resourceEvalManager->updateResourceEvaluation($pathAttempt, $resourceAttempt->getDate(), $data, false, false);
+                        // forward update to core to let him recompute the ResourceUserEvaluation if needed
+                        $this->resourceEvalManager->updateResourceEvaluation($pathAttempt, $resourceAttempt->getDate(), $data, false, false, true);
+                    }
                 }
             }
         }

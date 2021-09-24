@@ -64,8 +64,6 @@ class RuleSerializer
 
         switch ($data['type']) {
             case Rule::RESOURCE_PASSED:
-                $rule->setResourceNode($this->om->getObject($data['data'], ResourceNode::class));
-                break;
             case Rule::RESOURCE_PARTICIPATED:
                 $rule->setResourceNode($this->om->getObject($data['data'], ResourceNode::class));
                 break;

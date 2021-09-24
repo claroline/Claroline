@@ -143,7 +143,7 @@ function formatFormSections(sections, userData, params, currentUser = null) {
   let hasLockedRights = currentUser ? hasRoles(currentUser.roles, ['ROLE_ADMIN'].concat(params['roles_locked'])): false
 
   sections.forEach(section => {
-    section.fields = section.fields.filter(f => !f.restrictions.hidden && (hasConfidentialRights || !f.restrictions.isMetadata || (currentUser && currentUser.id === userData['id'])))
+    section.fields = section.fields.filter(f => !f.restrictions.hidden && (hasConfidentialRights || !f.restrictions.metadata || (currentUser && currentUser.id === userData['id'])))
     section.fields.forEach(f => {
       f['name'] = 'profile.' + f['id']
 
@@ -173,7 +173,7 @@ function formatFormSections(sections, userData, params, currentUser = null) {
 function formatDetailsSections(sections, user, params, currentUser) {
   const hasConfidentialRights = currentUser ? hasRoles(currentUser.roles, ['ROLE_ADMIN'].concat(params['roles_confidential'])) : false
   sections.forEach(section => {
-    section.fields = section.fields.filter(f => !f.restrictions.hidden && (hasConfidentialRights || !f.restrictions.isMetadata || (currentUser && currentUser.id === user.id)))
+    section.fields = section.fields.filter(f => !f.restrictions.hidden && (hasConfidentialRights || !f.restrictions.metadata || (currentUser && currentUser.id === user.id)))
     section.fields.forEach(f => {
       f['name'] = 'profile.' + f['id']
 

@@ -3,8 +3,7 @@
 namespace Claroline\LogBundle\Subscriber;
 
 use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
-use Claroline\CoreBundle\Event\Security\AddRoleEvent;
-use Claroline\CoreBundle\Event\Security\RemoveRoleEvent;
+use Claroline\CoreBundle\Event\Security\AbstractRoleEvent;
 use Claroline\CoreBundle\Library\GeoIp\GeoIpInfoProviderInterface;
 use Claroline\LogBundle\Messenger\Message\CreateRoleChangeLogs;
 use Claroline\LogBundle\Messenger\Message\CreateSecurityLog;
@@ -78,10 +77,7 @@ class SecurityLogSubscriber implements EventSubscriberInterface
         ));
     }
 
-    /**
-     * @param AddRoleEvent|RemoveRoleEvent $event
-     */
-    public function logRoleChanges(Event $event, string $eventName)
+    public function logRoleChanges(AbstractRoleEvent $event, string $eventName)
     {
         $doerInfo = $this->getDoerInfo();
 

@@ -28,7 +28,7 @@
             <div class="panel-body">
                 {% if template is empty or not useTemplate %}
                     {% for field in fields %}
-                        {% if withMeta or not field.getIsMetadata() %}
+                        {% if withMeta or not field.isMetadata() %}
                             <div class="row entry-row">
                                 <label class="col-md-3 entry-label">
                                     {{ field.getName()|raw }}
@@ -38,7 +38,7 @@
                                         {% if field.getFieldFacet().getType() == constant('Claroline\\CoreBundle\\Entity\\Facet\\FieldFacet::DATE_TYPE') %}
                                             {{ fieldValues[field.getId()]|date('d/m/Y') }}
                                         {% elseif field.getFieldFacet().getType() == constant('Claroline\\CoreBundle\\Entity\\Facet\\FieldFacet::CHOICE_TYPE') %}
-                                            {% if field.getDetails()['multiple'] %}
+                                            {% if field.getOptions()['multiple'] %}
                                                 {{ fieldValues[field.getId()]|join(', ') }}
                                             {% else %}
                                                 {{ fieldValues[field.getId()] }}

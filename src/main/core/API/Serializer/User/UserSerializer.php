@@ -411,7 +411,6 @@ class UserSerializer
             $organization = $this->om->getObject($data['mainOrganization'], Organization::class, ['id', 'code', 'name', 'email']);
 
             if ($organization) {
-                $user->addOrganization($organization);
                 $user->setMainOrganization($organization);
             }
         }
@@ -491,24 +490,25 @@ class UserSerializer
             }
         }
 
-        $fieldFacets = $this->fieldFacetRepo->findPlatformFieldFacets();
-        foreach ($fieldFacets as $fieldFacet) {
-            if (isset($data['profile']) && isset($data['profile'][$fieldFacet->getUuid()])) {
-                /** @var FieldFacetValue $fieldFacetValue */
-                $fieldFacetValue = $this->om
-                    ->getRepository(FieldFacetValue::class)
-                    ->findOneBy([
-                        'user' => $user,
-                        'fieldFacet' => $fieldFacet,
-                    ]) ?? new FieldFacetValue();
+        if (isset($data['profile'])) {
+            $fieldFacets = $this->fieldFacetRepo->findPlatformFieldFacets();
+            foreach ($fieldFacets as $fieldFacet) {
+                if (isset($data['profile'][$fieldFacet->getUuid()])) {
+                    /** @var FieldFacetValue $fieldFacetValue */
+                    $fieldFacetValue = $this->fieldFacetValueRepo
+                        ->findOneBy([
+                            'user' => $user,
+                            'fieldFacet' => $fieldFacet,
+                        ]) ?? new FieldFacetValue();
 
-                $user->addFieldFacet(
-                    $this->fieldFacetValueSerializer->deserialize([
-                        'name' => $fieldFacet->getName(),
-                        'value' => $data['profile'][$fieldFacet->getUuid()],
-                        'fieldFacet' => ['id' => $fieldFacet->getUuid()],
-                    ], $fieldFacetValue)
-                );
+                    $user->addFieldFacet(
+                        $this->fieldFacetValueSerializer->deserialize([
+                            'name' => $fieldFacet->getName(),
+                            'value' => $data['profile'][$fieldFacet->getUuid()],
+                            'fieldFacet' => ['id' => $fieldFacet->getUuid()],
+                        ], $fieldFacetValue)
+                    );
+                }
             }
         }
 

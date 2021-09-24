@@ -34,21 +34,25 @@ class WorkspaceVoter extends AbstractVoter
         $this->restrictionsManager = $restrictionsManager;
     }
 
+    public function getClass()
+    {
+        return Workspace::class;
+    }
+
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
     {
-        if ($this->isWorkspaceManaged($token, $object)) {
-            return VoterInterface::ACCESS_GRANTED;
-        }
-
         $collection = isset($options['collection']) ? $options['collection'] : null;
 
-        //crud actions
         switch ($attributes[0]) {
             case self::VIEW:   return $this->checkView($token, $object);
             case self::CREATE: return $this->checkCreation($token);
             case self::EDIT:   return $this->checkEdit($token, $object);
             case self::DELETE: return $this->checkDelete($token, $object);
             case self::PATCH:  return $this->checkPatch($token, $object, $collection);
+        }
+
+        if ($this->isWorkspaceManaged($token, $object)) {
+            return VoterInterface::ACCESS_GRANTED;
         }
 
         if (!$this->restrictionsManager->isStarted($object)
@@ -58,20 +62,19 @@ class WorkspaceVoter extends AbstractVoter
             return VoterInterface::ACCESS_DENIED;
         }
 
-        //then we do all the rest
         $toolName = isset($attributes[0]) && 'OPEN' !== $attributes[0] ?
             $attributes[0] :
             null;
 
         $action = isset($attributes[1]) ? strtolower($attributes[1]) : 'open';
-        $accesses = $this->workspaceManager->getAccesses($token, [$object], $toolName, $action);
-        //this is for the tools, probably change it later
-        return isset($accesses[$object->getId()]) && true === $accesses[$object->getId()] ?
-            VoterInterface::ACCESS_GRANTED :
-            VoterInterface::ACCESS_DENIED;
+
+        if ($this->workspaceManager->hasAccess($object, $token, $toolName, $action)) {
+            return VoterInterface::ACCESS_GRANTED;
+        }
+
+        return VoterInterface::ACCESS_DENIED;
     }
 
-    //workspace creator handling ?
     private function checkCreation(TokenInterface $token)
     {
         if ($this->isWorkspaceCreator($token)) {
@@ -90,7 +93,7 @@ class WorkspaceVoter extends AbstractVoter
         return VoterInterface::ACCESS_GRANTED;
     }
 
-    private function checkDelete($token, Workspace $workspace)
+    private function checkDelete($token, Workspace $workspace): int
     {
         // disallow deleting default models
         if (in_array($workspace->getCode(), ['default_personal', 'default_workspace'])) {
@@ -104,7 +107,7 @@ class WorkspaceVoter extends AbstractVoter
         return VoterInterface::ACCESS_GRANTED;
     }
 
-    private function checkView($token, Workspace $workspace)
+    private function checkView($token, Workspace $workspace): int
     {
         if (!$this->isWorkspaceManaged($token, $workspace)) {
             return VoterInterface::ACCESS_DENIED;
@@ -113,15 +116,7 @@ class WorkspaceVoter extends AbstractVoter
         return VoterInterface::ACCESS_GRANTED;
     }
 
-    /**
-     * This is not done yet but later a user might be able to edit its roles/groups himself
-     * and it should be checked here.
-     *
-     * @param ObjectCollection $collection
-     *
-     * @return int
-     */
-    private function checkPatch(TokenInterface $token, Workspace $workspace, ObjectCollection $collection = null)
+    private function checkPatch(TokenInterface $token, Workspace $workspace, ObjectCollection $collection = null): int
     {
         //single property: no check now
         if (!$collection) {
@@ -142,19 +137,14 @@ class WorkspaceVoter extends AbstractVoter
         return $this->workspaceManager->isManager($workspace, $token);
     }
 
-    public function getClass()
+    private function isWorkspaceCreator(TokenInterface $token)
     {
-        return Workspace::class;
+        return in_array(PlatformRoles::WS_CREATOR, $token->getRoleNames());
     }
 
     public function getSupportedActions()
     {
         //atm, null means "everything is supported... implement this later"
         return null;
-    }
-
-    protected function isWorkspaceCreator(TokenInterface $token)
-    {
-        return in_array(PlatformRoles::WS_CREATOR, $token->getRoleNames());
     }
 }

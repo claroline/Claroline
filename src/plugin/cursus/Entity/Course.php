@@ -73,6 +73,15 @@ class Course extends AbstractTraining
     private $sessions;
 
     /**
+     * Hides sessions to users.
+     *
+     * @ORM\Column(type="boolean")
+     *
+     * @var string
+     */
+    private $hideSessions = false;
+
+    /**
      * If true, automatically register users to the default session of the training children
      * when registering to a session of this training.
      *
@@ -195,6 +204,16 @@ class Course extends AbstractTraining
         }
 
         return false;
+    }
+
+    public function getHideSessions(): bool
+    {
+        return $this->hideSessions;
+    }
+
+    public function setHideSessions(bool $hideSessions)
+    {
+        $this->hideSessions = $hideSessions;
     }
 
     public function getSessionOpening(): ?string

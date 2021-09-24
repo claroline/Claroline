@@ -1,6 +1,6 @@
 <?php
 
-namespace  Icap\NotificationBundle\Serializer;
+namespace Icap\NotificationBundle\Serializer;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Persistence\ObjectManager;
@@ -21,9 +21,6 @@ class NotificationSerializer
     /** @var UserSerializer */
     private $userSerializer;
 
-    /**
-     * NotificationSerializer constructor.
-     */
     public function __construct(
         ObjectManager $om,
         EventDispatcherInterface $eventDispatcher,
@@ -44,10 +41,13 @@ class NotificationSerializer
         return 'notification';
     }
 
-    public function serialize(Notification $notification)
+    public function serialize(Notification $notification): array
     {
-        /** @var User $user */
-        $user = $this->om->getRepository(User::class)->find($notification->getUserId());
+        $user = null;
+        if (!empty($notification->getUserId())) {
+            /** @var User $user */
+            $user = $this->om->getRepository(User::class)->find($notification->getUserId());
+        }
 
         return [
             'id' => $notification->getId(),

@@ -12,14 +12,14 @@
 namespace Claroline\OpenBadgeBundle\Listener\Rules;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Evaluation\AbstractEvaluation;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Evaluation;
 use Claroline\CoreBundle\Event\UserEvaluationEvent;
+use Claroline\EvaluationBundle\Entity\AbstractEvaluation;
 use Claroline\OpenBadgeBundle\Entity\Evidence;
 use Claroline\OpenBadgeBundle\Entity\Rules\Rule;
 use Claroline\OpenBadgeBundle\Manager\RuleManager;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class WorkspaceEvaluationListener
 {

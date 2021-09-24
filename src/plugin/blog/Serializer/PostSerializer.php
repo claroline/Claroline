@@ -5,8 +5,10 @@ namespace Icap\BlogBundle\Serializer;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer;
 use Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
+use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Icap\BlogBundle\Entity\Post;
@@ -19,28 +21,26 @@ class PostSerializer
     private $userSerializer;
     private $commentSerializer;
     private $userRepo;
-    private $tagRepo;
     private $om;
     private $eventDispatcher;
     private $nodeSerializer;
+    private $publicFileSerializer;
 
-    /**
-     * PostSerializer constructor.
-     */
     public function __construct(
         UserSerializer $userSerializer,
         CommentSerializer $commentSerializer,
         ObjectManager $om,
         EventDispatcherInterface $eventDispatcher,
-        ResourceNodeSerializer $nodeSerializer
+        ResourceNodeSerializer $nodeSerializer,
+        PublicFileSerializer $publicFileSerializer
     ) {
         $this->userSerializer = $userSerializer;
         $this->commentSerializer = $commentSerializer;
         $this->userRepo = $om->getRepository('Claroline\CoreBundle\Entity\User');
-        $this->tagRepo = $om->getRepository('Icap\BlogBundle\Entity\Tag');
         $this->om = $om;
         $this->eventDispatcher = $eventDispatcher;
         $this->nodeSerializer = $nodeSerializer;
+        $this->publicFileSerializer = $publicFileSerializer;
     }
 
     public function getName()
@@ -76,11 +76,24 @@ class PostSerializer
         return in_array($option, $options);
     }
 
-    /**
-     * @return array - The serialized representation of a post
-     */
-    public function serialize(Post $post, array $options = [], array $comments = [])
+    public function serialize(Post $post, array $options = [], array $comments = []): array
     {
+        $thumbnail = null;
+        if ($post->getThumbnail()) {
+            /** @var PublicFile $thumbnail */
+            $thumbnail = $this->om->getRepository(PublicFile::class)->findOneBy([
+                'url' => $post->getThumbnail(),
+            ]);
+        }
+
+        $poster = null;
+        if ($post->getPoster()) {
+            /** @var PublicFile $poster */
+            $poster = $this->om->getRepository(PublicFile::class)->findOneBy([
+                'url' => $post->getPoster(),
+            ]);
+        }
+
         //serialize comments
         if (isset($options[CommentSerializer::INCLUDE_COMMENTS])) {
             if ($this->hasOption(CommentSerializer::FETCH_COMMENTS, $options)) {
@@ -94,21 +107,23 @@ class PostSerializer
             'id' => $post->getUuid(),
             'slug' => $post->getSlug(),
             'title' => $post->getTitle(),
+            'thumbnail' => $thumbnail ? $this->publicFileSerializer->serialize($thumbnail) : null,
+            'poster' => $poster ? $this->publicFileSerializer->serialize($poster) : null,
             'content' => isset($options['abstract']) && $options['abstract'] ? $post->getAbstract() : $post->getContent(),
             'abstract' => $this->isAbstract($post, $options),
             'meta' => [
+                //'author' => $post->getAuthor(),
                 'resource' => $post->getBlog() && $post->getBlog()->getResourceNode() ?
                     $this->nodeSerializer->serialize($post->getBlog()->getResourceNode(), [Options::SERIALIZE_MINIMAL])
                     :
                     null,
             ],
-            'creationDate' => $post->getCreationDate() ? DateNormalizer::normalize($post->getCreationDate()) : new \DateTime(),
-            'modificationDate' => $post->getModificationDate() ? DateNormalizer::normalize($post->getModificationDate()) : null,
-            'publicationDate' => $post->getPublicationDate() ? DateNormalizer::normalize($post->getPublicationDate()) : DateNormalizer::normalize($post->getCreationDate()),
+            'creationDate' => DateNormalizer::normalize($post->getCreationDate()),
+            'modificationDate' => DateNormalizer::normalize($post->getModificationDate()),
+            'publicationDate' => DateNormalizer::normalize($post->getPublicationDate()),
             'viewCounter' => $post->getViewCounter(),
             'author' => $post->getAuthor() ? $this->userSerializer->serialize($post->getAuthor(), [Options::SERIALIZE_MINIMAL]) : null,
             'authorName' => $post->getAuthor() ? $post->getAuthor()->getFullName() : null,
-            'authorPicture' => $post->getAuthor()->getPicture(),
             'tags' => $this->serializeTags($post),
             'comments' => $comments,
             'commentsNumber' => $commentsNumber,
@@ -133,13 +148,7 @@ class PostSerializer
         return false;
     }
 
-    /**
-     * @param array       $data
-     * @param Post | null $post
-     *
-     * @return Post - The deserialized post entity
-     */
-    public function deserialize($data, Post $post = null, array $options = [])
+    public function deserialize(array $data, Post $post = null, array $options = []): Post
     {
         if (empty($post)) {
             $post = new Post();
@@ -149,12 +158,10 @@ class PostSerializer
             $this->sipe('id', 'setUuid', $data, $post);
         }
 
-        if (isset($data['title'])) {
-            $post->setTitle($data['title']);
-        }
-        if (isset($data['content'])) {
-            $post->setContent($data['content']);
-        }
+        $this->sipe('title', 'setTitle', $data, $post);
+        $this->sipe('content', 'setContent', $data, $post);
+        $this->sipe('viewCounter', 'setViewCounter', $data, $post);
+
         if (isset($data['creationDate'])) {
             $post->setCreationDate(DateNormalizer::denormalize($data['creationDate']));
         }
@@ -164,9 +171,7 @@ class PostSerializer
         if (isset($data['modificationDate'])) {
             $post->setModificationDate(DateNormalizer::denormalize($data['modificationDate']));
         }
-        if (isset($data['viewCounter'])) {
-            $post->setViewCounter($data['viewCounter']);
-        }
+
         if (isset($data['user'])) {
             $user = isset($data['user']['id']) ? $this->userRepo->findOneBy(['id' => $data['user']['id']]) : null;
             $post->setAuthor($user);
@@ -179,6 +184,14 @@ class PostSerializer
         }
         if (isset($data['commentModerationMode'])) {
             $post->setCommentModerationMode($data['commentModerationMode']);
+        }
+
+        if (isset($data['poster']) && isset($data['poster']['url'])) {
+            $post->setPoster($data['poster']['url']);
+        }
+
+        if (isset($data['thumbnail']) && isset($data['thumbnail']['url'])) {
+            $post->setThumbnail($data['thumbnail']['url']);
         }
 
         return $post;

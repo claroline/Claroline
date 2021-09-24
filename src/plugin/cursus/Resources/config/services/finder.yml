@@ -25,18 +25,20 @@ services:
 
     Claroline\CursusBundle\Finder\EventFinder: ~
 
+    Claroline\CursusBundle\Finder\EventPresenceFinder: ~
+
     Claroline\CursusBundle\Finder\QuotaFinder:
         arguments:
           - '@security.authorization_checker'
           - '@security.token_storage'
 
     # Registrations
-    Claroline\CursusBundle\Finder\SessionGroupFinder: ~
+    Claroline\CursusBundle\Finder\Registration\CourseUserFinder: ~
 
-    Claroline\CursusBundle\Finder\SessionUserFinder: ~
+    Claroline\CursusBundle\Finder\Registration\SessionGroupFinder: ~
 
-    Claroline\CursusBundle\Finder\EventGroupFinder: ~
+    Claroline\CursusBundle\Finder\Registration\SessionUserFinder: ~
 
-    Claroline\CursusBundle\Finder\EventUserFinder: ~
+    Claroline\CursusBundle\Finder\Registration\EventGroupFinder: ~
 
-    Claroline\CursusBundle\Finder\EventPresenceFinder: ~
+    Claroline\CursusBundle\Finder\Registration\EventUserFinder: ~

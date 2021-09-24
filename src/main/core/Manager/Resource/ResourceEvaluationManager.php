@@ -13,7 +13,6 @@ namespace Claroline\CoreBundle\Manager\Resource;
 
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Evaluation\AbstractEvaluation;
 use Claroline\CoreBundle\Entity\Log\Connection\LogConnectResource;
 use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
@@ -22,6 +21,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Resource\EvaluateResourceEvent;
 use Claroline\CoreBundle\Repository\Log\LogRepository;
+use Claroline\EvaluationBundle\Entity\AbstractEvaluation;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class ResourceEvaluationManager
@@ -80,8 +80,14 @@ class ResourceEvaluationManager
         return $evaluation;
     }
 
-    public function updateResourceEvaluation(ResourceEvaluation $evaluation, \DateTime $date = null, array $data = [], $incAttempts = true, $incOpenings = false)
-    {
+    public function updateResourceEvaluation(
+        ResourceEvaluation $evaluation,
+        \DateTime $date = null,
+        array $data = [],
+        bool $incAttempts = true,
+        bool $incOpenings = false,
+        bool $forceScore = false
+    ) {
         $this->om->startFlushSuite();
 
         $evaluation->setDate($date ?? new \DateTime());
@@ -126,7 +132,7 @@ class ResourceEvaluationManager
             'scoreMax' => $evaluation->getScoreMax(),
             'progression' => $evaluation->getProgression(),
             'progressionMax' => $evaluation->getProgressionMax(),
-        ], $incAttempts, $incOpenings);
+        ], $incAttempts, $incOpenings, $forceScore);
 
         $this->om->endFlushSuite();
 
@@ -140,8 +146,9 @@ class ResourceEvaluationManager
         User $user = null,
         \DateTime $date = null,
         array $data = [],
-        $incAttempts = true,
-        $incOpenings = false
+        bool $incAttempts = true,
+        bool $incOpenings = false,
+        bool $forceScore = false
     ) {
         $rue = $this->getResourceUserEvaluation($node, $user);
 
@@ -160,13 +167,15 @@ class ResourceEvaluationManager
         }
 
         if (isset($data['score'])) {
+            $newScoreMax = !empty($data['scoreMax']) ? $data['scoreMax'] : null;
             $newScore = empty($data['scoreMax']) ? $data['score'] : $data['score'] / $data['scoreMax'];
 
             $rueScore = $rue->getScore();
             $rueScoreMax = $rue->getScoreMax();
             $oldScore = empty($rueScoreMax) ? $rueScore : $rueScore / $rueScoreMax;
 
-            if (is_null($oldScore) || $newScore >= $oldScore) {
+            // update evaluation score if the user has never been evaluated, has a better score or if the max score has changed
+            if ($forceScore || is_null($oldScore) || $newScore >= $oldScore || $newScoreMax !== $rueScoreMax) {
                 $rue->setScore($data['score']);
 
                 if (isset($data['scoreMax'])) {

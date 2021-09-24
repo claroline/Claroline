@@ -1,0 +1,7 @@
+services:
+    Claroline\EvaluationBundle\Subscriber\WorkspaceRequirementsSubscriber:
+        arguments:
+            - '@message_bus'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+        tags:
+            - { name: kernel.event_subscriber }
