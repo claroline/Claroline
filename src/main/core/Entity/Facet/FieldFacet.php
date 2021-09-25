@@ -338,7 +338,7 @@ class FieldFacet
         return $this->help;
     }
 
-    public function setHelp(string $help)
+    public function setHelp(?string $help)
     {
         $this->help = $help;
     }

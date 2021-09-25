@@ -5,7 +5,6 @@ namespace Claroline\CoreBundle\Listener\Resource;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\ResourceActionEvent;
@@ -101,15 +100,21 @@ class ResourceListener
 
     public function configure(ResourceActionEvent $event)
     {
+        $resourceNode = $event->getResourceNode();
         $data = $event->getData();
-        $this->crud->update(ResourceNode::class, $data);
 
-        $event->setResponse(new JsonResponse($data));
+        $this->crud->update($resourceNode, $data);
+
+        $event->setResponse(new JsonResponse(
+            $this->serializer->serialize($resourceNode)
+        ));
         $event->stopPropagation();
     }
 
     public function rights(ResourceActionEvent $event)
     {
+        $resourceNode = $event->getResourceNode();
+
         // forward to the resource type
         $options = [];
 
@@ -120,10 +125,10 @@ class ResourceListener
         }
 
         $data = $event->getData();
-        $this->crud->update(ResourceNode::class, $data, $options);
+        $this->crud->update($resourceNode, $data, $options);
 
         $event->setResponse(new JsonResponse(
-            $this->serializer->serialize($event->getResourceNode())
+            $this->serializer->serialize($resourceNode)
         ));
     }
 
@@ -134,19 +139,29 @@ class ResourceListener
 
     public function publish(ResourceActionEvent $event)
     {
-        $nodes = $this->manager->setPublishedStatus([$event->getResourceNode()], true);
+        $resourceNode = $event->getResourceNode();
+
+        $this->crud->update($resourceNode, [
+            'id' => $resourceNode->getUuid(),
+            'meta' => ['published' => true],
+        ]);
 
         $event->setResponse(
-            new JsonResponse($this->serializer->serialize($nodes[0]))
+            new JsonResponse($this->serializer->serialize($resourceNode))
         );
     }
 
     public function unpublish(ResourceActionEvent $event)
     {
-        $nodes = $this->manager->setPublishedStatus([$event->getResourceNode()], false);
+        $resourceNode = $event->getResourceNode();
+
+        $this->crud->update($resourceNode, [
+            'id' => $resourceNode->getUuid(),
+            'meta' => ['published' => false],
+        ]);
 
         $event->setResponse(
-            new JsonResponse($this->serializer->serialize($nodes[0]))
+            new JsonResponse($this->serializer->serialize($resourceNode))
         );
     }
 
@@ -190,7 +205,7 @@ class ResourceListener
         $user = $this->tokenStorage->getToken()->getUser();
 
         if (!empty($parent) && $user instanceof User) {
-            $newNode = $this->manager->copy($resourceNode, $parent, $user);
+            $newNode = $this->crud->copy($resourceNode, [Options::NO_RIGHTS, Crud::NO_PERMISSIONS], ['user' => $user, 'parent' => $parent]);
 
             $event->setResponse(
                 new JsonResponse($this->serializer->serialize($newNode))
