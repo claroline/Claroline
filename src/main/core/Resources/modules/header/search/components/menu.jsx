@@ -3,27 +3,35 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import isEmpty from 'lodash/isEmpty'
 
+import {getApps} from '#/main/app/plugins'
 import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {Button} from '#/main/app/action/components/button'
 import {Menu} from '#/main/app/overlays/menu/components/menu'
-
-import {route as workspaceRoute} from '#/main/core/workspace/routing'
-import {route as resourceRoute} from '#/main/core/resource/routing'
-import {route as userRoute} from '#/main/core/user/routing'
-
-import {constants} from '#/main/core/header/search/constants'
 
 class SearchMenu extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      currentSearch: ''
+      currentSearch: '',
+      availableSearches: {} // provided by plugins
     }
 
     this.updateSearch = this.updateSearch.bind(this)
     this.reset = this.reset.bind(this)
+  }
+
+  componentDidMount() {
+    const searchApps = getApps('search')
+
+    Promise
+      .all(Object.keys(searchApps).map(type => searchApps[type]()))
+      .then(searches => this.setState({
+        availableSearches: searches.reduce((acc, current) => Object.assign({}, acc, {
+          [current.default.name]: current.default
+        }), {})
+      }))
   }
 
   updateSearch(searchStr) {
@@ -43,7 +51,10 @@ class SearchMenu extends Component {
   }
 
   render() {
-    const menuOpened = !isEmpty(this.state.currentSearch) && 3 <= this.state.currentSearch.length && (!this.props.fetching || !this.props.empty)
+    const menuOpened = !isEmpty(this.state.availableSearches)
+      && !isEmpty(this.state.currentSearch)
+      && 3 <= this.state.currentSearch.length
+      && (!this.props.fetching || !this.props.empty)
 
     return (
       <div className="app-header-search">
@@ -88,13 +99,13 @@ class SearchMenu extends Component {
             }
 
             {!this.props.empty && Object.keys(this.props.results)
-              .filter(resultType => !isEmpty(this.props.results[resultType]))
+              .filter(resultType => !isEmpty(this.state.availableSearches[resultType]) && !isEmpty(this.props.results[resultType]))
               .map(resultType =>
                 <Fragment key={resultType}>
-                  <h2 className="h5 result-header">{trans(resultType)}</h2>
+                  <h2 className="h5 result-header">{this.state.availableSearches[resultType].label}</h2>
 
                   {this.props.results[resultType].map(result =>
-                    createElement(constants.RESULTS_CARD[resultType], {
+                    createElement(this.state.availableSearches[resultType].component, {
                       key: result.id,
                       size: 'xs',
                       direction: 'row',
@@ -102,7 +113,7 @@ class SearchMenu extends Component {
                       primaryAction: {
                         type: LINK_BUTTON,
                         label: trans('open', {}, 'actions'),
-                        target: 'workspaces' === resultType ? workspaceRoute(result) : ('resources' === resultType ? resourceRoute(result) : userRoute(result)),
+                        target: this.state.availableSearches[resultType].link(result),
                         onClick: this.reset
                       }
                     })

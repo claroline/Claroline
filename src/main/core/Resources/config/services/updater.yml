@@ -19,3 +19,8 @@ services:
         tags: [ 'claroline.platform.updater' ]
         arguments:
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+
+    Claroline\CoreBundle\Installation\Updater\Updater130037:
+        tags: [ 'claroline.platform.updater' ]
+        arguments:
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'

@@ -105,7 +105,7 @@ class UserProgressionManager
     /**
      * Fetch or create resource user evaluation.
      */
-    public function getResourceUserEvaluation(Path $path, User $user): ?ResourceUserEvaluation
+    public function getResourceUserEvaluation(Path $path, User $user): ResourceUserEvaluation
     {
         return $this->resourceEvalManager->getResourceUserEvaluation($path->getResourceNode(), $user);
     }
