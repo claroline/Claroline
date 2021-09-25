@@ -309,8 +309,7 @@ services:
     Claroline\CoreBundle\Controller\SearchController:
         arguments:
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@event_dispatcher'
 
     Claroline\CoreBundle\Controller\WorkspaceController:
         arguments:

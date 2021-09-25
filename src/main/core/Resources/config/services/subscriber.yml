@@ -1,4 +1,11 @@
 services:
+    Claroline\CoreBundle\Subscriber\GlobalSearchSubscriber:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+        tags:
+            - { name: kernel.event_subscriber }
+
     Claroline\CoreBundle\Subscriber\Crud\Planning\AbstractPlannedSubscriber:
         abstract: true
         calls:
