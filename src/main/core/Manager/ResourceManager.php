@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Manager;
 
 use Claroline\AppBundle\API\Crud;
-use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Log\LoggableTrait;
 use Claroline\AppBundle\Manager\File\TempFileManager;
@@ -225,61 +224,6 @@ class ResourceManager implements LoggerAwareInterface
         $this->dispatcher->dispatch('log', 'Log\LogResourceMove', [$child, $parent]);
 
         return $child;
-    }
-
-    /**
-     * Copies a resource in a directory.
-     *
-     * @deprecated use crud instead
-     *
-     * @return ResourceNode
-     */
-    public function copy(ResourceNode $node, ResourceNode $parent, User $user)
-    {
-        $this->log("Copying {$node->getName()} from type {$node->getResourceType()->getName()}");
-
-        /** @var ResourceNode $newNode */
-        $newNode = $this->crud->copy($node, [Options::NO_RIGHTS, Crud::NO_PERMISSIONS], ['user' => $user, 'parent' => $parent]);
-
-        $this->om->persist($newNode);
-        $this->om->flush();
-
-        return $newNode;
-    }
-
-    /**
-     * Sets the publication flag of a collection of nodes.
-     *
-     * @param ResourceNode[] $nodes
-     * @param bool           $arePublished
-     * @param bool           $isRecursive
-     *
-     * @return ResourceNode[]
-     */
-    public function setPublishedStatus(array $nodes, $arePublished, $isRecursive = false)
-    {
-        foreach ($nodes as $node) {
-            $this->crud->update(ResourceNode::class, [
-                'id' => $node->getUuid(),
-                'meta' => ['published' => $arePublished],
-            ]);
-
-            // do it on every children too
-            if ($isRecursive) {
-                $descendants = $this->resourceNodeRepo->findDescendants($node);
-                $this->setPublishedStatus($descendants, $arePublished, false);
-            }
-        }
-
-        return $nodes;
-    }
-
-    /**
-     * Removes a resource.
-     */
-    public function delete(ResourceNode $node, bool $softDelete = false)
-    {
-        $this->crud->delete($node, $softDelete ? [Options::SOFT_DELETE] : []);
     }
 
     /**

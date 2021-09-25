@@ -12,6 +12,7 @@
 namespace Claroline\TeamBundle\Manager;
 
 use Claroline\AppBundle\API\Crud;
+use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
@@ -264,6 +265,7 @@ class TeamManager
             }
         }
 
+        // TODO : use crud
         $this->resourceManager->create(
             $directory,
             $directoryType,
@@ -273,13 +275,9 @@ class TeamManager
             $rights
         );
 
-        // TODO : manage rights
         if (!is_null($resource)) {
-            $this->resourceManager->copy(
-                $resource,
-                $directory->getResourceNode(),
-                $user
-            );
+            // TODO : manage rights
+            $this->crud->copy($resource, [Options::NO_RIGHTS, Crud::NO_PERMISSIONS], ['user' => $user, 'parent' => $directory->getResourceNode()]);
         }
 
         return $directory;
@@ -288,7 +286,7 @@ class TeamManager
     public function deleteTeamDirectory(Team $team)
     {
         if ($team->isDirDeletable() && !empty($team->getDirectory())) {
-            $this->resourceManager->delete($team->getDirectory()->getResourceNode());
+            $this->crud->delete($team->getDirectory()->getResourceNode());
         }
     }
 

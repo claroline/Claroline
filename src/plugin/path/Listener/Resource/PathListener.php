@@ -2,6 +2,8 @@
 
 namespace Innova\PathBundle\Listener\Resource;
 
+use Claroline\AppBundle\API\Crud;
+use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
@@ -33,6 +35,9 @@ class PathListener
     /* @var ObjectManager */
     private $om;
 
+    /** @var Crud */
+    private $crud;
+
     /** @var SerializerProvider */
     private $serializer;
 
@@ -46,6 +51,7 @@ class PathListener
         TokenStorageInterface $tokenStorage,
         TranslatorInterface $translator,
         ObjectManager $om,
+        Crud $crud,
         SerializerProvider $serializer,
         ResourceManager $resourceManager,
         UserProgressionManager $userProgressionManager)
@@ -53,6 +59,7 @@ class PathListener
         $this->tokenStorage = $tokenStorage;
         $this->translator = $translator;
         $this->om = $om;
+        $this->crud = $crud;
         $this->serializer = $serializer;
         $this->resourceManager = $resourceManager;
         $this->userProgressionManager = $userProgressionManager;
@@ -164,7 +171,8 @@ class PathListener
             $resourceNode = $step->getResource();
             if (!isset($copiedResources[$resourceNode->getUuid()])) {
                 // resource not already copied, create a new copy
-                $resourceCopy = $this->resourceManager->copy($resourceNode, $destination, $user);
+                $resourceCopy = $this->crud->copy($resourceNode, [Options::NO_RIGHTS, Crud::NO_PERMISSIONS], ['user' => $user, 'parent' => $destination]);
+
                 if ($resourceCopy) {
                     $copiedResources[$resourceNode->getUuid()] = $resourceCopy;
                 }
@@ -180,7 +188,7 @@ class PathListener
                 $resourceNode = $secondaryResource->getResource();
                 if (!isset($copiedResources[$resourceNode->getUuid()])) {
                     // resource not already copied, create a new copy
-                    $resourceCopy = $this->resourceManager->copy($resourceNode, $destination, $user);
+                    $resourceCopy = $this->crud->copy($resourceNode, [Options::NO_RIGHTS, Crud::NO_PERMISSIONS], ['user' => $user, 'parent' => $destination]);
                     if ($resourceCopy) {
                         $copiedResources[$resourceNode->getUuid()] = $resourceCopy;
                     }

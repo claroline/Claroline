@@ -55,6 +55,11 @@ class ResourceNodeSerializer
         $this->serializer = $serializer;
     }
 
+    public function getClass(): string
+    {
+        return ResourceNode::class;
+    }
+
     public function getName(): string
     {
         return 'resource_node';
@@ -83,7 +88,7 @@ class ResourceNodeSerializer
             'access' => $this->rightsManager->getSimpleRights($resourceNode),
         ];
 
-        if ($resourceNode->getWorkspace() && !in_array(Options::REFRESH_UUID, $options)) {
+        if ($resourceNode->getWorkspace()/* && !in_array(Options::REFRESH_UUID, $options)*/) {
             $serializedNode['workspace'] = [ // TODO : use workspace serializer with minimal option
                 'id' => $resourceNode->getWorkspace()->getUuid(),
                 'autoId' => $resourceNode->getWorkspace()->getId(),
@@ -247,9 +252,9 @@ class ResourceNodeSerializer
             $resourceNode->refreshUuid();
         }
 
-        if (isset($data['meta']['workspace'])) {
+        if (isset($data['workspace'])) {
             /** @var Workspace $workspace */
-            $workspace = $this->om->getRepository(Workspace::class)->findOneBy(['uuid' => $data['meta']['workspace']['id']]);
+            $workspace = $this->om->getRepository(Workspace::class)->findOneBy(['uuid' => $data['workspace']['id']]);
             $resourceNode->setWorkspace($workspace);
         }
 
