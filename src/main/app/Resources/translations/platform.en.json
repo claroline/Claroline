@@ -14,5 +14,12 @@
   "loading": "Loading...",
   "forbidden": "Access forbidden",
   "dpo": "Data protection officer",
-  "next_step": "Next: %step%"
+  "next_step": "Next: %step%",
+  "field_conditional_display": "Display based on the value of another field",
+  "field": "Field",
+  "field_comparator": "Comparison",
+  "equal": "is equal to",
+  "different": "is different from",
+  "empty": "is empty",
+  "not_empty": "is not empty"
 }

@@ -54,6 +54,7 @@ class FieldFacet
     const BOOLEAN_TYPE = 12;
     /** @var int */
     const CHOICE_TYPE = 13;
+
     /** @var array */
     public static $types = [
         'string' => self::STRING_TYPE,
@@ -129,26 +130,48 @@ class FieldFacet
     /**
      * @ORM\Column(name="is_metadata", type="boolean", options={"default" = 0})
      */
-    protected $metadata = false;
+    private $metadata = false;
 
     /**
      * @ORM\Column(name="locked", type="boolean", options={"default" = 0})
      */
-    protected $locked = false;
+    private $locked = false;
 
     /**
      * @ORM\Column(name="locked_edition", type="boolean", options={"default" = 0})
      */
-    protected $lockedEditionOnly = false;
+    private $lockedEditionOnly = false;
 
     /**
      * @ORM\Column(name="help", nullable=true)
      */
-    protected $help;
+    private $help;
+
+    /**
+     * @ORM\Column(name="condition_field", type="string", nullable=true)
+     *
+     * @var string
+     */
+    private $conditionField;
+
+    /**
+     * @ORM\Column(name="condition_comparator", type="string", nullable=true)
+     *
+     * @var string
+     */
+    private $conditionComparator;
+
+    /**
+     * @ORM\Column(name="condition_value", type="json", nullable=true)
+     *
+     * @var array
+     */
+    private $conditionValue = [];
 
     public function __construct()
     {
         $this->refreshUuid();
+
         $this->fieldFacetChoices = new ArrayCollection();
     }
 
@@ -341,5 +364,35 @@ class FieldFacet
     public function setHelp(?string $help)
     {
         $this->help = $help;
+    }
+
+    public function getConditionField(): ?string
+    {
+        return $this->conditionField;
+    }
+
+    public function setConditionField(?string $conditionField)
+    {
+        $this->conditionField = $conditionField;
+    }
+
+    public function getConditionComparator(): ?string
+    {
+        return $this->conditionComparator;
+    }
+
+    public function setConditionComparator(?string $conditionComparator)
+    {
+        $this->conditionComparator = $conditionComparator;
+    }
+
+    public function getConditionValue()
+    {
+        return $this->conditionValue;
+    }
+
+    public function setConditionValue($conditionValue)
+    {
+        $this->conditionValue = $conditionValue;
     }
 }

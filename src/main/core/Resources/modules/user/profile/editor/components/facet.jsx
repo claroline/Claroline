@@ -10,16 +10,15 @@ import {FormData} from '#/main/app/content/form/containers/data'
 import {LINK_BUTTON} from '#/main/app/buttons'
 
 import {ProfileFacet as ProfileFacetTypes} from '#/main/core/user/profile/prop-types'
-import {selectors as select} from '#/main/core/user/profile/store/selectors'
+import {selectors} from '#/main/core/user/profile/store/selectors'
 import {getFormDefaultSections, formatFormSections} from '#/main/core/user/profile/utils'
 
-// todo manage differences between main / default / plugin facets
 const ProfileFacetComponent = props => {
   // todo : create selector
   let sections = []
   if (props.facet) {
     if (props.facet.sections) {
-      sections = formatFormSections(cloneDeep(props.facet.sections), props.originalUser, props.parameters, props.currentUser)
+      sections = formatFormSections(cloneDeep(props.facet.sections), props.allFields, props.originalUser, props.parameters, props.currentUser)
     }
 
     if (get(props.facet, 'meta.main')) {
@@ -29,7 +28,7 @@ const ProfileFacetComponent = props => {
 
   return (
     <FormData
-      name={select.FORM_NAME}
+      name={selectors.FORM_NAME}
       title={props.facet.title}
       target={['apiv2_user_update', {id: props.user.id}]}
       buttons={true}
@@ -51,16 +50,18 @@ ProfileFacetComponent.propTypes = {
   facet: T.shape(
     ProfileFacetTypes.propTypes
   ).isRequired,
+  allFields: T.array,
   parameters: T.object.isRequired
 }
 
 const ProfileFacet = connect(
   (state) => ({
     currentUser: securitySelectors.currentUser(state),
-    user: formSelect.data(formSelect.form(state, select.FORM_NAME)),
-    originalUser: formSelect.originalData(formSelect.form(state, select.FORM_NAME)),
-    facet: select.currentFacet(state),
-    parameters: select.parameters(state)
+    user: formSelect.data(formSelect.form(state, selectors.FORM_NAME)),
+    originalUser: formSelect.originalData(formSelect.form(state, selectors.FORM_NAME)),
+    facet: selectors.currentFacet(state),
+    parameters: selectors.parameters(state),
+    allFields: selectors.allFields(state)
   })
 )(ProfileFacetComponent)
 

@@ -17,7 +17,7 @@ const ProfileFacetComponent = props => {
   let sections = []
   if (props.facet) {
     if (props.facet.sections) {
-      sections = formatDetailsSections(cloneDeep(props.facet.sections), props.user, props.parameters, props.currentUser)
+      sections = formatDetailsSections(cloneDeep(props.facet.sections), props.allFields, props.user, props.parameters, props.currentUser)
     }
 
     if (get(props.facet, 'meta.main')) {
@@ -40,7 +40,8 @@ ProfileFacetComponent.propTypes = {
   facet: T.shape(
     ProfileFacetTypes.propTypes
   ).isRequired,
-  parameters: T.object.isRequired
+  parameters: T.object.isRequired,
+  allFields: T.array
 }
 
 const ProfileFacet = connect(
@@ -48,7 +49,8 @@ const ProfileFacet = connect(
     currentUser: securitySelectors.currentUser(state),
     user: detailsSelect.data(detailsSelect.details(state, selectors.FORM_NAME)),
     facet: selectors.currentFacet(state),
-    parameters: selectors.parameters(state)
+    parameters: selectors.parameters(state),
+    allFields: selectors.allFields(state)
   })
 )(ProfileFacetComponent)
 
