@@ -16,6 +16,7 @@ import {notEmpty} from '#/main/app/data/types/validators'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {Form} from '#/main/app/content/form/components/form'
 import {DataInput} from '#/main/app/data/components/input'
+import {formatField, isFieldDisplayed} from '#/main/core/user/profile/utils'
 
 import {trans} from '#/main/app/intl/translation'
 import {hasPermission} from '#/main/app/security'
@@ -63,41 +64,27 @@ class EntryFormComponent extends Component {
         required: true
       }
     ]
-    this.props.fields.forEach(f => {
-      const params = {
-        name: `values.${f.id}`,
-        type: f.type,
-        label: f.label,
-        required: f.required,
-        help: f.help,
-        displayed: this.props.isNew ||
-          isShared ||
-          this.props.displayMetadata === 'all' ||
-          (this.props.displayMetadata === 'manager' && this.props.isManager) ||
-          !f.restrictions.metadata ||
-          (this.props.entry.user && this.props.entry.user.id === this.props.currentUser.id),
-        disabled: !this.props.isManager && ((this.props.isNew && f.restrictions.locked && !f.restrictions.lockedEditionOnly) || (!this.props.isNew && f.restrictions.locked)),
-        options: f.options ? f.options : {}
-      }
+    this.props.fields
+      .filter(f => this.props.isNew ||
+        isShared ||
+        this.props.displayMetadata === 'all' ||
+        (this.props.displayMetadata === 'manager' && this.props.isManager) ||
+        !f.restrictions.metadata ||
+        (this.props.entry.user && this.props.entry.user.id === this.props.currentUser.id)
+      )
+      .forEach(f => {
+        const params = formatField(f, this.props.fields, 'values')
 
-      switch (f.type) {
-        case 'file':
-          params['options'] = Object.assign({}, params['options'], {'uploadUrl': ['apiv2_clacoformentry_file_upload', {clacoForm: this.props.clacoFormId}]})
-          break
-        case 'choice':
-          params['options'] = f.options.choices ?
-            Object.assign({}, params['options'], {
-              'choices': f.options.choices.reduce((acc, choice) => {
-                acc[choice.value] = choice.value
+        params.disabled = !this.props.isManager
+          && ((this.props.isNew && f.restrictions.locked && !f.restrictions.lockedEditionOnly) || (!this.props.isNew && f.restrictions.locked))
 
-                return acc
-              }, {})
-            }) :
-            {}
-          break
-      }
-      sectionFields.push(params)
-    })
+        switch (f.type) {
+          case 'file':
+            params['options'] = Object.assign({}, params['options'], {'uploadUrl': ['apiv2_clacoformentry_file_upload', {clacoForm: this.props.clacoFormId}]})
+            break
+        }
+        sectionFields.push(params)
+      })
 
     return [
       {
@@ -385,7 +372,7 @@ const EntryForm = withRouter(connect(
         title: notEmpty(entry.title),
         values: {}
       }
-      const requiredFields = fields.filter(field => field.required)
+      const requiredFields = fields.filter(field => field.required && isFieldDisplayed(field, fields, entry.values))
       errors.values = requiredFields.reduce((fieldErrors, field) => Object.assign(fieldErrors, {
         [field.id]: notEmpty(entry.values[field.id])
       }), {})

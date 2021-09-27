@@ -41,8 +41,8 @@ class RegistrationMain extends Component {
       }
     ], this.props.facets.map(facet => ({
       title: facet.title,
-      component: () => {
-        const currentFacet = <Facet facet={facet}/>
+      render: () => {
+        const currentFacet = <Facet facet={facet} allFields={this.props.allFacetFields} user={this.props.user} />
 
         return currentFacet
       }
@@ -129,6 +129,7 @@ RegistrationMain.propTypes = {
     organizationSelection: T.string
   }).isRequired,
   defaultWorkspaces: T.array,
+  allFacetFields: T.array,
   onRegister: T.func
 }
 

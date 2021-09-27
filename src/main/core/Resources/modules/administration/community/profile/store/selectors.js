@@ -26,9 +26,23 @@ const currentFacet = createSelector(
   (facets, currentFacetIndex) => -1 !== currentFacetIndex ? facets[currentFacetIndex] : undefined
 )
 
+const allFields = createSelector(
+  [facets],
+  (configuredFacets) => {
+    let fields = []
+
+    configuredFacets.map(facet => facet.sections.map(section => {
+      fields = fields.concat(section.fields)
+    }))
+
+    return fields
+  }
+)
+
 export const selectors = {
   formName,
   facets,
   currentFacetIndex,
-  currentFacet
+  currentFacet,
+  allFields
 }
