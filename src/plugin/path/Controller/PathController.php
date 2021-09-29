@@ -103,7 +103,7 @@ class PathController extends AbstractCrudController
         $params['hiddenFilters']['resourceNode'] = [$node->getUuid()];
 
         return new JsonResponse(
-            $this->finder->search(ResourceUserEvaluation::class, $params, [Options::SERIALIZE_MINIMAL])
+            $this->finder->search(ResourceUserEvaluation::class, $params)
         );
     }
 

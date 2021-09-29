@@ -1,6 +1,7 @@
 import {connect} from 'react-redux'
 
 import {withReducer} from '#/main/app/store/components/withReducer'
+import {selectors as resourceSelectors} from '#/main/core/resource/store'
 
 import {UserProgressionModal as UserProgressionModalComponent} from '#/plugin/path/resources/path/modals/user-progression/components/modal'
 import {actions, reducer, selectors} from '#/plugin/path/resources/path/modals/user-progression/store'
@@ -8,6 +9,7 @@ import {actions, reducer, selectors} from '#/plugin/path/resources/path/modals/u
 const UserProgressionModal = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
+      basePath: resourceSelectors.path(state),
       stepsProgression: selectors.stepsProgression(state)
     }),
     (dispatch) => ({
