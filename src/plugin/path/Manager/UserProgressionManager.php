@@ -197,7 +197,15 @@ class UserProgressionManager
             array_splice($data['done'], array_search($step->getUuid(), $data['done']), 1);
         }
 
-        $statusData = array_merge(['data' => $data], $this->computeProgression($step->getPath(), $data));
+        // recompute path attempt progression
+        $progressionData = $this->computeProgression($step->getPath(), $data);
+        // recompute path attempt score if the path is finished
+        $scoreData = [];
+        if (AbstractEvaluation::STATUS_COMPLETED === $progressionData['status']) {
+            $scoreData = $this->computeScore($step->getPath(), $data['resources']);
+        }
+
+        $statusData = array_merge(['data' => $data], $progressionData, $scoreData);
 
         if ($evaluation) {
             return $this->resourceEvalManager->updateResourceEvaluation($evaluation, $statusData);
