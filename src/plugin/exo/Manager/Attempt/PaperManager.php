@@ -25,44 +25,30 @@ use UJM\ExoBundle\Serializer\Attempt\PaperSerializer;
 
 class PaperManager
 {
-    /**
-     * @var ObjectManager
-     */
+    /** @var AuthorizationCheckerInterface */
+    private $authorization;
+
+    /** @var ObjectManager */
     private $om;
 
-    /**
-     * @var PaperRepository
-     */
+    /** @var PaperRepository */
     private $repository;
 
-    /**
-     * @var EventDispatcherInterface
-     */
+    /** @var EventDispatcherInterface */
     private $eventDispatcher;
 
-    /**
-     * @var PaperSerializer
-     */
+    /** @var PaperSerializer */
     private $serializer;
 
-    /**
-     * @var ItemManager
-     */
+    /** @var ItemManager */
     private $itemManager;
 
-    /**
-     * @var ScoreManager
-     */
+    /** @var ScoreManager */
     private $scoreManager;
 
-    /**
-     * @var ResourceEvaluationManager
-     */
+    /** @var ResourceEvaluationManager */
     private $resourceEvalManager;
 
-    /**
-     * PaperManager constructor.
-     */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         ObjectManager $om,
@@ -389,7 +375,7 @@ class PaperManager
             if (is_null($successScore) || empty($paper->getTotal())) {
                 $status = AbstractEvaluation::STATUS_COMPLETED;
             } else {
-                $percentScore = ($score * 100);
+                $percentScore = ($score / $paper->getTotal()) * 100;
                 $status = $percentScore >= $successScore ?
                     AbstractEvaluation::STATUS_PASSED :
                     AbstractEvaluation::STATUS_FAILED;
