@@ -184,7 +184,10 @@ class UserProgressionManager
     {
         $evaluation = $this->resourceEvalRepo->findLast($step->getPath()->getResourceNode(), $user);
 
-        $data = ['done' => []];
+        $data = [
+            'done' => [],
+            'resources' => [],
+        ];
         if ($evaluation) {
             $data = array_merge($data, $evaluation->getData() ?? []);
         }
@@ -221,7 +224,7 @@ class UserProgressionManager
     /**
      * Computes score for path and updates user evaluation.
      */
-    private function computeScore(Path $path, array $resourceScores = [])
+    private function computeScore(Path $path, ?array $resourceScores = [])
     {
         $toEvaluate = count(array_filter($path->getSteps()->toArray(), function (Step $step) {
             return $step->isEvaluated();
