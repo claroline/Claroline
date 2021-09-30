@@ -1,3 +1,3 @@
-13.0.39
-bad96c3d51458fce3aca0ae1ff6afcaea3338e26
+13.0.40
+b92a566597a2cbf63f5c9e788fe2be37bcf47f7d
 13.x
