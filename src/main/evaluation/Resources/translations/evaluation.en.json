@@ -1,0 +1,8 @@
+{
+  "evaluation_passed_feedback": "You have passed the resource.",
+  "evaluation_passed_feedback_msg": "You have obtained a sufficient score to pass the resource.",
+  "evaluation_failed_feedback": "You did not pass the resource.",
+  "evaluation_failed_feedback_msg": "You did not score high enough to pass the resource.",
+  "evaluation_completed_feedback": "You have completed the resource.",
+  "evaluation_completed_feedback_msg": "You have seen all of the content in the resource."
+}

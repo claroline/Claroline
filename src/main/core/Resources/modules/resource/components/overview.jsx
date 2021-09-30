@@ -104,19 +104,19 @@ const UserFeedback = props => {
     switch (props.status) {
       case baseConstants.EVALUATION_STATUS_PASSED:
         alertType = 'success'
-        alertTitle = trans('evaluation_passed_feedback')
+        alertTitle = trans('evaluation_passed_feedback', {}, 'evaluation')
         alertMessage = props.success
         break
       case baseConstants.EVALUATION_STATUS_FAILED:
         alertType = 'danger'
-        alertTitle = trans('evaluation_failed_feedback')
+        alertTitle = trans('evaluation_failed_feedback', {}, 'evaluation')
         alertMessage = props.failure
         break
       case baseConstants.EVALUATION_STATUS_COMPLETED:
       default:
         alertType = 'info'
-        alertTitle = trans('evaluation_completed_feedback')
-        alertMessage = trans('evaluation_completed_feedback_msg')
+        alertTitle = trans('evaluation_completed_feedback', {}, 'evaluation')
+        alertMessage = trans('evaluation_completed_feedback_msg', {}, 'evaluation')
         break
     }
 
@@ -128,7 +128,7 @@ const UserFeedback = props => {
         type={alertType}
         title={alertTitle}
       >
-        {alertMessage}
+        <ContentHtml>{alertMessage}</ContentHtml>
       </AlertBlock>
     )
   }
@@ -144,8 +144,8 @@ UserFeedback.propTypes = {
 
 UserFeedback.defaultProps = {
   status: baseConstants.EVALUATION_STATUS_NOT_ATTEMPTED,
-  success: trans('evaluation_passed_feedback_msg'),
-  failure: trans('evaluation_failed_feedback_msg')
+  success: trans('evaluation_passed_feedback_msg', {}, 'evaluation'),
+  failure: trans('evaluation_failed_feedback_msg', {}, 'evaluation')
 }
 
 const ResourceOverview = props =>
