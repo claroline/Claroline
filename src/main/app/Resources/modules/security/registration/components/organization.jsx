@@ -5,9 +5,6 @@ import {FormData} from '#/main/app/content/form/containers/data'
 
 import {selectors} from '#/main/app/security/registration/store/selectors'
 
-/**
- * @constructor
- */
 const Organization = () =>
   <FormData
     level={2}

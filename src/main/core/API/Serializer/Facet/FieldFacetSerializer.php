@@ -46,7 +46,7 @@ class FieldFacetSerializer
         $serialized = [
             'id' => $fieldFacet->getUuid(),
             'name' => $fieldFacet->getName(),
-            'type' => $fieldFacet->getFieldType(),
+            'type' => $fieldFacet->getType(),
             'label' => $fieldFacet->getLabel(),
             'required' => $fieldFacet->isRequired(),
             'help' => $fieldFacet->getHelp(),
@@ -79,7 +79,7 @@ class FieldFacetSerializer
         return $serialized;
     }
 
-    public function deserialize(array $data, FieldFacet $field, array $options = [])
+    public function deserialize(array $data, FieldFacet $field, array $options = []): FieldFacet
     {
         if (!in_array(Options::REFRESH_UUID, $options)) {
             $this->sipe('id', 'setUuid', $data, $field);

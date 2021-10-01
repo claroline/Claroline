@@ -3,6 +3,7 @@ import isEmpty from 'lodash/isEmpty'
 import cloneDeep from 'lodash/cloneDeep'
 
 import {trans} from '#/main/app/intl/translation'
+import {hasPermission} from '#/main/app/security/permissions'
 
 function getMainFacet(facets) {
   return facets.find(facet => facet.meta.main)
@@ -90,7 +91,7 @@ function getFormDefaultSections(userData, isNew = false) {
           type: 'username',
           label: trans('username'),
           required: true,
-          disabled: !isNew && (!userData.meta || !userData.meta.administrate)
+          disabled: !isNew && !hasPermission('administrate', userData)
         }, {
           name: 'plainPassword',
           type: 'password',
@@ -145,11 +146,11 @@ function formatFormSections(sections, allFields, userData, params = {}, currentU
 
   return sections.map(section => {
     section.fields = section.fields
-      .filter(f => !f.restrictions.hidden && (hasConfidentialRights || !f.restrictions.metadata || (currentUser && currentUser.id === userData.id)))
+      .filter(f => !get(f, 'restrictions.hidden') && (hasConfidentialRights || !get(f, 'restrictions.metadata') || (currentUser && currentUser.id === userData.id)))
       .map(f => {
         if (!hasLockedRights && (
           (f.restrictions.locked && !f.restrictions.lockedEditionOnly) ||
-          (f.restrictions.locked && f.restrictions.lockedEditionOnly && userData['profile'][f.id] !== undefined && userData['profile'][f.id] !== null)
+          (f.restrictions.locked && f.restrictions.lockedEditionOnly && null !== get(userData, `profile.${f.id}`, null))
         )) {
           f.disabled = true
         }

@@ -40,24 +40,7 @@ actions.fetchRegistrationData = () => ({
   }
 })
 
-const ORGANIZATIONS_DATA_LOAD = 'ORGANIZATIONS_DATA_LOAD'
-
-actions.loadOrganizationsData = makeActionCreator(ORGANIZATIONS_DATA_LOAD, 'data')
-
-actions.fetchExistingOrganizationsData = () => ({
-  [API_REQUEST]: {
-    url: ['apiv2_organization_list_recursive'],
-    request: {
-      method: 'GET'
-    },
-    success: (data, dispatch) => {
-      dispatch(actions.loadOrganizationsData(data.data))
-    }
-  }
-})
-
 export {
   actions,
-  REGISTRATION_DATA_LOAD,
-  ORGANIZATIONS_DATA_LOAD
+  REGISTRATION_DATA_LOAD
 }

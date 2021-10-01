@@ -109,7 +109,7 @@ services:
             - '@service_container'
             - '@Claroline\AppBundle\Event\StrictDispatcher'
             - '@Claroline\CoreBundle\API\Serializer\User\OrganizationSerializer'
-            - '@Claroline\CoreBundle\API\Serializer\Facet\FieldFacetValueSerializer'
+            - '@Claroline\CoreBundle\Manager\FacetManager'
 
     Claroline\CoreBundle\API\Serializer\User\RoleSerializer:
         tags: [claroline.serializer]
@@ -305,12 +305,6 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\API\Serializer\User\RoleSerializer'
             - '@Claroline\CoreBundle\API\Serializer\Facet\FieldFacetSerializer'
-
-    Claroline\CoreBundle\API\Serializer\Facet\FieldFacetValueSerializer:
-        tags: [claroline.serializer]
-        arguments:
-            - '@Claroline\CoreBundle\API\Serializer\Facet\FieldFacetSerializer'
-            - '@service_container'
 
     Claroline\CoreBundle\API\Serializer\Facet\FieldFacetSerializer:
         tags: [claroline.serializer]

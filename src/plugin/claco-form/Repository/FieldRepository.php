@@ -16,10 +16,7 @@ use Doctrine\ORM\EntityRepository;
 
 class FieldRepository extends EntityRepository
 {
-    /**
-     * @return Field[]
-     */
-    public function findByFieldFacetUuid(string $fieldFacetId)
+    public function findByFieldFacetUuid(string $fieldFacetId): ?Field
     {
         return $this->_em
             ->createQuery('

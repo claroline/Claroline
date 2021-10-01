@@ -47,7 +47,6 @@ class LogEntryEditEvent extends LogGenericEvent
                 'value' => $fieldFacetValue->getValue(),
                 'name' => $fieldFacet->getName(),
                 'type' => $fieldFacet->getType(),
-                'typeName' => $fieldFacet->getFieldType(),
             ];
         }
         $categories = $entry->getCategories();

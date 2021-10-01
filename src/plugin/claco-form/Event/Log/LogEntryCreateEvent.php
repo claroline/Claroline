@@ -46,7 +46,6 @@ class LogEntryCreateEvent extends LogGenericEvent
                 'value' => $fieldFacetValue->getValue(),
                 'name' => $fieldFacet->getName(),
                 'type' => $fieldFacet->getType(),
-                'typeName' => $fieldFacet->getFieldType(),
             ];
         }
         $keywords = $entry->getKeywords();
