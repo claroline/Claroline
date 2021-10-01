@@ -53,7 +53,7 @@ class EntryFinder extends AbstractFinder
 
     public static function getClass(): string
     {
-        return 'Claroline\ClacoFormBundle\Entity\Entry';
+        return Entry::class;
     }
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
@@ -223,7 +223,7 @@ class EntryFinder extends AbstractFinder
                     break;
                 default:
                     $filterName = str_replace('values.', '', $filterName);
-                    $field = $fieldRepo->findOneBy(['clacoForm' => $clacoForm, 'uuid' => $filterName]);
+                    $field = $fieldRepo->findByFieldFacetUuid($filterName);
                     $this->filterField($qb, $filterName, $filterValue, $field);
             }
         }
@@ -267,37 +267,26 @@ class EntryFinder extends AbstractFinder
         if ($field) {
             $qb->join('obj.fieldValues', "fv{$parsedFilterName}");
             $qb->join("fv{$parsedFilterName}.field", "fvf{$parsedFilterName}");
+            $qb->join("fvf{$parsedFilterName}.fieldFacet", "ff{$parsedFilterName}");
             $qb->join("fv{$parsedFilterName}.fieldFacetValue", "fvffv{$parsedFilterName}");
-            $qb->andWhere("fvf{$parsedFilterName}.uuid = :field{$parsedFilterName}");
+            $qb->andWhere("ff{$parsedFilterName}.uuid = :field{$parsedFilterName}");
             $qb->setParameter("field{$parsedFilterName}", $filterName);
             $this->usedJoin[$filterName] = true;
 
             switch ($field->getFieldFacet()->getType()) {
+                case FieldFacet::DATE_TYPE:
+                case FieldFacet::BOOLEAN_TYPE:
                 case FieldFacet::NUMBER_TYPE:
-                    $qb->andWhere("fvffv{$parsedFilterName}.floatValue = :value{$parsedFilterName}");
+                    $qb->andWhere("fvffv{$parsedFilterName}.value = :value{$parsedFilterName}");
                     $qb->setParameter("value{$parsedFilterName}", $filterValue);
                     break;
-                case FieldFacet::DATE_TYPE:
+
                 case FieldFacet::FILE_TYPE:
                     break;
+
                 case FieldFacet::CHOICE_TYPE:
-                    $options = $field->getOptions();
-                    $multiple = isset($options['multiple']) && $options['multiple'];
-
-                    if ($multiple) {
-                        $qb->andWhere("UPPER(fvffv{$parsedFilterName}.arrayValue) LIKE :value{$parsedFilterName}");
-                    } else {
-                        $qb->andWhere("UPPER(fvffv{$parsedFilterName}.stringValue) LIKE :value{$parsedFilterName}");
-                    }
-
-                    // a little of black magic because Doctrine Json type stores unicode seq for special chars
-                    $value = json_encode($filterValue);
-                    $value = trim($value, '"'); // removes string delimiters added by json encode
-
-                    $qb->setParameter("value{$parsedFilterName}", '%'.addslashes(strtoupper($value)).'%');
-                    break;
                 case FieldFacet::CASCADE_TYPE:
-                    $qb->andWhere("UPPER(fvffv{$parsedFilterName}.arrayValue) LIKE :value{$parsedFilterName}");
+                    $qb->andWhere("UPPER(fvffv{$parsedFilterName}.value) LIKE :value{$parsedFilterName}");
 
                     // a little of black magic because Doctrine Json type stores unicode seq for special chars
                     $value = json_encode($filterValue);
@@ -305,12 +294,9 @@ class EntryFinder extends AbstractFinder
 
                     $qb->setParameter("value{$parsedFilterName}", '%'.addslashes(strtoupper($value)).'%');
                     break;
-                case FieldFacet::BOOLEAN_TYPE:
-                    $qb->andWhere("fvffv{$parsedFilterName}.boolValue = :value{$parsedFilterName}");
-                    $qb->setParameter("value{$parsedFilterName}", $filterValue);
-                    break;
+
                 default:
-                    $qb->andWhere("UPPER(fvffv{$parsedFilterName}.stringValue) LIKE :value{$parsedFilterName}");
+                    $qb->andWhere("UPPER(fvffv{$parsedFilterName}.value) LIKE :value{$parsedFilterName}");
                     $qb->setParameter("value{$parsedFilterName}", '%'.strtoupper($filterValue).'%');
             }
         }
@@ -324,34 +310,14 @@ class EntryFinder extends AbstractFinder
             if (!isset($this->usedJoin[$sortBy])) {
                 $qb->leftJoin('obj.fieldValues', "fv{$parsedSortBy}");
                 $qb->leftJoin("fv{$parsedSortBy}.field", "fvf{$parsedSortBy}");
+                $qb->join("fvf{$parsedSortBy}.fieldFacet", "ff{$parsedSortBy}");
                 $qb->leftJoin("fv{$parsedSortBy}.fieldFacetValue", "fvffv{$parsedSortBy}");
-                $qb->andWhere("fvf{$parsedSortBy}.uuid = :field{$parsedSortBy} OR fvf{$parsedSortBy} = :nullValue");
+                $qb->andWhere("ff{$parsedSortBy}.uuid = :field{$parsedSortBy} OR fvf{$parsedSortBy} = :nullValue");
                 $qb->setParameter("field{$parsedSortBy}", $sortBy);
                 $qb->setParameter('nullValue', null);
             }
 
-            switch ($field->getFieldFacet()->getType()) {
-                case FieldFacet::NUMBER_TYPE:
-                    $qb->orderBy("fvffv{$parsedSortBy}.floatValue", $direction);
-                    break;
-                case FieldFacet::DATE_TYPE:
-                    $qb->orderBy("fvffv{$parsedSortBy}.dateValue", $direction);
-                    break;
-                case FieldFacet::CHOICE_TYPE:
-                    $options = $field->getOptions();
-
-                    if (isset($options['multiple']) && $options['multiple']) {
-                        $qb->orderBy("fvffv{$parsedSortBy}.arrayValue", $direction);
-                    } else {
-                        $qb->orderBy("fvffv{$parsedSortBy}.stringValue", $direction);
-                    }
-                    break;
-                case FieldFacet::CASCADE_TYPE:
-                    $qb->orderBy("fvffv{$parsedSortBy}.arrayValue", $direction);
-                    break;
-                default:
-                    $qb->orderBy("fvffv{$parsedSortBy}.stringValue", $direction);
-            }
+            $qb->orderBy("fvffv{$parsedSortBy}.value", $direction);
         }
     }
 

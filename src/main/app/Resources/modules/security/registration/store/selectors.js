@@ -30,11 +30,6 @@ const defaultWorkspaces = createSelector(
   (store) => store.defaultWorkspaces
 )
 
-const existingOrganizations = createSelector(
-  [store],
-  (store) => store.existingOrganizations
-)
-
 const allFacetFields = createSelector(
   [facets],
   (configuredFacets) => {
@@ -57,6 +52,5 @@ export const selectors = {
   facets,
   allFacetFields,
   workspaces,
-  defaultWorkspaces,
-  existingOrganizations
+  defaultWorkspaces
 }

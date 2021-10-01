@@ -17,7 +17,6 @@ use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Description;
 use Claroline\AppBundle\Entity\Meta\Poster;
 use Claroline\AppBundle\Entity\Meta\Thumbnail;
-use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;
 use Claroline\CoreBundle\Entity\Model\GroupsTrait;
 use Claroline\CoreBundle\Entity\Model\OrganizationsTrait;
 use Claroline\CoreBundle\Entity\Organization\Organization;
@@ -268,24 +267,6 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
      * @ORM\Column(name="expiration_date", type="datetime", nullable=true)
      */
     protected $expirationDate;
-
-    /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Facet\FieldFacetValue",
-     *     mappedBy="user",
-     *     cascade={"persist"}
-     * )
-     *
-     * @todo relation should not be declared here (only use Unidirectional)
-     */
-    protected $fieldsFacetValue;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(nullable=true)
-     */
-    protected $authentication;
 
     /**
      * @ORM\Column(name="email_validation_hash", nullable=true)
@@ -931,18 +912,6 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
             new \DateTime($defaultExpirationDate);
     }
 
-    public function getFieldsFacetValue()
-    {
-        return $this->fieldsFacetValue;
-    }
-
-    public function addFieldFacet(FieldFacetValue $fieldFacetValue)
-    {
-        $this->fieldsFacetValue->add($fieldFacetValue);
-
-        $fieldFacetValue->setUser($this);
-    }
-
     public function setInitDate($initDate)
     {
         $this->initDate = $initDate;
@@ -951,16 +920,6 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
     public function getInitDate()
     {
         return $this->initDate;
-    }
-
-    public function setAuthentication($authentication)
-    {
-        $this->authentication = $authentication;
-    }
-
-    public function getAuthentication()
-    {
-        return $this->authentication;
     }
 
     public function setIsMailValidated($isMailValidated)
