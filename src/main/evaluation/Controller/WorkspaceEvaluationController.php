@@ -32,7 +32,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * @Route("/workspace")
+ * @Route("/evaluations/workspace")
  */
 class WorkspaceEvaluationController extends AbstractSecurityController
 {
@@ -70,8 +70,7 @@ class WorkspaceEvaluationController extends AbstractSecurityController
     }
 
     /**
-     * @Route("/evaluations", name="apiv2_workspace_evaluations_all", methods={"GET"})
-     * @EXT\ParamConverter("workspace", options={"mapping": {"workspace": "uuid"}})
+     * @Route("/", name="apiv2_workspace_evaluations_all", methods={"GET"})
      */
     public function listAction(Request $request): JsonResponse
     {
@@ -83,7 +82,7 @@ class WorkspaceEvaluationController extends AbstractSecurityController
     }
 
     /**
-     * @Route("/evaluations/csv", name="apiv2_workspace_evaluation_csv", methods={"GET"})
+     * @Route("/csv", name="apiv2_workspace_evaluation_csv", methods={"GET"})
      * @EXT\ParamConverter("workspace", options={"mapping": {"workspace": "uuid"}})
      */
     public function exportAction(Request $request): BinaryFileResponse
@@ -115,7 +114,7 @@ class WorkspaceEvaluationController extends AbstractSecurityController
     }
 
     /**
-     * @Route("/{workspace}/evaluations", name="apiv2_workspace_evaluations_list", methods={"GET"})
+     * @Route("/{workspace}", name="apiv2_workspace_evaluations_list", methods={"GET"})
      * @EXT\ParamConverter("workspace", options={"mapping": {"workspace": "uuid"}})
      */
     public function listByWorkspaceAction(Workspace $workspace, Request $request): JsonResponse
@@ -133,7 +132,7 @@ class WorkspaceEvaluationController extends AbstractSecurityController
     }
 
     /**
-     * @Route("/{workspace}/evaluations/init/{role}", name="apiv2_workspace_evaluations_init", methods={"PUT"})
+     * @Route("/{workspace}/init/{role}", name="apiv2_workspace_evaluations_init", methods={"PUT"})
      * @EXT\ParamConverter("workspace", options={"mapping": {"workspace": "uuid"}})
      * @EXT\ParamConverter("role", options={"mapping": {"role": "uuid"}})
      */
