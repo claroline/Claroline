@@ -22,7 +22,6 @@ const Course = {
       workspaceModel: T.shape(WorkspaceTypes.propTypes),
       tutorRoleName: T.string,
       learnerRoleName: T.string,
-      icon: T.string,
       defaultSessionDuration: T.number
     }),
     display: T.shape({
@@ -46,7 +45,6 @@ const Course = {
     code: '',
     title: '',
     parent: null,
-    meta: {},
     display: {
       order: constants.DEFAULT_ORDER,
       hideSessions: false
