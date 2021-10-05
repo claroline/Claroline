@@ -60,8 +60,8 @@ abstract class AbstractEvaluationManager
     {
         $newProgression = $progression / $progressionMax;
 
-        $oldProgression = $evaluation->getProgression() ?? 0;
-        $oldProgressionMax = $evaluation->getProgressionMax() ?? 100;
+        $oldProgression = !empty($evaluation->getProgression()) ? $evaluation->getProgression() : 0;
+        $oldProgressionMax = !empty($evaluation->getProgressionMax()) ? $evaluation->getProgressionMax() : 100;
         $oldProgression = $oldProgression / $oldProgressionMax;
 
         if ($newProgression >= $oldProgression) {
