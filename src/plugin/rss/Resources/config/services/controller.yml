@@ -1,0 +1,7 @@
+services:
+    _defaults:
+        public: true #because controller
+
+    Claroline\RssBundle\Controller\RssFeedController:
+        parent: Claroline\AppBundle\Controller\AbstractCrudController
+        public: true

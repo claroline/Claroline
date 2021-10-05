@@ -20,9 +20,8 @@ class ClarolineRssExtension extends Extension
 {
     public function load(array $configs, ContainerBuilder $container)
     {
-        $locator = new FileLocator(__DIR__.'/../Resources/config/services');
+        $locator = new FileLocator(__DIR__.'/../Resources/config');
         $loader = new YamlFileLoader($container, $locator);
-        $loader->load('library.yml');
         $loader->load('services.yml');
     }
 }

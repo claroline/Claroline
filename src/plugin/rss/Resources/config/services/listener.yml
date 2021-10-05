@@ -1,6 +1,3 @@
-imports:
-    - { resource: services/serializer.yml }
-
 services:
     _defaults:
         autowire: false
@@ -9,6 +6,6 @@ services:
 
     Claroline\RssBundle\Listener\RssListener:
         arguments:
-           - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\AppBundle\API\SerializerProvider'
         tags:
             - { name: kernel.event_listener, event: resource.rss_feed.load, method: onLoad }
