@@ -13,7 +13,7 @@ services:
         arguments:
             - '@filesystem'
             - '@Claroline\AppBundle\Manager\CommandManager'
-            - '%%kernel.project_dir%'
+            - '%kernel.project_dir%'
             - '%kernel.cache_dir%'
             - '%claroline.param.public_directory%'
             - '%claroline.param.data_web_dir%'
