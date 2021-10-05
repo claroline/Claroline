@@ -127,7 +127,7 @@ class AnalyticsManager
         $organizations = [];
         $user = $this->tokenStorage->getToken()->getUser();
         if (!$user->hasRole('ROLE_ADMIN')) {
-            $organizations = $user->getAdministratedOrganizations();
+            $organizations = $user->getAdministratedOrganizations()->toArray();
         }
 
         return [
