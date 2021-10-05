@@ -1,6 +1,6 @@
 claro_open_badge_api:
     resource: "@ClarolineOpenBadgeBundle/Controller/API/"
-    prefix: api
+    prefix: apiv2
     type: api
     options:
         expose: true

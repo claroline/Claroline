@@ -23,8 +23,6 @@ services:
         public: true
         arguments:
             - '@security.authorization_checker'
-            - '@security.token_storage'
-            - '@translator'
             - '@Claroline\OpenBadgeBundle\Manager\OpenBadgeManager'
 
     Claroline\OpenBadgeBundle\Controller\API\EndorsementController:

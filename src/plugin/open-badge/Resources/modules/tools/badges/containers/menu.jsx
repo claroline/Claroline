@@ -1,16 +1,16 @@
 import {connect} from 'react-redux'
 
-import {withRouter} from '#/main/app/router'
-import {selectors as securitySelectors} from '#/main/app/security/store'
+import {hasPermission} from '#/main/app/security'
+import {selectors as toolSelectors} from '#/main/core/tool/store'
 
-import {BadgeMenu} from '#/plugin/open-badge/tools/badges/components/menu'
+import {BadgeMenu as BadgeMenuComponent} from '#/plugin/open-badge/tools/badges/components/menu'
 
-const ConnectedBadgeMenu = withRouter(connect(
+const BadgeMenu = connect(
   state => ({
-    isAdmin: securitySelectors.isAdmin(state)
+    canEdit: hasPermission('edit', toolSelectors.toolData(state))
   })
-)(BadgeMenu))
+)(BadgeMenuComponent)
 
 export {
-  ConnectedBadgeMenu as BadgeMenu
+  BadgeMenu
 }

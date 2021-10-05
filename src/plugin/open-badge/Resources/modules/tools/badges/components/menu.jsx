@@ -10,7 +10,7 @@ import {MenuSection} from '#/main/app/layout/menu/components/section'
 
 const BadgeMenu = (props) =>
   <MenuSection
-    {...omit(props, 'path', 'isAdmin')}
+    {...omit(props, 'path', 'canEdit')}
     title={trans('badges', {}, 'tools')}
   >
     <Toolbar
@@ -33,7 +33,7 @@ const BadgeMenu = (props) =>
           label: trans('parameters'),
           type: LINK_BUTTON,
           target: props.path+'/parameters',
-          displayed: props.isAdmin
+          displayed: props.canEdit
         }
       ]}
       onClick={props.autoClose}
@@ -42,7 +42,7 @@ const BadgeMenu = (props) =>
 
 BadgeMenu.propTypes = {
   path: T.string,
-  isAdmin: T.bool.isRequired,
+  canEdit: T.bool.isRequired,
 
   // from menu
   opened: T.bool.isRequired,
