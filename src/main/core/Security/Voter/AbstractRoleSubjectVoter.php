@@ -29,7 +29,7 @@ class AbstractRoleSubjectVoter extends AbstractVoter
         $nonAuthorized = array_filter($collection->toArray(), function (Role $role) use ($token) {
             $workspace = $role->getWorkspace();
             if ($workspace) {
-                if ($this->isGranted(['community', 'edit'], $workspace)) {
+                if ($this->isGranted(['community', 'create_user'], $workspace)) {
                     $workspaceManager = $this->getContainer()->get('claroline.manager.workspace_manager');
                     // If user is workspace manager then grant access
                     if ($workspaceManager->isManager($workspace, $token)) {
