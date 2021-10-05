@@ -68,7 +68,7 @@ class FieldChoiceCategorySerializer
             }
         }
         $field = isset($data['field']['id']) ?
-            $this->fieldRepo->findOneBy(['uuid' => $data['field']['id']]) :
+            $this->fieldRepo->findByFieldFacetUuid($data['field']['id']) :
             null;
 
         if (!empty($field)) {
