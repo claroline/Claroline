@@ -4,6 +4,7 @@ import {connect} from 'react-redux'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 
+import {url} from '#/main/app/api'
 import {withRouter} from '#/main/app/router'
 import {trans, transChoice} from '#/main/app/intl/translation'
 import {ContentHtml} from '#/main/app/content/components/html'
@@ -152,7 +153,16 @@ const BadgeDetailsComponent = (props) => {
           label: trans('export', {}, 'actions'),
           displayed: get(props.badge, 'permissions.grant'),
           file: {
-            url: ['apiv2_badge-class_export_users', {badge: props.badge.id}]
+            url: url(['apiv2_assertion_csv'], {
+              filters: {badge: get(props.badge, 'id')},
+              columns: [
+                'user.firstName',
+                'user.lastName',
+                'user.email',
+                'issuedOn',
+                'expires'
+              ]
+            })
           },
           group: trans('transfer')
         }, {

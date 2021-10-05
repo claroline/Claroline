@@ -8,7 +8,8 @@ import {actions, selectors} from '#/plugin/open-badge/tools/badges/store'
 
 const BadgeTool = connect(
   (state) => ({
-    editable: hasPermission('edit', toolSelectors.toolData(state)),
+    canEdit: hasPermission('edit', toolSelectors.toolData(state)),
+    canGrant: hasPermission('grant', toolSelectors.toolData(state)),
     currentContext: toolSelectors.context(state)
   }),
   dispatch => ({
