@@ -152,3 +152,6 @@ plugin:
         - name: training_quota
           placeholders:
               - organization_name
+              - quota_threshold
+              - subscriptions_count
+              - subscriptions
