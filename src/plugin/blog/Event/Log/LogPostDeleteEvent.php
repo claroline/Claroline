@@ -18,7 +18,7 @@ class LogPostDeleteEvent extends AbstractLogResourceEvent
                 'blog' => $blog->getId(),
                 'title' => $post->getTitle(),
                 'slug' => $post->getSlug(),
-                'author' => $post->getAuthor()->getFirstName().' '.$post->getAuthor()->getLastName(),
+                'author' => $post->getCreator()->getFirstName().' '.$post->getCreator()->getLastName(),
             ],
         ];
 

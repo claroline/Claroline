@@ -24,8 +24,8 @@ class LogPostCreateEvent extends AbstractLogResourceEvent implements NotifiableI
                 'title' => $post->getTitle(),
                 'slug' => $post->getSlug(),
                 'published' => $post->isPublished(),
-                'author' => $post->getAuthor()->getFirstName().' '.$post->getAuthor()->getLastName(),
-                'authorId' => $post->getAuthor()->getId(),
+                'author' => $post->getCreator()->getFirstName().' '.$post->getCreator()->getLastName(),
+                'authorId' => $post->getCreator()->getId(),
             ],
         ];
 

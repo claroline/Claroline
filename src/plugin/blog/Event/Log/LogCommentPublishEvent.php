@@ -31,7 +31,7 @@ class LogCommentPublishEvent extends AbstractLogResourceEvent implements Notifia
         $this->post = $post;
 
         $author = $comment->getAuthor()
-            ? $comment->getAuthor()->getFirstName().' '.$post->getAuthor()->getLastName()
+            ? $comment->getAuthor()->getFirstName().' '.$comment->getAuthor()->getLastName()
             : $translator->trans('anonymous', [], 'platform');
 
         $authorId = $comment->getAuthor()

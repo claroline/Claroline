@@ -106,6 +106,7 @@ class BlogController
     {
         $this->checkPermission('OPEN', $blog->getResourceNode(), [], true);
 
+        $parameters = [];
         $parameters['limit'] = -1;
         $posts = $this->postManager->getPosts(
             $blog->getId(),
@@ -124,7 +125,6 @@ class BlogController
 
         return new JsonResponse($this->blogManager->getTags($blog, $postsData));
     }
-
 
     /**
      * @Route("/rss", name="icap_blog_rss", methods={"GET"})
@@ -158,12 +158,21 @@ class BlogController
         $items = [];
         if (isset($posts)) {
             foreach ($posts['data'] as $post) {
+                $author = null;
+                if (!empty($post['meta'])) {
+                    if (!empty($post['meta']['author'])) {
+                        $author = $post['meta']['author'];
+                    } elseif (!empty($post['meta']['creator'])) {
+                        $author = $post['meta']['creator']['name'];
+                    }
+                }
+
                 $items[] = [
                     'title' => $post['title'],
                     'url' => $this->router->generate('apiv2_blog_post_get', ['blogId' => $blog->getId(), 'postId' => $post['slug']], UrlGeneratorInterface::ABSOLUTE_URL),
                     'date' => date('d/m/Y h:i:s', strtotime($post['publicationDate'])),
                     'intro' => $post['content'],
-                    'author' => $post['authorName'],
+                    'author' => $author,
                 ];
             }
         }
@@ -197,11 +206,20 @@ class BlogController
         $items = [];
         if (isset($posts)) {
             foreach ($posts['data'] as $post) {
+                $author = null;
+                if (!empty($post['meta'])) {
+                    if (!empty($post['meta']['author'])) {
+                        $author = $post['meta']['author'];
+                    } elseif (!empty($post['meta']['creator'])) {
+                        $author = $post['meta']['creator']['name'];
+                    }
+                }
+
                 $items[] = [
                     'title' => $post['title'],
                     'content' => $post['content'],
                     'publicationDate' => $post['publicationDate'] ? $post['publicationDate'] : $post['creationDate'],
-                    'author' => $post['authorName'],
+                    'author' => $author,
                 ];
             }
         }

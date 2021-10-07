@@ -36,7 +36,7 @@ const PostFormComponent = props =>
                 type: 'string',
                 label: trans('icap_blog_post_form_title', {}, 'icap_blog'),
                 required: true
-              },{
+              }, {
                 name: 'publicationDate',
                 type: 'date',
                 help: trans('icap_blog_post_form_publicationDate_help', {}, 'icap_blog'),
@@ -45,7 +45,7 @@ const PostFormComponent = props =>
                 options: {
                   time: false
                 }
-              },{
+              }, {
                 name: 'content',
                 type: 'html',
                 label: trans('icap_blog_post_form_content', {}, 'icap_blog'),
@@ -54,14 +54,14 @@ const PostFormComponent = props =>
                   minRows: 6,
                   workspace: props.workspace
                 }
-              },{
-                name: 'tags',
+              }, {
+                name: 'meta.author',
                 type: 'string',
-                help: trans('icap_blog_post_form_tags_help', {}, 'icap_blog'),
-                label: trans('icap_blog_post_form_tags', {}, 'icap_blog'),
-                options: {
-                  minRows: 6
-                }
+                label: trans('author')
+              }, {
+                name: 'tags',
+                label: trans('tags'),
+                type: 'tag'
               }
             ]
           }, {

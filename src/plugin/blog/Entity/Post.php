@@ -3,9 +3,9 @@
 namespace Icap\BlogBundle\Entity;
 
 use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Claroline\AppBundle\Entity\Meta\Creator;
 use Claroline\AppBundle\Entity\Meta\Poster;
 use Claroline\AppBundle\Entity\Meta\Thumbnail;
-use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -19,6 +19,7 @@ use Icap\NotificationBundle\Entity\UserPickerContent;
  */
 class Post extends Statusable
 {
+    use Creator;
     use Poster;
     use Thumbnail;
     use Uuid;
@@ -92,9 +93,9 @@ class Post extends Statusable
     protected $comments;
 
     /**
-     * @var User
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @ORM\Column(nullable=true)
+     *
+     * @var string
      */
     protected $author;
 
@@ -332,7 +333,7 @@ class Post extends Statusable
      *
      * @return Post
      */
-    public function setAuthor(User $author = null)
+    public function setAuthor(?string $author = null)
     {
         $this->author = $author;
 
@@ -342,7 +343,7 @@ class Post extends Statusable
     /**
      * Get author.
      *
-     * @return User
+     * @return string
      */
     public function getAuthor()
     {
