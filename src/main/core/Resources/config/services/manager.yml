@@ -27,6 +27,7 @@ services:
             - '@Claroline\AppBundle\API\Crud'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
             - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - '@messenger.default_bus'
 
     claroline.manager.user_manager:
         alias: Claroline\CoreBundle\Manager\UserManager
