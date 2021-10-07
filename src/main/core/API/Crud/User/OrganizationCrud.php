@@ -78,34 +78,29 @@ class OrganizationCrud
     public function postPatch(PatchEvent $event): void
     {
         $action = $event->getAction();
-        $users = $event->getValue();
         $property = $event->getProperty();
+
+        if (is_array($event->getValue())) {
+            $users = $event->getValue();
+        } else {
+            $users = [$event->getValue()];
+        }
 
         if ('administrator' === $property) {
             $roleAdminOrga = $this->om->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_ADMIN_ORGANIZATION');
             if (Crud::COLLECTION_ADD === $action) {
-                if (is_array($users)) {
-                    /** @var User $user */
-                    foreach ($users as $user) {
-                        $user->addRole($roleAdminOrga);
-                        $this->om->persist($user);
-                    }
-                } else {
-                    $users->addRole($roleAdminOrga);
-                    $this->om->persist($users);
+                /** @var User $user */
+                foreach ($users as $user) {
+                    $user->addRole($roleAdminOrga);
+                    $this->om->persist($user);
                 }
 
                 $this->dispatcher->dispatch(SecurityEvents::ADD_ROLE, AddRoleEvent::class, [$users, $roleAdminOrga]);
             } elseif (Crud::COLLECTION_REMOVE === $action) {
-                if (is_array($users)) {
-                    /** @var User $user */
-                    foreach ($users as $user) {
-                        $user->removeRole($roleAdminOrga);
-                        $this->om->persist($user);
-                    }
-                } else {
-                    $users->removeRole($roleAdminOrga);
-                    $this->om->persist($users);
+                /** @var User $user */
+                foreach ($users as $user) {
+                    $user->removeRole($roleAdminOrga);
+                    $this->om->persist($user);
                 }
 
                 $this->dispatcher->dispatch(SecurityEvents::REMOVE_ROLE, RemoveRoleEvent::class, [$users, $roleAdminOrga]);

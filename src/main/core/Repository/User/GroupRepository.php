@@ -51,7 +51,7 @@ class GroupRepository extends EntityRepository
                     SELECT g
                     FROM Claroline\CoreBundle\Entity\Group g
                     JOIN g.organizations AS og
-                    WHERE og.organization_id IN (:organizations)
+                    WHERE og IN (:organizations)
                ')
                 ->setParameter('organizations', $organizations)
                 ->getResult();
