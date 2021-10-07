@@ -21,7 +21,7 @@
       "description": "The course description"
     },
     "meta": {
-      "type": ["object"],
+      "type": "object",
       "properties": {
         "workspaceModel": {
           "type": ["object", "null"],
@@ -52,10 +52,6 @@
         "duration": {
           "type": "number",
           "description": "The default duration in days of session"
-        },
-        "order": {
-          "type": "integer",
-          "description": "The course display order"
         }
       }
     },

@@ -259,6 +259,8 @@ class ResourceNode
      * @var bool
      *
      * @ORM\Column(name="comments_activated", type="boolean")
+     *
+     * @todo : remove me. Should not be here
      */
     protected $commentsActivated = false;
 

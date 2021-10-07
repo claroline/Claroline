@@ -112,7 +112,8 @@ class PostSerializer
             'content' => isset($options['abstract']) && $options['abstract'] ? $post->getAbstract() : $post->getContent(),
             'abstract' => $this->isAbstract($post, $options),
             'meta' => [
-                //'author' => $post->getAuthor(),
+                'creator' => $post->getCreator() ? $this->userSerializer->serialize($post->getCreator(), [Options::SERIALIZE_MINIMAL]) : null,
+                'author' => $post->getAuthor(),
                 'resource' => $post->getBlog() && $post->getBlog()->getResourceNode() ?
                     $this->nodeSerializer->serialize($post->getBlog()->getResourceNode(), [Options::SERIALIZE_MINIMAL])
                     :
@@ -122,8 +123,6 @@ class PostSerializer
             'modificationDate' => DateNormalizer::normalize($post->getModificationDate()),
             'publicationDate' => DateNormalizer::normalize($post->getPublicationDate()),
             'viewCounter' => $post->getViewCounter(),
-            'author' => $post->getAuthor() ? $this->userSerializer->serialize($post->getAuthor(), [Options::SERIALIZE_MINIMAL]) : null,
-            'authorName' => $post->getAuthor() ? $post->getAuthor()->getFullName() : null,
             'tags' => $this->serializeTags($post),
             'comments' => $comments,
             'commentsNumber' => $commentsNumber,
@@ -161,6 +160,7 @@ class PostSerializer
         $this->sipe('title', 'setTitle', $data, $post);
         $this->sipe('content', 'setContent', $data, $post);
         $this->sipe('viewCounter', 'setViewCounter', $data, $post);
+        $this->sipe('meta.author', 'setAuthor', $data, $post);
 
         if (isset($data['creationDate'])) {
             $post->setCreationDate(DateNormalizer::denormalize($data['creationDate']));
@@ -172,9 +172,9 @@ class PostSerializer
             $post->setModificationDate(DateNormalizer::denormalize($data['modificationDate']));
         }
 
-        if (isset($data['user'])) {
-            $user = isset($data['user']['id']) ? $this->userRepo->findOneBy(['id' => $data['user']['id']]) : null;
-            $post->setAuthor($user);
+        if (isset($data['meta']) && isset($data['meta']['creator'])) {
+            $user = isset($data['meta']['creator']['id']) ? $this->userRepo->findOneBy(['uuid' => $data['meta']['creator']['id']]) : null;
+            $post->setCreator($user);
         }
         if (isset($data['tags'])) {
             $this->deserializeTags($post, $data['tags']);
@@ -226,7 +226,7 @@ class PostSerializer
         ]);
         $this->eventDispatcher->dispatch($event, 'claroline_retrieve_used_tags_by_class_and_ids');
 
-        return is_array($event->getResponse()) ? implode(', ', $event->getResponse()) : null;
+        return $event->getResponse() ?? [];
     }
 
     /**
@@ -234,12 +234,10 @@ class PostSerializer
      *
      * @param string $tags
      */
-    public function deserializeTags(Post $post, $tags, array $options = [])
+    public function deserializeTags(Post $post, array $tags, array $options = [])
     {
-        $array = array_map('trim', explode(',', $tags));
-
         $event = new GenericDataEvent([
-            'tags' => $array,
+            'tags' => $tags,
             'data' => [
                 [
                     'class' => 'Icap\BlogBundle\Entity\Post',

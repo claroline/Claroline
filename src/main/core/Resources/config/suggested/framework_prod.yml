@@ -14,7 +14,7 @@ framework:
         handler_id: "claroline.session_handler.file" # Overridden by SessionConfigPass
         cookie_httponly: true
         cookie_secure: auto
-        cookie_samesite: lax
+        cookie_samesite: "%claroline.session_cookie_samesite%"
     cache: ~
     php_errors:
         log: true

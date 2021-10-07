@@ -11,6 +11,7 @@
 
 namespace Claroline\EvaluationBundle\Entity;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -18,6 +19,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class AbstractEvaluation
 {
+    use Id;
+
     const STATUS_PASSED = 'passed';
     const STATUS_FAILED = 'failed';
     const STATUS_COMPLETED = 'completed';
@@ -39,13 +42,6 @@ class AbstractEvaluation
         self::STATUS_COMPLETED => 6,
         self::STATUS_PASSED => 7,
     ];
-
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
 
     /**
      * @ORM\Column(name="evaluation_date", type="datetime", nullable=true)
@@ -86,16 +82,6 @@ class AbstractEvaluation
      * @ORM\Column(name="progression_max", type="integer", nullable=true)
      */
     protected $progressionMax;
-
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
 
     public function getDate()
     {
@@ -177,16 +163,21 @@ class AbstractEvaluation
         $this->progressionMax = $progressionMax;
     }
 
-    public function isTerminated()
+    public function isTerminated(): bool
     {
-        return self::STATUS_NOT_ATTEMPTED !== $this->status &&
-            self::STATUS_INCOMPLETE !== $this->status &&
-            self::STATUS_UNKNOWN !== $this->status;
+        return in_array($this->status, [
+            self::STATUS_COMPLETED,
+            self::STATUS_PASSED,
+            self::STATUS_PARTICIPATED,
+            self::STATUS_FAILED,
+        ]);
     }
 
-    public function isSuccessful()
+    public function isSuccessful(): bool
     {
-        return self::STATUS_PASSED === $this->status ||
-            self::STATUS_COMPLETED === $this->status;
+        return in_array($this->status, [
+            self::STATUS_COMPLETED,
+            self::STATUS_PASSED,
+        ]);
     }
 }

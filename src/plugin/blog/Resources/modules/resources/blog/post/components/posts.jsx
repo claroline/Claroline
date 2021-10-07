@@ -82,15 +82,18 @@ class PostsComponent extends Component {
             sortable: false,
             displayed: false
           },{
-            name: 'authorName',
+            name: 'meta.author',
             label: trans('author', {}, 'platform'),
             type: 'string'
-          },{
-            name: 'tag',
-            label: trans('tags', {}, 'platform'),
-            type: 'string',
+          }, {
+            name: 'tags',
+            type: 'tag',
+            label: trans('tags'),
+            displayable: false,
             sortable: false,
-            displayed: false
+            options: {
+              objectClass: 'Icap\\BlogBundle\\Entity\\Post'
+            }
           }
         ]}
 

@@ -1,11 +1,13 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
+import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 
 // TODO : remove me
 import ButtonToolbar from 'react-bootstrap/lib/ButtonToolbar'
 
+import {asset} from '#/main/app/config'
 import {withRouter} from '#/main/app/router'
 import {trans, transChoice} from '#/main/app/intl/translation'
 import {displayDate} from '#/main/app/intl/date'
@@ -18,32 +20,27 @@ import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {CallbackButton} from '#/main/app/buttons/callback/components/button'
 import {LinkButton} from '#/main/app/buttons/link/components/button'
-import {route} from '#/main/core/user/routing'
-import {UserAvatar} from '#/main/core/user/components/avatar'
+import {UserMicro} from '#/main/core/user/components/micro'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
 
 import {selectors} from '#/plugin/blog/resources/blog/store'
 import {PostType} from '#/plugin/blog/resources/blog/post/components/prop-types'
 import {actions as postActions} from '#/plugin/blog/resources/blog/post/store'
-import {splitArray} from '#/plugin/blog/resources/blog/utils'
 import {updateQueryParameters} from '#/plugin/blog/resources/blog/utils'
-import {asset} from '#/main/app/config'
 
 const CardMeta = props =>
   <ul className="list-inline post-infos">
     <li
       onClick={(e) => {
-        props.getPostsByAuthor(props.history, props.location.search, props.blogId, props.post.author.firstName + ' ' + props.post.author.lastName)
+        props.getPostsByAuthor(props.history, props.location.search, props.blogId, get(props.post, 'meta.author') || get(props.post, 'meta.creator.name'))
         e.preventDefault()
         e.stopPropagation()
       }}
     >
-      <span>
-        <LinkButton target={route(props.post.author || {})}>
-          <UserAvatar className="user-picture" picture={props.post.author ? props.post.author.picture : undefined} alt={true} />
-        </LinkButton>
-        <a className="user-name link">{props.post.author.firstName} {props.post.author.lastName}</a>
-      </span>
+      {props.post.meta.author ?
+        <UserMicro name={props.post.meta.author} /> :
+        <UserMicro {...props.post.meta.creator} />
+      }
     </li>
 
     <li>
@@ -154,7 +151,7 @@ const CardFooter = props =>
       </li>
 
       {!isEmpty(props.post.tags) ? (
-        splitArray(props.post.tags).map((tag, index) =>(
+        props.post.tags.map((tag, index) =>(
           <li key={index}>
             <CallbackButton
               className='link'

@@ -37,3 +37,6 @@ parameters:
 
     # Geoip
     claroline.param.geoip_db_path: '%kernel.project_dir%/var/geoip/GeoLite2-City.mmdb'
+
+    # Session
+    claroline.session_cookie_samesite: lax

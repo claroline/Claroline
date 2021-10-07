@@ -18,7 +18,7 @@ services:
             - '@ujm_exo.serializer.paper'
             - '@UJM\ExoBundle\Manager\Item\ItemManager'
             - '@UJM\ExoBundle\Manager\Attempt\ScoreManager'
-            - '@claroline.manager.resource_evaluation_manager'
+            - '@Claroline\EvaluationBundle\Manager\ResourceEvaluationManager'
 
     UJM\ExoBundle\Manager\Attempt\ScoreManager: ~
 

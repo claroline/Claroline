@@ -7,10 +7,6 @@ import {constants} from '#/plugin/blog/resources/blog/constants'
 import {selectors} from '#/plugin/blog/resources/blog/store/selectors'
 import {actions as postActions} from '#/plugin/blog/resources/blog/post/store/actions'
 
-function splitArray(array){
-  return array.split(',').map(item => item.trim())
-}
-
 function cleanTag(mode, tag){
   if(mode === constants.TAGCLOUD_TYPE_CLASSIC_NUM) {
     tag = tag.replace(/ *\([0-9+]*\) */g, '')
@@ -38,7 +34,7 @@ function initDatalistFilters(dispatch, query){
       dispatch(postActions.initDataList())
     }
     if(!isEmpty(obj['author'])){
-      dispatch(listActions.addFilter(selectors.STORE_NAME+'.posts', 'authorName', obj['author']))
+      dispatch(listActions.addFilter(selectors.STORE_NAME+'.posts', 'author', obj['author']))
       dispatch(postActions.initDataList())
     }
   }
@@ -52,7 +48,7 @@ function buildQueryParameters(filters){
   if(!isEmpty(tags)){
     query = '?tags=' + tags['value']
   }
-  let authorName = find(filters, ['property', 'authorName'])
+  let authorName = find(filters, ['property', 'author'])
   if(!isEmpty(authorName)){
     authorParameter = 'author=' + authorName['value']
     query === '' ? query = '?' + authorParameter : '&' + authorParameter
@@ -72,7 +68,6 @@ function updateQueryParameters(uri, key, value) {
 }
 
 export {
-  splitArray,
   cleanTag,
   parseQuery,
   initDatalistFilters,

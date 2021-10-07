@@ -23,7 +23,6 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceRoleChangeRightEvent;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Claroline\CoreBundle\Repository\Resource\ResourceRightsRepository;
-use Claroline\CoreBundle\Security\PlatformRoles;
 use Doctrine\DBAL\Connection;
 use Psr\Log\LoggerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -243,108 +242,6 @@ class RightsManager implements LoggerAwareInterface
         }
 
         return array_merge($perms, ['create' => $creatable]);
-    }
-
-    /**
-     * Gets simplified rights for a Resource node.
-     * Format: [
-     *   mode: all | user | workspace | admin
-     *   customRules: true | false
-     * ].
-     */
-    public function getSimpleRights(ResourceNode $resourceNode): array
-    {
-        // get rights with decoded masks
-        $rights = $this->getRights($resourceNode);
-        $workspace = $resourceNode->getWorkspace();
-        $managerRole = null;
-        if ($workspace) {
-            $managerRole = $workspace->getManagerRole();
-        }
-
-        // check which users can access the resource
-        $mode = 'admin'; // only ws manager / resource creator
-        if ($this->hasRights($rights, PlatformRoles::ANONYMOUS)) {
-            // everyone can access the resource
-            $mode = 'all';
-        } elseif ($this->hasRights($rights, PlatformRoles::USER)) {
-            // only the platform users can access the resource
-            $mode = 'user';
-        } elseif (!empty($workspace)) {
-            // find perms for all non manager roles of the workspace
-            // and check if at least one as the open perm
-            $wsRolesWithRights = array_filter($rights, function (array $roleRights) use ($workspace, $managerRole) {
-                if ($roleRights['name'] === $managerRole->getName()) {
-                    return false;
-                }
-
-                if (!empty($roleRights['workspace']) && $roleRights['workspace']['id'] === $workspace->getUuid()) {
-                    // this is a parent workspace role, check if it has at least open right
-                    return !empty($roleRights['permissions']) && isset($roleRights['permissions']['open']) && $roleRights['permissions']['open'];
-                }
-
-                return false;
-            });
-
-            if (0 !== count($wsRolesWithRights)) {
-                $mode = 'workspace';
-            }
-        }
-
-        // checks if there are non standard perms on the resource
-        // aka, rights for roles of another workspace or other perms than 'open'
-        $customRights = array_filter($rights, function (array $roleRights) use ($workspace, $managerRole) {
-            if (!empty($managerRole) && $roleRights['name'] === $managerRole->getName()) {
-                return false;
-            }
-
-            if (PlatformRoles::ANONYMOUS === $roleRights['name']
-                || PlatformRoles::USER === $roleRights['name']
-                || (!empty($workspace) && false !== strpos($roleRights['name'], $workspace->getUuid()))
-            ) {
-                // this is a standard role, check if it has custom perms
-                if (isset($roleRights['permissions'])) {
-                    $perms = array_keys($roleRights['permissions']);
-
-                    return 0 !== count(array_filter($perms, function (string $permName) use ($roleRights) {
-                        if (!in_array($permName, ['open', 'download'])) {
-                            if (isset($roleRights['permissions'][$permName])) {
-                                if (is_array($roleRights['permissions'][$permName])) {
-                                    return 0 !== count($roleRights['permissions'][$permName]);
-                                }
-
-                                return $roleRights['permissions'][$permName];
-                            }
-
-                            return false;
-                        }
-
-                        return false;
-                    }));
-                }
-
-                return false;
-            }
-
-            // non standard rights found
-            return true;
-        });
-
-        return [
-            'mode' => $mode,
-            'customRules' => 0 !== count($customRights),
-        ];
-    }
-
-    private function hasRights(array $serializedRights, string $roleName, string $perm = 'OPEN'): bool
-    {
-        foreach ($serializedRights as $rights) {
-            if (isset($rights['name']) && $rights['name'] === $roleName) {
-                return !empty($rights['permissions']) && isset($rights['permissions'][strtolower($perm)]) && $rights['permissions'][strtolower($perm)];
-            }
-        }
-
-        return false;
     }
 
     private function getCreatableTypes(array $roles, ResourceNode $node): array

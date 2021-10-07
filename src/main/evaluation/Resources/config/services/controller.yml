@@ -1,0 +1,23 @@
+services:
+    _defaults:
+        public: true
+
+    Claroline\EvaluationBundle\Controller\WorkspaceEvaluationController:
+        parent: Claroline\AppBundle\Controller\AbstractSecurityController
+        public: true
+        arguments:
+            - '@security.authorization_checker'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\Crud'
+            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\EvaluationBundle\Manager\WorkspaceEvaluationManager'
+            - '@Claroline\EvaluationBundle\Manager\WorkspaceRequirementsManager'
+
+    Claroline\EvaluationBundle\Controller\WorkspaceRequirementsController:
+        arguments:
+            - '@security.authorization_checker'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\EvaluationBundle\Manager\WorkspaceRequirementsManager'

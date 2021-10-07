@@ -27,6 +27,15 @@ registry.add('ClarolineCoreBundle', {
   },
 
   /**
+   * Provides searchable items for the global search.
+   */
+  search: {
+    'resource' : () => { return import(/* webpackChunkName: "core-search-resource" */  '#/main/core/search/resource')},
+    'user'     : () => { return import(/* webpackChunkName: "core-search-user" */      '#/main/core/search/user')},
+    'workspace': () => { return import(/* webpackChunkName: "core-search-workspace" */ '#/main/core/search/workspace')}
+  },
+
+  /**
    * Provides actions for base Claroline objects.
    */
   actions: {

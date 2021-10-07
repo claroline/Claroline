@@ -16,7 +16,6 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\AppBundle\API\Crud'
-            - '@claroline.manager.resource_evaluation_manager'
             - '@Claroline\ForumBundle\Manager\ForumManager'
             - '@security.token_storage'
         tags:
@@ -24,7 +23,6 @@ services:
             - { name: kernel.event_listener, event: transfer.claroline_forum.export, method: onExport }
             - { name: kernel.event_listener, event: transfer.claroline_forum.import.before, method: onImportBefore }
             - { name: kernel.event_listener, event: transfer.claroline_forum.import.after, method: onImport }
-            - { name: kernel.event_listener, event: generate_resource_user_evaluation_claroline_forum, method: onGenerateResourceTracking }
 
     Claroline\ForumBundle\Listener\ApiListener:
         arguments:

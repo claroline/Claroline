@@ -1,0 +1,15 @@
+services:
+    Claroline\EvaluationBundle\Manager\ResourceEvaluationManager:
+        arguments:
+            - '@event_dispatcher'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+
+    Claroline\EvaluationBundle\Manager\WorkspaceEvaluationManager:
+        arguments:
+            - '@event_dispatcher'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\EvaluationBundle\Manager\WorkspaceRequirementsManager'
+
+    Claroline\EvaluationBundle\Manager\WorkspaceRequirementsManager:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'

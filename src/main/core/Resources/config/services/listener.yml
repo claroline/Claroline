@@ -127,7 +127,6 @@ services:
             - '%claroline.param.files_directory%'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@claroline.manager.resource_manager'
-            - '@claroline.manager.resource_evaluation_manager'
             - '@Claroline\CoreBundle\Library\Utilities\FileUtilities'
         tags:
             - { name: kernel.event_listener, event: resource.file.load, method: onLoad }
@@ -138,7 +137,6 @@ services:
             - { name: kernel.event_listener, event: transfer.file.import.after, method: onImportFile }
             - { name: kernel.event_listener, event: resource.file.copy, method: onCopy }
             - { name: kernel.event_listener, event: download_file, method: onDownload }
-            - { name: kernel.event_listener, event: generate_resource_user_evaluation_file, method: onGenerateResourceTracking }
 
     Claroline\CoreBundle\Listener\Resource\Types\TextListener:
         arguments:
@@ -155,7 +153,6 @@ services:
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@claroline.manager.resource_manager'
             - '@Claroline\CoreBundle\Manager\Resource\ResourceLifecycleManager'
-            - '@claroline.manager.resource_evaluation_manager'
         tags:
             - { name: kernel.event_listener, event: resource_load, method: load }
             - { name: kernel.event_listener, event: resource.create, method: create }
@@ -211,12 +208,6 @@ services:
             - '@security.authorization_checker'
         tags:
             - { name: kernel.event_listener, event: open_tool_desktop_workspaces, method: onDisplayDesktop }
-
-    Claroline\CoreBundle\Listener\Workspace\EvaluationListener:
-        arguments:
-            - '@Claroline\CoreBundle\Manager\Workspace\EvaluationManager'
-        tags:
-            - { name: kernel.event_listener, event: resource_evaluation, method: onResourceEvaluation }
 
     Claroline\CoreBundle\Listener\ViewAsListener:
         arguments:

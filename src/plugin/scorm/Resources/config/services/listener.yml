@@ -9,7 +9,7 @@ services:
             - '%claroline.param.files_directory%'
             - '@filesystem'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager'
+            - '@Claroline\EvaluationBundle\Manager\ResourceEvaluationManager'
             - '@Claroline\ScormBundle\Manager\ScormManager'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@security.token_storage'

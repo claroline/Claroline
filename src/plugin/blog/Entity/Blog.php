@@ -4,7 +4,6 @@ namespace Icap\BlogBundle\Entity;
 
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
-use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Mapping as ORM;
@@ -152,21 +151,6 @@ class Blog extends AbstractResource
     public function displayPostViewCounter()
     {
         return $this->getOptions()->getDisplayPostViewCounter();
-    }
-
-    /**
-     * @return User[]
-     */
-    public function getAuthors()
-    {
-        $authors = [];
-
-        foreach ($this->getPosts() as $post) {
-            $postAuthor = $post->getAuthor();
-            $authors[$postAuthor->getUsername()] = $postAuthor;
-        }
-
-        return $authors;
     }
 
     /**

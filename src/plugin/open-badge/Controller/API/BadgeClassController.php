@@ -14,8 +14,6 @@ namespace Claroline\OpenBadgeBundle\Controller\API;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
-use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\OpenBadgeBundle\Entity\Assertion;
 use Claroline\OpenBadgeBundle\Entity\BadgeClass;
@@ -23,11 +21,8 @@ use Claroline\OpenBadgeBundle\Manager\OpenBadgeManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @Route("/badge-class")
@@ -38,22 +33,14 @@ class BadgeClassController extends AbstractCrudController
 
     /** @var AuthorizationCheckerInterface */
     private $authorization;
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var TranslatorInterface */
-    private $translator;
     /** @var OpenBadgeManager */
     private $manager;
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
-        TokenStorageInterface $tokenStorage,
-        TranslatorInterface $translator,
         OpenBadgeManager $manager
     ) {
         $this->authorization = $authorization;
-        $this->tokenStorage = $tokenStorage;
-        $this->translator = $translator;
         $this->manager = $manager;
     }
 
@@ -181,54 +168,5 @@ class BadgeClassController extends AbstractCrudController
         return new JsonResponse(
             $this->serializer->serialize($badge)
         );
-    }
-
-    /**
-     * @Route("/{badge}/users/export", name="apiv2_badge-class_export_users", methods={"GET"})
-     * @EXT\ParamConverter("badge", class="ClarolineOpenBadgeBundle:BadgeClass", options={"mapping": {"badge": "uuid"}})
-     */
-    public function exportUsersAction(BadgeClass $badge): StreamedResponse
-    {
-        $this->checkPermission('GRANT', $badge, [], true);
-
-        /** @var Assertion[] $assertions */
-        $assertions = $this->om->getRepository(Assertion::class)->findBy([
-            'badge' => $badge,
-        ]);
-
-        $fileName = "assertions-{$badge->getName()}";
-        $fileName = TextNormalizer::toKey($fileName);
-
-        return new StreamedResponse(function () use ($assertions) {
-            // Prepare CSV file
-            $handle = fopen('php://output', 'w+');
-
-            // Create header
-            fputcsv($handle, [
-                $this->translator->trans('last_name', [], 'platform'),
-                $this->translator->trans('first_name', [], 'platform'),
-                $this->translator->trans('email', [], 'platform'),
-                $this->translator->trans('date', [], 'platform'),
-                $this->translator->trans('revoked', [], 'badge'),
-            ], ';', '"');
-
-            foreach ($assertions as $assertion) {
-                // put Workspace evaluation
-                fputcsv($handle, [
-                    $assertion->getRecipient()->getLastName(),
-                    $assertion->getRecipient()->getFirstName(),
-                    $assertion->getRecipient()->getEmail(),
-                    DateNormalizer::normalize($assertion->getIssuedOn()),
-                    $assertion->getRevoked(),
-                ], ';', '"');
-            }
-
-            fclose($handle);
-
-            return $handle;
-        }, 200, [
-            'Content-Type' => 'application/force-download',
-            'Content-Disposition' => 'attachment; filename="'.$fileName.'.csv"',
-        ]);
     }
 }

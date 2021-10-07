@@ -39,13 +39,14 @@ class PostFinder extends AbstractFinder
                         $qb->setParameter('status', false);
                     }
                     break;
-                case 'authorName':
-                    $qb->innerJoin('obj.author', 'author');
+                case 'author':
+                    $qb->innerJoin('obj.creator', 'creator');
                     $qb->andWhere("
-                        UPPER(author.firstName) LIKE :{$filterName}
-                        OR UPPER(author.lastName) LIKE :{$filterName}
-                        OR UPPER(CONCAT(CONCAT(author.firstName, ' '), author.lastName)) LIKE :{$filterName}
-                        OR UPPER(CONCAT(CONCAT(author.lastName, ' '), author.firstName)) LIKE :{$filterName}
+                        UPPER(obj.author) LIKE :{$filterName}
+                        OR UPPER(creator.firstName) LIKE :{$filterName}
+                        OR UPPER(creator.lastName) LIKE :{$filterName}
+                        OR UPPER(CONCAT(CONCAT(creator.firstName, ' '), creator.lastName)) LIKE :{$filterName}
+                        OR UPPER(CONCAT(CONCAT(creator.lastName, ' '), creator.firstName)) LIKE :{$filterName}
                     ");
                     $qb->setParameter($filterName, '%'.strtoupper($filterValue).'%');
                     break;

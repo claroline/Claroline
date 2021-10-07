@@ -1636,5 +1636,7 @@
     "irl": "Face-to-face",
     "add_room": "Add a room",
     "security": "Security",
-    "both": "Both"
+    "both": "Both",
+    "disable_inactive_users": "Disable inactive users",
+    "disable_inactive_users_help": "All users who have not connected to the platform since the chosen date will be disabled."
 }

@@ -2,6 +2,7 @@
 
 namespace Claroline\PdfPlayerBundle\Controller;
 
+use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\User;
@@ -61,7 +62,7 @@ class UserEvaluationController
         $resourceUserEvaluation = $this->userEvaluationManager->getResourceUserEvaluation($pdf->getResourceNode(), $user);
 
         return new JsonResponse([
-            'userEvaluation' => $this->serializer->serialize($resourceUserEvaluation),
+            'userEvaluation' => $this->serializer->serialize($resourceUserEvaluation, [Options::SERIALIZE_MINIMAL]),
         ]);
     }
 }

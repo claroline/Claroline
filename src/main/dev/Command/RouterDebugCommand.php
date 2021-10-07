@@ -33,10 +33,11 @@ class RouterDebugCommand extends Command
 
     protected function configure()
     {
-        $this->setName('claroline:api:router:debug')->setDescription('Shows the api route');
-        $this->setDefinition(
-            [new InputArgument('class', InputArgument::REQUIRED, 'The class managed by the api.')]
-        );
+        $this
+            ->setDescription('Shows the api route')
+            ->setDefinition(
+                [new InputArgument('class', InputArgument::REQUIRED, 'The class managed by the api.')]
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

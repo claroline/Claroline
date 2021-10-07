@@ -2,17 +2,18 @@
 
 namespace Innova\PathBundle\Listener\Resource;
 
+use Claroline\AppBundle\API\Crud;
+use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
-use Claroline\CoreBundle\Event\Resource\EvaluateResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Manager\ResourceManager;
+use Claroline\EvaluationBundle\Event\ResourceEvaluationEvent;
 use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\Step;
 use Innova\PathBundle\Manager\UserProgressionManager;
@@ -33,6 +34,9 @@ class PathListener
     /* @var ObjectManager */
     private $om;
 
+    /** @var Crud */
+    private $crud;
+
     /** @var SerializerProvider */
     private $serializer;
 
@@ -46,6 +50,7 @@ class PathListener
         TokenStorageInterface $tokenStorage,
         TranslatorInterface $translator,
         ObjectManager $om,
+        Crud $crud,
         SerializerProvider $serializer,
         ResourceManager $resourceManager,
         UserProgressionManager $userProgressionManager)
@@ -53,6 +58,7 @@ class PathListener
         $this->tokenStorage = $tokenStorage;
         $this->translator = $translator;
         $this->om = $om;
+        $this->crud = $crud;
         $this->serializer = $serializer;
         $this->resourceManager = $resourceManager;
         $this->userProgressionManager = $userProgressionManager;
@@ -72,7 +78,8 @@ class PathListener
         if ($user instanceof User) {
             // retrieve user progression
             $evaluation = $this->serializer->serialize(
-                $this->userProgressionManager->getResourceUserEvaluation($path, $user)
+                $this->userProgressionManager->getResourceUserEvaluation($path, $user),
+                [Options::SERIALIZE_MINIMAL]
             );
 
             $currentAttempt = $this->serializer->serialize($this->userProgressionManager->getCurrentAttempt($path, $user));
@@ -126,12 +133,11 @@ class PathListener
      * Fired when a Resource Evaluation with a score is created.
      * We will update progression for all paths using this resource.
      */
-    public function onEvaluation(EvaluateResourceEvent $event)
+    public function onEvaluation(ResourceEvaluationEvent $event)
     {
-        /** @var ResourceUserEvaluation $evaluation */
-        $evaluation = $event->getEvaluation();
-
-        $this->userProgressionManager->handleResourceEvaluation($evaluation, $event->getAttempt());
+        if ($event->getAttempt()) {
+            $this->userProgressionManager->handleResourceEvaluation($event->getEvaluation(), $event->getAttempt());
+        }
     }
 
     /**
@@ -164,7 +170,8 @@ class PathListener
             $resourceNode = $step->getResource();
             if (!isset($copiedResources[$resourceNode->getUuid()])) {
                 // resource not already copied, create a new copy
-                $resourceCopy = $this->resourceManager->copy($resourceNode, $destination, $user);
+                $resourceCopy = $this->crud->copy($resourceNode, [Options::NO_RIGHTS, Crud::NO_PERMISSIONS], ['user' => $user, 'parent' => $destination]);
+
                 if ($resourceCopy) {
                     $copiedResources[$resourceNode->getUuid()] = $resourceCopy;
                 }
@@ -180,7 +187,7 @@ class PathListener
                 $resourceNode = $secondaryResource->getResource();
                 if (!isset($copiedResources[$resourceNode->getUuid()])) {
                     // resource not already copied, create a new copy
-                    $resourceCopy = $this->resourceManager->copy($resourceNode, $destination, $user);
+                    $resourceCopy = $this->crud->copy($resourceNode, [Options::NO_RIGHTS, Crud::NO_PERMISSIONS], ['user' => $user, 'parent' => $destination]);
                     if ($resourceCopy) {
                         $copiedResources[$resourceNode->getUuid()] = $resourceCopy;
                     }

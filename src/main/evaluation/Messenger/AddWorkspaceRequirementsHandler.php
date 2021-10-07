@@ -3,7 +3,8 @@
 namespace Claroline\EvaluationBundle\Messenger;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Manager\Workspace\EvaluationManager;
+use Claroline\EvaluationBundle\Manager\WorkspaceEvaluationManager;
+use Claroline\EvaluationBundle\Manager\WorkspaceRequirementsManager;
 use Claroline\EvaluationBundle\Messenger\Message\AddWorkspaceRequirements;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
@@ -11,14 +12,18 @@ class AddWorkspaceRequirementsHandler implements MessageHandlerInterface
 {
     /** @var ObjectManager */
     private $om;
-    /** @var EvaluationManager */
+    /** @var WorkspaceEvaluationManager */
+    private $evaluationManager;
+    /** @var WorkspaceRequirementsManager */
     private $manager;
 
     public function __construct(
         ObjectManager $om,
-        EvaluationManager $manager
+        WorkspaceEvaluationManager $evaluationManager,
+        WorkspaceRequirementsManager $manager
     ) {
         $this->om = $om;
+        $this->evaluationManager = $evaluationManager;
         $this->manager = $manager;
     }
 
@@ -32,7 +37,7 @@ class AddWorkspaceRequirementsHandler implements MessageHandlerInterface
 
         // initialize workspace evaluations (maybe move it elsewhere for separation of concern)
         foreach ($users as $user) {
-            $this->manager->getEvaluation($workspace, $user, true);
+            $this->evaluationManager->getUserEvaluation($workspace, $user, true);
         }
 
         // set required resources for the workspace

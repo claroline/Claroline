@@ -27,13 +27,9 @@ services:
           - '@security.authorization_checker'
           - '@security.token_storage'
 
-    Claroline\CoreBundle\API\Finder\Workspace\RequirementsFinder: ~
-
     Claroline\CoreBundle\API\Finder\Workspace\PendingRegistrationFinder: ~
 
     Claroline\CoreBundle\API\Finder\Workspace\OrderedToolFinder: ~
-
-    Claroline\CoreBundle\API\Finder\Workspace\EvaluationFinder: ~
 
     Claroline\CoreBundle\API\Finder\User\UserFinder:
         arguments:
@@ -85,8 +81,6 @@ services:
         arguments:
           - '@security.authorization_checker'
           - '@security.token_storage'
-
-    Claroline\CoreBundle\API\Finder\Resource\ResourceUserEvaluationFinder: ~
 
     Claroline\CoreBundle\API\Finder\Resource\ResourceNodeFinder:
         arguments:

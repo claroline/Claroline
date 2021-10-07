@@ -76,11 +76,11 @@ class PostManager
      */
     public function replacePostAuthor(User $from, User $to)
     {
-        $posts = $this->repo->findByAuthor($from);
+        $posts = $this->repo->findBy(['creator' => $from]);
 
         if (count($posts) > 0) {
             foreach ($posts as $post) {
-                $post->setAuthor($to);
+                $post->setCreator($to);
             }
 
             $this->om->flush();
@@ -95,11 +95,12 @@ class PostManager
     public function createPost(Blog $blog, Post $post, User $user)
     {
         $post
-        ->setBlog($blog)
-        ->setAuthor($user)
-        ->setStatus($blog->isAutoPublishPost() ? Post::STATUS_PUBLISHED : Post::STATUS_UNPUBLISHED)
-        ->setCreationDate(new \DateTime())
-        ->setModificationDate(new \DateTime());
+            ->setBlog($blog)
+            ->setStatus($blog->isAutoPublishPost() ? Post::STATUS_PUBLISHED : Post::STATUS_UNPUBLISHED)
+            ->setCreationDate(new \DateTime())
+            ->setModificationDate(new \DateTime());
+
+        $post->setCreator($user);
 
         if (null === $post->getPublicationDate()) {
             $post->setPublicationDate(new \DateTime());

@@ -53,7 +53,6 @@ services:
             - '@security.token_storage'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\SerializerProvider'
-            - '@Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager'
             - '@Icap\BlogBundle\Manager\BlogManager'
             - '@Icap\BlogBundle\Manager\PostManager'
             - '@Icap\BlogBundle\Manager\CommentManager'
@@ -62,7 +61,6 @@ services:
             - { name: kernel.event_listener, event: transfer.icap_blog.export, method: onExport }
             - { name: kernel.event_listener, event: transfer.icap_blog.import.after, method: onImport }
             - { name: kernel.event_listener, event: resource.icap_blog.copy, method: onCopy }
-            - { name: kernel.event_listener, event: generate_resource_user_evaluation_icap_blog, method: onGenerateResourceTracking }
 
     Icap\BlogBundle\Listener\NotificationListener:
         arguments:

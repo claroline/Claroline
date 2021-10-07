@@ -76,7 +76,7 @@ class PathController extends AbstractCrudController
         $resourceUserEvaluation = $this->userProgressionManager->getResourceUserEvaluation($step->getPath(), $user);
 
         return new JsonResponse([
-            'userEvaluation' => $this->serializer->serialize($resourceUserEvaluation),
+            'userEvaluation' => $this->serializer->serialize($resourceUserEvaluation, [Options::SERIALIZE_MINIMAL]),
             'userProgression' => [
                 'stepId' => $step->getUuid(),
                 'status' => $status,
@@ -103,7 +103,7 @@ class PathController extends AbstractCrudController
         $params['hiddenFilters']['resourceNode'] = [$node->getUuid()];
 
         return new JsonResponse(
-            $this->finder->search(ResourceUserEvaluation::class, $params, [Options::SERIALIZE_MINIMAL])
+            $this->finder->search(ResourceUserEvaluation::class, $params)
         );
     }
 

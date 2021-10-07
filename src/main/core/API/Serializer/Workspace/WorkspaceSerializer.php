@@ -108,13 +108,7 @@ class WorkspaceSerializer
             ]);
         }
 
-        $poster = null;
-        if ($workspace->getPoster()) {
-            /** @var PublicFile $poster */
-            $poster = $this->om->getRepository(PublicFile::class)->findOneBy([
-                'url' => $workspace->getPoster(),
-            ]);
-        }
+        $editPerm = $this->authorization->isGranted('EDIT', $workspace);
 
         $serialized = [
             'id' => $this->getUuid($workspace, $options),
@@ -123,12 +117,11 @@ class WorkspaceSerializer
             'code' => $workspace->getCode(),
             'slug' => $workspace->getSlug(),
             'thumbnail' => $thumbnail ? $this->publicFileSerializer->serialize($thumbnail) : null,
-            'poster' => $poster ? $this->publicFileSerializer->serialize($poster) : null,
-            'permissions' => [ // TODO it will decrease perfs, should be tested, but it is required in lists
+            'permissions' => [
                 'open' => $this->authorization->isGranted('OPEN', $workspace),
                 'delete' => $this->authorization->isGranted('DELETE', $workspace),
-                'configure' => $this->authorization->isGranted('EDIT', $workspace),
-                'administrate' => $this->authorization->isGranted('EDIT', $workspace),
+                'configure' => $editPerm,
+                'administrate' => $editPerm,
                 'export' => $this->authorization->isGranted('EXPORT', $workspace),
             ],
             'meta' => $this->getMeta($workspace, $options),
@@ -136,7 +129,16 @@ class WorkspaceSerializer
         ];
 
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
+            $poster = null;
+            if ($workspace->getPoster()) {
+                /** @var PublicFile $poster */
+                $poster = $this->om->getRepository(PublicFile::class)->findOneBy([
+                    'url' => $workspace->getPoster(),
+                ]);
+            }
+
             $serialized = array_merge($serialized, [
+                'poster' => $poster ? $this->publicFileSerializer->serialize($poster) : null,
                 'registered' => $this->isRegistered($workspace),
                 'opening' => $this->getOpening($workspace),
                 'display' => $this->getDisplay($workspace),
@@ -184,7 +186,6 @@ class WorkspaceSerializer
     {
         return [
             'lang' => $workspace->getLang(),
-            'forceLang' => (bool) $workspace->getLang(),
             'archived' => $workspace->isArchived(),
             'model' => $workspace->isModel(),
             'personal' => $workspace->isPersonal(),
@@ -268,6 +269,7 @@ class WorkspaceSerializer
 
     private function getRegistration(Workspace $workspace, array $options): array
     {
+        $defaultRole = null;
         if ($workspace->getDefaultRole()) {
             // this should use RoleSerializer but we will get a circular reference if we do it
             if (in_array(Options::REFRESH_UUID, $options)) {
@@ -283,8 +285,6 @@ class WorkspaceSerializer
                     'translationKey' => $workspace->getDefaultRole()->getTranslationKey(),
                 ];
             }
-        } else {
-            $defaultRole = null;
         }
 
         return [

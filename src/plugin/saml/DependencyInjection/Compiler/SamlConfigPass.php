@@ -25,6 +25,9 @@ class SamlConfigPass implements CompilerPassInterface
         /** @var PlatformConfigurationHandler $configHandler */
         $configHandler = $container->get(PlatformConfigurationHandler::class);
 
+        // this will allow to send the user cookie to the IDP to make redirection work
+        $container->setParameter('claroline.session_cookie_samesite', 'none');
+
         $container->setParameter('entity_id', $configHandler->getParameter('saml.entity_id'));
         $container->setParameter('lightsaml.own.entity_id', $configHandler->getParameter('saml.entity_id'));
         $container->setParameter('credentials', $configHandler->getParameter('saml.credentials'));

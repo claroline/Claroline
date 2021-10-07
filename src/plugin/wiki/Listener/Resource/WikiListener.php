@@ -5,13 +5,10 @@ namespace Icap\WikiBundle\Listener\Resource;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\ExportObjectEvent;
-use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Event\ImportObjectEvent;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
-use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
-use Claroline\EvaluationBundle\Entity\AbstractEvaluation;
 use Icap\WikiBundle\Entity\Contribution;
 use Icap\WikiBundle\Entity\Section;
 use Icap\WikiBundle\Entity\Wiki;
@@ -40,19 +37,12 @@ class WikiListener
     /** @var SectionManager */
     private $sectionManager;
 
-    /** @var ResourceEvaluationManager */
-    private $evaluationManager;
-
-    /**
-     * WikiListener constructor.
-     */
     public function __construct(
         TokenStorageInterface $tokenStorage,
         ObjectManager $objectManager,
         WikiSerializer $serializer,
         WikiManager $wikiManager,
         SectionManager $sectionManager,
-        ResourceEvaluationManager $evaluationManager,
         AuthorizationCheckerInterface $authorization
     ) {
         $this->tokenStorage = $tokenStorage;
@@ -60,7 +50,6 @@ class WikiListener
         $this->serializer = $serializer;
         $this->wikiManager = $wikiManager;
         $this->sectionManager = $sectionManager;
-        $this->evaluationManager = $evaluationManager;
         $this->authorization = $authorization;
     }
 
@@ -153,53 +142,5 @@ class WikiListener
         $section->setWiki($wiki);
 
         return $section;
-    }
-
-    public function onGenerateResourceTracking(GenericDataEvent $event)
-    {
-        $data = $event->getData();
-        $node = $data['resourceNode'];
-        $user = $data['user'];
-        $startDate = $data['startDate'];
-
-        $logs = $this->evaluationManager->getLogsForResourceTracking(
-            $node,
-            $user,
-            ['resource-read', 'resource-icap_wiki-section_create', 'resource-icap_wiki-section_update'],
-            $startDate
-        );
-        $nbLogs = count($logs);
-
-        if ($nbLogs > 0) {
-            $this->om->startFlushSuite();
-            $tracking = $this->evaluationManager->getResourceUserEvaluation($node, $user);
-            $tracking->setDate($logs[0]->getDateLog());
-            $status = AbstractEvaluation::STATUS_UNKNOWN;
-            $nbAttempts = 0;
-            $nbOpenings = 0;
-
-            foreach ($logs as $log) {
-                switch ($log->getAction()) {
-                    case 'resource-read':
-                        ++$nbOpenings;
-
-                        if (AbstractEvaluation::STATUS_UNKNOWN === $status) {
-                            $status = AbstractEvaluation::STATUS_OPENED;
-                        }
-                        break;
-                    case 'resource-icap_wiki-section_create':
-                    case 'resource-icap_wiki-section_update':
-                        ++$nbAttempts;
-                        $status = AbstractEvaluation::STATUS_PARTICIPATED;
-                        break;
-                }
-            }
-            $tracking->setStatus($status);
-            $tracking->setNbAttempts($nbAttempts);
-            $tracking->setNbOpenings($nbOpenings);
-            $this->om->persist($tracking);
-            $this->om->endFlushSuite();
-        }
-        $event->stopPropagation();
     }
 }

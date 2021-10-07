@@ -14,7 +14,7 @@ services:
     Icap\BlogBundle\Manager\BlogTrackingManager:
         arguments:
             - '@event_dispatcher'
-            - '@claroline.manager.resource_evaluation_manager'
+            - '@Claroline\EvaluationBundle\Manager\ResourceEvaluationManager'
             - '@translator'
 
     Icap\BlogBundle\Manager\CommentManager:

@@ -1,0 +1,15 @@
+services:
+    Claroline\EvaluationBundle\Serializer\WorkspaceEvaluationSerializer:
+        tags: [ claroline.serializer ]
+        arguments:
+            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'
+
+    Claroline\EvaluationBundle\Serializer\ResourceUserEvaluationSerializer:
+        tags: [ claroline.serializer ]
+        arguments:
+            - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
+
+    Claroline\EvaluationBundle\Serializer\ResourceEvaluationSerializer:
+        tags: [ claroline.serializer ]

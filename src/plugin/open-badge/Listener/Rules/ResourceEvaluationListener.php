@@ -14,12 +14,12 @@ namespace Claroline\OpenBadgeBundle\Listener\Rules;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\Resource\EvaluateResourceEvent;
 use Claroline\EvaluationBundle\Entity\AbstractEvaluation;
+use Claroline\EvaluationBundle\Event\ResourceEvaluationEvent;
 use Claroline\OpenBadgeBundle\Entity\Evidence;
 use Claroline\OpenBadgeBundle\Entity\Rules\Rule;
 use Claroline\OpenBadgeBundle\Manager\RuleManager;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ResourceEvaluationListener
 {
@@ -42,9 +42,8 @@ class ResourceEvaluationListener
         $this->manager = $manager;
     }
 
-    public function onResourceEvaluation(EvaluateResourceEvent $event)
+    public function onResourceEvaluation(ResourceEvaluationEvent $event)
     {
-        /** @var ResourceUserEvaluation $evaluation */
         $evaluation = $event->getEvaluation();
 
         /** @var Rule[] $rules */

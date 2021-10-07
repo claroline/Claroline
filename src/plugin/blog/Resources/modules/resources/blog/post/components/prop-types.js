@@ -4,8 +4,11 @@ const PostType = {
   propTypes: {
     id: T.string,
     title: T.string,
+    meta: T.shape({
+      author: T.string,
+      creator: T.object
+    }),
     creationDate: T.string,
-    author: T.Object,
     viewCounter: T.number,
     isPublished: T.bool,
     commentsNumber: T.number

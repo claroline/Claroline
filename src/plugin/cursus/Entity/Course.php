@@ -19,7 +19,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\CursusBundle\Repository\CourseRepository")
  * @ORM\Table(name="claro_cursusbundle_course")
  * @DoctrineAssert\UniqueEntity("code")
  */

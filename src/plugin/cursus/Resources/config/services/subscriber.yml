@@ -1,4 +1,11 @@
 services:
+    Claroline\CursusBundle\Subscriber\GlobalSearchSubscriber:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+        tags:
+            - { name: kernel.event_subscriber }
+
     Claroline\CursusBundle\Subscriber\Crud\EventSubscriber:
         parent: Claroline\CoreBundle\Subscriber\Crud\Planning\AbstractPlannedSubscriber
         arguments:

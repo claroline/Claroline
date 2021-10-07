@@ -52,7 +52,7 @@ const UnpublishedPostsComponent = (props) =>
         sortable: false,
         displayed: false
       },{
-        name: 'authorName',
+        name: 'meta.author',
         label: trans('author', {}, 'platform'),
         type: 'string'
       },{

@@ -15,7 +15,7 @@ class PostRepository extends EntityRepository
             ->createQuery('
                 SELECT DISTINCT a.id
                 FROM IcapBlogBundle:Post p
-                JOIN p.author a
+                JOIN p.creator a
                 WHERE p.blog = :blogId
             ')
             ->setParameter('blogId', $blog->getId())

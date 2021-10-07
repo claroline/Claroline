@@ -8,6 +8,13 @@ registry.add('ClarolineCursusBundle', {
     'training_catalog': () => { return import(/* webpackChunkName: "cursus-home-catalog" */ '#/plugin/cursus/home/catalog') }
   },
 
+  /**
+   * Provides searchable items for the global search.
+   */
+  search: {
+    'training' : () => { return import(/* webpackChunkName: "cursus-search-training" */ '#/plugin/cursus/search/training')}
+  },
+
   data: {
     types: {
       'course'          : () => { return import(/* webpackChunkName: "cursus-data-course" */  '#/plugin/cursus/data/types/course') },

@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\API\Crud;
 
+use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Event\Crud\CopyEvent;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
@@ -19,6 +20,7 @@ class WorkspaceCrud
 {
     private $manager;
     private $tokenStorage;
+    private $crud;
     private $resourceManager;
     private $organizationManager;
     private $om;
@@ -27,6 +29,7 @@ class WorkspaceCrud
     public function __construct(
         WorkspaceManager $manager,
         TokenStorageInterface $tokenStorage,
+        Crud $crud,
         ResourceManager $resourceManager,
         OrganizationManager $orgaManager,
         ObjectManager $om,
@@ -34,6 +37,7 @@ class WorkspaceCrud
     ) {
         $this->manager = $manager;
         $this->tokenStorage = $tokenStorage;
+        $this->crud = $crud;
         $this->resourceManager = $resourceManager;
         $this->organizationManager = $orgaManager;
         $this->om = $om;
@@ -104,7 +108,7 @@ class WorkspaceCrud
 
             if ($children) {
                 foreach ($children as $node) {
-                    $this->resourceManager->delete($node);
+                    $this->crud->delete($node, [Crud::NO_PERMISSIONS]);
                 }
             }
         }

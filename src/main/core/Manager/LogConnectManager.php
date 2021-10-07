@@ -33,9 +33,9 @@ use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceEnterEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceToolReadEvent;
 use Claroline\CoreBundle\Event\Security\UserLoginEvent;
-use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
-use Claroline\CoreBundle\Manager\Workspace\EvaluationManager;
 use Claroline\CoreBundle\Repository\Tool\OrderedToolRepository;
+use Claroline\EvaluationBundle\Manager\ResourceEvaluationManager;
+use Claroline\EvaluationBundle\Manager\WorkspaceEvaluationManager;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -49,7 +49,7 @@ class LogConnectManager
     /** @var ObjectManager */
     private $om;
 
-    /** @var EvaluationManager */
+    /** @var WorkspaceEvaluationManager */
     private $workspaceEvaluationManager;
 
     /** @var ResourceEvaluationManager */
@@ -74,7 +74,7 @@ class LogConnectManager
     public function __construct(
         FinderProvider $finder,
         ObjectManager $om,
-        EvaluationManager $workspaceEvaluationManager,
+        WorkspaceEvaluationManager $workspaceEvaluationManager,
         ResourceEvaluationManager $resourceEvaluationManager,
         TranslatorInterface $translator,
         StrictDispatcher $eventDispatcher

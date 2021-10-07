@@ -1,11 +1,12 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {LINK_BUTTON} from '#/main/app/buttons'
-import {ToolPage} from '#/main/core/tool/containers/page'
-import {Routes} from '#/main/app/router'
-
+import {url} from '#/main/app/api'
 import {trans} from '#/main/app/intl/translation'
+import {Routes} from '#/main/app/router'
+import {DOWNLOAD_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
+import {ToolPage} from '#/main/core/tool/containers/page'
+
 import {ParametersForm} from '#/plugin/open-badge/tools/badges/parameters/components/form'
 import {Assertions} from '#/plugin/open-badge/tools/badges/assertion/components/list'
 import {Badges}  from '#/plugin/open-badge/tools/badges/badge/components/list'
@@ -24,7 +25,26 @@ const BadgeTool = props =>
         label: trans('add_badge', {}, 'badge'),
         target: `${props.path}/new`,
         primary: true,
-        displayed: props.editable
+        displayed: props.canEdit
+      }, {
+        name: 'export-results',
+        type: DOWNLOAD_BUTTON,
+        icon: 'fa fa-fw fa-file-csv',
+        label: trans('export', {}, 'actions'),
+        displayed: props.canGrant,
+        file: {
+          url: url(['apiv2_assertion_csv'], {
+            columns: [
+              'badge.name',
+              'user.firstName',
+              'user.lastName',
+              'user.email',
+              'issuedOn',
+              'expires'
+            ]
+          })
+        },
+        group: trans('transfer')
       }
     ]}
     subtitle={
@@ -73,7 +93,7 @@ const BadgeTool = props =>
         }, {
           path: '/parameters',
           component: ParametersForm,
-          disabled: !props.editable
+          disabled: !props.canEdit
         }
       ]}
     />
@@ -81,7 +101,8 @@ const BadgeTool = props =>
 
 BadgeTool.propTypes = {
   path: T.string.isRequired,
-  editable: T.bool.isRequired,
+  canEdit: T.bool.isRequired,
+  canGrant: T.bool.isRequired,
   currentContext: T.object.isRequired,
   openBadge: T.func.isRequired,
   openAssertion: T.func.isRequired

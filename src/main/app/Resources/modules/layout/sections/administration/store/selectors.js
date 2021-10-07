@@ -1,3 +1,4 @@
+import isEmpty from 'lodash/isEmpty'
 import {createSelector} from 'reselect'
 
 import {selectors as configSelectors} from '#/main/app/config/store'
@@ -18,14 +19,18 @@ const tools = createSelector(
 
 const defaultOpening = (state) => {
   const adminTools = tools(state)
-  let defaultTool = configSelectors.param(state, 'admin.defaultTool')
+  if (!isEmpty(adminTools)) {
+    let defaultTool = configSelectors.param(state, 'admin.defaultTool')
 
-  if (!defaultTool && adminTools[0]) {
-    // open the first available tool
-    defaultTool = adminTools[0].name
+    if (!defaultTool || -1 === adminTools.findIndex(tool => defaultTool === tool.name)) {
+      // open the first available tool
+      defaultTool = adminTools[0].name
+    }
+
+    return defaultTool
   }
 
-  return defaultTool
+  return null
 }
 
 export const selectors = {

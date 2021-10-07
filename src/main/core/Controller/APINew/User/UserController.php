@@ -14,17 +14,18 @@ namespace Claroline\CoreBundle\Controller\APINew\User;
 use Claroline\AppBundle\Annotations\ApiDoc;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
-use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Controller\APINew\Model\HasGroupsTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasOrganizationsTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasRolesTrait;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\User\MergeUsersEvent;
+use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Manager\MailManager;
+use Claroline\CoreBundle\Manager\Tool\ToolManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
+use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -47,28 +48,28 @@ class UserController extends AbstractCrudController
     private $tokenStorage;
     /** @var AuthorizationCheckerInterface */
     private $authorization;
-    /** @var StrictDispatcher */
-    private $eventDispatcher;
     /** @var UserManager */
     private $manager;
     /** @var MailManager */
     private $mailManager;
+    /** @var ToolManager */
+    private $toolManager;
     /** @var WorkspaceManager */
     private $workspaceManager;
 
     public function __construct(
         TokenStorageInterface $tokenStorage,
         AuthorizationCheckerInterface $authorization,
-        StrictDispatcher $eventDispatcher,
         UserManager $manager,
         MailManager $mailManager,
+        ToolManager $toolManager,
         WorkspaceManager $workspaceManager
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->authorization = $authorization;
-        $this->eventDispatcher = $eventDispatcher;
         $this->manager = $manager;
         $this->mailManager = $mailManager;
+        $this->toolManager = $toolManager;
         $this->workspaceManager = $workspaceManager;
     }
 
@@ -203,27 +204,9 @@ class UserController extends AbstractCrudController
         $this->checkPermission('ADMINISTRATE', $keep, true);
         $this->checkPermission('ADMINISTRATE', $remove, true);
 
-        // Dispatching an event for letting plugins and core do what they need to do
-        /** @var MergeUsersEvent $event */
-        $event = $this->eventDispatcher->dispatch(
-            'merge_users',
-            'User\MergeUsers',
-            [
-                $keep,
-                $remove,
-            ]
+        return new JsonResponse(
+            $this->manager->merge($keep, $remove)
         );
-
-        $keep_username = $keep->getUsername();
-        $remove_username = $remove->getUsername();
-
-        // Delete old user
-        $this->crud->deleteBulk([$remove], [Options::SOFT_DELETE]);
-
-        $event->addMessage("[CoreBundle] user removed: $remove_username");
-        $event->addMessage("[CoreBundle] user kept: $keep_username");
-
-        return new JsonResponse($event->getMessages());
     }
 
     /**
@@ -235,7 +218,7 @@ class UserController extends AbstractCrudController
      * )
      * @Route("/enable", name="apiv2_users_enable", methods={"PUT"})
      */
-    public function enableUsersAction(Request $request): JsonResponse
+    public function enableAction(Request $request): JsonResponse
     {
         /** @var User[] $users */
         $users = $this->decodeIdsString($request, User::class);
@@ -265,7 +248,7 @@ class UserController extends AbstractCrudController
      * )
      * @Route("/disable", name="apiv2_users_disable", methods={"PUT"})
      */
-    public function disableUsersAction(Request $request): JsonResponse
+    public function disableAction(Request $request): JsonResponse
     {
         /** @var User[] $users */
         $users = $this->decodeIdsString($request, User::class);
@@ -284,6 +267,24 @@ class UserController extends AbstractCrudController
         return new JsonResponse(array_map(function (User $user) {
             return $this->serializer->serialize($user);
         }, $processed));
+    }
+
+    /**
+     * @Route("/disable_inactive", name="apiv2_user_disable_inactive", methods={"PUT"})
+     */
+    public function disableInactiveAction(Request $request): JsonResponse
+    {
+        $tool = $this->toolManager->getAdminToolByName('community');
+        $this->checkPermission('OPEN', $tool, [], true);
+
+        $data = $this->decodeRequest($request);
+        if (empty($data['lastLogin'])) {
+            throw new InvalidDataException('Last login date is required');
+        }
+
+        $this->manager->disableInactive(DateNormalizer::denormalize($data['lastLogin']));
+
+        return new JsonResponse();
     }
 
     /**

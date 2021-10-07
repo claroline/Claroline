@@ -1,11 +1,12 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
+import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 import merge from 'lodash/merge'
 import omit from 'lodash/omit'
 
-import {trans} from '#/main/app/intl/translation'
+import {trans, number} from '#/main/app/intl'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
 import {constants as baseConstants} from '#/main/core/constants'
 import {constants} from '#/main/core/resource/constants'
@@ -14,6 +15,8 @@ import {Button} from '#/main/app/action/components/button'
 import {Alert} from '#/main/app/alert/components/alert'
 import {AlertBlock} from '#/main/app/alert/components/alert-block'
 import {ScoreGauge} from '#/main/core/layout/gauge/components/score'
+import {UserEvaluation as UserEvaluationTypes} from '#/main/core/resource/prop-types'
+import {LiquidGauge} from '#/main/core/layout/gauge/components/liquid-gauge'
 
 const UserProgression = props =>
   <section className="user-progression">
@@ -21,21 +24,32 @@ const UserProgression = props =>
 
     <div className="panel panel-default">
       <div className="panel-body text-center">
-        {props.score && props.score.displayed &&
+        {props.showScore &&
           <ScoreGauge
             type="user"
-            value={props.score.current}
-            total={props.score.total}
+            value={props.evaluation.score && props.scoreMax ? (props.evaluation.score / props.evaluation.scoreMax) * props.scoreMax : props.evaluation.score}
+            total={props.scoreMax || props.evaluation.scoreMax}
             width={140}
             height={140}
-            displayValue={value => undefined === value || null === value ? '?' : value+''}
+            displayValue={value => undefined === value || null === value ? '?' : number(value)+''}
+          />
+        }
+
+        {!props.showScore &&
+          <LiquidGauge
+            id="user-progression-overview"
+            type="user"
+            value={props.evaluation.progression && props.evaluation.progressionMax ? (props.evaluation.progression / props.evaluation.progressionMax) * 100 : props.evaluation.progression}
+            displayValue={(value) => number(value) + '%'}
+            width={140}
+            height={140}
           />
         }
 
         <h4 className="user-progression-status h5">
-          {props.statusTexts[props.status] ?
-            props.statusTexts[props.status] :
-            constants.EVALUATION_STATUSES[props.status]
+          {props.statusTexts[props.evaluation.status] ?
+            props.statusTexts[props.evaluation.status] :
+            constants.EVALUATION_STATUSES[props.evaluation.status]
           }
         </h4>
       </div>
@@ -54,13 +68,17 @@ const UserProgression = props =>
   </section>
 
 UserProgression.propTypes = {
-  status: T.string,
   statusTexts: T.object,
+  showScore: T.bool,
+  scoreMax: T.number,
   score: T.shape({
     displayed: T.bool,
     current: T.number,
     total: T.number
   }),
+  evaluation: T.shape(
+    UserEvaluationTypes.propTypes
+  ).isRequired,
   details: T.arrayOf(
     T.arrayOf(T.string)
   )
@@ -73,12 +91,11 @@ UserProgression.defaultProps = {
 }
 
 const UserFeedback = props => {
-  const displayed = props.displayed // Feedback are enabled
-    && [
-      baseConstants.EVALUATION_STATUS_PASSED,
-      baseConstants.EVALUATION_STATUS_FAILED,
-      baseConstants.EVALUATION_STATUS_COMPLETED
-    ].indexOf(props.status) > -1 // Evaluation is finished
+  const displayed = [
+    baseConstants.EVALUATION_STATUS_PASSED,
+    baseConstants.EVALUATION_STATUS_FAILED,
+    baseConstants.EVALUATION_STATUS_COMPLETED
+  ].indexOf(props.status) > -1 // Evaluation is finished
 
   if (displayed) {
     let alertType
@@ -87,28 +104,31 @@ const UserFeedback = props => {
     switch (props.status) {
       case baseConstants.EVALUATION_STATUS_PASSED:
         alertType = 'success'
-        alertTitle = trans('evaluation_passed_feedback')
+        alertTitle = trans('evaluation_passed_feedback', {}, 'evaluation')
         alertMessage = props.success
         break
       case baseConstants.EVALUATION_STATUS_FAILED:
         alertType = 'danger'
-        alertTitle = trans('evaluation_failed_feedback')
+        alertTitle = trans('evaluation_failed_feedback', {}, 'evaluation')
         alertMessage = props.failure
         break
       case baseConstants.EVALUATION_STATUS_COMPLETED:
       default:
         alertType = 'info'
-        alertTitle = trans('evaluation_completed_feedback')
-        alertMessage = trans('evaluation_completed_feedback_msg')
+        alertTitle = trans('evaluation_completed_feedback', {}, 'evaluation')
+        alertMessage = trans('evaluation_completed_feedback_msg', {}, 'evaluation')
         break
     }
 
     return (
       <AlertBlock
+        style={{
+          marginTop: 20
+        }}
         type={alertType}
         title={alertTitle}
       >
-        {alertMessage}
+        <ContentHtml>{alertMessage}</ContentHtml>
       </AlertBlock>
     )
   }
@@ -118,15 +138,14 @@ const UserFeedback = props => {
 
 UserFeedback.propTypes = {
   status: T.string,
-  displayed: T.bool.isRequired,
   success: T.string,
   failure: T.string
 }
 
 UserFeedback.defaultProps = {
   status: baseConstants.EVALUATION_STATUS_NOT_ATTEMPTED,
-  success: trans('evaluation_passed_feedback_msg'),
-  failure: trans('evaluation_failed_feedback_msg')
+  success: trans('evaluation_passed_feedback_msg', {}, 'evaluation'),
+  failure: trans('evaluation_failed_feedback_msg', {}, 'evaluation')
 }
 
 const ResourceOverview = props =>
@@ -135,9 +154,13 @@ const ResourceOverview = props =>
 
     <div className="row">
       <div className="user-column col-md-4">
-        {!isEmpty(props.progression) &&
+        {!isEmpty(props.evaluation) &&
           <UserProgression
-            {...props.progression}
+            evaluation={props.evaluation}
+            statusTexts={props.statusTexts}
+            details={props.details}
+            showScore={get(props, 'display.score', false)}
+            scoreMax={get(props, 'display.scoreMax')}
           />
         }
 
@@ -164,10 +187,10 @@ const ResourceOverview = props =>
       </div>
 
       <div className="resource-column col-md-8">
-        {props.progression.feedback &&
+        {!isEmpty(props.evaluation) && get(props, 'display.feedback', false) &&
           <UserFeedback
-            status={props.progression.status}
-            {...props.progression.feedback}
+            status={props.evaluation.status}
+            {...props.feedbacks}
           />
         }
 
@@ -192,23 +215,22 @@ const ResourceOverview = props =>
 
 ResourceOverview.propTypes = {
   contentText: T.node, // can be a string or an empty placeholder
-  progression: T.shape({
-    status: T.string,
-    statusTexts: T.object,
-    feedback: T.shape({
-      displayed: T.bool.isRequired,
-      success: T.string,
-      failure: T.string
-    }),
-    score: T.shape({
-      displayed: T.bool.isRequired,
-      current: T.number,
-      total: T.number
-    }),
-    details: T.arrayOf(
-      T.arrayOf(T.string)
-    )
+  evaluation: T.shape(
+    UserEvaluationTypes.propTypes
+  ),
+  display: T.shape({
+    score: T.bool,
+    scoreMax: T.number,
+    feedback: T.bool
   }),
+  feedbacks: T.shape({
+    success: T.string,
+    failure: T.string
+  }),
+  statusTexts: T.object,
+  details: T.arrayOf(
+    T.arrayOf(T.string)
+  ),
   actions: T.arrayOf(T.shape(
     merge({}, ActionTypes.propTypes, {
       disabledMessages: T.arrayOf(T.string)
@@ -218,7 +240,6 @@ ResourceOverview.propTypes = {
 }
 
 ResourceOverview.defaultProps = {
-  progression: {},
   actions: []
 }
 

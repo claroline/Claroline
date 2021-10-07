@@ -22,7 +22,7 @@ class LogCommentCreateEvent extends AbstractLogResourceEvent implements Notifiab
         $this->post = $post;
 
         $author = $comment->getAuthor()
-            ? $comment->getAuthor()->getFirstName().' '.$post->getAuthor()->getLastName()
+            ? $comment->getAuthor()->getFirstName().' '.$post->getCreator()->getLastName()
             : $translator->trans('anonymous', [], 'platform');
 
         $authorId = $comment->getAuthor()

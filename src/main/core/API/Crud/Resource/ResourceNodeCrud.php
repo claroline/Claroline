@@ -14,12 +14,10 @@ use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\Resource\ResourceLifecycleManager;
+use Claroline\CoreBundle\Manager\Resource\RightsManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-/**
- * @todo correct manage publication see : $this->resourceManager->setPublishedStatus([$resourceNode], $meta['published']);
- */
 class ResourceNodeCrud
 {
     /** @var TokenStorageInterface */
@@ -34,6 +32,8 @@ class ResourceNodeCrud
     private $lifeCycleManager;
     /** @var ResourceManager */
     private $resourceManager;
+    /** @var RightsManager */
+    private $rightsManager;
     /** @var ResourceNodeSerializer */
     private $serializer;
     /** @var string */
@@ -46,6 +46,7 @@ class ResourceNodeCrud
         StrictDispatcher $dispatcher,
         ResourceLifecycleManager $lifeCycleManager,
         ResourceManager $resourceManager,
+        RightsManager $rightsManager,
         ResourceNodeSerializer $serializer,
         string $filesDirectory
     ) {
@@ -56,6 +57,7 @@ class ResourceNodeCrud
         $this->lifeCycleManager = $lifeCycleManager;
         $this->filesDirectory = $filesDirectory;
         $this->resourceManager = $resourceManager;
+        $this->rightsManager = $rightsManager;
         $this->serializer = $serializer;
     }
 
@@ -200,32 +202,45 @@ class ResourceNodeCrud
         $newNode->setParent($newParent);
         $newParent->addChild($newNode);
 
-        $this->om->persist($newNode);
-
         /** @var AbstractResource $copy */
         $copy = $this->crud->copy($resource, [Options::REFRESH_UUID]);
 
         // link node and abstract resource
         $copy->setResourceNode($newNode);
-        //unmapped but allow to retrieve it with the entity without any request for the following code
+        // unmapped but allow to retrieve it with the entity without any request for the following code
         $newNode->setResource($copy);
 
-        $this->lifeCycleManager->copy($resource, $copy);
-
+        $this->om->persist($newNode);
         $this->om->persist($copy);
-        $this->om->persist($newParent);
 
-        $this->serializer->deserializeRights($this->serializer->serialize($newParent)['rights'], $newNode);
+        // TODO : this should not use a serializer internal method
+        $this->serializer->deserializeRights(array_values($this->rightsManager->getRights($newParent)), $newNode);
 
+        // TODO : listen to crud copy event instead
+        $this->lifeCycleManager->copy($resource, $copy);
+    }
+
+    public function postCopy(CopyEvent $event)
+    {
+        /** @var ResourceNode $node */
+        $node = $event->getObject();
+        /** @var ResourceNode $newNode */
+        $newNode = $event->getCopy();
+
+        $user = $event->getExtra()['user'];
+
+        // TODO : move this in the Directory listener
         if ('directory' === $node->getResourceType()->getName()) {
+            // this is needed because otherwise I don't get the new node rights.
+            // rights are directly created/updated in DB so the ResourceNode::getRights returns outdated data for now
+            $this->om->refresh($newNode);
+
             foreach ($node->getChildren() as $child) {
                 if ($child->isActive()) {
-                    $this->resourceManager->copy($child, $newNode, $user);
+                    $this->crud->copy($child, [Options::NO_RIGHTS, Crud::NO_PERMISSIONS], ['user' => $user, 'parent' => $newNode]);
                 }
             }
         }
-
-        $this->om->flush();
     }
 
     private function isDirectoryEmpty(string $dirName): bool

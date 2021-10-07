@@ -9,6 +9,7 @@ services:
         arguments:
             - '@claroline.manager.workspace_manager'
             - '@security.token_storage'
+            - '@Claroline\AppBundle\API\Crud'
             - '@claroline.manager.resource_manager'
             - '@claroline.manager.organization.organization_manager'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
@@ -81,12 +82,14 @@ services:
             - '@Claroline\AppBundle\Event\StrictDispatcher'
             - '@Claroline\CoreBundle\Manager\Resource\ResourceLifecycleManager'
             - '@Claroline\CoreBundle\Manager\ResourceManager'
+            - '@Claroline\CoreBundle\Manager\Resource\RightsManager'
             - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
             - '%claroline.param.files_directory%'
         tags:
             - { name: kernel.event_listener, event: crud.pre.create.resource_node, method: preCreate }
             - { name: kernel.event_listener, event: crud.pre.delete.resource_node, method: preDelete }
             - { name: kernel.event_listener, event: crud.pre.copy.resource_node, method: preCopy }
+            - { name: kernel.event_listener, event: crud.post.copy.resource_node, method: postCopy }
 
     Claroline\CoreBundle\API\Crud\File\PublicFile:
         arguments:

@@ -7,4 +7,4 @@ services:
     Innova\PathBundle\Manager\UserProgressionManager:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@claroline.manager.resource_evaluation_manager'
+            - '@Claroline\EvaluationBundle\Manager\ResourceEvaluationManager'
