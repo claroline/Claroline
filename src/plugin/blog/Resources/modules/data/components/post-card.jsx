@@ -1,4 +1,5 @@
 import React from 'react'
+import get from 'lodash/get'
 
 import {asset} from '#/main/app/config'
 import {getPlainText} from '#/main/app/data/types/html/utils'
@@ -11,7 +12,11 @@ const PostCard = (props) =>
     {...props}
     id={props.data.id}
     poster={props.data.thumbnail ? asset(props.data.thumbnail.url) : null}
-    icon={<UserAvatar picture={props.data.author ? props.data.author.picture : undefined} alt={true}/>}
+    icon={
+      get(props.data, 'meta.author') ?
+        <UserAvatar alt={true} /> :
+        <UserAvatar picture={get(props.data, 'meta.creator.picture')} alt={true} />
+    }
     title={props.data.title}
     contentText={getPlainText(props.data.content)}
   />

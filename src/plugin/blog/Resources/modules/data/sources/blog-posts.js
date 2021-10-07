@@ -29,10 +29,19 @@ export default {
         label: trans('date'),
         displayed: true
       }, {
-        name: 'authorName',
+        name: 'meta.author',
         type: 'string',
         label: trans('author'),
         displayed: true
+      }, {
+        name: 'tags',
+        type: 'tag',
+        label: trans('tags'),
+        displayable: false,
+        sortable: false,
+        options: {
+          objectClass: 'Icap\\BlogBundle\\Entity\\Post'
+        }
       }
     ],
     card: PostCard

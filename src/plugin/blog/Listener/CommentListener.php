@@ -50,7 +50,7 @@ class CommentListener
                     'id' => $comment->getId(),
                     'content' => $comment->getMessage(),
                     'published' => $comment->isPublished(),
-                    'author' => $comment->getAuthor()->getFirstName().' '.$post->getAuthor()->getLastName(),
+                    'author' => $comment->getAuthor()->getFirstName().' '.$comment->getAuthor()->getLastName(),
                     'authorId' => $comment->getAuthor()->getId(),
                 ],
                 'resource' => [

@@ -122,8 +122,8 @@ class BlogListener
                 $post->setModificationDate(DateNormalizer::denormalize($postData['updateDate']));
             }
 
-            $post->setBlog($blog)
-                ->setAuthor($this->tokenStorage->getToken()->getUser());
+            $post->setBlog($blog);
+            $post->setCreator($this->tokenStorage->getToken()->getUser());
 
             foreach ($postData['comments'] as $commentData) {
                 /** @var Comment $comment */
@@ -173,6 +173,8 @@ class BlogListener
                 ->setModificationDate($post->getModificationDate())
                 ->setBlog($newBlog)
             ;
+
+            $newPost->setCreator($post->getCreator());
 
             $this->om->persist($newPost);
             $this->om->flush();

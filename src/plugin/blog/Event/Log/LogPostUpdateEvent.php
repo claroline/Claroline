@@ -28,8 +28,8 @@ class LogPostUpdateEvent extends AbstractLogResourceEvent implements NotifiableI
                 'slug' => $post->getSlug(),
                 'changeSet' => $changeSet,
                 'published' => $post->isPublished(),
-                'author' => $post->getAuthor()->getFirstName().' '.$post->getAuthor()->getLastName(),
-                'authorId' => $post->getAuthor()->getId(),
+                'author' => $post->getCreator()->getFirstName().' '.$post->getCreator()->getLastName(),
+                'authorId' => $post->getCreator()->getId(),
             ],
         ];
 
