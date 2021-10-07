@@ -45,26 +45,18 @@ const SubscriptionAll = (props) =>
     ]}
     definition={[
       {
-        name: 'session.course.name',
-        alias: 'course',
+        name: 'user.name',
+        alias: 'user',
         type: 'string',
-        label: trans('course', {}, 'cursus'),
+        label: trans('user', {}, 'cursus'),
         displayed: true,
-        primary: true,
+        filterable: false,
         sortable: false
       }, {
         name: 'session.name',
         alias: 'session',
         type: 'string',
         label: trans('session', {}, 'cursus'),
-        displayed: true,
-        filterable: false,
-        sortable: false
-      }, {
-        name: 'user.name',
-        alias: 'user',
-        type: 'string',
-        label: trans('user', {}, 'cursus'),
         displayed: true,
         filterable: false,
         sortable: false

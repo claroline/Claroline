@@ -90,7 +90,9 @@ class QuotaController extends AbstractCrudController
     {
         $this->checkPermission('VALIDATE_SUBSCRIPTIONS', null, [], true);
 
-        $sessionUsers = $this->om->getRepository(SessionUser::class)->findByOrganization($quota->getOrganization());
+        /** @var SessionUserRepository */
+        $repo = $this->om->getRepository(SessionUser::class);
+        $sessionUsers = $repo->findByOrganization($quota->getOrganization());
         $statistics = [
             'total' => count($sessionUsers),
             'pending' => array_reduce($sessionUsers, function ($accum, $subscription) {
