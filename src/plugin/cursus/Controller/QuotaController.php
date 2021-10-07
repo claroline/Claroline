@@ -105,21 +105,19 @@ class QuotaController extends AbstractCrudController
                 return $accum + (SessionUser::STATUS_VALIDATED == $subscription->getStatus() ? 1 : 0);
             }, 0),
         ];
-        if ($quota->useQuotas())
-        {
+        if ($quota->useQuotas()) {
             $statistics['managed'] = array_reduce($sessionUsers, function ($accum, $subscription) {
                 return $accum + (SessionUser::STATUS_MANAGED == $subscription->getStatus() ? 1 : 0);
             }, 0);
             $statistics['calculated'] = array_reduce($sessionUsers, function ($accum, $subscription) {
                 return SessionUser::STATUS_MANAGED == $subscription->getStatus() ? $accum + $subscription->getSession()->getQuotaDays() : $accum;
             }, 0);
-        }
-        else
-        {
+        } else {
             $statistics['total'] = array_reduce($sessionUsers, function ($accum, $subscription) {
                 return $accum + (SessionUser::STATUS_MANAGED != $subscription->getStatus() ? 1 : 0);
             }, 0);
         }
+
         return new JsonResponse($statistics);
     }
 
@@ -139,7 +137,9 @@ class QuotaController extends AbstractCrudController
             'organization' => $organization,
         ];
 
-        if (!$quota->useQuotas()) $query['hiddenFilters']['ignored_status'] = SessionUser::STATUS_MANAGED;
+        if (!$quota->useQuotas()) {
+            $query['hiddenFilters']['ignored_status'] = SessionUser::STATUS_MANAGED;
+        }
 
         $subscriptions = $this->finder->searchEntities(SessionUser::class, $query)['data'];
 
@@ -177,8 +177,10 @@ class QuotaController extends AbstractCrudController
         $query['hiddenFilters'] = [
             'organization' => $organization,
         ];
-        
-        if (!$quota->useQuotas()) $query['hiddenFilters']['ignored_status'] = SessionUser::STATUS_MANAGED;
+
+        if (!$quota->useQuotas()) {
+            $query['hiddenFilters']['ignored_status'] = SessionUser::STATUS_MANAGED;
+        }
 
         $options = isset($query['options']) ? $query['options'] : [];
 

@@ -14,17 +14,17 @@ class Version20210827134753 extends AbstractMigration
 {
     public function up(Schema $schema): void
     {
-        $this->addSql("
+        $this->addSql('
             ALTER TABLE claro_cursusbundle_course_session_user 
             ADD remark LONGTEXT NOT NULL
-        ");
+        ');
     }
 
     public function down(Schema $schema): void
     {
-        $this->addSql("
+        $this->addSql('
             ALTER TABLE claro_cursusbundle_course_session_user 
             DROP remark
-        ");
+        ');
     }
 }
