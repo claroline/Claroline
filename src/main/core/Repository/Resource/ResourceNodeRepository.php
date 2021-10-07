@@ -180,7 +180,8 @@ class ResourceNodeRepository extends MaterializedPathRepository
         if (!empty($organizations)) {
             $qb
                 ->join('node.workspace', 'w')
-                ->andWhere('w.organization IN (:organizations)')
+                ->join('w.organizations', 'o')
+                ->andWhere('o IN (:organizations)')
                 ->setParameter('organizations', $organizations);
         }
 
