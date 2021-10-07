@@ -519,33 +519,20 @@ class UserRepository extends ServiceEntityRepository implements UserProviderInte
         return (int) $query->getSingleScalarResult();
     }
 
-    public function countUsersOfGroup(Group $group)
-    {
-        $dql = '
-            SELECT count(u) FROM Claroline\CoreBundle\Entity\User u
-            JOIN u.groups g
-            WHERE g.name = :name
-        ';
-
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('name', $group->getName());
-
-        return $query->getSingleScalarResult();
-    }
-
     public function findAllEnabledUsers($executeQuery = true)
     {
         $dql = '
             SELECT u
             FROM Claroline\CoreBundle\Entity\User u
             WHERE u.isEnabled = TRUE
+              AND u.isRemoved = FALSE
         ';
         $query = $this->_em->createQuery($dql);
 
         return $executeQuery ? $query->getResult() : $query;
     }
 
-    public function findInactiveSince(string $dateLastLogin)
+    public function findInactiveSince($dateLastLogin)
     {
         return $this->createQueryBuilder('u')
             ->where('(u.lastLogin IS NULL OR u.lastLogin < :dateLastLogin)')

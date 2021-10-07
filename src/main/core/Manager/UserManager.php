@@ -15,15 +15,17 @@ use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
 use Claroline\CoreBundle\Event\Security\UserDisableEvent;
 use Claroline\CoreBundle\Event\Security\UserEnableEvent;
+use Claroline\CoreBundle\Event\User\MergeUsersEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Messenger\Message\DisableInactiveUsers;
 use Claroline\CoreBundle\Repository\User\RoleRepository;
 use Claroline\CoreBundle\Repository\User\UserRepository;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 class UserManager
 {
@@ -39,17 +41,21 @@ class UserManager
     private $roleRepo;
     /** @var StrictDispatcher */
     private $dispatcher;
+    /** @var MessageBusInterface */
+    private $messageBus;
 
     public function __construct(
         ObjectManager $om,
         Crud $crud,
         PlatformConfigurationHandler $platformConfigHandler,
-        StrictDispatcher $dispatcher
+        StrictDispatcher $dispatcher,
+        MessageBusInterface $messageBus
     ) {
         $this->crud = $crud;
         $this->om = $om;
         $this->platformConfigHandler = $platformConfigHandler;
         $this->dispatcher = $dispatcher;
+        $this->messageBus = $messageBus;
 
         $this->userRepo = $om->getRepository(User::class);
         $this->roleRepo = $om->getRepository(Role::class);
@@ -156,17 +162,6 @@ class UserManager
     }
 
     /**
-     * @return User[]
-     *
-     * @todo use finder instead
-     * @todo REMOVE ME
-     */
-    public function getAllEnabledUsers($executeQuery = true)
-    {
-        return $this->userRepo->findAllEnabledUsers($executeQuery);
-    }
-
-    /**
      * Set the user locale.
      *
      * @todo use crud instead
@@ -184,11 +179,6 @@ class UserManager
     public function countUsersByRoleIncludingGroup(Role $role)
     {
         return $this->userRepo->countUsersByRoleIncludingGroup($role);
-    }
-
-    public function countUsersOfGroup(Group $group)
-    {
-        return $this->userRepo->countUsersOfGroup($group);
     }
 
     public function setUserInitDate(User $user)
@@ -273,6 +263,11 @@ class UserManager
         return $user;
     }
 
+    public function disableInactive(\DateTimeInterface $lastLogin)
+    {
+        $this->messageBus->dispatch(new DisableInactiveUsers($lastLogin));
+    }
+
     public function getDefaultClarolineAdmin()
     {
         $user = $this->getUserByUsername('claroline-connect');
@@ -335,5 +330,30 @@ class UserManager
         }
 
         return $usersLimitReached;
+    }
+
+    public function merge(User $keep, User $remove)
+    {
+        // Dispatching an event for letting plugins and core do what they need to do
+        /** @var MergeUsersEvent $event */
+        $event = $this->dispatcher->dispatch(
+            'merge_users',
+            'User\MergeUsers',
+            [
+                $keep,
+                $remove,
+            ]
+        );
+
+        $keep_username = $keep->getUsername();
+        $remove_username = $remove->getUsername();
+
+        // Delete old user
+        $this->crud->deleteBulk([$remove], [Options::SOFT_DELETE]);
+
+        $event->addMessage("[CoreBundle] user removed: $remove_username");
+        $event->addMessage("[CoreBundle] user kept: $keep_username");
+
+        return $event->getMessages();
     }
 }
