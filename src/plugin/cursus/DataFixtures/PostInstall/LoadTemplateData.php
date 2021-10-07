@@ -47,7 +47,7 @@ class LoadTemplateData extends AbstractFixture implements ContainerAwareInterfac
         $this->availableLocales = $this->config->getParameter('locales.available');
 
         // Course templates
-        $this->createTemplate('training_course', function($locale) {
+        $this->createTemplate('training_course', function ($locale) {
             return "
                 %course_poster%
                 <h1>%course_name% <small>%course_code%</small></h1>
@@ -64,7 +64,7 @@ class LoadTemplateData extends AbstractFixture implements ContainerAwareInterfac
         });
 
         // Session templates
-        $this->createTemplate('training_session', function($locale) {
+        $this->createTemplate('training_session', function ($locale) {
             return "
                 %session_poster%
                 <h1>%session_name% <small>%session_code%</small></h1>
@@ -81,7 +81,7 @@ class LoadTemplateData extends AbstractFixture implements ContainerAwareInterfac
             ";
         });
 
-        $this->createTemplate('training_session', function($locale) {
+        $this->createTemplate('training_session', function ($locale) {
             return "
                 %session_poster%
                 <h1>%session_name% <small>%session_code%</small></h1>
@@ -98,7 +98,7 @@ class LoadTemplateData extends AbstractFixture implements ContainerAwareInterfac
             ";
         });
 
-        $this->createTemplate('training_session_invitation', function($locale) {
+        $this->createTemplate('training_session_invitation', function ($locale) {
             return '
                 %session_name%<br/>
                 [%session_start% -> %session_end%]<br/>
@@ -106,7 +106,7 @@ class LoadTemplateData extends AbstractFixture implements ContainerAwareInterfac
             ';
         });
 
-        $this->createTemplate('training_session_confirmation', function($locale) {
+        $this->createTemplate('training_session_confirmation', function ($locale) {
             return '
                 %session_name%<br/>
                 [%session_start% -> %session_end%]<br/>
@@ -116,7 +116,7 @@ class LoadTemplateData extends AbstractFixture implements ContainerAwareInterfac
         });
 
         // Quota templates
-        $this->createTemplate('training_quota', function($locale) {
+        $this->createTemplate('training_quota', function ($locale) {
             return '
                 %organization_name%<br/>
                 %quota_threshold%<br/>
@@ -124,9 +124,9 @@ class LoadTemplateData extends AbstractFixture implements ContainerAwareInterfac
                 %subscriptions%<br/>
             ';
         });
-        
+
         // Event templates
-        $this->createTemplate('training_event', function($locale) {
+        $this->createTemplate('training_event', function ($locale) {
             return '
                 %event_name%<br/>
                 [%event_start% -> %event_end%]<br/>
@@ -135,7 +135,7 @@ class LoadTemplateData extends AbstractFixture implements ContainerAwareInterfac
             ';
         });
 
-        $this->createTemplate('training_event_invitation', function($locale) {
+        $this->createTemplate('training_event_invitation', function ($locale) {
             return '
                 %event_name%<br/>
                 [%event_start% -> %event_end%]<br/>
@@ -144,7 +144,7 @@ class LoadTemplateData extends AbstractFixture implements ContainerAwareInterfac
             ';
         });
 
-        $this->createTemplate('training_event_presences', function($locale) {
+        $this->createTemplate('training_event_presences', function ($locale) {
             return '
                 %event_name%<br/>
                 [%event_start% -> %event_end%]<br/>
@@ -153,7 +153,7 @@ class LoadTemplateData extends AbstractFixture implements ContainerAwareInterfac
             ';
         });
 
-        $this->createTemplate('training_event_presence', function($locale) {
+        $this->createTemplate('training_event_presence', function ($locale) {
             return '
                 %event_name%<br/>
                 [%event_start% -> %event_end%]<br/>
