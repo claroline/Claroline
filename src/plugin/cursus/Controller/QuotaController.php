@@ -46,6 +46,8 @@ class QuotaController extends AbstractCrudController
     private $tokenStorage;
     /** @var PlatformConfigurationHandler */
     private $config;
+    /** @var QuotaManager */
+    private $quotaManager;
     /** @var SessionManager */
     private $sessionManager;
 
@@ -55,7 +57,7 @@ class QuotaController extends AbstractCrudController
         TokenStorageInterface $tokenStorage,
         PlatformConfigurationHandler $config,
         ObjectManager $om,
-        QuotaManager $manager,
+        QuotaManager $quotaManager,
         SessionManager $sessionManager
     ) {
         $this->eventDispatcher = $eventDispatcher;
@@ -63,7 +65,7 @@ class QuotaController extends AbstractCrudController
         $this->tokenStorage = $tokenStorage;
         $this->config = $config;
         $this->om = $om;
-        $this->manager = $manager;
+        $this->quotaManager = $quotaManager;
         $this->sessionManager = $sessionManager;
     }
 
@@ -149,7 +151,7 @@ class QuotaController extends AbstractCrudController
             'tempDir' => $this->config->getParameter('server.tmp_dir'),
         ]);
 
-        $domPdf->loadHtml($this->manager->generateFromTemplate($quota, $subscriptions, $request->getLocale()));
+        $domPdf->loadHtml($this->quotaManager->generateFromTemplate($quota, $subscriptions, $request->getLocale()));
 
         // Render the HTML as PDF
         $domPdf->render();
@@ -231,6 +233,7 @@ class QuotaController extends AbstractCrudController
             $this->om->flush();
 
             $this->eventDispatcher->dispatch(new LogSubscriptionSetStatusEvent($sessionUser), 'log');
+            $this->quotaManager->sendSetStatusMail($sessionUser);
         }
 
         return new JsonResponse([

@@ -11,9 +11,13 @@
 
 namespace Claroline\CursusBundle\Manager;
 
+use Claroline\CoreBundle\Manager\LocaleManager;
+use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\Template\TemplateManager;
 use Claroline\CursusBundle\Entity\Quota;
+use Claroline\CursusBundle\Entity\Registration\SessionUser;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class QuotaManager
 {
@@ -23,12 +27,49 @@ class QuotaManager
     /** @var TemplateManager */
     private $templateManager;
 
+    /** @var LocaleManager */
+    private $localeManager;
+
+    /** @var MailManager */
+    private $mailManager;
+
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
+
     public function __construct(
         TranslatorInterface $translator,
-        TemplateManager $templateManager
+        TemplateManager $templateManager,
+        LocaleManager $localeManager,
+        MailManager $mailManager,
+        TokenStorageInterface $tokenStorage
     ) {
         $this->translator = $translator;
         $this->templateManager = $templateManager;
+        $this->localeManager = $localeManager;
+        $this->mailManager = $mailManager;
+        $this->tokenStorage = $tokenStorage;
+    }
+
+    public function sendSetStatusMail(SessionUser $sessionUser): void
+    {
+        $user = $sessionUser->getUser();
+        $locale = $this->localeManager->getLocale($user);
+
+        $placeholders = [
+            'session_name' => $sessionUser->getSession()->getName(),
+            'user_first_name' => $user->getFirstName(),
+            'user_last_name' => $user->getLastName(),
+            'session_start' => $sessionUser->getSession()->getStartDate()->format('d/m/Y'),
+            'session_end' => $sessionUser->getSession()->getEndDate()->format('d/m/Y'),
+            'status' => $sessionUser->getStatus()
+        ];
+        $subject = $this->templateManager->getTemplate('training_quota_set_status', $placeholders, $locale, 'title');
+        $body = $this->templateManager->getTemplate('training_quota_set_status', $placeholders, $locale);
+
+        $this->mailManager->send($subject, $body, [$user], null, [], true);
+        /*$user = $this->tokenStorage->getToken()->getUser();
+        if ($user instanceof \Claroline\CoreBundle\Entity\User) {
+        }*/
     }
 
     public function generateFromTemplate(Quota $quota, array $subscriptions, string $locale): string

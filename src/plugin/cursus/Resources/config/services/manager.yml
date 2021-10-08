@@ -50,3 +50,6 @@ services:
         arguments:
             - '@translator'
             - '@Claroline\CoreBundle\Manager\Template\TemplateManager'
+            - '@Claroline\CoreBundle\Manager\LocaleManager'
+            - '@Claroline\CoreBundle\Manager\MailManager'
+            - '@security.token_storage'

@@ -155,3 +155,12 @@ plugin:
               - quota_threshold
               - subscriptions_count
               - subscriptions
+
+        - name: training_quota_set_status
+          placeholders:
+              - session_name
+              - user_first_name
+              - user_last_name
+              - session_start
+              - session_end
+              - status
