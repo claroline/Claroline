@@ -12,13 +12,13 @@
 namespace Claroline\CoreBundle\Listener\Resource\Types;
 
 use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\AppBundle\Event\Crud\CopyEvent;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Event\ExportObjectEvent;
 use Claroline\CoreBundle\Event\ImportObjectEvent;
-use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DownloadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\File\LoadFileEvent;
@@ -201,11 +201,10 @@ class FileListener
         //move filebags elements here
     }
 
-    public function onCopy(CopyResourceEvent $event)
+    public function onCopy(CopyEvent $event)
     {
-        /** @var File $file */
-        $resource = $event->getResource();
-        $destParent = $event->getParent();
+        $resource = $event->getObject();
+        $destParent = $resource->getResourceNode();
         $workspace = $destParent->getWorkspace();
         $newFile = $event->getCopy();
         $newFile->setMimeType($resource->getMimeType());
@@ -229,10 +228,6 @@ class FileListener
             //do nothing yet
             //maybe log an error
         }
-
-        $event->setCopy($newFile);
-
-        $event->stopPropagation();
     }
 
     public function onDownload(DownloadResourceEvent $event)

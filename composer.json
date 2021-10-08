@@ -37,7 +37,7 @@
         "doctrine/orm": "^2.8",
         "dompdf/dompdf": "*",
         "friendsofsymfony/jsrouting-bundle": "^2.2",
-        "gedmo/doctrine-extensions": "^3.1",
+        "gedmo/doctrine-extensions": "^3.2",
         "geoip2/geoip2": "^2.11",
         "hwi/oauth-bundle": "^1.1",
         "icap/html-diff": "1.1.0",

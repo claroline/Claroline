@@ -29,7 +29,7 @@ const ProgressionMain = (props) =>
         icon: 'fa fa-fw fa-download',
         label: trans('export-progression', {}, 'actions'),
         file: {
-          url: ['apiv2_workspace_export_progression', {workspace: props.workspaceId}]
+          url: ['apiv2_workspace_evaluation_csv', {workspaceId: props.workspaceId}]
         },
         group: trans('transfer')
       }
