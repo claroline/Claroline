@@ -27,6 +27,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -82,25 +83,51 @@ class WorkspaceEvaluationController extends AbstractSecurityController
     }
 
     /**
-     * @Route("/csv", name="apiv2_workspace_evaluation_csv", methods={"GET"})
+     * @Route("/csv/{workspaceId}", name="apiv2_workspace_evaluation_csv", methods={"GET"})
      * @EXT\ParamConverter("workspace", options={"mapping": {"workspace": "uuid"}})
      */
-    public function exportAction(Request $request): BinaryFileResponse
+    public function exportAction(Request $request, ?string $workspaceId = null): BinaryFileResponse
     {
-        $this->canOpenAdminTool('dashboard');
+        $workspace = null;
+        if (!empty($workspaceId)) {
+            $workspace = $this->om->getRepository(Workspace::class)->findOneBy(['uuid' => $workspaceId]);
+            if (empty($workspace)) {
+                throw new NotFoundHttpException('Workspace not found.');
+            }
+        }
+
+        if (empty($workspace)) {
+            $this->canOpenAdminTool('dashboard');
+        } else {
+            $this->checkPermission(['dashboard', 'EDIT'], $workspace, [], true);
+        }
 
         $query = $request->query->all();
         // remove pagination if any
         $query['page'] = 0;
         $query['limit'] = -1;
         $query['columns'] = [
-            'workspace.name',
             'user.lastName',
             'user.firstName',
             'date',
             'status',
+            'progression',
+            'progressionMax',
             'score',
+            'scoreMax',
+            'duration',
         ];
+
+        if (!isset($query['filters'])) {
+            $query['filters'] = [];
+        }
+
+        if (!empty($workspace)) {
+            $query['filters']['workspace'] = $workspace->getUuid();
+        } else {
+            // adds the workspace names in the export
+            array_unshift($query['columns'], 'workspace.name');
+        }
 
         $csvFilename = $this->crud->csv(Evaluation::class, $query);
 
