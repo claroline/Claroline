@@ -135,7 +135,7 @@ services:
             - { name: kernel.event_listener, event: transfer.file.import.before, method: onImportBefore }
             - { name: kernel.event_listener, event: transfer.file.export, method: onExportFile }
             - { name: kernel.event_listener, event: transfer.file.import.after, method: onImportFile }
-            - { name: kernel.event_listener, event: resource.file.copy, method: onCopy }
+            - { name: kernel.event_listener, event: crud.pre.copy.file, method: onCopy }
             - { name: kernel.event_listener, event: download_file, method: onDownload }
 
     Claroline\CoreBundle\Listener\Resource\Types\TextListener:
