@@ -16,8 +16,8 @@ use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\Template\TemplateManager;
 use Claroline\CursusBundle\Entity\Quota;
 use Claroline\CursusBundle\Entity\Registration\SessionUser;
-use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class QuotaManager
 {
@@ -61,7 +61,7 @@ class QuotaManager
             'user_last_name' => $user->getLastName(),
             'session_start' => $sessionUser->getSession()->getStartDate()->format('d/m/Y'),
             'session_end' => $sessionUser->getSession()->getEndDate()->format('d/m/Y'),
-            'status' => $sessionUser->getStatus()
+            'status' => $sessionUser->getStatus(),
         ];
         $subject = $this->templateManager->getTemplate('training_quota_set_status', $placeholders, $locale, 'title');
         $body = $this->templateManager->getTemplate('training_quota_set_status', $placeholders, $locale);
