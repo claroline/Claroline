@@ -125,6 +125,17 @@ class LoadTemplateData extends AbstractFixture implements ContainerAwareInterfac
             ';
         });
 
+        $this->createTemplate('training_quota_set_status', function ($locale) {
+            return '
+                %session_name%<br/>
+                %user_first_name%<br/>
+                %user_last_name%<br/>
+                %session_start%<br/>
+                %session_end%<br/>
+                %status%<br/>
+            ';
+        });
+
         // Event templates
         $this->createTemplate('training_event', function ($locale) {
             return '
