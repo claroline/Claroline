@@ -3,8 +3,7 @@ import {makeListReducer} from '#/main/app/content/list/store'
 
 import {constants} from '#/plugin/cursus/constants'
 import {selectors} from '#/plugin/cursus/tools/trainings/subscription/store/selectors'
-import {UPDATE_SUBSCRIPTION_STATUS, SET_STATISTICS} from '#/plugin/cursus/tools/trainings/subscription/store/actions'
-import {LOAD_QUOTA} from '#/plugin/cursus/tools/trainings/quota/store/actions'
+import {SET_STATISTICS} from '#/plugin/cursus/tools/trainings/subscription/store/actions'
 
 export const reducer = combineReducers({
   subscriptions: makeListReducer(selectors.LIST_NAME, {
@@ -16,8 +15,7 @@ export const reducer = combineReducers({
     ]
   }, {
     invalidated: makeReducer(false, {
-      [UPDATE_SUBSCRIPTION_STATUS]: () => true,
-      [LOAD_QUOTA]: () => true
+      [SET_STATISTICS]: () => true
     })
   }),
   statistics: makeReducer({
