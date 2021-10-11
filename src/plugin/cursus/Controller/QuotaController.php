@@ -103,6 +103,7 @@ class QuotaController extends AbstractCrudController
                 foreach ($organization->getChildren() as $child) {
                     $output[] = $child->getUuid();
                 }
+
                 return $output;
             }, []));
         }
