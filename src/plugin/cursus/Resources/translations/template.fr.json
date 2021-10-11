@@ -15,6 +15,7 @@
     "training_session_invitation_desc": "Template utilisé pour le mail d'invitation à une session de formation.",
     "training_session_confirmation": "Confirmation d'inscription à une session de formation",
     "training_session_confirmation_desc": "Template utilisé pour le mail de demande de confirmation d'inscription à une session de formation.",
+    "training_quota_set_status": "Changement de status d'inscription",
 
     "course_code_desc": "Le code de la formation",
     "course_description_desc": "La description de la formation",
