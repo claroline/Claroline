@@ -34,22 +34,24 @@ const StatusModal = props => {
         )}
       </div>
       {selectedStatus >= 0 &&
-        <form style={{padding:'0 2rem 2rem 2rem'}}>
+        <form style={{padding: '0 2rem 2rem 2rem'}}>
           <div className="form-group">
             <label>{trans('remark', {}, 'cursus')}</label>
             <textarea ref={remark} className="form-control"></textarea>
           </div>
-          <CallbackButton
-            primary
-            key={status}
-            className="btn btn-primary"
-            callback={() => {
-              props.changeStatus(selectedStatus, remark.current.value)
-              props.fadeModal()
-            }}
-          >
-            {trans('confirm', {}, 'cursus')}
-          </CallbackButton>
+          <div className="d-flex">
+            <CallbackButton
+              primary
+              className="btn btn-primary"
+              callback={() => {
+                props.changeStatus(selectedStatus, remark.current.value)
+                props.fadeModal()
+              }}
+            >
+              {trans('confirm', {}, 'cursus')}
+            </CallbackButton>
+            {!props.canValidate && selectedStatus == 3 && <strong className="text-danger" style={{paddingLeft: '1rem'}}>Quotas insuffisant !</strong>}
+          </div>
         </form>
       }
     </div>
@@ -57,6 +59,7 @@ const StatusModal = props => {
 }
 
 StatusModal.propTypes = {
+  canValidate: T.bool.isRequired,
   status: T.arrayOf(T.number).isRequired,
   changeStatus: T.func.isRequired,
 
