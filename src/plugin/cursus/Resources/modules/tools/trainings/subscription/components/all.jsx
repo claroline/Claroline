@@ -7,10 +7,13 @@ import {constants} from '#/plugin/cursus/constants'
 import {now} from '#/main/app/intl/date'
 import {trans} from '#/main/app/intl/translation'
 import {MODAL_SUBSCRIPTION_STATUS} from '#/plugin/cursus/subscription/modals/status'
-import {MODAL_BUTTON} from '#/main/app/buttons'
+import {MODAL_BUTTON, CALLBACK_BUTTON} from '#/main/app/buttons'
 import {MODAL_SUBSCRIPTION_ABOUT} from '#/plugin/cursus/subscription/modals/about'
 import {ListData} from '#/main/app/content/list/containers/data'
-import {Quota as QuotaTypes} from '#/plugin/cursus/prop-types'
+import {
+  Quota as QuotaTypes,
+  Statistics as StatisticsTypes
+} from '#/plugin/cursus/prop-types'
 
 import {SubscriptionCard} from '#/plugin/cursus/subscription/components/card'
 
@@ -31,14 +34,29 @@ const SubscriptionAll = (props) =>
       }],
       scope: ['object']
     })}
-    actions={(rows) => [
+    actions={(rows) => !props.isAdmin && rows[0].status != 0 ? [
+      {
+        name: 'nothing',
+        type: CALLBACK_BUTTON,
+        icon: 'fas fa-fw fa-ban',
+        label: trans('nothing', {}, 'actions'),
+        callback: () => {}
+      }
+    ] : [
       {
         name: 'edit',
         type: MODAL_BUTTON,
         icon: 'fa fa-fw fa-pencil',
         label: trans('edit', {}, 'actions'),
         modal: [MODAL_SUBSCRIPTION_STATUS, {
-          status: (rows[0].session.quotas.used && props.quota.useQuotas ? [0, 1, 2, 3] : rows[0].session.restrictions.dates[0] >= now() ? [0, 1, 2] : [0, 1]).filter(status => status != rows[0].status),
+          canValidate: props.statistics.calculated + rows[0].session.quotas.days <= props.quota.threshold,
+          status: !props.isAdmin && rows[0].status != 0 ? [] : (
+            rows[0].session.quotas.used && props.quota.useQuotas ?
+              [0, 1, 2, 3] :
+              rows[0].session.restrictions.dates[0] >= now() ?
+                [0, 1, 2] :
+                [0, 1]
+          ).filter(status => status != rows[0].status),
           changeStatus: (status, remark) => props.setSubscriptionStatus(props.quota.id, rows[0].id, status, remark)
         }]
       }
@@ -118,7 +136,11 @@ SubscriptionAll.propTypes = {
   setSubscriptionStatus: T.func.isRequired,
   quota: T.shape(
     QuotaTypes.propTypes
-  )
+  ),
+  statistics: T.shape(
+    StatisticsTypes.propTypes
+  ).isRequired,
+  isAdmin: T.bool.isRequired
 }
 
 export {

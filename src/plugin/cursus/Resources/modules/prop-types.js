@@ -181,10 +181,22 @@ const Subscription = {
   }
 }
 
+const Statistics = {
+  propTypes: {
+    total: T.number,
+    pending: T.number,
+    refused: T.number,
+    validated: T.number,
+    managed: T.number,
+    calculated: T.number
+  }
+}
+
 export {
   Course,
   Session,
   Event,
   Quota,
-  Subscription
+  Subscription,
+  Statistics
 }

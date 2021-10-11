@@ -10,7 +10,10 @@ import {PageFull} from '#/main/app/page/components/full'
 import {getToolBreadcrumb, showToolBreadcrumb} from '#/main/core/tool/utils'
 
 import {SubscriptionAll} from '#/plugin/cursus/tools/trainings/subscription/components/all'
-import {Quota as QuotaTypes} from '#/plugin/cursus/prop-types'
+import {
+  Quota as QuotaTypes,
+  Statistics as StatisticsTypes
+} from '#/plugin/cursus/prop-types'
 import {selectors} from '#/plugin/cursus/tools/trainings/subscription/store/selectors'
 
 const SubscriptionPage = (props) => {
@@ -110,7 +113,9 @@ const SubscriptionPage = (props) => {
               url={['apiv2_cursus_quota_list_subscriptions', {id: props.quota.id}]}
               path={props.path}
               setSubscriptionStatus={props.setSubscriptionStatus}
+              statistics={props.statistics}
               quota={props.quota}
+              isAdmin={props.isAdmin}
             />
           </div>
         </div>
@@ -131,16 +136,12 @@ SubscriptionPage.propTypes = {
     QuotaTypes.propTypes
   ),
   filters: T.shape({}).isRequired, // Add PropType for filters
-  statistics: T.shape({
-    total: T.number,
-    pending: T.number,
-    refused: T.number,
-    validated: T.number,
-    managed: T.number,
-    calculated: T.number
-  }).isRequired,
+  statistics: T.shape(
+    StatisticsTypes.propTypes
+  ).isRequired,
   getStatistics: T.func.isRequired,
-  setSubscriptionStatus: T.func.isRequired
+  setSubscriptionStatus: T.func.isRequired,
+  isAdmin: T.bool.isRequired
 }
 
 export {
