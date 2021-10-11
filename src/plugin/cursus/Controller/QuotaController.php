@@ -84,6 +84,32 @@ class QuotaController extends AbstractCrudController
         return ['copyBulk', 'doc', 'exist'];
     }
 
+    protected function getDefaultHiddenFilters()
+    {
+        $filters = [];
+        if (!$this->authorization->isGranted('ROLE_ADMIN')) {
+            /** @var User $user */
+            $user = $this->tokenStorage->getToken()->getUser();
+
+            // filter by organization
+            if ($user instanceof User) {
+                $organizations = $user->getOrganizations();
+            } else {
+                $organizations = $this->om->getRepository(Organization::class)->findBy(['default' => true]);
+            }
+
+            $filters['organizations'] = array_unique(array_reduce($organizations, function (array $output, Organization $organization) {
+                $output[] = $organization->getUuid();
+                foreach ($organization->getChildren() as $child) {
+                    $output[] = $child->getUuid();
+                }
+                return $output;
+            }, []));
+        }
+
+        return $filters;
+    }
+
     /**
      * @Route("/{id}/statistics", name="apiv2_cursus_quota_statistics", methods={"GET"})
      * @EXT\ParamConverter("quota", class="Claroline\CursusBundle\Entity\Quota", options={"mapping": {"id": "uuid"}})
@@ -129,10 +155,9 @@ class QuotaController extends AbstractCrudController
      */
     public function exportAction(Quota $quota, Request $request): StreamedResponse
     {
+        $this->checkPermission('VALIDATE_SUBSCRIPTIONS', null, [], true);
+
         $organization = $quota->getOrganization();
-        if (!$this->canSeeQuota($organization)) {
-            return new JsonResponse('The user hasn\'t authorization for view this organization.', 401);
-        }
 
         $query = $request->query->all();
         $query['hiddenFilters'] = [
@@ -170,10 +195,9 @@ class QuotaController extends AbstractCrudController
      */
     public function listSubscriptionsAction(Quota $quota, Request $request): JsonResponse
     {
+        $this->checkPermission('VALIDATE_SUBSCRIPTIONS', null, [], true);
+
         $organization = $quota->getOrganization();
-        if (!$this->canSeeQuota($organization)) {
-            return new JsonResponse('The user hasn\'t authorization for view this organization.', 401);
-        }
 
         $query = $request->query->all();
         $query['hiddenFilters'] = [
@@ -198,6 +222,8 @@ class QuotaController extends AbstractCrudController
      */
     public function setSubscriptionStatusAction(Quota $quota, SessionUser $sessionUser, Request $request): JsonResponse
     {
+        $this->checkPermission('VALIDATE_SUBSCRIPTIONS', null, [], true);
+
         $remark = $request->query->get('remark', '');
 
         $status = $request->query->get('status', null);
@@ -250,16 +276,5 @@ class QuotaController extends AbstractCrudController
         return new JsonResponse([
             'quota' => $this->serializer->serialize($quota),
         ]);
-    }
-
-    private function canSeeQuota(Organization $organization): bool
-    {
-        if ($this->authorization->isGranted('ROLE_ADMIN')) {
-            return true;
-        }
-
-        $user = $this->tokenStorage->getToken()->getUser();
-
-        return $user instanceof User && $organization->getAdministrators()->contains($user);
     }
 }
