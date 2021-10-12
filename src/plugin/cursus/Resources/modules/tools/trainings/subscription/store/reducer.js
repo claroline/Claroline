@@ -12,7 +12,11 @@ export const reducer = combineReducers({
         property: 'status',
         value: constants.SUBSCRIPTION_STATUS_PENDING
       }
-    ]
+    ],
+    sortBy: {
+      property: 'startDate',
+      direction: 1
+    }
   }, {
     invalidated: makeReducer(false, {
       [SET_STATISTICS]: () => true

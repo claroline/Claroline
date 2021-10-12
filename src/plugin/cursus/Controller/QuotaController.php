@@ -11,6 +11,7 @@
 
 namespace Claroline\CursusBundle\Controller;
 
+use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Organization\Organization;
@@ -88,7 +89,7 @@ class QuotaController extends AbstractCrudController
     {
         $filters = [];
         if (!$this->authorization->isGranted('ROLE_ADMIN')) {
-            /** @var User $user */
+            /** @var User */
             $user = $this->tokenStorage->getToken()->getUser();
 
             // filter by organization
@@ -211,9 +212,33 @@ class QuotaController extends AbstractCrudController
 
         $options = isset($query['options']) ? $query['options'] : [];
 
-        return new JsonResponse(
-            $this->finder->search(SessionUser::class, $query, $options)
-        );
+        $queryParams = $this->finder->parseQueryParams($query);
+        $page = $queryParams['page'];
+        $limit = $queryParams['limit'];
+        $filters = $queryParams['filters'];
+        $allFilters = $queryParams['allFilters'];
+        $sortBy = $queryParams['sortBy'];
+
+        $count = $this->finder->fetch(SessionUser::class, $allFilters, $sortBy, $page, $limit, true);
+        $data = $this->finder->fetch(SessionUser::class, $allFilters, $sortBy, $page, $limit);
+
+        if (0 < $count && empty($data)) {
+            $page = 0 !== $limit ? ceil($count / $limit) - 1 : 1;
+            $data = $this->finder->fetch(SessionUser::class, $allFilters, $sortBy, $page, $limit);
+        }
+
+        if (!empty($sortBy) && $sortBy['property'] == 'startDate') {
+            usort($data, function(SessionUser $a, SessionUser $b) use($sortBy) {
+                return $sortBy['direction'] * ($a->getSession()->getStartDate()->getTimestamp() - $b->getSession()->getStartDate()->getTimestamp());
+            });
+        }
+
+        $results = FinderProvider::formatPaginatedData($data, $count, $page, $limit, $filters, $sortBy);
+        return new JsonResponse(array_merge($results, [
+            'data' => array_map(function ($result) use ($options) {
+                return $this->serializer->serialize($result, $options);
+            }, $results['data']),
+        ]));
     }
 
     /**
