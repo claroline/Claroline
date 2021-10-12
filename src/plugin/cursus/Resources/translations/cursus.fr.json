@@ -133,9 +133,9 @@
     "subscription_validated": "validé",
     "subscription_managed": "validé sur quotas",
     "subscription_quota": "Nombre de quotas",
-    "subscription_pending_help": "Le status est en attente.",
-    "subscription_refused_help": "Le status sera refusé.",
-    "subscription_validated_help": "Le status sera validé.",
-    "subscription_managed_help": "Le status sera validé et pris en compte dans le quota.",
+    "subscription_pending_help": "Le statut est en attente.",
+    "subscription_refused_help": "Le statut sera refusé.",
+    "subscription_validated_help": "Le statut sera validé.",
+    "subscription_managed_help": "Le statut sera validé et pris en compte dans le quota.",
     "quotas_insufficient": "Quotas insuffisant !"
 }
