@@ -39,7 +39,8 @@ const StatusModal = props => {
             <label>{trans('remark', {}, 'cursus')}</label>
             <textarea ref={remark} className="form-control"></textarea>
           </div>
-          <div className="d-flex">
+          {!props.canValidate && selectedStatus == 3 ? 
+            <strong className="text-danger" style={{paddingLeft: '1rem'}}>{trans('quotas_insufficient', {}, 'cursus')}</strong> :
             <CallbackButton
               primary
               className="btn btn-primary"
@@ -50,8 +51,7 @@ const StatusModal = props => {
             >
               {trans('confirm', {}, 'cursus')}
             </CallbackButton>
-            {!props.canValidate && selectedStatus == 3 && <strong className="text-danger" style={{paddingLeft: '1rem'}}>Quotas insuffisant !</strong>}
-          </div>
+          }
         </form>
       }
     </div>
