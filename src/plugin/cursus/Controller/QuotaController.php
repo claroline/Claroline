@@ -227,13 +227,14 @@ class QuotaController extends AbstractCrudController
             $data = $this->finder->fetch(SessionUser::class, $allFilters, $sortBy, $page, $limit);
         }
 
-        if (!empty($sortBy) && $sortBy['property'] == 'startDate') {
-            usort($data, function(SessionUser $a, SessionUser $b) use($sortBy) {
+        if (!empty($sortBy) && 'startDate' == $sortBy['property']) {
+            usort($data, function (SessionUser $a, SessionUser $b) use ($sortBy) {
                 return $sortBy['direction'] * ($a->getSession()->getStartDate()->getTimestamp() - $b->getSession()->getStartDate()->getTimestamp());
             });
         }
 
         $results = FinderProvider::formatPaginatedData($data, $count, $page, $limit, $filters, $sortBy);
+
         return new JsonResponse(array_merge($results, [
             'data' => array_map(function ($result) use ($options) {
                 return $this->serializer->serialize($result, $options);
