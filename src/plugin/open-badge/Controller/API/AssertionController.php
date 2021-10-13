@@ -16,7 +16,7 @@ use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\OpenBadgeBundle\Entity\Assertion;
 use Claroline\OpenBadgeBundle\Entity\Evidence;
-use Claroline\OpenBadgeBundle\Manager\OpenBadgeManager;
+use Claroline\OpenBadgeBundle\Manager\BadgeManager;
 use Dompdf\Dompdf;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -38,7 +38,7 @@ class AssertionController extends AbstractCrudController
     private $authorization;
     /** @var PlatformConfigurationHandler */
     private $config;
-    /** @var OpenBadgeManager */
+    /** @var BadgeManager */
     private $manager;
     /** @var TokenStorageInterface */
     private $tokenStorage;
@@ -46,7 +46,7 @@ class AssertionController extends AbstractCrudController
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         PlatformConfigurationHandler $config,
-        OpenBadgeManager $manager,
+        BadgeManager $manager,
         TokenStorageInterface $tokenStorage
     ) {
         $this->authorization = $authorization;

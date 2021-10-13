@@ -48,3 +48,12 @@ actions.openAssertion = (formName, id = null) => {
 
   return formActions.resetForm(formName, {}, true)
 }
+
+actions.downloadAssertion = (assertion) => ({
+  [API_REQUEST]: {
+    url: ['apiv2_assertion_pdf_download', {assertion: assertion.id}],
+    request: {
+      method: 'GET'
+    }
+  }
+})

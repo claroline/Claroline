@@ -1,0 +1,14 @@
+services:
+    Claroline\OpenBadgeBundle\Messenger\GrantBadgeHandler:
+        tags: [ messenger.message_handler ]
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\OpenBadgeBundle\Manager\RuleManager'
+            - '@Claroline\OpenBadgeBundle\Manager\AssertionManager'
+
+    Claroline\OpenBadgeBundle\Messenger\GrantRuleHandler:
+        tags: [ messenger.message_handler ]
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\OpenBadgeBundle\Manager\RuleManager'
+            - '@Claroline\OpenBadgeBundle\Manager\AssertionManager'

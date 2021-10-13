@@ -1,8 +1,59 @@
 services:
     _defaults:
-        autowire: false #default should be true now
-        autoconfigure: false #default should be true now
-        public: false #default should be false now
+        autowire: false
+        autoconfigure: false
+        public: false
 
-    Claroline\OpenBadgeBundle\Configuration\PlatformDefaults:
-        tags: [claroline.configuration]
+    # Community
+    Claroline\OpenBadgeBundle\Library\Rules\GroupRule:
+        tags: ['claroline.badge.rule']
+        arguments:
+            - '@security.token_storage'
+            - '@translator'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+
+    Claroline\OpenBadgeBundle\Library\Rules\RoleRule:
+        tags: [ 'claroline.badge.rule' ]
+        arguments:
+            - '@security.token_storage'
+            - '@translator'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+
+    # Workspace
+    Claroline\OpenBadgeBundle\Library\Rules\Evaluation\Workspace\WorkspaceStatusRule:
+        tags: [ 'claroline.badge.rule' ]
+        arguments:
+            - '@translator'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+
+    Claroline\OpenBadgeBundle\Library\Rules\Evaluation\Workspace\WorkspaceProgressionRule:
+        tags: [ 'claroline.badge.rule' ]
+        arguments:
+            - '@translator'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+
+    Claroline\OpenBadgeBundle\Library\Rules\Evaluation\Workspace\WorkspaceScoreRule:
+        tags: [ 'claroline.badge.rule' ]
+        arguments:
+            - '@translator'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+
+
+    # Resource
+    Claroline\OpenBadgeBundle\Library\Rules\Evaluation\Resource\ResourceStatusRule:
+        tags: [ 'claroline.badge.rule' ]
+        arguments:
+            - '@translator'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+
+    Claroline\OpenBadgeBundle\Library\Rules\Evaluation\Resource\ResourceProgressionRule:
+        tags: [ 'claroline.badge.rule' ]
+        arguments:
+            - '@translator'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+
+    Claroline\OpenBadgeBundle\Library\Rules\Evaluation\Resource\ResourceScoreRule:
+        tags: [ 'claroline.badge.rule' ]
+        arguments:
+            - '@translator'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'

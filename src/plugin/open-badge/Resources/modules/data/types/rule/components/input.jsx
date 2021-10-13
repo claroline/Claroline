@@ -18,14 +18,12 @@ import {WorkspacePassedInput} from '#/plugin/open-badge/data/types/rule/type/wor
 import {WorkspaceScoreAboveInput} from '#/plugin/open-badge/data/types/rule/type/workspace-score-above/components/input'
 
 import {
-  RESOURCE_PASSED,
+  RESOURCE_STATUS,
   RESOURCE_SCORE_ABOVE,
   RESOURCE_COMPLETED_ABOVE,
-  RESOURCE_PARTICIPATED,
-  WORKSPACE_PASSED,
+  WORKSPACE_STATUS,
   WORKSPACE_SCORE_ABOVE,
   WORKSPACE_COMPLETED_ABOVE,
-  WORKSPACE_PARTICIPATED,
   IN_ROLE,
   IN_GROUP
 } from '#/plugin/open-badge/data/types/rule/constants'
@@ -37,14 +35,13 @@ import {trans} from '#/main/app/intl/translation'
 
 const RuleDataInput = (props) => {
   switch (props.type) {
-    case RESOURCE_PARTICIPATED:
-    case RESOURCE_PASSED:
+    case RESOURCE_STATUS:
       return (
         <ResourcePassedInput
           id={props.id}
           disabled={props.disabled}
           value={props.value}
-          onChange={props.onChange}
+          onChange={(value) => props.onChange(merge(props.value || {}, value))}
           size={props.size}
         />
       )
@@ -71,14 +68,13 @@ const RuleDataInput = (props) => {
         />
       )
 
-    case WORKSPACE_PARTICIPATED:
-    case WORKSPACE_PASSED:
+    case WORKSPACE_STATUS:
       return (
         <WorkspacePassedInput
           id={props.id}
           disabled={props.disabled}
           value={props.value}
-          onChange={props.onChange}
+          onChange={(value) => props.onChange(merge(props.value || {}, value))}
           size={props.size}
         />
       )
@@ -150,13 +146,11 @@ const RuleInput = (props) =>
         disabled={props.disabled}
         choices={{
           // resources
-          [RESOURCE_PARTICIPATED]: trans(RESOURCE_PARTICIPATED, {}, 'badge'),
-          [RESOURCE_PASSED]: trans(RESOURCE_PASSED, {}, 'badge'),
+          [RESOURCE_STATUS]: trans(RESOURCE_STATUS, {}, 'badge'),
           [RESOURCE_SCORE_ABOVE]: trans(RESOURCE_SCORE_ABOVE, {}, 'badge'),
           [RESOURCE_COMPLETED_ABOVE]: trans(RESOURCE_COMPLETED_ABOVE, {}, 'badge'),
           // workspaces
-          [WORKSPACE_PARTICIPATED]: trans(WORKSPACE_PARTICIPATED, {}, 'badge'),
-          [WORKSPACE_PASSED]: trans(WORKSPACE_PASSED, {}, 'badge'),
+          [WORKSPACE_STATUS]: trans(WORKSPACE_STATUS, {}, 'badge'),
           [WORKSPACE_SCORE_ABOVE]: trans(WORKSPACE_SCORE_ABOVE, {}, 'badge'),
           [WORKSPACE_COMPLETED_ABOVE]: trans(WORKSPACE_COMPLETED_ABOVE, {}, 'badge'),
           // users
@@ -170,14 +164,16 @@ const RuleInput = (props) =>
     </FormGroup>
 
     {props.value.type &&
-      <RuleDataInput
-        id={`${props.id}-rule-data`}
-        type={props.value.type}
-        value={props.value.data}
-        disabled={props.disabled}
-        size={props.size}
-        onChange={(value) => props.onChange({type: props.value.type, data: value})}
-      />
+      <div className="sub-fields">
+        <RuleDataInput
+          id={`${props.id}-rule-data`}
+          type={props.value.type}
+          value={props.value.data}
+          disabled={props.disabled}
+          size={props.size}
+          onChange={(value) => props.onChange({type: props.value.type, data: value})}
+        />
+      </div>
     }
   </div>
 

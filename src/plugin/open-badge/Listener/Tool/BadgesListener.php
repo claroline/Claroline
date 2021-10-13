@@ -18,9 +18,6 @@ use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
  */
 class BadgesListener
 {
-    /**
-     * Displays home on Desktop.
-     */
     public function onDisplayDesktop(OpenToolEvent $event)
     {
         $event->setData([]);

@@ -3,9 +3,6 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 import get from 'lodash/get'
 
-// TODO : avoid hard dependency
-import html2pdf from 'html2pdf.js'
-
 import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
@@ -15,10 +12,9 @@ import {selectors as formSelectors} from '#/main/app/content/form/store'
 import {selectors as toolSelectors} from '#/main/core/tool/store'
 
 import {BadgeLayout}  from '#/plugin/open-badge/tools/badges/badge/components/layout'
-import {actions} from '#/plugin/open-badge/tools/badges/assertion/store'
 import {Assertion as AssertionTypes} from '#/plugin/open-badge/prop-types'
 import {MODAL_BADGE_EVIDENCE} from '#/plugin/open-badge/tools/badges/assertion/modals/evidence'
-import {selectors}  from '#/plugin/open-badge/tools/badges/store/selectors'
+import {actions, selectors}  from '#/plugin/open-badge/tools/badges/store'
 
 const AssertionDetailsComponent = (props) =>
   <BadgeLayout
@@ -124,17 +120,7 @@ const AssertionDetails = connect(
   }),
   (dispatch) => ({
     download(assertion) {
-      dispatch(actions.download(assertion)).then(pdfContent => {
-        html2pdf()
-          .set({
-            filename:    pdfContent.name,
-            image:       { type: 'jpeg', quality: 1 },
-            html2canvas: { scale: 4 },
-            enableLinks: true
-          })
-          .from(pdfContent.content, 'string')
-          .save()
-      })
+      dispatch(actions.downloadAssertion(assertion))
     }
   })
 )(AssertionDetailsComponent)
