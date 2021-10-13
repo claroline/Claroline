@@ -27,6 +27,11 @@ export default {
         label: trans('code'),
         displayed: false
       }, {
+        name: 'workspace',
+        type: 'workspace',
+        label: trans('workspace'),
+        displayed: false
+      }, {
         name: 'course',
         type: 'course',
         label: trans('course', {}, 'cursus'),

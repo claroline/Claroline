@@ -15,7 +15,13 @@ plugin:
               - name: register
 
     data_sources:
+        # TODO : to replace by course_sessions with a filter
         - name: public_course_sessions
+          type: list
+          context: [workspace, desktop, home]
+          tags: [community, event]
+
+        - name: course_sessions
           type: list
           context: [workspace, desktop, home]
           tags: [community, event]
