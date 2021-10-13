@@ -19,6 +19,7 @@ import {MODAL_USERS} from '#/main/core/modals/users'
 import {BadgeLayout}  from '#/plugin/open-badge/tools/badges/badge/components/layout'
 import {Badge as BadgeTypes} from '#/plugin/open-badge/prop-types'
 import {AssertionUserCard} from '#/plugin/open-badge/tools/badges/assertion/components/card'
+import {actions as badgeActions}  from '#/plugin/open-badge/tools/badges/store'
 import {actions, selectors}  from '#/plugin/open-badge/tools/badges/badge/store'
 
 const BadgeDetailsComponent = (props) => {
@@ -108,6 +109,15 @@ const BadgeDetailsComponent = (props) => {
                 }
               }
             ]}
+            actions={(rows) => [
+              {
+                type: CALLBACK_BUTTON,
+                icon: 'fa fa-fw fa-download',
+                label: trans('download', {}, 'actions'),
+                callback: () => rows.map(row => props.downloadAssertion(row)),
+                displayed: get(props.badge, 'permissions.grant')
+              }
+            ]}
             card={AssertionUserCard}
             display={{
               current: listConst.DISPLAY_LIST_SM,
@@ -145,6 +155,15 @@ const BadgeDetailsComponent = (props) => {
           label: trans('edit', {}, 'actions'),
           target: props.path + `/badges/${props.badge.id}/edit`,
           displayed: get(props.badge, 'permissions.edit'),
+          group: trans('management')
+        }, {
+          name: 'recalculate',
+          type: CALLBACK_BUTTON,
+          icon: 'fa fa-fw fa-refresh',
+          label: trans('recalculate', {}, 'actions'),
+          callback: () => props.recalculate(props.badge.id),
+          displayed: get(props.badge, 'permissions.grant') && !isEmpty(props.badge.rules),
+          disabled:  !get(props.badge, 'meta.enabled'),
           group: trans('management')
         }, {
           name: 'export-results',
@@ -220,7 +239,9 @@ BadgeDetailsComponent.propTypes = {
   enable: T.func.isRequired,
   disable: T.func.isRequired,
   delete: T.func.isRequired,
-  grant: T.func.isRequired
+  grant: T.func.isRequired,
+  recalculate: T.func.isRequired,
+  downloadAssertion: T.func.isRequired
 }
 
 BadgeDetailsComponent.defaultProps = {
@@ -250,6 +271,12 @@ const BadgeDetails = withRouter(
 
       grant(badgeId, selected) {
         dispatch(actions.grant(badgeId, selected))
+      },
+      recalculate(badgeId) {
+        dispatch(actions.recalculate(badgeId))
+      },
+      downloadAssertion(assertion) {
+        dispatch(badgeActions.downloadAssertion(assertion))
       }
     })
   )(BadgeDetailsComponent)

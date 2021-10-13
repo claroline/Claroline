@@ -15,7 +15,7 @@ services:
         arguments:
             - '@security.authorization_checker'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-            - '@Claroline\OpenBadgeBundle\Manager\OpenBadgeManager'
+            - '@Claroline\OpenBadgeBundle\Manager\BadgeManager'
             - '@security.token_storage'
 
     Claroline\OpenBadgeBundle\Controller\API\BadgeClassController:
@@ -23,7 +23,8 @@ services:
         public: true
         arguments:
             - '@security.authorization_checker'
-            - '@Claroline\OpenBadgeBundle\Manager\OpenBadgeManager'
+            - '@Claroline\OpenBadgeBundle\Manager\BadgeManager'
+            - '@Claroline\OpenBadgeBundle\Manager\AssertionManager'
 
     Claroline\OpenBadgeBundle\Controller\API\EndorsementController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController

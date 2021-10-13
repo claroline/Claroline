@@ -16,32 +16,21 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Evaluation;
 use Claroline\EvaluationBundle\Entity\AbstractEvaluation;
 use Claroline\EvaluationBundle\Event\WorkspaceEvaluationEvent;
-use Claroline\OpenBadgeBundle\Entity\Evidence;
 use Claroline\OpenBadgeBundle\Entity\Rules\Rule;
 use Claroline\OpenBadgeBundle\Manager\RuleManager;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class WorkspaceEvaluationListener
 {
     /** @var ObjectManager */
     private $om;
-
-    /** @var TranslatorInterface */
-    private $translator;
-
     /** @var RuleManager */
     private $manager;
 
-    /**
-     * RuleListener constructor.
-     */
     public function __construct(
         ObjectManager $om,
-        TranslatorInterface $translator,
         RuleManager $manager
     ) {
         $this->om = $om;
-        $this->translator = $translator;
         $this->manager = $manager;
     }
 
@@ -54,17 +43,14 @@ class WorkspaceEvaluationListener
 
         foreach ($rules as $rule) {
             switch ($rule->getAction()) {
-                case Rule::WORKSPACE_PASSED:
-                    $this->awardWorkspacePassed($evaluation->getUser(), $evaluation, $rule);
-                    break;
                 case Rule::WORKSPACE_SCORE_ABOVE:
                     $this->awardWorkspaceScoreAbove($evaluation->getUser(), $evaluation, $rule);
                     break;
                 case Rule::WORKSPACE_COMPLETED_ABOVE:
                     $this->awardWorkspaceCompletedAbove($evaluation->getUser(), $evaluation, $rule);
                     break;
-                case Rule::WORKSPACE_PARTICIPATED:
-                    $this->awardWorkspaceParticipated($evaluation->getUser(), $evaluation, $rule);
+                case Rule::WORKSPACE_STATUS:
+                    $this->awardWorkspaceStatus($evaluation->getUser(), $evaluation, $rule);
                     break;
                 default:
                     break;
@@ -72,27 +58,13 @@ class WorkspaceEvaluationListener
         }
     }
 
-    private function awardWorkspacePassed(User $user, Evaluation $evaluation, Rule $rule)
+    private function awardWorkspaceStatus(User $user, Evaluation $evaluation, Rule $rule)
     {
-        if (AbstractEvaluation::STATUS_PRIORITY[AbstractEvaluation::STATUS_PASSED] <= AbstractEvaluation::STATUS_PRIORITY[$evaluation->getStatus()]) {
-            $evidence = new Evidence();
-            $now = new \DateTime();
-            $evidence->setNarrative($this->translator->trans(
-                'evidence_narrative_workspace_passed',
-                [
-                    '%date%' => $now->format('Y-m-d H:i:s'),
-                ],
-                'badge'
-            ));
-            $evidence->setRule($rule);
-            $evidence->setName(Rule::WORKSPACE_PASSED);
-            $evidence->setWorkspaceEvidence($evaluation);
-            $evidence->setUser($user);
-
-            $this->om->persist($evidence);
-            $this->om->flush();
-
-            $this->manager->verifyAssertion($user, $rule->getBadge());
+        $data = $rule->getData();
+        if (!empty($data) && !empty($data['value'])) {
+            if (AbstractEvaluation::STATUS_PRIORITY[$data['value']] <= AbstractEvaluation::STATUS_PRIORITY[$evaluation->getStatus()]) {
+                $this->manager->grant($rule, $user);
+            }
         }
     }
 
@@ -106,24 +78,7 @@ class WorkspaceEvaluationListener
             }
 
             if ($scoreProgress >= $data['value']) {
-                $evidence = new Evidence();
-                $now = new \DateTime();
-                $evidence->setNarrative($this->translator->trans(
-                    'evidence_narrative_workspace_score_above',
-                    [
-                        '%date%' => $now->format('Y-m-d H:i:s'),
-                    ],
-                    'badge'
-                ));
-                $evidence->setRule($rule);
-                $evidence->setName(Rule::WORKSPACE_SCORE_ABOVE);
-                $evidence->setWorkspaceEvidence($evaluation);
-                $evidence->setUser($user);
-
-                $this->om->persist($evidence);
-                $this->om->flush();
-
-                $this->manager->verifyAssertion($user, $rule->getBadge());
+                $this->manager->grant($rule, $user);
             }
         }
     }
@@ -133,48 +88,7 @@ class WorkspaceEvaluationListener
         $data = $rule->getData();
         $progression = ($evaluation->getProgression() / $evaluation->getProgressionMax()) * 100;
         if ($data && $progression >= $data['value']) {
-            $evidence = new Evidence();
-            $now = new \DateTime();
-            $evidence->setNarrative($this->translator->trans(
-                'evidence_narrative_workspace_completed_above',
-                [
-                    '%date%' => $now->format('Y-m-d H:i:s'),
-                ],
-                'badge'
-            ));
-            $evidence->setRule($rule);
-            $evidence->setName(Rule::WORKSPACE_COMPLETED_ABOVE);
-            $evidence->setWorkspaceEvidence($evaluation);
-            $evidence->setUser($user);
-
-            $this->om->persist($evidence);
-            $this->om->flush();
-
-            $this->manager->verifyAssertion($user, $rule->getBadge());
-        }
-    }
-
-    private function awardWorkspaceParticipated(User $user, Evaluation $evaluation, Rule $rule)
-    {
-        if (AbstractEvaluation::STATUS_PRIORITY[AbstractEvaluation::STATUS_PARTICIPATED] <= AbstractEvaluation::STATUS_PRIORITY[$evaluation->getStatus()]) {
-            $evidence = new Evidence();
-            $now = new \DateTime();
-            $evidence->setNarrative($this->translator->trans(
-                'evidence_narrative_workspace_participated',
-                [
-                    '%date%' => $now->format('Y-m-d H:i:s'),
-                ],
-                'badge'
-            ));
-            $evidence->setRule($rule);
-            $evidence->setName(Rule::WORKSPACE_PARTICIPATED);
-            $evidence->setWorkspaceEvidence($evaluation);
-            $evidence->setUser($user);
-
-            $this->om->persist($evidence);
-            $this->om->flush();
-
-            $this->manager->verifyAssertion($user, $rule->getBadge());
+            $this->manager->grant($rule, $user);
         }
     }
 }

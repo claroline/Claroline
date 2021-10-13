@@ -34,7 +34,6 @@ services:
     Claroline\OpenBadgeBundle\Listener\Rules\WorkspaceEvaluationListener:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@translator'
             - '@Claroline\OpenBadgeBundle\Manager\RuleManager'
         tags:
             - { name: kernel.event_listener, event: workspace.evaluate, method: onWorkspaceEvaluation }
@@ -42,7 +41,6 @@ services:
     Claroline\OpenBadgeBundle\Listener\Rules\ResourceEvaluationListener:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@translator'
             - '@Claroline\OpenBadgeBundle\Manager\RuleManager'
         tags:
             - { name: kernel.event_listener, event: resource_evaluation, method: onResourceEvaluation }
@@ -50,19 +48,16 @@ services:
     Claroline\OpenBadgeBundle\Listener\Rules\GroupListener:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@translator'
-            - '@security.token_storage'
             - '@Claroline\OpenBadgeBundle\Manager\RuleManager'
         tags:
-            - { name: kernel.event_listener, event: crud_pre_patch_object_claroline_corebundle_entity_user, method: onUserPatch }
-            - { name: kernel.event_listener, event: crud_pre_patch_object_claroline_corebundle_entity_group, method: onGroupPatch }
+            - { name: kernel.event_listener, event: crud_post_patch_object_claroline_corebundle_entity_user, method: onUserPatch }
+            - { name: kernel.event_listener, event: crud_post_patch_object_claroline_corebundle_entity_group, method: onGroupPatch }
 
     Claroline\OpenBadgeBundle\Listener\Rules\RoleListener:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@translator'
-            - '@security.token_storage'
             - '@Claroline\OpenBadgeBundle\Manager\RuleManager'
         tags:
-            - { name: kernel.event_listener, event: crud_pre_patch_object_claroline_corebundle_entity_user, method: onUserPatch }
-            - { name: kernel.event_listener, event: crud_pre_patch_object_claroline_corebundle_entity_role, method: onRolePatch }
+            - { name: kernel.event_listener, event: crud_post_patch_object_claroline_corebundle_entity_user, method: onUserPatch }
+            - { name: kernel.event_listener, event: crud_post_patch_object_claroline_corebundle_entity_role, method: onRolePatch }
+            - { name: kernel.event_listener, event: crud_post_patch_object_claroline_corebundle_entity_group, method: onGroupPatch }

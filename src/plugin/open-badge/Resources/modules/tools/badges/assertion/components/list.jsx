@@ -9,11 +9,11 @@ import {constants as listConstants} from '#/main/app/content/list/constants'
 import {selectors as toolSelectors} from '#/main/core/tool/store'
 
 import {AssertionBadgeCard} from '#/plugin/open-badge/tools/badges/assertion/components/card'
-import {actions, selectors} from '#/plugin/open-badge/tools/badges/assertion/store'
+import {actions, selectors} from '#/plugin/open-badge/tools/badges/store'
 
 const AssertionsList = (props) =>
   <ListData
-    name={selectors.LIST_NAME}
+    name={selectors.STORE_NAME + '.badges.mine'}
     fetch={{
       url: ['apiv2_assertion_current_user_list'],
       autoload: true
@@ -51,8 +51,7 @@ const AssertionsList = (props) =>
         type: CALLBACK_BUTTON,
         icon: 'fa fa-fw fa-download',
         label: trans('download', {}, 'actions'),
-        scope: ['object'],
-        callback: () => props.download(rows[0])
+        callback: () => rows.map(row => props.download(row))
       }
     ]}
     card={AssertionBadgeCard}
@@ -70,7 +69,7 @@ const Assertions = connect(
   }),
   (dispatch) => ({
     download(assertion) {
-      dispatch(actions.download(assertion))
+      dispatch(actions.downloadAssertion(assertion))
     }
   })
 )(AssertionsList)

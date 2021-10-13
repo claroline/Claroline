@@ -188,30 +188,22 @@ class UserRepository extends ServiceEntityRepository implements UserProviderInte
     /**
      * Returns the users of a group.
      *
-     * @param bool   $executeQuery
-     * @param string $orderedBy
-     * @param string $order
-     *
-     * @return User[]|Query
+     * @return User[]
      */
-    public function findByGroup(
-        Group $group,
-        $executeQuery = true,
-        $orderedBy = 'id',
-        $order = 'ASC'
-    ) {
-        $dql = "
+    public function findByGroup(Group $group)
+    {
+        $query = $this->_em->createQuery('
             SELECT DISTINCT u 
             FROM Claroline\\CoreBundle\\Entity\\User u
             JOIN u.groups g
             WHERE g.id = :groupId
-            AND u.isRemoved = false
-            ORDER BY u.{$orderedBy} {$order}
-        ";
-        $query = $this->_em->createQuery($dql);
+              AND u.isRemoved = false
+              AND u.isEnabled = true
+        ');
+
         $query->setParameter('groupId', $group->getId());
 
-        return $executeQuery ? $query->getResult() : $query;
+        return $query->getResult();
     }
 
     /**
