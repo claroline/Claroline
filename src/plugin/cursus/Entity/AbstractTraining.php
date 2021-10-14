@@ -52,7 +52,7 @@ class AbstractTraining
     protected $name;
 
     /**
-     * @ORM\Column(nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      *
      * @var string
      */
