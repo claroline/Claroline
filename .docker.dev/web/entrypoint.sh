@@ -2,6 +2,11 @@
 
 set -e
 
+echo "Installing dependencies (or checking if correct ones are installed)"
+composer install # if composer.lock exists, this takes ~2 seconds (every subsequent run with no changes to deps)
+npm install --legacy-peer-deps # if package-lock.json exists, this takes ~3 seconds (every subsequent run with no changes to deps)
+# --legacy-peer-deps is needed until all dependencies are compatible with npm 7 (until npm install runs without error)
+
 # Wait for MySQL to respond, depends on mysql-client
 echo "Waiting for $DB_HOST..."
 while ! mysqladmin ping -h "$DB_HOST" --silent; do
@@ -10,11 +15,6 @@ while ! mysqladmin ping -h "$DB_HOST" --silent; do
 done
 
 echo "MySQL is up"
-
-echo "Installing dependencies (or checking if correct ones are installed)"
-composer install # if composer.lock exists, this takes ~2 seconds (every subsequent run with no changes to deps)
-npm install --legacy-peer-deps # if package-lock.json exists, this takes ~3 seconds (every subsequent run with no changes to deps)
-# --legacy-peer-deps is needed until all dependencies are compatible with npm 7 (until npm install runs without error)
 
 if [ -f files/installed ]; then
   echo "Claroline is already installed, updating and rebuilding themes and translations..."

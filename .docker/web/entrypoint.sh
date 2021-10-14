@@ -2,6 +2,10 @@
 
 set -e
 
+php bin/configure # we run it again to generate parameters.yml inside the volume
+composer bundles # we run it again to generate bundles.ini inside the volume
+composer delete-cache # fixes install/update errors
+
 # Wait for MySQL to respond, depends on mysql-client
 echo "Waiting for $DB_HOST..."
 while ! mysqladmin ping -h "$DB_HOST" --silent; do
@@ -10,10 +14,6 @@ while ! mysqladmin ping -h "$DB_HOST" --silent; do
 done
 
 echo "MySQL is up"
-
-php bin/configure # we run it again to generate parameters.yml inside the volume
-composer bundles # we run it again to generate bundles.ini inside the volume
-composer delete-cache # fixes install/update errors
 
 if [ -f files/installed ]; then
   echo "Claroline is already installed, updating and rebuilding themes and translations..."
