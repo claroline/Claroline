@@ -21,7 +21,7 @@ if [ -f files/installed ]; then
     if [[ "$versionLastUsed" != "$currentVersion" ]]; then
       echo "New version detected, updating..."
       composer install
-      npm install
+      npm install --legacy-peer-deps
       php bin/console claroline:update --env=dev -vvv
       chmod -R 777 var files config
       composer delete-cache # fixes SAML errors
@@ -32,7 +32,7 @@ if [ -f files/installed ]; then
 else
   echo "Installing Claroline..."
   composer install
-  npm install
+  npm install --legacy-peer-deps
   php bin/console claroline:install --env=dev -vvv
 
   if [[ -v PLATFORM_NAME ]]; then

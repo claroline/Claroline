@@ -10,7 +10,7 @@ services:
       - "80:80"
       - "8080:8080"
     volumes:
-      - ./:/var/www/html/claroline/
+      - ./:/var/www/html/claroline
     depends_on:
       - db
     environment:
@@ -18,6 +18,7 @@ services:
       - ENV=DEV
       - APP_ENV=dev
       - APP_DEBUG=1
+      - NODE_ENV=development
       - DB_HOST=claroline-db
       - DB_NAME=claroline
       - DB_USER=claroline
@@ -42,12 +43,11 @@ services:
       MYSQL_PASSWORD: claroline
       MYSQL_DATABASE: claroline
     image: mysql:8.0
-    command: --sql_mode="" --default_authentication_plugin="mysql_native_password"
     ports:
       - "3306:3306"
     volumes:
       - ../mysql:/var/lib/mysql
-      - ./.docker.dev/mysql:/etc/mysql/conf.d # TODO check why is world-writable config file ignored, shall we make it read-only? When and how?
+      - ./.docker.dev/mysql:/etc/mysql/conf.d
     networks:
       claroline_network:
         ipv4_address: 172.22.9.5
