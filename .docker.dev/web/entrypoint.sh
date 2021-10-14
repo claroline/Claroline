@@ -11,28 +11,17 @@ done
 
 echo "MySQL is up"
 
+echo "Installing dependencies (or checking if correct ones are installed)"
+composer install # if composer.lock exists, this takes ~2 seconds (every subsequent run with no changes to deps)
+npm install --legacy-peer-deps # if package-lock.json exists, this takes ~3 seconds (every subsequent run with no changes to deps)
+# --legacy-peer-deps is needed until all dependencies are compatible with npm 7 (until npm install runs without error)
+
 if [ -f files/installed ]; then
-  echo "Claroline is already installed"
+  echo "Claroline is already installed, updating and rebuilding themes and translations..."
 
-  if [ -f files/versionLastUsed.txt ]; then
-    versionLastUsed=$(head -n 1 files/versionLastUsed.txt)
-    currentVersion=$(head -n 1 VERSION.txt)
-
-    if [[ "$versionLastUsed" != "$currentVersion" ]]; then
-      echo "New version detected, updating..."
-      composer install
-      npm install --legacy-peer-deps
-      php bin/console claroline:update --env=dev -vvv
-      chmod -R 777 var files config
-      composer delete-cache # fixes SAML errors
-    else
-      echo "Claroline version is up to date"
-    fi
-  fi
+  php bin/console claroline:update --env=dev -vvv
 else
-  echo "Installing Claroline..."
-  composer install
-  npm install --legacy-peer-deps
+  echo "Installing Claroline for the first time..."
   php bin/console claroline:install --env=dev -vvv
 
   if [[ -v PLATFORM_NAME ]]; then
@@ -57,15 +46,16 @@ else
     echo 'Users already exist or no admin vars detected, Claroline installed without an admin account'
   fi
 
-  echo "Setting correct file permissions"
-  chmod -R 777 var files config
-
-  echo "Clean cache after setting correct permissions, fixes SAML issues"
-  composer delete-cache
   touch files/installed
+  echo "Claroline installed, created file ./files/installed for future runs of this container"
 fi
 
-cp VERSION.txt files/versionLastUsed.txt
+echo "Clean cache after setting correct permissions, fixes SAML issues"
+composer delete-cache # fixes SAML errors
+
+echo "Setting correct file permissions"
+chmod -R 750 var files config
+chown -R www-data:www-data var files config
 
 echo "webpack-dev-server starting as a background process..."
 nohup npm run webpack:dev -- --host=0.0.0.0 --disable-host-check &

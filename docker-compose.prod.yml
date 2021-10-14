@@ -12,7 +12,6 @@ services:
       - ./public/js:/var/www/html/claroline/public/js
       - ./public/themes:/var/www/html/claroline/public/themes
       - ./var:/var/www/html/claroline/var
-      - ./VERSION.txt:/var/www/html/claroline/VERSION.txt
     depends_on:
       - db
     environment:
