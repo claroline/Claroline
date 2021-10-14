@@ -47,18 +47,8 @@ else
     sed -i "/support_email: null/c\support_email: $PLATFORM_SUPPORT_EMAIL" files/config/platform_options.json
   fi
 
-  USERS=$(mysql $DB_NAME -u $DB_USER -p$DB_PASSWORD -h $DB_HOST -se "select count(*) from claro_user")
-
-  if [ "$USERS" == "0" ] && [ -v ADMIN_FIRSTNAME ] && [ -v ADMIN_LASTNAME ] && [ -v ADMIN_USERNAME ] && [ -v ADMIN_PASSWORD ]  && [ -v ADMIN_EMAIL ]; then
-    echo '*********************************************************************************************************************'
-    echo "Creating default admin user : $ADMIN_FIRSTNAME $ADMIN_LASTNAME $ADMIN_USERNAME $ADMIN_PASSWORD $ADMIN_EMAIL"
-    echo '*********************************************************************************************************************'
-
-    php bin/console claroline:user:create -a $ADMIN_FIRSTNAME $ADMIN_LASTNAME $ADMIN_USERNAME $ADMIN_PASSWORD $ADMIN_EMAIL
-  else
-    echo 'Users already exist or no admin vars detected, Claroline installed without an admin account'
-  fi
-
+  echo "In order to create an admin user, run the following command inside the docker container (and replace the variables):"
+  echo "php bin/console claroline:user:create -a \$ADMIN_FIRSTNAME \$ADMIN_LASTNAME \$ADMIN_USERNAME \$ADMIN_PASSWORD \$ADMIN_EMAIL"
   echo "Setting correct file permissions"
   chmod -R 750 var files config
   chown -R www-data:www-data var files config

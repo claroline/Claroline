@@ -26,11 +26,6 @@ services:
       - DB_USER=claroline
       - DB_PASSWORD=claroline
       - SECRET="secret-claroline"
-      - ADMIN_FIRSTNAME=John
-      - ADMIN_LASTNAME=Doe
-      - ADMIN_USERNAME=root
-      - ADMIN_PASSWORD=claroline
-      - ADMIN_EMAIL=claroline@example.com
       - PLATFORM_NAME=Claroline
       - PLATFORM_SUPPORT_EMAIL=claroline@example.com
     networks:
