@@ -14,21 +14,21 @@ class Version20211014093931 extends AbstractMigration
 {
     public function up(Schema $schema): void
     {
-        $this->addSql("
+        $this->addSql('
             ALTER TABLE claro_cursusbundle_course_session CHANGE plainDescription plainDescription LONGTEXT DEFAULT NULL
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE claro_cursusbundle_course CHANGE plainDescription plainDescription LONGTEXT DEFAULT NULL
-        ");
+        ');
     }
 
     public function down(Schema $schema): void
     {
-        $this->addSql("
+        $this->addSql('
             ALTER TABLE claro_cursusbundle_course CHANGE plainDescription plainDescription VARCHAR(255) CHARACTER SET utf8 DEFAULT NULL COLLATE `utf8_unicode_ci`
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE claro_cursusbundle_course_session CHANGE plainDescription plainDescription VARCHAR(255) CHARACTER SET utf8 DEFAULT NULL COLLATE `utf8_unicode_ci`
-        ");
+        ');
     }
 }
