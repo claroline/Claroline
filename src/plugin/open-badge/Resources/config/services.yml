@@ -1,15 +1,12 @@
 imports:
-    - { resource: services/listener.yml }
+    - { resource: services/configuration.yml }
     - { resource: services/controller.yml }
-    - { resource: services/serializer.yml }
-    - { resource: services/finder.yml }
     - { resource: services/crud.yml }
-    - { resource: services/manager.yml }
-    - { resource: services/voter.yml }
+    - { resource: services/finder.yml }
     - { resource: services/library.yml }
-
-services:
-    _defaults:
-        autowire: false #default should be true now
-        autoconfigure: false #default should be true now
-        public: false #default should be false now
+    - { resource: services/listener.yml }
+    - { resource: services/manager.yml }
+    - { resource: services/messenger.yml }
+    - { resource: services/serializer.yml }
+    - { resource: services/subscriber.yml }
+    - { resource: services/voter.yml }

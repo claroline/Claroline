@@ -3,13 +3,19 @@ services:
         autoconfigure: false
         public: false
 
-    Claroline\OpenBadgeBundle\Manager\OpenBadgeManager:
+    Claroline\OpenBadgeBundle\Manager\BadgeManager:
         arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\Manager\Template\TemplateManager'
             - '@twig'
-            - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - '@message_bus'
+
+    Claroline\OpenBadgeBundle\Manager\AssertionManager:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@event_dispatcher'
 
     Claroline\OpenBadgeBundle\Manager\RuleManager:
         arguments:
           - '@Claroline\AppBundle\Persistence\ObjectManager'
+          - '@message_bus'
+          - !tagged_iterator { tag: 'claroline.badge.rule', default_index_method: 'getType' }

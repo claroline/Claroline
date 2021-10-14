@@ -48,3 +48,16 @@ actions.grant = (badgeId, users) => ({
     }
   }
 })
+
+actions.recalculate = (badgeId) => ({
+  [API_REQUEST]: {
+    url: ['apiv2_badge-class_recalculate_users', {badge: badgeId}],
+    request: {
+      method: 'POST'
+    },
+    success: (data, dispatch) => {
+      dispatch(listActions.invalidateData(selectors.LIST_NAME))
+      dispatch(listActions.invalidateData(selectors.FORM_NAME + '.assertions'))
+    }
+  }
+})

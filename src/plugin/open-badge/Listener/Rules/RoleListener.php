@@ -14,85 +14,123 @@ namespace Claroline\OpenBadgeBundle\Listener\Rules;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Event\Crud\PatchEvent;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Group;
+use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\OpenBadgeBundle\Entity\Evidence;
 use Claroline\OpenBadgeBundle\Entity\Rules\Rule;
 use Claroline\OpenBadgeBundle\Manager\RuleManager;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 
 class RoleListener
 {
     /** @var ObjectManager */
     private $om;
-
-    /** @var TranslatorInterface */
-    private $translator;
-
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-
     /** @var RuleManager */
     private $manager;
 
-    /**
-     * RuleListener constructor.
-     */
     public function __construct(
         ObjectManager $om,
-        TranslatorInterface $translator,
-        TokenStorageInterface $tokenStorage,
         RuleManager $manager
     ) {
         $this->om = $om;
-        $this->translator = $translator;
-        $this->tokenStorage = $tokenStorage;
         $this->manager = $manager;
     }
 
     public function onUserPatch(PatchEvent $event)
     {
-        if (Crud::COLLECTION_ADD === $event->getAction() && 'role' === $event->getProperty()) {
-            /** @var Rule[] $rules */
-            $rules = $this->om->getRepository(Rule::class)->findBy(['role' => $event->getValue()]);
+        if (Crud::COLLECTION_ADD === $event->getAction()) {
+            $user = $event->getObject();
 
-            foreach ($rules as $rule) {
-                $this->awardInRole($event->getObject(), $rule);
+            $roles = [];
+            if ($event->getValue() instanceof Role) {
+                $roles[] = $event->getValue();
+            } elseif ($event->getValue() instanceof Group) {
+                // gets all the roles the user inherits from the new group
+                foreach ($event->getValue()->getEntityRoles() as $role) {
+                    if (!$user->hasRole($role->getName(), false)) {
+                        $roles[] = $role;
+                    }
+                }
+            }
+
+            foreach ($roles as $role) {
+                /** @var Rule[] $rules */
+                $rules = $this->om->getRepository(Rule::class)->findBy(['role' => $role]);
+
+                foreach ($rules as $rule) {
+                    $this->manager->grant($rule, $user);
+                }
             }
         }
     }
 
     public function onRolePatch(PatchEvent $event)
     {
-        if (Crud::COLLECTION_ADD === $event->getAction() && 'user' === $event->getProperty()) {
-            /** @var Rule[] $rules */
-            $rules = $this->om->getRepository(Rule::class)->findBy(['role' => $event->getObject()]);
+        if (Crud::COLLECTION_ADD === $event->getAction()) {
+            $role = $event->getObject();
 
-            foreach ($rules as $rule) {
-                $this->awardInRole($event->getValue(), $rule);
+            /** @var Rule[] $rules */
+            $rules = $this->om->getRepository(Rule::class)->findBy(['role' => $role]);
+            if (!empty($rules)) {
+                $users = [];
+                if ($event->getValue() instanceof User) {
+                    $users[] = $event->getValue();
+                } elseif ($event->getValue() instanceof Group) {
+                    foreach ($event->getValue()->getUsers() as $user) {
+                        if ($user->isEnabled() && !$user->isRemoved() && !$user->hasRole($role->getName(), false)) {
+                            $users[] = $user;
+                        }
+                    }
+                }
+
+                foreach ($rules as $rule) {
+                    foreach ($users as $user) {
+                        $this->manager->grant($rule, $user);
+                    }
+                }
             }
         }
     }
 
-    private function awardInRole(User $user, Rule $rule)
+    public function onGroupPatch(PatchEvent $event)
     {
-        $evidence = new Evidence();
-        $now = new \DateTime();
-        $evidence->setNarrative($this->translator->trans(
-            'evidence_narrative_add_role',
-            [
-                '%doer%' => $this->tokenStorage->getToken()->getUser()->getUsername(),
-                '%date%' => $now->format('Y-m-d H:i:s'),
-            ],
-            'badge'
-        ));
-        $evidence->setRule($rule);
-        $evidence->setName(Rule::IN_ROLE);
-        $evidence->setUser($user);
+        if (Crud::COLLECTION_ADD === $event->getAction()) {
+            $group = $event->getObject();
 
-        $this->om->persist($evidence);
-        $this->om->flush();
+            if ($event->getValue() instanceof User) {
+                $user = $event->getValue();
 
-        $this->manager->verifyAssertion($user, $rule->getBadge());
+                $roles = [];
+                foreach ($group->getEntityRoles() as $groupRole) {
+                    if (!$event->getValue()->hasRole($groupRole->getName(), false)) {
+                        $roles[] = $groupRole;
+                    }
+                }
+
+                foreach ($roles as $role) {
+                    /** @var Rule[] $rules */
+                    $rules = $this->om->getRepository(Rule::class)->findBy(['role' => $role]);
+                    foreach ($rules as $rule) {
+                        $this->manager->grant($rule, $user);
+                    }
+                }
+            } elseif ($event->getValue() instanceof Role) {
+                $role = $event->getValue();
+
+                $users = [];
+                foreach ($group->getUsers() as $user) {
+                    if ($user->isEnabled() && !$user->isRemoved() && !$user->hasRole($role->getName(), false)) {
+                        $users[] = $user;
+                    }
+                }
+
+                /** @var Rule[] $rules */
+                $rules = $this->om->getRepository(Rule::class)->findBy(['role' => $role]);
+                foreach ($rules as $rule) {
+                    foreach ($users as $user) {
+                        $this->manager->grant($rule, $user);
+                    }
+                }
+            }
+        }
     }
 }

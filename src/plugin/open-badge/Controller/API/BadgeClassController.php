@@ -15,9 +15,11 @@ use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
+use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Claroline\OpenBadgeBundle\Entity\Assertion;
 use Claroline\OpenBadgeBundle\Entity\BadgeClass;
-use Claroline\OpenBadgeBundle\Manager\OpenBadgeManager;
+use Claroline\OpenBadgeBundle\Manager\AssertionManager;
+use Claroline\OpenBadgeBundle\Manager\BadgeManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,15 +35,19 @@ class BadgeClassController extends AbstractCrudController
 
     /** @var AuthorizationCheckerInterface */
     private $authorization;
-    /** @var OpenBadgeManager */
+    /** @var BadgeManager */
     private $manager;
+    /** @var AssertionManager */
+    private $assertionManager;
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
-        OpenBadgeManager $manager
+        BadgeManager $manager,
+        AssertionManager $assertionManager
     ) {
         $this->authorization = $authorization;
         $this->manager = $manager;
+        $this->assertionManager = $assertionManager;
     }
 
     public function getName()
@@ -102,7 +108,7 @@ class BadgeClassController extends AbstractCrudController
      * @Route("/workspace/{workspace}", name="apiv2_badge-class_workspace_badge_list", methods={"GET"})
      * @EXT\ParamConverter("workspace", class="ClarolineCoreBundle:Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
      */
-    public function getWorkspaceBadgesAction(Request $request, Workspace $workspace): JsonResponse
+    public function listByWorkspaceAction(Request $request, Workspace $workspace): JsonResponse
     {
         return new JsonResponse(
             $this->finder->search(BadgeClass::class, array_merge(
@@ -143,7 +149,7 @@ class BadgeClassController extends AbstractCrudController
         $users = $this->decodeIdsString($request, User::class);
 
         foreach ($users as $user) {
-            $this->manager->addAssertion($badge, $user);
+            $this->assertionManager->create($badge, $user);
         }
 
         return new JsonResponse(
@@ -162,11 +168,31 @@ class BadgeClassController extends AbstractCrudController
         $assertions = $this->decodeIdsString($request, Assertion::class);
 
         foreach ($assertions as $assertion) {
-            $this->manager->revokeAssertion($assertion);
+            $this->assertionManager->delete($assertion);
         }
 
         return new JsonResponse(
             $this->serializer->serialize($badge)
         );
+    }
+
+    /**
+     * Searches for users which meet the badge rules and grant them the badge.
+     *
+     * @Route("/{badge}/users/recalculate", name="apiv2_badge-class_recalculate_users", methods={"POST"})
+     * @EXT\ParamConverter("badge", class="ClarolineOpenBadgeBundle:BadgeClass", options={"mapping": {"badge": "uuid"}})
+     */
+    public function recalculateAction(BadgeClass $badge): JsonResponse
+    {
+        $this->checkPermission('GRANT', $badge, [], true);
+
+        if (empty($badge->getRules())) {
+            // we can only recompute badges with auto rules
+            throw new InvalidDataException('The badge have no rules to check.');
+        }
+
+        $this->manager->grantAll($badge);
+
+        return new JsonResponse();
     }
 }

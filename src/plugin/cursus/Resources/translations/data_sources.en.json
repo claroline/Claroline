@@ -3,6 +3,8 @@
   "my_course_sessions_desc": "Allows to list the sessions to which the current user is registered.",
   "public_course_sessions": "List of public training sessions",
   "public_course_sessions_desc": "Allows to list sessions with public registrations.",
+  "course_sessions": "List of training sessions",
+  "course_sessions_desc": "Allows to list training sessions.",
   "all_courses": "List of courses",
   "public_courses_desc": "Allow to list all public courses.",
   "training_events": "List of session events",

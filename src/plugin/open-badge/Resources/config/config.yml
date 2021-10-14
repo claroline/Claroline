@@ -19,6 +19,7 @@ plugin:
           type: list
           context: [workspace, desktop]
           tags: [activity, community]
+
         - name: my_badges
           type: list
           context: [workspace, desktop]
@@ -26,4 +27,17 @@ plugin:
 
     templates:
         - name: badge_certificate
-          placeholders: [badge_name, badge_description, badge_image, badge_duration, assertion_id, issued_on, issuer_name, issuer_email, issuer_phone, issuer_street, issuer_street_number, issuer_box_number, issuer_pc, issuer_town, issuer_country]
+          placeholders:
+              - badge_name
+              - badge_description
+              - badge_image
+              - badge_duration
+              - assertion_id
+              - issued_on
+              - issuer_name
+              - issuer_email
+              - issuer_phone
+              - issuer_street
+              - issuer_pc
+              - issuer_town
+              - issuer_country

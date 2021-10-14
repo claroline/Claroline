@@ -11,10 +11,8 @@ services:
         arguments:
             - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
             - '@Claroline\OpenBadgeBundle\Serializer\BadgeClassSerializer'
-            - '@Claroline\OpenBadgeBundle\Serializer\ProfileSerializer'
             - '@router'
             - '@Claroline\OpenBadgeBundle\Serializer\VerificationObjectSerializer'
-            - '@Claroline\OpenBadgeBundle\Serializer\IdentityObjectSerializer'
 
     Claroline\OpenBadgeBundle\Serializer\BadgeClassSerializer:
         tags: [claroline.serializer]
