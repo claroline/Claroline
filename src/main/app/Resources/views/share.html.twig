@@ -6,18 +6,15 @@
 
         <title>{{ title }}</title>
         <meta property="og:title" content="{{ title }}" />
-        <meta name="twitter:title" content="{{ title }}" />
 
         <meta property="og:type" content="website" />
 
         {% if thumbnail is not empty %}
-            <meta property="og:image" content="{{ asset(thumbnail) }}"/>
-            <meta name="twitter:image" content="{{ asset(thumbnail) }}"/>
+            <meta property="og:image" content="{{ app.request.getUriForPath(thumbnail) }}"/>
         {% endif %}
 
         <meta name="description" content="{{ description }}" />
         <meta property="og:description" content="{{ description }}" />
-        <meta name="twitter:description" content="{{ description }}" />
     </head>
 
     <body>
