@@ -58,7 +58,9 @@ const PageSimple = {
      */
     meta: T.shape({
       title: T.string,
-      description: T.string
+      description: T.string,
+      poster: T.string,
+      type: T.string
     })
   },
   defaultProps: {

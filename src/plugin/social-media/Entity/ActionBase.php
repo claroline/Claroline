@@ -16,7 +16,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\MappedSuperclass
- * Class ActionBase
  */
 class ActionBase
 {

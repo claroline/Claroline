@@ -70,22 +70,6 @@ class Version20150506111907 extends AbstractMigration
             ) DEFAULT CHARACTER SET UTF8 COLLATE UTF8_unicode_ci ENGINE = InnoDB
         ');
         $this->addSql('
-            CREATE TABLE icap__socialmedia_wall_item (
-                id INT AUTO_INCREMENT NOT NULL, 
-                like_id INT DEFAULT NULL, 
-                share_id INT DEFAULT NULL, 
-                comment_id INT DEFAULT NULL, 
-                user_id INT DEFAULT NULL, 
-                creation_date DATETIME NOT NULL, 
-                visible TINYINT(1) NOT NULL, 
-                INDEX IDX_436BC420859BFA32 (like_id), 
-                INDEX IDX_436BC4202AE63FDB (share_id), 
-                INDEX IDX_436BC420F8697D13 (comment_id), 
-                INDEX IDX_436BC420A76ED395 (user_id), 
-                PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET UTF8 COLLATE UTF8_unicode_ci ENGINE = InnoDB
-        ');
-        $this->addSql('
             ALTER TABLE icap__socialmedia_comment 
             ADD CONSTRAINT FK_6FC00C3089329D25 FOREIGN KEY (resource_id) 
             REFERENCES claro_resource_node (id) 
@@ -133,46 +117,10 @@ class Version20150506111907 extends AbstractMigration
             REFERENCES claro_user (id) 
             ON DELETE CASCADE
         ');
-        $this->addSql('
-            ALTER TABLE icap__socialmedia_wall_item 
-            ADD CONSTRAINT FK_436BC420859BFA32 FOREIGN KEY (like_id) 
-            REFERENCES icap__socialmedia_like (id) 
-            ON DELETE CASCADE
-        ');
-        $this->addSql('
-            ALTER TABLE icap__socialmedia_wall_item 
-            ADD CONSTRAINT FK_436BC4202AE63FDB FOREIGN KEY (share_id) 
-            REFERENCES icap__socialmedia_share (id) 
-            ON DELETE CASCADE
-        ');
-        $this->addSql('
-            ALTER TABLE icap__socialmedia_wall_item 
-            ADD CONSTRAINT FK_436BC420F8697D13 FOREIGN KEY (comment_id) 
-            REFERENCES icap__socialmedia_comment (id) 
-            ON DELETE CASCADE
-        ');
-        $this->addSql('
-            ALTER TABLE icap__socialmedia_wall_item 
-            ADD CONSTRAINT FK_436BC420A76ED395 FOREIGN KEY (user_id) 
-            REFERENCES claro_user (id) 
-            ON DELETE CASCADE
-        ');
     }
 
     public function down(Schema $schema): void
     {
-        $this->addSql('
-            ALTER TABLE icap__socialmedia_wall_item 
-            DROP FOREIGN KEY FK_436BC420F8697D13
-        ');
-        $this->addSql('
-            ALTER TABLE icap__socialmedia_wall_item 
-            DROP FOREIGN KEY FK_436BC420859BFA32
-        ');
-        $this->addSql('
-            ALTER TABLE icap__socialmedia_wall_item 
-            DROP FOREIGN KEY FK_436BC4202AE63FDB
-        ');
         $this->addSql('
             DROP TABLE icap__socialmedia_comment
         ');
@@ -184,9 +132,6 @@ class Version20150506111907 extends AbstractMigration
         ');
         $this->addSql('
             DROP TABLE icap__socialmedia_share
-        ');
-        $this->addSql('
-            DROP TABLE icap__socialmedia_wall_item
         ');
     }
 }

@@ -285,6 +285,7 @@ services:
             - '@Claroline\CoreBundle\Manager\Resource\ResourceRestrictionsManager'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@security.authorization_checker'
+            - '@Claroline\CoreBundle\Library\RoutingHelper'
 
     Claroline\CoreBundle\Controller\SearchController:
         arguments:

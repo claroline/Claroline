@@ -38,17 +38,11 @@ class ShareActionManager
      */
     protected $resourceNodeRepository;
 
-    /**
-     * @var WallItemManager
-     */
-    protected $wallItemManager;
-
     protected $router;
 
-    public function __construct(EntityManager $em, WallItemManager $wallItemManager, Router $router)
+    public function __construct(EntityManager $em, Router $router)
     {
         $this->em = $em;
-        $this->wallItemManager = $wallItemManager;
         $this->router = $router;
         $this->shareActionRepository = $em->getRepository('IcapSocialmediaBundle:ShareAction');
         $this->resourceNodeRepository = $em->getRepository('ClarolineCoreBundle:Resource\ResourceNode');
@@ -81,7 +75,6 @@ class ShareActionManager
         $share->setNetwork($network);
 
         $this->em->persist($share);
-        $this->wallItemManager->createWallItem($share);
         $this->em->flush();
 
         return $return;

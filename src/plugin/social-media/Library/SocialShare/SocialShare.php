@@ -25,7 +25,6 @@ class SocialShare
     {
         $this->registerNetwork(new Facebook());
         $this->registerNetwork(new Twitter());
-        $this->registerNetwork(new GooglePlus());
         $this->registerNetwork(new LinkedIn());
     }
 
