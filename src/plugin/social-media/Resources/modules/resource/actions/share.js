@@ -4,8 +4,6 @@ import {trans} from '#/main/app/intl/translation'
 import {MODAL_BUTTON} from '#/main/app/buttons'
 
 import {MODAL_SHARE} from '#/plugin/social-media/modals/share'
-import {param} from '#/main/app/config'
-
 
 export default (resourceNodes) => ({
   name: 'share',
@@ -14,6 +12,6 @@ export default (resourceNodes) => ({
   label: trans('share', {}, 'actions'),
   modal: [MODAL_SHARE, {
     title: resourceNodes[0].name,
-    url: `${param('serverUrl')}/${url(['claro_resource_share', {id: resourceNodes[0].id}])}`
+    url: url(['claro_resource_share', {id: resourceNodes[0].id}, true])
   }]
 })
