@@ -76,6 +76,10 @@ const CourseForm = (props) =>
             name: 'organizations',
             type: 'organizations',
             label: trans('organizations')
+          }, {
+            name: 'resource',
+            type: 'resource',
+            label: trans('resource')
           }
         ]
       }, {

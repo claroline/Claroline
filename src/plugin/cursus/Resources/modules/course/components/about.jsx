@@ -247,6 +247,16 @@ const CourseAbout = (props) => {
             />
           }
 
+          {!isEmpty(props.course.resource) &&
+            <Button
+              className="btn btn-block btn-emphasis"
+              type={LINK_BUTTON}
+              label={trans('show_resources', {}, 'actions')}
+              target={resourceRoute(props.course.resource)}
+              primary={false}
+            />
+          }
+
           {isEmpty(props.activeSession) && !get(props.course, 'display.hideSessions') &&
             <Button
               className="btn btn-block btn-emphasis"

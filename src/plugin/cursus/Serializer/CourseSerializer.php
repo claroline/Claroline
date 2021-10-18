@@ -15,15 +15,18 @@ use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer;
+use Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer;
 use Claroline\CoreBundle\API\Serializer\User\OrganizationSerializer;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer;
 use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Organization\Organization;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
+use Claroline\CoreBundle\Repository\Resource\ResourceNodeRepository;
 use Claroline\CoreBundle\Repository\WorkspaceRepository;
 use Claroline\CursusBundle\Entity\Course;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -50,11 +53,17 @@ class CourseSerializer
     private $orgaSerializer;
     /** @var WorkspaceSerializer */
     private $workspaceSerializer;
+    /** @var ResourceNodeSerializer */
+    private $resourceSerializer;
 
+    /** @var OrganizationRepository */
     private $orgaRepo;
     /** @var WorkspaceRepository */
     private $workspaceRepo;
+    /** @var CourseRepository */
     private $courseRepo;
+    /** @var ResourceNodeRepository */
+    private $resourceRepo;
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
@@ -64,7 +73,8 @@ class CourseSerializer
         PublicFileSerializer $fileSerializer,
         UserSerializer $userSerializer,
         OrganizationSerializer $orgaSerializer,
-        WorkspaceSerializer $workspaceSerializer
+        WorkspaceSerializer $workspaceSerializer,
+        ResourceNodeSerializer $resourceSerializer
     ) {
         $this->authorization = $authorization;
         $this->tokenStorage = $tokenStorage;
@@ -74,10 +84,12 @@ class CourseSerializer
         $this->userSerializer = $userSerializer;
         $this->orgaSerializer = $orgaSerializer;
         $this->workspaceSerializer = $workspaceSerializer;
+        $this->resourceSerializer = $resourceSerializer;
 
         $this->orgaRepo = $om->getRepository(Organization::class);
         $this->workspaceRepo = $om->getRepository(Workspace::class);
         $this->courseRepo = $om->getRepository(Course::class);
+        $this->resourceRepo = $om->getRepository(ResourceNode::class);
     }
 
     public function getSchema()
@@ -156,6 +168,7 @@ class CourseSerializer
                 'children' => array_map(function (Course $child) {
                     return $this->serialize($child, [Options::SERIALIZE_MINIMAL]);
                 }, $course->getChildren()->toArray()),
+                'resource' => $course->getResource() ? $this->resourceSerializer->serialize($course->getResource(), [Options::SERIALIZE_MINIMAL]) : null,
             ]);
         }
 
@@ -209,6 +222,10 @@ class CourseSerializer
                 $creator = $this->om->getObject($data['meta']['creator'], User::class);
                 $course->setCreator($creator);
             }
+        }
+
+        if (array_key_exists('resource', $data)) {
+            $course->setResource(is_null($data['resource']) ? null : $this->resourceRepo->findOneBy(['uuid' => $data['resource']['id']]));
         }
 
         if (isset($data['parent'])) {

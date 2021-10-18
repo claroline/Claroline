@@ -12,6 +12,7 @@
 namespace Claroline\CursusBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Organization\Organization;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -112,6 +113,14 @@ class Course extends AbstractTraining
      * @ORM\JoinTable(name="claro_cursusbundle_course_organizations")
      */
     private $organizations;
+
+    /**
+     * @var ResourceNode
+     *
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
+     * @ORM\JoinColumn(name="resource_id", nullable=true, onDelete="SET NULL")
+     */
+    private $resource;
 
     /**
      * Course constructor.
@@ -272,6 +281,16 @@ class Course extends AbstractTraining
     public function setParent(Course $parent = null)
     {
         $this->parent = $parent;
+    }
+
+    public function getResource()
+    {
+        return $this->resource;
+    }
+
+    public function setResource(ResourceNode $resource = null)
+    {
+        $this->resource = $resource;
     }
 
     public function getChildren()
