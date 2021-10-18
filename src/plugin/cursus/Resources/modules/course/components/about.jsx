@@ -74,7 +74,7 @@ CurrentRegistration.propTypes = {
 
 const CourseAbout = (props) => {
   const availableSessions = props.availableSessions
-    .filter(session => !props.activeSession || props.activeSession.id !== session.id)
+    .filter(session => (!props.activeSession || props.activeSession.id !== session.id) && !get(session, 'restrictions.hidden'))
 
   const selfRegistration = canSelfRegister(props.course, props.activeSession, !isEmpty(props.activeSessionRegistration) || !isEmpty(props.courseRegistration))
 
@@ -440,11 +440,11 @@ const CourseAbout = (props) => {
             )}
 
             {isEmpty(availableSessions) &&
-            <ContentPlaceholder
-              icon="fa fa-fw fa-calendar-week"
-              title={trans('no_available_session', {}, 'cursus')}
-              help={trans('no_available_session_help', {}, 'cursus')}
-            />
+              <ContentPlaceholder
+                icon="fa fa-fw fa-calendar-week"
+                title={trans('no_available_session', {}, 'cursus')}
+                help={trans('no_available_session_help', {}, 'cursus')}
+              />
             }
           </Fragment>
         }
