@@ -8,8 +8,3 @@ services:
        arguments:
           - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@event_dispatcher'
-
-    Icap\SocialmediaBundle\Manager\ShareActionManager:
-       arguments:
-          - '@doctrine.orm.entity_manager'
-          - '@router'

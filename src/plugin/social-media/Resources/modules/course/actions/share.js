@@ -13,5 +13,6 @@ export default (courses) => ({
   modal: [MODAL_SHARE, {
     title: courses[0].name,
     url: url(['apiv2_cursus_course_share', {id: courses[0].id}, true])
-  }]
+  }],
+  group: trans('community')
 })

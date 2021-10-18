@@ -14,7 +14,6 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Repository\Resource\ResourceNodeRepository;
-use Doctrine\ORM\EntityManager;
 use Icap\SocialmediaBundle\Entity\LikeAction;
 use Icap\SocialmediaBundle\Event\Log\LogSocialmediaLikeEvent;
 use Icap\SocialmediaBundle\Repository\LikeActionRepository;
