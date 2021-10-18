@@ -89,7 +89,9 @@ services:
 
     Claroline\CoreBundle\API\Transfer\Action\User\Delete: ~
 
-    Claroline\CoreBundle\API\Transfer\Action\User\Update: ~
+    Claroline\CoreBundle\API\Transfer\Action\User\Update:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     Claroline\CoreBundle\API\Transfer\Action\User\Enable:
         arguments:
