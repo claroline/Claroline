@@ -81,7 +81,6 @@ class LikeActionManager
         $this->om->persist($like);
         $this->om->flush();
 
-
         $this->dispatcher->dispatch(new LogSocialmediaLikeEvent($like), 'log');
 
         return $like;

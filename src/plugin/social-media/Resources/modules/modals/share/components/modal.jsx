@@ -20,17 +20,17 @@ const ShareModal = (props) => {
             id: 'facebook',
             label: 'Facebook',
             icon: 'fa fa-fw fa-facebook',
-            description: 'Partager sur Facebook',
+            description: trans('share_on', {network: 'Facebook'}, 'icap_socialmedia')
           }, {
             id: 'linkedin',
             label: 'LinkedIn',
             icon: 'fa fa-fw fa-linkedin',
-            description: 'Partager sur LinkedIn',
+            description: trans('share_on', {network: 'LinkedIn'}, 'icap_socialmedia')
           }, {
             id: 'twitter',
             label: 'Twitter',
             icon: 'fa fa-fw fa-twitter',
-            description: 'Partager sur Twitter',
+            description: trans('share_on', {network: 'Twitter'}, 'icap_socialmedia')
           }
         ]}
         handleSelect={(type) => {
