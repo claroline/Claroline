@@ -19,6 +19,7 @@ use Claroline\CoreBundle\Entity\Resource\MenuAction;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Exception\ResourceNotFoundException;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
+use Claroline\CoreBundle\Library\RoutingHelper;
 use Claroline\CoreBundle\Manager\Resource\ResourceActionManager;
 use Claroline\CoreBundle\Manager\Resource\ResourceRestrictionsManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
@@ -61,6 +62,8 @@ class ResourceController
     private $restrictionsManager;
     /** @var ObjectManager */
     private $om;
+    /** @var RoutingHelper */
+    private $routing;
 
     public function __construct(
         TokenStorageInterface $tokenStorage,
@@ -70,7 +73,8 @@ class ResourceController
         ResourceActionManager $actionManager,
         ResourceRestrictionsManager $restrictionsManager,
         ObjectManager $om,
-        AuthorizationCheckerInterface $authorization
+        AuthorizationCheckerInterface $authorization,
+        RoutingHelper $routing
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->templating = $templating;
@@ -80,6 +84,7 @@ class ResourceController
         $this->restrictionsManager = $restrictionsManager;
         $this->om = $om;
         $this->authorization = $authorization;
+        $this->routing = $routing;
     }
 
     /**
@@ -243,6 +248,22 @@ class ResourceController
         return new JsonResponse(array_map(function (Response $response) {
             return json_decode($response->getContent(), true);
         }, $responses));
+    }
+
+    /**
+     * @Route("/share/{id}", name="claro_resource_share")
+     * @EXT\ParamConverter("resourceNode", class="ClarolineCoreBundle:Resource\ResourceNode", options={"mapping": {"id": "uuid"}})
+     */
+    public function shareAction(ResourceNode $resourceNode): Response
+    {
+        return new Response(
+            $this->templating->render('@ClarolineApp/share.html.twig', [
+                'url' => $this->routing->resourceUrl($resourceNode),
+                'title' => $resourceNode->getName(),
+                'thumbnail' => $resourceNode->getThumbnail(),
+                'description' => $resourceNode->getDescription(),
+            ])
+        );
     }
 
     /**

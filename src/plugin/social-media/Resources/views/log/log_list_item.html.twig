@@ -4,12 +4,4 @@
 
 {% if constant('Icap\\SocialmediaBundle\\Event\\Log\\LogSocialmediaLikeEvent::ACTION') == log.action %}
     {{ 'log.socialmedia.like_action'|trans({'%resource%': resource}, 'log')|raw }}
-{% elseif constant('Icap\\SocialmediaBundle\\Event\\Log\\LogSocialmediaShareEvent::ACTION') == log.action %}
-    {% set network = "claroline" %}
-    {% if log.details.share is defined and log.details.share.network is defined %}
-    {% set network = log.details.share.network %}
-    {% endif %}
-    {{ 'log.socialmedia.share_action'|trans({'%resource%': resource, '%network%': network}, 'log')|raw }}
-{% elseif constant('Icap\\SocialmediaBundle\\Event\\Log\\LogSocialmediaCommentEvent::ACTION') == log.action %}
-    {{ 'log.socialmedia.comment_action'|trans({'%resource%': resource}, 'log')|raw }}
 {% endif %}

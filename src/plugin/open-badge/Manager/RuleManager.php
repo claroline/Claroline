@@ -59,7 +59,7 @@ class RuleManager
 
         $recomputeUsers = [];
         foreach ($users as $user) {
-            if (!in_array($user->getUuid(), $owners)) {
+            if ($user->isEnabled() && !$user->isRemoved() && !in_array($user->getUuid(), $owners)) {
                 $this->createEvidence($rule, $user);
 
                 $recomputeUsers[$user->getUuid()] = $user; // using uuid as key will automatically dedup the array

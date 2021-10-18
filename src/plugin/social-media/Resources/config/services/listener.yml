@@ -4,8 +4,7 @@ services:
         autoconfigure: false
         public: true
 
-
-    Icap\SocialmediaBundle\Listener\ApiListener:
+    Icap\SocialmediaBundle\Listener\ResourceListener:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
         tags:
@@ -30,17 +29,4 @@ services:
             - { name: kernel.event_listener, event: create_notification_item_resource-icap_socialmedia-comment_action, method: onCreateNotificationItem }
             - { name: kernel.event_listener, event: create_notification_item_resource-icap_socialmedia-like_action, method: onCreateNotificationItem }
             - { name: kernel.event_listener, event: create_notification_item_resource-icap_socialmedia-share_action, method: onCreateNotificationItem }
-
-    Icap\SocialmediaBundle\Listener\NotificationUserParametersListener:
-        tags:
             - { name: kernel.event_listener, event: icap_notification_user_parameters_event, method: onGetTypesForParameters }
-
-    Icap\SocialmediaBundle\Listener\ResourceActionsListener:
-        arguments:
-            - '@request_stack'
-            - '@http_kernel'
-        tags:
-            - { name: kernel.event_listener, event: resource_action_like_action, method: onLikeAction }
-            - { name: kernel.event_listener, event: resource_action_share_action, method: onShareAction }
-            - { name: kernel.event_listener, event: resource_action_comment_action, method: onCommentAction }
-            - { name: kernel.event_listener, event: resource_action_note_action, method: onNoteAction }

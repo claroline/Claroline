@@ -18,6 +18,7 @@ use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
+use Claroline\CoreBundle\Library\RoutingHelper;
 use Claroline\CoreBundle\Manager\Tool\ToolManager;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
@@ -31,11 +32,13 @@ use Dompdf\Dompdf;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Twig\Environment;
 
 /**
  * @Route("/cursus_course")
@@ -46,6 +49,10 @@ class CourseController extends AbstractCrudController
 
     /** @var TokenStorageInterface */
     private $tokenStorage;
+    /** @var Environment */
+    private $templating;
+    /** @var RoutingHelper */
+    private $routing;
     /** @var PlatformConfigurationHandler */
     private $config;
     /** @var ToolManager */
@@ -56,12 +63,16 @@ class CourseController extends AbstractCrudController
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         TokenStorageInterface $tokenStorage,
+        Environment $templating,
+        RoutingHelper $routing,
         PlatformConfigurationHandler $config,
         ToolManager $toolManager,
         CourseManager $manager
     ) {
         $this->authorization = $authorization;
         $this->tokenStorage = $tokenStorage;
+        $this->templating = $templating;
+        $this->routing = $routing;
         $this->config = $config;
         $this->toolManager = $toolManager;
         $this->manager = $manager;
@@ -198,6 +209,22 @@ class CourseController extends AbstractCrudController
             'availableSessions' => $sessions['data'],
             'registrations' => $registrations,
         ]);
+    }
+
+    /**
+     * @Route("/{id}/share", name="apiv2_cursus_course_share")
+     * @EXT\ParamConverter("course", class="ClarolineCursusBundle:Course", options={"mapping": {"id": "uuid"}})
+     */
+    public function shareAction(Course $course): Response
+    {
+        return new Response(
+            $this->templating->render('@ClarolineApp/share.html.twig', [
+                'url' => $this->routing->desktopUrl('trainings').'/catalog/'.$course->getSlug(),
+                'title' => $course->getName(),
+                'thumbnail' => $course->getThumbnail(),
+                'description' => $course->getDescription(),
+            ])
+        );
     }
 
     /**

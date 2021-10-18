@@ -5,17 +5,11 @@ namespace Icap\SocialmediaBundle\Listener;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Event\Resource\DecorateResourceNodeEvent;
 
-/**
- * Class ApiListener.
- */
-class ApiListener
+class ResourceListener
 {
     /** @var ObjectManager */
     private $om;
 
-    /**
-     * ApiListener constructor.
-     */
     public function __construct(ObjectManager $om)
     {
         $this->om = $om;
