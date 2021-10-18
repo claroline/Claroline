@@ -10,12 +10,14 @@
         <meta property="og:type" content="website" />
 
         {% if thumbnail is not empty %}
-            <meta property="og:image" content="{{ app.request.getUriForPath(thumbnail) }}"/>
+            <meta property="og:image" content="{{ app.request.getUriForPath('/' ~ thumbnail) }}"/>
         {% endif %}
 
         <meta name="description" content="{{ description }}" />
         <meta property="og:description" content="{{ description }}" />
     </head>
+
+    {{ app.request.uri }}
 
     <body>
         {#
