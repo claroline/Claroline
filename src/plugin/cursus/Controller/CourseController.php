@@ -363,6 +363,35 @@ class CourseController extends AbstractCrudController
     }
 
     /**
+     * @Route("/{id}/move/pending", name="apiv2_cursus_course_move_pending", methods={"PUT"})
+     * @EXT\ParamConverter("course", class="Claroline\CursusBundle\Entity\Course", options={"mapping": {"id": "uuid"}})
+     */
+    public function moveToPendingAction(Course $course, Request $request): JsonResponse
+    {
+        $this->checkPermission('REGISTER', $course, [], true);
+
+        $data = $this->decodeRequest($request);
+        if (empty($data['sessionUsers'])) {
+            throw new InvalidDataException('Missing the user registrations to move.');
+        }
+
+        $sessionUsers = [];
+        foreach ($data['sessionUsers'] as $sessionUserId) {
+            $sessionUser = $this->om->getRepository(SessionUser::class)->findOneBy([
+                'uuid' => $sessionUserId,
+            ]);
+
+            if (!empty($sessionUser)) {
+                $sessionUsers[] = $sessionUser;
+            }
+        }
+
+        $this->manager->moveToPending($course, $sessionUsers);
+
+        return new JsonResponse();
+    }
+
+    /**
      * @Route("/{id}/self/register", name="apiv2_cursus_course_self_register", methods={"PUT"})
      * @EXT\ParamConverter("course", class="Claroline\CursusBundle\Entity\Course", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})

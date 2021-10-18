@@ -51,6 +51,14 @@ const CourseUsers = (props) =>
             callback: () => props.moveUsers(props.activeSession.id, selected[0].id, rows, props.type)
           })
         }]
+      }, {
+        name: 'move-pending',
+        type: CALLBACK_BUTTON,
+        icon: 'fa fa-fw fa-hourglass-half',
+        label: trans('move-pending', {}, 'actions'),
+        displayed: hasPermission('register', props.activeSession),
+        group: trans('management'),
+        callback: () => props.movePending(rows)
       }
     ]}
     add={{
@@ -75,7 +83,8 @@ CourseUsers.propTypes = {
   ),
   addUsers: T.func.isRequired,
   moveUsers: T.func.isRequired,
-  inviteUsers: T.func.isRequired
+  inviteUsers: T.func.isRequired,
+  movePending: T.func.isRequired
 }
 
 const CourseGroups = (props) =>
@@ -224,6 +233,7 @@ const CourseParticipants = (props) =>
                     addUsers={props.addUsers}
                     inviteUsers={props.inviteUsers}
                     moveUsers={props.moveUsers}
+                    movePending={(sessionUsers) => props.movePending(props.course.id, sessionUsers)}
                   />
                 )
 
@@ -256,6 +266,7 @@ const CourseParticipants = (props) =>
                       addUsers={props.addUsers}
                       inviteUsers={props.inviteUsers}
                       moveUsers={props.moveUsers}
+                      movePending={(sessionUsers) => props.movePending(props.course.id, sessionUsers)}
                     />
                   </Fragment>
                 )
@@ -329,6 +340,14 @@ const CourseParticipants = (props) =>
                               callback: () => props.moveUsers(props.activeSession.id, selected[0].id, rows, constants.LEARNER_TYPE)
                             })
                           }]
+                        }, {
+                          name: 'move-pending',
+                          type: CALLBACK_BUTTON,
+                          icon: 'fa fa-fw fa-hourglass-half',
+                          label: trans('move-pending', {}, 'actions'),
+                          displayed: hasPermission('register', props.activeSession),
+                          group: trans('management'),
+                          callback: () => props.movePending(props.course.id, rows)
                         }
                       ]}
                       add={{
@@ -372,7 +391,8 @@ CourseParticipants.propTypes = {
   moveGroups: T.func.isRequired,
   addPending: T.func.isRequired,
   confirmPending: T.func.isRequired,
-  validatePending: T.func.isRequired
+  validatePending: T.func.isRequired,
+  movePending: T.func.isRequired
 }
 
 export {

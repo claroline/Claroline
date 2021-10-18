@@ -6,5 +6,6 @@
   "confirm_registration": "Confirmer l'inscription",
   "validate_registration": "Valider l'inscription",
   "send_invitation": "Envoyer une invitation",
-  "open-training": "Ouvrir la formation"
+  "open-training": "Ouvrir la formation",
+  "move-pending": "Déplacer en liste d'attente"
 }

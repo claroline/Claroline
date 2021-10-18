@@ -24,14 +24,7 @@ const CoursePending = (props) =>
       url={['apiv2_cursus_course_list_users', {id: props.course.id}]}
       unregisterUrl={['apiv2_cursus_course_remove_users', {id: props.course.id}]}
       actions={(rows) => [
-        /*{
-          name: 'invite',
-          type: CALLBACK_BUTTON,
-          icon: 'fa fa-fw fa-envelope',
-          label: trans('send_invitation', {}, 'actions'),
-          callback: () => props.inviteUsers(props.course.id, rows),
-          displayed: hasPermission('register', props.course)
-        }, */{
+        {
           name: 'move',
           type: MODAL_BUTTON,
           icon: 'fa fa-fw fa-arrows',

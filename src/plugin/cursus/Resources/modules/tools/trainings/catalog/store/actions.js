@@ -89,6 +89,23 @@ actions.moveCourseUsers = (courseId, targetId, courseUsers) => ({
   }
 })
 
+actions.movePending = (courseId, sessionUsers) => ({
+  [API_REQUEST]: {
+    url: ['apiv2_cursus_course_move_pending', {id: courseId}],
+    request: {
+      method: 'PUT',
+      body: JSON.stringify({
+        sessionUsers: sessionUsers.map(sessionUser => sessionUser.id)
+      })
+    },
+    success: (data, dispatch) => {
+      dispatch(listActions.invalidateData(selectors.STORE_NAME+'.coursePending'))
+      // TODO : do something better (I need it to recompute session available space)
+      dispatch(actions.openSession(sessionUsers[0].session.id, true))
+    }
+  }
+})
+
 // Sessions registration management
 
 actions.addUsers = (sessionId, users, type) => ({
