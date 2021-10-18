@@ -58,7 +58,7 @@ const CoursePage = (props) => {
       }}
 
       toolbar="edit | fullscreen more"
-      actions={getActions(props.toolData, props.currentContext, {}, props.basePath).then(pluginActions => {
+      actions={getActions([props.course], props.currentContext, {}, props.basePath).then(pluginActions => {
         if (props.actions instanceof Promise) {
           return props.actions.then(promisedActions => promisedActions.concat(pluginActions, baseActions))
         }
