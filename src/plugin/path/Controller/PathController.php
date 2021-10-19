@@ -135,9 +135,12 @@ class PathController extends AbstractCrudController
     {
         $this->checkPermission('EDIT', $path->getResourceNode(), [], true);
 
-        return new JsonResponse(
-            $this->userProgressionManager->getStepsProgressionForUser($path, $user)
-        );
+        return new JsonResponse([
+            'lastAttempt' => $this->serializer->serialize(
+                $this->userProgressionManager->getCurrentAttempt($path, $user, false)
+            ),
+            'progression' => $this->userProgressionManager->getStepsProgressionForUser($path, $user),
+        ]);
     }
 
     /**

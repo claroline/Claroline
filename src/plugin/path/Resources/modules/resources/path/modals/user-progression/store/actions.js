@@ -10,9 +10,6 @@ actions.loadUserStepsProgression = makeActionCreator(USER_STEPS_PROGRESSION_LOAD
 actions.fetchUserStepsProgression = (resourceId, userId) => ({
   [API_REQUEST]: {
     url: ['innova_path_user_steps_progression_fetch', {id: resourceId, user: userId}],
-    request: {
-      method: 'GET'
-    },
     success: (data, dispatch) => {
       dispatch(actions.loadUserStepsProgression(data))
     }
@@ -20,5 +17,5 @@ actions.fetchUserStepsProgression = (resourceId, userId) => ({
 })
 
 actions.resetUserStepsProgression = () => (dispatch) => {
-  dispatch(actions.loadUserStepsProgression({}))
+  dispatch(actions.loadUserStepsProgression({progression: {}, lastAttempt: null}))
 }

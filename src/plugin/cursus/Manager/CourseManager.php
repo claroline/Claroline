@@ -17,6 +17,7 @@ use Claroline\CoreBundle\Manager\Template\TemplateManager;
 use Claroline\CursusBundle\Entity\Course;
 use Claroline\CursusBundle\Entity\Registration\AbstractRegistration;
 use Claroline\CursusBundle\Entity\Registration\CourseUser;
+use Claroline\CursusBundle\Entity\Registration\SessionUser;
 use Claroline\CursusBundle\Entity\Session;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -138,10 +139,34 @@ class CourseManager
         $this->removeUsers($courseUsers);
 
         // register to the new session
-        $this->sessionManager->addUsers($targetSession, array_map(function (CourseUser $sessionUser) {
-            return $sessionUser->getUser();
+        $this->sessionManager->addUsers($targetSession, array_map(function (CourseUser $courseUser) {
+            return $courseUser->getUser();
         }, $courseUsers), AbstractRegistration::LEARNER, true);
 
         $this->om->endFlushSuite();
+    }
+
+    /**
+     * @param SessionUser[] $sessionUsers
+     */
+    public function moveToPending(Course $course, array $sessionUsers)
+    {
+        if (!empty($sessionUsers)) {
+            $session = $sessionUsers[0]->getSession();
+
+            if (!empty($session) && !empty($course)) {
+                $this->om->startFlushSuite();
+
+                // remove users from session
+                $this->sessionManager->removeUsers($session, $sessionUsers);
+
+                // add users to the pending list of the course
+                $this->addUsers($course, array_map(function (SessionUser $sessionUser) {
+                    return $sessionUser->getUser();
+                }, $sessionUsers));
+
+                $this->om->endFlushSuite();
+            }
+        }
     }
 }
