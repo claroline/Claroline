@@ -10,7 +10,8 @@ const UserProgressionModal = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
       basePath: resourceSelectors.path(state),
-      stepsProgression: selectors.stepsProgression(state)
+      stepsProgression: selectors.stepsProgression(state),
+      lastAttempt: selectors.lastAttempt(state)
     }),
     (dispatch) => ({
       fetchUserStepsProgression(resourceId, userId) {
