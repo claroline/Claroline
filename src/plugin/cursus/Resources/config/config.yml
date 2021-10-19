@@ -162,7 +162,7 @@ plugin:
               - subscriptions_count
               - subscriptions
 
-        - name: training_quota_set_status
+        - name: training_quota_status_change
           placeholders:
               - session_name
               - user_first_name
@@ -170,3 +170,35 @@ plugin:
               - session_start
               - session_end
               - status
+
+        - name: training_quota_status_validate
+          placeholders:
+              - session_name
+              - user_first_name
+              - user_last_name
+              - session_start
+              - session_end
+
+        - name: training_quota_status_managed
+          placeholders:
+              - session_name
+              - user_first_name
+              - user_last_name
+              - session_start
+              - session_end
+
+        - name: training_quota_status_refuse
+          placeholders:
+              - session_name
+              - user_first_name
+              - user_last_name
+              - session_start
+              - session_end
+
+        - name: training_quota_status_cancel
+          placeholders:
+              - session_name
+              - user_first_name
+              - user_last_name
+              - session_start
+              - session_end

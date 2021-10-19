@@ -104,7 +104,6 @@ class QuotaController extends AbstractCrudController
                 foreach ($organization->getChildren() as $child) {
                     $output[] = $child->getUuid();
                 }
-
                 return $output;
             }, []));
         }
@@ -262,21 +261,33 @@ class QuotaController extends AbstractCrudController
             return new JsonResponse('The status don\'t have been updated.', 500);
         }
 
-        if ($sessionUser->getStatus() != $status) {
+        $oldStatus = $sessionUser->getStatus();
+        if ($oldStatus != $status) {
+            $this->eventDispatcher->dispatch(new LogSubscriptionSetStatusEvent($sessionUser), 'log');
+
             // Execute action, dispatch event, send mail, etc
             switch ($status) {
                 case SessionUser::STATUS_VALIDATED:
                     $this->sessionManager->addUsers($sessionUser->getSession(), [$sessionUser->getUser()]);
+                    $this->quotaManager->sendValidatedStatusMail($sessionUser);
                     break;
                 case SessionUser::STATUS_MANAGED:
                     if (null == $quota || !$quota->useQuotas()) {
                         return new JsonResponse('The status don\'t can be changed to managed.', 500);
                     }
                     $this->sessionManager->addUsers($sessionUser->getSession(), [$sessionUser->getUser()]);
+                    $this->quotaManager->sendManagedStatusMail($sessionUser);
                     break;
                 case SessionUser::STATUS_PENDING:
+                    break;
                 case SessionUser::STATUS_REFUSED:
-                    $this->sessionManager->removeUsers($sessionUser->getSession(), [$sessionUser]);
+                    if ($oldStatus == SessionUser::STATUS_VALIDATED || $oldStatus == SessionUser::STATUS_MANAGED) {
+                        $this->quotaManager->sendCancelledStatusMail($sessionUser);
+                    }
+                    else {
+                        $this->quotaManager->sendRefusedStatusMail($sessionUser);
+                    }
+                    //$this->sessionManager->removeUsers($sessionUser->getSession(), [$sessionUser]);
                     break;
             }
 
@@ -284,9 +295,6 @@ class QuotaController extends AbstractCrudController
             $sessionUser->setStatus($status);
             $this->om->persist($sessionUser);
             $this->om->flush();
-
-            $this->eventDispatcher->dispatch(new LogSubscriptionSetStatusEvent($sessionUser), 'log');
-            $this->quotaManager->sendSetStatusMail($sessionUser);
         }
 
         return new JsonResponse([

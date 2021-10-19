@@ -108,7 +108,7 @@ class LoadTemplateData extends AbstractFixture implements ContainerAwareInterfac
             ';
         });
 
-        $this->createTemplate('training_quota_set_status', function ($locale) {
+        $this->createTemplate('training_quota_status_change', function ($locale) {
             return '
                 %session_name%<br/>
                 %user_first_name%<br/>
@@ -116,6 +116,46 @@ class LoadTemplateData extends AbstractFixture implements ContainerAwareInterfac
                 %session_start%<br/>
                 %session_end%<br/>
                 %status%<br/>
+            ';
+        });
+
+        $this->createTemplate('training_quota_status_validate', function ($locale) {
+            return '
+                %session_name%<br/>
+                %user_first_name%<br/>
+                %user_last_name%<br/>
+                %session_start%<br/>
+                %session_end%<br/>
+            ';
+        });
+
+        $this->createTemplate('training_quota_status_managed', function ($locale) {
+            return '
+                %session_name%<br/>
+                %user_first_name%<br/>
+                %user_last_name%<br/>
+                %session_start%<br/>
+                %session_end%<br/>
+            ';
+        });
+
+        $this->createTemplate('training_quota_status_refuse', function ($locale) {
+            return '
+                %session_name%<br/>
+                %user_first_name%<br/>
+                %user_last_name%<br/>
+                %session_start%<br/>
+                %session_end%<br/>
+            ';
+        });
+
+        $this->createTemplate('training_quota_status_cancel', function ($locale) {
+            return '
+                %session_name%<br/>
+                %user_first_name%<br/>
+                %user_last_name%<br/>
+                %session_start%<br/>
+                %session_end%<br/>
             ';
         });
 
