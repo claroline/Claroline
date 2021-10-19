@@ -14,33 +14,33 @@ class Version20211018113640 extends AbstractMigration
 {
     public function up(Schema $schema): void
     {
-        $this->addSql("
+        $this->addSql('
             ALTER TABLE claro_cursusbundle_course 
             ADD resource_id INT DEFAULT NULL
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE claro_cursusbundle_course 
             ADD CONSTRAINT FK_3359D34989329D25 FOREIGN KEY (resource_id) 
             REFERENCES claro_resource_node (id) 
             ON DELETE SET NULL
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             CREATE INDEX IDX_3359D34989329D25 ON claro_cursusbundle_course (resource_id)
-        ");
+        ');
     }
 
     public function down(Schema $schema): void
     {
-        $this->addSql("
+        $this->addSql('
             ALTER TABLE claro_cursusbundle_course 
             DROP FOREIGN KEY FK_3359D34989329D25
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             DROP INDEX IDX_3359D34989329D25 ON claro_cursusbundle_course
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE claro_cursusbundle_course 
             DROP resource_id
-        ");
+        ');
     }
 }
