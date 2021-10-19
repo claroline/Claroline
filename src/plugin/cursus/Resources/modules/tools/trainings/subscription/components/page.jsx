@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import isEmpty from 'lodash/isEmpty'
 import get from 'lodash/get'
 
-import {LINK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
+import {LINK_BUTTON, DOWNLOAD_BUTTON} from '#/main/app/buttons'
 import {trans} from '#/main/app/intl/translation'
 import {ContentLoader} from '#/main/app/content/components/loader'
 import {PageFull} from '#/main/app/page/components/full'
@@ -46,15 +46,18 @@ const SubscriptionPage = (props) => {
       }])}
       title={props.quota.organization.name}
       toolbar="fullscreen more"
-      actions={[{
-        name: 'export-pdf',
-        type: URL_BUTTON,
-        icon: 'fa fa-fw fa-file-pdf-o',
-        label: trans('export-pdf', {}, 'actions'),
-        group: trans('transfer'),
-        target: ['apiv2_cursus_quota_export', {id: props.quota.id, filters: props.filters}],
-        displayed: true
-      }]}
+      actions={[
+        {
+          name: 'export-csv',
+          type: DOWNLOAD_BUTTON,
+          icon: 'fa fa-fw fa-download',
+          label: trans('export', {}, 'actions'),
+          file: {
+            url: ['apiv2_cursus_quota_export', {id: props.quota.id, filters: props.filters}]
+          },
+          group: trans('transfer')
+        }
+      ]}
     >
       <Fragment>
         <div className="row">

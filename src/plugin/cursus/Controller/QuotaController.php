@@ -17,19 +17,17 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\CursusBundle\Entity\Quota;
 use Claroline\CursusBundle\Entity\Registration\SessionUser;
 use Claroline\CursusBundle\Event\Log\LogSubscriptionSetStatusEvent;
 use Claroline\CursusBundle\Manager\QuotaManager;
 use Claroline\CursusBundle\Manager\SessionManager;
-use Dompdf\Dompdf;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -152,10 +150,10 @@ class QuotaController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/pdf", name="apiv2_cursus_quota_export", methods={"GET"})
+     * @Route("/{id}/csv", name="apiv2_cursus_quota_export", methods={"GET"})
      * @EXT\ParamConverter("quota", class="Claroline\CursusBundle\Entity\Quota", options={"mapping": {"id": "uuid"}})
      */
-    public function exportAction(Quota $quota, Request $request): StreamedResponse
+    public function exportAction(Quota $quota, Request $request): BinaryFileResponse
     {
         $this->checkPermission('VALIDATE_SUBSCRIPTIONS', null, [], true);
 
@@ -170,24 +168,11 @@ class QuotaController extends AbstractCrudController
             $query['hiddenFilters']['ignored_status'] = SessionUser::STATUS_MANAGED;
         }
 
-        $subscriptions = $this->finder->searchEntities(SessionUser::class, $query)['data'];
+        $csvFilename = $this->crud->csv(Sessionuser::class, $query, []);
 
-        $domPdf = new Dompdf([
-            'isHtml5ParserEnabled' => true,
-            'isRemoteEnabled' => true,
-            'tempDir' => $this->config->getParameter('server.tmp_dir'),
-        ]);
-
-        $domPdf->loadHtml($this->quotaManager->generateFromTemplate($quota, $subscriptions, $request->getLocale()));
-
-        // Render the HTML as PDF
-        $domPdf->render();
-
-        return new StreamedResponse(function () use ($domPdf) {
-            echo $domPdf->output();
-        }, 200, [
-            'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'attachment; filename='.TextNormalizer::toKey($quota->getOrganization()->getName()).'.pdf',
+        return new BinaryFileResponse($csvFilename, 200, [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename={$this->getName()}.csv",
         ]);
     }
 
