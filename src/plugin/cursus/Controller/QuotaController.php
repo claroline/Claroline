@@ -104,6 +104,7 @@ class QuotaController extends AbstractCrudController
                 foreach ($organization->getChildren() as $child) {
                     $output[] = $child->getUuid();
                 }
+
                 return $output;
             }, []));
         }
@@ -281,10 +282,9 @@ class QuotaController extends AbstractCrudController
                 case SessionUser::STATUS_PENDING:
                     break;
                 case SessionUser::STATUS_REFUSED:
-                    if ($oldStatus == SessionUser::STATUS_VALIDATED || $oldStatus == SessionUser::STATUS_MANAGED) {
+                    if (SessionUser::STATUS_VALIDATED == $oldStatus || SessionUser::STATUS_MANAGED == $oldStatus) {
                         $this->quotaManager->sendCancelledStatusMail($sessionUser);
-                    }
-                    else {
+                    } else {
                         $this->quotaManager->sendRefusedStatusMail($sessionUser);
                     }
                     //$this->sessionManager->removeUsers($sessionUser->getSession(), [$sessionUser]);
