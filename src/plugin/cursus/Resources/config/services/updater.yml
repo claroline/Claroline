@@ -22,7 +22,7 @@ services:
             - '@Claroline\CoreBundle\Manager\PlanningManager'
         tags: [ 'claroline.platform.updater' ]
 
-    Claroline\CursusBundle\Installation\Updater\Updater130028:
+    Claroline\CursusBundle\Installation\Updater\Updater130027:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CursusBundle\DataFixtures\PostInstall\LoadTemplateData'
