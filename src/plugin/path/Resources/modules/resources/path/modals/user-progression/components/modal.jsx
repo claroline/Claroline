@@ -1,15 +1,18 @@
-import React from 'react'
+import React, {Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
+import get from 'lodash/get'
 import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {ContentSummary} from '#/main/app/content/components/summary'
+import {ScoreBox} from '#/main/core/layout/evaluation/components/score-box'
 import {UserEvaluation as UserEvaluationTypes} from '#/main/core/resource/prop-types'
 
 import {Path as PathTypes} from '#/plugin/path/resources/path/prop-types'
+
 
 const UserProgressionModal = props => {
   function getStepSummary(step) {
@@ -17,7 +20,19 @@ const UserProgressionModal = props => {
       id: step.id,
       type: LINK_BUTTON,
       icon: classes('step-progression fa fa-fw fa-circle', props.stepsProgression[step.id]),
-      label: step.title,
+      label: (
+        <Fragment>
+          {step.title}
+          {step.evaluated && get(props.path, 'display.showScore') && get(props.lastAttempt, `data.resources[${step.id}].max`, null) &&
+            <ScoreBox
+              score={get(props.lastAttempt, `data.resources[${step.id}].score`, null)}
+              scoreMax={get(props.lastAttempt, `data.resources[${step.id}].max`)}
+              size="sm"
+              style={{marginLeft: 'auto'}}
+            />
+          }
+        </Fragment>
+      ),
       target: `${props.basePath}/play/${step.slug}`,
       children: step.children ? step.children.map(getStepSummary) : [],
       onClick: () => props.fadeModal()
@@ -26,7 +41,7 @@ const UserProgressionModal = props => {
 
   return (
     <Modal
-      {...omit(props, 'evaluation', 'path', 'stepsProgression', 'fetchUserStepsProgression', 'resetUserStepsProgression')}
+      {...omit(props, 'basePath', 'evaluation', 'path', 'stepsProgression', 'fetchUserStepsProgression', 'resetUserStepsProgression')}
       icon="fa fa-fw fa-tasks"
       title={trans('progression')}
       subtitle={props.evaluation.user.name}
@@ -49,6 +64,7 @@ UserProgressionModal.propTypes = {
   evaluation: T.shape(
     UserEvaluationTypes.propTypes
   ).isRequired,
+  lastAttempt: T.object,
   path: T.shape(
     PathTypes.propTypes
   ).isRequired,
