@@ -204,10 +204,10 @@ const EventAbout = (props) =>
         </div>
       </div>
 
-      {props.registration &&
+      {props.registration && (!isEmpty(props.registration.users) || !isEmpty(props.registration.groups)) &&
         <CurrentRegistration
           eventFull={isFull(props.event)}
-          registration={props.registration}
+          registration={!isEmpty(props.registration.users) ? props.registration.users[0] : props.registration.groups[0]}
         />
       }
 
@@ -268,7 +268,8 @@ EventAbout.propTypes = {
     EventTypes.propTypes
   ).isRequired,
   registration: T.shape({
-
+    users: T.array,
+    groups: T.array
   }),
   register: T.func.isRequired
 }

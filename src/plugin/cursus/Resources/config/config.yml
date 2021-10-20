@@ -41,6 +41,11 @@ plugin:
           context: [workspace, desktop]
           tags: [community, event]
 
+        - name: my_training_events
+          type: list
+          context: [workspace, desktop]
+          tags: [community, event]
+
     templates:
         - name: training_course
           placeholders:
