@@ -25,6 +25,12 @@ class ScoTrackingFinder extends AbstractFinder
     {
         $qb->join('obj.sco', 'sco');
 
+        if (!in_array('user', $searches) && !in_array('userEmail', $searches)) {
+            // only return results for enabled users
+            $qb->join('obj.user', 'u');
+            $qb->andWhere('u.isEnabled = true AND u.isRemoved = false');
+        }
+
         $userJoin = false;
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {

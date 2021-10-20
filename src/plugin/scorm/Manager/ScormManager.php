@@ -12,13 +12,13 @@
 namespace Claroline\ScormBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\EvaluationBundle\Manager\ResourceEvaluationManager;
 use Claroline\ScormBundle\Entity\Sco;
 use Claroline\ScormBundle\Entity\Scorm;
 use Claroline\ScormBundle\Entity\ScoTracking;
-use Claroline\ScormBundle\Event\Log\LogScormResultEvent;
 use Claroline\ScormBundle\Library\ScormLib;
 use Claroline\ScormBundle\Manager\Exception\InvalidScormArchiveException;
 use Claroline\ScormBundle\Serializer\ScormSerializer;
@@ -233,10 +233,9 @@ class ScormManager
         return $scoTracking;
     }
 
-    public function updateScoTracking(Sco $sco, User $user, $mode, $data)
+    public function updateScoTracking(Sco $sco, User $user, $data)
     {
         $tracking = $this->generateScoTracking($sco, $user);
-        $tracking->setLatestDate(new \DateTime());
 
         $statusPriority = [
             'unknown' => 0,
@@ -249,6 +248,7 @@ class ScormManager
             'passed' => 6,
         ];
 
+        $duration = null;
         switch ($sco->getScorm()->getVersion()) {
             case Scorm::SCORM_12:
                 $scoreRaw = isset($data['cmi.core.score.raw']) ? intval($data['cmi.core.score.raw']) : null;
@@ -257,14 +257,13 @@ class ScormManager
                 $lessonStatus = isset($data['cmi.core.lesson_status']) ? $data['cmi.core.lesson_status'] : null;
                 $sessionTime = isset($data['cmi.core.session_time']) ? $data['cmi.core.session_time'] : null;
                 $sessionTimeInHundredth = $this->convertTimeInHundredth($sessionTime);
+                $duration = $sessionTimeInHundredth / 100;
                 $progression = isset($data['cmi.progress_measure']) ? floatval($data['cmi.progress_measure']) : 0;
 
-                $tracking->setDetails($data);
                 $tracking->setEntry($data['cmi.core.entry']);
                 $tracking->setExitMode($data['cmi.core.exit']);
                 $tracking->setLessonLocation($data['cmi.core.lesson_location']);
                 $tracking->setSessionTime($sessionTimeInHundredth);
-                $tracking->setSuspendData($data['cmi.suspend_data']);
 
                 // Compute total time
                 $totalTimeInHundredth = $this->convertTimeInHundredth($data['cmi.core.total_time']);
@@ -272,15 +271,15 @@ class ScormManager
                 // Persist total time
                 $tracking->setTotalTime($totalTimeInHundredth);
 
-                $bestScore = $tracking->getScoreRaw();
-                $bestStatus = $tracking->getLessonStatus();
-
                 // Update best score if the current score is better than the previous best score
+                $bestScore = $tracking->getScoreRaw();
                 if (empty($bestScore) || (!is_null($scoreRaw) && $scoreRaw > $bestScore)) {
                     $tracking->setScoreRaw($scoreRaw);
-                    $bestScore = $scoreRaw;
+                    $tracking->setScoreMin($scoreMin);
+                    $tracking->setScoreMax($scoreMax);
                 }
 
+                $bestStatus = $tracking->getLessonStatus();
                 if (empty($bestStatus) || ($lessonStatus !== $bestStatus && $statusPriority[$lessonStatus] > $statusPriority[$bestStatus])) {
                     $tracking->setLessonStatus($lessonStatus);
                     $bestStatus = $lessonStatus;
@@ -294,40 +293,10 @@ class ScormManager
                     $tracking->setProgression($progression);
                 }
 
-                if ('log' === $mode) {
-                    $data['sco'] = $sco->getUuid();
-                    $data['lessonStatus'] = $lessonStatus;
-                    $data['scoreMax'] = $scoreMax;
-                    $data['scoreMin'] = $scoreMin;
-                    $data['scoreRaw'] = $scoreRaw;
-                    $data['sessionTime'] = $sessionTimeInHundredth;
-                    $data['totalTime'] = $totalTimeInHundredth;
-                    $data['bestScore'] = $bestScore;
-                    $data['bestStatus'] = $bestStatus;
-                    $data['progression'] = $progression;
-                    $event = new LogScormResultEvent($sco->getScorm(), $user, $data);
-                    $this->eventDispatcher->dispatch($event, 'log');
-
-                    // Generate resource evaluation
-                    $this->generateScormEvaluation(
-                        $tracking,
-                        $data,
-                        $scoreRaw,
-                        $scoreMin,
-                        $scoreMax,
-                        $sessionTimeInHundredth / 100,
-                        $lessonStatus
-                    );
-                }
                 break;
+
             case Scorm::SCORM_2004:
-                $tracking->setDetails($data);
-
-                if (isset($data['cmi.suspend_data'])) {
-                    $tracking->setSuspendData($data['cmi.suspend_data']);
-                }
-
-                $dataSessionTime = isset($data['cmi.session_time']) ?
+                $duration = isset($data['cmi.session_time']) ?
                     $this->formatSessionTime($data['cmi.session_time']) :
                     'PT0S';
                 $completionStatus = isset($data['cmi.completion_status']) ? $data['cmi.completion_status'] : 'unknown';
@@ -337,13 +306,12 @@ class ScormManager
                 $scoreMax = isset($data['cmi.score.max']) ? intval($data['cmi.score.max']) : null;
                 $scoreScaled = isset($data['cmi.score.scaled']) ? floatval($data['cmi.score.scaled']) : null;
                 $progression = isset($data['cmi.progress_measure']) ? floatval($data['cmi.progress_measure']) : 0;
-                $bestScore = $tracking->getScoreRaw();
 
                 // Computes total time
                 $totalTime = new \DateInterval($tracking->getTotalTimeString());
 
                 try {
-                    $sessionTime = new \DateInterval($dataSessionTime);
+                    $sessionTime = new \DateInterval($duration);
                 } catch (\Exception $e) {
                     $sessionTime = new \DateInterval('PT0S');
                 }
@@ -357,6 +325,7 @@ class ScormManager
                 $tracking->setTotalTimeString($totalTimeInterval);
 
                 // Update best score if the current score is better than the previous best score
+                $bestScore = $tracking->getScoreRaw();
                 if (empty($bestScore) || (!is_null($scoreRaw) && $scoreRaw > $bestScore)) {
                     $tracking->setScoreRaw($scoreRaw);
                     $tracking->setScoreMin($scoreMin);
@@ -393,71 +362,51 @@ class ScormManager
                     $tracking->setProgression($progression);
                 }
 
-                if ('log' === $mode) {
-                    $data['sco'] = $sco->getUuid();
-                    $data['lessonStatus'] = $lessonStatus;
-                    $data['completionStatus'] = $completionStatus;
-                    $data['scoreMax'] = $scoreMax;
-                    $data['scoreMin'] = $scoreMin;
-                    $data['scoreRaw'] = $scoreRaw;
-                    $data['sessionTime'] = $dataSessionTime;
-                    $data['totalTime'] = $totalTimeInterval;
-                    $data['result'] = $scoreRaw;
-                    $data['resultMax'] = $scoreMax;
-                    $data['progression'] = $progression;
-                    $event = new LogScormResultEvent($sco->getScorm(), $user, $data);
-                    $this->eventDispatcher->dispatch($event, 'log');
-
-                    // Generate resource evaluation
-                    $this->generateScormEvaluation(
-                        $tracking,
-                        $data,
-                        $scoreRaw,
-                        $scoreMin,
-                        $scoreMax,
-                        $dataSessionTime,
-                        $lessonStatus
-                    );
-                }
                 break;
         }
+
+        $tracking->setLatestDate(new \DateTime());
+        if (isset($data['cmi.suspend_data'])) {
+            $tracking->setSuspendData($data['cmi.suspend_data']);
+        }
+
+        $attempt = $this->generateScormEvaluation($tracking, $duration);
+
+        $tracking->setDetails(array_merge($data, [
+            'sco' => $sco->getUuid(),
+            'attempt' => $attempt->getId(),
+        ]));
+
         $this->om->persist($tracking);
         $this->om->flush();
 
         return $tracking;
     }
 
-    private function generateScormEvaluation(
-        ScoTracking $tracking,
-        array $data,
-        $score = null,
-        $scoreMin = null,
-        $scoreMax = null,
-        $sessionTime = null,
-        $successStatus = null
-    ) {
+    public function generateScormEvaluation(ScoTracking $tracking, $sessionTime = null)
+    {
         $scorm = $tracking->getSco()->getScorm();
 
+        $status = 'unknown';
+        switch ($tracking->getLessonStatus()) {
+            case 'passed':
+            case 'failed':
+            case 'completed':
+            case 'incomplete':
+                $status = $tracking->getLessonStatus();
+                break;
+            case 'not attempted':
+                $status = 'not_attempted';
+                break;
+            case 'browsed':
+                $status = 'opened';
+                break;
+        }
+
+        $duration = null;
         switch ($scorm->getVersion()) {
             case Scorm::SCORM_12:
                 $duration = $sessionTime;
-
-                switch ($successStatus) {
-                    case 'passed':
-                    case 'failed':
-                    case 'completed':
-                    case 'incomplete':
-                        $status = $successStatus;
-                        break;
-                    case 'not attempted':
-                        $status = 'not_attempted';
-                        break;
-                    case 'browsed':
-                        $status = 'opened';
-                        break;
-                    default:
-                        $status = 'unknown';
-                }
                 break;
             case Scorm::SCORM_2004:
                 if (!is_null($sessionTime)) {
@@ -467,36 +416,36 @@ class ScormManager
                     $computedTime->add($time);
                     $duration = $computedTime->getTimestamp();
                 }
-                switch ($successStatus) {
-                    case 'passed':
-                    case 'failed':
-                    case 'completed':
-                    case 'incomplete':
-                        $status = $successStatus;
-                        break;
-                    case 'not attempted':
-                        $status = 'not_attempted';
-                        break;
-                    default:
-                        $status = 'unknown';
-                }
-                break;
         }
 
-        $this->resourceEvalManager->createResourceEvaluation(
-            $scorm->getResourceNode(),
-            $tracking->getUser(),
-            [
-                'progression' => $data['progression'],
-                'status' => $status,
-                'score' => $score,
-                'scoreMin' => $scoreMin,
-                'scoreMax' => $scoreMax,
-                'duration' => $duration,
-                'data' => $data,
-            ],
-            $tracking->getLatestDate()
-        );
+        $evaluationData = [
+            'progression' => $tracking->getProgression(),
+            'status' => $status,
+            'score' => $tracking->getScoreRaw(),
+            'scoreMin' => $tracking->getScoreMin(),
+            'scoreMax' => $tracking->getScoreMax(),
+            'duration' => $duration, // todo : retrieve from ScoTracking
+            'data' => $tracking->getDetails(),
+        ];
+
+        $attempt = null;
+        $details = $tracking->getDetails();
+        if (!empty($details) && !empty($details['attempt'])) {
+            $attempt = $this->om->getRepository(ResourceEvaluation::class)->find($details['attempt']);
+        }
+
+        if (!empty($attempt)) {
+            $this->resourceEvalManager->updateResourceEvaluation($attempt, $evaluationData, $tracking->getLatestDate());
+        } else {
+            $attempt = $this->resourceEvalManager->createResourceEvaluation(
+                $scorm->getResourceNode(),
+                $tracking->getUser(),
+                $evaluationData,
+                $tracking->getLatestDate()
+            );
+        }
+
+        return $attempt;
     }
 
     /**
