@@ -8,5 +8,6 @@
   "send_invitation": "Send an invitation",
   "open-training": "Open training",
   "manage_quotas": "Manage quotas",
-  "validate_subscriptions": "Validate subscription"
+  "validate_subscriptions": "Validate subscription",
+  "move-pending": "Move on pending list"
 }

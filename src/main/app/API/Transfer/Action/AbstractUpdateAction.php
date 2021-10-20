@@ -7,7 +7,7 @@ use Claroline\AppBundle\API\Crud;
 abstract class AbstractUpdateAction extends AbstractAction
 {
     /** @var Crud */
-    private $crud;
+    protected $crud;
 
     abstract public function getClass();
 

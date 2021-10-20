@@ -58,3 +58,10 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
         tags:
             - { name: kernel.event_listener, event: data_source.training_events.load, method: getData }
+
+    Claroline\CursusBundle\Listener\DataSource\MyEventsSource:
+        arguments:
+            - '@security.token_storage'
+            - '@Claroline\AppBundle\API\FinderProvider'
+        tags:
+            - { name: kernel.event_listener, event: data_source.my_training_events.load, method: getData }

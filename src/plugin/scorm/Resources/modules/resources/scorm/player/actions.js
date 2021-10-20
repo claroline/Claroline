@@ -7,10 +7,10 @@ const actions = {}
 
 actions.updateTracking = makeActionCreator(TRACKING_UPDATE, 'tracking')
 
-actions.commitData = (scoId, mode, scoData) => ({
+actions.commitData = (scoId, scoData) => ({
   [API_REQUEST]: {
     silent: true,
-    url: ['apiv2_scorm_sco_commit', {sco: scoId, mode: mode}],
+    url: ['apiv2_scormscotracking_update', {sco: scoId}],
     request: {
       body: JSON.stringify(scoData),
       method: 'PUT'

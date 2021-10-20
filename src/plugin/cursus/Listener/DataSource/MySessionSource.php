@@ -33,7 +33,7 @@ class MySessionSource
         $user = $this->tokenStorage->getToken()->getUser();
         $options['hiddenFilters']['user'] = $user instanceof User ? $user->getUuid() : null;
 
-        if (DataSource::CONTEXT_WORKSPACE === $event->getContext()) {
+        if (DataSource::CONTEXT_WORKSPACE === $event->getContext() && (empty($options['filters'] || empty($options['filters']['workspace'])))) {
             $options['hiddenFilters']['workspace'] = $event->getWorkspace()->getUuid();
         }
 

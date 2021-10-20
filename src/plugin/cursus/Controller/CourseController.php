@@ -18,6 +18,7 @@ use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
+use Claroline\CoreBundle\Library\RoutingHelper;
 use Claroline\CoreBundle\Manager\Tool\ToolManager;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
@@ -31,11 +32,13 @@ use Dompdf\Dompdf;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Twig\Environment;
 
 /**
  * @Route("/cursus_course")
@@ -46,6 +49,10 @@ class CourseController extends AbstractCrudController
 
     /** @var TokenStorageInterface */
     private $tokenStorage;
+    /** @var Environment */
+    private $templating;
+    /** @var RoutingHelper */
+    private $routing;
     /** @var PlatformConfigurationHandler */
     private $config;
     /** @var ToolManager */
@@ -56,12 +63,16 @@ class CourseController extends AbstractCrudController
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         TokenStorageInterface $tokenStorage,
+        Environment $templating,
+        RoutingHelper $routing,
         PlatformConfigurationHandler $config,
         ToolManager $toolManager,
         CourseManager $manager
     ) {
         $this->authorization = $authorization;
         $this->tokenStorage = $tokenStorage;
+        $this->templating = $templating;
+        $this->routing = $routing;
         $this->config = $config;
         $this->toolManager = $toolManager;
         $this->manager = $manager;
@@ -201,6 +212,22 @@ class CourseController extends AbstractCrudController
     }
 
     /**
+     * @Route("/{id}/share", name="apiv2_cursus_course_share")
+     * @EXT\ParamConverter("course", class="ClarolineCursusBundle:Course", options={"mapping": {"id": "uuid"}})
+     */
+    public function shareAction(Course $course): Response
+    {
+        return new Response(
+            $this->templating->render('@ClarolineApp/share.html.twig', [
+                'url' => $this->routing->desktopUrl('trainings').'/catalog/'.$course->getSlug(),
+                'title' => $course->getName(),
+                'thumbnail' => $course->getThumbnail(),
+                'description' => $course->getDescription(),
+            ])
+        );
+    }
+
+    /**
      * @Route("/{id}/pdf", name="apiv2_cursus_course_download_pdf", methods={"GET"})
      * @EXT\ParamConverter("course", class="ClarolineCursusBundle:Course", options={"mapping": {"id": "uuid"}})
      */
@@ -331,6 +358,35 @@ class CourseController extends AbstractCrudController
         }
 
         $this->manager->moveUsers($targetSession, $courseUsers);
+
+        return new JsonResponse();
+    }
+
+    /**
+     * @Route("/{id}/move/pending", name="apiv2_cursus_course_move_pending", methods={"PUT"})
+     * @EXT\ParamConverter("course", class="Claroline\CursusBundle\Entity\Course", options={"mapping": {"id": "uuid"}})
+     */
+    public function moveToPendingAction(Course $course, Request $request): JsonResponse
+    {
+        $this->checkPermission('REGISTER', $course, [], true);
+
+        $data = $this->decodeRequest($request);
+        if (empty($data['sessionUsers'])) {
+            throw new InvalidDataException('Missing the user registrations to move.');
+        }
+
+        $sessionUsers = [];
+        foreach ($data['sessionUsers'] as $sessionUserId) {
+            $sessionUser = $this->om->getRepository(SessionUser::class)->findOneBy([
+                'uuid' => $sessionUserId,
+            ]);
+
+            if (!empty($sessionUser)) {
+                $sessionUsers[] = $sessionUser;
+            }
+        }
+
+        $this->manager->moveToPending($course, $sessionUsers);
 
         return new JsonResponse();
     }

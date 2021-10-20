@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import classes from 'classnames'
+import merge from 'lodash/merge'
 import omit from 'lodash/omit'
 
 import {implementPropTypes} from '#/main/app/prop-types'
@@ -60,6 +61,10 @@ class PageFull extends Component {
       <PageSimple
         {...omit(this.props, 'showHeader', 'showTitle', 'header', 'title', 'subtitle', 'icon', 'poster', 'toolbar', 'actions', 'fullscreen')}
         fullscreen={this.state.fullscreen}
+        meta={merge({}, {
+          title: this.props.title,
+          poster: this.props.poster
+        }, this.props.meta || {})}
       >
         {this.props.showHeader &&
           <PageHeader

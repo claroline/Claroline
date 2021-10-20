@@ -14,8 +14,3 @@ plugin:
           group: community
           decoder: open
           api: [POST]
-
-        - name: comments
-          group: community
-          decoder: open
-          api: [GET, POST, PUT, DELETE]

@@ -1,40 +1,10 @@
 services:
     _defaults:
-        autowire: false #change to true
+        autowire: false
         autoconfigure: false
-        public: true #because controller
-
-    _instanceof:
-        Icap\SocialmediaBundle\Controller\Controller:
-            calls:
-              - method: setLikeActionManager
-                arguments:
-                  - '@Icap\SocialmediaBundle\Manager\LikeActionManager'
-              - method: setShareActionManager
-                arguments:
-                  - '@Icap\SocialmediaBundle\Manager\ShareActionManager'
-              - method: setCommentActionManger
-                arguments:
-                  - '@Icap\SocialmediaBundle\Manager\CommentActionManager'
-              - method: setNoteActionManager
-                arguments:
-                  - '@Icap\SocialmediaBundle\Manager\NoteActionManager'
-              - method: setWallItemManager
-                arguments:
-                  - '@Icap\SocialmediaBundle\Manager\WallItemManager'
-              - method: setTokenStorage
-                arguments:
-                  - '@security.token_storage'
-              - method: setEventDispatcher
-                arguments:
-                  - '@event_dispatcher'
-
-    Icap\SocialmediaBundle\Controller\CommentActionController: ~
+        public: true # because controller
 
     Icap\SocialmediaBundle\Controller\LikeActionController:
         arguments:
             - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
-
-    Icap\SocialmediaBundle\Controller\ShareActionController: ~
-
-    Icap\SocialmediaBundle\Controller\WallController: ~
+            - '@Icap\SocialmediaBundle\Manager\LikeActionManager'

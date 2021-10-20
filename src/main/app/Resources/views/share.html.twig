@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+
+<html lang="{{ app.request.locale }}">
+    <head>
+        <meta charset="utf-8" />
+
+        <title>{{ title }}</title>
+        <meta property="og:title" content="{{ title }}" />
+
+        <meta property="og:type" content="website" />
+
+        {% if thumbnail is not empty %}
+            <meta property="og:image" content="{{ app.request.getUriForPath('/' ~ thumbnail) }}"/>
+        {% endif %}
+
+        <meta name="description" content="{{ description }}" />
+        <meta property="og:description" content="{{ description }}" />
+    </head>
+
+    {{ app.request.uri }}
+
+    <body>
+        {#
+            This is a little hacky, but if we directly put the url in the meta
+            the open graph parser will try to retrieve the meta from this URL
+        #}
+        <script type="text/javascript">
+            window.location.href = "{{ url }}"
+        </script>
+    </body>
+</html>

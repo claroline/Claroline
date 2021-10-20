@@ -10,9 +10,14 @@
 
 namespace Icap\SocialmediaBundle\Manager;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
-use Doctrine\ORM\EntityManager;
+use Claroline\CoreBundle\Repository\Resource\ResourceNodeRepository;
 use Icap\SocialmediaBundle\Entity\LikeAction;
+use Icap\SocialmediaBundle\Event\Log\LogSocialmediaLikeEvent;
+use Icap\SocialmediaBundle\Repository\LikeActionRepository;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -20,29 +25,25 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class LikeActionManager
 {
-    protected $em;
+    /** @var ObjectManager */
+    private $om;
+    /** @var EventDispatcherInterface */
+    private $dispatcher;
 
-    /**
-     * @var \Icap\SocialmediaBundle\Repository\LikeActionRepository
-     */
-    protected $likeActionRepository;
+    /** @var LikeActionRepository */
+    private $likeActionRepository;
+    /** @var ResourceNodeRepository */
+    private $resourceNodeRepository;
 
-    /**
-     * @var \Claroline\CoreBundle\Repository\Resource\ResourceNodeRepository
-     */
-    protected $resourceNodeRepository;
+    public function __construct(
+        ObjectManager $om,
+        EventDispatcherInterface $dispatcher
+    ) {
+        $this->om = $om;
+        $this->dispatcher = $dispatcher;
 
-    /**
-     * @var WallItemManager
-     */
-    protected $wallItemManager;
-
-    public function __construct(EntityManager $em, WallItemManager $wallItemManager)
-    {
-        $this->em = $em;
-        $this->wallItemManager = $wallItemManager;
-        $this->likeActionRepository = $em->getRepository('IcapSocialmediaBundle:LikeAction');
-        $this->resourceNodeRepository = $em->getRepository('ClarolineCoreBundle:Resource\ResourceNode');
+        $this->likeActionRepository = $om->getRepository(LikeAction::class);
+        $this->resourceNodeRepository = $om->getRepository(ResourceNode::class);
     }
 
     /**
@@ -53,19 +54,6 @@ class LikeActionManager
         $criteria = $this->getCriteriaFromRequest($request, $user, $criteria);
 
         return $this->likeActionRepository->findOneBy($criteria);
-    }
-
-    /**
-     * @param Request $request
-     * @param array   $criteria
-     *
-     * @return \Doctrine\ORM\QueryBuilder
-     */
-    public function getLikesForPagination(Request $request = null, $criteria = [])
-    {
-        $criteria = $this->getCriteriaFromRequest($request, null, $criteria);
-
-        return $this->likeActionRepository->findLikesForPagination($criteria);
     }
 
     public function countLikes(Request $request)
@@ -89,18 +77,19 @@ class LikeActionManager
             $resourceNode = $this->resourceNodeRepository->find($resourceId);
             $like->setResource($resourceNode);
         }
-        $this->em->persist($like);
-        $this->wallItemManager->createWallItem($like);
 
-        $this->em->flush();
+        $this->om->persist($like);
+        $this->om->flush();
+
+        $this->dispatcher->dispatch(new LogSocialmediaLikeEvent($like), 'log');
 
         return $like;
     }
 
     public function removeLike(LikeAction $like)
     {
-        $this->em->remove($like);
-        $this->em->flush();
+        $this->om->remove($like);
+        $this->om->flush();
     }
 
     private function getCriteriaFromRequest(Request $request = null, User $user = null, $criteria = [])

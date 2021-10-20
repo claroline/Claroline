@@ -2,28 +2,9 @@ services:
     _defaults:
         autowire: false
         autoconfigure: false
-        public: true
-
-    Icap\SocialmediaBundle\Manager\CommentActionManager:
-       arguments:
-          - '@doctrine.orm.entity_manager'
-          - '@Icap\SocialmediaBundle\Manager\WallItemManager'
+        public: false
 
     Icap\SocialmediaBundle\Manager\LikeActionManager:
        arguments:
-          - '@doctrine.orm.entity_manager'
-          - '@Icap\SocialmediaBundle\Manager\WallItemManager'
-
-    Icap\SocialmediaBundle\Manager\NoteActionManager:
-       arguments:
-          - '@doctrine.orm.entity_manager'
-
-    Icap\SocialmediaBundle\Manager\ShareActionManager:
-       arguments:
-          - '@doctrine.orm.entity_manager'
-          - '@Icap\SocialmediaBundle\Manager\WallItemManager'
-          - '@router'
-
-    Icap\SocialmediaBundle\Manager\WallItemManager:
-       arguments:
-          - '@doctrine.orm.entity_manager'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
+          - '@event_dispatcher'

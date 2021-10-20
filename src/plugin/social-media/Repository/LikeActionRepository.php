@@ -26,17 +26,4 @@ class LikeActionRepository extends EntityRepository
 
         return $qb->getQuery()->getSingleScalarResult();
     }
-
-    public function findLikesForPagination(array $criteria)
-    {
-        $qb = $this->createQueryBuilder('likeAction');
-        $qb->select('likeAction');
-        foreach ($criteria as $key => $value) {
-            $qb->andWhere('likeAction.'.$key.' = :'.$key);
-            $qb->setParameter($key, $value);
-        }
-        $qb->orderBy('likeAction.creationDate', 'DESC');
-
-        return $qb;
-    }
 }
