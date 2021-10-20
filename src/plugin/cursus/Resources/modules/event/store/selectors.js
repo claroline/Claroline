@@ -14,14 +14,14 @@ const loaded = createSelector(
   (store) => store.loaded
 )
 
-const registrations = createSelector(
+const registration = createSelector(
   [store],
-  (store) => store.registrations
+  (store) => store.registration
 )
 
 export const selectors = {
   STORE_NAME,
   event,
   loaded,
-  registrations
+  registration
 }
