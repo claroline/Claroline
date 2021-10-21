@@ -16,7 +16,6 @@ use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\Template\TemplateManager;
 use Claroline\CursusBundle\Entity\Registration\SessionUser;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class QuotaManager
 {

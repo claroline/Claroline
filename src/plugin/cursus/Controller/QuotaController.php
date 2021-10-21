@@ -11,8 +11,8 @@
 
 namespace Claroline\CursusBundle\Controller;
 
-use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\FinderProvider;
+use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Organization\Organization;

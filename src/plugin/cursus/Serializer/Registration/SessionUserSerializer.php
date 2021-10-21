@@ -59,7 +59,7 @@ class SessionUserSerializer extends AbstractUserSerializer
             ];
 
             return [
-                'user' => sprintf("%s %s", $sessionUser->getUser()->getFirstName(), $sessionUser->getUser()->getLastName()),
+                'user' => sprintf('%s %s', $sessionUser->getUser()->getFirstName(), $sessionUser->getUser()->getLastName()),
                 'session' => $sessionUser->getSession()->getName(),
                 'days' => $sessionUser->getSession()->getQuotaDays(),
                 'price' => $sessionUser->getSession()->getPrice(),
