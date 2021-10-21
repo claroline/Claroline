@@ -145,9 +145,9 @@ class EventController extends AbstractCrudController
         $this->checkPermission('OPEN', $sessionEvent, [], true);
 
         $user = $this->tokenStorage->getToken()->getUser();
-        $registrations = [];
+        $registration = [];
         if ($user instanceof User) {
-            $registrations = [
+            $registration = [
                 'users' => $this->finder->search(EventUser::class, ['filters' => [
                     'user' => $user->getUuid(),
                     'event' => $sessionEvent->getUuid(),
@@ -161,7 +161,7 @@ class EventController extends AbstractCrudController
 
         return new JsonResponse([
             'event' => $this->serializer->serialize($sessionEvent),
-            'registrations' => $registrations,
+            'registration' => $registration,
         ]);
     }
 

@@ -14,5 +14,12 @@
   "loading": "Chargement en cours...",
   "forbidden": "Accès interdit",
   "dpo": "Délégué à la protection des données",
-  "next_step": "Suivant : %step%"
+  "next_step": "Suivant : %step%",
+  "field_conditional_display": "Afficher en fonction de la valeur d'un autre champ",
+  "field": "Champ",
+  "field_comparator": "Comparaison",
+  "equal": "est égal à",
+  "different": "est différent de",
+  "empty": "est vide",
+  "not_empty": "est non vide"
 }

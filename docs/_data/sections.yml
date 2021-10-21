@@ -132,9 +132,11 @@
       - title: Docker
         doc: dev/docker
 
-- title: Contributing
-  doc: contributing
+      - title: Contributing
+        doc: dev/contributing
 
+      - title: Release process
+        doc: dev/release
 
 #- title: Cookbook
 #  doc: cookbook

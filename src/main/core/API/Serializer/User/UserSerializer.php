@@ -6,7 +6,6 @@ use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\API\Serializer\Facet\FieldFacetValueSerializer;
 use Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;
@@ -19,6 +18,7 @@ use Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue;
 use Claroline\CoreBundle\Event\User\DecorateUserEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
+use Claroline\CoreBundle\Manager\FacetManager;
 use Claroline\CoreBundle\Repository\Facet\FieldFacetRepository;
 use Claroline\CoreBundle\Repository\Facet\FieldFacetValueRepository;
 use Claroline\CoreBundle\Repository\User\RoleRepository;
@@ -42,12 +42,12 @@ class UserSerializer
     private $fileSerializer;
     /** @var OrganizationSerializer */
     private $organizationSerializer;
-    /** @var FieldFacetValueSerializer */
-    private $fieldFacetValueSerializer;
     /** @var ContainerInterface */
     private $container;
     /** @var StrictDispatcher */
     private $eventDispatcher;
+    /** @var FacetManager */
+    private $facetManager;
 
     private $organizationRepo;
     /** @var RoleRepository */
@@ -66,7 +66,7 @@ class UserSerializer
         ContainerInterface $container,
         StrictDispatcher $eventDispatcher,
         OrganizationSerializer $organizationSerializer,
-        FieldFacetValueSerializer $fieldFacetValueSerializer
+        FacetManager $facetManager
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->authorization = $authorization;
@@ -76,8 +76,7 @@ class UserSerializer
         $this->container = $container;
         $this->eventDispatcher = $eventDispatcher;
         $this->organizationSerializer = $organizationSerializer;
-        $this->fieldFacetValueSerializer = $fieldFacetValueSerializer;
-
+        $this->facetManager = $facetManager;
         $this->organizationRepo = $om->getRepository(Organization::class);
         $this->roleRepo = $om->getRepository(Role::class);
         $this->fieldFacetRepo = $om->getRepository(FieldFacet::class);
@@ -184,7 +183,11 @@ class UserSerializer
                 $serializedUser['profile'] = [];
                 foreach ($fields as $field) {
                     // we just flatten field facets in the base user structure
-                    $serializedUser['profile'][$field->getFieldFacet()->getUuid()] = $field->getValue();
+                    $serializedUser['profile'][$field->getFieldFacet()->getUuid()] = $this->facetManager->serializeFieldValue(
+                        $user,
+                        $field->getType(),
+                        $field->getValue()
+                    );
                 }
             }
         }
@@ -291,7 +294,6 @@ class UserSerializer
             'description' => $user->getDescription(),
             'mailValidated' => $user->isMailValidated(),
             'mailNotified' => $user->isMailNotified(),
-            'authentication' => $user->getAuthentication(),
             'personalWorkspace' => (bool) $user->getPersonalWorkspace(),
             'locale' => $locale,
         ];
@@ -491,21 +493,27 @@ class UserSerializer
         if (isset($data['profile'])) {
             $fieldFacets = $this->fieldFacetRepo->findPlatformFieldFacets();
             foreach ($fieldFacets as $fieldFacet) {
-                if (isset($data['profile'][$fieldFacet->getUuid()])) {
+                if (array_key_exists($fieldFacet->getUuid(), $data['profile'])) {
                     /** @var FieldFacetValue $fieldFacetValue */
-                    $fieldFacetValue = $this->fieldFacetValueRepo
+                    $fieldFacetValue = $this->fieldFacetValueRepo // TODO : retrieve all values at once for performances
                         ->findOneBy([
                             'user' => $user,
                             'fieldFacet' => $fieldFacet,
                         ]) ?? new FieldFacetValue();
 
-                    $user->addFieldFacet(
-                        $this->fieldFacetValueSerializer->deserialize([
-                            'name' => $fieldFacet->getName(),
-                            'value' => $data['profile'][$fieldFacet->getUuid()],
-                            'fieldFacet' => ['id' => $fieldFacet->getUuid()],
-                        ], $fieldFacetValue)
+                    $fieldFacetValue->setUser($user);
+                    $fieldFacetValue->setFieldFacet($fieldFacet);
+
+                    // TODO
+                    $fieldFacetValue->setValue(
+                        $this->facetManager->deserializeFieldValue(
+                            $user,
+                            $fieldFacet->getType(),
+                            $data['profile'][$fieldFacet->getUuid()]
+                        )
                     );
+
+                    $this->om->persist($fieldFacetValue);
                 }
             }
         }

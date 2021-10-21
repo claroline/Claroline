@@ -53,7 +53,7 @@ class FieldValue
     protected $field;
 
     /**
-     * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Facet\FieldFacetValue")
+     * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Facet\FieldFacetValue", cascade={"persist"})
      * @ORM\JoinColumn(name="field_facet_value_id", onDelete="CASCADE")
      *
      * @var FieldFacetValue

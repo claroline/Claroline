@@ -18,7 +18,6 @@ import {DataInput} from '#/main/app/data/components/input'
 
 // todo try to avoid connexion to the store
 // todo create working preview
-// todo restore data type icon : <span className={classes('field-item-icon', registry.get(field.type).meta.icon)} />
 // todo find a way to use collections
 
 const FieldPreview = props =>
@@ -39,11 +38,12 @@ class FieldList extends Component {
   constructor(props) {
     super(props)
 
-    this.add       = this.add.bind(this)
-    this.update    = this.update.bind(this)
-    this.remove    = this.remove.bind(this)
-    this.removeAll = this.removeAll.bind(this)
-    this.open      = this.open.bind(this)
+    this.add         = this.add.bind(this)
+    this.update      = this.update.bind(this)
+    this.remove      = this.remove.bind(this)
+    this.removeAll   = this.removeAll.bind(this)
+    this.open        = this.open.bind(this)
+    this.formatField = this.formatField.bind(this)
   }
 
   add(newField) {
@@ -77,9 +77,10 @@ class FieldList extends Component {
     this.props.onChange([])
   }
 
-  open(field, callback) {
+  open(field, allFields, callback) {
     this.props.showModal(MODAL_FIELD_PARAMETERS, {
       data: field,
+      fields: allFields.filter(otherField => otherField.id !== field.id),
       save: callback
     })
   }
@@ -102,6 +103,9 @@ class FieldList extends Component {
   }
 
   render() {
+    const allFields = (this.props.fields || this.props.value)
+      .map(this.formatField)
+
     return (
       <div className={classes('field-list-control', this.props.className)}>
         {0 !== this.props.value.length &&
@@ -130,6 +134,7 @@ class FieldList extends Component {
                     tooltip="top"
                     modal={[MODAL_FIELD_PARAMETERS, {
                       data: field,
+                      fields: allFields.filter(otherField => otherField.id !== field.id),
                       save: (data) => this.update(fieldIndex, data)
                     }]}
                   />
@@ -174,7 +179,7 @@ class FieldList extends Component {
                   locked: false,
                   lockedEditionOnly: false
                 }
-              }, this.add)
+              }, allFields, this.add)
             })
           })}
         />
@@ -190,6 +195,10 @@ FieldList.propTypes = {
   value: T.arrayOf(T.shape({
 
   })),
+  // a list of all fields for conditional rendering
+  // it uses the current list of fields in `value` in missing
+  // this is useful for profile where fields are propagated between multiple tabs/panels
+  fields: T.array,
   onChange: T.func.isRequired,
   showModal: T.func.isRequired
 }

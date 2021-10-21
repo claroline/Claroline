@@ -61,6 +61,12 @@ export default {
         label: trans('session', {}, 'cursus'),
         type: 'training_session',
         displayed: true
+      }, {
+        name: 'workspace',
+        type: 'workspace',
+        label: trans('workspace'),
+        displayable: false,
+        sortable: false
       }
     ],
     card: EventCard

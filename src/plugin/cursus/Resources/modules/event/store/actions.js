@@ -12,7 +12,7 @@ export const EVENT_SET_LOADED = 'EVENT_SET_LOADED'
 export const actions = {}
 
 actions.setLoaded = makeActionCreator(EVENT_SET_LOADED, 'loaded')
-actions.loadEvent = makeActionCreator(LOAD_EVENT, 'event', 'registrations')
+actions.loadEvent = makeActionCreator(LOAD_EVENT, 'event', 'registration')
 
 actions.open = (id, force = false) => (dispatch, getState) => {
   const currentEvent = selectors.event(getState())
@@ -26,7 +26,7 @@ actions.open = (id, force = false) => (dispatch, getState) => {
           dispatch(actions.loadEvent(null, null))
         },
         success: (data) => {
-          dispatch(actions.loadEvent(data.event, data.registrations))
+          dispatch(actions.loadEvent(data.event, data.registration))
           dispatch(actions.setLoaded(true))
         }
       }

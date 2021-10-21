@@ -8,5 +8,7 @@
   "all_courses": "List of courses",
   "public_courses_desc": "Allow to list all public courses.",
   "training_events": "List of session events",
-  "training_events_desc": "Allow to list all training events."
+  "training_events_desc": "Allow to list all training events.",
+  "my_training_events": "List of my training events",
+  "my_training_events_desc": "Allows to list the events to which the current user is registered."
 }

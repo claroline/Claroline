@@ -8,5 +8,7 @@
   "all_courses": "Liste de toutes les formations",
   "public_courses_desc": "Permet de lister l'ensemble des formations publiques.",
   "training_events": "Liste des séances",
-  "training_events_desc": "Permet de lister les séances de formation."
+  "training_events_desc": "Permet de lister les séances de formation.",
+  "my_training_events": "Liste de mes séances de formation",
+  "my_training_events_desc": "Permet de lister les séances auxquelles l'utilisateur courant est inscrit."
 }

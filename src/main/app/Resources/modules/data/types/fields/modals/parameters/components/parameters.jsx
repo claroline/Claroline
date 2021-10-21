@@ -1,5 +1,7 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
+import get from 'lodash/get'
+import isEmpty from 'lodash/isEmpty'
 import merge from 'lodash/merge'
 import set from 'lodash/set'
 
@@ -12,8 +14,9 @@ class ParametersModal extends Component {
     super(props)
 
     this.state = {
-      options: props.data.options ? props.data.options : {},
-      restrictions: props.data.restrictions ? props.data.restrictions : {},
+      options: get(props.data, 'options', {}),
+      restrictions: get(props.data, 'restrictions', {}),
+      display: get(props.data, 'display', {}),
       typeDef: null
     }
 
@@ -55,6 +58,16 @@ class ParametersModal extends Component {
     })
   }
 
+  updateDisplay(displayName, displayValue) {
+    const newDisplay = merge({}, this.state.display)
+
+    set(newDisplay, displayName, displayValue)
+
+    this.setState({
+      display: newDisplay
+    })
+  }
+
   generateParametersForm(fields) {
     return fields.map(optionField => merge({}, optionField, {
       name: `options.${optionField.name}`, // store all options in an `options` sub object
@@ -64,6 +77,11 @@ class ParametersModal extends Component {
   }
 
   render() {
+    let conditionField = null
+    if (!isEmpty(this.props.fields) && get(this.state, 'display.condition.field')) {
+      conditionField = this.props.fields.find(field => field.id === get(this.state, 'display.condition.field'))
+    }
+
     return (
       <FormDataModal
         {...this.props}
@@ -142,10 +160,60 @@ class ParametersModal extends Component {
             title: trans('display_parameters'),
             fields: [
               {
-                name: 'restrictions.order',
+                name: 'display.order',
                 type: 'number',
                 label: trans('order'),
-                onChange: (value) => this.updateRestrictions('order', value)
+                onChange: (value) => this.updateDisplay('order', value)
+              }, {
+                name: 'display._conditional',
+                type: 'boolean',
+                label: trans('Afficher en fonction de la valeur d\'un autre champ'),
+                displayed: !isEmpty(this.props.fields),
+                calculated: (field) => !isEmpty(get(field, 'display.condition.field')) || get(field, 'display._conditional'),
+                onChange: (checked) => {
+                  if (!checked) {
+                    this.updateDisplay('condition', null)
+                  }
+                },
+                linked: [
+                  {
+                    name: 'display.condition.field',
+                    type: 'choice',
+                    label: trans('field'),
+                    required: true,
+                    displayed: (field) => !isEmpty(this.props.fields) && (!isEmpty(get(field, 'display.condition.field')) || get(field, 'display._conditional')),
+                    options: {
+                      condensed: true,
+                      choices: this.props.fields.reduce((acc, current) => Object.assign({}, acc, {
+                        [current.id]: current.label
+                      }), {})
+                    },
+                    onChange: (value) => this.updateDisplay('condition.field', value)
+                  }, {
+                    name: 'display.condition.comparator',
+                    type: 'choice',
+                    label: trans('field_comparator'),
+                    required: true,
+                    displayed: !isEmpty(conditionField),
+                    onChange: (value) => this.updateDisplay('condition.comparator', value),
+                    options: {
+                      choices: {
+                        'equal': trans('equal'),
+                        'different': trans('different'),
+                        'empty': trans('empty'),
+                        'not_empty': trans('not_empty')
+                      }
+                    }
+                  }, {
+                    name: 'display.condition.value',
+                    type: get(conditionField, 'type', 'string'),
+                    label: trans('value'),
+                    required: true,
+                    displayed: (field) => !isEmpty(conditionField) && -1 === ['empty', 'not_empty'].indexOf(get(field, 'display.condition.comparator')),
+                    onChange: (value) => this.updateDisplay('condition.value', value),
+                    options: get(conditionField, 'options', {})
+                  }
+                ]
               }
             ]
           }, {
@@ -161,15 +229,13 @@ class ParametersModal extends Component {
               }, {
                 name: 'restrictions.hidden',
                 type: 'boolean',
-                label: trans('hide_field'),
+                label: trans('hide'),
                 onChange: (value) => this.updateRestrictions('hidden', value)
               }, {
                 name: 'restrictions.locked',
                 type: 'boolean',
-                label: trans('locked'),
-                options: {
-                  help: trans('required_locked_conflict')
-                },
+                label: trans('lock'),
+                help: trans('required_locked_conflict'),
                 onChange: (value) => this.updateRestrictions('locked', value),
                 linked: [
                   {
@@ -193,10 +259,16 @@ ParametersModal.propTypes = {
   data: T.shape({
     type: T.string.isRequired,
     options: T.object,
-    restrictions: T.object
+    restrictions: T.object,
+    display: T.object
   }),
+  fields: T.array,
   fadeModal: T.func.isRequired,
   save: T.func.isRequired
+}
+
+ParametersModal.defaultProps = {
+  fields: []
 }
 
 export {

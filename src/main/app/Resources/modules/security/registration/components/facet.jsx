@@ -1,10 +1,12 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import cloneDeep from 'lodash/cloneDeep'
 
 import {FormData} from '#/main/app/content/form/containers/data'
 import {ProfileFacet as ProfileFacetTypes} from '#/main/core/user/profile/prop-types'
 
 import {selectors} from '#/main/app/security/registration/store/selectors'
+import {formatFormSections} from '#/main/core/user/profile/utils'
 
 /**
  * Registration Form : Facet section.
@@ -12,21 +14,29 @@ import {selectors} from '#/main/app/security/registration/store/selectors'
  *
  * @todo maybe merge with #/main/core/user/profile/editor/components/facet.jsx
  */
-const Facet = props =>
-  <FormData
-    className="profile-facet"
-    name={selectors.FORM_NAME}
-    sections={props.facet.sections.map(section => (Object.assign({}, section, {
-      fields: section.fields.map(field => Object.assign({}, field, {
-        name: 'profile.' + field.id
-      }))
-    })))}
-  />
+const Facet = props => {
+  // todo : create selector
+  let sections = []
+  if (props.facet) {
+    if (props.facet.sections) {
+      sections = formatFormSections(cloneDeep(props.facet.sections), props.allFields, props.user)
+    }
+  }
+
+  return (
+    <FormData
+      name={selectors.FORM_NAME}
+      sections={sections}
+    />
+  )
+}
 
 Facet.propTypes = {
   facet: T.shape(
     ProfileFacetTypes.propTypes
-  ).isRequired
+  ).isRequired,
+  allFields: T.array,
+  user: T.object
 }
 
 export {
