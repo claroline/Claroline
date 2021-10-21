@@ -32,15 +32,19 @@ const QuotaForm = (props) =>
             label: trans('organization'),
             required: true
           }, {
-            name: 'threshold',
-            type: 'number',
-            label: trans('threshold', {}, 'cursus'),
-            required: true
-          }, {
             name: 'useQuotas',
             type: 'boolean',
             label: trans('use_quotas', {}, 'cursus'),
-            required: false
+            required: false,
+            linked: [
+              {
+                name: 'threshold',
+                type: 'number',
+                label: trans('threshold', {}, 'cursus'),
+                required: true,
+                displayed: (quota) => quota.useQuotas
+              }
+            ]
           }
         ]
       }
