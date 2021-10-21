@@ -51,6 +51,8 @@ class QuotaManager
 
     public function sendValidatedStatusMail(SessionUser $sessionUser): void
     {
+        $manager = $this->tokenStorage->getToken()->getUser();
+
         $user = $sessionUser->getUser();
         $locale = $this->localeManager->getLocale($user);
 
@@ -64,11 +66,13 @@ class QuotaManager
         $subject = $this->templateManager->getTemplate('training_quota_status_validated', $placeholders, $locale, 'title');
         $body = $this->templateManager->getTemplate('training_quota_status_validated', $placeholders, $locale);
 
-        $this->mailManager->send($subject, $body, [$user], null, [], true);
+        $this->mailManager->send($subject, $body, [$user], $manager, [], true);
     }
 
     public function sendManagedStatusMail(SessionUser $sessionUser): void
     {
+        $manager = $this->tokenStorage->getToken()->getUser();
+
         $user = $sessionUser->getUser();
         $locale = $this->localeManager->getLocale($user);
 
@@ -82,11 +86,13 @@ class QuotaManager
         $subject = $this->templateManager->getTemplate('training_quota_status_managed', $placeholders, $locale, 'title');
         $body = $this->templateManager->getTemplate('training_quota_status_managed', $placeholders, $locale);
 
-        $this->mailManager->send($subject, $body, [$user], null, [], true);
+        $this->mailManager->send($subject, $body, [$user], $manager, [], true);
     }
 
     public function sendRefusedStatusMail(SessionUser $sessionUser): void
     {
+        $manager = $this->tokenStorage->getToken()->getUser();
+
         $user = $sessionUser->getUser();
         $locale = $this->localeManager->getLocale($user);
 
@@ -100,11 +106,13 @@ class QuotaManager
         $subject = $this->templateManager->getTemplate('training_quota_status_refused', $placeholders, $locale, 'title');
         $body = $this->templateManager->getTemplate('training_quota_status_refused', $placeholders, $locale);
 
-        $this->mailManager->send($subject, $body, [$user], null, [], true);
+        $this->mailManager->send($subject, $body, [$user], $manager, [], true);
     }
 
     public function sendCancelledStatusMail(SessionUser $sessionUser): void
     {
+        $manager = $this->tokenStorage->getToken()->getUser();
+
         $user = $sessionUser->getUser();
         $locale = $this->localeManager->getLocale($user);
 
@@ -118,7 +126,7 @@ class QuotaManager
         $subject = $this->templateManager->getTemplate('training_quota_status_cancelled', $placeholders, $locale, 'title');
         $body = $this->templateManager->getTemplate('training_quota_status_cancelled', $placeholders, $locale);
 
-        $this->mailManager->send($subject, $body, [$user], null, [], true);
+        $this->mailManager->send($subject, $body, [$user], $manager, [], true);
     }
 
     public function sendChangedStatusMail(SessionUser $sessionUser): void
@@ -145,8 +153,5 @@ class QuotaManager
         $body = $this->templateManager->getTemplate('training_quota_status_changed', $placeholders, $locale);
 
         $this->mailManager->send($subject, $body, [$user], null, [], true);
-        /*$user = $this->tokenStorage->getToken()->getUser();
-        if ($user instanceof \Claroline\CoreBundle\Entity\User) {
-        }*/
     }
 }

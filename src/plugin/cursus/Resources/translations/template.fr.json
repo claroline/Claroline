@@ -15,7 +15,6 @@
     "training_session_invitation_desc": "Template utilisé pour le mail d'invitation à une session de formation.",
     "training_session_confirmation": "Confirmation d'inscription à une session de formation",
     "training_session_confirmation_desc": "Template utilisé pour le mail de demande de confirmation d'inscription à une session de formation.",
-    "training_quota_set_status": "Changement de status d'inscription",
 
     "course_code_desc": "Le code de la formation",
     "course_description_desc": "La description de la formation",
@@ -34,5 +33,11 @@
     "session_name_desc": "Le nom de la session de formation",
     "session_start_desc": "La date de début de la session de formation",
     "session_trainers_desc": "La liste des formateurs de la session de formation",
-    "registration_confirmation_url": "Le lien de confirmation de l'inscription"
+    "registration_confirmation_url": "Le lien de confirmation de l'inscription",
+
+    "training_quota_status_changed": "Changement de status d'inscription",
+    "training_quota_status_validated": "Validation de votre inscription",
+    "training_quota_status_managed": "Validation de votre inscription",
+    "training_quota_status_refused": "Refus de votre inscription",
+    "training_quota_status_cancelled": "Annulation de votre inscription"
 }

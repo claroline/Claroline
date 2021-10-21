@@ -160,13 +160,6 @@ plugin:
               - user_first_name
               - user_last_name
 
-        - name: training_quota
-          placeholders:
-              - organization_name
-              - quota_threshold
-              - subscriptions_count
-              - subscriptions
-
         - name: training_quota_status_changed
           placeholders:
               - session_name

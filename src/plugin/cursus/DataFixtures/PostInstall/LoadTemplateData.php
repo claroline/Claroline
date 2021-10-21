@@ -99,15 +99,6 @@ class LoadTemplateData extends AbstractFixture implements ContainerAwareInterfac
         });
 
         // Quota templates
-        $this->createTemplate('training_quota', function ($locale) {
-            return '
-                %organization_name%<br/>
-                %quota_threshold%<br/>
-                %subscriptions_count%<br/>
-                %subscriptions%<br/>
-            ';
-        });
-
         $this->createTemplate('training_quota_status_changed', function ($locale) {
             return '
                 %session_name%<br/>
