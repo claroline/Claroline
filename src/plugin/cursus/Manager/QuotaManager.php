@@ -20,9 +20,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class QuotaManager
 {
-    /** @var TranslatorInterface */
-    private $translator;
-
     /** @var TemplateManager */
     private $templateManager;
 
@@ -36,13 +33,11 @@ class QuotaManager
     private $tokenStorage;
 
     public function __construct(
-        TranslatorInterface $translator,
         TemplateManager $templateManager,
         LocaleManager $localeManager,
         MailManager $mailManager,
         TokenStorageInterface $tokenStorage
     ) {
-        $this->translator = $translator;
         $this->templateManager = $templateManager;
         $this->localeManager = $localeManager;
         $this->mailManager = $mailManager;
@@ -127,31 +122,5 @@ class QuotaManager
         $body = $this->templateManager->getTemplate('training_quota_status_cancelled', $placeholders, $locale);
 
         $this->mailManager->send($subject, $body, [$user], $manager, [], true);
-    }
-
-    public function sendChangedStatusMail(SessionUser $sessionUser): void
-    {
-        $STATUS_STRINGS = [
-            $this->translator->trans('subscription_pending', [], 'cursus'),
-            $this->translator->trans('subscription_refused', [], 'cursus'),
-            $this->translator->trans('subscription_validated', [], 'cursus'),
-            $this->translator->trans('subscription_managed', [], 'cursus'),
-        ];
-
-        $user = $sessionUser->getUser();
-        $locale = $this->localeManager->getLocale($user);
-
-        $placeholders = [
-            'session_name' => $sessionUser->getSession()->getName(),
-            'user_first_name' => $user->getFirstName(),
-            'user_last_name' => $user->getLastName(),
-            'session_start' => $sessionUser->getSession()->getStartDate()->format('d/m/Y'),
-            'session_end' => $sessionUser->getSession()->getEndDate()->format('d/m/Y'),
-            'status' => $STATUS_STRINGS[$sessionUser->getStatus()],
-        ];
-        $subject = $this->templateManager->getTemplate('training_quota_status_changed', $placeholders, $locale, 'title');
-        $body = $this->templateManager->getTemplate('training_quota_status_changed', $placeholders, $locale);
-
-        $this->mailManager->send($subject, $body, [$user], null, [], true);
     }
 }

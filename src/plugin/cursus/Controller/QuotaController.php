@@ -11,6 +11,7 @@
 
 namespace Claroline\CursusBundle\Controller;
 
+use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AppBundle\Persistence\ObjectManager;
@@ -168,7 +169,7 @@ class QuotaController extends AbstractCrudController
             $query['hiddenFilters']['ignored_status'] = SessionUser::STATUS_MANAGED;
         }
 
-        $csvFilename = $this->crud->csv(Sessionuser::class, $query, []);
+        $csvFilename = $this->crud->csv(Sessionuser::class, $query, [Options::SERIALIZE_MINIMAL]);
 
         return new BinaryFileResponse($csvFilename, 200, [
             'Content-Type' => 'text/csv',

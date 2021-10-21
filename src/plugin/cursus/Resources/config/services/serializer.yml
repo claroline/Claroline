@@ -57,6 +57,7 @@ services:
         arguments:
             - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
             - '@Claroline\CursusBundle\Serializer\SessionSerializer'
+            - '@translator'
 
     Claroline\CursusBundle\Serializer\Registration\SessionGroupSerializer:
         arguments:

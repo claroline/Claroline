@@ -48,12 +48,22 @@ const SubscriptionPage = (props) => {
       toolbar="fullscreen more"
       actions={[
         {
+          name: 'export-csv-with-filter',
+          type: DOWNLOAD_BUTTON,
+          icon: 'fa fa-fw fa-download',
+          label: trans('export_with_filter', {}, 'actions'),
+          file: {
+            url: ['apiv2_cursus_quota_export', {id: props.quota.id, filters: props.filters}]
+          },
+          group: trans('transfer')
+        },
+        {
           name: 'export-csv',
           type: DOWNLOAD_BUTTON,
           icon: 'fa fa-fw fa-download',
-          label: trans('export', {}, 'actions'),
+          label: trans('export_all', {}, 'actions'),
           file: {
-            url: ['apiv2_cursus_quota_export', {id: props.quota.id, filters: props.filters}]
+            url: ['apiv2_cursus_quota_export', {id: props.quota.id}]
           },
           group: trans('transfer')
         }
