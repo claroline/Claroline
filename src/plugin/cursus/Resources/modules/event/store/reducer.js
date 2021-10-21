@@ -11,8 +11,8 @@ export const reducer = combineReducers({
   event: makeReducer(null, {
     [LOAD_EVENT]: (state, action) => action.event
   }),
-  registrations: makeReducer(null, {
-    [LOAD_EVENT]: (state, action) => action.registrations
+  registration: makeReducer(null, {
+    [LOAD_EVENT]: (state, action) => action.registration
   }),
   // participants
   tutors: makeListReducer(selectors.STORE_NAME+'.tutors', {}, {

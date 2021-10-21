@@ -332,3 +332,7 @@ services:
         arguments:
             - '@event_dispatcher'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
+
+    Claroline\CoreBundle\Manager\FacetManager:
+        arguments:
+            - '@event_dispatcher'

@@ -11,16 +11,14 @@
 
 namespace Claroline\SamlBundle;
 
-use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
-use Claroline\KernelBundle\Bundle\ConfigurationProviderInterface;
 use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
 use Claroline\SamlBundle\DependencyInjection\Compiler\SamlConfigPass;
 use LightSaml\SpBundle\LightSamlSpBundle;
 use LightSaml\SymfonyBridgeBundle\LightSamlSymfonyBridgeBundle;
+use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class ClarolineSamlBundle extends DistributionPluginBundle implements ConfigurationProviderInterface
+class ClarolineSamlBundle extends DistributionPluginBundle
 {
     public function build(ContainerBuilder $container)
     {
@@ -37,34 +35,15 @@ class ClarolineSamlBundle extends DistributionPluginBundle implements Configurat
         ];
     }
 
-    public function suggestConfigurationFor(Bundle $bundle, $environment)
+    public function configureContainer(ContainerBuilder $container, LoaderInterface $loader)
     {
-        $config = new ConfigurationBuilder();
-        $bundleClass = get_class($bundle);
-        $emptyConfigs = [
-            'LightSaml\SpBundle\LightSamlSpBundle',
-        ];
+        $environment = $container->getParameter('kernel.environment');
 
         $bridgeConfig = 'light_saml_symfony_bridge';
         if ('test' === $environment) {
             $bridgeConfig = 'light_saml_symfony_bridge_test';
         }
 
-        $simpleConfigs = [
-            'LightSaml\SymfonyBridgeBundle\LightSamlSymfonyBridgeBundle' => $bridgeConfig,
-        ];
-
-        if (in_array($bundleClass, $emptyConfigs)) {
-            return $config;
-        } elseif (isset($simpleConfigs[$bundleClass])) {
-            return $config->addContainerResource($this->buildPath($simpleConfigs[$bundleClass]));
-        }
-
-        return false;
-    }
-
-    private function buildPath($file, $folder = 'suggested')
-    {
-        return __DIR__."/Resources/config/{$folder}/{$file}.yml";
+        $loader->load($this->getPath()."/Resources/config/suggested/{$bridgeConfig}.yml");
     }
 }

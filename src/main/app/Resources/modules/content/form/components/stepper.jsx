@@ -108,7 +108,7 @@ class FormStepper extends Component {
 
   render() {
     return (
-      <div className={classes('form-stepper', this.props.className)}>
+      <div className={classes('form-stepper component-container', this.props.className)}>
         <ProgressBar
           className="progress-minimal"
           value={Math.floor(((this.state.activeStep + 1) / (this.props.steps.length)) * 100)}

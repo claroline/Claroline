@@ -7,11 +7,27 @@ import {OrganizationInput} from '#/main/core/data/types/organization/components/
 const dataType = {
   name: 'organization',
   meta: {
-    creatable: false,
+    creatable: true,
     icon: 'fa fa-fw fa fa-building',
     label: trans('organization'),
     description: trans('organization_desc')
   },
+  /**
+   * The list of configuration fields.
+   */
+  configure: () => [
+    {
+      name: 'mode',
+      type: 'choice',
+      label: trans('mode'),
+      options: {
+        choices: {
+          picker: trans('picker'),
+          choice: trans('choice')
+        }
+      }
+    }
+  ],
   components: {
     details: OrganizationDisplay,
     input: OrganizationInput,

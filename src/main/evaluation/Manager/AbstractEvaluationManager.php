@@ -26,7 +26,7 @@ abstract class AbstractEvaluationManager
         }
 
         if (isset($data['progression'])) {
-            $this->updateEvaluationProgression($evaluation, $data['progression'], $data['progressionMax'] ?? null);
+            $this->updateEvaluationProgression($evaluation, $data['progression'], $data['progressionMax'] ?? 100);
         }
 
         return $evaluation;
@@ -56,7 +56,7 @@ abstract class AbstractEvaluationManager
         return $evaluation;
     }
 
-    private function updateEvaluationProgression(AbstractEvaluation $evaluation, float $progression, ?float $progressionMax = 100): AbstractEvaluation
+    private function updateEvaluationProgression(AbstractEvaluation $evaluation, float $progression, float $progressionMax): AbstractEvaluation
     {
         $newProgression = $progression / $progressionMax;
 

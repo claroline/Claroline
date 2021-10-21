@@ -14,6 +14,8 @@
             "homepage": "http://github.com/claroline"
         }
     ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "require": {
         "php": ">=7.2",
         "ext-curl": "*",
@@ -190,19 +192,5 @@
             "composer disable-maintenance",
             "composer delete-cache"
         ]
-    },
-    "minimum-stability": "dev",
-    "prefer-stable": true,
-    "config": {
-        "github-protocols": [
-            "https",
-            "git",
-            "ssh"
-        ],
-        "process-timeout": 3600
-    },
-    "extra": {
-        "symfony-var-dir": "var",
-        "symfony-assets-install": "symlink"
     }
 }

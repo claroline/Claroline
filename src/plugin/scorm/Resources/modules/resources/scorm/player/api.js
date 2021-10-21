@@ -45,9 +45,9 @@ const scorm2004Errors = {
   '408': 'Data Model Dependency Not Established'
 }
 
-function commitResult(scoId, mode, scoData, dispatch, currentUser) {
+function commitResult(scoId, scoData, dispatch, currentUser) {
   if (currentUser) {
-    dispatch(actions.commitData(scoId, mode, scoData))
+    dispatch(actions.commitData(scoId, scoData))
   }
 }
 
@@ -175,7 +175,7 @@ function APIClass(sco, scormData, tracking, dispatch, currentUser) {
       } else {
         this.scoData['cmi.core.entry'] = ''
       }
-      commitResult(sco.id, 'log', this.scoData, dispatch, currentUser)
+      commitResult(sco.id, this.scoData, dispatch, currentUser)
 
       return 'true'
     } else {
@@ -372,7 +372,7 @@ function APIClass(sco, scormData, tracking, dispatch, currentUser) {
         return 'false'
       } else {
         this.apiLastError = '0'
-        commitResult(sco.id, 'persist', this.scoData, dispatch, currentUser)
+        commitResult(sco.id, this.scoData, dispatch, currentUser)
 
         return 'true'
       }
@@ -497,7 +497,7 @@ function APIClass(sco, scormData, tracking, dispatch, currentUser) {
     } else {
       this.scoData['cmi.entry'] = ''
     }
-    commitResult(sco.id, 'log', this.scoData, dispatch, currentUser)
+    commitResult(sco.id, this.scoData, dispatch, currentUser)
 
     return 'true'
   }
@@ -1475,7 +1475,7 @@ function APIClass(sco, scormData, tracking, dispatch, currentUser) {
       return 'false'
     }
     this.apiLastError = '0'
-    commitResult(sco.id, 'persist', this.scoData, dispatch, currentUser)
+    commitResult(sco.id, this.scoData, dispatch, currentUser)
 
     return 'true'
   }

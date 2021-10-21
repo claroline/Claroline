@@ -53,27 +53,46 @@ class Create extends AbstractAction
             }
         }
 
+        $groups = [];
         if (isset($data['groups'])) {
             foreach ($data['groups'] as $group) {
                 $object = $this->om->getObject($group, Group::class, array_keys($group));
-
                 if (!$object) {
                     throw new \Exception('Group '.implode(',', $group).' does not exists');
                 }
+
+                $groups[] = $object;
             }
+
+            // remove groups from input data to avoid the user serializer to process it
+            unset($data['groups']);
         }
 
+        $roles = [];
         if (isset($data['roles'])) {
             foreach ($data['roles'] as $role) {
                 $object = $this->om->getObject($role, Role::class, array_keys($role));
-
                 if (!$object) {
                     throw new \Exception('Role '.implode(',', $role).' does not exists');
                 }
+
+                $roles[] = $role;
             }
+
+            // remove roles from input data to avoid the user serializer to process it
+            unset($data['roles']);
         }
 
-        $this->crud->create($this->getClass(), $data, $options);
+        $user = $this->crud->create($this->getClass(), $data, $options);
+        if ($user) {
+            if (!empty($groups)) {
+                $this->crud->patch($user, 'group', 'add', $groups);
+            }
+
+            if (!empty($roles)) {
+                $this->crud->patch($user, 'role', 'add', $roles);
+            }
+        }
 
         $successData['create'][] = [
             'data' => $data,

@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\ScormBundle\Migrations\pdo_mysql;
+namespace Claroline\CoreBundle\Installation\Migrations\pdo_mysql;
 
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
@@ -8,23 +8,23 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated migration based on mapping information: modify it with caution.
  *
- * Generation date: 2020/05/27 12:08:27
+ * Generation date: 2021/10/01 08:05:08
  */
-class Version20200527120744 extends AbstractMigration
+class Version20211001080456 extends AbstractMigration
 {
     public function up(Schema $schema): void
     {
         $this->addSql('
-            ALTER TABLE claro_scorm_sco_tracking 
-            ADD progression DOUBLE PRECISION NOT NULL
+            ALTER TABLE claro_user 
+            DROP authentication
         ');
     }
 
     public function down(Schema $schema): void
     {
         $this->addSql('
-            ALTER TABLE claro_scorm_sco_tracking 
-            DROP progression
+            ALTER TABLE claro_user 
+            ADD authentication VARCHAR(255) CHARACTER SET utf8 DEFAULT NULL COLLATE `utf8_unicode_ci`
         ');
     }
 }

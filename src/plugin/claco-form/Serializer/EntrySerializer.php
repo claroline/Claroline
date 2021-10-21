@@ -8,70 +8,51 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\ClacoFormBundle\Entity\Category;
 use Claroline\ClacoFormBundle\Entity\Comment;
 use Claroline\ClacoFormBundle\Entity\Entry;
+use Claroline\ClacoFormBundle\Entity\Field;
 use Claroline\ClacoFormBundle\Entity\FieldValue;
 use Claroline\ClacoFormBundle\Entity\Keyword;
-use Claroline\ClacoFormBundle\Manager\ClacoFormManager;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
-use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;
+use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
+use Claroline\CoreBundle\Manager\FacetManager;
 
 class EntrySerializer
 {
     use SerializerTrait;
 
-    /** @var ClacoFormManager */
-    private $clacoFormManager;
-
     /** @var CategorySerializer */
     private $categorySerializer;
-
     /** @var CommentSerializer */
     private $commentSerializer;
-
-    /** @var FieldValueSerializer */
-    private $fieldValueSerializer;
-
     /** @var KeywordSerializer */
     private $keywordSerializer;
-
     /** @var UserSerializer */
     private $userSerializer;
-
-    /** @var ObjectManager */
-    private $om;
+    /** @var FacetManager */
+    private $facetManager;
 
     private $clacoFormRepo;
     private $fieldRepo;
-    private $fieldValueRepo;
-    private $fieldChoiceCategoryRepo;
     private $categoryRepo;
     private $keywordRepo;
     private $userRepo;
 
-    /**
-     * EntrySerializer constructor.
-     */
     public function __construct(
-        ClacoFormManager $clacoFormManager,
+        ObjectManager $om,
         CategorySerializer $categorySerializer,
         CommentSerializer $commentSerializer,
-        FieldValueSerializer $fieldValueSerializer,
         KeywordSerializer $keywordSerializer,
         UserSerializer $userSerializer,
-        ObjectManager $om
+        FacetManager $facetManager
     ) {
-        $this->clacoFormManager = $clacoFormManager;
         $this->categorySerializer = $categorySerializer;
         $this->commentSerializer = $commentSerializer;
-        $this->fieldValueSerializer = $fieldValueSerializer;
         $this->keywordSerializer = $keywordSerializer;
         $this->userSerializer = $userSerializer;
-        $this->om = $om;
+        $this->facetManager = $facetManager;
 
         $this->clacoFormRepo = $om->getRepository('Claroline\ClacoFormBundle\Entity\ClacoForm');
         $this->fieldRepo = $om->getRepository('Claroline\ClacoFormBundle\Entity\Field');
-        $this->fieldValueRepo = $om->getRepository('Claroline\ClacoFormBundle\Entity\FieldValue');
-        $this->fieldChoiceCategoryRepo = $om->getRepository('Claroline\ClacoFormBundle\Entity\FieldChoiceCategory');
         $this->categoryRepo = $om->getRepository('Claroline\ClacoFormBundle\Entity\Category');
         $this->keywordRepo = $om->getRepository('Claroline\ClacoFormBundle\Entity\Keyword');
         $this->userRepo = $om->getRepository('Claroline\CoreBundle\Entity\User');
@@ -90,7 +71,7 @@ class EntrySerializer
      *
      * @return array - the serialized representation of the entry
      */
-    public function serialize(Entry $entry, array $options = [])
+    public function serialize(Entry $entry, array $options = []): array
     {
         $user = $entry->getUser();
 
@@ -100,19 +81,15 @@ class EntrySerializer
             'title' => $entry->getTitle(),
             'status' => $entry->getStatus(),
             'locked' => $entry->isLocked(),
-            'creationDate' => $entry->getCreationDate() ? $entry->getCreationDate()->format('Y-m-d H:i:s') : null,
-            'editionDate' => $entry->getEditionDate() ? $entry->getEditionDate()->format('Y-m-d H:i:s') : null,
-            'publicationDate' => $entry->getPublicationDate() ? $entry->getPublicationDate()->format('Y-m-d H:i:s') : null,
+            'creationDate' => DateNormalizer::normalize($entry->getCreationDate()),
+            'editionDate' => DateNormalizer::normalize($entry->getEditionDate()),
+            'publicationDate' => DateNormalizer::normalize($entry->getPublicationDate()),
             'user' => $user ? $this->userSerializer->serialize($user, [Options::SERIALIZE_MINIMAL]) : null,
             'clacoForm' => [
                 'id' => $entry->getClacoForm()->getUuid(),
             ],
+            'values' => $this->serializeValues($entry),
         ];
-        $fieldValues = $entry->getFieldValues();
-
-        if (count($fieldValues) > 0) {
-            $serialized['values'] = $this->serializeValues($fieldValues);
-        }
 
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
             $serialized = array_merge($serialized, [
@@ -125,12 +102,7 @@ class EntrySerializer
         return $serialized;
     }
 
-    /**
-     * @param array $data
-     *
-     * @return Entry
-     */
-    public function deserialize($data, Entry $entry, array $options = [])
+    public function deserialize(array $data, Entry $entry, array $options = []): Entry
     {
         $currentDate = new \DateTime();
 
@@ -171,67 +143,53 @@ class EntrySerializer
             }
 
             // Sets values for fields
-            $fields = $this->fieldRepo->findBy(['clacoForm' => $clacoForm]);
 
+            /** @var Field[] $fields */
+            $fields = $this->fieldRepo->findBy(['clacoForm' => $clacoForm]);
             foreach ($fields as $field) {
                 $uuid = $field->getUuid();
 
-                if (isset($data['values'][$uuid])) {
-                    $fieldValue = $this->fieldValueRepo->findOneBy(['entry' => $entry, 'field' => $field]);
-
+                if (array_key_exists($uuid, $data['values'])) {
+                    $fieldValue = $entry->getFieldValue($field);
                     if (empty($fieldValue)) {
                         $fieldValue = new FieldValue();
                         $fieldValue->setEntry($entry);
                         $fieldValue->setField($field);
 
-                        $fielFacetValue = new FieldFacetValue();
-                        $fielFacetValue->setUser($entry->getUser());
-                        $fielFacetValue->setFieldFacet($field->getFieldFacet());
-                        $fielFacetValue->setValue($data['values'][$uuid]);
-                        $fieldValue->setFieldFacetValue($fielFacetValue);
+                        $fieldFacetValue = new FieldFacetValue();
+                        $fieldFacetValue->setUser($entry->getUser());
+                        $fieldFacetValue->setFieldFacet($field->getFieldFacet());
+                        $fieldValue->setFieldFacetValue($fieldFacetValue);
 
-                        $this->om->persist($fielFacetValue);
-                    } else {
-                        $fieldValue->setValue($data['values'][$uuid]);
+                        $entry->addFieldValue($fieldValue);
                     }
-                    $this->om->persist($fieldValue);
 
-                    $fieldsCategories = $this->fieldChoiceCategoryRepo->findBy(['field' => $field]);
-
-                    foreach ($fieldsCategories as $fieldCategory) {
-                        switch ($field->getType()) {
-                            case FieldFacet::NUMBER_TYPE:
-                                $isCategoryValue = floatval($data['values'][$uuid]) === floatval($fieldCategory->getValue());
-                                break;
-                            default:
-                                $isCategoryValue = $data['values'][$uuid] === $fieldCategory->getValue();
-                        }
-                        if ($isCategoryValue) {
-                            $entry->addCategory($fieldCategory->getCategory());
-                        }
-                    }
+                    $fieldValue->setValue(
+                        $this->facetManager->deserializeFieldValue(
+                            $entry,
+                            $field->getType(),
+                            $data['values'][$uuid]
+                        )
+                    );
                 }
             }
-        }
-
-        if (empty($entry->getCreationDate())) {
-            $entry->setCreationDate($currentDate);
-            $this->clacoFormManager->notifyCategoriesManagers($entry, [], $entry->getCategories());
-        } else {
-            $entry->setEditionDate($currentDate);
-            $this->clacoFormManager->notifyCategoriesManagers($entry, $entry->getCategories(), $entry->getCategories());
         }
 
         return $entry;
     }
 
-    private function serializeValues(array $fieldValues)
+    private function serializeValues(Entry $entry)
     {
-        $values = [];
+        $fieldValues = $entry->getFieldValues();
 
+        $values = [];
         foreach ($fieldValues as $fieldValue) {
             $field = $fieldValue->getField();
-            $values[$field->getUuid()] = $fieldValue->getValue();
+            $values[$field->getUuid()] = $this->facetManager->serializeFieldValue(
+                $entry,
+                $field->getType(),
+                $fieldValue->getValue()
+            );
         }
 
         return $values;
@@ -302,7 +260,7 @@ class EntrySerializer
                     $keyword = new Keyword();
                     $keyword->setClacoForm($clacoForm);
                     $this->keywordSerializer->deserialize($keywordData, $keyword);
-                    $this->om->persist($keyword);
+
                     $entry->addKeyword($keyword);
                 }
             }

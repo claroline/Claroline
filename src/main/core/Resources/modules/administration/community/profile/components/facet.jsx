@@ -56,6 +56,7 @@ const FacetSection = props =>
               required: true,
               options: {
                 placeholder: trans('profile_section_no_field'),
+                fields: props.fields,
                 min: 1
               }
             }
@@ -69,6 +70,7 @@ FacetSection.propTypes = {
   index: T.number.isRequired,
   parentIndex: T.number.isRequired,
   title: T.string,
+  fields: T.array,
   remove: T.func.isRequired
 }
 
@@ -76,7 +78,6 @@ const ProfileFacetComponent = props =>
   <FormData
     level={2}
     name={`${baseSelectors.STORE_NAME}.profile`}
-    className="profile-facet"
     dataPart={`[${props.index}]`}
     buttons={true}
     target={['apiv2_profile_update']}
@@ -109,6 +110,7 @@ const ProfileFacetComponent = props =>
             index={sectionIndex}
             parentIndex={props.index}
             title={section.title}
+            fields={props.fields}
             remove={() => props.removeSection(props.facet.id, section.id)}
           />
         )}
@@ -137,6 +139,7 @@ ProfileFacetComponent.propTypes = {
   facet: T.shape(
     ProfileFacetTypes.propTypes
   ).isRequired,
+  fields: T.array,
   addSection: T.func.isRequired,
   removeSection: T.func.isRequired
 }
@@ -148,7 +151,8 @@ ProfileFacetComponent.defaultProps = {
 const ProfileFacet = connect(
   (state) => ({
     index: selectors.currentFacetIndex(state),
-    facet: selectors.currentFacet(state)
+    facet: selectors.currentFacet(state),
+    fields: selectors.allFields(state)
   }),
   (dispatch) => ({
     addSection(facetId) {

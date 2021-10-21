@@ -29,44 +29,23 @@ class FieldFacet
     use Hidden;
 
     /** @var int */
-    const STRING_TYPE = 1;
+    const NUMBER_TYPE = 'number';
     /** @var int */
-    const NUMBER_TYPE = 2;
+    const DATE_TYPE = 'date';
     /** @var int */
-    const DATE_TYPE = 3;
+    const COUNTRY_TYPE = 'country';
     /** @var int */
-    const RADIO_TYPE = 4;
+    const EMAIL_TYPE = 'email';
     /** @var int */
-    const SELECT_TYPE = 5;
+    const HTML_TYPE = 'html';
     /** @var int */
-    const CHECKBOXES_TYPE = 6;
+    const CASCADE_TYPE = 'cascade';
     /** @var int */
-    const COUNTRY_TYPE = 7;
+    const FILE_TYPE = 'file';
     /** @var int */
-    const EMAIL_TYPE = 8;
+    const BOOLEAN_TYPE = 'boolean';
     /** @var int */
-    const HTML_TYPE = 9;
-    /** @var int */
-    const CASCADE_TYPE = 10;
-    /** @var int */
-    const FILE_TYPE = 11;
-    /** @var int */
-    const BOOLEAN_TYPE = 12;
-    /** @var int */
-    const CHOICE_TYPE = 13;
-    /** @var array */
-    public static $types = [
-        'string' => self::STRING_TYPE,
-        'number' => self::NUMBER_TYPE,
-        'date' => self::DATE_TYPE,
-        'country' => self::COUNTRY_TYPE,
-        'email' => self::EMAIL_TYPE,
-        'html' => self::HTML_TYPE,
-        'cascade' => self::CASCADE_TYPE,
-        'file' => self::FILE_TYPE,
-        'boolean' => self::BOOLEAN_TYPE,
-        'choice' => self::CHOICE_TYPE,
-    ];
+    const CHOICE_TYPE = 'choice';
 
     /**
      * @ORM\Column(name="name")
@@ -76,9 +55,9 @@ class FieldFacet
     private $label;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column()
      *
-     * @var int
+     * @var string
      */
     private $type;
 
@@ -129,26 +108,48 @@ class FieldFacet
     /**
      * @ORM\Column(name="is_metadata", type="boolean", options={"default" = 0})
      */
-    protected $metadata = false;
+    private $metadata = false;
 
     /**
      * @ORM\Column(name="locked", type="boolean", options={"default" = 0})
      */
-    protected $locked = false;
+    private $locked = false;
 
     /**
      * @ORM\Column(name="locked_edition", type="boolean", options={"default" = 0})
      */
-    protected $lockedEditionOnly = false;
+    private $lockedEditionOnly = false;
 
     /**
      * @ORM\Column(name="help", nullable=true)
      */
-    protected $help;
+    private $help;
+
+    /**
+     * @ORM\Column(name="condition_field", type="string", nullable=true)
+     *
+     * @var string
+     */
+    private $conditionField;
+
+    /**
+     * @ORM\Column(name="condition_comparator", type="string", nullable=true)
+     *
+     * @var string
+     */
+    private $conditionComparator;
+
+    /**
+     * @ORM\Column(name="condition_value", type="json", nullable=true)
+     *
+     * @var array
+     */
+    private $conditionValue = [];
 
     public function __construct()
     {
         $this->refreshUuid();
+
         $this->fieldFacetChoices = new ArrayCollection();
     }
 
@@ -180,31 +181,17 @@ class FieldFacet
         $this->label = $label;
     }
 
-    /**
-     * @return string
-     */
     public function getLabel(): ?string
     {
         return $this->label;
     }
 
-    /**
-     * @param int|string $type
-     */
-    public function setType($type)
+    public function setType(string $type)
     {
-        //if we pass a correct type name
-        if (in_array($type, array_keys(static::$types))) {
-            $this->type = static::$types[$type];
-        } elseif (in_array($type, static::$types)) {
-            //otherwise we use the integer
-            $this->type = $type;
-        } else {
-            throw new \InvalidArgumentException('Type must be a FieldFacet class constant');
-        }
+        $this->type = $type;
     }
 
-    public function getType(): ?int
+    public function getType(): ?string
     {
         return $this->type;
     }
@@ -231,23 +218,6 @@ class FieldFacet
     public function getPosition(): ?int
     {
         return $this->position;
-    }
-
-    public function getFieldType(): string
-    {
-        switch ($this->type) {
-            case self::NUMBER_TYPE: return 'number';
-            case self::DATE_TYPE: return 'date';
-            case self::STRING_TYPE: return 'string';
-            case self::COUNTRY_TYPE: return 'country';
-            case self::EMAIL_TYPE: return 'email';
-            case self::HTML_TYPE: return 'html';
-            case self::CASCADE_TYPE: return 'cascade';
-            case self::FILE_TYPE: return 'file';
-            case self::BOOLEAN_TYPE: return 'boolean';
-            case self::CHOICE_TYPE: return 'choice';
-            default: return 'error';
-        }
     }
 
     /**
@@ -341,5 +311,35 @@ class FieldFacet
     public function setHelp(?string $help)
     {
         $this->help = $help;
+    }
+
+    public function getConditionField(): ?string
+    {
+        return $this->conditionField;
+    }
+
+    public function setConditionField(?string $conditionField)
+    {
+        $this->conditionField = $conditionField;
+    }
+
+    public function getConditionComparator(): ?string
+    {
+        return $this->conditionComparator;
+    }
+
+    public function setConditionComparator(?string $conditionComparator)
+    {
+        $this->conditionComparator = $conditionComparator;
+    }
+
+    public function getConditionValue()
+    {
+        return $this->conditionValue;
+    }
+
+    public function setConditionValue($conditionValue)
+    {
+        $this->conditionValue = $conditionValue;
     }
 }

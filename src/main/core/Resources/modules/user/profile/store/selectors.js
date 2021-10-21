@@ -31,11 +31,25 @@ const parameters = createSelector(
   (store) => store.parameters
 )
 
+const allFields = createSelector(
+  [facets],
+  (configuredFacets) => {
+    let fields = []
+
+    configuredFacets.map(facet => facet.sections.map(section => {
+      fields = fields.concat(section.fields)
+    }))
+
+    return fields
+  }
+)
+
 export const selectors = {
   STORE_NAME,
   FORM_NAME,
   facets,
   currentFacet,
   parameters,
-  loaded
+  loaded,
+  allFields
 }

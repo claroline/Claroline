@@ -46,7 +46,6 @@ class LogEntryLockSwitchEvent extends LogGenericEvent
                 'value' => $fieldFacetValue->getValue(),
                 'name' => $fieldFacet->getName(),
                 'type' => $fieldFacet->getType(),
-                'typeName' => $fieldFacet->getFieldType(),
             ];
         }
         $clacoForm = $entry->getClacoForm();

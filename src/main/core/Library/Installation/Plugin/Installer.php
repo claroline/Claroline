@@ -158,10 +158,10 @@ class Installer implements LoggerAwareInterface
         $bundles = $this->pluginManager->getInstalledBundles();
 
         foreach ($bundles as $bundle) {
-            $this->log('Updating configuration for '.get_class($bundle['instance']));
+            $this->log('Updating configuration for '.get_class($bundle));
             $this->log('Plugin validated: proceed to database changes...');
             $this->om->clear();
-            $this->recorder->update($bundle['instance']);
+            $this->recorder->update($bundle);
         }
     }
 }

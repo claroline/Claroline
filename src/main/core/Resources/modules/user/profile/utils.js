@@ -1,6 +1,9 @@
 import get from 'lodash/get'
+import isEmpty from 'lodash/isEmpty'
+import cloneDeep from 'lodash/cloneDeep'
 
 import {trans} from '#/main/app/intl/translation'
+import {hasPermission} from '#/main/app/security/permissions'
 
 function getMainFacet(facets) {
   return facets.find(facet => facet.meta.main)
@@ -88,7 +91,7 @@ function getFormDefaultSections(userData, isNew = false) {
           type: 'username',
           label: trans('username'),
           required: true,
-          disabled: !isNew && (!userData.meta || !userData.meta.administrate)
+          disabled: !isNew && !hasPermission('administrate', userData)
         }, {
           name: 'plainPassword',
           type: 'password',
@@ -137,63 +140,91 @@ function getFormDefaultSections(userData, isNew = false) {
   ]
 }
 
-//the `force` param is here for the user registration: just show everything
-function formatFormSections(sections, userData, params, currentUser = null) {
-  let hasConfidentialRights = currentUser ? hasRoles(currentUser.roles, ['ROLE_ADMIN'].concat(params['roles_confidential'])): false
-  let hasLockedRights = currentUser ? hasRoles(currentUser.roles, ['ROLE_ADMIN'].concat(params['roles_locked'])): false
+function formatFormSections(sections, allFields, userData, params = {}, currentUser = null) {
+  const hasConfidentialRights = currentUser ? hasRoles(currentUser.roles, ['ROLE_ADMIN'].concat(params.roles_confidential)): false
+  const hasLockedRights = currentUser ? hasRoles(currentUser.roles, ['ROLE_ADMIN'].concat(params.roles_locked)): false
 
-  sections.forEach(section => {
-    section.fields = section.fields.filter(f => !f.restrictions.hidden && (hasConfidentialRights || !f.restrictions.metadata || (currentUser && currentUser.id === userData['id'])))
-    section.fields.forEach(f => {
-      f['name'] = 'profile.' + f['id']
+  return sections.map(section => {
+    section.fields = section.fields
+      .filter(f => !get(f, 'restrictions.hidden') && (hasConfidentialRights || !get(f, 'restrictions.metadata') || (currentUser && currentUser.id === userData.id)))
+      .map(f => {
+        if (!hasLockedRights && (
+          (f.restrictions.locked && !f.restrictions.lockedEditionOnly) ||
+          (f.restrictions.locked && f.restrictions.lockedEditionOnly && null !== get(userData, `profile.${f.id}`, null))
+        )) {
+          f.disabled = true
+        }
 
-      if (!hasLockedRights && (
-        (f.restrictions.locked && !f.restrictions.lockedEditionOnly) ||
-        (f.restrictions.locked && f.restrictions.lockedEditionOnly && userData['profile'][f.id] !== undefined && userData['profile'][f.id] !== null)
-      )) {
-        f['disabled'] = true
-      }
-      if (f.type === 'choice') {
-        const options = f.options ? f.options : {}
-        options['choices'] = f.options.choices ?
-          f.options.choices.reduce((acc, choice) => {
-            acc[choice.value] = choice.value
+        return formatField(f, allFields, 'profile')
+      })
 
-            return acc
-          }, {}) :
-          {}
-        f['options'] = options
-      }
-    })
+    return section
   })
-
-  return sections
 }
 
-function formatDetailsSections(sections, user, params, currentUser) {
+function formatDetailsSections(sections, allFields, user, params, currentUser) {
   const hasConfidentialRights = currentUser ? hasRoles(currentUser.roles, ['ROLE_ADMIN'].concat(params['roles_confidential'])) : false
-  sections.forEach(section => {
-    section.fields = section.fields.filter(f => !f.restrictions.hidden && (hasConfidentialRights || !f.restrictions.metadata || (currentUser && currentUser.id === user.id)))
-    section.fields.forEach(f => {
-      f['name'] = 'profile.' + f['id']
 
-      if (f.type === 'choice') {
-        const options = f.options ? f.options : {}
-        options['choices'] = f.options.choices ?
-          f.options.choices.reduce((acc, choice) => {
-            acc[choice.value] = choice.value
+  return sections.map(section => {
+    section.fields = section.fields
+      .filter(f => !f.restrictions.hidden && (hasConfidentialRights || !f.restrictions.metadata || (currentUser && currentUser.id === user.id)))
+      .map(f => formatField(f, allFields, 'profile'))
 
-            return acc
-          }, {}) :
-          {}
-        f['options'] = options
-      }
-    })
+    return section
   })
-
-  return sections
 }
 
+function formatField(fieldDef, allFields, dataProp) {
+  const field = {
+    name: `${dataProp}.${fieldDef.id}`,
+    type: fieldDef.type,
+    label: fieldDef.label,
+    required: fieldDef.required,
+    help: fieldDef.help,
+    options: fieldDef.options ? cloneDeep(fieldDef.options) : {},
+    displayed: (data) => isFieldDisplayed(fieldDef, allFields, data[dataProp])
+  }
+
+  if (fieldDef.type === 'choice') {
+    field.options.choices = fieldDef.options.choices ?
+      fieldDef.options.choices.reduce((acc, choice) => Object.assign(acc, {
+        [choice.value]: choice.value
+      }), {}) : {}
+  }
+
+  return field
+}
+
+function isFieldDisplayed(fieldDef, allFields, data) {
+  if (!isEmpty(fieldDef.display.condition)) {
+    const parentField = allFields.find(f => f.id === fieldDef.display.condition.field)
+    if (parentField) {
+      const parentValue = get(data, parentField.id)
+
+      let displayed = false
+      switch (fieldDef.display.condition.comparator) {
+        case 'equal':
+          displayed = parentValue === fieldDef.display.condition.value
+          break
+        case 'different':
+          displayed = parentValue !== fieldDef.display.condition.value
+          break
+        case 'empty':
+          displayed = isEmpty(parentValue)
+          break
+        case 'not_empty':
+          displayed = !isEmpty(parentValue)
+          break
+      }
+
+      return displayed
+    }
+  }
+
+  return true
+}
+
+// should be declared elsewhere
 function hasRoles(roles, validRoleNames) {
   const validRoles = roles.filter(r => r.type === 1).filter(r => validRoleNames.indexOf(r.name) > -1)
 
@@ -206,5 +237,7 @@ export {
   getMainFacet,
   getDefaultFacet,
   formatFormSections,
-  formatDetailsSections
+  formatDetailsSections,
+  formatField,
+  isFieldDisplayed
 }

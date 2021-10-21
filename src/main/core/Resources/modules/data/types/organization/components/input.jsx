@@ -2,14 +2,15 @@ import React, {Fragment} from 'react'
 
 import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {Button} from '#/main/app/action/components/button'
-
 import {trans} from '#/main/app/intl/translation'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
+
 import {OrganizationCard} from '#/main/core/user/data/components/organization-card'
-import {Organization as OrganizationType} from '#/main/core/user/prop-types'
+import {Organization as OrganizationTypes} from '#/main/core/user/prop-types'
 import {MODAL_ORGANIZATIONS} from '#/main/core/modals/organizations'
+import {OrganizationChoice} from '#/main/core/data/types/organization/components/choice'
 
 const OrganizationButton = props =>
   <Button
@@ -38,8 +39,16 @@ OrganizationButton.propTypes = {
 }
 
 const OrganizationInput = props => {
+  if ('choice' === props.mode) {
+    return (
+      <OrganizationChoice
+        {...props}
+      />
+    )
+  }
+
   if (props.value) {
-    return(
+    return (
       <Fragment>
         <OrganizationCard
           data={props.value}
@@ -84,12 +93,14 @@ const OrganizationInput = props => {
 }
 
 implementPropTypes(OrganizationInput, DataInputTypes, {
-  value: T.shape(OrganizationType.propTypes),
+  value: T.shape(OrganizationTypes.propTypes),
   picker: T.shape({
     title: T.string
-  })
+  }),
+  mode: T.oneOf(['picker', 'choice'])
 }, {
-  value: null
+  value: null,
+  mode: 'picker'
 })
 
 export {

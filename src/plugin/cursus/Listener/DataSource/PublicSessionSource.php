@@ -50,7 +50,7 @@ class PublicSessionSource
         $options['hiddenFilters']['publicRegistration'] = true;
         $options['hiddenFilters']['terminated'] = false;
 
-        if (DataSource::CONTEXT_WORKSPACE === $event->getContext()) {
+        if (DataSource::CONTEXT_WORKSPACE === $event->getContext() && (empty($options['filters'] || empty($options['filters']['workspace'])))) {
             $options['hiddenFilters']['workspace'] = $event->getWorkspace()->getUuid();
         } elseif (DataSource::CONTEXT_HOME === $event->getContext()) {
             // only display sessions of the default organization on home

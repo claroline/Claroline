@@ -71,10 +71,10 @@ class UserProgressionManager
         return $this->resourceEvalManager->getUserEvaluation($path->getResourceNode(), $user);
     }
 
-    public function getCurrentAttempt(Path $path, $user)
+    public function getCurrentAttempt(Path $path, User $user, bool $createMissing = true)
     {
         $pathAttempt = $this->resourceEvalRepo->findLast($path->getResourceNode(), $user);
-        if (empty($pathAttempt)) {
+        if (empty($pathAttempt) && $createMissing) {
             $pathAttempt = $this->resourceEvalManager->createResourceEvaluation($path->getResourceNode(), $user);
         }
 

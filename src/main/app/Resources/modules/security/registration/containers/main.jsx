@@ -17,6 +17,7 @@ const RegistrationMain = withRouter(
       (state) => ({
         user: formSelectors.data(formSelectors.form(state, selectors.FORM_NAME)),
         facets: selectors.facets(state),
+        allFacetFields: selectors.allFacetFields(state),
         termOfService: selectors.termOfService(state),
         options: selectors.options(state),
         workspaces: selectors.workspaces(state),

@@ -6,7 +6,7 @@ import {EventDetails as EventDetailsComponent} from '#/plugin/cursus/event/compo
 const EventDetails = connect(
   (state) => ({
     event: selectors.event(state),
-    registration: selectors.registrations(state)
+    registration: selectors.registration(state)
   }),
   (dispatch) => ({
     register(id) {

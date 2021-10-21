@@ -54,7 +54,7 @@ class PluginManager
         $this->kernel = $kernel;
 
         $this->loadedBundles = IniParser::parseFile($this->bundleFile);
-        BundleManager::initialize($kernel, $this->bundleFile);
+        BundleManager::initialize($kernel->getEnvironment(), $this->bundleFile);
         $this->bundleManager = BundleManager::getInstance();
     }
 
@@ -262,9 +262,9 @@ class PluginManager
         $plugin = $this->getBundle($plugin);
 
         foreach ($this->getInstalledBundles() as $bundle) {
-            $requirements = $bundle['instance']->getRequiredPlugins();
+            $requirements = $bundle->getRequiredPlugins();
             if (in_array(get_class($plugin), $requirements)) {
-                $requiredBy[] = get_class($bundle['instance']);
+                $requiredBy[] = get_class($bundle);
             }
         }
 
@@ -299,8 +299,8 @@ class PluginManager
         $shortName = $this->getPluginShortName($plugin);
 
         foreach ($this->getInstalledBundles() as $bundle) {
-            if ($bundle['instance']->getName() === $shortName) {
-                return $bundle['instance'];
+            if ($bundle->getName() === $shortName) {
+                return $bundle;
             }
         }
 
@@ -310,7 +310,7 @@ class PluginManager
     public function getInstalledBundles()
     {
         return array_filter($this->bundleManager->getActiveBundles(true), function ($bundle) {
-            return $bundle['instance'] instanceof PluginBundle;
+            return $bundle instanceof PluginBundle;
         });
     }
 
