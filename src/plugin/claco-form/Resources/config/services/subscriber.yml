@@ -1,0 +1,8 @@
+services:
+    Claroline\ClacoFormBundle\Subscriber\EntrySubscriber:
+        arguments:
+            - '@security.token_storage'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\ClacoFormBundle\Manager\ClacoFormManager'
+        tags:
+            - { name: kernel.event_subscriber }

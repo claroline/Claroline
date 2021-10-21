@@ -6,7 +6,7 @@ import {makeListReducer} from '#/main/app/content/list/store'
 import {LIST_TOGGLE_SELECT, LIST_TOGGLE_SELECT_ALL} from '#/main/app/content/list/store/actions'
 
 import {selectors} from '#/main/app/security/registration/store/selectors'
-import {REGISTRATION_DATA_LOAD, ORGANIZATIONS_DATA_LOAD} from '#/main/app/security/registration/store/actions'
+import {REGISTRATION_DATA_LOAD} from '#/main/app/security/registration/store/actions'
 
 const getDefaultRole = (workspace) => workspace.registration.defaultRole
 
@@ -48,8 +48,5 @@ export const reducer = combineReducers({
         return user
       }
     })
-  }),
-  existingOrganizations: makeReducer([], {
-    [ORGANIZATIONS_DATA_LOAD]: (state, action) => action.data
   })
 })

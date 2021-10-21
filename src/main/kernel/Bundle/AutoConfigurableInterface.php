@@ -11,9 +11,15 @@
 
 namespace Claroline\KernelBundle\Bundle;
 
+use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\Routing\RouteCollectionBuilder;
+
 interface AutoConfigurableInterface
 {
     public function supports($environment);
 
-    public function getConfiguration($environment);
+    public function configureRoutes(RouteCollectionBuilder $routes);
+
+    public function configureContainer(ContainerBuilder $container, LoaderInterface $loader);
 }

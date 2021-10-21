@@ -12,7 +12,7 @@ import {Optional} from '#/main/app/security/registration/components/optional'
 import {Organization} from '#/main/app/security/registration/components/organization'
 import {Workspace} from '#/main/app/security/registration/components/workspace'
 import {Registration} from '#/main/app/security/registration/components/registration'
-import {OrganizationSelection} from '#/main/app/security/registration/containers/organization-selection'
+import {OrganizationSelection} from '#/main/app/security/registration/components/organization-selection'
 
 import {constants} from '#/main/app/security/registration/constants'
 
@@ -41,17 +41,22 @@ class RegistrationMain extends Component {
       }
     ], this.props.facets.map(facet => ({
       title: facet.title,
-      component: () => {
-        const currentFacet = <Facet facet={facet}/>
+      render: () => {
+        const currentFacet = <Facet facet={facet} allFields={this.props.allFacetFields} user={this.props.user} />
 
         return currentFacet
       }
     })))
 
-    if (this.props.options.organizationSelection === constants.ORGANIZATION_SELECTION_CREATE) {
+    if (constants.ORGANIZATION_SELECTION_CREATE === this.props.options.organizationSelection) {
       steps.push({
         title: trans('organization'),
         component: Organization
+      })
+    } else if (constants.ORGANIZATION_SELECTION_SELECT === this.props.options.organizationSelection) {
+      steps.push({
+        title: trans('organization'),
+        component: OrganizationSelection
       })
     }
 
@@ -59,13 +64,6 @@ class RegistrationMain extends Component {
       steps.push({
         title: trans('workspaces'),
         component: Workspace
-      })
-    }
-
-    if (this.props.options.organizationSelection === constants.ORGANIZATION_SELECTION_SELECT) {
-      steps.push({
-        title: trans('organization'),
-        component: OrganizationSelection
       })
     }
 
@@ -113,9 +111,6 @@ RegistrationMain.propTypes = {
   user: T.shape({
     // user type
   }).isRequired,
-  organization: T.shape({
-    // organization type
-  }).isRequired,
   facets: T.arrayOf(T.shape({
     id: T.string.isRequired,
     title: T.string.isRequired
@@ -129,6 +124,7 @@ RegistrationMain.propTypes = {
     organizationSelection: T.string
   }).isRequired,
   defaultWorkspaces: T.array,
+  allFacetFields: T.array,
   onRegister: T.func
 }
 

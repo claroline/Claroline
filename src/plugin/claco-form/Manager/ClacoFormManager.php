@@ -866,10 +866,7 @@ class ClacoFormManager implements LoggerAwareInterface
             $newFieldFacetValue = new FieldFacetValue();
             $newFieldFacetValue->setFieldFacet($fieldFacetLinks[$fieldFacetId]);
             $newFieldFacetValue->setUser($fieldFacetValue->getUser());
-            $newFieldFacetValue->setArrayValue($fieldFacetValue->getArrayValue());
-            $newFieldFacetValue->setDateValue($fieldFacetValue->getDateValue(false));
-            $newFieldFacetValue->setFloatValue($fieldFacetValue->getFloatValue());
-            $newFieldFacetValue->setStringValue($fieldFacetValue->getStringValue());
+            $newFieldFacetValue->setValue($fieldFacetValue->getValue());
             $this->om->persist($newFieldFacetValue);
 
             $newFieldValue = new FieldValue();

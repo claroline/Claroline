@@ -18,6 +18,10 @@ class Version20210920074139 extends AbstractMigration
             DROP INDEX field_unique_name ON claro_clacoformbundle_field
         ');
 
+        $this->addSql('
+            UPDATE claro_clacoformbundle_field SET details = "[]" WHERE details IS NULL 
+        ');
+
         // moves props from Field to FieldFacet (this is required because copy did not copy all the props on FieldFacet)
         $this->addSql('
             UPDATE claro_field_facet AS ff

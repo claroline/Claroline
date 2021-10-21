@@ -96,7 +96,8 @@ class Entry
     /**
      * @ORM\OneToMany(
      *     targetEntity="Claroline\ClacoFormBundle\Entity\FieldValue",
-     *     mappedBy="entry"
+     *     mappedBy="entry",
+     *     cascade={"persist"}
      * )
      * @ORM\JoinTable(name="claro_clacoformbundle_entry_value")
      *
@@ -124,7 +125,7 @@ class Entry
     protected $categories;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Claroline\ClacoFormBundle\Entity\Keyword")
+     * @ORM\ManyToMany(targetEntity="Claroline\ClacoFormBundle\Entity\Keyword", cascade={"persist"})
      * @ORM\JoinTable(name="claro_clacoformbundle_entry_keyword")
      *
      * @var Keyword[]
@@ -315,6 +316,20 @@ class Entry
         return $this->fieldValues->toArray();
     }
 
+    public function getFieldValue(Field $field): ?FieldValue
+    {
+        $value = null;
+
+        foreach ($this->fieldValues as $fieldValue) {
+            if ($field->getId() === $fieldValue->getField()->getId()) {
+                $value = $fieldValue;
+                break;
+            }
+        }
+
+        return $value;
+    }
+
     /**
      * Add a field value.
      */
@@ -389,6 +404,11 @@ class Entry
     public function getCategories()
     {
         return $this->categories->toArray();
+    }
+
+    public function hasCategory(Category $category)
+    {
+        return $this->categories->contains($category);
     }
 
     /**

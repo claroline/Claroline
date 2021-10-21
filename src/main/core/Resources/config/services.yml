@@ -37,8 +37,7 @@ services:
     claroline.plugin.validator:
         class: Claroline\CoreBundle\Library\Installation\Plugin\Validator
         arguments:
-            - routing: '@Claroline\CoreBundle\Library\Installation\Plugin\RoutingChecker'
-              config: '@Claroline\CoreBundle\Library\Installation\Plugin\ConfigurationChecker'
+            - config: '@Claroline\CoreBundle\Library\Installation\Plugin\ConfigurationChecker'
 
     # vendor classes used as service arguments
     claroline.symfony_yaml:

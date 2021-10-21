@@ -41,21 +41,28 @@ class FieldFacetSerializer
      *
      * @return array - the serialized representation of the field facet
      */
-    public function serialize(FieldFacet $fieldFacet, array $options = [])
+    public function serialize(FieldFacet $fieldFacet, array $options = []): array
     {
         $serialized = [
             'id' => $fieldFacet->getUuid(),
             'name' => $fieldFacet->getName(),
-            'type' => $fieldFacet->getFieldType(),
+            'type' => $fieldFacet->getType(),
             'label' => $fieldFacet->getLabel(),
             'required' => $fieldFacet->isRequired(),
             'help' => $fieldFacet->getHelp(),
+            'display' => [
+                'order' => $fieldFacet->getPosition(),
+                'condition' => [
+                    'field' => $fieldFacet->getConditionField(),
+                    'comparator' => $fieldFacet->getConditionComparator(),
+                    'value' => $fieldFacet->getConditionValue(),
+                ],
+            ],
             'restrictions' => [
                 'hidden' => $fieldFacet->isHidden(),
                 'metadata' => $fieldFacet->isMetadata(),
                 'locked' => $fieldFacet->isLocked(),
                 'lockedEditionOnly' => $fieldFacet->getLockedEditionOnly(),
-                'order' => $fieldFacet->getPosition(), // should be in `display` sub-object
             ],
         ];
 
@@ -72,7 +79,7 @@ class FieldFacetSerializer
         return $serialized;
     }
 
-    public function deserialize(array $data, FieldFacet $field, array $options = [])
+    public function deserialize(array $data, FieldFacet $field, array $options = []): FieldFacet
     {
         if (!in_array(Options::REFRESH_UUID, $options)) {
             $this->sipe('id', 'setUuid', $data, $field);
@@ -82,11 +89,16 @@ class FieldFacetSerializer
         $this->sipe('type', 'setType', $data, $field);
         $this->sipe('required', 'setRequired', $data, $field);
         $this->sipe('help', 'setHelp', $data, $field);
+
+        $this->sipe('display.order', 'setPosition', $data, $field);
+        $this->sipe('display.condition.field', 'setConditionField', $data, $field);
+        $this->sipe('display.condition.comparator', 'setConditionComparator', $data, $field);
+        $this->sipe('display.condition.value', 'setConditionValue', $data, $field);
+
         $this->sipe('restrictions.hidden', 'setHidden', $data, $field);
         $this->sipe('restrictions.metadata', 'setMetadata', $data, $field);
         $this->sipe('restrictions.locked', 'setLocked', $data, $field);
         $this->sipe('restrictions.lockedEditionOnly', 'setLockedEditionOnly', $data, $field);
-        $this->sipe('restrictions.order', 'setPosition', $data, $field);
 
         if (isset($data['options'])) {
             if (isset($data['options']['choices'])) {
