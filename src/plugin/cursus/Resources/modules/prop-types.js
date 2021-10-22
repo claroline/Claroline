@@ -170,6 +170,9 @@ const Quota = {
     organization: T.shape(OrganizationTypes.propTypes),
     threshold: T.number,
     useQuotas: T.bool
+  },
+  defaultProps: {
+    threshold: 0.0
   }
 }
 
