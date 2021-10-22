@@ -52,10 +52,10 @@ class SessionUserSerializer extends AbstractUserSerializer
     {
         if (in_array(Options::SERIALIZE_MINIMAL, $options)) {
             $STATUS_STRINGS = [
-                utf8_decode($this->translator->trans('subscription_pending', [], 'cursus')),
-                utf8_decode($this->translator->trans('subscription_refused', [], 'cursus')),
-                utf8_decode($this->translator->trans('subscription_validated', [], 'cursus')),
-                utf8_decode($this->translator->trans('subscription_managed', [], 'cursus')),
+                $this->translator->trans('subscription_pending', [], 'cursus'),
+                $this->translator->trans('subscription_refused', [], 'cursus'),
+                $this->translator->trans('subscription_validated', [], 'cursus'),
+                $this->translator->trans('subscription_managed', [], 'cursus'),
             ];
 
             return [
