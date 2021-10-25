@@ -42,6 +42,8 @@ services:
             - '@event_dispatcher'
             - '@security.authorization_checker'
             - '@security.token_storage'
+            - '@translator'
+            - '@Claroline\CoreBundle\Manager\LocaleManager'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CursusBundle\Manager\QuotaManager'
