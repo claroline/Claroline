@@ -92,7 +92,8 @@
         "symfony/web-profiler-bundle": "4.4.*",
         "symfony/yaml": "4.4.*",
         "twig/twig": "^2.14",
-        "willdurand/js-translation-bundle": "^4.0"
+        "willdurand/js-translation-bundle": "^4.0",
+        "phpoffice/phpspreadsheet": "^1.18"
     },
     "require-dev": {
         "symfony/dom-crawler": "4.4.*",

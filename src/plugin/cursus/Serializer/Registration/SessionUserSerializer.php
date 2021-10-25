@@ -50,25 +50,6 @@ class SessionUserSerializer extends AbstractUserSerializer
      */
     public function serialize(AbstractUserRegistration $sessionUser, array $options = []): array
     {
-        if (in_array(Options::SERIALIZE_MINIMAL, $options)) {
-            $STATUS_STRINGS = [
-                $this->translator->trans('subscription_pending', [], 'cursus'),
-                $this->translator->trans('subscription_refused', [], 'cursus'),
-                $this->translator->trans('subscription_validated', [], 'cursus'),
-                $this->translator->trans('subscription_managed', [], 'cursus'),
-            ];
-
-            return [
-                'user' => sprintf('%s %s', $sessionUser->getUser()->getFirstName(), $sessionUser->getUser()->getLastName()),
-                'session' => $sessionUser->getSession()->getName(),
-                'days' => $sessionUser->getSession()->getQuotaDays(),
-                'price' => $sessionUser->getSession()->getPrice(),
-                'start_date' => $sessionUser->getSession()->getStartDate()->format('d/m/Y'),
-                'status' => $STATUS_STRINGS[$sessionUser->getStatus()],
-                'remark' => $sessionUser->getRemark(),
-            ];
-        }
-
         return array_merge(parent::serialize($sessionUser, $options), [
             'session' => $this->sessionSerializer->serialize($sessionUser->getSession(), [Options::SERIALIZE_MINIMAL]),
             'status' => $sessionUser->getStatus(),
