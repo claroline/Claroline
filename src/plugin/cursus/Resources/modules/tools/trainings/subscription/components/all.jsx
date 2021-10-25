@@ -66,7 +66,7 @@ const SubscriptionAll = (props) =>
         name: 'user.name',
         alias: 'user',
         type: 'string',
-        label: trans('user', {}, 'cursus'),
+        label: trans('user'),
         displayed: true,
         filterable: false,
         sortable: false
