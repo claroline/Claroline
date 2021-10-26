@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Controller\APINew\User;
 
 use Claroline\AppBundle\Annotations\ApiDoc;
+use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Controller\APINew\Model\HasGroupsTrait;
@@ -130,6 +131,39 @@ class UserController extends AbstractCrudController
         return new JsonResponse($this->finder->search(
             User::class,
             array_merge($request->query->all(), ['hiddenFilters' => $filters])
+        ));
+    }
+
+    /**
+     * @Route("/organization/flat", name="apiv2_user_list_flat", methods={"GET"})
+     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
+     */
+    public function listFlatOrganizationsAction(User $user, Request $request): JsonResponse
+    {
+        $organizations = [];
+        $this->getFlatOrganizations($user->getOrganizations(), $organizations);
+
+        $queryParams = FinderProvider::parseQueryParams($request->query->all());
+        $page = $queryParams['page'];
+        $limit = $queryParams['limit'];
+        $filters = $queryParams['filters'];
+        $sortBy = $queryParams['sortBy'];
+
+        $count = count($organizations);
+
+        if ($limit > 0) {
+            $organizations = array_slice($organizations, $page * $limit, $limit);
+        }
+
+        return new JsonResponse(FinderProvider::formatPaginatedData(
+            array_map(function ($result) {
+                return $this->serializer->serialize($result);
+            }, $organizations),
+            $count,
+            $page,
+            $limit,
+            $filters,
+            $sortBy
         ));
     }
 
@@ -353,5 +387,15 @@ class UserController extends AbstractCrudController
         }
 
         return [];
+    }
+
+    private function getFlatOrganizations(array $organizations, array &$output): void
+    {
+        foreach ($organizations as $organization) {
+            $this->getFlatOrganizations($organization->getChildren()->toArray(), $output);
+            if (!in_array($organization, $output)) {
+                $output[] = $organization;
+            }
+        }
     }
 }

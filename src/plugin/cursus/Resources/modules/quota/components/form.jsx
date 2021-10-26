@@ -30,7 +30,10 @@ const QuotaForm = (props) =>
             name: 'organization',
             type: 'organization',
             label: trans('organization'),
-            required: true
+            required: true,
+            options: {
+              mode: 'recursive'
+            }
           }, {
             name: 'useQuotas',
             type: 'boolean',

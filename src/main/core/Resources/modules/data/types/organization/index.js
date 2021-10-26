@@ -23,7 +23,8 @@ const dataType = {
       options: {
         choices: {
           picker: trans('picker'),
-          choice: trans('choice')
+          choice: trans('choice'),
+          restrict: trans('restrict')
         }
       }
     }
