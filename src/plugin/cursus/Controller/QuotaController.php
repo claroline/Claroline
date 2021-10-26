@@ -12,18 +12,20 @@
 namespace Claroline\CursusBundle\Controller;
 
 use Claroline\AppBundle\API\FinderProvider;
-use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\CursusBundle\Entity\Quota;
 use Claroline\CursusBundle\Entity\Registration\SessionUser;
 use Claroline\CursusBundle\Event\Log\LogSubscriptionSetStatusEvent;
 use Claroline\CursusBundle\Manager\QuotaManager;
 use Claroline\CursusBundle\Manager\SessionManager;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -32,6 +34,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @Route("/cursus_quota")
@@ -44,6 +47,10 @@ class QuotaController extends AbstractCrudController
     private $eventDispatcher;
     /** @var TokenStorageInterface */
     private $tokenStorage;
+    /** @var TranslatorInterface */
+    private $translator;
+    /** @var LocaleManager */
+    private $localeManager;
     /** @var PlatformConfigurationHandler */
     private $config;
     /** @var QuotaManager */
@@ -55,6 +62,8 @@ class QuotaController extends AbstractCrudController
         EventDispatcherInterface $eventDispatcher,
         AuthorizationCheckerInterface $authorization,
         TokenStorageInterface $tokenStorage,
+        TranslatorInterface $translator,
+        LocaleManager $localeManager,
         PlatformConfigurationHandler $config,
         ObjectManager $om,
         QuotaManager $quotaManager,
@@ -63,6 +72,8 @@ class QuotaController extends AbstractCrudController
         $this->eventDispatcher = $eventDispatcher;
         $this->authorization = $authorization;
         $this->tokenStorage = $tokenStorage;
+        $this->translator = $translator;
+        $this->localeManager = $localeManager;
         $this->config = $config;
         $this->om = $om;
         $this->quotaManager = $quotaManager;
@@ -158,22 +169,54 @@ class QuotaController extends AbstractCrudController
     {
         $this->checkPermission('VALIDATE_SUBSCRIPTIONS', null, [], true);
 
-        $organization = $quota->getOrganization();
+        $STATUS_STRINGS = [
+            $this->translator->trans('subscription_pending', [], 'cursus'),
+            $this->translator->trans('subscription_refused', [], 'cursus'),
+            $this->translator->trans('subscription_validated', [], 'cursus'),
+            $this->translator->trans('subscription_managed', [], 'cursus'),
+        ];
 
-        $query = $request->query->all();
-        $query['hiddenFilters'] = [
-            'organization' => $organization,
+        $filters = [
+            'organization' => $quota->getOrganization(),
         ];
 
         if (!$quota->useQuotas()) {
-            $query['hiddenFilters']['ignored_status'] = SessionUser::STATUS_MANAGED;
+            $filters['ignored_status'] = SessionUser::STATUS_MANAGED;
         }
 
-        $csvFilename = $this->crud->csv(Sessionuser::class, $query, [Options::SERIALIZE_MINIMAL]);
+        $locale = $this->localeManager->getLocale($this->tokenStorage->getToken()->getUser());
 
-        return new BinaryFileResponse($csvFilename, 200, [
-            'Content-Type' => 'text/csv',
-            'Content-Disposition' => "attachment; filename={$this->getName()}.csv",
+        $subscriptions = $this->finder->fetch(SessionUser::class, $filters);
+        $this->sortSubscriptions($subscriptions, -1);
+
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        $sheet->setCellValue('A1', ucfirst($this->translator->trans('user', [], 'platform', $locale)));
+        $sheet->setCellValue('B1', ucfirst($this->translator->trans('session', [], 'cursus', $locale)));
+        $sheet->setCellValue('C1', ucfirst($this->translator->trans('days', [], 'platform', $locale)));
+        $sheet->setCellValue('D1', ucfirst($this->translator->trans('price', [], 'platform', $locale)));
+        $sheet->setCellValue('E1', ucfirst($this->translator->trans('start_date', [], 'platform', $locale)));
+        $sheet->setCellValue('F1', ucfirst($this->translator->trans('status', [], 'platform', $locale)));
+
+        $row = 1;
+        foreach ($subscriptions as $subscription) {
+            $sheet->setCellValueByColumnAndRow(1, ++$row, sprintf('%s %s', $subscription->getUser()->getFirstName(), $subscription->getUser()->getLastName()));
+            $sheet->setCellValueByColumnAndRow(2, $row, $subscription->getSession()->getName());
+            $sheet->setCellValueByColumnAndRow(3, $row, $subscription->getSession()->getQuotaDays());
+            $sheet->setCellValueByColumnAndRow(4, $row, $subscription->getSession()->getPrice());
+            $sheet->setCellValueByColumnAndRow(5, $row, $subscription->getSession()->getStartDate()->format('d/m/Y'));
+            $sheet->setCellValueByColumnAndRow(6, $row, $STATUS_STRINGS[$subscription->getStatus()]);
+            $sheet->setCellValueByColumnAndRow(7, $row, $subscription->getRemark());
+        }
+
+        $writer = new Xlsx($spreadsheet);
+        $tmpFile = tempnam(sys_get_temp_dir(), 'XLSXCLARO').'.xlsx';
+        $writer->save($tmpFile);
+
+        return new BinaryFileResponse($tmpFile, 200, [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'Content-Disposition' => "attachment; filename={$this->getName()}.xlsx",
         ]);
     }
 
@@ -214,9 +257,7 @@ class QuotaController extends AbstractCrudController
         }
 
         if (!empty($sortBy) && 'startDate' == $sortBy['property']) {
-            usort($data, function (SessionUser $a, SessionUser $b) use ($sortBy) {
-                return $sortBy['direction'] * ($a->getSession()->getStartDate()->getTimestamp() - $b->getSession()->getStartDate()->getTimestamp());
-            });
+            $this->sortSubscriptions($data, $sortBy['direction']);
         }
 
         $results = FinderProvider::formatPaginatedData($data, $count, $page, $limit, $filters, $sortBy);
@@ -297,5 +338,12 @@ class QuotaController extends AbstractCrudController
         return new JsonResponse([
             'quota' => $this->serializer->serialize($quota),
         ]);
+    }
+
+    private function sortSubscriptions(array &$subscriptions, int $direction)
+    {
+        usort($subscriptions, function (SessionUser $a, SessionUser $b) use ($direction) {
+            return $direction * ($a->getSession()->getStartDate()->getTimestamp() - $b->getSession()->getStartDate()->getTimestamp());
+        });
     }
 }
