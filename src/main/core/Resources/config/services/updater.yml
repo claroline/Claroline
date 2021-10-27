@@ -24,3 +24,9 @@ services:
         tags: [ 'claroline.platform.updater' ]
         arguments:
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+
+    Claroline\CoreBundle\Installation\Updater\Updater130100:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@logger'
+        tags: [ 'claroline.platform.updater' ]

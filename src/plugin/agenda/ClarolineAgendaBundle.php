@@ -11,4 +11,9 @@ class ClarolineAgendaBundle extends DistributionPluginBundle
     {
         return new AdditionalInstaller($this->getUpdaterServiceLocator());
     }
+
+    public function getRequiredFixturesDirectory(string $environment): string
+    {
+        return 'DataFixtures/Required';
+    }
 }

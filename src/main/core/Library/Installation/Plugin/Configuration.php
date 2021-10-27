@@ -333,6 +333,7 @@ class Configuration implements ConfigurationInterface
                 ->prototype('array')
                     ->children()
                         ->scalarNode('name')->isRequired()->end()
+                        ->scalarNode('type')->isRequired()->end()
                         ->arrayNode('placeholders')
                             ->prototype('scalar')->end()
                             ->defaultValue([])

@@ -19,10 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(
  *     name="claro_template_content",
  *     uniqueConstraints={
- *         @ORM\UniqueConstraint(
- *             name="template_unique_lang",
- *             columns={"template_id", "lang"}
- *         )
+ *         @ORM\UniqueConstraint(name="template_unique_lang", columns={"template_id", "lang"})
  *     }
  * )
  */

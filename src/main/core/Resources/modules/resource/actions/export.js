@@ -5,7 +5,7 @@ import {url} from '#/main/app/api'
 /**
  * Exports resource nodes.
  *
- * @param {Array}  resourceNodes  - the list of resource nodes on which we want to execute the action.
+ * @param {Array} resourceNodes - the list of resource nodes on which we want to execute the action.
  */
 export default (resourceNodes) => ({ // todo collection
   name: 'export',

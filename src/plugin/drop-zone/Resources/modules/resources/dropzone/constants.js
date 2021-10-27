@@ -61,7 +61,7 @@ const DOCUMENT_TYPES = {
   [DOCUMENT_TYPE_FILE]:     trans('uploaded_files', {}, 'dropzone'),
   [DOCUMENT_TYPE_TEXT]:     trans('rich_text_online_edition', {}, 'dropzone'),
   [DOCUMENT_TYPE_URL]:      trans('url_info', {}, 'dropzone'),
-  [DOCUMENT_TYPE_RESOURCE]: trans('workspace_resources', {}, 'dropzone')
+  [DOCUMENT_TYPE_RESOURCE]: trans('resources')
 }
 
 // drops

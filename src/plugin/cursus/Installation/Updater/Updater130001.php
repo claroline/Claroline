@@ -4,22 +4,18 @@ namespace Claroline\CursusBundle\Installation\Updater;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Template\TemplateType;
-use Claroline\CursusBundle\DataFixtures\PostInstall\LoadTemplateData;
 use Claroline\InstallationBundle\Updater\Updater;
 use Psr\Log\LoggerInterface;
 
 class Updater130001 extends Updater
 {
     private $om;
-    private $dataFixtures;
 
     public function __construct(
         ObjectManager $om,
-        LoadTemplateData $dataFixtures,
         LoggerInterface $logger = null
     ) {
         $this->om = $om;
-        $this->dataFixtures = $dataFixtures;
         $this->logger = $logger;
     }
 
@@ -29,11 +25,6 @@ class Updater130001 extends Updater
         $this->renameTool('claroline_session_events_tool', 'training_events');
 
         $this->cleanTemplates();
-    }
-
-    public function postUpdate()
-    {
-        $this->dataFixtures->load($this->om);
     }
 
     private function renameTool($oldName, $newName)

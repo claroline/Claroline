@@ -21,6 +21,11 @@ class ClarolineForumBundle extends DistributionPluginBundle
         return new AdditionalInstaller();
     }
 
+    public function getRequiredFixturesDirectory(string $environment): ?string
+    {
+        return 'DataFixtures/Required';
+    }
+
     public function getRequiredPlugins()
     {
         return ['Claroline\\TagBundle\\ClarolineTagBundle'];

@@ -43,7 +43,6 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\Manager\Resource\MaskManager'
             - '@filesystem'
-            - '@kernel'
             - '@Claroline\CoreBundle\Manager\Tool\ToolManager'
             - '@Claroline\CoreBundle\Manager\Tool\ToolMaskDecoderManager'
             - '@claroline.manager.icon_set_manager'

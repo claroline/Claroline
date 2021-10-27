@@ -16,7 +16,7 @@ const TemplateDisplay = (props) => props.data ?
     primaryAction={{
       type: LINK_BUTTON,
       label: trans('open', {}, 'actions'),
-      target: route('templates_management')+'/form/'+props.data.id
+      target: route('templates')+'/form/'+props.data.id
     }}
   /> :
   <ContentPlaceholder

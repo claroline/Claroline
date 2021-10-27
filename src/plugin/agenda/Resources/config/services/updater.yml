@@ -1,17 +1,6 @@
 services:
-    Claroline\AgendaBundle\DataFixtures\PostInstall\LoadTemplateData:
-        calls:
-            - [ 'setContainer', [ '@service_container' ] ]
-
     Claroline\AgendaBundle\Installation\Updater\Updater130013:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\Manager\PlanningManager'
-        tags: [ 'claroline.platform.updater' ]
-
-    Claroline\AgendaBundle\Installation\Updater\Updater130018:
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\AgendaBundle\DataFixtures\PostInstall\LoadTemplateData'
-            - '@logger'
         tags: [ 'claroline.platform.updater' ]

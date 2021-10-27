@@ -22,7 +22,6 @@ use Claroline\CoreBundle\Entity\Model\OrganizationsTrait;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Organization\UserOrganizationReference;
 use Claroline\CoreBundle\Entity\Task\ScheduledTask;
-use Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -315,13 +314,6 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
     private $scheduledTasks;
 
     /**
-     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue", mappedBy="user")
-     *
-     * @todo relation should not be declared here (only use Unidirectional)
-     */
-    protected $wkUserQueues;
-
-    /**
      * @var string
      *
      * @ORM\Column(nullable=true)
@@ -337,10 +329,8 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
 
         $this->roles = new ArrayCollection();
         $this->groups = new ArrayCollection();
-        $this->wkUserQueues = new ArrayCollection();
         $this->locations = new ArrayCollection();
         $this->salt = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
-        $this->fieldsFacetValue = new ArrayCollection();
         $this->scheduledTasks = new ArrayCollection();
         $this->administratedOrganizations = new ArrayCollection();
         $this->userOrganizationReferences = new ArrayCollection();
@@ -1118,11 +1108,6 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
     public function removeScheduledTask(ScheduledTask $task)
     {
         $this->scheduledTasks->removeElement($task);
-    }
-
-    public function addWorkspaceUserQueue(WorkspaceRegistrationQueue $wkUserQueue)
-    {
-        $this->wkUserQueues->add($wkUserQueue);
     }
 
     public function setCode($code)

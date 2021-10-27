@@ -48,6 +48,7 @@ plugin:
 
     templates:
         - name: training_course
+          type: pdf
           placeholders:
               - course_name
               - course_code
@@ -58,6 +59,7 @@ plugin:
               - course_max_users
 
         - name: training_session
+          type: pdf
           placeholders:
               - course_name
               - course_code
@@ -73,6 +75,7 @@ plugin:
               - session_end
 
         - name: training_session_invitation
+          type: email
           placeholders:
               - course_name
               - course_code
@@ -86,6 +89,7 @@ plugin:
               - session_trainers
 
         - name: training_session_confirmation
+          type: email
           placeholders:
               - course_name
               - course_code
@@ -100,6 +104,7 @@ plugin:
               - registration_confirmation_url
 
         - name: training_event
+          type: pdf
           placeholders:
               - course_name
               - course_code
@@ -119,6 +124,7 @@ plugin:
               - event_trainers
 
         - name: training_event_invitation
+          type: email
           placeholders:
               - course_name
               - course_code
@@ -138,6 +144,7 @@ plugin:
               - event_trainers
 
         - name: training_event_presences
+          type: pdf
           placeholders:
               - event_name
               - event_code
@@ -147,6 +154,7 @@ plugin:
               - event_presences_table
 
         - name: training_event_presence
+          type: pdf
           placeholders:
               - event_name
               - event_code
@@ -157,4 +165,3 @@ plugin:
               - user_username
               - user_first_name
               - user_last_name
-

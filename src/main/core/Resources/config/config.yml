@@ -152,7 +152,7 @@ plugin:
         - name: transfer
           class: exchange
 
-        - name: templates_management
+        - name: templates
           class: file-alt
 
         - name: integration
@@ -297,19 +297,52 @@ plugin:
           is_anonymous_excluded: true
 
     templates:
-        - name: claro_mail_layout
-          placeholders: [content]
+        - name: email_layout
+          type: email
+          placeholders:
+              - content
+              - sender_username
+              - sender_first_name
+              - sender_last_name
+              - sender_email
+              - sender_avatar
+
         - name: user_activation
-          placeholders: [user_activation_link]
-        - name: claro_mail_registration
-          placeholders: [validation_mail, password]
-        - name: claro_mail_validation
-          placeholders: [validation_mail]
+          type: email
+          placeholders:
+              - user_activation_link
+
+        - name: user_registration
+          type: email
+          placeholders:
+              - validation_mail
+              - password
+
+        - name: user_email_validation
+          type: email
+          placeholders:
+              - validation_mail
+
         - name: password_initialization
-          placeholders: [password_initialization_link]
+          type: email
+          placeholders:
+              - password_initialization_link
+
         - name: forgotten_password
-          placeholders: [password_reset_link]
+          type: email
+          placeholders:
+              - password_reset_link
+
+        # not sent
         - name: workspace_registration
-          placeholders: [workspace_name, workspace_code, role_name]
+          type: email
+          placeholders:
+              - workspace_name
+              - workspace_code
+              - role_name
+
+        # not sent
         - name: platform_role_registration
-          placeholders: [role_name]
+          type: email
+          placeholders:
+              - role_name

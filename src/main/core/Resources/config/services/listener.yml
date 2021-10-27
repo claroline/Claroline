@@ -36,7 +36,7 @@ services:
 
     Claroline\CoreBundle\Listener\Administration\TemplateListener:
         tags:
-            - { name: kernel.event_listener, event: administration_tool_templates_management, method: onAdministrationToolOpen }
+            - { name: kernel.event_listener, event: administration_tool_templates, method: onAdministrationToolOpen }
 
     Claroline\CoreBundle\Listener\Administration\TransferListener:
         arguments:
