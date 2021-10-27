@@ -27,6 +27,7 @@ plugin:
 
     templates:
         - name: badge_certificate
+          type: pdf
           placeholders:
               - badge_name
               - badge_description

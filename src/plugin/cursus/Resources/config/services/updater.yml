@@ -1,20 +1,9 @@
 services:
-    Claroline\CursusBundle\DataFixtures\PostInstall\LoadTemplateData:
-        calls:
-            - ['setContainer', ['@service_container']]
-
     Claroline\CursusBundle\Installation\Updater\Updater130001:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CursusBundle\DataFixtures\PostInstall\LoadTemplateData'
             - '@logger'
         tags: ['claroline.platform.updater']
-
-    Claroline\CursusBundle\Installation\Updater\Updater130006:
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CursusBundle\DataFixtures\PostInstall\LoadTemplateData'
-        tags: [ 'claroline.platform.updater' ]
 
     Claroline\CursusBundle\Installation\Updater\Updater130013:
         arguments:

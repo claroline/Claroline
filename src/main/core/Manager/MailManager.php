@@ -190,7 +190,7 @@ class MailManager
             }
 
             $body = $this->templateManager->getTemplate('claro_mail_layout', ['content' => $body], $locale);
-            $body = str_replace('%platform_name%', $this->config->getParameter('display.name'), $body);
+            //$body = str_replace('%platform_name%', $this->config->getParameter('display.name'), $body);
 
             if ($from) {
                 $body = str_replace('%first_name%', $from->getFirstName(), $body);

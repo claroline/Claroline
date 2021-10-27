@@ -18,6 +18,7 @@ plugin:
 
     templates:
         - name: event_invitation
+          type: email
           placeholders:
               - event_name
               - event_start

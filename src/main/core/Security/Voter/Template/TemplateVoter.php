@@ -18,16 +18,28 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class TemplateVoter extends AbstractVoter
 {
+    /**
+     * @param Template $object
+     */
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
     {
         switch ($attributes[0]) {
             case self::CREATE:
+            case self::OPEN:
+            case self::VIEW:
+                return $this->hasAdminToolAccess($token, 'templates') ?
+                    VoterInterface::ACCESS_GRANTED :
+                    VoterInterface::ACCESS_DENIED;
+
             case self::EDIT:
             case self::DELETE:
             case self::PATCH:
-            case self::OPEN:
-            case self::VIEW:
-                return $this->hasAdminToolAccess($token, 'templates_management') ?
+                if ($object->isSystem()) {
+                    // system templates are managed through claroline updates, so nobody can modify them
+                    return VoterInterface::ACCESS_DENIED;
+                }
+
+                return $this->hasAdminToolAccess($token, 'templates') ?
                     VoterInterface::ACCESS_GRANTED :
                     VoterInterface::ACCESS_DENIED;
         }

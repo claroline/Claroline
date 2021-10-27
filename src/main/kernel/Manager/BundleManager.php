@@ -24,9 +24,6 @@ class BundleManager implements LoggerAwareInterface
 {
     use LoggableTrait;
 
-    const BUNDLE_INSTANCE = 'instance';
-    const BUNDLE_CONFIG = 'config';
-
     private $env;
     private $bundlesFile;
 
