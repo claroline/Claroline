@@ -29,6 +29,7 @@ class ScoTrackingFinder extends AbstractFinder
             // only return results for enabled users
             $qb->join('obj.user', 'u');
             $qb->andWhere('u.isEnabled = true AND u.isRemoved = false');
+            $userJoin = true;
         }
 
         $userJoin = false;
