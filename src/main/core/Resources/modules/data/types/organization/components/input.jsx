@@ -39,6 +39,10 @@ OrganizationButton.propTypes = {
   url: T.string
 }
 
+OrganizationButton.defaultProps = {
+  url: 'apiv2_organization_list'
+}
+
 const OrganizationInput = props => {
   if ('choice' === props.mode) {
     return (
