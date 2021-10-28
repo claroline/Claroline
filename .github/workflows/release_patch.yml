@@ -56,4 +56,4 @@ jobs:
           token: ${{ secrets.FL_REPO_ACCESS_TOKEN }}
           repository: FormaLibre/ClarolineBundle/
           event-type: newtag
-          client-payload: '{"tag": "${{ steps.bump.outputs.tag }}"}'
+          client-payload: '{"tag": "${{ steps.bump.outputs.tag }}", "releaseBranch": "${{ steps.extract_branch.outputs.branch }}"}'
