@@ -17,3 +17,7 @@ doctrine:
         auto_mapping: true
         mappings:
             StofDoctrineExtensionsBundle: false
+
+        dql:
+            datetime_functions:
+                year: Claroline\CursusBundle\DQL\Year

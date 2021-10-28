@@ -176,9 +176,8 @@ class QuotaController extends AbstractCrudController
             $this->translator->trans('subscription_managed', [], 'cursus'),
         ];
 
-        $filters = [
-            'organization' => $quota->getOrganization(),
-        ];
+        $filters = $request->query->get('filters', []);
+        $filters['organization'] = $quota->getOrganization();
 
         if (!$quota->useQuotas()) {
             $filters['ignored_status'] = SessionUser::STATUS_MANAGED;

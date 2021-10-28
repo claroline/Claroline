@@ -1,10 +1,11 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import moment from 'moment'
 
 import classes from 'classnames'
 import {constants as constList} from '#/main/app/content/list/constants'
 import {constants} from '#/plugin/cursus/constants'
-import {now} from '#/main/app/intl/date'
+import {displayDate, now} from '#/main/app/intl/date'
 import {trans} from '#/main/app/intl/translation'
 import {MODAL_SUBSCRIPTION_STATUS} from '#/plugin/cursus/subscription/modals/status'
 import {MODAL_BUTTON, CALLBACK_BUTTON} from '#/main/app/buttons'
@@ -97,11 +98,17 @@ const SubscriptionAll = (props) =>
       }, {
         name: 'session.restrictions.dates[0]',
         alias: 'start_date',
-        type: 'date',
+        type: 'choice',
         label: trans('start_date'),
         displayed: true,
-        filterable: false,
-        sortable: false
+        sortable: false,
+        options: {
+          choices: new Array(Number(moment().utc().local().format('YYYY')) - 2019).fill(0).reduce((accum, none, delta) => {
+            accum[`${2021 + delta}`] = `${2021 + delta}`
+            return accum
+          }, {})
+        },
+        render: (row) => displayDate(row.session.restrictions.dates[0])
       }, {
         name: 'status',
         type: 'choice',
