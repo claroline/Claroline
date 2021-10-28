@@ -105,14 +105,14 @@ class AssertionController extends AbstractCrudController
      * @Route("/{assertion}/pdf/download", name="apiv2_assertion_pdf_download", methods={"GET"})
      * @EXT\ParamConverter("assertion", class="ClarolineOpenBadgeBundle:Assertion", options={"mapping": {"assertion": "uuid"}})
      */
-    public function downloadPdfAction(Assertion $assertion, Request $request): StreamedResponse
+    public function downloadPdfAction(Assertion $assertion): StreamedResponse
     {
         $this->checkPermission('OPEN', $assertion, [], true);
 
         $badge = $assertion->getBadge();
         $user = $assertion->getRecipient();
 
-        $content = $this->manager->generateCertificate($assertion, $request->server->get('DOCUMENT_ROOT').$request->getBasePath());
+        $content = $this->manager->generateCertificate($assertion);
 
         $dompdf = new Dompdf();
         $dompdf->set_option('isHtml5ParserEnabled', true);
