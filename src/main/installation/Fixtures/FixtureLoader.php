@@ -55,6 +55,8 @@ class FixtureLoader implements LoggerAwareInterface
         $fixtures = $loader->getFixtures();
 
         foreach ($fixtures as $fixture) {
+            $this->log(sprintf('Found %s fixture to load', get_class($fixture)));
+
             if (method_exists($fixture, 'setLogger')) {
                 $fixture->setLogger($this->logger);
             }

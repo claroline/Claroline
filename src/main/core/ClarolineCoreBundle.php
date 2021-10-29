@@ -49,19 +49,9 @@ class ClarolineCoreBundle extends DistributionPluginBundle
         $container->addCompilerPass(new GeoipPass());
     }
 
-    public function supports($environment)
-    {
-        return in_array($environment, ['prod', 'dev', 'test']);
-    }
-
     public function getRequiredFixturesDirectory(string $environment): string
     {
         return 'DataFixtures/Required';
-    }
-
-    public function getPostInstallFixturesDirectory(string $environment): string
-    {
-        return 'DataFixtures/PostInstall';
     }
 
     public function getAdditionalInstaller()

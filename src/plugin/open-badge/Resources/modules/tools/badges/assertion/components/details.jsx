@@ -31,6 +31,7 @@ const AssertionDetailsComponent = (props) =>
     }}
     actions={[
       {
+        name: 'download',
         type: CALLBACK_BUTTON,
         icon: 'fa fa-fw fa-download',
         label: trans('download', {}, 'actions'),

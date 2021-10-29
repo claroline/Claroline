@@ -222,7 +222,7 @@ class CourseController extends AbstractCrudController
                 'url' => $this->routing->desktopUrl('trainings').'/catalog/'.$course->getSlug(),
                 'title' => $course->getName(),
                 'thumbnail' => $course->getThumbnail(),
-                'description' => $course->getDescription(),
+                'description' => !empty($course->getPlainDescription()) ? $course->getPlainDescription() : strip_tags($course->getDescription()),
             ])
         );
     }

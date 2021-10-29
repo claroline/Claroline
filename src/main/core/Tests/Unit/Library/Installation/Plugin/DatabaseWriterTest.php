@@ -20,9 +20,6 @@ class DatabaseWriterTest extends MockeryTestCase
     private $om;
     private $mm;
     private $fileSystem;
-    private $kernelRootDir;
-    private $templateDir;
-    private $kernel;
     private $dbWriter;
 
     public function setUp(): void
@@ -37,16 +34,10 @@ class DatabaseWriterTest extends MockeryTestCase
         $this->tmd = $this->mock('Claroline\CoreBundle\Manager\Tool\ToolMaskDecoderManager');
         $this->ism = $this->mock('Claroline\ThemeBundle\Manager\IconSetManager');
         $this->fileSystem = $this->mock('Symfony\Component\Filesystem\Filesystem');
-        $this->kernel = $this->mock('Symfony\Component\HttpKernel\KernelInterface');
-        $this->templateDir = 'path/to/templateDir';
-        $this->kernel->shouldReceive('getProjectDir')->andReturn('kernelRootDir');
-        $this->kernel->shouldReceive('getEnvironment')->andReturn('test');
-        $this->kernelRootDir = 'kernelRootDir';
         $this->dbWriter = new DatabaseWriter(
             $this->om,
             $this->mm,
             $this->fileSystem,
-            $this->kernel,
             $this->tm,
             $this->tmd,
             $this->ism
