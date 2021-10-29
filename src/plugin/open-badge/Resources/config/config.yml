@@ -32,6 +32,7 @@ plugin:
               - badge_name
               - badge_description
               - badge_image
+              - badge_image_url
               - badge_duration
               - assertion_id
               - issued_on
