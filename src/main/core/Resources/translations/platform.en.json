@@ -604,7 +604,6 @@
     "open_resource_when_opening_ws": "Open a resource when opening the workspace",
     "opening_target_resource_help" : "Open a resource instead of being sent on the workspace home.",
     "opening_date": "Opening date",
-    "operation_done": "Operation done.",
     "options": "Options",
     "or": "Or",
     "order": "Order",

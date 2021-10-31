@@ -22,9 +22,9 @@ class ResourceTypeRepository extends ServiceEntityRepository
     /** @var array */
     private $bundles;
 
-    public function __construct(ManagerRegistry $registry, PluginManager $manager)
+    public function __construct(ManagerRegistry $registry, PluginManager $pluginManager)
     {
-        $this->bundles = $manager->getEnabled(true);
+        $this->bundles = $pluginManager->getEnabled();
 
         parent::__construct($registry, ResourceType::class);
     }

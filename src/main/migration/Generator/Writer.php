@@ -13,7 +13,7 @@ namespace Claroline\MigrationBundle\Generator;
 
 use Claroline\MigrationBundle\Twig\SqlFormatterExtension;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Twig\Environment;
 
 /**
@@ -45,7 +45,7 @@ class Writer
      * @param string $driverName
      * @param string $version
      */
-    public function writeMigrationClass(Bundle $bundle, $driverName, $version, array $queries)
+    public function writeMigrationClass(BundleInterface $bundle, $driverName, $version, array $queries)
     {
         if (!$this->hasSqlExtension) {
             $this->twigEnvironment->addExtension(new SqlFormatterExtension());
@@ -84,7 +84,7 @@ class Writer
      *
      * @return array The migration files that were deleted
      */
-    public function deleteUpperMigrationClasses(Bundle $bundle, $driverName, $referenceVersion)
+    public function deleteUpperMigrationClasses(BundleInterface $bundle, $driverName, $referenceVersion)
     {
         $migrations = new \DirectoryIterator(implode(DIRECTORY_SEPARATOR, [$bundle->getPath(), 'Installation', 'Migrations', $driverName]));
         $deletedVersions = [];

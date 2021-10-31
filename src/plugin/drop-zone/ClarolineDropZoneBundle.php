@@ -11,21 +11,15 @@
 
 namespace Claroline\DropZoneBundle;
 
-use Claroline\DropZoneBundle\Installation\AdditionalInstaller;
 use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
+use Claroline\TeamBundle\ClarolineTeamBundle;
 
-/**
- * Bundle class.
- */
 class ClarolineDropZoneBundle extends DistributionPluginBundle
 {
-    public function getAdditionalInstaller()
-    {
-        return new AdditionalInstaller();
-    }
-
     public function getRequiredPlugins()
     {
-        return ['Claroline\\TeamBundle\\ClarolineTeamBundle'];
+        return [
+            ClarolineTeamBundle::class,
+        ];
     }
 }

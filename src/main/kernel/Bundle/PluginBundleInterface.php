@@ -19,10 +19,6 @@ use Symfony\Component\HttpKernel\Bundle\BundleInterface;
  */
 interface PluginBundleInterface extends BundleInterface, AutoConfigurableInterface, InstallableInterface
 {
-    public function getVendorName();
-
-    public function getBundleName();
-
     public function getConfigFile();
 
     public function getRequiredExtensions();
@@ -32,9 +28,4 @@ interface PluginBundleInterface extends BundleInterface, AutoConfigurableInterfa
     public function getExtraRequirements();
 
     public function getDescription();
-
-    /**
-     * @return BundleInterface[] A list of third party bundle instances required by the plugin
-     */
-    public function getRequiredThirdPartyBundles(string $environment): array;
 }

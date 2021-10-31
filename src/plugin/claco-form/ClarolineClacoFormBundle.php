@@ -11,13 +11,8 @@
 
 namespace Claroline\ClacoFormBundle;
 
-use Claroline\ClacoFormBundle\Installation\AdditionalInstaller;
 use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
 
 class ClarolineClacoFormBundle extends DistributionPluginBundle
 {
-    public function getAdditionalInstaller()
-    {
-        return new AdditionalInstaller();
-    }
 }

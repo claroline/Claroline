@@ -10,21 +10,12 @@ services:
           - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
           - '%kernel.project_dir%/app'
           - '@Claroline\ThemeBundle\Serializer\ThemeSerializer'
-          - '@Claroline\CoreBundle\Manager\PluginManager'
-
-    claroline.manager.theme_manager:
-        alias: Claroline\ThemeBundle\Manager\ThemeManager
-        public: true
 
     Claroline\ThemeBundle\Manager\ThemeBuilderManager:
         arguments:
           - '@kernel'
           - '%claroline.param.files_directory%'
           - '%kernel.project_dir%/app'
-
-    claroline.manager.theme_builder:
-        alias: Claroline\ThemeBundle\Manager\ThemeBuilderManager
-        public: true
 
     Claroline\ThemeBundle\Manager\IconSetManager:
         arguments:
@@ -35,7 +26,3 @@ services:
           - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
         calls:
           - setLogger: [ '@logger' ]
-
-    claroline.manager.icon_set_manager:
-        alias: Claroline\ThemeBundle\Manager\IconSetManager
-        public: true

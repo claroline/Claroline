@@ -8,6 +8,6 @@ services:
     Claroline\ThemeBundle\Twig\ThemeExtension:
        arguments:
            - '@twig.extension.assets'
-           - '@claroline.manager.theme_manager'
+           - '@Claroline\ThemeBundle\Manager\ThemeManager'
            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
            - '%kernel.project_dir%'

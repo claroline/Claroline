@@ -4,7 +4,7 @@ namespace Claroline\KernelBundle;
 
 use Claroline\CoreBundle\Library\Maintenance\MaintenanceHandler;
 use Claroline\KernelBundle\Bundle\AutoConfigurableInterface;
-use Claroline\KernelBundle\Manager\BundleManager;
+use Claroline\KernelBundle\Recorder\BundleFileLoader;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -16,7 +16,7 @@ class Kernel extends BaseKernel
     use MicroKernelTrait;
 
     private $bundlesFile;
-    /** @var BundleManager */
+    /** @var BundleFileLoader */
     private $bundleManager;
 
     public function __construct(string $environment, bool $debug)
@@ -26,8 +26,8 @@ class Kernel extends BaseKernel
 
         $this->bundlesFile = $this->getProjectDir().'/files/config/bundles.ini';
 
-        BundleManager::initialize($environment, $this->bundlesFile);
-        $this->bundleManager = BundleManager::getInstance();
+        BundleFileLoader::initialize($environment, $this->bundlesFile);
+        $this->bundleManager = BundleFileLoader::getInstance();
 
         parent::__construct($environment, $debug);
     }

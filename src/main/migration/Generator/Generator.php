@@ -14,7 +14,7 @@ namespace Claroline\MigrationBundle\Generator;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\SchemaTool;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 
 /**
  * Class responsible for generating bundle migration queries.
@@ -42,7 +42,7 @@ class Generator
      *
      * @return array
      */
-    public function generateMigrationQueries(Bundle $bundle, AbstractPlatform $platform)
+    public function generateMigrationQueries(BundleInterface $bundle, AbstractPlatform $platform)
     {
         $schemas = $this->getSchemas();
         $fromSchema = $schemas['fromSchema'];
@@ -83,7 +83,7 @@ class Generator
         ];
     }
 
-    private function getBundleTables(Bundle $bundle, array $metadata)
+    private function getBundleTables(BundleInterface $bundle, array $metadata)
     {
         $bundleTables = ['tables' => [], 'joinTables' => []];
 

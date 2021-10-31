@@ -16,7 +16,6 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Update\Version;
 use Claroline\CoreBundle\Repository\VersionRepository;
 use Claroline\InstallationBundle\Bundle\InstallableInterface;
-use Claroline\KernelBundle\Bundle\PluginBundleInterface;
 use Psr\Log\LoggerAwareInterface;
 
 class VersionManager implements LoggerAwareInterface
@@ -37,7 +36,7 @@ class VersionManager implements LoggerAwareInterface
         $this->om = $om;
         $this->projectDir = $projectDir;
 
-        $this->repo = $this->om->getRepository('ClarolineCoreBundle:Update\Version');
+        $this->repo = $this->om->getRepository(Version::class);
     }
 
     public function register(InstallableInterface $bundle)
@@ -45,7 +44,7 @@ class VersionManager implements LoggerAwareInterface
         $data = $this->getVersionFile();
 
         /** @var Version $version */
-        $version = $this->repo->findOneBy(['version' => $data[0], 'bundle' => $bundle->getBundleFQCN()]);
+        $version = $this->repo->findOneBy(['version' => $data[0], 'bundle' => get_class($bundle)]);
 
         if (!empty($version)) {
             $this->log(
@@ -55,8 +54,8 @@ class VersionManager implements LoggerAwareInterface
             return $version;
         }
 
-        $this->log("Registering {$bundle->getBundleFQCN()} version {$data[0]}");
-        $version = new Version($data[0], $data[1], $data[2], $bundle->getBundleFQCN());
+        $this->log(sprintf('Registering %s version %s', get_class($bundle), $data[0]));
+        $version = new Version($data[0], $data[1], $data[2], get_class($bundle));
         $this->om->persist($version);
         $this->om->flush();
 
@@ -66,6 +65,7 @@ class VersionManager implements LoggerAwareInterface
     public function execute(Version $version)
     {
         $version->setIsUpgraded(true);
+
         $this->om->persist($version);
         $this->om->flush();
     }
@@ -75,15 +75,10 @@ class VersionManager implements LoggerAwareInterface
         return trim($this->getVersionFile()[0]);
     }
 
-    /**
-     * @param string $bundle
-     */
-    public function getLatestUpgraded($bundle)
+    public function getLatestUpgraded(string $bundle)
     {
-        $fqcn = $bundle instanceof PluginBundleInterface ? $bundle->getBundleFQCN() : $bundle;
-
         try {
-            return $this->repo->getLatestExecuted($fqcn);
+            return $this->repo->getLatestExecuted($bundle);
         } catch (\Exception $e) {
             //table is not here yet if version < 10
             return null;

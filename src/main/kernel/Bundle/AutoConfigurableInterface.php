@@ -13,13 +13,19 @@ namespace Claroline\KernelBundle\Bundle;
 
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\Routing\RouteCollectionBuilder;
 
 interface AutoConfigurableInterface
 {
-    public function supports($environment);
+    public function supports(string $environment): bool;
 
     public function configureRoutes(RouteCollectionBuilder $routes);
 
     public function configureContainer(ContainerBuilder $container, LoaderInterface $loader);
+
+    /**
+     * @return BundleInterface[] A list of bundle instances required by the bundle
+     */
+    public function getRequiredBundles(string $environment): array;
 }

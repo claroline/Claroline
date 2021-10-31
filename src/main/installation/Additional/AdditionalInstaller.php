@@ -61,6 +61,11 @@ abstract class AdditionalInstaller implements LoggerAwareInterface, ContainerAwa
         return $this->shouldReplayUpdaters;
     }
 
+    public function hasMigrations(): bool
+    {
+        return true;
+    }
+
     public function preInstall()
     {
     }
@@ -130,5 +135,15 @@ abstract class AdditionalInstaller implements LoggerAwareInterface, ContainerAwa
     public static function getUpdaters(): array
     {
         return [];
+    }
+
+    public function getRequiredFixturesDirectory(): ?string
+    {
+        return null;
+    }
+
+    public function getPostInstallFixturesDirectory(): ?string
+    {
+        return null;
     }
 }
