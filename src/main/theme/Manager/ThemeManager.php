@@ -14,7 +14,6 @@ namespace Claroline\ThemeBundle\Manager;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Manager\PluginManager;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Claroline\ThemeBundle\Entity\Theme;
 use Claroline\ThemeBundle\Repository\ThemeRepository;
@@ -38,21 +37,13 @@ class ThemeManager
     private $themeDir;
     /** @var Theme */
     private $currentTheme;
-    /** @var PluginManager */
-    private $pm;
 
-    /**
-     * ThemeManager constructor.
-     *
-     * @param string $kernelDir
-     */
     public function __construct(
         ObjectManager $om,
         AuthorizationCheckerInterface $authorization,
         PlatformConfigurationHandler $config,
-        $kernelDir,
-        ThemeSerializer $serializer,
-        PluginManager $pm
+        string $kernelDir,
+        ThemeSerializer $serializer
     ) {
         $this->om = $om;
         $this->repository = $this->om->getRepository(Theme::class);
@@ -60,7 +51,6 @@ class ThemeManager
         $this->config = $config;
         $this->themeDir = $kernelDir.'/../public/themes';
         $this->serializer = $serializer;
-        $this->pm = $pm;
     }
 
     /**
@@ -240,16 +230,7 @@ class ThemeManager
      */
     public function all($onlyEnabled = false)
     {
-        /** @var Theme[] $themes */
-        $themes = $this->repository->findAll();
-
-        if ($onlyEnabled) {
-            $themes = array_filter($themes, function (Theme $theme) {
-                return $theme->isEnabled() && $this->pm->isLoaded($theme->getPlugin());
-            });
-        }
-
-        return $themes;
+        return $this->repository->findAll($onlyEnabled);
     }
 
     /**

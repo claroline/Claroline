@@ -108,7 +108,6 @@
             "Claroline\\CoreBundle\\": "src/main/core",
             "Claroline\\AppBundle\\": "src/main/app",
             "Claroline\\AuthenticationBundle\\": "src/main/authentication",
-            "Claroline\\BundleRecorder\\": "src/main/recorder",
             "Claroline\\InstallationBundle\\": "src/main/installation",
             "Claroline\\MigrationBundle\\": "src/main/migration",
             "Claroline\\KernelBundle\\": "src/main/kernel",
@@ -169,7 +168,7 @@
             "rm -rf ./var/cache/*"
         ],
         "bundles": [
-            "Claroline\\BundleRecorder\\ScriptHandler::buildBundleFile"
+            "Claroline\\KernelBundle\\ScriptHandler::buildBundleFile"
         ],
         "setup-geoip": [
             "php bin/console claroline:geoip:download"

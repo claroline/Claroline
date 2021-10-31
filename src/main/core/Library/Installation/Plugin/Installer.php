@@ -18,8 +18,6 @@ use Claroline\CoreBundle\Manager\VersionManager;
 use Claroline\InstallationBundle\Manager\InstallationManager;
 use Claroline\KernelBundle\Bundle\PluginBundleInterface;
 use Psr\Log\LoggerAwareInterface;
-use Psr\Log\LoggerInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * This class is used to perform the (un-)installation of a plugin.
@@ -36,8 +34,6 @@ class Installer implements LoggerAwareInterface
     private $baseInstaller;
     /** @var ObjectManager */
     private $om;
-    /** @var TranslatorInterface */
-    private $translator;
     /** @var VersionManager */
     private $versionManager;
     /** @var PluginManager */
@@ -49,7 +45,6 @@ class Installer implements LoggerAwareInterface
         InstallationManager $installer,
         ObjectManager $om,
         PluginManager $pluginManager,
-        TranslatorInterface $translator,
         VersionManager $versionManager
     ) {
         $this->validator = $validator;
@@ -57,18 +52,7 @@ class Installer implements LoggerAwareInterface
         $this->baseInstaller = $installer;
         $this->om = $om;
         $this->pluginManager = $pluginManager;
-        $this->translator = $translator;
         $this->versionManager = $versionManager;
-    }
-
-    /**
-     * @param LoggerInterface $logger
-     */
-    public function setLogger(LoggerInterface $logger = null)
-    {
-        $this->logger = $logger;
-        $this->baseInstaller->setLogger($logger);
-        $this->recorder->setLogger($logger);
     }
 
     /**
@@ -96,14 +80,13 @@ class Installer implements LoggerAwareInterface
             }
 
             foreach ($errors['extras'] as $extra) {
-                $this->log(sprintf('<fg=red>The plugin %s has extra requirements ! %s.</fg=red>', $plugin->getName(), $this->translator->trans($extra, [], 'error')));
+                $this->log(sprintf('<fg=red>The plugin %s has extra requirements ! %s.</fg=red>', $plugin->getName(), $extra));
             }
 
             $this->log(sprintf('<fg=red>Disabling %s...</fg=red>', $plugin->getName()));
             $this->pluginManager->disable($pluginEntity);
         }
 
-        $this->versionManager->setLogger($this->logger);
         $version = $this->versionManager->register($plugin);
         $this->versionManager->execute($version);
     }
@@ -114,6 +97,7 @@ class Installer implements LoggerAwareInterface
     public function uninstall(PluginBundleInterface $plugin)
     {
         $this->checkInstallationStatus($plugin, true);
+
         $this->log('Removing plugin configuration...');
         $this->recorder->unregister($plugin);
         $this->baseInstaller->uninstall($plugin);
@@ -132,7 +116,6 @@ class Installer implements LoggerAwareInterface
         $this->baseInstaller->update($plugin, $currentVersion, $targetVersion);
 
         // updates plugin version
-        $this->versionManager->setLogger($this->logger);
         $version = $this->versionManager->register($plugin);
         $this->versionManager->execute($version);
     }
@@ -142,7 +125,7 @@ class Installer implements LoggerAwareInterface
         $this->baseInstaller->end($plugin, $currentVersion, $targetVersion);
     }
 
-    public function checkInstallationStatus(PluginBundleInterface $plugin, $shouldBeInstalled = true)
+    private function checkInstallationStatus(PluginBundleInterface $plugin, $shouldBeInstalled = true)
     {
         $this->log(sprintf('<fg=blue>Checking installation status for plugin %s</fg=blue>', $plugin->getName()));
 
@@ -150,18 +133,6 @@ class Installer implements LoggerAwareInterface
             $stateDiscr = $shouldBeInstalled ? 'not' : 'already';
 
             throw new \LogicException("Plugin '{$plugin->getName()}' is {$stateDiscr} installed.");
-        }
-    }
-
-    public function updateAllConfigurations()
-    {
-        $bundles = $this->pluginManager->getInstalledBundles();
-
-        foreach ($bundles as $bundle) {
-            $this->log('Updating configuration for '.get_class($bundle));
-            $this->log('Plugin validated: proceed to database changes...');
-            $this->om->clear();
-            $this->recorder->update($bundle);
         }
     }
 }

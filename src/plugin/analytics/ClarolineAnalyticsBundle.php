@@ -15,8 +15,4 @@ use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
 
 class ClarolineAnalyticsBundle extends DistributionPluginBundle
 {
-    public function hasMigrations(): bool
-    {
-        return false;
-    }
 }

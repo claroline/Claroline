@@ -4,5 +4,6 @@ imports:
     - { resource: services/finder.yml }
     - { resource: services/listener.yml }
     - { resource: services/manager.yml }
+    - { resource: services/repository.yml }
     - { resource: services/serializer.yml }
     - { resource: services/twig.yml }

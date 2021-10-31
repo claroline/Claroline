@@ -11,23 +11,15 @@
 
 namespace Claroline\ForumBundle;
 
-use Claroline\ForumBundle\Installation\AdditionalInstaller;
 use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
+use Claroline\TagBundle\ClarolineTagBundle;
 
 class ClarolineForumBundle extends DistributionPluginBundle
 {
-    public function getAdditionalInstaller()
-    {
-        return new AdditionalInstaller();
-    }
-
-    public function getRequiredFixturesDirectory(string $environment): ?string
-    {
-        return 'DataFixtures/Required';
-    }
-
     public function getRequiredPlugins()
     {
-        return ['Claroline\\TagBundle\\ClarolineTagBundle'];
+        return [
+            ClarolineTagBundle::class,
+        ];
     }
 }

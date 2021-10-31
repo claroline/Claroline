@@ -1,0 +1,15 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: false
+
+    _instanceof:
+        Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository:
+            autowire: false
+            tags: [doctrine.repository_service]
+
+    Claroline\ThemeBundle\Repository\ThemeRepository:
+        arguments:
+            - '@Doctrine\Persistence\ManagerRegistry'
+            - '@Claroline\CoreBundle\Manager\PluginManager'

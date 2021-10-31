@@ -21,34 +21,7 @@ use Symfony\Component\Routing\RouteCollectionBuilder;
  */
 abstract class PluginBundle extends InstallableBundle implements PluginBundleInterface
 {
-    public function getBundleFQCN()
-    {
-        $vendor = $this->getVendorName();
-        $bundle = $this->getBundleName();
-
-        return "{$vendor}\\{$bundle}\\{$vendor}{$bundle}";
-    }
-
-    public function getShortName()
-    {
-        return $this->getVendorName().$this->getBundleName();
-    }
-
-    final public function getVendorName()
-    {
-        $namespaceParts = explode('\\', $this->getNamespace());
-
-        return $namespaceParts[0];
-    }
-
-    final public function getBundleName()
-    {
-        $namespaceParts = explode('\\', $this->getNamespace());
-
-        return $namespaceParts[1];
-    }
-
-    public function supports($environment)
+    public function supports(string $environment): bool
     {
         return true;
     }
@@ -133,7 +106,7 @@ abstract class PluginBundle extends InstallableBundle implements PluginBundleInt
         return null;
     }
 
-    public function getRequiredThirdPartyBundles(string $environment): array
+    public function getRequiredBundles(string $environment): array
     {
         return [];
     }

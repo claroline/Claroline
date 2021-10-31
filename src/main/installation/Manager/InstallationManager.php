@@ -59,21 +59,29 @@ class InstallationManager implements LoggerAwareInterface
 
     public function install(InstallableInterface $bundle)
     {
-        $this->fixtureLoader->setLogger($this->logger);
         $this->log(sprintf('<comment>Installing %s %s... </comment>', $bundle->getName(), $bundle->getVersion()));
-        $additionalInstaller = $this->getAdditionalInstaller($bundle);
 
-        if ($additionalInstaller) {
-            $this->log('Launching pre-installation actions...');
-            $additionalInstaller->preInstall();
+        $additionalInstaller = $this->getAdditionalInstaller($bundle);
+        if (!$additionalInstaller) {
+            // Load configuration
+            if ($bundle instanceof PluginBundleInterface) {
+                $this->log('Saving configuration...');
+                $this->recorder->register($bundle);
+            }
+
+            // no additional installer for the plugin so there is nothing to do
+            return;
         }
 
-        if ($bundle->hasMigrations()) {
+        $this->log('Launching pre-installation actions...');
+        $additionalInstaller->preInstall();
+
+        if ($additionalInstaller->hasMigrations()) {
             $this->log('Executing migrations...');
             $this->migrationManager->upgradeBundle($bundle, Migrator::VERSION_FARTHEST);
         }
 
-        $fixturesDir = $bundle->getRequiredFixturesDirectory($this->environment);
+        $fixturesDir = $additionalInstaller->getRequiredFixturesDirectory();
         if ($fixturesDir) {
             $this->log("Loading required fixtures ($fixturesDir)...");
             $this->fixtureLoader->load($bundle, $fixturesDir);
@@ -85,12 +93,10 @@ class InstallationManager implements LoggerAwareInterface
             $this->recorder->register($bundle);
         }
 
-        if ($additionalInstaller) {
-            $this->log('Launching post-installation actions...');
-            $additionalInstaller->postInstall();
-        }
+        $this->log('Launching post-installation actions...');
+        $additionalInstaller->postInstall();
 
-        $fixturesDir = $bundle->getPostInstallFixturesDirectory($this->environment);
+        $fixturesDir = $additionalInstaller->getPostInstallFixturesDirectory();
         if ($fixturesDir) {
             $this->log("Loading post installation fixtures ($fixturesDir)...");
             $this->fixtureLoader->load($bundle, $fixturesDir);
@@ -99,27 +105,24 @@ class InstallationManager implements LoggerAwareInterface
 
     public function update(InstallableInterface $bundle, $currentVersion, $targetVersion)
     {
-        $this->log(sprintf(
-            '<comment>Updating %s from %s to %s...</comment>',
-            $bundle->getName(),
-            $currentVersion,
-            $targetVersion
-        ));
+        $this->log(sprintf('<comment>Updating %s from %s to %s...</comment>', $bundle->getName(), $currentVersion, $targetVersion));
 
         $additionalInstaller = $this->getAdditionalInstaller($bundle);
-
-        if ($additionalInstaller) {
-            $this->log('Launching pre-update actions...');
-            $additionalInstaller->setShouldReplayUpdaters($this->shouldReplayUpdaters);
-            $additionalInstaller->preUpdate($currentVersion, $targetVersion);
+        if (!$additionalInstaller) {
+            // no additional installer for the plugin so there is nothing to do
+            return;
         }
 
-        if ($bundle->hasMigrations()) {
+        $this->log('Launching pre-update actions...');
+        $additionalInstaller->setShouldReplayUpdaters($this->shouldReplayUpdaters);
+        $additionalInstaller->preUpdate($currentVersion, $targetVersion);
+
+        if ($additionalInstaller->hasMigrations()) {
             $this->log('Executing migrations...');
             $this->migrationManager->upgradeBundle($bundle, Migrator::VERSION_FARTHEST);
         }
 
-        $fixturesDir = $bundle->getRequiredFixturesDirectory($this->environment);
+        $fixturesDir = $additionalInstaller->getRequiredFixturesDirectory();
         if ($fixturesDir) {
             $this->log("Loading required fixtures ($fixturesDir)...");
             $this->fixtureLoader->load($bundle, $fixturesDir);
@@ -131,10 +134,8 @@ class InstallationManager implements LoggerAwareInterface
             $this->recorder->update($bundle);
         }
 
-        if ($additionalInstaller) {
-            $this->log('Launching post-update actions...');
-            $additionalInstaller->postUpdate($currentVersion, $targetVersion);
-        }
+        $this->log('Launching post-update actions...');
+        $additionalInstaller->postUpdate($currentVersion, $targetVersion);
     }
 
     //This function is fired at the end of a plugin installation/update.
@@ -152,22 +153,23 @@ class InstallationManager implements LoggerAwareInterface
     public function uninstall(InstallableInterface $bundle)
     {
         $this->log(sprintf('<comment>Uninstalling %s...</comment>', $bundle->getName()));
-        $additionalInstaller = $this->getAdditionalInstaller($bundle);
 
-        if ($additionalInstaller) {
-            $this->log('Launching pre-uninstallation actions...');
-            $additionalInstaller->preUninstall();
+        $additionalInstaller = $this->getAdditionalInstaller($bundle);
+        if (!$additionalInstaller) {
+            // no additional installer for the plugin so there is nothing to do
+            return;
         }
 
-        if ($bundle->hasMigrations()) {
+        $this->log('Launching pre-uninstallation actions...');
+        $additionalInstaller->preUninstall();
+
+        if ($additionalInstaller->hasMigrations()) {
             $this->log('Executing migrations...');
             $this->migrationManager->downgradeBundle($bundle, Migrator::VERSION_FARTHEST);
         }
 
-        if ($additionalInstaller) {
-            $this->log('Launching post-uninstallation actions...');
-            $additionalInstaller->postUninstall();
-        }
+        $this->log('Launching post-uninstallation actions...');
+        $additionalInstaller->postUninstall();
     }
 
     public function setShouldReplayUpdaters(bool $shouldReplayUpdaters): void
@@ -191,5 +193,16 @@ class InstallationManager implements LoggerAwareInterface
         }
 
         return null;
+    }
+
+    public function checkInstallationStatus(PluginBundleInterface $plugin, $shouldBeInstalled = true)
+    {
+        $this->log(sprintf('<fg=blue>Checking installation status for plugin %s</fg=blue>', $plugin->getName()));
+
+        if ($this->recorder->isRegistered($plugin) !== $shouldBeInstalled) {
+            $stateDiscr = $shouldBeInstalled ? 'not' : 'already';
+
+            throw new \LogicException("Plugin '{$plugin->getName()}' is {$stateDiscr} installed.");
+        }
     }
 }
