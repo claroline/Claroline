@@ -261,7 +261,7 @@ class ResourceController
                 'url' => $this->routing->resourceUrl($resourceNode),
                 'title' => $resourceNode->getName(),
                 'thumbnail' => $resourceNode->getThumbnail(),
-                'description' => $resourceNode->getDescription(),
+                'description' => !empty($resourceNode->getDescription()) ? strip_tags($resourceNode->getDescription()) : '',
             ])
         );
     }
