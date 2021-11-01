@@ -8,7 +8,7 @@ import {route} from '#/main/core/administration/routing'
 const TemplateCell = props => {
   if (!isEmpty(props.data)) {
     return (
-      <UrlButton target={'#'+route('templates_management')+'/form/'+props.data.id}>
+      <UrlButton target={'#'+route('templates')+'/form/'+props.data.id}>
         {props.data.name}
       </UrlButton>
     )

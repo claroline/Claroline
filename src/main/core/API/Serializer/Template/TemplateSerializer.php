@@ -52,9 +52,10 @@ class TemplateSerializer
             'id' => $template->getUuid(),
             'name' => $template->getName(),
             'type' => $this->typeSerializer->serialize($template->getType()),
+            'system' => $template->isSystem(),
         ];
 
-        if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
+        if (!in_array(Options::SERIALIZE_MINIMAL, $options) && !in_array(Options::SERIALIZE_LIST, $options)) {
             $contents = [];
             foreach ($template->getTemplateContents() as $content) {
                 $contents[$content->getLang()] = [

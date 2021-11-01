@@ -61,13 +61,13 @@ services:
     Claroline\CoreBundle\Controller\APINew\Template\TemplateController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
         public: true
-        arguments:
-            - '@security.authorization_checker'
-            - '@Claroline\CoreBundle\Manager\Template\TemplateManager'
 
     Claroline\CoreBundle\Controller\APINew\Template\TemplateTypeController:
-        parent: Claroline\AppBundle\Controller\AbstractCrudController
-        public: true
+        arguments:
+            - '@security.authorization_checker'
+            - '@Claroline\AppBundle\API\Crud'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\CoreBundle\Manager\Template\TemplateManager'
 
     Claroline\CoreBundle\Controller\APINew\Tool\ToolController:
         arguments:

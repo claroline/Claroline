@@ -6,10 +6,14 @@ import {FORM_SUBMIT_SUCCESS} from '#/main/app/content/form/store/actions'
 
 import {TOOL_LOAD} from '#/main/core/tool/store/actions'
 import {selectors} from '#/main/core/administration/template/store/selectors'
+import {TEMPLATE_TYPE_LOAD} from '#/main/core/administration/template/store/actions'
 
 const reducer = combineReducers({
+  current: makeReducer(null, {
+    [TEMPLATE_TYPE_LOAD]: (state, action) => action.templateType
+  }),
   templates: makeListReducer(selectors.STORE_NAME + '.templates', {
-    sortBy: {property: 'name', direction: 1}
+    //sortBy: {property: 'name', direction: 1}
   }, {
     invalidated: makeReducer(false, {
       [FORM_SUBMIT_SUCCESS + '/' + selectors.STORE_NAME + '.template']: () => true,

@@ -17,7 +17,7 @@ const Vertical = (props) =>
       .map((tab) =>
         <NavLink
           to={props.basePath+tab.path}
-          key={toKey(tab.title)}
+          key={tab.id || toKey(tab.title)}
           className="lateral-link"
           exact={tab.exact}
         >
@@ -43,10 +43,11 @@ Vertical.propTypes= {
   className: T.string,
   basePath: T.string,
   tabs: T.arrayOf(T.shape({
+    id: T.string,
     path: T.string.isRequired,
     exact: T.bool,
     icon: T.string,
-    title: T.string.isRequired,
+    title: T.node.isRequired,
     displayed: T.bool,
     actions: T.arrayOf(T.shape({
       // TODO : action types

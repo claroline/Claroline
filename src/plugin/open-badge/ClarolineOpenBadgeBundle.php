@@ -21,8 +21,8 @@ class ClarolineOpenBadgeBundle extends DistributionPluginBundle
         return new AdditionalInstaller();
     }
 
-    public function getPostInstallFixturesDirectory(string $environment): string
+    public function getRequiredFixturesDirectory(string $environment): string
     {
-        return 'DataFixtures/PostInstall';
+        return 'DataFixtures/Required';
     }
 }

@@ -13,24 +13,24 @@ namespace Claroline\CoreBundle\Entity\Template;
 
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Claroline\AppBundle\Entity\Meta\Name;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="claro_template")
+ * @ORM\Table(
+ *     name="claro_template",
+ *     uniqueConstraints={
+ *         @ORM\UniqueConstraint(name="template_unique_name", columns={"claro_template_type", "entity_name"})
+ *     }
+ * )
  */
 class Template
 {
     use Id;
+    use Name;
     use Uuid;
-
-    /**
-     * @ORM\Column(name="template_name", unique=true)
-     *
-     * @var string
-     */
-    private $name;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Template\TemplateType")
@@ -39,6 +39,16 @@ class Template
      * @var TemplateType
      */
     private $type;
+
+    /**
+     * System templates can not be edited nor deleted by users.
+     * They are managed through DataFixtures.
+     *
+     * @ORM\Column(type="boolean")
+     *
+     * @var bool
+     */
+    private $system = false;
 
     /**
      * @ORM\OneToMany(
@@ -59,16 +69,6 @@ class Template
         $this->contents = new ArrayCollection();
     }
 
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name)
-    {
-        $this->name = $name;
-    }
-
     public function getType(): ?TemplateType
     {
         return $this->type;
@@ -77,6 +77,16 @@ class Template
     public function setType(TemplateType $type)
     {
         $this->type = $type;
+    }
+
+    public function isSystem(): bool
+    {
+        return $this->system;
+    }
+
+    public function setSystem(bool $system)
+    {
+        $this->system = $system;
     }
 
     public function getTemplateContents()

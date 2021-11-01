@@ -1,6 +1,5 @@
 {
     "assertion_id_desc": "The id of the issued badge",
-    "badge_awarded_to": "This badge has been awarded to",
     "badge_certificate": "Badge certificate",
     "badge_certificate_desc": "Template used for badge certificate",
     "badge_description_desc": "Description of the badge",

@@ -52,7 +52,7 @@ const TemplateInput = props => {
           primaryAction={{
             type: LINK_BUTTON,
             label: trans('open', {}, 'actions'),
-            target: route('templates_management')+'/form/'+props.value.id
+            target: route('templates')+'/form/'+props.value.id
           }}
           actions={[
             {

@@ -45,6 +45,7 @@ class TemplateManager
     {
         $templateType = $template->getType();
         $templateType->setDefaultTemplate($template->getName());
+
         $this->om->persist($templateType);
         $this->om->flush();
     }

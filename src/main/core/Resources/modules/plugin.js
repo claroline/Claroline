@@ -135,12 +135,12 @@ registry.add('ClarolineCoreBundle', {
    * Provides Administration tools.
    */
   administration: {
-    'community'           : () => { return import(/* webpackChunkName: "core-admin-users" */          '#/main/core/administration/community') },
-    'main_settings'       : () => { return import(/* webpackChunkName: "core-admin-parameters" */     '#/main/core/administration/parameters') },
-    'templates_management': () => { return import(/* webpackChunkName: "core-admin-template" */       '#/main/core/administration/template') },
-    'tasks_scheduling'    : () => { return import(/* webpackChunkName: "core-admin-scheduled-task" */ '#/main/core/administration/scheduled-task') },
-    'integration'         : () => { return import(/* webpackChunkName: "core-admin-integration" */    '#/main/core/administration/integration') },
-    'transfer'            : () => { return import(/* webpackChunkName: "core-tool-transfer" */        '#/main/core/tools/transfer') }
+    'community'       : () => { return import(/* webpackChunkName: "core-admin-users" */          '#/main/core/administration/community') },
+    'main_settings'   : () => { return import(/* webpackChunkName: "core-admin-parameters" */     '#/main/core/administration/parameters') },
+    'templates'       : () => { return import(/* webpackChunkName: "core-admin-template" */       '#/main/core/administration/template') },
+    'tasks_scheduling': () => { return import(/* webpackChunkName: "core-admin-scheduled-task" */ '#/main/core/administration/scheduled-task') },
+    'integration'     : () => { return import(/* webpackChunkName: "core-admin-integration" */    '#/main/core/administration/integration') },
+    'transfer'        : () => { return import(/* webpackChunkName: "core-tool-transfer" */        '#/main/core/tools/transfer') }
   },
 
   /**

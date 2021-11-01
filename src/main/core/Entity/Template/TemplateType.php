@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Entity\Template;
 
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Claroline\AppBundle\Entity\Meta\Name;
 use Claroline\CoreBundle\Entity\Plugin;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -21,24 +22,22 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(
  *     name="claro_template_type",
  *     uniqueConstraints={
- *         @ORM\UniqueConstraint(
- *             name="template_unique_type",
- *             columns={"type_name"}
- *         )
+ *         @ORM\UniqueConstraint(name="template_unique_type", columns={"entity_name"})
  *     }
  * )
  */
 class TemplateType
 {
     use Id;
+    use Name;
     use Uuid;
 
     /**
-     * @ORM\Column(name="type_name")
+     * @ORM\Column(name="entity_type", type="string")
      *
      * @var string
      */
-    private $name;
+    private $type;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Plugin")
@@ -49,11 +48,11 @@ class TemplateType
     private $plugin;
 
     /**
-     * @ORM\Column(type="json_array", nullable=true)
+     * @ORM\Column(type="json", nullable=true)
      *
      * @var array
      */
-    private $placeholders;
+    private $placeholders = [];
 
     /**
      * @ORM\Column(name="default_template", nullable=true)
@@ -67,78 +66,42 @@ class TemplateType
         $this->refreshUuid();
     }
 
-    /**
-     * Get name.
-     *
-     * @return string
-     */
-    public function getName()
+    public function getType(): ?string
     {
-        return $this->name;
+        return $this->type;
     }
 
-    /**
-     * Set name.
-     *
-     * @param string $name
-     */
-    public function setName($name)
+    public function setType(string $type)
     {
-        $this->name = $name;
+        $this->type = $type;
     }
 
-    /**
-     * Get plugin.
-     *
-     * @return Plugin
-     */
-    public function getPlugin()
+    public function getPlugin(): ?Plugin
     {
         return $this->plugin;
     }
 
-    /**
-     * Set plugin.
-     */
     public function setPlugin(Plugin $plugin)
     {
         $this->plugin = $plugin;
     }
 
-    /**
-     * Get placeholders.
-     *
-     * @return array
-     */
-    public function getPlaceholders()
+    public function getPlaceholders(): array
     {
         return $this->placeholders;
     }
 
-    /**
-     * Set placeholders.
-     */
-    public function setPlaceholders(array $placeholders = null)
+    public function setPlaceholders(array $placeholders = [])
     {
         $this->placeholders = $placeholders;
     }
 
-    /**
-     * Get default template.
-     *
-     * @return string
-     */
-    public function getDefaultTemplate()
+    public function getDefaultTemplate(): ?string
     {
         return $this->defaultTemplate;
     }
 
-    /**
-     * Set default template.
-     *
-     * @param string $defaultTemplate
-     */
-    public function setDefaultTemplate($defaultTemplate)
+    public function setDefaultTemplate(?string $defaultTemplate)
     {
         $this->defaultTemplate = $defaultTemplate;
     }

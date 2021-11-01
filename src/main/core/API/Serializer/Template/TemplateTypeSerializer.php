@@ -20,6 +20,7 @@ class TemplateTypeSerializer
         return [
             'id' => $templateType->getUuid(),
             'name' => $templateType->getName(),
+            'type' => $templateType->getType(),
             'placeholders' => $templateType->getPlaceholders(),
             'defaultTemplate' => $templateType->getDefaultTemplate(),
         ];
