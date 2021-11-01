@@ -4,7 +4,7 @@ LABEL maintainer="Donovan Tengblad"
 
 RUN a2enmod rewrite expires ssl headers
 
-RUN curl -sL https://deb.nodesource.com/setup_14.x | bash
+RUN curl -sL https://deb.nodesource.com/setup_16.x | bash
 RUN apt-get update && apt-get install -y \
   git \
   mariadb-client \
@@ -50,7 +50,7 @@ WORKDIR /var/www/html/claroline
 RUN composer install --no-dev --optimize-autoloader
 RUN rm ./config/parameters.yml
 
-RUN npm install
+RUN npm install --legacy-peer-deps
 RUN npm run webpack
 
 RUN chmod 644 ./.docker/mysql

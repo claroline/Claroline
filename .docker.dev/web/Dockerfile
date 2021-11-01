@@ -4,7 +4,7 @@ LABEL maintainer="Donovan Tengblad"
 
 RUN a2enmod rewrite expires ssl headers
 
-RUN curl -sL https://deb.nodesource.com/setup_14.x | bash
+RUN curl -sL https://deb.nodesource.com/setup_16.x | bash
 RUN apt-get update && apt-get install -y \
   git \
   mariadb-client \
