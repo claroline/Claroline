@@ -1,9 +1,6 @@
 import {connect} from 'react-redux'
 
-import {trans} from '#/main/app/intl'
-import {actions as modalActions} from '#/main/app/overlays/modal/store'
 import {selectors as securitySelectors} from '#/main/app/security/store'
-import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
 
 import {selectors} from '#/plugin/drop-zone/resources/dropzone/store/selectors'
@@ -29,30 +26,14 @@ const MyDrop = connect(
       dispatch(actions.deleteDocument(documentId))
     },
     submit(id) {
-      dispatch(
-        modalActions.showModal(MODAL_CONFIRM, {
-          icon: 'fa fa-fw fa-exclamation-triangle',
-          title: trans('final_drop', {}, 'dropzone'),
-          question: trans('submit_my_drop_confirm', {}, 'dropzone'),
-          confirmButtonText: trans('submit_my_drop', {}, 'dropzone'),
-          dangerous: true,
-          handleConfirm: () => dispatch(actions.submitDrop(id))
-        })
-      )
+      dispatch(actions.submitDrop(id))
     },
     submitForRevision(id) {
-      dispatch(
-        modalActions.showModal(MODAL_CONFIRM, {
-          icon: 'fa fa-fw fa-exclamation-triangle',
-          title: trans('submit_for_revision', {}, 'dropzone'),
-          question: trans('submit_for_revision_confirm', {}, 'dropzone'),
-          confirmButtonText: trans('submit_for_revision', {}, 'dropzone'),
-          handleConfirm: () => dispatch(actions.submitDropForRevision(id))
-        })
-      )
+      dispatch(actions.submitDropForRevision(id))
     },
-    denyCorrection: (correctionId, comment) => dispatch(correctionActions.denyCorrection(correctionId, comment)),
-    showModal: (type, props) => dispatch(modalActions.showModal(type, props)),
+    denyCorrection(correctionId, comment) {
+      dispatch(correctionActions.denyCorrection(correctionId, comment))
+    },
     saveRevisionComment(revisionId, comment) {
       dispatch(actions.saveRevisionComment(revisionId, comment))
     },

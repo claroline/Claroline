@@ -11,6 +11,7 @@
 
 namespace Claroline\DropZoneBundle\Entity;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -29,16 +30,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Drop
 {
+    use Id;
     use Uuid;
-
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     *
-     * @var int
-     */
-    protected $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\DropZoneBundle\Entity\Dropzone")
@@ -85,21 +78,7 @@ class Drop
      *
      * @var bool
      */
-    protected $reported = false;
-
-    /**
-     * @ORM\Column(type="boolean", nullable=false)
-     *
-     * @var bool
-     */
     protected $finished = false;
-
-    /**
-     * @ORM\Column(name="drop_number", type="integer", nullable=true)
-     *
-     * @var int
-     */
-    protected $number;
 
     /**
      * Indicate if the drop was close automaticaly (when time is up by the dropzone option $autoCloseDropsAtDropEndDate).
@@ -203,22 +182,6 @@ class Drop
     }
 
     /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param int $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
-
-    /**
      * @return Dropzone
      */
     public function getDropzone()
@@ -303,22 +266,6 @@ class Drop
     /**
      * @return bool
      */
-    public function isReported()
-    {
-        return $this->reported;
-    }
-
-    /**
-     * @param bool $reported
-     */
-    public function setReported($reported)
-    {
-        $this->reported = $reported;
-    }
-
-    /**
-     * @return bool
-     */
     public function isFinished()
     {
         return $this->finished;
@@ -330,22 +277,6 @@ class Drop
     public function setFinished($finished)
     {
         $this->finished = $finished;
-    }
-
-    /**
-     * @return int
-     */
-    public function getNumber()
-    {
-        return $this->number;
-    }
-
-    /**
-     * @param int $number
-     */
-    public function setNumber($number)
-    {
-        $this->number = $number;
     }
 
     /**

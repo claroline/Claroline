@@ -123,12 +123,14 @@ class ContentComments extends Component {
                   allowHtml={true}
                   actions={[
                     {
+                      name: 'edit',
                       icon: 'fa fa-fw fa-pencil',
                       type: CALLBACK_BUTTON,
                       label: trans('edit'),
                       displayed: !!this.props.editComment && this.props.currentUser && comment.user.id === this.props.currentUser.id,
                       callback: () => this.showCommentForm(comment)
                     }, {
+                      name: 'delete',
                       icon: 'fa fa-fw fa-trash-o',
                       type: CALLBACK_BUTTON,
                       label: trans('delete'),
