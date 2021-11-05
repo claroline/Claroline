@@ -13,7 +13,7 @@ namespace Claroline\CoreBundle\Controller;
 
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;
-use Claroline\AppBundle\Controller\AbstractApiController;
+use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer;
 use Claroline\CoreBundle\Entity\Resource\File;
@@ -41,9 +41,10 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
  *
  * @todo merge with APINew\FileController
  */
-class FileController extends AbstractApiController
+class FileController
 {
     use PermissionCheckerTrait;
+    use RequestDecoderTrait;
 
     /** @var SessionInterface */
     private $session;
