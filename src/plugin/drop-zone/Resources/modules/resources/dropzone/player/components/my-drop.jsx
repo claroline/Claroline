@@ -1,7 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {trans, displayDate} from '#/main/app/intl'
+import {trans} from '#/main/app/intl'
 import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {Toolbar} from '#/main/app/action/components/toolbar'
 import {ContentComments} from '#/main/app/content/components/comments'
@@ -11,83 +11,9 @@ import {MODAL_ALERT} from '#/main/app/modals/alert'
 
 import {DropzoneType, DropType, Revision as RevisionType} from '#/plugin/drop-zone/resources/dropzone/prop-types'
 import {constants} from '#/plugin/drop-zone/resources/dropzone/constants'
-import {MODAL_CORRECTION} from '#/plugin/drop-zone/resources/dropzone/correction/components/modal/correction-modal'
 import {MODAL_ADD_DOCUMENT} from '#/plugin/drop-zone/resources/dropzone/player/modals/document'
 import {Documents} from '#/plugin/drop-zone/resources/dropzone/components/documents'
-
-const getTitle = (dropzone, correction, index) => {
-  let title = ''
-
-  if (dropzone.display.correctorDisplayed) {
-    if (dropzone.parameters.dropType === constants.DROP_TYPE_TEAM) {
-      title = trans('correction_from', {name: correction.teamName}, 'dropzone')
-    } else {
-      title = trans('correction_from', {name: `${correction.user.firstName} ${correction.user.lastName}`}, 'dropzone')
-    }
-  } else {
-    title = trans('correction_n', {number: index}, 'dropzone')
-  }
-
-  return title
-}
-
-const Corrections = props =>
-  <table className="table corrections-table">
-    <thead>
-      <tr>
-        <th></th>
-        <th></th>
-        <th>{trans('start_date', {}, 'platform')}</th>
-        <th>{trans('end_date', {}, 'platform')}</th>
-        {props.dropzone.display.showScore &&
-          <th>{trans('score', {}, 'platform')}</th>
-        }
-      </tr>
-    </thead>
-    <tbody>
-      {props.corrections
-        .filter(c => c.finished)
-        .map((c, idx) =>
-          <tr key={`correction-row-${c.id}`}>
-            <td>
-              {c.correctionDenied &&
-              <span className="fa fa-fw fa-exclamation-triangle" />
-              }
-            </td>
-            <td>
-              <a
-                className="pointer-hand"
-                onClick={() => {
-                  props.showModal(MODAL_CORRECTION, {
-                    title: getTitle(props.dropzone, c, idx + 1),
-                    correction: c,
-                    dropzone: props.dropzone,
-                    showDenialBox: props.dropzone.parameters.correctionDenialEnabled,
-                    denyCorrection: (correctionId, comment) => props.denyCorrection(correctionId, comment)
-                  })
-                }}
-              >
-
-                {getTitle(props.dropzone, c, idx + 1)}
-              </a>
-            </td>
-            <td>{displayDate(c.startDate, false, true)}</td>
-            <td>{displayDate(c.endDate, false, true)}</td>
-            {props.dropzone.display.showScore &&
-              <td>{c.score} / {props.dropzone.parameters.scoreMax}</td>
-            }
-          </tr>
-        )
-      }
-    </tbody>
-  </table>
-
-Corrections.propTypes = {
-  dropzone: T.shape(DropzoneType.propTypes).isRequired,
-  corrections: T.array,
-  denyCorrection: T.func,
-  showModal: T.func
-}
+import {Corrections} from '#/plugin/drop-zone/resources/dropzone/components/corrections'
 
 const MyDrop = props =>
   <section className="resource-section">
@@ -112,13 +38,13 @@ const MyDrop = props =>
       documents={props.myDrop.documents}
       canEdit={props.isDropEnabled && !props.myDrop.finished}
       showUser={props.dropzone.parameters.dropType === constants.DROP_TYPE_TEAM}
-      {...props}
     />
 
     {props.dropzone.display.displayCorrectionsToLearners && props.myDrop.finished && props.myDrop.corrections.filter(c => c.finished).length > 0 &&
       <Corrections
+        dropzone={props.dropzone}
         corrections={props.myDrop.corrections.filter(c => c.finished && c.valid)}
-        {...props}
+        denyCorrection={props.denyCorrection}
       />
     }
 
@@ -134,7 +60,10 @@ const MyDrop = props =>
             label: trans('submit_for_revision', {}, 'dropzone'),
             displayed: props.dropzone.parameters.revisionEnabled,
             disabled: !props.myDrop.documents || 0 === props.myDrop.documents.filter(d => !d.revision).length,
-            callback: () => props.submitForRevision(props.myDrop.id)
+            callback: () => props.submitForRevision(props.myDrop.id),
+            confirm: {
+              message: trans('submit_for_revision_confirm', {}, 'dropzone')
+            }
           }, {
             name: 'revision-history',
             type: LINK_BUTTON,
@@ -178,7 +107,11 @@ const MyDrop = props =>
             label: trans('submit_my_drop', {}, 'dropzone'),
             callback: () => props.submit(props.myDrop.id),
             disabled: !props.myDrop.documents || 0 === props.myDrop.documents.length,
-            primary: true
+            primary: true,
+            confirm: {
+              title: trans('final_drop', {}, 'dropzone'),
+              message: trans('submit_my_drop_confirm', {}, 'dropzone')
+            }
           }
         ]}
       />
@@ -213,9 +146,9 @@ MyDrop.propTypes = {
   isDropEnabled: T.bool.isRequired,
   currentRevisionId: T.string,
   revision: T.shape(RevisionType.propTypes),
+
   submit: T.func.isRequired,
   denyCorrection: T.func.isRequired,
-  showModal: T.func.isRequired,
   saveDocument: T.func.isRequired,
   submitForRevision: T.func.isRequired,
   saveRevisionComment: T.func.isRequired,

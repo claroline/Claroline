@@ -6,7 +6,7 @@ import {RESOURCE_LOAD} from '#/main/core/resource/store/actions'
 
 // app reducers
 import {selectors} from '#/plugin/drop-zone/resources/dropzone/store/selectors'
-import {reducer as editorReducer} from '#/plugin/drop-zone/resources/dropzone/editor/reducer'
+import {reducer as editorReducer} from '#/plugin/drop-zone/resources/dropzone/editor/store/reducer'
 import {reducer as playerReducer} from '#/plugin/drop-zone/resources/dropzone/player/store/reducer'
 import {reducer as correctionReducer} from '#/plugin/drop-zone/resources/dropzone/correction/reducer'
 

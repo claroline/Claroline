@@ -117,16 +117,12 @@ const reducer = {
         }
 
         return Object.assign({}, state, {corrections: corrections})
-      } else {
-        return state
       }
+
+      return state
     },
-    [PEER_DROP_LOAD]: (state, action) => {
-      return action.drop
-    },
-    [PEER_DROP_RESET]: () => {
-      return null
-    },
+    [PEER_DROP_LOAD]: (state, action) => action.drop,
+    [PEER_DROP_RESET]: () => null,
     [DROP_UPDATE]: (state, action) => {
       return state && state.id === action.drop.id ? action.drop : state
     }
@@ -141,13 +137,9 @@ const reducer = {
       [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: () => true
     })
   }),
-  revision: makeReducer({}, {
-    [REVISION_LOAD]: (state, action) => {
-      return action.revision
-    },
-    [REVISION_RESET]: () => {
-      return null
-    },
+  revision: makeReducer(null, {
+    [REVISION_LOAD]: (state, action) => action.revision,
+    [REVISION_RESET]: () => null,
     [REVISION_COMMENT_UPDATE]: (state, action) => {
       const newComments = cloneDeep(state.comments)
       const commentIdx = newComments.findIndex(c => c.id === action.comment.id)
