@@ -4,7 +4,7 @@ namespace HeVinci\FavouriteBundle\Controller;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
-use Claroline\AppBundle\Controller\AbstractApiController;
+use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
@@ -18,8 +18,10 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * @Route("/favourite", options={"expose"=true})
  */
-class FavouriteController extends AbstractApiController
+class FavouriteController
 {
+    use RequestDecoderTrait;
+
     /** @var ObjectManager */
     protected $om; // this is required by the RequestDecoderTrait. It should be fixed
 
@@ -29,9 +31,6 @@ class FavouriteController extends AbstractApiController
     /** @var FavouriteManager */
     private $manager;
 
-    /**
-     * FavouriteController constructor.
-     */
     public function __construct(
         ObjectManager $om,
         SerializerProvider $serializer,
@@ -47,10 +46,8 @@ class FavouriteController extends AbstractApiController
      *
      * @Route("/", name="claro_user_favourites")
      * @EXT\ParamConverter("currentUser", converter="current_user")
-     *
-     * @return JsonResponse
      */
-    public function listAction(User $currentUser)
+    public function listAction(User $currentUser): JsonResponse
     {
         $workspaces = $this->manager->getWorkspaces($currentUser);
         $resources = $this->manager->getResources($currentUser);
@@ -70,10 +67,8 @@ class FavouriteController extends AbstractApiController
      *
      * @Route("/resources/toggle", name="hevinci_favourite_resources_toggle", methods={"PUT"})
      * @EXT\ParamConverter("user", converter="current_user")
-     *
-     * @return JsonResponse
      */
-    public function toggleResourcesAction(User $user, Request $request)
+    public function toggleResourcesAction(User $user, Request $request): JsonResponse
     {
         $nodes = $this->decodeIdsString($request, ResourceNode::class);
         $this->manager->toggleResourceFavourites($user, $nodes);
@@ -86,10 +81,8 @@ class FavouriteController extends AbstractApiController
      *
      * @Route("/workspaces/toggle", name="hevinci_favourite_workspaces_toggle", methods={"PUT"})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @return JsonResponse
      */
-    public function toggleWorkspacesAction(User $user, Request $request)
+    public function toggleWorkspacesAction(User $user, Request $request): JsonResponse
     {
         $nodes = $this->decodeIdsString($request, Workspace::class);
         $this->manager->toggleWorkspaceFavourites($user, $nodes);

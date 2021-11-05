@@ -13,7 +13,6 @@ namespace Claroline\AnalyticsBundle\Controller\User;
 
 use Claroline\AppBundle\Annotations\ApiDoc;
 use Claroline\AppBundle\API\FinderProvider;
-use Claroline\AppBundle\Controller\AbstractApiController;
 use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -22,16 +21,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/user_tracking"),
+ * @Route("/user_tracking")
  */
-class TrackingController extends AbstractApiController
+class TrackingController
 {
     /** @var FinderProvider */
     private $finder;
 
-    /**
-     * UserTrackingController constructor.
-     */
     public function __construct(FinderProvider $finder)
     {
         $this->finder = $finder;
@@ -52,10 +48,8 @@ class TrackingController extends AbstractApiController
      * )
      * @Route("/{user}/tracking/list", name="apiv2_user_tracking_list")
      * @EXT\ParamConverter("user", class="ClarolineCoreBundle:User", options={"mapping": {"user": "uuid"}})
-     *
-     * @return JsonResponse
      */
-    public function listAction(User $user, Request $request)
+    public function listAction(User $user, Request $request): JsonResponse
     {
         $params = $request->query->all();
 

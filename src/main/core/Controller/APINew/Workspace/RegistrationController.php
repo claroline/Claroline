@@ -15,7 +15,7 @@ use Claroline\AppBundle\Annotations\ApiDoc;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\SerializerProvider;
-use Claroline\AppBundle\Controller\AbstractApiController;
+use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
@@ -34,8 +34,10 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 /**
  * @Route("/workspace")
  */
-class RegistrationController extends AbstractApiController
+class RegistrationController
 {
+    use RequestDecoderTrait;
+
     /** @var AuthorizationCheckerInterface */
     private $authorization;
 

@@ -11,7 +11,7 @@
 namespace Claroline\ScormBundle\Controller;
 
 use Claroline\AppBundle\API\FinderProvider;
-use Claroline\AppBundle\Controller\AbstractApiController;
+use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
@@ -30,8 +30,9 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class ScormController extends AbstractApiController
+class ScormController
 {
+    use RequestDecoderTrait;
     use PermissionCheckerTrait;
 
     /** @var AuthorizationCheckerInterface */

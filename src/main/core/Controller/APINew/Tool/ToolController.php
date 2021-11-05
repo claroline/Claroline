@@ -13,7 +13,7 @@ namespace Claroline\CoreBundle\Controller\APINew\Tool;
 
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\SerializerProvider;
-use Claroline\AppBundle\Controller\AbstractApiController;
+use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
@@ -37,8 +37,10 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 /**
  * @Route("/tool")
  */
-class ToolController extends AbstractApiController
+class ToolController
 {
+    use RequestDecoderTrait;
+
     /** @var AuthorizationCheckerInterface */
     private $authorization;
     /** @var ObjectManager */
