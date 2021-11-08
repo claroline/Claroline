@@ -22,17 +22,9 @@ services:
         calls:
             - setLogger: [ '@logger' ]
 
-    claroline.manager.database_manager:
-        alias: Claroline\AppBundle\Manager\DatabaseManager
-        public: true
-
     Claroline\AppBundle\Manager\CommandManager:
         arguments:
             - '@kernel'
-
-    claroline.manager.command_manager:
-        alias: Claroline\AppBundle\Manager\CommandManager
-        public: true
 
     Claroline\AppBundle\Manager\CacheManager:
         arguments:

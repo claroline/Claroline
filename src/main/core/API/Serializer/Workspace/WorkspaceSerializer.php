@@ -2,7 +2,6 @@
 
 namespace Claroline\CoreBundle\API\Serializer\Workspace;
 
-use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
@@ -44,9 +43,6 @@ class WorkspaceSerializer
     /** @var FileUtilities */
     private $fileUt;
 
-    /** @var FinderProvider */
-    private $finder;
-
     /** @var UserSerializer */
     private $userSerializer;
 
@@ -63,7 +59,6 @@ class WorkspaceSerializer
         WorkspaceManager $workspaceManager,
         ResourceManager $resourceManager,
         FileUtilities $fileUt,
-        FinderProvider $finder,
         UserSerializer $userSerializer,
         PublicFileSerializer $publicFileSerializer,
         ResourceNodeSerializer $resNodeSerializer
@@ -74,7 +69,6 @@ class WorkspaceSerializer
         $this->workspaceManager = $workspaceManager;
         $this->resourceManager = $resourceManager;
         $this->fileUt = $fileUt;
-        $this->finder = $finder;
         $this->userSerializer = $userSerializer;
         $this->publicFileSerializer = $publicFileSerializer;
         $this->resNodeSerializer = $resNodeSerializer;

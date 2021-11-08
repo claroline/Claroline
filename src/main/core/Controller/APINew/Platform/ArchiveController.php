@@ -28,17 +28,15 @@ class ArchiveController extends AbstractSecurityController
 
     /**
      * @Route("/download/{archive}", name="claro_admin_archive_download")
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function downloadAction($archive)
+    public function downloadAction($archive): BinaryFileResponse
     {
         $this->canOpenAdminTool('main_settings');
 
         $file = $this->archivePath.DIRECTORY_SEPARATOR.$archive;
 
-        $response = new BinaryFileResponse($file, 200, ['Content-Disposition' => "attachment; filename={$file}"]);
-
-        return $response;
+        return new BinaryFileResponse($file, 200, [
+            'Content-Disposition' => "attachment; filename={$file}",
+        ]);
     }
 }

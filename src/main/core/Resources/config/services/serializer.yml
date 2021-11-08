@@ -7,7 +7,6 @@ services:
     Claroline\CoreBundle\API\Serializer\ParametersSerializer:
         arguments:
             - '@Claroline\AppBundle\API\SerializerProvider'
-            - '@Claroline\AppBundle\API\FinderProvider'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
             - '%claroline.param.archive_directory%'
@@ -46,7 +45,6 @@ services:
             - '@claroline.manager.workspace_manager'
             - '@claroline.manager.resource_manager'
             - '@Claroline\CoreBundle\Library\Utilities\FileUtilities'
-            - '@Claroline\AppBundle\API\FinderProvider'
             - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
             - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
             - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
