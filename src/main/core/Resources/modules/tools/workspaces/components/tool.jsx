@@ -23,18 +23,18 @@ const WorkspacesTool = (props) =>
         label: trans('create_workspace', {}, 'workspace'),
         target: `${props.path}/new`,
         primary: true,
-        displayed: props.creatable
+        displayed: props.canCreate
       }
     ]}
     subtitle={
       <Routes
         path={props.path}
         routes={[
-          {path: '/new',        render: () => trans('new_workspace', {}, 'workspace'), disabled: !props.creatable},
+          {path: '/new',        render: () => trans('new_workspace', {}, 'workspace'), disabled: !props.canCreate},
           {path: '/registered', render: () => trans('my_workspaces', {}, 'workspace')},
           {path: '/public',     render: () => trans('public_workspaces', {}, 'workspace')},
           {path: '/managed',    render: () => trans('managed_workspaces', {}, 'workspace')},
-          {path: '/model',      render: () => trans('workspace_models', {}, 'workspace'), disabled: !props.creatable}
+          {path: '/model',      render: () => trans('workspace_models', {}, 'workspace'), disabled: !props.canCreate}
         ]}
       />
     }
@@ -44,7 +44,7 @@ const WorkspacesTool = (props) =>
       routes={[
         {
           path: '/new',
-          disabled: !props.creatable,
+          disabled: !props.canCreate,
           component: WorkspaceCreation,
           onEnter: () => props.resetForm('workspaces.creation', merge({}, WorkspaceType.defaultProps, {meta: {creator: props.currentUser}}))
         }, {
@@ -80,18 +80,6 @@ const WorkspacesTool = (props) =>
               <WorkspaceList
                 url={['apiv2_workspace_list_managed']}
                 name="workspaces.managed"
-                customDefinition={[
-                  {
-                    name: 'meta.archived',
-                    label: trans('archived'),
-                    type: 'boolean',
-                    alias: 'archived',
-                    displayed: false,
-                    displayable: false,
-                    sortable: false,
-                    filterable: true
-                  }
-                ]}
               />
             )
 
@@ -99,7 +87,7 @@ const WorkspacesTool = (props) =>
           }
         }, {
           path: '/model',
-          disabled: !props.creatable,
+          disabled: !props.canCreate,
           render: () => {
             const ModelList = (
               <WorkspaceList
@@ -109,6 +97,19 @@ const WorkspacesTool = (props) =>
             )
 
             return ModelList
+          }
+        }, {
+          path: '/archived',
+          disabled: !props.canArchive,
+          render: () => {
+            const ArchiveList = (
+              <WorkspaceList
+                url={['apiv2_workspace_list_archive']}
+                name="workspaces.archives"
+              />
+            )
+
+            return ArchiveList
           }
         }
       ]}
@@ -125,7 +126,8 @@ WorkspacesTool.propTypes = {
   currentUser: T.shape({
     // TODO : user types
   }),
-  creatable: T.bool.isRequired,
+  canCreate: T.bool.isRequired,
+  canArchive: T.bool.isRequired,
   resetForm: T.func.isRequired
 }
 

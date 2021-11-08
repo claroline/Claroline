@@ -117,6 +117,7 @@ class WorkspaceSerializer
                 'configure' => $editPerm,
                 'administrate' => $editPerm,
                 'export' => $this->authorization->isGranted('EXPORT', $workspace),
+                'archive' => $this->authorization->isGranted('ARCHIVE', $workspace),
             ],
             'meta' => $this->getMeta($workspace, $options),
             'contactEmail' => $workspace->getContactEmail(),

@@ -230,6 +230,8 @@ plugin:
           is_exportable: true
           is_locked_for_admin: false
           is_anonymous_excluded: false
+          tool_rights:
+              - name: archive
 
         - name: resources
           class: folder

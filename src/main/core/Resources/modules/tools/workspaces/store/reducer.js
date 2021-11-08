@@ -85,5 +85,16 @@ export const reducer = combineReducers({
     invalidated: makeReducer(false, {
       [makeInstanceAction(TOOL_LOAD, 'workspaces')]: () => true
     })
+  }),
+
+  /**
+   * The list of the archived workspaces.
+   */
+  archives: makeListReducer('workspaces.archives', {
+    sortBy: {property: 'created', direction: -1}
+  }, {
+    invalidated: makeReducer(false, {
+      [makeInstanceAction(TOOL_LOAD, 'workspaces')]: () => true
+    })
   })
 })

@@ -38,14 +38,20 @@ const WorkspacesMenu = (props) =>
           type: LINK_BUTTON,
           label: trans('workspace_models', {}, 'workspace'),
           target: props.path+'/model',
-          displayed: props.creatable
+          displayed: props.canCreate
+        }, {
+          name: 'archive',
+          type: LINK_BUTTON,
+          label: trans('workspace_archived', {}, 'workspace'),
+          target: props.path+'/archived',
+          displayed: props.canArchive
         }, {
           name: 'new',
           type: LINK_BUTTON,
           icon: 'fa fa-fw fa-plus',
           label: trans('create_workspace', {}, 'workspace'),
           target: props.path+'/new',
-          displayed: props.creatable
+          displayed: props.canCreate
         }
       ]}
       onClick={props.autoClose}
@@ -55,7 +61,8 @@ const WorkspacesMenu = (props) =>
 WorkspacesMenu.propTypes = {
   path: T.string,
   authenticated: T.bool.isRequired,
-  creatable: T.bool.isRequired,
+  canCreate: T.bool.isRequired,
+  canArchive: T.bool.isRequired,
 
   // from menu
   opened: T.bool.isRequired,

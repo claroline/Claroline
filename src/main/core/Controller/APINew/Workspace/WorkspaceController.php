@@ -148,7 +148,10 @@ class WorkspaceController extends AbstractCrudController
     {
         return new JsonResponse($this->finder->search(
             Workspace::class,
-            array_merge($request->query->all(), ['hiddenFilters' => ['user' => $this->tokenStorage->getToken()->getUser()->getId()]]),
+            array_merge($request->query->all(), ['hiddenFilters' => [
+                'model' => false,
+                'user' => $this->tokenStorage->getToken()->getUser()->getId(),
+            ]]),
             $this->getOptions()['list']
         ));
     }
@@ -191,6 +194,30 @@ class WorkspaceController extends AbstractCrudController
         return new JsonResponse($this->finder->search(
             Workspace:: class,
             array_merge($request->query->all(), ['hiddenFilters' => ['model' => true]]),
+            $this->getOptions()['list']
+        ));
+    }
+
+    /**
+     * @ApiDoc(
+     *     description="The list of archived workspace for the current security token.",
+     *     queryString={
+     *         "$finder=Claroline\CoreBundle\Entity\Workspace\Workspace&!archived",
+     *         {"name": "page", "type": "integer", "description": "The queried page."},
+     *         {"name": "limit", "type": "integer", "description": "The max amount of objects per page."},
+     *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
+     *     }
+     * )
+     * @Route("/list/archived", name="apiv2_workspace_list_archive", methods={"GET"})
+     */
+    public function listArchivedAction(Request $request): JsonResponse
+    {
+        return new JsonResponse($this->finder->search(
+            Workspace:: class,
+            array_merge($request->query->all(), ['hiddenFilters' => [
+                'administrated' => true,
+                'archived' => true,
+            ]]),
             $this->getOptions()['list']
         ));
     }

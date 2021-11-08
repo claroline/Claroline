@@ -22,7 +22,7 @@ const WorkspaceCard = props =>
     title={props.data.name}
     subtitle={props.data.code}
     flags={[
-      get(props.data, 'meta.archived')                       && ['fa fa-box',       trans('workspace_archived', {}, 'workspace')],
+      get(props.data, 'meta.archived')                       && ['fa fa-box',       trans('is_archived', {}, 'workspace')],
       get(props.data, 'meta.personal')                       && ['fa fa-user',      trans('workspace_personal', {}, 'workspace')],
       get(props.data, 'restrictions.hidden')                 && ['fa fa-eye-slash', trans('workspace_hidden', {}, 'workspace')],
       get(props.data, 'registration.selfRegistration')       && ['fa fa-globe',     trans('workspace_public_registration', {}, 'workspace')],
