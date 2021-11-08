@@ -65,7 +65,7 @@ const AboutModal = props =>
               }
             }, {
               name: 'meta.archived',
-              label: trans('workspace_archived', {}, 'workspace'),
+              label: trans('is_archived', {}, 'workspace'),
               type: 'boolean',
               hideLabel: true,
               displayed: get(props.workspace, 'meta.archived'),

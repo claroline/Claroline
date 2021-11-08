@@ -7,9 +7,11 @@
   "my_workspaces": "Mes espaces d'activités",
   "public_workspaces": "Espaces d'activités publics",
   "workspace_models": "Modèles d'espaces d'activités",
+  "workspace_archived": "Espaces d'activités archivés",
+
   "view_as_info": "Vous voyez actuellement ce que les utilisateurs avec ce rôle voient.",
 
-  "workspace_archived": "Cet espace d'activité est archivé.",
+  "is_archived": "Cet espace d'activité est archivé.",
   "workspace_hidden": "Cet espace d'activité est caché.",
   "workspace_model": "Cet espace d'activité est un modèle.",
   "workspace_personal": "Cet espace d'activité est un espace personnel.",
