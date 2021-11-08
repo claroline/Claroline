@@ -43,9 +43,9 @@ services:
             - '@security.token_storage'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@claroline.manager.workspace_manager'
-            - '@claroline.manager.resource_manager'
             - '@Claroline\CoreBundle\Library\Utilities\FileUtilities'
             - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\User\OrganizationSerializer'
             - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
             - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
 

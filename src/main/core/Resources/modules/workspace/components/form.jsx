@@ -71,6 +71,11 @@ const WorkspaceFormComponent = (props) =>
             },
             mode: 'standard'
           }, {
+            name: 'organizations',
+            type: 'organizations',
+            label: trans('organizations'),
+            mode: 'standard'
+          }, {
             name: 'contactEmail',
             label: trans('contact'),
             type: 'email',
