@@ -13,7 +13,6 @@ namespace Claroline\CoreBundle\Controller\APINew\Workspace;
 
 use Claroline\AppBundle\Annotations\ApiDoc;
 use Claroline\AppBundle\API\Crud;
-use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
@@ -47,9 +46,6 @@ class RegistrationController
     /** @var SerializerProvider */
     private $serializer;
 
-    /** @var FinderProvider */
-    private $finder;
-
     /** @var Crud */
     private $crud;
 
@@ -63,7 +59,6 @@ class RegistrationController
         AuthorizationCheckerInterface $authorization,
         ObjectManager $om,
         SerializerProvider $serializer,
-        FinderProvider $finder,
         Crud $crud,
         WorkspaceManager $workspaceManager,
         WorkspaceUserQueueManager $registrationQueueManager
@@ -71,7 +66,6 @@ class RegistrationController
         $this->authorization = $authorization;
         $this->om = $om;
         $this->serializer = $serializer;
-        $this->finder = $finder;
         $this->crud = $crud;
         $this->workspaceManager = $workspaceManager;
         $this->registrationQueueManager = $registrationQueueManager;
@@ -99,7 +93,7 @@ class RegistrationController
      */
     public function listPendingAction(Request $request, Workspace $workspace): JsonResponse
     {
-        return new JsonResponse($this->finder->search(
+        return new JsonResponse($this->crud->list(
             WorkspaceRegistrationQueue::class,
             array_merge($request->query->all(), ['hiddenFilters' => ['workspace' => $workspace->getUuid()]])
         ));
@@ -136,7 +130,7 @@ class RegistrationController
             $this->registrationQueueManager->removeRegistration($pending);
         }
 
-        return new JsonResponse($this->finder->search(
+        return new JsonResponse($this->crud->list(
             WorkspaceRegistrationQueue::class,
             array_merge($request->query->all(), ['hiddenFilters' => ['workspace' => $workspace->getUuid()]])
         ));
@@ -171,7 +165,7 @@ class RegistrationController
             $this->registrationQueueManager->removeRegistration($pending);
         }
 
-        return new JsonResponse($this->finder->search(
+        return new JsonResponse($this->crud->list(
             WorkspaceRegistrationQueue::class,
             array_merge($request->query->all(), ['hiddenFilters' => ['workspace' => $workspace->getUuid()]])
         ));

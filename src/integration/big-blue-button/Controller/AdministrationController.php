@@ -12,7 +12,6 @@
 namespace Claroline\BigBlueButtonBundle\Controller;
 
 use Claroline\AppBundle\API\Crud;
-use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\BigBlueButtonBundle\Entity\BBB;
@@ -42,8 +41,6 @@ class AdministrationController
     private $om;
     /** @var Crud */
     private $crud;
-    /** @var FinderProvider */
-    private $finder;
     /** @var ToolManager */
     private $toolManager;
     /** @var BBBManager */
@@ -54,7 +51,6 @@ class AdministrationController
         PlatformConfigurationHandler $config,
         ObjectManager $om,
         Crud $crud,
-        FinderProvider $finder,
         ToolManager $toolManager,
         BBBManager $bbbManager
     ) {
@@ -62,7 +58,6 @@ class AdministrationController
         $this->config = $config;
         $this->om = $om;
         $this->crud = $crud;
-        $this->finder = $finder;
         $this->toolManager = $toolManager;
         $this->bbbManager = $bbbManager;
     }
@@ -100,7 +95,7 @@ class AdministrationController
         $this->checkAccess();
 
         return new JsonResponse(
-            $this->finder->search(BBB::class, $request->query->all(), [AbstractResourceSerializer::SERIALIZE_NODE])
+            $this->crud->list(BBB::class, $request->query->all(), [AbstractResourceSerializer::SERIALIZE_NODE])
         );
     }
 
@@ -128,7 +123,7 @@ class AdministrationController
         $this->checkAccess();
 
         return new JsonResponse(
-            $this->finder->search(Recording::class, $request->query->all())
+            $this->crud->list(Recording::class, $request->query->all())
         );
     }
 
