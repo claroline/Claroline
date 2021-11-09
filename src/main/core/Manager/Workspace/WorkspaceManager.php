@@ -113,29 +113,28 @@ class WorkspaceManager implements LoggerAwareInterface
         if ($user->getLocale()) {
             $this->translator->setLocale($user->getLocale());
         }
-        $created = $this->om->getRepository(Workspace::class)->findOneBy(['code' => $user->getUsername()]);
 
+        $created = $this->om->getRepository(Workspace::class)->findOneBy(['code' => $user->getUsername()]);
         if ($created) {
             $code = $user->getUsername().'~'.uniqid();
         } else {
             $code = $user->getUsername();
         }
 
-        $personalWorkspaceName = $this->translator->trans('personal_workspace', [], 'platform').' - '.$user->getUsername();
         $workspace = new Workspace();
         $workspace->setCode($code);
-        $workspace->setName($personalWorkspaceName);
+        $workspace->setName($this->translator->trans('personal_workspace', [], 'platform').' - '.$user->getUsername());
         $workspace->setCreator($user);
 
-        $workspace = !$model ?
-            $this->copy($this->getDefaultModel(true), $workspace) :
-            $this->copy($model, $workspace);
+        if (empty($model)) {
+            $model = $this->getDefaultModel(true);
+        }
+
+        // copy model inside new workspace and register user to manager role
+        $workspace = $this->copy($model, $workspace);
 
         $workspace->setPersonal(true);
-
         $user->setPersonalWorkspace($workspace);
-        $user->addRole($workspace->getManagerRole());
-        $this->dispatcher->dispatch(SecurityEvents::ADD_ROLE, AddRoleEvent::class, [[$user], $workspace->getManagerRole()]);
 
         $this->om->persist($user);
         $this->om->flush();
@@ -376,9 +375,11 @@ class WorkspaceManager implements LoggerAwareInterface
         $managerRole = $this->roleManager->getManagerRole($workspaceCopy);
         if ($managerRole && $workspaceCopy->getCreator()) {
             $user = $workspaceCopy->getCreator();
-            $user->addRole($managerRole);
-            $this->om->persist($user);
-            $this->dispatcher->dispatch(SecurityEvents::ADD_ROLE, AddRoleEvent::class, [[$user], $managerRole]);
+            if (!$user->hasRole($managerRole->getName())) {
+                $user->addRole($managerRole);
+                $this->om->persist($user);
+                $this->dispatcher->dispatch(SecurityEvents::ADD_ROLE, AddRoleEvent::class, [[$user], $managerRole]);
+            }
         }
 
         $root = $this->resourceManager->getWorkspaceRoot($workspaceCopy);
