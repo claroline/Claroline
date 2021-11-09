@@ -40,9 +40,9 @@ class AddWorkspaceRequirementsHandler implements MessageHandlerInterface
             $this->evaluationManager->getUserEvaluation($workspace, $user, true);
         }
 
+        $this->om->endFlushSuite();
+
         // set required resources for the workspace
         $this->manager->manageRoleSubscription($role, $users, 'add');
-
-        $this->om->endFlushSuite();
     }
 }
