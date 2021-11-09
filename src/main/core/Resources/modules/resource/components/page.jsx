@@ -98,7 +98,7 @@ const ResourcePage = (props) => {
             }
 
             if (currentNode.parent) {
-              redirect += '/'+currentNode.parent.id
+              redirect += '/'+currentNode.parent.slug
             }
 
             props.history.push(redirect)
