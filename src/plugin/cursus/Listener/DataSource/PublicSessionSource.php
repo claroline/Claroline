@@ -47,6 +47,7 @@ class PublicSessionSource
     public function getData(GetDataEvent $event)
     {
         $options = $event->getOptions();
+        $options['hiddenFilters']['hidden'] = false;
         $options['hiddenFilters']['publicRegistration'] = true;
         $options['hiddenFilters']['terminated'] = false;
 
