@@ -41,6 +41,9 @@ services:
     Claroline\CoreBundle\Controller\APINew\Resource\Types\TextController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
         public: true
+        arguments:
+            - '@security.authorization_checker'
+            - '@Claroline\CoreBundle\Manager\Template\PlaceholderManager'
 
     Claroline\CoreBundle\Controller\APINew\Resource\ResourceCommentController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
