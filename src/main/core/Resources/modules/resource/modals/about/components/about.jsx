@@ -48,7 +48,7 @@ const AboutModal = props =>
               type: 'string'
             }, {
               name: 'parent',
-              label: trans('parent'),
+              label: trans('directory', {}, 'resource'),
               type: 'resource'
             }, {
               name: 'workspace',
