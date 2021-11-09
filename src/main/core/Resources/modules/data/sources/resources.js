@@ -34,7 +34,7 @@ export default {
         }
       }, {
         name: 'parent',
-        label: trans('parent'),
+        label: trans('parent', {}, 'resource'),
         type: 'resource'
       }, {
         name: 'meta.views',
