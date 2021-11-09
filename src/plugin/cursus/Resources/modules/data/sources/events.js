@@ -31,7 +31,7 @@ export default {
         displayed: false
       }, {
         name: 'description',
-        type: 'string',
+        type: 'html',
         label: trans('description'),
         displayed: true
       }, {
@@ -45,13 +45,13 @@ export default {
         label: trans('max_participants', {}, 'cursus'),
         displayed: true
       }, {
-        name: 'restrictions.dates[0]',
+        name: 'start',
         alias: 'startDate',
         type: 'date',
         label: trans('start_date'),
         displayed: true
       }, {
-        name: 'restrictions.dates[1]',
+        name: 'end',
         alias: 'endDate',
         type: 'date',
         label: trans('end_date'),
