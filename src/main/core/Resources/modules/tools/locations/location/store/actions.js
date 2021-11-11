@@ -5,7 +5,7 @@ import {actions as formActions} from '#/main/app/content/form/store'
 import {actions as listActions} from '#/main/app/content/list/store'
 
 import {Location as LocationTypes} from '#/main/core/tools/locations/prop-types'
-import {selectors} from '#/main/core/tools/locations/location/store'
+import {selectors} from '#/main/core/tools/locations/location/store/selectors'
 
 export const actions = {}
 

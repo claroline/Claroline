@@ -152,7 +152,6 @@ services:
             - '@Claroline\CoreBundle\Manager\ResourceManager'
             - '@translator'
             - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
-            - '@Claroline\CoreBundle\Manager\Workspace\TransferManager'
             - '%claroline.param.workspace_log_dir%'
             - '@Claroline\CoreBundle\Manager\LogConnectManager'
 

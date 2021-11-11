@@ -18,7 +18,7 @@ services:
             - { name: kernel.event_listener, event: crud_pre_delete_object_claroline_corebundle_entity_workspace_workspace, method: preDelete }
             - { name: kernel.event_listener, event: crud_pre_create_object_claroline_corebundle_entity_workspace_workspace, method: preCreate }
             - { name: kernel.event_listener, event: crud_pre_copy_object_claroline_corebundle_entity_workspace_workspace, method: preCopy }
-            - { name: kernel.event_listener, event: crud_post_update_object_claroline_corebundle_entity_workspace_workspace, method: endUpdate }
+            - { name: kernel.event_listener, event: crud_post_update_object_claroline_corebundle_entity_workspace_workspace, method: preUpdate }
 
     Claroline\CoreBundle\API\Crud\User\UserCrud:
         arguments:

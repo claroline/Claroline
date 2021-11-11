@@ -45,9 +45,9 @@ class LoadAdminHomeData extends AbstractFixture implements ContainerAwareInterfa
 
         if (empty($existingTabs)) {
             $defaultTab = [
-                'title' => $this->translator->trans('informations', [], 'platform'),
-                'longTitle' => $this->translator->trans('informations', [], 'platform'),
-                'slug' => 'informations',
+                'title' => $this->translator->trans('information', [], 'platform'),
+                'longTitle' => $this->translator->trans('information', [], 'platform'),
+                'slug' => 'information',
                 'context' => HomeTab::TYPE_ADMIN,
                 'type' => WidgetsTab::getType(),
                 'class' => WidgetsTab::class,

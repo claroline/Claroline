@@ -106,7 +106,7 @@ class KeywordFormModalComponent extends Component {
         </div>
         <div className="modal-footer">
           <button className="btn btn-default" onClick={this.props.fadeModal}>
-            {trans('cancel')}
+            {trans('cancel', {}, 'actions')}
           </button>
           <button className="btn btn-primary" onClick={() => this.validateKeyword()}>
             {this.state.isFetching ?

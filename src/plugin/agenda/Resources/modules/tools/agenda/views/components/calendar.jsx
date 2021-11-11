@@ -1,10 +1,7 @@
 import {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
-import moment from 'moment'
 
 import {withRouter} from '#/main/app/router'
-
-import {AGENDA_VIEWS} from '#/plugin/agenda/tools/agenda/views'
 
 class CalendarViewComponent extends Component {
   componentDidMount() {
@@ -20,11 +17,7 @@ class CalendarViewComponent extends Component {
   }
 
   loadEvents(force = false) {
-    // load events list
-    const reference = moment(this.props.referenceDate)
-    const view = AGENDA_VIEWS[this.props.view]
-
-    this.props.loadEvents(view.range(reference), force)
+    this.props.loadEvents(this.props.range, force)
   }
 
   render() {
@@ -34,8 +27,7 @@ class CalendarViewComponent extends Component {
 
 CalendarViewComponent.propTYpes = {
   loaded: T.bool.isRequired,
-  view: T.string.isRequired,
-  referenceDate: T.object.isRequired,
+  range: T.arrayOf(T.object),
   loadEvents: T.func.isRequired,
   children: T.node
 }

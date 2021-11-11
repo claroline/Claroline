@@ -1,6 +1,6 @@
 /**
  * Step details modal.
- * Displays a modal with informations about the step.
+ * Displays a modal with information about the step.
  */
 
 import {registry} from '#/main/app/modals/registry'

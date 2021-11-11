@@ -28,7 +28,6 @@ use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Manager\LogConnectManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RoleManager;
-use Claroline\CoreBundle\Manager\Workspace\TransferManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -65,8 +64,6 @@ class WorkspaceController extends AbstractCrudController
     private $translator;
     /** @var WorkspaceManager */
     private $workspaceManager;
-    /** @var TransferManager */
-    private $importer;
     /** @var string */
     private $logDir;
     /** @var LogConnectManager */
@@ -80,7 +77,6 @@ class WorkspaceController extends AbstractCrudController
         ResourceManager $resourceManager,
         TranslatorInterface $translator,
         WorkspaceManager $workspaceManager,
-        TransferManager $importer,
         $logDir,
         LogConnectManager $logConnectManager
     ) {
@@ -88,7 +84,6 @@ class WorkspaceController extends AbstractCrudController
         $this->authorization = $authorization;
         $this->dispatcher = $dispatcher;
         $this->roleManager = $roleManager;
-        $this->importer = $importer;
         $this->resourceManager = $resourceManager;
         $this->translator = $translator;
         $this->workspaceManager = $workspaceManager;
@@ -302,7 +297,7 @@ class WorkspaceController extends AbstractCrudController
     {
         $this->checkPermission('OPEN', $workspace, [], true);
 
-        $pathArch = $this->importer->export($workspace);
+        $pathArch = $this->workspaceManager->export($workspace);
         $filename = TextNormalizer::toKey($workspace->getCode()).'.zip';
 
         $response = new BinaryFileResponse($pathArch);

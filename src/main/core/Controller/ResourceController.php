@@ -162,14 +162,11 @@ class ResourceController
     /**
      * Downloads a list of Resources.
      *
-     * @Route("/download", name="claro_resource_download", defaults={"forceArchive"=false})
-     * @Route("/download/{forceArchive}", name="claro_resource_download", requirements={"forceArchive"="^(true|false|0|1)$"})
-     *
-     * @param bool $forceArchive
+     * @Route("/download", name="claro_resource_download")
      *
      * @return JsonResponse|BinaryFileResponse
      */
-    public function downloadAction(Request $request, $forceArchive = false)
+    public function downloadAction(Request $request)
     {
         $nodes = $this->decodeIdsString($request, ResourceNode::class);
 
@@ -178,7 +175,7 @@ class ResourceController
             throw new AccessDeniedException($collection->getErrorsForDisplay());
         }
 
-        $data = $this->manager->download($nodes, $forceArchive);
+        $data = $this->manager->download($nodes);
 
         $file = $data['file'];
         $fileName = $data['name'];

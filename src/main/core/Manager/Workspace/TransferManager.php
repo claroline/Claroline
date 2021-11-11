@@ -3,7 +3,6 @@
 namespace Claroline\CoreBundle\Manager\Workspace;
 
 use Claroline\AppBundle\API\Crud;
-use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\API\Utils\FileBag;
@@ -22,7 +21,6 @@ use Claroline\CoreBundle\Manager\Workspace\Transfer\OrderedToolTransfer;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Psr\Log\LoggerAwareInterface;
 use Ramsey\Uuid\Uuid;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class TransferManager implements LoggerAwareInterface
@@ -38,12 +36,8 @@ class TransferManager implements LoggerAwareInterface
     private $tempFileManager;
     /** @var SerializerProvider */
     private $serializer;
-    /** @var FinderProvider */
-    private $finder;
     /** @var Crud */
     private $crud;
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
     /** @var OrderedToolTransfer */
     private $ots;
     /** @var FileUtilities */
@@ -51,18 +45,13 @@ class TransferManager implements LoggerAwareInterface
     /** @var LogListener */
     private $logListener;
 
-    /**
-     * TransferManager constructor.
-     */
     public function __construct(
         ObjectManager $om,
         StrictDispatcher $dispatcher,
         TempFileManager $tempFileManager,
         SerializerProvider $serializer,
         OrderedToolTransfer $ots,
-        FinderProvider $finder,
         Crud $crud,
-        TokenStorageInterface $tokenStorage,
         FileUtilities $fileUts,
         LogListener $logListener,
         AuthorizationCheckerInterface $authorization
@@ -71,9 +60,7 @@ class TransferManager implements LoggerAwareInterface
         $this->dispatcher = $dispatcher;
         $this->tempFileManager = $tempFileManager;
         $this->serializer = $serializer;
-        $this->finder = $finder;
         $this->crud = $crud;
-        $this->tokenStorage = $tokenStorage;
         $this->ots = $ots;
         $this->fileUts = $fileUts;
         $this->logListener = $logListener;
@@ -103,11 +90,6 @@ class TransferManager implements LoggerAwareInterface
         return $workspace;
     }
 
-    public function dispatch($action, $when, array $args)
-    {
-        return $this->crud->dispatch($action, $when, $args);
-    }
-
     public function export(Workspace $workspace)
     {
         $fileBag = new FileBag();
@@ -125,6 +107,11 @@ class TransferManager implements LoggerAwareInterface
         $archive->close();
 
         return $pathArch;
+    }
+
+    public function dispatch($action, $when, array $args)
+    {
+        return $this->crud->dispatch($action, $when, $args);
     }
 
     /**

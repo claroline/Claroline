@@ -115,8 +115,7 @@ class AgendaViewMonthComponent extends Component {
     return (
       <CalendarView
         loaded={this.props.loaded}
-        referenceDate={this.props.referenceDate}
-        view={this.props.view}
+        range={this.props.range}
         loadEvents={this.props.loadEvents}
       >
         <div className="agenda-month" onWheel={this.onWheel}>

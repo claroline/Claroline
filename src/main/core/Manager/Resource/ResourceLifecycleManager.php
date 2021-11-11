@@ -124,12 +124,8 @@ class ResourceLifecycleManager
 
     /**
      * Generates the names for dispatched events.
-     *
-     * @param string $prefix
-     *
-     * @return string
      */
-    private static function eventName($prefix, ResourceNode $resourceNode)
+    private static function eventName(string $prefix, ResourceNode $resourceNode): string
     {
         return 'resource.'.$resourceNode->getResourceType()->getName().'.'.$prefix;
     }
