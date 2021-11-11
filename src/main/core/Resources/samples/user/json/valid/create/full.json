@@ -11,7 +11,6 @@
     "email": "homer.simpson@gmail.com",
     "administrativeCode": null,
     "meta": {
-        "publicUrl": "homer.simpson",
         "acceptedTerms": null,
         "lastLogin": "2017-12-06T07:02:51",
         "created": "2017-12-03T10:46:22",
@@ -19,7 +18,6 @@
         "mailValidated": true,
         "mailNotified": true,
         "mailWarningHidden": true,
-        "publicUrlTuned": false,
         "authentication": null,
         "personalWorkspace": true,
         "enabled": true,

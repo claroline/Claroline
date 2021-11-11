@@ -169,7 +169,6 @@ class UserCrud
         $user->setLastName('lastname#'.$user->getId());
         $user->setPlainPassword(uniqid());
         $user->setUsername('username#'.$user->getId());
-        $user->setPublicUrl('removed#'.$user->getId());
         $user->setAdministrativeCode('code#'.$user->getId());
         $user->setIsEnabled(false);
 
@@ -181,6 +180,7 @@ class UserCrud
         if ($ws) {
             $ws->setCode($ws->getCode().'#deleted_user#'.$user->getId());
             $ws->setHidden(true);
+            $ws->setArchived(true);
             $this->om->persist($ws);
         }
 

@@ -179,7 +179,7 @@ class LogListener
             $details['doer'] = [
                 'firstName' => $doer->getFirstName(),
                 'lastName' => $doer->getLastName(),
-                'publicUrl' => $doer->getPublicUrl(),
+                'username' => $doer->getUsername(),
             ];
 
             $doerPlatformRoles = $this->roleManager->getPlatformRoles($doer);

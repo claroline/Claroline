@@ -50,7 +50,6 @@ class Persister
         $user->setEmail($username.'@email.com');
         $user->setIsMailValidated(true);
         $user->addRole($roleUser);
-        $user->setPublicUrl($username);
         $user->setCreationDate(new \DateTime());
         $user->enable();
         $this->container->get('claroline.manager.role_manager')->createUserRole($user);

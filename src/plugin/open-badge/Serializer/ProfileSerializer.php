@@ -51,7 +51,7 @@ class ProfileSerializer
             $data['name'] = $profile->getUsername();
             $data['url'] = $this->router->generate(
               'claro_user_profile',
-              ['user' => $profile->getPublicUrl()],
+              ['user' => $profile->getUsername()],
               UrlGeneratorInterface::ABSOLUTE_URL
             );
         }

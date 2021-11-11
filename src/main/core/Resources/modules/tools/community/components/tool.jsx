@@ -43,14 +43,14 @@ const CommunityTool = (props) =>
         component: ParametersTab,
         disabled: !props.canAdministrate || props.contextType !== toolConstants.TOOL_WORKSPACE
       }, {
-        path: '/profile/:publicUrl',
+        path: '/profile/:username',
         render(routerProps) {
           return (
             <Profile
-              path={props.path + '/profile/' + routerProps.match.params.publicUrl}
+              path={props.path + '/profile/' + routerProps.match.params.username}
               showBreadcrumb={showToolBreadcrumb(props.contextType, props.contextData)}
               breadcrumb={getToolBreadcrumb('community', props.contextType, props.contextData)}
-              publicUrl={routerProps.match.params.publicUrl}
+              username={routerProps.match.params.username}
             />
           )
         }

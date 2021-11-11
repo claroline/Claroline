@@ -17,6 +17,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue;
 use Claroline\CoreBundle\Event\User\DecorateUserEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
 use Claroline\CoreBundle\Manager\FacetManager;
 use Claroline\CoreBundle\Repository\Facet\FieldFacetRepository;
@@ -129,7 +130,6 @@ class UserSerializer
             'administrativeCode' => $user->getAdministrativeCode(),
             'phone' => $showEmail ? $user->getPhone() : null,
             'meta' => $this->serializeMeta($user),
-            'publicUrl' => $user->getPublicUrl(), // todo : merge with the one from meta (I do it to have it in minimal)
             'permissions' => $this->serializePermissions($user),
             'restrictions' => $this->serializeRestrictions($user),
         ];
@@ -286,11 +286,9 @@ class UserSerializer
         }
 
         return [
-            'publicUrl' => $user->getPublicUrl(),
-            'publicUrlTuned' => $user->hasTunedPublicUrl(),
             'acceptedTerms' => $user->hasAcceptedTerms(),
-            'lastLogin' => $user->getLastLogin() ? $user->getLastLogin()->format('Y-m-d\TH:i:s') : null,
-            'created' => $user->getCreated() ? $user->getCreated()->format('Y-m-d\TH:i:s') : null,
+            'lastLogin' => DateNormalizer::normalize($user->getLastLogin()),
+            'created' => DateNormalizer::normalize($user->getCreated()),
             'description' => $user->getDescription(),
             'mailValidated' => $user->isMailValidated(),
             'mailNotified' => $user->isMailNotified(),
@@ -313,12 +311,6 @@ class UserSerializer
         } else {
             // use given locale
             $user->setLocale($meta['locale']);
-        }
-
-        // tune public URL
-        if (!empty($meta['publicUrl']) && $meta['publicUrl'] !== $user->getPublicUrl()) {
-            $user->setPublicUrl($meta['publicUrl']);
-            $user->setHasTunedPublicUrl(true);
         }
     }
 

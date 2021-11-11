@@ -104,8 +104,7 @@ registry.add('ClarolineCoreBundle', {
       'show-profile'   : () => { return import(/* webpackChunkName: "core-action-user-show-profile" */    '#/main/core/user/actions/show-profile') },
       'ws-disable'     : () => { return import(/* webpackChunkName: "core-action-user-ws-disable" */      '#/main/core/user/actions/ws-disable') },
       'ws-enable'      : () => { return import(/* webpackChunkName: "core-action-user-ws-enable" */       '#/main/core/user/actions/ws-enable') },
-      'merge'          : () => { return import(/* webpackChunkName: "core-action-user-merge" */           '#/main/core/user/actions/merge') },
-      'url-change'     : () => { return import(/* webpackChunkName: "core-action-user-url-change" */      '#/main/core/user/actions/url-change') }
+      'merge'          : () => { return import(/* webpackChunkName: "core-action-user-merge" */           '#/main/core/user/actions/merge') }
     }
   },
 

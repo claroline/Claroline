@@ -20,11 +20,11 @@ import {Tracking} from '#/plugin/analytics/user/tracking/containers/main'
 
 class Profile extends Component {
   componentDidMount() {
-    this.props.open(this.props.publicUrl)
+    this.props.open(this.props.username)
   }
 
-  componentDidUpdate(prevProps) {
-    this.props.open(this.props.publicUrl)
+  componentDidUpdate() {
+    this.props.open(this.props.username)
   }
 
   render() {
@@ -100,7 +100,7 @@ class Profile extends Component {
 }
 
 Profile.propTypes = {
-  publicUrl: T.string.isRequired,
+  username: T.string.isRequired,
   history: T.object.isRequired,
   showBreadcrumb: T.bool.isRequired,
   breadcrumb: T.arrayOf(T.shape({

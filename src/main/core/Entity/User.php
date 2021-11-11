@@ -22,7 +22,6 @@ use Claroline\CoreBundle\Entity\Model\OrganizationsTrait;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Organization\UserOrganizationReference;
 use Claroline\CoreBundle\Entity\Task\ScheduledTask;
-use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -244,21 +243,6 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
      * @ORM\Column(name="is_mail_validated", type="boolean")
      */
     protected $isMailValidated = false;
-
-    /**
-     * @var string
-     *
-     * @Assert\Regex("/^[^\/]+$/")
-     * @ORM\Column(name="public_url", type="string", nullable=true, unique=true)
-     */
-    protected $publicUrl;
-
-    /**
-     * @var bool
-     *
-     * @ORM\Column(name="has_tuned_public_url", type="boolean")
-     */
-    protected $hasTunedPublicUrl = false;
 
     /**
      * @var \DateTime
@@ -484,9 +468,6 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
     public function setUsername($username)
     {
         $this->username = $username;
-        if (empty($this->publicUrl)) {
-            $this->publicUrl = $this->generatePublicUrl();
-        }
 
         return $this;
     }
@@ -839,53 +820,6 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
     public function isMailNotified()
     {
         return $this->isMailNotified;
-    }
-
-    /**
-     * @param string $publicUrl
-     *
-     * @return User
-     */
-    public function setPublicUrl($publicUrl)
-    {
-        $this->publicUrl = $publicUrl;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPublicUrl()
-    {
-        return $this->publicUrl;
-    }
-
-    private function generatePublicUrl()
-    {
-        return TextNormalizer::stripDiacritics(
-            strtolower(str_replace(' ', '-', $this->username))
-        );
-    }
-
-    /**
-     * @param mixed $hasTunedPublicUrl
-     *
-     * @return User
-     */
-    public function setHasTunedPublicUrl($hasTunedPublicUrl)
-    {
-        $this->hasTunedPublicUrl = $hasTunedPublicUrl;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function hasTunedPublicUrl()
-    {
-        return $this->hasTunedPublicUrl;
     }
 
     public function setExpirationDate($expirationDate)
