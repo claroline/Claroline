@@ -28,11 +28,10 @@ use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
 use Claroline\CoreBundle\Event\Security\AddRoleEvent;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Manager\Tool\ToolManager;
 use Claroline\CoreBundle\Repository\User\UserRepository;
 use Claroline\CoreBundle\Repository\WorkspaceRepository;
-use Doctrine\Persistence\ObjectRepository;
 use Psr\Log\LoggerAwareInterface;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -53,6 +52,8 @@ class WorkspaceManager implements LoggerAwareInterface
     private $om;
     /** @var Crud */
     private $crud;
+    /** @var ToolManager */
+    private $toolManager;
     private $container;
 
     private $shortcutsRepo;
@@ -60,8 +61,6 @@ class WorkspaceManager implements LoggerAwareInterface
     private $userRepo;
     /** @var WorkspaceRepository */
     private $workspaceRepo;
-    /** @var ObjectRepository */
-    private $workspaceOptionsRepo;
 
     public function __construct(
         TranslatorInterface $translator,
@@ -70,6 +69,7 @@ class WorkspaceManager implements LoggerAwareInterface
         ResourceManager $resourceManager,
         StrictDispatcher $dispatcher,
         ObjectManager $om,
+        ToolManager $toolManager,
         ContainerInterface $container
     ) {
         $this->translator = $translator;
@@ -78,31 +78,12 @@ class WorkspaceManager implements LoggerAwareInterface
         $this->om = $om;
         $this->dispatcher = $dispatcher;
         $this->container = $container;
+        $this->toolManager = $toolManager;
         $this->crud = $crud;
 
         $this->userRepo = $om->getRepository(User::class);
         $this->workspaceRepo = $om->getRepository(Workspace::class);
-        $this->workspaceOptionsRepo = $om->getRepository(WorkspaceOptions::class);
         $this->shortcutsRepo = $om->getRepository(Shortcuts::class);
-    }
-
-    /**
-     * Rename a workspace.
-     *
-     * @param string $name
-     */
-    public function rename(Workspace $workspace, $name)
-    {
-        $workspace->setName($name);
-
-        $root = $this->resourceManager->getWorkspaceRoot($workspace);
-        if ($root) {
-            $root->setName($name);
-            $this->om->persist($root);
-        }
-
-        $this->om->persist($workspace);
-        $this->om->flush();
     }
 
     /**
@@ -138,6 +119,16 @@ class WorkspaceManager implements LoggerAwareInterface
 
         $this->om->persist($user);
         $this->om->flush();
+    }
+
+    public function export(Workspace $workspace)
+    {
+        return $this->container->get(TransferManager::class)->export($workspace);
+    }
+
+    public function import(array $data, Workspace $workspace)
+    {
+        return $this->container->get(TransferManager::class)->create($data, $workspace);
     }
 
     /**
@@ -236,7 +227,7 @@ class WorkspaceManager implements LoggerAwareInterface
 
     public function getWorkspaceOptions(Workspace $workspace)
     {
-        $workspaceOptions = $this->workspaceOptionsRepo->findOneBy(['workspace' => $workspace]);
+        $workspaceOptions = $this->om->getRepository(WorkspaceOptions::class)->findOneBy(['workspace' => $workspace]);
 
         //might not be required
         if (!$workspaceOptions) {
@@ -269,12 +260,6 @@ class WorkspaceManager implements LoggerAwareInterface
         }
 
         return $workspaceOptions;
-    }
-
-    public function setLogger(LoggerInterface $logger = null)
-    {
-        $this->logger = $logger;
-        $this->resourceManager->setLogger($logger);
     }
 
     public function isRegistered(Workspace $workspace, User $user)
@@ -338,26 +323,13 @@ class WorkspaceManager implements LoggerAwareInterface
 
     /**
      * Copies a Workspace.
-     *
-     * @param Workspace $workspace    - the original workspace to copy
-     * @param Workspace $newWorkspace - the copy
-     * @param bool      $model        - if true, the new workspace will be a model
-     *
-     * @return Workspace
      */
-    public function copy(Workspace $workspace, Workspace $newWorkspace, $model = false)
+    public function copy(Workspace $workspace, Workspace $newWorkspace, ?bool $model = false): Workspace
     {
-        /** @var TransferManager $transferManager */
-        $transferManager = $this->container->get('claroline.manager.workspace.transfer');
-
         $fileBag = new FileBag();
         //these are the new workspace data
-        $data = $transferManager->serialize($workspace);
-        $data = $transferManager->exportFiles($data, $fileBag, $workspace);
-
-        if ($this->logger) {
-            $transferManager->setLogger($this->logger);
-        }
+        $data = $this->container->get(TransferManager::class)->serialize($workspace);
+        $data = $this->container->get(TransferManager::class)->exportFiles($data, $fileBag, $workspace);
 
         if ($newWorkspace->getCode()) {
             unset($data['code']);
@@ -367,11 +339,12 @@ class WorkspaceManager implements LoggerAwareInterface
             unset($data['name']);
         }
 
-        $workspaceCopy = $transferManager->deserialize($data, $newWorkspace, [Options::REFRESH_UUID], $fileBag);
+        $workspaceCopy = $this->container->get(TransferManager::class)->deserialize($data, $newWorkspace, [Options::REFRESH_UUID], $fileBag);
 
         $workspaceCopy->setModel($model);
 
         // set the manager role
+        // TODO : do it with crud instead
         $managerRole = $this->roleManager->getManagerRole($workspaceCopy);
         if ($managerRole && $workspaceCopy->getCreator()) {
             $user = $workspaceCopy->getCreator();
@@ -410,7 +383,7 @@ class WorkspaceManager implements LoggerAwareInterface
         $this->om->persist($workspaceCopy);
         $this->om->flush();
 
-        $transferManager->dispatch('create', 'post', [$workspaceCopy]);
+        $this->container->get(TransferManager::class)->dispatch('create', 'post', [$workspaceCopy]);
 
         return $workspaceCopy;
     }
@@ -462,20 +435,19 @@ class WorkspaceManager implements LoggerAwareInterface
             $json = $zip->getFromName('workspace.json');
             $data = json_decode($json, true);
             $data['code'] = $data['name'] = $name;
-            $this->container->get('claroline.manager.workspace.transfer')->setLogger($this->logger);
             $workspace = new Workspace();
             $workspace->setName($name);
             $workspace->setPersonal($isPersonal);
             $workspace->setCode($name);
             /** @var Workspace $workspace */
-            $workspace = $this->container->get('claroline.manager.workspace.transfer')->create($data, $workspace);
+            $workspace = $this->container->get(TransferManager::class)->create($data, $workspace);
             //just in case
             $workspace->setName($name);
             $workspace->setPersonal($isPersonal);
             $workspace->setCode($name);
             $workspace->setModel(true);
             $this->log('Add tools...');
-            $this->container->get('claroline.manager.tool_manager')->addMissingWorkspaceTools($workspace);
+            $this->toolManager->addMissingWorkspaceTools($workspace);
             $this->log('Build...');
             $this->container->get('Claroline\CoreBundle\Listener\Log\LogListener')->setDefaults();
 
@@ -613,12 +585,8 @@ class WorkspaceManager implements LoggerAwareInterface
 
     /**
      * Generates an unique workspace code from given one by iterating it.
-     *
-     * @param string $code
-     *
-     * @return string
      */
-    public function getUniqueCode($code)
+    public function getUniqueCode(string $code): string
     {
         $existingCodes = $this->workspaceRepo->findWorkspaceCodesWithPrefix($code);
 

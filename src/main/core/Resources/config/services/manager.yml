@@ -194,6 +194,7 @@ services:
             - '@claroline.manager.resource_manager'
             - '@Claroline\AppBundle\Event\StrictDispatcher'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\Manager\Tool\ToolManager'
             - '@service_container'
         calls:
             - setLogger: [ '@logger' ]
@@ -203,24 +204,19 @@ services:
         public: true
 
     Claroline\CoreBundle\Manager\Workspace\TransferManager:
+        public: true
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\Event\StrictDispatcher'
             - '@claroline.manager.temp_file'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@claroline.transfer.ordered_tool'
-            - '@Claroline\AppBundle\API\FinderProvider'
             - '@Claroline\AppBundle\API\Crud'
-            - '@security.token_storage'
             - '@Claroline\CoreBundle\Library\Utilities\FileUtilities'
             - '@Claroline\CoreBundle\Listener\Log\LogListener'
             - '@security.authorization_checker'
         calls:
             - setLogger: [ '@logger' ]
-
-    claroline.manager.workspace.transfer:
-        alias: Claroline\CoreBundle\Manager\Workspace\TransferManager
-        public: true
 
     Claroline\CoreBundle\Manager\Workspace\Transfer\OrderedToolTransfer:
         arguments:

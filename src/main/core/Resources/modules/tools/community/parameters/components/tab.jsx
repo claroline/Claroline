@@ -92,7 +92,7 @@ const ParametersTab = props => {
               {
                 name: 'access_max_users',
                 type: 'boolean',
-                label: trans('access_max_users'),
+                label: trans('restrict_users_count'),
                 calculated: () => props.workspace.restrictions && null !== props.workspace.restrictions.maxUsers && '' !== props.workspace.restrictions.maxUsers,
                 onChange: checked => {
                   if (checked) {
@@ -107,7 +107,7 @@ const ParametersTab = props => {
                   {
                     name: 'restrictions.maxUsers',
                     type: 'number',
-                    label: trans('maxUsers'),
+                    label: trans('users_count'),
                     displayed: props.workspace.restrictions && null !== props.workspace.restrictions.maxUsers && '' !== props.workspace.restrictions.maxUsers,
                     required: true,
                     options: {

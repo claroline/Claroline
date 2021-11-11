@@ -91,7 +91,7 @@ const OrganizationForm = props =>
           {
             name: 'limit.enabled',
             type: 'boolean',
-            label: trans('access_max_users'),
+            label: trans('restrict_users_count'),
             calculated: (organization) => get(organization, 'limit.enabled') || get(organization, 'limit.users', -1) > -1,
             onChange: (enabled) => {
               if (!enabled) {
@@ -104,7 +104,7 @@ const OrganizationForm = props =>
               {
                 name: 'limit.users',
                 type: 'number',
-                label: trans('maxUsers'),
+                label: trans('users_count'),
                 displayed: get(props.organization, 'limit.enabled') || get(props.organization, 'limit.users', -1) > -1
               }
             ]

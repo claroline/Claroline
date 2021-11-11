@@ -103,7 +103,7 @@ services:
     Claroline\CoreBundle\Command\Workspace\ExportCommand:
         arguments:
             - '@doctrine.orm.entity_manager'
-            - '@Claroline\CoreBundle\Manager\Workspace\TransferManager'
+            - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
         tags:
             - { name: 'console.command', command: 'claroline:workspace:export' }
 
@@ -112,7 +112,7 @@ services:
             - '@Claroline\AppBundle\API\Crud'
             - '@Claroline\CoreBundle\Library\Utilities\FileUtilities'
             - '@Claroline\AppBundle\API\SerializerProvider'
-            - '@Claroline\CoreBundle\Manager\Workspace\TransferManager'
+            - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
         tags:
             - { name: 'console.command', command: 'claroline:workspace:import' }
 

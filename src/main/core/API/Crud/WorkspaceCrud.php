@@ -10,6 +10,7 @@ use Claroline\AppBundle\Event\Crud\UpdateEvent;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Listener\Log\LogListener;
 use Claroline\CoreBundle\Manager\Organization\OrganizationManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
@@ -46,13 +47,12 @@ class WorkspaceCrud
 
     public function preCreate(CreateEvent $event)
     {
-        $this->logListener->disable();
-
         $workspace = $event->getObject();
 
         $model = $workspace->getWorkspaceModel() ? $workspace->getWorkspaceModel() : $this->manager->getDefaultModel();
         $workspace->setWorkspaceModel($model);
 
+        // set the creator
         $user = $this->tokenStorage->getToken() ? $this->tokenStorage->getToken()->getUser() : null;
         if ($user instanceof User && empty($workspace->getCreator())) {
             $workspace->setCreator($user);
@@ -66,8 +66,6 @@ class WorkspaceCrud
         if (empty($workspace->getOrganizations())) {
             $workspace->addOrganization($this->organizationManager->getDefault());
         }
-
-        $this->logListener->enable();
     }
 
     public function preCopy(CopyEvent $event)
@@ -82,14 +80,17 @@ class WorkspaceCrud
         $this->logListener->enable();
     }
 
-    public function endUpdate(UpdateEvent $event)
+    public function preUpdate(UpdateEvent $event)
     {
+        /** @var Workspace $workspace */
         $workspace = $event->getObject();
-        $root = $this->resourceManager->getWorkspaceRoot($workspace);
-        if ($root) {
-            $root->setName($workspace->getName());
-            $this->om->persist($root);
-            $this->om->flush();
+        $oldData = $event->getOldData();
+        if (!empty($oldData['name']) && $oldData['name'] !== $workspace->getName()) {
+            $root = $this->resourceManager->getWorkspaceRoot($workspace);
+            if ($root) {
+                $root->setName($workspace->getName());
+                $this->om->persist($root);
+            }
         }
     }
 

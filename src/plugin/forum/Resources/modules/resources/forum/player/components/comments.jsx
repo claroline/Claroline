@@ -57,7 +57,7 @@ class CommentForm extends Component {
                 className="btn-link"
                 tooltip="bottom"
                 icon="fa fa-fw fa-times"
-                label={trans('cancel')}
+                label={trans('cancel', {}, 'actions')}
                 callback={this.props.cancel}
               />
             </div>

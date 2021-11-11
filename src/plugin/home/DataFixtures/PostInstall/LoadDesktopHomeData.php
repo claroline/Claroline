@@ -45,9 +45,9 @@ class LoadDesktopHomeData extends AbstractFixture implements ContainerAwareInter
 
         if (empty($existingTabs)) {
             $defaultTab = [
-                'title' => $this->translator->trans('informations', [], 'platform'),
-                'longTitle' => $this->translator->trans('informations', [], 'platform'),
-                'slug' => 'informations',
+                'title' => $this->translator->trans('information', [], 'platform'),
+                'longTitle' => $this->translator->trans('information', [], 'platform'),
+                'slug' => 'information',
                 'context' => HomeTab::TYPE_ADMIN_DESKTOP,
                 'type' => WidgetsTab::getType(),
                 'class' => WidgetsTab::class,

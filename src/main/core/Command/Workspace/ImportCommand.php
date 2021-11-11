@@ -16,7 +16,7 @@ use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Utilities\FileUtilities;
-use Claroline\CoreBundle\Manager\Workspace\TransferManager;
+use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -31,14 +31,14 @@ class ImportCommand extends Command
     private $crud;
     private $fileUtils;
     private $serializerProvider;
-    private $transferManager;
+    private $workspaceManager;
 
-    public function __construct(Crud $crud, FileUtilities $fileUtils, SerializerProvider $serializerProvider, TransferManager $transferManager)
+    public function __construct(Crud $crud, FileUtilities $fileUtils, SerializerProvider $serializerProvider, WorkspaceManager $workspaceManager)
     {
         $this->crud = $crud;
         $this->fileUtils = $fileUtils;
         $this->serializerProvider = $serializerProvider;
-        $this->transferManager = $transferManager;
+        $this->workspaceManager = $workspaceManager;
 
         parent::__construct();
     }
@@ -80,7 +80,7 @@ class ImportCommand extends Command
         $workspace = new Workspace();
         $workspace->setCode($data['code']);
 
-        $this->transferManager->create($data, $workspace);
+        $this->workspaceManager->import($data, $workspace);
 
         return 0;
     }

@@ -15,7 +15,6 @@ use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue;
-use Claroline\CoreBundle\Event\User\DecorateUserEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
@@ -36,7 +35,7 @@ class UserSerializer
     /** @var AuthorizationCheckerInterface */
     private $authorization;
     /** @var ObjectManager */
-    protected $om;
+    private $om;
     /** @var PlatformConfigurationHandler */
     private $config;
     /** @var PublicFileSerializer */
@@ -78,6 +77,7 @@ class UserSerializer
         $this->eventDispatcher = $eventDispatcher;
         $this->organizationSerializer = $organizationSerializer;
         $this->facetManager = $facetManager;
+
         $this->organizationRepo = $om->getRepository(Organization::class);
         $this->roleRepo = $om->getRepository(Role::class);
         $this->fieldFacetRepo = $om->getRepository(FieldFacet::class);
@@ -111,7 +111,7 @@ class UserSerializer
         $showEmailRoles = $this->config->getParameter('profile.show_email') ?? [];
         $showEmail = false;
         if ($token) {
-            $isOwner = $token->getUser() instanceof User && $token->getUser()->getUuid() === $user->getUuid();
+            $isOwner = $token->getUser() instanceof User && $token->getUser()->getId() === $user->getId();
             $showEmail = $isOwner || !empty(array_filter($token->getRoleNames(), function (string $role) use ($showEmailRoles) {
                 return 'ROLE_ADMIN' === $role || in_array($role, $showEmailRoles);
             }));
@@ -192,27 +192,7 @@ class UserSerializer
             }
         }
 
-        return $this->decorate($user, $serializedUser);
-    }
-
-    /**
-     * Dispatches an event to let plugins add some custom data to the serialized user.
-     * For example: AuthenticationBundle adds CAS Id to the serialized user.
-     */
-    private function decorate(User $user, array $serializedUser): array
-    {
-        $unauthorizedKeys = array_keys($serializedUser);
-
-        /** @var DecorateUserEvent $event */
-        $event = $this->eventDispatcher->dispatch('serialize_user', 'User\DecorateUser', [
-            $user,
-            $unauthorizedKeys,
-        ]);
-
-        return array_merge(
-            $serializedUser,
-            $event->getInjectedData()
-        );
+        return $serializedUser;
     }
 
     /**
@@ -236,12 +216,7 @@ class UserSerializer
         return null;
     }
 
-    /**
-     * Serialize the user poster.
-     *
-     * @return array|null
-     */
-    private function serializePoster(User $user)
+    private function serializePoster(User $user): ?array
     {
         if (!empty($user->getPoster())) {
             /** @var PublicFile $file */
@@ -257,12 +232,7 @@ class UserSerializer
         return null;
     }
 
-    /**
-     * Serialize the user thumbnail.
-     *
-     * @return array|null
-     */
-    private function serializeThumbnail(User $user)
+    private function serializeThumbnail(User $user): ?array
     {
         if (!empty($user->getThumbnail())) {
             /** @var PublicFile $file */
@@ -407,6 +377,7 @@ class UserSerializer
             }
         }
 
+        // TODO : this should not be done here
         //only add role here. If we want to remove them, use the crud remove method instead
         //it's useful if we want to create a user with a list of roles
         if (isset($data['roles'])) {
@@ -425,7 +396,6 @@ class UserSerializer
                     ]);
                 }
 
-                // TODO : this should not be done here
                 if ($role && $role->getId()) {
                     $roleWs = $role->getWorkspace();
                     if (in_array(Options::WORKSPACE_VALIDATE_ROLES, $options) && Role::WS_ROLE === $role->getType() && $roleWs->getRegistrationValidation()) {
@@ -448,6 +418,7 @@ class UserSerializer
             }
         }
 
+        // TODO : this should not be done here
         //only add groups here. If we want to remove them, use the crud remove method instead
         //it's useful if we want to create a user with a list of roles
         if (isset($data['groups'])) {
@@ -496,7 +467,6 @@ class UserSerializer
                     $fieldFacetValue->setUser($user);
                     $fieldFacetValue->setFieldFacet($fieldFacet);
 
-                    // TODO
                     $fieldFacetValue->setValue(
                         $this->facetManager->deserializeFieldValue(
                             $user,

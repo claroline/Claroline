@@ -8,18 +8,13 @@ import RootCloseWrapper from 'react-overlays/lib/RootCloseWrapper'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {toKey} from '#/main/core/scaffolding/text'
 
-import {
-  MenuOverlay,
-  Menu,
-  MenuAction,
-  MenuItem
-} from '#/main/app/overlays/menu'
+import {MenuOverlay, Menu, MenuItem} from '#/main/app/overlays/menu'
+import {MenuAction}  from '#/main/app/buttons/menu/components/menu-action'
 
 import {Button as ButtonTypes} from '#/main/app/buttons/prop-types'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
 import {CallbackButton} from '#/main/app/buttons/callback/components/button'
 
-// TODO : clean implementation
 
 // The class is only here because react-bootstrap dropdown uses ref to work and
 // it's not possible on stateless components
@@ -129,6 +124,7 @@ class StandardMenu extends Component {
 
 StandardMenu.propTypes = {
   id: T.string.isRequired,
+  name: T.string,
   menu: T.oneOfType([
     // a custom menu component
     T.element,
@@ -197,6 +193,7 @@ const MenuButton = props => {
 
 implementPropTypes(MenuButton, ButtonTypes, {
   id: T.string.isRequired,
+  name: T.string,
   opened: T.bool,
   onToggle: T.func,
   containerClassName: T.string, // permits to add a custom class to the wrapping .dropdown element

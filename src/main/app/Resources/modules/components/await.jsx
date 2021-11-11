@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import isEqual from 'lodash/isEqual'
 
-import {makeCancelable} from '#/main/app/api'
+import {makeCancelable} from '#/main/app/api/fetch/makeCancelable'
 
 class Await extends Component {
   constructor(props) {
