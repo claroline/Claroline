@@ -52,7 +52,6 @@ class UserSerializer
             'firstName' => $user->getFirstName(),
             'lastName' => $user->getLastName(),
             'username' => $user->getUsername(),
-            'publicUrl' => $user->getPublicUrl(),
         ];
 
         if (!in_array(Transfer::MINIMAL, $options)) {

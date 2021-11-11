@@ -16,8 +16,6 @@ const User = {
       created: T.string,
       lastLogin: T.string,
       description: T.string,
-      publicUrl: T.string,
-      publicUrlTuned: T.bool,
       personalWorkspace: T.bool
     }),
     restrictions: T.shape({
@@ -38,9 +36,7 @@ const User = {
     }))
   },
   defaultProps: {
-    meta: {
-      publicUrlTuned: false
-    },
+    meta: {},
     permissions: {
       contact: false,
       edit: false,

@@ -20,8 +20,8 @@ const Profile = withRouter(
         loaded: selectors.loaded(state)
       }),
       (dispatch) => ({
-        open(publicUrl) {
-          dispatch(actions.open(publicUrl))
+        open(username) {
+          dispatch(actions.open(username))
         }
       })
     )(ProfileComponent)

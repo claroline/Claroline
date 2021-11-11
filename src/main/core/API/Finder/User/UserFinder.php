@@ -49,10 +49,6 @@ class UserFinder extends AbstractFinder
     {
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
-                case 'publicUrl':
-                    $qb->andWhere('UPPER(obj.publicUrl) = :publicUrl');
-                    $qb->setParameter('publicUrl', strtoupper($filterValue));
-                    break;
                 case 'username':
                     // because some users use numeric username
                     // if we let the default, the finder will add a strict check instead of a LIKE
