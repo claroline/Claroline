@@ -20,7 +20,7 @@ const SessionUsers = (props) =>
       }}
       delete={{
         url: props.unregisterUrl,
-        label: trans('unregister', {}, 'actions'),
+        label: trans('cancel', {}, 'actions'),
         displayed: () => hasPermission('register', props.session)
       }}
       definition={[

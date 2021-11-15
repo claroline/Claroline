@@ -396,7 +396,7 @@ const CourseParticipants = (props) =>
                     <ListData
                       name={selectors.STORE_NAME+'.sessionCancellation'}
                       fetch={{
-                        url: ['apiv2_cursus_session_list_cancellation', {id: props.activeSession.id}],
+                        url: ['apiv2_cursus_session_list_cancellations', {id: props.activeSession.id}],
                         autoload: true
                       }}
                       delete={{

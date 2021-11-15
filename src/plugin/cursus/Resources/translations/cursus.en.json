@@ -110,5 +110,6 @@
     "course_registration_pending_help": "Please wait till a manager register you to a session.",
     "hide_sessions": "Hide sessions to users",
     "cancellations": "Cancellations",
-    "cancellation_date": "Cancellation date"
+    "cancellation_date": "Cancellation date",
+    "cancel": "Cancel"
 }

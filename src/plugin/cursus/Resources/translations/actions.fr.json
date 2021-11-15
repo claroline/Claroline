@@ -7,5 +7,6 @@
   "validate_registration": "Valider l'inscription",
   "send_invitation": "Envoyer une invitation",
   "open-training": "Ouvrir la formation",
-  "move-pending": "Déplacer en liste d'attente"
+  "move-pending": "Déplacer en liste d'attente",
+  "cancel": "Annuler"
 }

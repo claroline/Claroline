@@ -310,7 +310,7 @@ class SessionController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/cancellation", name="apiv2_cursus_session_list_cancellation", methods={"GET"})
+     * @Route("/{id}/cancellations", name="apiv2_cursus_session_list_cancellations", methods={"GET"})
      * @EXT\ParamConverter("session", class="Claroline\CursusBundle\Entity\Session", options={"mapping": {"id": "uuid"}})
      */
     public function listCancellationAction(Session $session, Request $request): JsonResponse
