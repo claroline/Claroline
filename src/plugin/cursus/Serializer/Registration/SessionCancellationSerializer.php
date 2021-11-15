@@ -48,7 +48,7 @@ class SessionCancellationSerializer
             'id' => $sessionCancellation->getUuid(),
             'date' => DateNormalizer::normalize($sessionCancellation->getDate()),
             'user' => $this->userSerializer->serialize($sessionCancellation->getUser(), [Options::SERIALIZE_MINIMAL]),
-            'session' => $this->sessionSerializer->serialize($sessionCancellation->getSession(), [Options::SERIALIZE_MINIMAL])
+            'session' => $this->sessionSerializer->serialize($sessionCancellation->getSession(), [Options::SERIALIZE_MINIMAL]),
         ];
     }
 }

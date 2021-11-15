@@ -13,8 +13,8 @@ namespace Claroline\CursusBundle\Entity\Registration;
 
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
-use Claroline\CursusBundle\Entity\Session;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CursusBundle\Entity\Session;
 use Doctrine\ORM\Mapping as ORM;
 
 /**

@@ -14,7 +14,7 @@ class Version20211111124911 extends AbstractMigration
 {
     public function up(Schema $schema): void
     {
-        $this->addSql("
+        $this->addSql('
             CREATE TABLE claro_cursusbundle_course_session_cancellation (
                 id INT AUTO_INCREMENT NOT NULL, 
                 session_id INT NOT NULL, 
@@ -26,25 +26,25 @@ class Version20211111124911 extends AbstractMigration
                 INDEX IDX_CE57DCC1A76ED395 (user_id), 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE claro_cursusbundle_course_session_cancellation 
             ADD CONSTRAINT FK_CE57DCC1613FECDF FOREIGN KEY (session_id) 
             REFERENCES claro_cursusbundle_course_session (id) 
             ON DELETE CASCADE
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE claro_cursusbundle_course_session_cancellation 
             ADD CONSTRAINT FK_CE57DCC1A76ED395 FOREIGN KEY (user_id) 
             REFERENCES claro_user (id) 
             ON DELETE CASCADE
-        ");
+        ');
     }
 
     public function down(Schema $schema): void
     {
-        $this->addSql("
+        $this->addSql('
             DROP TABLE claro_cursusbundle_course_session_cancellation
-        ");
+        ');
     }
 }
