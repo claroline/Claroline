@@ -33,6 +33,8 @@ services:
     Claroline\CursusBundle\Finder\Registration\SessionGroupFinder: ~
 
     Claroline\CursusBundle\Finder\Registration\SessionUserFinder: ~
+    
+    Claroline\CursusBundle\Finder\Registration\SessionCancellationFinder: ~
 
     Claroline\CursusBundle\Finder\Registration\EventGroupFinder: ~
 

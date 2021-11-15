@@ -23,6 +23,7 @@ use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Claroline\CursusBundle\Entity\Event;
 use Claroline\CursusBundle\Entity\Registration\AbstractRegistration;
+use Claroline\CursusBundle\Entity\Registration\SessionCancellation;
 use Claroline\CursusBundle\Entity\Registration\SessionGroup;
 use Claroline\CursusBundle\Entity\Registration\SessionUser;
 use Claroline\CursusBundle\Entity\Session;
@@ -233,6 +234,14 @@ class SessionController extends AbstractCrudController
         $this->checkPermission('REGISTER', $session, [], true);
 
         $sessionUsers = $this->decodeIdsString($request, SessionUser::class);
+
+        foreach ($sessionUsers as $sessionUser) {
+            $cancellation = new SessionCancellation();
+            $cancellation->setUser($sessionUser->getUser());
+            $cancellation->setSession($sessionUser->getSession());
+            $this->om->persist($cancellation);
+        }
+
         $this->manager->removeUsers($session, $sessionUsers);
 
         return new JsonResponse(null, 204);
@@ -298,6 +307,25 @@ class SessionController extends AbstractCrudController
         $this->manager->removeGroups($session, $sessionGroups);
 
         return new JsonResponse(null, 204);
+    }
+
+    /**
+     * @Route("/{id}/cancellation", name="apiv2_cursus_session_list_cancellation", methods={"GET"})
+     * @EXT\ParamConverter("session", class="Claroline\CursusBundle\Entity\Session", options={"mapping": {"id": "uuid"}})
+     */
+    public function listCancellationAction(Session $session, Request $request): JsonResponse
+    {
+        $this->checkPermission('REGISTER', $session, [], true);
+
+        $params = $request->query->all();
+        if (!isset($params['hiddenFilters'])) {
+            $params['hiddenFilters'] = [];
+        }
+        $params['hiddenFilters']['session'] = $session->getUuid();
+
+        return new JsonResponse(
+            $this->finder->search(SessionCancellation::class, $params)
+        );
     }
 
     /**

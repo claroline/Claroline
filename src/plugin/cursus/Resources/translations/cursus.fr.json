@@ -114,5 +114,7 @@
     "enable_session_pending_list": "Autoriser les utilisateurs à s'inscrire en liste d'attente si la session est complète",
     "course_registration_pending": "Vous êtes en liste d'attente pour cette formation.",
     "course_registration_pending_help": "Veuillez patienter le temps qu'un gestionnaire vous inscrive à une session.",
-    "hide_sessions": "Cacher les sessions aux utilisateurs"
+    "hide_sessions": "Cacher les sessions aux utilisateurs",
+    "cancellations": "Annulations",
+    "cancellation_date": "Date d'annulation"
 }

@@ -82,6 +82,13 @@ const reducer = combineReducers({
       [LOAD_COURSE]: () => true,
       [LOAD_COURSE_SESSION]: () => true
     })
+  }),
+  sessionCancellation: makeListReducer(selectors.STORE_NAME+'.sessionCancellation', {}, {
+    invalidated: makeReducer(false, {
+      [LOAD_COURSE]: () => true,
+      [LOAD_COURSE_SESSION]: () => true,
+      'LIST_DATA_INVALIDATE/trainingCatalog.sessionUsers': () => true
+    })
   })
 })
 
