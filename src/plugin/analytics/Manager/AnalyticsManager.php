@@ -31,6 +31,7 @@ use Claroline\CoreBundle\Repository\Resource\ResourceTypeRepository;
 use Claroline\CoreBundle\Repository\User\GroupRepository;
 use Claroline\CoreBundle\Repository\User\RoleRepository;
 use Claroline\CoreBundle\Repository\User\UserRepository;
+use Claroline\CoreBundle\Repository\WorkspaceRepository;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -38,6 +39,9 @@ class AnalyticsManager
 {
     /** @var TokenStorageInterface */
     private $tokenStorage;
+
+    /** @var WorkspaceRepository */
+    private $workspaceRepo;
 
     /** @var UserRepository */
     private $userRepo;
@@ -92,6 +96,7 @@ class AnalyticsManager
         $this->workspaceManager = $workspaceManager;
         $this->fileManager = $fileManager;
 
+        $this->workspaceRepo = $objectManager->getRepository('ClarolineCoreBundle:Workspace\Workspace');
         $this->userRepo = $objectManager->getRepository('ClarolineCoreBundle:User');
         $this->roleRepo = $objectManager->getRepository('ClarolineCoreBundle:Role');
         $this->groupRepo = $objectManager->getRepository('ClarolineCoreBundle:Group');
@@ -140,7 +145,7 @@ class AnalyticsManager
             'users' => $this->userRepo->countUsers($organizations),
             'roles' => count($this->roleRepo->findAllPlatformRoles()),
             'groups' => count($this->groupRepo->findByOrganizations($organizations)),
-            'workspaces' => $this->workspaceManager->getNbNonPersonalWorkspaces($organizations),
+            'workspaces' => $this->workspaceRepo->countNonPersonalWorkspaces($organizations),
             'organizations' => !empty($organizations) ?
                 count($organizations) :
                 $this->organizationRepo->count([]),
@@ -248,7 +253,7 @@ class AnalyticsManager
                 $listData = $this->resourceRepo->findMimeTypesWithMostResources($finderParams['limit'], $organizations);
                 break;
             case 'top_workspaces_resources':
-                $listData = $this->workspaceManager->getWorkspacesWithMostResources($finderParams['limit'], $organizations);
+                $listData = $this->workspaceRepo->findWorkspacesWithMostResources($finderParams['limit'], $organizations);
                 break;
             case 'top_workspaces_connections':
                 $finderParams['filters']['action'] = LogWorkspaceToolReadEvent::ACTION;

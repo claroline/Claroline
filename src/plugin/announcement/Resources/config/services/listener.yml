@@ -14,7 +14,6 @@ services:
     Claroline\AnnouncementBundle\Listener\Resource\AnnouncementListener:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@twig'
             - '@Claroline\AnnouncementBundle\Manager\AnnouncementManager'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\AppBundle\API\Crud'
@@ -24,7 +23,6 @@ services:
             - { name: kernel.event_listener, event: resource.claroline_announcement_aggregate.copy, method: copy }
             - { name: kernel.event_listener, event: transfer.claroline_announcement_aggregate.export, method: onExport }
             - { name: kernel.event_listener, event: transfer.claroline_announcement_aggregate.import.after, method: onImport }
-            - { name: kernel.event_listener, event: resource.claroline_announcement_aggregate.delete, method: delete }
 
     Claroline\AnnouncementBundle\Listener\CrudListener:
         arguments:

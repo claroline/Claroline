@@ -14,6 +14,9 @@ namespace Claroline\CoreBundle\Manager\Workspace;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue;
 
 class WorkspaceUserQueueManager
@@ -38,7 +41,7 @@ class WorkspaceUserQueueManager
     /**
      * Validates a pending workspace registration.
      */
-    public function validateRegistration(WorkspaceRegistrationQueue $workspaceRegistration)
+    public function validateRegistration(WorkspaceRegistrationQueue $workspaceRegistration): void
     {
         if (!$workspaceRegistration->getUser()->hasRole($workspaceRegistration->getRole())) {
             $this->crud->patch($workspaceRegistration->getUser(), 'role', Crud::COLLECTION_ADD, [
@@ -53,7 +56,7 @@ class WorkspaceUserQueueManager
     /**
      * Removes a pending workspace registration.
      */
-    public function removeRegistration(WorkspaceRegistrationQueue $workspaceRegistration)
+    public function removeRegistration(WorkspaceRegistrationQueue $workspaceRegistration): void
     {
         $this->dispatcher->dispatch(
             'log',
@@ -63,5 +66,35 @@ class WorkspaceUserQueueManager
 
         $this->om->remove($workspaceRegistration);
         $this->om->flush();
+    }
+
+    public function addUserQueue(Workspace $workspace, User $user, Role $role = null): WorkspaceRegistrationQueue
+    {
+        if (empty($role)) {
+            $role = $workspace->getDefaultRole();
+        }
+
+        $registration = new WorkspaceRegistrationQueue();
+
+        $registration->setUser($user);
+        $registration->setRole($role);
+        $registration->setWorkspace($workspace);
+
+        $this->dispatcher->dispatch('log', 'Log\LogWorkspaceRegistrationQueue', [$registration]);
+
+        $this->om->persist($registration);
+        $this->om->flush();
+
+        return $registration;
+    }
+
+    public function isUserInValidationQueue(Workspace $workspace, User $user): bool
+    {
+        $userQueued = $this->om->getRepository(WorkspaceRegistrationQueue::class)->findOneBy([
+            'workspace' => $workspace,
+            'user' => $user,
+        ]);
+
+        return !empty($userQueued);
     }
 }

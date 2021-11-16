@@ -67,7 +67,7 @@ final class Options
     //finder options
     const SQL_QUERY = 'sql_query';
 
-    //transfer_options
+    // for transfer tool
     const WORKSPACE_IMPORT = 'workspace_import';
 
     // for SchemaProvider

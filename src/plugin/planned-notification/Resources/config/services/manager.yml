@@ -6,9 +6,6 @@ services:
 
     Claroline\PlannedNotificationBundle\Manager\Transfer\PlannedNotification:
        arguments:
-          - '@security.authorization_checker'
-          - '@security.token_storage'
-          - '@Claroline\AppBundle\API\FinderProvider'
           - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@Claroline\AppBundle\API\Crud'
 

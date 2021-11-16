@@ -3,7 +3,6 @@
 namespace Claroline\CoreBundle\Manager\Workspace\Transfer\Tools;
 
 use Claroline\AppBundle\API\Crud;
-use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\API\Utils\FileBag;
@@ -12,13 +11,11 @@ use Claroline\AppBundle\Log\LoggableTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\ExportObjectEvent;
 use Claroline\CoreBundle\Event\ImportObjectEvent;
 use Claroline\CoreBundle\Manager\ResourceManager as ResManager;
 use Psr\Log\LoggerAwareInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class ResourceManager implements ToolImporterInterface, LoggerAwareInterface
 {
@@ -28,12 +25,8 @@ class ResourceManager implements ToolImporterInterface, LoggerAwareInterface
     private $serializer;
     /** @var ObjectManager */
     private $om;
-    /** @var FinderProvider */
-    private $finder;
     /** @var Crud */
     private $crud;
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
     /** @var StrictDispatcher */
     private $dispatcher;
     /** @var ResManager */
@@ -41,18 +34,14 @@ class ResourceManager implements ToolImporterInterface, LoggerAwareInterface
 
     public function __construct(
         SerializerProvider $serializer,
-        FinderProvider $finder,
         Crud $crud,
-        TokenStorageInterface $tokenStorage,
         ResManager $resourceManager,
         ObjectManager $om,
         StrictDispatcher $eventDispatcher
       ) {
         $this->serializer = $serializer;
         $this->om = $om;
-        $this->finder = $finder;
         $this->crud = $crud;
-        $this->tokenStorage = $tokenStorage;
         $this->dispatcher = $eventDispatcher;
         $this->resourceManager = $resourceManager;
     }
@@ -74,10 +63,11 @@ class ResourceManager implements ToolImporterInterface, LoggerAwareInterface
         $res = $this->om->getRepository($root->getClass())->findOneBy(['resourceNode' => $root]);
 
         if ($res) {
-            $resource = array_merge(
-                $this->serializer->serialize($res, $resSerializeOptions),
-                ['_nodeId' => $root->getUuid(), '_class' => $node['meta']['className'], '_type' => $node['meta']['type']]
-            );
+            $resource = array_merge($this->serializer->serialize($res, $resSerializeOptions), [
+                '_nodeId' => $root->getUuid(),
+                '_class' => $node['meta']['className'],
+                '_type' => $node['meta']['type'],
+            ]);
 
             $data['nodes'][] = $node;
             $data['resources'][] = $resource;
@@ -127,28 +117,26 @@ class ResourceManager implements ToolImporterInterface, LoggerAwareInterface
     {
         $created = [];
 
+        $options = [Options::REFRESH_UUID];
+
         foreach ($nodes as $data) {
-            $rights = $data['rights'];
-            unset($data['rights']);
-            /** @var ResourceNode $node */
-            $node = $this->om->getObject($data, ResourceNode::class) ?? new ResourceNode();
-            // FIXME
-            // I don't really understand why it's done like it but node should be deserialized in one time
-            // I think it may be because the workspace is not flushed yet and the deserialize method do a db call to retrieve it
-            $node = $this->serializer->deserialize($data, $node, [Options::NO_RIGHTS]);
+            unset($data['workspace']);
+
+            $node = new ResourceNode();
             $node->setWorkspace($workspace);
-            $node = $this->serializer->deserialize(['rights' => $rights], $node);
 
-            if ($this->tokenStorage->getToken() && $this->tokenStorage->getToken()->getUser() instanceof User) {
-                $node->setCreator($this->tokenStorage->getToken()->getUser());
-            }
+            $created[$data['id']] = $node;
 
-            $created[$node->getUuid()] = $node;
+            $node = $this->serializer->deserialize($data, $node, $options);
             if (isset($data['parent'])) {
                 $node->setParent($created[$data['parent']['id']]);
             }
 
-            $this->om->persist($node);
+            if ($this->dispatchCrud('create', 'pre', [$node, $options, $data])) {
+                $this->om->persist($node);
+
+                $this->dispatchCrud('create', 'post', [$node, $options, $data]);
+            }
         }
 
         return $created;
@@ -158,13 +146,16 @@ class ResourceManager implements ToolImporterInterface, LoggerAwareInterface
     {
         $this->om->startFlushSuite();
 
+        $options = [Options::REFRESH_UUID];
+
         foreach ($resources as $data) {
             /** @var AbstractResource $resource */
             $resource = new $data['_class']();
             $resource->setResourceNode($nodes[$data['_nodeId']]);
-            $this->dispatchCrud('create', 'pre', [$resource]);
-            $this->serializer->deserialize($data, $resource, [Options::REFRESH_UUID]);
-            $this->dispatchCrud('create', 'post', [$resource]);
+
+            $this->dispatchCrud('create', 'pre', [$resource, $options, $data]);
+            $this->serializer->deserialize($data, $resource, $options);
+            $this->dispatchCrud('create', 'post', [$resource, $options, $data]);
             $this->dispatcher->dispatch(
                 'transfer.'.$data['_type'].'.import.after',
                 ImportObjectEvent::class,
@@ -210,25 +201,10 @@ class ResourceManager implements ToolImporterInterface, LoggerAwareInterface
     }
 
     /**
-     * We dispatch 2 events: a generic one and an other with a custom name.
-     * Listen to what you want. Both have their uses.
-     *
-     * @param string $action (create, copy, delete, patch, update)
-     * @param string $when   (post, pre)
-     *
-     * @return bool
-     *
-     * Same dispatcher than the crud one
+     * @todo must directly use crud actions, not only the events
      */
-    public function dispatchCrud($action, $when, array $args)
+    private function dispatchCrud($action, $when, array $args)
     {
-        $name = 'crud_'.$when.'_'.$action.'_object';
-        $eventClass = ucfirst($action);
-        $generic = $this->dispatcher->dispatch($name, 'Claroline\\AppBundle\\Event\\Crud\\'.$eventClass.'Event', $args);
-        $className = $this->om->getMetadataFactory()->getMetadataFor(get_class($args[0]))->getName();
-        $serializedName = $name.'_'.strtolower(str_replace('\\', '_', $className));
-        $specific = $this->dispatcher->dispatch($serializedName, 'Claroline\\AppBundle\\Event\\Crud\\'.$eventClass.'Event', $args);
-
-        return $generic->isAllowed() && $specific->isAllowed();
+        return $this->crud->dispatch($action, $when, $args);
     }
 }

@@ -11,25 +11,31 @@
 
 namespace Claroline\LinkBundle\Listener\Resource;
 
+use Claroline\AppBundle\API\Crud;
+use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Event\Resource\ResourceActionEvent;
-use Claroline\LinkBundle\Manager\ShortcutManager;
+use Claroline\LinkBundle\Entity\Resource\Shortcut;
+use Doctrine\Persistence\ObjectRepository;
 
 /**
  * Integrates the "Shortcut" resource.
  */
 class ResourceListener
 {
-    /** @var ObjectManager */
-    private $shortcutManager;
+    /** @var Crud */
+    private $crud;
 
-    /**
-     * ShortcutListener constructor.
-     */
+    /** @var ObjectRepository */
+    private $repository;
+
     public function __construct(
-        ShortcutManager $shortcutManager
+        ObjectManager $om,
+        Crud $crud
     ) {
-        $this->shortcutManager = $shortcutManager;
+        $this->crud = $crud;
+
+        $this->repository = $om->getRepository(Shortcut::class);
     }
 
     /**
@@ -42,8 +48,15 @@ class ResourceListener
     /**
      * Removes all linked shortcuts when a resource is deleted.
      */
-    public function delete(ResourceActionEvent $event)
+    public function delete(DeleteEvent $event)
     {
-        $this->shortcutManager->removeShortcutsTo($event->getResourceNode());
+        $resourceNode = $event->getObject();
+
+        // retrieve the list of shortcuts associated to the ResourceNode
+        /** @var Shortcut[] $shortcuts */
+        $shortcuts = $this->repository->findBy(['target' => $resourceNode]);
+        if (!empty($shortcuts)) {
+            $this->crud->deleteBulk($shortcuts, $event->getOptions());
+        }
     }
 }

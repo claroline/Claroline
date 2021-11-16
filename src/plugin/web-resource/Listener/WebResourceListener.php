@@ -132,26 +132,24 @@ class WebResourceListener
 
     public function onDelete(DeleteResourceEvent $event)
     {
-        $ds = DIRECTORY_SEPARATOR;
-
         /** @var File $resource */
         $resource = $event->getResource();
         $workspace = $resource->getResourceNode()->getWorkspace();
         $hashName = $resource->getHashName();
 
-        $archiveFile = $this->filesDir.$ds.'webresource'.$ds.$workspace->getUuid().$ds.$hashName;
-        $webResourcesPath = $this->uploadDir.$ds.'webresource'.$ds.$workspace->getUuid().$ds.$hashName;
+        $files = [];
 
+        $archiveFile = $this->filesDir.DIRECTORY_SEPARATOR.'webresource'.DIRECTORY_SEPARATOR.$workspace->getUuid().DIRECTORY_SEPARATOR.$hashName;
         if (file_exists($archiveFile)) {
-            $event->setFiles([$archiveFile]);
+            $files[] = $archiveFile;
         }
+
+        $webResourcesPath = $this->uploadDir.DIRECTORY_SEPARATOR.'webresource'.DIRECTORY_SEPARATOR.$workspace->getUuid().DIRECTORY_SEPARATOR.$hashName;
         if (file_exists($webResourcesPath)) {
-            try {
-                $this->deleteFiles($webResourcesPath);
-            } catch (\Exception $e) {
-            }
+            $files[] = $webResourcesPath;
         }
-        $this->om->remove($resource);
+
+        $event->setFiles($files);
         $event->stopPropagation();
     }
 
@@ -220,23 +218,6 @@ class WebResourceListener
         $fs->copy($name, $newName);
 
         return $file;
-    }
-
-    /**
-     * Deletes recursively a directory and its content.
-     *
-     * @param string $dirPath The path to the directory to delete
-     */
-    private function deleteFiles($dirPath)
-    {
-        foreach (glob($dirPath.DIRECTORY_SEPARATOR.'{*,.[!.]*,..?*}', GLOB_BRACE) as $content) {
-            if (is_dir($content)) {
-                $this->deleteFiles($content);
-            } else {
-                unlink($content);
-            }
-        }
-        rmdir($dirPath);
     }
 
     /**

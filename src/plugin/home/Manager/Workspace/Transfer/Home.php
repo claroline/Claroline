@@ -53,6 +53,9 @@ class Home implements ToolImporterInterface, LoggerAwareInterface
     public function deserialize(array $data, Workspace $workspace, array $options, FileBag $bag)
     {
         foreach ($data['tabs'] as $tab) {
+            if (isset($tab['workspace'])) {
+                unset($tab['workspace']);
+            }
             $new = new HomeTab();
             $new->setWorkspace($workspace);
 

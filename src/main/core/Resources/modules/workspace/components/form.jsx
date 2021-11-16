@@ -3,13 +3,13 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
+import merge from 'lodash/merge'
 
 import {trans} from '#/main/app/intl/translation'
 import {url} from '#/main/app/api'
 
-import {selectors as securitySelectors} from '#/main/app/security/store'
 import {selectors as configSelectors} from '#/main/app/config/store'
-import {selectors as workspaceSelectors} from '#/main/core/workspace/store/selectors'
+import {actions, selectors as workspaceSelectors} from '#/main/core/workspace/store'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {
   actions as formActions,
@@ -18,17 +18,15 @@ import {
 
 import {route} from '#/main/core/workspace/routing'
 
-// todo : fix tool selection for opening
-
 // easy selection for restrictions
-const restrictByDates   = (workspace) => get(workspace, 'restrictions.enableDates') || !isEmpty(get(workspace, 'restrictions.dates'))
-const restrictByCode    = (workspace) => get(workspace, 'restrictions.enableCode') || !!get(workspace, 'restrictions.code')
-const restrictByIps     = (workspace) => get(workspace, 'restrictions.enableIps') || !isEmpty(get(workspace, 'restrictions.allowedIps'))
+const restrictByDates = (workspace) => get(workspace, 'restrictions.enableDates') || !isEmpty(get(workspace, 'restrictions.dates'))
+const restrictByCode  = (workspace) => get(workspace, 'restrictions.enableCode') || !!get(workspace, 'restrictions.code')
+const restrictByIps   = (workspace) => get(workspace, 'restrictions.enableIps') || !isEmpty(get(workspace, 'restrictions.allowedIps'))
 
 const WorkspaceFormComponent = (props) =>
   <FormData
-    {...props}
     meta={true}
+    {...props}
     sections={[
       {
         title: trans('general'),
@@ -45,7 +43,7 @@ const WorkspaceFormComponent = (props) =>
             label: trans('code'),
             required: true
           }, {
-            name: 'extra.model',
+            name: 'model',
             type: 'workspace',
             label: trans('create_from_model'),
             options: {
@@ -55,7 +53,8 @@ const WorkspaceFormComponent = (props) =>
               }
             },
             displayed: props.new,
-            mode: 'standard'
+            mode: 'standard',
+            onChange: (model) => props.loadModel(model)
           }
         ]
       }, {
@@ -91,6 +90,7 @@ const WorkspaceFormComponent = (props) =>
             label: trans('personal'),
             type: 'boolean',
             disabled: true,
+            displayed: !props.new,
             mode: 'expert'
           }, {
             name: 'meta._forceLang',
@@ -108,6 +108,7 @@ const WorkspaceFormComponent = (props) =>
               name: 'meta.lang',
               label: trans('lang'),
               type: 'locale',
+              required: true,
               displayed: (workspace) => get(workspace, 'meta._forceLang') || get(workspace, 'meta.lang')
             }]
           }
@@ -292,7 +293,6 @@ const WorkspaceFormComponent = (props) =>
                 props.updateProp('restrictions.dates', [])
               }
             },
-            displayed: props.isAdmin,
             linked: [
               {
                 name: 'restrictions.dates',
@@ -373,23 +373,36 @@ WorkspaceFormComponent.propTypes = {
   root: T.object,
   children: T.any,
   // from redux
-  isAdmin: T.bool.isRequired,
   hasBreadcrumb: T.bool.isRequired,
   new: T.bool.isRequired,
   id: T.string,
+  loadModel: T.func.isRequired,
   updateProp: T.func.isRequired
 }
 
 const WorkspaceForm = connect(
   (state, ownProps) => ({
-    isAdmin: securitySelectors.isAdmin(state),
     hasBreadcrumb: configSelectors.param(state, 'display.breadcrumb'),
     new: formSelectors.isNew(formSelectors.form(state, ownProps.name)),
     id: formSelectors.data(formSelectors.form(state, ownProps.name)).id,
+    // todo : fix tool/resource selection for opening. Those values are only available if the workspace is opened
     tools: workspaceSelectors.tools(state),
     root: workspaceSelectors.root(state)
   }),
   (dispatch, ownProps) =>({
+    loadModel(model) {
+      dispatch(actions.fetchModel(model.id)).then((workspaceModel) => {
+        dispatch(formActions.update(ownProps.name, merge({}, workspaceModel, {
+          // reset some values
+          id: null,
+          model: model,
+          meta: {
+            model: false
+          },
+          roles: [] // should disappear from response once transfer is rewritten
+        })))
+      })
+    },
     updateProp(propName, propValue) {
       dispatch(formActions.updateProp(ownProps.name, propName, propValue))
     }

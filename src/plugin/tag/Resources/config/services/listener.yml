@@ -50,4 +50,4 @@ services:
         arguments:
             - '@Claroline\TagBundle\Manager\TagManager'
         tags:
-            - { name: kernel.event_listener, event: claroline_resources_delete, method: onDelete }
+            - { name: kernel.event_listener, event: crud.pre.delete.resource_node, method: onDelete }

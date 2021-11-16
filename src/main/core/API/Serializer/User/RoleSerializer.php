@@ -201,6 +201,7 @@ class RoleSerializer
             }
         }
 
+        // Tools should not be managed here
         if (isset($data['adminTools'])) {
             $adminTools = $this->om->getRepository('ClarolineCoreBundle:Tool\AdminTool')->findAll();
 

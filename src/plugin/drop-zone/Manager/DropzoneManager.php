@@ -195,23 +195,6 @@ class DropzoneManager
     }
 
     /**
-     * Deletes a Dropzone.
-     */
-    public function delete(Dropzone $dropzone)
-    {
-        $this->om->startFlushSuite();
-        $uuid = $dropzone->getUuid();
-        $ds = DIRECTORY_SEPARATOR;
-        $dropzoneDir = $this->filesDir.$ds.'dropzone'.$ds.$uuid;
-
-        if ($this->fileSystem->exists($dropzoneDir)) {
-            $this->fileSystem->remove($dropzoneDir);
-        }
-        $this->crud->delete($dropzone);
-        $this->om->endFlushSuite();
-    }
-
-    /**
      * Sets Dropzone drop type to default.
      */
     public function setDefaultDropType(Dropzone $dropzone)

@@ -155,7 +155,6 @@ services:
             - '@Claroline\CoreBundle\Manager\ResourceManager'
             - '@translator'
             - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
-            - '%claroline.param.workspace_log_dir%'
             - '@Claroline\CoreBundle\Manager\LogConnectManager'
 
     Claroline\CoreBundle\Controller\APINew\Platform\ConnectionMessageController:

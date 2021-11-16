@@ -14,15 +14,14 @@ use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
 use Claroline\CoreBundle\Manager\FacetManager;
+use Claroline\CoreBundle\Manager\Workspace\WorkspaceUserQueueManager;
 use Claroline\CoreBundle\Repository\Facet\FieldFacetRepository;
 use Claroline\CoreBundle\Repository\Facet\FieldFacetValueRepository;
 use Claroline\CoreBundle\Repository\User\RoleRepository;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -42,12 +41,12 @@ class UserSerializer
     private $fileSerializer;
     /** @var OrganizationSerializer */
     private $organizationSerializer;
-    /** @var ContainerInterface */
-    private $container;
     /** @var StrictDispatcher */
     private $eventDispatcher;
     /** @var FacetManager */
     private $facetManager;
+    /** @var WorkspaceUserQueueManager */
+    private $workspaceUserQueueManager;
 
     private $organizationRepo;
     /** @var RoleRepository */
@@ -63,20 +62,20 @@ class UserSerializer
         ObjectManager $om,
         PlatformConfigurationHandler $config,
         PublicFileSerializer $fileSerializer,
-        ContainerInterface $container,
         StrictDispatcher $eventDispatcher,
         OrganizationSerializer $organizationSerializer,
-        FacetManager $facetManager
+        FacetManager $facetManager,
+        WorkspaceUserQueueManager $workspaceUserQueueManager
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->authorization = $authorization;
         $this->om = $om;
         $this->config = $config;
         $this->fileSerializer = $fileSerializer;
-        $this->container = $container;
         $this->eventDispatcher = $eventDispatcher;
         $this->organizationSerializer = $organizationSerializer;
         $this->facetManager = $facetManager;
+        $this->workspaceUserQueueManager = $workspaceUserQueueManager;
 
         $this->organizationRepo = $om->getRepository(Organization::class);
         $this->roleRepo = $om->getRepository(Role::class);
@@ -400,15 +399,8 @@ class UserSerializer
                     $roleWs = $role->getWorkspace();
                     if (in_array(Options::WORKSPACE_VALIDATE_ROLES, $options) && Role::WS_ROLE === $role->getType() && $roleWs->getRegistrationValidation()) {
                         if (!$user->hasRole($role)) {
-                            $workspaceManager = $this->container->get('claroline.manager.workspace_manager');
-
-                            if (!$workspaceManager->isUserInValidationQueue($roleWs, $user)) {
-                                //for some reason the workspace add manager queue is broken here. Probably it's the log fault
-                                $queue = new WorkspaceRegistrationQueue();
-                                $queue->setUser($user);
-                                $queue->setRole($role);
-                                $queue->setWorkspace($roleWs);
-                                $this->om->persist($queue);
+                            if (!$this->workspaceUserQueueManager->isUserInValidationQueue($roleWs, $user)) {
+                                $this->workspaceUserQueueManager->addUserQueue($roleWs, $user, $role);
                             }
                         }
                     } else {

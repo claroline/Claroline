@@ -24,15 +24,19 @@ class WorkspaceRestrictionsManager
     private $authorization;
     /** @var WorkspaceManager */
     private $workspaceManager;
+    /** @var WorkspaceUserQueueManager */
+    private $workspaceUserQueueManager;
 
     public function __construct(
         RequestStack $requestStack,
         AuthorizationCheckerInterface $authorization,
-        WorkspaceManager $workspaceManager
+        WorkspaceManager $workspaceManager,
+        WorkspaceUserQueueManager $workspaceUserQueueManager
     ) {
         $this->requestStack = $requestStack;
         $this->authorization = $authorization;
         $this->workspaceManager = $workspaceManager;
+        $this->workspaceUserQueueManager = $workspaceUserQueueManager;
     }
 
     /**
@@ -62,7 +66,7 @@ class WorkspaceRestrictionsManager
 
             if ($user) {
                 $errors['registered'] = $this->workspaceManager->isRegistered($workspace, $user);
-                $errors['pendingRegistration'] = $this->workspaceManager->isUserInValidationQueue($workspace, $user);
+                $errors['pendingRegistration'] = $this->workspaceUserQueueManager->isUserInValidationQueue($workspace, $user);
             }
 
             // optional restrictions

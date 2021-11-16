@@ -154,7 +154,6 @@ class FileListener
         $file = $event->getResource();
 
         $pathName = $this->filesDir.DIRECTORY_SEPARATOR.$file->getHashName();
-
         if (file_exists($pathName)) {
             $event->setFiles([$pathName]);
         }
@@ -179,9 +178,9 @@ class FileListener
     {
         $file = $exportEvent->getObject();
         $path = $this->filesDir.DIRECTORY_SEPARATOR.$file->getHashName();
-        $file = $exportEvent->getObject();
+
         $newPath = uniqid().'.'.pathinfo($file->getHashName(), PATHINFO_EXTENSION);
-        //get the filePath
+
         $exportEvent->addFile($newPath, $path);
         $exportEvent->overwrite('_path', $newPath);
     }

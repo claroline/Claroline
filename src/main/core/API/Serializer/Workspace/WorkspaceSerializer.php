@@ -150,14 +150,7 @@ class WorkspaceSerializer
                 }, $workspace->getOrganizations()->toArray());
 
                 // TODO : remove me. Used by workspace transfer
-                $serialized['roles'] = array_map(function (Role $role) use ($options) {
-                    if (in_array(Options::REFRESH_UUID, $options)) {
-                        return [
-                            'translationKey' => $role->getTranslationKey(),
-                            'type' => $role->getType(),
-                        ];
-                    }
-
+                $serialized['roles'] = array_map(function (Role $role) {
                     return [
                         'id' => $role->getUuid(),
                         'name' => $role->getName(),
@@ -190,8 +183,8 @@ class WorkspaceSerializer
             'model' => $workspace->isModel(),
             'personal' => $workspace->isPersonal(),
             'description' => $workspace->getDescription(),
-            'created' => DateNormalizer::normalize($workspace->getCreated()),
-            'updated' => DateNormalizer::normalize($workspace->getCreated()), // todo implement
+            'created' => DateNormalizer::normalize($workspace->getCreatedAt()),
+            'updated' => DateNormalizer::normalize($workspace->getUpdatedAt()),
             'creator' => $workspace->getCreator() ? $this->userSerializer->serialize($workspace->getCreator(), [Options::SERIALIZE_MINIMAL]) : null,
         ];
     }
@@ -272,19 +265,12 @@ class WorkspaceSerializer
         $defaultRole = null;
         if ($workspace->getDefaultRole()) {
             // this should use RoleSerializer but we will get a circular reference if we do it
-            if (in_array(Options::REFRESH_UUID, $options)) {
-                $defaultRole = [
-                  'translationKey' => $workspace->getDefaultRole()->getTranslationKey(),
-                  'type' => $workspace->getDefaultRole()->getType(),
-                ];
-            } else {
-                $defaultRole = [
-                    'id' => $workspace->getDefaultRole()->getUuid(),
-                    'name' => $workspace->getDefaultRole()->getName(),
-                    'type' => $workspace->getDefaultRole()->getType(), // TODO : should be a string for better data readability
-                    'translationKey' => $workspace->getDefaultRole()->getTranslationKey(),
-                ];
-            }
+            $defaultRole = [
+                'id' => $workspace->getDefaultRole()->getUuid(),
+                'name' => $workspace->getDefaultRole()->getName(),
+                'type' => $workspace->getDefaultRole()->getType(), // TODO : should be a string for better data readability
+                'translationKey' => $workspace->getDefaultRole()->getTranslationKey(),
+            ];
         }
 
         return [
@@ -299,7 +285,7 @@ class WorkspaceSerializer
     private function getNotifications(Workspace $workspace)
     {
         return [
-            'enabled' => !$workspace->isDisabledNotifications(),
+            'enabled' => $workspace->hasNotifications(),
         ];
     }
 
@@ -315,48 +301,69 @@ class WorkspaceSerializer
             $workspace->refreshUuid();
         }
 
+        if (array_key_exists('model', $data)) {
+            $model = null;
+            if (!empty($data['model'])) {
+                /** @var Workspace $model */
+                $model = $this->om->getObject($data['model'], Workspace::class, ['code']);
+            }
+
+            $workspace->setWorkspaceModel($model);
+        }
+
         $this->sipe('code', 'setCode', $data, $workspace);
         $this->sipe('name', 'setName', $data, $workspace);
         $this->sipe('contactEmail', 'setContactEmail', $data, $workspace);
 
-        if (isset($data['thumbnail']) && isset($data['thumbnail']['id'])) {
-            /** @var PublicFile $thumbnail */
-            $thumbnail = $this->om->getObject($data['thumbnail'], PublicFile::class);
-            if ($thumbnail) {
-                $workspace->setThumbnail($data['thumbnail']['url']);
-                $this->fileUt->createFileUse($thumbnail, Workspace::class, $workspace->getUuid());
+        if (array_key_exists('thumbnail', $data)) {
+            $thumbnailUrl = null;
+            if (!empty($data['thumbnail'])) {
+                /** @var PublicFile $thumbnail */
+                $thumbnail = $this->om->getObject($data['thumbnail'], PublicFile::class, ['url']);
+                if (!empty($thumbnail)) {
+                    $thumbnailUrl = $thumbnail->getUrl();
+                    $this->fileUt->createFileUse($thumbnail, Workspace::class, $workspace->getUuid());
+                }
             }
+
+            $workspace->setThumbnail($thumbnailUrl);
         }
 
-        if (isset($data['poster']) && isset($data['poster']['id'])) {
-            /** @var PublicFile $poster */
-            $poster = $this->om->getObject($data['poster'], PublicFile::class);
-            if ($poster) {
-                $workspace->setPoster($data['poster']['url']);
-                $this->fileUt->createFileUse($poster, Workspace::class, $workspace->getUuid());
+        if (array_key_exists('poster', $data)) {
+            $posterUrl = null;
+            if (!empty($data['poster'])) {
+                /** @var PublicFile $poster */
+                $poster = $this->om->getObject($data['poster'], PublicFile::class, ['url']);
+                if (!empty($poster)) {
+                    $posterUrl = $poster->getUrl();
+                    $this->fileUt->createFileUse($poster, Workspace::class, $workspace->getUuid());
+                }
             }
-        }
 
-        if (empty($workspace->getCreator()) && isset($data['meta']) && !empty($data['meta']['creator'])) {
-            /** @var User $creator */
-            $creator = $this->om->getObject($data['meta']['creator'], User::class);
-            $workspace->setCreator($creator);
-        }
-
-        if (isset($data['extra']) && isset($data['extra']['model']) && isset($data['extra']['model']['code'])) {
-            /** @var Workspace $model */
-            $model = $this->om->getRepository(Workspace::class)->findOneBy(['code' => $data['extra']['model']['code']]);
-            $workspace->setWorkspaceModel($model);
+            $workspace->setPoster($posterUrl);
         }
 
         if (isset($data['meta'])) {
+            $this->sipe('meta.personal', 'setPersonal', $data, $workspace);
             $this->sipe('meta.model', 'setModel', $data, $workspace);
             $this->sipe('meta.description', 'setDescription', $data, $workspace);
             $this->sipe('meta.lang', 'setLang', $data, $workspace);
 
-            if (empty($workspace->getCreated()) && !empty($data['meta']['created'])) {
-                $date = DateNormalizer::denormalize($data['meta']['created']);
-                $workspace->setCreated($date->getTimestamp());
+            if (array_key_exists('created', $data['meta'])) {
+                $workspace->setCreatedAt(DateNormalizer::denormalize($data['meta']['created']));
+            }
+            if (array_key_exists('updated', $data['meta'])) {
+                $workspace->setUpdatedAt(DateNormalizer::denormalize($data['meta']['updated']));
+            }
+
+            if (array_key_exists('creator', $data['meta'])) {
+                $creator = null;
+                if (!empty($data['meta']['creator'])) {
+                    /** @var User $creator */
+                    $creator = $this->om->getObject($data['meta']['creator'], User::class);
+                }
+
+                $workspace->setCreator($creator);
             }
         }
 

@@ -149,7 +149,7 @@ class UserCrud
             }
 
             if ($createWs) {
-                $this->workspaceManager->setPersonalWorkspace($user);
+                $this->workspaceManager->createPersonalWorkspace($user);
             }
         }
 

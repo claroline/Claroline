@@ -14,7 +14,7 @@ namespace Claroline\CoreBundle\Controller\APINew\Workspace;
 use Claroline\AppBundle\Annotations\ApiDoc;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AppBundle\Event\StrictDispatcher;
-use Claroline\AppBundle\Log\JsonLogger;
+use Claroline\CoreBundle\API\Crud\WorkspaceCrud;
 use Claroline\CoreBundle\Controller\APINew\Model\HasGroupsTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasOrganizationsTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasRolesTrait;
@@ -31,7 +31,6 @@ use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -55,6 +54,7 @@ class WorkspaceController extends AbstractCrudController
     private $tokenStorage;
     /** @var AuthorizationCheckerInterface */
     private $authorization;
+    /** @var StrictDispatcher */
     private $dispatcher;
     /** @var RoleManager */
     private $roleManager;
@@ -64,8 +64,6 @@ class WorkspaceController extends AbstractCrudController
     private $translator;
     /** @var WorkspaceManager */
     private $workspaceManager;
-    /** @var string */
-    private $logDir;
     /** @var LogConnectManager */
     private $logConnectManager;
 
@@ -77,7 +75,6 @@ class WorkspaceController extends AbstractCrudController
         ResourceManager $resourceManager,
         TranslatorInterface $translator,
         WorkspaceManager $workspaceManager,
-        $logDir,
         LogConnectManager $logConnectManager
     ) {
         $this->tokenStorage = $tokenStorage;
@@ -87,7 +84,6 @@ class WorkspaceController extends AbstractCrudController
         $this->resourceManager = $resourceManager;
         $this->translator = $translator;
         $this->workspaceManager = $workspaceManager;
-        $this->logDir = $logDir;
         $this->logConnectManager = $logConnectManager;
     }
 
@@ -167,7 +163,10 @@ class WorkspaceController extends AbstractCrudController
     {
         return new JsonResponse($this->finder->search(
             Workspace:: class,
-            array_merge($request->query->all(), ['hiddenFilters' => ['administrated' => true, 'model' => false]]),
+            array_merge($request->query->all(), ['hiddenFilters' => [
+                'administrated' => true,
+                'model' => false,
+            ]]),
             $this->getOptions()['list']
         ));
     }
@@ -188,7 +187,9 @@ class WorkspaceController extends AbstractCrudController
     {
         return new JsonResponse($this->finder->search(
             Workspace:: class,
-            array_merge($request->query->all(), ['hiddenFilters' => ['model' => true]]),
+            array_merge($request->query->all(), ['hiddenFilters' => [
+                'model' => true,
+            ]]),
             $this->getOptions()['list']
         ));
     }
@@ -219,45 +220,6 @@ class WorkspaceController extends AbstractCrudController
 
     /**
      * @ApiDoc(
-     *     description="Create a workspace",
-     *     body={
-     *         "schema":"$schema"
-     *     }
-     * )
-     *
-     * @todo all of this should be handled by crud (this method should not be overridden)
-     */
-    public function createAction(Request $request, $class): JsonResponse
-    {
-        $data = $this->decodeRequest($request);
-
-        /** @var Workspace $workspace */
-        $workspace = $this->crud->create($class, $data);
-
-        if (is_array($workspace)) {
-            return new JsonResponse($workspace, 400);
-        }
-
-        $model = $workspace->getWorkspaceModel();
-        $logFile = $this->getLogFile($workspace);
-        $logger = new JsonLogger($logFile);
-        $this->workspaceManager->setLogger($logger);
-        $workspace = $this->workspaceManager->copy($model, $workspace, false);
-
-        // Override model values by the form ones. This is not the better way to do it
-        // because it has already be done by Crud::create() earlier.
-        // This is mostly because the model copy requires some of the target WS entities to be here (eg. Role).
-        $workspace = $this->serializer->get(Workspace::class)->deserialize($data, $workspace);
-        $logger->end();
-
-        return new JsonResponse(
-            $this->serializer->serialize($workspace, $this->getOptions()['get']),
-            201
-        );
-    }
-
-    /**
-     * @ApiDoc(
      *     description="Copy an array of object of class $class.",
      *     queryString={
      *         {"name": "ids[]", "type": {"string", "integer"}, "description": "The object id or uuid."}
@@ -266,17 +228,15 @@ class WorkspaceController extends AbstractCrudController
      */
     public function copyBulkAction(Request $request, $class): JsonResponse
     {
-        //add params for the copy here
-        $isModel = 1 === (int) $request->query->get('model') || 'true' === $request->query->get('model') ? true : false;
-
-        $copies = [];
-
-        /** @var Workspace $workspace */
-        foreach ($this->decodeIdsString($request, $class) as $workspace) {
-            $new = new Workspace();
-            $new->setCode($workspace->getCode().uniqid());
-            $copies[] = $this->workspaceManager->copy($workspace, $new, $isModel);
+        $options = $this->getOptions()['copyBulk'];
+        if (1 === (int) $request->query->get('model') || 'true' === $request->query->get('model')) {
+            $options[] = WorkspaceCrud::AS_MODEL;
         }
+
+        $copies = $this->crud->copyBulk(
+            $this->decodeIdsString($request, $class),
+            $options
+        );
 
         return new JsonResponse(array_map(function ($copy) {
             return $this->serializer->serialize($copy, $this->getOptions()['get']);
@@ -511,13 +471,5 @@ class WorkspaceController extends AbstractCrudController
         }
 
         return new JsonResponse(null, 204);
-    }
-
-    private function getLogFile(Workspace $workspace): string
-    {
-        $fs = new Filesystem();
-        $fs->mkDir($this->logDir);
-
-        return $this->logDir.DIRECTORY_SEPARATOR.$workspace->getUuid().'.json';
     }
 }

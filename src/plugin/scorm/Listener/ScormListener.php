@@ -105,28 +105,27 @@ class ScormListener
 
     public function onDelete(DeleteResourceEvent $event)
     {
-        $ds = DIRECTORY_SEPARATOR;
         $scorm = $event->getResource();
         $workspace = $scorm->getResourceNode()->getWorkspace();
         $hashName = $scorm->getHashName();
 
-        $nbScorm = (int) ($this->scormResourceRepo->findNbScormWithSameSource($hashName, $workspace));
-
+        $nbScorm = (int) $this->scormResourceRepo->findNbScormWithSameSource($hashName, $workspace);
         if (1 === $nbScorm) {
-            $scormArchiveFile = $this->filesDir.$ds.'scorm'.$ds.$workspace->getUuid().$ds.$hashName;
-            $scormResourcesPath = $this->uploadDir.$ds.'scorm'.$ds.$workspace->getUuid().$ds.$hashName;
+            $files = [];
 
+            $scormArchiveFile = $this->filesDir.DIRECTORY_SEPARATOR.'scorm'.DIRECTORY_SEPARATOR.$workspace->getUuid().DIRECTORY_SEPARATOR.$hashName;
             if (file_exists($scormArchiveFile)) {
-                $event->setFiles([$scormArchiveFile]);
+                $files[] = $scormArchiveFile;
             }
+
+            $scormResourcesPath = $this->uploadDir.DIRECTORY_SEPARATOR.'scorm'.DIRECTORY_SEPARATOR.$workspace->getUuid().DIRECTORY_SEPARATOR.$hashName;
             if (file_exists($scormResourcesPath)) {
-                try {
-                    $this->deleteFiles($scormResourcesPath);
-                } catch (\Exception $e) {
-                }
+                $files[] = $scormResourcesPath;
             }
+
+            $event->setFiles($files);
         }
-        $this->om->remove($event->getResource());
+
         $event->stopPropagation();
     }
 
