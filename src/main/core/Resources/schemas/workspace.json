@@ -19,6 +19,10 @@
       "type": "object",
       "description": "The model to use to prefill the workspace",
       "properties": {
+        "id": {
+          "type": "string",
+          "description": "The id of the model used to pre-configure the workspace"
+        },
         "code": {
           "type": "string",
           "description": "The code of the model used to pre-configure the workspace"

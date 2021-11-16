@@ -2,8 +2,9 @@
 
 namespace Claroline\TagBundle\Listener\Resource;
 
+use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\TagBundle\Manager\TagManager;
 
 class ResourceListener
@@ -11,24 +12,18 @@ class ResourceListener
     /** @var TagManager */
     private $manager;
 
-    /**
-     * ResourceListener constructor.
-     */
     public function __construct(TagManager $manager)
     {
         $this->manager = $manager;
     }
 
-    public function onDelete(GenericDataEvent $event)
+    public function onDelete(DeleteEvent $event)
     {
-        /** @var ResourceNode[] $resources */
-        $resources = $event->getData();
+        /** @var ResourceNode $object */
+        $object = $event->getObject();
 
-        $ids = [];
-        foreach ($resources as $resource) {
-            $ids[] = $resource->getId();
+        if (!in_array(Options::SOFT_DELETE, $event->getOptions())) {
+            $this->manager->removeTaggedObjectsByClassAndIds(ResourceNode::class, [$object->getUuid()]);
         }
-
-        $this->manager->removeTaggedObjectsByClassAndIds(ResourceNode::class, $ids);
     }
 }

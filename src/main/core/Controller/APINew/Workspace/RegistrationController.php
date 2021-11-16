@@ -330,8 +330,8 @@ class RegistrationController
                 $this->workspaceManager->addUser($workspace, $user);
             } else {
                 // Otherwise add user to validation queue if not already there
-                if (!$this->workspaceManager->isUserInValidationQueue($workspace, $user)) {
-                    $this->workspaceManager->addUserQueue($workspace, $user);
+                if (!$this->registrationQueueManager->isUserInValidationQueue($workspace, $user)) {
+                    $this->registrationQueueManager->addUserQueue($workspace, $user);
                 }
             }
         }
@@ -393,8 +393,8 @@ class RegistrationController
         if (!$this->workspaceManager->isRegistered($workspace, $currentUser)) {
             if (!$workspace->getRegistrationValidation()) {
                 $this->workspaceManager->addUser($workspace, $currentUser);
-            } elseif (!$this->workspaceManager->isUserInValidationQueue($workspace, $currentUser)) {
-                $this->workspaceManager->addUserQueue($workspace, $currentUser);
+            } elseif (!$this->registrationQueueManager->isUserInValidationQueue($workspace, $currentUser)) {
+                $this->registrationQueueManager->addUserQueue($workspace, $currentUser);
             }
         }
 

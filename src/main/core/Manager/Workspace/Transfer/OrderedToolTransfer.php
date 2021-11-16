@@ -24,9 +24,14 @@ class OrderedToolTransfer implements LoggerAwareInterface
 
     /** @var ToolSerializer */
     private $toolSerializer;
+    /** @var RoleSerializer */
+    private $roleSerializer;
 
-    public function __construct(ToolSerializer $toolSerializer, RoleSerializer $roleSerializer, ContainerInterface $container)
-    {
+    public function __construct(
+        ToolSerializer $toolSerializer,
+        RoleSerializer $roleSerializer,
+        ContainerInterface $container
+    ) {
         $this->toolSerializer = $toolSerializer;
         $this->roleSerializer = $roleSerializer;
         $this->container = $container;
@@ -56,14 +61,8 @@ class OrderedToolTransfer implements LoggerAwareInterface
         $restrictions = [];
 
         foreach ($orderedTool->getRights() as $right) {
-            if (in_array(Options::REFRESH_UUID, $options)) {
-                $role = ['translationKey' => $right->getRole()->getTranslationKey(), 'type' => $right->getRole()->getType()];
-            } else {
-                $role = $this->roleSerializer->serialize($right->getRole(), [Options::SERIALIZE_MINIMAL]);
-            }
-
             $restrictions[] = [
-              'role' => $role,
+              'role' => $this->roleSerializer->serialize($right->getRole(), [Options::SERIALIZE_MINIMAL]),
               'mask' => $right->getMask(),
             ];
         }
@@ -99,14 +98,10 @@ class OrderedToolTransfer implements LoggerAwareInterface
             $orderedTool->setOrder($data['position']);
 
             foreach ($data['restrictions'] as $restriction) {
-                if (isset($restriction['role']['name'])) {
-                    $role = $om->getRepository(Role::class)->findOneBy(['name' => $restriction['role']['name']]);
-                } else {
-                    $role = $om->getRepository(Role::class)->findOneBy([
-                        'translationKey' => $restriction['role']['translationKey'],
-                        'workspace' => $workspace->getId(),
-                    ]);
-                }
+                $role = $om->getRepository(Role::class)->findOneBy([
+                    'translationKey' => $restriction['role']['translationKey'],
+                    'workspace' => $workspace->getId(),
+                ]);
 
                 if ($role) {
                     $rights = new ToolRights();

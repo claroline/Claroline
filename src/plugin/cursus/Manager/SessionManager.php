@@ -15,10 +15,10 @@ use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Manager\PlatformManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\CatalogEvents\MessageEvents;
 use Claroline\CoreBundle\Event\SendMessageEvent;
+use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
 use Claroline\CoreBundle\Library\RoutingHelper;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\Template\TemplateManager;
@@ -34,7 +34,6 @@ use Claroline\CursusBundle\Event\Log\LogSessionUserRegistrationEvent;
 use Claroline\CursusBundle\Event\Log\LogSessionUserUnregistrationEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SessionManager
@@ -57,8 +56,6 @@ class SessionManager
     private $routingHelper;
     /** @var TemplateManager */
     private $templateManager;
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
     /** @var WorkspaceManager */
     private $workspaceManager;
     /** @var EventManager */
@@ -78,7 +75,6 @@ class SessionManager
         RoleManager $roleManager,
         RoutingHelper $routingHelper,
         TemplateManager $templateManager,
-        TokenStorageInterface $tokenStorage,
         WorkspaceManager $workspaceManager,
         EventManager $sessionEventManager
     ) {
@@ -91,7 +87,6 @@ class SessionManager
         $this->roleManager = $roleManager;
         $this->routingHelper = $routingHelper;
         $this->templateManager = $templateManager;
-        $this->tokenStorage = $tokenStorage;
         $this->workspaceManager = $workspaceManager;
         $this->sessionEventManager = $sessionEventManager;
 
@@ -137,32 +132,28 @@ class SessionManager
      */
     public function generateWorkspace(Session $session): Workspace
     {
-        /** @var User $user */
-        $user = $this->tokenStorage->getToken()->getUser();
-
         $course = $session->getCourse();
+
+        $model = null;
         if (!empty($course->getWorkspaceModel())) {
-            $model = $course->getWorkspaceModel();
-        } else {
-            $model = $this->workspaceManager->getDefaultModel();
+            $model = ['id' => $course->getWorkspaceModel()->getUuid()];
         }
 
-        $workspace = new Workspace();
-        $workspace->setName($session->getName());
-        $workspace->setCode($this->workspaceManager->getUniqueCode($session->getCode()));
-
-        $workspace = $this->workspaceManager->copy($model, $workspace);
-
-        $workspace->setCreator($user);
-
-        $workspace->setDescription($session->getDescription());
-        $workspace->setPoster($session->getPoster());
-        $workspace->setThumbnail($session->getThumbnail());
-        $workspace->setAccessibleFrom($session->getStartDate());
-        $workspace->setAccessibleUntil($session->getEndDate());
-        $workspace->setHidden($course->isHidden());
-
-        $this->om->persist($workspace);
+        /** @var Workspace $workspace */
+        $workspace = $this->crud->create(Workspace::class, [
+            'name' => $session->getName(),
+            'code' => $session->getCode(),
+            'thumbnail' => ['url' => $session->getThumbnail()],
+            'poster' => ['url' => $session->getPoster()],
+            'model' => $model,
+            'meta' => [
+                'description' => $session->getDescription(),
+            ],
+            'restrictions' => [
+                'dates' => DateRangeNormalizer::normalize($session->getStartDate(), $session->getEndDate()),
+                'hidden' => $session->isHidden(),
+            ],
+        ]);
 
         return $workspace;
     }

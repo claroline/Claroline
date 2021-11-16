@@ -6,6 +6,7 @@ services:
 
     Claroline\DropZoneBundle\Listener\Resource\DropzoneListener:
         arguments:
+            - '%claroline.param.files_directory%'
             - '@security.token_storage'
             - '@Claroline\DropZoneBundle\Manager\DropzoneManager'
             - '@Claroline\AppBundle\API\SerializerProvider'

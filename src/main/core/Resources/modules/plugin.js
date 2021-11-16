@@ -74,7 +74,7 @@ registry.add('ClarolineCoreBundle', {
       'add_files' : () => { return import(/* webpackChunkName: "core-action-resource-add-files" */ '#/main/core/resources/directory/actions/add-files') },
 
       // file resource
-      //'download'   : () => { return import(/* webpackChunkName: "core-action-resource-download" */    '#/main/core/resources/file/actions/download') },
+      'download'   : () => { return import(/* webpackChunkName: "core-action-resource-download" */    '#/main/core/resources/file/actions/download') },
       'change_file': () => { return import(/* webpackChunkName: "core-action-resource-change-file" */ '#/main/core/resources/file/actions/change-file') }
     },
 

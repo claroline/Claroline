@@ -10,22 +10,17 @@ use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Log\LoggableTrait;
 use Claroline\AppBundle\Manager\File\TempFileManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\File\PublicFile;
+use Claroline\CoreBundle\API\Crud\WorkspaceCrud;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\ExportObjectEvent;
-use Claroline\CoreBundle\Library\Utilities\FileUtilities;
 use Claroline\CoreBundle\Listener\Log\LogListener;
 use Claroline\CoreBundle\Manager\Workspace\Transfer\OrderedToolTransfer;
-use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Psr\Log\LoggerAwareInterface;
-use Ramsey\Uuid\Uuid;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class TransferManager implements LoggerAwareInterface
 {
-    use PermissionCheckerTrait;
     use LoggableTrait;
 
     /** @var ObjectManager */
@@ -40,8 +35,6 @@ class TransferManager implements LoggerAwareInterface
     private $crud;
     /** @var OrderedToolTransfer */
     private $ots;
-    /** @var FileUtilities */
-    private $fileUts;
     /** @var LogListener */
     private $logListener;
 
@@ -52,9 +45,7 @@ class TransferManager implements LoggerAwareInterface
         SerializerProvider $serializer,
         OrderedToolTransfer $ots,
         Crud $crud,
-        FileUtilities $fileUts,
-        LogListener $logListener,
-        AuthorizationCheckerInterface $authorization
+        LogListener $logListener
     ) {
         $this->om = $om;
         $this->dispatcher = $dispatcher;
@@ -62,35 +53,31 @@ class TransferManager implements LoggerAwareInterface
         $this->serializer = $serializer;
         $this->crud = $crud;
         $this->ots = $ots;
-        $this->fileUts = $fileUts;
         $this->logListener = $logListener;
-        $this->authorization = $authorization;
     }
 
-    /**
-     * @param array $data - the serialized data of the object to create
-     *
-     * @return object
-     */
-    public function create(array $data, Workspace $workspace)
+    public function import(string $archivePath, ?Workspace $workspace = null): Workspace
     {
-        $options = [Options::REFRESH_UUID];
-        // gets entity from raw data.
-        $workspace = $this->deserialize($data, $workspace, $options);
-        // creates the entity if allowed
-        $this->checkPermission('CREATE', $workspace, [], true);
+        $archive = new \ZipArchive();
+        $archive->open($archivePath);
 
-        if ($this->dispatch('create', 'pre', [$workspace, $options])) {
+        $json = $archive->getFromName('workspace.json');
+        $data = json_decode($json, true);
+
+        $options = [WorkspaceCrud::NO_MODEL];
+        $workspace = $this->deserialize($data, $workspace ?? new Workspace(), $this->extractArchiveFiles($archive), $options);
+
+        if ($this->dispatch('create', 'pre', [$workspace, $options, $data])) {
             $this->om->persist($workspace);
             $this->om->flush();
 
-            $this->dispatch('create', 'post', [$workspace, $options]);
+            $this->dispatch('create', 'post', [$workspace, $options, $data]);
         }
 
         return $workspace;
     }
 
-    public function export(Workspace $workspace)
+    public function export(Workspace $workspace): string
     {
         $fileBag = new FileBag();
         $data = $this->serialize($workspace);
@@ -109,11 +96,6 @@ class TransferManager implements LoggerAwareInterface
         return $pathArch;
     }
 
-    public function dispatch($action, $when, array $args)
-    {
-        return $this->crud->dispatch($action, $when, $args);
-    }
-
     /**
      * Returns a json description of the entire workspace.
      *
@@ -121,85 +103,70 @@ class TransferManager implements LoggerAwareInterface
      *
      * @return array - the serialized representation of the workspace
      */
-    public function serialize(Workspace $workspace)
+    public function serialize(Workspace $workspace): array
     {
-        $serialized = $this->serializer->serialize($workspace, [Options::REFRESH_UUID]);
+        $serialized = $this->serializer->serialize($workspace);
 
         // we want to load the resources first
-        /** @var OrderedTool[] $ot */
-        $ot = $workspace->getOrderedTools()->toArray();
+        /** @var OrderedTool[] $orderedTools */
+        $orderedTools = $workspace->getOrderedTools()->toArray();
 
-        $idx = 0;
-
-        foreach ($ot as $key => $tool) {
+        $idx = null;
+        foreach ($orderedTools as $key => $tool) {
             if ('resources' === $tool->getTool()->getName()) {
                 $idx = $key;
             }
         }
 
-        $first = $ot[$idx];
-        unset($ot[$idx]);
-        array_unshift($ot, $first);
+        if ($idx) {
+            $first = $orderedTools[$idx];
+            unset($orderedTools[$idx]);
+            $orderedTools = array_values($orderedTools);
+            array_unshift($orderedTools, $first);
+        }
 
         $serialized['orderedTools'] = array_map(function (OrderedTool $tool) {
-            $data = $this->ots->serialize($tool, [Options::SERIALIZE_TOOL, Options::REFRESH_UUID]);
-
-            return $data;
-        }, $ot);
+            return $this->ots->serialize($tool, [Options::SERIALIZE_TOOL]);
+        }, $orderedTools);
 
         return $serialized;
     }
 
-    /**
-     * Deserializes Workspace data into entities.
-     *
-     * @param FileBag $bag
-     *
-     * @return Workspace
-     */
-    public function deserialize(array $data, Workspace $workspace, array $options = [], FileBag $bag = null)
+    public function deserialize(array $data, Workspace $workspace, FileBag $bag, array $options = []): Workspace
     {
         $this->logListener->disable();
-        $data = $this->replaceResourceIds($data);
 
         $defaultRole = $data['registration']['defaultRole'];
-
         unset($data['registration']['defaultRole']);
-        //we don't want new workspaces to be considered as models
-        $data['meta']['model'] = false;
+
+        if ($workspace->getCode()) {
+            unset($data['code']);
+        }
+
+        if ($workspace->getName()) {
+            unset($data['name']);
+        }
 
         /** @var Workspace $workspace */
-        $workspace = $this->serializer->deserialize($data, $workspace, $options);
+        $workspace = $this->serializer->deserialize($data, $workspace, array_merge($options, [Options::REFRESH_UUID]));
         $this->om->persist($workspace);
 
-        $this->log('Deserializing the roles...');
-        $roles = [];
+        $this->log(sprintf('Deserializing the roles : %s', implode(', ', array_map(function ($r) { return $r['translationKey']; }, $data['roles']))));
         foreach ($data['roles'] as $roleData) {
+            unset($roleData['name']);
             $roleData['workspace']['id'] = $workspace->getUuid();
             $role = new Role();
-            $this->om->persist($role);
 
             $role->setWorkspace($workspace);
             $workspace->addRole($role);
 
-            $roles[] = $this->crud->create($role, $roleData, [Crud::NO_PERMISSIONS, Options::FORCE_FLUSH]);
-        }
-
-        foreach ($roles as $role) {
+            $this->crud->create($role, $roleData, [Crud::NO_PERMISSIONS, Options::FORCE_FLUSH]);
             if ($defaultRole['translationKey'] === $role->getTranslationKey()) {
                 $workspace->setDefaultRole($role);
             }
         }
 
-        $this->om->forceFlush();
-
-        $data['root']['meta']['workspace']['id'] = $workspace->getUuid();
-
-        $this->log('Get filebag');
-
-        if (!$bag) {
-            $bag = $this->getFileBag($data);
-        }
+        $this->om->flush();
 
         $this->log('Pre import data update...');
 
@@ -240,58 +207,32 @@ class TransferManager implements LoggerAwareInterface
         return $data;
     }
 
-    private function getFileBag(array $data = [])
+    private function extractArchiveFiles(\ZipArchive $archive): FileBag
     {
-        $filebag = new FileBag();
+        $fileBag = new FileBag();
 
-        if (isset($data['archive'])) {
-            $this->log('Get filebag from the archive...');
-            $object = $this->om->getObject($data['archive'], PublicFile::class);
+        $dest = $this->tempFileManager->generate();
+        if (!file_exists($dest)) {
+            mkdir($dest, 0777, true);
+        }
+        $archive->extractTo($dest);
 
-            $archive = new \ZipArchive();
-            if ($archive->open($this->fileUts->getPath($object))) {
-                $dest = sys_get_temp_dir().'/'.uniqid();
-                if (!file_exists($dest)) {
-                    mkdir($dest, 0777, true);
-                }
-                $archive->extractTo($dest);
-
-                foreach (new \DirectoryIterator($dest) as $fileInfo) {
-                    if ($fileInfo->isDot()) {
-                        continue;
-                    }
-
-                    $location = $fileInfo->getPathname();
-                    $fileName = $fileInfo->getFilename();
-
-                    $filebag->add($fileName, $location);
-                }
+        foreach (new \DirectoryIterator($dest) as $fileInfo) {
+            if ($fileInfo->isDot()) {
+                continue;
             }
+
+            $location = $fileInfo->getPathname();
+            $fileName = $fileInfo->getFilename();
+
+            $fileBag->add($fileName, $location);
         }
 
-        return $filebag;
+        return $fileBag;
     }
 
-    //todo: move in resourcemanager tool transfer
-    public function replaceResourceIds($serialized)
+    private function dispatch($action, $when, array $args)
     {
-        $replaced = json_encode($serialized);
-
-        foreach ($serialized['orderedTools'] as $tool) {
-            if ('resources' === $tool['tool']) {
-                $nodes = $tool['data']['nodes'];
-
-                foreach ($nodes as $data) {
-                    $uuid = Uuid::uuid4()->toString();
-
-                    if (isset($data['id'])) {
-                        $replaced = str_replace($data['id'], $uuid, $replaced);
-                        $this->log('Replacing id '.$data['id'].' by '.$uuid);
-                    }
-                }
-            }
-        }
-
-        return json_decode($replaced, true);
+        return $this->crud->dispatch($action, $when, $args);
     }
 }

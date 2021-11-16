@@ -152,7 +152,7 @@ class UserController extends AbstractCrudController
         $processed = [];
         foreach ($users as $user) {
             if (!$user->getPersonalWorkspace() && $this->checkPermission('ADMINISTRATE', $user)) {
-                $this->workspaceManager->setPersonalWorkspace($user);
+                $this->workspaceManager->createPersonalWorkspace($user);
                 $processed[] = $user;
             }
         }

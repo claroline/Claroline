@@ -30,6 +30,12 @@ export default {
         displayed: true,
         filterable: false
       }, {
+        name: 'meta.updated',
+        label: trans('modification_date'),
+        type: 'date',
+        alias: 'updated',
+        filterable: false
+      }, {
         name: 'meta.personal',
         label: trans('personal_workspace'),
         type: 'boolean',

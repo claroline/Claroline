@@ -75,7 +75,9 @@ class BBBListener
     {
         /** @var BBB $bbb */
         $bbb = $event->getResource();
-        $this->bbbManager->deleteRecordings($bbb);
+        if (!$event->isSoftDelete()) {
+            $this->bbbManager->deleteRecordings($bbb);
+        }
 
         $event->stopPropagation();
     }

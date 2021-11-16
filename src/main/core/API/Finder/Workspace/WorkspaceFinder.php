@@ -54,11 +54,6 @@ class WorkspaceFinder extends AbstractFinder
                         $qb->andWhere('ps.isRemoved = true');
                     }
                     break;
-                case 'hidden':
-                    $qb->andWhere("obj.displayable = :{$filterName}");
-                    $qb->setParameter($filterName, !$filterValue);
-
-                    break;
                 case 'sameOrganization':
                     $currentUser = $this->tokenStorage->getToken()->getUser();
 
@@ -97,18 +92,12 @@ class WorkspaceFinder extends AbstractFinder
                     }
                     break;
                 case 'createdAfter':
-                    if (is_string($filterValue)) {
-                        $filterValue = \DateTime::createFromFormat('Y-m-d\TH:i:s', $filterValue);
-                    }
-                    $qb->andWhere("obj.created >= :{$filterName}");
-                    $qb->setParameter($filterName, $filterValue->getTimeStamp());
+                    $qb->andWhere("obj.createdAt >= :{$filterName}");
+                    $qb->setParameter($filterName, $filterValue);
                     break;
                 case 'createdBefore':
-                    if (is_string($filterValue)) {
-                        $filterValue = \DateTime::createFromFormat('Y-m-d\TH:i:s', $filterValue);
-                    }
-                    $qb->andWhere("obj.created <= :{$filterName}");
-                    $qb->setParameter($filterName, $filterValue->getTimeStamp());
+                    $qb->andWhere("obj.createdAt <= :{$filterName}");
+                    $qb->setParameter($filterName, $filterValue);
                     break;
                 case 'organization':
                     $qb->leftJoin('obj.organizations', 'o');
@@ -159,17 +148,6 @@ class WorkspaceFinder extends AbstractFinder
                     break;
                 default:
                     $this->setDefaults($qb, $filterName, $filterValue);
-            }
-        }
-
-        if (!is_null($sortBy) && isset($sortBy['property']) && isset($sortBy['direction'])) {
-            $sortByProperty = $sortBy['property'];
-            $sortByDirection = 1 === $sortBy['direction'] ? 'ASC' : 'DESC';
-
-            switch ($sortByProperty) {
-                case 'meta.created':
-                    $qb->orderBy('obj.created', $sortByDirection);
-                    break;
             }
         }
 
