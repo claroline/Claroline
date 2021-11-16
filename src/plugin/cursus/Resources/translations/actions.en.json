@@ -7,5 +7,6 @@
   "validate_registration": "Validate registration",
   "send_invitation": "Send an invitation",
   "open-training": "Open training",
-  "move-pending": "Move on pending list"
+  "move-pending": "Move on pending list",
+  "cancel": "Cancel"
 }
