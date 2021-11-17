@@ -1,1 +1,16 @@
-plugin: ~
+plugin:
+    data_sources:
+        - name: resource_attempts
+          type: list
+          context: [ workspace, desktop ]
+          tags: [ content ]
+
+        - name: resource_evaluations
+          type: list
+          context: [ workspace, desktop ]
+          tags: [ content ]
+
+        - name: workspace_evaluations
+          type: list
+          context: [ workspace, desktop ]
+          tags: [ content ]

@@ -22,4 +22,6 @@ services:
 
     Claroline\EvaluationBundle\Finder\WorkspaceRequirementsFinder: ~
 
+    Claroline\EvaluationBundle\Finder\ResourceEvaluationFinder: ~
+
     Claroline\EvaluationBundle\Finder\ResourceUserEvaluationFinder: ~
