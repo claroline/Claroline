@@ -13,3 +13,6 @@ services:
 
     Claroline\EvaluationBundle\Serializer\ResourceEvaluationSerializer:
         tags: [ claroline.serializer ]
+        arguments:
+            - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
