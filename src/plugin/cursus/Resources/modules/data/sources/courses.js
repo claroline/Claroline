@@ -28,6 +28,11 @@ export default {
         label: trans('code'),
         displayed: true
       }, {
+        name: 'meta.duration',
+        type: 'string',
+        label: trans('days'),
+        displayed: true
+      }, {
         name: 'location',
         type: 'location',
         label: trans('location'),
