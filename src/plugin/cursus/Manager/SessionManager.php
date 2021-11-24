@@ -212,6 +212,8 @@ class SessionManager
             }
         }
 
+        $this->checkUsersRegistration($session, $results);
+
         // TODO : what to do with this if he goes in pending state ?
 
         if ($session->getRegistrationMail()) {
@@ -225,16 +227,8 @@ class SessionManager
             foreach ($course->getChildren() as $childCourse) {
                 $childSession = $childCourse->getDefaultSession();
                 if ($childSession && !$childSession->isTerminated()) {
-                    $this->addUsers($childSession, $users);
+                    $this->addUsers($childSession, $users, $type);
                 }
-            }
-        }
-
-        // registers users to linked events
-        $events = $session->getEvents();
-        foreach ($events as $event) {
-            if (Session::REGISTRATION_AUTO === $event->getRegistrationType() && !$event->isTerminated()) {
-                $this->sessionEventManager->addUsers($event, $users);
             }
         }
 
@@ -298,13 +292,9 @@ class SessionManager
         foreach ($sessionUsers as $sessionUser) {
             $sessionUser->setConfirmed(true);
             $this->om->persist($sessionUser);
-
-            // grant workspace role if registration is fully validated
-            $role = AbstractRegistration::TUTOR === $sessionUser->getType() ? $session->getTutorRole() : $session->getLearnerRole();
-            if ($role && $sessionUser->isValidated() && $sessionUser->isConfirmed() && !$sessionUser->getUser()->hasRole($role->getName())) {
-                $this->crud->patch($sessionUser->getUser(), 'role', Crud::COLLECTION_ADD, [$role], [Crud::NO_PERMISSIONS]);
-            }
         }
+
+        $this->checkUsersRegistration($session, $sessionUsers);
 
         $this->om->endFlushSuite();
 
@@ -324,6 +314,8 @@ class SessionManager
             $sessionUser->setValidated(true);
             $this->om->persist($sessionUser);
         }
+
+        $this->checkUsersRegistration($session, $sessionUsers);
 
         $this->om->endFlushSuite();
 
@@ -590,6 +582,46 @@ class SessionManager
                 $title,
                 [$user]
             ), MessageEvents::MESSAGE_SENDING);
+        }
+    }
+
+    /**
+     * @param SessionUser[] $sessionUsers
+     */
+    private function checkUsersRegistration(Session $session, array $sessionUsers)
+    {
+        $fullyRegistered = [
+            AbstractRegistration::TUTOR => [],
+            AbstractRegistration::LEARNER => [],
+        ];
+
+        foreach ($sessionUsers as $sessionUser) {
+            if ($sessionUser->isValidated() && $sessionUser->isConfirmed()) {
+                // registration is fully validated
+                $fullyRegistered[$sessionUser->getType()][] = $sessionUser->getUser();
+
+                // grant workspace role if registration is fully validated
+                $role = AbstractRegistration::TUTOR === $sessionUser->getType() ? $session->getTutorRole() : $session->getLearnerRole();
+                if ($role && !$sessionUser->getUser()->hasRole($role->getName())) {
+                    $this->crud->patch($sessionUser->getUser(), 'role', Crud::COLLECTION_ADD, [$role], [Crud::NO_PERMISSIONS]);
+                }
+            }
+        }
+
+        if (!empty($fullyRegistered[AbstractRegistration::TUTOR]) || !empty($fullyRegistered[AbstractRegistration::LEARNER])) {
+            // registers users to linked events
+            $events = $session->getEvents();
+            foreach ($events as $event) {
+                if (Session::REGISTRATION_AUTO === $event->getRegistrationType() && !$event->isTerminated()) {
+                    if (!empty($fullyRegistered[AbstractRegistration::TUTOR])) {
+                        $this->sessionEventManager->addUsers($event, $fullyRegistered[AbstractRegistration::TUTOR], AbstractRegistration::TUTOR);
+                    }
+
+                    if (!empty($fullyRegistered[AbstractRegistration::LEARNER])) {
+                        $this->sessionEventManager->addUsers($event, $fullyRegistered[AbstractRegistration::LEARNER], AbstractRegistration::LEARNER);
+                    }
+                }
+            }
         }
     }
 }
