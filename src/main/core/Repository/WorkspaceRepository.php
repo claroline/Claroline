@@ -20,7 +20,7 @@ class WorkspaceRepository extends EntityRepository
     {
         return $this->createQueryBuilder('w')
             ->where('(UPPER(w.name) LIKE :search OR UPPER(w.code) LIKE :search)')
-            ->andWhere('w.displayable = true')
+            ->andWhere('w.hidden = false')
             ->andWhere('w.archived = false')
             ->andWhere('w.personal = false')
             ->andWhere('w.model = false')
