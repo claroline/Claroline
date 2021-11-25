@@ -65,7 +65,7 @@ abstract class AbstractEventFinder extends AbstractFinder
                     break;
                 case '_user':
                     if (!$workspaceJoin) {
-                        $qb->leftJoin('obj.workspace', 'w', Join::WITH, 'w.displayable = true AND w.model = false AND w.personal = false');
+                        $qb->leftJoin('obj.workspace', 'w', Join::WITH, 'w.hidden = false AND w.model = false AND w.personal = false');
                         $workspaceJoin = true;
                     }
 
@@ -97,7 +97,7 @@ abstract class AbstractEventFinder extends AbstractFinder
                     break;
                 case '_group':
                     if (!$workspaceJoin) {
-                        $qb->leftJoin('obj.workspace', 'w', Join::WITH, 'w.displayable = true AND w.model = false AND w.personal = false');
+                        $qb->leftJoin('obj.workspace', 'w', Join::WITH, 'w.hidden = false AND w.model = false AND w.personal = false');
                         $workspaceJoin = true;
                     }
 
@@ -118,7 +118,7 @@ abstract class AbstractEventFinder extends AbstractFinder
                     break;
                 case 'anonymous':
                     if (!$workspaceJoin) {
-                        $qb->leftJoin('obj.workspace', 'w', Join::WITH, 'w.displayable = true AND w.model = false AND w.personal = false');
+                        $qb->leftJoin('obj.workspace', 'w', Join::WITH, 'w.hidden = false AND w.model = false AND w.personal = false');
                         $workspaceJoin = true;
                     }
                     $qb->join('w.orderedTools', 'ot');
