@@ -71,7 +71,7 @@ class Version20211026053317 extends AbstractMigration
 
         $this->addSql('
             ALTER TABLE claro_template 
-            DROP system
+            DROP `system`
         ');
     }
 }
