@@ -17,6 +17,7 @@ use Claroline\CoreBundle\Entity\Workspace\Shortcuts;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\Organization\OrganizationManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
+use Claroline\CoreBundle\Manager\Tool\ToolManager;
 use Claroline\CoreBundle\Manager\Workspace\TransferManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -32,6 +33,7 @@ class WorkspaceCrud
     private $om;
     private $crud;
     private $manager;
+    private $toolManager;
     private $resourceManager;
     private $organizationManager;
     private $serializer;
@@ -42,6 +44,7 @@ class WorkspaceCrud
         ObjectManager $om,
         Crud $crud,
         WorkspaceManager $manager,
+        ToolManager $toolManager,
         ResourceManager $resourceManager,
         OrganizationManager $organizationManager,
         WorkspaceSerializer $serializer,
@@ -51,6 +54,7 @@ class WorkspaceCrud
         $this->om = $om;
         $this->crud = $crud;
         $this->manager = $manager;
+        $this->toolManager = $toolManager;
         $this->resourceManager = $resourceManager;
         $this->organizationManager = $organizationManager;
         $this->serializer = $serializer;
@@ -71,6 +75,8 @@ class WorkspaceCrud
 
         // copy model data
         if (!in_array(static::NO_MODEL, $options)) {
+            // The NO_MODEL options is only here for workspace import.
+            // It's not possible for now to create a workspace without a model (it will miss some required data).
             if (empty($workspace->getWorkspaceModel())) {
                 $workspace->setWorkspaceModel($this->manager->getDefaultModel($workspace->isPersonal()));
             }
@@ -96,6 +102,13 @@ class WorkspaceCrud
         if (!$workspace->isModel() && $workspace->getManagerRole() && $workspace->getCreator()) {
             $this->crud->patch($workspace->getCreator(), 'role', 'add', [$workspace->getManagerRole()]);
         }
+
+        $root = $this->resourceManager->getWorkspaceRoot($workspace);
+        if ($root) {
+            $this->resourceManager->createRights($root, [], true, false);
+        }
+
+        $this->toolManager->addMissingWorkspaceTools($workspace);
     }
 
     public function preCopy(CopyEvent $event)
@@ -126,6 +139,13 @@ class WorkspaceCrud
         if (!$workspace->isModel() && $workspace->getManagerRole() && $workspace->getCreator()) {
             $this->crud->patch($workspace->getCreator(), 'role', 'add', [$workspace->getManagerRole()]);
         }
+
+        $root = $this->resourceManager->getWorkspaceRoot($workspace);
+        if ($root) {
+            $this->resourceManager->createRights($root, [], true, false);
+        }
+
+        $this->toolManager->addMissingWorkspaceTools($workspace);
     }
 
     public function preUpdate(UpdateEvent $event)
@@ -190,8 +210,6 @@ class WorkspaceCrud
         if (empty($workspace->getOrganizations())) {
             $workspace->addOrganization($this->organizationManager->getDefault());
         }
-
-        // $this->toolManager->addMissingWorkspaceTools($workspace);
     }
 
     private function copy(Workspace $workspace, Workspace $newWorkspace, ?bool $model = false): Workspace
@@ -204,11 +222,6 @@ class WorkspaceCrud
         $workspaceCopy = $this->transferManager->deserialize($data, $newWorkspace, $fileBag);
 
         $workspaceCopy->setModel($model);
-
-        $root = $this->resourceManager->getWorkspaceRoot($workspaceCopy);
-        if ($root) {
-            $this->resourceManager->createRights($root, [], true, false);
-        }
 
         // Copy workspace shortcuts
         /** @var Shortcuts[] $workspaceShortcuts */

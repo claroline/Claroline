@@ -15,7 +15,6 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\ExportObjectEvent;
-use Claroline\CoreBundle\Listener\Log\LogListener;
 use Claroline\CoreBundle\Manager\Workspace\Transfer\OrderedToolTransfer;
 use Psr\Log\LoggerAwareInterface;
 
@@ -35,8 +34,6 @@ class TransferManager implements LoggerAwareInterface
     private $crud;
     /** @var OrderedToolTransfer */
     private $ots;
-    /** @var LogListener */
-    private $logListener;
 
     public function __construct(
         ObjectManager $om,
@@ -44,8 +41,7 @@ class TransferManager implements LoggerAwareInterface
         TempFileManager $tempFileManager,
         SerializerProvider $serializer,
         OrderedToolTransfer $ots,
-        Crud $crud,
-        LogListener $logListener
+        Crud $crud
     ) {
         $this->om = $om;
         $this->dispatcher = $dispatcher;
@@ -53,7 +49,6 @@ class TransferManager implements LoggerAwareInterface
         $this->serializer = $serializer;
         $this->crud = $crud;
         $this->ots = $ots;
-        $this->logListener = $logListener;
     }
 
     public function import(string $archivePath, ?Workspace $workspace = null): Workspace
@@ -65,11 +60,19 @@ class TransferManager implements LoggerAwareInterface
         $data = json_decode($json, true);
 
         $options = [WorkspaceCrud::NO_MODEL];
-        $workspace = $this->deserialize($data, $workspace ?? new Workspace(), $this->extractArchiveFiles($archive), $options);
+        $fileBag = $this->extractArchiveFiles($archive);
+
+        $defaultRole = $data['registration']['defaultRole'];
+        unset($data['registration']['defaultRole']);
+
+        $workspace = $this->importWorkspace($data, $workspace, $options);
 
         if ($this->dispatch('create', 'pre', [$workspace, $options, $data])) {
             $this->om->persist($workspace);
             $this->om->flush();
+
+            $this->importRoles($data, $workspace, $defaultRole);
+            $this->importTools($data, $workspace, $fileBag);
 
             $this->dispatch('create', 'post', [$workspace, $options, $data]);
         }
@@ -79,9 +82,12 @@ class TransferManager implements LoggerAwareInterface
 
     public function export(Workspace $workspace): string
     {
+        // get data
         $fileBag = new FileBag();
         $data = $this->serialize($workspace);
         $data = $this->exportFiles($data, $fileBag, $workspace);
+
+        // create archive
         $archive = new \ZipArchive();
         $pathArch = $this->tempFileManager->generate();
         $archive->open($pathArch, \ZipArchive::CREATE);
@@ -126,7 +132,7 @@ class TransferManager implements LoggerAwareInterface
         }
 
         $serialized['orderedTools'] = array_map(function (OrderedTool $tool) {
-            return $this->ots->serialize($tool, [Options::SERIALIZE_TOOL]);
+            return $this->ots->serialize($tool);
         }, $orderedTools);
 
         return $serialized;
@@ -134,56 +140,12 @@ class TransferManager implements LoggerAwareInterface
 
     public function deserialize(array $data, Workspace $workspace, FileBag $bag, array $options = []): Workspace
     {
-        $this->logListener->disable();
-
         $defaultRole = $data['registration']['defaultRole'];
         unset($data['registration']['defaultRole']);
 
-        if ($workspace->getCode()) {
-            unset($data['code']);
-        }
-
-        if ($workspace->getName()) {
-            unset($data['name']);
-        }
-
-        /** @var Workspace $workspace */
-        $workspace = $this->serializer->deserialize($data, $workspace, array_merge($options, [Options::REFRESH_UUID]));
-        $this->om->persist($workspace);
-
-        $this->log(sprintf('Deserializing the roles : %s', implode(', ', array_map(function ($r) { return $r['translationKey']; }, $data['roles']))));
-        foreach ($data['roles'] as $roleData) {
-            unset($roleData['name']);
-            $roleData['workspace']['id'] = $workspace->getUuid();
-            $role = new Role();
-
-            $role->setWorkspace($workspace);
-            $workspace->addRole($role);
-
-            $this->crud->create($role, $roleData, [Crud::NO_PERMISSIONS, Options::FORCE_FLUSH]);
-            if ($defaultRole['translationKey'] === $role->getTranslationKey()) {
-                $workspace->setDefaultRole($role);
-            }
-        }
-
-        $this->om->flush();
-
-        $this->log('Pre import data update...');
-
-        foreach ($data['orderedTools'] as $orderedToolData) {
-            $this->ots->setLogger($this->logger);
-            $data = $this->ots->dispatchPreEvent($data, $orderedToolData);
-        }
-
-        $this->log('Deserializing the tools...');
-
-        foreach ($data['orderedTools'] as $orderedToolData) {
-            $orderedTool = new OrderedTool();
-            $this->ots->setLogger($this->logger);
-            $this->ots->deserialize($orderedToolData, $orderedTool, [], $workspace, $bag);
-        }
-
-        $this->logListener->enable();
+        $this->importWorkspace($data, $workspace, $options);
+        $this->importRoles($data, $workspace, $defaultRole);
+        $this->importTools($data, $workspace, $bag);
 
         return $workspace;
     }
@@ -205,6 +167,60 @@ class TransferManager implements LoggerAwareInterface
         }
 
         return $data;
+    }
+
+    private function importWorkspace(array $data, Workspace $workspace, array $options = []): Workspace
+    {
+        if ($workspace->getCode()) {
+            unset($data['code']);
+        }
+
+        if ($workspace->getName()) {
+            unset($data['name']);
+        }
+
+        /** @var Workspace $workspace */
+        $workspace = $this->serializer->deserialize($data, $workspace, array_merge($options, [Options::REFRESH_UUID]));
+        $this->om->persist($workspace);
+
+        return $workspace;
+    }
+
+    private function importRoles(array $data, Workspace $workspace, array $defaultRole)
+    {
+        $this->log(sprintf('Deserializing the roles : %s', implode(', ', array_map(function ($r) { return $r['translationKey']; }, $data['roles']))));
+        foreach ($data['roles'] as $roleData) {
+            unset($roleData['name']);
+            $roleData['workspace']['id'] = $workspace->getUuid();
+            $role = new Role();
+
+            $role->setWorkspace($workspace);
+            $workspace->addRole($role);
+
+            $this->crud->create($role, $roleData, [Crud::NO_PERMISSIONS/*, Options::FORCE_FLUSH*/]);
+            if ($defaultRole['translationKey'] === $role->getTranslationKey()) {
+                $workspace->setDefaultRole($role);
+            }
+        }
+
+        $this->om->persist($workspace);
+        $this->om->flush();
+    }
+
+    private function importTools(array $data, Workspace $workspace, FileBag $bag)
+    {
+        $this->log('Pre import data update...');
+
+        foreach ($data['orderedTools'] as $orderedToolData) {
+            $this->ots->setLogger($this->logger);
+            $data = $this->ots->dispatchPreEvent($data, $orderedToolData);
+        }
+
+        $this->log('Deserializing the tools...');
+
+        foreach ($data['orderedTools'] as $orderedToolData) {
+            $this->ots->deserialize($orderedToolData, new OrderedTool(), [], $workspace, $bag);
+        }
     }
 
     private function extractArchiveFiles(\ZipArchive $archive): FileBag

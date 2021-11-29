@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\BundleRecorder;
+namespace Claroline\KernelBundle;
 
-use Claroline\KernelBundle\Handler\BundleFileWriter;
+use Claroline\KernelBundle\Recorder\BundleFileWriter;
 use Composer\Script\Event;
 use Symfony\Component\Filesystem\Filesystem;
 

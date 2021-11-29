@@ -191,7 +191,6 @@ services:
             - '%claroline.param.files_directory%'
             - '@Claroline\AppBundle\API\Crud'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CoreBundle\Manager\Tool\ToolManager'
             - '@service_container'
         calls:
             - setLogger: [ '@logger' ]
@@ -209,12 +208,12 @@ services:
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@claroline.transfer.ordered_tool'
             - '@Claroline\AppBundle\API\Crud'
-            - '@Claroline\CoreBundle\Listener\Log\LogListener'
         calls:
             - setLogger: [ '@logger' ]
 
     Claroline\CoreBundle\Manager\Workspace\Transfer\OrderedToolTransfer:
         arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\API\Serializer\Tool\ToolSerializer'
             - '@Claroline\CoreBundle\API\Serializer\User\RoleSerializer'
             - '@service_container'
