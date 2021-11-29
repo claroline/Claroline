@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Installation\DataFixtures\Required;
 
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Persistence\ObjectManager;
@@ -30,14 +29,7 @@ class DefaultWorkspaceModelsData extends AbstractFixture implements ContainerAwa
 
     public function load(ObjectManager $manager)
     {
-        $workspaceRepo = $manager->getRepository(Workspace::class);
-
-        if (!$workspaceRepo->findOneBy(['code' => 'default_workspace', 'personal' => false, 'model' => true])) {
-            $this->workspaceManager->getDefaultModel(false, true);
-        }
-
-        if (!$workspaceRepo->findOneBy(['code' => 'default_personal', 'personal' => true, 'model' => true])) {
-            $this->workspaceManager->getDefaultModel(true, true);
-        }
+        /*$this->workspaceManager->getDefaultModel(false);
+        $this->workspaceManager->getDefaultModel(true);*/
     }
 }

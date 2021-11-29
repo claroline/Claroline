@@ -36,7 +36,6 @@ const User = {
     }))
   },
   defaultProps: {
-    meta: {},
     permissions: {
       contact: false,
       edit: false,

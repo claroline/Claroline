@@ -57,10 +57,9 @@ class PluginManager
     {
         $enabledBundles = [];
         foreach ($this->kernel->getBundles() as $bundle) {
+            // It would be better to filter the bundles to only keep PluginBundleInterface
             // If I only keep real Claroline plugins, I loose ui injected by ClarolineAppBundle
-            /*if ($bundle instanceof PluginBundleInterface) {*/
-                $enabledBundles[] = $bundle->getName();
-            /*}*/
+            $enabledBundles[] = $bundle->getName();
         }
 
         return $enabledBundles;

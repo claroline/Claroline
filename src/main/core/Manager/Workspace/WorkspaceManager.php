@@ -20,7 +20,6 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Shortcuts;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceOptions;
-use Claroline\CoreBundle\Manager\Tool\ToolManager;
 use Claroline\CoreBundle\Repository\User\UserRepository;
 use Claroline\CoreBundle\Repository\WorkspaceRepository;
 use Psr\Log\LoggerAwareInterface;
@@ -37,8 +36,6 @@ class WorkspaceManager implements LoggerAwareInterface
     private $om;
     /** @var Crud */
     private $crud;
-    /** @var ToolManager */
-    private $toolManager;
     private $container;
 
     private $shortcutsRepo;
@@ -51,13 +48,11 @@ class WorkspaceManager implements LoggerAwareInterface
         string $fileDir,
         Crud $crud,
         ObjectManager $om,
-        ToolManager $toolManager,
         ContainerInterface $container
     ) {
         $this->filesDir = $fileDir;
         $this->om = $om;
         $this->container = $container;
-        $this->toolManager = $toolManager;
         $this->crud = $crud;
 
         $this->userRepo = $om->getRepository(User::class);
@@ -74,7 +69,7 @@ class WorkspaceManager implements LoggerAwareInterface
         /** @var Workspace $workspace */
         $workspace = $this->crud->create(Workspace::class, [
             'name' => $user->getUsername(),
-            'code' => $this->getUniqueCode($user->getUsername()),
+            'code' => $user->getUsername(),
             'model' => [
                 'id' => $model->getUuid(),
             ],
@@ -285,11 +280,7 @@ class WorkspaceManager implements LoggerAwareInterface
                 $this->om->flush();
             }
 
-            //don't log this or it'll crash everything during the platform installation
-            //(some database tables aren't already created because they come from plugins)
-            //$this->container->get('Claroline\CoreBundle\Listener\Log\LogListener')->disable();
-
-            $this->log('Build from json...');
+            $this->log(sprintf('Import from archive "%s"...', $this->container->getParameter('claroline.param.workspace.default')));
 
             $workspace = new Workspace();
             $workspace->setName($name);
@@ -304,12 +295,6 @@ class WorkspaceManager implements LoggerAwareInterface
             //just in case
             $workspace->setPersonal($isPersonal);
             $workspace->setModel(true);
-
-            $this->log('Add tools...');
-            $this->toolManager->addMissingWorkspaceTools($workspace);
-
-            $this->log('Build...');
-            //$this->container->get('Claroline\CoreBundle\Listener\Log\LogListener')->setDefaults();
 
             if (0 === count($this->shortcutsRepo->findBy(['workspace' => $workspace]))) {
                 $this->log('Generating default shortcuts...');
@@ -346,13 +331,9 @@ class WorkspaceManager implements LoggerAwareInterface
                 }
             }
 
-            if ($restore) {
-                $this->om->persist($workspace);
-                $this->om->flush();
-            }
+            $this->om->persist($workspace);
+            $this->om->flush();
         }
-
-        $this->om->forceFlush();
 
         return $workspace;
     }
