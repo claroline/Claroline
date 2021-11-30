@@ -44,14 +44,14 @@ class OrganizationFinder extends AbstractFinder
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
     {
-        if (!$this->authChecker->isGranted('ROLE_ADMIN')) {
-            $currentUser = $this->tokenStorage->getToken()->getUser();
-            if ($currentUser instanceof User) {
-                $qb->leftJoin('obj.administrators', 'ua');
-                $qb->andWhere('ua.id = :userId');
-                $qb->setParameter('userId', $currentUser->getId());
-            }
-        }
+        // if (!$this->authChecker->isGranted('ROLE_ADMIN')) {
+        //     $currentUser = $this->tokenStorage->getToken()->getUser();
+        //     if ($currentUser instanceof User) {
+        //         $qb->leftJoin('obj.administrators', 'ua');
+        //         $qb->andWhere('ua.id = :userId');
+        //         $qb->setParameter('userId', $currentUser->getId());
+        //     }
+        // }
 
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
