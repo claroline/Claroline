@@ -12,12 +12,12 @@
 namespace Claroline\OpenBadgeBundle\Controller\API;
 
 use Claroline\AppBundle\Controller\AbstractCrudController;
-use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\AppBundle\Manager\PdfManager;
+use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\OpenBadgeBundle\Entity\Assertion;
 use Claroline\OpenBadgeBundle\Entity\Evidence;
 use Claroline\OpenBadgeBundle\Manager\BadgeManager;
-use Dompdf\Dompdf;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,23 +36,23 @@ class AssertionController extends AbstractCrudController
 
     /** @var AuthorizationCheckerInterface */
     private $authorization;
-    /** @var PlatformConfigurationHandler */
-    private $config;
     /** @var BadgeManager */
     private $manager;
     /** @var TokenStorageInterface */
     private $tokenStorage;
+    /** @var PdfManager */
+    private $pdfManager;
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
-        PlatformConfigurationHandler $config,
         BadgeManager $manager,
-        TokenStorageInterface $tokenStorage
+        TokenStorageInterface $tokenStorage,
+        PdfManager $pdfManager
     ) {
         $this->authorization = $authorization;
-        $this->config = $config;
         $this->manager = $manager;
         $this->tokenStorage = $tokenStorage;
+        $this->pdfManager = $pdfManager;
     }
 
     public function getClass()
@@ -112,22 +112,12 @@ class AssertionController extends AbstractCrudController
         $badge = $assertion->getBadge();
         $user = $assertion->getRecipient();
 
-        $content = $this->manager->generateCertificate($assertion);
+        $fileName = TextNormalizer::toKey($badge->getName().'-'.$user->getFirstName().$user->getLastName());
 
-        $dompdf = new Dompdf();
-        $dompdf->set_option('isHtml5ParserEnabled', true);
-        $dompdf->set_option('isRemoteEnabled', true);
-        $dompdf->set_option('tempDir', $this->config->getParameter('server.tmp_dir'));
-        $dompdf->loadHtml($content);
-
-        // Render the HTML as PDF
-        $dompdf->render();
-
-        $fileName = trim($badge->getName().''.$user->getFirstName().$user->getLastName());
-        $fileName = str_replace(' ', '_', $fileName);
-
-        return new StreamedResponse(function () use ($dompdf) {
-            echo $dompdf->output();
+        return new StreamedResponse(function () use ($assertion) {
+            echo $this->pdfManager->fromHtml(
+                $this->manager->generateCertificate($assertion)
+            );
         }, 200, [
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => 'attachment; filename='.$fileName.'.pdf',
