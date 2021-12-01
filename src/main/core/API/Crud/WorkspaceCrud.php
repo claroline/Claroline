@@ -99,7 +99,7 @@ class WorkspaceCrud
         $workspace = $event->getObject();
 
         // give the creator the manager role
-        if (!$workspace->isModel() && $workspace->getManagerRole() && $workspace->getCreator()) {
+        if (!$workspace->isModel() && !$workspace->isPersonal() && $workspace->getManagerRole() && $workspace->getCreator()) {
             $this->crud->patch($workspace->getCreator(), 'role', 'add', [$workspace->getManagerRole()]);
         }
 
