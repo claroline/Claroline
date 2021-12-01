@@ -6,8 +6,8 @@ use Claroline\InstallationBundle\Additional\AdditionalInstaller;
 
 class ClarolineHomeInstaller extends AdditionalInstaller
 {
-    public function getPostInstallFixturesDirectory(): string
+    public function hasFixtures(): bool
     {
-        return 'Installation/DataFixtures/PostInstall';
+        return true;
     }
 }

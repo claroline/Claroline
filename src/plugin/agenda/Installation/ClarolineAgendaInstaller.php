@@ -14,8 +14,8 @@ class ClarolineAgendaInstaller extends AdditionalInstaller
         ];
     }
 
-    public function getRequiredFixturesDirectory(): string
+    public function getFixturesDirectory(): string
     {
-        return 'Installation/DataFixtures/Required';
+        return 'Installation/DataFixtures';
     }
 }

@@ -6,6 +6,7 @@
   "course_sessions": "Liste des sessions de formation",
   "course_sessions_desc": "Permet de lister les sessions de formation.",
   "all_courses": "Liste de toutes les formations",
+  "all_courses_desc": "Permet de lister les formations de la plateforme.",
   "public_courses_desc": "Permet de lister l'ensemble des formations publiques.",
   "training_events": "Liste des séances",
   "training_events_desc": "Permet de lister les séances de formation.",

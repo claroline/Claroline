@@ -16,6 +16,10 @@ use Claroline\CoreBundle\Library\Installation\Plugin\Recorder;
 use Claroline\InstallationBundle\Additional\AdditionalInstallerInterface;
 use Claroline\InstallationBundle\Bundle\InstallableInterface;
 use Claroline\InstallationBundle\Fixtures\FixtureLoader;
+use Claroline\InstallationBundle\Fixtures\PostInstallInterface;
+use Claroline\InstallationBundle\Fixtures\PostUpdateInterface;
+use Claroline\InstallationBundle\Fixtures\PreInstallInterface;
+use Claroline\InstallationBundle\Fixtures\PreUpdateInterface;
 use Claroline\KernelBundle\Bundle\PluginBundleInterface;
 use Claroline\MigrationBundle\Manager\Manager;
 use Claroline\MigrationBundle\Migrator\Migrator;
@@ -81,10 +85,9 @@ class InstallationManager implements LoggerAwareInterface
             $this->migrationManager->upgradeBundle($bundle, Migrator::VERSION_FARTHEST);
         }
 
-        $fixturesDir = $additionalInstaller->getRequiredFixturesDirectory();
-        if ($fixturesDir) {
-            $this->log("Loading required fixtures ($fixturesDir)...");
-            $this->fixtureLoader->load($bundle, $fixturesDir);
+        if ($additionalInstaller->hasFixtures()) {
+            $this->log('Loading pre-install fixtures...');
+            $this->fixtureLoader->load($bundle, PreInstallInterface::class);
         }
 
         // Load configuration
@@ -96,10 +99,9 @@ class InstallationManager implements LoggerAwareInterface
         $this->log('Launching post-installation actions...');
         $additionalInstaller->postInstall();
 
-        $fixturesDir = $additionalInstaller->getPostInstallFixturesDirectory();
-        if ($fixturesDir) {
-            $this->log("Loading post installation fixtures ($fixturesDir)...");
-            $this->fixtureLoader->load($bundle, $fixturesDir);
+        if ($additionalInstaller->hasFixtures()) {
+            $this->log('Loading post-install fixtures...');
+            $this->fixtureLoader->load($bundle, PostInstallInterface::class);
         }
     }
 
@@ -109,6 +111,12 @@ class InstallationManager implements LoggerAwareInterface
 
         $additionalInstaller = $this->getAdditionalInstaller($bundle);
         if (!$additionalInstaller) {
+            // Update configuration
+            if ($bundle instanceof PluginBundleInterface) {
+                $this->log('Updating configuration...');
+                $this->recorder->update($bundle);
+            }
+
             // no additional installer for the plugin so there is nothing to do
             return;
         }
@@ -122,10 +130,9 @@ class InstallationManager implements LoggerAwareInterface
             $this->migrationManager->upgradeBundle($bundle, Migrator::VERSION_FARTHEST);
         }
 
-        $fixturesDir = $additionalInstaller->getRequiredFixturesDirectory();
-        if ($fixturesDir) {
-            $this->log("Loading required fixtures ($fixturesDir)...");
-            $this->fixtureLoader->load($bundle, $fixturesDir);
+        if ($additionalInstaller->hasFixtures()) {
+            $this->log('Loading pre-update fixtures...');
+            $this->fixtureLoader->load($bundle, PreUpdateInterface::class);
         }
 
         // Update configuration
@@ -136,6 +143,11 @@ class InstallationManager implements LoggerAwareInterface
 
         $this->log('Launching post-update actions...');
         $additionalInstaller->postUpdate($currentVersion, $targetVersion);
+
+        if ($additionalInstaller->hasFixtures()) {
+            $this->log('Loading post-update fixtures...');
+            $this->fixtureLoader->load($bundle, PostUpdateInterface::class);
+        }
     }
 
     //This function is fired at the end of a plugin installation/update.
@@ -200,9 +212,9 @@ class InstallationManager implements LoggerAwareInterface
         $this->log(sprintf('<fg=blue>Checking installation status for plugin %s</fg=blue>', $plugin->getName()));
 
         if ($this->recorder->isRegistered($plugin) !== $shouldBeInstalled) {
-            $stateDiscr = $shouldBeInstalled ? 'not' : 'already';
+            $state = $shouldBeInstalled ? 'not' : 'already';
 
-            throw new \LogicException("Plugin '{$plugin->getName()}' is {$stateDiscr} installed.");
+            throw new \LogicException("Plugin '{$plugin->getName()}' is {$state} installed.");
         }
     }
 }

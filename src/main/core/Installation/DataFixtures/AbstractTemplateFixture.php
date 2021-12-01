@@ -15,6 +15,8 @@ use Claroline\AppBundle\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\Template\Template;
 use Claroline\CoreBundle\Entity\Template\TemplateContent;
 use Claroline\CoreBundle\Entity\Template\TemplateType;
+use Claroline\InstallationBundle\Fixtures\PostInstallInterface;
+use Claroline\InstallationBundle\Fixtures\PostUpdateInterface;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Persistence\ObjectManager;
 use Psr\Log\LoggerAwareInterface;
@@ -23,7 +25,7 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Twig\Environment;
 
-abstract class AbstractTemplateFixture extends AbstractFixture implements ContainerAwareInterface, LoggerAwareInterface
+abstract class AbstractTemplateFixture extends AbstractFixture implements PostInstallInterface, PostUpdateInterface, ContainerAwareInterface, LoggerAwareInterface
 {
     use LoggableTrait;
 

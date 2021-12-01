@@ -16,8 +16,8 @@ class ClarolineCursusInstaller extends AdditionalInstaller
         ];
     }
 
-    public function getRequiredFixturesDirectory(): string
+    public function hasFixtures(): bool
     {
-        return 'Installation/DataFixtures/Required';
+        return true;
     }
 }
