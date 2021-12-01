@@ -75,7 +75,7 @@ class WorkspaceManager implements LoggerAwareInterface
             ],
             'meta' => [
                 'personal' => true,
-                // Set the target user as creator :
+                // Set the target user as creator (this no longer work has the creator is overridden in WorkspaceCrud):
                 // - user will automatically gets the MANAGER role on workspace creation
                 // - managers don't get registered to all the personal workspace they create
                 'creator' => ['id' => $user->getUuid()],
@@ -83,6 +83,11 @@ class WorkspaceManager implements LoggerAwareInterface
         ]);
 
         $user->setPersonalWorkspace($workspace);
+
+        // register target user as manager
+        if ($workspace->getManagerRole()) {
+            $this->crud->patch($user, 'role', 'add', [$workspace->getManagerRole()]);
+        }
 
         $this->om->persist($user);
         $this->om->flush();
