@@ -46,19 +46,10 @@ interface AdditionalInstallerInterface extends LoggerAwareInterface
     public function hasMigrations(): bool;
 
     /**
-     * Returns the directory path (inside the bundle) where required fixtures are stored.
+     * Checks if the bundle has Fixtures that shopuld be loaded in the install/update process.
      *
-     * Required fixtures are loaded at each install/update just after the bundle migrations.
-     * You MUST ensure the data don't exist before inserting anything.
-     * This is useful to ensure some data always exist in the DB (eg. platform roles, default templates).
+     * You can use PreInstallInterface / PostInstallInterface / PreUpdateInterface / PostUpdateInterface
+     * to choose when you fixtures should be loaded.
      */
-    public function getRequiredFixturesDirectory(): ?string;
-
-    /**
-     * Returns the directory path (inside the bundle) where post-install fixtures are stored.
-     *
-     * Post-install fixtures are loaded once at the end of the bundle installation.
-     * This is useful to initialize some default data in the DB.
-     */
-    public function getPostInstallFixturesDirectory(): ?string;
+    public function hasFixtures(): bool;
 }
