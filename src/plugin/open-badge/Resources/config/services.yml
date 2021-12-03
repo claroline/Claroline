@@ -1,5 +1,4 @@
 imports:
-    - { resource: services/configuration.yml }
     - { resource: services/controller.yml }
     - { resource: services/crud.yml }
     - { resource: services/finder.yml }

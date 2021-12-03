@@ -111,13 +111,6 @@ class BadgeClass
     private $hideRecipients = false;
 
     /**
-     * @ORM\OneToMany(targetEntity="Claroline\OpenBadgeBundle\Entity\Assertion", mappedBy="badge")
-     *
-     * @var Assertion[]|ArrayCollection
-     */
-    private $assertions;
-
-    /**
      * @ORM\Column(type="datetime")
      * @Gedmo\Timestampable(on="update")
      *
@@ -147,6 +140,7 @@ class BadgeClass
         $this->refreshUuid();
 
         $this->rules = new ArrayCollection();
+        $this->assertions = new ArrayCollection();
     }
 
     /**
@@ -356,28 +350,6 @@ class BadgeClass
         if ($this->rules->contains($rule)) {
             $this->rules->removeElement($rule);
             $rule->setBadge(null);
-        }
-    }
-
-    /**
-     * @return Assertion[]|ArrayCollection
-     */
-    public function getAssertions()
-    {
-        return $this->assertions;
-    }
-
-    public function addAssertion(Assertion $assertion)
-    {
-        if (!$this->assertions->contains($assertion)) {
-            $this->assertions->add($assertion);
-        }
-    }
-
-    public function removeAssertion(Assertion $assertion)
-    {
-        if ($this->assertions->contains($assertion)) {
-            $this->assertions->removeElement($assertion);
         }
     }
 
