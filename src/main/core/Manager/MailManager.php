@@ -190,7 +190,6 @@ class MailManager
             }
 
             $body = $this->templateManager->getTemplate('email_layout', ['content' => $body], $locale);
-            //$body = str_replace('%platform_name%', $this->config->getParameter('display.name'), $body);
 
             if ($from) {
                 $body = str_replace('%first_name%', $from->getFirstName(), $body);

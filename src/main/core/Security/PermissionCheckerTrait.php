@@ -18,31 +18,20 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * Allows the target class to checks the current user permissions on a ResourceNode.
+ * Allows the target class to checks the current user permissions on an object.
  */
 trait PermissionCheckerTrait
 {
-    /**
-     * @var AuthorizationCheckerInterface
-     */
+    /** @var AuthorizationCheckerInterface */
     private $authorization;
 
-    /**
-     * @param mixed $permission
-     * @param mixed $object
-     * @param array $options
-     * @param bool  $throwException
-     *
-     * @return bool
-     */
-    protected function checkPermission($permission, $object, $options = [], $throwException = false)
+    protected function checkPermission($permission, $object, ?array $options = [], ?bool $throwException = false): bool
     {
         if (!$this->authorization instanceof AuthorizationCheckerInterface) {
             throw new \RuntimeException('PermissionCheckerTrait requires the AuthorizationChecker (@security.authorization_checker) to be injected in your service.');
         }
 
         switch ($object) {
-            //@todo Remove that line once we can
             case $object instanceof ResourceNode:
               $collection = new ResourceCollection([$object]);
               break;

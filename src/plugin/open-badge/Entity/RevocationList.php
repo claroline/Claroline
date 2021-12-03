@@ -37,4 +37,9 @@ class RevocationList
     {
         $this->revokedAssertions = new ArrayCollection();
     }
+
+    public function getIssuer()
+    {
+        return $this->issuer;
+    }
 }

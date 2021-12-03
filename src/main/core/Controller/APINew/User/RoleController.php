@@ -18,6 +18,7 @@ use Claroline\CoreBundle\Controller\APINew\Model\HasUsersTrait;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\LogManager;
+use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,6 +33,7 @@ class RoleController extends AbstractCrudController
 {
     use HasUsersTrait;
     use HasGroupsTrait;
+    use PermissionCheckerTrait;
 
     /** @var AuthorizationCheckerInterface */
     private $authorization;
@@ -39,9 +41,6 @@ class RoleController extends AbstractCrudController
     /** @var LogManager */
     private $logManager;
 
-    /**
-     * RoleController constructor.
-     */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         LogManager $logManager

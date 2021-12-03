@@ -105,12 +105,6 @@ class CourseManager
             }
         }
 
-        /*if ($course->getRegistrationMail()) {
-            $this->sendSessionInvitation($session, array_map(function (SessionUser $sessionUser) {
-                return $sessionUser->getUser();
-            }, $results), AbstractRegistration::LEARNER === $type);
-        }*/
-
         $this->om->endFlushSuite();
 
         return $results;

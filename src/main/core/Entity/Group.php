@@ -99,10 +99,13 @@ class Group extends AbstractRoleSubject
     public function __construct()
     {
         parent::__construct();
+
+        $this->refreshUuid();
+
         $this->users = new ArrayCollection();
         $this->organizations = new ArrayCollection();
         $this->locations = new ArrayCollection();
-        $this->refreshUuid();
+        $this->roles = new ArrayCollection();
     }
 
     public function getId()
