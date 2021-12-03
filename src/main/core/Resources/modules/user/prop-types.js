@@ -94,7 +94,7 @@ const Organization = {
     })
   },
   defaultProps: {
-    parent: null,
+    parent: null
   }
 }
 
