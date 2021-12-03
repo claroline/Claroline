@@ -18,14 +18,6 @@ class Blog extends AbstractResource
     use Uuid;
 
     /**
-     * Blog constructor.
-     */
-    public function __construct()
-    {
-        $this->refreshUuid();
-    }
-
-    /**
      * @var Post[]
      *
      * @ORM\OneToMany(targetEntity="Icap\BlogBundle\Entity\Post", mappedBy="blog", cascade={"all"})
@@ -53,6 +45,14 @@ class Blog extends AbstractResource
      * @ORM\Column(type="text", nullable=true)
      */
     protected $infos;
+
+    public function __construct()
+    {
+        $this->refreshUuid();
+
+        $this->posts = new ArrayCollection();
+        $this->members = new ArrayCollection();
+    }
 
     /**
      * @return Blog

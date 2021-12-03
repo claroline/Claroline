@@ -118,10 +118,6 @@ class HomeTabSerializer
             }, $homeTab->getChildren()->toArray()),
         ];
 
-        /*if (!in_array(Options::REFRESH_UUID, $options)) {
-            $data['workspace'] = $homeTab->getWorkspace() ? $this->workspaceSerializer->serialize($homeTab->getWorkspace(), [Options::SERIALIZE_MINIMAL]) : null;
-        }*/
-
         // retrieves the custom configuration of the widget if any
         if ($homeTab->getClass()) {
             // loads configuration entity for the current instance

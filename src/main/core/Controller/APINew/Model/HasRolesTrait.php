@@ -9,8 +9,13 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * Manages a roles collection on an entity.
+ */
 trait HasRolesTrait
 {
+    abstract protected function checkPermission($permission, $object, ?array $options = [], ?bool $throwException = false);
+
     /**
      * @ApiDoc(
      *     description="List the roles of an object.",
@@ -36,16 +41,14 @@ trait HasRolesTrait
      *     },
      *     response={"$list=Claroline\CoreBundle\Entity\Role"}
      * )
-     *
-     * @param string $id
-     * @param string $class
-     *
-     * @return JsonResponse
      */
-    public function listRolesAction($id, $class, Request $request)
+    public function listRolesAction(string $id, string $class, Request $request): JsonResponse
     {
+        $object = $this->crud->get($class, $id);
+        $this->checkPermission('OPEN', $object, [], true);
+
         return new JsonResponse(
-            $this->finder->search(Role::class, array_merge(
+            $this->crud->list(Role::class, array_merge(
                 $request->query->all(),
                 ['hiddenFilters' => [$this->getName() => [$id]]]
             ))
@@ -64,15 +67,11 @@ trait HasRolesTrait
      *         {"name": "ids[]", "type": {"string", "integer"}, "description": "The role id or uuid."}
      *     }
      * )
-     *
-     * @param string $id
-     * @param string $class
-     * @param string $env
-     *
-     * @return JsonResponse
      */
-    public function addRolesAction($id, $class, Request $request)
+    public function addRolesAction(string $id, string $class, Request $request): JsonResponse
     {
+        // no need to secure entrypoint, the CRUD will do it for us.
+
         $object = $this->crud->get($class, $id);
         $roles = $this->decodeIdsString($request, Role::class);
         $this->crud->patch($object, 'role', Crud::COLLECTION_ADD, $roles);
@@ -94,14 +93,11 @@ trait HasRolesTrait
      *         {"name": "ids[]", "type": {"string", "integer"}, "description": "The role id or uuid."}
      *     }
      * )
-     *
-     * @param string $id
-     * @param string $class
-     *
-     * @return JsonResponse
      */
-    public function removeRolesAction($id, $class, Request $request)
+    public function removeRolesAction(string $id, string $class, Request $request): JsonResponse
     {
+        // no need to secure entrypoint, the CRUD will do it for us.
+
         $object = $this->crud->get($class, $id);
         $roles = $this->decodeIdsString($request, Role::class);
         $this->crud->patch($object, 'role', Crud::COLLECTION_REMOVE, $roles);

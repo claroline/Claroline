@@ -1,5 +1,9 @@
 {
   "role_analytics_users_help": "Number of active users with this role.",
   "role_analytics_connections_help": "Number of unique connections per day of users with this role.",
-  "role_analytics_actions_help": "Number of actions performed by users with this role."
+  "role_analytics_actions_help": "Number of actions performed by users with this role.",
+  "public_organization": "The organization is public.",
+  "make_organization_public": "Make the organization public",
+  "make_organization_public_help1": "Public organizations are visible to anonymous.",
+  "make_organization_public_help2": "Public organizations allow users to choose their organization during self-registration (if enabled in registration settings)."
 }

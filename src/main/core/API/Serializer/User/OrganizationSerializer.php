@@ -7,7 +7,6 @@ use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Location\Location;
 use Claroline\CoreBundle\Entity\Organization\Organization;
-use Claroline\CoreBundle\Entity\User;
 
 class OrganizationSerializer
 {
@@ -16,9 +15,6 @@ class OrganizationSerializer
     /** @var ObjectManager */
     private $om;
 
-    /**
-     * OrganizationSerializer constructor.
-     */
     public function __construct(ObjectManager $om)
     {
         $this->om = $om;
@@ -63,7 +59,8 @@ class OrganizationSerializer
                 'default' => $organization->getDefault(),
                 'position' => $organization->getPosition(),
             ],
-            'limit' => [
+            'restrictions' => [
+                'public' => $organization->isPublic(),
                 'users' => $organization->getMaxUsers(),
             ],
         ];
@@ -78,12 +75,6 @@ class OrganizationSerializer
                         'default' => $organization->getParent()->getDefault(),
                     ],
                 ] : null,
-                'managers' => array_map(function (User $administrator) {
-                    return [
-                        'id' => $administrator->getId(),
-                        'username' => $administrator->getUsername(),
-                    ];
-                }, $organization->getAdministrators()->toArray()),
                 'locations' => array_map(function (Location $location) {
                     return [
                         'id' => $location->getId(),
@@ -109,7 +100,8 @@ class OrganizationSerializer
         $this->sipe('email', 'setEmail', $data, $organization);
         $this->sipe('type', 'setType', $data, $organization);
         $this->sipe('vat', 'setVat', $data, $organization);
-        $this->sipe('limit.users', 'setMaxUsers', $data, $organization);
+        $this->sipe('restrictions.users', 'setMaxUsers', $data, $organization);
+        $this->sipe('restrictions.public', 'setPublic', $data, $organization);
 
         if (isset($data['parent'])) {
             if (empty($data['parent'])) {
