@@ -3,44 +3,47 @@
 namespace Claroline\AppBundle\Manager;
 
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class PlatformManager
 {
-    /** @var Request */
-    private $request;
+    /** @var RequestStack */
+    private $requestStack;
     /** @var PlatformConfigurationHandler */
     private $config;
 
-    /**
-     * PlatformManager constructor.
-     */
     public function __construct(
         RequestStack $requestStack,
         PlatformConfigurationHandler $config
     ) {
-        $this->request = $requestStack->getCurrentRequest();
+        $this->requestStack = $requestStack;
         $this->config = $config;
     }
 
     /**
      * Gets the platform URL.
-     *
-     * @return string
      */
-    public function getUrl()
+    public function getUrl(): ?string
     {
         $url = $this->config->getParameter('internet.platform_url');
         if (empty($url)) {
+            // we will try to deduce the current platform URL based on the request if any
+            $request = $this->requestStack->getCurrentRequest();
+
             // add protocol
-            $url = $this->request->isSecure() || $this->config->getParameter('ssl.enabled') ? 'https://' : 'http://';
+            $url = ($request && $request->isSecure()) || $this->config->getParameter('ssl.enabled') ? 'https://' : 'http://';
 
             // add host
-            $url .= $this->config->getParameter('internet.domain_name') ? $this->config->getParameter('internet.domain_name') : $this->request->getHost();
+            if ($this->config->getParameter('internet.domain_name')) {
+                $url .= $this->config->getParameter('internet.domain_name');
+            } elseif ($request) {
+                $url .= $request->getHost();
+            }
 
             // add path if any
-            $url .= '/'.trim($this->request->getBasePath(), '/');
+            if ($request) {
+                $url .= '/'.trim($request->getBasePath(), '/');
+            }
         }
 
         return trim($url, '/');

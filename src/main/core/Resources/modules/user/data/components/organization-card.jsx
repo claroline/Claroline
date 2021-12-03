@@ -16,7 +16,7 @@ const OrganizationCard = props =>
     subtitle={props.data.code}
     flags={[
       get(props.data, 'meta.default', false) && ['fa fa-check', trans('default')],
-      get(props.data, 'restrictions.public') && ['fa fa-globe', trans('public_organization', {}, 'user')],
+      get(props.data, 'restrictions.public') && ['fa fa-globe', trans('public_organization', {}, 'user')]
     ].filter(flag => !!flag)}
   />
 
