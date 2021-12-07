@@ -31,7 +31,6 @@ use Claroline\CursusBundle\Manager\CourseManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -208,22 +207,6 @@ class CourseController extends AbstractCrudController
             'availableSessions' => $sessions['data'],
             'registrations' => $registrations,
         ]);
-    }
-
-    /**
-     * @Route("/{id}/share", name="apiv2_cursus_course_share")
-     * @EXT\ParamConverter("course", class="ClarolineCursusBundle:Course", options={"mapping": {"id": "uuid"}})
-     */
-    public function shareAction(Course $course): Response
-    {
-        return new Response(
-            $this->templating->render('@ClarolineApp/share.html.twig', [
-                'url' => $this->routing->desktopUrl('trainings').'/catalog/'.$course->getSlug(),
-                'title' => $course->getName(),
-                'thumbnail' => $course->getThumbnail(),
-                'description' => !empty($course->getPlainDescription()) ? $course->getPlainDescription() : strip_tags($course->getDescription()),
-            ])
-        );
     }
 
     /**
