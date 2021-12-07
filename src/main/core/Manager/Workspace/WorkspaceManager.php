@@ -80,13 +80,13 @@ class WorkspaceManager implements LoggerAwareInterface
                 // - managers don't get registered to all the personal workspace they create
                 'creator' => ['id' => $user->getUuid()],
             ],
-        ]);
+        ], [Crud::NO_PERMISSIONS]);
 
         $user->setPersonalWorkspace($workspace);
 
         // register target user as manager
         if ($workspace->getManagerRole()) {
-            $this->crud->patch($user, 'role', 'add', [$workspace->getManagerRole()]);
+            $this->crud->patch($user, 'role', 'add', [$workspace->getManagerRole()], [Crud::NO_PERMISSIONS]);
         }
 
         $this->om->persist($user);
