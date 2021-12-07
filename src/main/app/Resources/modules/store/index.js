@@ -21,9 +21,9 @@ const middleware = [apiMiddleware, thunk]
 // add dev tools
 if ('production' !== env()) {
   // Register redux freeze (it will throw errors if the state is mistakenly mutated)
-  middleware.push(
-    require('redux-freeze')
-  )
+  // middleware.push(
+  //   require('redux-freeze')
+  // )
 }
 
 /**
