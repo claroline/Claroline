@@ -12,10 +12,14 @@
 namespace Claroline\CoreBundle\Listener;
 
 use Claroline\AppBundle\Manager\File\TempFileManager;
+use Claroline\CoreBundle\Entity\ConnectionMessage\ConnectionMessage;
+use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Maintenance\MaintenanceHandler;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Manager\LocaleManager;
+use Claroline\CoreBundle\Manager\VersionManager;
+use Claroline\CoreBundle\Security\PlatformRoles;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -27,6 +31,9 @@ class PlatformListener
 
     /** @var PlatformConfigurationHandler */
     private $config;
+
+    /** @var VersionManager */
+    private $versionManager;
 
     /** @var TempFileManager */
     private $tempManager;
@@ -58,11 +65,13 @@ class PlatformListener
     public function __construct(
         TokenStorageInterface $tokenStorage,
         PlatformConfigurationHandler $config,
+        VersionManager $versionManager,
         TempFileManager $tempManager,
-        LocaleManager $localeManager)
-    {
+        LocaleManager $localeManager
+    ) {
         $this->tokenStorage = $tokenStorage;
         $this->config = $config;
+        $this->versionManager = $versionManager;
         $this->tempManager = $tempManager;
         $this->localeManager = $localeManager;
     }
@@ -110,18 +119,7 @@ class PlatformListener
         if (MaintenanceHandler::isMaintenanceEnabled() || $this->config->getParameter('maintenance.enable')) {
             // only disable for non admin
             // TODO : it may break the impersonation mode
-            $isAdmin = false;
-            $token = $this->tokenStorage->getToken();
-            if ($token) {
-                foreach ($token->getRoleNames() as $role) {
-                    if ('ROLE_ADMIN' === $role) {
-                        $isAdmin = true;
-                        break;
-                    }
-                }
-            }
-
-            if (!$isAdmin) {
+            if (!$this->isAdmin()) {
                 throw new HttpException(503, 'Platform is not available (Platform is under maintenance).');
             }
         }
@@ -133,5 +131,60 @@ class PlatformListener
     public function clearTemp()
     {
         $this->tempManager->clear();
+    }
+
+    /**
+     * Display new version changelogs to administrators.
+     */
+    public function displayVersionChangeLogs(GenericDataEvent $event)
+    {
+        if (!$this->config->getParameter('changelogMessage.enabled')) {
+            // connection message is disabled, nothing to do
+            return;
+        }
+
+        $roles = $this->config->getParameter('changelogMessage.roles');
+        if (empty(array_intersect($this->tokenStorage->getToken()->getRoleNames(), $roles))) {
+            // current user cannot see the changelog with its current roles
+            return;
+        }
+
+        // check if we still are in the display period
+        $installationDate = $this->versionManager->getInstallationDate($this->versionManager->getCurrentMinor());
+        if (empty($installationDate)) {
+            return;
+        }
+
+        $period = new \DateInterval($this->config->getParameter('changelogMessage.duration'));
+        $endDate = $installationDate->add($period);
+        $now = new \DateTime();
+        if ($now > $endDate) {
+            return;
+        }
+
+        $user = $this->tokenStorage->getToken()->getUser();
+        $event->setResponse([
+            [
+                'id' => 'new-version',
+                'title' => 'Une nouvelle version est disponible !',
+                'type' => ConnectionMessage::TYPE_ALWAYS,
+                'slides' => [[
+                    'id' => 'new-version-changelog',
+                    'title' => 'Version 13.1',
+                    'content' => $this->versionManager->getChangelogs($user->getLocale()),
+                    'order' => 0,
+                ]],
+            ],
+        ]);
+    }
+
+    private function isAdmin()
+    {
+        $token = $this->tokenStorage->getToken();
+        if ($token) {
+            return in_array(PlatformRoles::ADMIN, $token->getRoleNames());
+        }
+
+        return false;
     }
 }

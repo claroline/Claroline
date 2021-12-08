@@ -207,6 +207,14 @@ class PlatformDefaults implements ParameterProviderInterface
             'job_queue' => [
                 'enabled' => true,
             ],
+            'changelogMessage' => [
+                // display a connection message when a new minor version is installed
+                'enabled' => true,
+                // how many time the changelog is displayed
+                'duration' => 'P7D',
+                // which roles see the changelog message
+                'roles' => ['ROLE_ADMIN'],
+            ],
         ];
     }
 }
