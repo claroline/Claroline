@@ -224,12 +224,14 @@ services:
         arguments:
             - '@security.token_storage'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+            - '@Claroline\CoreBundle\Manager\VersionManager'
             - '@claroline.manager.temp_file'
             - '@Claroline\CoreBundle\Manager\LocaleManager'
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: setLocale, priority: 17 }
             - { name: kernel.event_listener, event: kernel.request, method: checkAvailability }
             - { name: kernel.event_listener, event: kernel.terminate, method: clearTemp }
+            - { name: kernel.event_listener, event: platform.connection_messages.populate, method: displayVersionChangeLogs }
 
     Claroline\CoreBundle\Listener\CommandListener:
         arguments:

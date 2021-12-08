@@ -9,6 +9,7 @@ import {LiquidGauge} from '#/main/core/layout/gauge/components/liquid-gauge'
 import {ProgressBar} from '#/main/app/content/components/progress-bar'
 
 import {MODAL_MAINTENANCE} from '#/main/app/modals/maintenance'
+import {MODAL_PLATFORM_ABOUT} from '#/main/app/layout/sections/administration/modals/about'
 
 import {MenuMain} from '#/main/app/layout/menu/containers/main'
 import {ToolMenu} from '#/main/core/tool/containers/menu'
@@ -147,6 +148,12 @@ const AdministrationMenu = props =>
     }))}
     actions={[
       {
+        name: 'about',
+        type: MODAL_BUTTON,
+        icon: 'fa fa-fw fa-info',
+        label: trans('show-info', {}, 'actions'),
+        modal: [MODAL_PLATFORM_ABOUT]
+      }, {
         name: 'enable-maintenance',
         type: MODAL_BUTTON,
         icon: 'fa fa-fw fa-hard-hat',
