@@ -98,10 +98,10 @@ class ResourceManager implements ToolImporterInterface, LoggerAwareInterface
         return $data;
     }
 
-    public function deserialize(array $data, Workspace $workspace, array $options, FileBag $bag)
+    public function deserialize(array $data, Workspace $workspace, array $options, array $newEntities, FileBag $bag): array
     {
-        $created = $this->deserializeNodes($data['nodes'], $workspace);
-        $this->deserializeResources($data['resources'], $workspace, $created, $bag);
+        $createdNodes = $this->deserializeNodes($data['nodes'], $workspace);
+        $createdResources = $this->deserializeResources($data['resources'], $workspace, $createdNodes, $bag);
 
         $root = $this->resourceManager->getWorkspaceRoot($workspace);
 
@@ -111,9 +111,14 @@ class ResourceManager implements ToolImporterInterface, LoggerAwareInterface
         }
 
         $this->om->flush();
+
+        return $createdNodes;
+
+        // Exporting AbstractResources may not be required
+        return array_merge($createdNodes, $createdResources);
     }
 
-    private function deserializeNodes(array $nodes, Workspace $workspace)
+    private function deserializeNodes(array $nodes, Workspace $workspace): array
     {
         $created = [];
 
@@ -142,12 +147,13 @@ class ResourceManager implements ToolImporterInterface, LoggerAwareInterface
         return $created;
     }
 
-    private function deserializeResources(array $resources, Workspace $workspace, array $nodes, FileBag $bag)
+    private function deserializeResources(array $resources, Workspace $workspace, array $nodes, FileBag $bag): array
     {
         $this->om->startFlushSuite();
 
         $options = [Options::REFRESH_UUID];
 
+        $createdResources = [];
         foreach ($resources as $data) {
             /** @var AbstractResource $resource */
             $resource = new $data['_class']();
@@ -162,9 +168,13 @@ class ResourceManager implements ToolImporterInterface, LoggerAwareInterface
                 [$bag, $data, $resource, null, $workspace]
             );
             $this->om->persist($resource);
+
+            $createdResources[$data['id']] = $resource;
         }
 
         $this->om->endFlushSuite();
+
+        return $createdResources;
     }
 
     public function onExport(ExportObjectEvent $event)

@@ -145,7 +145,7 @@ class WorkspaceCrud
             $this->resourceManager->createRights($root, [], true, false);
         }
 
-        $this->toolManager->addMissingWorkspaceTools($workspace);
+        //$this->toolManager->addMissingWorkspaceTools($workspace);
     }
 
     public function preUpdate(UpdateEvent $event)

@@ -37,6 +37,8 @@ class Text extends AbstractResource
 
     public function __construct()
     {
+        parent::__construct();
+
         $this->version = 1;
         $this->revisions = new ArrayCollection();
     }

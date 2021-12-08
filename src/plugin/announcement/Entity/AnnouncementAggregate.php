@@ -11,7 +11,6 @@
 
 namespace Claroline\AnnouncementBundle\Entity;
 
-use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -22,8 +21,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class AnnouncementAggregate extends AbstractResource
 {
-    use Uuid;
-
     /**
      * The list of announces in the aggregate.
      *
@@ -43,7 +40,7 @@ class AnnouncementAggregate extends AbstractResource
      */
     public function __construct()
     {
-        $this->refreshUuid();
+        parent::__construct();
 
         $this->announcements = new ArrayCollection();
     }

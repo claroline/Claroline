@@ -11,7 +11,6 @@
 
 namespace Claroline\BigBlueButtonBundle\Entity;
 
-use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -22,8 +21,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class BBB extends AbstractResource
 {
-    use Uuid;
-
     /**
      * @ORM\Column(name="welcome_message", type="text", nullable=true)
      *
@@ -108,12 +105,9 @@ class BBB extends AbstractResource
      */
     private $recordings;
 
-    /**
-     * BBB constructor.
-     */
     public function __construct()
     {
-        $this->refreshUuid();
+        parent::__construct();
 
         $this->recordings = new ArrayCollection();
     }

@@ -312,7 +312,7 @@ class Crud
         $this->serializer->deserialize(
           $this->serializer->serialize($object, $options),
           $new,
-          array_merge([], $options, Options::REFRESH_UUID)
+          array_merge([], $options, [Options::REFRESH_UUID])
         );
 
         $this->om->persist($new);

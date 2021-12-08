@@ -42,8 +42,10 @@ class PlannedNotification implements ToolImporterInterface
         ];
     }
 
-    public function deserialize(array $data, Workspace $workspace, array $options, FileBag $bag)
+    public function deserialize(array $data, Workspace $workspace, array $options, array $newEntities, FileBag $bag): array
     {
+        $messages = [];
+
         foreach ($data['messages'] as $message) {
             $this->om->startFlushSuite();
             $new = $this->crud->create(Message::class, $message, $options);
@@ -52,7 +54,11 @@ class PlannedNotification implements ToolImporterInterface
 
             $this->om->persist($new);
             $this->om->endFlushSuite();
+
+            $messages[$message['id']] = $new;
         }
+
+        return $messages;
     }
 
     public function prepareImport(array $orderedToolData, array $data): array

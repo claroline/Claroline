@@ -13,7 +13,7 @@ namespace Claroline\TeamBundle\Entity;
 
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
-use Claroline\CoreBundle\Entity\Resource\Directory;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -116,11 +116,11 @@ class Team
 
     /**
      * @ORM\OneToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Resource\Directory"
+     *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode"
      * )
      * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
      *
-     * @var Directory
+     * @var ResourceNode
      */
     protected $directory;
 
@@ -316,15 +316,12 @@ class Team
         $this->selfUnregistration = $selfUnregistration;
     }
 
-    /**
-     * @return Directory
-     */
-    public function getDirectory()
+    public function getDirectory(): ?ResourceNode
     {
         return $this->directory;
     }
 
-    public function setDirectory(Directory $directory = null)
+    public function setDirectory(ResourceNode $directory = null)
     {
         $this->directory = $directory;
     }

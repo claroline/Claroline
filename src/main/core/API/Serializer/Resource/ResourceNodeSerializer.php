@@ -86,7 +86,7 @@ class ResourceNodeSerializer
             'thumbnail' => $this->serializeThumbnail($resourceNode),
         ];
 
-        if ($resourceNode->getWorkspace()/* && !in_array(Options::REFRESH_UUID, $options)*/) {
+        if ($resourceNode->getWorkspace()) {
             $serializedNode['workspace'] = [ // TODO : use workspace serializer with minimal option
                 'id' => $resourceNode->getWorkspace()->getUuid(),
                 'autoId' => $resourceNode->getWorkspace()->getId(),
