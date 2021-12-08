@@ -82,10 +82,11 @@ class OrderedToolTransfer implements LoggerAwareInterface
         return $data;
     }
 
-    public function deserialize(array $data, OrderedTool $orderedTool, array $options = [], Workspace $workspace = null, FileBag $bag = null)
+    public function deserialize(array $data, OrderedTool $orderedTool, array $newEntities = [], Workspace $workspace = null, FileBag $bag = null): array
     {
-        $tool = $this->om->getRepository(Tool::class)->findOneByName($data['tool']);
+        $createdObjects = [];
 
+        $tool = $this->om->getRepository(Tool::class)->findOneByName($data['tool']);
         if ($tool) {
             $orderedTool->setWorkspace($workspace);
             $orderedTool->setTool($tool);
@@ -113,9 +114,11 @@ class OrderedToolTransfer implements LoggerAwareInterface
             if ($this->container->has($serviceName)) {
                 $importer = $this->container->get($serviceName);
                 if (isset($data['data'])) {
-                    $importer->deserialize($data['data'], $orderedTool->getWorkspace(), [Options::REFRESH_UUID], $bag);
+                    $createdObjects = $importer->deserialize($data['data'], $orderedTool->getWorkspace(), [Options::REFRESH_UUID], $newEntities, $bag);
                 }
             }
         }
+
+        return $createdObjects;
     }
 }

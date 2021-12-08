@@ -54,20 +54,41 @@ class Team implements ToolImporterInterface
         ];
     }
 
-    public function deserialize(array $data, Workspace $workspace, array $options, FileBag $bag)
+    public function deserialize(array $data, Workspace $workspace, array $options, array $newEntities, FileBag $bag): array
     {
+        $teams = [];
+
         foreach ($data['teams'] as $teamData) {
             $team = new TeamEntity();
             $this->teamSerializer->deserialize($teamData, $team, $options);
+
+            // correct relation to external entities
+            if (!empty($teamData['directory']) && $newEntities[$teamData['directory']['id']]) {
+                $team->setDirectory($newEntities[$teamData['directory']['id']]);
+            }
+
+            if (!empty($teamData['role']) && $newEntities[$teamData['role']['id']]) {
+                $team->setRole($newEntities[$teamData['role']['id']]);
+            }
+
+            if (!empty($teamData['teamManagerRole']) && $newEntities[$teamData['teamManagerRole']['id']]) {
+                $team->setTeamManagerRole($newEntities[$teamData['teamManagerRole']['id']]);
+            }
+
             $team->setWorkspace($workspace);
             $this->om->persist($team);
+
+            $teams[$teamData['id']] = $team;
         }
 
         $parameters = new WorkspaceTeamParameters();
         $this->parametersSerializer->deserialize($data['parameters'], $parameters, $options);
         $parameters->setWorkspace($workspace);
         $this->om->persist($parameters);
+
         $this->om->flush();
+
+        return $teams;
     }
 
     public function prepareImport(array $orderedToolData, array $data): array

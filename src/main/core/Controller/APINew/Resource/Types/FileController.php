@@ -59,12 +59,12 @@ class FileController extends AbstractCrudController
      */
     public function displayRawAction(string $file)
     {
-        $fileResource = $this->om->getRepository(File::class)->findOneBy(['id' => $file]);
+        $fileResource = $this->om->getRepository(File::class)->findOneBy(['uuid' => $file]);
         if (empty($fileResource)) {
             throw new NotFoundHttpException('File not found');
         }
 
-        $this->checkPermission('OPEN', $fileResource->getResourceNode(), true);
+        $this->checkPermission('OPEN', $fileResource->getResourceNode(), [], true);
 
         $data = $this->manager->download([$fileResource->getResourceNode()], false);
 

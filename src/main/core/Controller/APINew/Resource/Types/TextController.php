@@ -63,7 +63,7 @@ class TextController extends AbstractCrudController
 
     /**
      * @Route("/{id}/pdf", name="apiv2_resource_text_download_pdf", methods={"GET"})
-     * @EXT\ParamConverter("text", class="Claroline\CoreBundle\Entity\Resource\Text", options={"mapping": {"id": "id"}})
+     * @EXT\ParamConverter("text", class="Claroline\CoreBundle\Entity\Resource\Text", options={"mapping": {"id": "uuid"}})
      */
     public function downloadPdfAction(Text $text): StreamedResponse
     {

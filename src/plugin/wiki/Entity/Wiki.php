@@ -2,7 +2,6 @@
 
 namespace Icap\WikiBundle\Entity;
 
-use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Mapping as ORM;
@@ -14,7 +13,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Wiki extends AbstractResource
 {
-    use Uuid;
     const OPEN_MODE = 0;
     const MODERATE_MODE = 1;
     const READ_ONLY_MODE = 2;
@@ -48,11 +46,6 @@ class Wiki extends AbstractResource
 
     //Temporary variable used only by onCopy method of WikiListener
     private $wikiCreator;
-
-    public function __construct()
-    {
-        $this->refreshUuid();
-    }
 
     /**
      * @param mixed $root

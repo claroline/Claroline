@@ -11,7 +11,6 @@
 
 namespace Claroline\ForumBundle\Entity;
 
-use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -22,8 +21,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Forum extends AbstractResource
 {
-    use Uuid;
-
     const VALIDATE_NONE = 'NONE';
     const VALIDATE_PRIOR_ONCE = 'PRIOR_ONCE';
     const VALIDATE_PRIOR_ALL = 'PRIOR_ALL';
@@ -99,8 +96,9 @@ class Forum extends AbstractResource
 
     public function __construct()
     {
+        parent::__construct();
+
         $this->subjects = new ArrayCollection();
-        $this->refreshUuid();
         $this->validationMode = self::VALIDATE_NONE;
         $this->dataListOptions = self::DISPLAY_LIST;
     }

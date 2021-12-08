@@ -71,8 +71,8 @@ class TransferManager implements LoggerAwareInterface
             $this->om->persist($workspace);
             $this->om->flush();
 
-            $this->importRoles($data, $workspace, $defaultRole);
-            $this->importTools($data, $workspace, $fileBag);
+            $roles = $this->importRoles($data, $workspace, $defaultRole);
+            $this->importTools($data, $workspace, $roles, $fileBag);
 
             $this->dispatch('create', 'post', [$workspace, $options, $data]);
         }
@@ -144,8 +144,8 @@ class TransferManager implements LoggerAwareInterface
         unset($data['registration']['defaultRole']);
 
         $this->importWorkspace($data, $workspace, $options);
-        $this->importRoles($data, $workspace, $defaultRole);
-        $this->importTools($data, $workspace, $bag);
+        $roles = $this->importRoles($data, $workspace, $defaultRole);
+        $this->importTools($data, $workspace, $roles, $bag);
 
         return $workspace;
     }
@@ -186,8 +186,11 @@ class TransferManager implements LoggerAwareInterface
         return $workspace;
     }
 
-    private function importRoles(array $data, Workspace $workspace, array $defaultRole)
+    // this should be done by a community tool exporter
+    private function importRoles(array $data, Workspace $workspace, array $defaultRole): array
     {
+        $roles = [];
+
         $this->log(sprintf('Deserializing the roles : %s', implode(', ', array_map(function ($r) { return $r['translationKey']; }, $data['roles']))));
         foreach ($data['roles'] as $roleData) {
             unset($roleData['name']);
@@ -197,17 +200,22 @@ class TransferManager implements LoggerAwareInterface
             $role->setWorkspace($workspace);
             $workspace->addRole($role);
 
-            $this->crud->create($role, $roleData, [Crud::NO_PERMISSIONS/*, Options::FORCE_FLUSH*/]);
+            // TODO : remove force flush when role creation is moved in postCopy/postCreate
+            $this->crud->create($role, $roleData, [Crud::NO_PERMISSIONS, Options::FORCE_FLUSH]);
             if ($defaultRole['translationKey'] === $role->getTranslationKey()) {
                 $workspace->setDefaultRole($role);
             }
+
+            $roles[$roleData['id']] = $role;
         }
 
         $this->om->persist($workspace);
         $this->om->flush();
+
+        return $roles;
     }
 
-    private function importTools(array $data, Workspace $workspace, FileBag $bag)
+    private function importTools(array $data, Workspace $workspace, array $roles, FileBag $bag): array
     {
         $this->log('Pre import data update...');
 
@@ -218,9 +226,12 @@ class TransferManager implements LoggerAwareInterface
 
         $this->log('Deserializing the tools...');
 
+        $createdObjects = $roles; // keep a map of old ID => new object for all imported objects
         foreach ($data['orderedTools'] as $orderedToolData) {
-            $this->ots->deserialize($orderedToolData, new OrderedTool(), [], $workspace, $bag);
+            $createdObjects = array_merge([], $createdObjects, $this->ots->deserialize($orderedToolData, new OrderedTool(), $createdObjects, $workspace, $bag));
         }
+
+        return $createdObjects;
     }
 
     private function extractArchiveFiles(\ZipArchive $archive): FileBag
