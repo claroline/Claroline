@@ -29,8 +29,11 @@ export default {
         displayed: true
       }, {
         name: 'meta.duration',
-        type: 'string',
-        label: trans('days'),
+        type: 'number',
+        label: trans('duration'),
+        options: {
+          unit: trans('days')
+        },
         displayed: true
       }, {
         name: 'location',
