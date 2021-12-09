@@ -23,11 +23,14 @@ use Claroline\CoreBundle\Security\PlatformRoles;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PlatformListener
 {
     /** @var TokenStorageInterface */
     private $tokenStorage;
+
+    private $translator;
 
     /** @var PlatformConfigurationHandler */
     private $config;
@@ -64,12 +67,14 @@ class PlatformListener
 
     public function __construct(
         TokenStorageInterface $tokenStorage,
+        TranslatorInterface $translator,
         PlatformConfigurationHandler $config,
         VersionManager $versionManager,
         TempFileManager $tempManager,
         LocaleManager $localeManager
     ) {
         $this->tokenStorage = $tokenStorage;
+        $this->translator = $translator;
         $this->config = $config;
         $this->versionManager = $versionManager;
         $this->tempManager = $tempManager;
@@ -163,15 +168,19 @@ class PlatformListener
         }
 
         $user = $this->tokenStorage->getToken()->getUser();
+
+        $content = $this->versionManager->getChangelogs($user->getLocale()).'<br/>'.'<br/>';
+        $content .= '<em>'.$this->translator->trans('platform_changelog_display', ['%roles%' => implode(', ', $this->config->getParameter('changelogMessage.roles'))], 'platform').'</em>';
+
         $event->setResponse([
             [
                 'id' => 'new-version',
-                'title' => 'Une nouvelle version est disponible !',
+                'title' => $this->translator->trans('platform_new_available_version', [], 'platform'),
                 'type' => ConnectionMessage::TYPE_ALWAYS,
                 'slides' => [[
                     'id' => 'new-version-changelog',
-                    'title' => 'Version 13.1',
-                    'content' => $this->versionManager->getChangelogs($user->getLocale()),
+                    'title' => $this->translator->trans('platform_version', ['%version%' => $this->versionManager->getCurrentMinor()], 'platform'),
+                    'content' => $content,
                     'order' => 0,
                 ]],
             ],

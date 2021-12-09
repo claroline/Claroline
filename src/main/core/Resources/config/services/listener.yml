@@ -223,6 +223,7 @@ services:
     Claroline\CoreBundle\Listener\PlatformListener:
         arguments:
             - '@security.token_storage'
+            - '@translator'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
             - '@Claroline\CoreBundle\Manager\VersionManager'
             - '@claroline.manager.temp_file'
