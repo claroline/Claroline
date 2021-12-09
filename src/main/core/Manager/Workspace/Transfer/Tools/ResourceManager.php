@@ -112,8 +112,6 @@ class ResourceManager implements ToolImporterInterface, LoggerAwareInterface
 
         $this->om->flush();
 
-        return $createdNodes;
-
         // Exporting AbstractResources may not be required
         return array_merge($createdNodes, $createdResources);
     }
