@@ -16,6 +16,10 @@ use Claroline\CoreBundle\Library\Installation\Plugin\Recorder;
 use Claroline\InstallationBundle\Additional\AdditionalInstallerInterface;
 use Claroline\InstallationBundle\Bundle\InstallableInterface;
 use Claroline\InstallationBundle\Fixtures\FixtureLoader;
+use Claroline\InstallationBundle\Fixtures\PostInstallInterface;
+use Claroline\InstallationBundle\Fixtures\PostUpdateInterface;
+use Claroline\InstallationBundle\Fixtures\PreInstallInterface;
+use Claroline\InstallationBundle\Fixtures\PreUpdateInterface;
 use Claroline\KernelBundle\Bundle\PluginBundleInterface;
 use Claroline\MigrationBundle\Manager\Manager;
 use Claroline\MigrationBundle\Migrator\Migrator;
@@ -59,24 +63,31 @@ class InstallationManager implements LoggerAwareInterface
 
     public function install(InstallableInterface $bundle)
     {
-        $this->fixtureLoader->setLogger($this->logger);
         $this->log(sprintf('<comment>Installing %s %s... </comment>', $bundle->getName(), $bundle->getVersion()));
-        $additionalInstaller = $this->getAdditionalInstaller($bundle);
 
-        if ($additionalInstaller) {
-            $this->log('Launching pre-installation actions...');
-            $additionalInstaller->preInstall();
+        $additionalInstaller = $this->getAdditionalInstaller($bundle);
+        if (!$additionalInstaller) {
+            // Load configuration
+            if ($bundle instanceof PluginBundleInterface) {
+                $this->log('Saving configuration...');
+                $this->recorder->register($bundle);
+            }
+
+            // no additional installer for the plugin so there is nothing to do
+            return;
         }
 
-        if ($bundle->hasMigrations()) {
+        $this->log('Launching pre-installation actions...');
+        $additionalInstaller->preInstall();
+
+        if ($additionalInstaller->hasMigrations()) {
             $this->log('Executing migrations...');
             $this->migrationManager->upgradeBundle($bundle, Migrator::VERSION_FARTHEST);
         }
 
-        $fixturesDir = $bundle->getRequiredFixturesDirectory($this->environment);
-        if ($fixturesDir) {
-            $this->log("Loading required fixtures ($fixturesDir)...");
-            $this->fixtureLoader->load($bundle, $fixturesDir);
+        if ($additionalInstaller->hasFixtures()) {
+            $this->log('Loading pre-install fixtures...');
+            $this->fixtureLoader->load($bundle, PreInstallInterface::class);
         }
 
         // Load configuration
@@ -85,44 +96,43 @@ class InstallationManager implements LoggerAwareInterface
             $this->recorder->register($bundle);
         }
 
-        if ($additionalInstaller) {
-            $this->log('Launching post-installation actions...');
-            $additionalInstaller->postInstall();
-        }
+        $this->log('Launching post-installation actions...');
+        $additionalInstaller->postInstall();
 
-        $fixturesDir = $bundle->getPostInstallFixturesDirectory($this->environment);
-        if ($fixturesDir) {
-            $this->log("Loading post installation fixtures ($fixturesDir)...");
-            $this->fixtureLoader->load($bundle, $fixturesDir);
+        if ($additionalInstaller->hasFixtures()) {
+            $this->log('Loading post-install fixtures...');
+            $this->fixtureLoader->load($bundle, PostInstallInterface::class);
         }
     }
 
     public function update(InstallableInterface $bundle, $currentVersion, $targetVersion)
     {
-        $this->log(sprintf(
-            '<comment>Updating %s from %s to %s...</comment>',
-            $bundle->getName(),
-            $currentVersion,
-            $targetVersion
-        ));
+        $this->log(sprintf('<comment>Updating %s from %s to %s...</comment>', $bundle->getName(), $currentVersion, $targetVersion));
 
         $additionalInstaller = $this->getAdditionalInstaller($bundle);
+        if (!$additionalInstaller) {
+            // Update configuration
+            if ($bundle instanceof PluginBundleInterface) {
+                $this->log('Updating configuration...');
+                $this->recorder->update($bundle);
+            }
 
-        if ($additionalInstaller) {
-            $this->log('Launching pre-update actions...');
-            $additionalInstaller->setShouldReplayUpdaters($this->shouldReplayUpdaters);
-            $additionalInstaller->preUpdate($currentVersion, $targetVersion);
+            // no additional installer for the plugin so there is nothing to do
+            return;
         }
 
-        if ($bundle->hasMigrations()) {
+        $this->log('Launching pre-update actions...');
+        $additionalInstaller->setShouldReplayUpdaters($this->shouldReplayUpdaters);
+        $additionalInstaller->preUpdate($currentVersion, $targetVersion);
+
+        if ($additionalInstaller->hasMigrations()) {
             $this->log('Executing migrations...');
             $this->migrationManager->upgradeBundle($bundle, Migrator::VERSION_FARTHEST);
         }
 
-        $fixturesDir = $bundle->getRequiredFixturesDirectory($this->environment);
-        if ($fixturesDir) {
-            $this->log("Loading required fixtures ($fixturesDir)...");
-            $this->fixtureLoader->load($bundle, $fixturesDir);
+        if ($additionalInstaller->hasFixtures()) {
+            $this->log('Loading pre-update fixtures...');
+            $this->fixtureLoader->load($bundle, PreUpdateInterface::class);
         }
 
         // Update configuration
@@ -131,9 +141,12 @@ class InstallationManager implements LoggerAwareInterface
             $this->recorder->update($bundle);
         }
 
-        if ($additionalInstaller) {
-            $this->log('Launching post-update actions...');
-            $additionalInstaller->postUpdate($currentVersion, $targetVersion);
+        $this->log('Launching post-update actions...');
+        $additionalInstaller->postUpdate($currentVersion, $targetVersion);
+
+        if ($additionalInstaller->hasFixtures()) {
+            $this->log('Loading post-update fixtures...');
+            $this->fixtureLoader->load($bundle, PostUpdateInterface::class);
         }
     }
 
@@ -152,22 +165,23 @@ class InstallationManager implements LoggerAwareInterface
     public function uninstall(InstallableInterface $bundle)
     {
         $this->log(sprintf('<comment>Uninstalling %s...</comment>', $bundle->getName()));
-        $additionalInstaller = $this->getAdditionalInstaller($bundle);
 
-        if ($additionalInstaller) {
-            $this->log('Launching pre-uninstallation actions...');
-            $additionalInstaller->preUninstall();
+        $additionalInstaller = $this->getAdditionalInstaller($bundle);
+        if (!$additionalInstaller) {
+            // no additional installer for the plugin so there is nothing to do
+            return;
         }
 
-        if ($bundle->hasMigrations()) {
+        $this->log('Launching pre-uninstallation actions...');
+        $additionalInstaller->preUninstall();
+
+        if ($additionalInstaller->hasMigrations()) {
             $this->log('Executing migrations...');
             $this->migrationManager->downgradeBundle($bundle, Migrator::VERSION_FARTHEST);
         }
 
-        if ($additionalInstaller) {
-            $this->log('Launching post-uninstallation actions...');
-            $additionalInstaller->postUninstall();
-        }
+        $this->log('Launching post-uninstallation actions...');
+        $additionalInstaller->postUninstall();
     }
 
     public function setShouldReplayUpdaters(bool $shouldReplayUpdaters): void
@@ -191,5 +205,16 @@ class InstallationManager implements LoggerAwareInterface
         }
 
         return null;
+    }
+
+    public function checkInstallationStatus(PluginBundleInterface $plugin, $shouldBeInstalled = true)
+    {
+        $this->log(sprintf('<fg=blue>Checking installation status for plugin %s</fg=blue>', $plugin->getName()));
+
+        if ($this->recorder->isRegistered($plugin) !== $shouldBeInstalled) {
+            $state = $shouldBeInstalled ? 'not' : 'already';
+
+            throw new \LogicException("Plugin '{$plugin->getName()}' is {$state} installed.");
+        }
     }
 }

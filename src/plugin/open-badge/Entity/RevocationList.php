@@ -12,6 +12,7 @@
 namespace Claroline\OpenBadgeBundle\Entity;
 
 use Claroline\AppBundle\Entity\Identifier\Id;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -31,4 +32,14 @@ class RevocationList
      * @ORM\ManyToMany(targetEntity="Claroline\OpenBadgeBundle\Entity\Assertion")
      */
     private $revokedAssertions;
+
+    public function __construct()
+    {
+        $this->revokedAssertions = new ArrayCollection();
+    }
+
+    public function getIssuer()
+    {
+        return $this->issuer;
+    }
 }

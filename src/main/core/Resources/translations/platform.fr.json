@@ -616,7 +616,6 @@
     "open_resource_when_opening_ws": "Ouvrir une ressource à l'ouverture de l'espace d'activités",
     "opening_target_resource_help" : "Permet d’ouvrir directement une ressource au lieu de se rendre par défaut sur l’accueil de l’espace.",
     "opening_date": "Date d'ouverture",
-    "operation_done": "Opération effectuée.",
     "options": "Options",
     "or": "Ou",
     "order": "Ordre",
@@ -1464,5 +1463,8 @@
     "security": "Sécurité",
     "both": "Tous les deux",
     "disable_inactive_users": "Désactiver les utilisateurs inactifs",
-    "disable_inactive_users_help": "Tous les utilisateurs qui ne se sont pas connectés à la plateforme depuis la date choisie seront désactivés."
+    "disable_inactive_users_help": "Tous les utilisateurs qui ne se sont pas connectés à la plateforme depuis la date choisie seront désactivés.",
+    "platform_new_available_version": "Une nouvelle version est diponible !",
+    "platform_version": "Version %version%",
+    "platform_changelog_display": "Vous voyez la note de version car vous possédez l'un des rôles suivant : %roles%."
 }

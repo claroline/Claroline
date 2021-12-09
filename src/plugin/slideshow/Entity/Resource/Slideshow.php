@@ -2,7 +2,6 @@
 
 namespace Claroline\SlideshowBundle\Entity\Resource;
 
-use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -15,8 +14,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Slideshow extends AbstractResource
 {
-    use Uuid;
-
     /**
      * Auto play the slideshow on open.
      *
@@ -82,7 +79,7 @@ class Slideshow extends AbstractResource
      */
     public function __construct()
     {
-        $this->refreshUuid();
+        parent::__construct();
 
         $this->slides = new ArrayCollection();
     }

@@ -97,7 +97,7 @@ class TeamCrud
                     $defaultResource,
                     $creatableResources
                 );
-                $team->setDirectory($directory);
+                $team->setDirectory($directory->getResourceNode());
                 $this->manager->initializeTeamRights($team);
             }
         } else {

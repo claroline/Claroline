@@ -7,17 +7,21 @@ services:
 
     Claroline\CoreBundle\API\Crud\WorkspaceCrud:
         arguments:
-            - '@claroline.manager.workspace_manager'
             - '@security.token_storage'
-            - '@Claroline\AppBundle\API\Crud'
-            - '@claroline.manager.resource_manager'
-            - '@claroline.manager.organization.organization_manager'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CoreBundle\Listener\Log\LogListener'
+            - '@Claroline\AppBundle\API\Crud'
+            - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
+            - '@Claroline\CoreBundle\Manager\Tool\ToolManager'
+            - '@Claroline\CoreBundle\Manager\ResourceManager'
+            - '@Claroline\CoreBundle\Manager\Organization\OrganizationManager'
+            - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'
+            - '@Claroline\CoreBundle\Manager\Workspace\TransferManager'
         tags:
-            - { name: kernel.event_listener, event: crud_pre_delete_object_claroline_corebundle_entity_workspace_workspace, method: preDelete }
             - { name: kernel.event_listener, event: crud_pre_create_object_claroline_corebundle_entity_workspace_workspace, method: preCreate }
+            - { name: kernel.event_listener, event: crud_post_create_object_claroline_corebundle_entity_workspace_workspace, method: postCreate }
+            - { name: kernel.event_listener, event: crud_pre_delete_object_claroline_corebundle_entity_workspace_workspace, method: preDelete }
             - { name: kernel.event_listener, event: crud_pre_copy_object_claroline_corebundle_entity_workspace_workspace, method: preCopy }
+            - { name: kernel.event_listener, event: crud_post_copy_object_claroline_corebundle_entity_workspace_workspace, method: postCopy }
             - { name: kernel.event_listener, event: crud_post_update_object_claroline_corebundle_entity_workspace_workspace, method: preUpdate }
 
     Claroline\CoreBundle\API\Crud\User\UserCrud:
@@ -33,6 +37,7 @@ services:
             - '@Claroline\AppBundle\Event\StrictDispatcher'
         tags:
             - { name: kernel.event_listener, event: crud_pre_create_object_claroline_corebundle_entity_user, method: preCreate }
+            - { name: kernel.event_listener, event: crud_post_create_object_claroline_corebundle_entity_user, method: postCreate }
             - { name: kernel.event_listener, event: crud_pre_delete_object_claroline_corebundle_entity_user, method: preDelete }
             - { name: kernel.event_listener, event: crud_pre_update_object_claroline_corebundle_entity_user, method: preUpdate }
             - { name: kernel.event_listener, event: crud_post_update_object_claroline_corebundle_entity_user, method: postUpdate }
@@ -79,12 +84,10 @@ services:
             - '@security.token_storage'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\Crud'
-            - '@Claroline\AppBundle\Event\StrictDispatcher'
             - '@Claroline\CoreBundle\Manager\Resource\ResourceLifecycleManager'
             - '@Claroline\CoreBundle\Manager\ResourceManager'
             - '@Claroline\CoreBundle\Manager\Resource\RightsManager'
             - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
-            - '%claroline.param.files_directory%'
         tags:
             - { name: kernel.event_listener, event: crud.pre.create.resource_node, method: preCreate }
             - { name: kernel.event_listener, event: crud.pre.delete.resource_node, method: preDelete }

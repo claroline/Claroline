@@ -1,0 +1,5 @@
+services:
+    Claroline\InstallationBundle\Repository\UpdaterExecutionRepository:
+        arguments:
+            - '@Doctrine\Persistence\ManagerRegistry'
+        tags: ['doctrine.repository_service']

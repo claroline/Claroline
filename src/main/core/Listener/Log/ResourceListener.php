@@ -85,7 +85,7 @@ class ResourceListener
 
         if ($old['meta']['published'] !== $node->isPublished() && $node->isPublished()) {
             $workspace = $node->getWorkspace();
-            $usersToNotify = $node->getWorkspace() && !$node->getWorkspace()->isDisabledNotifications() ?
+            $usersToNotify = $node->getWorkspace() && $node->getWorkspace()->hasNotifications() ?
                 $this->userRepo->findByWorkspaces([$workspace->getId()]) :
                 [];
             $this->dispatcher->dispatch('log', 'Log\LogResourcePublish', [$node, $usersToNotify]);

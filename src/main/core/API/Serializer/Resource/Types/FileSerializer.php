@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\API\Serializer\Resource\Types;
 
+use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
@@ -23,14 +24,9 @@ class FileSerializer
     /** @var EventDispatcherInterface */
     protected $eventDispatcher;
 
-    /**
-     * ResourceNodeManager constructor.
-     *
-     * @param string $filesDir
-     */
     public function __construct(
         RouterInterface $router,
-        $filesDir,
+        string $filesDir,
         EventDispatcherInterface $eventDispatcher
     ) {
         $this->router = $router;
@@ -50,10 +46,10 @@ class FileSerializer
      *
      * @return array - the serialized representation of the file
      */
-    public function serialize(File $file)
+    public function serialize(File $file): array
     {
         $options = [
-            'id' => $file->getId(),
+            'id' => $file->getUuid(),
             'size' => $file->getSize(),
             'opening' => $file->getOpening(),
             'commentsActivated' => $file->getResourceNode()->isCommentsActivated(),
@@ -82,8 +78,14 @@ class FileSerializer
         return array_merge($additionalFileData, $options);
     }
 
-    public function deserialize($data, File $file, array $options = [])
+    public function deserialize($data, File $file, array $options = []): File
     {
+        if (!in_array(Options::REFRESH_UUID, $options)) {
+            $this->sipe('id', 'setUuid', $data, $file);
+        } else {
+            $file->refreshUuid();
+        }
+
         $this->sipe('size', 'setSize', $data, $file);
         $this->sipe('hashName', 'setHashName', $data, $file);
         $this->sipe('opening', 'setOpening', $data, $file);
@@ -99,9 +101,11 @@ class FileSerializer
             ]);
             $this->eventDispatcher->dispatch($dataEvent, 'resource.file.deserialize');
         }
+
+        return $file;
     }
 
-    private function generateEventName(ResourceNode $node, $event)
+    private function generateEventName(ResourceNode $node, $event): string
     {
         $mimeType = $node->getMimeType();
         $mimeElements = explode('/', $mimeType);

@@ -44,7 +44,7 @@ class Template
      * System templates can not be edited nor deleted by users.
      * They are managed through DataFixtures.
      *
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(name="is_system", type="boolean")
      *
      * @var bool
      */

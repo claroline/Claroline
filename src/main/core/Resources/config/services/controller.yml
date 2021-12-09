@@ -44,6 +44,7 @@ services:
         arguments:
             - '@security.authorization_checker'
             - '@Claroline\CoreBundle\Manager\Template\PlaceholderManager'
+            - '@Claroline\AppBundle\Manager\PdfManager'
 
     Claroline\CoreBundle\Controller\APINew\Resource\ResourceCommentController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
@@ -96,6 +97,7 @@ services:
         public: true
         arguments:
             - '@security.authorization_checker'
+            - '@security.token_storage'
 
     Claroline\CoreBundle\Controller\APINew\User\ProfileController:
         arguments:
@@ -155,7 +157,6 @@ services:
             - '@Claroline\CoreBundle\Manager\ResourceManager'
             - '@translator'
             - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
-            - '%claroline.param.workspace_log_dir%'
             - '@Claroline\CoreBundle\Manager\LogConnectManager'
 
     Claroline\CoreBundle\Controller\APINew\Platform\ConnectionMessageController:
@@ -198,6 +199,8 @@ services:
     Claroline\CoreBundle\Controller\APINew\Platform\ScheduledTaskController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
         public: true
+        arguments:
+            - '@security.authorization_checker'
 
     Claroline\CoreBundle\Controller\APINew\SwaggerController:
         arguments:

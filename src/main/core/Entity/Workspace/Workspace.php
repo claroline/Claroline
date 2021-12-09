@@ -12,29 +12,32 @@
 namespace Claroline\CoreBundle\Entity\Workspace;
 
 use Claroline\AppBundle\Entity\IdentifiableInterface;
+use Claroline\AppBundle\Entity\Identifier\Code;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Claroline\AppBundle\Entity\Meta\CreatedAt;
 use Claroline\AppBundle\Entity\Meta\Creator;
 use Claroline\AppBundle\Entity\Meta\Description;
+use Claroline\AppBundle\Entity\Meta\Name;
 use Claroline\AppBundle\Entity\Meta\Poster;
 use Claroline\AppBundle\Entity\Meta\Thumbnail;
+use Claroline\AppBundle\Entity\Meta\UpdatedAt;
 use Claroline\AppBundle\Entity\Restriction\AccessCode;
 use Claroline\AppBundle\Entity\Restriction\AccessibleFrom;
 use Claroline\AppBundle\Entity\Restriction\AccessibleUntil;
 use Claroline\AppBundle\Entity\Restriction\AllowedIps;
+use Claroline\AppBundle\Entity\Restriction\Hidden;
 use Claroline\CoreBundle\Entity\Model\OrganizationsTrait;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
-use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\WorkspaceRepository")
  * @ORM\Table(name="claro_workspace", indexes={
- *     @ORM\Index(name="name_idx", columns={"name"})
+ *     @ORM\Index(name="name_idx", columns={"entity_name"})
  * })
  */
 class Workspace implements IdentifiableInterface
@@ -42,12 +45,17 @@ class Workspace implements IdentifiableInterface
     // identifiers
     use Id;
     use Uuid;
+    use Code;
     // meta
+    use Name;
     use Poster;
     use Thumbnail;
     use Description;
     use Creator;
+    use CreatedAt;
+    use UpdatedAt;
     // restrictions
+    use Hidden;
     use AccessibleFrom;
     use AccessibleUntil;
     use AccessCode;
@@ -55,28 +63,10 @@ class Workspace implements IdentifiableInterface
     use OrganizationsTrait;
 
     /**
-     * The name of the workspace.
-     *
-     * @ORM\Column()
-     * @Assert\NotBlank()
-     *
-     * @var string
-     */
-    protected $name;
-
-    /**
-     * The code of the workspace.
-     *
-     * @ORM\Column(unique=true)
-     * @Assert\NotBlank()
-     *
-     * @var string
-     */
-    protected $code;
-
-    /**
      * @Gedmo\Slug(fields={"code"})
      * @ORM\Column(length=128, unique=true)
+     *
+     * @var string
      */
     private $slug;
 
@@ -85,21 +75,14 @@ class Workspace implements IdentifiableInterface
      *
      * @var string
      */
-    protected $lang = null;
-
-    /**
-     * @ORM\Column(type="boolean")
-     *
-     * @var bool
-     */
-    protected $displayable = true;
+    private $lang = null;
 
     /**
      * @ORM\Column(name="isModel", type="boolean")
      *
      * @var bool
      */
-    protected $model = false;
+    private $model = false;
 
     /**
      * @ORM\OneToMany(
@@ -113,7 +96,7 @@ class Workspace implements IdentifiableInterface
      *
      * @todo : remove me. relation should be unidirectional
      */
-    protected $orderedTools;
+    private $orderedTools;
 
     /**
      * @ORM\OneToMany(
@@ -123,10 +106,8 @@ class Workspace implements IdentifiableInterface
      * )
      *
      * @var Role[]|ArrayCollection
-     *
-     * @todo : remove me. relation should be unidirectional
      */
-    protected $roles;
+    private $roles;
 
     /**
      * @ORM\ManyToOne(
@@ -135,54 +116,44 @@ class Workspace implements IdentifiableInterface
      * )
      * @ORM\JoinColumn(name="default_role_id", onDelete="SET NULL")
      *
-     * @var User
+     * @var Role
      */
-    protected $defaultRole;
+    private $defaultRole;
 
     /**
      * @ORM\Column(name="self_registration", type="boolean")
      *
      * @var bool
      */
-    protected $selfRegistration = false;
+    private $selfRegistration = false;
 
     /**
      * @ORM\Column(name="registration_validation", type="boolean")
      *
      * @var bool
      */
-    protected $registrationValidation = false;
+    private $registrationValidation = false;
 
     /**
      * @ORM\Column(name="self_unregistration", type="boolean")
      *
      * @var bool
      */
-    protected $selfUnregistration = false;
-
-    /**
-     * @ORM\Column(name="creation_date", type="integer", nullable=true)
-     * @Gedmo\Timestampable(on="create")
-     *
-     * @todo store a DateTime and remove Gedmo (can be handled by Crud)
-     *
-     * @var \DateTime
-     */
-    protected $created;
+    private $selfUnregistration = false;
 
     /**
      * @ORM\Column(name="is_personal", type="boolean")
      *
      * @var bool
      */
-    protected $personal = false;
+    private $personal = false;
 
     /**
      * @ORM\Column(name="disabled_notifications", type="boolean")
      *
      * @var bool
      */
-    protected $disabledNotifications = false;
+    private $disabledNotifications = false;
 
     /**
      * @ORM\OneToOne(
@@ -194,7 +165,7 @@ class Workspace implements IdentifiableInterface
      *
      * @var WorkspaceOptions
      */
-    protected $options;
+    private $options;
 
     /**
      * Display user progression when the workspace is rendered.
@@ -213,17 +184,6 @@ class Workspace implements IdentifiableInterface
     private $contactEmail;
 
     /**
-     * @ORM\OneToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\User",
-     *     mappedBy="personalWorkspace",
-     *     cascade={"persist"}
-     * )
-     *
-     * @var User
-     */
-    protected $personalUser;
-
-    /**
      * @ORM\ManyToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Organization\Organization",
      *     inversedBy="workspaces"
@@ -231,7 +191,7 @@ class Workspace implements IdentifiableInterface
      *
      * @var ArrayCollection
      */
-    protected $organizations;
+    private $organizations;
 
     //not mapped. Used for creation
     private $workspaceModel;
@@ -241,7 +201,7 @@ class Workspace implements IdentifiableInterface
      *
      * @var bool
      */
-    protected $archived = false;
+    private $archived = false;
 
     /**
      * @ORM\OneToMany(
@@ -251,11 +211,8 @@ class Workspace implements IdentifiableInterface
      *
      * @var Shortcuts[]|ArrayCollection
      */
-    protected $shortcuts;
+    private $shortcuts;
 
-    /**
-     * Workspace constructor.
-     */
     public function __construct()
     {
         $this->refreshUuid();
@@ -267,49 +224,19 @@ class Workspace implements IdentifiableInterface
         $this->shortcuts = new ArrayCollection();
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->name.' ['.$this->code.']';
     }
 
-    /**
-     * Get name.
-     *
-     * @return string
-     */
-    public function getName()
+    public function getSlug(): ?string
     {
-        return $this->name;
+        return $this->slug;
     }
 
-    /**
-     * Set name.
-     *
-     * @param string $name
-     */
-    public function setName($name)
+    public function setSlug(string $slug)
     {
-        $this->name = $name;
-    }
-
-    /**
-     * Set code.
-     *
-     * @param string $code
-     */
-    public function setCode($code)
-    {
-        $this->code = $code;
-    }
-
-    /**
-     * Get code.
-     *
-     * @return string
-     */
-    public function getCode()
-    {
-        return $this->code;
+        $this->slug = $slug;
     }
 
     /**
@@ -354,26 +281,6 @@ class Workspace implements IdentifiableInterface
         $this->roles->removeElement($role);
     }
 
-    /**
-     * Is hidden ?
-     *
-     * @return bool
-     */
-    public function isHidden()
-    {
-        return !$this->displayable;
-    }
-
-    /**
-     * Set hidden.
-     *
-     * @param bool $hidden
-     */
-    public function setHidden($hidden)
-    {
-        $this->displayable = !$hidden;
-    }
-
     public function setSelfRegistration($selfRegistration)
     {
         $this->selfRegistration = $selfRegistration;
@@ -404,58 +311,12 @@ class Workspace implements IdentifiableInterface
         return $this->selfUnregistration;
     }
 
-    /**
-     * @param $creationDate
-     *
-     * @deprecated use `setCreated()` instead
-     */
-    public function setCreationDate($creationDate)
-    {
-        $this->setCreated($creationDate);
-    }
-
-    public function setCreated($created)
-    {
-        $this->created = $created;
-    }
-
-    /**
-     * @return \Datetime
-     *
-     * @deprecated use `getCreated()` instead
-     */
-    public function getCreationDate()
-    {
-        return $this->getCreated();
-    }
-
-    /**
-     * @return \Datetime
-     */
-    public function getCreated()
-    {
-        // todo : change column to datetime to avoid this
-        $date = !is_null($this->created) ? date('d-m-Y H:i', $this->created) : null;
-
-        return new \Datetime($date);
-    }
-
-    /**
-     * @param $isPersonal
-     *
-     * @deprecated use `setPersonal()` instead
-     */
-    public function setIsPersonal($isPersonal)
-    {
-        $this->setPersonal($isPersonal);
-    }
-
-    public function setPersonal($personal)
+    public function setPersonal(bool $personal)
     {
         $this->personal = $personal;
     }
 
-    public function isPersonal()
+    public function isPersonal(): bool
     {
         return $this->personal;
     }
@@ -473,7 +334,7 @@ class Workspace implements IdentifiableInterface
         $this->options = $options;
     }
 
-    public function getManagerRole()
+    public function getManagerRole(): ?Role
     {
         foreach ($this->roles as $role) {
             if (1 === strpos('_'.$role->getName(), 'ROLE_WS_MANAGER')) {
@@ -484,74 +345,48 @@ class Workspace implements IdentifiableInterface
         return null;
     }
 
-    public function getPersonalUser()
+    public function getCollaboratorRole(): ?Role
     {
-        return $this->personalUser;
+        foreach ($this->roles as $role) {
+            if (1 === strpos('_'.$role->getName(), 'ROLE_WS_COLLABORATOR')) {
+                return $role;
+            }
+        }
+
+        return null;
     }
 
-    /**
-     * @param $boolean
-     *
-     * @deprecated use `setModel()` instead
-     */
-    public function setIsModel($boolean)
-    {
-        $this->setModel($boolean);
-    }
-
-    public function setModel($model)
+    public function setModel(bool $model)
     {
         $this->model = $model;
     }
 
-    public function isModel()
+    public function isModel(): bool
     {
         return $this->model;
     }
 
-    /**
-     * @return bool
-     */
-    public function isDisabledNotifications()
+    public function hasNotifications(): bool
     {
-        return $this->disabledNotifications;
+        return !$this->disabledNotifications;
     }
 
-    /**
-     * @param bool $disabledNotifications
-     */
-    public function setDisabledNotifications($disabledNotifications)
-    {
-        $this->disabledNotifications = $disabledNotifications;
-    }
-
-    public function setNotifications($notifications)
+    public function setNotifications(bool $notifications)
     {
         $this->disabledNotifications = !$notifications;
     }
 
-    public function getSlug()
-    {
-        return $this->slug;
-    }
-
-    public function setSlug($slug)
-    {
-        $this->slug = $slug;
-    }
-
-    public function setDefaultRole(Role $role)
+    public function setDefaultRole(?Role $role = null)
     {
         $this->defaultRole = $role;
     }
 
-    public function getDefaultRole()
+    public function getDefaultRole(): ?Role
     {
-        if (!$this->defaultRole) {
-            foreach ($this->roles as $role) {
-                if (strpos($role->getName(), 'COLLABORATOR')) {
-                    return $role;
-                }
+        if (!$this->defaultRole && !empty($this->roles)) {
+            $collaborator = $this->getCollaboratorRole();
+            if ($collaborator) {
+                return $collaborator;
             }
 
             return $this->roles[0];

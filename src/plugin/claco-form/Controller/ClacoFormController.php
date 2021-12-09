@@ -15,6 +15,7 @@ use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
+use Claroline\AppBundle\Manager\PdfManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\ClacoFormBundle\Entity\ClacoForm;
 use Claroline\ClacoFormBundle\Entity\Comment;
@@ -28,7 +29,6 @@ use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Manager\LocationManager;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
-use Dompdf\Dompdf;
 use Ramsey\Uuid\Uuid;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -69,6 +69,8 @@ class ClacoFormController
     private $translator;
     /** @var SerializerProvider */
     private $serializer;
+    /** @var PdfManager */
+    private $pdfManager;
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
@@ -81,7 +83,8 @@ class ClacoFormController
         Environment $templating,
         TranslatorInterface $translator,
         SerializerProvider $serializer,
-        TokenStorageInterface $tokenStorage
+        TokenStorageInterface $tokenStorage,
+        PdfManager $pdfManager
     ) {
         $this->authorization = $authorization;
         $this->om = $om;
@@ -94,6 +97,7 @@ class ClacoFormController
         $this->translator = $translator;
         $this->serializer = $serializer;
         $this->tokenStorage = $tokenStorage;
+        $this->pdfManager = $pdfManager;
     }
 
     /**
@@ -299,19 +303,12 @@ class ClacoFormController
     {
         $this->clacoFormManager->checkEntryAccess($entry);
 
-        $domPdf = new Dompdf([
-            'isHtml5ParserEnabled' => true,
-            'isRemoteEnabled' => true,
-        ]);
-        $domPdf->loadHtml($this->generatePdfForEntry($entry, $user));
-
-        // Render the HTML as PDF
-        $domPdf->render();
-
         $fileName = TextNormalizer::toKey($entry->getTitle());
 
-        return new StreamedResponse(function () use ($domPdf) {
-            echo $domPdf->output();
+        return new StreamedResponse(function () use ($entry, $user) {
+            echo $this->pdfManager->fromHtml(
+                $this->generatePdfForEntry($entry, $user)
+            );
         }, 200, [
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => 'attachment; filename='.$fileName.'.pdf',

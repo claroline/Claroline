@@ -86,7 +86,7 @@ class ResourceNodeSerializer
             'thumbnail' => $this->serializeThumbnail($resourceNode),
         ];
 
-        if ($resourceNode->getWorkspace()/* && !in_array(Options::REFRESH_UUID, $options)*/) {
+        if ($resourceNode->getWorkspace()) {
             $serializedNode['workspace'] = [ // TODO : use workspace serializer with minimal option
                 'id' => $resourceNode->getWorkspace()->getUuid(),
                 'autoId' => $resourceNode->getWorkspace()->getId(),
@@ -116,7 +116,7 @@ class ResourceNodeSerializer
 
             if (!in_array(Options::NO_RIGHTS, $options)) {
                 // export rights, only used by transfer feature. Should be moved later.
-                $serializedNode['rights'] = array_values($this->rightsManager->getRights($resourceNode, $options));
+                $serializedNode['rights'] = array_values($this->rightsManager->getRights($resourceNode));
             }
         }
 
@@ -322,7 +322,8 @@ class ResourceNodeSerializer
 
         $roles = [];
         foreach ($rights as $right) {
-            if (isset($right['name'])) {
+            // this block is required by workspace
+            if (!in_array(Options::REFRESH_UUID, $options)) {
                 /** @var Role $role */
                 $role = $this->om->getRepository(Role::class)->findOneBy(['name' => $right['name']]);
             } else {

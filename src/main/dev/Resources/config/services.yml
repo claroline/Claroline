@@ -22,12 +22,6 @@ services:
         tags:
             - { name: 'console.command', command: 'claroline:fixup:translations' }
 
-    Claroline\DevBundle\Command\CreatePluginCommand:
-        arguments:
-            - '%claroline.param.vendor_directory%'
-        tags:
-            - { name: 'console.command', command: 'claroline:plugin:create' }
-
     Claroline\DevBundle\Command\RouterDebugCommand:
         arguments:
             - '@Claroline\AppBundle\Routing\Finder'

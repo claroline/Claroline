@@ -1,4 +1,4 @@
-name: Patch Release (scheduled)
+name: Patch Release
 
 on:
   workflow_dispatch:
@@ -15,43 +15,66 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.RELEASER_TOKEN }}
 
-      - name: Find release branch
+      - name: Find release branch & current tag
         shell: bash
-        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
         id: extract_branch
+        run: |
+          echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+          echo "##[set-output name=current_tag;]$(cat VERSION.txt | sed -n 1p)"
+          echo "##[set-output name=current_commit;]$(cat VERSION.txt | sed -n 2p)"
+          echo "##[set-output name=last_commit;]$(git rev-parse HEAD)"
 
-      - name: Update VERSION/CHANGELOG
+      - name: Compute diff since last release
+        id: diff
+        run: |
+          export DIFF=$(git log ${CURRENT_COMMIT}..${LAST_COMMIT} --oneline)
+          echo "::set-output name=diff::${DIFF}"
+        env:
+          CURRENT_COMMIT: ${{ steps.extract_branch.outputs.current_commit }}
+          LAST_COMMIT: ${{ steps.extract_branch.outputs.last_commit }}
+
+      - name: Update VERSION
+        if: ${{ env.DIFF != '' }}
         id: bump
         run: |
-          export CURRENT_TAG=$(cat VERSION.txt | sed -n 1p)
           ./bin/update-version ${CURRENT_TAG%.*} $RELEASE_BRANCH
-          export NEW_TAG=$(head -n 1 VERSION.txt)
+          export NEW_TAG=$(cat VERSION.txt | sed -n 1p)
           echo "::set-output name=tag::${NEW_TAG}"
           git config --global user.name ClaroBot
           git config --global user.email ClaroBot@users.noreply.github.com
-          git add changelogs/ VERSION.txt
+          git add VERSION.txt
           git commit -m "Release version ${NEW_TAG}"
           git push origin $RELEASE_BRANCH
         env:
+          DIFF: ${{ steps.diff.outputs.diff}}
           RELEASE_BRANCH: ${{ steps.extract_branch.outputs.branch }}
+          CURRENT_TAG: ${{ steps.extract_branch.outputs.current_tag }}
 
       - name: Create Tag
+        if: ${{ env.DIFF != '' }}
         uses: anothrNick/github-tag-action@1.34.0
         env:
+          DIFF: ${{ steps.diff.outputs.diff}}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RELEASE_BRANCHES: ${{ steps.extract_branch.outputs.branch }}
           CUSTOM_TAG: ${{ steps.bump.outputs.tag }}
 
       - name: Create Release
+        if: ${{ env.DIFF != '' }}
         uses: actions/create-release@v1
         env:
+          DIFF: ${{ steps.diff.outputs.diff}}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ steps.bump.outputs.tag }}
           release_name: v${{ steps.bump.outputs.tag }}
+          body: ${{ steps.diff.outputs.diff }}
 
       - name: Repository Dispatch
+        if: ${{ env.DIFF != '' }}
         uses: peter-evans/repository-dispatch@v1
+        env:
+          DIFF: ${{ steps.diff.outputs.diff}}
         with:
           token: ${{ secrets.FL_REPO_ACCESS_TOKEN }}
           repository: FormaLibre/ClarolineBundle/

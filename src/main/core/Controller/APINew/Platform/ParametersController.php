@@ -89,11 +89,12 @@ class ParametersController
     /**
      * @Route("/version", name="apiv2_platform_version", methods={"GET"})
      */
-    public function getVersionAction(): JsonResponse
+    public function getVersionAction(Request $request): JsonResponse
     {
-        return new JsonResponse(
-            $this->versionManager->getCurrent()
-        );
+        return new JsonResponse([
+            'version' => $this->versionManager->getCurrent(),
+            'changelogs' => $this->versionManager->getChangelogs($request->getLocale()),
+        ]);
     }
 
     /**

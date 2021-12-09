@@ -5,6 +5,7 @@ namespace Claroline\CoreBundle\Manager\Workspace\Transfer;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Utils\FileBag;
 use Claroline\AppBundle\Log\LoggableTrait;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\Tool\ToolSerializer;
 use Claroline\CoreBundle\API\Serializer\User\RoleSerializer;
 use Claroline\CoreBundle\Entity\Role;
@@ -22,11 +23,22 @@ class OrderedToolTransfer implements LoggerAwareInterface
 {
     use LoggableTrait;
 
+    /** @var ObjectManager */
+    private $om;
     /** @var ToolSerializer */
     private $toolSerializer;
+    /** @var RoleSerializer */
+    private $roleSerializer;
+    /** @var ContainerInterface */
+    private $container;
 
-    public function __construct(ToolSerializer $toolSerializer, RoleSerializer $roleSerializer, ContainerInterface $container)
-    {
+    public function __construct(
+        ObjectManager $om,
+        ToolSerializer $toolSerializer,
+        RoleSerializer $roleSerializer,
+        ContainerInterface $container
+    ) {
+        $this->om = $om;
         $this->toolSerializer = $toolSerializer;
         $this->roleSerializer = $roleSerializer;
         $this->container = $container;
@@ -35,40 +47,23 @@ class OrderedToolTransfer implements LoggerAwareInterface
     public function serialize(OrderedTool $orderedTool, array $options = []): array
     {
         $data = [
-          'tool' => $orderedTool->getTool()->getName(),
-          'position' => $orderedTool->getOrder(),
-          'restrictions' => $this->serializeRestrictions($orderedTool, $options),
+            'tool' => $orderedTool->getTool()->getName(),
+            'position' => $orderedTool->getOrder(),
+            // TODO : should be named rights and there should be a ToolRightsSerializer
+            'restrictions' => array_map(function (ToolRights $rights) {
+                return [
+                    'role' => $this->roleSerializer->serialize($rights->getRole(), [Options::SERIALIZE_MINIMAL]),
+                    'mask' => $rights->getMask(),
+                ];
+            }, $orderedTool->getRights()->toArray()),
         ];
 
-        if (in_array(Options::SERIALIZE_TOOL, $options)) {
-            $serviceName = 'claroline.transfer.'.$orderedTool->getTool()->getName();
-
-            if ($this->container->has($serviceName)) {
-                $data['data'] = $this->container->get($serviceName)->serialize($orderedTool->getWorkspace(), $options);
-            }
+        $serviceName = 'claroline.transfer.'.$orderedTool->getTool()->getName();
+        if ($this->container->has($serviceName)) {
+            $data['data'] = $this->container->get($serviceName)->serialize($orderedTool->getWorkspace(), $options);
         }
 
         return $data;
-    }
-
-    private function serializeRestrictions(OrderedTool $orderedTool, array $options = []): array
-    {
-        $restrictions = [];
-
-        foreach ($orderedTool->getRights() as $right) {
-            if (in_array(Options::REFRESH_UUID, $options)) {
-                $role = ['translationKey' => $right->getRole()->getTranslationKey(), 'type' => $right->getRole()->getType()];
-            } else {
-                $role = $this->roleSerializer->serialize($right->getRole(), [Options::SERIALIZE_MINIMAL]);
-            }
-
-            $restrictions[] = [
-              'role' => $role,
-              'mask' => $right->getMask(),
-            ];
-        }
-
-        return $restrictions;
     }
 
     public function dispatchPreEvent(array $data, array $orderedToolData)
@@ -87,33 +82,29 @@ class OrderedToolTransfer implements LoggerAwareInterface
         return $data;
     }
 
-    //only work for creation... other not supported. It's not a true Serializer anyway atm
-    public function deserialize(array $data, OrderedTool $orderedTool, array $options = [], Workspace $workspace = null, FileBag $bag = null)
+    public function deserialize(array $data, OrderedTool $orderedTool, array $newEntities = [], Workspace $workspace = null, FileBag $bag = null): array
     {
-        $om = $this->container->get('Claroline\AppBundle\Persistence\ObjectManager');
-        $tool = $om->getRepository(Tool::class)->findOneByName($data['tool']);
+        $createdObjects = [];
 
+        $tool = $this->om->getRepository(Tool::class)->findOneByName($data['tool']);
         if ($tool) {
             $orderedTool->setWorkspace($workspace);
             $orderedTool->setTool($tool);
             $orderedTool->setOrder($data['position']);
 
             foreach ($data['restrictions'] as $restriction) {
-                if (isset($restriction['role']['name'])) {
-                    $role = $om->getRepository(Role::class)->findOneBy(['name' => $restriction['role']['name']]);
-                } else {
-                    $role = $om->getRepository(Role::class)->findOneBy([
-                        'translationKey' => $restriction['role']['translationKey'],
-                        'workspace' => $workspace->getId(),
-                    ]);
-                }
+                $role = $this->om->getRepository(Role::class)->findOneBy([
+                    'translationKey' => $restriction['role']['translationKey'],
+                    'workspace' => $workspace->getId(),
+                ]);
 
                 if ($role) {
                     $rights = new ToolRights();
                     $rights->setRole($role);
                     $rights->setMask($restriction['mask']);
                     $rights->setOrderedTool($orderedTool);
-                    $om->persist($rights);
+
+                    $this->om->persist($rights);
                 }
             }
 
@@ -122,13 +113,12 @@ class OrderedToolTransfer implements LoggerAwareInterface
 
             if ($this->container->has($serviceName)) {
                 $importer = $this->container->get($serviceName);
-                if (method_exists($importer, 'setLogger')) {
-                    $importer->setLogger($this->logger);
-                }
                 if (isset($data['data'])) {
-                    $importer->deserialize($data['data'], $orderedTool->getWorkspace(), [Options::REFRESH_UUID], $bag);
+                    $createdObjects = $importer->deserialize($data['data'], $orderedTool->getWorkspace(), [Options::REFRESH_UUID], $newEntities, $bag);
                 }
             }
         }
+
+        return $createdObjects;
     }
 }

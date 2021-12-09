@@ -23,12 +23,10 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Event\ExportObjectEvent;
 use Claroline\CoreBundle\Event\ImportObjectEvent;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
-use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Twig\Environment;
 
 class AnnouncementListener
 {
@@ -36,8 +34,6 @@ class AnnouncementListener
 
     /** @var ObjectManager */
     private $om;
-    /** @var Environment */
-    private $templating;
     /** @var AnnouncementManager */
     private $manager;
     /** @var SerializerProvider */
@@ -45,19 +41,14 @@ class AnnouncementListener
     /** @var Crud */
     private $crud;
 
-    /**
-     * AnnouncementListener constructor.
-     */
     public function __construct(
         ObjectManager $om,
-        Environment $templating,
         AnnouncementManager $manager,
         SerializerProvider $serializer,
         Crud $crud,
         AuthorizationCheckerInterface $authorization
     ) {
         $this->om = $om;
-        $this->templating = $templating;
         $this->manager = $manager;
         $this->serializer = $serializer;
         $this->crud = $crud;
@@ -135,11 +126,5 @@ class AnnouncementListener
         }
 
         $this->om->persist($announcement);
-    }
-
-    public function delete(DeleteResourceEvent $event)
-    {
-        $this->crud->delete($event->getResource());
-        $event->stopPropagation();
     }
 }

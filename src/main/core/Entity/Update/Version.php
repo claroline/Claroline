@@ -11,19 +11,8 @@
 
 namespace Claroline\CoreBundle\Entity\Update;
 
-use Claroline\CoreBundle\Library\Installation\PackageInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-
-/**
- *     uniqueConstraints={.
- *
- *         @ORM\UniqueConstraint(
- *             name="unique_version",
- *             columns={"version", "bundle", "branch"}
- *         )
- *     }
- */
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\VersionRepository")
@@ -31,7 +20,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *     name="claro_version"
  *)
  */
-class Version implements PackageInterface
+class Version
 {
     /**
      * @ORM\Id

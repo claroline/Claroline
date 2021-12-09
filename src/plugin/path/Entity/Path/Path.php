@@ -2,7 +2,6 @@
 
 namespace Innova\PathBundle\Entity\Path;
 
-use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -16,8 +15,6 @@ use Innova\PathBundle\Entity\Step;
  */
 class Path extends AbstractResource
 {
-    use Uuid;
-
     /**
      * Steps linked to the path.
      *
@@ -125,7 +122,7 @@ class Path extends AbstractResource
 
     public function __construct()
     {
-        $this->refreshUuid();
+        parent::__construct();
 
         $this->steps = new ArrayCollection();
     }

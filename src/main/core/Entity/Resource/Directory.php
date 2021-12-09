@@ -36,6 +36,8 @@ class Directory extends AbstractResource
      */
     public function __construct()
     {
+        parent::__construct();
+
         // set some list configuration defaults
         // can be done later in the resource.directory.create event
         $this->count = true;

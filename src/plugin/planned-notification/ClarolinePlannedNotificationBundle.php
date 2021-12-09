@@ -13,9 +13,6 @@ namespace Claroline\PlannedNotificationBundle;
 
 use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
 
-/**
- * Bundle class.
- */
 class ClarolinePlannedNotificationBundle extends DistributionPluginBundle
 {
 }

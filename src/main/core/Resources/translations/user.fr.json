@@ -1,5 +1,9 @@
 {
   "role_analytics_users_help": "Nombre d'utilisateurs actifs ayant ce rôle.",
   "role_analytics_connections_help": "Nombre de connexions uniques par jour des utilisateurs ayant ce rôle.",
-  "role_analytics_actions_help": "Nombre d'actions effectuées par les utilisateurs ayant ce rôle."
+  "role_analytics_actions_help": "Nombre d'actions effectuées par les utilisateurs ayant ce rôle.",
+  "public_organization": "L'organisation est publique.",
+  "make_organization_public": "Rendre l'organisation publique",
+  "make_organization_public_help1": "Les organisations publiques sont visibles par les anonymes.",
+  "make_organization_public_help2": "Les organisations publiques permettent aux utilisateurs de choisir leur organisation lors de l'auto-inscription (si activé dans les paramètres d'inscription)."
 }

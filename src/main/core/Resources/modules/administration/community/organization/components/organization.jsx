@@ -89,23 +89,31 @@ const OrganizationForm = props =>
         title: trans('access_restrictions'),
         fields: [
           {
-            name: 'limit.enabled',
+            name: 'restrictions.public',
+            type: 'boolean',
+            label: trans('make_organization_public', {}, 'user'),
+            help: [
+              trans('make_organization_public_help1', {}, 'user'),
+              trans('make_organization_public_help2', {}, 'user')
+            ]
+          }, {
+            name: 'restrictions.maxUsers',
             type: 'boolean',
             label: trans('restrict_users_count'),
-            calculated: (organization) => get(organization, 'limit.enabled') || get(organization, 'limit.users', -1) > -1,
+            calculated: (organization) => get(organization, 'restrictions.maxUsers') || get(organization, 'restrictions.users', -1) > -1,
             onChange: (enabled) => {
               if (!enabled) {
-                props.updateProp('limit.users', -1)
+                props.updateProp('restrictions.users', -1)
               } else {
-                props.updateProp('limit.users', null)
+                props.updateProp('restrictions.users', null)
               }
             },
             linked: [
               {
-                name: 'limit.users',
+                name: 'restrictions.users',
                 type: 'number',
                 label: trans('users_count'),
-                displayed: get(props.organization, 'limit.enabled') || get(props.organization, 'limit.users', -1) > -1
+                displayed: (organization) => get(organization, 'restrictions.maxUsers') || get(organization, 'restrictions.users', -1) > -1
               }
             ]
           }
@@ -282,11 +290,7 @@ OrganizationForm.propTypes = {
   path: T.string.isRequired,
   new: T.bool.isRequired,
   organization: T.shape({
-    id: T.string,
-    limit: T.shape({
-      enable: T.boolean,
-      users: T.number
-    })
+    id: T.string
   }).isRequired,
   addUsers: T.func.isRequired,
   addGroups: T.func.isRequired,

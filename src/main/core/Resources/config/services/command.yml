@@ -109,9 +109,6 @@ services:
 
     Claroline\CoreBundle\Command\Workspace\ImportCommand:
         arguments:
-            - '@Claroline\AppBundle\API\Crud'
-            - '@Claroline\CoreBundle\Library\Utilities\FileUtilities'
-            - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
         tags:
             - { name: 'console.command', command: 'claroline:workspace:import' }

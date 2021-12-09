@@ -23,7 +23,7 @@ class AnnouncementAggregateCrud
         $aggregate = $event->getObject();
 
         foreach ($aggregate->getAnnouncements() as $announcement) {
-            $this->crud->delete($announcement);
+            $this->crud->delete($announcement, $event->getOptions());
         }
     }
 }

@@ -19,6 +19,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(
  *     name="claro_widget_instance_config"
  * )
+ *
+ * @todo merge with WidgetInstance entity.
  */
 class WidgetInstanceConfig
 {

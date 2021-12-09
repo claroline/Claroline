@@ -139,6 +139,15 @@ class UserCrud
             }
         }
 
+        $this->om->endFlushSuite();
+    }
+
+    public function postCreate(CreateEvent $event)
+    {
+        /** @var User $user */
+        $user = $event->getObject();
+        $options = $event->getOptions();
+
         if (!in_array(Options::NO_PERSONAL_WORKSPACE, $options)) {
             $createWs = false;
             foreach ($user->getEntityRoles() as $role) {
@@ -149,11 +158,9 @@ class UserCrud
             }
 
             if ($createWs) {
-                $this->workspaceManager->setPersonalWorkspace($user);
+                $this->workspaceManager->createPersonalWorkspace($user);
             }
         }
-
-        $this->om->endFlushSuite();
     }
 
     public function preDelete(DeleteEvent $event)

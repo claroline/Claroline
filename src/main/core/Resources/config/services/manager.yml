@@ -83,7 +83,6 @@ services:
 
     Claroline\CoreBundle\Manager\PluginManager:
         arguments:
-            - '%kernel.project_dir%/app'
             - '%claroline.param.bundle_file%'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@kernel'
@@ -183,18 +182,15 @@ services:
         arguments:
             - '@request_stack'
             - '@security.authorization_checker'
-            - '@claroline.manager.workspace_manager'
+            - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
+            - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceUserQueueManager'
 
     Claroline\CoreBundle\Manager\Workspace\WorkspaceManager:
         public: true
         arguments:
-            - '@translator'
+            - '%claroline.param.files_directory%'
             - '@Claroline\AppBundle\API\Crud'
-            - '@claroline.manager.role_manager'
-            - '@claroline.manager.resource_manager'
-            - '@Claroline\AppBundle\Event\StrictDispatcher'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CoreBundle\Manager\Tool\ToolManager'
             - '@service_container'
         calls:
             - setLogger: [ '@logger' ]
@@ -212,14 +208,12 @@ services:
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@claroline.transfer.ordered_tool'
             - '@Claroline\AppBundle\API\Crud'
-            - '@Claroline\CoreBundle\Library\Utilities\FileUtilities'
-            - '@Claroline\CoreBundle\Listener\Log\LogListener'
-            - '@security.authorization_checker'
         calls:
             - setLogger: [ '@logger' ]
 
     Claroline\CoreBundle\Manager\Workspace\Transfer\OrderedToolTransfer:
         arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\API\Serializer\Tool\ToolSerializer'
             - '@Claroline\CoreBundle\API\Serializer\User\RoleSerializer'
             - '@service_container'
@@ -234,9 +228,7 @@ services:
     Claroline\CoreBundle\Manager\Workspace\Transfer\Tools\ResourceManager:
         arguments:
             - '@Claroline\AppBundle\API\SerializerProvider'
-            - '@Claroline\AppBundle\API\FinderProvider'
             - '@Claroline\AppBundle\API\Crud'
-            - '@security.token_storage'
             - '@claroline.manager.resource_manager'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\Event\StrictDispatcher'

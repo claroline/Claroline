@@ -14,9 +14,9 @@ services:
         public: true
         arguments:
             - '@security.authorization_checker'
-            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
             - '@Claroline\OpenBadgeBundle\Manager\BadgeManager'
             - '@security.token_storage'
+            - '@Claroline\AppBundle\Manager\PdfManager'
 
     Claroline\OpenBadgeBundle\Controller\API\BadgeClassController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController

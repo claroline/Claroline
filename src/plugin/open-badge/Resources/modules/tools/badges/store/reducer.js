@@ -6,7 +6,6 @@ import {FORM_SUBMIT_SUCCESS} from '#/main/app/content/form/store/actions'
 import {TOOL_LOAD} from '#/main/core/tool/store/actions'
 
 import {selectors} from '#/plugin/open-badge/tools/badges/store/selectors'
-import {reducer as parametersReducer} from '#/plugin/open-badge/tools/badges/parameters/store/reducer'
 
 const reducer = combineReducers({
   badges: combineReducers({
@@ -39,8 +38,7 @@ const reducer = combineReducers({
         })
       })
     })
-  }),
-  parameters: parametersReducer
+  })
 })
 
 export {

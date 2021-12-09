@@ -7,7 +7,7 @@ import {trans} from '#/main/app/intl/translation'
 import {LineChart} from '#/main/core/layout/chart/line/components/line-chart'
 import {DataTable} from '#/main/app/content/list/components/view/data-table'
 import {getNumbering} from '#/plugin/exo/resources/quiz/utils'
-import {getDefinition} from '#/plugin/exo/items/item-types'
+import {isQuestionType, getDefinition} from '#/plugin/exo/items/item-types'
 
 /**
  * We don't use a redux store here because the chart can be rendered multiple times
@@ -76,7 +76,7 @@ class AttemptsChart extends Component {
         color: schemeCategory20[0]
       }
     ].concat(
-      ...this.props.steps.map((step, stepIndex) => step.items.map((item, idx) => ({
+      ...this.props.steps.map((step, stepIndex) => step.items.filter(item => isQuestionType(item.type)).map((item, idx) => ({
         id: item.id,
         color: schemeCategory20[(idx + 1) % schemeCategory20.length],
         label: item.title || trans(getDefinition(item.type).name, {}, 'question_types'),

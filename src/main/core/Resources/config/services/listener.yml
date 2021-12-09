@@ -24,7 +24,7 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
             - '@Claroline\CoreBundle\Manager\LocaleManager'
-            - '@claroline.manager.icon_set_manager'
+            - '@Claroline\ThemeBundle\Manager\IconSetManager'
         tags:
             - { name: kernel.event_listener, event: administration_tool_main_settings, method: onDisplayTool }
 
@@ -118,6 +118,7 @@ services:
         tags:
             - { name: kernel.event_listener, event: resource.directory.load, method: onLoad }
             - { name: kernel.event_listener, event: resource.directory.add, method: onAdd }
+            - { name: kernel.event_listener, event: resource.directory.delete, method: onDelete }
 
     Claroline\CoreBundle\Listener\Resource\Types\FileListener:
         arguments:
@@ -222,20 +223,26 @@ services:
     Claroline\CoreBundle\Listener\PlatformListener:
         arguments:
             - '@security.token_storage'
+            - '@translator'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+            - '@Claroline\CoreBundle\Manager\VersionManager'
             - '@claroline.manager.temp_file'
             - '@Claroline\CoreBundle\Manager\LocaleManager'
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: setLocale, priority: 17 }
             - { name: kernel.event_listener, event: kernel.request, method: checkAvailability }
             - { name: kernel.event_listener, event: kernel.terminate, method: clearTemp }
+            - { name: kernel.event_listener, event: platform.connection_messages.populate, method: displayVersionChangeLogs }
 
     Claroline\CoreBundle\Listener\CommandListener:
         arguments:
+            - '@translator'
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
             - '@Claroline\AuthenticationBundle\Security\Authentication\Authenticator'
             - '@Claroline\CoreBundle\Manager\UserManager'
         tags:
             - { name: kernel.event_listener, event: console.command, method: setDefaultUser, priority: 17 }
+            - { name: kernel.event_listener, event: console.command, method: setLocale, priority: 16 }
 
     Claroline\CoreBundle\Listener\AuthenticationSuccessListener:
         arguments:

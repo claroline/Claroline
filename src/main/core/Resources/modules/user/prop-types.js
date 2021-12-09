@@ -36,7 +36,6 @@ const User = {
     }))
   },
   defaultProps: {
-    meta: {},
     permissions: {
       contact: false,
       edit: false,
@@ -89,17 +88,13 @@ const Organization = {
       id: T.string.isRequired,
       name: T.string.isRequired
     }),
-    limit: T.shape({
-      enabled: T.bool,
+    restrictions: T.shape({
+      public: T.bool,
       users: T.number
     })
   },
   defaultProps: {
-    parent: null,
-    limit: {
-      enabled: false,
-      users: -1
-    }
+    parent: null
   }
 }
 

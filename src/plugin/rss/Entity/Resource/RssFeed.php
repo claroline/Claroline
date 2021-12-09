@@ -2,7 +2,6 @@
 
 namespace Claroline\RssBundle\Entity\Resource;
 
-use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -14,13 +13,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class RssFeed extends AbstractResource
 {
-    use Uuid;
-
-    public function __construct()
-    {
-        $this->refreshUuid();
-    }
-
     /**
      * @ORM\Column()
      *

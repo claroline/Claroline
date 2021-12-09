@@ -1,6 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
+import merge from 'lodash/merge'
 
 import {trans} from '#/main/app/intl/translation'
 import {selectors as securitySelectors} from '#/main/app/security/store'
@@ -11,11 +12,11 @@ import {getActions, getDefaultAction} from '#/main/core/workspace/utils'
 import {WorkspaceCard} from '#/main/core/workspace/components/card'
 
 const Workspaces = (props) => {
-  const workspacesRefresher = {
+  const workspacesRefresher = merge({
     add:    () => props.invalidate(props.name),
     update: () => props.invalidate(props.name),
     delete: () => props.invalidate(props.name)
-  }
+  }, props.refresher || {})
 
   return (
     <ListData
@@ -38,8 +39,14 @@ const Workspaces = (props) => {
           name: 'meta.created',
           label: trans('creation_date'),
           type: 'date',
-          alias: 'created',
+          alias: 'createdAt',
           displayed: true,
+          filterable: false
+        }, {
+          name: 'meta.updated',
+          label: trans('modification_date'),
+          type: 'date',
+          alias: 'updatedAt',
           filterable: false
         }, {
           name: 'meta.creator',
@@ -106,7 +113,12 @@ Workspaces.propTypes = {
     // TODO : data list prop types
   })),
   display: T.object,
-  invalidate: T.func.isRequired
+  invalidate: T.func.isRequired,
+  refresher: T.shape({
+    add: T.func,
+    update: T.func,
+    delete: T.func
+  })
 }
 
 Workspaces.defaultProps = {

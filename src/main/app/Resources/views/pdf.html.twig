@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+
+<html lang="{{ app.request.locale }}" class="claroline-app {{ config.getParameter('theme') }}">
+    <head>
+        <meta charset="utf-8" />
+
+        {# This is required in order to DOMPDF manage correctly relative path (mostly for tinyMce contents) #}
+        <base href="{{ baseUrl ~ '/' }}" />
+
+        {# We will need to load a specific stylesheets for pdfs later #}
+        <link rel="stylesheet" type="text/css" href="{{ absolute_url(themeAsset('bootstrap.css')) }}" />
+        <style>
+            @media print {
+                @page {
+                    size: A4;
+                }
+            }
+        </style>
+    </head>
+
+    <body>
+        {{ content | raw }}
+    </body>
+</html>

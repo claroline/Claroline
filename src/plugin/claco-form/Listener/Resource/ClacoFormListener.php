@@ -187,6 +187,9 @@ class ClacoFormListener
         foreach ($data['_data']['entries'] as $dataEntry) {
             $entry = new Entry();
             $this->serializer->deserialize($dataEntry, $entry, [Options::REFRESH_UUID]);
+            // we should keep original
+            $entry->setCreationDate(new \DateTime());
+            $entry->setEditionDate(new \DateTime());
             $entry->setClacoForm($clacoForm);
             $this->om->persist($entry);
 

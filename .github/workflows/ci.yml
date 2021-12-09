@@ -54,7 +54,7 @@ jobs:
 
       - name: "Install ESLint"
         if: ${{ env.DIFF != '' }}
-        run: npm install eslint eslint-plugin-react@7.21.5
+        run: npm install eslint eslint-plugin-react@7.21.5 --legacy-peer-deps
         env:
           DIFF: ${{ steps.diff.outputs.diff_js }}
 
@@ -113,7 +113,7 @@ jobs:
             npm-
 
       - name: "Install JS dependencies with NPM"
-        run: npm install
+        run: npm install --legacy-peer-deps
 
       - name: "Build JS files with Webpack"
         run: npm run webpack
@@ -123,6 +123,11 @@ jobs:
 
       - name: "Run PHPUnit Tests"
         run: SYMFONY_DEPRECATIONS_HELPER=weak vendor/bin/simple-phpunit --dont-report-useless-tests
+
+      # Created user is not used in the job. This is just a dumb way to test the user creation process.
+      # We do it after tests because we don't want tests on user parts to be affected by this.
+      - name: "Create a Claroline user"
+        run: php bin/console claroline:user:create --env=test -vvv -a John Doe john.doe john.doe john.doe@test.com
 
   php-80:
     name: "PHPUnit (PHP 8.0)"
@@ -173,7 +178,7 @@ jobs:
             npm-
 
       - name: "Install JS dependencies with NPM"
-        run: npm install
+        run: npm install --legacy-peer-deps
 
       - name: "Build JS files with Webpack"
         run: npm run webpack
@@ -183,3 +188,8 @@ jobs:
 
       - name: "Run PHPUnit Tests"
         run: SYMFONY_DEPRECATIONS_HELPER=weak vendor/bin/simple-phpunit --dont-report-useless-tests
+
+      # Created user is not used in the job. This is just a dumb way to test the user creation process.
+      # We do it after tests because we don't want tests on user parts to be affected by this.
+      - name: "Create a Claroline user"
+        run: php bin/console claroline:user:create --env=test -vvv -a John Doe john.doe john.doe john.doe@test.com

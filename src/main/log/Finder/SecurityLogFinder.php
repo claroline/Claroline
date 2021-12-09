@@ -26,7 +26,7 @@ class SecurityLogFinder extends AbstractFinder
     {
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
-                case 'user':
+                case 'doer':
                     $qb->leftJoin('obj.doer', 'd');
                     $qb->andWhere('d.uuid = :id');
                     $qb->setParameter('id', $filterValue);

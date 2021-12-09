@@ -5,11 +5,10 @@ namespace Icap\LessonBundle\Controller;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
+use Claroline\AppBundle\Manager\PdfManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
-use Dompdf\Dompdf;
 use Icap\LessonBundle\Entity\Chapter;
 use Icap\LessonBundle\Entity\Lesson;
 use Icap\LessonBundle\Repository\ChapterRepository;
@@ -28,32 +27,32 @@ class LessonController
 
     /** @var ObjectManager */
     private $om;
-    /** @var PlatformConfigurationHandler */
-    private $config;
     /** @var Environment */
     private $templating;
     /** @var Crud */
     private $crud;
     /** @var SerializerProvider */
     private $serializer;
+    /** @var PdfManager */
+    private $pdfManager;
 
     /** @var ChapterRepository */
     private $chapterRepo;
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
-        PlatformConfigurationHandler $config,
         ObjectManager $om,
         Environment $templating,
         Crud $crud,
-        SerializerProvider $serializer
+        SerializerProvider $serializer,
+        PdfManager $pdfManager
     ) {
         $this->authorization = $authorization;
-        $this->config = $config;
         $this->om = $om;
         $this->templating = $templating;
         $this->crud = $crud;
         $this->serializer = $serializer;
+        $this->pdfManager = $pdfManager;
 
         $this->chapterRepo = $this->om->getRepository(Chapter::class);
     }
@@ -82,22 +81,15 @@ class LessonController
     {
         $this->checkPermission('EXPORT', $lesson->getResourceNode(), [], true);
 
-        $domPdf = new Dompdf();
-        $domPdf->set_option('isHtml5ParserEnabled', true);
-        $domPdf->set_option('isRemoteEnabled', true);
-        $domPdf->set_option('tempDir', $this->config->getParameter('server.tmp_dir'));
-        $domPdf->loadHtml($this->templating->render('@IcapLesson/lesson/open.pdf.twig', [
-            '_resource' => $lesson,
-            'tree' => $this->chapterRepo->getChapterTree($lesson->getRoot(), false),
-        ]));
-
-        // Render the HTML as PDF
-        $domPdf->render();
-
         $fileName = TextNormalizer::toKey($lesson->getResourceNode()->getName());
 
-        return new StreamedResponse(function () use ($domPdf) {
-            echo $domPdf->output();
+        return new StreamedResponse(function () use ($lesson) {
+            echo $this->pdfManager->fromHtml(
+                $this->templating->render('@IcapLesson/lesson/open.pdf.twig', [
+                    '_resource' => $lesson,
+                    'tree' => $this->chapterRepo->getChapterTree($lesson->getRoot(), false),
+                ])
+            );
         }, 200, [
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => 'attachment; filename='.$fileName.'.pdf',

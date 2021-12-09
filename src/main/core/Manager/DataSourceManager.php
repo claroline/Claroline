@@ -62,7 +62,7 @@ class DataSourceManager
      */
     public function getAvailable($context = null)
     {
-        $enabledPlugins = $this->pluginManager->getEnabled(true);
+        $enabledPlugins = $this->pluginManager->getEnabled();
 
         return $this->dataSourceRepository->findAllAvailable($enabledPlugins, $context);
     }

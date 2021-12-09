@@ -135,12 +135,12 @@ class Course extends AbstractTraining
         $this->slug = $slug;
     }
 
-    public function getWorkspaceModel()
+    public function getWorkspaceModel(): ?Workspace
     {
         return $this->workspaceModel;
     }
 
-    public function setWorkspaceModel(Workspace $workspace = null)
+    public function setWorkspaceModel(?Workspace $workspace = null)
     {
         $this->workspaceModel = $workspace;
     }

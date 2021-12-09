@@ -248,22 +248,6 @@ class ResourceController
     }
 
     /**
-     * @Route("/share/{id}", name="claro_resource_share")
-     * @EXT\ParamConverter("resourceNode", class="ClarolineCoreBundle:Resource\ResourceNode", options={"mapping": {"id": "uuid"}})
-     */
-    public function shareAction(ResourceNode $resourceNode): Response
-    {
-        return new Response(
-            $this->templating->render('@ClarolineApp/share.html.twig', [
-                'url' => $this->routing->resourceUrl($resourceNode),
-                'title' => $resourceNode->getName(),
-                'thumbnail' => $resourceNode->getThumbnail(),
-                'description' => !empty($resourceNode->getDescription()) ? strip_tags($resourceNode->getDescription()) : '',
-            ])
-        );
-    }
-
-    /**
      * Executes an action on one resource.
      *
      * @Route("/{action}/{id}", name="claro_resource_action")

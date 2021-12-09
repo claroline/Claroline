@@ -50,13 +50,22 @@ class Home implements ToolImporterInterface, LoggerAwareInterface
         return $data;
     }
 
-    public function deserialize(array $data, Workspace $workspace, array $options, FileBag $bag)
+    public function deserialize(array $data, Workspace $workspace, array $options, array $newEntities, FileBag $bag): array
     {
+        $createdTabs = [];
+
         foreach ($data['tabs'] as $tab) {
+            if (isset($tab['workspace'])) {
+                unset($tab['workspace']);
+            }
             $new = new HomeTab();
             $new->setWorkspace($workspace);
 
             $this->crud->create($new, $tab, $options);
+
+            $createdTabs[$tab['id']] = $new;
         }
+
+        return $createdTabs;
     }
 }

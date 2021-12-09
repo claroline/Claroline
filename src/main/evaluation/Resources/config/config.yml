@@ -3,14 +3,14 @@ plugin:
         - name: resource_attempts
           type: list
           context: [ workspace, desktop ]
-          tags: [ content ]
+          tags: [ activity, content ]
 
         - name: resource_evaluations
           type: list
           context: [ workspace, desktop ]
-          tags: [ content ]
+          tags: [ activity, content ]
 
         - name: workspace_evaluations
           type: list
-          context: [ workspace, desktop ]
+          context: [ activity, workspace, desktop ]
           tags: [ content ]

@@ -12,18 +12,30 @@
 namespace Claroline\CoreBundle\Listener;
 
 use Claroline\AuthenticationBundle\Security\Authentication\Authenticator;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\UserManager;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CommandListener
 {
+    /** @var TranslatorInterface */
+    private $translator;
+    /** @var PlatformConfigurationHandler */
+    private $config;
+    /** @var Authenticator */
     private $authenticator;
+    /** @var UserManager */
     private $userManager;
 
     public function __construct(
+        TranslatorInterface $translator,
+        PlatformConfigurationHandler $config,
         Authenticator $authenticator,
         UserManager $userManager
     ) {
+        $this->translator = $translator;
+        $this->config = $config;
         $this->authenticator = $authenticator;
         $this->userManager = $userManager;
     }
@@ -41,5 +53,16 @@ class CommandListener
         }
 
         $this->authenticator->createAdminToken($user);
+    }
+
+    /**
+     * Sets default locale for cli.
+     */
+    public function setLocale(ConsoleCommandEvent $event)
+    {
+        $locale = $this->config->getParameter('locales.default');
+        if ($locale) {
+            $this->translator->setLocale($locale);
+        }
     }
 }
