@@ -40,6 +40,8 @@ abstract class AbstractVoter implements ClarolineVoterInterface, VoterInterface
     const OPEN = 'OPEN';
     /** @var string */
     const PATCH = 'PATCH';
+    /** @var string */
+    const REGISTER = 'REGISTER';
 
     /** @var ContainerInterface */
     protected $container;
@@ -292,6 +294,6 @@ abstract class AbstractVoter implements ClarolineVoterInterface, VoterInterface
 
     public function getSupportedActions()
     {
-        return [self::OPEN, self::VIEW, self::CREATE, self::EDIT, self::DELETE, self::PATCH];
+        return [self::OPEN, self::VIEW, self::CREATE, self::EDIT, self::DELETE, self::PATCH, self::REGISTER];
     }
 }
