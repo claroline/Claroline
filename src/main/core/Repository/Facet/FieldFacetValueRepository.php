@@ -26,7 +26,9 @@ class FieldFacetValueRepository extends EntityRepository
             ->createQuery('
                 SELECT fv
                 FROM Claroline\CoreBundle\Entity\Facet\FieldFacetValue fv
+                LEFT JOIN fv.fieldFacet AS f
                 WHERE fv.user = :user
+                  AND f.panelFacet IS NOT NULL
             ')
             ->setParameter('user', $user)
             ->getResult();
