@@ -5,9 +5,7 @@ title: Requirements
 
 # Requirements
 
-For a development installation, you'll need at least:
-
-- PHP >= 7.2 with the following extensions:
+- PHP 7.2 or higher with the following extensions:
     - curl
     - dom
     - fileinfo
@@ -20,19 +18,46 @@ For a development installation, you'll need at least:
     - pdo_mysql
     - simplexml
     - zip
-- MySQL/MariaDB >= 8.0
-- composer >= 2
-- node.js >= 10
-- npm >= 6
+- MySQL/MariaDB 8.0 or higher
+- [Composer](https://getcomposer.org) 2 or higher
+- [node.js](https://nodejs.org) 10 or higher
+- [npm](https://docs.npmjs.com) 6 or higher
+- [Git](https://git-scm.com/)
 
-It's also highly recommended developing on an UNIX-like OS.
+It's also highly recommended installing Claroline on an UNIX-like OS.
 
-> **For mysql >= 8.0**, there is an additional step.
->  
->  You have to go into your terminal and type the following commands.
->
-> ```bash
->     mysql -u**** -p
->     set global sql_mode='';
->     exit;
-> ```
+## Web server
+
+You'll also need a PHP-enabled web server to serve the application.
+Two alternatives are available.
+
+### 1. Using Symfony web server (not tested)
+
+This is the simplest way of serving the application during
+development. To start the server, use the command provided by the symfony
+local server (more details on installation and configuration [here](https://symfony.com/doc/4.4/setup/symfony_server.html)):
+
+    symfony server:start
+
+The application will be available at [http://localhost:8000](http://localhost:8000).
+
+### 2. Using a standalone web server (recommended)
+
+If you want to use Apache or Nginx during development, make them serve the
+*public* directory, and access the application at
+[http://localhost/example-site/index.php](http://localhost/example-site/index.php).
+
+## Directories permissions
+
+Note that you'll certainly face permissions issues on the following directories:
+
+- *config*
+- *var/cache*
+- *var/log*
+- *var/sessions*
+- *files*
+- *public/uploads*
+
+All of them must be recursively writable from both the web server and the CLI.
+For more information on that subject, see the [configuration section](https://symfony.com/doc/4.4/setup/web_server_configuration.html)
+of the official Symfony documentation.
