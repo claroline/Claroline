@@ -8,7 +8,6 @@ import {Tab as TabTypes} from '#/plugin/home/prop-types'
 
 import {CatalogList} from '#/plugin/cursus/home/catalog/components/list'
 import {CatalogDetails} from '#/plugin/cursus/home/catalog/containers/details'
-import {CatalogForm} from '#/plugin/cursus/home/catalog/containers/form'
 
 const CatalogTab = props =>
   <Routes
@@ -19,15 +18,6 @@ const CatalogTab = props =>
         exact: true,
         render: () => (
           <CatalogList
-            path={props.path}
-            {...omit(props, 'open')}
-          />
-        )
-      }, {
-        path: '/:slug/edit',
-        onEnter: (params = {}) => props.openForm(params.slug),
-        render: () => (
-          <CatalogForm
             path={props.path}
             {...omit(props, 'open')}
           />
