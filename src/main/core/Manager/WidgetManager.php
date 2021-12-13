@@ -46,7 +46,7 @@ class WidgetManager
      */
     public function getAvailable($context = null)
     {
-        $enabledPlugins = $this->pluginManager->getEnabled(true);
+        $enabledPlugins = $this->pluginManager->getEnabled();
 
         return $this->widgetRepository->findAllAvailable($enabledPlugins, $context);
     }

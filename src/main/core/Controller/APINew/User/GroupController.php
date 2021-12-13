@@ -20,6 +20,7 @@ use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\MailManager;
+use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,6 +37,7 @@ class GroupController extends AbstractCrudController
     use HasUsersTrait;
     use HasRolesTrait;
     use HasOrganizationsTrait;
+    use PermissionCheckerTrait;
 
     /** @var TokenStorageInterface */
     private $tokenStorage;

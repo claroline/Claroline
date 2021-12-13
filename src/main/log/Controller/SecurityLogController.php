@@ -38,11 +38,9 @@ class SecurityLogController extends AbstractSecurityController
     {
         $this->canOpenAdminTool('dashboard');
 
-        return new JsonResponse($this->finderProvider->search(
-            SecurityLog::class,
-            $request->query->all(),
-            []
-        ));
+        return new JsonResponse(
+            $this->finderProvider->search(SecurityLog::class, $request->query->all())
+        );
     }
 
     /**
@@ -58,13 +56,11 @@ class SecurityLogController extends AbstractSecurityController
 
         $query = $request->query->all();
         $query['hiddenFilters'] = [
-            'user' => $user->getUuid(),
+            'doer' => $user->getUuid(),
         ];
 
-        return new JsonResponse($this->finderProvider->search(
-            SecurityLog::class,
-            $query,
-            []
-        ));
+        return new JsonResponse(
+            $this->finderProvider->search(SecurityLog::class, $query)
+        );
     }
 }

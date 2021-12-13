@@ -20,6 +20,7 @@ use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\ResourceActionEvent;
 use Claroline\CoreBundle\Manager\Resource\ResourceActionManager;
@@ -148,5 +149,16 @@ class DirectoryListener
             ],
             201
         ));
+    }
+
+    public function onDelete(DeleteResourceEvent $event)
+    {
+        // delete all children of the current directory
+        // this may by interesting to put it in the messenger bus
+        $resourceNode = $event->getResource()->getResourceNode();
+
+        if (!empty($resourceNode->getChildren())) {
+            $this->crud->deleteBulk($resourceNode->getChildren()->toArray(), $event->isSoftDelete() ? [Options::SOFT_DELETE] : []);
+        }
     }
 }

@@ -6,6 +6,7 @@
   "course_sessions": "List of training sessions",
   "course_sessions_desc": "Allows to list training sessions.",
   "all_courses": "List of courses",
+  "all_courses_desc": "Allow to list platform trainings.",
   "public_courses_desc": "Allow to list all public courses.",
   "training_events": "List of session events",
   "training_events_desc": "Allow to list all training events.",

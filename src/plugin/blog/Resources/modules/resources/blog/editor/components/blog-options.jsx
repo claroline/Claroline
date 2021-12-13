@@ -125,12 +125,12 @@ const BlogOptionsComponent = props =>
           },{
             id: 'widgets',
             icon: 'fa fa-fw fa-bars',
-            title: trans('infobar', {}, 'icap_blog'),
+            title: trans('information'),
             fields: [
               {
                 name: 'infos',
                 type: 'html',
-                label: trans('infobar', {}, 'icap_blog'),
+                label: trans('information'),
                 options: {
                   workspace: props.workspace
                 }

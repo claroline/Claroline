@@ -1,7 +1,7 @@
 {% if log.getDetails().receiverUser is defined %}
     <strong>
         {% if log.getReceiver() != null %}
-            <a href="#/desktop/community/{{ log.getReceiver().getPublicUrl() }}">
+            <a href="#/desktop/community/{{ log.getReceiver().getUsername() }}">
                 {{ log.getDetails().receiverUser.firstName }} {{ log.getDetails().receiverUser.lastName }}
             </a>
         {% else %}

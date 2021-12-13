@@ -40,7 +40,7 @@ class AdminToolFinder extends AbstractFinder
         array $sortBy = null,
         array $options = ['count' => false, 'page' => 0, 'limit' => -1]
     ) {
-        $bundles = $this->pluginManager->getEnabled(true);
+        $bundles = $this->pluginManager->getEnabled();
 
         // only grab tools from enabled plugins
         $qb->leftJoin('obj.plugin', 'p');

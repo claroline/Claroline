@@ -2,7 +2,7 @@ import React from 'react'
 import classes from 'classnames'
 import omit from 'lodash/omit'
 
-import {url} from '#/main/app/api'
+import {url} from '#/main/app/api/router'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 
 import {Button as ButtonTypes} from '#/main/app/buttons/prop-types'

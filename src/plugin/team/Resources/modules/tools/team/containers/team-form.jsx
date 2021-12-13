@@ -27,7 +27,7 @@ const TeamForm = connect(
       dispatch(modalActions.showModal(MODAL_DATA_LIST, {
         icon: 'fa fa-fw fa-user',
         title: pickManagers ? trans('add_managers', {}, 'team') : trans('add_members', {}, 'team'),
-        confirmText: trans('add'),
+        confirmText: trans('add', {}, 'actions'),
         name: selectors.STORE_NAME + '.teams.current.usersPicker',
         definition: UserList.definition,
         card: UserList.card,

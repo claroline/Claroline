@@ -31,9 +31,6 @@ class LocaleController
     /** @var TokenStorageInterface */
     private $tokenStorage;
 
-    /**
-     * LocaleController constructor.
-     */
     public function __construct(
         LocaleManager $localeManager,
         TokenStorageInterface $tokenStorage
@@ -46,10 +43,8 @@ class LocaleController
      * List platform locales.
      *
      * @Route("/", name="apiv2_locale_list", methods={"GET"})
-     *
-     * @return JsonResponse
      */
-    public function listAction()
+    public function listAction(): JsonResponse
     {
         return new JsonResponse(
             $this->localeManager->getLocales()
@@ -58,15 +53,10 @@ class LocaleController
 
     /**
      * Change locale.
-     * Change locale.
      *
      * @Route("/{locale}", name="claroline_locale_change")
-     *
-     * @param string $locale
-     *
-     * @return RedirectResponse
      */
-    public function changeAction(Request $request, $locale)
+    public function changeAction(Request $request, string $locale): RedirectResponse
     {
         $user = $this->tokenStorage->getToken()->getUser();
         if ($user instanceof User) {

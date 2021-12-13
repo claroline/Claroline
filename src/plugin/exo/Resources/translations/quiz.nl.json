@@ -1,7 +1,6 @@
 {
     "type": "Soort",
     "actions": "Acties",
-    "add": "Voegen",
     "all": "Allen",
     "none": "Geen",
     "open": "Open",
@@ -268,7 +267,6 @@
     "metadata_visible": "De informaties weergeven",
     "metadata_visible_help": "Indien aangevinkt zal een lijst met de informatie over de quiz worden weergegeven.",
     "minimal_correction": "Het verwachte antwoord in de correctie verbergen",
-    "minimize": "Verkleinen",
     "move_item": "Het element verplaatsen",
     "move_step": "De stap verplaatsen",
     "my_questions": "Mijn vragen",

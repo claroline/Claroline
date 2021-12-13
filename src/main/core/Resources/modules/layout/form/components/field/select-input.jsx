@@ -151,7 +151,7 @@ SelectInput.defaultProps = {
   withEmptyOption: true,
   emptyValue: '',
   primaryLabel: trans('ok'),
-  secondaryLabel: trans('cancel'),
+  secondaryLabel: trans('cancel', {}, 'actions'),
   typeAhead: false,
   disablePrimary: false,
   disableSecondary: false,

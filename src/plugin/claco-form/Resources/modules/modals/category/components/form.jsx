@@ -93,7 +93,7 @@ class FieldsValues extends Component {
           primary={true}
           disabled={!this.state.selectedField}
         >
-          {trans('add')}
+          {trans('add', {}, 'actions')}
         </CallbackButton>
 
         {this.props.formData.fieldsValues.map((fv, idx) =>

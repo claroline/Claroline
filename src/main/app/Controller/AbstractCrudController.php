@@ -395,7 +395,7 @@ abstract class AbstractCrudController
 
     /**
      * @ApiDoc(
-     *     description="Display the current informations",
+     *     description="Display the current information",
      * )
      *
      * @param string $class

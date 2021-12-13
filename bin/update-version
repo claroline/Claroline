@@ -47,32 +47,3 @@ echo $FULL_VERSION
 echo `git rev-parse HEAD`
 echo $BRANCH_NAME
 } > VERSION.txt
-
-# building log file
-LOGS=`git log ${LAST_COMMIT}..${CURRENT_COMMIT} --oneline`
-
-COMMITS="$( cut -d " " -f -1 <<< "$LOGS" )"
-COMMITNAMES="$( cut -d " " -f 2- <<< "$LOGS" )"
-
-COMMITS=$(tr " " "\n" <<< "$COMMITS")
-mapfile -t COMMITNAMES <<< "$COMMITNAMES"
-
-MERGESTRING=''
-
-i=0
-
- printf "# Version $FULL_VERSION  "$'\n'$'\n' >> changelogs/${BRANCH_NAME}-${BASE_VERSION}.x.md
-
-for COMMIT in $COMMITS
-do
-    if [[ ${COMMITNAMES[$i]} == *"Merge"* ]]; then
-        #we don't log them yet, but jenkins already do that
-        MERGESTRING="${MERGESTRING}\nclaroline/claroline@${COMMIT} - ${COMMITNAMES[$i]}"
-    else
-        NAMELINKS=`echo ${COMMITNAMES[$i]} | sed -r 's/\(#([^)]*)\).*/[#\1]\(https:\/\/github.com\/claroline\/Claroline\/pull\/\1\)/'`
-        printf "[${COMMIT}](https://github.com/claroline/Claroline/commit/${COMMIT}) - ${NAMELINKS}  "$'\n' >> changelogs/${BRANCH_NAME}-${BASE_VERSION}.x.md
-    fi
-    i=$((i + 1))
-done
-
- printf $'\n' >> changelogs/${BRANCH_NAME}-${BASE_VERSION}.x.md

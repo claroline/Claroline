@@ -2,7 +2,6 @@
 
 namespace UJM\LtiBundle\Entity;
 
-use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -12,8 +11,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class LtiResource extends AbstractResource
 {
-    use Uuid;
-
     /**
      * @ORM\ManyToOne(targetEntity="LtiApp")
      * @ORM\JoinColumn(nullable=true)
@@ -29,14 +26,6 @@ class LtiResource extends AbstractResource
      * @ORM\Column(type="float", nullable=true)
      */
     private $ratio = 56.25;
-
-    /**
-     * LtiResource constructor.
-     */
-    public function __construct()
-    {
-        $this->refreshUuid();
-    }
 
     /**
      * @param LtiApp $ltiApp

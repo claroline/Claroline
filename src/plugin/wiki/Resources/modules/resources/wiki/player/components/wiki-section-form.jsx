@@ -92,8 +92,7 @@ const WikiSectionFormComponent = props =>
         type={CALLBACK_BUTTON}
         className="btn"
         callback={() => props.cancelChanges()}
-        label={trans('cancel')}
-        title={trans('cancel')}
+        label={trans('cancel', {}, 'actions')}
       />
     </div>
   </FormData>

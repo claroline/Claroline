@@ -83,21 +83,11 @@ class UserValidator implements ValidatorInterface
             ];
         }
 
-        // check public url is not already used
-        if (isset($data['meta']) && isset($data['meta']['publicUrl'])) {
-            if ($this->exists('publicUrl', $data['meta']['publicUrl'], isset($data['id']) ? $data['id'] : null)) {
-                $errors[] = [
-                  'path' => 'meta/publicUrl',
-                  'message' => 'The public url '.$data['meta']['publicUrl'].' already exists.',
-              ];
-            }
-        }
-
         // check if the administrative code is unique if the platform is configured to
         if (isset($data['administrativeCode']) && $this->config->getParameter('is_user_admin_code_unique')) {
-            if ($this->exists('publicUrl', $data['administrativeCode'], isset($data['id']) ? $data['id'] : null)) {
+            if ($this->exists('administrativeCode', $data['administrativeCode'], isset($data['id']) ? $data['id'] : null)) {
                 $errors[] = [
-                    'path' => 'meta/publicUrl',
+                    'path' => '/administrativeCode',
                     'message' => 'The administrative code '.$data['administrativeCode'].' already exists.',
                 ];
             }

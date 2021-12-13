@@ -62,12 +62,11 @@ final class Options
 
     //for resource node
     const NO_RIGHTS = 'no_rights';
-    const SERIALIZE_TOOL = 'serialize_tool';
 
     //finder options
     const SQL_QUERY = 'sql_query';
 
-    //transfer_options
+    // for transfer tool
     const WORKSPACE_IMPORT = 'workspace_import';
 
     // for SchemaProvider

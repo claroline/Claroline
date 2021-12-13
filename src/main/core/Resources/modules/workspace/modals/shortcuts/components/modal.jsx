@@ -103,7 +103,7 @@ class ShortcutsModal extends Component {
 
         <Button
           type={CALLBACK_BUTTON}
-          label={trans('add')}
+          label={trans('add', {}, 'actions')}
           className="modal-btn btn"
           primary={true}
           disabled={0 === this.state.selected.length}

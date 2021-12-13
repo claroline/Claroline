@@ -51,7 +51,7 @@ const CompilatioFormModal = props =>
           props.resetToolForm()
         }}
       >
-        {trans('cancel', {}, 'platform')}
+        {trans('cancel', {}, 'actions')}
       </button>
       <button
         className="btn btn-primary"

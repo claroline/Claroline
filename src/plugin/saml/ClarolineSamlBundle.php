@@ -27,7 +27,7 @@ class ClarolineSamlBundle extends DistributionPluginBundle
         $container->addCompilerPass(new SamlConfigPass());
     }
 
-    public function getRequiredThirdPartyBundles(string $environment): array
+    public function getRequiredBundles(string $environment): array
     {
         return [
             new LightSamlSymfonyBridgeBundle(),

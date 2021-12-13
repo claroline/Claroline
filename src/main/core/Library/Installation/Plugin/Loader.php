@@ -19,7 +19,7 @@ use RuntimeException;
  * perform checks, access some of its methods, etc.) while it is not yet
  * known by the application kernel.
  *
- * @todo Remove this class or move it to the installation bundle
+ * @todo Remove this class or move it to the installation bundle (only used in tests)
  */
 class Loader
 {

@@ -11,7 +11,6 @@
 
 namespace Claroline\ScormBundle\Entity;
 
-use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -22,8 +21,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Scorm extends AbstractResource
 {
-    use Uuid;
-
     const SCORM_12 = 'scorm_12';
     const SCORM_2004 = 'scorm_2004';
 
@@ -56,7 +53,8 @@ class Scorm extends AbstractResource
 
     public function __construct()
     {
-        $this->refreshUuid();
+        parent::__construct();
+
         $this->scos = new ArrayCollection();
     }
 

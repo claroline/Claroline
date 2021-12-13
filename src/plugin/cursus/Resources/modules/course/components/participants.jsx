@@ -59,7 +59,7 @@ const CourseUsers = (props) =>
         type: CALLBACK_BUTTON,
         icon: 'fa fa-fw fa-hourglass-half',
         label: trans('move-pending', {}, 'actions'),
-        displayed: hasPermission('register', props.activeSession),
+        displayed: props.hasPendingRegistrations && hasPermission('register', props.activeSession),
         group: trans('management'),
         callback: () => props.movePending(rows)
       }
@@ -84,6 +84,7 @@ CourseUsers.propTypes = {
   activeSession: T.shape(
     SessionTypes.propTypes
   ),
+  hasPendingRegistrations: T.bool,
   addUsers: T.func.isRequired,
   moveUsers: T.func.isRequired,
   inviteUsers: T.func.isRequired,
@@ -285,6 +286,7 @@ const CourseParticipants = (props) =>
                       addUsers={props.addUsers}
                       inviteUsers={props.inviteUsers}
                       moveUsers={props.moveUsers}
+                      hasPendingRegistrations={get(props.course, 'registration.pendingRegistrations', false)}
                       movePending={(sessionUsers) => props.movePending(props.course.id, sessionUsers)}
                     />
                   </Fragment>
@@ -364,7 +366,7 @@ const CourseParticipants = (props) =>
                           type: CALLBACK_BUTTON,
                           icon: 'fa fa-fw fa-hourglass-half',
                           label: trans('move-pending', {}, 'actions'),
-                          displayed: hasPermission('register', props.activeSession),
+                          displayed: get(props.course, 'registration.pendingRegistrations') && hasPermission('register', props.activeSession),
                           group: trans('management'),
                           callback: () => props.movePending(props.course.id, rows)
                         }

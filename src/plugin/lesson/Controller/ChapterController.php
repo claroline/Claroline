@@ -3,11 +3,10 @@
 namespace Icap\LessonBundle\Controller;
 
 use Claroline\AppBundle\API\FinderProvider;
+use Claroline\AppBundle\Manager\PdfManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
-use Dompdf\Dompdf;
 use Icap\LessonBundle\Entity\Chapter;
 use Icap\LessonBundle\Entity\Lesson;
 use Icap\LessonBundle\Manager\ChapterManager;
@@ -34,40 +33,38 @@ class ChapterController
 
     /** @var ObjectManager */
     private $om;
-    /** @var PlatformConfigurationHandler */
-    private $config;
     /** @var Environment */
     private $templating;
     /** @var FinderProvider */
     private $finder;
     /** @var ChapterManager */
     private $chapterManager;
+    /** @var ChapterSerializer */
+    private $chapterSerializer;
+    /** @var AuthorizationCheckerInterface */
+    private $authorization;
+    /** @var PdfManager */
+    private $pdfManager;
 
     /** @var ChapterRepository */
     private $chapterRepository;
 
-    /** @var ChapterSerializer */
-    private $chapterSerializer;
-
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-
     public function __construct(
         ObjectManager $om,
-        PlatformConfigurationHandler $config,
         Environment $templating,
         FinderProvider $finder,
         ChapterSerializer $chapterSerializer,
         ChapterManager $chapterManager,
-        AuthorizationCheckerInterface $authorization
+        AuthorizationCheckerInterface $authorization,
+        PdfManager $pdfManager
     ) {
         $this->om = $om;
-        $this->config = $config;
         $this->templating = $templating;
         $this->finder = $finder;
         $this->chapterSerializer = $chapterSerializer;
         $this->chapterManager = $chapterManager;
         $this->authorization = $authorization;
+        $this->pdfManager = $pdfManager;
 
         $this->chapterRepository = $this->om->getRepository('IcapLessonBundle:Chapter');
     }
@@ -197,22 +194,15 @@ class ChapterController
 
         $this->checkPermission('EXPORT', $lesson->getResourceNode(), [], true);
 
-        $domPdf = new Dompdf();
-        $domPdf->set_option('isHtml5ParserEnabled', true);
-        $domPdf->set_option('isRemoteEnabled', true);
-        $domPdf->set_option('tempDir', $this->config->getParameter('server.tmp_dir'));
-        $domPdf->loadHtml($this->templating->render('@IcapLesson/lesson/open.pdf.twig', [
-            '_resource' => $lesson,
-            'tree' => $this->chapterRepository->getChapterTree($chapter),
-        ]));
-
-        // Render the HTML as PDF
-        $domPdf->render();
-
         $fileName = TextNormalizer::toKey($lesson->getResourceNode()->getName().'-'.$chapter->getTitle());
 
-        return new StreamedResponse(function () use ($domPdf) {
-            echo $domPdf->output();
+        return new StreamedResponse(function () use ($lesson, $chapter) {
+            echo $this->pdfManager->fromHtml(
+                $this->templating->render('@IcapLesson/lesson/open.pdf.twig', [
+                    '_resource' => $lesson,
+                    'tree' => $this->chapterRepository->getChapterTree($chapter),
+                ])
+            );
         }, 200, [
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => 'attachment; filename='.$fileName.'.pdf',

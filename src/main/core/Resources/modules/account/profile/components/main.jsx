@@ -22,12 +22,12 @@ const ProfileMain = (props) =>
         target: '/account/profile'
       }
     ]}
-    publicUrl={props.currentUser.publicUrl}
+    username={props.currentUser.username}
   />
 
 ProfileMain.propTypes = {
   currentUser: T.shape({
-    publicUrl: T.string.isRequired
+    username: T.string.isRequired
   })
 }
 

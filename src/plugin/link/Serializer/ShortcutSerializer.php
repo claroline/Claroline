@@ -40,25 +40,22 @@ class ShortcutSerializer
         return 'shortcut';
     }
 
-    /**
-     * Serializes a Shortcut resource entity for the JSON api.
-     *
-     * @return array
-     */
-    public function serialize(Shortcut $shortcut, array $options = [])
+    public function serialize(Shortcut $shortcut, array $options = []): array
     {
         return [
+            'id' => $shortcut->getUuid(),
             'target' => $this->resourceNodeSerializer->serialize($shortcut->getTarget(), array_merge($options, [Options::SERIALIZE_MINIMAL])),
         ];
     }
 
-    /**
-     * Deserializes shortcut data into an Entity.
-     *
-     * @return Shortcut
-     */
-    public function deserialize(array $data, Shortcut $shortcut)
+    public function deserialize(array $data, Shortcut $shortcut, array $options = []): Shortcut
     {
+        if (!in_array(Options::REFRESH_UUID, $options)) {
+            $this->sipe('id', 'setUuid', $data, $shortcut);
+        } else {
+            $shortcut->refreshUuid();
+        }
+
         if (!empty($data['target']) &&
             !empty($data['target']['id']) &&
             (!$shortcut->getTarget() || $data['target']['id'] !== $shortcut->getTarget()->getUuid())

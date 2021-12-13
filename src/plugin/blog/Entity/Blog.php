@@ -2,7 +2,6 @@
 
 namespace Icap\BlogBundle\Entity;
 
-use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Event\LifecycleEventArgs;
@@ -15,16 +14,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Blog extends AbstractResource
 {
-    use Uuid;
-
-    /**
-     * Blog constructor.
-     */
-    public function __construct()
-    {
-        $this->refreshUuid();
-    }
-
     /**
      * @var Post[]
      *
@@ -53,6 +42,14 @@ class Blog extends AbstractResource
      * @ORM\Column(type="text", nullable=true)
      */
     protected $infos;
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->posts = new ArrayCollection();
+        $this->members = new ArrayCollection();
+    }
 
     /**
      * @return Blog

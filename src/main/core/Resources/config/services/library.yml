@@ -9,16 +9,6 @@ services:
             - '%claroline.param.platform_options%'
             - '@request_stack'
 
-    Claroline\CoreBundle\Library\Installation\OperationExecutor:
-        arguments:
-            - '@kernel'
-            - '@Claroline\InstallationBundle\Manager\InstallationManager'
-            - '@Claroline\CoreBundle\Library\Installation\Plugin\Installer'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CoreBundle\Manager\VersionManager'
-        calls:
-            - setLogger: ['@logger']
-
     Claroline\CoreBundle\Library\Installation\Plugin\Recorder:
         arguments:
             - '@Claroline\CoreBundle\Library\Installation\Plugin\DatabaseWriter'
@@ -33,7 +23,6 @@ services:
             - '@Claroline\InstallationBundle\Manager\InstallationManager'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\Manager\PluginManager'
-            - '@translator'
             - '@Claroline\CoreBundle\Manager\VersionManager'
         calls:
             - setLogger: [ '@logger' ]
@@ -45,7 +34,7 @@ services:
             - '@filesystem'
             - '@Claroline\CoreBundle\Manager\Tool\ToolManager'
             - '@Claroline\CoreBundle\Manager\Tool\ToolMaskDecoderManager'
-            - '@claroline.manager.icon_set_manager'
+            - '@Claroline\ThemeBundle\Manager\IconSetManager'
         calls:
             - setLogger: [ '@logger' ]
 
@@ -56,9 +45,11 @@ services:
 
     Claroline\CoreBundle\Library\Installation\PlatformInstaller:
         arguments:
-            - '@Claroline\CoreBundle\Library\Installation\OperationExecutor'
-            - '@Claroline\InstallationBundle\Manager\InstallationManager'
+            - '@kernel'
+            - '@Claroline\CoreBundle\Manager\PluginManager'
             - '@Claroline\CoreBundle\Library\Installation\Plugin\Installer'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\InstallationBundle\Manager\InstallationManager'
             - '@service_container'
         calls:
             - setLogger: [ '@logger' ]

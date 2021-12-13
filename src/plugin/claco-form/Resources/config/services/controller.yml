@@ -37,3 +37,4 @@ services:
             - '@translator'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@security.token_storage'
+            - '@Claroline\AppBundle\Manager\PdfManager'

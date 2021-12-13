@@ -18,7 +18,7 @@ trait Poster
         return $this->poster;
     }
 
-    public function setPoster(string $poster = null)
+    public function setPoster(?string $poster = null)
     {
         $this->poster = $poster;
     }

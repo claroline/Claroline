@@ -3,17 +3,14 @@
 namespace Icap\LessonBundle;
 
 use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
-use Icap\LessonBundle\Installation\AdditionalInstaller;
+use Icap\NotificationBundle\IcapNotificationBundle;
 
 class IcapLessonBundle extends DistributionPluginBundle
 {
-    public function getAdditionalInstaller()
-    {
-        return new AdditionalInstaller();
-    }
-
     public function getRequiredPlugins()
     {
-        return ['Icap\\NotificationBundle\\IcapNotificationBundle'];
+        return [
+            IcapNotificationBundle::class,
+        ];
     }
 }

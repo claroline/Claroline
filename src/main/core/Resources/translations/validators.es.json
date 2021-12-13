@@ -8,7 +8,6 @@
     "need_at_least_one_translation": "Al menos una traducción debe estar definida.",
     "password_mismatch": "Las contraseñas no coinciden.",
     "port_error": "El puerto debe ser un número.",
-    "public_profile_url_not_valid": "Su URL pública de perfil no es válida.",
     "valid_end_date_required": "Se requiere una fecha de finalización válida.",
     "valid_end_hour_required": "Se requiere una hora de finalización válida.",
     "valid_start_date_required": "Se requiere una fecha de inicio válida.",

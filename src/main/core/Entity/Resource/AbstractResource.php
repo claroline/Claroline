@@ -11,6 +11,8 @@
 
 namespace Claroline\CoreBundle\Entity\Resource;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -18,14 +20,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 abstract class AbstractResource
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     *
-     * @var int
-     */
-    protected $id;
+    use Id;
+    use Uuid;
 
     /**
      * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
@@ -48,12 +44,9 @@ abstract class AbstractResource
      */
     protected $name;
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function __construct()
     {
-        return $this->id;
+        $this->refreshUuid();
     }
 
     public function setResourceNode(ResourceNode $resourceNode)

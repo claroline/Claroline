@@ -72,6 +72,12 @@ actions.fetch = (slug) => (dispatch, getState) => {
   }
 }
 
+actions.fetchModel = (id) => (dispatch) => dispatch({
+  [API_REQUEST]: {
+    url: ['apiv2_workspace_get', {id: id}]
+  }
+})
+
 actions.reload = (workspace) => (dispatch) => {
   dispatch(actions.setLoaded(false))
   dispatch(actions.fetch(workspace.slug))

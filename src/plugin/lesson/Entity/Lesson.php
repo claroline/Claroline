@@ -2,7 +2,6 @@
 
 namespace Icap\LessonBundle\Entity;
 
-use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Mapping as ORM;
@@ -14,8 +13,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Lesson extends AbstractResource
 {
-    use Uuid;
-
     /**
      * @ORM\Column(name="description", type="text", nullable=true)
      *
@@ -37,11 +34,6 @@ class Lesson extends AbstractResource
      * @ORM\JoinColumn(name="root_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $root;
-
-    public function __construct()
-    {
-        $this->refreshUuid();
-    }
 
     /**
      * @return string

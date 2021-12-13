@@ -12,12 +12,7 @@
 namespace Claroline\LinkBundle;
 
 use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
-use Claroline\LinkBundle\Installation\AdditionalInstaller;
 
 class ClarolineLinkBundle extends DistributionPluginBundle
 {
-    public function getAdditionalInstaller()
-    {
-        return new AdditionalInstaller();
-    }
 }

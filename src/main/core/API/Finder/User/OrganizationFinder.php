@@ -13,30 +13,10 @@ namespace Claroline\CoreBundle\API\Finder\User;
 
 use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\CoreBundle\Entity\Organization\Organization;
-use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\QueryBuilder;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class OrganizationFinder extends AbstractFinder
 {
-    /** @var AuthorizationCheckerInterface */
-    private $authChecker;
-
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-
-    /**
-     * OrganizationFinder constructor.
-     */
-    public function __construct(
-        AuthorizationCheckerInterface $authChecker,
-        TokenStorageInterface $tokenStorage
-    ) {
-        $this->authChecker = $authChecker;
-        $this->tokenStorage = $tokenStorage;
-    }
-
     public static function getClass(): string
     {
         return Organization::class;
@@ -44,15 +24,6 @@ class OrganizationFinder extends AbstractFinder
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
     {
-        if (!$this->authChecker->isGranted('ROLE_ADMIN')) {
-            $currentUser = $this->tokenStorage->getToken()->getUser();
-            if ($currentUser instanceof User) {
-                $qb->leftJoin('obj.administrators', 'ua');
-                $qb->andWhere('ua.id = :userId');
-                $qb->setParameter('userId', $currentUser->getId());
-            }
-        }
-
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
                 case 'location':
@@ -84,10 +55,6 @@ class OrganizationFinder extends AbstractFinder
                     $qb->leftJoin('obj.workspaces', 'w');
                     $qb->andWhere('w.uuid IN (:workspaceIds)');
                     $qb->setParameter('workspaceIds', is_array($filterValue) ? $filterValue : [$filterValue]);
-                    break;
-                case 'whitelist':
-                    $qb->andWhere('obj.uuid IN (:uuids)');
-                    $qb->setParameter('uuids', is_array($filterValue) ? $filterValue : [$filterValue]);
                     break;
                 default:
                     $this->setDefaults($qb, $filterName, $filterValue);

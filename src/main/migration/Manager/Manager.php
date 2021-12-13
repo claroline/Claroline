@@ -16,7 +16,7 @@ use Claroline\MigrationBundle\Generator\Writer;
 use Claroline\MigrationBundle\Migrator\Migrator;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LogLevel;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 
 /**
  * API entry point.
@@ -44,10 +44,8 @@ class Manager
 
     /**
      * Generates bundle migrations classes for all the available driver platforms.
-     *
-     * @param \Symfony\Component\HttpKernel\Bundle\Bundle $output
      */
-    public function generateBundleMigration(Bundle $bundle, $output = null)
+    public function generateBundleMigration(BundleInterface $bundle, $output = null)
     {
         $platforms = $this->getAvailablePlatforms();
         $version = date('YmdHis');
@@ -75,7 +73,7 @@ class Manager
      *
      * @return array
      */
-    public function getBundleStatus(Bundle $bundle)
+    public function getBundleStatus(BundleInterface $bundle)
     {
         return $this->migrator->getMigrationStatus($bundle);
     }
@@ -86,7 +84,7 @@ class Manager
      *
      * @param string $version
      */
-    public function upgradeBundle(Bundle $bundle, $version)
+    public function upgradeBundle(BundleInterface $bundle, $version)
     {
         $this->doMigrate($bundle, $version, Migrator::DIRECTION_UP);
     }
@@ -97,7 +95,7 @@ class Manager
      *
      * @param string $version
      */
-    public function downgradeBundle(Bundle $bundle, $version)
+    public function downgradeBundle(BundleInterface $bundle, $version)
     {
         $this->doMigrate($bundle, $version, Migrator::DIRECTION_DOWN);
     }
@@ -105,7 +103,7 @@ class Manager
     /**
      * Deletes migration classes which are above the current version of a bundle.
      */
-    public function discardUpperMigrations(Bundle $bundle)
+    public function discardUpperMigrations(BundleInterface $bundle)
     {
         $drivers = array_keys($this->getAvailablePlatforms());
         $currentVersion = $this->migrator->getCurrentVersion($bundle);
@@ -154,7 +152,7 @@ class Manager
         ];
     }
 
-    private function doMigrate(Bundle $bundle, $version, $direction)
+    private function doMigrate(BundleInterface $bundle, $version, $direction)
     {
         $action = Migrator::DIRECTION_UP === $direction ? 'Ugprading' : 'Downgrading';
         $this->log("{$action} bundle '{$bundle->getName()}'...");

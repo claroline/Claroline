@@ -11,8 +11,6 @@
 
 namespace Claroline\DropZoneBundle\Entity;
 
-use Claroline\AppBundle\Entity\Identifier\Id;
-use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -23,9 +21,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Dropzone extends AbstractResource
 {
-    use Id;
-    use Uuid;
-
     const STATE_NOT_STARTED = 'not_started';
     const STATE_ALLOW_DROP = 'drop';
     const STATE_FINISHED = 'finished';
@@ -325,7 +320,8 @@ class Dropzone extends AbstractResource
      */
     public function __construct()
     {
-        $this->refreshUuid();
+        parent::__construct();
+
         $this->criteria = new ArrayCollection();
     }
 

@@ -6,14 +6,14 @@ import {selectors} from '#/main/core/tools/community/store/selectors'
 
 export const actions = {}
 
-actions.open = (formName, publicUrl = null, defaultProps) => (dispatch, getState) => {
+actions.open = (formName, username = null, defaultProps) => (dispatch, getState) => {
   const current = formSelectors.data(formSelectors.form(getState(), formName))
 
-  if (current.publicUrl !== publicUrl) {
-    if (publicUrl) {
+  if (current.username !== username) {
+    if (username) {
       return dispatch({
         [API_REQUEST]: {
-          url: url(['apiv2_user_find'], {filters: {publicUrl: publicUrl}}),
+          url: url(['apiv2_user_find'], {filters: {username: username}}),
           success: (response, dispatch) => dispatch(formActions.resetForm(formName, response, false))
         }
       })

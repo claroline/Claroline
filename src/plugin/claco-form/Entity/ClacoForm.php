@@ -11,7 +11,6 @@
 
 namespace Claroline\ClacoFormBundle\Entity;
 
-use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Parameters\ListParameters;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -23,7 +22,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ClacoForm extends AbstractResource
 {
-    use Uuid;
     // entries list configuration
     use ListParameters;
 
@@ -99,7 +97,7 @@ class ClacoForm extends AbstractResource
      */
     public function __construct()
     {
-        $this->refreshUuid();
+        parent::__construct();
 
         $this->categories = new ArrayCollection();
         $this->fields = new ArrayCollection();

@@ -189,7 +189,7 @@ const ContentRights = props => {
           .concat(props.rights)
           // move workspace manager role to the top of the list
           .sort((a, b) => props.workspace && roleWorkspace(props.workspace, true) === b.name ? 1 : 0)
-          .map((rolePerm, index) => {
+          .map((rolePerm) => {
             const workspaceCode = rolePerm.workspace ? rolePerm.workspace.code : null
             const displayName = trans(rolePerm.translationKey) + (workspaceCode ? ' (' + workspaceCode + ')' : '')
             let managerRole = null
@@ -199,7 +199,7 @@ const ContentRights = props => {
 
             return (
               <RolePermissions
-                key={rolePerm.id}
+                key={rolePerm.id || rolePerm.name}
                 name={rolePerm.name}
                 translationKey={displayName}
                 permissions={Object.assign({}, defaultPerms, rolePerm.permissions)}
@@ -216,9 +216,13 @@ const ContentRights = props => {
                 }}
                 delete={() => {
                   const newPerms = merge([], props.rights)
-                  newPerms.splice(index, 1)
+                  // rights have been reordered for display, we need to retrieve perm position in stored data
+                  const realIndex = newPerms.findIndex(p => p.name === rolePerm.name)
+                  if (-1 !== realIndex) {
+                    newPerms.splice(realIndex, 1)
 
-                  props.updateRights(newPerms)
+                    props.updateRights(newPerms)
+                  }
                 }}
               />
             )

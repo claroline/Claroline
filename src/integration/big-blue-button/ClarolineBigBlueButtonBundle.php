@@ -11,13 +11,8 @@
 
 namespace Claroline\BigBlueButtonBundle;
 
-use Claroline\BigBlueButtonBundle\Installation\AdditionalInstaller;
 use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
 
 class ClarolineBigBlueButtonBundle extends DistributionPluginBundle
 {
-    public function getAdditionalInstaller()
-    {
-        return new AdditionalInstaller();
-    }
 }

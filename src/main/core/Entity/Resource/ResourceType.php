@@ -97,6 +97,7 @@ class ResourceType
     public function __construct()
     {
         $this->maskDecoders = new ArrayCollection();
+        $this->rights = new ArrayCollection();
     }
 
     /**

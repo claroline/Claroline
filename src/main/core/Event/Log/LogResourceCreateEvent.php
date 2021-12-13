@@ -106,7 +106,11 @@ class LogResourceCreateEvent extends LogGenericEvent implements NotifiableInterf
      */
     public function getExcludeUserIds()
     {
-        return [$this->node->getCreator()->getId()];
+        if ($this->node->getCreator()) {
+            return [$this->node->getCreator()->getId()];
+        }
+
+        return [];
     }
 
     /**

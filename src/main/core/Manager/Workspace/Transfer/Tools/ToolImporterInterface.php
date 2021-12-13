@@ -9,7 +9,7 @@ interface ToolImporterInterface
 {
     public function serialize(Workspace $workspace, array $options): array;
 
-    public function deserialize(array $data, Workspace $workspace, array $options, FileBag $bag);
+    public function deserialize(array $data, Workspace $workspace, array $options, array $newEntities, FileBag $bag): array;
 
     public function prepareImport(array $orderedToolData, array $data): array;
 }

@@ -5,8 +5,6 @@
     "mandatory": "",
     "parameters": "Impostazioni",
     "404": "Pagina non trovata",
-    "accept": "Accettare",
-    "cas_id": "",
     "copy_permalink_to_clipboard": "",
     "copy_to_clipboard_error": "",
     "copy_to_clipboard_success": "",
@@ -18,8 +16,5 @@
     "merge_accounts": "",
     "merge_confirmation": "",
     "thumbnail": "",
-    "published_at": "",
-    "widget_type": "",
-    "widgets_usage_list": "",
-    "widgets_usage_ratio": ""
+    "published_at": ""
 }

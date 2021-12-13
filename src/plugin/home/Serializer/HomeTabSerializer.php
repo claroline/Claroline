@@ -109,6 +109,7 @@ class HomeTabSerializer
                 'centerTitle' => $homeTab->isCenterTitle(),
                 'showTitle' => $homeTab->getShowTitle(),
             ],
+            'workspace' => $homeTab->getWorkspace() ? $this->workspaceSerializer->serialize($homeTab->getWorkspace(), [Options::SERIALIZE_MINIMAL]) : null,
             'user' => $homeTab->getUser() ? $this->userSerializer->serialize($homeTab->getUser(), [Options::SERIALIZE_MINIMAL]) : null,
 
             // TODO : should no longer be exposed here (still required by update and ws import)
@@ -116,10 +117,6 @@ class HomeTabSerializer
                 return $this->serialize($child, $options);
             }, $homeTab->getChildren()->toArray()),
         ];
-
-        if (!in_array(Options::REFRESH_UUID, $options)) {
-            $data['workspace'] = $homeTab->getWorkspace() ? $this->workspaceSerializer->serialize($homeTab->getWorkspace(), [Options::SERIALIZE_MINIMAL]) : null;
-        }
 
         // retrieves the custom configuration of the widget if any
         if ($homeTab->getClass()) {

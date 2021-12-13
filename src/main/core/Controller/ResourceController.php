@@ -162,14 +162,11 @@ class ResourceController
     /**
      * Downloads a list of Resources.
      *
-     * @Route("/download", name="claro_resource_download", defaults={"forceArchive"=false})
-     * @Route("/download/{forceArchive}", name="claro_resource_download", requirements={"forceArchive"="^(true|false|0|1)$"})
-     *
-     * @param bool $forceArchive
+     * @Route("/download", name="claro_resource_download")
      *
      * @return JsonResponse|BinaryFileResponse
      */
-    public function downloadAction(Request $request, $forceArchive = false)
+    public function downloadAction(Request $request)
     {
         $nodes = $this->decodeIdsString($request, ResourceNode::class);
 
@@ -178,7 +175,7 @@ class ResourceController
             throw new AccessDeniedException($collection->getErrorsForDisplay());
         }
 
-        $data = $this->manager->download($nodes, $forceArchive);
+        $data = $this->manager->download($nodes);
 
         $file = $data['file'];
         $fileName = $data['name'];
@@ -248,22 +245,6 @@ class ResourceController
         return new JsonResponse(array_map(function (Response $response) {
             return json_decode($response->getContent(), true);
         }, $responses));
-    }
-
-    /**
-     * @Route("/share/{id}", name="claro_resource_share")
-     * @EXT\ParamConverter("resourceNode", class="ClarolineCoreBundle:Resource\ResourceNode", options={"mapping": {"id": "uuid"}})
-     */
-    public function shareAction(ResourceNode $resourceNode): Response
-    {
-        return new Response(
-            $this->templating->render('@ClarolineApp/share.html.twig', [
-                'url' => $this->routing->resourceUrl($resourceNode),
-                'title' => $resourceNode->getName(),
-                'thumbnail' => $resourceNode->getThumbnail(),
-                'description' => !empty($resourceNode->getDescription()) ? strip_tags($resourceNode->getDescription()) : '',
-            ])
-        );
     }
 
     /**

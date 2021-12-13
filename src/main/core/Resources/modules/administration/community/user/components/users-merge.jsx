@@ -64,10 +64,6 @@ const UserCompare = props =>
                 time: true
               }
             }, {
-              name: 'cas_data.id',
-              label: trans('cas_id'),
-              type: 'string'
-            }, {
               name: 'meta.mailValidated',
               label: trans('email_validated'),
               type: 'boolean'

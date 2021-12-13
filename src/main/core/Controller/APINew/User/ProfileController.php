@@ -100,8 +100,8 @@ class ProfileController
     }
 
     /**
-     * @Route("/{publicUrl}", name="apiv2_profile_open", methods={"GET"})
-     * @EXT\ParamConverter("user", options={"mapping": {"publicUrl": "publicUrl"}})
+     * @Route("/{username}", name="apiv2_profile_open", methods={"GET"})
+     * @EXT\ParamConverter("user", options={"mapping": {"username": "username"}})
      */
     public function openAction(User $user)
     {

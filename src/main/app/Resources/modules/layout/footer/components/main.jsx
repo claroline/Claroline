@@ -18,7 +18,7 @@ const FooterMain = (props) =>
         <ContentHtml className="app-footer-content">{props.content}</ContentHtml>
       }
 
-      <a className="app-footer-brand" href="https://www.claroline.net">
+      <a className="app-footer-brand" href="https://www.claroline.com">
         <img src={asset('bundles/clarolinecore/images/logos/logo-sm.svg')} alt="logo" />
 
         <span className="hidden-xs">Claroline Connect</span>

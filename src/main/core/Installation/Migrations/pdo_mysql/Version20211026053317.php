@@ -37,6 +37,18 @@ class Version20211026053317 extends AbstractMigration
         $this->addSql('
             UPDATE claro_template SET `system` = false
         ');
+
+        // Rename templates
+        // We cannot do it in an Updater because of the migration on claro_template_type table
+        $this->addSql('
+            UPDATE claro_template_type SET entity_name = "email_layout" WHERE entity_name = "claro_mail_layout"
+        ');
+        $this->addSql('
+            UPDATE claro_template_type SET entity_name = "user_registration" WHERE entity_name = "claro_mail_registration"
+        ');
+        $this->addSql('
+            UPDATE claro_template_type SET entity_name = "user_email_validation" WHERE entity_name = "claro_mail_validation"
+        ');
     }
 
     public function down(Schema $schema): void
@@ -59,7 +71,7 @@ class Version20211026053317 extends AbstractMigration
 
         $this->addSql('
             ALTER TABLE claro_template 
-            DROP system
+            DROP `system`
         ');
     }
 }

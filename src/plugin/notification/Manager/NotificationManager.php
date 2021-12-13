@@ -176,7 +176,7 @@ class NotificationManager
                 'firstName' => $doer->getFirstName(),
                 'lastName' => $doer->getLastName(),
                 'avatar' => $doer->getPicture(),
-                'publicUrl' => $doer->getPublicUrl(),
+                'username' => $doer->getUsername(),
             ];
         }
         $notification->setDetails($details);

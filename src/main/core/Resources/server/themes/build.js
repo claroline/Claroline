@@ -63,7 +63,9 @@ function buildTheme(theme, themeState) {
           // src
           path.resolve(theme.location, theme.name, assetDir),
           // destination
-          path.resolve(themeDir))
+          path.resolve(themeDir),
+          // asset dir
+          assetDir)
       )
     }
 
@@ -141,11 +143,14 @@ function createAsset(asset, outputFile, currentVersion, globalVars) {
  * Recursively copies static files directories (eg. images, fonts)
  * @param {string} src
  * @param {string} destination
+ * @param {string} assetDir
  */
-function copyStatic(src, destination) {
-  console.log(src)
-  console.log(destination)
-  shell.rm('-rf', destination)
+function copyStatic(src, destination, assetDir) {
+  const pathToRemove = path.join(destination, assetDir)
+  console.log('Removing path: ', pathToRemove)
+  console.log('copy src: ', src)
+  console.log('copy destination: ', destination)
+  shell.rm('-rf', pathToRemove)
   shell.cp('-R', src, destination)
 }
 

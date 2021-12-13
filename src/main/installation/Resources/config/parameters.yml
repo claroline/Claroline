@@ -1,4 +1,0 @@
-parameters:
-    claroline.installation_fixture_loader.class: 'Claroline\InstallationBundle\Fixtures\FixtureLoader'
-    claroline.symfony_fixture_loader.class:      'Symfony\Bridge\Doctrine\DataFixtures\ContainerAwareLoader'
-    claroline.doctrine_fixture_executor.class:   'Doctrine\Common\DataFixtures\Executor\ORMExecutor'

@@ -139,6 +139,15 @@ class UserCrud
             }
         }
 
+        $this->om->endFlushSuite();
+    }
+
+    public function postCreate(CreateEvent $event)
+    {
+        /** @var User $user */
+        $user = $event->getObject();
+        $options = $event->getOptions();
+
         if (!in_array(Options::NO_PERSONAL_WORKSPACE, $options)) {
             $createWs = false;
             foreach ($user->getEntityRoles() as $role) {
@@ -149,11 +158,9 @@ class UserCrud
             }
 
             if ($createWs) {
-                $this->workspaceManager->setPersonalWorkspace($user);
+                $this->workspaceManager->createPersonalWorkspace($user);
             }
         }
-
-        $this->om->endFlushSuite();
     }
 
     public function preDelete(DeleteEvent $event)
@@ -169,7 +176,6 @@ class UserCrud
         $user->setLastName('lastname#'.$user->getId());
         $user->setPlainPassword(uniqid());
         $user->setUsername('username#'.$user->getId());
-        $user->setPublicUrl('removed#'.$user->getId());
         $user->setAdministrativeCode('code#'.$user->getId());
         $user->setIsEnabled(false);
 
@@ -181,6 +187,7 @@ class UserCrud
         if ($ws) {
             $ws->setCode($ws->getCode().'#deleted_user#'.$user->getId());
             $ws->setHidden(true);
+            $ws->setArchived(true);
             $this->om->persist($ws);
         }
 
