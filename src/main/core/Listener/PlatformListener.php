@@ -169,7 +169,8 @@ class PlatformListener
 
         $user = $this->tokenStorage->getToken()->getUser();
 
-        $content = $this->versionManager->getChangelogs($user->getLocale()).'<br/>'.'<br/>';
+        $locale = $this->localeManager->getLocale($user);
+        $content = $this->versionManager->getChangelogs($locale).'<br/>'.'<br/>';
         $content .= '<em>'.$this->translator->trans('platform_changelog_display', ['%roles%' => implode(', ', $this->config->getParameter('changelogMessage.roles'))], 'platform').'</em>';
 
         $event->setResponse([

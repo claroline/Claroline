@@ -1,0 +1,6 @@
+services:
+    Claroline\AnalyticsBundle\Installation\Updater\Updater130101:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@logger'
+        tags: [ 'claroline.platform.updater' ]
