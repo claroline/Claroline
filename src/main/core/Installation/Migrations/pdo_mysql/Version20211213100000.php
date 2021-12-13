@@ -16,13 +16,13 @@ class Version20211213100000 extends AbstractMigration
     {
         // correctly escape " and \n
         $this->addSql('
-            UPDATE claro_field_facet_value SET field_value = REPLACE(field_value, "\n", "\\n")
+            UPDATE claro_field_facet_value SET field_value = REPLACE(field_value, "\\n", "\\\\n")
         ');
 
         $this->addSql('
             UPDATE claro_field_facet_value AS v 
             LEFT JOIN claro_field_facet AS f ON v.fieldFacet_id = f.id 
-            SET field_value = CONCAT(\'"\', REPLACE(TRIM(BOTH \'"\' FROM field_value), \'"\', \'\\"\'), \'"\') 
+            SET field_value = CONCAT(\'"\', REPLACE(TRIM(BOTH \'"\' FROM field_value), \'"\', \'\\\\"\'), \'"\') 
             WHERE f.type = "string" OR f.type = "html"
         ');
     }
