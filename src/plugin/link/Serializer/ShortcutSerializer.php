@@ -63,10 +63,12 @@ class ShortcutSerializer
             // the target is specified and as changed
             /** @var ResourceNode $target */
             $target = $this->om
-                ->getRepository('ClarolineCoreBundle:Resource\ResourceNode')
+                ->getRepository(ResourceNode::class)
                 ->findOneBy(['uuid' => $data['target']['id']]);
 
             $shortcut->setTarget($target);
         }
+
+        return $shortcut;
     }
 }
