@@ -50,6 +50,7 @@ class BadgeManager
             'badge_name' => $badge->getName(),
             'badge_description' => $badge->getDescription(),
             'badge_image' => '<img src="'.$this->platformManager->getUrl().'/'.$badge->getImage().'" style="max-width: 100px; max-height: 50px;"/>',
+            'badge_image_url' => $this->platformManager->getUrl().'/'.$badge->getImage(),
             'badge_duration' => $badge->getDurationValidation(),
             'assertion_id' => $assertion->getUuid(),
             'issued_on' => $assertion->getIssuedOn()->format('d-m-Y'),

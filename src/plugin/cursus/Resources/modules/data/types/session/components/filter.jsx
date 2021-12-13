@@ -9,10 +9,8 @@ import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 
 import {MODAL_SESSIONS} from '#/plugin/cursus/modals/sessions'
 
-// TODO : reuse explorer config (title, root, filters, etc.)
-
 const SessionFilter = (props) =>
-  <span className="data-filter workspace-filter">
+  <span className="data-filter session-filter">
     {props.search}
 
     <Button

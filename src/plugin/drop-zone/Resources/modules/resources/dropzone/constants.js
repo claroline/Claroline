@@ -58,10 +58,17 @@ const DOCUMENT_TYPE_URL      = 'url'
 const DOCUMENT_TYPE_RESOURCE = 'resource'
 
 const DOCUMENT_TYPES = {
-  [DOCUMENT_TYPE_FILE]:     trans('uploaded_files', {}, 'dropzone'),
-  [DOCUMENT_TYPE_TEXT]:     trans('rich_text_online_edition', {}, 'dropzone'),
-  [DOCUMENT_TYPE_URL]:      trans('url_info', {}, 'dropzone'),
-  [DOCUMENT_TYPE_RESOURCE]: trans('resources')
+  [DOCUMENT_TYPE_FILE]:     trans('file'),
+  [DOCUMENT_TYPE_TEXT]:     trans('text'),
+  [DOCUMENT_TYPE_URL]:      trans('url'),
+  [DOCUMENT_TYPE_RESOURCE]: trans('resource')
+}
+
+const DOCUMENT_TYPE_ICONS = {
+  [DOCUMENT_TYPE_FILE]:     'fa fa-fw fa-file',
+  [DOCUMENT_TYPE_TEXT]:     'fa fa-fw fa-font',
+  [DOCUMENT_TYPE_URL]:      'fa fa-fw fa-link',
+  [DOCUMENT_TYPE_RESOURCE]: 'fa fa-fw fa-folder'
 }
 
 // drops
@@ -107,6 +114,7 @@ export const constants = {
   DOCUMENT_TYPE_URL,
   DOCUMENT_TYPE_RESOURCE,
   DOCUMENT_TYPES,
+  DOCUMENT_TYPE_ICONS,
   DROP_NOT_ATTEMPTED,
   DROP_IN_PROGRESS,
   DROP_COMPLETED,

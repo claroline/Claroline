@@ -36,6 +36,11 @@ const OrganizationList = {
       name: 'parent',
       type: 'organization',
       label: trans('parent')
+    }, {
+      name: 'restrictions.public',
+      alias: 'public',
+      type: 'boolean',
+      label: trans('public')
     }
   ],
   card: OrganizationCard

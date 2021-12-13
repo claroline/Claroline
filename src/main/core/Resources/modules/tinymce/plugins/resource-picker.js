@@ -38,11 +38,16 @@ function openResourcePicker(editor) {
                 return response.text()
               }
             })
-            .then(responseText => {
+            // HACK
+            // There is a problem when tinymce is embedded in a modal as the upload modal will replace
+            // the current modal which will make the tinyMce editor object to be destroyed.
+            // The original modal is reopened automatically when this one is closed and a new tinyMce object is available when the field
+            // is re-rendered. But there is no way to know when it's down from here.
+            .then(responseText => setTimeout(() => {
               // retrieve the editor which have requested the picker
               // ATTENTION : we don't reuse instance from func params because it could have been removed
               // when tinyMCE is rendered in a modal
-              const initiator = /*tinymce.get(editor.id) */ tinymce.activeEditor
+              const initiator = tinymce.activeEditor || tinymce.get(editor.id)
               if (initiator) {
                 let content = initiator.getContent()
 
@@ -63,12 +68,12 @@ function openResourcePicker(editor) {
 
                 initiator.fire('change')
               }
-            })
+            }, 200))
             .catch((error) => {
               // creates log error
               invariant(false, error.message)
 
-              const initiator = tinymce.get(editor.id)
+              const initiator = tinymce.activeEditor || tinymce.get(editor.id)
               if (initiator) {
                 // displays generic error in ui
                 initiator.notificationManager.open({type: 'error', text: trans('error_occured')})

@@ -27,9 +27,6 @@ class FixtureLoader implements LoggerAwareInterface
     private $container;
     private $executor;
 
-    /**
-     * FixtureLoader constructor.
-     */
     public function __construct(ContainerInterface $container, ORMExecutor $executor)
     {
         $this->container = $container;
@@ -38,32 +35,33 @@ class FixtureLoader implements LoggerAwareInterface
 
     /**
      * Loads the fixtures of a bundle. Fixtures are expected to be found in a
-     * "DataFixtures/ORM" or "DataFixtures" directory within the bundle. Note
-     * that fixtures are always appended (no purge/truncation).
-     *
-     * @param string $fixturesDirectory
-     *
-     * @return bool True if some fixtures have been found and executed, false otherwise
+     * "Installation/DataFixtures" directory within the bundle.
+     * Note that fixtures are always appended (no purge/truncation).
      */
-    public function load(BundleInterface $bundle, $fixturesDirectory = 'DataFixtures')
+    public function load(BundleInterface $bundle, string $event): bool
     {
         // we must get a fresh instance of the loader (scope = prototype)
         // to avoid re-executing previously loaded fixtures
         $loader = $this->container->get('claroline.symfony_fixture_loader');
-        $directory = "{$bundle->getPath()}/{$fixturesDirectory}";
-        $loader->loadFromDirectory($directory);
+        $loader->loadFromDirectory("{$bundle->getPath()}/Installation/DataFixtures");
+
         $fixtures = $loader->getFixtures();
 
+        $toLoad = [];
         foreach ($fixtures as $fixture) {
-            $this->log(sprintf('Found %s fixture to load', get_class($fixture)));
+            if ($fixture instanceof $event) {
+                $this->log(sprintf('Found %s fixture to load', get_class($fixture)));
 
-            if (method_exists($fixture, 'setLogger')) {
-                $fixture->setLogger($this->logger);
+                if (method_exists($fixture, 'setLogger')) {
+                    $fixture->setLogger($this->logger);
+                }
+
+                $toLoad[] = $fixture;
             }
         }
 
-        if ($fixtures) {
-            $this->executor->execute($fixtures, true);
+        if ($toLoad) {
+            $this->executor->execute($toLoad, true);
 
             return true;
         }

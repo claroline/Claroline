@@ -105,8 +105,7 @@ const AgendaViewSchedule = (props) => {
   return (
     <CalendarView
       loaded={props.loaded}
-      referenceDate={props.referenceDate}
-      view={props.view}
+      range={props.range}
       loadEvents={props.loadEvents}
     >
       {isEmpty(schedule) &&

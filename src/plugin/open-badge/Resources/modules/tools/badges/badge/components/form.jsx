@@ -67,12 +67,6 @@ const BadgeFormComponent = (props) =>
             name: 'workspace',
             type: 'workspace',
             label: trans('workspace'),
-            options: {
-              picker: {
-                administrated: true,
-                model: false
-              }
-            },
             displayed: 'workspace' !== props.currentContext.type
           }
         ]
@@ -124,7 +118,10 @@ const BadgeFormComponent = (props) =>
                 type: 'number',
                 label: trans('duration'),
                 required: true,
-                displayed: (badge) => badge._restrictDuration || !!badge.duration
+                displayed: (badge) => badge._restrictDuration || !!badge.duration,
+                options: {
+                  unit: trans('days')
+                }
               }
             ]
           }, {

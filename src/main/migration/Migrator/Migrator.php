@@ -13,7 +13,7 @@ namespace Claroline\MigrationBundle\Migrator;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\Migrations\Configuration\Configuration;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 
 /**
  * Class responsible for executing bundle migrations.
@@ -44,7 +44,7 @@ class Migrator
      *
      * @return string
      */
-    public function getCurrentVersion(Bundle $bundle)
+    public function getCurrentVersion(BundleInterface $bundle)
     {
         return $this->getConfiguration($bundle)->getCurrentVersion();
     }
@@ -58,7 +58,7 @@ class Migrator
      *
      * @return array
      */
-    public function getMigrationStatus(Bundle $bundle)
+    public function getMigrationStatus(BundleInterface $bundle)
     {
         $config = $this->getConfiguration($bundle);
 
@@ -91,7 +91,7 @@ class Migrator
      * @throws InvalidVersionException   if the specified version is not valid
      * @throws InvalidDirectionException if the target version is not in the specified direction
      */
-    public function migrate(Bundle $bundle, $version, $direction)
+    public function migrate(BundleInterface $bundle, $version, $direction)
     {
         $config = $this->getConfiguration($bundle);
         $currentVersion = $config->getCurrentVersion();
@@ -131,7 +131,7 @@ class Migrator
         }
     }
 
-    private function getConfiguration(Bundle $bundle)
+    private function getConfiguration(BundleInterface $bundle)
     {
         if (isset($this->cacheConfigs[$bundle->getName()])) {
             return $this->cacheConfigs[$bundle->getName()];
@@ -159,19 +159,19 @@ class Migrator
         return $config;
     }
 
-    public function markMigrated(Bundle $bundle, $version)
+    public function markMigrated(BundleInterface $bundle, $version)
     {
         $config = $this->getConfiguration($bundle);
         $config->getVersion($version)->markMigrated();
     }
 
-    public function markNotMigrated(Bundle $bundle, $version)
+    public function markNotMigrated(BundleInterface $bundle, $version)
     {
         $config = $this->getConfiguration($bundle);
         $config->getVersion($version)->markNotMigrated();
     }
 
-    public function markAllMigrated(Bundle $bundle)
+    public function markAllMigrated(BundleInterface $bundle)
     {
         $config = $this->getConfiguration($bundle);
 

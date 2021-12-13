@@ -7,9 +7,10 @@
   "my_workspaces": "My workspaces",
   "public_workspaces": "Public workspaces",
   "workspace_models": "Models of workspaces",
+  "workspace_archived": "Archived workspaces",
   "view_as_info": "You are currently seeing what users with this role are seeing.",
 
-  "workspace_archived": "This workspace is archived.",
+  "is_archived": "This workspace is archived.",
   "workspace_hidden": "This workspace is hidden.",
   "workspace_model": "This workspace is a model.",
   "workspace_personal": "This workspace is a personal workspace.",

@@ -30,7 +30,7 @@ const Criterion = props =>
         className="btn-link"
         type={CALLBACK_BUTTON}
         icon="fa fa-fw fa-trash-o"
-        title={trans('delete')}
+        label={trans('delete', {}, 'actions')}
         callback={props.onDelete}
         tooltip="left"
         dangerous={true}

@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Entity\Organization;
 
 use Claroline\AppBundle\Entity\Identifier\Code;
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Location\Location;
@@ -19,7 +20,6 @@ use Claroline\CoreBundle\Entity\Model\GroupsTrait;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Event\PreFlushEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Ramsey\Uuid\Uuid as BaseUuid;
@@ -31,25 +31,16 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table(name="claro__organization")
  * @DoctrineAssert\UniqueEntity("name")
  * @Gedmo\Tree(type="nested")
- * @ORM\HasLifecycleCallbacks
  */
 class Organization
 {
     use Code;
     use GroupsTrait;
+    use Id;
     use Uuid;
 
     const TYPE_EXTERNAL = 'external';
     const TYPE_INTERNAL = 'internal';
-
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     *
-     * @var int
-     */
-    protected $id;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
@@ -161,6 +152,8 @@ class Organization
      * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\User", mappedBy="administratedOrganizations")
      *
      * @var User[]|ArrayCollection
+     *
+     * @todo reuse $userOrganizationReferences and add a prop on UserOrganizationReference. This will avoid a multiple join.
      */
     protected $administrators;
 
@@ -168,6 +161,11 @@ class Organization
      * @ORM\Column(name="is_default", type="boolean")
      */
     protected $default = false;
+
+    /**
+     * @ORM\Column(name="is_public", type="boolean")
+     */
+    protected $public = false;
 
     /**
      * @ORM\Column(type="string", nullable=true)
@@ -181,7 +179,7 @@ class Organization
      *
      * @var string
      */
-    protected $type;
+    protected $type = self::TYPE_INTERNAL;
 
     /**
      * @ORM\OneToMany(
@@ -208,12 +206,8 @@ class Organization
      */
     protected $maxUsers = -1;
 
-    protected $referencesToRemove;
-
     public function __construct()
     {
-        $this->type = self::TYPE_EXTERNAL;
-
         $this->refreshUuid();
         // todo : generate unique from name for a more beautiful code
         $this->code = BaseUuid::uuid4()->toString();
@@ -225,14 +219,6 @@ class Organization
         $this->administrators = new ArrayCollection();
         $this->userOrganizationReferences = new ArrayCollection();
         $this->children = new ArrayCollection();
-        $this->type = self::TYPE_INTERNAL;
-
-        $this->referencesToRemove = [];
-    }
-
-    public function getId()
-    {
-        return $this->id;
     }
 
     public function setName($name)
@@ -342,9 +328,22 @@ class Organization
         return $this->default;
     }
 
+    /**
+     * @deprecated use isDefault()
+     */
     public function getDefault()
     {
         return $this->default;
+    }
+
+    public function isPublic(): bool
+    {
+        return $this->public;
+    }
+
+    public function setPublic(bool $public)
+    {
+        $this->public = $public;
     }
 
     /**
@@ -451,7 +450,6 @@ class Organization
 
         if ($found && count($user->getOrganizations()) > 0) {
             $this->userOrganizationReferences->removeElement($found);
-            $this->referencesToRemove[] = $found;
         }
     }
 
@@ -493,21 +491,5 @@ class Organization
     public function removeWorkspace(Workspace $workspace)
     {
         $workspace->removeOrganization($this);
-    }
-
-    /**
-     * @ORM\PreFlush
-     */
-    public function removeOrganizationReferences(PreFlushEventArgs $event)
-    {
-        $em = $event->getEntityManager();
-
-        if (is_array($this->referencesToRemove)) {
-            foreach ($this->referencesToRemove as $toRemove) {
-                $em->remove($toRemove);
-            }
-        }
-
-        $this->referencesToRemove = [];
     }
 }

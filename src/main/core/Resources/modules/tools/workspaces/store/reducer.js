@@ -5,7 +5,6 @@ import {makeFormReducer} from '#/main/app/content/form/store/reducer'
 
 import {TOOL_LOAD} from '#/main/core/tool/store/actions'
 
-import {WORKSPACE_CREATION_LOG} from '#/main/core/tools/workspaces/store/actions'
 import {Workspace} from '#/main/core/workspace/prop-types'
 
 export const reducer = combineReducers({
@@ -28,23 +27,13 @@ export const reducer = combineReducers({
     new: true,
     data: Workspace.defaultProps,
     originalData: Workspace.defaultProps
-  }, {
-    logs: makeReducer({}, {
-      [WORKSPACE_CREATION_LOG]: (state, action) => {
-        try {
-          return JSON.parse(action.content)
-        } catch (e) {
-          return {}
-        }
-      }
-    })
   }),
 
   /**
    * The list of workspaces in which the current user is registered.
    */
   registered: makeListReducer('workspaces.registered', {
-    sortBy: {property: 'created', direction: -1}
+    sortBy: {property: 'createdAt', direction: -1}
   }, {
     invalidated: makeReducer(false, {
       [makeInstanceAction(TOOL_LOAD, 'workspaces')]: () => true
@@ -55,7 +44,7 @@ export const reducer = combineReducers({
    * The list of the platform public workspaces.
    */
   public: makeListReducer('workspaces.public', {
-    sortBy: {property: 'created', direction: -1}
+    sortBy: {property: 'createdAt', direction: -1}
   }, {
     invalidated: makeReducer(false, {
       [makeInstanceAction(TOOL_LOAD, 'workspaces')]: () => true
@@ -69,7 +58,7 @@ export const reducer = combineReducers({
     filters: [
       {property: 'personal', value: false}
     ],
-    sortBy: {property: 'created', direction: -1}
+    sortBy: {property: 'createdAt', direction: -1}
   }, {
     invalidated: makeReducer(false, {
       [makeInstanceAction(TOOL_LOAD, 'workspaces')]: () => true
@@ -80,7 +69,18 @@ export const reducer = combineReducers({
    * The list of the platform public workspaces.
    */
   models: makeListReducer('workspaces.models', {
-    sortBy: {property: 'created', direction: -1}
+    sortBy: {property: 'createdAt', direction: -1}
+  }, {
+    invalidated: makeReducer(false, {
+      [makeInstanceAction(TOOL_LOAD, 'workspaces')]: () => true
+    })
+  }),
+
+  /**
+   * The list of the archived workspaces.
+   */
+  archives: makeListReducer('workspaces.archives', {
+    sortBy: {property: 'createdAt', direction: -1}
   }, {
     invalidated: makeReducer(false, {
       [makeInstanceAction(TOOL_LOAD, 'workspaces')]: () => true

@@ -16,6 +16,7 @@ const TemplateTool = (props) =>
       {
         path: '/:type',
         exact: true,
+        onEnter: () => props.invalidateList(),
         render: (routerProps) => (
           <TemplateList
             type={routerProps.match.params.type}
@@ -31,7 +32,8 @@ const TemplateTool = (props) =>
 
 TemplateTool.propTypes = {
   path: T.string.isRequired,
-  open: T.func.isRequired
+  open: T.func.isRequired,
+  invalidateList: T.func.isRequired
 }
 
 export {

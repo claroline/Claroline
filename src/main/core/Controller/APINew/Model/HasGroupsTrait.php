@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Controller\APINew\Model;
 
 use Claroline\AppBundle\Annotations\ApiDoc;
 use Claroline\AppBundle\API\Crud;
+use Claroline\CoreBundle\Entity\Group;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -13,6 +14,8 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 trait HasGroupsTrait
 {
+    abstract protected function checkPermission($permission, $object, ?array $options = [], ?bool $throwException = false);
+
     /**
      * List groups of the collection.
      *
@@ -27,16 +30,14 @@ trait HasGroupsTrait
      *     },
      *     response={"$list=Claroline\CoreBundle\Entity\Group"}
      * )
-     *
-     * @param string $id
-     * @param string $class
-     *
-     * @return JsonResponse
      */
-    public function listGroupsAction($id, $class, Request $request)
+    public function listGroupsAction(string $id, string $class, Request $request): JsonResponse
     {
+        $object = $this->crud->get($class, $id);
+        $this->checkPermission('OPEN', $object, [], true);
+
         return new JsonResponse(
-            $this->finder->search('Claroline\CoreBundle\Entity\Group', array_merge(
+            $this->crud->list(Group::class, array_merge(
                 $request->query->all(),
                 ['hiddenFilters' => [$this->getName() => [$id]]]
             ))
@@ -57,16 +58,13 @@ trait HasGroupsTrait
      *         {"name": "ids[]", "type": {"string", "integer"}, "description": "The groups id or uuid."}
      *     }
      * )
-     *
-     * @param string $id
-     * @param string $class
-     *
-     * @return JsonResponse
      */
-    public function addGroupsAction($id, $class, Request $request)
+    public function addGroupsAction(string $id, string $class, Request $request): JsonResponse
     {
+        // no need to secure entrypoint, the CRUD will do it for us.
+
         $object = $this->crud->get($class, $id);
-        $groups = $this->decodeIdsString($request, 'Claroline\CoreBundle\Entity\Group');
+        $groups = $this->decodeIdsString($request, Group::class);
         $this->crud->patch($object, 'group', Crud::COLLECTION_ADD, $groups);
 
         return new JsonResponse(
@@ -88,16 +86,13 @@ trait HasGroupsTrait
      *         {"name": "ids[]", "type": {"string", "integer"}, "description": "The groups id or uuid."}
      *     }
      * )
-     *
-     * @param string $id
-     * @param string $class
-     *
-     * @return JsonResponse
      */
-    public function removeGroupsAction($id, $class, Request $request)
+    public function removeGroupsAction(string $id, string $class, Request $request): JsonResponse
     {
+        // no need to secure entrypoint, the CRUD will do it for us.
+
         $object = $this->crud->get($class, $id);
-        $groups = $this->decodeIdsString($request, 'Claroline\CoreBundle\Entity\Group');
+        $groups = $this->decodeIdsString($request, Group::class);
         $this->crud->patch($object, 'group', Crud::COLLECTION_REMOVE, $groups);
 
         return new JsonResponse($this->serializer->serialize($object));

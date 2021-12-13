@@ -256,7 +256,6 @@ class Persister
         $user->setFirstName($username);
         $user->setLastName($username);
         $user->setUsername($username);
-        $user->setPublicUrl($username);
         $user->setPlainPassword($username);
         $user->setEmail($username.'@email.com');
         $user->setIsMailValidated(true);

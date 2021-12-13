@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Controller\APINew\Model;
 
 use Claroline\AppBundle\Annotations\ApiDoc;
 use Claroline\AppBundle\API\Crud;
+use Claroline\CoreBundle\Entity\Organization\Organization;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -13,6 +14,8 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 trait HasOrganizationsTrait
 {
+    abstract protected function checkPermission($permission, $object, ?array $options = [], ?bool $throwException = false);
+
     /**
      * List organizations of the collection.
      *
@@ -27,16 +30,14 @@ trait HasOrganizationsTrait
      *     },
      *     response={"$list=Claroline\CoreBundle\Entity\Organization\Organization"}
      * )
-     *
-     * @param string $id
-     * @param string $class
-     *
-     * @return JsonResponse
      */
-    public function listOrganizationsAction($id, $class, Request $request)
+    public function listOrganizationsAction(string $id, string $class, Request $request): JsonResponse
     {
+        $object = $this->crud->get($class, $id);
+        $this->checkPermission('OPEN', $object, [], true);
+
         return new JsonResponse(
-            $this->finder->search('Claroline\CoreBundle\Entity\Organization\Organization', array_merge(
+            $this->crud->list(Organization::class, array_merge(
                 $request->query->all(),
                 ['hiddenFilters' => [$this->getName() => [$id]]]
             ))
@@ -57,16 +58,13 @@ trait HasOrganizationsTrait
      *         {"name": "ids[]", "type": {"string", "integer"}, "description": "The organization id or uuid."}
      *     }
      * )
-     *
-     * @param string $id
-     * @param string $class
-     *
-     * @return JsonResponse
      */
-    public function addOrganizationsAction($id, $class, Request $request)
+    public function addOrganizationsAction(string $id, string $class, Request $request): JsonResponse
     {
+        // no need to secure entrypoint, the CRUD will do it for us.
+
         $object = $this->crud->get($class, $id);
-        $organizations = $this->decodeIdsString($request, 'Claroline\CoreBundle\Entity\Organization\Organization');
+        $organizations = $this->decodeIdsString($request, Organization::class);
         $this->crud->patch($object, 'organization', Crud::COLLECTION_ADD, $organizations);
 
         return new JsonResponse(
@@ -88,16 +86,13 @@ trait HasOrganizationsTrait
      *         {"name": "ids[]", "type": {"string", "integer"}, "description": "The organization id or uuid."}
      *     }
      * )
-     *
-     * @param string $id
-     * @param string $class
-     *
-     * @return JsonResponse
      */
-    public function removeOrganizationsAction($id, $class, Request $request)
+    public function removeOrganizationsAction(string $id, string $class, Request $request): JsonResponse
     {
+        // no need to secure entrypoint, the CRUD will do it for us.
+
         $object = $this->crud->get($class, $id);
-        $organizations = $this->decodeIdsString($request, 'Claroline\CoreBundle\Entity\Organization\Organization');
+        $organizations = $this->decodeIdsString($request, Organization::class);
         $this->crud->patch($object, 'organization', Crud::COLLECTION_REMOVE, $organizations);
 
         return new JsonResponse(

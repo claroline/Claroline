@@ -65,7 +65,7 @@ class OrganizationCrud
         if ($organization->isDefault()) {
             $event->block();
 
-            // we can also throw an exception
+            return;
         }
 
         $keys = $this->om->getRepository(CryptographicKey::class)->findBy(['organization' => $organization]);

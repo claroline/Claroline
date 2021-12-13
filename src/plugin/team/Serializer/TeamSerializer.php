@@ -8,7 +8,6 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer;
 use Claroline\CoreBundle\API\Serializer\User\RoleSerializer;
 use Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer;
-use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -71,7 +70,7 @@ class TeamSerializer
         if (!in_array(Options::SERIALIZE_MINIMAL, $options) && !in_array(Options::SERIALIZE_LIST, $options)) {
             $serialized = array_merge($serialized, [
                 'directory' => $team->getDirectory() ?
-                    $this->resourceNodeSerializer->serialize($team->getDirectory()->getResourceNode(), [Options::SERIALIZE_MINIMAL]) :
+                    $this->resourceNodeSerializer->serialize($team->getDirectory(), [Options::SERIALIZE_MINIMAL]) :
                     null,
                 'workspace' => $this->workspaceSerializer->serialize($team->getWorkspace(), [Options::SERIALIZE_MINIMAL]),
             ]);
@@ -95,14 +94,9 @@ class TeamSerializer
         $this->sipe('maxUsers', 'setMaxUsers', $data, $team);
 
         if (isset($data['directory'])) {
-            $directory = null;
-            /** @var ResourceNode $directory */
+            /** @var ResourceNode $directoryNode */
             $directoryNode = $this->om->getObject($data['directory'], ResourceNode::class);
-            if ($directoryNode) {
-                $directory = $this->om->getRepository(Directory::class)->findOneBy(['resourceNode' => $directoryNode]);
-            }
-
-            $team->setDirectory($directory);
+            $team->setDirectory($directoryNode);
         }
 
         if (isset($data['role'])) {

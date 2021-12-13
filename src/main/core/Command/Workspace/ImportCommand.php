@@ -11,34 +11,19 @@
 
 namespace Claroline\CoreBundle\Command\Workspace;
 
-use Claroline\AppBundle\API\Crud;
-use Claroline\AppBundle\API\SerializerProvider;
-use Claroline\CoreBundle\Entity\File\PublicFile;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Library\Utilities\FileUtilities;
-use Claroline\CoreBundle\Manager\Workspace\TransferManager;
+use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\HttpFoundation\File\File;
 
-/**
- * Creates an user, optionally with a specific role (default to simple user).
- */
 class ImportCommand extends Command
 {
-    private $crud;
-    private $fileUtils;
-    private $serializerProvider;
-    private $transferManager;
+    private $workspaceManager;
 
-    public function __construct(Crud $crud, FileUtilities $fileUtils, SerializerProvider $serializerProvider, TransferManager $transferManager)
+    public function __construct(WorkspaceManager $workspaceManager)
     {
-        $this->crud = $crud;
-        $this->fileUtils = $fileUtils;
-        $this->serializerProvider = $serializerProvider;
-        $this->transferManager = $transferManager;
+        $this->workspaceManager = $workspaceManager;
 
         parent::__construct();
     }
@@ -46,41 +31,15 @@ class ImportCommand extends Command
     protected function configure()
     {
         $this
-            ->setDescription('Create a workspace from a zip archive (for debug purpose)')
+            ->setDescription('Create a workspace from a zip archive')
             ->setDefinition([
                 new InputArgument('path', InputArgument::REQUIRED, 'The absolute path to the zip file.'),
-                new InputArgument('code', InputArgument::REQUIRED, 'The new workspace code.'),
             ]);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $destination = tempnam('claro', '_wscopy');
-        $file = $input->getArgument('path');
-        copy($file, $destination);
-        $file = file_get_contents($file);
-        $tmp = tempnam('claro', '_zip');
-        file_put_contents($tmp, $file);
-        $file = new File($tmp);
-
-        $object = $this->crud->create(
-            PublicFile::class,
-            [],
-            ['file' => $file]
-        );
-
-        $zip = new \ZipArchive();
-        $zip->open($this->fileUtils->getPath($object));
-        $json = $zip->getFromName('workspace.json');
-        $zip->close();
-
-        $data = json_decode($json, true);
-        $data['code'] = $input->getArgument('code');
-        $data['archive'] = $this->serializerProvider->serialize($object);
-        $workspace = new Workspace();
-        $workspace->setCode($data['code']);
-
-        $this->transferManager->create($data, $workspace);
+        $this->workspaceManager->import($input->getArgument('path'));
 
         return 0;
     }

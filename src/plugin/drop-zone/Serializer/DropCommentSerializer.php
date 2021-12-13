@@ -13,8 +13,8 @@ namespace Claroline\DropZoneBundle\Serializer;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
-use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\DropZoneBundle\Entity\Drop;
@@ -24,18 +24,15 @@ class DropCommentSerializer
 {
     use SerializerTrait;
 
-    /** @var SerializerProvider */
-    private $serializer;
+    /** @var UserSerializer */
+    private $userSerializer;
 
     private $dropRepo;
     private $userRepo;
 
-    /**
-     * DropCommentSerializer constructor.
-     */
-    public function __construct(ObjectManager $om, SerializerProvider $serializer)
+    public function __construct(ObjectManager $om, UserSerializer $userSerializer)
     {
-        $this->serializer = $serializer;
+        $this->userSerializer = $userSerializer;
 
         $this->dropRepo = $om->getRepository(Drop::class);
         $this->userRepo = $om->getRepository(User::class);
@@ -46,44 +43,31 @@ class DropCommentSerializer
         return 'dropzone_drop_comment';
     }
 
-    /**
-     * @return array
-     */
-    public function serialize(DropComment $comment, array $options = [])
+    public function serialize(DropComment $comment): array
     {
-        $serialized = [
+        return [
             'id' => $comment->getUuid(),
             'content' => $comment->getContent(),
-            'meta' => [
-                'user' => $comment->getUser() ?
-                    $this->serializer->serialize($comment->getUser(), [Options::SERIALIZE_MINIMAL]) :
-                    null,
-                'creationDate' => DateNormalizer::normalize($comment->getCreationDate()),
-                'editionDate' => $comment->getEditionDate() ?
-                    DateNormalizer::normalize($comment->getEditionDate()) :
-                    null,
-            ],
+            'user' => $comment->getUser() ?
+                $this->userSerializer->serialize($comment->getUser(), [Options::SERIALIZE_MINIMAL]) :
+                null,
+            'creationDate' => DateNormalizer::normalize($comment->getCreationDate()),
+            'editionDate' => DateNormalizer::normalize($comment->getEditionDate()),
         ];
-
-        return $serialized;
     }
 
-    /**
-     * @param array $data
-     *
-     * @return DropComment
-     */
-    public function deserialize($data, DropComment $comment)
+    public function deserialize(array $data, DropComment $comment): DropComment
     {
         $this->sipe('id', 'setUuid', $data, $comment);
         $this->sipe('content', 'setContent', $data, $comment);
 
-        if (!$comment->getUser() && isset($data['meta']['user']['id'])) {
-            $user = $this->userRepo->findOneBy(['uuid' => $data['meta']['user']['id']]);
+        if (!$comment->getUser() && isset($data['user']['id'])) {
+            $user = $this->userRepo->findOneBy(['uuid' => $data['user']['id']]);
             $comment->setUser($user);
         }
-        if (!$comment->getDrop() && isset($data['meta']['drop']['id'])) {
-            $drop = $this->dropRepo->findOneBy(['uuid' => $data['meta']['drop']['id']]);
+
+        if (!$comment->getDrop() && isset($data['drop']['id'])) {
+            $drop = $this->dropRepo->findOneBy(['uuid' => $data['drop']['id']]);
             $comment->setDrop($drop);
         }
 

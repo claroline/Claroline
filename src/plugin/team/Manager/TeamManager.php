@@ -133,10 +133,10 @@ class TeamManager
                 $defaultResource,
                 $creatableResources
             );
-            $team->setDirectory($directory);
+            $team->setDirectory($directory->getResourceNode());
             $this->om->persist($team);
 
-            $node = $team->getDirectory()->getResourceNode();
+            $node = $team->getDirectory();
             $node->setIndex(1);
             $this->om->persist($node);
             $teams[] = $team;
@@ -286,7 +286,7 @@ class TeamManager
     public function deleteTeamDirectory(Team $team)
     {
         if ($team->isDirDeletable() && !empty($team->getDirectory())) {
-            $this->crud->delete($team->getDirectory()->getResourceNode());
+            $this->crud->delete($team->getDirectory());
         }
     }
 
@@ -308,9 +308,8 @@ class TeamManager
         $workspace = $team->getWorkspace();
         $teamRole = $team->getRole();
         $teamManagerRole = $team->getTeamManagerRole();
-        $resourceNode = !is_null($team->getDirectory()) ? $team->getDirectory()->getResourceNode() : null;
 
-        if (!is_null($resourceNode)) {
+        if (!empty($team->getDirectory())) {
             $workspaceRoles = $this->roleManager->getWorkspaceRoles($workspace);
             $rights = [];
 
@@ -323,7 +322,7 @@ class TeamManager
                     ];
                 }
             }
-            $this->applyRightsToResourceNode($resourceNode, $rights);
+            $this->applyRightsToResourceNode($team->getDirectory(), $rights);
         }
     }
 
@@ -332,9 +331,7 @@ class TeamManager
      */
     public function updateTeamDirectoryPerms(Team $team)
     {
-        $directory = $team->getDirectory();
-
-        if (!is_null($directory)) {
+        if (!is_null($team->getDirectory())) {
             $this->om->startFlushSuite();
 
             $workspace = $team->getWorkspace();
@@ -345,7 +342,7 @@ class TeamManager
             foreach ($workspaceRoles as $role) {
                 if (!in_array($role->getUuid(), [$teamRole->getUuid(), $teamManagerRole->getUuid()])) {
                     $rights = ['open' => $team->isPublic()];
-                    $this->rightsManager->update($rights, $role, $directory->getResourceNode(), true);
+                    $this->rightsManager->update($rights, $role, $team->getDirectory(), true);
                 }
             }
             $this->om->endFlushSuite();
@@ -357,11 +354,9 @@ class TeamManager
      */
     public function initializeTeamPerms(Team $team, array $roles)
     {
-        $directory = $team->getDirectory();
-
-        if (!is_null($directory)) {
+        if (!is_null($team->getDirectory())) {
             $this->om->startFlushSuite();
-            $node = $directory->getResourceNode();
+            $node = $team->getDirectory();
 
             foreach ($roles as $role) {
                 if ($role === $team->getRole()) {
@@ -575,15 +570,13 @@ class TeamManager
         $teams = $this->teamRepo->findBy(['workspace' => $workspace]);
 
         foreach ($teams as $team) {
-            $directory = $team->getDirectory();
-
-            if ($team->isPublic() && !is_null($directory)) {
+            if ($team->isPublic() && !is_null($team->getDirectory())) {
                 $rights = [];
                 $rights['open'] = true;
                 $this->rightsManager->update(
                     $rights,
                     $role,
-                    $directory->getResourceNode(),
+                    $team->getDirectory(),
                     true
                 );
             }

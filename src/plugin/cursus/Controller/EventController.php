@@ -12,6 +12,7 @@
 namespace Claroline\CursusBundle\Controller;
 
 use Claroline\AppBundle\Controller\AbstractCrudController;
+use Claroline\AppBundle\Manager\PdfManager;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
@@ -24,7 +25,6 @@ use Claroline\CursusBundle\Entity\Registration\EventGroup;
 use Claroline\CursusBundle\Entity\Registration\EventUser;
 use Claroline\CursusBundle\Entity\Session;
 use Claroline\CursusBundle\Manager\EventManager;
-use Dompdf\Dompdf;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -48,17 +48,21 @@ class EventController extends AbstractCrudController
     private $translator;
     /** @var EventManager */
     private $manager;
+    /** @var PdfManager */
+    private $pdfManager;
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         TokenStorageInterface $tokenStorage,
         TranslatorInterface $translator,
-        EventManager $manager
+        EventManager $manager,
+        PdfManager $pdfManager
     ) {
         $this->authorization = $authorization;
         $this->tokenStorage = $tokenStorage;
         $this->translator = $translator;
         $this->manager = $manager;
+        $this->pdfManager = $pdfManager;
     }
 
     public function getName()
@@ -173,17 +177,10 @@ class EventController extends AbstractCrudController
     {
         $this->checkPermission('OPEN', $sessionEvent, [], true);
 
-        $domPdf = new Dompdf([
-            'isHtml5ParserEnabled' => true,
-            'isRemoteEnabled' => true,
-        ]);
-        $domPdf->loadHtml($this->manager->generateFromTemplate($sessionEvent, $request->getLocale()));
-
-        // Render the HTML as PDF
-        $domPdf->render();
-
-        return new StreamedResponse(function () use ($domPdf) {
-            echo $domPdf->output();
+        return new StreamedResponse(function () use ($sessionEvent, $request) {
+            echo $this->pdfManager->fromHtml(
+                $this->manager->generateFromTemplate($sessionEvent, $request->getLocale())
+            );
         }, 200, [
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => 'attachment; filename='.TextNormalizer::toKey($sessionEvent->getName()).'.pdf',

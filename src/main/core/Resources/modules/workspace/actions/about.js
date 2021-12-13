@@ -11,7 +11,7 @@ export default (workspaces) => ({
   label: trans('show-info', {}, 'actions'),
   displayed: hasPermission('open', workspaces[0]),
   modal: [MODAL_WORKSPACE_ABOUT, {
-    workspace: workspaces[0]
+    workspaceId: workspaces[0].id
   }],
   scope: ['object']
 })

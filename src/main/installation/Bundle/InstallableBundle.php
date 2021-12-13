@@ -11,33 +11,28 @@
 
 namespace Claroline\InstallationBundle\Bundle;
 
-use Psr\Container\ContainerInterface;
+use Claroline\InstallationBundle\Additional\AdditionalInstallerInterface;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 abstract class InstallableBundle extends Bundle implements InstallableInterface
 {
-    public function hasMigrations(): bool
+    public function getAdditionalInstaller(): ?AdditionalInstallerInterface
     {
-        return true;
-    }
+        $class = $this->getInstallerClass();
+        if (class_exists($class)) {
+            return new $class($this->container->get('claroline.updater_locator'));
+        }
 
-    public function getRequiredFixturesDirectory(string $environment): ?string
-    {
         return null;
     }
 
-    public function getPostInstallFixturesDirectory(string $environment): ?string
+    /**
+     * Returns the bundle's installer class.
+     */
+    protected function getInstallerClass(): string
     {
-        return null;
-    }
+        $basename = preg_replace('/Bundle$/', '', $this->getName());
 
-    public function getAdditionalInstaller()
-    {
-        return null;
-    }
-
-    public function getUpdaterServiceLocator(): ContainerInterface
-    {
-        return $this->container->get('claroline.updater_locator');
+        return $this->getNamespace().'\\Installation\\'.$basename.'Installer';
     }
 }

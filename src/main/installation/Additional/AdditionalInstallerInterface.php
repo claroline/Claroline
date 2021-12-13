@@ -11,17 +11,15 @@
 
 namespace Claroline\InstallationBundle\Additional;
 
-use Psr\Log\LoggerInterface;
+use Psr\Log\LoggerAwareInterface;
 
-interface AdditionalInstallerInterface
+interface AdditionalInstallerInterface extends LoggerAwareInterface
 {
     public function setEnvironment($environment);
 
     public function setShouldReplayUpdaters(bool $shouldReplayUpdaters): void;
 
     public function shouldReplayUpdaters(): bool;
-
-    public function setLogger(LoggerInterface $logger = null);
 
     public function preInstall();
 
@@ -41,4 +39,17 @@ interface AdditionalInstallerInterface
      * @return string[] An array of Updater service identifiers (i.e. FQCN) indexed by version
      */
     public static function getUpdaters(): array;
+
+    /**
+     * Checks if the plugin have DB migrations that should be played in the install/update process ?
+     */
+    public function hasMigrations(): bool;
+
+    /**
+     * Checks if the bundle has Fixtures that shopuld be loaded in the install/update process.
+     *
+     * You can use PreInstallInterface / PostInstallInterface / PreUpdateInterface / PostUpdateInterface
+     * to choose when you fixtures should be loaded.
+     */
+    public function hasFixtures(): bool;
 }

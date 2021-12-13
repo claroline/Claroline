@@ -1,195 +1,144 @@
 import React from 'react'
-import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
-import ButtonToolbar from 'react-bootstrap/lib/ButtonToolbar'
 
-import {trans, displayDate} from '#/main/app/intl'
-import {actions as modalActions} from '#/main/app/overlays/modal/store'
-import {selectors as securitySelectors} from '#/main/app/security/store'
-import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
-import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
-import {Button} from '#/main/app/action/components/button'
-
-import {selectors as resourceSelect} from '#/main/core/resource/store'
-import {ResourceNode as ResourceNodeType} from '#/main/core/resource/prop-types'
-import {ContentHtml} from '#/main/app/content/components/html'
+import {trans} from '#/main/app/intl'
+import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
+import {Toolbar} from '#/main/app/action/components/toolbar'
+import {ContentComments} from '#/main/app/content/components/comments'
+import {ContentTitle} from '#/main/app/content/components/title'
+import {MODAL_SELECTION} from '#/main/app/modals/selection'
+import {MODAL_ALERT} from '#/main/app/modals/alert'
 
 import {DropzoneType, DropType, Revision as RevisionType} from '#/plugin/drop-zone/resources/dropzone/prop-types'
 import {constants} from '#/plugin/drop-zone/resources/dropzone/constants'
-import {selectors} from '#/plugin/drop-zone/resources/dropzone/store/selectors'
-import {actions} from '#/plugin/drop-zone/resources/dropzone/player/actions'
-import {actions as correctionActions} from '#/plugin/drop-zone/resources/dropzone/correction/actions'
-import {MODAL_ADD_DOCUMENT} from '#/plugin/drop-zone/resources/dropzone/player/components/modal/add-document'
-import {MODAL_CORRECTION} from '#/plugin/drop-zone/resources/dropzone/correction/components/modal/correction-modal'
+import {MODAL_ADD_DOCUMENT} from '#/plugin/drop-zone/resources/dropzone/player/modals/document'
 import {Documents} from '#/plugin/drop-zone/resources/dropzone/components/documents'
-import {Comments} from '#/plugin/drop-zone/resources/dropzone/player/components/comments'
+import {Corrections} from '#/plugin/drop-zone/resources/dropzone/components/corrections'
 
-const getTitle = (dropzone, correction, index) => {
-  let title = ''
-
-  if (dropzone.display.correctorDisplayed) {
-    if (dropzone.parameters.dropType === constants.DROP_TYPE_TEAM) {
-      title = trans('correction_from', {name: correction.teamName}, 'dropzone')
-    } else {
-      title = trans('correction_from', {name: `${correction.user.firstName} ${correction.user.lastName}`}, 'dropzone')
-    }
-  } else {
-    title = trans('correction_n', {number: index}, 'dropzone')
-  }
-
-  return title
-}
-
-const Corrections = props =>
-  <table className="table corrections-table">
-    <thead>
-      <tr>
-        <th></th>
-        <th></th>
-        <th>{trans('start_date', {}, 'platform')}</th>
-        <th>{trans('end_date', {}, 'platform')}</th>
-        {props.dropzone.display.showScore &&
-          <th>{trans('score', {}, 'platform')}</th>
+const MyDrop = props =>
+  <section className="resource-section">
+    <ContentTitle
+      level={2}
+      title={trans('my_drop', {}, 'dropzone')}
+      actions={[
+        {
+          name: 'show-instructions',
+          type: MODAL_BUTTON,
+          icon: 'fa fa-fw fa-info',
+          label: trans('show_instructions', {}, 'dropzone'),
+          modal: [MODAL_ALERT, {
+            title: trans('instructions', {}, 'dropzone'),
+            message: props.dropzone.instruction
+          }]
         }
-      </tr>
-    </thead>
-    <tbody>
-      {props.corrections
-        .filter(c => c.finished)
-        .map((c, idx) =>
-          <tr key={`correction-row-${c.id}`}>
-            <td>
-              {c.correctionDenied &&
-              <span className="fa fa-fw fa-exclamation-triangle" />
-              }
-            </td>
-            <td>
-              <a
-                className="pointer-hand"
-                onClick={() => {
-                  props.showModal(MODAL_CORRECTION, {
-                    title: getTitle(props.dropzone, c, idx + 1),
-                    correction: c,
-                    dropzone: props.dropzone,
-                    showDenialBox: props.dropzone.parameters.correctionDenialEnabled,
-                    denyCorrection: (correctionId, comment) => props.denyCorrection(correctionId, comment)
-                  })
-                }}
-              >
-
-                {getTitle(props.dropzone, c, idx + 1)}
-              </a>
-            </td>
-            <td>{displayDate(c.startDate, false, true)}</td>
-            <td>{displayDate(c.endDate, false, true)}</td>
-            {props.dropzone.display.showScore &&
-              <td>{c.score} / {props.dropzone.parameters.scoreMax}</td>
-            }
-          </tr>
-        )
-      }
-    </tbody>
-  </table>
-
-Corrections.propTypes = {
-  dropzone: T.shape(DropzoneType.propTypes).isRequired,
-  corrections: T.array,
-  denyCorrection: T.func,
-  showModal: T.func
-}
-
-const MyDropComponent = props =>
-  <section className="resource-section drop-panel">
-    <h2>{trans('my_drop', {}, 'dropzone')}</h2>
-    {props.dropzone.instruction &&
-      <ContentHtml>{props.dropzone.instruction}</ContentHtml>
-    }
+      ]}
+    />
 
     <Documents
       documents={props.myDrop.documents}
       canEdit={props.isDropEnabled && !props.myDrop.finished}
       showUser={props.dropzone.parameters.dropType === constants.DROP_TYPE_TEAM}
-      {...props}
     />
 
     {props.dropzone.display.displayCorrectionsToLearners && props.myDrop.finished && props.myDrop.corrections.filter(c => c.finished).length > 0 &&
       <Corrections
+        dropzone={props.dropzone}
         corrections={props.myDrop.corrections.filter(c => c.finished && c.valid)}
-        {...props}
+        denyCorrection={props.denyCorrection}
       />
     }
 
     {props.isDropEnabled && !props.myDrop.finished &&
-      <div className="text-right">
-        <ButtonToolbar className="pull-right">
-          {props.dropzone.parameters.revisionEnabled &&
-            <Button
-              type={CALLBACK_BUTTON}
-              icon={'fa fa-fw fa-comments-o icon-with-text-right'}
-              label= {trans('submit_for_revision', {}, 'dropzone')}
-              className="btn"
-              disabled={!props.myDrop.documents || 0 === props.myDrop.documents.filter(d => !d.revision).length}
-              callback={() => props.submitForRevision(props.myDrop.id)}
-            />
+      <Toolbar
+        className="component-container"
+        buttonName="btn"
+        actions={[
+          {
+            name: 'request-revision',
+            type: CALLBACK_BUTTON,
+            icon: 'fa fa-fw fa-comments-o',
+            label: trans('submit_for_revision', {}, 'dropzone'),
+            displayed: props.dropzone.parameters.revisionEnabled,
+            disabled: !props.myDrop.documents || 0 === props.myDrop.documents.filter(d => !d.revision).length,
+            callback: () => props.submitForRevision(props.myDrop.id),
+            confirm: {
+              message: trans('submit_for_revision_confirm', {}, 'dropzone')
+            }
+          }, {
+            name: 'revision-history',
+            type: LINK_BUTTON,
+            icon: 'fa fa-fw fa-history',
+            label: trans('revisions_history', {}, 'dropzone'),
+            target: `${props.path}/my/drop/revisions`,
+            displayed: props.dropzone.parameters.revisionEnabled
+          }, {
+            name: 'add-document',
+            type: MODAL_BUTTON,
+            icon: 'fa fa-fw fa-plus',
+            label: trans('add_document', {}, 'dropzone'),
+            modal: 1 < props.dropzone.parameters.documents.length ?
+              [MODAL_SELECTION, {
+                icon: 'fa fa-fw fa-plus',
+                title: trans('new_document', {}, 'dropzone'),
+                items: props.dropzone.parameters.documents.map((type) => ({
+                  name: type,
+                  icon: constants.DOCUMENT_TYPE_ICONS[type],
+                  label: constants.DOCUMENT_TYPES[type],
+                  description: trans(`document_${type}_desc`, {}, 'dropzone')
+                })),
+                selectAction: (type) => ({
+                  type: MODAL_BUTTON,
+                  modal: [
+                    MODAL_ADD_DOCUMENT, {
+                      type: type.name,
+                      save: (formData) => props.saveDocument(props.myDrop.id, type.name, formData.data)
+                    }
+                  ]
+                })
+              }] :
+              [MODAL_ADD_DOCUMENT, {
+                type: props.dropzone.parameters.documents[0],
+                save: (formData) => props.saveDocument(props.myDrop.id, props.dropzone.parameters.documents[0], formData.data)
+              }]
+          }, {
+            name: 'finish',
+            type: CALLBACK_BUTTON,
+            icon: 'fa fa-fw fa-upload',
+            label: trans('submit_my_drop', {}, 'dropzone'),
+            callback: () => props.submit(props.myDrop.id),
+            disabled: !props.myDrop.documents || 0 === props.myDrop.documents.length,
+            primary: true,
+            confirm: {
+              title: trans('final_drop', {}, 'dropzone'),
+              message: trans('submit_my_drop_confirm', {}, 'dropzone')
+            }
           }
-          {props.dropzone.parameters.revisionEnabled &&
-            <Button
-              type={LINK_BUTTON}
-              icon={'fa fa-fw fa-history icon-with-text-right'}
-              label={trans('revisions_history', {}, 'dropzone')}
-              className="btn"
-              target={`${props.path}/my/drop/revisions`}
-            />
-          }
-          <Button
-            type={CALLBACK_BUTTON}
-            icon={'fa fa-fw fa-plus icon-with-text-right'}
-            label= {trans('add_document', {}, 'dropzone')}
-            className="btn btn-default"
-            callback={() => props.addDocument(props.myDrop.id, props.dropzone.parameters.documents, props.resourceNode.parent)}
-          />
-          <Button
-            type={CALLBACK_BUTTON}
-            icon={'fa fa-fw fa-upload icon-with-text-right'}
-            label= {trans('submit_my_drop', {}, 'dropzone')}
-            className="btn primary"
-            disabled={!props.myDrop.documents || 0 === props.myDrop.documents.length}
-            callback={() => props.submit(props.myDrop.id)}
-          />
-        </ButtonToolbar>
-      </div>
+        ]}
+      />
     }
 
     {props.isDropEnabled && !props.myDrop.finished && props.dropzone.parameters.revisionEnabled &&
-      <hr className="revision-comments-separator"/>
-    }
-
-    {props.isDropEnabled && !props.myDrop.finished && props.dropzone.parameters.revisionEnabled &&
-      <Comments
-        comments={props.myDrop.comments}
-        dropId={props.myDrop.id}
+      <ContentComments
         title={trans('drop_comments', {}, 'dropzone')}
-        saveComment={props.saveDropComment}
         currentUser={props.currentUser}
+        comments={props.myDrop.comments}
+        createComment={(comment) => props.saveDropComment(props.myDrop.id, comment)}
+        editComment={(comment) => props.saveDropComment(props.myDrop.id, comment)}
       />
     }
 
     {props.isDropEnabled && !props.myDrop.finished && props.currentRevisionId && props.revision &&
-      <hr className="revision-comments-separator"/>
-    }
-
-    {props.isDropEnabled && !props.myDrop.finished && props.currentRevisionId && props.revision &&
-      <Comments
-        comments={props.revision.comments}
-        revisionId={props.currentRevisionId}
+      <ContentComments
         title={trans('revision_comments', {}, 'dropzone')}
-        saveComment={props.saveRevisionComment}
         currentUser={props.currentUser}
+        comments={props.revision.comments}
+        createComment={(comment) => props.saveRevisionComment(props.currentRevisionId, comment)}
+        updateComment={(comment) => props.saveRevisionComment(props.currentRevisionId, comment)}
       />
     }
   </section>
 
-MyDropComponent.propTypes = {
+MyDrop.propTypes = {
   path: T.string.isRequired,
   currentUser: T.object,
   dropzone: T.shape(DropzoneType.propTypes).isRequired,
@@ -197,73 +146,14 @@ MyDropComponent.propTypes = {
   isDropEnabled: T.bool.isRequired,
   currentRevisionId: T.string,
   revision: T.shape(RevisionType.propTypes),
-  resourceNode: T.shape(ResourceNodeType.propTypes),
+
   submit: T.func.isRequired,
   denyCorrection: T.func.isRequired,
-  showModal: T.func.isRequired,
-  addDocument: T.func.isRequired,
   saveDocument: T.func.isRequired,
   submitForRevision: T.func.isRequired,
   saveRevisionComment: T.func.isRequired,
   saveDropComment: T.func.isRequired
 }
-
-const MyDrop = connect(
-  (state) => ({
-    currentUser: securitySelectors.currentUser(state),
-    dropzone: selectors.dropzone(state),
-    myDrop: selectors.myDrop(state),
-    isDropEnabled: selectors.isDropEnabled(state),
-    currentRevisionId: selectors.currentRevisionId(state),
-    revision: selectors.revision(state),
-    resourceNode: resourceSelect.resourceNode(state)
-  }),
-  (dispatch) => ({
-    saveDocument: (dropType, dropData) => dispatch(actions.saveDocument(dropType, dropData)),
-    addDocument(dropId, allowedDocuments) {
-      dispatch(
-        modalActions.showModal(MODAL_ADD_DOCUMENT, {
-          allowedDocuments: allowedDocuments,
-          save: (data) => dispatch(actions.saveDocument(dropId, data.type, data.data))
-        })
-      )
-    },
-    deleteDocument(documentId) {
-      dispatch(actions.deleteDocument(documentId))
-    },
-    submit(id) {
-      dispatch(
-        modalActions.showModal(MODAL_CONFIRM, {
-          icon: 'fa fa-fw fa-exclamation-triangle',
-          title: trans('final_drop', {}, 'dropzone'),
-          question: trans('submit_my_drop_confirm', {}, 'dropzone'),
-          confirmButtonText: trans('to_drop', {}, 'dropzone'),
-          dangerous: true,
-          handleConfirm: () => dispatch(actions.submitDrop(id))
-        })
-      )
-    },
-    submitForRevision(id) {
-      dispatch(
-        modalActions.showModal(MODAL_CONFIRM, {
-          icon: 'fa fa-fw fa-exclamation-triangle',
-          title: trans('submit_for_revision', {}, 'dropzone'),
-          question: trans('submit_for_revision_confirm', {}, 'dropzone'),
-          confirmButtonText: trans('submit_for_revision', {}, 'dropzone'),
-          handleConfirm: () => dispatch(actions.submitDropForRevision(id))
-        })
-      )
-    },
-    denyCorrection: (correctionId, comment) => dispatch(correctionActions.denyCorrection(correctionId, comment)),
-    showModal: (type, props) => dispatch(modalActions.showModal(type, props)),
-    saveRevisionComment(comment) {
-      dispatch(actions.saveRevisionComment(comment))
-    },
-    saveDropComment(comment) {
-      dispatch(actions.saveDropComment(comment, true))
-    }
-  })
-)(MyDropComponent)
 
 export {
   MyDrop

@@ -24,7 +24,6 @@ services:
             - '@Claroline\CoreBundle\Manager\RoleManager'
             - '@Claroline\CoreBundle\Library\RoutingHelper'
             - '@Claroline\CoreBundle\Manager\Template\TemplateManager'
-            - '@security.token_storage'
             - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
             - '@Claroline\CursusBundle\Manager\EventManager'
 

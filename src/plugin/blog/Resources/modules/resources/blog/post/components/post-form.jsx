@@ -93,7 +93,7 @@ const PostFormComponent = props =>
             }}
           />
           <Button
-            label={trans('cancel')}
+            label={trans('cancel', {}, 'actions')}
             type={CALLBACK_BUTTON}
             className="btn"
             callback={() => {

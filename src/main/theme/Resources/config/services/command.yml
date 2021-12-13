@@ -2,13 +2,13 @@ services:
 
     Claroline\ThemeBundle\Command\CreateThemeCommand:
         arguments:
-            - '@claroline.manager.theme_manager'
+            - '@Claroline\ThemeBundle\Manager\ThemeManager'
         tags:
             - { name: 'console.command', command: 'claroline:theme:create' }
 
     Claroline\ThemeBundle\Command\BuildThemesCommand:
         arguments:
-            - '@claroline.manager.theme_builder'
-            - '@claroline.manager.theme_manager'
+            - '@Claroline\ThemeBundle\Manager\ThemeBuilderManager'
+            - '@Claroline\ThemeBundle\Manager\ThemeManager'
         tags:
             - { name: 'console.command', command: 'claroline:theme:build' }

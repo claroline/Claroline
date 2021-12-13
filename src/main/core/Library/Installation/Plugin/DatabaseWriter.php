@@ -84,9 +84,11 @@ class DatabaseWriter implements LoggerAwareInterface
      */
     public function insert(PluginBundleInterface $pluginBundle, array $pluginConfiguration)
     {
+        $namespaceParts = explode('\\', $pluginBundle->getNamespace());
+
         $pluginEntity = new Plugin();
-        $pluginEntity->setVendorName($pluginBundle->getVendorName());
-        $pluginEntity->setBundleName($pluginBundle->getBundleName());
+        $pluginEntity->setVendorName($namespaceParts[0]);
+        $pluginEntity->setBundleName($namespaceParts[1]);
 
         $this->em->persist($pluginEntity);
         $this->persistConfiguration($pluginConfiguration, $pluginEntity, $pluginBundle);
@@ -102,10 +104,12 @@ class DatabaseWriter implements LoggerAwareInterface
      */
     public function update(PluginBundleInterface $pluginBundle, array $pluginConfiguration)
     {
+        $namespaceParts = explode('\\', $pluginBundle->getNamespace());
+
         /** @var Plugin $plugin */
         $plugin = $this->pluginRepository->findOneBy([
-             'vendorName' => $pluginBundle->getVendorName(),
-             'bundleName' => $pluginBundle->getBundleName(),
+             'vendorName' => $namespaceParts[0],
+             'bundleName' => $namespaceParts[1],
         ]);
 
         if (null === $plugin) {

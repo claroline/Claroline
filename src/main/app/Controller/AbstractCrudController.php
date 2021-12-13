@@ -14,8 +14,10 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
-abstract class AbstractCrudController extends AbstractApiController
+abstract class AbstractCrudController
 {
+    use RequestDecoderTrait;
+
     /** @var FinderProvider */
     protected $finder;
 
@@ -393,7 +395,7 @@ abstract class AbstractCrudController extends AbstractApiController
 
     /**
      * @ApiDoc(
-     *     description="Display the current informations",
+     *     description="Display the current information",
      * )
      *
      * @param string $class

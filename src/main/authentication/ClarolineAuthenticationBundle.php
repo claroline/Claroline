@@ -12,7 +12,6 @@
 namespace Claroline\AuthenticationBundle;
 
 use Claroline\AuthenticationBundle\DependencyInjection\Compiler\OauthConfigPass;
-use Claroline\AuthenticationBundle\Installation\AdditionalInstaller;
 use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
 use HWI\Bundle\OAuthBundle\HWIOAuthBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -20,11 +19,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class ClarolineAuthenticationBundle extends DistributionPluginBundle
 {
-    public function getAdditionalInstaller()
-    {
-        return new AdditionalInstaller($this->getUpdaterServiceLocator());
-    }
-
     public function build(ContainerBuilder $container)
     {
         parent::build($container);
@@ -32,7 +26,7 @@ class ClarolineAuthenticationBundle extends DistributionPluginBundle
         $container->addCompilerPass(new OauthConfigPass());
     }
 
-    public function getRequiredThirdPartyBundles(string $environment): array
+    public function getRequiredBundles(string $environment): array
     {
         return [
             new HWIOAuthBundle(),

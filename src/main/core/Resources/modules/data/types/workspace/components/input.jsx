@@ -41,7 +41,7 @@ WorkspacesButton.propTypes = {
 
 const WorkspaceInput = props => {
   if (props.value) {
-    return(
+    return (
       <Fragment>
         <WorkspaceCard
           data={props.value}

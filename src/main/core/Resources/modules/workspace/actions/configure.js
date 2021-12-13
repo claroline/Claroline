@@ -13,7 +13,7 @@ export default (workspaces, workspacesRefresher) => ({
   group: trans('management'),
   scope: ['object'],
   modal: [MODAL_WORKSPACE_PARAMETERS, {
-    workspace: workspaces[0],
+    workspaceId: workspaces[0].id,
     onSave: (workspace) => workspacesRefresher.update([workspace])
   }]
 })

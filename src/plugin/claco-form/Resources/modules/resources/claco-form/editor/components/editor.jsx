@@ -36,7 +36,7 @@ const generateDisplayList = (fields = []) => {
   }
 
   fields.filter(f => !f.restrictions.hidden).map(field => {
-    displayList[field.id] = field.name
+    displayList[field.id] = field.label
   })
 
   return displayList

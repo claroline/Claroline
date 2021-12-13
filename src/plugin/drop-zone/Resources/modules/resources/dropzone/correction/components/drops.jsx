@@ -18,7 +18,7 @@ import {actions} from '#/plugin/drop-zone/resources/dropzone/correction/actions'
 
 const DropsList = props =>
   <section className="resource-section drop-list">
-    <h2>{trans('corrections_management', {}, 'dropzone')}</h2>
+    <h2>{trans('corrections', {}, 'dropzone')}</h2>
 
     <ListData
       name={`${selectors.STORE_NAME}.drops`}
@@ -38,9 +38,10 @@ const DropsList = props =>
       definition={[
         {
           name: 'user',
-          label: trans('user', {}, 'platform'),
+          label: trans('user'),
           type: 'string',
           displayed: constants.DROP_TYPE_USER === props.dropzone.parameters.dropType,
+          filterable: constants.DROP_TYPE_USER === props.dropzone.parameters.dropType,
           displayable: constants.DROP_TYPE_USER === props.dropzone.parameters.dropType,
           render: (rowData) => rowData.user ? `${rowData.user.firstName} ${rowData.user.lastName}` : trans('unknown')
         }, {
@@ -48,6 +49,7 @@ const DropsList = props =>
           label: trans('team', {}, 'team'),
           type: 'string',
           displayed: constants.DROP_TYPE_TEAM === props.dropzone.parameters.dropType,
+          filterable: constants.DROP_TYPE_TEAM === props.dropzone.parameters.dropType,
           displayable: constants.DROP_TYPE_TEAM === props.dropzone.parameters.dropType
         }, {
           name: 'dropDate',
@@ -98,30 +100,39 @@ const DropsList = props =>
       ]}
       actions={(rows) => [
         {
+          name: 'correct',
           type: LINK_BUTTON,
           icon: 'fa fa-fw fa-pencil',
           label: trans('correct_the_copy', {}, 'dropzone'),
           target: `${props.path}/drop/${rows[0].id}`,
-          scope: ['object']
+          disabled: !rows[0].finished,
+          scope: ['object'],
+          primary: true
         }, {
+          name: 'unlock',
           type: CALLBACK_BUTTON,
           icon: 'fa fa-fw fa-unlock',
           label: trans('unlock_drop', {}, 'dropzone'),
           displayed: !rows[0].unlockedDrop,
           callback: () => props.unlockDrop(rows[0].id),
-          scope: ['object'] // todo should be selection action too
+          scope: ['object'], // todo should be selection action too
+          group: trans('management')
         }, {
+          name: 'cancel-submission',
           type: CALLBACK_BUTTON,
           icon: 'fa fa-fw fa-undo',
           label: trans('cancel_drop_submission', {}, 'dropzone'),
           displayed: rows[0].finished,
           callback: () => props.cancelDrop(rows[0].id),
-          scope: ['object'] // todo should be selection action too
+          scope: ['object'], // todo should be selection action too
+          group: trans('management')
         }, {
+          name: 'download',
           type: CALLBACK_BUTTON,
           icon: 'fa fa-fw fa-download',
           label: trans('download', {}, 'platform'),
-          callback: () => props.downloadDrops(rows)
+          callback: () => props.downloadDrops(rows),
+          group: trans('transfer')
         }
       ]}
     />

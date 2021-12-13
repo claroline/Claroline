@@ -10,3 +10,8 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\Manager\PlanningManager'
         tags: [ 'claroline.platform.updater' ]
+
+    Claroline\CursusBundle\Installation\Updater\Updater130100:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+        tags: [ 'claroline.platform.updater' ]

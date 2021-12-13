@@ -44,9 +44,11 @@ const config = getExternalPlugins().then(extPlugins => {
     autoresize_min_height: 160,
     autoresize_max_height: 500,
 
-    //allow to fetch tinymce plugins
+    // allow to fetch tinymce plugins
     baseURL: asset('packages/tinymce'),
-    relative_urls : false,
+    // avoid tinymce to prepend platform url to relative path
+    // this breaks the url placeholders of the template system
+    relative_urls : true,
 
     // plugin : paste
     paste_data_images: true,

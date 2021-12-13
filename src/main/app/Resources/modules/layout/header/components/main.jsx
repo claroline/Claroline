@@ -108,7 +108,6 @@ HeaderMain.propTypes = {
     id: T.string,
     name: T.string,
     username: T.string,
-    publicUrl: T.string,
     picture: T.shape({
       url: T.string.isRequired
     }),

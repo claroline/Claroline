@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\API\Serializer\Resource\Types;
 
+use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 
@@ -15,7 +16,7 @@ class DirectorySerializer
     public function serialize(Directory $directory): array
     {
         return [
-            'id' => $directory->getId(),
+            'id' => $directory->getUuid(),
             'uploadDestination' => $directory->isUploadDestination(),
 
             // resource list config
@@ -62,8 +63,14 @@ class DirectorySerializer
     /**
      * Deserializes directory data into an Entity.
      */
-    public function deserialize(array $data, Directory $directory): Directory
+    public function deserialize(array $data, Directory $directory, array $options = []): Directory
     {
+        if (!in_array(Options::REFRESH_UUID, $options)) {
+            $this->sipe('id', 'setUuid', $data, $directory);
+        } else {
+            $directory->refreshUuid();
+        }
+
         $this->sipe('uploadDestination', 'setUploadDestination', $data, $directory);
 
         // resource list config

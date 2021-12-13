@@ -14,7 +14,7 @@ namespace Claroline\CoreBundle\Controller\APINew\User;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
-use Claroline\AppBundle\Controller\AbstractApiController;
+use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Manager\File\TempFileManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
@@ -33,9 +33,10 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 /**
  * @Route("/profile")
  */
-class ProfileController extends AbstractApiController
+class ProfileController
 {
     use PermissionCheckerTrait;
+    use RequestDecoderTrait;
 
     /** @var AuthorizationCheckerInterface */
     private $authorization;
@@ -99,8 +100,8 @@ class ProfileController extends AbstractApiController
     }
 
     /**
-     * @Route("/{publicUrl}", name="apiv2_profile_open", methods={"GET"})
-     * @EXT\ParamConverter("user", options={"mapping": {"publicUrl": "publicUrl"}})
+     * @Route("/{username}", name="apiv2_profile_open", methods={"GET"})
+     * @EXT\ParamConverter("user", options={"mapping": {"username": "username"}})
      */
     public function openAction(User $user)
     {

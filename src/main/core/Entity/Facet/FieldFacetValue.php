@@ -26,7 +26,6 @@ class FieldFacetValue extends AbstractFacetValue
      *
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\User",
-     *     inversedBy="fieldsFacetValue",
      *     cascade={"persist"}
      * )
      * @ORM\JoinColumn(onDelete="CASCADE", nullable=true)

@@ -20,7 +20,7 @@ class WorkspaceRepository extends EntityRepository
     {
         return $this->createQueryBuilder('w')
             ->where('(UPPER(w.name) LIKE :search OR UPPER(w.code) LIKE :search)')
-            ->andWhere('w.displayable = true')
+            ->andWhere('w.hidden = false')
             ->andWhere('w.archived = false')
             ->andWhere('w.personal = false')
             ->andWhere('w.model = false')
@@ -166,14 +166,14 @@ class WorkspaceRepository extends EntityRepository
     /**
      * Returns the list of workspace codes starting with $prefix.
      * Useful to auto generate unique workspace codes.
-     *
-     * @param string $prefix
-     *
-     * @return string[]
      */
-    public function findWorkspaceCodesWithPrefix($prefix)
+    public function findWorkspaceCodesWithPrefix(string $prefix): array
     {
-        return array_map(function (array $ws) { return $ws['code']; }, $this->_em->createQuery('
+        return array_map(
+            function (array $ws) {
+                return $ws['code'];
+            },
+            $this->_em->createQuery('
                 SELECT UPPER(w.code) AS code
                 FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
                 WHERE UPPER(w.code) LIKE :search

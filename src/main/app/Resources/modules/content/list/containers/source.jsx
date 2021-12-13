@@ -60,11 +60,11 @@ const ListSource = props => {
       card={computedCard}
       display={{
         current: props.parameters.display,
-        available: props.parameters.availableDisplays
+        available: !isEmpty(props.parameters.availableDisplays) ? props.parameters.availableDisplays : [props.parameters.display]
       }}
       searchMode={get(props.parameters, 'searchMode') || undefined}
       pageSizes={get(props.parameters, 'availablePageSizes') || undefined}
-      count={isEmpty(props.parameters) || props.parameters.count}
+      count={get(props.parameters, 'count', false)}
       selectable={get(props.parameters, 'actions', false) && !!get(props.source, 'parameters.actions')}
       filterable={isEmpty(props.parameters) || !isEmpty(props.parameters.availableFilters)}
       sortable={isEmpty(props.parameters) || !isEmpty(props.parameters.availableSort)}

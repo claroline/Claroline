@@ -11,13 +11,12 @@
 
 namespace Claroline\AppBundle\Event\Crud;
 
-/**
- * Crud event class.
- */
 class CopyEvent extends CrudEvent
 {
     /** @var mixed */
     private $copy;
+    /** @var mixed */
+    private $extra;
 
     /**
      * @param mixed $object  - The object created

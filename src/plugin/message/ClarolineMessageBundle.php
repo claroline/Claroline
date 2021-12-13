@@ -12,12 +12,7 @@
 namespace Claroline\MessageBundle;
 
 use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
-use Claroline\MessageBundle\Installation\AdditionalInstaller;
 
 class ClarolineMessageBundle extends DistributionPluginBundle
 {
-    public function getAdditionalInstaller()
-    {
-        return new AdditionalInstaller();
-    }
 }

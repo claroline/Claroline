@@ -46,12 +46,12 @@ const CommentsComponent = props =>
             onClick={() => props.switchCommentFormDisplay(!props.showForm)}
           >
             <span className="fa fa-fw fa-edit" style={{marginRight: '7px'}} />
-            {trans('add_comment', {}, 'icap_blog')}
+            {trans('add_comment')}
           </button>
         }
         {props.showForm &&
           <div>
-            <h4>{trans('add_comment', {}, 'icap_blog')}</h4>
+            <h4>{trans('add_comment')}</h4>
             <UserMessageForm
               user={props.currentUser !== null ? props.currentUser : {}}
               allowHtml={true}

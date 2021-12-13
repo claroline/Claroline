@@ -2,6 +2,8 @@
 
 namespace Claroline\CoreBundle\API\Serializer\Resource\Types;
 
+use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\CoreBundle\Entity\Resource\Revision;
 use Claroline\CoreBundle\Entity\Resource\Text;
 use Claroline\CoreBundle\Entity\User;
@@ -10,6 +12,8 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class TextSerializer
 {
+    use SerializerTrait;
+
     /** @var TokenStorageInterface */
     private $tokenStorage;
 
@@ -40,7 +44,7 @@ class TextSerializer
     public function serialize(Text $text): array
     {
         return [
-            'id' => $text->getId(),
+            'id' => $text->getUuid(),
             'raw' => $text->getContent(),
             'content' => $this->placeholderManager->replacePlaceholders($text->getContent() ?? ''),
             'meta' => [
@@ -49,10 +53,15 @@ class TextSerializer
         ];
     }
 
-    public function deserialize(array $data, Text $text): Text
+    public function deserialize(array $data, Text $text, array $options = []): Text
     {
-        $user = $this->tokenStorage->getToken()->getUser();
+        if (!in_array(Options::REFRESH_UUID, $options)) {
+            $this->sipe('id', 'setUuid', $data, $text);
+        } else {
+            $text->refreshUuid();
+        }
 
+        $user = $this->tokenStorage->getToken()->getUser();
         if (isset($data['raw'])) {
             $revision = new Revision();
             $revision->setContent($data['raw']);

@@ -12,7 +12,7 @@
 namespace Claroline\CoreBundle\Command\Workspace;
 
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Manager\Workspace\TransferManager;
+use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -22,12 +22,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 class ExportCommand extends Command
 {
     private $em;
-    private $transferManager;
+    private $workspaceManager;
 
-    public function __construct(EntityManagerInterface $em, TransferManager $transferManager)
+    public function __construct(EntityManagerInterface $em, WorkspaceManager $workspaceManager)
     {
         $this->em = $em;
-        $this->transferManager = $transferManager;
+        $this->workspaceManager = $workspaceManager;
 
         parent::__construct();
     }
@@ -35,17 +35,15 @@ class ExportCommand extends Command
     protected function configure()
     {
         $this->setDescription('export workspace archive');
-        $this->setDefinition(
-            [
-                new InputArgument('code', InputArgument::OPTIONAL, 'The workspace code'),
-            ]
-        );
+        $this->setDefinition([
+            new InputArgument('code', InputArgument::OPTIONAL, 'The workspace code'),
+        ]);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $workspace = $this->em->getRepository(Workspace::class)->findOneByCode($input->getArgument('code'));
-        $path = $this->transferManager->export($workspace);
+        $path = $this->workspaceManager->export($workspace);
 
         $output->writeln($path);
 

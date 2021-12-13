@@ -8,9 +8,9 @@ import {ResourcePage} from '#/main/core/resource/containers/page'
 
 import {constants} from '#/plugin/drop-zone/resources/dropzone/constants'
 
-import {Overview} from '#/plugin/drop-zone/resources/dropzone/overview/components/overview'
-import {Editor} from '#/plugin/drop-zone/resources/dropzone/editor/components/editor'
-import {MyDrop} from '#/plugin/drop-zone/resources/dropzone/player/components/my-drop'
+import {Overview} from '#/plugin/drop-zone/resources/dropzone/overview/containers/overview'
+import {Editor} from '#/plugin/drop-zone/resources/dropzone/editor/containers/editor'
+import {MyDrop} from '#/plugin/drop-zone/resources/dropzone/player/containers/my-drop'
 import {Drops} from '#/plugin/drop-zone/resources/dropzone/correction/components/drops'
 import {Correctors} from '#/plugin/drop-zone/resources/dropzone/correction/components/correctors'
 import {Corrector} from '#/plugin/drop-zone/resources/dropzone/correction/components/corrector'
@@ -69,29 +69,16 @@ const DropzoneResource = props =>
     routes={[
       {
         path: '/',
-        render: () => {
-          const component = <Overview path={props.path} />
-
-          return component
-        },
+        component: Overview,
         exact: true
       }, {
         path: '/edit',
-        render: () => {
-          const component = <Editor path={props.path} />
-
-          return component
-        },
+        component: Editor,
         disabled: !props.canEdit,
-        onLeave: () => props.resetForm(),
         onEnter: () => props.resetForm(props.dropzone)
       }, {
         path: '/my/drop',
-        render: () => {
-          const component = <MyDrop path={props.path} />
-
-          return component
-        },
+        component: MyDrop,
         exact: true,
         onEnter: () => {
           if (props.currentRevisionId) {

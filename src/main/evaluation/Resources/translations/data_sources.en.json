@@ -1,0 +1,8 @@
+{
+  "resource_attempts": "List of resources attempts",
+  "resource_attempts_desc": "Allows to list the attempts made by users.",
+  "resource_evaluations": "List of resources evaluations",
+  "resource_evaluations_desc": "Allows to list the evaluations obtained by users for resources.",
+  "workspace_evaluations": "List of workspaces evaluations",
+  "workspace_evaluations_desc": "Allows to list the evaluations obtained by users for workspaces."
+}

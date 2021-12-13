@@ -99,20 +99,8 @@ class AnnouncementFinder extends AbstractFinder
                     $this->setDefaults($qb, $filterName, $filterValue);
             }
         }
-
-        if (!is_null($sortBy) && isset($sortBy['property']) && isset($sortBy['direction'])) {
-            $sortByProperty = $sortBy['property'];
-            $sortByDirection = 1 === $sortBy['direction'] ? 'ASC' : 'DESC';
-
-            switch ($sortByProperty) {
-                case 'meta.publishedAt':
-                    $qb->orderBy('obj.publicationDate', $sortByDirection);
-                    break;
-            }
-        }
     }
 
-    //required for the unions
     public function getExtraFieldMapping()
     {
         return [

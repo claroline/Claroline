@@ -29,9 +29,6 @@ class DocumentSerializer
     private $revisionRepo;
     private $resourceNodeRepo;
 
-    /**
-     * DocumentSerializer constructor.
-     */
     public function __construct(
         DropzoneToolDocumentSerializer $dropzoneToolDocumentSerializer,
         RevisionSerializer $revisionSerializer,

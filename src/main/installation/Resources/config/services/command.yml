@@ -21,7 +21,6 @@ services:
             - '@Claroline\CoreBundle\Library\Installation\PlatformInstaller'
             - '@Claroline\CoreBundle\Manager\VersionManager'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-            - '@translator'
             - '%kernel.environment%'
         tags:
             - { name: 'console.command', command: 'claroline:update' }

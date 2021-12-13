@@ -29,5 +29,6 @@ export default (workspaces, refresher, path, currentUser) => ({
     message: trans('register_confirm_message')
   },
   group: trans('registration'),
-  scope: ['object', 'collection']
+  scope: ['object', 'collection'],
+  primary: true
 })

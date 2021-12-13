@@ -20,7 +20,7 @@ import {CorrectionRow} from '#/plugin/drop-zone/resources/dropzone/correction/co
 const Corrections = props =>
   <FormSections>
     <FormSection
-      title={trans('corrections_list', {}, 'dropzone')}
+      title={trans('corrections', {}, 'dropzone')}
     >
       <table className="table corrections-table">
         <thead>
@@ -81,7 +81,7 @@ const Drop = props => props.drop ?
           )}
         </h2>
         <Documents
-          documents={props.drop.documents || []}
+          documents={props.drop.documents}
           showUser={props.dropzone.parameters.dropType === constants.DROP_TYPE_TEAM}
           showTools={true}
           tools={props.tools}
@@ -111,6 +111,7 @@ const Drop = props => props.drop ?
         corrections={props.drop.corrections || []}
       />
     }
+
     {props.drop.finished &&
       <CorrectionCreation {...props}/>
     }

@@ -5,6 +5,7 @@ namespace Claroline\AnnouncementBundle\Crud;
 use Claroline\AnnouncementBundle\Entity\Announcement;
 use Claroline\AnnouncementBundle\Entity\AnnouncementSend;
 use Claroline\AnnouncementBundle\Manager\AnnouncementManager;
+use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
@@ -72,8 +73,10 @@ class AnnouncementCrud
         $announcement = $event->getObject();
         $send = $this->om->getRepository(AnnouncementSend::class)->findBy(['announcement' => $announcement]);
 
-        foreach ($send as $el) {
-            $this->om->remove($el);
+        if (!in_array(Options::SOFT_DELETE, $event->getOptions())) {
+            foreach ($send as $el) {
+                $this->om->remove($el);
+            }
         }
 
         // delete scheduled task is any

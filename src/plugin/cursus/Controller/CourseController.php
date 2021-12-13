@@ -13,10 +13,10 @@ namespace Claroline\CursusBundle\Controller;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
+use Claroline\AppBundle\Manager\PdfManager;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Library\RoutingHelper;
 use Claroline\CoreBundle\Manager\Tool\ToolManager;
@@ -28,11 +28,9 @@ use Claroline\CursusBundle\Entity\Registration\SessionGroup;
 use Claroline\CursusBundle\Entity\Registration\SessionUser;
 use Claroline\CursusBundle\Entity\Session;
 use Claroline\CursusBundle\Manager\CourseManager;
-use Dompdf\Dompdf;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -53,29 +51,29 @@ class CourseController extends AbstractCrudController
     private $templating;
     /** @var RoutingHelper */
     private $routing;
-    /** @var PlatformConfigurationHandler */
-    private $config;
     /** @var ToolManager */
     private $toolManager;
     /** @var CourseManager */
     private $manager;
+    /** @var PdfManager */
+    private $pdfManager;
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         TokenStorageInterface $tokenStorage,
         Environment $templating,
         RoutingHelper $routing,
-        PlatformConfigurationHandler $config,
         ToolManager $toolManager,
-        CourseManager $manager
+        CourseManager $manager,
+        PdfManager $pdfManager
     ) {
         $this->authorization = $authorization;
         $this->tokenStorage = $tokenStorage;
         $this->templating = $templating;
         $this->routing = $routing;
-        $this->config = $config;
         $this->toolManager = $toolManager;
         $this->manager = $manager;
+        $this->pdfManager = $pdfManager;
     }
 
     public function getName()
@@ -212,22 +210,6 @@ class CourseController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/share", name="apiv2_cursus_course_share")
-     * @EXT\ParamConverter("course", class="ClarolineCursusBundle:Course", options={"mapping": {"id": "uuid"}})
-     */
-    public function shareAction(Course $course): Response
-    {
-        return new Response(
-            $this->templating->render('@ClarolineApp/share.html.twig', [
-                'url' => $this->routing->desktopUrl('trainings').'/catalog/'.$course->getSlug(),
-                'title' => $course->getName(),
-                'thumbnail' => $course->getThumbnail(),
-                'description' => !empty($course->getPlainDescription()) ? $course->getPlainDescription() : strip_tags($course->getDescription()),
-            ])
-        );
-    }
-
-    /**
      * @Route("/{id}/pdf", name="apiv2_cursus_course_download_pdf", methods={"GET"})
      * @EXT\ParamConverter("course", class="ClarolineCursusBundle:Course", options={"mapping": {"id": "uuid"}})
      */
@@ -235,19 +217,10 @@ class CourseController extends AbstractCrudController
     {
         $this->checkPermission('OPEN', $course, [], true);
 
-        $domPdf = new Dompdf([
-            'isHtml5ParserEnabled' => true,
-            'isRemoteEnabled' => true,
-            'tempDir' => $this->config->getParameter('server.tmp_dir'),
-        ]);
-
-        $domPdf->loadHtml($this->manager->generateFromTemplate($course, $request->getLocale()));
-
-        // Render the HTML as PDF
-        $domPdf->render();
-
-        return new StreamedResponse(function () use ($domPdf) {
-            echo $domPdf->output();
+        return new StreamedResponse(function () use ($course, $request) {
+            echo $this->pdfManager->fromHtml(
+                $this->manager->generateFromTemplate($course, $request->getLocale())
+            );
         }, 200, [
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => 'attachment; filename='.TextNormalizer::toKey($course->getName()).'.pdf',

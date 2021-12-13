@@ -14,13 +14,14 @@ actions.openFacet = makeActionCreator(PROFILE_FACET_OPEN, 'id')
 actions.load = makeActionCreator(PROFILE_LOAD, 'user', 'facets', 'parameters')
 actions.setLoaded = makeActionCreator(PROFILE_SET_LOADED, 'loaded')
 
-actions.open = (publicUrl) => (dispatch, getState) => {
+actions.open = (username) => (dispatch, getState) => {
   const current = formSelectors.data(formSelectors.form(getState(), selectors.FORM_NAME))
 
-  if (current.publicUrl !== publicUrl) {
+  if (current.username !== username) {
     return dispatch({
       [API_REQUEST]: {
-        url: ['apiv2_profile_open', {publicUrl: publicUrl}],
+        url: ['apiv2_profile_open', {username: username}],
+        silent: true,
         before: () => dispatch(actions.setLoaded(false)),
         success: (response) => dispatch(actions.load(response.user, response.facets, response.parameters || {}))
       }

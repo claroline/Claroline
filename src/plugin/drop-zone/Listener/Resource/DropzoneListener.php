@@ -25,6 +25,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class DropzoneListener
 {
+    /** @var string */
+    private $filesDir;
+
     /** @var TokenStorageInterface */
     private $tokenStorage;
 
@@ -41,12 +44,14 @@ class DropzoneListener
     private $translator;
 
     public function __construct(
+        string $filesDir,
         TokenStorageInterface $tokenStorage,
         DropzoneManager $dropzoneManager,
         SerializerProvider $serializer,
         TeamManager $teamManager,
         TranslatorInterface $translator
     ) {
+        $this->filesDir = $filesDir;
         $this->tokenStorage = $tokenStorage;
         $this->dropzoneManager = $dropzoneManager;
         $this->serializer = $serializer;
@@ -81,7 +86,10 @@ class DropzoneListener
         /** @var Dropzone $dropzone */
         $dropzone = $event->getResource();
 
-        $this->dropzoneManager->delete($dropzone);
+        $dropzoneDir = $this->filesDir.DIRECTORY_SEPARATOR.'dropzone'.DIRECTORY_SEPARATOR.$dropzone->getUuid();
+        if (file_exists($dropzoneDir)) {
+            $event->setFiles([$dropzoneDir]);
+        }
 
         $event->stopPropagation();
     }

@@ -7,7 +7,6 @@ import {Routes} from '#/main/app/router'
 import {DOWNLOAD_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {ToolPage} from '#/main/core/tool/containers/page'
 
-import {ParametersForm} from '#/plugin/open-badge/tools/badges/parameters/components/form'
 import {Assertions} from '#/plugin/open-badge/tools/badges/assertion/components/list'
 import {Badges}  from '#/plugin/open-badge/tools/badges/badge/components/list'
 import {BadgeDetails} from '#/plugin/open-badge/tools/badges/badge/components/details'
@@ -53,8 +52,7 @@ const BadgeTool = props =>
         routes={[
           {path: '/new',        render: () => trans('new_badge', {}, 'badge')},
           {path: '/my-badges',  render: () => trans('my_badges', {}, 'badge')},
-          {path: '/badges',     render: () => trans('all_badges', {}, 'badge')},
-          {path: '/parameters', render: () => trans('parameters')}
+          {path: '/badges',     render: () => trans('all_badges', {}, 'badge')}
         ]}
       />
     }
@@ -90,10 +88,6 @@ const BadgeTool = props =>
           component: AssertionDetails,
           onEnter: (params) => props.openAssertion(params.assertionId),
           exact: true
-        }, {
-          path: '/parameters',
-          component: ParametersForm,
-          disabled: !props.canEdit
         }
       ]}
     />

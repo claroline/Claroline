@@ -144,7 +144,7 @@ class ClientSerializer
             'plugins' => $this->pluginManager->getEnabled(true),
             'quotas' => [
                 'enabled' => $this->config->getParameter('quotas.enabled'),
-            ],
+            ]
         ];
 
         $event = new GenericDataEvent();

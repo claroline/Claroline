@@ -1,15 +1,9 @@
 {
     "select": "Seleccionar",
-    "apply": "Aplicar",
     "close": "Cerrar",
     "search": "Buscar",
-    "maxlength_field": "",
     "posts": "Respuestas",
     "3D": "Sphere 3D  <span>(* No compatible con IE<9)</span>\n",
     "Post": "Entradas",
-    "add_comment": "Añadir un comentario:",
-    "add_new_post": "Añadir una entrada",
-    "add_tag": "Añadir un tag",
-    "angular_date_format": "dd/MM/yyyy",
-    "back_to_blog": "Volver al blog"
+    "add_new_post": "Añadir una entrada"
 }

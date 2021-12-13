@@ -24,7 +24,7 @@ const showFormulaDialog = editor => {
     html: buildFrame(editor),
     buttons: [
       {
-        text: trans('cancel'),
+        text: trans('cancel', {}, 'actions'),
         onclick: function () {
           win.close()
         }

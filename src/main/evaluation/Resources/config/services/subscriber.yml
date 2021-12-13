@@ -18,3 +18,28 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
         tags:
             - { name: kernel.event_subscriber }
+
+    # Data sources
+    Claroline\EvaluationBundle\Subscriber\DataSource\ResourceAttemptSource:
+        arguments:
+            - '@security.token_storage'
+            - '@security.authorization_checker'
+            - '@Claroline\AppBundle\API\FinderProvider'
+        tags:
+            - { name: kernel.event_subscriber }
+
+    Claroline\EvaluationBundle\Subscriber\DataSource\ResourceEvaluationSource:
+        arguments:
+            - '@security.token_storage'
+            - '@security.authorization_checker'
+            - '@Claroline\AppBundle\API\FinderProvider'
+        tags:
+            - { name: kernel.event_subscriber }
+
+    Claroline\EvaluationBundle\Subscriber\DataSource\WorkspaceEvaluationSource:
+        arguments:
+            - '@security.token_storage'
+            - '@security.authorization_checker'
+            - '@Claroline\AppBundle\API\FinderProvider'
+        tags:
+            - { name: kernel.event_subscriber }

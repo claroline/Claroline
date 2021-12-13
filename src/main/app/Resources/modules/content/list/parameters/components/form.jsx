@@ -394,7 +394,8 @@ const ListForm = props => {
           displayed: (parameters) => {
             const availableDisplays = get(parameters, 'availableDisplays') || []
 
-            return !!availableDisplays.find(displayMode => constants.DISPLAY_MODES[displayMode].options.filterColumns)
+            return (parameters.display && constants.DISPLAY_MODES[parameters.display].options.filterColumns)
+              || !!availableDisplays.find(displayMode => constants.DISPLAY_MODES[displayMode].options.filterColumns)
           },
           fields: [
             {

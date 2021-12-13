@@ -215,16 +215,10 @@ class DropController
      * Adds a Document to a Drop.
      *
      * @Route("/drop/{id}/type/{type}", name="claro_dropzone_documents_add", methods={"POST"})
-     * @EXT\ParamConverter(
-     *     "drop",
-     *     class="ClarolineDropZoneBundle:Drop",
-     *     options={"mapping": {"id": "uuid"}}
-     * )
+     * @EXT\ParamConverter("drop", class="ClarolineDropZoneBundle:Drop", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @param int $type
      */
-    public function addDocumentAction(Drop $drop, $type, User $user, Request $request): JsonResponse
+    public function addDocumentAction(Drop $drop, string $type, User $user, Request $request): JsonResponse
     {
         $dropzone = $drop->getDropzone();
         $this->checkPermission('OPEN', $dropzone->getResourceNode(), [], true);

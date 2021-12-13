@@ -140,7 +140,7 @@ class SchemaProvider
 
             if (in_array(Options::IGNORE_COLLECTIONS, $options) && isset($schema->properties)) {
                 foreach ($schema->properties as $key => $property) {
-                    if ('array' === $property->type) {
+                    if (isset($property->type) && 'array' === $property->type) {
                         unset($schema->properties->{$key});
                     }
                 }

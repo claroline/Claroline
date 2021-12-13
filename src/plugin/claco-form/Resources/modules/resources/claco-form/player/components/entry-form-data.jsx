@@ -80,7 +80,7 @@ class EntryFormData extends Component {
             options={this.props.choices.map(choice => {
               return {value: choice.id, label: choice.name}
             })}
-            primaryLabel={trans('add')}
+            primaryLabel={trans('add', {}, 'actions')}
             disablePrimary={!this.state.current}
             typeAhead={this.props.allowNew}
             value={this.state.current}

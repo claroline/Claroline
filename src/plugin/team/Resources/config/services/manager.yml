@@ -1,15 +1,12 @@
 services:
     _defaults:
-        autowire: false #change to true
+        autowire: false
         autoconfigure: false
-        public: true #because controller
+        public: true
 
     Claroline\TeamBundle\Manager\Transfer\Team:
         arguments:
-            - '@security.authorization_checker'
-            - '@security.token_storage'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\AppBundle\API\FinderProvider'
             - '@Claroline\TeamBundle\Serializer\TeamSerializer'
             - '@Claroline\TeamBundle\Manager\TeamManager'
             - '@Claroline\TeamBundle\Serializer\WorkspaceTeamParametersSerializer'

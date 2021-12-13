@@ -11,8 +11,6 @@
 
 namespace Claroline\TeamBundle\Manager\Transfer;
 
-use Claroline\AppBundle\API\FinderProvider;
-use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Utils\FileBag;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -22,19 +20,11 @@ use Claroline\TeamBundle\Entity\WorkspaceTeamParameters;
 use Claroline\TeamBundle\Manager\TeamManager;
 use Claroline\TeamBundle\Serializer\TeamSerializer;
 use Claroline\TeamBundle\Serializer\WorkspaceTeamParametersSerializer;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class Team implements ToolImporterInterface
 {
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
     /** @var ObjectManager */
     private $om;
-    /** @var FinderProvider */
-    private $finder;
     /** @var TeamSerializer */
     private $teamSerializer;
     /** @var TeamManager */
@@ -43,18 +33,12 @@ class Team implements ToolImporterInterface
     private $parametersSerializer;
 
     public function __construct(
-        AuthorizationCheckerInterface $authorization,
-        TokenStorageInterface $tokenStorage,
         ObjectManager $om,
-        FinderProvider $finder,
         TeamSerializer $teamSerializer,
         TeamManager $teamManager,
         WorkspaceTeamParametersSerializer $parametersSerializer
     ) {
-        $this->authorization = $authorization;
-        $this->tokenStorage = $tokenStorage;
         $this->om = $om;
-        $this->finder = $finder;
         $this->teamSerializer = $teamSerializer;
         $this->teamManager = $teamManager;
         $this->parametersSerializer = $parametersSerializer;
@@ -70,20 +54,41 @@ class Team implements ToolImporterInterface
         ];
     }
 
-    public function deserialize(array $data, Workspace $workspace, array $options, FileBag $bag)
+    public function deserialize(array $data, Workspace $workspace, array $options, array $newEntities, FileBag $bag): array
     {
+        $teams = [];
+
         foreach ($data['teams'] as $teamData) {
             $team = new TeamEntity();
-            $this->teamSerializer->deserialize($teamData, $team, [Options::REFRESH_UUID]);
+            $this->teamSerializer->deserialize($teamData, $team, $options);
+
+            // correct relation to external entities
+            if (!empty($teamData['directory']) && $newEntities[$teamData['directory']['id']]) {
+                $team->setDirectory($newEntities[$teamData['directory']['id']]);
+            }
+
+            if (!empty($teamData['role']) && $newEntities[$teamData['role']['id']]) {
+                $team->setRole($newEntities[$teamData['role']['id']]);
+            }
+
+            if (!empty($teamData['teamManagerRole']) && $newEntities[$teamData['teamManagerRole']['id']]) {
+                $team->setTeamManagerRole($newEntities[$teamData['teamManagerRole']['id']]);
+            }
+
             $team->setWorkspace($workspace);
             $this->om->persist($team);
+
+            $teams[$teamData['id']] = $team;
         }
 
         $parameters = new WorkspaceTeamParameters();
-        $this->parametersSerializer->deserialize($data['parameters'], $parameters, [Options::REFRESH_UUID]);
+        $this->parametersSerializer->deserialize($data['parameters'], $parameters, $options);
         $parameters->setWorkspace($workspace);
         $this->om->persist($parameters);
+
         $this->om->flush();
+
+        return $teams;
     }
 
     public function prepareImport(array $orderedToolData, array $data): array

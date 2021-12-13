@@ -109,6 +109,8 @@ class WorkspaceEvaluationController extends AbstractSecurityController
         $query['columns'] = [
             'user.lastName',
             'user.firstName',
+            'user.username',
+            'user.email',
             'date',
             'status',
             'progression',

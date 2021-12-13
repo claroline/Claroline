@@ -13,7 +13,7 @@ namespace Claroline\HomeBundle\Controller;
 
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\FinderProvider;
-use Claroline\AppBundle\Controller\AbstractApiController;
+use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\User;
@@ -31,8 +31,10 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 /**
  * @Route("/home")
  */
-class HomeController extends AbstractApiController
+class HomeController
 {
+    use RequestDecoderTrait;
+
     /** @var TokenStorageInterface */
     private $tokenStorage;
     /** @var AuthorizationCheckerInterface */

@@ -303,8 +303,6 @@ class Crud
         $class = $this->getRealClass($object);
         $new = new $class();
 
-        //default option for copy
-        $options[] = Options::REFRESH_UUID;
         $serializer = $this->serializer->get($new);
 
         if (method_exists($serializer, 'getCopyOptions')) {
@@ -314,7 +312,7 @@ class Crud
         $this->serializer->deserialize(
           $this->serializer->serialize($object, $options),
           $new,
-          $options
+          array_merge([], $options, [Options::REFRESH_UUID])
         );
 
         $this->om->persist($new);

@@ -15,14 +15,16 @@ use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Controller\APINew\Model\HasGroupsTrait;
-use Claroline\CoreBundle\Controller\APINew\Model\HasParentTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasUsersTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasWorkspacesTrait;
 use Claroline\CoreBundle\Entity\Organization\Organization;
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
@@ -31,16 +33,21 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 class OrganizationController extends AbstractCrudController
 {
     use HasGroupsTrait;
-    use HasParentTrait;
     use HasUsersTrait;
     use HasWorkspacesTrait;
+    use PermissionCheckerTrait;
 
     /** @var AuthorizationCheckerInterface */
     private $authorization;
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
 
-    public function __construct(AuthorizationCheckerInterface $authorization)
-    {
+    public function __construct(
+        AuthorizationCheckerInterface $authorization,
+        TokenStorageInterface $tokenStorage
+    ) {
         $this->authorization = $authorization;
+        $this->tokenStorage = $tokenStorage;
     }
 
     public function getName()
@@ -58,10 +65,13 @@ class OrganizationController extends AbstractCrudController
      */
     public function recursiveListAction(): JsonResponse
     {
+        $hiddenFilters = $this->getDefaultHiddenFilters();
+        // only get the root organization to build the tree
+        $hiddenFilters['parent'] = null;
+
         return new JsonResponse(
             $this->finder->search(Organization::class, [
-                // only get the root organization to build the tree
-                'hiddenFilters' => ['parent' => null],
+                'hiddenFilters' => $hiddenFilters,
             ], [Options::IS_RECURSIVE])
         );
     }
@@ -72,10 +82,13 @@ class OrganizationController extends AbstractCrudController
      */
     public function listManagersAction(Organization $organization): JsonResponse
     {
-        return new JsonResponse($this->finder->search(
-             'Claroline\CoreBundle\Entity\User',
-             ['hiddenFilters' => ['organizationManager' => $organization->getUuid()]]
-         ));
+        $this->checkPermission('OPEN', $organization, [], true);
+
+        return new JsonResponse(
+            $this->finder->search(User::class, [
+                'hiddenFilters' => ['organizationManager' => $organization->getUuid()],
+            ])
+        );
     }
 
     /**
@@ -86,7 +99,7 @@ class OrganizationController extends AbstractCrudController
      */
     public function addManagersAction(Organization $organization, Request $request): JsonResponse
     {
-        $users = $this->decodeIdsString($request, 'Claroline\CoreBundle\Entity\User');
+        $users = $this->decodeIdsString($request, User::class);
         $this->crud->patch($organization, 'administrator', Crud::COLLECTION_ADD, $users);
 
         return new JsonResponse($this->serializer->serialize($organization));
@@ -100,9 +113,30 @@ class OrganizationController extends AbstractCrudController
      */
     public function removeManagersAction(Organization $organization, Request $request): JsonResponse
     {
-        $users = $this->decodeIdsString($request, 'Claroline\CoreBundle\Entity\User');
+        $users = $this->decodeIdsString($request, User::class);
         $this->crud->patch($organization, 'administrator', Crud::COLLECTION_REMOVE, $users);
 
         return new JsonResponse($this->serializer->serialize($organization));
+    }
+
+    protected function getDefaultHiddenFilters()
+    {
+        if (!$this->authorization->isGranted('ROLE_ADMIN')) {
+            $user = $this->tokenStorage->getToken()->getUser();
+            if ($user instanceof User) {
+                // show user organizations
+                return [
+                    'user' => $user->getUuid(),
+                ];
+            }
+
+            // only show public organizations
+            return [
+                'public' => true,
+            ];
+        }
+
+        // show all to admins
+        return [];
     }
 }

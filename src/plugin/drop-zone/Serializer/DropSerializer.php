@@ -19,9 +19,6 @@ class DropSerializer
     private $dropzoneRepo;
     private $userRepo;
 
-    /**
-     * DropSerializer constructor.
-     */
     public function __construct(
         CorrectionSerializer $correctionSerializer,
         DocumentSerializer $documentSerializer,
@@ -44,17 +41,13 @@ class DropSerializer
         return 'dropzone_drop';
     }
 
-    /**
-     * @return array
-     */
-    public function serialize(Drop $drop)
+    public function serialize(Drop $drop): array
     {
-        $serialized = [
+        return [
             'id' => $drop->getUuid(),
             'user' => $drop->getUser() ? $this->userSerializer->serialize($drop->getUser()) : null,
             'dropDate' => $drop->getDropDate() ? $drop->getDropDate()->format('Y-m-d H:i') : null,
             'score' => $drop->getScore(),
-            'reported' => $drop->isReported(),
             'finished' => $drop->isFinished(),
             'autoClosedDrop' => $drop->getAutoClosedDrop(),
             'unlockedDrop' => $drop->isUnlockedDrop(),
@@ -66,8 +59,6 @@ class DropSerializer
             'users' => $this->getUsers($drop),
             'comments' => $this->getComments($drop),
         ];
-
-        return $serialized;
     }
 
     /**
@@ -97,9 +88,6 @@ class DropSerializer
         }
         if (isset($data['score'])) {
             $drop->setScore($data['score']);
-        }
-        if (isset($data['reported'])) {
-            $drop->setReported($data['reported']);
         }
         if (isset($data['finished'])) {
             $drop->setFinished($data['finished']);

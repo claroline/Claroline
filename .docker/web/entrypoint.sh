@@ -2,6 +2,10 @@
 
 set -e
 
+php bin/configure # we run it again to generate parameters.yml inside the volume
+composer bundles # we run it again to generate bundles.ini inside the volume
+composer delete-cache # fixes install/update errors
+
 # Wait for MySQL to respond, depends on mysql-client
 echo "Waiting for $DB_HOST..."
 while ! mysqladmin ping -h "$DB_HOST" --silent; do
@@ -12,29 +16,11 @@ done
 echo "MySQL is up"
 
 if [ -f files/installed ]; then
-  echo "Claroline is already installed"
+  echo "Claroline is already installed, updating and rebuilding themes and translations..."
 
-  if [ -f files/versionLastUsed.txt ]; then
-    versionLastUsed=$(head -n 1 files/versionLastUsed.txt)
-    currentVersion=$(head -n 1 VERSION.txt)
-
-    if [[ "$versionLastUsed" != "$currentVersion" ]]; then
-      echo "New version detected, updating..."
-      php bin/console claroline:update -vvv
-
-      chmod -R 750 var files config
-      chown -R www-data:www-data var files config
-      composer delete-cache # fixes SAML errors
-    else
-      echo "Claroline version is up to date, rebuilding themes"
-      php bin/console claroline:theme:build
-      composer delete-cache
-    fi
-  fi
+  php bin/console claroline:update -vvv
 else
-  echo "Installing Claroline..."
-  php bin/configure # we run it again to generate parameters.yml inside the volume
-  composer bundles # we run it again to generate bundles.ini inside the volume
+  echo "Installing Claroline for the first time..."
   php bin/console claroline:install -vvv
 
   if [[ -v PLATFORM_NAME ]]; then
@@ -47,27 +33,18 @@ else
     sed -i "/support_email: null/c\support_email: $PLATFORM_SUPPORT_EMAIL" files/config/platform_options.json
   fi
 
-  USERS=$(mysql $DB_NAME -u $DB_USER -p$DB_PASSWORD -h $DB_HOST -se "select count(*) from claro_user")
+  echo "In order to create an admin user, run the following command inside the docker container (and replace the variables):"
+  echo "php bin/console claroline:user:create -a \$ADMIN_FIRSTNAME \$ADMIN_LASTNAME \$ADMIN_USERNAME \$ADMIN_PASSWORD \$ADMIN_EMAIL"
 
-  if [ "$USERS" == "0" ] && [ -v ADMIN_FIRSTNAME ] && [ -v ADMIN_LASTNAME ] && [ -v ADMIN_USERNAME ] && [ -v ADMIN_PASSWORD ]  && [ -v ADMIN_EMAIL ]; then
-    echo '*********************************************************************************************************************'
-    echo "Creating default admin user : $ADMIN_FIRSTNAME $ADMIN_LASTNAME $ADMIN_USERNAME $ADMIN_PASSWORD $ADMIN_EMAIL"
-    echo '*********************************************************************************************************************'
-
-    php bin/console claroline:user:create -a $ADMIN_FIRSTNAME $ADMIN_LASTNAME $ADMIN_USERNAME $ADMIN_PASSWORD $ADMIN_EMAIL
-  else
-    echo 'Users already exist or no admin vars detected, Claroline installed without an admin account'
-  fi
-
-  echo "Setting correct file permissions"
-  chmod -R 750 var files config
-  chown -R www-data:www-data var files config
-
-  echo "Clean cache after setting correct permissions, fixes SAML issues"
-  composer delete-cache
   touch files/installed
+  echo "Claroline installed, created file ./files/installed for future runs of this container"
 fi
 
-cp VERSION.txt files/versionLastUsed.txt
+echo "Clean cache after setting correct permissions, fixes SAML issues"
+composer delete-cache # fixes SAML errors
+
+echo "Setting correct file permissions for PROD"
+chmod -R 750 var files config
+chown -R www-data:www-data var files config
 
 exec "$@"

@@ -195,23 +195,6 @@ class DropzoneManager
     }
 
     /**
-     * Deletes a Dropzone.
-     */
-    public function delete(Dropzone $dropzone)
-    {
-        $this->om->startFlushSuite();
-        $uuid = $dropzone->getUuid();
-        $ds = DIRECTORY_SEPARATOR;
-        $dropzoneDir = $this->filesDir.$ds.'dropzone'.$ds.$uuid;
-
-        if ($this->fileSystem->exists($dropzoneDir)) {
-            $this->fileSystem->remove($dropzoneDir);
-        }
-        $this->crud->delete($dropzone);
-        $this->om->endFlushSuite();
-    }
-
-    /**
      * Sets Dropzone drop type to default.
      */
     public function setDefaultDropType(Dropzone $dropzone)
@@ -367,14 +350,13 @@ class DropzoneManager
     /**
      * Creates a Document.
      *
-     * @param int      $documentType
      * @param mixed    $documentData
      * @param Revision $revision
      * @param bool     $isManager
      *
      * @return Document
      */
-    public function createDocument(Drop $drop, User $user, $documentType, $documentData, Revision $revision = null, $isManager = false)
+    public function createDocument(Drop $drop, User $user, string $documentType, $documentData, Revision $revision = null, $isManager = false)
     {
         $document = new Document();
         $document->setDrop($drop);

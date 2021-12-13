@@ -3,6 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import omit from 'lodash/omit'
 
+import {ContentHtml} from '#/main/app/content/components/html'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
 
 const AlertModal = props =>
@@ -15,9 +16,9 @@ const AlertModal = props =>
       'fa-minus-circle':         props.type === 'danger'
     })}
   >
-    <div className="modal-body">
+    <ContentHtml className="modal-body">
       {props.message}
-    </div>
+    </ContentHtml>
   </Modal>
 
 AlertModal.propTypes = {

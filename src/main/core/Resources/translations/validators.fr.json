@@ -18,7 +18,6 @@
     "need_at_least_one_translation": "Au moins une traduction complète doit être fournie.",
     "password_mismatch": "Les mots de passe ne correspondent pas.",
     "port_error": "Le port doit être un nombre.",
-    "public_profile_url_not_valid": "L'URL de votre profil public n'est pas valide.",
     "valid_end_date_required": "Une date de fin valide est requise.",
     "valid_end_hour_required": "Une heure de fin valide est requise.",
     "valid_start_date_required": "Une date de début valide est requise.",

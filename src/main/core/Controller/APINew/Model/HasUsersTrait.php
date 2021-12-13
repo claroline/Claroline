@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Controller\APINew\Model;
 
 use Claroline\AppBundle\Annotations\ApiDoc;
 use Claroline\AppBundle\API\Crud;
+use Claroline\CoreBundle\Entity\User;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -13,6 +14,8 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 trait HasUsersTrait
 {
+    abstract protected function checkPermission($permission, $object, ?array $options = [], ?bool $throwException = false);
+
     /**
      * List users of the collection.
      *
@@ -27,16 +30,14 @@ trait HasUsersTrait
      *     },
      *     response={"$list=Claroline\CoreBundle\Entity\User"}
      * )
-     *
-     * @param string $id
-     * @param string $class
-     *
-     * @return JsonResponse
      */
-    public function listUsersAction($id, $class, Request $request)
+    public function listUsersAction(string $id, string $class, Request $request): JsonResponse
     {
+        $object = $this->crud->get($class, $id);
+        $this->checkPermission('OPEN', $object, [], true);
+
         return new JsonResponse(
-            $this->finder->search('Claroline\CoreBundle\Entity\User', array_merge(
+            $this->crud->list(User::class, array_merge(
                 $request->query->all(),
                 ['hiddenFilters' => [$this->getName() => [$id]]]
             ))
@@ -57,16 +58,13 @@ trait HasUsersTrait
      *         {"name": "ids[]", "type": {"string", "integer"}, "description": "The user id or uuid."}
      *     }
      * )
-     *
-     * @param string $id
-     * @param string $class
-     *
-     * @return JsonResponse
      */
-    public function addUsersAction($id, $class, Request $request)
+    public function addUsersAction(string $id, string $class, Request $request): JsonResponse
     {
+        // no need to secure entrypoint, the CRUD will do it for us.
+
         $object = $this->crud->get($class, $id);
-        $users = $this->decodeIdsString($request, 'Claroline\CoreBundle\Entity\User');
+        $users = $this->decodeIdsString($request, User::class);
         $this->crud->patch($object, 'user', Crud::COLLECTION_ADD, $users);
 
         return new JsonResponse(
@@ -88,16 +86,13 @@ trait HasUsersTrait
      *         {"name": "ids[]", "type": {"string", "integer"}, "description": "The user id or uuid."}
      *     }
      * )
-     *
-     * @param string $id
-     * @param string $class
-     *
-     * @return JsonResponse
      */
-    public function removeUsersAction($id, $class, Request $request)
+    public function removeUsersAction(string $id, string $class, Request $request): JsonResponse
     {
+        // no need to secure entrypoint, the CRUD will do it for us.
+
         $object = $this->crud->get($class, $id);
-        $users = $this->decodeIdsString($request, 'Claroline\CoreBundle\Entity\User');
+        $users = $this->decodeIdsString($request, User::class);
         $this->crud->patch($object, 'user', Crud::COLLECTION_REMOVE, $users);
 
         return new JsonResponse(

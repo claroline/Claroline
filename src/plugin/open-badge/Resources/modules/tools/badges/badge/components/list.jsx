@@ -45,6 +45,14 @@ const BadgesList = (props) =>
         type: 'workspace',
         displayed: true,
         filterable: true
+      }, {
+        name: 'tags',
+        type: 'tag',
+        label: trans('tags'),
+        sortable: false,
+        options: {
+          objectClass: 'Claroline\\OpenBadgeBundle\\Entity\\BadgeClass'
+        }
       }
     ]}
     card={BadgeCard}

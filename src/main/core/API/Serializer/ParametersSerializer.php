@@ -2,7 +2,6 @@
 
 namespace Claroline\CoreBundle\API\Serializer;
 
-use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
@@ -19,27 +18,18 @@ class ParametersSerializer
     private $om;
     /** @var SerializerProvider */
     private $serializer;
-    /** @var FinderProvider */
-    private $finder;
     /** @var PlatformConfigurationHandler */
     private $configHandler;
     /** @var string */
     private $archivePath;
 
-    /**
-     * ParametersSerializer constructor.
-     *
-     * @param string $archivePath
-     */
     public function __construct(
         SerializerProvider $serializer, // bad
-        FinderProvider $finder, // bad
         ObjectManager $om,
         PlatformConfigurationHandler $configHandler,
-        $archivePath
+        string $archivePath
     ) {
         $this->serializer = $serializer;
-        $this->finder = $finder;
         $this->configHandler = $configHandler;
         $this->om = $om;
         $this->archivePath = $archivePath;
@@ -110,17 +100,14 @@ class ParametersSerializer
     public function serializeTos()
     {
         $result = $this->om->getRepository(Content::class)->findOneBy(['type' => 'termsOfService']);
-
         if ($result) {
-            $data = $this->serializer->serialize($result, ['property' => 'content']);
-
-            return $data;
-        } else {
-            $content = new Content();
-            $content->setType('termsOfService');
-
-            return $this->serializer->serialize($content);
+            return $this->serializer->serialize($result, ['property' => 'content']);
         }
+
+        $content = new Content();
+        $content->setType('termsOfService');
+
+        return $this->serializer->serialize($content);
     }
 
     public function getAssetsData($name, array $data)
@@ -140,13 +127,13 @@ class ParametersSerializer
     public function deserializeTos(array $data)
     {
         if (isset($data['tos'])) {
-            $contentTos = $this->finder->fetch(Content::class, ['type' => 'termsOfService'], [], 0, 10);
+            $contentTos = $this->om->getRepository(Content::class)->findOneBy([
+                'type' => 'termsOfService',
+            ]);
 
-            if (0 === count($contentTos)) {
+            if (empty($contentTos)) {
                 $contentTos = new Content();
                 $contentTos->setType('termsOfService');
-            } else {
-                $contentTos = $contentTos[0];
             }
 
             $serializer = $this->serializer->get(Content::class);

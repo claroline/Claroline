@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Controller\APINew\Model;
 
 use Claroline\AppBundle\Annotations\ApiDoc;
 use Claroline\AppBundle\API\Crud;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -13,6 +14,8 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 trait HasWorkspacesTrait
 {
+    abstract protected function checkPermission($permission, $object, ?array $options = [], ?bool $throwException = false);
+
     /**
      * List workspaces of the collection.
      *
@@ -27,16 +30,14 @@ trait HasWorkspacesTrait
      *     },
      *     response={"$list=Claroline\CoreBundle\Entity\Workspace\Workspace"}
      * )
-     *
-     * @param string $id
-     * @param string $class
-     *
-     * @return JsonResponse
      */
-    public function listWorkspacesAction($id, $class, Request $request)
+    public function listWorkspacesAction(string $id, string $class, Request $request): JsonResponse
     {
+        $object = $this->crud->get($class, $id);
+        $this->checkPermission('OPEN', $object, [], true);
+
         return new JsonResponse(
-            $this->finder->search('Claroline\CoreBundle\Entity\Workspace\Workspace', array_merge(
+            $this->crud->list(Workspace::class, array_merge(
                 $request->query->all(),
                 ['hiddenFilters' => [$this->getName() => [$id]]]
             ))
@@ -57,16 +58,13 @@ trait HasWorkspacesTrait
      *         {"name": "ids[]", "type": {"string", "integer"}, "description": "The workspace id or uuid."}
      *     }
      * )
-     *
-     * @param string $id
-     * @param string $class
-     *
-     * @return JsonResponse
      */
-    public function addWorkspacesAction($id, $class, Request $request)
+    public function addWorkspacesAction(string $id, string $class, Request $request): JsonResponse
     {
+        // no need to secure entrypoint, the CRUD will do it for us.
+
         $object = $this->crud->get($class, $id);
-        $workspaces = $this->decodeIdsString($request, 'Claroline\CoreBundle\Entity\Workspace\Workspace');
+        $workspaces = $this->decodeIdsString($request, Workspace::class);
         $this->crud->patch($object, 'workspace', Crud::COLLECTION_ADD, $workspaces);
 
         return new JsonResponse(
@@ -88,16 +86,13 @@ trait HasWorkspacesTrait
      *         {"name": "ids[]", "type": {"string", "integer"}, "description": "The workspace id or uuid."}
      *     }
      * )
-     *
-     * @param string $id
-     * @param string $class
-     *
-     * @return JsonResponse
      */
-    public function removeWorkspacesAction($id, $class, Request $request)
+    public function removeWorkspacesAction(string $id, string $class, Request $request): JsonResponse
     {
+        // no need to secure entrypoint, the CRUD will do it for us.
+
         $object = $this->crud->get($class, $id);
-        $workspaces = $this->decodeIdsString($request, 'Claroline\CoreBundle\Entity\Workspace\Workspace');
+        $workspaces = $this->decodeIdsString($request, Workspace::class);
         $this->crud->patch($object, 'workspace', Crud::COLLECTION_REMOVE, $workspaces);
 
         return new JsonResponse(

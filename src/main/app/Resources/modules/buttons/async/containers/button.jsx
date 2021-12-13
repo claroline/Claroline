@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import omit from 'lodash/omit'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
-import {API_REQUEST} from '#/main/app/api'
+import {constants as apiConst} from '#/main/app/api/constants'
 import {ApiRequest as ApiRequestTypes} from '#/main/app/api/prop-types'
 import {Button as ButtonTypes} from '#/main/app/buttons/prop-types'
 
@@ -41,7 +41,7 @@ const AsyncButton = connect(
   (dispatch, ownProps) => ({
     executeRequest() {
       dispatch({
-        [API_REQUEST]: ownProps.request
+        [apiConst.API_REQUEST]: ownProps.request
       })
     }
   })

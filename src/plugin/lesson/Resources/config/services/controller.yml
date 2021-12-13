@@ -7,18 +7,18 @@ services:
     Icap\LessonBundle\Controller\ChapterController:
         arguments:
           - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
           - '@twig'
           - '@Claroline\AppBundle\API\FinderProvider'
           - '@Icap\LessonBundle\Serializer\ChapterSerializer'
           - '@Icap\LessonBundle\Manager\ChapterManager'
           - '@security.authorization_checker'
+          - '@Claroline\AppBundle\Manager\PdfManager'
 
     Icap\LessonBundle\Controller\LessonController:
         arguments:
           - '@security.authorization_checker'
-          - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
           - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@twig'
           - '@Claroline\AppBundle\API\Crud'
           - '@Claroline\AppBundle\API\SerializerProvider'
+          - '@Claroline\AppBundle\Manager\PdfManager'

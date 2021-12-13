@@ -3,6 +3,7 @@
 namespace HeVinci\CompetencyBundle\Entity;
 
 use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -41,12 +42,11 @@ class Level implements \JsonSerializable
      */
     private $competencyAbilities;
 
-    /**
-     * Constructor.
-     */
     public function __construct()
     {
         $this->refreshUuid();
+
+        $this->competencyAbilities = new ArrayCollection();
     }
 
     /**

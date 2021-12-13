@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
@@ -10,7 +10,7 @@ import {DropzoneType} from '#/plugin/drop-zone/resources/dropzone/prop-types'
 import {selectors} from '#/plugin/drop-zone/resources/dropzone/store/selectors'
 
 const RevisionsComponent = props =>
-  <section className="resource-section revisions-list">
+  <Fragment>
     <h2>{trans('revisions_list', {}, 'dropzone')}</h2>
 
     <ListData
@@ -45,7 +45,7 @@ const RevisionsComponent = props =>
         }
       ]}
     />
-  </section>
+  </Fragment>
 
 RevisionsComponent.propTypes = {
   path: T.string.isRequired,

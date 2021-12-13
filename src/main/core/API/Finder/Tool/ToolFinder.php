@@ -36,7 +36,7 @@ class ToolFinder extends AbstractFinder
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
     {
-        $bundles = $this->pluginManager->getEnabled(true);
+        $bundles = $this->pluginManager->getEnabled();
 
         $qb->leftJoin('obj.plugin', 'p');
         $qb->andWhere($qb->expr()->orX(

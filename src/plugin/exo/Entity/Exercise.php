@@ -20,7 +20,6 @@ use UJM\ExoBundle\Library\Options\ShowScoreAt;
 class Exercise extends AbstractResource
 {
     use AttemptParametersTrait;
-    use Uuid;
 
     /**
      * Type of the Exercise.
@@ -353,7 +352,7 @@ class Exercise extends AbstractResource
      */
     public function __construct()
     {
-        $this->refreshUuid();
+        parent::__construct();
 
         $this->dateCorrection = new \DateTime();
         $this->steps = new ArrayCollection();

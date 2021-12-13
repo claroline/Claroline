@@ -8,7 +8,6 @@ services:
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\Crud'
-            - '@Claroline\AppBundle\API\FinderProvider'
             - '@claroline.manager.tool_manager'
             - '@Claroline\BigBlueButtonBundle\Manager\BBBManager'
 

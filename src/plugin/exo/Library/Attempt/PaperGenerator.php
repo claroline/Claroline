@@ -227,9 +227,14 @@ class PaperGenerator
         if (!empty($previousStep) && Recurrence::ALWAYS !== $step->getRandomPick()) {
             // Just get the list of question from previous step
             // We get the entities to reapply shuffle (= redo serialization with shuffle option)
-            $items = array_map(function (array $pickedItem) use ($step) {
-                return $step->getQuestion($pickedItem['id']);
-            }, $previousStep['items']);
+            $items = array_filter(
+                array_map(function (array $pickedItem) use ($step) {
+                    return $step->getQuestion($pickedItem['id']);
+                }, $previousStep['items']),
+                function ($item) {
+                    return !empty($item);
+                }
+            );
         } else {
             // Pick a new set of questions
             $items = static::pick(

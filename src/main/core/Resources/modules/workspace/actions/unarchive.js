@@ -12,7 +12,7 @@ import {trans} from '#/main/app/intl/translation'
  * @param {object} refresher  - an object containing methods to update context in response to action (eg. add, update, delete).
  */
 export default (workspaces, refresher) => {
-  const processable = workspaces.filter(workspace => hasPermission('administrate', workspace) && !get(workspace, 'meta.model') && get(workspace, 'meta.archived'))
+  const processable = workspaces.filter(workspace => hasPermission('archive', workspace) && get(workspace, 'meta.archived'))
 
   return {
     name: 'unarchive',
@@ -31,6 +31,7 @@ export default (workspaces, refresher) => {
       success: (response) => refresher.update(response)
     },
     group: trans('management'),
-    scope: ['object', 'collection']
+    scope: ['object', 'collection'],
+    primary: true
   }
 }

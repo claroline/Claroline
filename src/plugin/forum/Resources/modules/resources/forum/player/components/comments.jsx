@@ -57,7 +57,7 @@ class CommentForm extends Component {
                 className="btn-link"
                 tooltip="bottom"
                 icon="fa fa-fw fa-times"
-                label={trans('cancel')}
+                label={trans('cancel', {}, 'actions')}
                 callback={this.props.cancel}
               />
             </div>
@@ -79,7 +79,7 @@ class CommentForm extends Component {
             <Button
               type={CALLBACK_BUTTON}
               className="btn btn-block btn-primary btn-save"
-              label={trans('add_comment', {}, 'forum')}
+              label={trans('add_comment')}
               disabled={!this.state.pendingChanges || !this.state.content}
               callback={() => this.props.submit(this.state.content)}
               primary={true}

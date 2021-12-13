@@ -20,8 +20,8 @@ const CommunityTool = withRouter(
       canAdministrate: hasPermission('administrate', toolSelectors.toolData(state))
     }),
     (dispatch) => ({
-      loadUser(publicUrl) {
-        dispatch(userActions.open(profileSelectors.FORM_NAME, publicUrl))
+      loadUser(username) {
+        dispatch(userActions.open(profileSelectors.FORM_NAME, username))
       }
     })
   )(CommunityToolComponent)
