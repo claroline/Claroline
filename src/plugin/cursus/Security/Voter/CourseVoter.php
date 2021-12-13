@@ -90,4 +90,9 @@ class CourseVoter extends AbstractVoter
 
         return $sameOrganization;
     }
+
+    public function getSupportedActions()
+    {
+        return [self::OPEN, self::VIEW, self::CREATE, self::EDIT, self::DELETE, self::REGISTER];
+    }
 }

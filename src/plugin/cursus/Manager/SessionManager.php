@@ -238,7 +238,7 @@ class SessionManager
 
             // unregister user from the linked workspace
             if ($session->getWorkspace()) {
-                $this->workspaceManager->unregister($sessionUser->getUser(), $session->getWorkspace());
+                $this->workspaceManager->unregister($sessionUser->getUser(), $session->getWorkspace(), [Crud::NO_PERMISSIONS]);
             }
 
             // unregister user from linked events
