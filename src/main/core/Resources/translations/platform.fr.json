@@ -1466,5 +1466,5 @@
     "disable_inactive_users_help": "Tous les utilisateurs qui ne se sont pas connectés à la plateforme depuis la date choisie seront désactivés.",
     "platform_new_available_version": "Une nouvelle version est diponible !",
     "platform_version": "Version %version%",
-    "platform_changelog_display": "Vous voyez la note de version car vous possédez l'un des rôles suivant : %roles%."
+    "platform_changelog_display": "Vous voyez la note de version car vous possédez l'un des rôles suivant : %roles%. Ce message est affiché jusqu'au %end_date%."
 }
