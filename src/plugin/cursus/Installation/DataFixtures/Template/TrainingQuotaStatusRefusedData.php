@@ -2,7 +2,7 @@
 
 namespace Claroline\CursusBundle\DataFixtures\Required\Template;
 
-use Claroline\CoreBundle\DataFixtures\AbstractTemplateFixture;
+use Claroline\CoreBundle\Installation\DataFixtures\AbstractTemplateFixture;
 
 class TrainingQuotaStatusRefusedData extends AbstractTemplateFixture
 {
