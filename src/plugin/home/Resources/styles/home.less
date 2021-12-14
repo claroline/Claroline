@@ -14,6 +14,10 @@
 
   margin: 0 floor((@grid-gutter-width / 2) - 5px);
 
+  @media print {
+    display: none;
+  }
+
   .top-tabs {
     display: flex;
     padding-left: 0;
