@@ -343,7 +343,7 @@ class WorkspaceManager implements LoggerAwareInterface
         return $workspace;
     }
 
-    public function unregister(AbstractRoleSubject $subject, Workspace $workspace)
+    public function unregister(AbstractRoleSubject $subject, Workspace $workspace, array $options = [])
     {
         $rolesToRemove = array_filter($workspace->getRoles()->toArray(), function (Role $role) use ($workspace) {
             return $role->getWorkspace()->getId() === $workspace->getId();
@@ -351,7 +351,7 @@ class WorkspaceManager implements LoggerAwareInterface
 
         foreach ($rolesToRemove as $role) {
             if ($subject->hasRole($role->getName())) {
-                $this->crud->patch($subject, 'role', Crud::COLLECTION_REMOVE, [$role]);
+                $this->crud->patch($subject, 'role', Crud::COLLECTION_REMOVE, [$role], $options);
             }
         }
     }

@@ -1436,5 +1436,5 @@
     "disable_inactive_users_help": "All users who have not connected to the platform since the chosen date will be disabled.",
     "platform_new_available_version": "A new version is available !",
     "platform_version": "Version %version%",
-    "platform_changelog_display": "You see the release note because you have one of the following role : %roles%."
+    "platform_changelog_display": "You see the release note because you have one of the following role : %roles%. This message is displayed until %end_date%."
 }

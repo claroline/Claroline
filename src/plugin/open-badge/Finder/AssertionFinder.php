@@ -24,6 +24,8 @@ class AssertionFinder extends AbstractFinder
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = [])
     {
+        $userJoin = false;
+
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
                 case 'badge':
@@ -39,12 +41,29 @@ class AssertionFinder extends AbstractFinder
                     break;
                 case 'user':
                 case 'recipient':
-                    $qb->join('obj.recipient', 'r');
-                    $qb->andWhere('r.uuid = :user');
+                    if (!$userJoin) {
+                        $qb->join('obj.recipient', 'u');
+                        $userJoin = true;
+                    }
+                    $qb->andWhere('u.uuid = :user');
                     $qb->setParameter('user', $filterValue);
                     break;
                 default:
                   $this->setDefaults($qb, $filterName, $filterValue);
+            }
+        }
+
+        if (!is_null($sortBy) && isset($sortBy['property']) && isset($sortBy['direction'])) {
+            $sortByProperty = $sortBy['property'];
+            $sortByDirection = 1 === $sortBy['direction'] ? 'ASC' : 'DESC';
+
+            switch ($sortByProperty) {
+                case 'user':
+                    if (!$userJoin) {
+                        $qb->join('obj.recipient', 'u');
+                    }
+                    $qb->orderBy('u.lastName', $sortByDirection);
+                    break;
             }
         }
 
