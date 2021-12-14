@@ -235,6 +235,7 @@ const CourseParticipants = (props) =>
                     inviteUsers={props.inviteUsers}
                     moveUsers={props.moveUsers}
                     movePending={(sessionUsers) => props.movePending(props.course.id, sessionUsers)}
+                    hasPendingRegistrations={false}
                   />
                 )
 

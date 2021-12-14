@@ -364,7 +364,7 @@ const CourseForm = (props) =>
             name: 'restrictions._restrictUsers',
             type: 'boolean',
             label: trans('restrict_users_count'),
-            calculated: (course) => !!course.restrictions.users || course.restrictions._restrictUsers,
+            calculated: (course) => !!get(course, 'restrictions.users') || get(course, 'restrictions._restrictUsers'),
             onChange: (value) => {
               if (!value) {
                 props.update(props.name, 'restrictions.users', null)
@@ -376,7 +376,7 @@ const CourseForm = (props) =>
                 type: 'number',
                 label: trans('users_count'),
                 required: true,
-                displayed: (course) => course.restrictions.users || course.restrictions._restrictUsers,
+                displayed: (course) => get(course, 'restrictions.users') || get(course, 'restrictions._restrictUsers'),
                 options: {
                   min: 0
                 }

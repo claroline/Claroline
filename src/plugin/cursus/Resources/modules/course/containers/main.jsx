@@ -14,6 +14,9 @@ const CourseMain = connect(
   (dispatch) => ({
     openSession(sessionId) {
       dispatch(actions.openSession(sessionId))
+    },
+    openForm(slug, defaultProps) {
+      dispatch(actions.openForm(slug, defaultProps))
     }
   })
 )(CourseMainComponent)
