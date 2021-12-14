@@ -6,7 +6,7 @@ import {Routes} from '#/main/app/router'
 import {Course as CourseTypes} from '#/plugin/cursus/prop-types'
 import {CatalogList} from '#/plugin/cursus/tools/trainings/catalog/components/list'
 import {CatalogDetails} from '#/plugin/cursus/tools/trainings/catalog/containers/details'
-import {CatalogForm} from '#/plugin/cursus/tools/trainings/catalog/containers/form'
+import {CatalogCreation} from '#/plugin/cursus/tools/trainings/catalog/components/creation'
 
 const CatalogMain = (props) =>
   <Routes
@@ -24,14 +24,7 @@ const CatalogMain = (props) =>
         onEnter: () => props.openForm(null, CourseTypes.defaultProps),
         disabled: !props.canEdit,
         render: () => (
-          <CatalogForm path={`${props.path}/catalog`} />
-        )
-      }, {
-        path: '/:slug/edit',
-        onEnter: (params = {}) => props.openForm(params.slug),
-        disabled: !props.canEdit,
-        render: () => (
-          <CatalogForm path={`${props.path}/catalog`} />
+          <CatalogCreation path={`${props.path}/catalog`} />
         )
       }, {
         path: '/:slug',
