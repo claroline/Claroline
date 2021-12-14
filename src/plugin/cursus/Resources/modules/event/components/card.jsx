@@ -1,6 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
+import classes from 'classnames'
 
 import {asset} from '#/main/app/config/asset'
 import {trans, displayDateRange} from '#/main/app/intl'
@@ -18,6 +19,10 @@ const EventCard = props =>
     title={props.data.name}
     subtitle={displayDateRange(props.data.start, props.data.end)}
     contentText={props.data.description}
+    className={classes({
+      'is-event-online': !get(props.data, 'location.name'),
+      'has-event-url': !get(props.data, 'location.name') && get(props.data, 'locationUrl')
+    })}
     footer={
       <span
         style={{
@@ -34,7 +39,9 @@ const EventCard = props =>
           />
         }
 
-        {get(props.data, 'location.name') || (get(props.data, 'locationUrl') ? <a href={get(props.data, 'locationUrl')}>{get(props.data, 'locationUrl')}</a> : trans('online_session', {}, 'cursus'))}
+        <span className="event-location">
+          {get(props.data, 'location.name') || (get(props.data, 'locationUrl') ? <a href={get(props.data, 'locationUrl')}>{get(props.data, 'locationUrl')}</a> : trans('online_session', {}, 'cursus'))}
+        </span>
       </span>
     }
   />
