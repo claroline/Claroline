@@ -257,7 +257,7 @@ const CourseAbout = (props) => {
             />
           }
 
-          {!isEmpty(props.activeSession) &&
+          {!isEmpty(props.activeSession) && hasPermission('register', props.activeSession) &&
             <Button
               className="btn btn-block"
               type={LINK_BUTTON}

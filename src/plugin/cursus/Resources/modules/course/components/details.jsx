@@ -56,14 +56,14 @@ const CourseDetails = (props) =>
             icon: 'fa fa-fw fa-users',
             label: trans('participants'),
             target: `${route(props.path, props.course, props.activeSession)}/participants`,
-            displayed: !!props.activeSession
+            displayed: !!props.activeSession && hasPermission('register', props.activeSession)
           }, {
             name: 'events',
             type: LINK_BUTTON,
             icon: 'fa fa-fw fa-clock',
             label: trans('session_events', {}, 'cursus'),
             target: `${route(props.path, props.course, props.activeSession)}/events`,
-            displayed: !!props.activeSession
+            displayed: !!props.activeSession && hasPermission('register', props.activeSession)
           }
         ]}
       />
@@ -111,7 +111,7 @@ const CourseDetails = (props) =>
           }
         }, {
           path: '/participants',
-          disabled: !props.activeSession,
+          disabled: !props.activeSession || !hasPermission('register', props.activeSession),
           render() {
             return (
               <CourseParticipants
@@ -123,7 +123,7 @@ const CourseDetails = (props) =>
           }
         }, {
           path: '/events',
-          disabled: !props.activeSession,
+          disabled: !props.activeSession || !hasPermission('register', props.activeSession),
           render() {
             return (
               <CourseEvents
