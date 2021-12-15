@@ -25,6 +25,5 @@ services:
           - '@security.authorization_checker'
           - '@Claroline\CoreBundle\Manager\LocationManager'
           - '@security.token_storage'
-          - '@translator'
 
     Claroline\ClacoFormBundle\Finder\KeywordFinder: ~

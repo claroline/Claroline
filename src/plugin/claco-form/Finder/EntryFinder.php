@@ -18,10 +18,10 @@ use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\LocationManager;
 use Claroline\CoreBundle\Security\Collection\ResourceCollection;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 
 class EntryFinder extends AbstractFinder
 {
@@ -34,21 +34,16 @@ class EntryFinder extends AbstractFinder
     /** @var TokenStorageInterface */
     private $tokenStorage;
 
-    /** @var TranslatorInterface */
-    private $translator;
-
     private $usedJoin = [];
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         LocationManager $locationManager,
-        TokenStorageInterface $tokenStorage,
-        TranslatorInterface $translator
+        TokenStorageInterface $tokenStorage
     ) {
         $this->authorization = $authorization;
         $this->locationManager = $locationManager;
         $this->tokenStorage = $tokenStorage;
-        $this->translator = $translator;
     }
 
     public static function getClass(): string
@@ -183,6 +178,7 @@ class EntryFinder extends AbstractFinder
                 case 'user':
                     if (!isset($this->usedJoin['user'])) {
                         $qb->join('obj.user', 'u');
+                        $this->usedJoin['user'] = true;
                     }
                     $qb->andWhere("
                         UPPER(u.firstName) LIKE :name
@@ -204,6 +200,7 @@ class EntryFinder extends AbstractFinder
                 case 'categories':
                     if (!isset($this->usedJoin['categories'])) {
                         $qb->join('obj.categories', 'c');
+                        $this->usedJoin['categories'] = true;
                     }
                     $qb->andWhere('UPPER(c.name) LIKE :categoryName');
                     $qb->setParameter('categoryName', '%'.strtoupper($filterValue).'%');
@@ -211,15 +208,18 @@ class EntryFinder extends AbstractFinder
                 case 'category':
                     if (!isset($this->usedJoin['categories'])) {
                         $qb->join('obj.categories', 'c');
+                        $this->usedJoin['categories'] = true;
                     }
                     $qb->andWhere('c.uuid = :categoryUuid');
                     $qb->setParameter('categoryUuid', $filterValue);
                     break;
                 case 'keywords':
-                    $qb->join('obj.keywords', 'k');
+                    if (!$this->usedJoin['keywords']) {
+                        $qb->join('obj.keywords', 'k');
+                        $this->usedJoin['keywords'] = true;
+                    }
                     $qb->andWhere('UPPER(k.name) LIKE :keywordName');
                     $qb->setParameter('keywordName', '%'.strtoupper($filterValue).'%');
-                    $this->usedJoin['keywords'] = true;
                     break;
                 default:
                     $filterName = str_replace('values.', '', $filterName);
@@ -252,23 +252,24 @@ class EntryFinder extends AbstractFinder
                     $qb->orderBy('k.name', $sortByDirection);
                     break;
                 default:
-                    $field = $fieldRepo->findOneBy(['clacoForm' => $clacoForm, 'uuid' => $sortBy]);
-                    $this->sortField($qb, $sortByProperty, $sortByDirection, $field);
+                    $sortByUuid = str_replace('values.', '', $sortByProperty);
+                    $field = $fieldRepo->findByFieldFacetUuid($sortByUuid);
+                    $this->sortField($qb, $sortByUuid, $sortByDirection, $field);
             }
         }
 
         return $qb;
     }
 
-    private function filterField(&$qb, $filterName, $filterValue, $field)
+    private function filterField(QueryBuilder $qb, $filterName, $filterValue, $field)
     {
         $parsedFilterName = str_replace('-', '', $filterName);
 
         if ($field) {
-            $qb->join('obj.fieldValues', "fv{$parsedFilterName}");
-            $qb->join("fv{$parsedFilterName}.field", "fvf{$parsedFilterName}");
-            $qb->join("fvf{$parsedFilterName}.fieldFacet", "ff{$parsedFilterName}");
-            $qb->join("fv{$parsedFilterName}.fieldFacetValue", "fvffv{$parsedFilterName}");
+            $qb->leftJoin('obj.fieldValues', "fv{$parsedFilterName}");
+            $qb->leftJoin("fv{$parsedFilterName}.field", "fvf{$parsedFilterName}");
+            $qb->leftJoin("fvf{$parsedFilterName}.fieldFacet", "ff{$parsedFilterName}");
+            $qb->leftJoin("fv{$parsedFilterName}.fieldFacetValue", "fvffv{$parsedFilterName}");
             $qb->andWhere("ff{$parsedFilterName}.uuid = :field{$parsedFilterName}");
             $qb->setParameter("field{$parsedFilterName}", $filterName);
             $this->usedJoin[$filterName] = true;
@@ -302,7 +303,7 @@ class EntryFinder extends AbstractFinder
         }
     }
 
-    private function sortField(&$qb, $sortBy, $direction, $field)
+    private function sortField(QueryBuilder $qb, $sortBy, $direction, $field)
     {
         $parsedSortBy = str_replace('-', '', $sortBy);
 
@@ -310,11 +311,9 @@ class EntryFinder extends AbstractFinder
             if (!isset($this->usedJoin[$sortBy])) {
                 $qb->leftJoin('obj.fieldValues', "fv{$parsedSortBy}");
                 $qb->leftJoin("fv{$parsedSortBy}.field", "fvf{$parsedSortBy}");
-                $qb->join("fvf{$parsedSortBy}.fieldFacet", "ff{$parsedSortBy}");
+                $qb->leftJoin("fvf{$parsedSortBy}.fieldFacet", "ff{$parsedSortBy}", Join::WITH, "ff{$parsedSortBy}.uuid = :field{$parsedSortBy}");
                 $qb->leftJoin("fv{$parsedSortBy}.fieldFacetValue", "fvffv{$parsedSortBy}");
-                $qb->andWhere("ff{$parsedSortBy}.uuid = :field{$parsedSortBy} OR fvf{$parsedSortBy} = :nullValue");
                 $qb->setParameter("field{$parsedSortBy}", $sortBy);
-                $qb->setParameter('nullValue', null);
             }
 
             $qb->orderBy("fvffv{$parsedSortBy}.value", $direction);
