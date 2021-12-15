@@ -63,7 +63,7 @@ const CourseDetails = (props) =>
             icon: 'fa fa-fw fa-clock',
             label: trans('session_events', {}, 'cursus'),
             target: `${route(props.path, props.course, props.activeSession)}/events`,
-            displayed: !!props.activeSession && hasPermission('register', props.activeSession)
+            displayed: !!props.activeSession
           }
         ]}
       />
@@ -123,7 +123,7 @@ const CourseDetails = (props) =>
           }
         }, {
           path: '/events',
-          disabled: !props.activeSession || !hasPermission('register', props.activeSession),
+          disabled: !props.activeSession,
           render() {
             return (
               <CourseEvents
