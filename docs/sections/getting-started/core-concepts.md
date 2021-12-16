@@ -130,28 +130,18 @@ class FooFixture extends AbstractFixture
 
 The data fixtures loading is also part of the installation of every bundle in
 Claroline. To benefit from this feature, simply put your fixture classes in
-a *DataFixtures* directory :
+a *Installation\DataFixtures* directory :
 
 <pre>
 bundle
-+-- DataFixtures
-    +-- FooFixture.php
++-- Installation
+    +-- DataFixtures
+        +-- FooFixture.php
 </pre>
 
 Using those fixtures in a test requires to instantiate the fixture class and
 provide its dependencies manually. This will be covered later in this
 documentation.
-
-## Assets and views
-
-
-Claroline uses a few client-side libraries. Some -- like JQuery and Bootstrap
--- are available in every page, while others -- like underscore.js or
-backbone.js -- are used only in specific areas. All of them are gathered in an
-bundle called [FrontEndBundle][9], which is included by default in the
-platform. A javascript-compiled version of Twig, called [twigjs][10] is also
-used whenever client-side templating is required.
-
 
 [2]:  http://symfony.com/doc/current/index.html
 [3]:  http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/index.html
@@ -160,5 +150,3 @@ used whenever client-side templating is required.
 [6]:  http://docs.doctrine-project.org/en/2.0.x/reference/tools.html#database-schema-generation
 [7]:  http://docs.doctrine-project.org/projects/doctrine-migrations/en/latest/toc.html
 [8]:  https://github.com/doctrine/data-fixtures
-[9]:  https://github.com/claroline/FrontEndBundle
-[10]: http://jmsyst.com/libs/twig.js
