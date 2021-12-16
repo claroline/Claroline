@@ -162,16 +162,6 @@ plugin:
               - user_first_name
               - user_last_name
 
-        - name: training_quota_status_changed
-          type: email
-          placeholders:
-              - session_name
-              - user_first_name
-              - user_last_name
-              - session_start
-              - session_end
-              - status
-
         - name: training_quota_status_validated
           type: email
           placeholders:
@@ -200,6 +190,15 @@ plugin:
               - session_end
 
         - name: training_quota_status_cancelled
+          type: email
+          placeholders:
+              - session_name
+              - user_first_name
+              - user_last_name
+              - session_start
+              - session_end
+
+        - name: training_quota_subscription_created
           type: email
           placeholders:
               - session_name

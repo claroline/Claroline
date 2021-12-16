@@ -26,6 +26,9 @@ services:
             - '@Claroline\CoreBundle\Manager\Template\TemplateManager'
             - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
             - '@Claroline\CursusBundle\Manager\EventManager'
+            - '@Claroline\CoreBundle\Manager\MailManager'
+            - '@Claroline\CoreBundle\Manager\LocaleManager'
+            - '@security.token_storage'
 
     Claroline\CursusBundle\Manager\EventManager:
         arguments:

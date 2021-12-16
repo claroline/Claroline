@@ -20,6 +20,8 @@ use Claroline\CoreBundle\Event\CatalogEvents\MessageEvents;
 use Claroline\CoreBundle\Event\SendMessageEvent;
 use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
 use Claroline\CoreBundle\Library\RoutingHelper;
+use Claroline\CoreBundle\Manager\LocaleManager;
+use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\Template\TemplateManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
@@ -34,6 +36,7 @@ use Claroline\CursusBundle\Event\Log\LogSessionUserRegistrationEvent;
 use Claroline\CursusBundle\Event\Log\LogSessionUserUnregistrationEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SessionManager
@@ -60,6 +63,12 @@ class SessionManager
     private $workspaceManager;
     /** @var EventManager */
     private $sessionEventManager;
+    /** @var MailManager */
+    private $mailManager;
+    /** @var LocaleManager */
+    private $localeManager;
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
 
     private $sessionRepo;
     private $sessionUserRepo;
@@ -76,7 +85,10 @@ class SessionManager
         RoutingHelper $routingHelper,
         TemplateManager $templateManager,
         WorkspaceManager $workspaceManager,
-        EventManager $sessionEventManager
+        EventManager $sessionEventManager,
+        MailManager $mailManager,
+        LocaleManager $localeManager,
+        TokenStorageInterface $tokenStorage
     ) {
         $this->eventDispatcher = $eventDispatcher;
         $this->translator = $translator;
@@ -89,6 +101,9 @@ class SessionManager
         $this->templateManager = $templateManager;
         $this->workspaceManager = $workspaceManager;
         $this->sessionEventManager = $sessionEventManager;
+        $this->mailManager = $mailManager;
+        $this->localeManager = $localeManager;
+        $this->tokenStorage = $tokenStorage;
 
         $this->sessionRepo = $om->getRepository(Session::class);
         $this->sessionUserRepo = $om->getRepository(SessionUser::class);
@@ -198,6 +213,19 @@ class SessionManager
                 $this->om->persist($sessionUser);
 
                 $this->eventDispatcher->dispatch(new LogSessionUserRegistrationEvent($sessionUser), 'log');
+
+                $manager = $this->tokenStorage->getToken()->getUser();
+                $locale = $this->localeManager->getLocale($manager);
+                $placeholders = [
+                    'session_name' => $sessionUser->getSession()->getName(),
+                    'user_first_name' => $user->getFirstName(),
+                    'user_last_name' => $user->getLastName(),
+                    'session_start' => $sessionUser->getSession()->getStartDate()->format('d/m/Y'),
+                    'session_end' => $sessionUser->getSession()->getEndDate()->format('d/m/Y'),
+                ];
+                $subject = $this->templateManager->getTemplate('training_quota_subscription_created', $placeholders, $locale, 'title');
+                $body = $this->templateManager->getTemplate('training_quota_subscription_created', $placeholders, $locale);
+                $this->mailManager->send($subject, $body, [$manager]);
 
                 $results[] = $sessionUser;
             }
