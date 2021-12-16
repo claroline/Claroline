@@ -36,7 +36,6 @@ use Claroline\CursusBundle\Event\Log\LogSessionUserRegistrationEvent;
 use Claroline\CursusBundle\Event\Log\LogSessionUserUnregistrationEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SessionManager
@@ -67,8 +66,6 @@ class SessionManager
     private $mailManager;
     /** @var LocaleManager */
     private $localeManager;
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
 
     private $sessionRepo;
     private $sessionUserRepo;
@@ -87,8 +84,7 @@ class SessionManager
         WorkspaceManager $workspaceManager,
         EventManager $sessionEventManager,
         MailManager $mailManager,
-        LocaleManager $localeManager,
-        TokenStorageInterface $tokenStorage
+        LocaleManager $localeManager
     ) {
         $this->eventDispatcher = $eventDispatcher;
         $this->translator = $translator;
@@ -103,7 +99,6 @@ class SessionManager
         $this->sessionEventManager = $sessionEventManager;
         $this->mailManager = $mailManager;
         $this->localeManager = $localeManager;
-        $this->tokenStorage = $tokenStorage;
 
         $this->sessionRepo = $om->getRepository(Session::class);
         $this->sessionUserRepo = $om->getRepository(SessionUser::class);
@@ -180,8 +175,15 @@ class SessionManager
     {
         $results = [];
 
+        /**
+         * @var Course
+         */
         $course = $session->getCourse();
         $registrationDate = new \DateTime();
+
+        $managers = array_reduce($course->getOrganizations()->toArray(), function($acc, $organization) {
+            return array_merge($acc, $organization->getAdministrators()->toArray());
+        }, []);
 
         $this->om->startFlushSuite();
 
@@ -214,8 +216,7 @@ class SessionManager
 
                 $this->eventDispatcher->dispatch(new LogSessionUserRegistrationEvent($sessionUser), 'log');
 
-                $manager = $this->tokenStorage->getToken()->getUser();
-                $locale = $this->localeManager->getLocale($manager);
+                $locale = $this->localeManager->getLocale($user);
                 $placeholders = [
                     'session_name' => $sessionUser->getSession()->getName(),
                     'user_first_name' => $user->getFirstName(),
@@ -225,7 +226,7 @@ class SessionManager
                 ];
                 $subject = $this->templateManager->getTemplate('training_quota_subscription_created', $placeholders, $locale, 'title');
                 $body = $this->templateManager->getTemplate('training_quota_subscription_created', $placeholders, $locale);
-                $this->mailManager->send($subject, $body, [$manager]);
+                $this->mailManager->send($subject, $body, $managers);
 
                 $results[] = $sessionUser;
             }
