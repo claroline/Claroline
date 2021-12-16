@@ -18,7 +18,7 @@ Getting Started
 Documentation
 -------------
 
-- For the technical guide, see [here](https://claroline.github.io).
+- For the technical guide, see [here](https://claroline.github.io/Claroline).
 - For user documentation, see [here](https://support.claroline.com/#/desktop/workspaces/open/documentation/home/accueil).
 
 Contributing
