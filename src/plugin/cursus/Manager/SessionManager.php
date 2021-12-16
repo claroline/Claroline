@@ -181,7 +181,7 @@ class SessionManager
         $course = $session->getCourse();
         $registrationDate = new \DateTime();
 
-        $managers = array_reduce($course->getOrganizations()->toArray(), function($acc, $organization) {
+        $managers = array_reduce($course->getOrganizations()->toArray(), function ($acc, $organization) {
             return array_merge($acc, $organization->getAdministrators()->toArray());
         }, []);
 
