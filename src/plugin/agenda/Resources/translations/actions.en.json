@@ -3,5 +3,7 @@
   "change-calendar-view": "Change view mode",
   "add_agenda": "Add an Agenda",
   "send_invitation": "Send an invitation",
-  "add_participants": "Add participants"
+  "add_participants": "Add participants",
+  "mark-as-done": "Mark as done",
+  "mark-as-todo": "Mark as not done"
 }
