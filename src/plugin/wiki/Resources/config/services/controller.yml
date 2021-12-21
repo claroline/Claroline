@@ -21,3 +21,4 @@ services:
             - '@twig'
             - '@Icap\WikiBundle\Manager\WikiManager'
             - '@Icap\WikiBundle\Manager\SectionManager'
+            - '@Claroline\AppBundle\Manager\PdfManager'
