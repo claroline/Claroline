@@ -18,6 +18,7 @@ services:
         - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
         - '@Claroline\CoreBundle\Manager\UserManager'
         - '@Claroline\CoreBundle\API\Serializer\User\ProfileSerializer'
+        - '@Claroline\CoreBundle\Manager\FacetManager'
 
   Claroline\CoreBundle\API\Validator\GroupValidator:
       arguments:

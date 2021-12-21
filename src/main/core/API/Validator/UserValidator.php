@@ -11,6 +11,7 @@ use Claroline\CoreBundle\API\Serializer\User\ProfileSerializer;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\UserManager;
+use Claroline\CoreBundle\Manager\FacetManager;
 
 class UserValidator implements ValidatorInterface
 {
@@ -22,17 +23,21 @@ class UserValidator implements ValidatorInterface
     private $manager;
     /** @var ProfileSerializer */
     private $profileSerializer;
+    /** @var FacetManager */
+    private $facetManager;
 
     public function __construct(
         ObjectManager $om,
         PlatformConfigurationHandler $config,
         UserManager $manager,
-        ProfileSerializer $profileSerializer
+        ProfileSerializer $profileSerializer,
+        FacetManager $facetManager
     ) {
         $this->om = $om;
         $this->config = $config;
         $this->manager = $manager;
         $this->profileSerializer = $profileSerializer;
+        $this->facetManager = $facetManager;
     }
 
     public function validate($data, $mode, array $options = [])
@@ -97,10 +102,12 @@ class UserValidator implements ValidatorInterface
         if (in_array(Options::VALIDATE_FACET, $options)) {
             $facets = $this->profileSerializer->serialize([Options::REGISTRATION]);
             $required = [];
+            $allFields = [];
 
             foreach ($facets as $facet) {
                 foreach ($facet['sections'] as $section) {
                     foreach ($section['fields'] as $field) {
+                        $allFields[] = $field;
                         if ($field['required']) {
                             $required[] = $field;
                         }
@@ -109,7 +116,7 @@ class UserValidator implements ValidatorInterface
             }
 
             foreach ($required as $field) {
-                if (!ArrayUtils::has($data, 'profile.'.$field['id'])) {
+                if ($this->facetManager->isFieldDisplayed($field, $allFields, $data) && !ArrayUtils::has($data, 'profile.'.$field['id'])) {
                     $errors[] = [
                         'path' => 'profile/'.$field['id'],
                         'message' => 'The field '.$field['label'].' is required',
