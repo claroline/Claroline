@@ -44,11 +44,6 @@ class LatestActionsChart extends Component {
                     label: trans('analytics_connections'),
                     callback: () => this.props.changeFilter('user-login', this.props.url),
                     active: 'analytics_connections' === current
-                  }, {
-                    type: CALLBACK_BUTTON,
-                    label: 'Evaluations',
-                    callback: () => true,
-                    displayed: false // TODO
                   }
                 ]
               }}

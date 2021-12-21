@@ -1130,7 +1130,6 @@
     "it": "Italiano",
     "de": "Deutsch",
     "activate_self_registration": "Activer l'auto-inscription",
-    "user_enabled": "Actif",
     "platform": "Plateforme",
     "custom": "Custom",
     "add_organization": "Ajouter une organisation",
@@ -1204,7 +1203,6 @@
     "now": "Maintenant",
     "task": "Tâche",
     "submit": "Soumettre",
-    "user_disabled": "Inactif",
     "json": "JSON",
     "string": "Chaîne de caractères",
     "integer": "Nombre entier",
@@ -1466,5 +1464,7 @@
     "disable_inactive_users_help": "Tous les utilisateurs qui ne se sont pas connectés à la plateforme depuis la date choisie seront désactivés.",
     "platform_new_available_version": "Une nouvelle version est diponible !",
     "platform_version": "Version %version%",
-    "platform_changelog_display": "Vous voyez la note de version car vous possédez l'un des rôles suivant : %roles%. Ce message est affiché jusqu'au %end_date%."
+    "platform_changelog_display": "Vous voyez la note de version car vous possédez l'un des rôles suivant : %roles%. Ce message est affiché jusqu'au %end_date%.",
+    "user_enabled": "Utilisateur actif",
+    "user_disabled": "Utilisateur inactif"
 }

@@ -15,20 +15,16 @@ trait Hidden
 
     /**
      * Is the entity hidden ?
-     *
-     * @return bool
      */
-    public function isHidden()
+    public function isHidden(): bool
     {
         return $this->hidden;
     }
 
     /**
-     * Sets the access code.
-     *
-     * @param bool $hidden
+     * Sets the hidden flag.
      */
-    public function setHidden($hidden)
+    public function setHidden(bool $hidden)
     {
         $this->hidden = $hidden;
     }

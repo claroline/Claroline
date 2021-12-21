@@ -31,6 +31,7 @@
   "exit": "Exit",
   "expand": "Expand",
   "export": "Export",
+  "export-csv": "Export (.csv)",
   "export-pdf": "Export (.pdf)",
   "export-ics": "Export (.ics)",
   "filter": "Filter",

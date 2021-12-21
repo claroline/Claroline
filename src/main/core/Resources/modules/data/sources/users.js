@@ -47,7 +47,7 @@ export default {
         name: 'restrictions.disabled',
         alias: 'isDisabled',
         type: 'boolean',
-        label: trans('user_disabled'),
+        label: trans('disabled'),
         displayed: true
       }, {
         name: 'meta.created',

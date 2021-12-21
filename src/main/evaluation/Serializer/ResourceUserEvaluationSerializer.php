@@ -50,7 +50,7 @@ class ResourceUserEvaluationSerializer
             'progressionMax' => $resourceUserEvaluation->getProgressionMax(),
             'nbAttempts' => $resourceUserEvaluation->getNbAttempts(),
             'nbOpenings' => $resourceUserEvaluation->getNbOpenings(),
-            'required' => $resourceUserEvaluation->isRequired(),
+            'required' => $resourceUserEvaluation->getResourceNode()->isRequired(),
         ];
 
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {

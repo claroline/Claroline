@@ -34,7 +34,7 @@ const ApiToken = props =>
         name: 'export-csv',
         type: DOWNLOAD_BUTTON,
         icon: 'fa fa-fw fa-download',
-        label: trans('export', {}, 'actions'),
+        label: trans('export-csv', {}, 'actions'),
         file: {
           url: ['apiv2_apitoken_csv']
         },

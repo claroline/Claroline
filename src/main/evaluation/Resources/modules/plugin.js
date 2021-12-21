@@ -6,6 +6,13 @@ import {registry} from '#/main/app/plugins/registry'
  * Declares applications provided by the Evaluation plugin.
  */
 registry.add('ClarolineEvaluationBundle', {
+  /**
+   * Provides Desktop and/or Workspace tools.
+   */
+  tools: {
+    'evaluation': () => { return import(/* webpackChunkName: "evaluation-tool-evaluation" */ '#/main/evaluation/tools/evaluation') }
+  },
+
   data: {
     sources: {
       'resource_attempts'    : () => { return import(/* webpackChunkName: "evaluation-source-resource_attempts" */     '#/main/evaluation/data/sources/resource-attempts') },

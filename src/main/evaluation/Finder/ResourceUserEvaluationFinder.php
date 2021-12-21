@@ -85,6 +85,14 @@ class ResourceUserEvaluationFinder extends AbstractFinder
                     $qb->andWhere("w.uuid = :{$filterName}");
                     $qb->setParameter($filterName, $filterValue);
                     break;
+                case 'required':
+                    if (!$nodeJoin) {
+                        $qb->join('obj.resourceNode', 'r');
+                        $nodeJoin = true;
+                    }
+                    $qb->andWhere("r.required = :{$filterName}");
+                    $qb->setParameter($filterName, $filterValue);
+                    break;
                 case 'fromDate':
                     $qb->andWhere("obj.date >= :{$filterName}");
                     $qb->setParameter($filterName, $filterValue);

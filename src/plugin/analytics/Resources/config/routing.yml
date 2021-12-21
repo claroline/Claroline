@@ -1,4 +1,5 @@
 claro_analytics:
     resource: "@ClarolineAnalyticsBundle/Controller/"
     type: annotation
-    options: { expose: true }
+    options:
+        expose: true

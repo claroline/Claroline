@@ -1,7 +1,7 @@
 import {PropTypes as T} from 'prop-types'
 
 import {ResourceNode} from '#/main/core/resource/prop-types'
-import {Role, User} from '#/main/core/user/prop-types'
+import {User} from '#/main/core/user/prop-types'
 
 const Workspace = {
   propTypes: {
@@ -83,17 +83,6 @@ const Workspace = {
   }
 }
 
-const Requirements = {
-  propTypes: {
-    id: T.string,
-    role: T.shape(Role.propTypes),
-    user: T.shape(User.propTypes)
-  },
-  defaultProps: {
-
-  }
-}
-
 const UserEvaluation = {
   propTypes: {
     id: T.string.isRequired,
@@ -119,6 +108,5 @@ const UserEvaluation = {
 
 export {
   Workspace,
-  Requirements,
   UserEvaluation
 }

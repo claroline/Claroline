@@ -15,9 +15,6 @@ import {getActions} from '#/main/core/user/utils'
 import {ProfileEdit} from '#/main/core/user/profile/editor/components/main'
 import {ProfileShow} from '#/main/core/user/profile/player/components/main'
 
-// TODO : remove hard dependency to plugin
-import {Tracking} from '#/plugin/analytics/user/tracking/containers/main'
-
 class Profile extends Component {
   componentDidMount() {
     this.props.open(this.props.username)
@@ -67,27 +64,19 @@ class Profile extends Component {
           routes={[
             {
               path: '/show',
-              render: () => {
-                return (
-                  <ProfileShow
-                    path={this.props.path}
-                  />
-                )
-              }
+              render: () => (
+                <ProfileShow
+                  path={this.props.path}
+                />
+              )
             }, {
               path: '/edit',
               disabled: !hasPermission('edit', this.props.user),
-              render: () => {
-                return (
-                  <ProfileEdit
-                    path={this.props.path}
-                  />
-                )
-              }
-            }, {
-              path: '/dashboard',
-              component: Tracking,
-              disabled: !hasPermission('show_dashboard', this.props.user)
+              render: () => (
+                <ProfileEdit
+                  path={this.props.path}
+                />
+              )
             }
           ]}
           redirect={[
