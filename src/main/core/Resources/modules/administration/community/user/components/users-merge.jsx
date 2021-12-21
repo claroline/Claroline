@@ -69,7 +69,7 @@ const UserCompare = props =>
               type: 'boolean'
             }, {
               name: 'restrictions.disabled',
-              label: trans('user_disabled'),
+              label: trans('disabled'),
               type: 'boolean'
             }
           ]

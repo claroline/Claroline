@@ -9,7 +9,7 @@ export default (users, usersRefresher, path, currentUser) => {
 
   return {
     type: MODAL_BUTTON,
-    icon: 'fa fa-paper-plane',
+    icon: 'fa fa-fw fa-paper-plane',
     label: trans('send-message', {}, 'actions'),
     scope: ['object', 'collection'],
     modal: [MODAL_MESSAGE, {

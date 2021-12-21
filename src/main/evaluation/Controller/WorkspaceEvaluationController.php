@@ -13,32 +13,50 @@ namespace Claroline\EvaluationBundle\Controller;
 
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\FinderProvider;
+use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\AbstractSecurityController;
+use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
+use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Evaluation;
-use Claroline\CoreBundle\Entity\Workspace\Requirements;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
+use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\EvaluationBundle\Manager\WorkspaceEvaluationManager;
-use Claroline\EvaluationBundle\Manager\WorkspaceRequirementsManager;
+use Claroline\EvaluationBundle\Messenger\Message\InitializeWorkspaceEvaluations;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @Route("/evaluations/workspace")
  */
 class WorkspaceEvaluationController extends AbstractSecurityController
 {
+    use RequestDecoderTrait;
+
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
     /** @var AuthorizationCheckerInterface */
     private $authorization;
+    /** @var TranslatorInterface */
+    private $translator;
+    /** @var MessageBusInterface */
+    private $messageBus;
     /** @var ObjectManager */
     private $om;
     /** @var Crud */
@@ -49,25 +67,27 @@ class WorkspaceEvaluationController extends AbstractSecurityController
     private $serializer;
     /** @var WorkspaceEvaluationManager */
     private $manager;
-    /** @var WorkspaceRequirementsManager */
-    private $requirementsManager;
 
     public function __construct(
+        TokenStorageInterface $tokenStorage,
         AuthorizationCheckerInterface $authorization,
+        TranslatorInterface $translator,
+        MessageBusInterface $messageBus,
         ObjectManager $om,
         Crud $crud,
         FinderProvider $finder,
         SerializerProvider $serializer,
-        WorkspaceEvaluationManager $manager,
-        WorkspaceRequirementsManager $requirementsManager
+        WorkspaceEvaluationManager $manager
     ) {
+        $this->tokenStorage = $tokenStorage;
         $this->authorization = $authorization;
+        $this->translator = $translator;
+        $this->messageBus = $messageBus;
         $this->om = $om;
         $this->crud = $crud;
         $this->finder = $finder;
         $this->serializer = $serializer;
         $this->manager = $manager;
-        $this->requirementsManager = $requirementsManager;
     }
 
     /**
@@ -75,11 +95,27 @@ class WorkspaceEvaluationController extends AbstractSecurityController
      */
     public function listAction(Request $request): JsonResponse
     {
-        $this->canOpenAdminTool('dashboard');
+        $this->checkToolAccess('OPEN');
 
         return new JsonResponse(
             $this->crud->list(Evaluation::class, $request->query->all())
         );
+    }
+
+    /**
+     * @Route("/{workspace}", name="apiv2_workspace_evaluations_list", methods={"GET"})
+     * @EXT\ParamConverter("workspace", options={"mapping": {"workspace": "uuid"}})
+     */
+    public function listByWorkspaceAction(Workspace $workspace, Request $request): JsonResponse
+    {
+        $this->checkToolAccess('OPEN', $workspace);
+
+        return new JsonResponse($this->finder->search(
+            Evaluation::class,
+            array_merge($request->query->all(), ['hiddenFilters' => [
+                'workspace' => $workspace->getUuid(),
+            ]])
+        ));
     }
 
     /**
@@ -96,11 +132,7 @@ class WorkspaceEvaluationController extends AbstractSecurityController
             }
         }
 
-        if (empty($workspace)) {
-            $this->canOpenAdminTool('dashboard');
-        } else {
-            $this->checkPermission(['dashboard', 'EDIT'], $workspace, [], true);
-        }
+        $this->checkToolAccess('EDIT', $workspace);
 
         $query = $request->query->all();
         // remove pagination if any
@@ -143,55 +175,221 @@ class WorkspaceEvaluationController extends AbstractSecurityController
     }
 
     /**
-     * @Route("/{workspace}", name="apiv2_workspace_evaluations_list", methods={"GET"})
+     * @Route("/{workspace}/init", name="apiv2_workspace_evaluations_init", methods={"PUT"})
      * @EXT\ParamConverter("workspace", options={"mapping": {"workspace": "uuid"}})
      */
-    public function listByWorkspaceAction(Workspace $workspace, Request $request): JsonResponse
+    public function initializeAction(Workspace $workspace): JsonResponse
     {
-        if (!$this->authorization->isGranted(['dashboard', 'OPEN'], $workspace)) {
-            throw new AccessDeniedException();
+        $this->checkToolAccess('EDIT', $workspace);
+
+        $users = $this->om->getRepository(User::class)->findByWorkspaces([$workspace]);
+        if (!empty($users)) {
+            $this->messageBus->dispatch(new InitializeWorkspaceEvaluations($workspace, $users));
         }
 
-        return new JsonResponse($this->finder->search(
-            Evaluation::class,
-            array_merge($request->query->all(), ['hiddenFilters' => [
-                'workspace' => $workspace->getUuid(),
-            ]])
-        ));
+        return new JsonResponse(null, 204);
     }
 
     /**
-     * @Route("/{workspace}/init/{role}", name="apiv2_workspace_evaluations_init", methods={"PUT"})
-     * @EXT\ParamConverter("workspace", options={"mapping": {"workspace": "uuid"}})
-     * @EXT\ParamConverter("role", options={"mapping": {"role": "uuid"}})
+     * @Route("/{workspace}/progression/{user}", name="apiv2_workspace_get_user_progression", methods={"GET"})
+     * @EXT\ParamConverter("user", class="Claroline\CoreBundle\Entity\User", options={"mapping": {"user": "uuid"}})
+     * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
      */
-    public function initializeAction(Workspace $workspace, Role $role): JsonResponse
+    public function getUserProgressionAction(Workspace $workspace, User $user): JsonResponse
     {
-        if (!$this->authorization->isGranted(['dashboard', 'EDIT'], $workspace)) {
-            throw new AccessDeniedException();
+        $workspaceEvaluation = $this->om->getRepository(Evaluation::class)->findOneBy([
+            'workspace' => $workspace,
+            'user' => $user,
+        ]);
+
+        if (empty($workspaceEvaluation)) {
+            throw new NotFoundHttpException();
         }
 
-        $users = $this->om->getRepository(User::class)->findByRoles([$role]);
+        $this->checkPermission('OPEN', $workspaceEvaluation, [], true);
+
+        return new JsonResponse([
+            'workspaceEvaluation' => $this->serializer->serialize($workspaceEvaluation),
+            'resourceEvaluations' => $this->finder->search(ResourceUserEvaluation::class, [
+                'filters' => ['workspace' => $workspace->getUuid(), 'user' => $user->getUuid()],
+            ])['data'],
+        ]);
+    }
+
+    /**
+     * @Route("/{workspace}/progression/{user}/export", name="apiv2_workspace_export_user_progression", methods={"GET"})
+     * @EXT\ParamConverter("user", class="Claroline\CoreBundle\Entity\User", options={"mapping": {"user": "uuid"}})
+     * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
+     */
+    public function exportUserProgressionAction(Workspace $workspace, User $user): StreamedResponse
+    {
+        /** @var Evaluation $workspaceEvaluation */
+        $workspaceEvaluation = $this->om->getRepository(Evaluation::class)->findOneBy([
+            'workspace' => $workspace,
+            'user' => $user,
+        ]);
+
+        if (empty($workspaceEvaluation)) {
+            throw new NotFoundHttpException();
+        }
+
+        $this->checkPermission('OPEN', $workspaceEvaluation, [], true);
+
+        /** @var ResourceUserEvaluation[] $resourceUserEvaluations */
+        $resourceUserEvaluations = $this->finder->searchEntities(ResourceUserEvaluation::class, [
+            'filters' => ['workspace' => $workspace->getUuid(), 'user' => $user->getUuid()],
+            'sortBy' => '-date',
+        ])['data'];
+
+        return new StreamedResponse(function () use ($workspace, $workspaceEvaluation, $resourceUserEvaluations) {
+            // Prepare CSV file
+            $handle = fopen('php://output', 'w+');
+
+            // Create header
+            fputcsv($handle, [
+                $this->translator->trans('name', [], 'platform'),
+                $this->translator->trans('type', [], 'platform'),
+                $this->translator->trans('date', [], 'platform'),
+                $this->translator->trans('status', [], 'platform'),
+                $this->translator->trans('progression', [], 'platform'),
+                $this->translator->trans('progressionMax', [], 'platform'),
+                $this->translator->trans('score', [], 'platform'),
+                $this->translator->trans('score_total', [], 'platform'),
+                $this->translator->trans('duration', [], 'platform'),
+            ], ';', '"');
+
+            // put Workspace evaluation
+            fputcsv($handle, [
+                $workspace->getName(),
+                $this->translator->trans('workspace', [], 'platform'),
+                DateNormalizer::normalize($workspaceEvaluation->getDate()),
+                $workspaceEvaluation->getStatus(),
+                $workspaceEvaluation->getProgression(),
+                $workspaceEvaluation->getProgressionMax(),
+                $workspaceEvaluation->getScore(),
+                $workspaceEvaluation->getScoreMax(),
+                $workspaceEvaluation->getDuration(),
+            ], ';', '"');
+
+            // Get evaluations
+            foreach ($resourceUserEvaluations as $resourceUserEvaluation) {
+                // put ResourceUserEvaluation
+                fputcsv($handle, [
+                    $resourceUserEvaluation->getResourceNode()->getName(),
+                    $this->translator->trans('resource', [], 'platform'),
+                    DateNormalizer::normalize($resourceUserEvaluation->getDate()),
+                    $resourceUserEvaluation->getStatus(),
+                    $resourceUserEvaluation->getProgression(),
+                    $resourceUserEvaluation->getProgressionMax(),
+                    $resourceUserEvaluation->getScore(),
+                    $resourceUserEvaluation->getScoreMax(),
+                    $resourceUserEvaluation->getDuration(),
+                ], ';', '"');
+
+                /** @var ResourceEvaluation[] $resourceEvaluations */
+                $resourceEvaluations = $this->finder->searchEntities(ResourceEvaluation::class, [
+                    'filters' => ['resourceUserEvaluation' => $resourceUserEvaluation],
+                    'sortBy' => '-date',
+                ])['data'];
+
+                foreach ($resourceEvaluations as $resourceEvaluation) {
+                    fputcsv($handle, [
+                        $resourceUserEvaluation->getResourceNode()->getName(),
+                        $this->translator->trans('attempt', [], 'platform'),
+                        DateNormalizer::normalize($resourceEvaluation->getDate()),
+                        $resourceEvaluation->getStatus(),
+                        $resourceEvaluation->getProgression(),
+                        $resourceEvaluation->getProgressionMax(),
+                        $resourceEvaluation->getScore(),
+                        $resourceEvaluation->getScoreMax(),
+                        $resourceEvaluation->getDuration(),
+                    ], ';', '"');
+                }
+            }
+
+            fclose($handle);
+
+            return $handle;
+        }, 200, [
+            'Content-Type' => 'application/force-download',
+            'Content-Disposition' => 'attachment; filename="'.TextNormalizer::toKey("progression-{$user->getFullName()}").'.csv"',
+        ]);
+    }
+
+    /**
+     * @Route("/{workspace}/requirements", name="apiv2_workspace_required_resource_list", methods={"GET"})
+     * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
+     */
+    public function listRequiredResourcesAction(Workspace $workspace, Request $request): JsonResponse
+    {
+        $this->checkToolAccess('OPEN', $workspace);
+
+        return new JsonResponse(
+            $this->finder->search(ResourceNode::class, array_merge($request->query->all(), ['hiddenFilters' => [
+                'workspace' => $workspace->getUuid(),
+                'required' => true,
+            ]]), [Options::SERIALIZE_MINIMAL])
+        );
+    }
+
+    /**
+     * @Route("/{workspace}/requirements", name="apiv2_workspace_required_resource_add", methods={"PATCH"})
+     * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
+     */
+    public function addRequiredResourcesAction(Workspace $workspace, Request $request): JsonResponse
+    {
+        $this->checkToolAccess('EDIT', $workspace);
+
+        $resources = $this->decodeIdsString($request, ResourceNode::class);
 
         $this->om->startFlushSuite();
-        foreach ($users as $user) {
-            // this will automatically create missing workspace evaluation
-            $this->manager->getUserEvaluation($workspace, $user, true);
+        foreach ($resources as $resource) {
+            $this->crud->update($resource, [
+                'id' => $resource->getUuid(),
+                'evaluation' => ['required' => true],
+            ], [Crud::NO_PERMISSIONS]);
         }
-
-        // updates resource evaluation with workspace requirements
-        // this is only required because in some cases ResourceUserEvaluation were not marked as required
-        // when defined in the workspace requirements
-        // TODO : to remove in 14.x
-        $requirements = $this->om->getRepository(Requirements::class)->findOneBy(['workspace' => $workspace, 'role' => $role]);
-        if ($requirements) {
-            foreach ($requirements->getResources() as $resource) {
-                $this->requirementsManager->addRequirementToResourceEvaluationByRole($resource, $role);
-            }
-        }
-
         $this->om->endFlushSuite();
 
         return new JsonResponse(null, 204);
+    }
+
+    /**
+     * @Route("/{workspace}/requirements", name="apiv2_workspace_required_resource_remove", methods={"DELETE"})
+     * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
+     */
+    public function removeRequiredResourcesAction(Workspace $workspace, Request $request): JsonResponse
+    {
+        $this->checkToolAccess('EDIT', $workspace);
+
+        $resources = $this->decodeIdsString($request, ResourceNode::class);
+
+        $this->om->startFlushSuite();
+        foreach ($resources as $resource) {
+            $this->crud->update($resource, [
+                'id' => $resource->getUuid(),
+                'evaluation' => ['required' => false],
+            ], [Crud::NO_PERMISSIONS]);
+        }
+        $this->om->endFlushSuite();
+
+        return new JsonResponse(null, 204);
+    }
+
+    /**
+     * Checks user rights to access evaluation tool.
+     */
+    private function checkToolAccess(string $permission, ?Workspace $workspace = null): bool
+    {
+        if (!empty($workspace) && $this->authorization->isGranted(['evaluation', $permission], $workspace)) {
+            return true;
+        }
+
+        $evaluationTool = $this->om->getRepository(OrderedTool::class)->findOneByNameAndDesktop('evaluation');
+        if ($this->authorization->isGranted($permission, $evaluationTool)) {
+            return true;
+        }
+
+        throw new AccessDeniedException();
     }
 }

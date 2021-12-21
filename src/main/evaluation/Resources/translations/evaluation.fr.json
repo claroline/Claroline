@@ -4,5 +4,9 @@
   "evaluation_failed_feedback": "Vous n'avez pas réussi la ressource.",
   "evaluation_failed_feedback_msg": "Vous n'avez pas obtenu un score suffisant pour réussir la ressource.",
   "evaluation_completed_feedback": "Vous avez terminé la ressource.",
-  "evaluation_completed_feedback_msg": "Vous avez vu tout le contenu de la ressource."
+  "evaluation_completed_feedback_msg": "Vous avez vu tout le contenu de la ressource.",
+  "users_progression": "Progression des utilisateurs",
+  "workspace_requirements_help_title": "Vous pouvez définir ici les ressources devant être faites dans l'espace d'activités.",
+  "workspace_requirements_help_description": "Seules les ressources à faire sont utilisées pour calculer la progression des utilisateurs dans l'espace d'activités.",
+  "initialize_evaluations": "Initialiser les évaluations"
 }

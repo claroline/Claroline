@@ -24,19 +24,11 @@ services:
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\CoreBundle\Manager\LogManager'
 
-    Claroline\AnalyticsBundle\Controller\User\TrackingController:
-        public: true # required by controllers
-        arguments:
-            - '@Claroline\AppBundle\API\FinderProvider'
-
     Claroline\AnalyticsBundle\Controller\Workspace\DashboardController:
         public: true # required by controllers
         arguments:
             - '@security.authorization_checker'
             - '@security.token_storage'
-            - '@translator'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\AppBundle\API\FinderProvider'
             - '@Claroline\AnalyticsBundle\Manager\AnalyticsManager'
             - '@Claroline\CoreBundle\Manager\EventManager'

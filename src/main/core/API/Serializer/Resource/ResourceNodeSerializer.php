@@ -84,6 +84,10 @@ class ResourceNodeSerializer
             'meta' => $this->serializeMeta($resourceNode, $options),
             'permissions' => $this->rightsManager->getCurrentPermissionArray($resourceNode),
             'thumbnail' => $this->serializeThumbnail($resourceNode),
+            'evaluation' => [
+                'evaluated' => $resourceNode->isEvaluated(),
+                'required' => $resourceNode->isRequired(),
+            ],
         ];
 
         if ($resourceNode->getWorkspace()) {
@@ -297,15 +301,22 @@ class ResourceNodeSerializer
         $this->sipe('display.showTitle', 'setShowTitle', $data, $resourceNode);
 
         // restrictions
-        $this->sipe('restrictions.code', 'setAccessCode', $data, $resourceNode);
-        $this->sipe('restrictions.allowedIps', 'setAllowedIps', $data, $resourceNode);
-        $this->sipe('restrictions.hidden', 'setHidden', $data, $resourceNode);
+        if (isset($data['restrictions'])) {
+            $this->sipe('restrictions.code', 'setAccessCode', $data, $resourceNode);
+            $this->sipe('restrictions.allowedIps', 'setAllowedIps', $data, $resourceNode);
+            $this->sipe('restrictions.hidden', 'setHidden', $data, $resourceNode);
 
-        if (isset($data['restrictions']['dates'])) {
-            $dateRange = DateRangeNormalizer::denormalize($data['restrictions']['dates']);
+            if (isset($data['restrictions']['dates'])) {
+                $dateRange = DateRangeNormalizer::denormalize($data['restrictions']['dates']);
 
-            $resourceNode->setAccessibleFrom($dateRange[0]);
-            $resourceNode->setAccessibleUntil($dateRange[1]);
+                $resourceNode->setAccessibleFrom($dateRange[0]);
+                $resourceNode->setAccessibleUntil($dateRange[1]);
+            }
+        }
+
+        if (isset($data['evaluation'])) {
+            $this->sipe('evaluation.evaluated', 'setEvaluated', $data, $resourceNode);
+            $this->sipe('evaluation.required', 'setRequired', $data, $resourceNode);
         }
 
         if (!in_array(Options::NO_RIGHTS, $options) && isset($data['rights'])) {
