@@ -138,9 +138,11 @@ class EventManager
             }
         }
 
-        $this->sendSessionEventInvitation($event, array_map(function (EventUser $eventUser) {
-            return $eventUser->getUser();
-        }, $results));
+        if ($event->getRegistrationMail()) {
+            $this->sendSessionEventInvitation($event, array_map(function (EventUser $eventUser) {
+                return $eventUser->getUser();
+            }, $results));
+        }
 
         $this->om->endFlushSuite();
 

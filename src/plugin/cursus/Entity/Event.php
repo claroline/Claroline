@@ -50,6 +50,13 @@ class Event extends AbstractPlanned
     private $registrationType = Session::REGISTRATION_AUTO;
 
     /**
+     * @ORM\Column(name="registration_mail", type="boolean")
+     *
+     * @var bool
+     */
+    private $registrationMail = true;
+
+    /**
      * Template used to print the presence of a User.
      *
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Template\Template")
@@ -92,6 +99,16 @@ class Event extends AbstractPlanned
     public function setRegistrationType($registrationType)
     {
         $this->registrationType = $registrationType;
+    }
+
+    public function getRegistrationMail(): bool
+    {
+        return $this->registrationMail;
+    }
+
+    public function setRegistrationMail(bool $mail)
+    {
+        $this->registrationMail = $mail;
     }
 
     public function getPresenceTemplate(): ?Template
