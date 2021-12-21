@@ -19,6 +19,7 @@ const ResourcePage = withRouter(
   connect(
     (state) => ({
       currentUser: securitySelectors.currentUser(state),
+      authenticated: securitySelectors.isAuthenticated(state),
       // tool params
       basePath: selectors.basePath(state),
       contextType: toolSelectors.contextType(state),

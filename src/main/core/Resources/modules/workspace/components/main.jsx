@@ -75,7 +75,6 @@ class WorkspaceMain extends Component {
           checkAccessCode={(code) => this.props.checkAccessCode(workspace, code)}
           platformSelfRegistration={this.props.platformSelfRegistration}
           selfRegister={() => this.props.selfRegister(workspace)}
-          reload={() => this.props.reload(workspace)}
         />
       )
     }
