@@ -26,25 +26,19 @@ class EventPresenceManager
     private $om;
     /** @var TemplateManager */
     private $templateManager;
-    /** @var EventManager */
-    private $eventManager;
 
     public function __construct(
         TranslatorInterface $translator,
         ObjectManager $om,
-        TemplateManager $templateManager,
-        EventManager $eventManager
+        TemplateManager $templateManager
     ) {
         $this->translator = $translator;
         $this->om = $om;
         $this->templateManager = $templateManager;
-        $this->eventManager = $eventManager;
     }
 
-    public function generate(Event $event): array
+    public function generate(Event $event, array $eventUsers): array
     {
-        // get all registered users
-        $eventUsers = $this->eventManager->getRegisteredUsers($event);
         /** @var EventPresence[] $existingPresences */
         $existingPresences = $this->om->getRepository(EventPresence::class)->findBy(['event' => $event]);
 
@@ -77,6 +71,20 @@ class EventPresenceManager
         return $presences;
     }
 
+    public function removePresence(Event $event, $user)
+    {
+        $presence = $this->om->getRepository(EventPresence::class)->findOneBy([
+            'event' => $event,
+            'user' => $user,
+            'status' => EventPresence::UNKNOWN, // we only remove empty Presence to keep event history
+        ]);
+
+        if ($presence) {
+            $this->om->remove($presence);
+            $this->om->flush();
+        }
+    }
+
     public function setStatus(array $presences, string $status): array
     {
         foreach ($presences as $presence) {
@@ -89,9 +97,10 @@ class EventPresenceManager
         return $presences;
     }
 
-    public function download(Event $event, string $locale, bool $filled = false): string
+    public function download(Event $event, array $users, string $locale, bool $filled = false): string
     {
-        $presences = $this->generate($event);
+        $presences = $this->generate($event, $users);
+
         // sort presence by name
         usort($presences, function (EventPresence $a, EventPresence $b) {
             if ($a->getUser()->getLastName() === $b->getUser()->getLastName()) {

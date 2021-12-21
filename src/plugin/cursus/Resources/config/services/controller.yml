@@ -44,6 +44,7 @@ services:
             - '@Claroline\AppBundle\API\FinderProvider'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\CursusBundle\Manager\EventPresenceManager'
+            - '@Claroline\CursusBundle\Manager\EventManager'
             - '@Claroline\AppBundle\Manager\PdfManager'
 
     # User trainings
