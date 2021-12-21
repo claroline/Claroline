@@ -10,8 +10,8 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\User\ProfileSerializer;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\FacetManager;
+use Claroline\CoreBundle\Manager\UserManager;
 
 class UserValidator implements ValidatorInterface
 {
