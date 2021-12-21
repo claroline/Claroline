@@ -47,4 +47,5 @@ services:
     Claroline\AppBundle\Manager\PdfManager:
         arguments:
             - '@twig'
+            - '@Claroline\AppBundle\Manager\File\TempFileManager'
             - '@Claroline\AppBundle\Manager\PlatformManager'
