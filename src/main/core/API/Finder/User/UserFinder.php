@@ -227,6 +227,13 @@ class UserFinder extends AbstractFinder
 
                     $qb->setParameter('emails', $data);
                     break;
+                case 'resetPasswordHash':
+                case 'salt':
+                case 'password':
+                case 'emailValidationHash':
+                    // those are security fields, we don't want someone try to retrieve users with this
+                    // because it will leak sensible data.
+                    break;
                 default:
                     $this->setDefaults($qb, $filterName, $filterValue);
             }
