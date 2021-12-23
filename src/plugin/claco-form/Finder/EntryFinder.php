@@ -53,6 +53,8 @@ class EntryFinder extends AbstractFinder
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
     {
+        $this->usedJoin = [];
+
         $clacoFormRepo = $this->om->getRepository('ClarolineClacoFormBundle:ClacoForm');
         $fieldRepo = $this->om->getRepository('ClarolineClacoFormBundle:Field');
 
@@ -177,16 +179,16 @@ class EntryFinder extends AbstractFinder
                     break;
                 case 'user':
                     if (!isset($this->usedJoin['user'])) {
-                        $qb->join('obj.user', 'u');
+                        $qb->leftJoin('obj.user', 'u');
                         $this->usedJoin['user'] = true;
                     }
-                    $qb->andWhere("
+                    $qb->andWhere("(
                         UPPER(u.firstName) LIKE :name
                         OR UPPER(u.lastName) LIKE :name
                         OR UPPER(u.username) LIKE :name
                         OR CONCAT(UPPER(u.firstName), CONCAT(' ', UPPER(u.lastName))) LIKE :name
                         OR CONCAT(UPPER(u.lastName), CONCAT(' ', UPPER(u.firstName))) LIKE :name
-                    ");
+                    )");
                     $qb->setParameter('name', '%'.strtoupper($filterValue).'%');
                     break;
                 case 'createdAfter':

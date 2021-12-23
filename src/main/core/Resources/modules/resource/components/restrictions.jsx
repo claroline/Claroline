@@ -4,10 +4,11 @@ import isUndefined from 'lodash/isUndefined'
 
 import {trans, displayDate} from '#/main/app/intl'
 import {Button} from '#/main/app/action'
-import {CALLBACK_BUTTON} from '#/main/app/buttons'
+import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {PasswordInput} from '#/main/app/data/types/password/components/input'
 import {ContentHelp} from '#/main/app/content/components/help'
 import {ContentRestriction} from '#/main/app/content/components/restriction'
+import {MODAL_LOGIN} from '#/main/app/modals/login'
 
 class ResourceRestrictions extends Component {
   constructor(props) {
@@ -48,7 +49,18 @@ class ResourceRestrictions extends Component {
             title: trans('restrictions.no_rights', {}, 'resource'),
             help: trans('restrictions.no_rights_help', {}, 'resource')
           }}
-        />
+        >
+          {!this.props.authenticated &&
+            <Button
+              style={{marginTop: 20}}
+              className="btn btn-block btn-emphasis"
+              type={MODAL_BUTTON}
+              label={trans('login', {}, 'actions')}
+              modal={[MODAL_LOGIN]}
+              primary={true}
+            />
+          }
+        </ContentRestriction>
 
         <ContentRestriction
           icon="fa fa-fw fa-eye"
@@ -169,6 +181,7 @@ ResourceRestrictions.propTypes = {
     startDate: T.string,
     endDate: T.string
   }).isRequired,
+  authenticated: T.bool.isRequired,
   dismiss: T.func.isRequired,
   checkAccessCode: T.func
 }

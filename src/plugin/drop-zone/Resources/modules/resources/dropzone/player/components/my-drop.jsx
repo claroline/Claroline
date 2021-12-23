@@ -103,7 +103,7 @@ const MyDrop = props =>
           }, {
             name: 'finish',
             type: CALLBACK_BUTTON,
-            icon: 'fa fa-fw fa-upload',
+            icon: 'fa fa-fw fa-check-double',
             label: trans('submit_my_drop', {}, 'dropzone'),
             callback: () => props.submit(props.myDrop.id),
             disabled: !props.myDrop.documents || 0 === props.myDrop.documents.length,

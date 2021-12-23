@@ -1,5 +1,7 @@
 import {combineReducers, makeReducer} from '#/main/app/store/reducer'
+import {makeInstanceAction} from '#/main/app/store/actions'
 import {makeListReducer} from '#/main/app/content/list/store/reducer'
+import {LIST_DATA_DELETE} from '#/main/app/content/list/store/actions'
 
 import {LOAD_EVENT, EVENT_SET_LOADED} from '#/plugin/cursus/event/store/actions'
 import {selectors} from '#/plugin/cursus/event/store/selectors'
@@ -34,7 +36,9 @@ export const reducer = combineReducers({
     sortBy: {property: 'user', direction: 1}
   }, {
     invalidated: makeReducer(false, {
-      [LOAD_EVENT]: () => true
+      [LOAD_EVENT]: () => true,
+      [makeInstanceAction(LIST_DATA_DELETE, selectors.STORE_NAME+'.users')]: () => true,
+      [makeInstanceAction(LIST_DATA_DELETE, selectors.STORE_NAME+'.groups')]: () => true
     })
   })
 })
