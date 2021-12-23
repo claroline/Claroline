@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Controller\APINew\Platform;
 
 use Claroline\AnalyticsBundle\Manager\AnalyticsManager;
 use Claroline\AppBundle\API\Utils\ArrayUtils;
+use Claroline\AppBundle\Controller\AbstractSecurityController;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Event\Platform\EnableEvent;
 use Claroline\AppBundle\Event\Platform\ExtendEvent;
@@ -31,7 +32,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 /**
  * REST API to manage platform parameters.
  */
-class ParametersController
+class ParametersController extends AbstractSecurityController
 {
     use RequestDecoderTrait;
 
@@ -69,6 +70,8 @@ class ParametersController
      */
     public function updateAction(Request $request): JsonResponse
     {
+        $this->canOpenAdminTool('main_settings');
+
         $parametersData = $this->decodeRequest($request);
 
         // easy way to protect locked parameters (this may be done elsewhere)

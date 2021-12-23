@@ -14,23 +14,28 @@ namespace Claroline\CoreBundle\Security\Voter;
 use Claroline\AppBundle\Security\ObjectCollection;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class GroupVoter extends AbstractRoleSubjectVoter
 {
+    /**
+     * @param Group $object
+     */
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
     {
         $collection = isset($options['collection']) ? $options['collection'] : null;
 
         switch ($attributes[0]) {
+            case self::OPEN:
+            case self::VIEW:
+                return $this->checkView($token, $object);
             case self::ADMINISTRATE:
             case self::EDIT:
                 return $this->checkEdit($token, $object);
             case self::DELETE:
                 return $this->checkDelete($token, $object);
-            case self::VIEW:
-                return $this->checkView($token, $object);
             case self::PATCH:
                 return $this->checkPatch($token, $object, $collection);
         }
@@ -58,11 +63,13 @@ class GroupVoter extends AbstractRoleSubjectVoter
 
     private function checkView($token, Group $group)
     {
-        if (!$this->isOrganizationManager($token, $group)) {
-            return VoterInterface::ACCESS_DENIED;
+        /** @var User $user */
+        $user = $token->getUser();
+        if ($user && $user->hasGroup($group)) {
+            return VoterInterface::ACCESS_GRANTED;
         }
 
-        return VoterInterface::ACCESS_GRANTED;
+        return VoterInterface::ACCESS_DENIED;
     }
 
     private function checkPatch(TokenInterface $token, Group $group, ObjectCollection $collection = null): int
@@ -88,6 +95,6 @@ class GroupVoter extends AbstractRoleSubjectVoter
      */
     public function getSupportedActions()
     {
-        return [self::VIEW, self::CREATE, self::EDIT, self::ADMINISTRATE, self::DELETE, self::PATCH];
+        return [self::OPEN, self::VIEW, self::CREATE, self::EDIT, self::ADMINISTRATE, self::DELETE, self::PATCH];
     }
 }

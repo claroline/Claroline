@@ -31,7 +31,7 @@ const Parameters = (props) => {
       <FormData
         level={3}
         name={`${baseSelectors.STORE_NAME}.parameters`}
-        target={['apiv2_parameters_update']}
+        target={['apiv2_community_parameters']}
         buttons={true}
         sections={[
           {
