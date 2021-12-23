@@ -14,9 +14,12 @@ services:
 
   Claroline\CoreBundle\API\Validator\UserValidator:
       arguments:
+        - '@security.authorization_checker'
+        - '@security.token_storage'
         - '@Claroline\AppBundle\Persistence\ObjectManager'
         - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
         - '@Claroline\CoreBundle\Manager\UserManager'
+        - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
         - '@Claroline\CoreBundle\API\Serializer\User\ProfileSerializer'
 
   Claroline\CoreBundle\API\Validator\GroupValidator:
