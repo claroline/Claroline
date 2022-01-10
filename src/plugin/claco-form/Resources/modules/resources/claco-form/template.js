@@ -112,9 +112,9 @@ function getTemplateHelp(fields) {
   ].concat(fields
     .filter(field => !field.restrictions.hidden)
     .map(field => field.required ?
-      `${field.name} : ${generateFieldKey(field.id)}`
+      `${field.label} : ${generateFieldKey(field.id)}`
       :
-      `${field.name} : ${generateFieldKey(field.id)} (${trans('optional')})`
+      `${field.label} : ${generateFieldKey(field.id)} (${trans('optional')})`
     )
   )
 }
