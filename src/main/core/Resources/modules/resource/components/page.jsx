@@ -111,6 +111,7 @@ const ResourcePage = (props) => {
           errors={props.accessErrors}
           dismiss={props.dismissRestrictions}
           managed={props.managed}
+          authenticated={props.authenticated}
           checkAccessCode={(code) => props.checkAccessCode(props.resourceNode, code, props.embedded)}
         />
       }
@@ -141,6 +142,7 @@ ResourcePage.propTypes = {
   embedded: T.bool,
   showHeader: T.bool,
   managed: T.bool.isRequired,
+  authenticated: T.bool.isRequired,
   subtitle: T.string,
   path: T.arrayOf(T.shape({
     label: T.string.isRequired,

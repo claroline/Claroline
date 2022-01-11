@@ -98,8 +98,6 @@ class WorkspaceRestrictions extends Component {
                     onLogin: () => {
                       if (!this.props.errors.archived && this.props.errors.selfRegistration) {
                         this.props.selfRegister()
-                      } else {
-                        this.props.reload()
                       }
                     }
                   }]}
@@ -282,8 +280,7 @@ WorkspaceRestrictions.propTypes = {
   platformSelfRegistration: T.bool,
   dismiss: T.func.isRequired,
   checkAccessCode: T.func,
-  selfRegister: T.func,
-  reload: T.func.isRequired
+  selfRegister: T.func
 }
 
 export {

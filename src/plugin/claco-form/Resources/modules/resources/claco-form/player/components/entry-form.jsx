@@ -147,7 +147,7 @@ class EntryFormComponent extends Component {
       return {
         id: field.id,
         type: field.type,
-        label: field.name,
+        label: field.label,
         required: field.required,
         disabled: !this.props.isManager && ((this.props.isNew && field.restrictions.locked && !field.restrictions.lockedEditionOnly) || (!this.props.isNew && field.restrictions.locked)),
         help: field.help,

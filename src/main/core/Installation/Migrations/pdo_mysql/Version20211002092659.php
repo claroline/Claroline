@@ -28,7 +28,7 @@ class Version20211002092659 extends AbstractMigration
             UPDATE claro_field_facet SET type = "date" WHERE type = "3"
         ');
         $this->addSql('
-            UPDATE claro_field_facet SET type = "date" WHERE type = "7"
+            UPDATE claro_field_facet SET type = "country" WHERE type = "7"
         ');
         $this->addSql('
             UPDATE claro_field_facet SET type = "email" WHERE type = "8"

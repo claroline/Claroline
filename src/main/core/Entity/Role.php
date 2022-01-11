@@ -247,7 +247,7 @@ class Role
     /**
      * Get the users property.
      *
-     * @return ArrayCollection
+     * @return ArrayCollection|User[]
      */
     public function getUsers()
     {

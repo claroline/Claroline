@@ -12,6 +12,7 @@
 namespace Claroline\TeamBundle\Security\Voter;
 
 use Claroline\CoreBundle\Security\Voter\AbstractVoter;
+use Claroline\TeamBundle\Entity\Team;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
@@ -20,14 +21,23 @@ class TeamVoter extends AbstractVoter
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
     {
         switch ($attributes[0]) {
+            case self::OPEN:
+            case self::VIEW:
+                if ($this->isGranted(['claroline_team_tool', 'open'], $object->getWorkspace())) {
+                    return VoterInterface::ACCESS_GRANTED;
+                }
+
+                return VoterInterface::ACCESS_DENIED;
+
             case self::CREATE:
             case self::EDIT:
             case self::DELETE:
             case self::PATCH:
-                return $this->isGranted(['claroline_team_tool', 'edit'], $object->getWorkspace());
-            case self::OPEN:
-            case self::VIEW:
-                return $this->isGranted(['claroline_team_tool', 'open'], $object->getWorkspace());
+                if ($this->isGranted(['claroline_team_tool', 'edit'], $object->getWorkspace())) {
+                    return VoterInterface::ACCESS_GRANTED;
+                }
+
+                return VoterInterface::ACCESS_DENIED;
         }
 
         return VoterInterface::ACCESS_ABSTAIN;
@@ -35,7 +45,7 @@ class TeamVoter extends AbstractVoter
 
     public function getClass()
     {
-        return 'Claroline\TeamBundle\Entity\Team';
+        return Team::class;
     }
 
     public function getSupportedActions()

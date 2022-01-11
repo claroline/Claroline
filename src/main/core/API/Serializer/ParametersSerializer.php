@@ -72,7 +72,7 @@ class ParametersSerializer
         $data = $this->getAssetsData('stylesheets', $data);
         $data = $this->getLogoData($data);
 
-        if (isset($data['mailer'])) {
+        if (!empty($data['mailer'])) {
             $data['mailer'] = $this->deserializeMailer($data['mailer']);
         }
 
@@ -87,7 +87,7 @@ class ParametersSerializer
 
     public function deserializeMailer($data)
     {
-        if ('gmail' === $data['transport']) {
+        if (isset($data['transport']) && 'gmail' === $data['transport']) {
             $data['host'] = 'smtp.gmail.com';
             $data['auth_mode'] = 'login';
             $data['encryption'] = 'ssl';

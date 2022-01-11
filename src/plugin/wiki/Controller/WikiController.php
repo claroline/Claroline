@@ -2,7 +2,9 @@
 
 namespace Icap\WikiBundle\Controller;
 
+use Claroline\AppBundle\Manager\PdfManager;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Icap\WikiBundle\Entity\Wiki;
 use Icap\WikiBundle\Manager\SectionManager;
@@ -10,6 +12,7 @@ use Icap\WikiBundle\Manager\WikiManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Twig\Environment;
@@ -30,20 +33,21 @@ class WikiController
 
     /** @var SectionManager */
     private $sectionManager;
+    /** @var PdfManager */
+    private $pdfManager;
 
-    /**
-     * WikiController constructor.
-     */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         Environment $templating,
         WikiManager $wikiManager,
-        SectionManager $sectionManager
+        SectionManager $sectionManager,
+        PdfManager $pdfManager
     ) {
         $this->authorization = $authorization;
         $this->templating = $templating;
         $this->wikiManager = $wikiManager;
         $this->sectionManager = $sectionManager;
+        $this->pdfManager = $pdfManager;
     }
 
     /**
@@ -68,10 +72,8 @@ class WikiController
     /**
      * @Route("/pdf", name="apiv2_wiki_export_pdf")
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
-     *
-     * @return JsonResponse
      */
-    public function exportPdfAction(Wiki $wiki, User $user = null)
+    public function exportPdfAction(Wiki $wiki, User $user = null): StreamedResponse
     {
         $resourceNode = $wiki->getResourceNode();
         $this->checkPermission('EXPORT', $resourceNode, [], true);
@@ -79,14 +81,18 @@ class WikiController
         $isAdmin = $this->checkPermission('EDIT', $resourceNode);
         $sectionTree = $this->sectionManager->getSerializedSectionTree($wiki, $user, $isAdmin);
 
-        return new JsonResponse([
-            'content' => $this->templating->render('@IcapWiki/wiki/pdf.html.twig', [
-                '_resource' => $wiki,
-                'tree' => $sectionTree,
-                'isAdmin' => $isAdmin,
-                'user' => $user,
-            ]),
-            'name' => $resourceNode->getName(),
+        return new StreamedResponse(function () use ($wiki, $sectionTree, $isAdmin, $user) {
+            echo $this->pdfManager->fromHtml(
+                $this->templating->render('@IcapWiki/wiki/pdf.html.twig', [
+                    '_resource' => $wiki,
+                    'tree' => $sectionTree,
+                    'isAdmin' => $isAdmin,
+                    'user' => $user,
+                ])
+            );
+        }, 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename='.TextNormalizer::toKey($resourceNode->getName()).'.pdf',
         ]);
     }
 }

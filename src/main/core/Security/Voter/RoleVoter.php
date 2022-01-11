@@ -26,11 +26,20 @@ class RoleVoter extends AbstractVoter
         return Role::class;
     }
 
+    /**
+     * @param Role $object
+     */
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
     {
         $collection = isset($options['collection']) ? $options['collection'] : null;
 
         switch ($attributes[0]) {
+            case self::OPEN:
+                if (in_array($object->getName(), $token->getRoleNames())) {
+                    return VoterInterface::ACCESS_GRANTED;
+                }
+
+                return VoterInterface::ACCESS_DENIED;
             case self::EDIT:
                 return $this->check($token, $object);
             case self::PATCH:
@@ -109,6 +118,6 @@ class RoleVoter extends AbstractVoter
 
     public function getSupportedActions()
     {
-        return [self::CREATE, self::EDIT, self::DELETE, self::PATCH];
+        return [self::CREATE, self::OPEN, self::EDIT, self::DELETE, self::PATCH];
     }
 }
