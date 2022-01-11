@@ -64,8 +64,9 @@ class Editor extends Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    return (nextProps.content !== this.editor.getContent()
-    && nextProps.content !== this.props.content)
+    return this.editor
+      && nextProps.content !== this.editor.getContent()
+      && nextProps.content !== this.props.content
   }
 
   componentWillUnmount() {

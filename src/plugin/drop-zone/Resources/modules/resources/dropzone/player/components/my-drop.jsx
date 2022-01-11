@@ -38,6 +38,7 @@ const MyDrop = props =>
       documents={props.myDrop.documents}
       canEdit={props.isDropEnabled && !props.myDrop.finished}
       showUser={props.dropzone.parameters.dropType === constants.DROP_TYPE_TEAM}
+      deleteDocument={props.deleteDocument}
     />
 
     {props.dropzone.display.displayCorrectionsToLearners && props.myDrop.finished && props.myDrop.corrections.filter(c => c.finished).length > 0 &&
@@ -103,7 +104,7 @@ const MyDrop = props =>
           }, {
             name: 'finish',
             type: CALLBACK_BUTTON,
-            icon: 'fa fa-fw fa-upload',
+            icon: 'fa fa-fw fa-check-double',
             label: trans('submit_my_drop', {}, 'dropzone'),
             callback: () => props.submit(props.myDrop.id),
             disabled: !props.myDrop.documents || 0 === props.myDrop.documents.length,
@@ -150,6 +151,7 @@ MyDrop.propTypes = {
   submit: T.func.isRequired,
   denyCorrection: T.func.isRequired,
   saveDocument: T.func.isRequired,
+  deleteDocument: T.func.isRequired,
   submitForRevision: T.func.isRequired,
   saveRevisionComment: T.func.isRequired,
   saveDropComment: T.func.isRequired

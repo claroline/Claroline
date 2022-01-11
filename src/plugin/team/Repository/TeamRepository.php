@@ -17,6 +17,22 @@ use Doctrine\ORM\EntityRepository;
 
 class TeamRepository extends EntityRepository
 {
+    public function findByRole(string $roleName)
+    {
+        $dql = "
+            SELECT t
+            FROM Claroline\TeamBundle\Entity\Team t
+            LEFT JOIN t.role r
+            LEFT JOIN t.teamManagerRole mr
+            WHERE r.name = :role 
+               OR mr.name = :role
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('role', $roleName);
+
+        return $query->getResult();
+    }
+
     public function findTeamsByUser(User $user, $orderedBy = 'name', $order = 'ASC')
     {
         $dql = "

@@ -5,7 +5,7 @@ export const LOAD_WORKSPACE_ABOUT = 'LOAD_WORKSPACE_ABOUT'
 
 export const actions = {}
 
-actions.load = makeActionCreator(LOAD_WORKSPACE_ABOUT, 'version', 'changelogs')
+actions.load = makeActionCreator(LOAD_WORKSPACE_ABOUT, 'workspace')
 
 actions.get = (workspaceId) => (dispatch) => dispatch({
   [API_REQUEST]: {

@@ -63,6 +63,7 @@ const HistoryComponent = props =>
         {
           type: CALLBACK_BUTTON,
           label: trans('set_active_contribution', {}, 'icap_wiki'),
+          icon: 'fa fa-fw fa-eye',
           callback: () => props.setActiveContribution(props.section.id, rows[0].id),
           scope: ['object'],
           displayed: props.section.activeContribution.id !== rows[0].id && (

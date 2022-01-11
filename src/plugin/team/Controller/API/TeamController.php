@@ -81,15 +81,8 @@ class TeamController extends AbstractCrudController
     }
 
     /**
-     * @Route(
-     *     "/team/{team}/{role}/register",
-     *     name="apiv2_team_register"
-     * )
-     * @EXT\ParamConverter(
-     *     "team",
-     *     class="ClarolineTeamBundle:Team",
-     *     options={"mapping": {"team": "uuid"}}
-     * )
+     * @Route("/team/{team}/{role}/register", name="apiv2_team_register")
+     * @EXT\ParamConverter("team", class="ClarolineTeamBundle:Team", options={"mapping": {"team": "uuid"}})
      */
     public function teamRegisterAction(Team $team, string $role, Request $request): JsonResponse
     {
@@ -125,15 +118,8 @@ class TeamController extends AbstractCrudController
     }
 
     /**
-     * @Route(
-     *     "/team/{team}/{role}/unregister",
-     *     name="apiv2_team_unregister"
-     * )
-     * @EXT\ParamConverter(
-     *     "team",
-     *     class="ClarolineTeamBundle:Team",
-     *     options={"mapping": {"team": "uuid"}}
-     * )
+     * @Route("/team/{team}/{role}/unregister", name="apiv2_team_unregister")
+     * @EXT\ParamConverter("team", class="ClarolineTeamBundle:Team", options={"mapping": {"team": "uuid"}})
      */
     public function teamUnregisterAction(Team $team, string $role, Request $request): JsonResponse
     {
@@ -153,15 +139,8 @@ class TeamController extends AbstractCrudController
     }
 
     /**
-     * @Route(
-     *     "/team/{team}/register",
-     *     name="apiv2_team_self_register"
-     * )
-     * @EXT\ParamConverter(
-     *     "team",
-     *     class="ClarolineTeamBundle:Team",
-     *     options={"mapping": {"team": "uuid"}}
-     * )
+     * @Route("/team/{team}/register", name="apiv2_team_self_register")
+     * @EXT\ParamConverter("team", class="ClarolineTeamBundle:Team", options={"mapping": {"team": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
     public function teamSelfRegisterAction(Team $team, User $user): JsonResponse
@@ -190,15 +169,8 @@ class TeamController extends AbstractCrudController
     }
 
     /**
-     * @Route(
-     *     "/team/{team}/unregister",
-     *     name="apiv2_team_self_unregister"
-     * )
-     * @EXT\ParamConverter(
-     *     "team",
-     *     class="ClarolineTeamBundle:Team",
-     *     options={"mapping": {"team": "uuid"}}
-     * )
+     * @Route("/team/{team}/unregister", name="apiv2_team_self_unregister")
+     * @EXT\ParamConverter("team", class="ClarolineTeamBundle:Team", options={"mapping": {"team": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
     public function teamSelfUnregisterAction(Team $team, User $user): JsonResponse
@@ -214,15 +186,8 @@ class TeamController extends AbstractCrudController
     }
 
     /**
-     * @Route(
-     *     "/workspace/{workspace}/teams/create",
-     *     name="apiv2_team_multiple_create"
-     * )
-     * @EXT\ParamConverter(
-     *     "workspace",
-     *     class="ClarolineCoreBundle:Workspace\Workspace",
-     *     options={"mapping": {"workspace": "uuid"}}
-     * )
+     * @Route("/workspace/{workspace}/teams/create", name="apiv2_team_multiple_create")
+     * @EXT\ParamConverter("workspace", class="ClarolineCoreBundle:Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
     public function multipleTeamsCreateAction(Workspace $workspace, User $user, Request $request): JsonResponse
@@ -235,10 +200,7 @@ class TeamController extends AbstractCrudController
     }
 
     /**
-     * @Route(
-     *     "/teams/fill",
-     *     name="apiv2_team_fill"
-     * )
+     * @Route("/teams/fill", name="apiv2_team_fill")
      */
     public function teamsFillAction(Request $request): JsonResponse
     {
@@ -261,10 +223,7 @@ class TeamController extends AbstractCrudController
     }
 
     /**
-     * @Route(
-     *     "/teams/empty",
-     *     name="apiv2_team_empty"
-     * )
+     * @Route("/teams/empty", name="apiv2_team_empty")
      */
     public function teamsEmptyAction(Request $request): JsonResponse
     {

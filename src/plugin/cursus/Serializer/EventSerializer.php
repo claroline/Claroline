@@ -106,6 +106,7 @@ class EventSerializer
                 }, $tutors),
                 'registration' => [
                     'registrationType' => $event->getRegistrationType(),
+                    'mail' => $event->getRegistrationMail(),
                 ],
                 'presenceTemplate' => $event->getPresenceTemplate() ?
                     $this->templateSerializer->serialize($event->getPresenceTemplate(), [Options::SERIALIZE_MINIMAL]) :
@@ -124,6 +125,7 @@ class EventSerializer
         $this->sipe('code', 'setCode', $data, $event);
         $this->sipe('restrictions.users', 'setMaxUsers', $data, $event);
         $this->sipe('registration.registrationType', 'setRegistrationType', $data, $event);
+        $this->sipe('registration.mail', 'setRegistrationMail', $data, $event);
 
         $session = $event->getSession();
         if (empty($session) && isset($data['session']['id'])) {

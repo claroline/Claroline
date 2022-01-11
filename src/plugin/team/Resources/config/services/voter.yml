@@ -15,4 +15,8 @@ services:
 
     Claroline\TeamBundle\Security\Voter\TeamVoter: ~
 
+    Claroline\TeamBundle\Security\Voter\RoleVoter:
+        arguments:
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
+
     Claroline\TeamBundle\Security\Voter\WorkspaceTeamParametersVoter: ~
