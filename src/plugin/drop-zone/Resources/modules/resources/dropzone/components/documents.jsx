@@ -4,7 +4,8 @@ import classes from 'classnames'
 
 import {url} from '#/main/app/api'
 import {trans, displayDate} from '#/main/app/intl'
-import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
+import {Button} from '#/main/app/action/components/button'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {LinkButton} from '#/main/app/buttons/link'
 
 import {route as resourceRoute} from '#/main/core/resource/routing'
@@ -59,16 +60,17 @@ const DocumentRow = props =>
     </td>
     {(props.canEdit && !props.document.isManager) || (props.isManager && props.document.isManager) ?
       <td>
-        <span
-          className="fa fa-fw fa-trash-o pointer-hand"
-          onClick={() => {
-            props.showModal(MODAL_CONFIRM, {
-              icon: 'fa fa-fw fa-trash-o',
-              title: trans('delete_document', {}, 'dropzone'),
-              question: trans('delete_document_confirm_message', {}, 'dropzone'),
-              dangerous: true,
-              handleConfirm: () => props.deleteDocument(props.document.id)
-            })
+        <Button
+          className="btn btn-link"
+          type={CALLBACK_BUTTON}
+          icon="fa fa-fw fa-trash-o"
+          label={trans('delete', {}, 'actions')}
+          callback={() => props.deleteDocument(props.document.id)}
+          tooltip="left"
+          dangerous={true}
+          confirm={{
+            title: trans('delete_document', {}, 'dropzone'),
+            message: trans('delete_document_confirm_message', {}, 'dropzone')
           }}
         />
       </td> :
