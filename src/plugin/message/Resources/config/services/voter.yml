@@ -13,6 +13,8 @@ services:
                 arguments:
                   - '@service_container'
 
+    Claroline\MessageBundle\Security\Voter\ContactVoter: ~
+
     Claroline\MessageBundle\Security\Voter\MessageVoter: ~
 
     Claroline\MessageBundle\Security\Voter\UserMessageVoter: ~

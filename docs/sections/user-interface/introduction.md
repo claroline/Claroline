@@ -37,6 +37,12 @@ title: Introduction
 
 ### Webpack
 
+All the JavaScript needed by the application is compiled and distributed by webpack.
+To ease the development process, we use the `webpack-dev-server` in order to serve the files.
+This requires to run the dev server in command line :
+
+    npm run webpack:dev
+
 
 ## React integration
 

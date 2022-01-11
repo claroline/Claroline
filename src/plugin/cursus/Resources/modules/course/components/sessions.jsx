@@ -31,7 +31,8 @@ const CourseSessions = (props) =>
       name={selectors.STORE_NAME+'.courseSessions'}
       url={['apiv2_cursus_course_list_sessions', {id: props.course.id}]}
       delete={{
-        url: ['apiv2_cursus_session_delete_bulk']
+        url: ['apiv2_cursus_session_delete_bulk'],
+        displayed: (row) => hasPermission('delete', row)
       }}
       definition={[
         {

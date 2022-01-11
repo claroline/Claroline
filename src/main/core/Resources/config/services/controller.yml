@@ -188,6 +188,8 @@ services:
             - '@Claroline\CoreBundle\Manager\LockManager'
 
     Claroline\CoreBundle\Controller\APINew\Platform\ParametersController:
+        parent: Claroline\AppBundle\Controller\AbstractSecurityController
+        public: true
         arguments:
             - '@security.authorization_checker'
             - '@Claroline\AppBundle\Event\StrictDispatcher'
@@ -327,3 +329,11 @@ services:
         public: true
         arguments:
             - '@security.authorization_checker'
+
+    Claroline\CoreBundle\Controller\APINew\User\CommunityController:
+        parent: Claroline\AppBundle\Controller\AbstractSecurityController
+        public: true
+        arguments:
+            - '@security.authorization_checker'
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+            - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'

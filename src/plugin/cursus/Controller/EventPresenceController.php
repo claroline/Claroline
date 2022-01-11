@@ -21,6 +21,7 @@ use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\CursusBundle\Entity\Event;
 use Claroline\CursusBundle\Entity\EventPresence;
+use Claroline\CursusBundle\Manager\EventManager;
 use Claroline\CursusBundle\Manager\EventPresenceManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -47,6 +48,8 @@ class EventPresenceController
     private $serializer;
     /** @var EventPresenceManager */
     private $manager;
+    /** @var EventManager */
+    private $eventManager;
     /** @var PdfManager */
     private $pdfManager;
 
@@ -56,6 +59,7 @@ class EventPresenceController
         FinderProvider $finder,
         SerializerProvider $serializer,
         EventPresenceManager $manager,
+        EventManager $eventManager,
         PdfManager $pdfManager
     ) {
         $this->authorization = $authorization;
@@ -63,6 +67,7 @@ class EventPresenceController
         $this->finder = $finder;
         $this->serializer = $serializer;
         $this->manager = $manager;
+        $this->eventManager = $eventManager;
         $this->pdfManager = $pdfManager;
     }
 
@@ -75,7 +80,7 @@ class EventPresenceController
         $this->checkPermission('OPEN', $event, [], true);
 
         // not optimal, as it will do it for each new search
-        $this->manager->generate($event);
+        $this->manager->generate($event, $this->eventManager->getRegisteredUsers($event));
 
         $params = $request->query->all();
         $params['hiddenFilters'] = [
@@ -114,7 +119,7 @@ class EventPresenceController
 
         return new StreamedResponse(function () use ($event, $request, $filled) {
             echo $this->pdfManager->fromHtml(
-                $this->manager->download($event, $request->getLocale(), (bool) $filled)
+                $this->manager->download($event, $this->eventManager->getRegisteredUsers($event), $request->getLocale(), (bool) $filled)
             );
         }, 200, [
             'Content-Type' => 'application/pdf',

@@ -54,6 +54,8 @@ class EventManager
     private $dispatcher;
     /** @var PlanningManager */
     private $planningManager;
+    /** @var EventPresenceManager */
+    private $presenceManager;
 
     /** @var EventUserRepository */
     private $eventUserRepo;
@@ -68,7 +70,8 @@ class EventManager
         TemplateManager $templateManager,
         TokenStorageInterface $tokenStorage,
         StrictDispatcher $dispatcher,
-        PlanningManager $planningManager
+        PlanningManager $planningManager,
+        EventPresenceManager $presenceManager
     ) {
         $this->eventDispatcher = $eventDispatcher;
         $this->om = $om;
@@ -78,6 +81,7 @@ class EventManager
         $this->tokenStorage = $tokenStorage;
         $this->dispatcher = $dispatcher;
         $this->planningManager = $planningManager;
+        $this->presenceManager = $presenceManager;
 
         $this->eventUserRepo = $om->getRepository(EventUser::class);
         $this->eventGroupRepo = $om->getRepository(EventGroup::class);
@@ -134,9 +138,11 @@ class EventManager
             }
         }
 
-        $this->sendSessionEventInvitation($event, array_map(function (EventUser $eventUser) {
-            return $eventUser->getUser();
-        }, $results));
+        if ($event->getRegistrationMail()) {
+            $this->sendSessionEventInvitation($event, array_map(function (EventUser $eventUser) {
+                return $eventUser->getUser();
+            }, $results));
+        }
 
         $this->om->endFlushSuite();
 
@@ -157,6 +163,9 @@ class EventManager
 
             // remove event from user planning
             $this->planningManager->removeFromPlanning($event, $eventUser->getUser());
+
+            // clean presences
+            $this->presenceManager->removePresence($event, $eventUser->getUser());
         }
 
         $this->om->endFlushSuite();
@@ -233,6 +242,8 @@ class EventManager
             foreach ($group->getUsers() as $user) {
                 // remove event from user planning
                 $this->planningManager->removeFromPlanning($event, $user);
+                // clean presences
+                $this->presenceManager->removePresence($event, $user);
             }
 
             $this->eventDispatcher->dispatch(new LogSessionEventGroupUnregistrationEvent($eventGroup), 'log');

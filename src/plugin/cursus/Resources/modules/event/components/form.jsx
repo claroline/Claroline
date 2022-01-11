@@ -152,6 +152,10 @@ const EventForm = (props) =>
               multiple: false,
               choices: constants.REGISTRATION_TYPES
             }
+          }, {
+            name: 'registration.mail',
+            type: 'boolean',
+            label: trans('registration_send_mail', {}, 'cursus')
           }
         ]
       }, {
