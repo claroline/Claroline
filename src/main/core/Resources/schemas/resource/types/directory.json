@@ -3,7 +3,7 @@
   "type": "object",
   "properties": {
     "id": {
-      "type": "number",
+      "type": "string",
       "description": "The ID of the directory resource."
     }
   },

@@ -99,11 +99,13 @@ const reducer = combineReducers({
     filters: makeReducer([], {
       [makeInstanceAction(RESOURCE_LOAD, 'directory')]: (state, action) => get(action.resourceData.directory, 'list.filters') || []
     }),
-    page: makeReducer([], {
-      [makeInstanceAction(RESOURCE_LOAD, 'directory')]: () => 0
-    }),
-    pageSize: makeReducer([], {
-      [makeInstanceAction(RESOURCE_LOAD, 'directory')]: (state, action) => get(action.resourceData.directory, 'list.pageSize') || listConst.DEFAULT_PAGE_SIZE
+    pagination: combineReducers({
+      page: makeReducer([], {
+        [makeInstanceAction(RESOURCE_LOAD, 'directory')]: () => 0
+      }),
+      pageSize: makeReducer([], {
+        [makeInstanceAction(RESOURCE_LOAD, 'directory')]: (state, action) => get(action.resourceData.directory, 'list.pageSize') || listConst.DEFAULT_PAGE_SIZE
+      })
     }),
     sortBy: makeReducer([], {
       [makeInstanceAction(RESOURCE_LOAD, 'directory')]: (state, action) => {

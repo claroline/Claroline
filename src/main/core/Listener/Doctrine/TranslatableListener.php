@@ -27,7 +27,6 @@ class TranslatableListener extends BaseListener
 
         if (isset($config['fields'])) {
             $locale = $this->getTranslatableLocale($object, $meta);
-            $oid = spl_object_hash($object);
         }
 
         if (isset($config['fields']) && $locale !== $this->getDefaultLocale()) {
@@ -55,7 +54,7 @@ class TranslatableListener extends BaseListener
                         // ensure clean changeset
                         $ea->setOriginalObjectProperty(
                             $om->getUnitOfWork(),
-                            $oid,
+                            $object,
                             $field,
                             $meta->getReflectionProperty($field)->getValue($object)
                         );
