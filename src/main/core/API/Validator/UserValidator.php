@@ -46,7 +46,8 @@ class UserValidator implements ValidatorInterface
         PlatformConfigurationHandler $config,
         UserManager $manager,
         WorkspaceManager $workspaceManager,
-        ProfileSerializer $profileSerializer
+        ProfileSerializer $profileSerializer,
+        FacetManager $facetManager
     ) {
         $this->authorization = $authorization;
         $this->tokenStorage = $tokenStorage;
@@ -55,6 +56,7 @@ class UserValidator implements ValidatorInterface
         $this->manager = $manager;
         $this->workspaceManager = $workspaceManager;
         $this->profileSerializer = $profileSerializer;
+        $this->facetManager = $facetManager;
 
         $this->roleRepo = $om->getRepository(Role::class);
     }
