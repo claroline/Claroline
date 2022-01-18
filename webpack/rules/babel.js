@@ -9,7 +9,10 @@ module.exports = () => ({
     options: {
       presets: [
         // parse ES6
-        "@babel/preset-env",
+        ["@babel/preset-env", {
+          corejs: "3",
+          useBuiltIns: "usage"
+        }],
         // parse React JSX
         "@babel/preset-react"
       ],

@@ -5,11 +5,8 @@
  * The only purpose of the module is to bundle them and configure them.
  *
  * NB. You never have to require this module manually.
+ * NB2. ES6+ polyfills are directly provided by Babel in the webpack config.
  */
-
-// Provides ES5/ES6 features.
-// TODO : filter to only get required polyfills
-import 'core-js'
 
 // Provides SVG polyfills.
 // (Mostly to get SVG external reference polyfill for IE<13)
