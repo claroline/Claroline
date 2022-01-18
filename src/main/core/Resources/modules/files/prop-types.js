@@ -5,8 +5,8 @@ const File = {
     hashName: T.string.isRequired,
     size: T.number.isRequired,
     url: T.string.isRequired,
-    autoDownload: T.bool.isRequired,
-    commentsActivated: T.bool.isRequired
+    autoDownload: T.bool,
+    commentsActivated: T.bool
   },
   defaultProps: {
     size: 0,

@@ -14,13 +14,13 @@ const EvaluationTool = (props) =>
   <Routes
     path={props.path}
     redirect={[
-
+      {from: '/', exact: true, to: '/users', disabled: props.currentUserId && props.contextId}
     ]}
     routes={[
       {
         path: '/',
         exact: true,
-        disabled: !props.currentUserId && !props.contextId,
+        disabled: !props.currentUserId || !props.contextId,
         render: () => (
           <ToolPage subtitle={trans('my_progression')}>
             <EvaluationUser

@@ -1,4 +1,7 @@
-.pdf-player-menu {
+
+@import "../../packages/pdfjs-dist/web/pdf_viewer.css";
+
+.pdf-menu {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -47,14 +50,13 @@
     }
 }
 
-.pdf-player {
-    text-align: center;
+.pdf-container {
+    position: relative;
+    width: 100%;
 
-    .pdf-player-page {
-        border: 1px solid @panel-default-border;
-        border-radius: @panel-border-radius;
-        box-shadow: @box-shadow-base;
-
-        max-width: 100%;
+    .page {
+        margin-left: auto;
+        margin-right: auto;
+        overflow: hidden;
     }
 }
