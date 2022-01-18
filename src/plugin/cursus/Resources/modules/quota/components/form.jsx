@@ -32,7 +32,7 @@ const QuotaForm = (props) =>
             label: trans('organization'),
             required: true,
             options: {
-              mode: 'recursive'
+              url: 'apiv2_cursus_quota_organizations'
             }
           }, {
             name: 'useQuotas',

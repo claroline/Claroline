@@ -123,6 +123,30 @@ class QuotaController extends AbstractCrudController
     }
 
     /**
+     * @Route("/organizations", name="apiv2_cursus_quota_organizations", methods={"GET"})
+     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
+     */
+    public function getOrganizationsAction(User $user, Request $request): JsonResponse
+    {
+        $this->checkPermission('MANAGE_QUOTAS', null, [], true);
+
+        $params = $request->query->all();
+
+        if (!$this->authorization->isGranted('ROLE_ADMIN')) {
+            if (!isset($params['hiddenFilters'])) {
+                $params['hiddenFilters'] = [];
+            }
+            $organizations = [];
+            $this->getOrganizationIds($user->getOrganizations(), $organizations);
+            $params['hiddenFilters']['uuid'] = $organizations;
+        }
+            
+        return new JsonResponse(
+            $this->finder->search(Organization::class, $params)
+        );
+    }
+
+    /**
      * @Route("/{id}/statistics", name="apiv2_cursus_quota_statistics", methods={"GET"})
      * @EXT\ParamConverter("quota", class="Claroline\CursusBundle\Entity\Quota", options={"mapping": {"id": "uuid"}})
      */
@@ -344,5 +368,15 @@ class QuotaController extends AbstractCrudController
         usort($subscriptions, function (SessionUser $a, SessionUser $b) use ($direction) {
             return $direction * ($a->getSession()->getStartDate()->getTimestamp() - $b->getSession()->getStartDate()->getTimestamp());
         });
+    }
+
+    private function getOrganizationIds(array $organizations, array &$output): void
+    {
+        foreach ($organizations as $organization) {
+            $this->getOrganizationIds($organization->getChildren()->toArray(), $output);
+            if (!in_array($organization, $output)) {
+                $output[] = $organization->getUuid();
+            }
+        }
     }
 }

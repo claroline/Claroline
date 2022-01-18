@@ -52,8 +52,6 @@ const OrganizationInput = props => {
     )
   }
 
-  const url = props.mode === 'recursive' ? 'apiv2_user_list_flat' : 'apiv2_organization_list'
-
   if (props.value) {
     return (
       <Fragment>
@@ -78,7 +76,7 @@ const OrganizationInput = props => {
           disabled={props.disabled}
           size={props.size}
           onChange={props.onChange}
-          url={url}
+          url={props.url}
         />
       </Fragment>
     )
@@ -95,7 +93,7 @@ const OrganizationInput = props => {
         disabled={props.disabled}
         size={props.size}
         onChange={props.onChange}
-        url={url}
+        url={props.url}
       />
     </ContentPlaceholder>
   )
@@ -103,14 +101,19 @@ const OrganizationInput = props => {
 
 implementPropTypes(OrganizationInput, DataInputTypes, {
   value: T.shape(OrganizationTypes.propTypes),
+  url: T.string,
   picker: T.shape({
     title: T.string
   }),
-  mode: T.oneOf(['picker', 'choice', 'recursive'])
+  mode: T.oneOf(['picker', 'choice'])
 }, {
   value: null,
   mode: 'picker'
 })
+
+OrganizationInput.defaultProps = {
+  url: 'apiv2_organization_list'
+}
 
 export {
   OrganizationInput
