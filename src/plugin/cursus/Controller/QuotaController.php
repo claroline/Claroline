@@ -140,7 +140,7 @@ class QuotaController extends AbstractCrudController
             $this->getOrganizationIds($user->getOrganizations(), $organizations);
             $params['hiddenFilters']['uuid'] = $organizations;
         }
-            
+
         return new JsonResponse(
             $this->finder->search(Organization::class, $params)
         );
