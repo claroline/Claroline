@@ -64,6 +64,11 @@ export default {
         label: trans('creator'),
         displayed: true
       }, {
+        name: 'evaluation.required',
+        label: trans('required_resource', {}, 'resource'),
+        type: 'boolean',
+        alias: 'required'
+      }, {
         name: 'tags',
         type: 'tag',
         label: trans('tags'),

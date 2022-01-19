@@ -44,6 +44,7 @@
     "resources_delete_message": "{1} Are you sure you want to delete this resource? | [2,Inf[ Are you sure you want to delete these %count% resources?",
     "all_resources": "All resources",
     "all_resources_help": "You will find below all the resources of the workspace in which you have participated.",
+    "required_resource": "Required resource",
     "required_resources": "Required resources",
     "required_resources_help": "You will find below all the resources to do to progress in the workspace.",
     "not_found": "Resource not found",
