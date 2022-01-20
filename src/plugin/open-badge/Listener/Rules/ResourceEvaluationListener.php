@@ -86,7 +86,7 @@ class ResourceEvaluationListener
     private function awardResourceCompletedAbove(User $user, ResourceUserEvaluation $evaluation, Rule $rule)
     {
         $data = $rule->getData();
-        $progression = ($evaluation->getProgression() / $evaluation->getProgressionMax()) * 100;
+        $progression = ($evaluation->getProgression() / ($evaluation->getProgressionMax() ?? 100)) * 100;
         if ($data && $progression >= $data['value']) {
             $this->manager->grant($rule, $user);
         }
