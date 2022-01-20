@@ -13,9 +13,7 @@ namespace Innova\PathBundle\Controller;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
-use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\Step;
@@ -23,7 +21,6 @@ use Innova\PathBundle\Manager\UserProgressionManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -85,29 +82,6 @@ class PathController extends AbstractCrudController
     }
 
     /**
-     * Fetch user progressions for path.
-     *
-     * @Route("/{id}/progressions/fetch", name="innova_path_progressions_fetch", methods={"GET"})
-     * @EXT\ParamConverter("path", class="InnovaPathBundle:Path\Path", options={"mapping": {"id": "uuid"}})
-     */
-    public function progressionsFetchAction(Path $path, Request $request): JsonResponse
-    {
-        $node = $path->getResourceNode();
-
-        $this->checkPermission('EDIT', $path->getResourceNode(), [], true);
-
-        $params = $request->query->all();
-        if (!isset($params['hiddenFilters'])) {
-            $params['hiddenFilters'] = [];
-        }
-        $params['hiddenFilters']['resourceNode'] = [$node->getUuid()];
-
-        return new JsonResponse(
-            $this->finder->search(ResourceUserEvaluation::class, $params)
-        );
-    }
-
-    /**
      * @Route("/{id}/attempt", name="innova_path_current_attempt", methods={"GET"})
      * @EXT\ParamConverter("path", class="InnovaPathBundle:Path\Path", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
@@ -140,52 +114,6 @@ class PathController extends AbstractCrudController
                 $this->userProgressionManager->getCurrentAttempt($path, $user, false)
             ),
             'progression' => $this->userProgressionManager->getStepsProgressionForUser($path, $user),
-        ]);
-    }
-
-    /**
-     * This should be managed by Core when possible.
-     *
-     * @Route("/{id}/progression/csv", name="innova_path_users_progression_csv", methods={"GET"})
-     * @EXT\ParamConverter("path", class="InnovaPathBundle:Path\Path", options={"mapping": {"id": "uuid"}})
-     */
-    public function exportProgressionCsvAction(Path $path): StreamedResponse
-    {
-        $this->checkPermission('EDIT', $path->getResourceNode(), [], true);
-
-        $fileName = TextNormalizer::toKey("progression-{$path->getResourceNode()->getSlug()}");
-
-        $evaluations = $this->finder->searchEntities(ResourceUserEvaluation::class, [
-            'filters' => ['resourceNode' => $path->getResourceNode()->getUuid()],
-        ]);
-
-        return new StreamedResponse(function () use ($evaluations) {
-            // Prepare CSV file
-            $handle = fopen('php://output', 'w+');
-
-            // Create header
-            fputcsv($handle, [
-                'first_name',
-                'last_name',
-                'progression',
-                'progression_max',
-            ], ';', '"');
-
-            foreach ($evaluations['data'] as $evaluation) {
-                fputcsv($handle, [
-                    $evaluation->getUser()->getFirstName(),
-                    $evaluation->getUser()->getLastName(),
-                    $evaluation->getProgression(),
-                    $evaluation->getProgressionMax(),
-                ], ';', '"');
-            }
-
-            fclose($handle);
-
-            return $handle;
-        }, 200, [
-            'Content-Type' => 'application/force-download',
-            'Content-Disposition' => 'attachment; filename="'.$fileName.'.csv"',
         ]);
     }
 }

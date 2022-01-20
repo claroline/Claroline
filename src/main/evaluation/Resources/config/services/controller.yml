@@ -19,4 +19,5 @@ services:
     Claroline\EvaluationBundle\Controller\ResourceUserEvaluationController:
         arguments:
             - '@security.authorization_checker'
+            - '@security.token_storage'
             - '@Claroline\AppBundle\API\FinderProvider'

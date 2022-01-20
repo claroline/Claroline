@@ -19,5 +19,11 @@ registry.add('ClarolineEvaluationBundle', {
       'resource_evaluations' : () => { return import(/* webpackChunkName: "evaluation-source-resource_evaluations" */  '#/main/evaluation/data/sources/resource-evaluations') },
       'workspace_evaluations': () => { return import(/* webpackChunkName: "evaluation-source-workspace_evaluations" */ '#/main/evaluation/data/sources/workspace-evaluations') }
     }
+  },
+
+  analytics: {
+    resource: {
+      'evaluation': () => { return import(/* webpackChunkName: "evaluation-analytics-resource-evaluation" */ '#/main/evaluation/analytics/resource/evaluation') }
+    }
   }
 })
