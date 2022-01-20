@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
-import {DOWNLOAD_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
+import {MODAL_BUTTON} from '#/main/app/buttons'
 import {ContentTitle} from '#/main/app/content/components/title'
 import {ListData} from '#/main/app/content/list/containers/data'
 
@@ -16,24 +16,12 @@ const Progression = (props) =>
   <Fragment>
     <ContentTitle
       title={trans('progression')}
-      actions={[
-        {
-          name: 'download-connection-times',
-          type: DOWNLOAD_BUTTON,
-          icon: 'fa fa-fw fa-download',
-          label: trans('export-progression', {}, 'actions'),
-          file: {
-            url: ['innova_path_users_progression_csv', {id: props.path.id}]
-          },
-          group: trans('export')
-        }
-      ]}
     />
 
     <ListData
       name={selectors.STORE_NAME+'.analytics.evaluations'}
       fetch={{
-        url: ['innova_path_progressions_fetch', {id: props.path.id}],
+        url: ['apiv2_resource_evaluation_list', {nodeId: props.nodeId}],
         autoload: true
       }}
       definition={[
@@ -109,6 +97,7 @@ const Progression = (props) =>
   </Fragment>
 
 Progression.propTypes = {
+  nodeId: T.string.isRequired,
   path: T.shape(PathType.propTypes).isRequired
 }
 

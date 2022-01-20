@@ -22,14 +22,14 @@ const ResourceEvaluationsModal = props =>
     <ListData
       name={selectors.STORE_NAME}
       fetch={{
-        url: ['apiv2_workspace_list_resource_evaluations', {userEvaluationId: props.userEvaluation.id}],
+        url: ['apiv2_resource_evaluation_list_attempts', {userEvaluationId: props.userEvaluation.id}],
         autoload: true
       }}
       definition={[
         {
           name: 'date',
           type: 'date',
-          label: trans('date'),
+          label: trans('last_activity'),
           options: {
             time: true
           },

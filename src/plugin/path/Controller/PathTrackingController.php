@@ -15,17 +15,14 @@ use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\Tool\ToolManager;
 use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\Step;
 use Innova\PathBundle\Entity\UserProgression;
-use Innova\PathBundle\Manager\UserProgressionManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -47,50 +44,32 @@ class PathTrackingController
     /** @var ToolManager */
     private $toolManager;
 
-    /** @var UserProgressionManager */
-    private $userProgressionManager;
-
     private $userProgressionRepo;
     private $resourceUserEvaluationRepo;
 
-    /**
-     * PathTrackingController constructor.
-     */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         FinderProvider $finder,
         ObjectManager $om,
         SerializerProvider $serializer,
-        ToolManager $toolManager,
-        UserProgressionManager $userProgressionManager
+        ToolManager $toolManager
     ) {
         $this->authorization = $authorization;
         $this->finder = $finder;
         $this->serializer = $serializer;
         $this->toolManager = $toolManager;
-        $this->userProgressionManager = $userProgressionManager;
 
         $this->userProgressionRepo = $om->getRepository(UserProgression::class);
         $this->resourceUserEvaluationRepo = $om->getRepository(ResourceUserEvaluation::class);
     }
 
     /**
-     * Fetch all path trackings of the workspace.
+     * Fetch all paths tracking of the workspace.
      *
-     * @Route(
-     *     "/workspace/{workspace}/paths/tracking",
-     *     name="claroline_paths_trackings_fetch",
-     *     methods={"GET"}
-     * )
-     * @EXT\ParamConverter(
-     *     "workspace",
-     *     class="ClarolineCoreBundle:Workspace\Workspace",
-     *     options={"mapping": {"workspace": "uuid"}}
-     * )
-     *
-     * @return JsonResponse
+     * @Route("/workspace/{workspace}/paths/tracking", name="claroline_paths_trackings_fetch", methods={"GET"})
+     * @EXT\ParamConverter("workspace", class="ClarolineCoreBundle:Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
      */
-    public function pathsTrackingFetchAction(Workspace $workspace)
+    public function pathsTrackingFetchAction(Workspace $workspace): JsonResponse
     {
         $tool = $this->toolManager->getToolByName('dashboard');
 
@@ -107,7 +86,8 @@ class PathTrackingController
 
         foreach ($paths as $path) {
             // Fetches all users who have to do the path
-            $resourceEvals = $this->resourceUserEvaluationRepo->findBy(['resourceNode' => $path->getResourceNode(), 'required' => true]);
+            /** @var ResourceUserEvaluation $resourceEvals */
+            $resourceEvals = $this->resourceUserEvaluationRepo->findBy(['resourceNode' => $path->getResourceNode()]);
             $unstartedUsers = [];
 
             foreach ($resourceEvals as $resourceEval) {
@@ -168,41 +148,5 @@ class PathTrackingController
         }
 
         return new JsonResponse($data, 200);
-    }
-
-    /**
-     * Fetch path evaluations.
-     *
-     * @Route(
-     *     "/path/{resourceNode}/evaluations/list",
-     *     name="claroline_path_evaluations_list",
-     *     methods={"GET"}
-     * )
-     * @EXT\ParamConverter(
-     *     "resourceNode",
-     *     class="ClarolineCoreBundle:Resource\ResourceNode",
-     *     options={"mapping": {"resourceNode": "uuid"}}
-     * )
-     *
-     * @return JsonResponse
-     */
-    public function pathEvaluationFetchAction(ResourceNode $resourceNode, Request $request)
-    {
-        $tool = $this->toolManager->getToolByName('dashboard');
-
-        if (!$tool || !$this->authorization->isGranted('OPEN', $tool)) {
-            throw new AccessDeniedException();
-        }
-        $params = $request->query->all();
-
-        if (!isset($params['hiddenFilters'])) {
-            $params['hiddenFilters'] = [
-                'resourceNode' => $resourceNode->getUuid(),
-            ];
-        }
-
-        return new JsonResponse(
-            $this->finder->search(ResourceUserEvaluation::class, $params)
-        );
     }
 }

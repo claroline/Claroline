@@ -60,7 +60,7 @@ const EvaluationUsers = (props) =>
         }, {
           name: 'date',
           type: 'date',
-          label: trans('date'),
+          label: trans('last_activity'),
           options: {
             time: true
           },

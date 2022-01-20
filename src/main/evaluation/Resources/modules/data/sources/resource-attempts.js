@@ -18,7 +18,7 @@ export default {
         displayed: true
       }, {
         name: 'date',
-        label: trans('date'),
+        label: trans('last_activity'),
         type: 'date',
         options: {time: true},
         displayed: true,

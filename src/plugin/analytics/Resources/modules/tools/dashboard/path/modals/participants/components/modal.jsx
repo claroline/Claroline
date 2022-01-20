@@ -24,7 +24,7 @@ const ParticipantsModal = props =>
     <ListData
       name={selectors.STORE_NAME}
       fetch={{
-        url: ['claroline_path_evaluations_list', {resourceNode: props.resourceNode.id}],
+        url: ['apiv2_resource_evaluation_list', {nodeId: props.resourceNode.id}],
         autoload: true
       }}
       actions={(rows) => [
@@ -34,7 +34,7 @@ const ParticipantsModal = props =>
           label: trans('send-message', {}, 'actions'),
           scope: ['object', 'collection'],
           modal: [MODAL_MESSAGE, {
-            receivers: {users: rows}
+            receivers: {users: rows.map((row => row.user))}
           }]
         }
       ]}

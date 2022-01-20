@@ -6,7 +6,9 @@ function getAnalytics(resourceNode) {
   return Promise.all(
     Object.keys(apps).map(key => apps[key]())
   ).then(
-    (loadedAnalytics) => loadedAnalytics.map(module => module.default(resourceNode)).filter(analytic => analytic.displayed)
+    (loadedAnalytics) => loadedAnalytics
+      .map(module => module.default(resourceNode))
+      .filter(analytic => undefined === analytic.displayed || analytic.displayed)
   )
 }
 
