@@ -76,7 +76,7 @@ class Create extends AbstractAction
                     throw new \Exception('Role '.implode(',', $role).' does not exists');
                 }
 
-                $roles[] = $role;
+                $roles[] = $object;
             }
 
             // remove roles from input data to avoid the user serializer to process it
