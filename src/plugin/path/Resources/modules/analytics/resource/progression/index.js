@@ -7,6 +7,6 @@ export default (resourceNode) => ({
   icon: 'fa fa-fw fa-tasks',
   name: 'path_progression',
   label: trans('progression'),
-  path: 'progression',
+  path: '/progression',
   displayed: 'innova_path' === resourceNode.meta.type
 })

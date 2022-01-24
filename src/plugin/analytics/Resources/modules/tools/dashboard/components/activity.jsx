@@ -19,7 +19,7 @@ const DashboardActivity = (props) =>
       {
         name: 'download-connection-times',
         type: DOWNLOAD_BUTTON,
-        icon: 'fa fa-download',
+        icon: 'fa fa-fw fa-download',
         label: trans('export-connections', {}, 'actions'),
         file: {
           url: url(['apiv2_log_connect_workspace_list_csv', {workspace: props.workspaceId}])
@@ -28,7 +28,7 @@ const DashboardActivity = (props) =>
       }, {
         name: 'download',
         type: DOWNLOAD_BUTTON,
-        icon: 'fa fa-download',
+        icon: 'fa fa-fw fa-download',
         label: trans('export-actions', {}, 'actions'),
         file: {
           url: url(['apiv2_workspace_tool_logs_list_csv', {workspaceId: props.workspaceId}])
@@ -37,7 +37,7 @@ const DashboardActivity = (props) =>
       }, {
         name: 'download-users',
         type: DOWNLOAD_BUTTON,
-        icon: 'fa fa-download',
+        icon: 'fa fa-fw fa-download',
         label: trans('export-user-actions', {}, 'actions'),
         file: {
           url: url(['apiv2_workspace_tool_logs_list_users_csv', {workspaceId: props.workspaceId}])

@@ -4,7 +4,7 @@
     "log_resource-ujm_exercise-exercise_evaluated_shortname": "Evaluation d'un questionnaire",
     "log_resource-ujm_exercise-exercise_evaluated_title": "Obtenir une évaluation sur un questionnaire",
     "log_resource-ujm_exercise-exercise_updated_sentence": "a mis à jour l'exercice %resource%",
-    "log_resource-ujm_exercise-paper-end_sentence": "a terminé l'exercice %resource",
+    "log_resource-ujm_exercise-paper-end_sentence": "a terminé l'exercice %resource%",
     "log_resource-ujm_exercise-paper-start-or-continue_sentence": "a commencé ou continue l'exercice %resource%",
     "log_resource-ujm_exercise-exercise_updated_shortname": "Modification d'un exercice",
     "log_resource-ujm_exercise-paper-end_shortname": "Fin d'un exercice",

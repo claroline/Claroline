@@ -7,6 +7,6 @@ export default () => ({
   icon: 'fa fa-fw fa-award',
   name: 'evaluation',
   label: trans('evaluation', {}, 'tools'),
-  path: 'evaluation',
+  path: '/evaluation',
   displayed: true
 })

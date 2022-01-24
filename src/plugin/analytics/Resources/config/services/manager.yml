@@ -7,3 +7,7 @@ services:
           - '@Claroline\CoreBundle\Manager\UserManager'
           - '@claroline.manager.workspace_manager'
           - '@Claroline\CoreBundle\Manager\FileManager'
+
+    Claroline\AnalyticsBundle\Manager\ResourceManager:
+        arguments:
+          - '@Claroline\AppBundle\Persistence\ObjectManager'

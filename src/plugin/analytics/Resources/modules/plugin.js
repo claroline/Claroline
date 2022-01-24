@@ -28,11 +28,5 @@ registry.add('ClarolineAnalyticsBundle', {
    */
   administration: {
     'dashboard': () => { return import(/* webpackChunkName: "analytics-admin-dashboard" */ '#/plugin/analytics/administration/dashboard') }
-  },
-
-  analytics: {
-    resource: {
-      'connections' : () => { return import(/* webpackChunkName: "analytics-resource-connections" */  '#/plugin/analytics/analytics/resource/connections') }
-    }
   }
 })
