@@ -48,7 +48,7 @@ const DashboardOverview = (props) =>
 
     <div className="row">
       <div className="col-md-8">
-        <ActivityChart url={['apiv2_workspace_analytics_activity', {workspace: props.workspaceId}]}/>
+        <ActivityChart url={['apiv2_workspace_analytics_activity', {workspace: props.workspaceId}]} />
 
         <div className="row">
           <div className="col-md-4">

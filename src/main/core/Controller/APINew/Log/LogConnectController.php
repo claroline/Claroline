@@ -207,7 +207,7 @@ class LogConnectController
      * @EXT\ParamConverter(
      *     "resource",
      *     class="ClarolineCoreBundle:Resource\ResourceNode",
-     *     options={"mapping": {"resource": "id"}}
+     *     options={"mapping": {"resource": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      *
@@ -238,7 +238,7 @@ class LogConnectController
      * @EXT\ParamConverter(
      *     "resource",
      *     class="ClarolineCoreBundle:Resource\ResourceNode",
-     *     options={"mapping": {"resource": "id"}}
+     *     options={"mapping": {"resource": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      *

@@ -3,7 +3,6 @@
 namespace Claroline\AnalyticsBundle\Controller\Resource;
 
 use Claroline\AppBundle\API\FinderProvider;
-use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Manager\LogManager;
@@ -16,7 +15,8 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * @Route("/resource/{resourceId}/logs", requirements={"resourceId"="\d+"})
+ * @Route("/resource/{resourceId}/logs")
+ * @EXT\ParamConverter("resourceNode", class="Claroline\CoreBundle\Entity\Resource\ResourceNode", options={"mapping": {"resourceId": "uuid"}})
  */
 class LogController
 {
@@ -24,73 +24,41 @@ class LogController
     private $authorizationChecker;
     /** @var FinderProvider */
     private $finder;
-    /** @var SerializerProvider */
-    private $serializer;
     /** @var LogManager */
     private $logManager;
 
-    /**
-     * LogController constructor.
-     */
     public function __construct(
         AuthorizationCheckerInterface $authorizationChecker,
         FinderProvider $finder,
-        SerializerProvider $serializer,
         LogManager $logManager
     ) {
         $this->authorizationChecker = $authorizationChecker;
         $this->finder = $finder;
-        $this->serializer = $serializer;
         $this->logManager = $logManager;
     }
 
     /**
-     * Get the name of the managed entity.
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return 'log';
-    }
-
-    /**
      * @Route("/", name="apiv2_resource_logs_list", methods={"GET"})
-     * @EXT\ParamConverter(
-     *     "node",
-     *     class="Claroline\CoreBundle\Entity\Resource\ResourceNode",
-     *     options={"mapping": {"resourceId": "id"}}
-     * )
-     *
-     * @return JsonResponse
      */
-    public function listAction(Request $request, ResourceNode $node)
+    public function listAction(Request $request, ResourceNode $resourceNode): JsonResponse
     {
-        $this->checkLogsAccess($node);
+        $this->checkLogsAccess($resourceNode);
 
         return new JsonResponse($this->finder->search(
-            $this->getClass(),
-            $this->getResourceNodeFilteredQuery($request, $node),
-            []
+            Log::class,
+            $this->getResourceNodeFilteredQuery($request, $resourceNode)
         ));
     }
 
     /**
      * @Route("/csv", name="apiv2_resource_logs_list_csv", methods={"GET"})
-     * @EXT\ParamConverter(
-     *     "node",
-     *     class="Claroline\CoreBundle\Entity\Resource\ResourceNode",
-     *     options={"mapping": {"resourceId": "id"}}
-     * )
-     *
-     * @return StreamedResponse
      */
-    public function listCsvAction(Request $request, ResourceNode $node)
+    public function listCsvAction(Request $request, ResourceNode $resourceNode): StreamedResponse
     {
-        $this->checkLogsAccess($node);
+        $this->checkLogsAccess($resourceNode);
 
         // Filter data, but return all of them
-        $query = $this->getResourceNodeFilteredQuery($request, $node);
+        $query = $this->getResourceNodeFilteredQuery($request, $resourceNode);
         $dateStr = date('YmdHis');
 
         return new StreamedResponse(function () use ($query) {
@@ -102,58 +70,14 @@ class LogController
     }
 
     /**
-     * @Route("/chart", name="apiv2_resource_logs_list_chart", methods={"GET"})
-     * @EXT\ParamConverter(
-     *     "node",
-     *     class="Claroline\CoreBundle\Entity\Resource\ResourceNode",
-     *     options={"mapping": {"resourceId": "id"}}
-     * )
-     *
-     * @return JsonResponse
-     */
-    public function listChartAction(Request $request, ResourceNode $node)
-    {
-        $this->checkLogsAccess($node);
-
-        $chartData = $this->logManager->getChartData($this->getResourceNodeFilteredQuery($request, $node));
-
-        return new JsonResponse($chartData);
-    }
-
-    /**
-     * @Route("/users", name="apiv2_resource_logs_list_users", methods={"GET"})
-     * @EXT\ParamConverter(
-     *     "node",
-     *     class="Claroline\CoreBundle\Entity\Resource\ResourceNode",
-     *     options={"mapping": {"resourceId": "id"}}
-     * )
-     *
-     * @return JsonResponse
-     */
-    public function userActionsListAction(Request $request, ResourceNode $node)
-    {
-        $this->checkLogsAccess($node);
-        $userList = $this->logManager->getUserActionsList($this->getResourceNodeFilteredQuery($request, $node));
-
-        return new JsonResponse($userList);
-    }
-
-    /**
      * @Route("/users/csv", name="apiv2_resource_logs_list_users_csv", methods={"GET"})
-     * @EXT\ParamConverter(
-     *     "node",
-     *     class="Claroline\CoreBundle\Entity\Resource\ResourceNode",
-     *     options={"mapping": {"resourceId": "id"}}
-     * )
-     *
-     * @return StreamedResponse
      */
-    public function userActionsListCsvAction(Request $request, ResourceNode $node)
+    public function userActionsListCsvAction(Request $request, ResourceNode $resourceNode): StreamedResponse
     {
-        $this->checkLogsAccess($node);
+        $this->checkLogsAccess($resourceNode);
 
         // Filter data, but return all of them
-        $query = $this->getResourceNodeFilteredQuery($request, $node);
+        $query = $this->getResourceNodeFilteredQuery($request, $resourceNode);
         $dateStr = date('YmdHis');
 
         return new StreamedResponse(function () use ($query) {
@@ -165,32 +89,9 @@ class LogController
     }
 
     /**
-     * @Route("/{id}", name="apiv2_resource_logs_get", requirements={"id"="\d+"}, methods={"GET"})
-     * @EXT\ParamConverter("log", class="Claroline\CoreBundle\Entity\Log\Log", options={
-     *     "mapping": {"resourceId": "resourceNode",
-     *     "id": "id"
-     * }})
-     *
-     * @return JsonResponse
-     */
-    public function getAction(Log $log)
-    {
-        $this->checkLogsAccess($log->getResourceNode());
-
-        return new JsonResponse($this->serializer->serialize($log, ['details' => true]));
-    }
-
-    public function getClass()
-    {
-        return 'Claroline\CoreBundle\Entity\Log\Log';
-    }
-
-    /**
      * Add resource node filter to request.
-     *
-     * @return array
      */
-    private function getResourceNodeFilteredQuery(Request $request, ResourceNode $node)
+    private function getResourceNodeFilteredQuery(Request $request, ResourceNode $node): array
     {
         $query = $request->query->all();
         $hiddenFilters = isset($query['hiddenFilters']) ? $query['hiddenFilters'] : [];

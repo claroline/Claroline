@@ -19,7 +19,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * @Route("/dashboard")
+ * @Route("/workspace/dashboard")
  */
 class DashboardController
 {
@@ -54,7 +54,7 @@ class DashboardController
      */
     public function activityAction(Workspace $workspace, Request $request): JsonResponse
     {
-        if (!$this->checkDashboardToolAccess('OPEN', $workspace)) {
+        if (!$this->checkDashboardToolAccess($workspace)) {
             throw new AccessDeniedException();
         }
 
@@ -80,7 +80,7 @@ class DashboardController
      */
     public function actionsAction(Workspace $workspace, Request $request): JsonResponse
     {
-        if (!$this->checkDashboardToolAccess('OPEN', $workspace)) {
+        if (!$this->checkDashboardToolAccess($workspace)) {
             throw new AccessDeniedException();
         }
 
@@ -101,7 +101,7 @@ class DashboardController
      */
     public function connectionTimeAction(Workspace $workspace): JsonResponse
     {
-        if (!$this->checkDashboardToolAccess('OPEN', $workspace)) {
+        if (!$this->checkDashboardToolAccess($workspace)) {
             throw new AccessDeniedException();
         }
 
@@ -117,7 +117,7 @@ class DashboardController
      */
     public function resourcesAction(Workspace $workspace): JsonResponse
     {
-        if (!$this->checkDashboardToolAccess('OPEN', $workspace)) {
+        if (!$this->checkDashboardToolAccess($workspace)) {
             throw new AccessDeniedException();
         }
 
@@ -132,7 +132,7 @@ class DashboardController
      */
     public function topResourcesAction(Workspace $workspace): JsonResponse
     {
-        if (!$this->checkDashboardToolAccess('OPEN', $workspace)) {
+        if (!$this->checkDashboardToolAccess($workspace)) {
             throw new AccessDeniedException();
         }
 
@@ -164,7 +164,7 @@ class DashboardController
      */
     public function usersAction(Workspace $workspace): JsonResponse
     {
-        if (!$this->checkDashboardToolAccess('OPEN', $workspace)) {
+        if (!$this->checkDashboardToolAccess($workspace)) {
             throw new AccessDeniedException();
         }
 
@@ -179,7 +179,7 @@ class DashboardController
      */
     public function topUsersAction(Workspace $workspace): JsonResponse
     {
-        if (!$this->checkDashboardToolAccess('OPEN', $workspace)) {
+        if (!$this->checkDashboardToolAccess($workspace)) {
             throw new AccessDeniedException();
         }
 
@@ -200,9 +200,9 @@ class DashboardController
     /**
      * Checks user rights to access logs tool.
      */
-    private function checkDashboardToolAccess(string $permission, Workspace $workspace): bool
+    private function checkDashboardToolAccess(Workspace $workspace): bool
     {
-        if ($this->authorization->isGranted(['dashboard', $permission], $workspace)) {
+        if ($this->authorization->isGranted(['dashboard', 'OPEN'], $workspace)) {
             return true;
         }
 
