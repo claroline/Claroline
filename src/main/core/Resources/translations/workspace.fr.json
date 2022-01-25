@@ -39,6 +39,7 @@
     "authorized_ip": "Vous utilisez l'un des postes de travail authorisé.",
     "authorized_ip_required": "L'accès doit s'effectuer depuis un poste de travail authorisé.",
     "can_access": "Vous êtes inscrit à cet espace d'activités.",
+    "anonymous_can_access": "L'espace d'activités est public.",
     "cannot_access": "Vous n'êtes pas inscrit à cet espace d'activités.",
     "code_required": "L'accès requiert un code.",
     "contact_manager": "Veuillez contacter un gestionnaire %manager_email% si vous pensez que vous devriez avoir accès à cet espace d'activités.",
@@ -46,6 +47,7 @@
     "manager_info": "En tant que gestionnaire vous pouvez toujours accéder à l'espace d'activités, même si les conditions d'accès ne sont pas satisfaites.",
     "manager_rights_access": "Vos droits de gestionnaires vous permettents d'accéder à toutes les fonctions de l'espace d'activités.",
     "rights_access": "Vos droits vous permettent d'accéder à une ou plusieurs fonctions de l'espace d'activités.",
+    "anonymous_rights_access": "L'espace d'activités est ouvert aux utilisateurs non connectés.",
     "self_registration": "Veuillez vous inscrire afin d'accéder à l'espace d'activités.",
     "self_register": "M'inscire à l'espace d'activités",
     "unlocked": "Vous avez déverrouillé l'espace d'activités.",
@@ -62,5 +64,7 @@
     "wait_validation": "Veuillez attendre qu'un gestionnaire valide votre demande afin d'accéder à l'espace d'activités.",
     "archived": "L'espace d'activités est archivé.",
     "archived_help": "Vous ne pouvez plus accéder au contenu des espaces d'activités archivés."
-  }
+  },
+  "forbidden": "Accès à l'espace d'activités impossible",
+  "forbidden_desc": "Vous n'avez pas accès à cet espace d'activités. Veuillez contacter un administrateur afin qu'il vous donne les droits nécessaires."
 }

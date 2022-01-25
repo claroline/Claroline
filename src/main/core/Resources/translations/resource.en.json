@@ -94,5 +94,7 @@
         "location_authorized": "You are using one of the authorized workstations.",
         "location_unauthorized": "Access must be from an authorized workstation.",
         "location_unauthorized_help": "Please use one of the authorized workstations to access the resource."
-    }
+    },
+    "forbidden": "Access to the resource not possible",
+    "forbidden_desc": "You do not have access to this resource. Please contact an administrator to give you the necessary rights."
 }

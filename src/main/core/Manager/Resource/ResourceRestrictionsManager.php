@@ -101,7 +101,7 @@ class ResourceRestrictionsManager
             $isAdmin = $this->authorization->isGranted('administrate', $workspace);
         }
 
-        return 0 !== $this->rightsManager->getMaximumRights($userRoles, $resourceNode) || $isAdmin;
+        return $isAdmin || 0 !== $this->rightsManager->getMaximumRights($userRoles, $resourceNode);
     }
 
     /**
