@@ -7,15 +7,14 @@ import {actions as menuActions} from '#/main/app/layout/menu/store/actions'
 import {selectors} from '#/main/core/workspace/store/selectors'
 
 // actions
-export const WORKSPACE_OPEN = 'WORKSPACE_OPEN'
-export const WORKSPACE_LOAD = 'WORKSPACE_LOAD'
-export const WORKSPACE_SET_LOADED = 'WORKSPACE_SET_LOADED'
-export const WORKSPACE_SERVER_ERRORS = 'WORKSPACE_SERVER_ERRORS'
-export const WORKSPACE_RESTRICTIONS_ERROR = 'WORKSPACE_RESTRICTIONS_ERROR'
+export const WORKSPACE_OPEN                 = 'WORKSPACE_OPEN'
+export const WORKSPACE_LOAD                 = 'WORKSPACE_LOAD'
+export const WORKSPACE_SET_LOADED           = 'WORKSPACE_SET_LOADED'
 export const WORKSPACE_RESTRICTIONS_DISMISS = 'WORKSPACE_RESTRICTIONS_DISMISS'
-export const WORKSPACE_RESTRICTIONS_UNLOCKED = 'WORKSPACE_RESTRICTIONS_UNLOCKED'
-export const WORKSPACE_NOT_FOUND = 'WORKSPACE_NOT_FOUND'
-export const SHORTCUTS_LOAD = 'SHORTCUTS_LOAD'
+export const WORKSPACE_NOT_FOUND            = 'WORKSPACE_NOT_FOUND'
+
+// this ones should not be here
+export const SHORTCUTS_LOAD                 = 'SHORTCUTS_LOAD'
 
 // action creators
 export const actions = {}
@@ -23,11 +22,8 @@ export const actions = {}
 actions.open = makeActionCreator(WORKSPACE_OPEN, 'slug')
 actions.load = makeActionCreator(WORKSPACE_LOAD, 'workspaceData')
 actions.setLoaded = makeActionCreator(WORKSPACE_SET_LOADED, 'loaded')
-actions.setRestrictionsError = makeActionCreator(WORKSPACE_RESTRICTIONS_ERROR, 'errors')
-actions.setServerErrors = makeActionCreator(WORKSPACE_SERVER_ERRORS, 'errors')
 actions.setNotFound = makeActionCreator(WORKSPACE_NOT_FOUND)
 actions.dismissRestrictions = makeActionCreator(WORKSPACE_RESTRICTIONS_DISMISS)
-actions.unlockWorkspace = makeActionCreator(WORKSPACE_RESTRICTIONS_UNLOCKED)
 actions.loadShortcuts = makeActionCreator(SHORTCUTS_LOAD, 'shortcuts')
 
 /**
@@ -59,13 +55,19 @@ actions.fetch = (slug) => (dispatch, getState) => {
         },
         error: (response, status) => {
           switch (status) {
-            case 404: dispatch(actions.setNotFound()); break
-            case 403: dispatch(actions.setRestrictionsError(response)); break
-            case 401: dispatch(actions.setRestrictionsError(response)); break
-            default: dispatch(actions.setServerErrors(response))
-          }
+            case 404:
+              dispatch(actions.setNotFound())
+              break
+            case 401:
+            case 403:
+              dispatch(actions.load(response))
+              dispatch(actions.setLoaded(true))
 
-          dispatch(actions.setLoaded(true))
+              // set menu state based on ws configuration
+              dispatch(menuActions.setState(get(response, 'workspace.opening.menu')))
+
+              break
+          }
         }
       }
     })
@@ -93,51 +95,45 @@ actions.closeWorkspace = (slug) => ({
   }
 })
 
-actions.checkAccessCode = (workspace, code) => ({
+actions.checkAccessCode = (workspace, code) => (dispatch) => dispatch({
   [API_REQUEST] : {
     url: ['claro_workspace_unlock', {id: workspace.id}],
     request: {
       method: 'POST',
       body: JSON.stringify({code: code})
     },
-    success: (response, dispatch) => {
-      dispatch(actions.unlockWorkspace())
-    }
+    success: () => dispatch(actions.reload(workspace))
   }
 })
 
-actions.selfRegister = (workspace) => ({
+actions.selfRegister = (workspace) => (dispatch) => dispatch({
   [API_REQUEST] : {
     url: ['apiv2_workspace_self_register', {workspace: workspace.id}],
     request: {
       method: 'PUT'
     },
-    success: (response, dispatch) => dispatch(actions.reload(workspace))
+    success: () => dispatch(actions.reload(workspace))
   }
 })
 
-actions.addShortcuts = (workspaceId, roleId, shortcuts) => ({
+actions.addShortcuts = (workspaceId, roleId, shortcuts) => (dispatch) => dispatch({
   [API_REQUEST] : {
     url: ['apiv2_workspace_shortcuts_add', {workspace: workspaceId, role: roleId}],
     request: {
       method: 'PUT',
       body: JSON.stringify({shortcuts: shortcuts})
     },
-    success: (response, dispatch) => {
-      dispatch(actions.loadShortcuts(response))
-    }
+    success: (response) => dispatch(actions.loadShortcuts(response))
   }
 })
 
-actions.removeShortcut = (workspaceId, roleId, type, name) => ({
+actions.removeShortcut = (workspaceId, roleId, type, name) => (dispatch) => dispatch({
   [API_REQUEST] : {
     url: ['apiv2_workspace_shortcut_remove', {workspace: workspaceId, role: roleId}],
     request: {
       method: 'PUT',
       body: JSON.stringify({type: type, name: name})
     },
-    success: (response, dispatch) => {
-      dispatch(actions.loadShortcuts(response))
-    }
+    success: (response) => dispatch(actions.loadShortcuts(response))
   }
 })

@@ -24,6 +24,7 @@ actions.setResourceLoaded = makeActionCreator(RESOURCE_SET_LOADED, 'loaded')
 actions.setNotFound = makeActionCreator(RESOURCE_NOT_FOUND)
 actions.loadResource = makeActionCreator(RESOURCE_LOAD, 'resourceData')
 actions.loadResourceType = makeInstanceActionCreator(RESOURCE_LOAD, 'resourceData')
+
 actions.openResource = (resourceSlug) => (dispatch, getState) => {
   const currentSlug = selectors.slug(getState())
   if (currentSlug !== resourceSlug) {
@@ -34,11 +35,11 @@ actions.openResource = (resourceSlug) => (dispatch, getState) => {
   }
 }
 
-actions.fetchResource = (slug, embedded = false, loadApp) => ({
+actions.fetchResource = (slug, embedded = false, loadApp) => (dispatch) => dispatch({
   [API_REQUEST]: {
     silent: true,
     url: ['claro_resource_load_embedded', {id: slug, embedded: embedded ? 1 : 0}],
-    success: (response, dispatch) => {
+    success: (response) => {
       // weird time : I need to mount the correct resource type app before continuing loading data in store
       // in order to have the custom store of the resource mounted
       loadApp(response.resourceNode.meta.type).then(() => {
@@ -53,8 +54,8 @@ actions.fetchResource = (slug, embedded = false, loadApp) => ({
         dispatch(actions.setResourceLoaded(true))
       })
     },
-    error: (response, status, dispatch) => {
-      switch(status) {
+    error: (response, status) => {
+      switch (status) {
         case 404:
           dispatch(actions.setNotFound())
           break
@@ -86,7 +87,7 @@ actions.triggerLifecycleAction = (action) => (dispatch, getState) => {
 
 actions.updateUserEvaluation = makeActionCreator(USER_EVALUATION_UPDATE, 'userEvaluation')
 
-actions.dismissRestrictions = makeActionCreator(RESOURCE_RESTRICTIONS_DISMISS, 'dismissed')
+actions.dismissRestrictions = makeActionCreator(RESOURCE_RESTRICTIONS_DISMISS)
 
 actions.checkAccessCode = (resourceNode, code) => (dispatch) => dispatch({
   [API_REQUEST] : {

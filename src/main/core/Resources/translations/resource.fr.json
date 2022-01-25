@@ -95,5 +95,7 @@
         "location_authorized": "Vous utilisez l'un des postes de travail authorisé.",
         "location_unauthorized": "L'accès doit s'effectuer depuis un poste de travail authorisé.",
         "location_unauthorized_help": "Veuillez utiliser l'un des postes de travail authorisés afin d'accéder à la ressource."
-    }
+    },
+    "forbidden": "Accès à la ressource impossible",
+    "forbidden_desc": "Vous n'avez pas accès à cette ressource. Veuillez contacter un administrateur afin qu'il vous donne les droits nécessaires."
 }
