@@ -94,6 +94,18 @@ class IdpManager
         return $domains;
     }
 
+    public function getConditions(string $idpEntityId): array
+    {
+        $conditions = [];
+
+        $config = $this->getConfig($idpEntityId);
+        if (!empty($config['conditions'])) {
+            $conditions = $config['conditions'];
+        }
+
+        return $conditions;
+    }
+
     /**
      * Check if an email matches one of the domains defined in the IDP.
      * Only users with matching emails are registered to the IDP groups and organization.
@@ -112,5 +124,25 @@ class IdpManager
         }
 
         return false;
+    }
+
+    /**
+     * Check if the IDP defines conditions to be met in order to register user to groups and organization.
+     */
+    public function checkConditions(string $idpEntityId, array $attributes = []): bool
+    {
+        $conditions = $this->getConditions($idpEntityId);
+
+        foreach ($conditions as $fieldName => $expectedValue) {
+            if (!isset($attributes[$fieldName])) {
+                return false;
+            }
+
+            if ((is_array($expectedValue) && !in_array($attributes[$fieldName], $expectedValue)) || $attributes[$fieldName] !== $expectedValue) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

@@ -54,7 +54,9 @@ class AuthenticationSuccessListener extends BaseAuthenticationSuccessListener
         // apply IDP config
         $idpEntityId = $request->getSession()->get('authIdp');
         if ($idpEntityId) {
-            if ($this->idpManager->checkEmail($idpEntityId, $user->getEmail())) {
+            // this has been filled by lightSaml AttributeMapper with the SAML response values
+            $attributes = $token->getAttributes();
+            if ($this->idpManager->checkConditions($idpEntityId, $attributes) && $this->idpManager->checkEmail($idpEntityId, $user->getEmail())) {
                 // attach user to the defined organization
                 $organization = $this->idpManager->getOrganization($idpEntityId);
                 if ($organization && (empty($user->getMainOrganization()) || $organization->getId() !== $user->getMainOrganization()->getId())) {
