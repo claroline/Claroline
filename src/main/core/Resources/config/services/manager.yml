@@ -181,6 +181,7 @@ services:
     Claroline\CoreBundle\Manager\Workspace\WorkspaceRestrictionsManager:
         arguments:
             - '@request_stack'
+            - '@security.token_storage'
             - '@security.authorization_checker'
             - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
             - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceUserQueueManager'

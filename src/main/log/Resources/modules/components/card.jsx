@@ -9,6 +9,8 @@ import {displayUsername} from '#/main/core/user/utils'
 import {UserAvatar} from '#/main/core/user/components/avatar'
 import {User as UserTypes} from '#/main/core/user/prop-types'
 
+// TODO : adapt to new log format (only used in analytics for old logs)
+
 const LogCard = props =>
   <DataCard
     {...props}

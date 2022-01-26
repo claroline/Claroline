@@ -6,17 +6,17 @@ import {Await} from '#/main/app/components/await'
 import {Routes} from '#/main/app/router'
 import {Vertical} from '#/main/app/content/tabs/components/vertical'
 import {ContentLoader} from '#/main/app/content/components/loader'
-import {LogDetails} from '#/main/core/layout/logs'
 
 import {getAnalytics} from '#/plugin/analytics/resource/utils'
-import {Logs} from '#/plugin/analytics/resource/dashboard/containers/logs'
-import {UserLogs} from '#/plugin/analytics/resource/dashboard/containers/logs-user'
+import {DashboardActivity} from '#/plugin/analytics/resource/dashboard/containers/activity'
+import {DashboardOverview} from '#/plugin/analytics/resource/dashboard/containers/overview'
 
 const DashboardMain = (props) =>
   <Await
     for={getAnalytics(props.resourceNode)}
     placeholder={
       <ContentLoader
+        className="row"
         size="lg"
         description={trans('loading')}
       />
@@ -25,55 +25,48 @@ const DashboardMain = (props) =>
       <div className="row">
         <div className="col-md-3">
           <Vertical
-            style={{
-              marginTop: '20px'
-            }}
-            basePath={props.path}
+            style={{marginTop: 20}}
+            basePath={props.path+'/dashboard'}
             tabs={
-              apps.map(app => ({
+              [
+                {
+                  icon: 'fa fa-fw fa-pie-chart',
+                  title: trans('overview', {}, 'analytics'),
+                  path: '/',
+                  exact: true
+                }, {
+                  icon: 'fa fa-fw fa-chart-line',
+                  title: trans('activity'),
+                  path: '/activity'
+                }
+              ].concat(apps.map(app => ({
                 icon: app.icon,
                 title: app.label,
-                path: `/dashboard/${app.path}`,
+                path: app.path,
                 exact: true
-              })).concat([
-                {
-                  icon: 'fa fa-fw fa-users',
-                  title: trans('users_actions'),
-                  path: '/dashboard/log'
-                }, {
-                  icon: 'fa fa-fw fa-user',
-                  title: trans('user_actions'),
-                  path: '/dashboard/logs/users',
-                  exact: true
-                }
-              ])
+              })))
             }
           />
         </div>
 
-        <div className="dashboard-content col-md-9">
+        <div className="col-md-9">
           <Routes
-            path={props.path}
+            path={props.path+'/dashboard'}
             routes={
-              apps.map(app => ({
-                path: `/dashboard/${app.path}`,
+              [
+                {
+                  path: '/',
+                  component: DashboardOverview,
+                  exact: true
+                }, {
+                  path: '/activity',
+                  component: DashboardActivity
+                }
+              ].concat(apps.map(app => ({
+                path: app.path,
                 component: app.component,
                 exact: true
-              })).concat([
-                {
-                  path: '/dashboard/log',
-                  component: Logs,
-                  exact: true
-                }, {
-                  path: '/dashboard/log/:id',
-                  component: LogDetails,
-                  onEnter: (params) => props.openLog(params.id)
-                }, {
-                  path: '/dashboard/logs/users',
-                  component: UserLogs,
-                  exact: true
-                }
-              ])
+              })))
             }
           />
         </div>
@@ -83,8 +76,7 @@ const DashboardMain = (props) =>
 
 DashboardMain.propTypes = {
   path: T.string.isRequired,
-  resourceNode: T.object.isRequired,
-  openLog: T.func.isRequired
+  resourceNode: T.object.isRequired
 }
 
 export {

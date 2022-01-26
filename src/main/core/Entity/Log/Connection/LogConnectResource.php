@@ -15,7 +15,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Log\Connection\LogConnectResourceRepository")
  * @ORM\Table(name="claro_log_connect_resource")
  */
 class LogConnectResource extends AbstractLogConnect

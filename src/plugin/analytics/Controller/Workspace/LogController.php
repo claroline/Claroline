@@ -25,7 +25,8 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * @Route("/tools/workspace/{workspaceId}/logs")
+ * @Route("/workspace/{workspaceId}/logs")
+ * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspaceId": "uuid"}})
  */
 class LogController
 {
@@ -41,9 +42,6 @@ class LogController
     /** @var LogManager */
     private $logManager;
 
-    /**
-     * LogController constructor.
-     */
     public function __construct(
         AuthorizationCheckerInterface $authorizationChecker,
         FinderProvider $finder,
@@ -57,44 +55,22 @@ class LogController
     }
 
     /**
-     * Get the name of the managed entity.
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return 'log';
-    }
-
-    public function getClass()
-    {
-        return Log::class;
-    }
-
-    /**
      * @Route("/", name="apiv2_workspace_tool_logs_list", methods={"GET"})
-     * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspaceId": "uuid"}})
-     *
-     * @return JsonResponse
      */
-    public function listAction(Request $request, Workspace $workspace)
+    public function listAction(Request $request, Workspace $workspace): JsonResponse
     {
         $this->checkLogToolAccess($workspace);
 
         return new JsonResponse($this->finder->search(
-            $this->getClass(),
-            $this->getWorkspaceFilteredQuery($request, $workspace),
-            []
+            Log::class,
+            $this->getWorkspaceFilteredQuery($request, $workspace)
         ));
     }
 
     /**
      * @Route("/csv", name="apiv2_workspace_tool_logs_list_csv", methods={"GET"})
-     * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspaceId": "uuid"}})
-     *
-     * @return StreamedResponse
      */
-    public function listCsvAction(Request $request, Workspace $workspace)
+    public function listCsvAction(Request $request, Workspace $workspace): StreamedResponse
     {
         $this->checkLogToolAccess($workspace);
 
@@ -112,11 +88,8 @@ class LogController
 
     /**
      * @Route("/users/csv", name="apiv2_workspace_tool_logs_list_users_csv", methods={"GET"})
-     * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspaceId": "uuid"}})
-     *
-     * @return StreamedResponse
      */
-    public function userActionsListCsvAction(Request $request, Workspace $workspace)
+    public function userActionsListCsvAction(Request $request, Workspace $workspace): StreamedResponse
     {
         $this->checkLogToolAccess($workspace);
 
@@ -134,10 +107,8 @@ class LogController
 
     /**
      * Add workspace filter to request.
-     *
-     * @return array
      */
-    private function getWorkspaceFilteredQuery(Request $request, Workspace $workspace)
+    private function getWorkspaceFilteredQuery(Request $request, Workspace $workspace): array
     {
         $query = $request->query->all();
         $hiddenFilters = isset($query['hiddenFilters']) ? $query['hiddenFilters'] : [];

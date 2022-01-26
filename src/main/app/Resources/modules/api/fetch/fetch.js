@@ -107,9 +107,13 @@ function handleResponseError(dispatch, responseError, originalRequest, error) {
         dispatch(modalActions.showModal(MODAL_LOGIN, {
           onLogin: () => resolve(apiFetch(originalRequest, dispatch)), // re-execute original request
           onAbort: () => {
-            error('Authentication required', responseError.status, dispatch)
+            // user still not logged, forward the original error
+            return getResponseData(responseError) // get error data if any
+              .then(errorData => {
+                error(errorData, responseError.status, dispatch)
 
-            return reject('Authentication required')
+                return reject(errorData)
+              })
           }
         }))
       })

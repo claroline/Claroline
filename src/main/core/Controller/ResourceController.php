@@ -130,11 +130,19 @@ class ResourceController
             );
         }
 
+        // UX quality of life : if the user is anonymous and has no rights on the resource
+        // we want to directly display the login modal (by throwing a 401, the app will do it for us)
+        $statusCode = 403;
+        if (!$embedded && !$this->authorization->isGranted('IS_AUTHENTICATED_FULLY') && !$this->restrictionsManager->hasRights($resourceNode, $this->tokenStorage->getToken()->getRoleNames())) {
+            // we check if the resource is embedded to avoid multiple modals in homes and paths
+            $statusCode = 401;
+        }
+
         return new JsonResponse([
             'managed' => $isManager,
             'resourceNode' => $this->serializer->serialize($resourceNode, [Options::SERIALIZE_MINIMAL]),
             'accessErrors' => $accessErrors,
-        ], 403);
+        ], $statusCode);
     }
 
     /**

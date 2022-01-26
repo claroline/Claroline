@@ -7,6 +7,7 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
@@ -20,6 +21,8 @@ class WorkspaceRestrictionsManager
 {
     /** @var RequestStack */
     private $requestStack;
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
     /** @var AuthorizationCheckerInterface */
     private $authorization;
     /** @var WorkspaceManager */
@@ -29,11 +32,13 @@ class WorkspaceRestrictionsManager
 
     public function __construct(
         RequestStack $requestStack,
+        TokenStorageInterface $tokenStorage,
         AuthorizationCheckerInterface $authorization,
         WorkspaceManager $workspaceManager,
         WorkspaceUserQueueManager $workspaceUserQueueManager
     ) {
         $this->requestStack = $requestStack;
+        $this->tokenStorage = $tokenStorage;
         $this->authorization = $authorization;
         $this->workspaceManager = $workspaceManager;
         $this->workspaceUserQueueManager = $workspaceUserQueueManager;
@@ -93,11 +98,13 @@ class WorkspaceRestrictionsManager
     }
 
     /**
-     * Checks if a user has at least the right to access the workspace.
+     * Checks if a user has at least the right to access one workspace tool.
      */
     public function hasRights(Workspace $workspace): bool
     {
-        return $this->authorization->isGranted('open', $workspace);
+        // we don't simply call the auth checker because it will checks all the restrictions (eg. dates, code)
+        // not only the user rights
+        return $this->workspaceManager->hasAccess($workspace, $this->tokenStorage->getToken());
     }
 
     /**

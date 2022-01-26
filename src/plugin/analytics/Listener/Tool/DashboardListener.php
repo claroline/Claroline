@@ -19,9 +19,6 @@ class DashboardListener
     /** @var AnalyticsManager */
     private $manager;
 
-    /**
-     * DashboardListener constructor.
-     */
     public function __construct(
         AnalyticsManager $manager
     ) {
