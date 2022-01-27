@@ -4,14 +4,16 @@ Nouvel outil "Suivi pédagogique":
   - Paramètre : permet de définir les ressources requises
 
 Tableau de bord des ressources :
-  - Ajout de l'onglet "progression" dans le tableau de bord de toutes les ressources
+  - Ajout de l'onglet "Vue d'ensemble"
+  - Ajout de l'onglet "Suivi pédagogique" dans le tableau de bord de toutes les ressources
 
 Widget liste de ressources :
   - Ajout d'un filtre "ressource requise"
 
-Tableau de bord de l'espace d'activité :
-  - TO DO
-
 Lecteur PDF :
   - Mise à jour du lecteur pdf interne
   - Les liens internes des pdf sont désormais fonctionnel
+  - Ajout du lien de téléchargement directement dans le lecteur si les droits l'autorisent
+
+Permalien :
+  - Le nom du fichier téléchargé en utilisant un permalien est le même que celui de la ressource
