@@ -100,9 +100,27 @@ class OrganizationChoice extends Component {
       <FormFieldset
         id={this.props.id}
         data={this.state.selected}
-        updateProp={(name, value) => this.setState({
-          selected: [...this.state.selected.slice(0, parseInt(name)), value]
-        })}
+        updateProp={(name, value) => {
+          const getOrganization = (organizations, [currentId, ...restOfIds]) => {
+            if (isEmpty(currentId)) {
+              return []
+            }
+            
+            const currentOrganization = organizations.find(organization => organization.id === currentId)
+            
+            return currentOrganization && currentOrganization.children.length > 0 && restOfIds.length > 0
+              ? getOrganization(currentOrganization.children, restOfIds)
+              : currentOrganization
+          }
+          
+          const organization = getOrganization(this.state.organizations, [...this.state.selected.slice(0, parseInt(name)), value])
+
+          this.props.updateMainOrganization(organization.name, organization.code)
+
+          this.setState({
+            selected: [...this.state.selected.slice(0, parseInt(name)), value]
+          })
+        }}
         disabled={this.props.disabled}
         errors={this.props.error}
         fields={!isEmpty(this.state.organizations) ? this.getFields(this.state.organizations) : []}
@@ -129,7 +147,8 @@ OrganizationChoice.propTypes = {
   value: T.object,
   error: T.oneOfType([T.string, T.object]),
   onChange: T.func.isRequired,
-  onError: T.func.isRequired
+  onError: T.func.isRequired,
+  updateMainOrganization: T.func.isRequired
 }
 
 export {
