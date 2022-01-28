@@ -1,4 +1,4 @@
-Nouvel outil "Suivi pédagogique":
+Nouvel outil "Suivi pédagogique" (<a href="https://www.claroline.com/#/desktop/workspaces/open/doc/resources/suivi-pedagogique">Documentation</a>):
   - Ma progression : affiche la progression de l'utilisateur
   - Progressions des utilisateurs : affiche la progression de tous les utilisateurs de l'espace (il faut avoir le droit "éditer" sur l'outil pour le voir)
   - Paramètre : permet de définir les ressources requises
