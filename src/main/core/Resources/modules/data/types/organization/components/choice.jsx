@@ -115,7 +115,7 @@ class OrganizationChoice extends Component {
           
           const organization = getOrganization(this.state.organizations, [...this.state.selected.slice(0, parseInt(name)), value])
 
-          this.props.updateMainOrganization(organization.name, organization.code)
+          this.props.updateMainOrganization({organizationName: organization.name, organizationCode: organization.code, formPath: this.props.id.startsWith('registration')})
 
           this.setState({
             selected: [...this.state.selected.slice(0, parseInt(name)), value]
