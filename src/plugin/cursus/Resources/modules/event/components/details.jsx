@@ -32,7 +32,8 @@ const EventDetails = (props) =>
             type: LINK_BUTTON,
             icon: 'fa fa-fw fa-users',
             label: trans('participants'),
-            target: `${props.path}/${props.event.id}/participants`
+            target: `${props.path}/${props.event.id}/participants`,
+            displayed: props.isAuthenticated
           }
         ]}
       />
@@ -54,6 +55,7 @@ const EventDetails = (props) =>
           )
         }, {
           path: '/participants',
+          disabled: !props.isAuthenticated,
           render: () => (
             <EventParticipants
               path={props.path}
@@ -67,6 +69,7 @@ const EventDetails = (props) =>
 
 EventDetails.propTypes = {
   path: T.string.isRequired,
+  isAuthenticated: T.bool.isRequired,
   event: T.shape(
     EventTypes.propTypes
   ).isRequired,
