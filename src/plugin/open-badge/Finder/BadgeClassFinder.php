@@ -45,11 +45,6 @@ class BadgeClassFinder extends AbstractFinder
 
         $workspaceJoin = false;
 
-        $grantDecoder = $this->toolMaskDecoderManager->getMaskDecoderByToolAndName(
-            $this->om->getRepository(Tool::class)->findOneBy(['name' => 'badges']),
-            'grant'
-        );
-
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
                 case 'recipient':
@@ -71,6 +66,11 @@ class BadgeClassFinder extends AbstractFinder
 
                 case 'assignable':
                     if (!in_array('ROLE_ADMIN', $this->tokenStorage->getToken()->getRoleNames())) {
+                        $grantDecoder = $this->toolMaskDecoderManager->getMaskDecoderByToolAndName(
+                            $this->om->getRepository(Tool::class)->findOneBy(['name' => 'badges']),
+                            'grant'
+                        );
+
                         $qb->leftJoin('obj.issuer', 'o');
                         if (!$workspaceJoin) {
                             $qb->leftJoin('obj.workspace', 'w');

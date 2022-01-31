@@ -123,4 +123,20 @@ class AssertionController extends AbstractCrudController
             'Content-Disposition' => 'attachment; filename='.$fileName.'.pdf',
         ]);
     }
+
+    protected function getDefaultHiddenFilters()
+    {
+        if (!$this->authorization->isGranted('IS_AUTHENTICATED_FULLY')) {
+            throw new AccessDeniedException();
+        }
+
+        if (!$this->authorization->isGranted('ROLE_ADMIN')) {
+            // only get assertions for the badges the current user can grant
+            return [
+                'fromGrantableBadges' => true,
+            ];
+        }
+
+        return [];
+    }
 }
