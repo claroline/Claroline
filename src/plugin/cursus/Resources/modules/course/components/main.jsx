@@ -32,6 +32,7 @@ const CourseMain = (props) =>
             activeSessionRegistration={null}
             availableSessions={props.availableSessions}
             courseRegistration={props.courseRegistration}
+            isAuthenticated={props.isAuthenticated}
           />
         )
       }, {
@@ -55,6 +56,7 @@ const CourseMain = (props) =>
             activeSessionRegistration={props.activeSessionRegistration}
             availableSessions={props.availableSessions}
             courseRegistration={props.courseRegistration}
+            isAuthenticated={props.isAuthenticated}
           />
         )
       }
@@ -63,6 +65,7 @@ const CourseMain = (props) =>
 
 CourseMain.propTypes = {
   path: T.string.isRequired,
+  isAuthenticated: T.bool.isRequired,
   course: T.shape(
     CourseTypes.propTypes
   ).isRequired,

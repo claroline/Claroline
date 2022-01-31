@@ -266,6 +266,23 @@ class CourseController extends AbstractCrudController
         }
         $params['hiddenFilters']['course'] = $course->getUuid();
 
+        // only list participants of the same organization
+        if (!$this->authorization->isGranted('ROLE_ADMIN')) {
+            /** @var User $user */
+            $user = $this->tokenStorage->getToken()->getUser();
+
+            // filter by organizations
+            if ($user instanceof User) {
+                $organizations = $user->getOrganizations();
+            } else {
+                $organizations = $this->om->getRepository(Organization::class)->findBy(['default' => true]);
+            }
+
+            $params['hiddenFilters']['organizations'] = array_map(function (Organization $organization) {
+                return $organization->getUuid();
+            }, $organizations);
+        }
+
         return new JsonResponse(
             $this->finder->search(CourseUser::class, $params)
         );
