@@ -19,14 +19,14 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class AbstractRoleSubjectVoter extends AbstractVoter
 {
-    protected function checkPatchRoles(TokenInterface $token, ObjectCollection $collection): int
+    protected function checkPatchRoles(TokenInterface $token, AbstractRoleSubject $object, ObjectCollection $collection): int
     {
         if (!$collection->isInstanceOf(Role::class)) {
             return VoterInterface::ACCESS_ABSTAIN;
         }
 
         // check if we can add a workspace (this block is mostly a c/c from RoleVoter)
-        $nonAuthorized = array_filter($collection->toArray(), function (Role $role) use ($token) {
+        $nonAuthorized = array_filter($collection->toArray(), function (Role $role) use ($token, $object) {
             $workspace = $role->getWorkspace();
             if ($workspace) {
                 if ($this->isGranted(['community', 'create_user'], $workspace)) {
@@ -53,7 +53,11 @@ class AbstractRoleSubjectVoter extends AbstractVoter
                 return true;
             }
 
-            // we can only add platform roles to users if we have that platform role
+            // we can only add platform roles to users if we have that platform role or are organization manager
+            if ($this->isOrganizationManager($token, $object)) {
+                return false;
+            }
+
             if (Role::PLATFORM_ROLE === $role->getType() && in_array($role->getName(), $token->getRoleNames())) {
                 return false;
             }
