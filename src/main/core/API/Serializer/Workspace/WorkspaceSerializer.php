@@ -301,14 +301,12 @@ class WorkspaceSerializer
             $workspace->refreshUuid();
         }
 
-        if (array_key_exists('model', $data)) {
-            $model = null;
-            if (!empty($data['model'])) {
-                /** @var Workspace $model */
-                $model = $this->om->getObject($data['model'], Workspace::class, ['code']);
+        if (!empty($data['model'])) {
+            /** @var Workspace $model */
+            $model = $this->om->getObject($data['model'], Workspace::class, ['code']);
+            if (!empty($model)) {
+                $workspace->setWorkspaceModel($model);
             }
-
-            $workspace->setWorkspaceModel($model);
         }
 
         $this->sipe('code', 'setCode', $data, $workspace);
