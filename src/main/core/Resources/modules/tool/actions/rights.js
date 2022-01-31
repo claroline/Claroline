@@ -2,6 +2,7 @@ import {hasPermission} from '#/main/app/security'
 import {trans} from '#/main/app/intl/translation'
 import {MODAL_BUTTON} from '#/main/app/buttons'
 
+import {constants} from '#/main/core/tool/constants'
 import {MODAL_TOOL_RIGHTS} from '#/main/core/tool/modals/rights'
 
 /**
@@ -17,6 +18,6 @@ export default (tool, context, toolRefresher) => ({
     currentContext: context,
     onSave: () => toolRefresher.update(tool)
   }],
-  displayed: 'administration' !== context.type && hasPermission('administrate', tool),
+  displayed: -1 !== [constants.TOOL_DESKTOP, constants.TOOL_WORKSPACE].indexOf(context.type) && hasPermission('administrate', tool),
   group: trans('management')
 })
