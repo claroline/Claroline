@@ -260,10 +260,10 @@ class SessionManager
     /**
      * @param SessionUser[] $sessionUsers
      */
-    public function removeUsers(Session $session, array $sessionUsers, bool $delete = true)
+    public function removeUsers(Session $session, array $sessionUsers)
     {
         foreach ($sessionUsers as $sessionUser) {
-            if ($delete) $this->om->remove($sessionUser);
+            $this->om->remove($sessionUser);
 
             // unregister user from the linked workspace
             if ($session->getWorkspace()) {
