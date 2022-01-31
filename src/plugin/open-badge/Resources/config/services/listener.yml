@@ -4,12 +4,6 @@ services:
         autoconfigure: false
         public: false
 
-    Claroline\OpenBadgeBundle\Listener\LayoutListener:
-        arguments:
-            - '@twig'
-        tags:
-            - { name: kernel.event_listener, event: layout.inject.javascript, method: onInjectJs }
-
     # Tools
     Claroline\OpenBadgeBundle\Listener\Tool\BadgesListener:
         tags:
