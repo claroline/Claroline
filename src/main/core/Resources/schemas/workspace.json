@@ -16,7 +16,7 @@
       "minLength": 1
     },
     "model": {
-      "type": "object",
+      "type": ["null", "object"],
       "description": "The model to use to prefill the workspace",
       "properties": {
         "id": {
