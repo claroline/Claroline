@@ -18,11 +18,14 @@ services:
                   arguments:
                       - '@Claroline\AppBundle\Event\StrictDispatcher'
 
-    Claroline\OpenBadgeBundle\Finder\AssertionFinder: ~
-
-    Claroline\OpenBadgeBundle\Finder\EvidenceFinder: ~
-
     Claroline\OpenBadgeBundle\Finder\BadgeClassFinder:
         arguments:
             - '@security.token_storage'
             - '@Claroline\CoreBundle\Manager\Tool\ToolMaskDecoderManager'
+
+    Claroline\OpenBadgeBundle\Finder\AssertionFinder:
+        arguments:
+            - '@security.token_storage'
+            - '@Claroline\CoreBundle\Manager\Tool\ToolMaskDecoderManager'
+
+    Claroline\OpenBadgeBundle\Finder\EvidenceFinder: ~
