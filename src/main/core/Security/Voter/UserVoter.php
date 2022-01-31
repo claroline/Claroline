@@ -144,7 +144,7 @@ class UserVoter extends AbstractRoleSubjectVoter
         }
 
         if ($collection->isInstanceOf(Role::class)) {
-            return $this->checkPatchRoles($token, $collection);
+            return $this->checkPatchRoles($token, $user, $collection);
         }
 
         return $this->checkEdit($token, $user);

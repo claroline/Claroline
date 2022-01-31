@@ -79,7 +79,7 @@ class GroupVoter extends AbstractRoleSubjectVoter
         }
 
         if ($collection->isInstanceOf(Role::class)) {
-            return $this->checkPatchRoles($token, $collection);
+            return $this->checkPatchRoles($token, $group, $collection);
         }
 
         return $this->checkEdit($token, $group);
