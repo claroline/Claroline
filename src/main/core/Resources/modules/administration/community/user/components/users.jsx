@@ -22,7 +22,7 @@ import {getActions} from '#/main/core/user/utils'
 const UsersList = props =>
   <Fragment>
     {props.limitReached &&
-      <Alert type="warning">{trans('users_limit_reached')}</Alert>
+      <Alert type="warning" style={{marginTop: 20}}>{trans('users_limit_reached')}</Alert>
     }
 
     <ListData

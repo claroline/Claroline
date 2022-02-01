@@ -311,16 +311,14 @@ class UserManager
         return count($roles);
     }
 
-    public function hasReachedLimit()
+    public function hasReachedLimit(): bool
     {
         $usersLimitReached = false;
 
-        if ($this->platformConfigHandler->getParameter('restrictions.users') &&
-            $this->platformConfigHandler->getParameter('restrictions.max_users')
-        ) {
+        if ($this->platformConfigHandler->getParameter('restrictions.users')) {
             $usersCount = $this->countEnabledUsers();
 
-            if ($usersCount >= $this->platformConfigHandler->getParameter('restrictions.max_users')) {
+            if ($usersCount >= $this->platformConfigHandler->getParameter('restrictions.users')) {
                 $usersLimitReached = true;
             }
         }

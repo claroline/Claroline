@@ -87,15 +87,11 @@ class UserValidator implements ValidatorInterface
 
         if (ValidatorProvider::CREATE === $mode) {
             // check the platform user limit
-            $restrictions = $this->config->getParameter('restrictions') ?? [];
-            if (isset($restrictions['users']) && isset($restrictions['max_users']) && $restrictions['users'] && $restrictions['max_users']) {
-                $usersCount = $this->manager->countEnabledUsers();
-                if ($usersCount >= $restrictions['max_users']) {
-                    $errors[] = [
-                        'path' => '',
-                        'message' => 'The user limit of the platform has been reached.',
-                    ];
-                }
+            if ($this->manager->hasReachedLimit()) {
+                $errors[] = [
+                    'path' => '',
+                    'message' => 'The user limit of the platform has been reached.',
+                ];
             }
         }
 

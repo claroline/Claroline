@@ -11,8 +11,8 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\PluginManager;
+use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\VersionManager;
-use Claroline\CoreBundle\Repository\User\UserRepository;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -46,6 +46,9 @@ class ClientSerializer
     /** @var PluginManager */
     private $pluginManager;
 
+    /** @var UserManager */
+    private $userManager;
+
     /** @var ResourceTypeSerializer */
     private $resourceTypeSerializer;
 
@@ -62,6 +65,7 @@ class ClientSerializer
         PlatformManager $platformManager,
         VersionManager $versionManager,
         PluginManager $pluginManager,
+        UserManager $userManager,
         ResourceTypeSerializer $resourceTypeSerializer
     ) {
         $this->env = $env;
@@ -72,6 +76,7 @@ class ClientSerializer
         $this->platformManager = $platformManager;
         $this->versionManager = $versionManager;
         $this->pluginManager = $pluginManager;
+        $this->userManager = $userManager;
         $this->resourceTypeSerializer = $resourceTypeSerializer;
         $this->eventDispatcher = $eventDispatcher;
     }
@@ -93,18 +98,6 @@ class ClientSerializer
             ]);
         }
 
-        $usersLimitReached = false;
-        if ($this->config->getParameter('restrictions.users') && $this->config->getParameter('restrictions.max_users')) {
-            $maxUsers = $this->config->getParameter('restrictions.max_users');
-            /** @var UserRepository $userRepo */
-            $userRepo = $this->om->getRepository(User::class);
-            $usersCount = $userRepo->countUsers();
-
-            if ($usersCount >= $maxUsers) {
-                $usersLimitReached = true;
-            }
-        }
-
         $data = [
             'logo' => $logo ? $logo->getUrl() : null,
             'name' => $this->config->getParameter('name'),
@@ -113,7 +106,7 @@ class ClientSerializer
             'version' => $this->versionManager->getCurrent(),
             'environment' => $this->env,
             'helpUrl' => $this->config->getParameter('help_url'),
-            'selfRegistration' => $this->config->getParameter('registration.self') && !$usersLimitReached,
+            'selfRegistration' => $this->config->getParameter('registration.self') && !$this->userManager->hasReachedLimit(),
             'serverUrl' => $this->platformManager->getUrl(),
             'locale' => $this->serializeLocale(),
             'display' => [ // TODO : to move
