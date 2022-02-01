@@ -59,10 +59,10 @@ const UserList = props =>
         label: trans('email'),
         displayed: true
       }, {
-        name: 'meta.lastLogin',
+        name: 'meta.lastActivity',
         type: 'date',
-        alias: 'lastLogin',
-        label: trans('last_login'),
+        alias: 'lastActivity',
+        label: trans('last_activity'),
         displayed: true,
         options: {
           time: true

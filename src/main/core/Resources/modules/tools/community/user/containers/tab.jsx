@@ -23,7 +23,7 @@ const UserTab = connect(
         'username',
         'email',
         'administrativeCode',
-        'meta.lastLogin',
+        'meta.lastActivity',
         'roles'
       ]
     }

@@ -27,9 +27,9 @@ const UserCard = props =>
       props.data.restrictions.disabled && ['fa fa-times-circle', trans('user_disabled')] // todo also checks accessibility dates
     ].filter(flag => !!flag)}
     contentText={props.data.meta.description}
-    footer={props.data.meta.lastLogin &&
+    footer={props.data.meta.lastActivity &&
       <span>
-        {trans('last_logged_at')} <b>{displayDate(props.data.meta.lastLogin, false, true)}</b>
+        {trans('last_activity_at')} <b>{displayDate(props.data.meta.lastActivity, false, true)}</b>
       </span>
     }
   />

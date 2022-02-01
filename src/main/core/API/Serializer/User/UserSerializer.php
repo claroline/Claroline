@@ -256,7 +256,7 @@ class UserSerializer
 
         return [
             'acceptedTerms' => $user->hasAcceptedTerms(),
-            'lastLogin' => DateNormalizer::normalize($user->getLastLogin()),
+            'lastActivity' => DateNormalizer::normalize($user->getLastActivity()),
             'created' => DateNormalizer::normalize($user->getCreated()),
             'description' => $user->getDescription(),
             'mailValidated' => $user->isMailValidated(),

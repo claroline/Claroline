@@ -54,10 +54,10 @@ const UserList = {
       label: trans('creation_date'),
       filterable: false
     }, {
-      name: 'meta.lastLogin',
+      name: 'meta.lastActivity',
       type: 'date',
-      alias: 'lastLogin',
-      label: trans('last_login'),
+      alias: 'lastActivity',
+      label: trans('last_activity'),
       displayed: true,
       filterable: false,
       options: {
