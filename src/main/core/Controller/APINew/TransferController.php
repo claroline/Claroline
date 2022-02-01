@@ -14,7 +14,6 @@ namespace Claroline\CoreBundle\Controller\APINew;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\TransferProvider;
 use Claroline\AppBundle\Controller\AbstractCrudController;
-use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Import\File;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -32,18 +31,14 @@ class TransferController extends AbstractCrudController
 {
     /** @var TransferProvider */
     private $provider;
-    /** @var StrictDispatcher */
-    private $dispatcher;
     /** @var ApiManager */
     private $apiManager;
 
     public function __construct(
         TransferProvider $provider,
-        StrictDispatcher $dispatcher,
         ApiManager $apiManager
     ) {
         $this->provider = $provider;
-        $this->dispatcher = $dispatcher;
         $this->apiManager = $apiManager;
     }
 
@@ -80,11 +75,8 @@ class TransferController extends AbstractCrudController
     public function uploadFileAction(Request $request, string $workspaceId = null): JsonResponse
     {
         $toUpload = $request->files->all()['file'];
-        $handler = $request->get('handler');
 
         $object = $this->crud->create(PublicFile::class, [], ['file' => $toUpload]);
-
-        $this->dispatcher->dispatch(strtolower('upload_file_'.$handler), 'File\UploadFile', [$object]);
 
         $file = $this->serializer->serialize($object);
 

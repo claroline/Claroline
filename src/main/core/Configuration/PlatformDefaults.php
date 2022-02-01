@@ -176,10 +176,8 @@ class PlatformDefaults implements ParameterProviderInterface
             'javascripts' => [],
             'restrictions' => [
                 'users' => false,
-                'storage' => false,
                 'max_users' => null,
-                'max_storage_size' => null,
-                'max_storage_reached' => false,
+                'storage' => null,
                 'used_storage' => null,
             ],
             'privacy' => [

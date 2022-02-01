@@ -15,7 +15,6 @@ use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
@@ -23,6 +22,7 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\ResourceActionEvent;
+use Claroline\CoreBundle\Manager\FileManager;
 use Claroline\CoreBundle\Manager\Resource\ResourceActionManager;
 use Claroline\CoreBundle\Manager\Resource\RightsManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
@@ -41,31 +41,31 @@ class DirectoryListener
     private $serializer;
     /** @var Crud */
     private $crud;
+    /** @var FileManager */
+    private $fileManager;
     /** @var ResourceManager */
     private $resourceManager;
     /** @var ResourceActionManager */
     private $actionManager;
     /** @var RightsManager */
     private $rightsManager;
-    /** @var ParametersSerializer */
-    private $parametersSerializer;
 
     public function __construct(
         ObjectManager $om,
         SerializerProvider $serializer,
         Crud $crud,
+        FileManager $fileManager,
         ResourceManager $resourceManager,
         ResourceActionManager $actionManager,
-        RightsManager $rightsManager,
-        ParametersSerializer $parametersSerializer
+        RightsManager $rightsManager
     ) {
         $this->om = $om;
         $this->serializer = $serializer;
         $this->crud = $crud;
+        $this->fileManager = $fileManager;
         $this->resourceManager = $resourceManager;
         $this->rightsManager = $rightsManager;
         $this->actionManager = $actionManager;
-        $this->parametersSerializer = $parametersSerializer;
     }
 
     /**
@@ -73,15 +73,9 @@ class DirectoryListener
      */
     public function onLoad(LoadResourceEvent $event)
     {
-        $parameters = $this->parametersSerializer->serialize([Options::SERIALIZE_MINIMAL]);
-        $storageLock = isset($parameters['restrictions']['storage']) &&
-            isset($parameters['restrictions']['max_storage_reached']) &&
-            $parameters['restrictions']['storage'] &&
-            $parameters['restrictions']['max_storage_reached'];
-
         $event->setData([
             'directory' => $this->serializer->serialize($event->getResource()),
-            'storageLock' => $storageLock,
+            'storageLock' => $this->fileManager->isStorageFull(),
         ]);
 
         $event->stopPropagation();

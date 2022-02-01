@@ -2,10 +2,11 @@
 
 namespace Claroline\CoreBundle\Controller\APINew\Resource;
 
+use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
-use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
+use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
@@ -27,9 +28,6 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 class ResourceNodeController extends AbstractCrudController
 {
-    /** @var StrictDispatcher */
-    private $eventDispatcher;
-
     /** @var ResourceManager */
     private $resourceManager;
 
@@ -49,7 +47,6 @@ class ResourceNodeController extends AbstractCrudController
     private $token;
 
     public function __construct(
-        StrictDispatcher $eventDispatcher,
         ResourceActionManager $actionManager,
         ResourceManager $resourceManager,
         RightsManager $rightsManager,
@@ -57,7 +54,6 @@ class ResourceNodeController extends AbstractCrudController
         ParametersSerializer $parametersSerializer,
         TokenStorageInterface $token
     ) {
-        $this->eventDispatcher = $eventDispatcher;
         $this->resourceManager = $resourceManager;
         $this->rightsManager = $rightsManager;
         $this->actionManager = $actionManager;
@@ -149,46 +145,28 @@ class ResourceNodeController extends AbstractCrudController
      */
     public function resourceFilesCreateAction(ResourceNode $parent, User $user, Request $request): JsonResponse
     {
-        $parameters = $this->parametersSerializer->serialize([Options::SERIALIZE_MINIMAL]);
-
-        if (isset($parameters['restrictions']['storage']) &&
-            isset($parameters['restrictions']['max_storage_reached']) &&
-            $parameters['restrictions']['storage'] &&
-            $parameters['restrictions']['max_storage_reached']
-        ) {
-            throw new AccessDeniedException();
-        }
-
         $attributes = [];
         $attributes['type'] = 'file';
         $collection = new ResourceCollection([$parent]);
         $collection->setAttributes($attributes);
 
         $add = $this->actionManager->get($parent, 'add');
-
         if (!$this->actionManager->hasPermission($add, $collection)) {
             throw new AccessDeniedException($collection->getErrorsForDisplay());
         }
 
         $filesData = $request->files->all();
         $files = isset($filesData['files']) ? $filesData['files'] : [];
-        $handler = $request->get('handler');
-        $publicFiles = [];
-        $resources = [];
 
+        $publicFiles = [];
         foreach ($files as $file) {
-            $publicFile = $this->crud->create(
-                'Claroline\CoreBundle\Entity\File\PublicFile',
-                [],
-                ['file' => $file]
-            );
-            $this->eventDispatcher->dispatch(strtolower('upload_file_'.$handler), 'File\UploadFile', [$publicFile]);
-            $publicFiles[] = $publicFile;
+            $publicFiles[] = $this->crud->create(PublicFile::class, [], ['file' => $file, Crud::THROW_EXCEPTION]);
         }
-        $resourceType = $this->resourceManager->getResourceTypeByName('file');
 
         $this->om->startFlushSuite();
 
+        $resourceType = $this->resourceManager->getResourceTypeByName('file');
+        $resources = [];
         foreach ($publicFiles as $publicFile) {
             $resource = new File();
             $resource->setName($publicFile->getFilename());

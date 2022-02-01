@@ -43,7 +43,7 @@ function transformAction(action, resourceNodes, embedded = false) {
 const PlayerMain = props =>
   <Fragment>
     {props.storageLock &&
-      <Alert type="warning">{trans('storage_limit_reached_resources')}</Alert>
+      <Alert type="warning" style={{marginTop: 20}}>{trans('storage_limit_reached_resources')}</Alert>
     }
 
     <ListSource

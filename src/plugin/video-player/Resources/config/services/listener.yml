@@ -6,7 +6,7 @@ services:
 
     Claroline\VideoPlayerBundle\Listener\File\Type\VideoListener:
         arguments:
-            - '@claroline.serializer.video.track'
+            - '@Claroline\VideoPlayerBundle\Serializer\TrackSerializer'
             - '@Claroline\VideoPlayerBundle\Manager\VideoPlayerManager'
         tags:
             - { name: kernel.event_listener, event: file.video.load, method: onLoad }
