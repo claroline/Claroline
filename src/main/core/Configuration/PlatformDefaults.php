@@ -175,8 +175,7 @@ class PlatformDefaults implements ParameterProviderInterface
             'is_cron_configured' => false,
             'javascripts' => [],
             'restrictions' => [
-                'users' => false,
-                'max_users' => null,
+                'users' => null,
                 'storage' => null,
                 'used_storage' => null,
             ],

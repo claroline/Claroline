@@ -248,6 +248,7 @@ services:
             - '@Claroline\AppBundle\Manager\PlatformManager'
             - '@Claroline\CoreBundle\Manager\VersionManager'
             - '@Claroline\CoreBundle\Manager\PluginManager'
+            - '@Claroline\CoreBundle\Manager\UserManager'
             - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceTypeSerializer'
 
     Claroline\CoreBundle\API\Serializer\Log\LogSerializer:
