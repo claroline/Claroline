@@ -9,9 +9,10 @@ const ConnectedOrganizationChoice = connect(
   null,
   (dispatch) => (
     {
-      updateMainOrganization({organizationName, organizationCode, formPath}) {
-        const selectors = formPath ? registrationSelectors : profileSelectors
+      updateMainOrganization({organizationId, organizationName, organizationCode, isFormRegistration}) {
+        const selectors = isFormRegistration ? registrationSelectors : profileSelectors
         
+        dispatch(formActions.updateProp(selectors.FORM_NAME, 'mainOrganization.id', organizationId))
         dispatch(formActions.updateProp(selectors.FORM_NAME, 'mainOrganization.name', organizationName))
         dispatch(formActions.updateProp(selectors.FORM_NAME, 'mainOrganization.code', organizationCode))
       }
