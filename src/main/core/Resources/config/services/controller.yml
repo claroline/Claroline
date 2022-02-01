@@ -54,7 +54,6 @@ services:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
         public: true
         arguments:
-            - '@Claroline\AppBundle\Event\StrictDispatcher'
             - '@Claroline\CoreBundle\Manager\Resource\ResourceActionManager'
             - '@Claroline\CoreBundle\Manager\ResourceManager'
             - '@Claroline\CoreBundle\Manager\Resource\RightsManager'
@@ -174,8 +173,6 @@ services:
     Claroline\CoreBundle\Controller\APINew\FileController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
         public: true
-        arguments:
-            - '@Claroline\AppBundle\Event\StrictDispatcher'
 
     Claroline\CoreBundle\Controller\APINew\LoggerController:
         arguments:
@@ -196,7 +193,7 @@ services:
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
             - '@Claroline\AnalyticsBundle\Manager\AnalyticsManager'
             - '@Claroline\CoreBundle\Manager\VersionManager'
-            - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
+            - '@Claroline\CoreBundle\Manager\FileManager'
 
     Claroline\CoreBundle\Controller\APINew\Platform\ScheduledTaskController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
@@ -217,7 +214,6 @@ services:
         public: true
         arguments:
             - '@Claroline\AppBundle\API\TransferProvider'
-            - '@Claroline\AppBundle\Event\StrictDispatcher'
             - '@Claroline\CoreBundle\Manager\ApiManager'
 
     Claroline\CoreBundle\Controller\APINew\WidgetController:

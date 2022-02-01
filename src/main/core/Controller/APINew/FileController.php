@@ -11,8 +11,8 @@
 
 namespace Claroline\CoreBundle\Controller\APINew;
 
+use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Controller\AbstractCrudController;
-use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Entity\File\PublicFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,45 +25,32 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class FileController extends AbstractCrudController
 {
-    /** @var StrictDispatcher */
-    private $dispatcher;
-
-    public function __construct(StrictDispatcher $dispatcher)
-    {
-        $this->dispatcher = $dispatcher;
-    }
-
-    public function getClass()
+    public function getClass(): string
     {
         return PublicFile::class;
     }
 
-    public function getIgnore()
+    public function getIgnore(): array
     {
         return ['update', 'exist', 'list', 'copyBulk'];
     }
 
-    /** @return string */
-    public function getName()
+    public function getName(): string
     {
         return 'public_file';
     }
 
     /**
      * @Route("/upload", name="apiv2_file_upload", options={"method_prefix" = false}, methods={"POST"})
-     *
-     * @return JsonResponse
      */
-    public function uploadAction(Request $request)
+    public function uploadAction(Request $request): JsonResponse
     {
         $files = $request->files->all();
-        $handler = $request->get('handler');
 
         $objects = [];
         foreach ($files as $file) {
-            $object = $this->crud->create(PublicFile::class, [], ['file' => $file]);
+            $object = $this->crud->create(PublicFile::class, [], ['file' => $file, Crud::THROW_EXCEPTION]);
 
-            $this->dispatcher->dispatch(strtolower('upload_file_'.$handler), 'File\UploadFile', [$object]);
             $objects[] = $this->serializer->serialize($object);
         }
 

@@ -18,9 +18,6 @@ class TempFileManager
      */
     private $files = [];
 
-    /**
-     * TempManager constructor.
-     */
     public function __construct(
         PlatformConfigurationHandler $config)
     {
@@ -29,10 +26,8 @@ class TempFileManager
 
     /**
      * Get the path to the temp directory.
-     *
-     * @return string
      */
-    public function getDirectory()
+    public function getDirectory(): string
     {
         return $this->config->getParameter('tmp_dir');
     }
@@ -45,7 +40,7 @@ class TempFileManager
      *
      * @return string - the path to the temp file
      */
-    public function generate()
+    public function generate(): string
     {
         // generates an unique name for the new temp
         $tempName = Uuid::uuid4()->toString();
@@ -59,7 +54,7 @@ class TempFileManager
     /**
      * Removes current temp files.
      */
-    public function clear()
+    public function clear(): void
     {
         if (!empty($this->files)) {
             $fs = new FileSystem();

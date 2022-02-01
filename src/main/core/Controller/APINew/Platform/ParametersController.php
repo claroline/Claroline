@@ -21,6 +21,7 @@ use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
+use Claroline\CoreBundle\Manager\FileManager;
 use Claroline\CoreBundle\Manager\VersionManager;
 use Claroline\CoreBundle\Security\PlatformRoles;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -46,6 +47,8 @@ class ParametersController extends AbstractSecurityController
     private $analyticsManager;
     /** @var VersionManager */
     private $versionManager;
+    /** @var FileManager */
+    private $fileManager;
     /** @var ParametersSerializer */
     private $serializer;
 
@@ -55,6 +58,7 @@ class ParametersController extends AbstractSecurityController
         PlatformConfigurationHandler $ch,
         AnalyticsManager $analyticsManager,
         VersionManager $versionManager,
+        FileManager $fileManager,
         ParametersSerializer $serializer
     ) {
         $this->authorization = $authorization;
@@ -62,6 +66,7 @@ class ParametersController extends AbstractSecurityController
         $this->config = $ch;
         $this->serializer = $serializer;
         $this->versionManager = $versionManager;
+        $this->fileManager = $fileManager;
         $this->analyticsManager = $analyticsManager;
     }
 
@@ -105,21 +110,16 @@ class ParametersController extends AbstractSecurityController
      */
     public function getAction(): JsonResponse
     {
-        $parameters = $this->serializer->serialize();
-
         $analytics = $this->analyticsManager->count();
 
         // TODO : not the correct place to do it
-        $usedStorage = $analytics['storage'];
-        $parameters['restrictions']['used_storage'] = $usedStorage;
-        $parameters['restrictions']['max_storage_reached'] = isset($parameters['restrictions']['max_storage_size']) &&
-            $parameters['restrictions']['max_storage_size'] &&
-            $usedStorage >= $parameters['restrictions']['max_storage_size'];
-        $this->serializer->deserialize($parameters);
+        $this->fileManager->updateUsedStorage(
+            $analytics['storage']
+        );
 
         return new JsonResponse([
             'version' => $this->versionManager->getCurrent(),
-            'meta' => $parameters['meta'],
+            'meta' => $this->config->getParameter('meta'),
             'analytics' => $analytics, // TODO : add analytics through eventing to avoid hard dependency to a plugin
         ]);
     }

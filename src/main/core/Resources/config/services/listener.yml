@@ -111,10 +111,10 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\AppBundle\API\Crud'
+            - '@Claroline\CoreBundle\Manager\FileManager'
             - '@claroline.manager.resource_manager'
             - '@Claroline\CoreBundle\Manager\Resource\ResourceActionManager'
             - '@claroline.manager.rights_manager'
-            - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
         tags:
             - { name: kernel.event_listener, event: resource.directory.load, method: onLoad }
             - { name: kernel.event_listener, event: resource.directory.add, method: onAdd }

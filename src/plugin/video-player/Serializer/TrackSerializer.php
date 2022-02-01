@@ -13,8 +13,6 @@ namespace Claroline\VideoPlayerBundle\Serializer;
 
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Resource\File;
-use Claroline\CoreBundle\Manager\FileManager;
 use Claroline\VideoPlayerBundle\Entity\Track;
 
 class TrackSerializer
@@ -24,19 +22,12 @@ class TrackSerializer
     /** @var ObjectManager */
     private $om;
 
-    /** @var FileManager */
-    private $fileManager;
-
     private $fileRepo;
     private $trackRepo;
 
-    /**
-     * PathSerializer constructor.
-     */
-    public function __construct(ObjectManager $om, FileManager $fileManager)
+    public function __construct(ObjectManager $om)
     {
         $this->om = $om;
-        $this->fileManager = $fileManager;
         $this->fileRepo = $om->getRepository('Claroline\CoreBundle\Entity\Resource\File');
         $this->trackRepo = $om->getRepository('Claroline\VideoPlayerBundle\Entity\Track');
     }
@@ -54,10 +45,7 @@ class TrackSerializer
         return 'video_track';
     }
 
-    /**
-     * @return array
-     */
-    public function serialize(Track $track)
+    public function serialize(Track $track): array
     {
         return [
             'id' => $track->getUuid(),
@@ -76,12 +64,8 @@ class TrackSerializer
 
     /**
      * Deserializes data into a Track entity.
-     *
-     * @param \stdClass $data
-     *
-     * @return Track
      */
-    public function deserialize($data, Track $track)
+    public function deserialize(array $data, Track $track): Track
     {
         if (empty($track)) {
             $track = new Track();
@@ -93,18 +77,6 @@ class TrackSerializer
         $this->sipe('meta.lang', 'setLang', $data, $track);
         $this->sipe('meta.kind', 'setKind', $data, $track);
         $this->sipe('meta.default', 'setIsDefault', $data, $track);
-
-        if (isset($data['file'])) {
-            $trackFile = $this->fileManager->create(
-                new File(),
-                $data['file'],
-                $data['file']->getClientOriginalName(),
-                $data['file']->getMimeType(),
-                $video->getResourceNode()->getWorkspace()
-            );
-            $this->om->persist($trackFile);
-            $track->setTrackFile($trackFile);
-        }
 
         return $track;
     }
