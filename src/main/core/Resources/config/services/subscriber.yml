@@ -31,3 +31,10 @@ services:
             - '@Claroline\AppBundle\API\SerializerProvider'
         tags:
             - { name: kernel.event_subscriber }
+
+    Claroline\CoreBundle\Subscriber\UserActivitySubscriber:
+        arguments:
+            - '@security.token_storage'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+        tags:
+            - { name: kernel.event_subscriber }

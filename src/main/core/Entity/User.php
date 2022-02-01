@@ -175,9 +175,9 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="last_login", type="datetime", nullable=true)
+     * @ORM\Column(name="last_activity", type="datetime", nullable=true)
      */
-    protected $lastLogin;
+    protected $lastActivity;
 
     /**
      * @var \DateTime
@@ -1018,14 +1018,14 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
         }
     }
 
-    public function setLastLogin(\DateTime $date)
+    public function setLastActivity(\DateTime $date)
     {
-        $this->lastLogin = $date;
+        $this->lastActivity = $date;
     }
 
-    public function getLastLogin()
+    public function getLastActivity()
     {
-        return $this->lastLogin;
+        return $this->lastActivity;
     }
 
     public function getLocations()

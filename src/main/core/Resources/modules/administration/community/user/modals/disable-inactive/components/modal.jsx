@@ -10,7 +10,7 @@ const DisableInactiveModal = (props) =>
     {...omit(props, 'disableInactive')}
     icon="fa fa-fw fa-user-slash"
     title={trans('disable_inactive_users')}
-    save={(data) => props.disableInactive(data.lastLogin)}
+    save={(data) => props.disableInactive(data.lastActivity)}
     sections={[
       {
         id: 'general',
@@ -19,9 +19,9 @@ const DisableInactiveModal = (props) =>
         help: trans('disable_inactive_users_help'),
         fields: [
           {
-            name: 'lastLogin',
+            name: 'lastActivity',
             type: 'date',
-            label: trans('last_login'),
+            label: trans('last_activity'),
             required: true
           }
         ]

@@ -82,7 +82,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
         /** @var User $user */
         $user = $token->getUser();
 
-        $this->userManager->updateLastLogin($user);
+        $this->userManager->setInitDate($user);
 
         if ($user->getLocale()) {
             $request->setLocale($user->getLocale());

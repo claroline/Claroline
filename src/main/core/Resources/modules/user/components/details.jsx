@@ -20,9 +20,9 @@ const UserDetails = props =>
         </span>
       </li>
       <li className="list-group-item">
-        {trans('last_logged_at')}
+        {trans('last_activity_at')}
         <span className="value">
-          {props.user.meta.lastLogin ? displayDate(props.user.meta.lastLogin, false, true) : trans('never')}
+          {props.user.meta.lastActivity ? displayDate(props.user.meta.lastActivity, false, true) : trans('never')}
         </span>
       </li>
     </ul>
@@ -32,7 +32,7 @@ UserDetails.propTypes = {
   user: T.shape({
     meta: T.shape({
       created: T.string.isRequired,
-      lastLogin: T.string
+      lastActivity: T.string
     }),
     roles: T.arrayOf(T.shape({
       type: T.number.isRequired,

@@ -57,8 +57,8 @@ const UserCompare = props =>
                 time: true
               }
             }, {
-              name: 'meta.lastLogin',
-              label: trans('last_login'),
+              name: 'meta.lastActivity',
+              label: trans('last_activity'),
               type: 'date',
               options: {
                 time: true

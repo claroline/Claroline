@@ -66,10 +66,10 @@ const UsersList = props =>
         type: 'string',
         label: trans('code')
       }, {
-        name: 'meta.lastLogin',
+        name: 'meta.lastActivity',
         type: 'date',
-        alias: 'lastLogin',
-        label: trans('last_login'),
+        alias: 'lastActivity',
+        label: trans('last_activity'),
         displayed: true,
         filterable: false,
         options: {

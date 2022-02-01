@@ -17,15 +17,15 @@ namespace Claroline\CoreBundle\Messenger\Message;
 class DisableInactiveUsers
 {
     /** @var \DateTimeInterface */
-    private $lastLogin;
+    private $lastActivity;
 
-    public function __construct(\DateTimeInterface $lastLogin)
+    public function __construct(\DateTimeInterface $lastActivity)
     {
-        $this->lastLogin = $lastLogin;
+        $this->lastActivity = $lastActivity;
     }
 
-    public function getLastLogin(): \DateTimeInterface
+    public function getLastActivity(): \DateTimeInterface
     {
-        return $this->lastLogin;
+        return $this->lastActivity;
     }
 }

@@ -278,11 +278,11 @@ class UserController extends AbstractCrudController
         $this->checkPermission('OPEN', $tool, [], true);
 
         $data = $this->decodeRequest($request);
-        if (empty($data['lastLogin'])) {
+        if (empty($data['lastActivity'])) {
             throw new InvalidDataException('Last login date is required');
         }
 
-        $this->manager->disableInactive(DateNormalizer::denormalize($data['lastLogin']));
+        $this->manager->disableInactive(DateNormalizer::denormalize($data['lastActivity']));
 
         return new JsonResponse();
     }
