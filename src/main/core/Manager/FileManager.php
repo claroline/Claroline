@@ -38,9 +38,12 @@ class FileManager
 
     public function isStorageFull(): bool
     {
-        return $this->config->getParameter('restrictions.storage')
-            && $this->config->getParameter('restrictions.used_storage')
-            && $this->config->getParameter('restrictions.used_storage') >= $this->config->getParameter('restrictions.storage');
+        return false;
+        
+        // TODO : enable when our storage management is fixed
+        //return $this->config->getParameter('restrictions.storage')
+        //    && $this->config->getParameter('restrictions.used_storage')
+        //    && $this->config->getParameter('restrictions.used_storage') >= $this->config->getParameter('restrictions.storage');
     }
 
     /**
