@@ -194,6 +194,7 @@ services:
             - '@Claroline\AnalyticsBundle\Manager\AnalyticsManager'
             - '@Claroline\CoreBundle\Manager\VersionManager'
             - '@Claroline\CoreBundle\Manager\FileManager'
+            - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
 
     Claroline\CoreBundle\Controller\APINew\Platform\ScheduledTaskController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
