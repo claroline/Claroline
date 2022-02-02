@@ -53,27 +53,28 @@ class AuthenticationSuccessListener extends BaseAuthenticationSuccessListener
 
         // apply IDP config
         $idpEntityId = $request->getSession()->get('authIdp');
+
+        // register user to the Organizations and Groups defined on the IDP
         if ($idpEntityId) {
             // this has been filled by lightSaml AttributeMapper with the SAML response values
             $attributes = $token->getAttributes();
-            if ($this->idpManager->checkConditions($idpEntityId, $attributes) && $this->idpManager->checkEmail($idpEntityId, $user->getEmail())) {
-                // attach user to the defined organization
-                $organization = $this->idpManager->getOrganization($idpEntityId);
-                if ($organization && (empty($user->getMainOrganization()) || $organization->getId() !== $user->getMainOrganization()->getId())) {
-                    // reset organization if it has changed or has not been set (eg. user has just been created)
-                    $this->crud->replace($user, 'mainOrganization', $organization, [Crud::THROW_EXCEPTION, Crud::NO_PERMISSIONS, Options::NO_EMAIL]);
-                }
 
-                // attach user to the defined groups
-                $groups = $this->idpManager->getGroups($idpEntityId);
-                if (!empty($groups)) {
-                    $missingGroups = array_filter($groups, function (Group $group) use ($user) {
-                        return !$user->hasGroup($group);
-                    });
+            // attach user to the defined organization
+            $organization = $this->idpManager->getOrganization($idpEntityId, $user->getEmail(), $attributes);
+            if ($organization && (empty($user->getMainOrganization()) || $organization->getId() !== $user->getMainOrganization()->getId())) {
+                // reset organization if it has changed or has not been set (eg. user has just been created)
+                $this->crud->replace($user, 'mainOrganization', $organization, [Crud::THROW_EXCEPTION, Crud::NO_PERMISSIONS, Options::NO_EMAIL]);
+            }
 
-                    if (!empty($missingGroups)) {
-                        $this->crud->patch($user, 'group', 'add', $missingGroups, [Crud::THROW_EXCEPTION, Crud::NO_PERMISSIONS, Options::NO_EMAIL]);
-                    }
+            // attach user to the defined groups
+            $groups = $this->idpManager->getGroups($idpEntityId, $user->getEmail(), $attributes);
+            if (!empty($groups)) {
+                $missingGroups = array_filter($groups, function (Group $group) use ($user) {
+                    return !$user->hasGroup($group);
+                });
+
+                if (!empty($missingGroups)) {
+                    $this->crud->patch($user, 'group', 'add', $missingGroups, [Crud::THROW_EXCEPTION, Crud::NO_PERMISSIONS, Options::NO_EMAIL]);
                 }
             }
         }
