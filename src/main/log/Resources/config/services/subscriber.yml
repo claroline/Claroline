@@ -1,14 +1,4 @@
 services:
-    Claroline\LogBundle\Subscriber\SecurityLogSubscriber:
-        arguments:
-            - '@security.helper'
-            - '@request_stack'
-            - '@translator'
-            - '@messenger.default_bus'
-            - '@?Claroline\CoreBundle\Library\GeoIp\MaxMindGeoIpInfoProvider'
-        tags:
-            - { name: kernel.event_subscriber }
-
     Claroline\LogBundle\Subscriber\FunctionalLogSubscriber:
         arguments:
             - '@translator'
@@ -17,5 +7,32 @@ services:
             - { name: kernel.event_subscriber }
 
     Claroline\LogBundle\Subscriber\Administration\LogsSubscriber:
+        tags:
+            - { name: kernel.event_subscriber }
+
+    # move those subscribers in their respective plugin when old log system will be removed
+    Claroline\LogBundle\Subscriber\Security\AuthenticationLogSubscriber:
+        arguments:
+            - '@security.helper'
+            - '@request_stack'
+            - '@translator'
+            - '@messenger.default_bus'
+        tags:
+            - { name: kernel.event_subscriber }
+
+    Claroline\LogBundle\Subscriber\Security\RoleLogSubscriber:
+        arguments:
+            - '@security.helper'
+            - '@request_stack'
+            - '@messenger.default_bus'
+        tags:
+            - { name: kernel.event_subscriber }
+
+    Claroline\LogBundle\Subscriber\Security\UserLogSubscriber:
+        arguments:
+            - '@security.helper'
+            - '@request_stack'
+            - '@translator'
+            - '@messenger.default_bus'
         tags:
             - { name: kernel.event_subscriber }

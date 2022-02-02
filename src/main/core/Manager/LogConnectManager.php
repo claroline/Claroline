@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Manager;
 
 use Claroline\AppBundle\API\FinderProvider;
-use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Log\Connection\AbstractLogConnect;
 use Claroline\CoreBundle\Entity\Log\Connection\LogConnectAdminTool;
@@ -32,7 +31,6 @@ use Claroline\CoreBundle\Event\Log\LogDesktopToolReadEvent;
 use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceEnterEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceToolReadEvent;
-use Claroline\CoreBundle\Event\Security\UserLoginEvent;
 use Claroline\CoreBundle\Repository\Tool\OrderedToolRepository;
 use Claroline\EvaluationBundle\Manager\ResourceEvaluationManager;
 use Claroline\EvaluationBundle\Manager\WorkspaceEvaluationManager;
@@ -69,22 +67,19 @@ class LogConnectManager
     private $logToolRepo;
     private $logResourceRepo;
     private $logAdminToolRepo;
-    private $eventDispatcher;
 
     public function __construct(
         FinderProvider $finder,
         ObjectManager $om,
         WorkspaceEvaluationManager $workspaceEvaluationManager,
         ResourceEvaluationManager $resourceEvaluationManager,
-        TranslatorInterface $translator,
-        StrictDispatcher $eventDispatcher
+        TranslatorInterface $translator
     ) {
         $this->finder = $finder;
         $this->om = $om;
         $this->workspaceEvaluationManager = $workspaceEvaluationManager;
         $this->resourceEvaluationManager = $resourceEvaluationManager;
         $this->translator = $translator;
-        $this->eventDispatcher = $eventDispatcher;
 
         $this->logRepo = $om->getRepository(Log::class);
         $this->orderedToolRepo = $om->getRepository(OrderedTool::class);
@@ -112,7 +107,6 @@ class LogConnectManager
                     $this->createLogConnectPlatform($user, $dateLog);
 
                     $this->om->endFlushSuite();
-                    $this->eventDispatcher->dispatch(SecurityEvents::USER_LOGIN, UserLoginEvent::class, [$user]);
                     break;
                 case LogWorkspaceEnterEvent::ACTION:
                     $this->om->startFlushSuite();
