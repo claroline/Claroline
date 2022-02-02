@@ -13,7 +13,6 @@ namespace Claroline\CoreBundle\Event\Security;
 
 use Claroline\CoreBundle\Entity\User;
 use Symfony\Contracts\EventDispatcher\Event;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ViewAsEvent extends Event
 {
@@ -34,10 +33,5 @@ class ViewAsEvent extends Event
     public function getRole()
     {
         return $this->role;
-    }
-
-    public function getMessage(TranslatorInterface $translator)
-    {
-        return $translator->trans('viewAs', ['username' => $this->user->getUsername(), 'role' => $this->role], 'security');
     }
 }

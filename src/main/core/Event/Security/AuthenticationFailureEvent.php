@@ -13,7 +13,6 @@ namespace Claroline\CoreBundle\Event\Security;
 
 use Claroline\CoreBundle\Entity\User;
 use Symfony\Contracts\EventDispatcher\Event;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AuthenticationFailureEvent extends Event
 {
@@ -35,8 +34,8 @@ class AuthenticationFailureEvent extends Event
         return null;
     }
 
-    public function getMessage(TranslatorInterface $translator): string
+    public function getMessage(): string
     {
-        return $translator->trans('authenticationFailure', ['username' => $this->user, 'message' => $this->message], 'security');
+        return $this->message;
     }
 }
