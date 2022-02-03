@@ -11,6 +11,22 @@ services:
             - { name: kernel.event_subscriber }
 
     # move those subscribers in their respective plugin when old log system will be removed
+    Claroline\LogBundle\Subscriber\Functional\GroupLogSubscriber:
+        arguments:
+            - '@security.helper'
+            - '@translator'
+            - '@messenger.default_bus'
+        tags:
+            - { name: kernel.event_subscriber }
+
+    Claroline\LogBundle\Subscriber\Functional\OrganizationLogSubscriber:
+        arguments:
+            - '@security.helper'
+            - '@translator'
+            - '@messenger.default_bus'
+        tags:
+            - { name: kernel.event_subscriber }
+
     Claroline\LogBundle\Subscriber\Security\AuthenticationLogSubscriber:
         arguments:
             - '@security.helper'
