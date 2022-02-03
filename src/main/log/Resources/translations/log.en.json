@@ -1,0 +1,10 @@
+{
+  "group_add": "Add group",
+  "group_add_desc": "has added %user% to group %group%",
+  "group_remove": "Remove group",
+  "group_remove_desc": "has removed %user% from group %group%",
+  "organization_add": "Add organization",
+  "organization_add_desc": "has added %user% to organization %organization%",
+  "organization_remove": "Remove organization",
+  "organization_remove_desc": "has removed %user% from organization %organization%"
+}

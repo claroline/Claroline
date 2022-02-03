@@ -19,7 +19,6 @@ use Claroline\AppBundle\Event\Crud\UpdateEvent;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Entity\User;
 
 class GroupListener
 {
@@ -75,13 +74,7 @@ class GroupListener
         $value = $event->getValue();
         $action = $event->getAction();
 
-        if ($value instanceof User) {
-            if ('add' === $action) {
-                $this->dispatcher->dispatch('log', 'Log\LogGroupAddUser', [$group, $value]);
-            } elseif ('remove' === $action) {
-                $this->dispatcher->dispatch('log', 'Log\LogGroupRemoveUser', [$group, $value]);
-            }
-        } elseif ($value instanceof Role) {
+        if ($value instanceof Role) {
             if ('add' === $action) {
                 $this->dispatcher->dispatch('log', 'Log\LogRoleSubscribe', [$value, $group]);
             } elseif ('remove' === $action) {
