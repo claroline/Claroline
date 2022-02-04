@@ -79,7 +79,7 @@ class FieldsValues extends Component {
             multiple: false,
             condensed: true,
             choices: this.props.fields.filter(f => f.id && -1 < supportedTypes.indexOf(f.type)).reduce((acc, field) => {
-              acc[field.id] = field.name
+              acc[field.id] = field.label
 
               return acc
             }, {})
@@ -107,7 +107,7 @@ class FieldsValues extends Component {
               <span className="fa fa-trash-o" />
             </CallbackButton>
             <DataInput
-              label={fv.field.name}
+              label={fv.field.label}
               type={fv.field.type}
               options={fv.field.options ? this.formatOptions(fv.field.options, fv.field.type) : {}}
               value={fv.value}

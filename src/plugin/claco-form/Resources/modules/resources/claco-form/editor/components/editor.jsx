@@ -450,6 +450,13 @@ const EditorComponent = props =>
                 message: transChoice('objects_delete_question', rows.length, {count: rows.length}, 'platform')
               },
               callback: () => props.deleteCategories(rows)
+            }, {
+              type: CALLBACK_BUTTON,
+              icon: 'fa fa-fw fa-refresh',
+              label: trans('recalculate', {}, 'actions'),
+              callback: () => props.assignCategory(rows[0]),
+              scope: ['object'],
+              displayed: rows[0].fieldsValues && 0 !== rows[0].fieldsValues.length
             }
           ]}
         />
@@ -529,6 +536,7 @@ EditorComponent.propTypes = {
   roles: T.array,
   validateTemplate: T.func.isRequired,
   saveCategory: T.func.isRequired,
+  assignCategory: T.func.isRequired,
   deleteCategories: T.func.isRequired,
   deleteKeywords: T.func.isRequired
 }
@@ -555,6 +563,9 @@ const Editor = connect(
     },
     deleteCategories(categories) {
       dispatch(actions.deleteCategories(categories))
+    },
+    assignCategory(category) {
+      dispatch(actions.assignCategory(category))
     },
     deleteKeywords(keywords) {
       dispatch(actions.deleteKeywords(keywords))
