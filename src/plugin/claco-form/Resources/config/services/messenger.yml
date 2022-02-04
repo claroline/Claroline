@@ -1,0 +1,6 @@
+services:
+    Claroline\ClacoFormBundle\Messenger\AssignCategoryHandler:
+        tags: [ messenger.message_handler ]
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\ClacoFormBundle\Manager\CategoryManager'

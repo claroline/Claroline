@@ -5,6 +5,9 @@ services:
     Claroline\ClacoFormBundle\Controller\API\CategoryController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
         public: true
+        arguments:
+            - '@security.authorization_checker'
+            - '@Claroline\ClacoFormBundle\Manager\CategoryManager'
 
     Claroline\ClacoFormBundle\Controller\API\ClacoFormController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
