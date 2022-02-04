@@ -12,6 +12,7 @@
 namespace Claroline\ClacoFormBundle\Controller\API;
 
 use Claroline\AppBundle\Controller\AbstractCrudController;
+use Claroline\ClacoFormBundle\Entity\ClacoForm;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -21,10 +22,10 @@ class ClacoFormController extends AbstractCrudController
 {
     public function getClass()
     {
-        return 'Claroline\ClacoFormBundle\Entity\ClacoForm';
+        return ClacoForm::class;
     }
 
-    public function getIgore()
+    public function getIgnore()
     {
         return ['create', 'deleteBulk', 'exist', 'list', 'copyBulk', 'schema', 'find', 'get'];
     }

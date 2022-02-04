@@ -12,20 +12,39 @@
 namespace Claroline\ClacoFormBundle\Controller\API;
 
 use Claroline\AppBundle\Controller\AbstractCrudController;
+use Claroline\ClacoFormBundle\Entity\Category;
 use Claroline\ClacoFormBundle\Entity\ClacoForm;
+use Claroline\ClacoFormBundle\Manager\CategoryManager;
+use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * @Route("/clacoformcategory")
  */
 class CategoryController extends AbstractCrudController
 {
+    use PermissionCheckerTrait;
+
+    /** @var AuthorizationCheckerInterface */
+    private $authorization;
+    /** @var CategoryManager */
+    private $manager;
+
+    public function __construct(
+        AuthorizationCheckerInterface $authorization,
+        CategoryManager $manager
+    ) {
+        $this->authorization = $authorization;
+        $this->manager = $manager;
+    }
+
     public function getClass()
     {
-        return 'Claroline\ClacoFormBundle\Entity\Category';
+        return Category::class;
     }
 
     public function getIgnore()
@@ -39,27 +58,31 @@ class CategoryController extends AbstractCrudController
     }
 
     /**
-     * @Route(
-     *     "/clacoform/{clacoForm}/categories/list",
-     *     name="apiv2_clacoformcategory_list"
-     * )
-     * @EXT\ParamConverter(
-     *     "clacoForm",
-     *     class="ClarolineClacoFormBundle:ClacoForm",
-     *     options={"mapping": {"clacoForm": "uuid"}}
-     * )
-     *
-     * @return JsonResponse
+     * @Route("/list/{clacoForm}", name="apiv2_clacoformcategory_list")
+     * @EXT\ParamConverter("clacoForm", class="ClarolineClacoFormBundle:ClacoForm", options={"mapping": {"clacoForm": "uuid"}})
      */
-    public function categoriesListAction(ClacoForm $clacoForm, Request $request)
+    public function listByClacoFormAction(ClacoForm $clacoForm, Request $request): JsonResponse
     {
         $params = $request->query->all();
         if (!isset($params['hiddenFilters'])) {
             $params['hiddenFilters'] = [];
         }
         $params['hiddenFilters']['clacoForm'] = $clacoForm->getId();
-        $data = $this->finder->search('Claroline\ClacoFormBundle\Entity\Category', $params);
+        $data = $this->finder->search(Category::class, $params);
 
         return new JsonResponse($data, 200);
+    }
+
+    /**
+     * @Route("/{id}/assign", name="apiv2_clacoform_category_assign", methods={"PUT"})
+     * @EXT\ParamConverter("category", class="ClarolineClacoFormBundle:Category", options={"mapping": {"id": "uuid"}})
+     */
+    public function assignAction(Category $category): JsonResponse
+    {
+        $this->checkPermission('EDIT', $category->getClacoForm(), [], true);
+
+        $this->manager->assignCategory($category);
+
+        return new JsonResponse(null, 204);
     }
 }
