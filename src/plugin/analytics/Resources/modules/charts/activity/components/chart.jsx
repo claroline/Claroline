@@ -56,7 +56,7 @@ class ActivityChart extends Component {
 
   render() {
     return (
-      <div className="panel panel-default panel-analytics panel-activity">
+      <div className="panel panel-default panel-analytics">
         <div className="panel-heading">
           <h2 className="panel-title">
             {trans('recent_activity', {}, 'analytics')}

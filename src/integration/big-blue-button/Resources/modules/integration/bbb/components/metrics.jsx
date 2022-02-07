@@ -3,44 +3,37 @@ import {PropTypes as T} from 'prop-types'
 import {schemeCategory20c} from 'd3-scale'
 
 import {trans} from '#/main/app/intl/translation'
+import {ContentCounter} from '#/main/app/content/components/counter'
 
 const BBBMetrics = (props) =>
   <div className="row">
-    <div className="analytics-card">
-      <span className="fa fa-chalkboard" style={{backgroundColor: schemeCategory20c[1]}} />
+    <ContentCounter
+      icon="fa fa-chalkboard"
+      label={trans('active_meetings', {}, 'bbb')}
+      color={schemeCategory20c[1]}
+      value={props.meetings + (props.maxMeetings ? ' / ' + props.maxMeetings : '')}
+    />
 
-      <h1 className="h3">
-        <small>{trans('active_meetings', {}, 'bbb')}</small>
-        {props.meetings + (props.maxMeetings ? ' / ' + props.maxMeetings : '')}
-      </h1>
-    </div>
+    <ContentCounter
+      icon="fa fa-chalkboard-teacher"
+      label={trans('meeting_participants', {}, 'bbb')}
+      color={schemeCategory20c[5]}
+      value={props.meetingParticipants ? props.meetingParticipants : <span className="fa fa-fw fa-infinity" />}
+    />
 
-    <div className="analytics-card">
-      <span className="fa fa-chalkboard-teacher" style={{backgroundColor: schemeCategory20c[5]}} />
+    <ContentCounter
+      icon="fa fa-user"
+      label={trans('participants')}
+      color={schemeCategory20c[9]}
+      value={props.participants + (props.maxParticipants ? ' / ' + props.maxParticipants : '')}
+    />
 
-      <h1 className="h3">
-        <small>{trans('meeting_participants', {}, 'bbb')}</small>
-        {props.meetingParticipants ? props.meetingParticipants : <span className="fa fa-fw fa-infinity" />}
-      </h1>
-    </div>
-
-    <div className="analytics-card">
-      <span className="fa fa-user" style={{backgroundColor: schemeCategory20c[9]}} />
-
-      <h1 className="h3">
-        <small>{trans('participants')}</small>
-        {props.participants + (props.maxParticipants ? ' / ' + props.maxParticipants : '')}
-      </h1>
-    </div>
-
-    <div className="analytics-card">
-      <span className="fa fa-server" style={{backgroundColor: schemeCategory20c[13]}} />
-
-      <h1 className="h3">
-        <small>{trans('available_servers', {}, 'bbb')}</small>
-        {props.availableServers + ' / ' + props.servers}
-      </h1>
-    </div>
+    <ContentCounter
+      icon="fa fa-server"
+      label={trans('available_servers', {}, 'bbb')}
+      color={schemeCategory20c[13]}
+      value={props.availableServers + ' / ' + props.servers}
+    />
   </div>
 
 BBBMetrics.propTypes = {

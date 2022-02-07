@@ -22,6 +22,7 @@ import {selectors} from '#/plugin/cursus/event/store'
 import {MODAL_EVENT_PRESENCE} from '#/plugin/cursus/event/modals/presence'
 import {SessionGroups} from '#/plugin/cursus/session/components/groups'
 import {SessionUsers} from '#/plugin/cursus/session/components/users'
+import {ContentCounter} from '#/main/app/content/components/counter'
 
 const EventUsers = (props) =>
   <SessionUsers
@@ -180,36 +181,30 @@ EventPresences.propTypes = {
 
 const EventParticipants = (props) =>
   <Fragment>
-    <div className="row" style={{marginTop: '-20px'}}>
-      <div className="analytics-card">
-        <span className="fa fa-chalkboard-teacher" style={{backgroundColor: schemeCategory20c[1]}} />
+    <div className="row" style={{marginTop: -20}}>
+      <ContentCounter
+        icon="fa fa-chalkboard-teacher"
+        label={trans('tutors', {}, 'cursus')}
+        color={schemeCategory20c[1]}
+        value={get(props.event, 'participants.tutors', 0)}
+      />
 
-        <h1 className="h3">
-          <small>{trans('tutors', {}, 'cursus')}</small>
-          {get(props.event, 'participants.tutors', 0)}
-        </h1>
-      </div>
+      <ContentCounter
+        icon="fa fa-user"
+        label={trans('users')}
+        color={schemeCategory20c[5]}
+        value={get(props.event, 'participants.learners', 0)}
+      />
 
-      <div className="analytics-card">
-        <span className="fa fa-user" style={{backgroundColor: schemeCategory20c[5]}} />
-
-        <h1 className="h3">
-          <small>{trans('users')}</small>
-          {get(props.event, 'participants.learners', 0)}
-        </h1>
-      </div>
-
-      <div className="analytics-card">
-        <span className="fa fa-user-plus" style={{backgroundColor: schemeCategory20c[9]}} />
-
-        <h1 className="h3">
-          <small>{trans('available_seats', {}, 'cursus')}</small>
-          {get(props.event, 'restrictions.users') ?
-            (get(props.event, 'restrictions.users') - get(props.event, 'participants.learners', 0)) + ' / ' + get(props.event, 'restrictions.users')
-            : <span className="fa fa-fw fa-infinity" />
-          }
-        </h1>
-      </div>
+      <ContentCounter
+        icon="fa fa-user-plus"
+        label={trans('available_seats', {}, 'cursus')}
+        color={schemeCategory20c[9]}
+        value={get(props.event, 'restrictions.users') ?
+          (get(props.event, 'restrictions.users') - get(props.event, 'participants.learners', 0)) + ' / ' + get(props.event, 'restrictions.users')
+          : <span className="fa fa-fw fa-infinity" />
+        }
+      />
     </div>
 
     <div className="row">

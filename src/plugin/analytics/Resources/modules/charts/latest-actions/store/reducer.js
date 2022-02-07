@@ -7,6 +7,4 @@ export const reducer = makeListReducer(selectors.STORE_NAME, {
   data: [],
   sortBy: {property: 'dateLog', direction: -1},
   pagination: {page: 0, pageSize: 20}
-}, {
-
 })

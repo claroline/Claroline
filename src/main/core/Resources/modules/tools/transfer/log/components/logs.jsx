@@ -4,8 +4,11 @@ import {connect} from 'react-redux'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 
+import {schemeCategory20c} from 'd3-scale'
+
 import {trans} from '#/main/app/intl/translation'
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
+import {ContentCounter} from '#/main/app/content/components/counter'
 import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
 
 import {selectors} from '#/main/core/tools/transfer/store'
@@ -39,42 +42,34 @@ Success.propTypes = {
 
 const LogsComponent = props =>
   <Fragment>
-    <div className="row transfer-analytics">
-      <div className="transfer-total-count analytics-card">
-        <span className="fa fa-list" />
+    <div className="row">
+      <ContentCounter
+        icon="fa fa-list"
+        label={trans('total')}
+        color={schemeCategory20c[1]}
+        value={!isEmpty(props.data) ? get(props.data, 'total') || '0' : '?'}
+      />
 
-        <h1 className="h3">
-          <small>{trans('total')}</small>
-          {!isEmpty(props.data) ? get(props.data, 'total') || '0' : '?'}
-        </h1>
-      </div>
+      <ContentCounter
+        icon="fa fa-sync"
+        label={trans('processed')}
+        color={schemeCategory20c[5]}
+        value={!isEmpty(props.data) ? get(props.data, 'processed') || '0' : '?'}
+      />
 
-      <div className="transfer-processed-count analytics-card">
-        <span className="fa fa-sync" />
+      <ContentCounter
+        icon="fa fa-check"
+        label={trans('success')}
+        color={schemeCategory20c[9]}
+        value={!isEmpty(props.data) ? get(props.data, 'success') || '0' : '?'}
+      />
 
-        <h1 className="h3">
-          <small>{trans('processed')}</small>
-          {!isEmpty(props.data) ? get(props.data, 'processed') || '0' : '?'}
-        </h1>
-      </div>
-
-      <div className="transfer-success-count analytics-card">
-        <span className="fa fa-check" />
-
-        <h1 className="h3">
-          <small>{trans('success')}</small>
-          {!isEmpty(props.data) ? get(props.data, 'success') || '0' : '?'}
-        </h1>
-      </div>
-
-      <div className="transfer-error-count analytics-card">
-        <span className="fa fa-exclamation-triangle" />
-
-        <h1 className="h3">
-          <small>{trans('error')}</small>
-          {!isEmpty(props.data) ? get(props.data, 'error') || '0' : '?'}
-        </h1>
-      </div>
+      <ContentCounter
+        icon="fa fa-exclamation-triangle"
+        label={trans('error')}
+        color={schemeCategory20c[13]}
+        value={!isEmpty(props.data) ? get(props.data, 'error') || '0' : '?'}
+      />
     </div>
 
     {isEmpty(props.data) &&

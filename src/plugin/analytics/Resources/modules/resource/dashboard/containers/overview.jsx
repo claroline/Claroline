@@ -6,7 +6,7 @@ import {DashboardOverview as DashboardOverviewComponent} from '#/plugin/analytic
 
 const DashboardOverview = connect(
   state => ({
-    resourceId: resourceSelectors.id(state)
+    resourceNode: resourceSelectors.resourceNode(state)
   })
 )(DashboardOverviewComponent)
 

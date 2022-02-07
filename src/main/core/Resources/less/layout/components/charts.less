@@ -1,31 +1,75 @@
 svg.chart {
-  .grid {
-    .tick {
-      opacity: 0.7;
-      &, line {
-        stroke: @gray-light;
-      }
+    .grid {
+        .tick {
+            opacity: 0.7;
+            &, line {
+                stroke: @gray-light;
+            }
+        }
+        path {
+            stroke-width: 1;
+            stroke: @gray-light;
+        }
     }
-    path {
-      stroke-width: 1;
-      stroke: @gray-light;
-    }
-  }
 
-  .axis-label {
-    font-size: @font-size;
-    font-weight: bold;
-  }
+    .axis-label {
+        font-size: @font-size;
+        font-weight: bold;
+    }
 }
 
 .pie-chart {
-  .fa {
-    z-index: 5;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background: #262626;
-    display: block;
-    color: white;
-  }
+    .fa {
+        z-index: 5;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: #262626;
+        display: block;
+        color: white;
+    }
+}
+
+.panel-analytics {
+    .panel-heading {
+        background: transparent;
+        padding: 20px @panel-body-padding * 2;
+    }
+
+    .panel-title {
+        font-weight: bold;
+    }
+
+    .panel-actions {
+        right: @panel-body-padding;
+
+        .btn-link {
+            color: @gray-light;
+
+            &.active {
+                color: @gray-dark;
+                font-weight: bold;
+            }
+        }
+    }
+
+    .chart-legend {
+        .btn-link {
+            font-size: @font-size-small;
+            padding: 0;
+            border: none;
+
+            + .btn-link {
+                margin-left: 10px;
+            }
+        }
+    }
+
+    .panel-body {
+        padding: @panel-body-padding * 2;
+    }
+
+    .table {
+        margin-bottom: 0;
+    }
 }

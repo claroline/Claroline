@@ -54,7 +54,13 @@ class LatestActionsChart extends Component {
           </nav>
         </div>
 
-        <div className="data-cards-stacked data-cards-striped">
+        <div
+          className="data-cards-stacked data-cards-striped"
+          style={{
+            height: '315px', // FIXME
+            overflowY: 'auto'
+          }}
+        >
           {this.props.data.map(action => (
             <LogCard
               key={action.id}

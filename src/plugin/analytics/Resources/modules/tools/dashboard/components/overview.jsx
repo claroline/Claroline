@@ -1,84 +1,67 @@
-import React from 'react'
+import React, {createElement} from 'react'
 import {PropTypes as T} from 'prop-types'
+import isUndefined from 'lodash/isEmpty'
+import get from 'lodash/get'
 
 import {schemeCategory20c} from 'd3-scale'
 
 import {trans, displayDuration} from '#/main/app/intl'
+import {Await} from '#/main/app/components/await'
 import {ToolPage} from '#/main/core/tool/containers/page'
+import {ContentCounter} from '#/main/app/content/components/counter'
+import {ContentLoader} from '#/main/app/content/components/loader'
 
-import {ActivityChart} from '#/plugin/analytics/charts/activity/containers/chart'
-import {LatestActionsChart} from '#/plugin/analytics/charts/latest-actions/containers/chart'
-import {ResourcesChart} from '#/plugin/analytics/charts/resources/containers/chart'
-import {TopResourcesChart} from '#/plugin/analytics/charts/top-resources/containers/chart'
-import {TopUsersChart} from '#/plugin/analytics/charts/top-users/containers/chart'
-import {UsersChart} from '#/plugin/analytics/charts/users/containers/chart'
+import {getWorkspaceAnalytics} from '#/plugin/analytics/utils'
+import {DashboardResume} from '#/plugin/analytics/tools/dashboard/components/resume'
 
 const DashboardOverview = (props) =>
   <ToolPage
     subtitle={trans('overview', {}, 'analytics')}
   >
     <div className="row">
-      <div className="analytics-card">
-        <span className="fa fa-folder" style={{backgroundColor: schemeCategory20c[1]}} />
+      <ContentCounter
+        icon="fa fa-folder"
+        label={trans('resources')}
+        color={schemeCategory20c[1]}
+        value={props.count.resources}
+      />
 
-        <h1 className="h3">
-          <small>{trans('resources')}</small>
-          {props.count.resources}
-        </h1>
-      </div>
+      <ContentCounter
+        icon="fa fa-user"
+        label={trans('users')}
+        color={schemeCategory20c[5]}
+        value={props.count.users}
+      />
 
-      <div className="analytics-card">
-        <span className="fa fa-user" style={{backgroundColor: schemeCategory20c[5]}} />
-
-        <h1 className="h3">
-          <small>{trans('users')}</small>
-          {props.count.users}
-        </h1>
-      </div>
-
-      <div className="analytics-card">
-        <span className="fa fa-clock" style={{backgroundColor: schemeCategory20c[9]}} />
-
-        <h1 className="h3">
-          <small>{trans('connections')}</small>
-          {props.count.connections.count} {props.count.connections.avgTime ? '('+trans('connection_avg_time', {time: displayDuration(props.count.connections.avgTime)}, 'analytics')+')' : ''}
-        </h1>
-      </div>
+      <ContentCounter
+        icon="fa fa-clock"
+        label={trans('connections')}
+        color={schemeCategory20c[9]}
+        value={props.count.connections.count + (props.count.connections.avgTime ? ' ('+trans('connection_avg_time', {time: displayDuration(props.count.connections.avgTime)}, 'analytics')+')' : '')}
+      />
     </div>
 
-    <div className="row">
-      <div className="col-md-8">
-        <ActivityChart url={['apiv2_workspace_analytics_activity', {workspace: props.workspaceId}]} />
+    <DashboardResume
+      workspace={props.workspace}
+    />
 
-        <div className="row">
-          <div className="col-md-4">
-            <ResourcesChart url={['apiv2_workspace_analytics_resources', {workspace: props.workspaceId}]} />
-          </div>
-
-          <div className="col-md-8">
-            <TopResourcesChart url={['apiv2_workspace_analytics_top_resources', {workspace: props.workspaceId}]} />
-          </div>
-        </div>
-
-        <div className="row">
-          <div className="col-md-4">
-            <UsersChart url={['apiv2_workspace_analytics_users', {workspace: props.workspaceId}]} />
-          </div>
-
-          <div className="col-md-8">
-            <TopUsersChart url={['apiv2_workspace_analytics_top_users', {workspace: props.workspaceId}]} />
-          </div>
-        </div>
-      </div>
-
-      <div className="col-md-4">
-        <LatestActionsChart url={['apiv2_workspace_tool_logs_list', {workspaceId: props.workspaceId}]} />
-      </div>
-    </div>
+    <Await
+      for={getWorkspaceAnalytics(props.workspace).then(apps => apps.filter(app => !isUndefined(get(app, 'components.overview'))))}
+      placeholder={
+        <ContentLoader
+          className="row"
+          size="lg"
+          description={trans('loading', {}, 'analytics')}
+        />
+      }
+      then={(apps) => apps.map((app) => createElement(get(app, 'components.overview')))}
+    />
   </ToolPage>
 
 DashboardOverview.propTypes = {
-  workspaceId: T.string.isRequired,
+  workspace: T.shape({
+    id: T.string.isRequired
+  }).isRequired,
   count: T.shape({
     workspaces: T.number,
     resources: T.number,

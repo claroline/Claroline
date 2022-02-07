@@ -1,24 +1,25 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import get from 'lodash/get'
+import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
 import {Await} from '#/main/app/components/await'
 import {Routes} from '#/main/app/router'
-import {Vertical} from '#/main/app/content/tabs/components/vertical'
 import {ContentLoader} from '#/main/app/content/components/loader'
+import {Vertical} from '#/main/app/content/tabs/components/vertical'
 
-import {getAnalytics} from '#/plugin/analytics/resource/utils'
-import {DashboardActivity} from '#/plugin/analytics/resource/dashboard/containers/activity'
+import {getResourceAnalytics} from '#/plugin/analytics/utils'
 import {DashboardOverview} from '#/plugin/analytics/resource/dashboard/containers/overview'
 
 const DashboardMain = (props) =>
   <Await
-    for={getAnalytics(props.resourceNode)}
+    for={getResourceAnalytics(props.resourceNode).then(apps => apps.filter(app => !isEmpty(get(app, 'components.tab'))))}
     placeholder={
       <ContentLoader
         className="row"
         size="lg"
-        description={trans('loading')}
+        description={trans('loading', {}, 'analytics')}
       />
     }
     then={(apps) => (
@@ -34,16 +35,12 @@ const DashboardMain = (props) =>
                   title: trans('overview', {}, 'analytics'),
                   path: '/',
                   exact: true
-                }, {
-                  icon: 'fa fa-fw fa-chart-line',
-                  title: trans('activity'),
-                  path: '/activity'
                 }
               ].concat(apps.map(app => ({
-                icon: app.icon,
-                title: app.label,
-                path: app.path,
-                exact: true
+                name: app.name,
+                icon: app.meta.icon,
+                title: app.meta.label,
+                path: '/'+app.name
               })))
             }
           />
@@ -58,14 +55,10 @@ const DashboardMain = (props) =>
                   path: '/',
                   component: DashboardOverview,
                   exact: true
-                }, {
-                  path: '/activity',
-                  component: DashboardActivity
                 }
               ].concat(apps.map(app => ({
-                path: app.path,
-                component: app.component,
-                exact: true
+                path: '/'+app.name,
+                component: app.components.tab
               })))
             }
           />
