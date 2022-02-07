@@ -1,6 +1,8 @@
-import {combineReducers} from '#/main/app/store/reducer'
+import {combineReducers, makeReducer} from '#/main/app/store/reducer'
 
-const reducer = combineReducers({})
+const reducer = combineReducers({
+  count: makeReducer(null)
+})
 
 export {
   reducer

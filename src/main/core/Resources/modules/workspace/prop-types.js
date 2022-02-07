@@ -15,6 +15,8 @@ const Workspace = {
     contactEmail: T.string,
     meta: T.shape({
       description: T.string,
+      created: T.string,
+      updated: T.string,
       creator: T.shape(
         User.propTypes
       ),

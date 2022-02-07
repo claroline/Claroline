@@ -3,10 +3,13 @@ import {EvaluationDashboard} from '#/main/evaluation/analytics/resource/evaluati
 import {trans} from '#/main/app/intl/translation'
 
 export default () => ({
-  component: EvaluationDashboard,
-  icon: 'fa fa-fw fa-award',
   name: 'evaluation',
-  label: trans('evaluation', {}, 'tools'),
-  path: '/evaluation',
-  displayed: true
+  order: 0,
+  meta: {
+    icon: 'fa fa-fw fa-award',
+    label: trans('evaluation', {}, 'tools')
+  },
+  components: {
+    tab: EvaluationDashboard
+  }
 })

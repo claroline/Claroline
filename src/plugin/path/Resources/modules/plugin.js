@@ -10,6 +10,9 @@ registry.add('InnovaPathBundle', {
   analytics: {
     resource: {
       'path_progression': () => { return import(/* webpackChunkName: "plugin-path-analytics-resource-progression" */ '#/plugin/path/analytics/resource/progression') }
+    },
+    workspace: {
+      'paths': () => { return import(/* webpackChunkName: "plugin-path-analytics-workspace-path" */ '#/plugin/path/analytics/workspace/path') }
     }
   }
 })

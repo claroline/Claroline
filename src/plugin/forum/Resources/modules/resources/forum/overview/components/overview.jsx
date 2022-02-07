@@ -11,7 +11,6 @@ import {actions as listActions} from '#/main/app/content/list/store'
 import {ContentTags} from '#/main/app/content/components/tags'
 
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
-import {ContentHtml} from '#/main/app/content/components/html'
 import {CountGauge} from '#/main/core/layout/gauge/components/count-gauge'
 
 import {Forum as ForumType} from '#/plugin/forum/resources/forum/prop-types'
@@ -27,12 +26,18 @@ const OverviewComponent = props =>
         <section className="user-progression">
           <h3 className="h2">{trans('my_participation', {}, 'forum')}</h3>
           <div className="panel panel-default">
-            <div className="panel-body">
+            <div className="panel-body text-center">
               <CountGauge
+                type="user"
                 value={props.myMessages}
                 displayValue={(value) => number(value, true)}
+                width={140}
+                height={140}
               />
-              <h4 className="h5">{trans('my_messages', {}, 'forum')}</h4>
+
+              <h4 className="user-progression-status h5">
+                {trans('my_messages', {}, 'forum')}
+              </h4>
             </div>
           </div>
         </section>
@@ -43,9 +48,10 @@ const OverviewComponent = props =>
             label={trans('see_subjects', {}, 'forum')}
             type={LINK_BUTTON}
             target={`${props.path}/subjects`}
-            className="btn btn-block"
+            className="btn btn-block btn-emphasis"
             primary={true}
           />
+
           {!props.bannedUser &&
             <Button
               label={trans('create_subject', {}, 'forum')}
@@ -77,15 +83,6 @@ const OverviewComponent = props =>
       </div>
 
       <div className="resource-column col-md-8">
-        <section className="resource-info">
-          <h3 className="h2">{trans('resource_overview_info', {}, 'resource')}</h3>
-          {props.forum.display.description &&
-            <div className="panel panel-default">
-              <ContentHtml className="panel-body">{props.forum.display.description}</ContentHtml>
-            </div>
-          }
-        </section>
-
         <ForumInfo
           forum={props.forum}
         />

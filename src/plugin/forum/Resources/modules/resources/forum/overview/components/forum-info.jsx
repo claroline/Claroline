@@ -1,28 +1,41 @@
 import React from 'react'
 
+import {schemeCategory20c} from 'd3-scale'
+
 import {trans} from '#/main/app/intl/translation'
-import {MetricCard} from '#/main/core/layout/components/metric-card'
+import {ContentCounter} from '#/main/app/content/components/counter'
+import {ContentHtml} from '#/main/app/content/components/html'
 
 const ForumInfo = (props) =>
-  <section className="resource-info row">
-    <div className="col-md-4">
-      <MetricCard
+  <section className="resource-info">
+    <h3 className="h2">{trans('resource_overview_info', {}, 'resource')}</h3>
+
+    {props.forum.display.description &&
+      <div className="panel panel-default">
+        <ContentHtml className="panel-body">{props.forum.display.description}</ContentHtml>
+      </div>
+    }
+
+    <div className="row">
+      <ContentCounter
+        icon="fa fa-user"
+        label={trans('participants')}
+        color={schemeCategory20c[1]}
         value={props.forum.meta.users}
-        cardTitle={trans('participating_users', {}, 'forum')}
       />
-    </div>
 
-    <div className="col-md-4">
-      <MetricCard
+      <ContentCounter
+        icon="fa fa-comments"
+        label={trans('subjects', {}, 'forum')}
+        color={schemeCategory20c[5]}
         value={props.forum.meta.subjects}
-        cardTitle={trans('subjects', {}, 'forum')}
       />
-    </div>
 
-    <div className="col-md-4">
-      <MetricCard
+      <ContentCounter
+        icon="fa fa-comment"
+        label={trans('messages', {}, 'forum')}
+        color={schemeCategory20c[9]}
         value={props.forum.meta.messages}
-        cardTitle={trans('messages', {}, 'forum')}
       />
     </div>
   </section>

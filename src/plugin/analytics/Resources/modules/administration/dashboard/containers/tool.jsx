@@ -1,11 +1,12 @@
 import {connect} from 'react-redux'
 
+import {selectors as toolSelectors} from '#/main/core/tool/store'
+
 import {DashboardTool as DashboardToolComponent} from '#/plugin/analytics/administration/dashboard/components/tool'
-import {selectors} from '#/plugin/analytics/administration/dashboard/store'
 
 const DashboardTool = connect(
   (state) => ({
-    count: selectors.count(state)
+    path: toolSelectors.path(state)
   })
 )(DashboardToolComponent)
 

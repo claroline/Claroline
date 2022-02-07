@@ -1,6 +1,6 @@
 import {reducer} from '#/plugin/analytics/tools/dashboard/store'
 import {DashboardTool} from '#/plugin/analytics/tools/dashboard/containers/tool'
-import {DashboardMenu} from '#/plugin/analytics/tools/dashboard/components/menu'
+import {DashboardMenu} from '#/plugin/analytics/tools/dashboard/containers/menu'
 
 /**
  * Dashboard tool application.

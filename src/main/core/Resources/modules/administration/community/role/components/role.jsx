@@ -7,13 +7,13 @@ import moment from 'moment'
 import {schemeCategory20c} from 'd3-scale'
 
 import {trans} from '#/main/app/intl/translation'
-import {TooltipOverlay} from '#/main/app/overlays/tooltip/components/overlay'
 import {Toolbar} from '#/main/app/action/components/toolbar'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {Checkbox} from '#/main/app/input/components/checkbox'
 import {ContentLoader} from '#/main/app/content/components/loader'
+import {ContentCounter} from '#/main/app/content/components/counter'
 import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 
 import {MODAL_USERS} from '#/main/core/modals/users'
@@ -92,49 +92,33 @@ class RoleInfo extends Component {
             ))}
           />
 
-          <div className="analytics-card">
-            <span className="fa fa-user" style={{backgroundColor: schemeCategory20c[1]}} />
+          <ContentCounter
+            icon="fa fa-user"
+            label={trans('users')}
+            color={schemeCategory20c[1]}
+            value={!this.state.loaded ? '?' : this.state.count.users}
+            help={trans('role_analytics_users_help', {}, 'user')}
+          />
 
-            <h1 className="h3">
-              <small>
-                {trans('users')}
-                <TooltipOverlay id="help-users" tip={trans('role_analytics_users_help', {}, 'user')}>
-                  <span className="fa fa-fw fa-info-circle icon-with-text-left" />
-                </TooltipOverlay>
-              </small>
-              {!this.state.loaded ? '?' : this.state.count.users}
-            </h1>
-          </div>
+          <ContentCounter
+            icon="fa fa-power-off"
+            label={trans('connections')}
+            color={schemeCategory20c[5]}
+            value={!this.state.loaded ?
+              '? ' :
+              this.state.count.connections + ' (' + Math.ceil(this.state.count.connections / ellapsedDays) + ' ' + trans('per_day_short') + ')'}
+            help={trans('role_analytics_connections_help', {}, 'user')}
+          />
 
-          <div className="analytics-card">
-            <span className="fa fa-power-off" style={{backgroundColor: schemeCategory20c[9]}} />
-
-            <h1 className="h3">
-              <small>
-                {trans('connections')}
-                <TooltipOverlay id="help-users" tip={trans('role_analytics_connections_help', {}, 'user')}>
-                  <span className="fa fa-fw fa-info-circle icon-with-text-left" />
-                </TooltipOverlay>
-              </small>
-              {!this.state.loaded ? '? ' : this.state.count.connections + ' '}
-              ({!this.state.loaded ? '?' : Math.ceil(this.state.count.connections / ellapsedDays)} {trans('per_day_short')})
-            </h1>
-          </div>
-
-          <div className="analytics-card">
-            <span className="fa fa-history" style={{backgroundColor: schemeCategory20c[5]}} />
-
-            <h1 className="h3">
-              <small>
-                {trans('actions')}
-                <TooltipOverlay id="help-users" tip={trans('role_analytics_actions_help', {}, 'user')}>
-                  <span className="fa fa-fw fa-info-circle icon-with-text-left" />
-                </TooltipOverlay>
-              </small>
-              {!this.state.loaded ? '? ' : this.state.count.actions + ' '}
-              ({!this.state.loaded ? '?' : Math.ceil(this.state.count.actions / ellapsedDays)} {trans('per_day_short')})
-            </h1>
-          </div>
+          <ContentCounter
+            icon="fa fa-history"
+            label={trans('actions')}
+            color={schemeCategory20c[9]}
+            value={!this.state.loaded ?
+              '? ' :
+              this.state.count.actions + ' (' + Math.ceil(this.state.count.actions / ellapsedDays) + ' ' + trans('per_day_short') + ')'}
+            help={trans('role_analytics_actions_help', {}, 'user')}
+          />
         </div>
       </Fragment>
     )
