@@ -4,8 +4,8 @@ import {flattenTabs, getTabTitle} from '#/plugin/home/tools/home/utils'
 import {selectors as homeSelectors} from '#/plugin/home/tools/home/store/selectors'
 
 const tabs = (state) => {
-  return [].concat(homeSelectors.store(state).tabs)
-    .filter(tab => !tab.restrictions || !tab.restrictions.hidden)
+  return []
+    .concat(homeSelectors.store(state).tabs)
     .sort((a,b) => a.position - b.position)
 }
 
