@@ -22,6 +22,7 @@ const PlayerMenu = (props) => {
       activeStyle: {
         borderColor: get(tab, 'display.color')
       },
+      displayed: !tab.restrictions || !tab.restrictions.hidden,
       children: tab.children ? tab.children.map(getTabSummary) : [],
       onClick: (e) => {
         props.autoClose(e)

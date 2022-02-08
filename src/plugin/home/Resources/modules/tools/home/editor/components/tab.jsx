@@ -77,6 +77,7 @@ class EditorTab extends Component {
         tabs={this.props.tabs}
         currentTab={this.props.currentTab}
         title={this.props.currentTabTitle}
+        showHidden={true}
         actions={[
           {
             name: 'add',
