@@ -35,6 +35,13 @@ const SessionUsers = (props) =>
           label: trans('registration_date', {}, 'cursus'),
           options: {time: true},
           displayed: true
+        }, {
+          name: 'userDisabled',
+          label: trans('user_disabled'),
+          type: 'boolean',
+          displayable: false,
+          sortable: false,
+          filterable: true
         }
       ]}
       actions={props.actions}
