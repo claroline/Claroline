@@ -3,6 +3,5 @@
   "show-participants": "Voir les participants",
   "export-connections": "Exporter les temps de connexion (.csv)",
   "export-actions": "Exporter les actions (.csv)",
-  "export-user-actions": "Exporter les actions par utilisateurs (.csv)",
-  "export-progression": "Exporter la progression des utilisateurs (.csv)"
+  "export-user-actions": "Exporter les actions par utilisateurs (.csv)"
 }

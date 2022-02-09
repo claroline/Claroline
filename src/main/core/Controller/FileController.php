@@ -20,6 +20,7 @@ use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Library\Utilities\FileUtilities;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RoleManager;
@@ -31,6 +32,7 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -254,8 +256,14 @@ class FileController
             return new JsonResponse(['File not found'], 500);
         }
 
+        $extension = pathinfo($path, PATHINFO_EXTENSION);
+
         $response = new BinaryFileResponse($path);
         $response->headers->set('Content-Type', $resourceNode->getMimeType());
+        $response->setContentDisposition(
+            ResponseHeaderBag::DISPOSITION_INLINE,
+            TextNormalizer::toKey($resourceNode->getName()).'.'.$extension
+        );
 
         return $response;
     }

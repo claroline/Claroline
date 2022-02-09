@@ -46,7 +46,7 @@ const UserList = {
       name: 'restrictions.disabled',
       alias: 'isDisabled',
       type: 'boolean',
-      label: trans('user_disabled')
+      label: trans('disabled')
     }, {
       name: 'meta.created',
       type: 'date',
@@ -54,10 +54,10 @@ const UserList = {
       label: trans('creation_date'),
       filterable: false
     }, {
-      name: 'meta.lastLogin',
+      name: 'meta.lastActivity',
       type: 'date',
-      alias: 'lastLogin',
-      label: trans('last_login'),
+      alias: 'lastActivity',
+      label: trans('last_activity'),
       displayed: true,
       filterable: false,
       options: {

@@ -30,6 +30,7 @@ class PlatformDefaults implements ParameterProviderInterface
                 //   - active        : enable or disable a single idp
                 //   - label         : the label to display when displaying the login button
                 //   - email_domains : an array of email domains. If specified, only users with matching emails will be registered to idp groups and organization
+                //   - conditions    : an array of expected saml response values (key is the field name). If specified, only users who match those values will be registered to groups and organization
                 //   - organization  : An organization UUID to register users created from this idp
                 //   - groups        : A list of groups UUID to register users created from this idp
                 //   - mapping       : an associative array to know which saml props should be used for email, firstName and lastName at creation

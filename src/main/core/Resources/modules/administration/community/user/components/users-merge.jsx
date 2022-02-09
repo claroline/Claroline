@@ -57,8 +57,8 @@ const UserCompare = props =>
                 time: true
               }
             }, {
-              name: 'meta.lastLogin',
-              label: trans('last_login'),
+              name: 'meta.lastActivity',
+              label: trans('last_activity'),
               type: 'date',
               options: {
                 time: true
@@ -69,7 +69,7 @@ const UserCompare = props =>
               type: 'boolean'
             }, {
               name: 'restrictions.disabled',
-              label: trans('user_disabled'),
+              label: trans('disabled'),
               type: 'boolean'
             }
           ]

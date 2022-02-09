@@ -34,7 +34,7 @@ class DisableInactiveUsersHandler implements MessageHandlerInterface
 
     public function __invoke(DisableInactiveUsers $message)
     {
-        $users = $this->om->getRepository(User::class)->findInactiveSince($message->getLastLogin());
+        $users = $this->om->getRepository(User::class)->findInactiveSince($message->getLastActivity());
 
         $this->om->startFlushSuite();
         foreach ($users as $user) {

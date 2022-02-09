@@ -6,8 +6,8 @@ import {DisableInactiveModal as DisableInactiveModalComponent} from '#/main/core
 const DisableInactiveModal = connect(
   null,
   (dispatch) => ({
-    disableInactive(lastLogin) {
-      dispatch(actions.disableInactive(lastLogin))
+    disableInactive(lastActivity) {
+      dispatch(actions.disableInactive(lastActivity))
     }
   })
 )(DisableInactiveModalComponent)

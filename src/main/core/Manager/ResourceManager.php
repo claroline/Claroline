@@ -243,7 +243,10 @@ class ResourceManager implements LoggerAwareInterface
             $mimeTypeGuesser = new MimeTypes();
 
             if (!$hasExtension) {
-                $extension = $mimeTypeGuesser->getExtensions($nodes[0]->getMimeType())[0];
+                $guessedExtension = $mimeTypeGuesser->getExtensions($nodes[0]->getMimeType());
+                if (!empty($guessedExtension)) {
+                    $extension = $guessedExtension[0];
+                }
             }
 
             $data['name'] = $hasExtension ?

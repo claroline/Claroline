@@ -272,6 +272,23 @@ class EventController extends AbstractCrudController
         $params['hiddenFilters']['event'] = $sessionEvent->getUuid();
         $params['hiddenFilters']['type'] = $type;
 
+        // only list participants of the same organization
+        if (EventUser::LEARNER === $type && !$this->authorization->isGranted('ROLE_ADMIN')) {
+            /** @var User $user */
+            $user = $this->tokenStorage->getToken()->getUser();
+
+            // filter by organizations
+            if ($user instanceof User) {
+                $organizations = $user->getOrganizations();
+            } else {
+                $organizations = $this->om->getRepository(Organization::class)->findBy(['default' => true]);
+            }
+
+            $params['hiddenFilters']['organizations'] = array_map(function (Organization $organization) {
+                return $organization->getUuid();
+            }, $organizations);
+        }
+
         return new JsonResponse(
             $this->finder->search(EventUser::class, $params)
         );

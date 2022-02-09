@@ -118,10 +118,6 @@ services:
     Claroline\CoreBundle\Command\ComputeStorageCommand:
         arguments:
             - '@Claroline\CoreBundle\Manager\FileManager'
-            - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
-            - '@Claroline\AppBundle\API\FinderProvider'
-            - '@Claroline\AppBundle\API\Crud'
-            - '@Claroline\CoreBundle\Listener\Log\LogListener'
         tags:
             - { name: 'console.command', command: 'claroline:storage:compute' }
 

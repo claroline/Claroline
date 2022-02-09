@@ -18,7 +18,7 @@ export default {
         displayed: true
       }, {
         name: 'date',
-        label: trans('date'),
+        label: trans('last_activity'),
         type: 'date',
         options: {time: true},
         displayed: true,
@@ -63,6 +63,13 @@ export default {
         },
         displayed: true,
         filterable: false
+      }, {
+        name: 'userDisabled',
+        label: trans('user_disabled'),
+        type: 'boolean',
+        displayable: false,
+        sortable: false,
+        filterable: true
       }
     ]
   }

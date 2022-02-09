@@ -132,13 +132,8 @@ services:
 
     Claroline\CoreBundle\Manager\FileManager:
         arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '%claroline.param.files_directory%'
-            - '@claroline.manager.resource_manager'
-            - '@Claroline\AppBundle\Event\StrictDispatcher'
-            - '%claroline.param.uploads_directory%'
-            - '@security.token_storage'
-            - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
 
     Claroline\CoreBundle\Manager\EventManager:
         arguments:
@@ -181,6 +176,7 @@ services:
     Claroline\CoreBundle\Manager\Workspace\WorkspaceRestrictionsManager:
         arguments:
             - '@request_stack'
+            - '@security.token_storage'
             - '@security.authorization_checker'
             - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
             - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceUserQueueManager'
@@ -293,7 +289,6 @@ services:
             - '@security.authorization_checker'
             - '@Claroline\AppBundle\Event\StrictDispatcher'
             - '@claroline.manager.resource_manager'
-            - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
 
     Claroline\CoreBundle\Manager\Resource\MaskManager:
         arguments:

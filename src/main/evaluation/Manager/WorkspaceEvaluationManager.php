@@ -13,6 +13,7 @@ namespace Claroline\EvaluationBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Log\Connection\LogConnectWorkspace;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Evaluation;
@@ -28,17 +29,13 @@ class WorkspaceEvaluationManager extends AbstractEvaluationManager
     private $eventDispatcher;
     /** @var ObjectManager */
     private $om;
-    /** @var WorkspaceRequirementsManager */
-    private $requirementsManager;
 
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
-        ObjectManager $om,
-        WorkspaceRequirementsManager $requirementsManager
+        ObjectManager $om
     ) {
         $this->eventDispatcher = $eventDispatcher;
         $this->om = $om;
-        $this->requirementsManager = $requirementsManager;
     }
 
     /**
@@ -79,13 +76,26 @@ class WorkspaceEvaluationManager extends AbstractEvaluationManager
     }
 
     /**
+     * @return ResourceNode[]
+     */
+    public function getRequiredResources(Workspace $workspace): array
+    {
+        return $this->om->getRepository(ResourceNode::class)->findBy([
+            'required' => true,
+            'published' => true,
+            'active' => true,
+            'workspace' => $workspace,
+        ]);
+    }
+
+    /**
      * Compute evaluation status and progression of an user in a workspace.
      */
     public function computeEvaluation(Workspace $workspace, User $user, ResourceUserEvaluation $currentRue = null): Evaluation
     {
         $evaluation = $this->getUserEvaluation($workspace, $user);
 
-        $resources = $this->requirementsManager->getRequiredResources($workspace, $user);
+        $resources = $this->getRequiredResources($workspace);
         if (empty($resources)) {
             // nothing to do if there is no required resources in the workspace
             return $evaluation;

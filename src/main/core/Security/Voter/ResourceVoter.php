@@ -24,7 +24,7 @@ use Claroline\CoreBundle\Security\Collection\ResourceCollection;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * This voter is involved in access decisions for AbstractResource instances.

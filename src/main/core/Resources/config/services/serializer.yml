@@ -54,13 +54,6 @@ services:
         arguments:
             - '@Claroline\CoreBundle\API\Serializer\User\RoleSerializer'
 
-    Claroline\CoreBundle\API\Serializer\Workspace\RequirementsSerializer:
-        tags: [claroline.serializer]
-        arguments:
-            - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
-            - '@Claroline\CoreBundle\API\Serializer\User\RoleSerializer'
-            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
-
     Claroline\CoreBundle\API\Serializer\Workspace\PendingRegistrationSerializer:
         tags: [claroline.serializer]
         arguments:
@@ -255,6 +248,7 @@ services:
             - '@Claroline\AppBundle\Manager\PlatformManager'
             - '@Claroline\CoreBundle\Manager\VersionManager'
             - '@Claroline\CoreBundle\Manager\PluginManager'
+            - '@Claroline\CoreBundle\Manager\UserManager'
             - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceTypeSerializer'
 
     Claroline\CoreBundle\API\Serializer\Log\LogSerializer:

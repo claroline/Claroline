@@ -4,12 +4,12 @@ namespace Claroline\AnalyticsBundle\Controller\Administration;
 
 use Claroline\AnalyticsBundle\Manager\AnalyticsManager;
 use Claroline\AppBundle\API\FinderProvider;
-use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\AbstractSecurityController;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Claroline\CoreBundle\Manager\EventManager;
+use Claroline\CoreBundle\Security\PlatformRoles;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -29,25 +29,16 @@ class DashboardController extends AbstractSecurityController
     /** @var EventManager */
     private $eventManager;
 
-    /** @var User */
-    private $loggedUser;
-
-    /** @var SerializerProvider */
-    private $serializer;
-
     /** @var FinderProvider */
     private $finder;
 
     public function __construct(
         TokenStorageInterface $tokenStorage,
-        SerializerProvider $serializer,
         FinderProvider $finder,
         AnalyticsManager $analyticsManager,
         EventManager $eventManager
     ) {
         $this->tokenStorage = $tokenStorage;
-        $this->loggedUser = $tokenStorage->getToken()->getUser();
-        $this->serializer = $serializer;
         $this->finder = $finder;
         $this->analyticsManager = $analyticsManager;
         $this->eventManager = $eventManager;
@@ -203,8 +194,8 @@ class DashboardController extends AbstractSecurityController
 
     private function getLoggedUserOrganizations()
     {
-        if (!$this->loggedUser->hasRole('ROLE_ADMIN')) {
-            return $this->loggedUser->getAdministratedOrganizations();
+        if (!in_array(PlatformRoles::ADMIN, $this->tokenStorage->getToken()->getRoleNames())) {
+            return $this->tokenStorage->getToken()->getUser()->getAdministratedOrganizations();
         }
 
         return null;

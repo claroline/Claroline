@@ -16,11 +16,13 @@ use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Creator;
 use Claroline\AppBundle\Entity\Meta\Description;
 use Claroline\AppBundle\Entity\Meta\Poster;
+use Claroline\AppBundle\Entity\Meta\Published;
 use Claroline\AppBundle\Entity\Meta\Thumbnail;
 use Claroline\AppBundle\Entity\Restriction\AccessibleFrom;
 use Claroline\AppBundle\Entity\Restriction\AccessibleUntil;
 use Claroline\AppBundle\Entity\Restriction\Hidden;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\EvaluationBundle\Entity\Evaluated;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Event\PreFlushEventArgs;
 use Doctrine\ORM\Mapping as ORM;
@@ -44,10 +46,13 @@ class ResourceNode
     use Poster;
     use Description;
     use Creator;
+    use Published;
     // restrictions
     use Hidden;
     use AccessibleFrom;
     use AccessibleUntil;
+    // evaluation parameters
+    use Evaluated;
     const PATH_SEPARATOR = '/';
     const PATH_OLDSEPARATOR = '`';
 
@@ -194,13 +199,6 @@ class ResourceNode
      * @var string
      */
     private $pathForCreationLog = '';
-
-    /**
-     * @var bool
-     *
-     * @ORM\Column(name="published", type="boolean", options={"default": 1})
-     */
-    protected $published = true;
 
     /**
      * @var ArrayCollection|\Claroline\CoreBundle\Entity\Log\Log[]
@@ -617,26 +615,6 @@ class ResourceNode
         if (!$this->children->contains($resourceNode)) {
             $this->children->add($resourceNode);
         }
-    }
-
-    /**
-     * Returns whether the resource is published.
-     *
-     * @return bool
-     */
-    public function isPublished()
-    {
-        return $this->published;
-    }
-
-    /**
-     * Sets the resource published state.
-     *
-     * @param $published
-     */
-    public function setPublished($published)
-    {
-        $this->published = $published;
     }
 
     /**

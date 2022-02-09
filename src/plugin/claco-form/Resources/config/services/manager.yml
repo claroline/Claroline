@@ -14,5 +14,13 @@ services:
             - '@security.token_storage'
             - '@translator'
             - '@messenger.default_bus'
+            - '@Claroline\ClacoFormBundle\Manager\CategoryManager'
         calls:
             - setLogger: [ '@logger' ]
+
+    Claroline\ClacoFormBundle\Manager\CategoryManager:
+        arguments:
+            - '@messenger.default_bus'
+            - '@router'
+            - '@translator'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'

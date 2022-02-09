@@ -270,7 +270,6 @@ plugin:
           is_anonymous_excluded: true
           tool_rights:
               - name: create_user
-              - name: show_dashboard
 
         - name: locations
           class: map-marker-alt

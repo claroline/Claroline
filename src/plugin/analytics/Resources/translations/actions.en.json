@@ -3,6 +3,5 @@
   "show-participants": "Show participants",
   "export-connections": "Export connection times (.csv)",
   "export-actions": "Export actions (.csv)",
-  "export-user-actions": "Export user actions (.csv)",
-  "export-progression": "Export progression of users (.csv)"
+  "export-user-actions": "Export user actions (.csv)"
 }

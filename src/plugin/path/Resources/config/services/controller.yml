@@ -16,4 +16,3 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@claroline.manager.tool_manager'
-            - '@Innova\PathBundle\Manager\UserProgressionManager'

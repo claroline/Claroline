@@ -36,7 +36,7 @@ class SecurityLogController extends AbstractSecurityController
      */
     public function listAction(Request $request): JsonResponse
     {
-        $this->canOpenAdminTool('dashboard');
+        $this->canOpenAdminTool('logs');
 
         return new JsonResponse(
             $this->finderProvider->search(SecurityLog::class, $request->query->all())

@@ -106,11 +106,6 @@ const accessErrors = createSelector(
   (store) => !store.accessErrors.dismissed && !isEmpty(store.accessErrors.details) ? store.accessErrors.details : {}
 )
 
-const serverErrors = createSelector(
-  [store],
-  (store) => !isEmpty(store.serverErrors) ? store.serverErrors : []
-)
-
 export const selectors = {
   STORE_NAME,
   root,
@@ -125,6 +120,5 @@ export const selectors = {
   userShortcuts,
   userEvaluation,
   defaultOpening,
-  accessErrors,
-  serverErrors
+  accessErrors
 }

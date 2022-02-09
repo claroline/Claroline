@@ -13,9 +13,6 @@ registry.add('ClarolineAnalyticsBundle', {
     resource: {
       // all resources
       'dashboard': () => { return import(/* webpackChunkName: "analytics-action-resource-dashboard" */ '#/plugin/analytics/resource/actions/dashboard') }
-    },
-    user: {
-      'dashboard': () => { return import(/* webpackChunkName: "analytics-action-user-dashboard" */ '#/plugin/analytics/user/actions/dashboard') }
     }
   },
 
@@ -31,12 +28,5 @@ registry.add('ClarolineAnalyticsBundle', {
    */
   administration: {
     'dashboard': () => { return import(/* webpackChunkName: "analytics-admin-dashboard" */ '#/plugin/analytics/administration/dashboard') }
-  },
-
-  analytics: {
-    resource: {
-      'connections' : () => { return import(/* webpackChunkName: "analytics-resource-connections" */  '#/plugin/analytics/analytics/resource/connections') },
-      'requirements': () => { return import(/* webpackChunkName: "analytics-resource-requirements" */ '#/plugin/analytics/analytics/resource/requirements') }
-    }
   }
 })

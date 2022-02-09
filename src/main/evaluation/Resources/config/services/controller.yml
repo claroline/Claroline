@@ -6,18 +6,18 @@ services:
         parent: Claroline\AppBundle\Controller\AbstractSecurityController
         public: true
         arguments:
+            - '@security.token_storage'
             - '@security.authorization_checker'
+            - '@translator'
+            - '@message_bus'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\Crud'
             - '@Claroline\AppBundle\API\FinderProvider'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\EvaluationBundle\Manager\WorkspaceEvaluationManager'
-            - '@Claroline\EvaluationBundle\Manager\WorkspaceRequirementsManager'
 
-    Claroline\EvaluationBundle\Controller\WorkspaceRequirementsController:
+    Claroline\EvaluationBundle\Controller\ResourceUserEvaluationController:
         arguments:
             - '@security.authorization_checker'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@security.token_storage'
             - '@Claroline\AppBundle\API\FinderProvider'
-            - '@Claroline\AppBundle\API\SerializerProvider'
-            - '@Claroline\EvaluationBundle\Manager\WorkspaceRequirementsManager'

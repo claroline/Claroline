@@ -68,6 +68,15 @@ actions.deleteCategories = (categories) => ({
   }
 })
 
+actions.assignCategory = (category) => ({
+  [API_REQUEST]: {
+    url: ['apiv2_clacoform_category_assign', {id: category.id}],
+    request: {
+      method: 'PUT'
+    }
+  }
+})
+
 actions.addCategory = makeActionCreator(CATEGORY_ADD, 'category')
 actions.updateCategory = makeActionCreator(CATEGORY_UPDATE, 'category')
 actions.removeCategories = makeActionCreator(CATEGORIES_REMOVE, 'ids')

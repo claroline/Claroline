@@ -524,12 +524,12 @@ class UserRepository extends ServiceEntityRepository implements UserProviderInte
         return $executeQuery ? $query->getResult() : $query;
     }
 
-    public function findInactiveSince($dateLastLogin)
+    public function findInactiveSince($dateLastActivity)
     {
         return $this->createQueryBuilder('u')
-            ->where('(u.lastLogin IS NULL OR u.lastLogin < :dateLastLogin)')
+            ->where('(u.lastActivity IS NULL OR u.lastActivity < :dateLastActivity)')
             ->andWhere('u.isEnabled = true AND u.isRemoved = false')
-            ->setParameter('dateLastLogin', $dateLastLogin)
+            ->setParameter('dateLastActivity', $dateLastActivity)
             ->getQuery()
             ->getResult();
     }

@@ -41,12 +41,6 @@ const DashboardMenu = (props) =>
           icon: 'fa fa-fw fa-users',
           label: trans('community'),
           target: props.path + '/community'
-        }, {
-          name: 'workspaces',
-          type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-folder',
-          label: trans('workspaces'),
-          target: props.path + '/workspaces'
         }
       ]}
       onClick={props.autoClose}

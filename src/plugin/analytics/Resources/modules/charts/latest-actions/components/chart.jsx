@@ -5,7 +5,7 @@ import {trans} from '#/main/app/intl/translation'
 import {MenuButton} from '#/main/app/buttons/menu'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 
-import {LogCard} from '#/main/core/layout/logs/components/card'
+import {LogCard} from '#/main/log/components/card'
 
 class LatestActionsChart extends Component {
   componentDidMount() {
@@ -44,11 +44,6 @@ class LatestActionsChart extends Component {
                     label: trans('analytics_connections'),
                     callback: () => this.props.changeFilter('user-login', this.props.url),
                     active: 'analytics_connections' === current
-                  }, {
-                    type: CALLBACK_BUTTON,
-                    label: 'Evaluations',
-                    callback: () => true,
-                    displayed: false // TODO
                   }
                 ]
               }}

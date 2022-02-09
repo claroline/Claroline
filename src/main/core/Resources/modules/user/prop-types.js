@@ -14,7 +14,7 @@ const User = {
     }),
     meta: T.shape({
       created: T.string,
-      lastLogin: T.string,
+      lastActivity: T.string,
       description: T.string,
       personalWorkspace: T.bool
     }),

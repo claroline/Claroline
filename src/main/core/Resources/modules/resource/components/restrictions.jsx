@@ -1,4 +1,4 @@
-import React, {Component, Fragment}from 'react'
+import React, {Component}from 'react'
 import {PropTypes as T} from 'prop-types'
 import isUndefined from 'lodash/isUndefined'
 
@@ -6,6 +6,7 @@ import {trans, displayDate} from '#/main/app/intl'
 import {Button} from '#/main/app/action'
 import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {PasswordInput} from '#/main/app/data/types/password/components/input'
+import {FormGroup} from '#/main/app/content/form/components/group'
 import {ContentHelp} from '#/main/app/content/components/help'
 import {ContentRestriction} from '#/main/app/content/components/restriction'
 import {MODAL_LOGIN} from '#/main/app/modals/login'
@@ -110,12 +111,18 @@ class ResourceRestrictions extends Component {
             }}
           >
             {this.props.errors.locked && !(this.props.errors.noRights || this.props.errors.notPublished || this.props.errors.deleted || this.props.errors.notStarted || this.props.errors.ended) &&
-              <Fragment>
-                <PasswordInput
+              <div style={{marginTop: 20}}>
+                <FormGroup
                   id="access-code"
-                  value={this.state.codeAccess}
-                  onChange={this.updateCodeAccess}
-                />
+                  label={trans('access_code')}
+                  hideLabel={true}
+                >
+                  <PasswordInput
+                    id="access-code"
+                    value={this.state.codeAccess}
+                    onChange={this.updateCodeAccess}
+                  />
+                </FormGroup>
 
                 <Button
                   className="btn btn-block btn-emphasis"
@@ -126,7 +133,7 @@ class ResourceRestrictions extends Component {
                   callback={this.submitCodeAccess}
                   primary={true}
                 />
-              </Fragment>
+              </div>
             }
           </ContentRestriction>
         }

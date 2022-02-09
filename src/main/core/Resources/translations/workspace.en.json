@@ -38,6 +38,7 @@
     "authorized_ip": "You are using an authorized work station.",
     "authorized_ip_required": "Access must be done from an authorized work station.",
     "can_access": "You are registered to this workspace.",
+    "anonymous_can_access": "The workspace is public.",
     "cannot_access": "You are not registered to this workspace.",
     "code_required": "Access requires a code.",
     "contact_manager": "Please contact a manager %manager_email% if you think you should have access to this workspace.",
@@ -45,8 +46,10 @@
     "enter_code": "Please enter the code you have received to access the workspace.",
     "manager_info": "As manager you can always access the workspace even if the access conditions are not met.",
     "manager_rights_access": "Your rights as manager allow you to access to all the features of the workspace.",
-    "not_started": "The workspace is not available yet.",
     "rights_access": "Your rights allow you to access some features of the workspace.",
+    "anonymous_rights_access": "The workspace is open to users who are not logged in.",
+    "not_started": "The workspace is not available yet.",
+
     "self_register": "Register to workspace",
     "self_registration": "Please register to access the workspace.",
     "unlocked": "You have unlocked the workspace.",
@@ -57,5 +60,7 @@
     "wait_validation": "Please wait for a manager to validate your request to access the workspace.",
     "archived": "The workspace is archived.",
     "archived_help": "You can no longer access the content of archived workspaces."
-  }
+  },
+  "forbidden": "Access to the workspace not possible",
+  "forbidden_desc": "You do not have access to this workspace. Please contact an administrator to give you the necessary rights."
 }

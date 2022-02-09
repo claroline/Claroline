@@ -44,6 +44,7 @@
     "resources_delete_message": "{1} Êtes-vous sûr de vouloir supprimer cette ressource ? | [2,Inf[ Êtes-vous sûr de vouloir supprimer ces %count% ressources ?",
     "all_resources": "Toutes les ressources",
     "all_resources_help": "Vous trouverez ci-dessous toutes les ressources de l'espace auxquelles vous avez participé.",
+    "required_resource": "Ressource requise",
     "required_resources": "Ressources requises",
     "required_resources_help": "Vous trouverez ci-dessous toutes les ressources à faire pour progresser dans l'espace d'activités.",
     "not_found": "Ressource non trouvée",
@@ -94,5 +95,7 @@
         "location_authorized": "Vous utilisez l'un des postes de travail authorisé.",
         "location_unauthorized": "L'accès doit s'effectuer depuis un poste de travail authorisé.",
         "location_unauthorized_help": "Veuillez utiliser l'un des postes de travail authorisés afin d'accéder à la ressource."
-    }
+    },
+    "forbidden": "Accès à la ressource impossible",
+    "forbidden_desc": "Vous n'avez pas accès à cette ressource. Veuillez contacter un administrateur afin qu'il vous donne les droits nécessaires."
 }

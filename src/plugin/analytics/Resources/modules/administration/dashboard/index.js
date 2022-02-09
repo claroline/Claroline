@@ -1,4 +1,4 @@
-import {reducer} from '#/plugin/analytics/administration/dashboard/store/reducer'
+import {reducer} from '#/plugin/analytics/administration/dashboard/store'
 import {DashboardTool} from '#/plugin/analytics/administration/dashboard/containers/tool'
 import {DashboardMenu} from '#/plugin/analytics/administration/dashboard/components/menu'
 

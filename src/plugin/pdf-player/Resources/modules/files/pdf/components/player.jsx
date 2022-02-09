@@ -1,57 +1,92 @@
 import React, {Component, Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
-import {PDFJS} from 'pdfjs-dist/build/pdf.combined'
 
+// load from legacy otherwise webpack breaks
+import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf'
+import PDFJSWorker from 'pdfjs-dist/legacy/build/pdf.worker.entry'
+import {EventBus, PDFLinkService, PDFSinglePageViewer} from 'pdfjs-dist/legacy/web/pdf_viewer'
+pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJSWorker
+
+import {url} from '#/main/app/api'
 import {trans, transChoice} from '#/main/app/intl/translation'
 import {ContentLoader} from '#/main/app/content/components/loader'
+import {Button} from '#/main/app/action/components/button'
+import {CALLBACK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 
 import {Pdf as PdfTypes} from '#/plugin/pdf-player/files/pdf/prop-types'
 
 class PdfPlayer extends Component {
   constructor(props) {
     super(props)
+
     this.state = {
       loaded: false,
       pdf: null,
+      viewer: null,
       page: 1,
       scale: 100,
-      context: null
+      height: null
     }
+
+    this.resize = this.resize.bind(this)
   }
 
   componentDidMount() {
-    PDFJS.disableRange = true
-    PDFJS.disableWorker = true
-    PDFJS.getDocument(this.props.file.url).then((pdf) => {
+    const container = document.getElementById('pdf-' + this.props.file.id)
+
+    const eventBus = new EventBus()
+
+    // enable hyperlinks within PDF files.
+    const pdfLinkService = new PDFLinkService({eventBus})
+
+    // PDFViewer
+    const pdfSinglePageViewer = new PDFSinglePageViewer({
+      container,
+      eventBus,
+      linkService: pdfLinkService
+    })
+    pdfLinkService.setViewer(pdfSinglePageViewer)
+
+    eventBus.on('pagesinit', () => {
+      this.resize(pdfSinglePageViewer)
+      this.renderPage(1)
+    })
+
+    eventBus.on('pagechanging', (event) => this.renderPage(event.pageNumber))
+
+    const loadingTask = pdfjsLib.getDocument({
+      url: this.props.file.url
+    })
+
+    loadingTask.promise.then((pdf) => {
+      pdfSinglePageViewer.setDocument(pdf)
+      pdfLinkService.setDocument(pdf, null)
+
       this.setState({
         loaded: true,
         pdf: pdf,
-        context: document.getElementById('pdf-canvas-' + this.props.file.id).getContext('2d')
-      }, () => this.renderPage())
-    }).catch(() => {})
-  }
-
-  renderPage(updateProgression = true) {
-    this.state.pdf.getPage(this.state.page).then(page => {
-      const viewport = page.getViewport(this.state.scale / 100)
-      const canvas = document.getElementById('pdf-canvas-' + this.props.file.id)
-      canvas.height = viewport.height
-      canvas.width = viewport.width
-
-      // Render PDF page into canvas context
-      const renderContext = {
-        canvasContext: this.state.context,
-        viewport: viewport
-      }
-      page.render(renderContext)
-
-      if (this.props.currentUser && updateProgression) {
-        this.props.updateProgression(this.props.file.id, this.state.page, this.state.pdf.numPages)
-      }
+        viewer: pdfSinglePageViewer
+      })
     })
   }
 
-  changePage(requestPageNum) {
+  resize(pdfViewer) {
+    pdfViewer.currentScaleValue = this.state.scale / 100
+
+    this.setState({
+      height: pdfViewer.viewer.offsetHeight
+    })
+  }
+
+  renderPage(pageNumber) {
+    this.setState({page: parseInt(pageNumber)})
+
+    if (this.props.currentUser) {
+      this.props.updateProgression(this.props.file.id, pageNumber, this.state.pdf.numPages)
+    }
+  }
+
+  changePage(pdfViewer, requestPageNum) {
     let pageNum = requestPageNum
 
     if (!pageNum || 1 >= pageNum) {
@@ -60,20 +95,19 @@ class PdfPlayer extends Component {
       pageNum = this.state.pdf.numPages
     }
 
-    this.setState({page: parseInt(pageNum)}, () => this.renderPage())
+    pdfViewer.currentPageNumber = parseInt(pageNum)
   }
 
   zoom(requestScale) {
     let scale = requestScale
-
     if (1 >= scale) {
       scale = 1
     }
-    this.setState({scale: parseInt(scale)}, () => this.renderPage(false))
+
+    this.setState({scale: parseInt(scale)}, () => this.resize(this.state.viewer))
   }
 
   render() {
-    // NB : canvas is only hidden while loading because we need the DOM node to be present to bind the pdf renderer
     return (
       <Fragment>
         {!this.state.loaded &&
@@ -86,47 +120,57 @@ class PdfPlayer extends Component {
 
         {this.state.loaded &&
           <div className="row">
-            <div className="pdf-player-menu">
+            <div className="pdf-menu">
               <div className="pdf-pages">
-                <button
-                  className="btn btn-link-default"
+                <Button
+                  className="btn btn-link"
+                  type={CALLBACK_BUTTON}
+                  icon="fa fa-fw fa-backward"
+                  label={trans('previous')}
                   disabled={!this.state.page || 1 >= this.state.page}
-                  onClick={() => this.changePage(this.state.page - 1)}
-                >
-                  <span className="fa fa-fw fa-backward"/>
-                </button>
-                <button
-                  className="btn btn-link-default"
+                  callback={() => this.changePage(this.state.viewer, this.state.page - 1)}
+                  tooltip="bottom"
+                />
+
+                <Button
+                  className="btn btn-link"
+                  type={CALLBACK_BUTTON}
+                  icon="fa fa-fw fa-forward"
+                  label={trans('next')}
                   disabled={!this.state.pdf || !this.state.page || this.state.pdf.numPages <= this.state.page}
-                  onClick={() => this.changePage(this.state.page + 1)}
-                >
-                  <span className="fa fa-fw fa-forward"/>
-                </button>
+                  callback={() => this.changePage(this.state.viewer, this.state.page + 1)}
+                  tooltip="bottom"
+                />
 
                 <input
                   type="number"
                   className="form-control input-sm"
                   value={this.state.page}
-                  onChange={(e) => this.changePage(e.currentTarget.value)}
+                  onChange={(e) => this.changePage(this.state.viewer, e.currentTarget.value)}
                 />
                 {transChoice('count_pages', this.state.pdf ? this.state.pdf.numPages : 0, {count: this.state.pdf ? this.state.pdf.numPages : 0}, 'resource')}
               </div>
 
               <div className="pdf-zoom">
-                <button
+                <Button
+                  className="btn btn-link"
+                  type={CALLBACK_BUTTON}
+                  icon="fa fa-fw fa-search-plus"
+                  label={trans('zoom_in')}
+                  callback={() => this.zoom(this.state.scale + 25)}
                   disabled={!this.state.pdf || !this.state.scale}
-                  className="btn btn-link-default"
-                  onClick={() => this.zoom(this.state.scale + 25)}
-                >
-                  <span className="fa fa-fw fa-search-plus"/>
-                </button>
-                <button
-                  className="btn btn-link-default"
+                  tooltip="bottom"
+                />
+
+                <Button
+                  className="btn btn-link"
+                  type={CALLBACK_BUTTON}
+                  icon="fa fa-fw fa-search-minus"
+                  label={trans('zoom_out')}
+                  callback={() => this.zoom(this.state.scale - 25)}
                   disabled={!this.state.pdf || !this.state.scale || 1 >= this.state.scale}
-                  onClick={() => this.zoom(this.state.scale - 25)}
-                >
-                  <span className="fa fa-fw fa-search-minus"/>
-                </button>
+                  tooltip="bottom"
+                />
 
                 <input
                   type="number"
@@ -136,13 +180,37 @@ class PdfPlayer extends Component {
                   onChange={(e) => this.zoom(e.currentTarget.value)}
                 />
                 <span className="pdf-zoom-unit">%</span>
+
+                <Button
+                  className="btn btn-link"
+                  type={URL_BUTTON}
+                  icon="fa fa-fw fa-file-download"
+                  label={trans('download', {}, 'actions')}
+                  target={url(['claro_resource_download'], {ids: [this.props.nodeId]})}
+                  disabled={!this.state.pdf}
+                  tooltip="bottom"
+                />
               </div>
             </div>
           </div>
         }
 
-        <div className="pdf-player component-container" style={!this.state.loaded ? {display: 'none'} : {}}>
-          <canvas id={'pdf-canvas-' + this.props.file.id} className="pdf-player-page" />
+        <div
+          className="pdf-container component-container"
+          style={!this.state.loaded ? {display: 'none'} : {height: this.state.height}}
+        >
+          <div
+            id={'pdf-' + this.props.file.id}
+            className="pdf"
+            style={{
+              position: 'absolute',
+              overflow: 'hidden',
+              width: '100%',
+              height: '100%'
+            }}
+          >
+            <div id="viewer" className="pdfViewer" />
+          </div>
         </div>
       </Fragment>
     )
@@ -150,6 +218,7 @@ class PdfPlayer extends Component {
 }
 
 PdfPlayer.propTypes = {
+  nodeId: T.string.isRequired,
   file: T.shape(
     PdfTypes.propTypes
   ).isRequired,

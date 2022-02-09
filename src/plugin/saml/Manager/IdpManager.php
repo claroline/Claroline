@@ -35,29 +35,63 @@ class IdpManager
         return [];
     }
 
-    public function getGroups(string $idpEntityId): array
+    /**
+     * @return Group[]
+     */
+    public function getGroups(string $idpEntityId, string $email, array $attributes): array
     {
-        $config = $this->getConfig($idpEntityId);
-
         $groups = [];
-        if (!empty($config['groups'])) {
-            foreach ($config['groups'] as $groupId) {
-                $group = $this->om->getRepository(Group::class)->findOneBy(['uuid' => $groupId]);
-                if (!empty($group)) {
-                    $groups[] = $group;
+
+        $conditions = $this->getConditions($idpEntityId);
+        if (!empty($conditions)) {
+            foreach ($conditions as $condition) {
+                if (!empty($condition['groups']) && $this->checkCondition($condition, $email, $attributes)) {
+                    foreach ($condition['groups'] as $groupId) {
+                        $group = $this->om->getRepository(Group::class)->findOneBy(['uuid' => $groupId]);
+                        if (!empty($group)) {
+                            $groups[$group->getId()] = $group;
+                        }
+                    }
+
+                    break;
                 }
             }
         }
 
-        return $groups;
+        // no condition met, get the default IDP groups if any
+        $config = $this->getConfig($idpEntityId);
+        if (empty($groups) && !empty($config['groups'])) {
+            foreach ($config['groups'] as $groupId) {
+                $group = $this->om->getRepository(Group::class)->findOneBy(['uuid' => $groupId]);
+                if (!empty($group)) {
+                    $groups[$group->getId()] = $group;
+                }
+            }
+        }
+
+        return array_values($groups);
     }
 
-    public function getOrganization(string $idpEntityId): ?Organization
+    public function getOrganization(string $idpEntityId, string $email, array $attributes): ?Organization
     {
-        $config = $this->getConfig($idpEntityId);
-
         $organization = null;
-        if (!empty($config['organization'])) {
+
+        $conditions = $this->getConditions($idpEntityId);
+        if (!empty($conditions)) {
+            foreach ($conditions as $condition) {
+                if (!empty($condition['organization']) && $this->checkCondition($condition, $email, $attributes)) {
+                    $organization = $this->om->getRepository(Organization::class)->findOneBy([
+                        'uuid' => $condition['organization'],
+                    ]);
+
+                    break;
+                }
+            }
+        }
+
+        // no condition met, get the default IDP organization if any
+        $config = $this->getConfig($idpEntityId);
+        if (empty($organization) && !empty($config['organization'])) {
             $organization = $this->om->getRepository(Organization::class)->findOneBy([
                 'uuid' => $config['organization'],
             ]);
@@ -82,35 +116,51 @@ class IdpManager
         return $mapping;
     }
 
-    public function getEmailDomains(string $idpEntityId): array
+    private function getConditions(string $idpEntityId): array
     {
-        $domains = [];
+        $conditions = [];
 
         $config = $this->getConfig($idpEntityId);
-        if (!empty($config['email_domains'])) {
-            $domains = $config['email_domains'];
+        if (!empty($config['conditions'])) {
+            $conditions = $config['conditions'];
         }
 
-        return $domains;
+        return $conditions;
     }
 
     /**
-     * Check if an email matches one of the domains defined in the IDP.
-     * Only users with matching emails are registered to the IDP groups and organization.
+     * Check if the IDP defines conditions to be met in order to register user to groups and organization.
      */
-    public function checkEmail(string $idpEntityId, string $email): bool
+    private function checkCondition(array $condition, string $email, array $attributes = []): bool
     {
-        $emailDomains = $this->getEmailDomains($idpEntityId);
-        if (empty($emailDomains)) {
-            return true;
-        }
+        // check email domain
+        if (!empty($condition['email_domains'])) {
+            $emailMatch = false;
+            foreach ($condition['email_domains'] as $emailDomain) {
+                if (false !== strpos($email, '@'.$emailDomain)) {
+                    $emailMatch = true;
+                    break;
+                }
+            }
 
-        foreach ($emailDomains as $emailDomain) {
-            if (false !== strpos($email, '@'.$emailDomain)) {
-                return true;
+            if (!$emailMatch) {
+                return false;
             }
         }
 
-        return false;
+        // check attr values
+        if (!empty($condition['fields'])) {
+            foreach ($condition['fields'] as $fieldName => $expectedValue) {
+                if (!isset($attributes[$fieldName])) {
+                    return false;
+                }
+
+                if ((is_array($expectedValue) && !in_array($attributes[$fieldName], $expectedValue)) || $attributes[$fieldName] !== $expectedValue) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 }

@@ -1,4 +1,4 @@
-import React, {Component, Fragment} from 'react'
+import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import isUndefined from 'lodash/isUndefined'
@@ -8,6 +8,7 @@ import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {Button} from '#/main/app/action'
 import {PageFull} from '#/main/app/page/components/full'
 import {PasswordInput} from '#/main/app/data/types/password/components/input'
+import {FormGroup} from '#/main/app/content/form/components/group'
 import {ContentHelp} from '#/main/app/content/components/help'
 import {ContentRestriction} from '#/main/app/content/components/restriction'
 
@@ -60,11 +61,13 @@ class WorkspaceRestrictions extends Component {
               success={{
                 title: classes({
                   [trans('restricted_workspace.you_are_manager', {}, 'workspace')]: this.props.managed,
-                  [trans('restricted_workspace.can_access', {}, 'workspace')]: !this.props.managed
+                  [trans('restricted_workspace.can_access', {}, 'workspace')]: !this.props.managed && this.props.authenticated,
+                  [trans('restricted_workspace.anonymous_can_access', {}, 'workspace')]: !this.props.managed && !this.props.authenticated
                 }),
                 help: classes({
                   [trans('restricted_workspace.manager_rights_access', {}, 'workspace')]: this.props.managed,
-                  [trans('restricted_workspace.rights_access', {}, 'workspace')]: !this.props.managed
+                  [trans('restricted_workspace.rights_access', {}, 'workspace')]: !this.props.managed && this.props.authenticated,
+                  [trans('restricted_workspace.anonymous_rights_access', {}, 'workspace')]: !this.props.managed && !this.props.authenticated
                 })
               }}
               fail={{
@@ -109,7 +112,7 @@ class WorkspaceRestrictions extends Component {
                 <Button
                   className="btn btn-block"
                   type={MODAL_BUTTON}
-                  label={trans('self_register', {}, 'actions')}
+                  label={trans('create-account', {}, 'actions')}
                   modal={[MODAL_REGISTRATION, {
                     onRegister: this.props.selfRegister
                   }]}
@@ -199,12 +202,18 @@ class WorkspaceRestrictions extends Component {
               }}
             >
               {this.props.errors.locked &&
-                <Fragment>
-                  <PasswordInput
+                <div style={{marginTop: 20}}>
+                  <FormGroup
                     id="access-code"
-                    value={this.state.codeAccess}
-                    onChange={this.updateCodeAccess}
-                  />
+                    label={trans('access_code')}
+                    hideLabel={true}
+                  >
+                    <PasswordInput
+                      id="access-code"
+                      value={this.state.codeAccess}
+                      onChange={this.updateCodeAccess}
+                    />
+                  </FormGroup>
 
                   <Button
                     className="btn btn-block btn-emphasis"
@@ -215,7 +224,7 @@ class WorkspaceRestrictions extends Component {
                     callback={this.submitCodeAccess}
                     primary={true}
                   />
-                </Fragment>
+                </div>
               }
             </ContentRestriction>
           }

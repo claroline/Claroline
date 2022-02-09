@@ -47,7 +47,7 @@ export default {
         name: 'restrictions.disabled',
         alias: 'isDisabled',
         type: 'boolean',
-        label: trans('user_disabled'),
+        label: trans('disabled'),
         displayed: true
       }, {
         name: 'meta.created',
@@ -55,10 +55,10 @@ export default {
         alias: 'created',
         label: trans('creation_date')
       }, {
-        name: 'meta.lastLogin',
+        name: 'meta.lastActivity',
         type: 'date',
-        alias: 'lastLogin',
-        label: trans('last_login'),
+        alias: 'lastActivity',
+        label: trans('last_activity'),
         displayed: true,
         options: {
           time: true

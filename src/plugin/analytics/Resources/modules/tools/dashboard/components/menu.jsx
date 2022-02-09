@@ -42,12 +42,6 @@ const DashboardMenu = (props) =>
           label: trans('community'),
           target: props.path + '/community'
         }, {
-          name: 'progression',
-          type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-tasks',
-          label: trans('progression'),
-          target: `${props.path}/progression`
-        }, {
           name: 'paths',
           type: LINK_BUTTON,
           icon: 'fa fa-fw fa-wave-square',

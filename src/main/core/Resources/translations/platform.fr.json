@@ -1130,7 +1130,6 @@
     "it": "Italiano",
     "de": "Deutsch",
     "activate_self_registration": "Activer l'auto-inscription",
-    "user_enabled": "Actif",
     "platform": "Plateforme",
     "custom": "Custom",
     "add_organization": "Ajouter une organisation",
@@ -1140,7 +1139,7 @@
     "hide_advanced_options": "Masquer les paramètres avancés",
     "parent": "Parent",
     "managers": "Gestionnaires",
-    "last_login": "Dernière connexion",
+    "last_activity": "Dernière activité",
     "disable_user": "Désactiver l'utilisateur",
     "disable_personal_ws": "Supprimer l'espace personnel",
     "enable_user": "Activer l'utilisateur",
@@ -1152,7 +1151,7 @@
     "hide_password": "Masquer le mot de passe",
     "accept_terms_of_service": "Accepter les conditions d'utilisation",
     "registered_at": "inscrit le",
-    "last_logged_at": "dernière connexion le",
+    "last_activity_at": "dernière activité le",
     "add_organizations": "Ajouter des organisations",
     "optional": "optionnel",
     "field_required": "Rendre le champ obligatoire",
@@ -1204,7 +1203,6 @@
     "now": "Maintenant",
     "task": "Tâche",
     "submit": "Soumettre",
-    "user_disabled": "Inactif",
     "json": "JSON",
     "string": "Chaîne de caractères",
     "integer": "Nombre entier",
@@ -1466,5 +1464,7 @@
     "disable_inactive_users_help": "Tous les utilisateurs qui ne se sont pas connectés à la plateforme depuis la date choisie seront désactivés.",
     "platform_new_available_version": "Une nouvelle version est diponible !",
     "platform_version": "Version %version%",
-    "platform_changelog_display": "Vous voyez la note de version car vous possédez l'un des rôles suivant : %roles%. Ce message est affiché jusqu'au %end_date%."
+    "platform_changelog_display": "Vous voyez la note de version car vous possédez l'un des rôles suivant : %roles%. Ce message est affiché jusqu'au %end_date%.",
+    "user_enabled": "Utilisateur actif",
+    "user_disabled": "Utilisateur inactif"
 }

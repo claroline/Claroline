@@ -5,12 +5,12 @@ import {selectors as baseSelectors} from '#/main/core/administration/community/s
 
 export const actions = {}
 
-actions.disableInactive = (lastLogin) => (dispatch) => dispatch({
+actions.disableInactive = (lastActivity) => (dispatch) => dispatch({
   [API_REQUEST]: {
     url: ['apiv2_user_disable_inactive'],
     request: {
       method: 'PUT',
-      body: JSON.stringify({lastLogin: lastLogin})
+      body: JSON.stringify({lastActivity: lastActivity})
     },
     success: () => dispatch(listActions.invalidateData(baseSelectors.STORE_NAME+'.users.list'))
   }

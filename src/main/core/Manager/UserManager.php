@@ -218,15 +218,11 @@ class UserManager
         $this->om->flush();
     }
 
-    /**
-     * Updates user last login date.
-     */
-    public function updateLastLogin(User $user)
+    public function setInitDate(User $user)
     {
         if (null === $user->getInitDate()) {
             $this->setUserInitDate($user);
         }
-        $user->setLastLogin(new \DateTime());
 
         $this->om->persist($user);
         $this->om->flush();
@@ -263,9 +259,9 @@ class UserManager
         return $user;
     }
 
-    public function disableInactive(\DateTimeInterface $lastLogin)
+    public function disableInactive(\DateTimeInterface $lastActivity)
     {
-        $this->messageBus->dispatch(new DisableInactiveUsers($lastLogin));
+        $this->messageBus->dispatch(new DisableInactiveUsers($lastActivity));
     }
 
     public function getDefaultClarolineAdmin()
@@ -315,16 +311,14 @@ class UserManager
         return count($roles);
     }
 
-    public function hasReachedLimit()
+    public function hasReachedLimit(): bool
     {
         $usersLimitReached = false;
 
-        if ($this->platformConfigHandler->getParameter('restrictions.users') &&
-            $this->platformConfigHandler->getParameter('restrictions.max_users')
-        ) {
+        if ($this->platformConfigHandler->getParameter('restrictions.users')) {
             $usersCount = $this->countEnabledUsers();
 
-            if ($usersCount >= $this->platformConfigHandler->getParameter('restrictions.max_users')) {
+            if ($usersCount >= $this->platformConfigHandler->getParameter('restrictions.users')) {
                 $usersLimitReached = true;
             }
         }

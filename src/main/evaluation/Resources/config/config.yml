@@ -1,4 +1,17 @@
 plugin:
+    tools:
+        - name: evaluation
+          class: award
+          is_displayable_in_workspace: true
+          is_displayable_in_desktop: true
+          is_configurable_in_workspace: true
+          is_configurable_in_desktop: true
+          is_desktop_required: false
+          is_workspace_required: false
+          is_exportable: true
+          is_locked_for_admin: false
+          is_anonymous_excluded: false
+
     data_sources:
         - name: resource_attempts
           type: list

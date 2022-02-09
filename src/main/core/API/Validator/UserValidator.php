@@ -8,13 +8,17 @@ use Claroline\AppBundle\API\ValidatorInterface;
 use Claroline\AppBundle\API\ValidatorProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\User\ProfileSerializer;
+use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Manager\FacetManager;
+use Claroline\CoreBundle\Manager\Organization\OrganizationManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Claroline\CoreBundle\Security\PlatformRoles;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class UserValidator implements ValidatorInterface
@@ -31,6 +35,10 @@ class UserValidator implements ValidatorInterface
     private $manager;
     /** @var WorkspaceManager */
     private $workspaceManager;
+    /** @var OrganizationManager */
+    private $organizationManager;
+    /** @var FacetManager */
+    private $facetManager;
     /** @var ProfileSerializer */
     private $profileSerializer;
 
@@ -43,6 +51,8 @@ class UserValidator implements ValidatorInterface
         PlatformConfigurationHandler $config,
         UserManager $manager,
         WorkspaceManager $workspaceManager,
+        OrganizationManager $organizationManager,
+        FacetManager $facetManager,
         ProfileSerializer $profileSerializer
     ) {
         $this->authorization = $authorization;
@@ -51,6 +61,8 @@ class UserValidator implements ValidatorInterface
         $this->config = $config;
         $this->manager = $manager;
         $this->workspaceManager = $workspaceManager;
+        $this->organizationManager = $organizationManager;
+        $this->facetManager = $facetManager;
         $this->profileSerializer = $profileSerializer;
 
         $this->roleRepo = $om->getRepository(Role::class);
@@ -80,19 +92,15 @@ class UserValidator implements ValidatorInterface
 
         if (ValidatorProvider::CREATE === $mode) {
             // check the platform user limit
-            $restrictions = $this->config->getParameter('restrictions') ?? [];
-            if (isset($restrictions['users']) && isset($restrictions['max_users']) && $restrictions['users'] && $restrictions['max_users']) {
-                $usersCount = $this->manager->countEnabledUsers();
-                if ($usersCount >= $restrictions['max_users']) {
-                    $errors[] = [
-                        'path' => '',
-                        'message' => 'The user limit of the platform has been reached.',
-                    ];
-                }
+            if ($this->manager->hasReachedLimit()) {
+                $errors[] = [
+                    'path' => '',
+                    'message' => 'The user limit of the platform has been reached.',
+                ];
             }
         }
 
-        $errors = array_merge($errors, $this->validateRoles($data));
+        $errors = array_merge($errors, $this->validateRoles($data, $mode));
 
         // validate username format
         $regex = $this->config->getParameter('username_regex');
@@ -132,11 +140,13 @@ class UserValidator implements ValidatorInterface
         // todo validate Facet values
         if (in_array(Options::VALIDATE_FACET, $options)) {
             $facets = $this->profileSerializer->serialize([Options::REGISTRATION]);
+            $allFields = [];
             $required = [];
 
             foreach ($facets as $facet) {
                 foreach ($facet['sections'] as $section) {
                     foreach ($section['fields'] as $field) {
+                        $allFields[] = $field;
                         if ($field['required']) {
                             $required[] = $field;
                         }
@@ -145,7 +155,7 @@ class UserValidator implements ValidatorInterface
             }
 
             foreach ($required as $field) {
-                if (!ArrayUtils::has($data, 'profile.'.$field['id'])) {
+                if ($this->facetManager->isFieldDisplayed($field, $allFields, $data) && !ArrayUtils::has($data, 'profile.'.$field['id'])) {
                     $errors[] = [
                         'path' => 'profile/'.$field['id'],
                         'message' => 'The field '.$field['label'].' is required',
@@ -157,7 +167,7 @@ class UserValidator implements ValidatorInterface
         return $errors;
     }
 
-    private function validateRoles(array $data)
+    private function validateRoles(array $data, string $mode)
     {
         if (!empty($data['roles'])) {
             // get the entities for the roles we try to add to the user
@@ -181,8 +191,12 @@ class UserValidator implements ValidatorInterface
 
             // check if the current user can add those roles to the edited/created user
             // this is a c/c from AbstractRoleSubjectVoter. We should find a way to merge it
-            $nonAuthorized = array_filter($roles, function (Role $role) use ($data) {
-                if (!$this->authorization->isGranted(PlatformRoles::ADMIN)) {
+            $nonAuthorized = array_filter($roles, function (Role $role) use ($data, $mode) {
+                if ($this->authorization->isGranted(PlatformRoles::ADMIN)) {
+                    return false;
+                }
+
+                if ($this->isOrganizationManager($this->tokenStorage->getToken(), $data, $mode)) {
                     return false;
                 }
 
@@ -270,5 +284,41 @@ class UserValidator implements ValidatorInterface
         }
 
         return 0 < $qb->getQuery()->getSingleScalarResult();
+    }
+
+    private function isOrganizationManager(TokenInterface $token, array $userData, string $mode): bool
+    {
+        if (!($token->getUser() instanceof User)) {
+            return false;
+        }
+
+        $userOrganizations = [];
+        if (ValidatorProvider::UPDATE === $mode) {
+            // retrieve current organization of the user
+            $userOrganizations = $this->om->getRepository(Organization::class)->findByMember($userData['id']);
+        }
+
+        if (isset($userData['mainOrganization'])) {
+            $mainOrganization = $this->om->getObject($userData['mainOrganization'], Organization::class, ['id', 'code', 'name', 'email']);
+            if (!empty($mainOrganization)) {
+                $userOrganizations[] = $mainOrganization;
+            }
+        }
+
+        if (empty($userOrganizations)) {
+            // user will go in default organization
+            $userOrganizations[] = $this->organizationManager->getDefault();
+        }
+
+        $adminOrganizations = $token->getUser()->getAdministratedOrganizations();
+        foreach ($adminOrganizations as $adminOrganization) {
+            foreach ($userOrganizations as $userOrganization) {
+                if ($userOrganization === $adminOrganization) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }

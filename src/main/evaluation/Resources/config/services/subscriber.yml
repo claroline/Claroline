@@ -1,6 +1,8 @@
 services:
     Claroline\EvaluationBundle\Subscriber\ResourceEvaluationSubscriber:
         arguments:
+            - '@message_bus'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\EvaluationBundle\Manager\ResourceEvaluationManager'
         tags:
             - { name: kernel.event_subscriber }
@@ -8,14 +10,14 @@ services:
     Claroline\EvaluationBundle\Subscriber\WorkspaceEvaluationSubscriber:
         arguments:
             - '@security.token_storage'
+            - '@message_bus'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\EvaluationBundle\Manager\WorkspaceEvaluationManager'
         tags:
             - { name: kernel.event_subscriber }
 
-    Claroline\EvaluationBundle\Subscriber\WorkspaceRequirementsSubscriber:
-        arguments:
-            - '@message_bus'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
+    # Tools
+    Claroline\EvaluationBundle\Subscriber\Tool\EvaluationToolSubscriber:
         tags:
             - { name: kernel.event_subscriber }
 

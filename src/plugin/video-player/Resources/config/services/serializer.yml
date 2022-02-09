@@ -8,8 +8,3 @@ services:
         tags: [claroline.serializer]
         arguments:
            - '@Claroline\AppBundle\Persistence\ObjectManager'
-           - '@Claroline\CoreBundle\Manager\FileManager'
-
-    claroline.serializer.video.track:
-         alias: Claroline\VideoPlayerBundle\Serializer\TrackSerializer
-         public: true

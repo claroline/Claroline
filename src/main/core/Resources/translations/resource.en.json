@@ -44,6 +44,7 @@
     "resources_delete_message": "{1} Are you sure you want to delete this resource? | [2,Inf[ Are you sure you want to delete these %count% resources?",
     "all_resources": "All resources",
     "all_resources_help": "You will find below all the resources of the workspace in which you have participated.",
+    "required_resource": "Required resource",
     "required_resources": "Required resources",
     "required_resources_help": "You will find below all the resources to do to progress in the workspace.",
     "not_found": "Resource not found",
@@ -93,5 +94,7 @@
         "location_authorized": "You are using one of the authorized workstations.",
         "location_unauthorized": "Access must be from an authorized workstation.",
         "location_unauthorized_help": "Please use one of the authorized workstations to access the resource."
-    }
+    },
+    "forbidden": "Access to the resource not possible",
+    "forbidden_desc": "You do not have access to this resource. Please contact an administrator to give you the necessary rights."
 }

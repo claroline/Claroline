@@ -24,6 +24,16 @@ class EventUserFinder extends AbstractFinder
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
     {
+        $userJoin = false;
+        if (!array_key_exists('userDisabled', $searches) && !array_key_exists('user', $searches)) {
+            // don't show registrations of disabled/deleted users
+            $qb->join('obj.user', 'u');
+            $userJoin = true;
+
+            $qb->andWhere('u.isEnabled = TRUE');
+            $qb->andWhere('u.isRemoved = FALSE');
+        }
+
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
                 case 'event':
@@ -33,8 +43,33 @@ class EventUserFinder extends AbstractFinder
                     break;
 
                 case 'user':
-                    $qb->join('obj.user', 'u');
+                    if (!$userJoin) {
+                        $qb->join('obj.user', 'u');
+                        $userJoin = true;
+                    }
+
                     $qb->andWhere("u.uuid = :{$filterName}");
+                    $qb->setParameter($filterName, $filterValue);
+                    break;
+
+                case 'userDisabled':
+                    if (!$userJoin) {
+                        $qb->join('obj.user', 'u');
+                        $userJoin = true;
+                    }
+                    $qb->andWhere('u.isEnabled = :isEnabled');
+                    $qb->andWhere('u.isRemoved = FALSE');
+                    $qb->setParameter('isEnabled', !$filterValue);
+                    break;
+
+                case 'organizations':
+                    if (!$userJoin) {
+                        $qb->join('obj.user', 'u');
+                        $userJoin = true;
+                    }
+
+                    $qb->join('u.organizations', 'o');
+                    $qb->andWhere("o.uuid IN (:{$filterName})");
                     $qb->setParameter($filterName, $filterValue);
                     break;
 

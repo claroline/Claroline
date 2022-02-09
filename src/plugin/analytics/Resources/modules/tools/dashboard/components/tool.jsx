@@ -7,7 +7,6 @@ import {DashboardOverview} from '#/plugin/analytics/tools/dashboard/components/o
 import {DashboardActivity} from '#/plugin/analytics/tools/dashboard/components/activity'
 import {DashboardContent} from '#/plugin/analytics/tools/dashboard/components/content'
 import {DashboardCommunity} from '#/plugin/analytics/tools/dashboard/components/community'
-import {ProgressionMain} from '#/plugin/analytics/tools/dashboard/progression/containers/main'
 
 import {Paths} from '#/plugin/analytics/tools/dashboard/path/containers/paths'
 
@@ -52,9 +51,6 @@ const DashboardTool = (props) =>
 
           return Community
         }
-      }, {
-        path: '/progression',
-        component: ProgressionMain
       }, {
         path: '/paths',
         component: Paths

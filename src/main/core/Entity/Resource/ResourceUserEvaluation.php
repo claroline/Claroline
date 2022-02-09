@@ -55,15 +55,6 @@ class ResourceUserEvaluation extends AbstractUserEvaluation
      */
     private $nbOpenings = 0;
 
-    /**
-     * Is the evaluation used to compute the workspace evaluation ?
-     *
-     * @ORM\Column(type="boolean")
-     *
-     * @var bool
-     */
-    private $required = false;
-
     public function getResourceNode(): ?ResourceNode
     {
         return $this->resourceNode;
@@ -92,15 +83,5 @@ class ResourceUserEvaluation extends AbstractUserEvaluation
     public function setNbOpenings(int $nbOpenings)
     {
         $this->nbOpenings = $nbOpenings;
-    }
-
-    public function isRequired(): bool
-    {
-        return $this->required;
-    }
-
-    public function setRequired(bool $required)
-    {
-        $this->required = $required;
     }
 }

@@ -289,6 +289,7 @@ class EntryFinder extends AbstractFinder
 
                 case FieldFacet::CHOICE_TYPE:
                 case FieldFacet::CASCADE_TYPE:
+                default:
                     $qb->andWhere("UPPER(fvffv{$parsedFilterName}.value) LIKE :value{$parsedFilterName}");
 
                     // a little of black magic because Doctrine Json type stores unicode seq for special chars
@@ -297,10 +298,6 @@ class EntryFinder extends AbstractFinder
 
                     $qb->setParameter("value{$parsedFilterName}", '%'.addslashes(strtoupper($value)).'%');
                     break;
-
-                default:
-                    $qb->andWhere("UPPER(fvffv{$parsedFilterName}.value) LIKE :value{$parsedFilterName}");
-                    $qb->setParameter("value{$parsedFilterName}", '%'.strtoupper($filterValue).'%');
             }
         }
     }
