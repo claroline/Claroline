@@ -43,6 +43,15 @@ class AssertionFinder extends AbstractFinder
         $userJoin = false;
         $workspaceJoin = false;
 
+        if (!array_key_exists('userDisabled', $searches) && !array_key_exists('user', $searches) && !array_key_exists('recipient', $searches)) {
+            // don't show assertions of disabled/deleted users
+            $qb->join('obj.recipient', 'u');
+            $userJoin = true;
+
+            $qb->andWhere('u.isEnabled = TRUE');
+            $qb->andWhere('u.isRemoved = FALSE');
+        }
+
         /** @var User $user */
         $user = $this->tokenStorage->getToken()->getUser();
 
@@ -71,6 +80,15 @@ class AssertionFinder extends AbstractFinder
                     }
                     $qb->andWhere('u.uuid = :user');
                     $qb->setParameter('user', $filterValue);
+                    break;
+                case 'userDisabled':
+                    if (!$userJoin) {
+                        $qb->join('obj.recipient', 'u');
+                        $userJoin = true;
+                    }
+                    $qb->andWhere('u.isEnabled = :isEnabled');
+                    $qb->andWhere('u.isRemoved = FALSE');
+                    $qb->setParameter('isEnabled', !$filterValue);
                     break;
                 case 'fromGrantableBadges':
                     $grantDecoder = $this->toolMaskDecoderManager->getMaskDecoderByToolAndName(

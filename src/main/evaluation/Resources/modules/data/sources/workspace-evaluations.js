@@ -63,6 +63,13 @@ export default {
         },
         displayed: true,
         filterable: false
+      }, {
+        name: 'userDisabled',
+        label: trans('user_disabled'),
+        type: 'boolean',
+        displayable: false,
+        sortable: false,
+        filterable: true
       }
     ]
   }
