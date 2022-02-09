@@ -4,6 +4,7 @@ import get from 'lodash/get'
 
 import {trans, fileSize} from '#/main/app/intl'
 import {CALLBACK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
+import {Alert} from '#/main/app/alert/components/alert'
 import {Toolbar} from '#/main/app/action'
 import {ContentHtml} from '#/main/app/content/components/html'
 import {route} from '#/main/core/workspace/routing'
@@ -23,6 +24,8 @@ const PlayerOverview = (props) =>
         {fileSize(props.file.size)+trans('bytes_short')}
       </b>
     </div>
+
+    <Alert type="info">{trans('auto_download_help', {}, 'file')}</Alert>
 
     <Toolbar
       className="component-container"
