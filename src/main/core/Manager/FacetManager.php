@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\AppBundle\API\Utils\ArrayUtils;
 use Claroline\CoreBundle\Event\CatalogEvents\FacetEvents;
 use Claroline\CoreBundle\Event\Facet\GetFacetValueEvent;
 use Claroline\CoreBundle\Event\Facet\SetFacetValueEvent;
@@ -41,5 +42,45 @@ class FacetManager
         $this->dispatcher->dispatch($event, FacetEvents::getEventName(FacetEvents::SET_VALUE, $type));
 
         return $event->getFormattedValue();
+    }
+
+    public function isFieldDisplayed(array $fieldDef, array $allFields, array $data): bool
+    {
+        $condition = $fieldDef['display']['condition'];
+
+        if (!empty($condition)) {
+            $parentField = null;
+
+            foreach ($allFields as $searchedField) {
+                if ($searchedField['id'] === $condition['field']) {
+                    $parentField = $searchedField;
+                }
+            }
+
+            if ($parentField) {
+                $parentValue = ArrayUtils::get($data, 'profile.'.$parentField['id']);
+
+                $displayed = false;
+
+                switch ($condition['comparator']) {
+                    case 'equal':
+                        $displayed = $parentValue === $condition['value'];
+                        break;
+                    case 'different':
+                        $displayed = $parentValue !== $condition['value'];
+                        break;
+                    case 'empty':
+                        $displayed = empty($parentValue);
+                        break;
+                    case 'not_empty':
+                        $displayed = !empty($parentValue);
+                        break;
+                }
+
+                return $displayed;
+            }
+        }
+
+        return true;
     }
 }
