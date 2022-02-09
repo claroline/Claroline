@@ -185,14 +185,21 @@ class UpdateRichTextCommand extends Command
         return [
             'Claroline\CoreBundle\Entity\Content' => ['content'],
             'Claroline\CoreBundle\Entity\Resource\Revision' => ['content'],
+            'Claroline\CoreBundle\Entity\Widget\Type\SimpleWidget' => ['content'],
+            // plugins (should not be here)
             'Claroline\AgendaBundle\Entity\Event' => ['description'],
+            'Claroline\AgendaBundle\Entity\Task' => ['description'],
             'Claroline\AnnouncementBundle\Entity\Announcement' => ['content'],
             'Innova\PathBundle\Entity\Path\Path' => ['description'],
             'Innova\PathBundle\Entity\Step' => ['description'],
-            'Claroline\CoreBundle\Entity\Widget\Type\SimpleWidget' => ['content'],
             'UJM\ExoBundle\Entity\Exercise' => ['endMessage'],
             'UJM\ExoBundle\Entity\Item\Item' => ['content'],
             'Claroline\ForumBundle\Entity\Message' => ['content'],
+            'Claroline\CursusBundle\Entity\Course' => ['description'],
+            'Claroline\CursusBundle\Entity\Session' => ['description'],
+            'Claroline\CursusBundle\Entity\Event' => ['description'],
+            'HeVinci\UrlBundle\Entity\Url' => ['url'],
+            'HeVinci\UrlBundle\Entity\Home\UrlTab' => ['url'],
         ];
     }
 }

@@ -139,6 +139,13 @@ const EventPresences = (props) =>
           </span>
         ),
         displayed: true
+      }, {
+        name: 'userDisabled',
+        label: trans('user_disabled'),
+        type: 'boolean',
+        displayable: false,
+        sortable: false,
+        filterable: true
       }
     ]}
     actions={(rows) => [

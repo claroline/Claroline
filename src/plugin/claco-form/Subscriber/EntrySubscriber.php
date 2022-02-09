@@ -9,7 +9,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\ClacoFormBundle\Entity\Entry;
 use Claroline\ClacoFormBundle\Entity\Field;
 use Claroline\ClacoFormBundle\Entity\FieldChoiceCategory;
-use Claroline\ClacoFormBundle\Manager\ClacoFormManager;
+use Claroline\ClacoFormBundle\Manager\CategoryManager;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\User;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -19,8 +19,10 @@ class EntrySubscriber implements EventSubscriberInterface
 {
     /** @var TokenStorageInterface */
     private $tokenStorage;
-    /** @var ClacoFormManager */
-    private $clacoFormManager;
+    /** @var ObjectManager */
+    private $om;
+    /** @var CategoryManager */
+    private $categoryManager;
 
     private $fieldRepo;
     private $fieldChoiceCategoryRepo;
@@ -28,10 +30,11 @@ class EntrySubscriber implements EventSubscriberInterface
     public function __construct(
         TokenStorageInterface $tokenStorage,
         ObjectManager $om,
-        ClacoFormManager $clacoFormManager
+        CategoryManager $categoryManager
     ) {
         $this->tokenStorage = $tokenStorage;
-        $this->clacoFormManager = $clacoFormManager;
+        $this->om = $om;
+        $this->categoryManager = $categoryManager;
 
         $this->fieldRepo = $om->getRepository(Field::class);
         $this->fieldChoiceCategoryRepo = $om->getRepository(FieldChoiceCategory::class);
@@ -98,6 +101,7 @@ class EntrySubscriber implements EventSubscriberInterface
         /** @var Field[] $fields */
         $fields = $this->fieldRepo->findBy(['clacoForm' => $entry->getClacoForm()]);
 
+        $updated = false;
         foreach ($fields as $field) {
             /** @var FieldChoiceCategory[] $fieldsCategories */
             $fieldsCategories = $this->fieldChoiceCategoryRepo->findBy(['field' => $field]);
@@ -115,13 +119,20 @@ class EntrySubscriber implements EventSubscriberInterface
 
                     if ($isCategoryValue) {
                         $entry->addCategory($fieldCategory->getCategory());
+                        $updated = true;
                     } elseif ($entry->hasCategory($fieldCategory->getCategory())) {
                         $entry->removeCategory($fieldCategory->getCategory());
+                        $updated = true;
                     }
                 }
             }
         }
 
-        $this->clacoFormManager->notifyCategoriesManagers($entry, $oldCategories, $entry->getCategories());
+        if ($updated) {
+            $this->om->persist($entry);
+            $this->om->flush();
+        }
+
+        $this->categoryManager->notifyCategoriesManagers($entry, $oldCategories, $entry->getCategories());
     }
 }

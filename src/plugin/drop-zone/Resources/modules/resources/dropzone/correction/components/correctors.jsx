@@ -88,6 +88,13 @@ const Correctors = props =>
             label: trans('unlocked', {}, 'dropzone'),
             displayed: true,
             type: 'boolean'
+          }, {
+            name: 'userDisabled',
+            label: trans('user_disabled'),
+            type: 'boolean',
+            displayable: false,
+            sortable: false,
+            filterable: true
           }
         ]}
         actions={(rows) => [
