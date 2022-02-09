@@ -19,6 +19,7 @@ const PlayerMain = connect(
     mimeType: selectors.mimeType(state),
     file: selectors.file(state),
     resourceNode: resourceSelectors.resourceNode(state),
+    workspace: resourceSelectors.workspace(state),
     canEdit: hasPermission('edit', resourceSelectors.resourceNode(state))
   }),
   (dispatch) => ({

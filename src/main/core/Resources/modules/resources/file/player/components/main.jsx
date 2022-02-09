@@ -12,6 +12,7 @@ import {File as FileTypes} from '#/main/core/files/prop-types'
 
 import {constants} from '#/main/core/resources/file/constants'
 import {ContentComments} from '#/main/app/content/components/comments'
+import {PlayerOverview} from '#/main/core/resources/file/player/components/overview'
 
 // TODO : display a standard player with file info if no custom one
 const PlayerMain = (props) => {
@@ -55,6 +56,17 @@ const PlayerMain = (props) => {
         }
 
         props.download(props.resourceNode)
+
+        console.log(props.mimeType)
+
+        return (
+          <PlayerOverview
+            file={props.file}
+            resourceNode={props.resourceNode}
+            workspace={props.workspace}
+            download={props.download}
+          />
+        )
       }}
     />
   )
@@ -70,6 +82,7 @@ PlayerMain.propTypes = {
   file: T.shape(
     FileTypes.propTypes
   ).isRequired,
+  workspace: T.object,
   createComment: T.func.isRequired,
   editComment: T.func.isRequired,
   deleteComment: T.func.isRequired
