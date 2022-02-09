@@ -33,26 +33,26 @@ class Editor extends Component {
           // get the current workspace for the file upload and resource explorer plugins
           workspace: this.props.workspace
         })
-      )
+      ).then(() => {
+        this.editor = tinymce.get(this.props.id)
+        tinymce.setActive(this.editor)
 
-      this.editor = tinymce.get(this.props.id)
-      tinymce.setActive(this.editor)
+        this.editor.on('mouseup', () => {
+          this.getSelection()
+        })
 
-      this.editor.on('mouseup', () => {
-        this.getSelection()
-      })
+        this.editor.on('change', () => {
+          const tinyContent = this.editor.getContent()
+          const tmp = document.createElement('div')
+          tmp.innerHTML = tinyContent
 
-      this.editor.on('change', () => {
-        const tinyContent = this.editor.getContent()
-        const tmp = document.createElement('div')
-        tmp.innerHTML = tinyContent
+          const offsets = getOffsets(tmp, this.editor.selection.getSel())
+          this.props.onChange(tinyContent, offsets)
+        })
 
-        const offsets = getOffsets(tmp, this.editor.selection.getSel())
-        this.props.onChange(tinyContent, offsets)
-      })
-
-      this.editor.on('click', e => {
-        this.props.onClick(e.target)
+        this.editor.on('click', e => {
+          this.props.onClick(e.target)
+        })
       })
     })
   }

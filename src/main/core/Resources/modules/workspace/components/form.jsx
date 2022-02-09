@@ -392,15 +392,19 @@ const WorkspaceForm = connect(
   (dispatch, ownProps) =>({
     loadModel(model) {
       dispatch(actions.fetchModel(model.id)).then((workspaceModel) => {
-        dispatch(formActions.update(ownProps.name, merge({}, workspaceModel, {
+        const newWorkspace = merge({}, workspaceModel, {
           // reset some values
-          id: null,
           model: model,
           meta: {
             model: false
           },
           roles: [] // should disappear from response once transfer is rewritten
-        })))
+        })
+
+        delete newWorkspace.id
+        delete newWorkspace.autoId
+
+        dispatch(formActions.update(ownProps.name, newWorkspace))
       })
     },
     updateProp(propName, propValue) {
