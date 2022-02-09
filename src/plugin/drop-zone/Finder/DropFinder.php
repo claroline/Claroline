@@ -24,6 +24,16 @@ class DropFinder extends AbstractFinder
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
     {
+        $userJoin = false;
+        if (!array_key_exists('userDisabled', $searches) && !array_key_exists('user', $searches)) {
+            // don't show evaluation of disabled/deleted users
+            $qb->join('obj.user', 'u');
+            $userJoin = true;
+
+            $qb->andWhere('u.isEnabled = TRUE');
+            $qb->andWhere('u.isRemoved = FALSE');
+        }
+
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
                 case 'dropzone':
@@ -32,7 +42,11 @@ class DropFinder extends AbstractFinder
                     $qb->setParameter('dropzoneUuid', $searches['dropzone']);
                     break;
                 case 'user':
-                    $qb->join('obj.user', 'u');
+                    if (!$userJoin) {
+                        $qb->join('obj.user', 'u');
+                        $userJoin = true;
+                    }
+
                     $qb->andWhere("
                         UPPER(u.firstName) LIKE :name
                         OR UPPER(u.lastName) LIKE :name
@@ -41,6 +55,15 @@ class DropFinder extends AbstractFinder
                         OR CONCAT(UPPER(u.lastName), CONCAT(' ', UPPER(u.firstName))) LIKE :name
                     ");
                     $qb->setParameter('name', '%'.strtoupper($filterValue).'%');
+                    break;
+                case 'userDisabled':
+                    if (!$userJoin) {
+                        $qb->join('obj.user', 'u');
+                        $userJoin = true;
+                    }
+                    $qb->andWhere('u.isEnabled = :isEnabled');
+                    $qb->andWhere('u.isRemoved = FALSE');
+                    $qb->setParameter('isEnabled', !$filterValue);
                     break;
                 default:
                     $this->setDefaults($qb, $filterName, $filterValue);
