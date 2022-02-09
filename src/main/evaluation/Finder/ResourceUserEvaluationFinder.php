@@ -31,7 +31,7 @@ class ResourceUserEvaluationFinder extends AbstractFinder
         $userJoin = false;
         $nodeJoin = false;
 
-        if (!array_key_exists('user', $searches)) {
+        if (!array_key_exists('userDisabled', $searches) && !array_key_exists('user', $searches)) {
             // don't show evaluation of disabled/deleted users
             $qb->join('obj.user', 'u');
             $userJoin = true;
@@ -49,6 +49,15 @@ class ResourceUserEvaluationFinder extends AbstractFinder
                     }
                     $qb->andWhere("u.uuid = :{$filterName}");
                     $qb->setParameter($filterName, $filterValue);
+                    break;
+                case 'userDisabled':
+                    if (!$userJoin) {
+                        $qb->join('obj.user', 'u');
+                        $userJoin = true;
+                    }
+                    $qb->andWhere('u.isEnabled = :isEnabled');
+                    $qb->andWhere('u.isRemoved = FALSE');
+                    $qb->setParameter('isEnabled', !$filterValue);
                     break;
                 case 'user.firstName':
                     if (!$userJoin) {

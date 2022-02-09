@@ -92,6 +92,14 @@ const UsersList = props =>
             filters: []
           } : undefined
         }
+      }, {
+        name: 'restrictions.disabled',
+        alias: 'isDisabled',
+        type: 'boolean',
+        label: trans('disabled'),
+        displayable: false,
+        sortable: false,
+        filterable: true
       }
     ]}
     card={UserCard}
