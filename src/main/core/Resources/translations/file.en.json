@@ -1,3 +1,4 @@
 {
-  "loading": "We are loading your file..."
+  "loading": "We are loading your file...",
+  "auto_download_help": "The download of your file has started automatically. If this is not the case, you can click on the \"Download\" button below."
 }
