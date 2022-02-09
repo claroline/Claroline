@@ -15,6 +15,10 @@
     border-bottom: @top-bar-border-bottom;
     background: @top-bar-bg;
     .box-shadow(@top-bar-box-shadow);
+
+    @media print {
+        display: none;
+    }
 }
 
 .app-header {

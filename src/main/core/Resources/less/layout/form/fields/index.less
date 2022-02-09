@@ -39,6 +39,10 @@ input[type=checkbox] {
 .checkbox-inline {
     padding-left: 0; // remove bootstrap default
 
+    @media print {
+        display: none;
+    }
+
     label {
         // Fixes bootstrap that do not remove label font-weight like `.radio` and `.checkbox`
         // And so do not work as expected

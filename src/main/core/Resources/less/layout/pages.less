@@ -65,6 +65,10 @@
     height: 70px;
     margin: 10px floor(@grid-gutter-width / 2);
 
+    @media print {
+        display: none;
+    }
+
     > * {
         max-width: 100%;
         max-height: 100%;
@@ -92,6 +96,10 @@
     margin-bottom: floor(@grid-gutter-width / 2);
     padding: 0 floor(@grid-gutter-width / 2);
     white-space: nowrap;
+
+    @media print {
+        display: none;
+    }
 
     .page-actions-group { // todo remove me (for retro compatibility)
         display: inline-block;
@@ -176,6 +184,14 @@
     flex: 1 0 auto; // only specifying flex property here make the item fill the remaining space in its parent
     padding: 0 floor(@grid-gutter-width / 2);
 }
+
+@media print {
+    // Hide right sidebar in blog article page
+    .icap_blog-page > .page-content > .row > div:nth-child(2) {
+        display: none;
+    }
+}
+
 
 .page-icon {
     .tool-icon,

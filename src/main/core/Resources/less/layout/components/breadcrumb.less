@@ -8,6 +8,9 @@
     .box-shadow(@breadcrumb-box-shadow);
     .border-radius(@breadcrumb-border-radius);
 
+    @media print {
+        display: none;
+    }
 
     > li {
         line-height: @line-height-base;

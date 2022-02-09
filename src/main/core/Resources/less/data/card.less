@@ -21,6 +21,10 @@
     top: -1px; // absorb btn border
     right: -1px; // absorb btn border
 
+    @media print {
+        display: none;
+    }
+
     .btn {
         padding: @data-grid-gutter;
     }
@@ -141,6 +145,10 @@
     line-height: 1;
     bottom: @data-grid-gutter;
     right: @data-grid-gutter;
+
+    @media print {
+        display: none;
+    }
 }
 
 .data-card-flag {

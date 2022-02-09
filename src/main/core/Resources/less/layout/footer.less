@@ -10,6 +10,10 @@
     border-top: 1px solid @footer-border-color;
     .box-shadow(@footer-box-shadow);
 
+    @media print {
+        display: none;
+    }
+
     .app-footer {
         display: flex;
         flex-direction: row;

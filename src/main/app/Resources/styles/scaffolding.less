@@ -9,6 +9,11 @@ body {
 .claroline-app {
     height: 100%;
 
+    @media print {
+        height: auto;
+        overflow-y: auto;
+    }
+
     > body {
         height: 100%;
         overflow-y: hidden;
