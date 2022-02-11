@@ -54,11 +54,11 @@ services:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
         public: true
         arguments:
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
             - '@Claroline\CoreBundle\Manager\Resource\ResourceActionManager'
             - '@Claroline\CoreBundle\Manager\ResourceManager'
             - '@Claroline\CoreBundle\Manager\Resource\RightsManager'
             - '@Claroline\CoreBundle\Manager\LogConnectManager'
-            - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
             - '@security.token_storage'
 
     Claroline\CoreBundle\Controller\APINew\Template\TemplateController:

@@ -118,6 +118,7 @@ services:
         tags:
             - { name: kernel.event_listener, event: resource.directory.load, method: onLoad }
             - { name: kernel.event_listener, event: resource.directory.add, method: onAdd }
+            - { name: kernel.event_listener, event: resource.directory.add_files, method: onAddFiles }
             - { name: kernel.event_listener, event: resource.directory.delete, method: onDelete }
 
     Claroline\CoreBundle\Listener\Resource\Types\FileListener:

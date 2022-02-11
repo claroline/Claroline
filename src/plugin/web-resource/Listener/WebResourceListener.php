@@ -203,8 +203,6 @@ class WebResourceListener
         $fs = new Filesystem();
 
         $file->setSize($resource->getSize());
-        $file->setName($resource->getName());
-        $file->setMimeType($resource->getMimeType());
         $file->setHashName($hash);
 
         $name = $this->filesDir.DIRECTORY_SEPARATOR.'webresource'.
