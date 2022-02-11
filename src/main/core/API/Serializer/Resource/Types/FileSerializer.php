@@ -53,7 +53,7 @@ class FileSerializer
         $ext = pathinfo($file->getHashName(), PATHINFO_EXTENSION);
         if (empty($ext)) {
             $mimeTypeGuesser = new MimeTypes();
-            $guessedExtension = $mimeTypeGuesser->getExtensions($file->getMimeType());
+            $guessedExtension = $mimeTypeGuesser->getExtensions($file->getResourceNode()->getMimeType());
             if (!empty($guessedExtension)) {
                 $ext = $guessedExtension[0];
             }
