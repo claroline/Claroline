@@ -63,7 +63,7 @@
                     -
                 {% endif %}
                 {% if entry.getEditionDate() is not empty %}
-                    {{ 'edition_date'|trans({}, 'clacoform') }} :
+                    {{ 'last_modification'|trans({}, 'platform') }} :
                     {{ entry.getEditionDate()|date('d/m/Y') }}
                     -
                 {% endif %}

@@ -9,7 +9,7 @@ import {ResourcePage} from '#/main/core/resource/containers/page'
 import {ClacoForm as ClacoFormType} from '#/plugin/claco-form/resources/claco-form/prop-types'
 
 import {Overview} from '#/plugin/claco-form/resources/claco-form/overview/components/overview'
-import {Editor} from '#/plugin/claco-form/resources/claco-form/editor/components/editor'
+import {EditorMain} from '#/plugin/claco-form/resources/claco-form/editor/containers/main'
 import {Entries} from '#/plugin/claco-form/resources/claco-form/player/components/entries'
 import {EntryForm} from '#/plugin/claco-form/resources/claco-form/player/components/entry-form'
 import {Entry} from '#/plugin/claco-form/resources/claco-form/player/components/entry'
@@ -89,7 +89,7 @@ const ClacoFormResource = props =>
         component: Overview
       }, {
         path: '/edit',
-        component: Editor,
+        component: EditorMain,
         disabled: !props.canEdit,
         onLeave: () => props.resetForm(),
         onEnter: () => props.resetForm(props.clacoForm)
