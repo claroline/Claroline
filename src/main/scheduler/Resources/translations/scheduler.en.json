@@ -1,0 +1,11 @@
+{
+  "cron_not_configured": "The platform scheduler (CRON) is not configured.",
+  "cron_not_configured_help": "It is not possible to create new tasks and existing tasks cannot be executed automatically. Please contact an administrator to configure the scheduler.",
+  "scheduled_date": "Scheduled date",
+  "execution_date": "Execution",
+  "add_scheduled_task": "Schedule a task",
+  "task_pending": "Pending",
+  "task_in_progress": "Running",
+  "task_success": "Executed",
+  "task_error": "Failed"
+}

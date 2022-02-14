@@ -28,12 +28,6 @@ services:
         tags:
             - { name: kernel.event_listener, event: administration_tool_main_settings, method: onDisplayTool }
 
-    Claroline\CoreBundle\Listener\Administration\ScheduledTaskListener:
-        arguments:
-            - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
-        tags:
-            - { name: kernel.event_listener, event: administration_tool_tasks_scheduling, method: onDisplayTool }
-
     Claroline\CoreBundle\Listener\Administration\TemplateListener:
         tags:
             - { name: kernel.event_listener, event: administration_tool_templates, method: onAdministrationToolOpen }

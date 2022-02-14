@@ -17,7 +17,7 @@ use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Manager\Task\ScheduledTaskManager;
+use Claroline\SchedulerBundle\Manager\ScheduledTaskManager;
 use Symfony\Component\Messenger\MessageBusInterface;
 
 class AnnouncementManager

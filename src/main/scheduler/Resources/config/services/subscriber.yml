@@ -1,0 +1,6 @@
+services:
+    Claroline\SchedulerBundle\Subscriber\Administration\ScheduledTaskToolSubscriber:
+        arguments:
+          - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+        tags:
+            - { name: kernel.event_subscriber }

@@ -154,7 +154,8 @@
             "Claroline\\CursusBundle\\": "src/plugin/cursus",
             "Claroline\\BigBlueButtonBundle\\": "src/integration/big-blue-button",
             "Claroline\\DocumentationBundle\\": "src/plugin/documentation",
-            "Claroline\\LogBundle\\": "src/main/log"
+            "Claroline\\LogBundle\\": "src/main/log",
+            "Claroline\\SchedulerBundle\\": "src/main/scheduler"
         }
     },
     "scripts": {

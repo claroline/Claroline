@@ -1,10 +1,15 @@
 services:
-
     Claroline\MessageBundle\Subscriber\MessageSubscriber:
         arguments:
             - '@Claroline\MessageBundle\Manager\MessageManager'
             - '@doctrine.orm.entity_manager'
             - '@security.helper'
             - '@translator'
+        tags:
+            - { name: kernel.event_subscriber }
+
+    Claroline\MessageBundle\Subscriber\Scheduler\SendMessageSubscriber:
+        arguments:
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
         tags:
             - { name: kernel.event_subscriber }

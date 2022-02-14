@@ -1,0 +1,8 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: false
+
+    Claroline\SchedulerBundle\Configuration\PlatformDefaults:
+        tags: ['claroline.configuration']

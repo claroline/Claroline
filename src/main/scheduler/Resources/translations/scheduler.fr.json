@@ -1,0 +1,11 @@
+{
+  "cron_not_configured": "Le planificateur (CRON) de la plateforme n'est pas configuré.",
+  "cron_not_configured_help": "Il n'est pas possible de créer de nouvelles tâches et les tâches existantes ne peuvent être exécutées automatiquement. Veuillez contacter un administrateur afin de configurer le planificateur.",
+  "scheduled_date": "Date planifiée",
+  "execution_date": "Date d'exécution",
+  "add_scheduled_task": "Planifier une tâche",
+  "task_pending": "En attente",
+  "task_in_progress": "En cours d'exécution",
+  "task_success": "Exécutée",
+  "task_error": "Echouée"
+}

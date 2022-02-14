@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "The task id"
+    },
+    "name": {
+      "type": "string",
+      "description": "The task name"
+    },
+    "type": {
+      "type": "string",
+      "description": "The task type"
+    },
+    "scheduledDate": {
+      "type": "string",
+      "description": "The task planned date"
+    }
+  },
+  "required": ["name", "type", "scheduledDate"],
+  "claroline": {
+    "ids":  ["id"]
+  }
+}

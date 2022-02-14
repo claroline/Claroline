@@ -71,19 +71,10 @@ class UserFinder extends AbstractFinder
                     $qb->andWhere('obj.personalWorkspace IS NOT NULL');
                     break;
                 case 'group':
+                case 'groups':
                     $qb->leftJoin('obj.groups', 'g');
                     $qb->andWhere('g.uuid IN (:groupIds)');
                     $qb->setParameter('groupIds', is_array($filterValue) ? $filterValue : [$filterValue]);
-                    break;
-                case 'group_name':
-                    $qb->leftJoin('obj.groups', 'g');
-                    $qb->andWhere('UPPER(g.name) LIKE :groupName');
-                    $qb->setParameter('groupName', '%'.strtoupper($filterValue).'%');
-                    break;
-                case 'scheduledtask': // TODO : should be removed
-                    $qb->leftJoin('obj.scheduledTasks', 'st');
-                    $qb->andWhere('st.id IN (:scheduledTasks)');
-                    $qb->setParameter('scheduledTasks', is_array($filterValue) ? $filterValue : [$filterValue]);
                     break;
                 case 'role':
                     $qb->leftJoin('obj.roles', 'r');
@@ -208,11 +199,6 @@ class UserFinder extends AbstractFinder
                     $qb->leftJoin('grps.roles', 'grpRole');
                     $qb->leftJoin('grpRole.workspace', 'ws');
                     $qb->andWhere('ws.uuid IN ('.$string.')');
-                    break;
-                case 'groupName':
-                    $qb->join('obj.groups', 'gn');
-                    $qb->andWhere("UPPER(gn.name) LIKE :{$filterName}");
-                    $qb->setParameter($filterName, '%'.strtoupper($filterValue).'%');
                     break;
                 case 'emails':
                     $qb->orWhere($qb->expr()->orX(
