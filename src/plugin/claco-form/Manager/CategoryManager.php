@@ -42,13 +42,18 @@ class CategoryManager
         $this->messageBus->dispatch(new AssignCategory($category->getUuid()));
     }
 
+    /**
+     * Add/Remove category from an entry based on its fields values.
+     */
     public function manageCategory(Category $category, Entry $entry)
     {
-        $newCategories = [];
-        $oldCategories = [];
-
         /** @var FieldChoiceCategory[] $fieldsCategories */
         $fieldsCategories = $this->om->getRepository(FieldChoiceCategory::class)->findBy(['category' => $category]);
+        if (empty($fieldsCategories)) {
+            return;
+        }
+
+        $isCategoryValue = false;
         foreach ($fieldsCategories as $fieldCategory) {
             $fieldValue = $entry->getFieldValue($fieldCategory->getField());
             if ($fieldValue) {
@@ -61,103 +66,115 @@ class CategoryManager
                 }
 
                 if ($isCategoryValue) {
-                    $entry->addCategory($fieldCategory->getCategory());
-                    $newCategories = [$fieldCategory->getCategory()];
-                    $oldCategories = [];
-                } elseif ($entry->hasCategory($fieldCategory->getCategory())) {
-                    $entry->removeCategory($fieldCategory->getCategory());
-                    $newCategories = [];
-                    $oldCategories = [$fieldCategory->getCategory()];
+                    break;
                 }
             }
         }
 
-        if (!empty($newCategories) || !empty($oldCategories)) {
+        if ($isCategoryValue && !$entry->hasCategory($category)) {
+            // entry is newly added to the category
+            $entry->addCategory($category);
             $this->om->persist($entry);
             $this->om->flush();
 
-            $this->notifyCategoriesManagers($entry, $oldCategories, $newCategories);
+            $this->notifyNewEntry($entry, $category);
+        } elseif (!$isCategoryValue && $entry->hasCategory($category)) {
+            // entry is newly removed from the category
+            $entry->removeCategory($category);
+            $this->om->persist($entry);
+            $this->om->flush();
+
+            $this->notifyRemovedEntry($entry, $category);
         }
     }
 
-    public function notifyCategoriesManagers(Entry $entry, array $oldCategories = [], array $currentCategories = [])
+    public function notifyNewEntry(Entry $entry, Category $addedCategory)
     {
-        $removedCategories = [];
-        $editedCategories = [];
-        $addedCategories = [];
-        $node = $entry->getClacoForm()->getResourceNode();
-        $clacoFormName = $node->getName();
+        if (!$addedCategory->getNotifyAddition() || empty($addedCategory->getManagers())) {
+            return;
+        }
+
+        $resourceNode = $entry->getClacoForm()->getResourceNode();
         $url = $this->router->generate('claro_index', [], UrlGeneratorInterface::ABSOLUTE_URL).
-            '#/desktop/resources/'.$node->getSlug().'/entries/'.$entry->getUuid();
+            '#/desktop/resources/'.$resourceNode->getSlug().'/entries/'.$entry->getUuid();
 
-        foreach ($oldCategories as $category) {
-            if (in_array($category, $currentCategories)) {
-                $editedCategories[$category->getId()] = $category;
-            } else {
-                $removedCategories[$category->getId()] = $category;
-            }
-        }
-        foreach ($currentCategories as $category) {
-            if (!in_array($category, $oldCategories)) {
-                $addedCategories[$category->getId()] = $category;
-            }
-        }
-        foreach ($removedCategories as $category) {
-            if ($category->getNotifyRemoval()) {
-                $managers = $category->getManagers();
+        $object = $this->translator->trans('entry_addition_in_category', [
+            '%name%' => $addedCategory->getName(),
+            '%clacoform%' => $resourceNode->getName(),
+        ], 'clacoform');
 
-                if (count($managers) > 0) {
-                    $object = $this->translator->trans(
-                        'entry_removal_from_category',
-                        ['%name%' => $category->getName(), '%clacoform%' => $clacoFormName],
-                        'clacoform'
-                    );
-                    $content = $this->translator->trans(
-                        'entry_removal_from_category_msg',
-                        ['%title%' => $entry->getTitle(), '%category%' => $category->getName(), '%clacoform%' => $clacoFormName],
-                        'clacoform'
-                    );
-                    $this->messageBus->dispatch(new SendMessage($content, $object, $managers));
-                }
-            }
-        }
-        foreach ($editedCategories as $category) {
-            if ($category->getNotifyEdition()) {
-                $managers = $category->getManagers();
+        $content = $this->translator->trans('entry_addition_in_category_msg', [
+            '%title%' => $entry->getTitle(),
+            '%category%' => $addedCategory->getName(),
+            '%clacoform%' => $resourceNode->getName(),
+            '%url%' => $url,
+        ], 'clacoform');
 
-                if (count($managers) > 0) {
-                    $object = $this->translator->trans(
-                        'entry_edition_in_category',
-                        ['%name%' => $category->getName(), '%clacoform%' => $clacoFormName],
-                        'clacoform'
-                    );
-                    $content = $this->translator->trans(
-                        'entry_edition_in_category_msg',
-                        ['%title%' => $entry->getTitle(), '%category%' => $category->getName(), '%clacoform%' => $clacoFormName, '%url%' => $url],
-                        'clacoform'
-                    );
-                    $this->messageBus->dispatch(new SendMessage($content, $object, $managers));
-                }
-            }
-        }
-        foreach ($addedCategories as $category) {
-            if ($category->getNotifyAddition()) {
-                $managers = $category->getManagers();
+        $this->messageBus->dispatch(
+            new SendMessage($content, $object, $addedCategory->getManagers())
+        );
+    }
 
-                if (count($managers) > 0) {
-                    $object = $this->translator->trans(
-                        'entry_addition_in_category',
-                        ['%name%' => $category->getName(), '%clacoform%' => $clacoFormName],
-                        'clacoform'
-                    );
-                    $content = $this->translator->trans(
-                        'entry_addition_in_category_msg',
-                        ['%title%' => $entry->getTitle(), '%category%' => $category->getName(), '%clacoform%' => $clacoFormName, '%url%' => $url],
-                        'clacoform'
-                    );
-                    $this->messageBus->dispatch(new SendMessage($content, $object, $managers));
-                }
+    /**
+     * Notify managers when an entry is removed from a category.
+     */
+    public function notifyRemovedEntry(Entry $entry, Category $removedCategory)
+    {
+        if (!$removedCategory->getNotifyRemoval() || empty($removedCategory->getManagers())) {
+            return;
+        }
+
+        $resourceNode = $entry->getClacoForm()->getResourceNode();
+
+        $object = $this->translator->trans('entry_removal_from_category', [
+            '%name%' => $removedCategory->getName(),
+            '%clacoform%' => $resourceNode->getName(),
+        ], 'clacoform');
+
+        $content = $this->translator->trans('entry_removal_from_category_msg', [
+            '%title%' => $entry->getTitle(),
+            '%category%' => $removedCategory->getName(),
+            '%clacoform%' => $resourceNode->getName(),
+        ], 'clacoform');
+
+        $this->messageBus->dispatch(
+            new SendMessage($content, $object, $removedCategory->getManagers())
+        );
+    }
+
+    /**
+     * Notify managers when an entry of their categories is edited.
+     */
+    public function notifyEditedEntry(Entry $entry, array $categories)
+    {
+        if (empty($categories)) {
+            return;
+        }
+
+        $resourceNode = $entry->getClacoForm()->getResourceNode();
+        $url = $this->router->generate('claro_index', [], UrlGeneratorInterface::ABSOLUTE_URL).
+            '#/desktop/resources/'.$resourceNode->getSlug().'/entries/'.$entry->getUuid();
+
+        foreach ($categories as $category) {
+            if (!$category->getNotifyEdition() || empty($category->getManagers())) {
+                continue;
             }
+
+            $object = $this->translator->trans('entry_edition_in_category', [
+                '%name%' => $category->getName(),
+                '%clacoform%' => $resourceNode->getName(),
+            ], 'clacoform');
+
+            $content = $this->translator->trans('entry_edition_in_category_msg', [
+                '%title%' => $entry->getTitle(),
+                '%category%' => $category->getName(),
+                '%clacoform%' => $resourceNode->getName(),
+                '%url%' => $url,
+            ], 'clacoform');
+
+            $this->messageBus->dispatch(
+                new SendMessage($content, $object, $category->getManagers())
+            );
         }
     }
 }

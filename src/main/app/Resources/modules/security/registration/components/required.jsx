@@ -37,8 +37,7 @@ const Required = () =>
             required: true,
             options: {
               unique: {
-                name: 'email',
-                check: ['apiv2_user_exist']
+                check: ['apiv2_user_exist', {field: 'email'}]
               }
             }
           }, {
@@ -48,8 +47,7 @@ const Required = () =>
             required: true,
             options: {
               unique: {
-                name: 'username',
-                check: ['apiv2_user_exist']
+                check: ['apiv2_user_exist', {field: 'username'}]
               }
             }
           }, {
