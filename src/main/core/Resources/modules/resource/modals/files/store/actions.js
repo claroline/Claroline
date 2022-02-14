@@ -4,11 +4,11 @@ export const actions = {}
 
 actions.createFiles = (parent, files, onSuccess) => {
   const formData = new FormData()
-  files.forEach((file, index) => formData.append(`files[${index}]`, file))
+  files.forEach((file, index) => formData.append(index, file))
 
   return ({
     [API_REQUEST]: {
-      url: ['apiv2_resource_files_create', {parent: parent.id}],
+      url: ['claro_resource_action', {action: 'add_files', id: parent.id}],
       type: 'upload',
       request: {
         method: 'POST',

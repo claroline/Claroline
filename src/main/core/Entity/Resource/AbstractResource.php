@@ -31,12 +31,17 @@ abstract class AbstractResource
      */
     protected $resourceNode;
 
+    /**
+     * Only used for setting ResourceNode mimeType in old creation.
+     *
+     * @var string
+     *
+     * @deprecated
+     */
     protected $mimeType;
 
     /**
      * Only used for setting ResourceNode name in old creation.
-     *
-     * @todo remove me
      *
      * @var string
      *
@@ -83,7 +88,11 @@ abstract class AbstractResource
     }
 
     /**
+     * DO NOT USE IT. It may be empty.
+     *
      * @return string
+     *
+     * @deprecated Only used by old creation process
      */
     public function getMimeType()
     {
@@ -92,6 +101,8 @@ abstract class AbstractResource
 
     /**
      * @param string $mimeType
+     *
+     * @deprecated Only used by old creation process
      */
     public function setMimeType($mimeType)
     {

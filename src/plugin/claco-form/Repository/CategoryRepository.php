@@ -67,4 +67,22 @@ class CategoryRepository extends EntityRepository
 
         return $query->getResult();
     }
+
+    public function findAutoCategories(ClacoForm $clacoForm)
+    {
+        return $this->_em
+            ->createQuery('
+                SELECT c
+                FROM Claroline\ClacoFormBundle\Entity\Category c
+                JOIN c.clacoForm AS cf
+                WHERE cf.id = :clacoFormId
+                  AND EXISTS (
+                    SELECT fc
+                    FROM Claroline\ClacoFormBundle\Entity\FieldChoiceCategory AS fc
+                    WHERE fc.category = c
+                  )
+            ')
+            ->setParameter('clacoFormId', $clacoForm->getId())
+            ->getResult();
+    }
 }
