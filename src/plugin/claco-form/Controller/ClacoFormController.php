@@ -103,20 +103,20 @@ class ClacoFormController
     /**
      * Returns the keyword.
      *
-     * @Route("/{clacoForm}/keyword/get/by/name/{name}/excluding/uuid/{uuid}", name="claro_claco_form_get_keyword_by_name_excluding_uuid")
+     * @Route("/{clacoForm}/keyword/get/by/name/{value}/excluding/uuid/{uuid}", name="claro_claco_form_get_keyword_by_name_excluding_uuid", defaults={"uuid"=null})
      * @EXT\ParamConverter( "clacoForm", class="ClarolineClacoFormBundle:ClacoForm", options={"mapping": {"clacoForm": "uuid"}})
-     *
-     * @param string $name
-     * @param string $uuid
      */
-    public function getKeywordByNameExcludingUuidAction(ClacoForm $clacoForm, $name, $uuid): JsonResponse
+    public function getKeywordByNameExcludingUuidAction(ClacoForm $clacoForm, $value, ?string $uuid = null): JsonResponse
     {
         $this->checkPermission('EDIT', $clacoForm->getResourceNode(), [], true);
 
-        $keyword = $this->clacoFormManager->getKeywordByNameExcludingUuid($clacoForm, $name, $uuid);
-        $serializedKeyword = !empty($keyword) ? $this->serializer->serialize($keyword) : null;
+        $keyword = $this->clacoFormManager->getKeywordByNameExcludingUuid($clacoForm, $value, $uuid);
 
-        return new JsonResponse($serializedKeyword, 200);
+        if (!empty($keyword)) {
+            return new JsonResponse(true);
+        }
+
+        return new JsonResponse(false, 204);
     }
 
     /**
