@@ -81,40 +81,6 @@ actions.addCategory = makeActionCreator(CATEGORY_ADD, 'category')
 actions.updateCategory = makeActionCreator(CATEGORY_UPDATE, 'category')
 actions.removeCategories = makeActionCreator(CATEGORIES_REMOVE, 'ids')
 
-actions.saveKeyword = (keyword, isNew) => (dispatch, getState) => {
-  if (isNew) {
-    const clacoFormId = selectors.clacoForm(getState()).id
-    keyword['clacoForm'] = {}
-    keyword['clacoForm']['id'] = clacoFormId
-
-    dispatch({
-      [API_REQUEST]: {
-        url: ['apiv2_clacoformkeyword_create'],
-        request: {
-          method: 'POST',
-          body: JSON.stringify(keyword)
-        },
-        success: (data, dispatch) => {
-          dispatch(actions.addKeyword(data))
-        }
-      }
-    })
-  } else {
-    dispatch({
-      [API_REQUEST]: {
-        url: ['apiv2_clacoformkeyword_update', {id: keyword.id}],
-        request: {
-          method: 'PUT',
-          body: JSON.stringify(keyword)
-        },
-        success: (data, dispatch) => {
-          dispatch(actions.updateKeyword(data))
-        }
-      }
-    })
-  }
-}
-
 actions.deleteKeywords = (keywords) => ({
   [API_REQUEST]: {
     url: url(['apiv2_clacoformkeyword_delete_bulk', {ids: keywords.map(k => k.id)}]),

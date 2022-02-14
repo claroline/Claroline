@@ -1,5 +1,5 @@
 import {ClacoFormResource} from '#/plugin/claco-form/resources/claco-form/containers/resource'
-import {ClacoFormMenu} from '#/plugin/claco-form/resources/claco-form/components/menu'
+import {ClacoFormMenu} from '#/plugin/claco-form/resources/claco-form/containers/menu'
 import {reducer} from '#/plugin/claco-form/resources/claco-form/store'
 
 /**

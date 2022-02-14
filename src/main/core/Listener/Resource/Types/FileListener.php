@@ -202,17 +202,22 @@ class FileListener
 
     public function onCopy(CopyEvent $event)
     {
+        /** @var File $resource */
         $resource = $event->getObject();
+        /** @var File $newFile */
+        $newFile = $event->getCopy();
+
         $destParent = $resource->getResourceNode();
         $workspace = $destParent->getWorkspace();
-        $newFile = $event->getCopy();
-        $newFile->setMimeType($resource->getMimeType());
+
         $hashName = join('.', [
             'WORKSPACE_'.$workspace->getId(),
             Uuid::uuid4()->toString(),
             pathinfo($resource->getHashName(), PATHINFO_EXTENSION),
         ]);
         $newFile->setHashName($hashName);
+        $newFile->setSize($resource->getSize());
+
         $filePath = $this->filesDir.DIRECTORY_SEPARATOR.$resource->getHashName();
         $newPath = $this->filesDir.DIRECTORY_SEPARATOR.$hashName;
         $workspaceDir = $this->filesDir.DIRECTORY_SEPARATOR.'WORKSPACE_'.$workspace->getId();
