@@ -30,3 +30,8 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@logger'
         tags: [ 'claroline.platform.updater' ]
+
+    Claroline\CoreBundle\Installation\Updater\Updater130300:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+        tags: [ 'claroline.platform.updater' ]

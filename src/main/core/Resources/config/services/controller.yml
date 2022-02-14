@@ -196,12 +196,6 @@ services:
             - '@Claroline\CoreBundle\Manager\FileManager'
             - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
 
-    Claroline\CoreBundle\Controller\APINew\Platform\ScheduledTaskController:
-        parent: Claroline\AppBundle\Controller\AbstractCrudController
-        public: true
-        arguments:
-            - '@security.authorization_checker'
-
     Claroline\CoreBundle\Controller\APINew\SwaggerController:
         arguments:
             - '@Claroline\AppBundle\Routing\Finder'

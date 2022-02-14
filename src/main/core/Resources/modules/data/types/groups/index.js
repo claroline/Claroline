@@ -2,6 +2,7 @@ import {trans} from '#/main/app/intl/translation'
 
 import {GroupsDisplay} from '#/main/core/data/types/groups/components/display'
 import {GroupsInput} from '#/main/core/data/types/groups/components/input'
+import {GroupsFilter} from '#/main/core/data/types/groups/components/filter'
 
 const dataType = {
   name: 'groups',
@@ -11,9 +12,11 @@ const dataType = {
     label: trans('groups', {}, 'data'),
     description: trans('groups_desc', {}, 'data')
   },
+  render: (raw) => raw && raw.map(g => g.name).join(', '),
   components: {
     details: GroupsDisplay,
-    input: GroupsInput
+    input: GroupsInput,
+    search: GroupsFilter
   }
 }
 

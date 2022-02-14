@@ -1,0 +1,11 @@
+services:
+    _defaults:
+        autoconfigure: false
+        public: false
+
+    Claroline\SchedulerBundle\Manager\ScheduledTaskManager:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@messenger.default_bus'
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+            - '@Claroline\SchedulerBundle\Serializer\ScheduledTaskSerializer'

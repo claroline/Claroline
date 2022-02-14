@@ -64,10 +64,12 @@ const UserList = {
         time: true
       }
     }, {
-      name: 'group_name',
-      label: trans('group'),
-      type: 'string',
-      displayed: false
+      name: 'groups',
+      label: trans('groups'),
+      type: 'groups',
+      displayed: false,
+      displayable: false,
+      sortable: false
     }, {
       name: 'unionOrganizationName',
       label: trans('organization'),

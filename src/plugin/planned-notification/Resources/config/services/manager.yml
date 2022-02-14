@@ -17,5 +17,5 @@ services:
        arguments:
           - '@Claroline\CoreBundle\Manager\MailManager'
           - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@Claroline\CoreBundle\Manager\Task\ScheduledTaskManager'
+          - '@Claroline\SchedulerBundle\Manager\ScheduledTaskManager'
           - '@Claroline\AppBundle\Event\StrictDispatcher'

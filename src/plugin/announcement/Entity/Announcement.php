@@ -15,8 +15,8 @@ use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Poster;
 use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Entity\Task\ScheduledTask;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\SchedulerBundle\Entity\ScheduledTask;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -115,7 +115,7 @@ class Announcement
 
     /**
      * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Task\ScheduledTask"
+     *     targetEntity="Claroline\SchedulerBundle\Entity\ScheduledTask"
      * )
      * @ORM\JoinColumn(name="task_id", nullable=true, onDelete="SET NULL")
      */

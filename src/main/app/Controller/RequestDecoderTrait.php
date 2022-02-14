@@ -27,6 +27,9 @@ trait RequestDecoderTrait
     protected function decodeIdsString(Request $request, string $class, string $property = 'ids')
     {
         $ids = $request->query->get($property) ?? [];
+        if (empty($ids)) {
+            return [];
+        }
 
         $property = is_numeric($ids[0]) ? 'id' : 'uuid';
 

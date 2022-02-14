@@ -1,0 +1,7 @@
+services:
+    Claroline\SchedulerBundle\Messenger\ExecuteScheduledTaskHandler:
+        tags: [ messenger.message_handler ]
+        arguments:
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\SchedulerBundle\Manager\ScheduledTaskManager'

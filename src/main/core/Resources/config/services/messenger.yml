@@ -9,11 +9,3 @@ services:
         tags: [messenger.message_handler]
         arguments:
             - '@Claroline\AppBundle\Event\StrictDispatcher'
-
-    Claroline\CoreBundle\Messenger\ExecuteScheduledTaskHandler:
-        tags: [ messenger.message_handler ]
-        arguments:
-            - '@Claroline\AppBundle\Event\StrictDispatcher'
-            - '@Claroline\CoreBundle\Manager\Task\ScheduledTaskManager'
-            - '@Claroline\CoreBundle\Manager\MailManager'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'

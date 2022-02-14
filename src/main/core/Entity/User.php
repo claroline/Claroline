@@ -21,7 +21,6 @@ use Claroline\CoreBundle\Entity\Model\GroupsTrait;
 use Claroline\CoreBundle\Entity\Model\OrganizationsTrait;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Organization\UserOrganizationReference;
-use Claroline\CoreBundle\Entity\Task\ScheduledTask;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -282,19 +281,6 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
      * @ORM\JoinColumn(name="user_id", nullable=false)
      */
     protected $userOrganizationReferences;
-
-    /**
-     * @ORM\ManyToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Task\ScheduledTask",
-     *     inversedBy="users"
-     * )
-     * @ORM\JoinTable(name="claro_scheduled_task_users")
-     *
-     * @var ArrayCollection
-     *
-     * @todo relation should not be declared here (only use Unidirectional)
-     */
-    private $scheduledTasks;
 
     /**
      * @var string
@@ -1031,16 +1017,6 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
     public function getLocations()
     {
         return $this->locations;
-    }
-
-    public function addScheduledTask(ScheduledTask $task)
-    {
-        $this->scheduledTasks->add($task);
-    }
-
-    public function removeScheduledTask(ScheduledTask $task)
-    {
-        $this->scheduledTasks->removeElement($task);
     }
 
     public function setCode($code)

@@ -30,9 +30,6 @@ class PlannedNotificationListener
     /** @var FinderProvider */
     private $finder;
 
-    /**
-     * PlannedNotificationListener constructor.
-     */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         Crud $crud,

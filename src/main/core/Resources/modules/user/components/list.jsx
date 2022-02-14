@@ -68,11 +68,10 @@ const UserList = props =>
           time: true
         }
       }, {
-        name: 'group_name',
-        type: 'string',
-        label: trans('group'),
+        name: 'groups',
+        type: 'groups',
+        label: trans('groups'),
         displayed: false,
-        displayable: false,
         sortable: false
       }, {
         name: 'unionOrganizationName',

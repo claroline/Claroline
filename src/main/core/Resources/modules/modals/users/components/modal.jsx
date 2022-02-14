@@ -67,11 +67,10 @@ const UsersModal = props => {
             label: trans('email'),
             displayed: true
           }, {
-            name: 'group_name',
-            type: 'string',
-            label: trans('group'),
+            name: 'groups',
+            type: 'groups',
+            label: trans('groups'),
             displayed: false,
-            displayable: false,
             sortable: false
           }, {
             name: 'unionOrganizationName',

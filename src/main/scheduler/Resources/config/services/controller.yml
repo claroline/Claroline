@@ -1,0 +1,7 @@
+services:
+    Claroline\SchedulerBundle\Controller\ScheduledTaskController:
+        parent: Claroline\AppBundle\Controller\AbstractCrudController
+        public: true
+        arguments:
+            - '@security.authorization_checker'
+            - '@Claroline\SchedulerBundle\Manager\ScheduledTaskManager'

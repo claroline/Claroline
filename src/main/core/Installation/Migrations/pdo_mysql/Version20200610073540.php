@@ -242,15 +242,6 @@ class Version20200610073540 extends AbstractMigration
             ) DEFAULT CHARACTER SET UTF8 COLLATE UTF8_unicode_ci ENGINE = InnoDB
         ');
         $this->addSql('
-            CREATE TABLE claro_scheduled_task_users (
-                user_id INT NOT NULL, 
-                scheduledtask_id INT NOT NULL, 
-                INDEX IDX_573E7D5EA76ED395 (user_id), 
-                INDEX IDX_573E7D5ED87B621C (scheduledtask_id), 
-                PRIMARY KEY(user_id, scheduledtask_id)
-            ) DEFAULT CHARACTER SET UTF8 COLLATE UTF8_unicode_ci ENGINE = InnoDB
-        ');
-        $this->addSql('
             CREATE TABLE claro_role (
                 id INT AUTO_INCREMENT NOT NULL, 
                 workspace_id INT DEFAULT NULL, 
@@ -580,22 +571,6 @@ class Version20200610073540 extends AbstractMigration
                 desktop_mode INT DEFAULT 1 NOT NULL, 
                 details LONGTEXT DEFAULT NULL COMMENT '(DC2Type:json_array)', 
                 UNIQUE INDEX UNIQ_B2066972A76ED395 (user_id), 
-                PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET UTF8 COLLATE UTF8_unicode_ci ENGINE = InnoDB
-        ");
-        $this->addSql("
-            CREATE TABLE claro_scheduled_task (
-                id INT AUTO_INCREMENT NOT NULL, 
-                group_id INT DEFAULT NULL, 
-                workspace_id INT DEFAULT NULL, 
-                task_type VARCHAR(255) NOT NULL, 
-                task_name VARCHAR(255) DEFAULT NULL, 
-                scheduled_date DATETIME NOT NULL, 
-                execution_date DATETIME DEFAULT NULL, 
-                execution_status VARCHAR(255) DEFAULT NULL, 
-                task_data LONGTEXT DEFAULT NULL COMMENT '(DC2Type:json_array)', 
-                INDEX IDX_9D92A4DDFE54D947 (group_id), 
-                INDEX IDX_9D92A4DD82D40A1F (workspace_id), 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET UTF8 COLLATE UTF8_unicode_ci ENGINE = InnoDB
         ");
@@ -1597,18 +1572,6 @@ class Version20200610073540 extends AbstractMigration
             ON DELETE CASCADE
         ');
         $this->addSql('
-            ALTER TABLE claro_scheduled_task_users 
-            ADD CONSTRAINT FK_573E7D5EA76ED395 FOREIGN KEY (user_id) 
-            REFERENCES claro_user (id) 
-            ON DELETE CASCADE
-        ');
-        $this->addSql('
-            ALTER TABLE claro_scheduled_task_users 
-            ADD CONSTRAINT FK_573E7D5ED87B621C FOREIGN KEY (scheduledtask_id) 
-            REFERENCES claro_scheduled_task (id) 
-            ON DELETE CASCADE
-        ');
-        $this->addSql('
             ALTER TABLE claro_role 
             ADD CONSTRAINT FK_3177747182D40A1F FOREIGN KEY (workspace_id) 
             REFERENCES claro_workspace (id) 
@@ -1827,18 +1790,6 @@ class Version20200610073540 extends AbstractMigration
             ADD CONSTRAINT FK_B2066972A76ED395 FOREIGN KEY (user_id) 
             REFERENCES claro_user (id) 
             ON DELETE CASCADE
-        ');
-        $this->addSql('
-            ALTER TABLE claro_scheduled_task 
-            ADD CONSTRAINT FK_9D92A4DDFE54D947 FOREIGN KEY (group_id) 
-            REFERENCES claro_group (id) 
-            ON DELETE SET NULL
-        ');
-        $this->addSql('
-            ALTER TABLE claro_scheduled_task 
-            ADD CONSTRAINT FK_9D92A4DD82D40A1F FOREIGN KEY (workspace_id) 
-            REFERENCES claro_workspace (id) 
-            ON DELETE SET NULL
         ');
         $this->addSql('
             ALTER TABLE claro_workspace_registration_queue 
@@ -2491,10 +2442,6 @@ class Version20200610073540 extends AbstractMigration
             DROP FOREIGN KEY FK_BE136DCBA76ED395
         ');
         $this->addSql('
-            ALTER TABLE claro_scheduled_task_users 
-            DROP FOREIGN KEY FK_573E7D5EA76ED395
-        ');
-        $this->addSql('
             ALTER TABLE claro_workspace 
             DROP FOREIGN KEY FK_D902854561220EA6
         ');
@@ -2735,10 +2682,6 @@ class Version20200610073540 extends AbstractMigration
             DROP FOREIGN KEY FK_D603AE0582D40A1F
         ');
         $this->addSql('
-            ALTER TABLE claro_scheduled_task 
-            DROP FOREIGN KEY FK_9D92A4DD82D40A1F
-        ');
-        $this->addSql('
             ALTER TABLE claro_workspace_registration_queue 
             DROP FOREIGN KEY FK_F461C53882D40A1F
         ');
@@ -2789,10 +2732,6 @@ class Version20200610073540 extends AbstractMigration
         $this->addSql('
             ALTER TABLE group_location 
             DROP FOREIGN KEY FK_57AEC5B4FE54D947
-        ');
-        $this->addSql('
-            ALTER TABLE claro_scheduled_task 
-            DROP FOREIGN KEY FK_9D92A4DDFE54D947
         ');
         $this->addSql('
             ALTER TABLE claro_log 
@@ -2857,10 +2796,6 @@ class Version20200610073540 extends AbstractMigration
         $this->addSql('
             ALTER TABLE claro_user 
             DROP FOREIGN KEY FK_EB8D28523ADB05F1
-        ');
-        $this->addSql('
-            ALTER TABLE claro_scheduled_task_users 
-            DROP FOREIGN KEY FK_573E7D5ED87B621C
         ');
         $this->addSql('
             ALTER TABLE claro_resource_node 
@@ -3038,9 +2973,6 @@ class Version20200610073540 extends AbstractMigration
             DROP TABLE user_location
         ');
         $this->addSql('
-            DROP TABLE claro_scheduled_task_users
-        ');
-        $this->addSql('
             DROP TABLE claro_role
         ');
         $this->addSql('
@@ -3111,9 +3043,6 @@ class Version20200610073540 extends AbstractMigration
         ');
         $this->addSql('
             DROP TABLE claro_user_options
-        ');
-        $this->addSql('
-            DROP TABLE claro_scheduled_task
         ');
         $this->addSql('
             DROP TABLE claro_workspace_registration_queue

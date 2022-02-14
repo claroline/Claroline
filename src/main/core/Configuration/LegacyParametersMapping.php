@@ -68,7 +68,6 @@ class LegacyParametersMapping implements LegacyParametersMappingInterface
             'notifications_refresh_delay' => 'notifications_refresh_delay', // in ms
             'auto_enable_email_redirect' => 'database_restoration.auto_enable_email_redirect',
             'auto_enable_notifications' => 'auto_enable_notifications',
-            'is_cron_configured' => 'is_cron_configured',
             'force_organization_creation' => 'registration.force_organization_creation',
             'allow_workspace_at_registration' => 'registration.allow_workspace',
             'profile_roles_confidential' => 'profile.roles_confidential',

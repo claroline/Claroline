@@ -38,3 +38,9 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
         tags:
             - { name: kernel.event_subscriber }
+
+    Claroline\CoreBundle\Subscriber\Scheduler\SendEmailSubscriber:
+        arguments:
+            - '@Claroline\CoreBundle\Manager\MailManager'
+        tags:
+            - { name: kernel.event_subscriber }

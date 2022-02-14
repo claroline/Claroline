@@ -19,6 +19,7 @@ import {ManualNotification} from '#/plugin/planned-notification/tools/planned-no
 const NotificationTabComponent = props =>
   <ToolPage
     subtitle={trans('notifications')}
+    primaryAction="add"
     actions={[
       {
         name: 'add',

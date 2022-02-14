@@ -17,10 +17,12 @@ import {Message} from '#/plugin/planned-notification/tools/planned-notification/
 const MessageTabComponent = props =>
   <ToolPage
     subtitle={trans('messages')}
+    primaryAction="add"
     actions={[
       {
+        name: 'add',
         type: LINK_BUTTON,
-        icon: 'fa fa-plus',
+        icon: 'fa fa-fw fa-plus',
         label: trans('create_new_message', {}, 'planned_notification'),
         target: props.path+'/messages/form',
         displayed: props.canEdit,
