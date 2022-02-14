@@ -158,6 +158,13 @@ class ClacoFormSerializer
 
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
             $serialized = array_merge($serialized, [
+                'fields' => array_map(function (Field $field) {
+                    return $this->fieldSerializer->serialize($field);
+                }, $clacoForm->getFields()),
+            ]);
+
+            // TODO : should not be managed here (they have their own API for the UI). It's used by copy/transfer
+            $serialized = array_merge($serialized, [
                 'categories' => array_map(function (Category $category) {
                     return $this->categorySerializer->serialize($category);
                 }, $clacoForm->getCategories()),
@@ -166,11 +173,6 @@ class ClacoFormSerializer
                 'keywords' => array_map(function (Keyword $keyword) {
                     return $this->keywordSerializer->serialize($keyword);
                 }, $clacoForm->getKeywords()),
-            ]);
-            $serialized = array_merge($serialized, [
-                'fields' => array_map(function (Field $field) {
-                    return $this->fieldSerializer->serialize($field);
-                }, $clacoForm->getFields()),
             ]);
         }
 

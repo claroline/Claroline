@@ -6,11 +6,11 @@ use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\ClacoFormBundle\Entity\Category;
 use Claroline\ClacoFormBundle\Entity\Entry;
 use Claroline\ClacoFormBundle\Entity\Field;
 use Claroline\ClacoFormBundle\Entity\FieldChoiceCategory;
 use Claroline\ClacoFormBundle\Manager\CategoryManager;
-use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\User;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -98,41 +98,22 @@ class EntrySubscriber implements EventSubscriberInterface
     {
         $oldCategories = $entry->getCategories();
 
-        /** @var Field[] $fields */
-        $fields = $this->fieldRepo->findBy(['clacoForm' => $entry->getClacoForm()]);
+        $categories = $this->om->getRepository(Category::class)->findAutoCategories($entry->getClacoForm());
+        foreach ($categories as $category) {
+            $this->categoryManager->manageCategory($category, $entry);
+        }
 
-        $updated = false;
-        foreach ($fields as $field) {
-            /** @var FieldChoiceCategory[] $fieldsCategories */
-            $fieldsCategories = $this->fieldChoiceCategoryRepo->findBy(['field' => $field]);
-
-            $fieldValue = $entry->getFieldValue($field);
-            if ($fieldValue) {
-                foreach ($fieldsCategories as $fieldCategory) {
-                    switch ($field->getType()) {
-                        case FieldFacet::NUMBER_TYPE:
-                            $isCategoryValue = floatval($fieldValue->getValue()) === floatval($fieldCategory->getValue());
-                            break;
-                        default:
-                            $isCategoryValue = $fieldValue->getValue() === $fieldCategory->getValue();
-                    }
-
-                    if ($isCategoryValue) {
-                        $entry->addCategory($fieldCategory->getCategory());
-                        $updated = true;
-                    } elseif ($entry->hasCategory($fieldCategory->getCategory())) {
-                        $entry->removeCategory($fieldCategory->getCategory());
-                        $updated = true;
-                    }
-                }
+        // notify category managers the entry has been edited
+        // NB. we filter newly added categories because there is another notification for that
+        $editedCategories = [];
+        foreach ($oldCategories as $oldCategory) {
+            if (in_array($oldCategory, $entry->getCategories())) {
+                $editedCategories[] = $oldCategory;
             }
         }
 
-        if ($updated) {
-            $this->om->persist($entry);
-            $this->om->flush();
+        if (!empty($editedCategories)) {
+            $this->categoryManager->notifyEditedEntry($entry, $editedCategories);
         }
-
-        $this->categoryManager->notifyCategoriesManagers($entry, $oldCategories, $entry->getCategories());
     }
 }

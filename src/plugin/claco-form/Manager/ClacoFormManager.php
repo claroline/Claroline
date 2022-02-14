@@ -205,8 +205,8 @@ class ClacoFormManager implements LoggerAwareInterface
         $this->persistEntry($entry);
         $event = new LogEntryStatusChangeEvent($entry);
         $this->eventDispatcher->dispatch($event, 'log');
-        $categories = $entry->getCategories();
-        $this->categoryManager->notifyCategoriesManagers($entry, $categories, $categories);
+
+        $this->categoryManager->notifyEditedEntry($entry, $entry->getCategories());
 
         return $entry;
     }
@@ -223,8 +223,8 @@ class ClacoFormManager implements LoggerAwareInterface
             $this->persistEntry($entry);
             $event = new LogEntryStatusChangeEvent($entry);
             $this->eventDispatcher->dispatch($event, 'log');
-            $categories = $entry->getCategories();
-            $this->categoryManager->notifyCategoriesManagers($entry, $categories, $categories);
+
+            $this->categoryManager->notifyEditedEntry($entry, $entry->getCategories());
         }
         $this->om->endFlushSuite();
 
@@ -238,8 +238,8 @@ class ClacoFormManager implements LoggerAwareInterface
         $this->persistEntry($entry);
         $event = new LogEntryLockSwitchEvent($entry);
         $this->eventDispatcher->dispatch($event, 'log');
-        $categories = $entry->getCategories();
-        $this->categoryManager->notifyCategoriesManagers($entry, $categories, $categories);
+
+        $this->categoryManager->notifyEditedEntry($entry, $entry->getCategories());
 
         return $entry;
     }
@@ -253,8 +253,8 @@ class ClacoFormManager implements LoggerAwareInterface
             $this->persistEntry($entry);
             $event = new LogEntryLockSwitchEvent($entry);
             $this->eventDispatcher->dispatch($event, 'log');
-            $categories = $entry->getCategories();
-            $this->categoryManager->notifyCategoriesManagers($entry, $categories, $categories);
+
+            $this->categoryManager->notifyEditedEntry($entry, $entry->getCategories());
         }
         $this->om->endFlushSuite();
 

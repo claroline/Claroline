@@ -38,8 +38,7 @@ const TemplateForm = (props) =>
             disabled: (template) => template.system,
             options: {
               unique: {
-                name: 'name',
-                check: ['apiv2_template_exist']
+                check: ['apiv2_template_exist', {field: 'name'}]
               }
             }
           }, {
@@ -111,7 +110,8 @@ TemplateForm.propTypes = {
     TemplateTypes.propTypes
   ).isRequired,
   defaultLocale: T.string,
-  locales: T.arrayOf(T.string)
+  locales: T.arrayOf(T.string),
+  saveForm: T.func.isRequired
 }
 
 export {
