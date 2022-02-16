@@ -80,7 +80,7 @@ const ProfileFacetComponent = props =>
     name={`${baseSelectors.STORE_NAME}.profile`}
     dataPart={`[${props.index}]`}
     buttons={true}
-    target={['apiv2_profile_update']}
+    target={['apiv2_profile_configure']}
     sections={[
       {
         icon: 'fa fa-fw fa-cog',
