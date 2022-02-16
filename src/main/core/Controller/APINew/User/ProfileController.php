@@ -115,11 +115,29 @@ class ProfileController
     }
 
     /**
+     * @Route("/{username}", name="apiv2_profile_update", methods={"PUT"})
+     * @EXT\ParamConverter("user", options={"mapping": {"username": "username"}})
+     */
+    public function updateAction(User $user, Request $request): JsonResponse
+    {
+        $userData = $this->decodeRequest($request);
+        // removes roles from the serialized structure because it will cause access issues.
+        // those roles should not be here anyway.
+        unset($userData['roles']);
+
+        $updated = $this->crud->update($user, $userData, [Crud::THROW_EXCEPTION, Options::SERIALIZE_FACET]);
+
+        return new JsonResponse(
+            $this->serializer->serialize($updated, [Options::SERIALIZE_FACET])
+        );
+    }
+
+    /**
      * Updates the profile configuration for the current platform.
      *
-     * @Route("", name="apiv2_profile_update", methods={"PUT"})
+     * @Route("", name="apiv2_profile_configure", methods={"PUT"})
      */
-    public function updateAction(Request $request): JsonResponse
+    public function configureAction(Request $request): JsonResponse
     {
         $formData = $this->decodeRequest($request);
 
