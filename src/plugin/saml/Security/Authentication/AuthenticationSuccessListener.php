@@ -54,7 +54,7 @@ class AuthenticationSuccessListener extends BaseAuthenticationSuccessListener
         // apply IDP config
         $sessions = $request->getSession()->get('samlsso')->getSsoSessions();
         if (empty($sessions)) {
-            return null;
+            return parent::onAuthenticationSuccess($request, $token);
         }
         $session = $sessions[count($sessions) - 1];
         $idpEntityId = $session->getIdpEntityId();
