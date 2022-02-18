@@ -1,0 +1,12 @@
+services:
+    _defaults:
+        tags: [claroline.transfer.exporter]
+
+    Claroline\LogBundle\Transfer\Exporter\FunctionalLogListExporter:
+        parent: Claroline\TransferBundle\Transfer\Exporter\AbstractListExporter
+
+    Claroline\LogBundle\Transfer\Exporter\MessageLogListExporter:
+        parent: Claroline\TransferBundle\Transfer\Exporter\AbstractListExporter
+
+    Claroline\LogBundle\Transfer\Exporter\SecurityLogListExporter:
+        parent: Claroline\TransferBundle\Transfer\Exporter\AbstractListExporter

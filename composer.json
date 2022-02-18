@@ -22,6 +22,7 @@
         "ext-dom": "*",
         "ext-fileinfo": "*",
         "ext-gd": "*",
+        "ext-iconv": "*",
         "ext-intl": "*",
         "ext-json": "*",
         "ext-mbstring": "*",
@@ -155,7 +156,8 @@
             "Claroline\\BigBlueButtonBundle\\": "src/integration/big-blue-button",
             "Claroline\\DocumentationBundle\\": "src/plugin/documentation",
             "Claroline\\LogBundle\\": "src/main/log",
-            "Claroline\\SchedulerBundle\\": "src/main/scheduler"
+            "Claroline\\SchedulerBundle\\": "src/main/scheduler",
+            "Claroline\\TransferBundle\\": "src/main/transfer"
         }
     },
     "scripts": {

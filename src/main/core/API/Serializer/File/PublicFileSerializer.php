@@ -4,25 +4,25 @@ namespace Claroline\CoreBundle\API\Serializer\File;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Manager\PlatformManager;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\File\PublicFile;
-use Claroline\CoreBundle\Library\Utilities\FileUtilities;
 
 /**
  * @todo move me in AppBundle
  */
 class PublicFileSerializer
 {
+    /** @var ObjectManager */
+    private $om;
     /** @var PlatformManager */
     private $platformManager;
-    /** @var FileUtilities */
-    private $utilities;
 
     public function __construct(
-        PlatformManager $platformManager,
-        FileUtilities $utilities
+        ObjectManager $om,
+        PlatformManager $platformManager
     ) {
+        $this->om = $om;
         $this->platformManager = $platformManager;
-        $this->utilities = $utilities;
     }
 
     public function getClass(): string
@@ -67,9 +67,9 @@ class PublicFileSerializer
         // this is currently done in FileUtilities
         // todo : write correctly
         if (isset($data['id'])) {
-            return $this->utilities->getOneBy(['id' => $data['id']]);
+            $file = $this->om->getRepository(PublicFile::class)->findOneBy(['id' => $data['id']]);
         }
 
-        return null;
+        return $file;
     }
 }

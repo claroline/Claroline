@@ -165,13 +165,6 @@ services:
             - '@event_dispatcher'
             - '@Claroline\AppBundle\API\SerializerProvider'
 
-    Claroline\CoreBundle\Manager\ApiManager:
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\AppBundle\API\TransferProvider'
-            - '@Claroline\CoreBundle\Library\Utilities\FileUtilities'
-            - '@Claroline\AppBundle\API\Crud'
-
     Claroline\CoreBundle\Manager\Workspace\WorkspaceRestrictionsManager:
         arguments:
             - '@request_stack'

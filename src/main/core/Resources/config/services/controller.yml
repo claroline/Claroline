@@ -174,10 +174,6 @@ services:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
         public: true
 
-    Claroline\CoreBundle\Controller\APINew\LoggerController:
-        arguments:
-            - '%kernel.logs_dir%'
-
     Claroline\CoreBundle\Controller\APINew\ObjectLockController:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
@@ -203,13 +199,6 @@ services:
             - '@Claroline\AppBundle\API\SchemaProvider'
             - '@Claroline\AppBundle\Manager\PlatformManager'
             - '%kernel.project_dir%'
-
-    Claroline\CoreBundle\Controller\APINew\TransferController:
-        parent: Claroline\AppBundle\Controller\AbstractCrudController
-        public: true
-        arguments:
-            - '@Claroline\AppBundle\API\TransferProvider'
-            - '@Claroline\CoreBundle\Manager\ApiManager'
 
     Claroline\CoreBundle\Controller\APINew\WidgetController:
         arguments:

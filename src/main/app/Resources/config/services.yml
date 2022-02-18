@@ -2,7 +2,6 @@ imports:
     - { resource: services/controller.yml }
     - { resource: services/finder.yml }
     - { resource: services/manager.yml }
-    - { resource: services/adapter.yml }
     - { resource: services/persistence.yml }
     - { resource: services/routing.yml }
 
@@ -37,16 +36,6 @@ services:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - !tagged_iterator claroline.serializer # Lazy collection of 'claroline.serializer' tagged services
-
-    Claroline\AppBundle\API\TransferProvider:
-        arguments:
-            - '%kernel.project_dir%'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\AppBundle\API\SerializerProvider'
-            - '@Claroline\AppBundle\API\SchemaProvider'
-            - '%claroline.param.import_log_dir%'
-        calls:
-            - setLogger: ['@logger']
 
     Claroline\AppBundle\API\ValidatorProvider:
         arguments:

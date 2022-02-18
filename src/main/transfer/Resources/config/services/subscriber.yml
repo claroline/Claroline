@@ -1,0 +1,25 @@
+services:
+    Claroline\TransferBundle\Subscriber\Crud\ImportFileSubscriber:
+        arguments:
+            - '@security.token_storage'
+            - '@Claroline\AppBundle\API\Crud'
+            - '%claroline.param.import_log_dir%'
+        tags:
+            - { name: kernel.event_subscriber }
+
+    Claroline\TransferBundle\Subscriber\Crud\ExportFileSubscriber:
+        arguments:
+            - '@security.token_storage'
+            - '@Claroline\AppBundle\API\Crud'
+            - '%claroline.param.import_log_dir%'
+            - '%claroline.param.files_directory%'
+        tags:
+            - { name: kernel.event_subscriber }
+
+    Claroline\TransferBundle\Subscriber\Tool\TransferToolSubscriber:
+        arguments:
+            - '@Claroline\TransferBundle\Transfer\ImportProvider'
+            - '@Claroline\TransferBundle\Transfer\ExportProvider'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+        tags:
+            - { name: kernel.event_subscriber }

@@ -1,0 +1,9 @@
+services:
+    _defaults:
+        tags: [ claroline.transfer.exporter ]
+
+    Claroline\OpenBadgeBundle\Transfer\Exporter\ListExporter:
+        parent: Claroline\TransferBundle\Transfer\Exporter\AbstractListExporter
+
+    Claroline\OpenBadgeBundle\Transfer\Exporter\AssertionListExporter:
+        parent: Claroline\TransferBundle\Transfer\Exporter\AbstractListExporter

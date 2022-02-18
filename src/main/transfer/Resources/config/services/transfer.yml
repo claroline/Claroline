@@ -1,0 +1,83 @@
+services:
+    # Provider
+    Claroline\TransferBundle\Transfer\AbstractProvider:
+        abstract: true
+        calls:
+            - method: setAdapters
+              arguments:
+                  - !tagged_iterator claroline.transfer.adapter
+
+    Claroline\TransferBundle\Transfer\ImportProvider:
+        parent: Claroline\TransferBundle\Transfer\AbstractProvider
+        public: true # for tests purpose
+        arguments:
+            - '%kernel.project_dir%'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\AppBundle\API\SchemaProvider'
+            - '%claroline.param.import_log_dir%'
+        calls:
+            - method: setActions
+              arguments:
+                  - !tagged_iterator claroline.transfer.importer
+
+    Claroline\TransferBundle\Transfer\ExportProvider:
+        parent: Claroline\TransferBundle\Transfer\AbstractProvider
+        calls:
+            - method: setActions
+              arguments:
+                  - !tagged_iterator claroline.transfer.exporter
+
+    # Format adapters
+    Claroline\TransferBundle\Transfer\Adapter\CsvAdapter:
+        tags: [ claroline.transfer.adapter ]
+        arguments:
+            - '@translator'
+
+    Claroline\TransferBundle\Transfer\Adapter\JsonAdapter:
+        tags: [ claroline.transfer.adapter ]
+
+    # Base services for common import actions
+    # Implemented actions must use the tag `claroline.transfer.importer`
+    Claroline\TransferBundle\Transfer\Importer\AbstractCreateImporter:
+        abstract: true
+        calls:
+            - method: setCrud
+              arguments:
+                  - '@Claroline\AppBundle\API\Crud'
+
+    Claroline\TransferBundle\Transfer\Importer\AbstractCreateOrUpdateImporter:
+        abstract: true
+        calls:
+            - method: setCrud
+              arguments:
+                  - '@Claroline\AppBundle\API\Crud'
+            - method: setTransfer
+              arguments:
+                  - '@Claroline\TransferBundle\Transfer\ImportProvider'
+
+    Claroline\TransferBundle\Transfer\Importer\AbstractDeleteImporter:
+        abstract: true
+        calls:
+            - method: setCrud
+              arguments:
+                  - '@Claroline\AppBundle\API\Crud'
+            - method: setObjectManager
+              arguments:
+                  - '@Claroline\AppBundle\Persistence\ObjectManager'
+
+    Claroline\TransferBundle\Transfer\Importer\AbstractUpdateImporter:
+        abstract: true
+        calls:
+            - method: setCrud
+              arguments:
+                  - '@Claroline\AppBundle\API\Crud'
+
+    # Base services for common export actions
+    # Implemented actions must use the tag `claroline.transfer.exporter`
+    Claroline\TransferBundle\Transfer\Exporter\AbstractListExporter:
+        abstract: true
+        calls:
+            - method: setCrud
+              arguments:
+                  - '@Claroline\AppBundle\API\Crud'

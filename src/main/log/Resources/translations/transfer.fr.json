@@ -1,0 +1,6 @@
+{
+  "log": "Logs",
+  "functional_log_list": "Liste des logs fonctionnels",
+  "message_log_list": "Liste des logs d'envoi de messages",
+  "security_log_list": "Liste des logs de sécurité"
+}

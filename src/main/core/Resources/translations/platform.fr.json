@@ -1265,7 +1265,6 @@
     "units": "Unités",
     "log": "Log",
     "execution_date": "Date d'exécution",
-    "upload date": "Date d'upload",
     "about": "À propos",
     "created_at": "Créé le %date%",
     "updated_at": "Mis à jour le %date%",
@@ -1460,5 +1459,6 @@
     "platform_version": "Version %version%",
     "platform_changelog_display": "Vous voyez la note de version car vous possédez l'un des rôles suivant : %roles%. Ce message est affiché jusqu'au %end_date%.",
     "user_enabled": "Utilisateur actif",
-    "user_disabled": "Utilisateur inactif"
+    "user_disabled": "Utilisateur inactif",
+    "in_progress": "En cours"
 }

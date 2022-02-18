@@ -32,12 +32,6 @@ services:
         tags:
             - { name: kernel.event_listener, event: administration_tool_templates, method: onAdministrationToolOpen }
 
-    Claroline\CoreBundle\Listener\Administration\TransferListener:
-        arguments:
-            - '@Claroline\AppBundle\API\TransferProvider'
-        tags:
-            - { name: kernel.event_listener, event: administration_tool_transfer, method: onDisplayTool }
-
     Claroline\CoreBundle\Listener\DataSource\Workspace\AllSource:
         arguments:
             - '@Claroline\AppBundle\API\FinderProvider'
@@ -172,13 +166,6 @@ services:
         tags:
             - { name: kernel.event_listener, event: open_tool_workspace_community, method: onDisplayWorkspace }
             - { name: kernel.event_listener, event: open_tool_desktop_community, method: onDisplayDesktop }
-
-    Claroline\CoreBundle\Listener\Tool\DataTransferListener:
-        arguments:
-            - '@Claroline\AppBundle\API\TransferProvider'
-            - '@Claroline\AppBundle\API\SerializerProvider'
-        tags:
-            - { name: kernel.event_listener, event: open_tool_workspace_transfer, method: onDisplayWorkspace }
 
     Claroline\CoreBundle\Listener\Tool\ResourcesListener:
         arguments:

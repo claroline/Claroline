@@ -1430,5 +1430,6 @@
     "platform_version": "Version %version%",
     "platform_changelog_display": "You see the release note because you have one of the following role : %roles%. This message is displayed until %end_date%.",
     "user_enabled": "Active user",
-    "user_disabled": "Inactive user"
+    "user_disabled": "Inactive user",
+    "in_progress": "In progress"
 }

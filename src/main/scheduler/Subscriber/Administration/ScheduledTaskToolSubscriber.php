@@ -22,7 +22,7 @@ class ScheduledTaskToolSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            'administration_tool_scheduled_task' => 'onDisplayTool',
+            'administration_tool_scheduled_tasks' => 'onDisplayTool',
         ];
     }
 

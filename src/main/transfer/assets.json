@@ -1,0 +1,7 @@
+{
+  "styles": {
+    "entry": {
+      "transfer-tool": "tools/transfer.less"
+    }
+  }
+}

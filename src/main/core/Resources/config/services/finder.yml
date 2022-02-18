@@ -20,8 +20,6 @@ services:
 
     Claroline\CoreBundle\API\Finder\Planning\PlannedObjectFinder: ~
 
-    Claroline\CoreBundle\API\Finder\TransferFinder: ~
-
     Claroline\CoreBundle\API\Finder\Workspace\WorkspaceFinder:
         arguments:
           - '@security.authorization_checker'

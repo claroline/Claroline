@@ -1,5 +1,6 @@
 imports:
     - { resource: services/controller.yml }
+    - { resource: services/exporter.yml }
     - { resource: services/finder.yml }
     - { resource: services/messenger.yml }
     - { resource: services/serializer.yml }

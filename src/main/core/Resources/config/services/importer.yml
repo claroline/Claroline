@@ -1,0 +1,116 @@
+services:
+    _defaults:
+        tags: [claroline.transfer.importer]
+
+    # Directories
+    Claroline\CoreBundle\Transfer\Importer\Directory\Create:
+        arguments:
+            - '@Claroline\AppBundle\API\Crud'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@translator'
+
+    Claroline\CoreBundle\Transfer\Importer\Directory\CreateOrUpdate:
+        arguments:
+            - '@Claroline\AppBundle\API\Crud'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@translator'
+
+    # Groups
+    Claroline\CoreBundle\Transfer\Importer\Group\Create:
+        parent: Claroline\TransferBundle\Transfer\Importer\AbstractCreateImporter
+
+    Claroline\CoreBundle\Transfer\Importer\Group\CreateOrUpdate:
+        parent: Claroline\TransferBundle\Transfer\Importer\AbstractCreateOrUpdateImporter
+
+    Claroline\CoreBundle\Transfer\Importer\Group\Update:
+        parent: Claroline\TransferBundle\Transfer\Importer\AbstractUpdateImporter
+
+    Claroline\CoreBundle\Transfer\Importer\Group\Delete:
+        parent: Claroline\TransferBundle\Transfer\Importer\AbstractDeleteImporter
+
+    Claroline\CoreBundle\Transfer\Importer\Group\AddUser:
+        arguments:
+            - '@Claroline\AppBundle\API\Crud'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+
+    Claroline\CoreBundle\Transfer\Importer\Group\RemoveUser:
+        arguments:
+            - '@Claroline\AppBundle\API\Crud'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+
+    # Users
+    Claroline\CoreBundle\Transfer\Importer\User\Create:
+        arguments:
+            - '@Claroline\AppBundle\API\Crud'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+
+    Claroline\CoreBundle\Transfer\Importer\User\CreateOrUpdate:
+        parent: Claroline\TransferBundle\Transfer\Importer\AbstractCreateOrUpdateImporter
+
+    Claroline\CoreBundle\Transfer\Importer\User\Delete:
+        parent: Claroline\TransferBundle\Transfer\Importer\AbstractDeleteImporter
+
+    Claroline\CoreBundle\Transfer\Importer\User\Update:
+        parent: Claroline\TransferBundle\Transfer\Importer\AbstractUpdateImporter
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+
+    Claroline\CoreBundle\Transfer\Importer\User\Enable:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\Manager\UserManager'
+
+    Claroline\CoreBundle\Transfer\Importer\User\Disable:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\Manager\UserManager'
+
+    Claroline\CoreBundle\Transfer\Importer\User\SetMainOrganization:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\Crud'
+
+    # Workspaces
+    Claroline\CoreBundle\Transfer\Importer\Workspace\Create:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\Crud'
+
+    Claroline\CoreBundle\Transfer\Importer\Workspace\Delete:
+        parent: Claroline\TransferBundle\Transfer\Importer\AbstractDeleteImporter
+
+    Claroline\CoreBundle\Transfer\Importer\Workspace\Archive:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
+
+    Claroline\CoreBundle\Transfer\Importer\Workspace\Unarchive:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
+
+    Claroline\CoreBundle\Transfer\Importer\Workspace\AddUser:
+        arguments:
+            - '@Claroline\AppBundle\API\Crud'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+
+    Claroline\CoreBundle\Transfer\Importer\Workspace\RemoveUser:
+        arguments:
+            - '@Claroline\AppBundle\API\Crud'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+
+    Claroline\CoreBundle\Transfer\Importer\Workspace\AddGroup:
+        arguments:
+            - '@Claroline\AppBundle\API\Crud'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+
+    Claroline\CoreBundle\Transfer\Importer\Workspace\RemoveGroup:
+        arguments:
+            - '@Claroline\AppBundle\API\Crud'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'

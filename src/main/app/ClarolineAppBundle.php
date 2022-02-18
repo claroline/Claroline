@@ -12,7 +12,6 @@
 namespace Claroline\AppBundle;
 
 use Bazinga\Bundle\JsTranslationBundle\BazingaJsTranslationBundle;
-use Claroline\AppBundle\DependencyInjection\Compiler\ApiConfigPass;
 use Claroline\AppBundle\DependencyInjection\Compiler\RouterPass;
 use Claroline\KernelBundle\Bundle\AutoConfigurableInterface;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
@@ -35,7 +34,6 @@ class ClarolineAppBundle extends Bundle implements AutoConfigurableInterface
     {
         parent::build($container);
 
-        $container->addCompilerPass(new ApiConfigPass());
         $container->addCompilerPass(new RouterPass());
     }
 

@@ -37,8 +37,6 @@ services:
 
     Claroline\CoreBundle\Security\Voter\GroupVoter: ~
 
-    Claroline\CoreBundle\Security\Voter\ImportFileVoter: ~
-
     Claroline\CoreBundle\Security\Voter\Location\LocationVoter: ~
 
     Claroline\CoreBundle\Security\Voter\Location\RoomVoter: ~

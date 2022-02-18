@@ -1,0 +1,6 @@
+{
+  "log": "Logs",
+  "functional_log_list": "List of functional logs",
+  "message_log_list": "List of sent messages logs",
+  "security_log_list": "List of security logs"
+}

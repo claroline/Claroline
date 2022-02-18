@@ -223,14 +223,18 @@ class FileUtilities
         return $next;
     }
 
-    public function getOneBy(array $filters): ?PublicFile
+    public function getContents(PublicFile $file): ?string
     {
-        return $this->om->getRepository('ClarolineCoreBundle:File\PublicFile')->findOneBy($filters);
-    }
+        $content = file_get_contents($this->getPath($file));
+        if ($content) {
+            // remove BOM if any
+            $bom = pack('H*', 'EFBBBF');
+            $content = preg_replace("/^$bom/", '', $content);
 
-    public function getContents(PublicFile $file)
-    {
-        return file_get_contents($this->getPath($file));
+            return $content;
+        }
+
+        return null;
     }
 
     public function getPath(PublicFile $file)
