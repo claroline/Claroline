@@ -30,7 +30,7 @@ const ProfileFacetComponent = props => {
     <FormData
       name={selectors.FORM_NAME}
       title={props.facet.title}
-      target={['apiv2_user_update', {id: props.user.id}]}
+      target={['apiv2_profile_update', {username: props.user.username}]}
       buttons={true}
       cancel={{
         type: LINK_BUTTON,
