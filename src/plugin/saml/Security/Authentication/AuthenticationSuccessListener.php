@@ -61,7 +61,7 @@ class AuthenticationSuccessListener extends BaseAuthenticationSuccessListener
 
             // attach user to the defined organization
             $organization = $this->idpManager->getOrganization($idpEntityId, $user->getEmail(), $attributes);
-            if ($organization && (empty($user->getMainOrganization()) || $organization->getId() !== $user->getMainOrganization()->getId())) {
+            if ($organization && (empty($user->getMainOrganization()) || $user->getMainOrganization()->isDefault())) {
                 // reset organization if it has changed or has not been set (eg. user has just been created)
                 $this->crud->replace($user, 'mainOrganization', $organization, [Crud::THROW_EXCEPTION, Crud::NO_PERMISSIONS, Options::NO_EMAIL]);
             }
