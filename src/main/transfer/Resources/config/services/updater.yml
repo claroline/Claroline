@@ -1,0 +1,5 @@
+services:
+    Claroline\TransferBundle\Installation\Updater\Updater130300:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+        tags: [ 'claroline.platform.updater' ]

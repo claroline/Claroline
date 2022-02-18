@@ -165,12 +165,6 @@ services:
             - '@Claroline\CoreBundle\Manager\LocaleManager'
             - '@request_stack'
 
-    Claroline\CoreBundle\API\Serializer\Transfer\FileSerializer:
-        tags: [claroline.serializer]
-        arguments:
-           - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
-           - '@Claroline\AppBundle\Persistence\ObjectManager'
-
     Claroline\CoreBundle\API\Serializer\Tool\ToolSerializer:
         tags: [claroline.serializer]
 
@@ -281,8 +275,8 @@ services:
     Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer:
         tags: [claroline.serializer]
         arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\Manager\PlatformManager'
-            - '@Claroline\CoreBundle\Library\Utilities\FileUtilities'
 
     Claroline\CoreBundle\API\Serializer\Facet\PanelFacetSerializer:
         tags: [claroline.serializer]

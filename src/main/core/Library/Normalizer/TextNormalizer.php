@@ -106,4 +106,27 @@ class TextNormalizer
 
         return $key;
     }
+
+    public static function toUtf8(string $string): string
+    {
+        // If encoding not UTF-8 then convert it to UTF-8
+        $encoding = mb_detect_encoding($string, ['UTF-8', 'ASCII', 'ISO-8859-1', 'Windows-1252'], true);
+        if ($encoding && 'UTF-8' !== $encoding) {
+            $string = iconv($encoding, 'UTF-8', $string);
+        }
+
+        return $string;
+    }
+
+    public static function sanitize(string $string): string
+    {
+        // If encoding not UTF-8 then convert it to UTF-8
+        $string = TextNormalizer::toUtf8($string);
+
+        // normalize end of lines
+        $string = str_replace("\r\n", PHP_EOL, $string);
+        $string = str_replace("\r", PHP_EOL, $string);
+
+        return $string;
+    }
 }

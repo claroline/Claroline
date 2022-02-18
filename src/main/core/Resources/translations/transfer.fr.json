@@ -1,12 +1,8 @@
 {
-    "create": "Créer",
     "add_user": "Ajouter un utilisateur",
     "remove_user": "Supprimer un utilisateur",
     "add_group": "Ajouter un groupe",
     "remove_group": "Supprimer un groupe",
-    "delete": "Supprimer",
-    "update": "Mettre à jour",
-    "create_or_update": "Créer ou mettre à jour",
     "workspace": "Espace d'activités",
     "set_main_organization": "Définir l'organisation principale",
     "group": "Groupe",
@@ -14,15 +10,12 @@
     "directory": "Dossier",
     "enable": "Activer",
     "disable": "Désactiver",
-    "examples": "Exemples",
-    "schema_all_properties": "Toutes les colonnes disponibles",
-    "schema_required_properties": "Uniquement les colonnes requises",
-    "one_of_field_list": "Une des colonnes suivantes :",
     "archive": "Archiver",
     "unarchive": "Désarchiver",
+    "list_users": "Liste des utilisateurs",
 
     "directory_id": "L'id du dossier",
-    "directory_name": "Le nom du répertoire",
+    "directory_name": "Le nom du dossier",
     "directory_open": "Le droit d'ouverture [default: 0 (faux)]",
     "directory_delete": "Le droit de suppression [default: 0 (faux)]",
     "directory_edit": "Le droit d'édition [default: 0 (faux)]",
@@ -30,15 +23,6 @@
     "directory_export": "Le droit d'export [default: 0 (faux)]",
     "directory_administrate": "Le droit d'administration pour les collaborateurs",
     "directory_user": "Un username s'il est le seul a y avoir accès",
-    "directory_role": "Clef de traduction du role (role par defaut si non défini)",
-    "directory_creation": "Liste des types de ressources autorisé à être créé (séparé par des virgules) - %types% - par defaut: tous",
-
-    "no_sample": "Aucun fichier d'exemple n'est disponible pour cette action.",
-    "no_log": "Aucun log n'est disponible pour le moment.",
-    "no_log_help": "Veuillez commencer l'import ou patienter le temps que nous chargions les logs.",
-
-    "csv_header": "La 1ère ligne contient le nom des colonnes",
-    "row_delimiter": "Délimiteur de lignes",
-    "col_delimiter": "Délimiteur de colonnes",
-    "list_delimiter": "Délimiteur des valeurs dans les listes"
+    "directory_role": "Clé de traduction du rôle (rôle par défaut si non défini)",
+    "directory_creation": "Liste des types de ressources autorisé à être créé (séparé par des virgules) - %types% - par defaut: tous"
 }

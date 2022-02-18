@@ -1,0 +1,10 @@
+imports:
+    - { resource: services/controller.yml }
+    - { resource: services/finder.yml }
+    - { resource: services/manager.yml }
+    - { resource: services/messenger.yml }
+    - { resource: services/serializer.yml }
+    - { resource: services/subscriber.yml }
+    - { resource: services/transfer.yml }
+    - { resource: services/updater.yml }
+    - { resource: services/voter.yml }

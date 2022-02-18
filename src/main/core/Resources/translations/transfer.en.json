@@ -1,25 +1,18 @@
 {
-    "create": "Create",
     "add_user": "Add user",
     "remove_user": "Remove user",
     "add_group": "Add group",
     "remove_group": "Remove group",
-    "delete": "Delete",
-    "update": "Update",
-    "create_or_update": "Create or update",
-    "set_main_organization": "Define main organization",
     "workspace": "Workspace",
+    "set_main_organization": "Define main organization",
     "group": "Group",
     "user": "User",
     "directory": "Directory",
     "enable": "Enable",
     "disable": "Disable",
-    "examples": "Examples",
-    "schema_all_properties": "All available columns",
-    "schema_required_properties": "Only required columns",
-    "one_of_field_list": "One of the following columns:",
     "archive": "Archive",
     "unarchive": "Unarchive",
+    "list_users": "List of users",
 
     "directory_id": "The directory id",
     "directory_name": "The directory name",
@@ -31,14 +24,5 @@
     "directory_administrate": "Administrate permission [default: 0 (false)]",
     "directory_user": "A username if these directories are only usable by him",
     "directory_role": "A role translation key (workspace default role by default)",
-    "directory_creation": "The list of creatable types (coma separated) - %types% - default: all",
-
-    "no_sample": "No example file available for this action.",
-    "no_log": "No log is available for now.",
-    "no_log_help": "Please start the import or wait while we load the logs.",
-
-    "csv_header": "The first line contains the name of the columns",
-    "row_delimiter": "Rows delimiter",
-    "col_delimiter": "Columns delimiter",
-    "list_delimiter": "List values delimiter"
+    "directory_creation": "The list of creatable types (coma separated) - %types% - default: all"
 }

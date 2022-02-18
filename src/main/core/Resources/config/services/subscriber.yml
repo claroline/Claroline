@@ -12,6 +12,14 @@ services:
               arguments:
                   - '@Claroline\CoreBundle\Manager\PlanningManager'
 
+    Claroline\CoreBundle\Subscriber\Crud\File\PublicFileSubscriber:
+        arguments:
+            - '%claroline.param.files_directory%'
+            - '@security.token_storage'
+            - '@Claroline\CoreBundle\Library\Utilities\FileUtilities'
+        tags:
+            - { name: kernel.event_subscriber }
+
     Claroline\CoreBundle\Subscriber\GlobalSearchSubscriber:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'

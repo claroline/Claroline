@@ -80,6 +80,11 @@ class Crud
         return $this->om->getRepository($class)->findOneBy(['id' => $id]);
     }
 
+    public function find(string $class, $data)
+    {
+        return $this->om->getObject($data, $class, $this->schema->getIdentifiers($class));
+    }
+
     public function list(string $class, array $query = [], array $options = [])
     {
         $results = $this->finder->searchEntities($class, $query);
@@ -91,6 +96,9 @@ class Crud
         ]);
     }
 
+    /**
+     * @deprecated
+     */
     public function csv(string $class, array $query = [], array $options = [])
     {
         $data = $this->list($class, $query, $options)['data'];

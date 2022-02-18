@@ -1047,23 +1047,7 @@ class Version20200610073540 extends AbstractMigration
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET UTF8 COLLATE UTF8_unicode_ci ENGINE = InnoDB
         ');
-        $this->addSql('
-            CREATE TABLE claro_import_file (
-                id INT AUTO_INCREMENT NOT NULL, 
-                file_id INT DEFAULT NULL, 
-                workspace_id INT DEFAULT NULL, 
-                log VARCHAR(255) DEFAULT NULL, 
-                status VARCHAR(255) DEFAULT NULL, 
-                action VARCHAR(255) DEFAULT NULL, 
-                start_date DATETIME DEFAULT NULL, 
-                executionDate DATETIME DEFAULT NULL, 
-                uuid VARCHAR(36) NOT NULL, 
-                UNIQUE INDEX UNIQ_EA6FE9F1D17F50A6 (uuid), 
-                INDEX IDX_EA6FE9F193CB796C (file_id), 
-                INDEX IDX_EA6FE9F182D40A1F (workspace_id), 
-                PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET UTF8 COLLATE UTF8_unicode_ci ENGINE = InnoDB
-        ');
+
         $this->addSql('
             CREATE TABLE claro_log_connect_admin_tool (
                 id INT AUTO_INCREMENT NOT NULL, 
@@ -2074,18 +2058,6 @@ class Version20200610073540 extends AbstractMigration
             ON DELETE CASCADE
         ');
         $this->addSql('
-            ALTER TABLE claro_import_file 
-            ADD CONSTRAINT FK_EA6FE9F193CB796C FOREIGN KEY (file_id) 
-            REFERENCES claro_public_file (id) 
-            ON DELETE SET NULL
-        ');
-        $this->addSql('
-            ALTER TABLE claro_import_file 
-            ADD CONSTRAINT FK_EA6FE9F182D40A1F FOREIGN KEY (workspace_id) 
-            REFERENCES claro_workspace (id) 
-            ON DELETE CASCADE
-        ');
-        $this->addSql('
             ALTER TABLE claro_log_connect_admin_tool 
             ADD CONSTRAINT FK_833389778F7B22CC FOREIGN KEY (tool_id) 
             REFERENCES claro_admin_tools (id) 
@@ -2690,10 +2662,6 @@ class Version20200610073540 extends AbstractMigration
             DROP FOREIGN KEY FK_97FAB91F82D40A1F
         ');
         $this->addSql('
-            ALTER TABLE claro_import_file 
-            DROP FOREIGN KEY FK_EA6FE9F182D40A1F
-        ');
-        $this->addSql('
             ALTER TABLE claro_log_connect_tool 
             DROP FOREIGN KEY FK_DDD8A47082D40A1F
         ');
@@ -2848,10 +2816,6 @@ class Version20200610073540 extends AbstractMigration
         $this->addSql('
             ALTER TABLE claro_public_file_use 
             DROP FOREIGN KEY FK_6F128157C81526DE
-        ');
-        $this->addSql('
-            ALTER TABLE claro_import_file 
-            DROP FOREIGN KEY FK_EA6FE9F193CB796C
         ');
         $this->addSql('
             ALTER TABLE claro_resource_evaluation 
@@ -3133,9 +3097,6 @@ class Version20200610073540 extends AbstractMigration
         ');
         $this->addSql('
             DROP TABLE claro_public_file_use
-        ');
-        $this->addSql('
-            DROP TABLE claro_import_file
         ');
         $this->addSql('
             DROP TABLE claro_log_connect_admin_tool

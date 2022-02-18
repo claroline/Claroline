@@ -2,7 +2,6 @@
   "styles": {
     "entry": {
       "administration-parameters": "administration/parameters.less",
-      "transfer-tool": "tools/transfer.less",
       "theme-management": "tools/theme-management.less",
       "swagger": "swagger/index.less"
     }

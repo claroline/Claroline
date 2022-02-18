@@ -2,6 +2,7 @@ Claroline\InstallationBundle\ClarolineInstallationBundle = true
 Claroline\MigrationBundle\ClarolineMigrationBundle = true
 Claroline\CoreBundle\ClarolineCoreBundle = true
 Claroline\SchedulerBundle\ClarolineSchedulerBundle = true
+Claroline\TransferBundle\ClarolineTransferBundle = true
 Claroline\TagBundle\ClarolineTagBundle = true
 Claroline\AppBundle\ClarolineAppBundle = true
 Claroline\AuthenticationBundle\ClarolineAuthenticationBundle = true

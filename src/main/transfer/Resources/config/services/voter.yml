@@ -1,0 +1,18 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+
+    _instanceof:
+        Claroline\CoreBundle\Security\Voter\AbstractVoter:
+            autowire: false
+            tags: [security.voter]
+            calls:
+                - method: setContainer
+                  arguments:
+                      - '@service_container'
+
+    Claroline\TransferBundle\Security\Voter\ImportFileVoter: ~
+
+    Claroline\TransferBundle\Security\Voter\ExportFileVoter: ~

@@ -1,0 +1,9 @@
+services:
+    _defaults:
+        tags: [claroline.transfer.exporter]
+
+    Claroline\EvaluationBundle\Transfer\Exporter\ResourceEvaluationListExporter:
+        parent: Claroline\TransferBundle\Transfer\Exporter\AbstractListExporter
+
+    Claroline\EvaluationBundle\Transfer\Exporter\WorkspaceEvaluationListExporter:
+        parent: Claroline\TransferBundle\Transfer\Exporter\AbstractListExporter

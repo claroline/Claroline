@@ -1,0 +1,9 @@
+services:
+    _defaults:
+        autoconfigure: false
+        public: false
+
+    Claroline\TransferBundle\Manager\TransferManager:
+        arguments:
+            - '@messenger.default_bus'
+            - '%claroline.param.import_log_dir%'

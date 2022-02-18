@@ -1,25 +1,26 @@
 # This file contains only services that cannot be defined using annotations.
 
 imports:
-    - { resource: services/repository.yml }
-    - { resource: services/serializer.yml }
-    - { resource: services/manager.yml }
-    - { resource: services/transfer.yml }
-    - { resource: services/finder.yml }
-    - { resource: services/validator.yml }
-    - { resource: services/crud.yml }
-    - { resource: services/twig.yml }
     - { resource: services/checker.yml }
     - { resource: services/command.yml }
     - { resource: services/configuration.yml }
     - { resource: services/controller.yml }
     - { resource: services/converter.yml }
+    - { resource: services/crud.yml }
+    - { resource: services/exporter.yml }
+    - { resource: services/finder.yml }
+    - { resource: services/importer.yml }
     - { resource: services/listener.yml }
     - { resource: services/library.yml }
-    - { resource: services/session.yml }
-    - { resource: services/updater.yml }
+    - { resource: services/manager.yml }
     - { resource: services/messenger.yml }
+    - { resource: services/repository.yml }
+    - { resource: services/serializer.yml }
+    - { resource: services/session.yml }
     - { resource: services/subscriber.yml }
+    - { resource: services/twig.yml }
+    - { resource: services/updater.yml }
+    - { resource: services/validator.yml }
     - { resource: services/voter.yml }
 
 services:
