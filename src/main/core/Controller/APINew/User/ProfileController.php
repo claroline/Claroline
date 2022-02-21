@@ -125,7 +125,7 @@ class ProfileController
         // those roles should not be here anyway.
         unset($userData['roles']);
 
-        $updated = $this->crud->update($user, $userData, [Crud::THROW_EXCEPTION, Options::SERIALIZE_FACET]);
+        $updated = $this->crud->update($user, $userData, [Crud::THROW_EXCEPTION, Options::SERIALIZE_FACET, Options::VALIDATE_FACET], $this->profileSerializer);
 
         return new JsonResponse(
             $this->serializer->serialize($updated, [Options::SERIALIZE_FACET])
@@ -150,7 +150,7 @@ class ProfileController
         // updates facets data
         $updatedFacets = [];
         foreach ($formData as $facetData) {
-            $updated = $this->crud->update(Facet::class, $facetData, [Options::DEEP_DESERIALIZE]);
+            $updated = $this->crud->update(Facet::class, $facetData, [Options::DEEP_DESERIALIZE], null);
             $updatedFacets[$updated->getId()] = $updated;
         }
 

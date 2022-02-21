@@ -7,6 +7,7 @@ use Claroline\AppBundle\Event\Crud\CrudEvent;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AppBundle\Security\ObjectCollection;
+use Claroline\CoreBundle\Manager\FacetManager;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -48,6 +49,9 @@ class Crud
     /** @var SchemaProvider */
     private $schema;
 
+    /** @var FacetManager */
+    private $facetManager;
+
     public function __construct(
       ObjectManager $om,
       StrictDispatcher $dispatcher,
@@ -55,6 +59,7 @@ class Crud
       SerializerProvider $serializer,
       ValidatorProvider $validator,
       SchemaProvider $schema,
+      FacetManager $facetManager,
       AuthorizationCheckerInterface $authorization
     ) {
         $this->om = $om;
@@ -63,6 +68,7 @@ class Crud
         $this->serializer = $serializer;
         $this->validator = $validator;
         $this->schema = $schema;
+        $this->facetManager = $facetManager;
         $this->authorization = $authorization;
     }
 
@@ -194,7 +200,7 @@ class Crud
      *
      * @throws InvalidDataException
      */
-    public function update($classOrObject, $data, array $options = [])
+    public function update($classOrObject, $data, array $options = [], $profileSerializer)
     {
         if (is_string($classOrObject)) {
             // class name received
@@ -209,6 +215,34 @@ class Crud
 
         // validates submitted data.
         $errors = $this->validate($class, $data, ValidatorProvider::UPDATE);
+
+        // todo validate Facet values
+        if (in_array(Options::VALIDATE_FACET, $options)) {
+            $facets = $profileSerializer->serialize([Options::REGISTRATION]);
+            $allFields = [];
+            $required = [];
+
+            foreach ($facets as $facet) {
+                foreach ($facet['sections'] as $section) {
+                    foreach ($section['fields'] as $field) {
+                        $allFields[] = $field;
+                        if ($field['required']) {
+                            $required[] = $field;
+                        }
+                    }
+                }
+            }
+
+            foreach ($required as $field) {
+                if ($this->facetManager->isFieldDisplayed($field, $allFields, $data) && !ArrayUtils::has($data, 'profile.'.$field['id'])) {
+                    $errors[] = [
+                        'path' => 'profile/'.$field['id'],
+                        'message' => 'The field '.$field['label'].' is required',
+                    ];
+                }
+            }
+        }
+
         if (count($errors) > 0) {
             // TODO : it should always throw exception
             if (in_array(self::THROW_EXCEPTION, $options)) {

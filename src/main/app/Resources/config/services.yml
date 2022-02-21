@@ -26,6 +26,7 @@ services:
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\AppBundle\API\ValidatorProvider'
             - '@Claroline\AppBundle\API\SchemaProvider'
+            - '@Claroline\CoreBundle\Manager\FacetManager'
             - '@security.authorization_checker'
 
     Claroline\AppBundle\API\SchemaProvider:
