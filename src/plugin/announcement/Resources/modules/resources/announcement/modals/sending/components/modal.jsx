@@ -40,6 +40,7 @@ const SendingModal = (props) =>
               label: trans('announcement_notify_users', {}, 'announcement'),
               hideLabel: true,
               required: true,
+              displayed: props.schedulerEnabled,
               onChange: (notify) => {
                 if (2 === notify) {
                   props.update('meta.notificationDate', now())
@@ -120,6 +121,7 @@ const SendingModal = (props) =>
 
 SendingModal.propTypes = {
   aggregateId: T.string.isRequired,
+  schedulerEnabled: T.bool.isRequired,
   announcement: T.shape(
     AnnouncementTypes.propTypes
   ).isRequired,

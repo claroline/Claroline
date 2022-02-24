@@ -23,7 +23,7 @@ const ScheduledTaskTool = props =>
         target: `${props.path}/form`,
         primary: true,
         exact: true,
-        disabled: !props.isCronConfigured
+        disabled: !props.isSchedulerEnabled
       }, {
         name: 'execute-all',
         type: CALLBACK_BUTTON,
@@ -33,7 +33,7 @@ const ScheduledTaskTool = props =>
       }
     ]}
   >
-    {!props.isCronConfigured &&
+    {!props.isSchedulerEnabled &&
       <AlertBlock type="warning" title={trans('cron_not_configured', {}, 'scheduler')} style={{marginTop: 20}}>
         {trans('cron_not_configured_help', {}, 'scheduler')}
       </AlertBlock>
@@ -57,7 +57,7 @@ const ScheduledTaskTool = props =>
 
 ScheduledTaskTool.propTypes = {
   path: T.string.isRequired,
-  isCronConfigured: T.bool.isRequired,
+  isSchedulerEnabled: T.bool.isRequired,
   openForm: T.func.isRequired,
   execute: T.func.isRequired
 }

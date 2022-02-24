@@ -1,4 +1,4 @@
 plugin:
     admin_tools:
         - name: scheduled_tasks
-          class: clock-o
+          class: clock

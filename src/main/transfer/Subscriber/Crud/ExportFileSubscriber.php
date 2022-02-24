@@ -5,7 +5,9 @@ namespace Claroline\TransferBundle\Subscriber\Crud;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\SchedulerBundle\Entity\ScheduledTask;
 use Claroline\TransferBundle\Entity\ExportFile;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -15,6 +17,8 @@ class ExportFileSubscriber implements EventSubscriberInterface
 {
     /** @var TokenStorageInterface */
     private $tokenStorage;
+    /** @var ObjectManager */
+    private $om;
     /** @var Crud */
     private $crud;
     /** @var string */
@@ -24,11 +28,13 @@ class ExportFileSubscriber implements EventSubscriberInterface
 
     public function __construct(
         TokenStorageInterface $tokenStorage,
+        ObjectManager $om,
         Crud $crud,
         string $filesDir,
         string $logDir
     ) {
         $this->tokenStorage = $tokenStorage;
+        $this->om = $om;
         $this->crud = $crud;
         $this->filesDir = $filesDir;
         $this->logDir = $logDir;
@@ -38,6 +44,7 @@ class ExportFileSubscriber implements EventSubscriberInterface
     {
         return [
             Crud::getEventName('create', 'pre', ExportFile::class) => 'preCreate',
+            Crud::getEventName('create', 'post', ExportFile::class) => 'postCreate',
             Crud::getEventName('delete', 'post', ExportFile::class) => 'postDelete',
         ];
     }
@@ -55,6 +62,23 @@ class ExportFileSubscriber implements EventSubscriberInterface
         $object->setCreatedAt(new \DateTime());
     }
 
+    public function postCreate(CreateEvent $event)
+    {
+        /** @var ExportFile $object */
+        $object = $event->getObject();
+        $data = $event->getData();
+
+        if (empty($data['scheduler'])) {
+            return;
+        }
+
+        $this->crud->create(ScheduledTask::class, array_merge($data['scheduler'], [
+            'name' => $object->getAction(),
+            'action' => 'export',
+            'parentId' => $object->getUuid(),
+        ]), [Crud::THROW_EXCEPTION]);
+    }
+
     public function postDelete(DeleteEvent $event)
     {
         /** @var ExportFile $object */
@@ -66,9 +90,14 @@ class ExportFileSubscriber implements EventSubscriberInterface
         $fs->remove($this->logDir.DIRECTORY_SEPARATOR.$object->getUuid());
 
         // delete exported file
-        if ($object->getUrl()) {
-            $fs = new FileSystem();
-            $fs->remove($this->filesDir.DIRECTORY_SEPARATOR.$object->getUrl());
+        if (file_exists($this->filesDir.DIRECTORY_SEPARATOR.'transfer'.DIRECTORY_SEPARATOR.$object->getUuid())) {
+            $fs->remove($this->filesDir.DIRECTORY_SEPARATOR.'transfer'.DIRECTORY_SEPARATOR.$object->getUuid());
+        }
+
+        // delete scheduled tasks if any
+        $tasks = $this->om->getRepository(ScheduledTask::class)->findBy(['parentId' => $object->getUuid()]);
+        if (!empty($tasks)) {
+            $this->crud->deleteBulk($tasks);
         }
     }
 }

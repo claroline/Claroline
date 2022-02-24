@@ -53,8 +53,13 @@ const ScheduledTaskList = (props) =>
         primary: true,
         displayed: true
       }, {
-        name: 'type',
+        name: 'action',
         label: trans('task'),
+        type: 'translation',
+        displayed: true
+      }, {
+        name: 'executionType',
+        label: trans('type'),
         type: 'choice',
         options: {
           choices: constants.TASK_TYPES

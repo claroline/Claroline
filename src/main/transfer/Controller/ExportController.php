@@ -82,7 +82,7 @@ class ExportController extends AbstractCrudController
     {
         $this->checkPermission('EDIT', $exportFile, [], true);
 
-        $this->transferManager->export($exportFile);
+        $this->transferManager->requestExport($exportFile);
 
         return new JsonResponse(
             $this->serializer->serialize($exportFile)

@@ -11,6 +11,8 @@ use Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
+use Claroline\SchedulerBundle\Entity\ScheduledTask;
+use Claroline\SchedulerBundle\Serializer\ScheduledTaskSerializer;
 use Claroline\TransferBundle\Entity\ImportFile;
 
 class ImportFileSerializer
@@ -25,17 +27,21 @@ class ImportFileSerializer
     private $fileSerializer;
     /** @var WorkspaceSerializer */
     private $workspaceSerializer;
+    /** @var ScheduledTaskSerializer */
+    private $scheduledTaskSerializer;
 
     public function __construct(
         ObjectManager $om,
         UserSerializer $userSerializer,
         PublicFileSerializer $fileSerializer,
-        WorkspaceSerializer $workspaceSerializer
+        WorkspaceSerializer $workspaceSerializer,
+        ScheduledTaskSerializer $scheduledTaskSerializer
     ) {
         $this->om = $om;
         $this->userSerializer = $userSerializer;
         $this->fileSerializer = $fileSerializer;
         $this->workspaceSerializer = $workspaceSerializer;
+        $this->scheduledTaskSerializer = $scheduledTaskSerializer;
     }
 
     /** @return string */
@@ -56,7 +62,6 @@ class ImportFileSerializer
             'action' => $file->getAction(),
             'format' => $file->getFormat(),
             'status' => $file->getStatus(),
-            //'log' => $file->getLog(),
             'meta' => [
                 'createdAt' => DateNormalizer::normalize($file->getCreatedAt()),
                 'creator' => $file->getCreator() ? $this->userSerializer->serialize($file->getCreator(), [Options::SERIALIZE_MINIMAL]) : null,
@@ -66,6 +71,12 @@ class ImportFileSerializer
 
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
             $data['extra'] = $file->getExtra();
+
+            // should not be exposed here
+            $scheduler = $this->om->getRepository(ScheduledTask::class)->findOneBy(['parentId' => $file->getUuid()]);
+            if (!empty($scheduler)) {
+                $data['scheduler'] = $this->scheduledTaskSerializer->serialize($scheduler);
+            }
 
             if ($file->getFile()) {
                 $data['file'] = $this->fileSerializer->serialize($file->getFile(), [Options::ABSOLUTE_URL]);

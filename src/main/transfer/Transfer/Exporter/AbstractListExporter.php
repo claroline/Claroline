@@ -18,9 +18,12 @@ abstract class AbstractListExporter extends AbstractExporter
 
     public function execute(?array $options = [], ?array $extra = []): array
     {
-        $query = [];
+        $query = [
+            'hiddenFilters' => $this->getHiddenFilters(),
+        ];
+
         if (!empty($extra) && !empty($extra['workspace'])) {
-            $query = ['hiddenFilters' => ['workspace' => $extra['workspace']['id']]];
+            $query['hiddenFilters']['workspace'] = $extra['workspace']['id'];
         }
 
         $list = $this->crud->list(static::getClass(), $query, $this->getOptions());
@@ -29,6 +32,11 @@ abstract class AbstractListExporter extends AbstractExporter
     }
 
     protected function getOptions(): array
+    {
+        return [];
+    }
+
+    protected function getHiddenFilters(): array
     {
         return [];
     }

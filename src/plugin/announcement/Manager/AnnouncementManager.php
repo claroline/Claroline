@@ -13,34 +13,36 @@ namespace Claroline\AnnouncementBundle\Manager;
 
 use Claroline\AnnouncementBundle\Entity\Announcement;
 use Claroline\AnnouncementBundle\Messenger\Message\SendAnnouncement;
+use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\SchedulerBundle\Manager\ScheduledTaskManager;
+use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
+use Claroline\SchedulerBundle\Entity\ScheduledTask;
 use Symfony\Component\Messenger\MessageBusInterface;
 
 class AnnouncementManager
 {
     /** @var ObjectManager */
     private $om;
-    /** @var ScheduledTaskManager */
-    private $taskManager;
     /** @var FinderProvider */
     private $finder;
     /** @var MessageBusInterface */
     private $messageBus;
+    /** @var Crud */
+    private $crud;
 
     public function __construct(
+        MessageBusInterface $messageBus,
         ObjectManager $om,
-        ScheduledTaskManager $taskManager,
         FinderProvider $finder,
-        MessageBusInterface $messageBus
+        Crud $crud
     ) {
-        $this->om = $om;
-        $this->taskManager = $taskManager;
-        $this->finder = $finder;
         $this->messageBus = $messageBus;
+        $this->om = $om;
+        $this->finder = $finder;
+        $this->crud = $crud;
     }
 
     /**
@@ -67,7 +69,7 @@ class AnnouncementManager
         $taskData = [
             'name' => $message['object'],
             'type' => 'message',
-            'scheduledDate' => $scheduledDate->format('Y-m-d\TH:i:s'),
+            'scheduledDate' => DateNormalizer::normalize($scheduledDate),
             'data' => [
                 'object' => $message['object'],
                 'content' => $announcement->getContent(),
@@ -81,13 +83,14 @@ class AnnouncementManager
         ];
 
         if (empty($announcement->getTask())) {
-            $task = $this->taskManager->create($taskData);
+            /** @var ScheduledTask $task */
+            $task = $this->crud->create(ScheduledTask::class, $taskData, [Crud::THROW_EXCEPTION]);
 
             // link new task to announcement
             $announcement->setTask($task);
             $this->om->persist($announcement);
         } else {
-            $this->taskManager->update($taskData, $announcement->getTask());
+            $this->crud->update($announcement->getTask(), $taskData, [Crud::THROW_EXCEPTION]);
         }
 
         $this->om->endFlushSuite();
@@ -98,7 +101,7 @@ class AnnouncementManager
         $this->om->startFlushSuite();
 
         if (!empty($announcement->getTask())) {
-            $this->taskManager->delete($announcement->getTask());
+            $this->crud->delete($announcement->getTask());
 
             // unlink task and announcement
             $announcement->setTask(null);

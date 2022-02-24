@@ -24,7 +24,7 @@ Documentation
 Contributing
 -------------
 
-Read our [Contributing guidelines](https://claroline.github.io/Claroline/sections/dev/contributing.html)
+Read our [Contributing guidelines](https://claroline.github.io/Claroline/sections/dev/contributing.html).
 
 Security
 --------

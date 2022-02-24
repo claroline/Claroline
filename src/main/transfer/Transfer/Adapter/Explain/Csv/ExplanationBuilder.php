@@ -35,9 +35,9 @@ class ExplanationBuilder
                 return;
             }
 
-            if ('array' === $property->type) {
+            if ('array' === $property->type || (is_array($property->type) && in_array('array', $property->type))) {
                 $this->explainSchema($property->items, $explanation, $whereAmI, true);
-            } elseif ('object' === $property->type) {
+            } elseif ('object' === $property->type || (is_array($property->type) && in_array('object', $property->type))) {
                 $this->explainObject($property, $explanation, $whereAmI, $isArray);
             }
 

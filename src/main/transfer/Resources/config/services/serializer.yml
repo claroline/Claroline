@@ -11,6 +11,7 @@ services:
             - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
             - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
             - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'
+            - '@Claroline\SchedulerBundle\Serializer\ScheduledTaskSerializer'
 
     Claroline\TransferBundle\Serializer\ExportFileSerializer:
         tags: [ claroline.serializer ]
@@ -18,3 +19,4 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
             - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'
+            - '@Claroline\SchedulerBundle\Serializer\ScheduledTaskSerializer'

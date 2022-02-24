@@ -3,16 +3,16 @@ import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 import merge from 'lodash/merge'
 
-import {trans} from '#/main/app/intl/translation'
+import {trans, now} from '#/main/app/intl'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 
-import {Logs} from '#/main/transfer/tools/transfer/log/components/logs'
-
 import {selectors} from '#/main/transfer/tools/transfer/import/store'
 import {ImportExplanation} from '#/main/transfer/tools/transfer/import/components/explanation'
 import {ImportSamples} from '#/main/transfer/tools/transfer/import/components/samples'
+
+const isScheduled = (data) => get(data, 'scheduler._enable') || get(data, 'scheduler.scheduledDate')
 
 class ImportForm extends Component {
   constructor(props) {
@@ -40,10 +40,10 @@ class ImportForm extends Component {
             action = value.substring(value.indexOf('_') + 1)
           }
 
-          props.history.push(`${this.props.path}/import/new/${entity}/${action}`)
-          props.resetLog()
           // extra data is specific to the selected action, reset it to avoid saving wrong data
           props.updateProp('extra', null)
+
+          props.history.push(`${this.props.path}/import/new/${entity}/${action}`)
         },
         required: true,
         options: {
@@ -117,18 +117,9 @@ class ImportForm extends Component {
           type: CALLBACK_BUTTON,
           icon: 'fa fa-fw fa-upload',
           label: trans('import', {}, 'actions'),
-          callback: () => {
-            this.props.save().then(response => {
-              const refresher = setInterval(() => {
-                this.props.loadLog(response.id)
-                if (this.props.logs && this.props.logs.total !== undefined && this.props.logs.processed === this.props.logs.total) {
-                  clearInterval(refresher)
-                }
-              }, 2000)
-            })
-
-            this.setState({currentSection: 'log'})
-          }
+          callback: () => this.props.save().then(importFile =>
+            props.history.push(`${this.props.path}/import/history/${importFile.id}`)
+          )
         }}
         cancel={{
           type: LINK_BUTTON,
@@ -144,6 +135,63 @@ class ImportForm extends Component {
               name: 'extra.'+field.name,
               linked: field.linked ? field.linked.map(linked => merge({}, linked, {name: 'extra.'+linked.name})) : []
             })))
+          }, {
+            title: trans('planing', {}, 'scheduler'),
+            icon: 'fa fa-fw fa-clock',
+            displayed: props.schedulerEnabled,
+            fields: [
+              {
+                name: 'scheduler._enable',
+                type: 'boolean',
+                label: trans('schedule', {}, 'scheduler'),
+                calculated: isScheduled,
+                onChange: (enabled) => {
+                  if (enabled) {
+                    props.updateProp('scheduler.executionType', 'once')
+                    props.updateProp('scheduler.scheduledDate', now())
+                  } else {
+                    props.updateProp('scheduler', {})
+                  }
+                },
+                linked: [
+                  {
+                    name: 'scheduler.executionType',
+                    type: 'choice',
+                    label: trans('type'),
+                    displayed: isScheduled,
+                    hideLabel: true,
+                    required: true,
+                    options: {
+                      choices: {
+                        once: trans('once', {}, 'scheduler'),
+                        recurring: trans('recurring', {}, 'scheduler')
+                      }
+                    }
+                  }, {
+                    name: 'scheduler.scheduledDate',
+                    type: 'date',
+                    label: trans('scheduled_date', {}, 'scheduler'),
+                    displayed: isScheduled,
+                    required: true
+                  }, {
+                    name: 'scheduler.executionInterval',
+                    type: 'number',
+                    label: trans('interval', {}, 'scheduler'),
+                    displayed: (data) => isScheduled(data) && 'recurring' === get(data, 'scheduler.executionType'),
+                    required: true,
+                    options: {
+                      unit: trans('days')
+                    }
+                  }, {
+                    name: 'scheduler.endDate',
+                    type: 'date',
+                    label: trans('end_date'),
+                    displayed: (data) => isScheduled(data) && 'recurring' === get(data, 'scheduler.executionType'),
+                    required: true
+                  }
+                ]
+              }
+            ]
           }
         ]}
       >
@@ -167,15 +215,6 @@ class ImportForm extends Component {
                   active={'samples' === this.state.currentSection}
                 />
               </li>
-
-              <li>
-                <Button
-                  type={CALLBACK_BUTTON}
-                  label={trans('log')}
-                  callback={() => this.setState({currentSection: 'log'})}
-                  active={'log' === this.state.currentSection}
-                />
-              </li>
             </ul>
 
             {'format' === this.state.currentSection &&
@@ -189,10 +228,6 @@ class ImportForm extends Component {
                 action={action}
                 samples={get(this.props.samples, entity+'.'+action, [])}
               />
-            }
-
-            {'log' === this.state.currentSection &&
-              <Logs />
             }
           </Fragment>
         }
@@ -209,14 +244,12 @@ ImportForm.propTypes = {
   match: T.shape({
     params: T.object.isRequired
   }).isRequired,
+  schedulerEnabled: T.bool,
   explanation: T.object.isRequired,
   samples: T.object.isRequired,
-  logs: T.object,
 
   save: T.func.isRequired,
-  updateProp: T.func.isRequired,
-  resetLog: T.func.isRequired,
-  loadLog: T.func.isRequired
+  updateProp: T.func.isRequired
 }
 
 export {

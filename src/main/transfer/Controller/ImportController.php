@@ -83,7 +83,7 @@ class ImportController extends AbstractCrudController
     {
         $this->checkPermission('EDIT', $importFile, [], true);
 
-        $this->transferManager->import($importFile);
+        $this->transferManager->requestImport($importFile);
 
         return new JsonResponse(
             $this->serializer->serialize($importFile)

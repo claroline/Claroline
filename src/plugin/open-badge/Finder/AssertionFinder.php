@@ -82,13 +82,15 @@ class AssertionFinder extends AbstractFinder
                     $qb->setParameter('user', $filterValue);
                     break;
                 case 'userDisabled':
-                    if (!$userJoin) {
-                        $qb->join('obj.recipient', 'u');
-                        $userJoin = true;
+                    if (is_bool($filterValue)) {
+                        if (!$userJoin) {
+                            $qb->join('obj.recipient', 'u');
+                            $userJoin = true;
+                        }
+                        $qb->andWhere('u.isEnabled = :isEnabled');
+                        $qb->andWhere('u.isRemoved = FALSE');
+                        $qb->setParameter('isEnabled', !$filterValue);
                     }
-                    $qb->andWhere('u.isEnabled = :isEnabled');
-                    $qb->andWhere('u.isRemoved = FALSE');
-                    $qb->setParameter('isEnabled', !$filterValue);
                     break;
                 case 'fromGrantableBadges':
                     $grantDecoder = $this->toolMaskDecoderManager->getMaskDecoderByToolAndName(

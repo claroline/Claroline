@@ -32,6 +32,16 @@ class ScheduledTask
     use Uuid;
 
     /**
+     * The task will be executed only once.
+     */
+    const ONCE = 'once';
+
+    /**
+     * The task will be executed multiple times at the defined interval.
+     */
+    const RECURRING = 'recurring';
+
+    /**
      * The task is waiting for execution.
      */
     const PENDING = 'pending';
@@ -52,12 +62,20 @@ class ScheduledTask
     const ERROR = 'error';
 
     /**
-     * @ORM\Column(name="task_type")
+     * @ORM\Column(name="task_action")
      * @Assert\NotBlank()
      *
      * @var string
      */
-    private $type;
+    private $action;
+
+    /**
+     * @ORM\Column(name="execution_type")
+     * @Assert\NotBlank()
+     *
+     * @var string
+     */
+    private $executionType = 'once';
 
     /**
      * @ORM\Column(name="scheduled_date", type="datetime")
@@ -74,11 +92,38 @@ class ScheduledTask
     private $executionDate = null;
 
     /**
+     * For recurring execution only, define interval (in days) between each recurring execution.
+     *
+     * @ORM\Column(name="execution_interval", type="integer", nullable=true)
+     *
+     * @var int
+     */
+    private $executionInterval = null;
+
+    /**
+     * For recurring execution only, define when we will need to stop replaying the task.
+     *
+     * @ORM\Column(name="end_date", type="datetime", nullable=true)
+     *
+     * @var \DateTime
+     */
+    private $endDate = null;
+
+    /**
      * @ORM\Column(name="execution_status", nullable=true)
      *
      * @var string
      */
     private $status = self::PENDING;
+
+    /**
+     * The UUID of the object which have generated the task (eg. an announcement id, an import/export id).
+     *
+     * @ORM\Column(name="parent_id", type="string", nullable=true)
+     *
+     * @var string
+     */
+    private $parentId;
 
     /**
      * @ORM\Column(name="task_data", type="json", nullable=true)
@@ -94,6 +139,8 @@ class ScheduledTask
      * )
      *
      * @var ArrayCollection[]
+     *
+     * @deprecated
      */
     private $users;
 
@@ -102,6 +149,8 @@ class ScheduledTask
      * @ORM\JoinColumn(name="group_id", nullable=true, onDelete="SET NULL")
      *
      * @var Group
+     *
+     * @deprecated
      */
     private $group;
 
@@ -120,14 +169,24 @@ class ScheduledTask
         $this->users = new ArrayCollection();
     }
 
-    public function getType()
+    public function getAction(): ?string
     {
-        return $this->type;
+        return $this->action;
     }
 
-    public function setType($type)
+    public function setAction(string $action)
     {
-        $this->type = $type;
+        $this->action = $action;
+    }
+
+    public function getExecutionType(): string
+    {
+        return $this->executionType;
+    }
+
+    public function setExecutionType(string $type)
+    {
+        $this->executionType = $type;
     }
 
     public function getScheduledDate(): ?\DateTimeInterface
@@ -137,12 +196,7 @@ class ScheduledTask
 
     public function setScheduledDate(\DateTimeInterface $scheduledDate)
     {
-        $this->scheduledDate = $scheduledDate;
-    }
-
-    public function isExecuted()
-    {
-        return !empty($this->executionDate);
+        $this->scheduledDate = clone $scheduledDate;
     }
 
     public function getExecutionDate(): ?\DateTimeInterface
@@ -152,7 +206,27 @@ class ScheduledTask
 
     public function setExecutionDate(?\DateTimeInterface $executionDate = null)
     {
-        $this->executionDate = $executionDate;
+        $this->executionDate = $executionDate ? clone $executionDate : null;
+    }
+
+    public function getExecutionInterval(): ?int
+    {
+        return $this->executionInterval;
+    }
+
+    public function setExecutionInterval(?int $executionInterval = null)
+    {
+        $this->executionInterval = $executionInterval;
+    }
+
+    public function setEndDate(?\DateTimeInterface $endDate = null)
+    {
+        $this->endDate = $endDate ? clone $endDate : null;
+    }
+
+    public function getEndDate(): ?\DateTimeInterface
+    {
+        return $this->endDate;
     }
 
     public function getStatus(): string
@@ -173,6 +247,16 @@ class ScheduledTask
     public function setWorkspace(?Workspace $workspace = null)
     {
         $this->workspace = $workspace;
+    }
+
+    public function getParentId(): ?string
+    {
+        return $this->parentId;
+    }
+
+    public function setParentId(?string $parentId = null)
+    {
+        $this->parentId = $parentId;
     }
 
     public function getData()

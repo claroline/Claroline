@@ -9,7 +9,7 @@ import {FormSections, FormSection} from '#/main/app/content/form/components/sect
 import {UserList} from '#/main/core/administration/community/user/components/user-list'
 
 import {constants} from '#/main/scheduler/administration/scheduled-task/constants'
-import {actions, selectors} from '#/main/scheduler/administration/scheduled-task/store'
+import {selectors} from '#/main/scheduler/administration/scheduled-task/store'
 
 const ScheduledTaskForm = props =>
   <FormData
@@ -44,14 +44,14 @@ const ScheduledTaskForm = props =>
               time: true
             }
           }, {
-            name: 'type',
+            name: 'action',
             type: 'choice',
             label: trans('task'),
             required: true,
             disabled: !props.new,
             options: {
               condensed: true,
-              choices: constants.TASK_TYPES
+              choices: constants.TASK_ACTIONS
             }
           }
         ]

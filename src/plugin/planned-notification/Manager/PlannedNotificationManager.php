@@ -11,6 +11,7 @@
 
 namespace Claroline\PlannedNotificationBundle\Manager;
 
+use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Group;
@@ -20,47 +21,43 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\CatalogEvents\MessageEvents;
 use Claroline\CoreBundle\Event\SendMessageEvent;
+use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Repository\Log\LogRepository;
 use Claroline\CoreBundle\Repository\User\UserRepository;
 use Claroline\PlannedNotificationBundle\Entity\Message;
 use Claroline\PlannedNotificationBundle\Entity\PlannedNotification;
 use Claroline\PlannedNotificationBundle\Repository\PlannedNotificationRepository;
-use Claroline\SchedulerBundle\Manager\ScheduledTaskManager;
+use Claroline\SchedulerBundle\Entity\ScheduledTask;
 
 class PlannedNotificationManager
 {
     /** @var MailManager */
     private $mailManager;
-
     /** @var ObjectManager */
     private $om;
-
-    /** @var ScheduledTaskManager */
-    private $scheduledTaskManager;
+    /** @var StrictDispatcher */
+    private $dispatcher;
+    /** @var Crud */
+    private $crud;
 
     /** @var LogRepository */
     private $logRepo;
-
     /** @var PlannedNotificationRepository */
     private $plannedNotificationRepo;
-
     /** @var UserRepository */
     private $userRepo;
-
-    /** @var StrictDispatcher */
-    private $dispatcher;
 
     public function __construct(
         MailManager $mailManager,
         ObjectManager $om,
-        ScheduledTaskManager $scheduledTaskManager,
-        StrictDispatcher $dispatcher
+        StrictDispatcher $dispatcher,
+        Crud $crud
     ) {
         $this->mailManager = $mailManager;
         $this->om = $om;
-        $this->scheduledTaskManager = $scheduledTaskManager;
         $this->dispatcher = $dispatcher;
+        $this->crud = $crud;
 
         $this->logRepo = $om->getRepository(Log::class);
         $this->plannedNotificationRepo = $om->getRepository(PlannedNotification::class);
@@ -131,9 +128,11 @@ class PlannedNotificationManager
                 }
             }
 
-            $data = [
+            $this->crud->create(ScheduledTask::class, [
                 'name' => $name,
-                'scheduledDate' => $scheduledDate->format('Y-m-d\TH:i:s'),
+                'action' => $notification->isByMail() ? 'email' : 'message',
+                'scheduledDate' => DateNormalizer::normalize($scheduledDate),
+                'parentId' => $notification->getUuid(),
                 'workspace' => [
                     'id' => $workspace->getId(),
                 ],
@@ -144,16 +143,7 @@ class PlannedNotificationManager
                 'users' => array_map(function (User $u) {
                     return ['id' => $u->getId()];
                 }, $users),
-            ];
-
-            if ($notification->isByMail()) {
-                $data['type'] = 'email';
-                $this->scheduledTaskManager->create($data);
-            }
-            if ($notification->isByMessage()) {
-                $data['type'] = 'message';
-                $this->scheduledTaskManager->create($data);
-            }
+            ], [Crud::THROW_EXCEPTION]);
         }
         $this->om->endFlushSuite();
     }
@@ -197,9 +187,11 @@ class PlannedNotificationManager
                 $scheduledDate = clone $date;
                 $scheduledDate->add(new \DateInterval('P'.$notification['parameters']['interval'].'D'));
 
-                $data = [
+                $tasks[] = $this->crud->create(ScheduledTask::class, [
                     'name' => $name,
+                    'action' => $notification['parameters']['byMail'] ? 'email' : 'message',
                     'scheduledDate' => $scheduledDate->format('Y-m-d\TH:i:s'),
+                    'parentId' => $notification['id'],
                     'workspace' => [
                         'id' => $notification['workspace']['id'],
                     ],
@@ -210,18 +202,7 @@ class PlannedNotificationManager
                     'users' => [
                         ['id' => $user['autoId']],
                     ],
-                ];
-
-                if ($notification['parameters']['byMail']) {
-                    $data['type'] = 'email';
-                    $task = $this->scheduledTaskManager->create($data);
-                    $tasks[] = $task;
-                }
-                if ($notification['parameters']['byMessage']) {
-                    $data['type'] = 'message';
-                    $task = $this->scheduledTaskManager->create($data);
-                    $tasks[] = $task;
-                }
+                ], [Crud::THROW_EXCEPTION]);
             }
         }
         $this->om->endFlushSuite();

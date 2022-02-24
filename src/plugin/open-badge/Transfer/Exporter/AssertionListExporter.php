@@ -21,4 +21,12 @@ class AssertionListExporter extends AbstractListExporter
     {
         return Assertion::class;
     }
+
+    protected function getHiddenFilters(): array
+    {
+        return [
+            // do not filter disabled and deleted users for now
+            'userDisabled' => 'all',
+        ];
+    }
 }
