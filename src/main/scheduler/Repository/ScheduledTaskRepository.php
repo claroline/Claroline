@@ -11,21 +11,27 @@
 
 namespace Claroline\SchedulerBundle\Repository;
 
+use Claroline\SchedulerBundle\Entity\ScheduledTask;
 use Doctrine\ORM\EntityRepository;
 
 class ScheduledTaskRepository extends EntityRepository
 {
     public function findTasksToExecute()
     {
-        $dql = '
-            SELECT t
-            FROM Claroline\SchedulerBundle\Entity\ScheduledTask t
-            WHERE t.executionDate IS NULL
-            AND t.scheduledDate < :now
-        ';
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('now', new \DateTime());
-
-        return $query->getResult();
+        return $this->_em
+            ->createQuery('
+                SELECT t
+                FROM Claroline\SchedulerBundle\Entity\ScheduledTask t
+                WHERE (
+                    (t.executionType = ":once" AND t.executionDate IS NULL)) 
+                    OR 
+                    ((t.executionType = ":recurring" AND (t.endDate IS NULL OR t.endDate < :now))
+                )  
+                AND t.scheduledDate < :now
+            ')
+            ->setParameter('now', new \DateTime())
+            ->setParameter('once', ScheduledTask::ONCE)
+            ->setParameter('recurring', ScheduledTask::RECURRING)
+            ->getResult();
     }
 }

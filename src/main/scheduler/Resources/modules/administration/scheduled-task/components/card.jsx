@@ -10,7 +10,7 @@ const ScheduledTaskCard = props =>
   <DataCard
     {...props}
     id={props.data.id}
-    icon="fa fa-clock-o"
+    icon="fa fa-clock"
     title={props.data.name}
     subtitle={trans(props.data.type)}
     footer={props.data.executionDate &&

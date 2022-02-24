@@ -3,16 +3,10 @@ services:
         tags: [ messenger.message_handler ]
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\AppBundle\API\SerializerProvider'
-            - '@Claroline\AppBundle\API\Crud'
-            - '@Claroline\TransferBundle\Transfer\ExportProvider'
-            - '%claroline.param.files_directory%'
+            - '@Claroline\TransferBundle\Manager\TransferManager'
 
     Claroline\TransferBundle\Messenger\ExecuteImportHandler:
         tags: [ messenger.message_handler ]
         arguments:
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@Claroline\AppBundle\API\SerializerProvider'
-          - '@Claroline\AppBundle\API\Crud'
-          - '@Claroline\TransferBundle\Transfer\ImportProvider'
-          - '@Claroline\CoreBundle\Library\Utilities\FileUtilities'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\TransferBundle\Manager\TransferManager'

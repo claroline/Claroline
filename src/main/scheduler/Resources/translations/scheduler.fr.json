@@ -7,5 +7,10 @@
   "task_pending": "En attente",
   "task_in_progress": "En cours d'exécution",
   "task_success": "Exécutée",
-  "task_error": "Echouée"
+  "task_error": "Echouée",
+  "planing": "Planification",
+  "schedule": "Planifier l'exécution",
+  "once": "Exécution unique",
+  "recurring": "Exécution récurente",
+  "interval": "Interval d'exécution"
 }

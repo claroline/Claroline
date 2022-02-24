@@ -12,7 +12,6 @@
 namespace Claroline\SchedulerBundle\Command;
 
 use Claroline\SchedulerBundle\Manager\ScheduledTaskManager;
-use Claroline\SchedulerBundle\Messenger\Message\ExecuteScheduledTask;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -44,7 +43,7 @@ class ExecuteScheduledTasksCommand extends Command
         $tasks = $this->taskManager->getTasksToExecute();
 
         foreach ($tasks as $task) {
-            $output->writeln('['.$task->getType().'] '.$task->getName().' : Requesting execution...');
+            $output->writeln('['.$task->getAction().'] '.$task->getName().' : Requesting execution...');
 
             $this->taskManager->execute($task);
         }

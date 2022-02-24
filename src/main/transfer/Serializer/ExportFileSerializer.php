@@ -10,6 +10,8 @@ use Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
+use Claroline\SchedulerBundle\Entity\ScheduledTask;
+use Claroline\SchedulerBundle\Serializer\ScheduledTaskSerializer;
 use Claroline\TransferBundle\Entity\ExportFile;
 
 class ExportFileSerializer
@@ -22,15 +24,19 @@ class ExportFileSerializer
     private $userSerializer;
     /** @var WorkspaceSerializer */
     private $workspaceSerializer;
+    /** @var ScheduledTaskSerializer */
+    private $scheduledTaskSerializer;
 
     public function __construct(
         ObjectManager $om,
         UserSerializer $userSerializer,
-        WorkspaceSerializer $workspaceSerializer
+        WorkspaceSerializer $workspaceSerializer,
+        ScheduledTaskSerializer $scheduledTaskSerializer
     ) {
         $this->om = $om;
         $this->userSerializer = $userSerializer;
         $this->workspaceSerializer = $workspaceSerializer;
+        $this->scheduledTaskSerializer = $scheduledTaskSerializer;
     }
 
     /** @return string */
@@ -60,6 +66,12 @@ class ExportFileSerializer
 
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
             $data['extra'] = $file->getExtra();
+
+            // should not be exposed here
+            $scheduler = $this->om->getRepository(ScheduledTask::class)->findOneBy(['parentId' => $file->getUuid()]);
+            if (!empty($scheduler)) {
+                $data['scheduler'] = $this->scheduledTaskSerializer->serialize($scheduler);
+            }
 
             if ($file->getWorkspace()) {
                 $data['workspace'] = $this->workspaceSerializer->serialize($file->getWorkspace(), [Options::SERIALIZE_MINIMAL]);

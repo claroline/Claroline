@@ -77,11 +77,15 @@ class CsvAdapter implements AdapterInterface
 
     public function format(array $data, array $options)
     {
+        if (empty($data)) {
+            return '';
+        }
+
         $headers = !empty($options['headers']) ? $options['headers'] : ArrayUtils::getPropertiesName($data[0]);
 
         $lines = [
             // generate header line
-            implode(self::COLUMN_DELIMITER, $headers)
+            implode(self::COLUMN_DELIMITER, $headers),
         ];
 
         foreach ($data as $object) {

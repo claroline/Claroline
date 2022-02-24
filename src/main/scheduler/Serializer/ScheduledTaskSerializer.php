@@ -7,10 +7,10 @@ use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\SchedulerBundle\Entity\ScheduledTask;
-use Claroline\CoreBundle\Entity\User;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class ScheduledTaskSerializer
@@ -59,11 +59,14 @@ class ScheduledTaskSerializer
     {
         return [
             'id' => $scheduledTask->getUuid(),
-            'type' => $scheduledTask->getType(),
+            'action' => $scheduledTask->getAction(),
             'name' => $scheduledTask->getName(),
+            'executionType' => $scheduledTask->getExecutionType(),
             'scheduledDate' => DateNormalizer::normalize($scheduledTask->getScheduledDate()),
             'executionDate' => DateNormalizer::normalize($scheduledTask->getExecutionDate()),
+            'endDate' => DateNormalizer::normalize($scheduledTask->getEndDate()),
             'status' => $scheduledTask->getStatus(),
+            'parentId' => $scheduledTask->getParentId(),
             'permissions' => [
                 'open' => $this->authorization->isGranted('OPEN', $scheduledTask),
                 'edit' => $this->authorization->isGranted('EDIT', $scheduledTask),
@@ -95,11 +98,20 @@ class ScheduledTaskSerializer
     {
         $this->sipe('id', 'setUuid', $data, $scheduledTask);
         $this->sipe('name', 'setName', $data, $scheduledTask);
-        $this->sipe('type', 'setType', $data, $scheduledTask);
+        $this->sipe('action', 'setAction', $data, $scheduledTask);
         $this->sipe('status', 'setStatus', $data, $scheduledTask);
+        $this->sipe('parentId', 'setParentId', $data, $scheduledTask);
+        $this->sipe('executionType', 'setExecutionType', $data, $scheduledTask);
+        $this->sipe('executionInterval', 'setExecutionInterval', $data, $scheduledTask);
 
         $scheduledTask->setScheduledDate(DateNormalizer::denormalize($data['scheduledDate']));
-        $scheduledTask->setExecutionDate(DateNormalizer::denormalize($data['executionDate']));
+
+        if (array_key_exists('executionDate', $data)) {
+            $scheduledTask->setExecutionDate(DateNormalizer::denormalize($data['executionDate']));
+        }
+        if (array_key_exists('endDate', $data)) {
+            $scheduledTask->setEndDate(DateNormalizer::denormalize($data['endDate']));
+        }
 
         if (array_key_exists('data', $data)) {
             $scheduledTask->setData($data['data']);

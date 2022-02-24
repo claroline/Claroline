@@ -95,9 +95,6 @@ class ImportProvider extends AbstractProvider
             $data = $adapter->decodeSchema($data, $explanation);
         }
 
-        /*$explanation = $this->getExplanation($action, $mimeType, $options, $extra);
-        $data = $adapter->decodeSchema($data, $explanation);*/
-
         $data = array_map(function ($el) use ($extra) {
             return array_merge($el, $extra);
         }, $data);

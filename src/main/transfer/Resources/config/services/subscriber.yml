@@ -2,6 +2,7 @@ services:
     Claroline\TransferBundle\Subscriber\Crud\ImportFileSubscriber:
         arguments:
             - '@security.token_storage'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\Crud'
             - '%claroline.param.import_log_dir%'
         tags:
@@ -10,6 +11,7 @@ services:
     Claroline\TransferBundle\Subscriber\Crud\ExportFileSubscriber:
         arguments:
             - '@security.token_storage'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\Crud'
             - '%claroline.param.import_log_dir%'
             - '%claroline.param.files_directory%'
@@ -21,5 +23,12 @@ services:
             - '@Claroline\TransferBundle\Transfer\ImportProvider'
             - '@Claroline\TransferBundle\Transfer\ExportProvider'
             - '@Claroline\AppBundle\API\SerializerProvider'
+        tags:
+            - { name: kernel.event_subscriber }
+
+    Claroline\TransferBundle\Subscriber\Scheduler\ScheduledTransferSubscriber:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\TransferBundle\Manager\TransferManager'
         tags:
             - { name: kernel.event_subscriber }

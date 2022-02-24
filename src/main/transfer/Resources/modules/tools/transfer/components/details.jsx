@@ -59,6 +59,15 @@ const TransferDetails = props => {
                   {get(props.transferFile, 'executionDate') ? displayDate(get(props.transferFile, 'executionDate'), false, true) : '-'}
                 </span>
               </li>
+
+              {get(props.transferFile, 'scheduler.scheduledDate') &&
+                <li className="list-group-item">
+                  {trans('scheduled_date', {}, 'scheduler')}
+                  <span className="value">
+                    {displayDate(get(props.transferFile, 'scheduler.scheduledDate'), false, true)}
+                  </span>
+                </li>
+              }
             </ul>
           </div>
 
@@ -83,7 +92,10 @@ const TransferDetails = props => {
 TransferDetails.propTypes = {
   transferFile: T.shape({
     action: T.string,
-    status: T.string.isRequired
+    status: T.string.isRequired,
+    scheduler: T.shape({
+      scheduledDate: T.string.isRequired
+    })
   }),
   downloadUrl: T.string,
   children: T.any

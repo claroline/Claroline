@@ -38,7 +38,7 @@ abstract class AbstractProvider
         $this->actions = $actions;
     }
 
-    protected function getAction(string $actionName): ActionInterface
+    public function getAction(string $actionName): ActionInterface
     {
         foreach ($this->actions as $action) {
             if ($actionName === $this->getActionName($action)) {

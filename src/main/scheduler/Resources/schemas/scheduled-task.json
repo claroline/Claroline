@@ -10,16 +10,16 @@
       "type": "string",
       "description": "The task name"
     },
-    "type": {
+    "action": {
       "type": "string",
-      "description": "The task type"
+      "description": "The task action"
     },
     "scheduledDate": {
       "type": "string",
       "description": "The task planned date"
     }
   },
-  "required": ["name", "type", "scheduledDate"],
+  "required": ["name", "action", "scheduledDate"],
   "claroline": {
     "ids":  ["id"]
   }

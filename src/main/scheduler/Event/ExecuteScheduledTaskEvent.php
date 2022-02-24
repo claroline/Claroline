@@ -11,7 +11,7 @@ class ExecuteScheduledTaskEvent extends Event
     private $task;
 
     /** @var string */
-    private $status;
+    private $status = ScheduledTask::SUCCESS;
 
     private $errors;
 

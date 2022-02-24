@@ -24,6 +24,10 @@ class Unarchive extends AbstractImporter
 
     public function execute(array $data, &$successData = []): array
     {
+        if (empty($data[$this->getAction()[0]])) {
+            return [];
+        }
+
         /** @var Workspace $object */
         $object = $this->om->getObject($data[$this->getAction()[0]], Workspace::class, array_keys($data[$this->getAction()[0]]));
 

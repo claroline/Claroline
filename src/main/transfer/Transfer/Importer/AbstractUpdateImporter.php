@@ -18,7 +18,19 @@ abstract class AbstractUpdateImporter extends AbstractImporter
 
     public function execute(array $data): array
     {
-        $this->crud->update(static::getClass(), $data, $this->getOptions());
+        $toUpdate = $this->crud->find(static::getClass(), $data);
+        if (!$toUpdate) {
+            // we need to check the object exists first because the Crud::update will generate a new one if not.
+            // we don't want updates actions accidentally generate new entities (there is the CreateOrUpdateImporter for that).
+            return [
+                'update' => [[
+                    'data' => $data,
+                    'log' => $this->getAction()[0].' not found.',
+                ]],
+            ];
+        }
+
+        $this->crud->update($toUpdate, $data, $this->getOptions());
 
         return [
             'update' => [[

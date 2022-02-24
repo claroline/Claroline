@@ -1,8 +1,10 @@
-import React from 'react'
+import React, {Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {trans} from '#/main/app/intl/translation'
+import {Button} from '#/main/app/action/components/button'
+import {LINK_BUTTON} from '#/main/app/buttons'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {actions as modalActions} from '#/main/app/overlays/modal/store'
 import {hasPermission} from '#/main/app/security'
@@ -14,16 +16,29 @@ import {Announcement as AnnouncementTypes} from '#/plugin/announcement/resources
 import {AnnouncePost} from '#/plugin/announcement/resources/announcement/components/announce-post'
 
 const AnnounceDetail = props =>
-  <AnnouncePost
-    active={true}
-    aggregateId={props.aggregateId}
-    announcement={props.announcement}
-    workspaceRoles={props.workspaceRoles}
-    removePost={() => props.removePost(props.aggregateId, props.announcement)}
-    editable={props.editable}
-    deletable={props.deletable}
-    path={props.path}
-  />
+  <Fragment>
+    <div className="announces-sort">
+      <Button
+        className="btn btn-link"
+        type={LINK_BUTTON}
+        icon="fa fa-fw fa-list"
+        label={trans('announcements_list', {}, 'announcement')}
+        target={props.path}
+        primary={true}
+      />
+    </div>
+
+    <AnnouncePost
+      active={true}
+      aggregateId={props.aggregateId}
+      announcement={props.announcement}
+      workspaceRoles={props.workspaceRoles}
+      removePost={() => props.removePost(props.aggregateId, props.announcement)}
+      editable={props.editable}
+      deletable={props.deletable}
+      path={props.path}
+    />
+  </Fragment>
 
 AnnounceDetail.propTypes = {
   path: T.string.isRequired,

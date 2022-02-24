@@ -6,7 +6,7 @@ services:
 
     Claroline\AnnouncementBundle\Manager\AnnouncementManager:
         arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\SchedulerBundle\Manager\ScheduledTaskManager'
-            - '@Claroline\AppBundle\API\FinderProvider'
             - '@messenger.default_bus'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@Claroline\AppBundle\API\Crud'

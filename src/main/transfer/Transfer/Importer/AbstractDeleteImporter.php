@@ -26,24 +26,33 @@ abstract class AbstractDeleteImporter extends AbstractImporter
 
     public function execute(array $data): array
     {
+        if (empty($data[$this->getAction()[0]])) {
+            return [];
+        }
+
         $object = $this->om->getObject(
             $data[$this->getAction()[0]],
-            $this->getClass(),
+            static::getClass(),
             array_keys($data[$this->getAction()[0]])
         );
 
         if (!empty($object)) {
-            $this->crud->delete($object, $this->getOptions());
-
             return [
                 'delete' => [[
                     'data' => $data,
-                    'log' => $this->getAction()[0].' deleted.',
+                    'log' => $this->getAction()[0].' not found.',
                 ]],
             ];
         }
 
-        return [];
+        $this->crud->delete($object, $this->getOptions());
+
+        return [
+            'delete' => [[
+                'data' => $data,
+                'log' => $this->getAction()[0].' deleted.',
+            ]],
+        ];
     }
 
     public function getSchema(?array $options = [], ?array $extra = []): array

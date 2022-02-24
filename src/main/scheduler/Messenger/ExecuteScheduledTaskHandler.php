@@ -45,8 +45,9 @@ class ExecuteScheduledTaskHandler implements MessageHandlerInterface
             return;
         }
 
-        $this->dispatcher->dispatch('scheduler.execute.'.$task->getType(), ExecuteScheduledTaskEvent::class, [$task]);
+        /** @var ExecuteScheduledTaskEvent $event */
+        $event = $this->dispatcher->dispatch('scheduler.execute.'.$task->getAction(), ExecuteScheduledTaskEvent::class, [$task]);
 
-        $this->taskManager->markAsExecuted($task);
+        $this->taskManager->markAsExecuted($task, $event->getStatus());
     }
 }
