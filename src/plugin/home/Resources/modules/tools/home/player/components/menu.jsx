@@ -9,8 +9,6 @@ import {ContentSummary} from '#/main/app/content/components/summary'
 
 import {Tab as TabTypes} from '#/plugin/home/prop-types'
 
-// TODO : fix tab colors
-
 const PlayerMenu = (props) => {
   function getTabSummary(tab) {
     return {

@@ -15,6 +15,10 @@ use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Order;
 use Claroline\AppBundle\Entity\Meta\Poster;
+use Claroline\AppBundle\Entity\Restriction\AccessCode;
+use Claroline\AppBundle\Entity\Restriction\AccessibleFrom;
+use Claroline\AppBundle\Entity\Restriction\AccessibleUntil;
+use Claroline\AppBundle\Entity\Restriction\Hidden;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -31,6 +35,11 @@ class HomeTab
     use Uuid;
     use Order;
     use Poster;
+    // restrictions
+    use Hidden;
+    use AccessibleFrom;
+    use AccessibleUntil;
+    use AccessCode;
 
     const TYPE_WORKSPACE = 'workspace';
     const TYPE_DESKTOP = 'desktop';
@@ -94,13 +103,6 @@ class HomeTab
      * @var string
      */
     private $color = null;
-
-    /**
-     * @ORM\Column(type="boolean", name="is_visible")
-     *
-     * @var bool
-     */
-    private $visible = true;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
@@ -202,16 +204,6 @@ class HomeTab
     public function setColor($color)
     {
         $this->color = $color;
-    }
-
-    public function isVisible()
-    {
-        return $this->visible;
-    }
-
-    public function setVisible($visible)
-    {
-        $this->visible = $visible;
     }
 
     public function getIcon()

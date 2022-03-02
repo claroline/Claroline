@@ -27,6 +27,12 @@ const PlayerMain = props =>
                 tabs={props.tabs}
                 currentTabTitle={props.currentTabTitle}
                 currentTab={props.currentTab}
+                loaded={props.loaded}
+                accessErrors={props.accessErrors}
+                open={props.open}
+                dismissRestrictions={props.dismissRestrictions}
+                managed={props.managed}
+                checkAccessCode={props.checkAccessCode}
               />
             )
 
@@ -51,6 +57,12 @@ PlayerMain.propTypes = {
   )),
   currentTabTitle: T.string.isRequired,
   currentTab: T.shape(TabTypes.propTypes),
+  loaded: T.bool.isRequired,
+  accessErrors: T.object,
+  managed: T.bool.isRequired,
+  open: T.func.isRequired,
+  dismissRestrictions: T.func.isRequired,
+  checkAccessCode: T.func.isRequired,
   setCurrentTab: T.func.isRequired
 }
 

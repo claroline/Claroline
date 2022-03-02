@@ -79,9 +79,7 @@ class HomeTabVoter extends AbstractVoter
         }
 
         if ($granted && $this->checkTabRestrictions($token, $object)) {
-            if ($object->isVisible() || VoterInterface::ACCESS_GRANTED === $this->checkEdit($token, $object)) {
-                return VoterInterface::ACCESS_GRANTED;
-            }
+            return VoterInterface::ACCESS_GRANTED;
         }
 
         return VoterInterface::ACCESS_DENIED;

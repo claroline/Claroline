@@ -8,7 +8,23 @@
     "new_tab": "Nouvel onglet",
     "new_tab_configure": "2. Configurer l'onglet",
     "new_tab_select": "1. Choisir le type d'onglet à créer",
+    "loading": "Nous chargeons votre onglet...",
 
     "widgets": "Widgets",
-    "widgets_desc": "Permet de créer une grille de différents types de widgets."
+    "widgets_desc": "Permet de créer une grille de différents types de widgets.",
+
+    "restricted_access_message": "Vous ne pouvez pas accéder à cet onglet car toutes les conditions d'accès ne sont pas satisfaites.",
+    "restrictions": {
+        "dismiss_help": "En tant que gestionnaire vous pouvez toujours accéder à l'onglet, même si les conditions d'accès ne sont pas satisfaites.",
+        "unlocked": "Vous avez déverrouillé l'onglet.",
+        "locked": "L'accès requiert un code.",
+        "locked_help": "Veuillez saisir le code qui vous a été remis afin d'accéder à la ressource.",
+        "period_opened": "La période d'accès à l'onglet est actuellement en cours.",
+        "period_opened_help": "L'onglet' est accessible du %start% au %end%.",
+        "period_not_limited": "La période d'accès à l'onglet' n'est pas limitée.",
+        "not_started": "L'onglet' n'est pas encore accessible.",
+        "not_started_help": "Veuillez patientez jusqu'au %date%.",
+        "ended": "L'onglet' n'est plus accessible.",
+        "ended_help": "L'accès est fermé depuis le %date%."
+    }
 }

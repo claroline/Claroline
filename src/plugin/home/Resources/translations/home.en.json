@@ -8,8 +8,23 @@
     "new_tab": "New tab",
     "new_tab_configure": "2. Configure the tab",
     "new_tab_select": "1. Choose the type of tab to create",
-
+    "loading": "We are loading your tab...",
 
     "widgets": "Widgets",
-    "widgets_desc": "Allows to create a grid of different types of widgets."
+    "widgets_desc": "Allows to create a grid of different types of widgets.",
+
+    "restricted_access_message": "You can not access this tab because all access conditions are not met.",
+    "restrictions": {
+        "dismiss_help": "As a manager, you can still access the tab, even if the access conditions are not met.",
+        "unlocked": "You have unlocked the tab.",
+        "locked": "Access requires a code.",
+        "locked_help": "Please enter the code given to you in order to access the tab.",
+        "period_opened": "The access period to the tab is currently in progress.",
+        "period_opened_help": "The tab is accessible from %start% to %end%.",
+        "period_not_limited": "The access period to the tab is not limited.",
+        "not_started": "The tab is not yet accessible.",
+        "not_started_help": "Please wait until %date%.",
+        "ended": "The tab is no longer accessible.",
+        "ended_help": "Access is closed since %date%."
+    }
 }

@@ -1,16 +1,21 @@
 services:
-  _defaults:
-    autowire: false
-    autoconfigure: false
-    public: true
+    _defaults:
+        public: true
 
-  Claroline\HomeBundle\Controller\HomeController:
-    arguments:
-      - '@security.token_storage'
-      - '@security.authorization_checker'
-      - '@Claroline\AppBundle\Persistence\ObjectManager'
-      - '@Claroline\AppBundle\API\FinderProvider'
-      - '@Claroline\AppBundle\API\Crud'
-      - '@Claroline\CoreBundle\Manager\LockManager'
-      - '@Claroline\HomeBundle\Serializer\HomeTabSerializer'
-      - '@Claroline\HomeBundle\Manager\HomeManager'
+    Claroline\HomeBundle\Controller\HomeController:
+        arguments:
+            - '@security.token_storage'
+            - '@security.authorization_checker'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@Claroline\AppBundle\API\Crud'
+            - '@Claroline\CoreBundle\Manager\LockManager'
+            - '@Claroline\HomeBundle\Serializer\HomeTabSerializer'
+            - '@Claroline\HomeBundle\Manager\HomeManager'
+
+    Claroline\HomeBundle\Controller\HomeTabController:
+        parent: Claroline\AppBundle\Controller\AbstractCrudController
+        public: true
+        arguments:
+            - '@security.authorization_checker'
+            - '@Claroline\HomeBundle\Manager\HomeManager'

@@ -56,10 +56,6 @@ class HomeTabFinder extends AbstractFinder
                     }
 
                     break;
-                case 'visible':
-                    $qb->andWhere('obj.visible = true');
-
-                    break;
                 case 'roles':
                     if (!empty($filterValue)) {
                         $qb->leftJoin('obj.roles', 'r');

@@ -7,7 +7,7 @@ use Claroline\CoreBundle\Entity\Widget\Widget;
 use Claroline\InstallationBundle\Updater\Updater;
 use Psr\Log\LoggerInterface;
 
-class Updater130101 extends Updater
+class Updater130300 extends Updater
 {
     /** @var ObjectManager */
     private $om;
