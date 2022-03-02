@@ -16,5 +16,6 @@ services:
     Claroline\HomeBundle\Manager\HomeManager:
         arguments:
             - '@security.authorization_checker'
+            - '@request_stack'
             - '@Claroline\AppBundle\API\FinderProvider'
             - '@Claroline\AppBundle\API\SerializerProvider'

@@ -14,6 +14,7 @@ import {
 } from '#/plugin/home/tools/home/store/actions'
 import {selectors} from '#/plugin/home/tools/home/store/selectors'
 import {reducer as editorReducer} from '#/plugin/home/tools/home/editor/store/reducer'
+import {reducer as playerReducer} from '#/plugin/home/tools/home/player/store/reducer'
 
 const reducer = combineReducers({
   administration: makeReducer(false, {
@@ -49,7 +50,8 @@ const reducer = combineReducers({
       return tabs
     }
   }),
-  editor: editorReducer
+  editor: editorReducer,
+  player: playerReducer
 })
 
 export {

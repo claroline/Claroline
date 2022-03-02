@@ -18,10 +18,10 @@ const ParametersModal = withReducer(selectors.STORE_NAME, reducer)(
     }),
     (dispatch) => ({
       update(field, value) {
-        dispatch(formActions.updateProp(selectors.FORM_NAME, field, value))
+        dispatch(formActions.updateProp(selectors.STORE_NAME, field, value))
       },
       setErrors(errors) {
-        dispatch(formActions.setErrors(selectors.FORM_NAME, errors))
+        dispatch(formActions.setErrors(selectors.STORE_NAME, errors))
       },
       loadTab(tab) {
         dispatch(formActions.resetForm(selectors.STORE_NAME, tab))

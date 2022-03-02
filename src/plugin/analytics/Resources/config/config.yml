@@ -22,9 +22,3 @@ plugin:
           is_exportable: false
           is_locked_for_admin: false
           is_anonymous_excluded: true
-
-    widgets:
-        - name: progression
-          class: Claroline\AnalyticsBundle\Entity\Widget\Type\ProgressionWidget
-          context: [workspace]
-          tags: [activity]

@@ -6,7 +6,11 @@ import isEmpty from 'lodash/isEmpty'
 import {trans} from '#/main/app/intl/translation'
 import {FormData} from '#/main/app/content/form/containers/data'
 
-const TabForm = props =>
+const restrictedByDates = (tab) => get(tab, 'restrictions.enableDates') || !isEmpty(get(tab, 'restrictions.dates'))
+const restrictedByCode = (tab) => get(tab, 'restrictions.enableCode') || !!get(tab, 'restrictions.code')
+const restrictedByRoles = (tab) => get(tab, 'restrictions.enableRoles') || !isEmpty(get(tab, 'restrictions.roles'))
+
+const TabForm = (props) =>
   <FormData
     level={props.level}
     name={props.name}
@@ -91,10 +95,51 @@ const TabForm = props =>
             type: 'boolean',
             label: trans('restrict_hidden')
           }, {
-            name: 'restrictByRole',
+            name: 'restrictions.enableDates',
+            label: trans('restrict_by_dates'),
+            type: 'boolean',
+            calculated: restrictedByDates,
+            onChange: activated => {
+              if (!activated) {
+                props.update('restrictions.dates', [])
+              }
+            },
+            linked: [
+              {
+                name: 'restrictions.dates',
+                type: 'date-range',
+                label: trans('access_dates'),
+                displayed: restrictedByDates,
+                required: true,
+                options: {
+                  time: true
+                }
+              }
+            ]
+          }, {
+            name: 'restrictions.enableCode',
+            label: trans('restrict_by_code'),
+            type: 'boolean',
+            calculated: restrictedByCode,
+            onChange: activated => {
+              if (!activated) {
+                props.update('restrictions.code', '')
+              }
+            },
+            linked: [
+              {
+                name: 'restrictions.code',
+                label: trans('access_code'),
+                displayed: restrictedByCode,
+                type: 'password',
+                required: true
+              }
+            ]
+          }, {
+            name: 'restrictions.enableRoles',
             type: 'boolean',
             label: trans('restrictions_by_roles', {}, 'widget'),
-            calculated: (tab) => tab.restrictByRole || !isEmpty(get(tab, 'restrictions.roles')),
+            calculated: restrictedByRoles,
             onChange: (checked) => {
               if (!checked) {
                 props.update('restrictions.roles', [])
@@ -104,7 +149,7 @@ const TabForm = props =>
               {
                 name: 'restrictions.roles',
                 label: trans('roles'),
-                displayed: (tab) => tab.restrictByRole || !isEmpty(get(tab, 'restrictions.roles')),
+                displayed: restrictedByRoles,
                 type: 'roles',
                 required: true,
                 options: {
