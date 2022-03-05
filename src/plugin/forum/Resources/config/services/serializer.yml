@@ -34,7 +34,6 @@ services:
         tags: [claroline.serializer]
         arguments:
            - '@Claroline\AppBundle\API\FinderProvider'
-           - '@Claroline\CoreBundle\Library\Utilities\FileUtilities'
            - '@event_dispatcher'
            - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
            - '@Claroline\AppBundle\Persistence\ObjectManager'

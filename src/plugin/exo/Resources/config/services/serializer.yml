@@ -150,7 +150,7 @@ services:
     UJM\ExoBundle\Serializer\Item\Type\GraphicQuestionSerializer:
         tags: [claroline.serializer]
         arguments:
-            - '@Claroline\CoreBundle\Library\Utilities\FileUtilities'
+            - '@Claroline\CoreBundle\Manager\FileManager'
 
     ujm_exo.serializer.question_graphic:
          alias: UJM\ExoBundle\Serializer\Item\Type\GraphicQuestionSerializer

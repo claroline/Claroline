@@ -132,7 +132,11 @@ services:
     Claroline\CoreBundle\Manager\FileManager:
         arguments:
             - '%claroline.param.files_directory%'
+            - '%claroline.param.public_files_directory%'
+            - '@filesystem'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\Crud'
 
     Claroline\CoreBundle\Manager\EventManager:
         arguments:

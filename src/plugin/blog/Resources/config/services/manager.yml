@@ -9,7 +9,6 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@event_dispatcher'
             - '@Icap\BlogBundle\Manager\PostManager'
-            - '@Claroline\CoreBundle\Library\Utilities\FileUtilities'
 
     Icap\BlogBundle\Manager\BlogTrackingManager:
         arguments:

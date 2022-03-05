@@ -1,0 +1,28 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: false
+
+    Claroline\ForumBundle\Subscriber\Crud\SubjectSubscriber:
+        arguments:
+            - '@security.authorization_checker'
+            - '@messenger.default_bus'
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@Claroline\ForumBundle\Manager\ForumManager'
+            - '@Claroline\CoreBundle\Manager\FileManager'
+        tags:
+            - { name: kernel.event_subscriber }
+
+    Claroline\ForumBundle\Subscriber\Crud\MessageSubscriber:
+        arguments:
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@Claroline\ForumBundle\Manager\ForumManager'
+            - '@security.authorization_checker'
+            - '@messenger.default_bus'
+        tags:
+            - { name: kernel.event_subscriber }

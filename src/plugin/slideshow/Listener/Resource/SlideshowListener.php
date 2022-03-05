@@ -3,7 +3,9 @@
 namespace Claroline\SlideshowBundle\Listener\Resource;
 
 use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
+use Claroline\CoreBundle\Manager\FileManager;
 use Claroline\SlideshowBundle\Entity\Resource\Slideshow;
 
 /**
@@ -13,13 +15,15 @@ class SlideshowListener
 {
     /** @var SerializerProvider */
     private $serializer;
+    /** @var FileManager */
+    private $fileManager;
 
-    /**
-     * SlideshowListener constructor.
-     */
-    public function __construct(SerializerProvider $serializer)
-    {
+    public function __construct(
+        SerializerProvider $serializer,
+        FileManager $fileManager
+    ) {
         $this->serializer = $serializer;
+        $this->fileManager = $fileManager;
     }
 
     /**
@@ -33,6 +37,26 @@ class SlideshowListener
         $event->setData([
             'slideshow' => $this->serializer->serialize($slideshow),
         ]);
+        $event->stopPropagation();
+    }
+
+    /**
+     * Deletes Slideshow files when the resource is deleted.
+     */
+    public function onDelete(DeleteResourceEvent $event)
+    {
+        /** @var Slideshow $slideshow */
+        $slideshow = $event->getResource();
+
+        $files = [];
+        foreach ($slideshow->getSlides() as $slide) {
+            if (!$slide->getContent()) {
+                // for now all slides are files
+                $files[] = $this->fileManager->getDirectory().DIRECTORY_SEPARATOR.$slide->getContent();
+            }
+        }
+
+        $event->setFiles($files);
         $event->stopPropagation();
     }
 }

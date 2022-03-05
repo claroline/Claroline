@@ -5,7 +5,6 @@ namespace Icap\BlogBundle\Manager;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\GenericDataEvent;
-use Claroline\CoreBundle\Library\Utilities\FileUtilities;
 use Icap\BlogBundle\Entity\Blog;
 use Icap\BlogBundle\Entity\BlogOptions;
 use Icap\BlogBundle\Entity\Member;
@@ -18,18 +17,15 @@ class BlogManager
     private $memberRepo;
     private $eventDispatcher;
     private $postManager;
-    private $fileUtils;
 
     public function __construct(
         ObjectManager $objectManager,
         EventDispatcherInterface $eventDispatcher,
-        PostManager $postManager,
-        FileUtilities $fileUtils)
-    {
+        PostManager $postManager
+    ) {
         $this->objectManager = $objectManager;
         $this->eventDispatcher = $eventDispatcher;
         $this->postManager = $postManager;
-        $this->fileUtils = $fileUtils;
 
         $this->repo = $this->objectManager->getRepository(Blog::class);
         $this->memberRepo = $this->objectManager->getRepository(Member::class);

@@ -10,10 +10,8 @@ use Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
-use Claroline\CoreBundle\Library\Utilities\FileUtilities;
 use Claroline\ForumBundle\Entity\Forum;
 use Claroline\ForumBundle\Entity\Message;
 use Claroline\ForumBundle\Entity\Subject;
@@ -27,8 +25,6 @@ class SubjectSerializer
 
     /** @var FinderProvider */
     private $finder;
-    /** @var FileUtilities */
-    private $fileUt;
     /** @var EventDispatcherInterface */
     private $eventDispatcher;
     /** @var ObjectManager */
@@ -68,12 +64,8 @@ class SubjectSerializer
         return '#/plugin/forum/subject';
     }
 
-    /**
-     * SubjectSerializer constructor.
-     */
     public function __construct(
         FinderProvider $finder,
-        FileUtilities $fileUt,
         EventDispatcherInterface $eventDispatcher,
         PublicFileSerializer $fileSerializer,
         ObjectManager $om,
@@ -81,7 +73,6 @@ class SubjectSerializer
         ForumManager $manager
     ) {
         $this->finder = $finder;
-        $this->fileUt = $fileUt;
         $this->eventDispatcher = $eventDispatcher;
         $this->om = $om;
         $this->fileSerializer = $fileSerializer;
@@ -157,6 +148,7 @@ class SubjectSerializer
         $this->sipe('meta.moderation', 'setModerated', $data, $subject);
 
         if (isset($data['content'])) {
+            // this should be done in the CRUD instead
             if (!$first) {
                 $messageData = ['content' => $data['content']];
 
@@ -201,15 +193,13 @@ class SubjectSerializer
             }
         }
 
-        if (isset($data['poster'])) {
-            $poster = $this->om->getObject($data['poster'], PublicFile::class);
+        if (array_key_exists('poster', $data)) {
+            $poster = null;
+            if (!empty($data['poster'])) {
+                /** @var PublicFile $poster */
+                $poster = $this->om->getObject($data['poster'], PublicFile::class);
+            }
             $subject->setPoster($poster);
-
-            $this->fileUt->createFileUse(
-              $poster,
-              Workspace::class,
-              $subject->getUuid()
-          );
         }
 
         if (isset($data['tags'])) {

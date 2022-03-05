@@ -15,6 +15,7 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Shortcuts;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Manager\FileManager;
 use Claroline\CoreBundle\Manager\Organization\OrganizationManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\Tool\ToolManager;
@@ -33,6 +34,7 @@ class WorkspaceCrud
     private $om;
     private $crud;
     private $manager;
+    private $fileManager;
     private $toolManager;
     private $resourceManager;
     private $organizationManager;
@@ -44,6 +46,7 @@ class WorkspaceCrud
         ObjectManager $om,
         Crud $crud,
         WorkspaceManager $manager,
+        FileManager $fileManager,
         ToolManager $toolManager,
         ResourceManager $resourceManager,
         OrganizationManager $organizationManager,
@@ -54,6 +57,7 @@ class WorkspaceCrud
         $this->om = $om;
         $this->crud = $crud;
         $this->manager = $manager;
+        $this->fileManager = $fileManager;
         $this->toolManager = $toolManager;
         $this->resourceManager = $resourceManager;
         $this->organizationManager = $organizationManager;
@@ -164,27 +168,44 @@ class WorkspaceCrud
                 $this->om->persist($root);
             }
         }
+
+        $this->fileManager->updateFile(
+            Workspace::class,
+            $workspace->getUuid(),
+            $workspace->getPoster(),
+            !empty($oldData['poster']) ? $oldData['poster']['url'] : null
+        );
+
+        $this->fileManager->updateFile(
+            Workspace::class,
+            $workspace->getUuid(),
+            $workspace->getThumbnail(),
+            !empty($oldData['thumbnail']) ? $oldData['thumbnail']['url'] : null
+        );
     }
 
     public function preDelete(DeleteEvent $event)
     {
         $workspace = $event->getObject();
 
-        // remove workspace resources
-        $this->om->startFlushSuite();
-
-        /** @var ResourceNode[] $roots */
         $roots = $this->om->getRepository(ResourceNode::class)->findBy(['workspace' => $workspace, 'parent' => null]);
-        foreach ($roots as $root) {
-            $children = $root->getChildren();
-            if ($children) {
-                foreach ($children as $node) {
-                    $this->crud->delete($node, [Crud::NO_PERMISSIONS]);
-                }
-            }
+        if (!empty($roots)) {
+            $this->crud->deleteBulk($roots, [Crud::NO_PERMISSIONS]);
+        }
+    }
+
+    public function postDelete(DeleteEvent $event)
+    {
+        /** @var Workspace $workspace */
+        $workspace = $event->getObject();
+
+        if ($workspace->getPoster()) {
+            $this->fileManager->unlinkFile(Workspace::class, $workspace->getUuid(), $workspace->getPoster());
         }
 
-        $this->om->endFlushSuite();
+        if ($workspace->getThumbnail()) {
+            $this->fileManager->unlinkFile(Workspace::class, $workspace->getUuid(), $workspace->getThumbnail());
+        }
 
         // remove workspace files dir
         rmdir($this->manager->getStorageDirectory($workspace));
@@ -210,6 +231,9 @@ class WorkspaceCrud
         if (empty($workspace->getOrganizations())) {
             $workspace->addOrganization($this->organizationManager->getDefault());
         }
+
+        $this->fileManager->updateFile(Workspace::class, $workspace->getUuid(), $workspace->getPoster());
+        $this->fileManager->updateFile(Workspace::class, $workspace->getUuid(), $workspace->getThumbnail());
     }
 
     private function copy(Workspace $workspace, Workspace $newWorkspace, ?bool $model = false): Workspace

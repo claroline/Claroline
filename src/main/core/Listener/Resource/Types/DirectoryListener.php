@@ -155,7 +155,7 @@ class DirectoryListener
     public function onDelete(DeleteResourceEvent $event)
     {
         // delete all children of the current directory
-        // this may by interesting to put it in the messenger bus
+        // this may be interesting to put it in the messenger bus
         $resourceNode = $event->getResource()->getResourceNode();
 
         if (!empty($resourceNode->getChildren())) {

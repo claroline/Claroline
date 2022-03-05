@@ -17,7 +17,6 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
-use Claroline\CoreBundle\Library\Utilities\FileUtilities;
 use Claroline\CoreBundle\Repository\User\RoleRepository;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -41,9 +40,6 @@ class AnnouncementSerializer
     /** @var RoleRepository */
     private $roleRepo;
 
-    /** @var FileUtilities */
-    private $fileUt;
-
     /** @var WorkspaceSerializer */
     private $wsSerializer;
 
@@ -60,13 +56,11 @@ class AnnouncementSerializer
         WorkspaceSerializer $wsSerializer,
         ResourceNodeSerializer $nodeSerializer,
         PublicFileSerializer $publicFileSerializer,
-        FileUtilities $fileUt,
         RoleSerializer $roleSerializer
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->userSerializer = $userSerializer;
         $this->om = $om;
-        $this->fileUt = $fileUt;
         $this->wsSerializer = $wsSerializer;
         $this->nodeSerializer = $nodeSerializer;
         $this->publicFileSerializer = $publicFileSerializer;
@@ -194,18 +188,13 @@ class AnnouncementSerializer
         }
 
         if (isset($data['poster']) && isset($data['poster']['id'])) {
-            $publicFile = $this->om->getRepository(PublicFile::class)->find($data['poster']['id']);
-            if ($publicFile) {
-                $poster = $this->publicFileSerializer->deserialize(
-                    $data['poster'],
-                    $publicFile
-                );
-                $announce->setPoster($data['poster']['url']);
-                $this->fileUt->createFileUse(
-                    $poster,
-                    Announcement::class,
-                    $announce->getUuid()
-                );
+            if (array_key_exists('poster', $data)) {
+                $posterUrl = null;
+                if (!empty($data['poster']) && !empty($data['poster']['url'])) {
+                    $posterUrl = $data['poster']['url'];
+                }
+
+                $announce->setPoster($posterUrl);
             }
         }
 

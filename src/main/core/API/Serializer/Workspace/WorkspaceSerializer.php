@@ -17,7 +17,6 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
-use Claroline\CoreBundle\Library\Utilities\FileUtilities;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -38,9 +37,6 @@ class WorkspaceSerializer
     /** @var WorkspaceManager */
     private $workspaceManager;
 
-    /** @var FileUtilities */
-    private $fileUt;
-
     /** @var OrganizationSerializer */
     private $organizationSerializer;
 
@@ -58,7 +54,6 @@ class WorkspaceSerializer
         TokenStorageInterface $tokenStorage,
         ObjectManager $om,
         WorkspaceManager $workspaceManager,
-        FileUtilities $fileUt,
         UserSerializer $userSerializer,
         OrganizationSerializer $organizationSerializer,
         PublicFileSerializer $publicFileSerializer,
@@ -68,7 +63,6 @@ class WorkspaceSerializer
         $this->authorization = $authorization;
         $this->om = $om;
         $this->workspaceManager = $workspaceManager;
-        $this->fileUt = $fileUt;
         $this->userSerializer = $userSerializer;
         $this->organizationSerializer = $organizationSerializer;
         $this->publicFileSerializer = $publicFileSerializer;
@@ -315,13 +309,8 @@ class WorkspaceSerializer
 
         if (array_key_exists('thumbnail', $data)) {
             $thumbnailUrl = null;
-            if (!empty($data['thumbnail'])) {
-                /** @var PublicFile $thumbnail */
-                $thumbnail = $this->om->getObject($data['thumbnail'], PublicFile::class, ['url']);
-                if (!empty($thumbnail)) {
-                    $thumbnailUrl = $thumbnail->getUrl();
-                    $this->fileUt->createFileUse($thumbnail, Workspace::class, $workspace->getUuid());
-                }
+            if (!empty($data['thumbnail']) && !empty($data['thumbnail']['url'])) {
+                $thumbnailUrl = $data['thumbnail']['url'];
             }
 
             $workspace->setThumbnail($thumbnailUrl);
@@ -329,13 +318,8 @@ class WorkspaceSerializer
 
         if (array_key_exists('poster', $data)) {
             $posterUrl = null;
-            if (!empty($data['poster'])) {
-                /** @var PublicFile $poster */
-                $poster = $this->om->getObject($data['poster'], PublicFile::class, ['url']);
-                if (!empty($poster)) {
-                    $posterUrl = $poster->getUrl();
-                    $this->fileUt->createFileUse($poster, Workspace::class, $workspace->getUuid());
-                }
+            if (!empty($data['poster']) && !empty($data['poster']['url'])) {
+                $posterUrl = $data['poster']['url'];
             }
 
             $workspace->setPoster($posterUrl);

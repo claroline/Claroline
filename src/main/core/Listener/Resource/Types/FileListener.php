@@ -24,7 +24,7 @@ use Claroline\CoreBundle\Event\Resource\DownloadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\File\LoadFileEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\ResourceActionEvent;
-use Claroline\CoreBundle\Library\Utilities\FileUtilities;
+use Claroline\CoreBundle\Manager\FileManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Filesystem\Filesystem;
@@ -52,38 +52,33 @@ class FileListener
     /** @var ResourceManager */
     private $resourceManager;
 
-    /** @var string */
-    private $filesDir;
-
     /** @var SerializerProvider */
     private $serializer;
 
-    /** @var FileUtilities */
-    private $fileUtils;
+    /** @var FileManager */
+    private $fileManager;
 
     public function __construct(
         TokenStorageInterface $tokenStorage,
         ObjectManager $om,
         StrictDispatcher $eventDispatcher,
-        string $filesDir,
         SerializerProvider $serializer,
         ResourceManager $resourceManager,
-        FileUtilities $fileUtils
+        FileManager $fileManager
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->om = $om;
         $this->eventDispatcher = $eventDispatcher;
-        $this->filesDir = $filesDir;
         $this->serializer = $serializer;
         $this->resourceManager = $resourceManager;
-        $this->fileUtils = $fileUtils;
+        $this->fileManager = $fileManager;
     }
 
     public function onLoad(LoadResourceEvent $event)
     {
         /** @var File $resource */
         $resource = $event->getResource();
-        $path = $this->filesDir.DIRECTORY_SEPARATOR.$resource->getHashName();
+        $path = $this->fileManager->getDirectory().DIRECTORY_SEPARATOR.$resource->getHashName();
 
         $additionalFileData = [];
 
@@ -153,7 +148,7 @@ class FileListener
         /** @var File $file */
         $file = $event->getResource();
 
-        $pathName = $this->filesDir.DIRECTORY_SEPARATOR.$file->getHashName();
+        $pathName = $this->fileManager->getDirectory().DIRECTORY_SEPARATOR.$file->getHashName();
         if (file_exists($pathName)) {
             $event->setFiles([$pathName]);
         }
@@ -177,7 +172,7 @@ class FileListener
     public function onExportFile(ExportObjectEvent $exportEvent)
     {
         $file = $exportEvent->getObject();
-        $path = $this->filesDir.DIRECTORY_SEPARATOR.$file->getHashName();
+        $path = $this->fileManager->getDirectory().DIRECTORY_SEPARATOR.$file->getHashName();
 
         $newPath = uniqid().'.'.pathinfo($file->getHashName(), PATHINFO_EXTENSION);
 
@@ -193,7 +188,7 @@ class FileListener
             $fileSystem = new Filesystem();
             try {
                 $ds = DIRECTORY_SEPARATOR;
-                $fileSystem->copy($bag->get($data['_path']), $this->filesDir.$ds.$data['hashName']);
+                $fileSystem->copy($bag->get($data['_path']), $this->fileManager->getDirectory().$ds.$data['hashName']);
             } catch (\Exception $e) {
             }
         }
@@ -218,9 +213,9 @@ class FileListener
         $newFile->setHashName($hashName);
         $newFile->setSize($resource->getSize());
 
-        $filePath = $this->filesDir.DIRECTORY_SEPARATOR.$resource->getHashName();
-        $newPath = $this->filesDir.DIRECTORY_SEPARATOR.$hashName;
-        $workspaceDir = $this->filesDir.DIRECTORY_SEPARATOR.'WORKSPACE_'.$workspace->getId();
+        $filePath = $this->fileManager->getDirectory().DIRECTORY_SEPARATOR.$resource->getHashName();
+        $newPath = $this->fileManager->getDirectory().DIRECTORY_SEPARATOR.$hashName;
+        $workspaceDir = $this->fileManager->getDirectory().DIRECTORY_SEPARATOR.'WORKSPACE_'.$workspace->getId();
 
         if (!is_dir($workspaceDir)) {
             mkdir($workspaceDir);
@@ -240,7 +235,7 @@ class FileListener
         $file = $event->getResource();
 
         $event->setItem(
-            $this->filesDir.DIRECTORY_SEPARATOR.$file->getHashName()
+            $this->fileManager->getDirectory().DIRECTORY_SEPARATOR.$file->getHashName()
         );
 
         $event->stopPropagation();

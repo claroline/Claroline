@@ -4,12 +4,15 @@ namespace Claroline\CoreBundle\Subscriber\Crud\Planning;
 
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
+use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Location\Location;
 use Claroline\CoreBundle\Entity\Location\Room;
 use Claroline\CoreBundle\Entity\Planning\AbstractPlanned;
+use Claroline\CoreBundle\Entity\Planning\PlannedObject;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Manager\FileManager;
 use Claroline\CoreBundle\Manager\PlanningManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -20,6 +23,8 @@ abstract class AbstractPlannedSubscriber implements EventSubscriberInterface
     protected $tokenStorage;
     /** @var ObjectManager */
     protected $om;
+    /** @var FileManager */
+    protected $fileManager;
     /** @var PlanningManager */
     protected $planningManager;
 
@@ -31,6 +36,11 @@ abstract class AbstractPlannedSubscriber implements EventSubscriberInterface
     public function setObjectManager(ObjectManager $om)
     {
         $this->om = $om;
+    }
+
+    public function setFileManager(FileManager $fileManager)
+    {
+        $this->fileManager = $fileManager;
     }
 
     public function setPlanningManager(PlanningManager $planningManager)
@@ -48,6 +58,7 @@ abstract class AbstractPlannedSubscriber implements EventSubscriberInterface
         return [
             Crud::getEventName('create', 'pre', static::getPlannedClass()) => 'preCreate',
             Crud::getEventName('update', 'pre', static::getPlannedClass()) => 'preUpdate',
+            Crud::getEventName('delete', 'post', static::getPlannedClass()) => 'postDelete',
         ];
     }
 
@@ -115,6 +126,20 @@ abstract class AbstractPlannedSubscriber implements EventSubscriberInterface
                     $this->planningManager->removeFromPlanning($object, $old);
                 }
             }
+        }
+    }
+
+    public function postDelete(DeleteEvent $event)
+    {
+        /** @var AbstractPlanned $object */
+        $object = $event->getObject();
+
+        if ($object->getPoster()) {
+            $this->fileManager->unlinkFile(PlannedObject::class, $object->getUuid(), $object->getPoster());
+        }
+
+        if ($object->getThumbnail()) {
+            $this->fileManager->unlinkFile(PlannedObject::class, $object->getUuid(), $object->getThumbnail());
         }
     }
 }

@@ -76,14 +76,6 @@ services:
         arguments:
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
 
-    Claroline\CoreBundle\Library\Utilities\FileUtilities:
-        arguments:
-            - '%claroline.param.files_directory%'
-            - '@filesystem'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '%claroline.param.public_files_directory%'
-            - '@security.token_storage'
-
     Claroline\CoreBundle\Library\Utilities\ClaroUtilities: ~
 
     Claroline\CoreBundle\Library\RoutingHelper:

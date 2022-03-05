@@ -21,7 +21,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
-use Claroline\CoreBundle\Library\Utilities\FileUtilities;
+use Claroline\CoreBundle\Manager\FileManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Security\Collection\ResourceCollection;
@@ -52,16 +52,14 @@ class FileController
     private $session;
     /** @var ObjectManager */
     private $om;
-    /** @var string */
-    private $fileDir;
     /** @var ResourceNodeSerializer */
     private $serializer;
     /** @var ResourceManager */
     private $resourceManager;
     /** @var RoleManager */
     private $roleManager;
-    /** @var FileUtilities */
-    private $fileUtils;
+    /** @var FileManager */
+    private $fileManager;
     /** @var FinderProvider */
     private $finder;
     /** @var TokenStorageInterface */
@@ -70,11 +68,10 @@ class FileController
     public function __construct(
         SessionInterface $session,
         ObjectManager $om,
-        string $fileDir,
         ResourceNodeSerializer $serializer,
         ResourceManager $resourceManager,
         RoleManager $roleManager,
-        FileUtilities $fileUtils,
+        FileManager $fileManager,
         FinderProvider $finder,
         TokenStorageInterface $tokenStorage,
         AuthorizationCheckerInterface $authorization
@@ -82,11 +79,10 @@ class FileController
         $this->tokenStorage = $tokenStorage;
         $this->session = $session;
         $this->om = $om;
-        $this->fileDir = $fileDir;
         $this->serializer = $serializer;
         $this->resourceManager = $resourceManager;
         $this->roleManager = $roleManager;
-        $this->fileUtils = $fileUtils;
+        $this->fileManager = $fileManager;
         $this->finder = $finder;
         $this->authorization = $authorization;
     }
@@ -220,7 +216,7 @@ class FileController
         $sourceType = $request->get('sourceType');
 
         if ($request->files->get('file')) {
-            $publicFile = $this->fileUtils->createFile(
+            $publicFile = $this->fileManager->createFile(
                 $request->files->get('file'),
                 $fileName,
                 $objectClass,
@@ -250,7 +246,7 @@ class FileController
 
         /** @var File $file */
         $file = $this->resourceManager->getResourceFromNode($resourceNode);
-        $path = $this->fileDir.DIRECTORY_SEPARATOR.$file->getHashName();
+        $path = $this->fileManager->getDirectory().DIRECTORY_SEPARATOR.$file->getHashName();
 
         if (!file_exists($path)) {
             return new JsonResponse(['File not found'], 500);

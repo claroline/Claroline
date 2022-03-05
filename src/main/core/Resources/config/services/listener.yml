@@ -114,10 +114,9 @@ services:
             - '@security.token_storage'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\Event\StrictDispatcher'
-            - '%claroline.param.files_directory%'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@claroline.manager.resource_manager'
-            - '@Claroline\CoreBundle\Library\Utilities\FileUtilities'
+            - '@Claroline\CoreBundle\Manager\FileManager'
         tags:
             - { name: kernel.event_listener, event: resource.file.load, method: onLoad }
             - { name: kernel.event_listener, event: resource.file.change_file, method: onFileChange }
