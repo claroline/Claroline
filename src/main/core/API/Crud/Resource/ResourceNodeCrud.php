@@ -12,6 +12,7 @@ use Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Manager\FileManager;
 use Claroline\CoreBundle\Manager\Resource\ResourceLifecycleManager;
 use Claroline\CoreBundle\Manager\Resource\RightsManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
@@ -25,6 +26,8 @@ class ResourceNodeCrud
     private $om;
     /** @var Crud */
     private $crud;
+    /** @var FileManager */
+    private $fileManager;
     /** @var ResourceLifecycleManager */
     private $lifeCycleManager;
     /** @var ResourceManager */
@@ -38,6 +41,7 @@ class ResourceNodeCrud
         TokenStorageInterface $tokenStorage,
         ObjectManager $om,
         Crud $crud,
+        FileManager $fileManager,
         ResourceLifecycleManager $lifeCycleManager,
         ResourceManager $resourceManager,
         RightsManager $rightsManager,
@@ -46,6 +50,7 @@ class ResourceNodeCrud
         $this->tokenStorage = $tokenStorage;
         $this->om = $om;
         $this->crud = $crud;
+        $this->fileManager = $fileManager;
         $this->lifeCycleManager = $lifeCycleManager;
         $this->resourceManager = $resourceManager;
         $this->rightsManager = $rightsManager;
@@ -66,15 +71,9 @@ class ResourceNodeCrud
 
     public function preDelete(DeleteEvent $event)
     {
+        /** @var ResourceNode $node */
         $node = $event->getObject();
         $options = $event->getOptions();
-
-        if (null === $node->getParent()) {
-            // Root directory cannot be removed
-            $event->block();
-
-            return;
-        }
 
         // check if the node is still correctly linked to an AbstractResource
         // this was a common problem in the old versions
@@ -97,8 +96,16 @@ class ResourceNodeCrud
             $this->om->persist($node);
         } else {
             // remove resource files
+            if ($node->getPoster()) {
+                $this->fileManager->unlinkFile(ResourceNode::class, $node->getUuid(), $node->getPoster());
+            }
+
+            if ($node->getThumbnail()) {
+                $this->fileManager->unlinkFile(ResourceNode::class, $node->getUuid(), $node->getThumbnail());
+            }
+
             foreach ($event->getFiles() as $file) {
-                unlink($file);
+                $this->fileManager->remove($file, true);
             }
         }
     }

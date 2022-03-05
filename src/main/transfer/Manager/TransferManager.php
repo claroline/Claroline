@@ -8,7 +8,7 @@ use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
-use Claroline\CoreBundle\Library\Utilities\FileUtilities;
+use Claroline\CoreBundle\Manager\FileManager;
 use Claroline\TransferBundle\Entity\AbstractTransferFile;
 use Claroline\TransferBundle\Entity\ExportFile;
 use Claroline\TransferBundle\Entity\ImportFile;
@@ -34,10 +34,8 @@ class TransferManager
     private $exporter;
     /** @var ImportProvider */
     private $importer;
-    /** @var FileUtilities */
-    private $fileUtilities;
-    /** @var string */
-    private $filesDir;
+    /** @var FileManager */
+    private $fileManager;
     /** @var string */
     private $logDir;
 
@@ -48,8 +46,7 @@ class TransferManager
         Crud $crud,
         ExportProvider $exporter,
         importProvider $importer,
-        FileUtilities $fileUtilities,
-        string $filesDir,
+        FileManager $fileManager,
         string $logDir
     ) {
         $this->messageBus = $messageBus;
@@ -58,8 +55,7 @@ class TransferManager
         $this->crud = $crud;
         $this->exporter = $exporter;
         $this->importer = $importer;
-        $this->fileUtilities = $fileUtilities;
-        $this->filesDir = $filesDir;
+        $this->fileManager = $fileManager;
         $this->logDir = $logDir;
     }
 
@@ -87,7 +83,7 @@ class TransferManager
     public function import(ImportFile $importFile): string
     {
         try {
-            $toImport = $this->fileUtilities->getContents($importFile->getFile());
+            $toImport = $this->fileManager->getContents($importFile->getFile());
 
             $extra = $importFile->getExtra() ?? [];
             $options = [];
@@ -150,7 +146,7 @@ class TransferManager
             );
 
             $fs = new FileSystem();
-            $fs->dumpFile($this->filesDir.'/transfer'.'/'.$exportFile->getUuid(), $data);
+            $fs->dumpFile($this->fileManager->getDirectory().'/transfer'.'/'.$exportFile->getUuid(), $data);
 
             $status = TransferFileInterface::SUCCESS;
         } catch (\Exception $e) {

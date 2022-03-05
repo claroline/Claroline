@@ -20,6 +20,7 @@ use Claroline\CoreBundle\Event\Security\AddRoleEvent;
 use Claroline\CoreBundle\Event\Security\NewPasswordEvent;
 use Claroline\CoreBundle\Event\Security\RemoveRoleEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Manager\FileManager;
 use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\Organization\OrganizationManager;
 use Claroline\CoreBundle\Manager\RoleManager;
@@ -48,6 +49,8 @@ class UserCrud
     private $notificationManager;
     /** @var StrictDispatcher */
     private $dispatcher;
+    /** @var FileManager */
+    private $fileManager;
 
     public function __construct(
         TokenStorageInterface $tokenStorage,
@@ -58,7 +61,8 @@ class UserCrud
         OrganizationManager $organizationManager,
         WorkspaceManager $workspaceManager,
         NotificationUserParametersManager $notificationManager,
-        StrictDispatcher $dispatcher
+        StrictDispatcher $dispatcher,
+        FileManager $fileManager
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->om = $om;
@@ -69,6 +73,7 @@ class UserCrud
         $this->workspaceManager = $workspaceManager;
         $this->notificationManager = $notificationManager;
         $this->dispatcher = $dispatcher;
+        $this->fileManager = $fileManager;
     }
 
     public function preCreate(CreateEvent $event)
@@ -163,42 +168,6 @@ class UserCrud
         }
     }
 
-    public function preDelete(DeleteEvent $event)
-    {
-        /** @var User $user */
-        $user = $event->getObject();
-        $userRole = $this->roleManager->getUserRole($user->getUsername());
-
-        //soft delete~
-        $user->setRemoved(true);
-        $user->setEmail('email#'.$user->getId());
-        $user->setFirstName('firstname#'.$user->getId());
-        $user->setLastName('lastname#'.$user->getId());
-        $user->setPlainPassword(uniqid());
-        $user->setUsername('username#'.$user->getId());
-        $user->setAdministrativeCode('code#'.$user->getId());
-        $user->setIsEnabled(false);
-
-        // keeping the user's workspace with its original code
-        // would prevent creating a user with the same username
-        // todo: workspace deletion should be an option
-        $ws = $user->getPersonalWorkspace();
-
-        if ($ws) {
-            $ws->setCode($ws->getCode().'#deleted_user#'.$user->getId());
-            $ws->setHidden(true);
-            $ws->setArchived(true);
-            $this->om->persist($ws);
-        }
-
-        if ($userRole) {
-            $this->om->remove($userRole);
-        }
-
-        $this->om->persist($user);
-        $this->om->flush();
-    }
-
     public function preUpdate(UpdateEvent $event)
     {
         $oldData = $event->getOldData();
@@ -264,6 +233,56 @@ class UserCrud
                     }
                 }
             }
+        }
+    }
+
+    public function preDelete(DeleteEvent $event)
+    {
+        /** @var User $user */
+        $user = $event->getObject();
+        $userRole = $this->roleManager->getUserRole($user->getUsername());
+
+        //soft delete~
+        $user->setRemoved(true);
+        $user->setEmail('email#'.$user->getId());
+        $user->setFirstName('firstname#'.$user->getId());
+        $user->setLastName('lastname#'.$user->getId());
+        $user->setPlainPassword(uniqid());
+        $user->setUsername('username#'.$user->getId());
+        $user->setAdministrativeCode('code#'.$user->getId());
+        $user->setIsEnabled(false);
+
+        // keeping the user's workspace with its original code
+        // would prevent creating a user with the same username
+        // todo: workspace deletion should be an option
+        $ws = $user->getPersonalWorkspace();
+
+        if ($ws) {
+            $ws->setCode($ws->getCode().'#deleted_user#'.$user->getId());
+            $ws->setHidden(true);
+            $ws->setArchived(true);
+            $this->om->persist($ws);
+        }
+
+        if ($userRole) {
+            $this->om->remove($userRole);
+        }
+
+        $this->om->persist($user);
+        $this->om->flush();
+    }
+
+    public function postDelete(DeleteEvent $event)
+    {
+        /** @var User $user */
+        $user = $event->getObject();
+
+        if ($user->getPoster()) {
+            $this->fileManager->unlinkFile(User::class, $user->getUuid(), $user->getPoster());
+        }
+
+        if ($user->getPicture()) {
+            $this->fileManager->unlinkFile(User::class, $user->getUuid(), $user->getPicture());
         }
     }
 }

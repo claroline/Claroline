@@ -15,7 +15,6 @@ use Claroline\CoreBundle\Entity\Template\Template;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
-use Claroline\CoreBundle\Library\Utilities\FileUtilities;
 use Claroline\OpenBadgeBundle\Entity\BadgeClass;
 use Claroline\OpenBadgeBundle\Entity\Rules\Rule;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -30,7 +29,6 @@ class BadgeClassSerializer
     /** @var AuthorizationCheckerInterface */
     private $authorization;
     private $router;
-    private $fileUt;
     private $workspaceSerializer;
     private $om;
     private $criteriaSerializer;
@@ -43,7 +41,6 @@ class BadgeClassSerializer
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
-        FileUtilities $fileUt,
         RouterInterface $router,
         ObjectManager $om,
         CriteriaSerializer $criteriaSerializer,
@@ -57,7 +54,6 @@ class BadgeClassSerializer
     ) {
         $this->authorization = $authorization;
         $this->router = $router;
-        $this->fileUt = $fileUt;
         $this->workspaceSerializer = $workspaceSerializer;
         $this->om = $om;
         $this->criteriaSerializer = $criteriaSerializer;
@@ -160,20 +156,18 @@ class BadgeClassSerializer
             $badge->setIssuer($organization);
         }
 
-        if (isset($data['image']) && isset($data['image']['id'])) {
-            /** @var PublicFile $thumbnail */
-            $thumbnail = $this->om->getObject($data['image'], PublicFile::class);
-            $badge->setImage($data['image']['url']);
-            $this->fileUt->createFileUse(
-                $thumbnail,
-                BadgeClass::class,
-                $badge->getUuid()
-            );
+        if (array_key_exists('image', $data)) {
+            $imageUrl = null;
+            if (!empty($data['image']) && !empty($data['image']['url'])) {
+                $imageUrl = $data['image']['url'];
+            }
+
+            $badge->setImage($imageUrl);
         }
 
-        if (isset($data['workspace'])) {
+        if (array_key_exists('workspace', $data)) {
             $workspace = null;
-            if (isset($data['workspace']['id'])) {
+            if (!empty($data['workspace']) && !empty($data['workspace']['id'])) {
                 /** @var Workspace $workspace */
                 $workspace = $this->om->getRepository(Workspace::class)->findOneBy(['uuid' => $data['workspace']['id']]);
             }
@@ -181,9 +175,9 @@ class BadgeClassSerializer
             $badge->setWorkspace($workspace);
         }
 
-        if (isset($data['template'])) {
+        if (array_key_exists('template', $data)) {
             $template = null;
-            if (isset($data['template']['id'])) {
+            if (!empty($data['template']) && !empty($data['template']['id'])) {
                 /** @var Template $template */
                 $template = $this->om->getRepository(Template::class)->findOneBy(['uuid' => $data['template']['id']]);
             }

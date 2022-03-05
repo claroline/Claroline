@@ -11,5 +11,5 @@ services:
             - '@service_container' # FIXME avoid container injection -> service locator or direct per-dependency constructor arg
 
     test.annotation_reader:
-        alias: annotation_reader
+        alias: annotations.reader
         public: true

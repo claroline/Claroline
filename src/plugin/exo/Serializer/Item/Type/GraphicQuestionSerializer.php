@@ -3,7 +3,7 @@
 namespace UJM\ExoBundle\Serializer\Item\Type;
 
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
-use Claroline\CoreBundle\Library\Utilities\FileUtilities;
+use Claroline\CoreBundle\Manager\FileManager;
 use UJM\ExoBundle\Entity\Content\Image;
 use UJM\ExoBundle\Entity\ItemType\GraphicQuestion;
 use UJM\ExoBundle\Entity\Misc\Area;
@@ -13,17 +13,12 @@ class GraphicQuestionSerializer
 {
     use SerializerTrait;
 
-    /**
-     * @var FileUtilities
-     */
-    private $fileUtils;
+    /** @var FileManager */
+    private $fileManager;
 
-    /**
-     * GraphicQuestionSerializer constructor.
-     */
-    public function __construct(FileUtilities $fileUtils)
+    public function __construct(FileManager $fileManager)
     {
-        $this->fileUtils = $fileUtils;
+        $this->fileManager = $fileManager;
     }
 
     public function getName()
@@ -120,7 +115,7 @@ class GraphicQuestionSerializer
 
         if (isset($imageData['data'])) {
             $imageName = "{$imageData['id']}.{$typeParts[1]}";
-            $publicFile = $this->fileUtils->createFileFromData(
+            $publicFile = $this->fileManager->createFileFromData(
                 $imageData['data'],
                 $imageName,
                 $objectClass,

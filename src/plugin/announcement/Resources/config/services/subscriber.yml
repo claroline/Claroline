@@ -1,0 +1,21 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: false
+
+    Claroline\AnnouncementBundle\Subscriber\Crud\AnnouncementAggregateSubscriber:
+        arguments:
+            - '@Claroline\AppBundle\API\Crud'
+        tags:
+            - { name: kernel.event_subscriber }
+
+    Claroline\AnnouncementBundle\Subscriber\Crud\AnnouncementSubscriber:
+        arguments:
+            - '@security.token_storage'
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AnnouncementBundle\Manager\AnnouncementManager'
+            - '@Claroline\CoreBundle\Manager\FileManager'
+        tags:
+            - { name: kernel.event_subscriber }

@@ -5,7 +5,6 @@ namespace Claroline\AnnouncementBundle\Messenger;
 use Claroline\AnnouncementBundle\Entity\Announcement;
 use Claroline\AnnouncementBundle\Entity\AnnouncementSend;
 use Claroline\AnnouncementBundle\Messenger\Message\SendAnnouncement;
-use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Event\CatalogEvents\MessageEvents;
@@ -49,11 +48,6 @@ class SendAnnouncementHandler implements MessageHandlerInterface
                     $sendAnnouncement->getSender(),
                 ]
             );
-
-            //it's kind of a hack because this is not using the crud... but wathever.
-            $this->eventDispatcher->dispatch('crud.post.create.announcement_send', CreateEvent::class, [
-                $announcementSend, [], [],
-            ]);
         }
     }
 }

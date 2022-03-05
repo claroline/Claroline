@@ -6,30 +6,20 @@ use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\CoreBundle\Entity\File\PublicFile;
-use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Library\Utilities\FileUtilities;
+use Claroline\CoreBundle\Manager\FileManager;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class PublicFileSubscriber implements EventSubscriberInterface
 {
-    /** @var string */
-    private $filesDir;
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var FileUtilities */
-    private $fileUtils;
+    /** @var FileManager */
+    private $fileManager;
 
     public function __construct(
-        string $filesDir,
-        TokenStorageInterface $tokenStorage,
-        FileUtilities $fileUtils
+        FileManager $fileManager
     ) {
-        $this->filesDir = $filesDir;
-        $this->tokenStorage = $tokenStorage;
-        $this->fileUtils = $fileUtils;
+        $this->fileManager = $fileManager;
     }
 
     public static function getSubscribedEvents(): array
@@ -50,7 +40,7 @@ class PublicFileSubscriber implements EventSubscriberInterface
         $fileName = !method_exists($tmpFile, 'getClientOriginalName') || !$tmpFile->getClientOriginalName() ?
             $tmpFile->getFileName() :
             $tmpFile->getClientOriginalName();
-        $directoryName = $this->fileUtils->getActiveDirectoryName();
+        $directoryName = $this->fileManager->getActiveDirectoryName();
         $size = filesize($tmpFile);
         $mimeType = !$tmpFile->getMimeType() && method_exists($tmpFile, 'getClientMimeType') ?
             $tmpFile->getClientMimeType() :
@@ -69,12 +59,7 @@ class PublicFileSubscriber implements EventSubscriberInterface
         $publicFile->setCreationDate(new \DateTime());
         $publicFile->setUrl($url);
 
-        $user = $this->tokenStorage->getToken()->getUser();
-        if (empty($publicFile->getCreator()) && $user instanceof User) {
-            $publicFile->setCreator($user);
-        }
-
-        $tmpFile->move($this->filesDir.DIRECTORY_SEPARATOR.$prefix, $hashName);
+        $tmpFile->move($this->fileManager->getDirectory().DIRECTORY_SEPARATOR.$prefix, $hashName);
     }
 
     public function postDelete(DeleteEvent $event)
@@ -83,7 +68,7 @@ class PublicFileSubscriber implements EventSubscriberInterface
         $object = $event->getObject();
         if ($object->getUrl()) {
             $fs = new FileSystem();
-            $fs->remove($this->filesDir.DIRECTORY_SEPARATOR.$object->getUrl());
+            $fs->remove($this->fileManager->getDirectory().DIRECTORY_SEPARATOR.$object->getUrl());
         }
     }
 }

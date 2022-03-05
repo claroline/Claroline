@@ -252,11 +252,10 @@ services:
         arguments:
             - '@session'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '%claroline.param.files_directory%'
             - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
             - '@claroline.manager.resource_manager'
-            - '@claroline.manager.role_manager'
-            - '@Claroline\CoreBundle\Library\Utilities\FileUtilities'
+            - '@Claroline\CoreBundle\Manager\RoleManager'
+            - '@Claroline\CoreBundle\Manager\FileManager'
             - '@Claroline\AppBundle\API\FinderProvider'
             - '@security.token_storage'
             - '@security.authorization_checker'

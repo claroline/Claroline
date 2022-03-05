@@ -11,6 +11,5 @@ services:
             - '@Claroline\AppBundle\API\Crud'
             - '@Claroline\TransferBundle\Transfer\ExportProvider'
             - '@Claroline\TransferBundle\Transfer\ImportProvider'
-            - '@Claroline\CoreBundle\Library\Utilities\FileUtilities'
-            - '%claroline.param.files_directory%'
+            - '@Claroline\CoreBundle\Manager\FileManager'
             - '%claroline.param.import_log_dir%'

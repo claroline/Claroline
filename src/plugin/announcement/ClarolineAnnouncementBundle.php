@@ -12,7 +12,14 @@
 namespace Claroline\AnnouncementBundle;
 
 use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
+use Claroline\SchedulerBundle\ClarolineSchedulerBundle;
 
 class ClarolineAnnouncementBundle extends DistributionPluginBundle
 {
+    public function getRequiredPlugins()
+    {
+        return [
+            ClarolineSchedulerBundle::class,
+        ];
+    }
 }

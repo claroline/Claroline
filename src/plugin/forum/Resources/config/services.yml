@@ -1,9 +1,9 @@
 imports:
-    - { resource: services/finder.yml }
-    - { resource: services/serializer.yml }
-    - { resource: services/voter.yml }
-    - { resource: services/manager.yml }
-    - { resource: services/listener.yml }
-    - { resource: services/crud.yml }
     - { resource: services/controller.yml }
+    - { resource: services/finder.yml }
+    - { resource: services/listener.yml }
+    - { resource: services/manager.yml }
     - { resource: services/messenger.yml }
+    - { resource: services/serializer.yml }
+    - { resource: services/subscriber.yml }
+    - { resource: services/voter.yml }

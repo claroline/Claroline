@@ -8,15 +8,16 @@ services:
             - method: setObjectManager
               arguments:
                   - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - method: setFileManager
+              arguments:
+                  - '@Claroline\CoreBundle\Manager\FileManager'
             - method: setPlanningManager
               arguments:
                   - '@Claroline\CoreBundle\Manager\PlanningManager'
 
     Claroline\CoreBundle\Subscriber\Crud\File\PublicFileSubscriber:
         arguments:
-            - '%claroline.param.files_directory%'
-            - '@security.token_storage'
-            - '@Claroline\CoreBundle\Library\Utilities\FileUtilities'
+            - '@Claroline\CoreBundle\Manager\FileManager'
         tags:
             - { name: kernel.event_subscriber }
 
