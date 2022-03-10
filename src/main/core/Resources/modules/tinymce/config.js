@@ -46,9 +46,7 @@ const config = getExternalPlugins().then(extPlugins => {
 
     // allow to fetch tinymce plugins
     baseURL: asset('packages/tinymce'),
-    // avoid tinymce to prepend platform url to relative path
-    // this breaks the url placeholders of the template system
-    relative_urls : true,
+    relative_urls: false,
 
     // plugin : paste
     paste_data_images: true,

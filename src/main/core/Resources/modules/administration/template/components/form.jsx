@@ -61,9 +61,12 @@ const TemplateForm = (props) =>
           disabled: (template) => template.system
         }, {
           name: `contents.${locale}.content`,
-          type: 'html',
+          type: 'string',
           label: trans('content'),
-          disabled: (template) => template.system
+          disabled: (template) => template.system,
+          options: {
+            long: true
+          }
         }
       ]
     })))}
