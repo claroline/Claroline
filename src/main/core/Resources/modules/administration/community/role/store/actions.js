@@ -19,6 +19,7 @@ actions.open = (formName, id = null) => (dispatch) => {
       [API_REQUEST]: {
         url: ['apiv2_role_get', {id}],
         silent: true,
+        before: () => dispatch(formActions.resetForm(formName, null, false)),
         success: (response) => {
           dispatch(formActions.resetForm(formName, response, false))
         }
