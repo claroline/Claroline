@@ -104,6 +104,14 @@ services:
         tags:
             - { name: 'console.command', command: 'claroline:workspace:import' }
 
+    Claroline\CoreBundle\Command\Workspace\DeleteArchivedCommand:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@Claroline\AppBundle\API\Crud'
+        tags:
+            - { name: 'console.command', command: 'claroline:workspace:delete-archived' }
+
     # Common
 
     Claroline\CoreBundle\Command\ComputeStorageCommand:

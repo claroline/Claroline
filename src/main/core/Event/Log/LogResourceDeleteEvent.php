@@ -42,7 +42,7 @@ class LogResourceDeleteEvent extends LogGenericEvent
             ],
             null,
             null,
-            $node,
+            null,
             null,
             $node->getWorkspace(),
             $node->getCreator()
