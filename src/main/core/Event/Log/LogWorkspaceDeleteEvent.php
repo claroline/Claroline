@@ -31,7 +31,7 @@ class LogWorkspaceDeleteEvent extends LogGenericEvent
             null,
             null,
             null,
-            $workspace
+            null
         );
     }
 
