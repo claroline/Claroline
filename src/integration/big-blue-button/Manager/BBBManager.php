@@ -213,6 +213,10 @@ class BBBManager
         $meetingId = $bbb->getUuid();
 
         $server = empty($serverName) ? $this->getMeetingServer($bbb) : $this->serverManager->getServer($serverName);
+        if (empty($server)) {
+            return;
+        }
+
         $serverUrl = $server['url'];
         $securitySalt = $server['token'];
 
@@ -379,6 +383,10 @@ class BBBManager
 
         $meetingId = $bbb->getUuid();
         $server = $this->getMeetingServer($bbb);
+        if (empty($server)) {
+            return $recordings;
+        }
+
         $serverUrl = $server['url'];
         $securitySalt = $server['token'];
 
@@ -390,7 +398,7 @@ class BBBManager
             $response = $this->curlManager->exec($url);
 
             $dom = new \DOMDocument();
-            if ($dom->loadXML($response)) {
+            if ($response && $dom->loadXML($response)) {
                 $recordingsEl = $dom->getElementsByTagName('recording');
 
                 for ($i = 0; $i < $recordingsEl->length; ++$i) {
