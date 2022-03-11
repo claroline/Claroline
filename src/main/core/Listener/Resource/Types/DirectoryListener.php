@@ -147,9 +147,9 @@ class DirectoryListener
         }
         $this->om->endFlushSuite();
 
-        return new JsonResponse(array_map(function (ResourceNode $fileNode) {
+        $event->setResponse(new JsonResponse(array_map(function (ResourceNode $fileNode) {
             return $this->serializer->serialize($fileNode);
-        }, $resources));
+        }, $resources)));
     }
 
     public function onDelete(DeleteResourceEvent $event)
