@@ -34,6 +34,7 @@ class User
      *     targetEntity="Claroline\CoreBundle\Entity\User",
      *     cascade={"persist", "remove"}
      * )
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     protected $user;
 
