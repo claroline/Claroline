@@ -31,6 +31,7 @@ class Assertion
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      *
      * @var User
      */
