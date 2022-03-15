@@ -1,6 +1,8 @@
-import React from 'react'
+import React, {createElement, Fragment} from 'react'
+import {Helmet} from 'react-helmet'
 
 import {trans} from '#/main/app/intl/translation'
+import {theme} from '#/main/app/config'
 import {Routes} from '#/main/app/router'
 import {Await} from '#/main/app/components/await'
 import {ContentLoader} from '#/main/app/content/components/loader'
@@ -24,8 +26,20 @@ const AccountMain = () =>
         ]}
         routes={sections.map(section => ({
           path: `/${section.name}`,
-          component: section.component
-        }))}
+          render: () => (
+            <Fragment>
+              {createElement(section.component)}
+
+              {0 !== section.styles.length &&
+                <Helmet>
+                  {section.styles.map(style =>
+                    <link key={style} rel="stylesheet" type="text/css" href={theme(style)} />
+                  )}
+                </Helmet>
+              }
+            </Fragment>
+          )})
+        )}
       />
     }
   />

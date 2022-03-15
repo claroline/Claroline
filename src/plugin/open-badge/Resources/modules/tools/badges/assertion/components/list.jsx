@@ -32,7 +32,7 @@ const AssertionsList = (props) =>
         primary: true
       }, {
         name: 'issuedOn',
-        label: trans('issued_on', {}, 'badge'),
+        label: trans('granted_date', {}, 'badge'),
         type: 'date',
         displayed: true,
         primary: true,

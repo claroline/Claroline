@@ -19,5 +19,12 @@ registry.add('ClarolineOpenBadgeBundle', {
    */
   tools: {
     'badges': () => { return import(/* webpackChunkName: "plugin-open-badge-tool-badges" */ '#/plugin/open-badge/tools/badges') },
-  }
+  },
+
+  /**
+   * Provides current user Account sections.
+   */
+  account: {
+    'badges': () => { return import(/* webpackChunkName: "plugin-open-badge-account-badges" */ '#/plugin/open-badge/account/badges') },
+  },
 })
