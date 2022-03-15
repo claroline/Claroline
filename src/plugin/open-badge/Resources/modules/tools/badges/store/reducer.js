@@ -17,7 +17,9 @@ const reducer = combineReducers({
         [FORM_SUBMIT_SUCCESS+'/'+selectors.STORE_NAME + '.badges.current']: () => true
       })
     }),
-    mine: makeListReducer(selectors.STORE_NAME + '.badges.mine', {}, {
+    mine: makeListReducer(selectors.STORE_NAME + '.badges.mine', {
+      sortBy: {property: 'issuedOn', direction: -1}
+    }, {
       invalidated: makeReducer(false, {
         [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: () => true
       })
