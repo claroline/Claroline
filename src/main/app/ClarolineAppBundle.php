@@ -74,6 +74,7 @@ class ClarolineAppBundle extends Bundle implements AutoConfigurableInterface
             'security' => true,
             'monolog' => true,
             'doctrine' => true,
+            'messenger' => true,
         ];
 
         foreach ($configs as $configKey => $envConfig) {
