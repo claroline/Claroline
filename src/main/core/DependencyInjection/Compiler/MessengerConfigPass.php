@@ -15,7 +15,9 @@ use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-// Configures messenger to be async or sync depending on the "job_queue.enabled" platform option
+/**
+ * Configures messenger to be async or sync depending on the "job_queue.enabled" platform option.
+ */
 class MessengerConfigPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
