@@ -44,6 +44,7 @@ class WorkspaceRepositoryTest extends RepositoryTestCase
         self::createLog(self::get('john'), 'workspace-tool-read', self::get('ws_2'));
         self::createResourceType('t_dir', 'Directory');
         self::createDirectory('dir_1', self::get('t_dir'), self::get('john'), self::get('ws_2'));
+        self::createDirectory('dir_2', self::get('t_dir'), self::get('john'), self::get('ws_2'));
     }
 
     public function testCount()
@@ -61,7 +62,7 @@ class WorkspaceRepositoryTest extends RepositoryTestCase
     {
         $workspaces = self::$repo->findWorkspacesWithMostResources(10);
         $this->assertEquals(7, count($workspaces));
-        $this->assertEquals('default_workspace', $workspaces[0]['name']);
-        $this->assertEquals(1, $workspaces[0]['total']);
+        $this->assertEquals('ws_2', $workspaces[0]['name']);
+        $this->assertEquals(2, $workspaces[0]['total']);
     }
 }

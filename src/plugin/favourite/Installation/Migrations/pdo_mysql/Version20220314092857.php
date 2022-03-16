@@ -2,6 +2,7 @@
 
 namespace HeVinci\FavouriteBundle\Installation\Migrations\pdo_mysql;
 
+use Claroline\MigrationBundle\Migrations\ConditionalMigrationTrait;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
 
@@ -12,12 +13,23 @@ use Doctrine\Migrations\AbstractMigration;
  */
 class Version20220314092857 extends AbstractMigration
 {
+    use ConditionalMigrationTrait;
+
     public function up(Schema $schema): void
     {
-        $this->addSql('
-            ALTER TABLE claro_resource_favourite 
-            DROP FOREIGN KEY FK_5ED1A9BDA76ED395
-        ');
+        if ($this->checkForeignKeyExists('FK_5ED1A9BDA76ED395', $this->connection)) {
+            $this->addSql('
+                ALTER TABLE claro_resource_favourite 
+                DROP FOREIGN KEY FK_5ED1A9BDA76ED395
+            ');
+        }
+
+        if ($this->checkForeignKeyExists('FK_55DB0452A76ED395', $this->connection)) {
+            $this->addSql('
+                ALTER TABLE claro_resource_favourite 
+                DROP FOREIGN KEY FK_55DB0452A76ED395
+            ');
+        }
         $this->addSql('
             ALTER TABLE claro_resource_favourite 
             ADD CONSTRAINT FK_5ED1A9BDA76ED395 FOREIGN KEY (user_id) 
