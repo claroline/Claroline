@@ -16,7 +16,7 @@ class Version20220314092857 extends AbstractMigration
     {
         $this->addSql('
             ALTER TABLE claro_resource_favourite 
-            DROP FOREIGN KEY FK_5ED1A9BDA76ED395
+            DROP FOREIGN KEY FK_55DB0452A76ED395
         ');
         $this->addSql('
             ALTER TABLE claro_resource_favourite 
@@ -44,7 +44,7 @@ class Version20220314092857 extends AbstractMigration
         ');
         $this->addSql('
             ALTER TABLE claro_resource_favourite 
-            ADD CONSTRAINT FK_5ED1A9BDA76ED395 FOREIGN KEY (user_id) 
+            ADD CONSTRAINT FK_55DB0452A76ED395 FOREIGN KEY (user_id) 
             REFERENCES claro_user (id)
         ');
         $this->addSql('
