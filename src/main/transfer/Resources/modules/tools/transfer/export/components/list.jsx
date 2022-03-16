@@ -26,7 +26,7 @@ const ExportList = (props) =>
         autoload: true
       }}
       delete={{
-        url: ['apiv2_transfer_import_delete_bulk']
+        url: ['apiv2_transfer_export_delete_bulk']
       }}
       definition={[
         {
