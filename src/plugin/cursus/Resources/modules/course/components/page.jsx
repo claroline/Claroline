@@ -7,8 +7,7 @@ import {trans} from '#/main/app/intl/translation'
 import {hasPermission} from '#/main/app/security'
 import {LINK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 import {ContentLoader} from '#/main/app/content/components/loader'
-import {PageFull} from '#/main/app/page/components/full'
-import {getToolBreadcrumb, showToolBreadcrumb} from '#/main/core/tool/utils'
+import {ToolPage} from '#/main/core/tool/containers/page'
 
 import {route} from '#/plugin/cursus/routing'
 import {getInfo} from '#/plugin/cursus/utils'
@@ -46,9 +45,8 @@ const CoursePage = (props) => {
   ]
 
   return (
-    <PageFull
-      showBreadcrumb={showToolBreadcrumb(props.currentContext.type, props.currentContext.data)}
-      path={[].concat(getToolBreadcrumb('trainings', props.currentContext.type, props.currentContext.data), props.path)}
+    <ToolPage
+      path={props.path}
       title={props.course.name}
       subtitle={get(props.activeSession, 'name')}
       poster={getInfo(props.course, props.activeSession, 'poster.url')}
@@ -57,7 +55,7 @@ const CoursePage = (props) => {
         description: props.course.description
       }}
 
-      toolbar="edit | fullscreen more"
+      primaryAction="edit"
       actions={getActions([props.course], props.currentContext, {}, props.basePath).then(pluginActions => {
         if (props.actions instanceof Promise) {
           return props.actions.then(promisedActions => promisedActions.concat(pluginActions, baseActions))
@@ -67,7 +65,7 @@ const CoursePage = (props) => {
       })}
     >
       {props.children}
-    </PageFull>
+    </ToolPage>
   )
 }
 

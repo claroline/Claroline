@@ -9,8 +9,7 @@ import {actions} from '#/plugin/agenda/event/store'
 const EventPage = withRouter(
   connect(
     (state) => ({
-      path: toolSelectors.path(state),
-      currentContext: toolSelectors.context(state)
+      path: toolSelectors.path(state)
     }),
     (dispatch) => ({
       delete(event) {

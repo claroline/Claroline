@@ -1,3 +1,4 @@
+import get from 'lodash/get'
 import {combineReducers, makeReducer} from '#/main/app/store/reducer'
 
 import {SECURITY_USER_CHANGE} from '#/main/app/security/store/actions'
@@ -7,7 +8,8 @@ import {
   TOOL_LOAD,
   TOOL_SET_LOADED,
   TOOL_SET_ACCESS_DENIED,
-  TOOL_SET_NOT_FOUND
+  TOOL_SET_NOT_FOUND,
+  TOOL_TOGGLE_FULLSCREEN
 } from '#/main/core/tool/store/actions'
 
 const reducer = combineReducers({
@@ -34,6 +36,10 @@ const reducer = combineReducers({
   currentContext: makeReducer({}, {
     [TOOL_OPEN]: (state, action) => action.context,
     [TOOL_CLOSE]: () => ({})
+  }),
+  fullscreen: makeReducer(false, {
+    [TOOL_LOAD]: (state, action) => get(action.toolData, 'data.display.fullscreen') || false,
+    [TOOL_TOGGLE_FULLSCREEN]: (state) => !state
   }),
   data: makeReducer({}, {
     [TOOL_LOAD]: (state, action) => action.toolData.data || {}

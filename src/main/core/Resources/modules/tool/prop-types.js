@@ -15,7 +15,8 @@ const Tool = {
       data: T.object
     }),
     display: T.shape({
-      showIcon: T.bool
+      showIcon: T.bool,
+      fullscreen: T.bool
     })
   },
   defaultProps: {

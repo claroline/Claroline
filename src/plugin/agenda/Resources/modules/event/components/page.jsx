@@ -5,27 +5,25 @@ import get from 'lodash/get'
 import {trans, displayDate} from '#/main/app/intl'
 import {hasPermission} from '#/main/app/security'
 import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
-import {PageFull} from '#/main/app/page/components/full'
-import {getToolBreadcrumb, showToolBreadcrumb} from '#/main/core/tool/utils'
+import {ToolPage} from '#/main/core/tool/containers/page'
 
 import {Event as EventTypes} from '#/plugin/agenda/prop-types'
 import {route} from '#/plugin/agenda/tools/agenda/routing'
 import {MODAL_EVENT_PARAMETERS} from '#/plugin/agenda/event/modals/parameters'
 
 const EventPage = (props) =>
-  <PageFull
-    showBreadcrumb={showToolBreadcrumb(props.currentContext.type, props.currentContext.data)}
-    path={[].concat(getToolBreadcrumb('agenda', props.currentContext.type, props.currentContext.data), [
+  <ToolPage
+    path={[
       {
         type: LINK_BUTTON,
         label: props.event.name,
         target: props.path+'/event/'+props.event.id
       }
-    ])}
+    ]}
     title={props.event.name}
     subtitle={displayDate(props.event.start, true, true)}
     poster={get(props.event, 'thumbnail.url')}
-    toolbar="show-calendar | edit | fullscreen more"
+    primaryAction="show-calendar"
     actions={[
       {
         name: 'show-calendar',
@@ -64,7 +62,7 @@ const EventPage = (props) =>
     }}
   >
     {props.children}
-  </PageFull>
+  </ToolPage>
 
 EventPage.propTypes = {
   event: T.shape(
@@ -77,10 +75,6 @@ EventPage.propTypes = {
   path: T.string.isRequired,
   history: T.shape({
     push: T.func.isRequired
-  }).isRequired,
-  currentContext: T.shape({
-    type: T.string.isRequired,
-    data: T.object
   }).isRequired,
   delete: T.func.isRequired
 }

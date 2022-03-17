@@ -102,7 +102,7 @@ class WorkspaceManager implements LoggerAwareInterface
 
     public function import(string $archivePath)
     {
-        return $this->container->get(TransferManager::class)->import($archivePath);
+        return $this->container->get(TransferManager::class)->import($archivePath, new Workspace());
     }
 
     public function hasAccess(Workspace $workspace, TokenInterface $token, string $toolName = null, string $permission = 'open'): bool

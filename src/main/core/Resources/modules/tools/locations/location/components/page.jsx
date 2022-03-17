@@ -6,8 +6,7 @@ import isEmpty from 'lodash/isEmpty'
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ContentLoader} from '#/main/app/content/components/loader'
-import {PageFull} from '#/main/app/page/components/full'
-import {getToolBreadcrumb, showToolBreadcrumb} from '#/main/core/tool/utils'
+import {ToolPage} from '#/main/core/tool/containers/page'
 import {getAddressString} from '#/main/app/data/types/address/utils'
 
 import {Location as LocationTypes} from '#/main/core/tools/locations/prop-types'
@@ -23,9 +22,8 @@ const LocationPage = (props) => {
   }
 
   return (
-    <PageFull
-      showBreadcrumb={showToolBreadcrumb(props.currentContext.type, props.currentContext.data)}
-      path={[].concat(getToolBreadcrumb('locations', props.currentContext.type, props.currentContext.data), [
+    <ToolPage
+      path={[
         {
           type: LINK_BUTTON,
           label: trans('locations', {}, 'tools'),
@@ -35,11 +33,11 @@ const LocationPage = (props) => {
           label: get(props.location, 'name'),
           target: `${props.path}/locations/${get(props.location, 'id')}`
         }
-      ])}
+      ]}
       poster={get(props.location, 'poster.url')}
       title={get(props.location, 'name')}
       subtitle={getAddressString(get(props.location, 'address'))}
-      toolbar="edit | fullscreen more"
+      primaryAction="edit"
       actions={[
         {
           name: 'edit',
@@ -52,16 +50,12 @@ const LocationPage = (props) => {
       ]}
     >
       {props.children}
-    </PageFull>
+    </ToolPage>
   )
 }
 
 LocationPage.propTypes = {
   path: T.string.isRequired,
-  currentContext: T.shape({
-    type: T.string.isRequired,
-    data: T.object
-  }).isRequired,
   location: T.shape(
     LocationTypes.propTypes
   ),

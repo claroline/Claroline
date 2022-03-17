@@ -41,6 +41,11 @@ const path = createSelector(
   (basePath, name) => basePath + '/' + name
 )
 
+const fullscreen = createSelector(
+  [store],
+  (store) => store.fullscreen
+)
+
 const toolData = createSelector(
   [store],
   (store) => store.data
@@ -98,6 +103,7 @@ export const selectors = {
   name,
   basePath,
   path,
+  fullscreen,
   toolData,
   permissions,
   context,

@@ -54,6 +54,7 @@ class OrderedToolSerializer
             'permissions' => $this->toolManager->getCurrentPermissions($orderedTool),
             'display' => [
                 'showIcon' => $orderedTool->getShowIcon(),
+                'fullscreen' => $orderedTool->getFullscreen(),
             ],
         ];
     }
@@ -61,6 +62,7 @@ class OrderedToolSerializer
     public function deserialize(array $data, OrderedTool $orderedTool): OrderedTool
     {
         $this->sipe('display.showIcon', 'setShowIcon', $data, $orderedTool);
+        $this->sipe('display.fullscreen', 'setFullscreen', $data, $orderedTool);
 
         if (isset($data['poster']) && isset($data['poster']['url'])) {
             $orderedTool->setPoster($data['poster']['url']);
