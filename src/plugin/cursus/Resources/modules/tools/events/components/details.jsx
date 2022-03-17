@@ -17,7 +17,6 @@ const EventsDetails = (props) =>
         target: props.path + '/' + props.event.id
       }
     ] : undefined}
-    currentContext={props.currentContext}
     event={props.event}
     reload={props.reload}
   >
@@ -28,10 +27,6 @@ const EventsDetails = (props) =>
 
 EventsDetails.propTypes = {
   path: T.string.isRequired,
-  currentContext: T.shape({
-    type: T.oneOf(['administration', 'desktop', 'workspace']),
-    data: T.object
-  }).isRequired,
   event: T.shape(
     EventTypes.propTypes
   ),

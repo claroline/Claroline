@@ -6,8 +6,7 @@ import {LocationPage as LocationPageComponent} from '#/main/core/tools/locations
 
 const LocationPage = connect(
   (state) => ({
-    path: toolSelectors.path(state),
-    currentContext: toolSelectors.context(state)
+    path: toolSelectors.path(state)
   })
 )(LocationPageComponent)
 

@@ -17,7 +17,7 @@ trait Code
      */
     protected $code;
 
-    public function getCode(): string
+    public function getCode(): ?string
     {
         return $this->code;
     }

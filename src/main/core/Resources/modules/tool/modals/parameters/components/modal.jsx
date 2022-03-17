@@ -68,6 +68,10 @@ class ParametersModal extends Component {
                   name: 'display.showIcon',
                   label: trans('resource_showIcon', {}, 'resource'),
                   type: 'boolean'
+                }, {
+                  name: 'display.fullscreen',
+                  label: trans('resource_fullscreen', {}, 'resource'),
+                  type: 'boolean'
                 }
               ]
             }

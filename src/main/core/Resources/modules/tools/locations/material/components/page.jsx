@@ -5,9 +5,8 @@ import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
-import {PageFull} from '#/main/app/page/components/full'
 import {ContentLoader} from '#/main/app/content/components/loader'
-import {getToolBreadcrumb, showToolBreadcrumb} from '#/main/core/tool/utils'
+import {ToolPage} from '#/main/core/tool/containers/page'
 
 import {Material as MaterialTypes} from '#/main/core/tools/locations/prop-types'
 import {MODAL_MATERIAL_BOOKING} from '#/main/core/tools/locations/material/modals/booking'
@@ -24,9 +23,8 @@ const MaterialPage = (props) => {
   }
 
   return (
-    <PageFull
-      showBreadcrumb={showToolBreadcrumb(props.currentContext.type, props.currentContext.data)}
-      path={[].concat(getToolBreadcrumb('locations', props.currentContext.type, props.currentContext.data), [
+    <ToolPage
+      path={[
         {
           type: LINK_BUTTON,
           label: trans('materials', {}, 'location'),
@@ -37,11 +35,11 @@ const MaterialPage = (props) => {
           target: `${props.path}/materials/${get(props.material, 'id')}`,
           displayed: !!props.material
         }
-      ])}
+      ]}
       poster={get(props.material, 'poster.url')}
       title={get(props.material, 'name') || trans('locations', {}, 'tools')}
       subtitle={get(props.material, 'code') || trans('materials', {}, 'location')}
-      toolbar="book | edit | fullscreen more"
+      primaryAction="book"
       actions={[
         {
           name: 'book',
@@ -68,16 +66,12 @@ const MaterialPage = (props) => {
       ]}
     >
       {props.children}
-    </PageFull>
+    </ToolPage>
   )
 }
 
 MaterialPage.propTypes = {
   path: T.string.isRequired,
-  currentContext: T.shape({
-    type: T.string.isRequired,
-    data: T.object
-  }).isRequired,
   material: T.shape(
     MaterialTypes.propTypes
   ),

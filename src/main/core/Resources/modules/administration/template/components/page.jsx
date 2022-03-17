@@ -6,8 +6,7 @@ import isEmpty from 'lodash/isEmpty'
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ContentLoader} from '#/main/app/content/components/loader'
-import {PageFull} from '#/main/app/page/components/full'
-import {getToolBreadcrumb, showToolBreadcrumb} from '#/main/core/tool/utils'
+import {ToolPage} from '#/main/core/tool/containers/page'
 
 import {TemplateType as TemplateTypeTypes} from '#/main/core/data/types/template-type/prop-types'
 
@@ -22,9 +21,8 @@ const TemplatePage = (props) => {
   }
 
   return (
-    <PageFull
-      showBreadcrumb={showToolBreadcrumb(props.currentContext.type, props.currentContext.data)}
-      path={[].concat(getToolBreadcrumb('templates', props.currentContext.type, props.currentContext.data), [
+    <ToolPage
+      path={[
         {
           type: LINK_BUTTON,
           label: trans(get(props.templateType, 'type')),
@@ -34,15 +32,14 @@ const TemplatePage = (props) => {
           label: trans(get(props.templateType, 'name'), {}, 'template'),
           target: ''
         }
-      ])}
-      title={trans('templates', {}, 'tools')}
+      ]}
       subtitle={trans(get(props.templateType, 'name'), {}, 'template')}
       meta={{
         title: `${trans('templates', {}, 'tools')} - ${trans(get(props.templateType, 'name'), {}, 'template')}`,
         description: trans(get(props.templateType, 'name')+'_desc', {}, 'template')
       }}
 
-      toolbar="add | fullscreen more"
+      primaryAction="add"
       actions={[
         {
           name: 'add',
@@ -56,16 +53,12 @@ const TemplatePage = (props) => {
       ]}
     >
       {props.children}
-    </PageFull>
+    </ToolPage>
   )
 }
 
 TemplatePage.propTypes = {
   path: T.string.isRequired,
-  currentContext: T.shape({
-    type: T.oneOf(['administration', 'desktop', 'workspace']),
-    data: T.object
-  }).isRequired,
   templateType: T.shape(
     TemplateTypeTypes.propTypes
   ),

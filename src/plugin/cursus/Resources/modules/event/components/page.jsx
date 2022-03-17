@@ -7,8 +7,7 @@ import {trans} from '#/main/app/intl/translation'
 import {hasPermission} from '#/main/app/security'
 import {MODAL_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 import {ContentLoader} from '#/main/app/content/components/loader'
-import {PageFull} from '#/main/app/page/components/full'
-import {getToolBreadcrumb, showToolBreadcrumb} from '#/main/core/tool/utils'
+import {ToolPage} from '#/main/core/tool/containers/page'
 
 import {Event as EventTypes} from '#/plugin/cursus/prop-types'
 import {MODAL_TRAINING_EVENT_ABOUT} from '#/plugin/cursus/event/modals/about'
@@ -25,12 +24,11 @@ const EventPage = (props) => {
   }
 
   return (
-    <PageFull
-      showBreadcrumb={showToolBreadcrumb(props.currentContext.type, props.currentContext.data)}
-      path={[].concat(getToolBreadcrumb('training_events', props.currentContext.type, props.currentContext.data), props.path)}
+    <ToolPage
+      path={props.path}
       title={get(props.event, 'name')}
       poster={get(props.event, 'poster.url')}
-      toolbar="edit | fullscreen more"
+      primaryAction="edit"
       actions={[
         {
           name: 'about',
@@ -93,17 +91,13 @@ const EventPage = (props) => {
       }}
     >
       {props.children}
-    </PageFull>
+    </ToolPage>
   )
 }
 
 EventPage.propTypes = {
   path: T.array,
   basePath: T.string.isRequired,
-  currentContext: T.shape({
-    type: T.oneOf(['administration', 'desktop', 'workspace']),
-    data: T.object
-  }).isRequired,
   primaryAction: T.string,
   actions: T.array,
   event: T.shape(

@@ -6,8 +6,7 @@ import {TemplatePage as TemplatePageComponent} from '#/main/core/administration/
 
 const TemplatePage = connect(
   (state) => ({
-    path: toolSelectors.path(state),
-    currentContext: toolSelectors.context(state)
+    path: toolSelectors.path(state)
   })
 )(TemplatePageComponent)
 

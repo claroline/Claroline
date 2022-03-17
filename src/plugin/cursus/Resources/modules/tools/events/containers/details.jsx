@@ -8,7 +8,6 @@ import {EventsDetails as EventsDetailsComponent} from '#/plugin/cursus/tools/eve
 const EventsDetails = connect(
   (state, ownProps) => ({
     path: ownProps.path || toolSelectors.path(state),
-    currentContext: toolSelectors.context(state),
     event: selectors.event(state)
   }),
   (dispatch) => ({

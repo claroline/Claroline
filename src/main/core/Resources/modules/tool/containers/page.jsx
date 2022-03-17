@@ -10,12 +10,16 @@ const ToolPage = withReducer(selectors.STORE_NAME, reducer)(
     (state) => ({
       name: selectors.name(state),
       basePath: selectors.path(state),
+      fullscreen: selectors.fullscreen(state),
       toolData: selectors.toolData(state),
       currentContext: selectors.context(state)
     }),
     (dispatch) => ({
       reload() {
         dispatch(actions.setLoaded(false))
+      },
+      toggleFullscreen() {
+        dispatch(actions.toggleFullscreen())
       }
     }),
     undefined,

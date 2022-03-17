@@ -48,13 +48,20 @@ class OrderedTool
     use Poster;
 
     /**
-     * Display resource icon/evaluation when the resource is rendered.
+     * Display tool icon when the tool is rendered.
      *
      * @var bool
      *
      * @ORM\Column(type="boolean", options={"default": 0})
      */
     private $showIcon = false;
+
+    /**
+     * Display in fullscreen when the tool is opened.
+     *
+     * @ORM\Column(type="boolean", nullable=false)
+     */
+    private $fullscreen = false;
 
     /**
      * @ORM\ManyToOne(
@@ -126,6 +133,16 @@ class OrderedTool
     public function setShowIcon($showIcon)
     {
         $this->showIcon = $showIcon;
+    }
+
+    public function setFullscreen(bool $fullscreen)
+    {
+        $this->fullscreen = $fullscreen;
+    }
+
+    public function getFullscreen(): bool
+    {
+        return $this->fullscreen;
     }
 
     public function __toString()
