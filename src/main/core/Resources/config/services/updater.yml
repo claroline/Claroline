@@ -35,3 +35,8 @@ services:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
         tags: [ 'claroline.platform.updater' ]
+
+    Claroline\CoreBundle\Installation\Updater\Updater130303:
+        tags: [ 'claroline.platform.updater' ]
+        arguments:
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'

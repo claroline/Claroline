@@ -201,7 +201,7 @@ class PlatformDefaults implements ParameterProviderInterface
                 'maxmind_license_key' => null,
             ],
             'job_queue' => [
-                'enabled' => true,
+                'enabled' => false,
             ],
             'changelogMessage' => [
                 // display a connection message when a new minor version is installed
