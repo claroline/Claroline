@@ -8,9 +8,7 @@ services:
         Claroline\AppBundle\API\ValidatorInterface:
             tags: [claroline.validator]
 
-    Claroline\CoreBundle\API\Validator\WorkspaceValidator:
-        arguments:
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
+    Claroline\CoreBundle\API\Validator\WorkspaceValidator: ~
 
     Claroline\CoreBundle\API\Validator\UserValidator:
         arguments:
@@ -24,9 +22,7 @@ services:
           - '@Claroline\CoreBundle\Manager\FacetManager'
           - '@Claroline\CoreBundle\API\Serializer\User\ProfileSerializer'
 
-    Claroline\CoreBundle\API\Validator\GroupValidator:
-        arguments:
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
+    Claroline\CoreBundle\API\Validator\GroupValidator: ~
 
     Claroline\CoreBundle\API\Validator\Resource\ResourceNodeValidator:
         arguments:

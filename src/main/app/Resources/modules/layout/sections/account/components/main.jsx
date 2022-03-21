@@ -30,7 +30,7 @@ const AccountMain = () =>
             <Fragment>
               {createElement(section.component)}
 
-              {0 !== section.styles.length &&
+              {section.styles && 0 !== section.styles.length &&
                 <Helmet>
                   {section.styles.map(style =>
                     <link key={style} rel="stylesheet" type="text/css" href={theme(style)} />

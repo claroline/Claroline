@@ -334,9 +334,9 @@ class UserController extends AbstractCrudController
     public function getRequirements(): array
     {
         return array_merge(parent::getRequirements(), [
-          'get' => ['id' => '^(?!.*(schema|copy|parameters|find|doc|csv|current|\/)).*'],
-          'update' => ['id' => '^(?!.*(schema|parameters|find|doc|csv|current|\/)).*'],
-          'exist' => [],
+            'get' => ['id' => '^(?!.*(schema|copy|parameters|find|doc|csv|current|\/)).*'],
+            'update' => ['id' => '^(?!.*(schema|parameters|find|doc|csv|current|\/)).*'],
+            'exist' => [],
         ]);
     }
 

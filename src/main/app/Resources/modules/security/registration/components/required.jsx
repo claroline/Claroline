@@ -1,6 +1,7 @@
 import React from 'react'
 
 import {trans} from '#/main/app/intl/translation'
+import {param} from '#/main/app/config'
 import {FormData} from '#/main/app/content/form/containers/data'
 
 import {selectors} from '#/main/app/security/registration/store/selectors'
@@ -8,8 +9,6 @@ import {selectors} from '#/main/app/security/registration/store/selectors'
 /**
  * Registration Form : Required section.
  * Contains all fields required for the user registration.
- *
- * @constructor
  */
 const Required = () =>
   <FormData
@@ -45,6 +44,7 @@ const Required = () =>
             type: 'username',
             label: trans('username'),
             required: true,
+            displayed: param('community.username'),
             options: {
               unique: {
                 check: ['apiv2_user_exist', {field: 'username'}]

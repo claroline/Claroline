@@ -85,6 +85,10 @@ class UserCrud
 
         $this->om->startFlushSuite();
 
+        if (empty($user->getUsername())) {
+            $user->setUsername($user->getEmail());
+        }
+
         if (empty($user->getLocale())) {
             $user->setLocale(
                 $this->config->getParameter('locales.default')

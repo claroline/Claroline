@@ -19,7 +19,7 @@ import {selectors as toolSelectors} from '#/main/core/tool/store'
 
 import {actions, selectors} from '#/main/core/administration/community/organization/store'
 import {GroupList} from '#/main/core/administration/community/group/components/group-list'
-import {UserList} from '#/main/core/administration/community/user/components/user-list'
+import {UserList} from '#/main/core/user/components/list'
 import workspacesSource from '#/main/core/data/sources/workspaces'
 
 const OrganizationForm = props =>
@@ -128,7 +128,7 @@ const OrganizationForm = props =>
         className="embedded-list-section"
         icon="fa fa-fw fa-user-cog"
         title={trans('managers')}
-        disabled={props.new}
+        disabled={!props.organization.id || props.new}
         actions={[
           {
             name: 'add',
@@ -146,23 +146,20 @@ const OrganizationForm = props =>
           }
         ]}
       >
-        <ListData
-          name={`${baseSelectors.STORE_NAME}.organizations.current.managers`}
-          fetch={{
-            url: ['apiv2_organization_list_managers', {id: props.organization.id}],
-            autoload: props.organization.id && !props.new
-          }}
-          primaryAction={(row) => ({
-            type: LINK_BUTTON,
-            target: `${props.path}/users/form/${row.id}`,
-            label: trans('edit', {}, 'actions')
-          })}
-          delete={{
-            url: ['apiv2_organization_remove_managers', {id: props.organization.id}]
-          }}
-          definition={UserList.definition}
-          card={UserList.card}
-        />
+        {props.organization.id && !props.new &&
+          <UserList
+            name={`${baseSelectors.STORE_NAME}.organizations.current.managers`}
+            url={['apiv2_organization_list_managers', {id: props.organization.id}]}
+            primaryAction={(row) => ({
+              type: LINK_BUTTON,
+              target: `${props.path}/users/form/${row.id}`,
+              label: trans('edit', {}, 'actions')
+            })}
+            delete={{
+              url: ['apiv2_organization_remove_managers', {id: props.organization.id}]
+            }}
+          />
+        }
       </FormSection>
 
       <FormSection
@@ -206,7 +203,7 @@ const OrganizationForm = props =>
         className="embedded-list-section"
         icon="fa fa-fw fa-user"
         title={trans('users')}
-        disabled={props.new}
+        disabled={!props.organization.id || props.new}
         actions={[
           {
             name: 'add',
@@ -224,23 +221,20 @@ const OrganizationForm = props =>
           }
         ]}
       >
-        <ListData
-          name={`${baseSelectors.STORE_NAME}.organizations.current.users`}
-          fetch={{
-            url: ['apiv2_organization_list_users', {id: props.organization.id}],
-            autoload: props.organization.id && !props.new
-          }}
-          primaryAction={(row) => ({
-            type: LINK_BUTTON,
-            target: `${props.path}/users/form/${row.id}`,
-            label: trans('edit', {}, 'actions')
-          })}
-          delete={{
-            url: ['apiv2_organization_remove_users', {id: props.organization.id}]
-          }}
-          definition={UserList.definition}
-          card={UserList.card}
-        />
+        {props.organization.id && !props.new &&
+          <UserList
+            name={`${baseSelectors.STORE_NAME}.organizations.current.users`}
+            url={['apiv2_organization_list_users', {id: props.organization.id}]}
+            primaryAction={(row) => ({
+              type: LINK_BUTTON,
+              target: `${props.path}/users/form/${row.id}`,
+              label: trans('edit', {}, 'actions')
+            })}
+            delete={{
+              url: ['apiv2_organization_remove_users', {id: props.organization.id}]
+            }}
+          />
+        }
       </FormSection>
 
       <FormSection

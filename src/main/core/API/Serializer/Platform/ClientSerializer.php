@@ -107,6 +107,7 @@ class ClientSerializer
             'environment' => $this->env,
             'helpUrl' => $this->config->getParameter('help_url'),
             'selfRegistration' => $this->config->getParameter('registration.self') && !$this->userManager->hasReachedLimit(),
+            'community' => $this->config->getParameter('community'),
             'serverUrl' => $this->platformManager->getUrl(),
             'locale' => $this->serializeLocale(),
             'display' => [ // TODO : to move

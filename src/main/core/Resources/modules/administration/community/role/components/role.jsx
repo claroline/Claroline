@@ -22,7 +22,7 @@ import {selectors as baseSelectors} from '#/main/core/administration/community/s
 import {constants} from '#/main/core/user/constants'
 import {Role as RoleTypes} from '#/main/core/user/prop-types'
 import {GroupList} from '#/main/core/administration/community/group/components/group-list'
-import {UserList} from '#/main/core/administration/community/user/components/user-list'
+import {UserList} from '#/main/core/user/components/list'
 
 // TODO : merge with main/core/tools/community/role/components/role
 
@@ -230,61 +230,61 @@ const Role = props => {
         level={3}
       >
         {constants.ROLE_PLATFORM === props.role.type &&
-        <FormSection
-          icon="fa fa-fw fa-cogs"
-          title={trans('administration_tools')}
-        >
-          <div className="list-group" fill={true}>
-            {Object.keys(props.role.adminTools || {}).map(toolName =>
-              <Checkbox
-                key={toolName}
-                id={toolName}
-                className={classes('list-group-item', {
-                  'list-group-item-selected': props.role.adminTools[toolName]
-                })}
-                label={trans(toolName, {}, 'tools')}
-                checked={props.role.adminTools[toolName]}
-                onChange={checked => props.updateProp(`adminTools.${toolName}`, checked)}
-              />
-            )}
-          </div>
-        </FormSection>
+          <FormSection
+            icon="fa fa-fw fa-cogs"
+            title={trans('administration_tools')}
+          >
+            <div className="list-group" fill={true}>
+              {Object.keys(props.role.adminTools || {}).map(toolName =>
+                <Checkbox
+                  key={toolName}
+                  id={toolName}
+                  className={classes('list-group-item', {
+                    'list-group-item-selected': props.role.adminTools[toolName]
+                  })}
+                  label={trans(toolName, {}, 'tools')}
+                  checked={props.role.adminTools[toolName]}
+                  onChange={checked => props.updateProp(`adminTools.${toolName}`, checked)}
+                />
+              )}
+            </div>
+          </FormSection>
         }
 
         {constants.ROLE_PLATFORM === props.role.type &&
-        <FormSection
-          icon="fa fa-fw fa-tools"
-          title={trans('desktop_tools')}
-        >
-          <div className="list-group" fill={true}>
-            {Object.keys(props.role.desktopTools || {}).map(toolName =>
-              <div key={toolName} className="tool-rights-row list-group-item">
-                <div className="tool-rights-title">
-                  {trans(toolName, {}, 'tools')}
-                </div>
+          <FormSection
+            icon="fa fa-fw fa-tools"
+            title={trans('desktop_tools')}
+          >
+            <div className="list-group" fill={true}>
+              {Object.keys(props.role.desktopTools || {}).map(toolName =>
+                <div key={toolName} className="tool-rights-row list-group-item">
+                  <div className="tool-rights-title">
+                    {trans(toolName, {}, 'tools')}
+                  </div>
 
-                <div className="tool-rights-actions">
-                  {Object.keys(props.role.desktopTools[toolName]).map((permName) =>
-                    <Checkbox
-                      key={permName}
-                      id={`${toolName}-${permName}`}
-                      label={trans(permName, {}, 'actions')}
-                      checked={props.role.desktopTools[toolName][permName]}
-                      onChange={checked => props.updateProp(`desktopTools.${toolName}.${permName}`, checked)}
-                    />
-                  )}
+                  <div className="tool-rights-actions">
+                    {Object.keys(props.role.desktopTools[toolName]).map((permName) =>
+                      <Checkbox
+                        key={permName}
+                        id={`${toolName}-${permName}`}
+                        label={trans(permName, {}, 'actions')}
+                        checked={props.role.desktopTools[toolName][permName]}
+                        onChange={checked => props.updateProp(`desktopTools.${toolName}.${permName}`, checked)}
+                      />
+                    )}
+                  </div>
                 </div>
-              </div>
-            )}
-          </div>
-        </FormSection>
+              )}
+            </div>
+          </FormSection>
         }
 
         <FormSection
           className="embedded-list-section"
           icon="fa fa-fw fa-user"
           title={trans('users')}
-          disabled={props.new}
+          disabled={!props.role.id || props.new}
           actions={[
             {
               name: 'add-users',
@@ -301,23 +301,20 @@ const Role = props => {
             }
           ]}
         >
-          <ListData
-            name={`${baseSelectors.STORE_NAME}.roles.current.users`}
-            fetch={{
-              url: ['apiv2_role_list_users', {id: props.role.id}],
-              autoload: props.role.id && !props.new
-            }}
-            primaryAction={(row) => ({
-              type: LINK_BUTTON,
-              target: `${props.path}/users/form/${row.id}`,
-              label: trans('edit', {}, 'actions')
-            })}
-            delete={{
-              url: ['apiv2_role_remove_users', {id: props.role.id}]
-            }}
-            definition={UserList.definition}
-            card={UserList.card}
-          />
+          {props.role.id && !props.new &&
+            <UserList
+              name={`${baseSelectors.STORE_NAME}.roles.current.users`}
+              url={['apiv2_role_list_users', {id: props.role.id}]}
+              primaryAction={(row) => ({
+                type: LINK_BUTTON,
+                target: `${props.path}/users/form/${row.id}`,
+                label: trans('edit', {}, 'actions')
+              })}
+              delete={{
+                url: ['apiv2_role_remove_users', {id: props.role.id}]
+              }}
+            />
+          }
         </FormSection>
 
         <FormSection

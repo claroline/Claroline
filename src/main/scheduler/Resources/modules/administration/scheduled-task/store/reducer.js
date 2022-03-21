@@ -8,11 +8,6 @@ import {TOOL_LOAD} from '#/main/core/tool/store/actions'
 import {selectors} from '#/main/scheduler/administration/scheduled-task/store/selectors'
 
 const reducer = combineReducers({
-  picker: makeListReducer(selectors.STORE_NAME + '.picker', {}, {
-    invalidated: makeReducer(false, {
-      [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: () => true
-    })
-  }),
   tasks: makeListReducer(selectors.STORE_NAME + '.tasks', {
     sortBy: {property: 'scheduledDate', direction: -1}
   }, {

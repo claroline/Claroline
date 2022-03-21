@@ -5,7 +5,6 @@ import {connect} from 'react-redux'
 import {hasPermission} from '#/main/app/security'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {actions as listActions} from '#/main/app/content/list/store'
-import {ListData} from '#/main/app/content/list/containers/data'
 import {selectors as securitySelectors} from '#/main/app/security/store'
 import {trans} from '#/main/app/intl/translation'
 import {Alert} from '#/main/app/alert/components/alert'
@@ -14,10 +13,9 @@ import {selectors as toolSelectors} from '#/main/core/tool/store'
 import {selectors as baseSelectors} from '#/main/core/administration/community/store'
 import {selectors} from '#/main/core/administration/community/user/store'
 import {route} from '#/main/core/user/routing'
-import {UserList, getUserListDefinition} from '#/main/core/administration/community/user/components/user-list'
+import {UserList} from '#/main/core/user/components/list'
 import {getActions} from '#/main/core/user/utils'
-
-// todo : restore custom actions the same way resource actions are implemented
+import {constants} from '#/main/core/user/constants'
 
 const UsersList = props =>
   <Fragment>
@@ -25,12 +23,9 @@ const UsersList = props =>
       <Alert type="warning" style={{marginTop: 20}}>{trans('users_limit_reached')}</Alert>
     }
 
-    <ListData
+    <UserList
       name={`${baseSelectors.STORE_NAME}.users.list`}
-      fetch={{
-        url: ['apiv2_user_list_managed'],
-        autoload: true
-      }}
+      url={['apiv2_user_list_managed']}
       delete={{
         url: ['apiv2_user_delete_bulk'],
         displayed: (users) => 0 < users.filter(user => hasPermission('delete', user) && user.restrictions.disabled).length
@@ -57,8 +52,22 @@ const UsersList = props =>
           scope: ['object']
         }
       ]))}
-      definition={getUserListDefinition({platformRoles: props.platformRoles})}
-      card={UserList.card}
+      customDefinition={[
+        {
+          name: 'meta.personalWorkspace',
+          alias: 'hasPersonalWorkspace',
+          type: 'boolean',
+          label: trans('has_personal_workspace')
+        }, {
+          name: 'roles',
+          alias: 'role',
+          type: 'roles',
+          label: trans('roles'),
+          calculated: (user) => user.roles.filter(role => constants.ROLE_PLATFORM === role.type),
+          displayed: true,
+          sortable: false
+        }
+      ]}
     />
   </Fragment>
 

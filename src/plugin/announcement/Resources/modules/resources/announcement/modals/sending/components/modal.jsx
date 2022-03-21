@@ -9,8 +9,7 @@ import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
 import {FormData} from '#/main/app/content/form/containers/data'
-import {ListData} from '#/main/app/content/list/containers/data'
-import {UserList} from '#/main/core/administration/community/user/components/user-list'
+import {UserList} from '#/main/core/user/components/list'
 import {constants as userConst} from '#/main/core/user/constants'
 
 import {Announcement as AnnouncementTypes} from '#/plugin/announcement/resources/announcement/prop-types'
@@ -93,17 +92,14 @@ const SendingModal = (props) =>
         title={trans('receivers')}
         disabled={0 === get(props.formData, 'roles', []).length}
       >
-        <ListData
-          name={selectors.STORE_NAME+'.receivers'}
-          fetch={{
-            url: ['claro_announcement_validate', {aggregateId: props.aggregateId, id: props.announcement.id}],
-            autoload: 0 !== get(props.formData, 'roles', []).length
-          }}
-          definition={UserList.definition}
-          card={UserList.card}
-          selectable={false}
-          filterable={false}
-        />
+        {0 !== get(props.formData, 'roles', []).length &&
+          <UserList
+            name={selectors.STORE_NAME+'.receivers'}
+            url={['claro_announcement_validate', {aggregateId: props.aggregateId, id: props.announcement.id}]}
+            selectable={false}
+            filterable={false}
+          />
+        }
       </FormSection>
     </FormSections>
 

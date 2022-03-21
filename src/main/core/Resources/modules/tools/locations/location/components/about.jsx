@@ -3,17 +3,16 @@ import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
 import {hasPermission} from '#/main/app/security'
-import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
+import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {ContentSections, ContentSection} from '#/main/app/content/components/sections'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {DetailsData} from '#/main/app/content/details/containers/data'
-import {route as userRoute} from '#/main/core/user/routing'
 
 import {Location as LocationTypes} from '#/main/core/tools/locations/prop-types'
 import {selectors} from '#/main/core/tools/locations/location/store'
 
 import {MODAL_USERS} from '#/main/core/modals/users'
-import {UserList} from '#/main/core/administration/community/user/components/user-list'
+import {UserList} from '#/main/core/user/components/list'
 import {MODAL_GROUPS} from '#/main/core/modals/groups'
 import {GroupList} from '#/main/core/administration/community/group/components/group-list'
 import {MODAL_ORGANIZATIONS} from '#/main/core/modals/organizations'
@@ -64,28 +63,19 @@ const LocationAbout = (props) =>
               selectAction: (selected) => ({
                 type: CALLBACK_BUTTON,
                 label: trans('add', {}, 'actions'),
-                callback: () => props.addUsers(props.location.id, selected)
+                callback: () => props.addUsers(props.location.id, selected.map(row => row.id))
               })
             }]
           }
         ]}
       >
-        <ListData
+        <UserList
           name={`${selectors.STORE_NAME}.current.users`}
-          fetch={{
-            url: ['apiv2_location_list_users', {id: props.location.id}],
-            autoload: true
-          }}
-          primaryAction={(row) => ({
-            type: LINK_BUTTON,
-            target: userRoute(row)
-          })}
+          url={['apiv2_location_list_users', {id: props.location.id}]}
           delete={{
             url: ['apiv2_location_remove_users', {id: props.location.id}],
             displayed: () => hasPermission('edit', props.location)
           }}
-          definition={UserList.definition}
-          card={UserList.card}
         />
       </ContentSection>
 
@@ -105,7 +95,7 @@ const LocationAbout = (props) =>
               selectAction: (selected) => ({
                 type: CALLBACK_BUTTON,
                 label: trans('add', {}, 'actions'),
-                callback: () => props.addGroups(props.location.id, selected)
+                callback: () => props.addGroups(props.location.id, selected.map(row => row.id))
               })
             }]
           }
@@ -141,7 +131,7 @@ const LocationAbout = (props) =>
               selectAction: (selected) => ({
                 type: CALLBACK_BUTTON,
                 label: trans('add', {}, 'actions'),
-                callback: () => props.addOrganizations(props.location.id, selected)
+                callback: () => props.addOrganizations(props.location.id, selected.map(row => row.id))
               })
             }]
           }
