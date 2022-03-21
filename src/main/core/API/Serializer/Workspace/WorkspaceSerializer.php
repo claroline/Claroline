@@ -15,9 +15,11 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -30,6 +32,8 @@ class WorkspaceSerializer
 
     /** @var AuthorizationCheckerInterface */
     private $tokenStorage;
+
+    private $eventDispatcher;
 
     /** @var ObjectManager */
     private $om;
@@ -52,6 +56,7 @@ class WorkspaceSerializer
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         TokenStorageInterface $tokenStorage,
+        EventDispatcherInterface $eventDispatcher,
         ObjectManager $om,
         WorkspaceManager $workspaceManager,
         UserSerializer $userSerializer,
@@ -61,6 +66,7 @@ class WorkspaceSerializer
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->authorization = $authorization;
+        $this->eventDispatcher = $eventDispatcher;
         $this->om = $om;
         $this->workspaceManager = $workspaceManager;
         $this->userSerializer = $userSerializer;
@@ -128,6 +134,7 @@ class WorkspaceSerializer
             }
 
             $serialized = array_merge($serialized, [
+                'tags' => $this->serializeTags($workspace),
                 'poster' => $poster ? $this->publicFileSerializer->serialize($poster) : null,
                 'registered' => $this->isRegistered($workspace),
                 'opening' => $this->getOpening($workspace),
@@ -281,6 +288,17 @@ class WorkspaceSerializer
         return [
             'enabled' => $workspace->hasNotifications(),
         ];
+    }
+
+    public function serializeTags(Workspace $workspace)
+    {
+        $event = new GenericDataEvent([
+            'class' => Workspace::class,
+            'ids' => [$workspace->getUuid()],
+        ]);
+        $this->eventDispatcher->dispatch($event, 'claroline_retrieve_used_tags_by_class_and_ids');
+
+        return $event->getResponse() ?? [];
     }
 
     /**
