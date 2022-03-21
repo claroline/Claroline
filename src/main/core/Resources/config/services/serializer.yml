@@ -41,6 +41,7 @@ services:
         arguments:
             - '@security.authorization_checker'
             - '@security.token_storage'
+            - '@event_dispatcher'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@claroline.manager.workspace_manager'
             - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'

@@ -15,10 +15,10 @@ const ObjectTagsModal = withReducer(selectors.STORE_NAME, reducer)(
         dispatch(actions.fetchTags(objectClass, objects))
       },
       addTag(objectClass, objects, tag) {
-        dispatch(actions.postTag(objectClass, objects, tag))
+        return dispatch(actions.postTag(objectClass, objects, tag))
       },
       removeTag(objectClass, objects, tag) {
-        dispatch(actions.removeTag(objectClass, objects, tag))
+        return dispatch(actions.removeTag(objectClass, objects, tag))
       }
     })
   )(ObjectTagsModalComponent)

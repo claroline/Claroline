@@ -70,7 +70,7 @@ export default {
         name: 'tags',
         type: 'tag',
         label: trans('tags'),
-        displayable: false,
+        displayable: true,
         sortable: false,
         options: {
           objectClass: 'Claroline\\CoreBundle\\Entity\\Workspace\\Workspace'
