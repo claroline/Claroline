@@ -15,6 +15,7 @@ const LoginForm = withReducer(selectors.STORE_NAME, reducer)(
       platformName: configSelectors.param(state, 'name'),
       help: configSelectors.param(state, 'authentication.help'),
       registration: configSelectors.param(state, 'selfRegistration'),
+      username: configSelectors.param(state, 'community.username'),
       resetPassword: configSelectors.param(state, 'authentication.changePassword'),
       internalAccount: selectors.internalAccount(state),
       showClientIp: selectors.showClientIp(state),

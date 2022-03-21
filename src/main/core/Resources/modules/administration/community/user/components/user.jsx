@@ -10,6 +10,7 @@ import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 
+import {selectors as configSelectors} from '#/main/app/config/store'
 import {selectors as toolSelectors} from '#/main/core/tool/store'
 import {selectors as baseSelectors} from '#/main/core/administration/community/store'
 import {actions} from '#/main/core/administration/community/user/store'
@@ -59,6 +60,7 @@ const UserForm = props =>
             name: 'username',
             type: 'username',
             label: trans('username'),
+            displayed: props.username,
             required: true
           }, {
             name: 'plainPassword',
@@ -69,8 +71,7 @@ const UserForm = props =>
             options: {
               autoComplete: 'new-password'
             }
-          },
-          {
+          }, {
             name: 'mainOrganization',
             type: 'organization',
             required: true,
@@ -277,6 +278,7 @@ const UserForm = props =>
 
 UserForm.propTypes = {
   path: T.string.isRequired,
+  username: T.bool.isRequired,
   new: T.bool.isRequired,
   user: T.shape({
     id: T.string,
@@ -293,6 +295,7 @@ UserForm.propTypes = {
 const User = connect(
   state => ({
     path: toolSelectors.path(state),
+    username: configSelectors.param(state, 'community.username'),
     new: formSelect.isNew(formSelect.form(state, baseSelectors.STORE_NAME+'.users.current')),
     user: formSelect.data(formSelect.form(state, baseSelectors.STORE_NAME+'.users.current'))
   }),

@@ -155,6 +155,14 @@ const Parameters = (props) => {
             title: trans('user_profile'),
             fields: [
               {
+                name: 'community.username',
+                type: 'boolean',
+                label: trans('enable_username'),
+                help: [
+                  trans('username_enabled_help'),
+                  trans('username_disabled_help')
+                ]
+              }, {
                 name: 'profile.roles_edition',
                 type: 'choice',
                 label: trans('profile_roles_for_edition'),

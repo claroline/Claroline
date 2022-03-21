@@ -11,7 +11,7 @@ import {ToolPage} from '#/main/core/tool/containers/page'
 import {MODAL_USERS} from '#/main/core/modals/users'
 import {MODAL_ROLES} from '#/main/core/modals/roles'
 
-import {Users} from '#/main/core/tools/community/user/components/users'
+import {Users} from '#/main/core/tools/community/user/containers/users'
 import {User} from '#/main/core/tools/community/user/components/user'
 
 const UserTab = props =>

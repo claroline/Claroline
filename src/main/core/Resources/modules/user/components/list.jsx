@@ -1,7 +1,9 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
+import {param} from '#/main/app/config'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
 
@@ -11,6 +13,7 @@ import {UserCard} from '#/main/core/user/components/card'
 
 const UserList = props =>
   <ListData
+    {...omit(props, 'url', 'customDefinition')}
     name={props.name}
     fetch={{
       url: props.url,
@@ -29,24 +32,24 @@ const UserList = props =>
         displayed: true,
         filterable: false,
         sortable: false,
-        render: (user) => {
-          const Avatar = (
-            <UserAvatar picture={user.picture} alt={false} />
-          )
-
-          return Avatar
-        }
+        render: (user) => (
+          <UserAvatar picture={user.picture} alt={false} />
+        )
       }, {
         name: 'username',
         type: 'username',
         label: trans('username'),
-        displayed: true,
-        primary: true
+        displayable: param('community.username'),
+        displayed: param('community.username'),
+        sortable: param('community.username'),
+        filterable: param('community.username'),
+        primary: param('community.username')
       }, {
         name: 'lastName',
         type: 'string',
         label: trans('last_name'),
-        displayed: true
+        displayed: true,
+        primary: !param('community.username')
       }, {
         name: 'firstName',
         type: 'string',
@@ -58,6 +61,16 @@ const UserList = props =>
         type: 'email',
         label: trans('email'),
         displayed: true
+      }, {
+        name: 'administrativeCode',
+        type: 'string',
+        label: trans('code')
+      }, {
+        name: 'meta.created',
+        type: 'date',
+        alias: 'created',
+        label: trans('creation_date'),
+        filterable: false
       }, {
         name: 'meta.lastActivity',
         type: 'date',
@@ -80,8 +93,16 @@ const UserList = props =>
         displayed: false,
         displayable: false,
         sortable: false
+      }, {
+        name: 'restrictions.disabled',
+        alias: 'isDisabled',
+        type: 'boolean',
+        label: trans('disabled'),
+        displayable: false,
+        sortable: false,
+        filterable: true
       }
-    ]}
+    ].concat(props.customDefinition)}
     card={UserCard}
   />
 
@@ -89,7 +110,14 @@ UserList.propTypes = {
   name: T.string.isRequired,
   url: T.oneOfType([T.string, T.array]).isRequired,
   primaryAction: T.func,
-  actions: T.func
+  actions: T.func,
+  customDefinition: T.arrayOf(T.shape({
+    // data list prop types
+  }))
+}
+
+UserList.defaultProps = {
+  customDefinition: []
 }
 
 export {

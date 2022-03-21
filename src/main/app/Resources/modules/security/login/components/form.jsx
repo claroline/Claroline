@@ -72,7 +72,7 @@ class LoginForm extends Component {
                       {
                         name: 'username',
                         label: trans('username_or_email'),
-                        placeholder: trans('username_or_email'),
+                        placeholder: this.props.username ? trans('username_or_email') : trans('email'),
                         hideLabel: true,
                         type: 'username',
                         required: true
@@ -175,6 +175,7 @@ LoginForm.propTypes = {
     label: T.string,
     primary: T.bool
   })).isRequired,
+  username: T.bool.isRequired,
   registration: T.bool.isRequired,
   resetPassword: T.bool.isRequired,
   login: T.func.isRequired,

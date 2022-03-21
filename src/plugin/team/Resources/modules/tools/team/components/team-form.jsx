@@ -3,19 +3,25 @@ import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
-import {LINK_BUTTON} from '#/main/app/buttons'
+import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
-import {ListData} from '#/main/app/content/list/containers/data'
 import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
 
-import {UserList} from '#/main/core/administration/community/user/components/user-list'
+import {UserList} from '#/main/core/user/components/list'
 
 import {Team as TeamType} from '#/plugin/team/tools/team/prop-types'
 import {selectors} from '#/plugin/team/tools/team/store'
+import {MODAL_USERS} from '#/main/core/modals/users'
 
 const TeamForm = props =>
   <section className="tool-section">
-    <h2>{props.isNew ? trans('team_creation', {}, 'team') : trans('team_edition', {}, 'team')}</h2>
+    <h2>
+      {props.isNew ?
+        trans('team_creation', {}, 'team') :
+        trans('team_edition', {}, 'team')
+      }
+    </h2>
+
     <FormData
       level={3}
       name={selectors.STORE_NAME + '.teams.current'}
@@ -149,27 +155,32 @@ const TeamForm = props =>
             disabled={props.isNew}
             actions={[
               {
-                type: 'callback',
+                type: MODAL_BUTTON,
                 icon: 'fa fa-fw fa-plus',
                 label: trans('add_members', {}, 'team'),
-                callback: () => props.pickUsers(props.team.id, props.workspace.id)
+                modal: [MODAL_USERS, {
+                  url: ['apiv2_workspace_list_users', {id: props.workspace.id}],
+                  selectAction: (selected) => ({
+                    type: CALLBACK_BUTTON,
+                    label: trans('add', {}, 'actions'),
+                    callback: () => props.addUsers(props.team.id, selected.map(row => row.id))
+                  })
+                }]
               }
             ]}
           >
-            <ListData
-              name={selectors.STORE_NAME + '.teams.current.users'}
-              fetch={{
-                url: ['apiv2_role_list_users', {id: props.team.role.id}],
-                autoload: !props.isNew
-              }}
-              delete={{
-                url: ['apiv2_team_unregister', {team: props.team.id, role: 'user'}]
-              }}
-              definition={UserList.definition}
-              card={UserList.card}
-            />
+            {!props.isNew &&
+              <UserList
+                name={selectors.STORE_NAME + '.teams.current.users'}
+                url={['apiv2_role_list_users', {id: props.team.role.id}]}
+                delete={{
+                  url: ['apiv2_team_unregister', {team: props.team.id, role: 'user'}]
+                }}
+              />
+            }
           </FormSection>
         }
+
         {props.team.teamManagerRole &&
           <FormSection
             className="embedded-list-section"
@@ -178,25 +189,29 @@ const TeamForm = props =>
             disabled={props.isNew}
             actions={[
               {
-                type: 'callback',
+                type: MODAL_BUTTON,
                 icon: 'fa fa-fw fa-plus',
                 label: trans('add_managers', {}, 'team'),
-                callback: () => props.pickUsers(props.team.id, props.workspace.id, true)
+                modal: [MODAL_USERS, {
+                  url: ['apiv2_workspace_list_users', {id: props.workspace.id}],
+                  selectAction: (selected) => ({
+                    type: CALLBACK_BUTTON,
+                    label: trans('add', {}, 'actions'),
+                    callback: () => props.addUsers(props.team.id, selected.map(row => row.id), true)
+                  })
+                }]
               }
             ]}
           >
-            <ListData
-              name={selectors.STORE_NAME + '.teams.current.managers'}
-              fetch={{
-                url: ['apiv2_role_list_users', {id: props.team.teamManagerRole.id}],
-                autoload: !props.isNew
-              }}
-              delete={{
-                url: ['apiv2_team_unregister', {team: props.team.id, role: 'manager'}]
-              }}
-              definition={UserList.definition}
-              card={UserList.card}
-            />
+            {!props.isNew &&
+              <UserList
+                name={selectors.STORE_NAME + '.teams.current.managers'}
+                url={['apiv2_role_list_users', {id: props.team.teamManagerRole.id}]}
+                delete={{
+                  url: ['apiv2_team_unregister', {team: props.team.id, role: 'manager'}]
+                }}
+              />
+            }
           </FormSection>
         }
       </FormSections>
@@ -215,7 +230,7 @@ TeamForm.propTypes = {
     push: T.func.isRequired
   }).isRequired,
   update: T.func.isRequired,
-  pickUsers: T.func.isRequired
+  addUsers: T.func.isRequired
 }
 
 export {

@@ -40,11 +40,6 @@ const reducer = combineReducers({
           [FORM_RESET + '/' + selectors.STORE_NAME + '.teams.current']: () => true,
           [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: () => true
         })
-      }),
-      usersPicker: makeListReducer(selectors.STORE_NAME + '.teams.current.usersPicker', {}, {
-        invalidated: makeReducer(false, {
-          [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: () => true
-        })
       })
     }),
     multiple: makeFormReducer(selectors.STORE_NAME + '.teams.multiple')

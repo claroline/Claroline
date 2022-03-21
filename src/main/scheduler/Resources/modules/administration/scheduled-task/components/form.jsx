@@ -2,14 +2,14 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
-import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
-import {ListData} from '#/main/app/content/list/containers/data'
+import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
-import {UserList} from '#/main/core/administration/community/user/components/user-list'
+import {UserList} from '#/main/core/user/components/list'
 
 import {constants} from '#/main/scheduler/administration/scheduled-task/constants'
 import {selectors} from '#/main/scheduler/administration/scheduled-task/store'
+import {MODAL_USERS} from '#/main/core/modals/users'
 
 const ScheduledTaskForm = props =>
   <FormData
@@ -81,29 +81,31 @@ const ScheduledTaskForm = props =>
         icon="fa fa-fw fa-user"
         className="embedded-list-section"
         title={trans('users')}
-        disabled={props.new}
+        disabled={!props.task.id || props.new}
         actions={[
           {
-            type: CALLBACK_BUTTON,
+            type: MODAL_BUTTON,
             icon: 'fa fa-fw fa-plus',
             label: trans('add_users'),
-            callback: () => props.pickUsers(props.task.id)
+            modal: [MODAL_USERS, {
+              selectAction: (selected) => ({
+                type: CALLBACK_BUTTON,
+                label: trans('add', {}, 'actions'),
+                callback: () => props.addUsers(props.task.id, selected.map(row => row.id))
+              })
+            }]
           }
         ]}
       >
-        <ListData
-          name={selectors.STORE_NAME + '.task.users'}
-          fetch={{
-            url: ['apiv2_scheduled_task_list_users', {id: props.task.id}],
-            autoload: props.task.id && !props.new
-          }}
-          delete={{
-            url: ['apiv2_scheduled_task_remove_users', {id: props.task.id}]
-          }}
-          primaryAction={UserList.open}
-          definition={UserList.definition}
-          card={UserList.card}
-        />
+        {props.task.id && !props.new &&
+          <UserList
+            name={selectors.STORE_NAME + '.task.users'}
+            url={['apiv2_scheduled_task_list_users', {id: props.task.id}]}
+            delete={{
+              url: ['apiv2_scheduled_task_remove_users', {id: props.task.id}]
+            }}
+          />
+        }
       </FormSection>
     </FormSections>
   </FormData>
@@ -114,7 +116,7 @@ ScheduledTaskForm.propTypes = {
   task: T.shape({
     id: T.string
   }).isRequired,
-  pickUsers: T.func.isRequired
+  addUsers: T.func.isRequired
 }
 
 export {

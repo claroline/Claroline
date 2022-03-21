@@ -18,7 +18,7 @@ import {MODAL_ROLES} from '#/main/core/modals/roles'
 import {MODAL_ORGANIZATIONS} from '#/main/core/modals/organizations'
 import {OrganizationList} from '#/main/core/administration/community/organization/components/organization-list'
 import {RoleList} from '#/main/core/administration/community/role/components/role-list'
-import {UserList} from '#/main/core/administration/community/user/components/user-list'
+import {UserList} from '#/main/core/user/components/list'
 
 const GroupForm = props =>
   <FormData
@@ -56,7 +56,7 @@ const GroupForm = props =>
         className="embedded-list-section"
         icon="fa fa-fw fa-user"
         title={trans('users')}
-        disabled={props.new}
+        disabled={!props.group.id || props.new}
         actions={[
           {
             name: 'add-users',
@@ -73,23 +73,20 @@ const GroupForm = props =>
           }
         ]}
       >
-        <ListData
-          name={`${baseSelectors.STORE_NAME}.groups.current.users`}
-          fetch={{
-            url: ['apiv2_group_list_users', {id: props.group.id}],
-            autoload: props.group.id && !props.new
-          }}
-          primaryAction={(row) => ({
-            type: LINK_BUTTON,
-            target: `${props.path}/users/form/${row.id}`,
-            label: trans('edit', {}, 'actions')
-          })}
-          delete={{
-            url: ['apiv2_group_remove_users', {id: props.group.id}]
-          }}
-          definition={UserList.definition}
-          card={UserList.card}
-        />
+        {props.group.id && !props.new &&
+          <UserList
+            name={`${baseSelectors.STORE_NAME}.groups.current.users`}
+            url={['apiv2_group_list_users', {id: props.group.id}]}
+            primaryAction={(row) => ({
+              type: LINK_BUTTON,
+              target: `${props.path}/users/form/${row.id}`,
+              label: trans('edit', {}, 'actions')
+            })}
+            delete={{
+              url: ['apiv2_group_remove_users', {id: props.group.id}]
+            }}
+          />
+        }
       </FormSection>
 
       <FormSection

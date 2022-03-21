@@ -67,6 +67,9 @@ class CommunityController extends AbstractSecurityController
         if (isset($parametersData['profile'])) {
             $communityParameters['profile'] = $parametersData['profile'];
         }
+        if (isset($parametersData['community'])) {
+            $communityParameters['community'] = $parametersData['community'];
+        }
 
         // removes locked parameters values if any
         $locked = $this->config->getParameter('lockedParameters') ?? [];

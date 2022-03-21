@@ -75,10 +75,16 @@ class UserValidator implements ValidatorInterface
 
     public function getUniqueFields()
     {
-        return [
+        $unique = [
             'username' => 'username',
             'email' => 'email',
         ];
+
+        if ($this->config->getParameter('is_user_admin_code_unique')) {
+            $unique['administrativeCode'] = 'administrativeCode';
+        }
+
+        return $unique;
     }
 
     public function validate($data, $mode, array $options = [])
@@ -102,37 +108,14 @@ class UserValidator implements ValidatorInterface
 
         $errors = array_merge($errors, $this->validateRoles($data, $mode));
 
-        // validate username format
-        $regex = $this->config->getParameter('username_regex');
-        if ($regex && !preg_match($regex, $data['username'])) {
-            $errors[] = [
-                'path' => 'username',
-                'message' => 'The username '.$data['username'].' contains illegal characters.',
-            ];
-        }
-
-        // checks username is available
-        if (isset($data['username']) && $this->exists('username', $data['username'], isset($data['id']) ? $data['id'] : null)) {
-            $errors[] = [
-                'path' => 'username',
-                'message' => 'The username '.$data['username'].' already exists.',
-            ];
-        }
-
-        // check email is not already used
-        if (isset($data['email']) && $this->exists('email', $data['email'], isset($data['id']) ? $data['id'] : null)) {
-            $errors[] = [
-                'path' => 'email',
-                'message' => 'The email '.$data['email'].' already exists.',
-            ];
-        }
-
-        // check if the administrative code is unique if the platform is configured to
-        if (isset($data['administrativeCode']) && $this->config->getParameter('is_user_admin_code_unique')) {
-            if ($this->exists('administrativeCode', $data['administrativeCode'], isset($data['id']) ? $data['id'] : null)) {
+        // validate username
+        if ($this->config->getParameter('community.username')) {
+            // validate username format
+            $regex = $this->config->getParameter('username_regex');
+            if (isset($data['username']) && $regex && !preg_match($regex, $data['username'])) {
                 $errors[] = [
-                    'path' => '/administrativeCode',
-                    'message' => 'The administrative code '.$data['administrativeCode'].' already exists.',
+                    'path' => 'username',
+                    'message' => 'The username '.$data['username'].' contains illegal characters.',
                 ];
             }
         }
@@ -258,32 +241,6 @@ class UserValidator implements ValidatorInterface
         }
 
         return [];
-    }
-
-    /**
-     * Check if a user exists with the given data.
-     *
-     * @param string      $propName
-     * @param string      $propValue
-     * @param string|null $userId
-     *
-     * @return bool
-     */
-    private function exists($propName, $propValue, $userId = null)
-    {
-        $qb = $this->om->createQueryBuilder();
-        $qb
-            ->select('COUNT(DISTINCT user)')
-            ->from('Claroline\CoreBundle\Entity\User', 'user')
-            ->where('user.'.$propName.' = :value')
-            ->setParameter('value', $propValue);
-
-        if (isset($userId)) {
-            $parameter = is_numeric($userId) ? 'id' : 'uuid';
-            $qb->andWhere("user.{$parameter} != :{$parameter}")->setParameter($parameter, $userId);
-        }
-
-        return 0 < $qb->getQuery()->getSingleScalarResult();
     }
 
     private function isOrganizationManager(TokenInterface $token, array $userData, string $mode): bool

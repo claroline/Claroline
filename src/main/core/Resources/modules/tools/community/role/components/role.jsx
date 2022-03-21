@@ -7,7 +7,6 @@ import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
-import {Checkbox} from '#/main/app/input/components/checkbox'
 
 import {getActions as getWorkspaceActions} from '#/main/core/workspace/utils'
 import {MODAL_WORKSPACE_SHORTCUTS} from '#/main/core/workspace/modals/shortcuts'
@@ -16,7 +15,7 @@ import {selectors} from '#/main/core/tools/community/store'
 import {Role as RoleTypes} from '#/main/core/user/prop-types'
 import {Workspace as WorkspaceType} from '#/main/core/workspace/prop-types'
 import {GroupList} from '#/main/core/administration/community/group/components/group-list'
-import {UserList} from '#/main/core/administration/community/user/components/user-list'
+import {UserList} from '#/main/core/user/components/list'
 import {MODAL_USERS} from '#/main/core/modals/users'
 import {MODAL_GROUPS} from '#/main/core/modals/groups'
 
@@ -146,7 +145,7 @@ class Role extends Component {
               className="embedded-list-section"
               icon="fa fa-fw fa-user"
               title={trans('users')}
-              disabled={this.props.new}
+              disabled={!this.props.role.id  || this.props.new}
               actions={[
                 {
                   name: 'add-users',
@@ -163,19 +162,15 @@ class Role extends Component {
                 }
               ]}
             >
-              <ListData
-                name={selectors.STORE_NAME + '.roles.current.users'}
-                fetch={{
-                  url: ['apiv2_role_list_users', {id: this.props.role.id}],
-                  autoload: this.props.role.id && !this.props.new
-                }}
-                primaryAction={UserList.open}
-                delete={{
-                  url: ['apiv2_role_remove_users', {id: this.props.role.id}]
-                }}
-                definition={UserList.definition}
-                card={UserList.card}
-              />
+              {this.props.role.id && !this.props.new &&
+                <UserList
+                  name={selectors.STORE_NAME + '.roles.current.users'}
+                  url={['apiv2_role_list_users', {id: this.props.role.id}]}
+                  delete={{
+                    url: ['apiv2_role_remove_users', {id: this.props.role.id}]
+                  }}
+                />
+              }
             </FormSection>
           }
 

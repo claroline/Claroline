@@ -42,6 +42,9 @@ class PlatformDefaults implements ParameterProviderInterface
             'logs' => [
                 'enabled' => true,
             ],
+            'community' => [
+                'username' => true,
+            ],
             //database_restoration section is not configurable nor documented
             'database_restoration' => [
                 'auto_validate_email' => false,

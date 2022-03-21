@@ -94,7 +94,7 @@
     }
   },
   "claroline": {
-    "requiredAtCreation": ["email", "firstName", "lastName", "username", "plainPassword"],
+    "requiredAtCreation": ["email", "firstName", "lastName", "plainPassword"],
     "ids": ["id", "email", "username"]
   }
 }

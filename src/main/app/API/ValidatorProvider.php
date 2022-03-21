@@ -141,7 +141,7 @@ class ValidatorProvider
 
                 $qb->select('DISTINCT o')
                    ->from($class, 'o')
-                   ->where("o.{$entityProp} LIKE :{$entityProp}")
+                   ->where("o.{$entityProp} = :{$entityProp}")
                    ->setParameter($entityProp, $data[$dataProp]);
 
                 if (self::UPDATE === $mode && isset($data['id'])) {

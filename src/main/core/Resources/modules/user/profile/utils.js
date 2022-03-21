@@ -4,6 +4,7 @@ import cloneDeep from 'lodash/cloneDeep'
 
 import {trans} from '#/main/app/intl/translation'
 import {hasPermission} from '#/main/app/security/permissions'
+import {param} from '#/main/app/config'
 
 function getMainFacet(facets) {
   return facets.find(facet => facet.meta.main)
@@ -80,6 +81,7 @@ function getFormDefaultSections(user, isNew = false) {
           type: 'username',
           label: trans('username'),
           required: true,
+          displayed: param('community.username'),
           disabled: !isNew && !hasPermission('administrate', user)
         }, {
           name: 'plainPassword',

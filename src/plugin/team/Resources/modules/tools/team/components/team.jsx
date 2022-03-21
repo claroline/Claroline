@@ -6,11 +6,10 @@ import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {ContentTitle} from '#/main/app/content/components/title'
 import {ContentLoader} from '#/main/app/content/components/loader'
-import {ListData} from '#/main/app/content/list/containers/data'
 import {DetailsData} from '#/main/app/content/details/containers/data'
 import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
 
-import {UserList} from '#/main/core/administration/community/user/components/user-list'
+import {UserList} from '#/main/core/user/components/list'
 
 import {selectors} from '#/plugin/team/tools/team/store'
 import {Team as TeamType} from '#/plugin/team/tools/team/prop-types'
@@ -123,14 +122,9 @@ const Team = props => {
               props.selfUnregister
             )}
           >
-            <ListData
+            <UserList
               name={selectors.STORE_NAME + '.teams.current.users'}
-              fetch={{
-                url: ['apiv2_role_list_users', {id: props.team.role.id}],
-                autoload: true
-              }}
-              definition={UserList.definition}
-              card={UserList.card}
+              url={['apiv2_role_list_users', {id: props.team.role.id}]}
             />
           </FormSection>
         }
@@ -141,14 +135,9 @@ const Team = props => {
             icon="fa fa-fw fa-atom"
             title={trans('team_managers', {}, 'team')}
           >
-            <ListData
+            <UserList
               name={selectors.STORE_NAME + '.teams.current.managers'}
-              fetch={{
-                url: ['apiv2_role_list_users', {id: props.team.teamManagerRole.id}],
-                autoload: true
-              }}
-              definition={UserList.definition}
-              card={UserList.card}
+              url={['apiv2_role_list_users', {id: props.team.teamManagerRole.id}]}
             />
           </FormSection>
         }

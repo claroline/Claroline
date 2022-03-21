@@ -117,7 +117,9 @@ class ParametersSerializer
             $data[$name] = [];
 
             foreach ($assets as $asset) {
-                $data[$name][] = $asset['url'];
+                if (!empty($asset)) {
+                    $data[$name][] = $asset['url'];
+                }
             }
         }
 
