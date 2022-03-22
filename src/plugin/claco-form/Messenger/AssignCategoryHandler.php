@@ -30,9 +30,7 @@ class AssignCategoryHandler implements MessageHandlerInterface
     public function __invoke(AssignCategory $assignCategory)
     {
         // retrieve the category to check
-        $category = $this->om->getRepository(Category::class)->findOneBy([
-            'uuid' => $assignCategory->getCategoryId(),
-        ]);
+        $category = $this->om->getRepository(Category::class)->find($assignCategory->getCategoryId());
 
         if (empty($category)) {
             return;

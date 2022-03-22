@@ -75,6 +75,6 @@ class BadgeManager
 
     public function grantAll(BadgeClass $badge)
     {
-        $this->messageBus->dispatch(new GrantBadge($badge->getUuid()));
+        $this->messageBus->dispatch(new GrantBadge($badge->getId()));
     }
 }

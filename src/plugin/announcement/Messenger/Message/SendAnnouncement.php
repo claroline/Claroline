@@ -3,28 +3,32 @@
 namespace Claroline\AnnouncementBundle\Messenger\Message;
 
 use Claroline\AppBundle\Messenger\Message\AsyncMessageInterface;
-use Claroline\CoreBundle\Entity\User;
 
 class SendAnnouncement implements AsyncMessageInterface
 {
+    /** @var string */
     private $content;
+    /** @var string */
     private $object;
-    private $receivers;
+    /** @var int[] */
+    private $receiverIds;
+    /** @var int */
     private $announcementId;
-    private $sender;
+    /** @var int|null */
+    private $senderId;
 
     public function __construct(
         string $content,
         string $object,
-        array $receivers,
+        array $receiverIds,
         int $announcementId,
-        ?User $sender = null
+        ?int $senderId = null
     ) {
         $this->content = $content;
         $this->object = $object;
-        $this->receivers = $receivers;
+        $this->receiverIds = $receiverIds;
         $this->announcementId = $announcementId;
-        $this->sender = $sender;
+        $this->senderId = $senderId;
     }
 
     public function getContent(): string
@@ -37,14 +41,14 @@ class SendAnnouncement implements AsyncMessageInterface
         return $this->object;
     }
 
-    public function getReceivers(): array
+    public function getReceiverIds(): array
     {
-        return $this->receivers;
+        return $this->receiverIds;
     }
 
-    public function getSender(): ?User
+    public function getSenderId(): ?int
     {
-        return $this->sender;
+        return $this->senderId;
     }
 
     public function getAnnouncementId(): int

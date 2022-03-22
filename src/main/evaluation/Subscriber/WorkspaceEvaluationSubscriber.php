@@ -88,7 +88,11 @@ class WorkspaceEvaluationSubscriber implements EventSubscriberInterface
         // event if they have not opened the workspace yet.
         $workspaces = $this->workspaceRepo->findByRoles([$role->getName()]);
         foreach ($workspaces as $workspace) {
-            $this->messageBus->dispatch(new InitializeWorkspaceEvaluations($workspace, $event->getUsers()));
+            $this->messageBus->dispatch(
+                new InitializeWorkspaceEvaluations($workspace->getId(), array_map(function (User $user) {
+                    return $user->getId();
+                }, $event->getUsers()))
+            );
         }
     }
 

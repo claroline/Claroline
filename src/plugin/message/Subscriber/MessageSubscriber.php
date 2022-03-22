@@ -17,25 +17,21 @@ use Claroline\LogBundle\Entity\MessageLog;
 use Claroline\MessageBundle\Manager\MessageManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class MessageSubscriber implements EventSubscriberInterface
 {
     private $messageManager;
     private $em;
-    private $security;
     private $translator;
 
     public function __construct(
         MessageManager $messageManager,
         EntityManagerInterface $em,
-        Security $security,
         TranslatorInterface $translator
     ) {
         $this->messageManager = $messageManager;
         $this->em = $em;
-        $this->security = $security;
         $this->translator = $translator;
     }
 
@@ -56,14 +52,12 @@ class MessageSubscriber implements EventSubscriberInterface
             $event->getAttachments()
         );
 
-        $sender = $event->getSender() ?? $this->security->getUser();
-
         foreach ($users as $user) {
             $logEntry = new MessageLog();
-            $logEntry->setDetails($event->getMessage($this->translator, $sender, $user));
+            $logEntry->setDetails($event->getMessage($this->translator, $event->getSender(), $user));
             $logEntry->setEvent($eventName);
             $logEntry->setReceiver($user);
-            $logEntry->setSender($sender);
+            $logEntry->setSender($event->getSender());
 
             $this->em->persist($logEntry);
         }

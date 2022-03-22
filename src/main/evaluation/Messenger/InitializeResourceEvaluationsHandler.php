@@ -3,7 +3,9 @@
 namespace Claroline\EvaluationBundle\Messenger;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\EvaluationBundle\Entity\AbstractEvaluation;
 use Claroline\EvaluationBundle\Messenger\Message\InitializeResourceEvaluations;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
@@ -21,8 +23,19 @@ class InitializeResourceEvaluationsHandler implements MessageHandlerInterface
 
     public function __invoke(InitializeResourceEvaluations $initMessage)
     {
-        $resourceNode = $initMessage->getResourceNode();
-        $users = $initMessage->getUsers();
+        $resourceNode = $this->om->getRepository(ResourceNode::class)->find($initMessage->getResourceNodeId());
+        if (empty($resourceNode)) {
+            return;
+        }
+
+        $users = [];
+        foreach ($initMessage->getUserIds() as $userId) {
+            $user = $this->om->getRepository(User::class)->find($userId);
+            if (!empty($user)) {
+                $users[] = $user;
+            }
+        }
+
         $status = $initMessage->getStatus();
 
         $this->om->startFlushSuite();

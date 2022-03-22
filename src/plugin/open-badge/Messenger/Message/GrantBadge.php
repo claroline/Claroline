@@ -2,17 +2,19 @@
 
 namespace Claroline\OpenBadgeBundle\Messenger\Message;
 
-class GrantBadge
+use Claroline\AppBundle\Messenger\Message\AsyncMessageInterface;
+
+class GrantBadge implements AsyncMessageInterface
 {
-    /** @var string */
+    /** @var int */
     private $badgeId;
 
-    public function __construct(string $badgeId)
+    public function __construct(int $badgeId)
     {
         $this->badgeId = $badgeId;
     }
 
-    public function getBadgeId(): string
+    public function getBadgeId(): int
     {
         return $this->badgeId;
     }

@@ -2,17 +2,19 @@
 
 namespace Claroline\ClacoFormBundle\Messenger\Message;
 
-class AssignCategory
+use Claroline\AppBundle\Messenger\Message\AsyncMessageInterface;
+
+class AssignCategory implements AsyncMessageInterface
 {
-    /** @var string */
+    /** @var int */
     private $categoryId;
 
-    public function __construct(string $categoryId)
+    public function __construct(int $categoryId)
     {
         $this->categoryId = $categoryId;
     }
 
-    public function getCategoryId(): string
+    public function getCategoryId(): int
     {
         return $this->categoryId;
     }

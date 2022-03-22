@@ -8,6 +8,7 @@ use Claroline\ClacoFormBundle\Entity\Entry;
 use Claroline\ClacoFormBundle\Entity\FieldChoiceCategory;
 use Claroline\ClacoFormBundle\Messenger\Message\AssignCategory;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Messenger\Message\SendMessage;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -39,7 +40,7 @@ class CategoryManager
 
     public function assignCategory(Category $category)
     {
-        $this->messageBus->dispatch(new AssignCategory($category->getUuid()));
+        $this->messageBus->dispatch(new AssignCategory($category->getId()));
     }
 
     /**
@@ -111,7 +112,9 @@ class CategoryManager
         ], 'clacoform');
 
         $this->messageBus->dispatch(
-            new SendMessage($content, $object, $addedCategory->getManagers())
+            new SendMessage($content, $object, array_map(function (User $user) {
+                return $user->getId();
+            }, $addedCategory->getManagers()))
         );
     }
 
@@ -138,7 +141,9 @@ class CategoryManager
         ], 'clacoform');
 
         $this->messageBus->dispatch(
-            new SendMessage($content, $object, $removedCategory->getManagers())
+            new SendMessage($content, $object, array_map(function (User $user) {
+                return $user->getId();
+            }, $removedCategory->getManagers()))
         );
     }
 
@@ -173,7 +178,9 @@ class CategoryManager
             ], 'clacoform');
 
             $this->messageBus->dispatch(
-                new SendMessage($content, $object, $category->getManagers())
+                new SendMessage($content, $object, array_map(function (User $user) {
+                    return $user->getId();
+                }, $category->getManagers()))
             );
         }
     }

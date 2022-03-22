@@ -2,6 +2,7 @@
 
 namespace Claroline\LogBundle\Subscriber\Security;
 
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
 use Claroline\CoreBundle\Event\Security\AbstractRoleEvent;
 use Claroline\LogBundle\Messenger\Message\CreateRoleChangeLogs;
@@ -42,10 +43,12 @@ class RoleLogSubscriber implements EventSubscriberInterface
         $this->messageBus->dispatch(new CreateRoleChangeLogs(
             new \DateTime(),
             $eventName,
-            $event->getRole(),
+            $event->getRole()->getId(),
             $this->getDoerIp(),
-            $this->security->getUser(),
-            $event->getUsers()
+            $this->security->getUser()->getId(),
+            array_map(function (User $user) {
+                return $user->getId();
+            }, $event->getUsers())
         ));
     }
 
