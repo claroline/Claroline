@@ -42,9 +42,9 @@ class FunctionalLogSubscriber implements EventSubscriberInterface
                 new \DateTime(),
                 $eventName,
                 $event->getMessage($this->translator), // this should not be done by the symfony event
-                $event->getUser(),
-                method_exists($event, 'getWorkspace') ? $event->getWorkspace() : null,
-                method_exists($event, 'getResourceNode') ? $event->getResourceNode() : null
+                $event->getUser()->getId(),
+                method_exists($event, 'getWorkspace') && $event->getWorkspace() ? $event->getWorkspace()->getId() : null,
+                method_exists($event, 'getResourceNode') && $event->getResourceNode() ? $event->getResourceNode()->getId() : null
             ));
         }
 

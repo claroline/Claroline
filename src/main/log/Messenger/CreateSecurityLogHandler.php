@@ -3,6 +3,7 @@
 namespace Claroline\LogBundle\Messenger;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\GeoIp\GeoIpInfoProviderInterface;
 use Claroline\LogBundle\Entity\SecurityLog;
 use Claroline\LogBundle\Messenger\Message\CreateSecurityLog;
@@ -30,8 +31,17 @@ class CreateSecurityLogHandler implements MessageHandlerInterface
         $logEntry->setDate($createLog->getDate());
         $logEntry->setEvent($createLog->getAction());
         $logEntry->setDetails($createLog->getDetails());
-        $logEntry->setDoer($createLog->getDoer());
-        $logEntry->setTarget($createLog->getTarget());
+
+        if ($createLog->getDoerId()) {
+            $doer = $this->om->getRepository(User::class)->find($createLog->getDoerId());
+            $logEntry->setDoer($doer);
+        }
+
+        if ($createLog->getTargetId()) {
+            $target = $this->om->getRepository(User::class)->find($createLog->getTargetId());
+            $logEntry->setTarget($target);
+        }
+
         $logEntry->setDoerIp($createLog->getDoerIp());
 
         $doerLocation = $this->getDoerLocation($createLog->getDoerIp());

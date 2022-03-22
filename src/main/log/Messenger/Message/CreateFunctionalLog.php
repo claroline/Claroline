@@ -3,9 +3,6 @@
 namespace Claroline\LogBundle\Messenger\Message;
 
 use Claroline\AppBundle\Messenger\Message\AsyncMessageInterface;
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 
 class CreateFunctionalLog implements AsyncMessageInterface
 {
@@ -15,27 +12,27 @@ class CreateFunctionalLog implements AsyncMessageInterface
     private $action;
     /** @var string */
     private $details;
-    /** @var User */
-    private $doer;
-    /** @var Workspace|null */
-    private $workspace;
-    /** @var ResourceNode|null */
-    private $resourceNode;
+    /** @var int */
+    private $doerId;
+    /** @var int */
+    private $workspaceId;
+    /** @var int */
+    private $resourceNodeId;
 
     public function __construct(
         \DateTimeInterface $date,
         string $action,
         string $details,
-        User $doer,
-        ?Workspace $workspace = null,
-        ?ResourceNode $resourceNode = null
+        int $doerId,
+        ?int $workspaceId = null,
+        ?int $resourceNodeId = null
     ) {
         $this->date = $date;
         $this->action = $action;
         $this->details = $details;
-        $this->doer = $doer;
-        $this->workspace = $workspace;
-        $this->resourceNode = $resourceNode;
+        $this->doerId = $doerId;
+        $this->workspaceId = $workspaceId;
+        $this->resourceNodeId = $resourceNodeId;
     }
 
     public function getDate(): \DateTimeInterface
@@ -53,18 +50,18 @@ class CreateFunctionalLog implements AsyncMessageInterface
         return $this->details;
     }
 
-    public function getDoer(): User
+    public function getDoerId(): int
     {
-        return $this->doer;
+        return $this->doerId;
     }
 
-    public function getWorkspace(): ?Workspace
+    public function getWorkspaceId(): ?int
     {
-        return $this->workspace;
+        return $this->workspaceId;
     }
 
-    public function getResourceNode(): ?ResourceNode
+    public function getResourceNodeId(): ?int
     {
-        return $this->resourceNode;
+        return $this->resourceNodeId;
     }
 }

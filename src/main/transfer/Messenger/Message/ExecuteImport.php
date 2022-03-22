@@ -2,7 +2,9 @@
 
 namespace Claroline\TransferBundle\Messenger\Message;
 
-class ExecuteImport
+use Claroline\AppBundle\Messenger\Message\AsyncMessageInterface;
+
+class ExecuteImport implements AsyncMessageInterface
 {
     /** @var int */
     private $importId;

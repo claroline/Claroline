@@ -2,34 +2,33 @@
 
 namespace Claroline\EvaluationBundle\Messenger\Message;
 
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Entity\User;
+use Claroline\AppBundle\Messenger\Message\AsyncMessageInterface;
 use Claroline\EvaluationBundle\Entity\AbstractEvaluation;
 
-class InitializeResourceEvaluations
+class InitializeResourceEvaluations implements AsyncMessageInterface
 {
-    /** @var ResourceNode */
-    private $resourceNode;
-    /** @var User[] */
-    private $users;
+    /** @var int */
+    private $resourceNodeId;
+    /** @var int[] */
+    private $userIds;
     /** @var string */
     private $status;
 
-    public function __construct(ResourceNode $resourceNode, array $users, string $status = AbstractEvaluation::STATUS_NOT_ATTEMPTED)
+    public function __construct(int $resourceNodeId, array $userIds, string $status = AbstractEvaluation::STATUS_NOT_ATTEMPTED)
     {
-        $this->resourceNode = $resourceNode;
-        $this->users = $users;
+        $this->resourceNodeId = $resourceNodeId;
+        $this->userIds = $userIds;
         $this->status = $status;
     }
 
-    public function getResourceNode(): ResourceNode
+    public function getResourceNodeId(): int
     {
-        return $this->resourceNode;
+        return $this->resourceNodeId;
     }
 
-    public function getUsers(): array
+    public function getUserIds(): array
     {
-        return $this->users;
+        return $this->userIds;
     }
 
     public function getStatus(): string

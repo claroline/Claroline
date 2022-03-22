@@ -3,6 +3,8 @@
 namespace Claroline\LogBundle\Messenger;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\GeoIp\GeoIpInfoProviderInterface;
 use Claroline\LogBundle\Entity\SecurityLog;
 use Claroline\LogBundle\Messenger\Message\CreateRoleChangeLogs;
@@ -30,7 +32,22 @@ class CreateRoleChangeLogsHandler implements MessageHandlerInterface
 
     public function __invoke(CreateRoleChangeLogs $createLog)
     {
-        foreach ($createLog->getTargets() as $target) {
+        $role = $this->om->getRepository(Role::class)->find($createLog->getRoleId());
+        if (empty($role)) {
+            return;
+        }
+
+        $doer = null;
+        if ($createLog->getDoerId()) {
+            $doer = $this->om->getRepository(User::class)->find($createLog->getDoerId());
+        }
+
+        foreach ($createLog->getTargetIds() as $targetId) {
+            $target = $this->om->getRepository(User::class)->find($targetId);
+            if (empty($target)) {
+                continue;
+            }
+
             $logEntry = new SecurityLog();
 
             $logEntry->setDate($createLog->getDate());
@@ -38,9 +55,9 @@ class CreateRoleChangeLogsHandler implements MessageHandlerInterface
 
             // this should not be done by the handler
             $logEntry->setDetails(
-                $this->translator->trans($createLog->getAction().'.desc', ['username' => $target->getUsername(), 'role' => $createLog->getRole()->getName()], 'security')
+                $this->translator->trans($createLog->getAction().'.desc', ['username' => $target->getUsername(), 'role' => $role->getName()], 'security')
             );
-            $logEntry->setDoer($createLog->getDoer());
+            $logEntry->setDoer($doer);
             $logEntry->setTarget($target);
             $logEntry->setDoerIp($createLog->getDoerIp());
 

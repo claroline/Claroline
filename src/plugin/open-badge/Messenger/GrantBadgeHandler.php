@@ -34,7 +34,7 @@ class GrantBadgeHandler implements MessageHandlerInterface
     public function __invoke(GrantBadge $grantBadge)
     {
         /** @var BadgeClass $badge */
-        $badge = $this->om->getRepository(BadgeClass::class)->findOneBy(['uuid' => $grantBadge->getBadgeId()]);
+        $badge = $this->om->getRepository(BadgeClass::class)->find($grantBadge->getBadgeId());
         if ($badge) {
             $recomputeUsers = [];
             foreach ($badge->getRules() as $rule) {
