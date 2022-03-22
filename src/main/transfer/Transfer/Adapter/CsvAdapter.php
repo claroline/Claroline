@@ -13,6 +13,7 @@ class CsvAdapter implements AdapterInterface
     private const LINE_DELIMITER = PHP_EOL;
     private const COLUMN_DELIMITER = ';';
     private const ARRAY_DELIMITER = ',';
+    private const ENCLOSURE = '"';
 
     /** @var TranslatorInterface */
     private $translator;
@@ -43,7 +44,7 @@ class CsvAdapter implements AdapterInterface
         $headers = array_filter(
             array_map(function ($headerProp) {
                 return trim($headerProp);
-            }, str_getcsv($header, self::COLUMN_DELIMITER)),
+            }, str_getcsv($header, self::COLUMN_DELIMITER, self::ENCLOSURE)),
             function ($headerProp) {
                 return !empty($headerProp);
             }
@@ -53,7 +54,7 @@ class CsvAdapter implements AdapterInterface
             if (!empty($line)) {
                 $properties = array_map(function ($property) {
                     return trim($property);
-                }, str_getcsv($line, self::COLUMN_DELIMITER));
+                }, str_getcsv($line, self::COLUMN_DELIMITER, self::ENCLOSURE));
                 $data[] = $this->buildObjectFromLine($properties, $headers, $explanation);
             }
         }
@@ -94,7 +95,11 @@ class CsvAdapter implements AdapterInterface
             $object = json_decode(json_encode($object));
 
             foreach ($headers as $header) {
-                $properties[] = $this->getCsvSerialized($object, $header);
+                $value = $this->getCsvSerialized($object, $header);
+                // escape enclosure char if it's present inside the value
+                $value = str_replace(self::ENCLOSURE, self::ENCLOSURE.self::ENCLOSURE, $value);
+
+                $properties[] = self::ENCLOSURE.$value.self::ENCLOSURE;
             }
 
             $lines[] = implode(self::COLUMN_DELIMITER, $properties);
@@ -198,8 +203,8 @@ class CsvAdapter implements AdapterInterface
             return $this->getCsvArraySerialized($object->{$first}, implode($parts, '.'));
         }
 
-        if (property_exists($object, $first) && !is_array($object->$first)) {
-            return $object->{$first};
+        if (property_exists($object, $first) && !is_array($object->$first) && !empty($object->$first)) {
+            return strval($object->{$first});
         }
 
         return '';
