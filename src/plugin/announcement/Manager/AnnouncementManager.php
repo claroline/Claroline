@@ -55,9 +55,11 @@ class AnnouncementManager
         $this->messageBus->dispatch(new SendAnnouncement(
             $message['content'],
             $message['object'],
-            $message['receivers'],
+            array_map(function (User $user) {
+                return $user->getId();
+            }, $message['receivers']),
             $announcement->getId(),
-            $message['sender']
+            !empty($message['sender']) ? $message['sender']->getId() : null
         ));
     }
 

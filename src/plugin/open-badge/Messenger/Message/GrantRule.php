@@ -2,26 +2,28 @@
 
 namespace Claroline\OpenBadgeBundle\Messenger\Message;
 
-class GrantRule
+use Claroline\AppBundle\Messenger\Message\AsyncMessageInterface;
+
+class GrantRule implements AsyncMessageInterface
 {
-    /** @var string */
+    /** @var int */
     private $ruleId;
 
-    /** @var string */
+    /** @var int */
     private $userId;
 
-    public function __construct(string $ruleId, string $userId)
+    public function __construct(int $ruleId, int $userId)
     {
         $this->ruleId = $ruleId;
         $this->userId = $userId;
     }
 
-    public function getRuleId(): string
+    public function getRuleId(): int
     {
         return $this->ruleId;
     }
 
-    public function getUserId(): string
+    public function getUserId(): int
     {
         return $this->userId;
     }

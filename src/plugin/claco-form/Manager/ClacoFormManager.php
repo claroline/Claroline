@@ -279,7 +279,7 @@ class ClacoFormManager implements LoggerAwareInterface
         if ($clacoForm->getDisplayComments()) {
             $url = $this->router->generate('claro_index', [], UrlGeneratorInterface::ABSOLUTE_URL).
                 '#/desktop/resources/'.$node->getSlug().'/entries/'.$entry->getUuid();
-            $receivers = [];
+            $receiverIds = [];
             $categories = $entry->getCategories();
 
             foreach ($categories as $category) {
@@ -287,11 +287,14 @@ class ClacoFormManager implements LoggerAwareInterface
                     $managers = $category->getManagers();
 
                     foreach ($managers as $manager) {
-                        $receivers[$manager->getId()] = $manager;
+                        if (!in_array($manager->getId(), $receiverIds)) {
+                            $receiverIds[] = $manager->getId();
+                        }
                     }
                 }
             }
-            if (count($receivers) > 0) {
+
+            if (count($receiverIds) > 0) {
                 $object = '['.
                     $this->translator->trans('entry_pending_comment', [], 'clacoform').
                     '] '.
@@ -305,7 +308,7 @@ class ClacoFormManager implements LoggerAwareInterface
                     $this->translator->trans('here', [], 'platform').
                     '</a><br><br>';
 
-                $this->messageBus->dispatch(new SendMessage($content, $object, $receivers));
+                $this->messageBus->dispatch(new SendMessage($content, $object, $receiverIds));
             }
         }
     }
@@ -449,7 +452,7 @@ class ClacoFormManager implements LoggerAwareInterface
     public function notifyUsers(Entry $entry, $type, $data = null)
     {
         $sendMessage = false;
-        $receivers = [];
+        $receiverIds = [];
         $clacoForm = $entry->getClacoForm();
         $node = $clacoForm->getResourceNode();
         $url = $this->router->generate('claro_index', [], UrlGeneratorInterface::ABSOLUTE_URL).
@@ -463,9 +466,9 @@ class ClacoFormManager implements LoggerAwareInterface
                 $entryUsers = $this->entryUserRepo->findBy(['entry' => $entry, 'notifyEdition' => true]);
 
                 foreach ($entryUsers as $entryUser) {
-                    $receivers[] = $entryUser->getUser();
+                    $receiverIds[] = $entryUser->getUser()->getId();
                 }
-                if ($sendMessage && count($receivers) > 0) {
+                if ($sendMessage && count($receiverIds) > 0) {
                     $subject = '['.
                         $this->translator->trans('entry_edition', [], 'clacoform').
                         '] '.
@@ -483,9 +486,9 @@ class ClacoFormManager implements LoggerAwareInterface
                 $entryUsers = $this->entryUserRepo->findBy(['entry' => $entry, 'notifyEdition' => true]);
 
                 foreach ($entryUsers as $entryUser) {
-                    $receivers[] = $entryUser->getUser();
+                    $receiverIds[] = $entryUser->getUser()->getId();
                 }
-                if ($sendMessage && count($receivers) > 0) {
+                if ($sendMessage && count($receiverIds) > 0) {
                     $subject = '['.
                         $this->translator->trans('entry_deletion', [], 'clacoform').
                         '] '.
@@ -505,13 +508,15 @@ class ClacoFormManager implements LoggerAwareInterface
 
                     foreach ($entryUsers as $entryUser) {
                         $user = $entryUser->getUser();
-                        $roles = array_intersect($commentsRoles, $user->getRoles());
+                        if ($entryUser->getUser()) {
+                            $roles = array_intersect($commentsRoles, $user->getRoles());
 
-                        if (count($roles) > 0) {
-                            $receivers[] = $user;
+                            if (count($roles) > 0) {
+                                $receiverIds[] = $user->getId();
+                            }
                         }
                     }
-                    if (count($receivers) > 0) {
+                    if (count($receiverIds) > 0) {
                         $subject = '['.
                             $this->translator->trans('entry_comment', [], 'clacoform').
                             '] '.
@@ -529,8 +534,8 @@ class ClacoFormManager implements LoggerAwareInterface
                 break;
         }
 
-        if ($sendMessage && count($receivers) > 0) {
-            $this->messageBus->dispatch(new SendMessage($content, $subject, $receivers));
+        if ($sendMessage && count($receiverIds) > 0) {
+            $this->messageBus->dispatch(new SendMessage($content, $subject, $receiverIds));
         }
     }
 

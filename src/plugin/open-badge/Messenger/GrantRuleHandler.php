@@ -35,9 +35,9 @@ class GrantRuleHandler implements MessageHandlerInterface
     public function __invoke(GrantRule $grantRule)
     {
         /** @var Rule $rule */
-        $rule = $this->om->getRepository(Rule::class)->findOneBy(['uuid' => $grantRule->getRuleId()]);
+        $rule = $this->om->getRepository(Rule::class)->find($grantRule->getRuleId());
         /** @var User $user */
-        $user = $this->om->getRepository(User::class)->findOneBy(['uuid' => $grantRule->getUserId()]);
+        $user = $this->om->getRepository(User::class)->find($grantRule->getUserId());
 
         if (!empty($rule) && !empty($user)) {
             $this->ruleManager->createEvidence($rule, $user);

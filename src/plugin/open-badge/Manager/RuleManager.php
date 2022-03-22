@@ -41,7 +41,7 @@ class RuleManager
 
     public function grant(Rule $rule, User $user)
     {
-        $this->messageBus->dispatch(new GrantRule($rule->getUuid(), $user->getUuid()));
+        $this->messageBus->dispatch(new GrantRule($rule->getId(), $user->getId()));
     }
 
     public function grantAll(Rule $rule): array

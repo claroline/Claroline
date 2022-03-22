@@ -67,7 +67,7 @@ class GroupLogSubscriber implements EventSubscriberInterface
                     '%group%' => $group,
                     '%user%' => $user,
                 ], 'log'),
-                $this->security->getUser()
+                $this->security->getUser()->getId()
             ));
         } elseif (Crud::COLLECTION_REMOVE === $action) {
             $this->messageBus->dispatch(new CreateFunctionalLog(
@@ -77,7 +77,7 @@ class GroupLogSubscriber implements EventSubscriberInterface
                     '%group%' => $group,
                     '%user%' => $user,
                 ], 'log'),
-                $this->security->getUser()
+                $this->security->getUser()->getId()
             ));
         }
     }
