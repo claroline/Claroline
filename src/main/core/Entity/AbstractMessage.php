@@ -53,7 +53,7 @@ abstract class AbstractMessage
      *     targetEntity="Claroline\CoreBundle\Entity\User",
      *     cascade={"persist"}
      * )
-     * @ORM\JoinColumn(name="user_id")
+     * @ORM\JoinColumn(name="user_id", onDelete="SET NULL")
      *
      * @var User
      */

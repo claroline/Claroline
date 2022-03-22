@@ -96,7 +96,7 @@ class Announcement
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\User"
      * )
-     * @ORM\JoinColumn(name="creator_id", onDelete="CASCADE", nullable=false)
+     * @ORM\JoinColumn(name="creator_id", onDelete="SET NULL")
      *
      * @var User
      */

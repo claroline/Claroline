@@ -78,7 +78,7 @@ class Subject
      *     targetEntity="Claroline\CoreBundle\Entity\User",
      *     cascade={"persist"}
      * )
-     * @ORM\JoinColumn(name="user_id", onDelete="CASCADE")
+     * @ORM\JoinColumn(name="user_id", onDelete="SET NULL")
      *
      * @var User
      */
