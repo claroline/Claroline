@@ -66,7 +66,7 @@ class Entry
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
-     * @ORM\JoinColumn(name="user_id", nullable=true, onDelete="CASCADE")
+     * @ORM\JoinColumn(name="user_id", onDelete="SET NULL")
      *
      * @var User
      */

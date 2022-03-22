@@ -27,7 +27,7 @@ class ScoTracking
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
-     * @ORM\JoinColumn(name="user_id", onDelete="CASCADE", nullable=false)
+     * @ORM\JoinColumn(name="user_id", onDelete="SET NULL", nullable=true)
      *
      * @var User
      */
