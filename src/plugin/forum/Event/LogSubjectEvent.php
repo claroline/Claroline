@@ -17,31 +17,37 @@ use Claroline\ForumBundle\Entity\Subject;
 
 class LogSubjectEvent extends AbstractLogResourceEvent implements NotifiableInterface
 {
-    /**
-     * Constructor.
-     */
+    /** @var Subject */
+    private $subject;
+    /** @var array */
+    private $usersToNotify;
+
     public function __construct($action, Subject $subject, array $usersToNotify = [])
     {
         $this->usersToNotify = $usersToNotify;
         $this->subject = $subject;
-        $node = $subject->getForum()->getResourceNode();
         $this->action = $action;
 
-        $details = ['forum' => [
-          'id' => $subject->getForum()->getId(),
-          'uuid' => $subject->getForum()->getUuid(),
-        ],
-        'subject' => [
-          'title' => $subject->getTitle(),
-          'id' => $subject->getId(),
-          'uuid' => $subject->getUuid(),
-        ],
-        'owner' => [
-            'id' => $subject->getCreator()->getId(),
-            'uuid' => $subject->getCreator()->getUuid(),
-            'lastName' => $subject->getCreator()->getLastName(),
-            'firstName' => $subject->getCreator()->getFirstName(),
-        ], ];
+        $node = $subject->getForum()->getResourceNode();
+        $creator = $subject->getCreator();
+
+        $details = [
+            'forum' => [
+                'id' => $subject->getForum()->getId(),
+                'uuid' => $subject->getForum()->getUuid(),
+            ],
+            'subject' => [
+                'title' => $subject->getTitle(),
+                'id' => $subject->getId(),
+                'uuid' => $subject->getUuid(),
+            ],
+            'owner' => $creator ? [
+                'id' => $creator->getId(),
+                'uuid' => $creator->getUuid(),
+                'lastName' => $creator->getLastName(),
+                'firstName' => $creator->getFirstName(),
+            ] : [],
+        ];
 
         parent::__construct($node, $details);
     }
@@ -92,7 +98,11 @@ class LogSubjectEvent extends AbstractLogResourceEvent implements NotifiableInte
      */
     public function getExcludeUserIds()
     {
-        return [$this->subject->getCreator()->getId()];
+        if ($this->subject->getCreator()) {
+            return [$this->subject->getCreator()->getId()];
+        }
+
+        return [];
     }
 
     /**
@@ -123,9 +133,7 @@ class LogSubjectEvent extends AbstractLogResourceEvent implements NotifiableInte
      */
     public function getNotificationDetails()
     {
-        $notificationDetails = array_merge($this->details, []);
-
-        return $notificationDetails;
+        return array_merge($this->details, []);
     }
 
     /**
