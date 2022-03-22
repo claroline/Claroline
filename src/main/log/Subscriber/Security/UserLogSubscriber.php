@@ -54,8 +54,8 @@ class UserLogSubscriber implements EventSubscriberInterface
                 'username' => $event->getUser(),
             ], 'security'),
             $this->getDoerIp(),
-            $this->security->getUser() ?? $event->getUser(),
-            $event->getUser()
+            $this->security->getUser() ? $this->security->getUser()->getId() : $event->getUser()->getId(),
+            $event->getUser()->getId()
         ));
     }
 
@@ -68,8 +68,8 @@ class UserLogSubscriber implements EventSubscriberInterface
                 'username' => $event->getUser(),
             ], 'security'),
             $this->getDoerIp(),
-            $this->security->getUser() ?? $event->getUser(),
-            $event->getUser()
+            $this->security->getUser() ? $this->security->getUser()->getId() : $event->getUser()->getId(),
+            $event->getUser()->getId()
         ));
     }
 
@@ -80,8 +80,8 @@ class UserLogSubscriber implements EventSubscriberInterface
             $eventName,
             $event->getMessage($this->translator),
             $this->getDoerIp(),
-            $this->security->getUser() ?? $event->getUser(),
-            $event->getUser()
+            $this->security->getUser() ? $this->security->getUser()->getId() : $event->getUser()->getId(),
+            $event->getUser()->getId()
         ));
     }
 

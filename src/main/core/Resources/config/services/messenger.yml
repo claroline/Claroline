@@ -9,3 +9,4 @@ services:
         tags: [messenger.message_handler]
         arguments:
             - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'

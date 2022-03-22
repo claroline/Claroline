@@ -63,8 +63,8 @@ class AuthenticationLogSubscriber implements EventSubscriberInterface
                 'username' => $event->getUser(),
             ], 'security'),
             $this->getDoerIp(),
-            $event->getUser(),
-            $event->getUser()
+            $event->getUser()->getId(),
+            $event->getUser()->getId()
         ));
     }
 
@@ -77,8 +77,8 @@ class AuthenticationLogSubscriber implements EventSubscriberInterface
                 'username' => $event->getUser(),
             ], 'security'),
             $this->getDoerIp(),
-            $event->getUser(),
-            $event->getUser()
+            $event->getUser()->getId(),
+            $event->getUser()->getId()
         ));
     }
 
@@ -92,8 +92,8 @@ class AuthenticationLogSubscriber implements EventSubscriberInterface
                 'message' => $event->getMessage(),
             ], 'security'),
             $this->getDoerIp(),
-            $event->getUser(),
-            $event->getUser()
+            $event->getUser()->getId(),
+            $event->getUser()->getId()
         ));
     }
 
@@ -107,8 +107,8 @@ class AuthenticationLogSubscriber implements EventSubscriberInterface
                 'role' => $event->getRole(),
             ], 'security'),
             $this->getDoerIp(),
-            $event->getUser(),
-            $event->getUser()
+            $event->getUser()->getId(),
+            $event->getUser()->getId()
         ));
     }
 
@@ -126,8 +126,8 @@ class AuthenticationLogSubscriber implements EventSubscriberInterface
                 'target' => $event->getTargetUser(),
             ], 'security'),
             $this->getDoerIp(),
-            $this->security->getUser(),
-            $event->getTargetUser()
+            $this->security->getUser()->getId(),
+            $event->getTargetUser()->getId()
         ));
     }
 
@@ -140,8 +140,8 @@ class AuthenticationLogSubscriber implements EventSubscriberInterface
                 'username' => $event->getUser(),
             ], 'security'),
             $this->getDoerIp(),
-            $this->security->getUser() ?? $event->getUser(),
-            $event->getUser()
+            $this->security->getUser() ? $this->security->getUser()->getId() : $event->getUser()->getId(),
+            $event->getUser()->getId()
         ));
     }
 
@@ -154,8 +154,8 @@ class AuthenticationLogSubscriber implements EventSubscriberInterface
                 'username' => $event->getUser(),
             ], 'security'),
             $this->getDoerIp(),
-            $this->security->getUser() ?? $event->getUser(),
-            $event->getUser()
+            $this->security->getUser() ? $this->security->getUser()->getId() : $event->getUser()->getId(),
+            $event->getUser()->getId()
         ));
     }
 

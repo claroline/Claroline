@@ -2,29 +2,28 @@
 
 namespace Claroline\EvaluationBundle\Messenger\Message;
 
-use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\AppBundle\Messenger\Message\AsyncMessageInterface;
 
-class InitializeWorkspaceEvaluations
+class InitializeWorkspaceEvaluations implements AsyncMessageInterface
 {
-    /** @var Workspace */
-    private $workspace;
-    /** @var User[] */
-    private $users;
+    /** @var int */
+    private $workspaceId;
+    /** @var int[] */
+    private $userIds;
 
-    public function __construct(Workspace $workspace, array $users)
+    public function __construct(int $workspaceId, array $userIds)
     {
-        $this->workspace = $workspace;
-        $this->users = $users;
+        $this->workspaceId = $workspaceId;
+        $this->userIds = $userIds;
     }
 
-    public function getWorkspace(): Workspace
+    public function getWorkspaceId(): int
     {
-        return $this->workspace;
+        return $this->workspaceId;
     }
 
-    public function getUsers(): array
+    public function getUserIds(): array
     {
-        return $this->users;
+        return $this->userIds;
     }
 }

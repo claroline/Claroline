@@ -11,25 +11,25 @@
 
 namespace Claroline\CoreBundle\Messenger\Message;
 
-use Claroline\CoreBundle\Entity\User;
+use Claroline\AppBundle\Messenger\Message\AsyncMessageInterface;
 
-class SendMessage
+class SendMessage implements AsyncMessageInterface
 {
     /** @var string */
     private $content;
     /** @var string */
     private $object;
     /** @var array */
-    private $receivers;
-    /** @var User|null */
-    private $sender;
+    private $receiverIds;
+    /** @var int|null */
+    private $senderId;
 
-    public function __construct(string $content, string $object, array $receivers, ?User $sender = null)
+    public function __construct(string $content, string $object, array $receiverIds, ?int $senderId = null)
     {
         $this->content = $content;
         $this->object = $object;
-        $this->receivers = $receivers;
-        $this->sender = $sender;
+        $this->receiverIds = $receiverIds;
+        $this->senderId = $senderId;
     }
 
     public function getContent(): string
@@ -42,13 +42,13 @@ class SendMessage
         return $this->object;
     }
 
-    public function getReceivers(): array
+    public function getReceiverIds(): array
     {
-        return $this->receivers;
+        return $this->receiverIds;
     }
 
-    public function getSender(): ?User
+    public function getSenderId(): ?int
     {
-        return $this->sender;
+        return $this->senderId;
     }
 }

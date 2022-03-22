@@ -54,11 +54,19 @@ class ResourceEvaluationSubscriber implements EventSubscriberInterface
         if ((empty($oldData['evaluation']) || $resourceNode->isRequired() !== $oldData['evaluation']['required'])) {
             $registeredUsers = $this->userRepo->findByWorkspaces([$resourceNode->getWorkspace()]);
             if (!empty($registeredUsers)) {
+                $registeredUserIds = array_map(function (User $user) {
+                    return $user->getId();
+                }, $registeredUsers);
+
                 if ($resourceNode->isRequired()) {
-                    $this->messageBus->dispatch(new InitializeResourceEvaluations($resourceNode, $registeredUsers, AbstractEvaluation::STATUS_TODO));
+                    $this->messageBus->dispatch(
+                        new InitializeResourceEvaluations($resourceNode->getId(), $registeredUserIds, AbstractEvaluation::STATUS_TODO)
+                    );
                 } else {
                     // TODO : do an update, as is it will generate missing evaluations and we don't want to
-                    $this->messageBus->dispatch(new InitializeResourceEvaluations($resourceNode, $registeredUsers, AbstractEvaluation::STATUS_NOT_ATTEMPTED));
+                    $this->messageBus->dispatch(
+                        new InitializeResourceEvaluations($resourceNode->getId(), $registeredUserIds, AbstractEvaluation::STATUS_NOT_ATTEMPTED)
+                    );
                 }
             }
         }

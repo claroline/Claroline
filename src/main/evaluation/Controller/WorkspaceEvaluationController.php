@@ -184,7 +184,11 @@ class WorkspaceEvaluationController extends AbstractSecurityController
 
         $users = $this->om->getRepository(User::class)->findByWorkspaces([$workspace]);
         if (!empty($users)) {
-            $this->messageBus->dispatch(new InitializeWorkspaceEvaluations($workspace, $users));
+            $this->messageBus->dispatch(
+                new InitializeWorkspaceEvaluations($workspace->getId(), array_map(function (User $user) {
+                    return $user->getId();
+                }, $users))
+            );
         }
 
         return new JsonResponse(null, 204);

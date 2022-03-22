@@ -3,7 +3,6 @@ services:
         arguments:
             - '@Claroline\MessageBundle\Manager\MessageManager'
             - '@doctrine.orm.entity_manager'
-            - '@security.helper'
             - '@translator'
         tags:
             - { name: kernel.event_subscriber }
