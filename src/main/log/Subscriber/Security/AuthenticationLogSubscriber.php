@@ -92,8 +92,8 @@ class AuthenticationLogSubscriber implements EventSubscriberInterface
                 'message' => $event->getMessage(),
             ], 'security'),
             $this->getDoerIp(),
-            $event->getUser()->getId(),
-            $event->getUser()->getId()
+            $event->getUser() ? $event->getUser()->getId() : null,
+            $event->getUser() ? $event->getUser()->getId() : null
         ));
     }
 
