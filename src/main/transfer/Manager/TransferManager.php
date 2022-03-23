@@ -138,15 +138,16 @@ class TransferManager
                 $extra['workspace'] = $this->serializer->serialize($exportFile->getWorkspace(), [Options::SERIALIZE_MINIMAL]);
             }
 
-            $data = $this->exporter->execute(
+            $fs = new FileSystem();
+            $fs->touch($this->fileManager->getDirectory().'/transfer'.'/'.$exportFile->getUuid());
+
+            $this->exporter->execute(
+                $this->fileManager->getDirectory().'/transfer'.'/'.$exportFile->getUuid(),
                 $exportFile->getFormat(),
                 $exportFile->getAction(),
                 $options,
                 $extra
             );
-
-            $fs = new FileSystem();
-            $fs->dumpFile($this->fileManager->getDirectory().'/transfer'.'/'.$exportFile->getUuid(), $data);
 
             $status = TransferFileInterface::SUCCESS;
         } catch (\Exception $e) {

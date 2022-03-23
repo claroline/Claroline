@@ -36,12 +36,10 @@ interface AdapterInterface
     public function explainIdentifiers(array $schemas);
 
     /**
-     * format the data for the export.
+     * Format and dump exported data into a file.
      *
-     * @param array $data    - the serialized objects
-     * @param array $options - a list of options
-     *
-     * @return array
+     * NB. the dumping process is delegated to the Adapter because of performances reasons.
+     * For heavy exports, we need to be able to dump data regularly during the process in order to free memory.
      */
-    public function format(array $data, array $options);
+    public function dump(string $fileDest, array $data, array $options): void;
 }
