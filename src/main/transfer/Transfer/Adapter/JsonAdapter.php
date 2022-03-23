@@ -3,6 +3,7 @@
 namespace Claroline\TransferBundle\Transfer\Adapter;
 
 use Claroline\TransferBundle\Transfer\Adapter\Explain\Csv\Explanation;
+use Symfony\Component\Filesystem\Filesystem;
 
 class JsonAdapter implements AdapterInterface
 {
@@ -26,8 +27,10 @@ class JsonAdapter implements AdapterInterface
         return $schema;
     }
 
-    public function format(array $data, array $options)
+    public function dump(string $fileDest, array $data, array $options): void
     {
-        return $data;
+        $fs = new FileSystem();
+
+        $fs->appendToFile($fileDest, json_encode($data));
     }
 }

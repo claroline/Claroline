@@ -6,6 +6,7 @@ use Claroline\AppBundle\API\Utils\ArrayUtils;
 use Claroline\TransferBundle\Transfer\Adapter\Explain\Csv\Explanation;
 use Claroline\TransferBundle\Transfer\Adapter\Explain\Csv\ExplanationBuilder;
 use Claroline\TransferBundle\Transfer\Adapter\Explain\Csv\Property;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CsvAdapter implements AdapterInterface
@@ -76,23 +77,21 @@ class CsvAdapter implements AdapterInterface
         return $builder->explainIdentifiers($schemas);
     }
 
-    public function format(array $data, array $options)
+    public function dump(string $fileDest, array $data, array $options): void
     {
         if (empty($data)) {
-            return '';
+            return;
         }
 
         $headers = !empty($options['headers']) ? $options['headers'] : ArrayUtils::getPropertiesName($data[0]);
 
-        $lines = [
-            // generate header line
-            implode(self::COLUMN_DELIMITER, $headers),
-        ];
+        $fs = new FileSystem();
 
-        foreach ($data as $object) {
+        $fs->appendToFile($fileDest, implode(self::COLUMN_DELIMITER, $headers));
+
+        $lines = [];
+        foreach ($data as $i => $object) {
             $properties = [];
-
-            $object = json_decode(json_encode($object));
 
             foreach ($headers as $header) {
                 $value = $this->getCsvSerialized($object, $header);
@@ -103,11 +102,17 @@ class CsvAdapter implements AdapterInterface
             }
 
             $lines[] = implode(self::COLUMN_DELIMITER, $properties);
+            if (0 === $i % 200) {
+                // regularly dump lines in the destination file to avoid keeping too much data in memory
+                $fs->appendToFile($fileDest, self::LINE_DELIMITER.implode(self::LINE_DELIMITER, $lines));
+                $lines = [];
+            }
         }
 
-        $data = implode(self::LINE_DELIMITER, $lines);
-
-        return $data;
+        // add the rest of the lines to the file
+        if (!empty($lines)) {
+            $fs->appendToFile($fileDest, self::LINE_DELIMITER.implode(self::LINE_DELIMITER, $lines));
+        }
     }
 
     /**
@@ -184,27 +189,16 @@ class CsvAdapter implements AdapterInterface
 
     /**
      * Returns the property of the object according to the path for the csv export.
-     *
-     * @param string $path
-     *
-     * @return string
      */
-    private function getCsvSerialized(\stdClass $object, $path)
+    private function getCsvSerialized(array $object, string $path): string
     {
-        //it's easier to work with objects here
-        $parts = explode('.', $path);
-        $first = array_shift($parts);
+        $value = ArrayUtils::get($object, $path);
+        if (!empty($value)) {
+            if (is_array($value)) {
+                return $this->getCsvArraySerialized($value, $path);
+            }
 
-        if (property_exists($object, $first) && is_object($object->{$first})) {
-            return $this->getCsvSerialized($object->{$first}, implode($parts, '.'));
-        }
-
-        if (property_exists($object, $first) && is_array($object->{$first})) {
-            return $this->getCsvArraySerialized($object->{$first}, implode($parts, '.'));
-        }
-
-        if (property_exists($object, $first) && !is_array($object->$first) && !empty($object->$first)) {
-            return strval($object->{$first});
+            return strval($value);
         }
 
         return '';
@@ -212,18 +206,17 @@ class CsvAdapter implements AdapterInterface
 
     /**
      * Returns the serialized array for the csv export.
-     *
-     * @param array  $elements - the array to serialize
-     * @param string $path     - the property path inside the array
-     *
-     * @return string
      */
-    private function getCsvArraySerialized(array $elements, $path)
+    private function getCsvArraySerialized(array $elements, string $path): string
     {
         $data = [];
 
         foreach ($elements as $element) {
-            $data[] = $this->getCsvSerialized($element, $path);
+            if (is_array($element)) {
+                $data[] = $this->getCsvSerialized($element, $path);
+            } else {
+                $data[] = $element;
+            }
         }
 
         return implode($data, self::ARRAY_DELIMITER);
