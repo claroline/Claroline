@@ -125,7 +125,7 @@ class ProfileController
         // those roles should not be here anyway.
         unset($userData['roles']);
 
-        $updated = $this->crud->update($user, $userData, [Crud::THROW_EXCEPTION, Options::SERIALIZE_FACET]);
+        $updated = $this->crud->update($user, $userData, [Crud::THROW_EXCEPTION, Options::VALIDATE_FACET, Options::SERIALIZE_FACET]);
 
         return new JsonResponse(
             $this->serializer->serialize($updated, [Options::SERIALIZE_FACET])
