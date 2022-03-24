@@ -139,7 +139,7 @@ class UserValidator implements ValidatorInterface
 
         // todo validate Facet values
         if (in_array(Options::VALIDATE_FACET, $options)) {
-            $facets = $this->profileSerializer->serialize([Options::REGISTRATION]);
+            $facets = $this->profileSerializer->serialize(in_array(Options::REGISTRATION, $options) ? [Options::REGISTRATION] : []);
             $allFields = [];
             $required = [];
 

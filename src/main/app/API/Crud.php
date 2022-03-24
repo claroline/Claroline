@@ -216,7 +216,7 @@ class Crud
         }
 
         // validates submitted data.
-        $errors = $this->validate($class, $data, ValidatorProvider::UPDATE);
+        $errors = $this->validate($class, $data, ValidatorProvider::UPDATE, $options);
         if (count($errors) > 0) {
             // TODO : it should always throw exception
             if (in_array(self::THROW_EXCEPTION, $options)) {
