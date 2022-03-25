@@ -4,7 +4,7 @@ import {Role} from '#/main/core/user/prop-types'
 
 const Tab = {
   propTypes: {
-    id: T.string.isRequired,
+    id: T.string,
     context: T.oneOf(['workspace', 'admin_desktop', 'desktop', 'administration', 'home', 'admin']),
     type: T.string,
     title: T.string.isRequired,

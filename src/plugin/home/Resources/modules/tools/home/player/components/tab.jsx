@@ -23,7 +23,7 @@ class PlayerTab extends Component {
   componentDidMount() {
     if (this.props.currentTab) {
       if (!this.props.loaded) {
-        this.props.open(this.props.currentTab.id)
+        this.props.open(this.props.currentTab)
       }
 
       getTab(this.props.currentTab.type).then(tabApp => this.setState({
@@ -34,8 +34,8 @@ class PlayerTab extends Component {
 
   componentDidUpdate(prevProps) {
     if (this.props.currentTab) {
-      if (this.props.currentTab.id !== get(prevProps, 'currentTab.id')) {
-        this.props.open(this.props.currentTab.id)
+      if (this.props.currentTab.slug !== get(prevProps, 'currentTab.slug')) {
+        this.props.open(this.props.currentTab)
       }
 
       if (get(prevProps, 'currentTab.type') !== get(this.props, 'currentTab.type')) {

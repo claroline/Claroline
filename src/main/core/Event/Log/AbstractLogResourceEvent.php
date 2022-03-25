@@ -44,6 +44,8 @@ abstract class AbstractLogResourceEvent extends LogGenericEvent
      */
     public function __construct(ResourceNode $node, $details)
     {
+        $creator = $node->getCreator();
+
         $commonDetails = [
             'resource' => [
                 'name' => $node->getName(),
@@ -56,10 +58,10 @@ abstract class AbstractLogResourceEvent extends LogGenericEvent
                 'name' => $node->getWorkspace()->getName(),
                 'slug' => $node->getWorkspace()->getSlug(),
             ],
-            'owner' => [
-                'lastName' => $node->getCreator()->getLastName(),
-                'firstName' => $node->getCreator()->getFirstName(),
-            ],
+            'owner' => $creator ? [
+                'lastName' => $creator->getLastName(),
+                'firstName' => $creator->getFirstName(),
+            ] : [],
         ];
 
         $detailsData = array_merge($commonDetails, $details);
@@ -72,7 +74,7 @@ abstract class AbstractLogResourceEvent extends LogGenericEvent
             $node,
             null,
             $node->getWorkspace(),
-            $node->getCreator(),
+            $creator,
             null
         );
     }
