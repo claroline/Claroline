@@ -155,6 +155,16 @@ class IdpManager
                     return false;
                 }
 
+                if (is_array($attributes[$fieldName])) {
+                    return 0 !== count(array_filter($attributes[$fieldName], function ($attrValue) use ($expectedValue) {
+                        if ((is_array($expectedValue) && !in_array($attrValue, $expectedValue)) || $attrValue !== $expectedValue) {
+                            return false;
+                        }
+
+                        return true;
+                    }));
+                }
+
                 if ((is_array($expectedValue) && !in_array($attributes[$fieldName], $expectedValue)) || $attributes[$fieldName] !== $expectedValue) {
                     return false;
                 }
