@@ -21,8 +21,8 @@ const PlayerMain = withRouter(
       currentTabTitle: playerSelectors.currentTabTitle(state)
     }),
     (dispatch) => ({
-      open(tabId) {
-        dispatch(playerActions.fetchTab(tabId))
+      open(tab) {
+        dispatch(playerActions.fetchTab(tab))
       },
       setCurrentTab(tab) {
         dispatch(actions.setCurrentTab(tab))

@@ -1,7 +1,6 @@
 import {createSelector} from 'reselect'
 
 import {trans} from '#/main/app/intl/translation'
-import {makeId} from '#/main/core/scaffolding/id'
 
 import {selectors as toolSelectors} from '#/main/core/tool/store/selectors'
 
@@ -14,7 +13,6 @@ const context = toolSelectors.context
 const defaultTab = createSelector(
   [context],
   (context) => ({
-    id: makeId(),
     context: 'administration' === context.type ? 'admin' : context.type,
     type: 'widgets',
     class: 'Claroline\\HomeBundle\\Entity\\Type\\WidgetsTab',
