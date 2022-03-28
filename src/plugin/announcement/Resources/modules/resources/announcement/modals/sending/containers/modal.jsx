@@ -1,4 +1,5 @@
 import {connect} from 'react-redux'
+import get from 'lodash/get'
 import merge from 'lodash/merge'
 
 import {param} from '#/main/app/config'
@@ -25,11 +26,17 @@ const SendingModal = withReducer(selectors.STORE_NAME, reducer)(
         dispatch(formActions.updateProp(selectors.STORE_NAME+'.form', prop, value))
       },
       reset(announcement, workspaceRoles) {
-        let data = announcement
+        let data = merge({}, announcement)
+
+        if (!get(announcement, 'meta.notifyUsers')) {
+          data = merge(data, {
+            meta: {notifyUsers: 1}
+          })
+        }
+
         if (!announcement.roles || 0 === announcement.roles.length) {
           // by default select all ws roles for sending
-          data = merge({}, announcement, {
-            meta: {notifyUsers: 1},
+          data = merge({}, data, {
             roles: workspaceRoles
           })
         }
