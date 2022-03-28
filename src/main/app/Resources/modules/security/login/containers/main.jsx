@@ -6,10 +6,10 @@ import {actions as securityActions, selectors as securitySelectors} from '#/main
 import {selectors as configSelectors} from '#/main/app/config/store'
 import {actions as formActions, selectors as formSelectors} from '#/main/app/content/form/store'
 
-import {LoginForm as LoginFormComponent} from '#/main/app/security/login/components/form'
+import {LoginMain as LoginMainComponent} from '#/main/app/security/login/components/main'
 import {reducer, selectors} from '#/main/app/security/login/store'
 
-const LoginForm = withReducer(selectors.STORE_NAME, reducer)(
+const LoginMain = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
       platformName: configSelectors.param(state, 'name'),
@@ -40,9 +40,9 @@ const LoginForm = withReducer(selectors.STORE_NAME, reducer)(
         })
       }
     })
-  )(LoginFormComponent)
+  )(LoginMainComponent)
 )
 
 export {
-  LoginForm
+  LoginMain
 }

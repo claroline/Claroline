@@ -6,7 +6,7 @@ import {param} from '#/main/app/config'
 import {PageSimple} from '#/main/app/page/components/simple'
 
 import {constants} from '#/main/app/security/login/constants'
-import {LoginForm} from '#/main/app/security/login/containers/form'
+import {LoginMain} from '#/main/app/security/login/containers/main'
 
 import {route as workspaceRoute} from '#/main/core/workspace/routing'
 
@@ -14,7 +14,8 @@ const LoginPage = (props) =>
   <PageSimple
     className="authentication-page login-page"
   >
-    <LoginForm
+    <LoginMain
+      forceInternalAccount={props.match.params.forceInternalAccount}
       onLogin={(response) => {
         if (response.redirect) {
           switch (response.redirect.type) {
@@ -43,6 +44,11 @@ const LoginPage = (props) =>
   </PageSimple>
 
 LoginPage.propTypes = {
+  match: T.shape({
+    params: T.shape({
+      forceInternalAccount: T.bool
+    })
+  }).isRequired,
   history: T.shape({
     push: T.func.isRequired,
     goBack: T.func.isRequired

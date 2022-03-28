@@ -30,7 +30,8 @@ class HomeMain extends Component {
           {from: '/', exact: true, to: '/home',    disabled: this.props.unavailable || !this.props.hasHome},
           {from: '/', exact: true, to: '/desktop', disabled: this.props.unavailable || this.props.hasHome || !this.props.authenticated},
 
-          {from: '/login', to: '/', disabled: !this.props.authenticated}
+          {from: '/login', to: '/', disabled: !this.props.authenticated},
+          {from: '/registration', to: '/', disabled: !this.props.unavailable || this.props.selfRegistration || !this.props.authenticated}
         ]}
         routes={[
           {
@@ -54,7 +55,7 @@ class HomeMain extends Component {
             path: '/newpassword/:hash',
             component: NewPassword
           }, {
-            path: '/login',
+            path: '/login/:forceInternalAccount(account)?',
             disabled: this.props.authenticated,
             component: HomeLogin
           }, {
