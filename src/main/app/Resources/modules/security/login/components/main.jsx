@@ -4,20 +4,18 @@ import classes from 'classnames'
 
 import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
-import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
-import {FormData} from '#/main/app/content/form/containers/data'
+import {LINK_BUTTON} from '#/main/app/buttons'
 import {ContentHtml} from '#/main/app/content/components/html'
 
 import {getSso} from '#/main/authentication/sso'
-import {selectors} from '#/main/app/security/login/store/selectors'
+import {LoginAccount} from '#/main/app/security/login/components/account'
 
-class LoginForm extends Component {
+class LoginMain extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      sso: {},
-      inProgress: false
+      sso: {}
     }
   }
 
@@ -36,20 +34,23 @@ class LoginForm extends Component {
     const primarySso = this.props.sso.find(sso => sso.primary)
     const otherSso = this.props.sso.filter(sso => !sso.primary)
 
+    // check if we want to show the form to log in with a claroline account
+    const internalAccount = this.props.forceInternalAccount || this.props.internalAccount
+
     return (
       <Fragment>
         {this.props.help &&
           <div className={classes('login-container', {
-            'login-with-sso': this.props.internalAccount && otherSso.length
+            'login-with-sso': internalAccount && otherSso.length
           })}>
             <ContentHtml className="panel-body">{this.props.help}</ContentHtml>
           </div>
         }
 
         <div className={classes('login-container', {
-          'login-with-sso': this.props.internalAccount && otherSso.length
+          'login-with-sso': internalAccount && otherSso.length
         })}>
-          {this.props.internalAccount &&
+          {internalAccount &&
             <div className="authentication-column account-authentication-column">
               {primarySso && this.state.sso[primarySso.service] &&
                 <div className="primary-external-authentication-column">
@@ -61,57 +62,12 @@ class LoginForm extends Component {
 
               <p className="authentication-help">{trans('login_auth_claro_account', {platform: this.props.platformName})}</p>
 
-              <FormData
-                name={selectors.FORM_NAME}
-                alertExit={false}
-                sections={[
-                  {
-                    title: trans('general'),
-                    primary: true,
-                    fields: [
-                      {
-                        name: 'username',
-                        label: trans('username_or_email'),
-                        placeholder: this.props.username ? trans('username_or_email') : trans('email'),
-                        hideLabel: true,
-                        type: 'username',
-                        required: true
-                      }, {
-                        name: 'password',
-                        label: trans('password'),
-                        placeholder: trans('password'),
-                        autoComplete: 'current-password',
-                        hideLabel: true,
-                        type: 'password',
-                        required: true
-                      }
-                    ]
-                  }
-                ]}
-              >
-                <Button
-                  className="btn btn-block btn-emphasis"
-                  type={CALLBACK_BUTTON}
-                  htmlType="submit"
-                  label={!this.state.inProgress ? trans('login'):trans('login_in_progress')}
-                  disabled={this.state.inProgress}
-                  callback={() => {
-                    this.setState({inProgress: true})
-                    this.props.login(this.props.onLogin).then(() => this.setState({inProgress: false}))
-                  }}
-                  primary={true}
-                />
-              </FormData>
-
-              {this.props.resetPassword &&
-                <Button
-                  className="btn-link btn-block"
-                  type={LINK_BUTTON}
-                  label={trans('forgot_password')}
-                  target="/reset_password"
-                  primary={true}
-                />
-              }
+              <LoginAccount
+                username={this.props.username}
+                resetPassword={this.props.resetPassword}
+                login={this.props.login}
+                onLogin={this.props.onLogin}
+              />
 
               {0 !== otherSso.length &&
                 <div className="authentication-or">
@@ -123,7 +79,7 @@ class LoginForm extends Component {
 
           {0 !== otherSso.length &&
             <div className="authentication-column external-authentication-column">
-              {!this.props.internalAccount && primarySso && this.state.sso[primarySso.service] &&
+              {!internalAccount && primarySso && this.state.sso[primarySso.service] &&
                 <div className="primary-external-authentication-column">
                   {createElement(this.state.sso[primarySso.service].components.button, Object.assign({}, primarySso, {
                     label: primarySso.label || trans('login_with_third_party_btn', {name: trans(primarySso.service, {}, 'oauth')})
@@ -131,7 +87,7 @@ class LoginForm extends Component {
                 </div>
               }
 
-              <p className="authentication-help">{trans(!this.props.internalAccount ? 'login_auth_sso' : 'login_auth_sso_other')}</p>
+              <p className="authentication-help">{trans(!internalAccount ? 'login_auth_sso' : 'login_auth_sso_other')}</p>
 
               {otherSso.map(sso => this.state.sso[sso.service] ?
                 createElement(this.state.sso[sso.service].components.button, Object.assign({}, sso, {
@@ -145,14 +101,14 @@ class LoginForm extends Component {
 
         {this.props.showClientIp &&
           <div className={classes('authentication-client-ip', {
-            'login-with-sso': this.props.internalAccount && otherSso.length
+            'login-with-sso': internalAccount && otherSso.length
           })}>{trans('location')} : {this.props.clientIp}</div>
         }
 
         {this.props.registration &&
           <Button
             className={classes('btn btn-lg btn-block btn-registration', {
-              'login-with-sso': this.props.internalAccount && 0 !== otherSso.length
+              'login-with-sso': internalAccount && 0 !== otherSso.length
             })}
             type={LINK_BUTTON}
             label={trans('create-account', {}, 'actions')}
@@ -164,10 +120,11 @@ class LoginForm extends Component {
   }
 }
 
-LoginForm.propTypes = {
+LoginMain.propTypes = {
   platformName: T.string.isRequired,
   help: T.string,
   internalAccount: T.bool.isRequired,
+  forceInternalAccount: T.bool,
   showClientIp: T.bool.isRequired,
   clientIp: T.string,
   sso: T.arrayOf(T.shape({
@@ -182,6 +139,10 @@ LoginForm.propTypes = {
   onLogin: T.func
 }
 
+LoginMain.defaultProps = {
+  forceInternalAccount: false
+}
+
 export {
-  LoginForm
+  LoginMain
 }

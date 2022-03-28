@@ -4,7 +4,7 @@ import omit from 'lodash/omit'
 
 import BaseModal from 'react-bootstrap/lib/Modal'
 
-import {LoginForm} from '#/main/app/security/login/containers/form'
+import {LoginMain} from '#/main/app/security/login/containers/main'
 
 class LoginModal extends Component {
   constructor(props) {
@@ -32,7 +32,7 @@ class LoginModal extends Component {
           this.props.hideModal()
         }}
       >
-        <LoginForm
+        <LoginMain
           onLogin={(response) => {
             this.setState({
               aborted: false
