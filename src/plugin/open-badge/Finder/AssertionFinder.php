@@ -42,6 +42,7 @@ class AssertionFinder extends AbstractFinder
     {
         $userJoin = false;
         $workspaceJoin = false;
+        $badgeJoin = false;
 
         if (!array_key_exists('userDisabled', $searches) && !array_key_exists('user', $searches) && !array_key_exists('recipient', $searches)) {
             // don't show assertions of disabled/deleted users
@@ -58,13 +59,19 @@ class AssertionFinder extends AbstractFinder
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
                 case 'badge':
-                    $qb->join('obj.badge', 'b');
+                    if (!$badgeJoin) {
+                        $qb->join('obj.badge', 'b');
+                        $badgeJoin = true;
+                    }
                     $qb->andWhere('b.uuid = :badge');
                     $qb->setParameter('badge', $filterValue);
                     break;
                 case 'workspace':
                     if (!$workspaceJoin) {
-                        $qb->leftJoin('obj.badge', 'b');
+                        if (!$badgeJoin) {
+                            $qb->join('obj.badge', 'b');
+                            $badgeJoin = true;
+                        }
                         $qb->join('b.workspace', 'w');
                         $workspaceJoin = true;
                     }
@@ -98,9 +105,13 @@ class AssertionFinder extends AbstractFinder
                         'grant'
                     );
 
+                    if (!$badgeJoin) {
+                        $qb->join('obj.badge', 'b');
+                        $badgeJoin = true;
+                    }
+
                     if (!$workspaceJoin) {
-                        $qb->leftJoin('obj.badge', 'b');
-                        $qb->join('b.workspace', 'w');
+                        $qb->leftJoin('b.workspace', 'w');
                         $workspaceJoin = true;
                     }
 
@@ -124,11 +135,13 @@ class AssertionFinder extends AbstractFinder
                         ->getDQL()
                     ;
 
+                    $administratedOrganizations = $user->getAdministratedOrganizations()->toArray();
+
                     $qb->andWhere($qb->expr()->orX(
                         // always assignable by organization managers
-                        $qb->expr()->in('o.id', array_map(function (Organization $organization) {
+                        !empty($administratedOrganizations) ? $qb->expr()->in('o.id', array_map(function (Organization $organization) {
                             return $organization->getId();
-                        }, $user->getAdministratedOrganizations()->toArray())),
+                        }, $administratedOrganizations)) : null,
 
                         // assignable by users with GRANT rights on the tool
                         $qb->expr()->exists($subQb),
