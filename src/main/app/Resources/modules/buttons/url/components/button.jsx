@@ -7,8 +7,6 @@ import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 
 import {Button as ButtonTypes} from '#/main/app/buttons/prop-types'
 
-// todo implement confirm behavior
-
 /**
  * URL button.
  * Renders a component that will navigate user to an url (internal or external) on click.
