@@ -29,6 +29,7 @@ class PlatformDefaults implements ParameterProviderInterface
                 //   - metadata      : the path to the metadata file (either URL or local files are allowed)
                 //   - active        : enable or disable a single idp
                 //   - label         : the label to display when displaying the login button
+                //   - confirm       : a confirm text to display before redirecting to the IDP login page
                 //   - email_domains : an array of email domains. If specified, only users with matching emails will be registered to idp groups and organization
                 //   - conditions    : an array of expected saml response values (key is the field name). If specified, only users who match those values will be registered to groups and organization
                 //   - organization  : An organization UUID to register users created from this idp
