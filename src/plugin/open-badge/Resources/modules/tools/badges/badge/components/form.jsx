@@ -143,6 +143,10 @@ const BadgeFormComponent = (props) =>
             type: 'boolean',
             label: trans('enable_manual_issuing', {}, 'badge')
           }, {
+            name: 'notifyGrant',
+            type: 'boolean',
+            label: trans('notify_grant', {}, 'badge')
+          }, {
             name: '_autoIssuing',
             type: 'boolean',
             label: trans('enable_auto_issuing', {}, 'badge'),

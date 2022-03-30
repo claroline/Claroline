@@ -122,6 +122,7 @@ class BadgeClassSerializer
             ];
 
             if (!in_array(APIOptions::SERIALIZE_MINIMAL, $options)) {
+                $data['notifyGrant'] = $badge->getNotifyGrant();
                 $data['issuingPeer'] = $badge->hasIssuingPeer();
                 $data['restrictions'] = [
                     'hideRecipients' => $badge->getHideRecipients(),
@@ -147,6 +148,7 @@ class BadgeClassSerializer
         $this->sipe('criteria', 'setCriteria', $data, $badge);
         $this->sipe('duration', 'setDurationValidation', $data, $badge);
         $this->sipe('issuingPeer', 'setIssuingPeer', $data, $badge);
+        $this->sipe('notifyGrant', 'setNotifyGrant', $data, $badge);
         $this->sipe('meta.enabled', 'setEnabled', $data, $badge);
         $this->sipe('restrictions.hideRecipients', 'setHideRecipients', $data, $badge);
 

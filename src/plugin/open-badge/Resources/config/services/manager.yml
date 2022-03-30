@@ -14,6 +14,9 @@ services:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@event_dispatcher'
+            - '@Claroline\AppBundle\Manager\PlatformManager'
+            - '@Claroline\CoreBundle\Library\RoutingHelper'
+            - '@Claroline\CoreBundle\Manager\Template\TemplateManager'
 
     Claroline\OpenBadgeBundle\Manager\RuleManager:
         arguments:
