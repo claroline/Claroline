@@ -12,6 +12,7 @@
 namespace Claroline\OpenBadgeBundle\Controller\API;
 
 use Claroline\AppBundle\Controller\AbstractCrudController;
+use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
@@ -24,6 +25,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
@@ -35,6 +37,8 @@ class BadgeClassController extends AbstractCrudController
 
     /** @var AuthorizationCheckerInterface */
     private $authorization;
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
     /** @var BadgeManager */
     private $manager;
     /** @var AssertionManager */
@@ -42,10 +46,12 @@ class BadgeClassController extends AbstractCrudController
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
+        TokenStorageInterface $tokenStorage,
         BadgeManager $manager,
         AssertionManager $assertionManager
     ) {
         $this->authorization = $authorization;
+        $this->tokenStorage = $tokenStorage;
         $this->manager = $manager;
         $this->assertionManager = $assertionManager;
     }
@@ -194,5 +200,24 @@ class BadgeClassController extends AbstractCrudController
         $this->manager->grantAll($badge);
 
         return new JsonResponse();
+    }
+
+    protected function getDefaultHiddenFilters()
+    {
+        if (!$this->authorization->isGranted('ROLE_ADMIN')) {
+            $user = $this->tokenStorage->getToken()->getUser();
+
+            if ($user instanceof User) {
+                return [
+                    'organizations' => array_map(function (Organization $organization) {
+                        return $organization->getUuid();
+                    }, $user->getOrganizations()),
+                ];
+            }
+
+            return ['organizations' => []];
+        }
+
+        return [];
     }
 }

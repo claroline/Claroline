@@ -23,6 +23,7 @@ services:
         public: true
         arguments:
             - '@security.authorization_checker'
+            - '@security.token_storage'
             - '@Claroline\OpenBadgeBundle\Manager\BadgeManager'
             - '@Claroline\OpenBadgeBundle\Manager\AssertionManager'
 
