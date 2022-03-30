@@ -8,6 +8,9 @@ import {selectors} from '#/plugin/message/tools/messaging/store/selectors'
 import {MESSAGE_LOAD} from '#/plugin/message/tools/messaging/store/actions'
 
 const reducer = combineReducers({
+  mailNotified: makeReducer(false, {
+    [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: (state, action) => action.toolData.mailNotified
+  }),
   contacts: makeListReducer(`${selectors.STORE_NAME}.contacts`, {}, {
     invalidated: makeReducer(false, {
       [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: () => true

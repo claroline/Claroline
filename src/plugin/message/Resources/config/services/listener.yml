@@ -7,7 +7,7 @@ services:
     Claroline\MessageBundle\Listener\Tool\MessagingListener:
         arguments:
             - '@security.token_storage'
-            - '@Claroline\MessageBundle\Manager\ContactManager'
+            - '@Claroline\AppBundle\API\Crud'
         tags:
             - { name: kernel.event_listener, event: open_tool_desktop_messaging, method: onDisplayDesktop }
             - { name: kernel.event_listener, event: desktop.messaging.configure, method: onConfigureDesktop }

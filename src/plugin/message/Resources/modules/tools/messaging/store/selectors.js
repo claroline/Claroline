@@ -9,7 +9,13 @@ const message = createSelector(
   (store) => store.currentMessage
 )
 
+const mailNotified = createSelector(
+  [store],
+  (store) => store.mailNotified
+)
+
 export const selectors = {
   STORE_NAME,
-  message
+  message,
+  mailNotified
 }

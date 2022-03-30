@@ -8,7 +8,6 @@ import {ToolPage} from '#/main/core/tool/containers/page'
 
 import {MODAL_USERS} from '#/main/core/modals/users'
 import {MODAL_MESSAGE} from '#/plugin/message/modals/message'
-import {MODAL_MESSAGING_PARAMETERS} from '#/plugin/message/tools/messaging/modals/parameters'
 
 import {Contacts} from '#/plugin/message/tools/messaging/components/contacts'
 import {ReceivedMessages} from '#/plugin/message/tools/messaging/components/received-messages'
@@ -39,13 +38,6 @@ const MessagingTool = (props) =>
             callback: () => props.addContacts(users.map(r => r.id))
           })
         }]
-      }, {
-        name: 'configure',
-        type: MODAL_BUTTON,
-        icon: 'fa fa-fw fa-cog',
-        label: trans('configure', {}, 'actions'),
-        modal: [MODAL_MESSAGING_PARAMETERS],
-        group: trans('management')
       }
     ]}
     subtitle={
