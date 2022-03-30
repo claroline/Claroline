@@ -17,13 +17,12 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class ConfigureToolEvent extends Event implements DataConveyorEventInterface
 {
+    /** @var array */
     private $parameters;
-
+    /** @var Workspace|null */
     private $workspace;
-
     /** @var array */
     private $data = [];
-
     /** @var bool */
     private $isPopulated = false;
 

@@ -11,31 +11,25 @@
 
 namespace Claroline\MessageBundle\Listener\Tool;
 
+use Claroline\AppBundle\API\Crud;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Tool\ConfigureToolEvent;
 use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
-use Claroline\MessageBundle\Manager\ContactManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-/**
- * Messaging tool.
- */
 class MessagingListener
 {
     /** @var TokenStorageInterface */
     private $tokenStorage;
+    /** @var Crud */
+    private $crud;
 
-    /** @var ContactManager */
-    private $contactManager;
-
-    /**
-     * ContactsListener constructor.
-     */
     public function __construct(
         TokenStorageInterface $tokenStorage,
-        ContactManager $contactManager)
-    {
+        Crud $crud
+    ) {
         $this->tokenStorage = $tokenStorage;
-        $this->contactManager = $contactManager;
+        $this->crud = $crud;
     }
 
     /**
@@ -43,7 +37,15 @@ class MessagingListener
      */
     public function onDisplayDesktop(OpenToolEvent $event)
     {
-        $event->setData([]);
+        $mailNotified = false;
+        $currentUser = $this->tokenStorage->getToken()->getUser();
+        if ($currentUser instanceof User) {
+            $mailNotified = $currentUser->isMailNotified();
+        }
+
+        $event->setData([
+            'mailNotified' => $mailNotified,
+        ]);
         $event->stopPropagation();
     }
 
@@ -52,7 +54,28 @@ class MessagingListener
      */
     public function onConfigureDesktop(ConfigureToolEvent $event)
     {
-        $event->setData([]);
+        $parameters = $event->getParameters();
+
+        $currentUser = $this->tokenStorage->getToken()->getUser();
+        if (!($currentUser instanceof User)) {
+            $event->setData([]);
+            $event->stopPropagation();
+
+            return;
+        }
+
+        $mailNotified = false;
+        if (isset($parameters['mailNotified'])) {
+            $mailNotified = $parameters['mailNotified'];
+        }
+
+        $this->crud->update($this->tokenStorage->getToken()->getUser(), [
+            'meta' => ['mailNotified' => $mailNotified],
+        ], [Crud::NO_PERMISSIONS, Crud::THROW_EXCEPTION]);
+
+        $event->setData([
+            'mailNotified' => $mailNotified,
+        ]);
         $event->stopPropagation();
     }
 }
