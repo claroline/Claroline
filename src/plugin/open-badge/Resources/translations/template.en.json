@@ -2,6 +2,8 @@
     "assertion_id_desc": "The id of the issued badge",
     "badge_certificate": "Badge certificate",
     "badge_certificate_desc": "Template used for badge certificate",
+    "badge_granted": "Awarding a badge",
+    "badge_granted_desc": "Template used to notify users when they get a badge.",
     "badge_description_desc": "Description of the badge",
     "badge_duration_desc": "Validity duration of the badge",
     "badge_image_desc": "The image of the badge",

@@ -53,5 +53,6 @@
   "hide_recipients": "Hide the list of badge recipients",
   "score_above_help": "This value represents the percentage of the total score to be obtained.",
   "addBadge": "The badge badgeName has been added to the user userName",
-  "removeBadge": "The badge badgeName has been removed to the user userName"
+  "removeBadge": "The badge badgeName has been removed to the user userName",
+  "notify_grant": "Notify users when the badge is granted"
 }

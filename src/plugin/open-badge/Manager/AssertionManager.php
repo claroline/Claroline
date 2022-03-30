@@ -2,8 +2,13 @@
 
 namespace Claroline\OpenBadgeBundle\Manager;
 
+use Claroline\AppBundle\Manager\PlatformManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Event\CatalogEvents\MessageEvents;
+use Claroline\CoreBundle\Event\SendMessageEvent;
+use Claroline\CoreBundle\Library\RoutingHelper;
+use Claroline\CoreBundle\Manager\Template\TemplateManager;
 use Claroline\OpenBadgeBundle\Entity\Assertion;
 use Claroline\OpenBadgeBundle\Entity\BadgeClass;
 use Claroline\OpenBadgeBundle\Entity\Evidence;
@@ -18,13 +23,25 @@ class AssertionManager
     private $om;
     /** @var EventDispatcherInterface */
     private $dispatcher;
+    /** @var PlatformManager */
+    private $platformManager;
+    /** @var RoutingHelper */
+    private $routingHelper;
+    /** @var TemplateManager */
+    private $templateManager;
 
     public function __construct(
         ObjectManager $om,
-        EventDispatcherInterface $dispatcher
+        EventDispatcherInterface $dispatcher,
+        PlatformManager $platformManager,
+        RoutingHelper $routingHelper,
+        TemplateManager $templateManager
     ) {
         $this->om = $om;
         $this->dispatcher = $dispatcher;
+        $this->platformManager = $platformManager;
+        $this->routingHelper = $routingHelper;
+        $this->templateManager = $templateManager;
     }
 
     /**
@@ -79,6 +96,10 @@ class AssertionManager
         $this->om->persist($assertion);
         $this->om->flush();
 
+        if ($badge->getNotifyGrant()) {
+            $this->notifyRecipient($assertion);
+        }
+
         $this->dispatcher->dispatch(new AddBadgeEvent($user, $badge), BadgeEvents::ADD_BADGE);
 
         return $assertion;
@@ -102,5 +123,40 @@ class AssertionManager
         $this->om->flush();
 
         $this->dispatcher->dispatch(new RemoveBadgeEvent($assertion->getRecipient(), $assertion->getBadge()), BadgeEvents::REMOVE_BADGE);
+    }
+
+    private function notifyRecipient(Assertion $assertion)
+    {
+        $user = $assertion->getRecipient();
+        $badge = $assertion->getBadge();
+        $organization = $badge->getIssuer();
+
+        $locale = $user->getLocale();
+        $placeholders = [
+            //recipient
+            'first_name' => $user->getFirstName(),
+            'last_name' => $user->getLastName(),
+            'username' => $user->getUsername(),
+            // badge
+            'badge_name' => $badge->getName(),
+            'badge_description' => $badge->getDescription(),
+            'badge_image' => '<img src="'.$this->platformManager->getUrl().'/'.$badge->getImage().'" style="max-width: 100px; max-height: 50px;"/>',
+            'badge_image_url' => $this->platformManager->getUrl().'/'.$badge->getImage(),
+            'badge_duration' => $badge->getDurationValidation(),
+            // assertion
+            'assertion_url' => $this->routingHelper->desktopUrl('badges')."/badges/{$badge->getUuid()}/assertion/{$assertion->getUuid()}",
+            'issued_on' => $assertion->getIssuedOn()->format('d-m-Y'),
+            // issuer
+            'issuer_name' => $organization->getName(),
+        ];
+
+        $title = $this->templateManager->getTemplate('badge_granted', $placeholders, $locale, 'title');
+        $content = $this->templateManager->getTemplate('badge_granted', $placeholders, $locale);
+
+        $this->dispatcher->dispatch(new SendMessageEvent(
+            $content,
+            $title,
+            [$user]
+        ), MessageEvents::MESSAGE_SENDING);
     }
 }

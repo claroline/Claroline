@@ -1,7 +1,9 @@
 {
     "assertion_id_desc": "L'identifiant d'attribution du badge",
     "badge_certificate": "Certificat d'un badge",
-    "badge_certificate_desc": "Template utilisé pour le certificat d'un badge",
+    "badge_certificate_desc": "Template utilisé pour le certificat d'un badge.",
+    "badge_granted": "Attribution d'un badge",
+    "badge_granted_desc": "Template utilisé pour notifier des utilisateurs lorsqu'ils obtiennent un badge.",
     "badge_description_desc": "La description du badge",
     "badge_duration_desc": "La durée de validité du badge",
     "badge_image_desc": "L'icône du badge",

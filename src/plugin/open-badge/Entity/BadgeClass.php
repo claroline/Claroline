@@ -135,12 +135,20 @@ class BadgeClass
      */
     private $issuingPeer = false;
 
+    /**
+     * Notifies users when they are granted the badge.
+     *
+     * @ORM\Column(type="boolean")
+     *
+     * @var bool
+     */
+    private $notifyGrant = false;
+
     public function __construct()
     {
         $this->refreshUuid();
 
         $this->rules = new ArrayCollection();
-        $this->assertions = new ArrayCollection();
     }
 
     /**
@@ -327,6 +335,16 @@ class BadgeClass
     public function hasIssuingPeer(): bool
     {
         return $this->issuingPeer;
+    }
+
+    public function setNotifyGrant(bool $notifyGrant)
+    {
+        $this->notifyGrant = $notifyGrant;
+    }
+
+    public function getNotifyGrant(): bool
+    {
+        return $this->notifyGrant;
     }
 
     /**
