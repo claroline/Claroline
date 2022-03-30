@@ -13,6 +13,8 @@ services:
     # DataSources
     Claroline\OpenBadgeBundle\Listener\DataSource\BadgesSource:
         arguments:
+            - '@security.authorization_checker'
+            - '@security.token_storage'
             - '@Claroline\AppBundle\API\FinderProvider'
         tags:
             - { name: kernel.event_listener, event: data_source.badges.load, method: getData }
