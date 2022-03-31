@@ -71,6 +71,8 @@ services:
 
     Claroline\CoreBundle\Listener\DataSource\UserSource:
         arguments:
+            - '@security.authorization_checker'
+            - '@security.token_storage'
             - '@Claroline\AppBundle\API\FinderProvider'
         tags:
             - { name: kernel.event_listener, event: data_source.users.load, method: getData }
