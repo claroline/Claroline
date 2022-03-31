@@ -32,7 +32,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @Route("/user")
@@ -81,27 +80,6 @@ class UserController extends AbstractCrudController
     public function getClass()
     {
         return User::class;
-    }
-
-    /**
-     * @ApiDoc(
-     *     description="List the objects of class $class.",
-     *     queryString={
-     *         "$finder",
-     *         {"name": "page", "type": "integer", "description": "The queried page."},
-     *         {"name": "limit", "type": "integer", "description": "The max amount of objects per page."},
-     *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
-     *     },
-     *     response={"$list"}
-     * )
-     */
-    public function listAction(Request $request, $class): JsonResponse
-    {
-        if (!$this->authorization->isGranted('IS_AUTHENTICATED_FULLY')) {
-            throw new AccessDeniedException();
-        }
-
-        return parent::listAction($request, $class);
     }
 
     /**
@@ -201,8 +179,8 @@ class UserController extends AbstractCrudController
      */
     public function mergeUsersAction(User $keep, User $remove): JsonResponse
     {
-        $this->checkPermission('ADMINISTRATE', $keep, true);
-        $this->checkPermission('ADMINISTRATE', $remove, true);
+        $this->checkPermission('ADMINISTRATE', $keep, [], true);
+        $this->checkPermission('ADMINISTRATE', $remove, [], true);
 
         return new JsonResponse(
             $this->manager->merge($keep, $remove)
@@ -345,10 +323,18 @@ class UserController extends AbstractCrudController
         if (!$this->authorization->isGranted('ROLE_ADMIN')) {
             $user = $this->tokenStorage->getToken()->getUser();
 
+            if ($user instanceof User) {
+                // only shows users of the same organizations
+                return [
+                    'recursiveOrXOrganization' => array_map(function (Organization $organization) {
+                        return $organization->getUuid();
+                    }, $user->getOrganizations()),
+                ];
+            }
+
+            // anonymous will see nothing
             return [
-                'recursiveOrXOrganization' => array_map(function (Organization $organization) {
-                    return $organization->getUuid();
-                }, $user->getOrganizations()),
+                'recursiveOrXOrganization' => [],
             ];
         }
 
