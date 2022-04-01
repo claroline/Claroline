@@ -64,6 +64,8 @@ abstract class AbstractFinder implements FinderInterface
 
     /**
      * Might not be fully functional with the unions.
+     *
+     * @deprecated
      */
     public function delete(array $filters = [])
     {

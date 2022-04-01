@@ -65,20 +65,28 @@ class MailManager
     {
         $this->dispatcher->dispatch(SecurityEvents::FORGOT_PASSWORD, ForgotPasswordEvent::class, [$user]);
 
-        $this->userManager->initializePassword($user);
-        $hash = $user->getResetPasswordHash();
-        $link = $this->router->generate(
-            'claro_index',
-            [],
-            UrlGeneratorInterface::ABSOLUTE_URL
-        )."#/newpassword/{$hash}";
+        $locale = $this->localeManager->getLocale($user);
         $placeholders = [
             'first_name' => $user->getFirstName(),
             'last_name' => $user->getLastName(),
             'username' => $user->getUsername(),
-            'password_reset_link' => $link,
         ];
-        $locale = $this->localeManager->getLocale($user);
+
+        if (!$user->isEnabled()) {
+            $subject = $this->templateManager->getTemplate('user_disabled', $placeholders, $locale, 'title');
+            $body = $this->templateManager->getTemplate('user_disabled', $placeholders, $locale);
+
+            return $this->send($subject, $body, [$user], null, [], true);
+        }
+
+        $this->userManager->initializePassword($user);
+
+        $placeholders['password_reset_link'] = $this->router->generate(
+            'claro_index',
+            [],
+            UrlGeneratorInterface::ABSOLUTE_URL
+        )."#/newpassword/{$user->getResetPasswordHash()}";
+
         $subject = $this->templateManager->getTemplate('forgotten_password', $placeholders, $locale, 'title');
         $body = $this->templateManager->getTemplate('forgotten_password', $placeholders, $locale);
 

@@ -37,6 +37,7 @@ actions.changeUser = (user, impersonated = false, administration = false) => (di
 actions.login = (username, password, rememberMe) => ({
   [apiConst.API_REQUEST]: {
     silent: true,
+    forceReauthenticate: false,
     url: ['claro_security_login'],
     request: {
       method: 'POST',

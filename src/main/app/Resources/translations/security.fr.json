@@ -11,10 +11,10 @@
   "validateEmail": "L'utilisateur username a validé son adresse email",
   "authenticationFailure": "Connexion échoué pour l'utilisateur username : message",
   "switchUser": "L'utilisateur username a utilisé la fonctionnalité 'voir en tant que' avec l'utilisateur target",
-  "security.add_role": "Ajout d'un role",
-  "security.add_role.desc": "Le Role role vient d'être ajouté à l'utilisateur username.",
-  "security.remove_role": "Suppression d'un role",
-  "security.remove_role.desc": "Le Role role vient d'être retiré de l'utilisateur username.",
+  "security.add_role": "Ajout d'un rôle",
+  "security.add_role.desc": "Le Rôle role vient d'être ajouté à l'utilisateur username.",
+  "security.remove_role": "Suppression d'un rôle",
+  "security.remove_role.desc": "Le Rôle role vient d'être retiré de l'utilisateur username.",
   "security.user_login": "Connexion utilisateur",
   "security.user_logout": "Deconnexion utilisateur",
   "security.user_enable": "Activation utilisateur",
@@ -24,5 +24,6 @@
   "security.view_as": "Voir en tant que",
   "security.switch_user": "Voir en tant que",
   "security.validate_email": "Validation de l'email",
-  "security.authentication_failure": "Authentification échouée"
+  "security.authentication_failure": "Authentification échouée",
+  "Your user account no longer exists.": "Votre compte utilisateur est désactivé. Veuillez contacter un administrateur."
 }
