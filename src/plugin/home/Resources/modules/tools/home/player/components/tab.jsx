@@ -34,7 +34,7 @@ class PlayerTab extends Component {
 
   componentDidUpdate(prevProps) {
     if (this.props.currentTab) {
-      if (this.props.currentTab.slug !== get(prevProps, 'currentTab.slug')) {
+      if (this.props.currentTab.slug !== get(prevProps, 'currentTab.slug') || (prevProps.loaded !== this.props.loaded && !this.props.loaded)) {
         this.props.open(this.props.currentTab)
       }
 
