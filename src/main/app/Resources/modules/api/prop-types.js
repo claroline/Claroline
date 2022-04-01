@@ -48,6 +48,12 @@ const ApiRequest = {
     silent: T.bool,
 
     /**
+     * Displays the login modal if API returns authentication errors (aka 401 http status).
+     * This is mostly used to avoid login errors to reopen another login modal.
+     */
+    forceReauthenticate: T.bool,
+
+    /**
      * An object permitting to override the messages displayed to the user
      * during the lifecycle of the Request.
      * Each key in the object is the status name to override.
@@ -77,6 +83,7 @@ const ApiRequest = {
   },
   defaultProps: {
     silent: false,
+    forceReauthenticate: true,
     request: {
       method: 'GET',
       credentials: 'include',

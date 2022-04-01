@@ -316,6 +316,9 @@ plugin:
           placeholders:
               - password_reset_link
 
+        - name: user_disabled
+          type: email
+
         # not sent
         - name: workspace_registration
           type: email
