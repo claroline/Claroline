@@ -54,12 +54,12 @@ class TermsOfServiceManager
 
         $allTerms = $this->getTermsOfService();
         if (!empty($allTerms)) {
-            if ($locale && $allTerms[$locale]) {
+            if ($locale && !empty($allTerms[$locale])) {
                 $terms = $allTerms[$locale];
-            } elseif ($allTerms[$this->config->getParameter('locales.default')]) {
+            } elseif (!empty($allTerms[$this->config->getParameter('locales.default')])) {
                 $terms = $allTerms[$this->config->getParameter('locales.default')];
             } else {
-                $terms = $allTerms[0];
+                $terms = array_shift($allTerms);
             }
         }
 
