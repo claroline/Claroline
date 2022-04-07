@@ -37,7 +37,20 @@ const EditorParameters = props =>
             label: trans('fields_list'),
             options: {
               placeholder: trans('no_field', {}, 'clacoform')
-            }
+            },
+            calculated: (data) => []
+              .concat(data.fields || [])
+              .sort((a, b) => {
+                if (get(a, 'display.order') < get(b, 'display.order')) {
+                  return -1
+                }
+
+                if (get(a, 'display.order') > get(b, 'display.order')) {
+                  return 1
+                }
+
+                return 0
+              })
           }
         ]
       }, {

@@ -29,7 +29,20 @@ const fields = createSelector(
 
 const visibleFields = createSelector(
   [fields],
-  (fields) => fields.filter(f => !f.restrictions.hidden)
+  (fields) => []
+    .concat(fields || [])
+    .sort((a, b) => {
+      if (get(a, 'display.order') < get(b, 'display.order')) {
+        return -1
+      }
+
+      if (get(a, 'display.order') > get(b, 'display.order')) {
+        return 1
+      }
+
+      return 0
+    })
+    .filter(f => !f.restrictions.hidden)
 )
 
 const template = createSelector(
