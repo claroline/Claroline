@@ -27,7 +27,7 @@ class SamlSsoListener
                     $sso[] = [
                         'service' => 'saml',
                         'label' => !empty($idpConfig['label']) ? $idpConfig['label'] : $entityId,
-                        'confirm' => !empty($idpConfig['confirm']) ? $idpConfig['confirm'] : $entityId,
+                        'confirm' => !empty($idpConfig['confirm']) ? $idpConfig['confirm'] : null,
                         'primary' => false,
                         'idp' => $entityId,
                     ];

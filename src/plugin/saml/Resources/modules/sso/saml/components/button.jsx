@@ -9,6 +9,7 @@ const SamlButton = props =>
   <SsoButton
     icon={constants.SERVICE_ICON}
     service={constants.SERVICE_NAME}
+    label={props.label}
     target={['lightsaml_sp.login', {idp: props.idp, redirectPath: window.location.hash}]}
     confirm={props.confirm ? {
       message: props.confirm,
