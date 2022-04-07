@@ -41,7 +41,7 @@ class BadgeManager
         $organization = $badge->getIssuer();
 
         /** @var Location $location */
-        $location = 0 < count($organization->getLocations()) ? $organization->getLocations()->toArray()[0] : null;
+        $location = $organization && 0 < count($organization->getLocations()) ? $organization->getLocations()->toArray()[0] : null;
 
         $placeholders = [
             // recipient
@@ -58,8 +58,8 @@ class BadgeManager
             'assertion_id' => $assertion->getUuid(),
             'issued_on' => $assertion->getIssuedOn()->format('d-m-Y'),
             // issuer
-            'issuer_name' => $organization->getName(),
-            'issuer_email' => $organization->getEmail(),
+            'issuer_name' => $organization ? $organization->getName() : '',
+            'issuer_email' => $organization ? $organization->getEmail() : '',
             'issuer_phone' => $location ? $location->getPhone() : null,
             'issuer_street' => $location ? $location->getAddressStreet1().' '.$location->getAddressStreet2() : null,
             'issuer_pc' => $location ? $location->getAddressPostalCode() : null,
