@@ -57,7 +57,6 @@ const UserList = props =>
         displayed: true
       }, {
         name: 'email',
-        alias: 'mail',
         type: 'email',
         label: trans('email'),
         displayed: true
