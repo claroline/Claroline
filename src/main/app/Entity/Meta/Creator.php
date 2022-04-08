@@ -10,7 +10,7 @@ trait Creator
     /**
      * The user who created the entity.
      *
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
      * @ORM\JoinColumn(onDelete="SET NULL")
      *
      * @var User
