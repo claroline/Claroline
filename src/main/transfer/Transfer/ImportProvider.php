@@ -188,7 +188,6 @@ class ImportProvider extends AbstractProvider
             if (0 === $i % $executor->getBatchSize()) {
                 try {
                     $this->om->forceFlush();
-                    $this->om->clear();
                 } catch (\Exception $e) {
                     $jsonLogger->info($e->getMessage());
                 }
@@ -197,7 +196,11 @@ class ImportProvider extends AbstractProvider
             $jsonLogger->increment('processed');
         }
 
-        $this->om->endFlushSuite();
+        try {
+            $this->om->endFlushSuite();
+        } catch (\Exception $e) {
+            $jsonLogger->info($e->getMessage());
+        }
 
         return $jsonLogger->get();
     }

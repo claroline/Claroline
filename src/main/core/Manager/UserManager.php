@@ -239,22 +239,26 @@ class UserManager
 
     public function enable(User $user)
     {
-        $user->enable();
-        $this->om->persist($user);
-        $this->om->flush();
+        if (!$user->isEnabled()) {
+            $user->enable();
+            $this->om->persist($user);
+            $this->om->flush();
 
-        $this->dispatcher->dispatch(SecurityEvents::USER_ENABLE, UserEnableEvent::class, [$user]);
+            $this->dispatcher->dispatch(SecurityEvents::USER_ENABLE, UserEnableEvent::class, [$user]);
+        }
 
         return $user;
     }
 
     public function disable(User $user)
     {
-        $user->disable();
-        $this->om->persist($user);
-        $this->om->flush();
+        if ($user->isEnabled()) {
+            $user->disable();
+            $this->om->persist($user);
+            $this->om->flush();
 
-        $this->dispatcher->dispatch(SecurityEvents::USER_DISABLE, UserDisableEvent::class, [$user]);
+            $this->dispatcher->dispatch(SecurityEvents::USER_DISABLE, UserDisableEvent::class, [$user]);
+        }
 
         return $user;
     }
