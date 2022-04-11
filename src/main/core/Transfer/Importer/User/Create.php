@@ -32,7 +32,7 @@ class Create extends AbstractImporter
     public function execute(array $data): array
     {
         $hasWs = false;
-        $options = [];
+        $options = [Options::FORCE_FLUSH];
 
         if (isset($data['meta']) && isset($data['meta']['personalWorkspace'])) {
             $hasWs = $data['meta']['personalWorkspace'];
@@ -73,7 +73,7 @@ class Create extends AbstractImporter
                     throw new \Exception('Role '.implode(',', $role).' does not exists');
                 }
 
-                $roles[] = $role;
+                $roles[] = $object;
             }
 
             // remove roles from input data to avoid the user serializer to process it
