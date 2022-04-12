@@ -11,7 +11,7 @@
 
 namespace Claroline\ClacoFormBundle\Listener\Resource;
 
-use Claroline\AppBundle\API\FinderProvider;
+use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
@@ -19,50 +19,55 @@ use Claroline\ClacoFormBundle\Entity\Category;
 use Claroline\ClacoFormBundle\Entity\ClacoForm;
 use Claroline\ClacoFormBundle\Entity\Entry;
 use Claroline\ClacoFormBundle\Entity\Field;
-use Claroline\ClacoFormBundle\Entity\FieldValue;
 use Claroline\ClacoFormBundle\Entity\Keyword;
 use Claroline\ClacoFormBundle\Manager\ClacoFormManager;
-use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\ExportObjectEvent;
-use Claroline\CoreBundle\Event\ImportObjectEvent;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
+use Claroline\CoreBundle\Event\Resource\ExportResourceEvent;
+use Claroline\CoreBundle\Event\Resource\ImportResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\RoleManager;
-use Ramsey\Uuid\Uuid;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class ClacoFormListener
 {
-    private $clacoFormManager;
-    private $om;
-    private $finder;
-    private $platformConfigHandler;
-    private $roleManager;
-    private $serializer;
+    /** @var TokenStorageInterface */
     private $tokenStorage;
+    /** @var AuthorizationCheckerInterface */
     private $authorization;
+    /** @var ObjectManager */
+    private $om;
+    /** @var Crud */
+    private $crud;
+    /** @var SerializerProvider */
+    private $serializer;
+    /** @var PlatformConfigurationHandler */
+    private $platformConfigHandler;
+    /** @var RoleManager */
+    private $roleManager;
+    /** @var ClacoFormManager */
+    private $clacoFormManager;
 
     public function __construct(
-        ClacoFormManager $clacoFormManager,
+        TokenStorageInterface $tokenStorage,
+        AuthorizationCheckerInterface $authorization,
         ObjectManager $om,
-        FinderProvider $finder,
+        SerializerProvider $serializer,
+        Crud $crud,
         PlatformConfigurationHandler $platformConfigHandler,
         RoleManager $roleManager,
-        SerializerProvider $serializer,
-        TokenStorageInterface $tokenStorage,
-        AuthorizationCheckerInterface $authorization
+        ClacoFormManager $clacoFormManager
     ) {
-        $this->clacoFormManager = $clacoFormManager;
-        $this->om = $om;
-        $this->finder = $finder;
-        $this->platformConfigHandler = $platformConfigHandler;
-        $this->roleManager = $roleManager;
-        $this->serializer = $serializer;
         $this->tokenStorage = $tokenStorage;
         $this->authorization = $authorization;
+        $this->om = $om;
+        $this->serializer = $serializer;
+        $this->crud = $crud;
+        $this->platformConfigHandler = $platformConfigHandler;
+        $this->roleManager = $roleManager;
+        $this->clacoFormManager = $clacoFormManager;
     }
 
     /**
@@ -72,6 +77,7 @@ class ClacoFormListener
     {
         /** @var ClacoForm $clacoForm */
         $clacoForm = $event->getResource();
+        /** @var User|string $user */
         $user = $this->tokenStorage->getToken()->getUser();
         $isAnon = !$user instanceof User;
         $myEntries = $isAnon ? [] : $this->clacoFormManager->getUserEntries($clacoForm, $user);
@@ -126,90 +132,81 @@ class ClacoFormListener
         $event->stopPropagation();
     }
 
-    public function onExport(ExportObjectEvent $exportEvent)
+    public function onExport(ExportResourceEvent $exportEvent)
     {
-        $clacoForm = $exportEvent->getObject();
-        $data = $exportEvent->getData();
-        $params = [];
-        $params['hiddenFilters']['clacoForm'] = $clacoForm->getId();
-        $data['_data']['entries'] = $this->finder->search(Entry::class, $params)['data'];
-
-        $exportEvent->setData($data);
-    }
-
-    public function onImportBefore(ImportObjectEvent $event)
-    {
-        $data = $event->getData();
-        $replaced = json_encode($event->getExtra());
-
-        foreach ($data['fields'] as $field) {
-            $uuid = Uuid::uuid4()->toString();
-            $replaced = str_replace($field['id'], $uuid, $replaced);
-        }
-
-        $data = json_decode($replaced, true);
-        $event->setExtra($data);
-    }
-
-    public function onImportAfter(ImportObjectEvent $event)
-    {
-        $data = $event->getData();
-
         /** @var ClacoForm $clacoForm */
-        $clacoForm = $event->getObject();
+        $clacoForm = $exportEvent->getResource();
 
-        foreach ($data['categories'] as $dataCategory) {
-            $category = new Category();
-            $category = $this->serializer->deserialize($dataCategory, $category, [Options::REFRESH_UUID]);
-            $category->setClacoForm($clacoForm);
-            $this->om->persist($category);
-        }
+        $exportEvent->setData([
+            'categories' => array_map(function (Category $category) {
+                return $this->serializer->serialize($category);
+            }, $clacoForm->getCategories()),
+            'keywords' => array_map(function (Keyword $keyword) {
+                return $this->serializer->serialize($keyword);
+            }, $clacoForm->getKeywords()),
+            'entries' => array_map(function (Entry $entry) {
+                return $this->serializer->serialize($entry);
+            }, $this->clacoFormManager->getAllEntries($clacoForm)),
+        ]);
+    }
 
-        foreach ($data['keywords'] as $dataKeyword) {
-            $keyword = new Keyword();
-            $keyword = $this->serializer->deserialize($dataKeyword, $keyword, [Options::REFRESH_UUID]);
-            $keyword->setClacoForm($clacoForm);
-            $this->om->persist($keyword);
-        }
+    public function onImport(ImportResourceEvent $event)
+    {
+        /** @var ClacoForm $clacoForm */
+        $clacoForm = $event->getResource();
+        $data = $event->getData();
 
-        $fields = [];
+        // We will replace UUIDs in the string version of the data,
+        // it will be easier to fix relationships this way than creating a mapping.
+        // This may have a huge performances impact because we need to decode the string multiple times.
+        $rawData = json_encode($data);
 
         foreach ($data['fields'] as $fieldData) {
             $newField = new Field();
             $newField->setClacoForm($clacoForm);
-            $newField = $this->serializer->deserialize($fieldData, $newField);
-            $this->om->persist($newField);
             $clacoForm->addField($newField);
+
+            // no Crud here. This is managed by the ClacoFormSerializer in the app
+            $newField = $this->serializer->deserialize($fieldData, $newField, [Options::REFRESH_UUID]);
+
+            $this->om->persist($newField);
             $this->om->persist($clacoForm);
-            $fields[] = $newField;
+
+            // replace UUIDs for Categories and Entries data
+            $rawData = str_replace($fieldData['id'], $newField->getUuid(), $rawData);
         }
 
-        foreach ($data['_data']['entries'] as $dataEntry) {
+        // get decoded data with new UUIDs
+        $data = json_decode($rawData, true);
+        foreach ($data['categories'] as $categoryData) {
+            $category = new Category();
+            $category->setClacoForm($clacoForm);
+
+            $this->crud->create($category, $categoryData, [Crud::NO_PERMISSIONS, Crud::NO_VALIDATION, Options::REFRESH_UUID]);
+
+            // replace UUIDs for Entries data
+            $rawData = str_replace($categoryData['id'], $category->getUuid(), $rawData);
+        }
+
+        // get decoded data with new UUIDs
+        $data = json_decode($rawData, true);
+        foreach ($data['keywords'] as $keywordData) {
+            $keyword = new Keyword();
+            $keyword->setClacoForm($clacoForm);
+
+            $this->crud->create($keyword, $keywordData, [Crud::NO_PERMISSIONS, Crud::NO_VALIDATION, Options::REFRESH_UUID]);
+
+            // replace UUIDs for Entries data
+            $rawData = str_replace($keywordData['id'], $keyword->getUuid(), $rawData);
+        }
+
+        // get decoded data with new UUIDs
+        $data = json_decode($rawData, true);
+        foreach ($data['entries'] as $entryData) {
             $entry = new Entry();
-            $this->serializer->deserialize($dataEntry, $entry, [Options::REFRESH_UUID]);
-            // we should keep original
-            $entry->setCreationDate(new \DateTime());
-            $entry->setEditionDate(new \DateTime());
             $entry->setClacoForm($clacoForm);
-            $this->om->persist($entry);
 
-            foreach ($fields as $field) {
-                $uuid = $field->getUuid();
-                if (isset($dataEntry['values'][$uuid])) {
-                    $fieldValue = new FieldValue();
-                    $fieldValue->setEntry($entry);
-                    $fieldValue->setField($field);
-
-                    $fielFacetValue = new FieldFacetValue();
-                    $fielFacetValue->setUser($entry->getUser());
-                    $fielFacetValue->setFieldFacet($field->getFieldFacet());
-                    $fielFacetValue->setValue($dataEntry['values'][$uuid]);
-                    $fieldValue->setFieldFacetValue($fielFacetValue);
-
-                    $this->om->persist($fielFacetValue);
-                    $this->om->persist($fieldValue);
-                }
-            }
+            $this->crud->create($entry, $entryData, [Crud::NO_PERMISSIONS, Crud::NO_VALIDATION, Options::REFRESH_UUID]);
         }
     }
 }

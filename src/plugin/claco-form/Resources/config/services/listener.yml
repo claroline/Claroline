@@ -1,25 +1,19 @@
 services:
-    _defaults:
-        autowire: false
-        autoconfigure: false
-        public: false
-
     Claroline\ClacoFormBundle\Listener\Resource\ClacoFormListener:
         arguments:
-            - '@Claroline\ClacoFormBundle\Manager\ClacoFormManager'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\AppBundle\API\FinderProvider'
-            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-            - '@claroline.manager.role_manager'
-            - '@Claroline\AppBundle\API\SerializerProvider'
             - '@security.token_storage'
             - '@security.authorization_checker'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\AppBundle\API\Crud'
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+            - '@claroline.manager.role_manager'
+            - '@Claroline\ClacoFormBundle\Manager\ClacoFormManager'
         tags:
             - { name: kernel.event_listener, event: resource.claroline_claco_form.load, method: onLoad }
             - { name: kernel.event_listener, event: resource.claroline_claco_form.copy, method: onCopy }
-            - { name: kernel.event_listener, event: transfer.claroline_claco_form.export, method: onExport }
-            - { name: kernel.event_listener, event: transfer.claroline_claco_form.import.before, method: onImportBefore }
-            - { name: kernel.event_listener, event: transfer.claroline_claco_form.import.after, method: onImportAfter }
+            - { name: kernel.event_listener, event: resource.claroline_claco_form.export, method: onExport }
+            - { name: kernel.event_listener, event: resource.claroline_claco_form.import, method: onImport }
 
     Claroline\ClacoFormBundle\Listener\UserListener:
         arguments:

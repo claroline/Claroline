@@ -14,7 +14,7 @@ services:
 
     Icap\NotificationBundle\Listener\Tool\NotificationListener:
         tags:
-            - { name: kernel.event_listener, event: open_tool_desktop_notification, method: onDisplayDesktop }
+            - { name: kernel.event_listener, event: tool.open.desktop.notification, method: onDisplayDesktop }
 
     Icap\NotificationBundle\Listener\Resource\ResourceNodeListener:
         arguments:

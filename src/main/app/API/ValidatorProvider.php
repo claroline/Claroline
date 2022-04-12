@@ -154,11 +154,11 @@ class ValidatorProvider
 
                 if ((self::UPDATE === $mode && isset($data['id'])) || self::CREATE === $mode) {
                     if ($countResults > 0) {
-                        $errors[] = ['path' => $dataProp, 'message' => "{$entityProp} already exists and should be unique"];
+                        $errors[] = ['path' => $dataProp, 'message' => "{$dataProp} already exists and should be unique"];
                     }
                 } else {
                     if ($countResults > 1) {
-                        $errors[] = ['path' => $dataProp, 'message' => "{$entityProp} already exists and should be unique"];
+                        $errors[] = ['path' => $dataProp, 'message' => "{$dataProp} already exists and should be unique"];
                     }
                 }
             }

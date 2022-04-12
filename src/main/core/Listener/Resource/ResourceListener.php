@@ -95,7 +95,6 @@ class ResourceListener
         $options = [];
 
         $params = $event->getOptions();
-
         if (isset($params['recursive']) && 'true' === $params['recursive']) {
             $options[] = Options::IS_RECURSIVE;
         }

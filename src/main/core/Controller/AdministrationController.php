@@ -112,14 +112,14 @@ class AdministrationController
         ];
 
         $this->strictDispatcher->dispatch(
-            ToolEvents::TOOL_OPEN,
+            ToolEvents::OPEN,
             OpenToolEvent::class,
             $eventParams
         );
 
         /** @var OpenToolEvent $event */
         $event = $this->strictDispatcher->dispatch(
-            'administration_tool_'.$toolName,
+            ToolEvents::getEventName(ToolEvents::OPEN, AbstractTool::ADMINISTRATION, $toolName),
             OpenToolEvent::class,
             $eventParams
         );

@@ -148,7 +148,9 @@ const WorkspaceMenu = (props) => {
         .map(tool => ({
           name: tool.name,
           icon: tool.icon,
-          path: workspaceRoute(props.workspace, tool.name)
+          path: workspaceRoute(props.workspace, tool.name),
+          order: get(tool, 'display.order'),
+          displayed: !get(tool, 'restrictions.hidden', false)
         }))
       }
       actions={workspaceActions}

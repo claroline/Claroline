@@ -1,0 +1,6 @@
+services:
+    Claroline\AuthenticationBundle\Messenger\Middleware\AuthenticationMiddleware:
+        arguments:
+          - '@security.token_storage'
+          - '@Claroline\AuthenticationBundle\Security\Authentication\Authenticator'
+          - '@Claroline\CoreBundle\Repository\User\UserRepository'

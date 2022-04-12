@@ -160,18 +160,6 @@ class WorkspaceSerializer
                 $serialized['organizations'] = array_map(function (Organization $organization) {
                     return $this->organizationSerializer->serialize($organization, [SerializerInterface::SERIALIZE_MINIMAL]);
                 }, $workspace->getOrganizations()->toArray());
-
-                if (!in_array(SerializerInterface::SERIALIZE_TRANSFER, $options)) {
-                    // TODO : remove me. Used by workspace transfer
-                    $serialized['roles'] = array_map(function (Role $role) {
-                        return [
-                            'id' => $role->getUuid(),
-                            'name' => $role->getName(),
-                            'type' => $role->getType(),
-                            'translationKey' => $role->getTranslationKey(),
-                        ];
-                    }, $workspace->getRoles()->toArray());
-                }
             }
         }
 

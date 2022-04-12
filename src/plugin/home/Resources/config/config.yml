@@ -8,10 +8,3 @@ plugin:
       class: home
       is_displayable_in_workspace: true
       is_displayable_in_desktop: true
-      is_configurable_in_workspace: false
-      is_configurable_in_desktop: false
-      is_desktop_required: false
-      is_workspace_required: false
-      is_exportable: true
-      is_locked_for_admin: false
-      is_anonymous_excluded: false

@@ -14,8 +14,8 @@ services:
         tags:
             - { name: kernel.event_listener, event: resource.icap_lesson.load, method: onLoad }
             - { name: kernel.event_listener, event: resource.icap_lesson.copy, method: onCopy }
-            - { name: kernel.event_listener, event: transfer.icap_lesson.export, method: onExport }
-            - { name: kernel.event_listener, event: transfer.icap_lesson.import.after, method: onImport }
+            - { name: kernel.event_listener, event: resource.icap_lesson.export, method: onExport }
+            - { name: kernel.event_listener, event: resource.icap_lesson.import, method: onImport }
 
     icap.listener.lesson_log_listener:
         class: Icap\LessonBundle\Listener\LogListener

@@ -576,15 +576,6 @@ class DatabaseWriter implements LoggerAwareInterface
         $tool->setPlugin($plugin);
         $tool->setDisplayableInDesktop($toolConfiguration['is_displayable_in_desktop']);
         $tool->setDisplayableInWorkspace($toolConfiguration['is_displayable_in_workspace']);
-        $tool->setIsDesktopRequired(false);
-        $tool->setIsWorkspaceRequired(false);
-        $tool->setExportable($toolConfiguration['is_exportable']);
-        $tool->setIsConfigurableInWorkspace($toolConfiguration['is_configurable_in_workspace']);
-        $tool->setIsConfigurableInDesktop($toolConfiguration['is_configurable_in_desktop']);
-        $tool->setIsDesktopRequired($toolConfiguration['is_desktop_required']);
-        $tool->setIsWorkspaceRequired($toolConfiguration['is_workspace_required']);
-        $tool->setIsLockedForAdmin($toolConfiguration['is_locked_for_admin']);
-        $tool->setIsAnonymousExcluded($toolConfiguration['is_anonymous_excluded']);
 
         if (isset($toolConfiguration['class'])) {
             $tool->setClass("{$toolConfiguration['class']}");

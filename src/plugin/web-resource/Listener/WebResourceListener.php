@@ -14,11 +14,11 @@ namespace Claroline\WebResourceBundle\Listener;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\File;
-use Claroline\CoreBundle\Event\ExportObjectEvent;
-use Claroline\CoreBundle\Event\ImportObjectEvent;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DownloadResourceEvent;
+use Claroline\CoreBundle\Event\Resource\ExportResourceEvent;
+use Claroline\CoreBundle\Event\Resource\ImportResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\ResourceActionEvent;
 use Claroline\CoreBundle\Manager\ResourceManager;
@@ -90,44 +90,28 @@ class WebResourceListener
         $event->stopPropagation();
     }
 
-    public function onImportBefore(ImportObjectEvent $event)
+    public function onExport(ExportResourceEvent $event)
     {
-        $data = $event->getData();
-        $replaced = json_encode($event->getExtra());
+        /** @var File $webResource */
+        $webResource = $event->getResource();
+        $workspace = $webResource->getResourceNode()->getWorkspace();
 
-        $hashName = pathinfo($data['hashName'], PATHINFO_BASENAME);
-        $uuid = Uuid::uuid4()->toString();
-        $replaced = str_replace($hashName, $uuid, $replaced);
+        $path = $this->uploadDir.DIRECTORY_SEPARATOR.'webresource'.DIRECTORY_SEPARATOR.$workspace->getUuid().DIRECTORY_SEPARATOR.$webResource->getHashName();
 
-        $data = json_decode($replaced, true);
-        $event->setExtra($data);
+        $event->addFile($webResource->getHashName(), $path);
     }
 
-    public function onExportFile(ExportObjectEvent $exportEvent)
+    public function onImport(ImportResourceEvent $event)
     {
-        $file = $exportEvent->getObject();
-        $workspace = $exportEvent->getWorkspace();
-        $ds = DIRECTORY_SEPARATOR;
-        $path = $this->uploadDir.$ds.'webresource'.$ds.$workspace->getUuid().$ds.$file->getHashName();
-        //probably make it a zip here
-        $file = $exportEvent->getObject();
-        $newPath = uniqid().'.'.pathinfo($file->getHashName(), PATHINFO_EXTENSION);
-        //get the filePath
-        $exportEvent->addFile($newPath, $path);
-        $exportEvent->overwrite('_path', $newPath);
-    }
-
-    public function onImportFile(ImportObjectEvent $event)
-    {
-        $data = $event->getData();
+        /** @var File $webResource */
+        $webResource = $event->getResource();
+        $workspace = $webResource->getResourceNode()->getWorkspace();
         $bag = $event->getFileBag();
-        $workspace = $event->getWorkspace();
+
+        $filesPath = $this->uploadDir.DIRECTORY_SEPARATOR.'webresource'.DIRECTORY_SEPARATOR.$workspace->getUuid().DIRECTORY_SEPARATOR.$webResource->getHashName();
 
         $fileSystem = new Filesystem();
-
-        $ds = DIRECTORY_SEPARATOR;
-        $filesPath = $this->uploadDir.$ds.'webresource'.$ds.$workspace->getUuid().$ds.$data['hashName'];
-        $fileSystem->mirror($bag->get($data['_path']), $filesPath);
+        $fileSystem->mirror($bag->get($webResource->getHashName()), $filesPath);
     }
 
     public function onDelete(DeleteResourceEvent $event)

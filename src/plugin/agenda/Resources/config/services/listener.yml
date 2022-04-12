@@ -9,8 +9,8 @@ services:
             - '@security.token_storage'
             - '@translator'
         tags:
-            - { name: kernel.event_listener, event: open_tool_workspace_agenda, method: onDisplayWorkspace }
-            - { name: kernel.event_listener, event: open_tool_desktop_agenda, method: onDisplayDesktop }
+            - { name: kernel.event_listener, event: tool.open.workspace.agenda, method: onDisplayWorkspace }
+            - { name: kernel.event_listener, event: tool.open.desktop.agenda, method: onDisplayDesktop }
 
     Claroline\AgendaBundle\Listener\DataSource\AgendaSource:
         arguments:

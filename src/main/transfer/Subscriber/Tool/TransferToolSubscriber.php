@@ -4,6 +4,8 @@ namespace Claroline\TransferBundle\Subscriber\Tool;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\CoreBundle\Entity\Tool\Tool;
+use Claroline\CoreBundle\Event\CatalogEvents\ToolEvents;
 use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 use Claroline\TransferBundle\Transfer\ExportProvider;
 use Claroline\TransferBundle\Transfer\ImportProvider;
@@ -14,6 +16,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class TransferToolSubscriber implements EventSubscriberInterface
 {
+    const NAME = 'transfer';
+
     /** @var ImportProvider */
     private $importProvider;
     /** @var ExportProvider */
@@ -34,37 +38,19 @@ class TransferToolSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            'administration_tool_transfer' => 'onDisplayTool',
-            'open_tool_workspace_transfer' => 'onDisplayWorkspace',
+            ToolEvents::getEventName(ToolEvents::OPEN, Tool::WORKSPACE, static::NAME) => 'onOpen',
+            ToolEvents::getEventName(ToolEvents::OPEN, Tool::ADMINISTRATION, static::NAME) => 'onOpen',
         ];
     }
 
-    /**
-     * Displays transfer tool in administration.
-     */
-    public function onDisplayTool(OpenToolEvent $event)
+    public function onOpen(OpenToolEvent $event)
     {
-        $event->setData([
-            'import' => [
-                'explanation' => $this->importProvider->getAvailableActions('csv'),
-                'samples' => $this->importProvider->getSamples('csv'),
-            ],
-            'export' => [
-                'explanation' => $this->exportProvider->getAvailableActions('csv'),
-            ],
-        ]);
-        $event->stopPropagation();
-    }
-
-    /**
-     * Displays transfer tool on Workspace.
-     */
-    public function onDisplayWorkspace(OpenToolEvent $event)
-    {
-        $options = [Options::WORKSPACE_IMPORT];
-        $extra = [
-            'workspace' => $this->serializer->serialize($event->getWorkspace(), [Options::SERIALIZE_MINIMAL]),
-        ];
+        $options = [];
+        $extra = [];
+        if (Tool::WORKSPACE === $event->getContext()) {
+            $options[] = Options::WORKSPACE_IMPORT;
+            $extra['workspace'] = $this->serializer->serialize($event->getWorkspace(), [Options::SERIALIZE_MINIMAL]);
+        }
 
         $event->setData([
             'import' => [
@@ -75,6 +61,7 @@ class TransferToolSubscriber implements EventSubscriberInterface
                 'explanation' => $this->exportProvider->getAvailableActions('csv', $options, $extra),
             ],
         ]);
+
         $event->stopPropagation();
     }
 }

@@ -31,13 +31,13 @@ services:
             - '@Claroline\AppBundle\Event\StrictDispatcher'
             - '@kernel'
 
+    Claroline\AppBundle\Manager\File\ArchiveManager:
+        arguments:
+            - '@Claroline\AppBundle\Manager\File\TempFileManager'
+
     Claroline\AppBundle\Manager\File\TempFileManager:
         arguments:
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-
-    claroline.manager.temp_file:
-        alias: Claroline\AppBundle\Manager\File\TempFileManager
-        public: true
 
     Claroline\AppBundle\Manager\TermsOfServiceManager:
         arguments:

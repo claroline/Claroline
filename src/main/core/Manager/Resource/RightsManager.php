@@ -158,6 +158,7 @@ class RightsManager implements LoggerAwareInterface
                 );
             }
 
+            // TODO : do not flatten role data. Use RoleSerializer instead
             $data = [
                 'id' => $rights->getId(),
                 'name' => $role->getName(),

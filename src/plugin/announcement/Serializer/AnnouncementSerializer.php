@@ -3,7 +3,6 @@
 namespace Claroline\AnnouncementBundle\Serializer;
 
 use Claroline\AnnouncementBundle\Entity\Announcement;
-use Claroline\AnnouncementBundle\Entity\AnnouncementAggregate;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
@@ -17,7 +16,6 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
-use Claroline\CoreBundle\Repository\User\RoleRepository;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class AnnouncementSerializer
@@ -35,10 +33,6 @@ class AnnouncementSerializer
 
     /** @var ObjectManager */
     private $om;
-
-    private $aggregateRepo;
-    /** @var RoleRepository */
-    private $roleRepo;
 
     /** @var WorkspaceSerializer */
     private $wsSerializer;
@@ -65,9 +59,6 @@ class AnnouncementSerializer
         $this->nodeSerializer = $nodeSerializer;
         $this->publicFileSerializer = $publicFileSerializer;
         $this->roleSerializer = $roleSerializer;
-
-        $this->aggregateRepo = $om->getRepository('ClarolineAnnouncementBundle:AnnouncementAggregate');
-        $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
     }
 
     public function getClass(): string
@@ -163,24 +154,13 @@ class AnnouncementSerializer
             }
         }
 
-        // set aggregate
-        if (isset($data['aggregate']['id'])) {
-            /** @var AnnouncementAggregate $aggregate */
-            $aggregate = $this->aggregateRepo->findOneBy(['uuid' => $data['aggregate']['id']]);
-
-            if (!empty($aggregate)) {
-                $announce->setAggregate($aggregate);
-            }
-        }
-
         // set roles
         $announce->emptyRoles();
 
         if (!empty($data['roles'])) {
             foreach ($data['roles'] as $roleData) {
                 /** @var Role $role */
-                $role = $this->roleRepo->findOneBy(['uuid' => $roleData['id']]);
-
+                $role = $this->om->getObject($roleData, Role::class);
                 if (!empty($role)) {
                     $announce->addRole($role);
                 }

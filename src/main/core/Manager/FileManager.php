@@ -139,8 +139,7 @@ class FileManager
         $directoryName = $this->getActiveDirectoryName();
         $size = filesize($tmpFile);
         $mimeType = $tmpFile->getMimeType();
-        $extension = pathinfo($fileName, PATHINFO_EXTENSION);
-        $hashName = Uuid::uuid4()->toString().'.'.$extension;
+        $hashName = Uuid::uuid4()->toString().'.'.$tmpFile->guessExtension();
         $prefix = 'data'.DIRECTORY_SEPARATOR.$directoryName;
         $url = $prefix.DIRECTORY_SEPARATOR.$hashName;
 
@@ -275,6 +274,13 @@ class FileManager
         }
 
         $this->om->endFlushSuite();
+    }
+
+    public function exists(string $filePath, bool $isAbsolutePath = false): bool
+    {
+        return $this->filesystem->exists(
+            !$isAbsolutePath ? $this->getDirectory().DIRECTORY_SEPARATOR.$filePath : $filePath
+        );
     }
 
     public function remove(string $filePath, bool $isAbsolutePath = false)

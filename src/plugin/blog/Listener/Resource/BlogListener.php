@@ -5,9 +5,9 @@ namespace Icap\BlogBundle\Listener\Resource;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Event\ExportObjectEvent;
-use Claroline\CoreBundle\Event\ImportObjectEvent;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
+use Claroline\CoreBundle\Event\Resource\ExportResourceEvent;
+use Claroline\CoreBundle\Event\Resource\ImportResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
@@ -86,27 +86,25 @@ class BlogListener
         $event->stopPropagation();
     }
 
-    public function onExport(ExportObjectEvent $exportEvent)
+    public function onExport(ExportResourceEvent $exportEvent)
     {
         /** @var Blog $blog */
-        $blog = $exportEvent->getObject();
+        $blog = $exportEvent->getResource();
 
-        $data = [
+        $exportEvent->setData([
             'posts' => array_map(function (Post $post) {
-                return $this->serializer->serialize($post, [
-                    CommentSerializer::INCLUDE_COMMENTS, CommentSerializer::FETCH_COMMENTS,
-                ]);
+                return $this->serializer->serialize($post, [CommentSerializer::INCLUDE_COMMENTS, CommentSerializer::FETCH_COMMENTS]);
             }, $blog->getPosts()->toArray()),
-        ];
-        $exportEvent->overwrite('_data', $data);
+        ]);
     }
 
-    public function onImport(ImportObjectEvent $event)
+    public function onImport(ImportResourceEvent $event)
     {
         $data = $event->getData();
-        $blog = $event->getObject();
+        $blog = $event->getResource();
 
-        foreach ($data['_data']['posts'] as $postData) {
+        // TODO : use crud
+        foreach ($data['posts'] as $postData) {
             /** @var Post $post */
             $post = $this->serializer->deserialize($postData, new Post(), [Options::REFRESH_UUID]);
 

@@ -16,18 +16,16 @@ use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\ExportObjectEvent;
-use Claroline\CoreBundle\Event\ImportObjectEvent;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DownloadResourceEvent;
+use Claroline\CoreBundle\Event\Resource\ExportResourceEvent;
+use Claroline\CoreBundle\Event\Resource\ImportResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\ResourceActionEvent;
 use Claroline\EvaluationBundle\Manager\ResourceEvaluationManager;
-use Claroline\ScormBundle\Entity\Sco;
 use Claroline\ScormBundle\Entity\Scorm;
 use Claroline\ScormBundle\Manager\ScormManager;
-use Ramsey\Uuid\Uuid;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -55,19 +53,15 @@ class ScormListener
     private $scormResourceRepo;
     private $scoTrackingRepo;
 
-    /**
-     * @param string $filesDir
-     * @param string $uploadDir
-     */
     public function __construct(
-        $filesDir,
+        string $filesDir,
         Filesystem $fileSystem,
         ObjectManager $om,
         ResourceEvaluationManager $resourceEvalManager,
         ScormManager $scormManager,
         SerializerProvider $serializer,
         TokenStorageInterface $tokenStorage,
-        $uploadDir
+        string $uploadDir
     ) {
         $this->filesDir = $filesDir;
         $this->fileSystem = $fileSystem;
@@ -129,62 +123,27 @@ class ScormListener
         $event->stopPropagation();
     }
 
-    public function onImportBefore(ImportObjectEvent $event)
+    public function onExport(ExportResourceEvent $event)
     {
-        $data = $event->getData();
-        $replaced = json_encode($event->getExtra());
+        /** @var Scorm $scorm */
+        $scorm = $event->getResource();
 
-        $hashName = pathinfo($data['hashName'], PATHINFO_BASENAME).'.zip';
-        $uuid = Uuid::uuid4()->toString();
-        $replaced = str_replace($hashName, $uuid, $replaced);
-
-        foreach ($data['scos'] as $sco) {
-            $replaced = $this->replaceScosIds($sco, $replaced);
-        }
-
-        $data = json_decode($replaced, true);
-        $event->setExtra($data);
+        // get the file path
+        $event->addFile($scorm->getHashName(), $this->getScormArchive($scorm));
     }
 
-    private function replaceScosIds(array $sco, $string)
+    public function onImport(ImportResourceEvent $event)
     {
-        $uuid = Uuid::uuid4()->toString();
-        $string = str_replace($sco['id'], $uuid, $string);
-
-        if (isset($sco['children'])) {
-            foreach ($sco['children'] as $child) {
-                $this->replaceScosIds($child, $string);
-            }
-        }
-
-        return $string;
-    }
-
-    public function onExportFile(ExportObjectEvent $exportEvent)
-    {
-        $file = $exportEvent->getObject();
-        $path = $this->getScormArchive($file);
-        $file = $exportEvent->getObject();
-        $newPath = uniqid().'.'.pathinfo($file->getHashName(), PATHINFO_EXTENSION);
-        //get the filePath
-        $exportEvent->addFile($newPath, $path);
-        $exportEvent->overwrite('_path', $newPath);
-    }
-
-    public function onImportFile(ImportObjectEvent $event)
-    {
-        $data = $event->getData();
+        /** @var Scorm $scorm */
+        $scorm = $event->getResource();
+        $resourceNde = $scorm->getResourceNode();
         $bag = $event->getFileBag();
-        $workspace = $event->getWorkspace();
 
-        if ($bag) {
-            try {
-                $file = new File($bag->get($data['_path']));
-                $this->scormManager->parseScormArchive($file);
-                $this->scormManager->unzipScormArchive($workspace, $file, $data['hashName']);
-            } catch (\Exception $e) {
-                //scorm was invalid. Proceed as usual.
-            }
+        try {
+            $file = new File($bag->get($scorm->getHashName()));
+            $this->scormManager->unzipScormArchive($resourceNde->getWorkspace(), $file, $scorm->getHashName());
+        } catch (\Exception $e) {
+            // scorm was invalid.
         }
     }
 
@@ -315,34 +274,5 @@ class ScormListener
             }
         }
         rmdir($dirPath);
-    }
-
-    /**
-     * Copy given sco and its children.
-     */
-    private function copySco(Sco $sco, Scorm $resource, Sco $scoParent = null)
-    {
-        $scoCopy = new Sco();
-        $scoCopy->setScorm($resource);
-        $scoCopy->setScoParent($scoParent);
-
-        $scoCopy->setEntryUrl($sco->getEntryUrl());
-        $scoCopy->setIdentifier($sco->getIdentifier());
-        $scoCopy->setTitle($sco->getTitle());
-        $scoCopy->setVisible($sco->isVisible());
-        $scoCopy->setParameters($sco->getParameters());
-        $scoCopy->setLaunchData($sco->getLaunchData());
-        $scoCopy->setMaxTimeAllowed($sco->getMaxTimeAllowed());
-        $scoCopy->setTimeLimitAction($sco->getTimeLimitAction());
-        $scoCopy->setBlock($sco->isBlock());
-        $scoCopy->setScoreToPassInt($sco->getScoreToPassInt());
-        $scoCopy->setScoreToPassDecimal($sco->getScoreToPassDecimal());
-        $scoCopy->setCompletionThreshold($sco->getCompletionThreshold());
-        $scoCopy->setPrerequisites($sco->getPrerequisites());
-        $this->om->persist($scoCopy);
-
-        foreach ($sco->getScoChildren() as $scoChild) {
-            $this->copySco($scoChild, $resource, $scoCopy);
-        }
     }
 }

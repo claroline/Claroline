@@ -6,10 +6,10 @@ use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Creator;
 use Claroline\AppBundle\Entity\Meta\Poster;
 use Claroline\AppBundle\Entity\Meta\Thumbnail;
+use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Icap\BlogBundle\Utils\StringUtils;
 use Icap\NotificationBundle\Entity\UserPickerContent;
 
 /**
@@ -182,9 +182,13 @@ class Post extends Statusable
      */
     public function getShortContent($url, $text)
     {
-        $readMoreText = sprintf('... <a href="%s" class="read_more">%s <span class="fa fa-long-arrow-right"></span></a>', $url, $text);
+        if (!empty($this->content)) {
+            $readMoreText = sprintf('... <a href="%s" class="read_more">%s <span class="fa fa-long-arrow-right"></span></a>', $url, $text);
 
-        return StringUtils::resumeHtml($this->content, 400, $readMoreText);
+            return TextNormalizer::resumeHtml($this->content, 400, $readMoreText);
+        }
+
+        return '';
     }
 
     /**
@@ -476,7 +480,7 @@ class Post extends Statusable
      */
     public function getAbstract()
     {
-        return strlen($this->content) > 400 ? StringUtils::resumeHtml($this->content, 400) : $this->content;
+        return !empty($this->content) && strlen($this->content) > 400 ? TextNormalizer::resumeHtml($this->content, 400) : $this->content;
     }
 
     /**

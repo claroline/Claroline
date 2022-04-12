@@ -20,5 +20,10 @@ framework:
 
             failed: 'doctrine://default?queue_name=failed'
 
+        buses:
+            messenger.bus.default:
+                middleware:
+                    - 'Claroline\AuthenticationBundle\Messenger\Middleware\AuthenticationMiddleware'
+
         routing:
             'Claroline\AppBundle\Messenger\Message\AsyncMessageInterface': default

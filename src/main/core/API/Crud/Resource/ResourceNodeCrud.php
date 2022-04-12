@@ -125,9 +125,13 @@ class ResourceNodeCrud
 
         /** @var ResourceNode $newParent */
         $newParent = $event->getExtra()['parent'];
-        $user = $event->getExtra()['user']; // we don't need to get it like this. Just use the one in token.
 
-        $newNode->setCreator($user);
+        // set the creator of the copy
+        $user = $this->tokenStorage->getToken()->getUser();
+        if ($user instanceof User) {
+            $newNode->setCreator($user);
+        }
+
         // link new node to its parent
         $newNode->setWorkspace($newParent->getWorkspace());
         $newNode->setParent($newParent);
@@ -158,8 +162,6 @@ class ResourceNodeCrud
         /** @var ResourceNode $newNode */
         $newNode = $event->getCopy();
 
-        $user = $event->getExtra()['user'];
-
         // TODO : move this in the Directory listener
         if ('directory' === $node->getResourceType()->getName()) {
             // this is needed because otherwise I don't get the new node rights.
@@ -168,7 +170,7 @@ class ResourceNodeCrud
 
             foreach ($node->getChildren() as $child) {
                 if ($child->isActive()) {
-                    $this->crud->copy($child, [Options::NO_RIGHTS, Crud::NO_PERMISSIONS], ['user' => $user, 'parent' => $newNode]);
+                    $this->crud->copy($child, [Options::NO_RIGHTS, Crud::NO_PERMISSIONS], ['parent' => $newNode]);
                 }
             }
         }

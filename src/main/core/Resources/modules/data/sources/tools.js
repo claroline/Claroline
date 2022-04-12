@@ -21,6 +21,22 @@ export default {
         label: trans('name'),
         displayed: true,
         primary: true
+      }, {
+        name: 'display.order',
+        alias: 'order',
+        type: 'number',
+        label: trans('order'),
+        displayable: false,
+        filterable: false,
+        sortable: true
+      }, {
+        name: 'restrictions.hidden',
+        alias: 'hidden',
+        type: 'boolean',
+        label: trans('hidden'),
+        displayable: false,
+        filterable: true,
+        sortable: false
       }
     ],
     card: ToolCard

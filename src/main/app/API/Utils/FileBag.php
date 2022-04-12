@@ -4,6 +4,8 @@ namespace Claroline\AppBundle\API\Utils;
 
 class FileBag
 {
+    private $files;
+
     public function __construct()
     {
         $this->files = [];
@@ -21,6 +23,10 @@ class FileBag
 
     public function get($key)
     {
-        return $this->files[$key];
+        if (!empty($this->files[$key])) {
+            return $this->files[$key];
+        }
+
+        return null;
     }
 }

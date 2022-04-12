@@ -17,11 +17,11 @@ use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Event\ExportObjectEvent;
-use Claroline\CoreBundle\Event\ImportObjectEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DownloadResourceEvent;
+use Claroline\CoreBundle\Event\Resource\ExportResourceEvent;
 use Claroline\CoreBundle\Event\Resource\File\LoadFileEvent;
+use Claroline\CoreBundle\Event\Resource\ImportResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\ResourceActionEvent;
 use Claroline\CoreBundle\Manager\FileManager;
@@ -156,43 +156,32 @@ class FileListener
         $event->stopPropagation();
     }
 
-    public function onImportBefore(ImportObjectEvent $event)
+    public function onExport(ExportResourceEvent $event)
     {
-        $data = $event->getData();
-        $replaced = json_encode($event->getExtra());
-
-        $hashName = pathinfo($data['hashName'], PATHINFO_BASENAME);
-        $uuid = Uuid::uuid4()->toString();
-        $replaced = str_replace($hashName, $uuid, $replaced);
-
-        $data = json_decode($replaced, true);
-        $event->setExtra($data);
-    }
-
-    public function onExportFile(ExportObjectEvent $exportEvent)
-    {
-        $file = $exportEvent->getObject();
+        /** @var File $file */
+        $file = $event->getResource();
         $path = $this->fileManager->getDirectory().DIRECTORY_SEPARATOR.$file->getHashName();
 
-        $newPath = uniqid().'.'.pathinfo($file->getHashName(), PATHINFO_EXTENSION);
-
-        $exportEvent->addFile($newPath, $path);
-        $exportEvent->overwrite('_path', $newPath);
+        $event->addFile($file->getHashName(), $path);
     }
 
-    public function onImportFile(ImportObjectEvent $event)
+    public function onImport(ImportResourceEvent $event)
     {
-        $data = $event->getData();
+        /** @var File $file */
+        $file = $event->getResource();
+
         $bag = $event->getFileBag();
-        if ($bag) {
-            $fileSystem = new Filesystem();
-            try {
-                $ds = DIRECTORY_SEPARATOR;
-                $fileSystem->copy($bag->get($data['_path']), $this->fileManager->getDirectory().$ds.$data['hashName']);
-            } catch (\Exception $e) {
-            }
+
+        $fileSystem = new Filesystem();
+        try {
+            $newHash = Uuid::uuid4()->toString();
+            $fileSystem->copy($bag->get($file->getHashName()), $this->fileManager->getDirectory().DIRECTORY_SEPARATOR.$newHash);
+            $file->setHashName($newHash);
+
+            $this->om->persist($file);
+            $this->om->flush();
+        } catch (\Exception $e) {
         }
-        //move filebags elements here
     }
 
     public function onCopy(CopyEvent $event)

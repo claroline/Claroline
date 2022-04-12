@@ -9,5 +9,5 @@ services:
             - '@security.token_storage'
             - '@Claroline\AppBundle\API\Crud'
         tags:
-            - { name: kernel.event_listener, event: open_tool_desktop_messaging, method: onDisplayDesktop }
-            - { name: kernel.event_listener, event: desktop.messaging.configure, method: onConfigureDesktop }
+            - { name: kernel.event_listener, event: tool.open.desktop.messaging, method: onDisplayDesktop }
+            - { name: kernel.event_listener, event: tool.configure.desktop.messaging, method: onConfigureDesktop }

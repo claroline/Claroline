@@ -1,6 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import isEmpty from 'lodash/isEmpty'
+import get from 'lodash/get'
 
 import {trans, number} from '#/main/app/intl'
 import {hasPermission} from '#/main/app/security/permissions'
@@ -62,7 +63,9 @@ const DesktopMenu = props => {
         .map(tool => ({
           name: tool.name,
           icon: tool.icon,
-          path: toolRoute(tool.name)
+          path: toolRoute(tool.name),
+          order: get(tool, 'display.order'),
+          displayed: !get(tool, 'restrictions.hidden', false)
         }))
       }
       actions={desktopActions}

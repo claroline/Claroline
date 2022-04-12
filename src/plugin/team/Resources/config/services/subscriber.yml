@@ -1,0 +1,12 @@
+services:
+    _defaults:
+        tags: [kernel.event_subscriber]
+
+    Claroline\TeamBundle\Subscriber\Tool\TeamSubscriber:
+        arguments:
+            - '@security.authorization_checker'
+            - '@security.token_storage'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\AppBundle\API\Crud'
+            - '@Claroline\TeamBundle\Manager\TeamManager'

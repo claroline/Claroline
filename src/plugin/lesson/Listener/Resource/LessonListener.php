@@ -4,9 +4,9 @@ namespace Icap\LessonBundle\Listener\Resource;
 
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Event\ExportObjectEvent;
-use Claroline\CoreBundle\Event\ImportObjectEvent;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
+use Claroline\CoreBundle\Event\Resource\ExportResourceEvent;
+use Claroline\CoreBundle\Event\Resource\ImportResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Icap\LessonBundle\Entity\Chapter;
@@ -86,22 +86,25 @@ class LessonListener
         $event->stopPropagation();
     }
 
-    public function onExport(ExportObjectEvent $exportEvent)
+    public function onExport(ExportResourceEvent $event)
     {
         /** @var Lesson $lesson */
-        $lesson = $exportEvent->getObject();
+        $lesson = $event->getResource();
 
-        $exportEvent->overwrite('_data', [
+        $event->setData([
             'root' => $this->chapterManager->serializeChapterTree($lesson),
         ]);
     }
 
-    public function onImport(ImportObjectEvent $event)
+    public function onImport(ImportResourceEvent $event)
     {
         $data = $event->getData();
-        $lesson = $event->getObject();
+        /** @var Lesson $lesson */
+        $lesson = $event->getResource();
 
-        $rootChapter = $data['_data']['root'];
+        // TODO : use CRUD to import chapters
+
+        $rootChapter = $data['root'];
         $lesson->buildRoot();
         $root = $lesson->getRoot();
 

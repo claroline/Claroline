@@ -56,8 +56,8 @@ const aggregateId = createSelector(
 )
 
 const posts = createSelector(
-  [announcement],
-  (announcement) => announcement.posts
+  [resource],
+  (resource) => resource.posts
 )
 
 const pages = createSelector(

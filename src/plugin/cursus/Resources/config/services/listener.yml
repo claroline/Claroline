@@ -9,11 +9,11 @@ services:
         arguments:
             - '@Claroline\AppBundle\API\FinderProvider'
         tags:
-            - { name: kernel.event_listener, event: open_tool_workspace_training_events, method: onDisplayWorkspace }
+            - { name: kernel.event_listener, event: tool.open.workspace.training_events, method: onDisplayWorkspace }
 
     Claroline\CursusBundle\Listener\Tool\TrainingsListener:
         tags:
-            - { name: kernel.event_listener, event: open_tool_desktop_trainings, method: onDisplayDesktop }
+            - { name: kernel.event_listener, event: tool.open.desktop.trainings, method: onDisplayDesktop }
 
     # Data source
     Claroline\CursusBundle\Listener\DataSource\SessionSource:

@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\API\Serializer\User;
 
 use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer;
@@ -88,16 +89,16 @@ class RoleSerializer
             'translationKey' => $role->getTranslationKey(),
         ];
 
-        if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
+        if (!in_array(SerializerInterface::SERIALIZE_MINIMAL, $options) && !in_array(SerializerInterface::SERIALIZE_TRANSFER, $options)) {
             $serialized['meta'] = $this->serializeMeta($role);
 
             if ($role->getWorkspace()) {
-                $serialized['workspace'] = $this->workspaceSerializer->serialize($role->getWorkspace(), [Options::SERIALIZE_MINIMAL]);
+                $serialized['workspace'] = $this->workspaceSerializer->serialize($role->getWorkspace(), [SerializerInterface::SERIALIZE_MINIMAL]);
             }
 
             if (Role::USER_ROLE === $role->getType()) {
                 if (count($role->getUsers()->toArray()) > 0) {
-                    $serialized['user'] = $this->userSerializer->serialize($role->getUsers()->toArray()[0], [Options::SERIALIZE_MINIMAL]);
+                    $serialized['user'] = $this->userSerializer->serialize($role->getUsers()->toArray()[0], [SerializerInterface::SERIALIZE_MINIMAL]);
                 } else {
                     //if we removed some user roles... for some reason.
                     $serialized['user'] = null;
@@ -173,8 +174,14 @@ class RoleSerializer
         return $tools;
     }
 
-    public function deserialize(array $data, Role $role): Role
+    public function deserialize(array $data, Role $role, ?array $options = []): Role
     {
+        if (!in_array(SerializerInterface::REFRESH_UUID, $options)) {
+            $this->sipe('id', 'setUuid', $data, $role);
+        } else {
+            $role->refreshUuid();
+        }
+
         if (!$role->isReadOnly()) {
             $this->sipe('name', 'setName', $data, $role);
             $this->sipe('type', 'setType', $data, $role);

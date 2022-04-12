@@ -117,14 +117,14 @@ class DesktopController
         ];
 
         $this->strictDispatcher->dispatch(
-            ToolEvents::TOOL_OPEN,
+            ToolEvents::OPEN,
             OpenToolEvent::class,
             $eventParams
         );
 
         /** @var OpenToolEvent $event */
         $event = $this->strictDispatcher->dispatch(
-            'open_tool_desktop_'.$toolName,
+            ToolEvents::getEventName(ToolEvents::OPEN, AbstractTool::DESKTOP, $toolName),
             OpenToolEvent::class,
             $eventParams
         );

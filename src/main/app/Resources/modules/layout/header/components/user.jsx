@@ -98,7 +98,7 @@ const UserMenu = props =>
     }
 
     {props.authenticated &&
-      <div className="app-current-user-tools list-group">
+      <div className="list-group">
         <Button
           type={LINK_BUTTON}
           className="list-group-item"

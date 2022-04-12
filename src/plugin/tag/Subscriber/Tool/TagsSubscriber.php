@@ -11,6 +11,8 @@
 
 namespace Claroline\TagBundle\Subscriber\Tool;
 
+use Claroline\CoreBundle\Entity\Tool\AbstractTool;
+use Claroline\CoreBundle\Event\CatalogEvents\ToolEvents;
 use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -21,7 +23,7 @@ class TagsSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            'open_tool_desktop_tags' => 'onOpen',
+            ToolEvents::getEventName(ToolEvents::OPEN, AbstractTool::DESKTOP, static::NAME) => 'onOpen',
         ];
     }
 

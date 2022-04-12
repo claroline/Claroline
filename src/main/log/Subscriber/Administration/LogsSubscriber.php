@@ -2,21 +2,23 @@
 
 namespace Claroline\LogBundle\Subscriber\Administration;
 
+use Claroline\CoreBundle\Entity\Tool\Tool;
+use Claroline\CoreBundle\Event\CatalogEvents\ToolEvents;
 use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class LogsSubscriber implements EventSubscriberInterface
 {
-    private const ADMINISTRATION_TOOL_LOGS = 'administration_tool_logs';
+    const NAME = 'logs';
 
     public static function getSubscribedEvents(): array
     {
         return [
-            self::ADMINISTRATION_TOOL_LOGS => 'onAdministrationToolOpen',
+            ToolEvents::getEventName(ToolEvents::OPEN, Tool::ADMINISTRATION, static::NAME) => 'onOpen',
         ];
     }
 
-    public function onAdministrationToolOpen(OpenToolEvent $event)
+    public function onOpen(OpenToolEvent $event)
     {
         $event->setData([]);
         $event->stopPropagation();

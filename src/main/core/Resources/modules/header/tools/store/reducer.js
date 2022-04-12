@@ -10,7 +10,7 @@ export const reducer = combineReducers({
     [USER_TOOLS_LOAD]: () => true,
     [USER_TOOLS_SET_LOADED]: (state, action) => action.loaded
   }),
-  tools: makeReducer({}, {
+  tools: makeReducer([], {
     [USER_TOOLS_LOAD]: (state, action) => action.tools
   })
 })

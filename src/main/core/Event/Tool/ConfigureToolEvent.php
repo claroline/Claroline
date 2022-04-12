@@ -13,33 +13,26 @@ namespace Claroline\CoreBundle\Event\Tool;
 
 use Claroline\AppBundle\Event\DataConveyorEventInterface;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Symfony\Contracts\EventDispatcher\Event;
 
-class ConfigureToolEvent extends Event implements DataConveyorEventInterface
+class ConfigureToolEvent extends AbstractToolEvent implements DataConveyorEventInterface
 {
     /** @var array */
     private $parameters;
-    /** @var Workspace|null */
-    private $workspace;
     /** @var array */
     private $data = [];
     /** @var bool */
     private $isPopulated = false;
 
-    public function __construct(array $parameters = [], Workspace $workspace = null)
+    public function __construct(string $toolName, string $context, ?Workspace $workspace = null, ?array $parameters = [])
     {
+        parent::__construct($toolName, $context, $workspace);
+
         $this->parameters = $parameters;
-        $this->workspace = $workspace;
     }
 
     public function getParameters()
     {
         return $this->parameters;
-    }
-
-    public function getWorkspace()
-    {
-        return $this->workspace;
     }
 
     /**

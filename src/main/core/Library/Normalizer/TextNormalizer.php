@@ -129,4 +129,93 @@ class TextNormalizer
 
         return $string;
     }
+
+    /**
+     * Came from http://j-reaux.developpez.com/tutoriel/php/fonctions-troncature-texte/.
+     */
+    public static function resumeHtml(string $text, int $nbCharacter, ?string $readMoreText = ''): string
+    {
+        if (is_numeric($nbCharacter)) {
+            $lengthBeforeWithoutHtml = strlen(trim(strip_tags($text)));
+            $htmlSplitMask = '#</?([a-zA-Z1-6]+)(?: +[a-zA-Z]+="[^"]*")*( ?/)?>#';
+            $htmlMatchMask = '#<(?:/([a-zA-Z1-6]+)|([a-zA-Z1-6]+)(?: +[a-zA-Z]+="[^"]*")*( ?/)?)>#';
+            $text .= ' ';
+            $textPieces = preg_split($htmlSplitMask, $text, -1, PREG_SPLIT_OFFSET_CAPTURE | PREG_SPLIT_NO_EMPTY);
+            $pieceNumber = count($textPieces);
+
+            if (1 === $pieceNumber) {
+                $text .= ' ';
+                $lengthBefore = strlen($text);
+                $text = substr($text, 0, strpos($text, ' ', $lengthBefore > $nbCharacter ? $nbCharacter : $lengthBefore));
+
+                if ('' != $readMoreText && $lengthBefore > $nbCharacter) {
+                    $text .= $readMoreText;
+                }
+            } else {
+                $length = 0;
+                $indexLastPiece = $pieceNumber - 1;
+                $position = $textPieces[$indexLastPiece][1] + strlen($textPieces[$indexLastPiece][0]) - 1;
+                $indexPiece = $indexLastPiece;
+                $searchSpace = true;
+
+                foreach ($textPieces as $index => $bout) {
+                    $length += strlen($bout[0]);
+                    if ($length >= $nbCharacter) {
+                        $positionEndPiece = $bout[1] + strlen($bout[0]) - 1;
+                        $position = $positionEndPiece - ($length - $nbCharacter);
+
+                        $positionSpace = strpos($bout[0], ' ', $position - $bout[1]);
+                        if (false !== $positionSpace) {
+                            $position = $bout[1] + $positionSpace;
+                            $searchSpace = false;
+                        }
+                        if ($index != $indexLastPiece) {
+                            $indexPiece = $index + 1;
+                        }
+                        break;
+                    }
+                }
+
+                if (true === $searchSpace) {
+                    for ($i = $indexPiece; $i <= $indexLastPiece; ++$i) {
+                        $position = $textPieces[$i][1];
+                        $positionSpace = strpos($textPieces[$i][0], ' ');
+                        if (false !== $positionSpace) {
+                            $position += $positionSpace;
+                            break;
+                        }
+                    }
+                }
+
+                $text = substr($text, 0, $position);
+                preg_match_all($htmlMatchMask, $text, $return, PREG_OFFSET_CAPTURE);
+                $tagPieces = [];
+
+                foreach ($return[0] as $index => $tag) {
+                    if (isset($return[3][$index][0])) {
+                        continue;
+                    }
+                    if ('/' != $return[0][$index][0][1]) {
+                        array_unshift($tagPieces, $return[2][$index][0]);
+                    } else {
+                        array_shift($tagPieces);
+                    }
+                }
+
+                if (!empty($tagPieces)) {
+                    foreach ($tagPieces as $tag) {
+                        $text .= '</'.$tag.'>';
+                    }
+                }
+
+                if ('' != $readMoreText && $lengthBeforeWithoutHtml > $nbCharacter) {
+                    $text .= 'SuspensionPoint';
+                    $pattern = '#((</[^>]*>[\n\t\r ]*)?(</[^>]*>[\n\t\r ]*)?(</[^>]*>[\n\t\r ]*)?(</[^>]*>[\n\t\r ]*)?(</[^>]*>)[\n\t\r ]*SuspensionPoint)#i';
+                    $text = preg_replace($pattern, $readMoreText.'${2}${3}${4}${5}${6}', $text);
+                }
+            }
+        }
+
+        return $text;
+    }
 }
