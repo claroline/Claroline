@@ -1,26 +1,9 @@
 services:
-    _defaults:
-        autowire: false
-        autoconfigure: false
-        public: true
-
-    Claroline\TeamBundle\Manager\Transfer\Team:
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\TeamBundle\Serializer\TeamSerializer'
-            - '@Claroline\TeamBundle\Manager\TeamManager'
-            - '@Claroline\TeamBundle\Serializer\WorkspaceTeamParametersSerializer'
-
-      #alias is required: todo: use tags
-    claroline.transfer.claroline_team_tool:
-        alias: Claroline\TeamBundle\Manager\Transfer\Team
-        public: true
-
     Claroline\TeamBundle\Manager\TeamManager:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\Crud'
-            - '@claroline.manager.resource_manager'
-            - '@claroline.manager.rights_manager'
-            - '@claroline.manager.role_manager'
+            - '@Claroline\CoreBundle\Manager\ResourceManager'
+            - '@Claroline\CoreBundle\Manager\Resource\RightsManager'
+            - '@Claroline\CoreBundle\Manager\RoleManager'
             - '@Claroline\CoreBundle\Manager\Tool\ToolRightsManager'

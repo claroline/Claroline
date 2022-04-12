@@ -1,0 +1,9 @@
+services:
+    _defaults:
+        tags: [kernel.event_subscriber]
+
+    Claroline\PlannedNotificationBundle\Subscriber\Tool\PlannedNotificationSubscriber:
+        arguments:
+            - '@security.authorization_checker'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\Crud'

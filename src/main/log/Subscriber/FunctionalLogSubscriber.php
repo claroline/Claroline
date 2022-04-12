@@ -31,7 +31,7 @@ class FunctionalLogSubscriber implements EventSubscriberInterface
         return [
             EvaluationEvents::RESOURCE => ['logEvent', 10],
             ResourceEvents::RESOURCE_OPEN => ['logEvent', 10],
-            ToolEvents::TOOL_OPEN => ['logEvent', 10],
+            ToolEvents::OPEN => ['logEvent', 10],
         ];
     }
 
@@ -48,7 +48,7 @@ class FunctionalLogSubscriber implements EventSubscriberInterface
             ));
         }
 
-        // Hack because of ToolEvents::TOOL_OPEN implements the DataConveyorEventInterface
+        // Hack because of ToolEvents::OPEN implements the DataConveyorEventInterface
         if (method_exists($event, 'setData')) {
             $event->setData([]);
         }

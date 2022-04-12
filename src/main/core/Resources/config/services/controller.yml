@@ -80,7 +80,6 @@ services:
             - '@Claroline\AppBundle\API\Crud'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\CoreBundle\Manager\Tool\ToolManager'
-            - '@Claroline\CoreBundle\Manager\Tool\ToolMaskDecoderManager'
             - '@Claroline\CoreBundle\Manager\LogConnectManager'
 
     Claroline\CoreBundle\Controller\APINew\User\GroupController:
@@ -152,11 +151,13 @@ services:
             - '@security.token_storage'
             - '@security.authorization_checker'
             - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - '@messenger.default_bus'
             - '@Claroline\CoreBundle\Manager\RoleManager'
             - '@Claroline\CoreBundle\Manager\ResourceManager'
             - '@translator'
             - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
             - '@Claroline\CoreBundle\Manager\LogConnectManager'
+            - '@Claroline\AppBundle\Manager\File\TempFileManager'
 
     Claroline\CoreBundle\Controller\APINew\Platform\ConnectionMessageController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController

@@ -34,7 +34,7 @@ services:
 
     UJM\ExoBundle\Listener\Tool\QuestionBankListener:
         tags:
-            - { name: kernel.event_listener, event: open_tool_desktop_ujm_questions, method: onDisplayDesktop }
+            - { name: kernel.event_listener, event: tool.open.desktop.ujm_questions, method: onDisplayDesktop }
 
     UJM\ExoBundle\Listener\ApiListener:
         arguments:

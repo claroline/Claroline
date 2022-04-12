@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\API\Serializer\Tool;
 
+use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer;
@@ -20,9 +21,6 @@ class OrderedToolSerializer
     /** @var PublicFileSerializer */
     private $fileSerializer;
 
-    /**
-     * OrderedToolSerializer constructor.
-     */
     public function __construct(
         ObjectManager $om,
         ToolManager $toolManager,
@@ -43,26 +41,43 @@ class OrderedToolSerializer
         return 'ordered_tool';
     }
 
-    public function serialize(OrderedTool $orderedTool): array
+    public function serialize(OrderedTool $orderedTool, ?array $options = []): array
     {
-        return [
+        $serialized = [
             'id' => $orderedTool->getUuid(),
             'name' => $orderedTool->getTool()->getName(),
             'icon' => $orderedTool->getTool()->getClass(),
             'poster' => $this->serializePoster($orderedTool),
             'thumbnail' => $this->serializeThumbnail($orderedTool),
-            'permissions' => $this->toolManager->getCurrentPermissions($orderedTool),
             'display' => [
+                'order' => $orderedTool->getOrder(),
                 'showIcon' => $orderedTool->getShowIcon(),
                 'fullscreen' => $orderedTool->getFullscreen(),
             ],
+            'restrictions' => [
+                'hidden' => $orderedTool->isHidden(),
+            ],
         ];
+
+        if (!in_array(SerializerInterface::SERIALIZE_TRANSFER, $options)) {
+            $serialized['permissions'] = $this->toolManager->getCurrentPermissions($orderedTool);
+        }
+
+        return $serialized;
     }
 
-    public function deserialize(array $data, OrderedTool $orderedTool): OrderedTool
+    public function deserialize(array $data, OrderedTool $orderedTool, ?array $options = []): OrderedTool
     {
+        if (!in_array(SerializerInterface::REFRESH_UUID, $options)) {
+            $this->sipe('id', 'setUuid', $data, $orderedTool);
+        } else {
+            $orderedTool->refreshUuid();
+        }
+
+        $this->sipe('display.order', 'setOrder', $data, $orderedTool);
         $this->sipe('display.showIcon', 'setShowIcon', $data, $orderedTool);
         $this->sipe('display.fullscreen', 'setFullscreen', $data, $orderedTool);
+        $this->sipe('restrictions.hidden', 'setHidden', $data, $orderedTool);
 
         if (isset($data['poster']) && isset($data['poster']['url'])) {
             $orderedTool->setPoster($data['poster']['url']);

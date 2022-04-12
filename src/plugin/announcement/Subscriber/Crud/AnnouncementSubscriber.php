@@ -61,8 +61,6 @@ class AnnouncementSubscriber implements EventSubscriberInterface
     {
         /** @var Announcement $announcement */
         $announcement = $event->getObject();
-        $options = $event->getOptions();
-        $announcement->setAggregate($options['announcement_aggregate']);
 
         if (empty($announcement->getCreator())) {
             $currentUser = $this->tokenStorage->getToken()->getUser();

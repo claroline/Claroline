@@ -8,5 +8,5 @@ services:
         arguments:
             - '@Claroline\AnalyticsBundle\Manager\AnalyticsManager'
         tags:
-            - { name: kernel.event_listener, event: open_tool_workspace_dashboard, method: onDisplayWorkspace }
-            - { name: kernel.event_listener, event: administration_tool_dashboard, method: onDisplayAdministration }
+            - { name: kernel.event_listener, event: tool.open.workspace.dashboard, method: onDisplayWorkspace }
+            - { name: kernel.event_listener, event: tool.open.administration.dashboard, method: onDisplayAdministration }

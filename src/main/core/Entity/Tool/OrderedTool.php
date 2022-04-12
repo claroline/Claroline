@@ -13,8 +13,10 @@ namespace Claroline\CoreBundle\Entity\Tool;
 
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Claroline\AppBundle\Entity\Meta\Order;
 use Claroline\AppBundle\Entity\Meta\Poster;
 use Claroline\AppBundle\Entity\Meta\Thumbnail;
+use Claroline\AppBundle\Entity\Restriction\Hidden;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -46,6 +48,8 @@ class OrderedTool
     // meta
     use Thumbnail;
     use Poster;
+    use Order;
+    use Hidden;
 
     /**
      * Display tool icon when the tool is rendered.
@@ -77,22 +81,13 @@ class OrderedTool
 
     /**
      * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Tool\Tool",
-     *     cascade={"persist", "merge", "remove"},
-     *     inversedBy="orderedTools"
+     *     targetEntity="Claroline\CoreBundle\Entity\Tool\Tool"
      * )
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      *
      * @var Tool
      */
     private $tool;
-
-    /**
-     * @ORM\Column(name="display_order", type="integer")
-     *
-     * @var int
-     */
-    private $order;
 
     /**
      * @ORM\ManyToOne(
@@ -115,14 +110,20 @@ class OrderedTool
      */
     private $rights;
 
-    /**
-     * OrderedTool constructor.
-     */
     public function __construct()
     {
         $this->refreshUuid();
 
         $this->rights = new ArrayCollection();
+    }
+
+    public function __toString()
+    {
+        if (!empty($this->workspace)) {
+            return '['.$this->workspace->getName().'] '.$this->tool->getName();
+        }
+
+        return $this->tool->getName();
     }
 
     public function getShowIcon()
@@ -143,15 +144,6 @@ class OrderedTool
     public function getFullscreen(): bool
     {
         return $this->fullscreen;
-    }
-
-    public function __toString()
-    {
-        if (!empty($this->workspace)) {
-            return '['.$this->workspace->getName().'] '.$this->tool->getName();
-        }
-
-        return $this->tool->getName();
     }
 
     public function setWorkspace(Workspace $ws = null)
@@ -178,22 +170,6 @@ class OrderedTool
     public function getTool()
     {
         return $this->tool;
-    }
-
-    /**
-     * @param int $order
-     */
-    public function setOrder($order)
-    {
-        $this->order = $order;
-    }
-
-    /**
-     * @return int
-     */
-    public function getOrder()
-    {
-        return $this->order;
     }
 
     public function setUser(User $user = null)

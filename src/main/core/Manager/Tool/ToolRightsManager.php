@@ -35,6 +35,9 @@ class ToolRightsManager
         $this->toolRightsRepo = $om->getRepository(ToolRights::class);
     }
 
+    /**
+     * @deprecated can be done by the ToolRightsSerializer
+     */
     public function setToolRights(OrderedTool $orderedTool, Role $role, $mask)
     {
         $toolRights = $this->toolRightsRepo->findOneBy(['role' => $role, 'orderedTool' => $orderedTool]);

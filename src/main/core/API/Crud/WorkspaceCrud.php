@@ -239,9 +239,7 @@ class WorkspaceCrud
     private function copy(Workspace $workspace, Workspace $newWorkspace, ?bool $model = false): Workspace
     {
         $fileBag = new FileBag();
-        //these are the new workspace data
-        $data = $this->transferManager->serialize($workspace);
-        $data = $this->transferManager->exportFiles($data, $fileBag, $workspace);
+        $data = $this->transferManager->serialize($workspace, $fileBag);
 
         $workspaceCopy = $this->transferManager->deserialize($data, $newWorkspace, $fileBag);
 

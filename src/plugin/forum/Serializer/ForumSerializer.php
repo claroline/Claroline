@@ -22,10 +22,10 @@ class ForumSerializer
     use SerializerTrait;
 
     private $finder;
+    private $tokenStorage;
+    private $eventDispatcher;
+    private $manager;
 
-    /**
-     * ForumSerializer constructor.
-     */
     public function __construct(
         FinderProvider $finder,
         TokenStorageInterface $tokenStorage,

@@ -217,13 +217,6 @@ plugin:
           class: book
           is_displayable_in_workspace: false
           is_displayable_in_desktop: true
-          is_configurable_in_workspace: false
-          is_configurable_in_desktop: false
-          is_desktop_required: true
-          is_workspace_required: false
-          is_exportable: true
-          is_locked_for_admin: false
-          is_anonymous_excluded: false
           tool_rights:
               - name: archive
 
@@ -231,37 +224,16 @@ plugin:
           class: folder
           is_displayable_in_workspace: true
           is_displayable_in_desktop: true
-          is_configurable_in_workspace: true
-          is_configurable_in_desktop: false
-          is_desktop_required: false
-          is_workspace_required: false
-          is_exportable: true
-          is_locked_for_admin: false
-          is_anonymous_excluded: false
 
         - name: resource_trash
           class: trash-alt
           is_displayable_in_workspace: true
           is_displayable_in_desktop: false
-          is_configurable_in_workspace: false
-          is_configurable_in_desktop: false
-          is_desktop_required: false
-          is_workspace_required: true
-          is_exportable: false
-          is_locked_for_admin: false
-          is_anonymous_excluded: false
 
         - name: community
           class: user
           is_displayable_in_workspace: true
           is_displayable_in_desktop: true
-          is_configurable_in_workspace: false
-          is_configurable_in_desktop: false
-          is_desktop_required: true
-          is_workspace_required: true
-          is_exportable: false
-          is_locked_for_admin: false
-          is_anonymous_excluded: true
           tool_rights:
               - name: create_user
 
@@ -269,13 +241,6 @@ plugin:
           class: map-marker-alt
           is_displayable_in_workspace: false
           is_displayable_in_desktop: true
-          is_configurable_in_workspace: false
-          is_configurable_in_desktop: false
-          is_desktop_required: false
-          is_workspace_required: false
-          is_exportable: false
-          is_locked_for_admin: false
-          is_anonymous_excluded: false
           tool_rights:
               - name: book
 

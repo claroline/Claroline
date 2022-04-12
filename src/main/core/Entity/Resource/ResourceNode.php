@@ -577,12 +577,18 @@ class ResourceNode
 
     /**
      * Returns the resource class name.
-     *
-     * @return string
      */
-    public function getClass()
+    public function getClass(): ?string
     {
         return $this->resourceType->getClass();
+    }
+
+    /**
+     * Returns the resource type name.
+     */
+    public function getType(): string
+    {
+        return $this->resourceType->getName();
     }
 
     /**

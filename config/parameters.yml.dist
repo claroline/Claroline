@@ -37,9 +37,3 @@ parameters:
 
   # logs
   non_repeatable_log_time_in_seconds: 600
-
-  # Forms
-  # Presets for date range picker
-  # All possible values:
-  # ['today', 'yesterday', 'this_week', 'last_week', 'this_month', 'last_month', 'this_year', 'last_year', 'this_school_year', 'last_school_year', 'last_seven_days', 'last_thirty_days']
-  chosenRangeKeys: "['yesterday', 'last_seven_days', 'last_thirty_days', 'this_month', 'last_month', 'this_school_year', 'last_school_year']"

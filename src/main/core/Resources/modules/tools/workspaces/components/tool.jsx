@@ -5,12 +5,13 @@ import merge from 'lodash/merge'
 
 import {trans} from '#/main/app/intl/translation'
 import {Routes} from '#/main/app/router'
-import {LINK_BUTTON} from '#/main/app/buttons'
+import {LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 
 import {Workspace as WorkspaceType} from '#/main/core/workspace/prop-types'
 import {ToolPage} from '#/main/core/tool/containers/page'
 import {WorkspaceList} from '#/main/core/workspace/components/list'
 import {WorkspaceCreation} from '#/main/core/tools/workspaces/containers/creation'
+import {MODAL_WORKSPACE_IMPORT} from '#/main/core/workspace/modals/import'
 
 const WorkspacesTool = (props) => {
   // we invalidate all the workspaces list when we execute an action on one or many workspaces
@@ -52,6 +53,14 @@ const WorkspacesTool = (props) => {
           target: `${props.path}/new`,
           primary: true,
           displayed: props.canCreate
+        }, {
+          name: 'import',
+          type: MODAL_BUTTON,
+          icon: 'fa fa-fw fa-upload',
+          label: trans('import', {}, 'actions'),
+          modal: [MODAL_WORKSPACE_IMPORT],
+          displayed: props.canCreate,
+          group: trans('transfer')
         }
       ]}
       subtitle={

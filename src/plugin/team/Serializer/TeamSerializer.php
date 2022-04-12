@@ -101,13 +101,13 @@ class TeamSerializer
 
         if (isset($data['role'])) {
             /** @var Role $role */
-            $role = $this->om->getObject($data['role'], Workspace::class);
+            $role = $this->om->getObject($data['role'], Role::class);
             $team->setRole($role);
         }
 
         if (isset($data['teamManagerRole'])) {
             /** @var Role $managerRole */
-            $managerRole = $this->om->getObject($data['teamManagerRole'], Workspace::class);
+            $managerRole = $this->om->getObject($data['teamManagerRole'], Role::class);
             $team->setTeamManagerRole($managerRole);
         }
 

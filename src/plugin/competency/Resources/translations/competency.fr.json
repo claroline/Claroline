@@ -156,9 +156,5 @@
     "tooltip.undeletable_scale": "Cette échelle ne peut être supprimée car elle est liée à un référentiel.",
     "tooltip.undeletable_scale_plural": "Cette échelle ne peut être supprimée car elle est liée à %count% référentiels.",
     "tooltip.uneditable_scale": "Cette échelle ne peut être modifiée car une capacité lui est associée.",
-    "tooltip.uneditable_scale_plural": "Cette échelle ne peut être modifiée car %count% capacités lui sont associées.",
-    "user_picker.enter_group_search": "Entrez un nom de groupe et sélectionnez une proposition dans la liste.",
-    "user_picker.enter_user_search": "Entrez un nom, prénom ou nom d''utilisateur et sélectionnez une proposition dans la liste.",
-    "user_picker.select_target": "Choisissez l'objet de la sélection",
-    "user_picker_": "Sélection d'utilisateur(s)"
+    "tooltip.uneditable_scale_plural": "Cette échelle ne peut être modifiée car %count% capacités lui sont associées."
 }

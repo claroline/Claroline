@@ -1,9 +1,4 @@
 services:
-    _defaults:
-        autowire: false
-        autoconfigure: false
-        public: true
-
     Innova\PathBundle\Listener\Resource\PathListener:
         arguments:
            - '@security.token_storage'

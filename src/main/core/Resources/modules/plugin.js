@@ -17,8 +17,8 @@ registry.add('ClarolineCoreBundle', {
    * Provides menu which can be used in the main header menu.
    */
   header: {
-    'search': () => { return import(/* webpackChunkName: "core-header-search" */ '#/main/core/header/search') }/*,
-    'tools' : () => { return import(/!* webpackChunkName: "core-header-tools" *!/  '#/main/core/header/tools') }*/
+    'search': () => { return import(/* webpackChunkName: "core-header-search" */ '#/main/core/header/search') },
+    'tools' : () => { return import(/* webpackChunkName: "core-header-tools" */  '#/main/core/header/tools') }
   },
 
   integration: {

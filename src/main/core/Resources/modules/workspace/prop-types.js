@@ -45,19 +45,13 @@ const Workspace = {
     }),
     notifications: T.shape({
       enabled: T.bool
-    }),
-    roles: T.arrayOf(T.shape({
-      id: T.string.isRequired,
-      name: T.string.isRequired,
-      translationKey: T.string.isRequired
-    }))
+    })
   },
   defaultProps: {
     meta: {
       model: false,
       personal: false
     },
-    roles: [],
     opening: {
       type: 'tool',
       target: 'home'

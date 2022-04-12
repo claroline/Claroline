@@ -7,7 +7,7 @@ services:
         arguments:
             - '@Claroline\CoreBundle\Manager\Template\TemplateManager'
             - '@twig'
-            - '@message_bus'
+            - '@messenger.default_bus'
             - '@Claroline\AppBundle\Manager\PlatformManager'
 
     Claroline\OpenBadgeBundle\Manager\AssertionManager:
@@ -21,5 +21,5 @@ services:
     Claroline\OpenBadgeBundle\Manager\RuleManager:
         arguments:
           - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@message_bus'
+          - '@messenger.default_bus'
           - !tagged_iterator { tag: 'claroline.badge.rule', default_index_method: 'getType' }

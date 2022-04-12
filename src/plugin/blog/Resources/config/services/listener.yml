@@ -58,8 +58,8 @@ services:
             - '@Icap\BlogBundle\Manager\CommentManager'
         tags:
             - { name: kernel.event_listener, event: resource.icap_blog.load, method: onLoad }
-            - { name: kernel.event_listener, event: transfer.icap_blog.export, method: onExport }
-            - { name: kernel.event_listener, event: transfer.icap_blog.import.after, method: onImport }
+            - { name: kernel.event_listener, event: resource.icap_blog.export, method: onExport }
+            - { name: kernel.event_listener, event: resource.icap_blog.import, method: onImport }
             - { name: kernel.event_listener, event: resource.icap_blog.copy, method: onCopy }
 
     Icap\BlogBundle\Listener\NotificationListener:

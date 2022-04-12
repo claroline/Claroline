@@ -168,6 +168,13 @@ services:
     Claroline\CoreBundle\API\Serializer\Tool\ToolSerializer:
         tags: [claroline.serializer]
 
+    Claroline\CoreBundle\API\Serializer\Tool\ToolRightsSerializer:
+        tags: [ claroline.serializer ]
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\API\Serializer\User\RoleSerializer'
+            - '@Claroline\CoreBundle\Manager\Tool\ToolMaskDecoderManager'
+
     Claroline\CoreBundle\API\Serializer\Tool\OrderedToolSerializer:
         tags: [claroline.serializer]
         arguments:

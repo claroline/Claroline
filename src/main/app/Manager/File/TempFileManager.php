@@ -5,6 +5,7 @@ namespace Claroline\AppBundle\Manager\File;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\File\File;
 
 class TempFileManager
 {
@@ -38,15 +39,40 @@ class TempFileManager
      * This may also handle the real creation of the file and returns the File object.
      * But for now it's only used by archive generation (which uses \ZipArchive for this and only needs the path).
      *
+     * NB. persisted files are not automatically cleared at the end of each requests (this is useful when the file is processed
+     * in the messenger). YOU NEED TO MANUALLY REMOVE THE FILE WHEN YOU ARE DONE WITH IT.
+     *
      * @return string - the path to the temp file
      */
-    public function generate(): string
+    public function generate(?bool $persist = false): string
     {
         // generates an unique name for the new temp
         $tempName = Uuid::uuid4()->toString();
         $tempFile = $this->getDirectory().DIRECTORY_SEPARATOR.$tempName;
 
-        $this->files[] = $tempFile;
+        if (!$persist) {
+            $this->files[] = $tempFile;
+        }
+
+        return $tempFile;
+    }
+
+    /**
+     * Copy a file inside the temp dir.
+     *
+     * NB. persisted files are not automatically cleared at the end of each requests (this is useful when the file is processed
+     * in the messenger). YOU NEED TO MANUALLY REMOVE THE FILE WHEN YOU ARE DONE WITH IT.
+     */
+    public function copy(File $file, ?bool $persist = false)
+    {
+        // generates an unique name for the new temp
+        $tempName = Uuid::uuid4()->toString();
+        $tempFile = $this->getDirectory().DIRECTORY_SEPARATOR.$tempName;
+
+        $file->move($this->getDirectory(), $tempName);
+        if (!$persist) {
+            $this->files[] = $tempFile;
+        }
 
         return $tempFile;
     }

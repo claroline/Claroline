@@ -177,7 +177,6 @@ class DirectoryListener
         $resource = $this->crud->create($resourceClass, $resourceData, $options);
         $resource->setResourceNode($resourceNode);
 
-        // maybe do it in the serializer (if it can be done without intermediate flush)
         if (!empty($nodeData['rights'])) {
             foreach ($nodeData['rights'] as $rights) {
                 /** @var Role $role */

@@ -59,7 +59,7 @@ class StrictDispatcherTest extends MockeryTestCase
         $this->dispatcher->shouldReceive('hasListeners')->once()->andReturn(true);
         $this->dispatcher->shouldReceive('addSubscriber')->once();
         $this->dispatcher->shouldReceive('dispatch')->once();
-        $claroDispatcher->dispatch('notPopulated', 'Tool\ConfigureTool', []);
+        $claroDispatcher->dispatch('notPopulated', 'Tool\ConfigureTool', ['toolName', 'context']);
     }
 
     public function testDispatch()
@@ -72,7 +72,7 @@ class StrictDispatcherTest extends MockeryTestCase
             }
         );
         $claroDispatcher = new StrictDispatcher(
-            $dispatcher,
+            $dispatcher
         );
         $this->dispatcher->shouldReceive('addSubscriber')->once();
         $this->dispatcher->shouldReceive('dispatch')->once();

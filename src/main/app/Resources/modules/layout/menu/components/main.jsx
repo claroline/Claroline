@@ -1,6 +1,7 @@
 import React, {Fragment, Component, Children, cloneElement} from 'react'
 import {PropTypes as T} from 'prop-types'
 import isEmpty from 'lodash/isEmpty'
+import isNumber from 'lodash/isNumber'
 
 import RootCloseWrapper from 'react-overlays/lib/RootCloseWrapper'
 
@@ -95,14 +96,20 @@ class MenuMain extends Component {
                   className="list-group"
                   buttonName="list-group-item"
                   actions={this.props.tools
+                    .filter((tool) => undefined === tool.displayed || tool.displayed)
                     .map((tool) => ({
                       name: tool.name,
                       type: LINK_BUTTON,
                       icon: `fa fa-fw fa-${tool.icon}`,
                       label: trans(tool.name, {}, 'tools'),
-                      target: tool.path
+                      target: tool.path,
+                      order: tool.order
                     }))
                     .sort((a, b) => {
+                      if (isNumber(a.order) && isNumber(b.order) && a.order !== b.order) {
+                        return a.order - b.order
+                      }
+
                       if (a.label > b.label) {
                         return 1
                       }
@@ -151,7 +158,9 @@ MenuMain.propTypes = {
   tools: T.arrayOf(T.shape({
     icon: T.string.isRequired,
     name: T.string.isRequired,
-    path: T.string.isRequired
+    path: T.string.isRequired,
+    displayed: T.bool,
+    order: T.number
   })),
   actions: T.oneOfType([
     // a regular array of actions

@@ -1,6 +1,6 @@
 
 import {BadgeTool} from '#/plugin/open-badge/tools/badges/containers/tool'
-import {BadgeMenu} from '#/plugin/open-badge/tools/badges/components/menu'
+import {BadgeMenu} from '#/plugin/open-badge/tools/badges/containers/menu'
 
 import {reducer} from '#/plugin/open-badge/tools/badges/store/reducer'
 

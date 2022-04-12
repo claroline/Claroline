@@ -1,7 +1,7 @@
 services:
     Claroline\EvaluationBundle\Subscriber\ResourceEvaluationSubscriber:
         arguments:
-            - '@message_bus'
+            - '@messenger.default_bus'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\EvaluationBundle\Manager\ResourceEvaluationManager'
         tags:
@@ -10,7 +10,7 @@ services:
     Claroline\EvaluationBundle\Subscriber\WorkspaceEvaluationSubscriber:
         arguments:
             - '@security.token_storage'
-            - '@message_bus'
+            - '@messenger.default_bus'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\EvaluationBundle\Manager\WorkspaceEvaluationManager'
         tags:

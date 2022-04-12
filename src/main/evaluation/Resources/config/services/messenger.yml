@@ -2,7 +2,7 @@ services:
     Claroline\EvaluationBundle\Messenger\InitializeWorkspaceEvaluationsHandler:
         tags: [ messenger.message_handler ]
         arguments:
-            - '@message_bus'
+            - '@messenger.default_bus'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\EvaluationBundle\Manager\WorkspaceEvaluationManager'
 

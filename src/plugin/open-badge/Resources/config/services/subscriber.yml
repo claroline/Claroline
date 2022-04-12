@@ -1,22 +1,26 @@
 services:
+    _defaults:
+        tags: [kernel.event_subscriber]
+
     Claroline\OpenBadgeBundle\Subscriber\Crud\BadgeClassSubscriber:
         arguments:
             - '@security.token_storage'
             - '@Claroline\CoreBundle\Manager\Organization\OrganizationManager'
             - '@Claroline\CoreBundle\Manager\FileManager'
-        tags:
-            - { name: kernel.event_subscriber }
 
     Claroline\OpenBadgeBundle\Subscriber\Crud\WorkspaceSubscriber:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\Crud'
-        tags:
-            - { name: kernel.event_subscriber }
+
+    Claroline\OpenBadgeBundle\Subscriber\Tool\BadgesSubscriber:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\AppBundle\API\Crud'
+            - '@Claroline\CoreBundle\Manager\FileManager'
 
     Claroline\OpenBadgeBundle\Subscriber\BadgeLogSubscriber:
         arguments:
-            - '@doctrine.orm.entity_manager'
             - '@translator'
-        tags:
-            - { name: kernel.event_subscriber }
+            - '@messenger.default_bus'

@@ -72,7 +72,7 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\Library\Utilities\ClaroUtilities'
             - '@Claroline\AppBundle\API\Crud'
-            - '@claroline.manager.temp_file'
+            - '@Claroline\AppBundle\Manager\File\TempFileManager'
             - '@security.helper'
         calls:
             - setLogger: ['@logger']
@@ -196,44 +196,12 @@ services:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\Event\StrictDispatcher'
-            - '@claroline.manager.temp_file'
+            - '@Claroline\AppBundle\Manager\File\ArchiveManager'
+            - '@Claroline\CoreBundle\Manager\FileManager'
             - '@Claroline\AppBundle\API\SerializerProvider'
-            - '@claroline.transfer.ordered_tool'
             - '@Claroline\AppBundle\API\Crud'
         calls:
             - setLogger: [ '@logger' ]
-
-    Claroline\CoreBundle\Manager\Workspace\Transfer\OrderedToolTransfer:
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CoreBundle\API\Serializer\Tool\ToolSerializer'
-            - '@Claroline\CoreBundle\API\Serializer\User\RoleSerializer'
-            - '@service_container'
-        calls:
-          - setLogger: [ '@logger' ]
-
-    #alias is required: todo: use tags
-    claroline.transfer.ordered_tool:
-        alias: Claroline\CoreBundle\Manager\Workspace\Transfer\OrderedToolTransfer
-        public: true
-
-    Claroline\CoreBundle\Manager\Workspace\Transfer\Tools\ResourceManager:
-        arguments:
-            - '@Claroline\AppBundle\API\SerializerProvider'
-            - '@Claroline\AppBundle\API\Crud'
-            - '@claroline.manager.resource_manager'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\AppBundle\Event\StrictDispatcher'
-        calls:
-            - setLogger: [ '@logger' ]
-        tags:
-            - { name: kernel.event_listener, event: export_tool_resources, method: onExport }
-            - { name: kernel.event_listener, event: import_tool_resources, method: onImport }
-
-    #alias is required: todo: use tags
-    claroline.transfer.resources:
-        alias: Claroline\CoreBundle\Manager\Workspace\Transfer\Tools\ResourceManager
-        public: true
 
     Claroline\CoreBundle\Manager\Template\PlaceholderManager:
         arguments:

@@ -4,6 +4,8 @@ namespace Claroline\SlideshowBundle\Listener\Resource;
 
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
+use Claroline\CoreBundle\Event\Resource\ExportResourceEvent;
+use Claroline\CoreBundle\Event\Resource\ImportResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Manager\FileManager;
 use Claroline\SlideshowBundle\Entity\Resource\Slideshow;
@@ -58,5 +60,15 @@ class SlideshowListener
 
         $event->setFiles($files);
         $event->stopPropagation();
+    }
+
+    public function onExport(ExportResourceEvent $event)
+    {
+        // TODO : implement. It should export Slides files
+    }
+
+    public function onImport(ImportResourceEvent $event)
+    {
+        // TODO : implement. It should import Slides files
     }
 }

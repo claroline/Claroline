@@ -119,7 +119,7 @@ function url(/*value*/) {
 
 function email(value) {
   // we use same regex than W3C <input type="email" />
-  if (match(value, {regex: /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/ig})) {
+  if (match(value, {regex: /^[a-zA-Z0-9.!#$%&'’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/ig})) {
     return tval('This value should be a valid email.')
   }
 }

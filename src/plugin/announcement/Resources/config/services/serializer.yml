@@ -17,5 +17,3 @@ services:
 
     Claroline\AnnouncementBundle\Serializer\AnnouncementAggregateSerializer:
         tags: [claroline.serializer]
-        arguments:
-            - '@Claroline\AnnouncementBundle\Serializer\AnnouncementSerializer'

@@ -156,9 +156,5 @@
     "tooltip.undeletable_scale": "This scale cannot be deleted because it is associated with a framework.",
     "tooltip.undeletable_scale_plural": "This scale cannot be deleted because it is associated with %count% frameworks.",
     "tooltip.uneditable_scale": "This scale cannot be edited because it is associated with an ability.",
-    "tooltip.uneditable_scale_plural": "This scale cannot be edited because it is associated with %count% abilities.",
-    "user_picker.enter_group_search": "Enter a group name and select a suggestion in the list.",
-    "user_picker.enter_user_search": "Enter a first name, last name or username and select a suggestion in the list.",
-    "user_picker.select_target": "Choose the selection target",
-    "user_picker_": "User(s) selection"
+    "tooltip.uneditable_scale_plural": "This scale cannot be edited because it is associated with %count% abilities."
 }
