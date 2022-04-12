@@ -9,48 +9,36 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Listener\Tool;
+namespace Claroline\CoreBundle\Subscriber\Tool;
 
-use Claroline\AppBundle\API\FinderProvider;
-use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Event\CatalogEvents\ToolEvents;
 use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-/**
- * Workspaces tool.
- */
-class WorkspacesListener
+class WorkspacesSubscriber implements EventSubscriberInterface
 {
+    const NAME = 'workspaces';
+
     /** @var AuthorizationCheckerInterface */
     private $authorization;
 
-    /** @var FinderProvider */
-    private $finder;
-
-    /** @var SerializerProvider */
-    private $serializer;
-
-    /**
-     * HomeListener constructor.
-     */
     public function __construct(
-        TokenStorageInterface $tokenStorage,
-        FinderProvider $finder,
-        SerializerProvider $serializer,
         AuthorizationCheckerInterface $authorization
     ) {
-        $this->tokenStorage = $tokenStorage;
-        $this->finder = $finder;
-        $this->serializer = $serializer;
         $this->authorization = $authorization;
     }
 
-    /**
-     * Displays workspaces on Desktop.
-     */
-    public function onDisplayDesktop(OpenToolEvent $event)
+    public static function getSubscribedEvents(): array
+    {
+        return [
+            ToolEvents::getEventName(ToolEvents::OPEN, Tool::DESKTOP, static::NAME) => 'onOpen',
+        ];
+    }
+
+    public function onOpen(OpenToolEvent $event)
     {
         $event->setData([
             'creatable' => $this->authorization->isGranted('CREATE', new Workspace()),

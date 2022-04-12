@@ -1,0 +1,356 @@
+{
+    "id": "9bcaecc5-ad37-4915-86aa-a900f55ec7fc",
+    "name": "default_workspace",
+    "code": "default_workspace",
+    "meta": {
+        "slug": "default-workspace",
+        "model": true,
+        "personal": false,
+        "description": "",
+        "created": "2019-04-05T16:33:00",
+        "updated": "2019-04-05T16:33:00",
+        "creator": {
+            "firstName": "Claroline",
+            "lastName": "Connect",
+            "username": "claroline-connect",
+            "email": "claroline-connect"
+        }
+    },
+    "opening": {
+        "type": "tool",
+        "target": "home"
+    },
+    "display": {
+        "showTools": true
+    },
+    "breadcrumb": {
+        "displayed": true,
+        "items": [
+            "desktop",
+            "workspaces",
+            "current",
+            "tool"
+        ]
+    },
+    "restrictions": {
+        "hidden": true,
+        "dates": []
+    },
+    "registration": {
+        "validation": false,
+        "waitingForRegistration": false,
+        "selfRegistration": false,
+        "selfUnregistration": false,
+        "defaultRole": {
+            "id": "2539f32c-c139-11ec-8283-d45d64d6f420",
+            "translationKey": "collaborator",
+            "type": 2
+        }
+    },
+    "notifications": {
+        "enabled": true
+    },
+    "roles": [
+        {
+            "id": "2539f32c-c139-11ec-8283-d45d64d6f420",
+            "type": 2,
+            "translationKey": "collaborator"
+        },
+        {
+            "id": "4b1543ae-c139-11ec-8283-d45d64d6f420",
+            "type": 2,
+            "translationKey": "manager"
+        }
+    ],
+    "organizations": [
+        {
+            "id": "01010507-acee-11e7-aace-08606e6cde7f",
+            "name": "default",
+            "code": "0104d1c8-acee-11e7-aace-08606e6cde7f",
+            "email": null,
+            "type": "",
+            "parent": null,
+            "meta": {
+                "default": true,
+                "position": 1
+            },
+            "managers": [],
+            "locations": []
+        }
+    ],
+    "orderedTools": [
+        {
+            "tool": "resources",
+            "name": "resources",
+            "position": 2,
+            "restrictions": [
+                {
+                    "role": {
+                        "id": "2539f32c-c139-11ec-8283-d45d64d6f420",
+                        "translationKey": "collaborator",
+                        "type": 2
+                    },
+                    "mask": 1
+                }
+            ],
+            "data": {
+                "resources": [{
+                    "resourceNode": {
+                        "id": "6cf71f31-e167-4ecb-a06a-12db9eef7b6c",
+                        "name": "default_workspace",
+                        "path": [
+                            {
+                                "id": "6cf71f31-e167-4ecb-a06a-12db9eef7b6c",
+                                "name": "default_workspace"
+                            }
+                        ],
+                        "meta": {
+                            "type": "directory",
+                            "className": "Claroline\\CoreBundle\\Entity\\Resource\\Directory",
+                            "mimeType": "custom\/directory",
+                            "creator": {
+                                "id": "3a829b82-eb18-46a1-b67b-af1e8a3b5513",
+                                "firstName": "Claroline",
+                                "lastName": "Connect",
+                                "username": "claroline-connect",
+                                "email": "claroline-connect"
+                            },
+                            "created": "2019-04-05T16:33:32",
+                            "updated": "2019-04-05T16:35:43",
+                            "published": true,
+                            "active": true
+                        },
+                        "rights": [
+                            {
+                                "translationKey": "user",
+                                "permissions": {
+                                    "open": false,
+                                    "copy": false,
+                                    "export": false,
+                                    "delete": false,
+                                    "edit": false,
+                                    "administrate": false,
+                                    "create": []
+                                }
+                            },
+                            {
+                                "translationKey": "anonymous",
+                                "permissions": {
+                                    "open": false,
+                                    "copy": false,
+                                    "export": false,
+                                    "delete": false,
+                                    "edit": false,
+                                    "administrate": false,
+                                    "create": []
+                                }
+                            },
+                            {
+                                "translationKey": "collaborator",
+                                "permissions": {
+                                    "open": true,
+                                    "copy": false,
+                                    "export": false,
+                                    "delete": false,
+                                    "edit": false,
+                                    "administrate": false,
+                                    "create": []
+                                }
+                            },
+                            {
+                                "translationKey": "manager",
+                                "permissions": {
+                                    "open": true,
+                                    "copy": true,
+                                    "export": true,
+                                    "delete": true,
+                                    "edit": true,
+                                    "administrate": true,
+                                    "create": [
+                                        "file",
+                                        "directory",
+                                        "text",
+                                        "shortcut",
+                                        "claroline_announcement_aggregate",
+                                        "hevinci_url",
+                                        "claroline_forum",
+                                        "claroline_web_resource",
+                                        "icap_blog",
+                                        "icap_wiki",
+                                        "icap_lesson",
+                                        "icap_website",
+                                        "ujm_exercise",
+                                        "innova_path",
+                                        "claroline_claco_form",
+                                        "ujm_lti_resource",
+                                        "icap_bibliography",
+                                        "claroline_dropzone",
+                                        "claroline_scorm",
+                                        "claro_slideshow",
+                                        "rss_feed"
+                                    ]
+                                }
+                            }
+                        ]
+                    },
+                    "resource": {
+                        "id": "1104d1c8-acee-11e7-aace-08606e6cde7d",
+                        "uploadDestination": false,
+                        "display": {
+                            "showSummary": true,
+                            "openSummary": false
+                        },
+                        "list": {
+                            "actions": true,
+                            "count": true,
+                            "display": "tiles-sm",
+                            "availableDisplays": [
+                                "table",
+                                "table-sm",
+                                "tiles",
+                                "tiles-sm",
+                                "list",
+                                "list-sm"
+                            ],
+                            "sorting": "name",
+                            "availableSort": [
+                                "name",
+                                "meta.type",
+                                "meta.updated",
+                                "meta.created"
+                            ],
+                            "searchMode": "unified",
+                            "filters": [],
+                            "availableFilters": [
+                                "name",
+                                "meta.type",
+                                "parent",
+                                "meta.published"
+                            ],
+                            "paginated": true,
+                            "pageSize": 30,
+                            "availablePageSizes": [
+                                15,
+                                30,
+                                50,
+                                100,
+                                -1
+                            ],
+                            "columns": [
+                                "name",
+                                "meta.type",
+                                "parent",
+                                "meta.published"
+                            ],
+                            "availableColumns": [
+                                "name",
+                                "meta.type",
+                                "parent",
+                                "meta.published",
+                                "meta.updated",
+                                "meta.created"
+                            ],
+                            "card": {
+                                "display": [
+                                    "icon",
+                                    "flags",
+                                    "subtitle",
+                                    "description",
+                                    "footer"
+                                ],
+                                "mapping": []
+                            }
+                        },
+                        "_nodeId": "6cf71f31-e167-4ecb-a06a-12db9eef7b6c",
+                        "_class": "Claroline\\CoreBundle\\Entity\\Resource\\Directory",
+                        "_type": "directory"
+                    }
+                }]
+            }
+        },
+        {
+            "tool": "home",
+            "name": "home",
+            "position": 1,
+            "restrictions": [
+                {
+                    "role": {
+                        "id": "2539f32c-c139-11ec-8283-d45d64d6f420",
+                        "translationKey": "collaborator",
+                        "type": 2
+                    },
+                    "mask": 1
+                }
+            ],
+            "data": {
+                "tabs": [
+                    {
+                        "id": "c6004066-2a02-4f87-b289-42f4dfc32e5d",
+                        "title": "Accueil",
+                        "longTitle": "Accueil",
+                        "centerTitle": false,
+                        "poster": null,
+                        "icon": null,
+                        "context": "workspace",
+                        "type": "widgets",
+                        "class": "Claroline\\HomeBundle\\Entity\\Type\\WidgetsTab",
+                        "position": 1,
+                        "restrictions": {
+                            "hidden": false,
+                            "roles": []
+                        },
+                        "display": {
+                            "color": "#277913"
+                        },
+                        "user": null,
+                        "parameter": {
+                            "widgets": []
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "tool": "dashboard",
+            "name": "dashboard",
+            "position": 3,
+            "restrictions": []
+        },
+        {
+            "tool": "community",
+            "name": "community",
+            "position": 5,
+            "restrictions": []
+        },
+        {
+            "tool": "claroline_team_tool",
+            "name": "claroline_team_tool",
+            "position": 6,
+            "restrictions": []
+        },
+        {
+            "tool": "agenda",
+            "name": "agenda",
+            "position": 7,
+            "restrictions": []
+        },
+        {
+            "tool": "progression",
+            "name": "progression",
+            "position": 8,
+            "restrictions": []
+        },
+        {
+            "tool": "resource_trash",
+            "name": "resource_trash",
+            "position": 9,
+            "restrictions": []
+        },
+        {
+            "tool": "open-badge",
+            "name": "open-badge",
+            "position": 10,
+            "restrictions": []
+        }
+    ]
+}

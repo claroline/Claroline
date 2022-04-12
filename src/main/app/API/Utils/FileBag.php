@@ -4,6 +4,8 @@ namespace Claroline\AppBundle\API\Utils;
 
 class FileBag
 {
+    private $files;
+
     public function __construct()
     {
         $this->files = [];

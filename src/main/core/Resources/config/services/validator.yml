@@ -10,6 +10,8 @@ services:
 
     Claroline\CoreBundle\API\Validator\WorkspaceValidator: ~
 
+    Claroline\CoreBundle\API\Validator\RoleValidator: ~
+
     Claroline\CoreBundle\API\Validator\UserValidator:
         arguments:
           - '@security.authorization_checker'

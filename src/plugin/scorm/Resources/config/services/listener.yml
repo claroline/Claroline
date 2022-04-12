@@ -17,9 +17,8 @@ services:
         tags:
            - { name: kernel.event_listener, event: resource.claroline_scorm.load, method: onLoad }
            - { name: kernel.event_listener, event: resource.claroline_scorm.delete, method: onDelete }
-           - { name: kernel.event_listener, event: transfer.claroline_scorm.import.before, method: onImportBefore }
-           - { name: kernel.event_listener, event: transfer.claroline_scorm.export, method: onExportFile }
-           - { name: kernel.event_listener, event: transfer.claroline_scorm.import.after, method: onImportFile }
+           - { name: kernel.event_listener, event: resource.claroline_scorm.export, method: onExport }
+           - { name: kernel.event_listener, event: resource.claroline_scorm.import, method: onImport }
            - { name: kernel.event_listener, event: resource.claroline_scorm.copy, method: onCopy }
            - { name: kernel.event_listener, event: resource.claroline_scorm.change_file, method: onFileChange }
            - { name: kernel.event_listener, event: download_claroline_scorm, method: onDownload }

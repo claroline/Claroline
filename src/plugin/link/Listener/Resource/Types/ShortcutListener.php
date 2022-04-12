@@ -14,6 +14,7 @@ namespace Claroline\LinkBundle\Listener\Resource\Types;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Event\Resource\DownloadResourceEvent;
+use Claroline\CoreBundle\Event\Resource\ImportResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Manager\Resource\ResourceLifecycleManager;
 use Claroline\LinkBundle\Entity\Resource\Shortcut;
@@ -53,13 +54,18 @@ class ShortcutListener
      * Exports a shortcut.
      * It forwards the event to the target of the shortcut.
      */
-    public function export(DownloadResourceEvent $event)
+    public function download(DownloadResourceEvent $event)
     {
         /** @var Shortcut $shortcut */
         $shortcut = $event->getResource();
 
         $targetEvent = $this->resourceLifecycle->export($shortcut->getTarget());
 
-        $event->setData($targetEvent->getData());
+        $event->setItem($targetEvent->getItem());
+    }
+
+    public function onImport(ImportResourceEvent $event)
+    {
+        // TODO : implement
     }
 }

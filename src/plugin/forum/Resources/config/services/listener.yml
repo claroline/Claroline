@@ -20,9 +20,9 @@ services:
             - '@security.token_storage'
         tags:
             - { name: kernel.event_listener, event: resource.claroline_forum.load, method: onOpen }
-            - { name: kernel.event_listener, event: transfer.claroline_forum.export, method: onExport }
-            - { name: kernel.event_listener, event: transfer.claroline_forum.import.before, method: onImportBefore }
-            - { name: kernel.event_listener, event: transfer.claroline_forum.import.after, method: onImport }
+            - { name: kernel.event_listener, event: resource.claroline_forum.copy, method: onCopy }
+            - { name: kernel.event_listener, event: resource.claroline_forum.export, method: onExport }
+            - { name: kernel.event_listener, event: resource.claroline_forum.import, method: onImport }
 
     Claroline\ForumBundle\Listener\ApiListener:
         arguments:

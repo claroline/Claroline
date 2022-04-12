@@ -1,15 +1,4 @@
 services:
-    _defaults:
-        autowire: false
-        autoconfigure: false
-        public: false
-
-    # Tools
-    Claroline\OpenBadgeBundle\Listener\Tool\BadgesListener:
-        tags:
-            - { name: kernel.event_listener, event: open_tool_desktop_badges, method: onDisplayDesktop }
-            - { name: kernel.event_listener, event: open_tool_workspace_badges, method: onDisplayWorkspace }
-
     # DataSources
     Claroline\OpenBadgeBundle\Listener\DataSource\BadgesSource:
         arguments:

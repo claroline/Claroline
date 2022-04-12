@@ -14,7 +14,6 @@ use Claroline\CoreBundle\API\Crud\WorkspaceCrud;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Event\ExportObjectEvent;
 use Claroline\CoreBundle\Manager\Workspace\Transfer\OrderedToolTransfer;
 use Psr\Log\LoggerAwareInterface;
 
@@ -84,8 +83,7 @@ class TransferManager implements LoggerAwareInterface
     {
         // get data
         $fileBag = new FileBag();
-        $data = $this->serialize($workspace);
-        $data = $this->exportFiles($data, $fileBag, $workspace);
+        $data = $this->serialize($workspace, $fileBag);
 
         // create archive
         $archive = new \ZipArchive();
@@ -109,7 +107,7 @@ class TransferManager implements LoggerAwareInterface
      *
      * @return array - the serialized representation of the workspace
      */
-    public function serialize(Workspace $workspace): array
+    public function serialize(Workspace $workspace, FileBag $fileBag): array
     {
         $serialized = $this->serializer->serialize($workspace);
 
@@ -131,8 +129,8 @@ class TransferManager implements LoggerAwareInterface
             array_unshift($orderedTools, $first);
         }
 
-        $serialized['orderedTools'] = array_map(function (OrderedTool $tool) {
-            return $this->ots->serialize($tool);
+        $serialized['orderedTools'] = array_map(function (OrderedTool $tool) use ($fileBag) {
+            return $this->ots->serialize($tool, $fileBag);
         }, $orderedTools);
 
         return $serialized;
@@ -148,25 +146,6 @@ class TransferManager implements LoggerAwareInterface
         $this->importTools($data, $workspace, $roles, $bag);
 
         return $workspace;
-    }
-
-    //once everything is serialized, we add files to the archive.
-    public function exportFiles($data, FileBag $fileBag, Workspace $workspace)
-    {
-        foreach ($data['orderedTools'] as $key => $orderedToolData) {
-            //copied from crud
-            $name = 'export_tool_'.$orderedToolData['tool'];
-            //use an other even. StdClass is not pretty
-            if (isset($orderedToolData['data'])) {
-                /** @var ExportObjectEvent $event */
-                $event = $this->dispatcher->dispatch($name, ExportObjectEvent::class, [
-                    new \StdClass(), $fileBag, $orderedToolData['data'], $workspace,
-                ]);
-                $data['orderedTools'][$key]['data'] = $event->getData();
-            }
-        }
-
-        return $data;
     }
 
     private function importWorkspace(array $data, Workspace $workspace, array $options = []): Workspace
@@ -193,6 +172,8 @@ class TransferManager implements LoggerAwareInterface
 
         $this->log(sprintf('Deserializing the roles : %s', implode(', ', array_map(function ($r) { return $r['translationKey']; }, $data['roles']))));
         foreach ($data['roles'] as $roleData) {
+            $oldId = $roleData['id'];
+            unset($roleData['id']); // otherwise it will check for uniqueness on it and fail
             unset($roleData['name']);
             $roleData['workspace']['id'] = $workspace->getUuid();
             $role = new Role();
@@ -206,7 +187,7 @@ class TransferManager implements LoggerAwareInterface
                 $workspace->setDefaultRole($role);
             }
 
-            $roles[$roleData['id']] = $role;
+            $roles[$oldId] = $role;
         }
 
         $this->om->persist($workspace);
@@ -217,13 +198,6 @@ class TransferManager implements LoggerAwareInterface
 
     private function importTools(array $data, Workspace $workspace, array $roles, FileBag $bag): array
     {
-        $this->log('Pre import data update...');
-
-        foreach ($data['orderedTools'] as $orderedToolData) {
-            $this->ots->setLogger($this->logger);
-            $data = $this->ots->dispatchPreEvent($data, $orderedToolData);
-        }
-
         $this->log('Deserializing the tools...');
 
         $createdObjects = $roles; // keep a map of old ID => new object for all imported objects

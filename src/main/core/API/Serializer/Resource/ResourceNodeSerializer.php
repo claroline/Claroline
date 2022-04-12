@@ -194,8 +194,8 @@ class ResourceNodeSerializer
     private function serializeMeta(ResourceNode $resourceNode, array $options): array
     {
         $meta = [
-            'type' => $resourceNode->getResourceType()->getName(),
-            'className' => $resourceNode->getResourceType()->getClass(),
+            'type' => $resourceNode->getType(),
+            'className' => $resourceNode->getClass(),
             'mimeType' => $resourceNode->getMimeType(),
             'description' => $resourceNode->getDescription(),
             'creator' => $resourceNode->getCreator() ?

@@ -9,15 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Listener\Tool;
+namespace Claroline\CoreBundle\Event\Tool;
 
-use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
+use Claroline\AppBundle\Event\DataConveyorEventInterface;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 
-class LocationsListener
+/**
+ * Event fired when a tool is closed.
+ */
+class CloseToolEvent extends AbstractToolEvent
 {
-    public function onDisplayDesktop(OpenToolEvent $event)
-    {
-        $event->setData([]);
-        $event->stopPropagation();
-    }
 }

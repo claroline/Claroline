@@ -173,8 +173,14 @@ class RoleSerializer
         return $tools;
     }
 
-    public function deserialize(array $data, Role $role): Role
+    public function deserialize(array $data, Role $role, ?array $options = []): Role
     {
+        if (!in_array(Options::REFRESH_UUID, $options)) {
+            $this->sipe('id', 'setUuid', $data, $role);
+        } else {
+            $role->refreshUuid();
+        }
+
         if (!$role->isReadOnly()) {
             $this->sipe('name', 'setName', $data, $role);
             $this->sipe('type', 'setType', $data, $role);

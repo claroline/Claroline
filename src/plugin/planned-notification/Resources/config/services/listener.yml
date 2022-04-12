@@ -4,19 +4,9 @@ services:
         autoconfigure: false
         public: true
 
-    Claroline\PlannedNotificationBundle\Listener\Tool\PlannedNotificationListener:
-       arguments:
-          - '@security.authorization_checker'
-          - '@Claroline\AppBundle\API\Crud'
-          - '@Claroline\AppBundle\API\FinderProvider'
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
-       tags:
-          - { name: kernel.event_listener, event: open_tool_workspace_claroline_planned_notification_tool, method: onWorkspaceToolOpen }
-          - { name: kernel.event_listener, event: workspace_copy_tool_claroline_planned_notification_tool, method: onWorkspaceToolCopy }
-
     Claroline\PlannedNotificationBundle\Listener\LogListener:
-       arguments:
-          - '@Claroline\PlannedNotificationBundle\Manager\PlannedNotificationManager'
-          - '@security.token_storage'
-       tags:
-          - { name: kernel.event_listener, event: log, method: onLog, priority: 1 }
+        arguments:
+            - '@Claroline\PlannedNotificationBundle\Manager\PlannedNotificationManager'
+            - '@security.token_storage'
+        tags:
+            - { name: kernel.event_listener, event: log, method: onLog, priority: 1 }

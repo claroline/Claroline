@@ -50,7 +50,7 @@ const AnnouncesList = props =>
 
     {1 < props.pages &&
       <nav className="text-right">
-        <div className="pagination-condensed btn-group">
+        <div className="pagination-condensed btn-group component-container">
           <button
             type="button"
             className="btn btn-pagination btn-previous"
@@ -70,7 +70,7 @@ const AnnouncesList = props =>
             onClick={() => props.changePage(props.currentPage + 1)}
           >
             {trans(1 === props.sortOrder ? 'newer':'older', {}, 'announcement')}
-            <span className="fa fa-angle-double-right" aria-hidden="true" />
+            <span className="fa fa-angle-double-right icon-with-text-left" aria-hidden="true" />
           </button>
         </div>
       </nav>

@@ -11,41 +11,62 @@
 
 namespace Claroline\OpenBadgeBundle\Subscriber;
 
-use Claroline\LogBundle\Entity\FunctionalLog;
+use Claroline\LogBundle\Messenger\Message\CreateFunctionalLog;
+use Claroline\OpenBadgeBundle\Event\AddBadgeEvent;
 use Claroline\OpenBadgeBundle\Event\BadgeEvents;
-use Doctrine\ORM\EntityManagerInterface;
+use Claroline\OpenBadgeBundle\Event\RemoveBadgeEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Contracts\EventDispatcher\Event;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class BadgeLogSubscriber implements EventSubscriberInterface
 {
+    /** @var TranslatorInterface */
     private $translator;
-    private $em;
+    /** @var MessageBusInterface */
+    private $messageBus;
 
-    public function __construct(EntityManagerInterface $em, TranslatorInterface $translator)
-    {
-        $this->em = $em;
+    public function __construct(
+        TranslatorInterface $translator,
+        MessageBusInterface $messageBus
+    ) {
         $this->translator = $translator;
+        $this->messageBus = $messageBus;
     }
 
     public static function getSubscribedEvents(): array
     {
         return [
-            BadgeEvents::ADD_BADGE => 'logEvent',
-            BadgeEvents::REMOVE_BADGE => 'logEvent',
+            BadgeEvents::ADD_BADGE => 'logAddBadge',
+            BadgeEvents::REMOVE_BADGE => 'logRemoveBadge',
         ];
     }
 
-    public function logEvent(Event $event, string $eventName)
+    public function logAddBadge(AddBadgeEvent $event)
     {
-        $logEntry = new FunctionalLog();
+        $user = $event->getUser();
+        $badge = $event->getBadge();
 
-        $logEntry->setUser($event->getUser());
-        $logEntry->setDetails($event->getMessage($this->translator));
-        $logEntry->setEvent($eventName);
+        $this->messageBus->dispatch(new CreateFunctionalLog(
+            new \DateTime(),
+            BadgeEvents::ADD_BADGE,
+            $this->translator->trans('addBadge', ['userName' => $user->getUsername(), 'badgeName' => $badge->getName()], 'functional'),
+            $user->getId(),
+            $badge->getWorkspace() ? $badge->getWorkspace()->getId() : null
+        ));
+    }
 
-        $this->em->persist($logEntry);
-        $this->em->flush();
+    public function logRemoveBadge(RemoveBadgeEvent $event)
+    {
+        $user = $event->getUser();
+        $badge = $event->getBadge();
+
+        $this->messageBus->dispatch(new CreateFunctionalLog(
+            new \DateTime(),
+            BadgeEvents::REMOVE_BADGE,
+            $this->translator->trans('removeBadge', ['userName' => $user->getUsername(), 'badgeName' => $badge->getName()], 'functional'),
+            $user->getId(),
+            $badge->getWorkspace() ? $badge->getWorkspace()->getId() : null
+        ));
     }
 }

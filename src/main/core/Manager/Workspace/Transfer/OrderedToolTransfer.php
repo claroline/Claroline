@@ -4,21 +4,23 @@ namespace Claroline\CoreBundle\Manager\Workspace\Transfer;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Utils\FileBag;
+use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Log\LoggableTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\Tool\ToolSerializer;
 use Claroline\CoreBundle\API\Serializer\User\RoleSerializer;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\Tool\AbstractTool;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Tool\ToolRights;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Event\CatalogEvents\ToolEvents;
+use Claroline\CoreBundle\Event\Tool\ExportToolEvent;
+use Claroline\CoreBundle\Event\Tool\ImportToolEvent;
 use Psr\Log\LoggerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-/**
- * Not a true Serializer I guess, need to see where it is used. Could be extended after a refactoring.
- */
 class OrderedToolTransfer implements LoggerAwareInterface
 {
     use LoggableTrait;
@@ -29,6 +31,8 @@ class OrderedToolTransfer implements LoggerAwareInterface
     private $toolSerializer;
     /** @var RoleSerializer */
     private $roleSerializer;
+    /** @var StrictDispatcher */
+    private $dispatcher;
     /** @var ContainerInterface */
     private $container;
 
@@ -36,17 +40,25 @@ class OrderedToolTransfer implements LoggerAwareInterface
         ObjectManager $om,
         ToolSerializer $toolSerializer,
         RoleSerializer $roleSerializer,
+        StrictDispatcher $dispatcher,
         ContainerInterface $container
     ) {
         $this->om = $om;
         $this->toolSerializer = $toolSerializer;
         $this->roleSerializer = $roleSerializer;
+        $this->dispatcher = $dispatcher;
         $this->container = $container;
     }
 
-    public function serialize(OrderedTool $orderedTool, array $options = []): array
+    public function serialize(OrderedTool $orderedTool, FileBag $fileBag): array
     {
-        $data = [
+        // get custom tool data
+        /** @var ExportToolEvent $event */
+        $event = $this->dispatcher->dispatch(ToolEvents::getEventName(ToolEvents::EXPORT, AbstractTool::WORKSPACE, $orderedTool->getTool()->getName()), ExportToolEvent::class, [
+            $orderedTool->getTool()->getName(), AbstractTool::WORKSPACE, $orderedTool->getWorkspace(), $fileBag,
+        ]);
+
+        return [
             'tool' => $orderedTool->getTool()->getName(),
             'position' => $orderedTool->getOrder(),
             // TODO : should be named rights and there should be a ToolRightsSerializer
@@ -56,37 +68,13 @@ class OrderedToolTransfer implements LoggerAwareInterface
                     'mask' => $rights->getMask(),
                 ];
             }, $orderedTool->getRights()->toArray()),
+            'data' => $event->getData(),
         ];
-
-        $serviceName = 'claroline.transfer.'.$orderedTool->getTool()->getName();
-        if ($this->container->has($serviceName)) {
-            $data['data'] = $this->container->get($serviceName)->serialize($orderedTool->getWorkspace(), $options);
-        }
-
-        return $data;
     }
 
-    public function dispatchPreEvent(array $data, array $orderedToolData)
+    public function deserialize(array $data, OrderedTool $orderedTool, array $newEntities = [], Workspace $workspace = null, FileBag $fileBag = null): array
     {
-        //use event instead maybe ? or tagged service
-        $serviceName = 'claroline.transfer.'.$orderedToolData['tool'];
-
-        if ($this->container->has($serviceName)) {
-            $importer = $this->container->get($serviceName);
-            if (method_exists($importer, 'setLogger')) {
-                $importer->setLogger($this->logger);
-            }
-            $data = $importer->prepareImport($orderedToolData, $data);
-        }
-
-        return $data;
-    }
-
-    public function deserialize(array $data, OrderedTool $orderedTool, array $newEntities = [], Workspace $workspace = null, FileBag $bag = null): array
-    {
-        $createdObjects = [];
-
-        $tool = $this->om->getRepository(Tool::class)->findOneByName($data['tool']);
+        $tool = $this->om->getRepository(Tool::class)->findOneBy(['name' => $data['tool']]);
         if ($tool) {
             $orderedTool->setWorkspace($workspace);
             $orderedTool->setTool($tool);
@@ -108,17 +96,16 @@ class OrderedToolTransfer implements LoggerAwareInterface
                 }
             }
 
-            //use event instead maybe ? or tagged service
-            $serviceName = 'claroline.transfer.'.$orderedTool->getTool()->getName();
+            /* @var ImportToolEvent $event */
+            $event = $this->dispatcher->dispatch(
+                ToolEvents::getEventName(ToolEvents::IMPORT, AbstractTool::WORKSPACE, $orderedTool->getTool()->getName()),
+                ImportToolEvent::class,
+                [$orderedTool->getTool()->getName(), AbstractTool::WORKSPACE, $orderedTool->getWorkspace(), $fileBag, $data['data'] ?? [], $newEntities]
+            );
 
-            if ($this->container->has($serviceName)) {
-                $importer = $this->container->get($serviceName);
-                if (isset($data['data'])) {
-                    $createdObjects = $importer->deserialize($data['data'], $orderedTool->getWorkspace(), [Options::REFRESH_UUID], $newEntities, $bag);
-                }
-            }
+            return $event->getCreatedEntities();
         }
 
-        return $createdObjects;
+        return [];
     }
 }

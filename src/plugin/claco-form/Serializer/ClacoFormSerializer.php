@@ -163,7 +163,7 @@ class ClacoFormSerializer
                 }, $clacoForm->getFields()),
             ]);
 
-            // TODO : should not be managed here (they have their own API for the UI). It's used by copy/transfer
+            // TODO : should not be managed here (they have their own API for the UI). This is no longer used.
             $serialized = array_merge($serialized, [
                 'categories' => array_map(function (Category $category) {
                     return $this->categorySerializer->serialize($category);

@@ -15,16 +15,16 @@ use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Tool\ToolRights;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Event\CatalogEvents\ToolEvents;
+use Claroline\CoreBundle\Event\Tool\CloseToolEvent;
 use Claroline\CoreBundle\Event\Tool\ConfigureToolEvent;
 use Claroline\CoreBundle\Manager\LogConnectManager;
 use Claroline\CoreBundle\Manager\Tool\ToolManager;
-use Claroline\CoreBundle\Manager\Tool\ToolMaskDecoderManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -53,8 +53,6 @@ class ToolController
     private $serializer;
     /** @var ToolManager */
     private $toolManager;
-    /** @var ToolMaskDecoderManager */
-    private $maskManager;
     /** @var LogConnectManager */
     private $logConnectManager;
 
@@ -68,7 +66,6 @@ class ToolController
         Crud $crud,
         SerializerProvider $serializer,
         ToolManager $toolManager,
-        ToolMaskDecoderManager $maskManager,
         LogConnectManager $logConnectManager
     ) {
         $this->authorization = $authorization;
@@ -77,7 +74,6 @@ class ToolController
         $this->crud = $crud;
         $this->serializer = $serializer;
         $this->toolManager = $toolManager;
-        $this->maskManager = $maskManager;
         $this->logConnectManager = $logConnectManager;
     }
 
@@ -106,7 +102,10 @@ class ToolController
         }
 
         /** @var ConfigureToolEvent $event */
-        $event = $this->eventDispatcher->dispatch(new ConfigureToolEvent($data, $contextObject), $context.'.'.$name.'.configure');
+        $event = $this->eventDispatcher->dispatch(
+            new ConfigureToolEvent($name, $context, $contextObject, $data),
+            ToolEvents::getEventName(ToolEvents::CONFIGURE, $context, $name)
+        );
 
         return new JsonResponse(array_merge($event->getData(), [
             'data' => $this->serializer->serialize($orderedTool),
@@ -128,22 +127,8 @@ class ToolController
             throw new AccessDeniedException();
         }
 
-        return new JsonResponse(array_map(function (ToolRights $rights) use ($orderedTool) {
-            $role = $rights->getRole();
-
-            $data = [
-                'id' => $rights->getId(),
-                'translationKey' => $role->getTranslationKey(),
-                'name' => $role->getName(),
-                'permissions' => $this->maskManager->decodeMask($rights->getMask(), $orderedTool->getTool()),
-                'workspace' => null,
-            ];
-
-            if ($role->getWorkspace()) {
-                $data['workspace']['code'] = $role->getWorkspace()->getCode();
-            }
-
-            return $data;
+        return new JsonResponse(array_map(function (ToolRights $rights) {
+            return $this->serializer->serialize($rights);
         }, $orderedTool->getRights()->toArray()));
     }
 
@@ -164,27 +149,33 @@ class ToolController
 
         $requestData = $this->decodeRequest($request);
 
+        $this->om->startFlushSuite();
+
         $existingRights = $orderedTool->getRights();
 
         $roles = [];
         foreach ($requestData as $right) {
-            /** @var Role $role */
-            $role = $this->om->getRepository(Role::class)->findOneBy(['name' => $right['name']]);
-            if ($role) {
-                $this->toolManager->setPermissions($right['permissions'], $orderedTool, $role);
-                $roles[] = $role->getName();
+            if (!empty($right['id'])) {
+                /** @var ToolRights $toolRights */
+                $toolRights = $this->crud->update(ToolRights::class, array_merge($right, ['orderedToolId' => $orderedTool->getUuid()]), [Crud::THROW_EXCEPTION, Crud::NO_PERMISSIONS]);
+            } else {
+                /** @var ToolRights $toolRights */
+                $toolRights = $this->crud->create(ToolRights::class, array_merge($right, ['orderedToolId' => $orderedTool->getUuid()]), [Crud::THROW_EXCEPTION, Crud::NO_PERMISSIONS]);
             }
+
+            // keep reference to the created/update rights, it will be used later to know the ones to delete.
+            // I don't use ToolRights id because there is a flush suite and it is not already generated.
+            $roles[] = $toolRights->getRole()->getName();
         }
 
         // removes rights which no longer exists
         foreach ($existingRights as $existingRight) {
             if (!in_array($existingRight->getRole()->getName(), $roles)) {
-                $orderedTool->removeRight($existingRight);
+                $this->crud->delete($existingRight);
             }
         }
 
-        $this->om->persist($orderedTool);
-        $this->om->flush();
+        $this->om->endFlushSuite();
 
         return $this->getRightsAction($name, $context, $contextId);
     }
@@ -195,7 +186,23 @@ class ToolController
      */
     public function closeAction(string $name, string $context, string $contextId = null, User $user = null): JsonResponse
     {
+        /** @var OrderedTool|null $orderedTool */
+        $orderedTool = $this->toolManager->getOrderedTool($name, $context, $contextId);
+        if (!$orderedTool) {
+            throw new NotFoundHttpException(sprintf('Tool "%s" not found', $name));
+        }
+
+        if (!$this->authorization->isGranted('OPEN', $orderedTool)) {
+            throw new AccessDeniedException();
+        }
+
+        $this->eventDispatcher->dispatch(
+            new CloseToolEvent($name, $context, $orderedTool->getWorkspace()),
+            ToolEvents::CLOSE
+        );
+
         if ($user) {
+            // TODO : listen to close event instead
             $this->logConnectManager->computeToolDuration($user, $name, $context, $contextId);
         }
 

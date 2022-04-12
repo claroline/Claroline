@@ -12,16 +12,17 @@
 namespace Claroline\ForumBundle\Listener\Resource;
 
 use Claroline\AppBundle\API\Crud;
+use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\ExportObjectEvent;
-use Claroline\CoreBundle\Event\ImportObjectEvent;
+use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
+use Claroline\CoreBundle\Event\Resource\ExportResourceEvent;
+use Claroline\CoreBundle\Event\Resource\ImportResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\ForumBundle\Entity\Forum;
 use Claroline\ForumBundle\Entity\Subject;
 use Claroline\ForumBundle\Manager\ForumManager;
-use Ramsey\Uuid\Uuid;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class ForumListener
@@ -55,9 +56,6 @@ class ForumListener
         $this->tokenStorage = $tokenStorage;
     }
 
-    /**
-     * Loads a Forum resource.
-     */
     public function onOpen(LoadResourceEvent $event)
     {
         /** @var Forum $forum */
@@ -79,42 +77,56 @@ class ForumListener
         $event->stopPropagation();
     }
 
-    public function onExport(ExportObjectEvent $exportEvent)
+    public function onCopy(CopyResourceEvent $event)
     {
         /** @var Forum $forum */
-        $forum = $exportEvent->getObject();
-        $data = [
-          'subjects' => array_map(function (Subject $subject) {
-              return $this->serializer->serialize($subject);
-          }, $forum->getSubjects()->toArray()),
-        ];
-        $exportEvent->overwrite('_data', $data);
-    }
+        $forum = $event->getResource();
+        /** @var Forum $copy */
+        $copy = $event->getCopy();
 
-    public function onImportBefore(ImportObjectEvent $event)
-    {
-        $data = $event->getData();
-        $replaced = json_encode($event->getExtra());
+        $this->om->startFlushSuite();
+        foreach ($forum->getSubjects() as $subject) {
+            $newSubject = new Subject();
+            $newSubject->setForum($copy);
 
-        foreach ($data['_data']['subjects'] as $subjectsData) {
-            $uuid = Uuid::uuid4()->toString();
-            $replaced = str_replace($subjectsData['id'], $uuid, $replaced);
+            $this->crud->create($newSubject, $this->serializer->serialize($subject), [
+                Crud::NO_PERMISSIONS, // this has already been checked by the core before forwarding the copy
+                Options::REFRESH_UUID,
+            ]);
         }
+        $this->om->endFlushSuite();
 
-        $data = json_decode($replaced, true);
-        $event->setExtra($data);
+        $event->stopPropagation();
     }
 
-    public function onImport(ImportObjectEvent $event)
+    public function onExport(ExportResourceEvent $event)
+    {
+        /** @var Forum $forum */
+        $forum = $event->getResource();
+
+        // maybe also export Forum messages
+        $event->setData([
+            'subjects' => array_map(function (Subject $subject) {
+                return $this->serializer->serialize($subject);
+            }, $forum->getSubjects()->toArray()),
+        ]);
+    }
+
+    public function onImport(ImportResourceEvent $event)
     {
         $data = $event->getData();
-        $forum = $event->getObject();
+        /** @var Forum $forum */
+        $forum = $event->getResource();
 
-        foreach ($data['_data']['subjects'] as $subjectsData) {
-            unset($subjectsData['forum']);
-            $subject = $this->serializer->deserialize($subjectsData, new Subject());
+        $this->om->startFlushSuite();
+        foreach ($data['subjects'] as $subjectData) {
+            unset($subjectData['forum']);
+
+            $subject = new Subject();
             $subject->setForum($forum);
-            $this->om->persist($subject);
+
+            $this->crud->create($subject, $subjectData, [Crud::NO_PERMISSIONS, Crud::NO_VALIDATION, Options::REFRESH_UUID]);
         }
+        $this->om->endFlushSuite();
     }
 }

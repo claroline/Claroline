@@ -102,11 +102,15 @@ class ScormSerializer
         $updated = [];
 
         foreach ($data as $scoData) {
+            $sco = null;
+
             // search by identifier to be able to retrieve and update sco when we change scorm file
-            $sco = $this->scoRepo->findOneBy([
-                'scorm' => $scorm,
-                'identifier' => $scoData['data']['identifier'],
-            ]);
+            if (!in_array(Options::REFRESH_UUID, $options)) {
+                $sco = $this->scoRepo->findOneBy([
+                    'scorm' => $scorm,
+                    'identifier' => $scoData['data']['identifier'],
+                ]);
+            }
 
             if (empty($sco)) {
                 $sco = new Sco();

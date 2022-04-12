@@ -1,21 +1,6 @@
 services:
-    _defaults:
-        autowire: false #change to true
-        autoconfigure: false
-        public: false
-
     Claroline\TeamBundle\Listener\UserListener:
         arguments:
             - '@Claroline\TeamBundle\Manager\TeamManager'
         tags:
             - { name: kernel.event_listener, event: merge_users, method: onMerge }
-
-    Claroline\TeamBundle\Listener\Tool\TeamListener:
-        arguments:
-            - '@security.authorization_checker'
-            - '@Claroline\AppBundle\API\SerializerProvider'
-            - '@Claroline\TeamBundle\Manager\TeamManager'
-            - '@security.token_storage'
-        tags:
-            - { name: kernel.event_listener, event: open_tool_workspace_claroline_team_tool, method: onWorkspaceToolOpen }
-            - { name: kernel.event_listener, event: open_tool_workspace_claroline_team_tool, method: onWorkspaceToolOpen }

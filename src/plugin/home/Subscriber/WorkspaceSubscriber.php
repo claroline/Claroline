@@ -1,13 +1,15 @@
 <?php
 
-namespace Claroline\HomeBundle\Listener;
+namespace Claroline\HomeBundle\Subscriber;
 
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\HomeBundle\Entity\HomeTab;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class WorkspaceListener
+class WorkspaceSubscriber implements EventSubscriberInterface
 {
     /** @var ObjectManager */
     private $om;
@@ -18,6 +20,13 @@ class WorkspaceListener
     {
         $this->om = $om;
         $this->crud = $crud;
+    }
+
+    public static function getSubscribedEvents(): array
+    {
+        return [
+            Crud::getEventName('delete', 'pre', Workspace::class) => 'preDelete',
+        ];
     }
 
     public function preDelete(DeleteEvent $event)

@@ -21,9 +21,8 @@ services:
             - '@Claroline\AppBundle\API\SerializerProvider'
         tags:
             - { name: kernel.event_listener, event: resource.claroline_web_resource.load, method: onLoad }
-            - { name: kernel.event_listener, event: transfer.claroline_web_resource.import.before, method: onImportBefore }
-            - { name: kernel.event_listener, event: transfer.claroline_web_resource.export, method: onExportFile }
-            - { name: kernel.event_listener, event: transfer.claroline_web_resource.import.after, method: onImportFile }
+            - { name: kernel.event_listener, event: resource.claroline_web_resource.export, method: onExport }
+            - { name: kernel.event_listener, event: resource.claroline_web_resource.import, method: onImport }
             - { name: kernel.event_listener, event: resource.claroline_web_resource.delete, method: onDelete }
             - { name: kernel.event_listener, event: resource.claroline_web_resource.copy, method: onCopy }
             - { name: kernel.event_listener, event: download_claroline_web_resource, method: onDownload }

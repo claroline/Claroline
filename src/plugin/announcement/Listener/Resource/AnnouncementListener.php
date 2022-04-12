@@ -13,19 +13,16 @@ namespace Claroline\AnnouncementBundle\Listener\Resource;
 
 use Claroline\AnnouncementBundle\Entity\Announcement;
 use Claroline\AnnouncementBundle\Entity\AnnouncementAggregate;
-use Claroline\AnnouncementBundle\Manager\AnnouncementManager;
-use Claroline\AnnouncementBundle\Serializer\AnnouncementAggregateSerializer;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Event\ExportObjectEvent;
-use Claroline\CoreBundle\Event\ImportObjectEvent;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
+use Claroline\CoreBundle\Event\Resource\ExportResourceEvent;
+use Claroline\CoreBundle\Event\Resource\ImportResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
-use Ramsey\Uuid\Uuid;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class AnnouncementListener
@@ -34,25 +31,21 @@ class AnnouncementListener
 
     /** @var ObjectManager */
     private $om;
-    /** @var AnnouncementManager */
-    private $manager;
     /** @var SerializerProvider */
     private $serializer;
     /** @var Crud */
     private $crud;
 
     public function __construct(
+        AuthorizationCheckerInterface $authorization,
         ObjectManager $om,
-        AnnouncementManager $manager,
         SerializerProvider $serializer,
-        Crud $crud,
-        AuthorizationCheckerInterface $authorization
+        Crud $crud
     ) {
+        $this->authorization = $authorization;
         $this->om = $om;
-        $this->manager = $manager;
         $this->serializer = $serializer;
         $this->crud = $crud;
-        $this->authorization = $authorization;
     }
 
     /**
@@ -63,11 +56,19 @@ class AnnouncementListener
         $resource = $event->getResource();
         $workspace = $resource->getResourceNode()->getWorkspace();
 
-        $canEdit = $this->authorization->isGranted('EDIT', $resource->getResourceNode());
+        $filters = [];
+        if (!$this->authorization->isGranted('EDIT', $resource->getResourceNode())) {
+            $filters = ['visible' => true];
+        }
+
+        $postsList = $this->crud->list(Announcement::class, [
+            'filters' => $filters,
+        ]);
 
         $event->setData([
-            'announcement' => $this->serializer->serialize($resource, !$canEdit ? [AnnouncementAggregateSerializer::VISIBLE_POSTS_ONLY] : []),
-            'workspaceRoles' => array_map(function (Role $role) {
+            'announcement' => $this->serializer->serialize($resource),
+            'posts' => $postsList['data'],
+            'workspaceRoles' => array_map(function (Role $role) { // TODO : to remove. This can be retrieve directly from api later
                 return $this->serializer->serialize($role, [Options::SERIALIZE_MINIMAL]);
             }, $workspace->getRoles()->toArray()),
         ]);
@@ -79,52 +80,58 @@ class AnnouncementListener
     {
         /** @var AnnouncementAggregate $aggregate */
         $aggregate = $event->getResource();
+        /** @var AnnouncementAggregate $copy */
+        $copy = $event->getCopy();
 
         $this->om->startFlushSuite();
-        $copy = $event->getCopy();
-        $announcements = $aggregate->getAnnouncements();
 
+        $announcements = $aggregate->getAnnouncements();
         foreach ($announcements as $announcement) {
-            $newAnnouncement = $this->serializer->serialize($announcement);
-            $newAnnouncement['id'] = Uuid::uuid4()->toString();
-            $this->crud->create(Announcement::class, $newAnnouncement, [
+            $announcementData = $this->serializer->serialize($announcement);
+
+            $newAnnouncement = new Announcement();
+            $newAnnouncement->setAggregate($copy);
+
+            $this->crud->create($newAnnouncement, $announcementData, [
                 Crud::NO_PERMISSIONS, // this has already been checked by the core before forwarding the copy
-                'announcement_aggregate' => $copy,
+                Options::REFRESH_UUID,
             ]);
         }
 
         $this->om->endFlushSuite();
 
-        $event->setCopy($copy);
         $event->stopPropagation();
     }
 
-    public function onExport(ExportObjectEvent $exportEvent)
+    public function onExport(ExportResourceEvent $exportEvent)
     {
         /** @var AnnouncementAggregate $announcements */
-        $announcements = $exportEvent->getObject();
-        $announcePosts = $announcements->getAnnouncements()->toArray();
+        $announcements = $exportEvent->getResource();
 
-        $data = [
-          'posts' => array_map(function (Announcement $announcement) {
-              return $this->serializer->serialize($announcement);
-          }, $announcePosts),
-        ];
-
-        $exportEvent->overwrite('_data', $data);
+        $exportEvent->setData([
+            'posts' => array_map(function (Announcement $announcement) {
+                return $this->serializer->serialize($announcement);
+            }, $announcements->getAnnouncements()->toArray()),
+        ]);
     }
 
-    public function onImport(ImportObjectEvent $event)
+    public function onImport(ImportResourceEvent $event)
     {
         $data = $event->getData();
-        $announcement = $event->getObject();
+        /** @var AnnouncementAggregate $announcements */
+        $announcements = $event->getResource();
 
-        foreach ($data['posts'] as $post) {
-            $announce = $this->serializer->deserialize($post, new Announcement(), [Options::REFRESH_UUID]);
-            $this->om->persist($announce);
-            $announce->setAggregate($announcement);
+        $this->om->startFlushSuite();
+        foreach ($data['posts'] as $announcementData) {
+            $newAnnouncement = new Announcement();
+            $newAnnouncement->setAggregate($announcements);
+
+            $this->crud->create($newAnnouncement, $announcementData, [
+                Crud::NO_PERMISSIONS, // this has already been checked by the core before forwarding the import
+                Crud::NO_VALIDATION,
+                Options::REFRESH_UUID,
+            ]);
         }
-
-        $this->om->persist($announcement);
+        $this->om->endFlushSuite();
     }
 }

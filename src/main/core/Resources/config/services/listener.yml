@@ -12,12 +12,12 @@ services:
             - '@claroline.manager.resource_manager'
             - '@Claroline\CoreBundle\Manager\UserManager'
         tags:
-            - { name: kernel.event_listener, event: administration_tool_community, method: onDisplayTool }
+            - { name: kernel.event_listener, event: tool.open.administration.community, method: onDisplayTool }
             - { name: kernel.event_listener, event: merge_users, method: onMergeUsers }
 
     Claroline\CoreBundle\Listener\Administration\IntegrationListener:
         tags:
-            - { name: kernel.event_listener, event: administration_tool_integration, method: onDisplayTool }
+            - { name: kernel.event_listener, event: tool.open.administration.integration, method: onDisplayTool }
 
     Claroline\CoreBundle\Listener\Administration\ParametersListener:
         arguments:
@@ -26,11 +26,11 @@ services:
             - '@Claroline\CoreBundle\Manager\LocaleManager'
             - '@Claroline\ThemeBundle\Manager\IconSetManager'
         tags:
-            - { name: kernel.event_listener, event: administration_tool_main_settings, method: onDisplayTool }
+            - { name: kernel.event_listener, event: tool.open.administration.main_settings, method: onDisplayTool }
 
     Claroline\CoreBundle\Listener\Administration\TemplateListener:
         tags:
-            - { name: kernel.event_listener, event: administration_tool_templates, method: onAdministrationToolOpen }
+            - { name: kernel.event_listener, event: tool.open.administration.templates, method: onAdministrationToolOpen }
 
     Claroline\CoreBundle\Listener\DataSource\Workspace\AllSource:
         arguments:
@@ -123,9 +123,8 @@ services:
             - { name: kernel.event_listener, event: resource.file.load, method: onLoad }
             - { name: kernel.event_listener, event: resource.file.change_file, method: onFileChange }
             - { name: kernel.event_listener, event: resource.file.delete, method: onDelete }
-            - { name: kernel.event_listener, event: transfer.file.import.before, method: onImportBefore }
-            - { name: kernel.event_listener, event: transfer.file.export, method: onExportFile }
-            - { name: kernel.event_listener, event: transfer.file.import.after, method: onImportFile }
+            - { name: kernel.event_listener, event: resource.file.export, method: onExport }
+            - { name: kernel.event_listener, event: resource.file.import, method: onImport }
             - { name: kernel.event_listener, event: crud.pre.copy.file, method: onCopy }
             - { name: kernel.event_listener, event: download_file, method: onDownload }
 
@@ -158,40 +157,6 @@ services:
             - { name: kernel.event_listener, event: resource.restore, method: restore }
             - { name: kernel.event_listener, event: resource.copy, method: copy }
             - { name: kernel.event_listener, event: resource.move, method: move }
-
-    Claroline\CoreBundle\Listener\Tool\CommunityListener:
-        arguments:
-            - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
-            - '@Claroline\CoreBundle\API\Serializer\User\ProfileSerializer'
-            - '@Claroline\CoreBundle\Manager\UserManager'
-        tags:
-            - { name: kernel.event_listener, event: open_tool_workspace_community, method: onDisplayWorkspace }
-            - { name: kernel.event_listener, event: open_tool_desktop_community, method: onDisplayDesktop }
-
-    Claroline\CoreBundle\Listener\Tool\ResourcesListener:
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\AppBundle\API\SerializerProvider'
-        tags:
-            - { name: kernel.event_listener, event: open_tool_desktop_resources, method: onDisplayDesktop }
-            - { name: kernel.event_listener, event: open_tool_workspace_resources, method: onDisplayWorkspace }
-
-    Claroline\CoreBundle\Listener\Tool\TrashListener:
-        tags:
-            - { name: kernel.event_listener, event: open_tool_workspace_resource_trash, method: onDisplayWorkspace }
-
-    Claroline\CoreBundle\Listener\Tool\LocationsListener:
-        tags:
-            - { name: kernel.event_listener, event: open_tool_desktop_locations, method: onDisplayDesktop }
-
-    Claroline\CoreBundle\Listener\Tool\WorkspacesListener:
-        arguments:
-            - '@security.token_storage'
-            - '@Claroline\AppBundle\API\FinderProvider'
-            - '@Claroline\AppBundle\API\SerializerProvider'
-            - '@security.authorization_checker'
-        tags:
-            - { name: kernel.event_listener, event: open_tool_desktop_workspaces, method: onDisplayDesktop }
 
     Claroline\CoreBundle\Listener\ViewAsListener:
         arguments:

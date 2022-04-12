@@ -205,14 +205,14 @@ class WorkspaceController
         ];
 
         $this->strictDispatcher->dispatch(
-            ToolEvents::TOOL_OPEN,
+            ToolEvents::OPEN,
             OpenToolEvent::class,
             $eventParams
         );
 
         /** @var OpenToolEvent $event */
         $event = $this->strictDispatcher->dispatch(
-            'open_tool_workspace_'.$toolName,
+            ToolEvents::getEventName(ToolEvents::OPEN, AbstractTool::WORKSPACE, $toolName),
             OpenToolEvent::class,
             $eventParams
         );

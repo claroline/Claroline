@@ -8,7 +8,7 @@ services:
         arguments:
             - '@HeVinci\CompetencyBundle\Manager\CompetencyManager'
         tags:
-            - { name: kernel.event_listener, event: administration_tool_competencies, method: onDisplayTool }
+            - { name: kernel.event_listener, event: tool.open.administration.competencies, method: onDisplayTool }
 
     HeVinci\CompetencyBundle\Listener\PluginListener:
         arguments:
@@ -18,8 +18,8 @@ services:
             - '@request_stack'
             - '@http_kernel'
         tags:
-            - { name: kernel.event_listener, event: administration_tool_learning-objectives, method: onOpenLearningObjectivesTool }
-            - { name: kernel.event_listener, event: open_tool_desktop_my-learning-objectives, method: onOpenMyLearningObjectivesTool }
+            - { name: kernel.event_listener, event: tool.open.administration.learning-objectives, method: onOpenLearningObjectivesTool }
+            - { name: kernel.event_listener, event: tool.open.desktop.my-learning-objectives, method: onOpenMyLearningObjectivesTool }
             - { name: kernel.event_listener, event: resource_action_manage_competencies, method: onOpenResourceCompetencies }
 
     HeVinci\CompetencyBundle\Listener\ResourceListener:

@@ -4,9 +4,9 @@ namespace Icap\WikiBundle\Listener\Resource;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\ExportObjectEvent;
-use Claroline\CoreBundle\Event\ImportObjectEvent;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
+use Claroline\CoreBundle\Event\Resource\ExportResourceEvent;
+use Claroline\CoreBundle\Event\Resource\ImportResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Icap\WikiBundle\Entity\Contribution;
@@ -80,31 +80,32 @@ class WikiListener
     {
         /** @var Wiki $wiki */
         $wiki = $event->getResource();
-        $newWiki = $this->wikiManager->copyWiki($wiki, $event->getCopy(), $this->tokenStorage->getToken()->getUser());
+        /** @var Wiki $copy */
+        $copy = $event->getCopy();
+
+        $newWiki = $this->wikiManager->copyWiki($wiki, $copy, $this->tokenStorage->getToken()->getUser());
 
         $event->setCopy($newWiki);
         $event->stopPropagation();
     }
 
-    public function onExport(ExportObjectEvent $exportEvent)
+    public function onExport(ExportResourceEvent $event)
     {
         /** @var Wiki $wiki */
-        $wiki = $exportEvent->getObject();
+        $wiki = $event->getResource();
 
-        $data = [
-          'root' => $this->sectionManager->getSerializedSectionTree($wiki, null, true),
-        ];
-
-        $exportEvent->overwrite('_data', $data);
+        $event->setData([
+            'root' => $this->sectionManager->getSerializedSectionTree($wiki, null, true),
+        ]);
     }
 
-    public function onImport(ImportObjectEvent $event)
+    public function onImport(ImportResourceEvent $event)
     {
         $data = $event->getData();
         /** @var Wiki $wiki */
-        $wiki = $event->getObject();
+        $wiki = $event->getResource();
 
-        $rootSection = $data['_data']['root'];
+        $rootSection = $data['root'];
         $wiki->buildRoot();
         $root = $wiki->getRoot();
 
@@ -121,7 +122,7 @@ class WikiListener
         }
     }
 
-    private function importSection(array $data = [], Wiki $wiki)
+    private function importSection(array $data, Wiki $wiki)
     {
         $section = new Section();
         $contrib = new Contribution();

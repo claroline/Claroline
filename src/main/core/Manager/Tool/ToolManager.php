@@ -135,6 +135,9 @@ class ToolManager implements LoggerAwareInterface
         return $perms;
     }
 
+    /**
+     * @deprecated can be done by the ToolRightsSerializer
+     */
     public function setPermissions(array $perms, OrderedTool $orderedTool, Role $role)
     {
         $mask = $this->toolMaskManager->encodeMask($perms, $orderedTool->getTool());
