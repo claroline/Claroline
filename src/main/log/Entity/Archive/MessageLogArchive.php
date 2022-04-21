@@ -12,6 +12,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class MessageLogArchive extends AbstractLog
 {
+    public const ARCHIVE_TABLE_PREFIX = 'claro_log_message_archive_';
+
     /**
      * @var int|null
      * @ORM\Column(type="integer", nullable=true)
