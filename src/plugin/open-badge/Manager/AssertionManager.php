@@ -76,12 +76,15 @@ class AssertionManager
 
     public function create(BadgeClass $badge, User $user, array $evidences = []): Assertion
     {
+        $newlyGranted = false;
         $assertion = $this->om->getRepository(Assertion::class)->findOneBy(['badge' => $badge, 'recipient' => $user]);
         if (!$assertion) {
             $assertion = new Assertion();
             $assertion->setBadge($badge);
             $assertion->setRecipient($user);
             $assertion->setImage($badge->getImage());
+
+            $newlyGranted = true;
         }
 
         $assertion->setRevoked(false);
@@ -96,7 +99,7 @@ class AssertionManager
         $this->om->persist($assertion);
         $this->om->flush();
 
-        if ($badge->getNotifyGrant()) {
+        if ($newlyGranted && $badge->getNotifyGrant()) {
             $this->notifyRecipient($assertion);
         }
 
