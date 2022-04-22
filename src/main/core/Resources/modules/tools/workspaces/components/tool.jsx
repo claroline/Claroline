@@ -140,6 +140,14 @@ const WorkspacesTool = (props) => {
                   url={['apiv2_workspace_list_archive']}
                   name="workspaces.archives"
                   refresher={refresher}
+                  customDefinition={[
+                    {
+                      name: 'meta.model',
+                      label: trans('model'),
+                      type: 'boolean',
+                      alias: 'model'
+                    }
+                  ]}
                 />
               )
 

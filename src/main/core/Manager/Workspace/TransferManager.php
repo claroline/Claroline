@@ -201,7 +201,7 @@ class TransferManager implements LoggerAwareInterface
             $workspace->addRole($role);
 
             // TODO : remove force flush when role creation is moved in postCopy/postCreate
-            $this->crud->create($role, $roleData, [Crud::NO_PERMISSIONS, Options::FORCE_FLUSH]);
+            $this->crud->create($role, $roleData, [Crud::NO_PERMISSIONS, Crud::NO_VALIDATION, Options::REFRESH_UUID, Options::FORCE_FLUSH]);
             if ($defaultRole['translationKey'] === $role->getTranslationKey()) {
                 $workspace->setDefaultRole($role);
             }

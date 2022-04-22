@@ -29,6 +29,7 @@ class Crud
     const THROW_EXCEPTION = 'throw_exception';
 
     const NO_PERMISSIONS = 'NO_PERMISSIONS';
+    const NO_VALIDATION = 'NO_VALIDATION';
 
     /** @var ObjectManager */
     private $om;
@@ -49,13 +50,13 @@ class Crud
     private $schema;
 
     public function __construct(
-      ObjectManager $om,
-      StrictDispatcher $dispatcher,
-      FinderProvider $finder,
-      SerializerProvider $serializer,
-      ValidatorProvider $validator,
-      SchemaProvider $schema,
-      AuthorizationCheckerInterface $authorization
+        ObjectManager $om,
+        StrictDispatcher $dispatcher,
+        FinderProvider $finder,
+        SerializerProvider $serializer,
+        ValidatorProvider $validator,
+        SchemaProvider $schema,
+        AuthorizationCheckerInterface $authorization
     ) {
         $this->om = $om;
         $this->dispatcher = $dispatcher;
@@ -159,13 +160,15 @@ class Crud
         }
 
         // validates submitted data.
-        $errors = $this->validate($class, $data, ValidatorProvider::CREATE, $options);
-        if (count($errors) > 0) {
-            // TODO : it should always throw exception
-            if (in_array(self::THROW_EXCEPTION, $options)) {
-                throw new InvalidDataException(sprintf('%s is not valid', $class), $errors);
-            } else {
-                return $errors;
+        if (!in_array(self::NO_VALIDATION, $options)) {
+            $errors = $this->validate($class, $data, ValidatorProvider::CREATE, $options);
+            if (count($errors) > 0) {
+                // TODO : it should always throw exception
+                if (in_array(self::THROW_EXCEPTION, $options)) {
+                    throw new InvalidDataException(sprintf('%s is not valid', $class), $errors);
+                } else {
+                    return $errors;
+                }
             }
         }
 
@@ -216,13 +219,15 @@ class Crud
         }
 
         // validates submitted data.
-        $errors = $this->validate($class, $data, ValidatorProvider::UPDATE, $options);
-        if (count($errors) > 0) {
-            // TODO : it should always throw exception
-            if (in_array(self::THROW_EXCEPTION, $options)) {
-                throw new InvalidDataException(sprintf('%s is not valid', $class), $errors);
-            } else {
-                return $errors;
+        if (!in_array(self::NO_VALIDATION, $options)) {
+            $errors = $this->validate($class, $data, ValidatorProvider::UPDATE, $options);
+            if (count($errors) > 0) {
+                // TODO : it should always throw exception
+                if (in_array(self::THROW_EXCEPTION, $options)) {
+                    throw new InvalidDataException(sprintf('%s is not valid', $class), $errors);
+                } else {
+                    return $errors;
+                }
             }
         }
 
@@ -318,9 +323,9 @@ class Crud
         }
 
         $this->serializer->deserialize(
-          $this->serializer->serialize($object, $options),
-          $new,
-          array_merge([], $options, [Options::REFRESH_UUID])
+            $this->serializer->serialize($object, $options),
+            $new,
+            array_merge([], $options, [Options::REFRESH_UUID])
         );
 
         $this->om->persist($new);
