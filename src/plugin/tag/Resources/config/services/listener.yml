@@ -1,9 +1,4 @@
 services:
-    _defaults:
-        autowire: false
-        autoconfigure: false
-        public: true
-
     Claroline\TagBundle\Listener\WorkspaceListener:
         arguments:
             - '@Claroline\TagBundle\Manager\TagManager'
@@ -16,7 +11,6 @@ services:
             - '@Claroline\TagBundle\Manager\TagManager'
         tags:
             - { name: kernel.event_listener, event: objects.search, method: onSearchObjects }
-            - { name: kernel.event_listener, event: claroline_tag_object, method: onObjectTag }
             - { name: kernel.event_listener, event: claroline_tag_multiple_data, method: onDataTag }
             - { name: kernel.event_listener, event: claroline_retrieve_user_workspaces_by_tag, method: onRetrieveUserWorkspacesByTag }
             - { name: kernel.event_listener, event: claroline_retrieve_used_tags_by_class_and_ids, method: onRetrieveUsedTagsByClassAndIds }
@@ -24,27 +18,15 @@ services:
 
     Claroline\TagBundle\Listener\User\UserListener:
         arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\TagBundle\Manager\TagManager'
         tags:
             - { name: kernel.event_listener, event: crud.pre.delete.user, method: onDelete }
-            - { name: kernel.event_listener, event: merge_users, method: onMerge }
 
     Claroline\TagBundle\Listener\User\GroupListener:
         arguments:
             - '@Claroline\TagBundle\Manager\TagManager'
         tags:
             - { name: kernel.event_listener, event: claroline_groups_delete, method: onDelete }
-
-    Claroline\TagBundle\Listener\Platform\ClientListener:
-        arguments:
-            - '@twig'
-        tags:
-            - { name: kernel.event_listener, event: layout.inject.stylesheet, method: onInjectCss }
-
-    Claroline\TagBundle\Listener\Administration\TagsListener:
-        tags:
-            - { name: kernel.event_listener, event: administration_tool_claroline_tag_admin_tool, method: onAdministrationToolOpen }
 
     Claroline\TagBundle\Listener\Resource\ResourceListener:
         arguments:

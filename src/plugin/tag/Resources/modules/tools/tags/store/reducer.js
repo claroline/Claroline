@@ -6,7 +6,7 @@ import {FORM_SUBMIT_SUCCESS} from '#/main/app/content/form/store/actions'
 
 import {TOOL_LOAD} from '#/main/core/tool/store/actions'
 
-import {selectors} from '#/plugin/tag/administration/tags/store/selectors'
+import {selectors} from '#/plugin/tag/tools/tags/store/selectors'
 
 export const reducer = combineReducers({
   tags: makeListReducer(selectors.STORE_NAME + '.tags', {

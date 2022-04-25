@@ -285,7 +285,7 @@ class Subject
         $this->viewCount = $viewCount;
     }
 
-    public function setPoster(PublicFile $file)
+    public function setPoster(?PublicFile $file = null)
     {
         $this->poster = $file;
     }

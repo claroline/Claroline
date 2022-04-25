@@ -5,10 +5,7 @@ const Tag = {
     id: T.string.isRequired,
     name: T.string.isRequired,
     meta: T.shape({
-      description: T.string,
-      creator: T.shape({
-        // TODO : minimal user
-      })
+      description: T.string
     }),
     elements: T.number
   },

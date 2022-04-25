@@ -9,13 +9,23 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\TagBundle\Listener\Administration;
+namespace Claroline\TagBundle\Subscriber\Tool;
 
 use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class TagsListener
+class TagsSubscriber implements EventSubscriberInterface
 {
-    public function onAdministrationToolOpen(OpenToolEvent $event)
+    const NAME = 'tags';
+
+    public static function getSubscribedEvents(): array
+    {
+        return [
+            'open_tool_desktop_tags' => 'onOpen',
+        ];
+    }
+
+    public function onOpen(OpenToolEvent $event)
     {
         $event->setData([]);
         $event->stopPropagation();

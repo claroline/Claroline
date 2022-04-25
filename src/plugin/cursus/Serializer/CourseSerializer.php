@@ -27,7 +27,6 @@ use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Repository\WorkspaceRepository;
 use Claroline\CursusBundle\Entity\Course;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class CourseSerializer
@@ -36,8 +35,6 @@ class CourseSerializer
 
     /** @var AuthorizationCheckerInterface */
     private $authorization;
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
     /** @var EventDispatcherInterface */
     private $eventDispatcher;
     /** @var ObjectManager */
@@ -58,7 +55,6 @@ class CourseSerializer
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
-        TokenStorageInterface $tokenStorage,
         EventDispatcherInterface $eventDispatcher,
         ObjectManager $om,
         PublicFileSerializer $fileSerializer,
@@ -67,7 +63,6 @@ class CourseSerializer
         WorkspaceSerializer $workspaceSerializer
     ) {
         $this->authorization = $authorization;
-        $this->tokenStorage = $tokenStorage;
         $this->eventDispatcher = $eventDispatcher;
         $this->om = $om;
         $this->fileSerializer = $fileSerializer;
@@ -317,14 +312,7 @@ class CourseSerializer
     private function deserializeTags(Course $course, array $tags = [], array $options = [])
     {
         if (in_array(Options::PERSIST_TAG, $options)) {
-            $user = null;
-
-            if ($this->tokenStorage->getToken() && $this->tokenStorage->getToken()->getUser() instanceof User) {
-                $user = $this->tokenStorage->getToken()->getUser();
-            }
-
             $event = new GenericDataEvent([
-                'user' => $user,
                 'tags' => $tags,
                 'data' => [
                     [

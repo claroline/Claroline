@@ -5,7 +5,7 @@ import classes from 'classnames'
 import {implementPropTypes} from '#/main/app/prop-types'
 import {trans, transChoice} from '#/main/app/intl/translation'
 import {makeCancelable, url} from '#/main/app/api'
-import {currentUser} from '#/main/app/security'
+import {param} from '#/main/app/config'
 import {toKey} from '#/main/core/scaffolding/text'
 import {Overlay} from '#/main/app/overlays/components/overlay'
 import {Button} from '#/main/app/action/components/button'
@@ -40,8 +40,7 @@ implementPropTypes(TagPreview, TagTypes, {
 const TagsList = props =>
   <div className="dropdown-menu dropdown-menu-full">
     {props.isFetching &&
-      <ContentLoader
-      />
+      <ContentLoader />
     }
 
     {(!props.isFetching && 0 !== props.tags.length) &&
@@ -57,15 +56,17 @@ const TagsList = props =>
       </ul>
     }
 
-    <Button
-      className="btn btn-block"
-      type={CALLBACK_BUTTON}
-      icon="fa fa-fw fa-plus"
-      label={trans('create-named-tag', {tagName: props.currentTag}, 'actions')}
-      callback={props.create}
-      primary={true}
-      disabled={props.isFetching}
-    />
+    {props.canCreate &&
+      <Button
+        className="btn btn-block"
+        type={CALLBACK_BUTTON}
+        icon="fa fa-fw fa-plus"
+        label={trans('create-named-tag', {tagName: props.currentTag}, 'actions')}
+        callback={props.create}
+        primary={true}
+        disabled={props.isFetching}
+      />
+    }
   </div>
 
 TagsList.propTypes = {
@@ -75,7 +76,8 @@ TagsList.propTypes = {
     TagTypes.propTypes
   )),
   select: T.func.isRequired,
-  create: T.func.isRequired
+  create: T.func.isRequired,
+  canCreate: T.bool.isRequired
 }
 
 TagsList.defaultProps = {
@@ -170,7 +172,6 @@ class TagInput extends Component {
 
   onChange(e) {
     const value = e.target.value
-    const authenticated = currentUser()
 
     this.setState({currentTag: value})
 
@@ -187,7 +188,7 @@ class TagInput extends Component {
 
       this.pending = makeCancelable(
         fetch(
-          url(['apiv2_tag_list'], {filters: {name: value, user: authenticated ? authenticated.id : null}}), {
+          url(['apiv2_tag_list'], {filters: {name: value}}), {
             method: 'GET' ,
             credentials: 'include'
           })
@@ -285,6 +286,7 @@ class TagInput extends Component {
             tags={this.state.results}
             select={this.select}
             create={this.create}
+            canCreate={param('canCreateTags')}
           />
         </Overlay>
       </div>

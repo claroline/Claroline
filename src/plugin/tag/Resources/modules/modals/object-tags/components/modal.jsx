@@ -24,6 +24,7 @@ const ObjectTagsModal = props =>
   >
     <div className="modal-body">
       <TagTypeahead
+        canCreate={props.canCreate}
         select={(tagName) => props.addTag(props.objectClass, props.objects, {name: tagName}).then(() => {
           if (props.update) {
             props.update(props.objects)
@@ -81,7 +82,8 @@ ObjectTagsModal.propTypes = {
   )),
   loadTags: T.func.isRequired,
   removeTag: T.func.isRequired,
-  addTag: T.func.isRequired
+  addTag: T.func.isRequired,
+  canCreate: T.bool.isRequired
 }
 
 ObjectTagsModal.defaultProps = {

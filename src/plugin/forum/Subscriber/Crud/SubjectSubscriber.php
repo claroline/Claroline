@@ -143,7 +143,7 @@ class SubjectSubscriber implements EventSubscriberInterface
         $this->fileManager->updateFile(
             Subject::class,
             $subject->getUuid(),
-            $subject->getPoster()->getUrl(),
+            !empty($subject->getPoster()) ? $subject->getPoster()->getUrl() : null,
             !empty($oldData['poster']) ? $oldData['poster']['url'] : null
         );
 

@@ -521,14 +521,7 @@ class ItemSerializer
     private function deserializeTags(Item $question, array $tags = [], array $options = [])
     {
         if (in_array(Options::PERSIST_TAG, $options)) {
-            $user = null;
-
-            if ($this->tokenStorage->getToken() && $this->tokenStorage->getToken()->getUser() instanceof User) {
-                $user = $this->tokenStorage->getToken()->getUser();
-            }
-
             $event = new GenericDataEvent([
-                'user' => $user,
                 'tags' => $tags,
                 'data' => [
                     [

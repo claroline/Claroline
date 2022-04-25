@@ -15,16 +15,13 @@ use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Color;
 use Claroline\AppBundle\Entity\Meta\Description;
-use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass="Claroline\TagBundle\Repository\TagRepository")
- * @ORM\Table(name="claro_tagbundle_tag", uniqueConstraints={
- *     @ORM\UniqueConstraint(name="unique", columns={"tag_name", "user_id"})
- * })
+ * @ORM\Entity()
+ * @ORM\Table(name="claro_tagbundle_tag")
  */
 class Tag
 {
@@ -37,22 +34,12 @@ class Tag
     /**
      * The name of the tag.
      *
-     * @ORM\Column(name="tag_name")
+     * @ORM\Column(name="tag_name", unique=true)
      * @Assert\NotBlank()
      *
      * @var string
      */
     private $name;
-
-    /**
-     * The user who created the tag.
-     *
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
-     * @ORM\JoinColumn(name="user_id", nullable=true, onDelete="CASCADE")
-     *
-     * @var User
-     */
-    private $user;
 
     /**
      * The list of objects with the tag.
@@ -63,9 +50,6 @@ class Tag
      */
     private $taggedObjects;
 
-    /**
-     * Tag constructor.
-     */
     public function __construct()
     {
         $this->refreshUuid();
@@ -91,24 +75,6 @@ class Tag
     public function setName($name)
     {
         $this->name = $name;
-    }
-
-    /**
-     * Get user.
-     *
-     * @return User
-     */
-    public function getUser()
-    {
-        return $this->user;
-    }
-
-    /**
-     * Set user.
-     */
-    public function setUser(User $user = null)
-    {
-        $this->user = $user;
     }
 
     /**

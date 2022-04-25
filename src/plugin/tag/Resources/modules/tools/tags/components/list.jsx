@@ -5,7 +5,7 @@ import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
 
-import {selectors} from '#/plugin/tag/administration/tags/store'
+import {selectors} from '#/plugin/tag/tools/tags/store'
 import {TagCard} from '#/plugin/tag/card/components/tag'
 
 const TagList = (props) =>

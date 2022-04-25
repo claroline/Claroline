@@ -12,7 +12,7 @@
 namespace Claroline\TagBundle\Controller;
 
 use Claroline\AppBundle\Controller\AbstractCrudController;
-use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\TagBundle\Entity\Tag;
 use Claroline\TagBundle\Entity\TaggedObject;
 use Claroline\TagBundle\Manager\TagManager;
@@ -20,21 +20,25 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * @Route("tag")
  */
 class TagController extends AbstractCrudController
 {
+    use PermissionCheckerTrait;
+
+    /** @var AuthorizationCheckerInterface */
+    private $authorization;
     /** @var TagManager */
     private $manager;
 
-    /**
-     * TagController constructor.
-     */
     public function __construct(
+        AuthorizationCheckerInterface $authorization,
         TagManager $tagManager
     ) {
+        $this->authorization = $authorization;
         $this->manager = $tagManager;
     }
 
@@ -49,55 +53,12 @@ class TagController extends AbstractCrudController
     }
 
     /**
-     * @param string $class
-     *
-     * @return JsonResponse
-     */
-    public function createAction(Request $request, $class)
-    {
-        $query = $request->query->all();
-        $data = $this->decodeRequest($request);
-
-        // Skips creation if a tag already exists with the same name
-        $tag = isset($data['meta']['creator']) ?
-            $this->manager->getUserTagByNameAndUserId($data['name'], $data['meta']['creator']) :
-            $this->manager->getOnePlatformTagByName($data['name']);
-
-        if ($tag) {
-            return new JsonResponse($this->serializer->serialize($tag));
-        } else {
-            $options = $this->options['create'];
-
-            if (isset($query['options'])) {
-                $options = $query['options'];
-            }
-
-            $object = $this->crud->create(
-                $class,
-                $this->decodeRequest($request),
-                $options
-            );
-
-            if (is_array($object)) {
-                return new JsonResponse($object, 400);
-            }
-
-            return new JsonResponse(
-                $this->serializer->serialize($object, $options),
-                201
-            );
-        }
-    }
-
-    /**
      * List all objects linked to a Tag.
      *
      * @Route("/{id}/object", name="apiv2_tag_list_objects", methods={"GET"})
      * @EXT\ParamConverter("tag", class="ClarolineTagBundle:Tag", options={"mapping": {"id": "uuid"}})
-     *
-     * @return JsonResponse
      */
-    public function listObjectsAction(Tag $tag, Request $request)
+    public function listObjectsAction(Tag $tag, Request $request): JsonResponse
     {
         return new JsonResponse(
             $this->finder->search(TaggedObject::class, array_merge(
@@ -109,18 +70,16 @@ class TagController extends AbstractCrudController
 
     /**
      * Adds a tag to a collection of taggable objects.
-     * NB. If the tag does not exist, it will be created.
+     * NB. If the tag does not exist, it will be created if the user has the correct rights.
      *
      * @Route("/{tag}/object", name="apiv2_tag_add_objects", methods={"POST"})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @param string $tag
-     *
-     * @return JsonResponse
      */
-    public function addObjectsAction($tag, User $user, Request $request)
+    public function addObjectsAction(string $tag, Request $request): JsonResponse
     {
-        $taggedObjects = $this->manager->tagData([$tag], $this->decodeRequest($request), $user);
+        $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
+
+        $taggedObjects = $this->manager->tagData([$tag], $this->decodeRequest($request));
 
         return new JsonResponse(
             !empty($taggedObjects) ? $this->serializer->serialize($taggedObjects[0]->getTag()) : null
@@ -131,11 +90,11 @@ class TagController extends AbstractCrudController
      * @Route("/{id}/object", name="apiv2_tag_remove_objects", methods={"DELETE"})
      * @EXT\ParamConverter("tag", class="ClarolineTagBundle:Tag", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @return JsonResponse
      */
-    public function removeObjectsAction(Tag $tag, Request $request)
+    public function removeObjectsAction(Tag $tag, Request $request): JsonResponse
     {
+        $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
+
         $this->manager->removeTagFromObjects($tag, $this->decodeRequest($request));
 
         return new JsonResponse(null, 204);
