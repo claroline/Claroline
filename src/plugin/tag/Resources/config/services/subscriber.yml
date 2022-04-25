@@ -1,0 +1,10 @@
+services:
+    _defaults:
+        tags: [kernel.event_subscriber]
+
+    Claroline\TagBundle\Subscriber\Tool\TagsSubscriber: ~
+
+    Claroline\TagBundle\Subscriber\PlatformSubscriber:
+        arguments:
+            - '@security.authorization_checker'
+            - '@twig'

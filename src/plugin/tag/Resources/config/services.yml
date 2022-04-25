@@ -4,4 +4,6 @@ imports:
     - { resource: services/listener.yml }
     - { resource: services/manager.yml }
     - { resource: services/serializer.yml }
+    - { resource: services/subscriber.yml }
+    - { resource: services/updater.yml }
     - { resource: services/voter.yml }

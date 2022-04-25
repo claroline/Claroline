@@ -9,7 +9,6 @@ services:
     Claroline\CursusBundle\Serializer\CourseSerializer:
         arguments:
             - '@security.authorization_checker'
-            - '@security.token_storage'
             - '@event_dispatcher'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'

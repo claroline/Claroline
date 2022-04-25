@@ -25,26 +25,29 @@ trait PermissionCheckerTrait
     /** @var AuthorizationCheckerInterface */
     private $authorization;
 
-    protected function checkPermission($permission, $object, ?array $options = [], ?bool $throwException = false): bool
+    protected function checkPermission($permission, $object = null, ?array $options = [], ?bool $throwException = false): bool
     {
         if (!$this->authorization instanceof AuthorizationCheckerInterface) {
             throw new \RuntimeException('PermissionCheckerTrait requires the AuthorizationChecker (@security.authorization_checker) to be injected in your service.');
         }
 
-        switch ($object) {
-            case $object instanceof ResourceNode:
-              $collection = new ResourceCollection([$object]);
-              break;
-            case is_array($object):
-              $collection = new ObjectCollection($object, $options);
-              break;
-            default:
-              $collection = new ObjectCollection([$object], $options);
+        $subject = null;
+        if ($object) {
+            switch ($object) {
+                case $object instanceof ResourceNode:
+                    $subject = new ResourceCollection([$object]);
+                    break;
+                case is_array($object):
+                    $subject = new ObjectCollection($object, $options);
+                    break;
+                default:
+                    $subject = new ObjectCollection([$object], $options);
+            }
         }
 
-        $granted = $this->authorization->isGranted($permission, $collection);
+        $granted = $this->authorization->isGranted($permission, $subject);
         if (!$granted && $throwException) {
-            throw new AccessDeniedException(sprintf('Operation "%s" cannot be done on object %s', $permission, get_class($object)));
+            throw new AccessDeniedException($object ? sprintf('Operation "%s" cannot be done on object %s', $permission, get_class($object)) : sprintf('Permission "%s" denied', $permission));
         }
 
         return $granted;

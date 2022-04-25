@@ -3,7 +3,6 @@ import {PropTypes as T} from 'prop-types'
 
 import {transChoice} from '#/main/app/intl/translation'
 import {DataCard} from '#/main/app/data/components/card'
-import {UserMicro} from '#/main/core/user/components/micro'
 
 import {Tag as TagTypes} from '#/plugin/tag/data/types/tag/prop-types'
 
@@ -16,9 +15,6 @@ const TagCard = props =>
     color={props.data.color}
     subtitle={transChoice('count_elements', props.data.elements, {count: props.data.elements})}
     contentText={props.data.meta.description}
-    footer={
-      <UserMicro {...props.data.meta.creator} />
-    }
   />
 
 TagCard.propTypes = {

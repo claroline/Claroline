@@ -21,9 +21,9 @@ use Claroline\CoreBundle\Installation\Updater\Updater130300;
 use Claroline\CoreBundle\Installation\Updater\Updater130303;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
-use Claroline\InstallationBundle\Additional\AdditionalInstaller as BaseInstaller;
+use Claroline\InstallationBundle\Additional\AdditionalInstaller;
 
-class ClarolineCoreInstaller extends BaseInstaller
+class ClarolineCoreInstaller extends AdditionalInstaller
 {
     public static function getUpdaters(): array
     {

@@ -68,28 +68,14 @@ class TagListener
         }
     }
 
-    public function onObjectTag(GenericDataEvent $event)
-    {
-        $taggedObject = null;
-        $data = $event->getData();
-
-        if (is_array($data) && isset($data['tag']) && isset($data['object'])) {
-            $user = isset($data['user']) ? $data['user'] : null;
-            $taggedObject = $this->manager->tagObject($data['tag'], $data['object'], $user);
-        }
-
-        $event->setResponse($taggedObject);
-    }
-
     public function onDataTag(GenericDataEvent $event)
     {
         $taggedObject = null;
         $data = $event->getData();
 
         if (is_array($data) && isset($data['tags']) && isset($data['data'])) {
-            $user = isset($data['user']) ? $data['user'] : null;
             $replace = isset($data['replace']) && $data['replace'];
-            $taggedObject = $this->manager->tagData($data['tags'], $data['data'], $user, $replace);
+            $taggedObject = $this->manager->tagData($data['tags'], $data['data'], $replace);
         }
         $event->setResponse($taggedObject);
     }

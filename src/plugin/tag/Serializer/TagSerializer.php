@@ -5,8 +5,6 @@ namespace Claroline\TagBundle\Serializer;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\TagBundle\Entity\Tag;
 use Claroline\TagBundle\Entity\TaggedObject;
 use Claroline\TagBundle\Repository\TaggedObjectRepository;
@@ -18,21 +16,12 @@ class TagSerializer
     /** @var ObjectManager */
     private $om;
 
-    /** @var UserSerializer */
-    private $userSerializer;
-
     /** @var TaggedObjectRepository */
     private $taggedObjectRepo;
 
-    /**
-     * TagSerializer constructor.
-     */
-    public function __construct(
-        ObjectManager $om,
-        UserSerializer $userSerializer)
+    public function __construct(ObjectManager $om)
     {
         $this->om = $om;
-        $this->userSerializer = $userSerializer;
 
         $this->taggedObjectRepo = $om->getRepository(TaggedObject::class);
     }
@@ -62,9 +51,6 @@ class TagSerializer
             $serialized = array_merge($serialized, [
                 'meta' => [
                     'description' => $tag->getDescription(),
-                    'creator' => $tag->getUser() ?
-                        $this->userSerializer->serialize($tag->getUser(), [Options::SERIALIZE_MINIMAL]) :
-                        null,
                 ],
                 'elements' => $this->taggedObjectRepo->countByTag($tag),
             ]);
@@ -76,18 +62,17 @@ class TagSerializer
     /**
      * Deserializes tag data into an Entity.
      */
-    public function deserialize(array $data, Tag $tag): Tag
+    public function deserialize(array $data, Tag $tag, ?array $options): Tag
     {
+        if (!in_array(Options::REFRESH_UUID, $options)) {
+            $this->sipe('id', 'setUuid', $data, $tag);
+        } else {
+            $tag->refreshUuid();
+        }
+
         $this->sipe('name', 'setName', $data, $tag);
         $this->sipe('color', 'setColor', $data, $tag);
         $this->sipe('meta.description', 'setDescription', $data, $tag);
-
-        if (isset($data['meta']) && isset($data['meta']['creator'])) {
-            $user = $this->om->getRepository(User::class)->findOneBy(['uuid' => $data['meta']['creator']['id']]);
-            if ($user) {
-                $tag->setUser($user);
-            }
-        }
 
         return $tag;
     }

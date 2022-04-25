@@ -1,7 +1,7 @@
 import {API_REQUEST} from '#/main/app/api'
 import {actions as formActions} from '#/main/app/content/form/store/actions'
 
-import {selectors} from '#/plugin/tag/administration/tags/store/selectors'
+import {selectors} from '#/plugin/tag/tools/tags/store/selectors'
 
 export const actions = {}
 

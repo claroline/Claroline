@@ -10,7 +10,7 @@ import {ListData} from '#/main/app/content/list/containers/data'
 
 import {selectors as toolSelectors} from '#/main/core/tool/store'
 
-import {selectors} from '#/plugin/tag/administration/tags/store'
+import {selectors} from '#/plugin/tag/tools/tags/store'
 import {TaggedObjectCard} from '#/plugin/tag/card/components/tagged-object'
 
 const TagFormComponent = (props) =>

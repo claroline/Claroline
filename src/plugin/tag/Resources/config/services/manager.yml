@@ -1,9 +1,5 @@
 services:
-    _defaults:
-        autowire: false
-        autoconfigure: false
-        public: true
-
     Claroline\TagBundle\Manager\TagManager:
         arguments:
+            - '@security.authorization_checker'
             - '@Claroline\AppBundle\Persistence\ObjectManager'

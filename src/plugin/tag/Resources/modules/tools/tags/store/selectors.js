@@ -1,4 +1,4 @@
-const STORE_NAME = 'claroline_tag_admin_tool'
+const STORE_NAME = 'tags'
 
 const store = (state) => state[STORE_NAME]
 

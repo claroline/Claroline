@@ -97,27 +97,35 @@ class TagTypeahead extends Component {
   render() {
     return (
       <div className="tag-typehead">
-        <div className="input-group">
+        {this.props.canCreate ?
+          <div className="input-group">
+            <input
+              className="form-control"
+              type="text"
+              value={this.state.currentTag}
+              onChange={e => this.updateCurrentTag(e.target.value)}
+            />
+            <span className="input-group-btn">
+              <Button
+                type={CALLBACK_BUTTON}
+                className="btn btn-default"
+                label={trans('add', {}, 'actions')}
+                disabled={!this.state.currentTag.trim()}
+                callback={() => {
+                  this.props.select(this.state.currentTag.trim())
+                  this.reset()
+                }}
+              />
+            </span>
+          </div>
+          :
           <input
             className="form-control"
             type="text"
             value={this.state.currentTag}
             onChange={e => this.updateCurrentTag(e.target.value)}
           />
-          <span className="input-group-btn">
-            <Button
-              type={CALLBACK_BUTTON}
-              className="btn btn-default"
-              label={trans('add', {}, 'actions')}
-              disabled={!this.state.currentTag.trim()}
-              callback={() => {
-                this.props.select(this.state.currentTag.trim())
-                this.reset()
-              }}
-            />
-          </span>
-        </div>
-
+        }
         {(this.state.isFetching || this.state.results.length > 0) &&
           <TagsList
             isFetching={this.state.isFetching}
@@ -134,7 +142,8 @@ class TagTypeahead extends Component {
 }
 
 TagTypeahead.propTypes = {
-  select: T.func.isRequired
+  select: T.func.isRequired,
+  canCreate: T.bool.isRequired
 }
 
 export {
