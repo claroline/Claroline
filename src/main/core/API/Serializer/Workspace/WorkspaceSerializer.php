@@ -290,7 +290,7 @@ class WorkspaceSerializer
         ];
     }
 
-    public function serializeTags(Workspace $workspace)
+    private function serializeTags(Workspace $workspace)
     {
         $event = new GenericDataEvent([
             'class' => Workspace::class,
@@ -306,7 +306,6 @@ class WorkspaceSerializer
      */
     public function deserialize(array $data, Workspace $workspace, array $options = []): Workspace
     {
-        //not sure if keep that. Might be troublesome later for rich texts
         if (!in_array(Options::REFRESH_UUID, $options)) {
             $this->sipe('id', 'setUuid', $data, $workspace);
         } else {

@@ -108,8 +108,8 @@ class UserSerializer
         $token = $this->tokenStorage->getToken();
 
         $showEmailRoles = $this->config->getParameter('profile.show_email') ?? [];
-        $showEmail = false;
-        if ($token) {
+        $showEmail = empty($showEmailRoles);
+        if ($token && !empty($showEmailRoles)) {
             $isOwner = $token->getUser() instanceof User && $token->getUser()->getId() === $user->getId();
             $showEmail = $isOwner || !empty(array_filter($token->getRoleNames(), function (string $role) use ($showEmailRoles) {
                 return 'ROLE_ADMIN' === $role || in_array($role, $showEmailRoles);

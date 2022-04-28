@@ -2,28 +2,38 @@
 
 namespace Claroline\CoreBundle\Tests\NewAPI;
 
+use Claroline\AppBundle\API\SchemaProvider;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\API\ValidatorProvider;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
+use Claroline\CoreBundle\Security\PlatformRoles;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 
 class SerializerProviderTest extends TransactionalTestCase
 {
     /** @var SerializerProvider */
     private $provider;
-    /** @var mixed[] */
-    private $serializers;
+    /** @var ValidatorProvider */
+    private $validator;
+    /** @var SchemaProvider */
+    private $schema;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->provider = $this->client->getContainer()->get('Claroline\AppBundle\API\SerializerProvider');
-        $this->validator = $this->client->getContainer()->get('Claroline\AppBundle\API\ValidatorProvider');
-        $this->schema = $this->client->getContainer()->get('Claroline\AppBundle\API\SchemaProvider');
-        $this->sampleDir = $this->client->getContainer()->getParameter('claroline.api.sample.dir');
+        $this->provider = $this->client->getContainer()->get(SerializerProvider::class);
+        $this->validator = $this->client->getContainer()->get(ValidatorProvider::class);
+        $this->schema = $this->client->getContainer()->get(SchemaProvider::class);
+
+        // this is hacky
+        // I need to allow anonymous to see users email otherwise the serialized data can not pass the validation
+        // the feature needs to be written in another way to avoid this
+        $config = $this->client->getContainer()->get(PlatformConfigurationHandler::class);
+        $config->setParameter('profile.show_email', [PlatformRoles::ANONYMOUS]);
 
         $tokenStorage = $this->client->getContainer()->get('security.token_storage');
-        $token = new AnonymousToken('key', 'anon.');
+        $token = new AnonymousToken('key', 'anon.', [PlatformRoles::ANONYMOUS]);
         $tokenStorage->setToken($token);
     }
 
@@ -32,7 +42,7 @@ class SerializerProviderTest extends TransactionalTestCase
      *
      * @param string $class
      *
-     * If json il malformed, a syntax error will be thrown
+     * If json is malformed, a syntax error will be thrown
      */
     public function testSchema($class)
     {
@@ -67,7 +77,9 @@ class SerializerProviderTest extends TransactionalTestCase
                 }
                 //is the result... valid ?
                 $errors = $this->validator->validate($class, $data, ValidatorProvider::UPDATE);
+                var_dump($errors);
                 $this->assertTrue(0 === count($errors));
+                $this->assertEquals([], $errors);
             }
         }
     }

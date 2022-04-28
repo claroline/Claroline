@@ -6,5 +6,5 @@ use Claroline\TransferBundle\Transfer\ActionInterface;
 
 interface ExporterInterface extends ActionInterface
 {
-    public function execute(?array $options = [], ?array $extra = []): array;
+    public function execute(int $batchNumber, ?array $options = [], ?array $extra = []): array;
 }
