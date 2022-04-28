@@ -8,16 +8,19 @@ class ExportProvider extends AbstractProvider
 {
     public function execute(string $fileDest, string $format, string $action, ?array $options = [], ?array $extra = [])
     {
+        $adapter = $this->getAdapter($format);
         $executor = $this->getAction($action);
         if (!$executor->supports($format, $options, $extra)) {
             return;
         }
 
-        $data = $executor->execute($options, $extra);
+        $i = 0;
+        do {
+            $data = $executor->execute($i, $options, $extra);
+            $adapter->dump($fileDest, $data, $options, 0 !== $i);
 
-        $adapter = $this->getAdapter($format);
-
-        $adapter->dump($fileDest, $data, $options);
+            ++$i;
+        } while (!empty($data));
     }
 
     /**

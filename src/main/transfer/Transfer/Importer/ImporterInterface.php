@@ -9,6 +9,4 @@ interface ImporterInterface extends ActionInterface
     public function execute(array $data): array;
 
     public function getSchema(?array $options = [], ?array $extra = []): array;
-
-    public function getBatchSize(): int;
 }

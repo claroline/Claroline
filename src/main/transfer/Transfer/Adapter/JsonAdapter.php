@@ -27,7 +27,7 @@ class JsonAdapter implements AdapterInterface
         return $schema;
     }
 
-    public function dump(string $fileDest, array $data, array $options): void
+    public function dump(string $fileDest, array $data, array $options, ?bool $append = false): void
     {
         $fs = new FileSystem();
 

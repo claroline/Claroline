@@ -16,10 +16,12 @@ abstract class AbstractListExporter extends AbstractExporter
         $this->crud = $crud;
     }
 
-    public function execute(?array $options = [], ?array $extra = []): array
+    public function execute(int $batchNumber, ?array $options = [], ?array $extra = []): array
     {
         $query = [
             'hiddenFilters' => $this->getHiddenFilters(),
+            'page' => $batchNumber,
+            'limit' => $this->getBatchSize(),
         ];
 
         if (!empty($extra) && !empty($extra['workspace'])) {

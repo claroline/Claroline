@@ -218,7 +218,7 @@ class PostSerializer
      *
      * @return array
      */
-    public function serializeTags(Post $post)
+    private function serializeTags(Post $post)
     {
         $event = new GenericDataEvent([
             'class' => 'Icap\BlogBundle\Entity\Post',
