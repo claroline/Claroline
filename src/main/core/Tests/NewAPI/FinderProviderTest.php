@@ -5,6 +5,7 @@ namespace Claroline\CoreBundle\Tests\NewAPI;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
+use Claroline\CoreBundle\Security\PlatformRoles;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 
 class FinderProviderTest extends TransactionalTestCase
@@ -18,7 +19,7 @@ class FinderProviderTest extends TransactionalTestCase
         $this->provider = $this->client->getContainer()->get('Claroline\AppBundle\API\FinderProvider');
         $this->reader = $this->client->getContainer()->get('test.annotation_reader');
         $tokenStorage = $this->client->getContainer()->get('security.token_storage');
-        $token = new AnonymousToken('key', 'anon.');
+        $token = new AnonymousToken('key', 'anon.', [PlatformRoles::ANONYMOUS]);
         $tokenStorage->setToken($token);
     }
 

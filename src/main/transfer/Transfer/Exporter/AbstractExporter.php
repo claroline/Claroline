@@ -15,6 +15,11 @@ abstract class AbstractExporter implements ExporterInterface
         return in_array($format, ['json', 'csv']);
     }
 
+    public function getBatchSize(): int
+    {
+        return 100;
+    }
+
     public function getExtraDefinition(?array $options = [], ?array $extra = []): array
     {
         return [];

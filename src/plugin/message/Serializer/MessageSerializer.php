@@ -169,7 +169,10 @@ class MessageSerializer
     {
         $currentUser = $this->tokenStorage->getToken()->getUser();
 
-        $userMessage = $message->getUserMessage($currentUser);
+        $userMessage = null;
+        if ($currentUser instanceof User) {
+            $userMessage = $message->getUserMessage($currentUser);
+        }
 
         //mainly for tests or if something went wrong
         if (empty($userMessage)) {

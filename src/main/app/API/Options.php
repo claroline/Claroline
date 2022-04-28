@@ -35,10 +35,10 @@ final class Options
 
     /* CRUD OPTIONS */
 
-    //do something better with these options
     const SOFT_DELETE = 'soft_delete';
     const FORCE_FLUSH = 'force_flush';
-    const PERSIST_TAG = 'persistTag';
+    const REFRESH_UUID = 'refresh_uuid';
+    const PERSIST_TAG = 'persistTag'; // find a way to remove
 
     //for user
     const NO_PERSONAL_WORKSPACE = 'no_personal_workspace';
@@ -57,8 +57,6 @@ final class Options
     //for serialize, do we want to (de)serialize objects in subtrees ?
     const DEEP_SERIALIZE = 'deep_serialize';
     const DEEP_DESERIALIZE = 'deep_deserialize';
-
-    const REFRESH_UUID = 'refresh_uuid';
 
     //for resource node
     const NO_RIGHTS = 'no_rights';
