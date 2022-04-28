@@ -77,7 +77,7 @@ class CsvAdapter implements AdapterInterface
         return $builder->explainIdentifiers($schemas);
     }
 
-    public function dump(string $fileDest, array $data, array $options): void
+    public function dump(string $fileDest, array $data, array $options, ?bool $append = false): void
     {
         if (empty($data)) {
             return;
@@ -87,7 +87,9 @@ class CsvAdapter implements AdapterInterface
 
         $fs = new FileSystem();
 
-        $fs->appendToFile($fileDest, implode(self::COLUMN_DELIMITER, $headers));
+        if (!$append) {
+            $fs->appendToFile($fileDest, implode(self::COLUMN_DELIMITER, $headers));
+        }
 
         $lines = [];
         foreach ($data as $i => $object) {

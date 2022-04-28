@@ -64,9 +64,8 @@ class ValidatorProvider
      */
     public function validate($class, $data, $mode, $throwException = false, array $options = [])
     {
+        // validates JSON Schema
         $schema = $this->schema->getSchema($class);
-
-        //schema isn't always there yet
         if ($schema) {
             $validator = Validator::buildDefault();
             $errors = $validator->validate($this->toObject($data), $schema, '', [$mode]);
@@ -79,7 +78,7 @@ class ValidatorProvider
             }
         }
 
-        //validate uniques
+        // validates unique fields
         try {
             $validator = $this->get($class);
         } catch (\Exception $e) {
@@ -116,10 +115,7 @@ class ValidatorProvider
         return $errors;
     }
 
-    /**
-     * @return \stdClass
-     */
-    public function toObject(array $data)
+    private function toObject(array $data): \stdClass
     {
         $data = json_decode(json_encode($data));
 
@@ -130,7 +126,6 @@ class ValidatorProvider
         return $data;
     }
 
-    //only if uniqueFields in data
     private function validateUnique(array $uniqueFields, array $data, $mode, $class)
     {
         $errors = [];
@@ -139,25 +134,30 @@ class ValidatorProvider
             if (isset($data[$dataProp])) {
                 $qb = $this->om->createQueryBuilder();
 
-                $qb->select('DISTINCT o')
-                   ->from($class, 'o')
-                   ->where("o.{$entityProp} = :{$entityProp}")
-                   ->setParameter($entityProp, $data[$dataProp]);
+                $qb
+                    ->select('COUNT(DISTINCT o)')
+                    ->from($class, 'o')
+                    ->where("o.{$entityProp} = :{$entityProp}")
+                    ->setParameter($entityProp, $data[$dataProp]);
 
                 if (self::UPDATE === $mode && isset($data['id'])) {
+                    // we are updating an existing object, we must exclude it from the results
                     $parameter = is_numeric($data['id']) ? 'id' : 'uuid';
                     $value = is_numeric($data['id']) ? (int) $data['id'] : $data['id'];
-                    $qb->setParameter($parameter, $value)->andWhere("o.{$parameter} != :{$parameter}");
+
+                    $qb
+                        ->setParameter($parameter, $value)
+                        ->andWhere("o.{$parameter} != :{$parameter}");
                 }
 
-                $objects = $qb->getQuery()->getResult();
+                $countResults = $qb->getQuery()->getSingleScalarResult();
 
                 if ((self::UPDATE === $mode && isset($data['id'])) || self::CREATE === $mode) {
-                    if (count($objects) > 0) {
+                    if ($countResults > 0) {
                         $errors[] = ['path' => $dataProp, 'message' => "{$entityProp} already exists and should be unique"];
                     }
                 } else {
-                    if (count($objects) > 1) {
+                    if ($countResults > 1) {
                         $errors[] = ['path' => $dataProp, 'message' => "{$entityProp} already exists and should be unique"];
                     }
                 }

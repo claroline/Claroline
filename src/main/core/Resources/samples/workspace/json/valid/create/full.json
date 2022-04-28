@@ -1,6 +1,5 @@
 {
-  "id": 123456789,
-  "uuid": "59d245173680e9.83088773",
+  "id": "59d245173680e9.83088773",
   "name": "Espace personnel - toto4",
   "code": "toto41",
   "thumbnail": "",
@@ -8,7 +7,8 @@
   "meta": {
     "model": false,
     "personal": true,
-    "description": ""
+    "description": "",
+    "created": "2016-01-01T12:00:00"
   },
   "display": {
     "displayable": false
