@@ -139,13 +139,55 @@ class FinderProvider
     }
 
     /**
+     * Parses query params to their appropriate filter values.
+     * Should not be public. Only used by old logs queries.
+     *
+     * @return array
+     */
+    public static function parseQueryParams(array $finderParams = [])
+    {
+        $filters = isset($finderParams['filters']) ? self::parseFilters($finderParams['filters']) : [];
+        $sortBy = isset($finderParams['sortBy']) ? self::parseSortBy($finderParams['sortBy']) : null;
+        $page = isset($finderParams['page']) ? (int) $finderParams['page'] : 0;
+        $limit = isset($finderParams['limit']) ? (int) $finderParams['limit'] : -1;
+
+        // these filters are not configurable/displayed in UI
+        // it's mostly used for access restrictions or entity collections
+        $hiddenFilters = isset($finderParams['hiddenFilters']) ? self::parseFilters($finderParams['hiddenFilters']) : [];
+
+        return [
+            'filters' => $filters,
+            'hiddenFilters' => $hiddenFilters,
+            'allFilters' => array_merge_recursive($filters, $hiddenFilters),
+            'sortBy' => $sortBy,
+            'page' => $page,
+            'limit' => $limit,
+        ];
+    }
+
+    /**
+     * Should not be public. Only used by old logs queries.
+     */
+    public static function formatPaginatedData($data, $total, $page, $limit, $filters, $sortBy)
+    {
+        return [
+            'data' => $data,
+            'totalResults' => $total,
+            'page' => $page,
+            'pageSize' => $limit,
+            'filters' => self::decodeFilters($filters),
+            'sortBy' => $sortBy,
+        ];
+    }
+
+    /**
      * @param string $sortBy
      *
      * @todo : we should make UI and API formats uniform to avoid such transformations
      *
      * @return array
      */
-    public static function parseSortBy($sortBy)
+    private static function parseSortBy($sortBy)
     {
         // default values
         $property = null;
@@ -172,7 +214,7 @@ class FinderProvider
      *
      * @return array
      */
-    public static function parseFilters(array $filters)
+    private static function parseFilters(array $filters)
     {
         $parsed = [];
         foreach ($filters as $property => $value) {
@@ -208,7 +250,7 @@ class FinderProvider
      *
      * @return array
      */
-    public static function decodeFilters(array $filters)
+    private static function decodeFilters(array $filters)
     {
         $decodedFilters = [];
         foreach ($filters as $property => $value) {
@@ -216,43 +258,5 @@ class FinderProvider
         }
 
         return $decodedFilters;
-    }
-
-    /**
-     * Parses query params to their appropriate filter values.
-     *
-     * @return array
-     */
-    public static function parseQueryParams(array $finderParams = [])
-    {
-        $filters = isset($finderParams['filters']) ? self::parseFilters($finderParams['filters']) : [];
-        $sortBy = isset($finderParams['sortBy']) ? self::parseSortBy($finderParams['sortBy']) : null;
-        $page = isset($finderParams['page']) ? (int) $finderParams['page'] : 0;
-        $limit = isset($finderParams['limit']) ? (int) $finderParams['limit'] : -1;
-
-        // these filters are not configurable/displayed in UI
-        // it's mostly used for access restrictions or entity collections
-        $hiddenFilters = isset($finderParams['hiddenFilters']) ? self::parseFilters($finderParams['hiddenFilters']) : [];
-
-        return [
-            'filters' => $filters,
-            'hiddenFilters' => $hiddenFilters,
-            'allFilters' => array_merge_recursive($filters, $hiddenFilters),
-            'sortBy' => $sortBy,
-            'page' => $page,
-            'limit' => $limit,
-        ];
-    }
-
-    public static function formatPaginatedData($data, $total, $page, $limit, $filters, $sortBy)
-    {
-        return [
-            'data' => $data,
-            'totalResults' => $total,
-            'page' => $page,
-            'pageSize' => $limit,
-            'filters' => self::decodeFilters($filters),
-            'sortBy' => $sortBy,
-        ];
     }
 }
