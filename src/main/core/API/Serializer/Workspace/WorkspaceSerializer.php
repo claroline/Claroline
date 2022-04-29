@@ -2,7 +2,7 @@
 
 namespace Claroline\CoreBundle\API\Serializer\Workspace;
 
-use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer;
@@ -75,6 +75,11 @@ class WorkspaceSerializer
         $this->resNodeSerializer = $resNodeSerializer;
     }
 
+    public function getClass()
+    {
+        return Workspace::class;
+    }
+
     public function getName()
     {
         return 'workspace';
@@ -103,8 +108,6 @@ class WorkspaceSerializer
             ]);
         }
 
-        $editPerm = $this->authorization->isGranted('EDIT', $workspace);
-
         $serialized = [
             'id' => $this->getUuid($workspace, $options),
             'autoId' => $workspace->getId(),
@@ -112,19 +115,24 @@ class WorkspaceSerializer
             'code' => $workspace->getCode(),
             'slug' => $workspace->getSlug(),
             'thumbnail' => $thumbnail ? $this->publicFileSerializer->serialize($thumbnail) : null,
-            'permissions' => [
+            'meta' => $this->getMeta($workspace, $options),
+            'contactEmail' => $workspace->getContactEmail(),
+        ];
+
+        if (!in_array(SerializerInterface::SERIALIZE_TRANSFER, $options)) {
+            $editPerm = $this->authorization->isGranted('EDIT', $workspace);
+
+            $serialized['permissions'] = [
                 'open' => $this->authorization->isGranted('OPEN', $workspace),
                 'delete' => $this->authorization->isGranted('DELETE', $workspace),
                 'configure' => $editPerm,
                 'administrate' => $editPerm,
                 'export' => $this->authorization->isGranted('EXPORT', $workspace),
                 'archive' => $this->authorization->isGranted('ARCHIVE', $workspace),
-            ],
-            'meta' => $this->getMeta($workspace, $options),
-            'contactEmail' => $workspace->getContactEmail(),
-        ];
+            ];
+        }
 
-        if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
+        if (!in_array(SerializerInterface::SERIALIZE_MINIMAL, $options)) {
             $poster = null;
             if ($workspace->getPoster()) {
                 /** @var PublicFile $poster */
@@ -136,7 +144,6 @@ class WorkspaceSerializer
             $serialized = array_merge($serialized, [
                 'tags' => $this->serializeTags($workspace),
                 'poster' => $poster ? $this->publicFileSerializer->serialize($poster) : null,
-                'registered' => $this->isRegistered($workspace),
                 'opening' => $this->getOpening($workspace),
                 'display' => $this->getDisplay($workspace),
                 'breadcrumb' => $this->getBreadcrumb($workspace),
@@ -145,20 +152,26 @@ class WorkspaceSerializer
                 'notifications' => $this->getNotifications($workspace),
             ]);
 
-            if (!in_array(Options::SERIALIZE_LIST, $options)) {
+            if (!in_array(SerializerInterface::SERIALIZE_TRANSFER, $options)) {
+                $serialized['registered'] = $this->isRegistered($workspace);
+            }
+
+            if (!in_array(SerializerInterface::SERIALIZE_LIST, $options)) {
                 $serialized['organizations'] = array_map(function (Organization $organization) {
-                    return $this->organizationSerializer->serialize($organization, [Options::SERIALIZE_MINIMAL]);
+                    return $this->organizationSerializer->serialize($organization, [SerializerInterface::SERIALIZE_MINIMAL]);
                 }, $workspace->getOrganizations()->toArray());
 
-                // TODO : remove me. Used by workspace transfer
-                $serialized['roles'] = array_map(function (Role $role) {
-                    return [
-                        'id' => $role->getUuid(),
-                        'name' => $role->getName(),
-                        'type' => $role->getType(),
-                        'translationKey' => $role->getTranslationKey(),
-                    ];
-                }, $workspace->getRoles()->toArray());
+                if (!in_array(SerializerInterface::SERIALIZE_TRANSFER, $options)) {
+                    // TODO : remove me. Used by workspace transfer
+                    $serialized['roles'] = array_map(function (Role $role) {
+                        return [
+                            'id' => $role->getUuid(),
+                            'name' => $role->getName(),
+                            'type' => $role->getType(),
+                            'translationKey' => $role->getTranslationKey(),
+                        ];
+                    }, $workspace->getRoles()->toArray());
+                }
             }
         }
 
@@ -186,7 +199,7 @@ class WorkspaceSerializer
             'description' => $workspace->getDescription(),
             'created' => DateNormalizer::normalize($workspace->getCreatedAt()),
             'updated' => DateNormalizer::normalize($workspace->getUpdatedAt()),
-            'creator' => $workspace->getCreator() ? $this->userSerializer->serialize($workspace->getCreator(), [Options::SERIALIZE_MINIMAL]) : null,
+            'creator' => $workspace->getCreator() ? $this->userSerializer->serialize($workspace->getCreator(), [SerializerInterface::SERIALIZE_MINIMAL]) : null,
         ];
     }
 
@@ -221,7 +234,7 @@ class WorkspaceSerializer
                 ->findOneBy(['id' => $details['workspace_opening_resource']]);
 
             if (!empty($resource)) {
-                $openingData['target'] = $this->resNodeSerializer->serialize($resource, [Options::SERIALIZE_MINIMAL]);
+                $openingData['target'] = $this->resNodeSerializer->serialize($resource, [SerializerInterface::SERIALIZE_MINIMAL]);
             }
         }
 
@@ -274,13 +287,18 @@ class WorkspaceSerializer
             ];
         }
 
-        return [
+        $serialized = [
             'validation' => $workspace->getRegistrationValidation(),
-            'waitingForRegistration' => $workspace->getSelfRegistration() ? $this->waitingForRegistration($workspace) : false,
             'selfRegistration' => $workspace->getSelfRegistration(),
             'selfUnregistration' => $workspace->getSelfUnregistration(),
             'defaultRole' => $defaultRole,
         ];
+
+        if (!in_array(SerializerInterface::SERIALIZE_TRANSFER, $options)) {
+            $serialized['waitingForRegistration'] = $workspace->getSelfRegistration() ? $this->waitingForRegistration($workspace) : false;
+        }
+
+        return $serialized;
     }
 
     private function getNotifications(Workspace $workspace)
@@ -306,7 +324,7 @@ class WorkspaceSerializer
      */
     public function deserialize(array $data, Workspace $workspace, array $options = []): Workspace
     {
-        if (!in_array(Options::REFRESH_UUID, $options)) {
+        if (!in_array(SerializerInterface::REFRESH_UUID, $options)) {
             $this->sipe('id', 'setUuid', $data, $workspace);
         } else {
             $workspace->refreshUuid();

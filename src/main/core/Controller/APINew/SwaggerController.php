@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Controller\APINew;
 
-use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SchemaProvider;
 use Claroline\AppBundle\Manager\PlatformManager;
 use Claroline\AppBundle\Routing\Documentator;
@@ -79,7 +78,7 @@ class SwaggerController
         $definitions = [];
 
         foreach ($classes as $class) {
-            $def = json_decode(json_encode($this->schemaProvider->getSchema($class, [Options::IGNORE_COLLECTIONS])), true);
+            $def = json_decode(json_encode($this->schemaProvider->getSchema($class, [SchemaProvider::IGNORE_COLLECTIONS])), true);
             //we need to mode, return and submit
             $defFull = json_decode(json_encode($this->schemaProvider->getSchema($class)), true);
 

@@ -77,9 +77,7 @@ class SerializerProviderTest extends TransactionalTestCase
                 }
                 //is the result... valid ?
                 $errors = $this->validator->validate($class, $data, ValidatorProvider::UPDATE);
-                var_dump($errors);
                 $this->assertTrue(0 === count($errors));
-                $this->assertEquals([], $errors);
             }
         }
     }
