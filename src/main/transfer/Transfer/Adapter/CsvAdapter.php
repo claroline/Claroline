@@ -92,9 +92,8 @@ class CsvAdapter implements AdapterInterface
         }
 
         $lines = [];
-        foreach ($data as $i => $object) {
+        foreach ($data as $object) {
             $properties = [];
-
             foreach ($headers as $header) {
                 $value = $this->getCsvSerialized($object, $header);
                 // escape enclosure char if it's present inside the value
@@ -104,17 +103,9 @@ class CsvAdapter implements AdapterInterface
             }
 
             $lines[] = implode(self::COLUMN_DELIMITER, $properties);
-            if (0 === $i % 200) {
-                // regularly dump lines in the destination file to avoid keeping too much data in memory
-                $fs->appendToFile($fileDest, self::LINE_DELIMITER.implode(self::LINE_DELIMITER, $lines));
-                $lines = [];
-            }
         }
 
-        // add the rest of the lines to the file
-        if (!empty($lines)) {
-            $fs->appendToFile($fileDest, self::LINE_DELIMITER.implode(self::LINE_DELIMITER, $lines));
-        }
+        $fs->appendToFile($fileDest, self::LINE_DELIMITER.implode(self::LINE_DELIMITER, $lines));
     }
 
     /**

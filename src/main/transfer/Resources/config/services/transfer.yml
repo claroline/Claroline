@@ -78,6 +78,10 @@ services:
     Claroline\TransferBundle\Transfer\Exporter\AbstractListExporter:
         abstract: true
         calls:
-            - method: setCrud
+            - method: setFinder
               arguments:
-                  - '@Claroline\AppBundle\API\Crud'
+                  - '@Claroline\AppBundle\API\FinderProvider'
+
+            - method: setSerializer
+              arguments:
+                  - '@Claroline\AppBundle\API\SerializerProvider'
