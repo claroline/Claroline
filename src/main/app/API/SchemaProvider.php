@@ -11,6 +11,8 @@ use JVal\Walker;
 
 class SchemaProvider
 {
+    const IGNORE_COLLECTIONS = 'ignore_collections';
+
     /** @var SerializerProvider */
     private $serializer;
     /** @var string */
@@ -112,7 +114,7 @@ class SchemaProvider
 
             $schema = $this->loadSchema($absolutePath);
 
-            if (in_array(Options::IGNORE_COLLECTIONS, $options) && isset($schema->properties)) {
+            if (in_array(static::IGNORE_COLLECTIONS, $options) && isset($schema->properties)) {
                 foreach ($schema->properties as $key => $property) {
                     if (isset($property->type) && 'array' === $property->type) {
                         unset($schema->properties->{$key});

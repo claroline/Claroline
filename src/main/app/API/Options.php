@@ -11,19 +11,15 @@
 
 namespace Claroline\AppBundle\API;
 
-// todo : should be broken in multiple files or it will become very large with time.
+use Claroline\AppBundle\API\Serializer\SerializerInterface;
+
+// todo : should be broken in multiple files.
 final class Options
 {
-    /* SERIALIZER PROVIDER OPTIONS */
-
-    const SERIALIZE_LIST = 'serialize_list';
-
-    /*
-     * Using this option, the serializers will return minimal data (no meta or restrictions)
-     */
-    const SERIALIZE_MINIMAL = 'serialize_minimal';
-
-    const ABSOLUTE_URL = 'absolute_url';
+    const SERIALIZE_LIST = SerializerInterface::SERIALIZE_LIST;
+    const SERIALIZE_MINIMAL = SerializerInterface::SERIALIZE_MINIMAL;
+    const ABSOLUTE_URL = SerializerInterface::ABSOLUTE_URL;
+    const REFRESH_UUID = SerializerInterface::REFRESH_UUID;
 
     /* SPECIFIC SERIALIZER OPTIONS */
 
@@ -37,12 +33,11 @@ final class Options
 
     const SOFT_DELETE = 'soft_delete';
     const FORCE_FLUSH = 'force_flush';
-    const REFRESH_UUID = 'refresh_uuid';
     const PERSIST_TAG = 'persistTag'; // find a way to remove
 
     //for user
     const NO_PERSONAL_WORKSPACE = 'no_personal_workspace';
-    const SERIALIZE_FACET = 'serialize_facet'; // TODO : replace by SERIALIZE_LIST / SERIALIZE_MINIMAL
+    const SERIALIZE_FACET = 'serialize_facet';
     const NO_EMAIL = 'no_email';
     const ADD_NOTIFICATIONS = 'add_notifications';
     const VALIDATE_FACET = 'validate_facet';
@@ -62,11 +57,8 @@ final class Options
     const NO_RIGHTS = 'no_rights';
 
     //finder options
-    const SQL_QUERY = 'sql_query';
+    const SQL_QUERY = 'sql_query'; // to remove
 
     // for transfer tool
     const WORKSPACE_IMPORT = 'workspace_import';
-
-    // for SchemaProvider
-    const IGNORE_COLLECTIONS = 'ignore_collections';
 }

@@ -41,6 +41,9 @@ trait SerializerTrait
         }
     }
 
+    /**
+     * @deprecated. UUIDs must be refreshed in deserialize only.
+     */
     public function getUuid($object, array $options): string
     {
         return in_array(Options::REFRESH_UUID, $options) ?
