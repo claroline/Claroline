@@ -45,7 +45,7 @@ class RoleLogSubscriber implements EventSubscriberInterface
             $eventName,
             $event->getRole()->getId(),
             $this->getDoerIp(),
-            $this->security->getUser()->getId(),
+            $this->security->getUser() ? $this->security->getUser()->getId() : null,
             array_map(function (User $user) {
                 return $user->getId();
             }, $event->getUsers())
