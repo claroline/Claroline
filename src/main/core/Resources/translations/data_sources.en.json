@@ -7,8 +7,6 @@
   "resources_desc": "Allows to list resources accessible by the current user.",
   "tools": "List of tools",
   "tools_desc": "Allows to list tools accessible by the current user.",
-  "users": "List of users",
-  "users_desc": "Allows to list users visible by the current user.",
   "workspaces": "List of workspaces",
   "workspaces_desc": "Allows to list workspaces visible by the current user. This includes workspaces that the user manages, in which he is registered or in which he can register.",
   "resource": "Selected resource",

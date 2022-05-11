@@ -27,21 +27,6 @@ services:
 
     Claroline\CoreBundle\API\Finder\Workspace\PendingRegistrationFinder: ~
 
-    Claroline\CoreBundle\API\Finder\Workspace\OrderedToolFinder: ~
-
-    Claroline\CoreBundle\API\Finder\User\UserFinder:
-        arguments:
-          - '@security.authorization_checker'
-          - '@security.token_storage'
-          - '@claroline.manager.workspace_manager'
-
-    Claroline\CoreBundle\API\Finder\User\RoleFinder:
-        arguments:
-          - '@security.authorization_checker'
-          - '@security.token_storage'
-
-    Claroline\CoreBundle\API\Finder\User\OrganizationFinder: ~
-
     Claroline\CoreBundle\API\Finder\Location\LocationFinder: ~
 
     Claroline\CoreBundle\API\Finder\Location\RoomFinder: ~
@@ -52,12 +37,7 @@ services:
 
     Claroline\CoreBundle\API\Finder\Location\MaterialBookingFinder: ~
 
-    Claroline\CoreBundle\API\Finder\User\GroupFinder:
-        arguments:
-          - '@security.authorization_checker'
-          - '@security.token_storage'
-
-    Claroline\CoreBundle\API\Finder\User\FieldFacetValueFinder:
+    Claroline\CoreBundle\API\Finder\Facet\FieldFacetValueFinder:
         arguments:
           - '@security.authorization_checker'
           - '@security.token_storage'
@@ -69,6 +49,8 @@ services:
     Claroline\CoreBundle\API\Finder\Tool\AdminToolFinder:
         arguments:
           - '@Claroline\CoreBundle\Manager\PluginManager'
+
+    Claroline\CoreBundle\API\Finder\Tool\OrderedToolFinder: ~
 
     Claroline\CoreBundle\API\Finder\Template\TemplateFinder: ~
 

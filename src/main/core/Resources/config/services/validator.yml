@@ -3,28 +3,9 @@ services:
         autowire: false
         autoconfigure: false
         public: true
-
-    _instanceof:
-        Claroline\AppBundle\API\ValidatorInterface:
-            tags: [claroline.validator]
+        tags: [claroline.validator]
 
     Claroline\CoreBundle\API\Validator\WorkspaceValidator: ~
-
-    Claroline\CoreBundle\API\Validator\RoleValidator: ~
-
-    Claroline\CoreBundle\API\Validator\UserValidator:
-        arguments:
-          - '@security.authorization_checker'
-          - '@security.token_storage'
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-          - '@Claroline\CoreBundle\Manager\UserManager'
-          - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
-          - '@Claroline\CoreBundle\Manager\Organization\OrganizationManager'
-          - '@Claroline\CoreBundle\Manager\FacetManager'
-          - '@Claroline\CoreBundle\API\Serializer\User\ProfileSerializer'
-
-    Claroline\CoreBundle\API\Validator\GroupValidator: ~
 
     Claroline\CoreBundle\API\Validator\Resource\ResourceNodeValidator:
         arguments:

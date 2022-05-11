@@ -1,0 +1,6 @@
+claro_community:
+    resource: "@ClarolineCommunityBundle/Controller/"
+    prefix: apiv2
+    type: api
+    options:
+        expose: true

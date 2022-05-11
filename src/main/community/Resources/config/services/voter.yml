@@ -1,0 +1,30 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+
+    _instanceof:
+        Claroline\CoreBundle\Security\Voter\AbstractVoter:
+            autowire: false
+            tags: [security.voter]
+            calls:
+                - method: setContainer
+                  arguments:
+                      - '@service_container'
+
+        Claroline\CoreBundle\Security\Voter\AbstractRoleSubjectVoter:
+            autowire: false
+            tags: [security.voter]
+
+    Claroline\CommunityBundle\Security\Voter\GroupVoter: ~
+
+    Claroline\CommunityBundle\Security\Voter\OrganizationVoter:
+        arguments:
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+
+    Claroline\CommunityBundle\Security\Voter\RoleVoter: ~
+
+    Claroline\CommunityBundle\Security\Voter\UserVoter:
+        arguments:
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'

@@ -20,6 +20,39 @@ services:
         arguments:
             - '@Claroline\CoreBundle\Manager\FileManager'
 
+    Claroline\CoreBundle\Subscriber\Crud\ResourceNodeSubscriber:
+        tags: [ kernel.event_subscriber ]
+        arguments:
+            - '@security.token_storage'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\Crud'
+            - '@Claroline\CoreBundle\Manager\FileManager'
+            - '@Claroline\CoreBundle\Manager\Resource\ResourceLifecycleManager'
+            - '@Claroline\CoreBundle\Manager\ResourceManager'
+            - '@Claroline\CoreBundle\Manager\Resource\RightsManager'
+            - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
+
+    Claroline\CoreBundle\Subscriber\Crud\UserSubscriber:
+        tags: [ kernel.event_subscriber ]
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
+            - '@Claroline\CoreBundle\Manager\ResourceManager'
+
+    Claroline\CoreBundle\Subscriber\Crud\WorkspaceSubscriber:
+        tags: [ kernel.event_subscriber ]
+        arguments:
+            - '@security.token_storage'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\Crud'
+            - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
+            - '@Claroline\CoreBundle\Manager\FileManager'
+            - '@Claroline\CoreBundle\Manager\Tool\ToolManager'
+            - '@Claroline\CoreBundle\Manager\ResourceManager'
+            - '@Claroline\CoreBundle\Manager\Organization\OrganizationManager'
+            - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'
+            - '@Claroline\CoreBundle\Manager\Workspace\TransferManager'
+
     Claroline\CoreBundle\Subscriber\GlobalSearchSubscriber:
         tags: [kernel.event_subscriber]
         arguments:
@@ -37,25 +70,12 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\SerializerProvider'
 
-    Claroline\CoreBundle\Subscriber\UserActivitySubscriber:
-        tags: [kernel.event_subscriber]
-        arguments:
-            - '@security.token_storage'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-
     Claroline\CoreBundle\Subscriber\Scheduler\SendEmailSubscriber:
         tags: [kernel.event_subscriber]
         arguments:
             - '@Claroline\CoreBundle\Manager\MailManager'
 
     # Tools
-    Claroline\CoreBundle\Subscriber\Tool\CommunitySubscriber:
-        tags: [kernel.event_subscriber]
-        arguments:
-            - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
-            - '@Claroline\CoreBundle\API\Serializer\User\ProfileSerializer'
-            - '@Claroline\CoreBundle\Manager\UserManager'
-
     Claroline\CoreBundle\Subscriber\Tool\LocationsSubscriber:
         tags: [kernel.event_subscriber]
 

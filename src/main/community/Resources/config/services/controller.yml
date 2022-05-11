@@ -1,0 +1,65 @@
+services:
+    _defaults:
+        public: true # because controller
+
+    Claroline\CommunityBundle\Controller\CommunityController:
+        parent: Claroline\AppBundle\Controller\AbstractSecurityController
+        public: true
+        arguments:
+            - '@security.authorization_checker'
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+            - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
+
+    Claroline\CommunityBundle\Controller\GroupController:
+        parent: Claroline\AppBundle\Controller\AbstractCrudController
+        public: true
+        arguments:
+            - '@security.token_storage'
+            - '@security.authorization_checker'
+            - '@Claroline\CoreBundle\Manager\MailManager'
+
+    Claroline\CommunityBundle\Controller\OrganizationController:
+        parent: Claroline\AppBundle\Controller\AbstractCrudController
+        public: true
+        arguments:
+            - '@security.authorization_checker'
+            - '@security.token_storage'
+
+    Claroline\CommunityBundle\Controller\ProfileController:
+        arguments:
+            - '@security.authorization_checker'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\Manager\File\TempFileManager'
+            - '@Claroline\AppBundle\API\Crud'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\User\ProfileSerializer'
+
+    Claroline\CommunityBundle\Controller\RegistrationController:
+        arguments:
+            - '@security.authorization_checker'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+            - '@Claroline\AppBundle\API\Crud'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\CoreBundle\API\Serializer\User\ProfileSerializer'
+            - '@Claroline\AppBundle\Manager\TermsOfServiceManager'
+            - '@Claroline\AuthenticationBundle\Security\Authentication\Authenticator'
+
+    Claroline\CommunityBundle\Controller\RoleController:
+        parent: Claroline\AppBundle\Controller\AbstractCrudController
+        public: true
+        arguments:
+            - '@security.authorization_checker'
+            - '@Claroline\CoreBundle\Manager\LogManager'
+
+    Claroline\CommunityBundle\Controller\UserController:
+        parent: Claroline\AppBundle\Controller\AbstractCrudController
+        public: true
+        arguments:
+            - '@security.token_storage'
+            - '@security.authorization_checker'
+            - '@Claroline\CoreBundle\Manager\UserManager'
+            - '@Claroline\CoreBundle\Manager\MailManager'
+            - '@Claroline\CoreBundle\Manager\Tool\ToolManager'
+            - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'

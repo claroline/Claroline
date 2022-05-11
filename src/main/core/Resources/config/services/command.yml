@@ -44,45 +44,6 @@ services:
         tags:
             - { name: 'console.command', command: 'claroline:logs:fetch' }
 
-    # User
-
-    Claroline\CoreBundle\Command\User\CreateCommand:
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\AppBundle\API\Crud'
-        tags:
-            - { name: 'console.command', command: 'claroline:user:create' }
-
-    Claroline\CoreBundle\Command\User\DisableInactiveCommand:
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CoreBundle\Manager\UserManager'
-        tags:
-            - { name: 'console.command', command: 'claroline:user:disable-inactive' }
-
-    Claroline\CoreBundle\Command\User\AddGroupCommand:
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\AppBundle\API\Crud'
-            - '@Claroline\AppBundle\API\FinderProvider'
-        tags:
-            - { name: 'console.command', command: 'claroline:user:add_group' }
-
-    Claroline\CoreBundle\Command\User\CleanGroupCommand:
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CoreBundle\Manager\UserManager'
-        tags:
-            - { name: 'console.command', command: 'claroline:user:clean_group' }
-
-    Claroline\CoreBundle\Command\User\DeleteDisabledCommand:
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\AppBundle\API\FinderProvider'
-            - '@Claroline\AppBundle\API\Crud'
-        tags:
-            - { name: 'console.command', command: 'claroline:user:delete-disabled' }
-
     # Workspace
 
     Claroline\CoreBundle\Command\Workspace\ArchiveCommand:
