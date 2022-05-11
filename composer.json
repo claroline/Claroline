@@ -109,6 +109,7 @@
             "Claroline\\CoreBundle\\": "src/main/core",
             "Claroline\\AppBundle\\": "src/main/app",
             "Claroline\\AuthenticationBundle\\": "src/main/authentication",
+            "Claroline\\CommunityBundle\\": "src/main/community",
             "Claroline\\InstallationBundle\\": "src/main/installation",
             "Claroline\\MigrationBundle\\": "src/main/migration",
             "Claroline\\KernelBundle\\": "src/main/kernel",

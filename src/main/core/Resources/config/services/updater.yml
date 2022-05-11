@@ -1,27 +1,25 @@
 services:
-    Claroline\CoreBundle\Installation\Updater\Updater130015:
+    _defaults:
         tags: [ 'claroline.platform.updater' ]
+
+    Claroline\CoreBundle\Installation\Updater\Updater130015:
         arguments:
             - '@doctrine.dbal.default_connection'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     Claroline\CoreBundle\Installation\Updater\Updater130023:
-        tags: [ 'claroline.platform.updater' ]
         arguments:
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
 
     Claroline\CoreBundle\Installation\Updater\Updater130025:
-        tags: [ 'claroline.platform.updater' ]
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     Claroline\CoreBundle\Installation\Updater\Updater130032:
-        tags: [ 'claroline.platform.updater' ]
         arguments:
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
 
     Claroline\CoreBundle\Installation\Updater\Updater130037:
-        tags: [ 'claroline.platform.updater' ]
         arguments:
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
 
@@ -29,20 +27,16 @@ services:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@logger'
-        tags: [ 'claroline.platform.updater' ]
 
     Claroline\CoreBundle\Installation\Updater\Updater130300:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-        tags: [ 'claroline.platform.updater' ]
 
     Claroline\CoreBundle\Installation\Updater\Updater130303:
-        tags: [ 'claroline.platform.updater' ]
         arguments:
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
 
-    Claroline\CoreBundle\Installation\Updater\Updater130500:
-        tags: [ 'claroline.platform.updater' ]
+    Claroline\CoreBundle\Installation\Updater\Updater130406:
         arguments:
             - '@doctrine.dbal.default_connection'
             - '@Claroline\AppBundle\Persistence\ObjectManager'

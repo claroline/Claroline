@@ -11,7 +11,6 @@ use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Log\LoggableTrait;
 use Claroline\AppBundle\Manager\File\ArchiveManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\API\Crud\WorkspaceCrud;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\AbstractTool;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
@@ -69,7 +68,7 @@ class TransferManager implements LoggerAwareInterface
         // todo : put it in an event
         $data = $this->replaceResourceIds($data);
 
-        $options = [WorkspaceCrud::NO_MODEL];
+        $options = [Options::NO_MODEL];
         $fileBag = $this->archiveManager->extractFiles($archive);
 
         $defaultRole = $data['registration']['defaultRole'];

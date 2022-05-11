@@ -1,0 +1,37 @@
+services:
+    Claroline\CommunityBundle\Command\CreateCommand:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\Crud'
+        tags:
+            - { name: 'console.command', command: 'claroline:user:create' }
+
+    Claroline\CommunityBundle\Command\DisableInactiveCommand:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\Manager\UserManager'
+        tags:
+            - { name: 'console.command', command: 'claroline:user:disable-inactive' }
+
+    Claroline\CommunityBundle\Command\AddGroupCommand:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\Crud'
+            - '@Claroline\AppBundle\API\FinderProvider'
+        tags:
+            - { name: 'console.command', command: 'claroline:user:add_group' }
+
+    Claroline\CommunityBundle\Command\CleanGroupCommand:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\Manager\UserManager'
+        tags:
+            - { name: 'console.command', command: 'claroline:user:clean_group' }
+
+    Claroline\CommunityBundle\Command\DeleteDisabledCommand:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@Claroline\AppBundle\API\Crud'
+        tags:
+            - { name: 'console.command', command: 'claroline:user:delete-disabled' }

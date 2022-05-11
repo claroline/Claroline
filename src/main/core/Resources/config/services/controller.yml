@@ -82,49 +82,6 @@ services:
             - '@Claroline\CoreBundle\Manager\Tool\ToolManager'
             - '@Claroline\CoreBundle\Manager\LogConnectManager'
 
-    Claroline\CoreBundle\Controller\APINew\User\GroupController:
-        parent: Claroline\AppBundle\Controller\AbstractCrudController
-        public: true
-        arguments:
-            - '@security.token_storage'
-            - '@security.authorization_checker'
-            - '@Claroline\CoreBundle\Manager\MailManager'
-
-    Claroline\CoreBundle\Controller\APINew\User\OrganizationController:
-        parent: Claroline\AppBundle\Controller\AbstractCrudController
-        public: true
-        arguments:
-            - '@security.authorization_checker'
-            - '@security.token_storage'
-
-    Claroline\CoreBundle\Controller\APINew\User\ProfileController:
-        arguments:
-            - '@security.authorization_checker'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\AppBundle\Manager\File\TempFileManager'
-            - '@Claroline\AppBundle\API\Crud'
-            - '@Claroline\AppBundle\API\SerializerProvider'
-            - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
-            - '@Claroline\CoreBundle\API\Serializer\User\ProfileSerializer'
-
-    Claroline\CoreBundle\Controller\APINew\User\RoleController:
-        parent: Claroline\AppBundle\Controller\AbstractCrudController
-        public: true
-        arguments:
-            - '@security.authorization_checker'
-            - '@Claroline\CoreBundle\Manager\LogManager'
-
-    Claroline\CoreBundle\Controller\APINew\User\UserController:
-        parent: Claroline\AppBundle\Controller\AbstractCrudController
-        public: true
-        arguments:
-            - '@security.token_storage'
-            - '@security.authorization_checker'
-            - '@Claroline\CoreBundle\Manager\UserManager'
-            - '@Claroline\CoreBundle\Manager\MailManager'
-            - '@Claroline\CoreBundle\Manager\Tool\ToolManager'
-            - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
-
     Claroline\CoreBundle\Controller\APINew\Workspace\RegistrationController:
         arguments:
             - '@security.authorization_checker'
@@ -213,17 +170,6 @@ services:
         arguments:
             - '%claroline.param.archive_directory%'
 
-    Claroline\CoreBundle\Controller\APINew\User\RegistrationController:
-        arguments:
-            - '@security.authorization_checker'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-            - '@Claroline\AppBundle\API\Crud'
-            - '@Claroline\AppBundle\API\SerializerProvider'
-            - '@Claroline\CoreBundle\API\Serializer\User\ProfileSerializer'
-            - '@Claroline\AppBundle\Manager\TermsOfServiceManager'
-            - '@Claroline\AuthenticationBundle\Security\Authentication\Authenticator'
-
     Claroline\CoreBundle\Controller\AdministrationController:
         arguments:
             - '@security.authorization_checker'
@@ -309,11 +255,3 @@ services:
         public: true
         arguments:
             - '@security.authorization_checker'
-
-    Claroline\CoreBundle\Controller\APINew\User\CommunityController:
-        parent: Claroline\AppBundle\Controller\AbstractSecurityController
-        public: true
-        arguments:
-            - '@security.authorization_checker'
-            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-            - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'

@@ -12,11 +12,11 @@
 namespace Claroline\CoreBundle\Controller\APINew\Workspace;
 
 use Claroline\AppBundle\Annotations\ApiDoc;
+use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Manager\File\TempFileManager;
 use Claroline\AuthenticationBundle\Messenger\Stamp\AuthenticationStamp;
-use Claroline\CoreBundle\API\Crud\WorkspaceCrud;
 use Claroline\CoreBundle\Controller\APINew\Model\HasGroupsTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasOrganizationsTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasRolesTrait;
@@ -242,7 +242,7 @@ class WorkspaceController extends AbstractCrudController
     {
         $options = $this->getOptions()['copyBulk'];
         if (1 === (int) $request->query->get('model') || 'true' === $request->query->get('model')) {
-            $options[] = WorkspaceCrud::AS_MODEL;
+            $options[] = Options::AS_MODEL;
         }
 
         $copies = $this->crud->copyBulk(

@@ -7,8 +7,6 @@
   "resources_desc": "Permet de lister les ressources accessibles par l'utilisateur courant.",
   "tools": "Liste des outils",
   "tools_desc": "Permet de lister les outils accessibles par l'utilisateur courant.",
-  "users": "Liste d'utilisateurs",
-  "users_desc": "Permet de lister les utilisateurs visibles par l'utilisateur courant.",
   "workspaces": "Liste d'espaces d'activités",
   "workspaces_desc": "Permet de lister les espaces d'activités visibles par l'utilisateur courant. Cela inclut les espaces que l'utilisateur gère, dans lesquels il est inscrit ou dans lesquels il peut s'inscrire.",
   "resource": "Ressource sélectionnée",

@@ -35,17 +35,11 @@ services:
 
     Claroline\CoreBundle\Security\Voter\FacetVoter: ~
 
-    Claroline\CoreBundle\Security\Voter\GroupVoter: ~
-
     Claroline\CoreBundle\Security\Voter\Location\LocationVoter: ~
 
     Claroline\CoreBundle\Security\Voter\Location\RoomVoter: ~
 
     Claroline\CoreBundle\Security\Voter\Location\MaterialVoter: ~
-
-    Claroline\CoreBundle\Security\Voter\OrganizationVoter:
-        arguments:
-            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
 
     Claroline\CoreBundle\Security\Voter\Planning\PlannedObjectVoter:
         arguments:
@@ -66,15 +60,9 @@ services:
             - '@claroline.manager.rights_manager'
             - '@Claroline\CoreBundle\Manager\Resource\ResourceRestrictionsManager'
 
-    Claroline\CoreBundle\Security\Voter\RoleVoter: ~
-
     Claroline\CoreBundle\Security\Voter\TextVoter: ~
 
     Claroline\CoreBundle\Security\Voter\UserSwitchVoter: ~
-
-    Claroline\CoreBundle\Security\Voter\UserVoter:
-        arguments:
-            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
 
     Claroline\CoreBundle\Security\Voter\WorkspaceVoter:
         arguments:

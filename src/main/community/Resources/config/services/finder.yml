@@ -1,0 +1,36 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+
+    _instanceof:
+        Claroline\AppBundle\API\Finder\AbstractFinder:
+            tags: [claroline.finder]
+            calls:
+                - method: setObjectManager
+                  arguments:
+                      - '@Claroline\AppBundle\Persistence\ObjectManager'
+                - method: setEntityManager
+                  arguments:
+                      - '@doctrine.orm.entity_manager'
+                - method: setEventDispatcher
+                  arguments:
+                      - '@Claroline\AppBundle\Event\StrictDispatcher'
+
+    Claroline\CommunityBundle\Finder\GroupFinder:
+        arguments:
+            - '@security.authorization_checker'
+            - '@security.token_storage'
+
+    Claroline\CommunityBundle\Finder\OrganizationFinder: ~
+
+    Claroline\CommunityBundle\Finder\RoleFinder:
+        arguments:
+            - '@security.authorization_checker'
+            - '@security.token_storage'
+
+    Claroline\CommunityBundle\Finder\UserFinder:
+        arguments:
+            - '@security.authorization_checker'
+            - '@security.token_storage'

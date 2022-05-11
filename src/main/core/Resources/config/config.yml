@@ -143,9 +143,6 @@ plugin:
         - name: main_settings
           class: cog
 
-        - name: community
-          class: user
-
         - name: templates
           class: file-alt
 
@@ -161,11 +158,6 @@ plugin:
         - name: list
           class: Claroline\CoreBundle\Entity\Widget\Type\ListWidget
           sources: [list]
-
-        # - name: profile
-        #   class: Claroline\CoreBundle\Entity\Widget\Type\ProfileWidget
-        #   context: [workspace, desktop]
-        #   tags: [community]
 
         - name: resource
           class: Claroline\CoreBundle\Entity\Widget\Type\ResourceWidget
@@ -197,11 +189,6 @@ plugin:
           context: [desktop, workspace, administration]
           tags: [content]
 
-        - name: users
-          type: list
-          context: [desktop, workspace, administration]
-          tags: [community]
-
         - name: admin_tools
           type: list
           context: [administration]
@@ -229,13 +216,6 @@ plugin:
           class: trash-alt
           is_displayable_in_workspace: true
           is_displayable_in_desktop: false
-
-        - name: community
-          class: user
-          is_displayable_in_workspace: true
-          is_displayable_in_desktop: true
-          tool_rights:
-              - name: create_user
 
         - name: locations
           class: map-marker-alt

@@ -45,6 +45,10 @@ final class Options
 
     //for workspace
     const WORKSPACE_VALIDATE_ROLES = 'workspace_validate_roles';
+    // make created workspace a model
+    const AS_MODEL = 'as_model';
+    // avoid copying model (this is used by import)
+    const NO_MODEL = 'no_model';
 
     //for role
     const SERIALIZE_ROLE_TOOLS_RIGHTS = 'serialize_role_tools_rights';

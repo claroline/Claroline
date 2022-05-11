@@ -4,17 +4,6 @@ services:
         autoconfigure: false
         public: true #because lazy
 
-    Claroline\CoreBundle\Listener\Administration\CommunityListener:
-        arguments:
-            - '@Claroline\AppBundle\API\FinderProvider'
-            - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
-            - '@Claroline\CoreBundle\API\Serializer\User\ProfileSerializer'
-            - '@claroline.manager.resource_manager'
-            - '@Claroline\CoreBundle\Manager\UserManager'
-        tags:
-            - { name: kernel.event_listener, event: tool.open.administration.community, method: onDisplayTool }
-            - { name: kernel.event_listener, event: merge_users, method: onMergeUsers }
-
     Claroline\CoreBundle\Listener\Administration\IntegrationListener:
         tags:
             - { name: kernel.event_listener, event: tool.open.administration.integration, method: onDisplayTool }
