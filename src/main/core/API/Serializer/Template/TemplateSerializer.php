@@ -64,7 +64,7 @@ class TemplateSerializer
                 ];
             }
 
-            if (!empty($serialized['contents'])) {
+            if (!empty($contents)) {
                 // UI expects an object here, if we expose an empty array it will break the form state
                 $serialized['contents'] = $contents;
             }
