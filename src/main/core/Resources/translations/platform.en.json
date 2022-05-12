@@ -1428,5 +1428,7 @@
     "in_progress": "In progress",
     "enable_username": "Use custom usernames",
     "username_enabled_help": "If enabled, users will have a unique identifier that can be used to log in to the platform.",
-    "username_disabled_help": "If disabled, the user's email address will be used."
+    "username_disabled_help": "If disabled, the user's email address will be used.",
+    "platform_home_none": "None (Displaying the login page)",
+    "platform_home_tool": "Tool (Displaying the platform's home)"
 }

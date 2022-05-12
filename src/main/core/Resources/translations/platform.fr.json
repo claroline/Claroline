@@ -1457,5 +1457,7 @@
     "in_progress": "En cours",
     "enable_username": "Utiliser des noms d'utilisateur personnalisés",
     "username_enabled_help": "Si activé, les utilisateurs auront un identifiant unique utilisable pour se connecter à la plateforme.",
-    "username_disabled_help": "Si désactivé, l'adresse email de l'utilisateur sera utilisée."
+    "username_disabled_help": "Si désactivé, l'adresse email de l'utilisateur sera utilisée.",
+    "platform_home_none": "Aucun (Affichage de la page de connexion)",
+    "platform_home_tool": "Outil (Affichage de l'accueil de la plateforme)"
 }
