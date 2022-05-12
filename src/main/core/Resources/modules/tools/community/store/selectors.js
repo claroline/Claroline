@@ -40,7 +40,7 @@ const defaultRole = createSelector(
   [toolSelectors.contextType, toolSelectors.contextData],
   (contextType, contextData) => {
     if (contextType === toolConstants.TOOL_WORKSPACE) {
-      return contextData.roles.find(role => role.translationKey === 'collaborator')
+      return contextData.defaultRole
     }
 
     return null
