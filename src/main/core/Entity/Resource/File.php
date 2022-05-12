@@ -32,7 +32,7 @@ class File extends AbstractResource
     protected $size;
 
     /**
-     * @ORM\Column(name="hash_name", unique=true)
+     * @ORM\Column(name="hash_name")
      */
     protected $hashName;
 
