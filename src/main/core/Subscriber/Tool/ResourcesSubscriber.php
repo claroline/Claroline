@@ -13,12 +13,14 @@ namespace Claroline\CoreBundle\Subscriber\Tool;
 
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\API\Utils\FileBag;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 use Claroline\CoreBundle\Entity\Tool\AbstractTool;
 use Claroline\CoreBundle\Event\CatalogEvents\ToolEvents;
 use Claroline\CoreBundle\Event\Resource\ExportResourceEvent;
@@ -108,6 +110,7 @@ class ResourcesSubscriber implements EventSubscriberInterface
             // create resource node
             $nodeData = $resourceData['resourceNode'];
             unset($nodeData['workspace']);
+            unset($nodeData['slug']);
 
             $resourceNode = new ResourceNode();
             $resourceNode->setWorkspace($event->getWorkspace());
@@ -115,9 +118,29 @@ class ResourcesSubscriber implements EventSubscriberInterface
                 $resourceNode->setParent($event->getCreatedEntity($nodeData['parent']['id']));
             }
 
-            $this->crud->create($resourceNode, $nodeData, [Crud::NO_PERMISSIONS, Crud::NO_VALIDATION/*, Options::REFRESH_UUID*/]);
+            $this->crud->create($resourceNode, $nodeData, [Crud::NO_PERMISSIONS, Crud::NO_VALIDATION, Options::NO_RIGHTS/*, Options::REFRESH_UUID*/]);
 
             $event->addCreatedEntity($nodeData['id'], $resourceNode);
+
+            // create rights
+            if (!empty($resourceData['rights'])) {
+                foreach ($resourceData['rights'] as $rightsData) {
+                    $role = $event->getCreatedEntity($rightsData['role']['id']);
+                    if (empty($role)) {
+                        continue;
+                    }
+
+                    $rights = new ResourceRights();
+                    $rights->setResourceNode($resourceNode);
+                    $this->serializer->deserialize(array_merge($rightsData, [
+                        'role' => [
+                            'id' => $role->getUuid(),
+                        ],
+                    ]), $rights);
+
+                    $this->om->persist($rights);
+                }
+            }
 
             // create custom resource Entity
             $resourceClass = $resourceNode->getResourceType()->getClass();
@@ -133,13 +156,16 @@ class ResourcesSubscriber implements EventSubscriberInterface
             );
         }
 
+        // TODO : set workspace opening (not possible now because I don't have access to the full workspace data).
+
         // rename root directory based on the new workspace name
         $root = $this->resourceRepository->findWorkspaceRoot($event->getWorkspace());
         if ($root) {
             $root->setName($event->getWorkspace()->getName());
             $this->om->persist($root);
-            $this->om->flush();
         }
+
+        $this->om->flush();
     }
 
     private function recursiveExport(ResourceNode $resourceNode, FileBag $fileBag)
@@ -160,8 +186,11 @@ class ResourcesSubscriber implements EventSubscriberInterface
             );
 
             $exported[] = array_merge([
-                'resourceNode' => $this->serializer->serialize($resourceNode),
-                'resource' => $this->serializer->serialize($resource, $resSerializeOptions),
+                'resourceNode' => $this->serializer->serialize($resourceNode, [SerializerInterface::SERIALIZE_TRANSFER, Options::NO_RIGHTS]),
+                'resource' => $this->serializer->serialize($resource, array_merge([SerializerInterface::SERIALIZE_TRANSFER], $resSerializeOptions)),
+                'rights' => array_map(function (ResourceRights $rights) {
+                    return $this->serializer->serialize($rights, [SerializerInterface::SERIALIZE_TRANSFER]);
+                }, $resourceNode->getRights()->toArray()),
             ], $exportEvent->getData());
 
             foreach ($resourceNode->getChildren() as $child) {

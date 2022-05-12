@@ -152,10 +152,11 @@ class RightsManager implements LoggerAwareInterface
 
             if ('directory' === $resourceNode->getResourceType()->getName()) {
                 // ugly hack to only get create rights for directories (it's the only one that can handle it).
-                $permissions = array_merge(
-                    $permissions,
-                    ['create' => $this->getCreatableTypes([$role->getName()], $resourceNode)]
-                );
+                $permissions = array_merge($permissions, [
+                    'create' => array_map(function (ResourceType $creatableType) {
+                        return $creatableType->getName();
+                    }, $rights->getCreatableResourceTypes()->toArray()),
+                ]);
             }
 
             // TODO : do not flatten role data. Use RoleSerializer instead

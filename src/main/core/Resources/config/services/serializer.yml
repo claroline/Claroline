@@ -206,6 +206,13 @@ services:
             - '@Claroline\CoreBundle\Manager\Resource\RightsManager'
             - '@Claroline\AppBundle\API\SerializerProvider'
 
+    Claroline\CoreBundle\API\Serializer\Resource\ResourceRightsSerializer:
+        tags: [claroline.serializer]
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\API\Serializer\User\RoleSerializer'
+            - '@Claroline\CoreBundle\Manager\Resource\MaskManager'
+
     Claroline\CoreBundle\API\Serializer\Resource\ResourceCommentSerializer:
         tags: [claroline.serializer]
         arguments:

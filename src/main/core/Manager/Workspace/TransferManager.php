@@ -269,7 +269,7 @@ class TransferManager implements LoggerAwareInterface
                     $rights->setOrderedTool($orderedTool);
                     unset($rightsData['orderedToolId']);
 
-                    $this->serializer->deserialize(array_merge_recursive($rightsData, [
+                    $this->serializer->deserialize(array_merge($rightsData, [
                         'role' => [
                             'id' => $createdObjects[$rightsData['role']['id']]->getUuid(),
                         ],

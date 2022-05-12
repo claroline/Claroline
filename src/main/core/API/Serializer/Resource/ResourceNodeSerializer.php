@@ -320,7 +320,7 @@ class ResourceNodeSerializer
         }
 
         if (!in_array(Options::NO_RIGHTS, $options) && isset($data['rights'])) {
-            // only used by transfer feature and creation. Should be moved later
+            // only used to be able to directly create a node with rights. Used in transfer feature and ui creation. To move later
             $this->deserializeRights($data['rights'], $resourceNode, $options);
         }
 
@@ -333,33 +333,19 @@ class ResourceNodeSerializer
 
         $roles = [];
         foreach ($rights as $right) {
-            // this block is required by workspace
-            if (!in_array(Options::REFRESH_UUID, $options)) {
-                /** @var Role $role */
-                $role = $this->om->getRepository(Role::class)->findOneBy(['name' => $right['name']]);
-            } else {
-                // this block is required by workspace transfer and I don't know why (it shouldn't)
-                $workspace = $resourceNode->getWorkspace() ?
-                    $resourceNode->getWorkspace() :
-                    $this->om->getRepository(Workspace::class)->findOneBy(['code' => $right['workspace']['code']]);
-
-                /** @var Role $role */
-                $role = $this->om->getRepository(Role::class)->findOneBy([
-                    'translationKey' => $right['translationKey'],
-                    'workspace' => $workspace,
-                ]);
-            }
-
+            $role = $this->om->getRepository(Role::class)->findOneBy(['name' => $right['name']]);
             if ($role) {
                 $creationPerms = [];
                 if (isset($right['permissions']['create'])) {
                     if (!empty($right['permissions']['create']) && 'directory' === $resourceNode->getResourceType()->getName()) {
                         // ugly hack to only get create rights for directories (it's the only one that can handle it).
-                        $creationPerms = array_map(function (string $typeName) {
+                        $creationPerms = array_filter(array_map(function (string $typeName) {
                             return $this->om
                                 ->getRepository(ResourceType::class)
                                 ->findOneBy(['name' => $typeName]);
-                        }, $right['permissions']['create']);
+                        }, $right['permissions']['create']), function ($type) {
+                            return !empty($type);
+                        });
                     }
 
                     unset($right['permissions']['create']);
