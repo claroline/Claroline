@@ -148,7 +148,7 @@ class ResourceNodeCrud
         $this->om->persist($newNode);
         $this->om->persist($copy);
 
-        // TODO : this should not use a serializer internal method
+        // TODO : this should not use a serializer internal method and should be done in post event to avoid more flush
         $this->serializer->deserializeRights(array_values($this->rightsManager->getRights($newParent)), $newNode);
 
         // TODO : listen to crud copy event instead
