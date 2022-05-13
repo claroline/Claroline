@@ -95,6 +95,7 @@ abstract class AdditionalInstaller implements LoggerAwareInterface, ContainerAwa
                 continue;
             }
 
+            $this->log(sprintf('Executing "%s" preUpdate.', $updaterClass));
             $updater = $this->updaterLocator->get($updaterClass);
             $updater->preUpdate();
         }
@@ -116,6 +117,7 @@ abstract class AdditionalInstaller implements LoggerAwareInterface, ContainerAwa
                 return;
             }
 
+            $this->log(sprintf('Executing "%s" postUpdate.', $updaterClass));
             $updater = $this->updaterLocator->get($updaterClass);
             $updater->postUpdate();
 
