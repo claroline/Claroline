@@ -41,7 +41,7 @@ services:
         arguments:
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
 
-    Claroline\CoreBundle\Installation\Updater\Updater130500:
+    Claroline\CoreBundle\Installation\Updater\Updater130406:
         tags: [ 'claroline.platform.updater' ]
         arguments:
             - '@doctrine.dbal.default_connection'
