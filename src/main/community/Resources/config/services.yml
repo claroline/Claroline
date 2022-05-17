@@ -4,4 +4,5 @@ imports:
     - { resource: services/finder.yml }
     - { resource: services/subscriber.yml }
     - { resource: services/validator.yml }
+    - { resource: services/updater.yml }
     - { resource: services/voter.yml }

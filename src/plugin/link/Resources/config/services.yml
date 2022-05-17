@@ -1,28 +1,3 @@
-services:
-    _defaults:
-        autowire: false
-        autoconfigure: false
-        public: true
-
-    Claroline\LinkBundle\Serializer\ShortcutSerializer:
-        tags: [claroline.serializer]
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
-
-    Claroline\LinkBundle\Listener\Resource\ResourceListener:
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\AppBundle\API\Crud'
-        tags:
-            - { name: kernel.event_listener, event: resource.shortcuts, method: shortcuts }
-            - { name: kernel.event_listener, event: crud.post.delete.resource_node, method: delete }
-
-    Claroline\LinkBundle\Listener\Resource\Types\ShortcutListener:
-        arguments:
-            - '@Claroline\AppBundle\API\SerializerProvider'
-            - '@Claroline\CoreBundle\Manager\Resource\ResourceLifecycleManager'
-        tags:
-            - { name: kernel.event_listener, event: resource.shortcut.load, method: load }
-            - { name: kernel.event_listener, event: resource.shortcut.export, method: download }
-            - { name: kernel.event_listener, event: resource.shortcut.import.after, method: onImport }
+imports:
+    - { resource: services/listener.yml }
+    - { resource: services/serializer.yml }
