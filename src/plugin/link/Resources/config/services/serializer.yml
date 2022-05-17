@@ -1,0 +1,10 @@
+services:
+    _defaults:
+        tags: [claroline.serializer]
+
+    Claroline\LinkBundle\Serializer\ShortcutSerializer:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
+
+    Claroline\LinkBundle\Serializer\Home\ToolShortcutSerializer: ~
