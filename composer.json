@@ -38,6 +38,7 @@
         "doctrine/doctrine-bundle": "^2.4",
         "doctrine/migrations": "^2.3",
         "doctrine/orm": "^2.8",
+        "doctrine/persistence": "2.5.3",
         "dompdf/dompdf": "*",
         "friendsofsymfony/jsrouting-bundle": "^2.2",
         "gedmo/doctrine-extensions": "^3.2",
