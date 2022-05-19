@@ -12,6 +12,7 @@
 namespace Claroline\CommunityBundle\Security\Voter;
 
 use Claroline\CoreBundle\Entity\Organization\Organization;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Security\Voter\AbstractVoter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -37,7 +38,15 @@ class OrganizationVoter extends AbstractVoter
             return VoterInterface::ACCESS_GRANTED;
         }
 
-        //not used in workspaces yet so no implementation
+        $currentUser = $token->getUser();
+        if ($currentUser instanceof User && !empty($object->getAdministrators())) {
+            foreach ($object->getAdministrators() as $admin) {
+                if ($admin->getId() === $currentUser->getId()) {
+                    return VoterInterface::ACCESS_GRANTED;
+                }
+            }
+        }
+
         return VoterInterface::ACCESS_DENIED;
     }
 
@@ -48,6 +57,6 @@ class OrganizationVoter extends AbstractVoter
 
     public function getSupportedActions()
     {
-        return [self::CREATE, self::EDIT, self::DELETE, self::PATCH];
+        return [self::OPEN, self::CREATE, self::EDIT, self::DELETE, self::PATCH];
     }
 }
