@@ -291,7 +291,7 @@ class Persister
      */
     public function role($name)
     {
-        $role = $this->om->getRepository('ClarolineCoreBundle:Role')->findOneBy([
+        $role = $this->om->getRepository(Role::class)->findOneBy([
             'name' => $name,
         ]);
 

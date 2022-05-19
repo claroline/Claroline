@@ -13,6 +13,7 @@ namespace Claroline\ScormBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
+use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\EvaluationBundle\Manager\ResourceEvaluationManager;
@@ -79,8 +80,8 @@ class ScormManager
         $this->scoTrackingSerializer = $scoTrackingSerializer;
         $this->uploadDir = $uploadDir;
 
-        $this->resourceUserEvalRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceUserEvaluation');
-        $this->scoTrackingRepo = $om->getRepository('ClarolineScormBundle:ScoTracking');
+        $this->resourceUserEvalRepo = $om->getRepository(ResourceUserEvaluation::class);
+        $this->scoTrackingRepo = $om->getRepository(ScoTracking::class);
     }
 
     public function uploadScormArchive(Workspace $workspace, File $file)

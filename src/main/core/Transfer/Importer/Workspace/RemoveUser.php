@@ -47,7 +47,7 @@ class RemoveUser extends AbstractImporter
             throw new \Exception('Workspace '.$this->printError($data['workspace'])." doesn't exists.");
         }
 
-        $role = $this->om->getRepository('ClarolineCoreBundle:Role')
+        $role = $this->om->getRepository(Role::class)
             ->findOneBy(['workspace' => $workspace, 'translationKey' => $data['role']['translationKey']]);
 
         if (!$role) {

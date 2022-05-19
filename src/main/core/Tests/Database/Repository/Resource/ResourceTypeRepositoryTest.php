@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Repository\Resource;
 
+use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Library\Testing\RepositoryTestCase;
 
 class ResourceTypeRepositoryTest extends RepositoryTestCase
@@ -20,7 +21,7 @@ class ResourceTypeRepositoryTest extends RepositoryTestCase
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
-        self::$repo = self::getRepository('ClarolineCoreBundle:Resource\ResourceType');
+        self::$repo = self::getRepository(ResourceType::class);
 
         self::createUser('john');
         self::createWorkspace('ws_1');

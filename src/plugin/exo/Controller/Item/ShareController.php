@@ -37,7 +37,7 @@ class ShareController
         UserSerializer $userSerializer,
         ShareManager $shareManager)
     {
-        $this->userRepository = $om->getRepository('ClarolineCoreBundle:User');
+        $this->userRepository = $om->getRepository(User::class);
         $this->userSerializer = $userSerializer;
         $this->shareManager = $shareManager;
     }

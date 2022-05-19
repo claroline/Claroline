@@ -124,11 +124,6 @@ class LogListener
             ->setOtherElementId($event->getOtherElementId());
 
         if (!(LogUserDeleteEvent::ACTION === $event->getAction() && $event->getReceiver() === $doer)) {
-            //Prevent self delete case
-            //Sometimes, the entity manager has been cleared, so we must merge the doer.
-            if ($doer) {
-                $doer = $this->om->merge($doer);
-            }
             $log->setDoer($doer);
         }
         $log->setDoerType($doerType);
@@ -141,9 +136,6 @@ class LogListener
         }
         if (LogGroupDeleteEvent::ACTION !== $event->getAction()) {
             $receiverGroup = $event->getReceiverGroup();
-            if ($receiverGroup) {
-                $this->om->merge($receiverGroup);
-            }
             $log->setReceiverGroup($receiverGroup);
         }
         if (

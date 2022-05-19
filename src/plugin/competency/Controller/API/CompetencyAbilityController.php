@@ -47,7 +47,7 @@ class CompetencyAbilityController extends AbstractCrudController
      * )
      * @EXT\ParamConverter(
      *     "competency",
-     *     class="HeVinciCompetencyBundle:Competency",
+     *     class="HeVinci\CompetencyBundle\Entity\Competency",
      *     options={"mapping": {"competency": "uuid"}}
      * )
      *

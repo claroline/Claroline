@@ -316,7 +316,7 @@ class RegistrationController
      *     }
      * )
      * @Route("/register/{user}", name="apiv2_workspace_register", methods={"PATCH"})
-     * @EXT\ParamConverter("user", class = "ClarolineCoreBundle:User",  options={"mapping": {"user": "uuid"}})
+     * @EXT\ParamConverter("user", class = "Claroline\CoreBundle\Entity\User",  options={"mapping": {"user": "uuid"}})
      */
     public function registerAction(User $user, Request $request): JsonResponse
     {
@@ -352,7 +352,7 @@ class RegistrationController
      *     }
      * )
      * @Route("/unregister/{user}", name="apiv2_workspace_unregister", methods={"DELETE"})
-     * @EXT\ParamConverter("user", class = "ClarolineCoreBundle:User",  options={"mapping": {"user": "uuid"}})
+     * @EXT\ParamConverter("user", class = "Claroline\CoreBundle\Entity\User",  options={"mapping": {"user": "uuid"}})
      */
     public function unregisterAction(User $user, Request $request): JsonResponse
     {
@@ -379,7 +379,7 @@ class RegistrationController
      * )
      * @EXT\ParamConverter(
      *     "workspace",
-     *     class = "ClarolineCoreBundle:Workspace\Workspace",
+     *     class = "Claroline\CoreBundle\Entity\Workspace\Workspace",
      *     options={"mapping": {"workspace": "uuid"}}
      * )
      * @EXT\ParamConverter("currentUser", converter="current_user", options={"allowAnonymous"=false})

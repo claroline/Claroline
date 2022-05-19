@@ -20,6 +20,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Manager\ExerciseManager;
 
 class ExportExoResultsCommand extends Command
@@ -68,7 +69,7 @@ class ExportExoResultsCommand extends Command
         $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
         $this->tokenStorage->setToken($token);
 
-        $exoRepo = $this->em->getRepository('UJMExoBundle:Exercise');
+        $exoRepo = $this->em->getRepository(Exercise::class);
         $exercises = [];
         if (!$workspaceMode) {
             $exercises[] = $exoRepo->findOneBy(['resourceNode' => $id]);

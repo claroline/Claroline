@@ -177,7 +177,7 @@ class DocimologyManager
         ]);
 
         $questionStatistics = [];
-        $itemRepository = $this->om->getRepository('UJMExoBundle:Item\Item');
+        $itemRepository = $this->om->getRepository(Item::class);
 
         /** @var Paper $paper */
         foreach ($papers as $paper) {
@@ -262,7 +262,7 @@ class DocimologyManager
             'exercise' => $exercise,
         ]);
 
-        $itemRepository = $this->om->getRepository('UJMExoBundle:Item\Item');
+        $itemRepository = $this->om->getRepository(Item::class);
         $reportScoreOn = 100;
         // all scores obtained for an exercise
         $exerciseScores = $this->getPapersScores($papers, $reportScoreOn);

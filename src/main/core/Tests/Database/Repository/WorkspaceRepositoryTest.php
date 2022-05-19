@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Repository;
 
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Testing\RepositoryTestCase;
 
 class WorkspaceRepositoryTest extends RepositoryTestCase
@@ -20,7 +21,7 @@ class WorkspaceRepositoryTest extends RepositoryTestCase
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
-        self::$repo = self::getRepository('ClarolineCoreBundle:Workspace\Workspace');
+        self::$repo = self::getRepository(Workspace::class);
 
         self::createWorkspace('ws_1');
         self::createWorkspace('ws_2');

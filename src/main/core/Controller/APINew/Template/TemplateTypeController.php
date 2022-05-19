@@ -70,7 +70,7 @@ class TemplateTypeController
 
     /**
      * @Route("/{id}/open", name="apiv2_template_type_open", methods={"GET"})
-     * @EXT\ParamConverter("templateType", class="ClarolineCoreBundle:Template\TemplateType", options={"mapping": {"id": "uuid"}})
+     * @EXT\ParamConverter("templateType", class="Claroline\CoreBundle\Entity\Template\TemplateType", options={"mapping": {"id": "uuid"}})
      */
     public function openAction(TemplateType $templateType): JsonResponse
     {
@@ -89,7 +89,7 @@ class TemplateTypeController
 
     /**
      * @Route("/{id}/templates", name="apiv2_template_type_templates")
-     * @EXT\ParamConverter("templateType", class="ClarolineCoreBundle:Template\TemplateType", options={"mapping": {"id": "uuid"}})
+     * @EXT\ParamConverter("templateType", class="Claroline\CoreBundle\Entity\Template\TemplateType", options={"mapping": {"id": "uuid"}})
      */
     public function listTemplatesAction(TemplateType $templateType, Request $request): JsonResponse
     {
@@ -107,7 +107,7 @@ class TemplateTypeController
 
     /**
      * @Route("/{id}/preview/{templateId}/{locale}", name="apiv2_template_preview")
-     * @EXT\ParamConverter("template", class="ClarolineCoreBundle:Template\Template", options={"mapping": {"templateId": "uuid"}})
+     * @EXT\ParamConverter("template", class="Claroline\CoreBundle\Entity\Template\Template", options={"mapping": {"templateId": "uuid"}})
      */
     public function previewAction(Template $template, string $locale)
     {

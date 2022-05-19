@@ -54,7 +54,7 @@ class OpenBadgeController
 
     /**
      * @Route("/criteria/{badge}", name="apiv2_open_badge__criteria", methods={"GET"})
-     * @EXT\ParamConverter("badge", class="ClarolineOpenBadgeBundle:BadgeClass", options={"mapping": {"badge": "uuid"}})
+     * @EXT\ParamConverter("badge", class="Claroline\OpenBadgeBundle\Entity\BadgeClass", options={"mapping": {"badge": "uuid"}})
      */
     public function getCriteriaAction(BadgeClass $badge): JsonResponse
     {
@@ -63,7 +63,7 @@ class OpenBadgeController
 
     /**
      * @Route("/image/{image}", name="apiv2_open_badge__image", methods={"GET"})
-     * @EXT\ParamConverter("image", class="ClarolineCoreBundle:File\PublicFile", options={"mapping": {"image": "id"}})
+     * @EXT\ParamConverter("image", class="Claroline\CoreBundle\Entity\File\PublicFile", options={"mapping": {"image": "id"}})
      */
     public function getImage(PublicFile $image): JsonResponse
     {
@@ -80,7 +80,7 @@ class OpenBadgeController
 
     /**
      * @Route("/badge/{badge}", name="apiv2_open_badge__badge_class", methods={"GET"})
-     * @EXT\ParamConverter("badge", class="ClarolineOpenBadgeBundle:BadgeClass", options={"mapping": {"badge": "uuid"}})
+     * @EXT\ParamConverter("badge", class="Claroline\OpenBadgeBundle\Entity\BadgeClass", options={"mapping": {"badge": "uuid"}})
      */
     public function getBadgeAction(BadgeClass $badge): JsonResponse
     {
@@ -89,7 +89,7 @@ class OpenBadgeController
 
     /**
      * @Route("/assertion/{assertion}.json", name="apiv2_open_badge__assertion", methods={"GET"})
-     * @EXT\ParamConverter("assertion", class="ClarolineOpenBadgeBundle:Assertion", options={"mapping": {"assertion": "uuid"}})
+     * @EXT\ParamConverter("assertion", class="Claroline\OpenBadgeBundle\Entity\Assertion", options={"mapping": {"assertion": "uuid"}})
      */
     public function getAssertionAction(Assertion $assertion): JsonResponse
     {
@@ -98,7 +98,7 @@ class OpenBadgeController
 
     /**
      * @Route("/evidence/{evidence}", name="apiv2_open_badge__evidence", methods={"GET"})
-     * @EXT\ParamConverter("evidence", class="ClarolineOpenBadgeBundle:Evidence", options={"mapping": {"evidence": "uuid"}})
+     * @EXT\ParamConverter("evidence", class="Claroline\OpenBadgeBundle\Entity\Evidence", options={"mapping": {"evidence": "uuid"}})
      */
     public function getEvidenceAction(Evidence $evidence): JsonResponse
     {
@@ -107,7 +107,7 @@ class OpenBadgeController
 
     /**
      * @Route("/crypto/{key}", name="apiv2_open_badge__cryptographic_key", methods={"GET"})
-     * @EXT\ParamConverter("key", class="ClarolineCoreBundle:Cryptography\CryptographicKey", options={"mapping": {"key": "uuid"}})
+     * @EXT\ParamConverter("key", class="Claroline\CoreBundle\Entity\Cryptography\CryptographicKey", options={"mapping": {"key": "uuid"}})
      */
     public function getCryptographicKeyAction(CryptographicKey $key): JsonResponse
     {

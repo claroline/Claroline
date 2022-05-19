@@ -92,7 +92,7 @@ class Lesson extends AbstractResource
         $em = $event->getEntityManager();
         $rootLesson = $this->buildRoot();
 
-        $em->getRepository('IcapLessonBundle:Chapter')->persistAsFirstChild($rootLesson);
+        $em->getRepository(Chapter::class)->persistAsFirstChild($rootLesson);
         $em->flush();
     }
 

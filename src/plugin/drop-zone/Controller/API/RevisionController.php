@@ -69,7 +69,7 @@ class RevisionController extends AbstractCrudController
      * @Route("/drop/{id}/submit/revision", name="claro_dropzone_drop_submit_for_revision", methods={"PUT"})
      * @EXT\ParamConverter(
      *     "drop",
-     *     class="ClarolineDropZoneBundle:Drop",
+     *     class="Claroline\DropZoneBundle\Entity\Drop",
      *     options={"mapping": {"id": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
@@ -98,7 +98,7 @@ class RevisionController extends AbstractCrudController
      * @Route("/{id}/revisions/list", name="claro_dropzone_revisions_list", methods={"GET"})
      * @EXT\ParamConverter(
      *     "dropzone",
-     *     class="ClarolineDropZoneBundle:Dropzone",
+     *     class="Claroline\DropZoneBundle\Entity\Dropzone",
      *     options={"mapping": {"id": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
@@ -121,7 +121,7 @@ class RevisionController extends AbstractCrudController
      * @Route("/drop/{drop}/revisions/list", name="claro_dropzone_drop_revisions_list", methods={"GET"})
      * @EXT\ParamConverter(
      *     "drop",
-     *     class="ClarolineDropZoneBundle:Drop",
+     *     class="Claroline\DropZoneBundle\Entity\Drop",
      *     options={"mapping": {"drop": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
@@ -149,7 +149,7 @@ class RevisionController extends AbstractCrudController
      * @Route("/{id}/revision/drop", name="claro_dropzone_drop_from_revision_get", methods={"GET"})
      * @EXT\ParamConverter(
      *     "revision",
-     *     class="ClarolineDropZoneBundle:Revision",
+     *     class="Claroline\DropZoneBundle\Entity\Revision",
      *     options={"mapping": {"id": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
@@ -176,7 +176,7 @@ class RevisionController extends AbstractCrudController
      * )
      * @EXT\ParamConverter(
      *     "revision",
-     *     class="ClarolineDropZoneBundle:Revision",
+     *     class="Claroline\DropZoneBundle\Entity\Revision",
      *     options={"mapping": {"id": "uuid"}}
      * )
      *
@@ -216,7 +216,7 @@ class RevisionController extends AbstractCrudController
      * )
      * @EXT\ParamConverter(
      *     "revision",
-     *     class="ClarolineDropZoneBundle:Revision",
+     *     class="Claroline\DropZoneBundle\Entity\Revision",
      *     options={"mapping": {"id": "uuid"}}
      * )
      *

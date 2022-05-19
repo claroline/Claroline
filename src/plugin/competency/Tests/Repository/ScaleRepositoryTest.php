@@ -2,6 +2,7 @@
 
 namespace HeVinci\CompetencyBundle\Tests\Repository;
 
+use HeVinci\CompetencyBundle\Entity\Scale;
 use HeVinci\CompetencyBundle\Util\RepositoryTestCase;
 
 class ScaleRepositoryTest extends RepositoryTestCase
@@ -11,7 +12,7 @@ class ScaleRepositoryTest extends RepositoryTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->repo = $this->om->getRepository('HeVinciCompetencyBundle:Scale');
+        $this->repo = $this->om->getRepository(Scale::class);
     }
 
     public function testFindWithStatus()

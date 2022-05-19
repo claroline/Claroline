@@ -99,12 +99,10 @@ class ForumController extends AbstractCrudController
         );
     }
 
-    //Pour les 6 méthodes suivantes, utilser le CRUD ? je sais pas trop.
-
     /**
      * @Route("/unlock/{user}/forum/{forum}", methods={"PATCH"})
-     * @EXT\ParamConverter("user", class = "ClarolineCoreBundle:User",  options={"mapping": {"user": "uuid"}})
-     * @EXT\ParamConverter("forum", class = "ClarolineForumBundle:Forum",  options={"mapping": {"forum": "uuid"}})
+     * @EXT\ParamConverter("user", class = "Claroline\CoreBundle\Entity\User",  options={"mapping": {"user": "uuid"}})
+     * @EXT\ParamConverter("forum", class = "Claroline\ForumBundle\Entity\Forum",  options={"mapping": {"forum": "uuid"}})
      *
      * @return JsonResponse
      */
@@ -141,8 +139,8 @@ class ForumController extends AbstractCrudController
 
     /**
      * @Route("/lock/{user}/forum/{forum}", methods={"PATCH"})
-     * @EXT\ParamConverter("user", class = "ClarolineCoreBundle:User",  options={"mapping": {"user": "uuid"}})
-     * @EXT\ParamConverter("forum", class = "ClarolineForumBundle:Forum",  options={"mapping": {"forum": "uuid"}})
+     * @EXT\ParamConverter("user", class = "Claroline\CoreBundle\Entity\User",  options={"mapping": {"user": "uuid"}})
+     * @EXT\ParamConverter("forum", class = "Claroline\ForumBundle\Entity\Forum",  options={"mapping": {"forum": "uuid"}})
      *
      * @return JsonResponse
      */
@@ -158,8 +156,8 @@ class ForumController extends AbstractCrudController
 
     /**
      * @Route("/ban/{user}/forum/{forum}", methods={"PATCH"})
-     * @EXT\ParamConverter("user", class = "ClarolineCoreBundle:User",  options={"mapping": {"user": "uuid"}})
-     * @EXT\ParamConverter("forum", class = "ClarolineForumBundle:Forum",  options={"mapping": {"forum": "uuid"}})
+     * @EXT\ParamConverter("user", class = "Claroline\CoreBundle\Entity\User",  options={"mapping": {"user": "uuid"}})
+     * @EXT\ParamConverter("forum", class = "Claroline\ForumBundle\Entity\Forum",  options={"mapping": {"forum": "uuid"}})
      *
      * @return JsonResponse
      */
@@ -175,8 +173,8 @@ class ForumController extends AbstractCrudController
 
     /**
      * @Route("/unban/{user}/forum/{forum}", methods={"PATCH"})
-     * @EXT\ParamConverter("user", class = "ClarolineCoreBundle:User",  options={"mapping": {"user": "uuid"}})
-     * @EXT\ParamConverter("forum", class = "ClarolineForumBundle:Forum",  options={"mapping": {"forum": "uuid"}})
+     * @EXT\ParamConverter("user", class = "Claroline\CoreBundle\Entity\User",  options={"mapping": {"user": "uuid"}})
+     * @EXT\ParamConverter("forum", class = "Claroline\ForumBundle\Entity\Forum",  options={"mapping": {"forum": "uuid"}})
      *
      * @return JsonResponse
      */
@@ -192,8 +190,8 @@ class ForumController extends AbstractCrudController
 
     /**
      * @Route("/notify/{user}/forum/{forum}", methods={"PATCH"})
-     * @EXT\ParamConverter("user", class = "ClarolineCoreBundle:User",  options={"mapping": {"user": "uuid"}})
-     * @EXT\ParamConverter("forum", class = "ClarolineForumBundle:Forum",  options={"mapping": {"forum": "uuid"}})
+     * @EXT\ParamConverter("user", class = "Claroline\CoreBundle\Entity\User",  options={"mapping": {"user": "uuid"}})
+     * @EXT\ParamConverter("forum", class = "Claroline\ForumBundle\Entity\Forum",  options={"mapping": {"forum": "uuid"}})
      *
      * @return JsonResponse
      */
@@ -209,8 +207,8 @@ class ForumController extends AbstractCrudController
 
     /**
      * @Route("/unnotify/{user}/forum/{forum}", methods={"PATCH"})
-     * @EXT\ParamConverter("user", class = "ClarolineCoreBundle:User",  options={"mapping": {"user": "uuid"}})
-     * @EXT\ParamConverter("forum", class = "ClarolineForumBundle:Forum",  options={"mapping": {"forum": "uuid"}})
+     * @EXT\ParamConverter("user", class = "Claroline\CoreBundle\Entity\User",  options={"mapping": {"user": "uuid"}})
+     * @EXT\ParamConverter("forum", class = "Claroline\ForumBundle\Entity\Forum",  options={"mapping": {"forum": "uuid"}})
      *
      * @return JsonResponse
      */

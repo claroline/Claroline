@@ -11,6 +11,10 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
+use Claroline\CoreBundle\Entity\Resource\MenuAction;
+use Claroline\CoreBundle\Entity\Resource\ResourceType;
+use Claroline\CoreBundle\Entity\Tool\Tool;
+use Claroline\CoreBundle\Entity\Widget\Widget;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 use Claroline\CoreBundle\Library\Testing\StubPluginTrait;
 use Symfony\Component\Yaml\Parser;
@@ -35,16 +39,16 @@ class ConfigurationCheckerTest extends MockeryTestCase
         $widgetRepo->shouldReceive('findAll')->andReturn([]);
         $em = $this->mock('Doctrine\ORM\EntityManager');
         $em->shouldReceive('getRepository')
-            ->with('ClarolineCoreBundle:Resource\ResourceType')
+            ->with(ResourceType::class)
             ->andReturn($resourceTypeRepo);
         $em->shouldReceive('getRepository')
-            ->with('ClarolineCoreBundle:Tool\Tool')
+            ->with(Tool::class)
             ->andReturn($toolRepo);
         $em->shouldReceive('getRepository')
-            ->with('ClarolineCoreBundle:Widget\Widget')
+            ->with(Widget::class)
             ->andReturn($widgetRepo);
         $em->shouldReceive('getRepository')
-            ->with('ClarolineCoreBundle:Resource\MenuAction')
+            ->with(MenuAction::class)
             ->andReturn($menuActionRepo);
         $this->checker = new ConfigurationChecker(new Parser(), $em);
     }

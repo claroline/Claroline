@@ -6,6 +6,7 @@ use Claroline\AppBundle\API\ValidatorInterface;
 use Claroline\AppBundle\API\ValidatorProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\Resource\ResourceType;
 
 class ResourceNodeValidator implements ValidatorInterface
 {
@@ -50,7 +51,7 @@ class ResourceNodeValidator implements ValidatorInterface
         // validates the resource type exists
         if (isset($data['meta']) && isset($data['meta']['type'])) {
             $resourceType = $this->om
-                ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
+                ->getRepository(ResourceType::class)
                 ->findOneBy(['name' => $data['meta']['type']]);
 
             if (!$resourceType) {

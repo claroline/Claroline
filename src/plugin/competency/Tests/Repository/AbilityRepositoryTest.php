@@ -3,8 +3,10 @@
 namespace HeVinci\CompetencyBundle\Tests\Repository;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\EvaluationBundle\Entity\AbstractEvaluation;
+use HeVinci\CompetencyBundle\Entity\Ability;
 use HeVinci\CompetencyBundle\Util\RepositoryTestCase;
 
 class AbilityRepositoryTest extends RepositoryTestCase
@@ -14,7 +16,7 @@ class AbilityRepositoryTest extends RepositoryTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->repo = $this->om->getRepository('HeVinciCompetencyBundle:Ability');
+        $this->repo = $this->om->getRepository(Ability::class);
     }
 
     public function testFindByCompetency()
@@ -102,9 +104,9 @@ class AbilityRepositoryTest extends RepositoryTestCase
         $this->persistAbility('Foo'); // not linked
         $this->om->flush();
 
-        $this->assertEquals(4, $this->om->count('HeVinciCompetencyBundle:Ability'));
+        $this->assertEquals(4, $this->om->count(Ability::class));
         $this->repo->deleteOrphans();
-        $this->assertEquals(3, $this->om->count('HeVinciCompetencyBundle:Ability'));
+        $this->assertEquals(3, $this->om->count(Ability::class));
     }
 
     public function testFindFirstByName()
@@ -286,7 +288,7 @@ class AbilityRepositoryTest extends RepositoryTestCase
         $workspace->setUuid('abc123');
         $workspace->setCreator($user);
 
-        $type = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')
+        $type = $this->om->getRepository(ResourceType::class)
             ->findOneByName('text');
 
         $node = new ResourceNode();

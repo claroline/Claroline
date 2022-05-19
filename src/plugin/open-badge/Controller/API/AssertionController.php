@@ -85,7 +85,7 @@ class AssertionController extends AbstractCrudController
 
     /**
      * @Route("/{assertion}/evidences", name="apiv2_assertion_evidences", methods={"GET"})
-     * @EXT\ParamConverter("assertion", class="ClarolineOpenBadgeBundle:Assertion", options={"mapping": {"assertion": "uuid"}})
+     * @EXT\ParamConverter("assertion", class="Claroline\OpenBadgeBundle\Entity\Assertion", options={"mapping": {"assertion": "uuid"}})
      */
     public function listEvidencesAction(Request $request, Assertion $assertion): JsonResponse
     {
@@ -103,7 +103,7 @@ class AssertionController extends AbstractCrudController
      * Downloads pdf version of assertion.
      *
      * @Route("/{assertion}/pdf/download", name="apiv2_assertion_pdf_download", methods={"GET"})
-     * @EXT\ParamConverter("assertion", class="ClarolineOpenBadgeBundle:Assertion", options={"mapping": {"assertion": "uuid"}})
+     * @EXT\ParamConverter("assertion", class="Claroline\OpenBadgeBundle\Entity\Assertion", options={"mapping": {"assertion": "uuid"}})
      */
     public function downloadPdfAction(Assertion $assertion): StreamedResponse
     {

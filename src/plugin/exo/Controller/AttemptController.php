@@ -24,7 +24,7 @@ use UJM\ExoBundle\Manager\AttemptManager;
  * Attempt Controller.
  *
  * @Route("/exercises/{exerciseId}/attempts")
- * @EXT\ParamConverter("exercise", class="UJMExoBundle:Exercise", options={"mapping": {"exerciseId": "uuid"}})
+ * @EXT\ParamConverter("exercise", class="UJM\ExoBundle\Entity\Exercise", options={"mapping": {"exerciseId": "uuid"}})
  */
 class AttemptController
 {
@@ -106,7 +106,7 @@ class AttemptController
      * Submits answers to an Exercise.
      *
      * @Route("/{id}", name="exercise_attempt_submit", methods={"PUT"})
-     * @EXT\ParamConverter("paper", class="UJMExoBundle:Attempt\Paper", options={"mapping": {"id": "uuid"}})
+     * @EXT\ParamConverter("paper", class="UJM\ExoBundle\Entity\Attempt\Paper", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      *
      * @param User $user
@@ -146,7 +146,7 @@ class AttemptController
      * Flags a paper as finished.
      *
      * @Route("/{id}/end", name="exercise_attempt_finish", methods={"PUT"})
-     * @EXT\ParamConverter("paper", class="UJMExoBundle:Attempt\Paper", options={"mapping": {"id": "uuid"}})
+     * @EXT\ParamConverter("paper", class="UJM\ExoBundle\Entity\Attempt\Paper", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      *
      * @param User $user
@@ -175,7 +175,7 @@ class AttemptController
      *
      * @Route("/{id}/{questionId}/hints/{hintId}", name="exercise_attempt_hint_show", methods={"GET"})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
-     * @EXT\ParamConverter("paper", class="UJMExoBundle:Attempt\Paper", options={"mapping": {"id": "uuid"}})
+     * @EXT\ParamConverter("paper", class="UJM\ExoBundle\Entity\Attempt\Paper", options={"mapping": {"id": "uuid"}})
      *
      * @param string $questionId
      * @param string $hintId

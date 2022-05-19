@@ -163,7 +163,7 @@ class Wiki extends AbstractResource
     {
         $em = $event->getEntityManager();
         $rootSection = $this->buildRoot();
-        $em->getRepository('IcapWikiBundle:Section')->persistAsFirstChild($rootSection);
+        $em->getRepository(Section::class)->persistAsFirstChild($rootSection);
         $em->flush();
     }
 

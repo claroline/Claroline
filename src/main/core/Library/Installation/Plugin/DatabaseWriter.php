@@ -74,7 +74,7 @@ class DatabaseWriter implements LoggerAwareInterface
         $this->toolMaskManager = $toolMaskManager;
         $this->iconSetManager = $iconSetManager;
 
-        $this->pluginRepository = $this->em->getRepository('ClarolineCoreBundle:Plugin');
+        $this->pluginRepository = $this->em->getRepository(Plugin::class);
     }
 
     /**
@@ -141,7 +141,7 @@ class DatabaseWriter implements LoggerAwareInterface
 
         /** @var ResourceType[] $resourceTypes */
         $resourceTypes = $this->em
-            ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
+            ->getRepository(ResourceType::class)
             ->findBy(['plugin' => $plugin->getGeneratedId()]);
 
         foreach ($resourceTypes as $resourceType) {
@@ -245,7 +245,7 @@ class DatabaseWriter implements LoggerAwareInterface
         // cleans deleted widgets
 
         /** @var Widget[] $installedWidgets */
-        $installedWidgets = $this->em->getRepository('ClarolineCoreBundle:Widget\Widget')
+        $installedWidgets = $this->em->getRepository(Widget::class)
             ->findBy(['plugin' => $plugin]);
         $widgetNames = array_map(function ($widget) {
             return $widget['name'];
@@ -261,7 +261,7 @@ class DatabaseWriter implements LoggerAwareInterface
         }
 
         // cleans deleted data sources
-        $installedSources = $this->em->getRepository('ClarolineCoreBundle:DataSource')
+        $installedSources = $this->em->getRepository(DataSource::class)
             ->findBy(['plugin' => $plugin]);
         $sourceNames = array_map(function ($source) {
             return $source['name'];
@@ -278,7 +278,7 @@ class DatabaseWriter implements LoggerAwareInterface
 
         // cleans deleted admin tools
         /** @var AdminTool[] $installedAdminTools */
-        $installedAdminTools = $this->em->getRepository('ClarolineCoreBundle:Tool\AdminTool')
+        $installedAdminTools = $this->em->getRepository(AdminTool::class)
           ->findBy(['plugin' => $plugin]);
         $adminTools = $processedConfiguration['admin_tools'];
         $adminToolNames = array_map(function ($adminTool) {
@@ -320,7 +320,7 @@ class DatabaseWriter implements LoggerAwareInterface
     {
         $this->log('Update the resource type : "'.$resourceConfiguration['name'].'".');
 
-        $resourceType = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')
+        $resourceType = $this->em->getRepository(ResourceType::class)
             ->findOneBy(['name' => $resourceConfiguration['name']]);
 
         if (null === $resourceType) {
@@ -375,7 +375,7 @@ class DatabaseWriter implements LoggerAwareInterface
     private function updateTool($toolConfiguration, Plugin $plugin)
     {
         $tool = $this->em
-            ->getRepository('ClarolineCoreBundle:Tool\Tool')
+            ->getRepository(Tool::class)
             ->findOneBy(['name' => $toolConfiguration['name']]);
 
         if (null === $tool) {
@@ -395,7 +395,7 @@ class DatabaseWriter implements LoggerAwareInterface
     {
         /** @var Widget $widget */
         $widget = $this->em
-            ->getRepository('ClarolineCoreBundle:Widget\Widget')
+            ->getRepository(Widget::class)
             ->findOneBy(['name' => $widgetConfiguration['name']]);
 
         if (is_null($widget)) {
@@ -412,7 +412,7 @@ class DatabaseWriter implements LoggerAwareInterface
         if (!empty($action['resource_type'])) {
             /** @var ResourceType $resourceType */
             $resourceType = $this->em
-                ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
+                ->getRepository(ResourceType::class)
                 ->findOneBy(['name' => $action['resource_type']]);
         }
 
@@ -423,7 +423,7 @@ class DatabaseWriter implements LoggerAwareInterface
 
         /** @var MenuAction $resourceAction */
         $resourceAction = $this->em
-            ->getRepository('ClarolineCoreBundle:Resource\MenuAction')
+            ->getRepository(MenuAction::class)
             ->findOneBy(['name' => $action['name'], 'resourceType' => $resourceType]);
 
         if (!$resourceAction) {
@@ -555,7 +555,7 @@ class DatabaseWriter implements LoggerAwareInterface
     {
         /** @var DataSource $source */
         $source = $this->em
-            ->getRepository('ClarolineCoreBundle:DataSource')
+            ->getRepository(DataSource::class)
             ->findOneBy(['name' => $sourceConfiguration['name']]);
 
         if (is_null($source)) {
@@ -602,7 +602,7 @@ class DatabaseWriter implements LoggerAwareInterface
      */
     private function updateTheme($themeConfiguration, Plugin $plugin)
     {
-        $theme = $this->em->getRepository('ClarolineThemeBundle:Theme')
+        $theme = $this->em->getRepository(Theme::class)
             ->findOneBy(['name' => $themeConfiguration['name']]);
 
         if (null === $theme) {
@@ -648,7 +648,7 @@ class DatabaseWriter implements LoggerAwareInterface
      */
     private function updateAdminTool($adminToolConfiguration, Plugin $plugin)
     {
-        $adminTool = $this->em->getRepository('ClarolineCoreBundle:Tool\AdminTool')
+        $adminTool = $this->em->getRepository(AdminTool::class)
             ->findOneBy(['name' => $adminToolConfiguration['name']]);
 
         if (null === $adminTool) {

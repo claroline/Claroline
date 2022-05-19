@@ -11,6 +11,7 @@ use HeVinci\CompetencyBundle\Entity\Level;
 use HeVinci\CompetencyBundle\Entity\Objective;
 use HeVinci\CompetencyBundle\Entity\ObjectiveCompetency;
 use HeVinci\CompetencyBundle\Entity\Progress\AbilityProgress;
+use HeVinci\CompetencyBundle\Entity\Progress\CompetencyProgress;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class ObjectiveManager
@@ -33,10 +34,10 @@ class ObjectiveManager
         $this->om = $om;
         $this->competencyManager = $competencyManager;
         $this->progressManager = $progressManager;
-        $this->objectiveRepo = $om->getRepository('HeVinciCompetencyBundle:Objective');
-        $this->competencyRepo = $om->getRepository('HeVinciCompetencyBundle:Competency');
-        $this->objectiveCompetencyRepo = $om->getRepository('HeVinciCompetencyBundle:ObjectiveCompetency');
-        $this->competencyProgressRepo = $om->getRepository('HeVinciCompetencyBundle:Progress\CompetencyProgress');
+        $this->objectiveRepo = $om->getRepository(Objective::class);
+        $this->competencyRepo = $om->getRepository(Competency::class);
+        $this->objectiveCompetencyRepo = $om->getRepository(ObjectiveCompetency::class);
+        $this->competencyProgressRepo = $om->getRepository(CompetencyProgress::class);
         $this->translator = $translator;
     }
 
@@ -118,7 +119,8 @@ class ObjectiveManager
                             $collection['progress'] = $progress->getPercentage();
                             $collection['latestResource'] = $progress->getResourceId();
 
-                            if ($level = $progress->getLevel()) {
+                            $level = $progress->getLevel();
+                            if ($level) {
                                 $collection['userLevel'] = $level->getName();
                                 $collection['userLevelValue'] = $level->getValue();
                             }

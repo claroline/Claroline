@@ -62,7 +62,7 @@ class ResourceActionManager
         $this->dispatcher = $dispatcher;
         $this->resourceManager = $resourceManager;
 
-        $this->repository = $this->om->getRepository('ClarolineCoreBundle:Resource\MenuAction');
+        $this->repository = $this->om->getRepository(MenuAction::class);
     }
 
     /**

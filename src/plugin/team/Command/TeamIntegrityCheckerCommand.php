@@ -12,6 +12,7 @@
 namespace Claroline\TeamBundle\Command;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\TeamBundle\Manager\TeamManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -40,8 +41,8 @@ class TeamIntegrityCheckerCommand extends Command
     {
         $code = $input->getArgument('code');
         $workspaces = $code ?
-          [$this->om->getRepository('ClarolineCoreBundle:Workspace\Workspace')->findOneByCode($code)] :
-          $this->om->getRepository('ClarolineCoreBundle:Workspace\Workspace')->findBy(['personal' => false]);
+          [$this->om->getRepository(Workspace::class)->findOneByCode($code)] :
+          $this->om->getRepository(Workspace::class)->findBy(['personal' => false]);
 
         foreach ($workspaces as $workspace) {
             $teams = $this->teamManager->getTeamsByWorkspace($workspace);

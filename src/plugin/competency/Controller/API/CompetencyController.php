@@ -94,7 +94,7 @@ class CompetencyController extends AbstractCrudController
      * )
      * @EXT\ParamConverter(
      *     "competency",
-     *     class="HeVinciCompetencyBundle:Competency",
+     *     class="HeVinci\CompetencyBundle\Entity\Competency",
      *     options={"mapping": {"id": "uuid"}}
      * )
      *
@@ -125,7 +125,7 @@ class CompetencyController extends AbstractCrudController
      * )
      * @EXT\ParamConverter(
      *     "framework",
-     *     class="HeVinciCompetencyBundle:Competency",
+     *     class="HeVinci\CompetencyBundle\Entity\Competency",
      *     options={"mapping": {"id": "uuid"}}
      * )
      *
@@ -198,7 +198,7 @@ class CompetencyController extends AbstractCrudController
      * )
      * @EXT\ParamConverter(
      *     "node",
-     *     class="ClarolineCoreBundle:Resource\ResourceNode",
+     *     class="Claroline\CoreBundle\Entity\Resource\ResourceNode",
      *     options={"mapping": {"node": "uuid"}}
      * )
      *
@@ -225,12 +225,12 @@ class CompetencyController extends AbstractCrudController
      * )
      * @EXT\ParamConverter(
      *     "node",
-     *     class="ClarolineCoreBundle:Resource\ResourceNode",
+     *     class="Claroline\CoreBundle\Entity\Resource\ResourceNode",
      *     options={"mapping": {"node": "uuid"}}
      * )
      * @EXT\ParamConverter(
      *     "competency",
-     *     class="HeVinciCompetencyBundle:Competency",
+     *     class="HeVinci\CompetencyBundle\Entity\Competency",
      *     options={"mapping": {"competency": "uuid"}},
      * )
      *
@@ -256,12 +256,12 @@ class CompetencyController extends AbstractCrudController
      * )
      * @EXT\ParamConverter(
      *     "node",
-     *     class="ClarolineCoreBundle:Resource\ResourceNode",
+     *     class="Claroline\CoreBundle\Entity\Resource\ResourceNode",
      *     options={"mapping": {"node": "uuid"}}
      * )
      * @EXT\ParamConverter(
      *     "competency",
-     *     class="HeVinciCompetencyBundle:Competency",
+     *     class="HeVinci\CompetencyBundle\Entity\Competency",
      *     options={"mapping": {"competency": "uuid"}}
      * )
      *

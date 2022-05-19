@@ -135,7 +135,7 @@ class ScheduledTaskSerializer
         if (isset($data['users'])) {
             foreach ($data['users'] as $dataUser) {
                 /** @var User $user */
-                $user = $this->om->getRepository('ClarolineCoreBundle:User')->findOneBy([
+                $user = $this->om->getRepository(User::class)->findOneBy([
                     'uuid' => $dataUser['id'],
                 ]);
 
@@ -149,7 +149,7 @@ class ScheduledTaskSerializer
         if (isset($data['group'])) {
             if (empty($scheduledTask->getGroup()) || $data['group']['id'] !== $scheduledTask->getGroup()->getId()) {
                 // Group has changed, we need to load the new one to link it to the entity
-                $group = $this->om->getRepository('ClarolineCoreBundle:Group')->findOneBy([
+                $group = $this->om->getRepository(Group::class)->findOneBy([
                     'uuid' => $data['group']['id'],
                 ]);
 

@@ -56,7 +56,7 @@ class ConnectionMessageController extends AbstractCrudController
      * @Route("/{id}/discard", name="apiv2_connection_message_discard", methods="PUT")
      * @EXT\ParamConverter(
      *     "message",
-     *     class="ClarolineCoreBundle:ConnectionMessage\ConnectionMessage",
+     *     class="Claroline\CoreBundle\Entity\ConnectionMessage\ConnectionMessage",
      *     options={"mapping": {"id": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})

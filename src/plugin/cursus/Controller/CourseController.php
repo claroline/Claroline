@@ -128,7 +128,7 @@ class CourseController extends AbstractCrudController
 
     /**
      * @Route("/{slug}/open", name="apiv2_cursus_course_open", methods={"GET"})
-     * @EXT\ParamConverter("course", class="ClarolineCursusBundle:Course", options={"mapping": {"slug": "slug"}})
+     * @EXT\ParamConverter("course", class="Claroline\CursusBundle\Entity\Course", options={"mapping": {"slug": "slug"}})
      */
     public function openAction(Course $course): JsonResponse
     {
@@ -211,7 +211,7 @@ class CourseController extends AbstractCrudController
 
     /**
      * @Route("/{id}/pdf", name="apiv2_cursus_course_download_pdf", methods={"GET"})
-     * @EXT\ParamConverter("course", class="ClarolineCursusBundle:Course", options={"mapping": {"id": "uuid"}})
+     * @EXT\ParamConverter("course", class="Claroline\CursusBundle\Entity\Course", options={"mapping": {"id": "uuid"}})
      */
     public function downloadPdfAction(Course $course, Request $request): StreamedResponse
     {
@@ -229,7 +229,7 @@ class CourseController extends AbstractCrudController
 
     /**
      * @Route("/{id}/sessions", name="apiv2_cursus_course_list_sessions", methods={"GET"})
-     * @EXT\ParamConverter("course", class="ClarolineCursusBundle:Course", options={"mapping": {"id": "uuid"}})
+     * @EXT\ParamConverter("course", class="Claroline\CursusBundle\Entity\Course", options={"mapping": {"id": "uuid"}})
      */
     public function listSessionsAction(Course $course, Request $request): JsonResponse
     {

@@ -21,7 +21,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @Route("blog/{blogId}/comments", options={"expose"=true})
- * @EXT\ParamConverter("blog", class="IcapBlogBundle:Blog", options={"mapping": {"blogId": "uuid"}})
+ * @EXT\ParamConverter("blog", class="Icap\BlogBundle\Entity\Blog", options={"mapping": {"blogId": "uuid"}})
  */
 class CommentController
 {
@@ -50,7 +50,7 @@ class CommentController
      * Get post comments.
      *
      * @Route("/{postId}", name="apiv2_blog_comment_list", methods={"GET"})
-     * @EXT\ParamConverter("post", class="IcapBlogBundle:Post", options={"mapping": {"postId": "uuid"}})
+     * @EXT\ParamConverter("post", class="Icap\BlogBundle\Entity\Post", options={"mapping": {"postId": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      *
      * @param User $user
@@ -146,7 +146,7 @@ class CommentController
      * Create a post comment.
      *
      * @Route("/{postId}/new", name="apiv2_blog_comment_new", methods={"POST"})
-     * @EXT\ParamConverter("post", class="IcapBlogBundle:Post", options={"mapping": {"postId": "uuid"}})
+     * @EXT\ParamConverter("post", class="Icap\BlogBundle\Entity\Post", options={"mapping": {"postId": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      *
      * @param User $user
@@ -173,7 +173,7 @@ class CommentController
      * Update post comment.
      *
      * @Route("/{commentId}/update", name="apiv2_blog_comment_update", methods={"PUT"})
-     * @EXT\ParamConverter("comment", class="IcapBlogBundle:Comment", options={"mapping": {"commentId": "uuid"}})
+     * @EXT\ParamConverter("comment", class="Icap\BlogBundle\Entity\Comment", options={"mapping": {"commentId": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      *
      * @param User $user
@@ -201,7 +201,7 @@ class CommentController
      * Publish post comment.
      *
      * @Route("/{commentId}/publish", name="apiv2_blog_comment_publish", methods={"PUT"})
-     * @EXT\ParamConverter("comment", class="IcapBlogBundle:Comment", options={"mapping": {"commentId": "uuid"}})
+     * @EXT\ParamConverter("comment", class="Icap\BlogBundle\Entity\Comment", options={"mapping": {"commentId": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      *
      * @return JsonResponse
@@ -218,7 +218,7 @@ class CommentController
      * Unpublish post comment.
      *
      * @Route("/{commentId}/unpublish", name="apiv2_blog_comment_unpublish", methods={"PUT"})
-     * @EXT\ParamConverter("comment", class="IcapBlogBundle:Comment", options={"mapping": {"commentId": "uuid"}})
+     * @EXT\ParamConverter("comment", class="Icap\BlogBundle\Entity\Comment", options={"mapping": {"commentId": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      *
      * @return JsonResponse
@@ -235,7 +235,7 @@ class CommentController
      * Report post comment.
      *
      * @Route("/{commentId}/report", name="apiv2_blog_comment_report", methods={"PUT"})
-     * @EXT\ParamConverter("comment", class="IcapBlogBundle:Comment", options={"mapping": {"commentId": "uuid"}})
+     * @EXT\ParamConverter("comment", class="Icap\BlogBundle\Entity\Comment", options={"mapping": {"commentId": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      *
      * @return JsonResponse
@@ -251,7 +251,7 @@ class CommentController
      * Delete post comment.
      *
      * @Route("/{commentId}/delete", name="apiv2_blog_comment_delete", methods={"DELETE"})
-     * @EXT\ParamConverter("comment", class="IcapBlogBundle:Comment", options={"mapping": {"commentId": "uuid"}})
+     * @EXT\ParamConverter("comment", class="Icap\BlogBundle\Entity\Comment", options={"mapping": {"commentId": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      *
      * @return JsonResponse

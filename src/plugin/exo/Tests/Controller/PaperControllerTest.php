@@ -264,7 +264,7 @@ class PaperControllerTest extends TransactionalTestCase
         $this->assertEquals(204, $this->client->getResponse()->getStatusCode());
 
         // Checks the papers have really been deleted
-        $papers = $this->om->getRepository('UJMExoBundle:Attempt\Paper')->findBy([
+        $papers = $this->om->getRepository(Paper::class)->findBy([
             'exercise' => $this->exercise,
         ]);
 

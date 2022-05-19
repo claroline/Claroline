@@ -5,6 +5,7 @@ namespace UJM\ExoBundle\Manager\Item;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
+use UJM\ExoBundle\Entity\Item\Item;
 use UJM\ExoBundle\Entity\Item\Shared;
 use UJM\ExoBundle\Repository\ItemRepository;
 
@@ -43,7 +44,7 @@ class ShareManager
         $adminRights = isset($shareRequest['adminRights']) && $shareRequest['adminRights'];
 
         /** @var ItemRepository $questionRepo */
-        $questionRepo = $this->om->getRepository('UJMExoBundle:Item\Item');
+        $questionRepo = $this->om->getRepository(Item::class);
         // Loaded questions (we load it to be sure it exist)
         $questions = $questionRepo->findByUuids($shareRequest['questions']);
 
@@ -54,7 +55,7 @@ class ShareManager
         foreach ($questions as $question) {
             if ($this->itemManager->canEdit($question, $user)) {
                 $sharedWith = $this->om
-                    ->getRepository('UJMExoBundle:Item\Shared')
+                    ->getRepository(Shared::class)
                     ->findBy(['question' => $question]);
 
                 foreach ($users as $user) {
@@ -134,7 +135,7 @@ class ShareManager
      */
     public function replaceUser(User $from, User $to)
     {
-        $shareds = $this->om->getRepository('UJMExoBundle:Item\Shared')->findByUser($from);
+        $shareds = $this->om->getRepository(Shared::class)->findByUser($from);
 
         if (count($shareds) > 0) {
             foreach ($shareds as $shared) {

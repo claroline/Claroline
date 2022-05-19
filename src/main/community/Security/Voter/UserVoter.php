@@ -78,7 +78,7 @@ class UserVoter extends AbstractRoleSubjectVoter
         // allow open for all of those who have the open right on community tool
         // TODO : this should also check user is in the same organization
         /** @var OrderedToolRepository $orderedToolRepo */
-        $orderedToolRepo = $this->getObjectManager()->getRepository('ClarolineCoreBundle:Tool\OrderedTool');
+        $orderedToolRepo = $this->getObjectManager()->getRepository(OrderedTool::class);
         /** @var OrderedTool $communityTools */
         $communityTool = $orderedToolRepo->findOneByNameAndDesktop('community');
         if ($communityTool && $this->isGranted('OPEN', $communityTool)) {
@@ -164,7 +164,7 @@ class UserVoter extends AbstractRoleSubjectVoter
 
         // allow creation for all of those who have the create right on a community tool
         /** @var OrderedToolRepository $orderedToolRepo */
-        $orderedToolRepo = $this->getObjectManager()->getRepository('ClarolineCoreBundle:Tool\OrderedTool');
+        $orderedToolRepo = $this->getObjectManager()->getRepository(OrderedTool::class);
         /** @var OrderedTool[] $communityTools */
         $communityTools = $orderedToolRepo->findByName('community');
         foreach ($communityTools as $communityTool) {

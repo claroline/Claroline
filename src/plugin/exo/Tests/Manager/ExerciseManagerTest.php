@@ -88,7 +88,7 @@ class ExerciseManagerTest extends JsonDataTestCase
         $this->om->clear();
 
         // Check paper validity
-        $papers = $this->om->getRepository('UJMExoBundle:Attempt\Paper')->findBy([
+        $papers = $this->om->getRepository(Paper::class)->findBy([
             'exercise' => $this->exercise,
         ]);
 

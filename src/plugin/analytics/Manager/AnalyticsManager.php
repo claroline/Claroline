@@ -13,8 +13,15 @@ namespace Claroline\AnalyticsBundle\Manager;
 
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Log\Connection\LogConnectPlatform;
 use Claroline\CoreBundle\Entity\Log\Connection\LogConnectWorkspace;
+use Claroline\CoreBundle\Entity\Log\Log;
+use Claroline\CoreBundle\Entity\Organization\Organization;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\Resource\ResourceType;
+use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\Log\LogResourceExportEvent;
 use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
@@ -96,14 +103,14 @@ class AnalyticsManager
         $this->workspaceManager = $workspaceManager;
         $this->fileManager = $fileManager;
 
-        $this->workspaceRepo = $objectManager->getRepository('ClarolineCoreBundle:Workspace\Workspace');
-        $this->userRepo = $objectManager->getRepository('ClarolineCoreBundle:User');
-        $this->roleRepo = $objectManager->getRepository('ClarolineCoreBundle:Role');
-        $this->groupRepo = $objectManager->getRepository('ClarolineCoreBundle:Group');
-        $this->organizationRepo = $objectManager->getRepository('ClarolineCoreBundle:Organization\Organization');
-        $this->resourceRepo = $objectManager->getRepository('ClarolineCoreBundle:Resource\ResourceNode');
-        $this->resourceTypeRepo = $objectManager->getRepository('ClarolineCoreBundle:Resource\ResourceType');
-        $this->logRepo = $objectManager->getRepository('ClarolineCoreBundle:Log\Log');
+        $this->workspaceRepo = $objectManager->getRepository(Workspace::class);
+        $this->userRepo = $objectManager->getRepository(User::class);
+        $this->roleRepo = $objectManager->getRepository(Role::class);
+        $this->groupRepo = $objectManager->getRepository(Group::class);
+        $this->organizationRepo = $objectManager->getRepository(Organization::class);
+        $this->resourceRepo = $objectManager->getRepository(ResourceNode::class);
+        $this->resourceTypeRepo = $objectManager->getRepository(ResourceType::class);
+        $this->logRepo = $objectManager->getRepository(Log::class);
         $this->logConnectPlatformRepo = $objectManager->getRepository(LogConnectPlatform::class);
         $this->logConnectWorkspaceRepo = $objectManager->getRepository(LogConnectWorkspace::class);
     }

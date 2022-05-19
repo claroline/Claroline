@@ -47,7 +47,7 @@ class ChapterManager
         $this->chapterSerializer = $chapterSerializer;
         $this->om = $om;
         $this->eventDispatcher = $eventDispatcher;
-        $this->chapterRepository = $entityManager->getRepository('IcapLessonBundle:Chapter');
+        $this->chapterRepository = $entityManager->getRepository(Chapter::class);
     }
 
     /**
@@ -89,7 +89,7 @@ class ChapterManager
 
     public function copyChildren(Chapter $chapter_org, Chapter $chapter_copy, $copy_children)
     {
-        $chapterRepository = $this->entityManager->getRepository('IcapLessonBundle:Chapter');
+        $chapterRepository = $this->entityManager->getRepository(Chapter::class);
         $chapters = $chapterRepository->children($chapter_org, true);
         if (null !== $chapters && count($chapters) > 0) {
             foreach ($chapters as $child) {
@@ -100,13 +100,13 @@ class ChapterManager
 
     public function insertChapter(Chapter $chapter, Chapter $parent)
     {
-        $this->entityManager->getRepository('IcapLessonBundle:Chapter')->persistAsLastChildOf($chapter, $parent);
+        $this->entityManager->getRepository(Chapter::class)->persistAsLastChildOf($chapter, $parent);
         $this->entityManager->flush();
     }
 
     public function serializeChapterTree(Lesson $lesson)
     {
-        $tree = $this->entityManager->getRepository('IcapLessonBundle:Chapter')->buildChapterTree($lesson->getRoot(), 'chapter.uuid, chapter.level, chapter.title, chapter.slug, chapter.text, chapter.poster');
+        $tree = $this->entityManager->getRepository(Chapter::class)->buildChapterTree($lesson->getRoot(), 'chapter.uuid, chapter.level, chapter.title, chapter.slug, chapter.text, chapter.poster');
 
         return $this->chapterSerializer->serializeChapterTree($tree[0]);
     }

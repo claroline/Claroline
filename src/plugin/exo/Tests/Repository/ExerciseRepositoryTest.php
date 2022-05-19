@@ -27,9 +27,9 @@ class ExerciseRepositoryTest extends TransactionalTestCase
     {
         parent::setUp();
 
-        $this->om = $this->client->getContainer()->get('Claroline\AppBundle\Persistence\ObjectManager');
+        $this->om = $this->client->getContainer()->get(ObjectManager::class);
         $this->persist = new Persister($this->om);
-        $this->repo = $this->om->getRepository('UJMExoBundle:Exercise');
+        $this->repo = $this->om->getRepository(Exercise::class);
 
         // Initialize some base data for tests
         $paperGenerator = $this->client->getContainer()->get('ujm_exo.generator.paper');
@@ -77,7 +77,7 @@ class ExerciseRepositoryTest extends TransactionalTestCase
         $this->repo->invalidatePapers($this->exercises[0]);
         $this->om->clear(); // this is needed to force doctrine to reload the entities
 
-        $papers = $this->om->getRepository('UJMExoBundle:Attempt\Paper')->findBy([
+        $papers = $this->om->getRepository(Paper::class)->findBy([
             'exercise' => $this->exercises[0],
         ]);
 

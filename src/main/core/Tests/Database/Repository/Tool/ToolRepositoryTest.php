@@ -23,7 +23,7 @@ class ToolRepositoryTest extends RepositoryTestCase
     {
         parent::setUpBeforeClass();
 
-        self::$repo = self::getRepository('ClarolineCoreBundle:Tool\Tool');
+        self::$repo = self::getRepository(Tool::class);
 
         self::createUser('john');
         self::createWorkspace('ws_1');

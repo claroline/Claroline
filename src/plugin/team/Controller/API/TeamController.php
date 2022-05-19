@@ -61,7 +61,7 @@ class TeamController extends AbstractCrudController
      * )
      * @EXT\ParamConverter(
      *     "workspace",
-     *     class="ClarolineCoreBundle:Workspace\Workspace",
+     *     class="Claroline\CoreBundle\Entity\Workspace\Workspace",
      *     options={"mapping": {"workspace": "uuid"}}
      * )
      */
@@ -82,7 +82,7 @@ class TeamController extends AbstractCrudController
 
     /**
      * @Route("/team/{team}/{role}/register", name="apiv2_team_register")
-     * @EXT\ParamConverter("team", class="ClarolineTeamBundle:Team", options={"mapping": {"team": "uuid"}})
+     * @EXT\ParamConverter("team", class="Claroline\TeamBundle\Entity\Team", options={"mapping": {"team": "uuid"}})
      */
     public function teamRegisterAction(Team $team, string $role, Request $request): JsonResponse
     {
@@ -119,7 +119,7 @@ class TeamController extends AbstractCrudController
 
     /**
      * @Route("/team/{team}/{role}/unregister", name="apiv2_team_unregister")
-     * @EXT\ParamConverter("team", class="ClarolineTeamBundle:Team", options={"mapping": {"team": "uuid"}})
+     * @EXT\ParamConverter("team", class="Claroline\TeamBundle\Entity\Team", options={"mapping": {"team": "uuid"}})
      */
     public function teamUnregisterAction(Team $team, string $role, Request $request): JsonResponse
     {
@@ -140,7 +140,7 @@ class TeamController extends AbstractCrudController
 
     /**
      * @Route("/team/{team}/register", name="apiv2_team_self_register")
-     * @EXT\ParamConverter("team", class="ClarolineTeamBundle:Team", options={"mapping": {"team": "uuid"}})
+     * @EXT\ParamConverter("team", class="Claroline\TeamBundle\Entity\Team", options={"mapping": {"team": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
     public function teamSelfRegisterAction(Team $team, User $user): JsonResponse
@@ -170,7 +170,7 @@ class TeamController extends AbstractCrudController
 
     /**
      * @Route("/team/{team}/unregister", name="apiv2_team_self_unregister")
-     * @EXT\ParamConverter("team", class="ClarolineTeamBundle:Team", options={"mapping": {"team": "uuid"}})
+     * @EXT\ParamConverter("team", class="Claroline\TeamBundle\Entity\Team", options={"mapping": {"team": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
     public function teamSelfUnregisterAction(Team $team, User $user): JsonResponse
@@ -187,7 +187,7 @@ class TeamController extends AbstractCrudController
 
     /**
      * @Route("/workspace/{workspace}/teams/create", name="apiv2_team_multiple_create")
-     * @EXT\ParamConverter("workspace", class="ClarolineCoreBundle:Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
+     * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
     public function multipleTeamsCreateAction(Workspace $workspace, User $user, Request $request): JsonResponse

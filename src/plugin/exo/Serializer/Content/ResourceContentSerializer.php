@@ -108,7 +108,7 @@ class ResourceContentSerializer
     {
         if (empty($resourceNode)) {
             $id = method_exists($data, 'getId') ? $data->getId() : $data['id'];
-            $resourceNode = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->find($id);
+            $resourceNode = $this->om->getRepository(ResourceNode::class)->find($id);
         }
 
         return $resourceNode;

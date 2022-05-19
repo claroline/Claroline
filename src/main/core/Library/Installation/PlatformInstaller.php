@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Library\Installation;
 
 use Claroline\AppBundle\Log\LoggableTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Plugin;
 use Claroline\CoreBundle\Library\Installation\Plugin\Installer;
 use Claroline\CoreBundle\Manager\PluginManager;
 use Claroline\InstallationBundle\Bundle\InstallableInterface;
@@ -135,7 +136,7 @@ class PlatformInstaller implements LoggerAwareInterface
         }
 
         try {
-            return $this->om->getRepository('ClarolineCoreBundle:Plugin')->findOneByBundleFQCN($bundleFqcn);
+            return $this->om->getRepository(Plugin::class)->findOneByBundleFQCN($bundleFqcn);
         } catch (TableNotFoundException $e) {
             // we're probably installing the platform because the database isn't here yet do... return false
             return false;

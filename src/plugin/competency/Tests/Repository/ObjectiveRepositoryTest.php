@@ -2,6 +2,7 @@
 
 namespace HeVinci\CompetencyBundle\Repository;
 
+use HeVinci\CompetencyBundle\Entity\Objective;
 use HeVinci\CompetencyBundle\Util\RepositoryTestCase;
 
 class ObjectiveRepositoryTest extends RepositoryTestCase
@@ -12,7 +13,7 @@ class ObjectiveRepositoryTest extends RepositoryTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->repo = $this->om->getRepository('HeVinciCompetencyBundle:Objective');
+        $this->repo = $this->om->getRepository(Objective::class);
         $this->context = $this->persistContext();
         $this->om->flush();
     }

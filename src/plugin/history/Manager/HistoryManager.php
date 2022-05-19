@@ -41,7 +41,7 @@ class HistoryManager implements LoggerAwareInterface
     public function getWorkspaces(User $user)
     {
         /** @var WorkspaceRecentRepository $repo */
-        $repo = $this->om->getRepository('ClarolineHistoryBundle:WorkspaceRecent');
+        $repo = $this->om->getRepository(WorkspaceRecent::class);
 
         $workspaces = $repo->findEntries($user, static::HISTORY_RESULTS);
 
@@ -58,7 +58,7 @@ class HistoryManager implements LoggerAwareInterface
     public function getResources(User $user)
     {
         /** @var ResourceRecentRepository $repo */
-        $repo = $this->om->getRepository('ClarolineHistoryBundle:ResourceRecent');
+        $repo = $this->om->getRepository(ResourceRecent::class);
 
         $resources = $repo->findEntries($user, static::HISTORY_RESULTS);
 
@@ -74,7 +74,7 @@ class HistoryManager implements LoggerAwareInterface
     {
         // If object already in recent workspaces, update date
         $recentWorkspace = $this->om
-            ->getRepository('ClarolineHistoryBundle:WorkspaceRecent')
+            ->getRepository(WorkspaceRecent::class)
             ->findOneBy([
                 'user' => $user,
                 'workspace' => $workspace,
@@ -99,7 +99,7 @@ class HistoryManager implements LoggerAwareInterface
     {
         // If object already in recent workspaces, update date
         $recentResource = $this->om
-            ->getRepository('ClarolineHistoryBundle:ResourceRecent')
+            ->getRepository(ResourceRecent::class)
             ->findOneBy([
                 'user' => $user,
                 'resource' => $resource,
@@ -125,13 +125,13 @@ class HistoryManager implements LoggerAwareInterface
         $this->log('Cleaning recent workspaces entries that are older than six months');
 
         /** @var WorkspaceRecentRepository $recentWorkspaceRepo */
-        $recentWorkspaceRepo = $this->om->getRepository('ClarolineHistoryBundle:WorkspaceRecent');
+        $recentWorkspaceRepo = $this->om->getRepository(WorkspaceRecent::class);
         $recentWorkspaceRepo->removeAllEntriesBefore(new \DateTime('-6 months'));
 
         $this->log('Cleaning recent resources entries that are older than six months');
 
         /** @var ResourceRecentRepository $recentResourceRepo */
-        $recentResourceRepo = $this->om->getRepository('ClarolineHistoryBundle:ResourceRecent');
+        $recentResourceRepo = $this->om->getRepository(ResourceRecent::class);
         $recentResourceRepo->removeAllEntriesBefore(new \DateTime('-6 months'));
     }
 }

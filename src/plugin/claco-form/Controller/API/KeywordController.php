@@ -45,7 +45,7 @@ class KeywordController extends AbstractCrudController
      * )
      * @EXT\ParamConverter(
      *     "clacoForm",
-     *     class="ClarolineClacoFormBundle:ClacoForm",
+     *     class="Claroline\ClacoFormBundle\Entity\ClacoForm",
      *     options={"mapping": {"clacoForm": "uuid"}}
      * )
      *

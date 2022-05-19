@@ -69,7 +69,7 @@ class DropController
      * @Route("/drop/{id}", name="claro_dropzone_drop_fetch", methods={"GET"})
      * @EXT\ParamConverter(
      *     "drop",
-     *     class="ClarolineDropZoneBundle:Drop",
+     *     class="Claroline\DropZoneBundle\Entity\Drop",
      *     options={"mapping": {"id": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
@@ -87,7 +87,7 @@ class DropController
      * @Route("/{id}/drops/search", name="claro_dropzone_drops_search", methods={"GET"})
      * @EXT\ParamConverter(
      *     "dropzone",
-     *     class="ClarolineDropZoneBundle:Dropzone",
+     *     class="Claroline\DropZoneBundle\Entity\Dropzone",
      *     options={"mapping": {"id": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
@@ -108,8 +108,8 @@ class DropController
      * Initializes a Drop for the current User or Team.
      *
      * @Route("/{id}/drops/{teamId}", name="claro_dropzone_drop_create", defaults={"teamId"=null}, methods={"POST"})
-     * @EXT\ParamConverter("dropzone", class="ClarolineDropZoneBundle:Dropzone", options={"mapping": {"id": "uuid"}})
-     * @EXT\ParamConverter("team", class="ClarolineTeamBundle:Team", options={"mapping": {"teamId": "uuid"}})
+     * @EXT\ParamConverter("dropzone", class="Claroline\DropZoneBundle\Entity\Dropzone", options={"mapping": {"id": "uuid"}})
+     * @EXT\ParamConverter("team", class="Claroline\TeamBundle\Entity\Team", options={"mapping": {"teamId": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
     public function createAction(Dropzone $dropzone, User $user, Team $team = null): JsonResponse
@@ -139,7 +139,7 @@ class DropController
      * Delete Drop.
      *
      * @Route("/{id}/drops", name="claro_dropzone_drop_delete", methods={"DELETE"})
-     * @EXT\ParamConverter("dropzone", class="ClarolineDropZoneBundle:Dropzone", options={"mapping": {"id": "uuid"}})
+     * @EXT\ParamConverter("dropzone", class="Claroline\DropZoneBundle\Entity\Dropzone", options={"mapping": {"id": "uuid"}})
      */
     public function deleteAction(Dropzone $dropzone, Request $request): JsonResponse
     {
@@ -164,7 +164,7 @@ class DropController
      * @Route("/drop/{id}/submit", name="claro_dropzone_drop_submit", methods={"PUT"})
      * @EXT\ParamConverter(
      *     "drop",
-     *     class="ClarolineDropZoneBundle:Drop",
+     *     class="Claroline\DropZoneBundle\Entity\Drop",
      *     options={"mapping": {"id": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
@@ -192,7 +192,7 @@ class DropController
      * @Route("/drop/{id}/submission/cancel", name="claro_dropzone_drop_submission_cancel", methods={"PUT"})
      * @EXT\ParamConverter(
      *     "drop",
-     *     class="ClarolineDropZoneBundle:Drop",
+     *     class="Claroline\DropZoneBundle\Entity\Drop",
      *     options={"mapping": {"id": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
@@ -215,7 +215,7 @@ class DropController
      * Adds a Document to a Drop.
      *
      * @Route("/drop/{id}/type/{type}", name="claro_dropzone_documents_add", methods={"POST"})
-     * @EXT\ParamConverter("drop", class="ClarolineDropZoneBundle:Drop", options={"mapping": {"id": "uuid"}})
+     * @EXT\ParamConverter("drop", class="Claroline\DropZoneBundle\Entity\Drop", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
     public function addDocumentAction(Drop $drop, string $type, User $user, Request $request): JsonResponse
@@ -259,7 +259,7 @@ class DropController
      * @Route("/document/{id}", name="claro_dropzone_document_delete", methods={"DELETE"})
      * @EXT\ParamConverter(
      *     "document",
-     *     class="ClarolineDropZoneBundle:Document",
+     *     class="Claroline\DropZoneBundle\Entity\Document",
      *     options={"mapping": {"id": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
@@ -291,12 +291,12 @@ class DropController
      * )
      * @EXT\ParamConverter(
      *     "drop",
-     *     class="ClarolineDropZoneBundle:Drop",
+     *     class="Claroline\DropZoneBundle\Entity\Drop",
      *     options={"mapping": {"id": "uuid"}}
      * )
      * @EXT\ParamConverter(
      *     "revision",
-     *     class="ClarolineDropZoneBundle:Revision",
+     *     class="Claroline\DropZoneBundle\Entity\Revision",
      *     options={"mapping": {"revision": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
@@ -340,7 +340,7 @@ class DropController
      * @Route("/document/{id}/manager", name="claro_dropzone_manager_document_delete", methods={"DELETE"})
      * @EXT\ParamConverter(
      *     "document",
-     *     class="ClarolineDropZoneBundle:Document",
+     *     class="Claroline\DropZoneBundle\Entity\Document",
      *     options={"mapping": {"id": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
@@ -367,7 +367,7 @@ class DropController
      * @Route("/drop/{id}/unlock", name="claro_dropzone_drop_unlock", methods={"PUT"})
      * @EXT\ParamConverter(
      *     "drop",
-     *     class="ClarolineDropZoneBundle:Drop",
+     *     class="Claroline\DropZoneBundle\Entity\Drop",
      *     options={"mapping": {"id": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
@@ -392,7 +392,7 @@ class DropController
      * @Route("/drop/{id}/unlock/user", name="claro_dropzone_drop_unlock_user", methods={"PUT"})
      * @EXT\ParamConverter(
      *     "drop",
-     *     class="ClarolineDropZoneBundle:Drop",
+     *     class="Claroline\DropZoneBundle\Entity\Drop",
      *     options={"mapping": {"id": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
@@ -415,12 +415,12 @@ class DropController
      * @Route("/tool/{tool}/document/{document}", name="claro_dropzone_tool_execute", methods={"POST"})
      * @EXT\ParamConverter(
      *     "tool",
-     *     class="ClarolineDropZoneBundle:DropzoneTool",
+     *     class="Claroline\DropZoneBundle\Entity\DropzoneTool",
      *     options={"mapping": {"tool": "uuid"}}
      * )
      * @EXT\ParamConverter(
      *     "document",
-     *     class="ClarolineDropZoneBundle:Document",
+     *     class="Claroline\DropZoneBundle\Entity\Document",
      *     options={"mapping": {"document": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
@@ -471,7 +471,7 @@ class DropController
 
     /**
      * @Route("/{id}/drops/csv", name="claro_dropzone_drops_csv", methods={"GET"})
-     * @EXT\ParamConverter("dropzone", class="ClarolineDropZoneBundle:Dropzone", options={"mapping": {"id": "uuid"}})
+     * @EXT\ParamConverter("dropzone", class="Claroline\DropZoneBundle\Entity\Dropzone", options={"mapping": {"id": "uuid"}})
      */
     public function exportCsvAction(Dropzone $dropzone): StreamedResponse
     {
@@ -537,7 +537,7 @@ class DropController
 
     /**
      * @Route("/drop/{id}/next", name="claro_dropzone_drop_next")
-     * @EXT\ParamConverter("drop", class="ClarolineDropZoneBundle:Drop", options={"mapping": {"id": "uuid"}})
+     * @EXT\ParamConverter("drop", class="Claroline\DropZoneBundle\Entity\Drop", options={"mapping": {"id": "uuid"}})
      */
     public function nextAction(Drop $drop, Request $request): JsonResponse
     {
@@ -570,7 +570,7 @@ class DropController
 
     /**
      * @Route("/drop/{id}/previous", name="claro_dropzone_drop_previous")
-     * @EXT\ParamConverter("drop", class="ClarolineDropZoneBundle:Drop", options={"mapping": {"id": "uuid"}})
+     * @EXT\ParamConverter("drop", class="Claroline\DropZoneBundle\Entity\Drop", options={"mapping": {"id": "uuid"}})
      */
     public function previousAction(Drop $drop, Request $request): JsonResponse
     {

@@ -98,7 +98,7 @@ class HintSerializerTest extends JsonDataTestCase
 
         $hint = $this->serializer->deserialize($hintData);
 
-        $this->assertInstanceOf('UJM\ExoBundle\Entity\Item\Hint', $hint);
+        $this->assertInstanceOf(Hint::class, $hint);
         $this->compareHintAndData($hint, $hintData);
     }
 
@@ -115,13 +115,13 @@ class HintSerializerTest extends JsonDataTestCase
         $this->compareHintAndData($this->hint, $hintData);
 
         // Checks no new entity have been created
-        $nbBefore = count($this->om->getRepository('UJMExoBundle:Item\Hint')->findAll());
+        $nbBefore = count($this->om->getRepository(Hint::class)->findAll());
 
         // Save the keyword to DB
         $this->om->persist($updatedHint);
         $this->om->flush();
 
-        $nbAfter = count($this->om->getRepository('UJMExoBundle:Item\Hint')->findAll());
+        $nbAfter = count($this->om->getRepository(Hint::class)->findAll());
 
         $this->assertEquals($nbBefore, $nbAfter);
     }

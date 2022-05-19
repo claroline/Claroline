@@ -11,6 +11,10 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
+use Claroline\CoreBundle\Entity\Resource\MenuAction;
+use Claroline\CoreBundle\Entity\Resource\ResourceType;
+use Claroline\CoreBundle\Entity\Tool\Tool;
+use Claroline\CoreBundle\Entity\Widget\Widget;
 use Claroline\KernelBundle\Bundle\PluginBundleInterface;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Config\Definition\Processor;
@@ -55,7 +59,7 @@ class ConfigurationChecker implements CheckerInterface
         //required for update to claroline v10 because database not updated yet from older version
         try {
             $listResource = $this->em
-                ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
+                ->getRepository(ResourceType::class)
                 ->findAll();
         } catch (\Exception $e) {
             $listResource = [];
@@ -66,9 +70,9 @@ class ConfigurationChecker implements CheckerInterface
         }
 
         $tools = [];
-        /** @var \Claroline\CoreBundle\Entity\Tool\Tool[] $listTool */
+        /** @var Tool[] $listTool */
         $listTool = $this->em
-            ->getRepository('ClarolineCoreBundle:Tool\Tool')
+            ->getRepository(Tool::class)
             ->findAll();
 
         foreach ($listTool as $tool) {
@@ -82,7 +86,7 @@ class ConfigurationChecker implements CheckerInterface
         //required for update to claroline v10 because database not updated yet from older version
         try {
             $listResourceActions = $this->em
-                ->getRepository('ClarolineCoreBundle:Resource\MenuAction')
+                ->getRepository(MenuAction::class)
                 ->findBy(['resourceType' => null, 'isCustom' => true]);
         } catch (\Exception $e) {
             $listResourceActions = [];
@@ -93,9 +97,9 @@ class ConfigurationChecker implements CheckerInterface
         }
 
         $widgets = [];
-        /** @var \Claroline\CoreBundle\Entity\Widget\Widget[] $listWidget */
+        /** @var Widget[] $listWidget */
         $listWidget = $this->em
-            ->getRepository('ClarolineCoreBundle:Widget\Widget')
+            ->getRepository(Widget::class)
             ->findAll();
 
         foreach ($listWidget as $widget) {

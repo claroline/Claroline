@@ -29,7 +29,7 @@ class ProfileSerializer
         FacetSerializer $facetSerializer
     ) {
         $this->tokenStorage = $tokenStorage;
-        $this->repository = $om->getRepository('ClarolineCoreBundle:Facet\Facet');
+        $this->repository = $om->getRepository(Facet::class);
         $this->facetSerializer = $facetSerializer;
     }
 

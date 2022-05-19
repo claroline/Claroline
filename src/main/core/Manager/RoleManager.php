@@ -35,8 +35,8 @@ class RoleManager
     ) {
         $this->om = $om;
 
-        $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
-        $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
+        $this->roleRepo = $om->getRepository(Role::class);
+        $this->userRepo = $om->getRepository(User::class);
     }
 
     /**

@@ -56,7 +56,7 @@ class TagController extends AbstractCrudController
      * List all objects linked to a Tag.
      *
      * @Route("/{id}/object", name="apiv2_tag_list_objects", methods={"GET"})
-     * @EXT\ParamConverter("tag", class="ClarolineTagBundle:Tag", options={"mapping": {"id": "uuid"}})
+     * @EXT\ParamConverter("tag", class="Claroline\TagBundle\Entity\Tag", options={"mapping": {"id": "uuid"}})
      */
     public function listObjectsAction(Tag $tag, Request $request): JsonResponse
     {
@@ -88,7 +88,7 @@ class TagController extends AbstractCrudController
 
     /**
      * @Route("/{id}/object", name="apiv2_tag_remove_objects", methods={"DELETE"})
-     * @EXT\ParamConverter("tag", class="ClarolineTagBundle:Tag", options={"mapping": {"id": "uuid"}})
+     * @EXT\ParamConverter("tag", class="Claroline\TagBundle\Entity\Tag", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
     public function removeObjectsAction(Tag $tag, Request $request): JsonResponse

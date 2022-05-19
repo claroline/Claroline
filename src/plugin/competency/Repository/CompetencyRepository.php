@@ -2,7 +2,9 @@
 
 namespace HeVinci\CompetencyBundle\Repository;
 
+use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\User;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 use HeVinci\CompetencyBundle\Entity\Competency;
 
@@ -53,7 +55,7 @@ class CompetencyRepository extends NestedTreeRepository
                 'u.id',
                 "CONCAT(u.firstName, ' ', u.lastName, ' (', u.username, ')') AS name"
             )
-            ->from('ClarolineCoreBundle:User', 'u')
+            ->from(User::class, 'u')
             ->where('u.firstName LIKE :search')
             ->orWhere('u.lastName LIKE :search')
             ->orWhere('u.username LIKE :search')
@@ -76,7 +78,7 @@ class CompetencyRepository extends NestedTreeRepository
     {
         return $this->_em->createQueryBuilder()
             ->select('g.id, g.name')
-            ->from('ClarolineCoreBundle:Group', 'g')
+            ->from(Group::class, 'g')
             ->where('g.name LIKE :search')
             ->setMaxResults(5)
             ->setParameter(':search', "%{$search}%")
@@ -94,7 +96,8 @@ class CompetencyRepository extends NestedTreeRepository
      */
     public function findForProgressComputing(Competency $startNode)
     {
-        if (!($parent = $startNode->getParent())) {
+        $parent = $startNode->getParent();
+        if (!$parent) {
             return [];
         }
 

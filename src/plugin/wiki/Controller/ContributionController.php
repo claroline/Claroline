@@ -20,7 +20,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  * @Route("/wiki/section/{sectionId}/contribution")
  * @EXT\ParamConverter(
  *     "section",
- *     class="IcapWikiBundle:Section",
+ *     class="Icap\WikiBundle\Entity\Section",
  *     options={"mapping": {"sectionId": "uuid"}}
  * )
  */
@@ -78,7 +78,7 @@ class ContributionController
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      * @EXT\ParamConverter(
      *     "contribution",
-     *     class="IcapWikiBundle:Contribution",
+     *     class="Icap\WikiBundle\Entity\Contribution",
      *     options={"mapping": {"id": "uuid"}}
      * )
      *
@@ -96,7 +96,7 @@ class ContributionController
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      * @EXT\ParamConverter(
      *     "contribution",
-     *     class="IcapWikiBundle:Contribution",
+     *     class="Icap\WikiBundle\Entity\Contribution",
      *     options={"mapping": {"id": "uuid"}}
      * )
      *

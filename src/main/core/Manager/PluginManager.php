@@ -42,7 +42,7 @@ class PluginManager
         KernelInterface $kernel
     ) {
         $this->om = $om;
-        $this->pluginRepo = $om->getRepository('ClarolineCoreBundle:Plugin');
+        $this->pluginRepo = $om->getRepository(Plugin::class);
         $this->bundleFile = $bundleFile;
         $this->kernel = $kernel;
 

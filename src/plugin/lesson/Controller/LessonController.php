@@ -59,7 +59,7 @@ class LessonController
 
     /**
      * @Route("/lesson/{id}", name="icap_lesson_update", methods={"PUT"})
-     * @EXT\ParamConverter("lesson", class="IcapLessonBundle:Lesson", options={"mapping": {"id": "uuid"}})
+     * @EXT\ParamConverter("lesson", class="Icap\LessonBundle\Entity\Lesson", options={"mapping": {"id": "uuid"}})
      */
     public function updateAction(Lesson $lesson, Request $request): JsonResponse
     {
@@ -75,7 +75,7 @@ class LessonController
 
     /**
      * @Route("/lesson/{id}/pdf", name="icap_lesson_export_pdf")
-     * @EXT\ParamConverter("lesson", class="IcapLessonBundle:Lesson", options={"mapping": {"id": "uuid"}})
+     * @EXT\ParamConverter("lesson", class="Icap\LessonBundle\Entity\Lesson", options={"mapping": {"id": "uuid"}})
      */
     public function downloadPdfAction(Lesson $lesson): StreamedResponse
     {
