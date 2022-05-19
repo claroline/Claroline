@@ -2,6 +2,7 @@
 
 namespace HeVinci\CompetencyBundle\Repository;
 
+use HeVinci\CompetencyBundle\Entity\Progress\CompetencyProgress;
 use HeVinci\CompetencyBundle\Util\RepositoryTestCase;
 
 class CompetencyProgressRepositoryTest extends RepositoryTestCase
@@ -11,7 +12,7 @@ class CompetencyProgressRepositoryTest extends RepositoryTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->repo = $this->om->getRepository('HeVinciCompetencyBundle:Progress\CompetencyProgress');
+        $this->repo = $this->om->getRepository(CompetencyProgress::class);
     }
 
     public function testFindByUserAndCompetencyIds()

@@ -85,7 +85,7 @@ class ForumManager
 
     public function getValidationUser(User $creator, Forum $forum)
     {
-        $user = $this->om->getRepository('ClarolineForumBundle:Validation\User')->findOneBy([
+        $user = $this->om->getRepository(UserValidation::class)->findOneBy([
           'user' => $creator,
           'forum' => $forum,
         ]);

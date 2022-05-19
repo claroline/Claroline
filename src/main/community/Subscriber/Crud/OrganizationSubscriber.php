@@ -10,6 +10,7 @@ use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Cryptography\CryptographicKey;
 use Claroline\CoreBundle\Entity\Organization\Organization;
+use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
 use Claroline\CoreBundle\Event\Security\AddRoleEvent;
@@ -98,7 +99,7 @@ class OrganizationSubscriber implements EventSubscriberInterface
         }
 
         if ('administrator' === $property) {
-            $roleAdminOrga = $this->om->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_ADMIN_ORGANIZATION');
+            $roleAdminOrga = $this->om->getRepository(Role::class)->findOneByName('ROLE_ADMIN_ORGANIZATION');
             if (Crud::COLLECTION_ADD === $action) {
                 /** @var User $user */
                 foreach ($users as $user) {

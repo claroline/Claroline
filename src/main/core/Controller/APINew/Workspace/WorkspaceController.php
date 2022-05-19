@@ -490,7 +490,7 @@ class WorkspaceController extends AbstractCrudController
      *     }
      * )
      * @Route("/{slug}/close", name="apiv2_workspace_close", methods={"PUT"})
-     * @EXT\ParamConverter("workspace", class="ClarolineCoreBundle:Workspace\Workspace", options={"mapping": {"slug": "slug"}})
+     * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"slug": "slug"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      */
     public function closeAction(Workspace $workspace, User $user = null): JsonResponse

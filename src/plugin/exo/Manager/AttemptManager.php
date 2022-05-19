@@ -78,7 +78,7 @@ class AttemptManager
         $this->om = $om;
         $this->paperGenerator = $paperGenerator;
         $this->paperManager = $paperManager;
-        $this->paperRepository = $this->om->getRepository('UJMExoBundle:Attempt\Paper');
+        $this->paperRepository = $this->om->getRepository(Paper::class);
         $this->answerManager = $answerManager;
         $this->itemManager = $itemManager;
         $this->itemSerializer = $itemSerializer;

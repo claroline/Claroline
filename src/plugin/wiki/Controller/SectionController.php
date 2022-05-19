@@ -53,7 +53,7 @@ class SectionController
      * @Route("/{wikiId}/tree", name="apiv2_wiki_section_tree", methods={"GET"})
      * @EXT\ParamConverter(
      *     "wiki",
-     *     class="IcapWikiBundle:Wiki",
+     *     class="Icap\WikiBundle\Entity\Wiki",
      *     options={"mapping": {"wikiId": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
@@ -78,7 +78,7 @@ class SectionController
      * @Route("/section/{id}/visible", name="apiv2_wiki_section_set_visibility", methods={"PUT"})
      * @EXT\ParamConverter(
      *     "section",
-     *     class="IcapWikiBundle:Section",
+     *     class="Icap\WikiBundle\Entity\Section",
      *     options={"mapping": {"id": "uuid"}}
      * )
      *
@@ -102,7 +102,7 @@ class SectionController
      * @Route("/section/{id}", name="apiv2_wiki_section_create", methods={"POST"})
      * @EXT\ParamConverter(
      *     "section",
-     *     class="IcapWikiBundle:Section",
+     *     class="Icap\WikiBundle\Entity\Section",
      *     options={"mapping": {"id": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
@@ -129,7 +129,7 @@ class SectionController
      * @Route("/section/{id}", name="apiv2_wiki_section_update", methods={"PUT"})
      * @EXT\ParamConverter(
      *     "section",
-     *     class="IcapWikiBundle:Section",
+     *     class="Icap\WikiBundle\Entity\Section",
      *     options={"mapping": {"id": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
@@ -156,7 +156,7 @@ class SectionController
      * @Route("/{wikiId}/section/delete", name="apiv2_wiki_section_delete", methods={"DELETE"})
      * @EXT\ParamConverter(
      *     "wiki",
-     *     class="IcapWikiBundle:Wiki",
+     *     class="Icap\WikiBundle\Entity\Wiki",
      *     options={"mapping": {"wikiId": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
@@ -183,7 +183,7 @@ class SectionController
      * @Route("/{wikiId}/section/restore", name="apiv2_wiki_section_restore", methods={"POST"})
      * @EXT\ParamConverter(
      *     "wiki",
-     *     class="IcapWikiBundle:Wiki",
+     *     class="Icap\WikiBundle\Entity\Wiki",
      *     options={"mapping": {"wikiId": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
@@ -203,7 +203,7 @@ class SectionController
      * @Route("/{wikiId}/sections/deleted", name="apiv2_wiki_section_deleted_list", methods={"GET"})
      * @EXT\ParamConverter(
      *     "wiki",
-     *     class="IcapWikiBundle:Wiki",
+     *     class="Icap\WikiBundle\Entity\Wiki",
      *     options={"mapping": {"wikiId": "uuid"}}
      * )
      *

@@ -26,7 +26,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
  * @Route("/announcement/{aggregateId}", options={"expose"=true})
  * @EXT\ParamConverter(
  *      "aggregate",
- *      class="ClarolineAnnouncementBundle:AnnouncementAggregate",
+ *      class="Claroline\AnnouncementBundle\Entity\AnnouncementAggregate",
  *      options={"mapping": {"aggregateId": "uuid"}}
  * )
  */
@@ -100,7 +100,7 @@ class AnnouncementController
      * @Route("/{id}", name="claro_announcement_update", methods={"PUT"})
      * @EXT\ParamConverter(
      *      "announcement",
-     *      class="ClarolineAnnouncementBundle:Announcement",
+     *      class="Claroline\AnnouncementBundle\Entity\Announcement",
      *      options={"mapping": {"id": "uuid"}}
      * )
      */
@@ -124,7 +124,7 @@ class AnnouncementController
      * @Route("/{id}", name="claro_announcement_delete", methods={"DELETE"})
      * @EXT\ParamConverter(
      *      "announcement",
-     *      class="ClarolineAnnouncementBundle:Announcement",
+     *      class="Claroline\AnnouncementBundle\Entity\Announcement",
      *      options={"mapping": {"id": "uuid"}}
      * )
      */
@@ -145,7 +145,7 @@ class AnnouncementController
      * @Route("/{id}/validate", name="claro_announcement_validate", methods={"GET"})
      * @EXT\ParamConverter(
      *      "announcement",
-     *      class="ClarolineAnnouncementBundle:Announcement",
+     *      class="Claroline\AnnouncementBundle\Entity\Announcement",
      *      options={"mapping": {"id": "uuid"}}
      * )
      */

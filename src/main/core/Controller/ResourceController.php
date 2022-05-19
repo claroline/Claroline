@@ -206,7 +206,7 @@ class ResourceController
      * Submit access code.
      *
      * @Route("/unlock/{id}", name="claro_resource_unlock", methods={"POST"})
-     * @EXT\ParamConverter("resourceNode", class="ClarolineCoreBundle:Resource\ResourceNode", options={"mapping": {"id": "uuid"}})
+     * @EXT\ParamConverter("resourceNode", class="Claroline\CoreBundle\Entity\Resource\ResourceNode", options={"mapping": {"id": "uuid"}})
      */
     public function unlockAction(ResourceNode $resourceNode, Request $request): JsonResponse
     {
@@ -259,7 +259,7 @@ class ResourceController
      * Executes an action on one resource.
      *
      * @Route("/{action}/{id}", name="claro_resource_action")
-     * @EXT\ParamConverter("resourceNode", class="ClarolineCoreBundle:Resource\ResourceNode", options={"mapping": {"id": "uuid"}})
+     * @EXT\ParamConverter("resourceNode", class="Claroline\CoreBundle\Entity\Resource\ResourceNode", options={"mapping": {"id": "uuid"}})
      */
     public function executeAction(string $action, ResourceNode $resourceNode, Request $request): Response
     {

@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Repository\User;
 
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Testing\RepositoryTestCase;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
@@ -22,7 +23,7 @@ class UserRepositoryTest extends RepositoryTestCase
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
-        self::$repo = self::getRepository('ClarolineCoreBundle:User');
+        self::$repo = self::getRepository(User::class);
         self::createWorkspace('ws_1');
         self::createWorkspace('ws_2');
         self::createWorkspace('ws_3');

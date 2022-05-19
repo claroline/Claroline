@@ -8,6 +8,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\User;
 use HeVinci\CompetencyBundle\Entity\Ability;
 use HeVinci\CompetencyBundle\Entity\Competency;
+use HeVinci\CompetencyBundle\Entity\CompetencyAbility;
 use HeVinci\CompetencyBundle\Entity\Objective;
 use HeVinci\CompetencyBundle\Entity\Progress\AbilityProgress;
 use HeVinci\CompetencyBundle\Entity\Progress\CompetencyProgress;
@@ -33,14 +34,14 @@ class ProgressManager
     public function __construct(ObjectManager $om)
     {
         $this->om = $om;
-        $this->abilityRepo = $om->getRepository('HeVinciCompetencyBundle:Ability');
-        $this->competencyRepo = $om->getRepository('HeVinciCompetencyBundle:Competency');
-        $this->competencyAbilityRepo = $om->getRepository('HeVinciCompetencyBundle:CompetencyAbility');
-        $this->objectiveRepo = $om->getRepository('HeVinciCompetencyBundle:Objective');
-        $this->abilityProgressRepo = $om->getRepository('HeVinciCompetencyBundle:Progress\AbilityProgress');
-        $this->competencyProgressRepo = $om->getRepository('HeVinciCompetencyBundle:Progress\CompetencyProgress');
-        $this->objectiveProgressRepo = $om->getRepository('HeVinciCompetencyBundle:Progress\ObjectiveProgress');
-        $this->userProgressRepo = $om->getRepository('HeVinciCompetencyBundle:Progress\UserProgress');
+        $this->abilityRepo = $om->getRepository(Ability::class);
+        $this->competencyRepo = $om->getRepository(Competency::class);
+        $this->competencyAbilityRepo = $om->getRepository(CompetencyAbility::class);
+        $this->objectiveRepo = $om->getRepository(Objective::class);
+        $this->abilityProgressRepo = $om->getRepository(AbilityProgress::class);
+        $this->competencyProgressRepo = $om->getRepository(CompetencyProgress::class);
+        $this->objectiveProgressRepo = $om->getRepository(ObjectiveProgress::class);
+        $this->userProgressRepo = $om->getRepository(UserProgress::class);
     }
 
     /**
@@ -234,7 +235,8 @@ class ProgressManager
 
     private function computeParentCompetency(Competency $startNode, User $user, array $related)
     {
-        if (!($parentNode = $this->getParentNode($startNode, $related))) {
+        $parentNode = $this->getParentNode($startNode, $related);
+        if (!$parentNode) {
             return;
         }
 
@@ -242,7 +244,8 @@ class ProgressManager
         $parentProgress = $this->getCompetencyProgress($parentNode, $user);
         $siblings = $this->getSiblingNodes($startNode, $parentNode, $related);
 
-        if (0 === $siblingCount = count($siblings)) {
+        $siblingCount = count($siblings);
+        if (0 === $siblingCount) {
             $parentProgress->setPercentage($nodeProgress->getPercentage());
             $parentProgress->setLevel($nodeProgress->getLevel());
         } else {

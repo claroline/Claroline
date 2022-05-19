@@ -27,7 +27,7 @@ class ChapterSerializer
     {
         $this->om = $om;
         $this->fileSerializer = $fileSerializer;
-        $this->chapterRepository = $om->getRepository('IcapLessonBundle:Chapter');
+        $this->chapterRepository = $om->getRepository(Chapter::class);
     }
 
     /**

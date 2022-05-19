@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Repository\Tool;
 
+use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Library\Testing\RepositoryTestCase;
 
 class OrderedToolRepositoryTest extends RepositoryTestCase
@@ -20,7 +21,7 @@ class OrderedToolRepositoryTest extends RepositoryTestCase
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
-        self::$repo = self::getRepository('ClarolineCoreBundle:Tool\OrderedTool');
+        self::$repo = self::getRepository(OrderedTool::class);
 
         self::createWorkspace('ws_1');
         self::createRole('ROLE_1', self::get('ws_1'));

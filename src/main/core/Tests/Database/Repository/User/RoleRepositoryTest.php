@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Repository\User;
 
+use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Library\Testing\RepositoryTestCase;
 
 class RoleRepositoryTest extends RepositoryTestCase
@@ -20,7 +21,7 @@ class RoleRepositoryTest extends RepositoryTestCase
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
-        self::$repo = self::getRepository('ClarolineCoreBundle:Role');
+        self::$repo = self::getRepository(Role::class);
 
         self::createWorkspace('ws_1');
         self::createWorkspace('ws_2');

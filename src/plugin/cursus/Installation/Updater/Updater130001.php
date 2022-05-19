@@ -4,6 +4,7 @@ namespace Claroline\CursusBundle\Installation\Updater;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Template\TemplateType;
+use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\InstallationBundle\Updater\Updater;
 use Psr\Log\LoggerInterface;
 
@@ -31,7 +32,7 @@ class Updater130001 extends Updater
     {
         $this->log(sprintf('Renaming `%s` tool into `%s`...', $oldName, $newName));
 
-        $tool = $this->om->getRepository('ClarolineCoreBundle:Tool\Tool')->findOneBy(['name' => $oldName]);
+        $tool = $this->om->getRepository(Tool::class)->findOneBy(['name' => $oldName]);
         if (!empty($tool)) {
             $tool->setName($newName);
             $this->om->persist($tool);

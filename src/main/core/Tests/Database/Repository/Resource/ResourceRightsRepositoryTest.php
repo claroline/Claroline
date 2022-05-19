@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Repository\Resource;
 
+use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 use Claroline\CoreBundle\Library\Testing\RepositoryTestCase;
 
 class ResourceRightsRepositoryTest extends RepositoryTestCase
@@ -20,7 +21,7 @@ class ResourceRightsRepositoryTest extends RepositoryTestCase
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
-        self::$repo = self::getRepository('ClarolineCoreBundle:Resource\ResourceRights');
+        self::$repo = self::getRepository(ResourceRights::class);
 
         self::createWorkspace('ws_1');
         self::createRole('ROLE_ADMIN');

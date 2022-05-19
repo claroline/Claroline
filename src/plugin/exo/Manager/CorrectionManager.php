@@ -5,6 +5,7 @@ namespace UJM\ExoBundle\Manager;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use UJM\ExoBundle\Entity\Attempt\Answer;
+use UJM\ExoBundle\Entity\Attempt\Paper;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Entity\Item\Item;
 use UJM\ExoBundle\Manager\Attempt\AnswerManager;
@@ -49,7 +50,7 @@ class CorrectionManager
         ItemSerializer $itemSerializer)
     {
         $this->om = $om;
-        $this->paperRepository = $this->om->getRepository('UJMExoBundle:Attempt\Paper');
+        $this->paperRepository = $this->om->getRepository(Paper::class);
         $this->answerManager = $answerManager;
         $this->paperManager = $paperManager;
         $this->itemSerializer = $itemSerializer;
@@ -93,7 +94,7 @@ class CorrectionManager
 
         foreach ($correctedAnswers as $index => $correctedAnswer) {
             /** @var Answer $answer */
-            $answer = $this->om->getRepository('UJMExoBundle:Attempt\Answer')->findOneBy([
+            $answer = $this->om->getRepository(Answer::class)->findOneBy([
                 'uuid' => $correctedAnswer['id'],
             ]);
 

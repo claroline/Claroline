@@ -20,7 +20,7 @@ use Twig\Environment;
 
 /**
  * @Route("blog/{blogId}", options={"expose"=true})
- * @EXT\ParamConverter("blog", class="IcapBlogBundle:Blog", options={"mapping": {"blogId": "uuid"}})
+ * @EXT\ParamConverter("blog", class="Icap\BlogBundle\Entity\Blog", options={"mapping": {"blogId": "uuid"}})
  */
 class BlogController
 {

@@ -85,19 +85,15 @@ class ToolManager implements LoggerAwareInterface
                 while ($offset < $total) {
                     /** @var Workspace $workspaces */
                     $workspaces = $this->om->getRepository(Workspace::class)->findBy([], [], 500, $offset);
-                    $ot = [];
 
                     foreach ($workspaces as $workspace) {
-                        $ot[] = $this->setWorkspaceTool($tool, $totalTools, $workspace);
+                        $this->setWorkspaceTool($tool, $totalTools, $workspace);
                         ++$offset;
                         $this->log('Adding tool '.$offset.'/'.$total);
                     }
+
                     $this->log('Flush');
                     $this->om->forceFlush();
-
-                    foreach ($ot as $toDetach) {
-                        $this->om->detach($toDetach);
-                    }
                 }
 
                 $this->om->endFlushSuite();

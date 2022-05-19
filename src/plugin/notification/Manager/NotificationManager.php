@@ -59,7 +59,7 @@ class NotificationManager
      */
     protected function getNotificationViewerRepository()
     {
-        return $this->om->getRepository('IcapNotificationBundle:NotificationViewer');
+        return $this->om->getRepository(NotificationViewer::class);
     }
 
     /**
@@ -67,7 +67,7 @@ class NotificationManager
      */
     protected function getFollowerResourceRepository()
     {
-        return $this->om->getRepository('IcapNotificationBundle:FollowerResource');
+        return $this->om->getRepository(FollowerResource::class);
     }
 
     protected function getUsersToNotifyForNotifiable(NotifiableInterface $notifiable)

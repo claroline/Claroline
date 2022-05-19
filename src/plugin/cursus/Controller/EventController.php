@@ -102,7 +102,7 @@ class EventController extends AbstractCrudController
 
     /**
      * @Route("/{workspace}", name="apiv2_cursus_event_list", methods={"GET"})
-     * @EXT\ParamConverter("workspace", class="ClarolineCoreBundle:Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
+     * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
      */
     public function listAction(Request $request, $class = Event::class, Workspace $workspace = null): JsonResponse
     {
@@ -121,7 +121,7 @@ class EventController extends AbstractCrudController
 
     /**
      * @Route("/public/{workspace}", name="apiv2_cursus_event_public", methods={"GET"})
-     * @EXT\ParamConverter("workspace", class="ClarolineCoreBundle:Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
+     * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
      */
     public function listPublicAction(Request $request, Workspace $workspace = null): JsonResponse
     {

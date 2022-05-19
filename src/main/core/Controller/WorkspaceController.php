@@ -181,7 +181,7 @@ class WorkspaceController
      * @Route("/{id}/tool/{toolName}", name="claro_workspace_open_tool")
      * @EXT\ParamConverter(
      *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\Workspace",
+     *      class="Claroline\CoreBundle\Entity\Workspace\Workspace",
      *      options={"mapping": {"id": "uuid"}}
      * )
      */
@@ -228,7 +228,7 @@ class WorkspaceController
      * @Route("/unlock/{id}", name="claro_workspace_unlock", methods={"POST"})
      * @EXT\ParamConverter(
      *     "workspace",
-     *     class="ClarolineCoreBundle:Workspace\Workspace",
+     *     class="Claroline\CoreBundle\Entity\Workspace\Workspace",
      *     options={"mapping": {"id": "uuid"}}
      * )
      */

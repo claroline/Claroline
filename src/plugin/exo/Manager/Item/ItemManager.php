@@ -8,6 +8,7 @@ use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Entity\Item\Item;
+use UJM\ExoBundle\Entity\Item\Shared;
 use UJM\ExoBundle\Library\Attempt\CorrectedAnswer;
 use UJM\ExoBundle\Library\Item\Definition\AnswerableItemDefinitionInterface;
 use UJM\ExoBundle\Library\Item\ItemDefinitionsCollection;
@@ -73,8 +74,8 @@ class ItemManager
     ) {
         $this->om = $om;
         $this->scoreManager = $scoreManager;
-        $this->repository = $this->om->getRepository('UJMExoBundle:Item\Item');
-        $this->answerRepository = $this->om->getRepository('UJMExoBundle:Attempt\Answer');
+        $this->repository = $this->om->getRepository(Item::class);
+        $this->answerRepository = $this->om->getRepository(Answer::class);
         $this->validator = $validator;
         $this->serializer = $serializer;
         $this->itemDefinitions = $itemDefinitions;
@@ -83,7 +84,7 @@ class ItemManager
 
     public function canEdit(Item $question, User $user)
     {
-        $shared = $this->om->getRepository('UJMExoBundle:Item\Shared')
+        $shared = $this->om->getRepository(Shared::class)
             ->findOneBy([
                 'question' => $question,
                 'user' => $user,

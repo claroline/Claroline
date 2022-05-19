@@ -39,7 +39,7 @@ class Persister
      */
     public function user($username, $personalWorkspace = false)
     {
-        $roleUser = $this->om->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_USER');
+        $roleUser = $this->om->getRepository(Role::class)->findOneByName('ROLE_USER');
 
         $user = new User();
         $user->setFirstName($username);
@@ -95,7 +95,7 @@ class Persister
     {
         $directory = new Directory();
         $directory->setName($name);
-        $dirType = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('directory');
+        $dirType = $this->om->getRepository(ResourceType::class)->findOneByName('directory');
 
         return $this->container->get('claroline.manager.resource_manager')->create(
           $directory,
@@ -122,7 +122,7 @@ class Persister
      */
     public function role($name)
     {
-        $role = $this->om->getRepository('ClarolineCoreBundle:Role')->findOneByName($name);
+        $role = $this->om->getRepository(Role::class)->findOneByName($name);
 
         if (!$role) {
             $role = new Role();
@@ -148,7 +148,7 @@ class Persister
         }
 
         if ($withNode) {
-            $fileType = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('file');
+            $fileType = $this->om->getRepository(ResourceType::class)->findOneByName('file');
 
             $this->container->get('claroline.manager.resource_manager')->create(
                 $file,

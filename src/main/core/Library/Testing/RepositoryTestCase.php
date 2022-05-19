@@ -170,7 +170,7 @@ abstract class RepositoryTestCase extends WebTestCase
             $role->setWorkspace($workspace);
         }
 
-        $exists = self::$om->getRepository('ClarolineCoreBundle:Role')->findOneByName($name);
+        $exists = self::$om->getRepository(Role::class)->findOneByName($name);
         if ($exists) {
             self::set($name, $exists);
         } else {

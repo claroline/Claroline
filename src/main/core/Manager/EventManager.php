@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -165,7 +166,7 @@ class EventManager
         // adding resource types that don't define specific event classes
         $sortedEvents[$resourceOption][$allOption] = [];
         $remainingTypes = $this->om
-            ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
+            ->getRepository(ResourceType::class)
             ->findTypeNamesNotIn(array_keys($tempResourceEvents));
 
         foreach ($remainingTypes as $type) {

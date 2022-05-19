@@ -25,6 +25,7 @@ use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\ResourceActionEvent;
 use Claroline\EvaluationBundle\Manager\ResourceEvaluationManager;
 use Claroline\ScormBundle\Entity\Scorm;
+use Claroline\ScormBundle\Entity\ScoTracking;
 use Claroline\ScormBundle\Manager\ScormManager;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\File;
@@ -72,8 +73,8 @@ class ScormListener
         $this->tokenStorage = $tokenStorage;
         $this->uploadDir = $uploadDir;
 
-        $this->scormResourceRepo = $om->getRepository('ClarolineScormBundle:Scorm');
-        $this->scoTrackingRepo = $om->getRepository('ClarolineScormBundle:ScoTracking');
+        $this->scormResourceRepo = $om->getRepository(Scorm::class);
+        $this->scoTrackingRepo = $om->getRepository(ScoTracking::class);
     }
 
     public function onLoad(LoadResourceEvent $event)

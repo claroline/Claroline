@@ -5,6 +5,7 @@ namespace Claroline\CoreBundle\API\Serializer\Translatable;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Content;
+use Claroline\CoreBundle\Entity\ContentTranslation;
 use Claroline\CoreBundle\Manager\LocaleManager;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -26,7 +27,7 @@ class TranslatableSerializer
         $this->localeManager = $localeManager;
         $this->requestStack = $requestStack;
 
-        $this->translations = $om->getRepository('ClarolineCoreBundle:ContentTranslation');
+        $this->translations = $om->getRepository(ContentTranslation::class);
     }
 
     public function getName(): string

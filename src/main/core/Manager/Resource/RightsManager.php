@@ -225,7 +225,7 @@ class RightsManager implements LoggerAwareInterface
         $creatable = [];
         if ($this->isManager($resourceNode)) {
             /** @var ResourceType[] $resourceTypes */
-            $resourceTypes = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll();
+            $resourceTypes = $this->om->getRepository(ResourceType::class)->findAll();
 
             foreach ($resourceTypes as $resourceType) {
                 $creatable[] = $resourceType->getName();

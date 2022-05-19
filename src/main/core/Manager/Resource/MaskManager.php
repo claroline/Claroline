@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Manager\Resource;
 use Claroline\AppBundle\Log\LoggableTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\MaskDecoder;
+use Claroline\CoreBundle\Entity\Resource\MenuAction;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Repository\Resource\ResourceMaskDecoderRepository;
 use Doctrine\Persistence\ObjectRepository;
@@ -43,8 +44,8 @@ class MaskManager implements LoggerAwareInterface
     {
         $this->om = $om;
 
-        $this->maskRepo = $om->getRepository('ClarolineCoreBundle:Resource\MaskDecoder');
-        $this->menuRepo = $om->getRepository('ClarolineCoreBundle:Resource\MenuAction');
+        $this->maskRepo = $om->getRepository(MaskDecoder::class);
+        $this->menuRepo = $om->getRepository(MenuAction::class);
     }
 
     public function createDecoder($action, ResourceType $resourceType = null)
@@ -53,7 +54,7 @@ class MaskManager implements LoggerAwareInterface
         $resourceTypes = [];
         if (empty($resourceType)) {
             // we will need to create mask decoder for all resource types
-            $resourceTypes = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll();
+            $resourceTypes = $this->om->getRepository(ResourceType::class)->findAll();
         } else {
             $resourceTypes[] = $resourceType;
         }

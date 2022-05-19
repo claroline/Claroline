@@ -70,7 +70,7 @@ class DropzoneController
      * @Route("/{id}", name="claro_dropzone_update", methods={"PUT"})
      * @EXT\ParamConverter(
      *     "dropzone",
-     *     class="ClarolineDropZoneBundle:Dropzone",
+     *     class="Claroline\DropZoneBundle\Entity\Dropzone",
      *     options={"mapping": {"id": "uuid"}}
      * )
      *
@@ -103,7 +103,7 @@ class DropzoneController
      * @Route("/{id}/corrections/fetch", name="claro_dropzone_corrections_fetch", methods={"GET"})
      * @EXT\ParamConverter(
      *     "dropzone",
-     *     class="ClarolineDropZoneBundle:Dropzone",
+     *     class="Claroline\DropZoneBundle\Entity\Dropzone",
      *     options={"mapping": {"id": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
@@ -122,7 +122,7 @@ class DropzoneController
      * @Route("/drop/{id}/correction/save", name="claro_dropzone_correction_save", methods={"POST"})
      * @EXT\ParamConverter(
      *     "drop",
-     *     class="ClarolineDropZoneBundle:Drop",
+     *     class="Claroline\DropZoneBundle\Entity\Drop",
      *     options={"mapping": {"id": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
@@ -150,7 +150,7 @@ class DropzoneController
      * @Route("/correction/{id}/submit", name="claro_dropzone_correction_submit", methods={"PUT"})
      * @EXT\ParamConverter(
      *     "correction",
-     *     class="ClarolineDropZoneBundle:Correction",
+     *     class="Claroline\DropZoneBundle\Entity\Correction",
      *     options={"mapping": {"id": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
@@ -182,7 +182,7 @@ class DropzoneController
      * )
      * @EXT\ParamConverter(
      *     "correction",
-     *     class="ClarolineDropZoneBundle:Correction",
+     *     class="Claroline\DropZoneBundle\Entity\Correction",
      *     options={"mapping": {"id": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
@@ -211,7 +211,7 @@ class DropzoneController
      * @Route("/correction/{id}/delete", name="claro_dropzone_correction_delete", methods={"DELETE"})
      * @EXT\ParamConverter(
      *     "correction",
-     *     class="ClarolineDropZoneBundle:Correction",
+     *     class="Claroline\DropZoneBundle\Entity\Correction",
      *     options={"mapping": {"id": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
@@ -239,7 +239,7 @@ class DropzoneController
      * @Route("/correction/{id}/deny", name="claro_dropzone_correction_deny", methods={"PUT"})
      * @EXT\ParamConverter(
      *     "correction",
-     *     class="ClarolineDropZoneBundle:Correction",
+     *     class="Claroline\DropZoneBundle\Entity\Correction",
      *     options={"mapping": {"id": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
@@ -270,7 +270,7 @@ class DropzoneController
      * @Route("/{id}/peer/drop/fetch", name="claro_dropzone_peer_drop_fetch", methods={"GET"})
      * @EXT\ParamConverter(
      *     "dropzone",
-     *     class="ClarolineDropZoneBundle:Dropzone",
+     *     class="Claroline\DropZoneBundle\Entity\Dropzone",
      *     options={"mapping": {"id": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
@@ -290,12 +290,12 @@ class DropzoneController
      * @Route("/{id}/team/{teamId}/peer/drop/fetch", name="claro_dropzone_team_peer_drop_fetch", methods={"GET"})
      * @EXT\ParamConverter(
      *     "dropzone",
-     *     class="ClarolineDropZoneBundle:Dropzone",
+     *     class="Claroline\DropZoneBundle\Entity\Dropzone",
      *     options={"mapping": {"id": "uuid"}}
      * )
      * @EXT\ParamConverter(
      *     "team",
-     *     class="ClarolineTeamBundle:Team",
+     *     class="Claroline\TeamBundle\Entity\Team",
      *     options={"mapping": {"teamId": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
@@ -316,12 +316,12 @@ class DropzoneController
      * @Route("/tool/{tool}/document/{document}", name="claro_dropzone_tool_execute", methods={"POST"})
      * @EXT\ParamConverter(
      *     "tool",
-     *     class="ClarolineDropZoneBundle:DropzoneTool",
+     *     class="Claroline\DropZoneBundle\Entity\DropzoneTool",
      *     options={"mapping": {"tool": "uuid"}}
      * )
      * @EXT\ParamConverter(
      *     "document",
-     *     class="ClarolineDropZoneBundle:Document",
+     *     class="Claroline\DropZoneBundle\Entity\Document",
      *     options={"mapping": {"document": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
@@ -348,7 +348,7 @@ class DropzoneController
      * @Route("/{document}/download", name="claro_dropzone_document_download", methods={"GET"})
      * @EXT\ParamConverter(
      *     "document",
-     *     class="ClarolineDropZoneBundle:Document",
+     *     class="Claroline\DropZoneBundle\Entity\Document",
      *     options={"mapping": {"document": "uuid"}}
      * )
      *

@@ -3,6 +3,7 @@
 namespace UJM\ExoBundle\Validator\JsonSchema\Attempt;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
+use UJM\ExoBundle\Entity\Item\Item;
 use UJM\ExoBundle\Library\Item\ItemDefinitionsCollection;
 use UJM\ExoBundle\Library\Options\Validation;
 use UJM\ExoBundle\Library\Validator\JsonSchemaValidator;
@@ -47,7 +48,7 @@ class AnswerValidator extends JsonSchemaValidator
         $errors = [];
 
         if (empty($options[Validation::QUESTION])) {
-            $question = $this->om->getRepository('UJMExoBundle:Item\Item')->findOneBy([
+            $question = $this->om->getRepository(Item::class)->findOneBy([
                 'uuid' => $answer->questionId,
             ]);
 

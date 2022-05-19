@@ -69,7 +69,7 @@ class ExerciseManager
         EventDispatcherInterface $eventDispatcher
     ) {
         $this->om = $om;
-        $this->repository = $this->om->getRepository('UJMExoBundle:Exercise');
+        $this->repository = $this->om->getRepository(Exercise::class);
         $this->validator = $validator;
         $this->serializer = $serializer;
         $this->resourceManager = $resourceManager;
@@ -146,7 +146,7 @@ class ExerciseManager
     public function exportPapersToCsv(Exercise $exercise)
     {
         /** @var PaperRepository $repo */
-        $repo = $this->om->getRepository('UJMExoBundle:Attempt\Paper');
+        $repo = $this->om->getRepository(Paper::class);
 
         $handle = fopen('php://output', 'w+');
         $limit = 250;
@@ -187,7 +187,7 @@ class ExerciseManager
     public function exportResultsToCsv(Exercise $exercise, $output = null)
     {
         /** @var PaperRepository $repo */
-        $repo = $this->om->getRepository('UJMExoBundle:Attempt\Paper');
+        $repo = $this->om->getRepository(Paper::class);
 
         $titles = [['username'], ['lastname'], ['firstname'], ['start'], ['end'], ['status'], ['score'], ['total_score_on']];
         $items = [];

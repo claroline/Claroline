@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Security\Voter;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AppBundle\Security\ObjectCollection;
 use Claroline\AppBundle\Security\Voter\VoterInterface as ClarolineVoterInterface;
+use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -189,10 +190,10 @@ abstract class AbstractVoter implements ClarolineVoterInterface, VoterInterface
 
     protected function hasAdminToolAccess(TokenInterface $token, string $name): bool
     {
-        /** @var \Claroline\CoreBundle\Entity\Tool\Tool */
+        /** @var AdminTool $tool */
         $tool = $this->getObjectManager()
-          ->getRepository('ClarolineCoreBundle:Tool\AdminTool')
-          ->findOneBy(['name' => $name]);
+            ->getRepository(AdminTool::class)
+            ->findOneBy(['name' => $name]);
 
         return $this->isGranted('OPEN', $tool);
     }

@@ -33,7 +33,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * @Route("/workspace/{workspace}/role")
- * @EXT\ParamConverter("workspace", class="ClarolineCoreBundle:Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
+ * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
  */
 class RoleController
 {
@@ -105,7 +105,7 @@ class RoleController
      * Manages workspace tools accesses for a Role.
      *
      * @Route("/{role}/tools", name="apiv2_workspace_tools_set", methods={"PUT"})
-     * @EXT\ParamConverter("role", class="ClarolineCoreBundle:Role", options={"mapping": {"role": "uuid"}})
+     * @EXT\ParamConverter("role", class="Claroline\CoreBundle\Entity\Role", options={"mapping": {"role": "uuid"}})
      */
     public function setToolRightsAction(Workspace $workspace, Role $role, Request $request): JsonResponse
     {
@@ -127,7 +127,7 @@ class RoleController
 
     /**
      * @Route("/{role}/shortcuts", name="apiv2_workspace_shortcuts_list", methods={"GET"})
-     * @EXT\ParamConverter("role", class="ClarolineCoreBundle:Role", options={"mapping": {"role": "uuid"}})
+     * @EXT\ParamConverter("role", class="Claroline\CoreBundle\Entity\Role", options={"mapping": {"role": "uuid"}})
      */
     public function listShortcutsAction(Workspace $workspace, Role $role): JsonResponse
     {
@@ -142,7 +142,7 @@ class RoleController
 
     /**
      * @Route("/{role}/shortcuts/add", name="apiv2_workspace_shortcuts_add", methods={"PUT"})
-     * @EXT\ParamConverter("role", class="ClarolineCoreBundle:Role", options={"mapping": {"role": "uuid"}})
+     * @EXT\ParamConverter("role", class="Claroline\CoreBundle\Entity\Role", options={"mapping": {"role": "uuid"}})
      * @ApiDoc(
      *     description="Adds shortcuts to a workspace for a given role.",
      *     parameters={
@@ -167,7 +167,7 @@ class RoleController
 
     /**
      * @Route("/{role}/shortcuts/remove", name="apiv2_workspace_shortcut_remove", methods={"PUT"})
-     * @EXT\ParamConverter("role", class="ClarolineCoreBundle:Role", options={"mapping": {"role": "uuid"}})
+     * @EXT\ParamConverter("role", class="Claroline\CoreBundle\Entity\Role", options={"mapping": {"role": "uuid"}})
      * @ApiDoc(
      *     description="Removes a shortcut from a workspace for a given role.",
      *     parameters={

@@ -31,7 +31,7 @@ class EvidenceController extends AbstractCrudController
 
     /**
      * @Route("/assertion/{assertion}", name="apiv2_evidence_create_at", methods={"POST"})
-     * @EXT\ParamConverter("assertion", class="ClarolineOpenBadgeBundle:Assertion", options={"mapping": {"assertion": "uuid"}})
+     * @EXT\ParamConverter("assertion", class="Claroline\OpenBadgeBundle\Entity\Assertion", options={"mapping": {"assertion": "uuid"}})
      *
      * @return JsonResponse
      */

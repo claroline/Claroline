@@ -50,8 +50,8 @@ class ContentManager
     ) {
         $this->manager = $persistence;
         $this->request = $requestStack->getCurrentRequest();
-        $this->content = $manager->getRepository('ClarolineCoreBundle:Content');
-        $this->translations = $manager->getRepository('ClarolineCoreBundle:ContentTranslation');
+        $this->content = $manager->getRepository(Content::class);
+        $this->translations = $manager->getRepository(ContentTranslation::class);
     }
 
     /**

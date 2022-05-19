@@ -61,7 +61,7 @@ class AbilityController extends AbstractCrudController
      * )
      * @EXT\ParamConverter(
      *     "node",
-     *     class="ClarolineCoreBundle:Resource\ResourceNode",
+     *     class="Claroline\CoreBundle\Entity\Resource\ResourceNode",
      *     options={"mapping": {"node": "uuid"}}
      * )
      *
@@ -88,12 +88,12 @@ class AbilityController extends AbstractCrudController
      * )
      * @EXT\ParamConverter(
      *     "node",
-     *     class="ClarolineCoreBundle:Resource\ResourceNode",
+     *     class="Claroline\CoreBundle\Entity\Resource\ResourceNode",
      *     options={"mapping": {"node": "uuid"}}
      * )
      * @EXT\ParamConverter(
      *     "ability",
-     *     class="HeVinciCompetencyBundle:Ability",
+     *     class="HeVinci\CompetencyBundle\Entity\Ability",
      *     options={"mapping": {"ability": "uuid"}},
      * )
      *
@@ -119,12 +119,12 @@ class AbilityController extends AbstractCrudController
      * )
      * @EXT\ParamConverter(
      *     "node",
-     *     class="ClarolineCoreBundle:Resource\ResourceNode",
+     *     class="Claroline\CoreBundle\Entity\Resource\ResourceNode",
      *     options={"mapping": {"node": "uuid"}}
      * )
      * @EXT\ParamConverter(
      *     "ability",
-     *     class="HeVinciCompetencyBundle:Ability",
+     *     class="HeVinci\CompetencyBundle\Entity\Ability",
      *     options={"mapping": {"ability": "uuid"}},
      * )
      *

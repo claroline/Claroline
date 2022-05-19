@@ -67,7 +67,7 @@ class PathTrackingController
      * Fetch all paths tracking of the workspace.
      *
      * @Route("/workspace/{workspace}/paths/tracking", name="claroline_paths_trackings_fetch", methods={"GET"})
-     * @EXT\ParamConverter("workspace", class="ClarolineCoreBundle:Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
+     * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
      */
     public function pathsTrackingFetchAction(Workspace $workspace): JsonResponse
     {

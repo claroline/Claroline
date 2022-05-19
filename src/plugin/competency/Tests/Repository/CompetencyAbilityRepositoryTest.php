@@ -2,6 +2,7 @@
 
 namespace HeVinci\CompetencyBundle\Tests\Repository;
 
+use HeVinci\CompetencyBundle\Entity\CompetencyAbility;
 use HeVinci\CompetencyBundle\Util\RepositoryTestCase;
 
 class CompetencyAbilityRepositoryTest extends RepositoryTestCase
@@ -11,7 +12,7 @@ class CompetencyAbilityRepositoryTest extends RepositoryTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->repo = $this->om->getRepository('HeVinciCompetencyBundle:CompetencyAbility');
+        $this->repo = $this->om->getRepository(CompetencyAbility::class);
     }
 
     public function testCountByAbility()

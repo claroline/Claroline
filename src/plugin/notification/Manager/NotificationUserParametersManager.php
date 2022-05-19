@@ -42,7 +42,7 @@ class NotificationUserParametersManager
         $this->em = $em;
         $this->ed = $ed;
         $this->notificationUserParametersRepository = $em
-            ->getRepository('IcapNotificationBundle:NotificationUserParameters');
+            ->getRepository(NotificationUserParameters::class);
     }
 
     public function getParametersByUser(User $user)

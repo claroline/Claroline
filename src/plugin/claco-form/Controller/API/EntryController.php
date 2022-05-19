@@ -50,7 +50,7 @@ class EntryController extends AbstractCrudController
 
     /**
      * @Route("/clacoform/{clacoForm}/entries/list", name="apiv2_clacoformentry_list")
-     * @EXT\ParamConverter("clacoForm", class="ClarolineClacoFormBundle:ClacoForm", options={"mapping": {"clacoForm": "uuid"}})
+     * @EXT\ParamConverter("clacoForm", class="Claroline\ClacoFormBundle\Entity\ClacoForm", options={"mapping": {"clacoForm": "uuid"}})
      */
     public function entriesListAction(ClacoForm $clacoForm, Request $request): JsonResponse
     {
@@ -89,7 +89,7 @@ class EntryController extends AbstractCrudController
 
     /**
      * @Route("/clacoform/{clacoForm}/file/upload", name="apiv2_clacoformentry_file_upload")
-     * @EXT\ParamConverter("clacoForm", class="ClarolineClacoFormBundle:ClacoForm", options={"mapping": {"clacoForm": "uuid"}})
+     * @EXT\ParamConverter("clacoForm", class="Claroline\ClacoFormBundle\Entity\ClacoForm", options={"mapping": {"clacoForm": "uuid"}})
      */
     public function uploadAction(ClacoForm $clacoForm, Request $request): JsonResponse
     {
@@ -105,8 +105,8 @@ class EntryController extends AbstractCrudController
 
     /**
      * @Route("/clacoform/{clacoForm}/{entry}/next", name="apiv2_clacoformentry_next")
-     * @EXT\ParamConverter("clacoForm", class="ClarolineClacoFormBundle:ClacoForm", options={"mapping": {"clacoForm": "uuid"}})
-     * @EXT\ParamConverter("entry", class="ClarolineClacoFormBundle:Entry", options={"mapping": {"entry": "uuid"}})
+     * @EXT\ParamConverter("clacoForm", class="Claroline\ClacoFormBundle\Entity\ClacoForm", options={"mapping": {"clacoForm": "uuid"}})
+     * @EXT\ParamConverter("entry", class="Claroline\ClacoFormBundle\Entity\Entry", options={"mapping": {"entry": "uuid"}})
      */
     public function nextAction(ClacoForm $clacoForm, Entry $entry, Request $request): JsonResponse
     {
@@ -133,8 +133,8 @@ class EntryController extends AbstractCrudController
 
     /**
      * @Route("/clacoform/{clacoForm}/{entry}/previous", name="apiv2_clacoformentry_previous")
-     * @EXT\ParamConverter("clacoForm", class="ClarolineClacoFormBundle:ClacoForm", options={"mapping": {"clacoForm": "uuid"}})
-     * @EXT\ParamConverter("entry", class="ClarolineClacoFormBundle:Entry", options={"mapping": {"entry": "uuid"}})
+     * @EXT\ParamConverter("clacoForm", class="Claroline\ClacoFormBundle\Entity\ClacoForm", options={"mapping": {"clacoForm": "uuid"}})
+     * @EXT\ParamConverter("entry", class="Claroline\ClacoFormBundle\Entity\Entry", options={"mapping": {"entry": "uuid"}})
      */
     public function previousAction(ClacoForm $clacoForm, Entry $entry, Request $request): JsonResponse
     {
@@ -163,7 +163,7 @@ class EntryController extends AbstractCrudController
      * Changes status of an entry.
      *
      * @Route("/entry/{entry}/status/change", name="claro_claco_form_entry_status_change")
-     * @EXT\ParamConverter("entry", class="ClarolineClacoFormBundle:Entry", options={"mapping": {"entry": "uuid"}})
+     * @EXT\ParamConverter("entry", class="Claroline\ClacoFormBundle\Entity\Entry", options={"mapping": {"entry": "uuid"}})
      */
     public function entryStatusChangeAction(Entry $entry): JsonResponse
     {

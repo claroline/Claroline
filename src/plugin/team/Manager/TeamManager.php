@@ -16,7 +16,9 @@ use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -55,9 +57,9 @@ class TeamManager
         $this->roleManager = $roleManager;
         $this->toolRightsManager = $toolRightsManager;
 
-        $this->resourceNodeRepo = $om->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceNode');
-        $this->teamRepo = $om->getRepository('ClarolineTeamBundle:Team');
-        $this->workspaceTeamParamsRepo = $om->getRepository('ClarolineTeamBundle:WorkspaceTeamParameters');
+        $this->resourceNodeRepo = $om->getRepository(ResourceNode::class);
+        $this->teamRepo = $om->getRepository(Team::class);
+        $this->workspaceTeamParamsRepo = $om->getRepository(WorkspaceTeamParameters::class);
     }
 
     /**
@@ -194,7 +196,7 @@ class TeamManager
         $this->rightsManager->update(['open' => true], $role, $root);
         $tool = $this->om->getRepository(Tool::class)->findOneBy(['name' => 'resources']);
         $orderedTool = $this->om
-            ->getRepository('ClarolineCoreBundle:Tool\OrderedTool')
+            ->getRepository(OrderedTool::class)
             ->findOneBy(['workspace' => $workspace, 'tool' => $tool]);
 
         if (!empty($orderedTool)) {
@@ -361,10 +363,10 @@ class TeamManager
             foreach ($roles as $role) {
                 if ($role === $team->getRole()) {
                     $perms = ['open' => true, 'edit' => true, 'export' => true, 'copy' => true];
-                    $creatable = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll();
+                    $creatable = $this->om->getRepository(ResourceType::class)->findAll();
                 } elseif ($role === $team->getTeamManagerRole()) {
                     $perms = ['open' => true, 'edit' => true, 'export' => true, 'copy' => true, 'delete' => true, 'administrate' => true];
-                    $creatable = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll();
+                    $creatable = $this->om->getRepository(ResourceType::class)->findAll();
                 } elseif ($team->isPublic()) {
                     $perms = ['open' => true];
                     $creatable = [];

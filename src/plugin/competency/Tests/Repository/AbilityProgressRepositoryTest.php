@@ -9,7 +9,7 @@ class AbilityProgressRepositoryTest extends RepositoryTestCase
 {
     public function testFindByAbilitiesAndStatus()
     {
-        $repo = $this->om->getRepository('HeVinciCompetencyBundle:Progress\AbilityProgress');
+        $repo = $this->om->getRepository(AbilityProgress::class);
 
         $user = $this->persistUser('john');
         $a1 = $this->persistAbility('a1');

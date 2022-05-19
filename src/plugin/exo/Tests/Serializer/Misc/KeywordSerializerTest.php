@@ -80,7 +80,7 @@ class KeywordSerializerTest extends JsonDataTestCase
 
         $keyword = $this->serializer->deserialize($keywordData);
 
-        $this->assertInstanceOf('\UJM\ExoBundle\Entity\Misc\Keyword', $keyword);
+        $this->assertInstanceOf(Keyword::class, $keyword);
         $this->compareKeywordAndData($keyword, $keywordData);
     }
 
@@ -97,13 +97,13 @@ class KeywordSerializerTest extends JsonDataTestCase
         $this->compareKeywordAndData($this->keyword, $keywordData);
 
         // Checks no new entity have been created
-        $nbBefore = count($this->om->getRepository('UJMExoBundle:Misc\Keyword')->findAll());
+        $nbBefore = count($this->om->getRepository(Keyword::class)->findAll());
 
         // Save the keyword to DB
         $this->om->persist($updatedKeyword);
         $this->om->flush();
 
-        $nbAfter = count($this->om->getRepository('UJMExoBundle:Misc\Keyword')->findAll());
+        $nbAfter = count($this->om->getRepository(Keyword::class)->findAll());
 
         $this->assertEquals($nbBefore, $nbAfter);
     }

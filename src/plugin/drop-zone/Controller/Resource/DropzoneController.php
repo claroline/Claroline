@@ -26,7 +26,7 @@ class DropzoneController
      * For backwards compatibility with notification twigs.
      *
      * @Route("details/{dropzoneId}", name="claro_dropzone_detail_dropzone")
-     * @EXT\ParamConverter("dropzone", class="ClarolineDropZoneBundle:Dropzone", options={"id" = "dropzoneId"})
+     * @EXT\ParamConverter("dropzone", class="Claroline\DropZoneBundle\Entity\Dropzone", options={"id" = "dropzoneId"})
      */
     public function openDropZoneAction(DropZone $dropzone): RedirectResponse
     {
@@ -42,8 +42,8 @@ class DropzoneController
      * For backwards compatibility with notification twigs.
      *
      * @Route("details/{dropzoneId}/{dropId}", name="claro_dropzone_detail_drop")
-     * @EXT\ParamConverter("dropzone", class="ClarolineDropZoneBundle:Dropzone", options={"id" = "dropzoneId"})
-     * @EXT\ParamConverter("drop", class="ClarolineDropZoneBundle:Drop", options={"id" = "dropId"})
+     * @EXT\ParamConverter("dropzone", class="Claroline\DropZoneBundle\Entity\Dropzone", options={"id" = "dropzoneId"})
+     * @EXT\ParamConverter("drop", class="Claroline\DropZoneBundle\Entity\Drop", options={"id" = "dropId"})
      */
     public function openDropAction(DropZone $dropzone, Drop $drop): RedirectResponse
     {

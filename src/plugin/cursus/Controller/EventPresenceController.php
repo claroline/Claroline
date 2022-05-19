@@ -73,7 +73,7 @@ class EventPresenceController
 
     /**
      * @Route("/{id}", name="apiv2_cursus_event_presence_list", methods={"GET"})
-     * @EXT\ParamConverter("event", class="ClarolineCursusBundle:Event", options={"mapping": {"id": "uuid"}})
+     * @EXT\ParamConverter("event", class="Claroline\CursusBundle\Entity\Event", options={"mapping": {"id": "uuid"}})
      */
     public function listAction(Event $event, Request $request): JsonResponse
     {
@@ -96,7 +96,7 @@ class EventPresenceController
      * Updates the status of an EventPresence list.
      *
      * @Route("/{id}/{status}", name="apiv2_cursus_event_presence_update", methods={"PUT"})
-     * @EXT\ParamConverter("event", class="ClarolineCursusBundle:Event", options={"mapping": {"id": "uuid"}})
+     * @EXT\ParamConverter("event", class="Claroline\CursusBundle\Entity\Event", options={"mapping": {"id": "uuid"}})
      */
     public function updateStatusAction(Event $event, string $status, Request $request): JsonResponse
     {
@@ -111,7 +111,7 @@ class EventPresenceController
 
     /**
      * @Route("/{id}/download/{filled}", name="apiv2_cursus_event_presence_download", methods={"GET"})
-     * @EXT\ParamConverter("event", class="ClarolineCursusBundle:Event", options={"mapping": {"id": "uuid"}})
+     * @EXT\ParamConverter("event", class="Claroline\CursusBundle\Entity\Event", options={"mapping": {"id": "uuid"}})
      */
     public function downloadPdfAction(Event $event, Request $request, int $filled): StreamedResponse
     {
@@ -129,8 +129,8 @@ class EventPresenceController
 
     /**
      * @Route("/{id}/user/{userId}/download", name="apiv2_cursus_user_presence_download", methods={"GET"})
-     * @EXT\ParamConverter("event", class="ClarolineCursusBundle:Event", options={"mapping": {"id": "uuid"}})
-     * @EXT\ParamConverter("user", class="ClarolineCoreBundle:User", options={"mapping": {"userId": "uuid"}})
+     * @EXT\ParamConverter("event", class="Claroline\CursusBundle\Entity\Event", options={"mapping": {"id": "uuid"}})
+     * @EXT\ParamConverter("user", class="Claroline\CoreBundle\Entity\User", options={"mapping": {"userId": "uuid"}})
      */
     public function downloadUserPdfAction(Event $event, User $user, Request $request): StreamedResponse
     {

@@ -2,6 +2,7 @@
 
 namespace HeVinci\CompetencyBundle\Tests\Repository;
 
+use HeVinci\CompetencyBundle\Entity\Level;
 use HeVinci\CompetencyBundle\Util\RepositoryTestCase;
 
 class LevelRepositoryTest extends RepositoryTestCase
@@ -11,7 +12,7 @@ class LevelRepositoryTest extends RepositoryTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->repo = $this->om->getRepository('HeVinciCompetencyBundle:Level');
+        $this->repo = $this->om->getRepository(Level::class);
     }
 
     public function testGetFindByCompetencyBuilder()

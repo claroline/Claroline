@@ -25,7 +25,7 @@ const Users = props =>
       label: trans('unregister', {}, 'actions'),
       callback: () => props.unregister(rows, props.workspace),
       dangerous: true,
-      disabled: rows.find(row => row.roles.filter(r => r.name !== 'ROLE_USER' && r.context === 'group' && props.workspace.roles.findIndex(wr => wr.name === r.name) > -1).length > 0),
+      disabled: -1 !== rows.findIndex(row => -1 !== row.roles.findIndex(r => r.context !== 'group' && r.workspace && r.workspace.id === props.workspace.id)),
       confirm: {
         title: trans('unregister'),
         message: transChoice('unregister_users_confirm_message', rows.length, {count: rows.length})

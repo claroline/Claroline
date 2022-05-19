@@ -273,7 +273,7 @@ class ResourceNodeSerializer
         if (empty($resourceNode->getResourceType())) {
             /** @var ResourceType $resourceType */
             $resourceType = $this->om
-                ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
+                ->getRepository(ResourceType::class)
                 ->findOneBy(['name' => $data['meta']['type']]);
 
             $resourceNode->setResourceType($resourceType);

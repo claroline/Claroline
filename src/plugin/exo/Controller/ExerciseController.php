@@ -42,7 +42,7 @@ class ExerciseController
      * Gets the full representation of an exercise (including solutions) in a JSON format.
      *
      * @Route("/{id}", name="exercise_get", methods={"GET"})
-     * @EXT\ParamConverter("exercise", class="UJMExoBundle:Exercise", options={"mapping": {"id": "uuid"}})
+     * @EXT\ParamConverter("exercise", class="UJM\ExoBundle\Entity\Exercise", options={"mapping": {"id": "uuid"}})
      */
     public function getAction(Exercise $exercise): JsonResponse
     {
@@ -57,7 +57,7 @@ class ExerciseController
      * Updates an Exercise.
      *
      * @Route("/{id}", name="exercise_update", methods={"PUT"})
-     * @EXT\ParamConverter("exercise", class="UJMExoBundle:Exercise", options={"mapping": {"id": "uuid"}})
+     * @EXT\ParamConverter("exercise", class="UJM\ExoBundle\Entity\Exercise", options={"mapping": {"id": "uuid"}})
      */
     public function updateAction(Exercise $exercise, Request $request): JsonResponse
     {

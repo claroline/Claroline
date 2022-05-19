@@ -19,7 +19,7 @@ use Twig\Environment;
 
 /**
  * @Route("/wiki/{id}")
- * @EXT\ParamConverter("wiki", class="IcapWikiBundle:Wiki", options={"mapping": {"id": "uuid"}})
+ * @EXT\ParamConverter("wiki", class="Icap\WikiBundle\Entity\Wiki", options={"mapping": {"id": "uuid"}})
  */
 class WikiController
 {

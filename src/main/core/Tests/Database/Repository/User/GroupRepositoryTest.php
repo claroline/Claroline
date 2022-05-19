@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Repository\User;
 
+use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Library\Testing\RepositoryTestCase;
 
 class GroupRepositoryTest extends RepositoryTestCase
@@ -20,7 +21,7 @@ class GroupRepositoryTest extends RepositoryTestCase
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
-        self::$repo = self::getRepository('ClarolineCoreBundle:Group');
+        self::$repo = self::getRepository(Group::class);
         self::createWorkspace('ws_1');
         self::createRole('ROLE_1', self::get('ws_1'));
         self::createGroup('group_1', [], [self::get('ROLE_1')]);

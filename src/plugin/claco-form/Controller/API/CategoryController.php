@@ -59,7 +59,7 @@ class CategoryController extends AbstractCrudController
 
     /**
      * @Route("/list/{clacoForm}", name="apiv2_clacoformcategory_list")
-     * @EXT\ParamConverter("clacoForm", class="ClarolineClacoFormBundle:ClacoForm", options={"mapping": {"clacoForm": "uuid"}})
+     * @EXT\ParamConverter("clacoForm", class="Claroline\ClacoFormBundle\Entity\ClacoForm", options={"mapping": {"clacoForm": "uuid"}})
      */
     public function listByClacoFormAction(ClacoForm $clacoForm, Request $request): JsonResponse
     {
@@ -75,7 +75,7 @@ class CategoryController extends AbstractCrudController
 
     /**
      * @Route("/{id}/assign", name="apiv2_clacoform_category_assign", methods={"PUT"})
-     * @EXT\ParamConverter("category", class="ClarolineClacoFormBundle:Category", options={"mapping": {"id": "uuid"}})
+     * @EXT\ParamConverter("category", class="Claroline\ClacoFormBundle\Entity\Category", options={"mapping": {"id": "uuid"}})
      */
     public function assignAction(Category $category): JsonResponse
     {

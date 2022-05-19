@@ -59,7 +59,7 @@ class LogManager
         $this->ut = $ut;
         $this->dispatcher = $dispatcher;
 
-        $this->logRepository = $objectManager->getRepository('ClarolineCoreBundle:Log\Log');
+        $this->logRepository = $objectManager->getRepository(Log::class);
     }
 
     /**

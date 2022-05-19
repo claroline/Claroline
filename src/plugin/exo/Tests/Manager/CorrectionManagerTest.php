@@ -129,7 +129,7 @@ class CorrectionManagerTest extends JsonDataTestCase
         $this->manager->save([$toCorrect]);
 
         /** @var Answer $updatedAnswer */
-        $updatedAnswer = $this->om->getRepository('UJMExoBundle:Attempt\Answer')->findOneBy([
+        $updatedAnswer = $this->om->getRepository(Answer::class)->findOneBy([
             'uuid' => $this->answers[0]->getUuid(),
         ]);
 
@@ -158,7 +158,7 @@ class CorrectionManagerTest extends JsonDataTestCase
         $this->manager->save([$toCorrect]);
 
         /** @var Answer $updatedAnswer */
-        $updatedAnswer = $this->om->getRepository('UJMExoBundle:Attempt\Answer')->findOneBy([
+        $updatedAnswer = $this->om->getRepository(Answer::class)->findOneBy([
             'uuid' => $this->answers[0]->getUuid(),
         ]);
 

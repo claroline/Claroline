@@ -41,7 +41,7 @@ class EventController
      * List the active (in progress and forthcoming) session events of the current user.
      *
      * @Route("/active/{workspace}", name="apiv2_cursus_my_events_active", methods={"GET"})
-     * @EXT\ParamConverter("workspace", class="ClarolineCoreBundle:Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
+     * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
      */
     public function listActiveAction(Request $request, Workspace $workspace = null): JsonResponse
     {
@@ -66,7 +66,7 @@ class EventController
      * List the ended session events of the current user.
      *
      * @Route("/ended/{workspace}", name="apiv2_cursus_my_events_ended", methods={"GET"})
-     * @EXT\ParamConverter("workspace", class="ClarolineCoreBundle:Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
+     * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
      */
     public function listEndedAction(Request $request, Workspace $workspace = null): JsonResponse
     {

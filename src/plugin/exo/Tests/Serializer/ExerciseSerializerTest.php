@@ -143,12 +143,12 @@ class ExerciseSerializerTest extends JsonDataTestCase
         $this->assertCount(count($exerciseData['steps']), $this->exercise->getSteps());
 
         // Checks no new entity have been created
-        $nbBefore = count($this->om->getRepository('UJMExoBundle:Exercise')->findAll());
+        $nbBefore = count($this->om->getRepository(Exercise::class)->findAll());
 
         $this->om->persist($updatedExercise);
         $this->om->flush();
 
-        $nbAfter = count($this->om->getRepository('UJMExoBundle:Exercise')->findAll());
+        $nbAfter = count($this->om->getRepository(Exercise::class)->findAll());
 
         $this->assertEquals($nbBefore, $nbAfter);
     }

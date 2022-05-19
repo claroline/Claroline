@@ -59,7 +59,7 @@ class PathController extends AbstractCrudController
      * Update step progression for an user.
      *
      * @Route("/step/{id}/progression/update", name="innova_path_progression_update", methods={"PUT"})
-     * @EXT\ParamConverter("step", class="InnovaPathBundle:Step", options={"mapping": {"id": "uuid"}})
+     * @EXT\ParamConverter("step", class="Innova\PathBundle\Entity\Step", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
     public function updateProgressionAction(Step $step, User $user, Request $request): JsonResponse
@@ -83,7 +83,7 @@ class PathController extends AbstractCrudController
 
     /**
      * @Route("/{id}/attempt", name="innova_path_current_attempt", methods={"GET"})
-     * @EXT\ParamConverter("path", class="InnovaPathBundle:Path\Path", options={"mapping": {"id": "uuid"}})
+     * @EXT\ParamConverter("path", class="Innova\PathBundle\Entity\Path\Path", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      */
     public function getAttemptAction(Path $path, User $user = null)
@@ -102,8 +102,8 @@ class PathController extends AbstractCrudController
      * Fetch user progressions for path.
      *
      * @Route("/{id}/user/{user}/steps/progression/fetch", name="innova_path_user_steps_progression_fetch", methods={"GET"})
-     * @EXT\ParamConverter("path", class="InnovaPathBundle:Path\Path", options={"mapping": {"id": "uuid"}})
-     * @EXT\ParamConverter("user", class="ClarolineCoreBundle:User", options={"mapping": {"user": "uuid"}})
+     * @EXT\ParamConverter("path", class="Innova\PathBundle\Entity\Path\Path", options={"mapping": {"id": "uuid"}})
+     * @EXT\ParamConverter("user", class="Claroline\CoreBundle\Entity\User", options={"mapping": {"user": "uuid"}})
      */
     public function userStepsProgressionFetchAction(Path $path, User $user): JsonResponse
     {

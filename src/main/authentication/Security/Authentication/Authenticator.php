@@ -63,7 +63,7 @@ class Authenticator
         $this->authenticationHandler = $authenticationHandler;
         $this->eventDispatcher = $eventDispatcher;
 
-        $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
+        $this->userRepo = $om->getRepository(User::class);
     }
 
     public function authenticate($username, $password, $validatePassword = true): ?User

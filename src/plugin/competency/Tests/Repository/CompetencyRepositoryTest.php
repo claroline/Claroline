@@ -2,6 +2,7 @@
 
 namespace HeVinci\CompetencyBundle\Repository;
 
+use HeVinci\CompetencyBundle\Entity\Competency;
 use HeVinci\CompetencyBundle\Util\RepositoryTestCase;
 
 class CompetencyRepositoryTest extends RepositoryTestCase
@@ -11,7 +12,7 @@ class CompetencyRepositoryTest extends RepositoryTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->repo = $this->om->getRepository('HeVinciCompetencyBundle:Competency');
+        $this->repo = $this->om->getRepository(Competency::class);
     }
 
     public function testFindRootsByName()

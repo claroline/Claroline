@@ -14,6 +14,7 @@ namespace Claroline\CursusBundle\Finder;
 use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\CursusBundle\Entity\Course;
 use Claroline\CursusBundle\Entity\Session;
+use Claroline\TagBundle\Entity\TaggedObject;
 use Doctrine\ORM\QueryBuilder;
 
 class SessionFinder extends AbstractFinder
@@ -113,7 +114,7 @@ class SessionFinder extends AbstractFinder
                     $tagQueryBuilder = $this->om->createQueryBuilder();
                     $tagQueryBuilder
                         ->select('to.id')
-                        ->from('ClarolineTagBundle:TaggedObject', 'to')
+                        ->from(TaggedObject::class, 'to')
                         ->innerJoin('to.tag', 't')
                         ->where('to.objectClass = :objectClass')
                         ->andWhere('to.objectId = c.uuid') // this makes the UUID required on tagged objects

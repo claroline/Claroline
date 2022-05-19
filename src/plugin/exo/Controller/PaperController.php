@@ -25,7 +25,7 @@ use UJM\ExoBundle\Manager\ExerciseManager;
  * Manages the submitted papers to an exercise.
  *
  * @Route("exercises/{exerciseId}/papers")
- * @EXT\ParamConverter("exercise", class="UJMExoBundle:Exercise", options={"mapping": {"exerciseId": "uuid"}})
+ * @EXT\ParamConverter("exercise", class="UJM\ExoBundle\Entity\Exercise", options={"mapping": {"exerciseId": "uuid"}})
  */
 class PaperController
 {
@@ -100,7 +100,7 @@ class PaperController
      * associated with the exercise.
      *
      * @Route("/{id}", name="exercise_paper_get", methods={"GET"})
-     * @EXT\ParamConverter("paper", class="UJMExoBundle:Attempt\Paper", options={"mapping": {"id": "uuid"}})
+     * @EXT\ParamConverter("paper", class="UJM\ExoBundle\Entity\Attempt\Paper", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user")
      */
     public function getAction(Exercise $exercise, Paper $paper, User $user): JsonResponse

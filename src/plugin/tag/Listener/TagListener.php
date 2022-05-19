@@ -48,7 +48,7 @@ class TagListener
             $tagQueryBuilder = $this->om->createQueryBuilder();
             $tagQueryBuilder
                 ->select('to.id')
-                ->from('ClarolineTagBundle:TaggedObject', 'to')
+                ->from(TaggedObject::class, 'to')
                 ->innerJoin('to.tag', 't')
                 ->where('to.objectClass = :objectClass')
                 ->andWhere('to.objectId = obj.uuid') // this makes the UUID required on tagged objects

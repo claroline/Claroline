@@ -62,7 +62,7 @@ class ScormController
 
     /**
      * @Route("/workspace/{workspace}/scorm/archive/upload", name="apiv2_scorm_archive_upload")
-     * @EXT\ParamConverter("workspace", class="ClarolineCoreBundle:Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
+     * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
      */
     public function uploadAction(Workspace $workspace, Request $request): JsonResponse
     {
@@ -91,7 +91,7 @@ class ScormController
 
     /**
      * @Route("/scorm/{scorm}", name="apiv2_scorm_update", methods={"PUT"})
-     * @EXT\ParamConverter("scorm", class="ClarolineScormBundle:Scorm", options={"mapping": {"scorm": "uuid"}})
+     * @EXT\ParamConverter("scorm", class="Claroline\ScormBundle\Entity\Scorm", options={"mapping": {"scorm": "uuid"}})
      */
     public function updateAction(Scorm $scorm, Request $request): JsonResponse
     {
@@ -104,7 +104,7 @@ class ScormController
 
     /**
      * @Route("/sco/{sco}/commit", name="apiv2_scormscotracking_update", methods={"PUT"})
-     * @EXT\ParamConverter("sco", class="ClarolineScormBundle:Sco", options={"mapping": {"sco": "uuid"}})
+     * @EXT\ParamConverter("sco", class="Claroline\ScormBundle\Entity\Sco", options={"mapping": {"sco": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
     public function updateTrackingAction(Sco $sco, User $user, Request $request): JsonResponse
@@ -122,7 +122,7 @@ class ScormController
 
     /**
      * @Route("/scorm/{scorm}/trackings/list", name="apiv2_scormscotracking_list")
-     * @EXT\ParamConverter("scorm", class="ClarolineScormBundle:Scorm", options={"mapping": {"scorm": "uuid"}})
+     * @EXT\ParamConverter("scorm", class="Claroline\ScormBundle\Entity\Scorm", options={"mapping": {"scorm": "uuid"}})
      */
     public function listTrackingsAction(Scorm $scorm, Request $request): JsonResponse
     {
@@ -142,7 +142,7 @@ class ScormController
 
     /**
      * @Route("/scorm/{scorm}/trackings/export", name="apiv2_scormscotracking_export")
-     * @EXT\ParamConverter("scorm", class="ClarolineScormBundle:Scorm", options={"mapping": {"scorm": "uuid"}})
+     * @EXT\ParamConverter("scorm", class="Claroline\ScormBundle\Entity\Scorm", options={"mapping": {"scorm": "uuid"}})
      */
     public function exportTrackingsAction(Scorm $scorm): StreamedResponse
     {

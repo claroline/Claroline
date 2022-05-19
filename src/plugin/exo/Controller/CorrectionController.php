@@ -19,7 +19,7 @@ use UJM\ExoBundle\Manager\CorrectionManager;
  * for answers to questions with manual correction.
  *
  * @Route("/exercises/{exerciseId}/correction")
- * @EXT\ParamConverter("exercise", class="UJMExoBundle:Exercise", options={"mapping": {"exerciseId": "uuid"}})
+ * @EXT\ParamConverter("exercise", class="UJM\ExoBundle\Entity\Exercise", options={"mapping": {"exerciseId": "uuid"}})
  */
 class CorrectionController
 {

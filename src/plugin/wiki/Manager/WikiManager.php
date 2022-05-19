@@ -12,6 +12,7 @@
 namespace Icap\WikiBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\User;
 use Icap\WikiBundle\Entity\Contribution;
 use Icap\WikiBundle\Entity\Section;
 use Icap\WikiBundle\Entity\Wiki;
@@ -55,9 +56,9 @@ class WikiManager
         $this->om = $om;
         $this->wikiSerializer = $wikiSerializer;
         $this->eventDispatcher = $eventDispatcher;
-        $this->sectionRepository = $this->om->getRepository('IcapWikiBundle:Section');
-        $this->contributionRepository = $this->om->getRepository('IcapWikiBundle:Contribution');
-        $this->userRepository = $this->om->getRepository('ClarolineCoreBundle:User');
+        $this->sectionRepository = $this->om->getRepository(Section::class);
+        $this->contributionRepository = $this->om->getRepository(Contribution::class);
+        $this->userRepository = $this->om->getRepository(User::class);
     }
 
     public function updateWiki(Wiki $wiki, $data)

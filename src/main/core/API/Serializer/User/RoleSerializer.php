@@ -11,6 +11,7 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Tool\Tool;
+use Claroline\CoreBundle\Entity\Tool\ToolRights;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\Tool\ToolMaskDecoderManager;
@@ -60,9 +61,9 @@ class RoleSerializer
         $this->workspaceSerializer = $workspaceSerializer;
         $this->userSerializer = $userSerializer;
 
-        $this->orderedToolRepo = $this->om->getRepository('ClarolineCoreBundle:Tool\OrderedTool');
-        $this->toolRightsRepo = $this->om->getRepository('ClarolineCoreBundle:Tool\ToolRights');
-        $this->userRepo = $this->om->getRepository('ClarolineCoreBundle:User');
+        $this->orderedToolRepo = $this->om->getRepository(OrderedTool::class);
+        $this->toolRightsRepo = $this->om->getRepository(ToolRights::class);
+        $this->userRepo = $this->om->getRepository(User::class);
     }
 
     public function getName(): string
@@ -124,7 +125,7 @@ class RoleSerializer
                 $adminTools = [];
 
                 /** @var AdminTool $adminTool */
-                foreach ($this->om->getRepository('ClarolineCoreBundle:Tool\AdminTool')->findAll() as $adminTool) {
+                foreach ($this->om->getRepository(AdminTool::class)->findAll() as $adminTool) {
                     $adminTools[$adminTool->getName()] = $role->getAdminTools()->contains($adminTool);
                 }
 
@@ -192,7 +193,7 @@ class RoleSerializer
 
         // we should test role type before trying to set the workspace
         if (!empty($data['workspace']) && !empty($data['workspace']['id'])) {
-            $workspace = $this->om->getRepository('ClarolineCoreBundle:Workspace\Workspace')
+            $workspace = $this->om->getRepository(Workspace::class)
                 ->findOneBy(['uuid' => $data['workspace']['id']]);
             if ($workspace) {
                 $role->setWorkspace($workspace);
@@ -210,7 +211,7 @@ class RoleSerializer
 
         // Tools should not be managed here
         if (isset($data['adminTools'])) {
-            $adminTools = $this->om->getRepository('ClarolineCoreBundle:Tool\AdminTool')->findAll();
+            $adminTools = $this->om->getRepository(AdminTool::class)->findAll();
 
             /** @var AdminTool $adminTool */
             foreach ($adminTools as $adminTool) {

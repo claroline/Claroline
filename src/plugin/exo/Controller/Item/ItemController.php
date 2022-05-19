@@ -109,7 +109,7 @@ class ItemController
      * Updates a Item.
      *
      * @Route("/{id}", name="question_update", methods={"PUT"})
-     * @EXT\ParamConverter("question", class="UJMExoBundle:Item\Item", options={"mapping": {"id": "uuid"}})
+     * @EXT\ParamConverter("question", class="UJM\ExoBundle\Entity\Item\Item", options={"mapping": {"id": "uuid"}})
      *
      * @return JsonResponse
      */

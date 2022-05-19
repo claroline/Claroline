@@ -121,7 +121,7 @@ class ClientSerializer
             'resources' => [ // TODO : maybe no longer needed here
                 'types' => array_map(function (ResourceType $resourceType) {
                     return $this->resourceTypeSerializer->serialize($resourceType);
-                }, $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll()),
+                }, $this->om->getRepository(ResourceType::class)->findAll()),
                 'softDelete' => $this->config->getParameter('resource.soft_delete'),
             ],
             'desktop' => [ // TODO : find a better way to store and expose this

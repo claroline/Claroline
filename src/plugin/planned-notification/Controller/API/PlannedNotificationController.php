@@ -59,7 +59,7 @@ class PlannedNotificationController extends AbstractCrudController
      * )
      * @EXT\ParamConverter(
      *     "workspace",
-     *     class="ClarolineCoreBundle:Workspace\Workspace",
+     *     class="Claroline\CoreBundle\Entity\Workspace\Workspace",
      *     options={"mapping": {"workspace": "uuid"}}
      * )
      *
@@ -86,7 +86,7 @@ class PlannedNotificationController extends AbstractCrudController
      * )
      * @EXT\ParamConverter(
      *     "workspace",
-     *     class="ClarolineCoreBundle:Workspace\Workspace",
+     *     class="Claroline\CoreBundle\Entity\Workspace\Workspace",
      *     options={"mapping": {"workspace": "uuid"}}
      * )
      *

@@ -116,13 +116,13 @@ class ClacoFormManager implements LoggerAwareInterface
         $this->messageBus = $messageBus;
         $this->categoryManager = $categoryManager;
 
-        $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
-        $this->categoryRepo = $om->getRepository('ClarolineClacoFormBundle:Category');
-        $this->commentRepo = $om->getRepository('ClarolineClacoFormBundle:Comment');
-        $this->entryRepo = $om->getRepository('ClarolineClacoFormBundle:Entry');
-        $this->entryUserRepo = $om->getRepository('ClarolineClacoFormBundle:EntryUser');
-        $this->fieldValueRepo = $om->getRepository('ClarolineClacoFormBundle:FieldValue');
-        $this->keywordRepo = $om->getRepository('ClarolineClacoFormBundle:Keyword');
+        $this->userRepo = $om->getRepository(User::class);
+        $this->categoryRepo = $om->getRepository(Category::class);
+        $this->commentRepo = $om->getRepository(Comment::class);
+        $this->entryRepo = $om->getRepository(Entry::class);
+        $this->entryUserRepo = $om->getRepository(EntryUser::class);
+        $this->fieldValueRepo = $om->getRepository(FieldValue::class);
+        $this->keywordRepo = $om->getRepository(Keyword::class);
     }
 
     public function persistEntry(Entry $entry)

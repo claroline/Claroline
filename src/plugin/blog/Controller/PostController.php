@@ -19,7 +19,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @Route("blog/{blogId}/posts", options={"expose"=true})
- * @EXT\ParamConverter("blog", class="IcapBlogBundle:Blog", options={"mapping": {"blogId": "uuid"}})
+ * @EXT\ParamConverter("blog", class="Icap\BlogBundle\Entity\Blog", options={"mapping": {"blogId": "uuid"}})
  */
 class PostController
 {
@@ -171,7 +171,7 @@ class PostController
      * Update blog post.
      *
      * @Route("/update/{postId}", name="apiv2_blog_post_update", methods={"PUT"})
-     * @EXT\ParamConverter("post", class="IcapBlogBundle:Post", options={"mapping": {"postId": "uuid"}})
+     * @EXT\ParamConverter("post", class="Icap\BlogBundle\Entity\Post", options={"mapping": {"postId": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      *
      * @return array
@@ -190,7 +190,7 @@ class PostController
      * Delete blog post.
      *
      * @Route("/delete/{postId}", name="apiv2_blog_post_delete", methods={"DELETE"})
-     * @EXT\ParamConverter("post", class="IcapBlogBundle:Post", options={"mapping": {"postId": "uuid"}})
+     * @EXT\ParamConverter("post", class="Icap\BlogBundle\Entity\Post", options={"mapping": {"postId": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      *
      * @return array
@@ -207,7 +207,7 @@ class PostController
      * Switch post publication state.
      *
      * @Route("/publish/{postId}", name="apiv2_blog_post_publish", methods={"PUT"})
-     * @EXT\ParamConverter("post", class="IcapBlogBundle:Post", options={"mapping": {"postId": "uuid"}})
+     * @EXT\ParamConverter("post", class="Icap\BlogBundle\Entity\Post", options={"mapping": {"postId": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      *
      * @return array
@@ -228,7 +228,7 @@ class PostController
      * Pin post.
      *
      * @Route("/pin/{postId}", name="apiv2_blog_post_pin", methods={"PUT"})
-     * @EXT\ParamConverter("post", class="IcapBlogBundle:Post", options={"mapping": {"postId": "uuid"}})
+     * @EXT\ParamConverter("post", class="Icap\BlogBundle\Entity\Post", options={"mapping": {"postId": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      *
      * @return array

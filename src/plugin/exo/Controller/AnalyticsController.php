@@ -17,7 +17,7 @@ use UJM\ExoBundle\Manager\Item\ItemManager;
 
 /**
  * @Route("/exercises/{id}/statistics")
- * @EXT\ParamConverter("exercise", class="UJMExoBundle:Exercise", options={"mapping": {"id": "uuid"}})
+ * @EXT\ParamConverter("exercise", class="UJM\ExoBundle\Entity\Exercise", options={"mapping": {"id": "uuid"}})
  */
 class AnalyticsController
 {

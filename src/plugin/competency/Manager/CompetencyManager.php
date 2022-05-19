@@ -6,6 +6,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Doctrine\Common\Collections\ArrayCollection;
 use HeVinci\CompetencyBundle\Entity\Ability;
 use HeVinci\CompetencyBundle\Entity\Competency;
+use HeVinci\CompetencyBundle\Entity\CompetencyAbility;
 use HeVinci\CompetencyBundle\Entity\Level;
 use HeVinci\CompetencyBundle\Entity\Scale;
 use HeVinci\CompetencyBundle\Transfer\Converter;
@@ -32,11 +33,11 @@ class CompetencyManager
         $this->om = $om;
         $this->translator = $translator;
 
-        $this->abilityRepo = $om->getRepository('HeVinciCompetencyBundle:Ability');
-        $this->competencyAbilityRepo = $om->getRepository('HeVinciCompetencyBundle:CompetencyAbility');
-        $this->competencyRepo = $om->getRepository('HeVinciCompetencyBundle:Competency');
-        $this->levelRepo = $om->getRepository('HeVinciCompetencyBundle:Level');
-        $this->scaleRepo = $om->getRepository('HeVinciCompetencyBundle:Scale');
+        $this->abilityRepo = $om->getRepository(Ability::class);
+        $this->competencyAbilityRepo = $om->getRepository(CompetencyAbility::class);
+        $this->competencyRepo = $om->getRepository(Competency::class);
+        $this->levelRepo = $om->getRepository(Level::class);
+        $this->scaleRepo = $om->getRepository(Scale::class);
     }
 
     /**

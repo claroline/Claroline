@@ -3,6 +3,7 @@
 namespace Claroline\AppBundle\Controller;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -34,7 +35,7 @@ abstract class AbstractSecurityController
      */
     protected function canOpenAdminTool($toolName)
     {
-        $tool = $this->om->getRepository('ClarolineCoreBundle:Tool\AdminTool')
+        $tool = $this->om->getRepository(AdminTool::class)
             ->findOneBy(['name' => $toolName]);
 
         if (!$tool) {

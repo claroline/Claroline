@@ -51,7 +51,7 @@ class MaterialController extends AbstractCrudController
 
     /**
      * @Route("/{material}/booking", name="apiv2_booking_material_book", methods={"POST"})
-     * @EXT\ParamConverter("material", class="ClarolineBookingBundle:Material", options={"mapping": {"material": "uuid"}})
+     * @EXT\ParamConverter("material", class="Claroline\CoreBundle\Entity\Location\Material", options={"mapping": {"material": "uuid"}})
      */
     public function bookAction(Material $material, Request $request): JsonResponse
     {
@@ -72,7 +72,7 @@ class MaterialController extends AbstractCrudController
 
     /**
      * @Route("/{material}/booking", name="apiv2_booking_material_list_booking", methods={"GET"})
-     * @EXT\ParamConverter("material", class="ClarolineCoreBundle:Location\Material", options={"mapping": {"material": "uuid"}})
+     * @EXT\ParamConverter("material", class="Claroline\CoreBundle\Entity\Location\Material", options={"mapping": {"material": "uuid"}})
      */
     public function listBookingAction(Material $material, Request $request): JsonResponse
     {
@@ -90,7 +90,7 @@ class MaterialController extends AbstractCrudController
 
     /**
      * @Route("/{$material}/booking", name="apiv2_booking_material_remove_booking", methods={"DELETE"})
-     * @EXT\ParamConverter("$material", class="ClarolineCoreBundle:Location\Material", options={"mapping": {"$material": "uuid"}})
+     * @EXT\ParamConverter("$material", class="Claroline\CoreBundle\Entity\Location\Material", options={"mapping": {"$material": "uuid"}})
      */
     public function deleteBookingAction(Material $material, Request $request): JsonResponse
     {
