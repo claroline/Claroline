@@ -43,17 +43,11 @@ actions.setSectionVisibility = (id = null, visible = true) => (dispatch) => {
         url: ['apiv2_wiki_section_set_visibility', {id}],
         request: {
           method: 'PUT',
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          },
           body: JSON.stringify({
-            visible
+            visible: visible
           })
         },
-        success: (data, dispatch) => {
-          dispatch(actions.updateSectionVisibility(id, data))
-        }
+        success: (data) => dispatch(actions.updateSectionVisibility(id, data))
       }
     })
   }
