@@ -1,0 +1,11 @@
+services:
+    _defaults:
+        tags: [claroline.transfer.exporter]
+
+    # User
+    Claroline\CommunityBundle\Transfer\Exporter\User\ListExporter:
+        parent: Claroline\TransferBundle\Transfer\Exporter\AbstractListExporter
+
+    # Group
+    Claroline\CommunityBundle\Transfer\Exporter\Group\ListExporter:
+        parent: Claroline\TransferBundle\Transfer\Exporter\AbstractListExporter

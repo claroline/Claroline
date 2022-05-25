@@ -1,4 +1,5 @@
 {
+  "badge": "Badge",
   "all_badges": "Tous les badges",
   "allowed_issuers": "Utilisateurs pouvant attribuer le badge",
   "required_validation": "Validation requise par un administrateur",

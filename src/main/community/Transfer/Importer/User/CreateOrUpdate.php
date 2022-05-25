@@ -1,19 +1,19 @@
 <?php
 
-namespace Claroline\CoreBundle\Transfer\Importer\Group;
+namespace Claroline\CommunityBundle\Transfer\Importer\User;
 
-use Claroline\CoreBundle\Entity\Group;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\TransferBundle\Transfer\Importer\AbstractCreateOrUpdateImporter;
 
 class CreateOrUpdate extends AbstractCreateOrUpdateImporter
 {
     public function getAction(): array
     {
-        return ['group', 'create_or_update'];
+        return ['user', 'create_or_update'];
     }
 
     protected static function getClass(): string
     {
-        return Group::class;
+        return User::class;
     }
 }

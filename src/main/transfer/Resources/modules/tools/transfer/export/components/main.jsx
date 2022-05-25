@@ -14,7 +14,8 @@ const ExportMain = (props) =>
   <Routes
     path={props.path+'/export'}
     redirect={[
-      {from: '/', exact: true, to: '/new'}
+      {from: '/', exact: true, to: '/new', disabled: !props.canExport},
+      {from: '/', exact: true, to: '/history', disabled: props.canExport}
     ]}
     routes={[
       {
@@ -27,6 +28,7 @@ const ExportMain = (props) =>
         onEnter: (params) => props.open(params.id)
       }, {
         path: '/new',
+        disabled: !props.canExport,
         render: () => (
           <TransferForm
             path={props.path+'/export/new'}
@@ -46,6 +48,7 @@ ExportMain.propTypes = {
   path: T.string.isRequired,
   contextData: T.object,
   explanation: T.object,
+  canExport: T.bool.isRequired,
   open: T.func.isRequired,
   openForm: T.func.isRequired
 }

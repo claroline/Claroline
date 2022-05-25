@@ -2,11 +2,16 @@
 @import "/src/main/app/Resources/styles/mixins";
 @import "/src/main/app/Resources/styles/variables";
 
-.transfer-schema-filter {
+.transfer-schema-select {
     margin-top: @component-margin-bottom;
+    margin-left: 11px; // padding + border width of .transfer-schema-field, to align checkboxes
+}
+
+.transfer-schema-filter {
     display: flex;
     align-items: center;
     justify-content: flex-end;
+    margin-top: @component-margin-bottom;
     margin-bottom: 10px; // same as list grid sort
 
     .btn {
@@ -24,6 +29,7 @@
     border-radius: @panel-border-radius;
     .box-shadow(@panel-box-shadow);
 
+    &.selected,
     &.required {
         border: 1px solid @brand-primary;
     }

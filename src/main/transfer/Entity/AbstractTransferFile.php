@@ -6,6 +6,7 @@ use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\CreatedAt;
 use Claroline\AppBundle\Entity\Meta\Creator;
+use Claroline\AppBundle\Entity\Meta\Name;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -18,6 +19,13 @@ abstract class AbstractTransferFile implements TransferFileInterface
     use Uuid;
     use Creator;
     use CreatedAt;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     *
+     * @var string
+     */
+    protected $name;
 
     /**
      * @ORM\Column(type="string", nullable=true)
@@ -67,6 +75,16 @@ abstract class AbstractTransferFile implements TransferFileInterface
     public function __construct()
     {
         $this->refreshUuid();
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(?string $name)
+    {
+        $this->name = $name;
     }
 
     public function getAction(): ?string

@@ -1,5 +1,5 @@
 services:
-    Claroline\AnalyticsBundle\Installation\Updater\Updater130101:
+    Claroline\AnalyticsBundle\Installation\Updater\Updater130300:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@logger'

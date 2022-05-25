@@ -20,5 +20,7 @@
     "csv_header": "The first line contains the name of the columns",
     "row_delimiter": "Rows delimiter",
     "col_delimiter": "Columns delimiter",
-    "list_delimiter": "List values delimiter"
+    "list_delimiter": "List values delimiter",
+    "unnamed_import": "Unnamed import",
+    "unnamed_export": "Unnamed export"
 }

@@ -9,7 +9,7 @@ import {MenuSection} from '#/main/app/layout/menu/components/section'
 
 const TransferMenu = (props) =>
   <MenuSection
-    {...omit(props, 'path')}
+    {...omit(props, 'path', 'canImport', 'canExport')}
     title={trans('transfer', {}, 'tools')}
   >
     <Toolbar
@@ -26,7 +26,8 @@ const TransferMenu = (props) =>
           type: LINK_BUTTON,
           icon: 'fa fa-fw fa-plus',
           label: trans('new_import', {}, 'transfer'),
-          target: `${props.path}/import/new`
+          target: `${props.path}/import/new`,
+          displayed: props.canImport
         }, {
           name: 'export-list',
           type: LINK_BUTTON,
@@ -37,7 +38,8 @@ const TransferMenu = (props) =>
           type: LINK_BUTTON,
           icon: 'fa fa-fw fa-plus',
           label: trans('new_export', {}, 'transfer'),
-          target: `${props.path}/export/new`
+          target: `${props.path}/export/new`,
+          displayed: props.canExport
         }
       ]}
       onClick={props.autoClose}
@@ -46,6 +48,8 @@ const TransferMenu = (props) =>
 
 TransferMenu.propTypes = {
   path: T.string,
+  canImport: T.bool.isRequired,
+  canExport: T.bool.isRequired,
 
   // from menu
   opened: T.bool.isRequired,

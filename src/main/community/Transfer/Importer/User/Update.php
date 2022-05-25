@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Transfer\Importer\User;
+namespace Claroline\CommunityBundle\Transfer\Importer\User;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Group;

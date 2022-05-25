@@ -13,6 +13,7 @@ namespace Claroline\TransferBundle\Installation;
 
 use Claroline\InstallationBundle\Additional\AdditionalInstaller as BaseInstaller;
 use Claroline\TransferBundle\Installation\Updater\Updater130300;
+use Claroline\TransferBundle\Installation\Updater\Updater130500;
 
 class ClarolineTransferInstaller extends BaseInstaller
 {
@@ -20,6 +21,7 @@ class ClarolineTransferInstaller extends BaseInstaller
     {
         return [
             '13.3.0' => Updater130300::class,
+            '13.5.0' => Updater130500::class,
         ];
     }
 }

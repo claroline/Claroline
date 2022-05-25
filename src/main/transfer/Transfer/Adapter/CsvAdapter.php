@@ -77,13 +77,13 @@ class CsvAdapter implements AdapterInterface
         return $builder->explainIdentifiers($schemas);
     }
 
-    public function dump(string $fileDest, array $data, array $options, ?bool $append = false): void
+    public function dump(string $fileDest, array $data, ?array $options = [], ?array $extra = [], ?bool $append = false): void
     {
         if (empty($data)) {
             return;
         }
 
-        $headers = !empty($options['headers']) ? $options['headers'] : ArrayUtils::getPropertiesName($data[0]);
+        $headers = !empty($extra['columns']) ? $extra['columns'] : ArrayUtils::getPropertiesName($data[0]);
 
         $fs = new FileSystem();
 

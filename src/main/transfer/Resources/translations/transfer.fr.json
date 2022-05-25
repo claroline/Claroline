@@ -20,5 +20,7 @@
     "csv_header": "La 1ère ligne contient le nom des colonnes",
     "row_delimiter": "Délimiteur de lignes",
     "col_delimiter": "Délimiteur de colonnes",
-    "list_delimiter": "Délimiteur des valeurs dans les listes"
+    "list_delimiter": "Délimiteur des valeurs dans les listes",
+    "unnamed_import": "Import sans nom",
+    "unnamed_export": "Export sans nom"
 }

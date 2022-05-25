@@ -1,5 +1,6 @@
 import {connect} from 'react-redux'
 
+import {hasPermission} from '#/main/app/security'
 import {selectors as toolSelectors} from '#/main/core/tool/store'
 
 import {ExportMain as ExportMainComponent} from '#/main/transfer/tools/transfer/export/components/main'
@@ -9,7 +10,8 @@ const ExportMain = connect(
   state => ({
     path: toolSelectors.path(state),
     contextData: toolSelectors.contextData(state),
-    explanation: selectors.exportExplanation(state)
+    explanation: selectors.exportExplanation(state),
+    canExport: hasPermission('export', toolSelectors.toolData(state))
   }),
   dispatch => ({
     open(exportFileId) {

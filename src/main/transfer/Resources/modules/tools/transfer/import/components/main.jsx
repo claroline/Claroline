@@ -14,7 +14,8 @@ const ImportMain = (props) =>
   <Routes
     path={props.path+'/import'}
     redirect={[
-      {from: '/', exact: true, to: '/new'}
+      {from: '/', exact: true, to: '/new', disabled: !props.canImport},
+      {from: '/', exact: true, to: '/history', disabled: props.canImport}
     ]}
     routes={[
       {
@@ -27,6 +28,7 @@ const ImportMain = (props) =>
         onEnter: (params) => props.open(params.id)
       }, {
         path: '/new',
+        disabled: !props.canImport,
         render: () => (
           <TransferForm
             path={props.path+'/import/new'}
@@ -46,6 +48,7 @@ ImportMain.propTypes = {
   path: T.string.isRequired,
   contextData: T.object,
   explanation: T.object,
+  canImport: T.bool.isRequired,
   open: T.func.isRequired,
   openForm: T.func.isRequired
 }

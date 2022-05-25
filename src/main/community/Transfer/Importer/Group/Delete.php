@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Transfer\Importer\Group;
+namespace Claroline\CommunityBundle\Transfer\Importer\Group;
 
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\TransferBundle\Transfer\Importer\AbstractDeleteImporter;

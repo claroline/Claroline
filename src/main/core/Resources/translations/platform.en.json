@@ -160,7 +160,7 @@
     "creation_date": "Creation date",
     "creator": "Creator",
     "cron_not_configured_msg": "Cron must be configured to use this tool.",
-    "csv": "CSV",
+    "csv": "MS Excel, LibreOffice Calc spreadsheet (.csv)",
     "current_category": "Current category",
     "cut": "Cut",
     "dashboard": "Dashboard",
@@ -1430,5 +1430,6 @@
     "username_enabled_help": "If enabled, users will have a unique identifier that can be used to log in to the platform.",
     "username_disabled_help": "If disabled, the user's email address will be used.",
     "platform_home_none": "None (Displaying the login page)",
-    "platform_home_tool": "Tool (Displaying the platform's home)"
+    "platform_home_tool": "Tool (Displaying the platform's home)",
+    "no_title": "No title"
 }
