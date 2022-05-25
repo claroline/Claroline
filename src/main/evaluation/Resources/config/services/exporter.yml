@@ -1,9 +1,12 @@
 services:
-    _defaults:
-        tags: [claroline.transfer.exporter]
+    Claroline\EvaluationBundle\Transfer\Exporter\AbstractEvaluationListExporter:
+        parent: Claroline\TransferBundle\Transfer\Exporter\AbstractListExporter
+        abstract: true
 
     Claroline\EvaluationBundle\Transfer\Exporter\ResourceEvaluationListExporter:
-        parent: Claroline\TransferBundle\Transfer\Exporter\AbstractListExporter
+        parent: Claroline\EvaluationBundle\Transfer\Exporter\AbstractEvaluationListExporter
+        tags: [claroline.transfer.exporter]
 
     Claroline\EvaluationBundle\Transfer\Exporter\WorkspaceEvaluationListExporter:
-        parent: Claroline\TransferBundle\Transfer\Exporter\AbstractListExporter
+        parent: Claroline\EvaluationBundle\Transfer\Exporter\AbstractEvaluationListExporter
+        tags: [claroline.transfer.exporter]

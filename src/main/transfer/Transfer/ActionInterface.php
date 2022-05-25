@@ -8,6 +8,8 @@ interface ActionInterface
 
     public function supports(string $format, ?array $options = [], ?array $extra = []): bool;
 
+    public function getSchema(?array $options = [], ?array $extra = []): array;
+
     public function getExtraDefinition(?array $options = [], ?array $extra = []): array;
 
     /**

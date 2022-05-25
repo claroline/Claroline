@@ -40,7 +40,7 @@ abstract class AbstractLog
      */
     protected $event;
 
-    public function getDate(): \DateTimeInterface
+    public function getDate(): ?\DateTimeInterface
     {
         return $this->date;
     }
@@ -52,7 +52,7 @@ abstract class AbstractLog
         return $this;
     }
 
-    public function getDetails(): string
+    public function getDetails(): ?string
     {
         return $this->details;
     }
@@ -64,7 +64,7 @@ abstract class AbstractLog
         return $this;
     }
 
-    public function getEvent(): string
+    public function getEvent(): ?string
     {
         return $this->event;
     }

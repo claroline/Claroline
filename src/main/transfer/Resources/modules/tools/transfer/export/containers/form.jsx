@@ -4,7 +4,7 @@ import isEmpty from 'lodash/isEmpty'
 import {withRouter} from '#/main/app/router'
 import {param} from '#/main/app/config'
 import {selectors as toolSelectors} from '#/main/core/tool/store'
-import {actions as formActions} from '#/main/app/content/form/store'
+import {actions as formActions, selectors as formSelectors} from '#/main/app/content/form/store'
 
 import {actions, selectors} from '#/main/transfer/tools/transfer/export/store'
 import {ExportForm as ExportFormComponent} from '#/main/transfer/tools/transfer/export/components/form'
@@ -14,7 +14,9 @@ const ExportForm = withRouter(
     (state) => ({
       path: toolSelectors.path(state),
       explanation: selectors.exportExplanation(state),
-      schedulerEnabled: param('schedulerEnabled')
+      schedulerEnabled: param('schedulerEnabled'),
+      formData: formSelectors.data(formSelectors.form(state, selectors.STORE_NAME + '.form')),
+      isNew: formSelectors.isNew(formSelectors.form(state, selectors.STORE_NAME + '.form'))
     }),
     (dispatch) =>({
       updateProp(prop, value) {

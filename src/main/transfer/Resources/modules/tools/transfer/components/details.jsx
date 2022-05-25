@@ -5,13 +5,12 @@ import isEmpty from 'lodash/isEmpty'
 import get from 'lodash/get'
 
 import {displayDate, trans} from '#/main/app/intl'
-import {Button} from '#/main/app/action/components/button'
-import {URL_BUTTON} from '#/main/app/buttons'
 import {ContentLoader} from '#/main/app/content/components/loader'
 import {UserMicro} from '#/main/core/user/components/micro'
 import {ToolPage} from '#/main/core/tool/containers/page'
 
 import {transAction} from '#/main/transfer/utils'
+import {Toolbar} from '#/main/app/action'
 
 const TransferDetails = props => {
   if (isEmpty(props.transferFile)) {
@@ -37,7 +36,7 @@ const TransferDetails = props => {
             {trans(props.transferFile.status)}
           </span>
 
-          {transAction(props.transferFile.action)}
+          {props.transferFile.name || transAction(props.transferFile.action)}
         </Fragment>
       }
     >
@@ -47,7 +46,13 @@ const TransferDetails = props => {
             <div className="panel-heading">
               <UserMicro {...get(props.transferFile, 'meta.creator', {})} link={true} />
             </div>
+
             <ul className="list-group list-group-values">
+              <li className="list-group-item">
+                {trans('action')}
+                <span className="value">{transAction(props.transferFile.action)}</span>
+              </li>
+
               <li className="list-group-item">
                 {trans('creation_date')}
                 <span className="value">{displayDate(get(props.transferFile, 'meta.createdAt'), false, true)}</span>
@@ -71,13 +76,9 @@ const TransferDetails = props => {
             </ul>
           </div>
 
-          <Button
-            className="btn btn-block btn-emphasis component-container"
-            type={URL_BUTTON}
-            label={trans('download', {}, 'actions')}
-            target={props.downloadUrl}
-            primary={true}
-            disabled={!props.downloadUrl}
+          <Toolbar
+            buttonName="btn btn-block"
+            actions={props.actions}
           />
         </div>
 
@@ -91,13 +92,14 @@ const TransferDetails = props => {
 
 TransferDetails.propTypes = {
   transferFile: T.shape({
+    name: T.string,
     action: T.string,
     status: T.string.isRequired,
     scheduler: T.shape({
       scheduledDate: T.string.isRequired
     })
   }),
-  downloadUrl: T.string,
+  actions: T.arrayOf(T.object),
   children: T.any
 }
 

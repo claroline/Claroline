@@ -66,7 +66,9 @@ class ImportProvider extends AbstractProvider
 
         $jsonSchema = null;
         if (array_key_exists('$root', $schema)) {
-            $jsonSchema = $this->schema->getSchema($schema['$root']);
+            if (is_string($schema['$root'])) {
+                $jsonSchema = $this->schema->getSchema($schema['$root']);
+            }
 
             // if we didn't find any but root it's set, it means that is custom and already defined
             if (empty($jsonSchema)) {
@@ -205,14 +207,6 @@ class ImportProvider extends AbstractProvider
         return $jsonLogger->get();
     }
 
-    public function explainAction(string $actionName, string $format, array $options = [], array $extra = [])
-    {
-        $action = $this->getAction($actionName);
-        $schema = $this->getExplanation($actionName, $format, $options, $extra);
-
-        return (object) array_merge((array) $schema, $action->getExtraDefinition($options, $extra));
-    }
-
     /**
      * Returns a list of available importers for a given format (mime type).
      */
@@ -272,6 +266,14 @@ class ImportProvider extends AbstractProvider
         return null;
     }
 
+    private function explainAction(string $actionName, string $format, array $options = [], array $extra = [])
+    {
+        $action = $this->getAction($actionName);
+        $schema = $this->getExplanation($actionName, $format, $options, $extra);
+
+        return (object) array_merge((array) $schema, $action->getExtraDefinition($options, $extra));
+    }
+
     private function getExplanation(string $actionName, string $format, array $options = [], array $extra = [])
     {
         $adapter = $this->getAdapter($format);
@@ -279,9 +281,11 @@ class ImportProvider extends AbstractProvider
         $schema = $action->getSchema($options, $extra);
 
         if (array_key_exists('$root', $schema)) {
-            $jsonSchema = $this->schema->getSchema($schema['$root']);
-            if ($jsonSchema) {
-                return $adapter->explainSchema($jsonSchema, $action->getMode());
+            if (is_string($schema['$root'])) {
+                $jsonSchema = $this->schema->getSchema($schema['$root']);
+                if ($jsonSchema) {
+                    return $adapter->explainSchema($jsonSchema, $action->getMode());
+                }
             }
 
             return $adapter->explainSchema($schema['$root'], $action->getMode());

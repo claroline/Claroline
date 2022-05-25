@@ -3,7 +3,6 @@
 namespace Claroline\CoreBundle\API\Serializer\User;
 
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
-use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Organization\Organization;
@@ -13,11 +12,13 @@ class GroupSerializer
 {
     use SerializerTrait;
 
-    /**
-     * GroupSerializer constructor.
-     *
-     * @param SerializerProvider $serializer
-     */
+    /** @var ObjectManager */
+    private $om;
+    /** @var OrganizationSerializer */
+    private $organizationSerializer;
+    /** @var RoleSerializer */
+    private $roleSerializer;
+
     public function __construct(
         ObjectManager $om,
         OrganizationSerializer $organizationSerializer,
@@ -28,22 +29,30 @@ class GroupSerializer
         $this->roleSerializer = $roleSerializer;
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return Group::class;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'group';
     }
 
+    public function getSchema(): string
+    {
+        return '#/main/core/group.json';
+    }
+
+    public function getSamples(): string
+    {
+        return '#/main/core/group';
+    }
+
     /**
      * Serializes a Group entity.
-     *
-     * @return array
      */
-    public function serialize(Group $group, array $options = [])
+    public function serialize(Group $group, array $options = []): array
     {
         return [
             'id' => $group->getUuid(),
@@ -59,13 +68,8 @@ class GroupSerializer
 
     /**
      * Deserializes data into a Group entity.
-     *
-     * @param \stdClass $data
-     * @param Group     $group
-     *
-     * @return Group
      */
-    public function deserialize($data, Group $group = null, array $options = [])
+    public function deserialize(array $data, Group $group, ?array $options = []): Group
     {
         $this->sipe('name', 'setName', $data, $group);
 
@@ -77,30 +81,18 @@ class GroupSerializer
             );
         }
 
-        //only add role here. If we want to remove them, use the crud remove method instead
-        //it's usefull if we want to create a user with a list of roles
+        // only add role here. If we want to remove them, use the crud remove method instead
+        // it's useful if we want to create a user with a list of roles
         if (isset($data['roles'])) {
-            foreach ($data['roles'] as $role) {
-                $role = $this->om->getObject($role, Role::class);
-                if ($role && $role->getId()) {
+            foreach ($data['roles'] as $roleData) {
+                /** @var Role $role */
+                $role = $this->om->getObject($roleData, Role::class);
+                if ($role) {
                     $group->addRole($role);
                 }
             }
         }
 
         return $group;
-    }
-
-    public function getSchema()
-    {
-        return '#/main/core/group.json';
-    }
-
-    /**
-     * @return string
-     */
-    public function getSamples()
-    {
-        return '#/main/core/group';
     }
 }

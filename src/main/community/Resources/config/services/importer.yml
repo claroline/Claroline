@@ -1,0 +1,58 @@
+services:
+    _defaults:
+        tags: [claroline.transfer.importer]
+
+    # Groups
+    Claroline\CommunityBundle\Transfer\Importer\Group\Create:
+        parent: Claroline\TransferBundle\Transfer\Importer\AbstractCreateImporter
+
+    Claroline\CommunityBundle\Transfer\Importer\Group\CreateOrUpdate:
+        parent: Claroline\TransferBundle\Transfer\Importer\AbstractCreateOrUpdateImporter
+
+    Claroline\CommunityBundle\Transfer\Importer\Group\Update:
+        parent: Claroline\TransferBundle\Transfer\Importer\AbstractUpdateImporter
+
+    Claroline\CommunityBundle\Transfer\Importer\Group\Delete:
+        parent: Claroline\TransferBundle\Transfer\Importer\AbstractDeleteImporter
+
+    Claroline\CommunityBundle\Transfer\Importer\Group\AddUser:
+        arguments:
+            - '@Claroline\AppBundle\API\Crud'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+
+    Claroline\CommunityBundle\Transfer\Importer\Group\RemoveUser:
+        arguments:
+            - '@Claroline\AppBundle\API\Crud'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+
+    # Users
+    Claroline\CommunityBundle\Transfer\Importer\User\Create:
+        arguments:
+            - '@Claroline\AppBundle\API\Crud'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+
+    Claroline\CommunityBundle\Transfer\Importer\User\CreateOrUpdate:
+        parent: Claroline\TransferBundle\Transfer\Importer\AbstractCreateOrUpdateImporter
+
+    Claroline\CommunityBundle\Transfer\Importer\User\Delete:
+        parent: Claroline\TransferBundle\Transfer\Importer\AbstractDeleteImporter
+
+    Claroline\CommunityBundle\Transfer\Importer\User\Update:
+        parent: Claroline\TransferBundle\Transfer\Importer\AbstractUpdateImporter
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+
+    Claroline\CommunityBundle\Transfer\Importer\User\Enable:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\Manager\UserManager'
+
+    Claroline\CommunityBundle\Transfer\Importer\User\Disable:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\Manager\UserManager'
+
+    Claroline\CommunityBundle\Transfer\Importer\User\SetMainOrganization:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\Crud'

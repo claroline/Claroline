@@ -1,4 +1,5 @@
 {
   "import": "Importer",
-  "export": "Exporter"
+  "export": "Exporter",
+  "refresh-data": "Rafraîchir les données"
 }

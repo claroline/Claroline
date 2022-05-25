@@ -34,6 +34,7 @@ class ImportForm extends Component {
         name: 'action',
         type: 'choice',
         label: trans('action'),
+        disabled: !props.isNew,
         onChange: (value) => {
           let action = ''
           if (value) {
@@ -54,52 +55,14 @@ class ImportForm extends Component {
           }), {})
         }
       }, {
+        name: 'name',
+        type: 'string',
+        label: trans('name')
+      }, {
         name: 'file',
         type: 'file',
         label: trans('file'),
         required: true
-      }, {
-        name: 'format',
-        type: 'choice',
-        label: trans('format'),
-        required: true,
-        options: {
-          noEmpty: true,
-          choices: {
-            csv: trans('csv')
-          }
-        },
-        linked: [
-          {
-            name: 'header',
-            type: 'boolean',
-            label: trans('csv_header', {}, 'transfer'),
-            required: true,
-            disabled: true,
-            calculated: () => true
-          }, {
-            name: 'rowDelimiter',
-            type: 'string',
-            label: trans('row_delimiter', {}, 'transfer'),
-            required: true,
-            disabled: true,
-            calculated: () => '\\n'
-          }, {
-            name: 'columnDelimiter',
-            type: 'string',
-            label: trans('col_delimiter', {}, 'transfer'),
-            required: true,
-            disabled: true,
-            calculated: () => ';'
-          }, {
-            name: 'arrayDelimiter',
-            type: 'string',
-            label: trans('list_delimiter', {}, 'transfer'),
-            required: true,
-            disabled: true,
-            calculated: () => ','
-          }
-        ]
       }
     ]
 
@@ -135,6 +98,55 @@ class ImportForm extends Component {
               name: 'extra.'+field.name,
               linked: field.linked ? field.linked.map(linked => merge({}, linked, {name: 'extra.'+linked.name})) : []
             })))
+          }, {
+            title: trans('format'),
+            icon: 'fa fa-fw fa-file',
+            fields: [
+              {
+                name: 'format',
+                type: 'choice',
+                label: trans('format'),
+                required: true,
+                hideLabel: true,
+                options: {
+                  noEmpty: true,
+                  choices: {
+                    csv: trans('csv')
+                  }
+                },
+                linked: [
+                  {
+                    name: 'header',
+                    type: 'boolean',
+                    label: trans('csv_header', {}, 'transfer'),
+                    required: true,
+                    disabled: true,
+                    calculated: () => true
+                  }, {
+                    name: 'rowDelimiter',
+                    type: 'string',
+                    label: trans('row_delimiter', {}, 'transfer'),
+                    required: true,
+                    disabled: true,
+                    calculated: () => '\\n'
+                  }, {
+                    name: 'columnDelimiter',
+                    type: 'string',
+                    label: trans('col_delimiter', {}, 'transfer'),
+                    required: true,
+                    disabled: true,
+                    calculated: () => ';'
+                  }, {
+                    name: 'arrayDelimiter',
+                    type: 'string',
+                    label: trans('list_delimiter', {}, 'transfer'),
+                    required: true,
+                    disabled: true,
+                    calculated: () => ','
+                  }
+                ]
+              }
+            ]
           }, {
             title: trans('planing', {}, 'scheduler'),
             icon: 'fa fa-fw fa-clock',
@@ -247,6 +259,7 @@ ImportForm.propTypes = {
   schedulerEnabled: T.bool,
   explanation: T.object.isRequired,
   samples: T.object.isRequired,
+  isNew: T.bool.isRequired,
 
   save: T.func.isRequired,
   updateProp: T.func.isRequired

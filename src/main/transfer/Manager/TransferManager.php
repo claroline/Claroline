@@ -130,6 +130,13 @@ class TransferManager
 
     public function export(ExportFile $exportFile): string
     {
+        $fs = new FileSystem();
+
+        $exportPath = $this->fileManager->getDirectory().'/transfer'.'/'.$exportFile->getUuid();
+        if ($fs->exists($exportPath)) {
+            $fs->remove($exportPath);
+        }
+
         try {
             $extra = $exportFile->getExtra() ?? [];
             $options = [];
@@ -138,8 +145,7 @@ class TransferManager
                 $extra['workspace'] = $this->serializer->serialize($exportFile->getWorkspace(), [Options::SERIALIZE_MINIMAL]);
             }
 
-            $fs = new FileSystem();
-            $fs->touch($this->fileManager->getDirectory().'/transfer'.'/'.$exportFile->getUuid());
+            $fs->touch($exportPath);
 
             $this->exporter->execute(
                 $this->fileManager->getDirectory().'/transfer'.'/'.$exportFile->getUuid(),

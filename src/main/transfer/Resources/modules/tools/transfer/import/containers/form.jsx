@@ -4,7 +4,7 @@ import isEmpty from 'lodash/isEmpty'
 import {withRouter} from '#/main/app/router'
 import {param} from '#/main/app/config'
 import {selectors as toolSelectors} from '#/main/core/tool/store'
-import {actions as formActions} from '#/main/app/content/form/store'
+import {actions as formActions, selectors as formSelectors} from '#/main/app/content/form/store'
 
 import {ImportForm as ImportFormComponent} from '#/main/transfer/tools/transfer/import/components/form'
 import {actions, selectors} from '#/main/transfer/tools/transfer/import/store'
@@ -15,7 +15,8 @@ const ImportForm = withRouter(
       path: toolSelectors.path(state),
       explanation: selectors.importExplanation(state),
       samples: selectors.importSamples(state),
-      schedulerEnabled: param('schedulerEnabled')
+      schedulerEnabled: param('schedulerEnabled'),
+      isNew: formSelectors.isNew(formSelectors.form(state, selectors.STORE_NAME + '.form'))
     }),
     (dispatch) =>({
       updateProp(prop, value) {

@@ -1,6 +1,7 @@
 import {trans} from '#/main/app/intl/translation'
 
 import {BadgeDisplay} from '#/plugin/open-badge/data/types/badge/components/display'
+import {BadgeFilter} from '#/plugin/open-badge/data/types/badge/components/filter'
 import {BadgeInput} from '#/plugin/open-badge/data/types/badge/components/input'
 
 const dataType = {
@@ -13,7 +14,8 @@ const dataType = {
   },
   components: {
     details: BadgeDisplay,
-    input: BadgeInput
+    input: BadgeInput,
+    search: BadgeFilter
   }
 }
 

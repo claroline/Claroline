@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, {Component, Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 
@@ -7,12 +7,19 @@ import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 
 import {selectors} from '#/main/transfer/tools/transfer/export/store'
+import {ExportExplanation} from '#/main/transfer/tools/transfer/export/components/explanation'
+import merge from 'lodash/merge'
+import {Button} from '#/main/app/action'
 
 const isScheduled = (data) => get(data, 'scheduler._enable') || get(data, 'scheduler.scheduledDate')
 
 class ExportForm extends Component {
   constructor(props) {
     super(props)
+
+    this.state = {
+      currentSection: 'format'
+    }
   }
 
   render() {
@@ -26,11 +33,15 @@ class ExportForm extends Component {
         name: 'action',
         type: 'choice',
         label: trans('action'),
+        disabled: !props.isNew,
         onChange: (value) => {
           let action = ''
           if (value) {
             action = value.substring(value.indexOf('_') + 1)
           }
+
+          // extra data is specific to the selected action, reset it to avoid saving wrong data
+          props.updateProp('extra', null)
 
           props.history.push(`${this.props.path}/export/new/${entity}/${action}`)
         },
@@ -43,47 +54,9 @@ class ExportForm extends Component {
           }), {})
         }
       }, {
-        name: 'format',
-        type: 'choice',
-        label: trans('format'),
-        required: true,
-        options: {
-          noEmpty: true,
-          choices: {
-            csv: trans('csv')
-          }
-        },
-        linked: [
-          {
-            name: 'header',
-            type: 'boolean',
-            label: trans('csv_header', {}, 'transfer'),
-            required: true,
-            disabled: true,
-            calculated: () => true
-          }, {
-            name: 'rowDelimiter',
-            type: 'string',
-            label: trans('row_delimiter', {}, 'transfer'),
-            required: true,
-            disabled: true,
-            calculated: () => '\\n'
-          }, {
-            name: 'columnDelimiter',
-            type: 'string',
-            label: trans('col_delimiter', {}, 'transfer'),
-            required: true,
-            disabled: true,
-            calculated: () => ';'
-          }, {
-            name: 'arrayDelimiter',
-            type: 'string',
-            label: trans('list_delimiter', {}, 'transfer'),
-            required: true,
-            disabled: true,
-            calculated: () => ','
-          }
-        ]
+        name: 'name',
+        type: 'string',
+        label: trans('name')
       }
     ]
 
@@ -114,7 +87,59 @@ class ExportForm extends Component {
           {
             title: trans('general'),
             primary: true,
-            fields: defaultFields.concat(additionalFields)
+            fields: defaultFields.concat(additionalFields.map(field => merge({}, field, {
+              name: 'extra.'+field.name,
+              linked: field.linked ? field.linked.map(linked => merge({}, linked, {name: 'extra.'+linked.name})) : []
+            })))
+          }, {
+            title: trans('format'),
+            icon: 'fa fa-fw fa-file',
+            fields: [
+              {
+                name: 'format',
+                type: 'choice',
+                label: trans('format'),
+                required: true,
+                hideLabel: true,
+                options: {
+                  noEmpty: true,
+                  choices: {
+                    csv: trans('csv')
+                  }
+                },
+                linked: [
+                  {
+                    name: 'header',
+                    type: 'boolean',
+                    label: trans('csv_header', {}, 'transfer'),
+                    required: true,
+                    disabled: true,
+                    calculated: () => true
+                  }, {
+                    name: 'rowDelimiter',
+                    type: 'string',
+                    label: trans('row_delimiter', {}, 'transfer'),
+                    required: true,
+                    disabled: true,
+                    calculated: () => '\\n'
+                  }, {
+                    name: 'columnDelimiter',
+                    type: 'string',
+                    label: trans('col_delimiter', {}, 'transfer'),
+                    required: true,
+                    disabled: true,
+                    calculated: () => ';'
+                  }, {
+                    name: 'arrayDelimiter',
+                    type: 'string',
+                    label: trans('list_delimiter', {}, 'transfer'),
+                    required: true,
+                    disabled: true,
+                    calculated: () => ','
+                  }
+                ]
+              }
+            ]
           }, {
             title: trans('planing', {}, 'scheduler'),
             icon: 'fa fa-fw fa-clock',
@@ -174,7 +199,28 @@ class ExportForm extends Component {
             ]
           }
         ]}
-      />
+      >
+        {action &&
+          <Fragment>
+            <ul className="nav nav-tabs">
+              <li>
+                <Button
+                  type={CALLBACK_BUTTON}
+                  label={trans('format')}
+                  callback={() => this.setState({currentSection: 'format'})}
+                  active={'format' === this.state.currentSection}
+                />
+              </li>
+            </ul>
+
+            <ExportExplanation
+              schema={get(this.props.explanation, entity + '.' + action, {})}
+              columns={get(props.formData, 'extra.columns', [])}
+              update={(selectedColumns) => props.updateProp('extra.columns', selectedColumns)}
+            />
+          </Fragment>
+        }
+      </FormData>
     )
   }
 }
@@ -189,6 +235,8 @@ ExportForm.propTypes = {
     params: T.object.isRequired
   }).isRequired,
   explanation: T.object.isRequired,
+  isNew: T.bool.isRequired,
+  formData: T.object,
 
   save: T.func.isRequired,
   updateProp: T.func.isRequired

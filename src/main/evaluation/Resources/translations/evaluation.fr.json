@@ -8,5 +8,15 @@
   "users_progression": "Progression des utilisateurs",
   "workspace_requirements_help_title": "Vous pouvez définir ici les ressources devant être faites dans l'espace d'activités.",
   "workspace_requirements_help_description": "Seules les ressources à faire sont utilisées pour calculer la progression des utilisateurs dans l'espace d'activités.",
-  "initialize_evaluations": "Initialiser les évaluations"
+  "initialize_evaluations": "Initialiser les évaluations",
+
+  "evaluation_not_attempted_status": "Vous n'avez pas commencé l'évaluation.",
+  "evaluation_todo_status": "Vous devez faire cette évaluation.",
+  "evaluation_unknown_status": "Nous ne connaissons pas votre progression dans cette évaluation.",
+  "evaluation_opened_status": "Vous avez ouvert l'évaluation.",
+  "evaluation_incomplete_status": "Vous n'avez pas terminé lévaluation.",
+  "evaluation_participated_status": "Vous avez participé à l'évaluation.",
+  "evaluation_failed_status": "Vous n'avez pas réussi l'évaluation.",
+  "evaluation_completed_status": "Vous avez terminé l'évaluation.",
+  "evaluation_passed_status": "Vous avez réussi l'évaluation."
 }

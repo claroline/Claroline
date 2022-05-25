@@ -13,11 +13,14 @@ use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\SchedulerBundle\Entity\ScheduledTask;
 use Claroline\SchedulerBundle\Serializer\ScheduledTaskSerializer;
 use Claroline\TransferBundle\Entity\ExportFile;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class ExportFileSerializer
 {
     use SerializerTrait;
 
+    /** @var AuthorizationCheckerInterface */
+    private $authorization;
     /** @var ObjectManager */
     private $om;
     /** @var UserSerializer */
@@ -28,11 +31,13 @@ class ExportFileSerializer
     private $scheduledTaskSerializer;
 
     public function __construct(
+        AuthorizationCheckerInterface $authorization,
         ObjectManager $om,
         UserSerializer $userSerializer,
         WorkspaceSerializer $workspaceSerializer,
         ScheduledTaskSerializer $scheduledTaskSerializer
     ) {
+        $this->authorization = $authorization;
         $this->om = $om;
         $this->userSerializer = $userSerializer;
         $this->workspaceSerializer = $workspaceSerializer;
@@ -54,12 +59,17 @@ class ExportFileSerializer
     {
         $data = [
             'id' => $file->getUuid(),
+            'name' => $file->getName(),
             'action' => $file->getAction(),
             'format' => $file->getFormat(),
             'status' => $file->getStatus(),
             'meta' => [
                 'createdAt' => DateNormalizer::normalize($file->getCreatedAt()),
                 'creator' => $file->getCreator() ? $this->userSerializer->serialize($file->getCreator(), [Options::SERIALIZE_MINIMAL]) : null,
+            ],
+            'permissions' => [
+                'edit' => $this->authorization->isGranted('EDIT', $file),
+                'delete' => $this->authorization->isGranted('DELETE', $file),
             ],
             'executionDate' => DateNormalizer::normalize($file->getExecutionDate()),
         ];
@@ -83,6 +93,7 @@ class ExportFileSerializer
 
     public function deserialize(array $data, ExportFile $file, array $options = []): ExportFile
     {
+        $this->sipe('name', 'setName', $data, $file);
         $this->sipe('action', 'setAction', $data, $file);
         $this->sipe('format', 'setFormat', $data, $file);
         $this->sipe('status', 'setStatus', $data, $file);

@@ -17,7 +17,7 @@ class ExportProvider extends AbstractProvider
         $i = 0;
         do {
             $data = $executor->execute($i, $options, $extra);
-            $adapter->dump($fileDest, $data, $options, 0 !== $i);
+            $adapter->dump($fileDest, $data, $options, $extra, 0 !== $i);
 
             ++$i;
         } while (!empty($data));
@@ -34,8 +34,12 @@ class ExportProvider extends AbstractProvider
 
         $available = [];
         foreach ($supportedActions as $action) {
-            $schema = $action->getAction();
-            $available[$schema[0]][$schema[1]] = $action->getExtraDefinition($options, $extra);
+            $actionDef = $action->getAction();
+
+            $available[$actionDef[0]][$actionDef[1]] = array_merge(
+                $action->getSchema($options, $extra),
+                $action->getExtraDefinition($options, $extra)
+            );
         }
 
         return $available;

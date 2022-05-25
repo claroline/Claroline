@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Transfer\Importer\Group;
+namespace Claroline\CommunityBundle\Transfer\Importer\Group;
 
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Persistence\ObjectManager;
@@ -8,16 +8,13 @@ use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\TransferBundle\Transfer\Importer\AbstractImporter;
 
-class AddUser extends AbstractImporter
+class RemoveUser extends AbstractImporter
 {
     /** @var Crud */
     private $crud;
     /** @var ObjectManager */
     private $om;
 
-    /**
-     * AddUser constructor.
-     */
     public function __construct(Crud $crud, ObjectManager $om)
     {
         $this->crud = $crud;
@@ -28,23 +25,16 @@ class AddUser extends AbstractImporter
     {
         /** @var User $user */
         $user = $this->om->getObject($data['user'], User::class, array_keys($data['user']));
-        if (!$user) {
-            throw new \Exception('User does not exists');
-        }
-
         /** @var Group $group */
         $group = $this->om->getObject($data['group'], Group::class, array_keys($data['group']));
-        if (!$group) {
-            throw new \Exception('Group does not exists');
-        }
 
-        if (!$user->hasGroup($group)) {
-            $this->crud->patch($group, 'user', 'add', [$user]);
+        if ($user && $group && $user->hasGroup($group)) {
+            $this->crud->patch($user, 'group', 'remove', [$group]);
 
             return [
-                'add_user' => [[
+                'remove_user' => [[
                     'data' => $data,
-                    'log' => 'user registered to group.',
+                    'log' => 'user removed from group.',
                 ]],
             ];
         }
@@ -65,6 +55,6 @@ class AddUser extends AbstractImporter
      */
     public function getAction(): array
     {
-        return ['group', 'add_user'];
+        return ['group', 'remove_user'];
     }
 }

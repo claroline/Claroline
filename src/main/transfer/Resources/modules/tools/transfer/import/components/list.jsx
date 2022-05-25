@@ -3,6 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import isEmpty from 'lodash/isEmpty'
 
+import {hasPermission} from '#/main/app/security'
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
@@ -26,7 +27,8 @@ const ImportList = props =>
         autoload: true
       }}
       delete={{
-        url: ['apiv2_transfer_import_delete_bulk']
+        url: ['apiv2_transfer_import_delete_bulk'],
+        disabled: (rows) => -1 === rows.findIndex(row => hasPermission('delete', row))
       }}
       definition={[
         {
@@ -54,11 +56,16 @@ const ImportList = props =>
             </span>
           )
         }, {
+          name: 'name',
+          label: trans('name'),
+          displayed: true,
+          primary: true,
+          placeholder: trans('unnamed_import', {}, 'transfer')
+        }, {
           name: 'action',
           type: 'string',
           label: trans('type'),
           calculated: (row) => transAction(row.action),
-          primary: true,
           displayed: true
         }, {
           name: 'format',
