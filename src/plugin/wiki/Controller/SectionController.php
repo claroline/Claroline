@@ -76,22 +76,16 @@ class SectionController
 
     /**
      * @Route("/section/{id}/visible", name="apiv2_wiki_section_set_visibility", methods={"PUT"})
-     * @EXT\ParamConverter(
-     *     "section",
-     *     class="IcapWikiBundle:Section",
-     *     options={"mapping": {"id": "uuid"}}
-     * )
-     *
-     * @return JsonResponse
+     * @EXT\ParamConverter("section", class="Icap\WikiBundle\Entity\Section", options={"mapping": {"id": "uuid"}})
      */
-    public function setVisibilityAction(Section $section, Request $request)
+    public function setVisibilityAction(Section $section, Request $request): JsonResponse
     {
         $resourceNode = $section->getWiki()->getResourceNode();
         $this->checkPermission('EDIT', $resourceNode, [], true);
-        $visible = $request->request->get('visible');
-        if (isset($visible)) {
-            $this->sectionManager->updateSectionVisibility($section, $visible);
-        }
+
+        $content = $this->decodeRequest($request);
+
+        $this->sectionManager->updateSectionVisibility($section, $content['visible'] ?? false);
 
         return new JsonResponse(
             $this->sectionManager->serializeSection($section)
