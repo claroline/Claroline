@@ -29,10 +29,6 @@ class AuthenticationController extends AbstractController
             return $this->redirect($this->generateUrl($this->container->getParameter('lightsaml_sp.route.discovery')));
         }
 
-        // we store idp in session to retrieve it at the end of authentication success
-        // in order to register user to correct groups and organization based on the idp configuration
-        $request->getSession()->set('authIdp', $idpEntityId);
-
         $profile = $this->get('ligthsaml.profile.login_factory')->get($idpEntityId);
         $context = $profile->buildContext();
         $action = $profile->buildAction();
