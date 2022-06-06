@@ -106,6 +106,18 @@ class ResourcesSubscriber implements EventSubscriberInterface
             return;
         }
 
+        $workspace = $event->getWorkspace();
+
+        // manage workspace opening
+        // this is for retro-compatibility, when we have stored the autoincrement id of the resource in the workspace options
+        // when using the UUID, replacement is automatically done in the serialized data
+        $workspaceOptions = $workspace->getOptions()->getDetails();
+        $openingResourceId = null;
+        if ($workspaceOptions && 'resource' === $workspaceOptions['opening_target'] && !empty($workspaceOptions['workspace_opening_resource'])) {
+            // this only works because the WorkspaceSerializer::deserialize does not check if the resource exists
+            $openingResourceId = $workspaceOptions['workspace_opening_resource'];
+        }
+
         foreach ($data['resources'] as $resourceData) {
             // create resource node
             $nodeData = $resourceData['resourceNode'];
@@ -113,7 +125,7 @@ class ResourcesSubscriber implements EventSubscriberInterface
             unset($nodeData['slug']);
 
             $resourceNode = new ResourceNode();
-            $resourceNode->setWorkspace($event->getWorkspace());
+            $resourceNode->setWorkspace($workspace);
             if (!empty($nodeData['parent']) && $event->getCreatedEntity($nodeData['parent']['id'])) {
                 $resourceNode->setParent($event->getCreatedEntity($nodeData['parent']['id']));
             }
@@ -145,8 +157,12 @@ class ResourcesSubscriber implements EventSubscriberInterface
             // create custom resource Entity
             $resourceClass = $resourceNode->getResourceType()->getClass();
 
+            // should be removed. It's only used by quizzes
+            $resSerializer = $this->serializer->get($resourceClass);
+            $resSerializeOptions = method_exists($resSerializer, 'getCopyOptions') ? $resSerializer->getCopyOptions() : [];
+
             /** @var AbstractResource $resource */
-            $resource = $this->crud->create($resourceClass, $resourceData['resource'], [Crud::NO_PERMISSIONS, Crud::NO_VALIDATION, Options::REFRESH_UUID]);
+            $resource = $this->crud->create($resourceClass, $resourceData['resource'], array_merge([Crud::NO_PERMISSIONS, Crud::NO_VALIDATION, Options::REFRESH_UUID], $resSerializeOptions));
             $resource->setResourceNode($resourceNode);
 
             $this->dispatcher->dispatch(
@@ -154,14 +170,21 @@ class ResourcesSubscriber implements EventSubscriberInterface
                 ImportResourceEvent::class,
                 [$resource, $event->getFileBag(), $resourceData]
             );
+
+            // replace workspace opening resource id by the new one
+            // this is for retro-compatibility, when we have stored the autoincrement id of the resource in the workspace options
+            // when using the UUID, replacement is automatically done in the serialized data
+            if (!empty($openingResourceId) && $resourceData['autoId'] === $openingResourceId) {
+                $workspace->getOptions()->setDetails(array_merge($workspaceOptions, [
+                    'workspace_opening_resource' => $resourceNode->getUuid(),
+                ]));
+            }
         }
 
-        // TODO : set workspace opening (not possible now because I don't have access to the full workspace data).
-
         // rename root directory based on the new workspace name
-        $root = $this->resourceRepository->findWorkspaceRoot($event->getWorkspace());
+        $root = $this->resourceRepository->findWorkspaceRoot($workspace);
         if ($root) {
-            $root->setName($event->getWorkspace()->getName());
+            $root->setName($workspace->getName());
             $this->om->persist($root);
         }
 
