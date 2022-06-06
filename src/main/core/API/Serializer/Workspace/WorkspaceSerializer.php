@@ -217,9 +217,7 @@ class WorkspaceSerializer
         }
         if ('resource' === $openingData['type'] && isset($details['workspace_opening_resource']) && $details['workspace_opening_resource']) {
             /** @var ResourceNode $resource */
-            $resource = $this->om
-                ->getRepository(ResourceNode::class)
-                ->findOneBy(['id' => $details['workspace_opening_resource']]);
+            $resource = $this->om->find(ResourceNode::class, $details['workspace_opening_resource']);
 
             if (!empty($resource)) {
                 $openingData['target'] = $this->resNodeSerializer->serialize($resource, [SerializerInterface::SERIALIZE_MINIMAL]);
@@ -399,7 +397,7 @@ class WorkspaceSerializer
             }
         }
 
-        $workspaceOptions = $workspace->getOptions();
+        $workspaceOptions = $this->workspaceManager->getWorkspaceOptions($workspace);
 
         if (isset($data['display']) || isset($data['opening'])) {
             $details = $workspaceOptions->getDetails();
@@ -414,15 +412,15 @@ class WorkspaceSerializer
 
             if (isset($data['opening'])) {
                 $details['hide_tools_menu'] = isset($data['opening']['menu']) ? $data['opening']['menu'] : null;
-                $details['opening_type'] = isset($data['opening']['type']) && isset($data['opening']['target']) && !empty($data['opening']['target']) ?
+                $details['opening_type'] = isset($data['opening']['type']) && !empty($data['opening']['target']) ?
                     $data['opening']['type'] :
                     'tool';
-                $details['opening_target'] = isset($data['opening']['target']) && !empty($data['opening']['target']) ?
+                $details['opening_target'] = !empty($data['opening']['target']) ?
                     $data['opening']['target'] :
                     'home';
 
-                if ('resource' === $data['opening']['type'] && isset($data['opening']['target']['autoId'])) {
-                    $details['workspace_opening_resource'] = $data['opening']['target']['autoId'];
+                if ('resource' === $data['opening']['type'] && isset($data['opening']['target']['id'])) {
+                    $details['workspace_opening_resource'] = $data['opening']['target']['id'];
                     $details['use_workspace_opening_resource'] = true;
                 } else {
                     $details['workspace_opening_resource'] = null;

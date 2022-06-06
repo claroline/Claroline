@@ -52,10 +52,6 @@ const Workspace = {
       model: false,
       personal: false
     },
-    opening: {
-      type: 'tool',
-      target: 'home'
-    },
     display: {
       showProgression: true,
       showMenu: true
