@@ -14,6 +14,8 @@ namespace Claroline\CoreBundle\API\Finder\Tool;
 use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Manager\PluginManager;
+use Claroline\CoreBundle\Manager\Tool\ToolManager;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 
 class ToolFinder extends AbstractFinder
@@ -21,9 +23,6 @@ class ToolFinder extends AbstractFinder
     /** @var PluginManager */
     private $pluginManager;
 
-    /**
-     * ToolFinder constructor.
-     */
     public function __construct(PluginManager $pluginManager)
     {
         $this->pluginManager = $pluginManager;
@@ -51,7 +50,7 @@ class ToolFinder extends AbstractFinder
             switch ($filterName) {
                 case 'user':
                     if (!$otJoin) {
-                        $qb->join('obj.orderedTools', 'ot');
+                        $qb->join('Claroline\\CoreBundle\\Entity\\Tool\\OrderedTool', 'ot', Join::WITH, 'ot.tool = obj');
                         $otJoin = true;
                     }
 
@@ -59,16 +58,18 @@ class ToolFinder extends AbstractFinder
                     break;
                 case 'workspace':
                     if (!$otJoin) {
-                        $qb->join('obj.orderedTools', 'ot');
+                        $qb->join('Claroline\\CoreBundle\\Entity\\Tool\\OrderedTool', 'ot', Join::WITH, 'ot.tool = obj');
                         $otJoin = true;
                     }
                     $qb->join('ot.workspace', 'w');
                     $qb->andWhere("w.uuid = :{$filterName}");
+                    $qb->andWhere('(w.model = false OR obj.name IN (:availableTools))');
                     $qb->setParameter($filterName, $filterValue);
+                    $qb->setParameter('availableTools', ToolManager::WORKSPACE_MODEL_TOOLS);
                     break;
                 case 'roles':
                     if (!$otJoin) {
-                        $qb->join('obj.orderedTools', 'ot');
+                        $qb->join('Claroline\\CoreBundle\\Entity\\Tool\\OrderedTool', 'ot', Join::WITH, 'ot.tool = obj');
                         $otJoin = true;
                     }
                     $qb->join('ot.rights', 'r');
