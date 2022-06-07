@@ -71,23 +71,23 @@ class AssertionListExporter extends AbstractListExporter
                 ],
                 // recipient
                 [
-                    'name' => 'recipient.id',
+                    'name' => 'user.id',
                     'type' => 'string',
                     'description' => $this->translator->trans('The user id', [], 'schema'),
                 ], [
-                    'name' => 'recipient.email',
+                    'name' => 'user.email',
                     'type' => 'string',
                     'description' => $this->translator->trans('The user email address', [], 'schema'),
                 ], [
-                    'name' => 'recipient.username',
+                    'name' => 'user.username',
                     'type' => 'string',
                     'description' => $this->translator->trans('The user username', [], 'schema'),
                 ], [
-                    'name' => 'recipient.firstName',
+                    'name' => 'user.firstName',
                     'type' => 'string',
                     'description' => $this->translator->trans('The user first name', [], 'schema'),
                 ], [
-                    'name' => 'recipient.lastName',
+                    'name' => 'user.lastName',
                     'type' => 'string',
                     'description' => $this->translator->trans('The user last name', [], 'schema'),
                 ],
@@ -103,7 +103,7 @@ class AssertionListExporter extends AbstractListExporter
                 'label' => $this->translator->trans('badge', [], 'badge'),
                 'type' => 'badge',
             ], [
-                'name' => 'recipient',
+                'name' => 'user',
                 'label' => $this->translator->trans('user', [], 'platform'),
                 'type' => 'user',
             ],
