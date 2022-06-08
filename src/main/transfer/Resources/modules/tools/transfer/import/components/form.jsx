@@ -26,8 +26,12 @@ class ImportForm extends Component {
   render() {
     const props = this.props
 
-    const entity = props.match.params.entity
-    const action = props.match.params.action
+    let entity = props.match.params.entity
+    let action = props.match.params.action
+    if (props.formData.action) {
+      entity = props.formData.action.substring(0, props.formData.action.indexOf('_'))
+      action = props.formData.action.substring(props.formData.action.indexOf('_') + 1)
+    }
 
     const defaultFields = [
       {
@@ -62,7 +66,8 @@ class ImportForm extends Component {
         name: 'file',
         type: 'file',
         label: trans('file'),
-        required: true
+        required: true,
+        disabled: !props.isNew
       }
     ]
 
@@ -80,13 +85,13 @@ class ImportForm extends Component {
           type: CALLBACK_BUTTON,
           icon: 'fa fa-fw fa-upload',
           label: trans('import', {}, 'actions'),
-          callback: () => this.props.save().then(importFile =>
+          callback: () => this.props.save(this.props.formData, this.props.isNew).then(importFile =>
             props.history.push(`${this.props.path}/import/history/${importFile.id}`)
           )
         }}
         cancel={{
           type: LINK_BUTTON,
-          target: `${this.props.path}/import/new`,
+          target: props.isNew ? `${this.props.path}/import/new` : `${this.props.path}/import/history/`+this.props.formData.id,
           exact: true
         }}
         sections={[
@@ -259,6 +264,7 @@ ImportForm.propTypes = {
   schedulerEnabled: T.bool,
   explanation: T.object.isRequired,
   samples: T.object.isRequired,
+  formData: T.object,
   isNew: T.bool.isRequired,
 
   save: T.func.isRequired,

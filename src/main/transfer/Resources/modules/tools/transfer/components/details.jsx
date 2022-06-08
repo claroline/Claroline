@@ -5,6 +5,8 @@ import isEmpty from 'lodash/isEmpty'
 import get from 'lodash/get'
 
 import {displayDate, trans} from '#/main/app/intl'
+import {hasPermission} from '#/main/app/security'
+import {LINK_BUTTON} from '#/main/app/buttons'
 import {ContentLoader} from '#/main/app/content/components/loader'
 import {UserMicro} from '#/main/core/user/components/micro'
 import {ToolPage} from '#/main/core/tool/containers/page'
@@ -39,6 +41,20 @@ const TransferDetails = props => {
           {props.transferFile.name || transAction(props.transferFile.action)}
         </Fragment>
       }
+      primaryAction="edit"
+      actions={[
+        {
+          name: 'edit',
+          type: LINK_BUTTON,
+          icon: 'fa fa-fw fa-pencil',
+          label: trans('edit', {}, 'actions'),
+          displayed: hasPermission('edit', props.transferFile),
+          disabled: 'in_progress' === props.transferFile.status,
+          target: props.path+'/edit',
+          primary: true,
+          group: trans('management')
+        }
+      ]}
     >
       <div className="row">
         <div className="col-md-3">
@@ -91,6 +107,7 @@ const TransferDetails = props => {
 }
 
 TransferDetails.propTypes = {
+  path: T.string.isRequired,
   transferFile: T.shape({
     name: T.string,
     action: T.string,

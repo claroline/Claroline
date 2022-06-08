@@ -1,6 +1,6 @@
 import {reducer} from '#/main/transfer/tools/transfer/store'
 import {TransferTool} from '#/main/transfer/tools/transfer/containers/tool'
-import {TransferMenu} from '#/main/transfer/tools/transfer/components/menu'
+import {TransferMenu} from '#/main/transfer/tools/transfer/containers/menu'
 
 /**
  * Transfer tool application.

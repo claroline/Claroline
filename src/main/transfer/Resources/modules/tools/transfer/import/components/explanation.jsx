@@ -89,26 +89,30 @@ class ImportExplanation extends Component {
   }
 
   render() {
-    return (
-      <Fragment>
-        <div className="transfer-schema-filter">
-          {trans('list_filter_by')}
-          <Button
-            type={CALLBACK_BUTTON}
-            className="btn btn-link"
-            label={trans('all' === this.state.columns ? 'schema_all_properties' : 'schema_required_properties', {}, 'transfer')}
-            callback={() => this.setState({columns: 'all' === this.state.columns ? 'required' : 'all'})}
-            primary={true}
-          />
-        </div>
+    if (this.props.schema.properties && 0 !== this.props.schema.properties.length) {
+      return (
+        <Fragment>
+          <div className="transfer-schema-filter">
+            {trans('list_filter_by')}
+            <Button
+              type={CALLBACK_BUTTON}
+              className="btn btn-link"
+              label={trans('all' === this.state.columns ? 'schema_all_properties' : 'schema_required_properties', {}, 'transfer')}
+              callback={() => this.setState({columns: 'all' === this.state.columns ? 'required' : 'all'})}
+              primary={true}
+            />
+          </div>
 
-        <Fields
-          properties={this.props.schema.properties
-            .filter(prop => 'all' === this.state.columns || prop.required)
-          }
-        />
-      </Fragment>
-    )
+          <Fields
+            properties={this.props.schema.properties
+              .filter(prop => 'all' === this.state.columns || prop.required)
+            }
+          />
+        </Fragment>
+      )
+    }
+
+    return null
   }
 }
 

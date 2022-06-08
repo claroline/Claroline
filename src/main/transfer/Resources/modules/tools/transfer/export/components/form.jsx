@@ -25,8 +25,12 @@ class ExportForm extends Component {
   render() {
     const props = this.props
 
-    const entity = props.match.params.entity
-    const action = props.match.params.action
+    let entity = props.match.params.entity
+    let action = props.match.params.action
+    if (props.formData.action) {
+      entity = props.formData.action.substring(0, props.formData.action.indexOf('_'))
+      action = props.formData.action.substring(props.formData.action.indexOf('_') + 1)
+    }
 
     const defaultFields = [
       {
@@ -74,13 +78,13 @@ class ExportForm extends Component {
           type: CALLBACK_BUTTON,
           icon: 'fa fa-fw fa-download',
           label: trans('export', {}, 'actions'),
-          callback: () => this.props.save().then(exportFile =>
+          callback: () => this.props.save(props.formData, props.isNew).then(exportFile =>
             props.history.push(`${this.props.path}/export/history/${exportFile.id}`)
           )
         }}
         cancel={{
           type: LINK_BUTTON,
-          target: `${this.props.path}/export/new`,
+          target: this.props.isNew ? `${this.props.path}/export/new` : `${this.props.path}/export/history/`+this.props.formData.id,
           exact: true
         }}
         sections={[
