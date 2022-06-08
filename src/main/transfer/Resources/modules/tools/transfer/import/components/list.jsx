@@ -106,6 +106,19 @@ const ImportList = props =>
           sortable: false
         }
       ]}
+      actions={(rows) => [
+        {
+          name: 'edit',
+          type: LINK_BUTTON,
+          icon: 'fa fa-fw fa-pencil',
+          label: trans('edit', {}, 'actions'),
+          displayed: hasPermission('edit', rows[0]),
+          disabled: 'in_progress' === rows[0].status,
+          target: props.path+'/import/history/'+rows[0].id+'/edit',
+          group: trans('management'),
+          scope: ['object']
+        }
+      ]}
     />
   </ToolPage>
 

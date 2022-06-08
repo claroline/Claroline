@@ -22,10 +22,10 @@ const ExportForm = withRouter(
       updateProp(prop, value) {
         dispatch(formActions.updateProp(selectors.STORE_NAME + '.form', prop, value))
       },
-      save() {
-        return dispatch(formActions.saveForm(selectors.STORE_NAME + '.form', ['apiv2_transfer_export_create'])).then(response => {
+      save(formData, isNew = false) {
+        return dispatch(formActions.saveForm(selectors.STORE_NAME + '.form', isNew ? ['apiv2_transfer_export_create'] : ['apiv2_transfer_export_update', {id: formData.id}])).then(response => {
           // request execution for the created export
-          if (isEmpty(response.scheduler)) {
+          if (isNew && isEmpty(response.scheduler)) {
             return dispatch(actions.execute(response.id)).then(() => response)
           }
 
