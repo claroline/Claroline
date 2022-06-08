@@ -1,7 +1,7 @@
 Améliorations de l'import / export :
  - Déplacement de l'outil de l'administration vers le bureau
- - Ajout de droits (import et exporter)
- - Possibilité de donner un nom à vos export
+ - Ajout de droits (importer et exporter)
+ - Possibilité de donner un nom à vos exports et imports
  - Possibilité de rejouer un export
  - Possibilité de paramétrer des filtres avant l'export
  - Possibilité de paramétrer les colonnes de l'export
