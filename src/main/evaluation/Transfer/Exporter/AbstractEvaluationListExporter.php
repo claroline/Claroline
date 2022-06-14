@@ -121,6 +121,17 @@ abstract class AbstractEvaluationListExporter extends AbstractListExporter
 
     protected function getAvailableSortBy(): array
     {
-        return [];
+        return [
+            [
+                'name' => 'user.lastName',
+                'label' => $this->translator->trans('last_name', [], 'platform'),
+            ], [
+                'name' => 'user.firstName',
+                'label' => $this->translator->trans('first_name', [], 'platform'),
+            ], [
+                'name' => 'date',
+                'label' => $this->translator->trans('last_modification', [], 'platform'),
+            ],
+        ];
     }
 }

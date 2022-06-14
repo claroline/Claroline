@@ -90,10 +90,17 @@ class WorkspaceEvaluationFinder extends AbstractFinder
 
             switch ($sortByProperty) {
                 case 'user':
+                case 'user.lastName':
                     if (!$userJoin) {
                         $qb->join('obj.user', 'u');
                     }
                     $qb->orderBy('u.lastName', $sortByDirection);
+                    break;
+                case 'user.firstName':
+                    if (!$userJoin) {
+                        $qb->join('obj.user', 'u');
+                    }
+                    $qb->orderBy('u.firstName', $sortByDirection);
                     break;
                 case 'workspace':
                     if (!$workspaceJoin) {
