@@ -25,3 +25,4 @@ Amélioration du suivi pédagogique :
 Améliorations diverses :
   - Nouveaux types d'onglets "outils" permettant de pointer vers un outil de l'espace d'activité (et l'outil s'adapte lors de la copie)
   - Possibilité de cacher un outil (comme on cache une ressource)
+  - Possibilité de mettre un temps indicatif sur les ressources

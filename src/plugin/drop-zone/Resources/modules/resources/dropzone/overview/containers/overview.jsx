@@ -25,7 +25,8 @@ const Overview = connect(
     userEvaluation: selectors.userEvaluation(state),
     errorMessage: selectors.errorMessage(state),
     teams: selectors.teams(state),
-    dropStatus: selectors.getMyDropStatus(state)
+    dropStatus: selectors.getMyDropStatus(state),
+    resourceNode: resourceSelectors.resourceNode(state)
   }),
   (dispatch) => ({
     startDrop(dropzoneId, dropType, teams = [], navigate, path) {

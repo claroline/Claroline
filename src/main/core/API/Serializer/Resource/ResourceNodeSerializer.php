@@ -87,6 +87,7 @@ class ResourceNodeSerializer
             'evaluation' => [
                 'evaluated' => $resourceNode->isEvaluated(),
                 'required' => $resourceNode->isRequired(),
+                'estimatedDuration' => $resourceNode->getEstimatedDuration(),
             ],
         ];
 
@@ -317,6 +318,7 @@ class ResourceNodeSerializer
         if (isset($data['evaluation'])) {
             $this->sipe('evaluation.evaluated', 'setEvaluated', $data, $resourceNode);
             $this->sipe('evaluation.required', 'setRequired', $data, $resourceNode);
+            $this->sipe('evaluation.estimatedDuration', 'setEstimatedDuration', $data, $resourceNode);
         }
 
         if (!in_array(Options::NO_RIGHTS, $options) && isset($data['rights'])) {

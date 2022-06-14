@@ -170,6 +170,19 @@ const ResourceFormComponent = (props) =>
           }
         ]
       }, {
+        icon: 'fa fa-fw fa-award',
+        title: trans('evaluation'),
+        fields: [
+          {
+            name: 'evaluation.estimatedDuration',
+            label: trans('estimated_duration'),
+            type: 'number',
+            options: {
+              unit: trans('minutes')
+            }
+          }
+        ]
+      }, {
         icon: 'fa fa-fw fa-copyright',
         title: trans('authors_license'),
         fields: [

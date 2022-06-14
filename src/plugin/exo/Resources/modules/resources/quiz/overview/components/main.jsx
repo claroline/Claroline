@@ -76,6 +76,7 @@ const OverviewMain = props =>
   <ResourceOverview
     contentText={props.quiz.description}
     evaluation={props.userEvaluation}
+    resourceNode={props.resourceNode}
     display={{
       score: props.quiz.parameters.showScoreAt !== SHOW_SCORE_AT_NEVER,
       scoreMax: get(props.quiz, 'score.total'),
@@ -154,6 +155,7 @@ OverviewMain.propTypes = {
   userEvaluation: T.shape(
     UserEvaluationType.propTypes
   ),
+  resourceNode: T.object,
   currentUserId: T.string,
   showStats: T.bool.isRequired
 }

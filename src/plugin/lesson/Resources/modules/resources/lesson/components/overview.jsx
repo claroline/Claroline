@@ -28,6 +28,7 @@ const LessonOverview = (props) => {
   return (
     <ResourceOverview
       contentText={get(props.lesson, 'display.description')}
+      resourceNode={props.resourceNode}
       actions={[
         { // TODO : implement continue and restart
           type: LINK_BUTTON,
@@ -71,7 +72,8 @@ LessonOverview.propTypes = {
   tree: T.object,
   lesson: T.object.isRequired,
   internalNotes: T.bool.isRequired,
-  search: T.func.isRequired
+  search: T.func.isRequired,
+  resourceNode: T.object
 }
 
 export {

@@ -15,7 +15,8 @@ const OverviewMain = connect(
     quiz: selectors.quiz(state),
     showStats: selectors.showOverviewStats(state),
     userEvaluation: resourceSelectors.resourceEvaluation(state),
-    currentUserId: securitySelectors.currentUserId(state)
+    currentUserId: securitySelectors.currentUserId(state),
+    resourceNode: resourceSelectors.resourceNode(state)
   })
 )(OverviewMainComponent)
 

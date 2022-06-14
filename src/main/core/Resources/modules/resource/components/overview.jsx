@@ -54,8 +54,15 @@ const UserProgression = props =>
         </h4>
       </div>
 
-      {0 !== props.details.length &&
+      {(props.estimatedDuration || 0 !== props.details.length) &&
         <ul className="list-group list-group-values">
+          {props.estimatedDuration &&
+            <li className="list-group-item">
+              {trans('estimated_duration')}
+              <span className="value">{props.estimatedDuration} {trans('minutes')}</span>
+            </li>
+          }
+
           {props.details.map((info, index) =>
             <li key={index} className="list-group-item">
               {info[0]}
@@ -79,6 +86,7 @@ UserProgression.propTypes = {
   evaluation: T.shape(
     UserEvaluationTypes.propTypes
   ).isRequired,
+  estimatedDuration: T.number,
   details: T.arrayOf(
     T.arrayOf(T.string)
   )
@@ -161,6 +169,7 @@ const ResourceOverview = props =>
             details={props.details}
             showScore={get(props, 'display.score', false)}
             scoreMax={get(props, 'display.scoreMax')}
+            estimatedDuration={get(props, 'resourceNode.evaluation.estimatedDuration')}
           />
         }
 
@@ -236,6 +245,7 @@ ResourceOverview.propTypes = {
       disabledMessages: T.arrayOf(T.string)
     })
   )),
+  resourceNode: T.object,
   children: T.node
 }
 
