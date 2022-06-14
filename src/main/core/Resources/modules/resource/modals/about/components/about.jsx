@@ -61,6 +61,19 @@ const AboutModal = props =>
               calculated: (resourceNode) => resourceNode.id + ' / ' + resourceNode.autoId
             }
           ]
+        }, {
+          icon: 'fa fa-fw fa-award',
+          title: trans('evaluation'),
+          fields: [
+            {
+              name: 'evaluation.estimatedDuration',
+              label: trans('estimated_duration'),
+              type: 'number',
+              options: {
+                unit: trans('minutes')
+              }
+            }
+          ]
         }
       ]}
     />

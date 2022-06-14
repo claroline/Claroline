@@ -38,9 +38,11 @@ const WorkspaceCard = props =>
           justifyContent: 'space-between'
         }}
       >
-        <UserMicro {...props.data.meta.creator} />
+        <UserMicro {...get(props.data, 'meta.creator', {})} />
 
-        {trans('created_at', {date: displayDate(props.data.meta.created, false, true)})}
+        {get(props.data, 'meta.created') &&
+          trans('created_at', {date: displayDate(props.data.meta.created, false, true)})
+        }
       </span>
     }
   />

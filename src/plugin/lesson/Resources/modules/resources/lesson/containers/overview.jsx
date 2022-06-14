@@ -14,7 +14,8 @@ const LessonOverview = withRouter(
       resourceId: resourceSelectors.id(state),
       lesson: selectors.lesson(state),
       internalNotes: hasPermission('view_internal_notes', resourceSelectors.resourceNode(state)),
-      tree: selectors.treeData(state)
+      tree: selectors.treeData(state),
+      resourceNode: resourceSelectors.resourceNode(state)
     }),
     (dispatch) => ({
       search(searchStr, internalNotes = false) {

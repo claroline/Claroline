@@ -25,3 +25,4 @@ Educational follow-up improvements :
 Various improvements :
   - New types of tabs "tools" allowing to point towards a tool of the workspace (and the tool adapts during the copy)
   - Possibility to hide a tool (like hiding a resource)
+  - Possibility to put an estimated time on the resources

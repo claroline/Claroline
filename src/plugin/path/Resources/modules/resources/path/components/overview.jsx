@@ -46,6 +46,7 @@ const PathOverview = props => {
     <ResourceOverview
       contentText={get(props.path, 'meta.description')}
       evaluation={props.evaluation}
+      resourceNode={props.resourceNode}
       display={{
         score: get(props.path, 'display.showScore'),
         scoreMax: get(props.path, 'score.total')
@@ -94,7 +95,8 @@ PathOverview.propTypes = {
   evaluation: T.shape(
     UserEvaluationTypes.propTypes
   ),
-  attempt: T.object
+  attempt: T.object,
+  resourceNode: T.object
 }
 
 PathOverview.defaultProps = {

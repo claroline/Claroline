@@ -21,6 +21,15 @@ trait Evaluated
     protected $required = false;
 
     /**
+     * The estimated time required to do the resource (in minutes).
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     *
+     * @var int
+     */
+    protected $estimatedDuration;
+
+    /**
      * Is the entity evaluated ?
      */
     public function isEvaluated(): bool
@@ -44,5 +53,15 @@ trait Evaluated
     public function setRequired(bool $required)
     {
         $this->required = $required;
+    }
+
+    public function getEstimatedDuration(): ?int
+    {
+        return $this->estimatedDuration;
+    }
+
+    public function setEstimatedDuration(?int $estimatedDuration = null)
+    {
+        $this->estimatedDuration = $estimatedDuration;
     }
 }

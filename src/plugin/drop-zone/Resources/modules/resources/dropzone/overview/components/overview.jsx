@@ -16,6 +16,7 @@ const Overview = props =>
   <ResourceOverview
     contentText={props.dropzone.instruction}
     evaluation={props.userEvaluation}
+    resourceNode={props.resourceNode}
     display={{
       score: props.dropzone.display.showScore,
       scoreMax: props.dropzone.parameters.scoreMax,
@@ -109,7 +110,8 @@ Overview.propTypes = {
   history: T.shape({
     push: T.func.isRequired
   }).isRequired,
-  dropStatus: T.string
+  dropStatus: T.string,
+  resourceNode: T.object
 }
 
 Overview.defaultProps = {
