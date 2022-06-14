@@ -73,10 +73,7 @@ const ResourceFormComponent = (props) =>
           {
             name: 'poster',
             label: trans('poster'),
-            type: 'image',
-            options: {
-              ratio: '3:1'
-            }
+            type: 'image'
           }, {
             name: 'thumbnail',
             label: trans('thumbnail'),

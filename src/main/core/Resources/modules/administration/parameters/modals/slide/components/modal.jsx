@@ -107,10 +107,7 @@ class SlideFormModal extends Component {
                 }, {
                   name: 'poster',
                   label: trans('image'),
-                  type: 'file',
-                  options: {
-                    types: ['image/*']
-                  },
+                  type: 'image',
                   required: false
                 }, {
                   name: 'content',

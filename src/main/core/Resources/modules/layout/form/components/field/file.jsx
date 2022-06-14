@@ -113,8 +113,8 @@ implementPropTypes(FileComponent, DataInputTypes, {
 const File = connect(
   null,
   dispatch => ({
-    uploadFile(file, url, callback) {
-      dispatch(actions.uploadFile(file, url, callback))
+    uploadFile(file, url, onSuccess) {
+      dispatch(actions.uploadFile(file, url)).then(onSuccess)
     },
     deleteFile(file, callback) {
       dispatch(actions.deleteFile(file, callback))

@@ -10,8 +10,6 @@ import {actions} from '#/main/app/api/store'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 
-// todo : merge with file type
-
 class ImageInputComponent extends PureComponent {
   constructor(props) {
     super(props)
@@ -22,11 +20,7 @@ class ImageInputComponent extends PureComponent {
 
   onChange() {
     if (this.input.files[0]) {
-      const file = this.input.files[0]
-
-      if (this.props.autoUpload) {
-        this.props.uploadFile(file, this.props.uploadUrl, this.props.onChange)
-      }
+      this.props.uploadFile(this.input.files[0], this.props.uploadUrl, this.props.onChange, this.props.onError)
     }
   }
 
@@ -71,7 +65,6 @@ class ImageInputComponent extends PureComponent {
             />
           </div>
         }
-
       </fieldset>
     )
   }
@@ -80,22 +73,20 @@ class ImageInputComponent extends PureComponent {
 implementPropTypes(ImageInputComponent, DataInputTypes, {
   value: T.object,
   size: T.arrayOf(T.number),
-  autoUpload: T.bool.isRequired,
   deleteFile: T.func.isRequired,
   uploadUrl: T.array.isRequired,
   uploadFile: T.func.isRequired
 }, {
   size: [200, 200],
-  autoUpload: true,
-  uploadUrl: ['apiv2_file_upload']
+  uploadUrl: ['apiv2_image_upload']
 })
 
 // this is not pretty
 const ImageInput = connect(
   null,
   dispatch => ({
-    uploadFile(file, url, callback) {
-      dispatch(actions.uploadFile(file, url, callback))
+    uploadFile(file, url, onSuccess, onError) {
+      dispatch(actions.uploadFile(file, url)).then(onSuccess, () => onError(trans('invalid_image', {}, 'validators')))
     },
     deleteFile(file, callback) {
       dispatch(actions.deleteFile(file, callback))

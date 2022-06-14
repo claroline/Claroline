@@ -77,7 +77,7 @@ actions.receiveResponse = (apiRequest, status, statusText) => dispatch => {
 }
 
 // file actions
-actions.uploadFile = (file, uploadUrl = ['apiv2_file_upload'], onSuccess = () => {}) => {
+actions.uploadFile = (file, uploadUrl = ['apiv2_file_upload']) => {
   const formData = new FormData()
   formData.append('file', file)
   formData.append('fileName', file.name)
@@ -95,7 +95,7 @@ actions.uploadFile = (file, uploadUrl = ['apiv2_file_upload'], onSuccess = () =>
           'X-Requested-With': 'XMLHttpRequest'
         })
       },
-      success: (response) => Array.isArray(response) ? onSuccess(response[0]) : onSuccess(response)
+      success: (response) => Array.isArray(response) ? response[0] : response
     }
   })
 }
