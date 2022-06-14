@@ -4,6 +4,8 @@ plugin:
           class: award
           is_displayable_in_workspace: true
           is_displayable_in_desktop: true
+          tool_rights:
+              - name: show_evaluations
 
     data_sources:
         - name: resource_attempts

@@ -13,12 +13,16 @@ namespace Claroline\EvaluationBundle\Security\Voter;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Security\Voter\AbstractVoter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
-class ResourceUserEvaluationVoter extends AbstractVoter
+class ResourceUserEvaluationVoter extends AbstractEvaluationVoter
 {
+    public function getClass(): string
+    {
+        return ResourceUserEvaluation::class;
+    }
+
     /**
      * @param ResourceUserEvaluation $object
      */
@@ -34,7 +38,13 @@ class ResourceUserEvaluationVoter extends AbstractVoter
                     return VoterInterface::ACCESS_GRANTED;
                 }
 
-                if ($token->getUser() instanceof User && $token->getUser()->getId() === $object->getUser()->getId()) {
+                if (($token->getUser() instanceof User && $token->getUser()->getId() === $object->getUser()->getId())) {
+                    return VoterInterface::ACCESS_GRANTED;
+                }
+
+                $canShowEval = $this->isToolGranted(self::SHOW_EVALUATIONS, 'evaluation')
+                    || $this->isToolGranted(self::EDIT, 'evaluation', $object->getResourceNode()->getWorkspace());
+                if ($canShowEval) {
                     return VoterInterface::ACCESS_GRANTED;
                 }
 
@@ -50,18 +60,5 @@ class ResourceUserEvaluationVoter extends AbstractVoter
         }
 
         return VoterInterface::ACCESS_ABSTAIN;
-    }
-
-    public function getClass(): string
-    {
-        return ResourceUserEvaluation::class;
-    }
-
-    /**
-     * @return array
-     */
-    public function getSupportedActions()
-    {
-        return [self::OPEN, self::VIEW, self::EDIT, self::DELETE];
     }
 }

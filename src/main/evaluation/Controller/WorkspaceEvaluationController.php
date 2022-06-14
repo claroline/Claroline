@@ -97,9 +97,17 @@ class WorkspaceEvaluationController extends AbstractSecurityController
     {
         $this->checkToolAccess('OPEN');
 
-        return new JsonResponse(
-            $this->crud->list(Evaluation::class, $request->query->all())
-        );
+        $hiddenFilters = [];
+
+        // don't show all users evaluations if no right
+        if ($this->checkToolAccess('SHOW_EVALUATIONS', null, false)) {
+            $hiddenFilters['user'] = $this->tokenStorage->getToken()->getUser()->getUuid();
+        }
+
+        return new JsonResponse($this->crud->list(
+            Evaluation::class,
+            array_merge($request->query->all(), ['hiddenFilters' => $hiddenFilters])
+        ));
     }
 
     /**
@@ -110,11 +118,18 @@ class WorkspaceEvaluationController extends AbstractSecurityController
     {
         $this->checkToolAccess('OPEN', $workspace);
 
-        return new JsonResponse($this->finder->search(
+        $hiddenFilters = [
+            'workspace' => $workspace->getUuid(),
+        ];
+
+        // don't show all users evaluations if no right
+        if ($this->checkToolAccess('SHOW_EVALUATIONS', $workspace, false)) {
+            $hiddenFilters['user'] = $this->tokenStorage->getToken()->getUser()->getUuid();
+        }
+
+        return new JsonResponse($this->crud->list(
             Evaluation::class,
-            array_merge($request->query->all(), ['hiddenFilters' => [
-                'workspace' => $workspace->getUuid(),
-            ]])
+            array_merge($request->query->all(), ['hiddenFilters' => $hiddenFilters])
         ));
     }
 
@@ -383,7 +398,7 @@ class WorkspaceEvaluationController extends AbstractSecurityController
     /**
      * Checks user rights to access evaluation tool.
      */
-    private function checkToolAccess(string $permission, ?Workspace $workspace = null): bool
+    private function checkToolAccess(string $permission, ?Workspace $workspace = null, bool $exception = true): bool
     {
         if (!empty($workspace) && $this->authorization->isGranted(['evaluation', $permission], $workspace)) {
             return true;
@@ -394,6 +409,10 @@ class WorkspaceEvaluationController extends AbstractSecurityController
             return true;
         }
 
-        throw new AccessDeniedException();
+        if ($exception) {
+            throw new AccessDeniedException();
+        }
+
+        return false;
     }
 }

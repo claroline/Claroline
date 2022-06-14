@@ -32,11 +32,11 @@ const EvaluationTool = (props) =>
       }, {
         path: '/users',
         component: EvaluationUsers,
-        disabled: !props.canEdit,
+        disabled: !props.canShowEvaluations && !props.canEdit,
         exact: true
       }, {
         path: '/users/:userId/:workspaceId?',
-        disabled: !props.canEdit,
+        disabled: !props.canShowEvaluations && !props.canEdit,
         render: (routeProps) => (
           <ToolPage subtitle={trans('users_progression', {}, 'evaluation')}>
             <EvaluationUser
@@ -61,6 +61,7 @@ const EvaluationTool = (props) =>
 EvaluationTool.propTypes = {
   path: T.string.isRequired,
   canEdit: T.bool.isRequired,
+  canShowEvaluations: T.bool.isRequired,
   contextId: T.string,
   currentUserId: T.string
 }
