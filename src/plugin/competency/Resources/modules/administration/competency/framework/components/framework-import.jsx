@@ -32,7 +32,7 @@ const FrameworkImportComponent = (props) =>
             type: 'file',
             label: trans('file'),
             required: true,
-            onChange: (file) => {props.updateProp('frameworks.import', 'file', file)},
+            onChange: (file) => props.updateProp('frameworks.import', 'file', file),
             options: {
               uploadUrl: ['apiv2_competency_framework_file_upload']
             }

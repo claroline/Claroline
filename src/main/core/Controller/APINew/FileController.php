@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Controller\APINew;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\File\PublicFile;
+use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -50,10 +51,29 @@ class FileController extends AbstractCrudController
         $objects = [];
         foreach ($files as $file) {
             $object = $this->crud->create(PublicFile::class, [], ['file' => $file, Crud::THROW_EXCEPTION]);
-
             $objects[] = $this->serializer->serialize($object);
         }
 
-        return new JsonResponse($objects, 200);
+        return new JsonResponse($objects);
+    }
+
+    /**
+     * @Route("/upload/image", name="apiv2_image_upload", methods={"POST"})
+     */
+    public function uploadImage(Request $request): JsonResponse
+    {
+        $files = $request->files->all();
+
+        $objects = [];
+        foreach ($files as $file) {
+            if (0 !== strpos($file->getMimeType(), 'image')) {
+                throw new InvalidDataException('Invalid image type.');
+            }
+
+            $object = $this->crud->create(PublicFile::class, [], ['file' => $file, Crud::THROW_EXCEPTION]);
+            $objects[] = $this->serializer->serialize($object);
+        }
+
+        return new JsonResponse($objects);
     }
 }

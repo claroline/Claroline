@@ -30,5 +30,6 @@
     "This filter should have a name.": "Ce filtre doit avoir un nom.",
     "This filter should have a value.": "Ce filtre doit avoir une valeur.",
     "This filter should use a filterable property.": "Ce filtre doit utiliser une propriété filtrable.",
-    "The room is not available for this dates.": "Cette salle n'est pas disponible pour les dates choisies"
+    "The room is not available for this dates.": "Cette salle n'est pas disponible pour les dates choisies.",
+    "invalid_image": "Ce fichier n'est pas une image valide."
 }

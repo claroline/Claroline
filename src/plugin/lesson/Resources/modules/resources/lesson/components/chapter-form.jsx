@@ -118,10 +118,7 @@ const ChapterFormComponent = props =>
           {
             name: 'poster',
             type: 'image',
-            label: trans('poster'),
-            options: {
-              ratio: '3:1'
-            }
+            label: trans('poster')
           }
         ]
       }, {
