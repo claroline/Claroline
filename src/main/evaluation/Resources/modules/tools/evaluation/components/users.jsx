@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
-import {LINK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
+import {LINK_BUTTON, MODAL_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 import {DOWNLOAD_BUTTON} from '#/main/app/buttons'
 import {ToolPage} from '#/main/core/tool/containers/page'
 import {ListData} from '#/main/app/content/list/containers/data'
@@ -11,6 +11,7 @@ import {constants} from '#/main/core/workspace/constants'
 
 import {selectors} from '#/main/evaluation/tools/evaluation/store'
 import {url} from '#/main/app/api'
+import {MODAL_MESSAGE} from '#/plugin/message/modals/message'
 
 const EvaluationUsers = (props) =>
   <ToolPage
@@ -131,6 +132,14 @@ const EvaluationUsers = (props) =>
           target: ['apiv2_workspace_export_user_progression', {workspace: get(rows[0], 'workspace.id'), user: get(rows[0], 'user.id')}],
           group: trans('export'),
           scope: ['object']
+        }, {
+          type: MODAL_BUTTON,
+          icon: 'fa fa-fw fa-envelope',
+          label: trans('send-message', {}, 'actions'),
+          scope: ['object', 'collection'],
+          modal: [MODAL_MESSAGE, {
+            receivers: {users: rows.map((row => row.user))}
+          }]
         }
       ]}
     />
