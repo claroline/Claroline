@@ -9,6 +9,7 @@ import {EvaluationTool as EvaluationToolComponent} from '#/main/evaluation/tools
 const EvaluationTool = connect(
   (state) => ({
     canEdit: hasPermission('edit', toolSelectors.toolData(state)),
+    canShowEvaluations: hasPermission('show_evaluations', toolSelectors.toolData(state)),
     contextId: toolSelectors.contextId(state),
     currentUserId: securitySelectors.currentUserId(state)
   })

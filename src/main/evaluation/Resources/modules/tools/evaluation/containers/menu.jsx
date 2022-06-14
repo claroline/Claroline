@@ -8,6 +8,7 @@ import {EvaluationMenu as EvaluationMenuComponent} from '#/main/evaluation/tools
 const EvaluationMenu = connect(
   (state) => ({
     canEdit: hasPermission('edit', toolSelectors.toolData(state)),
+    canShowEvaluations: hasPermission('show_evaluations', toolSelectors.toolData(state)),
     contextType: toolSelectors.contextType(state)
   })
 )(EvaluationMenuComponent)

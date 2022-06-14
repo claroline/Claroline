@@ -28,7 +28,7 @@ const EvaluationMenu = (props) =>
           type: LINK_BUTTON,
           label: trans('users_progression', {}, 'evaluation'),
           target: props.path+'/users',
-          displayed: props.canEdit
+          displayed: props.canShowEvaluations || props.canEdit
         }, {
           name: 'parameters',
           type: LINK_BUTTON,
@@ -45,6 +45,7 @@ const EvaluationMenu = (props) =>
 EvaluationMenu.propTypes = {
   path: T.string,
   canEdit: T.bool.isRequired,
+  canShowEvaluations: T.bool.isRequired,
   contextType: T.string.isRequired,
 
   // from menu

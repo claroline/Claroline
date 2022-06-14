@@ -13,12 +13,16 @@ namespace Claroline\EvaluationBundle\Security\Voter;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Evaluation;
-use Claroline\CoreBundle\Security\Voter\AbstractVoter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
-class WorkspaceEvaluationVoter extends AbstractVoter
+class WorkspaceEvaluationVoter extends AbstractEvaluationVoter
 {
+    public function getClass(): string
+    {
+        return Evaluation::class;
+    }
+
     /**
      * @param Evaluation $object
      */
@@ -38,6 +42,12 @@ class WorkspaceEvaluationVoter extends AbstractVoter
                     return VoterInterface::ACCESS_GRANTED;
                 }
 
+                $canShowEval = $this->isToolGranted(self::SHOW_EVALUATIONS, 'evaluation')
+                    || $this->isToolGranted(self::EDIT, 'evaluation', $object->getWorkspace());
+                if ($canShowEval) {
+                    return VoterInterface::ACCESS_GRANTED;
+                }
+
                 return VoterInterface::ACCESS_DENIED;
 
             case self::EDIT:
@@ -50,18 +60,5 @@ class WorkspaceEvaluationVoter extends AbstractVoter
         }
 
         return VoterInterface::ACCESS_ABSTAIN;
-    }
-
-    public function getClass(): string
-    {
-        return Evaluation::class;
-    }
-
-    /**
-     * @return array
-     */
-    public function getSupportedActions()
-    {
-        return [self::OPEN, self::VIEW, self::EDIT, self::DELETE];
     }
 }
