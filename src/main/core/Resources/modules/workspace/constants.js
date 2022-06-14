@@ -4,6 +4,8 @@ import {constants as baseConst} from '#/main/core/constants'
 
 const SHORTCUTS_LIMIT = 8
 
+const WORKSPACE_MODEL_TOOLS = ['home', 'resources', 'community', 'badges']
+
 // evaluation
 const EVALUATION_STATUSES = {
   [baseConst.EVALUATION_STATUS_NOT_ATTEMPTED]: trans('evaluation_not_attempted_status', {}, 'workspace'),
@@ -19,5 +21,6 @@ const EVALUATION_STATUSES = {
 
 export const constants = {
   SHORTCUTS_LIMIT,
-  EVALUATION_STATUSES
+  EVALUATION_STATUSES,
+  WORKSPACE_MODEL_TOOLS
 }

@@ -144,6 +144,8 @@ const WorkspaceMenu = (props) => {
       }}
 
       tools={props.tools
+        // hide tools that can not be configured in models for now
+        .filter(tool => !get(props.workspace, 'meta.model', false) || -1 !== constants.WORKSPACE_MODEL_TOOLS.indexOf(tool.name))
         .filter(tool => hasPermission('open', tool))
         .map(tool => ({
           name: tool.name,
