@@ -5,7 +5,7 @@ import isEmpty from 'lodash/isEmpty'
 
 import {trans, displayDate, displayDuration, number} from '#/main/app/intl'
 import {Button} from '#/main/app/action/components/button'
-import {CALLBACK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
+import {CALLBACK_BUTTON, MODAL_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 import {Alert} from '#/main/app/alert/components/alert'
 import {ContentLoader} from '#/main/app/content/components/loader'
 import {ContentTitle} from '#/main/app/content/components/title'
@@ -19,6 +19,7 @@ import {constants} from '#/main/core/workspace/constants'
 import {UserEvaluation as WorkspaceUserEvaluationTypes} from '#/main/core/workspace/prop-types'
 import {ResourceUserEvaluation as ResourceUserEvaluationTypes} from '#/main/evaluation/resource/prop-types'
 import {ResourceCard} from '#/main/evaluation/resource/components/card'
+import {MODAL_MESSAGE} from '#/plugin/message/modals/message'
 
 const WorkspaceProgression = (props) => {
   let progression = 0
@@ -137,6 +138,14 @@ class EvaluationUser extends Component {
                 label: trans('export', {}, 'actions'),
                 target: ['apiv2_workspace_export_user_progression', {workspace: this.props.workspaceId, user: this.props.userId}],
                 group: trans('export')
+              }, {
+                type: MODAL_BUTTON,
+                icon: 'fa fa-fw fa-envelope',
+                label: trans('send-message', {}, 'actions'),
+                scope: ['object', 'collection'],
+                modal: [MODAL_MESSAGE, {
+                  receivers: {users: [get(this.props.workspaceEvaluation, 'user')]}
+                }]
               }
             ]}
           />
