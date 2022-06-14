@@ -8,3 +8,6 @@ services:
 
     Claroline\CoreBundle\Transfer\Exporter\Workspace\ListUsersExporter:
         parent: Claroline\TransferBundle\Transfer\Exporter\AbstractListExporter
+
+    Claroline\CoreBundle\Transfer\Exporter\Workspace\ListManagersExporter:
+        parent: Claroline\TransferBundle\Transfer\Exporter\AbstractListExporter
