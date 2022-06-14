@@ -136,10 +136,10 @@ class UserFinder extends AbstractFinder
                         $expr = [];
                         foreach ($roots as $root) {
                             $expr[] = $qb->expr()->andX(
-                                  $qb->expr()->gte('organization.lft', $root->getLeft()),
-                                  $qb->expr()->lte('organization.rgt', $root->getRight()),
-                                  $qb->expr()->eq('oparent.root', $root->getRoot())
-                                );
+                                $qb->expr()->gte('organization.lft', $root->getLeft()),
+                                $qb->expr()->lte('organization.rgt', $root->getRight()),
+                                $qb->expr()->eq('oparent.root', $root->getRoot())
+                            );
                         }
 
                         $orX = $qb->expr()->orX(...$expr);
@@ -213,6 +213,22 @@ class UserFinder extends AbstractFinder
                 case 'emailValidationHash':
                     // those are security fields, we don't want someone try to retrieve users with this
                     // because it will leak sensible data.
+                    break;
+
+                // get users which are manager of at least one workspace (not their personal ws)
+                // used by Workspace\ListManagersExporter
+                case 'workspaceManager':
+                    $qb->leftJoin('obj.roles', 'rn');
+                    $qb->leftJoin('rn.workspace', 'rw');
+
+                    $qb->andWhere('UPPER(rn.name) LIKE :managerRoleName');
+                    $qb->setParameter('managerRoleName', 'ROLE_WS_MANAGER_%');
+                    $qb->andWhere('rn.type = 2');
+
+                    $qb->andWhere('rw.model = 0');
+                    $qb->andWhere('rw.personal = 0');
+                    $qb->andWhere('rw.archived = 0');
+
                     break;
                 default:
                     $this->setDefaults($qb, $filterName, $filterValue);

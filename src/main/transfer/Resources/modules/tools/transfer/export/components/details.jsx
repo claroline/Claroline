@@ -28,7 +28,7 @@ const ExportDetails = props =>
         type: CALLBACK_BUTTON,
         label: trans('refresh-data', {}, 'actions'),
         callback: () => props.refresh(props.exportFile.id),
-        disabled: !props.exportFile || !hasPermission('edit', props.exportFile)
+        disabled: !props.exportFile || !hasPermission('edit', props.exportFile) || 'in_progress' === props.exportFile.status
       }
     ]}
   >

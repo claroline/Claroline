@@ -13,6 +13,7 @@
     "archive": "Archive",
     "unarchive": "Unarchive",
     "list_users": "List of users",
+    "list_managers": "List of managers",
 
     "directory_id": "The directory id",
     "directory_name": "The directory name",

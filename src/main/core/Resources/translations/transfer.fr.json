@@ -13,6 +13,7 @@
     "archive": "Archiver",
     "unarchive": "Désarchiver",
     "list_users": "Liste des utilisateurs",
+    "list_managers": "Liste des gestionnaires",
 
     "directory_id": "L'id du dossier",
     "directory_name": "Le nom du dossier",

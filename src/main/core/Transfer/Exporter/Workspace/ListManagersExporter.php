@@ -6,16 +6,26 @@ use Claroline\AppBundle\API\Options;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\TransferBundle\Transfer\Exporter\AbstractListExporter;
 
-class ListUsersExporter extends AbstractListExporter
+/**
+ * Lists all users with a workspace manager role.
+ */
+class ListManagersExporter extends AbstractListExporter
 {
     public function getAction(): array
     {
-        return ['workspace', 'list_users'];
+        return ['workspace', 'list_managers'];
     }
 
     protected static function getClass(): string
     {
         return User::class;
+    }
+
+    protected function getHiddenFilters(): array
+    {
+        return [
+            'workspaceManager' => true,
+        ];
     }
 
     public function getExtraDefinition(?array $options = [], ?array $extra = []): array
