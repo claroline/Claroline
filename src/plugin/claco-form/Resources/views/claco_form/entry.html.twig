@@ -29,7 +29,7 @@
                                         {{ countries[fieldValues[field.getId()]] }}
                                     {% endif %}
                                 {% elseif field.getFieldFacet().getType() == constant('Claroline\\CoreBundle\\Entity\\Facet\\FieldFacet::HTML_TYPE') %}
-                                    {{ fieldValues[field.getId()]|raw }}
+                                    {{ fieldValues[field.getId()]|replace({'<o:p>': '', '</o:p>':''})|raw }}
                                 {% elseif field.getFieldFacet().getType() == constant('Claroline\\CoreBundle\\Entity\\Facet\\FieldFacet::CASCADE_TYPE') %}
                                     {{ fieldValues[field.getId()]|join(', ') }}
                                 {% elseif field.getFieldFacet().getType() == constant('Claroline\\CoreBundle\\Entity\\Facet\\FieldFacet::FILE_TYPE') %}
