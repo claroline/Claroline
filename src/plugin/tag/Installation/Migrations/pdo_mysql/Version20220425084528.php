@@ -25,6 +25,19 @@ class Version20220425084528 extends AbstractMigration
             DROP INDEX IDX_6E5EC9DA76ED395 ON claro_tagbundle_tag
         ');
 
+        $this->addSql('
+            DELETE to1
+            FROM claro_tagbundle_tagged_object AS to1 
+            LEFT JOIN claro_tagbundle_tag AS t1 ON (to1.tag_id = t1.id)
+            WHERE EXISTS (
+                SELECT to2.id
+                FROM (SELECT * FROM claro_tagbundle_tagged_object) AS to2 
+                LEFT JOIN claro_tagbundle_tag AS t2 ON (to2.tag_id = t2.id)
+                WHERE to2.object_id = to1.object_id
+                  AND t2.tag_name = t1.tag_name
+            )
+        ');
+
         // linked tagged objects to the platform tags (the ones without user)
         $this->addSql('
             UPDATE claro_tagbundle_tagged_object AS tob
@@ -33,6 +46,12 @@ class Version20220425084528 extends AbstractMigration
             SET tob.tag_id = t2.id
             WHERE t1.user_id IS NOT NULL
               AND t2.user_id IS NULL
+              AND NOT EXISTS (
+                SELECT tob2.id 
+                FROM (SELECT * FROM claro_tagbundle_tagged_object) AS tob2
+                WHERE tob2.tag_id = t2.id
+                  AND tob2.object_id = tob.object_id
+              )
         ');
 
         // delete user tags when there is a platform tag
