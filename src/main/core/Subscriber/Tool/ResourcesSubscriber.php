@@ -192,6 +192,9 @@ class ResourcesSubscriber implements EventSubscriberInterface
                     'workspace_opening_resource' => $resourceNode->getUuid(),
                 ]));
             }
+
+            // we need the resources to be persisted in DB to be exploitable in listeners (eg. path do a DB call to retrieve linked resources)
+            $this->om->forceFlush();
         }
 
         // rename root directory based on the new workspace name
@@ -199,9 +202,8 @@ class ResourcesSubscriber implements EventSubscriberInterface
         if ($root) {
             $root->setName($workspace->getName());
             $this->om->persist($root);
+            $this->om->flush();
         }
-
-        $this->om->flush();
     }
 
     private function recursiveExport(ResourceNode $resourceNode, FileBag $fileBag)
