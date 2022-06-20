@@ -106,6 +106,19 @@ class ResourcesSubscriber implements EventSubscriberInterface
             return;
         }
 
+        // we need to push the path resources last, because we need all resources to be created
+        // to link them to the new paths.
+        // this should not be done here and as is it doesn't work if we link paths to others paths.
+        usort($data['resources'], function (array $a, array $b) {
+            if ('innova_path' === $a['resourceNode']['meta']['type']) {
+                return 1;
+            } elseif ('innova_path' === $b['resourceNode']['meta']['type']) {
+                return -1;
+            }
+
+            return 0;
+        });
+
         $workspace = $event->getWorkspace();
 
         // manage workspace opening
