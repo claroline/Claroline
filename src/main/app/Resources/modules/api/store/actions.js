@@ -94,8 +94,7 @@ actions.uploadFile = (file, uploadUrl = ['apiv2_file_upload']) => {
           //no Content type for automatic detection of boundaries.
           'X-Requested-With': 'XMLHttpRequest'
         })
-      },
-      success: (response) => Array.isArray(response) ? response[0] : response
+      }
     }
   })
 }
