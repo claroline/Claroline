@@ -86,7 +86,10 @@ const ImageInput = connect(
   null,
   dispatch => ({
     uploadFile(file, url, onSuccess, onError) {
-      dispatch(actions.uploadFile(file, url)).then(onSuccess, () => onError(trans('invalid_image', {}, 'validators')))
+      dispatch(actions.uploadFile(file, url)).then(
+        (response) => onSuccess(Array.isArray(response) ? response[0] : response),
+        () => onError(trans('invalid_image', {}, 'validators'))
+      )
     },
     deleteFile(file, callback) {
       dispatch(actions.deleteFile(file, callback))

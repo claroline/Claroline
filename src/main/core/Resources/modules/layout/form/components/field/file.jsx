@@ -114,7 +114,7 @@ const File = connect(
   null,
   dispatch => ({
     uploadFile(file, url, onSuccess) {
-      dispatch(actions.uploadFile(file, url)).then(onSuccess)
+      dispatch(actions.uploadFile(file, url)).then((response) => onSuccess(Array.isArray(response) ? response[0] : response))
     },
     deleteFile(file, callback) {
       dispatch(actions.deleteFile(file, callback))
