@@ -42,16 +42,17 @@ class Version20220425084528 extends AbstractMigration
         // generate a platform tag when there are user tag but not platform one
         $this->addSql('
             INSERT INTO claro_tagbundle_tag (tag_name, uuid)
-            SELECT DISTINCT t1.tag_name, UUID() as uuid
-            FROM claro_tagbundle_tag AS t1
-            WHERE t1.user_id IS NOT NULL
-              AND NOT EXISTS (
-                  SELECT t3.id
-                  FROM (SELECT * from claro_tagbundle_tag) AS t3
-                  WHERE t3.tag_name = t1.tag_name
-                    AND t1.id != t3.id
-                    AND t3.user_id IS NULL
-              )
+                SELECT DISTINCT t1.tag_name, UUID() as uuid
+                FROM claro_tagbundle_tag AS t1
+                WHERE t1.user_id IS NOT NULL
+                  AND NOT EXISTS (
+                      SELECT t3.id
+                      FROM (SELECT * from claro_tagbundle_tag) AS t3
+                      WHERE t3.tag_name = t1.tag_name
+                        AND t1.id != t3.id
+                        AND t3.user_id IS NULL
+                  )
+                GROUP BY t1.tag_name
         ');
 
         // linked tagged objects to the platform tags (the ones without user)
