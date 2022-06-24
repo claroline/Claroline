@@ -2,3 +2,7 @@ sensio_framework_extra:
   router:   { annotations: false }
   cache:    { annotations: false }
   security: { annotations: false }
+
+  # sentry bundle throws an error without that
+  psr_message:
+    enabled: false
