@@ -56,7 +56,7 @@ class GridQuestion extends AbstractItem
     /**
      * Number of rows to draw.
      *
-     * @ORM\Column(type="integer")
+     * @ORM\Column(name="grid_rows", type="integer")
      *
      * @var int
      */
@@ -65,7 +65,7 @@ class GridQuestion extends AbstractItem
     /**
      * Number of columns to draw.
      *
-     * @ORM\Column(type="integer")
+     * @ORM\Column(name="grid_columns", type="integer")
      *
      * @var int
      */
