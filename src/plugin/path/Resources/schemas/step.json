@@ -40,10 +40,6 @@
         "claroIds": ["id"]
       }
     },
-    "evaluated": {
-      "type": "boolean",
-      "description": "Wether the score of the primary resource is used to compute the score of the path"
-    },
     "children": {
       "type": "array",
       "uniqueItems": true,

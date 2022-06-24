@@ -109,7 +109,7 @@ class UserProgressionManager
             $resourceNode = $resourceUserEvaluation->getResourceNode();
             $user = $resourceUserEvaluation->getUser();
 
-            // Gets all steps containing the resource node
+            // Gets all steps containing the resource node with an evaluation
             /** @var Step[] $steps */
             $steps = $this->stepRepo->findBy(['resource' => $resourceNode, 'evaluated' => true]);
 
@@ -227,7 +227,7 @@ class UserProgressionManager
     private function computeScore(Path $path, ?array $resourceScores = [])
     {
         $toEvaluate = count(array_filter($path->getSteps()->toArray(), function (Step $step) {
-            return $step->isEvaluated();
+            return !empty($step->getResource()) && $step->getResource()->isEvaluated();
         }));
 
         if (!empty($resourceScores)) {
@@ -281,11 +281,11 @@ class UserProgressionManager
             }
 
             foreach ($path->getSteps() as $step) {
-                if (!$step->isEvaluated() && in_array($step->getUuid(), $data['done'])) {
+                if ((empty($step->getResource()) || !$step->getResource()->isEvaluated()) && in_array($step->getUuid(), $data['done'])) {
                     ++$progression;
                 }
 
-                if ($step->isEvaluated() && !empty($resourcesData[$step->getUuid()]) && $resourcesData[$step->getUuid()]['terminated']) {
+                if (!empty($step->getResource()) && $step->getResource()->isEvaluated() && !empty($resourcesData[$step->getUuid()]) && $resourcesData[$step->getUuid()]['terminated']) {
                     ++$progression;
                 }
             }

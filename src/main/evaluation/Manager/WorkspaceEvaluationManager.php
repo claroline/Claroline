@@ -117,7 +117,7 @@ class WorkspaceEvaluationManager extends AbstractEvaluationManager
         $scoreMax = 0;
         $progressionMax = count($resources);
 
-        // if there is a triggering resource evaluation checks if is part of the workspace requirements
+        // if there is a triggering resource evaluation checks if it is part of the workspace requirements
         // if not, no evaluation is computed
         if ($currentRue) {
             $currentResourceId = $currentRue->getResourceNode()->getUuid();
@@ -169,7 +169,7 @@ class WorkspaceEvaluationManager extends AbstractEvaluationManager
             'progressionMax' => $progressionMax,
         ];
 
-        // recompute workspace evaluation if all resources
+        // recompute workspace evaluation if all resources are done
         if ($scoreMax && $progression >= $progressionMax) {
             $evaluationData['score'] = $score;
             $evaluationData['scoreMax'] = $scoreMax;

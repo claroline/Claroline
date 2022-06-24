@@ -100,7 +100,6 @@ class StepSerializer
                 return $this->serialize($child, $options);
             }, $step->getChildren()->toArray())),
             'userProgression' => $this->serializeUserProgression($step),
-            'evaluated' => $step->isEvaluated(),
         ];
     }
 
@@ -123,9 +122,6 @@ class StepSerializer
             $this->resourceNodeRepo->findOneBy(['uuid' => $data['primaryResource']['id']]) :
             null;
         $step->setResource($resource);
-
-        $evaluated = isset($data['evaluated']) && $step->getResource() ? $data['evaluated'] : false;
-        $step->setEvaluated($evaluated);
 
         if (isset($data['showResourceHeader'])) {
             $step->setShowResourceHeader($data['showResourceHeader']);

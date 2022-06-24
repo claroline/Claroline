@@ -180,7 +180,33 @@ const ResourceFormComponent = (props) =>
             options: {
               unit: trans('minutes')
             }
-          }
+          }, {
+            name: 'evaluation.required',
+            label: trans('La ressource participe à la progression de l\'espace d\'activités'),
+            type: 'boolean',
+            help: trans('Les utilisateurs devront terminer cette ressource pour faire avancer leur progression dans l\'espace d\'activités.')
+          }, {
+            name: 'evaluation.score',
+            label: trans('Type de score'),
+            type: 'choice',
+            required: true,
+            options: {
+              condensed: true,
+              choices: {
+                'none': trans('none'),
+                'other': trans('Autre')
+              }
+            },
+            linked: [
+              {
+                name: 'evaluation.evaluated',
+                label: trans('La ressource participe au score de l\'espace d\'activités'),
+                type: 'boolean',
+                help: trans('Le score obtenu par les utilisateurs est utilisé pour calculer le score de l\'espace d\'activités.'),
+                displayed: (resourceNode) => 'other' === get(resourceNode, 'evaluation.score')
+              }
+            ]
+          },
         ]
       }, {
         icon: 'fa fa-fw fa-copyright',

@@ -71,4 +71,16 @@ abstract class AbstractEvaluationManager
 
         return $evaluation;
     }
+
+    protected function computeStatus(AbstractEvaluation $evaluation): string
+    {
+        $newStatus = $evaluation->getStatus() ?? AbstractEvaluation::STATUS_NOT_ATTEMPTED;
+        if (0 !== $evaluation->getProgression() && 100 > $evaluation->getProgression()) {
+            $newStatus = AbstractEvaluation::STATUS_INCOMPLETE; // TODO : or PARTICIPATED, I don't know for now
+        } elseif (100 <= $evaluation->getProgression()) {
+            $newStatus = AbstractEvaluation::STATUS_COMPLETED;
+        }
+
+        return $newStatus;
+    }
 }
