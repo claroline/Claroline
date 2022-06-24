@@ -53,12 +53,15 @@ class AnnouncementListener
      */
     public function load(LoadResourceEvent $event)
     {
+        /** @var AnnouncementAggregate $resource */
         $resource = $event->getResource();
         $workspace = $resource->getResourceNode()->getWorkspace();
 
-        $filters = [];
+        $filters = [
+            'aggregate' => $resource,
+        ];
         if (!$this->authorization->isGranted('EDIT', $resource->getResourceNode())) {
-            $filters = ['visible' => true];
+            $filters['visible'] = true;
         }
 
         $postsList = $this->crud->list(Announcement::class, [
