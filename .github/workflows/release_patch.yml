@@ -28,6 +28,9 @@ jobs:
         id: diff
         run: |
           export DIFF=$(git log ${CURRENT_COMMIT}..${LAST_COMMIT} --oneline)
+          DIFF="${DIFF//'%'/'%25'}"
+          DIFF="${DIFF//$'\n'/'%0A'}"
+          DIFF="${DIFF//$'\r'/'%0D'}"
           echo "::set-output name=diff::${DIFF}"
         env:
           CURRENT_COMMIT: ${{ steps.extract_branch.outputs.current_commit }}
@@ -52,7 +55,7 @@ jobs:
 
       - name: Create Tag
         if: ${{ env.DIFF != '' }}
-        uses: anothrNick/github-tag-action@1.34.0
+        uses: anothrNick/github-tag-action@1.39.0
         env:
           DIFF: ${{ steps.diff.outputs.diff}}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
