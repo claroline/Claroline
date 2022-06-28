@@ -13,7 +13,7 @@ plugin:
           scope: [object]
           api: [GET]
 
-        # Changes changes the content of a resource
+        # Changes the content of a resource
         - name: edit
           decoder: edit
           group: management

@@ -169,19 +169,26 @@ class FileListener
     {
         /** @var File $file */
         $file = $event->getResource();
+        $workspace = $file->getResourceNode()->getWorkspace();
 
         $bag = $event->getFileBag();
+        $realFile = $bag->get($file->getHashName());
+
+        $hashName = 'WORKSPACE_'.$workspace->getId().DIRECTORY_SEPARATOR.Uuid::uuid4()->toString();
+        $ext = pathinfo($realFile, PATHINFO_EXTENSION);
+        if ($ext) {
+            $hashName .= '.'.$ext;
+        }
 
         $fileSystem = new Filesystem();
-        try {
-            $newHash = Uuid::uuid4()->toString();
-            $fileSystem->copy($bag->get($file->getHashName()), $this->fileManager->getDirectory().DIRECTORY_SEPARATOR.$newHash);
-            $file->setHashName($newHash);
+        // create workspace dir if missing
+        $fileSystem->mkdir($this->fileManager->getDirectory().DIRECTORY_SEPARATOR.'WORKSPACE_'.$workspace->getId());
+        $fileSystem->copy($realFile, $this->fileManager->getDirectory().DIRECTORY_SEPARATOR.$hashName);
 
-            $this->om->persist($file);
-            $this->om->flush();
-        } catch (\Exception $e) {
-        }
+        $file->setHashName($hashName);
+
+        $this->om->persist($file);
+        $this->om->flush();
     }
 
     public function onCopy(CopyEvent $event)
@@ -194,28 +201,22 @@ class FileListener
         $destParent = $resource->getResourceNode();
         $workspace = $destParent->getWorkspace();
 
-        $hashName = join('.', [
-            'WORKSPACE_'.$workspace->getId(),
-            Uuid::uuid4()->toString(),
-            pathinfo($resource->getHashName(), PATHINFO_EXTENSION),
-        ]);
+        $hashName = 'WORKSPACE_'.$workspace->getId().DIRECTORY_SEPARATOR.Uuid::uuid4()->toString();
+        $ext = pathinfo($resource->getHashName(), PATHINFO_EXTENSION);
+        if ($ext) {
+            $hashName .= '.'.$ext;
+        }
+
+        $fileSystem = new Filesystem();
+        // create workspace dir if missing
+        $fileSystem->mkdir($this->fileManager->getDirectory().DIRECTORY_SEPARATOR.'WORKSPACE_'.$workspace->getId());
+        $fileSystem->copy(
+            $this->fileManager->getDirectory().DIRECTORY_SEPARATOR.$resource->getHashName(),
+            $this->fileManager->getDirectory().DIRECTORY_SEPARATOR.$hashName
+        );
+
         $newFile->setHashName($hashName);
         $newFile->setSize($resource->getSize());
-
-        $filePath = $this->fileManager->getDirectory().DIRECTORY_SEPARATOR.$resource->getHashName();
-        $newPath = $this->fileManager->getDirectory().DIRECTORY_SEPARATOR.$hashName;
-        $workspaceDir = $this->fileManager->getDirectory().DIRECTORY_SEPARATOR.'WORKSPACE_'.$workspace->getId();
-
-        if (!is_dir($workspaceDir)) {
-            mkdir($workspaceDir);
-        }
-
-        try {
-            copy($filePath, $newPath);
-        } catch (\Exception $e) {
-            //do nothing yet
-            //maybe log an error
-        }
     }
 
     public function onDownload(DownloadResourceEvent $event)
