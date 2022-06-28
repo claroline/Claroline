@@ -34,15 +34,6 @@ class WorkspaceMain extends Component {
   }
 
   render() {
-    if (!this.props.loaded) {
-      return (
-        <ContentLoader
-          size="lg"
-          description={trans('loading', {}, 'workspace')}
-        />
-      )
-    }
-
     if (this.props.notFound) {
       return (
         <ContentNotFound
@@ -59,6 +50,15 @@ class WorkspaceMain extends Component {
             primary={true}
           />
         </ContentNotFound>
+      )
+    }
+
+    if (!this.props.loaded) {
+      return (
+        <ContentLoader
+          size="lg"
+          description={trans('loading', {}, 'workspace')}
+        />
       )
     }
 

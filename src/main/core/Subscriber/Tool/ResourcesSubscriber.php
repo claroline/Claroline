@@ -141,6 +141,7 @@ class ResourcesSubscriber implements EventSubscriberInterface
             $resourceNode->setWorkspace($workspace);
             if (!empty($nodeData['parent']) && $event->getCreatedEntity($nodeData['parent']['id'])) {
                 $resourceNode->setParent($event->getCreatedEntity($nodeData['parent']['id']));
+                unset($nodeData['parent']);
             }
 
             $this->crud->create($resourceNode, $nodeData, [Crud::NO_PERMISSIONS, Crud::NO_VALIDATION, Options::NO_RIGHTS/*, Options::REFRESH_UUID*/]);

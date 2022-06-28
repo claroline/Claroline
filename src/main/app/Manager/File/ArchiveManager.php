@@ -3,7 +3,9 @@
 namespace Claroline\AppBundle\Manager\File;
 
 use Claroline\AppBundle\API\Utils\FileBag;
-use DirectoryIterator;
+use FilesystemIterator;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 use ZipArchive;
 
 /**
@@ -60,13 +62,11 @@ class ArchiveManager
 
         $archive->extractTo($destinationPath);
 
-        foreach (new DirectoryIterator($destinationPath) as $fileInfo) {
-            if ($fileInfo->isDot()) {
-                continue;
-            }
-
+        $flags = FilesystemIterator::SKIP_DOTS | FilesystemIterator::UNIX_PATHS;
+        $dirIterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($destinationPath, $flags));
+        foreach ($dirIterator as $fileInfo) {
             $location = $fileInfo->getPathname();
-            $fileName = $fileInfo->getFilename();
+            $fileName = substr($location, strlen($destinationPath) + 1);
 
             $fileBag->add($fileName, $location);
         }

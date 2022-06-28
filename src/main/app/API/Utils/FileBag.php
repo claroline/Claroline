@@ -23,6 +23,9 @@ class FileBag
 
     public function get($key)
     {
+        // be sure to use unix directory separator
+        $key = str_replace('\\', '/', $key);
+
         if (!empty($this->files[$key])) {
             return $this->files[$key];
         }
