@@ -12,29 +12,14 @@
 namespace Claroline\CommunityBundle\Finder;
 
 use Claroline\AppBundle\API\Finder\AbstractFinder;
+use Claroline\CoreBundle\Entity\Group;
 use Doctrine\ORM\QueryBuilder;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class GroupFinder extends AbstractFinder
 {
-    /** @var AuthorizationCheckerInterface */
-    private $authChecker;
-
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-
-    public function __construct(
-        AuthorizationCheckerInterface $authChecker,
-        TokenStorageInterface $tokenStorage
-    ) {
-        $this->authChecker = $authChecker;
-        $this->tokenStorage = $tokenStorage;
-    }
-
     public static function getClass(): string
     {
-        return 'Claroline\CoreBundle\Entity\Group';
+        return Group::class;
     }
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])

@@ -171,7 +171,7 @@ class AnnouncementController
 
         $all = $request->query->all();
         unset($all['filters']['roles']);
-        $parameters = array_merge($all, ['hiddenFilters' => ['unionRole' => array_map(function (Role $role) {
+        $parameters = array_merge($all, ['hiddenFilters' => ['roles' => array_map(function (Role $role) {
             return $role->getUuid();
         }, $roles)]]);
 

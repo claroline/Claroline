@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Listener\DataSource\Workspace;
 
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\DataSource\GetDataEvent;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -32,7 +33,10 @@ class RegisteredSource
         $options = $event->getOptions();
 
         $options['hiddenFilters']['model'] = false;
-        $options['hiddenFilters']['user'] = $this->tokenStorage->getToken()->getUser()->getId();
+        $options['hiddenFilters']['user'] = null;
+        if ($this->tokenStorage->getToken()->getUser() instanceof User) {
+            $options['hiddenFilters']['user'] = $this->tokenStorage->getToken()->getUser()->getId();
+        }
 
         $event->setData(
             $this->finder->search(Workspace::class, $options, [Options::SERIALIZE_LIST])

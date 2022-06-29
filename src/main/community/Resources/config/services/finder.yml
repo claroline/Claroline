@@ -18,10 +18,7 @@ services:
                   arguments:
                       - '@Claroline\AppBundle\Event\StrictDispatcher'
 
-    Claroline\CommunityBundle\Finder\GroupFinder:
-        arguments:
-            - '@security.authorization_checker'
-            - '@security.token_storage'
+    Claroline\CommunityBundle\Finder\GroupFinder: ~
 
     Claroline\CommunityBundle\Finder\OrganizationFinder: ~
 
@@ -30,7 +27,4 @@ services:
             - '@security.authorization_checker'
             - '@security.token_storage'
 
-    Claroline\CommunityBundle\Finder\UserFinder:
-        arguments:
-            - '@security.authorization_checker'
-            - '@security.token_storage'
+    Claroline\CommunityBundle\Finder\UserFinder: ~

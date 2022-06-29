@@ -139,13 +139,6 @@ class WorkspaceFinder extends AbstractFinder
 
                     return $this->union($byUserSearch, $byGroupSearch, $options, $sortBy);
                     break;
-                    //use this with the 'user' property
-                case 'isManager':
-                    if ($filterValue) {
-                        $qb->andWhere('r.name like :ROLE_WS_MANAGER');
-                        $qb->setParameter('ROLE_WS_MANAGER', 'ROLE_WS_MANAGER%');
-                    }
-                    break;
                 default:
                     $this->setDefaults($qb, $filterName, $filterValue);
             }
@@ -157,8 +150,8 @@ class WorkspaceFinder extends AbstractFinder
     public function getExtraFieldMapping()
     {
         return [
-          'meta.personal' => 'personal',
-          'meta.model' => 'model',
+            'meta.personal' => 'personal',
+            'meta.model' => 'model',
         ];
     }
 
@@ -188,11 +181,6 @@ class WorkspaceFinder extends AbstractFinder
             'user' => [
                 'type' => 'integer',
                 'description' => 'The user id/uuid. Check if the user is registered',
-            ],
-
-            'isManager' => [
-                'type' => 'boolean',
-                'description' => 'Requires the user filter. Check if the user is the manager aswell',
             ],
 
             '$defaults' => [],
