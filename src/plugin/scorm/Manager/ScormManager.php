@@ -281,9 +281,11 @@ class ScormManager
                 }
 
                 $bestStatus = $tracking->getLessonStatus();
-                if (empty($bestStatus) || ($lessonStatus !== $bestStatus && $statusPriority[$lessonStatus] > $statusPriority[$bestStatus])) {
-                    $tracking->setLessonStatus($lessonStatus);
-                    $bestStatus = $lessonStatus;
+                if (!empty($lessonStatus)) {
+                    if (empty($bestStatus) || ($lessonStatus !== $bestStatus && $statusPriority[$lessonStatus] > $statusPriority[$bestStatus])) {
+                        $tracking->setLessonStatus($lessonStatus);
+                        $bestStatus = $lessonStatus;
+                    }
                 }
 
                 if (empty($progression) && ('completed' === $bestStatus || 'passed' === $bestStatus)) {
