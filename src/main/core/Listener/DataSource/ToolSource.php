@@ -53,7 +53,9 @@ class ToolSource
         switch ($event->getContext()) {
             case DataSource::CONTEXT_DESKTOP:
                 $options['hiddenFilters']['isDisplayableInDesktop'] = true;
-                $options['hiddenFilters']['user'] = $user->getUuid();
+                if ($user) {
+                    $options['hiddenFilters']['user'] = $user->getUuid();
+                }
 
                 if (!in_array('ROLE_ADMIN', $roles)) {
                     $options['hiddenFilters']['roles'] = $roles;

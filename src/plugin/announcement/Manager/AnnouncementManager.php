@@ -121,7 +121,7 @@ class AnnouncementManager
         $resourceNode = $announce->getAggregate()->getResourceNode();
 
         $users = $this->finder->fetch(User::class, [
-            'unionRole' => array_map(function (Role $role) {
+            'roles' => array_map(function (Role $role) {
                 return $role->getUuid();
             }, $roles),
         ]);

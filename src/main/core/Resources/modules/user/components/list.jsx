@@ -86,9 +86,9 @@ const UserList = props =>
         displayed: false,
         sortable: false
       }, {
-        name: 'unionOrganizationName',
-        label: trans('organization'),
-        type: 'string',
+        name: 'organizations',
+        label: trans('organizations'),
+        type: 'organizations',
         displayed: false,
         displayable: false,
         sortable: false

@@ -15,25 +15,9 @@ use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\QueryBuilder;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class UserFinder extends AbstractFinder
 {
-    /** @var AuthorizationCheckerInterface */
-    private $authChecker;
-
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-
-    public function __construct(
-        AuthorizationCheckerInterface $authChecker,
-        TokenStorageInterface $tokenStorage
-    ) {
-        $this->authChecker = $authChecker;
-        $this->tokenStorage = $tokenStorage;
-    }
-
     public static function getClass(): string
     {
         return User::class;
@@ -41,6 +25,10 @@ class UserFinder extends AbstractFinder
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
     {
+        $roleJoin = false;
+        $groupJoin = false;
+        $groupRoleJoin = false;
+
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
                 case 'username':
@@ -49,81 +37,93 @@ class UserFinder extends AbstractFinder
                     $qb->andWhere('UPPER(obj.username) LIKE :username');
                     $qb->setParameter('username', '%'.strtoupper($filterValue).'%');
                     break;
+
                 case 'name':
                     $qb->andWhere('UPPER(obj.username) LIKE :name OR UPPER(CONCAT(obj.firstName, \' \', obj.lastName)) LIKE :name');
                     $qb->setParameter('name', '%'.strtoupper($filterValue).'%');
                     break;
-                case 'id':
+
+                case 'id': // should not exist
                     $qb->andWhere('obj.uuid IN (:userUuids)');
                     $qb->setParameter('userUuids', is_array($filterValue) ? $filterValue : [$filterValue]);
                     break;
+
+                case 'emails':
+                    $qb->orWhere($qb->expr()->orX(
+                        $qb->expr()->in('obj.email', ':globalSearch'),
+                        $qb->expr()->in('obj.username', ':globalSearch')
+                    ));
+
+                    $data = array_map(function ($data) {
+                        //trim and do other stuff here
+                        return $data;
+                    }, str_getcsv($filterValue));
+
+                    $qb->setParameter('emails', $data);
+                    break;
+
                 case 'isDisabled':
                     $qb->andWhere('obj.isEnabled = :enabled');
                     $qb->setParameter('enabled', !$filterValue);
                     break;
+
                 case 'hasPersonalWorkspace':
                     $qb->andWhere('obj.personalWorkspace IS NOT NULL');
                     break;
+
                 case 'group':
                 case 'groups':
-                    $qb->leftJoin('obj.groups', 'g');
+                    if (!$groupJoin) {
+                        $qb->leftJoin('obj.groups', 'g');
+                        $groupJoin = true;
+                    }
+
                     $qb->andWhere('g.uuid IN (:groupIds)');
                     $qb->setParameter('groupIds', is_array($filterValue) ? $filterValue : [$filterValue]);
                     break;
+
                 case 'role':
-                    $qb->leftJoin('obj.roles', 'r');
-                    $qb->andWhere('r.uuid IN (:roleIds)');
-                    $qb->setParameter('roleIds', is_array($filterValue) ? $filterValue : [$filterValue]);
-                    break;
-                case 'unionRole':
-                    $byUserSearch = $byGroupSearch = $searches;
-                    $byUserSearch['role'] = $filterValue;
-                    $byGroupSearch['_roleGroup'] = $filterValue;
-                    unset($byUserSearch['unionRole']);
-                    unset($byGroupSearch['unionRole']);
+                case 'roles':
+                    if (!$roleJoin) {
+                        $qb->leftJoin('obj.roles', 'r');
+                        $roleJoin = true;
+                    }
 
-                    return $this->union($byUserSearch, $byGroupSearch, $options, $sortBy);
+                    if (!$groupJoin) {
+                        $qb->leftJoin('obj.groups', 'g');
+                        $groupJoin = true;
+                    }
 
+                    if (!$groupRoleJoin) {
+                        $qb->leftJoin('g.roles', 'gr');
+                        $groupRoleJoin = true;
+                    }
+
+                    $qb->andWhere('(r.uuid IN (:roleIds) OR gr.uuid IN (:groupRoleIds))');
+                    $qb->setParameters([
+                        'roleIds' => is_array($filterValue) ? $filterValue : [$filterValue],
+                        'groupRoleIds' => is_array($filterValue) ? $filterValue : [$filterValue],
+                    ]);
                     break;
-                case '_roleGroup':
-                    $qb->leftJoin('obj.groups', 'ggr');
-                    $qb->leftJoin('ggr.roles', 'groupRole');
-                    $qb->andWhere('groupRole.uuid IN (:groleIds)');
-                    $qb->setParameter('groleIds', is_array($filterValue) ? $filterValue : [$filterValue]);
-                    break;
+
                 case 'roleTranslation':
-                    $qb->leftJoin('obj.roles', 'rn');
-                    $qb->andWhere('UPPER(rn.translationKey) LIKE :roleTranslation');
+                    if (!$roleJoin) {
+                        $qb->leftJoin('obj.roles', 'r');
+                        $roleJoin = true;
+                    }
+
+                    $qb->andWhere('UPPER(r.translationKey) LIKE :roleTranslation');
                     $qb->setParameter('roleTranslation', '%'.strtoupper($filterValue).'%');
                     break;
-                  //non recursive search here
+
                 case 'organization':
+                case 'organizations':
                    $qb->leftJoin('obj.userOrganizationReferences', 'oref');
                    $qb->leftJoin('oref.organization', 'o');
                    $qb->andWhere('o.uuid IN (:organizationIds)');
                    $qb->setParameter('organizationIds', is_array($filterValue) ? $filterValue : [$filterValue]);
                    break;
 
-                case 'organizationNameUser':
-                    $qb->leftJoin('obj.userOrganizationReferences', 'orefu');
-                    $qb->leftJoin('orefu.organization', 'ou');
-                    $qb->andWhere('UPPER(ou.name) LIKE :organizationName');
-                    $qb->setParameter('organizationName', '%'.strtoupper($filterValue).'%');
-                    break;
-                case '_organizationNameGroup':
-                    $qb->leftJoin('obj.groups', 'ugroup');
-                    $qb->leftJoin('ugroup.organizations', 'ogroup');
-                    $qb->andWhere('UPPER(ogroup.name) LIKE :organizationNameGroup');
-                    $qb->setParameter('organizationNameGroup', '%'.strtoupper($filterValue).'%');
-                    break;
-                case 'unionOrganizationName':
-                    $byUserSearch = $byGroupSearch = $searches;
-                    $byUserSearch['organizationNameUser'] = $filterValue;
-                    $byGroupSearch['_organizationNameGroup'] = $filterValue;
-                    unset($byUserSearch['unionOrganizationName']);
-                    unset($byGroupSearch['unionOrganizationName']);
-
-                    return $this->union($byUserSearch, $byGroupSearch, $options, $sortBy);
                 case 'recursiveOrXOrganization':
                     $value = is_array($filterValue) ? $filterValue : [$filterValue];
                     $roots = $this->om->findList(Organization::class, 'uuid', $value);
@@ -142,8 +142,7 @@ class UserFinder extends AbstractFinder
                             );
                         }
 
-                        $orX = $qb->expr()->orX(...$expr);
-                        $qb->andWhere($orX);
+                        $qb->andWhere($qb->expr()->orX(...$expr));
                     } else {
                         //no roots mean no user so we stop it here and make a crazy search
                         $qb->andWhere('obj.id = -1');
@@ -151,75 +150,59 @@ class UserFinder extends AbstractFinder
                         return $qb;
                     }
                     break;
+
                 case 'location':
                     $qb->leftJoin('obj.locations', 'l');
                     $qb->andWhere('l.uuid IN (:locationIds)');
                     $qb->setParameter('locationIds', is_array($filterValue) ? $filterValue : [$filterValue]);
                     break;
+
                 case 'organizationManager':
                     $qb->leftJoin('obj.administratedOrganizations', 'ao');
                     $qb->andWhere('ao.uuid IN (:administratedOrganizations)');
                     $qb->setParameter('administratedOrganizations', is_array($filterValue) ? $filterValue : [$filterValue]);
                     break;
+
                 case 'workspace':
                     if (!is_array($filterValue)) {
                         $filterValue = [$filterValue];
                     }
 
-                    $byUserSearch = $byGroupSearch = $searches;
-                    $byUserSearch['_workspace_user'] = $filterValue;
-                    $byGroupSearch['_workspace_group'] = $filterValue;
-                    unset($byUserSearch['workspace']);
-                    unset($byGroupSearch['workspace']);
+                    // check if user a WS role
+                    if (!$roleJoin) {
+                        $qb->leftJoin('obj.roles', 'r');
+                        $roleJoin = true;
+                    }
 
-                    return $this->union($byUserSearch, $byGroupSearch, $options, $sortBy);
+                    $qb->leftJoin('r.workspace', 'rws');
 
-                    break;
-                case '_workspace_user':
-                    $filterValue = array_map(function ($value) {
-                        return "'$value'";
-                    }, $filterValue);
-                    $string = join($filterValue, ',');
-                    $qb->leftJoin('obj.roles', 'wsuroles');
-                    $qb->leftJoin('wsuroles.workspace', 'rws');
-                    $qb->andWhere('rws.uuid IN ('.$string.')');
-                    break;
-                case '_workspace_group':
-                    $filterValue = array_map(function ($value) {
-                        return "'$value'";
-                    }, $filterValue);
-                    $string = join($filterValue, ',');
-                    $qb->leftJoin('obj.groups', 'grps');
-                    $qb->leftJoin('grps.roles', 'grpRole');
-                    $qb->leftJoin('grpRole.workspace', 'ws');
-                    $qb->andWhere('ws.uuid IN ('.$string.')');
-                    break;
-                case 'emails':
-                    $qb->orWhere($qb->expr()->orX(
-                        $qb->expr()->in('obj.email', ':globalSearch'),
-                        $qb->expr()->in('obj.username', ':globalSearch')
-                    ));
+                    // check if user is in a group with a WS role
+                    if (!$groupJoin) {
+                        $qb->leftJoin('obj.groups', 'g');
+                        $groupJoin = true;
+                    }
 
-                    $data = array_map(function ($data) {
-                        //trim and do other stuff here
-                        return $data;
-                    }, str_getcsv($filterValue));
+                    if (!$groupRoleJoin) {
+                        $qb->leftJoin('g.roles', 'gr');
+                        $groupRoleJoin = true;
+                    }
 
-                    $qb->setParameter('emails', $data);
-                    break;
-                case 'resetPasswordHash':
-                case 'salt':
-                case 'password':
-                case 'emailValidationHash':
-                    // those are security fields, we don't want someone try to retrieve users with this
-                    // because it will leak sensible data.
+                    $qb->leftJoin('gr.workspace', 'gws');
+                    $qb->andWhere('(rws.uuid IN (:userWorkspaceId) OR gws.uuid IN (:groupWorkspaceId))');
+                    $qb->setParameters([
+                        'userWorkspaceId' => $filterValue,
+                        'groupWorkspaceId' => $filterValue,
+                    ]);
                     break;
 
                 // get users which are manager of at least one workspace (not their personal ws)
                 // used by Workspace\ListManagersExporter
                 case 'workspaceManager':
-                    $qb->leftJoin('obj.roles', 'rn');
-                    $qb->leftJoin('rn.workspace', 'rw');
+                    if (!$roleJoin) {
+                        $qb->leftJoin('obj.roles', 'r');
+                        $roleJoin = true;
+                    }
+                    $qb->leftJoin('r.workspace', 'rw');
 
                     $qb->andWhere('UPPER(rn.name) LIKE :managerRoleName');
                     $qb->setParameter('managerRoleName', 'ROLE_WS_MANAGER_%');
@@ -230,6 +213,15 @@ class UserFinder extends AbstractFinder
                     $qb->andWhere('rw.archived = 0');
 
                     break;
+
+                case 'resetPasswordHash':
+                case 'salt':
+                case 'password':
+                case 'emailValidationHash':
+                    // those are security fields, we don't want someone try to retrieve users with this
+                    // because it will leak sensible data.
+                    break;
+
                 default:
                     $this->setDefaults($qb, $filterName, $filterValue);
             }
@@ -249,7 +241,6 @@ class UserFinder extends AbstractFinder
         return $qb;
     }
 
-    //probably deprecated since we try hard to optimize everything and is a duplicata of getExtraFieldMapping
     private function sortBy($qb, array $sortBy = null)
     {
         // manages custom sort properties
@@ -267,7 +258,6 @@ class UserFinder extends AbstractFinder
         return $qb;
     }
 
-    //required for the unions
     public function getExtraFieldMapping()
     {
         return [
