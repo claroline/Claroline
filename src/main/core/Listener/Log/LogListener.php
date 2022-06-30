@@ -23,6 +23,7 @@ use Claroline\CoreBundle\Event\Log\LogNotRepeatableInterface;
 use Claroline\CoreBundle\Event\Log\LogResourceDeleteEvent;
 use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
 use Claroline\CoreBundle\Event\Log\LogUserDeleteEvent;
+use Claroline\CoreBundle\Event\Log\LogWorkspaceDeleteEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceEnterEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceRoleDeleteEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceToolReadEvent;
@@ -138,12 +139,7 @@ class LogListener
             $receiverGroup = $event->getReceiverGroup();
             $log->setReceiverGroup($receiverGroup);
         }
-        if (
-            !(
-                LogResourceDeleteEvent::ACTION === $event->getAction() &&
-                $event->getResource() === $event->getWorkspace()
-            )
-        ) {
+        if (LogWorkspaceDeleteEvent::ACTION !== $event->getAction()) {
             //Prevent delete workspace case
             $log->setWorkspace($event->getWorkspace());
         }
