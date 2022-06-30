@@ -23,7 +23,9 @@ framework:
         buses:
             messenger.bus.default:
                 middleware:
+                    - 'doctrine_ping_connection'
                     - 'Claroline\AuthenticationBundle\Messenger\Middleware\AuthenticationMiddleware'
+                    - 'doctrine_close_connection'
 
         routing:
             'Claroline\AppBundle\Messenger\Message\AsyncMessageInterface': default
