@@ -24,3 +24,14 @@ services:
             - '@router'
             - '@translator'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
+
+    Claroline\ClacoFormBundle\Manager\ExportManager:
+        arguments:
+            - '@router'
+            - '@Claroline\ClacoFormBundle\Manager\ClacoFormManager'
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+            - '%claroline.param.files_directory%'
+            - '@Claroline\CoreBundle\Manager\LocationManager'
+            - '@twig'
+            - '@translator'
+            - '@Claroline\AppBundle\Manager\PdfManager'
