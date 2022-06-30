@@ -15,7 +15,7 @@
                 <th>{{ 'last_modification'|trans({}, 'platform') }}</th>
 
                 {% for field in fields %}
-                    <th>{{ field.getName() }}</th>
+                    <th>{{ field.getLabel() }}</th>
                 {% endfor %}
 
                 <th>{{ 'username'|trans({}, 'platform') }}</th>

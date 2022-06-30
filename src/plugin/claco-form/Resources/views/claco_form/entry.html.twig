@@ -1,108 +1,86 @@
-<div class="panel panel-default">
-    {% if template is empty %}
-        <div class="panel-heading">
-            <h3 class="panel-title">
-                <b>{{ entry.getTitle() }}</b>
-            </h3>
-        </div>
-    {% endif %}
-    <div class="panel-body">
-        {% if template is empty or not useTemplate %}
-            {% for field in fields %}
-                {% if withMeta or not field.isMetadata() %}
-                    <div class="row entry-row">
-                        <label class="col-md-3 entry-label">
-                            {{ field.getName()|raw }}
-                        </label>
-                        <div class="col-md-9 entry-value">
-                            {% if fieldValues[field.getId()] is defined %}
-                                {% if field.getFieldFacet().getType() == constant('Claroline\\CoreBundle\\Entity\\Facet\\FieldFacet::DATE_TYPE') %}
-                                    {{ fieldValues[field.getId()]|date('d/m/Y') }}
-                                {% elseif field.getFieldFacet().getType() == constant('Claroline\\CoreBundle\\Entity\\Facet\\FieldFacet::CHOICE_TYPE') %}
-                                    {% if field.getOptions()['multiple'] %}
-                                        {{ fieldValues[field.getId()]|join(', ') }}
-                                    {% else %}
-                                        {{ fieldValues[field.getId()] }}
-                                    {% endif %}
-                                {% elseif field.getFieldFacet().getType() == constant('Claroline\\CoreBundle\\Entity\\Facet\\FieldFacet::COUNTRY_TYPE') %}
-                                    {% if fieldValues[field.getId()] %}
-                                        {{ countries[fieldValues[field.getId()]] }}
-                                    {% endif %}
-                                {% elseif field.getFieldFacet().getType() == constant('Claroline\\CoreBundle\\Entity\\Facet\\FieldFacet::HTML_TYPE') %}
-                                    {{ fieldValues[field.getId()]|replace({'<o:p>': '', '</o:p>':''})|raw }}
-                                {% elseif field.getFieldFacet().getType() == constant('Claroline\\CoreBundle\\Entity\\Facet\\FieldFacet::CASCADE_TYPE') %}
-                                    {{ fieldValues[field.getId()]|join(', ') }}
-                                {% elseif field.getFieldFacet().getType() == constant('Claroline\\CoreBundle\\Entity\\Facet\\FieldFacet::FILE_TYPE') %}
-                                    {% set values = [] %}
-                                    {% for fileValue in fieldValues[field.getId()] %}
-                                        {% set values = values|merge(['['~fileValue|join(', ')~']']) %}
-                                    {% endfor %}
-                                    {{ values|join(', ') }}
-                                {% else %}
-                                    {{ fieldValues[field.getId()] }}
+{% if template is empty %}
+    <header>
+        {{ entry.getTitle() }}
+    </header>
+{% endif %}
+
+<main>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            {% if template is empty or not useTemplate %}
+                {% for field in fields %}
+                    {% if withMeta or not field.isMetadata() %}
+                        <div class="row entry-row">
+                            <label class="col-md-3 entry-label">
+                                {{ field.getLabel()|raw }}
+                            </label>
+
+                            <div class="col-md-9 entry-value">
+                                {% if fieldValues[field.getId()] is defined %}
+                                    {{ fieldValues[field.getId()]|raw }}
                                 {% endif %}
-                            {% endif %}
+                            </div>
                         </div>
+
+                        {% if not loop.last %}
+                            <hr/>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                {{ template|raw }}
+            {% endif %}
+
+            {% if withMeta %}
+                <br/>
+                <div>
+                    {% if entry.getPublicationDate() is not empty %}
+                        {{ 'publication_date'|trans({}, 'clacoform') }} :
+                        {{ entry.getPublicationDate()|date('d/m/Y') }}
+                        -
+                    {% endif %}
+                    {% if entry.getEditionDate() is not empty %}
+                        {{ 'last_modification'|trans({}, 'platform') }} :
+                        {{ entry.getEditionDate()|date('d/m/Y') }}
+                        -
+                    {% endif %}
+                    {{ 'author'|trans({}, 'platform') }} :
+
+                    {% if entry.getUser() is not empty %}
+                        {{ entry.getUser().getFirstName() }}
+                        {{ entry.getUser().getLastName() }}
+                    {% else %}
+                        {{ 'anonymous'|trans({}, 'platform') }}
+                    {% endif %}
+                </div>
+            {% endif %}
+
+            {% if canViewComments and comments|length > 0 %}
+                <hr/>
+                <h2>{{ 'comments'|trans({}, 'clacoform') }}</h2>
+
+                {% for comment in comments %}
+                    <div>
+                        {{ comment.content|raw }}
                     </div>
+                    <br/>
+                    <b>{{ 'author'|trans({}, 'platform') }} :</b>
+
+                    {% if comment.getUser() is not empty %}
+                        {{ comment.getUser().getFirstName() }}
+                        {{ comment.getUser().getLastName() }}
+                    {% else %}
+                        {{ 'anonymous'|trans({}, 'platform') }}
+                    {% endif %}
+                    -
+                    <b>{{ 'publication_date'|trans({}, 'clacoform') }} :</b>
+                    {{ comment.getCreationDate()|date('d/m/Y H:i:s') }}
 
                     {% if not loop.last %}
                         <hr/>
                     {% endif %}
-                {% endif %}
-            {% endfor %}
-        {% else %}
-            {{ template|raw }}
-        {% endif %}
-
-        {% if withMeta %}
-            <br/>
-            <div>
-                {% if entry.getPublicationDate() is not empty %}
-                    {{ 'publication_date'|trans({}, 'clacoform') }} :
-                    {{ entry.getPublicationDate()|date('d/m/Y') }}
-                    -
-                {% endif %}
-                {% if entry.getEditionDate() is not empty %}
-                    {{ 'last_modification'|trans({}, 'platform') }} :
-                    {{ entry.getEditionDate()|date('d/m/Y') }}
-                    -
-                {% endif %}
-                {{ 'author'|trans({}, 'platform') }} :
-
-                {% if entry.getUser() is not empty %}
-                    {{ entry.getUser().getFirstName() }}
-                    {{ entry.getUser().getLastName() }}
-                {% else %}
-                    {{ 'anonymous'|trans({}, 'platform') }}
-                {% endif %}
-            </div>
-        {% endif %}
-
-        {% if canViewComments and comments|length > 0 %}
-            <hr/>
-            <h2>{{ 'comments'|trans({}, 'clacoform') }}</h2>
-
-            {% for comment in comments %}
-                <div>
-                    {{ comment.content|raw }}
-                </div>
-                <br/>
-                <b>{{ 'author'|trans({}, 'platform') }} :</b>
-
-                {% if comment.getUser() is not empty %}
-                    {{ comment.getUser().getFirstName() }}
-                    {{ comment.getUser().getLastName() }}
-                {% else %}
-                    {{ 'anonymous'|trans({}, 'platform') }}
-                {% endif %}
-                -
-                <b>{{ 'publication_date'|trans({}, 'clacoform') }} :</b>
-                {{ comment.getCreationDate()|date('d/m/Y H:i:s') }}
-
-                {% if not loop.last %}
-                    <hr/>
-                {% endif %}
-            {% endfor %}
-        {% endif %}
+                {% endfor %}
+            {% endif %}
+        </div>
     </div>
-</div>
+</main>
