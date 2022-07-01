@@ -419,8 +419,8 @@ class WorkspaceSerializer
                     $data['opening']['target'] :
                     'home';
 
-                if ('resource' === $data['opening']['type'] && isset($data['opening']['target']['id'])) {
-                    $details['workspace_opening_resource'] = $data['opening']['target']['id'];
+                if ('resource' === $details['opening_type'] && isset($details['opening_target']['id'])) {
+                    $details['workspace_opening_resource'] = $details['opening_target']['id'];
                     $details['use_workspace_opening_resource'] = true;
                 } else {
                     $details['workspace_opening_resource'] = null;
