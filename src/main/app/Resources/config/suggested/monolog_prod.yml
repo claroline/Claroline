@@ -10,8 +10,15 @@ monolog:
             type:  stream
             path:  "%kernel.logs_dir%/%kernel.environment%.log"
             level: error
+            channels: ["!messenger"]
 
         console:
             type: console
             process_psr_3_messages: false
             channels: [ "!php", "!event", "!doctrine" ]
+
+        messenger:
+            type: stream
+            path: "%kernel.logs_dir%/messenger.log"
+            level: error
+            channels: ["messenger"]
