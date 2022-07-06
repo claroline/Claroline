@@ -4,7 +4,6 @@ namespace Claroline\CommunityBundle\Subscriber\Crud;
 
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
-use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\PatchEvent;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
@@ -45,7 +44,6 @@ class RoleSubscriber implements EventSubscriberInterface
             Crud::getEventName('create', 'post', Role::class) => 'postCreate',
             Crud::getEventName('patch', 'pre', Role::class) => 'prePatch',
             Crud::getEventName('patch', 'post', Role::class) => 'postPatch',
-            Crud::getEventName('delete', 'pre', Role::class) => 'preDelete',
         ];
     }
 
@@ -108,17 +106,6 @@ class RoleSubscriber implements EventSubscriberInterface
                     WHERE ot.workspace_id IS NULL AND user_id IS NULL
                 ")
                 ->execute();
-        }
-    }
-
-    public function preDelete(DeleteEvent $event)
-    {
-        /** @var Role $role */
-        $role = $event->getObject();
-
-        if ($role->isReadOnly()) {
-            // abort delete
-            $event->block();
         }
     }
 

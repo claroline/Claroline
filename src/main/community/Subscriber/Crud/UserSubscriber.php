@@ -250,7 +250,7 @@ class UserSubscriber implements EventSubscriberInterface
 
         if ($userRole) {
             // this would have been better in the postDelete event, but the username has been changed
-            $this->crud->delete($userRole);
+            $this->crud->delete($userRole, [Crud::NO_PERMISSIONS]);
         }
     }
 
