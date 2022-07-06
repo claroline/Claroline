@@ -112,7 +112,7 @@ abstract class AbstractPlannedSubscriber implements EventSubscriberInterface
 
         $oldRoom = !empty($oldData['room']) ? $oldData['room']['id'] : null;
         $newRoom = !empty($object->getRoom()) ? $object->getRoom()->getUuid() : null;
-        if ($oldRoom !== $newLocation) {
+        if ($oldRoom !== $newRoom) {
             // add to new room
             if ($newRoom) {
                 $this->planningManager->addToPlanning($object, $object->getRoom());
