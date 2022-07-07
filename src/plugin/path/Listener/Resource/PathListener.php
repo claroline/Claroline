@@ -16,7 +16,7 @@ use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\EvaluationBundle\Event\ResourceEvaluationEvent;
 use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\Step;
-use Innova\PathBundle\Manager\UserProgressionManager;
+use Innova\PathBundle\Manager\EvaluationManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -43,8 +43,8 @@ class PathListener
     /** @var ResourceManager */
     private $resourceManager;
 
-    /** @var UserProgressionManager */
-    private $userProgressionManager;
+    /** @var EvaluationManager */
+    private $evaluationManager;
 
     public function __construct(
         TokenStorageInterface $tokenStorage,
@@ -53,7 +53,7 @@ class PathListener
         Crud $crud,
         SerializerProvider $serializer,
         ResourceManager $resourceManager,
-        UserProgressionManager $userProgressionManager)
+        EvaluationManager $evaluationManager)
     {
         $this->tokenStorage = $tokenStorage;
         $this->translator = $translator;
@@ -61,7 +61,7 @@ class PathListener
         $this->crud = $crud;
         $this->serializer = $serializer;
         $this->resourceManager = $resourceManager;
-        $this->userProgressionManager = $userProgressionManager;
+        $this->evaluationManager = $evaluationManager;
     }
 
     /**
@@ -78,11 +78,11 @@ class PathListener
         if ($user instanceof User) {
             // retrieve user progression
             $evaluation = $this->serializer->serialize(
-                $this->userProgressionManager->getResourceUserEvaluation($path, $user),
+                $this->evaluationManager->getResourceUserEvaluation($path, $user),
                 [Options::SERIALIZE_MINIMAL]
             );
 
-            $currentAttempt = $this->serializer->serialize($this->userProgressionManager->getCurrentAttempt($path, $user));
+            $currentAttempt = $this->serializer->serialize($this->evaluationManager->getCurrentAttempt($path, $user));
         }
 
         $event->setData([
@@ -136,7 +136,7 @@ class PathListener
     public function onEvaluation(ResourceEvaluationEvent $event)
     {
         if ($event->getAttempt()) {
-            $this->userProgressionManager->handleResourceEvaluation($event->getEvaluation(), $event->getAttempt());
+            $this->evaluationManager->handleResourceEvaluation($event->getEvaluation(), $event->getAttempt());
         }
     }
 

@@ -24,9 +24,6 @@ const reducer = combineReducers({
   currentDrop: correctionReducer.currentDrop,
   correctorDrop: correctionReducer.correctorDrop,
   corrections: correctionReducer.corrections,
-  tools: makeReducer([], {
-    [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.tools
-  }),
   teams: makeReducer({}, {
     [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.teams
   }),

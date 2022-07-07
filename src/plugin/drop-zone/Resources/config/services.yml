@@ -4,6 +4,5 @@ imports:
     - { resource: services/listener.yml }
     - { resource: services/manager.yml }
     - { resource: services/serializer.yml }
-
-services:
-    Claroline\ScormBundle\Library\ScormLib: ~
+    - { resource: services/subscriber.yml }
+    - { resource: services/voter.yml }

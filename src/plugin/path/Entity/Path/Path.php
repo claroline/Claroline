@@ -118,7 +118,7 @@ class Path extends AbstractResource
      *
      * @var bool
      *
-     * @deprecated will be be replaced by the score type on resource node.
+     * @deprecated will be be replaced by the score type on resource node
      */
     private $showScore = false;
 

@@ -1,11 +1,14 @@
 <?php
 
-namespace Claroline\DropZoneBundle\Crud;
+namespace Claroline\DropZoneBundle\Subscriber\Crud;
 
+use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
+use Claroline\DropZoneBundle\Entity\Dropzone;
 use Claroline\DropZoneBundle\Manager\DropzoneManager;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class Dropzone
+class DropzoneSubscriber implements EventSubscriberInterface
 {
     /** @var DropzoneManager */
     private $dropzoneManager;
@@ -15,7 +18,14 @@ class Dropzone
         $this->dropzoneManager = $dropzoneManager;
     }
 
-    public function endUpdate(UpdateEvent $event)
+    public static function getSubscribedEvents(): array
+    {
+        return [
+            Crud::getEventName('update', 'post', Dropzone::class) => 'postUpdate',
+        ];
+    }
+
+    public function postUpdate(UpdateEvent $event)
     {
         $dropzone = $event->getObject();
         $oldData = $event->getOldData();

@@ -75,11 +75,15 @@ abstract class AbstractEvaluationManager
     protected function computeStatus(AbstractEvaluation $evaluation): string
     {
         $newStatus = $evaluation->getStatus() ?? AbstractEvaluation::STATUS_NOT_ATTEMPTED;
+
+        // checks progression
         if (0 !== $evaluation->getProgression() && 100 > $evaluation->getProgression()) {
-            $newStatus = AbstractEvaluation::STATUS_INCOMPLETE; // TODO : or PARTICIPATED, I don't know for now
+            $newStatus = AbstractEvaluation::STATUS_INCOMPLETE;
         } elseif (100 <= $evaluation->getProgression()) {
             $newStatus = AbstractEvaluation::STATUS_COMPLETED;
         }
+
+        // checks score if any
 
         return $newStatus;
     }

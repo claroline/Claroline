@@ -1,9 +1,0 @@
-services:
-    Claroline\ScormBundle\Command\FixEvaluationCommand:
-        arguments:
-            - '@doctrine.dbal.default_connection'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\ScormBundle\Manager\ScormManager'
-            - '@Claroline\EvaluationBundle\Manager\ResourceEvaluationManager'
-        tags:
-            - { name: 'console.command', command: 'claroline:scorm:fix_evaluation' }

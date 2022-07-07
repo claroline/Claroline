@@ -13,7 +13,7 @@ use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\Step;
 use Innova\PathBundle\Entity\UserProgression;
 
-class UserProgressionManager
+class EvaluationManager
 {
     /** @var ObjectManager */
     private $om;
@@ -298,8 +298,8 @@ class UserProgressionManager
         }
 
         return [
-            'progression' => $progression,
-            'progressionMax' => $progressionMax,
+            'progression' => $progressionMax ? ($progression / $progressionMax) * 100 : $progression,
+            'progressionMax' => $progressionMax, // TODO : for retro compatibility
             'status' => $status,
         ];
     }

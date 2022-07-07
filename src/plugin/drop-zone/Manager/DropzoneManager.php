@@ -11,10 +11,8 @@
 
 namespace Claroline\DropZoneBundle\Manager;
 
-use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\RoleManager;
@@ -24,8 +22,6 @@ use Claroline\DropZoneBundle\Entity\Criterion;
 use Claroline\DropZoneBundle\Entity\Document;
 use Claroline\DropZoneBundle\Entity\Drop;
 use Claroline\DropZoneBundle\Entity\Dropzone;
-use Claroline\DropZoneBundle\Entity\DropzoneTool;
-use Claroline\DropZoneBundle\Entity\DropzoneToolDocument;
 use Claroline\DropZoneBundle\Entity\Revision;
 use Claroline\DropZoneBundle\Event\Log\LogCorrectionDeleteEvent;
 use Claroline\DropZoneBundle\Event\Log\LogCorrectionEndEvent;
@@ -36,15 +32,9 @@ use Claroline\DropZoneBundle\Event\Log\LogCorrectionValidationChangeEvent;
 use Claroline\DropZoneBundle\Event\Log\LogDocumentCreateEvent;
 use Claroline\DropZoneBundle\Event\Log\LogDocumentDeleteEvent;
 use Claroline\DropZoneBundle\Event\Log\LogDropEndEvent;
-use Claroline\DropZoneBundle\Event\Log\LogDropEvaluateEvent;
-use Claroline\DropZoneBundle\Event\Log\LogDropStartEvent;
-use Claroline\DropZoneBundle\Event\Log\LogDropzoneConfigureEvent;
 use Claroline\DropZoneBundle\Repository\CorrectionRepository;
 use Claroline\DropZoneBundle\Repository\DocumentRepository;
 use Claroline\DropZoneBundle\Repository\DropRepository;
-use Claroline\EvaluationBundle\Entity\AbstractEvaluation;
-use Claroline\EvaluationBundle\Manager\ResourceEvaluationManager;
-use Claroline\TeamBundle\Entity\Team;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -56,8 +46,6 @@ class DropzoneManager
     private $eventDispatcher;
     /** @var RoleManager */
     private $roleManager;
-    /** @var Crud */
-    private $crud;
     /** @var SerializerProvider */
     private $serializer;
     /** @var Filesystem */
@@ -66,8 +54,6 @@ class DropzoneManager
     private $filesDir;
     /** @var ObjectManager */
     private $om;
-    /** @var ResourceEvaluationManager */
-    private $resourceEvalManager;
     /** @var PlatformConfigurationHandler */
     private $configHandler;
 
@@ -77,41 +63,28 @@ class DropzoneManager
     private $dropRepo;
     /** @var CorrectionRepository */
     private $correctionRepo;
-    private $dropzoneToolRepo;
-    private $dropzoneToolDocumentRepo;
     /** @var DocumentRepository */
     private $documentRepo;
 
-    /**
-     * DropzoneManager constructor.
-     *
-     * @param string $filesDir
-     */
     public function __construct(
-        Crud $crud,
         SerializerProvider $serializer,
         Filesystem $fileSystem,
-        $filesDir,
+        string $filesDir,
         ObjectManager $om,
-        ResourceEvaluationManager $resourceEvalManager,
         PlatformConfigurationHandler $configHandler,
         EventDispatcherInterface $eventDispatcher,
         RoleManager $roleManager
     ) {
-        $this->crud = $crud;
         $this->serializer = $serializer;
         $this->fileSystem = $fileSystem;
         $this->filesDir = $filesDir;
         $this->om = $om;
-        $this->resourceEvalManager = $resourceEvalManager;
         $this->configHandler = $configHandler;
         $this->eventDispatcher = $eventDispatcher;
         $this->roleManager = $roleManager;
 
         $this->dropRepo = $om->getRepository('Claroline\DropZoneBundle\Entity\Drop');
         $this->correctionRepo = $om->getRepository('Claroline\DropZoneBundle\Entity\Correction');
-        $this->dropzoneToolRepo = $om->getRepository('Claroline\DropZoneBundle\Entity\DropzoneTool');
-        $this->dropzoneToolDocumentRepo = $om->getRepository('Claroline\DropZoneBundle\Entity\DropzoneToolDocument');
         $this->documentRepo = $om->getRepository('Claroline\DropZoneBundle\Entity\Document');
         $this->resourceNodeRepo = $om->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceNode');
     }
@@ -157,16 +130,6 @@ class DropzoneManager
     }
 
     /**
-     * Serializes a Tool entity.
-     *
-     * @return array
-     */
-    public function serializeTool(DropzoneTool $tool)
-    {
-        return $this->serializer->serialize($tool);
-    }
-
-    /**
      * Serializes a Revision entity.
      *
      * @return array
@@ -174,24 +137,6 @@ class DropzoneManager
     public function serializeRevision(Revision $revision)
     {
         return $this->serializer->serialize($revision);
-    }
-
-    /**
-     * Updates a Dropzone.
-     *
-     * @return Dropzone
-     */
-    public function update(Dropzone $dropzone, array $data)
-    {
-        $this->crud->update(Dropzone::class, $data);
-
-        $uow = $this->om->getUnitOfWork();
-        $uow->computeChangeSets();
-        $changeSet = $uow->getEntityChangeSet($dropzone);
-
-        $this->eventDispatcher->dispatch(new LogDropzoneConfigureEvent($dropzone, $changeSet), 'log');
-
-        return $dropzone;
     }
 
     /**
@@ -215,94 +160,13 @@ class DropzoneManager
     }
 
     /**
-     * Gets user drop or creates one.
-     *
-     * @param bool $withCreation
-     *
-     * @return Drop
-     */
-    public function getUserDrop(Dropzone $dropzone, User $user, $withCreation = false)
-    {
-        $drops = $this->dropRepo->findBy(['dropzone' => $dropzone, 'user' => $user, 'teamUuid' => null]);
-        $drop = count($drops) > 0 ? $drops[0] : null;
-
-        if (empty($drop) && $withCreation) {
-            $this->om->startFlushSuite();
-            $drop = new Drop();
-            $drop->setUser($user);
-            $drop->setDropzone($dropzone);
-            $this->om->persist($drop);
-
-            $this->resourceEvalManager->createResourceEvaluation(
-                $dropzone->getResourceNode(),
-                $user,
-                ['status' => AbstractEvaluation::STATUS_INCOMPLETE]
-            );
-            $this->om->endFlushSuite();
-
-            $this->eventDispatcher->dispatch(new LogDropStartEvent($dropzone, $drop), 'log');
-        }
-
-        return $drop;
-    }
-
-    /**
-     * Gets team drop or creates one.
-     *
-     * @param bool $withCreation
-     *
-     * @return Drop
-     */
-    public function getTeamDrop(Dropzone $dropzone, Team $team, User $user, $withCreation = false)
-    {
-        $drop = $this->dropRepo->findOneBy(['dropzone' => $dropzone, 'teamUuid' => $team->getUuid()]);
-
-        if ($withCreation) {
-            if (empty($drop)) {
-                $drop = new Drop();
-                $drop->setUser($user);
-                $drop->setDropzone($dropzone);
-                $drop->setTeamId($team->getId());
-                $drop->setTeamUuid($team->getUuid());
-                $drop->setTeamName($team->getName());
-
-                foreach ($team->getRole()->getUsers() as $teamUser) {
-                    $drop->addUser($teamUser);
-                    /* TODO: checks that a valid status is not overwritten */
-                    $this->resourceEvalManager->createResourceEvaluation(
-                        $dropzone->getResourceNode(),
-                        $teamUser,
-                        ['status' => AbstractEvaluation::STATUS_INCOMPLETE]
-                    );
-                }
-
-                $this->eventDispatcher->dispatch(new LogDropStartEvent($dropzone, $drop), 'log');
-            } elseif (!$drop->hasUser($user)) {
-                $drop->addUser($user);
-                $this->resourceEvalManager->createResourceEvaluation(
-                    $dropzone->getResourceNode(),
-                    $user,
-                    ['status' => AbstractEvaluation::STATUS_INCOMPLETE]
-                );
-            }
-
-            $this->om->persist($drop);
-            $this->om->flush();
-        }
-
-        return $drop;
-    }
-
-    /**
      * Gets Team drops or create one.
      *
      * @return array
      */
     public function getTeamDrops(Dropzone $dropzone, User $user)
     {
-        $drops = $this->dropRepo->findTeamDrops($dropzone, $user);
-
-        return $drops;
+        return $this->dropRepo->findTeamDrops($dropzone, $user);
     }
 
     /**
@@ -481,31 +345,6 @@ class DropzoneManager
         $this->om->flush();
 
         return $revision;
-    }
-
-    /**
-     * Computes Drop score from submitted Corrections.
-     *
-     * @return Drop
-     */
-    public function computeDropScore(Drop $drop)
-    {
-        $corrections = $drop->getCorrections();
-        $score = 0;
-        $nbValidCorrection = 0;
-
-        foreach ($corrections as $correction) {
-            if ($correction->isFinished() && $correction->isValid()) {
-                $score += $correction->getScore();
-                ++$nbValidCorrection;
-            }
-        }
-        $score = $nbValidCorrection > 0 ? round($score / $nbValidCorrection, 2) : null;
-        $drop->setScore($score);
-        $this->om->persist($drop);
-        $this->om->flush();
-
-        return $drop;
     }
 
     /**
@@ -763,41 +602,6 @@ class DropzoneManager
         return $correction;
     }
 
-    public function getSerializedTools()
-    {
-        $serializedTools = [];
-        $tools = $this->dropzoneToolRepo->findAll();
-
-        foreach ($tools as $tool) {
-            $serializedTools[] = $this->serializer->serialize($tool);
-        }
-
-        return $serializedTools;
-    }
-
-    /**
-     * Updates a Tool.
-     *
-     * @return Tool
-     */
-    public function saveTool(array $data)
-    {
-        $tool = $this->serializer->get(DropzoneTool::class)->deserialize($data);
-        $this->om->persist($tool);
-        $this->om->flush();
-
-        return $tool;
-    }
-
-    /**
-     * Deletes a Tool.
-     */
-    public function deleteTool(DropzoneTool $tool)
-    {
-        $this->om->remove($tool);
-        $this->om->flush();
-    }
-
     /**
      * Gets unifnished drops from teams list.
      *
@@ -810,13 +614,8 @@ class DropzoneManager
 
     /**
      * Gets user|team drop if it is finished.
-     *
-     * @param User   $user
-     * @param string $teamId
-     *
-     * @return array
      */
-    public function getFinishedUserDrop(Dropzone $dropzone, User $user = null, $teamId = null)
+    public function getFinishedUserDrop(Dropzone $dropzone, ?User $user = null, ?string $teamId = null): Drop
     {
         $drop = null;
 
@@ -991,200 +790,6 @@ class DropzoneManager
         }
 
         return $peerDrop;
-    }
-
-    /**
-     * Executes a Tool on a Document.
-     *
-     * @return Document
-     */
-    public function executeTool(DropzoneTool $tool, Document $document)
-    {
-        if (DropzoneTool::COMPILATIO === $tool->getType() && Document::DOCUMENT_TYPE_FILE === $document->getType()) {
-            $toolDocument = $this->dropzoneToolDocumentRepo->findOneBy(['tool' => $tool, 'document' => $document]);
-            $toolData = $tool->getData();
-            $compilatio = new \SoapClient($toolData['url']);
-
-            if (empty($toolDocument)) {
-                $documentData = $document->getFile();
-                $params = [];
-                $params[] = $toolData['key'];
-                $params[] = utf8_encode($documentData['name']);
-                $params[] = utf8_encode($documentData['name']);
-                $params[] = utf8_encode($documentData['name']);
-                $params[] = utf8_encode($documentData['mimeType']);
-                $params[] = base64_encode(file_get_contents($this->filesDir.DIRECTORY_SEPARATOR.$documentData['url']));
-                $idDocument = $compilatio->__call('addDocumentBase64', $params);
-                $analysisParams = [];
-                $analysisParams[] = $toolData['key'];
-                $analysisParams[] = $idDocument;
-                $compilatio->__call('startDocumentAnalyse', $analysisParams);
-                $reportUrl = $compilatio->__call('getDocumentReportUrl', $analysisParams);
-
-                if ($idDocument && $reportUrl) {
-                    $this->createToolDocument($tool, $document, $idDocument, $reportUrl);
-                }
-            }
-        }
-
-        return $document;
-    }
-
-    /**
-     * Associates data generated by a Tool to a Document.
-     *
-     * @param string $idDocument
-     * @param string $reportUrl
-     */
-    public function createToolDocument(DropzoneTool $tool, Document $document, $idDocument = null, $reportUrl = null)
-    {
-        $toolDocument = new DropzoneToolDocument();
-        $toolDocument->setTool($tool);
-        $toolDocument->setDocument($document);
-        $data = ['idDocument' => $idDocument, 'reportUrl' => $reportUrl];
-        $toolDocument->setData($data);
-        $this->om->persist($toolDocument);
-        $this->om->flush();
-    }
-
-    /**
-     * Computes Complete status for a user.
-     *
-     * @param Drop $drop
-     */
-    public function checkCompletion(Dropzone $dropzone, array $users, Drop $drop = null)
-    {
-        $fixedStatusList = [
-            AbstractEvaluation::STATUS_COMPLETED,
-            AbstractEvaluation::STATUS_PASSED,
-            AbstractEvaluation::STATUS_FAILED,
-        ];
-        $teamId = !empty($drop) ? $drop->getTeamUuid() : null;
-
-        $this->om->startFlushSuite();
-
-        /* By default drop is complete if teacher review is enabled or drop is unlocked for user */
-        $isComplete = !empty($drop) ? $drop->isFinished() && (!$dropzone->isPeerReview() || $drop->isUnlockedUser()) : false;
-
-        /* If drop is not complete by default, checks for the number of finished corrections done by user */
-        if (!$isComplete) {
-            $expectedCorrectionTotal = $dropzone->getExpectedCorrectionTotal();
-            $finishedPeerDrops = $this->getFinishedPeerDrops($dropzone, $users[0], $teamId);
-            $isComplete = count($finishedPeerDrops) >= $expectedCorrectionTotal;
-        }
-        if ($isComplete) {
-            foreach ($users as $user) {
-                $userEval = $this->resourceEvalManager->getUserEvaluation($dropzone->getResourceNode(), $user, false);
-
-                if (!empty($userEval) && !in_array($userEval->getStatus(), $fixedStatusList)) {
-                    $this->resourceEvalManager->createResourceEvaluation(
-                        $dropzone->getResourceNode(),
-                        $user,
-                        ['status' => AbstractEvaluation::STATUS_COMPLETED, 'progression' => 100]
-                    );
-                } elseif (!empty($drop)) {
-                    $this->updateDropProgression($dropzone, $drop, 100);
-                }
-                //TODO user whose score is available must be notified by LogDropGradeAvailableEvent, when he has done his corrections AND his drop has been corrected
-            }
-        }
-
-        $this->om->endFlushSuite();
-    }
-
-    /**
-     * Computes Success status for a Drop.
-     */
-    public function checkSuccess(Drop $drop)
-    {
-        $this->om->startFlushSuite();
-
-        $dropzone = $drop->getDropzone();
-        $users = [$drop->getUser()];
-
-        if (Dropzone::DROP_TYPE_TEAM === $dropzone->getDropType()) {
-            $users = $drop->getUsers();
-        }
-        $computeStatus = $drop->isFinished() && (!$dropzone->isPeerReview() || $drop->isUnlockedDrop());
-
-        if (!$computeStatus) {
-            $nbValidCorrections = 0;
-            $expectedCorrectionTotal = $dropzone->getExpectedCorrectionTotal();
-            $corrections = $drop->getCorrections();
-
-            foreach ($corrections as $correction) {
-                if ($correction->isFinished() && $correction->isValid()) {
-                    ++$nbValidCorrections;
-                }
-            }
-            $computeStatus = $nbValidCorrections >= $expectedCorrectionTotal;
-        }
-        if ($computeStatus) {
-            $score = $drop->getScore();
-            $scoreToPass = $dropzone->getScoreToPass();
-            $scoreMax = $dropzone->getScoreMax();
-            $status = !empty($scoreMax) && (($score / $scoreMax) * 100) >= $scoreToPass ?
-                AbstractEvaluation::STATUS_PASSED :
-                AbstractEvaluation::STATUS_FAILED;
-
-            foreach ($users as $user) {
-                $this->resourceEvalManager->createResourceEvaluation(
-                    $dropzone->getResourceNode(),
-                    $user,
-                    [
-                        'status' => $status,
-                        'score' => $score,
-                        'scoreMax' => $scoreMax,
-                        'data' => $this->serializeDrop($drop),
-                    ]
-                );
-            }
-
-            $this->eventDispatcher->dispatch(new LogDropEvaluateEvent($dropzone, $drop, $drop->getScore()), 'log');
-
-            //TODO user whose score is available must be notified by LogDropGradeAvailableEvent, when he has done his corrections AND his drop has been corrected
-        }
-
-        $this->om->endFlushSuite();
-    }
-
-    /**
-     * Retrieves ResourceUserEvaluation for a Dropzone and an user or creates one.
-     *
-     * @return ResourceUserEvaluation
-     */
-    public function getResourceUserEvaluation(Dropzone $dropzone, User $user)
-    {
-        return $this->resourceEvalManager->getUserEvaluation($dropzone->getResourceNode(), $user);
-    }
-
-    /**
-     * Updates progression of ResourceEvaluation for drop.
-     *
-     * @param int $progression
-     *
-     * @return ResourceUserEvaluation
-     */
-    public function updateDropProgression(Dropzone $dropzone, Drop $drop, $progression)
-    {
-        $this->om->startFlushSuite();
-
-        if (Dropzone::DROP_TYPE_TEAM === $dropzone->getDropType()) {
-            foreach ($drop->getUsers() as $user) {
-                $this->resourceEvalManager->createResourceEvaluation(
-                    $dropzone->getResourceNode(),
-                    $user,
-                    ['progression' => $progression, 'data' => $this->serializeDrop($drop)]
-                );
-            }
-        } else {
-            $this->resourceEvalManager->createResourceEvaluation(
-                $dropzone->getResourceNode(),
-                $drop->getUser(),
-                ['progression' => $progression, 'data' => $this->serializeDrop($drop)]
-            );
-        }
-        $this->om->endFlushSuite();
     }
 
     /**

@@ -11,7 +11,7 @@ use Claroline\CoreBundle\Repository\Resource\ResourceEvaluationRepository;
 use Claroline\EvaluationBundle\Entity\AbstractEvaluation;
 use Claroline\EvaluationBundle\Manager\ResourceEvaluationManager;
 
-class UserEvaluationManager
+class EvaluationManager
 {
     /** @var ObjectManager */
     private $om;
@@ -32,12 +32,7 @@ class UserEvaluationManager
         $this->resourceEvalRepo = $this->om->getRepository(ResourceEvaluation::class);
     }
 
-    /**
-     * Fetch or create resource user evaluation.
-     *
-     * @return ResourceUserEvaluation
-     */
-    public function getResourceUserEvaluation(ResourceNode $node, User $user)
+    public function getResourceUserEvaluation(ResourceNode $node, User $user): ResourceUserEvaluation
     {
         return $this->resourceEvalManager->getUserEvaluation($node, $user);
     }
@@ -106,8 +101,8 @@ class UserEvaluationManager
         }
 
         return [
-            'progression' => $progression,
-            'progressionMax' => $progressionMax,
+            'progression' => $progressionMax ? ($progression / $progressionMax) * 100 : $progression,
+            'progressionMax' => $progressionMax, // TODO : for retro compatibility
             'status' => $status,
         ];
     }

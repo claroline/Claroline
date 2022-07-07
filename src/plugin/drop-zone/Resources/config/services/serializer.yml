@@ -1,8 +1,5 @@
 services:
     _defaults:
-        autowire: false
-        autoconfigure: false
-        public: false
         tags: [claroline.serializer]
 
     Claroline\DropZoneBundle\Serializer\RevisionSerializer:
@@ -16,14 +13,6 @@ services:
             - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
 
     Claroline\DropZoneBundle\Serializer\GradeSerializer:
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-
-    Claroline\DropZoneBundle\Serializer\DropzoneToolSerializer:
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-
-    Claroline\DropZoneBundle\Serializer\DropzoneToolDocumentSerializer:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
 
@@ -48,7 +37,6 @@ services:
 
     Claroline\DropZoneBundle\Serializer\DocumentSerializer:
         arguments:
-            - '@Claroline\DropZoneBundle\Serializer\DropzoneToolDocumentSerializer'
             - '@Claroline\DropZoneBundle\Serializer\RevisionSerializer'
             - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
             - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'

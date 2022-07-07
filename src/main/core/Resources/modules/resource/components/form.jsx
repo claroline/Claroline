@@ -206,7 +206,7 @@ const ResourceFormComponent = (props) =>
                 displayed: (resourceNode) => 'other' === get(resourceNode, 'evaluation.score')
               }
             ]
-          },
+          }
         ]
       }, {
         icon: 'fa fa-fw fa-copyright',

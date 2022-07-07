@@ -18,7 +18,6 @@ class DocumentSerializer
 {
     use SerializerTrait;
 
-    private $dropzoneToolDocumentSerializer;
     private $revisionSerializer;
     private $resourceSerializer;
     private $userSerializer;
@@ -30,14 +29,12 @@ class DocumentSerializer
     private $resourceNodeRepo;
 
     public function __construct(
-        DropzoneToolDocumentSerializer $dropzoneToolDocumentSerializer,
         RevisionSerializer $revisionSerializer,
         ResourceNodeSerializer $resourceSerializer,
         UserSerializer $userSerializer,
         TokenStorageInterface $tokenStorage,
         ObjectManager $om
     ) {
-        $this->dropzoneToolDocumentSerializer = $dropzoneToolDocumentSerializer;
         $this->revisionSerializer = $revisionSerializer;
         $this->resourceSerializer = $resourceSerializer;
         $this->userSerializer = $userSerializer;
@@ -71,23 +68,11 @@ class DocumentSerializer
             'drop' => $document->getDrop()->getUuid(),
             'user' => $document->getUser() ? $this->userSerializer->serialize($document->getUser()) : null,
             'dropDate' => $document->getDropDate() ? $document->getDropDate()->format('Y-m-d H:i') : null,
-            'toolDocuments' => $this->getToolDocuments($document),
             'revision' => $document->getRevision() ?
                 $this->revisionSerializer->serialize($document->getRevision(), [Options::SERIALIZE_MINIMAL]) :
                 null,
             'isManager' => $document->getIsManager(),
         ];
-    }
-
-    private function getToolDocuments(Document $document)
-    {
-        $toolDocuments = [];
-
-        foreach ($document->getToolDocuments() as $toolDocument) {
-            $toolDocuments[] = $this->dropzoneToolDocumentSerializer->serialize($toolDocument);
-        }
-
-        return $toolDocuments;
     }
 
     /**

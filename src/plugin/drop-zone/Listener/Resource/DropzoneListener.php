@@ -166,7 +166,7 @@ class DropzoneListener
                 $finishedPeerDrops = $this->dropzoneManager->getFinishedPeerDrops($dropzone, $user, $teamId);
                 break;
         }
-        $serializedTools = $this->dropzoneManager->getSerializedTools();
+
         /* TODO: generate ResourceUserEvaluation for team */
         $userEvaluation = !empty($user) ? $this->dropzoneManager->getResourceUserEvaluation($dropzone, $user) : null;
         $mySerializedDrop = !empty($myDrop) ? $this->serializer->serialize($myDrop) : null;
@@ -180,7 +180,6 @@ class DropzoneListener
             'dropzone' => $this->serializer->serialize($dropzone),
             'myDrop' => $mySerializedDrop,
             'nbCorrections' => count($finishedPeerDrops),
-            'tools' => $serializedTools,
             'userEvaluation' => $this->serializer->serialize($userEvaluation, [Options::SERIALIZE_MINIMAL]),
             'teams' => $serializedTeams,
             'errorMessage' => $errorMessage,

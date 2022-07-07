@@ -12,6 +12,7 @@
 namespace Claroline\DropZoneBundle\Security\Voter;
 
 use Claroline\CoreBundle\Security\Voter\AbstractVoter;
+use Claroline\DropZoneBundle\Entity\Dropzone;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class DropzoneVoter extends AbstractVoter
@@ -23,7 +24,7 @@ class DropzoneVoter extends AbstractVoter
 
     public function getClass()
     {
-        return 'Claroline\DropZoneBundle\Entity\Dropzone';
+        return Dropzone::class;
     }
 
     public function getSupportedActions()

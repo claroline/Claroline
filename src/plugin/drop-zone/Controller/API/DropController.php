@@ -22,7 +22,6 @@ use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\DropZoneBundle\Entity\Document;
 use Claroline\DropZoneBundle\Entity\Drop;
 use Claroline\DropZoneBundle\Entity\Dropzone;
-use Claroline\DropZoneBundle\Entity\DropzoneTool;
 use Claroline\DropZoneBundle\Entity\Revision;
 use Claroline\DropZoneBundle\Manager\DropzoneManager;
 use Claroline\TeamBundle\Entity\Team;
@@ -406,34 +405,6 @@ class DropController
             $this->manager->unlockDropUser($drop);
 
             return new JsonResponse($this->manager->serializeDrop($drop));
-        } catch (\Exception $e) {
-            return new JsonResponse($e->getMessage(), 422);
-        }
-    }
-
-    /**
-     * @Route("/tool/{tool}/document/{document}", name="claro_dropzone_tool_execute", methods={"POST"})
-     * @EXT\ParamConverter(
-     *     "tool",
-     *     class="Claroline\DropZoneBundle\Entity\DropzoneTool",
-     *     options={"mapping": {"tool": "uuid"}}
-     * )
-     * @EXT\ParamConverter(
-     *     "document",
-     *     class="Claroline\DropZoneBundle\Entity\Document",
-     *     options={"mapping": {"document": "uuid"}}
-     * )
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     */
-    public function toolExecuteAction(DropzoneTool $tool, Document $document): JsonResponse
-    {
-        $dropzone = $document->getDrop()->getDropzone();
-        $this->checkPermission('EDIT', $dropzone->getResourceNode(), [], true);
-
-        try {
-            $updatedDocument = $this->manager->executeTool($tool, $document);
-
-            return new JsonResponse($this->manager->serializeDocument($updatedDocument));
         } catch (\Exception $e) {
             return new JsonResponse($e->getMessage(), 422);
         }

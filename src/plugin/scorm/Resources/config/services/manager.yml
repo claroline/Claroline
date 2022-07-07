@@ -1,17 +1,14 @@
 services:
-    _defaults:
-        autowire: false
-        autoconfigure: false
-        public: true
-
     Claroline\ScormBundle\Manager\ScormManager:
-       arguments:
-          - '@event_dispatcher'
-          - '%claroline.param.files_directory%'
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@Claroline\EvaluationBundle\Manager\ResourceEvaluationManager'
-          - '@Claroline\ScormBundle\Library\ScormLib'
-          - '@Claroline\ScormBundle\Serializer\ScormSerializer'
-          - '@Claroline\ScormBundle\Serializer\ScoSerializer'
-          - '@Claroline\ScormBundle\Serializer\ScoTrackingSerializer'
-          - '%claroline.param.uploads_directory%'
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\ScormBundle\Library\ScormLib'
+            - '%claroline.param.files_directory%'
+            - '%claroline.param.uploads_directory%'
+
+    Claroline\ScormBundle\Manager\EvaluationManager:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\EvaluationBundle\Manager\ResourceEvaluationManager'

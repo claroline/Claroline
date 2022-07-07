@@ -1,0 +1,5 @@
+services:
+    Claroline\DropZoneBundle\Subscriber\Crud\DropzoneSubscriber:
+        tags: [ kernel.event_subscriber ]
+        arguments:
+            - '@Claroline\DropZoneBundle\Manager\DropzoneManager'
