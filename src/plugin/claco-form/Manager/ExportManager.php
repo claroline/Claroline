@@ -10,6 +10,7 @@ use Claroline\ClacoFormBundle\Entity\Field;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Manager\LocationManager;
 use Ramsey\Uuid\Uuid;
@@ -215,7 +216,13 @@ class ExportManager
         $fieldFacet = $field->getFieldFacet();
         switch ($fieldFacet->getType()) {
             case FieldFacet::DATE_TYPE:
-                $value = !empty($value) ? $value->format('d/m/Y') : '';
+                if (!empty($value)) {
+                    $dateValue = DateNormalizer::denormalize($value);
+                    if ($dateValue) {
+                        $value = $value->format('d/m/Y');
+                    }
+                }
+
                 break;
 
             case FieldFacet::CHOICE_TYPE:
