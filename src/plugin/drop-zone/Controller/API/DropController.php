@@ -547,14 +547,12 @@ class DropController
         if (!$this->authorization->isGranted('EDIT', $collection)) {
             throw new AccessDeniedException();
         }
-        $params = $request->query->all();
-        $filters = array_key_exists('filters', $params) ? $params['filters'] : [];
-        $filters['dropzone'] = $dropzone->getUuid();
-        $sortBy = array_key_exists('sortBy', $params) ? $params['sortBy'] : null;
 
-        //array map is not even needed; objects are fine here
+        $params = FinderProvider::parseQueryParams($request->query->all());
+        $params['allFilters']['dropzone'] = $dropzone->getUuid();
+
         /** @var Drop[] $data */
-        $data = $this->finder->get(Drop::class)->find($filters, $sortBy, 0, -1, false);
+        $data = $this->finder->fetch(Drop::class, $params['allFilters'], $params['sortBy'], 0, -1, false);
         $next = null;
 
         foreach ($data as $position => $value) {
@@ -580,14 +578,12 @@ class DropController
         if (!$this->authorization->isGranted('EDIT', $collection)) {
             throw new AccessDeniedException();
         }
-        $params = $request->query->all();
-        $filters = array_key_exists('filters', $params) ? $params['filters'] : [];
-        $filters['dropzone'] = $dropzone->getUuid();
-        $sortBy = array_key_exists('sortBy', $params) ? $params['sortBy'] : null;
 
-        //array map is not even needed; objects are fine here
+        $params = FinderProvider::parseQueryParams($request->query->all());
+        $params['allFilters']['dropzone'] = $dropzone->getUuid();
+
         /** @var Drop[] $data */
-        $data = $this->finder->get(Drop::class)->find($filters, $sortBy, 0, -1, false);
+        $data = $this->finder->fetch(Drop::class, $params['allFilters'], $params['sortBy'], 0, -1, false);
         $previous = null;
 
         foreach ($data as $position => $value) {
