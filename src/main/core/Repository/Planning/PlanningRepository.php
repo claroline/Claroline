@@ -23,8 +23,8 @@ class PlanningRepository extends EntityRepository
                 SELECT COUNT(p)
                 FROM Claroline\CoreBundle\Entity\Planning\Planning AS pl 
                 LEFT JOIN pl.plannedObjects AS p
-                WHERE :endDate < p.startDate
-                  AND :startDate > p.endDate
+                WHERE :endDate > p.startDate
+                  AND :startDate < p.endDate
                   AND pl.objectId = :objectId
             ')
             ->setParameters([
