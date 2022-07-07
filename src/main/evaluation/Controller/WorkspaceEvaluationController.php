@@ -100,7 +100,7 @@ class WorkspaceEvaluationController extends AbstractSecurityController
         $hiddenFilters = [];
 
         // don't show all users evaluations if no right
-        if ($this->checkToolAccess('SHOW_EVALUATIONS', null, false)) {
+        if (!$this->checkToolAccess('SHOW_EVALUATIONS', null, false)) {
             $hiddenFilters['user'] = $this->tokenStorage->getToken()->getUser()->getUuid();
         }
 
@@ -123,7 +123,7 @@ class WorkspaceEvaluationController extends AbstractSecurityController
         ];
 
         // don't show all users evaluations if no right
-        if ($this->checkToolAccess('SHOW_EVALUATIONS', $workspace, false)) {
+        if (!$this->checkToolAccess('SHOW_EVALUATIONS', $workspace, false)) {
             $hiddenFilters['user'] = $this->tokenStorage->getToken()->getUser()->getUuid();
         }
 
@@ -400,11 +400,12 @@ class WorkspaceEvaluationController extends AbstractSecurityController
      */
     private function checkToolAccess(string $permission, ?Workspace $workspace = null, bool $exception = true): bool
     {
-        if (!empty($workspace) && $this->authorization->isGranted(['evaluation', $permission], $workspace)) {
-            return true;
+        if (!empty($workspace)) {
+            $evaluationTool = $this->om->getRepository(OrderedTool::class)->findOneByNameAndWorkspace('evaluation', $workspace);
+        } else {
+            $evaluationTool = $this->om->getRepository(OrderedTool::class)->findOneByNameAndDesktop('evaluation');
         }
 
-        $evaluationTool = $this->om->getRepository(OrderedTool::class)->findOneByNameAndDesktop('evaluation');
         if ($this->authorization->isGranted($permission, $evaluationTool)) {
             return true;
         }
