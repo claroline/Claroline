@@ -7,7 +7,7 @@ use Claroline\TransferBundle\Transfer\Importer\AbstractCreateImporter;
 
 class Create extends AbstractCreateImporter
 {
-    public function getAction(): array
+    public static function getAction(): array
     {
         return ['group', self::MODE_CREATE];
     }

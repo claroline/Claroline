@@ -8,7 +8,7 @@ use Claroline\TransferBundle\Transfer\Exporter\AbstractListExporter;
 
 class FunctionalLogListExporter extends AbstractListExporter
 {
-    public function getAction(): array
+    public static function getAction(): array
     {
         return ['log', 'functional_log_list'];
     }

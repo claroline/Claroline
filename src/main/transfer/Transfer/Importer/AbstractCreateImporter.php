@@ -23,7 +23,7 @@ abstract class AbstractCreateImporter extends AbstractImporter
         return [
             'create' => [[
                 'data' => $data,
-                'log' => $this->getAction()[0].' created.',
+                'log' => static::getAction()[0].' created.',
             ]],
         ];
     }

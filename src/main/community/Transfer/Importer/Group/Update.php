@@ -7,7 +7,7 @@ use Claroline\TransferBundle\Transfer\Importer\AbstractUpdateImporter;
 
 class Update extends AbstractUpdateImporter
 {
-    public function getAction(): array
+    public static function getAction(): array
     {
         return ['group', self::MODE_UPDATE];
     }

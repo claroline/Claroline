@@ -1,0 +1,3 @@
+id;name;code;email;meta.default;restrictions.public
+699438d3-c874-11e8-8e9e-f46d0497b22d;Organization1;ORGANIZATION_1;organization1@test.com;false;false
+699438d3-c874-11e8-8e9e-f46d0497b33d;Organization2;ORGANIZATION_2;organization2@test.com;false;false

@@ -19,9 +19,28 @@
     "email": {
       "type": ["null", "string"],
       "description": "The organization email"
+    },
+    "meta": {
+      "type": "object",
+      "properties": {
+        "default": {
+          "type": "boolean",
+          "description": "Is it the default platform organization ?"
+        }
+      }
+    },
+    "restrictions": {
+      "type": "object",
+      "properties": {
+        "public": {
+          "type": "boolean",
+          "description": "Is the organization public (aka visible by users which are not members) ?"
+        }
+      }
     }
   },
   "claroline": {
+    "requiredAtCreation": ["name"],
     "ids": ["id", "code", "email"]
   }
 }

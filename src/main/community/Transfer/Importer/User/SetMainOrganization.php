@@ -24,7 +24,7 @@ class SetMainOrganization extends AbstractImporter
     public function execute(array $data): array
     {
         /** @var User $user */
-        $user = $this->om->getObject($data[$this->getAction()[0]], User::class, array_keys($data[$this->getAction()[0]]));
+        $user = $this->om->getObject($data[static::getAction()[0]], User::class, array_keys($data[static::getAction()[0]]));
 
         /** @var Organization $organization */
         $organization = $this->om->getObject($data['organization'], Organization::class, array_keys($data['organization']));
@@ -40,7 +40,7 @@ class SetMainOrganization extends AbstractImporter
             return [
                 'set_main_organization' => [[
                     'data' => $data,
-                    'log' => sprintf('%s added to organization %s.', $this->getAction()[0], $organization->getName()),
+                    'log' => sprintf('%s added to organization %s.', static::getAction()[0], $organization->getName()),
                 ]],
             ];
         }
@@ -48,7 +48,7 @@ class SetMainOrganization extends AbstractImporter
         return [];
     }
 
-    public function getAction(): array
+    public static function getAction(): array
     {
         return ['user', 'set_main_organization'];
     }

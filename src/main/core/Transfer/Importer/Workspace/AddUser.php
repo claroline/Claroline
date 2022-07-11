@@ -94,7 +94,7 @@ class AddUser extends AbstractImporter
         return $schema;
     }
 
-    public function getAction(): array
+    public static function getAction(): array
     {
         return ['workspace', 'add_user'];
     }

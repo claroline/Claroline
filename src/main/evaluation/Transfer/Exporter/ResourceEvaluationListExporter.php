@@ -6,7 +6,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 
 class ResourceEvaluationListExporter extends AbstractEvaluationListExporter
 {
-    public function getAction(): array
+    public static function getAction(): array
     {
         return ['evaluation', 'resource_evaluation_list'];
     }

@@ -7,7 +7,7 @@ use Claroline\TransferBundle\Transfer\Importer\AbstractDeleteImporter;
 
 class Delete extends AbstractDeleteImporter
 {
-    public function getAction(): array
+    public static function getAction(): array
     {
         return ['group', self::MODE_DELETE];
     }

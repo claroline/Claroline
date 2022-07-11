@@ -25,7 +25,7 @@ abstract class AbstractUpdateImporter extends AbstractImporter
             return [
                 'update' => [[
                     'data' => $data,
-                    'log' => $this->getAction()[0].' not found.',
+                    'log' => static::getAction()[0].' not found.',
                 ]],
             ];
         }
@@ -35,7 +35,7 @@ abstract class AbstractUpdateImporter extends AbstractImporter
         return [
             'update' => [[
                 'data' => $data,
-                'log' => $this->getAction()[0].' updated.',
+                'log' => static::getAction()[0].' updated.',
             ]],
         ];
     }

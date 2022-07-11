@@ -102,7 +102,7 @@ class RemoveGroup extends AbstractImporter
         return $schema;
     }
 
-    public function getAction(): array
+    public static function getAction(): array
     {
         return ['workspace', 'remove_group'];
     }

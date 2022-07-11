@@ -34,7 +34,7 @@ class ExportProvider extends AbstractProvider
 
         $available = [];
         foreach ($supportedActions as $action) {
-            $actionDef = $action->getAction();
+            $actionDef = $action::getAction();
 
             $available[$actionDef[0]][$actionDef[1]] = array_merge(
                 $action->getSchema($options, $extra),

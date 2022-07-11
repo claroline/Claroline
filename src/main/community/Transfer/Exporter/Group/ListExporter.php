@@ -7,7 +7,7 @@ use Claroline\TransferBundle\Transfer\Exporter\AbstractListExporter;
 
 class ListExporter extends AbstractListExporter
 {
-    public function getAction(): array
+    public static function getAction(): array
     {
         return ['group', 'list'];
     }

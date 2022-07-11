@@ -130,12 +130,8 @@ class SchemaProvider
 
     /**
      * Gets the json schema examples.
-     *
-     * @param string $class
-     *
-     * @return array
      */
-    public function getSamples($class, array $options = [])
+    public function getSamples(string $class, array $options = []): array
     {
         $serializer = $this->get($class);
         $samples = [];
@@ -179,12 +175,7 @@ class SchemaProvider
         return $walker->parseSchema($schema, new Context());
     }
 
-    /**
-     * @param string $class
-     *
-     * @return string
-     */
-    public function getSampleDirectory($class)
+    public function getSampleDirectory(string $class): ?string
     {
         $serializer = $this->get($class);
 

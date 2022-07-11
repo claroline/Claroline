@@ -63,7 +63,7 @@ class AddUser extends AbstractImporter
      * - action
      * - action name.
      */
-    public function getAction(): array
+    public static function getAction(): array
     {
         return ['group', 'add_user'];
     }
