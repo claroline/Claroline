@@ -53,7 +53,7 @@ class RemoveUser extends AbstractImporter
      * - action
      * - action name.
      */
-    public function getAction(): array
+    public static function getAction(): array
     {
         return ['group', 'remove_user'];
     }

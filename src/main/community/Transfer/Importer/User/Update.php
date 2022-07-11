@@ -18,7 +18,7 @@ class Update extends AbstractUpdateImporter
         $this->om = $om;
     }
 
-    public function getAction(): array
+    public static function getAction(): array
     {
         return ['user', self::MODE_UPDATE];
     }
@@ -69,7 +69,7 @@ class Update extends AbstractUpdateImporter
         return [
             'update' => [[
                 'data' => $data,
-                'log' => $this->getAction()[0].' updated.',
+                'log' => static::getAction()[0].' updated.',
             ]],
         ];
     }

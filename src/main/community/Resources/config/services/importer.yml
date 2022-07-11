@@ -56,3 +56,34 @@ services:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\Crud'
+
+    # Organizations
+    Claroline\CommunityBundle\Transfer\Importer\Organization\Create:
+        parent: Claroline\TransferBundle\Transfer\Importer\AbstractCreateImporter
+
+    Claroline\CommunityBundle\Transfer\Importer\Organization\CreateOrUpdate:
+        parent: Claroline\TransferBundle\Transfer\Importer\AbstractCreateOrUpdateImporter
+
+    Claroline\CommunityBundle\Transfer\Importer\Organization\Update:
+        parent: Claroline\TransferBundle\Transfer\Importer\AbstractUpdateImporter
+
+    Claroline\CommunityBundle\Transfer\Importer\Organization\Delete:
+        parent: Claroline\TransferBundle\Transfer\Importer\AbstractDeleteImporter
+
+    Claroline\CommunityBundle\Transfer\Importer\Organization\AddUser:
+        parent: Claroline\TransferBundle\Transfer\Importer\AbstractCollectionImporter
+
+    Claroline\CommunityBundle\Transfer\Importer\Organization\RemoveUser:
+        parent: Claroline\TransferBundle\Transfer\Importer\AbstractCollectionImporter
+
+    Claroline\CommunityBundle\Transfer\Importer\Organization\AddManager:
+        parent: Claroline\TransferBundle\Transfer\Importer\AbstractCollectionImporter
+
+    Claroline\CommunityBundle\Transfer\Importer\Organization\RemoveManager:
+        parent: Claroline\TransferBundle\Transfer\Importer\AbstractCollectionImporter
+
+    Claroline\CommunityBundle\Transfer\Importer\Organization\AddGroup:
+        parent: Claroline\TransferBundle\Transfer\Importer\AbstractCollectionImporter
+
+    Claroline\CommunityBundle\Transfer\Importer\Organization\RemoveGroup:
+        parent: Claroline\TransferBundle\Transfer\Importer\AbstractCollectionImporter

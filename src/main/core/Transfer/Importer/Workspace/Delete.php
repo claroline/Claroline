@@ -12,7 +12,7 @@ class Delete extends AbstractDeleteImporter
         return Workspace::class;
     }
 
-    public function getAction(): array
+    public static function getAction(): array
     {
         return ['workspace', self::MODE_DELETE];
     }

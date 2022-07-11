@@ -276,7 +276,7 @@ class Create extends AbstractImporter
         return in_array($format, ['json', 'csv']);
     }
 
-    public function getAction(): array
+    public static function getAction(): array
     {
         return ['directory', 'create'];
     }

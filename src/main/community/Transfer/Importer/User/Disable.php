@@ -23,7 +23,7 @@ class Disable extends AbstractImporter
     public function execute(array $data): array
     {
         /** @var User $object */
-        $object = $this->om->getObject($data[$this->getAction()[0]], User::class, array_keys($data[$this->getAction()[0]]));
+        $object = $this->om->getObject($data[static::getAction()[0]], User::class, array_keys($data[static::getAction()[0]]));
 
         if (!empty($object)) {
             $this->userManager->disable($object);
@@ -31,7 +31,7 @@ class Disable extends AbstractImporter
             return [
                 'disable' => [[
                     'data' => $data,
-                    'log' => $this->getAction()[0].' disabled.',
+                    'log' => static::getAction()[0].' disabled.',
                 ]],
             ];
         }
@@ -39,7 +39,7 @@ class Disable extends AbstractImporter
         return [];
     }
 
-    public function getAction(): array
+    public static function getAction(): array
     {
         return ['user', 'disable'];
     }
@@ -47,6 +47,6 @@ class Disable extends AbstractImporter
     public function getSchema(?array $options = [], ?array $extra = []): array
     {
         //this is so we don't show all properties. See ImportProvider and search $root
-        return [$this->getAction()[0] => User::class];
+        return [static::getAction()[0] => User::class];
     }
 }

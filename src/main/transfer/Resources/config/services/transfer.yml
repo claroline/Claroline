@@ -73,6 +73,16 @@ services:
               arguments:
                   - '@Claroline\AppBundle\API\Crud'
 
+    Claroline\TransferBundle\Transfer\Importer\AbstractCollectionImporter:
+        abstract: true
+        calls:
+            - method: setObjectManager
+              arguments:
+                  - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - method: setCrud
+              arguments:
+                  - '@Claroline\AppBundle\API\Crud'
+
     # Base services for common export actions
     # Implemented actions must use the tag `claroline.transfer.exporter`
     Claroline\TransferBundle\Transfer\Exporter\AbstractListExporter:

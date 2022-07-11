@@ -218,7 +218,7 @@ class ImportProvider extends AbstractProvider
 
         $available = [];
         foreach ($supportedActions as $action) {
-            $schema = $action->getAction();
+            $schema = $action::getAction();
             $available[$schema[0]][$schema[1]] = $this->explainAction($this->getActionName($action), $format, $options, $extra);
         }
 
@@ -233,7 +233,7 @@ class ImportProvider extends AbstractProvider
 
         $samples = [];
         foreach ($supportedActions as $action) {
-            $schema = $action->getAction();
+            $schema = $action::getAction();
 
             $samples[$schema[0]][$schema[1]] = [];
 

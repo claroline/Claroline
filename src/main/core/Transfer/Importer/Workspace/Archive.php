@@ -24,12 +24,12 @@ class Archive extends AbstractImporter
 
     public function execute(array $data): array
     {
-        if (empty($data[$this->getAction()[0]])) {
+        if (empty($data[static::getAction()[0]])) {
             return [];
         }
 
         /** @var Workspace $object */
-        $object = $this->om->getObject($data[$this->getAction()[0]], Workspace::class, array_keys($data[$this->getAction()[0]]));
+        $object = $this->om->getObject($data[static::getAction()[0]], Workspace::class, array_keys($data[static::getAction()[0]]));
 
         if (!empty($object)) {
             $this->manager->archive($object);
@@ -37,7 +37,7 @@ class Archive extends AbstractImporter
             return [
                 'archive' => [[
                     'data' => $data,
-                    'log' => $this->getAction()[0].' archived.',
+                    'log' => static::getAction()[0].' archived.',
                 ]],
             ];
         }
@@ -45,7 +45,7 @@ class Archive extends AbstractImporter
         return [];
     }
 
-    public function getAction(): array
+    public static function getAction(): array
     {
         return ['workspace', 'archive'];
     }
@@ -53,6 +53,6 @@ class Archive extends AbstractImporter
     public function getSchema(?array $options = [], ?array $extra = []): array
     {
         //this is so we don't show all properties. See ImportProvider and search $root
-        return [$this->getAction()[0] => Workspace::class];
+        return [static::getAction()[0] => Workspace::class];
     }
 }

@@ -6,7 +6,7 @@ use Claroline\CoreBundle\Entity\Workspace\Evaluation;
 
 class WorkspaceEvaluationListExporter extends AbstractEvaluationListExporter
 {
-    public function getAction(): array
+    public static function getAction(): array
     {
         return ['evaluation', 'workspace_evaluation_list'];
     }

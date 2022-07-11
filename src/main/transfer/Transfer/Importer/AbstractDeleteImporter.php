@@ -26,21 +26,21 @@ abstract class AbstractDeleteImporter extends AbstractImporter
 
     public function execute(array $data): array
     {
-        if (empty($data[$this->getAction()[0]])) {
+        if (empty($data[static::getAction()[0]])) {
             return [];
         }
 
         $object = $this->om->getObject(
-            $data[$this->getAction()[0]],
+            $data[static::getAction()[0]],
             static::getClass(),
-            array_keys($data[$this->getAction()[0]])
+            array_keys($data[static::getAction()[0]])
         );
 
         if (!empty($object)) {
             return [
                 'delete' => [[
                     'data' => $data,
-                    'log' => $this->getAction()[0].' not found.',
+                    'log' => static::getAction()[0].' not found.',
                 ]],
             ];
         }
@@ -50,7 +50,7 @@ abstract class AbstractDeleteImporter extends AbstractImporter
         return [
             'delete' => [[
                 'data' => $data,
-                'log' => $this->getAction()[0].' deleted.',
+                'log' => static::getAction()[0].' deleted.',
             ]],
         ];
     }
@@ -58,7 +58,7 @@ abstract class AbstractDeleteImporter extends AbstractImporter
     public function getSchema(?array $options = [], ?array $extra = []): array
     {
         //this is so we don't show all properties. See ImportProvider and search $root
-        return [$this->getAction()[0] => static::getClass()];
+        return [static::getAction()[0] => static::getClass()];
     }
 
     protected function getOptions(): array

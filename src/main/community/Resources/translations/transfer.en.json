@@ -1,0 +1,16 @@
+{
+    "add_user": "Add user",
+    "remove_user": "Remove user",
+    "add_group": "Add group",
+    "remove_group": "Remove group",
+    "add_manager": "Add manager",
+    "remove_manager": "Remove manager",
+    "set_main_organization": "Define main organization",
+    "group": "Group",
+    "user": "User",
+    "organization": "Organization",
+    "enable": "Enable",
+    "disable": "Disable",
+    "list_users": "List of users",
+    "list_managers": "List of managers"
+}

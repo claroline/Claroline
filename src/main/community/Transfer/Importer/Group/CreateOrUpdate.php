@@ -7,7 +7,7 @@ use Claroline\TransferBundle\Transfer\Importer\AbstractCreateOrUpdateImporter;
 
 class CreateOrUpdate extends AbstractCreateOrUpdateImporter
 {
-    public function getAction(): array
+    public static function getAction(): array
     {
         return ['group', 'create_or_update'];
     }

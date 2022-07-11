@@ -8,7 +8,7 @@ use Claroline\TransferBundle\Transfer\Exporter\AbstractListExporter;
 
 class AssertionListExporter extends AbstractListExporter
 {
-    public function getAction(): array
+    public static function getAction(): array
     {
         return ['badge', 'list_assertions'];
     }

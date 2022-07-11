@@ -24,7 +24,7 @@ class Create extends AbstractImporter
         $this->om = $om;
     }
 
-    public function getAction(): array
+    public static function getAction(): array
     {
         return ['user', self::MODE_CREATE];
     }
@@ -94,7 +94,7 @@ class Create extends AbstractImporter
         return [
             'create' => [[
                 'data' => $data,
-                'log' => $this->getAction()[0].' created.',
+                'log' => static::getAction()[0].' created.',
             ]],
         ];
     }

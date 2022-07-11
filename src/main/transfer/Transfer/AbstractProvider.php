@@ -51,6 +51,6 @@ abstract class AbstractProvider
 
     protected function getActionName(ActionInterface $action): string
     {
-        return $action->getAction()[0].'_'.$action->getAction()[1];
+        return $action::getAction()[0].'_'.$action::getAction()[1];
     }
 }

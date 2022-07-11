@@ -376,21 +376,27 @@ class Crud
      * @param array  $elements - the collection to patch
      * @param array  $options  - additional patch options
      */
-    public function patch($object, $property, $action, array $elements, array $options = [])
+    public function patch($object, string $property, string $action, array $elements, array $options = [])
     {
         $methodName = $action.ucfirst(strtolower($property));
 
         if (!method_exists($object, $methodName)) {
-            throw new \LogicException(sprintf('You have requested a non implemented action %s on %s', $methodName, get_class($object)));
+            throw new \LogicException(sprintf('You have requested a non implemented action %s on %s', $methodName, $this->getRealClass($object)));
         }
 
         if (!in_array(static::NO_PERMISSIONS, $options)) {
-            //add the options to pass on here
             $this->checkPermission('PATCH', $object, ['collection' => new ObjectCollection($elements)], true);
-            //we'll need to pass the $action and $data here aswell later
         }
 
+        $updated = [];
         foreach ($elements as $element) {
+            // check if the element is in the collection if the object implement a has*() method
+            $checkerName = 'has'.ucfirst(strtolower($property));
+            if (method_exists($object, $checkerName) && $object->$checkerName($element)) {
+                // the element is already in the collection, nothing to do
+                continue;
+            }
+
             if ($this->dispatch('patch', 'pre', [$object, $options, $property, $element, $action])) {
                 $object->$methodName($element);
 
@@ -402,10 +408,12 @@ class Crud
                 }
 
                 $this->dispatch('patch', 'post', [$object, $options, $property, $element, $action]);
+
+                $updated[] = $element;
             }
         }
 
-        $this->dispatch('patch', 'post_collection', [$object, $options, $property, $elements, $action]);
+        $this->dispatch('patch', 'post_collection', [$object, $options, $property, $updated, $action]);
 
         return $object;
     }
@@ -420,13 +428,15 @@ class Crud
      * @param array  $options  - an array of options
      *
      * @return object
+     *
+     * @deprecated should use standard update instead
      */
     public function replace($object, string $property, $data, array $options = [])
     {
         $methodName = 'set'.ucfirst($property);
 
         if (!method_exists($object, $methodName)) {
-            throw new \LogicException(sprintf('You have requested a non implemented action \'set\' on %s (looked for %s)', get_class($object), $methodName));
+            throw new \LogicException(sprintf('You have requested a non implemented action \'set\' on %s (looked for %s)', $this->getRealClass($object), $methodName));
         }
 
         if (!in_array(static::NO_PERMISSIONS, $options)) {

@@ -4,7 +4,7 @@ namespace Claroline\TransferBundle\Transfer;
 
 interface ActionInterface
 {
-    public function getAction(): array;
+    public static function getAction(): array;
 
     public function supports(string $format, ?array $options = [], ?array $extra = []): bool;
 

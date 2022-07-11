@@ -11,7 +11,7 @@ use Claroline\TransferBundle\Transfer\Exporter\AbstractListExporter;
  */
 class ListManagersExporter extends AbstractListExporter
 {
-    public function getAction(): array
+    public static function getAction(): array
     {
         return ['workspace', 'list_managers'];
     }

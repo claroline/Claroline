@@ -26,7 +26,7 @@ abstract class AbstractCreateOrUpdateImporter extends AbstractImporter
 
     public function execute(array $data): array
     {
-        $serializedClass = $this->getAction()[0];
+        $serializedClass = static::getAction()[0];
 
         $object = $this->crud->find(static::getClass(), $data);
         if (empty($object)) {

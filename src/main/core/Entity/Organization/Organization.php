@@ -291,12 +291,41 @@ class Organization
         return $this->locations->removeElement($location);
     }
 
+    /**
+     * @deprecated use getManagers()
+     */
     public function getAdministrators()
+    {
+        return $this->getManagers();
+    }
+
+    /**
+     * @deprecated use addManager()
+     */
+    public function addAdministrator(User $user)
+    {
+        $this->addManager($user);
+    }
+
+    /**
+     * @deprecated use removeAdministrator()
+     */
+    public function removeAdministrator(User $user)
+    {
+        $this->removeManager($user);
+    }
+
+    public function getManagers()
     {
         return $this->administrators;
     }
 
-    public function addAdministrator(User $user)
+    public function hasManager(User $user): bool
+    {
+        return $this->administrators->contains($user);
+    }
+
+    public function addManager(User $user)
     {
         if (!$this->administrators->contains($user)) {
             $this->addUser($user);
@@ -305,7 +334,7 @@ class Organization
         }
     }
 
-    public function removeAdministrator(User $user)
+    public function removeManager(User $user)
     {
         if ($this->administrators->contains($user)) {
             $this->administrators->removeElement($user);
@@ -358,14 +387,16 @@ class Organization
     {
         if (!$this->groups->contains($group)) {
             $this->groups->add($group);
-            $group->getOrganizations()->add($this);
+            $group->addOrganization($this);
         }
     }
 
     public function removeGroup(Group $group)
     {
-        $this->groups->removeElement($group);
-        $group->getOrganizations()->removeElement($this);
+        if ($this->groups->contains($group)) {
+            $this->groups->removeElement($group);
+            $group->removeOrganization($this);
+        }
     }
 
     /**
@@ -408,7 +439,7 @@ class Organization
         return $this->type;
     }
 
-    public function getUserOrganizationReferecnes()
+    public function getUserOrganizationReferences()
     {
         return $this->userOrganizationReferences;
     }
@@ -416,7 +447,7 @@ class Organization
     public function addUser(User $user)
     {
         if ($this->getMaxUsers() > -1) {
-            $totalUsers = count($this->getUserOrganizationReferecnes());
+            $totalUsers = count($this->getUserOrganizationReferences());
             if ($totalUsers >= $this->getMaxUsers()) {
                 throw new \Exception('The organization user limit has been reached');
             }

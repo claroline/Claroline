@@ -851,6 +851,18 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
         return $this->emailValidationHash;
     }
 
+    public function hasOrganization(Organization $organization, ?bool $includeGroup = true): bool
+    {
+        $organizations = $this->getOrganizations($includeGroup);
+        foreach ($organizations as $userOrganization) {
+            if ($userOrganization->getId() === $organization->getId()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /**
      * @param bool $includeGroups
      *
@@ -879,7 +891,7 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
     public function addOrganization(Organization $organization)
     {
         if ($organization->getMaxUsers() > -1) {
-            $totalUsers = count($organization->getUserOrganizationReferecnes());
+            $totalUsers = count($organization->getUserOrganizationReferences());
             if ($totalUsers >= $organization->getMaxUsers()) {
                 throw new \Exception('The organization user limit has been reached');
             }
@@ -917,6 +929,11 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
             //this is the line doing all the work. I'm not sure the previous one is usefull
             $found->getOrganization()->removeUser($this);
         }
+    }
+
+    public function hasAdministratedOrganization(Organization $organization)
+    {
+        return $this->administratedOrganizations->contains($organization);
     }
 
     public function getAdministratedOrganizations()

@@ -24,12 +24,12 @@ class Unarchive extends AbstractImporter
 
     public function execute(array $data, &$successData = []): array
     {
-        if (empty($data[$this->getAction()[0]])) {
+        if (empty($data[static::getAction()[0]])) {
             return [];
         }
 
         /** @var Workspace $object */
-        $object = $this->om->getObject($data[$this->getAction()[0]], Workspace::class, array_keys($data[$this->getAction()[0]]));
+        $object = $this->om->getObject($data[static::getAction()[0]], Workspace::class, array_keys($data[static::getAction()[0]]));
 
         if (!empty($object)) {
             $this->manager->unarchive($object);
@@ -37,7 +37,7 @@ class Unarchive extends AbstractImporter
             return [
                 'unarchive' => [[
                     'data' => $data,
-                    'log' => $this->getAction()[0].' unarchived.',
+                    'log' => static::getAction()[0].' unarchived.',
                 ]],
             ];
         }
@@ -45,7 +45,7 @@ class Unarchive extends AbstractImporter
         return [];
     }
 
-    public function getAction(): array
+    public static function getAction(): array
     {
         return ['workspace', 'unarchive'];
     }
@@ -53,6 +53,6 @@ class Unarchive extends AbstractImporter
     public function getSchema(?array $options = [], ?array $extra = []): array
     {
         //this is so we don't show all properties. See ImportProvider and search $root
-        return [$this->getAction()[0] => Workspace::class];
+        return [static::getAction()[0] => Workspace::class];
     }
 }
