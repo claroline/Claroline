@@ -15,15 +15,15 @@ function sortEvents(events) {
   return events.sort((a, b) => {
     // TODO : correct compute
     if (a.allDay && !b.allDay) {
-      return 1
-    } else if (!a.allDay && b.allDay) {
       return -1
+    } else if (!a.allDay && b.allDay) {
+      return 1
     }
 
     if (a.start < b.start) {
-      return 1
-    } else if (a.start > b.start) {
       return -1
+    } else if (a.start > b.start) {
+      return 1
     }
 
     return 0
