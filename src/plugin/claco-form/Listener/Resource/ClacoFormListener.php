@@ -160,53 +160,60 @@ class ClacoFormListener
         // it will be easier to fix relationships this way than creating a mapping.
         // This may have a huge performances impact because we need to decode the string multiple times.
         $rawData = json_encode($data);
+        if (!empty($data['fields'])) {
+            foreach ($data['fields'] as $fieldData) {
+                $newField = new Field();
+                $newField->setClacoForm($clacoForm);
+                $clacoForm->addField($newField);
 
-        foreach ($data['fields'] as $fieldData) {
-            $newField = new Field();
-            $newField->setClacoForm($clacoForm);
-            $clacoForm->addField($newField);
+                // no Crud here. This is managed by the ClacoFormSerializer in the app
+                $newField = $this->serializer->deserialize($fieldData, $newField, [Options::REFRESH_UUID]);
 
-            // no Crud here. This is managed by the ClacoFormSerializer in the app
-            $newField = $this->serializer->deserialize($fieldData, $newField, [Options::REFRESH_UUID]);
+                $this->om->persist($newField);
+                $this->om->persist($clacoForm);
 
-            $this->om->persist($newField);
-            $this->om->persist($clacoForm);
-
-            // replace UUIDs for Categories and Entries data
-            $rawData = str_replace($fieldData['id'], $newField->getUuid(), $rawData);
+                // replace UUIDs for Categories and Entries data
+                $rawData = str_replace($fieldData['id'], $newField->getUuid(), $rawData);
+            }
         }
 
         // get decoded data with new UUIDs
         $data = json_decode($rawData, true);
-        foreach ($data['categories'] as $categoryData) {
-            $category = new Category();
-            $category->setClacoForm($clacoForm);
+        if (!empty($data['categories'])) {
+            foreach ($data['categories'] as $categoryData) {
+                $category = new Category();
+                $category->setClacoForm($clacoForm);
 
-            $this->crud->create($category, $categoryData, [Crud::NO_PERMISSIONS, Crud::NO_VALIDATION, Options::REFRESH_UUID]);
+                $this->crud->create($category, $categoryData, [Crud::NO_PERMISSIONS, Crud::NO_VALIDATION, Options::REFRESH_UUID]);
 
-            // replace UUIDs for Entries data
-            $rawData = str_replace($categoryData['id'], $category->getUuid(), $rawData);
+                // replace UUIDs for Entries data
+                $rawData = str_replace($categoryData['id'], $category->getUuid(), $rawData);
+            }
         }
 
         // get decoded data with new UUIDs
         $data = json_decode($rawData, true);
-        foreach ($data['keywords'] as $keywordData) {
-            $keyword = new Keyword();
-            $keyword->setClacoForm($clacoForm);
+        if (!empty($data['keywords'])) {
+            foreach ($data['keywords'] as $keywordData) {
+                $keyword = new Keyword();
+                $keyword->setClacoForm($clacoForm);
 
-            $this->crud->create($keyword, $keywordData, [Crud::NO_PERMISSIONS, Crud::NO_VALIDATION, Options::REFRESH_UUID]);
+                $this->crud->create($keyword, $keywordData, [Crud::NO_PERMISSIONS, Crud::NO_VALIDATION, Options::REFRESH_UUID]);
 
-            // replace UUIDs for Entries data
-            $rawData = str_replace($keywordData['id'], $keyword->getUuid(), $rawData);
+                // replace UUIDs for Entries data
+                $rawData = str_replace($keywordData['id'], $keyword->getUuid(), $rawData);
+            }
         }
 
         // get decoded data with new UUIDs
         $data = json_decode($rawData, true);
-        foreach ($data['entries'] as $entryData) {
-            $entry = new Entry();
-            $entry->setClacoForm($clacoForm);
+        if (!empty($data['entries'])) {
+            foreach ($data['entries'] as $entryData) {
+                $entry = new Entry();
+                $entry->setClacoForm($clacoForm);
 
-            $this->crud->create($entry, $entryData, [Crud::NO_PERMISSIONS, Crud::NO_VALIDATION, Options::REFRESH_UUID]);
+                $this->crud->create($entry, $entryData, [Crud::NO_PERMISSIONS, Crud::NO_VALIDATION, Options::REFRESH_UUID]);
+            }
         }
     }
 }

@@ -44,6 +44,9 @@ class NotifyUsersOnMessageCreatedHandler implements MessageHandlerInterface
     public function __invoke(NotifyUsersOnMessageCreated $forumNotification)
     {
         $message = $this->om->getRepository(Message::class)->find($forumNotification->getMessageId());
+        if (empty($message)) {
+            return;
+        }
 
         $subject = $message->getSubject();
         $forum = $subject->getForum();

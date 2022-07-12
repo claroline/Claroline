@@ -125,6 +125,7 @@ class ForumListener
             $subject = new Subject();
             $subject->setForum($forum);
 
+            // TODO : this should use the copy action
             $this->crud->create($subject, $subjectData, [Crud::NO_PERMISSIONS, Crud::NO_VALIDATION, Options::REFRESH_UUID]);
         }
         $this->om->endFlushSuite();
