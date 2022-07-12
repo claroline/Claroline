@@ -88,7 +88,12 @@ class ValidatorProvider
 
             if (is_array($identifiers)) {
                 foreach ($identifiers as $identifier) {
-                    $uniqueFields[$identifier] = $identifier;
+                    if ('id' === $identifier) {
+                        // slightly hacky : the 'id' prop declared in the schema must be remapped on the 'uuid' entity prop
+                        $uniqueFields[$identifier] = 'uuid';
+                    } else {
+                        $uniqueFields[$identifier] = $identifier;
+                    }
                 }
             }
 
