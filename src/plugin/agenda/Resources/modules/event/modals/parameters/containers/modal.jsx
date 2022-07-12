@@ -15,6 +15,7 @@ import {reducer, selectors} from '#/plugin/agenda/event/modals/parameters/store'
 const ParametersModal = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
+      formData: formSelect.data(formSelect.form(state, selectors.STORE_NAME)),
       saveEnabled: formSelect.saveEnabled(formSelect.form(state, selectors.STORE_NAME))
     }),
     (dispatch) => ({
