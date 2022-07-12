@@ -122,13 +122,15 @@ class SubjectSubscriber implements EventSubscriberInterface
         /** @var Subject $subject */
         $subject = $event->getObject();
 
-        $message = $subject->getFirstMessage();
-        if ($message) {
-            $this->messageBus->dispatch(new NotifyUsersOnMessageCreated($message->getId()));
-        }
-
         if ($subject->getPoster()) {
             $this->fileManager->linkFile(Subject::class, $subject->getUuid(), $subject->getPoster()->getUrl());
+        }
+
+        $message = $subject->getFirstMessage();
+        if ($message) {
+            // hacky : when we are in a flushSuite (eg. copy), the messenger will fail because the message does not exist
+            $this->om->forceFlush();
+            $this->messageBus->dispatch(new NotifyUsersOnMessageCreated($message->getId()));
         }
 
         $this->dispatchSubjectEvent($subject, 'forum_subject-create');
