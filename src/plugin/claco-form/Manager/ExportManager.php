@@ -219,7 +219,7 @@ class ExportManager
                 if (!empty($value)) {
                     $dateValue = DateNormalizer::denormalize($value);
                     if ($dateValue) {
-                        $value = $value->format('d/m/Y');
+                        $value = $dateValue->format('d/m/Y');
                     }
                 }
 
