@@ -31,7 +31,10 @@ class DateNormalizer
     {
         if (!empty($dateString)) {
             try {
-                return \DateTime::createFromFormat(static::DATE_FORMAT, $dateString);
+                $dateObject = \DateTime::createFromFormat(static::DATE_FORMAT, trim($dateString));
+                if (false !== $dateObject) {
+                    return $dateObject;
+                }
             } catch (\Exception $e) {
             }
         }
