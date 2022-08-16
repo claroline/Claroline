@@ -30,11 +30,10 @@ class PaperFinder extends AbstractFinder
         $userJoin = false;
         if (!array_key_exists('userDisabled', $searches) && !array_key_exists('user', $searches)) {
             // don't show evaluation of disabled/deleted users
-            $qb->join('obj.user', 'u');
+            $qb->leftJoin('obj.user', 'u');
             $userJoin = true;
 
-            $qb->andWhere('u.isEnabled = TRUE');
-            $qb->andWhere('u.isRemoved = FALSE');
+            $qb->andWhere('(u.id IS NULL OR (u.isEnabled = TRUE AND u.isRemoved = FALSE))');
         }
 
         foreach ($searches as $filterName => $filterValue) {
