@@ -100,10 +100,8 @@ class UserFinder extends AbstractFinder
                     }
 
                     $qb->andWhere('(r.uuid IN (:roleIds) OR gr.uuid IN (:groupRoleIds))');
-                    $qb->setParameters([
-                        'roleIds' => is_array($filterValue) ? $filterValue : [$filterValue],
-                        'groupRoleIds' => is_array($filterValue) ? $filterValue : [$filterValue],
-                    ]);
+                    $qb->setParameter('roleIds', is_array($filterValue) ? $filterValue : [$filterValue]);
+                    $qb->setParameter('groupRoleIds', is_array($filterValue) ? $filterValue : [$filterValue]);
                     break;
 
                 case 'roleTranslation':
@@ -189,10 +187,9 @@ class UserFinder extends AbstractFinder
 
                     $qb->leftJoin('gr.workspace', 'gws');
                     $qb->andWhere('(rws.uuid IN (:userWorkspaceId) OR gws.uuid IN (:groupWorkspaceId))');
-                    $qb->setParameters([
-                        'userWorkspaceId' => $filterValue,
-                        'groupWorkspaceId' => $filterValue,
-                    ]);
+                    $qb->setParameter('userWorkspaceId', $filterValue);
+                    $qb->setParameter('groupWorkspaceId', $filterValue);
+
                     break;
 
                 // get users which are manager of at least one workspace (not their personal ws)
