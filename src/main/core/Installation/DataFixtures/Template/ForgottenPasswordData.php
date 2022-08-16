@@ -17,11 +17,11 @@ class ForgottenPasswordData extends AbstractTemplateFixture
             'Claroline Connect' => [
                 'en' => [
                     'title' => 'Resetting your password',
-                    'content' => $this->twig->render('@ClarolineCore/template/password_initialization.en.html.twig'),
+                    'content' => $this->twig->render('@ClarolineCore/template/forgotten_password.en.html.twig'),
                 ],
                 'fr' => [
                     'title' => 'Réinitialisation de votre mot de passe',
-                    'content' => $this->twig->render('@ClarolineCore/template/password_initialization.fr.html.twig'),
+                    'content' => $this->twig->render('@ClarolineCore/template/forgotten_password.fr.html.twig'),
                 ],
             ],
         ];
