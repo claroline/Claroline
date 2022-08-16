@@ -262,7 +262,7 @@ class BadgeClass
      *
      * @return self
      */
-    public function setIssuer(Organization $issuer)
+    public function setIssuer(?Organization $issuer = null)
     {
         $this->issuer = $issuer;
 
