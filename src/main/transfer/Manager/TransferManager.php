@@ -132,7 +132,12 @@ class TransferManager
     {
         $fs = new FileSystem();
 
-        $exportPath = $this->fileManager->getDirectory().'/transfer'.'/'.$exportFile->getUuid();
+        $exportDir = $this->fileManager->getDirectory().DIRECTORY_SEPARATOR.'transfer'.DIRECTORY_SEPARATOR;
+        if (!$fs->exists($exportDir)) {
+            $fs->mkdir($exportDir);
+        }
+
+        $exportPath = $exportDir.$exportFile->getUuid();
         if ($fs->exists($exportPath)) {
             $fs->remove($exportPath);
         }
@@ -148,7 +153,7 @@ class TransferManager
             $fs->touch($exportPath);
 
             $this->exporter->execute(
-                $this->fileManager->getDirectory().'/transfer'.'/'.$exportFile->getUuid(),
+                $exportPath,
                 $exportFile->getFormat(),
                 $exportFile->getAction(),
                 $options,
