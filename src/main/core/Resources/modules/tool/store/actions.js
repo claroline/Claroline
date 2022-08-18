@@ -15,6 +15,7 @@ export const TOOL_SET_LOADED        = 'TOOL_SET_LOADED'
 export const TOOL_SET_ACCESS_DENIED = 'TOOL_SET_ACCESS_DENIED'
 export const TOOL_SET_NOT_FOUND     = 'TOOL_SET_NOT_FOUND'
 export const TOOL_TOGGLE_FULLSCREEN = 'TOOL_TOGGLE_FULLSCREEN'
+export const TOOL_SET_FULLSCREEN    = 'TOOL_SET_FULLSCREEN'
 
 // action creators
 export const actions = {}
@@ -25,6 +26,7 @@ actions.setLoaded = makeActionCreator(TOOL_SET_LOADED, 'loaded')
 actions.setAccessDenied = makeActionCreator(TOOL_SET_ACCESS_DENIED, 'accessDenied')
 actions.setNotFound = makeActionCreator(TOOL_SET_NOT_FOUND, 'notFound')
 actions.toggleFullscreen = makeActionCreator(TOOL_TOGGLE_FULLSCREEN)
+actions.setFullscreen = makeActionCreator(TOOL_SET_FULLSCREEN, 'fullscreen')
 
 actions.open = (name, context, basePath) => (dispatch, getState) => {
   const prevName = selectors.name(getState())

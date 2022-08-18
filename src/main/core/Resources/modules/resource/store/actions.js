@@ -1,6 +1,9 @@
+import get from 'lodash/get'
+
 import {makeActionCreator, makeInstanceActionCreator} from '#/main/app/store/actions'
 import {API_REQUEST} from '#/main/app/api'
 
+import {actions as toolActions} from '#/main/core/tool/store/actions'
 import {selectors} from '#/main/core/resource/store/selectors'
 
 // actions
@@ -47,6 +50,10 @@ actions.fetchResource = (slug, embedded = false, loadApp) => (dispatch) => dispa
 
         // load resource data inside the store
         dispatch(actions.loadResourceType(response.resourceNode.meta.type, response))
+
+        if (!embedded) {
+          dispatch(toolActions.setFullscreen(get(response.resourceNode, 'display.fullscreen', false)))
+        }
 
         // mark the resource as loaded
         // it's done through another action (not RESOURCE_LOAD) to be sure all reducers have been resolved
