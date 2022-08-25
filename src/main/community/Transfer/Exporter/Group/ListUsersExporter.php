@@ -1,8 +1,7 @@
 <?php
 
-namespace Claroline\CoreBundle\Transfer\Exporter\Workspace;
+namespace Claroline\CommunityBundle\Transfer\Exporter\Group;
 
-use Claroline\AppBundle\API\Options;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\TransferBundle\Transfer\Exporter\AbstractListExporter;
 
@@ -10,7 +9,7 @@ class ListUsersExporter extends AbstractListExporter
 {
     public static function getAction(): array
     {
-        return ['workspace', 'list_users'];
+        return ['group', 'list_users'];
     }
 
     protected static function getClass(): string
@@ -20,8 +19,8 @@ class ListUsersExporter extends AbstractListExporter
 
     public function execute(int $batchNumber, ?array $options = [], ?array $extra = []): array
     {
-        if (empty($extra['workspace'])) {
-            // avoid exposing the full users list if no workspace is selected
+        if (empty($extra['group'])) {
+            // avoid exposing the full users list if no group is selected
             return [];
         }
 
@@ -31,14 +30,11 @@ class ListUsersExporter extends AbstractListExporter
     public function getExtraDefinition(?array $options = [], ?array $extra = []): array
     {
         $extraDef = parent::getExtraDefinition($options, $extra);
-
-        if (!in_array(Options::WORKSPACE_IMPORT, $options)) {
-            $extraDef['fields'][] = [
-                'name' => 'workspace',
-                'label' => $this->translator->trans('workspace', [], 'platform'),
-                'type' => 'workspace',
-            ];
-        }
+        $extraDef['fields'][] = [
+            'name' => 'group',
+            'label' => $this->translator->trans('group', [], 'platform'),
+            'type' => 'group',
+        ];
 
         return $extraDef;
     }
@@ -90,6 +86,17 @@ class ListUsersExporter extends AbstractListExporter
                 ],
             ],
         ];
+    }
+
+    protected function getHiddenFilters(?array $options = [], ?array $extra = []): array
+    {
+        if (!empty($extra['group'])) {
+            return [
+                'group' => $extra['group']['id'],
+            ];
+        }
+
+        return [];
     }
 
     protected function getAvailableFilters(): array

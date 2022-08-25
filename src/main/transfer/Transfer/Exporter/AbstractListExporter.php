@@ -37,16 +37,12 @@ abstract class AbstractListExporter extends AbstractExporter
     {
         $query = [
             'filters' => [],
-            'hiddenFilters' => $this->getHiddenFilters(),
+            'hiddenFilters' => $this->getHiddenFilters($options, $extra),
             'page' => $batchNumber,
             'limit' => $this->getBatchSize(),
         ];
 
         if (!empty($extra)) {
-            if (!empty($extra['workspace'])) {
-                $query['hiddenFilters']['workspace'] = $extra['workspace']['id'];
-            }
-
             if (!empty($extra['filters'])) {
                 foreach ($extra['filters'] as $filter) {
                     $query['filters'][$filter['property']] = $filter['value'];
@@ -80,8 +76,16 @@ abstract class AbstractListExporter extends AbstractExporter
         return [];
     }
 
-    protected function getHiddenFilters(): array
+    protected function getHiddenFilters(?array $options = [], ?array $extra = []): array
     {
+        if (!empty($extra['workspace'])) {
+            // for export in workspace, we auto filter on the current workspace
+            // NB. the linked Finder should implement the filter to make it work
+            return [
+                'workspace' => $extra['workspace']['id'],
+            ];
+        }
+
         return [];
     }
 

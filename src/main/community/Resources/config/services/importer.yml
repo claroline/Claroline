@@ -25,6 +25,11 @@ services:
             - '@Claroline\AppBundle\API\Crud'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
 
+    Claroline\CommunityBundle\Transfer\Importer\Group\EmptyUsers:
+        arguments:
+            - '@Claroline\AppBundle\API\Crud'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+
     # Users
     Claroline\CommunityBundle\Transfer\Importer\User\Create:
         arguments:

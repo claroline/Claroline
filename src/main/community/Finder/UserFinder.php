@@ -12,6 +12,7 @@
 namespace Claroline\CommunityBundle\Finder;
 
 use Claroline\AppBundle\API\Finder\AbstractFinder;
+use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\QueryBuilder;
@@ -54,9 +55,8 @@ class UserFinder extends AbstractFinder
                         $qb->expr()->in('obj.username', ':globalSearch')
                     ));
 
-                    $data = array_map(function ($data) {
-                        //trim and do other stuff here
-                        return $data;
+                    $data = array_map(function ($email) {
+                        return trim($email);
                     }, str_getcsv($filterValue));
 
                     $qb->setParameter('emails', $data);
@@ -78,8 +78,13 @@ class UserFinder extends AbstractFinder
                         $groupJoin = true;
                     }
 
+                    $groups = is_array($filterValue) ? $filterValue : [$filterValue];
+                    $groups = array_map(function ($group) {
+                        return $group instanceof Group ? $group->getUuid() : $group;
+                    }, $groups);
+
                     $qb->andWhere('g.uuid IN (:groupIds)');
-                    $qb->setParameter('groupIds', is_array($filterValue) ? $filterValue : [$filterValue]);
+                    $qb->setParameter('groupIds', $groups);
                     break;
 
                 case 'role':

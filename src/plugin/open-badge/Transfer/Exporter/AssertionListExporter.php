@@ -23,7 +23,7 @@ class AssertionListExporter extends AbstractListExporter
         return Assertion::class;
     }
 
-    protected function getHiddenFilters(): array
+    protected function getHiddenFilters(?array $options = [], ?array $extra = []): array
     {
         return [
             // do not filter disabled and deleted users for now
