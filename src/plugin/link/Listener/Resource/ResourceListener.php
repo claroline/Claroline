@@ -14,7 +14,6 @@ namespace Claroline\LinkBundle\Listener\Resource;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Event\Resource\ResourceActionEvent;
 use Claroline\LinkBundle\Entity\Resource\Shortcut;
 use Doctrine\Persistence\ObjectRepository;
 
@@ -36,13 +35,6 @@ class ResourceListener
         $this->crud = $crud;
 
         $this->repository = $om->getRepository(Shortcut::class);
-    }
-
-    /**
-     * Gets all shortcuts of a resource.
-     */
-    public function shortcuts(ResourceActionEvent $event)
-    {
     }
 
     /**
