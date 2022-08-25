@@ -106,13 +106,14 @@ class ResourcesSubscriber implements EventSubscriberInterface
             return;
         }
 
-        // we need to push the path resources last, because we need all resources to be created
-        // to link them to the new paths.
-        // this should not be done here and as is it doesn't work if we link paths to others paths.
-        usort($data['resources'], function (array $a, array $b) {
-            if ('innova_path' === $a['resourceNode']['meta']['type']) {
+        // we need to push the resource types with linked resources last, because we need all resources to be created
+        // to link them to the new resources.
+        // this should not be done here and as is it doesn't work in all cases (eg. if we link paths to others paths).
+        $typesWithResourceLinks = ['innova_path', 'shortcut'];
+        usort($data['resources'], function (array $a, array $b) use ($typesWithResourceLinks) {
+            if (in_array($a['resourceNode']['meta']['type'], $typesWithResourceLinks)) {
                 return 1;
-            } elseif ('innova_path' === $b['resourceNode']['meta']['type']) {
+            } elseif (in_array($b['resourceNode']['meta']['type'], $typesWithResourceLinks)) {
                 return -1;
             }
 
