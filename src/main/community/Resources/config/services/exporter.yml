@@ -9,3 +9,6 @@ services:
     # Group
     Claroline\CommunityBundle\Transfer\Exporter\Group\ListExporter:
         parent: Claroline\TransferBundle\Transfer\Exporter\AbstractListExporter
+
+    Claroline\CommunityBundle\Transfer\Exporter\Group\ListUsersExporter:
+        parent: Claroline\TransferBundle\Transfer\Exporter\AbstractListExporter

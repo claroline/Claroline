@@ -12,5 +12,6 @@
     "enable": "Enable",
     "disable": "Disable",
     "list_users": "List of users",
-    "list_managers": "List of managers"
+    "list_managers": "List of managers",
+    "empty_users": "Remove all users"
 }
