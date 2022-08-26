@@ -19,6 +19,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 class ExportFileVoter extends AbstractTransferFileVoter
 {
     const EXPORT = 'EXPORT';
+    const REFRESH = 'REFRESH';
 
     public function getClass()
     {
@@ -46,6 +47,17 @@ class ExportFileVoter extends AbstractTransferFileVoter
 
                 return VoterInterface::ACCESS_DENIED;
 
+            case self::REFRESH:
+                if ($this->isToolGranted(self::REFRESH, 'transfer', $object->getWorkspace() ?? null)) {
+                    return VoterInterface::ACCESS_GRANTED;
+                }
+
+                if ($object->getCreator() && $token->getUser() instanceof User && $object->getCreator()->getId() === $token->getUser()->getId()) {
+                    return VoterInterface::ACCESS_GRANTED;
+                }
+
+                return VoterInterface::ACCESS_DENIED;
+
             case self::EDIT:
             case self::DELETE:
                 if ($this->isToolGranted(self::EDIT, 'transfer', $object->getWorkspace() ?? null)) {
@@ -60,5 +72,10 @@ class ExportFileVoter extends AbstractTransferFileVoter
         }
 
         return VoterInterface::ACCESS_ABSTAIN;
+    }
+
+    public function getSupportedActions()
+    {
+        return array_merge(parent::getSupportedActions(), [self::REFRESH]);
     }
 }
