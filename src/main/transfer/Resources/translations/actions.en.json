@@ -1,5 +1,5 @@
 {
   "import": "Import",
   "export": "Export",
-  "refresh-data": "Refresh data"
+  "refresh": "Refresh data"
 }

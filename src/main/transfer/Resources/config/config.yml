@@ -7,3 +7,4 @@ plugin:
           tool_rights:
               - name: import
               - name: export
+              - name: refresh

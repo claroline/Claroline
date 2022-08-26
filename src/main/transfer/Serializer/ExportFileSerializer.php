@@ -70,6 +70,7 @@ class ExportFileSerializer
             'permissions' => [
                 'edit' => $this->authorization->isGranted('EDIT', $file),
                 'delete' => $this->authorization->isGranted('DELETE', $file),
+                'refresh' => $this->authorization->isGranted('REFRESH', $file),
             ],
             'executionDate' => DateNormalizer::normalize($file->getExecutionDate()),
         ];
