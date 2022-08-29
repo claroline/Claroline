@@ -21,16 +21,6 @@ class ListManagersExporter extends AbstractListExporter
         return User::class;
     }
 
-    public function execute(int $batchNumber, ?array $options = [], ?array $extra = []): array
-    {
-        if (empty($extra['workspace'])) {
-            // avoid exposing the full users list if no workspace is selected
-            return [];
-        }
-
-        return parent::execute($batchNumber, $options, $extra);
-    }
-
     protected function getHiddenFilters(?array $options = [], ?array $extra = []): array
     {
         return [
