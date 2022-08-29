@@ -121,7 +121,9 @@ class WorkspaceSubscriber implements EventSubscriberInterface
             $this->resourceManager->createRights($root, [], true, false);
         }
 
-        $this->toolManager->addMissingWorkspaceTools($workspace);
+        // this is broken when the workspace is created inside a flush suite.
+        // this would be better to handle it here, but for now there is a check on the workspace open to do it
+        //$this->toolManager->addMissingWorkspaceTools($workspace);
     }
 
     public function preCopy(CopyEvent $event)
