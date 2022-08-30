@@ -206,9 +206,9 @@ class UserFinder extends AbstractFinder
                     }
                     $qb->leftJoin('r.workspace', 'rw');
 
-                    $qb->andWhere('UPPER(rn.name) LIKE :managerRoleName');
+                    $qb->andWhere('UPPER(r.name) LIKE :managerRoleName');
                     $qb->setParameter('managerRoleName', 'ROLE_WS_MANAGER_%');
-                    $qb->andWhere('rn.type = 2');
+                    $qb->andWhere('r.type = 2');
 
                     $qb->andWhere('rw.model = 0');
                     $qb->andWhere('rw.personal = 0');
