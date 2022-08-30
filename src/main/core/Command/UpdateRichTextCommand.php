@@ -186,6 +186,7 @@ class UpdateRichTextCommand extends Command
             'Claroline\CoreBundle\Entity\Content' => ['content'],
             'Claroline\CoreBundle\Entity\Resource\Revision' => ['content'],
             'Claroline\CoreBundle\Entity\Widget\Type\SimpleWidget' => ['content'],
+            'Claroline\CoreBundle\Entity\Template\TemplateContent' => ['content'],
             // plugins (should not be here)
             'Claroline\AgendaBundle\Entity\Event' => ['description'],
             'Claroline\AgendaBundle\Entity\Task' => ['description'],
