@@ -27,7 +27,7 @@ class Shortcut extends AbstractResource
      * The targeted resource node.
      *
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
-     * @ORM\JoinColumn(onDelete="CASCADE", nullable=false)
+     * @ORM\JoinColumn(onDelete="CASCADE", nullable=true)
      *
      * @var ResourceNode
      */

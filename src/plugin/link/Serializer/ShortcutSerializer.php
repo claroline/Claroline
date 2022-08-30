@@ -66,7 +66,9 @@ class ShortcutSerializer
                 ->getRepository(ResourceNode::class)
                 ->findOneBy(['uuid' => $data['target']['id']]);
 
-            $shortcut->setTarget($target);
+            if (!empty($target)) {
+                $shortcut->setTarget($target);
+            }
         }
 
         return $shortcut;
