@@ -112,7 +112,7 @@ class TransferManager
         $this->crud->update($importFile, [
             'status' => $status,
             'executionDate' => DateNormalizer::normalize(new \DateTime()),
-        ]);
+        ], [Crud::NO_PERMISSIONS]);
 
         return $status;
     }
@@ -168,7 +168,7 @@ class TransferManager
         $this->crud->update($exportFile, [
             'status' => $status,
             'executionDate' => DateNormalizer::normalize(new \DateTime()),
-        ]);
+        ], [Crud::NO_PERMISSIONS]);
 
         return $status;
     }
