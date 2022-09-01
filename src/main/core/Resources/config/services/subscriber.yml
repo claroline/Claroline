@@ -32,6 +32,12 @@ services:
             - '@Claroline\CoreBundle\Manager\Resource\RightsManager'
             - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
 
+    Claroline\CoreBundle\Subscriber\Crud\TemplateSubscriber:
+        tags: [ kernel.event_subscriber ]
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\Manager\Template\TemplateManager'
+
     Claroline\CoreBundle\Subscriber\Crud\UserSubscriber:
         tags: [ kernel.event_subscriber ]
         arguments:
