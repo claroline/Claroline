@@ -11,10 +11,8 @@
 
 namespace Claroline\LinkBundle\Listener\Resource\Types;
 
-use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
-use Claroline\CoreBundle\Manager\Resource\ResourceLifecycleManager;
 use Claroline\LinkBundle\Entity\Resource\Shortcut;
 
 /**
@@ -24,27 +22,20 @@ class ShortcutListener
 {
     /** @var SerializerProvider */
     private $serializer;
-    /** @var ResourceLifecycleManager */
-    private $resourceLifecycle;
 
     public function __construct(
-        SerializerProvider $serializer,
-        ResourceLifecycleManager $resourceLifecycleManager
+        SerializerProvider $serializer
     ) {
         $this->serializer = $serializer;
-        $this->resourceLifecycle = $resourceLifecycleManager;
     }
 
-    /**
-     * Loads a shortcut.
-     */
     public function load(LoadResourceEvent $event)
     {
         /** @var Shortcut $shortcut */
         $shortcut = $event->getResource();
 
         $event->setData([
-            'embedded' => $this->serializer->serialize($shortcut->getTarget(), [Options::SERIALIZE_MINIMAL]),
+            'shortcut' => $this->serializer->serialize($shortcut),
         ]);
     }
 }

@@ -1,0 +1,4 @@
+services:
+    Claroline\LinkBundle\Controller\ShortcutController:
+        parent: Claroline\AppBundle\Controller\AbstractCrudController
+        public: true
