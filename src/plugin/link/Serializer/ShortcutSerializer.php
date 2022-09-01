@@ -42,9 +42,14 @@ class ShortcutSerializer
 
     public function serialize(Shortcut $shortcut, array $options = []): array
     {
+        $target = null;
+        if (!empty($shortcut->getTarget())) {
+            $target = $this->resourceNodeSerializer->serialize($shortcut->getTarget(), array_merge($options, [Options::SERIALIZE_MINIMAL]));
+        }
+
         return [
             'id' => $shortcut->getUuid(),
-            'target' => $this->resourceNodeSerializer->serialize($shortcut->getTarget(), array_merge($options, [Options::SERIALIZE_MINIMAL])),
+            'target' => $target,
         ];
     }
 
