@@ -30,7 +30,7 @@ class WorkspaceSerializer
     /** @var AuthorizationCheckerInterface */
     private $authorization;
 
-    /** @var AuthorizationCheckerInterface */
+    /** @var TokenStorageInterface */
     private $tokenStorage;
 
     private $eventDispatcher;
