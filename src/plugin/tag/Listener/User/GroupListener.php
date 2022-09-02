@@ -2,8 +2,8 @@
 
 namespace Claroline\TagBundle\Listener\User;
 
+use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\CoreBundle\Entity\Group;
-use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\TagBundle\Manager\TagManager;
 
 class GroupListener
@@ -11,24 +11,16 @@ class GroupListener
     /** @var TagManager */
     private $manager;
 
-    /**
-     * GroupListener constructor.
-     */
     public function __construct(TagManager $manager)
     {
         $this->manager = $manager;
     }
 
-    public function onDelete(GenericDataEvent $event)
+    public function onDelete(DeleteEvent $event)
     {
-        /** @var Group[] $groups */
-        $groups = $event->getData();
+        /** @var Group $group */
+        $group = $event->getObject();
 
-        $ids = [];
-        foreach ($groups as $group) {
-            $ids[] = $group->getId();
-        }
-
-        $this->manager->removeTaggedObjectsByClassAndIds(Group::class, $ids);
+        $this->manager->removeTaggedObjectsByClassAndIds(Group::class, [$group->getId()]);
     }
 }

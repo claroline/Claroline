@@ -34,7 +34,7 @@ export default {
         }
       }, {
         name: 'parent',
-        label: trans('parent', {}, 'resource'),
+        label: trans('directory', {}, 'resource'),
         type: 'resource'
       }, {
         name: 'meta.views',
@@ -72,7 +72,7 @@ export default {
         name: 'tags',
         type: 'tag',
         label: trans('tags'),
-        displayable: false,
+        displayable: true,
         sortable: false,
         options: {
           objectClass: 'Claroline\\CoreBundle\\Entity\\Resource\\ResourceNode'

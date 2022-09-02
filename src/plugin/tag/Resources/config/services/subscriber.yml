@@ -8,3 +8,11 @@ services:
         arguments:
             - '@security.authorization_checker'
             - '@twig'
+
+    Claroline\TagBundle\Subscriber\WorkspaceSubscriber:
+        arguments:
+            - '@Claroline\TagBundle\Manager\TagManager'
+
+    Claroline\TagBundle\Subscriber\ResourceNodeSubscriber:
+        arguments:
+            - '@Claroline\TagBundle\Manager\TagManager'

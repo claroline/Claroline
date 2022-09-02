@@ -6,7 +6,6 @@ use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\API\SerializerProvider;
-use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
@@ -16,10 +15,12 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Event\Resource\DecorateResourceNodeEvent;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
 use Claroline\CoreBundle\Manager\Resource\RightsManager;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class ResourceNodeSerializer
 {
@@ -29,7 +30,7 @@ class ResourceNodeSerializer
 
     /** @var ObjectManager */
     private $om;
-    /** @var StrictDispatcher */
+    /** @var EventDispatcherInterface */
     private $eventDispatcher;
     /** @var PublicFileSerializer */
     private $fileSerializer;
@@ -42,7 +43,7 @@ class ResourceNodeSerializer
 
     public function __construct(
         ObjectManager $om,
-        StrictDispatcher $eventDispatcher,
+        EventDispatcherInterface $eventDispatcher,
         PublicFileSerializer $fileSerializer,
         UserSerializer $userSerializer,
         RightsManager $rightsManager,
@@ -84,7 +85,7 @@ class ResourceNodeSerializer
             'path' => $resourceNode->getAncestors(),
             'meta' => $this->serializeMeta($resourceNode, $options),
             'thumbnail' => $this->serializeThumbnail($resourceNode),
-            'evaluation' => [
+            'evaluation' => [ // may not be required in minimal mode
                 'evaluated' => $resourceNode->isEvaluated(),
                 'required' => $resourceNode->isRequired(),
                 'estimatedDuration' => $resourceNode->getEstimatedDuration(),
@@ -113,6 +114,7 @@ class ResourceNodeSerializer
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
             $serializedNode['poster'] = $this->serializePoster($resourceNode);
             $serializedNode['restrictions'] = $this->serializeRestrictions($resourceNode);
+            $serializedNode['tags'] = $this->serializeTags($resourceNode);
 
             if (!in_array(Options::SERIALIZE_LIST, $options)) {
                 $serializedNode = array_merge($serializedNode, [
@@ -141,19 +143,8 @@ class ResourceNodeSerializer
         // avoid plugins override the standard node properties
         $unauthorizedKeys = array_keys($serializedNode);
 
-        // 'thumbnail' is a key that can be overridden by another plugin. For example: UrlBundle
-        // TODO : find a cleaner way to do it
-        $key = array_search('thumbnail', $unauthorizedKeys);
-        if (false !== $key) {
-            unset($unauthorizedKeys[$key]);
-        }
-
-        /** @var DecorateResourceNodeEvent $event */
-        $event = $this->eventDispatcher->dispatch('serialize_resource_node', 'Resource\DecorateResourceNode', [
-            $resourceNode,
-            $unauthorizedKeys,
-            $options,
-        ]);
+        $event = new DecorateResourceNodeEvent($resourceNode, $unauthorizedKeys, $options);
+        $this->eventDispatcher->dispatch($event, 'serialize_resource_node');
 
         return array_merge($serializedNode, $event->getInjectedData());
     }
@@ -211,13 +202,13 @@ class ResourceNodeSerializer
             'published' => $resourceNode->isPublished(),
             'active' => $resourceNode->isActive(),
             'views' => $resourceNode->getViewsCount(),
-            'commentsActivated' => $resourceNode->isCommentsActivated(),
         ];
 
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
             $meta = array_merge($meta, [
                 'authors' => $resourceNode->getAuthor(),
                 'license' => $resourceNode->getLicense(),
+                'commentsActivated' => $resourceNode->isCommentsActivated(),
             ]);
         }
 
@@ -244,6 +235,18 @@ class ResourceNodeSerializer
             'code' => $resourceNode->getAccessCode(),
             'allowedIps' => $resourceNode->getAllowedIps(),
         ];
+    }
+
+    private function serializeTags(ResourceNode $resourceNode): array
+    {
+        $event = new GenericDataEvent([
+            'class' => ResourceNode::class,
+            'ids' => [$resourceNode->getUuid()],
+        ]);
+
+        $this->eventDispatcher->dispatch($event, 'claroline_retrieve_used_tags_by_class_and_ids');
+
+        return $event->getResponse() ?? [];
     }
 
     /**
