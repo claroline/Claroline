@@ -305,7 +305,7 @@ class Announcement
     /**
      * Set creator.
      */
-    public function setCreator(User $creator)
+    public function setCreator(?User $creator = null)
     {
         $this->creator = $creator;
     }

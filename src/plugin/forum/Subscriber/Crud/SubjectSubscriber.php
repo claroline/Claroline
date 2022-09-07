@@ -74,15 +74,17 @@ class SubjectSubscriber implements EventSubscriberInterface
         $forum = $subject->getForum();
 
         //create user if not here
-        $user = $this->om->getRepository(UserValidation::class)->findOneBy([
-            'user' => $subject->getCreator(),
-            'forum' => $forum,
-        ]);
+        if ($subject->getCreator()) {
+            $user = $this->om->getRepository(UserValidation::class)->findOneBy([
+                'user' => $subject->getCreator(),
+                'forum' => $forum,
+            ]);
 
-        if (!$user) {
-            $user = new UserValidation();
-            $user->setForum($forum);
-            $user->setUser($subject->getCreator());
+            if (!$user) {
+                $user = new UserValidation();
+                $user->setForum($forum);
+                $user->setUser($subject->getCreator());
+            }
         }
 
         $messages = $subject->getMessages();
