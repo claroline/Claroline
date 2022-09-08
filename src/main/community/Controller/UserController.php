@@ -284,7 +284,7 @@ class UserController extends AbstractCrudController
         $processed = [];
         foreach ($users as $user) {
             if ($this->checkPermission('ADMINISTRATE', $user)) {
-                $this->mailManager->sendForgotPassword($user);
+                $this->mailManager->sendInitPassword($user);
                 $processed[] = $user;
             }
         }
