@@ -9,7 +9,7 @@ export default (users) => ({
   icon: 'fa fa-fw fa-user-lock',
   label: trans('reset_password'),
   scope: ['object', 'collection'],
-  displayed: hasPermission('edit', users[0]),
+  displayed: -1 !== users.findIndex(user => hasPermission('administrate', user)),
   request: {
     url: url(['apiv2_users_password_reset'], {ids: users.map(u => u.id)}),
     request: {
