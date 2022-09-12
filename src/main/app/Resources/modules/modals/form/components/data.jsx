@@ -11,8 +11,8 @@ import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {DataFormSection as DataFormSectionTypes} from '#/main/app/content/form/prop-types'
 import {FormData} from '#/main/app/content/form/components/data'
 import {cleanErrors} from '#/main/app/content/form/utils'
+import {CallbackButton} from '#/main/app/buttons'
 
-// todo : use claroline btns
 // todo : maybe use btns from Form definition
 // todo : use a redux store
 
@@ -90,15 +90,17 @@ class FormDataModal extends Component {
           setMode={() => true}
         >
           {this.props.children}
-        </FormData>
 
-        <button
-          className="modal-btn btn btn-primary"
-          disabled={!this.state.pendingChanges || (this.state.validating && !isEmpty(this.state.errors))}
-          onClick={this.save}
-        >
-          {this.props.saveButtonText}
-        </button>
+          <CallbackButton
+            htmlType="submit"
+            className="modal-btn btn"
+            disabled={!this.state.pendingChanges || (this.state.validating && !isEmpty(this.state.errors))}
+            callback={this.save}
+            primary={true}
+          >
+            {this.props.saveButtonText}
+          </CallbackButton>
+        </FormData>
       </Modal>
     )}
 }
