@@ -55,7 +55,7 @@
       "items": {
         "oneOf": [
           {
-              "$ref": "https://github.com/claroline/Distribution/tree/master/main/core/Resources/schemas/group.json"
+              "$ref": "https://github.com/claroline/Claroline/tree/master/src/main/core/Resources/schemas/group.json"
           }
         ]
       }
@@ -66,20 +66,14 @@
       "items": {
         "oneOf": [
           {
-              "$ref": "https://github.com/claroline/Distribution/tree/master/main/core/Resources/schemas/role.json"
+              "$ref": "https://github.com/claroline/Claroline/tree/master/src/main/core/Resources/schemas/role.json"
           }
         ]
       }
     },
     "mainOrganization": {
-      "oneOf": [
-        {
-          "type": "null"
-        }, {
-          "type": "object",
-          "$ref": "https://github.com/claroline/Distribution/tree/master/main/core/Resources/schemas/organization.json"
-        }
-      ]
+      "type": ["object", "null"],
+      "$ref": "https://github.com/claroline/Claroline/tree/master/src/main/core/Resources/schemas/organization.json"
     },
     "organizations": {
       "type": "array",
@@ -87,7 +81,7 @@
       "items": {
         "oneOf": [
           {
-              "$ref": "https://github.com/claroline/Distribution/tree/master/main/core/Resources/schemas/organization.json"
+              "$ref": "https://github.com/claroline/Claroline/tree/master/src/main/core/Resources/schemas/organization.json"
           }
         ]
       }

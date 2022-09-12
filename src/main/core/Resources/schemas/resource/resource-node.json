@@ -13,7 +13,7 @@
     "rights": {
       "type": "array",
       "uniqueItems": true,
-      "items": { "$ref": "https://github.com/claroline/Distribution/tree/master/main/core/Resources/schemas/resource/rights.json" }
+      "items": { "$ref": "https://github.com/claroline/Claroline/tree/master/src/main/core/Resources/schemas/resource/rights.json" }
     }
   },
   "claroline": {

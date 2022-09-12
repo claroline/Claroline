@@ -424,22 +424,14 @@ class UserSerializer
             }
         }
 
+        // TODO : this should not be done here
         //only add organizations here. If we want to remove them, use the crud remove method instead
         //it's useful if we want to create a user with a list of roles
         if (isset($data['organizations'])) {
             foreach ($data['organizations'] as $organizationData) {
-                $organization = null;
-
-                if (isset($organizationData['id'])) {
-                    $organization = $this->organizationRepo->findOneBy(['uuid' => $organizationData['id']]);
-                } elseif (isset($organizationData['name'])) {
-                    $organization = $this->organizationRepo->findOneBy(['name' => $organizationData['name']]);
-                } elseif (isset($organizationData['code'])) {
-                    $organization = $this->organizationRepo->findOneBy(['code' => $organizationData['code']]);
-                } elseif (isset($organizationData['email'])) {
-                    $organization = $this->organizationRepo->findOneBy(['email' => $organizationData['email']]);
-                }
-                if ($organization && $organization->getId()) {
+                /** @var Organization $organization */
+                $organization = $this->om->getObject($organizationData, Organization::class, ['id', 'code', 'name', 'email']);
+                if (!empty($organization)) {
                     $user->addOrganization($organization);
                 }
             }
