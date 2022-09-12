@@ -160,8 +160,8 @@ class ClacoFormListener
         // it will be easier to fix relationships this way than creating a mapping.
         // This may have a huge performances impact because we need to decode the string multiple times.
         $rawData = json_encode($data);
-        if (!empty($data['fields'])) {
-            foreach ($data['fields'] as $fieldData) {
+        if (!empty($data['resource']) && !empty($data['resource']['fields'])) {
+            foreach ($data['resource']['fields'] as $fieldData) {
                 $newField = new Field();
                 $newField->setClacoForm($clacoForm);
                 $clacoForm->addField($newField);
@@ -174,6 +174,14 @@ class ClacoFormListener
 
                 // replace UUIDs for Categories and Entries data
                 $rawData = str_replace($fieldData['id'], $newField->getUuid(), $rawData);
+
+                // update template placeholders if any
+                if (!empty($clacoForm->getTemplate())) {
+                    $template = str_replace("%field_{$fieldData['id']}%", "%field_{$newField->getUuid()}%", $clacoForm->getTemplate());
+
+                    $clacoForm->setTemplate($template);
+                    $this->om->persist($clacoForm);
+                }
             }
         }
 
