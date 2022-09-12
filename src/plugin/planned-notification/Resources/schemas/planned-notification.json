@@ -61,7 +61,7 @@
       "items": {
         "oneOf": [
           {
-              "$ref": "https://github.com/claroline/Distribution/tree/master/main/core/Resources/schemas/role.json"
+              "$ref": "https://github.com/claroline/Claroline/tree/master/src/main/core/Resources/schemas/role.json"
           }
         ]
       }

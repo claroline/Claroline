@@ -151,7 +151,7 @@ class UserSubscriber implements EventSubscriberInterface
             $this->notificationManager->processUpdate($notifications, $user);
         }
 
-        if (null === $user->getMainOrganization()) {
+        if (empty($user->getMainOrganization())) {
             $token = $this->tokenStorage->getToken();
             //we want a main organization
             if ($token && $token->getUser() instanceof User && $token->getUser()->getMainOrganization()) {

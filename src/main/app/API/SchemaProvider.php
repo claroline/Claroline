@@ -23,7 +23,7 @@ class SchemaProvider
     public function __construct(string $projectDir, SerializerProvider $serializer)
     {
         $this->projectDir = $projectDir;
-        $this->baseUri = 'https://github.com/claroline/Distribution/tree/master';
+        $this->baseUri = 'https://github.com/claroline/Claroline/tree/master';
         $this->serializer = $serializer;
     }
 
@@ -200,7 +200,7 @@ class SchemaProvider
     private function resolveRef($uri)
     {
         $uri = str_replace($this->baseUri, '', $uri);
-        $schemaDir = realpath("{$this->projectDir}/src");
+        $schemaDir = realpath($this->projectDir);
 
         return $schemaDir.'/'.$uri;
     }

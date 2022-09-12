@@ -134,7 +134,7 @@
       "items": {
         "oneOf": [
           {
-              "$ref": "https://github.com/claroline/Distribution/tree/master/main/core/Resources/schemas/organization.json"
+              "$ref": "https://github.com/claroline/Claroline/tree/master/src/main/core/Resources/schemas/organization.json"
           },
           {
               "type": "null"
