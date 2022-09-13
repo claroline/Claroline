@@ -34,14 +34,28 @@ class GroupVoter extends AbstractRoleSubjectVoter
                 return $this->checkView($token, $object);
             case self::ADMINISTRATE:
             case self::EDIT:
-                return $this->checkEdit($token, $object);
             case self::DELETE:
-                return $this->checkDelete($token, $object);
+                return $this->checkEdit($token, $object);
             case self::PATCH:
                 return $this->checkPatch($token, $object, $collection);
         }
 
         return VoterInterface::ACCESS_ABSTAIN;
+    }
+
+    private function checkView($token, Group $group)
+    {
+        if ($this->isOrganizationManager($token, $group)) {
+            return VoterInterface::ACCESS_GRANTED;
+        }
+
+        /** @var User $user */
+        $user = $token->getUser();
+        if ($user && $user->hasGroup($group)) {
+            return VoterInterface::ACCESS_GRANTED;
+        }
+
+        return VoterInterface::ACCESS_DENIED;
     }
 
     private function checkEdit($token, Group $group)
@@ -51,26 +65,6 @@ class GroupVoter extends AbstractRoleSubjectVoter
         }
 
         return VoterInterface::ACCESS_GRANTED;
-    }
-
-    private function checkDelete($token, Group $group)
-    {
-        if (!$this->isOrganizationManager($token, $group)) {
-            return VoterInterface::ACCESS_DENIED;
-        }
-
-        return VoterInterface::ACCESS_GRANTED;
-    }
-
-    private function checkView($token, Group $group)
-    {
-        /** @var User $user */
-        $user = $token->getUser();
-        if ($user && $user->hasGroup($group)) {
-            return VoterInterface::ACCESS_GRANTED;
-        }
-
-        return VoterInterface::ACCESS_DENIED;
     }
 
     private function checkPatch(TokenInterface $token, Group $group, ObjectCollection $collection = null): int
