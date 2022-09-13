@@ -6,6 +6,7 @@ use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\AuthenticationBundle\Messenger\Stamp\AuthenticationStamp;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Manager\FileManager;
@@ -19,9 +20,12 @@ use Claroline\TransferBundle\Transfer\ExportProvider;
 use Claroline\TransferBundle\Transfer\ImportProvider;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class TransferManager
 {
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
     /** @var MessageBusInterface */
     private $messageBus;
     /** @var ObjectManager */
@@ -40,6 +44,7 @@ class TransferManager
     private $logDir;
 
     public function __construct(
+        TokenStorageInterface $tokenStorage,
         MessageBusInterface $messageBus,
         ObjectManager $om,
         SerializerProvider $serializer,
@@ -49,6 +54,7 @@ class TransferManager
         FileManager $fileManager,
         string $logDir
     ) {
+        $this->tokenStorage = $tokenStorage;
         $this->messageBus = $messageBus;
         $this->om = $om;
         $this->serializer = $serializer;
@@ -77,7 +83,7 @@ class TransferManager
         $this->om->flush();
 
         // request import execution
-        $this->messageBus->dispatch(new ExecuteImport($importFile->getId()));
+        $this->messageBus->dispatch(new ExecuteImport($importFile->getId()), [new AuthenticationStamp($this->tokenStorage->getToken()->getUser()->getId())]);
     }
 
     public function import(ImportFile $importFile): string
@@ -125,7 +131,7 @@ class TransferManager
         $this->om->flush();
 
         // request export execution
-        $this->messageBus->dispatch(new ExecuteExport($exportFile->getId()));
+        $this->messageBus->dispatch(new ExecuteExport($exportFile->getId()), [new AuthenticationStamp($this->tokenStorage->getToken()->getUser()->getId())]);
     }
 
     public function export(ExportFile $exportFile): string

@@ -123,7 +123,7 @@ class ResourcesSubscriber implements EventSubscriberInterface
         $workspace = $event->getWorkspace();
 
         // manage workspace opening
-        // this is for retro-compatibility, when we have stored the autoincrement id of the resource in the workspace options
+        // this is for retro-compatibility, we have stored the autoincrement id of the resource in the workspace options
         // when using the UUID, replacement is automatically done in the serialized data
         $workspaceOptions = $workspace->getOptions()->getDetails();
         $openingResourceId = null;
