@@ -5,6 +5,7 @@ services:
 
     Claroline\TransferBundle\Manager\TransferManager:
         arguments:
+            - '@security.token_storage'
             - '@messenger.default_bus'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\SerializerProvider'

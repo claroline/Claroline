@@ -274,7 +274,7 @@ class WorkspaceManager implements LoggerAwareInterface
     public function getDefaultModel($isPersonal = false, $restore = false): Workspace
     {
         $name = $isPersonal ? 'default_personal' : 'default_workspace';
-        $this->log('Search old default workspace '.$name);
+        $this->log('Search default workspace '.$name);
         $workspace = $this->workspaceRepo->findOneBy(['code' => $name]);
 
         if (!$workspace || $restore) {
