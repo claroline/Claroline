@@ -80,7 +80,8 @@ class FileComponent extends Component {
     return (
       <div
         className={classes('file-control', this.props.className, {
-          'highlight': this.context
+          'highlight': this.context,
+          'disabled': this.props.disabled
         })}
         onDrop={this.onFileDrop}
       >
@@ -123,6 +124,7 @@ class FileComponent extends Component {
               canEdit={false}
               canExpand={false}
               canDownload={false}
+              canDelete={!this.props.disabled}
               handleDelete={() => {
                 if (this.props.value.id) {
                   this.props.deleteFile(this.props.value.id, this.props.onChange)

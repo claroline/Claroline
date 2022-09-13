@@ -57,8 +57,11 @@
         }
     }
 
-    .files-list {
-
+    &.disabled {
+        .files-drop-container {
+            cursor: @cursor-disabled;
+            background: @input-bg-disabled;
+        }
     }
 
     // sizing
