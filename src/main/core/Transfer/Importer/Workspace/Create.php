@@ -31,13 +31,16 @@ class Create extends AbstractImporter
         $workspace = $this->crud->create(Workspace::class, $data, [Options::FORCE_FLUSH]);
 
         if (isset($data['managers'])) {
+            $role = $this->om->getRepository(Role::class)->findOneBy(['workspace' => $workspace, 'translationKey' => 'manager']);
+            if (empty($role)) {
+                // this should not happen as the manager role is created at ws creation
+                throw new \Exception('Could not find role manager');
+            }
+
             foreach ($data['managers'] as $manager) {
-                $user = $this->om->getRepository(User::class)->findOneBy($manager);
-                $role = $this->om->getRepository(Role::class)->findOneBy(['workspace' => $workspace, 'translationKey' => 'manager']);
-                if ($role) {
+                $user = $this->om->getObject($manager, User::class, array_keys($manager));
+                if ($user) {
                     $this->crud->patch($user, 'role', 'add', [$role]);
-                } else {
-                    throw new \Exception('Could not find role manager');
                 }
             }
         }
