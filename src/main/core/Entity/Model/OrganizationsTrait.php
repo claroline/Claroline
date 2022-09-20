@@ -38,9 +38,10 @@ trait OrganizationsTrait
     {
         $this->hasOrganizationsProperty();
 
-        $this->organizations = $organizations instanceof ArrayCollection ?
-            $organizations :
-            new ArrayCollection($organizations);
+        $this->organizations->clear();
+        foreach ($organizations as $organization) {
+            $this->addOrganization($organization);
+        }
     }
 
     /**
@@ -55,7 +56,7 @@ trait OrganizationsTrait
         return $this->organizations;
     }
 
-    public function hasOrganizationsProperty()
+    private function hasOrganizationsProperty()
     {
         if (!property_exists($this, 'organizations')) {
             $error = 'Property organizations does not exists in class '.get_class($this).'. This property is required if you want to patch it.';

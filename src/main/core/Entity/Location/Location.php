@@ -182,11 +182,6 @@ class Location implements IdentifiableInterface
         return $this->users;
     }
 
-    public function setOrganizations(Organization $organizations)
-    {
-        $this->organizations = $organizations;
-    }
-
     /**
      * @return Organization[]|ArrayCollection
      */

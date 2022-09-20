@@ -37,6 +37,7 @@ const ParametersModal = props =>
           type={CALLBACK_BUTTON}
           primary={true}
           label={trans('save', {}, 'actions')}
+          htmlType="submit"
           disabled={!props.saveEnabled}
           callback={() => {
             props.saveWorkspace(props.workspace, props.onSave)
