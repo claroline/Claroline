@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 
 import {url} from '#/main/app/api'
 import {trans} from '#/main/app/intl/translation'
-import {LINK_BUTTON} from '#/main/app/buttons'
+import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {ToolPage} from '#/main/core/tool/containers/page'
 
@@ -24,7 +24,10 @@ const ParametersTab = props =>
       level={3}
       name={selectors.FORM_NAME}
       buttons={true}
-      target={['apiv2_workspace_update', {id: props.workspace.id}]}
+      save={{
+        type: CALLBACK_BUTTON,
+        callback: () => props.save(props.workspace)
+      }}
       cancel={{
         type: LINK_BUTTON,
         target: props.path,
@@ -114,7 +117,8 @@ const ParametersTab = props =>
 ParametersTab.propTypes = {
   path: T.string.isRequired,
   workspace: T.shape(WorkspaceTypes.propTypes),
-  updateProp: T.func.isRequired
+  updateProp: T.func.isRequired,
+  save: T.func.isRequired
 }
 
 export {

@@ -5,6 +5,7 @@ import {selectors as toolSelectors} from '#/main/core/tool/store'
 
 import {ParametersTab as ParametersTabComponent} from '#/main/core/tools/community/parameters/components/tab'
 import {selectors} from '#/main/core/tools/community/parameters/store'
+import {actions as workspaceActions} from '#/main/core/workspace/store'
 
 const ParametersTab = connect(
   (state) => ({
@@ -14,6 +15,11 @@ const ParametersTab = connect(
   (dispatch) => ({
     updateProp(propName, propValue) {
       dispatch(formActions.updateProp(selectors.FORM_NAME, propName, propValue))
+    },
+    save(workspace) {
+      dispatch(formActions.save(selectors.FORM_NAME, ['apiv2_workspace_update', {id: workspace.id}])).then(() => {
+        dispatch(workspaceActions.reload(workspace))
+      })
     }
   })
 )(ParametersTabComponent)
