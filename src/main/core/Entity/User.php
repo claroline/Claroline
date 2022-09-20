@@ -18,7 +18,6 @@ use Claroline\AppBundle\Entity\Meta\Description;
 use Claroline\AppBundle\Entity\Meta\Poster;
 use Claroline\AppBundle\Entity\Meta\Thumbnail;
 use Claroline\CoreBundle\Entity\Model\GroupsTrait;
-use Claroline\CoreBundle\Entity\Model\OrganizationsTrait;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Organization\UserOrganizationReference;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -49,7 +48,6 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
     use Thumbnail;
     use Description;
     use GroupsTrait;
-    use OrganizationsTrait;
 
     /**
      * @var string
@@ -916,6 +914,7 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
 
     public function removeOrganization(Organization $organization)
     {
+        /** @var UserOrganizationReference $found */
         $found = null;
 
         foreach ($this->userOrganizationReferences as $ref) {
