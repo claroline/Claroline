@@ -5,7 +5,6 @@ namespace UJM\ExoBundle\Manager\Attempt;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Security\Collection\ResourceCollection;
 use Claroline\EvaluationBundle\Entity\AbstractEvaluation;
 use Claroline\EvaluationBundle\Manager\ResourceEvaluationManager;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -75,8 +74,8 @@ class PaperManager
      */
     public function serialize(Paper $paper, array $options = [])
     {
-        $collection = new ResourceCollection([$paper->getExercise()->getResourceNode()]);
-        $isAdmin = $this->authorization->isGranted('ADMINISTRATE', $collection) || $this->authorization->isGranted('MANAGE_PAPERS', $collection);
+        $isAdmin = $this->authorization->isGranted('ADMINISTRATE', $paper->getExercise()->getResourceNode())
+            || $this->authorization->isGranted('MANAGE_PAPERS', $paper->getExercise()->getResourceNode());
 
         // Adds user score if available and the method options do not already request it
         if (!in_array(Transfer::INCLUDE_USER_SCORE, $options)
@@ -250,20 +249,16 @@ class PaperManager
 
     /**
      * Returns the number of finished papers already done by the user for a given exercise.
-     *
-     * @return array
      */
-    public function countUserFinishedPapers(Exercise $exercise, User $user)
+    public function countUserFinishedPapers(Exercise $exercise, User $user): int
     {
         return $this->repository->countUserFinishedPapers($exercise, $user);
     }
 
     /**
      * Returns the number of finished papers already done by the user for a given exercise for the current day.
-     *
-     * @return array
      */
-    public function countUserFinishedDayPapers(Exercise $exercise, User $user)
+    public function countUserFinishedDayPapers(Exercise $exercise, User $user): int
     {
         return $this->repository->countUserFinishedDayPapers($exercise, $user);
     }
@@ -414,25 +409,5 @@ class PaperManager
                 'data' => $data,
             ]
         );
-    }
-
-    /**
-     * Find all content for a given user and the replace him by another.
-     *
-     * @return int
-     */
-    public function replaceUser(User $from, User $to)
-    {
-        $papers = $this->repository->findBy(['user' => $from]);
-
-        if (count($papers) > 0) {
-            foreach ($papers as $paper) {
-                $paper->setUser($to);
-            }
-
-            $this->om->flush();
-        }
-
-        return count($papers);
     }
 }

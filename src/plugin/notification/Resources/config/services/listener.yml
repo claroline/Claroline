@@ -29,9 +29,3 @@ services:
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
         tags:
             - { name: kernel.event_listener, event: log, method: onLog }
-
-    Icap\NotificationBundle\Listener\UserListener:
-        arguments:
-            - '@Icap\NotificationBundle\Manager\NotificationUserParametersManager'
-        tags:
-            - { name: kernel.event_listener, event: merge_users, method: onMerge }

@@ -17,12 +17,6 @@ services:
             - { name: kernel.event_listener, event: resource.claroline_dropzone.copy, method: onCopy }
             - { name: kernel.event_listener, event: resource.claroline_dropzone.delete, method: onDelete }
 
-    Claroline\DropZoneBundle\Listener\ApiListener:
-        arguments:
-            - '@Claroline\DropZoneBundle\Manager\DropzoneManager'
-        tags:
-            - { name: kernel.event_listener, event: merge_users, method: onMerge }
-
     Claroline\DropZoneBundle\Listener\NotificationUserParametersListener:
         arguments:
             - '@Claroline\DropZoneBundle\Manager\DropzoneManager'

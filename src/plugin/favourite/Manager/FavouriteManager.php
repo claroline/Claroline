@@ -55,42 +55,6 @@ class FavouriteManager
     }
 
     /**
-     * Find all content for a given user and the replace him by another.
-     *
-     * @return int
-     */
-    public function replaceUser(User $from, User $to)
-    {
-        /** @var WorkspaceFavourite[] $workspaceFavourites */
-        $workspaceFavourites = $this->om
-            ->getRepository(WorkspaceFavourite::class)
-            ->findBy(['user' => $from]);
-
-        /** @var ResourceFavourite[] $resourceFavourites */
-        $resourceFavourites = $this->om
-            ->getRepository(ResourceFavourite::class)
-            ->findBy(['user' => $from]);
-
-        $this->om->startFlushSuite();
-        if (!empty($workspaceFavourites)) {
-            foreach ($workspaceFavourites as $favourite) {
-                $favourite->setUser($to);
-            }
-            $this->om->flush();
-        }
-
-        if (!empty($resourceFavourites)) {
-            foreach ($resourceFavourites as $favourite) {
-                $favourite->setUser($to);
-            }
-            $this->om->flush();
-        }
-        $this->om->endFlushSuite();
-
-        return count($workspaceFavourites) + count($resourceFavourites);
-    }
-
-    /**
      * Creates or deletes (depending on the first resource) favourites for given user and list of resources.
      *
      * @param ResourceNode[] $resourceNodes

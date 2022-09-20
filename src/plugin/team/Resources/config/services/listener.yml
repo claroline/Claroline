@@ -1,6 +1,0 @@
-services:
-    Claroline\TeamBundle\Listener\UserListener:
-        arguments:
-            - '@Claroline\TeamBundle\Manager\TeamManager'
-        tags:
-            - { name: kernel.event_listener, event: merge_users, method: onMerge }

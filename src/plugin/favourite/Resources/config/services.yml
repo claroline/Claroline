@@ -15,12 +15,6 @@ services:
         tags:
             - { name: kernel.event_listener, event: data_source.my_favourites.load, method: getData }
 
-    HeVinci\FavouriteBundle\Listener\UserListener:
-        arguments:
-            - '@HeVinci\FavouriteBundle\Manager\FavouriteManager'
-        tags:
-            - { name: kernel.event_listener, event: merge_users, method: merge_users }
-
     HeVinci\FavouriteBundle\Manager\FavouriteManager:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'

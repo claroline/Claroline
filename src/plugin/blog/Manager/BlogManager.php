@@ -3,18 +3,15 @@
 namespace Icap\BlogBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Icap\BlogBundle\Entity\Blog;
 use Icap\BlogBundle\Entity\BlogOptions;
-use Icap\BlogBundle\Entity\Member;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class BlogManager
 {
     private $objectManager;
     private $repo;
-    private $memberRepo;
     private $eventDispatcher;
     private $postManager;
 
@@ -28,7 +25,6 @@ class BlogManager
         $this->postManager = $postManager;
 
         $this->repo = $this->objectManager->getRepository(Blog::class);
-        $this->memberRepo = $this->objectManager->getRepository(Member::class);
     }
 
     public function getPanelInfos()
@@ -114,37 +110,5 @@ class BlogManager
         }
 
         return (object) $tags;
-    }
-
-    /**
-     * Find all member for a given user and the replace him by another.
-     */
-    public function replaceMemberAuthor(User $from, User $to)
-    {
-        $fromIsMember = false;
-        $froms = $this->memberRepo->findByUser($from);
-        if (count($froms) > 0) {
-            $fromIsMember = true;
-        }
-
-        $toIsMember = false;
-        $tos = $this->memberRepo->findByUser($to);
-        if (count($tos) > 0) {
-            $toIsMember = true;
-        }
-
-        if ($toIsMember && $fromIsMember) {
-            //user kept already have its member entry, delete the old one
-            foreach ($froms as $member) {
-                $this->objectManager->remove($member);
-            }
-            $this->objectManager->flush();
-        } elseif (!$toIsMember && $fromIsMember) {
-            //update entry for kept user
-            foreach ($froms as $member) {
-                $member->setUser($to);
-            }
-            $this->objectManager->flush();
-        }
     }
 }

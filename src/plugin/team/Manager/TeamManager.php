@@ -613,10 +613,6 @@ class TeamManager
         }
     }
 
-    /*******************
-     *  Old functions  *
-     ******************/
-
     /**
      * @param string $orderedBy
      * @param string $order
@@ -637,46 +633,5 @@ class TeamManager
     public function getTeamsByUser(User $user, $orderedBy = 'name', $order = 'ASC')
     {
         return $this->teamRepo->findTeamsByUser($user, $orderedBy, $order);
-    }
-
-    /**
-     * Find all content for a given user and replace him by another.
-     *
-     * @return int
-     */
-    public function replaceManager(User $from, User $to)
-    {
-        $teams = $this->teamRepo->findByTeamManager($from);
-
-        if (count($teams) > 0) {
-            foreach ($teams as $team) {
-                $team->setTeamManager($to);
-            }
-
-            $this->om->flush();
-        }
-
-        return count($teams);
-    }
-
-    /**
-     * Find all content for a given user and replace him by another.
-     *
-     * @return int
-     */
-    public function replaceUser(User $from, User $to)
-    {
-        $teams = $this->teamRepo->findTeamsByUser($from);
-
-        if (count($teams) > 0) {
-            foreach ($teams as $team) {
-                $team->removeUser($from);
-                $team->addUser($to);
-            }
-
-            $this->om->flush();
-        }
-
-        return count($teams);
     }
 }

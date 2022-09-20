@@ -16,33 +16,21 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\ForumBundle\Entity\Forum;
 use Claroline\ForumBundle\Entity\Message;
-use Claroline\ForumBundle\Entity\Subject;
 use Claroline\ForumBundle\Entity\Validation\User as UserValidation;
 
 class ForumManager
 {
     /** @var ObjectManager */
     private $om;
-
     /** @var FinderProvider */
     private $finder;
 
-    private $messageRepo;
-
-    private $subjectRepo;
-
-    /**
-     * ForumManager constructor.
-     */
     public function __construct(
         FinderProvider $finder,
         ObjectManager $om
     ) {
         $this->finder = $finder;
         $this->om = $om;
-
-        $this->messageRepo = $om->getRepository(Message::class);
-        $this->subjectRepo = $om->getRepository(Subject::class);
     }
 
     public function getHotSubjects(Forum $forum)
@@ -99,42 +87,5 @@ class ForumManager
         }
 
         return $user;
-    }
-
-    /**
-     * Find all content for a given user and the replace him by another.
-     *
-     * @return int
-     */
-    public function replaceSubjectUser(User $from, User $to)
-    {
-        $subjects = $this->subjectRepo->findBy(['creator' => $from]);
-        if (count($subjects) > 0) {
-            foreach ($subjects as $subject) {
-                $subject->setCreator($to);
-            }
-            $this->om->flush();
-        }
-
-        return count($subjects);
-    }
-
-    /**
-     * Find all content for a given user and the replace him by another.
-     *
-     * @return int
-     */
-    public function replaceMessageUser(User $from, User $to)
-    {
-        $messages = $this->messageRepo->findBy(['creator' => $from]);
-        if (count($messages) > 0) {
-            foreach ($messages as $message) {
-                $message->setCreator($to);
-                $message->setAuthor($to->getFirstName().' '.$to->getLastName());
-            }
-            $this->om->flush();
-        }
-
-        return count($messages);
     }
 }

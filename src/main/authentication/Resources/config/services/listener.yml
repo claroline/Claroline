@@ -21,7 +21,6 @@ services:
         arguments:
             - '@Claroline\AuthenticationBundle\Manager\OauthManager'
         tags:
-            - { name: kernel.event_listener, event: merge_users, method: onMerge }
             - { name: kernel.event_listener, event: log, method: onDelete }
 
     Claroline\AuthenticationBundle\Listener\DataSource\MyTokensSource:

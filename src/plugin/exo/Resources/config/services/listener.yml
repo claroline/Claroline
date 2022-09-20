@@ -35,11 +35,3 @@ services:
     UJM\ExoBundle\Listener\Tool\QuestionBankListener:
         tags:
             - { name: kernel.event_listener, event: tool.open.desktop.ujm_questions, method: onDisplayDesktop }
-
-    UJM\ExoBundle\Listener\ApiListener:
-        arguments:
-            - '@UJM\ExoBundle\Manager\Item\ItemManager'
-            - '@UJM\ExoBundle\Manager\Item\ShareManager'
-            - '@UJM\ExoBundle\Manager\Attempt\PaperManager'
-        tags:
-            - { name: kernel.event_listener, event: merge_users, method: onMerge }

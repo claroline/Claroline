@@ -12,7 +12,7 @@ use HeVinci\CompetencyBundle\Entity\Objective;
 use HeVinci\CompetencyBundle\Entity\ObjectiveCompetency;
 use HeVinci\CompetencyBundle\Entity\Progress\AbilityProgress;
 use HeVinci\CompetencyBundle\Entity\Progress\CompetencyProgress;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ObjectiveManager
 {
@@ -420,26 +420,5 @@ class ObjectiveManager
         $type = $resource->getResourceType()->getName();
 
         return 'ujm_exercise' === $type;
-    }
-
-    /**
-     * Find all content for a given user and replace him by another.
-     *
-     * @return int
-     */
-    public function replaceUser(User $from, User $to)
-    {
-        $objectives = $this->objectiveRepo->findAllByUser($from);
-
-        if (count($objectives) > 0) {
-            foreach ($objectives as $objective) {
-                $objective->removeUser($from);
-                $objectives->addUser($to);
-            }
-
-            $this->om->flush();
-        }
-
-        return count($objectives);
     }
 }

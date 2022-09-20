@@ -13,6 +13,7 @@ use Icap\WikiBundle\Event\Log\LogSectionMoveEvent;
 use Icap\WikiBundle\Event\Log\LogSectionRemoveEvent;
 use Icap\WikiBundle\Event\Log\LogSectionRestoreEvent;
 use Icap\WikiBundle\Event\Log\LogSectionUpdateEvent;
+use Icap\WikiBundle\Repository\SectionRepository;
 use Icap\WikiBundle\Serializer\SectionSerializer;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -22,7 +23,7 @@ class SectionManager
     /** @var ObjectManager */
     protected $om;
 
-    /** @var \Icap\WikiBundle\Repository\SectionRepository */
+    /** @var SectionRepository */
     protected $sectionRepository;
 
     /** @var SectionSerializer */
@@ -178,26 +179,6 @@ class SectionManager
         }
 
         return $archivedSections;
-    }
-
-    /**
-     * Find all content for a given user and the replace him by another.
-     *
-     * @return int
-     */
-    public function replaceUser(User $from, User $to)
-    {
-        $sections = $this->sectionRepository->findByAuthor($from);
-
-        if (count($sections) > 0) {
-            foreach ($sections as $section) {
-                $section->setAuthor($to);
-            }
-
-            $this->om->flush();
-        }
-
-        return count($sections);
     }
 
     private function dispatch($event)

@@ -1319,66 +1319,6 @@ class DropzoneManager
     }
 
     /**
-     * Find all content for a given user and the replace him by another.
-     *
-     * @return int
-     */
-    public function replaceDropUser(User $from, User $to)
-    {
-        $drops = $this->dropRepo->findByUser($from);
-
-        if (count($drops) > 0) {
-            foreach ($drops as $drop) {
-                $drop->setUser($to);
-            }
-
-            $this->om->flush();
-        }
-
-        return count($drops);
-    }
-
-    /**
-     * Find all content for a given user and the replace him by another.
-     *
-     * @return int
-     */
-    public function replaceCorrectionUser(User $from, User $to)
-    {
-        $corrections = $this->correctionRepo->findByUser($from);
-
-        if (count($corrections) > 0) {
-            foreach ($corrections as $correction) {
-                $correction->setUser($to);
-            }
-
-            $this->om->flush();
-        }
-
-        return count($corrections);
-    }
-
-    /**
-     * Find all content for a given user and the replace him by another.
-     *
-     * @return int
-     */
-    public function replaceDocumentUser(User $from, User $to)
-    {
-        $documents = $this->documentRepo->findByUser($from);
-
-        if (count($documents) > 0) {
-            foreach ($documents as $document) {
-                $document->setUser($to);
-            }
-
-            $this->om->flush();
-        }
-
-        return count($documents);
-    }
-
-    /**
      * Fetches all drops and corrections and updates their score depending on new score max.
      *
      * @param float $oldScoreMax

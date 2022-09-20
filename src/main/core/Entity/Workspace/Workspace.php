@@ -15,6 +15,7 @@ use Claroline\AppBundle\Entity\IdentifiableInterface;
 use Claroline\AppBundle\Entity\Identifier\Code;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Claroline\AppBundle\Entity\Meta\Archived;
 use Claroline\AppBundle\Entity\Meta\CreatedAt;
 use Claroline\AppBundle\Entity\Meta\Creator;
 use Claroline\AppBundle\Entity\Meta\Description;
@@ -47,6 +48,7 @@ class Workspace implements IdentifiableInterface
     use Uuid;
     use Code;
     // meta
+    use Archived;
     use Name;
     use Poster;
     use Thumbnail;
@@ -195,13 +197,6 @@ class Workspace implements IdentifiableInterface
 
     //not mapped. Used for creation
     private $workspaceModel;
-
-    /**
-     * @ORM\Column(name="archived", type="boolean")
-     *
-     * @var bool
-     */
-    private $archived = false;
 
     /**
      * @ORM\OneToMany(
@@ -433,16 +428,6 @@ class Workspace implements IdentifiableInterface
     public function setContactEmail(?string $email = null)
     {
         $this->contactEmail = $email;
-    }
-
-    public function setArchived($archived)
-    {
-        $this->archived = $archived;
-    }
-
-    public function isArchived()
-    {
-        return $this->archived;
     }
 
     /**
