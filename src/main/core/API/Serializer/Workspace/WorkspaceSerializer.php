@@ -444,16 +444,17 @@ class WorkspaceSerializer
             $organizations = [];
             if (!empty($data['organizations'])) {
                 foreach ($data['organizations'] as $organizationData) {
-                    if (isset($organizationData['id'])) {
+                    if (!empty($organizationData['id']) && empty($organizations[$organizationData['id']])) {
+                        /** @var Organization $organization */
                         $organization = $this->om->getObject($organizationData, Organization::class);
                         if ($organization) {
-                            $organizations[] = $organization;
+                            $organizations[$organization->getUuid()] = $organization;
                         }
                     }
                 }
             }
 
-            $workspace->setOrganizations($organizations);
+            $workspace->setOrganizations(array_values($organizations));
         }
 
         return $workspace;

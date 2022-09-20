@@ -233,13 +233,13 @@ class WorkspaceSubscriber implements EventSubscriberInterface
         if ($user instanceof User) {
             $workspace->setCreator($user);
 
-            if (empty($workspace->getOrganizations()) && !empty($user->getMainOrganization())) {
+            if (empty($workspace->getOrganizations()->toArray()) && !empty($user->getMainOrganization())) {
                 $workspace->addOrganization($user->getMainOrganization());
             }
         }
 
         // adds default organization if needed
-        if (empty($workspace->getOrganizations())) {
+        if (empty($workspace->getOrganizations()->toArray())) {
             $workspace->addOrganization($this->organizationManager->getDefault());
         }
 
