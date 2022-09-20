@@ -77,6 +77,7 @@ class CreateOrUpdate extends AbstractImporter
             foreach ($data['roles'] as $role) {
                 $roleKeys = array_keys($role);
                 if (in_array('translationKey', $roleKeys)) {
+                    /** @var Role $object */
                     $object = $this->om->getRepository(Role::class)->findOneBy([
                         'translationKey' => $role['translationKey'],
                         'workspace' => $workspace,
@@ -85,6 +86,7 @@ class CreateOrUpdate extends AbstractImporter
                     unset($roleKeys[array_search('translationKey', $roleKeys)]);
                 }
                 if (empty($object)) {
+                    /** @var Role $object */
                     $object = $this->om->getObject($role, Role::class, $roleKeys);
                 }
 
@@ -92,12 +94,12 @@ class CreateOrUpdate extends AbstractImporter
                     throw new \Exception('Role '.implode(',', $role).' does not exists');
                 }
 
-                $roles[] = $object;
+                $roles[$object->getUuid()] = $object;
             }
         }
 
-        if (empty($roles)) {
-            $roles[] = $workspace->getDefaultRole();
+        if (empty($roles) && !empty($workspace->getDefaultRole())) {
+            $roles[$workspace->getDefaultRole()->getUuid()] = $workspace->getDefaultRole();
         }
 
         $permissions = [
