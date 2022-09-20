@@ -173,21 +173,6 @@ class UserController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{keep}/{remove}/merge", name="apiv2_user_merge", methods={"PUT"})
-     * @EXT\ParamConverter("keep", options={"mapping": {"keep": "uuid"}})
-     * @EXT\ParamConverter("remove", options={"mapping": {"remove": "uuid"}})
-     */
-    public function mergeUsersAction(User $keep, User $remove): JsonResponse
-    {
-        $this->checkPermission('ADMINISTRATE', $keep, [], true);
-        $this->checkPermission('ADMINISTRATE', $remove, [], true);
-
-        return new JsonResponse(
-            $this->manager->merge($keep, $remove)
-        );
-    }
-
-    /**
      * @ApiDoc(
      *     description="Enable a list of users.",
      *     queryString={

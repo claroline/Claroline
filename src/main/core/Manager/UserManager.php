@@ -20,7 +20,6 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
 use Claroline\CoreBundle\Event\Security\UserDisableEvent;
 use Claroline\CoreBundle\Event\Security\UserEnableEvent;
-use Claroline\CoreBundle\Event\User\MergeUsersEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Messenger\Message\DisableInactiveUsers;
 use Claroline\CoreBundle\Repository\User\RoleRepository;
@@ -328,30 +327,5 @@ class UserManager
         }
 
         return $usersLimitReached;
-    }
-
-    public function merge(User $keep, User $remove)
-    {
-        // Dispatching an event for letting plugins and core do what they need to do
-        /** @var MergeUsersEvent $event */
-        $event = $this->dispatcher->dispatch(
-            'merge_users',
-            'User\MergeUsers',
-            [
-                $keep,
-                $remove,
-            ]
-        );
-
-        $keep_username = $keep->getUsername();
-        $remove_username = $remove->getUsername();
-
-        // Delete old user
-        $this->crud->deleteBulk([$remove], [Options::SOFT_DELETE]);
-
-        $event->addMessage("[CoreBundle] user removed: $remove_username");
-        $event->addMessage("[CoreBundle] user kept: $keep_username");
-
-        return $event->getMessages();
     }
 }

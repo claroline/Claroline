@@ -70,26 +70,6 @@ class PostManager
     }
 
     /**
-     * Find all content for a given user and the replace him by another.
-     *
-     * @return int
-     */
-    public function replacePostAuthor(User $from, User $to)
-    {
-        $posts = $this->repo->findBy(['creator' => $from]);
-
-        if (count($posts) > 0) {
-            foreach ($posts as $post) {
-                $post->setCreator($to);
-            }
-
-            $this->om->flush();
-        }
-
-        return count($posts);
-    }
-
-    /**
      * Create a post.
      */
     public function createPost(Blog $blog, Post $post, User $user)

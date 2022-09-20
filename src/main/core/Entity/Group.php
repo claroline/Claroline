@@ -11,39 +11,25 @@
 
 namespace Claroline\CoreBundle\Entity;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\Model\OrganizationsTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\User\GroupRepository")
- * @ORM\Table(
- *      name="claro_group",
- *       uniqueConstraints={
- *          @ORM\UniqueConstraint(name="group_unique_name", columns={"name"})
- *      }
- *  )
- * @DoctrineAssert\UniqueEntity("name")
+ * @ORM\Table(name="claro_group")
  */
 class Group extends AbstractRoleSubject
 {
     use OrganizationsTrait;
+    use Id;
     use Uuid;
 
     /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     *
-     * @var int
-     */
-    protected $id;
-
-    /**
-     * @ORM\Column()
+     * @ORM\Column(unique=true)
      * @Assert\NotBlank()
      *
      * @var string
@@ -106,11 +92,6 @@ class Group extends AbstractRoleSubject
         $this->organizations = new ArrayCollection();
         $this->locations = new ArrayCollection();
         $this->roles = new ArrayCollection();
-    }
-
-    public function getId()
-    {
-        return $this->id;
     }
 
     public function setName($name)

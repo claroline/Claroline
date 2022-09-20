@@ -53,13 +53,6 @@ services:
         tags:
             - { name: kernel.event_listener, event: icap_notification_user_parameters_event, method: onGetTypesForParameters }
 
-    Icap\WikiBundle\Listener\UserListener:
-        arguments:
-            - '@Icap\WikiBundle\Manager\SectionManager'
-            - '@Icap\WikiBundle\Manager\ContributionManager'
-        tags:
-            - { name: kernel.event_listener, event: merge_users, method: onMerge }
-
     Icap\WikiBundle\Listener\Entity\ContributionListener:
         public: true
         arguments:

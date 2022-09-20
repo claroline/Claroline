@@ -187,7 +187,7 @@ class Paper
      *
      * @param bool $decoded
      *
-     * @return string
+     * @return string|array
      */
     public function getStructure($decoded = false)
     {

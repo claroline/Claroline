@@ -11,14 +11,6 @@ services:
         tags:
             - { name: kernel.event_listener, event: data_source.blog_posts.load, method: getData }
 
-    Icap\BlogBundle\Listener\ApiListener:
-        arguments:
-            - '@Icap\BlogBundle\Manager\CommentManager'
-            - '@Icap\BlogBundle\Manager\PostManager'
-            - '@Icap\BlogBundle\Manager\BlogManager'
-        tags:
-            - { name: kernel.event_listener, event: merge_users, method: onMerge }
-
     Icap\BlogBundle\Listener\LogListener:
         calls:
             - [setContainer, ["@service_container"]]

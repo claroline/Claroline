@@ -31,26 +31,6 @@ actions.open = (formName, id = null) => (dispatch) => {
 
 actions.close = (formName) => formActions.resetForm(formName)
 
-actions.compareOpen = (data) => ({
-  type: USER_COMPARE,
-  data: data
-})
-
-actions.compare = (ids) => {
-  const queryParams = []
-
-  ids.map((id, index) => {
-    queryParams.push(`filters[id][${index}]=${id}`)
-  })
-
-  return {
-    [API_REQUEST]: {
-      url: url(['apiv2_user_list']) + '?' + queryParams.join('&'),
-      success: (response, dispatch) => dispatch(actions.compareOpen(response.data))
-    }
-  }
-}
-
 actions.addGroups = (id, groups) => ({
   [API_REQUEST]: {
     url: url(['apiv2_user_add_groups', {id: id}], {ids: groups}),
@@ -86,17 +66,6 @@ actions.addOrganizations = (id, organizations) => ({
     success: (data, dispatch) => {
       dispatch(listActions.invalidateData(baseSelectors.STORE_NAME+'.users.list'))
       dispatch(listActions.invalidateData(baseSelectors.STORE_NAME+'.users.current.organizations'))
-    }
-  }
-})
-
-actions.merge = (id1, id2) => ({
-  [API_REQUEST]: {
-    url: ['apiv2_user_merge', {keep: id1, remove: id2}],
-    request: {method: 'PUT'},
-    success: (data, dispatch) => {
-      dispatch(listActions.invalidateData(baseSelectors.STORE_NAME+'.users.list'))
-      dispatch(listActions.resetSelect(baseSelectors.STORE_NAME+'.users.list'))
     }
   }
 })

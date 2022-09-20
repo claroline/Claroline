@@ -24,12 +24,6 @@ services:
             - { name: kernel.event_listener, event: resource.claroline_forum.export, method: onExport }
             - { name: kernel.event_listener, event: resource.claroline_forum.import, method: onImport }
 
-    Claroline\ForumBundle\Listener\ApiListener:
-        arguments:
-            - '@Claroline\ForumBundle\Manager\ForumManager'
-        tags:
-            - { name: kernel.event_listener, event: merge_users, method: onMerge }
-
     Claroline\ForumBundle\Listener\NotificationListener:
         arguments:
             - '@translator'

@@ -36,26 +36,6 @@ class CommentManager
     }
 
     /**
-     * Find all content for a given user and the replace him by another.
-     *
-     * @return int
-     */
-    public function replaceCommentAuthor(User $from, User $to)
-    {
-        $comments = $this->repo->findByAuthor($from);
-
-        if (count($comments) > 0) {
-            foreach ($comments as $comment) {
-                $comment->setAuthor($to);
-            }
-
-            $this->om->flush();
-        }
-
-        return count($comments);
-    }
-
-    /**
      * Get unpublished comments.
      *
      * @param $blogId

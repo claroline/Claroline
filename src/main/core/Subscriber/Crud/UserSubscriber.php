@@ -9,7 +9,6 @@ use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\User\MergeUsersEvent;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -39,7 +38,6 @@ class UserSubscriber implements EventSubscriberInterface
             Crud::getEventName('create', 'post', User::class) => 'postCreate',
             Crud::getEventName('update', 'post', User::class) => 'postUpdate',
             Crud::getEventName('delete', 'post', User::class) => 'postDelete',
-            'merge_users' => 'mergeUsers',
         ];
     }
 
@@ -90,18 +88,6 @@ class UserSubscriber implements EventSubscriberInterface
             $ws->setHidden(true);
             $ws->setArchived(true);
             $this->om->persist($ws);
-        }
-    }
-
-    public function mergeUsers(MergeUsersEvent $event)
-    {
-        // Replace creator of resource nodes
-        $resourcesCount = $this->resourceManager->replaceCreator($event->getRemoved(), $event->getKept());
-        $event->addMessage("[CoreBundle] updated resources count: $resourcesCount");
-
-        // Change personal workspace into regular
-        if ($event->getRemoved()->getPersonalWorkspace()) {
-            $event->getRemoved()->getPersonalWorkspace()->setPersonal(false);
         }
     }
 }

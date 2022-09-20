@@ -11,14 +11,9 @@ use UJM\ExoBundle\Repository\ItemRepository;
 
 class ShareManager
 {
-    /**
-     * @var ObjectManager
-     */
+    /** @var ObjectManager */
     private $om;
-
-    /**
-     * @var ItemManager
-     */
+    /** @var ItemManager */
     private $itemManager;
 
     public function __construct(
@@ -126,25 +121,5 @@ class ShareManager
         }
 
         return $errors;
-    }
-
-    /**
-     * Find all content for a given user and the replace him by another.
-     *
-     * @return int
-     */
-    public function replaceUser(User $from, User $to)
-    {
-        $shareds = $this->om->getRepository(Shared::class)->findByUser($from);
-
-        if (count($shareds) > 0) {
-            foreach ($shareds as $shared) {
-                $shared->setUser($to);
-            }
-
-            $this->om->flush();
-        }
-
-        return count($shareds);
     }
 }

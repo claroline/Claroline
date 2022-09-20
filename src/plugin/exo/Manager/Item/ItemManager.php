@@ -24,44 +24,21 @@ use UJM\ExoBundle\Validator\JsonSchema\Item\ItemValidator;
 
 class ItemManager
 {
-    /**
-     * @var ObjectManager
-     */
+    /** @var ObjectManager */
     private $om;
-
-    /**
-     * @var ScoreManager
-     */
+    /** @var ScoreManager */
     private $scoreManager;
-
-    /**
-     * @var ItemRepository
-     */
+    /** @var ItemRepository */
     private $repository;
-
-    /**
-     * @var ItemValidator
-     */
+    /** @var ItemValidator */
     private $validator;
-
-    /**
-     * @var ItemSerializer
-     */
+    /** @var ItemSerializer */
     private $serializer;
-
-    /**
-     * @var AnswerRepository
-     */
+    /** @var AnswerRepository */
     private $answerRepository;
-
-    /**
-     * @var ItemDefinitionsCollection
-     */
+    /** @var ItemDefinitionsCollection */
     private $itemDefinitions;
-
-    /**
-     * @var HintSerializer
-     */
+    /** @var HintSerializer */
     private $hintSerializer;
 
     public function __construct(
@@ -380,26 +357,6 @@ class ItemManager
         }
 
         $definition->refreshIdentifiers($item->getInteraction());
-    }
-
-    /**
-     * Find all content for a given user and the replace him by another.
-     *
-     * @return int
-     */
-    public function replaceUser(User $from, User $to)
-    {
-        $items = $this->repository->findBy(['creator' => $from]);
-
-        if (count($items) > 0) {
-            foreach ($items as $item) {
-                $item->setCreator($to);
-            }
-
-            $this->om->flush();
-        }
-
-        return count($items);
     }
 
     public function isQuestionType(string $type): bool

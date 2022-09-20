@@ -14,9 +14,3 @@ services:
             - { name: kernel.event_listener, event: resource.claroline_claco_form.copy, method: onCopy }
             - { name: kernel.event_listener, event: resource.claroline_claco_form.export, method: onExport }
             - { name: kernel.event_listener, event: resource.claroline_claco_form.import, method: onImport }
-
-    Claroline\ClacoFormBundle\Listener\UserListener:
-        arguments:
-            - '@Claroline\ClacoFormBundle\Manager\ClacoFormManager'
-        tags:
-            - { name: kernel.event_listener, event: merge_users, method: onMerge }

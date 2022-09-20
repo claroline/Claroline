@@ -399,29 +399,6 @@ class ResourceManager implements LoggerAwareInterface
         return $this->resourceNodeRepo->findBy(['workspace' => $workspace, 'deletable' => false]);
     }
 
-    /**
-     * Find all content for a given user and the replace him by another.
-     *
-     * @return int
-     */
-    public function replaceCreator(User $from, User $to)
-    {
-        /** @var ResourceNode[] $nodes */
-        $nodes = $this->resourceNodeRepo->findBy([
-            'creator' => $from,
-        ]);
-
-        if (count($nodes) > 0) {
-            foreach ($nodes as $node) {
-                $node->setCreator($to);
-            }
-
-            $this->om->flush();
-        }
-
-        return count($nodes);
-    }
-
     public function addView(ResourceNode $node)
     {
         $node->addView();

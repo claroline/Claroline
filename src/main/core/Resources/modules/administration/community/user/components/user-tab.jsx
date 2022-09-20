@@ -11,7 +11,6 @@ import {selectors as toolSelectors} from '#/main/core/tool/store'
 import {selectors as baseSelectors} from '#/main/core/administration/community/store'
 import {User} from '#/main/core/administration/community/user/components/user'
 import {Users} from '#/main/core/administration/community/user/components/users'
-import {UsersMerge} from '#/main/core/administration/community/user/components/users-merge'
 import {actions, selectors} from '#/main/core/administration/community/user/store'
 import {MODAL_USER_DISABLE_INACTIVE} from '#/main/core/administration/community/user/modals/disable-inactive'
 
@@ -55,10 +54,6 @@ const UserTabComponent = props =>
           component: User,
           onEnter: (params) => props.openForm(params.id || null),
           onLeave: props.closeForm
-        }, {
-          path: '/users/merge/:id1/:id2',
-          component: UsersMerge,
-          onEnter: (params) => props.compare([params.id1, params.id2])
         }
       ]}
     />
@@ -68,8 +63,7 @@ UserTabComponent.propTypes = {
   path: T.string.isRequired,
   limitReached: T.bool.isRequired,
   openForm: T.func.isRequired,
-  closeForm: T.func.isRequired,
-  compare: T.func.isRequired
+  closeForm: T.func.isRequired
 }
 
 const UserTab = connect(

@@ -3,7 +3,6 @@
 namespace Icap\WikiBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\User;
 use Icap\HtmlDiff\HtmlDiff;
 use Icap\WikiBundle\Entity\Contribution;
 use Icap\WikiBundle\Entity\Section;
@@ -28,14 +27,6 @@ class ContributionManager
         $this->om = $om;
         $this->contributionRepository = $om->getRepository(Contribution::class);
         $this->contributionSerializer = $contributionSerializer;
-    }
-
-    /**
-     * @return \Icap\WikiBundle\Repository\ContributionRepository
-     */
-    public function getContributionRepository()
-    {
-        return $this->contributionRepository;
     }
 
     public function serializeContribution(Contribution $contribution)
@@ -72,25 +63,5 @@ class ContributionManager
         $contributions[1] = $contribution;
 
         return $contributions;
-    }
-
-    /**
-     * Find all content for a given user and the replace him by another.
-     *
-     * @return int
-     */
-    public function replaceUser(User $from, User $to)
-    {
-        $contributions = $this->contributionRepository->findByContributor($from);
-
-        if (count($contributions) > 0) {
-            foreach ($contributions as $contribution) {
-                $contribution->setContributor($to);
-            }
-
-            $this->om->flush();
-        }
-
-        return count($contributions);
     }
 }
