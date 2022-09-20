@@ -269,7 +269,7 @@ class UserManager
 
     public function getDefaultClarolineAdmin()
     {
-        $user = $this->getUserByUsername('claroline-connect');
+        $user = $this->getUserByUsername('support@claroline.com');
 
         if (!$user) {
             $user = $this->crud->create(User::class, [
