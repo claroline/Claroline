@@ -3,6 +3,7 @@
     "directory": "Directory",
     "archive": "Archive",
     "unarchive": "Unarchive",
+    "empty_role": "Empty role (users and groups)",
 
     "directory_id": "The directory id",
     "directory_name": "The directory name",

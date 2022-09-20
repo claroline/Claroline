@@ -83,9 +83,10 @@ class AddGroup extends AbstractImporter
             ],
         ];
 
-        $schema = json_decode(json_encode($roleSchema));
-
-        $schema = ['group' => Group::class, 'role' => $schema];
+        $schema = [
+            'group' => Group::class,
+            'role' => json_decode(json_encode($roleSchema)),
+        ];
 
         if (!in_array(Options::WORKSPACE_IMPORT, $options)) {
             $schema['workspace'] = Workspace::class;

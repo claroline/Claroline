@@ -3,6 +3,7 @@
     "directory": "Dossier",
     "archive": "Archiver",
     "unarchive": "Désarchiver",
+    "empty_role": "Vider le rôle (utilisateurs et groupes)",
 
     "directory_id": "L'id du dossier",
     "directory_name": "Le nom du dossier",
