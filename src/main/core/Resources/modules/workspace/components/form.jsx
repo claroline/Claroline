@@ -403,6 +403,10 @@ const WorkspaceForm = connect(
 
         delete newWorkspace.id
         delete newWorkspace.autoId
+        if (newWorkspace.registration && newWorkspace.registration.defaultRole) {
+          // otherwise new workspace will directly use the model role
+          delete newWorkspace.registration.defaultRole
+        }
 
         dispatch(formActions.update(ownProps.name, newWorkspace))
       })
