@@ -36,7 +36,7 @@ abstract class AbstractDeleteImporter extends AbstractImporter
             array_keys($data[static::getAction()[0]])
         );
 
-        if (!empty($object)) {
+        if (empty($object)) {
             return [
                 'delete' => [[
                     'data' => $data,
