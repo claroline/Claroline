@@ -392,9 +392,11 @@ class Crud
         foreach ($elements as $element) {
             // check if the element is in the collection if the object implement a has*() method
             $checkerName = 'has'.ucfirst(strtolower($property));
-            if (method_exists($object, $checkerName) && $object->$checkerName($element)) {
-                // the element is already in the collection, nothing to do
-                continue;
+            if (method_exists($object, $checkerName)) {
+                if ((self::COLLECTION_ADD === $action && $object->$checkerName($element))
+                    || (self::COLLECTION_REMOVE === $action && !$object->$checkerName($element))) {
+                    continue;
+                }
             }
 
             if ($this->dispatch('patch', 'pre', [$object, $options, $property, $element, $action])) {
