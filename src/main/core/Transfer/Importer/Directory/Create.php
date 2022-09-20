@@ -15,6 +15,9 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\TransferBundle\Transfer\Importer\AbstractImporter;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * @todo merge some logic with CreateOrUpdate action.
+ */
 class Create extends AbstractImporter
 {
     /** @var Crud */
@@ -64,7 +67,7 @@ class Create extends AbstractImporter
             if ($user) {
                 foreach ($user->getEntityRoles() as $role) {
                     if (Role::USER_ROLE === $role->getType()) {
-                        $roles[] = $role;
+                        $roles[$role->getUuid()] = $role;
                     }
                 }
             }
@@ -74,6 +77,7 @@ class Create extends AbstractImporter
             foreach ($data['roles'] as $role) {
                 $roleKeys = array_keys($role);
                 if (in_array('translationKey', $roleKeys)) {
+                    /** @var Role $object */
                     $object = $this->om->getRepository(Role::class)->findOneBy([
                         'translationKey' => $role['translationKey'],
                         'workspace' => $workspace,
@@ -83,6 +87,7 @@ class Create extends AbstractImporter
                 }
 
                 if (empty($object)) {
+                    /** @var Role $object */
                     $object = $this->om->getObject($role, Role::class, $roleKeys);
                 }
 
@@ -90,12 +95,12 @@ class Create extends AbstractImporter
                     throw new \Exception('Role '.implode(',', $role).' does not exists');
                 }
 
-                $roles[] = $object;
+                $roles[$object->getUuid()] = $object;
             }
         }
 
-        if (empty($roles)) {
-            $roles[] = $workspace->getDefaultRole();
+        if (empty($roles) && !empty($workspace->getDefaultRole())) {
+            $roles[$workspace->getDefaultRole()->getUuid()] = $workspace->getDefaultRole();
         }
 
         $permissions = [
