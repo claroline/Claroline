@@ -1,8 +1,9 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {PageSimple} from '#/main/app/page/components/simple'
+import {PageSimple, PageContent} from '#/main/app/page'
 import {ToolMain} from '#/main/core/tool/containers/main'
+import {ContentHtml} from '#/main/app/content/components/html'
 
 import {constants} from '#/main/app/layout/sections/home/constants'
 
@@ -11,7 +12,9 @@ const HomeContent = props => {
     case constants.HOME_TYPE_HTML:
       return (
         <PageSimple>
-          {props.content}
+          <PageContent>
+            <ContentHtml>{props.content}</ContentHtml>
+          </PageContent>
         </PageSimple>
       )
 
