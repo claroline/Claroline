@@ -15,22 +15,23 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 class ObjectCollection extends ArrayCollection
 {
-    private $class;
+    /** @var array */
     private $options;
 
     public function __construct(array $objects, array $options = [])
     {
-        foreach ($objects as $object) {
+        /*foreach ($objects as $object) {
             if (!$object instanceof $objects[0]) {
                 $classes = '';
-                foreach ($objects as $object) {
-                    $classes .= get_class($object).', ';
+                foreach ($objects as $obj) {
+                    $classes .= get_class($obj).', ';
                 }
                 throw new \Exception('Classes of objects are varying. '.$classes);
             }
-        }
+        }*/
 
         parent::__construct($objects);
+
         $this->options = $options;
     }
 
@@ -47,14 +48,6 @@ class ObjectCollection extends ArrayCollection
     public function setOptions($options)
     {
         $this->options = $options;
-    }
-
-    /**
-     * Be carreful as it can returns the doctrine proxy class name.
-     */
-    public function getClass()
-    {
-        return $this->class;
     }
 
     public function isInstanceOf($class)

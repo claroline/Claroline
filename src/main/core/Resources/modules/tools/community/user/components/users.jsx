@@ -27,7 +27,7 @@ const Users = props =>
       dangerous: true,
       disabled: -1 === rows.findIndex(row => -1 !== row.roles.findIndex(r => r.context !== 'group' && r.workspace && r.workspace.id === props.workspace.id)),
       confirm: {
-        title: trans('unregister'),
+        title: trans('unregister', {}, 'actions'),
         message: transChoice('unregister_users_confirm_message', rows.length, {count: rows.length})
       }
     }] : []}

@@ -298,7 +298,6 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
         $this->groups = new ArrayCollection();
         $this->locations = new ArrayCollection();
         $this->salt = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
-        $this->scheduledTasks = new ArrayCollection();
         $this->administratedOrganizations = new ArrayCollection();
         $this->userOrganizationReferences = new ArrayCollection();
     }
@@ -574,13 +573,13 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
     /**
      * Checks if the user has a given role.
      *
-     * @param bool   $includeGroup
-     * @param string $roleName
-     *
-     * @return bool
+     * @param bool        $includeGroup
+     * @param string|Role $role
      */
-    public function hasRole($roleName, $includeGroup = true)
+    public function hasRole($role, $includeGroup = true): bool
     {
+        $roleName = $role instanceof Role ? $role->getName() : $role;
+
         $roles = $this->getEntityRoles($includeGroup);
         $roleNames = array_map(function (Role $role) {
             return $role->getName();

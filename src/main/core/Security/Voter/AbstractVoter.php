@@ -84,9 +84,6 @@ abstract class AbstractVoter implements ClarolineVoterInterface, VoterInterface
      */
     protected function getCollection($object)
     {
-        //here we can switch the old CollectionObjects for the new one so we can remove them laster
-        //ie, remove GroupCollection, ResourceCollection, w/e
-
         if (!$object instanceof ObjectCollection) {
             $object = new ObjectCollection([$object]);
         }

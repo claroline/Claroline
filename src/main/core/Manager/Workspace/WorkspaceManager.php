@@ -345,15 +345,7 @@ class WorkspaceManager implements LoggerAwareInterface
 
     public function unregister(AbstractRoleSubject $subject, Workspace $workspace, array $options = [])
     {
-        $rolesToRemove = array_filter($workspace->getRoles()->toArray(), function (Role $role) use ($workspace) {
-            return $role->getWorkspace()->getId() === $workspace->getId();
-        });
-
-        foreach ($rolesToRemove as $role) {
-            if ($subject->hasRole($role->getName())) {
-                $this->crud->patch($subject, 'role', Crud::COLLECTION_REMOVE, [$role], $options);
-            }
-        }
+        $this->crud->patch($subject, 'role', Crud::COLLECTION_REMOVE, $workspace->getRoles()->toArray(), $options);
     }
 
     public function countUsersForRoles(Workspace $workspace)

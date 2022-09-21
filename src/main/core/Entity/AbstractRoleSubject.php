@@ -56,12 +56,11 @@ abstract class AbstractRoleSubject
     /**
      * Checks if the subject has a given role.
      *
-     * @param string $roleName
-     *
-     * @return bool
+     * @param string|Role $role
      */
-    public function hasRole($roleName)
+    public function hasRole($role): bool
     {
+        $roleName = $role instanceof Role ? $role->getName() : $role;
         if (in_array($roleName, $this->getRoles())) {
             return true;
         }
