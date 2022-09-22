@@ -156,7 +156,7 @@ class ResourceNode
      * @var string
      *
      * @Gedmo\TreePath(separator="`")
-     * @ORM\Column(length=3000, nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      *
      * @todo remove me
      */
@@ -166,7 +166,7 @@ class ResourceNode
      * @var string
      *
      * nullable true because it's a new property and migrations/updaters were needed
-     * @ORM\Column(length=3000, nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     protected $materializedPath;
 
