@@ -31,6 +31,7 @@ use Claroline\CoreBundle\Manager\LogConnectManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
+use Claroline\CoreBundle\Messenger\Message\CopyWorkspace;
 use Claroline\CoreBundle\Messenger\Message\ImportWorkspace;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
@@ -245,14 +246,18 @@ class WorkspaceController extends AbstractCrudController
             $options[] = Options::AS_MODEL;
         }
 
-        $copies = $this->crud->copyBulk(
-            $this->decodeIdsString($request, $class),
-            $options
-        );
+        $toCopy = $this->decodeIdsString($request, $class);
 
-        return new JsonResponse(array_map(function ($copy) {
-            return $this->serializer->serialize($copy, $this->getOptions()['get']);
-        }, $copies), 200);
+        foreach ($toCopy as $workspace) {
+            if ($this->checkPermission('COPY', $workspace)) {
+                $this->messageBus->dispatch(new CopyWorkspace(
+                    $workspace->getId(),
+                    $options
+                ), [new AuthenticationStamp($this->tokenStorage->getToken()->getUser()->getId())]);
+            }
+        }
+
+        return new JsonResponse(null, 204);
     }
 
     /**

@@ -11,6 +11,10 @@ services:
         arguments:
             - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
 
+    Claroline\CoreBundle\Messenger\CopyWorkspaceHandler:
+        arguments:
+            - '@Claroline\AppBundle\API\Crud'
+
     Claroline\CoreBundle\Messenger\SendMessageHandler:
         arguments:
             - '@Claroline\AppBundle\Event\StrictDispatcher'
