@@ -149,6 +149,12 @@ class ServerManager
      */
     public function extractMeetingInfo($meetingXml): array
     {
+        $returnCode = $meetingXml->getElementsByTagName('returncode')->item(0);
+        if (!empty($returnCode) && 'failed' === strtolower($returnCode->textContent)) {
+            // mostly occur when the meeting has not yet been created on the server
+            return [];
+        }
+
         $meetingId = $meetingXml->getElementsByTagName('meetingID')->item(0)->textContent;
 
         return [
