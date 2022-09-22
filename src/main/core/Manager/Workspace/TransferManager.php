@@ -135,8 +135,11 @@ class TransferManager implements LoggerAwareInterface
         // todo : put it in an event
         $data = $this->replaceResourceIds($data);
 
-        $defaultRole = $data['registration']['defaultRole'];
-        unset($data['registration']['defaultRole']);
+        $defaultRole = null;
+        if (!empty($data['registration']) && !empty($data['registration']['defaultRole'])) {
+            $defaultRole = $data['registration']['defaultRole'];
+            unset($data['registration']['defaultRole']);
+        }
 
         $this->importWorkspace($data, $workspace, $bag, $options);
         $roles = $this->importRoles($data, $workspace, $defaultRole);
@@ -181,7 +184,7 @@ class TransferManager implements LoggerAwareInterface
         }, $workspace->getRoles()->toArray());
     }
 
-    private function importRoles(array $data, Workspace $workspace, array $defaultRole): array
+    private function importRoles(array $data, Workspace $workspace, ?array $defaultRole = null): array
     {
         $roles = [];
 
@@ -195,7 +198,7 @@ class TransferManager implements LoggerAwareInterface
             $workspace->addRole($role);
 
             $this->crud->create($role, $roleData, [Crud::NO_PERMISSIONS, Crud::NO_VALIDATION, Options::REFRESH_UUID, Options::FORCE_FLUSH]);
-            if ($defaultRole['translationKey'] === $role->getTranslationKey()) {
+            if (!empty($defaultRole) && $defaultRole['translationKey'] === $role->getTranslationKey()) {
                 $workspace->setDefaultRole($role);
             }
 
