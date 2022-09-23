@@ -8,8 +8,6 @@ use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\AppBundle\Routing\Documentator;
-use Claroline\AppBundle\Routing\Finder;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,12 +18,6 @@ abstract class AbstractCrudController
 
     /** @var FinderProvider */
     protected $finder;
-
-    /** @var Finder */
-    protected $routerFinder;
-
-    /** @var Documentator */
-    protected $routerDocumentator;
 
     /** @var SerializerProvider */
     protected $serializer;
@@ -71,16 +63,6 @@ abstract class AbstractCrudController
         $this->om = $om;
     }
 
-    public function setRouterFinder(Finder $routerFinder)
-    {
-        $this->routerFinder = $routerFinder;
-    }
-
-    public function setRouterDocumentator(Documentator $routerDocumentator)
-    {
-        $this->routerDocumentator = $routerDocumentator;
-    }
-
     /**
      * @ApiDoc(
      *     description="Find a single object of class $class.",
@@ -112,20 +94,6 @@ abstract class AbstractCrudController
             default:
                 return new JsonResponse('Multiple results, use "list" instead', 400);
         }
-    }
-
-    /**
-     * @ApiDoc(
-     *     description="Return the schema of class $class."
-     * )
-     *
-     * @param string $class
-     *
-     * @return JsonResponse
-     */
-    public function schemaAction($class)
-    {
-        return new JsonResponse($this->serializer->getSchema($class));
     }
 
     /**
@@ -232,6 +200,8 @@ abstract class AbstractCrudController
      * )
      *
      * @param string $class
+     *
+     * @deprecated use transfer feature instead
      */
     public function csvAction(Request $request, $class): BinaryFileResponse
     {
@@ -394,20 +364,6 @@ abstract class AbstractCrudController
     }
 
     /**
-     * @ApiDoc(
-     *     description="Display the current information",
-     * )
-     *
-     * @param string $class
-     *
-     * @return JsonResponse
-     */
-    public function docAction($class)
-    {
-        return new JsonResponse($this->routerDocumentator->documentClass($class));
-    }
-
-    /**
      * @return array
      */
     public function getOptions()
@@ -420,10 +376,7 @@ abstract class AbstractCrudController
             'deleteBulk' => [],
             'copyBulk' => [],
             'exist' => [],
-            'schema' => [],
             'find' => [],
-            'doc' => [],
-            'export' => [],
         ];
     }
 
@@ -433,8 +386,8 @@ abstract class AbstractCrudController
     public function getRequirements()
     {
         return [
-            'get' => ['id' => '^(?!.*(schema|copy|parameters|find|doc|csv|\/)).*'],
-            'update' => ['id' => '^(?!.*(schema|parameters|find|doc|csv|\/)).*'],
+            'get' => ['id' => '^(?!.*(copy|parameters|find|csv|\/)).*'],
+            'update' => ['id' => '^(?!.*(parameters|find|csv|\/)).*'],
             'exist' => [],
         ];
     }
