@@ -7,6 +7,7 @@ use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Event\Crud\CopyEvent;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
+use Claroline\AppBundle\Event\Crud\UpdateEvent;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
@@ -62,6 +63,8 @@ class ResourceNodeSubscriber implements EventSubscriberInterface
     {
         return [
             Crud::getEventName('create', 'pre', ResourceNode::class) => 'preCreate',
+            Crud::getEventName('create', 'post', ResourceNode::class) => 'postCreate',
+            Crud::getEventName('update', 'post', ResourceNode::class) => 'postCreate',
             Crud::getEventName('copy', 'pre', ResourceNode::class) => 'preCopy',
             Crud::getEventName('copy', 'post', ResourceNode::class) => 'postCopy',
             Crud::getEventName('delete', 'pre', ResourceNode::class) => 'preDelete',
@@ -78,6 +81,41 @@ class ResourceNodeSubscriber implements EventSubscriberInterface
         if ($user instanceof User) {
             $resourceNode->setCreator($user);
         }
+    }
+
+    public function postCreate(CreateEvent $event)
+    {
+        /** @var ResourceNode $resourceNode */
+        $resourceNode = $event->getObject();
+
+        if ($resourceNode->getPoster()) {
+            $this->fileManager->linkFile(ResourceNode::class, $resourceNode->getUuid(), $resourceNode->getPoster());
+        }
+
+        if ($resourceNode->getThumbnail()) {
+            $this->fileManager->linkFile(ResourceNode::class, $resourceNode->getUuid(), $resourceNode->getThumbnail());
+        }
+    }
+
+    public function postUpdate(UpdateEvent $event)
+    {
+        /** @var ResourceNode $resourceNode */
+        $resourceNode = $event->getObject();
+        $oldData = $event->getOldData();
+
+        $this->fileManager->updateFile(
+            ResourceNode::class,
+            $resourceNode->getUuid(),
+            $resourceNode->getPoster(),
+            !empty($oldData['poster']) ? $oldData['poster']['url'] : null
+        );
+
+        $this->fileManager->updateFile(
+            ResourceNode::class,
+            $resourceNode->getUuid(),
+            $resourceNode->getPoster(),
+            !empty($oldData['thumbnail']) ? $oldData['thumbnail']['url'] : null
+        );
     }
 
     public function preDelete(DeleteEvent $event)
@@ -172,6 +210,14 @@ class ResourceNodeSubscriber implements EventSubscriberInterface
         $node = $event->getObject();
         /** @var ResourceNode $newNode */
         $newNode = $event->getCopy();
+
+        if ($newNode->getPoster()) {
+            $this->fileManager->linkFile(ResourceNode::class, $newNode->getUuid(), $newNode->getPoster());
+        }
+
+        if ($newNode->getThumbnail()) {
+            $this->fileManager->linkFile(ResourceNode::class, $newNode->getUuid(), $newNode->getThumbnail());
+        }
 
         // TODO : move this in the Directory listener
         if ('directory' === $node->getResourceType()->getName()) {
