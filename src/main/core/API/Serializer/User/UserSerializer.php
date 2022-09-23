@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\API\Serializer\User;
 
 use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
@@ -129,9 +130,12 @@ class UserSerializer
             'administrativeCode' => $user->getAdministrativeCode(),
             'phone' => $showEmail ? $user->getPhone() : null,
             'meta' => $this->serializeMeta($user),
-            'permissions' => $this->serializePermissions($user),
             'restrictions' => $this->serializeRestrictions($user),
         ];
+
+        if (!in_array(SerializerInterface::SERIALIZE_TRANSFER, $options)) {
+            $serializedUser['permissions'] = $this->serializePermissions($user);
+        }
 
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
             $userRoles = array_map(function (Role $role) { // todo use role serializer with minimal option

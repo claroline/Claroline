@@ -86,6 +86,8 @@ class TransferManager implements LoggerAwareInterface
             $this->crud->dispatch('create', 'post', [$workspace, $options, $data]);
         }
 
+        $archive->close();
+
         return $workspace;
     }
 
