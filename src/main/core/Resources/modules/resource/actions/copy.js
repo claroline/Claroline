@@ -30,7 +30,10 @@ export default (resourceNodes, nodesRefresher) => ({
           method: 'POST',
           body: JSON.stringify({destination: selected[0]})
         },
-        success: (response) => nodesRefresher.add(response)
+        success: (response) => {
+          nodesRefresher.add(response)
+          nodesRefresher.update([selected[0]])
+        }
       }
     }),
     filters: [{property: 'resourceType', value: 'directory', locked: true}]
