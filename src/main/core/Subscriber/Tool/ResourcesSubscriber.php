@@ -106,18 +106,22 @@ class ResourcesSubscriber implements EventSubscriberInterface
             return;
         }
 
+        $resources = $data['resources'];
+
         // we need to push the resource types with linked resources last, because we need all resources to be created
         // to link them to the new resources.
         // this should not be done here and as is it doesn't work in all cases (eg. if we link paths to others paths).
         $typesWithResourceLinks = ['innova_path', 'shortcut'];
-        usort($data['resources'], function (array $a, array $b) use ($typesWithResourceLinks) {
-            if (in_array($a['resourceNode']['meta']['type'], $typesWithResourceLinks)) {
+        uksort($resources, function (int $a, int $b) use ($resources, $typesWithResourceLinks) {
+            if (in_array($resources[$a]['resourceNode']['meta']['type'], $typesWithResourceLinks)) {
                 return 1;
-            } elseif (in_array($b['resourceNode']['meta']['type'], $typesWithResourceLinks)) {
+            } elseif (in_array($resources[$b]['resourceNode']['meta']['type'], $typesWithResourceLinks)) {
                 return -1;
             }
 
-            return 0;
+            // we want to keep the original order (required for the parent directories to be created first)
+            // that's why we use uksort and not usort (from the usort doc : If two members compare as equal, they retain their original order. Prior to PHP 8.0.0, their relative order in the sorted array was undefined.)
+            return $a - $b;
         });
 
         $workspace = $event->getWorkspace();
@@ -132,7 +136,7 @@ class ResourcesSubscriber implements EventSubscriberInterface
             $openingResourceId = $workspaceOptions['workspace_opening_resource'];
         }
 
-        foreach ($data['resources'] as $resourceData) {
+        foreach ($resources as $resourceData) {
             // create resource node
             $nodeData = $resourceData['resourceNode'];
             unset($nodeData['workspace']);
