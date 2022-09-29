@@ -77,7 +77,7 @@ class Course extends AbstractTraining
      *
      * @ORM\Column(type="boolean")
      *
-     * @var string
+     * @var bool
      */
     private $hideSessions = false;
 

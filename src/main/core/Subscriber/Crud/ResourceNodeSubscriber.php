@@ -64,7 +64,7 @@ class ResourceNodeSubscriber implements EventSubscriberInterface
         return [
             Crud::getEventName('create', 'pre', ResourceNode::class) => 'preCreate',
             Crud::getEventName('create', 'post', ResourceNode::class) => 'postCreate',
-            Crud::getEventName('update', 'post', ResourceNode::class) => 'postCreate',
+            Crud::getEventName('update', 'post', ResourceNode::class) => 'postUpdate',
             Crud::getEventName('copy', 'pre', ResourceNode::class) => 'preCopy',
             Crud::getEventName('copy', 'post', ResourceNode::class) => 'postCopy',
             Crud::getEventName('delete', 'pre', ResourceNode::class) => 'preDelete',

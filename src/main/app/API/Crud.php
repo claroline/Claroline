@@ -375,6 +375,10 @@ class Crud
      * @param string $action   - the action to execute on the collection (aka. add/remove/set)
      * @param array  $elements - the collection to patch
      * @param array  $options  - additional patch options
+     *
+     * @todo only flush flush once (do not flush for each collection element)
+     * @todo only dispatch lifecycle events once with the full collection in param
+     * @todo remove post_collection event
      */
     public function patch($object, string $property, string $action, array $elements, array $options = [])
     {
