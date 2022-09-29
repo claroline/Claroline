@@ -28,23 +28,23 @@ class FieldFacet
     // Restrictions
     use Hidden;
 
-    /** @var int */
+    /** @var string */
     const NUMBER_TYPE = 'number';
-    /** @var int */
+    /** @var string */
     const DATE_TYPE = 'date';
-    /** @var int */
+    /** @var string */
     const COUNTRY_TYPE = 'country';
-    /** @var int */
+    /** @var string */
     const EMAIL_TYPE = 'email';
-    /** @var int */
+    /** @var string */
     const HTML_TYPE = 'html';
-    /** @var int */
+    /** @var string */
     const CASCADE_TYPE = 'cascade';
-    /** @var int */
+    /** @var string */
     const FILE_TYPE = 'file';
-    /** @var int */
+    /** @var string */
     const BOOLEAN_TYPE = 'boolean';
-    /** @var int */
+    /** @var string */
     const CHOICE_TYPE = 'choice';
 
     /**

@@ -248,7 +248,7 @@ class CommentManager
     public function addBannedMember(Blog $blog, User $user)
     {
         $member = new Member();
-        $member->setBlog(blog);
+        $member->setBlog($blog);
         $member->setUser($user);
         $member->setBanned(true);
 
