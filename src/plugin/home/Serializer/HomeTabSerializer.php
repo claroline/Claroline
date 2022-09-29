@@ -200,7 +200,7 @@ class HomeTabSerializer
             }
         }
 
-        if (isset($data['workspace'])) {
+        if (isset($data['workspace']) && empty($homeTab->getWorkspace())) {
             /** @var Workspace $workspace */
             $workspace = $this->om->getObject($data['workspace'], Workspace::class);
             $homeTab->setWorkspace($workspace);
