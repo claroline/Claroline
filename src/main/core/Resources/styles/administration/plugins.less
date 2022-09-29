@@ -1,0 +1,130 @@
+@import "/src/main/app/Resources/styles/mixins";
+@import "/src/main/app/Resources/styles/variables";
+
+.app-plugins {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.app-plugin-container {
+  display: flex;
+  flex-wrap: wrap;
+
+  margin-bottom: floor(@component-margin-bottom / 2);
+  color: @data-card-color;
+  background: @data-card-bg;
+  border: 1px solid @data-card-border;
+  border-radius: @data-card-border-radius;
+
+  .box-shadow(@data-card-box-shadow);
+
+  .app-plugin-header {
+    text-align: center;
+    background: @data-card-header-bg;
+    border-right: 1px solid @data-card-inner-border;
+  }
+
+  .app-plugin-icon { // c/c from data-card-icon
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, .6);
+    border-radius: 50%;
+    line-height: 0;
+
+    // for FA icons
+    color: rgba(0, 0, 0, 0.5) !important;
+
+    // for SVG icons
+    fill: rgba(0, 0, 0, 0.5) !important;
+    stroke: rgba(0, 0, 0, 0.5) !important;
+
+    font-size: floor(@data-card-icon-lg-size / 2); // for FA icons
+    width: @data-card-icon-lg-size;
+    height: @data-card-icon-lg-size;
+    margin: @data-card-padding @data-card-padding 5px;
+
+    img.icon {
+      max-width: floor(@data-card-icon-lg-size / 2);
+      max-height: floor(@data-card-icon-lg-size / 2);
+    }
+  }
+
+  .app-plugin-version {
+    display: block;
+    font-size: @font-size-small;
+    color: @label-color;
+    background: @label-primary-bg;
+    padding: 5px;
+    border-radius: 0 0 0 @data-card-border-radius;
+  }
+
+  .app-plugin-status {
+    margin-left: auto; // align to the right
+  }
+
+  .app-plugin {
+    flex: 1;
+    padding: @data-card-padding;
+  }
+
+  h3 {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 0;
+    padding: 0;
+
+    small {
+      display: block;
+      margin-top: 5px;
+      width: 100%;
+    }
+  }
+
+  &.locked {
+
+  }
+
+  &.disabled {
+    color: @data-card-muted-color;
+    background: @data-card-muted-bg;
+    border-color: @data-card-muted-border;
+    .box-shadow(@data-card-muted-box-shadow);
+
+    .app-plugin-header {
+      background: @data-card-muted-header-bg;
+      border-color: @data-card-muted-inner-border;
+    }
+
+    .app-plugin-version {
+      background: @label-default-bg;
+    }
+  }
+}
+
+
+// -
+// Plugin sections
+// ---
+
+.app-plugin-section {
+  width: 100%;
+  padding: @data-card-padding;
+  border-top: 1px solid @data-card-inner-border;
+}
+
+.app-plugin-meta {
+  p {
+    font-style: italic;
+    margin-bottom: 0;
+  }
+}
+
+.app-plugin-requirements {
+
+}
+
+.app-plugin-parameters {
+
+}

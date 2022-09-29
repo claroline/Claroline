@@ -11,7 +11,7 @@ import {LocaleInput} from '#/main/app/data/types/locale/components/input'
 const LocaleModal = props =>
   <Modal
     {...omit(props, 'current', 'available')}
-    title={trans('lang')}
+    title={trans('language')}
   >
     <div className="modal-body text-center">
       <LocaleInput

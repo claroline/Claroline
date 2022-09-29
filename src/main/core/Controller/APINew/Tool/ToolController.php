@@ -56,9 +56,6 @@ class ToolController
     /** @var LogConnectManager */
     private $logConnectManager;
 
-    /**
-     * ToolController constructor.
-     */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         ObjectManager $om,

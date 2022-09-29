@@ -53,7 +53,7 @@ class TextController extends AbstractCrudController
 
     public function getIgnore()
     {
-        return ['create', 'exist', 'list', 'copyBulk', 'deleteBulk', 'schema', 'find', 'get'];
+        return ['create', 'exist', 'list', 'copyBulk', 'deleteBulk', 'find', 'get'];
     }
 
     public function getName()

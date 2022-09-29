@@ -16,7 +16,7 @@ class UJMExoBundle extends DistributionPluginBundle
         $container->addCompilerPass(new ItemDefinitionsPass());
     }
 
-    public function getRequiredPlugins()
+    public function getRequiredPlugins(): array
     {
         return [
             ClarolineTagBundle::class,

@@ -143,7 +143,6 @@
             "UJM\\ExoBundle\\": "src/plugin/exo",
             "Icap\\LessonBundle\\": "src/plugin/lesson",
             "Claroline\\ClacoFormBundle\\": "src/plugin/claco-form",
-            "UJM\\LtiBundle\\": "src/plugin/lti",
             "Icap\\BibliographyBundle\\": "src/plugin/bibliography",
             "Claroline\\DropZoneBundle\\": "src/plugin/drop-zone",
             "Claroline\\LinkBundle\\": "src/plugin/link",

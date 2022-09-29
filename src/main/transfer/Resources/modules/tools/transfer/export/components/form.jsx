@@ -84,7 +84,7 @@ class ExportForm extends Component {
         }}
         cancel={{
           type: LINK_BUTTON,
-          target: this.props.isNew ? `${this.props.path}/export/new` : `${this.props.path}/export/history/`+this.props.formData.id,
+          target: this.props.isNew ? `${this.props.path}/export/history` : `${this.props.path}/export/history/`+this.props.formData.id,
           exact: true
         }}
         sections={[

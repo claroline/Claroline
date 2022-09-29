@@ -91,7 +91,7 @@ class ImportForm extends Component {
         }}
         cancel={{
           type: LINK_BUTTON,
-          target: props.isNew ? `${this.props.path}/import/new` : `${this.props.path}/import/history/`+this.props.formData.id,
+          target: props.isNew ? `${this.props.path}/import/history` : `${this.props.path}/import/history/`+this.props.formData.id,
           exact: true
         }}
         sections={[

@@ -66,9 +66,11 @@ class CellChoiceSerializer
      *
      * @param CellChoice[] $cellChoiceEntities
      *
-     * @return Keyword[] - the list of updated Keyword entities (and without the one no longer in `$keywordCollection`)
+     * @return CellChoice[] - the list of updated Keyword entities (and without the one no longer in `$keywordCollection`)
+     *
+     * @deprecated serializer should only expose serialize/deserialize methods
      */
-    public function deserializeCollection(array $cellChoiceCollection, array $cellChoiceEntities, array $options = [])
+    public function deserializeCollection(array $cellChoiceCollection, array $cellChoiceEntities, array $options = []): array
     {
         $cellChoices = [];
 

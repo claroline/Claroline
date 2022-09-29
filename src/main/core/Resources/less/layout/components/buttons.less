@@ -94,22 +94,6 @@ input[type=reset] {
     .button-link-variant(@brand-danger, darken(@brand-danger, 10%), @link-hover-decoration);
 }
 
-// todo : for retro compatibility, to remove
-.btn-link-danger {
-    .button-link-variant(@brand-danger, darken(@brand-danger, 10%), @link-hover-decoration);
-}
-.btn-link-default {
-    .button-link-variant(@gray, @gray-dark, @link-hover-decoration);
-}
-.btn-group.open .dropdown-toggle {
-    // remove push effect on dropdown links
-    &.btn-link-default,
-    &.btn-link-danger {
-        box-shadow: none;
-    }
-}
-
-
 // -
 // Button sizes
 // ---
@@ -126,11 +110,101 @@ input[type=reset] {
     .button-size(@padding-xs-vertical; @padding-xs-horizontal; @font-size-small; @line-height-small; @btn-border-radius-small);
 }
 
-
 // -
 // Other Variants
 // ---
 
 .btn-emphasis {
     padding: @padding-large-vertical @padding-large-horizontal;
+}
+
+.btn-toggle {
+    .fa {
+        background: @input-bg;
+        box-shadow: 0 0 1px rgba(0, 0, 0, 0.5);
+    }
+
+    // color
+    &.default {
+        .button-toggle-color(@gray, @btn-default-border);
+    }
+    &.primary {
+        .button-toggle-color(@brand-primary, @btn-primary-border);
+    }
+    &.success {
+        .button-toggle-color(@brand-success, @btn-success-border);
+    }
+    &.info {
+        .button-toggle-color(@brand-info, @btn-info-border);
+    }
+    &.warning {
+        .button-toggle-color(@brand-warning, @btn-warning-border);
+    }
+    &.danger {
+        .button-toggle-color(@brand-danger, @btn-danger-border);
+    }
+
+    // sizing
+    .button-toggle-size(2px; @padding-base-vertical; @font-size-base; @line-height-base);
+
+    &.btn-lg {
+        .button-toggle-size(2px; @padding-large-vertical; @font-size-large; @line-height-large);
+    }
+    &.btn-sm {
+        .button-toggle-size(2px; @padding-small-vertical; @font-size-small; @line-height-small);
+    }
+    &.btn-xs {
+        .button-toggle-size(@padding-xs-vertical; @padding-xs-vertical; @font-size-small; @line-height-small);
+    }
+
+    &.page-actions-btn {
+        // FIXME
+        //.button-toggle-size(.1em; .65em; 1.25em; 1.25em);
+        .button-toggle-size(2px; @padding-large-vertical; @font-size-large; @line-height-large);
+    }
+}
+
+.button-toggle-size(@outer-padding, @padding-vertical, @font-size, @line-height) {
+    @inner-padding: max(@padding-vertical - @outer-padding, 0);
+    @handle-size: ceil((@font-size * @line-height) + (@inner-padding * 2));
+
+    padding: @outer-padding;
+    border-radius: (@handle-size / 2) + @outer-padding + 1;
+
+    .fa {
+        padding: @inner-padding;
+        line-height: @line-height;
+        height: @handle-size;
+        width: @handle-size;
+        border-radius: @handle-size / 2;
+
+        transition: margin .25s ease-in-out;
+    }
+
+    &[aria-pressed=false] {
+        .fa {
+            margin-right: @handle-size + @outer-padding;
+        }
+    }
+
+    &[aria-pressed=true] {
+        .fa {
+            margin-left: @handle-size + @outer-padding;
+        }
+    }
+}
+
+.button-toggle-color(@color, @border-color) {
+    &[aria-pressed=false] {
+        .button-variant(@input-bg-disabled, @input-bg-disabled, @input-border);
+    }
+
+    &[aria-pressed=true] {
+        background-color: @color;
+        border-color: @border-color;
+
+        .fa {
+            color: @color;
+        }
+    }
 }

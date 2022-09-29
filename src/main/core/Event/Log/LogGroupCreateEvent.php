@@ -32,9 +32,6 @@ class LogGroupCreateEvent extends LogGenericEvent
         );
     }
 
-    /**
-     * @return array
-     */
     public static function getRestriction()
     {
         return [self::DISPLAYED_ADMIN];

@@ -115,20 +115,8 @@ class ObjectLock
 
     /**
      * Get the value of Locked.
-     *
-     * @return string
      */
-    public function getLocked()
-    {
-        return $this->locked;
-    }
-
-    /**
-     * Get the value of Locked.
-     *
-     * @return string
-     */
-    public function isLocked()
+    public function isLocked(): bool
     {
         return $this->locked;
     }
@@ -136,11 +124,11 @@ class ObjectLock
     /**
      * Set the value of Locked.
      *
-     * @param string locked
+     * @param bool locked
      *
      * @return self
      */
-    public function setLocked($locked)
+    public function setLocked(bool $locked)
     {
         $this->locked = $locked;
 

@@ -16,7 +16,7 @@ use Claroline\TeamBundle\ClarolineTeamBundle;
 
 class ClarolineDropZoneBundle extends DistributionPluginBundle
 {
-    public function getRequiredPlugins()
+    public function getRequiredPlugins(): array
     {
         return [
             ClarolineTeamBundle::class,

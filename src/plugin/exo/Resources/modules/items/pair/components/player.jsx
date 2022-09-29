@@ -116,7 +116,8 @@ let Item = props => {
               draggable="true"
               className={classes(
                 'btn',
-                'btn-link-default',
+                'btn-link',
+                'default',
                 'drag-handle'
               )}
             >

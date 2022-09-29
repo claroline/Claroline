@@ -60,12 +60,7 @@ class UserManager
         $this->roleRepo = $om->getRepository(Role::class);
     }
 
-    /**
-     * @param string $username
-     *
-     * @return User
-     */
-    public function getUserByUsername($username)
+    public function getUserByUsername(string $username): ?User
     {
         try {
             $user = $this->userRepo->loadUserByUsername($username);

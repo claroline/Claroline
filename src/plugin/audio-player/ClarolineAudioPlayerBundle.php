@@ -15,7 +15,7 @@ use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
 
 class ClarolineAudioPlayerBundle extends DistributionPluginBundle
 {
-    public function getRequiredPlugins()
+    public function getRequiredPlugins(): array
     {
         return [
             'UJM\\ExoBundle\\UJMExoBundle', // FIXME : this should not be the case

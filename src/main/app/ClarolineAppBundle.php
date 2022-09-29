@@ -58,7 +58,7 @@ class ClarolineAppBundle extends Bundle implements AutoConfigurableInterface
         ];
     }
 
-    public function configureContainer(ContainerBuilder $container, LoaderInterface $loader)
+    public function configureContainer(ContainerBuilder $container, LoaderInterface $loader): void
     {
         $environment = $container->getParameter('kernel.environment');
 
@@ -86,7 +86,7 @@ class ClarolineAppBundle extends Bundle implements AutoConfigurableInterface
         }
     }
 
-    public function configureRoutes(RouteCollectionBuilder $routes)
+    public function configureRoutes(RouteCollectionBuilder $routes): void
     {
         $routes->import($this->getPath().'/Resources/config/routing.yml');
     }

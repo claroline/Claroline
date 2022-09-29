@@ -168,7 +168,7 @@ class EntityDescriptorProvider implements EntityDescriptorProviderInterface
     }
 
     /**
-     * @return IdpSsoDescriptor
+     * @return IdpSsoDescriptor|null
      */
     protected function getIdpSsoDescriptor()
     {

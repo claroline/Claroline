@@ -57,7 +57,7 @@ class LogWorkspaceRegistrationDeclineEvent extends LogGenericEvent implements No
      */
     public static function getRestriction()
     {
-        return;
+        return [];
     }
 
     public function getActionKey()

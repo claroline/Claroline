@@ -23,7 +23,7 @@ interface VoterInterface
     public function getClass();
 
     /**
-     * @return array
+     * @return array|null
      */
     public function getSupportedActions();
 }

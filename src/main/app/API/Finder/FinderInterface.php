@@ -23,7 +23,7 @@ interface FinderInterface
     public function find(array $filters = [], array $sortBy = null, $page = 0, $limit = -1, $count = false);
 
     /**
-     * @return object
+     * @return object|null
      */
     public function findOneBy(array $filters = []);
 

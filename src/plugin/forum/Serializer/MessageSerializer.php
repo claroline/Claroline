@@ -16,63 +16,45 @@ class MessageSerializer
 
     /** @var AbstractMessageSerializer */
     private $messageSerializer;
-
-    /** @var AbstractMessageSerializer */
-    private $subjectSerializer;
-
     /** @var ObjectManager */
     private $om;
-
     /** @var ResourceNodeSerializer */
     private $nodeSerializer;
 
-    /**
-     * MessageSerializer constructor.
-     */
     public function __construct(
         AbstractMessageSerializer $messageSerializer,
         ObjectManager $om,
-        SubjectSerializer $subjectSerializer,
         ResourceNodeSerializer $nodeSerializer
     ) {
         $this->messageSerializer = $messageSerializer;
         $this->om = $om;
-        $this->subjectSerializer = $subjectSerializer;
         $this->nodeSerializer = $nodeSerializer;
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return Message::class;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'forum_message';
     }
 
-    /**
-     * @return string
-     */
-    public function getSchema()
+    public function getSchema(): string
     {
         return '#/plugin/forum/message.json';
     }
 
-    /**
-     * @return string
-     */
-    public function getSamples()
+    public function getSamples(): string
     {
         return '#/plugin/forum/message';
     }
 
     /**
      * Serializes a Message entity.
-     *
-     * @return array
      */
-    public function serialize(Message $message, array $options = [])
+    public function serialize(Message $message, ?array $options = []): array
     {
         $data = $this->messageSerializer->serialize($message, $options);
         $subject = $message->getSubject();
@@ -98,14 +80,10 @@ class MessageSerializer
 
     /**
      * Deserializes data into a Message entity.
-     *
-     * @param array $data
-     *
-     * @return Message
      */
-    public function deserialize($data, Message $message, array $options = [])
+    public function deserialize(array $data, Message $message, ?array $options = []): Message
     {
-        $message = $this->messageSerializer->deserialize($data, $message, $options);
+        $this->messageSerializer->deserialize($data, $message, $options);
 
         if (isset($data['subject'])) {
             /** @var Subject $subject */

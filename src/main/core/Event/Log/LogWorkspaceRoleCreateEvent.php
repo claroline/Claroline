@@ -43,6 +43,6 @@ class LogWorkspaceRoleCreateEvent extends LogGenericEvent
      */
     public static function getRestriction()
     {
-        return;
+        return [];
     }
 }

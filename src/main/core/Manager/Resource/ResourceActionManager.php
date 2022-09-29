@@ -99,10 +99,8 @@ class ResourceActionManager
 
     /**
      * Retrieves the correct action instance for resource.
-     *
-     * @return MenuAction
      */
-    public function get(ResourceNode $resourceNode, string $actionName)
+    public function get(ResourceNode $resourceNode, string $actionName): ?MenuAction
     {
         $nodeActions = $this->all($resourceNode->getResourceType());
         foreach ($nodeActions as $current) {

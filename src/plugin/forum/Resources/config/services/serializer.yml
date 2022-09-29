@@ -17,7 +17,6 @@ services:
         arguments:
            - '@Claroline\CoreBundle\API\Serializer\MessageSerializer'
            - '@Claroline\AppBundle\Persistence\ObjectManager'
-           - '@Claroline\ForumBundle\Serializer\SubjectSerializer'
            - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
 
     Claroline\ForumBundle\Serializer\SubjectSerializer:

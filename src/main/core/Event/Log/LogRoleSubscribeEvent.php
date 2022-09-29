@@ -80,7 +80,7 @@ class LogRoleSubscribeEvent extends LogGenericEvent implements NotifiableInterfa
      */
     public static function getRestriction()
     {
-        return;
+        return [];
     }
 
     /**

@@ -109,13 +109,15 @@ class FieldList extends Component {
     return (
       <div className={classes('field-list-control', this.props.className)}>
         {0 !== this.props.value.length &&
-          <button
-            type="button"
-            className="btn btn-remove-all btn-sm btn-link-danger"
-            onClick={this.removeAll}
-          >
-            {trans('delete_all')}
-          </button>
+          <Button
+            className="btn-link btn-delete-all"
+            type={CALLBACK_BUTTON}
+            label={trans('delete_all')}
+            disabled={this.props.disabled}
+            size="sm"
+            dangerous={true}
+            callback={this.removeAll}
+          />
         }
 
         {0 < this.props.value.length &&
@@ -192,6 +194,7 @@ FieldList.propTypes = {
   id: T.string.isRequired,
   placeholder: T.string,
   className: T.string,
+  disabled: T.bool,
   value: T.arrayOf(T.shape({
 
   })),

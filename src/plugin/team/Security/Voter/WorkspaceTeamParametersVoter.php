@@ -21,7 +21,11 @@ class WorkspaceTeamParametersVoter extends AbstractVoter
     {
         switch ($attributes[0]) {
             case self::EDIT:
-                return $this->isGranted(['claroline_team_tool', 'edit'], $object->getWorkspace());
+                if ($this->isGranted(['claroline_team_tool', 'edit'], $object->getWorkspace())) {
+                    return VoterInterface::ACCESS_GRANTED;
+                }
+
+                return VoterInterface::ACCESS_DENIED;
         }
 
         return VoterInterface::ACCESS_ABSTAIN;

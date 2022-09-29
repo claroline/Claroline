@@ -48,6 +48,6 @@ class LogWorkspaceEnterEvent extends LogGenericEvent implements LogNotRepeatable
      */
     public static function getRestriction()
     {
-        return;
+        return [];
     }
 }

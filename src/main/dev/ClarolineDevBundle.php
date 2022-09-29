@@ -27,12 +27,12 @@ class ClarolineDevBundle extends Bundle implements AutoConfigurableInterface
         ];
     }
 
-    public function configureContainer(ContainerBuilder $container, LoaderInterface $loader)
+    public function configureContainer(ContainerBuilder $container, LoaderInterface $loader): void
     {
         $loader->load($this->getPath().'/Resources/config/suggested/web_profiler.yml');
     }
 
-    public function configureRoutes(RouteCollectionBuilder $routes)
+    public function configureRoutes(RouteCollectionBuilder $routes): void
     {
         $routingFile = $this->getPath().'/Resources/config/routing.yml';
         if (file_exists($routingFile)) {

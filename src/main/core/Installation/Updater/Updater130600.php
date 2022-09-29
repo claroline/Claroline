@@ -20,6 +20,10 @@ class Updater130600 extends Updater
     {
         $this->removePlugin('Icap', 'SocialmediaBundle');
         $this->removePlugin('Claroline', 'PlannedNotificationBundle');
+        $this->removePlugin('Claroline', 'BookingBundle');
+        $this->removePlugin('UJM', 'LtiBundle');
+
+        // TODO : delete lti resources
 
         $this->om->flush();
     }

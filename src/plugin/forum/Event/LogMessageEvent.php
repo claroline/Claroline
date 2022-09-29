@@ -112,8 +112,7 @@ class LogMessageEvent extends AbstractLogResourceEvent implements NotifiableInte
      */
     public function getIconKey()
     {
-        //Icon key is null here because we need default icon for platform notifications
-        return;
+        return 'forum';
     }
 
     /**

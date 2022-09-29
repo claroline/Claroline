@@ -121,7 +121,7 @@ class LogoutHandler implements LogoutSuccessHandlerInterface
     /**
      * Send a logout request to the IdP.
      *
-     * @return Response
+     * @return Response|null
      */
     private function sendLogoutRequest()
     {
