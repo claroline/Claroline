@@ -24,7 +24,12 @@ class ResourceCommentVoter extends AbstractVoter
             case self::CREATE:
             case self::OPEN:
             case self::VIEW:
-                return $this->isGranted(['open'], $object->getResourceNode());
+                if ($this->isGranted('OPEN', $object->getResourceNode())) {
+                    return VoterInterface::ACCESS_GRANTED;
+                }
+
+                return VoterInterface::ACCESS_DENIED;
+
             case self::EDIT:
             case self::DELETE:
                 return $this->checkEdit($token, $object);
@@ -48,7 +53,7 @@ class ResourceCommentVoter extends AbstractVoter
         $user = $token->getUser();
         $commentUser = $comment->getUser();
 
-        if ($this->isGranted(['edit'], $comment->getResourceNode()) ||
+        if ($this->isGranted('EDIT', $comment->getResourceNode()) ||
             ($user instanceof User && $commentUser && $user->getUuid() === $commentUser->getUuid())
         ) {
             return VoterInterface::ACCESS_GRANTED;

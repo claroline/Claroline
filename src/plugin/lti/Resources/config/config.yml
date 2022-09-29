@@ -1,4 +1,0 @@
-plugin:
-    resources:
-        - class: UJM\LtiBundle\Entity\LtiResource
-          name: ujm_lti_resource

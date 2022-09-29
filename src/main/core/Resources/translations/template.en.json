@@ -25,8 +25,6 @@
     "password_reset_link_desc": "The link to reset the password",
     "placeholders_info": "The following parameters can be used and will be replaced by the corresponding value.",
     "platform_name_desc": "The name of the platform",
-    "platform_role_registration": "Registration to a platform role",
-    "platform_role_registration_desc": "Template used for the mail sent when an user is registered to a platform role.",
     "platform_url_desc": "The URL of the platform",
     "role_name_desc": "The name of the role",
     "add_template_type": "Add a template type",

@@ -17,7 +17,7 @@ use Claroline\TagBundle\ClarolineTagBundle;
 
 class ClarolineCursusBundle extends DistributionPluginBundle
 {
-    public function getRequiredPlugins()
+    public function getRequiredPlugins(): array
     {
         return [
             ClarolineMessageBundle::class,

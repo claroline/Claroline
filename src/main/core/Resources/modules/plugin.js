@@ -132,10 +132,11 @@ registry.add('ClarolineCoreBundle', {
    * Provides Administration tools.
    */
   administration: {
-    'community'       : () => { return import(/* webpackChunkName: "core-admin-users" */          '#/main/core/administration/community') },
-    'main_settings'   : () => { return import(/* webpackChunkName: "core-admin-parameters" */     '#/main/core/administration/parameters') },
-    'templates'       : () => { return import(/* webpackChunkName: "core-admin-template" */       '#/main/core/administration/template') },
-    'integration'     : () => { return import(/* webpackChunkName: "core-admin-integration" */    '#/main/core/administration/integration') }
+    'community'     : () => { return import(/* webpackChunkName: "core-admin-users" */       '#/main/core/administration/community') },
+    'main_settings' : () => { return import(/* webpackChunkName: "core-admin-parameters" */  '#/main/core/administration/parameters') },
+    'templates'     : () => { return import(/* webpackChunkName: "core-admin-template" */    '#/main/core/administration/template') },
+    'integration'   : () => { return import(/* webpackChunkName: "core-admin-integration" */ '#/main/core/administration/integration') },
+    'plugins'       : () => { return import(/* webpackChunkName: "core-admin-plugins" */     '#/main/core/administration/plugins') }
   },
 
   /**

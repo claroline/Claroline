@@ -60,8 +60,6 @@ services:
             - '@claroline.manager.rights_manager'
             - '@Claroline\CoreBundle\Manager\Resource\ResourceRestrictionsManager'
 
-    Claroline\CoreBundle\Security\Voter\TextVoter: ~
-
     Claroline\CoreBundle\Security\Voter\UserSwitchVoter: ~
 
     Claroline\CoreBundle\Security\Voter\WorkspaceVoter:

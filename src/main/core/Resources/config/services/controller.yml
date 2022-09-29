@@ -18,6 +18,8 @@ services:
         parent: Claroline\AppBundle\Controller\AbstractSecurityController
         public: true
         arguments:
+            - '@Claroline\AppBundle\API\Crud'
+            - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\CoreBundle\Manager\PluginManager'
 
     Claroline\CoreBundle\Controller\APINew\Planning\PlannedObjectController:

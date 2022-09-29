@@ -25,6 +25,8 @@ class PageFull extends Component {
       actions: []
     }
 
+    this.generateActions()
+
     this.toggleFullscreen = this.toggleFullscreen.bind(this)
   }
 
@@ -34,33 +36,37 @@ class PageFull extends Component {
     }
 
     if (this.props.actions !== prevProps.actions) {
-      const fullscreenAction = {
-        name: 'fullscreen',
-        type: CALLBACK_BUTTON,
-        icon: classes('fa fa-fw', {
-          'fa-expand': !this.state.fullscreen,
-          'fa-times': this.state.fullscreen
-        }),
-        label: trans(this.state.fullscreen ? 'fullscreen_off' : 'fullscreen_on'),
-        callback: this.toggleFullscreen
-      }
+      this.generateActions()
+    }
+  }
 
-      // append fullscreen action only if the caller do not replace it (it's the case of ToolPage)
-      if (this.props.actions instanceof Promise) {
-        this.props.actions.then(promisedActions => {
-          const fullscreenPos = promisedActions.findIndex(action => 'fullscreen' === action.name)
-          if (-1 !== fullscreenPos) {
-            this.setState({actions: promisedActions})
-          }
+  generateActions() {
+    const fullscreenAction = {
+      name: 'fullscreen',
+      type: CALLBACK_BUTTON,
+      icon: classes('fa fa-fw', {
+        'fa-expand': !this.state.fullscreen,
+        'fa-times': this.state.fullscreen
+      }),
+      label: trans(this.state.fullscreen ? 'fullscreen_off' : 'fullscreen_on'),
+      callback: this.toggleFullscreen
+    }
 
-          this.setState({actions: promisedActions.concat([fullscreenAction])})
-        })
-      } else {
-        const fullscreenPos = (this.props.actions || []).findIndex(action => 'fullscreen' === action.name)
+    // append fullscreen action only if the caller do not replace it (it's the case of ToolPage)
+    if (this.props.actions instanceof Promise) {
+      this.props.actions.then(promisedActions => {
+        const fullscreenPos = promisedActions.findIndex(action => 'fullscreen' === action.name)
         if (-1 !== fullscreenPos) {
-          this.setState({actions: (this.props.actions || [])})
+          this.setState({actions: promisedActions})
+        } else {
+          this.setState({actions: promisedActions.concat([fullscreenAction])})
         }
-
+      })
+    } else {
+      const fullscreenPos = (this.props.actions || []).findIndex(action => 'fullscreen' === action.name)
+      if (-1 !== fullscreenPos) {
+        this.setState({actions: (this.props.actions || [])})
+      } else {
         this.setState({actions: (this.props.actions || []).concat([fullscreenAction])})
       }
     }

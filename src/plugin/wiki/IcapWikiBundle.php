@@ -7,7 +7,7 @@ use Icap\NotificationBundle\IcapNotificationBundle;
 
 class IcapWikiBundle extends DistributionPluginBundle
 {
-    public function getRequiredPlugins()
+    public function getRequiredPlugins(): array
     {
         return [
             IcapNotificationBundle::class,

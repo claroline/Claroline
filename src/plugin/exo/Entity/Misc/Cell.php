@@ -327,7 +327,7 @@ class Cell
      *
      * @param string $text
      *
-     * @return Cell|null
+     * @return CellChoice|null
      */
     public function getChoice($text)
     {

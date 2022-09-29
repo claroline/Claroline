@@ -16,7 +16,7 @@ use Claroline\TagBundle\ClarolineTagBundle;
 
 class ClarolineForumBundle extends DistributionPluginBundle
 {
-    public function getRequiredPlugins()
+    public function getRequiredPlugins(): array
     {
         return [
             ClarolineTagBundle::class,

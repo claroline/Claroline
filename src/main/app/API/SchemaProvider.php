@@ -96,7 +96,7 @@ class SchemaProvider
      *
      * @param string $class
      *
-     * @return \stdClass
+     * @return \stdClass|null
      */
     public function getSchema($class, array $options = [])
     {

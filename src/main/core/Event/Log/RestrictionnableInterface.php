@@ -14,7 +14,7 @@ namespace Claroline\CoreBundle\Event\Log;
 interface RestrictionnableInterface
 {
     /**
-     * @return array
+     * @return array|null
      */
     public static function getRestriction();
 }

@@ -48,12 +48,6 @@ const ParametersMenu = (props) =>
           icon: 'fa fa-fw fa-comment-dots',
           label: trans('connection_messages'),
           target: props.path+'/messages'
-        }, {
-          name: 'plugins',
-          type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-cubes',
-          label: trans('plugins'),
-          target: props.path+'/plugins'
         }
       ]}
       onClick={props.autoClose}

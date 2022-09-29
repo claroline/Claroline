@@ -72,35 +72,6 @@ class PluginManager
         });
     }
 
-    public function getPluginsData()
-    {
-        /** @var Plugin[] $plugins */
-        $plugins = $this->pluginRepo->findBy([], ['vendorName' => 'ASC', 'bundleName' => 'ASC']);
-        $data = [];
-
-        foreach ($plugins as $plugin) {
-            if (class_exists($plugin->getBundleFQCN())) {
-                $data[] = [
-                    'id' => $plugin->getId(),
-                    'name' => $plugin->getShortName(),
-                    'meta' => [
-                        'version' => $this->getVersion($plugin),
-                        'vendor' => $plugin->getVendorName(),
-                        'bundle' => $plugin->getBundleName(),
-                    ],
-                    'ready' => $this->isReady($plugin),
-                    'enabled' => $this->isLoaded($plugin),
-                    'locked' => $this->isLocked($plugin),
-
-                    'requirements' => $this->getRequirements($plugin),
-                    'requiredBy' => $this->getRequiredBy($plugin),
-                ];
-            }
-        }
-
-        return $data;
-    }
-
     public function enable(Plugin $plugin)
     {
         IniParser::updateKey(
@@ -175,12 +146,12 @@ class PluginManager
         return false;
     }
 
-    private function getVersion(Plugin $plugin): string
+    public function getVersion(Plugin $plugin): string
     {
         return $this->getBundle($plugin)->getVersion();
     }
 
-    private function getRequirements(Plugin $plugin): array
+    public function getRequirements(Plugin $plugin): array
     {
         $bundle = $this->getBundle($plugin);
 
@@ -193,7 +164,7 @@ class PluginManager
         ];
     }
 
-    private function getRequiredBy(Plugin $plugin): array
+    public function getRequiredBy(Plugin $plugin): array
     {
         $requiredBy = [];
         $plugin = $this->getBundle($plugin);
@@ -208,7 +179,7 @@ class PluginManager
         return $requiredBy;
     }
 
-    private function isLocked(Plugin $plugin): bool
+    public function isLocked(Plugin $plugin): bool
     {
         $requiredBy = $this->getRequiredBy($plugin);
 

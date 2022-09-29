@@ -148,7 +148,7 @@ abstract class AbstractFinder implements FinderInterface
         return $data[0];
     }
 
-    public function setDefaults(QueryBuilder $qb, $filterName, $filterValue)
+    public function setDefaults(QueryBuilder $qb, string $filterName, $filterValue)
     {
         $property = $filterName;
         if (array_key_exists($filterName, $this->getExtraFieldMapping())) {

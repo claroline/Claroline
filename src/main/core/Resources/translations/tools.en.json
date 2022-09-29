@@ -15,5 +15,6 @@
     "integration": "Integration",
     "workspaces": "Workspaces",
     "toolOpen": "context : User userName open the tool toolName",
-    "locations": "Locations"
+    "locations": "Locations",
+    "plugins": "Plugins"
 }

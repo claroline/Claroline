@@ -9,6 +9,8 @@ use Claroline\CoreBundle\Event\Log\NotifiableInterface;
 use Icap\NotificationBundle\Entity\FollowerResource;
 use Icap\NotificationBundle\Entity\Notification;
 use Icap\NotificationBundle\Entity\NotificationViewer;
+use Icap\NotificationBundle\Repository\FollowerResourceRepository;
+use Icap\NotificationBundle\Repository\NotificationViewerRepository;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -26,9 +28,11 @@ class NotificationManager
     /** @var NotificationUserParametersManager */
     private $notificationParametersManager;
 
-    /**
-     * NotificationManager constructor.
-     */
+    /** @var NotificationViewerRepository */
+    private $notificationViewerRepo;
+    /** @var FollowerResourceRepository */
+    private $followerResourceRepo;
+
     public function __construct(
         ObjectManager $om,
         TokenStorageInterface $tokenStorage,
@@ -39,6 +43,9 @@ class NotificationManager
         $this->tokenStorage = $tokenStorage;
         $this->eventDispatcher = $eventDispatcher;
         $this->notificationParametersManager = $notificationParametersManager;
+
+        $this->notificationViewerRepo = $this->om->getRepository(NotificationViewer::class);
+        $this->followerResourceRepo = $this->om->getRepository(FollowerResource::class);
     }
 
     private function getLoggedUser()
@@ -52,22 +59,6 @@ class NotificationManager
         }
 
         return $doer;
-    }
-
-    /**
-     * @return \Icap\NotificationBundle\Repository\NotificationViewerRepository
-     */
-    protected function getNotificationViewerRepository()
-    {
-        return $this->om->getRepository(NotificationViewer::class);
-    }
-
-    /**
-     * @return \Icap\NotificationBundle\Repository\FollowerResourceRepository
-     */
-    protected function getFollowerResourceRepository()
-    {
-        return $this->om->getRepository(FollowerResource::class);
     }
 
     protected function getUsersToNotifyForNotifiable(NotifiableInterface $notifiable)
@@ -130,7 +121,7 @@ class NotificationManager
      */
     public function getFollowersByResourceIdAndClass($resourceId, $resourceClass)
     {
-        $followerResults = $this->getFollowerResourceRepository()->
+        $followerResults = $this->followerResourceRepo->
             findFollowersByResourceIdAndClass($resourceId, $resourceClass);
         $followerIds = [];
         foreach ($followerResults as $followerResult) {
@@ -246,7 +237,7 @@ class NotificationManager
 
     public function markAllNotificationsAsViewed($userId)
     {
-        $this->getNotificationViewerRepository()->markAllAsViewed($userId);
+        $this->notificationViewerRepo->markAllAsViewed($userId);
     }
 
     /**
@@ -258,12 +249,10 @@ class NotificationManager
      */
     public function getFollowerResource($userId, $resourceId, $resourceClass)
     {
-        $followerResource = $this->getFollowerResourceRepository()->findOneBy([
+        return $this->followerResourceRepo->findOneBy([
             'followerId' => $userId,
             'hash' => $this->getHash($resourceId, $resourceClass),
         ]);
-
-        return $followerResource;
     }
 
     /**
@@ -344,7 +333,7 @@ class NotificationManager
     public function markNotificationsAsViewed($notificationViewIds)
     {
         if (!empty($notificationViewIds)) {
-            $this->getNotificationViewerRepository()->markAsViewed($notificationViewIds);
+            $this->notificationViewerRepo->markAsViewed($notificationViewIds);
         }
     }
 
@@ -354,7 +343,7 @@ class NotificationManager
     public function markNotificationsAsUnviewed($notificationViewIds)
     {
         if (!empty($notificationViewIds)) {
-            $this->getNotificationViewerRepository()->markAsUnviewed($notificationViewIds);
+            $this->notificationViewerRepo->markAsUnviewed($notificationViewIds);
         }
     }
 
@@ -370,6 +359,6 @@ class NotificationManager
         }
         $notificationParameters = $this->notificationParametersManager->getParametersByUser($viewer);
 
-        return intval($this->getNotificationViewerRepository()->countUnviewedNotifications($viewer->getId(), $notificationParameters->getDisplayEnabledTypes())['total']);
+        return intval($this->notificationViewerRepo->countUnviewedNotifications($viewer->getId(), $notificationParameters->getDisplayEnabledTypes())['total']);
     }
 }

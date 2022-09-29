@@ -144,7 +144,7 @@ class HomeTab
      * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\Role")
      * @ORM\JoinTable(name="claro_home_tab_roles")
      *
-     * @var Role[]
+     * @var ArrayCollection|Role[]
      */
     private $roles;
 
@@ -328,8 +328,6 @@ class HomeTab
             $this->children->removeElement($homeTab);
             $homeTab->setParent(null);
         }
-
-        return $this;
     }
 
     /**

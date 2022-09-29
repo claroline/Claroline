@@ -32,7 +32,7 @@ class Step
     private $id;
 
     /**
-     * @var int
+     * @var string
      *
      * @ORM\Column(type="string", nullable=true)
      */
@@ -203,7 +203,7 @@ class Step
         foreach ($stepQuestions as $stepQuestion) {
             /** @var StepItem $stepQuestion */
             if ($stepQuestion->getQuestion() === $question) {
-                return; // The question is already linked to the Step
+                return $stepQuestion; // The question is already linked to the Step
             }
         }
 

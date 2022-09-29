@@ -109,7 +109,7 @@ class PaperManager
     /**
      * Calculates the score of a Paper.
      *
-     * @return float
+     * @return float|null
      */
     public function calculateScore(Paper $paper)
     {
@@ -180,7 +180,7 @@ class PaperManager
     /**
      * Calculates the total score of a Paper.
      *
-     * @return float
+     * @return float|null
      */
     public function calculateTotal(Paper $paper)
     {

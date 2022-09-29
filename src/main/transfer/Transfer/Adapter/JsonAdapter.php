@@ -19,12 +19,14 @@ class JsonAdapter implements AdapterInterface
 
     public function explainSchema(\stdClass $schema, $mode)
     {
-        return $schema;
+        // this is wrong
+        return new Explanation();
     }
 
     public function explainIdentifiers(array $schema)
     {
-        return $schema;
+        // this is wrong
+        return new Explanation();
     }
 
     public function dump(string $fileDest, array $data, ?array $options = [], ?array $extra = [], ?bool $append = false): void

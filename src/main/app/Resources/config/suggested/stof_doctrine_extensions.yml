@@ -2,12 +2,11 @@ stof_doctrine_extensions:
     orm:
         default:
             tree: true
-            blameable: true
+            blameable: false
             timestampable: true
             sluggable: true
             translatable: true
-            softdeleteable: true
+            softdeleteable: false
 
     class:
         translatable: Claroline\CoreBundle\Listener\Doctrine\TranslatableListener
-        timestampable: Claroline\CoreBundle\Listener\Doctrine\TimestampableListener

@@ -16,7 +16,7 @@ use Claroline\SchedulerBundle\ClarolineSchedulerBundle;
 
 class ClarolineAnnouncementBundle extends DistributionPluginBundle
 {
-    public function getRequiredPlugins()
+    public function getRequiredPlugins(): array
     {
         return [
             ClarolineSchedulerBundle::class,

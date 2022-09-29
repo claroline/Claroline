@@ -83,7 +83,7 @@ class ResourceVoter implements VoterInterface
         }
 
         if (!$supports) {
-            return false;
+            return VoterInterface::ACCESS_ABSTAIN;
         }
 
         if ($this->isAdmin($object)) {

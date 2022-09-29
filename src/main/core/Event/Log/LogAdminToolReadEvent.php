@@ -41,11 +41,8 @@ class LogAdminToolReadEvent extends LogGenericEvent implements LogNotRepeatableI
         return self::ACTION.'_'.$this->toolName;
     }
 
-    /**
-     * @return array
-     */
     public static function getRestriction()
     {
-        return;
+        return [];
     }
 }

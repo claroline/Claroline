@@ -4,9 +4,8 @@
     "logs": "",
     "my_contacts": "",
     "parameters": "",
-    "platform_parameters": "",
-    "platform_plugins": "",
     "registration_to_workspace": "",
     "resources": "",
-    "users": ""
+    "users": "",
+    "plugins": "Plugins"
 }

@@ -19,13 +19,11 @@ use Symfony\Component\HttpKernel\Bundle\BundleInterface;
  */
 interface PluginBundleInterface extends BundleInterface, AutoConfigurableInterface, InstallableInterface
 {
-    public function getConfigFile();
+    public function getConfigFile(): ?string;
 
-    public function getRequiredExtensions();
+    public function getRequiredExtensions(): array;
 
-    public function getRequiredPlugins();
+    public function getRequiredPlugins(): array;
 
-    public function getExtraRequirements();
-
-    public function getDescription();
+    public function getExtraRequirements(): array;
 }

@@ -174,8 +174,6 @@ class IconSet
 
     /**
      * @param string $type
-     *
-     * @return $this
      */
     public function setType($type)
     {
@@ -183,7 +181,7 @@ class IconSet
     }
 
     /**
-     * @return array
+     * @return ArrayCollection
      */
     public function getIcons()
     {

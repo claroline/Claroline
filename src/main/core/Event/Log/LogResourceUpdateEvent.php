@@ -71,6 +71,6 @@ class LogResourceUpdateEvent extends LogGenericEvent
      */
     public static function getRestriction()
     {
-        return;
+        return [];
     }
 }

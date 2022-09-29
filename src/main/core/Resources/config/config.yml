@@ -149,6 +149,9 @@ plugin:
         - name: integration
           class: plug
 
+        - name: plugins
+          class: puzzle-piece
+
     widgets:
         - name: simple
           class: Claroline\CoreBundle\Entity\Widget\Type\SimpleWidget

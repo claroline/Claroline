@@ -20,9 +20,9 @@ interface AutoConfigurableInterface
 {
     public function supports(string $environment): bool;
 
-    public function configureRoutes(RouteCollectionBuilder $routes);
+    public function configureRoutes(RouteCollectionBuilder $routes): void;
 
-    public function configureContainer(ContainerBuilder $container, LoaderInterface $loader);
+    public function configureContainer(ContainerBuilder $container, LoaderInterface $loader): void;
 
     /**
      * @return BundleInterface[] A list of bundle instances required by the bundle

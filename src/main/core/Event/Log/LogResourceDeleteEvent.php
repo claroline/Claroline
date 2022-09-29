@@ -49,11 +49,8 @@ class LogResourceDeleteEvent extends LogGenericEvent
         );
     }
 
-    /**
-     * @return array
-     */
     public static function getRestriction()
     {
-        return;
+        return [];
     }
 }

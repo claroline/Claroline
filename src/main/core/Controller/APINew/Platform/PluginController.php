@@ -2,10 +2,14 @@
 
 namespace Claroline\CoreBundle\Controller\APINew\Platform;
 
+use Claroline\AppBundle\API\Crud;
+use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\AbstractSecurityController;
 use Claroline\CoreBundle\Entity\Plugin;
 use Claroline\CoreBundle\Manager\PluginManager;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -15,73 +19,84 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class PluginController extends AbstractSecurityController
 {
+    /** @var Crud */
+    private $crud;
+    /** @var SerializerProvider */
+    private $serializer;
     /** @var PluginManager */
     private $pluginManager;
 
-    /**
-     * PluginController constructor.
-     */
-    public function __construct(PluginManager $pluginManager)
-    {
+    public function __construct(
+        Crud $crud,
+        SerializerProvider $serializer,
+        PluginManager $pluginManager
+    ) {
+        $this->crud = $crud;
+        $this->serializer = $serializer;
         $this->pluginManager = $pluginManager;
     }
 
     /**
      * @Route("", name="apiv2_plugin_list")
-     *
-     * @return JsonResponse
      */
-    public function listAction()
+    public function listAction(Request $request): JsonResponse
     {
-        $this->canOpenAdminTool('main_settings');
+        $this->canOpenAdminTool('plugins');
 
         return new JsonResponse(
-            $this->pluginManager->getPluginsData()
+            $this->crud->list(Plugin::class, $request->query->all(), [Options::SERIALIZE_LIST])
         );
     }
 
     /**
-     * @Route("/configure", name="apiv2_plugin_configure", methods={"PUT"})
-     *
-     * @return JsonResponse
+     * @Route("/{id}", name="apiv2_plugin_get")
      */
-    public function configureAction(Plugin $plugin)
+    public function getAction(Plugin $plugin): JsonResponse
     {
-        $this->canOpenAdminTool('main_settings');
-        // TODO : implement
+        $this->canOpenAdminTool('plugins');
 
         return new JsonResponse(
-            $this->pluginManager->getPluginsData()
+            $this->serializer->serialize($plugin)
         );
     }
 
     /**
-     * @Route("/enable", name="apiv2_plugin_enable", methods={"PUT"})
-     *
-     * @return JsonResponse
+     * @Route("/{id}/configure", name="apiv2_plugin_configure", methods={"PUT"})
      */
-    public function enableAction(Plugin $plugin)
+    public function configureAction(Plugin $plugin): JsonResponse
     {
-        $this->canOpenAdminTool('main_settings');
+        $this->canOpenAdminTool('plugins');
+
+        return new JsonResponse(
+            $this->serializer->serialize($plugin)
+        );
+    }
+
+    /**
+     * @Route("/{id}/enable", name="apiv2_plugin_enable", methods={"PUT"})
+     */
+    public function enableAction(Plugin $plugin): JsonResponse
+    {
+        $this->canOpenAdminTool('plugins');
+
         $this->pluginManager->enable($plugin);
 
         return new JsonResponse(
-            $this->pluginManager->getPluginsData()
+            $this->serializer->serialize($plugin)
         );
     }
 
     /**
-     * @Route("/disable", name="apiv2_plugin_disable", methods={"PUT"})
-     *
-     * @return JsonResponse
+     * @Route("/{id}/disable", name="apiv2_plugin_disable", methods={"PUT"})
      */
-    public function disableAction(Plugin $plugin)
+    public function disableAction(Plugin $plugin): JsonResponse
     {
-        $this->canOpenAdminTool('main_settings');
+        $this->canOpenAdminTool('plugins');
+
         $this->pluginManager->disable($plugin);
 
         return new JsonResponse(
-            $this->pluginManager->getPluginsData()
+            $this->serializer->serialize($plugin)
         );
     }
 }

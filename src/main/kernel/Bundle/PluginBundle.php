@@ -26,11 +26,11 @@ abstract class PluginBundle extends InstallableBundle implements PluginBundleInt
         return true;
     }
 
-    public function configureContainer(ContainerBuilder $container, LoaderInterface $loader)
+    public function configureContainer(ContainerBuilder $container, LoaderInterface $loader): void
     {
     }
 
-    public function configureRoutes(RouteCollectionBuilder $routes)
+    public function configureRoutes(RouteCollectionBuilder $routes): void
     {
         $routingFile = $this->getPath().'/Resources/config/routing.yml';
         if (file_exists($routingFile)) {
@@ -38,7 +38,7 @@ abstract class PluginBundle extends InstallableBundle implements PluginBundleInt
         }
     }
 
-    public function getConfigFile()
+    public function getConfigFile(): ?string
     {
         $ds = DIRECTORY_SEPARATOR;
         $defaultFilePath = $this->getPath().$ds.'Resources'.$ds.'config'.$ds.'config.yml';
@@ -54,10 +54,8 @@ abstract class PluginBundle extends InstallableBundle implements PluginBundleInt
      * Returns the list of PHP extensions required by this plugin.
      *
      * Example: ['ldap', 'zlib']
-     *
-     * @return array
      */
-    public function getRequiredExtensions()
+    public function getRequiredExtensions(): array
     {
         return [];
     }
@@ -65,10 +63,8 @@ abstract class PluginBundle extends InstallableBundle implements PluginBundleInt
     /**
      * Returns the list of Claroline plugins required by this plugin. Each plugin
      * in the list must be represented by its fully qualified namespace.
-     *
-     * @return array
      */
-    public function getRequiredPlugins()
+    public function getRequiredPlugins(): array
     {
         return [];
     }
@@ -81,20 +77,16 @@ abstract class PluginBundle extends InstallableBundle implements PluginBundleInt
      *   - "test":          An anonymous function checking that the requirement is met.
      *                      Must return true if the check is successful, false otherwise.
      *   - "failure_msg":   A text indicating what went wrong if the test has failed.
-     *
-     * @return array
      */
-    public function getExtraRequirements()
+    public function getExtraRequirements(): array
     {
         return [];
     }
 
     /**
      * Returns path to the folder of the icon sets for resources.
-     *
-     * @return string
      */
-    public function getResourcesIconsSetsFolder()
+    public function getResourcesIconsSetsFolder(): ?string
     {
         $ds = DIRECTORY_SEPARATOR;
         $path = "{$this->getPath()}{$ds}Resources{$ds}public{$ds}images{$ds}resources{$ds}icons";
@@ -109,10 +101,5 @@ abstract class PluginBundle extends InstallableBundle implements PluginBundleInt
     public function getRequiredBundles(string $environment): array
     {
         return [];
-    }
-
-    public function getDescription()
-    {
-        return file_exists($this->getPath().'/DESCRIPTION.md') ? file_get_contents($this->getPath().'/DESCRIPTION.md') : '';
     }
 }

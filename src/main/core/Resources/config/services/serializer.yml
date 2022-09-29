@@ -226,6 +226,8 @@ services:
 
     Claroline\CoreBundle\API\Serializer\Platform\PluginSerializer:
         tags: [claroline.serializer]
+        arguments:
+            - '@Claroline\CoreBundle\Manager\PluginManager'
 
     Claroline\CoreBundle\API\Serializer\Platform\ClientSerializer:
         arguments:

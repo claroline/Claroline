@@ -1,0 +1,4 @@
+{
+  "claroline_transfer": "Import/Export",
+  "claroline_transfer_desc": "Provides the data import/export (.csv) functionalities of the Claroline platform."
+}

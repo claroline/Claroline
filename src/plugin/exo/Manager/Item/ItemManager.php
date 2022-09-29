@@ -182,7 +182,7 @@ class ItemManager
     /**
      * Calculates the score of an answer to a question.
      *
-     * @return float
+     * @return float|null
      */
     public function calculateScore(Item $question, Answer $answer, bool $applyHints = true)
     {
@@ -221,7 +221,7 @@ class ItemManager
     /**
      * Calculates the total score of a question.
      *
-     * @return float
+     * @return float|null
      */
     public function calculateTotal(Item $question)
     {

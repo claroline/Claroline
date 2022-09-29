@@ -52,7 +52,7 @@ class DocumentationController
 
     private function callDocumentationApi($path, array $query = []): ?array
     {
-        $response = $this->curlManager->exec('https://support.claroline.com'.$path, $query, 'GET', [
+        $response = $this->curlManager->exec('https://get.claroline.com'.$path, $query, 'GET', [
             CURLOPT_HTTPHEADER => [
                 'Content-Type: application/json',
                 'X-Requested-With: XMLHttpRequest',

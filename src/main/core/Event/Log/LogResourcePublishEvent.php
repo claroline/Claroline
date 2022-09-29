@@ -69,7 +69,7 @@ class LogResourcePublishEvent extends LogGenericEvent implements NotifiableInter
      */
     public static function getRestriction()
     {
-        return;
+        return [];
     }
 
     /**

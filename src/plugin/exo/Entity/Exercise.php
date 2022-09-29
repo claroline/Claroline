@@ -51,7 +51,7 @@ class Exercise extends AbstractResource
      *
      * @ORM\Column(name="date_correction", type="datetime", nullable=true)
      *
-     * @var string
+     * @var \DateTime
      */
     private $dateCorrection;
 

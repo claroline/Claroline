@@ -93,6 +93,8 @@ abstract class AbstractVoter implements ClarolineVoterInterface, VoterInterface
 
     /**
      * @return ContainerInterface
+     *
+     * @deprecated
      */
     protected function getContainer()
     {
@@ -101,6 +103,8 @@ abstract class AbstractVoter implements ClarolineVoterInterface, VoterInterface
 
     /**
      * @return ObjectManager
+     *
+     * @deprecated
      */
     protected function getObjectManager()
     {

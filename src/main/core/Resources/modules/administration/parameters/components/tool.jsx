@@ -7,7 +7,6 @@ import {Routes} from '#/main/app/router'
 
 import {ToolPage} from '#/main/core/tool/containers/page'
 import {Meta} from '#/main/core/administration/parameters/main/containers/meta'
-import {Plugins} from '#/main/core/administration/parameters/plugin/containers/plugins'
 import {Messages} from '#/main/core/administration/parameters/message/components/messages'
 import {Message} from '#/main/core/administration/parameters/message/containers/message'
 import {Technical} from '#/main/core/administration/parameters/technical/containers/technical'
@@ -42,7 +41,6 @@ const ParametersTool = (props) => {
           routes={[
             {path: '/', exact: true, render: () => trans('general')},
             {path: '/privacy',       render: () => trans('privacy')},
-            {path: '/plugins',       render: () => trans('plugins')},
             {path: '/messages',      render: () => trans('connection_messages')},
             {path: '/technical',     render: () => trans('technical')},
             {path: '/appearance',    render: () => trans('appearance')}
@@ -60,9 +58,6 @@ const ParametersTool = (props) => {
           }, {
             path: '/privacy',
             component: PrivacyMain
-          }, {
-            path: '/plugins',
-            component: Plugins
           }, {
             path: '/messages',
             exact: true,

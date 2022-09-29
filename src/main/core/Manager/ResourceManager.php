@@ -364,10 +364,8 @@ class ResourceManager implements LoggerAwareInterface
 
     /**
      * Returns the resource linked to a node.
-     *
-     * @return AbstractResource
      */
-    public function getResourceFromNode(ResourceNode $node)
+    public function getResourceFromNode(ResourceNode $node): ?AbstractResource
     {
         try {
             /* @var AbstractResource $resource */

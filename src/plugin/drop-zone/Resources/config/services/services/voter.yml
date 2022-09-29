@@ -17,8 +17,6 @@ services:
 
     Claroline\DropZoneBundle\Security\Voter\DropzoneToolVoter: ~
 
-    Claroline\DropZoneBundle\Security\Voter\DropzoneVoter: ~
-
     Claroline\DropZoneBundle\Security\Voter\RevisionCommentVoter: ~
 
     Claroline\DropZoneBundle\Security\Voter\RevisionVoter: ~

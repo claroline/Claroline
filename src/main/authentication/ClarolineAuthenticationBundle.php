@@ -33,7 +33,7 @@ class ClarolineAuthenticationBundle extends DistributionPluginBundle
         ];
     }
 
-    public function configureContainer(ContainerBuilder $container, LoaderInterface $loader)
+    public function configureContainer(ContainerBuilder $container, LoaderInterface $loader): void
     {
         // simple container configuration, same for every environment
         $simpleConfigs = [

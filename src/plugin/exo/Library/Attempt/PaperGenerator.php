@@ -29,9 +29,6 @@ class PaperGenerator
     /** @var ItemSerializer */
     private $itemSerializer;
 
-    /**
-     * PaperGenerator constructor.
-     */
     public function __construct(
         ExerciseSerializer $exerciseSerializer,
         StepSerializer $stepSerializer,
@@ -48,10 +45,8 @@ class PaperGenerator
      * @param Exercise $exercise      - the exercise tried
      * @param User     $user          - the user who wants to pass the exercise
      * @param Paper    $previousPaper - the previous paper if one exists
-     *
-     * @return Paper
      */
-    public function create(Exercise $exercise, User $user = null, Paper $previousPaper = null)
+    public function create(Exercise $exercise, User $user = null, ?Paper $previousPaper = null): Paper
     {
         // Create the new Paper entity
         $paper = new Paper();
@@ -76,12 +71,8 @@ class PaperGenerator
 
     /**
      * Generates the structure of the attempt based on Exercise and Steps parameters.
-     *
-     * @param Paper $previousPaper
-     *
-     * @return array
      */
-    private function generateStructure(Exercise $exercise, Paper $previousPaper = null)
+    private function generateStructure(Exercise $exercise, ?Paper $previousPaper = null): array
     {
         // The structure of the previous paper if any
         $previousStructure = !empty($previousPaper) ? $previousPaper->getStructure(true) : null;
@@ -94,7 +85,7 @@ class PaperGenerator
         return $structure;
     }
 
-    private function pickSteps(Exercise $exercise, array $previousExercise = null)
+    private function pickSteps(Exercise $exercise, ?array $previousExercise = null): array
     {
         switch ($exercise->getPicking()) {
             case Picking::TAGS:
@@ -147,12 +138,8 @@ class PaperGenerator
     /**
      * Generates steps based on the quiz configuration and a list of items.
      * In this kind of quiz all items are stored in a single step.
-     *
-     * @param array $previousExercise
-     *
-     * @return array
      */
-    private function pickStepsByTags(Exercise $exercise, array $previousExercise = null)
+    private function pickStepsByTags(Exercise $exercise, ?array $previousExercise = null): array
     {
         $pickConfig = $exercise->getPick();
 
@@ -219,10 +206,8 @@ class PaperGenerator
 
     /**
      * Pick items for a step according to the step configuration.
-     *
-     * @return Item[]
      */
-    private function pickItems(Step $step, array $previousStep = null)
+    private function pickItems(Step $step, ?array $previousStep = null): array
     {
         if (!empty($previousStep) && Recurrence::ALWAYS !== $step->getRandomPick()) {
             // Just get the list of question from previous step
@@ -270,7 +255,7 @@ class PaperGenerator
      *
      * @return array - the truncated collection
      */
-    private static function pick(array $collection, $count = 0, $force = false)
+    private static function pick(array $collection, ?int $count = 0, ?bool $force = false): array
     {
         if (count($collection) < $count) {
             if ($force) {

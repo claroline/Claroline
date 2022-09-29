@@ -7,9 +7,7 @@ import uniq from 'lodash/uniq'
 
 import {trans}  from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
-import {ModalButton} from '#/main/app/buttons/modal/containers/button'
-import {PopoverButton} from '#/main/app/buttons/popover/components/button'
-import {CALLBACK_BUTTON} from '#/main/app/buttons'
+import {CALLBACK_BUTTON, ModalButton, PopoverButton} from '#/main/app/buttons'
 
 import {constants} from '#/main/core/user/constants'
 import {MODAL_ROLES} from '#/main/core/modals/roles'

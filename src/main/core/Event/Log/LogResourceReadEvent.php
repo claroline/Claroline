@@ -67,6 +67,6 @@ class LogResourceReadEvent extends LogGenericEvent implements LogNotRepeatableIn
      */
     public static function getRestriction()
     {
-        return;
+        return [];
     }
 }
