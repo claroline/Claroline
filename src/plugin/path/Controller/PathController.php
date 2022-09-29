@@ -107,7 +107,7 @@ class PathController extends AbstractCrudController
      */
     public function userStepsProgressionFetchAction(Path $path, User $user): JsonResponse
     {
-        $this->checkPermission('EDIT', $path->getResourceNode(), [], true);
+        $this->checkPermission('ADMINISTRATE', $path->getResourceNode(), [], true);
 
         return new JsonResponse([
             'lastAttempt' => $this->serializer->serialize(
