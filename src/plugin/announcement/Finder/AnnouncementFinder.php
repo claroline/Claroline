@@ -75,17 +75,13 @@ class AnnouncementFinder extends AbstractFinder
                 case 'visible':
                     if ($filterValue) {
                         $now = new \DateTime();
-                        $qb->expr()->andX(
-                            $qb->expr()->orX(
-                                $qb->expr()->gte('obj.visibleFrom', $now),
-                                $qb->expr()->isNull('obj.visibleFrom')
-                            ),
-                            $qb->expr()->orX(
-                                $qb->expr()->lte('obj.visibleUntil', $now),
-                                $qb->expr()->isNull('obj.visibleUntil')
-                            )
-                        );
+
+                        $qb->andWhere('(obj.visibleFrom >= :fromDate OR obj.visibleFrom IS NULL)');
+                        $qb->andWhere('(obj.visibleUntil <= :untilDate OR obj.visibleUntil IS NULL)');
                         $qb->andWhere('obj.visible = true');
+
+                        $qb->setParameter('fromDate', $now);
+                        $qb->setParameter('untilDate', $now);
                     }
                     break;
                 case 'roles':
