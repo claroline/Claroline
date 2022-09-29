@@ -74,6 +74,7 @@ class WorkspaceController extends AbstractCrudController
     private $workspaceManager;
     /** @var LogConnectManager */
     private $logConnectManager;
+    /** @var TempFileManager */
     private $tempManager;
 
     public function __construct(
@@ -150,6 +151,8 @@ class WorkspaceController extends AbstractCrudController
      */
     public function listRegisteredAction(Request $request): JsonResponse
     {
+        $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
+
         return new JsonResponse($this->finder->search(
             Workspace::class,
             array_merge($request->query->all(), ['hiddenFilters' => [
@@ -174,6 +177,8 @@ class WorkspaceController extends AbstractCrudController
      */
     public function listManagedAction(Request $request): JsonResponse
     {
+        $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
+
         return new JsonResponse($this->finder->search(
             Workspace:: class,
             array_merge($request->query->all(), ['hiddenFilters' => [
@@ -198,6 +203,8 @@ class WorkspaceController extends AbstractCrudController
      */
     public function listModelAction(Request $request): JsonResponse
     {
+        $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
+
         return new JsonResponse($this->finder->search(
             Workspace:: class,
             array_merge($request->query->all(), ['hiddenFilters' => [
@@ -221,6 +228,8 @@ class WorkspaceController extends AbstractCrudController
      */
     public function listArchivedAction(Request $request): JsonResponse
     {
+        $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
+
         return new JsonResponse($this->finder->search(
             Workspace:: class,
             array_merge($request->query->all(), ['hiddenFilters' => [

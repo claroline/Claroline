@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 trait HasWorkspacesTrait
 {
-    abstract protected function checkPermission($permission, $object, ?array $options = [], ?bool $throwException = false);
+    abstract protected function checkPermission($permission, $object = null, ?array $options = [], ?bool $throwException = false): bool;
 
     /**
      * List workspaces of the collection.
