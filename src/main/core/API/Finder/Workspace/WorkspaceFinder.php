@@ -70,9 +70,7 @@ class WorkspaceFinder extends AbstractFinder
 
                     break;
                 case 'administrated':
-                    if ('cli' !== php_sapi_name() && !$this->authChecker->isGranted('ROLE_ADMIN') && !$this->authChecker->isGranted('ROLE_ANONYMOUS')) {
-                        /** @var User $currentUser */
-                        $currentUser = $this->tokenStorage->getToken()->getUser();
+                    if ('cli' !== php_sapi_name() && !$this->authChecker->isGranted('ROLE_ADMIN')) {
                         $qb->leftJoin('obj.organizations', 'uo');
                         $qb->leftJoin('uo.administrators', 'ua');
                         $qb->leftJoin('obj.creator', 'creator');
@@ -86,9 +84,13 @@ class WorkspaceFinder extends AbstractFinder
                                 $qb->expr()->eq('ru.id', ':ruId')
                             )
                         ));
-                        $qb->setParameter('uaId', $currentUser->getId());
-                        $qb->setParameter('cId', $currentUser->getId());
-                        $qb->setParameter('ruId', $currentUser->getId());
+
+                        /** @var User $currentUser */
+                        $currentUser = $this->tokenStorage->getToken()->getUser();
+
+                        $qb->setParameter('uaId', $currentUser instanceof User ? $currentUser->getId() : null);
+                        $qb->setParameter('cId', $currentUser instanceof User ? $currentUser->getId() : null);
+                        $qb->setParameter('ruId', $currentUser instanceof User ? $currentUser->getId() : null);
                     }
                     break;
                 case 'createdAfter':

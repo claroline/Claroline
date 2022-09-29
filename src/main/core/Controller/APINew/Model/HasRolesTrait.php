@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 trait HasRolesTrait
 {
-    abstract protected function checkPermission($permission, $object, ?array $options = [], ?bool $throwException = false);
+    abstract protected function checkPermission($permission, $object = null, ?array $options = [], ?bool $throwException = false): bool;
 
     /**
      * @ApiDoc(

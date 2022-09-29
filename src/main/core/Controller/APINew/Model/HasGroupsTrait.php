@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 trait HasGroupsTrait
 {
-    abstract protected function checkPermission($permission, $object, ?array $options = [], ?bool $throwException = false);
+    abstract protected function checkPermission($permission, $object = null, ?array $options = [], ?bool $throwException = false): bool;
 
     /**
      * List groups of the collection.
