@@ -47,7 +47,7 @@ trait Url
         return $this->mode;
     }
 
-    public function setRatio(float $ratio)
+    public function setRatio(?float $ratio = null)
     {
         $this->ratio = $ratio;
     }

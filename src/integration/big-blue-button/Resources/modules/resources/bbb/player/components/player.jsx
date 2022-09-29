@@ -11,6 +11,7 @@ import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON, LINK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 import {ContentLoader} from '#/main/app/content/components/loader'
 import {ContentHtml} from '#/main/app/content/components/html'
+import {ContentIFrame} from '#/main/app/content/components/iframe'
 
 import {BBB as BBBTypes, Recording as RecordingTypes} from '#/integration/big-blue-button/resources/bbb/prop-types'
 
@@ -132,33 +133,11 @@ class Player extends Component {
         }
 
         {!this.isClosed() && isEmpty(this.props.joinStatus) && !this.props.bbb.newTab &&
-          <div
-            className="content-container bbb-content-container"
-            style={this.props.bbb.ratio ?
-              {
-                position: 'relative',
-                paddingBottom: `${this.props.bbb.ratio}%`,
-                height: 0,
-                overflow: 'auto'
-              } :
-              {
-                height: 0,
-                overflow: 'auto'
-              }
-            }
-          >
-            <iframe
-              className="bbb-iframe"
-              src={url(['apiv2_bbb_meeting_join', {id: this.props.bbb.id}])}
-              style={{
-                width: '100%',
-                height: '100%',
-                position: 'absolute',
-                top: 0,
-                left: 0
-              }}
-            />
-          </div>
+          <ContentIFrame
+            className="row"
+            url={url(['apiv2_bbb_meeting_join', {id: this.props.bbb.id}])}
+            ratio={this.props.bbb.ratio}
+          />
         }
       </Fragment>
     )
