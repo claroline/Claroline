@@ -3,6 +3,7 @@ import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
+import {ContentIFrame} from '#/main/app/content/components/iframe'
 import {URL_BUTTON} from '#/main/app/buttons'
 
 class UrlDisplay extends Component {
@@ -21,15 +22,11 @@ class UrlDisplay extends Component {
   render() {
     if ('iframe' === this.props.mode) {
       return (
-        <div
-          className="claro-iframe-content-container"
-          style={this.props.ratio ? {
-            position: 'relative',
-            paddingBottom: `${this.props.ratio}%`
-          } : {}}
-        >
-          <iframe className="claro-iframe" src={this.props.url} />
-        </div>
+        <ContentIFrame
+          className="row"
+          url={this.props.url}
+          ratio={this.props.ratio}
+        />
       )
     }
 
@@ -38,9 +35,7 @@ class UrlDisplay extends Component {
         type={URL_BUTTON}
         className="btn btn-block btn-emphasis component-container"
         target={this.props.url}
-        style={{
-          marginTop: 20 // FIXME
-        }}
+        style={{marginTop: 20}}
         label={trans('open', {}, 'actions')}
         primary={true}
       />
@@ -51,7 +46,7 @@ class UrlDisplay extends Component {
 UrlDisplay.propTypes = {
   url: T.string.isRequired,
   mode: T.string.isRequired,
-  ratio: T.number.isRequired
+  ratio: T.number
 }
 
 export {
