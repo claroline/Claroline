@@ -14,6 +14,28 @@
         right: 0;
         background: @body-bg; // regular page container has no background. We need to hide what is under
         overflow-y: auto; // get the scrollbar
+
+        .fullscreen-close {
+            position: absolute;
+            z-index: @zindex-fullscreen;
+            top: floor(@grid-gutter-width / 2);
+            right: @grid-gutter-width;
+            //font-weight: @close-font-weight;
+            color: @close-color;
+            font-size: 36px;
+            line-height: 1;
+            opacity: 0.6;
+
+            &:hover,
+            &.hover,
+            &:focus,
+            &.focus,
+            &:active,
+            &.active {
+                opacity: 1;
+                text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+            }
+        }
     }
 }
 

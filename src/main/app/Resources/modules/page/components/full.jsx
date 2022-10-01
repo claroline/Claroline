@@ -6,6 +6,7 @@ import omit from 'lodash/omit'
 import {implementPropTypes} from '#/main/app/prop-types'
 import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
+import {Button} from '#/main/app/action/components/button'
 
 import {PageFull as PageFullTypes} from '#/main/app/page/prop-types'
 import {PageSimple} from '#/main/app/page/components/simple'
@@ -20,7 +21,8 @@ class PageFull extends Component {
     super(props)
 
     this.state = {
-      fullscreen: this.props.fullscreen
+      fullscreen: this.props.fullscreen,
+      actions: []
     }
 
     this.toggleFullscreen = this.toggleFullscreen.bind(this)
@@ -30,6 +32,38 @@ class PageFull extends Component {
     if (this.props.fullscreen !== prevProps.fullscreen) {
       this.setState({fullscreen: this.props.fullscreen})
     }
+
+    if (this.props.actions !== prevProps.actions) {
+      const fullscreenAction = {
+        name: 'fullscreen',
+        type: CALLBACK_BUTTON,
+        icon: classes('fa fa-fw', {
+          'fa-expand': !this.state.fullscreen,
+          'fa-times': this.state.fullscreen
+        }),
+        label: trans(this.state.fullscreen ? 'fullscreen_off' : 'fullscreen_on'),
+        callback: this.toggleFullscreen
+      }
+
+      // append fullscreen action only if the caller do not replace it (it's the case of ToolPage)
+      if (this.props.actions instanceof Promise) {
+        this.props.actions.then(promisedActions => {
+          const fullscreenPos = promisedActions.findIndex(action => 'fullscreen' === action.name)
+          if (-1 !== fullscreenPos) {
+            this.setState({actions: promisedActions})
+          }
+
+          this.setState({actions: promisedActions.concat([fullscreenAction])})
+        })
+      } else {
+        const fullscreenPos = (this.props.actions || []).findIndex(action => 'fullscreen' === action.name)
+        if (-1 !== fullscreenPos) {
+          this.setState({actions: (this.props.actions || [])})
+        }
+
+        this.setState({actions: (this.props.actions || []).concat([fullscreenAction])})
+      }
+    }
   }
 
   toggleFullscreen() {
@@ -37,26 +71,6 @@ class PageFull extends Component {
   }
 
   render() {
-    const baseActions = [
-      {
-        name: 'fullscreen',
-        type: CALLBACK_BUTTON,
-        icon: classes('fa fa-fw', {
-          'fa-expand': !this.state.fullscreen,
-          'fa-compress': this.state.fullscreen
-        }),
-        label: trans(this.state.fullscreen ? 'fullscreen_off' : 'fullscreen_on'),
-        callback: this.toggleFullscreen
-      }
-    ]
-
-    let actions
-    if (this.props.actions instanceof Promise) {
-      actions = this.props.actions.then(promisedActions => promisedActions.concat(baseActions))
-    } else {
-      actions = (this.props.actions || []).concat(baseActions)
-    }
-
     return (
       <PageSimple
         {...omit(this.props, 'showHeader', 'showTitle', 'header', 'title', 'subtitle', 'icon', 'poster', 'toolbar', 'actions', 'fullscreen')}
@@ -66,7 +80,15 @@ class PageFull extends Component {
           poster: this.props.poster
         }, this.props.meta || {})}
       >
-        {this.props.showHeader &&
+        {this.state.fullscreen &&
+          <Button
+            className="fullscreen-close"
+            {...this.state.actions.find(action => 'fullscreen' === action.name)}
+            tooltip="bottom"
+          />
+        }
+
+        {!this.state.fullscreen && this.props.showHeader &&
           <PageHeader
             id={this.props.id}
             showTitle={this.props.showTitle}
@@ -76,7 +98,7 @@ class PageFull extends Component {
             poster={this.props.poster}
             toolbar={this.props.toolbar}
             disabled={this.props.disabled}
-            actions={actions}
+            actions={this.state.actions}
           >
             {this.props.header}
           </PageHeader>
