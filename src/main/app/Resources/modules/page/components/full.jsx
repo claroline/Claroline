@@ -6,6 +6,7 @@ import omit from 'lodash/omit'
 import {implementPropTypes} from '#/main/app/prop-types'
 import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
+import {Button} from '#/main/app/action/components/button'
 
 import {PageFull as PageFullTypes} from '#/main/app/page/prop-types'
 import {PageSimple} from '#/main/app/page/components/simple'
@@ -37,17 +38,19 @@ class PageFull extends Component {
   }
 
   render() {
+    const fullscreenAction = {
+      name: 'fullscreen',
+      type: CALLBACK_BUTTON,
+      icon: classes('fa fa-fw', {
+        'fa-expand': !this.state.fullscreen,
+        'fa-times': this.state.fullscreen
+      }),
+      label: trans(this.state.fullscreen ? 'fullscreen_off' : 'fullscreen_on'),
+      callback: this.toggleFullscreen
+    }
+
     const baseActions = [
-      {
-        name: 'fullscreen',
-        type: CALLBACK_BUTTON,
-        icon: classes('fa fa-fw', {
-          'fa-expand': !this.state.fullscreen,
-          'fa-compress': this.state.fullscreen
-        }),
-        label: trans(this.state.fullscreen ? 'fullscreen_off' : 'fullscreen_on'),
-        callback: this.toggleFullscreen
-      }
+      fullscreenAction
     ]
 
     let actions
@@ -66,7 +69,15 @@ class PageFull extends Component {
           poster: this.props.poster
         }, this.props.meta || {})}
       >
-        {this.props.showHeader &&
+        {this.state.fullscreen &&
+          <Button
+            className="fullscreen-close"
+            {...fullscreenAction}
+            tooltip="bottom"
+          />
+        }
+
+        {!this.state.fullscreen && this.props.showHeader &&
           <PageHeader
             id={this.props.id}
             showTitle={this.props.showTitle}

@@ -24,7 +24,7 @@ abstract class AbstractUrlSerializer
             'raw' => $url->getUrl(),
             'url' => $this->placeholderManager->replacePlaceholders($url->getUrl() ?? ''),
             'mode' => $url->getMode(),
-            'ratio' => $url->getRatio() ?? 56.25,
+            'ratio' => $url->getRatio(),
         ];
     }
 
