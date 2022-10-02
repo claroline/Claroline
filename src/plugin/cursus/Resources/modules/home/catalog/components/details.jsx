@@ -39,7 +39,7 @@ const CatalogDetails = (props) => {
       currentTab={props.currentTab}
       title={props.course.name}
       subtitle={get(props.activeSession, 'name')}
-      poster={getInfo(props.course, props.activeSession, 'poster.url')}
+      poster={getInfo(props.course, props.activeSession, 'poster')}
       actions={[
         {
           name: 'export-pdf',

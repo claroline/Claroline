@@ -120,10 +120,6 @@ class WorkspaceSubscriber implements EventSubscriberInterface
         if ($root) {
             $this->resourceManager->createRights($root, [], true, false);
         }
-
-        // this is broken when the workspace is created inside a flush suite.
-        // this would be better to handle it here, but for now there is a check on the workspace open to do it
-        //$this->toolManager->addMissingWorkspaceTools($workspace);
     }
 
     public function preCopy(CopyEvent $event)
@@ -159,8 +155,6 @@ class WorkspaceSubscriber implements EventSubscriberInterface
         if ($root) {
             $this->resourceManager->createRights($root, [], true, false);
         }
-
-        //$this->toolManager->addMissingWorkspaceTools($workspace);
     }
 
     public function preUpdate(UpdateEvent $event)
@@ -184,14 +178,14 @@ class WorkspaceSubscriber implements EventSubscriberInterface
             Workspace::class,
             $workspace->getUuid(),
             $workspace->getPoster(),
-            !empty($oldData['poster']) ? $oldData['poster']['url'] : null
+            !empty($oldData['poster']) ? $oldData['poster'] : null
         );
 
         $this->fileManager->updateFile(
             Workspace::class,
             $workspace->getUuid(),
             $workspace->getThumbnail(),
-            !empty($oldData['thumbnail']) ? $oldData['thumbnail']['url'] : null
+            !empty($oldData['thumbnail']) ? $oldData['thumbnail'] : null
         );
     }
 

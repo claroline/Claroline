@@ -107,6 +107,8 @@ class WorkspaceController
 
         // switch to the workspace locale if needed (this is broken in UI atm)
         $this->forceWorkspaceLang($workspace, $request);
+
+        // this should not be done here
         $this->toolManager->addMissingWorkspaceTools($workspace);
 
         $isManager = $this->manager->isManager($workspace, $this->tokenStorage->getToken());

@@ -16,7 +16,7 @@ const EventCard = (props) =>
     icon={<EventIcon type={props.data.meta.type} />}
     title={props.data.name}
     subtitle={displayDateRange(props.data.start, props.data.end)}
-    poster={props.data.thumbnail ? asset(props.data.thumbnail.url) : null}
+    poster={props.data.thumbnail ? asset(props.data.thumbnail) : null}
     contentText={getPlainText(props.data.description)}
   />
 

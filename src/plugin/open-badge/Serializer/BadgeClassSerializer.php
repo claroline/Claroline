@@ -5,7 +5,6 @@ namespace Claroline\OpenBadgeBundle\Serializer;
 use Claroline\AppBundle\API\Options as APIOptions;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer;
 use Claroline\CoreBundle\API\Serializer\Template\TemplateSerializer;
 use Claroline\CoreBundle\API\Serializer\User\OrganizationSerializer;
 use Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer;
@@ -34,7 +33,6 @@ class BadgeClassSerializer
     private $criteriaSerializer;
     private $imageSerializer;
     private $eventDispatcher;
-    private $publicFileSerializer;
     private $organizationSerializer;
     private $ruleSerializer;
     private $templateSerializer;
@@ -48,7 +46,6 @@ class BadgeClassSerializer
         WorkspaceSerializer $workspaceSerializer,
         ImageSerializer $imageSerializer,
         OrganizationSerializer $organizationSerializer,
-        PublicFileSerializer $publicFileSerializer,
         RuleSerializer $ruleSerializer,
         TemplateSerializer $templateSerializer
     ) {
@@ -59,7 +56,6 @@ class BadgeClassSerializer
         $this->criteriaSerializer = $criteriaSerializer;
         $this->imageSerializer = $imageSerializer;
         $this->eventDispatcher = $eventDispatcher;
-        $this->publicFileSerializer = $publicFileSerializer;
         $this->organizationSerializer = $organizationSerializer;
         $this->ruleSerializer = $ruleSerializer;
         $this->templateSerializer = $templateSerializer;
@@ -82,14 +78,6 @@ class BadgeClassSerializer
 
     public function serialize(BadgeClass $badge, array $options = []): array
     {
-        $image = null;
-        if ($badge->getImage()) {
-            /** @var PublicFile $image */
-            $image = $this->om->getRepository(PublicFile::class)->findOneBy([
-                'url' => $badge->getImage(),
-            ]);
-        }
-
         $data = [
             'id' => $badge->getUuid(),
             'name' => $badge->getName(),
@@ -97,7 +85,7 @@ class BadgeClassSerializer
             'color' => $badge->getColor(),
             'criteria' => $badge->getCriteria(),
             'duration' => $badge->getDurationValidation(),
-            'image' => $image ? $this->publicFileSerializer->serialize($image) : null,
+            'image' => $badge->getImage(),
             'issuer' => $badge->getIssuer() ? $this->organizationSerializer->serialize($badge->getIssuer(), [APIOptions::SERIALIZE_MINIMAL]) : null,
             'tags' => $this->serializeTags($badge),
         ];
@@ -143,7 +131,8 @@ class BadgeClassSerializer
     public function deserialize(array $data, BadgeClass $badge = null, array $options = []): BadgeClass
     {
         $this->sipe('name', 'setName', $data, $badge);
-        $this->sipe('description', 'setDescription', $data, $badge);
+        $this->sipe('image', 'setImage', $data, $badge);
+        $this->sipe('color', 'setColor', $data, $badge);
         $this->sipe('color', 'setColor', $data, $badge);
         $this->sipe('criteria', 'setCriteria', $data, $badge);
         $this->sipe('duration', 'setDurationValidation', $data, $badge);
@@ -156,15 +145,6 @@ class BadgeClassSerializer
             /** @var Organization $organization */
             $organization = $this->om->getObject($data['issuer'], Organization::class);
             $badge->setIssuer($organization);
-        }
-
-        if (array_key_exists('image', $data)) {
-            $imageUrl = null;
-            if (!empty($data['image']) && !empty($data['image']['url'])) {
-                $imageUrl = $data['image']['url'];
-            }
-
-            $badge->setImage($imageUrl);
         }
 
         if (array_key_exists('workspace', $data)) {

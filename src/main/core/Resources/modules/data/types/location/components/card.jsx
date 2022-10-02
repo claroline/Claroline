@@ -11,7 +11,7 @@ const LocationCard = props =>
   <DataCard
     {...props}
     id={props.data.id}
-    poster={props.data.thumbnail ? asset(props.data.thumbnail.url) : null}
+    poster={props.data.thumbnail ? asset(props.data.thumbnail) : null}
     icon="fa fa-map-marker-alt"
     title={props.data.name}
     subtitle={getAddressString(props.data.address, true)}

@@ -12,7 +12,6 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@event_dispatcher'
             - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
-            - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
 
     Icap\BlogBundle\Serializer\CommentSerializer:
         tags: [claroline.serializer]

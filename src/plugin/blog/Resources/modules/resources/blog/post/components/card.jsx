@@ -201,7 +201,7 @@ CardFooter.propTypes = {
 const PostCardComponent = props =>
   <div className="data-card data-card-col">
     {props.data.poster &&
-      <img className="img-responsive" alt={props.data.title} src={asset(props.data.poster.url)} />
+      <img className="img-responsive" alt={props.data.title} src={asset(props.data.poster)} />
     }
 
     <div className="post-header">

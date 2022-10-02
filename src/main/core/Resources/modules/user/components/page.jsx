@@ -18,7 +18,7 @@ const UserPage = props =>
     }])}
     title={props.user.name}
     subtitle={props.title || props.user.username}
-    poster={props.user.poster ? props.user.poster.url : undefined}
+    poster={props.user.poster}
     icon={
       <UserAvatar className="user-avatar-lg img-thumbnail" picture={props.user.picture} />
     }

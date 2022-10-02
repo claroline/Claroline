@@ -13,7 +13,7 @@ const PostCard = (props) =>
   <DataCard
     {...props}
     id={props.data.id}
-    poster={props.data.thumbnail ? asset(props.data.thumbnail.url) : null}
+    poster={props.data.thumbnail ? asset(props.data.thumbnail) : null}
     icon={
       get(props.data, 'meta.author') ?
         <UserAvatar alt={true} /> :

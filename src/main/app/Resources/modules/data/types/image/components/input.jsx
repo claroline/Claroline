@@ -1,8 +1,8 @@
 import React, {PureComponent} from 'react'
 import {connect} from 'react-redux'
-import has from 'lodash/has'
 
 import {trans} from '#/main/app/intl/translation'
+import {url} from '#/main/app/api'
 import {asset} from '#/main/app/config/asset'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
@@ -16,6 +16,45 @@ class ImageInputComponent extends PureComponent {
 
     this.onChange = this.onChange.bind(this)
     this.onDelete = this.onDelete.bind(this)
+
+    // the full public file object
+    this.state = {
+      loaded: false,
+      file: null
+    }
+  }
+
+  componentDidMount() {
+    this.load()
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.value !== this.props.value) {
+      this.load()
+    }
+  }
+
+  load() {
+    if (!this.props.value) {
+      return
+    }
+
+    fetch(url(['apiv2_public_file_find', {filters: {url: this.props.value}}]), {
+      method: 'GET' ,
+      headers: new Headers({
+        'Content-Type': 'application/json; charset=utf-8',
+        // next header is required for symfony to recognize our requests as XMLHttpRequest
+        // there is no spec about possible values, but this is the one expected by symfony
+        // @see Symfony\Component\HttpFoundation\Request::isXmlHttpRequest
+        'X-Requested-With': 'XMLHttpRequest'
+      }),
+      credentials: 'include'
+    })
+      .then(response => response.json())
+      .then((data) => this.setState({
+        loaded: true,
+        file: data
+      }))
   }
 
   onChange() {
@@ -25,13 +64,13 @@ class ImageInputComponent extends PureComponent {
   }
 
   onDelete() {
-    this.props.deleteFile(this.props.value.id, this.props.onChange)
+    this.props.deleteFile(this.state.file.id, this.props.onChange)
   }
 
   render() {
     return (
       <fieldset className={this.props.className}>
-        {!has(this.props.value, 'id') &&
+        {!this.props.value &&
           <input
             id={this.props.id}
             type="file"
@@ -42,11 +81,11 @@ class ImageInputComponent extends PureComponent {
           />
         }
 
-        {has(this.props.value, 'id') &&
+        {this.props.value &&
           <div className="img-preview">
             <img
               className="img-thumbnail"
-              src={asset(this.props.value.url)}
+              src={asset(this.props.value)}
               style={{
                 maxWidth: this.props.size[0] + 'px',
                 maxHeight: this.props.size[1] + 'px'
@@ -60,6 +99,7 @@ class ImageInputComponent extends PureComponent {
               icon="fa fa-fw fa-trash-o"
               label={trans('delete', {}, 'actions')}
               tooltip="left"
+              disabled={!this.state.loaded}
               callback={this.onDelete}
               dangerous={true}
             />
@@ -71,7 +111,7 @@ class ImageInputComponent extends PureComponent {
 }
 
 implementPropTypes(ImageInputComponent, DataInputTypes, {
-  value: T.object,
+  value: T.string, // the url of the image
   size: T.arrayOf(T.number),
   deleteFile: T.func.isRequired,
   uploadUrl: T.array.isRequired,
@@ -81,13 +121,12 @@ implementPropTypes(ImageInputComponent, DataInputTypes, {
   uploadUrl: ['apiv2_image_upload']
 })
 
-// this is not pretty
 const ImageInput = connect(
   null,
   dispatch => ({
     uploadFile(file, url, onSuccess, onError) {
       dispatch(actions.uploadFile(file, url)).then(
-        (response) => onSuccess(Array.isArray(response) ? response[0] : response),
+        (response) => onSuccess(Array.isArray(response) ? response[0].url : response.url),
         () => onError(trans('invalid_image', {}, 'validators'))
       )
     },

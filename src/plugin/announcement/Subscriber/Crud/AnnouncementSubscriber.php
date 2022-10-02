@@ -107,7 +107,7 @@ class AnnouncementSubscriber implements EventSubscriberInterface
             Announcement::class,
             $announcement->getUuid(),
             $announcement->getPoster(),
-            !empty($oldData['poster']) ? $oldData['poster']['url'] : null
+            !empty($oldData['poster']) ? $oldData['poster'] : null
         );
 
         $this->dispatchAnnouncementEvent($announcement, 'announcement-update');

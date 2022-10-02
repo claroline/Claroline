@@ -9,10 +9,7 @@ const Slide = {
     id: T.string,
     title: T.string,
     content: T.string,
-    poster: T.shape({
-      url: T.string,
-      mimeType: T.string
-    }),
+    poster: T.string,
     order: T.number,
     message: T.shape({
       id: T.string

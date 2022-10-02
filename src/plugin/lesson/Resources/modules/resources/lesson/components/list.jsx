@@ -13,7 +13,7 @@ const ChapterCard = (props) =>
   <DataCard
     {...props}
     id={props.data.id}
-    poster={props.data.poster ? asset(props.data.poster.url) : null}
+    poster={props.data.poster ? asset(props.data.poster) : null}
     title={props.data.title}
     contentText={props.data.text}
   />

@@ -27,7 +27,7 @@ const EventPage = (props) => {
     <ToolPage
       path={props.path}
       title={get(props.event, 'name')}
-      poster={get(props.event, 'poster.url')}
+      poster={get(props.event, 'poster')}
       primaryAction="edit"
       actions={[
         {

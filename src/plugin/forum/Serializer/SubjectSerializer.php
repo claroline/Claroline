@@ -103,7 +103,7 @@ class SubjectSerializer
             'content' => $first ? $first->getContent() : null,
             'title' => $subject->getTitle(),
             'meta' => $this->serializeMeta($subject, $options),
-            'poster' => $subject->getPoster() ? $this->fileSerializer->serialize($subject->getPoster()) : null,
+            'poster' => $subject->getPoster() ? $subject->getPoster()->getUrl() : null,
         ];
     }
 
@@ -197,7 +197,9 @@ class SubjectSerializer
             $poster = null;
             if (!empty($data['poster'])) {
                 /** @var PublicFile $poster */
-                $poster = $this->om->getObject($data['poster'], PublicFile::class);
+                $poster = $this->om->getRepository(PublicFile::class)->findOneBy([
+                    'url' => $data['poster'],
+                ]);
             }
             $subject->setPoster($poster);
         }

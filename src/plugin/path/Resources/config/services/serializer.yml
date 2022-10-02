@@ -13,6 +13,5 @@ services:
         tags: [claroline.serializer]
         arguments:
            - '@Claroline\AppBundle\Persistence\ObjectManager'
-           - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
            - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
            - '@security.token_storage'

@@ -99,17 +99,9 @@ class ConnectionMessageSerializer
                     $poster = null;
                     if ($slide->getPoster()) {
                         if (in_array(Options::ABSOLUTE_URL, $options)) {
-                            $poster = [
-                                'url' => $this->platformManager->getUrl().'/'.$slide->getPoster(),
-                                'mimeType' => 'image/*',
-                                'absolute' => true,
-                            ];
+                            $poster = $this->platformManager->getUrl().'/'.$slide->getPoster();
                         } else {
-                            $poster = [
-                                'url' => $slide->getPoster(),
-                                'mimeType' => 'image/*',
-                                'absolute' => false,
-                            ];
+                            $poster = $slide->getPoster();
                         }
                     }
 
@@ -133,7 +125,7 @@ class ConnectionMessageSerializer
                         'content' => $slide->getContent(),
                         'poster' => $poster,
                         'order' => $slide->getOrder(),
-                        'shortcuts' => $slide->getShortcuts(),
+                        'shortcuts' => $shortcuts,
                     ];
                 }, $message->getSlides()->toArray())),
             ]);
@@ -144,12 +136,8 @@ class ConnectionMessageSerializer
 
     /**
      * Deserializes ConnectionMessage data into entities.
-     *
-     * @param array $data
-     *
-     * @return ConnectionMessage
      */
-    public function deserialize($data, ConnectionMessage $message)
+    public function deserialize(array $data, ConnectionMessage $message): ConnectionMessage
     {
         $this->sipe('id', 'setUuid', $data, $message);
         $this->sipe('title', 'setTitle', $data, $message);
@@ -197,7 +185,7 @@ class ConnectionMessageSerializer
                 $this->sipe('id', 'setUuid', $slideData, $slide);
                 $this->sipe('content', 'setContent', $slideData, $slide);
                 $this->sipe('title', 'setTitle', $slideData, $slide);
-                $this->sipe('poster.url', 'setPoster', $slideData, $slide);
+                $this->sipe('poster', 'setPoster', $slideData, $slide);
                 $this->sipe('shortcuts', 'setShortcuts', $slideData, $slide);
 
                 $slide->setOrder($slideOrder);

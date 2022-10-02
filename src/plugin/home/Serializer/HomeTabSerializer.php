@@ -71,24 +71,12 @@ class HomeTabSerializer
 
     public function serialize(HomeTab $homeTab, array $options = []): array
     {
-        $poster = null;
-        if ($homeTab->getPoster()) {
-            /** @var PublicFile $file */
-            $file = $this->om
-                ->getRepository(PublicFile::class)
-                ->findOneBy(['url' => $homeTab->getPoster()]);
-
-            if ($file) {
-                $poster = $this->publicFileSerializer->serialize($file);
-            }
-        }
-
         $data = [
             'id' => $homeTab->getUuid(),
             'title' => $homeTab->getName(),
             'slug' => $homeTab->getLongTitle() ? substr(strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $homeTab->getLongTitle()))), 0, 128) : 'new',
             'longTitle' => $homeTab->getLongTitle(),
-            'poster' => $poster,
+            'poster' => $homeTab->getPoster(),
             'icon' => $homeTab->getIcon(),
             'context' => $homeTab->getContext(),
             'type' => $homeTab->getType(),
@@ -156,7 +144,7 @@ class HomeTabSerializer
         $this->sipe('title', 'setName', $data, $homeTab);
         $this->sipe('position', 'setOrder', $data, $homeTab);
         $this->sipe('longTitle', 'setLongTitle', $data, $homeTab);
-        $this->sipe('poster.url', 'setPoster', $data, $homeTab);
+        $this->sipe('poster', 'setPoster', $data, $homeTab);
         $this->sipe('icon', 'setIcon', $data, $homeTab);
         $this->sipe('context', 'setContext', $data, $homeTab);
         $this->sipe('type', 'setType', $data, $homeTab);

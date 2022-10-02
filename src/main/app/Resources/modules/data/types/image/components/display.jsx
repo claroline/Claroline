@@ -12,16 +12,8 @@ const ImageDisplay = (props) => {
     )
   }
 
-  if (typeof props.data === 'string') {
-    // we only get the image url
-    return (
-      <img id={props.id} className="image-display" src={asset(props.data)} />
-    )
-  }
-
-  // we get an image object
   return (
-    <img id={props.id} className="image-display" src={asset(props.data.url)} />
+    <img id={props.id} className="image-display" src={asset(props.data)} />
   )
 }
 

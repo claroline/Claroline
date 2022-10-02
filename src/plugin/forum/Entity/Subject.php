@@ -126,6 +126,8 @@ class Subject
      * @ORM\JoinColumn(name="poster_id", referencedColumnName="id", onDelete="SET NULL")
      *
      * @var PublicFile
+     *
+     * @todo only store file URL
      */
     protected $poster;
 

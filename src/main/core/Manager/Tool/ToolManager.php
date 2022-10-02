@@ -185,12 +185,6 @@ class ToolManager implements LoggerAwareInterface
             $tools = $this->orderedToolRepo->findByWorkspaceAndRoles($workspace, $roles);
         }
 
-        /*if ($workspace->isModel()) {
-            $tools = array_filter($tools, function (OrderedTool $orderedTool) {
-                return in_array($orderedTool->getTool()->getName(), static::WORKSPACE_MODEL_TOOLS);
-            });
-        }*/
-
         return $tools;
     }
 

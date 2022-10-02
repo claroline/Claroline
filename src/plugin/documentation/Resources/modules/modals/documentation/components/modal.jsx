@@ -38,7 +38,7 @@ class DocumentationModal extends Component {
         icon="fa fa-fw fa-question-circle"
         title={trans('documentation', {}, 'documentation')}
         subtitle={get(this.props.current, 'resourceNode.name')}
-        poster={get(this.props.current, 'resourceNode.poster.url') ? 'https://support.claroline.com/'+get(this.props.current, 'resourceNode.poster.url') : undefined}
+        poster={get(this.props.current, 'resourceNode.poster') ? 'https://get.claroline.com/'+get(this.props.current, 'resourceNode.poster') : undefined}
         onEntered={() => {
           this.props.resetFilters([
             {property: 'tags', value: this.props.tags || [], locked: true}

@@ -15,7 +15,7 @@ const ToolCard = props =>
     })}
     id={props.data.id}
     icon={`fa fa-${props.data.icon}`}
-    poster={props.data.thumbnail ? asset(props.data.thumbnail.url) : null}
+    poster={props.data.thumbnail ? asset(props.data.thumbnail) : null}
     title={trans(props.data.name, {}, 'tools')}
   />
 
@@ -25,9 +25,7 @@ ToolCard.propTypes = {
     id: T.string.isRequired,
     name: T.string.isRequired,
     icon: T.string.isRequired,
-    thumbnail: T.shape({
-      url: T.string
-    })
+    thumbnail: T.string
   }).isRequired
 }
 

@@ -5,13 +5,12 @@ namespace Innova\PathBundle\Serializer;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer;
 use Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer;
-use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Innova\PathBundle\Entity\SecondaryResource;
 use Innova\PathBundle\Entity\Step;
+use Innova\PathBundle\Entity\UserProgression;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class StepSerializer
@@ -20,8 +19,6 @@ class StepSerializer
 
     /** @var ObjectManager */
     private $om;
-    /** @var PublicFileSerializer */
-    private $fileSerializer;
     /** @var ResourceNodeSerializer */
     private $resourceNodeSerializer;
     /** @var TokenStorageInterface */
@@ -34,19 +31,17 @@ class StepSerializer
 
     public function __construct(
         ObjectManager $om,
-        PublicFileSerializer $fileSerializer,
         ResourceNodeSerializer $resourceSerializer,
         TokenStorageInterface $tokenStorage
     ) {
         $this->om = $om;
-        $this->fileSerializer = $fileSerializer;
         $this->resourceNodeSerializer = $resourceSerializer;
         $this->tokenStorage = $tokenStorage;
 
-        $this->resourceNodeRepo = $om->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceNode');
-        $this->stepRepo = $om->getRepository('Innova\PathBundle\Entity\Step');
-        $this->secondaryResourceRepo = $om->getRepository('Innova\PathBundle\Entity\SecondaryResource');
-        $this->userProgressionRepo = $om->getRepository('Innova\PathBundle\Entity\UserProgression');
+        $this->resourceNodeRepo = $om->getRepository(ResourceNode::class);
+        $this->stepRepo = $om->getRepository(Step::class);
+        $this->secondaryResourceRepo = $om->getRepository(SecondaryResource::class);
+        $this->userProgressionRepo = $om->getRepository(UserProgression::class);
     }
 
     public function getSchema(): string
@@ -61,24 +56,12 @@ class StepSerializer
 
     public function serialize(Step $step, array $options = []): array
     {
-        $poster = null;
-        if (!empty($step->getPoster())) {
-            /** @var PublicFile $file */
-            $file = $this->om
-                ->getRepository('Claroline\CoreBundle\Entity\File\PublicFile')
-                ->findOneBy(['url' => $step->getPoster()]);
-
-            if ($file) {
-                $poster = $this->fileSerializer->serialize($file);
-            }
-        }
-
         if (in_array(Options::SERIALIZE_MINIMAL, $options)) {
             return [
                 'id' => $step->getUuid(),
                 'title' => $step->getTitle(),
                 'slug' => $step->getSlug(),
-                'poster' => $poster,
+                'poster' => $step->getPoster(),
             ];
         }
 
@@ -86,7 +69,7 @@ class StepSerializer
             'id' => $step->getUuid(),
             'title' => $step->getTitle(),
             'slug' => $step->getSlug(),
-            'poster' => $poster,
+            'poster' => $step->getPoster(),
             'description' => $step->getDescription(),
             'primaryResource' => $step->getResource() ? $this->resourceNodeSerializer->serialize($step->getResource()) : null,
             'showResourceHeader' => $step->getShowResourceHeader(),
@@ -99,7 +82,7 @@ class StepSerializer
             'children' => array_values(array_map(function (Step $child) use ($options) {
                 return $this->serialize($child, $options);
             }, $step->getChildren()->toArray())),
-            'userProgression' => $this->serializeUserProgression($step),
+            'userProgression' => $this->serializeUserProgression($step), // todo : user related data should not be here
             'evaluated' => $step->isEvaluated(),
         ];
     }
@@ -115,10 +98,11 @@ class StepSerializer
         $this->sipe('title', 'setTitle', $data, $step);
         $this->sipe('slug', 'setSlug', $data, $step);
         $this->sipe('description', 'setDescription', $data, $step);
-        $this->sipe('poster.url', 'setPoster', $data, $step);
+        $this->sipe('poster', 'setPoster', $data, $step);
         $this->sipe('display.numbering', 'setNumbering', $data, $step);
 
-        /* Set primary resource */
+        // Set primary resource
+        /** @var ResourceNode $resource */
         $resource = isset($data['primaryResource']['id']) ?
             $this->resourceNodeRepo->findOneBy(['uuid' => $data['primaryResource']['id']]) :
             null;
@@ -186,6 +170,7 @@ class StepSerializer
     private function serializeUserProgression(Step $step): array
     {
         $user = $this->tokenStorage->getToken()->getUser();
+        /** @var UserProgression $userProgression */
         $userProgression = $user instanceof User ?
             $this->userProgressionRepo->findOneBy(['step' => $step, 'user' => $user]) :
             null;

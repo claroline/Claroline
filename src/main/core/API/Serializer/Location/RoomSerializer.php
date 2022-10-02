@@ -15,7 +15,6 @@ use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer;
-use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Location\Location;
 use Claroline\CoreBundle\Entity\Location\Room;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -58,8 +57,8 @@ class RoomSerializer
             'name' => $room->getName(),
             'description' => $room->getDescription(),
             'capacity' => $room->getCapacity(),
-            'poster' => $this->serializePoster($room),
-            'thumbnail' => $this->serializeThumbnail($room),
+            'poster' => $room->getPoster(),
+            'thumbnail' => $room->getThumbnail(),
             'location' => $room->getLocation() ? $this->locationSerializer->serialize($room->getLocation(), [Options::SERIALIZE_MINIMAL]) : null,
             'permissions' => [
                 'open' => $this->authorization->isGranted('OPEN', $room),
@@ -76,6 +75,8 @@ class RoomSerializer
         $this->sipe('name', 'setName', $data, $room);
         $this->sipe('description', 'setDescription', $data, $room);
         $this->sipe('capacity', 'setCapacity', $data, $room);
+        $this->sipe('poster', 'setPoster', $data, $room);
+        $this->sipe('thumbnail', 'setThumbnail', $data, $room);
 
         if (isset($data['location'])) {
             $location = null;
@@ -86,46 +87,6 @@ class RoomSerializer
             $room->setLocation($location);
         }
 
-        if (isset($data['poster'])) {
-            $room->setPoster($data['poster']['url'] ?? null);
-        }
-
-        if (isset($data['thumbnail'])) {
-            $room->setThumbnail($data['thumbnail']['url'] ?? null);
-        }
-
         return $room;
-    }
-
-    private function serializePoster(Room $room)
-    {
-        if (!empty($room->getPoster())) {
-            /** @var PublicFile $file */
-            $file = $this->om
-                ->getRepository(PublicFile::class)
-                ->findOneBy(['url' => $room->getPoster()]);
-
-            if ($file) {
-                return $this->fileSerializer->serialize($file);
-            }
-        }
-
-        return null;
-    }
-
-    private function serializeThumbnail(Room $room)
-    {
-        if (!empty($room->getThumbnail())) {
-            /** @var PublicFile $file */
-            $file = $this->om
-                ->getRepository(PublicFile::class)
-                ->findOneBy(['url' => $room->getThumbnail()]);
-
-            if ($file) {
-                return $this->fileSerializer->serialize($file);
-            }
-        }
-
-        return null;
     }
 }

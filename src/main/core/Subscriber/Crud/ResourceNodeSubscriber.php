@@ -107,14 +107,14 @@ class ResourceNodeSubscriber implements EventSubscriberInterface
             ResourceNode::class,
             $resourceNode->getUuid(),
             $resourceNode->getPoster(),
-            !empty($oldData['poster']) ? $oldData['poster']['url'] : null
+            !empty($oldData['poster']) ? $oldData['poster'] : null
         );
 
         $this->fileManager->updateFile(
             ResourceNode::class,
             $resourceNode->getUuid(),
             $resourceNode->getPoster(),
-            !empty($oldData['thumbnail']) ? $oldData['thumbnail']['url'] : null
+            !empty($oldData['thumbnail']) ? $oldData['thumbnail'] : null
         );
     }
 

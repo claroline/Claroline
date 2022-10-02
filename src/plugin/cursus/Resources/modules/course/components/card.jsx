@@ -17,7 +17,7 @@ const CourseCard = props =>
       'data-card-muted': get(props.data, 'restrictions.hidden', false) || !get(props.data, 'restrictions.active', false)
     })}
     id={props.data.id}
-    poster={props.data.thumbnail ? asset(props.data.thumbnail.url) : null}
+    poster={props.data.thumbnail ? asset(props.data.thumbnail) : null}
     icon="fa fa-graduation-cap"
     title={props.data.name}
     subtitle={props.data.code}

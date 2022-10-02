@@ -20,7 +20,7 @@ const AnnouncementCard = (props) =>
     })}
     icon={<ResourceIcon className="icon" mimeType="custom/claroline_announcement_aggregate" />}
     title={props.data.title}
-    poster={props.data.poster ? asset(props.data.poster.url) : null}
+    poster={props.data.poster ? asset(props.data.poster) : null}
     contentText={getPlainText(props.data.content)}
     footer={
       <span
