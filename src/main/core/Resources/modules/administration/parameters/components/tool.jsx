@@ -6,7 +6,6 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 import {Routes} from '#/main/app/router'
 
 import {ToolPage} from '#/main/core/tool/containers/page'
-import {Archive} from '#/main/core/administration/parameters/archive/containers/archive'
 import {Meta} from '#/main/core/administration/parameters/main/containers/meta'
 import {Plugins} from '#/main/core/administration/parameters/plugin/containers/plugins'
 import {Messages} from '#/main/core/administration/parameters/message/components/messages'
@@ -44,7 +43,6 @@ const ParametersTool = (props) => {
             {path: '/', exact: true, render: () => trans('general')},
             {path: '/privacy',       render: () => trans('privacy')},
             {path: '/plugins',       render: () => trans('plugins')},
-            {path: '/archives',      render: () => trans('archive')},
             {path: '/messages',      render: () => trans('connection_messages')},
             {path: '/technical',     render: () => trans('technical')},
             {path: '/appearance',    render: () => trans('appearance')}
@@ -65,9 +63,6 @@ const ParametersTool = (props) => {
           }, {
             path: '/plugins',
             component: Plugins
-          }, {
-            path: '/archives',
-            component: Archive
           }, {
             path: '/messages',
             exact: true,

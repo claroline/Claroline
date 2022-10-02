@@ -20,19 +20,15 @@ class ParametersSerializer
     private $serializer;
     /** @var PlatformConfigurationHandler */
     private $configHandler;
-    /** @var string */
-    private $archivePath;
 
     public function __construct(
         SerializerProvider $serializer, // bad
         ObjectManager $om,
-        PlatformConfigurationHandler $configHandler,
-        string $archivePath
+        PlatformConfigurationHandler $configHandler
     ) {
         $this->serializer = $serializer;
         $this->configHandler = $configHandler;
         $this->om = $om;
-        $this->archivePath = $archivePath;
     }
 
     public function getName()
@@ -51,8 +47,6 @@ class ParametersSerializer
         $data['javascripts'] = $this->serializeAssets('javascripts', $data);
         $data['stylesheets'] = $this->serializeAssets('stylesheets', $data);
         $data['display']['logo'] = $this->serializeAppearanceLogo($data);
-        // TODO : move this somewhere else
-        $data['archives'] = $this->serializeArchive();
 
         return $data;
     }
@@ -144,24 +138,6 @@ class ParametersSerializer
                 $serializer->deserialize($data['tos']['text'], $contentTos, ['property' => 'content']);
             }
         }
-    }
-
-    public function serializeArchive()
-    {
-        if (!is_dir($this->archivePath)) {
-            mkdir($this->archivePath);
-        }
-
-        $iterator = new \DirectoryIterator($this->archivePath);
-        $files = [];
-
-        foreach ($iterator as $element) {
-            if ($element->isFile()) {
-                $files[] = $element->getFilename();
-            }
-        }
-
-        return $files;
     }
 
     public function serializeAssets($name, array $data)
