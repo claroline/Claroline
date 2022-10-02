@@ -9,7 +9,6 @@ services:
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-            - '%claroline.param.archive_directory%'
 
     Claroline\CoreBundle\API\Serializer\ObjectLockSerializer:
         tags: [claroline.serializer]

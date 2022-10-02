@@ -31,19 +31,6 @@ services:
         tags:
             - { name: 'console.command', command: 'claroline:connection:duration' }
 
-    Claroline\CoreBundle\Command\Logs\LogsArchiverCommand:
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\AppBundle\Manager\DatabaseManager'
-        tags:
-            - { name: 'console.command', command: 'claroline:logs:archive' }
-
-    Claroline\CoreBundle\Command\Logs\LogsFetcherCommand:
-        arguments:
-            - '@Claroline\CoreBundle\Manager\LogManager'
-        tags:
-            - { name: 'console.command', command: 'claroline:logs:fetch' }
-
     # Workspace
 
     Claroline\CoreBundle\Command\Workspace\ArchiveCommand:

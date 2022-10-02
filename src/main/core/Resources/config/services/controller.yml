@@ -164,12 +164,6 @@ services:
             - '@Claroline\CoreBundle\Manager\WidgetManager'
             - '@Claroline\CoreBundle\Manager\DataSourceManager'
 
-    Claroline\CoreBundle\Controller\APINew\Platform\ArchiveController:
-        parent: Claroline\AppBundle\Controller\AbstractSecurityController
-        public: true
-        arguments:
-            - '%claroline.param.archive_directory%'
-
     Claroline\CoreBundle\Controller\AdministrationController:
         arguments:
             - '@security.authorization_checker'

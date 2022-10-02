@@ -24,11 +24,6 @@ const locales = createSelector(
   (parameters) => parameters.locales
 )
 
-const archives = createSelector(
-  [parameters],
-  (parameters) => parameters.archives
-)
-
 const plugins = createSelector(
   [store],
   (store) => store.plugins
@@ -65,7 +60,6 @@ export const selectors = {
   parameters,
   locales,
   plugins,
-  archives,
   theme,
   iconSetChoices,
   mimeTypes

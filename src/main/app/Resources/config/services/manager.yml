@@ -13,15 +13,6 @@ services:
         arguments:
             - '@security.token_storage'
 
-    Claroline\AppBundle\Manager\DatabaseManager:
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@doctrine.dbal.default_connection'
-            - '@Claroline\AppBundle\API\FinderProvider'
-            - '%claroline.param.archive_directory%'
-        calls:
-            - setLogger: [ '@logger' ]
-
     Claroline\AppBundle\Manager\CommandManager:
         arguments:
             - '@kernel'
