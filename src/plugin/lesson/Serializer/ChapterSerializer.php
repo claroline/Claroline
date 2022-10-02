@@ -4,8 +4,6 @@ namespace Icap\LessonBundle\Serializer;
 
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer;
-use Claroline\CoreBundle\Entity\File\PublicFile;
 use Icap\LessonBundle\Entity\Chapter;
 use Icap\LessonBundle\Repository\ChapterRepository;
 
@@ -17,16 +15,12 @@ class ChapterSerializer
     /** @var ObjectManager */
     private $om;
 
-    /** @var PublicFileSerializer */
-    private $fileSerializer;
-
     /** @var ChapterRepository */
     private $chapterRepository;
 
-    public function __construct(ObjectManager $om, PublicFileSerializer $fileSerializer)
+    public function __construct(ObjectManager $om)
     {
         $this->om = $om;
-        $this->fileSerializer = $fileSerializer;
         $this->chapterRepository = $om->getRepository(Chapter::class);
     }
 
@@ -68,7 +62,7 @@ class ChapterSerializer
             'id' => $chapter->getUuid(),
             'slug' => $chapter->getSlug(),
             'title' => $chapter->getTitle(),
-            'poster' => $this->serializePoster($chapter),
+            'poster' => $chapter->getPoster(),
             'text' => $chapter->getText(),
             'parentSlug' => $chapter->getParent() ? $chapter->getParent()->getSlug() : null,
             'previousSlug' => $previousChapter ? $previousChapter->getSlug() : null,
@@ -102,7 +96,7 @@ class ChapterSerializer
 
         $this->sipe('title', 'setTitle', $data, $chapter);
         $this->sipe('text', 'setText', $data, $chapter);
-        $this->sipe('poster.url', 'setPoster', $data, $chapter);
+        $this->sipe('poster', 'setPoster', $data, $chapter);
         $this->sipe('internalNote', 'setInternalNote', $data, $chapter);
 
         return $chapter;
@@ -126,22 +120,5 @@ class ChapterSerializer
             'poster' => $node['poster'],
             'children' => $children,
         ];
-    }
-
-    private function serializePoster(Chapter $chapter)
-    {
-        $poster = null;
-        if (!empty($chapter->getPoster())) {
-            /** @var PublicFile $file */
-            $file = $this->om
-                ->getRepository('Claroline\CoreBundle\Entity\File\PublicFile')
-                ->findOneBy(['url' => $chapter->getPoster()]);
-
-            if ($file) {
-                $poster = $this->fileSerializer->serialize($file);
-            }
-        }
-
-        return $poster;
     }
 }

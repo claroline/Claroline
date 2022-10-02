@@ -32,7 +32,7 @@ const Chapter = props => {
     >
       <section className="current-chapter">
         {props.chapter.poster &&
-          <img className="chapter-poster img-responsive" alt={props.chapter.title} src={asset(props.chapter.poster.url)} />
+          <img className="chapter-poster img-responsive" alt={props.chapter.title} src={asset(props.chapter.poster)} />
         }
 
         <ContentTitle

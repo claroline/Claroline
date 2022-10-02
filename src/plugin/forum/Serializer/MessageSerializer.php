@@ -5,7 +5,6 @@ namespace Claroline\ForumBundle\Serializer;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer;
 use Claroline\CoreBundle\API\Serializer\MessageSerializer as AbstractMessageSerializer;
 use Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer;
 use Claroline\ForumBundle\Entity\Message;
@@ -24,9 +23,6 @@ class MessageSerializer
     /** @var ObjectManager */
     private $om;
 
-    /** @var PublicFileSerializer */
-    private $fileSerializer;
-
     /** @var ResourceNodeSerializer */
     private $nodeSerializer;
 
@@ -37,13 +33,11 @@ class MessageSerializer
         AbstractMessageSerializer $messageSerializer,
         ObjectManager $om,
         SubjectSerializer $subjectSerializer,
-        PublicFileSerializer $fileSerializer,
         ResourceNodeSerializer $nodeSerializer
     ) {
         $this->messageSerializer = $messageSerializer;
         $this->om = $om;
         $this->subjectSerializer = $subjectSerializer;
-        $this->fileSerializer = $fileSerializer;
         $this->nodeSerializer = $nodeSerializer;
     }
 
@@ -87,7 +81,7 @@ class MessageSerializer
             $data['subject'] = [
                 'id' => $subject->getUuid(),
                 'title' => $subject->getTitle(),
-                'poster' => $subject->getPoster() ? $this->fileSerializer->serialize($subject->getPoster()) : null,
+                'poster' => $subject->getPoster() ? $subject->getPoster()->getUrl() : null,
             ];
 
             if ($subject->getForum() && $subject->getForum()->getResourceNode()) {
@@ -114,6 +108,7 @@ class MessageSerializer
         $message = $this->messageSerializer->deserialize($data, $message, $options);
 
         if (isset($data['subject'])) {
+            /** @var Subject $subject */
             $subject = $this->om->getObject($data['subject'], Subject::class);
 
             if (!empty($subject)) {

@@ -6,12 +6,10 @@ use Claroline\AnnouncementBundle\Entity\Announcement;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer;
 use Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer;
 use Claroline\CoreBundle\API\Serializer\User\RoleSerializer;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer;
-use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
@@ -27,9 +25,6 @@ class AnnouncementSerializer
 
     /** @var UserSerializer */
     private $userSerializer;
-
-    /** @var PublicFileSerializer */
-    private $publicFileSerializer;
 
     /** @var ObjectManager */
     private $om;
@@ -49,7 +44,6 @@ class AnnouncementSerializer
         ObjectManager $om,
         WorkspaceSerializer $wsSerializer,
         ResourceNodeSerializer $nodeSerializer,
-        PublicFileSerializer $publicFileSerializer,
         RoleSerializer $roleSerializer
     ) {
         $this->tokenStorage = $tokenStorage;
@@ -57,7 +51,6 @@ class AnnouncementSerializer
         $this->om = $om;
         $this->wsSerializer = $wsSerializer;
         $this->nodeSerializer = $nodeSerializer;
-        $this->publicFileSerializer = $publicFileSerializer;
         $this->roleSerializer = $roleSerializer;
     }
 
@@ -73,18 +66,11 @@ class AnnouncementSerializer
 
     public function serialize(Announcement $announce): array
     {
-        $poster = null;
-        if ($announce->getPoster()) {
-            /** @var PublicFile $poster */
-            $poster = $this->om->getRepository(PublicFile::class)->findOneBy([
-                'url' => $announce->getPoster(),
-            ]);
-        }
-
         return [
             'id' => $announce->getUuid(),
             'title' => $announce->getTitle(),
             'content' => $announce->getContent(),
+            'poster' => $announce->getPoster(),
             'workspace' => $announce->getAggregate()->getResourceNode()->getWorkspace() ?
                 $this->wsSerializer->serialize($announce->getAggregate()->getResourceNode()->getWorkspace(), [Options::SERIALIZE_MINIMAL]) :
                 null, // TODO : remove me, can be retrieved from the node
@@ -108,7 +94,6 @@ class AnnouncementSerializer
             'roles' => array_map(function (Role $role) {
                 return $this->roleSerializer->serialize($role, [Options::SERIALIZE_MINIMAL]);
             }, $announce->getRoles()),
-            'poster' => $poster ? $this->publicFileSerializer->serialize($poster) : null,
         ];
     }
 
@@ -121,6 +106,8 @@ class AnnouncementSerializer
         } else {
             $announce->refreshUuid();
         }
+
+        $this->sipe('poster', 'setPoster', $data, $announce);
 
         $announce->setTitle($data['title']);
         $announce->setContent($data['content']);
@@ -164,17 +151,6 @@ class AnnouncementSerializer
                 if (!empty($role)) {
                     $announce->addRole($role);
                 }
-            }
-        }
-
-        if (isset($data['poster']) && isset($data['poster']['id'])) {
-            if (array_key_exists('poster', $data)) {
-                $posterUrl = null;
-                if (!empty($data['poster']) && !empty($data['poster']['url'])) {
-                    $posterUrl = $data['poster']['url'];
-                }
-
-                $announce->setPoster($posterUrl);
             }
         }
 

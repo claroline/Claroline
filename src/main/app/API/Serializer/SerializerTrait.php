@@ -11,7 +11,6 @@
 
 namespace Claroline\AppBundle\API\Serializer;
 
-use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Utils\ArrayUtils;
 
 trait SerializerTrait
@@ -39,15 +38,5 @@ trait SerializerTrait
                 $object->{$setter}($value);
             }
         }
-    }
-
-    /**
-     * @deprecated. UUIDs must be refreshed in deserialize only.
-     */
-    public function getUuid($object, array $options): string
-    {
-        return in_array(Options::REFRESH_UUID, $options) ?
-            $object->generateUuid() :
-            $object->getUuid();
     }
 }

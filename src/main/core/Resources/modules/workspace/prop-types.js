@@ -9,9 +9,8 @@ const Workspace = {
     autoId: T.number,
     name: T.string,
     slug: T.string,
-    poster: T.shape({
-      url: T.string
-    }),
+    poster: T.string,
+    thumbnail: T.string,
     contactEmail: T.string,
     meta: T.shape({
       description: T.string,

@@ -40,7 +40,7 @@ class ListExporter extends AbstractListExporter
                     'type' => 'text',
                     'description' => $this->translator->trans('The badge description', [], 'schema'),
                 ], [
-                    'name' => 'image.url',
+                    'name' => 'image',
                     'type' => 'text',
                     'description' => $this->translator->trans('The badge image URL', [], 'schema'),
                 ],

@@ -36,7 +36,7 @@ const MaterialPage = (props) => {
           displayed: !!props.material
         }
       ]}
-      poster={get(props.material, 'poster.url')}
+      poster={get(props.material, 'poster')}
       title={get(props.material, 'name') || trans('locations', {}, 'tools')}
       subtitle={get(props.material, 'code') || trans('materials', {}, 'location')}
       primaryAction="book"

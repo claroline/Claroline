@@ -6,8 +6,6 @@ use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Finder\Widget\WidgetInstanceFinder;
-use Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer;
-use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Widget\WidgetContainer;
 use Claroline\CoreBundle\Entity\Widget\WidgetContainerConfig;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
@@ -25,19 +23,14 @@ class WidgetContainerSerializer
     /** @var WidgetInstanceSerializer */
     private $widgetInstanceSerializer;
 
-    /** @var PublicFileSerializer */
-    private $publicFileSerializer;
-
     public function __construct(
         ObjectManager $om,
         WidgetInstanceFinder $widgetInstanceFinder,
-        WidgetInstanceSerializer $widgetInstanceSerializer,
-        PublicFileSerializer $publicFileSerializer
+        WidgetInstanceSerializer $widgetInstanceSerializer
     ) {
         $this->om = $om;
         $this->widgetInstanceFinder = $widgetInstanceFinder;
         $this->widgetInstanceSerializer = $widgetInstanceSerializer;
-        $this->publicFileSerializer = $publicFileSerializer;
     }
 
     public function getName()
@@ -80,7 +73,7 @@ class WidgetContainerSerializer
 
     public function serializeDisplay(WidgetContainerConfig $widgetContainerConfig)
     {
-        $display = [
+        return [
             'layout' => $widgetContainerConfig->getLayout(),
             'alignName' => $widgetContainerConfig->getAlignName(),
             'color' => $widgetContainerConfig->getColor(),
@@ -88,21 +81,6 @@ class WidgetContainerSerializer
             'backgroundType' => $widgetContainerConfig->getBackgroundType(),
             'background' => $widgetContainerConfig->getBackground(),
         ];
-
-        if ('image' === $widgetContainerConfig->getBackgroundType() && $widgetContainerConfig->getBackground()) {
-            /** @var PublicFile $file */
-            $file = $this->om
-                ->getRepository(PublicFile::class)
-                ->findOneBy(['url' => $widgetContainerConfig->getBackground()]);
-
-            if ($file) {
-                $display['background'] = $this->publicFileSerializer->serialize($file);
-            }
-        } else {
-            $display['background'] = $widgetContainerConfig->getBackground();
-        }
-
-        return $display;
     }
 
     public function deserialize($data, WidgetContainer $widgetContainer, array $options): WidgetContainer
@@ -128,14 +106,7 @@ class WidgetContainerSerializer
         $this->sipe('display.color', 'setColor', $data, $widgetContainerConfig);
         $this->sipe('display.borderColor', 'setBorderColor', $data, $widgetContainerConfig);
         $this->sipe('display.backgroundType', 'setBackgroundType', $data, $widgetContainerConfig);
-
-        if (isset($data['display'])) {
-            if (isset($data['display']['background']) && isset($data['display']['background']['url'])) {
-                $this->sipe('display.background.url', 'setBackground', $data, $widgetContainerConfig);
-            } else {
-                $this->sipe('display.background', 'setBackground', $data, $widgetContainerConfig);
-            }
-        }
+        $this->sipe('display.background', 'setBackground', $data, $widgetContainerConfig);
 
         if (isset($data['contents'])) {
             /** @var WidgetInstance[] $currentInstances */

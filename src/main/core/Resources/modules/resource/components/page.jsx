@@ -61,7 +61,7 @@ const ResourcePage = (props) => {
         label: ancestorNode.name,
         target: `${props.basePath}/${ancestorNode.slug}`
       })), props.path)}
-      poster={props.resourceNode.poster ? props.resourceNode.poster.url : undefined}
+      poster={props.resourceNode.poster}
       icon={get(props.resourceNode, 'display.showIcon') && (props.userEvaluation ?
         <UserProgression
           userEvaluation={props.userEvaluation}

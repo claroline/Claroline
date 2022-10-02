@@ -36,7 +36,7 @@ const RoomPage = (props) => {
           displayed: !!props.room
         }
       ]}
-      poster={get(props.room, 'poster.url')}
+      poster={get(props.room, 'poster')}
       title={get(props.room, 'name') || trans('locations', {}, 'tools')}
       subtitle={get(props.room, 'code') || trans('rooms', {}, 'location')}
       primaryAction="book"

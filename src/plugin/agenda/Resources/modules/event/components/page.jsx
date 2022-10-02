@@ -22,7 +22,7 @@ const EventPage = (props) =>
     ]}
     title={props.event.name}
     subtitle={displayDate(props.event.start, true, true)}
-    poster={get(props.event, 'thumbnail.url')}
+    poster={get(props.event, 'thumbnail')}
     primaryAction="show-calendar"
     actions={[
       {

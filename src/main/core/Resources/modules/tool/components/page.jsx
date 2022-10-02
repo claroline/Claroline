@@ -38,7 +38,7 @@ const ToolPage = props => {
       title={trans(props.name, {}, 'tools')}
       showBreadcrumb={showToolBreadcrumb(props.currentContext.type, props.currentContext.data)}
       path={[].concat(getToolBreadcrumb(props.name, props.currentContext.type, props.currentContext.data), props.path)}
-      poster={get(props.toolData, 'poster.url')}
+      poster={get(props.toolData, 'poster')}
       icon={get(props.toolData, 'display.showIcon') ?
         <ToolIcon type={get(props.toolData, 'icon')} />
         :
@@ -76,9 +76,7 @@ ToolPage.propTypes = {
       showIcon: T.bool,
       fullscreen: T.bool
     }),
-    poster: T.shape({
-      url: T.string.isRequired
-    }),
+    poster: T.string,
     permissions: T.object.isRequired
   }),
   currentContext: T.shape({

@@ -182,7 +182,6 @@ class WorkspaceManager implements LoggerAwareInterface
             $workspace->setOptions($workspaceOptions);
             $this->om->persist($workspaceOptions);
             $this->om->persist($workspace);
-            //$this->om->flush();
         }
 
         return $workspaceOptions;

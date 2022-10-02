@@ -18,7 +18,7 @@ const Path = (props) =>
       orientation="row"
       size="sm"
       id={props.path.id}
-      poster={props.path.thumbnail ? asset(props.path.thumbnail.url) : null}
+      poster={props.path.thumbnail ? asset(props.path.thumbnail) : null}
       icon={
         <ResourceIcon className="icon" mimeType={props.path.meta.mimeType} />
       }

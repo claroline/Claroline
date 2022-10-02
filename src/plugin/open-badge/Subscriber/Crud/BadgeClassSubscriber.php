@@ -79,7 +79,7 @@ class BadgeClassSubscriber implements EventSubscriberInterface
             BadgeClass::class,
             $badge->getUuid(),
             $badge->getImage(),
-            !empty($oldData['image']) ? $oldData['image']['url'] : null
+            !empty($oldData['image']) ? $oldData['image'] : null
         );
     }
 

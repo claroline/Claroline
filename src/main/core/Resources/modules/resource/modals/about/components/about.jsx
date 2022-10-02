@@ -17,7 +17,7 @@ const AboutModal = props =>
     icon="fa fa-fw fa-info"
     title={trans('about')}
     subtitle={props.resourceNode.name}
-    poster={props.resourceNode.poster ? props.resourceNode.poster.url : undefined}
+    poster={props.resourceNode.poster}
   >
     <DetailsData
       meta={true}

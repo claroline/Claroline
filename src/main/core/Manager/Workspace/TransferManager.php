@@ -163,13 +163,13 @@ class TransferManager implements LoggerAwareInterface
         $poster = $bag->get($data['id'].'-poster');
         if ($poster && !$this->fileManager->exists($poster)) {
             $file = $this->fileManager->createFile(new File($poster));
-            $data['poster'] = ['url' => $file->getUrl()];
+            $data['poster'] = $file->getUrl();
         }
 
         $thumbnail = $bag->get($data['id'].'-thumbnail');
         if ($thumbnail && !$this->fileManager->exists($thumbnail)) {
             $file = $this->fileManager->createFile(new File($thumbnail));
-            $data['thumbnail'] = ['url' => $file->getUrl()];
+            $data['thumbnail'] = $file->getUrl();
         }
 
         /** @var Workspace $workspace */

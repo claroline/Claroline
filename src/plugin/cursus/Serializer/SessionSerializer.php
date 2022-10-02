@@ -98,8 +98,8 @@ class SessionSerializer
             'name' => $session->getName(),
             'description' => $session->getDescription(),
             'plainDescription' => $session->getPlainDescription(),
-            'poster' => $this->serializePoster($session),
-            'thumbnail' => $this->serializeThumbnail($session),
+            'poster' => $session->getPoster(),
+            'thumbnail' => $session->getThumbnail(),
             'permissions' => [
                 'open' => $this->authorization->isGranted('OPEN', $session),
                 'edit' => $this->authorization->isGranted('EDIT', $session),
@@ -181,6 +181,8 @@ class SessionSerializer
         $this->sipe('name', 'setName', $data, $session);
         $this->sipe('description', 'setDescription', $data, $session);
         $this->sipe('plainDescription', 'setPlainDescription', $data, $session);
+        $this->sipe('poster', 'setPoster', $data, $session);
+        $this->sipe('thumbnail', 'setThumbnail', $data, $session);
 
         $this->sipe('display.order', 'setOrder', $data, $session);
 
@@ -226,14 +228,6 @@ class SessionSerializer
             }
         }
 
-        if (isset($data['poster'])) {
-            $session->setPoster($data['poster']['url'] ?? null);
-        }
-
-        if (isset($data['thumbnail'])) {
-            $session->setThumbnail($data['thumbnail']['url'] ?? null);
-        }
-
         $course = $session->getCourse();
         // Sets course at creation
         if (empty($course) && isset($data['course']['id'])) {
@@ -263,37 +257,5 @@ class SessionSerializer
         }
 
         return $session;
-    }
-
-    private function serializePoster(Session $session)
-    {
-        if (!empty($session->getPoster())) {
-            /** @var PublicFile $file */
-            $file = $this->om
-                ->getRepository(PublicFile::class)
-                ->findOneBy(['url' => $session->getPoster()]);
-
-            if ($file) {
-                return $this->fileSerializer->serialize($file);
-            }
-        }
-
-        return null;
-    }
-
-    private function serializeThumbnail(Session $session)
-    {
-        if (!empty($session->getThumbnail())) {
-            /** @var PublicFile $file */
-            $file = $this->om
-                ->getRepository(PublicFile::class)
-                ->findOneBy(['url' => $session->getThumbnail()]);
-
-            if ($file) {
-                return $this->fileSerializer->serialize($file);
-            }
-        }
-
-        return null;
     }
 }

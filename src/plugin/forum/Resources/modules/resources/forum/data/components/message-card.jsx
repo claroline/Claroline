@@ -10,7 +10,7 @@ const MessageCard = (props) =>
     {...props}
     id={props.data.id}
     icon={<UserAvatar picture={props.data.meta.creator ? props.data.meta.creator.picture : undefined} alt={true}/>}
-    poster={props.data.subject.poster ? asset(props.data.subject.poster.url) : null}
+    poster={props.data.subject.poster ? asset(props.data.subject.poster) : null}
     title={props.data.subject.title}
     contentText={getPlainText(props.data.content)}
   />

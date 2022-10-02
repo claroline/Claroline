@@ -74,7 +74,7 @@ SecondaryResources.propTypes = {
 const Step = props =>
   <section className="current-step">
     {props.poster &&
-      <img className="step-poster img-responsive" alt={props.title} src={asset(props.poster.url)} />
+      <img className="step-poster img-responsive" alt={props.title} src={asset(props.poster)} />
     }
 
     <h3 className="h2 h-title step-title">

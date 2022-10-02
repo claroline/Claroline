@@ -82,7 +82,7 @@ class ConnectionModal extends Component {
         bsSize="lg"
       >
         {!isEmpty(slide.poster) &&
-          <img className="img-responsive" src={slide.poster.absolute ? slide.poster.url : asset(slide.poster.url)} />
+          <img className="img-responsive" src={slide.poster.absolute ? slide.poster : asset(slide.poster)} />
         }
 
         {slide.title &&

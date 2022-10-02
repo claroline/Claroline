@@ -5,11 +5,9 @@ namespace Claroline\CoreBundle\API\Serializer\Workspace;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer;
 use Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer;
 use Claroline\CoreBundle\API\Serializer\User\OrganizationSerializer;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
-use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Role;
@@ -47,9 +45,6 @@ class WorkspaceSerializer
     /** @var UserSerializer */
     private $userSerializer;
 
-    /** @var PublicFileSerializer */
-    private $publicFileSerializer;
-
     /** @var ResourceNodeSerializer */
     private $resNodeSerializer;
 
@@ -61,7 +56,6 @@ class WorkspaceSerializer
         WorkspaceManager $workspaceManager,
         UserSerializer $userSerializer,
         OrganizationSerializer $organizationSerializer,
-        PublicFileSerializer $publicFileSerializer,
         ResourceNodeSerializer $resNodeSerializer
     ) {
         $this->tokenStorage = $tokenStorage;
@@ -71,7 +65,6 @@ class WorkspaceSerializer
         $this->workspaceManager = $workspaceManager;
         $this->userSerializer = $userSerializer;
         $this->organizationSerializer = $organizationSerializer;
-        $this->publicFileSerializer = $publicFileSerializer;
         $this->resNodeSerializer = $resNodeSerializer;
     }
 
@@ -100,21 +93,14 @@ class WorkspaceSerializer
      */
     public function serialize(Workspace $workspace, array $options = []): array
     {
-        $thumbnail = null;
-        if ($workspace->getThumbnail()) {
-            /** @var PublicFile $thumbnail */
-            $thumbnail = $this->om->getRepository(PublicFile::class)->findOneBy([
-                'url' => $workspace->getThumbnail(),
-            ]);
-        }
 
         $serialized = [
-            'id' => $this->getUuid($workspace, $options),
+            'id' => $workspace->getUuid(),
             'autoId' => $workspace->getId(),
             'name' => $workspace->getName(),
             'code' => $workspace->getCode(),
             'slug' => $workspace->getSlug(),
-            'thumbnail' => $thumbnail ? $this->publicFileSerializer->serialize($thumbnail) : null,
+            'thumbnail' => $workspace->getThumbnail(),
             'meta' => $this->getMeta($workspace, $options),
             'contactEmail' => $workspace->getContactEmail(),
         ];
@@ -133,17 +119,9 @@ class WorkspaceSerializer
         }
 
         if (!in_array(SerializerInterface::SERIALIZE_MINIMAL, $options)) {
-            $poster = null;
-            if ($workspace->getPoster()) {
-                /** @var PublicFile $poster */
-                $poster = $this->om->getRepository(PublicFile::class)->findOneBy([
-                    'url' => $workspace->getPoster(),
-                ]);
-            }
-
             $serialized = array_merge($serialized, [
                 'tags' => $this->serializeTags($workspace),
-                'poster' => $poster ? $this->publicFileSerializer->serialize($poster) : null,
+                'poster' => $workspace->getPoster(),
                 'opening' => $this->getOpening($workspace),
                 'display' => $this->getDisplay($workspace),
                 'breadcrumb' => $this->getBreadcrumb($workspace),
@@ -153,6 +131,7 @@ class WorkspaceSerializer
             ]);
 
             if (!in_array(SerializerInterface::SERIALIZE_TRANSFER, $options)) {
+                // this is a huge performances bottleneck as it will check if the current user as at least one right on one ws tool
                 $serialized['registered'] = $this->isRegistered($workspace);
             }
 
@@ -281,7 +260,8 @@ class WorkspaceSerializer
         ];
 
         if (!in_array(SerializerInterface::SERIALIZE_TRANSFER, $options)) {
-            $serialized['waitingForRegistration'] = $workspace->getSelfRegistration() ? $this->waitingForRegistration($workspace) : false;
+            // this is a huge performances bottleneck
+            $serialized['waitingForRegistration'] = $workspace->getSelfRegistration() && $workspace->getRegistrationValidation() ? $this->waitingForRegistration($workspace) : false;
         }
 
         return $serialized;
@@ -327,24 +307,8 @@ class WorkspaceSerializer
         $this->sipe('code', 'setCode', $data, $workspace);
         $this->sipe('name', 'setName', $data, $workspace);
         $this->sipe('contactEmail', 'setContactEmail', $data, $workspace);
-
-        if (array_key_exists('thumbnail', $data)) {
-            $thumbnailUrl = null;
-            if (!empty($data['thumbnail']) && !empty($data['thumbnail']['url'])) {
-                $thumbnailUrl = $data['thumbnail']['url'];
-            }
-
-            $workspace->setThumbnail($thumbnailUrl);
-        }
-
-        if (array_key_exists('poster', $data)) {
-            $posterUrl = null;
-            if (!empty($data['poster']) && !empty($data['poster']['url'])) {
-                $posterUrl = $data['poster']['url'];
-            }
-
-            $workspace->setPoster($posterUrl);
-        }
+        $this->sipe('poster', 'setPoster', $data, $workspace);
+        $this->sipe('thumbnail', 'setThumbnail', $data, $workspace);
 
         if (isset($data['meta'])) {
             $this->sipe('meta.personal', 'setPersonal', $data, $workspace);

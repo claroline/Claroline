@@ -17,7 +17,7 @@ const BadgeCard = props =>
       'data-card-muted': !get(props.data, 'meta.enabled')
     })}
     icon={
-      <img src={get(props.data, 'image.url') ? asset(get(props.data, 'image.url')) : null} />
+      <img src={get(props.data, 'image') ? asset(get(props.data, 'image')) : null} />
     }
     title={props.data.name}
     color={props.data.color}

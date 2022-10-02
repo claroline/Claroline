@@ -231,8 +231,8 @@ AutoComplete.prototype = {
 
   render: function (item, query) {
     let avatar = '<span class="user-avatar fa fa-user-circle-o"></span>'
-    if (item.picture && item.picture.url) {
-      avatar = `<img class="user-avatar" src="${asset(item.picture.url)}" alt="${item.name}" />`
+    if (item.picture) {
+      avatar = `<img class="user-avatar" src="${asset(item.picture)}" alt="${item.name}" />`
     }
 
     return (`

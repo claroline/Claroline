@@ -12,10 +12,7 @@ const Tab = {
     slug: T.string.isRequired,
     icon: T.string,
     class: T.string.isRequired,
-    poster: T.oneOfType([
-      T.string,
-      T.object
-    ]),
+    poster: T.string,
     position: T.number,
     display: T.shape({
       color: T.string,

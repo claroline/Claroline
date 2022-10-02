@@ -5,11 +5,9 @@ namespace Claroline\CoreBundle\API\Serializer\Planning;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer;
 use Claroline\CoreBundle\API\Serializer\Location\LocationSerializer;
 use Claroline\CoreBundle\API\Serializer\Location\RoomSerializer;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
-use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Location\Location;
 use Claroline\CoreBundle\Entity\Location\Room;
 use Claroline\CoreBundle\Entity\Planning\PlannedObject;
@@ -22,8 +20,6 @@ class PlannedObjectSerializer
 
     /** @var ObjectManager */
     private $om;
-    /** @var PublicFileSerializer */
-    private $fileSerializer;
     /** @var UserSerializer */
     private $userSerializer;
     /** @var LocationSerializer */
@@ -33,13 +29,11 @@ class PlannedObjectSerializer
 
     public function __construct(
         ObjectManager $om,
-        PublicFileSerializer $fileSerializer,
         UserSerializer $userSerializer,
         LocationSerializer $locationSerializer,
         RoomSerializer $roomSerializer
     ) {
         $this->om = $om;
-        $this->fileSerializer = $fileSerializer;
         $this->userSerializer = $userSerializer;
         $this->locationSerializer = $locationSerializer;
         $this->roomSerializer = $roomSerializer;
@@ -52,7 +46,7 @@ class PlannedObjectSerializer
             'name' => $plannedObject->getName(),
             'start' => $plannedObject->getStartDate() ? DateNormalizer::normalize($plannedObject->getStartDate()) : null,
             'end' => $plannedObject->getEndDate() ? DateNormalizer::normalize($plannedObject->getEndDate()) : null,
-            'thumbnail' => $this->serializeThumbnail($plannedObject),
+            'thumbnail' => $plannedObject->getThumbnail(),
             'description' => $plannedObject->getDescription(),
             'meta' => [
                 'type' => $plannedObject->getType(),
@@ -70,43 +64,11 @@ class PlannedObjectSerializer
 
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
             $serialized = array_merge($serialized, [
-                'poster' => $this->serializePoster($plannedObject),
+                'poster' => $plannedObject->getPoster(),
             ]);
         }
 
         return $serialized;
-    }
-
-    private function serializePoster(PlannedObject $plannedObject)
-    {
-        if (!empty($plannedObject->getPoster())) {
-            /** @var PublicFile $file */
-            $file = $this->om
-                ->getRepository(PublicFile::class)
-                ->findOneBy(['url' => $plannedObject->getPoster()]);
-
-            if ($file) {
-                return $this->fileSerializer->serialize($file);
-            }
-        }
-
-        return null;
-    }
-
-    private function serializeThumbnail(PlannedObject $plannedObject): ?array
-    {
-        if (!empty($plannedObject->getThumbnail())) {
-            /** @var PublicFile $file */
-            $file = $this->om
-                ->getRepository(PublicFile::class)
-                ->findOneBy(['url' => $plannedObject->getThumbnail()]);
-
-            if ($file) {
-                return $this->fileSerializer->serialize($file);
-            }
-        }
-
-        return null;
     }
 
     public function deserialize(array $data, PlannedObject $planned): PlannedObject
@@ -116,6 +78,8 @@ class PlannedObjectSerializer
         $this->sipe('display.color', 'setColor', $data, $planned);
         $this->sipe('description', 'setDescription', $data, $planned);
         $this->sipe('locationUrl', 'setLocationUrl', $data, $planned);
+        $this->sipe('poster', 'setPoster', $data, $planned);
+        $this->sipe('thumbnail', 'setThumbnail', $data, $planned);
 
         if (isset($data['meta'])) {
             if (isset($data['meta']['creator'])) {
@@ -143,15 +107,6 @@ class PlannedObjectSerializer
             }
 
             $planned->setRoom($room);
-        }
-
-        if (array_key_exists('thumbnail', $data)) {
-            $thumbnail = null;
-            if (isset($data['thumbnail'], $data['thumbnail']['url'])) {
-                $thumbnail = $data['thumbnail']['url'];
-            }
-
-            $planned->setThumbnail($thumbnail);
         }
 
         if (isset($data['start'])) {

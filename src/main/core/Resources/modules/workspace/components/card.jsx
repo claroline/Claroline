@@ -18,7 +18,7 @@ const WorkspaceCard = props =>
       'data-card-muted': get(props.data, 'restrictions.hidden', false)
     })}
     id={props.data.id}
-    poster={props.data.thumbnail ? asset(props.data.thumbnail.url) : null}
+    poster={props.data.thumbnail ? asset(props.data.thumbnail) : null}
     icon="fa fa-book"
     title={props.data.name}
     subtitle={props.data.code}

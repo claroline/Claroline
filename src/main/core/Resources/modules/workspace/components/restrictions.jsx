@@ -47,7 +47,7 @@ class WorkspaceRestrictions extends Component {
         showBreadcrumb={showToolBreadcrumb(toolConstants.TOOL_WORKSPACE, this.props.workspace)}
         path={getToolBreadcrumb(null, toolConstants.TOOL_WORKSPACE, this.props.workspace)}
         title={this.props.workspace.name}
-        poster={this.props.workspace.poster ? this.props.workspace.poster.url : undefined}
+        poster={this.props.workspace.poster ? this.props.workspace.poster : undefined}
       >
         <div className="access-restrictions">
           <h2>{trans('restricted_access')}</h2>

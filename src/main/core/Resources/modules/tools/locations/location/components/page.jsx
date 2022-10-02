@@ -34,7 +34,7 @@ const LocationPage = (props) => {
           target: `${props.path}/locations/${get(props.location, 'id')}`
         }
       ]}
-      poster={get(props.location, 'poster.url')}
+      poster={get(props.location, 'poster')}
       title={get(props.location, 'name')}
       subtitle={getAddressString(get(props.location, 'address'))}
       primaryAction="edit"

@@ -79,7 +79,7 @@ class BadgeLayoutComponent extends Component {
                 backgroundColor: this.props.badge.color
               } : undefined}
             >
-              <img src={get(this.props.badge, 'image.url') ? asset(get(this.props.badge, 'image.url')) : null} />
+              <img src={get(this.props.badge, 'image') ? asset(get(this.props.badge, 'image')) : null} />
             </div>
           </div>
 

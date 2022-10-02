@@ -18,7 +18,7 @@ const AboutModal = props =>
     icon="fa fa-fw fa-info"
     title={trans('about')}
     subtitle={get(props.workspace, 'name')}
-    poster={get(props.workspace, 'poster.url')}
+    poster={get(props.workspace, 'poster')}
     onEntering={() => props.get(props.workspaceId)}
     onExiting={() => props.reset()}
   >

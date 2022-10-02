@@ -20,7 +20,7 @@ const RegistrationModal = props =>
     icon="fa fa-fw fa-user-plus"
     title={trans('registration')}
     subtitle={getInfo(props.course, props.session, 'name')}
-    poster={getInfo(props.course, props.session, 'poster.url')}
+    poster={getInfo(props.course, props.session, 'poster')}
   >
     {!props.session &&
       <div className="modal-body">

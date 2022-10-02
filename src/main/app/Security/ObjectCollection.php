@@ -20,16 +20,6 @@ class ObjectCollection extends ArrayCollection
 
     public function __construct(array $objects, array $options = [])
     {
-        /*foreach ($objects as $object) {
-            if (!$object instanceof $objects[0]) {
-                $classes = '';
-                foreach ($objects as $obj) {
-                    $classes .= get_class($obj).', ';
-                }
-                throw new \Exception('Classes of objects are varying. '.$classes);
-            }
-        }*/
-
         parent::__construct($objects);
 
         $this->options = $options;

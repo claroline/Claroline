@@ -40,10 +40,10 @@ const SlidesForm = (props) =>
       <ul className="slides">
         {props.slides.map((slide, slideIndex) =>
           <li key={slide.id} className="slide-preview">
-            {slide.poster && slide.poster.url ?
+            {slide.poster ?
               <img
                 className="image-thumbnail"
-                src={asset(slide.poster.url)}
+                src={asset(slide.poster)}
                 alt={slide.title}
               /> :
               <ContentHtml className="text-thumbnail">

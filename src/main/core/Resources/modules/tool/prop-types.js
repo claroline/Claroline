@@ -4,8 +4,8 @@ const Tool = {
   propTypes: {
     icon: T.string.isRequired,
     name: T.string.isRequired,
-    poster: T.object,
-    thumbnail: T.object,
+    poster: T.string,
+    thumbnail: T.string,
     display: T.shape({
       order: T.number,
       showIcon: T.bool,

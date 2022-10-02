@@ -24,7 +24,6 @@ services:
         tags: [ claroline.serializer ]
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
             - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
             - '@Claroline\CoreBundle\API\Serializer\Location\LocationSerializer'
             - '@Claroline\CoreBundle\API\Serializer\Location\RoomSerializer'
@@ -45,7 +44,6 @@ services:
             - '@claroline.manager.workspace_manager'
             - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
             - '@Claroline\CoreBundle\API\Serializer\User\OrganizationSerializer'
-            - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
             - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
 
     Claroline\CoreBundle\API\Serializer\Workspace\ShortcutsSerializer:
@@ -73,7 +71,6 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\API\Finder\Widget\WidgetInstanceFinder'
             - '@Claroline\CoreBundle\API\Serializer\Widget\WidgetInstanceSerializer'
-            - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
 
     Claroline\CoreBundle\API\Serializer\Widget\Type\SimpleWidgetSerializer:
         tags: [claroline.serializer]
@@ -95,8 +92,6 @@ services:
             - '@security.authorization_checker'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-            - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
-            - '@Claroline\AppBundle\Event\StrictDispatcher'
             - '@Claroline\CoreBundle\API\Serializer\User\OrganizationSerializer'
             - '@Claroline\CoreBundle\Manager\FacetManager'
             - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceUserQueueManager'
@@ -126,7 +121,6 @@ services:
         arguments:
             - '@security.authorization_checker'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
 
     Claroline\CoreBundle\API\Serializer\Location\RoomSerializer:
         tags: [claroline.serializer]
@@ -141,7 +135,6 @@ services:
         arguments:
             - '@security.authorization_checker'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
             - '@Claroline\CoreBundle\API\Serializer\Location\LocationSerializer'
 
     Claroline\CoreBundle\API\Serializer\Location\MaterialBookingSerializer:
@@ -179,7 +172,6 @@ services:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\Manager\Tool\ToolManager'
-            - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
 
     Claroline\CoreBundle\API\Serializer\Template\TemplateTypeSerializer:
         tags: [claroline.serializer]
@@ -200,7 +192,6 @@ services:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@event_dispatcher'
-            - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
             - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
             - '@Claroline\CoreBundle\Manager\Resource\RightsManager'
             - '@Claroline\AppBundle\API\SerializerProvider'

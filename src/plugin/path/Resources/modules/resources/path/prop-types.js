@@ -6,9 +6,7 @@ const Step = {
     slug: T.string.isRequired,
     title: T.string,
     description: T.string,
-    poster: T.shape({
-      url: T.string
-    }),
+    poster: T.string,
     display: T.shape({
       numbering: T.string
     }).isRequired,

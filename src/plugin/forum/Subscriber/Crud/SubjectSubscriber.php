@@ -148,7 +148,7 @@ class SubjectSubscriber implements EventSubscriberInterface
             Subject::class,
             $subject->getUuid(),
             !empty($subject->getPoster()) ? $subject->getPoster()->getUrl() : null,
-            !empty($oldData['poster']) ? $oldData['poster']['url'] : null
+            !empty($oldData['poster']) ? $oldData['poster'] : null
         );
 
         if ($oldData['meta']['flagged'] !== $subject->isFlagged()) {

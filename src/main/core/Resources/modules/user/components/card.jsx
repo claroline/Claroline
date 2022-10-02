@@ -18,7 +18,7 @@ const UserCard = props =>
       'data-card-muted': props.data.restrictions.disabled
     })}
     id={props.data.id}
-    poster={props.data.thumbnail ? asset(props.data.thumbnail.url) : null}
+    poster={props.data.thumbnail ? asset(props.data.thumbnail) : null}
     icon={<UserAvatar picture={props.data.picture} alt={true} />}
     title={props.data.username}
     subtitle={displayUsername(props.data)}

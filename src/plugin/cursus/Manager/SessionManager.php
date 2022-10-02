@@ -143,8 +143,8 @@ class SessionManager
         $workspace = $this->crud->create(Workspace::class, [
             'name' => $session->getName(),
             'code' => $session->getCode(),
-            'thumbnail' => ['url' => $session->getThumbnail()],
-            'poster' => ['url' => $session->getPoster()],
+            'thumbnail' => $session->getThumbnail(),
+            'poster' => $session->getPoster(),
             'model' => $model,
             'meta' => [
                 'description' => $session->getDescription(),

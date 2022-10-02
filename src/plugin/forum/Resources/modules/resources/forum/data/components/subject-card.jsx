@@ -12,7 +12,7 @@ const SubjectCard = (props) =>
     id={props.data.id}
     icon={<UserAvatar picture={props.data.meta.creator ? props.data.meta.creator.picture : undefined} alt={true}/>}
     title={props.data.title}
-    poster={props.data.poster ? asset(props.data.poster.url) : null}
+    poster={props.data.poster ? asset(props.data.poster) : null}
     subtitle={transChoice('replies', props.data.meta.messages, {count: props.data.meta.messages}, 'forum')}
     flags={[
       props.data.meta.hot && ['fa fa-fw fa-fire', trans('hot_subject', {}, 'forum')],

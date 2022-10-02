@@ -5,12 +5,9 @@ namespace Claroline\CoreBundle\API\Serializer\User;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
-use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;
-use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Role;
@@ -38,12 +35,8 @@ class UserSerializer
     private $om;
     /** @var PlatformConfigurationHandler */
     private $config;
-    /** @var PublicFileSerializer */
-    private $fileSerializer;
     /** @var OrganizationSerializer */
     private $organizationSerializer;
-    /** @var StrictDispatcher */
-    private $eventDispatcher;
     /** @var FacetManager */
     private $facetManager;
     /** @var WorkspaceUserQueueManager */
@@ -62,8 +55,6 @@ class UserSerializer
         AuthorizationCheckerInterface $authorization,
         ObjectManager $om,
         PlatformConfigurationHandler $config,
-        PublicFileSerializer $fileSerializer,
-        StrictDispatcher $eventDispatcher,
         OrganizationSerializer $organizationSerializer,
         FacetManager $facetManager,
         WorkspaceUserQueueManager $workspaceUserQueueManager
@@ -72,8 +63,6 @@ class UserSerializer
         $this->authorization = $authorization;
         $this->om = $om;
         $this->config = $config;
-        $this->fileSerializer = $fileSerializer;
-        $this->eventDispatcher = $eventDispatcher;
         $this->organizationSerializer = $organizationSerializer;
         $this->facetManager = $facetManager;
         $this->workspaceUserQueueManager = $workspaceUserQueueManager;
@@ -124,8 +113,8 @@ class UserSerializer
             'firstName' => $user->getFirstName(),
             'lastName' => $user->getLastName(),
             'username' => $user->getUsername(),
-            'picture' => $this->serializePicture($user),
-            'thumbnail' => $this->serializeThumbnail($user),
+            'picture' => $user->getPicture(),
+            'thumbnail' => $user->getThumbnail(),
             'email' => $showEmail ? $user->getEmail() : null,
             'administrativeCode' => $user->getAdministrativeCode(),
             'phone' => $showEmail ? $user->getPhone() : null,
@@ -160,7 +149,7 @@ class UserSerializer
             }, $user->getGroupRoles());
 
             $serializedUser = array_merge($serializedUser, [
-                'poster' => $this->serializePoster($user),
+                'poster' => $user->getPoster(),
                 'roles' => array_merge($userRoles, $groupRoles),
                 'groups' => array_values(array_map(function (Group $group) { // todo use group serializer with minimal option
                     return [
@@ -198,63 +187,11 @@ class UserSerializer
         return $serializedUser;
     }
 
-    /**
-     * Serialize the user picture.
-     *
-     * @return array|null
-     */
-    private function serializePicture(User $user)
-    {
-        if (!empty($user->getPicture())) {
-            /** @var PublicFile $file */
-            $file = $this->om
-                ->getRepository('Claroline\CoreBundle\Entity\File\PublicFile')
-                ->findOneBy(['url' => $user->getPicture()]);
-
-            if ($file) {
-                return $this->fileSerializer->serialize($file);
-            }
-        }
-
-        return null;
-    }
-
-    private function serializePoster(User $user): ?array
-    {
-        if (!empty($user->getPoster())) {
-            /** @var PublicFile $file */
-            $file = $this->om
-                ->getRepository(PublicFile::class)
-                ->findOneBy(['url' => $user->getPoster()]);
-
-            if ($file) {
-                return $this->fileSerializer->serialize($file);
-            }
-        }
-
-        return null;
-    }
-
-    private function serializeThumbnail(User $user): ?array
-    {
-        if (!empty($user->getThumbnail())) {
-            /** @var PublicFile $file */
-            $file = $this->om
-                ->getRepository(PublicFile::class)
-                ->findOneBy(['url' => $user->getThumbnail()]);
-
-            if ($file) {
-                return $this->fileSerializer->serialize($file);
-            }
-        }
-
-        return null;
-    }
-
     private function serializeMeta(User $user): array
     {
         $locale = $user->getLocale();
         if (empty($locale)) {
+            // todo : remove me (default should be set by crud at creation)
             $locale = $this->config->getParameter('locale_language');
         }
 
@@ -279,6 +216,7 @@ class UserSerializer
         if (empty($meta) || empty($meta['locale'])) {
             if (empty($user->getLocale())) {
                 // set default
+                // todo : remove me (should be set by crud event)
                 $user->setLocale($this->config->getParameter('locale_language'));
             }
         } else {
@@ -342,7 +280,6 @@ class UserSerializer
         }
 
         $this->sipe('id', 'setUuid', $data, $user);
-        $this->sipe('picture.url', 'setPicture', $data, $user);
         $this->sipe('username', 'setUserName', $data, $user);
         $this->sipe('firstName', 'setFirstName', $data, $user);
         $this->sipe('lastName', 'setLastName', $data, $user);
@@ -351,20 +288,15 @@ class UserSerializer
         $this->sipe('locale', 'setLocale', $data, $user);
         $this->sipe('phone', 'setPhone', $data, $user);
         $this->sipe('administrativeCode', 'setAdministrativeCode', $data, $user);
+        $this->sipe('picture', 'setPicture', $data, $user);
+        $this->sipe('thumbnail', 'setThumbnail', $data, $user);
+        $this->sipe('poster', 'setPoster', $data, $user);
 
         //don't trim the password just in case
         $this->sipe('plainPassword', 'setPlainPassword', $data, $user, false);
 
         if (isset($data['meta'])) {
             $this->deserializeMeta($data['meta'], $user);
-        }
-
-        if (isset($data['poster']) && isset($data['poster']['url'])) {
-            $user->setPoster($data['poster']['url']);
-        }
-
-        if (isset($data['thumbnail']) && isset($data['thumbnail']['url'])) {
-            $user->setThumbnail($data['thumbnail']['url']);
         }
 
         if (isset($data['restrictions'])) {
