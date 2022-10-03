@@ -21,7 +21,7 @@ class ImageListener
     public function onLoad(LoadFileEvent $event)
     {
         // setting empty data let the dispatcher know there is
-        // a player for pdf but it doesn't require any additional data
+        // a player for image but it doesn't require any additional data
         // without it, the dispatcher will try to find a player for "application/*"
         $event->setData([]);
         $event->stopPropagation();

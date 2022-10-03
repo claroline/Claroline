@@ -1,8 +1,9 @@
 services:
     Claroline\WebResourceBundle\Manager\WebResourceManager:
         arguments:
+            - '%claroline.param.files_directory%'
+            - '%claroline.param.uploads_directory%'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@service_container'
 
     Claroline\WebResourceBundle\Controller\API\WebResourceController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController

@@ -1,5 +1,5 @@
-claro_video_api_new:
-    resource: "@ClarolineVideoPlayerBundle/Controller/APINew/"
+claro_video_api:
+    resource: "@ClarolineVideoPlayerBundle/Controller/"
     prefix: apiv2
     type: api
     options:

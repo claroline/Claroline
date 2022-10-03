@@ -1,6 +1,7 @@
-import React, {Fragment} from 'react'
+import React, {Fragment, createElement} from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
+import {Helmet} from 'react-helmet'
 
 import {url} from '#/main/app/api'
 import {theme} from '#/main/app/config'
@@ -14,7 +15,6 @@ import {constants} from '#/main/core/resources/file/constants'
 import {ContentComments} from '#/main/app/content/components/comments'
 import {PlayerOverview} from '#/main/core/resources/file/player/components/overview'
 
-// TODO : display a standard player with file info if no custom one
 const PlayerMain = (props) => {
   // FIXME : ugly
   if (constants.OPENING_DOWNLOAD === props.file.opening) {
@@ -30,13 +30,17 @@ const PlayerMain = (props) => {
         if (get(module, 'fileType.components.player')) {
           return (
             <Fragment>
-              {React.createElement(get(module, 'fileType.components.player'), {
+              {createElement(get(module, 'fileType.components.player'), {
                 file: props.file,
                 path: props.path
               })}
 
               {get(module, 'fileType.styles') &&
-                <link rel="stylesheet" type="text/css" href={theme(get(module, 'fileType.styles'))} />
+                <Helmet>
+                  {get(module, 'fileType.styles').map(style =>
+                    <link key={style} rel="stylesheet" type="text/css" href={theme(style)} />
+                  )}
+                </Helmet>
               }
 
               {props.file && props.file.commentsActivated &&

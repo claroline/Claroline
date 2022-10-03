@@ -1,9 +1,5 @@
 services:
-    _defaults:
-        autowire: false #change to true
-        autoconfigure: false
-        public: true #because controller
-
-    Claroline\VideoPlayerBundle\Manager\VideoPlayerManager:
+    Claroline\VideoPlayerBundle\Manager\EvaluationManager:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\EvaluationBundle\Manager\ResourceEvaluationManager'

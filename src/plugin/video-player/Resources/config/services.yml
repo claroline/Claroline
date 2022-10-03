@@ -1,6 +1,4 @@
 imports:
-    - { resource: services/serializer.yml }
     - { resource: services/controller.yml }
     - { resource: services/manager.yml }
     - { resource: services/listener.yml }
-    - { resource: services/voter.yml }
