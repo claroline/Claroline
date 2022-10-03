@@ -60,7 +60,7 @@ class GraphicPlayer extends Component {
               className="btn btn-default"
               onClick={this.onUndo}
             >
-              <span className="fa fa-fw fa-undo"/>&nbsp;{trans('undo', {}, 'quiz')}
+              <span className="fa fa-fw fa-undo"/>&nbsp;{trans('cancel', {}, 'actions')}
             </button>
           }
         </div>
