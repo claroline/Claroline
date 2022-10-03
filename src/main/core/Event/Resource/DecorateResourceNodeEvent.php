@@ -11,8 +11,8 @@ use Symfony\Contracts\EventDispatcher\Event;
  *
  * It's the right place to add custom data to the exported node.
  *
- * For example, it's used by the SocialMedia plugin to add the number of likes
- * obtained by the resource.
+ * For example, it's used by the Notification plugin to add a flag
+ * to know if the current user follows the resource.
  *
  * We don't give direct access to the serialized data in order to avoid
  * possible data corruption by listeners.

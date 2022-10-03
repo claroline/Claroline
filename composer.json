@@ -136,7 +136,6 @@
             "HeVinci\\CompetencyBundle\\": "src/plugin/competency",
             "HeVinci\\UrlBundle\\": "src/plugin/url",
             "Icap\\BlogBundle\\": "src/plugin/blog",
-            "Icap\\SocialmediaBundle\\": "src/plugin/social-media",
             "Icap\\WikiBundle\\": "src/plugin/wiki",
             "Icap\\FormulaPluginBundle\\": "src/plugin/formula",
             "Innova\\PathBundle\\": "src/plugin/path",

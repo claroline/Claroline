@@ -30,7 +30,6 @@ HeVinci\FavouriteBundle\HeVinciFavouriteBundle = true
 HeVinci\CompetencyBundle\HeVinciCompetencyBundle = true
 HeVinci\UrlBundle\HeVinciUrlBundle = true
 Icap\BlogBundle\IcapBlogBundle = true
-Icap\SocialmediaBundle\IcapSocialmediaBundle = true
 Icap\WikiBundle\IcapWikiBundle = true
 Icap\FormulaPluginBundle\IcapFormulaPluginBundle = true
 Innova\PathBundle\InnovaPathBundle = true
