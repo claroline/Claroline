@@ -2,50 +2,54 @@ import React from 'react'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {trans} from '#/main/app/intl/translation'
 import {keywords as keywordUtils} from '#/plugin/exo/utils/keywords'
-import cloneDeep from 'lodash/cloneDeep'
 
 import {WordsItem as WordsItemTypes} from '#/plugin/exo/items/words/prop-types'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {ItemEditor as ItemEditorTypes} from '#/plugin/exo/items/prop-types'
 import {KeywordItems} from '#/plugin/exo/components/keywords'
+import {makeId} from '#/main/core/scaffolding/id'
 
 const WordsEditor = (props) => {
+  let newSolutions = []
+  if (props.item.solutions) {
+    newSolutions = props.item.solutions.map(solution => Object.assign({}, solution, {
+      _id: solution._id ? solution._id : makeId(),
+      _deletable: 1 < props.item.solutions.length
+    }))
+  }
+
   const KeyWordItems =
     <KeywordItems
       showCaseSensitive={props.item._wordsCaseSensitive}
       showScore={props.item.hasExpectedAnswers && props.hasAnswerScores}
       hasExpectedAnswers={props.item.hasExpectedAnswers}
-      keywords={props.item.solutions}
+      keywords={newSolutions}
       contentType={props.item.contentType}
       validating={props.validating}
       addKeyword={() => {
-        const solutions = cloneDeep(props.item.solutions)
-        solutions.push(keywordUtils.createNew())
-        const deletable = solutions.length > 1
-        solutions.forEach(solution => solution._deletable = deletable)
-        props.update('solutions', solutions)
+        newSolutions.push(keywordUtils.createNew())
+        newSolutions.forEach(solution => solution._deletable = newSolutions.length > 1)
+
+        props.update('solutions', newSolutions)
       }}
       updateKeyword={(keyword, property, value) => {
-        const solutions = cloneDeep(props.item.solutions)
         value = property === 'score' ? parseFloat(value) : value
-        const solution = solutions.find(solution => solution._id === keyword)
+        const solution = newSolutions.find(solution => solution._id === keyword)
         // Retrieve the keyword to update
         if (solution) {
           solution[property] = value
         }
 
-        props.update('solutions', solutions)
+        props.update('solutions', newSolutions)
       }}
       removeKeyword={(keyword) => {
-        const solutions = cloneDeep(props.item.solutions)
-
-        const solution = solutions.find(solution => solution._id === keyword)
-        if (solution) {
-          solutions.splice(solutions.indexOf(solution), 1)
-          solutions.forEach(solution => solution._deletable = props.item.solutions.length > 1)
+        const solutionPos = newSolutions.findIndex(solution => solution._id === keyword)
+        if (-1 !== solutionPos) {
+          newSolutions.splice(solutionPos, 1)
+          newSolutions.forEach(solution => solution._deletable = newSolutions.length > 1)
         }
 
-        props.update('solutions', solutions)
+        props.update('solutions', newSolutions)
       }}
     />
 
