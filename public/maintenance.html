@@ -1,15 +1,3 @@
-<?php
-
-$maintenanceMode = file_exists(__DIR__.'/../files/config/.update');
-
-if (!$maintenanceMode) {
-    $protocol = isset($_SERVER['HTTPS']) ? 'https://' : 'http://';
-    $url = $protocol.$_SERVER['HTTP_HOST'].$_SERVER['SCRIPT_NAME'].'/../index.php';
-    header("Location: {$url}");
-}
-
-?>
-
 <!DOCTYPE html>
 <html lang="en">
     <head>

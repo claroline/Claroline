@@ -28,7 +28,5 @@ if (!MaintenanceHandler::isMaintenanceEnabled()) {
     $response->send();
     $kernel->terminate($request, $response);
 } else {
-    $protocol = isset($_SERVER['HTTPS']) ? 'https://' : 'http://';
-    $url = $protocol.$_SERVER['HTTP_HOST'].$_SERVER['SCRIPT_NAME'].'/../maintenance.php';
-    header("Location: {$url}");
+    require 'maintenance.html';
 }
