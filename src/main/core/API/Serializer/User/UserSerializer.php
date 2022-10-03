@@ -109,6 +109,7 @@ class UserSerializer
         if (in_array(SerializerInterface::SERIALIZE_MINIMAL, $options)) {
             return [
                 'id' => $user->getUuid(),
+                'name' => $user->getFullName(), // can be removed later (will throw too much validation errors in JSONSchema for now)
                 'firstName' => $user->getFirstName(),
                 'lastName' => $user->getLastName(),
                 'username' => $user->getUsername(),
