@@ -1,4 +1,0 @@
-imports:
-    - { resource: services/listener.yml }
-    - { resource: services/controller.yml }
-    - { resource: services/manager.yml }

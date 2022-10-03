@@ -167,7 +167,7 @@ class ResourceNodeSerializer
 
     /**
      * Dispatches an event to let plugins add some custom data to the serialized node.
-     * For example, SocialMedia adds the number of likes.
+     * For example, Notification adds a flag to know if the current user follows the resource.
      */
     private function decorate(ResourceNode $resourceNode, array $serializedNode, array $options = []): array
     {

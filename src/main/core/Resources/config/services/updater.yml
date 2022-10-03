@@ -40,3 +40,7 @@ services:
         arguments:
             - '@doctrine.dbal.default_connection'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
+
+    Claroline\CoreBundle\Installation\Updater\Updater130600:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'

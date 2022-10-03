@@ -161,7 +161,7 @@ class PluginManager
     /**
      * @param mixed $plugin Plugin Entity, ShortName (ClarolineCoreBundle) Fqcn (Claroline\CoreBundle\ClarolineCoreBundle)
      */
-    private function isLoaded(string $pluginName): bool
+    public function isLoaded(string $pluginName): bool
     {
         $bundle = $this->getBundle($pluginName);
 

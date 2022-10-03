@@ -129,7 +129,6 @@ class PlatformDefaults implements ParameterProviderInterface
                 'portfolio' => ['visible'],
                 'icap_blog' => ['visible'],
                 'icap_dropzone' => ['visible'],
-                'icap_socialmedia' => ['visible'],
                 'icap_wiki' => ['visible'],
                 'innova_path' => ['visible'],
                 'icap_lesson' => ['visible'],
