@@ -71,19 +71,58 @@ class ResourceNodeSerializer
      */
     public function serialize(ResourceNode $resourceNode, array $options = []): array
     {
+        if (in_array(SerializerInterface::SERIALIZE_MINIMAL, $options)) {
+            return [
+                'id' => $resourceNode->getUuid(),
+                'slug' => $resourceNode->getSlug(),
+                'name' => $resourceNode->getName(),
+                'thumbnail' => $resourceNode->getThumbnail(),
+                'meta' => [
+                    'published' => $resourceNode->isPublished(), // not required but nice to have
+                    // move outside meta
+                    'type' => $resourceNode->getType(), // try to remove. use mimeType instead
+                    'mimeType' => $resourceNode->getMimeType(),
+                ],
+            ];
+        }
+
         $serializedNode = [
             'id' => $resourceNode->getUuid(),
             'autoId' => $resourceNode->getId(),
             'slug' => $resourceNode->getSlug(),
             'name' => $resourceNode->getName(),
             'path' => $resourceNode->getAncestors(),
-            'meta' => $this->serializeMeta($resourceNode, $options),
+            'meta' => [
+                'type' => $resourceNode->getType(), // try to remove. use mimeType instead
+                'className' => $resourceNode->getClass(), // try to remove. use mimeType instead
+                'mimeType' => $resourceNode->getMimeType(),
+                'description' => $resourceNode->getDescription(),
+                'creator' => $resourceNode->getCreator() ?
+                    $this->userSerializer->serialize($resourceNode->getCreator(), [Options::SERIALIZE_MINIMAL]) :
+                    null,
+                'created' => DateNormalizer::normalize($resourceNode->getCreationDate()),
+                'updated' => DateNormalizer::normalize($resourceNode->getModificationDate()),
+                'published' => $resourceNode->isPublished(),
+                'active' => $resourceNode->isActive(),
+                'views' => $resourceNode->getViewsCount(),
+                'authors' => $resourceNode->getAuthor(),
+                'license' => $resourceNode->getLicense(),
+                'commentsActivated' => $resourceNode->isCommentsActivated(),
+            ],
             'thumbnail' => $resourceNode->getThumbnail(),
-            'evaluation' => [ // may not be required in minimal mode
+            'poster' => $resourceNode->getPoster(),
+            'evaluation' => [
                 'evaluated' => $resourceNode->isEvaluated(),
                 'required' => $resourceNode->isRequired(),
                 'estimatedDuration' => $resourceNode->getEstimatedDuration(),
             ],
+            'restrictions' => [
+                'hidden' => $resourceNode->isHidden(),
+                'dates' => DateRangeNormalizer::normalize($resourceNode->getAccessibleFrom(), $resourceNode->getAccessibleUntil()),
+                'code' => $resourceNode->getAccessCode(),
+                'allowedIps' => $resourceNode->getAllowedIps(),
+            ],
+            'tags' => $this->serializeTags($resourceNode),
         ];
 
         if (!in_array(SerializerInterface::SERIALIZE_TRANSFER, $options)) {
@@ -97,32 +136,30 @@ class ResourceNodeSerializer
                 'slug' => $resourceNode->getWorkspace()->getSlug(),
                 'name' => $resourceNode->getWorkspace()->getName(),
                 'code' => $resourceNode->getWorkspace()->getCode(),
+                'thumbnail' => $resourceNode->getWorkspace()->getThumbnail(),
             ];
         }
 
-        $parent = $resourceNode->getParent();
-        if (!empty($parent) && !in_array(static::NO_PARENT, $options)) {
-            $serializedNode['parent'] = $this->serialize($resourceNode->getParent(), [Options::SERIALIZE_MINIMAL, static::NO_PARENT]);
+        if (!empty($resourceNode->getParent())) {
+            $serializedNode['parent'] = $this->serialize($resourceNode->getParent(), [Options::SERIALIZE_MINIMAL]);
         }
 
-        if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
-            $serializedNode['poster'] = $resourceNode->getPoster();
-            $serializedNode['restrictions'] = $this->serializeRestrictions($resourceNode);
-            $serializedNode['tags'] = $this->serializeTags($resourceNode);
+        if (!in_array(Options::SERIALIZE_LIST, $options)) {
+            $serializedNode = array_merge($serializedNode, [
+                'display' => [
+                    'fullscreen' => $resourceNode->isFullscreen(),
+                    'showIcon' => $resourceNode->getShowIcon(),
+                    'showTitle' => $resourceNode->getShowTitle(),
+                ],
+                'comments' => array_map(function (ResourceComment $comment) { // TODO : should not be exposed here
+                    return $this->serializer->serialize($comment);
+                }, $resourceNode->getComments()->toArray()),
+            ]);
+        }
 
-            if (!in_array(Options::SERIALIZE_LIST, $options)) {
-                $serializedNode = array_merge($serializedNode, [
-                    'display' => $this->serializeDisplay($resourceNode),
-                    'comments' => array_map(function (ResourceComment $comment) { // TODO : should not be exposed here
-                        return $this->serializer->serialize($comment);
-                    }, $resourceNode->getComments()->toArray()),
-                ]);
-            }
-
-            if (!in_array(Options::NO_RIGHTS, $options)) {
-                // export rights, only used by transfer feature. Should be moved later.
-                $serializedNode['rights'] = array_values($this->rightsManager->getRights($resourceNode));
-            }
+        if (!in_array(Options::NO_RIGHTS, $options)) {
+            // export rights, only used by transfer feature. Should be moved later.
+            $serializedNode['rights'] = array_values($this->rightsManager->getRights($resourceNode));
         }
 
         return $this->decorate($resourceNode, $serializedNode, $options);
@@ -141,56 +178,6 @@ class ResourceNodeSerializer
         $this->eventDispatcher->dispatch($event, 'serialize_resource_node');
 
         return array_merge($serializedNode, $event->getInjectedData());
-    }
-
-    private function serializeMeta(ResourceNode $resourceNode, array $options): array
-    {
-        $meta = [
-            'type' => $resourceNode->getType(),
-            'className' => $resourceNode->getClass(),
-            'mimeType' => $resourceNode->getMimeType(),
-            'description' => $resourceNode->getDescription(),
-            'creator' => $resourceNode->getCreator() ?
-                $this->userSerializer->serialize($resourceNode->getCreator(), [Options::SERIALIZE_MINIMAL]) :
-                null,
-            'created' => DateNormalizer::normalize($resourceNode->getCreationDate()),
-            'updated' => DateNormalizer::normalize($resourceNode->getModificationDate()),
-            'published' => $resourceNode->isPublished(),
-            'active' => $resourceNode->isActive(),
-            'views' => $resourceNode->getViewsCount(),
-        ];
-
-        if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
-            $meta = array_merge($meta, [
-                'authors' => $resourceNode->getAuthor(),
-                'license' => $resourceNode->getLicense(),
-                'commentsActivated' => $resourceNode->isCommentsActivated(),
-            ]);
-        }
-
-        return $meta;
-    }
-
-    private function serializeDisplay(ResourceNode $resourceNode): array
-    {
-        return [
-            'fullscreen' => $resourceNode->isFullscreen(),
-            'showIcon' => $resourceNode->getShowIcon(),
-            'showTitle' => $resourceNode->getShowTitle(),
-        ];
-    }
-
-    private function serializeRestrictions(ResourceNode $resourceNode): array
-    {
-        return [
-            'hidden' => $resourceNode->isHidden(),
-            'dates' => DateRangeNormalizer::normalize(
-                $resourceNode->getAccessibleFrom(),
-                $resourceNode->getAccessibleUntil()
-            ),
-            'code' => $resourceNode->getAccessCode(),
-            'allowedIps' => $resourceNode->getAllowedIps(),
-        ];
     }
 
     private function serializeTags(ResourceNode $resourceNode): array

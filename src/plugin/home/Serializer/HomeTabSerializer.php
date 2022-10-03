@@ -6,11 +6,9 @@ use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer;
 use Claroline\CoreBundle\API\Serializer\User\RoleSerializer;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer;
-use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -19,9 +17,6 @@ use Claroline\HomeBundle\Entity\HomeTab;
 use Claroline\HomeBundle\Entity\Type\AbstractTab;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-/**
- * @todo simplify serialized structure
- */
 class HomeTabSerializer
 {
     use SerializerTrait;
@@ -38,8 +33,6 @@ class HomeTabSerializer
     private $userSerializer;
     /** @var RoleSerializer */
     private $roleSerializer;
-    /** @var PublicFileSerializer */
-    private $publicFileSerializer;
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
@@ -47,8 +40,7 @@ class HomeTabSerializer
         SerializerProvider $serializer,
         WorkspaceSerializer $workspaceSerializer,
         UserSerializer $userSerializer,
-        RoleSerializer $roleSerializer,
-        PublicFileSerializer $publicFileSerializer
+        RoleSerializer $roleSerializer
     ) {
         $this->authorization = $authorization;
         $this->om = $om;
@@ -56,7 +48,6 @@ class HomeTabSerializer
         $this->workspaceSerializer = $workspaceSerializer;
         $this->userSerializer = $userSerializer;
         $this->roleSerializer = $roleSerializer;
-        $this->publicFileSerializer = $publicFileSerializer;
     }
 
     public function getName()

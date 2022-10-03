@@ -1,5 +1,6 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import get from 'lodash/get'
 
 import {asset} from '#/main/app/config/asset'
 import {DataCard} from '#/main/app/data/components/card'
@@ -15,7 +16,7 @@ const LocationCard = props =>
     icon="fa fa-map-marker-alt"
     title={props.data.name}
     subtitle={getAddressString(props.data.address, true)}
-    contentText={props.data.meta.description}
+    contentText={get(props.data, 'meta.description')}
   />
 
 LocationCard.propTypes = {

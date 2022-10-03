@@ -3,6 +3,7 @@
 namespace Innova\PathBundle\Serializer;
 
 use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer;
@@ -56,7 +57,7 @@ class StepSerializer
 
     public function serialize(Step $step, array $options = []): array
     {
-        if (in_array(Options::SERIALIZE_MINIMAL, $options)) {
+        if (in_array(SerializerInterface::SERIALIZE_MINIMAL, $options)) {
             return [
                 'id' => $step->getUuid(),
                 'title' => $step->getTitle(),
@@ -71,10 +72,10 @@ class StepSerializer
             'slug' => $step->getSlug(),
             'poster' => $step->getPoster(),
             'description' => $step->getDescription(),
-            'primaryResource' => $step->getResource() ? $this->resourceNodeSerializer->serialize($step->getResource()) : null,
+            'primaryResource' => $step->getResource() ? $this->resourceNodeSerializer->serialize($step->getResource(), [SerializerInterface::SERIALIZE_MINIMAL]) : null,
             'showResourceHeader' => $step->getShowResourceHeader(),
             'secondaryResources' => array_map(function (SecondaryResource $secondaryResource) {
-                return $this->resourceNodeSerializer->serialize($secondaryResource->getResource(), [Options::SERIALIZE_MINIMAL]);
+                return $this->resourceNodeSerializer->serialize($secondaryResource->getResource(), [SerializerInterface::SERIALIZE_MINIMAL]);
             }, $step->getSecondaryResources()->toArray()),
             'display' => [
                 'numbering' => $step->getNumbering(),

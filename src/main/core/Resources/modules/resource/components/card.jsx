@@ -26,11 +26,17 @@ const ResourceCard = props =>
     title={props.data.name}
     subtitle={trans(props.data.meta.type, {}, 'resource')}
     flags={[
-      !props.data.meta.published && ['fa fa-fw fa-eye-slash', trans('resource_not_published', {}, 'resource')],
-      props.data.meta.published && ['fa fa-fw fa-eye', transChoice('resource_views', props.data.meta.views, {count: props.data.meta.views}, 'resource'), props.data.meta.views]
+      !get(props.data, 'meta.published') && ['fa fa-fw fa-eye-slash', trans('resource_not_published', {}, 'resource')],
+      get(props.data, 'meta.published') && [
+        'fa fa-fw fa-eye',
+        undefined !== get(props.data, 'meta.views') ?
+          transChoice('resource_views', props.data.meta.views, {count: props.data.meta.views}, 'resource')
+          :
+          trans('resource_published', {}, 'resource')
+        , get(props.data, 'meta.views')]
     ].filter(flag => !!flag)}
-    contentText={props.data.meta.description}
-    footer={
+    contentText={get(props.data, 'meta.description')}
+    footer={get(props.data, 'meta.creator') || get(props.data, 'meta.created') ?
       <span
         style={{
           display: 'flex',
@@ -38,10 +44,12 @@ const ResourceCard = props =>
           justifyContent: 'space-between'
         }}
       >
-        <UserMicro {...props.data.meta.creator} />
+        <UserMicro {...get(props.data, 'meta.creator', {})} />
 
-      {trans('published_at', {date: displayDate(props.data.meta.created, false, true)})}
+        {get(props.data, 'meta.created') && trans('published_at', {date: displayDate(props.data.meta.created, false, true)})}
       </span>
+      :
+      null
     }
   />
 

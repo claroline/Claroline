@@ -175,7 +175,6 @@ class BlogListener
             $newPost->setCreator($post->getCreator());
 
             $this->om->persist($newPost);
-            $this->om->flush();
 
             //get existing tags
             $tags = $this->postManager->getTags($post->getUuid());
@@ -196,6 +195,7 @@ class BlogListener
         }
 
         $this->om->persist($newBlog);
+        $this->om->flush();
 
         $event->setCopy($newBlog);
         $event->stopPropagation();

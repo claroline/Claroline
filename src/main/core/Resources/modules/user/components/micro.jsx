@@ -19,17 +19,16 @@ const UserMicro = props => {
   if (props.showUsername) {
     displayName = props.username
   } else {
-    displayName = props.name
+    displayName = props.firstName + ' ' + props.lastName
+    displayName = displayName.trim()
   }
 
-  if (props.link && props.username) {
+  if (props.link && displayName) {
     return (
       <LinkButton className={classes('user-micro', props.className)} target={route(props)}>
         <UserAvatar picture={props.picture} alt={false} />
 
-        {displayName ?
-          displayName : trans('unknown')
-        }
+        {displayName}
       </LinkButton>
     )
   }
@@ -46,19 +45,18 @@ const UserMicro = props => {
 }
 
 UserMicro.propTypes = {
-  name: T.string,
+  firstName: T.string,
+  lastName: T.string,
   username: T.string,
   className: T.string,
-  picture: T.shape({
-    url: T.string.isRequired
-  }),
-  link: T.bool,
-  showUsername: T.bool
+  picture: T.string,
+  showUsername: T.bool,
+  link: T.bool
 }
 
 UserMicro.defaultProps = {
-  link: false,
-  showUsername: false
+  showUsername: false,
+  link: false
 }
 
 export {

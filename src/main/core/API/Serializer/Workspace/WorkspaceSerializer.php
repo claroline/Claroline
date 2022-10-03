@@ -93,6 +93,15 @@ class WorkspaceSerializer
      */
     public function serialize(Workspace $workspace, array $options = []): array
     {
+        if (in_array(SerializerInterface::SERIALIZE_MINIMAL, $options)) {
+            return [
+                'id' => $workspace->getUuid(),
+                'name' => $workspace->getName(),
+                'code' => $workspace->getCode(),
+                'slug' => $workspace->getSlug(),
+                'thumbnail' => $workspace->getThumbnail(),
+            ];
+        }
 
         $serialized = [
             'id' => $workspace->getUuid(),
@@ -101,8 +110,32 @@ class WorkspaceSerializer
             'code' => $workspace->getCode(),
             'slug' => $workspace->getSlug(),
             'thumbnail' => $workspace->getThumbnail(),
-            'meta' => $this->getMeta($workspace, $options),
+            'poster' => $workspace->getPoster(),
+            'meta' => [
+                'lang' => $workspace->getLang(),
+                'archived' => $workspace->isArchived(),
+                'model' => $workspace->isModel(),
+                'personal' => $workspace->isPersonal(),
+                'description' => $workspace->getDescription(),
+                'created' => DateNormalizer::normalize($workspace->getCreatedAt()),
+                'updated' => DateNormalizer::normalize($workspace->getUpdatedAt()),
+                'creator' => $workspace->getCreator() ? $this->userSerializer->serialize($workspace->getCreator(), [SerializerInterface::SERIALIZE_MINIMAL]) : null,
+            ],
             'contactEmail' => $workspace->getContactEmail(),
+            'tags' => $this->serializeTags($workspace),
+            'opening' => $this->getOpening($workspace),
+            'display' => $this->getDisplay($workspace),
+            'breadcrumb' => $this->getBreadcrumb($workspace),
+            'restrictions' => [
+                'hidden' => $workspace->isHidden(),
+                'dates' => DateRangeNormalizer::normalize($workspace->getAccessibleFrom(), $workspace->getAccessibleUntil()),
+                'code' => $workspace->getAccessCode(),
+                'allowedIps' => $workspace->getAllowedIps(),
+            ],
+            'registration' => $this->getRegistration($workspace, $options),
+            'notifications' => [
+                'enabled' => $workspace->hasNotifications(),
+            ],
         ];
 
         if (!in_array(SerializerInterface::SERIALIZE_TRANSFER, $options)) {
@@ -116,30 +149,15 @@ class WorkspaceSerializer
                 'export' => $this->authorization->isGranted('EXPORT', $workspace),
                 'archive' => $this->authorization->isGranted('ARCHIVE', $workspace),
             ];
+
+            // this is a huge performances bottleneck as it will check if the current user as at least one right on one ws tool
+            $serialized['registered'] = $this->isRegistered($workspace);
         }
 
-        if (!in_array(SerializerInterface::SERIALIZE_MINIMAL, $options)) {
-            $serialized = array_merge($serialized, [
-                'tags' => $this->serializeTags($workspace),
-                'poster' => $workspace->getPoster(),
-                'opening' => $this->getOpening($workspace),
-                'display' => $this->getDisplay($workspace),
-                'breadcrumb' => $this->getBreadcrumb($workspace),
-                'restrictions' => $this->getRestrictions($workspace),
-                'registration' => $this->getRegistration($workspace, $options),
-                'notifications' => $this->getNotifications($workspace),
-            ]);
-
-            if (!in_array(SerializerInterface::SERIALIZE_TRANSFER, $options)) {
-                // this is a huge performances bottleneck as it will check if the current user as at least one right on one ws tool
-                $serialized['registered'] = $this->isRegistered($workspace);
-            }
-
-            if (!in_array(SerializerInterface::SERIALIZE_LIST, $options)) {
-                $serialized['organizations'] = array_map(function (Organization $organization) {
-                    return $this->organizationSerializer->serialize($organization, [SerializerInterface::SERIALIZE_MINIMAL]);
-                }, $workspace->getOrganizations()->toArray());
-            }
+        if (!in_array(SerializerInterface::SERIALIZE_LIST, $options)) {
+            $serialized['organizations'] = array_map(function (Organization $organization) {
+                return $this->organizationSerializer->serialize($organization, [SerializerInterface::SERIALIZE_MINIMAL]);
+            }, $workspace->getOrganizations()->toArray());
         }
 
         return $serialized;
@@ -154,20 +172,6 @@ class WorkspaceSerializer
         }
 
         return false;
-    }
-
-    private function getMeta(Workspace $workspace, array $options): array
-    {
-        return [
-            'lang' => $workspace->getLang(),
-            'archived' => $workspace->isArchived(),
-            'model' => $workspace->isModel(),
-            'personal' => $workspace->isPersonal(),
-            'description' => $workspace->getDescription(),
-            'created' => DateNormalizer::normalize($workspace->getCreatedAt()),
-            'updated' => DateNormalizer::normalize($workspace->getUpdatedAt()),
-            'creator' => $workspace->getCreator() ? $this->userSerializer->serialize($workspace->getCreator(), [SerializerInterface::SERIALIZE_MINIMAL]) : null,
-        ];
     }
 
     private function getOpening(Workspace $workspace)
@@ -226,19 +230,6 @@ class WorkspaceSerializer
         ];
     }
 
-    private function getRestrictions(Workspace $workspace): array
-    {
-        return [
-            'hidden' => $workspace->isHidden(),
-            'dates' => DateRangeNormalizer::normalize(
-                $workspace->getAccessibleFrom(),
-                $workspace->getAccessibleUntil()
-            ),
-            'code' => $workspace->getAccessCode(),
-            'allowedIps' => $workspace->getAllowedIps(),
-        ];
-    }
-
     private function getRegistration(Workspace $workspace, array $options): array
     {
         $defaultRole = null;
@@ -247,7 +238,7 @@ class WorkspaceSerializer
             $defaultRole = [
                 'id' => $workspace->getDefaultRole()->getUuid(),
                 'name' => $workspace->getDefaultRole()->getName(),
-                'type' => $workspace->getDefaultRole()->getType(), // TODO : should be a string for better data readability
+                'type' => $workspace->getDefaultRole()->getType(),
                 'translationKey' => $workspace->getDefaultRole()->getTranslationKey(),
             ];
         }
@@ -265,13 +256,6 @@ class WorkspaceSerializer
         }
 
         return $serialized;
-    }
-
-    private function getNotifications(Workspace $workspace)
-    {
-        return [
-            'enabled' => $workspace->hasNotifications(),
-        ];
     }
 
     private function serializeTags(Workspace $workspace)

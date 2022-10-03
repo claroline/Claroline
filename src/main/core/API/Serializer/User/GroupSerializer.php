@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\API\Serializer\User;
 
+use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Group;
@@ -54,8 +55,16 @@ class GroupSerializer
      */
     public function serialize(Group $group, array $options = []): array
     {
+        if (in_array(SerializerInterface::SERIALIZE_MINIMAL, $options)) {
+            return [
+                'id' => $group->getUuid(),
+                'name' => $group->getName(),
+            ];
+        }
+
         return [
             'id' => $group->getUuid(),
+            'autoId' => $group->getId(),
             'name' => $group->getName(),
             'roles' => array_map(function (Role $role) use ($options) {
                 return $this->roleSerializer->serialize($role, $options);

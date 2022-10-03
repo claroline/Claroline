@@ -12,9 +12,9 @@
 namespace Claroline\CoreBundle\API\Serializer\Location;
 
 use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer;
 use Claroline\CoreBundle\Entity\Location\Location;
 use Claroline\CoreBundle\Entity\Location\Room;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -27,20 +27,16 @@ class RoomSerializer
     private $authorization;
     /** @var ObjectManager */
     private $om;
-    /** @var PublicFileSerializer */
-    private $fileSerializer;
     /** @var LocationSerializer */
     private $locationSerializer;
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         ObjectManager $om,
-        PublicFileSerializer $fileSerializer,
         LocationSerializer $locationSerializer
     ) {
         $this->authorization = $authorization;
         $this->om = $om;
-        $this->fileSerializer = $fileSerializer;
         $this->locationSerializer = $locationSerializer;
     }
 
@@ -51,14 +47,24 @@ class RoomSerializer
 
     public function serialize(Room $room, array $options = []): array
     {
+        if (in_array(SerializerInterface::SERIALIZE_MINIMAL, $options)) {
+            return [
+                'id' => $room->getUuid(),
+                'code' => $room->getCode(),
+                'name' => $room->getName(),
+                'thumbnail' => $room->getThumbnail(),
+            ];
+        }
+
         return [
+            'autoId' => $room->getId(),
             'id' => $room->getUuid(),
             'code' => $room->getCode(),
             'name' => $room->getName(),
+            'thumbnail' => $room->getThumbnail(),
+            'poster' => $room->getPoster(),
             'description' => $room->getDescription(),
             'capacity' => $room->getCapacity(),
-            'poster' => $room->getPoster(),
-            'thumbnail' => $room->getThumbnail(),
             'location' => $room->getLocation() ? $this->locationSerializer->serialize($room->getLocation(), [Options::SERIALIZE_MINIMAL]) : null,
             'permissions' => [
                 'open' => $this->authorization->isGranted('OPEN', $room),

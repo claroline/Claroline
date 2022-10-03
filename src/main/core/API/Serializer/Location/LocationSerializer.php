@@ -2,9 +2,9 @@
 
 namespace Claroline\CoreBundle\API\Serializer\Location;
 
+use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer;
 use Claroline\CoreBundle\Entity\Location\Location;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -16,8 +16,6 @@ class LocationSerializer
     private $authorization;
     /** @var ObjectManager */
     private $om;
-    /** @var PublicFileSerializer */
-    private $fileSerializer;
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
@@ -44,12 +42,29 @@ class LocationSerializer
 
     public function serialize(Location $location, array $options = []): array
     {
+        if (in_array(SerializerInterface::SERIALIZE_MINIMAL, $options)) {
+            return [
+                'id' => $location->getUuid(),
+                'name' => $location->getName(),
+                'thumbnail' => $location->getThumbnail(),
+
+                'address' => [
+                    'street1' => $location->getAddressStreet1(),
+                    'street2' => $location->getAddressStreet2(),
+                    'postalCode' => $location->getAddressPostalCode(),
+                    'city' => $location->getAddressCity(),
+                    'state' => $location->getAddressState(),
+                    'country' => $location->getAddressCountry(),
+                ],
+            ];
+        }
+
         return [
             'autoId' => $location->getId(),
             'id' => $location->getUuid(),
             'name' => $location->getName(),
-            'poster' => $location->getPoster(),
             'thumbnail' => $location->getThumbnail(),
+            'poster' => $location->getPoster(),
             'permissions' => [
                 'open' => $this->authorization->isGranted('OPEN', $location),
                 'edit' => $this->authorization->isGranted('EDIT', $location),

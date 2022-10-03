@@ -25,7 +25,6 @@ services:
             - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'
             - '@Claroline\OpenBadgeBundle\Serializer\ImageSerializer'
             - '@Claroline\CoreBundle\API\Serializer\User\OrganizationSerializer'
-            - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
             - '@Claroline\OpenBadgeBundle\Serializer\RuleSerializer'
             - '@Claroline\CoreBundle\API\Serializer\Template\TemplateSerializer'
 
