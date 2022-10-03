@@ -416,7 +416,6 @@
     "initialize": "Initialiser",
     "inscription_mail": "Courriel d'inscription",
     "install": "Installer",
-    "install_update_cant_be_undone": "Les opérations d'installation et de mise à jour ne peuvent pas être annulées.",
     "installed": "Installé",
     "instructions": "Consignes",
     "internal_error": "Erreur interne du serveur. Veuillez contactez l'administrateur de la plateforme.",

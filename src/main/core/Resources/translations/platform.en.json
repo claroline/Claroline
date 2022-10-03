@@ -409,7 +409,6 @@
     "initialize": "Initialize",
     "inscription_mail": "Subscription email",
     "install": "Install",
-    "install_update_cant_be_undone": "Once install or upgrade is started, it cannot be stopped.",
     "installed": "Installed",
     "instructions": "Instructions",
     "internal_error": "Internal server error. Please contact the administrator.",
