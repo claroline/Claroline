@@ -106,67 +106,66 @@ class UserSerializer
             }));
         }
 
+        if (in_array(SerializerInterface::SERIALIZE_MINIMAL, $options)) {
+            return [
+                'id' => $user->getUuid(),
+                'firstName' => $user->getFirstName(),
+                'lastName' => $user->getLastName(),
+                'username' => $user->getUsername(),
+                'email' => $showEmail ? $user->getEmail() : null,
+                'picture' => $user->getPicture(),
+                'thumbnail' => $user->getThumbnail(),
+            ];
+        }
+
+        $userRoles = array_map(function (Role $role) { // todo use role serializer with minimal option
+            return [
+                'id' => $role->getUuid(),
+                'type' => $role->getType(),
+                'name' => $role->getName(),
+                'translationKey' => $role->getTranslationKey(),
+                'workspace' => $role->getWorkspace() ? ['id' => $role->getWorkspace()->getUuid()] : null,
+                'context' => 'user',
+            ];
+        }, $user->getEntityRoles(false));
+        $groupRoles = array_map(function (Role $role) { // todo use role serializer with minimal option
+            return [
+                'id' => $role->getUuid(),
+                'type' => $role->getType(),
+                'name' => $role->getName(),
+                'translationKey' => $role->getTranslationKey(),
+                'workspace' => $role->getWorkspace() ? ['id' => $role->getWorkspace()->getUuid()] : null,
+                'context' => 'group',
+            ];
+        }, $user->getGroupRoles());
+
         $serializedUser = [
-            'autoId' => $user->getId(),
             'id' => $user->getUuid(),
+            'autoId' => $user->getId(),
             'name' => $user->getFullName(),
             'firstName' => $user->getFirstName(),
             'lastName' => $user->getLastName(),
             'username' => $user->getUsername(),
             'picture' => $user->getPicture(),
             'thumbnail' => $user->getThumbnail(),
+            'poster' => $user->getPoster(),
             'email' => $showEmail ? $user->getEmail() : null,
             'administrativeCode' => $user->getAdministrativeCode(),
             'phone' => $showEmail ? $user->getPhone() : null,
             'meta' => $this->serializeMeta($user),
             'restrictions' => $this->serializeRestrictions($user),
+            'roles' => array_merge($userRoles, $groupRoles),
+            'groups' => array_values(array_map(function (Group $group) { // todo use group serializer with minimal option
+                return [
+                    'id' => $group->getUuid(),
+                    'name' => $group->getName(),
+                ];
+            }, $user->getGroups()->toArray())),
+            'mainOrganization' => $user->getMainOrganization() ? $this->organizationSerializer->serialize($user->getMainOrganization(), [SerializerInterface::SERIALIZE_MINIMAL]) : null,
         ];
 
         if (!in_array(SerializerInterface::SERIALIZE_TRANSFER, $options)) {
             $serializedUser['permissions'] = $this->serializePermissions($user);
-        }
-
-        if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
-            $userRoles = array_map(function (Role $role) { // todo use role serializer with minimal option
-                return [
-                    'id' => $role->getUuid(),
-                    'type' => $role->getType(),
-                    'name' => $role->getName(),
-                    'translationKey' => $role->getTranslationKey(),
-                    'workspace' => $role->getWorkspace() ? ['id' => $role->getWorkspace()->getUuid()] : null,
-                    'context' => 'user',
-                ];
-            }, $user->getEntityRoles(false));
-            $groupRoles = array_map(function (Role $role) { // todo use role serializer with minimal option
-                return [
-                    'id' => $role->getUuid(),
-                    'type' => $role->getType(),
-                    'name' => $role->getName(),
-                    'translationKey' => $role->getTranslationKey(),
-                    'workspace' => $role->getWorkspace() ? ['id' => $role->getWorkspace()->getUuid()] : null,
-                    'context' => 'group',
-                ];
-            }, $user->getGroupRoles());
-
-            $serializedUser = array_merge($serializedUser, [
-                'poster' => $user->getPoster(),
-                'roles' => array_merge($userRoles, $groupRoles),
-                'groups' => array_values(array_map(function (Group $group) { // todo use group serializer with minimal option
-                    return [
-                        'id' => $group->getUuid(),
-                        'name' => $group->getName(),
-                    ];
-                }, $user->getGroups()->toArray())),
-            ]);
-
-            if ($user->getMainOrganization()) {
-                $serializedUser['mainOrganization'] = $this->organizationSerializer->serialize($user->getMainOrganization());
-            }
-
-            // TODO : do not get it here
-            $serializedUser['administratedOrganizations'] = array_map(function ($organization) {
-                return $this->organizationSerializer->serialize($organization);
-            }, $user->getAdministratedOrganizations()->toArray());
         }
 
         if (in_array(Options::SERIALIZE_FACET, $options)) {

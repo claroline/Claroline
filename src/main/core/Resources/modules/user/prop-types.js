@@ -9,9 +9,8 @@ const User = {
     firstName: T.string,
     lastName: T.string,
     username: T.string.isRequired,
-    picture: T.shape({
-      url: T.string.isRequired
-    }),
+    picture: T.string,
+    thumbnail: T.string,
     meta: T.shape({
       created: T.string,
       lastActivity: T.string,

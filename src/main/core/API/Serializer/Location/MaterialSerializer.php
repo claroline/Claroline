@@ -12,11 +12,11 @@
 namespace Claroline\CoreBundle\API\Serializer\Location;
 
 use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Location\Material;
-use Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer;
 use Claroline\CoreBundle\Entity\Location\Location;
+use Claroline\CoreBundle\Entity\Location\Material;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class MaterialSerializer
@@ -27,8 +27,6 @@ class MaterialSerializer
     private $authorization;
     /** @var ObjectManager */
     private $om;
-    /** @var PublicFileSerializer */
-    private $fileSerializer;
     /** @var LocationSerializer */
     private $locationSerializer;
 
@@ -49,14 +47,24 @@ class MaterialSerializer
 
     public function serialize(Material $material, array $options = []): array
     {
+        if (in_array(SerializerInterface::SERIALIZE_MINIMAL, $options)) {
+            return [
+                'id' => $material->getUuid(),
+                'code' => $material->getCode(),
+                'name' => $material->getName(),
+                'thumbnail' => $material->getThumbnail(),
+            ];
+        }
+
         return [
+            'autoId' => $material->getId(),
             'id' => $material->getUuid(),
             'code' => $material->getCode(),
             'name' => $material->getName(),
+            'thumbnail' => $material->getThumbnail(),
+            'poster' => $material->getPoster(),
             'description' => $material->getDescription(),
             'quantity' => $material->getQuantity(),
-            'poster' => $material->getPoster(),
-            'thumbnail' => $material->getThumbnail(),
             'location' => $material->getLocation() ? $this->locationSerializer->serialize($material->getLocation(), [Options::SERIALIZE_MINIMAL]) : null,
             'permissions' => [
                 'open' => $this->authorization->isGranted('OPEN', $material),

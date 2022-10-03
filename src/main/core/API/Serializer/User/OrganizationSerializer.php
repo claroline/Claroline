@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\API\Serializer\User;
 
 use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Location\Location;
@@ -49,40 +50,44 @@ class OrganizationSerializer
      */
     public function serialize(Organization $organization, array $options = []): array
     {
+        if (in_array(SerializerInterface::SERIALIZE_MINIMAL, $options)) {
+            return [
+                'id' => $organization->getUuid(),
+                'name' => $organization->getName(),
+                'code' => $organization->getCode(),
+            ];
+        }
+
         $serialized = [
             'id' => $organization->getUuid(),
+            'autoId' => $organization->getId(),
             'name' => $organization->getName(),
             'code' => $organization->getCode(),
             'email' => $organization->getEmail(),
             'type' => $organization->getType(),
             'meta' => [
-                'default' => $organization->getDefault(),
+                'default' => $organization->isDefault(),
                 'position' => $organization->getPosition(),
             ],
             'restrictions' => [
                 'public' => $organization->isPublic(),
                 'users' => $organization->getMaxUsers(),
             ],
+            'parent' => !empty($organization->getParent()) ? [
+                'id' => $organization->getParent()->getUuid(),
+                'name' => $organization->getParent()->getName(),
+                'code' => $organization->getParent()->getCode(),
+                'meta' => [
+                    'default' => $organization->getParent()->getDefault(),
+                ],
+            ] : null,
+            'locations' => array_map(function (Location $location) {
+                return [
+                    'id' => $location->getId(),
+                    'name' => $location->getName(),
+                ];
+            }, $organization->getLocations()->toArray()),
         ];
-
-        if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
-            $serialized = array_merge($serialized, [
-                'parent' => !empty($organization->getParent()) ? [
-                    'id' => $organization->getParent()->getUuid(),
-                    'name' => $organization->getParent()->getName(),
-                    'code' => $organization->getParent()->getCode(),
-                    'meta' => [
-                        'default' => $organization->getParent()->getDefault(),
-                    ],
-                ] : null,
-                'locations' => array_map(function (Location $location) {
-                    return [
-                        'id' => $location->getId(),
-                        'name' => $location->getName(),
-                    ];
-                }, $organization->getLocations()->toArray()),
-            ]);
-        }
 
         if (in_array(Options::IS_RECURSIVE, $options)) {
             $serialized['children'] = array_map(function (Organization $child) use ($options) {

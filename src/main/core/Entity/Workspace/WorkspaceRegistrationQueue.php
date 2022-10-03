@@ -40,7 +40,7 @@ class WorkspaceRegistrationQueue
     private $role;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User", inversedBy="wkUserQueues")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      *
      * @var User

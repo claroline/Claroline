@@ -30,7 +30,7 @@ const WorkspaceCard = props =>
       get(props.data, 'registration.waitingForRegistration') && ['fa fa-hourglass', trans('pending')]
     ].filter(flag => !!flag)}
     contentText={get(props.data, 'meta.description')}
-    footer={
+    footer={get(props.data, 'meta.creator') || get(props.data, 'meta.created') ?
       <span
         style={{
           display: 'flex',
@@ -44,6 +44,8 @@ const WorkspaceCard = props =>
           trans('created_at', {date: displayDate(props.data.meta.created, false, true)})
         }
       </span>
+      :
+      null
     }
   />
 

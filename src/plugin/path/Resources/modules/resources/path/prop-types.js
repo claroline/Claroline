@@ -11,7 +11,7 @@ const Step = {
       numbering: T.string
     }).isRequired,
     primaryResource: T.shape({
-      autoId: T.number.isRequired,
+      id: T.string.isRequired,
       meta: T.shape({
         type: T.string.isRequired
       })

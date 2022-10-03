@@ -11,7 +11,8 @@ const UserLink = (props) => {
   if (props.showUsername) {
     displayName = props.username
   } else {
-    displayName = props.name
+    displayName = props.firstName + ' ' + props.lastName
+    displayName = displayName.trim()
   }
 
   return (
@@ -24,7 +25,8 @@ const UserLink = (props) => {
 }
 
 UserLink.propTypes = {
-  name: T.string,
+  firstName: T.string,
+  lastName: T.string,
   username: T.string,
   className: T.string,
   showUsername: T.bool

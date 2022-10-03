@@ -127,7 +127,6 @@ services:
         arguments:
             - '@security.authorization_checker'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
             - '@Claroline\CoreBundle\API\Serializer\Location\LocationSerializer'
 
     Claroline\CoreBundle\API\Serializer\Location\MaterialSerializer:
