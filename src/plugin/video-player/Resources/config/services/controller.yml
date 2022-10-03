@@ -1,9 +1,9 @@
 services:
     _defaults:
-        public: true #because controller
+        public: true # because controller
 
-    Claroline\VideoPlayerBundle\Controller\APINew\TrackController:
-        parent: Claroline\AppBundle\Controller\AbstractCrudController
-        public: true
+    Claroline\VideoPlayerBundle\Controller\EvaluationController:
         arguments:
-            - '%claroline.param.files_directory%'
+            - '@security.authorization_checker'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\VideoPlayerBundle\Manager\EvaluationManager'

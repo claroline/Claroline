@@ -1,6 +1,4 @@
-import {VideoPlayer} from '#/plugin/video-player/files/video/components/player'
-
-// todo : restore tracks edition
+import {VideoPlayer} from '#/plugin/video-player/files/video/containers/player'
 
 const fileType = {
   components: {

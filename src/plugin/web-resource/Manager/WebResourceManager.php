@@ -15,20 +15,17 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Ramsey\Uuid\Uuid;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Finder\Iterator\RecursiveDirectoryIterator;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class WebResourceManager
 {
+    /** @var string */
+    private $filesDir;
+    /** @var string */
+    private $uploadDir;
+    /** @var ObjectManager */
     private $om;
-    private $container;
-    private $webResourceResourcesPath;
-
-    /**
-     * @var \ZipArchive
-     */
-    private $zip;
 
     private $defaultIndexFiles = [
         'web/SCO_0001/default.html',
@@ -45,39 +42,120 @@ class WebResourceManager
         'Index.htm',
     ];
 
-    /**
-     * Constructor.
-     */
     public function __construct(
-        ObjectManager $om,
-        ContainerInterface $container
+        string $filesDir,
+        string $uploadDir,
+        ObjectManager $om
     ) {
+        $this->filesDir = $filesDir;
+        $this->uploadDir = $uploadDir;
         $this->om = $om;
-        $this->container = $container;
+    }
+
+    public function create(UploadedFile $tmpFile, Workspace $workspace): array
+    {
+        $filesPath = $this->filesDir.DIRECTORY_SEPARATOR.'webresource'.DIRECTORY_SEPARATOR.$workspace->getUuid().DIRECTORY_SEPARATOR;
+        $file = new File();
+        $fileName = $tmpFile->getClientOriginalName();
+        $hash = $this->getHash(pathinfo($fileName, PATHINFO_EXTENSION));
+        $size = filesize($tmpFile);
+        $file->setSize($size);
+        $file->setName($fileName);
+        $file->setHashName($hash);
+        $file->setMimeType('custom/claroline_web_resource');
+        $tmpFile->move($filesPath, $hash);
+        $this->unzip($hash, $workspace);
+
+        return [
+            'hashName' => $hash,
+            'size' => $size,
+        ];
     }
 
     /**
-     * Get ZipArchive object.
-     *
-     * @return \ZipArchive
+     * Try to retrieve root file of the WebResource from the unzipped directory.
      */
-    public function getZip()
+    public function guessRootFileFromUnzipped(string $hash): ?string
     {
-        if (!$this->zip instanceof \ZipArchive) {
-            $this->zip = new \ZipArchive();
+        // Grab all HTML files from Archive
+        $htmlFiles = $this->getHTMLFiles($hash);
+
+        // Only one file
+        if (1 === count($htmlFiles)) {
+            return array_shift($htmlFiles);
         }
 
-        return $this->zip;
+        // Check usual default root files
+        foreach ($this->defaultIndexFiles as $file) {
+            if (in_array($file, $htmlFiles)) {
+                return $file;
+            }
+        }
+
+        // Unable to find an unique HTML file
+        return null;
+    }
+
+    /**
+     * Checks if a UploadedFile is a zip and contains index.html file.
+     */
+    public function isZip(UploadedFile $file, Workspace $workspace): bool
+    {
+        $isZip = false;
+        $archive = new \ZipArchive();
+        if ('application/zip' === $file->getClientMimeType() || true === $archive->open($file)) {
+            // Correct Zip type => check if html root file exists
+            $rootFile = $this->guessRootFile($file, $workspace);
+
+            if (!empty($rootFile)) {
+                $isZip = true;
+            }
+        }
+
+        return $isZip;
+    }
+
+    /**
+     * Unzips files in web directory.
+     *
+     * @param string $hash The hash name of the resource
+     */
+    public function unzip(string $hash, Workspace $workspace)
+    {
+        $filesPath = $this->filesDir.DIRECTORY_SEPARATOR.'webresource'.DIRECTORY_SEPARATOR.$workspace->getUuid().DIRECTORY_SEPARATOR;
+        $zipPath = $this->uploadDir.DIRECTORY_SEPARATOR.'webresource'.DIRECTORY_SEPARATOR.$workspace->getUuid().DIRECTORY_SEPARATOR;
+        if (!file_exists($zipPath.$hash)) {
+            mkdir($zipPath.$hash, 0777, true);
+        }
+
+        $archive = new \ZipArchive();
+        $archive->open($filesPath.$hash);
+        $archive->extractTo($zipPath.$hash);
+        $archive->close();
+    }
+
+    /**
+     * Deletes web resource unzipped files.
+     *
+     * @param string $dir The path to the directory to delete
+     */
+    private function unzipDelete(string $dir)
+    {
+        foreach (glob($dir.'/*') as $file) {
+            if (is_dir($file)) {
+                $this->unzipDelete($file);
+            } else {
+                unlink($file);
+            }
+        }
+
+        rmdir($dir);
     }
 
     /**
      * Get all HTML files from a zip archive.
-     *
-     * @param string $directory
-     *
-     * @return array
      */
-    public function getHTMLFiles($directory)
+    private function getHTMLFiles(string $directory): array
     {
         try {
             $dir = new RecursiveDirectoryIterator($directory, RecursiveDirectoryIterator::SKIP_DOTS | RecursiveDirectoryIterator::NEW_CURRENT_AND_KEY);
@@ -102,22 +180,19 @@ class WebResourceManager
 
     /**
      * Try to retrieve root file of the WebResource from the zip archive.
-     *
-     * @return string
-     *
-     * @throws \Exception
      */
-    public function guessRootFile(UploadedFile $file, Workspace $workspace)
+    private function guessRootFile(UploadedFile $file, Workspace $workspace): ?string
     {
-        $zipPath = $this->container->getParameter('claroline.param.uploads_directory').DIRECTORY_SEPARATOR.'webresource'.DIRECTORY_SEPARATOR.$workspace->getUuid().DIRECTORY_SEPARATOR;
+        $zipPath = $this->uploadDir.DIRECTORY_SEPARATOR.'webresource'.DIRECTORY_SEPARATOR.$workspace->getUuid().DIRECTORY_SEPARATOR;
 
-        if (!$this->getZip()->open($file)) {
+        $archive = new \ZipArchive();
+        if (!$archive->open($file)) {
             throw new \Exception('Can not open archive file.');
         }
 
         // Try to locate usual default HTML files to avoid unzip archive and scan directory tree
         foreach ($this->defaultIndexFiles as $html) {
-            if (is_numeric($this->getZip()->locateName($html))) {
+            if (is_numeric($archive->locateName($html))) {
                 return $html;
             }
         }
@@ -128,8 +203,8 @@ class WebResourceManager
         if (!$tmpDir) {
             mkdir($zipPath.'tmp/', 0777, true);
         }
-        $this->getZip()->extractTo($tmpDir);
-        $this->getZip()->close();
+        $archive->extractTo($tmpDir);
+        $archive->close();
 
         // Search for root file
         $htmlFiles = $this->getHTMLFiles($tmpDir);
@@ -142,146 +217,20 @@ class WebResourceManager
             return array_shift($htmlFiles);
         }
 
-        return;
-    }
-
-    /**
-     * Try to retrieve root file of the WebResource from the unzipped directory.
-     *
-     * @param string $hash
-     *
-     * @return string
-     */
-    public function guessRootFileFromUnzipped($hash)
-    {
-        // Grab all HTML files from Archive
-        $htmlFiles = $this->getHTMLFiles($hash);
-
-        // Only one file
-        if (1 === count($htmlFiles)) {
-            return array_shift($htmlFiles);
-        }
-
-        // Check usual default root files
-        foreach ($this->defaultIndexFiles as $file) {
-            if (in_array($file, $htmlFiles)) {
-                return $file;
-            }
-        }
-
-        // Unable to find an unique HTML file
-        return;
-    }
-
-    /**
-     * Deletes web resource unzipped files.
-     *
-     * @param string $dir The path to the directory to delete
-     */
-    public function unzipDelete($dir)
-    {
-        foreach (glob($dir.'/*') as $file) {
-            if (is_dir($file)) {
-                $this->unzipDelete($file);
-            } else {
-                unlink($file);
-            }
-        }
-
-        rmdir($dir);
-    }
-
-    /**
-     * Checks if a UploadedFile is a zip and contains index.html file.
-     *
-     * @return bool
-     */
-    public function isZip(UploadedFile $file, $workspace)
-    {
-        $isZip = false;
-        if ('application/zip' === $file->getClientMimeType() || true === $this->getZip()->open($file)) {
-            // Correct Zip type => check if html root file exists
-            $rootFile = $this->guessRootFile($file, $workspace);
-
-            if (!empty($rootFile)) {
-                $isZip = true;
-            }
-        }
-
-        return $isZip;
-    }
-
-    /**
-     * Unzips files in web directory.
-     *
-     * Use first $this->getZip()->open($file) or $this->isZip($file)
-     *
-     * @param string $hash The hash name of the resource
-     */
-    public function unzip($hash, Workspace $workspace)
-    {
-        $filesPath = $this->container->getParameter('claroline.param.files_directory').DIRECTORY_SEPARATOR.'webresource'.DIRECTORY_SEPARATOR.$workspace->getUuid().DIRECTORY_SEPARATOR;
-        $zipPath = $this->container->getParameter('claroline.param.uploads_directory').DIRECTORY_SEPARATOR.'webresource'.DIRECTORY_SEPARATOR.$workspace->getUuid().DIRECTORY_SEPARATOR;
-        if (!file_exists($zipPath.$hash)) {
-            mkdir($zipPath.$hash, 0777, true);
-        }
-        $this->getZip()->open($filesPath.$hash);
-        $this->getZip()->extractTo($zipPath.$hash);
-        $this->getZip()->close();
-    }
-
-    /**
-     * Unzip a given ZIP file into the web resources directory.
-     *
-     * @param UploadedFile $file
-     * @param $hashName name of the destination directory
-     */
-    public function unzipWebResourceArchive(\SplFileInfo $file, $hashName, $workspace)
-    {
-        $webResourceResourcesPath = $this->container->getParameter('claroline.param.uploads_directory').DIRECTORY_SEPARATOR.'webresource'.DIRECTORY_SEPARATOR.$workspace->getUuid().DIRECTORY_SEPARATOR;
-        $zip = new \ZipArchive();
-        $zip->open($file);
-        $destinationDir = $webResourceResourcesPath.$hashName;
-        if (!file_exists($destinationDir)) {
-            mkdir($destinationDir, 0777, true);
-        }
-        $zip->extractTo($destinationDir);
-        $zip->close();
+        return null;
     }
 
     /**
      * Returns a new hash for a file.
      *
      * @param mixed mixed The extension of the file or an Claroline\CoreBundle\Entity\Resource\File
-     *
-     * @return string
      */
-    private function getHash($mixed)
+    private function getHash($mixed): string
     {
         if ($mixed instanceof File) {
             $mixed = pathinfo($mixed->getHashName(), PATHINFO_EXTENSION);
         }
 
         return Uuid::uuid4()->toString().'.'.$mixed;
-    }
-
-    public function create(UploadedFile $tmpFile, Workspace $workspace)
-    {
-        $filesPath = $this->container->getParameter('claroline.param.files_directory').DIRECTORY_SEPARATOR.'webresource'.DIRECTORY_SEPARATOR.$workspace->getUuid().DIRECTORY_SEPARATOR;
-        $file = new File();
-        $fileName = $tmpFile->getClientOriginalName();
-        $hash = $this->getHash(pathinfo($fileName, PATHINFO_EXTENSION));
-        $size = filesize($tmpFile);
-        $file->setSize($size);
-        $file->setName($fileName);
-        $file->setHashName($hash);
-        $file->setMimeType('custom/claroline_web_resource');
-        $tmpFile->move($filesPath, $hash);
-        $this->unzip($hash, $workspace);
-
-        return [
-          'hashName' => $hash,
-          'size' => $size,
-        ];
     }
 }

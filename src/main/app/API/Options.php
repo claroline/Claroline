@@ -60,9 +60,6 @@ final class Options
     //for resource node
     const NO_RIGHTS = 'no_rights';
 
-    //finder options
-    const SQL_QUERY = 'sql_query'; // to remove
-
     // for transfer tool
     const WORKSPACE_IMPORT = 'workspace_import';
 }

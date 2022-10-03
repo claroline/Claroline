@@ -1,6 +1,7 @@
 import React, {createElement} from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
+import {Helmet} from 'react-helmet'
 
 import {theme} from '#/main/app/config'
 import {trans} from '#/main/app/intl/translation'
@@ -67,7 +68,11 @@ const EditorMain = (props) =>
                 })}
 
                 {get(module, 'fileType.styles') &&
-                  <link rel="stylesheet" type="text/css" href={theme(get(module, 'fileType.styles'))} />
+                  <Helmet>
+                    {get(module, 'fileType.styles').map(style =>
+                      <link key={style} rel="stylesheet" type="text/css" href={theme(style)} />
+                    )}
+                  </Helmet>
                 }
               </FormSection>
             </FormSections>

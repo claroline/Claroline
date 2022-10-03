@@ -29,9 +29,6 @@ class LoadFileEvent extends Event
     /** @var bool */
     private $populated = false;
 
-    /**
-     * LoadFileEvent constructor.
-     */
     public function __construct(File $resource, string $path)
     {
         $this->resource = $resource;

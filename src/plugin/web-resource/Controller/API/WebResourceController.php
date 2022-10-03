@@ -49,10 +49,8 @@ class WebResourceController extends AbstractCrudController
      *     class="Claroline\CoreBundle\Entity\Workspace\Workspace",
      *     options={"mapping": {"workspace": "uuid"}}
      * )
-     *
-     * @return JsonResponse
      */
-    public function uploadFile(Workspace $workspace, Request $request)
+    public function uploadFile(Workspace $workspace, Request $request): JsonResponse
     {
         $files = $request->files->all();
         $error = null;
@@ -62,7 +60,7 @@ class WebResourceController extends AbstractCrudController
             if (!$isZip) {
                 $error = 'not_valid_file';
 
-                return new JsonResponse($error, 500);
+                return new JsonResponse($error, 422);
             } else {
                 $data = $this->webResourceManager->create($file, $workspace);
 

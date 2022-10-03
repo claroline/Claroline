@@ -105,14 +105,10 @@ class FileListener
             }
         }
 
-        $event->setData([
-            // common file data
-            'file' => array_merge(
-                $additionalFileData,
-                // standard props are in 2nd to make sure custom file serializer doesn't override them
-                $this->serializer->serialize($resource)
-            ),
-        ]);
+        $event->setData(array_merge_recursive([], $additionalFileData, [
+            // we put event data first to be sure nobody override the file data
+            'file' => $this->serializer->serialize($resource),
+        ]));
     }
 
     /**

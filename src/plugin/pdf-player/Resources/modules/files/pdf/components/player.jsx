@@ -13,7 +13,7 @@ import {ContentLoader} from '#/main/app/content/components/loader'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 
-import {Pdf as PdfTypes} from '#/plugin/pdf-player/files/pdf/prop-types'
+import {File as FileTypes} from '#/main/core/files/prop-types'
 
 class PdfPlayer extends Component {
   constructor(props) {
@@ -220,7 +220,7 @@ class PdfPlayer extends Component {
 PdfPlayer.propTypes = {
   nodeId: T.string.isRequired,
   file: T.shape(
-    PdfTypes.propTypes
+    FileTypes.propTypes
   ).isRequired,
   updateProgression: T.func.isRequired,
   currentUser: T.object

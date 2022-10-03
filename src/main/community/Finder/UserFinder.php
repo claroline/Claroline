@@ -171,7 +171,7 @@ class UserFinder extends AbstractFinder
                         $filterValue = [$filterValue];
                     }
 
-                    // check if user a WS role
+                    // check if user has a WS role
                     if (!$roleJoin) {
                         $qb->leftJoin('obj.roles', 'r');
                         $roleJoin = true;

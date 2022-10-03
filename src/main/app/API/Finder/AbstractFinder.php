@@ -11,7 +11,6 @@
 
 namespace Claroline\AppBundle\API\Finder;
 
-use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Event\SearchObjectsEvent;
@@ -133,10 +132,6 @@ abstract class AbstractFinder implements FinderInterface
             $query = $qb->getQuery();
         }
 
-        if (in_array(Options::SQL_QUERY, $options)) {
-            return $query;
-        }
-
         return $count ? (int) $query->getSingleScalarResult() : $query->getResult();
     }
 
@@ -151,6 +146,29 @@ abstract class AbstractFinder implements FinderInterface
         }
 
         return $data[0];
+    }
+
+    public function setDefaults(QueryBuilder $qb, $filterName, $filterValue)
+    {
+        $property = $filterName;
+        if (array_key_exists($filterName, $this->getExtraFieldMapping())) {
+            $property = $this->getExtraFieldMapping()[$filterName];
+        }
+
+        if (!property_exists($this->getClass(), $property)) {
+            return;
+        }
+
+        if (is_string($filterValue)) {
+            $qb->andWhere("UPPER(obj.{$property}) LIKE :{$property}");
+            $qb->setParameter($property, '%'.strtoupper($filterValue).'%');
+        } elseif (is_array($filterValue)) {
+            $qb->andWhere("obj.{$property} IN (:{$property})");
+            $qb->setParameter($property, $filterValue);
+        } else {
+            $qb->andWhere("obj.{$property} = :{$property}");
+            $qb->setParameter($property, $filterValue);
+        }
     }
 
     private function sortResults(QueryBuilder $qb, array $sortBy = null)
@@ -203,8 +221,7 @@ abstract class AbstractFinder implements FinderInterface
     {
         //let doctrine do its stuff for the fist part
         $firstQb = $this->om->createQueryBuilder();
-        $extraSelect = $options['count'] ? [] : $this->getExtraSelect();
-        $firstQb->select('DISTINCT obj', ...$extraSelect)->from($this->getClass(), 'obj');
+        $firstQb->select('DISTINCT obj')->from($this->getClass(), 'obj');
         /** @var SearchObjectsEvent $event */
         $build = $this->configureQueryBuilder($firstQb, $firstSearch);
         $this->eventDispatcher->dispatch('objects.search', SearchObjectsEvent::class, [
@@ -222,7 +239,7 @@ abstract class AbstractFinder implements FinderInterface
 
         //new qb for the 2nd part
         $secQb = $this->om->createQueryBuilder();
-        $secQb->select('DISTINCT obj', ...$extraSelect)->from($this->getClass(), 'obj');
+        $secQb->select('DISTINCT obj')->from($this->getClass(), 'obj');
 
         $build = $this->configureQueryBuilder($secQb, $secondSearch);
 
@@ -256,31 +273,6 @@ abstract class AbstractFinder implements FinderInterface
     private function getSql(Query $query)
     {
         $sql = $query->getSql();
-        //we may find a way to turn the getExtraSelect() into something nice here but not many idea on how to do it.
-        //the qb getAllAliases() func doesn't return what's needed
-        $sql = preg_replace('/ AS \S+/', ',', $sql);
-        $sql = str_replace(', FROM', ' FROM', $sql);
-
-        foreach ($this->getAliases() as $property => $alias) {
-            $sql = str_replace(', '.$property, ', '.$property.' AS '.$alias, $sql);
-        }
-
-        return $sql;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getSqlWithParameters(Query $query)
-    {
-        $sql = $query->getSql();
-        $params = $query->getParameters();
-
-        if (!empty($params)) {
-            foreach ($params as $param) {
-                $sql = join(var_export($param->getValue(), true), explode('?', $sql, 2));
-            }
-        }
 
         $sql = preg_replace('/ AS \S+/', ',', $sql);
         $sql = str_replace(', FROM', ' FROM', $sql);
@@ -339,29 +331,6 @@ abstract class AbstractFinder implements FinderInterface
         return '';
     }
 
-    public function setDefaults(QueryBuilder $qb, $filterName, $filterValue)
-    {
-        $property = $filterName;
-        if (array_key_exists($filterName, $this->getExtraFieldMapping())) {
-            $property = $this->getExtraFieldMapping()[$filterName];
-        }
-
-        if (!property_exists($this->getClass(), $property)) {
-            return;
-        }
-
-        if (is_string($filterValue)) {
-            $qb->andWhere("UPPER(obj.{$property}) LIKE :{$property}");
-            $qb->setParameter($property, '%'.strtoupper($filterValue).'%');
-        } elseif (is_array($filterValue)) {
-            $qb->andWhere("obj.{$property} IN (:{$property})");
-            $qb->setParameter($property, $filterValue);
-        } else {
-            $qb->andWhere("obj.{$property} = :{$property}");
-            $qb->setParameter($property, $filterValue);
-        }
-    }
-
     private function getSqlPropertyFromMapping($property)
     {
         /** @var ClassMetadata $metadata */
@@ -371,11 +340,6 @@ abstract class AbstractFinder implements FinderInterface
     }
 
     public function getExtraFieldMapping()
-    {
-        return [];
-    }
-
-    public function getExtraSelect()
     {
         return [];
     }
