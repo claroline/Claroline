@@ -161,8 +161,11 @@ class UserSerializer
                     'name' => $group->getName(),
                 ];
             }, $user->getGroups()->toArray())),
-            'mainOrganization' => $user->getMainOrganization() ? $this->organizationSerializer->serialize($user->getMainOrganization(), [SerializerInterface::SERIALIZE_MINIMAL]) : null,
         ];
+
+        if ($user->getMainOrganization()) {
+            $serializedUser['mainOrganization'] = $this->organizationSerializer->serialize($user->getMainOrganization(), [SerializerInterface::SERIALIZE_MINIMAL]);
+        }
 
         if (!in_array(SerializerInterface::SERIALIZE_TRANSFER, $options)) {
             $serializedUser['permissions'] = $this->serializePermissions($user);

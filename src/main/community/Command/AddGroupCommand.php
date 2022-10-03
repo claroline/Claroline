@@ -49,10 +49,6 @@ class AddGroupCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->om = $this->getContainer()->get(ObjectManager::class);
-        $this->finder = $this->getContainer()->get(FinderProvider::class);
-        $this->crud = $this->getContainer()->get(Crud::class);
-
         $group = $this->om->getRepository(Group::class)->findOneBy(['name' => $input->getArgument('group')]);
         if (!$group) {
             throw new \Exception('Group cannot be found.');

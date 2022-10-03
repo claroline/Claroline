@@ -2,13 +2,14 @@
 
 namespace UJM\ExoBundle\Serializer\Attempt;
 
+use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
+use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Entity\Attempt\Paper;
 use UJM\ExoBundle\Library\Options\Score;
 use UJM\ExoBundle\Library\Options\Transfer;
-use UJM\ExoBundle\Serializer\UserSerializer;
 
 /**
  * Serializer for paper data.
@@ -27,9 +28,6 @@ class PaperSerializer
      */
     private $answerSerializer;
 
-    /**
-     * PaperSerializer constructor.
-     */
     public function __construct(UserSerializer $userSerializer, AnswerSerializer $answerSerializer)
     {
         $this->userSerializer = $userSerializer;
@@ -43,16 +41,14 @@ class PaperSerializer
 
     /**
      * Converts a Paper into a JSON-encodable structure.
-     *
-     * @return array
      */
-    public function serialize(Paper $paper, array $options = [])
+    public function serialize(Paper $paper, array $options = []): array
     {
         $serialized = [
             'id' => $paper->getUuid(),
             'number' => $paper->getNumber(),
             'finished' => !$paper->isInterrupted(),
-            'user' => $paper->getUser() && !$paper->isAnonymized() ? $this->userSerializer->serialize($paper->getUser(), $options) : null,
+            'user' => $paper->getUser() && !$paper->isAnonymized() ? $this->userSerializer->serialize($paper->getUser(), [SerializerInterface::SERIALIZE_MINIMAL]) : null,
             'startDate' => $paper->getStart() ? DateNormalizer::normalize($paper->getStart()) : null,
             'endDate' => $paper->getEnd() ? DateNormalizer::normalize($paper->getEnd()) : null,
             'total' => $paper->getTotal(),

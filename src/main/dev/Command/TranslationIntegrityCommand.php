@@ -11,18 +11,30 @@
 
 namespace Claroline\DevBundle\Command;
 
+use Claroline\CoreBundle\Manager\PluginManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 class TranslationIntegrityCommand extends Command
 {
     const BASE_LANG = 'fr';
 
+    private $kernel;
+    private $pluginManager;
+
+    public function __construct(KernelInterface $kernel, PluginManager $pluginManager)
+    {
+        $this->kernel = $kernel;
+        $this->pluginManager = $pluginManager;
+
+        parent::__construct();
+    }
+
     protected function configure()
     {
-        $this->setName('claroline:debug:translations')
-            ->setDescription('Show translations integrity information. This command ignore arrays');
+        $this->setDescription('Show translations integrity information. This command ignore arrays');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -38,15 +50,14 @@ class TranslationIntegrityCommand extends Command
 
     private function getTranslationFiles()
     {
-        $pluginManager = $this->getContainer()->get('claroline.manager.plugin_manager');
-        $bundles = $pluginManager->getInstalledBundles();
+        $bundles = $this->pluginManager->getInstalledBundles();
         $translationFiles = [];
 
         foreach ($bundles as $bundle) {
             $parts = explode('\\', get_class($bundle));
             $shortName = end($parts);
 
-            if ($pluginManager->isLoaded($shortName)) {
+            if ($this->pluginManager->isLoaded($shortName)) {
                 $translationFiles = array_unique(array_merge($this->parseDirectoryTranslationFiles($shortName), $translationFiles));
             }
         }
@@ -125,7 +136,7 @@ class TranslationIntegrityCommand extends Command
 
     private function getBundleFromFileName($file)
     {
-        $startsAt = strpos($file, '/distribution/plugin/') + strlen('/distribution/plugin/');
+        $startsAt = strpos($file, '/plugin/') + strlen('/plugin/');
         $endsAt = strpos($file, '/Resources', $startsAt);
         $result = substr($file, $startsAt, $endsAt - $startsAt);
 
@@ -139,12 +150,12 @@ class TranslationIntegrityCommand extends Command
     private function parseDirectoryTranslationFiles($shortName)
     {
         $translationFiles = [];
-        $translationDir = $this->getContainer()->get('kernel')->locateResource('@'.$shortName.'/Resources/translations');
+        $translationDir = $this->kernel->locateResource('@'.$shortName.'/Resources/translations');
         $iterator = new \DirectoryIterator($translationDir);
 
-        foreach ($iterator as $fileinfo) {
-            if ($fileinfo->isFile()) {
-                $translationFiles[] = realpath($fileinfo->getPathname());
+        foreach ($iterator as $fileInfo) {
+            if ($fileInfo->isFile()) {
+                $translationFiles[] = realpath($fileInfo->getPathname());
             }
         }
 

@@ -378,7 +378,6 @@ class Crud
      *
      * @todo only flush flush once (do not flush for each collection element)
      * @todo only dispatch lifecycle events once with the full collection in param
-     * @todo remove post_collection event
      */
     public function patch($object, string $property, string $action, array $elements, array $options = [])
     {
@@ -418,8 +417,6 @@ class Crud
                 $updated[] = $element;
             }
         }
-
-        $this->dispatch('patch', 'post_collection', [$object, $options, $property, $updated, $action]);
 
         return $object;
     }

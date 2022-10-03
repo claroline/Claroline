@@ -5,7 +5,6 @@ import {constants} from '#/main/core/user/constants'
 const User = {
   propTypes: {
     id: T.string.isRequired,
-    name: T.string.isRequired,
     firstName: T.string,
     lastName: T.string,
     username: T.string.isRequired,

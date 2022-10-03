@@ -15,26 +15,16 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Notification\NotificationUserParametersEvent;
 use Icap\NotificationBundle\Entity\NotificationUserParameters;
+use Icap\NotificationBundle\Repository\NotificationUserParametersRepository;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-/**
- * Class NotificationUserParametersManager.
- */
 class NotificationUserParametersManager
 {
-    /**
-     * @var \Icap\NotificationBundle\Repository\NotificationUserParametersRepository
-     */
+    /** @var NotificationUserParametersRepository */
     private $notificationUserParametersRepository;
-
-    /**
-     * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
-     */
+    /** @var EventDispatcherInterface */
     private $ed;
-
-    /**
-     * @var \Doctrine\ORM\EntityManager
-     */
+    /** @var ObjectManager */
     private $em;
 
     public function __construct(ObjectManager $em, EventDispatcherInterface $ed)
@@ -52,23 +42,6 @@ class NotificationUserParametersManager
             $parameters = $this->notificationUserParametersRepository->findParametersByUser($user);
         } catch (\Exception $nre) {
             $parameters = $this->createEmptyParameters($user);
-        }
-
-        return $parameters;
-    }
-
-    public function getParametersByRssId($rssId)
-    {
-        return $this->notificationUserParametersRepository->findOneByRssId($rssId);
-    }
-
-    public function regenerateRssId($userId)
-    {
-        $parameters = $this->getParametersByUserId($userId);
-        if (!$parameters->isNew()) {
-            $parameters->setRssId($this->uniqueRssId());
-            $this->em->persist($parameters);
-            $this->em->flush();
         }
 
         return $parameters;

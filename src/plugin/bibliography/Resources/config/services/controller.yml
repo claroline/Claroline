@@ -4,7 +4,8 @@ services:
 
     Icap\BibliographyBundle\Controller\API\ApiController:
         arguments:
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@translator'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     Icap\BibliographyBundle\Controller\API\BookReferenceConfigurationController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
