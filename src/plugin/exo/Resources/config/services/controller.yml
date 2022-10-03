@@ -11,7 +11,7 @@ services:
     UJM\ExoBundle\Controller\Item\ShareController:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@ujm_exo.serializer.user'
+            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
             - '@UJM\ExoBundle\Manager\Item\ShareManager'
 
     UJM\ExoBundle\Controller\AttemptController:

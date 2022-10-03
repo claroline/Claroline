@@ -165,9 +165,7 @@ UserMenu.propTypes = {
     name: T.string,
     username: T.string,
     email: T.string,
-    picture: T.shape({
-      url: T.string.isRequired
-    }),
+    picture: T.string,
     meta: T.shape({
       mailValidated: T.bool
     }),
@@ -248,9 +246,7 @@ HeaderUser.propTypes = {
     name: T.string,
     username: T.string,
     email: T.string,
-    picture: T.shape({
-      url: T.string.isRequired
-    }),
+    picture: T.string,
     meta: T.shape({
       mailValidated: T.bool
     }),

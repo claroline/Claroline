@@ -1,8 +1,5 @@
 # This file contains the core container parameters.
 parameters:
-    # Replace default ExceptionListener
-    security.exception_listener.class: Claroline\CoreBundle\Security\Firewall\ExceptionListener
-
     # Disable symfony legacy autowiring
     container.autowiring.strict_mode: true
 

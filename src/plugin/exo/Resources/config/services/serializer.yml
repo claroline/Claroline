@@ -4,16 +4,6 @@ services:
         autoconfigure: false
         public: true
 
-    UJM\ExoBundle\Serializer\UserSerializer:
-        tags: [claroline.serializer]
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
-
-    ujm_exo.serializer.user:
-         alias: UJM\ExoBundle\Serializer\UserSerializer
-         public: true
-
     UJM\ExoBundle\Serializer\StepSerializer:
         tags: [claroline.serializer]
         arguments:
@@ -54,7 +44,7 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@security.token_storage'
             - '@ujm_exo.collection.item_definitions'
-            - '@ujm_exo.serializer.user'
+            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
             - '@ujm_exo.serializer.hint'
             - '@ujm_exo.serializer.resource_content'
             - '@ujm_exo.serializer.item_object'
@@ -213,7 +203,7 @@ services:
     UJM\ExoBundle\Serializer\Attempt\PaperSerializer:
         tags: [claroline.serializer]
         arguments:
-            - '@ujm_exo.serializer.user'
+            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
             - '@ujm_exo.serializer.answer'
 
     ujm_exo.serializer.paper:

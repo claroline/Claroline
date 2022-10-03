@@ -6,17 +6,19 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Icap\BibliographyBundle\Entity\BookReferenceConfiguration;
 use Icap\BibliographyBundle\Repository\BookReferenceConfigurationRepository;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ApiController
 {
+    /** @var TranslatorInterface */
+    private $translator;
+
     /** @var BookReferenceConfigurationRepository */
     private $configRepository;
 
-    /**
-     * ApiController constructor.
-     */
-    public function __construct(ObjectManager $om)
+    public function __construct(TranslatorInterface $translator, ObjectManager $om)
     {
+        $this->translator = $translator;
         $this->configRepository = $om->getRepository(BookReferenceConfiguration::class);
     }
 
@@ -80,7 +82,7 @@ class ApiController
         $api_key = $config->getApiKey();
 
         if (is_null($api_key)) {
-            throw new \Exception($this->get('translator')->trans('api_not_configured', [], 'icap_bibliography'));
+            throw new \Exception($this->translator->trans('api_not_configured', [], 'icap_bibliography'));
         }
 
         return $api_key;

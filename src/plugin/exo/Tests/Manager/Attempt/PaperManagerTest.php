@@ -47,12 +47,12 @@ class PaperManagerTest extends TestCase
         $this->serializer->expects($this->once())
             ->method('serialize')
             ->with($paper, $options)
-            ->willReturn(new \stdClass());
+            ->willReturn([]);
 
         $data = $this->manager->serialize($paper, $options);
 
         // Checks the result of the serializer is returned
-        $this->assertInstanceOf('\stdClass', $data);
+        $this->assertIsArray($data);
     }
 
     private function mock($class)

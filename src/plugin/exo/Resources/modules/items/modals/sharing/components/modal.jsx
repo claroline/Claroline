@@ -99,17 +99,20 @@ class SharingModal extends Component {
           </FormGroup>
 
           {0 < this.state.users.length &&
-          <SelectedUsers
-            users={this.state.users}
-            deselect={this.deselectUser.bind(this)}
-          />
+            <SelectedUsers
+              users={this.state.users}
+              deselect={this.deselectUser.bind(this)}
+            />
           }
         </div>
 
         <button
           className="modal-btn btn btn-primary"
           disabled={0 === this.state.users.length}
-          onClick={() => this.props.handleShare(this.state.users, this.state.adminRights)}
+          onClick={() => {
+            this.props.fadeModal()
+            this.props.handleShare(this.state.users, this.state.adminRights)
+          }}
         >
           {trans('share', {}, 'actions')}
         </button>
@@ -119,6 +122,7 @@ class SharingModal extends Component {
 }
 
 SharingModal.propTypes = {
+  fadeModal: T.func.isRequired,
   handleShare: T.func.isRequired
 }
 

@@ -20,7 +20,14 @@ services:
         arguments:
             - '@Claroline\DevBundle\Manager\TranslationManager'
         tags:
-            - { name: 'console.command', command: 'claroline:fixup:translations' }
+            - { name: 'console.command', command: 'claroline:translations:fixup' }
+
+    Claroline\DevBundle\Command\TranslationIntegrityCommand:
+        arguments:
+            - '@kernel'
+            - '@Claroline\CoreBundle\Manager\PluginManager'
+        tags:
+            - { name: 'console.command', command: 'claroline:translations:debug' }
 
     Claroline\DevBundle\Command\RouterDebugCommand:
         arguments:

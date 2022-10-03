@@ -45,9 +45,6 @@ class CleanGroupCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->om = $this->getContainer()->get(ObjectManager::class);
-        $this->manager = $this->getContainer()->get('claroline.manager.user_manager');
-
         // get group
         $group = $this->om->getRepository(Group::class)->findOneBy(['name' => $input->getArgument('group')]);
         if (!$group) {

@@ -3,8 +3,10 @@
 namespace UJM\ExoBundle\Serializer\Item;
 
 use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\GenericDataEvent;
@@ -22,7 +24,6 @@ use UJM\ExoBundle\Library\Item\ItemDefinitionsCollection;
 use UJM\ExoBundle\Library\Options\Transfer;
 use UJM\ExoBundle\Repository\ExerciseRepository;
 use UJM\ExoBundle\Serializer\Content\ResourceContentSerializer;
-use UJM\ExoBundle\Serializer\UserSerializer;
 
 /**
  * Serializer for item data.
@@ -59,9 +60,6 @@ class ItemSerializer
      */
     private $eventDispatcher;
 
-    /**
-     * ItemSerializer constructor.
-     */
     public function __construct(
         ObjectManager $om,
         TokenStorageInterface $tokenStorage,
@@ -91,10 +89,8 @@ class ItemSerializer
 
     /**
      * Converts a Item into a JSON-encodable structure.
-     *
-     * @return array
      */
-    public function serialize(Item $question, array $options = [])
+    public function serialize(Item $question, array $options = []): array
     {
         // Serialize specific data for the item type
         $serialized = $this->serializeQuestionType($question, $options);
@@ -264,9 +260,9 @@ class ItemSerializer
         $creator = $question->getCreator();
 
         if (!empty($creator)) {
-            $metadata['creator'] = $this->userSerializer->serialize($creator, $options);
+            $metadata['creator'] = $this->userSerializer->serialize($creator, [SerializerInterface::SERIALIZE_MINIMAL]);
             // TODO : remove me. for retro compatibility with old schema
-            $metadata['authors'] = [$this->userSerializer->serialize($creator, $options)];
+            $metadata['authors'] = [$this->userSerializer->serialize($creator, [SerializerInterface::SERIALIZE_MINIMAL])];
         }
 
         if ($question->getDateCreate()) {

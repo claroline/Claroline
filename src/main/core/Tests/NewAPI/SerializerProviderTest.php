@@ -63,8 +63,6 @@ class SerializerProviderTest extends TransactionalTestCase
     {
         $iterator = new \DirectoryIterator($this->schema->getSampleDirectory($class).'/json/valid/create');
 
-        var_dump($class);
-
         foreach ($iterator as $file) {
             if ($file->isFile()) {
                 $originalData = \file_get_contents($file->getPathName());
@@ -79,7 +77,6 @@ class SerializerProviderTest extends TransactionalTestCase
                 }
                 //is the result... valid ?
                 $errors = $this->validator->validate($class, $data, ValidatorProvider::UPDATE);
-                var_dump($errors);
                 $this->assertTrue(0 === count($errors));
             }
         }

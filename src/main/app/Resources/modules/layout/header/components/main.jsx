@@ -106,11 +106,10 @@ HeaderMain.propTypes = {
    */
   currentUser: T.shape({
     id: T.string,
-    name: T.string,
+    firstName: T.string,
+    lastName: T.string,
     username: T.string,
-    picture: T.shape({
-      url: T.string.isRequired
-    }),
+    picture: T.string,
     roles: T.array
   }),
   impersonated: T.bool.isRequired,
