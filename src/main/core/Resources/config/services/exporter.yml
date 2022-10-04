@@ -11,3 +11,5 @@ services:
 
     Claroline\CoreBundle\Transfer\Exporter\Workspace\ListManagersExporter:
         parent: Claroline\TransferBundle\Transfer\Exporter\AbstractListExporter
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'

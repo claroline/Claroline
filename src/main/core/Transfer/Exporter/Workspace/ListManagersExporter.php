@@ -3,7 +3,10 @@
 namespace Claroline\CoreBundle\Transfer\Exporter\Workspace;
 
 use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\API\Serializer\SerializerInterface;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\TransferBundle\Transfer\Exporter\AbstractListExporter;
 
 /**
@@ -11,6 +14,14 @@ use Claroline\TransferBundle\Transfer\Exporter\AbstractListExporter;
  */
 class ListManagersExporter extends AbstractListExporter
 {
+    /** @var ObjectManager */
+    private $om;
+
+    public function __construct(ObjectManager $om)
+    {
+        $this->om = $om;
+    }
+
     public static function getAction(): array
     {
         return ['workspace', 'list_managers'];
@@ -19,6 +30,32 @@ class ListManagersExporter extends AbstractListExporter
     protected static function getClass(): string
     {
         return User::class;
+    }
+
+    public function execute(int $batchNumber, ?array $options = [], ?array $extra = []): array
+    {
+        $users = parent::execute($batchNumber, $options, $extra);
+
+        $data = [];
+        foreach ($users as $user) {
+            if (!empty($extra['workspace'])) {
+                $data[] = [
+                    'user' => $user,
+                    'workspace' => $extra['workspace'],
+                ];
+            } else {
+                // find all workspaces the user manages
+                $workspaces = $this->om->getRepository(Workspace::class)->findManaged($user['id']);
+                foreach ($workspaces as $workspace) {
+                    $data[] = [
+                        'user' => $user,
+                        'workspace' => $this->serializer->serialize($workspace, [SerializerInterface::SERIALIZE_TRANSFER]),
+                    ];
+                }
+            }
+        }
+
+        return $data;
     }
 
     protected function getHiddenFilters(?array $options = [], ?array $extra = []): array
@@ -48,45 +85,57 @@ class ListManagersExporter extends AbstractListExporter
         return [
             'properties' => [
                 [
-                    'name' => 'id',
+                    'name' => 'user.id',
                     'type' => 'string',
                     'description' => $this->translator->trans('The user id', [], 'schema'),
                 ], [
-                    'name' => 'email',
+                    'name' => 'user.email',
                     'type' => 'string',
                     'description' => $this->translator->trans('The user email address', [], 'schema'),
                 ], [
-                    'name' => 'username',
+                    'name' => 'user.username',
                     'type' => 'string',
                     'description' => $this->translator->trans('The user username', [], 'schema'),
                 ], [
-                    'name' => 'firstName',
+                    'name' => 'user.firstName',
                     'type' => 'string',
                     'description' => $this->translator->trans('The user first name', [], 'schema'),
                 ], [
-                    'name' => 'lastName',
+                    'name' => 'user.lastName',
                     'type' => 'string',
                     'description' => $this->translator->trans('The user last name', [], 'schema'),
                 ], [
-                    'name' => 'administrativeCode',
+                    'name' => 'user.administrativeCode',
                     'type' => 'string',
                     'description' => $this->translator->trans('The user administrativeCode', [], 'schema'),
                 ], [
-                    'name' => 'meta.description',
+                    'name' => 'user.meta.description',
                     'type' => 'string',
                     'description' => $this->translator->trans('The user description', [], 'schema'),
                 ], [
-                    'name' => 'meta.created',
+                    'name' => 'user.meta.created',
                     'type' => 'date',
                     'description' => $this->translator->trans('The user creation date', [], 'schema'),
                 ], [
-                    'name' => 'meta.lastActivity',
+                    'name' => 'user.meta.lastActivity',
                     'type' => 'date',
                     'description' => $this->translator->trans('The user last activity date', [], 'schema'),
                 ], [
-                    'name' => 'restrictions.disabled',
+                    'name' => 'user.restrictions.disabled',
                     'type' => 'boolean',
                     'description' => $this->translator->trans('Is the user disabled ?', [], 'schema'),
+                ], [
+                    'name' => 'workspace.id',
+                    'type' => 'string',
+                    'description' => $this->translator->trans('The workspace id', [], 'schema'),
+                ], [
+                    'name' => 'workspace.name',
+                    'type' => 'string',
+                    'description' => $this->translator->trans('The workspace name', [], 'schema'),
+                ], [
+                    'name' => 'workspace.code',
+                    'type' => 'string',
+                    'description' => $this->translator->trans('The workspace code', [], 'schema'),
                 ],
             ],
         ];
@@ -116,9 +165,6 @@ class ListManagersExporter extends AbstractListExporter
     {
         return [
             [
-                'name' => 'name',
-                'label' => $this->translator->trans('name', [], 'platform'),
-            ], [
                 'name' => 'email',
                 'label' => $this->translator->trans('email', [], 'platform'),
             ], [

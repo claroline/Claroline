@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Listener;
 
+use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
@@ -23,6 +24,8 @@ use Symfony\Component\Security\Http\Authentication\DefaultAuthenticationFailureH
 
 class AuthenticationFailureHandler extends DefaultAuthenticationFailureHandler
 {
+    use RequestDecoderTrait;
+
     /** @var StrictDispatcher */
     private $dispatcher;
     /** @var ObjectManager */
@@ -43,29 +46,30 @@ class AuthenticationFailureHandler extends DefaultAuthenticationFailureHandler
      */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
-        if ($request->isXmlHttpRequest()) {
-            $this->dispatchAuthenticationFailureEvent(json_decode($request->getContent(), true)['username'] ?? '', $exception->getMessage());
+        $authData = $this->decodeRequest($request);
 
+        $this->dispatchAuthenticationFailureEvent($authData['username'] ?? '', $exception->getMessage());
+
+        if ($request->isXmlHttpRequest()) {
             return new JsonResponse($exception->getMessage(), 422);
         }
-
-        $this->dispatchAuthenticationFailureEvent(json_decode($request->getContent(), true)['username'] ?? '', $exception->getMessage());
 
         return parent::onAuthenticationFailure($request, $exception);
     }
 
     private function dispatchAuthenticationFailureEvent(string $username, string $message): void
     {
-        $user = $this->objectManager->getRepository(User::class)->findByName($username);
-        if ($user) {
-            $username = $user[0];
+        try {
+            $user = $this->objectManager->getRepository(User::class)->loadUserByUsername($username);
+        } catch (\Exception $e) {
+            $user = $username;
         }
 
         $this->dispatcher->dispatch(
             SecurityEvents::AUTHENTICATION_FAILURE,
             AuthenticationFailureEvent::class,
             [
-                $username,
+                $user,
                 $message,
             ]
         );
