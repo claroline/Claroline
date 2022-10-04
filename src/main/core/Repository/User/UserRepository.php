@@ -148,44 +148,6 @@ class UserRepository extends ServiceEntityRepository implements UserProviderInte
     }
 
     /**
-     * Search users whose first name, last name or username match a given search string.
-     *
-     * @param string $search
-     * @param bool   $executeQuery
-     * @param string $orderedBy
-     * @param null   $order
-     *
-     * @return User[]|Query
-     */
-    public function findByName($search, $executeQuery = true, $orderedBy = 'id', $order = null)
-    {
-        $upperSearch = strtoupper($search);
-        $upperSearch = trim($upperSearch);
-        $upperSearch = preg_replace('/\s+/', ' ', $upperSearch);
-        $dql = "
-            SELECT u, r, g FROM Claroline\\CoreBundle\\Entity\\User u
-            JOIN u.roles r
-            LEFT JOIN u.groups g
-            WHERE (
-            UPPER(u.lastName) LIKE :search
-            OR UPPER(u.firstName) LIKE :search
-            OR UPPER(u.username) LIKE :search
-            OR UPPER(u.administrativeCode) LIKE :search
-            OR UPPER(u.email) LIKE :search
-            OR CONCAT(UPPER(u.firstName), CONCAT(' ', UPPER(u.lastName))) LIKE :search
-            OR CONCAT(UPPER(u.lastName), CONCAT(' ', UPPER(u.firstName))) LIKE :search
-            )
-            AND u.isRemoved = false
-            AND r.type = 1
-            ORDER BY u.{$orderedBy} {$order}
-        ";
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('search', "%{$upperSearch}%");
-
-        return $executeQuery ? $query->getResult() : $query;
-    }
-
-    /**
      * Returns the users of a group.
      *
      * @return User[]

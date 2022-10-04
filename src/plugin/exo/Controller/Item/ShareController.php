@@ -84,7 +84,7 @@ class ShareController
      */
     public function searchUsers($search)
     {
-        $users = $this->userRepository->findByName($search);
+        $users = $this->userRepository->search($search, 15);
 
         return new JsonResponse(array_map(function (User $user) {
             return $this->userSerializer->serialize($user);

@@ -149,6 +149,25 @@ class WorkspaceRepository extends EntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    public function findManaged(string $userId)
+    {
+        $qb = $this
+            ->createQueryBuilder('w')
+            ->leftJoin('w.roles', 'r')
+            ->leftJoin('r.users', 'u')
+            ->leftJoin('r.groups', 'g')
+            ->leftJoin('g.users', 'gu')
+            ->where('(u.uuid = :userId OR gu.uuid = :userId)')
+            ->andWhere('r.name LIKE :managerRolePrefix')
+            ->andWhere('w.personal = 0')
+            ->setParameters([
+                'userId' => $userId,
+                'managerRolePrefix' => 'ROLE_WS_MANAGER_%',
+            ]);
+
+        return $qb->getQuery()->getResult();
+    }
+
     public function findByCodes(array $codes)
     {
         $dql = '

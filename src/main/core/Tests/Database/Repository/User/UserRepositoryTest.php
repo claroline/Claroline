@@ -79,12 +79,6 @@ class UserRepositoryTest extends RepositoryTestCase
         $this->assertEquals(4, count(self::$repo->findAll()));
     }
 
-    public function testFindByName()
-    {
-        $users = self::$repo->findByName('j');
-        $this->assertEquals(2, count($users));
-    }
-
     public function testFindByGroup()
     {
         $users = self::$repo->findByGroup(self::get('group_2'));
