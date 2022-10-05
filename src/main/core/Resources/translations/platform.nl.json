@@ -329,7 +329,6 @@
     "init_password": "Het wachtwoord herstellen",
     "init_password_confirm": "Bent u er zeker van dat u de wachtwoorden voor deze gebruiker(s) [ %user_list% ] wenst te herstellen ?",
     "initialize": "Initialiseren",
-    "inscription_mail": "E-email bij het inschrijven",
     "install": "Installeren",
     "installed": "Geïnstalleerd",
     "instructions": "Instructies",

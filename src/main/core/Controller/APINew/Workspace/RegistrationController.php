@@ -362,7 +362,9 @@ class RegistrationController
             $this->workspaceManager->unregister($user, $workspace);
         }
 
-        return new JsonResponse(null, 204);
+        return new JsonResponse(array_map(function (Workspace $workspace) {
+            return $this->serializer->serialize($workspace);
+        }, $workspaces));
     }
 
     /**
@@ -398,6 +400,8 @@ class RegistrationController
             }
         }
 
-        return new JsonResponse(null, 204);
+        return new JsonResponse(
+            $this->serializer->serialize($workspace)
+        );
     }
 }

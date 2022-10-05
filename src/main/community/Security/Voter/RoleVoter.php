@@ -56,7 +56,7 @@ class RoleVoter extends AbstractVoter
         if ($collection->isInstanceOf(User::class) || $collection->isInstanceOf(Group::class)) {
             $grant = true;
             foreach ($collection as $object) {
-                $grant = $grant && $this->isGranted(self::PATCH, new ObjectCollection([$object], ['collection' => new ObjectCollection([$role])]));
+                $grant = $grant && $this->isGranted(self::PATCH, new ObjectCollection([$object], ['collection' => new ObjectCollection([$role], $collection->getOptions())]));
                 if (!$grant) {
                     // no need to continue
                     break;
