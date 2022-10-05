@@ -221,6 +221,11 @@ class Organization
         $this->children = new ArrayCollection();
     }
 
+    public function __toString()
+    {
+        return $this->name;
+    }
+
     public function setName($name)
     {
         $this->name = $name;
