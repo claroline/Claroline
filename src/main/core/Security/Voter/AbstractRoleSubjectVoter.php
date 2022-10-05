@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Security\Voter;
 use Claroline\AppBundle\Security\ObjectCollection;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
@@ -25,8 +26,9 @@ class AbstractRoleSubjectVoter extends AbstractVoter
             return VoterInterface::ACCESS_ABSTAIN;
         }
 
-        // check if we can add a workspace (this block is mostly a c/c from RoleVoter)
-        $nonAuthorized = array_filter($collection->toArray(), function (Role $role) use ($token, $object) {
+        $action = $collection->getOption('action');
+
+        $nonAuthorized = array_filter($collection->toArray(), function (Role $role) use ($token, $object, $action) {
             $workspace = $role->getWorkspace();
             if ($workspace) {
                 if ($this->isGranted(['community', 'create_user'], $workspace)) {
@@ -42,9 +44,16 @@ class AbstractRoleSubjectVoter extends AbstractVoter
                     }
                 }
 
-                // If public registration is enabled and user try to get the default role, grant access
-                if ($workspace->getSelfRegistration() && $workspace->getDefaultRole()) {
-                    if ($workspace->getDefaultRole()->getId() === $role->getId()) {
+                if ('add' === $action) {
+                    // If public registration is enabled and user try to get the default role, grant access
+                    if ($workspace->getSelfRegistration() && $workspace->getDefaultRole()) {
+                        if ($workspace->getDefaultRole()->getId() === $role->getId()) {
+                            return false;
+                        }
+                    }
+                } else {
+                    // If public unregistration is enabled and user try to remove the role, grant access
+                    if ($workspace->getSelfUnregistration() && $object instanceof User) {
                         return false;
                     }
                 }

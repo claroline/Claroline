@@ -376,7 +376,7 @@ class Crud
      * @param array  $elements - the collection to patch
      * @param array  $options  - additional patch options
      *
-     * @todo only flush flush once (do not flush for each collection element)
+     * @todo only flush once (do not flush for each collection element)
      * @todo only dispatch lifecycle events once with the full collection in param
      * @todo remove post_collection event
      */
@@ -389,7 +389,7 @@ class Crud
         }
 
         if (!in_array(static::NO_PERMISSIONS, $options)) {
-            $this->checkPermission('PATCH', $object, ['collection' => new ObjectCollection($elements)], true);
+            $this->checkPermission('PATCH', $object, ['collection' => new ObjectCollection($elements, ['action' => $action])], true);
         }
 
         $updated = [];
