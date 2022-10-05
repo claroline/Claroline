@@ -18,29 +18,28 @@ class ObjectCollection extends ArrayCollection
     /** @var array */
     private $options;
 
-    public function __construct(array $objects, array $options = [])
+    public function __construct(array $objects, ?array $options = [])
     {
         parent::__construct($objects);
 
         $this->options = $options;
     }
 
-    public function addOption($option)
-    {
-        $this->options[] = $option;
-    }
-
-    public function getOptions()
+    public function getOptions(): array
     {
         return $this->options;
     }
 
-    public function setOptions($options)
+    public function getOption(string $optionKey)
     {
-        $this->options = $options;
+        if ($this->options[$optionKey]) {
+            return $this->options[$optionKey];
+        }
+
+        return null;
     }
 
-    public function isInstanceOf($class)
+    public function isInstanceOf($class): bool
     {
         //doctrine sends proxy so we have to do the check with the instanceof operator
         $rc = new \ReflectionClass($class);

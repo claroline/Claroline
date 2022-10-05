@@ -1,5 +1,6 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import merge from 'lodash/merge'
 import omit from 'lodash/omit'
 
 import {Modal} from '#/main/app/overlays/modal/components/modal'
@@ -20,7 +21,9 @@ const RolesModal = props =>
           key={role.name}
           className="component-container"
           data={role}
-          primaryAction={props.selectAction(role)}
+          primaryAction={merge({}, props.selectAction(role), {
+            onClick: props.fadeModal
+          })}
         />
       )}
     </div>
