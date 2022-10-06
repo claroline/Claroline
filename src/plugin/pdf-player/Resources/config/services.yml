@@ -5,23 +5,23 @@ services:
         public: true # because controller
 
     # Controllers
-    Claroline\PdfPlayerBundle\Controller\UserEvaluationController:
+    Claroline\PdfPlayerBundle\Controller\EvaluationController:
         arguments:
             - '@security.authorization_checker'
             - '@Claroline\AppBundle\API\SerializerProvider'
-            - '@Claroline\PdfPlayerBundle\Manager\UserEvaluationManager'
+            - '@Claroline\PdfPlayerBundle\Manager\EvaluationManager'
 
     # Listeners
     Claroline\PdfPlayerBundle\Listener\File\Type\PdfListener:
         arguments:
             - '@security.token_storage'
             - '@Claroline\AppBundle\API\SerializerProvider'
-            - '@Claroline\PdfPlayerBundle\Manager\UserEvaluationManager'
+            - '@Claroline\PdfPlayerBundle\Manager\EvaluationManager'
         tags:
             - { name: kernel.event_listener, event: file.application_pdf.load, method: onLoad }
 
     # Managers
-    Claroline\PdfPlayerBundle\Manager\UserEvaluationManager:
+    Claroline\PdfPlayerBundle\Manager\EvaluationManager:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\EvaluationBundle\Manager\ResourceEvaluationManager'
