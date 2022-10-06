@@ -13,9 +13,6 @@ namespace Claroline\DropZoneBundle\Listener;
 
 use Claroline\CoreBundle\Event\Notification\NotificationUserParametersEvent;
 
-/**
- * Class NotificationUserParametersListener.
- */
 class NotificationUserParametersListener
 {
     public function onGetTypesForParameters(NotificationUserParametersEvent $event)

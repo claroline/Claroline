@@ -22,73 +22,39 @@ class NotificationListener
         $notification = $notificationView->getNotification();
 
         switch ($notification->getActionKey()) {
-          case LogDropReportEvent::ACTION:
-            if (isset($notification->getDetails()['report']['dropId'])) {
+            case LogDropReportEvent::ACTION:
+            case LogCorrectionReportEvent::ACTION:
+            case LogDropGradeAvailableEvent::ACTION:
+            case LogDropEndEvent::ACTION:
+                if (isset($notification->getDetails()['report']['dropId'])) {
+                    $event->setPrimaryAction([
+                        'url' => 'claro_dropzone_detail_drop',
+                        'parameters' => [
+                            'dropzoneId' => $notification->getDetails()['report']['dropzoneId'],
+                            'dropId' => $notification->getDetails()['report']['dropId'],
+                        ],
+                    ]);
+                }
+
+                $text = $translator->trans($notification->getActionKey(), ['%dropzone%' => $notification->getDetails()['resource']['name']], 'notification');
+                $event->setText($text);
+
+                break;
+            case LogDropzoneManualStateChangedEvent::ACTION:
                 $event->setPrimaryAction([
-                  'url' => 'claro_dropzone_detail_drop',
-                  'parameters' => [
-                    'dropzoneId' => $notification->getDetails()['report']['dropzoneId'],
-                    'dropId' => $notification->getDetails()['report']['dropId'],
-                  ],
+                    'url' => 'claro_dropzone_detail_dropzone',
+                    'parameters' => [
+                        'dropzoneId' => $notification->getDetails()['report']['dropzoneId'],
+                    ],
                 ]);
-            }
 
-            $text = $translator->trans($notification->getActionKey(), ['%dropzone%' => $notification->getDetails()['resource']['name']], 'notification');
-            $event->setText($text);
-            break;
-          case LogCorrectionReportEvent::ACTION:
-            if (isset($notification->getDetails()['report']['dropId'])) {
-                $event->setPrimaryAction([
-                  'url' => 'claro_dropzone_detail_drop',
-                  'parameters' => [
-                    'dropzoneId' => $notification->getDetails()['report']['dropzoneId'],
-                    'dropId' => $notification->getDetails()['report']['dropId'],
-                  ],
-                ]);
-            }
+                $text = $translator->trans($notification->getActionKey(), [
+                    '%dropzone%' => $notification->getDetails()['resource']['name'],
+                    '%newState%' => $translator->trans($notification->getDetails()['resource']['newState'], [], 'dropzone'),
+                ], 'notification');
+                $event->setText($text);
 
-            $text = $translator->trans($notification->getActionKey(), ['%dropzone%' => $notification->getDetails()['resource']['name']], 'notification');
-            $event->setText($text);
-            break;
-          case LogDropGradeAvailableEvent::ACTION:
-            if (isset($notification->getDetails()['report']['dropId'])) {
-                $event->setPrimaryAction([
-                  'url' => 'claro_dropzone_detail_drop',
-                  'parameters' => [
-                    'dropzoneId' => $notification->getDetails()['report']['dropzoneId'],
-                    'dropId' => $notification->getDetails()['report']['dropId'],
-                  ],
-                ]);
-            }
-
-            $text = $translator->trans($notification->getActionKey(), ['%dropzone%' => $notification->getDetails()['resource']['name']], 'notification');
-            $event->setText($text);
-
-            break;
-          case LogDropzoneManualStateChangedEvent::ACTION:
-            $event->setPrimaryAction([
-              'url' => 'claro_dropzone_detail_dropzone',
-              'parameters' => [
-                'dropzoneId' => $notification->getDetails()['report']['dropzoneId'],
-              ],
-            ]);
-            $text = $translator->trans($notification->getActionKey(), ['%dropzone%' => $notification->getDetails()['resource']['name'], '%newState%' => $this->tranlator->trans($notification->getDetails()['resource']['newState'], [], 'dropzone')], 'notification');
-            $event->setText($text);
-            break;
-          case LogDropEndEvent::ACTION:
-            if (isset($notification->getDetails()['report']['dropId'])) {
-                $event->setPrimaryAction([
-                  'url' => 'claro_dropzone_detail_drop',
-                  'parameters' => [
-                    'dropzoneId' => $notification->getDetails()['report']['dropzoneId'],
-                    'dropId' => $notification->getDetails()['report']['dropId'],
-                  ],
-                ]);
-            }
-
-            $text = $translator->trans($notification->getActionKey(), ['%dropzone%' => $notification->getDetails()['resource']['name']], 'notification');
-            $event->setText($text);
-            break;
-      }
+                break;
+        }
     }
 }

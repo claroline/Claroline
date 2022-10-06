@@ -83,9 +83,6 @@ const Drop = props => props.drop ?
         <Documents
           documents={props.drop.documents}
           showUser={props.dropzone.parameters.dropType === constants.DROP_TYPE_TEAM}
-          showTools={true}
-          tools={props.tools}
-          executeTool={props.executeTool}
         />
       </div>
 
@@ -124,9 +121,7 @@ Drop.propTypes = {
   currentUser: T.object,
   dropzone: T.shape(DropzoneType.propTypes),
   drop: T.shape(DropType.propTypes),
-  tools: T.array,
   saveCorrection: T.func.isRequired,
-  executeTool: T.func.isRequired,
   slideshowQueryString: T.string,
   history: T.object.isRequired
 }
@@ -136,12 +131,10 @@ const ConnectedDrop = withRouter(connect(
     currentUser: selectors.user(state),
     dropzone: selectors.dropzone(state),
     drop: selectors.currentDrop(state),
-    tools: selectors.tools(state),
     slideshowQueryString: selectors.slideshowQueryString(state, selectors.STORE_NAME+'.drops')
   }),
   (dispatch) => ({
-    saveCorrection: (correction) => dispatch(actions.saveCorrection(correction)),
-    executeTool: (toolId, documentId) => dispatch(actions.executeTool(toolId, documentId))
+    saveCorrection: (correction) => dispatch(actions.saveCorrection(correction))
   })
 )(Drop))
 

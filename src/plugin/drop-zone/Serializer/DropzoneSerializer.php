@@ -7,7 +7,6 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
 use Claroline\DropZoneBundle\Entity\Criterion;
 use Claroline\DropZoneBundle\Entity\Dropzone;
-use Claroline\DropZoneBundle\Manager\DropzoneManager;
 
 class DropzoneSerializer
 {
@@ -15,20 +14,14 @@ class DropzoneSerializer
 
     /** @var CriterionSerializer */
     private $criterionSerializer;
-
-    /** @var DropzoneManager */
-    private $dropzoneManager;
-
     /** @var ObjectManager */
     private $om;
 
     public function __construct(
         CriterionSerializer $criterionSerializer,
-        DropzoneManager $dropzoneManager,
         ObjectManager $om
     ) {
         $this->criterionSerializer = $criterionSerializer;
-        $this->dropzoneManager = $dropzoneManager;
         $this->om = $om;
     }
 

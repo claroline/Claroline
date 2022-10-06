@@ -10,9 +10,6 @@ class CriterionSerializer
     private $criterionRepo;
     private $dropzoneRepo;
 
-    /**
-     * CriterionSerializer constructor.
-     */
     public function __construct(ObjectManager $om)
     {
         $this->criterionRepo = $om->getRepository('Claroline\DropZoneBundle\Entity\Criterion');

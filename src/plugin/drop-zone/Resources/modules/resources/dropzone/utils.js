@@ -1,10 +1,9 @@
-import moment from 'moment'
-
+import {now} from '#/main/app/intl/date'
 import {makeId} from '#/main/core/scaffolding/id'
 import {constants} from '#/plugin/drop-zone/resources/dropzone/constants'
 
 function generateCorrection(dropId, user, dropzone, teamId = null) {
-  const currentDate = moment().format('YYYY-MM-DD\THH:mm')
+  const currentDate = now()
   const correction = {
     id: makeId(),
     drop: dropId,
@@ -61,7 +60,7 @@ function computeDropCompletion(dropzone, drop, nbFinishedCorrections) {
   const nbExpected = dropzone.parameters.expectedCorrectionTotal
 
   return drop.finished && (
-      constants.REVIEW_TYPE_PEER !== dropzone.parameters.reviewType || (
+    constants.REVIEW_TYPE_PEER !== dropzone.parameters.reviewType || (
       (drop.unlockedDrop || drop.corrections.filter(c => c.finished && c.valid).length >= nbExpected) &&
       (drop.unlockedUser || nbFinishedCorrections >= nbExpected)
     )
@@ -83,17 +82,10 @@ function getCorrectionKey(drop, dropzone) {
   return key
 }
 
-function getToolDocumentType(toolDocument, tools) {
-  const tool = tools.find(t => t.id === toolDocument.tool)
-
-  return tool ? tool.type : null
-}
-
 export {
   generateCorrection,
   generateCorrectionGrades,
   computeScoreFromGrades,
   computeDropCompletion,
-  getCorrectionKey,
-  getToolDocumentType
+  getCorrectionKey
 }

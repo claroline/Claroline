@@ -12,18 +12,22 @@ services:
             - '@Claroline\DropZoneBundle\Manager\DropzoneManager'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@security.authorization_checker'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\DropZoneBundle\Manager\EvaluationManager'
+            - '@Claroline\DropZoneBundle\Manager\DropManager'
+            - '@Claroline\DropZoneBundle\Manager\DocumentManager'
             
     Claroline\DropZoneBundle\Controller\API\DropzoneController:
         arguments:
+            - '@Claroline\AppBundle\API\Crud'
             - '@Claroline\AppBundle\API\FinderProvider'
             - '@Claroline\DropZoneBundle\Manager\DropzoneManager'
             - '%claroline.param.files_directory%'
             - '@event_dispatcher'
             - '@security.authorization_checker'
-
-    Claroline\DropZoneBundle\Controller\API\DropzoneToolController:
-        parent: Claroline\AppBundle\Controller\AbstractCrudController
-        public: true
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\DropZoneBundle\Manager\DropManager'
+            - '@Claroline\DropZoneBundle\Manager\CorrectionManager'
 
     Claroline\DropZoneBundle\Controller\API\RevisionCommentController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController

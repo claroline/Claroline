@@ -12,9 +12,6 @@ class GradeSerializer
     private $criterionRepo;
     private $gradeRepo;
 
-    /**
-     * GradeSerializer constructor.
-     */
     public function __construct(ObjectManager $om)
     {
         $this->correctionRepo = $om->getRepository('Claroline\DropZoneBundle\Entity\Correction');
@@ -27,10 +24,7 @@ class GradeSerializer
         return 'dropzone_grade';
     }
 
-    /**
-     * @return array
-     */
-    public function serialize(Grade $grade)
+    public function serialize(Grade $grade): array
     {
         return [
             'id' => $grade->getUuid(),

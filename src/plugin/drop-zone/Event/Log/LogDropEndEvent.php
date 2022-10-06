@@ -11,16 +11,13 @@ use Claroline\DropZoneBundle\Entity\Dropzone;
 class LogDropEndEvent extends AbstractLogResourceEvent implements NotifiableInterface
 {
     const ACTION = 'resource-claroline_dropzone-drop_end';
-    protected $dropzone;
-    private $role_manager;
 
-    /**
-     * @param $roleManager
-     */
-    public function __construct(Dropzone $dropzone, Drop $drop, $roleManager)
+    /** @var Dropzone */
+    protected $dropzone;
+
+    public function __construct(Dropzone $dropzone, Drop $drop)
     {
         $this->dropzone = $dropzone;
-        $this->role_manager = $roleManager;
 
         $documentsDetails = [];
         foreach ($drop->getDocuments() as $document) {
@@ -66,19 +63,17 @@ class LogDropEndEvent extends AbstractLogResourceEvent implements NotifiableInte
      */
     public function getIncludeUserIds()
     {
-        // In order to get users with the manager role.
-        //getting the  workspace.
+        $resourceNode = $this->dropzone->getResourceNode();
+        $workspace = $resourceNode->getWorkspace();
 
-        $ResourceNode = $this->dropzone->getResourceNode();
-        $workspace = $ResourceNode->getWorkspace();
-        // getting the  Manager role
-        $role = $this->role_manager->getManagerRole($workspace);
-
-        // to finaly have the users.
-        $users = $role->getUsers();
         $ids = [];
-        foreach ($users as $user) {
-            array_push($ids, $user->getId());
+
+        $role = $workspace->getManagerRole();
+        if ($role) {
+            $users = $role->getUsers();
+            foreach ($users as $user) {
+                $ids[] = $user->getId();
+            }
         }
 
         return $ids;

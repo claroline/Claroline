@@ -13,8 +13,6 @@ import {ContentHtml} from '#/main/app/content/components/html'
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
 import {constants} from '#/plugin/drop-zone/resources/dropzone/constants'
-import {getToolDocumentType} from '#/plugin/drop-zone/resources/dropzone/utils'
-import {constants as configConstants} from '#/plugin/drop-zone/plugin/configuration/constants'
 import {DocumentType} from '#/plugin/drop-zone/resources/dropzone/prop-types'
 
 const formatUrl = (url) => !url || url.startsWith('http') ? url : `http://${url}`
@@ -76,36 +74,6 @@ const DocumentRow = props =>
       </td> :
       <td></td>
     }
-    {props.showTools && props.tools.length > 0 &&
-      <td>
-        {props.tools.map(t =>
-          <button
-            key={`tool-btn-${t.id}`}
-            className="btn btn-default"
-            type="button"
-            onClick={() => props.executeTool(t.id, props.document.id)}
-          >
-            {t.name}
-          </button>
-        )}
-        {props.document.toolDocuments.length > 0 && props.document.toolDocuments.map(td => {
-          if (getToolDocumentType(td, props.tools) === configConstants.compilatioValue && td.data && td.data.reportUrl) {
-            return (
-              <button
-                key={`tool-document-button-${td.id}`}
-                className="btn btn-default"
-                type="button"
-                onClick={() => window.open(td.data.reportUrl, '_blank')}
-              >
-                {trans('report', {}, 'dropzone')}
-              </button>
-            )
-          } else {
-            return ''
-          }
-        })}
-      </td>
-    }
   </tr>
 
 DocumentRow.propTypes = {
@@ -113,11 +81,8 @@ DocumentRow.propTypes = {
   isManager: T.bool.isRequired,
   showUser: T.bool.isRequired,
   showMeta: T.bool.isRequired,
-  showTools: T.bool.isRequired,
   document: T.shape(DocumentType.propTypes),
-  tools: T.array,
   deleteDocument: T.func,
-  executeTool: T.func,
   showModal: T.func
 }
 
@@ -148,9 +113,6 @@ const Documents = props => {
           {props.canEdit &&
             <th>{trans('actions', {}, 'platform')}</th>
           }
-          {props.showTools && props.tools.length > 0 &&
-            <th>{trans('tools', {}, 'platform')}</th>
-          }
         </tr>
       </thead>
 
@@ -172,9 +134,7 @@ Documents.propTypes = {
   isManager: T.bool.isRequired,
   showUser: T.bool.isRequired,
   showMeta: T.bool.isRequired,
-  showTools: T.bool.isRequired,
-  documents: T.arrayOf(T.shape(DocumentType.propTypes)),
-  tools: T.array
+  documents: T.arrayOf(T.shape(DocumentType.propTypes))
 }
 
 Documents.defaultProps = {
@@ -182,8 +142,7 @@ Documents.defaultProps = {
   canEdit: false,
   isManager: false,
   showUser: false,
-  showMeta: true,
-  showTools: false
+  showMeta: true
 }
 
 export {

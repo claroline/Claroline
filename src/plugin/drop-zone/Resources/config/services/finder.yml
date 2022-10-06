@@ -1,9 +1,4 @@
 services:
-    _defaults:
-        autowire: false
-        autoconfigure: false
-        public: true
-
     _instanceof:
         Claroline\AppBundle\API\Finder\AbstractFinder:
             tags: [claroline.finder]
@@ -19,7 +14,5 @@ services:
                      - '@Claroline\AppBundle\Event\StrictDispatcher'
 
     Claroline\DropZoneBundle\Finder\DropFinder: ~
-
-    Claroline\DropZoneBundle\Finder\DropzoneToolFinder: ~
 
     Claroline\DropZoneBundle\Finder\RevisionFinder: ~

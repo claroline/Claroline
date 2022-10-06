@@ -1,0 +1,41 @@
+services:
+    Claroline\DropZoneBundle\Manager\CorrectionManager:
+        arguments:
+            - '@event_dispatcher'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\DropZoneBundle\Manager\DropManager'
+            - '@Claroline\DropZoneBundle\Manager\EvaluationManager'
+
+    Claroline\DropZoneBundle\Manager\DocumentManager:
+        arguments:
+            - '%claroline.param.files_directory%'
+            - '@filesystem'
+            - '@event_dispatcher'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+
+    Claroline\DropZoneBundle\Manager\DropManager:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\DropZoneBundle\Manager\DocumentManager'
+
+    Claroline\DropZoneBundle\Manager\DropzoneManager:
+        arguments:
+            - '%claroline.param.files_directory%'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+            - '@event_dispatcher'
+            - '@translator'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\TeamBundle\Manager\TeamManager'
+            - '@Claroline\DropZoneBundle\Manager\EvaluationManager'
+            - '@Claroline\DropZoneBundle\Manager\DropManager'
+
+    Claroline\DropZoneBundle\Manager\EvaluationManager:
+        arguments:
+            - '@event_dispatcher'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\EvaluationBundle\Manager\ResourceEvaluationManager'
+            - '@Claroline\DropZoneBundle\Manager\DropManager'

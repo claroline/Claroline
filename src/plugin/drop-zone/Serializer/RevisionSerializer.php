@@ -31,9 +31,6 @@ class RevisionSerializer
     private $dropRepo;
     private $userRepo;
 
-    /**
-     * RevisionSerializer constructor.
-     */
     public function __construct(ObjectManager $om, SerializerProvider $serializer)
     {
         $this->serializer = $serializer;
@@ -78,12 +75,10 @@ class RevisionSerializer
     /**
      * @param array    $data
      * @param Revision $revision
-     *
-     * @return Revision
      */
-    public function deserialize($data, Revision $revision = null)
+    public function deserialize($data, Revision $revision = null): Revision
     {
-        if (empty($correction)) {
+        if (empty($revision)) {
             $revision = $this->revisionRepo->findOneBy(['uuid' => $data['id']]);
         }
         $revision = $revision ?: new Revision();
@@ -99,6 +94,6 @@ class RevisionSerializer
             $revision->setCreator($creator);
         }
 
-        return $correction;
+        return $revision;
     }
 }

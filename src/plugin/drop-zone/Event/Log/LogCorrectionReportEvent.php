@@ -11,19 +11,15 @@ use Claroline\DropZoneBundle\Entity\Dropzone;
 class LogCorrectionReportEvent extends AbstractLogResourceEvent implements NotifiableInterface
 {
     const ACTION = 'resource-claroline_dropzone-correction_report';
-    protected $dropzone;
-    protected $details;
-    private $role_manager;
 
-    /**
-     * @param Wiki         $wiki
-     * @param Section      $section
-     * @param Contribution $contribution
-     */
-    public function __construct(Dropzone $dropzone, Drop $drop, Correction $correction, $roleManager)
+    /** @var Dropzone */
+    protected $dropzone;
+    /** @var array */
+    protected $details;
+
+    public function __construct(Dropzone $dropzone, Drop $drop, Correction $correction)
     {
         $this->dropzone = $dropzone;
-        $this->role_manager = $roleManager;
         $this->details = [
             'report' => [
                 'drop' => $drop,
@@ -65,19 +61,17 @@ class LogCorrectionReportEvent extends AbstractLogResourceEvent implements Notif
      */
     public function getIncludeUserIds()
     {
-        // In order to get users with the manager role.
-        //getting the  workspace.
+        $resourceNode = $this->dropzone->getResourceNode();
+        $workspace = $resourceNode->getWorkspace();
 
-        $ResourceNode = $this->dropzone->getResourceNode();
-        $workspace = $ResourceNode->getWorkspace();
-        // getting the  Manager role
-        $role = $this->role_manager->getManagerRole($workspace);
-
-        // to finaly have the users.
-        $users = $role->getUsers();
         $ids = [];
-        foreach ($users as $user) {
-            array_push($ids, $user->getId());
+        // getting the  Manager role
+        $role = $workspace->getManagerRole();
+        if ($role) {
+            $users = $role->getUsers();
+            foreach ($users as $user) {
+                $ids[] = $user->getId();
+            }
         }
 
         return $ids;

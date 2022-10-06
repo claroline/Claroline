@@ -11,6 +11,7 @@
 
 namespace Claroline\DropZoneBundle\Security\Voter;
 
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Security\Voter\AbstractVoter;
 use Claroline\DropZoneBundle\Entity\Revision;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -54,6 +55,7 @@ class RevisionVoter extends AbstractVoter
     private function isOwner(TokenInterface $token, Revision $revision)
     {
         $isOwner = false;
+        /** @var User|string $user */
         $user = $token->getUser();
 
         if ('anon.' !== $user) {

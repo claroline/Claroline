@@ -65,18 +65,6 @@ const DropzoneType = {
   }
 }
 
-const DropzoneToolDocumentType = {
-  propTypes: {
-    id: T.string.isRequired,
-    document: T.string.isRequired,
-    tool: T.string.isRequired,
-    data: T.shape({
-      idDocument: T.string,
-      reportUrl: T.string
-    })
-  }
-}
-
 const Comment = {
   propTypes: {
     id: T.string.isRequired,
@@ -108,9 +96,6 @@ const DocumentType = {
       lastName: T.string.isRequired
     }),
     dropDate: T.string,
-    toolDocuments: T.arrayOf(
-      T.shape(DropzoneToolDocumentType.propTypes)
-    ),
     revision: T.shape({
       id: T.string.isRequired
     })
@@ -210,7 +195,6 @@ const Revision = {
 
 export {
   DropzoneType,
-  DropzoneToolDocumentType,
   DocumentType,
   GradeType,
   CorrectionType,
