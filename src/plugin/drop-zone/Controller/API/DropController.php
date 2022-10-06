@@ -12,19 +12,21 @@
 namespace Claroline\DropZoneBundle\Controller\API;
 
 use Claroline\AppBundle\API\FinderProvider;
+use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
-use Claroline\CoreBundle\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\DropZoneBundle\Entity\Document;
 use Claroline\DropZoneBundle\Entity\Drop;
 use Claroline\DropZoneBundle\Entity\Dropzone;
-use Claroline\DropZoneBundle\Entity\DropzoneTool;
 use Claroline\DropZoneBundle\Entity\Revision;
+use Claroline\DropZoneBundle\Manager\DocumentManager;
+use Claroline\DropZoneBundle\Manager\DropManager;
 use Claroline\DropZoneBundle\Manager\DropzoneManager;
+use Claroline\DropZoneBundle\Manager\EvaluationManager;
 use Claroline\TeamBundle\Entity\Team;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -37,7 +39,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 /**
  * @Route("/dropzone", options={"expose"=true})
  *
- * @todo use crud
+ * @todo use crud and move Document management inside its own controller
  */
 class DropController
 {
@@ -46,23 +48,37 @@ class DropController
 
     /** @var FinderProvider */
     private $finder;
-
     /** @var DropzoneManager */
     private $manager;
-
     /** @var ObjectManager */
     private $om;
+    /** @var SerializerProvider */
+    private $serializer;
+    /** @var EvaluationManager */
+    private $evaluationManager;
+    /** @var DropManager */
+    private $dropManager;
+    /** @var DocumentManager */
+    private $documentManager;
 
     public function __construct(
         FinderProvider $finder,
         DropzoneManager $manager,
         ObjectManager $om,
-        AuthorizationCheckerInterface $authorization
+        AuthorizationCheckerInterface $authorization,
+        SerializerProvider $serializer,
+        EvaluationManager $evaluationManager,
+        DropManager $dropManager,
+        DocumentManager $documentManager
     ) {
         $this->finder = $finder;
         $this->manager = $manager;
         $this->om = $om;
         $this->authorization = $authorization;
+        $this->serializer = $serializer;
+        $this->evaluationManager = $evaluationManager;
+        $this->dropManager = $dropManager;
+        $this->documentManager = $documentManager;
     }
 
     /**
@@ -80,7 +96,7 @@ class DropController
         /* TODO: checks if current user can edit resource or view this drop */
         $this->checkPermission('OPEN', $dropzone->getResourceNode(), [], true);
 
-        return new JsonResponse($this->manager->serializeDrop($drop));
+        return new JsonResponse($this->serializer->serialize($drop));
     }
 
     /**
@@ -123,13 +139,13 @@ class DropController
         try {
             if (empty($team)) {
                 // creates a User drop
-                $myDrop = $this->manager->getUserDrop($dropzone, $user, true);
+                $myDrop = $this->evaluationManager->getUserDrop($dropzone, $user, true);
             } else {
                 // creates a Team drop
-                $myDrop = $this->manager->getTeamDrop($dropzone, $team, $user, true);
+                $myDrop = $this->evaluationManager->getTeamDrop($dropzone, $team, $user, true);
             }
 
-            return new JsonResponse($this->manager->serializeDrop($myDrop));
+            return new JsonResponse($this->serializer->serialize($myDrop));
         } catch (\Exception $e) {
             return new JsonResponse($e->getMessage(), 422);
         }
@@ -150,7 +166,7 @@ class DropController
 
             $this->om->startFlushSuite();
             foreach ($drops as $drop) {
-                $this->manager->deleteDrop($drop);
+                $this->dropManager->deleteDrop($drop);
             }
             $this->om->endFlushSuite();
         }
@@ -178,9 +194,9 @@ class DropController
         try {
             $this->manager->submitDrop($drop, $user);
             $progression = $dropzone->isPeerReview() ? 50 : 100;
-            $this->manager->updateDropProgression($dropzone, $drop, $progression);
+            $this->evaluationManager->updateDropProgression($dropzone, $drop, $progression);
 
-            return new JsonResponse($this->manager->serializeDrop($drop));
+            return new JsonResponse($this->serializer->serialize($drop));
         } catch (\Exception $e) {
             return new JsonResponse($e->getMessage(), 422);
         }
@@ -205,7 +221,7 @@ class DropController
         try {
             $this->manager->cancelDropSubmission($drop);
 
-            return new JsonResponse($this->manager->serializeDrop($drop));
+            return new JsonResponse($this->serializer->serialize($drop));
         } catch (\Exception $e) {
             return new JsonResponse($e->getMessage(), 422);
         }
@@ -230,7 +246,7 @@ class DropController
                 switch ($type) {
                     case Document::DOCUMENT_TYPE_FILE:
                         $files = $request->files->all();
-                        $documents = $this->manager->createFilesDocuments($drop, $user, $files);
+                        $documents = $this->documentManager->createFilesDocuments($drop, $user, $files);
                         break;
                     case Document::DOCUMENT_TYPE_TEXT:
                     case Document::DOCUMENT_TYPE_URL:
@@ -239,12 +255,12 @@ class DropController
                         if ($data) {
                             $data = json_decode($data, true);
                         }
-                        $document = $this->manager->createDocument($drop, $user, $type, $data);
-                        $documents[] = $this->manager->serializeDocument($document);
+                        $document = $this->documentManager->createDocument($drop, $user, $type, $data);
+                        $documents[] = $this->serializer->serialize($document);
                         break;
                 }
                 $progression = $dropzone->isPeerReview() ? 0 : 50;
-                $this->manager->updateDropProgression($dropzone, $drop, $progression);
+                $this->evaluationManager->updateDropProgression($dropzone, $drop, $progression);
             }
 
             return new JsonResponse($documents);
@@ -273,7 +289,7 @@ class DropController
 
         try {
             $documentId = $document->getUuid();
-            $this->manager->deleteDocument($document);
+            $this->documentManager->deleteDocument($document);
 
             return new JsonResponse($documentId);
         } catch (\Exception $e) {
@@ -314,18 +330,18 @@ class DropController
                 switch ($type) {
                     case Document::DOCUMENT_TYPE_FILE:
                         $files = $request->files->all();
-                        $documents = $this->manager->createFilesDocuments($drop, $user, $files, $revision, true);
+                        $documents = $this->documentManager->createFilesDocuments($drop, $user, $files, $revision, true);
                         break;
                     case Document::DOCUMENT_TYPE_TEXT:
                     case Document::DOCUMENT_TYPE_URL:
                     case Document::DOCUMENT_TYPE_RESOURCE:
                         $uuid = $request->request->get('dropData', false);
-                        $document = $this->manager->createDocument($drop, $user, $type, $uuid, $revision, true);
-                        $documents[] = $this->manager->serializeDocument($document);
+                        $document = $this->documentManager->createDocument($drop, $user, $type, $uuid, $revision, true);
+                        $documents[] = $this->serializer->serialize($document);
                         break;
                 }
                 $progression = $dropzone->isPeerReview() ? 0 : 50;
-                $this->manager->updateDropProgression($dropzone, $drop, $progression);
+                $this->evaluationManager->updateDropProgression($dropzone, $drop, $progression);
             }
 
             return new JsonResponse($documents);
@@ -353,7 +369,7 @@ class DropController
 
         try {
             $documentId = $document->getUuid();
-            $this->manager->deleteDocument($document);
+            $this->documentManager->deleteDocument($document);
 
             return new JsonResponse($documentId);
         } catch (\Exception $e) {
@@ -380,7 +396,7 @@ class DropController
         try {
             $this->manager->unlockDrop($drop);
 
-            return new JsonResponse($this->manager->serializeDrop($drop));
+            return new JsonResponse($this->serializer->serialize($drop));
         } catch (\Exception $e) {
             return new JsonResponse($e->getMessage(), 422);
         }
@@ -405,35 +421,7 @@ class DropController
         try {
             $this->manager->unlockDropUser($drop);
 
-            return new JsonResponse($this->manager->serializeDrop($drop));
-        } catch (\Exception $e) {
-            return new JsonResponse($e->getMessage(), 422);
-        }
-    }
-
-    /**
-     * @Route("/tool/{tool}/document/{document}", name="claro_dropzone_tool_execute", methods={"POST"})
-     * @EXT\ParamConverter(
-     *     "tool",
-     *     class="Claroline\DropZoneBundle\Entity\DropzoneTool",
-     *     options={"mapping": {"tool": "uuid"}}
-     * )
-     * @EXT\ParamConverter(
-     *     "document",
-     *     class="Claroline\DropZoneBundle\Entity\Document",
-     *     options={"mapping": {"document": "uuid"}}
-     * )
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     */
-    public function toolExecuteAction(DropzoneTool $tool, Document $document): JsonResponse
-    {
-        $dropzone = $document->getDrop()->getDropzone();
-        $this->checkPermission('EDIT', $dropzone->getResourceNode(), [], true);
-
-        try {
-            $updatedDocument = $this->manager->executeTool($tool, $document);
-
-            return new JsonResponse($this->manager->serializeDocument($updatedDocument));
+            return new JsonResponse($this->serializer->serialize($drop));
         } catch (\Exception $e) {
             return new JsonResponse($e->getMessage(), 422);
         }
@@ -472,6 +460,8 @@ class DropController
     /**
      * @Route("/{id}/drops/csv", name="claro_dropzone_drops_csv", methods={"GET"})
      * @EXT\ParamConverter("dropzone", class="Claroline\DropZoneBundle\Entity\Dropzone", options={"mapping": {"id": "uuid"}})
+     *
+     * @deprecated use Transfer export for this
      */
     public function exportCsvAction(Dropzone $dropzone): StreamedResponse
     {
@@ -542,11 +532,8 @@ class DropController
     public function nextAction(Drop $drop, Request $request): JsonResponse
     {
         $dropzone = $drop->getDropzone();
-        $collection = new ResourceCollection([$dropzone->getResourceNode()]);
 
-        if (!$this->authorization->isGranted('EDIT', $collection)) {
-            throw new AccessDeniedException();
-        }
+        $this->checkPermission('EDIT', $dropzone->getResourceNode(), [], true);
 
         $params = FinderProvider::parseQueryParams($request->query->all());
         $params['allFilters']['dropzone'] = $dropzone->getUuid();
@@ -563,7 +550,7 @@ class DropController
 
         $nextDrop = array_key_exists($next, $data) ? $data[$next] : reset($data);
 
-        return new JsonResponse($this->manager->serializeDrop($nextDrop), 200);
+        return new JsonResponse($this->serializer->serialize($nextDrop), 200);
     }
 
     /**
@@ -573,11 +560,8 @@ class DropController
     public function previousAction(Drop $drop, Request $request): JsonResponse
     {
         $dropzone = $drop->getDropzone();
-        $collection = new ResourceCollection([$dropzone->getResourceNode()]);
 
-        if (!$this->authorization->isGranted('EDIT', $collection)) {
-            throw new AccessDeniedException();
-        }
+        $this->checkPermission('EDIT', $dropzone->getResourceNode(), [], true);
 
         $params = FinderProvider::parseQueryParams($request->query->all());
         $params['allFilters']['dropzone'] = $dropzone->getUuid();
@@ -594,17 +578,17 @@ class DropController
 
         $previousDrop = array_key_exists($previous, $data) ? $data[$previous] : end($data);
 
-        return new JsonResponse($this->manager->serializeDrop($previousDrop), 200);
+        return new JsonResponse($this->serializer->serialize($previousDrop), 200);
     }
 
     private function checkDropEdition(Drop $drop, User $user)
     {
         $dropzone = $drop->getDropzone();
-        $collection = new ResourceCollection([$dropzone->getResourceNode()]);
 
-        if ($this->authorization->isGranted('EDIT', $collection)) {
+        if ($this->checkPermission('EDIT', $dropzone->getResourceNode())) {
             return;
         }
+
         if ($dropzone->isDropEnabled()) {
             if ($drop->getUser() === $user || in_array($user, $drop->getUsers())) {
                 return;

@@ -14,7 +14,6 @@ namespace Claroline\DropZoneBundle\Entity;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -102,16 +101,6 @@ class Document
     protected $dropDate;
 
     /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\DropZoneBundle\Entity\DropzoneToolDocument",
-     *     mappedBy="document"
-     * )
-     *
-     * @var DropzoneToolDocument[]|ArrayCollection
-     */
-    protected $toolDocuments;
-
-    /**
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\DropZoneBundle\Entity\Revision",
      *     inversedBy="documents"
@@ -125,13 +114,9 @@ class Document
      */
     protected $isManager = false;
 
-    /**
-     * Document constructor.
-     */
     public function __construct()
     {
         $this->refreshUuid();
-        $this->toolDocuments = new ArrayCollection();
     }
 
     /**
@@ -304,33 +289,6 @@ class Document
                 $this->setResource($data);
                 break;
         }
-    }
-
-    /**
-     * @return DropzoneToolDocument[]
-     */
-    public function getToolDocuments()
-    {
-        return $this->toolDocuments->toArray();
-    }
-
-    public function addToolDocument(DropzoneToolDocument $toolDocument)
-    {
-        if (!$this->toolDocuments->contains($toolDocument)) {
-            $this->toolDocuments->add($toolDocument);
-        }
-    }
-
-    public function removeToolDocument(DropzoneToolDocument $toolDocument)
-    {
-        if ($this->toolDocuments->contains($toolDocument)) {
-            $this->toolDocuments->removeElement($toolDocument);
-        }
-    }
-
-    public function emptyToolDocuments()
-    {
-        $this->toolDocuments->clear();
     }
 
     /**

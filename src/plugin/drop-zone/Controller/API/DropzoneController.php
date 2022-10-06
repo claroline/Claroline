@@ -11,16 +11,18 @@
 
 namespace Claroline\DropZoneBundle\Controller\API;
 
+use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\FinderProvider;
+use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\DropZoneBundle\Entity\Correction;
 use Claroline\DropZoneBundle\Entity\Document;
 use Claroline\DropZoneBundle\Entity\Drop;
 use Claroline\DropZoneBundle\Entity\Dropzone;
-use Claroline\DropZoneBundle\Entity\DropzoneTool;
 use Claroline\DropZoneBundle\Event\Log\LogDocumentOpenEvent;
+use Claroline\DropZoneBundle\Manager\CorrectionManager;
+use Claroline\DropZoneBundle\Manager\DropManager;
 use Claroline\DropZoneBundle\Manager\DropzoneManager;
 use Claroline\TeamBundle\Entity\Team;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -34,69 +36,73 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @Route("/dropzone", options={"expose"=true})
+ *
+ * @todo use crud and move Correction management inside its own controller
  */
 class DropzoneController
 {
     use PermissionCheckerTrait;
 
+    /** @var Crud */
+    private $crud;
     /** @var FinderProvider */
     private $finder;
-
     /** @var DropzoneManager */
     private $manager;
-
     /** @var EventDispatcherInterface */
-    protected $eventDispatcher;
-
+    private $eventDispatcher;
+    /** @var string */
     private $filesDir;
+    /** @var SerializerProvider */
+    private $serializer;
+    /** @var DropManager */
+    private $dropManager;
+    /** @var CorrectionManager */
+    private $correctionManager;
 
-    /**
-     * DropzoneController constructor.
-     *
-     * @param string $filesDir
-     */
-    public function __construct(FinderProvider $finder, DropzoneManager $manager, $filesDir, EventDispatcherInterface $eventDispatcher, AuthorizationCheckerInterface $authorization)
-    {
+    public function __construct(
+        Crud $crud,
+        FinderProvider $finder,
+        DropzoneManager $manager,
+        string $filesDir,
+        EventDispatcherInterface $eventDispatcher,
+        AuthorizationCheckerInterface $authorization,
+        SerializerProvider $serializer,
+        DropManager $dropManager,
+        CorrectionManager $correctionManager
+    ) {
+        $this->crud = $crud;
         $this->finder = $finder;
         $this->manager = $manager;
         $this->filesDir = $filesDir;
         $this->eventDispatcher = $eventDispatcher;
         $this->authorization = $authorization;
+        $this->serializer = $serializer;
+        $this->dropManager = $dropManager;
+        $this->correctionManager = $correctionManager;
     }
 
     /**
      * Updates a Dropzone resource.
      *
      * @Route("/{id}", name="claro_dropzone_update", methods={"PUT"})
-     * @EXT\ParamConverter(
-     *     "dropzone",
-     *     class="Claroline\DropZoneBundle\Entity\Dropzone",
-     *     options={"mapping": {"id": "uuid"}}
-     * )
-     *
-     * @return JsonResponse
+     * @EXT\ParamConverter("dropzone", class="Claroline\DropZoneBundle\Entity\Dropzone", options={"mapping": {"id": "uuid"}})
      */
-    public function updateAction(Dropzone $dropzone, Request $request)
+    public function updateAction(Dropzone $dropzone, Request $request): JsonResponse
     {
-        $this->checkPermission('EDIT', $dropzone->getResourceNode(), [], true);
+        $this->crud->update($dropzone, json_decode($request->getContent(), true));
 
-        try {
-            $this->manager->update($dropzone, json_decode($request->getContent(), true));
+        $closedDropStates = [
+            Dropzone::STATE_FINISHED,
+            Dropzone::STATE_PEER_REVIEW,
+            Dropzone::STATE_WAITING_FOR_PEER_REVIEW,
+        ];
 
-            $closedDropStates = [
-                Dropzone::STATE_FINISHED,
-                Dropzone::STATE_PEER_REVIEW,
-                Dropzone::STATE_WAITING_FOR_PEER_REVIEW,
-            ];
-
-            if (!$dropzone->getDropClosed() && $dropzone->getManualPlanning() && in_array($dropzone->getManualState(), $closedDropStates)) {
-                $this->manager->closeAllUnfinishedDrops($dropzone);
-            }
-
-            return new JsonResponse($this->manager->serialize($dropzone));
-        } catch (\Exception $e) {
-            return new JsonResponse($e->getMessage(), 422);
+        if (!$dropzone->getDropClosed() && $dropzone->getManualPlanning() && in_array($dropzone->getManualState(), $closedDropStates)) {
+            $this->manager->closeAllUnfinishedDrops($dropzone);
         }
+
+        return new JsonResponse($this->serializer->serialize($dropzone));
     }
 
     /**
@@ -107,13 +113,11 @@ class DropzoneController
      *     options={"mapping": {"id": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @return JsonResponse
      */
-    public function correctionsFetchAction(Dropzone $dropzone)
+    public function correctionsFetchAction(Dropzone $dropzone): JsonResponse
     {
         $this->checkPermission('EDIT', $dropzone->getResourceNode(), [], true);
-        $data = $this->manager->getAllCorrectionsData($dropzone);
+        $data = $this->correctionManager->getAllCorrectionsData($dropzone);
 
         return new JsonResponse($data, 200);
     }
@@ -126,20 +130,18 @@ class DropzoneController
      *     options={"mapping": {"id": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @return JsonResponse
      */
-    public function correctionSaveAction(Drop $drop, User $user, Request $request)
+    public function correctionSaveAction(Drop $drop, User $user, Request $request): JsonResponse
     {
         $dropzone = $drop->getDropzone();
         $this->checkPermission('OPEN', $dropzone->getResourceNode(), [], true);
         /* TODO: Checks correction rights */
 
         try {
-            $correction = $this->manager->saveCorrection(json_decode($request->getContent(), true), $user);
+            $correction = $this->correctionManager->saveCorrection(json_decode($request->getContent(), true), $user);
 
             return new JsonResponse(
-                $this->manager->serializeCorrection($correction)
+                $this->serializer->serialize($correction)
             );
         } catch (\Exception $e) {
             return new JsonResponse($e->getMessage(), 422);
@@ -154,10 +156,8 @@ class DropzoneController
      *     options={"mapping": {"id": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @return JsonResponse
      */
-    public function correctionSubmitAction(Correction $correction, User $user)
+    public function correctionSubmitAction(Correction $correction, User $user): JsonResponse
     {
         $dropzone = $correction->getDrop()->getDropzone();
         $this->checkPermission('OPEN', $dropzone->getResourceNode(), [], true);
@@ -165,10 +165,10 @@ class DropzoneController
         $this->checkCorrectionEdition($correction, $user, $teamId);
 
         try {
-            $this->manager->submitCorrection($correction, $user);
+            $this->correctionManager->submitCorrection($correction, $user);
 
             return new JsonResponse(
-                $this->manager->serializeCorrection($correction)
+                $this->serializer->serialize($correction)
             );
         } catch (\Exception $e) {
             return new JsonResponse($e->getMessage(), 422);
@@ -186,10 +186,8 @@ class DropzoneController
      *     options={"mapping": {"id": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @return JsonResponse
      */
-    public function correctionValidationSwitchAction(Correction $correction, User $user)
+    public function correctionValidationSwitchAction(Correction $correction, User $user): JsonResponse
     {
         $dropzone = $correction->getDrop()->getDropzone();
         $this->checkPermission('OPEN', $dropzone->getResourceNode(), [], true);
@@ -197,10 +195,10 @@ class DropzoneController
         $this->checkCorrectionEdition($correction, $user, $teamId);
 
         try {
-            $this->manager->switchCorrectionValidation($correction);
+            $this->correctionManager->switchCorrectionValidation($correction);
 
             return new JsonResponse(
-                $this->manager->serializeCorrection($correction)
+                $this->serializer->serialize($correction)
             );
         } catch (\Exception $e) {
             return new JsonResponse($e->getMessage(), 422);
@@ -215,10 +213,8 @@ class DropzoneController
      *     options={"mapping": {"id": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @return JsonResponse
      */
-    public function correctionDeleteAction(Correction $correction, User $user)
+    public function correctionDeleteAction(Correction $correction, User $user): JsonResponse
     {
         $dropzone = $correction->getDrop()->getDropzone();
         $this->checkPermission('OPEN', $dropzone->getResourceNode(), [], true);
@@ -226,8 +222,8 @@ class DropzoneController
         $this->checkCorrectionEdition($correction, $user, $teamId);
 
         try {
-            $serializedCorrection = $this->manager->serializeCorrection($correction);
-            $this->manager->deleteCorrection($correction);
+            $serializedCorrection = $this->serializer->serialize($correction);
+            $this->correctionManager->deleteCorrection($correction);
 
             return new JsonResponse($serializedCorrection);
         } catch (\Exception $e) {
@@ -243,10 +239,8 @@ class DropzoneController
      *     options={"mapping": {"id": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @return JsonResponse
      */
-    public function correctionDenyAction(Correction $correction, User $user, Request $request)
+    public function correctionDenyAction(Correction $correction, User $user, Request $request): JsonResponse
     {
         $dropzone = $correction->getDrop()->getDropzone();
         $this->checkPermission('OPEN', $dropzone->getResourceNode(), [], true);
@@ -256,10 +250,10 @@ class DropzoneController
         $comment = $data['comment'];
 
         try {
-            $this->manager->denyCorrection($correction, $comment);
+            $this->correctionManager->denyCorrection($correction, $comment);
 
             return new JsonResponse(
-                $this->manager->serializeCorrection($correction)
+                $this->serializer->serialize($correction)
             );
         } catch (\Exception $e) {
             return new JsonResponse($e->getMessage(), 422);
@@ -274,14 +268,12 @@ class DropzoneController
      *     options={"mapping": {"id": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @return JsonResponse
      */
-    public function peerDropFetchAction(Dropzone $dropzone, User $user)
+    public function peerDropFetchAction(Dropzone $dropzone, User $user): JsonResponse
     {
         $this->checkPermission('OPEN', $dropzone->getResourceNode(), [], true);
-        $drop = $this->manager->getPeerDrop($dropzone, $user);
-        $data = empty($drop) ? null : $this->manager->serializeDrop($drop);
+        $drop = $this->dropManager->getPeerDrop($dropzone, $user);
+        $data = empty($drop) ? null : $this->serializer->serialize($drop);
 
         return new JsonResponse($data);
     }
@@ -299,47 +291,15 @@ class DropzoneController
      *     options={"mapping": {"teamId": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @return JsonResponse
      */
-    public function teamPeerDropFetchAction(Dropzone $dropzone, Team $team, User $user)
+    public function teamPeerDropFetchAction(Dropzone $dropzone, Team $team, User $user): JsonResponse
     {
         $this->checkPermission('OPEN', $dropzone->getResourceNode(), [], true);
         $this->checkTeamUser($team, $user);
-        $drop = $this->manager->getPeerDrop($dropzone, $user, $team->getUuid(), $team->getName());
-        $data = empty($drop) ? null : $this->manager->serializeDrop($drop);
+        $drop = $this->dropManager->getPeerDrop($dropzone, $user, $team->getUuid(), $team->getName());
+        $data = empty($drop) ? null : $this->serializer->serialize($drop);
 
         return new JsonResponse($data);
-    }
-
-    /**
-     * @Route("/tool/{tool}/document/{document}", name="claro_dropzone_tool_execute", methods={"POST"})
-     * @EXT\ParamConverter(
-     *     "tool",
-     *     class="Claroline\DropZoneBundle\Entity\DropzoneTool",
-     *     options={"mapping": {"tool": "uuid"}}
-     * )
-     * @EXT\ParamConverter(
-     *     "document",
-     *     class="Claroline\DropZoneBundle\Entity\Document",
-     *     options={"mapping": {"document": "uuid"}}
-     * )
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @return JsonResponse
-     */
-    public function toolExecuteAction(DropzoneTool $tool, Document $document)
-    {
-        $dropzone = $document->getDrop()->getDropzone();
-        $this->checkPermission('EDIT', $dropzone->getResourceNode(), [], true);
-
-        try {
-            $updatedDocument = $this->manager->executeTool($tool, $document);
-
-            return new JsonResponse($this->manager->serializeDocument($updatedDocument));
-        } catch (\Exception $e) {
-            return new JsonResponse($e->getMessage(), 422);
-        }
     }
 
     /**
@@ -351,10 +311,8 @@ class DropzoneController
      *     class="Claroline\DropZoneBundle\Entity\Document",
      *     options={"mapping": {"document": "uuid"}}
      * )
-     *
-     * @return StreamedResponse
      */
-    public function downloadAction(Document $document)
+    public function downloadAction(Document $document): StreamedResponse
     {
         $this->checkDocumentAccess($document);
         $data = $document->getData();
@@ -382,12 +340,13 @@ class DropzoneController
 
     private function checkCorrectionEdition(Correction $correction, User $user, $teamId = null)
     {
+        // TODO : move this in the CorrectionVoter
         $dropzone = $correction->getDrop()->getDropzone();
-        $collection = new ResourceCollection([$dropzone->getResourceNode()]);
 
-        if ($this->authorization->isGranted('EDIT', $collection)) {
+        if ($this->checkPermission('EDIT', $dropzone->getResourceNode())) {
             return;
         }
+
         if (!$correction->isFinished()) {
             if ($correction->getUser() === $user || $correction->getTeamUuid() === $teamId) {
                 return;
@@ -399,13 +358,14 @@ class DropzoneController
 
     private function checkCorrectionDenial(Correction $correction, User $user, $teamId = null)
     {
+        // TODO : move this in the voter
         $drop = $correction->getDrop();
         $dropzone = $drop->getDropzone();
-        $collection = new ResourceCollection([$dropzone->getResourceNode()]);
 
-        if ($this->authorization->isGranted('EDIT', $collection)) {
+        if ($this->checkPermission('EDIT', $dropzone->getResourceNode())) {
             return;
         }
+
         if ($drop->getUser() === $user || $drop->getTeamUuid() === $teamId) {
             return;
         }
@@ -415,6 +375,7 @@ class DropzoneController
 
     private function checkTeamUser(Team $team, User $user)
     {
+        // TODO : move this in the voter
         if (!$user->hasRole($team->getRole()->getName())) {
             throw new AccessDeniedException();
         }
@@ -422,11 +383,9 @@ class DropzoneController
 
     private function checkDocumentAccess(Document $document)
     {
+        // TODO : move this in the voter
         $dropzone = $document->getDrop()->getDropzone();
-        $collection = new ResourceCollection([$dropzone->getResourceNode()]);
 
-        if (!$this->authorization->isGranted('OPEN', $collection)) {
-            throw new AccessDeniedException();
-        }
+        $this->checkPermission('OPEN', $dropzone->getResourceNode(), [], true);
     }
 }

@@ -1,10 +1,4 @@
 {
-  "webpack": {
-    "entry": {
-      "configuration": "plugin/configuration"
-    }
-  },
-
   "styles": {
     "entry": {
       "dropzone-resource": "dropzone/index.less"

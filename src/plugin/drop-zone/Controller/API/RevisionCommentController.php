@@ -32,6 +32,6 @@ class RevisionCommentController extends AbstractCrudController
 
     public function getIgnore()
     {
-        return ['exist', 'copyBulk', 'schema', 'find'];
+        return ['exist', 'copyBulk', 'find'];
     }
 }

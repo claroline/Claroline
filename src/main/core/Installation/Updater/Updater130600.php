@@ -23,8 +23,6 @@ class Updater130600 extends Updater
         $this->removePlugin('Claroline', 'BookingBundle');
         $this->removePlugin('UJM', 'LtiBundle');
 
-        // TODO : delete lti resources
-
         $this->om->flush();
     }
 

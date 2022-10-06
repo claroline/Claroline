@@ -39,9 +39,6 @@ class RevisionController extends AbstractCrudController
     /** @var DropzoneManager */
     private $manager;
 
-    /**
-     * RevisionController constructor.
-     */
     public function __construct(AuthorizationCheckerInterface $authorization, DropzoneManager $manager)
     {
         $this->authorization = $authorization;
@@ -60,7 +57,7 @@ class RevisionController extends AbstractCrudController
 
     public function getIgnore()
     {
-        return ['exist', 'copyBulk', 'schema', 'find', 'create', 'update', 'list', 'deleteBulk'];
+        return ['exist', 'copyBulk', 'find', 'create', 'update', 'list', 'deleteBulk'];
     }
 
     /**
@@ -86,8 +83,8 @@ class RevisionController extends AbstractCrudController
             $revision = $this->manager->submitDropForRevision($drop, $user);
 
             return new JsonResponse([
-                'drop' => $this->manager->serializeDrop($drop),
-                'revision' => $this->manager->serializeRevision($revision),
+                'drop' => $this->serializer->serialize($drop),
+                'revision' => $this->serializer->serialize($revision),
             ]);
         } catch (\Exception $e) {
             return new JsonResponse($e->getMessage(), 422);
@@ -166,7 +163,7 @@ class RevisionController extends AbstractCrudController
             throw new AccessDeniedException();
         }
 
-        return new JsonResponse($this->manager->serializeDrop($drop), 200);
+        return new JsonResponse($this->serializer->serialize($drop), 200);
     }
 
     /**
@@ -206,7 +203,7 @@ class RevisionController extends AbstractCrudController
 
         $nextRevision = array_key_exists($next, $data) ? $data[$next] : reset($data);
 
-        return new JsonResponse($this->manager->serializeRevision($nextRevision), 200);
+        return new JsonResponse($this->serializer->serialize($nextRevision), 200);
     }
 
     /**
@@ -246,7 +243,7 @@ class RevisionController extends AbstractCrudController
 
         $previousDrop = array_key_exists($previous, $data) ? $data[$previous] : end($data);
 
-        return new JsonResponse($this->manager->serializeRevision($previousDrop), 200);
+        return new JsonResponse($this->serializer->serialize($previousDrop), 200);
     }
 
     private function checkPermission($permission, ResourceNode $resourceNode)

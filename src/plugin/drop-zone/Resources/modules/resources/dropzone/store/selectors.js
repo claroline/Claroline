@@ -67,11 +67,6 @@ const nbCorrections = createSelector(
   (resource) => resource.nbCorrections
 )
 
-const tools = createSelector(
-  [resource],
-  (resource) => resource.tools
-)
-
 const myDrops = createSelector(
   [resource],
   (resource) => resource.myDrops
@@ -227,7 +222,7 @@ const dropDisabledMessages = createSelector(
 
       default:
         if (constants.PLANNING_TYPE_MANUAL === dropzone.planning.type && !isDropEnabledManual) {
-            messages.push(trans('drop_disabled_not_active', {}, 'dropzone'))
+          messages.push(trans('drop_disabled_not_active', {}, 'dropzone'))
         }
 
         break
@@ -271,7 +266,7 @@ const peerReviewDisabledMessages = createSelector(
 
         default:
           if (constants.PLANNING_TYPE_MANUAL === dropzone.planning.type && !isPeerReviewEnabledManual) {
-              messages.push(trans('review_disabled_not_active', {}, 'dropzone'))
+            messages.push(trans('review_disabled_not_active', {}, 'dropzone'))
           }
 
           break
@@ -347,7 +342,6 @@ export const selectors = {
   corrections,
   correctionForm,
   nbCorrections,
-  tools,
   teams,
   myTeamId,
   errorMessage,

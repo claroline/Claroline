@@ -2,7 +2,6 @@ import {makeActionCreator} from '#/main/app/store/actions'
 import {API_REQUEST, url} from '#/main/app/api'
 
 import {selectors} from '#/plugin/drop-zone/resources/dropzone/store/selectors'
-import {actions as baseActions} from '#/plugin/drop-zone/resources/dropzone/store/actions'
 
 export const DROP_UPDATE = 'DROP_UPDATE'
 export const CURRENT_DROP_LOAD = 'CURRENT_DROP_LOAD'
@@ -131,18 +130,6 @@ actions.denyCorrection = (correctionId, comment) => ({
     },
     success: (data, dispatch) => {
       dispatch(actions.updateCorrection(data))
-    }
-  }
-})
-
-actions.executeTool = (toolId, documentId) => ({
-  [API_REQUEST]: {
-    url: ['claro_dropzone_tool_execute', {tool: toolId, document: documentId}],
-    request: {
-      method: 'POST'
-    },
-    success: (data, dispatch) => {
-      dispatch(baseActions.updateDocument(data))
     }
   }
 })

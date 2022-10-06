@@ -1,9 +1,4 @@
 services:
-    _defaults:
-        autowire: false
-        autoconfigure: false
-        public: true
-
     _instanceof:
         Claroline\CoreBundle\Security\Voter\AbstractVoter:
             autowire: false
@@ -14,8 +9,6 @@ services:
                   - '@service_container'
 
     Claroline\DropZoneBundle\Security\Voter\DropCommentVoter: ~
-
-    Claroline\DropZoneBundle\Security\Voter\DropzoneToolVoter: ~
 
     Claroline\DropZoneBundle\Security\Voter\RevisionCommentVoter: ~
 
