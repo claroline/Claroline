@@ -26,7 +26,7 @@ const ToolPage = props => {
     type: CALLBACK_BUTTON,
     icon: classes('fa fa-fw', {
       'fa-expand': !props.fullscreen,
-      'fa-compress': props.fullscreen
+      'fa-times': props.fullscreen
     }),
     label: trans(props.fullscreen ? 'fullscreen_off' : 'fullscreen_on'),
     callback: props.toggleFullscreen

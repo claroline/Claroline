@@ -171,7 +171,7 @@ AutoComplete.prototype = {
           // creates log error
           invariant(false, error.message)
           // displays generic error in ui
-          this.editor.notificationManager.open({type: 'error', text: trans('error_occured')})
+          this.editor.notificationManager.open({type: 'error', text: trans('error_occurred')})
         })
     }
   },

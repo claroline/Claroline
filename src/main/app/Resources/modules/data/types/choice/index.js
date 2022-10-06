@@ -21,7 +21,7 @@ const dataType = {
     {
       name: 'multiple',
       type: 'boolean',
-      label: trans('allow_multiple_responses')
+      label: trans('allow_multiple_responses', {}, 'quiz')
     }, {
       name: 'condensed',
       type: 'boolean',

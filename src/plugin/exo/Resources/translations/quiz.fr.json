@@ -525,5 +525,6 @@
     "show_back": "Autoriser le retour en arrière",
     "show_attempts_stats": "Afficher le graphique d'évolution des tentatives",
     "attempts_chart_all": "Evolution de toutes les tentatives",
-    "attempts_chart_user": "Evolution de mes tentatives"
+    "attempts_chart_user": "Evolution de mes tentatives",
+    "allow_multiple_responses": "Autoriser les réponses multiples"
 }
