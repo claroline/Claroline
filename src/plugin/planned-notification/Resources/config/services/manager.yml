@@ -1,7 +1,0 @@
-services:
-    Claroline\PlannedNotificationBundle\Manager\PlannedNotificationManager:
-       arguments:
-          - '@Claroline\CoreBundle\Manager\MailManager'
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@Claroline\AppBundle\Event\StrictDispatcher'
-          - '@Claroline\AppBundle\API\Crud'

@@ -1,6 +1,0 @@
-plugin:
-  tools:
-    - name: claroline_planned_notification_tool
-      class: bell
-      is_displayable_in_workspace: true
-      is_displayable_in_desktop: false

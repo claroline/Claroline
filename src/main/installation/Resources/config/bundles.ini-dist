@@ -40,7 +40,6 @@ Claroline\ClacoFormBundle\ClarolineClacoFormBundle = true
 UJM\LtiBundle\UJMLtiBundle = false
 Icap\BibliographyBundle\IcapBibliographyBundle = true
 Claroline\DropZoneBundle\ClarolineDropZoneBundle = true
-Claroline\PlannedNotificationBundle\ClarolinePlannedNotificationBundle = false
 Claroline\LinkBundle\ClarolineLinkBundle = true
 Claroline\SlideshowBundle\ClarolineSlideshowBundle = true
 Claroline\OpenBadgeBundle\ClarolineOpenBadgeBundle = true

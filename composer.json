@@ -146,7 +146,6 @@
             "UJM\\LtiBundle\\": "src/plugin/lti",
             "Icap\\BibliographyBundle\\": "src/plugin/bibliography",
             "Claroline\\DropZoneBundle\\": "src/plugin/drop-zone",
-            "Claroline\\PlannedNotificationBundle\\": "src/plugin/planned-notification",
             "Claroline\\LinkBundle\\": "src/plugin/link",
             "Claroline\\OpenBadgeBundle\\": "src/plugin/open-badge",
             "Claroline\\SamlBundle\\": "src/plugin/saml",
