@@ -18,16 +18,23 @@ class Updater130600 extends Updater
 
     public function postUpdate()
     {
-        $this->log('Remove SocialMedia plugin...');
+        $this->removePlugin('Icap', 'SocialmediaBundle');
+        $this->removePlugin('Claroline', 'PlannedNotificationBundle');
 
-        $socialMedia = $this->om->getRepository(Plugin::class)->findOneBy([
-            'vendorName' => 'Icap',
-            'bundleName' => 'SocialmediaBundle',
+        $this->om->flush();
+    }
+
+    private function removePlugin(string $vendorName, string $bundleName)
+    {
+        $this->log(sprintf('Remove %s plugin...', $vendorName.$bundleName));
+
+        $plugin = $this->om->getRepository(Plugin::class)->findOneBy([
+            'vendorName' => $vendorName,
+            'bundleName' => $bundleName,
         ]);
 
-        if ($socialMedia) {
-            $this->om->remove($socialMedia);
-            $this->om->flush();
+        if ($plugin) {
+            $this->om->remove($plugin);
         }
     }
 }
