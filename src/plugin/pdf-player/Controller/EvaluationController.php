@@ -7,7 +7,7 @@ use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Security\Collection\ResourceCollection;
-use Claroline\PdfPlayerBundle\Manager\UserEvaluationManager;
+use Claroline\PdfPlayerBundle\Manager\EvaluationManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
@@ -17,7 +17,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 /**
  * @Route("/pdf")
  */
-class UserEvaluationController
+class EvaluationController
 {
     /** @var AuthorizationCheckerInterface */
     private $authorization;
@@ -25,20 +25,17 @@ class UserEvaluationController
     /** @var SerializerProvider */
     private $serializer;
 
-    /** @var UserEvaluationManager */
-    private $userEvaluationManager;
+    /** @var EvaluationManager */
+    private $evaluationManager;
 
-    /**
-     * UserEvaluationController constructor.
-     */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         SerializerProvider $serializer,
-        UserEvaluationManager $userEvaluationManager
+        EvaluationManager $evaluationManager
     ) {
         $this->authorization = $authorization;
         $this->serializer = $serializer;
-        $this->userEvaluationManager = $userEvaluationManager;
+        $this->evaluationManager = $evaluationManager;
     }
 
     /**
@@ -48,18 +45,16 @@ class UserEvaluationController
      *
      * @param int $page
      * @param int $total
-     *
-     * @return JsonResponse
      */
-    public function updateAction(User $user, File $pdf, $page, $total)
+    public function updateAction(User $user, File $pdf, $page, $total): JsonResponse
     {
         if (!$this->authorization->isGranted('OPEN', new ResourceCollection([$pdf->getResourceNode()]))) {
             throw new AccessDeniedException('Operation "OPEN" cannot be done on object'.get_class($pdf->getResourceNode()));
         }
 
-        $this->userEvaluationManager->update($pdf->getResourceNode(), $user, intval($page), intval($total));
+        $this->evaluationManager->update($pdf->getResourceNode(), $user, intval($page), intval($total));
 
-        $resourceUserEvaluation = $this->userEvaluationManager->getResourceUserEvaluation($pdf->getResourceNode(), $user);
+        $resourceUserEvaluation = $this->evaluationManager->getResourceUserEvaluation($pdf->getResourceNode(), $user);
 
         return new JsonResponse([
             'userEvaluation' => $this->serializer->serialize($resourceUserEvaluation, [Options::SERIALIZE_MINIMAL]),

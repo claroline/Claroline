@@ -16,7 +16,7 @@ use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Resource\File\LoadFileEvent;
-use Claroline\PdfPlayerBundle\Manager\UserEvaluationManager;
+use Claroline\PdfPlayerBundle\Manager\EvaluationManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -30,20 +30,17 @@ class PdfListener
     /** @var SerializerProvider */
     private $serializer;
 
-    /** @var UserEvaluationManager */
-    private $userEvaluationManager;
+    /** @var EvaluationManager */
+    private $evaluationManager;
 
-    /**
-     * PdfListener constructor.
-     */
     public function __construct(
         TokenStorageInterface $tokenStorage,
         SerializerProvider $serializer,
-        UserEvaluationManager $userEvaluationManager
+        EvaluationManager $evaluationManager
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->serializer = $serializer;
-        $this->userEvaluationManager = $userEvaluationManager;
+        $this->evaluationManager = $evaluationManager;
     }
 
     public function onLoad(LoadFileEvent $event)
@@ -54,7 +51,7 @@ class PdfListener
 
         $event->setData([
             'userEvaluation' => $user instanceof User ? $this->serializer->serialize(
-                $this->userEvaluationManager->getResourceUserEvaluation($pdf->getResourceNode(), $user),
+                $this->evaluationManager->getResourceUserEvaluation($pdf->getResourceNode(), $user),
                 [SerializerInterface::SERIALIZE_MINIMAL]
             ) : null,
         ]);
