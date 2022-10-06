@@ -62,7 +62,7 @@ function openFileUpload(editor) {
           const initiator = tinymce.activeEditor || tinymce.get(editor.id)
           if (initiator) {
             // displays generic error in ui
-            initiator.notificationManager.open({type: 'error', text: trans('error_occured')})
+            initiator.notificationManager.open({type: 'error', text: trans('error_occurred')})
             initiator.setProgressState(false)
           }
         })

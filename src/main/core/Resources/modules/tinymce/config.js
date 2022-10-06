@@ -89,7 +89,7 @@ const config = getExternalPlugins().then(extPlugins => {
               invariant(false, error.message)
 
               // displays generic error in ui
-              args.target.notificationManager.open({type: 'error', text: trans('error_occured')})
+              args.target.notificationManager.open({type: 'error', text: trans('error_occurred')})
 
               // hide loader
               args.target.setProgressState(false)

@@ -522,5 +522,6 @@
     "show_back": "Allow rollback",
     "show_attempts_stats": "Display attempts statistics",
     "attempts_chart_all": "Evolution of all attempts",
-    "attempts_chart_user": "Evolution of my attempts"
+    "attempts_chart_user": "Evolution of my attempts",
+    "allow_multiple_responses": "Allows multiple responses"
 }

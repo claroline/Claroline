@@ -70,7 +70,7 @@ class FileController extends AbstractCrudController
 
         $file = $data['file'] ?: tempnam('tmp', 'tmp');
         if (!file_exists($file)) {
-            return new JsonResponse(['file_not_found'], 500);
+            return new JsonResponse('File not found.', 500);
         }
 
         return new BinaryFileResponse($file, 200, [

@@ -170,7 +170,6 @@
     "resource": "Bron",
     "role": "Rol",
     "user": "Gebruiker",
-    "user_list": "Lijst van de gebruikers",
     "workspace": "Werkruimte",
     "log_resource-publish_filter": "Een bron publiceren",
     "log_resource-publish_sentence": "heeft %resource% gepubliceerd",
