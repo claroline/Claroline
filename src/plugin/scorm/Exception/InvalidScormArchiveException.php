@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\ScormBundle\Manager\Exception;
+namespace Claroline\ScormBundle\Exception;
 
 class InvalidScormArchiveException extends \Exception
 {

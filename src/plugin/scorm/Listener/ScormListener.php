@@ -23,78 +23,81 @@ use Claroline\CoreBundle\Event\Resource\ExportResourceEvent;
 use Claroline\CoreBundle\Event\Resource\ImportResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\ResourceActionEvent;
-use Claroline\EvaluationBundle\Manager\ResourceEvaluationManager;
 use Claroline\ScormBundle\Entity\Scorm;
-use Claroline\ScormBundle\Entity\ScoTracking;
+use Claroline\ScormBundle\Manager\EvaluationManager;
 use Claroline\ScormBundle\Manager\ScormManager;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class ScormListener
 {
-    /** @var string */
-    private $filesDir;
-    /** @var Filesystem */
-    private $fileSystem;
-    /** @var ObjectManager */
-    private $om;
-    /** @var ResourceEvaluationManager */
-    private $resourceEvalManager;
-    /** @var ScormManager */
-    private $scormManager;
-    /** @var SerializerProvider */
-    private $serializer;
     /** @var TokenStorageInterface */
     private $tokenStorage;
+    /** @var ObjectManager */
+    private $om;
+    /** @var SerializerProvider */
+    private $serializer;
+    /** @var ScormManager */
+    private $scormManager;
+    /** @var EvaluationManager */
+    private $evaluationManager;
+
+    /** @var string */
+    private $filesDir;
     /** @var string */
     private $uploadDir;
 
     private $scormResourceRepo;
-    private $scoTrackingRepo;
 
     public function __construct(
-        string $filesDir,
-        Filesystem $fileSystem,
-        ObjectManager $om,
-        ResourceEvaluationManager $resourceEvalManager,
-        ScormManager $scormManager,
-        SerializerProvider $serializer,
         TokenStorageInterface $tokenStorage,
+        ObjectManager $om,
+        SerializerProvider $serializer,
+        ScormManager $scormManager,
+        EvaluationManager $evaluationManager,
+        string $filesDir,
         string $uploadDir
     ) {
-        $this->filesDir = $filesDir;
-        $this->fileSystem = $fileSystem;
-        $this->om = $om;
-        $this->resourceEvalManager = $resourceEvalManager;
-        $this->scormManager = $scormManager;
-        $this->serializer = $serializer;
         $this->tokenStorage = $tokenStorage;
+        $this->om = $om;
+        $this->serializer = $serializer;
+        $this->scormManager = $scormManager;
+        $this->evaluationManager = $evaluationManager;
+        $this->filesDir = $filesDir;
         $this->uploadDir = $uploadDir;
 
         $this->scormResourceRepo = $om->getRepository(Scorm::class);
-        $this->scoTrackingRepo = $om->getRepository(ScoTracking::class);
     }
 
     public function onLoad(LoadResourceEvent $event)
     {
+        /** @var Scorm $scorm */
         $scorm = $event->getResource();
-        $user = $this->tokenStorage->getToken()->getUser();
-        if (!$user instanceof User) {
-            $user = null;
+
+        $user = null;
+        $evaluation = null;
+        $tracking = [];
+        if ($this->tokenStorage->getToken()->getUser() instanceof User) {
+            /** @var User $user */
+            $user = $this->tokenStorage->getToken()->getUser();
+
+            // retrieve user progression
+            $evaluation = $this->serializer->serialize(
+                $this->evaluationManager->getResourceUserEvaluation($scorm, $user),
+                [Options::SERIALIZE_MINIMAL]
+            );
+
+            // retrieve progression for each sco in the scorm
+            $tracking = $this->evaluationManager->generateScosTrackings($scorm->getRootScos(), $user);
         }
 
         $event->setData([
             'scorm' => $this->serializer->serialize($scorm),
-            'userEvaluation' => is_null($user) ?
-                null :
-                $this->serializer->serialize(
-                    $this->resourceEvalManager->getUserEvaluation($scorm->getResourceNode(), $user),
-                    [Options::SERIALIZE_MINIMAL]
-                ),
-            'trackings' => $this->scormManager->generateScosTrackings($scorm->getRootScos(), $user),
+            'userEvaluation' => $evaluation,
+            'trackings' => $tracking,
         ]);
+
         $event->stopPropagation();
     }
 
@@ -150,28 +153,11 @@ class ScormListener
 
     public function onCopy(CopyResourceEvent $event)
     {
+        /** @var Scorm $resource */
         $resource = $event->getResource();
-        $workspace = $resource->getResourceNode()->getWorkspace();
         $newWorkspace = $event->getCopy()->getResourceNode()->getWorkspace();
 
-        $hashName = $resource->getHashName();
-
-        if ($workspace->getId() !== $newWorkspace->getId()) {
-            $ds = DIRECTORY_SEPARATOR;
-            /* Copies archive file & unzipped files */
-            if ($this->fileSystem->exists($this->filesDir.$ds.'scorm'.$ds.$workspace->getUuid().$ds.$hashName)) {
-                $this->fileSystem->copy(
-                    $this->filesDir.$ds.'scorm'.$ds.$workspace->getUuid().$ds.$hashName,
-                    $this->filesDir.$ds.'scorm'.$ds.$newWorkspace->getUuid().$ds.$hashName
-                );
-            }
-            if ($this->fileSystem->exists($this->uploadDir.$ds.'scorm'.$ds.$workspace->getUuid().$ds.$hashName)) {
-                $this->fileSystem->mirror(
-                    $this->uploadDir.$ds.'scorm'.$ds.$workspace->getUuid().$ds.$hashName,
-                    $this->uploadDir.$ds.'scorm'.$ds.$newWorkspace->getUuid().$ds.$hashName
-                );
-            }
-        }
+        $this->scormManager->copy($resource, $newWorkspace);
 
         $event->stopPropagation();
     }
