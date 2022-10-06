@@ -12,7 +12,7 @@
 namespace Claroline\ScormBundle\Library;
 
 use Claroline\ScormBundle\Entity\Sco;
-use Claroline\ScormBundle\Manager\Exception\InvalidScormArchiveException;
+use Claroline\ScormBundle\Exception\InvalidScormArchiveException;
 
 class ScormLib
 {

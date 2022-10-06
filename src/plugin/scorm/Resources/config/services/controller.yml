@@ -5,7 +5,8 @@ services:
     Claroline\ScormBundle\Controller\ScormController:
         arguments:
           - '@security.authorization_checker'
-          - '@Claroline\AppBundle\API\FinderProvider'
-          - '@Claroline\ScormBundle\Manager\ScormManager'
-          - '@Claroline\ScormBundle\Serializer\ScoTrackingSerializer'
           - '@translator'
+          - '@Claroline\AppBundle\API\FinderProvider'
+          - '@Claroline\AppBundle\API\SerializerProvider'
+          - '@Claroline\ScormBundle\Manager\ScormManager'
+          - '@Claroline\ScormBundle\Manager\EvaluationManager'

@@ -11,6 +11,7 @@
 namespace Claroline\ScormBundle\Controller;
 
 use Claroline\AppBundle\API\FinderProvider;
+use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -19,9 +20,9 @@ use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\ScormBundle\Entity\Sco;
 use Claroline\ScormBundle\Entity\Scorm;
 use Claroline\ScormBundle\Entity\ScoTracking;
-use Claroline\ScormBundle\Manager\Exception\InvalidScormArchiveException;
+use Claroline\ScormBundle\Exception\InvalidScormArchiveException;
+use Claroline\ScormBundle\Manager\EvaluationManager;
 use Claroline\ScormBundle\Manager\ScormManager;
-use Claroline\ScormBundle\Serializer\ScoTrackingSerializer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,29 +36,31 @@ class ScormController
     use RequestDecoderTrait;
     use PermissionCheckerTrait;
 
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-    /* @var FinderProvider */
-    protected $finder;
-    /** @var ScormManager */
-    private $scormManager;
-    /** @var ScoTrackingSerializer */
-    private $scoTrackingSerializer;
     /** @var TranslatorInterface */
     private $translator;
+    /* @var FinderProvider */
+    private $finder;
+    /** @var SerializerProvider */
+    private $serializer;
+    /** @var ScormManager */
+    private $scormManager;
+    /** @var EvaluationManager */
+    private $evaluationManager;
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
+        TranslatorInterface $translator,
         FinderProvider $finder,
+        SerializerProvider $serializer,
         ScormManager $scormManager,
-        ScoTrackingSerializer $scoTrackingSerializer,
-        TranslatorInterface $translator
+        EvaluationManager $evaluationManager
     ) {
         $this->authorization = $authorization;
-        $this->finder = $finder;
-        $this->scormManager = $scormManager;
-        $this->scoTrackingSerializer = $scoTrackingSerializer;
         $this->translator = $translator;
+        $this->finder = $finder;
+        $this->serializer = $serializer;
+        $this->scormManager = $scormManager;
+        $this->evaluationManager = $evaluationManager;
     }
 
     /**
@@ -113,10 +116,10 @@ class ScormController
         $this->checkPermission('OPEN', $scorm->getResourceNode(), [], true);
 
         $data = $this->decodeRequest($request);
-        $tracking = $this->scormManager->updateScoTracking($sco, $user, $data);
+        $tracking = $this->evaluationManager->updateScoTracking($sco, $user, $data);
 
         return new JsonResponse(
-            $this->scoTrackingSerializer->serialize($tracking)
+            $this->serializer->serialize($tracking)
         );
     }
 

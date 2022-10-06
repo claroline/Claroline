@@ -1,18 +1,12 @@
 services:
-    _defaults:
-        autowire: false
-        autoconfigure: false
-        public: true
-
     Claroline\ScormBundle\Listener\ScormListener:
         arguments:
-            - '%claroline.param.files_directory%'
-            - '@filesystem'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\EvaluationBundle\Manager\ResourceEvaluationManager'
-            - '@Claroline\ScormBundle\Manager\ScormManager'
-            - '@Claroline\AppBundle\API\SerializerProvider'
             - '@security.token_storage'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\ScormBundle\Manager\ScormManager'
+            - '@Claroline\ScormBundle\Manager\EvaluationManager'
+            - '%claroline.param.files_directory%'
             - '%claroline.param.uploads_directory%'
         tags:
            - { name: kernel.event_listener, event: resource.claroline_scorm.load, method: onLoad }
