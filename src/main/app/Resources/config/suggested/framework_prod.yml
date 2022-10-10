@@ -13,6 +13,11 @@ framework:
         cookie_httponly: true
         cookie_secure: auto
         cookie_samesite: "%claroline.session_cookie_samesite%"
-    cache: ~
+    cache:
+        pools:
+            doctrine.result_cache_pool:
+                adapter: cache.app
+            doctrine.system_cache_pool:
+                adapter: cache.system
     php_errors:
         log: true
