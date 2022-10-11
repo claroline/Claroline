@@ -120,15 +120,21 @@ class WorkspaceEvaluationManager extends AbstractEvaluationManager
         // if there is a triggering resource evaluation checks if it is part of the workspace requirements
         // if not, no evaluation is computed
         if ($currentRue) {
-            $currentResourceId = $currentRue->getResourceNode()->getUuid();
+            $currentResource = $currentRue->getResourceNode();
 
-            if (isset($resources[$currentResourceId])) {
+            if (isset($resources[$currentResource->getUuid()])) {
                 if ($currentRue->getStatus()) {
                     ++$statusCount[$currentRue->getStatus()];
                     $score += $currentRue->getScore() ?? 0;
                     $scoreMax += $currentRue->getScoreMax() ?? 0;
                 }
-                unset($resources[$currentResourceId]);
+
+                if ($currentResource->isEvaluated()) {
+                    $score += $currentRue->getScore() ?? 0;
+                    $scoreMax += $currentRue->getScoreMax() ?? 0;
+                }
+
+                unset($resources[$currentResource->getUuid()]);
             }
         }
 
@@ -140,8 +146,11 @@ class WorkspaceEvaluationManager extends AbstractEvaluationManager
 
             if ($resourceEval && $resourceEval->getStatus()) {
                 ++$statusCount[$resourceEval->getStatus()];
-                $score += $resourceEval->getScore() ?? 0;
-                $scoreMax += $resourceEval->getScoreMax() ?? 0;
+
+                if ($resource->isEvaluated()) {
+                    $score += $resourceEval->getScore() ?? 0;
+                    $scoreMax += $resourceEval->getScoreMax() ?? 0;
+                }
             }
         }
 
