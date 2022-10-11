@@ -7,7 +7,7 @@ services:
         public: true
         arguments:
             - '@security.authorization_checker'
-            - '@Innova\PathBundle\Manager\UserProgressionManager'
+            - '@Innova\PathBundle\Manager\EvaluationManager'
 
     Innova\PathBundle\Controller\PathTrackingController:
         arguments:

@@ -17,7 +17,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\Step;
-use Innova\PathBundle\Manager\UserProgressionManager;
+use Innova\PathBundle\Manager\EvaluationManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,15 +34,15 @@ class PathController extends AbstractCrudController
     /** @var AuthorizationCheckerInterface */
     private $authorization;
 
-    /** @var UserProgressionManager */
-    private $userProgressionManager;
+    /** @var EvaluationManager */
+    private $evaluationManager;
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
-        UserProgressionManager $userProgressionManager
+        EvaluationManager $evaluationManager
     ) {
         $this->authorization = $authorization;
-        $this->userProgressionManager = $userProgressionManager;
+        $this->evaluationManager = $evaluationManager;
     }
 
     public function getClass()
@@ -69,8 +69,8 @@ class PathController extends AbstractCrudController
         $this->checkPermission('OPEN', $node, [], true);
 
         $status = $this->decodeRequest($request)['status'];
-        $this->userProgressionManager->update($step, $user, $status);
-        $resourceUserEvaluation = $this->userProgressionManager->getResourceUserEvaluation($step->getPath(), $user);
+        $this->evaluationManager->update($step, $user, $status);
+        $resourceUserEvaluation = $this->evaluationManager->getResourceUserEvaluation($step->getPath(), $user);
 
         return new JsonResponse([
             'userEvaluation' => $this->serializer->serialize($resourceUserEvaluation, [Options::SERIALIZE_MINIMAL]),
@@ -92,7 +92,7 @@ class PathController extends AbstractCrudController
 
         $attempt = null;
         if ($user) {
-            $attempt = $this->serializer->serialize($this->userProgressionManager->getCurrentAttempt($path, $user));
+            $attempt = $this->serializer->serialize($this->evaluationManager->getCurrentAttempt($path, $user));
         }
 
         return new JsonResponse($attempt);
@@ -111,9 +111,9 @@ class PathController extends AbstractCrudController
 
         return new JsonResponse([
             'lastAttempt' => $this->serializer->serialize(
-                $this->userProgressionManager->getCurrentAttempt($path, $user, false)
+                $this->evaluationManager->getCurrentAttempt($path, $user, false)
             ),
-            'progression' => $this->userProgressionManager->getStepsProgressionForUser($path, $user),
+            'progression' => $this->evaluationManager->getStepsProgressionForUser($path, $user),
         ]);
     }
 }

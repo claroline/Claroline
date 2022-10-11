@@ -45,6 +45,7 @@
     "resources_delete_message": "{1} Are you sure you want to delete this resource? | [2,Inf[ Are you sure you want to delete these %count% resources?",
     "all_resources": "All resources",
     "all_resources_help": "You will find below all the resources of the workspace in which you have participated.",
+    "evaluated_resource": "Evaluated resource",
     "required_resource": "Required resource",
     "required_resources": "Required resources",
     "required_resources_help": "You will find below all the resources to do to progress in the workspace.",
@@ -97,5 +98,9 @@
         "location_unauthorized_help": "Please use one of the authorized workstations to access the resource."
     },
     "forbidden": "Access to the resource not possible",
-    "forbidden_desc": "You do not have access to this resource. Please contact an administrator to give you the necessary rights."
+    "forbidden_desc": "You do not have access to this resource. Please contact an administrator to give you the necessary rights.",
+    "require_resource": "The resource is used in the progression of the workspace",
+    "require_resource_help": "Users will need to complete this resource to progress through the workspace.",
+    "evaluate_resource": "The resource is used in the score of the workspace",
+    "evaluate_resource_help": "The score obtained by users at this resource is used to calculate the score of the workspace."
 }

@@ -35,7 +35,7 @@ class ResourceEvaluationManager extends AbstractEvaluationManager
         $this->om = $om;
     }
 
-    public function getUserEvaluation(ResourceNode $node, User $user, ?bool $withCreation = true)
+    public function getUserEvaluation(ResourceNode $node, User $user, ?bool $withCreation = true): ?ResourceUserEvaluation
     {
         $evaluation = $this->om->getRepository(ResourceUserEvaluation::class)->findOneBy([
             'resourceNode' => $node,

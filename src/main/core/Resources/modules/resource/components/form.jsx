@@ -180,6 +180,16 @@ const ResourceFormComponent = (props) =>
             options: {
               unit: trans('minutes')
             }
+          }, {
+            name: 'evaluation.required',
+            label: trans('require_resource', {}, 'resource'),
+            type: 'boolean',
+            help: trans('require_resource_help', {}, 'resource')
+          }, {
+            name: 'evaluation.evaluated',
+            label: trans('evaluate_resource', {}, 'resource'),
+            type: 'boolean',
+            help: trans('evaluate_resource_help', {}, 'resource')
           }
         ]
       }, {
