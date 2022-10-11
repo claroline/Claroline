@@ -7,7 +7,7 @@ services:
            - '@Claroline\AppBundle\API\Crud'
            - '@Claroline\AppBundle\API\SerializerProvider'
            - '@claroline.manager.resource_manager'
-           - '@Innova\PathBundle\Manager\UserProgressionManager'
+           - '@Innova\PathBundle\Manager\EvaluationManager'
         tags:
             - { name: kernel.event_listener, event: resource.innova_path.load, method: onLoad }
             - { name: kernel.event_listener, event: resource.innova_path.copy, method: onCopy }

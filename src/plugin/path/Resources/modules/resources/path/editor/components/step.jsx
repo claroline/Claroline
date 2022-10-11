@@ -61,12 +61,6 @@ const EditorStep = props =>
               },
               linked: [
                 {
-                  name: 'evaluated',
-                  type: 'boolean',
-                  label: trans('evaluated', {}, 'path'),
-                  help: trans('evaluated_help', {}, 'path'),
-                  displayed: (step) => !isEmpty(step.primaryResource)
-                }, {
                   name: 'showResourceHeader',
                   type: 'boolean',
                   label: trans('show_resource_header', {}, 'resource'),

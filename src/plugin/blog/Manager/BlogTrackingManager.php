@@ -21,7 +21,7 @@ use Icap\BlogBundle\Event\Log\LogPostReadEvent;
 use Icap\BlogBundle\Event\Log\LogPostUpdateEvent;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class BlogTrackingManager
 {
@@ -30,19 +30,16 @@ class BlogTrackingManager
     const BLOG_COMMENT_TYPE = 'icap_blog_comment';
 
     private $eventDispatcher;
-    private $evalutionManager;
+    private $evaluationManager;
     private $translator;
 
-    /**
-     * Constructor.
-     */
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
-        ResourceEvaluationManager $evalutionManager,
-        TranslatorInterface $translator)
-    {
+        ResourceEvaluationManager $evaluationManager,
+        TranslatorInterface $translator
+    ) {
         $this->eventDispatcher = $eventDispatcher;
-        $this->evalutionManager = $evalutionManager;
+        $this->evaluationManager = $evaluationManager;
         $this->translator = $translator;
     }
 
@@ -164,7 +161,7 @@ class BlogTrackingManager
      */
     public function updateResourceTracking(ResourceNode $node, User $user, \DateTime $date)
     {
-        $this->evalutionManager->updateUserEvaluation(
+        $this->evaluationManager->updateUserEvaluation(
             $node,
             $user,
             ['status' => AbstractEvaluation::STATUS_PARTICIPATED],

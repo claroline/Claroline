@@ -2,6 +2,7 @@ import React, {Component, Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import get from 'lodash/get'
+import isEmpty from 'lodash/isEmpty'
 
 import {trans, number} from '#/main/app/intl'
 import {ContentSummary} from '#/main/app/content/components/summary'
@@ -38,13 +39,13 @@ class PlayerEnd extends Component {
       label: (
         <Fragment>
           {step.title}
-          {step.evaluated && this.props.showScore && get(this.props.attempt, `data.resources[${step.id}].max`, null) &&
-          <ScoreBox
-            score={get(this.props.attempt, `data.resources[${step.id}].score`, null)}
-            scoreMax={get(this.props.attempt, `data.resources[${step.id}].max`)}
-            size="sm"
-            style={{marginLeft: 'auto'}}
-          />
+          {!isEmpty(step.primaryResource) && this.props.showScore && get(this.props.attempt, `data.resources[${step.id}].max`, null) &&
+            <ScoreBox
+              score={get(this.props.attempt, `data.resources[${step.id}].score`, null)}
+              scoreMax={get(this.props.attempt, `data.resources[${step.id}].max`)}
+              size="sm"
+              style={{marginLeft: 'auto'}}
+            />
           }
         </Fragment>
       ),

@@ -1,5 +1,6 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import get from 'lodash/get'
 import omit from 'lodash/omit'
 
 import {url} from '#/main/app/api'
@@ -72,6 +73,16 @@ const AboutModal = props =>
               options: {
                 unit: trans('minutes')
               }
+            }, {
+              name: 'evaluation.required',
+              label: trans('require_resource', {}, 'resource'),
+              type: 'boolean',
+              displayed: (resourceNode) => !!get(resourceNode, 'evaluation.required')
+            }, {
+              name: 'evaluation.evaluated',
+              label: trans('evaluate_resource', {}, 'resource'),
+              type: 'boolean',
+              displayed: (resourceNode) => !!get(resourceNode, 'evaluation.evaluated')
             }
           ]
         }

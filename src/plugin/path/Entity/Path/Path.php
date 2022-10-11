@@ -117,6 +117,8 @@ class Path extends AbstractResource
      * @ORM\Column(name="show_score", type="boolean")
      *
      * @var bool
+     *
+     * @deprecated will be be replaced by the score type on resource node
      */
     private $showScore = false;
 

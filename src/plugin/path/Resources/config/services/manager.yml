@@ -1,10 +1,5 @@
 services:
-    _defaults:
-        autowire: false
-        autoconfigure: false
-        public: true
-
-    Innova\PathBundle\Manager\UserProgressionManager:
+    Innova\PathBundle\Manager\EvaluationManager:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\EvaluationBundle\Manager\ResourceEvaluationManager'

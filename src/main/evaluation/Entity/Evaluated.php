@@ -7,6 +7,8 @@ use Doctrine\ORM\Mapping as ORM;
 trait Evaluated
 {
     /**
+     * The evaluation will produce a score.
+     *
      * @ORM\Column(type="boolean", options={"default" = 0})
      *
      * @var bool

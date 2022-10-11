@@ -3,6 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import get from 'lodash/get'
 import omit from 'lodash/omit'
+import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
@@ -23,7 +24,7 @@ const UserProgressionModal = props => {
       label: (
         <Fragment>
           {step.title}
-          {step.evaluated && get(props.path, 'display.showScore') && get(props.lastAttempt, `data.resources[${step.id}].max`, null) &&
+          {!isEmpty(step.primaryResource) && get(props.path, 'display.showScore') && get(props.lastAttempt, `data.resources[${step.id}].max`, null) &&
             <ScoreBox
               score={get(props.lastAttempt, `data.resources[${step.id}].score`, null)}
               scoreMax={get(props.lastAttempt, `data.resources[${step.id}].max`)}

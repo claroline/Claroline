@@ -30,7 +30,7 @@ class Step
      *
      * @ORM\Column(name="step_order", type="integer")
      */
-    protected $order;
+    private $order;
 
     /**
      * Parent step.
@@ -40,7 +40,7 @@ class Step
      * @ORM\ManyToOne(targetEntity="Step", inversedBy="children")
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="CASCADE")
      */
-    protected $parent;
+    private $parent;
 
     /**
      * Children steps.
@@ -50,7 +50,7 @@ class Step
      * @ORM\OneToMany(targetEntity="Step", mappedBy="parent", cascade={"persist", "remove"})
      * @ORM\OrderBy({"order" = "ASC"})
      */
-    protected $children;
+    private $children;
 
     /**
      * Path.
@@ -60,7 +60,7 @@ class Step
      * @ORM\ManyToOne(targetEntity="Innova\PathBundle\Entity\Path\Path", inversedBy="steps")
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
-    protected $path;
+    private $path;
 
     /**
      * Title of the step.
@@ -69,7 +69,7 @@ class Step
      *
      * @ORM\Column(name="title", nullable=true)
      */
-    protected $title;
+    private $title;
 
     /**
      * Description of the step.
@@ -78,7 +78,7 @@ class Step
      *
      * @ORM\Column(name="description", type="text", nullable=true)
      */
-    protected $description;
+    private $description;
 
     /**
      * The number of the step (either a number, a literal or a custom label).
@@ -87,7 +87,7 @@ class Step
      *
      * @ORM\Column(nullable=true)
      */
-    protected $numbering;
+    private $numbering;
 
     /**
      * @var ResourceNode
@@ -95,14 +95,14 @@ class Step
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
      * @ORM\JoinColumn(name="resource_id", nullable=true, onDelete="SET NULL")
      */
-    protected $resource;
+    private $resource;
 
     /**
      * @var bool
      *
      * @ORM\Column(name="showResourceHeader", type="boolean")
      */
-    protected $showResourceHeader = false;
+    private $showResourceHeader = false;
 
     /**
      * Secondary resources.
@@ -112,14 +112,7 @@ class Step
      * @ORM\OneToMany(targetEntity="Innova\PathBundle\Entity\SecondaryResource", mappedBy="step", cascade={"persist", "remove"}, orphanRemoval=true)
      * @ORM\OrderBy({"order" = "ASC"})
      */
-    protected $secondaryResources;
-
-    /**
-     * @ORM\Column(type="boolean")
-     *
-     * @var bool
-     */
-    private $evaluated = false;
+    private $secondaryResources;
 
     /**
      * @Gedmo\Slug(fields={"title"}, unique=false, updatable=false)
@@ -436,22 +429,6 @@ class Step
         $this->showResourceHeader = $showResourceHeader;
 
         return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isEvaluated()
-    {
-        return $this->evaluated;
-    }
-
-    /**
-     * @param bool $evaluated
-     */
-    public function setEvaluated($evaluated)
-    {
-        $this->evaluated = $evaluated;
     }
 
     public function getSlug()

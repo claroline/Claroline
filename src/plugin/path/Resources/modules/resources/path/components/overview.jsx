@@ -24,7 +24,7 @@ const PathOverview = props => {
       label: (
         <Fragment>
           {step.title}
-          {step.evaluated && get(props.path, 'display.showScore') && get(props.attempt, `data.resources[${step.id}].max`, null) &&
+          {!isEmpty(step.primaryResource) && get(props.path, 'display.showScore') && get(props.attempt, `data.resources[${step.id}].max`, null) &&
             <ScoreBox
               score={get(props.attempt, `data.resources[${step.id}].score`, null)}
               scoreMax={get(props.attempt, `data.resources[${step.id}].max`)}

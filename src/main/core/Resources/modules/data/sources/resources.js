@@ -40,7 +40,7 @@ export default {
         name: 'meta.views',
         type: 'number',
         label: trans('views')
-      }, { // todo : find a way to display it only to those who have 'administrate' right
+      }, {
         name: 'meta.published',
         alias: 'published',
         type: 'boolean',
@@ -64,10 +64,23 @@ export default {
         label: trans('creator'),
         displayed: true
       }, {
+        name: 'evaluation.estimatedDuration',
+        label: trans('estimated_duration'),
+        type: 'number',
+        options: {
+          unit: trans('minutes')
+        },
+        alias: 'estimatedDuration'
+      }, {
         name: 'evaluation.required',
         label: trans('required_resource', {}, 'resource'),
         type: 'boolean',
         alias: 'required'
+      }, {
+        name: 'evaluation.evaluated',
+        label: trans('evaluated_resource', {}, 'resource'),
+        type: 'boolean',
+        alias: 'evaluated'
       }, {
         name: 'tags',
         type: 'tag',
