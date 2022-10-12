@@ -58,16 +58,8 @@ abstract class AbstractEvaluationManager
 
     private function updateEvaluationProgression(AbstractEvaluation $evaluation, float $progression, float $progressionMax): AbstractEvaluation
     {
-        $newProgression = $progression / $progressionMax;
-
-        $oldProgression = !empty($evaluation->getProgression()) ? $evaluation->getProgression() : 0;
-        $oldProgressionMax = !empty($evaluation->getProgressionMax()) ? $evaluation->getProgressionMax() : 100;
-        $oldProgression = $oldProgression / $oldProgressionMax;
-
-        if ($newProgression >= $oldProgression) {
-            $evaluation->setProgression($progression);
-            $evaluation->setProgressionMax($progressionMax);
-        }
+        $evaluation->setProgression($progression);
+        $evaluation->setProgressionMax($progressionMax);
 
         return $evaluation;
     }
