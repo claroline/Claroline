@@ -86,7 +86,7 @@ class PageFull extends Component {
           poster: this.props.poster
         }, this.props.meta || {})}
       >
-        {this.state.fullscreen &&
+        {this.state.fullscreen && 0 !== this.state.actions.length &&
           <Button
             className="fullscreen-close"
             {...this.state.actions.find(action => 'fullscreen' === action.name)}

@@ -21,10 +21,12 @@
             top: floor(@grid-gutter-width / 2);
             right: @grid-gutter-width;
             //font-weight: @close-font-weight;
-            color: @close-color;
+            //color: @close-color;
             font-size: 36px;
             line-height: 1;
             opacity: 0.6;
+
+            .text-subtitles();
 
             &:hover,
             &.hover,
@@ -33,7 +35,7 @@
             &:active,
             &.active {
                 opacity: 1;
-                text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+                //text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
             }
         }
     }
