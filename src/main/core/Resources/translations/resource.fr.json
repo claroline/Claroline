@@ -45,6 +45,7 @@
     "resources_delete_message": "{1} Êtes-vous sûr de vouloir supprimer cette ressource ? | [2,Inf[ Êtes-vous sûr de vouloir supprimer ces %count% ressources ?",
     "all_resources": "Toutes les ressources",
     "all_resources_help": "Vous trouverez ci-dessous toutes les ressources de l'espace auxquelles vous avez participé.",
+    "evaluated_resource": "Ressource évaluée",
     "required_resource": "Ressource requise",
     "required_resources": "Ressources requises",
     "required_resources_help": "Vous trouverez ci-dessous toutes les ressources à faire pour progresser dans l'espace d'activités.",
