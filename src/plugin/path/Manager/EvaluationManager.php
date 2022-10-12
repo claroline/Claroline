@@ -299,7 +299,7 @@ class EvaluationManager
 
         return [
             'progression' => $progressionMax ? ($progression / $progressionMax) * 100 : $progression,
-            'progressionMax' => $progressionMax, // TODO : for retro compatibility
+            'progressionMax' => 100, // TODO : for retro compatibility
             'status' => $status,
         ];
     }
