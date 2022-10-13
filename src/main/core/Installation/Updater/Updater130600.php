@@ -16,7 +16,7 @@ class Updater130600 extends Updater
         $this->om = $om;
     }
 
-    public function postUpdate()
+    public function preUpdate()
     {
         $this->removePlugin('Icap', 'SocialmediaBundle');
         $this->removePlugin('Claroline', 'PlannedNotificationBundle');
