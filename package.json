@@ -5,13 +5,13 @@
   "license": "GPL-3.0",
   "repository": "https://github.com/claroline/Claroline",
   "engines": {
-    "node": ">=10",
-    "npm": ">=6,<7"
+    "node": ">=12",
+    "npm": ">=8"
   },
   "scripts": {
     "themes": "node src/main/core/Resources/server/themes/bin build",
-    "webpack": "node_modules/.bin/webpack --config=webpack.config.prod.js --progress --bail",
-    "webpack:dev": "node_modules/.bin/webpack-dev-server --config=webpack.config.dev.js --color"
+    "webpack": "webpack --config=webpack.config.prod.js --progress --bail",
+    "webpack:dev": "webpack-dev-server --config=webpack.config.dev.js --color"
   },
   "dependencies": {
     "@babel/core": "^7.4.1",
