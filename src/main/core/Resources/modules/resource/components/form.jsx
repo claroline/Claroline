@@ -184,12 +184,21 @@ const ResourceFormComponent = (props) =>
             name: 'evaluation.required',
             label: trans('require_resource', {}, 'resource'),
             type: 'boolean',
-            help: trans('require_resource_help', {}, 'resource')
-          }, {
-            name: 'evaluation.evaluated',
-            label: trans('evaluate_resource', {}, 'resource'),
-            type: 'boolean',
-            help: trans('evaluate_resource_help', {}, 'resource')
+            help: trans('require_resource_help', {}, 'resource'),
+            onChange: (required) => {
+              if (!required) {
+                props.updateProp('evaluation.evaluated', false)
+              }
+            },
+            linked: [
+              {
+                name: 'evaluation.evaluated',
+                label: trans('evaluate_resource', {}, 'resource'),
+                type: 'boolean',
+                help: trans('evaluate_resource_help', {}, 'resource'),
+                displayed: (resource) => get(resource, 'evaluation.required', false)
+              }
+            ]
           }
         ]
       }, {
