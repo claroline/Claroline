@@ -133,7 +133,7 @@ class UserSerializer
             'restrictions' => $this->serializeRestrictions($user),
         ];
 
-        if (!in_array(SerializerInterface::SERIALIZE_TRANSFER, $options)) {
+        if (!in_array(SerializerInterface::SERIALIZE_TRANSFER, $options) && !in_array(SerializerInterface::SERIALIZE_MINIMAL, $options)) {
             $serializedUser['permissions'] = $this->serializePermissions($user);
         }
 
