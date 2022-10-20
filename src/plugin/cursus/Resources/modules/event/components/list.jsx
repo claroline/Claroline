@@ -52,7 +52,7 @@ const EventList = (props) =>
       }, {
         name: 'export-pdf',
         type: URL_BUTTON,
-        icon: 'fa fa-fw fa-file-pdf-o',
+        icon: 'fa fa-fw fa-file-pdf',
         label: trans('export-pdf', {}, 'actions'),
         displayed: hasPermission('open', rows[0]),
         scope: ['object'],

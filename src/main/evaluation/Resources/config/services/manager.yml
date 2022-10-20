@@ -8,3 +8,10 @@ services:
         arguments:
             - '@event_dispatcher'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
+
+    Claroline\EvaluationBundle\Manager\PdfManager:
+        arguments:
+            - '@translator'
+            - '@Claroline\AppBundle\Manager\PlatformManager'
+            - '@Claroline\AppBundle\Manager\PdfManager'
+            - '@Claroline\CoreBundle\Manager\Template\TemplateManager'

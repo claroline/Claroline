@@ -227,7 +227,6 @@ services:
             - '@security.token_storage'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@claroline.manager.tool_manager'
-            - '@translator'
             - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
             - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceRestrictionsManager'
             - '@Claroline\EvaluationBundle\Manager\WorkspaceEvaluationManager'

@@ -40,7 +40,6 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @Route("/workspaces", options={"expose" = true})
@@ -57,8 +56,6 @@ class WorkspaceController
     private $serializer;
     /** @var ToolManager */
     private $toolManager;
-    /** @var TranslatorInterface */
-    private $translator;
     /** @var WorkspaceManager */
     private $manager;
     /** @var WorkspaceRestrictionsManager */
@@ -74,7 +71,6 @@ class WorkspaceController
         TokenStorageInterface $tokenStorage,
         SerializerProvider $serializer,
         ToolManager $toolManager,
-        TranslatorInterface $translator,
         WorkspaceManager $manager,
         WorkspaceRestrictionsManager $restrictionsManager,
         WorkspaceEvaluationManager $evaluationManager,
@@ -85,7 +81,6 @@ class WorkspaceController
         $this->tokenStorage = $tokenStorage;
         $this->serializer = $serializer;
         $this->toolManager = $toolManager;
-        $this->translator = $translator;
         $this->manager = $manager;
         $this->restrictionsManager = $restrictionsManager;
         $this->evaluationManager = $evaluationManager;

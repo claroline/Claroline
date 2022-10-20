@@ -15,7 +15,7 @@ const TextResource = (props) =>
       {
         name: 'export-pdf',
         type: URL_BUTTON,
-        icon: 'fa fa-fw fa-file-pdf-o',
+        icon: 'fa fa-fw fa-file-pdf',
         label: trans('export-pdf', {}, 'actions'),
         displayed: props.canExport,
         target: ['apiv2_resource_text_download_pdf', {id: props.text.id}],

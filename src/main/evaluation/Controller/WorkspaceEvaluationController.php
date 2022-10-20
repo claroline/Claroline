@@ -27,6 +27,7 @@ use Claroline\CoreBundle\Entity\Workspace\Evaluation;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
+use Claroline\EvaluationBundle\Manager\PdfManager;
 use Claroline\EvaluationBundle\Manager\WorkspaceEvaluationManager;
 use Claroline\EvaluationBundle\Messenger\Message\InitializeWorkspaceEvaluations;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -67,6 +68,8 @@ class WorkspaceEvaluationController extends AbstractSecurityController
     private $serializer;
     /** @var WorkspaceEvaluationManager */
     private $manager;
+    /** @var PdfManager */
+    private $pdfManager;
 
     public function __construct(
         TokenStorageInterface $tokenStorage,
@@ -77,7 +80,8 @@ class WorkspaceEvaluationController extends AbstractSecurityController
         Crud $crud,
         FinderProvider $finder,
         SerializerProvider $serializer,
-        WorkspaceEvaluationManager $manager
+        WorkspaceEvaluationManager $manager,
+        PdfManager $pdfManager
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->authorization = $authorization;
@@ -88,6 +92,7 @@ class WorkspaceEvaluationController extends AbstractSecurityController
         $this->finder = $finder;
         $this->serializer = $serializer;
         $this->manager = $manager;
+        $this->pdfManager = $pdfManager;
     }
 
     /**
@@ -136,6 +141,8 @@ class WorkspaceEvaluationController extends AbstractSecurityController
     /**
      * @Route("/csv/{workspaceId}", name="apiv2_workspace_evaluation_csv", methods={"GET"})
      * @EXT\ParamConverter("workspace", options={"mapping": {"workspace": "uuid"}})
+     *
+     * @deprecated to move inside the Transfer system
      */
     public function exportAction(Request $request, ?string $workspaceId = null): BinaryFileResponse
     {
@@ -239,6 +246,8 @@ class WorkspaceEvaluationController extends AbstractSecurityController
      * @Route("/{workspace}/progression/{user}/export", name="apiv2_workspace_export_user_progression", methods={"GET"})
      * @EXT\ParamConverter("user", class="Claroline\CoreBundle\Entity\User", options={"mapping": {"user": "uuid"}})
      * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
+     *
+     * @deprecated to move inside the Transfer system
      */
     public function exportUserProgressionAction(Workspace $workspace, User $user): StreamedResponse
     {
@@ -332,6 +341,68 @@ class WorkspaceEvaluationController extends AbstractSecurityController
         }, 200, [
             'Content-Type' => 'application/force-download',
             'Content-Disposition' => 'attachment; filename="'.TextNormalizer::toKey("progression-{$user->getFullName()}").'.csv"',
+        ]);
+    }
+
+    /**
+     * @Route("/{workspace}/certificate/{user}/participation", name="apiv2_workspace_download_participation_certificate", methods={"GET"})
+     * @EXT\ParamConverter("user", class="Claroline\CoreBundle\Entity\User", options={"mapping": {"user": "uuid"}})
+     * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
+     */
+    public function downloadParticipationCertificateAction(Workspace $workspace, User $user, Request $request): StreamedResponse
+    {
+        $workspaceEvaluation = $this->om->getRepository(Evaluation::class)->findOneBy([
+            'workspace' => $workspace,
+            'user' => $user,
+        ]);
+
+        if (empty($workspaceEvaluation)) {
+            throw new NotFoundHttpException('Workspace evaluation not found.');
+        }
+
+        $this->checkPermission('OPEN', $workspaceEvaluation, [], true);
+
+        $certificate = $this->pdfManager->getWorkspaceParticipationCertificate($workspaceEvaluation, $request->getLocale());
+        if (empty($certificate)) {
+            throw new NotFoundHttpException('No participation certificate is available yet.');
+        }
+
+        return new StreamedResponse(function () use ($certificate) {
+            echo $certificate;
+        }, 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename='.TextNormalizer::toKey($workspace->getName()).'-'.TextNormalizer::toKey($user->getFullName()).'-participation.pdf',
+        ]);
+    }
+
+    /**
+     * @Route("/{workspace}/certificate/{user}/success", name="apiv2_workspace_download_success_certificate", methods={"GET"})
+     * @EXT\ParamConverter("user", class="Claroline\CoreBundle\Entity\User", options={"mapping": {"user": "uuid"}})
+     * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
+     */
+    public function downloadSuccessCertificateAction(Workspace $workspace, User $user, Request $request): StreamedResponse
+    {
+        $workspaceEvaluation = $this->om->getRepository(Evaluation::class)->findOneBy([
+            'workspace' => $workspace,
+            'user' => $user,
+        ]);
+
+        if (empty($workspaceEvaluation)) {
+            throw new NotFoundHttpException('Workspace evaluation not found.');
+        }
+
+        $this->checkPermission('OPEN', $workspaceEvaluation, [], true);
+
+        $certificate = $this->pdfManager->getWorkspaceSuccessCertificate($workspaceEvaluation, $request->getLocale());
+        if (empty($certificate)) {
+            throw new NotFoundHttpException('No success certificate is available yet.');
+        }
+
+        return new StreamedResponse(function () use ($certificate) {
+            echo $certificate;
+        }, 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename='.TextNormalizer::toKey($workspace->getName()).'-'.TextNormalizer::toKey($user->getFullName()).'-success.pdf',
         ]);
     }
 

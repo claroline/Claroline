@@ -25,7 +25,7 @@ const ExportersComponent = props =>
     <Button
       className="btn btn-block btn-emphasis"
       type={CALLBACK_BUTTON}
-      icon="fa fa-fw fa-file-pdf-o"
+      icon="fa fa-fw fa-file-pdf"
       label={trans('export-pdf', {}, 'actions')}
       callback={() => props.downloadBlogPdf(props.blogId).then(pdfContent => {
         html2pdf()

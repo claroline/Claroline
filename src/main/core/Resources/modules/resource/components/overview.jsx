@@ -8,7 +8,7 @@ import omit from 'lodash/omit'
 
 import {trans, number} from '#/main/app/intl'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
-import {constants as baseConstants} from '#/main/core/constants'
+import {constants as baseConstants} from '#/main/evaluation/constants'
 import {constants} from '#/main/core/resource/constants'
 import {ContentHtml} from '#/main/app/content/components/html'
 import {Button} from '#/main/app/action/components/button'

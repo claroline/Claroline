@@ -15,7 +15,7 @@ import {MenuMain} from '#/main/app/layout/menu/containers/main'
 import {ToolMenu} from '#/main/core/tool/containers/menu'
 import {route as toolRoute} from '#/main/core/tool/routing'
 import {User as UserTypes} from '#/main/core/user/prop-types'
-import {constants as baseConstants} from '#/main/core/constants'
+import {constants as baseConstants} from '#/main/evaluation/constants'
 
 import {route as workspaceRoute} from '#/main/core/workspace/routing'
 import {getActions} from '#/main/core/workspace/utils'

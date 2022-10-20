@@ -1296,5 +1296,6 @@
     "username_disabled_help": "Si désactivé, l'adresse email de l'utilisateur sera utilisée.",
     "platform_home_none": "Aucun (Affichage de la page de connexion)",
     "platform_home_tool": "Outil (Affichage de l'accueil de la plateforme)",
-    "no_title": "Aucun titre"
+    "no_title": "Aucun titre",
+    "time_spent": "Temps passé"
 }

@@ -3,7 +3,7 @@ import isEmpty from 'lodash/isEmpty'
 
 import {selectors as toolSelectors} from '#/main/core/tool/store/selectors'
 
-import {constants as baseConstants} from '#/main/core/constants'
+import {constants as baseConstants} from '#/main/evaluation/constants'
 
 const STORE_NAME = 'resource'
 

@@ -24,7 +24,6 @@ class ApiTokenVoter extends AbstractVoter
      */
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
     {
-        return VoterInterface::ACCESS_DENIED;
         if ($token->getUser() instanceof User) {
             switch ($attributes[0]) {
                 case self::EDIT:

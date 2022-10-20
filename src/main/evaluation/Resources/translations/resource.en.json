@@ -1,0 +1,11 @@
+{
+  "evaluation_not_attempted_status": "You have not started the resource.",
+  "evaluation_todo_status": "You have to do the resource.",
+  "evaluation_unknown_status": "We don't know your progression in this resource.",
+  "evaluation_opened_status": "You have opened the resource.",
+  "evaluation_incomplete_status": "You have started the resource.",
+  "evaluation_participated_status": "You have participated to the resource.",
+  "evaluation_failed_status": "You did not pass the resource.",
+  "evaluation_completed_status": "You have finished the resource.",
+  "evaluation_passed_status": "You have passed the resource."
+}
