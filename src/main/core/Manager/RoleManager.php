@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
@@ -208,23 +207,6 @@ class RoleManager
         $role = $this->roleRepo->findOneBy(['translationKey' => $key, 'workspace' => $workspace]);
 
         return $role;
-    }
-
-    /**
-     * Returns if a role can be added to a RoleSubject.
-     */
-    public function validateRoleInsert(AbstractRoleSubject $ars, Role $role): bool
-    {
-        //if we already have the role, then it's ok
-        if ($ars->hasRole($role->getName())) {
-            return true;
-        }
-
-        if ($ars instanceof Group && 'ROLE_USER' === $role->getName()) {
-            return false;
-        }
-
-        return true;
     }
 
     /**

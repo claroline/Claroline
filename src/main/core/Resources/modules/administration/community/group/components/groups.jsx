@@ -41,7 +41,7 @@ const GroupsList = props =>
           })
         },
         callback: () => props.updatePassword(rows),
-        dangerous: true
+        group: trans('management')
       }
     ]}
   />

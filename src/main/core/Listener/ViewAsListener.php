@@ -16,6 +16,7 @@ use Claroline\AuthenticationBundle\Security\Authentication\Authenticator;
 use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
 use Claroline\CoreBundle\Event\Security\ViewAsEvent;
 use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Security\PlatformRoles;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -75,12 +76,12 @@ class ViewAsListener
 
                 if (!in_array('ROLE_USURPATE_WORKSPACE_ROLE', $this->tokenStorage->getToken()->getRoleNames())) {
                     // we are not already usurping a workspace role
-                    if (in_array($viewAs, ['ROLE_USER', 'ROLE_ANONYMOUS']) || $this->authorization->isGranted('ADMINISTRATE', $role->getWorkspace())) {
+                    if (in_array($viewAs, [PlatformRoles::USER, PlatformRoles::ANONYMOUS]) || $this->authorization->isGranted('ADMINISTRATE', $role->getWorkspace())) {
                         // we have the right to usurp one the workspace role
-                        if ('ROLE_ANONYMOUS' === $viewAs) {
+                        if (PlatformRoles::ANONYMOUS === $viewAs) {
                             $this->authenticator->createAnonymousToken();
                         } else {
-                            $this->authenticator->createToken($this->tokenStorage->getToken()->getUser(), ['ROLE_USER', $viewAs, 'ROLE_USURPATE_WORKSPACE_ROLE']);
+                            $this->authenticator->createToken($this->tokenStorage->getToken()->getUser(), [PlatformRoles::USER, $viewAs, 'ROLE_USURPATE_WORKSPACE_ROLE']);
                             $this->eventDispatcher->dispatch(SecurityEvents::VIEW_AS, ViewAsEvent::class, [$this->tokenStorage->getToken()->getUser(), $viewAs]);
                         }
                     } else {

@@ -113,10 +113,9 @@ class WorkspaceFinder extends AbstractFinder
                         $qb->expr()->like('ru.id', ':_userId'),
                         $qb->expr()->like('ru.uuid', ':_userUuid')
                     ));
-                    $qb->andWhere('r.name != :roleUser');
+
                     $qb->setParameter('_userId', $filterValue);
                     $qb->setParameter('_userUuid', $filterValue);
-                    $qb->setParameter('roleUser', 'ROLE_USER');
 
                     break;
                 case '_group':
@@ -127,10 +126,10 @@ class WorkspaceFinder extends AbstractFinder
                         $qb->expr()->like('rgu.id', ':_groupUserId'),
                         $qb->expr()->like('rgu.uuid', ':_groupUserUuid')
                     ));
-                    $qb->andWhere('r.name != :roleUser');
+
                     $qb->setParameter('_groupUserId', $filterValue);
                     $qb->setParameter('_groupUserUuid', $filterValue);
-                    $qb->setParameter('roleUser', 'ROLE_USER');
+
                     break;
                 case 'user':
                     $byUserSearch = $byGroupSearch = $searches;

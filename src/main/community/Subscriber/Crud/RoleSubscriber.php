@@ -6,7 +6,6 @@ use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\PatchEvent;
 use Claroline\AppBundle\Event\StrictDispatcher;
-use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
@@ -14,7 +13,6 @@ use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
 use Claroline\CoreBundle\Event\Security\AddRoleEvent;
 use Claroline\CoreBundle\Event\Security\RemoveRoleEvent;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
-use Claroline\CoreBundle\Manager\RoleManager;
 use Doctrine\DBAL\Driver\Connection;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -22,18 +20,14 @@ class RoleSubscriber implements EventSubscriberInterface
 {
     /** @var Connection */
     private $conn;
-    /** @var RoleManager */
-    private $manager;
     /** @var StrictDispatcher */
     private $dispatcher;
 
     public function __construct(
         Connection $conn,
-        RoleManager $manager,
         StrictDispatcher $dispatcher
     ) {
         $this->conn = $conn;
-        $this->manager = $manager;
         $this->dispatcher = $dispatcher;
     }
 
@@ -42,7 +36,6 @@ class RoleSubscriber implements EventSubscriberInterface
         return [
             Crud::getEventName('create', 'pre', Role::class) => 'preCreate',
             Crud::getEventName('create', 'post', Role::class) => 'postCreate',
-            Crud::getEventName('patch', 'pre', Role::class) => 'prePatch',
             Crud::getEventName('patch', 'post', Role::class) => 'postPatch',
         ];
     }
@@ -106,21 +99,6 @@ class RoleSubscriber implements EventSubscriberInterface
                     WHERE ot.workspace_id IS NULL AND user_id IS NULL
                 ")
                 ->execute();
-        }
-    }
-
-    public function prePatch(PatchEvent $event)
-    {
-        /** @var Role $role */
-        $role = $event->getObject();
-
-        // checks if we can add users/groups to the role
-        if (Crud::COLLECTION_ADD === $event->getAction() && in_array($event->getProperty(), ['user', 'group'])) {
-            /** @var AbstractRoleSubject $ars */
-            $ars = $event->getValue();
-            if ($ars->hasRole($role->getName()) || !$this->manager->validateRoleInsert($ars, $role)) {
-                $event->block();
-            }
         }
     }
 

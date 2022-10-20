@@ -134,6 +134,8 @@ class Organization
      * @ORM\JoinTable(name="claro_user_workspace")
      *
      * @var Workspace[]|ArrayCollection
+     *
+     * @todo should be unidirectional
      */
     protected $workspaces;
 
@@ -145,6 +147,8 @@ class Organization
      * @ORM\JoinTable(name="claro_group_organization")
      *
      * @var ArrayCollection
+     *
+     * @todo should be unidirectional
      */
     protected $groups;
 
@@ -191,6 +195,8 @@ class Organization
      * @ORM\JoinColumn(name="organization_id", nullable=false)
      *
      * @var ArrayCollection
+     *
+     * @todo should be unidirectional
      */
     protected $userOrganizationReferences;
 
