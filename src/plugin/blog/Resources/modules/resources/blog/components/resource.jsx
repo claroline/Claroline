@@ -32,7 +32,7 @@ const BlogResource = props =>
         group: trans('management')
       }, {
         type: CALLBACK_BUTTON,
-        icon: 'fa fa-fw fa-file-pdf-o',
+        icon: 'fa fa-fw fa-file-pdf',
         label: trans('export-pdf', {}, 'actions'),
         displayed: props.canExport,
         group: trans('transfer'),

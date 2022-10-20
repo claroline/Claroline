@@ -5,6 +5,7 @@ import isEmpty from 'lodash/isEmpty'
 
 import {trans, displayDate, displayDuration, number} from '#/main/app/intl'
 import {Button} from '#/main/app/action/components/button'
+import {Toolbar} from '#/main/app/action/components/toolbar'
 import {CALLBACK_BUTTON, MODAL_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 import {Alert} from '#/main/app/alert/components/alert'
 import {ContentLoader} from '#/main/app/content/components/loader'
@@ -14,12 +15,13 @@ import {UserMicro} from '#/main/core/user/components/micro'
 import {displayUsername} from '#/main/core/user/utils'
 import {LiquidGauge} from '#/main/core/layout/gauge/components/liquid-gauge'
 
-import {constants as baseConstants} from '#/main/core/constants'
+import {constants as baseConstants} from '#/main/evaluation/constants'
 import {constants} from '#/main/core/workspace/constants'
 import {UserEvaluation as WorkspaceUserEvaluationTypes} from '#/main/core/workspace/prop-types'
 import {ResourceUserEvaluation as ResourceUserEvaluationTypes} from '#/main/evaluation/resource/prop-types'
 import {ResourceCard} from '#/main/evaluation/resource/components/card'
 import {MODAL_MESSAGE} from '#/plugin/message/modals/message'
+import {ContentHelp} from '#/main/app/content/components/help'
 
 const WorkspaceProgression = (props) => {
   let progression = 0
@@ -57,7 +59,7 @@ const WorkspaceProgression = (props) => {
 
       <ul className="list-group list-group-values">
         <li className="list-group-item">
-          {trans('last_modification')}
+          {trans('last_activity')}
           <span className="value">{get(props.workspaceEvaluation, 'date') ? displayDate(props.workspaceEvaluation.date, false, true) : '-'}</span>
         </li>
 
@@ -162,6 +164,45 @@ class EvaluationUser extends Component {
             <WorkspaceProgression
               workspaceEvaluation={this.props.workspaceEvaluation}
             />
+
+            <div className="component-container">
+              <Toolbar
+                buttonName="btn btn-block"
+                actions={[
+                  {
+                    name: 'download-participation-certificate',
+                    type: URL_BUTTON,
+                    label: trans('download_participation_certificate', {}, 'actions'),
+                    target: ['apiv2_workspace_download_participation_certificate', {
+                      workspace: get(this.props.workspaceEvaluation, 'workspace.id'),
+                      user: get(this.props.workspaceEvaluation, 'user.id')
+                    }],
+                    disabled: ![
+                      baseConstants.EVALUATION_STATUS_COMPLETED,
+                      baseConstants.EVALUATION_STATUS_PASSED,
+                      baseConstants.EVALUATION_STATUS_PARTICIPATED,
+                      baseConstants.EVALUATION_STATUS_FAILED
+                    ].includes(get(this.props.workspaceEvaluation, 'status', baseConstants.EVALUATION_STATUS_UNKNOWN))
+                  }, {
+                    name: 'download-success-certificate',
+                    type: URL_BUTTON,
+                    label: trans('download_success_certificate', {}, 'actions'),
+                    target: ['apiv2_workspace_download_success_certificate', {
+                      workspace: get(this.props.workspaceEvaluation, 'workspace.id'),
+                      user: get(this.props.workspaceEvaluation, 'user.id')
+                    }],
+                    disabled: ![
+                      baseConstants.EVALUATION_STATUS_PASSED,
+                      baseConstants.EVALUATION_STATUS_FAILED
+                    ].includes(get(this.props.workspaceEvaluation, 'status', baseConstants.EVALUATION_STATUS_UNKNOWN))
+                  }
+                ]}
+              />
+
+              <ContentHelp
+                help={trans('workspace_certificates_availability_help', {}, 'workspace')}
+              />
+            </div>
           </div>
 
           <div className="col-md-8">

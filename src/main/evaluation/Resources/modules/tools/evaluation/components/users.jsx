@@ -2,16 +2,17 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 
+import {url} from '#/main/app/api'
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON, MODAL_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 import {DOWNLOAD_BUTTON} from '#/main/app/buttons'
 import {ToolPage} from '#/main/core/tool/containers/page'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {constants} from '#/main/core/workspace/constants'
+import {constants as evalConstants} from '#/main/evaluation/constants'
 
-import {selectors} from '#/main/evaluation/tools/evaluation/store'
-import {url} from '#/main/app/api'
 import {MODAL_MESSAGE} from '#/plugin/message/modals/message'
+import {selectors} from '#/main/evaluation/tools/evaluation/store'
 
 const EvaluationUsers = (props) =>
   <ToolPage
@@ -130,7 +131,7 @@ const EvaluationUsers = (props) =>
           icon: 'fa fa-fw fa-download',
           label: trans('export-csv', {}, 'actions'),
           target: ['apiv2_workspace_export_user_progression', {workspace: get(rows[0], 'workspace.id'), user: get(rows[0], 'user.id')}],
-          group: trans('export'),
+          group: trans('transfer'),
           scope: ['object']
         }, {
           type: MODAL_BUTTON,
@@ -140,6 +141,32 @@ const EvaluationUsers = (props) =>
           modal: [MODAL_MESSAGE, {
             receivers: {users: rows.map((row => row.user))}
           }]
+        }, {
+          name: 'download-participation-certificate',
+          type: URL_BUTTON,
+          icon: 'fa fa-fw fa-file-pdf',
+          label: trans('download_participation_certificate', {}, 'actions'),
+          target: ['apiv2_workspace_download_participation_certificate', {workspace: get(rows[0], 'workspace.id'), user: get(rows[0], 'user.id')}],
+          disabled: ![
+            evalConstants.EVALUATION_STATUS_COMPLETED,
+            evalConstants.EVALUATION_STATUS_PASSED,
+            evalConstants.EVALUATION_STATUS_PARTICIPATED,
+            evalConstants.EVALUATION_STATUS_FAILED
+          ].includes(get(rows[0], 'status', evalConstants.EVALUATION_STATUS_UNKNOWN)),
+          group: trans('transfer'),
+          scope: ['object']
+        }, {
+          name: 'download-success-certificate',
+          type: URL_BUTTON,
+          icon: 'fa fa-fw fa-file-pdf',
+          label: trans('download_success_certificate', {}, 'actions'),
+          target: ['apiv2_workspace_download_success_certificate', {workspace: get(rows[0], 'workspace.id'), user: get(rows[0], 'user.id')}],
+          disabled: ![
+            evalConstants.EVALUATION_STATUS_PASSED,
+            evalConstants.EVALUATION_STATUS_FAILED
+          ].includes(get(rows[0], 'status', evalConstants.EVALUATION_STATUS_UNKNOWN)),
+          group: trans('transfer'),
+          scope: ['object']
         }
       ]}
     />

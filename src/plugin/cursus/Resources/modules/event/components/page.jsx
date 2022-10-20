@@ -53,7 +53,7 @@ const EventPage = (props) => {
         }, {
           name: 'export-pdf',
           type: URL_BUTTON,
-          icon: 'fa fa-fw fa-file-pdf-o',
+          icon: 'fa fa-fw fa-file-pdf',
           label: trans('export-pdf', {}, 'actions'),
           displayed: hasPermission('open', props.event),
           group: trans('transfer'),

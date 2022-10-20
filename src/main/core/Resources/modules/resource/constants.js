@@ -1,6 +1,6 @@
 import {trans} from '#/main/app/intl/translation'
 
-import {constants as baseConst} from '#/main/core/constants'
+import {constants as baseConst} from '#/main/evaluation/constants'
 
 // evaluation
 const EVALUATION_STATUSES = {

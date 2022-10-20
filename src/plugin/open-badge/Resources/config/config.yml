@@ -22,13 +22,13 @@ plugin:
         - name: badge_granted
           type: email
           placeholders:
-            - badge_name
-            - badge_description
-            - badge_image
-            - badge_image_url
-            - badge_duration
-            - assertion_url
-            - issued_on
+              - badge_name
+              - badge_description
+              - badge_image
+              - badge_image_url
+              - badge_duration
+              - assertion_url
+              - issued_on
 
         - name: badge_certificate
           type: pdf

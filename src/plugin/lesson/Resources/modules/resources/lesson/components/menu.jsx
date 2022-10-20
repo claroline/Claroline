@@ -39,7 +39,7 @@ const LessonMenu = props => {
           group: trans('management')
         }, {
           type: CALLBACK_BUTTON,
-          icon: 'fa fa-fw fa-file-pdf-o',
+          icon: 'fa fa-fw fa-file-pdf',
           displayed: props.canExport,
           label: trans('export-pdf', {}, 'actions'),
           group: trans('transfer'),

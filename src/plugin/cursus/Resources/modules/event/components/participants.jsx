@@ -41,7 +41,7 @@ const EventUsers = (props) =>
       }, {
         name: 'download-presence',
         type: DOWNLOAD_BUTTON,
-        icon: 'fa fa-fw fa-file-pdf-o',
+        icon: 'fa fa-fw fa-file-pdf',
         label: trans('download_presence', {}, 'cursus'),
         file: {
           url: ['apiv2_cursus_user_presence_download', {id: props.event.id, userId: rows[0].user.id}]
@@ -162,7 +162,7 @@ const EventPresences = (props) =>
       }, {
         name: 'download-presence',
         type: DOWNLOAD_BUTTON,
-        icon: 'fa fa-fw fa-file-pdf-o',
+        icon: 'fa fa-fw fa-file-pdf',
         label: trans('download_presence', {}, 'cursus'),
         file: {
           url: ['apiv2_cursus_user_presence_download', {id: props.event.id, userId: rows[0].user.id}]

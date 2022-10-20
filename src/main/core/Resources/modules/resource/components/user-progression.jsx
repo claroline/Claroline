@@ -8,7 +8,7 @@ import {toKey} from '#/main/core/scaffolding/text'
 import {MenuButton} from '#/main/app/buttons/menu'
 import {LiquidGauge} from '#/main/core/layout/gauge/components/liquid-gauge'
 
-import {constants as baseConstants} from '#/main/core/constants'
+import {constants as baseConstants} from '#/main/evaluation/constants'
 import {constants} from '#/main/core/resource/constants'
 import {UserEvaluation as UserEvaluationTypes} from '#/main/core/resource/prop-types'
 
@@ -104,7 +104,7 @@ const UserProgression = props => {
               value: number(props.userEvaluation.nbAttempts)
             }, {
               icon: 'fa fa-fw fa-hourglass-half',
-              label: 'Temps passé',
+              label: trans('time_spent'),
               value: displayDuration(props.userEvaluation.duration) || trans('unknown')
             }
           ]}

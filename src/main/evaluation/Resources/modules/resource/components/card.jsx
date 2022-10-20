@@ -70,7 +70,7 @@ const ResourceCard = (props) => {
             value: number(props.data.nbAttempts)
           }, {
             icon: 'fa fa-fw fa-hourglass-half',
-            label: 'Temps passé',
+            label: trans('time_spent'),
             value: displayDuration(props.data.duration) || trans('unknown')
           }, {
             icon: 'fa fa-fw fa-award',

@@ -30,7 +30,7 @@ const PlayerComponent = props => {
 
   return (
     <Carousel
-      className="row slideshow-carourel"
+      className="row slideshow-carousel"
       defaultActiveIndex={activeIndex}
       interval={props.autoPlay && props.interval}
       controls={props.showControls}

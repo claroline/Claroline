@@ -22,3 +22,34 @@ plugin:
           type: list
           context: [ activity, workspace, desktop ]
           tags: [ content ]
+
+    templates:
+        - name: workspace_participation_certificate
+          type: pdf
+          placeholders:
+              - workspace_name
+              - workspace_code
+              - workspace_description
+              - workspace_poster
+              - user_first_name
+              - user_last_name
+              - user_username
+              - evaluation_duration
+              - evaluation_status
+              - evaluation_date
+
+        - name: workspace_success_certificate
+          type: pdf
+          placeholders:
+              - workspace_name
+              - workspace_code
+              - workspace_description
+              - workspace_poster
+              - user_first_name
+              - user_last_name
+              - user_username
+              - evaluation_duration
+              - evaluation_status
+              - evaluation_date
+              - evaluation_score
+              - evaluation_score_max

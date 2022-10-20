@@ -63,7 +63,7 @@ abstract class AdditionalInstaller implements LoggerAwareInterface, ContainerAwa
 
     public function hasMigrations(): bool
     {
-        return true;
+        return true; // should be false by default
     }
 
     public function hasFixtures(): bool
