@@ -1,4 +1,3 @@
-# JSON API
 innova_path_api:
     resource: "@InnovaPathBundle/Controller/"
     prefix: apiv2
