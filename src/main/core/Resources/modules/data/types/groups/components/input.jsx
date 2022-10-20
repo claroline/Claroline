@@ -21,7 +21,9 @@ const GroupsButton = props =>
     label={trans('add_groups')}
     disabled={props.disabled}
     modal={[MODAL_GROUPS, {
+      url: props.url,
       title: props.title,
+      filters: props.filters,
       selectAction: (selected) => ({
         type: CALLBACK_BUTTON,
         label: trans('select', {}, 'actions'),
@@ -32,7 +34,11 @@ const GroupsButton = props =>
   />
 
 GroupsButton.propTypes = {
+  url: T.oneOfType([T.string, T.array]),
   title: T.string,
+  filters: T.arrayOf(T.shape({
+    // TODO : list filter types
+  })),
   disabled: T.bool,
   onChange: T.func.isRequired,
   size: T.string
@@ -110,10 +116,15 @@ implementPropTypes(GroupsInput, DataInputTypes, {
     GroupType.propTypes
   )),
   picker: T.shape({
-    title: T.string
+    url: T.oneOfType([T.string, T.array]),
+    title: T.string,
+    filters: T.arrayOf(T.shape({
+      // TODO : list filter types
+    }))
   })
 }, {
-  value: null
+  value: null,
+  picker: {}
 })
 
 export {

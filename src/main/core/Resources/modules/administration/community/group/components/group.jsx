@@ -43,7 +43,8 @@ const GroupForm = props =>
             name: 'name',
             type: 'string',
             label: trans('name'),
-            required: true
+            required: true,
+            disabled: props.group.meta && props.group.meta.readOnly
           }
         ]
       }
@@ -63,6 +64,7 @@ const GroupForm = props =>
             type: MODAL_BUTTON,
             icon: 'fa fa-fw fa-plus',
             label: trans('add_users'),
+            disabled: props.group.meta && props.group.meta.readOnly,
             modal: [MODAL_USERS, {
               selectAction: (selected) => ({
                 type: CALLBACK_BUTTON,
@@ -83,7 +85,8 @@ const GroupForm = props =>
               label: trans('edit', {}, 'actions')
             })}
             delete={{
-              url: ['apiv2_group_remove_users', {id: props.group.id}]
+              url: ['apiv2_group_remove_users', {id: props.group.id}],
+              disabled: () => props.group.meta && props.group.meta.readOnly
             }}
           />
         }
@@ -100,6 +103,7 @@ const GroupForm = props =>
             type: MODAL_BUTTON,
             icon: 'fa fa-fw fa-plus',
             label: trans('add_roles'),
+            disabled: props.group.meta && props.group.meta.readOnly,
             modal: [MODAL_ROLES, {
               selectAction: (selected) => ({
                 type: CALLBACK_BUTTON,
@@ -122,7 +126,8 @@ const GroupForm = props =>
             label: trans('edit', {}, 'actions')
           })}
           delete={{
-            url: ['apiv2_group_remove_roles', {id: props.group.id}]
+            url: ['apiv2_group_remove_roles', {id: props.group.id}],
+            disabled: () => props.group.meta && props.group.meta.readOnly
           }}
           definition={RoleList.definition}
           card={RoleList.card}
@@ -140,6 +145,7 @@ const GroupForm = props =>
             type: MODAL_BUTTON,
             icon: 'fa fa-fw fa-plus',
             label: trans('add_organizations'),
+            disabled: props.group.meta && props.group.meta.readOnly,
             modal: [MODAL_ORGANIZATIONS, {
               selectAction: (selected) => ({
                 type: CALLBACK_BUTTON,
@@ -162,7 +168,8 @@ const GroupForm = props =>
             label: trans('edit', {}, 'actions')
           })}
           delete={{
-            url: ['apiv2_group_remove_organizations', {id: props.group.id}]
+            url: ['apiv2_group_remove_organizations', {id: props.group.id}],
+            disabled: () => props.group.meta && props.group.meta.readOnly
           }}
           definition={OrganizationList.definition}
           card={OrganizationList.card}
@@ -175,7 +182,10 @@ GroupForm.propTypes = {
   path: T.string.isRequired,
   new: T.bool.isRequired,
   group: T.shape({
-    id: T.string
+    id: T.string,
+    meta: T.shape({
+      readOnly: T.bool
+    })
   }).isRequired,
   addUsers: T.func.isRequired,
   addRoles: T.func.isRequired,

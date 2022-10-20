@@ -119,7 +119,8 @@ implementPropTypes(RolesInput, DataInputTypes, {
     }))
   })
 }, {
-  value: null
+  value: null,
+  picker: {}
 })
 
 export {

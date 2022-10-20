@@ -21,6 +21,11 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class GroupVoter extends AbstractRoleSubjectVoter
 {
+    public function getClass(): string
+    {
+        return Group::class;
+    }
+
     /**
      * @param Group $object
      */
@@ -34,8 +39,9 @@ class GroupVoter extends AbstractRoleSubjectVoter
                 return $this->checkView($token, $object);
             case self::ADMINISTRATE:
             case self::EDIT:
-            case self::DELETE:
                 return $this->checkEdit($token, $object);
+            case self::DELETE:
+                return $this->checkDelete($token, $object);
             case self::PATCH:
                 return $this->checkPatch($token, $object, $collection);
         }
@@ -80,9 +86,13 @@ class GroupVoter extends AbstractRoleSubjectVoter
         return $this->checkEdit($token, $group);
     }
 
-    public function getClass(): string
+    private function checkDelete($token, Group $group)
     {
-        return Group::class;
+        if ($group->isReadOnly()) {
+            return VoterInterface::ACCESS_DENIED;
+        }
+
+        return $this->checkEdit($token, $group);
     }
 
     /**

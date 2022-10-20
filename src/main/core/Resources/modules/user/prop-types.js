@@ -71,7 +71,10 @@ const Role = {
 const Group = {
   propTypes: {
     id: T.string,
-    name: T.string
+    name: T.string,
+    meta: T.shape({
+      readOnly: T.bool
+    })
   },
   defaultProps: {}
 }
