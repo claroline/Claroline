@@ -1,7 +1,0 @@
-{
-  "styles": {
-    "entry": {
-      "dashboard-tool": "tools/dashboard/index.less"
-    }
-  }
-}
