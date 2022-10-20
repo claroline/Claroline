@@ -358,16 +358,6 @@ class Role
     }
 
     /**
-     * Get the isReadOnly property.
-     *
-     * @return bool
-     */
-    public function getIsReadOnly()
-    {
-        return $this->isReadOnly;
-    }
-
-    /**
      * Get shortcuts.
      *
      * @return Shortcuts[]|ArrayCollection

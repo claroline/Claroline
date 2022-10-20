@@ -13,6 +13,7 @@ namespace Claroline\CommunityBundle\Finder;
 
 use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Security\PlatformRoles;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -45,9 +46,10 @@ class RoleFinder extends AbstractFinder
             $isAdmin = true;
         }
 
-        //if not admin doesnt list platform_admin role, for security purpose
+        // if not admin doesnt list platform_admin role, for security purpose
         if (!$isAdmin) {
-            $qb->andWhere("obj.name != 'ROLE_ADMIN'");
+            $qb->andWhere('obj.name != :roleAdmin');
+            $qb->setParameter('roleAdmin', PlatformRoles::ADMIN);
         }
 
         foreach ($searches as $filterName => $filterValue) {
@@ -86,8 +88,10 @@ class RoleFinder extends AbstractFinder
                     $qb->leftJoin('obj.workspace', 'w');
                     $qb->andWhere('w.uuid IN (:workspaceIds)');
                     $qb->setParameter('workspaceIds', is_array($filterValue) ? $filterValue : [$filterValue]);
-                    $qb->orWhere("obj.name LIKE 'ROLE_ANONYMOUS'");
-                    $qb->orWhere("obj.name LIKE 'ROLE_USER'");
+                    $qb->orWhere('obj.name LIKE :roleAnonymous');
+                    $qb->orWhere('obj.name LIKE :roleUser');
+                    $qb->setParameter('roleAnonymous', PlatformRoles::ANONYMOUS);
+                    $qb->setParameter('roleUser', PlatformRoles::USER);
                     break;
                 case 'grantable':
                     if (!$isAdmin && $this->tokenStorage->getToken()) {

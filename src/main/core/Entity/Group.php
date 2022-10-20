@@ -94,6 +94,11 @@ class Group extends AbstractRoleSubject
         $this->roles = new ArrayCollection();
     }
 
+    public function __toString()
+    {
+        return $this->name;
+    }
+
     public function setName($name)
     {
         $this->name = $name;
@@ -146,16 +151,6 @@ class Group extends AbstractRoleSubject
         return $return;
     }
 
-    public function getOrganizations()
-    {
-        return $this->organizations;
-    }
-
-    public function containsUser(User $user)
-    {
-        return $this->users->contains($user);
-    }
-
     /**
      * @return ArrayCollection
      */
@@ -164,32 +159,12 @@ class Group extends AbstractRoleSubject
         return $this->locations;
     }
 
-    public function __toString()
-    {
-        return $this->name;
-    }
-
-    /**
-     * Get the isReadOnly property.
-     *
-     * @return bool
-     */
-    public function isReadOnly()
+    public function isReadOnly(): bool
     {
         return $this->isReadOnly;
     }
 
-    /**
-     * Get the isReadOnly property.
-     *
-     * @return bool
-     */
-    public function getIsReadOnly()
-    {
-        return $this->isReadOnly();
-    }
-
-    public function setReadOnly($value)
+    public function setReadOnly(bool $value)
     {
         $this->isReadOnly = $value;
     }

@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Configuration;
 
 use Claroline\CoreBundle\Library\Configuration\ParameterProviderInterface;
+use Claroline\CoreBundle\Security\PlatformRoles;
 
 class PlatformDefaults implements ParameterProviderInterface
 {
@@ -33,7 +34,7 @@ class PlatformDefaults implements ParameterProviderInterface
                 'roles_confidential' => [],
                 'roles_locked' => [],
                 'roles_edition' => [],
-                'show_email' => ['ROLE_USER'],
+                'show_email' => [PlatformRoles::USER],
             ],
             'country' => '-',
             'text' => [
@@ -68,7 +69,7 @@ class PlatformDefaults implements ParameterProviderInterface
             ],
             'registration' => [
                 'self' => false,
-                'default_role' => 'ROLE_USER',
+                'default_role' => PlatformRoles::USER,
                 'validation' => self::REGISTRATION_MAIL_VALIDATION_PARTIAL,
                 'auto_logging' => false,
                 'allow_workspace' => false,

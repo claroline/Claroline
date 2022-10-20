@@ -12,7 +12,6 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
 use Claroline\CoreBundle\Event\Security\AddRoleEvent;
 use Claroline\CoreBundle\Event\Security\RemoveRoleEvent;
-use Claroline\CoreBundle\Manager\RoleManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -22,24 +21,19 @@ class GroupSubscriber implements EventSubscriberInterface
     private $tokenStorage;
     /** @var StrictDispatcher */
     private $dispatcher;
-    /** @var RoleManager */
-    private $roleManager;
 
     public function __construct(
         TokenStorageInterface $tokenStorage,
-        StrictDispatcher $dispatcher,
-        RoleManager $roleManager
+        StrictDispatcher $dispatcher
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->dispatcher = $dispatcher;
-        $this->roleManager = $roleManager;
     }
 
     public static function getSubscribedEvents(): array
     {
         return [
             Crud::getEventName('create', 'pre', Group::class) => 'preCreate',
-            Crud::getEventName('patch', 'pre', Group::class) => 'prePatch',
             Crud::getEventName('patch', 'post', Group::class) => 'postPatch',
         ];
     }
@@ -52,22 +46,6 @@ class GroupSubscriber implements EventSubscriberInterface
 
         if ($user instanceof User) {
             $group->addOrganization($user->getMainOrganization());
-        }
-    }
-
-    public function prePatch(PatchEvent $event)
-    {
-        /** @var Group $group */
-        $group = $event->getObject();
-
-        // trying to add a new role to a group
-        if (Crud::COLLECTION_ADD === $event->getAction() && 'role' === $event->getProperty()) {
-            /** @var Role $role */
-            $role = $event->getValue();
-
-            if ($group->hasRole($role->getName()) || !$this->roleManager->validateRoleInsert($event->getObject(), $event->getValue())) {
-                $event->block();
-            }
         }
     }
 

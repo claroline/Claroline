@@ -82,7 +82,6 @@ class UserSubscriber implements EventSubscriberInterface
             Crud::getEventName('create', 'pre', User::class) => 'preCreate',
             Crud::getEventName('update', 'pre', User::class) => 'preUpdate',
             Crud::getEventName('update', 'post', User::class) => 'postUpdate',
-            Crud::getEventName('patch', 'pre', User::class) => 'prePatch',
             Crud::getEventName('patch', 'post', User::class) => 'postPatch',
             Crud::getEventName('delete', 'pre', User::class) => 'preDelete',
             Crud::getEventName('delete', 'post', User::class) => 'postDelete',
@@ -183,22 +182,6 @@ class UserSubscriber implements EventSubscriberInterface
 
         if ($user->getPlainpassword()) {
             $this->dispatcher->dispatch(SecurityEvents::NEW_PASSWORD, NewPasswordEvent::class, [$user]);
-        }
-    }
-
-    public function prePatch(PatchEvent $event)
-    {
-        /** @var User $user */
-        $user = $event->getObject();
-
-        // trying to add a new role to a user
-        if (Crud::COLLECTION_ADD === $event->getAction() && $event->getValue() instanceof Role) {
-            /** @var Role $role */
-            $role = $event->getValue();
-
-            if ($user->hasRole($role->getName()) || !$this->roleManager->validateRoleInsert($user, $role)) {
-                $event->block();
-            }
         }
     }
 
