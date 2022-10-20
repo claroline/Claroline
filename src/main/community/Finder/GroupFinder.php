@@ -24,8 +24,6 @@ class GroupFinder extends AbstractFinder
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
     {
-        $qb->andWhere('obj.isReadOnly = false');
-
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
                 case 'organization':
@@ -60,5 +58,12 @@ class GroupFinder extends AbstractFinder
         }
 
         return $qb;
+    }
+
+    public function getExtraFieldMapping()
+    {
+        return [
+            'meta.readOnly' => 'isReadOnly',
+        ];
     }
 }

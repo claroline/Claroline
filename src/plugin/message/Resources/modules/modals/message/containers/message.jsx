@@ -6,6 +6,7 @@ import {
   actions as formActions,
   selectors as formSelectors
 } from '#/main/app/content/form/store'
+import {selectors as securitySelectors} from '#/main/app/security/store'
 
 import {Message as MessageTypes} from '#/plugin/message/prop-types'
 import {reducer, selectors} from '#/plugin/message/modals/message/store'
@@ -14,6 +15,7 @@ import {MessageModal as MessageModalComponent} from '#/plugin/message/modals/mes
 const MessageModal = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
+      isAdmin: securitySelectors.isAdmin(state),
       saveEnabled: formSelectors.saveEnabled(formSelectors.form(state, selectors.STORE_NAME))
     }),
     (dispatch) => ({

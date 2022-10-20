@@ -66,6 +66,11 @@ class GroupSerializer
             'id' => $group->getUuid(),
             'autoId' => $group->getId(),
             'name' => $group->getName(),
+            'meta' => [
+                'readOnly' => $group->isReadOnly(),
+            ],
+
+            // should not be exposed here
             'roles' => array_map(function (Role $role) use ($options) {
                 return $this->roleSerializer->serialize($role, $options);
             }, $group->getEntityRoles()->toArray()),

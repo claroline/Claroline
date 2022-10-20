@@ -1,14 +1,14 @@
 import React, {Fragment} from 'react'
 
+import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
+import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {Button} from '#/main/app/action/components/button'
-
-import {trans} from '#/main/app/intl/translation'
-import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
+
 import {GroupCard} from '#/main/core/user/data/components/group-card'
-import {Group as GroupType} from '#/main/core/user/prop-types'
+import {Group as GroupTypes} from '#/main/core/user/prop-types'
 import {MODAL_GROUPS} from '#/main/core/modals/groups'
 
 const GroupButton = props =>
@@ -20,7 +20,9 @@ const GroupButton = props =>
     label={trans('add_group')}
     disabled={props.disabled}
     modal={[MODAL_GROUPS, {
+      url: props.url,
       title: props.title,
+      filters: props.filters,
       selectAction: (selected) => ({
         type: CALLBACK_BUTTON,
         label: trans('select', {}, 'actions'),
@@ -31,7 +33,11 @@ const GroupButton = props =>
   />
 
 GroupButton.propTypes = {
+  url: T.oneOfType([T.string, T.array]),
   title: T.string,
+  filters: T.arrayOf(T.shape({
+    // TODO : list filter types
+  })),
   disabled: T.bool,
   onChange: T.func.isRequired,
   size: T.string
@@ -85,13 +91,16 @@ const GroupInput = props => {
 
 implementPropTypes(GroupInput, DataInputTypes, {
   value: T.shape(
-    GroupType.propTypes
+    GroupTypes.propTypes
   ),
-  picker: T.shape({
-    title: T.string
-  })
+  url: T.oneOfType([T.string, T.array]),
+  title: T.string,
+  filters: T.arrayOf(T.shape({
+    // TODO : list filter types
+  }))
 }, {
-  value: null
+  value: null,
+  picker: {}
 })
 
 export {

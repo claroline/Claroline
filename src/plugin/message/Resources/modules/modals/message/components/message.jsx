@@ -32,7 +32,12 @@ const MessageModal = props =>
             }, {
               name: 'receivers.groups',
               type: 'groups',
-              label: trans('message_form_to', {}, 'message')
+              label: trans('message_form_to', {}, 'message'),
+              options: {
+                // the only readOnly group is ROLE_USER which contains all the platform users
+                // we don't want someone to be able to send a message to everyone
+                picker: {filters: !props.isAdmin ? [{property: 'meta.readOnly', value: false, locked: true}] : []}
+              }
             }, {
               name: 'receivers.workspaces',
               type: 'workspaces',
@@ -69,6 +74,7 @@ const MessageModal = props =>
   </Modal>
 
 MessageModal.propTypes = {
+  isAdmin: T.bool.isRequired,
   saveEnabled: T.bool.isRequired,
   receivers: T.shape({
     users: T.arrayOf(T.shape({

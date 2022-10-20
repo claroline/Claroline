@@ -1,12 +1,12 @@
 import React, {Fragment} from 'react'
 
+import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
+import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {Button} from '#/main/app/action/components/button'
-
-import {trans} from '#/main/app/intl/translation'
-import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
+
 import {RoleCard} from '#/main/core/user/data/components/role-card'
 import {Role as RoleType} from '#/main/core/user/prop-types'
 import {MODAL_ROLES} from '#/main/core/modals/roles'
@@ -102,7 +102,8 @@ implementPropTypes(RoleInput, DataInputTypes, {
     }))
   })
 }, {
-  value: null
+  value: null,
+  picker: {}
 })
 
 export {
