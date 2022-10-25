@@ -73,13 +73,6 @@ class Workspace implements IdentifiableInterface
     private $slug;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
-     *
-     * @var string
-     */
-    private $lang = null;
-
-    /**
      * @ORM\Column(name="isModel", type="boolean")
      *
      * @var bool
@@ -398,16 +391,6 @@ class Workspace implements IdentifiableInterface
     public function getWorkspaceModel()
     {
         return $this->workspaceModel;
-    }
-
-    public function setLang($lang)
-    {
-        $this->lang = $lang;
-    }
-
-    public function getLang()
-    {
-        return $this->lang;
     }
 
     public function getShowProgression()

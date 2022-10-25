@@ -92,25 +92,6 @@ const WorkspaceFormComponent = (props) =>
             disabled: true,
             displayed: !props.new,
             mode: 'expert'
-          }, {
-            name: 'meta._forceLang',
-            type: 'boolean',
-            label: trans('default_language'),
-            calculated: (workspace) => get(workspace, 'meta._forceLang') || get(workspace, 'meta.lang'),
-            onChange: activated => {
-              if (!activated) {
-                // reset lang field
-                props.updateProp('meta.lang', null)
-              }
-            },
-            mode: 'advanced',
-            linked: [{
-              name: 'meta.lang',
-              label: trans('lang'),
-              type: 'locale',
-              required: true,
-              displayed: (workspace) => get(workspace, 'meta._forceLang') || get(workspace, 'meta.lang')
-            }]
           }
         ]
       }, {
