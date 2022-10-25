@@ -96,7 +96,7 @@ class WorkspaceController
      * @Route("/{slug}", name="claro_workspace_open")
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      */
-    public function openAction(string $slug, Request $request, ?User $user = null): JsonResponse
+    public function openAction(string $slug, ?User $user = null): JsonResponse
     {
         /** @var Workspace $workspace */
         $workspace = $this->om->getRepository(Workspace::class)->findOneBy(['slug' => $slug]);
@@ -104,9 +104,6 @@ class WorkspaceController
         if (!$workspace) {
             throw new NotFoundHttpException('Workspace not found');
         }
-
-        // switch to the workspace locale if needed (this is broken in UI atm)
-        $this->forceWorkspaceLang($workspace, $request);
 
         // this should not be done here
         $this->toolManager->addMissingWorkspaceTools($workspace);
@@ -239,14 +236,5 @@ class WorkspaceController
         $this->restrictionsManager->unlock($workspace, json_decode($request->getContent(), true)['code']);
 
         return new JsonResponse(null, 204);
-    }
-
-    private function forceWorkspaceLang(Workspace $workspace, Request $request)
-    {
-        if ($workspace->getLang()) {
-            $request->setLocale($workspace->getLang());
-            //not sure if both lines are needed
-            $this->translator->setLocale($workspace->getLang());
-        }
     }
 }

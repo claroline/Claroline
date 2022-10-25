@@ -112,7 +112,6 @@ class WorkspaceSerializer
             'thumbnail' => $workspace->getThumbnail(),
             'poster' => $workspace->getPoster(),
             'meta' => [
-                'lang' => $workspace->getLang(),
                 'archived' => $workspace->isArchived(),
                 'model' => $workspace->isModel(),
                 'personal' => $workspace->isPersonal(),
@@ -298,7 +297,6 @@ class WorkspaceSerializer
             $this->sipe('meta.personal', 'setPersonal', $data, $workspace);
             $this->sipe('meta.model', 'setModel', $data, $workspace);
             $this->sipe('meta.description', 'setDescription', $data, $workspace);
-            $this->sipe('meta.lang', 'setLang', $data, $workspace);
 
             if (array_key_exists('created', $data['meta'])) {
                 $workspace->setCreatedAt(DateNormalizer::denormalize($data['meta']['created']));
