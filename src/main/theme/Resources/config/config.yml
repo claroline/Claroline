@@ -1,9 +1,6 @@
 plugin:
     themes:
         - name: Claroline
-        - name: Claroline Black
-        - name: Claroline Mint
-        - name: Claroline Ruby
 
     resource_icons:
         - name: res_text
