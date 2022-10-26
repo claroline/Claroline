@@ -118,11 +118,11 @@ class TransferManager implements LoggerAwareInterface
     {
         $serialized = $this->serializer->serialize($workspace, [SerializerInterface::SERIALIZE_TRANSFER]);
 
-        if (!empty($workspace->getPoster())) {
+        if (!empty($workspace->getPoster()) && $this->fileManager->exists($workspace->getPoster())) {
             $fileBag->add($workspace->getUuid().'-poster', $workspace->getPoster());
         }
 
-        if (!empty($workspace->getThumbnail())) {
+        if (!empty($workspace->getThumbnail()) && $this->fileManager->exists($workspace->getThumbnail())) {
             $fileBag->add($workspace->getUuid().'-thumbnail', $workspace->getThumbnail());
         }
 

@@ -158,7 +158,9 @@ class FileListener
         $file = $event->getResource();
         $path = $this->fileManager->getDirectory().DIRECTORY_SEPARATOR.$file->getHashName();
 
-        $event->addFile($file->getHashName(), $path);
+        if ($this->fileManager->exists($file->getHashName())) {
+            $event->addFile($file->getHashName(), $path);
+        }
     }
 
     public function onImport(ImportResourceEvent $event)
@@ -169,6 +171,10 @@ class FileListener
 
         $bag = $event->getFileBag();
         $realFile = $bag->get($file->getHashName());
+
+        if (empty($realFile)) {
+            return;
+        }
 
         $hashName = 'WORKSPACE_'.$workspace->getId().DIRECTORY_SEPARATOR.Uuid::uuid4()->toString();
         $ext = pathinfo($realFile, PATHINFO_EXTENSION);
@@ -194,6 +200,10 @@ class FileListener
         /** @var File $newFile */
         $newFile = $event->getCopy();
 
+        if (!$this->fileManager->exists($resource->getHashName())) {
+            return;
+        }
+
         $destParent = $resource->getResourceNode();
         $workspace = $destParent->getWorkspace();
 
@@ -202,7 +212,6 @@ class FileListener
         if ($ext) {
             $hashName .= '.'.$ext;
         }
-
         $fileSystem = new Filesystem();
         // create workspace dir if missing
         $fileSystem->mkdir($this->fileManager->getDirectory().DIRECTORY_SEPARATOR.'WORKSPACE_'.$workspace->getId());

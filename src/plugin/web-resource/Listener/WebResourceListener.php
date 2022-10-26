@@ -23,7 +23,6 @@ use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\ResourceActionEvent;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\WebResourceBundle\Manager\WebResourceManager;
-use Ramsey\Uuid\Uuid;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -158,48 +157,6 @@ class WebResourceListener
 
         $event->setItem($name);
         $event->stopPropagation();
-    }
-
-    /**
-     * Returns a new hash for a file.
-     *
-     * @param mixed $mixed The extension of the file or an Claroline\CoreBundle\Entity\Resource\File
-     *
-     * @return string
-     */
-    private function getHash($mixed)
-    {
-        if ($mixed instanceof File) {
-            $mixed = pathinfo($mixed->getHashName(), PATHINFO_EXTENSION);
-        }
-
-        return Uuid::uuid4()->toString().'.'.$mixed;
-    }
-
-    /**
-     * Copies a file (no persistence).
-     *
-     * @return File
-     */
-    private function copy(File $resource, File $file)
-    {
-        $hash = $this->getHash($resource);
-        $fs = new Filesystem();
-
-        $file->setSize($resource->getSize());
-        $file->setHashName($hash);
-
-        $name = $this->filesDir.DIRECTORY_SEPARATOR.'webresource'.
-          DIRECTORY_SEPARATOR.$resource->getResourceNode()->getWorkspace()->getUuid().
-          DIRECTORY_SEPARATOR.$resource->getHashName();
-
-        $newName = $this->filesDir.DIRECTORY_SEPARATOR.'webresource'.
-          DIRECTORY_SEPARATOR.$file->getResourceNode()->getWorkspace()->getUuid().
-          DIRECTORY_SEPARATOR.$file->getHashName();
-
-        $fs->copy($name, $newName);
-
-        return $file;
     }
 
     /**
