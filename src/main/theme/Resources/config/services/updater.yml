@@ -1,0 +1,10 @@
+services:
+    _defaults:
+        tags: [ 'claroline.platform.updater' ]
+
+    Claroline\ThemeBundle\Installation\Updater\Updater130600:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+        calls:
+            - setLogger: [ '@logger' ]

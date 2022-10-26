@@ -7,3 +7,4 @@ imports:
     - { resource: services/repository.yml }
     - { resource: services/serializer.yml }
     - { resource: services/twig.yml }
+    - { resource: services/updater.yml }
