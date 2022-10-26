@@ -35,24 +35,33 @@ class BuildThemesCommand extends Command
     {
         $this
             ->setDescription('Build themes which are installed in the platform')
+            ->addOption('current', 'c', InputOption::VALUE_NONE, 'Rebuild only the theme currently used by the platform.')
             ->addOption('theme', 't', InputOption::VALUE_OPTIONAL, 'Theme name. Rebuild only this theme.')
-            ->addOption('no-cache', 'c', InputOption::VALUE_NONE, 'Rebuild themes without using cache.');
+            ->addOption('no-cache', 'nc', InputOption::VALUE_NONE, 'Rebuild themes without using cache.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $output->writeln('Rebuilding themes...');
-
         // Get themes to build (either a single theme or all themes)
-        $themeName = $input->getOption('theme');
-        if (!empty($themeName)) {
-            $theme = $this->themeManager->getThemeByName($themeName);
+        if ($input->getOption('current')) {
+            // rebuild current theme only
+            $output->writeln('Rebuilding current theme...');
+
+            $themesToRebuild = [$this->themeManager->getCurrentTheme()];
+        } elseif (!empty($input->getOption('theme'))) {
+            // rebuild the specified theme
+            $output->writeln(sprintf('Rebuilding theme %s...', $input->getOption('theme')));
+
+            $theme = $this->themeManager->getThemeByName($input->getOption('theme'));
             if (!empty($theme)) {
-                $themesToRebuild = [$this->themeManager->getThemeByName($themeName)];
+                $themesToRebuild = [$theme];
             } else {
-                $output->writeln('Can not find theme "'.$themeName.'".');
+                $output->writeln(sprintf('Can not find theme "%s".', $input->getOption('theme')));
             }
         } else {
+            // rebuild all themes
+            $output->writeln('Rebuilding all themes...');
+
             $themesToRebuild = $this->themeManager->all();
         }
 
