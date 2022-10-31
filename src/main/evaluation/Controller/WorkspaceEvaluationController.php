@@ -30,6 +30,7 @@ use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\EvaluationBundle\Manager\PdfManager;
 use Claroline\EvaluationBundle\Manager\WorkspaceEvaluationManager;
 use Claroline\EvaluationBundle\Messenger\Message\InitializeWorkspaceEvaluations;
+use Claroline\EvaluationBundle\Messenger\Message\RecomputeWorkspaceEvaluations;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -208,6 +209,26 @@ class WorkspaceEvaluationController extends AbstractSecurityController
         if (!empty($users)) {
             $this->messageBus->dispatch(
                 new InitializeWorkspaceEvaluations($workspace->getId(), array_map(function (User $user) {
+                    return $user->getId();
+                }, $users))
+            );
+        }
+
+        return new JsonResponse(null, 204);
+    }
+
+    /**
+     * @Route("/{workspace}/recompute", name="apiv2_workspace_evaluations_recompute", methods={"PUT"})
+     * @EXT\ParamConverter("workspace", options={"mapping": {"workspace": "uuid"}})
+     */
+    public function recomputeAction(Workspace $workspace): JsonResponse
+    {
+        $this->checkToolAccess('EDIT', $workspace);
+
+        $users = $this->om->getRepository(User::class)->findByWorkspaces([$workspace]);
+        if (!empty($users)) {
+            $this->messageBus->dispatch(
+                new RecomputeWorkspaceEvaluations($workspace->getId(), array_map(function (User $user) {
                     return $user->getId();
                 }, $users))
             );

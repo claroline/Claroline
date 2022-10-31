@@ -9,6 +9,7 @@
   "workspace_requirements_help_title": "You can specify here the resources that have to be done in the workspace.",
   "workspace_requirements_help_description": "Only resources to do are used to calculate users progression in the workspace.",
   "initialize_evaluations": "Initialize evaluations",
+  "recompute_evaluations": "Recompute evaluations",
 
   "evaluation_not_attempted_status": "You have not started the evaluation.",
   "evaluation_todo_status": "You have to do the evaluation.",
