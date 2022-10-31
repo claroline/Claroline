@@ -29,6 +29,17 @@ const EvaluationParameters = (props) =>
             method: 'PUT'
           }
         }
+      }, {
+        name: 'recompute',
+        type: ASYNC_BUTTON,
+        icon: 'fa fa-fw fa-calculator',
+        label: trans('recompute_evaluations', {}, 'evaluation'),
+        request: {
+          url: ['apiv2_workspace_evaluations_recompute', {workspace: props.contextId}],
+          request: {
+            method: 'PUT'
+          }
+        }
       }
     ]}
   >
@@ -58,7 +69,7 @@ const EvaluationParameters = (props) =>
     />
 
     <Button
-      className="btn btn-emphasis btn-block"
+      className="btn btn-emphasis btn-block component-container"
       type={MODAL_BUTTON}
       primary={true}
       label={trans('add_resources')}
