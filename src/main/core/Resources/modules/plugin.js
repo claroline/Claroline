@@ -142,8 +142,9 @@ registry.add('ClarolineCoreBundle', {
    * Provides current user Account sections.
    */
   account: {
-    'profile': () => { return import(/* webpackChunkName: "core-account-profile" */ '#/main/core/account/profile') },
-    'privacy': () => { return import(/* webpackChunkName: "core-account-privacy" */ '#/main/core/account/privacy') }
+    'profile'   : () => { return import(/* webpackChunkName: "core-account-profile" */ '#/main/core/account/profile') },
+    'parameters': () => { return import(/* webpackChunkName: "core-account-parameters" */ '#/main/core/account/parameters') },
+    'privacy'   : () => { return import(/* webpackChunkName: "core-account-privacy" */ '#/main/core/account/privacy') }
   },
 
   /**

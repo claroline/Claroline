@@ -101,6 +101,7 @@ function getFormDefaultSections(user, isNew = false) {
           type: 'locale',
           label: trans('language'),
           required: true,
+          displayed: isNew,
           options: {
             onlyEnabled: true
           }

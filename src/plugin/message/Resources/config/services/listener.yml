@@ -5,9 +5,5 @@ services:
         public: true
 
     Claroline\MessageBundle\Listener\Tool\MessagingListener:
-        arguments:
-            - '@security.token_storage'
-            - '@Claroline\AppBundle\API\Crud'
         tags:
             - { name: kernel.event_listener, event: tool.open.desktop.messaging, method: onDisplayDesktop }
-            - { name: kernel.event_listener, event: tool.configure.desktop.messaging, method: onConfigureDesktop }
