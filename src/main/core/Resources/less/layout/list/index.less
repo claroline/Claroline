@@ -10,6 +10,8 @@
 // FIXME: this is ugly to do it like it
 // if there are additional containers, I'm fucked and it may be required by some other components too
 .page-content > .data-list {
+    margin-bottom: @component-margin-bottom;
+
     &:first-child {
         margin-top: @component-margin-bottom;
     }
@@ -26,10 +28,6 @@
 
 .data-picker-modal {
     .embedded-list-variant(@modal-footer-bg, @modal-footer-bg, @modal-header-border-color, @modal-inner-padding);
-
-    .data-list {
-        margin: 0;
-    }
 }
 
 
@@ -82,10 +80,13 @@
     }
 
     .data-grid {
-        margin-bottom: @data-grid-gutter;
         .data-grid-header,
         .list-selected-label {
             margin-left: @data-grid-gutter;
+        }
+
+        + .list-footer {
+            margin-top: @data-grid-gutter;
         }
     }
 

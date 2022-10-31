@@ -128,6 +128,7 @@ const FormData = (props) => {
             level={hLevel}
             displayed={false}
             title={primarySection.title}
+            subtitle={primarySection.subtitle}
           />
 
           <div className="panel-body">

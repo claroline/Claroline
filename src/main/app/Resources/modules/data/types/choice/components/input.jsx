@@ -8,8 +8,6 @@ import {Select} from '#/main/app/input/components/select'
 import {Checkboxes} from '#/main/app/input/components/checkboxes'
 import {Radios} from '#/main/app/input/components/radios'
 
-// todo : adds min and max values for multiple: true
-
 const ChoiceInput = props => {
   const className = classes('choice-control', props.className, props.size)
 
