@@ -164,6 +164,7 @@ class Liquid extends Component {
         </defs>
 
         <circle
+          style={this.props.color ? {fill: this.props.color} : undefined}
           className={this.props.className}
           cx={this.props.radius}
           cy={this.props.radius}
@@ -185,7 +186,8 @@ Liquid.propTypes = {
   preFilled: T.bool.isRequired,
   onFilled: T.func,
   wave: T.bool.isRequired,
-  children: T.node
+  children: T.node,
+  color: T.string
 }
 
 Liquid.defaultProps = {

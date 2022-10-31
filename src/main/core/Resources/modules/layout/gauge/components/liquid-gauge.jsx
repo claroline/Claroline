@@ -42,6 +42,7 @@ const LiquidGauge = props => {
         radius={radius}
         thickness={circleThickness}
         preFilled={true}
+        color={props.color}
       />
 
       <GaugeText
@@ -50,6 +51,7 @@ const LiquidGauge = props => {
         margin={fillCircleMargin}
         radius={radius}
         preFilled={props.preFilled}
+        color={props.color}
       />
 
       <Liquid
@@ -60,6 +62,7 @@ const LiquidGauge = props => {
         margin={fillCircleMargin}
         preFilled={props.preFilled}
         wave={props.wave}
+        color={props.color}
       >
         <GaugeText
           className="gauge-liquid-text"
@@ -68,6 +71,7 @@ const LiquidGauge = props => {
           margin={fillCircleMargin}
           radius={radius}
           preFilled={props.preFilled}
+          color={props.color}
         />
       </Liquid>
     </GaugeContainer>

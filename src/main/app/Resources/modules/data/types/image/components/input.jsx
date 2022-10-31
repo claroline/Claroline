@@ -50,11 +50,11 @@ class ImageInputComponent extends PureComponent {
       }),
       credentials: 'include'
     })
-      .then(response => response.json())
-      .then((data) => this.setState({
-        loaded: true,
-        file: data
-      }))
+      .then(response => response.json(),
+        () => this.setState({loaded: true, file: null}))
+      .then(
+        (data) => this.setState({loaded: true, file: data})
+      )
   }
 
   onChange() {
@@ -64,13 +64,18 @@ class ImageInputComponent extends PureComponent {
   }
 
   onDelete() {
-    this.props.deleteFile(this.state.file.id, this.props.onChange)
+    if (this.state.file) {
+      this.props.deleteFile(this.state.file.id, this.props.onChange)
+    } else {
+      // this permits to empty missing file
+      this.props.onChange(null)
+    }
   }
 
   render() {
     return (
       <fieldset className={this.props.className}>
-        {!this.props.value &&
+        {(!this.props.value || !this.state.file) &&
           <input
             id={this.props.id}
             type="file"

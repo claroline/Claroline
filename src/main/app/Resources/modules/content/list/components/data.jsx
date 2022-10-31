@@ -163,14 +163,16 @@ class ListData extends Component {
           />
         }
 
-        <ListHeader
-          id={this.props.id}
-          disabled={0 === this.props.totalResults}
-          display={displayTool}
-          columns={columnsTool}
-          filters={filtersTool}
-          customActions={this.props.customActions}
-        />
+        {(displayTool || columnsTool || filtersTool || this.props.customActions) &&
+          <ListHeader
+            id={this.props.id}
+            disabled={0 === this.props.totalResults}
+            display={displayTool}
+            columns={columnsTool}
+            filters={filtersTool}
+            customActions={this.props.customActions}
+          />
+        }
 
         {this.props.loading &&
           <ContentLoader />
@@ -213,6 +215,9 @@ ListData.propTypes = {
   level: T.number,
   displayLevel: T.number,
   className: T.string,
+  /**
+   * @deprecated
+   */
   title: T.string,
   loading: T.bool,
 

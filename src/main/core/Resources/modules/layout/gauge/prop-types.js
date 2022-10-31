@@ -7,7 +7,7 @@ const Gauge = {
     /**
      * The type of the Gauge (to apply correct color scheme).
      */
-    type: T.oneOf(['primary', 'success', 'warning', 'danger', 'info', 'user']),
+    type: T.oneOf(['primary', 'success', 'warning', 'danger', 'info', 'user', 'custom']),
 
     /**
      * The current value.
@@ -24,7 +24,7 @@ const Gauge = {
      * The available height for the Gauge.
      */
     height: T.number,
-
+    color: T.string,
     preFilled: T.bool
   },
   defaultProps: {
