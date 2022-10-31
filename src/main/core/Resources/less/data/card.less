@@ -180,7 +180,6 @@
     font-size: @data-card-content-font;
     line-height: @line-height-base;
     text-align: justify;
-    padding: 0 @data-card-padding;
     max-height: @line-height-base * 5em;
     overflow: hidden;
 }
@@ -192,6 +191,33 @@
     padding: 0 @data-card-padding @data-card-padding;
     color: @data-card-color-muted;
     font-style: italic;
+}
+
+.data-card-row + .data-card-row {
+    margin-top: 5px;
+}
+
+.data-cards-stacked .data-card-row {
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+    margin: 0;
+
+    .data-card-header,
+    .data-card-content {
+        border-radius: 0;
+    }
+
+    + .data-card {
+        border-top: 1px solid @data-card-border;
+    }
+}
+
+.data-cards-striped .data-card:nth-of-type(odd) {
+    background-color: @table-bg-accent;
+    .data-card-header {
+        background-color: #f0f0f0;
+    }
 }
 
 

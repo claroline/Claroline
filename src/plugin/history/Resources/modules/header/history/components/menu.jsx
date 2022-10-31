@@ -14,7 +14,7 @@ import {route as resourceRoute} from '#/main/core/resource/routing'
 import {constants} from '#/plugin/history/header/history/constants'
 
 const HistoryDropdown = props =>
-  <div className="app-header-dropdown dropdown-menu dropdown-menu-right">
+  <div className="app-header-dropdown dropdown-menu dropdown-menu-right data-cards-stacked">
     <ul className="nav nav-tabs">
       <li className={classes({
         active: 'workspaces' === props.section
