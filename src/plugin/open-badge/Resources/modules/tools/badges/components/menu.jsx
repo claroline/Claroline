@@ -23,7 +23,7 @@ const BadgeMenu = (props) =>
           label: trans('my_badges', {}, 'badge'),
           target: props.path+'/my-badges',
           type: LINK_BUTTON,
-          displayed: props.contextType === toolConstants.TOOL_WORKSPACE && !get(props.workspace, 'meta.model')
+          displayed: props.contextType !== toolConstants.TOOL_WORKSPACE || !get(props.workspace, 'meta.model')
         }, {
           name: 'all-badges',
           label: trans('all_badges', {}, 'badge'),

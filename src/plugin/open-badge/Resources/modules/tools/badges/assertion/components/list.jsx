@@ -15,7 +15,7 @@ const AssertionsList = (props) =>
   <ListData
     name={selectors.STORE_NAME + '.badges.mine'}
     fetch={{
-      url: ['apiv2_assertion_current_user_list'],
+      url: ['apiv2_assertion_current_user_list', {workspace: props.contextData ? props.contextData.id : null}],
       autoload: true
     }}
     primaryAction={(row) => ({
@@ -60,12 +60,14 @@ const AssertionsList = (props) =>
 
 AssertionsList.propTypes = {
   path: T.string.isRequired,
-  download: T.func.isRequired
+  download: T.func.isRequired,
+  contextData: T.object
 }
 
 const Assertions = connect(
   (state) => ({
-    path: toolSelectors.path(state)
+    path: toolSelectors.path(state),
+    contextData: toolSelectors.contextData(state)
   }),
   (dispatch) => ({
     download(assertion) {
