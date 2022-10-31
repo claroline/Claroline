@@ -83,7 +83,6 @@ registry.add('ClarolineCoreBundle', {
       'archive'        : () => { return import(/* webpackChunkName: "core-action-workspace-archive" */         '#/main/core/workspace/actions/archive') },
       'configure'      : () => { return import(/* webpackChunkName: "core-action-workspace-configure" */       '#/main/core/workspace/actions/configure') },
       'copy'           : () => { return import(/* webpackChunkName: "core-action-workspace-copy" */            '#/main/core/workspace/actions/copy') },
-      'copy-model'     : () => { return import(/* webpackChunkName: "core-action-workspace-copy-model" */      '#/main/core/workspace/actions/copy-model') },
       'delete'         : () => { return import(/* webpackChunkName: "core-action-workspace-delete" */          '#/main/core/workspace/actions/delete') },
       'export'         : () => { return import(/* webpackChunkName: "core-action-workspace-export" */          '#/main/core/workspace/actions/export') },
       'open'           : () => { return import(/* webpackChunkName: "core-action-workspace-open" */            '#/main/core/workspace/actions/open') },

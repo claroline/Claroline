@@ -49,7 +49,7 @@ const WorkspaceFormComponent = (props) =>
             options: {
               picker: {
                 model: true,
-                title: trans('workspace_models')
+                title: trans('workspace_models', {}, 'workspace')
               }
             },
             displayed: props.new,
@@ -81,13 +81,13 @@ const WorkspaceFormComponent = (props) =>
             mode: 'standard'
           }, {
             name: 'meta.model',
-            label: trans('define_as_model'),
+            label: trans('workspace_model', {}, 'workspace'),
             type: 'boolean',
             disabled: !props.new,
             mode: 'expert'
           }, {
             name: 'meta.personal',
-            label: trans('personal'),
+            label: trans('workspace_personal', {}, 'workspace'),
             type: 'boolean',
             disabled: true,
             displayed: !props.new,
