@@ -12,7 +12,7 @@ import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import classes from 'classnames'
 
 const ToolPage = props => {
-  let toolbar = 'edit rights'
+  let toolbar = 'edit'
   if (props.primaryAction) {
     toolbar = props.primaryAction + ' | ' + toolbar
   }
