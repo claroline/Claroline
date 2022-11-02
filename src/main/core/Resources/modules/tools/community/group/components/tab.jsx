@@ -12,6 +12,7 @@ import {MODAL_ROLES} from '#/main/core/modals/roles'
 
 import {Groups} from '#/main/core/tools/community/group/components/groups'
 import {Group} from '#/main/core/tools/community/group/components/group'
+import {constants} from '#/main/core/user/constants'
 
 const GroupTab = props =>
   <ToolPage
@@ -42,7 +43,11 @@ const GroupTab = props =>
             // select roles to assign to selected groups
             modal: [MODAL_ROLES, {
               url: ['apiv2_workspace_list_roles', {id: get(props.contextData, 'id')}],
-              filters: [],
+              filters: [
+                // those filters are not exploited as the url already do it for us. This is just to disable filters
+                {property: 'type', value: constants.ROLE_WORKSPACE, locked: true},
+                {property: 'workspace', value: get(props.contextData, 'id'), locked: true, hidden: true}
+              ],
               title: trans('register_groups'),
               subtitle: trans('workspace_register_select_roles'),
               selectAction: (selectedRoles) => ({

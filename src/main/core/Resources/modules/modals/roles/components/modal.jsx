@@ -26,8 +26,8 @@ class RolesModal extends Component {
 
     return (
       <Modal
-        {...omit(this.props, 'url', 'selected', 'selectAction', 'reset', 'resetFilters', 'filters')}
         icon="fa fa-fw fa-id-badge"
+        {...omit(this.props, 'url', 'selected', 'selectAction', 'reset', 'resetFilters', 'filters')}
         className="data-picker-modal"
         bsSize="lg"
         onEnter={() => {

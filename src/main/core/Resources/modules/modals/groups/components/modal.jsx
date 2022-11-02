@@ -26,8 +26,8 @@ class GroupsModal extends Component
 
     return (
       <Modal
-        {...omit(this.props, 'url', 'selected', 'selectAction', 'reset', 'resetFilters', 'filters', 'isAdmin')}
         icon="fa fa-fw fa-users"
+        {...omit(this.props, 'url', 'selected', 'selectAction', 'reset', 'resetFilters', 'filters', 'isAdmin')}
         className="data-picker-modal"
         bsSize="lg"
         onEnter={() => {

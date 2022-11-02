@@ -13,6 +13,7 @@ import {MODAL_ROLES} from '#/main/core/modals/roles'
 
 import {Users} from '#/main/core/tools/community/user/containers/users'
 import {User} from '#/main/core/tools/community/user/components/user'
+import {constants} from '#/main/core/user/constants'
 
 const UserTab = props =>
   <ToolPage
@@ -43,7 +44,11 @@ const UserTab = props =>
             // select roles to assign to selected users
             modal: [MODAL_ROLES, {
               url: ['apiv2_workspace_list_roles', {id: get(props.contextData, 'id')}],
-              filters: [],
+              filters: [
+                // those filters are not exploited as the url already do it for us. This is just to disable filters
+                {property: 'type', value: constants.ROLE_WORKSPACE, locked: true, hidden: false},
+                {property: 'workspace', value: get(props.contextData, 'id'), locked: true, hidden: false}
+              ],
               title: trans('register_users'),
               subtitle: trans('workspace_register_select_roles'),
               selectAction: (selectedRoles) => ({
