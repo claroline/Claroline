@@ -18,6 +18,8 @@
   "delete_confirm_message": "{1} Are you sure you want to delete this workspace? | [2,Inf[ Are you sure you want to delete these %count% workspaces?",
   "self_unregister_confirm_title": "{1} Workspace unregistration | [2, Inf[ Workspaces unregistration",
   "self_unregister_confirm_message": "{1} Are you sure you want to unsubscribe from this workspace ?|[2,Inf[ Are you sure you want to unsubscribe from these %count% workspaces ?",
+  "self_register_confirm_title": "{1} Workspace registration | [2, Inf[ Workspaces registration",
+  "self_register_confirm_message": "{1} Are you sure you want to subscribe to this workspace ?|[2,Inf[ Are you sure you want to subscribe to these %count% workspaces ?",
 
   "is_archived": "This workspace is archived.",
   "workspace_hidden": "This workspace is hidden.",

@@ -9,5 +9,10 @@
   "evaluation_completed_status": "You have finished the workspace.",
   "evaluation_passed_status": "You have passed the workspace.",
 
-  "workspace_certificates_availability_help": "Certificates are available once the workspace is completed."
+  "workspace_certificates_availability_help": "Certificates are available once the workspace is completed.",
+  "enable_success_condition": "Activate the success or failure conditions",
+  "enable_success_condition_help": "Once the workspace is completed, users are given a pass or fail status depending on the defined conditions.",
+  "enable_success_condition_score": "Obtain a minimum score",
+  "enable_success_condition_success": "Successfully complete a certain number of resources",
+  "enable_success_condition_failed": "Not have failed a certain number of resources"
 }

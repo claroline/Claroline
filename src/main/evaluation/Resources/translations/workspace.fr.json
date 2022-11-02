@@ -9,5 +9,10 @@
   "evaluation_completed_status": "Vous avez terminé l'espace d'activités.",
   "evaluation_passed_status": "Vous avez réussi l'espace d'activités.",
 
-  "workspace_certificates_availability_help": "Les certificats sont disponibles une fois l'espace d'activités terminé."
+  "workspace_certificates_availability_help": "Les certificats sont disponibles une fois l'espace d'activités terminé.",
+  "enable_success_condition": "Activer les conditions de réussite ou d'échec",
+  "enable_success_condition_help": "Une fois l'espace d'activités complété les utilisateurs obtiennent un statut de réussite ou d'échec en fonction des conditions définies.",
+  "enable_success_condition_score": "Obtenir un score minimal",
+  "enable_success_condition_success": "Avoir réussi un certain nombre de ressources",
+  "enable_success_condition_failed": "Ne pas avoir échoué à un certain nombre de ressources"
 }

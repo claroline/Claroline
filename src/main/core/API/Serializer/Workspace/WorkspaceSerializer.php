@@ -135,6 +135,9 @@ class WorkspaceSerializer
             'notifications' => [
                 'enabled' => $workspace->hasNotifications(),
             ],
+            'evaluation' => [
+                'successCondition' => $workspace->getSuccessCondition(),
+            ],
         ];
 
         if (!in_array(SerializerInterface::SERIALIZE_TRANSFER, $options)) {
@@ -384,6 +387,10 @@ class WorkspaceSerializer
             if (isset($data['breadcrumb']['items'])) {
                 $workspaceOptions->setBreadcrumbItems($data['breadcrumb']['items']);
             }
+        }
+
+        if (isset($data['evaluation'])) {
+            $this->sipe('evaluation.successCondition', 'setSuccessCondition', $data, $workspace);
         }
 
         if (array_key_exists('organizations', $data)) {

@@ -271,6 +271,7 @@ const Editor = props =>
             required: true,
             options: {
               min: 0,
+              max: 100,
               unit: '%'
             }
           }, {

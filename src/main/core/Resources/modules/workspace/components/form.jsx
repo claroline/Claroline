@@ -23,6 +23,15 @@ const restrictByDates = (workspace) => get(workspace, 'restrictions.enableDates'
 const restrictByCode  = (workspace) => get(workspace, 'restrictions.enableCode') || !!get(workspace, 'restrictions.code')
 const restrictByIps   = (workspace) => get(workspace, 'restrictions.enableIps') || !isEmpty(get(workspace, 'restrictions.allowedIps'))
 
+// easy selection for evaluation
+const enableSuccessCondition = (workspace) => get(workspace, 'evaluation._enableSuccess')
+  || get(workspace, 'evaluation.successCondition.score')
+  || undefined !== get(workspace, 'evaluation.successCondition.minSuccess')
+  || undefined !== get(workspace, 'evaluation.successCondition.maxFailed')
+const enableSuccessScore = (workspace) => get(workspace, 'evaluation._enableSuccessScore') || get(workspace, 'evaluation.successCondition.score')
+const enableSuccessMinSuccess = (workspace) => get(workspace, 'evaluation._enableSuccessCount') || null !== get(workspace, 'evaluation.successCondition.minSuccess', null)
+const enableSuccessMaxFailed = (workspace) => get(workspace, 'evaluation._enableFailureCount') || null !== get(workspace, 'evaluation.successCondition.maxFailed', null)
+
 const WorkspaceFormComponent = (props) =>
   <FormData
     meta={true}
@@ -328,6 +337,100 @@ const WorkspaceFormComponent = (props) =>
                   placeholder: trans('no_allowed_ip'),
                   button: trans('add_ip')
                 }
+              }
+            ]
+          }
+        ]
+      }, {
+        icon: 'fa fa-fw fa-award',
+        title: trans('evaluation'),
+        fields: [
+          {
+            name: 'evaluation._enableSuccess',
+            type: 'boolean',
+            label: trans('enable_success_condition', {}, 'workspace'),
+            help: trans('enable_success_condition_help', {}, 'workspace'),
+            calculated: enableSuccessCondition,
+            onChange: (enabled) => {
+              if (!enabled) {
+                props.updateProp('evaluation.successCondition', null)
+                props.updateProp('evaluation._enableSuccessScore', false)
+                props.updateProp('evaluation._enableSuccessCount', false)
+                props.updateProp('evaluation._enableFailureCount', false)
+              }
+            },
+            linked: [
+              {
+                name: 'evaluation._enableSuccessScore',
+                label: trans('Obtenir un score minimal', {}, 'workspace'),
+                type: 'boolean',
+                displayed: enableSuccessCondition,
+                calculated: enableSuccessScore,
+                onChange: (enabled) => {
+                  if (!enabled) {
+                    props.updateProp('evaluation.successCondition.score', null)
+                  }
+                },
+                linked: [
+                  {
+                    name: 'evaluation.successCondition.score',
+                    label: trans('score_to_pass'),
+                    type: 'number',
+                    required: true,
+                    displayed: enableSuccessScore,
+                    options: {
+                      min: 0,
+                      max: 100,
+                      unit: '%'
+                    }
+                  }
+                ]
+              }, {
+                name: 'evaluation._enableSuccessCount',
+                type: 'boolean',
+                label: trans('enable_success_condition_success', {}, 'workspace'),
+                displayed: enableSuccessCondition,
+                calculated: enableSuccessMinSuccess,
+                onChange: (enabled) => {
+                  if (!enabled) {
+                    props.updateProp('evaluation.successCondition.minSuccess', null)
+                  }
+                },
+                linked: [
+                  {
+                    name: 'evaluation.successCondition.minSuccess',
+                    label: trans('count_resources', {}, 'resource'),
+                    type: 'number',
+                    required: true,
+                    displayed: enableSuccessMinSuccess,
+                    options: {
+                      min: 0
+                    }
+                  }
+                ]
+              }, {
+                name: 'evaluation._enableFailureCount',
+                type: 'boolean',
+                label: trans('enable_success_condition_failed', {}, 'workspace'),
+                displayed: enableSuccessCondition,
+                calculated: enableSuccessMaxFailed,
+                onChange: (enabled) => {
+                  if (!enabled) {
+                    props.updateProp('evaluation.successCondition.maxFailed', null)
+                  }
+                },
+                linked: [
+                  {
+                    name: 'evaluation.successCondition.maxFailed',
+                    label: trans('count_resources', {}, 'resource'),
+                    type: 'number',
+                    required: true,
+                    displayed: enableSuccessMaxFailed,
+                    options: {
+                      min: 0
+                    }
+                  }
+                ]
               }
             ]
           }
