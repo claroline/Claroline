@@ -77,7 +77,8 @@ GroupsModal.propTypes = {
 
 GroupsModal.defaultProps = {
   url: ['apiv2_group_list'],
-  title: trans('groups')
+  title: trans('groups'),
+  filters: []
 }
 
 export {
