@@ -92,5 +92,6 @@
     "require_resource": "The resource is used in the progression of the workspace",
     "require_resource_help": "Users will need to complete this resource to progress through the workspace.",
     "evaluate_resource": "The resource is used in the score of the workspace",
-    "evaluate_resource_help": "The score obtained by users at this resource is used to calculate the score of the workspace."
+    "evaluate_resource_help": "The score obtained by users at this resource is used to calculate the score of the workspace.",
+    "count_resources": "Number of resources"
 }

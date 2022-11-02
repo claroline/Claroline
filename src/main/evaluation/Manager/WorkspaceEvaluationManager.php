@@ -161,12 +161,37 @@ class WorkspaceEvaluationManager extends AbstractEvaluationManager
 
         $status = $evaluation->getStatus();
         if ($progression >= $progressionMax) {
-            if (0 !== $statusCount[AbstractEvaluation::STATUS_FAILED]) {
-                // if there is one failed resource the workspace is considered as failed also
-                $status = AbstractEvaluation::STATUS_FAILED;
-            } else {
-                // if all resources have been done without failure the workspace is completed
+            // recompute workspace score and status if all resources are done
+            if ($scoreMax) {
+                $evaluationData['score'] = $score;
+                $evaluationData['scoreMax'] = $scoreMax;
+            }
+
+            $successCondition = $workspace->getSuccessCondition();
+            if (!empty($successCondition)) {
                 $status = AbstractEvaluation::STATUS_PASSED;
+
+                // check user score
+                if ($scoreMax && $successCondition['score']) {
+                    $successScore = ($successCondition['score'] * $scoreMax) / 100;
+                    if ($score < $successScore) {
+                        $status = AbstractEvaluation::STATUS_FAILED;
+                    }
+                }
+
+                // check user success resources
+                if (($successCondition['minSuccess'] || 0 === $successCondition['minSuccess'])
+                    && $successCondition['minSuccess'] > $statusCount[AbstractEvaluation::STATUS_PASSED]) {
+                    $status = AbstractEvaluation::STATUS_FAILED;
+                }
+
+                // check user failed resources
+                if (($successCondition['maxFailed'] || 0 === $successCondition['maxFailed'])
+                    && $successCondition['maxFailed'] <= $statusCount[AbstractEvaluation::STATUS_FAILED]) {
+                    $status = AbstractEvaluation::STATUS_FAILED;
+                }
+            } else {
+                $status = AbstractEvaluation::STATUS_COMPLETED;
             }
         } elseif ((0 !== $progression && $progression < $progressionMax) || 0 < $statusCount[AbstractEvaluation::STATUS_INCOMPLETE]) {
             $status = AbstractEvaluation::STATUS_INCOMPLETE;
@@ -177,12 +202,6 @@ class WorkspaceEvaluationManager extends AbstractEvaluationManager
             'progression' => $progression,
             'progressionMax' => $progressionMax,
         ];
-
-        // recompute workspace evaluation if all resources are done
-        if ($scoreMax && $progression >= $progressionMax) {
-            $evaluationData['score'] = $score;
-            $evaluationData['scoreMax'] = $scoreMax;
-        }
 
         $this->updateEvaluation($evaluation, $evaluationData, $currentRue ? $currentRue->getDate() : null);
 
