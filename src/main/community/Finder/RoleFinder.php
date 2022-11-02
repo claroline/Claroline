@@ -52,6 +52,8 @@ class RoleFinder extends AbstractFinder
             $qb->setParameter('roleAdmin', PlatformRoles::ADMIN);
         }
 
+        $workspaceJoin = false;
+
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
                 case 'type':
@@ -80,12 +82,20 @@ class RoleFinder extends AbstractFinder
                     $qb->setParameter('groupIds', is_array($filterValue) ? $filterValue : [$filterValue]);
                     break;
                 case 'workspace':
-                    $qb->leftJoin('obj.workspace', 'w');
+                    if (!$workspaceJoin) {
+                        $qb->leftJoin('obj.workspace', 'w');
+                        $workspaceJoin = true;
+                    }
+
                     $qb->andWhere('w.uuid IN (:workspaceIds)');
                     $qb->setParameter('workspaceIds', is_array($filterValue) ? $filterValue : [$filterValue]);
                     break;
                 case 'workspaceConfigurable':
-                    $qb->leftJoin('obj.workspace', 'w');
+                    if (!$workspaceJoin) {
+                        $qb->leftJoin('obj.workspace', 'w');
+                        $workspaceJoin = true;
+                    }
+
                     $qb->andWhere('w.uuid IN (:workspaceIds)');
                     $qb->setParameter('workspaceIds', is_array($filterValue) ? $filterValue : [$filterValue]);
                     $qb->orWhere('obj.name LIKE :roleAnonymous');
@@ -99,10 +109,6 @@ class RoleFinder extends AbstractFinder
                         $qb->andWhere('cu.id = :currentUserId');
                         $qb->setParameter('currentUserId', $this->tokenStorage->getToken()->getUser()->getId());
                     }
-                    break;
-                case 'roleNames':
-                    $qb->orWhere('obj.name IN (:roleNames)');
-                    $qb->setParameter('roleNames', is_array($filterValue) ? $filterValue : [$filterValue]);
                     break;
                 default:
                     $this->setDefaults($qb, $filterName, $filterValue);
