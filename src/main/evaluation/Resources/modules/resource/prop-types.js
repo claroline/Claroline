@@ -1,5 +1,5 @@
 import {PropTypes as T} from 'prop-types'
-import {User} from '#/main/core/user/prop-types'
+import {User} from '#/main/community/prop-types'
 import {ResourceNode} from '#/main/core/resource/prop-types'
 
 const ResourceUserEvaluation = {

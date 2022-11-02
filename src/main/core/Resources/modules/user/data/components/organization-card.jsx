@@ -5,7 +5,7 @@ import get from 'lodash/get'
 import {trans} from '#/main/app/intl/translation'
 import {DataCard} from '#/main/app/data/components/card'
 
-import {Organization as OrganizationTypes} from '#/main/core/user/prop-types'
+import {Organization as OrganizationTypes} from '#/main/community/prop-types'
 
 const OrganizationCard = props =>
   <DataCard

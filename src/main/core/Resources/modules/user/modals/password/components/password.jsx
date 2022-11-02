@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
-import {User as UserType} from '#/main/core/user/prop-types'
+import {User as UserType} from '#/main/community/prop-types'
 import {FormDataModal} from '#/main/app/modals/form/components/data'
 
 const PasswordModal = props =>

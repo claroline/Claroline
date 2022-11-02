@@ -6,7 +6,7 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 import {showBreadcrumb} from '#/main/app/layout/utils'
 
 import {UserPage} from '#/main/core/user/components/page'
-import {User as UserTypes} from '#/main/core/user/prop-types'
+import {User as UserTypes} from '#/main/community/prop-types'
 import {selectors} from '#/main/log/account/security/store/selectors'
 import {SecurityLogList} from '#/main/log/account/security/components/list'
 

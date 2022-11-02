@@ -8,7 +8,7 @@ import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {ListData} from '#/main/app/content/list/containers/data'
 
 import {selectors} from '#/main/core/modals/locations/store'
-import {Location as LocationType} from '#/main/core/user/prop-types'
+import {Location as LocationType} from '#/main/community/prop-types'
 import {LocationCard} from '#/main/core/data/types/location/components/card'
 
 const LocationsModal = props => {

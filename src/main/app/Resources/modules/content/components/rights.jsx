@@ -9,9 +9,9 @@ import {trans}  from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON, ModalButton, PopoverButton} from '#/main/app/buttons'
 
-import {constants} from '#/main/core/user/constants'
-import {MODAL_ROLES} from '#/main/core/modals/roles'
-import {isStandardRole, hasCustomRoles, roleWorkspace} from '#/main/core/user/permissions'
+import {constants} from '#/main/community/constants'
+import {MODAL_ROLES} from '#/main/community/modals/roles'
+import {isStandardRole, hasCustomRoles, roleWorkspace} from '#/main/community/permissions'
 
 const CreatePermission = props =>
   <td key="create-cell" className="create-cell">

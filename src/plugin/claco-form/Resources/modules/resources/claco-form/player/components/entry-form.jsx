@@ -16,7 +16,7 @@ import {notEmpty} from '#/main/app/data/types/validators'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {Form} from '#/main/app/content/form/components/form'
 import {DataInput} from '#/main/app/data/components/input'
-import {formatField, isFieldDisplayed} from '#/main/core/user/profile/utils'
+import {formatField, isFieldDisplayed} from '#/main/community/profile/utils'
 
 import {trans} from '#/main/app/intl/translation'
 import {hasPermission} from '#/main/app/security'

@@ -9,7 +9,7 @@ import {Toolbar} from '#/main/app/action/components/toolbar'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {LiquidGauge} from '#/main/core/layout/gauge/components/liquid-gauge'
 import {route as toolRoute} from '#/main/core/tool/routing'
-import {User as UserTypes} from '#/main/core/user/prop-types'
+import {User as UserTypes} from '#/main/community/prop-types'
 
 import {getActions} from '#/main/core/desktop'
 import {MenuMain} from '#/main/app/layout/menu/containers/main'

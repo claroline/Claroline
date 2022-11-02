@@ -8,8 +8,8 @@ import {Toolbar} from '#/main/app/action/components/toolbar'
 import {MenuMain} from '#/main/app/layout/menu/containers/main'
 import {MenuSection} from '#/main/app/layout/menu/components/section'
 
-import {getPlatformRoles} from '#/main/core/user/utils'
-import {User as UserTypes} from '#/main/core/user/prop-types'
+import {getPlatformRoles} from '#/main/community/utils'
+import {User as UserTypes} from '#/main/community/prop-types'
 import {UserAvatar} from '#/main/core/user/components/avatar'
 import {getSections} from '#/main/app/layout/sections/account/utils'
 

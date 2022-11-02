@@ -19,11 +19,11 @@ import {Button} from '#/main/app/action/components/button'
 import {Toolbar} from '#/main/app/action/components/toolbar'
 import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
 import {ListData} from '#/main/app/content/list/containers/data'
-import {formatField} from '#/main/core/user/profile/utils'
+import {formatField} from '#/main/community/profile/utils'
 
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
 import {UserCard} from '#/main/core/user/components/card'
-import {MODAL_USERS} from '#/main/core/modals/users'
+import {MODAL_USERS} from '#/main/community/modals/users'
 import {ContentHtml} from '#/main/app/content/components/html'
 import {UserMicro} from '#/main/core/user/components/micro'
 

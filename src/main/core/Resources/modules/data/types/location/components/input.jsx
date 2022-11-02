@@ -9,7 +9,7 @@ import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
 import {LocationCard} from '#/main/core/data/types/location/components/card'
-import {Location as LocationTypes} from '#/main/core/user/prop-types'
+import {Location as LocationTypes} from '#/main/community/prop-types'
 import {MODAL_LOCATIONS} from '#/main/core/modals/locations'
 
 const LocationsButton = props =>

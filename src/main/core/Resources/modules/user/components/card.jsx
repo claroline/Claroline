@@ -9,8 +9,8 @@ import {displayDate} from '#/main/app/intl/date'
 
 import {DataCard} from '#/main/app/data/components/card'
 import {UserAvatar} from '#/main/core/user/components/avatar'
-import {User as UserTypes} from '#/main/core/user/prop-types'
-import {displayUsername} from '#/main/core/user/utils'
+import {User as UserTypes} from '#/main/community/prop-types'
+import {displayUsername} from '#/main/community/utils'
 
 const UserCard = props =>
   <DataCard

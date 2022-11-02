@@ -1,6 +1,6 @@
 import {PropTypes as T} from 'prop-types'
 
-import {User as UserType} from '#/main/core/user/prop-types'
+import {User as UserType} from '#/main/community/prop-types'
 
 const Field = {
   propTypes: {

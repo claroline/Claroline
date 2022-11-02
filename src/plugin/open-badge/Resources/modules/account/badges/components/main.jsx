@@ -7,7 +7,7 @@ import {showBreadcrumb} from '#/main/app/layout/utils'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {constants as listConstants} from '#/main/app/content/list/constants'
 import {UserPage} from '#/main/core/user/components/page'
-import {User as UserTypes} from '#/main/core/user/prop-types'
+import {User as UserTypes} from '#/main/community/prop-types'
 import {route as toolRoute} from '#/main/core/tool/routing'
 
 import {selectors} from '#/plugin/open-badge/account/badges/store/selectors'

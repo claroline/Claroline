@@ -12,7 +12,7 @@ import {ContentLoader} from '#/main/app/content/components/loader'
 import {ContentTitle} from '#/main/app/content/components/title'
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 import {UserMicro} from '#/main/core/user/components/micro'
-import {displayUsername} from '#/main/core/user/utils'
+import {displayUsername} from '#/main/community/utils'
 import {LiquidGauge} from '#/main/core/layout/gauge/components/liquid-gauge'
 
 import {constants as baseConstants} from '#/main/evaluation/constants'

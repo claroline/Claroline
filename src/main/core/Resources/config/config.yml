@@ -89,11 +89,6 @@ plugin:
           api: [PUT]
           recursive: true
 
-        - name: notes
-          decoder: open
-          scope: [object]
-          api: [GET, POST, PUT, DELETE]
-
     resources:
         - name: file
           class: Claroline\CoreBundle\Entity\Resource\File
@@ -120,12 +115,6 @@ plugin:
               - name: add
                 decoder: create
                 group: management
-                api: [POST]
-
-              # Imports one or more resources in the directory
-              - name: import
-                decoder: create
-                group: transfer
                 api: [POST]
 
               # Creates one or several File resources in the directory

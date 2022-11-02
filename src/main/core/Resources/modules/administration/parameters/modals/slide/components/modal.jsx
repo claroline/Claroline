@@ -6,7 +6,7 @@ import merge from 'lodash/merge'
 import {trans} from '#/main/app/intl/translation'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {FormData} from '#/main/app/content/form/containers/data'
-import {User as UserTypes} from '#/main/core/user/prop-types'
+import {User as UserTypes} from '#/main/community/prop-types'
 import {Select} from '#/main/app/input/components/select'
 
 import {getActions} from '#/main/core/desktop'

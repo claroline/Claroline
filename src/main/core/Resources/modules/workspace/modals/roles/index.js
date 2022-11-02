@@ -8,6 +8,9 @@ import {registry} from '#/main/app/modals/registry'
 // gets the modal component
 import {RolesModal} from '#/main/core/workspace/modals/roles/components/modal'
 
+/**
+ * @deprecated use standard MODAL_ROLES
+ */
 const MODAL_WORKSPACE_ROLES = 'MODAL_WORKSPACE_ROLES'
 
 // make the modal available for use

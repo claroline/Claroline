@@ -8,7 +8,7 @@ import {hasPermission} from '#/main/app/security'
 import {DOWNLOAD_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {showBreadcrumb} from '#/main/app/layout/utils'
 import {UserPage} from '#/main/core/user/components/page'
-import {User as UserTypes} from '#/main/core/user/prop-types'
+import {User as UserTypes} from '#/main/community/prop-types'
 
 import {MODAL_TOKEN_PARAMETERS} from '#/main/authentication/token/modals/parameters'
 import {TokenList} from '#/main/authentication/token/components/list'

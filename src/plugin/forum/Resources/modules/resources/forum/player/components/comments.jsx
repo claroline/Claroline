@@ -13,7 +13,7 @@ import {HtmlGroup} from '#/main/core/layout/form/components/group/html-group'
 import {TextGroup} from '#/main/core/layout/form/components/group/text-group'
 import {ContentHtml} from '#/main/app/content/components/html'
 
-import {User as UserTypes} from '#/main/core/user/prop-types'
+import {User as UserTypes} from '#/main/community/prop-types'
 import {UserAvatar} from '#/main/core/user/components/avatar'
 
 class CommentForm extends Component {

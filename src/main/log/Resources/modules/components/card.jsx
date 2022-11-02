@@ -5,9 +5,9 @@ import get from 'lodash/get'
 
 import {trans, displayDate} from '#/main/app/intl'
 import {DataCard} from '#/main/app/data/components/card'
-import {displayUsername} from '#/main/core/user/utils'
+import {displayUsername} from '#/main/community/utils'
 import {UserAvatar} from '#/main/core/user/components/avatar'
-import {User as UserTypes} from '#/main/core/user/prop-types'
+import {User as UserTypes} from '#/main/community/prop-types'
 
 // TODO : adapt to new log format (only used in analytics for old logs)
 

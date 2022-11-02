@@ -1,6 +1,6 @@
 import {connect} from 'react-redux'
 
-import {actions as userActions} from '#/main/core/user/store/actions'
+import {actions as userActions} from '#/main/core/user/modals/password/store/actions'
 import {PasswordModal as PasswordModalComponent} from '#/main/core/user/modals/password/components/password'
 
 const PasswordModal = connect(

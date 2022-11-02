@@ -5,8 +5,8 @@ import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 import {FormGroup} from '#/main/app/content/form/components/group'
 
-import {GroupInput} from '#/main/core/data/types/group/components/input'
-import {Group as GroupTypes} from '#/main/core/user/prop-types'
+import {GroupInput} from '#/main/community/data/types/group/components/input'
+import {Group as GroupTypes} from '#/main/community/prop-types'
 
 // todo : manages errors
 

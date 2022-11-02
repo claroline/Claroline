@@ -7,7 +7,7 @@ import {trans, displayDate} from '#/main/app/intl'
 
 import {DataCard} from '#/main/app/data/components/card'
 import {UserAvatar} from '#/main/core/user/components/avatar'
-import {displayUsername} from '#/main/core/user/utils'
+import {displayUsername} from '#/main/community/utils'
 
 const NotificationCard = props =>
   <DataCard

@@ -1,6 +1,6 @@
 import {PropTypes as T} from 'prop-types'
 
-import {Role} from '#/main/core/user/prop-types'
+import {Role} from '#/main/community/prop-types'
 
 const Tab = {
   propTypes: {

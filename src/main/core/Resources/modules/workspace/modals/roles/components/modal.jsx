@@ -5,7 +5,7 @@ import omit from 'lodash/omit'
 
 import {Modal} from '#/main/app/overlays/modal/components/modal'
 
-import {Role as RoleTypes} from '#/main/core/user/prop-types'
+import {Role as RoleTypes} from '#/main/community/prop-types'
 import {RoleCard} from '#/main/core/user/data/components/role-card'
 
 // TODO : find a way to merge with other roles modals

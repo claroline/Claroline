@@ -6,7 +6,7 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 import {showBreadcrumb} from '#/main/app/layout/utils'
 
 import {UserPage} from '#/main/core/user/components/page'
-import {User as UserTypes} from '#/main/core/user/prop-types'
+import {User as UserTypes} from '#/main/community/prop-types'
 import {selectors} from '#/main/log/account/functional/store/selectors'
 import {FunctionalLogList} from '#/main/log/account/functional/components/list'
 

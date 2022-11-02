@@ -8,7 +8,7 @@ import {ContentTitle} from '#/main/app/content/components/title'
 import {showBreadcrumb} from '#/main/app/layout/utils'
 
 import {UserPage} from '#/main/core/user/components/page'
-import {User as UserTypes} from '#/main/core/user/prop-types'
+import {User as UserTypes} from '#/main/community/prop-types'
 import {FormData} from '#/main/app/content/form/containers/data'
 
 import {selectors} from '#/main/core/account/parameters/store/selectors'

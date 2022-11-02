@@ -12,7 +12,7 @@ import {showBreadcrumb} from '#/main/app/layout/utils'
 import {MODAL_TERMS_OF_SERVICE} from '#/main/app/modals/terms-of-service'
 
 import {UserPage} from '#/main/core/user/components/page'
-import {User as UserTypes} from '#/main/core/user/prop-types'
+import {User as UserTypes} from '#/main/community/prop-types'
 
 const PrivacyMain = (props) =>
   <UserPage

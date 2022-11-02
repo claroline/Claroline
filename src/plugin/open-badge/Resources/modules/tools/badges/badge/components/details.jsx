@@ -14,7 +14,7 @@ import {ListData} from '#/main/app/content/list/containers/data'
 import {constants as listConst} from '#/main/app/content/list/constants'
 import {actions as formActions, selectors as formSelectors} from '#/main/app/content/form/store'
 import {selectors as toolSelectors} from '#/main/core/tool/store'
-import {MODAL_USERS} from '#/main/core/modals/users'
+import {MODAL_USERS} from '#/main/community/modals/users'
 
 import {BadgeLayout}  from '#/plugin/open-badge/tools/badges/badge/components/layout'
 import {Badge as BadgeTypes} from '#/plugin/open-badge/prop-types'

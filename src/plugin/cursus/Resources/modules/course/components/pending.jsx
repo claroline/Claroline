@@ -5,7 +5,7 @@ import {trans} from '#/main/app/intl/translation'
 import {hasPermission} from '#/main/app/security'
 import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {Alert} from '#/main/app/alert/components/alert'
-import {MODAL_USERS} from '#/main/core/modals/users'
+import {MODAL_USERS} from '#/main/community/modals/users'
 
 import {selectors} from '#/plugin/cursus/tools/trainings/catalog/store/selectors'
 import {Course as CourseTypes} from '#/plugin/cursus/prop-types'

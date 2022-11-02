@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import merge from 'lodash/merge'
 
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
-import {User as UserTypes} from '#/main/core/user/prop-types'
+import {User as UserTypes} from '#/main/community/prop-types'
 import {ContentHtml} from '#/main/app/content/components/html'
 import {ContentMessage} from '#/main/app/content/components/message'
 
