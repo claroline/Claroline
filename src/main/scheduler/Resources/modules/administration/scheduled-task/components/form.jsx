@@ -9,7 +9,7 @@ import {UserList} from '#/main/core/user/components/list'
 
 import {constants} from '#/main/scheduler/administration/scheduled-task/constants'
 import {selectors} from '#/main/scheduler/administration/scheduled-task/store'
-import {MODAL_USERS} from '#/main/core/modals/users'
+import {MODAL_USERS} from '#/main/community/modals/users'
 
 const ScheduledTaskForm = props =>
   <FormData

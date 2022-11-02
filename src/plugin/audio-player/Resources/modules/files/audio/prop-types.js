@@ -2,7 +2,7 @@ import {PropTypes as T} from 'prop-types'
 import merge from 'lodash/merge'
 
 import {File as FileType} from '#/main/core/files/prop-types'
-import {User as UserType} from '#/main/core/user/prop-types'
+import {User as UserType} from '#/main/community/prop-types'
 
 const Comment = {
   propTypes: {

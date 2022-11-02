@@ -11,12 +11,12 @@ import {DetailsData} from '#/main/app/content/details/containers/data'
 import {Location as LocationTypes} from '#/main/core/tools/locations/prop-types'
 import {selectors} from '#/main/core/tools/locations/location/store'
 
-import {MODAL_USERS} from '#/main/core/modals/users'
+import {MODAL_USERS} from '#/main/community/modals/users'
 import {UserList} from '#/main/core/user/components/list'
-import {MODAL_GROUPS} from '#/main/core/modals/groups'
-import {GroupList} from '#/main/core/administration/community/group/components/group-list'
-import {MODAL_ORGANIZATIONS} from '#/main/core/modals/organizations'
-import {OrganizationList} from '#/main/core/administration/community/organization/components/organization-list'
+import {MODAL_GROUPS} from '#/main/community/modals/groups'
+import {GroupList} from '#/main/community/administration/community/group/components/group-list'
+import {MODAL_ORGANIZATIONS} from '#/main/community/modals/organizations'
+import {OrganizationList} from '#/main/community/administration/community/organization/components/organization-list'
 
 const LocationAbout = (props) =>
   <Fragment>

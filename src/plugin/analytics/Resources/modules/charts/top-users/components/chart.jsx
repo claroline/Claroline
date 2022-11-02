@@ -5,7 +5,7 @@ import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {MenuButton} from '#/main/app/buttons/menu'
 
-import {route as userRoute} from '#/main/core/user/routing'
+import {route as userRoute} from '#/main/community/routing'
 import {UserCard} from '#/main/core/user/components/card'
 
 class TopUsersChart extends Component {

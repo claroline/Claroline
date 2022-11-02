@@ -4,7 +4,7 @@ import {PropTypes as T} from 'prop-types'
 import {MenuButton} from '#/main/app/buttons/menu'
 
 import {UserMicro} from '#/main/core/user/components/micro'
-import {User as UserTypes} from '#/main/core/user/prop-types'
+import {User as UserTypes} from '#/main/community/prop-types'
 
 const UserMicroList = props => {
   if (1 === props.users.length) {

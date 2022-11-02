@@ -8,7 +8,7 @@ import {getTimeDiff} from '#/main/app/intl/date'
 import {hasPermission} from '#/main/app/security'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
-import {displayUsername} from '#/main/core/user/utils'
+import {displayUsername} from '#/main/community/utils'
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
 
 import {actions as papersActions, selectors as paperSelectors} from '#/plugin/exo/resources/quiz/papers/store'

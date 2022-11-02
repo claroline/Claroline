@@ -6,7 +6,7 @@ import merge from 'lodash/merge'
 import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 
-import {User as UserType} from '#/main/core/user/prop-types'
+import {User as UserType} from '#/main/community/prop-types'
 import {UserMessage} from '#/main/core/user/message/components/user-message'
 import {UserMessageForm} from '#/main/core/user/message/components/user-message-form'
 

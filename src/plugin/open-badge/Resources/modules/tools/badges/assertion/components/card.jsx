@@ -8,7 +8,7 @@ import {displayDate} from '#/main/app/intl/date'
 
 import {DataCard} from '#/main/app/data/components/card'
 import {UserAvatar} from '#/main/core/user/components/avatar'
-import {displayUsername} from '#/main/core/user/utils'
+import {displayUsername} from '#/main/community/utils'
 
 import {BadgeCard} from '#/plugin/open-badge/tools/badges/badge/components/card'
 

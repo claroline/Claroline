@@ -1,6 +1,6 @@
 import {PropTypes as T} from 'prop-types'
 
-import {Role as RoleTypes} from '#/main/core/user/prop-types'
+import {Role as RoleTypes} from '#/main/community/prop-types'
 
 import {constants} from '#/main/core/data/types/connection-message/constants'
 

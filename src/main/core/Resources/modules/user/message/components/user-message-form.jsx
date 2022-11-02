@@ -9,7 +9,7 @@ import {HtmlGroup} from '#/main/core/layout/form/components/group/html-group'
 import {TextGroup} from '#/main/core/layout/form/components/group/text-group'
 import {ContentMessage} from '#/main/app/content/components/message'
 
-import {User as UserTypes} from '#/main/core/user/prop-types'
+import {User as UserTypes} from '#/main/community/prop-types'
 
 class UserMessageForm extends Component {
   constructor(props) {
@@ -84,6 +84,13 @@ UserMessageForm.propTypes = {
    * @type {object}
    */
   user: T.shape(UserTypes.propTypes),
+
+  /**
+   * The date of the message.
+   *
+   * @type {string}
+   */
+  date: T.string,
 
   /**
    * The content of the message.

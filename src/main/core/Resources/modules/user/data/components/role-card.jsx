@@ -6,8 +6,8 @@ import {trans} from '#/main/app/intl/translation'
 import {CompositeIcon} from '#/main/app/icon/font'
 import {DataCard} from '#/main/app/data/components/card'
 
-import {constants} from '#/main/core/user/constants'
-import {Role as RoleTypes} from '#/main/core/user/prop-types'
+import {constants} from '#/main/community/constants'
+import {Role as RoleTypes} from '#/main/community/prop-types'
 
 const RoleCard = props =>
   <DataCard

@@ -12,7 +12,7 @@ import {ContentHelp} from '#/main/app/content/components/help'
 
 import {MODAL_LOCALE} from '#/main/app/modals/locale'
 
-import {getPlatformRoles} from '#/main/core/user/utils'
+import {getPlatformRoles} from '#/main/community/utils'
 import {UserAvatar} from '#/main/core/user/components/avatar'
 
 const UserMenu = props =>

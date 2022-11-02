@@ -14,7 +14,7 @@ import {LiquidGauge} from '#/main/core/layout/gauge/components/liquid-gauge'
 import {MenuMain} from '#/main/app/layout/menu/containers/main'
 import {ToolMenu} from '#/main/core/tool/containers/menu'
 import {route as toolRoute} from '#/main/core/tool/routing'
-import {User as UserTypes} from '#/main/core/user/prop-types'
+import {User as UserTypes} from '#/main/community/prop-types'
 import {constants as baseConstants} from '#/main/evaluation/constants'
 
 import {route as workspaceRoute} from '#/main/core/workspace/routing'

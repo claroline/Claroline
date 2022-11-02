@@ -7,11 +7,11 @@ import {trans} from '#/main/app/intl/translation'
 import {displayDate} from '#/main/app/intl/date'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
 import {Toolbar} from '#/main/app/action/components/toolbar'
-import {User as UserTypes} from '#/main/core/user/prop-types'
+import {User as UserTypes} from '#/main/community/prop-types'
 
 import {LinkButton} from '#/main/app/buttons/link/components/button'
 
-import {route} from '#/main/core/user/routing'
+import {route} from '#/main/community/routing'
 import {UserAvatar} from '#/main/core/user/components/avatar'
 
 /**

@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 
 import {DataCard} from '#/main/app/data/components/card'
 
-import {Group as GroupTypes} from '#/main/core/user/prop-types'
+import {Group as GroupTypes} from '#/main/community/prop-types'
 
 const GroupCard = props =>
   <DataCard

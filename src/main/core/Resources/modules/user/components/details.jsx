@@ -4,7 +4,7 @@ import {PropTypes as T} from 'prop-types'
 import {trans} from '#/main/app/intl/translation'
 import {displayDate} from '#/main/app/intl/date'
 
-import {getPlatformRoles} from '#/main/core/user/utils'
+import {getPlatformRoles} from '#/main/community/utils'
 
 const UserDetails = props =>
   <div className="user-details panel panel-default">

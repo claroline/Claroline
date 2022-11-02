@@ -6,7 +6,7 @@ import {Routes} from '#/main/app/router'
 import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {ToolPage} from '#/main/core/tool/containers/page'
 
-import {MODAL_USERS} from '#/main/core/modals/users'
+import {MODAL_USERS} from '#/main/community/modals/users'
 import {MODAL_MESSAGE} from '#/plugin/message/modals/message'
 
 import {Contacts} from '#/plugin/message/tools/messaging/components/contacts'

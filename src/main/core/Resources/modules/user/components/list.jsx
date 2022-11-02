@@ -7,7 +7,7 @@ import {param} from '#/main/app/config'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
 
-import {route} from '#/main/core/user/routing'
+import {route} from '#/main/community/routing'
 import {UserAvatar} from '#/main/core/user/components/avatar'
 import {UserCard} from '#/main/core/user/components/card'
 

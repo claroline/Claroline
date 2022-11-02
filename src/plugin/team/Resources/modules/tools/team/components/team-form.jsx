@@ -11,7 +11,7 @@ import {UserList} from '#/main/core/user/components/list'
 
 import {Team as TeamType} from '#/plugin/team/tools/team/prop-types'
 import {selectors} from '#/plugin/team/tools/team/store'
-import {MODAL_USERS} from '#/main/core/modals/users'
+import {MODAL_USERS} from '#/main/community/modals/users'
 
 const TeamForm = props =>
   <section className="tool-section">

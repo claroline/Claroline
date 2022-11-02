@@ -6,7 +6,7 @@ import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {Alert} from '#/main/app/alert/components/alert'
 import {Sections, Section} from '#/main/app/content/components/sections'
-import {MODAL_USERS} from '#/main/core/modals/users'
+import {MODAL_USERS} from '#/main/community/modals/users'
 
 import {constants} from '#/plugin/agenda/events/event/constants'
 import {selectors} from '#/plugin/agenda/events/event/store'

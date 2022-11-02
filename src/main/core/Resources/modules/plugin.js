@@ -21,9 +21,11 @@ registry.add('ClarolineCoreBundle', {
     'tools' : () => { return import(/* webpackChunkName: "core-header-tools" */  '#/main/core/header/tools') }
   },
 
+  /**
+   * Provides new tabs for the administration integration tool.
+   */
   integration: {
-    'api'     : () => { return import(/* webpackChunkName: "core-integration-api" */      '#/main/core/integration/api')}/*,
-    'external': () => { return import(/!* webpackChunkName: "core-integration-external" *!/ '#/main/core/integration/external')}*/
+    'api': () => { return import(/* webpackChunkName: "core-integration-api" */ '#/main/core/integration/api')}
   },
 
   /**
@@ -31,7 +33,6 @@ registry.add('ClarolineCoreBundle', {
    */
   search: {
     'resource' : () => { return import(/* webpackChunkName: "core-search-resource" */  '#/main/core/search/resource')},
-    'user'     : () => { return import(/* webpackChunkName: "core-search-user" */      '#/main/core/search/user')},
     'workspace': () => { return import(/* webpackChunkName: "core-search-workspace" */ '#/main/core/search/workspace')}
   },
 
@@ -41,10 +42,6 @@ registry.add('ClarolineCoreBundle', {
   actions: {
     administration: {
 
-    },
-
-    desktop: {
-      'impersonation': () => { return import(/* webpackChunkName: "core-action-desktop-impersonation" */ '#/main/core/desktop/actions/impersonation') },
     },
 
     tool: {
@@ -62,7 +59,6 @@ registry.add('ClarolineCoreBundle', {
       'export'   : () => { return import(/* webpackChunkName: "core-action-resource-export" */      '#/main/core/resource/actions/export') },
       'move'     : () => { return import(/* webpackChunkName: "core-action-resource-move" */        '#/main/core/resource/actions/move') },
       'open'     : () => { return import(/* webpackChunkName: "core-action-resource-open" */        '#/main/core/resource/actions/open') },
-      // 'notes'    : () => { return import(/* webpackChunkName: "core-action-resource-notes" */     '#/main/core/resource/actions/notes') },
       'publish'  : () => { return import(/* webpackChunkName: "core-action-resource-publish" */     '#/main/core/resource/actions/publish') },
       'restore'  : () => { return import(/* webpackChunkName: "core-action-resource-restore" */     '#/main/core/resource/actions/restore') },
       'rights'   : () => { return import(/* webpackChunkName: "core-action-resource-rights" */      '#/main/core/resource/actions/rights') },
@@ -70,7 +66,6 @@ registry.add('ClarolineCoreBundle', {
 
       // directory resource
       'add'       : () => { return import(/* webpackChunkName: "core-action-resource-add" */       '#/main/core/resources/directory/actions/add') },
-      //'import'    : () => { return import(/* webpackChunkName: "core-action-resource-import" */    '#/main/core/resources/directory/actions/import') },
       'add_files' : () => { return import(/* webpackChunkName: "core-action-resource-add-files" */ '#/main/core/resources/directory/actions/add-files') },
 
       // file resource
@@ -79,30 +74,19 @@ registry.add('ClarolineCoreBundle', {
     },
 
     workspace: {
-      'about'          : () => { return import(/* webpackChunkName: "core-action-workspace-about" */           '#/main/core/workspace/actions/about') },
-      'archive'        : () => { return import(/* webpackChunkName: "core-action-workspace-archive" */         '#/main/core/workspace/actions/archive') },
-      'configure'      : () => { return import(/* webpackChunkName: "core-action-workspace-configure" */       '#/main/core/workspace/actions/configure') },
-      'copy'           : () => { return import(/* webpackChunkName: "core-action-workspace-copy" */            '#/main/core/workspace/actions/copy') },
-      'delete'         : () => { return import(/* webpackChunkName: "core-action-workspace-delete" */          '#/main/core/workspace/actions/delete') },
-      'export'         : () => { return import(/* webpackChunkName: "core-action-workspace-export" */          '#/main/core/workspace/actions/export') },
-      'open'           : () => { return import(/* webpackChunkName: "core-action-workspace-open" */            '#/main/core/workspace/actions/open') },
-      'register-users' : () => { return import(/* webpackChunkName: "core-action-workspace-register-users" */  '#/main/core/workspace/actions/register-users') },
-      'register-groups': () => { return import(/* webpackChunkName: "core-action-workspace-register-groups" */ '#/main/core/workspace/actions/register-groups') },
-      'register-self'  : () => { return import(/* webpackChunkName: "core-action-workspace-register-self" */   '#/main/core/workspace/actions/register-self') },
-      'unarchive'      : () => { return import(/* webpackChunkName: "core-action-workspace-unarchive" */       '#/main/core/workspace/actions/unarchive') },
-      'unregister-self': () => { return import(/* webpackChunkName: "core-action-workspace-unregister-self" */ '#/main/core/workspace/actions/unregister-self') },
-      'view-as'        : () => { return import(/* webpackChunkName: "core-action-workspace-view-as" */         '#/main/core/workspace/actions/view-as') }
+      'about'    : () => { return import(/* webpackChunkName: "core-action-workspace-about" */     '#/main/core/workspace/actions/about') },
+      'archive'  : () => { return import(/* webpackChunkName: "core-action-workspace-archive" */   '#/main/core/workspace/actions/archive') },
+      'configure': () => { return import(/* webpackChunkName: "core-action-workspace-configure" */ '#/main/core/workspace/actions/configure') },
+      'copy'     : () => { return import(/* webpackChunkName: "core-action-workspace-copy" */      '#/main/core/workspace/actions/copy') },
+      'delete'   : () => { return import(/* webpackChunkName: "core-action-workspace-delete" */    '#/main/core/workspace/actions/delete') },
+      'export'   : () => { return import(/* webpackChunkName: "core-action-workspace-export" */    '#/main/core/workspace/actions/export') },
+      'open'     : () => { return import(/* webpackChunkName: "core-action-workspace-open" */      '#/main/core/workspace/actions/open') },
+      'unarchive': () => { return import(/* webpackChunkName: "core-action-workspace-unarchive" */ '#/main/core/workspace/actions/unarchive') }
     },
 
     user: {
-      'disable'        : () => { return import(/* webpackChunkName: "core-action-user-disable" */         '#/main/core/user/actions/disable') },
-      'enable'         : () => { return import(/* webpackChunkName: "core-action-user-enable" */          '#/main/core/user/actions/enable') },
-      'password-change': () => { return import(/* webpackChunkName: "core-action-user-password-change" */ '#/main/core/user/actions/password-change') },
-      'password-reset' : () => { return import(/* webpackChunkName: "core-action-user-password-reset" */  '#/main/core/user/actions/password-reset') },
-      'show-as'        : () => { return import(/* webpackChunkName: "core-action-user-show-as" */         '#/main/core/user/actions/show-as') },
-      'show-profile'   : () => { return import(/* webpackChunkName: "core-action-user-show-profile" */    '#/main/core/user/actions/show-profile') },
-      'ws-disable'     : () => { return import(/* webpackChunkName: "core-action-user-ws-disable" */      '#/main/core/user/actions/ws-disable') },
-      'ws-enable'      : () => { return import(/* webpackChunkName: "core-action-user-ws-enable" */       '#/main/core/user/actions/ws-enable') }
+      'ws-disable': () => { return import(/* webpackChunkName: "core-action-user-ws-disable" */ '#/main/core/user/actions/ws-disable') },
+      'ws-enable' : () => { return import(/* webpackChunkName: "core-action-user-ws-enable" */  '#/main/core/user/actions/ws-enable') }
     }
   },
 
@@ -122,7 +106,6 @@ registry.add('ClarolineCoreBundle', {
     'workspaces'     : () => { return import(/* webpackChunkName: "core-tool-workspaces" */ '#/main/core/tools/workspaces') },
     'resources'      : () => { return import(/* webpackChunkName: "core-tool-resources" */  '#/main/core/tools/resources') },
     'parameters'     : () => { return import(/* webpackChunkName: "core-tool-parameters" */ '#/main/core/tools/parameters') },
-    'community'      : () => { return import(/* webpackChunkName: "core-tool-users" */      '#/main/core/tools/community') },
     'resource_trash' : () => { return import(/* webpackChunkName: "core-tool-trash" */      '#/main/core/tools/trash') },
     'locations'      : () => { return import(/* webpackChunkName: "core-tool-locations" */  '#/main/core/tools/locations') }
   },
@@ -131,7 +114,6 @@ registry.add('ClarolineCoreBundle', {
    * Provides Administration tools.
    */
   administration: {
-    'community'     : () => { return import(/* webpackChunkName: "core-admin-users" */       '#/main/core/administration/community') },
     'main_settings' : () => { return import(/* webpackChunkName: "core-admin-parameters" */  '#/main/core/administration/parameters') },
     'templates'     : () => { return import(/* webpackChunkName: "core-admin-template" */    '#/main/core/administration/template') },
     'integration'   : () => { return import(/* webpackChunkName: "core-admin-integration" */ '#/main/core/administration/integration') },
@@ -142,7 +124,6 @@ registry.add('ClarolineCoreBundle', {
    * Provides current user Account sections.
    */
   account: {
-    'profile'   : () => { return import(/* webpackChunkName: "core-account-profile" */ '#/main/core/account/profile') },
     'parameters': () => { return import(/* webpackChunkName: "core-account-parameters" */ '#/main/core/account/parameters') },
     'privacy'   : () => { return import(/* webpackChunkName: "core-account-privacy" */ '#/main/core/account/privacy') }
   },
@@ -160,26 +141,17 @@ registry.add('ClarolineCoreBundle', {
   data: {
     types: {
       'connection-message': () => { return import(/* webpackChunkName: "core-data-type-connection-message" */ '#/main/core/data/types/connection-message') },
-      'group'             : () => { return import(/* webpackChunkName: "core-data-type-group" */              '#/main/core/data/types/group') },
-      'groups'            : () => { return import(/* webpackChunkName: "core-data-type-groups" */             '#/main/core/data/types/groups') },
       'location'          : () => { return import(/* webpackChunkName: "core-data-type-location" */           '#/main/core/data/types/location') },
-      'organization'      : () => { return import(/* webpackChunkName: "core-data-type-organization" */       '#/main/core/data/types/organization') },
-      'organizations'     : () => { return import(/* webpackChunkName: "core-data-type-organizations" */      '#/main/core/data/types/organizations') },
       'resource'          : () => { return import(/* webpackChunkName: "core-data-type-resource" */           '#/main/core/data/types/resource') },
       'resources'         : () => { return import(/* webpackChunkName: "core-data-type-resources" */          '#/main/core/data/types/resources') },
       'room'              : () => { return import(/* webpackChunkName: "core-data-type-room" */               '#/main/core/data/types/room') },
-      'role'              : () => { return import(/* webpackChunkName: "core-data-type-role" */               '#/main/core/data/types/role') },
-      'roles'             : () => { return import(/* webpackChunkName: "core-data-type-roles" */              '#/main/core/data/types/roles') },
       'template'          : () => { return import(/* webpackChunkName: "core-data-type-template" */           '#/main/core/data/types/template') },
       'template_type'     : () => { return import(/* webpackChunkName: "core-data-type-template-type" */      '#/main/core/data/types/template-type') },
-      'user'              : () => { return import(/* webpackChunkName: "core-data-type-user" */               '#/main/core/data/types/user') },
-      'users'             : () => { return import(/* webpackChunkName: "core-data-type-users" */              '#/main/core/data/types/users') },
       'workspace'         : () => { return import(/* webpackChunkName: "core-data-type-workspace" */          '#/main/core/data/types/workspace') },
       'workspaces'        : () => { return import(/* webpackChunkName: "core-data-type-workspaces" */         '#/main/core/data/types/workspaces') }
     },
     sources: {
       'resources'    : () => { return import(/* webpackChunkName: "core-data-source-resources" */    '#/main/core/data/sources/resources') },
-      'users'        : () => { return import(/* webpackChunkName: "core-data-source-users" */        '#/main/core/data/sources/users') },
       'workspaces'   : () => { return import(/* webpackChunkName: "core-data-source-workspaces" */   '#/main/core/data/sources/workspaces') },
       'my_workspaces': () => { return import(/* webpackChunkName: "core-data-source-m-workspaces" */ '#/main/core/data/sources/workspaces') },
       'admin_tools'  : () => { return import(/* webpackChunkName: "core-data-source-admin-tools" */  '#/main/core/data/sources/admin-tools') },

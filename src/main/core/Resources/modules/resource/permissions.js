@@ -7,7 +7,7 @@ import {
   hasCustomRoles,
   isWorkspaceRole,
   isStandardRole
-} from '#/main/core/user/permissions'
+} from '#/main/community/permissions'
 
 /**
  * Gets permissions object for a Role.
