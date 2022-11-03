@@ -21,21 +21,59 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\EvaluationBundle\Entity\AbstractEvaluation;
 use Claroline\EvaluationBundle\Event\EvaluationEvents;
 use Claroline\EvaluationBundle\Event\WorkspaceEvaluationEvent;
+use Claroline\EvaluationBundle\Messenger\Message\InitializeWorkspaceEvaluations;
+use Claroline\EvaluationBundle\Messenger\Message\RecomputeWorkspaceEvaluations;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 class WorkspaceEvaluationManager extends AbstractEvaluationManager
 {
+    /** @var MessageBusInterface */
+    private $messageBus;
     /** @var EventDispatcherInterface */
     private $eventDispatcher;
     /** @var ObjectManager */
     private $om;
 
     public function __construct(
+        MessageBusInterface $messageBus,
         EventDispatcherInterface $eventDispatcher,
         ObjectManager $om
     ) {
+        $this->messageBus = $messageBus;
         $this->eventDispatcher = $eventDispatcher;
         $this->om = $om;
+    }
+
+    /**
+     * Recomputes all the evaluations of a workspace.
+     * This is called when required resources are added/removed in order to update the users progression and score.
+     */
+    public function recompute(Workspace $workspace): void
+    {
+        $users = $this->om->getRepository(User::class)->findByWorkspaces([$workspace]);
+        if (!empty($users)) {
+            $this->messageBus->dispatch(
+                new RecomputeWorkspaceEvaluations($workspace->getId(), array_map(function (User $user) {
+                    return $user->getId();
+                }, $users))
+            );
+        }
+    }
+
+    /**
+     * Initializes missing evaluations for a workspace.
+     */
+    public function initialize(Workspace $workspace): void
+    {
+        $users = $this->om->getRepository(User::class)->findByWorkspaces([$workspace]);
+        if (!empty($users)) {
+            $this->messageBus->dispatch(
+                new InitializeWorkspaceEvaluations($workspace->getId(), array_map(function (User $user) {
+                    return $user->getId();
+                }, $users))
+            );
+        }
     }
 
     /**
@@ -59,8 +97,6 @@ class WorkspaceEvaluationManager extends AbstractEvaluationManager
 
             $this->om->persist($evaluation);
             $this->om->flush();
-
-            // TODO : this should compute required resources
         }
 
         return $evaluation;
@@ -171,24 +207,35 @@ class WorkspaceEvaluationManager extends AbstractEvaluationManager
             if (!empty($successCondition)) {
                 $status = AbstractEvaluation::STATUS_PASSED;
 
-                // check user score
-                if ($scoreMax && $successCondition['score']) {
+                // check user score (the condition is a percentage of the max score)
+                if ($scoreMax && isset($successCondition['score'])) {
+                    // the condition has been set for the workspace, we need to check it
+
                     $successScore = ($successCondition['score'] * $scoreMax) / 100;
                     if ($score < $successScore) {
+                        // condition is not met
                         $status = AbstractEvaluation::STATUS_FAILED;
                     }
                 }
 
                 // check user success resources
-                if (($successCondition['minSuccess'] || 0 === $successCondition['minSuccess'])
-                    && $successCondition['minSuccess'] > $statusCount[AbstractEvaluation::STATUS_PASSED]) {
-                    $status = AbstractEvaluation::STATUS_FAILED;
+                if (array_key_exists('minSuccess', $successCondition) && is_numeric($successCondition['minSuccess'])) {
+                    // the condition has been set for the workspace, we need to check it
+                    $minSuccess = $successCondition['minSuccess'] > $progressionMax ? $progressionMax : $successCondition['minSuccess'];
+                    if ($minSuccess > $statusCount[AbstractEvaluation::STATUS_PASSED]) {
+                        // condition is not met
+                        $status = AbstractEvaluation::STATUS_FAILED;
+                    }
                 }
 
                 // check user failed resources
-                if (($successCondition['maxFailed'] || 0 === $successCondition['maxFailed'])
-                    && $successCondition['maxFailed'] <= $statusCount[AbstractEvaluation::STATUS_FAILED]) {
-                    $status = AbstractEvaluation::STATUS_FAILED;
+                if (array_key_exists('maxFailed', $successCondition) && is_numeric($successCondition['maxFailed'])) {
+                    // the condition has been set for the workspace, we need to check it
+                    $maxFailed = $successCondition['maxFailed'] > $progressionMax ? $progressionMax : $successCondition['maxFailed'];
+                    if ($maxFailed <= $statusCount[AbstractEvaluation::STATUS_FAILED]) {
+                        // condition is not met
+                        $status = AbstractEvaluation::STATUS_FAILED;
+                    }
                 }
             } else {
                 $status = AbstractEvaluation::STATUS_COMPLETED;

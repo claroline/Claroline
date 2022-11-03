@@ -42,7 +42,6 @@ class ResourceEvaluationSubscriber implements EventSubscriberInterface
         return [
             Crud::getEventName('update', 'post', ResourceNode::class) => 'updateEvaluations',
             ResourceEvents::RESOURCE_OPEN => ['open', 10],
-            // TODO : do something on resource delete / unpublish
         ];
     }
 

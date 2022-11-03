@@ -11,7 +11,11 @@
 
 namespace Claroline\EvaluationBundle\Subscriber;
 
+use Claroline\AppBundle\API\Crud;
+use Claroline\AppBundle\Event\Crud\DeleteEvent;
+use Claroline\AppBundle\Event\Crud\UpdateEvent;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
@@ -56,13 +60,18 @@ class WorkspaceEvaluationSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            SecurityEvents::ADD_ROLE => 'initializeEvaluations',
-            WorkspaceEvents::OPEN => 'open',
-            EvaluationEvents::RESOURCE => 'updateEvaluation',
+            WorkspaceEvents::OPEN => 'onOpen',
+            SecurityEvents::ADD_ROLE => 'onAddRole',
+            EvaluationEvents::RESOURCE => 'onResourceEvaluate',
+            Crud::getEventName('update', 'post', ResourceNode::class) => 'onResourcePublicationChange',
+            Crud::getEventName('delete', 'post', ResourceNode::class) => 'onResourceDelete',
         ];
     }
 
-    public function open(OpenWorkspaceEvent $event)
+    /**
+     * Updates the workspace evaluation status to "opened".
+     */
+    public function onOpen(OpenWorkspaceEvent $event)
     {
         $user = $this->tokenStorage->getToken()->getUser();
 
@@ -79,7 +88,7 @@ class WorkspaceEvaluationSubscriber implements EventSubscriberInterface
     /**
      * Initializes evaluations for newly registered users.
      */
-    public function initializeEvaluations(AddRoleEvent $event)
+    public function onAddRole(AddRoleEvent $event)
     {
         $role = $event->getRole();
 
@@ -99,7 +108,7 @@ class WorkspaceEvaluationSubscriber implements EventSubscriberInterface
     /**
      * Updates WorkspaceEvaluation each time a user is evaluated for a Resource.
      */
-    public function updateEvaluation(ResourceEvaluationEvent $event)
+    public function onResourceEvaluate(ResourceEvaluationEvent $event)
     {
         $resourceUserEvaluation = $event->getEvaluation();
         $resourceNode = $resourceUserEvaluation->getResourceNode();
@@ -107,5 +116,27 @@ class WorkspaceEvaluationSubscriber implements EventSubscriberInterface
         $user = $resourceUserEvaluation->getUser();
 
         $this->manager->computeEvaluation($workspace, $user, $resourceUserEvaluation);
+    }
+
+    /**
+     * Recomputes WorkspaceEvaluations when a resource is deleted.
+     */
+    public function onResourceDelete(DeleteEvent $event)
+    {
+        /** @var ResourceNode $resourceNode */
+        $resourceNode = $event->getObject();
+
+        $this->manager->recompute($resourceNode->getWorkspace());
+    }
+
+    public function onResourcePublicationChange(UpdateEvent $event)
+    {
+        /** @var ResourceNode $resourceNode */
+        $resourceNode = $event->getObject();
+        $oldData = $event->getOldData();
+
+        if ($resourceNode->isRequired() && !empty($oldData['meta']) && ($oldData['meta']['published'] !== $resourceNode->isPublished())) {
+            $this->manager->recompute($resourceNode->getWorkspace());
+        }
     }
 }

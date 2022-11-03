@@ -9,7 +9,6 @@ services:
             - '@security.token_storage'
             - '@security.authorization_checker'
             - '@translator'
-            - '@messenger.default_bus'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\Crud'
             - '@Claroline\AppBundle\API\FinderProvider'

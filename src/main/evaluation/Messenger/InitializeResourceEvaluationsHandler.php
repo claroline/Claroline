@@ -4,9 +4,8 @@ namespace Claroline\EvaluationBundle\Messenger;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\EvaluationBundle\Entity\AbstractEvaluation;
+use Claroline\EvaluationBundle\Manager\ResourceEvaluationManager;
 use Claroline\EvaluationBundle\Messenger\Message\InitializeResourceEvaluations;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
@@ -14,11 +13,15 @@ class InitializeResourceEvaluationsHandler implements MessageHandlerInterface
 {
     /** @var ObjectManager */
     private $om;
+    /** @var ResourceEvaluationManager */
+    private $resourceEvaluationManager;
 
     public function __construct(
-        ObjectManager $om
+        ObjectManager $om,
+        ResourceEvaluationManager $resourceEvaluationManager
     ) {
         $this->om = $om;
+        $this->resourceEvaluationManager = $resourceEvaluationManager;
     }
 
     public function __invoke(InitializeResourceEvaluations $initMessage)
@@ -36,29 +39,16 @@ class InitializeResourceEvaluationsHandler implements MessageHandlerInterface
             }
         }
 
-        $status = $initMessage->getStatus();
-
-        $this->om->startFlushSuite();
-
         foreach ($users as $user) {
-            $resourceUserEval = $this->om->getRepository(ResourceUserEvaluation::class)->findOneBy([
-                'resourceNode' => $resourceNode,
-                'user' => $user,
-            ]);
-
-            if (!$resourceUserEval) {
-                $resourceUserEval = new ResourceUserEvaluation();
-                $resourceUserEval->setResourceNode($resourceNode);
-                $resourceUserEval->setUser($user);
-            }
-
-            if (AbstractEvaluation::STATUS_PRIORITY[$status] >= AbstractEvaluation::STATUS_PRIORITY[$resourceUserEval->getStatus()]) {
-                $resourceUserEval->setStatus($status);
-            }
-
-            $this->om->persist($resourceUserEval);
+            // update method will create the evaluation if missing
+            // it also dispatches the evaluation event to let the workspace evaluation update
+            // (this is useless when the message is dispatched by the InitializeWorkspaceEvaluations)
+            // we can not do it into a flush suite because the workspace calculation requires the info to be persisted in db
+            $this->resourceEvaluationManager->updateUserEvaluation(
+                $resourceNode,
+                $user,
+                ['status' => $initMessage->getStatus()]
+            );
         }
-
-        $this->om->endFlushSuite();
     }
 }

@@ -53,6 +53,8 @@ class InitializeWorkspaceEvaluationsHandler implements MessageHandlerInterface
             $this->evaluationManager->getUserEvaluation($workspace, $user, true);
         }
 
+        $this->om->endFlushSuite();
+
         // initialize evaluations for required resources
         // this is not required by the code, but is a feature for managers to see users in evaluation tool/exports
         // event if they have not opened the workspace yet.
@@ -60,7 +62,5 @@ class InitializeWorkspaceEvaluationsHandler implements MessageHandlerInterface
         foreach ($requiredResources as $requiredResource) {
             $this->messageBus->dispatch(new InitializeResourceEvaluations($requiredResource->getId(), $initMessage->getUserIds(), AbstractEvaluation::STATUS_TODO));
         }
-
-        $this->om->endFlushSuite();
     }
 }

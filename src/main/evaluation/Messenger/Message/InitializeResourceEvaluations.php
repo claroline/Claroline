@@ -14,8 +14,11 @@ class InitializeResourceEvaluations implements AsyncMessageInterface
     /** @var string */
     private $status;
 
-    public function __construct(int $resourceNodeId, array $userIds, string $status = AbstractEvaluation::STATUS_NOT_ATTEMPTED)
-    {
+    public function __construct(
+        int $resourceNodeId,
+        array $userIds,
+        ?string $status = AbstractEvaluation::STATUS_NOT_ATTEMPTED
+    ) {
         $this->resourceNodeId = $resourceNodeId;
         $this->userIds = $userIds;
         $this->status = $status;
