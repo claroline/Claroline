@@ -16,4 +16,7 @@ Evaluation :
   - Ajout de la notion ressource "évaluée sur toutes les ressources. Dans la configuration d'une ressource vous pouvez maintenant cocher la case "Évaluée" pour indiquer que le score obtenu pour la ressource contribue au calcul du score global de l'espace. Attention : Pour être prise en compte dans le score de l'espace la ressource doit être "Évaluée" ET "Obligatoire".
   - Dans les listes de ressources, et notamment dans les widgets, il existe maintenant un filtre "obligatoire" et un filtre "évalué". 
   - Il est maintenant possible de configurer un seuil de réussite de l'espace d'activité depuis le menu "Configurer" dans "Plus d'outils".
-  - Ajout d'attestation de participation et de réussite pour les espaces d'activités
+  - Ajout d'attestations de participation et de réussite pour les espaces d'activités
+
+Espace d'activités :
+  - Fusion des actions "Copier" et "Copier comme modèle". Il est dorénavant possible de choisir si l'on veut créer un(des) modèle(s) depuis la modale de confirmation de l'action "Copier". Cela permet de simplifier et d'améliorer la lisibilité du menu de gestion des espaces d'activités.
