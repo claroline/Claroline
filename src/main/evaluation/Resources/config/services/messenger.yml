@@ -11,9 +11,9 @@ services:
     Claroline\EvaluationBundle\Messenger\InitializeResourceEvaluationsHandler:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\EvaluationBundle\Manager\ResourceEvaluationManager'
 
     Claroline\EvaluationBundle\Messenger\RecomputeWorkspaceEvaluationsHandler:
-
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\EvaluationBundle\Manager\WorkspaceEvaluationManager'

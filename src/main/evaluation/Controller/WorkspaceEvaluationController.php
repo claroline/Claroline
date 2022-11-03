@@ -29,15 +29,12 @@ use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\EvaluationBundle\Manager\PdfManager;
 use Claroline\EvaluationBundle\Manager\WorkspaceEvaluationManager;
-use Claroline\EvaluationBundle\Messenger\Message\InitializeWorkspaceEvaluations;
-use Claroline\EvaluationBundle\Messenger\Message\RecomputeWorkspaceEvaluations;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -57,8 +54,6 @@ class WorkspaceEvaluationController extends AbstractSecurityController
     private $authorization;
     /** @var TranslatorInterface */
     private $translator;
-    /** @var MessageBusInterface */
-    private $messageBus;
     /** @var ObjectManager */
     private $om;
     /** @var Crud */
@@ -76,7 +71,6 @@ class WorkspaceEvaluationController extends AbstractSecurityController
         TokenStorageInterface $tokenStorage,
         AuthorizationCheckerInterface $authorization,
         TranslatorInterface $translator,
-        MessageBusInterface $messageBus,
         ObjectManager $om,
         Crud $crud,
         FinderProvider $finder,
@@ -87,7 +81,6 @@ class WorkspaceEvaluationController extends AbstractSecurityController
         $this->tokenStorage = $tokenStorage;
         $this->authorization = $authorization;
         $this->translator = $translator;
-        $this->messageBus = $messageBus;
         $this->om = $om;
         $this->crud = $crud;
         $this->finder = $finder;
@@ -205,14 +198,7 @@ class WorkspaceEvaluationController extends AbstractSecurityController
     {
         $this->checkToolAccess('EDIT', $workspace);
 
-        $users = $this->om->getRepository(User::class)->findByWorkspaces([$workspace]);
-        if (!empty($users)) {
-            $this->messageBus->dispatch(
-                new InitializeWorkspaceEvaluations($workspace->getId(), array_map(function (User $user) {
-                    return $user->getId();
-                }, $users))
-            );
-        }
+        $this->manager->initialize($workspace);
 
         return new JsonResponse(null, 204);
     }
@@ -225,14 +211,7 @@ class WorkspaceEvaluationController extends AbstractSecurityController
     {
         $this->checkToolAccess('EDIT', $workspace);
 
-        $users = $this->om->getRepository(User::class)->findByWorkspaces([$workspace]);
-        if (!empty($users)) {
-            $this->messageBus->dispatch(
-                new RecomputeWorkspaceEvaluations($workspace->getId(), array_map(function (User $user) {
-                    return $user->getId();
-                }, $users))
-            );
-        }
+        $this->manager->recompute($workspace);
 
         return new JsonResponse(null, 204);
     }
@@ -453,14 +432,15 @@ class WorkspaceEvaluationController extends AbstractSecurityController
 
         $resources = $this->decodeIdsString($request, ResourceNode::class);
 
-        $this->om->startFlushSuite();
+        // we can not do it inside a flush suite because it will trigger the Workspace to recompute its evaluation
+        // and it requires to have all the data recorded inside the db.
+        // we can create a messenger message for it later if there are performances issues.
         foreach ($resources as $resource) {
             $this->crud->update($resource, [
                 'id' => $resource->getUuid(),
                 'evaluation' => ['required' => true],
             ], [Crud::NO_PERMISSIONS]);
         }
-        $this->om->endFlushSuite();
 
         return new JsonResponse(null, 204);
     }
@@ -475,14 +455,15 @@ class WorkspaceEvaluationController extends AbstractSecurityController
 
         $resources = $this->decodeIdsString($request, ResourceNode::class);
 
-        $this->om->startFlushSuite();
+        // we can not do it inside a flush suite because it will trigger the Workspace to recompute its evaluation
+        // and it requires to have all the data recorded inside the db.
+        // we can create a messenger message for it later if there are performances issues.
         foreach ($resources as $resource) {
             $this->crud->update($resource, [
                 'id' => $resource->getUuid(),
                 'evaluation' => ['required' => false],
             ], [Crud::NO_PERMISSIONS]);
         }
-        $this->om->endFlushSuite();
 
         return new JsonResponse(null, 204);
     }

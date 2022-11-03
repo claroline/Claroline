@@ -18,6 +18,11 @@ class Version20221102054906 extends AbstractMigration
             ALTER TABLE claro_workspace 
             ADD successCondition LONGTEXT DEFAULT NULL COMMENT "(DC2Type:json)"
         ');
+
+        // keep old behavior
+        $this->addSql('
+            UPDATE claro_workspace SET successCondition = \'{"maxFailed": 0}\' 
+        ');
     }
 
     public function down(Schema $schema): void
