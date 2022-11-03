@@ -144,7 +144,7 @@ class AnalyticsManager
 
         return [
             'resources' => $this->resourceRepo->countActiveResources([], $organizations),
-            'storage' => $this->fileManager->computeUsedStorage(), // TODO : filter by orga
+            'storage' => $this->fileManager->getUsedStorage(), // TODO : filter by orga
             'connections' => [
                 'count' => $this->logConnectPlatformRepo->countConnections($organizations),
                 'avgTime' => $this->logConnectPlatformRepo->findAvgTime($organizations), // in seconds
