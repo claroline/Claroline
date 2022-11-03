@@ -54,7 +54,7 @@ class PdfManager
         }
 
         $placeholders = array_merge($this->getCommonPlaceholders($evaluation), [
-            'evaluation_score' => $evaluation->getScore(),
+            'evaluation_score' => $evaluation->getScore() ? $evaluation->getScore() : '0',
             'evaluation_score_max' => $evaluation->getScoreMax(),
         ]);
 
@@ -78,7 +78,7 @@ class PdfManager
             'user_last_name' => $user->getLastName(),
             'user_username' => $user->getUsername(),
 
-            'evaluation_duration' => $evaluation->getDuration() / 60, // in minutes
+            'evaluation_duration' => round($evaluation->getDuration() / 60, 2), // in minutes
             'evaluation_status' => $this->translator->trans('evaluation_'.$evaluation->getStatus().'_status', [], 'workspace'),
             'evaluation_date' => $evaluation->getDate()->format('d/m/Y H:i'),
         ];
