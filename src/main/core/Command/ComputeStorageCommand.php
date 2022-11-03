@@ -37,7 +37,6 @@ class ComputeStorageCommand extends Command
         $output->writeln('Computing used storage...');
 
         $usedStorage = $this->fileManager->computeUsedStorage();
-        $this->fileManager->updateUsedStorage($usedStorage);
 
         $output->writeln('Used storage : '.$usedStorage.'B');
 

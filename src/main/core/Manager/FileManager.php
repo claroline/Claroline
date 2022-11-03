@@ -80,6 +80,11 @@ class FileManager
             && $this->config->getParameter('restrictions.used_storage') >= $this->config->getParameter('restrictions.storage');
     }
 
+    public function getUsedStorage(): ?int
+    {
+        return $this->config->getParameter('restrictions.used_storage');
+    }
+
     /**
      * Computes the size of the files directory in bytes.
      */
@@ -93,15 +98,9 @@ class FileManager
             }
         }
 
-        return $filesDirSize;
-    }
+        $this->config->setParameter('restrictions.used_storage', $filesDirSize);
 
-    /**
-     * Dumps used storage in platform_options for performances (it's heavy to scan the whole files directory to get the files sizes).
-     */
-    public function updateUsedStorage(int $usedStorage): void
-    {
-        $this->config->setParameter('restrictions.used_storage', $usedStorage);
+        return $filesDirSize;
     }
 
     public function getPath(PublicFile $file): string
