@@ -104,14 +104,15 @@ class EvaluationManager
      */
     public function handleResourceEvaluation(ResourceUserEvaluation $resourceUserEvaluation, ResourceEvaluation $resourceAttempt)
     {
+        $resourceNode = $resourceUserEvaluation->getResourceNode();
+
         // only update paths evaluations if the current attempt is fully evaluated
-        if (!is_null($resourceAttempt->getScore()) && !is_null($resourceAttempt->getScoreMax())) {
-            $resourceNode = $resourceUserEvaluation->getResourceNode();
+        if ($resourceNode->isEvaluated() && !is_null($resourceAttempt->getScore()) && !is_null($resourceAttempt->getScoreMax())) {
             $user = $resourceUserEvaluation->getUser();
 
             // Gets all steps containing the resource node with an evaluation
             /** @var Step[] $steps */
-            $steps = $this->stepRepo->findBy(['resource' => $resourceNode, 'evaluated' => true]);
+            $steps = $this->stepRepo->findBy(['resource' => $resourceNode]);
 
             foreach ($steps as $step) {
                 // get the current attempt of the path
