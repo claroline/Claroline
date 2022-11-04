@@ -11,9 +11,6 @@ class ResourceTypeSerializer
     /** @var ResourceActionManager */
     private $actionManager;
 
-    /**
-     * ResourceTypeSerializer constructor.
-     */
     public function __construct(ResourceActionManager $actionManager)
     {
         $this->actionManager = $actionManager;
@@ -26,12 +23,8 @@ class ResourceTypeSerializer
 
     /**
      * Serializes a ResourceType entity for the JSON api.
-     *
-     * @param ResourceType $resourceType - the resource type to serialize
-     *
-     * @return array - the serialized representation of the resource type
      */
-    public function serialize(ResourceType $resourceType)
+    public function serialize(ResourceType $resourceType): array
     {
         return [
             'id' => $resourceType->getId(),

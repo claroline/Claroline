@@ -48,7 +48,6 @@ class LegacyParametersMapping implements LegacyParametersMappingInterface
             'country' => 'country',
             'auto_logging_after_registration' => 'registration.auto_logging',
             'registration_mail_validation' => 'registration.validation',
-            'resource_soft_delete' => 'resource.soft_delete',
             'show_help_button' => 'help.show',
             'show_about_button' => 'show_about_button',
             'help_url' => 'help.url',
