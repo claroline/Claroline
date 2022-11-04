@@ -21,7 +21,7 @@ const ResourceFormComponent = (props) =>
     name={props.name}
     dataPart={props.dataPart}
     meta={props.meta}
-    sections={[
+    definition={[
       {
         title: trans('general'),
         primary: true,
@@ -31,11 +31,11 @@ const ResourceFormComponent = (props) =>
             label: trans('type'),
             type: 'type',
             hideLabel: true,
-            calculated: (resourceNode) => ({
+            calculated: (resourceNode) => !isEmpty(resourceNode) ? ({
               icon: <ResourceIcon mimeType={resourceNode.meta.mimeType} />,
               name: trans(resourceNode.meta.type, {}, 'resource'),
               description: trans(`${resourceNode.meta.type}_desc`, {}, 'resource')
-            })
+            }) : null
           }, {
             name: 'name',
             label: trans('name'),

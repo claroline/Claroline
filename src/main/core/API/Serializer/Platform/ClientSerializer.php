@@ -118,11 +118,10 @@ class ClientSerializer
                 'enabled' => $this->config->getParameter('enable_opengraph'),
             ],
             'home' => $this->config->getParameter('home'),
-            'resources' => [ // TODO : maybe no longer needed here
+            'resources' => [
                 'types' => array_map(function (ResourceType $resourceType) {
                     return $this->resourceTypeSerializer->serialize($resourceType);
                 }, $this->om->getRepository(ResourceType::class)->findAll()),
-                'softDelete' => $this->config->getParameter('resource.soft_delete'),
             ],
             'desktop' => [ // TODO : find a better way to store and expose this
                 'defaultTool' => $this->config->getParameter('desktop.default_tool'),
@@ -140,9 +139,8 @@ class ClientSerializer
 
         $event = new GenericDataEvent();
         $this->eventDispatcher->dispatch($event, 'claroline_populate_client_config');
-        $data = array_merge_recursive($data, $event->getResponse() ?? []);
 
-        return $data;
+        return array_merge_recursive($data, $event->getResponse() ?? []);
     }
 
     private function serializeLocale()

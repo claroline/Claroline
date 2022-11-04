@@ -9,6 +9,7 @@ import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 import {actions} from '#/main/app/api/store'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
+import {Alert} from '#/main/app/alert/components/alert'
 
 class ImageInputComponent extends PureComponent {
   constructor(props) {
@@ -20,7 +21,9 @@ class ImageInputComponent extends PureComponent {
     // the full public file object
     this.state = {
       loaded: false,
-      file: null
+      file: null,
+      notFound: false,
+      error: false
     }
   }
 
@@ -50,11 +53,23 @@ class ImageInputComponent extends PureComponent {
       }),
       credentials: 'include'
     })
-      .then(response => response.json(),
-        () => this.setState({loaded: true, file: null}))
-      .then(
-        (data) => this.setState({loaded: true, file: data})
-      )
+      .then(response => {
+        if (!response.ok) {
+          if (404 === response.status) {
+            this.setState({loaded: false, file: null, notFound: true})
+          } else {
+            this.setState({loaded: false, file: null, error: true})
+          }
+
+          return Promise.reject(response)
+        }
+
+        return response.json()
+      })
+      .then((data) => {
+        this.setState({loaded: true, file: data, notFound: false, error: false})
+      })
+
   }
 
   onChange() {
@@ -75,18 +90,43 @@ class ImageInputComponent extends PureComponent {
   render() {
     return (
       <fieldset className={this.props.className}>
+        {this.state.notFound && !this.state.file &&
+          <Alert type="warning" className="component-container">
+            <span>
+              {trans('image_not_found')}
+
+              <Button
+                className="alert-link"
+                style={{textTransform: 'uppercase'}}
+                type={CALLBACK_BUTTON}
+                callback={() => this.input.click()}
+                label={trans('replace_image', {}, 'actions')}
+                disabled={this.props.disabled}
+              />
+            </span>
+          </Alert>
+        }
+
+        {this.state.error && !this.state.file &&
+          <Alert type="danger" className="component-container">
+            {trans('image_error')}
+          </Alert>
+        }
+
         {(!this.props.value || !this.state.file) &&
           <input
             id={this.props.id}
+            style={this.state.notFound ? {display: 'none'} : undefined}
             type="file"
             className="form-control"
             accept="image"
             ref={input => this.input = input}
             onChange={this.onChange}
+            disabled={this.props.disabled}
           />
         }
 
-        {this.props.value &&
+        {this.props.value && this.state.loaded &&
           <div className="img-preview">
             <img
               className="img-thumbnail"
@@ -104,7 +144,7 @@ class ImageInputComponent extends PureComponent {
               icon="fa fa-fw fa-trash-o"
               label={trans('delete', {}, 'actions')}
               tooltip="left"
-              disabled={!this.state.loaded}
+              disabled={this.props.disabled}
               callback={this.onDelete}
               dangerous={true}
             />

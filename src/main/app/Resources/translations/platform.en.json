@@ -21,5 +21,7 @@
   "equal": "is equal to",
   "different": "is different from",
   "empty": "is empty",
-  "not_empty": "is not empty"
+  "not_empty": "is not empty",
+  "image_not_found": "We are sorry, we could not find your image. It is possible that it does not exist (or no longer).",
+  "image_error": "We are sorry, an error occurred while loading your image. Please contact an administrator."
 }
