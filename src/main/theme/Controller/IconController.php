@@ -21,10 +21,8 @@ class IconController
 
     /**
      * @Route("/system", name="apiv2_icon_system_list", methods={"GET"})
-     *
-     * @return JsonResponse
      */
-    public function listSystemAction()
+    public function listSystemAction(): JsonResponse
     {
         $metadataPath = $this->projectDir.'/node_modules/@fortawesome/fontawesome-free/metadata/categories.yml';
 

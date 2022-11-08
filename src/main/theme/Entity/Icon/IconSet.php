@@ -21,7 +21,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
 /**
  * @ORM\Entity()
  * @ORM\Table(name="claro_icon_set")
- * Class IconSet
  */
 class IconSet
 {
