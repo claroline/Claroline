@@ -1,44 +1,74 @@
 
 .type-control {
-  border-radius: @border-radius-base;
-  background: @gray-lightest;
-  border: 1px solid transparent;
-  padding: 5px;
-  display: flex;
-  align-items: center;
-  font-size: @font-size-large;
-
-  .type-icon {
-    margin-right: 10px;
-
-    // for img
-    width: 40px;
-    height: 40px;
-    // for font-awesome
-    font-size: 32px; // there a re icons which are larger than tall
-    color: #777; // todo : use a var : same as generic-type-picker
     display: flex;
     align-items: center;
-    justify-content: center;
 
-    svg {
-      width: 100%;
-      height: 100%;
+    .type-icon {
+        color: @gray-light;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
-  }
 
-  h1 {
-    padding: 0;
-    margin: 0;
-    font-size: 16px;
-    font-weight: bold;
-  }
+    svg.type-icon {
+        fill: @gray-light;
+        stroke: @gray-light;
+        /*width: 100%;
+        height: 100%;*/
+    }
 
-  p {
-    margin-top: 5px;
-    margin-bottom: 0;
-    font-style: italic;
-    font-size: @font-size-small;
-    color: @gray-light;
-  }
+    h1 {
+        padding: 0;
+        margin: 0;
+        font-weight: bold;
+    }
+
+    p {
+        margin-top: 5px;
+        margin-bottom: 0;
+        font-style: italic;
+        color: @gray-light;
+    }
+
+    .type-control-sizing(40px, @font-size-base, @font-size-small);
+
+    &.lg {
+        .type-control-sizing(64px, @font-size-large, @font-size-base);
+    }
+}
+
+.type-control.list-group-item {
+    .type-icon {
+        margin-right: @list-group-item-padding-h;
+    }
+}
+
+.type-control:not(.list-group-item) {
+    border-radius: @border-radius-base;
+    background: @gray-lightest;
+    border: 1px solid transparent;
+    padding: @input-padding;
+
+    .type-icon {
+        margin-right: @icon-text-spacer;
+    }
+}
+
+.type-control-sizing(@icon-size, @label-font-size, @desc-font-size) {
+    .type-icon {
+        // for img
+        width: @icon-size;
+        height: @icon-size;
+        min-width: @icon-size; // for correct alignment
+        // for font-awesome
+        font-size: floor(@icon-size) * 0.7;
+    }
+
+    h1 {
+        font-size: @label-font-size;
+    }
+
+    p {
+        font-size: @desc-font-size;
+    }
 }

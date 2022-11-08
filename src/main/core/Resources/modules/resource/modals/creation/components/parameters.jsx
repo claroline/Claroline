@@ -49,7 +49,7 @@ class ResourceParameters extends Component {
     return (
       <ResourceForm
         level={5}
-        meta={true}
+        meta={false}
         name={selectors.STORE_NAME}
         dataPart={selectors.FORM_NODE_PART}
       >

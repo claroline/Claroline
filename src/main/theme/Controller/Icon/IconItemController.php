@@ -74,7 +74,7 @@ class IconItemController extends AbstractCrudController
      * )
      * @EXT\ParamConverter(
      *     "iconSet",
-     *     class="Claroline\CoreBundle\Entity\Icon\IconSet",
+     *     class="Claroline\ThemeBundle\Entity\Icon\IconSet",
      *     options={"mapping": {"iconSet": "uuid"}}
      * )
      *
@@ -97,7 +97,7 @@ class IconItemController extends AbstractCrudController
      * )
      * @EXT\ParamConverter(
      *     "iconSet",
-     *     class="Claroline\CoreBundle\Entity\Icon\IconSet",
+     *     class="Claroline\ThemeBundle\Entity\Icon\IconSet",
      *     options={"mapping": {"iconSet": "uuid"}}
      * )
      *

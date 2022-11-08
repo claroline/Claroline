@@ -14,9 +14,6 @@ class ClientListener
     /** @var IconSetManager */
     private $iconManager;
 
-    /**
-     * ClientListener constructor.
-     */
     public function __construct(
         PlatformConfigurationHandler $config,
         IconSetManager $iconManager
