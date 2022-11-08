@@ -137,6 +137,7 @@ class WorkspaceSerializer
             ],
             'evaluation' => [
                 'successCondition' => $workspace->getSuccessCondition(),
+                'estimatedDuration' => $workspace->getEstimatedDuration(),
             ],
         ];
 

@@ -21,17 +21,17 @@ class CrudEvent extends Event
     /**
      * @var mixed
      */
-    private $object;
+    protected $object;
 
     /**
      * @var bool
      */
-    private $block = false;
+    protected $block = false;
 
     /**
      * @var array
      */
-    private $options = [];
+    protected $options = [];
 
     /**
      * @param mixed $object  - The object created

@@ -38,6 +38,8 @@ class WorkspaceEvaluationSubscriber implements EventSubscriberInterface
     private $tokenStorage;
     /** @var MessageBusInterface */
     private $messageBus;
+    /** @var ObjectManager */
+    private $om;
     /** @var WorkspaceEvaluationManager */
     private $manager;
 
@@ -52,6 +54,7 @@ class WorkspaceEvaluationSubscriber implements EventSubscriberInterface
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->messageBus = $messageBus;
+        $this->om = $om;
         $this->manager = $manager;
 
         $this->workspaceRepo = $om->getRepository(Workspace::class);
@@ -63,7 +66,7 @@ class WorkspaceEvaluationSubscriber implements EventSubscriberInterface
             WorkspaceEvents::OPEN => 'onOpen',
             SecurityEvents::ADD_ROLE => 'onAddRole',
             EvaluationEvents::RESOURCE => 'onResourceEvaluate',
-            Crud::getEventName('update', 'post', ResourceNode::class) => 'onResourcePublicationChange',
+            Crud::getEventName('update', 'post', ResourceNode::class) => 'onResourceUpdate',
             Crud::getEventName('delete', 'post', ResourceNode::class) => 'onResourceDelete',
         ];
     }
@@ -125,17 +128,68 @@ class WorkspaceEvaluationSubscriber implements EventSubscriberInterface
     {
         /** @var ResourceNode $resourceNode */
         $resourceNode = $event->getObject();
+        $workspace = $resourceNode->getWorkspace();
+
+        // update workspace estimated duration when needed
+        if ($resourceNode->isRequired() && $resourceNode->isPublished() && $resourceNode->getEstimatedDuration()) {
+            $workspace->setEstimatedDuration(
+                $workspace->getEstimatedDuration() ?? 0 - $resourceNode->getEstimatedDuration()
+            );
+
+            $this->om->persist($workspace);
+            $this->om->flush();
+        }
 
         $this->manager->recompute($resourceNode->getWorkspace());
     }
 
-    public function onResourcePublicationChange(UpdateEvent $event)
+    public function onResourceUpdate(UpdateEvent $event)
     {
         /** @var ResourceNode $resourceNode */
         $resourceNode = $event->getObject();
-        $oldData = $event->getOldData();
+        $workspace = $resourceNode->getWorkspace();
 
-        if ($resourceNode->isRequired() && !empty($oldData['meta']) && ($oldData['meta']['published'] !== $resourceNode->isPublished())) {
+        // Workspace estimated duration is the sum of the estimated duration of all the published required resources
+        // So we need to update the workspace duration :
+        //   - Each time a resource is published / unpublished
+        //   - Each time a resource is set as required / optional
+        //   - Each time the estimated duration of a resource is updated
+        $updateDuration = false;
+
+        // We compute the duration diff we will need to add / subtract to the workspace estimated duration
+        // We do it to avoid recomputing based on all resources estimated duration (it would be costly and would not work in a flush suite)
+        $oldDuration = $event->getOldData('evaluation.estimatedDuration') ?? 0;
+        $currentDuration = $resourceNode->getEstimatedDuration() ?? 0;
+        if ($event->hasPropertyChanged('evaluation.estimatedDuration', 'getEstimatedDuration')) {
+            $diffDuration = $currentDuration - $oldDuration;
+            $updateDuration = true;
+        } else {
+            $diffDuration = $currentDuration;
+        }
+
+        if ($event->hasPropertyChanged('evaluation.required', 'isRequired')
+            || $event->hasPropertyChanged('meta.published', 'isPublished')) {
+            // there are changes in the published / required resources of the workspace
+            // we will need to update the estimated duration of the workspace accordingly
+            $updateDuration = true;
+        }
+
+        if ($updateDuration) {
+            if ($resourceNode->isRequired() && $resourceNode->isPublished()) {
+                $workspace->setEstimatedDuration(
+                    $workspace->getEstimatedDuration() ?? 0 + $diffDuration
+                );
+            } else {
+                $workspace->setEstimatedDuration(
+                    $workspace->getEstimatedDuration() ?? 0 - $diffDuration
+                );
+            }
+
+            $this->om->persist($workspace);
+            $this->om->flush();
+        }
+
+        if ($resourceNode->isRequired() && $event->hasPropertyChanged('meta.published', 'isPublished')) {
             $this->manager->recompute($resourceNode->getWorkspace());
         }
     }

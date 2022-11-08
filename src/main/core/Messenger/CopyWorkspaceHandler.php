@@ -35,7 +35,7 @@ class CopyWorkspaceHandler implements MessageHandlerInterface
         }
 
         try {
-            $this->crud->copy($workspace, $copyWorkspace->getOptions());
+            $this->crud->copy($workspace, array_merge([Crud::NO_PERMISSIONS], $copyWorkspace->getOptions()));
         } catch (\Exception $e) {
             // we don't want to retry action and create more broken data in the DB.
             throw new UnrecoverableMessageHandlingException($e->getMessage(), $e->getCode());

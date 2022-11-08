@@ -11,9 +11,8 @@
 
 namespace Claroline\AppBundle\Event\Crud;
 
-/**
- * Crud event class.
- */
+use Claroline\AppBundle\API\Utils\ArrayUtils;
+
 class UpdateEvent extends CrudEvent
 {
     /** @var array */
@@ -29,13 +28,36 @@ class UpdateEvent extends CrudEvent
         $this->oldData = $oldData;
     }
 
-    public function getData()
+    public function getData(?string $dataPath = null)
     {
+        if (!empty($dataPath)) {
+            return ArrayUtils::get($this->data, $dataPath);
+        }
+
         return $this->data;
     }
 
-    public function getOldData()
+    public function getOldData(?string $dataPath = null)
     {
+        if (!empty($dataPath)) {
+            return ArrayUtils::get($this->oldData, $dataPath);
+        }
+
         return $this->oldData;
+    }
+
+    /**
+     * Checks if a prop of the target entity has been changed by the update.
+     */
+    public function hasPropertyChanged(string $serializedPath, string $entityGetter): bool
+    {
+        $oldProp = ArrayUtils::get($this->oldData, $serializedPath);
+        $newProp = $this->object->{$entityGetter}();
+
+        if ($oldProp !== $newProp) {
+            return true;
+        }
+
+        return false;
     }
 }

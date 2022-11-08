@@ -201,4 +201,18 @@ class WorkspaceRepository extends EntityRepository
             ->getResult()
         );
     }
+
+    public function findEstimatedDuration(Workspace $workspace)
+    {
+        return $this->_em
+            ->createQuery('
+                SELECT SUM(r.estimatedDuration)
+                FROM Claroline\\CoreBundle\\Entity\\Resource\\ResourceNode r
+                WHERE r.workspace = :workspace
+                  AND r.published = true
+                  AND r.active = true
+            ')
+            ->setParameter('workspace', $workspace)
+            ->getSingleScalarResult();
+    }
 }

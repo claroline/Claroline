@@ -189,6 +189,15 @@ class Workspace implements IdentifiableInterface
     private $successCondition = null;
 
     /**
+     * The estimated time required to do the resource (in minutes).
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     *
+     * @var int
+     */
+    private $estimatedDuration;
+
+    /**
      * @ORM\ManyToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Organization\Organization",
      *     inversedBy="workspaces"
@@ -431,6 +440,16 @@ class Workspace implements IdentifiableInterface
     public function setSuccessCondition(?array $successCondition)
     {
         $this->successCondition = $successCondition;
+    }
+
+    public function getEstimatedDuration(): ?int
+    {
+        return $this->estimatedDuration;
+    }
+
+    public function setEstimatedDuration(?int $estimatedDuration = null)
+    {
+        $this->estimatedDuration = $estimatedDuration;
     }
 
     /**
