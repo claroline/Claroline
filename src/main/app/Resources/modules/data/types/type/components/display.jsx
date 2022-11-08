@@ -15,9 +15,9 @@ const TypeDisplay = props => {
           className: classes(value.icon.props.className, 'type-icon')
         })}
 
-        <div>
+        <div role="presentation">
           <h1>{value.name}</h1>
-          <p className="hidden-xs">{value.description}</p>
+          <p>{value.description}</p>
         </div>
       </article>
     )

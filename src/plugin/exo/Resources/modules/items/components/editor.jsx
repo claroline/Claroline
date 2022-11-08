@@ -6,11 +6,9 @@ import {trans} from '#/main/app/intl/translation'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {HtmlInput} from '#/main/app/data/types/html/components/input'
 import {NumberInput} from '#/main/app/data/types/number/components/input'
-
 import {makeId} from '#/main/core/scaffolding/id'
 
 import {Item as ItemTypes, ItemType as ItemTypeTypes} from '#/plugin/exo/items/prop-types'
-import {ItemType} from '#/plugin/exo/items/components/type'
 
 import ScoreNone from '#/plugin/exo/scores/none'
 
@@ -24,8 +22,6 @@ const ItemEditor = props => {
       [current.name]: current.meta.label
     }), {})
   }
-
-  const CurrentType = <ItemType name={props.definition.name} size="lg" />
 
   const CustomSection = createElement(props.definition.components.editor, {
     formName: props.formName,
@@ -51,13 +47,6 @@ const ItemEditor = props => {
           primary: true,
           fields: [
             {
-              name: 'type',
-              label: trans('type'),
-              type: 'string',
-              hideLabel: true,
-              displayed: props.meta,
-              component: CurrentType
-            }, {
               name: 'content',
               label: trans('question', {}, 'quiz'),
               type: 'html',

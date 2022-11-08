@@ -91,15 +91,15 @@ class ClientSerializer
      */
     public function serialize()
     {
-        $logo = null;
+        /*$logo = null;
         if ($this->config->getParameter('logo')) {
             $logo = $this->om->getRepository(PublicFile::class)->findOneBy([
                 'url' => $this->config->getParameter('logo'),
             ]);
-        }
+        }*/
 
         $data = [
-            'logo' => $logo ? $logo->getUrl() : null,
+            'logo' => $this->config->getParameter('logo'),
             'name' => $this->config->getParameter('name'),
             'secondaryName' => $this->config->getParameter('secondary_name'),
             'description' => null, // the one for the current locale

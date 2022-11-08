@@ -1,8 +1,6 @@
-import React, {Component, cloneElement} from 'react'
+import React, {Component, cloneElement, Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
-
-import isEqual from 'lodash/isEqual'
 import uniq from 'lodash/uniq'
 
 import {trans} from '#/main/app/intl/translation'
@@ -41,34 +39,15 @@ class GridSelection extends Component {
     super(props)
 
     this.state = {
-      currentGroup: props.tag || trans('all'),
-      currentType: props.items[0]
+      currentGroup: props.tag || trans('all')
     }
 
     this.changeGroup = this.changeGroup.bind(this)
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    if (0 === this.props.items.length && 0 < nextProps.items.length) {
-      this.setState({
-        currentType: nextProps.items[0]
-      })
-    }
-  }
-
-  handleItemMouseOver(type) {
-    this.setState({
-      currentType: type
-    })
-  }
-
   changeGroup(group) {
-    const filteredItems = this.props.items
-      .filter(item => trans('all') === group || (item.tags && -1 !== item.tags.indexOf(group)))
-
     this.setState({
-      currentGroup: group,
-      currentType: filteredItems[0]
+      currentGroup: group
     })
   }
 
@@ -77,9 +56,10 @@ class GridSelection extends Component {
 
     const filteredItems = this.props.items
       .filter(item => trans('all') === this.state.currentGroup || (item.tags && -1 !== item.tags.indexOf(this.state.currentGroup)))
+      .sort((a, b) => a.label < b.label ? -1 : 1)
 
     return (
-      <div className="generic-type-picker">
+      <Fragment>
         {0 !== tags.length &&
           <GroupTabs
             current={this.state.currentGroup}
@@ -88,57 +68,43 @@ class GridSelection extends Component {
           />
         }
 
-        <div className="modal-body">
-          <ul className="types-list" role="listbox">
-            {filteredItems.map((type, index) => {
-              let selectAction
-              if (this.props.selectAction) {
-                selectAction = this.props.selectAction(type)
-              } else {
-                selectAction = {
-                  type: CALLBACK_BUTTON,
-                  callback: () => this.props.handleSelect(type)
+        <ul className="list-group" role="listbox">
+          {filteredItems.map((type) => {
+            let selectAction
+            if (this.props.selectAction) {
+              selectAction = this.props.selectAction(type)
+            } else {
+              selectAction = {
+                type: CALLBACK_BUTTON,
+                callback: () => this.props.handleSelect(type)
+              }
+            }
+
+            return (
+              <Button
+                id={type.id || type.name}
+                key={type.id || type.name}
+                className="list-group-item type-control lg"
+                role="option"
+                icon={typeof type.icon === 'string' ?
+                  <span className={classes('type-icon', type.icon)} /> :
+                  cloneElement(type.icon, {
+                    className: 'type-icon'
+                  })
                 }
-              }
+                label={
+                  <div>
+                    <h1>{type.label}</h1>
 
-              return (
-                <li
-                  key={type.id || `type-${index}`}
-                  className={classes('type-entry', {
-                    selected: isEqual(this.state.currentType, type)
-                  })}
-                  onMouseOver={() => this.handleItemMouseOver(type)}
-                >
-                  <Button
-                    id={type.id}
-                    className="type-entry-btn"
-                    role="option"
-                    icon={typeof type.icon === 'string' ?
-                      <span className={classes('type-icon', type.icon)} /> :
-                      cloneElement(type.icon, {
-                        className: 'type-icon'
-                      })
-                    }
-                    label={type.label}
-                    hideLabel={true}
-                    {...selectAction}
-                  />
-                </li>
-              )
-            })}
-          </ul>
-
-          {this.state.currentType &&
-            <div className="type-desc">
-              <span className="type-name">{this.state.currentType.label}</span>
-
-              {this.state.currentType.description &&
-                <p>{this.state.currentType.description}</p>
-              }
-            </div>
-          }
-        </div>
-      </div>
+                    <p>{type.description}</p>
+                  </div>
+                }
+                {...selectAction}
+              />
+            )
+          })}
+        </ul>
+      </Fragment>
     )
   }
 }
@@ -146,13 +112,17 @@ class GridSelection extends Component {
 GridSelection.propTypes = {
   tag: T.string,
   items: T.arrayOf(T.shape({
-    id: T.string,
+    id: T.string, // to merge with name
+    name: T.string,
     label: T.string.isRequired,
     icon: T.node.isRequired, // either a FontAwesome class string or a custom icon component
     description: T.string,
     tags: T.arrayOf(T.string)
   })).isRequired,
   selectAction: T.func,
+  /**
+   * @deprecated
+   */
   handleSelect: T.func // for retro-compatibility only. Use selectAction
 }
 

@@ -46,7 +46,6 @@ class ParametersSerializer
 
         $data['javascripts'] = $this->serializeAssets('javascripts', $data);
         $data['stylesheets'] = $this->serializeAssets('stylesheets', $data);
-        $data['display']['logo'] = $this->serializeAppearanceLogo($data);
 
         return $data;
     }
@@ -72,14 +71,13 @@ class ParametersSerializer
 
         // TODO : move this somewhere else
         unset($data['tos']['text']);
-        unset($data['archives']);
 
         $this->configHandler->setParameters($data);
 
         return $original;
     }
 
-    public function deserializeMailer($data)
+    private function deserializeMailer($data)
     {
         if (isset($data['transport']) && 'gmail' === $data['transport']) {
             $data['host'] = 'smtp.gmail.com';
@@ -91,7 +89,7 @@ class ParametersSerializer
         return $data;
     }
 
-    public function serializeTos()
+    private function serializeTos()
     {
         $result = $this->om->getRepository(Content::class)->findOneBy(['type' => 'termsOfService']);
         if ($result) {
@@ -104,7 +102,7 @@ class ParametersSerializer
         return $this->serializer->serialize($content);
     }
 
-    public function getAssetsData($name, array $data)
+    private function getAssetsData($name, array $data)
     {
         if (isset($data[$name])) {
             $assets = $data[$name];
@@ -120,7 +118,7 @@ class ParametersSerializer
         return $data;
     }
 
-    public function deserializeTos(array $data)
+    private function deserializeTos(array $data)
     {
         if (isset($data['tos'])) {
             $contentTos = $this->om->getRepository(Content::class)->findOneBy([
@@ -140,7 +138,7 @@ class ParametersSerializer
         }
     }
 
-    public function serializeAssets($name, array $data)
+    private function serializeAssets($name, array $data)
     {
         $uploadedFiles = [];
 
@@ -154,15 +152,7 @@ class ParametersSerializer
         return $uploadedFiles;
     }
 
-    public function serializeAppearanceLogo(array $data)
-    {
-        $url = $data['display']['logo'];
-        $file = $this->om->getRepository(PublicFile::class)->findOneBy(['url' => $url]);
-
-        return $this->serializer->serialize($file);
-    }
-
-    public function getLogoData(array $data)
+    private function getLogoData(array $data)
     {
         if (isset($data['display']) && isset($data['display']['logo'])) {
             $logo = $data['display']['logo'];

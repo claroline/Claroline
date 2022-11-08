@@ -6,10 +6,6 @@ services:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
         public: true
 
-    Claroline\ThemeBundle\Controller\ColorCollectionController:
-        parent: Claroline\AppBundle\Controller\AbstractCrudController
-        public: true
-
     Claroline\ThemeBundle\Controller\IconController:
         arguments:
             - '%kernel.project_dir%'
