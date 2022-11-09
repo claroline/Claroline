@@ -12,7 +12,7 @@ import {MessageCard} from '#/plugin/message/data/components/message-card'
 import {constants} from '#/plugin/message/header/messages/constants'
 
 const MessagesDropdown = (props) =>
-  <div className="app-header-dropdown dropdown-menu dropdown-menu-right">
+  <div className="app-header-dropdown dropdown-menu dropdown-menu-right data-cards-stacked">
     {isEmpty(props.results) &&
       <div className="app-header-dropdown-empty">
         {trans('empty_unread', {}, 'message')}
