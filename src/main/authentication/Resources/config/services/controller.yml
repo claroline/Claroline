@@ -12,6 +12,9 @@ services:
     Claroline\AuthenticationBundle\Controller\IpUserController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
         public: true
+        arguments:
+            - '@security.authorization_checker'
+            - '@security.token_storage'
 
     Claroline\AuthenticationBundle\Controller\OauthController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController

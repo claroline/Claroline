@@ -32,6 +32,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @Route("/user")
@@ -305,6 +306,10 @@ class UserController extends AbstractCrudController
 
     protected function getDefaultHiddenFilters(): array
     {
+        if (!$this->authorization->isGranted('IS_AUTHENTICATED_FULLY')) {
+            throw new AccessDeniedException();
+        }
+
         if (!$this->authorization->isGranted('ROLE_ADMIN')) {
             $user = $this->tokenStorage->getToken()->getUser();
 
@@ -317,7 +322,6 @@ class UserController extends AbstractCrudController
                 ];
             }
 
-            // anonymous will see nothing
             return [
                 'recursiveOrXOrganization' => [],
             ];

@@ -33,7 +33,7 @@ class FileController extends AbstractCrudController
 
     public function getIgnore(): array
     {
-        return ['update', 'exist', 'list', 'copyBulk'];
+        return ['update', 'exist', 'list', 'copyBulk', 'csv'];
     }
 
     public function getName(): string
@@ -60,7 +60,7 @@ class FileController extends AbstractCrudController
     /**
      * @Route("/upload/image", name="apiv2_image_upload", methods={"POST"})
      */
-    public function uploadImage(Request $request): JsonResponse
+    public function uploadImageAction(Request $request): JsonResponse
     {
         $files = $request->files->all();
 
