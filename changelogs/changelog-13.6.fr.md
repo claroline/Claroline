@@ -13,7 +13,7 @@ Import/Export :
 Evaluation :
   - Ajout de la progression sur les vidéos, l'indicateur de progression est maintenant proportionnel au point de visionnage le plus avancé dans la vidéo.
   - Il est maintenant possible d'envoyer des messages aux utilisateurs directement depuis le suivi pédagogique de l'espace d'activité et des ressources.
-  - Ajout de la notion ressource "évaluée sur toutes les ressources. Dans la configuration d'une ressource vous pouvez maintenant cocher la case "Évaluée" pour indiquer que le score obtenu pour la ressource contribue au calcul du score global de l'espace. Attention : Pour être prise en compte dans le score de l'espace la ressource doit être "Évaluée" ET "Obligatoire".
+  - Ajout de la notion de  "ressource évaluée" sur toutes les ressources. Dans la configuration d'une ressource vous pouvez maintenant cocher la case "Évaluée" pour indiquer que le score obtenu pour la ressource contribue au calcul du score global de l'espace. Attention : Pour être prise en compte dans le score de l'espace la ressource doit être "Évaluée" ET "Obligatoire".
   - Dans les listes de ressources, et notamment dans les widgets, il existe maintenant un filtre "obligatoire" et un filtre "évalué". 
   - Il est maintenant possible de configurer un seuil de réussite de l'espace d'activité depuis le menu "Configurer" dans "Plus d'outils".
   - Ajout d'attestations de participation et de réussite pour les espaces d'activités
