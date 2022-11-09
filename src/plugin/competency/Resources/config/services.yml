@@ -1,10 +1,11 @@
 imports:
-    - { resource: services/finder.yml }
-    - { resource: services/serializer.yml }
-    - { resource: services/voter.yml }
     - { resource: services/controller.yml }
+    - { resource: services/finder.yml }
     - { resource: services/listener.yml }
     - { resource: services/manager.yml }
+    - { resource: services/serializer.yml }
+    - { resource: services/updater.yml }
+    - { resource: services/voter.yml }
 
 services:
     _defaults:

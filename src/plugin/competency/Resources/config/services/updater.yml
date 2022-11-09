@@ -1,0 +1,7 @@
+services:
+    _defaults:
+        tags: [ 'claroline.platform.updater' ]
+
+    HeVinci\CompetencyBundle\Installation\Updater\Updater130600:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
