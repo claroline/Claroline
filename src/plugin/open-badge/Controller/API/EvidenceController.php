@@ -11,6 +11,7 @@
 
 namespace Claroline\OpenBadgeBundle\Controller\API;
 
+use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\OpenBadgeBundle\Entity\Assertion;
 use Claroline\OpenBadgeBundle\Entity\Evidence;
@@ -18,12 +19,33 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @Route("/evidence")
  */
 class EvidenceController extends AbstractCrudController
 {
+    /** @var AuthorizationCheckerInterface */
+    private $authorization;
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
+
+    public function __construct(
+        AuthorizationCheckerInterface $authorization,
+        TokenStorageInterface $tokenStorage
+    ) {
+        $this->authorization = $authorization;
+        $this->tokenStorage = $tokenStorage;
+    }
+
+    public function getClass()
+    {
+        return Evidence::class;
+    }
+
     public function getName()
     {
         return 'badge-evidence';
@@ -32,33 +54,34 @@ class EvidenceController extends AbstractCrudController
     /**
      * @Route("/assertion/{assertion}", name="apiv2_evidence_create_at", methods={"POST"})
      * @EXT\ParamConverter("assertion", class="Claroline\OpenBadgeBundle\Entity\Assertion", options={"mapping": {"assertion": "uuid"}})
-     *
-     * @return JsonResponse
      */
-    public function createAtAction(Request $request, Assertion $assertion)
+    public function createAtAction(Request $request, Assertion $assertion): JsonResponse
     {
-        $object = $this->crud->create(
-            $this->getClass(),
-            $this->decodeRequest($request),
-            []
-        );
-
+        $object = $this->crud->create($this->getClass(), $this->decodeRequest($request), [Crud::THROW_EXCEPTION]);
         $object->setAssertion($assertion);
+
         $this->om->persist($object);
         $this->om->flush();
 
-        if (is_array($object)) {
-            return new JsonResponse($object, 400);
-        }
-
         return new JsonResponse(
-            $this->serializer->serialize($object, []),
+            $this->serializer->serialize($object),
             201
         );
     }
 
-    public function getClass()
+    protected function getDefaultHiddenFilters(): array
     {
-        return Evidence::class;
+        if (!$this->authorization->isGranted('IS_AUTHENTICATED_FULLY')) {
+            // anonymous cannot have badges
+            throw new AccessDeniedException();
+        }
+
+        if (!$this->authorization->isGranted('ROLE_ADMIN')) {
+            return [
+                'recipient' => $this->tokenStorage->getToken()->getUser()->getUuid(),
+            ];
+        }
+
+        return [];
     }
 }

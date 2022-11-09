@@ -63,16 +63,18 @@ class AuthenticationController
      */
     public function activateUserAction(string $hash, Request $request)
     {
-        $user = $this->userManager->getByResetPasswordHash($hash);
-        if (!$user) {
-            return new RedirectResponse(
-                $this->routingHelper->indexPath()
-            );
+        if (!empty($hash)) {
+            $user = $this->userManager->getByResetPasswordHash($hash);
+            if ($user) {
+                $this->userManager->activateUser($user);
+
+                return $this->authenticator->login($user, $request);
+            }
         }
 
-        $this->userManager->activateUser($user);
-
-        return $this->authenticator->login($user, $request);
+        return new RedirectResponse(
+            $this->routingHelper->indexPath()
+        );
     }
 
     /**
@@ -83,7 +85,13 @@ class AuthenticationController
     public function sendForgotPasswordAction(Request $request): JsonResponse
     {
         $data = $this->decodeRequest($request);
-        $user = $this->om->getRepository(User::class)->findOneByEmail($data['email']);
+        if (empty($data['email'])) {
+            return new JsonResponse([
+                'error' => ['email' => 'value_not_blank'],
+            ], 400);
+        }
+
+        $user = $this->om->getRepository(User::class)->findOneBy(['email' => $data['email']]);
 
         if ($user) {
             $user->setHashTime(time());
@@ -110,8 +118,11 @@ class AuthenticationController
     public function newPasswordAction(Request $request): JsonResponse
     {
         $data = $this->decodeRequest($request);
-        $user = $this->userManager->getByResetPasswordHash($data['hash']);
+        if (empty($data['hash'])) {
+            return new JsonResponse('hash_invalid', 500);
+        }
 
+        $user = $this->userManager->getByResetPasswordHash($data['hash']);
         if (!$user) {
             return new JsonResponse('hash_invalid', 500);
         }
@@ -142,12 +153,14 @@ class AuthenticationController
      */
     public function validateEmailAction(string $hash): RedirectResponse
     {
-        $foundAndValidated = $this->userManager->validateEmailHash($hash);
-        if (!$foundAndValidated) {
-            throw new NotFoundHttpException('User not found.');
-        }
+        if (!empty($hash)) {
+            $foundAndValidated = $this->userManager->validateEmailHash($hash);
+            if (!$foundAndValidated) {
+                throw new NotFoundHttpException('User not found.');
+            }
 
-        $this->eventDispatcher->dispatch(SecurityEvents::VALIDATE_EMAIL, ValidateEmailEvent::class, [$this->userManager->getByEmailValidationHash($hash)]);
+            $this->eventDispatcher->dispatch(SecurityEvents::VALIDATE_EMAIL, ValidateEmailEvent::class, [$this->userManager->getByEmailValidationHash($hash)]);
+        }
 
         return new RedirectResponse(
             $this->routingHelper->indexPath()

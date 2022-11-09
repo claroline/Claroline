@@ -22,20 +22,27 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @Route("/message")
  */
 class MessageController extends AbstractCrudController
 {
+    /** @var AuthorizationCheckerInterface */
+    private $authorization;
+    /** @var TokenStorageInterface */
     private $tokenStorage;
     /** @var MessageManager */
     private $messageManager;
 
     public function __construct(
+        AuthorizationCheckerInterface $authorization,
         TokenStorageInterface $tokenStorage,
         MessageManager $messageManager
     ) {
+        $this->authorization = $authorization;
         $this->tokenStorage = $tokenStorage;
         $this->messageManager = $messageManager;
     }
@@ -301,5 +308,18 @@ class MessageController extends AbstractCrudController
     public function getClass()
     {
         return Message::class;
+    }
+
+    protected function getDefaultHiddenFilters(): array
+    {
+        if (!$this->authorization->isGranted('IS_AUTHENTICATED_FULLY')) {
+            throw new AccessDeniedException();
+        }
+
+        $user = $this->tokenStorage->getToken()->getUser();
+
+        return [
+            'user' => $user->getUuid(),
+        ];
     }
 }

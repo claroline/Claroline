@@ -24,15 +24,35 @@ class EvidenceFinder extends AbstractFinder
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = [])
     {
+        $assertionJoin = false;
+
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
-              case 'assertion':
-                  $qb->join('obj.assertion', 'a');
-                  $qb->andWhere('a.uuid like :assertion');
-                  $qb->setParameter('assertion', $filterValue);
-                  break;
-              default:
-                  $this->setDefaults($qb, $filterName, $filterValue);
+                case 'assertion':
+                    if (!$assertionJoin) {
+                        $qb->join('obj.assertion', 'a');
+                        $assertionJoin = true;
+                    }
+
+                    $qb->andWhere('a.uuid = :assertion');
+                    $qb->setParameter('assertion', $filterValue);
+
+                    break;
+
+                case 'recipient':
+                    if (!$assertionJoin) {
+                        $qb->join('obj.assertion', 'a');
+                        $assertionJoin = true;
+                    }
+
+                    $qb->join('a.recipient', 'a');
+                    $qb->andWhere('a.uuid = :recipientId');
+                    $qb->setParameter('recipientId', $filterValue);
+
+                    break;
+
+                default:
+                    $this->setDefaults($qb, $filterName, $filterValue);
             }
         }
 

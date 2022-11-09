@@ -7,6 +7,7 @@ import {trans} from '#/main/app/intl/translation'
 
 // action creators
 export const actions = {}
+
 /**
  * Fetch the required data to open the current user desktop.
  */
