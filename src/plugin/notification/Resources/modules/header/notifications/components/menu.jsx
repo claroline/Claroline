@@ -11,7 +11,7 @@ import {NotificationCard} from '#/plugin/notification/components/card'
 import {constants} from '#/plugin/notification/header/notifications/constants'
 
 const NotificationsDropdown = (props) =>
-  <div className="app-header-dropdown dropdown-menu dropdown-menu-right">
+  <div className="app-header-dropdown dropdown-menu dropdown-menu-right data-cards-stacked">
     {isEmpty(props.results) &&
       <div className="app-header-dropdown-empty">
         {trans('empty_unread', {}, 'notification')}
