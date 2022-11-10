@@ -131,8 +131,7 @@ class FileManager
         string $name = null,
         string $objectClass = null,
         string $objectUuid = null,
-        string $objectName = null,
-        string $sourceType = null
+        string $objectName = null
     ): PublicFile {
         $fileName = $name ? $name : $tmpFile->getFilename();
         $directoryName = $this->getActiveDirectoryName();
@@ -144,13 +143,10 @@ class FileManager
 
         $this->om->startFlushSuite();
         $publicFile = new PublicFile();
-        $publicFile->setDirectoryName($directoryName);
         $publicFile->setFilename($fileName);
         $publicFile->setSize($size);
         $publicFile->setMimeType($mimeType);
-        $publicFile->setCreationDate(new \DateTime());
         $publicFile->setUrl($url);
-        $publicFile->setSourceType($sourceType);
 
         $tmpFile->move($this->fileDir.DIRECTORY_SEPARATOR.$prefix, $hashName);
         $this->om->persist($publicFile);
@@ -174,8 +170,7 @@ class FileManager
         string $fileName,
         string $objectClass = null,
         string $objectUuid = null,
-        string $objectName = null,
-        string $sourceType = null
+        string $objectName = null
     ): PublicFile {
         $directoryName = $this->getActiveDirectoryName();
         $dataParts = explode(',', $data);
@@ -198,12 +193,9 @@ class FileManager
 
         $this->om->startFlushSuite();
         $publicFile = new PublicFile();
-        $publicFile->setDirectoryName($directoryName);
         $publicFile->setFilename($fileName);
         $publicFile->setSize($size);
-        $publicFile->setCreationDate(new \DateTime());
         $publicFile->setUrl($url);
-        $publicFile->setSourceType($sourceType);
 
         $this->filesystem->dumpFile($url, $dataBin);
         $mimeType = mime_content_type($url);

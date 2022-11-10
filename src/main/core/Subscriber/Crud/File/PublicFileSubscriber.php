@@ -52,11 +52,9 @@ class PublicFileSubscriber implements EventSubscriberInterface
         $prefix = 'data'.DIRECTORY_SEPARATOR.$directoryName;
         $url = $prefix.DIRECTORY_SEPARATOR.$hashName;
 
-        $publicFile->setDirectoryName($directoryName);
         $publicFile->setFilename($fileName);
         $publicFile->setSize($size);
         $publicFile->setMimeType($mimeType);
-        $publicFile->setCreationDate(new \DateTime());
         $publicFile->setUrl($url);
 
         $tmpFile->move($this->fileManager->getDirectory().DIRECTORY_SEPARATOR.$prefix, $hashName);

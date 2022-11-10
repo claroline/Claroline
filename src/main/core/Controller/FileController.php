@@ -213,7 +213,6 @@ class FileController
         $objectClass = $request->get('objectClass');
         $objectUuid = $request->get('objectUuid');
         $objectName = $request->get('objectName');
-        $sourceType = $request->get('sourceType');
 
         if ($request->files->get('file')) {
             $publicFile = $this->fileManager->createFile(
@@ -221,8 +220,7 @@ class FileController
                 $fileName,
                 $objectClass,
                 $objectUuid,
-                $objectName,
-                $sourceType
+                $objectName
             );
             $url = $publicFile->getUrl();
         }
