@@ -33,7 +33,7 @@ class FileController extends AbstractCrudController
 
     public function getIgnore(): array
     {
-        return ['update', 'exist', 'list', 'copyBulk', 'csv'];
+        return ['get', 'create', 'update', 'exist', 'list', 'copyBulk', 'csv'];
     }
 
     public function getName(): string
