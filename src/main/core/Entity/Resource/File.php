@@ -61,26 +61,6 @@ class File extends AbstractResource
         $this->size = $size;
     }
 
-    /**
-     * Returns the file size with unit and in a readable format.
-     *
-     * @return string
-     */
-    public function getFormattedSize()
-    {
-        if ($this->size < 1024) {
-            return $this->size.' B';
-        } elseif ($this->size < 1048576) {
-            return round($this->size / 1024, 2).' KB';
-        } elseif ($this->size < 1073741824) {
-            return round($this->size / 1048576, 2).' MB';
-        } elseif ($this->size < 1099511627776) {
-            return round($this->size / 1073741824, 2).' GB';
-        }
-
-        return round($this->size / 1099511627776, 2).' TB';
-    }
-
     public function getOpening(): string
     {
         return $this->opening;

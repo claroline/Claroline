@@ -30,12 +30,12 @@ class PublicFileSerializer
         return PublicFile::class;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'public_file';
     }
 
-    public function getSchema()
+    public function getSchema(): string
     {
         return '#/main/core/publicFile.json';
     }
@@ -48,12 +48,10 @@ class PublicFileSerializer
         }
 
         return [
-            'id' => $file->getId(),
+            'id' => $file->getUuid(),
             'type' => $file->getMimeType(),
             'name' => $file->getFilename(),
             'size' => $file->getSize(),
-            'directory' => $file->getDirectoryName(), // I'm not sure this is needed
-            'sourceType' => $file->getSourceType(),
             'url' => $url,
 
             // deprecated use `type` / `name` (this is to be compliant with the js File API)
@@ -67,7 +65,7 @@ class PublicFileSerializer
         // this is currently done in FileUtilities
         // todo : write correctly
         if (isset($data['id'])) {
-            $file = $this->om->getRepository(PublicFile::class)->findOneBy(['id' => $data['id']]);
+            $file = $this->om->getObject($data, PublicFile::class);
         }
 
         return $file;

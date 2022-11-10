@@ -120,8 +120,7 @@ class GraphicQuestionSerializer
                 $imageName,
                 $objectClass,
                 $objectUuid,
-                $title,
-                $objectClass
+                $title
             );
 
             if ($publicFile) {

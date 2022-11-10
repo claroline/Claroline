@@ -11,7 +11,8 @@
 
 namespace Claroline\CoreBundle\Entity\File;
 
-use Claroline\CoreBundle\Entity\User;
+use Claroline\AppBundle\Entity\Identifier\Id;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -20,167 +21,81 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class PublicFile
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
+    use Id;
+    use Uuid;
 
     /**
      * @ORM\Column(name="file_size", type="integer", nullable=true)
+     *
+     * @var int
      */
-    protected $size;
+    private $size;
 
     /**
      * @ORM\Column(name="filename")
+     *
+     * @var string
      */
-    protected $filename;
+    private $filename;
 
     /**
      * @ORM\Column(name="hash_name")
+     *
+     * @var string
      */
-    protected $url;
-
-    /**
-     * @ORM\Column(name="directory_name")
-     */
-    protected $directoryName;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
-     * @ORM\JoinColumn(name="user_id", onDelete="SET NULL", nullable=true)
-     */
-    protected $creator;
-
-    /**
-     * @ORM\Column(name="creation_date", type="datetime")
-     */
-    protected $creationDate;
+    private $url;
 
     /**
      * @ORM\Column(name="mime_type", nullable=true)
+     *
+     * @var string
      */
-    protected $mimeType;
+    private $mimeType;
 
-    /**
-     * @ORM\Column(name="source_type", nullable=true)
-     */
-    protected $sourceType;
-
-    public function getId()
+    public function __construct()
     {
-        return $this->id;
+        $this->refreshUuid();
     }
 
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
-
-    public function getSize()
+    public function getSize(): ?int
     {
         return $this->size;
     }
 
-    public function setSize($size)
+    public function setSize(?int $size): void
     {
         $this->size = $size;
     }
 
-    /**
-     * @return string
-     *
-     * @depreacted always return raw size
-     */
-    public function getFormattedSize()
-    {
-        if ($this->size < 1024) {
-            return $this->size.' B';
-        } elseif ($this->size < 1048576) {
-            return round($this->size / 1024, 2).' KB';
-        } elseif ($this->size < 1073741824) {
-            return round($this->size / 1048576, 2).' MB';
-        } elseif ($this->size < 1099511627776) {
-            return round($this->size / 1073741824, 2).' GB';
-        }
-
-        return round($this->size / 1099511627776, 2).' TB';
-    }
-
-    public function getFilename()
+    public function getFilename(): ?string
     {
         return $this->filename;
     }
 
-    public function setFilename($filename)
+    public function setFilename(string $filename): void
     {
         $this->filename = $filename;
     }
 
-    public function getUrl()
+    public function getUrl(): ?string
     {
         return $this->url;
     }
 
-    public function setUrl($url)
+    public function setUrl(string $url): void
     {
         // normalize the URL
-        // we should remove \ from window envs because it requires additional
-        // escaping when used in UI.
-
-        $url = str_replace('\\', '/', $url);
-
-        $this->url = $url;
+        // we should remove \ from window envs because it requires additional escaping when used in UI.
+        $this->url = str_replace('\\', '/', $url);
     }
 
-    public function getDirectoryName()
-    {
-        return $this->directoryName;
-    }
-
-    public function setDirectoryName($directoryName)
-    {
-        $this->directoryName = $directoryName;
-    }
-
-    public function getCreator()
-    {
-        return $this->creator;
-    }
-
-    public function setCreator(User $creator = null)
-    {
-        $this->creator = $creator;
-    }
-
-    public function getCreationDate()
-    {
-        return $this->creationDate;
-    }
-
-    public function setCreationDate($creationDate)
-    {
-        $this->creationDate = $creationDate;
-    }
-
-    public function getMimeType()
+    public function getMimeType(): ?string
     {
         return $this->mimeType;
     }
 
-    public function setMimeType($mimeType)
+    public function setMimeType(?string $mimeType): void
     {
         $this->mimeType = $mimeType;
-    }
-
-    public function getSourceType()
-    {
-        return $this->sourceType;
-    }
-
-    public function setSourceType($sourceType)
-    {
-        $this->sourceType = $sourceType;
     }
 }
