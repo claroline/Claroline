@@ -1,9 +1,0 @@
-{
-    "Each value must be unique.": "Elke waarde moet uniek zijn.",
-    "This ability does not exist.": "Deze competentie bestaat niet.",
-    "framework_import.conflict_issue": "Sommige gegevens in dit framework zijn in strijd met bestaande gegevens.",
-    "framework_import.data_issue": "Sommige gegevens in dit framework zijn inconsistent.",
-    "framework_import.json_issue": "Dit bestand kan niet worden ontleed. Controleer of het een JSON-bestand is.",
-    "framework_import.original_error": "Fout: %msg%",
-    "framework_import.schema_issue": "De informatie in dit bestand bevat gegevens die niet voldoen aan de verwachte framework formaat."
-}

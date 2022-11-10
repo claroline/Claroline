@@ -1,7 +1,0 @@
-{
-    "resource-claroline_dropzone-correction_report": "heeft een correctie in %dropzone% vermeld.",
-    "resource-claroline_dropzone-drop_end": "heeft een drop gemaakt in %dropzone%.",
-    "resource-claroline_dropzone-drop_grade_available": "Uw kopie is gecorrigeerd. Uw notatie is nu beschikbaar in %dropzone%.",
-    "resource-claroline_dropzone-drop_report": "Heeft een kopie in %dropzone% vermeld.",
-    "resource-claroline_dropzone-dropzone_manual_state_changed": "De huidige fase van %dropzone% is zojuist veranderd in %newState%."
-}
