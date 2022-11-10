@@ -90,10 +90,11 @@ services:
     # GeoIp
     Claroline\CoreBundle\Library\GeoIp\Database\MaxMindGeoIpDatabaseDownloader:
         arguments:
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+            - '%claroline.tmp_dir%'
             - '@logger'
             - '@?http_client'
             - '@filesystem'
-            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
 
     Claroline\CoreBundle\Library\GeoIp\MaxMindGeoIpInfoProvider:
         arguments: ['@GeoIp2\Database\Reader']

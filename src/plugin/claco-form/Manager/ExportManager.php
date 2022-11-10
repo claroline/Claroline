@@ -2,6 +2,7 @@
 
 namespace Claroline\ClacoFormBundle\Manager;
 
+use Claroline\AppBundle\Manager\File\TempFileManager;
 use Claroline\AppBundle\Manager\PdfManager;
 use Claroline\ClacoFormBundle\Entity\ClacoForm;
 use Claroline\ClacoFormBundle\Entity\Comment;
@@ -9,11 +10,9 @@ use Claroline\ClacoFormBundle\Entity\Entry;
 use Claroline\ClacoFormBundle\Entity\Field;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Manager\LocationManager;
-use Ramsey\Uuid\Uuid;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -25,8 +24,8 @@ class ExportManager
     private $router;
     /** @var ClacoFormManager */
     private $clacoFormManager;
-    /** @var PlatformConfigurationHandler */
-    private $configHandler;
+    /** @var TempFileManager */
+    private $tempManager;
     /** @var string */
     private $filesDir;
     /** @var LocationManager */
@@ -41,7 +40,7 @@ class ExportManager
     public function __construct(
         RouterInterface $router,
         ClacoFormManager $clacoFormManager,
-        PlatformConfigurationHandler $configHandler,
+        TempFileManager $tempManager,
         string $filesDir,
         LocationManager $locationManager,
         Environment $templating,
@@ -50,7 +49,7 @@ class ExportManager
     ) {
         $this->router = $router;
         $this->clacoFormManager = $clacoFormManager;
-        $this->configHandler = $configHandler;
+        $this->tempManager = $tempManager;
         $this->filesDir = $filesDir;
         $this->locationManager = $locationManager;
         $this->templating = $templating;
@@ -170,7 +169,7 @@ class ExportManager
     public function zipEntries($content, ClacoForm $clacoForm)
     {
         $archive = new \ZipArchive();
-        $pathArch = $this->configHandler->getParameter('tmp_dir').DIRECTORY_SEPARATOR.Uuid::uuid4()->toString().'.zip';
+        $pathArch = $this->tempManager->generate();
         $archive->open($pathArch, \ZipArchive::CREATE);
         $archive->addFromString($clacoForm->getResourceNode()->getName().'.xls', $content);
 

@@ -29,7 +29,7 @@ services:
         arguments:
             - '@router'
             - '@Claroline\ClacoFormBundle\Manager\ClacoFormManager'
-            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+            - '@Claroline\AppBundle\Manager\File\TempFileManager'
             - '%claroline.param.files_directory%'
             - '@Claroline\CoreBundle\Manager\LocationManager'
             - '@twig'

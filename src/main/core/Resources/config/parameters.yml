@@ -6,7 +6,7 @@ parameters:
     test.client.class: Claroline\CoreBundle\Library\Testing\TransactionalTestClient
 
     # Project base paths
-    claroline.param.vendor_directory: "%kernel.project_dir%/vendor"
+    claroline.tmp_dir:                "%kernel.project_dir%/var/tmp"
     claroline.param.public_directory: "%kernel.project_dir%/public"
     claroline.param.files_directory:  "%kernel.project_dir%/files"
 

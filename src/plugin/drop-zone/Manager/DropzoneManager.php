@@ -13,9 +13,9 @@ namespace Claroline\DropZoneBundle\Manager;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\AppBundle\Manager\File\TempFileManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\DropZoneBundle\Entity\Criterion;
 use Claroline\DropZoneBundle\Entity\Document;
 use Claroline\DropZoneBundle\Entity\Drop;
@@ -39,8 +39,8 @@ class DropzoneManager
     private $filesDir;
     /** @var ObjectManager */
     private $om;
-    /** @var PlatformConfigurationHandler */
-    private $configHandler;
+    /** @var TempFileManager */
+    private $tempManager;
     /** @var SerializerProvider */
     private $serializer;
     /** @var TeamManager */
@@ -58,7 +58,7 @@ class DropzoneManager
     public function __construct(
         string $filesDir,
         ObjectManager $om,
-        PlatformConfigurationHandler $configHandler,
+        TempFileManager $tempManager,
         EventDispatcherInterface $eventDispatcher,
         TranslatorInterface $translator,
         SerializerProvider $serializer,
@@ -68,7 +68,7 @@ class DropzoneManager
     ) {
         $this->filesDir = $filesDir;
         $this->om = $om;
-        $this->configHandler = $configHandler;
+        $this->tempManager = $tempManager;
         $this->eventDispatcher = $eventDispatcher;
         $this->translator = $translator;
         $this->serializer = $serializer;
@@ -342,7 +342,7 @@ class DropzoneManager
     {
         $ds = DIRECTORY_SEPARATOR;
         $archive = new \ZipArchive();
-        $pathArch = $this->configHandler->getParameter('tmp_dir').$ds.Uuid::uuid4()->toString().'.zip';
+        $pathArch = $this->tempManager->generate();
         $archive->open($pathArch, \ZipArchive::CREATE);
 
         foreach ($drops as $drop) {
@@ -369,7 +369,7 @@ class DropzoneManager
                         break;
                     case Document::DOCUMENT_TYPE_TEXT:
                         $name = 'text_'.Uuid::uuid4()->toString().'.html';
-                        $textPath = $this->configHandler->getParameter('tmp_dir').$ds.$name;
+                        $textPath = $this->tempManager->generate();
                         file_put_contents($textPath, $document->getData());
                         $archive->addFile(
                             $textPath,
@@ -378,7 +378,7 @@ class DropzoneManager
                         break;
                     case Document::DOCUMENT_TYPE_URL:
                         $name = 'url_'.Uuid::uuid4()->toString();
-                        $textPath = $this->configHandler->getParameter('tmp_dir').$ds.$name;
+                        $textPath = $this->tempManager->generate();
                         file_put_contents($textPath, $document->getData());
                         $archive->addFile(
                             $textPath,
