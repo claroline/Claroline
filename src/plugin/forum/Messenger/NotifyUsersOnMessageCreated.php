@@ -11,9 +11,9 @@
 
 namespace Claroline\ForumBundle\Messenger;
 
-use Claroline\AppBundle\Messenger\Message\AsyncMessageInterface;
+use Claroline\AppBundle\Messenger\Message\AsyncHighMessageInterface;
 
-class NotifyUsersOnMessageCreated implements AsyncMessageInterface
+class NotifyUsersOnMessageCreated implements AsyncHighMessageInterface
 {
     private $messageId;
 

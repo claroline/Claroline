@@ -11,9 +11,9 @@
 
 namespace Claroline\SchedulerBundle\Messenger\Message;
 
-use Claroline\AppBundle\Messenger\Message\AsyncMessageInterface;
+use Claroline\AppBundle\Messenger\Message\AsyncLowMessageInterface;
 
-class ExecuteScheduledTask implements AsyncMessageInterface
+class ExecuteScheduledTask implements AsyncLowMessageInterface
 {
     private $scheduledTaskId;
 

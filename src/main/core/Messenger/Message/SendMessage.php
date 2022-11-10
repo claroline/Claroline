@@ -11,9 +11,9 @@
 
 namespace Claroline\CoreBundle\Messenger\Message;
 
-use Claroline\AppBundle\Messenger\Message\AsyncMessageInterface;
+use Claroline\AppBundle\Messenger\Message\AsyncHighMessageInterface;
 
-class SendMessage implements AsyncMessageInterface
+class SendMessage implements AsyncHighMessageInterface
 {
     /** @var string */
     private $content;

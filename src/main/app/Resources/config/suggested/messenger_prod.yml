@@ -2,10 +2,12 @@ framework:
     messenger:
         failure_transport: failed
         transports:
-            default:
+            high_priority:
                 dsn: 'doctrine://default' # overridden in MessengerConfigPass
+                options:
+                    # queue_name is specific to the doctrine transport
+                    queue_name: high
 
-                # default configuration
                 retry_strategy:
                     max_retries: 3
                     # milliseconds delay
@@ -14,9 +16,19 @@ framework:
                     # e.g. 1 second delay, 2 seconds, 4 seconds
                     multiplier: 2
                     max_delay: 0
-                    # override all of this with a service that
-                    # implements Symfony\Component\Messenger\Retry\RetryStrategyInterface
-                    # service: null
+
+            # Create a dedicated transport for the claroline transfer features (eg. workspace copy, transfer plugin)
+            # We don't want these heavy tasks to delay the other app messages
+            low_priority:
+                dsn: 'doctrine://default' # overridden in MessengerConfigPass
+                options:
+                    # queue_name is specific to the doctrine transport
+                    queue_name: low
+
+                retry_strategy:
+                    # we don't want import/copy create more corrupted data
+                    # also there is no chance things will work better if we retry the transfer
+                    max_retries: 0
 
             failed: 'doctrine://default?queue_name=failed'
 
@@ -28,4 +40,5 @@ framework:
                     - 'doctrine_close_connection'
 
         routing:
-            'Claroline\AppBundle\Messenger\Message\AsyncMessageInterface': default
+            'Claroline\AppBundle\Messenger\Message\AsyncHighMessageInterface': high_priority
+            'Claroline\AppBundle\Messenger\Message\AsyncLowMessageInterface': low_priority

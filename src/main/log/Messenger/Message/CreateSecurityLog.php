@@ -2,9 +2,9 @@
 
 namespace Claroline\LogBundle\Messenger\Message;
 
-use Claroline\AppBundle\Messenger\Message\AsyncMessageInterface;
+use Claroline\AppBundle\Messenger\Message\AsyncHighMessageInterface;
 
-class CreateSecurityLog implements AsyncMessageInterface
+class CreateSecurityLog implements AsyncHighMessageInterface
 {
     /** @var \DateTimeInterface */
     private $date;

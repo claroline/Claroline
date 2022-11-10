@@ -2,12 +2,12 @@
 
 namespace Claroline\AgendaBundle\Messenger\Message;
 
-use Claroline\AppBundle\Messenger\Message\AsyncMessageInterface;
+use Claroline\AppBundle\Messenger\Message\AsyncHighMessageInterface;
 
 /**
  * Send an invitation to an event to a user.
  */
-class SendEventInvitation implements AsyncMessageInterface
+class SendEventInvitation implements AsyncHighMessageInterface
 {
     /**
      * The auto id of the EventInvitation to be sent.
