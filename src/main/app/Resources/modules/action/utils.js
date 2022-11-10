@@ -10,12 +10,10 @@ import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 const GROUP_SEPARATOR  = '|'
 const ACTION_SEPARATOR = ' '
 
-// TODO : use reselect to memoize actions & toolbars config
-
 function createActionDefinition(action) {
   // compute id based on received config
   let actionDef = {
-    id: action.id || (typeof action.label === 'string' && toKey(action.label)) || action.name || undefined
+    id: action.id || action.name || (typeof action.label === 'string' && toKey(action.label)) || undefined
   }
 
   // manage confirmation
@@ -142,11 +140,16 @@ function buildToolbar(toolbarConfig, actions = [], scope) {
   if (0 < rest.length) {
     // append remaining actions to the configured toolbar (in a new group)
     if (hasMore) {
-      // merge all remaining actions in a menu
+      // merge all remaining actions in a menu (avoid the more menu if it remains only one item)
       const groupIndex = toolbar.findIndex(group => -1 !== group.findIndex(action => 'more' === action.name))
       const actionIndex = toolbar[groupIndex].findIndex(action => 'more' === action.name)
 
-      toolbar[groupIndex][actionIndex].menu.items = rest
+      if (1 !== rest.length) {
+        toolbar[groupIndex][actionIndex].menu.items = rest
+      } else {
+        // replace more action
+        toolbar[groupIndex][actionIndex] = rest.pop()
+      }
     } else {
       // append all remaining actions in a new group
       toolbar.push(
