@@ -1,5 +1,0 @@
-{
-    "resource-icap_lesson-chapter_create": "heeft hoofdstuk %chapter% in cursus %lesson% gemaakt.",
-    "resource-icap_lesson-chapter_update": "heeft hoofdstuk %chapter% in cursus %lesson% bijgewerkt.",
-    "resource-icap_lesson-user_tagged": "heeft u geciteerd in hoofdstuk %chapter% in cursus %lesson%."
-}
