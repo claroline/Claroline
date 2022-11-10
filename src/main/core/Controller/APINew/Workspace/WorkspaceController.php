@@ -21,6 +21,7 @@ use Claroline\CoreBundle\Controller\APINew\Model\HasGroupsTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasOrganizationsTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasRolesTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasUsersTrait;
+use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -127,12 +128,11 @@ class WorkspaceController extends AbstractCrudController
     {
         return new JsonResponse($this->finder->search(
             Workspace::class,
-            array_merge($request->query->all(), ['hiddenFilters' => [
+            array_merge($request->query->all(), ['hiddenFilters' => array_merge($this->getDefaultHiddenFilters(), [
                 'displayable' => true,
                 'model' => false,
                 'selfRegistration' => true,
-                'sameOrganization' => true,
-            ]]),
+            ])]),
             $this->getOptions()['list']
         ));
     }
@@ -157,7 +157,7 @@ class WorkspaceController extends AbstractCrudController
             Workspace::class,
             array_merge($request->query->all(), ['hiddenFilters' => [
                 'model' => false,
-                'user' => $this->tokenStorage->getToken()->getUser()->getId(),
+                'user' => $this->tokenStorage->getToken()->getUser()->getUuid(),
             ]]),
             $this->getOptions()['list']
         ));
@@ -181,10 +181,10 @@ class WorkspaceController extends AbstractCrudController
 
         return new JsonResponse($this->finder->search(
             Workspace:: class,
-            array_merge($request->query->all(), ['hiddenFilters' => [
+            array_merge($request->query->all(), ['hiddenFilters' => array_merge($this->getDefaultHiddenFilters(), [
                 'administrated' => true,
                 'model' => false,
-            ]]),
+            ])]),
             $this->getOptions()['list']
         ));
     }
@@ -207,9 +207,9 @@ class WorkspaceController extends AbstractCrudController
 
         return new JsonResponse($this->finder->search(
             Workspace:: class,
-            array_merge($request->query->all(), ['hiddenFilters' => [
+            array_merge($request->query->all(), ['hiddenFilters' => array_merge($this->getDefaultHiddenFilters(), [
                 'model' => true,
-            ]]),
+            ])]),
             $this->getOptions()['list']
         ));
     }
@@ -232,10 +232,10 @@ class WorkspaceController extends AbstractCrudController
 
         return new JsonResponse($this->finder->search(
             Workspace:: class,
-            array_merge($request->query->all(), ['hiddenFilters' => [
+            array_merge($request->query->all(), ['hiddenFilters' => array_merge($this->getDefaultHiddenFilters(), [
                 'administrated' => true,
                 'archived' => true,
-            ]]),
+            ])]),
             $this->getOptions()['list']
         ));
     }
@@ -270,6 +270,8 @@ class WorkspaceController extends AbstractCrudController
     }
 
     /**
+     * Creates a new Workspace from a Claroline archive.
+     *
      * @Route("/import", name="apiv2_workspace_import", methods={"POST"})
      */
     public function importAction(Request $request): JsonResponse
@@ -294,6 +296,8 @@ class WorkspaceController extends AbstractCrudController
     }
 
     /**
+     * Exports a Workspace into a Claroline archive.
+     *
      * @ApiDoc(
      *     description="Export the workspace as a zip archive.",
      *     parameters={
@@ -521,5 +525,21 @@ class WorkspaceController extends AbstractCrudController
         }
 
         return new JsonResponse(null, 204);
+    }
+
+    protected function getDefaultHiddenFilters(): array
+    {
+        if (!$this->authorization->isGranted('ROLE_ADMIN')) {
+            $user = $this->tokenStorage->getToken()->getUser();
+            if ($user instanceof User) {
+                return [
+                    'organization' => array_map(function (Organization $organization) {
+                        return $organization->getUuid();
+                    }, $user->getOrganizations()),
+                ];
+            }
+        }
+
+        return [];
     }
 }
