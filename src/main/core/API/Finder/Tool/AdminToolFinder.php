@@ -34,12 +34,8 @@ class AdminToolFinder extends AbstractFinder
         return AdminTool::class;
     }
 
-    public function configureQueryBuilder(
-        QueryBuilder $qb,
-        array $searches = [],
-        array $sortBy = null,
-        array $options = ['count' => false, 'page' => 0, 'limit' => -1]
-    ) {
+    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null): QueryBuilder
+    {
         $bundles = $this->pluginManager->getEnabled();
 
         // only grab tools from enabled plugins

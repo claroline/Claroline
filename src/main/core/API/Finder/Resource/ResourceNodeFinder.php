@@ -40,7 +40,7 @@ class ResourceNodeFinder extends AbstractFinder
         return ResourceNode::class;
     }
 
-    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
+    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null): QueryBuilder
     {
         $qb->join('obj.resourceType', 'ort');
         $qb->join('obj.workspace', 'ow');
@@ -155,7 +155,7 @@ class ResourceNodeFinder extends AbstractFinder
         return $qb;
     }
 
-    public function getExtraFieldMapping()
+    protected function getExtraFieldMapping(): array
     {
         return [
             'meta.updated' => 'creationDate',

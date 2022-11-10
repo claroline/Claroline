@@ -22,7 +22,7 @@ class EventGroupFinder extends AbstractFinder
         return EventGroup::class;
     }
 
-    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
+    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null): QueryBuilder
     {
         $groupJoin = false;
         foreach ($searches as $filterName => $filterValue) {

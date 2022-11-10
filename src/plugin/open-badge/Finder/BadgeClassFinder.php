@@ -38,7 +38,7 @@ class BadgeClassFinder extends AbstractFinder
         return BadgeClass::class;
     }
 
-    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = [])
+    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null): QueryBuilder
     {
         /** @var User $user */
         $user = $this->tokenStorage->getToken()->getUser();

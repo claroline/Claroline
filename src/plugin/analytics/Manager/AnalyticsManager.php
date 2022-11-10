@@ -23,7 +23,6 @@ use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Event\Log\LogResourceExportEvent;
 use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceToolReadEvent;
 use Claroline\CoreBundle\Manager\FileManager;
@@ -244,70 +243,5 @@ class AnalyticsManager
         }
 
         return $filters;
-    }
-
-    public function getTopActions(array $finderParams = [])
-    {
-        $finderParams['filters'] = isset($finderParams['filters']) ? $finderParams['filters'] : [];
-        $topType = isset($finderParams['filters']['type']) ? $finderParams['filters']['type'] : 'top_users_connections';
-        unset($finderParams['filters']['type']);
-        $organizations = isset($finderParams['hiddenFilters']['organization']) ?
-            $finderParams['hiddenFilters']['organization'] :
-            null;
-        $finderParams['limit'] = isset($finderParams['limit']) ? intval($finderParams['limit']) : 10;
-        switch ($topType) {
-            case 'top_extension':
-                $listData = $this->resourceRepo->findMimeTypesWithMostResources($finderParams['limit'], $organizations);
-                break;
-            case 'top_workspaces_resources':
-                $listData = $this->workspaceRepo->findWorkspacesWithMostResources($finderParams['limit'], $organizations);
-                break;
-            case 'top_workspaces_connections':
-                $finderParams['filters']['action'] = LogWorkspaceToolReadEvent::ACTION;
-                $listData = $this->topWorkspaceByAction($finderParams);
-                break;
-            case 'top_resources_views':
-                $finderParams['filters']['action'] = LogResourceReadEvent::ACTION;
-                $listData = $this->topResourcesByAction($finderParams);
-                break;
-            case 'top_resources_downloads':
-                $finderParams['filters']['action'] = LogResourceExportEvent::ACTION;
-                $listData = $this->topResourcesByAction($finderParams);
-                break;
-            case 'top_users_workspaces_enrolled':
-                $listData = $this->userManager->getUsersEnrolledInMostWorkspaces($finderParams['limit'], $organizations);
-                break;
-            case 'top_users_workspaces_owners':
-                $listData = $this->userManager->getUsersOwnersOfMostWorkspaces($finderParams['limit'], $organizations);
-                break;
-            case 'top_media_views':
-                $finderParams['filters']['action'] = LogResourceReadEvent::ACTION;
-                $listData = $this->topResourcesByAction($finderParams, true);
-                break;
-            case 'top_users_connections':
-            default:
-                $finderParams['filters']['action'] = 'user-login';
-                $finderParams['sortBy'] = '-actions';
-                $listData = $this->logManager->getUserActionsList($finderParams);
-                $listData = $listData['data'];
-                break;
-        }
-
-        foreach ($listData as $idx => &$data) {
-            if (!isset($data['id'])) {
-                $data['id'] = "top-{$idx}";
-            }
-        }
-
-        return [
-            'data' => $listData,
-            'filters' => [
-                ['property' => 'type', 'value' => $topType],
-            ],
-            'page' => 0,
-            'pageSize' => $finderParams['limit'],
-            'sortBy' => null,
-            'totalResults' => count($listData),
-        ];
     }
 }

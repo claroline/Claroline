@@ -1,6 +1,6 @@
 plugin:
-  resources:
-    - name: innova_path
-      class: Innova\PathBundle\Entity\Path\Path
-      tags: [structure, content, evaluation]
-      exportable: true
+    resources:
+        - name: innova_path
+          class: Innova\PathBundle\Entity\Path\Path
+          tags: [structure, content, evaluation]
+          exportable: true

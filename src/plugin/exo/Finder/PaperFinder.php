@@ -25,7 +25,7 @@ class PaperFinder extends AbstractFinder
         return Paper::class;
     }
 
-    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
+    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null): QueryBuilder
     {
         $userJoin = false;
         if (!array_key_exists('userDisabled', $searches) && !array_key_exists('user', $searches)) {

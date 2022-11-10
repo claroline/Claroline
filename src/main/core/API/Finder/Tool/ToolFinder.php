@@ -33,7 +33,7 @@ class ToolFinder extends AbstractFinder
         return Tool::class;
     }
 
-    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
+    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null): QueryBuilder
     {
         $bundles = $this->pluginManager->getEnabled();
 

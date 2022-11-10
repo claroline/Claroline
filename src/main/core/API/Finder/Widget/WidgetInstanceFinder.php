@@ -15,6 +15,9 @@ use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Doctrine\ORM\QueryBuilder;
 
+/**
+ * @deprecated this should not exist (this is only for high level search)
+ */
 class WidgetInstanceFinder extends AbstractFinder
 {
     public static function getClass(): string
@@ -22,7 +25,7 @@ class WidgetInstanceFinder extends AbstractFinder
         return WidgetInstance::class;
     }
 
-    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
+    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null): QueryBuilder
     {
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {

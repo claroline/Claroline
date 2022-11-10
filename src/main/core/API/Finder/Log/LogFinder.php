@@ -10,10 +10,8 @@ class LogFinder extends AbstractFinder
 {
     /**
      * The queried object is already named "obj".
-     *
-     * @return QueryBuilder
      */
-    public function configureQueryBuilder(QueryBuilder $qb, array $searches, array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
+    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null): QueryBuilder
     {
         $qb->leftJoin('obj.resourceType', 'ort');
         $userJoin = false;
@@ -27,11 +25,6 @@ class LogFinder extends AbstractFinder
                     }
                     $qb->setParameter($filterName, $filterValue);
                     break;
-                /*case 'workspace':
-                    $qb->join('obj.workspace', 'ws');
-                    $qb->andWhere("ws.uuid = :{$filterName}");
-                    $qb->setParameter($filterName, $filterValue);
-                    break;*/
                 case 'doer':
                     if (!$userJoin) {
                         $userJoin = true;

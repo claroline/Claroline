@@ -35,14 +35,8 @@ class FinderProvider
 
     /**
      * Gets a registered finder instance.
-     *
-     * @param string $class
-     *
-     * @return FinderInterface
-     *
-     * @throws \Exception
      */
-    public function get($class)
+    public function get(string $class): FinderInterface
     {
         $finders = $this->finders instanceof \Traversable ? iterator_to_array($this->finders) : $this->finders;
         if (!isset($finders[$class])) {
@@ -64,12 +58,8 @@ class FinderProvider
 
     /**
      * Builds and fires the query for a given class. The result will be serialized afterwards.
-     *
-     * @param string $class
-     *
-     * @return array
      */
-    public function search($class, array $finderParams = [], array $serializerOptions = [])
+    public function search(string $class, array $finderParams = [], array $serializerOptions = []): array
     {
         $results = $this->searchEntities($class, $finderParams);
 
@@ -80,12 +70,7 @@ class FinderProvider
         ]);
     }
 
-    /**
-     * @param $class
-     *
-     * @return array
-     */
-    public function searchEntities($class, array $finderParams = [])
+    public function searchEntities(string $class, array $finderParams = []): array
     {
         $queryParams = self::parseQueryParams($finderParams);
         $page = $queryParams['page'];
@@ -118,14 +103,13 @@ class FinderProvider
     /**
      * Builds and fires the query for a given class. There will be no serialization here.
      *
-     * @param string $class
-     * @param int    $page
-     * @param int    $limit
-     * @param bool   $count
+     * @param int  $page
+     * @param int  $limit
+     * @param bool $count
      *
      * @return mixed
      */
-    public function fetch($class, array $filters = [], array $sortBy = null, $page = 0, $limit = -1, $count = false)
+    public function fetch(string $class, array $filters = [], array $sortBy = null, $page = 0, $limit = -1, $count = false)
     {
         try {
             return $this->get($class)->find($filters, $sortBy, $page, $limit, $count);
@@ -141,10 +125,8 @@ class FinderProvider
     /**
      * Parses query params to their appropriate filter values.
      * Should not be public. Only used by old logs queries.
-     *
-     * @return array
      */
-    public static function parseQueryParams(array $finderParams = [])
+    public static function parseQueryParams(array $finderParams = []): array
     {
         $filters = isset($finderParams['filters']) ? self::parseFilters($finderParams['filters']) : [];
         $sortBy = isset($finderParams['sortBy']) ? self::parseSortBy($finderParams['sortBy']) : null;
@@ -165,10 +147,7 @@ class FinderProvider
         ];
     }
 
-    /**
-     * Should not be public. Only used by old logs queries.
-     */
-    public static function formatPaginatedData($data, $total, $page, $limit, $filters, $sortBy)
+    private static function formatPaginatedData($data, $total, $page, $limit, $filters, $sortBy): array
     {
         return [
             'data' => $data,
@@ -181,13 +160,9 @@ class FinderProvider
     }
 
     /**
-     * @param string $sortBy
-     *
      * @todo : we should make UI and API formats uniform to avoid such transformations
-     *
-     * @return array
      */
-    private static function parseSortBy($sortBy)
+    private static function parseSortBy(?string $sortBy): array
     {
         // default values
         $property = null;
@@ -211,10 +186,8 @@ class FinderProvider
 
     /**
      * Properly convert the filters (boolean or integer for instance when they're displayed as string).
-     *
-     * @return array
      */
-    private static function parseFilters(array $filters)
+    private static function parseFilters(array $filters): array
     {
         $parsed = [];
         foreach ($filters as $property => $value) {
@@ -247,10 +220,8 @@ class FinderProvider
 
     /**
      * @todo : we should make UI and API formats uniform to avoid such transformations
-     *
-     * @return array
      */
-    private static function decodeFilters(array $filters)
+    private static function decodeFilters(array $filters): array
     {
         $decodedFilters = [];
         foreach ($filters as $property => $value) {

@@ -38,7 +38,7 @@ class AssertionFinder extends AbstractFinder
         return Assertion::class;
     }
 
-    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = [])
+    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null): QueryBuilder
     {
         $userJoin = false;
         $workspaceJoin = false;

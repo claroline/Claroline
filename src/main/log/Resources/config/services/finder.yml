@@ -1,20 +1,12 @@
 services:
-    _instanceof:
-        Claroline\AppBundle\API\Finder\AbstractFinder:
-            tags: [ claroline.finder ]
-            calls:
-                - method: setObjectManager
-                  arguments:
-                      - '@Claroline\AppBundle\Persistence\ObjectManager'
-                - method: setEntityManager
-                  arguments:
-                      - '@doctrine.orm.entity_manager'
-                - method: setEventDispatcher
-                  arguments:
-                      - '@Claroline\AppBundle\Event\StrictDispatcher'
+    Claroline\LogBundle\Finder\SecurityLogFinder:
+        parent: Claroline\AppBundle\API\Finder\AbstractFinder
+        tags: [ claroline.finder ]
 
-    Claroline\LogBundle\Finder\SecurityLogFinder: ~
+    Claroline\LogBundle\Finder\MessageLogFinder:
+        parent: Claroline\AppBundle\API\Finder\AbstractFinder
+        tags: [ claroline.finder ]
 
-    Claroline\LogBundle\Finder\MessageLogFinder: ~
-
-    Claroline\LogBundle\Finder\FunctionalLogFinder: ~
+    Claroline\LogBundle\Finder\FunctionalLogFinder:
+        parent: Claroline\AppBundle\API\Finder\AbstractFinder
+        tags: [ claroline.finder ]

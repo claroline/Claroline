@@ -1,27 +1,16 @@
 services:
-    _defaults:
-        autowire: false
-        autoconfigure: false
-        public: true
+    Claroline\ForumBundle\Finder\ForumFinder:
+        parent: Claroline\AppBundle\API\Finder\AbstractFinder
+        tags: [ claroline.finder ]
 
-    _instanceof:
-        Claroline\AppBundle\API\Finder\AbstractFinder:
-            tags: [claroline.finder]
-            calls:
-                - method: setObjectManager
-                  arguments:
-                     - '@Claroline\AppBundle\Persistence\ObjectManager'
-                - method: setEntityManager
-                  arguments:
-                     - '@doctrine.orm.entity_manager'
-                - method: setEventDispatcher
-                  arguments:
-                     - '@Claroline\AppBundle\Event\StrictDispatcher'
+    Claroline\ForumBundle\Finder\MessageFinder:
+        parent: Claroline\AppBundle\API\Finder\AbstractFinder
+        tags: [ claroline.finder ]
 
-    Claroline\ForumBundle\Finder\ForumFinder: ~
+    Claroline\ForumBundle\Finder\SubjectFinder:
+        parent: Claroline\AppBundle\API\Finder\AbstractFinder
+        tags: [ claroline.finder ]
 
-    Claroline\ForumBundle\Finder\MessageFinder: ~
-
-    Claroline\ForumBundle\Finder\SubjectFinder: ~
-
-    Claroline\ForumBundle\Finder\UserFinder: ~
+    Claroline\ForumBundle\Finder\UserFinder:
+        parent: Claroline\AppBundle\API\Finder\AbstractFinder
+        tags: [ claroline.finder ]

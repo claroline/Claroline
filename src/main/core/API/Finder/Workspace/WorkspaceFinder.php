@@ -38,7 +38,7 @@ class WorkspaceFinder extends AbstractFinder
         return Workspace::class;
     }
 
-    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
+    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null): QueryBuilder
     {
         // force non archived workspaces only if not explicitly requested
         if (!array_key_exists('archived', $searches)) {
@@ -104,7 +104,7 @@ class WorkspaceFinder extends AbstractFinder
         return $qb;
     }
 
-    public function getExtraFieldMapping()
+    protected function getExtraFieldMapping(): array
     {
         return [
             'meta.personal' => 'personal',
