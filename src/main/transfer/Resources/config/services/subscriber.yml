@@ -4,7 +4,7 @@ services:
             - '@security.token_storage'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\Crud'
-            - '%claroline.param.import_log_dir%'
+            - '%claroline.transfer.logs_dir%'
         tags:
             - { name: kernel.event_subscriber }
 
@@ -13,8 +13,8 @@ services:
             - '@security.token_storage'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\Crud'
-            - '%claroline.param.import_log_dir%'
-            - '%claroline.param.files_directory%'
+            - '%claroline.transfer.files_dir%'
+            - '%claroline.transfer.logs_dir%'
         tags:
             - { name: kernel.event_subscriber }
 

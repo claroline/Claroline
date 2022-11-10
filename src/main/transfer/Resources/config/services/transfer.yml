@@ -15,7 +15,7 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\AppBundle\API\SchemaProvider'
-            - '%claroline.param.import_log_dir%'
+            - '%claroline.transfer.logs_dir%'
         calls:
             - method: setActions
               arguments:

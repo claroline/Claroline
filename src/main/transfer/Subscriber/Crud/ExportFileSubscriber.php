@@ -87,11 +87,13 @@ class ExportFileSubscriber implements EventSubscriberInterface
         $fs = new FileSystem();
 
         // delete log file
-        $fs->remove($this->logDir.DIRECTORY_SEPARATOR.$object->getUuid());
+        if (file_exists($this->logDir.DIRECTORY_SEPARATOR.$object->getUuid())) {
+            $fs->remove($this->logDir.DIRECTORY_SEPARATOR.$object->getUuid());
+        }
 
         // delete exported file
-        if (file_exists($this->filesDir.DIRECTORY_SEPARATOR.'transfer'.DIRECTORY_SEPARATOR.$object->getUuid())) {
-            $fs->remove($this->filesDir.DIRECTORY_SEPARATOR.'transfer'.DIRECTORY_SEPARATOR.$object->getUuid());
+        if (file_exists($this->filesDir.DIRECTORY_SEPARATOR.$object->getUuid())) {
+            $fs->remove($this->filesDir.DIRECTORY_SEPARATOR.$object->getUuid());
         }
 
         // delete scheduled tasks if any

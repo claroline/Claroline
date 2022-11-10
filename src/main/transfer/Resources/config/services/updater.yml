@@ -9,3 +9,8 @@ services:
     Claroline\TransferBundle\Installation\Updater\Updater130500:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
+
+    Claroline\TransferBundle\Installation\Updater\Updater130601:
+        arguments:
+            - '%kernel.logs_dir%'
+            - '%claroline.transfer.logs_dir%'
