@@ -41,6 +41,8 @@ class TransferManager
     /** @var FileManager */
     private $fileManager;
     /** @var string */
+    private $filesDir;
+    /** @var string */
     private $logDir;
 
     public function __construct(
@@ -52,6 +54,7 @@ class TransferManager
         ExportProvider $exporter,
         importProvider $importer,
         FileManager $fileManager,
+        string $filesDir,
         string $logDir
     ) {
         $this->tokenStorage = $tokenStorage;
@@ -62,6 +65,7 @@ class TransferManager
         $this->exporter = $exporter;
         $this->importer = $importer;
         $this->fileManager = $fileManager;
+        $this->filesDir = $filesDir;
         $this->logDir = $logDir;
     }
 
@@ -138,12 +142,11 @@ class TransferManager
     {
         $fs = new FileSystem();
 
-        $exportDir = $this->fileManager->getDirectory().DIRECTORY_SEPARATOR.'transfer'.DIRECTORY_SEPARATOR;
-        if (!$fs->exists($exportDir)) {
-            $fs->mkdir($exportDir);
+        if (!$fs->exists($this->filesDir)) {
+            $fs->mkdir($this->filesDir);
         }
 
-        $exportPath = $exportDir.$exportFile->getUuid();
+        $exportPath = $this->filesDir.$exportFile->getUuid();
         if ($fs->exists($exportPath)) {
             $fs->remove($exportPath);
         }

@@ -1,0 +1,8 @@
+parameters:
+    # The directory used to store the imported/generated files
+    claroline.transfer.files_dir: "%claroline.param.files_directory%/transfer"
+
+    # The directory used to store the log for imports
+    # NB. We don't store it in the default symfony logs because logs are exposed to the users in the ui and
+    # are part of the feature, so we need more persistence than standard app logs
+    claroline.transfer.logs_dir:  "%claroline.transfer.files_dir%/log"
