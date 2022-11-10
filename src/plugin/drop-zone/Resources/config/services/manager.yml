@@ -24,7 +24,7 @@ services:
         arguments:
             - '%claroline.param.files_directory%'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+            - '@Claroline\AppBundle\Manager\File\TempFileManager'
             - '@event_dispatcher'
             - '@translator'
             - '@Claroline\AppBundle\API\SerializerProvider'

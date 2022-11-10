@@ -28,6 +28,7 @@ services:
 
     Claroline\AppBundle\Manager\File\TempFileManager:
         arguments:
+            - '%claroline.tmp_dir%'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
 
     Claroline\AppBundle\Manager\TermsOfServiceManager:

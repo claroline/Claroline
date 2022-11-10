@@ -22,13 +22,18 @@ class MaxMindGeoIpDatabaseDownloader
     private $filesystem;
     private $tempDir;
 
-    public function __construct(?LoggerInterface $logger = null, ?HttpClientInterface $httpClient = null, ?Filesystem $filesystem = null, PlatformConfigurationHandler $config)
-    {
+    public function __construct(
+        PlatformConfigurationHandler $config,
+        string $tempDir,
+        ?LoggerInterface $logger = null,
+        ?HttpClientInterface $httpClient = null,
+        ?Filesystem $filesystem = null
+    ) {
         $this->licenseKey = $config->getParameter('geoip.maxmind_license_key');
         $this->logger = $logger ?? new NullLogger();
         $this->httpClient = $httpClient ?? HttpClient::create();
         $this->filesystem = $filesystem ?? new Filesystem();
-        $this->tempDir = $config->getParameter('server.tmp_dir') ?? sys_get_temp_dir();
+        $this->tempDir = $tempDir;
     }
 
     public function downloadDatabase(string $destinationDir, bool $catchExceptions = true): void

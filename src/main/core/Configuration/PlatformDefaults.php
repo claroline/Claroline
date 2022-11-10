@@ -116,9 +116,6 @@ class PlatformDefaults implements ParameterProviderInterface
                 'enabled' => false,
                 'version' => 3,
             ],
-            'server' => [
-                'tmp_dir' => sys_get_temp_dir(),
-            ],
             'auto_enable_notifications' => [
                 'resource-create' => ['visible'],
                 'resource-publish' => ['visible'],

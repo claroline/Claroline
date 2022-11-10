@@ -59,7 +59,6 @@ class LegacyParametersMapping implements LegacyParametersMappingInterface
             'ssl_enabled' => 'ssl.enabled',
             'ssl_version_value' => 'ssl.version',
             'enable_opengraph' => 'text.enable_opengraph',
-            'tmp_dir' => 'server.tmp_dir',
             'resource_icon_set' => 'display.resource_icon_set',
             'direct_third_party_authentication' => 'authentication.direct_third_party',
             'platform_log_enabled' => 'logs.enabled',

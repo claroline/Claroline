@@ -2,27 +2,27 @@
 
 namespace Claroline\AppBundle\Manager\File;
 
-use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\File;
 
 class TempFileManager
 {
-    /** @var PlatformConfigurationHandler */
-    private $config;
+    /** @var string */
+    private $tmpDir;
 
     /**
      * The list of current temp files.
+     * This is used to purge the temp files created during the process of the current request.
      *
      * @var array
      */
     private $files = [];
 
     public function __construct(
-        PlatformConfigurationHandler $config)
-    {
-        $this->config = $config;
+        string $tmpDir
+    ) {
+        $this->tmpDir = $tmpDir;
     }
 
     /**
@@ -30,7 +30,12 @@ class TempFileManager
      */
     public function getDirectory(): string
     {
-        return $this->config->getParameter('tmp_dir');
+        $fs = new Filesystem();
+        if (!$fs->exists($this->tmpDir)) {
+            $fs->mkdir($this->tmpDir);
+        }
+
+        return $this->tmpDir;
     }
 
     /**
