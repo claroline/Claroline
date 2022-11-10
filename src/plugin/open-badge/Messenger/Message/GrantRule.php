@@ -2,9 +2,9 @@
 
 namespace Claroline\OpenBadgeBundle\Messenger\Message;
 
-use Claroline\AppBundle\Messenger\Message\AsyncMessageInterface;
+use Claroline\AppBundle\Messenger\Message\AsyncHighMessageInterface;
 
-class GrantRule implements AsyncMessageInterface
+class GrantRule implements AsyncHighMessageInterface
 {
     /** @var int */
     private $ruleId;

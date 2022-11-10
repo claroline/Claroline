@@ -2,9 +2,9 @@
 
 namespace Claroline\EvaluationBundle\Messenger\Message;
 
-use Claroline\AppBundle\Messenger\Message\AsyncMessageInterface;
+use Claroline\AppBundle\Messenger\Message\AsyncHighMessageInterface;
 
-class RecomputeWorkspaceEvaluations implements AsyncMessageInterface
+class RecomputeWorkspaceEvaluations implements AsyncHighMessageInterface
 {
     /** @var int */
     private $workspaceId;

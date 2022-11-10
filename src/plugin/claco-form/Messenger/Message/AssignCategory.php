@@ -2,9 +2,9 @@
 
 namespace Claroline\ClacoFormBundle\Messenger\Message;
 
-use Claroline\AppBundle\Messenger\Message\AsyncMessageInterface;
+use Claroline\AppBundle\Messenger\Message\AsyncHighMessageInterface;
 
-class AssignCategory implements AsyncMessageInterface
+class AssignCategory implements AsyncHighMessageInterface
 {
     /** @var int */
     private $categoryId;

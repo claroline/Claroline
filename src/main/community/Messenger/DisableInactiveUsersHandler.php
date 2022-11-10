@@ -9,12 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Messenger;
+namespace Claroline\CommunityBundle\Messenger;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CommunityBundle\Messenger\Message\DisableInactiveUsers;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\UserManager;
-use Claroline\CoreBundle\Messenger\Message\DisableInactiveUsers;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class DisableInactiveUsersHandler implements MessageHandlerInterface

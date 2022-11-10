@@ -11,12 +11,12 @@
 
 namespace Claroline\CoreBundle\Messenger\Message;
 
-use Claroline\AppBundle\Messenger\Message\AsyncMessageInterface;
+use Claroline\AppBundle\Messenger\Message\AsyncLowMessageInterface;
 
 /**
  * Import a workspace from a Claroline archive.
  */
-class ImportWorkspace implements AsyncMessageInterface
+class ImportWorkspace implements AsyncLowMessageInterface
 {
     /** @var string */
     private $archivePath;

@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Messenger\Message;
+namespace Claroline\CommunityBundle\Messenger\Message;
 
-use Claroline\AppBundle\Messenger\Message\AsyncMessageInterface;
+use Claroline\AppBundle\Messenger\Message\AsyncLowMessageInterface;
 
 /**
  * Disable all users which have not logged in since the selected date.
  */
-class DisableInactiveUsers implements AsyncMessageInterface
+class DisableInactiveUsers implements AsyncLowMessageInterface
 {
     /** @var \DateTimeInterface */
     private $lastActivity;

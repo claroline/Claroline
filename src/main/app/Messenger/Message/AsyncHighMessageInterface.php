@@ -13,8 +13,8 @@ namespace Claroline\AppBundle\Messenger\Message;
 
 /**
  * Classes implementing this interface will
- * subscribe to the asynchronous transport.
+ * subscribe to the asynchronous high priority transport.
  */
-interface AsyncMessageInterface
+interface AsyncHighMessageInterface
 {
 }

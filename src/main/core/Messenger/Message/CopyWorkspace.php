@@ -11,12 +11,12 @@
 
 namespace Claroline\CoreBundle\Messenger\Message;
 
-use Claroline\AppBundle\Messenger\Message\AsyncMessageInterface;
+use Claroline\AppBundle\Messenger\Message\AsyncLowMessageInterface;
 
 /**
  * Copy a workspace.
  */
-class CopyWorkspace implements AsyncMessageInterface
+class CopyWorkspace implements AsyncLowMessageInterface
 {
     /**
      * The auto increment ID of the workspace to copy.

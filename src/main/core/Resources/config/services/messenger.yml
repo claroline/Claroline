@@ -2,11 +2,6 @@ services:
     _defaults:
         tags: [messenger.message_handler]
 
-    Claroline\CoreBundle\Messenger\DisableInactiveUsersHandler:
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CoreBundle\Manager\UserManager'
-
     Claroline\CoreBundle\Messenger\ImportWorkspaceHandler:
         arguments:
             - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'

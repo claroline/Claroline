@@ -22,16 +22,22 @@ class MessengerConfigPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
-        if (!$container->hasDefinition('messenger.transport.default')) {
+        if (!$container->hasDefinition('messenger.transport.high_priority')
+            || !$container->hasDefinition('messenger.transport.low_priority')) {
             throw new \LogicException('Unable to configure messenger, make sure it is correctly configured.');
         }
 
         /** @var PlatformConfigurationHandler $platformConfig */
         $platformConfig = $container->get(PlatformConfigurationHandler::class);
-        $transportDefinition = $container->getDefinition('messenger.transport.default');
-
-        if (!$platformConfig->getParameter('job_queue.enabled')) {
-            $transportDefinition->replaceArgument(0, 'sync://');
+        if ($platformConfig->getParameter('job_queue.enabled')) {
+            // messenger is enabled nothing to do
+            return;
         }
+
+        $defaultTransportDef = $container->getDefinition('messenger.transport.high_priority');
+        $defaultTransportDef->replaceArgument(0, 'sync://');
+
+        $transferTransportDef = $container->getDefinition('messenger.transport.low_priority');
+        $transferTransportDef->replaceArgument(0, 'sync://');
     }
 }

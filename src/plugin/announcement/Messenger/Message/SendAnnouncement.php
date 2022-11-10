@@ -2,9 +2,9 @@
 
 namespace Claroline\AnnouncementBundle\Messenger\Message;
 
-use Claroline\AppBundle\Messenger\Message\AsyncMessageInterface;
+use Claroline\AppBundle\Messenger\Message\AsyncHighMessageInterface;
 
-class SendAnnouncement implements AsyncMessageInterface
+class SendAnnouncement implements AsyncHighMessageInterface
 {
     /** @var string */
     private $content;

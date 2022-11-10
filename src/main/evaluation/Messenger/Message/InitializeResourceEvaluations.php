@@ -2,10 +2,10 @@
 
 namespace Claroline\EvaluationBundle\Messenger\Message;
 
-use Claroline\AppBundle\Messenger\Message\AsyncMessageInterface;
+use Claroline\AppBundle\Messenger\Message\AsyncHighMessageInterface;
 use Claroline\EvaluationBundle\Entity\AbstractEvaluation;
 
-class InitializeResourceEvaluations implements AsyncMessageInterface
+class InitializeResourceEvaluations implements AsyncHighMessageInterface
 {
     /** @var int */
     private $resourceNodeId;
