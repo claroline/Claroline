@@ -22,7 +22,7 @@ class ContactFinder extends AbstractFinder
         return Contact::class;
     }
 
-    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
+    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null): QueryBuilder
     {
         $qb->join('obj.user', 'u');
         $qb->join('obj.contact', 'c');

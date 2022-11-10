@@ -1,21 +1,4 @@
 services:
-  _defaults:
-    autowire: false
-    autoconfigure: false
-    public: true
-
-  _instanceof:
-    Claroline\AppBundle\API\Finder\AbstractFinder:
-      tags: [claroline.finder]
-      calls:
-        - method: setObjectManager
-          arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-        - method: setEntityManager
-          arguments:
-            - '@doctrine.orm.entity_manager'
-        - method: setEventDispatcher
-          arguments:
-            - '@Claroline\AppBundle\Event\StrictDispatcher'
-
-  Claroline\HomeBundle\Finder\HomeTabFinder: ~
+    Claroline\HomeBundle\Finder\HomeTabFinder:
+        parent: Claroline\AppBundle\API\Finder\AbstractFinder
+        tags: [ claroline.finder ]

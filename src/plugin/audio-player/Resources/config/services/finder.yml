@@ -1,23 +1,8 @@
 services:
-    _defaults:
-        autowire: false
-        autoconfigure: false
-        public: true
+    Claroline\AudioPlayerBundle\Finder\Resource\SectionCommentFinder:
+        parent: Claroline\AppBundle\API\Finder\AbstractFinder
+        tags: [ claroline.finder ]
 
-    _instanceof:
-        Claroline\AppBundle\API\Finder\AbstractFinder:
-            tags: [claroline.finder]
-            calls:
-                - method: setObjectManager
-                  arguments:
-                     - '@Claroline\AppBundle\Persistence\ObjectManager'
-                - method: setEntityManager
-                  arguments:
-                     - '@doctrine.orm.entity_manager'
-                - method: setEventDispatcher
-                  arguments:
-                     - '@Claroline\AppBundle\Event\StrictDispatcher'
-
-    Claroline\AudioPlayerBundle\Finder\Resource\SectionCommentFinder: ~
-
-    Claroline\AudioPlayerBundle\Finder\Resource\SectionFinder: ~
+    Claroline\AudioPlayerBundle\Finder\Resource\SectionFinder:
+        parent: Claroline\AppBundle\API\Finder\AbstractFinder
+        tags: [ claroline.finder ]

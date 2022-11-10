@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace  Icap\NotificationBundle\Finder;
+namespace Icap\NotificationBundle\Finder;
 
 use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Doctrine\ORM\QueryBuilder;
@@ -22,7 +22,7 @@ class NotificationViewerFinder extends AbstractFinder
         return NotificationViewer::class;
     }
 
-    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
+    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null): QueryBuilder
     {
         $qb->join('obj.notification', 'notification');
 

@@ -24,7 +24,7 @@ class UserFinder extends AbstractFinder
         return User::class;
     }
 
-    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
+    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null): QueryBuilder
     {
         $roleJoin = false;
         $groupJoin = false;
@@ -260,7 +260,7 @@ class UserFinder extends AbstractFinder
         return $qb;
     }
 
-    public function getExtraFieldMapping()
+    protected function getExtraFieldMapping(): array
     {
         return [
             'name' => 'last_name',

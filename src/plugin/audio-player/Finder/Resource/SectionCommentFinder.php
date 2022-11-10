@@ -22,12 +22,8 @@ class SectionCommentFinder extends AbstractFinder
         return SectionComment::class;
     }
 
-    public function configureQueryBuilder(
-        QueryBuilder $qb,
-        array $searches = [],
-        array $sortBy = null,
-        array $options = ['count' => false, 'page' => 0, 'limit' => -1]
-    ) {
+    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null): QueryBuilder
+    {
         $userJoin = false;
         $sectionJoin = false;
 

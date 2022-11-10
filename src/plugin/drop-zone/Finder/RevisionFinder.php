@@ -22,12 +22,8 @@ class RevisionFinder extends AbstractFinder
         return Revision::class;
     }
 
-    public function configureQueryBuilder(
-        QueryBuilder $qb,
-        array $searches = [],
-        array $sortBy = null,
-        array $options = ['count' => false, 'page' => 0, 'limit' => -1]
-    ) {
+    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null): QueryBuilder
+    {
         $qb->join('obj.drop', 'drop');
         $qb->join('drop.dropzone', 'd');
 

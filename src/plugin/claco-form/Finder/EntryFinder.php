@@ -52,7 +52,7 @@ class EntryFinder extends AbstractFinder
         return Entry::class;
     }
 
-    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
+    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null): QueryBuilder
     {
         $this->usedJoin = [];
 
@@ -100,9 +100,11 @@ class EntryFinder extends AbstractFinder
                 $type = $isCategoryManager ? 'manager' : 'my';
             }
         }
+
         if (is_null($type)) {
-            return null;
+            return $qb;
         }
+
         switch ($type) {
             case 'all':
                 if (!$canEdit) {

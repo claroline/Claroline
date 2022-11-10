@@ -1,18 +1,8 @@
 services:
-    _instanceof:
-        Claroline\AppBundle\API\Finder\AbstractFinder:
-            tags: [claroline.finder]
-            calls:
-                - method: setObjectManager
-                  arguments:
-                     - '@Claroline\AppBundle\Persistence\ObjectManager'
-                - method: setEntityManager
-                  arguments:
-                     - '@doctrine.orm.entity_manager'
-                - method: setEventDispatcher
-                  arguments:
-                     - '@Claroline\AppBundle\Event\StrictDispatcher'
+    Claroline\DropZoneBundle\Finder\DropFinder:
+        parent: Claroline\AppBundle\API\Finder\AbstractFinder
+        tags: [ claroline.finder ]
 
-    Claroline\DropZoneBundle\Finder\DropFinder: ~
-
-    Claroline\DropZoneBundle\Finder\RevisionFinder: ~
+    Claroline\DropZoneBundle\Finder\RevisionFinder:
+        parent: Claroline\AppBundle\API\Finder\AbstractFinder
+        tags: [ claroline.finder ]

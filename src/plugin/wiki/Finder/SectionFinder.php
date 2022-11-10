@@ -10,9 +10,10 @@ class SectionFinder extends AbstractFinder
     /**
      * The queried object is already named "obj".
      */
-    public function configureQueryBuilder(QueryBuilder $qb, array $searches, array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
+    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null): QueryBuilder
     {
         $qb->join('obj.activeContribution', 'contribution');
+
         $joinedCreator = false;
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
@@ -64,6 +65,8 @@ class SectionFinder extends AbstractFinder
                     $qb->addOrderBy('contribution.title', $direction);
             }
         }
+
+        return $qb;
     }
 
     /** @return $string */

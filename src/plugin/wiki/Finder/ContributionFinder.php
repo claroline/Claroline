@@ -10,7 +10,7 @@ class ContributionFinder extends AbstractFinder
     /**
      * The queried object is already named "obj".
      */
-    public function configureQueryBuilder(QueryBuilder $qb, array $searches, array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
+    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null): QueryBuilder
     {
         $joinedCreator = false;
         foreach ($searches as $filterName => $filterValue) {
@@ -50,6 +50,8 @@ class ContributionFinder extends AbstractFinder
                 ->addOrderBy('contributor.lastName', $direction)
                 ->addOrderBy('contributor.firstName', $direction);
         }
+
+        return $qb;
     }
 
     /** @return $string */

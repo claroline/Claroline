@@ -22,7 +22,7 @@ class AnnouncementFinder extends AbstractFinder
         return Announcement::class;
     }
 
-    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
+    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null): QueryBuilder
     {
         $qb->leftJoin('obj.aggregate', 'a');
         $qb->leftJoin('a.resourceNode', 'node');
@@ -95,9 +95,11 @@ class AnnouncementFinder extends AbstractFinder
                     $this->setDefaults($qb, $filterName, $filterValue);
             }
         }
+
+        return $qb;
     }
 
-    public function getExtraFieldMapping()
+    protected function getExtraFieldMapping(): array
     {
         return [
           'meta.publishedAt' => 'publication_date',

@@ -1,80 +1,109 @@
 services:
-    _defaults:
-        autowire: false
-        autoconfigure: false
-        public: true
-
-    _instanceof:
-        Claroline\AppBundle\API\Finder\AbstractFinder:
-            tags: [claroline.finder]
-            calls:
-                - method: setObjectManager
-                  arguments:
-                     - '@Claroline\AppBundle\Persistence\ObjectManager'
-                - method: setEntityManager
-                  arguments:
-                     - '@doctrine.orm.entity_manager'
-                - method: setEventDispatcher
-                  arguments:
-                     - '@Claroline\AppBundle\Event\StrictDispatcher'
-
-    Claroline\CoreBundle\API\Finder\Planning\PlannedObjectFinder: ~
+    Claroline\CoreBundle\API\Finder\Planning\PlannedObjectFinder:
+        parent: Claroline\AppBundle\API\Finder\AbstractFinder
+        tags: [ claroline.finder ]
 
     Claroline\CoreBundle\API\Finder\Workspace\WorkspaceFinder:
+        parent: Claroline\AppBundle\API\Finder\AbstractFinder
+        tags: [ claroline.finder ]
         arguments:
-          - '@security.authorization_checker'
-          - '@security.token_storage'
+            - '@security.authorization_checker'
+            - '@security.token_storage'
 
-    Claroline\CoreBundle\API\Finder\Workspace\PendingRegistrationFinder: ~
+    Claroline\CoreBundle\API\Finder\Workspace\PendingRegistrationFinder:
+        parent: Claroline\AppBundle\API\Finder\AbstractFinder
+        tags: [ claroline.finder ]
 
-    Claroline\CoreBundle\API\Finder\Location\LocationFinder: ~
+    Claroline\CoreBundle\API\Finder\Location\LocationFinder:
+        parent: Claroline\AppBundle\API\Finder\AbstractFinder
+        tags: [ claroline.finder ]
 
-    Claroline\CoreBundle\API\Finder\Location\RoomFinder: ~
+    Claroline\CoreBundle\API\Finder\Location\RoomFinder:
+        parent: Claroline\AppBundle\API\Finder\AbstractFinder
+        tags: [ claroline.finder ]
 
-    Claroline\CoreBundle\API\Finder\Location\RoomBookingFinder: ~
+    Claroline\CoreBundle\API\Finder\Location\RoomBookingFinder:
+        parent: Claroline\AppBundle\API\Finder\AbstractFinder
+        tags: [ claroline.finder ]
 
-    Claroline\CoreBundle\API\Finder\Location\MaterialFinder: ~
+    Claroline\CoreBundle\API\Finder\Location\MaterialFinder:
+        parent: Claroline\AppBundle\API\Finder\AbstractFinder
+        tags: [ claroline.finder ]
 
-    Claroline\CoreBundle\API\Finder\Location\MaterialBookingFinder: ~
+    Claroline\CoreBundle\API\Finder\Location\MaterialBookingFinder:
+        parent: Claroline\AppBundle\API\Finder\AbstractFinder
+        tags: [ claroline.finder ]
 
     Claroline\CoreBundle\API\Finder\Facet\FieldFacetValueFinder:
+        parent: Claroline\AppBundle\API\Finder\AbstractFinder
+        tags: [ claroline.finder ]
         arguments:
-          - '@security.authorization_checker'
-          - '@security.token_storage'
+            - '@security.authorization_checker'
+            - '@security.token_storage'
 
     Claroline\CoreBundle\API\Finder\Tool\ToolFinder:
+        parent: Claroline\AppBundle\API\Finder\AbstractFinder
+        tags: [ claroline.finder ]
         arguments:
-          - '@Claroline\CoreBundle\Manager\PluginManager'
+            - '@Claroline\CoreBundle\Manager\PluginManager'
 
     Claroline\CoreBundle\API\Finder\Tool\AdminToolFinder:
+        parent: Claroline\AppBundle\API\Finder\AbstractFinder
+        tags: [ claroline.finder ]
         arguments:
-          - '@Claroline\CoreBundle\Manager\PluginManager'
+            - '@Claroline\CoreBundle\Manager\PluginManager'
 
-    Claroline\CoreBundle\API\Finder\Tool\OrderedToolFinder: ~
+    Claroline\CoreBundle\API\Finder\Tool\OrderedToolFinder:
+        parent: Claroline\AppBundle\API\Finder\AbstractFinder
+        tags: [ claroline.finder ]
 
-    Claroline\CoreBundle\API\Finder\Template\TemplateFinder: ~
+    Claroline\CoreBundle\API\Finder\Template\TemplateFinder:
+        parent: Claroline\AppBundle\API\Finder\AbstractFinder
+        tags: [ claroline.finder ]
 
     Claroline\CoreBundle\API\Finder\Resource\ResourceNodeFinder:
+        parent: Claroline\AppBundle\API\Finder\AbstractFinder
+        tags: [ claroline.finder ]
         arguments:
-          - '@security.authorization_checker'
-          - '@security.token_storage'
+            - '@security.authorization_checker'
+            - '@security.token_storage'
 
-    Claroline\CoreBundle\API\Finder\Log\LogFinder: ~
+    Claroline\CoreBundle\API\Finder\Log\LogFinder:
+        parent: Claroline\AppBundle\API\Finder\AbstractFinder
+        tags: [ claroline.finder ]
 
-    Claroline\CoreBundle\API\Finder\Log\Connection\LogConnectWorkspaceFinder: ~
+    Claroline\CoreBundle\API\Finder\Log\Connection\LogConnectWorkspaceFinder:
+        parent: Claroline\AppBundle\API\Finder\AbstractFinder
+        tags: [ claroline.finder ]
 
-    Claroline\CoreBundle\API\Finder\Log\Connection\LogConnectToolFinder: ~
+    Claroline\CoreBundle\API\Finder\Log\Connection\LogConnectToolFinder:
+        parent: Claroline\AppBundle\API\Finder\AbstractFinder
+        tags: [ claroline.finder ]
 
-    Claroline\CoreBundle\API\Finder\Log\Connection\LogConnectResourceFinder: ~
+    Claroline\CoreBundle\API\Finder\Log\Connection\LogConnectResourceFinder:
+        parent: Claroline\AppBundle\API\Finder\AbstractFinder
+        tags: [ claroline.finder ]
 
-    Claroline\CoreBundle\API\Finder\Log\Connection\LogConnectPlatformFinder: ~
+    Claroline\CoreBundle\API\Finder\Log\Connection\LogConnectPlatformFinder:
+        parent: Claroline\AppBundle\API\Finder\AbstractFinder
+        tags: [ claroline.finder ]
 
-    Claroline\CoreBundle\API\Finder\Log\Connection\LogConnectAdminToolFinder: ~
+    Claroline\CoreBundle\API\Finder\Log\Connection\LogConnectAdminToolFinder:
+        parent: Claroline\AppBundle\API\Finder\AbstractFinder
+        tags: [ claroline.finder ]
 
-    Claroline\CoreBundle\API\Finder\Widget\WidgetInstanceFinder: ~
+    Claroline\CoreBundle\API\Finder\Widget\WidgetInstanceFinder:
+        parent: Claroline\AppBundle\API\Finder\AbstractFinder
+        tags: [ claroline.finder ]
 
-    Claroline\CoreBundle\API\Finder\Widget\WidgetContainerFinder: ~
+    Claroline\CoreBundle\API\Finder\Widget\WidgetContainerFinder:
+        parent: Claroline\AppBundle\API\Finder\AbstractFinder
+        tags: [ claroline.finder ]
 
-    Claroline\CoreBundle\API\Finder\Platform\ConnectionMessageFinder: ~
+    Claroline\CoreBundle\API\Finder\Platform\ConnectionMessageFinder:
+        parent: Claroline\AppBundle\API\Finder\AbstractFinder
+        tags: [ claroline.finder ]
 
-    Claroline\CoreBundle\API\Finder\Platform\PluginFinder: ~
+    Claroline\CoreBundle\API\Finder\Platform\PluginFinder:
+        parent: Claroline\AppBundle\API\Finder\AbstractFinder
+        tags: [ claroline.finder ]

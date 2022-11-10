@@ -14,25 +14,9 @@ namespace Claroline\AppBundle\API\Finder;
 interface FinderInterface
 {
     /**
-     * @param int  $page
-     * @param int  $limit
-     * @param bool $count
-     *
-     * @return array
+     * @return array|int
      */
-    public function find(array $filters = [], array $sortBy = null, $page = 0, $limit = -1, $count = false);
-
-    /**
-     * @return object|null
-     */
-    public function findOneBy(array $filters = []);
+    public function find(?array $filters = [], ?array $sortBy = null, ?int $page = 0, ?int $limit = -1, ?bool $count = false);
 
     public static function getClass(): string;
-
-    /**
-     * Allow us to make optimize sql directly by mapping serialized property path to their own database colum.
-     *
-     * @return array
-     */
-    public function getExtraFieldMapping();
 }

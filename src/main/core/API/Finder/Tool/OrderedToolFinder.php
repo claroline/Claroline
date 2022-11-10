@@ -22,7 +22,7 @@ class OrderedToolFinder extends AbstractFinder
         return OrderedTool::class;
     }
 
-    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
+    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null): QueryBuilder
     {
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {

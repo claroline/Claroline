@@ -1,23 +1,8 @@
 services:
-    _defaults:
-        autowire: false
-        autoconfigure: false
-        public: true
+    Claroline\AuthenticationBundle\Finder\ApiTokenFinder:
+        parent: Claroline\AppBundle\API\Finder\AbstractFinder
+        tags: [ claroline.finder ]
 
-    _instanceof:
-        Claroline\AppBundle\API\Finder\AbstractFinder:
-            tags: [claroline.finder]
-            calls:
-                - method: setObjectManager
-                  arguments:
-                      - '@Claroline\AppBundle\Persistence\ObjectManager'
-                - method: setEntityManager
-                  arguments:
-                      - '@doctrine.orm.entity_manager'
-                - method: setEventDispatcher
-                  arguments:
-                      - '@Claroline\AppBundle\Event\StrictDispatcher'
-
-    Claroline\AuthenticationBundle\Finder\ApiTokenFinder: ~
-
-    Claroline\AuthenticationBundle\Finder\IpUserFinder: ~
+    Claroline\AuthenticationBundle\Finder\IpUserFinder:
+        parent: Claroline\AppBundle\API\Finder\AbstractFinder
+        tags: [ claroline.finder ]

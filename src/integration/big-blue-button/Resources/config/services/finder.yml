@@ -1,23 +1,8 @@
 services:
-  _defaults:
-    autowire: false
-    autoconfigure: false
-    public: true
+    Claroline\BigBlueButtonBundle\Finder\BBBFinder:
+        parent: Claroline\AppBundle\API\Finder\AbstractFinder
+        tags: [claroline.finder]
 
-  _instanceof:
-    Claroline\AppBundle\API\Finder\AbstractFinder:
-      tags: [claroline.finder]
-      calls:
-        - method: setObjectManager
-          arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-        - method: setEntityManager
-          arguments:
-            - '@doctrine.orm.entity_manager'
-        - method: setEventDispatcher
-          arguments:
-            - '@Claroline\AppBundle\Event\StrictDispatcher'
-
-  Claroline\BigBlueButtonBundle\Finder\BBBFinder: ~
-
-  Claroline\BigBlueButtonBundle\Finder\RecordingFinder: ~
+    Claroline\BigBlueButtonBundle\Finder\RecordingFinder:
+        parent: Claroline\AppBundle\API\Finder\AbstractFinder
+        tags: [ claroline.finder ]

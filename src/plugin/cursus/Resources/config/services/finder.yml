@@ -1,39 +1,38 @@
 services:
-    _defaults:
-        autowire: false
-        autoconfigure: false
-        public: true
-
-    _instanceof:
-        Claroline\AppBundle\API\Finder\AbstractFinder:
-            tags: [claroline.finder]
-            calls:
-                - method: setObjectManager
-                  arguments:
-                     - '@Claroline\AppBundle\Persistence\ObjectManager'
-                - method: setEntityManager
-                  arguments:
-                     - '@doctrine.orm.entity_manager'
-                - method: setEventDispatcher
-                  arguments:
-                     - '@Claroline\AppBundle\Event\StrictDispatcher'
-
     # Trainings
-    Claroline\CursusBundle\Finder\CourseFinder: ~
+    Claroline\CursusBundle\Finder\CourseFinder:
+        parent: Claroline\AppBundle\API\Finder\AbstractFinder
+        tags: [ claroline.finder ]
 
-    Claroline\CursusBundle\Finder\SessionFinder: ~
+    Claroline\CursusBundle\Finder\SessionFinder:
+        parent: Claroline\AppBundle\API\Finder\AbstractFinder
+        tags: [ claroline.finder ]
 
-    Claroline\CursusBundle\Finder\EventFinder: ~
+    Claroline\CursusBundle\Finder\EventFinder:
+        parent: Claroline\AppBundle\API\Finder\AbstractFinder
+        tags: [ claroline.finder ]
 
-    Claroline\CursusBundle\Finder\EventPresenceFinder: ~
+    Claroline\CursusBundle\Finder\EventPresenceFinder:
+        parent: Claroline\AppBundle\API\Finder\AbstractFinder
+        tags: [ claroline.finder ]
 
     # Registrations
-    Claroline\CursusBundle\Finder\Registration\CourseUserFinder: ~
+    Claroline\CursusBundle\Finder\Registration\CourseUserFinder:
+        parent: Claroline\AppBundle\API\Finder\AbstractFinder
+        tags: [ claroline.finder ]
 
-    Claroline\CursusBundle\Finder\Registration\SessionGroupFinder: ~
+    Claroline\CursusBundle\Finder\Registration\SessionGroupFinder:
+        parent: Claroline\AppBundle\API\Finder\AbstractFinder
+        tags: [ claroline.finder ]
 
-    Claroline\CursusBundle\Finder\Registration\SessionUserFinder: ~
+    Claroline\CursusBundle\Finder\Registration\SessionUserFinder:
+        parent: Claroline\AppBundle\API\Finder\AbstractFinder
+        tags: [ claroline.finder ]
 
-    Claroline\CursusBundle\Finder\Registration\EventGroupFinder: ~
+    Claroline\CursusBundle\Finder\Registration\EventGroupFinder:
+        parent: Claroline\AppBundle\API\Finder\AbstractFinder
+        tags: [ claroline.finder ]
 
-    Claroline\CursusBundle\Finder\Registration\EventUserFinder: ~
+    Claroline\CursusBundle\Finder\Registration\EventUserFinder:
+        parent: Claroline\AppBundle\API\Finder\AbstractFinder
+        tags: [ claroline.finder ]

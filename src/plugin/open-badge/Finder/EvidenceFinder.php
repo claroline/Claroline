@@ -22,7 +22,7 @@ class EvidenceFinder extends AbstractFinder
         return Evidence::class;
     }
 
-    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = [])
+    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null): QueryBuilder
     {
         $assertionJoin = false;
 

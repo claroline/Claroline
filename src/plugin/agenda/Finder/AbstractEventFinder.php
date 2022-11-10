@@ -17,9 +17,8 @@ use Doctrine\ORM\QueryBuilder;
 
 abstract class AbstractEventFinder extends AbstractFinder
 {
-    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
+    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null): QueryBuilder
     {
-        $qb->select($options['count'] ? 'COUNT(DISTINCT obj)' : 'DISTINCT obj, p.startDate AS HIDDEN startDate');
         $qb->leftJoin('obj.plannedObject', 'p');
         $workspaceJoin = false;
 
@@ -33,6 +32,7 @@ abstract class AbstractEventFinder extends AbstractFinder
                     $qb->andWhere('w.uuid IN (:'.$filterName.')');
                     $qb->setParameter($filterName, $filterValue);
                     break;
+
                 case 'inRange':
                     if (!empty($filterValue[0])) {
                         $qb->andWhere('p.startDate >= :startRange OR p.endDate >= :startRange2');
@@ -45,8 +45,8 @@ abstract class AbstractEventFinder extends AbstractFinder
                         $qb->setParameter('endRange', $filterValue[1]);
                         $qb->setParameter('endRange2', $filterValue[1]);
                     }
-
                     break;
+
                 case 'afterToday':
                     if ($filterValue) {
                         $qb->andWhere("p.startDate >= :{$filterName}");
@@ -55,15 +55,6 @@ abstract class AbstractEventFinder extends AbstractFinder
                     break;
 
                 case 'user':
-                    $byUserSearch = $byGroupSearch = $searches;
-                    $byUserSearch['_user'] = $filterValue;
-                    $byGroupSearch['_group'] = $filterValue;
-                    unset($byUserSearch['user']);
-                    unset($byGroupSearch['user']);
-
-                    return $this->union($byUserSearch, $byGroupSearch, $options, $sortBy);
-                    break;
-                case '_user':
                     if (!$workspaceJoin) {
                         $qb->leftJoin('obj.workspace', 'w', Join::WITH, 'w.hidden = false AND w.model = false AND w.personal = false');
                         $workspaceJoin = true;
@@ -78,6 +69,8 @@ abstract class AbstractEventFinder extends AbstractFinder
                     $qb->leftJoin('ot.rights', 'otr');
                     $qb->leftJoin('otr.role', 'otrr');
                     $qb->leftJoin('otrr.users', 'otrru');
+                    $qb->leftJoin('otrr.groups', 'otrrg');
+                    $qb->leftJoin('otrrg.users', 'otrrgu');
 
                     $qb->andWhere($qb->expr()->orX(
                         // creator of the event
@@ -85,8 +78,11 @@ abstract class AbstractEventFinder extends AbstractFinder
                         // or has open rights on agenda tool
                         $qb->expr()->andX(
                             $qb->expr()->eq('ott.name', ':agenda'),
-                            $qb->expr()->eq('otrru.uuid', ':roleUserId'),
-                            $qb->expr()->eq('BIT_AND(otr.mask, 1)', '1')
+                            $qb->expr()->eq('BIT_AND(otr.mask, 1)', '1'),
+                            $qb->expr()->orX(
+                                $qb->expr()->eq('otrru.uuid', ':roleUserId'),
+                                $qb->expr()->eq('otrrgu.uuid', ':roleUserId')
+                            )
                         )
                     ));
 
@@ -95,27 +91,7 @@ abstract class AbstractEventFinder extends AbstractFinder
                     $qb->setParameter('roleUserId', $filterValue);
 
                     break;
-                case '_group':
-                    if (!$workspaceJoin) {
-                        $qb->leftJoin('obj.workspace', 'w', Join::WITH, 'w.hidden = false AND w.model = false AND w.personal = false');
-                        $workspaceJoin = true;
-                    }
 
-                    // join for tool rights
-                    $qb->leftJoin('w.orderedTools', 'ot');
-                    $qb->leftJoin('ot.tool', 'ott');
-                    $qb->leftJoin('ot.rights', 'otr');
-                    $qb->leftJoin('otr.role', 'otrr');
-                    $qb->leftJoin('otrr.groups', 'otrrg');
-                    $qb->leftJoin('otrrg.users', 'otrru');
-
-                    $qb->andWhere('ott.name = :agenda');
-                    $qb->andWhere('otrru.uuid = :_groupUserId');
-                    $qb->andWhere('BIT_AND(otr.mask, 1) = 1');
-
-                    $qb->setParameter('agenda', 'agenda');
-                    $qb->setParameter('_groupUserId', $filterValue);
-                    break;
                 case 'anonymous':
                     if (!$workspaceJoin) {
                         $qb->leftJoin('obj.workspace', 'w', Join::WITH, 'w.hidden = false AND w.model = false AND w.personal = false');
@@ -174,23 +150,11 @@ abstract class AbstractEventFinder extends AbstractFinder
         return $qb;
     }
 
-    public function getExtraFieldMapping()
+    protected function getExtraFieldMapping(): array
     {
         return [
             'start' => 'startDate',
             'end' => 'endDate',
-        ];
-    }
-
-    // some black magic to be able to sort the union on a linked table.
-    // it works with $queryBuilder->select(..., 'p.startDate').
-    // it can be removed once we do not need the union anymore.
-    // this is slightly ugly to rely on the doctrine generated alias, but other implementations
-    // require to open lots of methods of AbstractFinder and override them here.
-    public function getAliases()
-    {
-        return [
-            'c1_.start_date' => 'startDate',
         ];
     }
 }
