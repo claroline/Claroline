@@ -68,7 +68,7 @@ class ResourceNodeFinder extends AbstractFinder
                     $qb->setParameter('resourceType', $filterValue);
                     break;
 
-                case 'resourceTypeBlacklist':
+                case 'resourceTypeBlacklist': // TODO : remove me. only used by obsolete dashboard query
                     if (is_array($filterValue)) {
                         $qb->andWhere("ort.name NOT IN (:{$filterName})");
                     }

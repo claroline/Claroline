@@ -23,14 +23,16 @@ services:
 
     Claroline\CoreBundle\Listener\DataSource\Workspace\AllSource:
         arguments:
+            - '@security.authorization_checker'
+            - '@security.token_storage'
             - '@Claroline\AppBundle\API\FinderProvider'
         tags:
             - { name: kernel.event_listener, event: data_source.workspaces.load, method: getData }
 
     Claroline\CoreBundle\Listener\DataSource\Workspace\RegisteredSource:
         arguments:
-            - '@Claroline\AppBundle\API\FinderProvider'
             - '@security.token_storage'
+            - '@Claroline\AppBundle\API\FinderProvider'
         tags:
             - { name: kernel.event_listener, event: data_source.my_workspaces.load, method: getData }
 

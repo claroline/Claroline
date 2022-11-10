@@ -47,28 +47,6 @@ class WorkspaceFinder extends AbstractFinder
 
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
-                case 'orphan':
-                    if ($filterValue) {
-                        $qb->andWhere('obj.personal = true');
-                        $qb->leftJoin('obj.personalUser', 'ps');
-                        $qb->andWhere('ps.isRemoved = true');
-                    }
-                    break;
-                case 'sameOrganization':
-                    $currentUser = $this->tokenStorage->getToken()->getUser();
-
-                    if ($currentUser instanceof User) {
-                        $qb->leftJoin('obj.organizations', 'uo');
-                        $qb->leftJoin('uo.userOrganizationReferences', 'ua');
-
-                        $qb->andWhere($qb->expr()->orX(
-                            $qb->expr()->eq('ua.user', ':userOganizationId')
-                        ));
-
-                        $qb->setParameter('userOganizationId', $currentUser->getId());
-                    }
-
-                    break;
                 case 'administrated':
                     if ('cli' !== php_sapi_name() && !$this->authChecker->isGranted('ROLE_ADMIN')) {
                         $qb->leftJoin('obj.organizations', 'uo');
@@ -102,43 +80,21 @@ class WorkspaceFinder extends AbstractFinder
                     $qb->setParameter($filterName, $filterValue);
                     break;
                 case 'organization':
+                case 'organizations':
                     $qb->leftJoin('obj.organizations', 'o');
                     $qb->andWhere('o.uuid IN (:organizationIds)');
                     $qb->setParameter('organizationIds', is_array($filterValue) ? $filterValue : [$filterValue]);
                     break;
-                case '_user':
+                case 'user':
                     $qb->leftJoin('obj.roles', 'r');
                     $qb->leftJoin('r.users', 'ru');
-                    $qb->andWhere($qb->expr()->orX(
-                        $qb->expr()->like('ru.id', ':_userId'),
-                        $qb->expr()->like('ru.uuid', ':_userUuid')
-                    ));
-
-                    $qb->setParameter('_userId', $filterValue);
-                    $qb->setParameter('_userUuid', $filterValue);
-
-                    break;
-                case '_group':
-                    $qb->leftJoin('obj.roles', 'r');
                     $qb->leftJoin('r.groups', 'rg');
                     $qb->leftJoin('rg.users', 'rgu');
-                    $qb->andWhere($qb->expr()->orX(
-                        $qb->expr()->like('rgu.id', ':_groupUserId'),
-                        $qb->expr()->like('rgu.uuid', ':_groupUserUuid')
-                    ));
 
-                    $qb->setParameter('_groupUserId', $filterValue);
-                    $qb->setParameter('_groupUserUuid', $filterValue);
+                    $qb->andWhere('(ru.uuid = :_userId OR rgu.uuid = :_userId)');
 
-                    break;
-                case 'user':
-                    $byUserSearch = $byGroupSearch = $searches;
-                    $byUserSearch['_user'] = $filterValue;
-                    $byGroupSearch['_group'] = $filterValue;
-                    unset($byUserSearch['user']);
-                    unset($byGroupSearch['user']);
+                    $qb->setParameter('_userId', $filterValue);
 
-                    return $this->union($byUserSearch, $byGroupSearch, $options, $sortBy);
                     break;
                 default:
                     $this->setDefaults($qb, $filterName, $filterValue);
@@ -162,11 +118,6 @@ class WorkspaceFinder extends AbstractFinder
             'administrated' => [
                 'type' => 'boolean',
                 'description' => 'The the current user administrate the organization of the workspace',
-            ],
-
-            'sameOrganization' => [
-                'type' => 'boolean',
-                'description' => 'Workspace and current user share the same organization',
             ],
 
             'createdBefore' => [

@@ -14,18 +14,17 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class RegisteredSource
 {
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
     /** @var FinderProvider */
     private $finder;
 
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-
     public function __construct(
-        FinderProvider $finder,
-        TokenStorageInterface $tokenStorage
+        TokenStorageInterface $tokenStorage,
+        FinderProvider $finder
     ) {
-        $this->finder = $finder;
         $this->tokenStorage = $tokenStorage;
+        $this->finder = $finder;
     }
 
     public function getData(GetDataEvent $event)
@@ -34,8 +33,10 @@ class RegisteredSource
 
         $options['hiddenFilters']['model'] = false;
         $options['hiddenFilters']['user'] = null;
-        if ($this->tokenStorage->getToken()->getUser() instanceof User) {
-            $options['hiddenFilters']['user'] = $this->tokenStorage->getToken()->getUser()->getId();
+
+        $user = $this->tokenStorage->getToken()->getUser();
+        if ($user instanceof User) {
+            $options['hiddenFilters']['user'] = $user->getUuid();
         }
 
         $event->setData(
