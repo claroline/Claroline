@@ -8,12 +8,15 @@ const IconSet = {
     name: T.string,
     type: T.string,
     default: T.bool,
-    active: T.bool,
-    editable: T.bool
+    restrictions: T.shape({
+      locked: T.bool
+    })
   },
   defaultProps: {
     type: constants.ICON_SET_TYPE_RESOURCE,
-    editable: true
+    restrictions: {
+      locked: false
+    }
   }
 }
 

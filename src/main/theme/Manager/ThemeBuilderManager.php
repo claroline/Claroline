@@ -45,24 +45,10 @@ class ThemeBuilderManager
      */
     private $filesDir;
 
-    /**
-     * Compiled file directory.
-     *
-     * @var string
-     */
-    private $buildDir;
-
-    /**
-     * BuildManager constructor.
-     *
-     * @param string $filesDir
-     * @param string $kernelDir
-     */
-    public function __construct(KernelInterface $kernel, $filesDir, $kernelDir)
+    public function __construct(KernelInterface $kernel, string $filesDir)
     {
         $this->kernel = $kernel;
         $this->filesDir = $filesDir;
-        $this->buildDir = implode(DIRECTORY_SEPARATOR, [$kernelDir, '..', 'web', 'themes']);
     }
 
     /**
@@ -82,11 +68,6 @@ class ThemeBuilderManager
         }
 
         return $logs;
-    }
-
-    public function getBuildDir()
-    {
-        return $this->buildDir;
     }
 
     public function getThemeDir(Theme $theme)

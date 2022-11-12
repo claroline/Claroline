@@ -13,76 +13,48 @@
 
 namespace Claroline\ThemeBundle\Entity\Icon;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Claroline\AppBundle\Entity\Meta\Name;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\ThemeBundle\Repository\Icon\IconItemRepository")
  * @ORM\Table(name="claro_icon_item")
- * Class IconItem
  */
 class IconItem
 {
+    use Id;
     use Uuid;
+    use Name;
 
     /**
-     * @var int
-     *
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(nullable=true)
-     */
-    private $name;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(nullable=true)
-     */
-    private $class;
-
-    /**
-     * @var string
-     *
      * @ORM\Column(name="mime_type", nullable=true)
+     *
+     * @var string
      */
     private $mimeType;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="relative_url")
+     *
+     * @var string
      */
     private $relativeUrl;
 
     /**
-     * @var IconSet
      * @ORM\ManyToOne(targetEntity="IconSet", inversedBy="icons", fetch="LAZY")
      * @ORM\JoinColumn(name="icon_set_id", referencedColumnName="id", onDelete="CASCADE")
+     *
+     * @var IconSet
      */
     private $iconSet;
 
-    /**
-     * IconItem constructor.
-     *
-     * @param $relativeUrl
-     * @param null $name
-     * @param null $mimeType
-     * @param null $class
-     */
     public function __construct(
         IconSet $iconSet,
-        $relativeUrl,
-        $name = null,
-        $mimeType = null,
-        $class = null
+        string $relativeUrl,
+        ?string $name = null,
+        ?string $mimeType = null
     ) {
         $this->refreshUuid();
 
@@ -90,114 +62,37 @@ class IconItem
         $this->relativeUrl = $relativeUrl;
         $this->name = $name;
         $this->mimeType = $mimeType;
-        $this->class = $class;
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @return IconSet
-     */
-    public function getIconSet()
+    public function getIconSet(): ?IconSet
     {
         return $this->iconSet;
     }
 
-    /**
-     * @param IconSet $iconSet
-     *
-     * @return $this
-     */
-    public function setIconSet($iconSet)
+    public function setIconSet(IconSet $iconSet): void
     {
         $this->iconSet = $iconSet;
-
-        return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * @param string $name
-     *
-     * @return $this
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getClass()
-    {
-        return $this->class;
-    }
-
-    /**
-     * @param string $class
-     *
-     * @return $this
-     */
-    public function setClass($class)
-    {
-        $this->class = $class;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getMimeType()
+    public function getMimeType(): ?string
     {
         return $this->mimeType;
     }
 
-    /**
-     * @param string $mimeType
-     *
-     * @return $this
-     */
-    public function setMimeType($mimeType)
+    public function setMimeType(?string $mimeType = null)
     {
         $this->mimeType = $mimeType;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getRelativeUrl()
+    public function getRelativeUrl(): ?string
     {
         return $this->relativeUrl;
     }
 
-    /**
-     * @param string $relativeUrl
-     *
-     * @return $this
-     */
-    public function setRelativeUrl($relativeUrl)
+    public function setRelativeUrl(string $relativeUrl): void
     {
         $this->relativeUrl = $relativeUrl;
-
-        return $this;
     }
 }

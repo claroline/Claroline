@@ -1,5 +1,6 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
 import {constants as listConst} from '#/main/app/content/list/constants'
@@ -23,7 +24,7 @@ const Icon = (props) =>
       ['apiv2_icon_set_update', {id: iconSet.id}]
     }
     buttons={true}
-    disabled={!props.iconSet.editable}
+    disabled={get(props.iconSet, 'restrictions.locked', false)}
     cancel={{
       type: LINK_BUTTON,
       target: props.path+'/appearance/icons',
@@ -58,7 +59,7 @@ const Icon = (props) =>
             icon: 'fa fa-fw fa-plus',
             label: trans('add_icon_item'),
             callback: () => props.openIconItemForm(props.iconSet, props.mimeTypes, {id: makeId()}),
-            displayed: !props.new && props.iconSet.editable
+            displayed: !props.new && !get(props.iconSet, 'restrictions.locked', false)
           }
         ]}
       >
@@ -75,11 +76,11 @@ const Icon = (props) =>
             type: CALLBACK_BUTTON,
             label: trans('edit', {}, 'actions'),
             callback: () => props.openIconItemForm(props.iconSet, props.mimeTypes, {}, row.id),
-            displayed: props.iconSet.editable
+            displayed: !get(props.iconSet, 'restrictions.locked', false)
           })}
           delete={{
             url: ['apiv2_icon_item_delete_bulk'],
-            displayed: () => props.iconSet.editable
+            displayed: () => !get(props.iconSet, 'restrictions.locked', false)
           }}
           definition={[
             {

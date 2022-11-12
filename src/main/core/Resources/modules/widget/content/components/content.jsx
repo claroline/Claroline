@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import {Helmet} from 'react-helmet'
 import isEqual from 'lodash/isEqual'
 
-import {theme} from '#/main/app/config'
+import {theme} from '#/main/theme/config'
 import {mount, unmount} from '#/main/app/dom/mount'
 import {selectors as configSelectors} from '#/main/app/config/store'
 import {selectors as securitySelectors} from '#/main/app/security/store'

@@ -69,18 +69,19 @@ const IconItemFormModal = props =>
           ]
         }
       ]}
-    />
-    <Button
-      className="btn modal-btn"
-      type={CALLBACK_BUTTON}
-      primary={true}
-      label={trans('save', {}, 'actions')}
-      disabled={!props.saveEnabled || (!props.iconItem.mimeType && !props.iconItem.mimeTypes) || (!props.iconItem.relativeUrl && !props.iconItem.file)}
-      callback={() => {
-        props.updateIconItem(props.iconSet, props.iconItem)
-        props.fadeModal()
-      }}
-    />
+    >
+      <Button
+        className="btn modal-btn"
+        type={CALLBACK_BUTTON}
+        primary={true}
+        label={trans('save', {}, 'actions')}
+        disabled={!props.saveEnabled || (!props.iconItem.mimeType && !props.iconItem.mimeTypes) || (!props.iconItem.relativeUrl && !props.iconItem.file)}
+        callback={() => {
+          props.updateIconItem(props.iconSet, props.iconItem)
+          props.fadeModal()
+        }}
+      />
+    </FormData>
   </Modal>
 
 IconItemFormModal.propTypes = {

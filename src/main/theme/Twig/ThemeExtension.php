@@ -34,31 +34,29 @@ class ThemeExtension extends AbstractExtension
         AssetExtension $extension,
         ThemeManager $themeManager,
         PlatformConfigurationHandler $config,
-        string $projectDir)
-    {
+        string $projectDir
+    ) {
         $this->assetExtension = $extension;
         $this->themeManager = $themeManager;
         $this->config = $config;
         $this->projectDir = $projectDir;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'theme_extension';
     }
 
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return [
             'themeAsset' => new TwigFunction('themeAsset', [$this, 'themeAsset']),
         ];
     }
 
-    public function themeAsset($path, $themeName = null)
+    public function themeAsset($path): string
     {
-        if (empty($themeName)) {
-            $themeName = $this->config->getParameter('theme');
-        }
+        $themeName = $this->config->getParameter('theme');
         $themeName = str_replace(' ', '-', strtolower($themeName));
         $assets = $this->getThemeAssets();
 
@@ -80,7 +78,7 @@ class ThemeExtension extends AbstractExtension
         );
     }
 
-    private function getThemeAssets()
+    private function getThemeAssets(): array
     {
         if (!$this->assetCache) {
             $assetFile = "{$this->projectDir}/theme-assets.json";

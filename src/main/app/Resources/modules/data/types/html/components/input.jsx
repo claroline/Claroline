@@ -32,7 +32,6 @@ class ContentEditable extends Component {
       endContainer: rng.endContainer,
       collapsed: rng.collapsed,
       commonAncestorContainer: rng.commonAncestorContainer
-
     })
 
     const selected = window.getSelection().toString()

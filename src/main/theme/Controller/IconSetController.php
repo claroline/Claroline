@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\ThemeBundle\Controller\Icon;
+namespace Claroline\ThemeBundle\Controller;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
@@ -25,12 +25,12 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * @Route("/icon_item")
+ * @Route("/icon_set")
  */
-class IconItemController extends AbstractCrudController
+class IconSetController extends AbstractCrudController
 {
     /** @var AuthorizationCheckerInterface */
-    protected $authorization;
+    private $authorization;
 
     /** @var IconSetManager */
     private $iconSetManager;
@@ -38,9 +38,6 @@ class IconItemController extends AbstractCrudController
     /** @var ToolManager */
     private $toolManager;
 
-    /**
-     * IconItemController constructor.
-     */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         IconSetManager $iconSetManager,
@@ -53,34 +50,24 @@ class IconItemController extends AbstractCrudController
 
     public function getName(): string
     {
-        return 'icon_item';
+        return 'icon_set';
     }
 
     public function getClass(): string
     {
-        return IconItem::class;
+        return IconSet::class;
     }
 
     public function getIgnore(): array
     {
-        return ['exist', 'copyBulk', 'schema', 'doc', 'find', 'list', 'create', 'update'];
+        return ['exist', 'copyBulk', 'find'];
     }
 
     /**
-     * @Route(
-     *     "/{iconSet}/items/list",
-     *     name="apiv2_icon_set_items_list",
-     *     methods={"GET"}
-     * )
-     * @EXT\ParamConverter(
-     *     "iconSet",
-     *     class="Claroline\ThemeBundle\Entity\Icon\IconSet",
-     *     options={"mapping": {"iconSet": "uuid"}}
-     * )
-     *
-     * @return JsonResponse
+     * @Route("/{iconSet}/items/list", name="apiv2_icon_set_items_list", methods={"GET"})
+     * @EXT\ParamConverter("iconSet", class="Claroline\ThemeBundle\Entity\Icon\IconSet", options={"mapping": {"iconSet": "uuid"}})
      */
-    public function iconSetItemListAction(IconSet $iconSet, Request $request)
+    public function listItemsAction(IconSet $iconSet, Request $request): JsonResponse
     {
         return new JsonResponse($this->finder->search(
             IconItem::class,
@@ -90,24 +77,12 @@ class IconItemController extends AbstractCrudController
     }
 
     /**
-     * @Route(
-     *     "/{iconSet}/item/update",
-     *     name="apiv2_icon_set_item_update",
-     *     methods={"POST", "PUT"}
-     * )
-     * @EXT\ParamConverter(
-     *     "iconSet",
-     *     class="Claroline\ThemeBundle\Entity\Icon\IconSet",
-     *     options={"mapping": {"iconSet": "uuid"}}
-     * )
-     *
-     * @return JsonResponse
-     *
-     * @throws \Exception
+     * @Route("/{iconSet}/item/update", name="apiv2_icon_set_item_update", methods={"POST", "PUT"})
+     * @EXT\ParamConverter("iconSet", class="Claroline\ThemeBundle\Entity\Icon\IconSet", options={"mapping": {"iconSet": "uuid"}})
      */
-    public function iconSetItemUpdateAction(IconSet $iconSet, Request $request)
+    public function updateItemAction(IconSet $iconSet, Request $request): JsonResponse
     {
-        if (!$iconSet->isEditable() || !$this->hasToolAccess()) {
+        if ($iconSet->isLocked() || !$this->hasToolAccess()) {
             throw new AccessDeniedException();
         }
         $data = json_decode($request->request->all()['iconItem'], true);
@@ -128,12 +103,7 @@ class IconItemController extends AbstractCrudController
         }, $iconItems));
     }
 
-    /**
-     * @param string $rights
-     *
-     * @return bool
-     */
-    private function hasToolAccess($rights = 'OPEN')
+    private function hasToolAccess(string $rights = 'OPEN'): bool
     {
         $tool = $this->toolManager->getAdminToolByName('main_settings');
 

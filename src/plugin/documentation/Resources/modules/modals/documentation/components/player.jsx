@@ -4,7 +4,7 @@ import {Helmet} from 'react-helmet'
 import get from 'lodash/get'
 
 import {scrollTo} from '#/main/app/dom/scroll'
-import {theme} from '#/main/app/config'
+import {theme} from '#/main/theme/config'
 import {Router, Routes} from '#/main/app/router'
 import {LINK_BUTTON} from '#/main/app/buttons'
 

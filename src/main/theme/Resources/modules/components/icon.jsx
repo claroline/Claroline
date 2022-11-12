@@ -4,14 +4,14 @@ import classes from 'classnames'
 
 import {icon} from '#/main/theme/config'
 
-const ResourceIcon = props =>
-  <img className={classes('resource-icon', props.className)} src={icon(props.mimeType)} />
+const ThemeIcon = props =>
+  <img className={classes('theme-icon', props.className)} src={icon(props.mimeType)} />
 
-ResourceIcon.propTypes = {
+ThemeIcon.propTypes = {
   className: T.string,
   mimeType: T.string.isRequired
 }
 
 export {
-  ResourceIcon
+  ThemeIcon
 }

@@ -40,7 +40,7 @@ class Updater130700 extends Updater
         $availableLocales = [];
         foreach ($this->config->getParameter('locales.available') as $locale) {
             if (!in_array($locale, $removed)) {
-                $availableLocales[] = $removed;
+                $availableLocales[] = $locale;
             }
         }
 

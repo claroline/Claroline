@@ -2,9 +2,6 @@
  * Forms.
  */
 
-@import "fields/index";
-@import "form-stepper";
-
 // FIXME: this is ugly to do it like it
 // if there are additional containers, I'm fucked and it may be required by some other components too
 .page-content > .data-form {
@@ -33,6 +30,57 @@
     border: 1px solid transparent;
     line-height: @line-height-computed;
     padding: @padding-base-vertical @padding-base-horizontal;
+}
+
+// adds some var to configure form controls
+.form-control {
+    padding: @input-padding; // adds a semantic var
+
+    .box-shadow(@input-box-shadow);
+    .transition(@input-transition);
+}
+
+
+// -
+// Checkboxes and radios
+// Rewrites some boostrap defaults (may not be needed anymore with bootstrap 5)
+// ---
+
+input[type=checkbox] {
+    cursor: pointer;
+}
+
+// rewrites Bootstrap checkboxes/radios in flex
+// TODO : manage inline mode in flex too
+.radio,
+.radio-inline,
+.checkbox,
+.checkbox-inline {
+    padding-left: 0; // remove bootstrap default
+
+    label {
+        // Fixes bootstrap that do not remove label font-weight like `.radio` and `.checkbox`
+        // And so do not work as expected
+        font-weight: normal;
+        cursor: pointer;
+        margin-bottom: 0;
+        display: flex;
+        align-items: center;
+        padding-left: 0; // remove bootstrap default
+    }
+
+    // remove bootstrap default
+    input[type="radio"],
+    input[type="checkbox"] {
+        position: static;
+        margin: 0;
+        margin-right: @icon-text-spacer;
+    }
+}
+
+.radio-inline + .radio-inline,
+.checkbox-inline + .checkbox-inline {
+    margin-left: 5px; // same space than vertical
 }
 
 
@@ -89,10 +137,32 @@
 
 
 // -
+// Multi steps Forms.
+// ---
+
+.form-stepper {
+    .progress + .h-title {
+        margin-top: @line-height-computed - 4px; // 4px is to absorb progress bar height
+    }
+}
+
+.form-stepper-footer {
+    text-align: right;
+
+    .btn + .btn {
+        margin-left: 5px;
+    }
+
+    .btn-next {
+        min-width: 240px;
+    }
+}
+
+
+// -
 // Fieldset
 // ---
 
-// todo : we may need a more specific namespacing
 .sub-fields {
     // this is used to conditionally display fields on radio/checkbox check
     // we align the displayed fields with the label of the radio/checkbox

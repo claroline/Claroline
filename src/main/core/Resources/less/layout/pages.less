@@ -113,17 +113,7 @@
     padding: 0 floor(@grid-gutter-width / 2);
     white-space: nowrap;
 
-    .page-actions-group { // todo remove me (for retro compatibility)
-        display: inline-block;
-        margin-left: floor(@grid-gutter-width / 2);
-
-        &:first-child {
-            margin-left: 0;
-        }
-    }
-
-    > .page-actions-btn:first-child,
-    .page-actions-group .page-actions-btn:first-child {
+    > .page-actions-btn:first-child  {
         margin-left: 0; // absorb first btn margin
     }
 

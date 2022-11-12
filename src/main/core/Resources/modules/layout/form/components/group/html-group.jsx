@@ -1,14 +1,13 @@
 import React from 'react'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 
+import {HtmlInput} from '#/main/app/data/types/html/components/input'
 import {DataGroup as DataGroupTypes, DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 import {FormGroup} from '#/main/app/content/form/components/group'
 
-import {Textarea} from '#/main/core/layout/form/components/field/textarea'
-
 const HtmlGroup = props =>
   <FormGroup {...props}>
-    <Textarea {...props} />
+    <HtmlInput {...props} />
   </FormGroup>
 
 implementPropTypes(HtmlGroup, [DataGroupTypes, DataInputTypes], {

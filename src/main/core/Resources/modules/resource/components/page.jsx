@@ -19,7 +19,7 @@ import {
 import {getActions, getToolbar} from '#/main/core/resource/utils'
 import {ToolPage} from '#/main/core/tool/containers/page'
 import {constants as toolConst} from '#/main/core/tool/constants'
-import {ResourceIcon} from '#/main/core/resource/components/icon'
+import {ThemeIcon} from '#/main/theme/components/icon'
 import {ResourceRestrictions} from '#/main/core/resource/components/restrictions'
 import {UserProgression} from '#/main/core/resource/components/user-progression'
 
@@ -68,7 +68,7 @@ const ResourcePage = (props) => {
           width={70}
           height={70}
         /> :
-        <ResourceIcon
+        <ThemeIcon
           mimeType={props.resourceNode.meta.mimeType}
         />
       )}

@@ -15,6 +15,9 @@ namespace Claroline\ThemeBundle\Library\Icon;
 
 use Claroline\ThemeBundle\Entity\Icon\IconItem;
 
+/**
+ * @deprecated
+ */
 class ResourceIconSetIconItemList
 {
     /**

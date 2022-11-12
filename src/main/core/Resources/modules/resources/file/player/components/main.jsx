@@ -4,7 +4,7 @@ import get from 'lodash/get'
 import {Helmet} from 'react-helmet'
 
 import {url} from '#/main/app/api'
-import {theme} from '#/main/app/config'
+import {theme} from '#/main/theme/config'
 import {Await} from '#/main/app/components/await'
 
 import {ResourceNode as ResourceNodeType} from '#/main/core/resource/prop-types'

@@ -13,7 +13,10 @@
 
 namespace Claroline\ThemeBundle\Entity\Icon;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Claroline\AppBundle\Entity\Meta\Name;
+use Claroline\AppBundle\Entity\Restriction\Locked;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -24,27 +27,14 @@ use Gedmo\Mapping\Annotation as Gedmo;
  */
 class IconSet
 {
+    use Id;
     use Uuid;
+    use Name;
+    use Locked;
 
     const RESOURCE_ICON_SET = 'resource_icon_set';
-    const UTILITIES_ICON_SET = 'utilities_icon_set';
-    const THEME_ICON_SET = 'theme_icon_set';
-
-    /**
-     * @var int
-     *
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column()
-     */
-    private $name;
+    const WIDGET_ICON_SET = 'widget_icon_set';
+    const DATA_ICON_SET = 'data_icon_set';
 
     /**
      * @var string
@@ -61,13 +51,6 @@ class IconSet
     private $default = false;
 
     /**
-     * @var bool
-     *
-     * @ORM\Column(name="is_active", type="boolean")
-     */
-    private $active = false;
-
-    /**
      * @var string
      *
      * @ORM\Column(nullable=true)
@@ -81,13 +64,6 @@ class IconSet
      */
     private $icons;
 
-    /**
-     * @var bool
-     *
-     * @ORM\Column(type="boolean", options={"default" = 0})
-     */
-    private $editable = false;
-
     public function __construct()
     {
         $this->refreshUuid();
@@ -95,93 +71,31 @@ class IconSet
         $this->icons = new ArrayCollection();
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getCname(): ?string
     {
-        return $this->id;
+        return $this->cname;
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * @param string $name
-     *
-     * @return $this
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isDefault()
+    public function isDefault(): bool
     {
         return $this->default;
     }
 
-    /**
-     * @param bool $default
-     *
-     * @return $this
-     */
-    public function setDefault($default)
+    public function setDefault(bool $default): void
     {
         $this->default = $default;
-
-        return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function isActive()
-    {
-        return $this->active;
-    }
-
-    /**
-     * @param bool $active
-     *
-     * @return $this
-     */
-    public function setActive($active)
-    {
-        $this->active = $active;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getType()
+    public function getType(): ?string
     {
         return $this->type;
     }
 
-    /**
-     * @param string $type
-     */
-    public function setType($type)
+    public function setType(string $type): void
     {
         $this->type = $type;
     }
 
-    /**
-     * @return ArrayCollection
-     */
     public function getIcons()
     {
         return $this->icons;
@@ -190,41 +104,15 @@ class IconSet
     /**
      * @param array $icons
      *
-     * @return $this
+     * @deprecated
      */
-    public function setIcons($icons)
+    public function setIcons($icons): void
     {
         $this->icons = $icons;
-
-        return $this;
     }
 
     public function addIcon(IconItem $icon)
     {
         $this->icons->add($icon);
-    }
-
-    /**
-     * @return string
-     */
-    public function getCname()
-    {
-        return $this->cname;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isEditable()
-    {
-        return $this->editable;
-    }
-
-    /**
-     * @param bool $editable
-     */
-    public function setEditable($editable)
-    {
-        $this->editable = $editable;
     }
 }

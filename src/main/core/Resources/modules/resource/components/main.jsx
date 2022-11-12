@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import {ReactReduxContext} from 'react-redux'
 import {Helmet} from 'react-helmet'
 
-import {theme} from '#/main/app/config'
+import {theme} from '#/main/theme/config'
 import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
 import {LINK_BUTTON} from '#/main/app/buttons'

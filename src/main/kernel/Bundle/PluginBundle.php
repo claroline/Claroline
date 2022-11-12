@@ -85,6 +85,8 @@ abstract class PluginBundle extends InstallableBundle implements PluginBundleInt
 
     /**
      * Returns path to the folder of the icon sets for resources.
+     *
+     * application/vnd.claroline.resource.directory
      */
     public function getResourcesIconsSetsFolder(): ?string
     {

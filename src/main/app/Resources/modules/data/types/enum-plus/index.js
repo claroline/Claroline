@@ -3,7 +3,7 @@ import {trans} from '#/main/app/intl/translation'
 import {EnumPlusSearch} from '#/main/app/data/types/enum-plus/components/search'
 import {isChoiceValid, parseChoice, renderChoice} from '#/main/app/data/types/enum-plus/utils'
 
-// TODO : merge with choice type
+// TODO : should not be a type. It's only used to configure "choice" type in facets.
 
 const dataType = {
   name: 'enum-plus',

@@ -2,7 +2,7 @@ import React, {createElement, Component, Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
 import {Helmet} from 'react-helmet'
 
-import {theme} from '#/main/app/config'
+import {theme} from '#/main/theme/config'
 import {trans} from '#/main/app/intl/translation'
 import {withReducer} from '#/main/app/store/components/withReducer'
 import {makeCancelable} from '#/main/app/api'

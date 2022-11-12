@@ -2,7 +2,7 @@ services:
 
     Claroline\ThemeBundle\Command\CreateThemeCommand:
         arguments:
-            - '@Claroline\ThemeBundle\Manager\ThemeManager'
+            - '@Claroline\AppBundle\API\Crud'
         tags:
             - { name: 'console.command', command: 'claroline:theme:create' }
 

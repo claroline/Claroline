@@ -2,17 +2,10 @@ import {makeActionCreator} from '#/main/app/store/actions'
 import {API_REQUEST, url} from '#/main/app/api'
 
 // actions
-export const SIDEBAR_OPEN  = 'SIDEBAR_OPEN'
-export const SIDEBAR_CLOSE = 'SIDEBAR_CLOSE'
-
 export const MAINTENANCE_SET = 'MAINTENANCE_SET'
 
 // action creators
 export const actions = {}
-
-// Toolbar & Sidebar
-actions.openSidebar = makeActionCreator(SIDEBAR_OPEN, 'toolName')
-actions.closeSidebar = makeActionCreator(SIDEBAR_CLOSE)
 
 actions.setMaintenance = makeActionCreator(MAINTENANCE_SET, 'enabled', 'message')
 

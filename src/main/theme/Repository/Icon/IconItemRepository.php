@@ -41,16 +41,6 @@ class IconItemRepository extends EntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function deleteAllByMimeType($mimeType)
-    {
-        $qb = $this->createQueryBuilder('icon')
-            ->delete()
-            ->where('icon.mimeType = :mimeType')
-            ->setParameter('mimeType', $mimeType);
-
-        return $qb->getQuery()->getResult();
-    }
-
     private function addDefaultResourceIconSetToQueryBuilder(QueryBuilder $qb)
     {
         $qb->join('icon.iconSet', 'st')

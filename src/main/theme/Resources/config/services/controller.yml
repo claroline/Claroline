@@ -1,6 +1,6 @@
 services:
     _defaults:
-        public: true #because controller
+        public: true # because controller
 
     Claroline\ThemeBundle\Controller\ThemeController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
@@ -10,11 +10,7 @@ services:
         arguments:
             - '%kernel.project_dir%'
 
-    Claroline\ThemeBundle\Controller\Icon\IconSetController:
-        parent: Claroline\AppBundle\Controller\AbstractCrudController
-        public: true
-
-    Claroline\ThemeBundle\Controller\Icon\IconItemController:
+    Claroline\ThemeBundle\Controller\IconSetController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
         public: true
         arguments:
