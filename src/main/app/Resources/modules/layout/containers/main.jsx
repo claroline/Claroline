@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import {withRouter} from '#/main/app/router'
 
 import {LayoutMain as LayoutMainComponent} from '#/main/app/layout/components/main'
-import {actions, selectors} from '#/main/app/layout/store'
+import {selectors} from '#/main/app/layout/store'
 import {selectors as securitySelectors} from '#/main/app/security/store'
 import {actions as menuActions, selectors as menuSelectors} from '#/main/app/layout/menu/store'
 
@@ -14,8 +14,7 @@ const LayoutMain = withRouter(
     (state) => ({
       unavailable: selectors.unavailable(state),
       authenticated: securitySelectors.isAuthenticated(state),
-      menuOpened: menuSelectors.opened(state),
-      sidebar: selectors.sidebar(state)
+      menuOpened: menuSelectors.opened(state)
     }),
     (dispatch) => ({
       openWorkspace(workspaceId) {
@@ -27,13 +26,6 @@ const LayoutMain = withRouter(
        */
       toggleMenu() {
         dispatch(menuActions.toggle())
-      },
-
-      openSidebar(toolName) {
-        dispatch(actions.openSidebar(toolName))
-      },
-      closeSidebar() {
-        dispatch(actions.closeSidebar())
       }
     })
   )(LayoutMainComponent)
