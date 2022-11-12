@@ -50,6 +50,7 @@ class UiMain extends Component {
                 options: {
                   multiple: false,
                   condensed: true,
+                  noEmpty: true,
                   choices: this.props.iconSetChoices
                 }
               }, {

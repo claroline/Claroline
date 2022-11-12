@@ -2,7 +2,7 @@ import React, {createElement, Fragment} from 'react'
 import {Helmet} from 'react-helmet'
 
 import {trans} from '#/main/app/intl/translation'
-import {theme} from '#/main/app/config'
+import {theme} from '#/main/theme/config'
 import {Routes} from '#/main/app/router'
 import {Await} from '#/main/app/components/await'
 import {ContentLoader} from '#/main/app/content/components/loader'

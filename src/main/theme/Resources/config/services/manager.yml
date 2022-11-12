@@ -1,28 +1,20 @@
 services:
-    _defaults:
-        autoconfigure: false
-        public: false
-
     Claroline\ThemeBundle\Manager\ThemeManager:
         arguments:
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@security.authorization_checker'
-          - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-          - '%kernel.project_dir%/app'
-          - '@Claroline\ThemeBundle\Serializer\ThemeSerializer'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
 
     Claroline\ThemeBundle\Manager\ThemeBuilderManager:
         arguments:
-          - '@kernel'
-          - '%claroline.param.files_directory%'
-          - '%kernel.project_dir%/app'
+            - '@kernel'
+            - '%claroline.param.files_directory%'
 
     Claroline\ThemeBundle\Manager\IconSetManager:
         arguments:
-          - '%claroline.param.public_directory%'
-          - '%claroline.param.icon_sets_web_dir%'
-          - '%claroline.param.icon_sets_directory%'
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+            - '%claroline.param.public_directory%'
+            - '%claroline.param.icon_sets_web_dir%'
+            - '%claroline.param.icon_sets_directory%'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
         calls:
-          - setLogger: [ '@logger' ]
+            - setLogger: [ '@logger' ]

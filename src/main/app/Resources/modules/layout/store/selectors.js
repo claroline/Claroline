@@ -17,12 +17,9 @@ const maintenanceMessage = state => state.maintenance.message
 
 const unavailable = (state) => disabled(state) || (!securitySelectors.isAuthenticated(state) && maintenance(state))
 
-const sidebar = state => state.sidebar.name
-
 export const selectors = {
   unavailable,
   disabled,
   maintenance,
-  maintenanceMessage,
-  sidebar
+  maintenanceMessage
 }

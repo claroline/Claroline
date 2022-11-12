@@ -5,7 +5,6 @@ namespace Claroline\CoreBundle\API\Serializer\Platform;
 use Claroline\AppBundle\Manager\PlatformManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\Resource\ResourceTypeSerializer;
-use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\GenericDataEvent;
@@ -91,13 +90,6 @@ class ClientSerializer
      */
     public function serialize()
     {
-        /*$logo = null;
-        if ($this->config->getParameter('logo')) {
-            $logo = $this->om->getRepository(PublicFile::class)->findOneBy([
-                'url' => $this->config->getParameter('logo'),
-            ]);
-        }*/
-
         $data = [
             'logo' => $this->config->getParameter('logo'),
             'name' => $this->config->getParameter('name'),

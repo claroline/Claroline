@@ -22,7 +22,6 @@ use Claroline\ThemeBundle\Repository\Icon\IconItemRepository;
 use Psr\Log\LoggerAwareInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class IconSetManager implements LoggerAwareInterface
 {
@@ -100,53 +99,6 @@ class IconSetManager implements LoggerAwareInterface
         return $this->iconSetRepo->findOneByName($this->ch->getParameter('display.resource_icon_set'));
     }
 
-    public function setActiveResourceIconSetByCname($cname, $force = false)
-    {
-        // Get active Icon Set
-        $activeSet = $this->getActiveResourceIconSet();
-        if (!$force && $activeSet->getCname() === $cname) {
-            return true;
-        }
-        $newActiveSet = $this->iconSetRepo->findOneByCname($cname);
-        if (empty($newActiveSet)) {
-            return true;
-        }
-        $activeSet->setActive(false);
-        $newActiveSet->setActive(true);
-        $this->om->persist($activeSet);
-        $this->om->persist($newActiveSet);
-        $this->om->flush();
-
-        return true;
-    }
-
-    public function deleteIconSet(IconSet $iconSet)
-    {
-        if ($iconSet->isActive() || $iconSet->isDefault()) {
-            throw new BadRequestHttpException('error_cannot_delete_active_default_icon_set');
-        }
-        $cname = $iconSet->getCname();
-        $this->om->remove($iconSet);
-        $this->om->flush();
-        $this->deleteIconSetDirForCname($cname);
-    }
-
-    public function deleteAllResourceIconItemsForMimeType($mimeType)
-    {
-        $this->iconItemRepo->deleteAllByMimeType($mimeType);
-    }
-
-    /**
-     * @param $cname
-     */
-    private function deleteIconSetDirForCname($cname)
-    {
-        $cnameDir = $this->iconSetsDir.DIRECTORY_SEPARATOR.$cname;
-        if ($this->fs->exists($cnameDir)) {
-            $this->fs->rmdir($cnameDir, true);
-        }
-    }
-
     public function generateIconSets($iconsPath, array $mimeTypesList = [], $force = false)
     {
         $ds = DIRECTORY_SEPARATOR;
@@ -171,7 +123,6 @@ class IconSetManager implements LoggerAwareInterface
 
                             if ('claroline' === $name) {
                                 $iconSet->setDefault(true);
-                                $iconSet->setActive(true);
                             }
                             $this->om->persist($iconSet);
                             $this->om->flush();

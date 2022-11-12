@@ -13,35 +13,26 @@ class IconItemSerializer
     /** @var IconSetSerializer */
     private $iconSetSerializer;
 
-    /**
-     * IconItemSerializer constructor.
-     */
     public function __construct(IconSetSerializer $iconSetSerializer)
     {
         $this->iconSetSerializer = $iconSetSerializer;
     }
 
-    /**
-     * @return string
-     */
-    public function getClass()
+    public function getClass(): string
     {
         return IconItem::class;
     }
 
     /**
      * Serializes an IconItem entity for the JSON api.
-     *
-     * @return array
      */
-    public function serialize(IconItem $iconItem, array $options = [])
+    public function serialize(IconItem $iconItem, ?array $options = []): array
     {
         $serialized = [
             'id' => $iconItem->getUuid(),
+            'name' => $iconItem->getName(),
             'mimeType' => $iconItem->getMimeType(),
             'relativeUrl' => $iconItem->getRelativeUrl(),
-            'name' => $iconItem->getName(),
-            'class' => $iconItem->getClass(),
         ];
 
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {

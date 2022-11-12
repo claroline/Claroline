@@ -136,18 +136,6 @@ class DatabaseWriter implements LoggerAwareInterface
     public function delete($pluginFqcn)
     {
         $plugin = $this->pluginRepository->findOneByBundleFQCN($pluginFqcn);
-        // code below is for "re-parenting" the resources which depend on one
-        // of the resource types the plugin might have declared
-
-        /** @var ResourceType[] $resourceTypes */
-        $resourceTypes = $this->em
-            ->getRepository(ResourceType::class)
-            ->findBy(['plugin' => $plugin->getGeneratedId()]);
-
-        foreach ($resourceTypes as $resourceType) {
-            // delete all icons for this resource type in icon sets
-            $this->iconSetManager->deleteAllResourceIconItemsForMimeType('custom/'.$resourceType->getName());
-        }
 
         // deletion of other plugin db dependencies is made via a cascade mechanism
         $this->em->remove($plugin);

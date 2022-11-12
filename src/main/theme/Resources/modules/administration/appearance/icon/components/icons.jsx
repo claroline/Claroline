@@ -6,15 +6,6 @@ import {ListData} from '#/main/app/content/list/containers/data'
 
 import {selectors} from '#/main/theme/administration/appearance/icon/store/selectors'
 
-/*{
-  name: 'add',
-  type: LINK_BUTTON,
-  icon: 'fa fa-fw fa-plus',
-  label: trans('add_icon_set'),
-  target: props.path+'/icons/form',
-  primary: true
-}*/
-
 const Icons = (props) =>
   <ListData
     name={selectors.STORE_NAME+'.list'}
@@ -27,19 +18,9 @@ const Icons = (props) =>
       target: `${props.path}/appearance/icons/form/${row.id}`,
       label: trans('edit', {}, 'actions')
     })}
-    actions={(rows) => [
-      {
-        type: LINK_BUTTON,
-        icon: 'fa fa-fw fa-pencil',
-        label: trans('edit', {}, 'actions'),
-        scope: ['object'],
-        target: `${props.path}/icons/form/${rows[0].id}`,
-        displayed: rows[0].editable
-      }
-    ]}
     delete={{
       url: ['apiv2_icon_set_delete_bulk'],
-      displayed: (rows) => !rows.find(iconSet => !iconSet.editable)
+      displayed: (rows) => !rows.find(iconSet => !iconSet.restrictions.locked)
     }}
     definition={[
       {
@@ -54,9 +35,10 @@ const Icons = (props) =>
         label: trans('default'),
         displayed: true
       }, {
-        name: 'editable',
+        name: 'restrictions.locked',
+        alias: 'locked',
         type: 'boolean',
-        label: trans('editable'),
+        label: trans('locked'),
         displayed: true
       }
     ]}

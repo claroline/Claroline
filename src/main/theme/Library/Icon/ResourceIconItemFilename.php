@@ -12,6 +12,9 @@
 
 namespace Claroline\ThemeBundle\Library\Icon;
 
+/**
+ * @deprecated
+ */
 class ResourceIconItemFilename
 {
     private $filename;

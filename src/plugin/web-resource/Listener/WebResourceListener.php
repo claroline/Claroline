@@ -14,7 +14,6 @@ namespace Claroline\WebResourceBundle\Listener;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\File;
-use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DownloadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\ExportResourceEvent;
@@ -40,19 +39,16 @@ class WebResourceListener
     /** @var WebResourceManager */
     private $webResourceManager;
 
+    /** @var SerializerProvider */
+    private $serializer;
+
     /** @var ResourceManager */
     private $resourceManager;
 
-    /**
-     * WebResourceListener constructor.
-     *
-     * @param string $filesDir
-     * @param string $uploadDir
-     */
     public function __construct(
-        $filesDir,
+        string $filesDir,
         ObjectManager $om,
-        $uploadDir,
+        string $uploadDir,
         WebResourceManager $webResourceManager,
         ResourceManager $resourceManager,
         SerializerProvider $serializer
@@ -81,9 +77,9 @@ class WebResourceListener
         }
 
         $event->setData([
-          'path' => rtrim($srcPath.$ds.$this->webResourceManager->guessRootFileFromUnzipped($unzippedPath.$ds.$hash), '/'),
-          // common file data
-          'file' => $this->serializer->serialize($resource),
+            'path' => rtrim($srcPath.$ds.$this->webResourceManager->guessRootFileFromUnzipped($unzippedPath.$ds.$hash), '/'),
+            // common file data
+            'file' => $this->serializer->serialize($resource),
         ]);
 
         $event->stopPropagation();
@@ -136,24 +132,14 @@ class WebResourceListener
         $event->stopPropagation();
     }
 
-    public function onCopy(CopyResourceEvent $event)
-    {
-        /** @var File $webResource */
-        $webResource = $event->getResource();
-
-        $file = $this->copy($webResource, $event->getCopy());
-        $event->setCopy($file);
-        $event->stopPropagation();
-    }
-
     public function onDownload(DownloadResourceEvent $event)
     {
         /** @var File $resource */
         $resource = $event->getResource();
 
         $name = $this->filesDir.DIRECTORY_SEPARATOR.'webresource'.
-          DIRECTORY_SEPARATOR.$resource->getResourceNode()->getWorkspace()->getUuid().
-          DIRECTORY_SEPARATOR.$resource->getHashName();
+            DIRECTORY_SEPARATOR.$resource->getResourceNode()->getWorkspace()->getUuid().
+            DIRECTORY_SEPARATOR.$resource->getHashName();
 
         $event->setItem($name);
         $event->stopPropagation();

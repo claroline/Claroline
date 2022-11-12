@@ -11,23 +11,15 @@
 
 namespace Claroline\CoreBundle\Command;
 
-use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\ChoiceQuestion;
-use Symfony\Component\Console\Question\Question;
 
 class UpdateRichTextCommand extends Command
 {
-    private $params = [
-        'old_string' => 'The string to match',
-        'new_string' => 'The string to replace',
-    ];
     private $em;
 
     public function __construct(EntityManagerInterface $em)
@@ -44,143 +36,68 @@ class UpdateRichTextCommand extends Command
             ->setDefinition([
                new InputArgument('old_string', InputArgument::REQUIRED, 'old str'),
                new InputArgument('new_string', InputArgument::REQUIRED, 'new str'),
-               new InputArgument('classes', InputArgument::REQUIRED, 'classes'),
            ])
            ->addOption(
                'force',
                'f',
                InputOption::VALUE_NONE,
                'When set to true, no confirmation required'
-           )
-           ->addOption(
-               'all',
-               'a',
-               InputOption::VALUE_NONE,
-               'When set to true, all entities'
-           )
-           ->addOption(
-               'regex',
-               'r',
-               InputOption::VALUE_NONE,
-               'When set to true, use regex'
            );
-    }
-
-    protected function interact(InputInterface $input, OutputInterface $output)
-    {
-        foreach ($this->params as $parameter => $question) {
-            if (!$input->getArgument($parameter)) {
-                $input->setArgument(
-                    $parameter,
-                    $this->getHelper('question')->ask($input, $output, new Question($question.': '))
-                );
-            }
-        }
-
-        $helper = $this->getHelper('question');
-        $entities = array_keys($this->getParsableEntities());
-        $question = new ChoiceQuestion('Entity to parse: (use \',\' as a separator) ', $entities);
-        $question->setMultiselect(true);
-        while (null === $entity = $input->getArgument('classes')) {
-            $entity = $helper->ask($input, $output, $question);
-            $input->setArgument('classes', $entity);
-        }
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $parsable = $this->getParsableEntities();
         $toMatch = $input->getArgument('old_string');
         $toReplace = $input->getArgument('new_string');
-        $classes = $input->getArgument('classes');
-        $entities = [];
         $search = '%'.addcslashes($toMatch, '%_').'%';
 
-        foreach ($classes as $class) {
-            foreach ($parsable[$class] as $property) {
-                if ($input->getOption('regex')) {
-                    $metadata = $this->em->getClassMetadata($class);
+        $classes = $this->getParsableEntities();
+        foreach ($classes as $class => $properties) {
+            $output->writeln($class);
 
-                    $tableName = $metadata->getTableName();
-                    $columnName = $metadata->getColumnName($property);
-                    $sql = 'SELECT * from '.$tableName.' WHERE '.$columnName." RLIKE '{$toMatch}'";
-                    $output->writeln($sql);
-                    $rsm = new ResultSetMappingBuilder($this->em);
-                    $rsm->addRootEntityFromClassMetadata($class, '');
-                    $query = $this->em->createNativeQuery($sql, $rsm);
-                    $data = $query->getResult();
-                } else {
-                    $data = $this->em->getRepository($class)->createQueryBuilder('e')
-                      ->where("e.{$property} LIKE :str")
-                      ->setParameter('str', $search)
-                      ->getQuery()
-                      ->getResult();
-                }
+            // search for entities containing the string to replace
+            $qb = $this->em->getRepository($class)->createQueryBuilder('e');
+            foreach ($properties as $property) {
+                $qb->andWhere("e.{$property} LIKE :str");
+            }
 
-                if ($data) {
-                    $entities = array_merge($entities, $data);
+            $entities = $qb->setParameter('str', $search)->getQuery()->getResult();
+            $output->writeln('<error>'.count($entities).' entities found.</error>');
+
+            // process found entities or display info about changes in the console for review
+            foreach ($entities as $entity) {
+                $output->writeln('<comment>'.$entity->getId().'</comment>');
+
+                foreach ($properties as $property) {
+                    $getter = 'get'.ucfirst($property);
+
+                    $originalText = $entity->$getter();
+                    $updatedText = str_replace($toMatch, $toReplace, $originalText);
+
+                    if ($originalText !== $updatedText) {
+                        // we want to exclude false positive : MySQL do a case-insensitive search
+                        // and we will do a case-sensitive replace
+                        if ($input->getOption('force')) {
+                            $func = 'set'.ucfirst($property);
+                            $entity->$func($updatedText);
+
+                            $this->em->persist($entity);
+                        } else {
+                            $output->writeln(str_replace($toMatch, '<question>'.$toMatch.'</question>', $originalText));
+                        }
+                    }
                 }
             }
         }
 
-        if (!$entities) {
-            $output->writeln('<error>No entities found...</error>');
-
-            return 1;
+        if ($input->getOption('force')) {
+            $this->em->flush();
         }
-
-        $output->writeln('<error>'.count($entities).' entities found.</error>');
-
-        $i = 0;
-
-        foreach ($entities as $entity) {
-            $continue = false;
-
-            foreach ($parsable[ClassUtils::getRealClass(get_class($entity))] as $property) {
-                $func = 'get'.ucfirst($property);
-                $text = $entity->$func();
-
-                if ($input->getOption('force')) {
-                    $continue = true;
-                } else {
-                    $infos = 'Class: '.get_class($entity)."\n";
-                    $infos .= 'Id: '.$entity->getId()."\n";
-                    $infos .= $text;
-                    $output->writeln('<comment>'.$infos.'</comment>');
-
-                    $helper = $this->getHelper('question');
-                    $question = new ChoiceQuestion('Edit ?', ['yes', 'no']);
-                    $answer = $helper->ask($input, $output, $question);
-
-                    if ('yes' === $answer) {
-                        $continue = true;
-                    }
-                }
-
-                if ($continue) {
-                    if ($input->getOption('regex')) {
-                        $escapedMatcher = str_replace('#', '\#', $toMatch);
-                        $text = preg_replace('#'.$escapedMatcher.'#', $toReplace, $text);
-                    } else {
-                        $text = str_replace($toMatch, $toReplace, $text);
-                    }
-
-                    $func = 'set'.ucfirst($property);
-                    $entity->$func($text);
-                    $this->em->persist($entity);
-                    ++$i;
-                }
-            }
-        }
-
-        $output->writeln("<comment>{$i} element changed... flushing</comment>");
-        $this->em->flush();
-        $output->writeln('<comment>Done</comment>');
 
         return 0;
     }
 
-    private function getParsableEntities()
+    private function getParsableEntities(): array
     {
         return array_filter([
             'Claroline\CoreBundle\Entity\Content' => ['content'],
@@ -193,7 +110,7 @@ class UpdateRichTextCommand extends Command
             'Innova\PathBundle\Entity\Path\Path' => ['description'],
             'Innova\PathBundle\Entity\Step' => ['description'],
             'UJM\ExoBundle\Entity\Exercise' => ['endMessage'],
-            'UJM\ExoBundle\Entity\Item\Item' => ['content'],
+            'UJM\ExoBundle\Entity\Item\Item' => ['title', 'content'],
             'Claroline\ForumBundle\Entity\Message' => ['content'],
             'Claroline\CursusBundle\Entity\Course' => ['description'],
             'Claroline\CursusBundle\Entity\Session' => ['description'],

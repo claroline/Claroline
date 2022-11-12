@@ -3,8 +3,6 @@ import {PropTypes as T} from 'prop-types'
 
 import {Routes} from '#/main/app/router/components/routes'
 
-import {LayoutSidebar} from '#/main/app/layout/components/sidebar'
-import {LayoutToolbar} from '#/main/app/layout/components/toolbar'
 import {HeaderMain} from '#/main/app/layout/header/containers/main'
 import {FooterMain} from '#/main/app/layout/footer/containers/main'
 
@@ -103,20 +101,7 @@ const LayoutMain = props =>
 
         <FooterMain />
       </div>
-
-      {false && props.authenticated &&
-        <LayoutToolbar
-          opened={props.sidebar}
-          open={props.openSidebar}
-        />
-      }
     </div>
-
-    {(false && props.authenticated && props.sidebar) &&
-      <LayoutSidebar
-        close={props.closeSidebar}
-      />
-    }
   </Fragment>
 
 LayoutMain.propTypes = {
@@ -126,11 +111,7 @@ LayoutMain.propTypes = {
   openWorkspace: T.func.isRequired,
 
   menuOpened: T.bool.isRequired,
-  toggleMenu: T.func.isRequired,
-
-  sidebar: T.string,
-  openSidebar: T.func.isRequired,
-  closeSidebar: T.func.isRequired
+  toggleMenu: T.func.isRequired
 }
 
 export {

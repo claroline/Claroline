@@ -5,11 +5,9 @@ import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
-
+import {ThemeIcon} from '#/main/theme/components/icon'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {actions as formActions} from '#/main/app/content/form/store/actions'
-
-import {ResourceIcon} from '#/main/core/resource/components/icon'
 
 const restrictedByDates = (node) => get(node, 'restrictions.enableDates') || !isEmpty(get(node, 'restrictions.dates'))
 const restrictedByCode = (node) => get(node, 'restrictions.enableCode') || !!get(node, 'restrictions.code')
@@ -32,7 +30,7 @@ const ResourceFormComponent = (props) =>
             type: 'type',
             hideLabel: true,
             calculated: (resourceNode) => !isEmpty(resourceNode) ? ({
-              icon: <ResourceIcon mimeType={resourceNode.meta.mimeType} />,
+              icon: <ThemeIcon mimeType={resourceNode.meta.mimeType} />,
               name: trans(resourceNode.meta.type, {}, 'resource'),
               description: trans(`${resourceNode.meta.type}_desc`, {}, 'resource')
             }) : null

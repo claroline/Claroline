@@ -3,10 +3,10 @@ import {PropTypes as T} from 'prop-types'
 import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
+import {ThemeIcon} from '#/main/theme/components/icon'
 import {GridSelection} from '#/main/app/content/grid/components/selection'
 
 import {getType} from '#/main/core/resource/utils'
-import {ResourceIcon} from '#/main/core/resource/components/icon'
 
 const ResourceType = props =>
   <GridSelection
@@ -17,7 +17,7 @@ const ResourceType = props =>
 
         return ({
           name: name,
-          icon: React.createElement(ResourceIcon, {
+          icon: React.createElement(ThemeIcon, {
             mimeType: `custom/${name}`
           }),
           label: trans(name, {}, 'resource'),

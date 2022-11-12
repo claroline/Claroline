@@ -19,29 +19,24 @@ class IconSetSerializer
 
     /**
      * Serializes an IconSet entity for the JSON api.
-     *
-     * @return array
      */
-    public function serialize(IconSet $iconSet)
+    public function serialize(IconSet $iconSet): array
     {
         return [
             'id' => $iconSet->getUuid(),
             'name' => $iconSet->getName(),
             'type' => $iconSet->getType(),
-            'active' => $iconSet->isActive(),
             'default' => $iconSet->isDefault(),
-            'editable' => $iconSet->isEditable(),
+            'restrictions' => [
+                'locked' => $iconSet->isLocked(),
+            ],
         ];
     }
 
     /**
      * Deserializes IconSet data into entities.
-     *
-     * @param array $data
-     *
-     * @return IconSet
      */
-    public function deserialize($data, IconSet $iconSet)
+    public function deserialize(array $data, IconSet $iconSet): IconSet
     {
         $this->sipe('id', 'setUuid', $data, $iconSet);
         $this->sipe('name', 'setName', $data, $iconSet);
