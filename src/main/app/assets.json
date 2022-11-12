@@ -1,7 +1,6 @@
 {
   "webpack": {
     "entry": {
-      "polyfills": "polyfills",
       "layout": "layout/bootstrap"
     }
   }
