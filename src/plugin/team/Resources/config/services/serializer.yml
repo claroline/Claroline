@@ -9,7 +9,7 @@ services:
         arguments:
            - '@Claroline\AppBundle\Persistence\ObjectManager'
            - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
-           - '@Claroline\CoreBundle\API\Serializer\User\RoleSerializer'
+           - '@Claroline\CommunityBundle\Serializer\RoleSerializer'
            - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'
 
     Claroline\TeamBundle\Serializer\WorkspaceTeamParametersSerializer:

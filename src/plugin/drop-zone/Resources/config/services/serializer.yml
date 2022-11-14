@@ -10,7 +10,7 @@ services:
     Claroline\DropZoneBundle\Serializer\RevisionCommentSerializer:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
+            - '@Claroline\CommunityBundle\Serializer\UserSerializer'
 
     Claroline\DropZoneBundle\Serializer\GradeSerializer:
         arguments:
@@ -26,19 +26,19 @@ services:
             - '@Claroline\DropZoneBundle\Serializer\CorrectionSerializer'
             - '@Claroline\DropZoneBundle\Serializer\DocumentSerializer'
             - '@Claroline\DropZoneBundle\Serializer\DropCommentSerializer'
-            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
+            - '@Claroline\CommunityBundle\Serializer\UserSerializer'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     Claroline\DropZoneBundle\Serializer\DropCommentSerializer:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
+            - '@Claroline\CommunityBundle\Serializer\UserSerializer'
 
     Claroline\DropZoneBundle\Serializer\DocumentSerializer:
         arguments:
             - '@Claroline\DropZoneBundle\Serializer\RevisionSerializer'
             - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
-            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
+            - '@Claroline\CommunityBundle\Serializer\UserSerializer'
             - '@security.token_storage'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
 
@@ -49,5 +49,5 @@ services:
     Claroline\DropZoneBundle\Serializer\CorrectionSerializer:
         arguments:
             - '@Claroline\DropZoneBundle\Serializer\GradeSerializer'
-            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
+            - '@Claroline\CommunityBundle\Serializer\UserSerializer'
             - '@Claroline\AppBundle\Persistence\ObjectManager'

@@ -13,4 +13,4 @@ services:
         arguments:
            - '@Claroline\AppBundle\Persistence\ObjectManager'
            - '@Claroline\ScormBundle\Serializer\ScoSerializer'
-           - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
+           - '@Claroline\CommunityBundle\Serializer\UserSerializer'

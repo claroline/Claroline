@@ -13,7 +13,7 @@ namespace Claroline\MessageBundle\Controller\Contact;
 
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\Controller\AbstractCrudController;
-use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
+use Claroline\CommunityBundle\Serializer\UserSerializer;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\MessageBundle\Entity\Contact\Contact;
 use Claroline\MessageBundle\Manager\ContactManager;

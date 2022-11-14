@@ -13,7 +13,7 @@ namespace Claroline\CursusBundle\Serializer\Registration;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
-use Claroline\CoreBundle\API\Serializer\User\GroupSerializer;
+use Claroline\CommunityBundle\Serializer\GroupSerializer;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CursusBundle\Entity\Registration\AbstractGroupRegistration;
 

@@ -4,7 +4,7 @@ namespace Claroline\AgendaBundle\Serializer;
 
 use Claroline\AgendaBundle\Entity\EventInvitation;
 use Claroline\AppBundle\API\Options;
-use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
+use Claroline\CommunityBundle\Serializer\UserSerializer;
 
 class EventInvitationSerializer
 {

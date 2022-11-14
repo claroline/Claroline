@@ -1,9 +1,9 @@
 <?php
 
-namespace  Icap\NotificationBundle\Serializer;
+namespace Icap\NotificationBundle\Serializer;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
+use Claroline\CommunityBundle\Serializer\UserSerializer;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Icap\NotificationBundle\Entity\NotificationViewer;
 use Icap\NotificationBundle\Event\Notification\NotificationCreateDelegateViewEvent;

@@ -8,17 +8,17 @@ services:
         tags: [ claroline.serializer ]
         arguments:
             - '@security.authorization_checker'
-            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
+            - '@Claroline\CommunityBundle\Serializer\UserSerializer'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     Claroline\AuthenticationBundle\Serializer\IpUserSerializer:
         tags: [ claroline.serializer ]
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
+            - '@Claroline\CommunityBundle\Serializer\UserSerializer'
 
     Claroline\AuthenticationBundle\Serializer\OauthUserSerializer:
         tags: [ claroline.serializer ]
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
+            - '@Claroline\CommunityBundle\Serializer\UserSerializer'

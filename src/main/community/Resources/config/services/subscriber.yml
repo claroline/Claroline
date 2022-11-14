@@ -12,7 +12,7 @@ services:
         arguments:
             - '@Claroline\AppBundle\API\FinderProvider'
             - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
-            - '@Claroline\CoreBundle\API\Serializer\User\ProfileSerializer'
+            - '@Claroline\CommunityBundle\Serializer\ProfileSerializer'
             - '@Claroline\CoreBundle\Manager\UserManager'
 
     # Crud

@@ -12,8 +12,8 @@
 namespace Claroline\CommunityBundle\Subscriber\Tool;
 
 use Claroline\AppBundle\API\FinderProvider;
+use Claroline\CommunityBundle\Serializer\ProfileSerializer;
 use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
-use Claroline\CoreBundle\API\Serializer\User\ProfileSerializer;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Event\CatalogEvents\ToolEvents;

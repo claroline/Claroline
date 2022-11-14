@@ -14,7 +14,7 @@ services:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AudioPlayerBundle\Serializer\Resource\SectionSerializer'
-            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
+            - '@Claroline\CommunityBundle\Serializer\UserSerializer'
 
     Claroline\AudioPlayerBundle\Serializer\Resource\AudioParamsSerializer:
         tags: [claroline.serializer]

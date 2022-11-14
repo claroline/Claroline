@@ -10,7 +10,7 @@ services:
             - '@claroline.serializer.contact'
             - '@Claroline\AppBundle\API\FinderProvider'
             - '@security.token_storage'
-            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
+            - '@Claroline\CommunityBundle\Serializer\UserSerializer'
 
     Claroline\MessageBundle\Controller\Contact\OptionsController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController

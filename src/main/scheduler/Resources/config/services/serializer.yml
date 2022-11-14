@@ -10,4 +10,4 @@ services:
             - '@Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'
-            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
+            - '@Claroline\CommunityBundle\Serializer\UserSerializer'

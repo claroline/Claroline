@@ -11,8 +11,8 @@ services:
       - '@Claroline\AppBundle\Persistence\ObjectManager'
       - '@Claroline\AppBundle\API\SerializerProvider'
       - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'
-      - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
-      - '@Claroline\CoreBundle\API\Serializer\User\RoleSerializer'
+      - '@Claroline\CommunityBundle\Serializer\UserSerializer'
+      - '@Claroline\CommunityBundle\Serializer\RoleSerializer'
 
   Claroline\HomeBundle\Serializer\Type\WidgetsTabSerializer:
     tags: [claroline.serializer]

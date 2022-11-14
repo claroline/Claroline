@@ -14,11 +14,11 @@ services:
          arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Icap\WikiBundle\Serializer\ContributionSerializer'
-            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
+            - '@Claroline\CommunityBundle\Serializer\UserSerializer'
 
     Icap\WikiBundle\Serializer\ContributionSerializer:
          public: false
          tags: [claroline.serializer]
          arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
+            - '@Claroline\CommunityBundle\Serializer\UserSerializer'

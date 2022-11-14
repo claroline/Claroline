@@ -28,5 +28,5 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Icap\BlogBundle\Manager\BlogTrackingManager'
             - '@translator'
-            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
+            - '@Claroline\CommunityBundle\Serializer\UserSerializer'
             - '@event_dispatcher'

@@ -3,7 +3,7 @@
 namespace Claroline\DropZoneBundle\Serializer;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
+use Claroline\CommunityBundle\Serializer\UserSerializer;
 use Claroline\DropZoneBundle\Entity\Correction;
 
 class CorrectionSerializer

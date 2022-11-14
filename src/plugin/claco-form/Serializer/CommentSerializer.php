@@ -4,7 +4,7 @@ namespace Claroline\ClacoFormBundle\Serializer;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\ClacoFormBundle\Entity\Comment;
-use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
+use Claroline\CommunityBundle\Serializer\UserSerializer;
 
 class CommentSerializer
 {

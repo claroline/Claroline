@@ -4,7 +4,7 @@ namespace Claroline\CoreBundle\API\Serializer\Workspace;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
-use Claroline\CoreBundle\API\Serializer\User\RoleSerializer;
+use Claroline\CommunityBundle\Serializer\RoleSerializer;
 use Claroline\CoreBundle\Entity\Workspace\Shortcuts;
 
 class ShortcutsSerializer
