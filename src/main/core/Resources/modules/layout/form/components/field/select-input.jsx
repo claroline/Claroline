@@ -35,6 +35,9 @@ ChoicesTypeAhead.propTypes = {
   onSelect: T.func
 }
 
+/**
+ * @deprecated
+ */
 class SelectInput extends Component {
   constructor(props) {
     super(props)

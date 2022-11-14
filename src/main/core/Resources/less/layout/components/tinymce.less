@@ -1,0 +1,26 @@
+// Full screen editor container
+
+@import "@{vendor-path}/tinymce/skins/content/default/content.min.css";
+@import "@{vendor-path}/tinymce/skins/ui/oxide/content.min.css";
+
+.tox-tinymce {
+  border-radius: 0 !important;
+  border: none !important;
+}
+
+.tox .tox-throbber {
+  z-index: @zindex-modal-background - 1 !important;
+}
+
+.tox-fullscreen {
+  z-index: @zindex-fullscreen;
+}
+
+.mce-content-body {
+  //padding: 0 floor(@grid-gutter-width / 2) !important;
+  padding: @input-padding !important;
+
+  .btn, .btn-link {
+    .user-select(auto);
+  }
+}

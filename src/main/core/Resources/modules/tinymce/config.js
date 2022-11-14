@@ -2,7 +2,7 @@ import invariant from 'invariant'
 
 import {plugins} from '#/main/core/tinymce/plugins'
 import '#/main/core/tinymce/langs'
-import '#/main/core/tinymce/themes'
+//import '#/main/core/tinymce/themes'
 
 import {url} from '#/main/app/api'
 import {makeId} from '#/main/core/scaffolding/id'
