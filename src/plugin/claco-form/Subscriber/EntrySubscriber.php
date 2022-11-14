@@ -62,7 +62,7 @@ class EntrySubscriber implements EventSubscriberInterface
 
         // set the creator of the entry
         $user = $this->tokenStorage->getToken()->getUser();
-        if (empty($entry->getUser()) && $user instanceof User) {
+        if ($user instanceof User) {
             $entry->setUser($user);
         }
     }

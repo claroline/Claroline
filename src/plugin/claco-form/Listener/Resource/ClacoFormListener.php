@@ -221,7 +221,21 @@ class ClacoFormListener
                 $entry->setClacoForm($clacoForm);
 
                 $this->crud->create($entry, $entryData, [Crud::NO_PERMISSIONS, Crud::NO_VALIDATION, Options::REFRESH_UUID]);
+
+                // correctly set the entry creator
+                // it's forced to the current user in EntrySubscriber.
+                // This will no longer be required when import will stop using creation process
+                if (!empty($entryData['user'])) {
+                    /** @var User $creator */
+                    $creator = $this->om->getObject($entryData['user'], Entry::class);
+                    if ($creator) {
+                        $entry->setUser($creator);
+                        $this->om->persist($entry);
+                    }
+                }
             }
         }
+
+        $this->om->flush();
     }
 }
