@@ -121,6 +121,8 @@ class ProfileController
     public function updateAction(User $user, Request $request): JsonResponse
     {
         $userData = $this->decodeRequest($request);
+        // removes main organization from the serialized structure because it will cause access issues.
+        unset($userData['mainOrganization']);
         // removes roles from the serialized structure because it will cause access issues.
         // those roles should not be here anyway.
         unset($userData['roles']);

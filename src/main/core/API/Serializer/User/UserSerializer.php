@@ -8,7 +8,6 @@ use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;
-use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
@@ -155,13 +154,9 @@ class UserSerializer
             'phone' => $showEmail ? $user->getPhone() : null,
             'meta' => $this->serializeMeta($user),
             'restrictions' => $this->serializeRestrictions($user),
+            // this has a uge negative impact on perfs
+            // be this is useful to have the user roles in DataLists (mostly in workspace to know which ws role a user has)
             'roles' => array_merge($userRoles, $groupRoles),
-            'groups' => array_values(array_map(function (Group $group) { // todo use group serializer with minimal option
-                return [
-                    'id' => $group->getUuid(),
-                    'name' => $group->getName(),
-                ];
-            }, $user->getGroups()->toArray())),
         ];
 
         if ($user->getMainOrganization()) {
@@ -192,12 +187,6 @@ class UserSerializer
 
     private function serializeMeta(User $user): array
     {
-        $locale = $user->getLocale();
-        if (empty($locale)) {
-            // todo : remove me (default should be set by crud at creation)
-            $locale = $this->config->getParameter('locale_language');
-        }
-
         return [
             'acceptedTerms' => $user->hasAcceptedTerms(),
             'lastActivity' => DateNormalizer::normalize($user->getLastActivity()),
@@ -206,26 +195,16 @@ class UserSerializer
             'mailValidated' => $user->isMailValidated(),
             'mailNotified' => $user->isMailNotified(),
             'personalWorkspace' => (bool) $user->getPersonalWorkspace(),
-            'locale' => $locale,
+            'locale' => $user->getLocale(),
         ];
     }
 
     private function deserializeMeta(array $meta, User $user)
     {
-        $this->sipe('mailNotified', 'setIsMailNotified', $meta, $user);
+        $this->sipe('locale', 'setLocale', $meta, $user);
         $this->sipe('description', 'setDescription', $meta, $user);
+        $this->sipe('mailNotified', 'setIsMailNotified', $meta, $user);
         $this->sipe('mailValidated', 'setIsMailValidated', $meta, $user);
-
-        if (empty($meta) || empty($meta['locale'])) {
-            if (empty($user->getLocale())) {
-                // set default
-                // todo : remove me (should be set by crud event)
-                $user->setLocale($this->config->getParameter('locale_language'));
-            }
-        } else {
-            // use given locale
-            $user->setLocale($meta['locale']);
-        }
     }
 
     private function serializePermissions(User $user): array
@@ -315,7 +294,7 @@ class UserSerializer
             }
         }
 
-        // TODO : this should not be done here
+        // TODO : this should not be done here (this is still used to register new users in ws in platform registration)
         //only add role here. If we want to remove them, use the crud remove method instead
         //it's useful if we want to create a user with a list of roles
         if (isset($data['roles'])) {
@@ -345,33 +324,6 @@ class UserSerializer
                     } else {
                         $user->addRole($role);
                     }
-                }
-            }
-        }
-
-        // TODO : this should not be done here
-        //only add groups here. If we want to remove them, use the crud remove method instead
-        //it's useful if we want to create a user with a list of roles
-        if (isset($data['groups'])) {
-            foreach ($data['groups'] as $groupData) {
-                /** @var Group $group */
-                $group = $this->om->getObject($groupData, Group::class, ['id', 'name']);
-
-                if ($group && $group->getId()) {
-                    $user->addGroup($group);
-                }
-            }
-        }
-
-        // TODO : this should not be done here
-        //only add organizations here. If we want to remove them, use the crud remove method instead
-        //it's useful if we want to create a user with a list of roles
-        if (isset($data['organizations'])) {
-            foreach ($data['organizations'] as $organizationData) {
-                /** @var Organization $organization */
-                $organization = $this->om->getObject($organizationData, Organization::class, ['id', 'code', 'name', 'email']);
-                if (!empty($organization)) {
-                    $user->addOrganization($organization);
                 }
             }
         }

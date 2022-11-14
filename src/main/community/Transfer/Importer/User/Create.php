@@ -80,6 +80,21 @@ class Create extends AbstractImporter
             unset($data['roles']);
         }
 
+        $organizations = [];
+        if (isset($data['organizations'])) {
+            foreach ($data['organizations'] as $organization) {
+                $object = $this->om->getObject($organization, Organization::class, array_keys($organization));
+                if (!$object) {
+                    throw new \Exception('Organization '.implode(',', $organization).' does not exists');
+                }
+
+                $organizations[] = $organization;
+            }
+
+            // remove roles from input data to avoid the user serializer to process it
+            unset($data['organizations']);
+        }
+
         $user = $this->crud->create(User::class, $data, $options);
         if ($user) {
             if (!empty($groups)) {
@@ -88,6 +103,10 @@ class Create extends AbstractImporter
 
             if (!empty($roles)) {
                 $this->crud->patch($user, 'role', 'add', $roles);
+            }
+
+            if (!empty($organizations)) {
+                $this->crud->patch($user, 'organization', 'add', $organizations);
             }
         }
 
