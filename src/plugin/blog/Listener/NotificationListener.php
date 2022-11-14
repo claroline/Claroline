@@ -10,7 +10,7 @@ use Icap\BlogBundle\Event\Log\LogPostPublishEvent;
 use Icap\BlogBundle\Event\Log\LogPostUpdateEvent;
 use Icap\NotificationBundle\Event\Notification\NotificationCreateDelegateViewEvent;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class NotificationListener.
