@@ -7,7 +7,7 @@ use Claroline\AppBundle\API\Utils\ArrayUtils;
 use Claroline\AppBundle\API\ValidatorInterface;
 use Claroline\AppBundle\API\ValidatorProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\API\Serializer\User\ProfileSerializer;
+use Claroline\CommunityBundle\Serializer\ProfileSerializer;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;

@@ -4,8 +4,8 @@ namespace Claroline\LogBundle\Serializer;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
+use Claroline\CommunityBundle\Serializer\UserSerializer;
 use Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer;
-use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\LogBundle\Entity\FunctionalLog;

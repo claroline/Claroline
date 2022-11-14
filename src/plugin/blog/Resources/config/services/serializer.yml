@@ -7,7 +7,7 @@ services:
     Icap\BlogBundle\Serializer\PostSerializer:
         tags: [claroline.serializer]
         arguments:
-            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
+            - '@Claroline\CommunityBundle\Serializer\UserSerializer'
             - '@Icap\BlogBundle\Serializer\CommentSerializer'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@event_dispatcher'
@@ -16,7 +16,7 @@ services:
     Icap\BlogBundle\Serializer\CommentSerializer:
         tags: [claroline.serializer]
         arguments:
-            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
+            - '@Claroline\CommunityBundle\Serializer\UserSerializer'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     Icap\BlogBundle\Serializer\BlogSerializer:

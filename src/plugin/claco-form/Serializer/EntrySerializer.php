@@ -11,7 +11,7 @@ use Claroline\ClacoFormBundle\Entity\Entry;
 use Claroline\ClacoFormBundle\Entity\Field;
 use Claroline\ClacoFormBundle\Entity\FieldValue;
 use Claroline\ClacoFormBundle\Entity\Keyword;
-use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
+use Claroline\CommunityBundle\Serializer\UserSerializer;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Manager\FacetManager;

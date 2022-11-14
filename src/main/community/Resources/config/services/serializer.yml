@@ -1,0 +1,38 @@
+services:
+    Claroline\CommunityBundle\Serializer\GroupSerializer:
+        tags: [claroline.serializer]
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CommunityBundle\Serializer\OrganizationSerializer'
+            - '@Claroline\CommunityBundle\Serializer\RoleSerializer'
+
+    Claroline\CommunityBundle\Serializer\OrganizationSerializer:
+        tags: [claroline.serializer]
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+
+    Claroline\CommunityBundle\Serializer\ProfileSerializer:
+        arguments:
+            - '@security.token_storage'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\API\Serializer\Facet\FacetSerializer'
+
+    Claroline\CommunityBundle\Serializer\RoleSerializer:
+        tags: [claroline.serializer]
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\Manager\Tool\ToolMaskDecoderManager'
+            - '@Claroline\CoreBundle\Manager\Tool\ToolRightsManager'
+            - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'
+            - '@Claroline\CommunityBundle\Serializer\UserSerializer'
+
+    Claroline\CommunityBundle\Serializer\UserSerializer:
+        tags: [claroline.serializer]
+        arguments:
+            - '@security.token_storage'
+            - '@security.authorization_checker'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+            - '@Claroline\CommunityBundle\Serializer\OrganizationSerializer'
+            - '@Claroline\CoreBundle\Manager\FacetManager'
+            - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceUserQueueManager'

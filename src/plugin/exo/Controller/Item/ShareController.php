@@ -4,7 +4,7 @@ namespace UJM\ExoBundle\Controller\Item;
 
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
+use Claroline\CommunityBundle\Serializer\UserSerializer;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Repository\User\UserRepository;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;

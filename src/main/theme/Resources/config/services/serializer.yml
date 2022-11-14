@@ -8,7 +8,7 @@ services:
         tags: [claroline.serializer]
         arguments:
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
+            - '@Claroline\CommunityBundle\Serializer\UserSerializer'
 
     Claroline\ThemeBundle\Serializer\Icon\IconSetSerializer:
         tags: [claroline.serializer]

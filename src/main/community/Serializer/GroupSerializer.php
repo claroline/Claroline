@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\API\Serializer\User;
+namespace Claroline\CommunityBundle\Serializer;
 
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;

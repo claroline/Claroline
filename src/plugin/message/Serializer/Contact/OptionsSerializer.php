@@ -3,7 +3,7 @@
 namespace Claroline\MessageBundle\Serializer\Contact;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
+use Claroline\CommunityBundle\Serializer\UserSerializer;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\MessageBundle\Entity\Contact\Options;
 

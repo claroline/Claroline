@@ -19,4 +19,4 @@ services:
             - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
             - '@Claroline\CoreBundle\Manager\Organization\OrganizationManager'
             - '@Claroline\CoreBundle\Manager\FacetManager'
-            - '@Claroline\CoreBundle\API\Serializer\User\ProfileSerializer'
+            - '@Claroline\CommunityBundle\Serializer\ProfileSerializer'

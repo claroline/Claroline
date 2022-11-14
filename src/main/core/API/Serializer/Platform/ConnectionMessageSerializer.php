@@ -6,7 +6,7 @@ use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Manager\PlatformManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\API\Serializer\User\RoleSerializer;
+use Claroline\CommunityBundle\Serializer\RoleSerializer;
 use Claroline\CoreBundle\Entity\ConnectionMessage\ConnectionMessage;
 use Claroline\CoreBundle\Entity\ConnectionMessage\Slide;
 use Claroline\CoreBundle\Entity\Role;

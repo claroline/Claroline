@@ -31,13 +31,13 @@ services:
             - '@Claroline\ClacoFormBundle\Serializer\CategorySerializer'
             - '@Claroline\ClacoFormBundle\Serializer\CommentSerializer'
             - '@Claroline\ClacoFormBundle\Serializer\KeywordSerializer'
-            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
+            - '@Claroline\CommunityBundle\Serializer\UserSerializer'
             - '@Claroline\CoreBundle\Manager\FacetManager'
 
     Claroline\ClacoFormBundle\Serializer\CommentSerializer:
         tags: [claroline.serializer]
         arguments:
-            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
+            - '@Claroline\CommunityBundle\Serializer\UserSerializer'
 
     Claroline\ClacoFormBundle\Serializer\ClacoFormSerializer:
         tags: [claroline.serializer]
@@ -51,5 +51,5 @@ services:
         tags: [claroline.serializer]
         arguments:
             - '@Claroline\ClacoFormBundle\Serializer\FieldChoiceCategorySerializer'
-            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
+            - '@Claroline\CommunityBundle\Serializer\UserSerializer'
             - '@Claroline\AppBundle\Persistence\ObjectManager'

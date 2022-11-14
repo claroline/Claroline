@@ -16,7 +16,7 @@ services:
     Claroline\AgendaBundle\Serializer\EventInvitationSerializer:
         tags: [ claroline.serializer ]
         arguments:
-            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
+            - '@Claroline\CommunityBundle\Serializer\UserSerializer'
 
     Claroline\AgendaBundle\Serializer\TaskSerializer:
         tags: [ claroline.serializer ]

@@ -44,7 +44,7 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@security.token_storage'
             - '@ujm_exo.collection.item_definitions'
-            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
+            - '@Claroline\CommunityBundle\Serializer\UserSerializer'
             - '@ujm_exo.serializer.hint'
             - '@ujm_exo.serializer.resource_content'
             - '@ujm_exo.serializer.item_object'
@@ -203,7 +203,7 @@ services:
     UJM\ExoBundle\Serializer\Attempt\PaperSerializer:
         tags: [claroline.serializer]
         arguments:
-            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
+            - '@Claroline\CommunityBundle\Serializer\UserSerializer'
             - '@ujm_exo.serializer.answer'
 
     ujm_exo.serializer.paper:

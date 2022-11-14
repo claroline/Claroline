@@ -2,7 +2,7 @@
 
 namespace Claroline\CoreBundle\API\Serializer\Widget\Type;
 
-use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
+use Claroline\CommunityBundle\Serializer\UserSerializer;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Widget\Type\ProfileWidget;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;

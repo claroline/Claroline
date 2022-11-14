@@ -3,7 +3,7 @@
 namespace Claroline\CoreBundle\API\Serializer;
 
 use Claroline\AppBundle\API\Options;
-use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
+use Claroline\CommunityBundle\Serializer\UserSerializer;
 use Claroline\CoreBundle\Entity\ObjectLock;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 

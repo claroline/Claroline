@@ -18,7 +18,7 @@ use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Manager\TermsOfServiceManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AuthenticationBundle\Security\Authentication\Authenticator;
-use Claroline\CoreBundle\API\Serializer\User\ProfileSerializer;
+use Claroline\CommunityBundle\Serializer\ProfileSerializer;
 use Claroline\CoreBundle\Configuration\PlatformDefaults;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;

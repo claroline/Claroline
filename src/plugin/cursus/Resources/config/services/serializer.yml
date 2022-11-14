@@ -11,8 +11,8 @@ services:
             - '@security.authorization_checker'
             - '@event_dispatcher'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
-            - '@Claroline\CoreBundle\API\Serializer\User\OrganizationSerializer'
+            - '@Claroline\CommunityBundle\Serializer\UserSerializer'
+            - '@Claroline\CommunityBundle\Serializer\OrganizationSerializer'
             - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'
 
     Claroline\CursusBundle\Serializer\SessionSerializer:
@@ -20,8 +20,8 @@ services:
             - '@security.authorization_checker'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
-            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
-            - '@Claroline\CoreBundle\API\Serializer\User\RoleSerializer'
+            - '@Claroline\CommunityBundle\Serializer\UserSerializer'
+            - '@Claroline\CommunityBundle\Serializer\RoleSerializer'
             - '@Claroline\CoreBundle\API\Serializer\Location\LocationSerializer'
             - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'
             - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
@@ -32,37 +32,37 @@ services:
             - '@security.authorization_checker'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\API\Serializer\Planning\PlannedObjectSerializer'
-            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
+            - '@Claroline\CommunityBundle\Serializer\UserSerializer'
             - '@Claroline\CursusBundle\Serializer\SessionSerializer'
             - '@Claroline\CoreBundle\API\Serializer\Template\TemplateSerializer'
 
     Claroline\CursusBundle\Serializer\EventPresenceSerializer:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
+            - '@Claroline\CommunityBundle\Serializer\UserSerializer'
 
     # Registrations
     Claroline\CursusBundle\Serializer\Registration\CourseUserSerializer:
         arguments:
-            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
+            - '@Claroline\CommunityBundle\Serializer\UserSerializer'
             - '@Claroline\CursusBundle\Serializer\CourseSerializer'
             -
     Claroline\CursusBundle\Serializer\Registration\SessionUserSerializer:
         arguments:
-            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
+            - '@Claroline\CommunityBundle\Serializer\UserSerializer'
             - '@Claroline\CursusBundle\Serializer\SessionSerializer'
 
     Claroline\CursusBundle\Serializer\Registration\SessionGroupSerializer:
         arguments:
-            - '@Claroline\CoreBundle\API\Serializer\User\GroupSerializer'
+            - '@Claroline\CommunityBundle\Serializer\GroupSerializer'
             - '@Claroline\CursusBundle\Serializer\SessionSerializer'
 
     Claroline\CursusBundle\Serializer\Registration\EventUserSerializer:
         arguments:
-            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
+            - '@Claroline\CommunityBundle\Serializer\UserSerializer'
             - '@Claroline\CursusBundle\Serializer\EventSerializer'
 
     Claroline\CursusBundle\Serializer\Registration\EventGroupSerializer:
         arguments:
-            - '@Claroline\CoreBundle\API\Serializer\User\GroupSerializer'
+            - '@Claroline\CommunityBundle\Serializer\GroupSerializer'
             - '@Claroline\CursusBundle\Serializer\EventSerializer'

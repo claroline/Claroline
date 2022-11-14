@@ -4,7 +4,7 @@ namespace Claroline\OpenBadgeBundle\Serializer;
 
 use Claroline\AppBundle\API\Options as ApiOptions;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
-use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
+use Claroline\CommunityBundle\Serializer\UserSerializer;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\OpenBadgeBundle\Entity\Assertion;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;

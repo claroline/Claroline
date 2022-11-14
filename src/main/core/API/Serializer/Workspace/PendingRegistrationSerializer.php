@@ -2,7 +2,7 @@
 
 namespace Claroline\CoreBundle\API\Serializer\Workspace;
 
-use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
+use Claroline\CommunityBundle\Serializer\UserSerializer;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue;
 
 class PendingRegistrationSerializer

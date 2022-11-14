@@ -2,7 +2,7 @@
 
 namespace Claroline\ThemeBundle\Serializer;
 
-use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
+use Claroline\CommunityBundle\Serializer\UserSerializer;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\ThemeBundle\Entity\Theme;
 

@@ -33,7 +33,7 @@ services:
             - '@Claroline\AppBundle\API\Crud'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
-            - '@Claroline\CoreBundle\API\Serializer\User\ProfileSerializer'
+            - '@Claroline\CommunityBundle\Serializer\ProfileSerializer'
 
     Claroline\CommunityBundle\Controller\RegistrationController:
         arguments:
@@ -42,7 +42,7 @@ services:
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
             - '@Claroline\AppBundle\API\Crud'
             - '@Claroline\AppBundle\API\SerializerProvider'
-            - '@Claroline\CoreBundle\API\Serializer\User\ProfileSerializer'
+            - '@Claroline\CommunityBundle\Serializer\ProfileSerializer'
             - '@Claroline\AppBundle\Manager\TermsOfServiceManager'
             - '@Claroline\AuthenticationBundle\Security\Authentication\Authenticator'
 

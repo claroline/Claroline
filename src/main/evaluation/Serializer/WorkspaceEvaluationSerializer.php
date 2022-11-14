@@ -3,7 +3,7 @@
 namespace Claroline\EvaluationBundle\Serializer;
 
 use Claroline\AppBundle\API\Options;
-use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
+use Claroline\CommunityBundle\Serializer\UserSerializer;
 use Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer;
 use Claroline\CoreBundle\Entity\Workspace\Evaluation;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;

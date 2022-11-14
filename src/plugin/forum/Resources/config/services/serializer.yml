@@ -25,5 +25,5 @@ services:
            - '@event_dispatcher'
            - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
            - '@Claroline\AppBundle\Persistence\ObjectManager'
-           - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
+           - '@Claroline\CommunityBundle\Serializer\UserSerializer'
            - '@Claroline\ForumBundle\Manager\ForumManager'
