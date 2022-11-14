@@ -1,9 +1,11 @@
 import differenceBy from 'lodash/differenceBy'
+import get from 'lodash/get'
 
 import {trans, tval} from '#/main/app/intl/translation'
 
 import {ChoiceInput} from '#/main/app/data/types/choice/components/input'
 import {ChoiceSearch} from '#/main/app/data/types/choice/components/search'
+import {makeId} from '#/main/core/scaffolding/id'
 
 const dataType = {
   name: 'choice',
@@ -28,12 +30,20 @@ const dataType = {
       label: trans('condensed_display')
     }, {
       name: 'choices',
-      type: 'enum',
+      type: 'collection',
       label: trans('choices_list'),
+      calculated: (data) => {
+        //get(data, 'options.choices', [])
+        console.log(data)
+        // data ? data.map(choice => choice.value) : []
+        return get(data, 'options.choices', []).map(choice => choice.value)
+      },
       options: {
+        type: 'string',
         placeholder: trans('no_choice'),
-        addButtonLabel: trans('add_a_choice'),
-        unique: true
+        button: trans('add_a_choice'),
+        unique: true,
+        defaultItem: {id: makeId(), value: ''}
       },
       required: true
     }

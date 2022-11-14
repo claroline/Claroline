@@ -166,7 +166,7 @@ class HtmlInput extends Component {
       <Tinymce
         id={this.props.id}
         placeholder={this.props.placeholder}
-        content={this.props.value || ''}
+        value={this.props.value || ''}
         workspace={this.props.workspace}
         disabled={this.props.disabled}
         onChange={this.props.onChange}
