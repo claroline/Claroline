@@ -49,12 +49,12 @@ class RoleController extends AbstractCrudController
         $this->logManager = $logManager;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'role';
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return Role::class;
     }
@@ -72,10 +72,8 @@ class RoleController extends AbstractCrudController
      * )
      *
      * @param string $class
-     *
-     * @return JsonResponse
      */
-    public function listAction(Request $request, $class)
+    public function listAction(Request $request, $class): JsonResponse
     {
         if (!$this->authorization->isGranted('IS_AUTHENTICATED_FULLY')) {
             throw new AccessDeniedException();
@@ -88,12 +86,8 @@ class RoleController extends AbstractCrudController
      * @Route("/{id}/analytics/{year}", name="apiv2_role_analytics")
      * @EXT\ParamConverter("role", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("currentUser", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @param string $year
-     *
-     * @return JsonResponse
      */
-    public function analyticsAction(User $currentUser, Role $role, $year)
+    public function analyticsAction(User $currentUser, Role $role, string $year): JsonResponse
     {
         // get values for user administrated organizations
         $organizations = null;
@@ -142,7 +136,7 @@ class RoleController extends AbstractCrudController
         ]);
     }
 
-    protected function getDefaultHiddenFilters()
+    protected function getDefaultHiddenFilters(): array
     {
         return [
             'grantable' => true,

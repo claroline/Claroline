@@ -20,17 +20,17 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class DirectoryController extends AbstractCrudController
 {
-    public function getClass()
+    public function getClass(): string
     {
         return Directory::class;
     }
 
-    public function getIgnore()
+    public function getIgnore(): array
     {
-        return ['create', 'exist', 'list', 'copyBulk', 'deleteBulk', 'find', 'get'];
+        return ['create', 'exist', 'list', 'copyBulk', 'deleteBulk', 'find', 'get', 'csv'];
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'resource_directory';
     }

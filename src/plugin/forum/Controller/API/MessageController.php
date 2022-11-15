@@ -17,7 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class MessageController extends AbstractCrudController
 {
-    public function getName()
+    public function getName(): string
     {
         return 'forum_message';
     }
@@ -100,7 +100,7 @@ class MessageController extends AbstractCrudController
       );
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return Message::class;
     }

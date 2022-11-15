@@ -17,7 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class SubjectController extends AbstractCrudController
 {
-    public function getName()
+    public function getName(): string
     {
         return 'forum_subject';
     }
@@ -145,7 +145,7 @@ class SubjectController extends AbstractCrudController
         );
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return Subject::class;
     }

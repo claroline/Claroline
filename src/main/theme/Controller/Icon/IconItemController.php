@@ -51,17 +51,17 @@ class IconItemController extends AbstractCrudController
         $this->toolManager = $toolManager;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'icon_item';
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return IconItem::class;
     }
 
-    public function getIgnore()
+    public function getIgnore(): array
     {
         return ['exist', 'copyBulk', 'schema', 'doc', 'find', 'list', 'create', 'update'];
     }

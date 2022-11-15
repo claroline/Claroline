@@ -20,17 +20,17 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class SectionController extends AbstractCrudController
 {
-    public function getName()
+    public function getName(): string
     {
         return 'audioresourcesection';
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return Section::class;
     }
 
-    public function getIgnore()
+    public function getIgnore(): array
     {
         return ['exist', 'copyBulk', 'schema', 'find'];
     }

@@ -19,17 +19,17 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class WorkspaceTeamParametersController extends AbstractCrudController
 {
-    public function getName()
+    public function getName(): string
     {
         return 'workspaceteamparameters';
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return 'Claroline\TeamBundle\Entity\WorkspaceTeamParameters';
     }
 
-    public function getIgnore()
+    public function getIgnore(): array
     {
         return ['create', 'deleteBulk', 'get', 'exist', 'copyBulk', 'schema', 'find', 'list'];
     }

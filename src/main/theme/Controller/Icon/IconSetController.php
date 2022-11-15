@@ -20,17 +20,17 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class IconSetController extends AbstractCrudController
 {
-    public function getName()
+    public function getName(): string
     {
         return 'icon_set';
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return IconSet::class;
     }
 
-    public function getIgnore()
+    public function getIgnore(): array
     {
         return ['exist', 'copyBulk', 'schema', 'doc', 'find'];
     }

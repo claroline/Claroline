@@ -20,12 +20,12 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class RuleController extends AbstractCrudController
 {
-    public function getName()
+    public function getName(): string
     {
         return 'rule';
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return Rule::class;
     }

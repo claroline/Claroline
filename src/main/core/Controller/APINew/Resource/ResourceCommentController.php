@@ -20,17 +20,17 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ResourceCommentController extends AbstractCrudController
 {
-    public function getName()
+    public function getName(): string
     {
         return 'resourcecomment';
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return ResourceComment::class;
     }
 
-    public function getIgnore()
+    public function getIgnore(): array
     {
         return ['exist', 'copyBulk', 'schema', 'find'];
     }

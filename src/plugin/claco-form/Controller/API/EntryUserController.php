@@ -19,17 +19,17 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class EntryUserController extends AbstractCrudController
 {
-    public function getClass()
+    public function getClass(): string
     {
         return 'Claroline\ClacoFormBundle\Entity\EntryUser';
     }
 
-    public function getIgnore()
+    public function getIgnore(): array
     {
-        return ['exist', 'copyBulk', 'schema', 'find', 'list', 'create', 'deleteBulk', 'get'];
+        return ['exist', 'copyBulk', 'find', 'list', 'create', 'deleteBulk', 'get', 'csv'];
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'clacoformentryuser';
     }

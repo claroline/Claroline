@@ -19,28 +19,43 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class EntryVoter extends AbstractVoter
 {
-    public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
+    public function checkPermission(TokenInterface $token, $object, array $attributes, array $options): int
     {
         switch ($attributes[0]) {
+            case self::OPEN:
+                return $this->checkOpen($object);
             case self::CREATE:
                 return $this->checkCreate($object);
             case self::EDIT:
             case self::DELETE:
                 return $this->checkEdit($token, $object);
         }
+
+        return VoterInterface::ACCESS_ABSTAIN;
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return Entry::class;
     }
 
-    public function getSupportedActions()
+    public function getSupportedActions(): array
     {
         return [self::OPEN, self::VIEW, self::CREATE, self::EDIT, self::DELETE, self::PATCH];
     }
 
-    private function checkCreate(Entry $entry)
+    private function checkOpen(Entry $entry): int
+    {
+        $clacoForm = $entry->getClacoForm();
+
+        if ($this->isGranted('OPEN', $clacoForm->getResourceNode())) {
+            return VoterInterface::ACCESS_GRANTED;
+        }
+
+        return VoterInterface::ACCESS_DENIED;
+    }
+
+    private function checkCreate(Entry $entry): int
     {
         $clacoForm = $entry->getClacoForm();
 
@@ -51,7 +66,7 @@ class EntryVoter extends AbstractVoter
         return VoterInterface::ACCESS_DENIED;
     }
 
-    private function checkEdit(TokenInterface $token, Entry $entry)
+    private function checkEdit(TokenInterface $token, Entry $entry): int
     {
         $clacoForm = $entry->getClacoForm();
         $user = $token->getUser();

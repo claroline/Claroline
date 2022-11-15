@@ -36,12 +36,12 @@ class RoomController extends AbstractCrudController
         $this->authorization = $authorization;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'location_room';
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return Room::class;
     }

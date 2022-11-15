@@ -20,12 +20,12 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ThemeController extends AbstractCrudController
 {
-    public function getClass()
+    public function getClass(): string
     {
         return Theme::class;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'theme';
     }

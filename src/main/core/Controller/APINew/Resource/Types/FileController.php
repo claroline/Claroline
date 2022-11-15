@@ -17,6 +17,7 @@ use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -39,17 +40,17 @@ class FileController extends AbstractCrudController
         $this->manager = $resourceManager;
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return File::class;
     }
 
-    public function getIgnore()
+    public function getIgnore(): array
     {
         return ['create', 'exist', 'list', 'copyBulk', 'deleteBulk', 'find', 'get'];
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'file';
     }
@@ -57,7 +58,7 @@ class FileController extends AbstractCrudController
     /**
      * @Route("{file}/raw", name="claro_resource_file_raw")
      */
-    public function displayRawAction(string $file)
+    public function displayRawAction(string $file): Response
     {
         $fileResource = $this->om->getRepository(File::class)->findOneBy(['uuid' => $file]);
         if (empty($fileResource)) {

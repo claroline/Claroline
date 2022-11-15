@@ -39,17 +39,17 @@ class ApiTokenController extends AbstractCrudController
         $this->tokenStorage = $tokenStorage;
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return ApiToken::class;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'apitoken';
     }
 
-    protected function getDefaultHiddenFilters()
+    protected function getDefaultHiddenFilters(): array
     {
         if (!$this->authorization->isGranted('IS_AUTHENTICATED_FULLY')) {
             throw new AccessDeniedException();

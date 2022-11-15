@@ -11,7 +11,6 @@
 
 namespace Claroline\TeamBundle\Controller\API;
 
-use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\User;
@@ -31,39 +30,37 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 class TeamController extends AbstractCrudController
 {
     /** @var AuthorizationCheckerInterface */
-    protected $authorization;
-
-    /** @var FinderProvider */
-    protected $finder;
+    private $authorization;
 
     /** @var TeamManager */
-    protected $teamManager;
+    private $teamManager;
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
-        FinderProvider $finder,
         TeamManager $teamManager
     ) {
         $this->authorization = $authorization;
-        $this->finder = $finder;
         $this->teamManager = $teamManager;
     }
 
-    public function getName()
+    public function getClass(): string
+    {
+        return Team::class;
+    }
+
+    public function getName(): string
     {
         return 'team';
     }
 
+    public function getIgnore(): array
+    {
+        return ['exist', 'copyBulk', 'schema', 'find', 'list'];
+    }
+
     /**
-     * @Route(
-     *     "/workspace/{workspace}/teams/list",
-     *     name="apiv2_workspace_team_list"
-     * )
-     * @EXT\ParamConverter(
-     *     "workspace",
-     *     class="Claroline\CoreBundle\Entity\Workspace\Workspace",
-     *     options={"mapping": {"workspace": "uuid"}}
-     * )
+     * @Route("/workspace/{workspace}/teams/list", name="apiv2_workspace_team_list")
+     * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
      */
     public function teamsListAction(Workspace $workspace, Request $request): JsonResponse
     {
@@ -245,20 +242,10 @@ class TeamController extends AbstractCrudController
         return new JsonResponse(null, 204);
     }
 
-    private function checkToolAccess(Workspace $workspace, $rights)
+    private function checkToolAccess(Workspace $workspace, $rights): void
     {
         if (!$this->authorization->isGranted(['claroline_team_tool', $rights], $workspace)) {
             throw new AccessDeniedException();
         }
-    }
-
-    public function getClass()
-    {
-        return Team::class;
-    }
-
-    public function getIgnore()
-    {
-        return ['exist', 'copyBulk', 'schema', 'find', 'list'];
     }
 }

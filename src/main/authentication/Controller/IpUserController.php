@@ -36,12 +36,12 @@ class IpUserController extends AbstractCrudController
         $this->tokenStorage = $tokenStorage;
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return IpUser::class;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'ip_user';
     }

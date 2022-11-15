@@ -10,7 +10,7 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ColorCollectionController extends AbstractCrudController
 {
-    public function getName()
+    public function getName(): string
     {
         return 'color_collection';
     }

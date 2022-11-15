@@ -45,12 +45,12 @@ class PathController extends AbstractCrudController
         $this->evaluationManager = $evaluationManager;
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return Path::class;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'path';
     }

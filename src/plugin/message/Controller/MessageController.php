@@ -14,6 +14,7 @@ namespace Claroline\MessageBundle\Controller;
 use Claroline\AppBundle\Annotations\ApiDoc;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\MessageBundle\Entity\Message;
 use Claroline\MessageBundle\Entity\UserMessage;
 use Claroline\MessageBundle\Manager\MessageManager;
@@ -47,8 +48,7 @@ class MessageController extends AbstractCrudController
         $this->messageManager = $messageManager;
     }
 
-    /** @return string */
-    public function getName()
+    public function getName(): string
     {
         return 'message';
     }
@@ -277,7 +277,7 @@ class MessageController extends AbstractCrudController
         return new JsonResponse($this->serializer->serialize($root, [Options::IS_RECURSIVE]));
     }
 
-    public function getAction(Request $request, $id, $class)
+    public function getAction(Request $request, $id, $class): JsonResponse
     {
         $currentUser = $this->tokenStorage->getToken()->getUser();
 
@@ -291,21 +291,23 @@ class MessageController extends AbstractCrudController
             $options = $query['options'];
         }
 
-        return $object ?
-            new JsonResponse(
+        if ($object) {
+            return new JsonResponse(
                 $this->serializer->serialize($object, $options)
-            ) :
-            new JsonResponse("No object found for id {$id} of class {$class}", 404);
+            );
+        }
+
+        return new JsonResponse("No object found for id {$id} of class {$class}", 404);
     }
 
-    public function getOptions()
+    public function getOptions(): array
     {
         return array_merge(parent::getOptions(), [
             'get' => [Options::IS_RECURSIVE],
         ]);
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return Message::class;
     }
@@ -316,6 +318,7 @@ class MessageController extends AbstractCrudController
             throw new AccessDeniedException();
         }
 
+        /** @var User $user */
         $user = $this->tokenStorage->getToken()->getUser();
 
         return [

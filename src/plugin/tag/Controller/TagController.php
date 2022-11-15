@@ -42,12 +42,12 @@ class TagController extends AbstractCrudController
         $this->manager = $tagManager;
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return Tag::class;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'tag';
     }

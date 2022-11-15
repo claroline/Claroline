@@ -20,17 +20,17 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ClacoFormController extends AbstractCrudController
 {
-    public function getClass()
+    public function getClass(): string
     {
         return ClacoForm::class;
     }
 
-    public function getIgnore()
+    public function getIgnore(): array
     {
-        return ['create', 'deleteBulk', 'exist', 'list', 'copyBulk', 'schema', 'find', 'get'];
+        return ['create', 'deleteBulk', 'exist', 'list', 'copyBulk', 'find', 'get'];
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'clacoform';
     }

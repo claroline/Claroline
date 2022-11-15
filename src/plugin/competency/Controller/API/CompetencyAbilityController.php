@@ -25,17 +25,17 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class CompetencyAbilityController extends AbstractCrudController
 {
-    public function getName()
+    public function getName(): string
     {
         return 'competency_ability';
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return CompetencyAbility::class;
     }
 
-    public function getIgnore()
+    public function getIgnore(): array
     {
         return ['exist', 'copyBulk', 'schema', 'find'];
     }

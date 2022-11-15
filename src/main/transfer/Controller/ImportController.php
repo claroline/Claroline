@@ -50,12 +50,12 @@ class ImportController extends AbstractCrudController
         $this->transferManager = $transferManager;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'transfer_import';
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return ImportFile::class;
     }

@@ -41,12 +41,12 @@ class EvidenceController extends AbstractCrudController
         $this->tokenStorage = $tokenStorage;
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return Evidence::class;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'badge-evidence';
     }

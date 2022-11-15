@@ -33,17 +33,17 @@ class HomeTabController extends AbstractCrudController
         $this->manager = $manager;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'home_tab';
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return HomeTab::class;
     }
 
-    public function getIgnore()
+    public function getIgnore(): array
     {
         return ['list'];
     }

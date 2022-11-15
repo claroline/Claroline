@@ -20,17 +20,19 @@ use Symfony\Component\Routing\Annotation\Route;
 class ForumController extends AbstractCrudController
 {
     /* @var ForumManager */
-    protected $manager;
+    private $manager;
 
-    /**
-     * ForumController constructor.
-     */
     public function __construct(ForumManager $manager)
     {
         $this->manager = $manager;
     }
 
-    public function getName()
+    public function getClass(): string
+    {
+        return Forum::class;
+    }
+
+    public function getName(): string
     {
         return 'forum';
     }
@@ -52,10 +54,8 @@ class ForumController extends AbstractCrudController
      * )
      *
      * @param string $id
-     *
-     * @return JsonResponse
      */
-    public function getSubjectsAction($id, Request $request)
+    public function getSubjectsAction($id, Request $request): JsonResponse
     {
         return new JsonResponse(
             $this->finder->search(Subject::class, array_merge(
@@ -75,10 +75,8 @@ class ForumController extends AbstractCrudController
      *          {"name": "id", "type": {"string", "integer"},  "description": "The forum id or uuid"}
      *     }
      * )
-     *
-     * @return JsonResponse
      */
-    public function createSubjectAction(Forum $forum, Request $request)
+    public function createSubjectAction(Forum $forum, Request $request): JsonResponse
     {
         $serializedForum = $this->serializer->serialize($forum);
         $data = $this->decodeRequest($request);
@@ -103,10 +101,8 @@ class ForumController extends AbstractCrudController
      * @Route("/unlock/{user}/forum/{forum}", methods={"PATCH"})
      * @EXT\ParamConverter("user", class = "Claroline\CoreBundle\Entity\User",  options={"mapping": {"user": "uuid"}})
      * @EXT\ParamConverter("forum", class = "Claroline\ForumBundle\Entity\Forum",  options={"mapping": {"forum": "uuid"}})
-     *
-     * @return JsonResponse
      */
-    public function unlockAction(User $user, Forum $forum)
+    public function unlockAction(User $user, Forum $forum): JsonResponse
     {
         // unlock user
         $validationUser = $this->manager->getValidationUser($user, $forum);
@@ -141,10 +137,8 @@ class ForumController extends AbstractCrudController
      * @Route("/lock/{user}/forum/{forum}", methods={"PATCH"})
      * @EXT\ParamConverter("user", class = "Claroline\CoreBundle\Entity\User",  options={"mapping": {"user": "uuid"}})
      * @EXT\ParamConverter("forum", class = "Claroline\ForumBundle\Entity\Forum",  options={"mapping": {"forum": "uuid"}})
-     *
-     * @return JsonResponse
      */
-    public function lockAction(User $user, Forum $forum)
+    public function lockAction(User $user, Forum $forum): JsonResponse
     {
         $validationUser = $this->manager->getValidationUser($user, $forum);
         $validationUser->setAccess(false);
@@ -158,10 +152,8 @@ class ForumController extends AbstractCrudController
      * @Route("/ban/{user}/forum/{forum}", methods={"PATCH"})
      * @EXT\ParamConverter("user", class = "Claroline\CoreBundle\Entity\User",  options={"mapping": {"user": "uuid"}})
      * @EXT\ParamConverter("forum", class = "Claroline\ForumBundle\Entity\Forum",  options={"mapping": {"forum": "uuid"}})
-     *
-     * @return JsonResponse
      */
-    public function banAction(User $user, Forum $forum)
+    public function banAction(User $user, Forum $forum): JsonResponse
     {
         $validationUser = $this->manager->getValidationUser($user, $forum);
         $validationUser->setBanned(true);
@@ -175,10 +167,8 @@ class ForumController extends AbstractCrudController
      * @Route("/unban/{user}/forum/{forum}", methods={"PATCH"})
      * @EXT\ParamConverter("user", class = "Claroline\CoreBundle\Entity\User",  options={"mapping": {"user": "uuid"}})
      * @EXT\ParamConverter("forum", class = "Claroline\ForumBundle\Entity\Forum",  options={"mapping": {"forum": "uuid"}})
-     *
-     * @return JsonResponse
      */
-    public function unbanAction(User $user, Forum $forum)
+    public function unbanAction(User $user, Forum $forum): JsonResponse
     {
         $validationUser = $this->manager->getValidationUser($user, $forum);
         $validationUser->setBanned(false);
@@ -192,10 +182,8 @@ class ForumController extends AbstractCrudController
      * @Route("/notify/{user}/forum/{forum}", methods={"PATCH"})
      * @EXT\ParamConverter("user", class = "Claroline\CoreBundle\Entity\User",  options={"mapping": {"user": "uuid"}})
      * @EXT\ParamConverter("forum", class = "Claroline\ForumBundle\Entity\Forum",  options={"mapping": {"forum": "uuid"}})
-     *
-     * @return JsonResponse
      */
-    public function notifyAction(User $user, Forum $forum)
+    public function notifyAction(User $user, Forum $forum): JsonResponse
     {
         $validationUser = $this->manager->getValidationUser($user, $forum);
         $validationUser->setNotified(true);
@@ -209,10 +197,8 @@ class ForumController extends AbstractCrudController
      * @Route("/unnotify/{user}/forum/{forum}", methods={"PATCH"})
      * @EXT\ParamConverter("user", class = "Claroline\CoreBundle\Entity\User",  options={"mapping": {"user": "uuid"}})
      * @EXT\ParamConverter("forum", class = "Claroline\ForumBundle\Entity\Forum",  options={"mapping": {"forum": "uuid"}})
-     *
-     * @return JsonResponse
      */
-    public function unnotifyAction(User $user, Forum $forum)
+    public function unnotifyAction(User $user, Forum $forum): JsonResponse
     {
         $validationUser = $this->manager->getValidationUser($user, $forum);
         $validationUser->setNotified(false);
@@ -220,10 +206,5 @@ class ForumController extends AbstractCrudController
         $this->om->flush();
 
         return new JsonResponse(true);
-    }
-
-    public function getClass()
-    {
-        return Forum::class;
     }
 }

@@ -53,17 +53,17 @@ class BBBController extends AbstractCrudController
         $this->routingHelper = $routingHelper;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'bbb';
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return BBB::class;
     }
 
-    public function getIgnore()
+    public function getIgnore(): array
     {
         return ['exist', 'copyBulk', 'schema', 'find', 'list', 'get', 'create', 'deleteBulk'];
     }

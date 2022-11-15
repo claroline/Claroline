@@ -102,12 +102,12 @@ class WorkspaceController extends AbstractCrudController
         $this->tempManager = $tempManager;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'workspace';
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return Workspace::class;
     }

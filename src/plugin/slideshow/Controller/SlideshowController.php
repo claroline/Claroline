@@ -19,12 +19,12 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class SlideshowController extends AbstractCrudController
 {
-    public function getClass()
+    public function getClass(): string
     {
         return 'Claroline\SlideshowBundle\Entity\Resource\Slideshow';
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'slideshow';
     }

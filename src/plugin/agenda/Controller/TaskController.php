@@ -35,12 +35,12 @@ class TaskController extends AbstractCrudController
         $this->authorization = $authorization;
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return Task::class;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'task';
     }

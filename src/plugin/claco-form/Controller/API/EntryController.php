@@ -15,37 +15,59 @@ use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\ClacoFormBundle\Entity\ClacoForm;
 use Claroline\ClacoFormBundle\Entity\Entry;
 use Claroline\ClacoFormBundle\Manager\ClacoFormManager;
+use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * @Route("/clacoformentry")
  */
 class EntryController extends AbstractCrudController
 {
-    /* @var ClacoFormManager */
-    protected $manager;
+    use PermissionCheckerTrait;
 
-    public function __construct(ClacoFormManager $manager)
-    {
+    private $authorization;
+    /* @var ClacoFormManager */
+    private $manager;
+
+    public function __construct(
+        AuthorizationCheckerInterface $authorization,
+        ClacoFormManager $manager
+    ) {
+        $this->authorization = $authorization;
         $this->manager = $manager;
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return Entry::class;
     }
 
-    public function getIgnore()
+    public function getIgnore(): array
     {
-        return ['exist', 'copyBulk', 'schema', 'find', 'list'];
+        return ['exist', 'copyBulk', 'find', 'list'];
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'clacoformentry';
+    }
+
+    public function getAction(Request $request, $id, $class): JsonResponse
+    {
+        /** @var Entry $entry */
+        $entry = $this->crud->get($class, $id);
+        if (!$entry) {
+            throw new NotFoundHttpException('Entry cannot be found');
+        }
+
+        $this->checkPermission('OPEN', $entry, [], true);
+
+        return new JsonResponse($this->serializer->serialize($entry));
     }
 
     /**
@@ -54,6 +76,8 @@ class EntryController extends AbstractCrudController
      */
     public function entriesListAction(ClacoForm $clacoForm, Request $request): JsonResponse
     {
+        $this->checkPermission('OPEN', $clacoForm->getResourceNode(), [], true);
+
         $params = $request->query->all();
         if (!isset($params['hiddenFilters'])) {
             $params['hiddenFilters'] = [];
@@ -93,6 +117,8 @@ class EntryController extends AbstractCrudController
      */
     public function uploadAction(ClacoForm $clacoForm, Request $request): JsonResponse
     {
+        $this->checkPermission('OPEN', $clacoForm->getResourceNode(), [], true);
+
         $files = $request->files->all();
         $data = [];
 
@@ -110,6 +136,8 @@ class EntryController extends AbstractCrudController
      */
     public function nextAction(ClacoForm $clacoForm, Entry $entry, Request $request): JsonResponse
     {
+        $this->checkPermission('OPEN', $clacoForm->getResourceNode(), [], true);
+
         $params = $request->query->all();
         $filters = array_key_exists('filters', $params) ? $params['filters'] : [];
         $filters['clacoForm'] = $clacoForm->getId();
@@ -138,6 +166,8 @@ class EntryController extends AbstractCrudController
      */
     public function previousAction(ClacoForm $clacoForm, Entry $entry, Request $request): JsonResponse
     {
+        $this->checkPermission('OPEN', $clacoForm->getResourceNode(), [], true);
+
         $params = $request->query->all();
         $filters = array_key_exists('filters', $params) ? $params['filters'] : [];
         $filters['clacoForm'] = $clacoForm->getId();
@@ -167,6 +197,10 @@ class EntryController extends AbstractCrudController
      */
     public function entryStatusChangeAction(Entry $entry): JsonResponse
     {
+        $clacoForm = $entry->getClacoForm();
+
+        $this->checkPermission('EDIT', $clacoForm->getResourceNode(), [], true);
+
         if ($entry->isLocked()) {
             $serializedEntry = $this->serializer->serialize($entry);
         } else {

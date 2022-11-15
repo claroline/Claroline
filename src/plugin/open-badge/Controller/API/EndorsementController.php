@@ -20,12 +20,12 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class EndorsementController extends AbstractCrudController
 {
-    public function getName()
+    public function getName(): string
     {
         return 'badge-endorsement';
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return Endorsement::class;
     }

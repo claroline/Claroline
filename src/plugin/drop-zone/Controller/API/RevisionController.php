@@ -45,17 +45,17 @@ class RevisionController extends AbstractCrudController
         $this->manager = $manager;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'droprevision';
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return Revision::class;
     }
 
-    public function getIgnore()
+    public function getIgnore(): array
     {
         return ['exist', 'copyBulk', 'find', 'create', 'update', 'list', 'deleteBulk'];
     }
