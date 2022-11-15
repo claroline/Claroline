@@ -13,30 +13,73 @@ namespace Claroline\ForumBundle\Security;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Security\Voter\AbstractVoter;
+use Claroline\ForumBundle\Entity\Subject;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class SubjectVoter extends AbstractVoter
 {
-    public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
+    public function checkPermission(TokenInterface $token, $object, array $attributes, array $options): int
     {
         switch ($attributes[0]) {
-          case self::CREATE: return $this->checkCreate($token);
-      }
+            case self::OPEN:
+                return $this->checkOpen($object);
+            case self::CREATE:
+                return $this->checkCreate($object, $token);
+            case self::EDIT:
+            case self::DELETE:
+                return $this->checkEdit($object, $token);
+        }
+
+        return VoterInterface::ACCESS_ABSTAIN;
     }
 
-    public function checkCreate($token)
+    private function checkOpen(Subject $subject): int
     {
-        return $token->getUser() instanceof User ? VoterInterface::ACCESS_GRANTED : VoterInterface::ACCESS_DENIED;
+        $forum = $subject->getForum();
+
+        if ($this->isGranted('OPEN', $forum->getResourceNode())) {
+            return VoterInterface::ACCESS_GRANTED;
+        }
+
+        return VoterInterface::ACCESS_DENIED;
     }
 
-    public function getClass()
+    private function checkCreate(Subject $subject, TokenInterface $token): int
     {
-        return 'Claroline\ForumBundle\Entity\Subject';
+        $forum = $subject->getForum();
+
+        if ($this->isGranted('OPEN', $forum->getResourceNode())) {
+            if ($token->getUser() instanceof User) {
+                return VoterInterface::ACCESS_GRANTED;
+            }
+        }
+
+        return VoterInterface::ACCESS_DENIED;
     }
 
-    public function getSupportedActions()
+    private function checkEdit(Subject $subject, TokenInterface $token): int
     {
-        return [self::CREATE, self::EDIT, self::DELETE, self::PATCH];
+        $forum = $subject->getForum();
+
+        if ($this->isGranted('EDIT', $forum->getResourceNode())) {
+            return VoterInterface::ACCESS_GRANTED;
+        }
+
+        if ($token->getUser() instanceof User && $subject->getCreator() && $subject->getCreator()->getId() === $token->getUser()->getId()) {
+            return VoterInterface::ACCESS_GRANTED;
+        }
+
+        return VoterInterface::ACCESS_DENIED;
+    }
+
+    public function getClass(): string
+    {
+        return Subject::class;
+    }
+
+    public function getSupportedActions(): array
+    {
+        return [self::CREATE, self::EDIT, self::DELETE];
     }
 }
