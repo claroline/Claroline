@@ -23,17 +23,17 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class KeywordController extends AbstractCrudController
 {
-    public function getClass()
+    public function getClass(): string
     {
         return 'Claroline\ClacoFormBundle\Entity\Keyword';
     }
 
-    public function getIgnore()
+    public function getIgnore(): array
     {
         return ['exist', 'copyBulk', 'schema', 'find', 'list'];
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'clacoformkeyword';
     }

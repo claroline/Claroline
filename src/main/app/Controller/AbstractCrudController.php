@@ -11,6 +11,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 abstract class AbstractCrudController
 {
@@ -37,10 +38,8 @@ abstract class AbstractCrudController
 
     /**
      * Get the name of the managed entity.
-     *
-     * @return string
      */
-    abstract public function getName();
+    abstract public function getName(): string;
 
     public function setFinder(FinderProvider $finder)
     {
@@ -107,10 +106,8 @@ abstract class AbstractCrudController
      *
      * @param string|int $id
      * @param string     $class
-     *
-     * @return JsonResponse
      */
-    public function getAction(Request $request, $id, $class)
+    public function getAction(Request $request, $id, $class): JsonResponse
     {
         $query = $request->query->all();
         $object = $this->crud->get($class, $id);
@@ -120,13 +117,13 @@ abstract class AbstractCrudController
             $options = $query['options'];
         }
 
-        if ($object) {
-            return new JsonResponse(
-                $this->serializer->serialize($object, $options ?? [])
-            );
+        if (!$object) {
+            throw new NotFoundHttpException(sprintf('No object found for id %s of class %s', $id.'', $class));
         }
 
-        return new JsonResponse("No object found for id {$id} of class {$class}", 404);
+        return new JsonResponse(
+            $this->serializer->serialize($object, $options ?? [])
+        );
     }
 
     /**
@@ -141,10 +138,8 @@ abstract class AbstractCrudController
      * @param string $class
      * @param string $field
      * @param mixed  $value
-     *
-     * @return JsonResponse
      */
-    public function existAction($class, $field, $value)
+    public function existAction($class, $field, $value): JsonResponse
     {
         $objects = $this->om->getRepository($class)->findBy([$field => $value]);
 
@@ -168,10 +163,8 @@ abstract class AbstractCrudController
      * )
      *
      * @param string $class
-     *
-     * @return JsonResponse
      */
-    public function listAction(Request $request, $class)
+    public function listAction(Request $request, $class): JsonResponse
     {
         $query = $request->query->all();
         $options = $this->options['list'];
@@ -233,10 +226,8 @@ abstract class AbstractCrudController
      * )
      *
      * @param string $class
-     *
-     * @return JsonResponse
      */
-    public function createAction(Request $request, $class)
+    public function createAction(Request $request, $class): JsonResponse
     {
         $query = $request->query->all();
 
@@ -271,10 +262,8 @@ abstract class AbstractCrudController
      *
      * @param string|int $id
      * @param string     $class
-     *
-     * @return JsonResponse
      */
-    public function updateAction($id, Request $request, $class)
+    public function updateAction($id, Request $request, $class): JsonResponse
     {
         $query = $request->query->all();
 
@@ -311,10 +300,8 @@ abstract class AbstractCrudController
      * )
      *
      * @param string $class
-     *
-     * @return JsonResponse
      */
-    public function deleteBulkAction(Request $request, $class)
+    public function deleteBulkAction(Request $request, $class): JsonResponse
     {
         $query = $request->query->all();
         $options = $this->options['deleteBulk'];
@@ -341,10 +328,8 @@ abstract class AbstractCrudController
      * )
      *
      * @param string $class
-     *
-     * @return JsonResponse
      */
-    public function copyBulkAction(Request $request, $class)
+    public function copyBulkAction(Request $request, $class): JsonResponse
     {
         $query = $request->query->all();
 
@@ -363,10 +348,7 @@ abstract class AbstractCrudController
         }, $copies), 200);
     }
 
-    /**
-     * @return array
-     */
-    public function getOptions()
+    public function getOptions(): array
     {
         return [
             'list' => [Options::SERIALIZE_LIST],
@@ -380,10 +362,7 @@ abstract class AbstractCrudController
         ];
     }
 
-    /**
-     * @return array
-     */
-    public function getRequirements()
+    public function getRequirements(): array
     {
         return [
             'get' => ['id' => '^(?!.*(copy|parameters|find|csv|\/)).*'],
@@ -392,22 +371,17 @@ abstract class AbstractCrudController
         ];
     }
 
-    /**
-     * @return array
-     *
-     * @todo this should get the current request as param.
-     */
-    protected function getDefaultHiddenFilters()
+    protected function getDefaultHiddenFilters(): array
     {
         return [];
     }
 
-    public function getClass()
+    public function getClass(): ?string
     {
         return null;
     }
 
-    public function getIgnore()
+    public function getIgnore(): array
     {
         return [];
     }

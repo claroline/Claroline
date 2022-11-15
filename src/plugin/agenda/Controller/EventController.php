@@ -63,12 +63,12 @@ class EventController extends AbstractCrudController
         $this->routing = $routing;
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return Event::class;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'event';
     }

@@ -39,12 +39,12 @@ class MaterialController extends AbstractCrudController
         $this->authorization = $authorization;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'booking_material';
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return Material::class;
     }

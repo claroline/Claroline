@@ -20,12 +20,12 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class RssFeedController extends AbstractCrudController
 {
-    public function getClass()
+    public function getClass(): string
     {
         return RssFeed::class;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'rss_feed';
     }

@@ -7,8 +7,6 @@ services:
         public: true
         arguments:
             - '@Claroline\MessageBundle\Manager\ContactManager'
-            - '@claroline.serializer.contact'
-            - '@Claroline\AppBundle\API\FinderProvider'
             - '@security.token_storage'
             - '@Claroline\CommunityBundle\Serializer\UserSerializer'
 

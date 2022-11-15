@@ -15,9 +15,6 @@ class ContactSerializer
     private $contactRepo;
     private $userRepo;
 
-    /**
-     * ContactSerializer constructor.
-     */
     public function __construct(
         CategorySerializer $categorySerializer,
         UserSerializer $userSerializer,
@@ -30,12 +27,12 @@ class ContactSerializer
         $this->userRepo = $om->getRepository(User::class);
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'message_contact';
     }
 
-    public function serialize(Contact $contact)
+    public function serialize(Contact $contact): array
     {
         return [
             'id' => $contact->getId(),
@@ -45,10 +42,7 @@ class ContactSerializer
         ];
     }
 
-    /**
-     * @return Contact
-     */
-    public function deserialize(array $data, Contact $contact = null)
+    public function deserialize(array $data, Contact $contact = null): Contact
     {
         if (empty($contact)) {
             $contact = $this->contactRepo->findOneBy(['id' => $data['id']]);
@@ -71,12 +65,12 @@ class ContactSerializer
         return $contact;
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return Contact::class;
     }
 
-    private function getCategories(Contact $contact)
+    private function getCategories(Contact $contact): array
     {
         $categories = [];
 
@@ -87,7 +81,7 @@ class ContactSerializer
         return $categories;
     }
 
-    private function deserializeCategories(Contact $contact, $categoriesData)
+    private function deserializeCategories(Contact $contact, $categoriesData): void
     {
         $contact->emptyCategories();
 

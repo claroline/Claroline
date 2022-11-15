@@ -17,6 +17,7 @@ services:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
         public: true
         arguments:
+            - '@security.authorization_checker'
             - '@Claroline\ClacoFormBundle\Manager\ClacoFormManager'
 
     Claroline\ClacoFormBundle\Controller\API\EntryUserController:

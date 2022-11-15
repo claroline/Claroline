@@ -15,7 +15,7 @@ use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Manager\Tool\ToolManager;
-use Claroline\CoreBundle\Security\Collection\ResourceCollection;
+use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use HeVinci\CompetencyBundle\Entity\Competency;
 use HeVinci\CompetencyBundle\Manager\CompetencyManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -32,8 +32,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 class CompetencyController extends AbstractCrudController
 {
-    /** @var AuthorizationCheckerInterface */
-    protected $authorization;
+    use PermissionCheckerTrait;
 
     /** @var CompetencyManager */
     private $manager;
@@ -51,17 +50,17 @@ class CompetencyController extends AbstractCrudController
         $this->toolManager = $toolManager;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'competency';
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return Competency::class;
     }
 
-    public function getIgnore()
+    public function getIgnore(): array
     {
         return ['exist', 'copyBulk', 'schema', 'find'];
     }
@@ -71,10 +70,8 @@ class CompetencyController extends AbstractCrudController
      *     "/root/list",
      *     name="apiv2_competency_root_list"
      * )
-     *
-     * @return JsonResponse
      */
-    public function competenciesRootListAction(Request $request)
+    public function competenciesRootListAction(Request $request): JsonResponse
     {
         $params = $request->query->all();
 
@@ -97,10 +94,8 @@ class CompetencyController extends AbstractCrudController
      *     class="HeVinci\CompetencyBundle\Entity\Competency",
      *     options={"mapping": {"id": "uuid"}}
      * )
-     *
-     * @return JsonResponse
      */
-    public function competenciesTreeListAction(Competency $competency, Request $request)
+    public function competenciesTreeListAction(Competency $competency, Request $request): JsonResponse
     {
         $root = $competency;
 
@@ -128,10 +123,8 @@ class CompetencyController extends AbstractCrudController
      *     class="HeVinci\CompetencyBundle\Entity\Competency",
      *     options={"mapping": {"id": "uuid"}}
      * )
-     *
-     * @return Response
      */
-    public function frameworkExportAction(Competency $framework)
+    public function frameworkExportAction(Competency $framework): Response
     {
         $this->manager->ensureIsRoot($framework);
         $response = new Response($this->manager->exportFramework($framework));
@@ -151,10 +144,8 @@ class CompetencyController extends AbstractCrudController
      *    "/framework/file/upload",
      *     name="apiv2_competency_framework_file_upload"
      * )
-     *
-     * @return JsonResponse
      */
-    public function uploadAction(Request $request)
+    public function uploadAction(Request $request): JsonResponse
     {
         $this->checkToolAccess();
 
@@ -177,10 +168,8 @@ class CompetencyController extends AbstractCrudController
      *     "/framework/import",
      *     name="apiv2_competency_framework_import"
      * )
-     *
-     * @return JsonResponse
      */
-    public function frameworkImportAction(Request $request)
+    public function frameworkImportAction(Request $request): JsonResponse
     {
         $this->checkToolAccess();
 
@@ -201,10 +190,8 @@ class CompetencyController extends AbstractCrudController
      *     class="Claroline\CoreBundle\Entity\Resource\ResourceNode",
      *     options={"mapping": {"node": "uuid"}}
      * )
-     *
-     * @return JsonResponse
      */
-    public function resourceCompetenciesFetchAction(ResourceNode $node)
+    public function resourceCompetenciesFetchAction(ResourceNode $node): JsonResponse
     {
         $competencies = $this->finder->fetch(
             Competency::class,
@@ -233,12 +220,10 @@ class CompetencyController extends AbstractCrudController
      *     class="HeVinci\CompetencyBundle\Entity\Competency",
      *     options={"mapping": {"competency": "uuid"}},
      * )
-     *
-     * @return JsonResponse
      */
-    public function resourceCompetencyAssociateAction(ResourceNode $node, Competency $competency)
+    public function resourceCompetencyAssociateAction(ResourceNode $node, Competency $competency): JsonResponse
     {
-        $this->checkResourceAccess($node, 'EDIT');
+        $this->checkPermission('EDIT', $node, [], true);
 
         $associatedNodes = $this->manager->associateCompetencyToResources($competency, [$node]);
         $data = 0 < count($associatedNodes) ?
@@ -264,45 +249,28 @@ class CompetencyController extends AbstractCrudController
      *     class="HeVinci\CompetencyBundle\Entity\Competency",
      *     options={"mapping": {"competency": "uuid"}}
      * )
-     *
-     * @return JsonResponse
      */
-    public function resourceCompetencyDissociateAction(ResourceNode $node, Competency $competency)
+    public function resourceCompetencyDissociateAction(ResourceNode $node, Competency $competency): JsonResponse
     {
-        $this->checkResourceAccess($node, 'EDIT');
+        $this->checkPermission('EDIT', $node, [], true);
 
         $this->manager->dissociateCompetencyFromResources($competency, [$node]);
 
         return new JsonResponse();
     }
 
-    public function getOptions()
+    public function getOptions(): array
     {
         return array_merge(parent::getOptions(), [
             'get' => [Options::IS_RECURSIVE],
         ]);
     }
 
-    /**
-     * @param string $rights
-     */
-    private function checkToolAccess($rights = 'OPEN')
+    private function checkToolAccess(string $rights = 'OPEN'): void
     {
         $competenciesTool = $this->toolManager->getAdminToolByName('competencies');
 
         if (is_null($competenciesTool) || !$this->authorization->isGranted($rights, $competenciesTool)) {
-            throw new AccessDeniedException();
-        }
-    }
-
-    /**
-     * @param string $rights
-     */
-    private function checkResourceAccess(ResourceNode $node, $rights = 'OPEN')
-    {
-        $collection = new ResourceCollection([$node]);
-
-        if (!$this->authorization->isGranted($rights, $collection)) {
             throw new AccessDeniedException();
         }
     }

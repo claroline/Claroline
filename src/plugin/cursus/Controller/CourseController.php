@@ -76,22 +76,22 @@ class CourseController extends AbstractCrudController
         $this->pdfManager = $pdfManager;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'cursus_course';
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return Course::class;
     }
 
-    public function getIgnore()
+    public function getIgnore(): array
     {
         return ['copyBulk', 'schema'];
     }
 
-    public function getOptions()
+    public function getOptions(): array
     {
         return array_merge(parent::getOptions(), [
             'create' => [Options::PERSIST_TAG],
@@ -99,7 +99,7 @@ class CourseController extends AbstractCrudController
         ]);
     }
 
-    protected function getDefaultHiddenFilters()
+    protected function getDefaultHiddenFilters(): array
     {
         $filters = [];
         if (!$this->authorization->isGranted('ROLE_ADMIN')) {

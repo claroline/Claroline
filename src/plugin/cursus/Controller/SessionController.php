@@ -77,22 +77,22 @@ class SessionController extends AbstractCrudController
         $this->pdfManager = $pdfManager;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'cursus_session';
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return Session::class;
     }
 
-    public function getIgnore()
+    public function getIgnore(): array
     {
         return ['schema'];
     }
 
-    protected function getDefaultHiddenFilters()
+    protected function getDefaultHiddenFilters(): array
     {
         $filters = [];
         if (!$this->authorization->isGranted('ROLE_ADMIN')) {

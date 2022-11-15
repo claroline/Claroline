@@ -58,12 +58,12 @@ class GroupController extends AbstractCrudController
         $this->mailManager = $mailManager;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'group';
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return Group::class;
     }
@@ -146,7 +146,7 @@ class GroupController extends AbstractCrudController
         return new JsonResponse(null, 204);
     }
 
-    protected function getDefaultHiddenFilters()
+    protected function getDefaultHiddenFilters(): array
     {
         if (!$this->authorization->isGranted('ROLE_ADMIN')) {
             $user = $this->tokenStorage->getToken()->getUser();

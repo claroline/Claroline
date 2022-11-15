@@ -20,19 +20,19 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ShortcutController extends AbstractCrudController
 {
-    public function getClass()
+    public function getClass(): string
     {
         return Shortcut::class;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'shortcut';
     }
 
-    public function getIgnore()
+    public function getIgnore(): array
     {
         // only keep update action
-        return ['list', 'get', 'create', 'deleteBulk', 'copyBulk', 'exist', 'schema', 'find', 'doc', 'export'];
+        return ['list', 'get', 'create', 'deleteBulk', 'copyBulk', 'exist', 'find'];
     }
 }

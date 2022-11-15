@@ -65,22 +65,22 @@ class EventController extends AbstractCrudController
         $this->pdfManager = $pdfManager;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'cursus_event';
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return Event::class;
     }
 
-    public function getIgnore()
+    public function getIgnore(): array
     {
         return ['list', 'copyBulk'];
     }
 
-    protected function getDefaultHiddenFilters()
+    protected function getDefaultHiddenFilters(): array
     {
         if (!$this->authorization->isGranted('ROLE_ADMIN')) {
             $user = $this->tokenStorage->getToken()->getUser();

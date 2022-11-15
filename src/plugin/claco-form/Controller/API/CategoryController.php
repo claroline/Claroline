@@ -42,17 +42,17 @@ class CategoryController extends AbstractCrudController
         $this->manager = $manager;
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return Category::class;
     }
 
-    public function getIgnore()
+    public function getIgnore(): array
     {
         return ['exist', 'copyBulk', 'schema', 'find', 'list'];
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'clacoformcategory';
     }

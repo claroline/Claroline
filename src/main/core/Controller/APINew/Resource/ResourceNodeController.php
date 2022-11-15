@@ -61,10 +61,7 @@ class ResourceNodeController extends AbstractCrudController
         $this->token = $token;
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return 'resource_node';
     }
@@ -177,7 +174,7 @@ class ResourceNodeController extends AbstractCrudController
         return new JsonResponse(null, 204);
     }
 
-    public function getOptions()
+    public function getOptions(): array
     {
         return [
             'list' => [Options::NO_RIGHTS, Options::SERIALIZE_LIST],

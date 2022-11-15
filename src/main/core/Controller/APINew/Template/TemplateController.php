@@ -20,12 +20,12 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class TemplateController extends AbstractCrudController
 {
-    public function getName()
+    public function getName(): string
     {
         return 'template';
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return Template::class;
     }

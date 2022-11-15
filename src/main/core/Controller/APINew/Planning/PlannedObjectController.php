@@ -35,12 +35,12 @@ class PlannedObjectController extends AbstractCrudController
         return 'planned_object';
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return PlannedObject::class;
     }
 
-    public function getIgnore()
+    public function getIgnore(): array
     {
         return ['create', 'update'];
     }

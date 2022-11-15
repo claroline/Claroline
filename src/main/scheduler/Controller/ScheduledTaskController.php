@@ -33,12 +33,12 @@ class ScheduledTaskController extends AbstractCrudController
         $this->manager = $manager;
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return ScheduledTask::class;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'scheduled_task';
     }

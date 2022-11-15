@@ -56,12 +56,12 @@ class BadgeClassController extends AbstractCrudController
         $this->assertionManager = $assertionManager;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'badge-class';
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return BadgeClass::class;
     }
@@ -202,7 +202,7 @@ class BadgeClassController extends AbstractCrudController
         return new JsonResponse();
     }
 
-    protected function getDefaultHiddenFilters()
+    protected function getDefaultHiddenFilters(): array
     {
         if (!$this->authorization->isGranted('ROLE_ADMIN')) {
             $user = $this->tokenStorage->getToken()->getUser();

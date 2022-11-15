@@ -29,12 +29,12 @@ class UrlController extends AbstractCrudController
         $this->placeholderManager = $placeholderManager;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'url';
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return Url::class;
     }

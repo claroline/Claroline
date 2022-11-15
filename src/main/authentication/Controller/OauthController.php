@@ -45,12 +45,12 @@ class OauthController extends AbstractCrudController
         $this->oauthManager = $oauthManager;
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return OauthUser::class;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'oauth';
     }

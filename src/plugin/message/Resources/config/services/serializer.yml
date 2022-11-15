@@ -27,10 +27,6 @@ services:
            - '@Claroline\CommunityBundle\Serializer\UserSerializer'
            - '@Claroline\AppBundle\Persistence\ObjectManager'
 
-    claroline.serializer.contact:
-           alias: Claroline\MessageBundle\Serializer\Contact\ContactSerializer
-           public: true
-
     Claroline\MessageBundle\Serializer\Contact\CategorySerializer:
         tags: [claroline.serializer]
         arguments:

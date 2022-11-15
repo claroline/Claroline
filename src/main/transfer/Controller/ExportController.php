@@ -49,12 +49,12 @@ class ExportController extends AbstractCrudController
         $this->filesDir = $filesDir;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'transfer_export';
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return ExportFile::class;
     }

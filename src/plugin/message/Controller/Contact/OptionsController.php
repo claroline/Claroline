@@ -20,12 +20,12 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class OptionsController extends AbstractCrudController
 {
-    public function getClass()
+    public function getClass(): string
     {
         return Options::class;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'contact_options';
     }

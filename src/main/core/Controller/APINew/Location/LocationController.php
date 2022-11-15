@@ -46,12 +46,12 @@ class LocationController extends AbstractCrudController
         $this->manager = $manager;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'location';
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return Location::class;
     }

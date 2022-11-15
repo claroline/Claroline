@@ -27,27 +27,24 @@ class ConnectionMessageController extends AbstractCrudController
     /** @var ConnectionMessageManager */
     private $manager;
 
-    /**
-     * ConnectionMessageController constructor.
-     */
     public function __construct(ConnectionMessageManager $manager)
     {
         $this->manager = $manager;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'connectionmessage';
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return ConnectionMessage::class;
     }
 
-    public function getIgnore()
+    public function getIgnore(): array
     {
-        return ['exist', 'copyBulk', 'schema', 'doc', 'find'];
+        return ['exist', 'copyBulk', 'csv', 'find'];
     }
 
     /**
@@ -60,10 +57,8 @@ class ConnectionMessageController extends AbstractCrudController
      *     options={"mapping": {"id": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @return JsonResponse
      */
-    public function discardAction(ConnectionMessage $message, User $user)
+    public function discardAction(ConnectionMessage $message, User $user): JsonResponse
     {
         $this->manager->discard($message, $user);
 

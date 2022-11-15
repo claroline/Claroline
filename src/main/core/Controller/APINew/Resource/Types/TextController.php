@@ -46,17 +46,17 @@ class TextController extends AbstractCrudController
         $this->pdfManager = $pdfManager;
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return Text::class;
     }
 
-    public function getIgnore()
+    public function getIgnore(): array
     {
         return ['create', 'exist', 'list', 'copyBulk', 'deleteBulk', 'find', 'get'];
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'resource_text';
     }

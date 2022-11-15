@@ -73,12 +73,12 @@ class UserController extends AbstractCrudController
         $this->workspaceManager = $workspaceManager;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'user';
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return User::class;
     }
@@ -281,7 +281,7 @@ class UserController extends AbstractCrudController
         }, $processed));
     }
 
-    public function getOptions()
+    public function getOptions(): array
     {
         return array_merge(parent::getOptions(), [
             'deleteBulk' => [Options::SOFT_DELETE],
@@ -292,15 +292,6 @@ class UserController extends AbstractCrudController
             ],
             'get' => [Options::SERIALIZE_FACET],
             'update' => [Options::SERIALIZE_FACET],
-        ]);
-    }
-
-    public function getRequirements(): array
-    {
-        return array_merge(parent::getRequirements(), [
-            'get' => ['id' => '^(?!.*(schema|copy|parameters|find|doc|csv|current|\/)).*'],
-            'update' => ['id' => '^(?!.*(schema|parameters|find|doc|csv|current|\/)).*'],
-            'exist' => [],
         ]);
     }
 

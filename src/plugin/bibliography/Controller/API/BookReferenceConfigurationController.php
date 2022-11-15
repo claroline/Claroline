@@ -10,22 +10,20 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class BookReferenceConfigurationController extends AbstractCrudController
 {
-    public function getClass()
+    public function getClass(): string
     {
         return 'Icap\BibliographyBundle\Entity\BookReferenceConfiguration';
     }
 
-    public function getIgnore()
+    public function getIgnore(): array
     {
         return ['find', 'deleteBulk', 'doc', 'list', 'get', 'exist', 'create', 'copyBulk'];
     }
 
     /**
      * Get the name of the managed entity.
-     *
-     * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return 'bookReferenceConfiguration';
     }

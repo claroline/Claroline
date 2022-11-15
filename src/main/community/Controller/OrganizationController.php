@@ -50,12 +50,12 @@ class OrganizationController extends AbstractCrudController
         $this->tokenStorage = $tokenStorage;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'organization';
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return Organization::class;
     }
@@ -119,7 +119,7 @@ class OrganizationController extends AbstractCrudController
         return new JsonResponse($this->serializer->serialize($organization));
     }
 
-    protected function getDefaultHiddenFilters()
+    protected function getDefaultHiddenFilters(): array
     {
         if (!$this->authorization->isGranted('ROLE_ADMIN')) {
             $user = $this->tokenStorage->getToken()->getUser();

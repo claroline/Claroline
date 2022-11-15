@@ -20,17 +20,17 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ScaleController extends AbstractCrudController
 {
-    public function getName()
+    public function getName(): string
     {
         return 'scale';
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return Scale::class;
     }
 
-    public function getIgnore()
+    public function getIgnore(): array
     {
         return ['exist', 'copyBulk', 'schema', 'find'];
     }

@@ -39,17 +39,17 @@ class AbilityController extends AbstractCrudController
         $this->manager = $manager;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'ability';
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return Ability::class;
     }
 
-    public function getIgnore()
+    public function getIgnore(): array
     {
         return ['create', 'update', 'deleteBulk', 'get', 'exist', 'copyBulk', 'schema', 'find'];
     }

@@ -11,13 +11,10 @@
 
 namespace Claroline\MessageBundle\Controller\Contact;
 
-use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\Controller\AbstractCrudController;
-use Claroline\CommunityBundle\Serializer\UserSerializer;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\MessageBundle\Entity\Contact\Contact;
 use Claroline\MessageBundle\Manager\ContactManager;
-use Claroline\MessageBundle\Serializer\Contact\ContactSerializer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,38 +28,28 @@ class ContactController extends AbstractCrudController
 {
     /** @var ContactManager */
     private $contactManager;
-    /** @var ContactSerializer */
-    private $contactSerializer;
-    /** @var FinderProvider */
-    protected $finder;
     /** @var TokenStorageInterface */
     private $tokenStorage;
-    /** @var UserSerializer */
-    private $userSerializer;
 
-    /**
-     * ContactController constructor.
-     */
     public function __construct(
         ContactManager $contactManager,
-        ContactSerializer $contactSerializer,
-        FinderProvider $finder,
-        TokenStorageInterface $tokenStorage,
-        UserSerializer $userSerializer
+        TokenStorageInterface $tokenStorage
     ) {
         $this->contactManager = $contactManager;
-        $this->contactSerializer = $contactSerializer;
-        $this->finder = $finder;
         $this->tokenStorage = $tokenStorage;
-        $this->userSerializer = $userSerializer;
     }
 
-    public function getName()
+    public function getClass(): string
+    {
+        return Contact::class;
+    }
+
+    public function getName(): string
     {
         return 'contact';
     }
 
-    protected function getDefaultHiddenFilters()
+    protected function getDefaultHiddenFilters(): array
     {
         $user = $this->tokenStorage->getToken()->getUser();
 
@@ -72,29 +59,19 @@ class ContactController extends AbstractCrudController
     }
 
     /**
-     * @Route(
-     *     "/contacts/create",
-     *     name="apiv2_contacts_create"
-     * )
+     * @Route("/contacts/create", name="apiv2_contacts_create")
      * @EXT\ParamConverter("currentUser", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @return JsonResponse
      */
-    public function contactsCreateAction(User $currentUser, Request $request)
+    public function contactsCreateAction(User $currentUser, Request $request): JsonResponse
     {
         $serializedContacts = [];
         $users = $this->decodeIdsString($request, 'Claroline\CoreBundle\Entity\User');
         $contacts = $this->contactManager->createContacts($currentUser, $users);
 
         foreach ($contacts as $contact) {
-            $serializedContacts[] = $this->contactSerializer->serialize($contact);
+            $serializedContacts[] = $this->serializer->serialize($contact);
         }
 
         return new JsonResponse($serializedContacts);
-    }
-
-    public function getClass()
-    {
-        return Contact::class;
     }
 }

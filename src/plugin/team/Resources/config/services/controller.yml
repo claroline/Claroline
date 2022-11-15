@@ -7,7 +7,6 @@ services:
         public: true
         arguments:
             - '@security.authorization_checker'
-            - '@Claroline\AppBundle\API\FinderProvider'
             - '@Claroline\TeamBundle\Manager\TeamManager'
 
     Claroline\TeamBundle\Controller\API\WorkspaceTeamParametersController:

@@ -14,6 +14,9 @@ namespace Claroline\ClacoFormBundle\Security\Voter;
 use Claroline\CoreBundle\Security\Voter\AbstractVoter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
+/**
+ * @deprecated Should directly check permissions on the ResourceNode
+ */
 class ClacoFormVoter extends AbstractVoter
 {
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
@@ -21,7 +24,7 @@ class ClacoFormVoter extends AbstractVoter
         return $this->isGranted($attributes, $object->getResourceNode());
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return 'Claroline\ClacoFormBundle\Entity\ClacoForm';
     }
