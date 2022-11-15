@@ -1,7 +1,4 @@
 services:
-    _defaults:
-        public: true #because controller
-
     Claroline\ForumBundle\Controller\API\ForumController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
         public: true
@@ -15,3 +12,5 @@ services:
     Claroline\ForumBundle\Controller\API\SubjectController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
         public: true
+        arguments:
+            - '@security.authorization_checker'

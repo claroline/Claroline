@@ -4,6 +4,7 @@ namespace Claroline\ForumBundle\Controller\API;
 
 use Claroline\AppBundle\Annotations\ApiDoc;
 use Claroline\AppBundle\Controller\AbstractCrudController;
+use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\ForumBundle\Entity\Forum;
 use Claroline\ForumBundle\Entity\Message;
 use Claroline\ForumBundle\Entity\Subject;
@@ -11,15 +12,28 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * @Route("/forum_subject")
  */
 class SubjectController extends AbstractCrudController
 {
+    use PermissionCheckerTrait;
+
+    public function __construct(AuthorizationCheckerInterface $authorization)
+    {
+        $this->authorization = $authorization;
+    }
+
     public function getName(): string
     {
         return 'forum_subject';
+    }
+
+    public function getClass(): string
+    {
+        return Subject::class;
     }
 
     /**
@@ -42,14 +56,14 @@ class SubjectController extends AbstractCrudController
      * )
      *
      * @param string $id
-     *
-     * @return JsonResponse
      */
-    public function getMessagesAction(Subject $subject, Forum $forum = null, Request $request)
+    public function getMessagesAction(Request $request, Subject $subject, ?Forum $forum = null): JsonResponse
     {
         if ($forum && ($forum->getId() !== $subject->getForum()->getId())) {
             throw new \Exception('This subject was not created in the forum.');
         }
+
+        $this->checkPermission('OPEN', $subject, [], true);
 
         return new JsonResponse(
           $this->finder->search(Message::class, array_merge(
@@ -69,11 +83,11 @@ class SubjectController extends AbstractCrudController
      *          {"name": "id", "type": {"string", "integer"},  "description": "The subject id or uuid"}
      *     }
      * )
-     *
-     * @return JsonResponse
      */
-    public function createMessage(Subject $subject, Request $request)
+    public function createMessage(Subject $subject, Request $request): JsonResponse
     {
+        $this->checkPermission('OPEN', $subject, [], true);
+
         $subject = $this->serializer->serialize($subject);
         $data = $this->decodeRequest($request);
         $data['subject'] = $subject;
@@ -105,48 +119,43 @@ class SubjectController extends AbstractCrudController
      *          {"name": "id", "type": {"string", "integer"},  "description": "The subject id or uuid"}
      *     }
      * )
-     *
-     * @return JsonResponse
      */
-    public function updateMessageAction(Subject $subject, Message $message, Request $request)
+    public function updateMessageAction(Subject $subject, Message $message, Request $request): JsonResponse
     {
+        $this->checkPermission('OPEN', $subject, [], true);
+
         return parent::updateAction($message->getUuid(), $request, Message::class);
     }
 
     /**
      * @Route("/forum/{forum}/subjects/list/flagged", name="apiv2_forum_subject_flagged_list", methods={"GET"})
      * @EXT\ParamConverter("forum", class = "Claroline\ForumBundle\Entity\Forum",  options={"mapping": {"forum": "uuid"}})
-     *
-     * @return JsonResponse
      */
-    public function getFlaggedSubjectsAction(Forum $forum, Request $request)
+    public function getFlaggedSubjectsAction(Forum $forum, Request $request): JsonResponse
     {
+        $this->checkPermission('OPEN', $forum->getResourceNode(), [], true);
+
         return new JsonResponse(
-        $this->finder->search($this->getClass(), array_merge(
+            $this->finder->search($this->getClass(), array_merge(
                 $request->query->all(),
                 ['hiddenFilters' => ['flagged' => true, 'forum' => $forum->getUuid()]]
             ))
-      );
+        );
     }
 
     /**
      * @Route("/forum/{forum}/subjects/list/blocked", name="apiv2_forum_subject_blocked_list", methods={"GET"})
      * @EXT\ParamConverter("forum", class = "Claroline\ForumBundle\Entity\Forum",  options={"mapping": {"forum": "uuid"}})
-     *
-     * @return JsonResponse
      */
-    public function getBlockedSubjectsAction(Forum $forum, Request $request)
+    public function getBlockedSubjectsAction(Forum $forum, Request $request): JsonResponse
     {
+        $this->checkPermission('OPEN', $forum->getResourceNode(), [], true);
+
         return new JsonResponse(
             $this->finder->search($this->getClass(), array_merge(
                 $request->query->all(),
                 ['hiddenFilters' => ['moderation' => true, 'forum' => $forum->getUuid()]]
             ))
         );
-    }
-
-    public function getClass(): string
-    {
-        return Subject::class;
     }
 }
