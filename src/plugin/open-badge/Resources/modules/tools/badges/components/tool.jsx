@@ -1,10 +1,9 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {url} from '#/main/app/api'
 import {trans} from '#/main/app/intl/translation'
 import {Routes} from '#/main/app/router'
-import {DOWNLOAD_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
+import {LINK_BUTTON} from '#/main/app/buttons'
 import {ToolPage} from '#/main/core/tool/containers/page'
 
 import {Assertions} from '#/plugin/open-badge/tools/badges/assertion/components/list'
@@ -25,25 +24,6 @@ const BadgeTool = props =>
         target: `${props.path}/new`,
         primary: true,
         displayed: props.canEdit
-      }, {
-        name: 'export-results',
-        type: DOWNLOAD_BUTTON,
-        icon: 'fa fa-fw fa-file-csv',
-        label: trans('export', {}, 'actions'),
-        displayed: props.canGrant,
-        file: {
-          url: url(['apiv2_assertion_csv'], {
-            columns: [
-              'badge.name',
-              'user.firstName',
-              'user.lastName',
-              'user.email',
-              'issuedOn',
-              'expires'
-            ]
-          })
-        },
-        group: trans('transfer')
       }
     ]}
     subtitle={

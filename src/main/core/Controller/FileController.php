@@ -31,9 +31,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -89,10 +89,8 @@ class FileController
 
     /**
      * @Route("/stream/{id}", name="claro_file_stream", methods={"GET"})
-     *
-     * @return BinaryFileResponse
      */
-    public function streamAction(ResourceNode $resourceNode)
+    public function streamAction(ResourceNode $resourceNode): BinaryFileResponse
     {
         return $this->stream($resourceNode);
     }
@@ -100,21 +98,17 @@ class FileController
     /**
      * @Route("/resource/media/{node}", name="claro_file_get_media", methods={"GET"})
      *
-     * @return Response
-     *
      * @deprecated for retro compatibility with old tinymce embedded resources
      */
-    public function streamMediaAction(ResourceNode $node)
+    public function streamMediaAction(ResourceNode $node): BinaryFileResponse
     {
         return $this->stream($node);
     }
 
     /**
      * @Route("/tinymce/destinations/{workspace}", name="claro_tinymce_file_destinations", defaults={"workspace"=null}, methods={"GET"})
-     *
-     * @return JsonResponse
      */
-    public function listTinyMceDestinationsAction(Workspace $workspace = null)
+    public function listTinyMceDestinationsAction(Workspace $workspace = null): JsonResponse
     {
         $data = $this->finder->search(
             ResourceNode::class, [
@@ -134,12 +128,8 @@ class FileController
      *
      * @Route("/tinymce/upload", name="claro_tinymce_file_upload", methods={"POST"})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @throws \Exception
-     *
-     * @return Response
      */
-    public function uploadTinyMceAction(Request $request, User $user)
+    public function uploadTinyMceAction(Request $request, User $user): JsonResponse
     {
         // grab and validate user submission
         $content = $this->decodeRequest($request);
@@ -202,11 +192,9 @@ class FileController
      *
      * @Route("/public/upload", name="upload_public_file", methods={"POST"})
      *
-     * @return JsonResponse
-     *
      * @deprecated only used in quiz content items. Use new file upload route instead.
      */
-    public function fileSaveAction(Request $request)
+    public function fileSaveAction(Request $request): JsonResponse
     {
         $url = null;
         $fileName = $request->get('fileName');
@@ -230,10 +218,8 @@ class FileController
 
     /**
      * Streams a resource file to the user browser.
-     *
-     * @return BinaryFileResponse|JsonResponse
      */
-    private function stream(ResourceNode $resourceNode)
+    private function stream(ResourceNode $resourceNode): BinaryFileResponse
     {
         //temporary because otherwise injected resource must have the "open" right
         $this->checkPermission('OPEN', $resourceNode, [], true);
@@ -247,7 +233,7 @@ class FileController
         $path = $this->fileManager->getDirectory().DIRECTORY_SEPARATOR.$file->getHashName();
 
         if (!file_exists($path)) {
-            return new JsonResponse(['File not found'], 500);
+            throw new NotFoundHttpException('File not found');
         }
 
         $extension = pathinfo($path, PATHINFO_EXTENSION);

@@ -97,7 +97,9 @@ class WorkspaceEvaluationController extends AbstractSecurityController
 
         // don't show all users evaluations if no right
         if (!$this->checkToolAccess('SHOW_EVALUATIONS', null, false)) {
-            $hiddenFilters['user'] = $this->tokenStorage->getToken()->getUser()->getUuid();
+            /** @var User $user */
+            $user = $this->tokenStorage->getToken()->getUser();
+            $hiddenFilters['user'] = $user->getUuid();
         }
 
         return new JsonResponse($this->crud->list(
@@ -120,7 +122,8 @@ class WorkspaceEvaluationController extends AbstractSecurityController
 
         // don't show all users evaluations if no right
         if (!$this->checkToolAccess('SHOW_EVALUATIONS', $workspace, false)) {
-            $hiddenFilters['user'] = $this->tokenStorage->getToken()->getUser()->getUuid();
+            /** @var User $user */
+            $hiddenFilters['user'] = $user->getUuid();
         }
 
         return new JsonResponse($this->crud->list(

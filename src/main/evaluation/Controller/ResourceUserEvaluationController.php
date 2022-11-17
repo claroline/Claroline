@@ -15,6 +15,7 @@ use Claroline\AppBundle\API\FinderProvider;
 use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -60,8 +61,10 @@ class ResourceUserEvaluationController
 
         $filters = ['resourceNode' => $resourceNode->getUuid()];
         if (!$this->checkPermission('ADMINISTRATE', $resourceNode)) {
-            // only display
-            $filters['user'] = $this->tokenStorage->getToken()->getUser()->getUuid();
+            // only display evaluation of the current user
+            /** @var User $user */
+            $user = $this->tokenStorage->getToken()->getUser();
+            $filters['user'] = $user->getUuid();
         }
 
         return new JsonResponse(
