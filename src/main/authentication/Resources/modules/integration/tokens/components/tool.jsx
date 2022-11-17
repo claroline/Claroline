@@ -4,7 +4,7 @@ import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
 import {hasPermission} from '#/main/app/security'
-import {DOWNLOAD_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
+import {LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {ToolPage} from '#/main/core/tool/containers/page'
 
 import {MODAL_TOKEN_PARAMETERS} from '#/main/authentication/token/modals/parameters'
@@ -30,15 +30,6 @@ const ApiToken = props =>
         modal: [MODAL_TOKEN_PARAMETERS, {
           onSave: () => props.invalidateList()
         }]
-      }, {
-        name: 'export-csv',
-        type: DOWNLOAD_BUTTON,
-        icon: 'fa fa-fw fa-download',
-        label: trans('export-csv', {}, 'actions'),
-        file: {
-          url: ['apiv2_apitoken_csv']
-        },
-        group: trans('transfer')
       }
     ]}
   >

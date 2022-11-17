@@ -4,12 +4,11 @@ import {connect} from 'react-redux'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 
-import {url} from '#/main/app/api'
 import {withRouter} from '#/main/app/router'
 import {trans, transChoice} from '#/main/app/intl/translation'
 import {ContentHtml} from '#/main/app/content/components/html'
 import {Button} from '#/main/app/action/components/button'
-import {CALLBACK_BUTTON, DOWNLOAD_BUTTON, MODAL_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
+import {CALLBACK_BUTTON, MODAL_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {constants as listConst} from '#/main/app/content/list/constants'
 import {actions as formActions, selectors as formSelectors} from '#/main/app/content/form/store'
@@ -171,25 +170,6 @@ const BadgeDetailsComponent = (props) => {
           displayed: get(props.badge, 'permissions.grant') && !isEmpty(props.badge.rules),
           disabled:  !get(props.badge, 'meta.enabled'),
           group: trans('management')
-        }, {
-          name: 'export-results',
-          type: DOWNLOAD_BUTTON,
-          icon: 'fa fa-fw fa-file-csv',
-          label: trans('export', {}, 'actions'),
-          displayed: get(props.badge, 'permissions.grant'),
-          file: {
-            url: url(['apiv2_assertion_csv'], {
-              filters: {badge: get(props.badge, 'id')},
-              columns: [
-                'user.firstName',
-                'user.lastName',
-                'user.email',
-                'issuedOn',
-                'expires'
-              ]
-            })
-          },
-          group: trans('transfer')
         }, {
           name: 'enable',
           type: CALLBACK_BUTTON,

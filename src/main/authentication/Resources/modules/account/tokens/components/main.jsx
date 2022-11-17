@@ -2,10 +2,10 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 
-import {url} from '#/main/app/api'
 import {trans} from '#/main/app/intl/translation'
 import {hasPermission} from '#/main/app/security'
-import {DOWNLOAD_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
+import {LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
+
 import {User as UserTypes} from '#/main/community/prop-types'
 import {AccountPage} from '#/main/app/account/containers/page'
 import {route} from '#/main/app/account/routing'
@@ -38,15 +38,6 @@ const TokensMain = props =>
           },
           onSave: () => props.invalidateList()
         }]
-      }, {
-        name: 'export-csv',
-        type: DOWNLOAD_BUTTON,
-        icon: 'fa fa-fw fa-download',
-        label: trans('export-csv', {}, 'actions'),
-        file: {
-          url: url(['apiv2_apitoken_csv'], {filters: {user: props.currentUser.id}})
-        },
-        group: trans('transfer')
       }
     ]}
   >
