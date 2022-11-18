@@ -21,7 +21,7 @@ class ExportFileVoter extends AbstractTransferFileVoter
     const EXPORT = 'EXPORT';
     const REFRESH = 'REFRESH';
 
-    public function getClass()
+    public function getClass(): string
     {
         return ExportFile::class;
     }
@@ -29,7 +29,7 @@ class ExportFileVoter extends AbstractTransferFileVoter
     /**
      * @param ExportFile $object
      */
-    public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
+    public function checkPermission(TokenInterface $token, $object, array $attributes, array $options): int
     {
         switch ($attributes[0]) {
             case self::CREATE:
@@ -74,7 +74,7 @@ class ExportFileVoter extends AbstractTransferFileVoter
         return VoterInterface::ACCESS_ABSTAIN;
     }
 
-    public function getSupportedActions()
+    public function getSupportedActions(): array
     {
         return array_merge(parent::getSupportedActions(), [self::REFRESH]);
     }

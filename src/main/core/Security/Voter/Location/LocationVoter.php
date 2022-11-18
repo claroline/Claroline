@@ -11,14 +11,14 @@
 
 namespace Claroline\CoreBundle\Security\Voter\Location;
 
+use Claroline\AppBundle\Security\Voter\AbstractVoter;
 use Claroline\CoreBundle\Entity\Location\Location;
-use Claroline\CoreBundle\Security\Voter\AbstractVoter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class LocationVoter extends AbstractVoter
 {
-    public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
+    public function checkPermission(TokenInterface $token, $object, array $attributes, array $options): int
     {
         switch ($attributes[0]) {
             case self::CREATE:
@@ -39,7 +39,7 @@ class LocationVoter extends AbstractVoter
         return VoterInterface::ACCESS_DENIED;
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return Location::class;
     }

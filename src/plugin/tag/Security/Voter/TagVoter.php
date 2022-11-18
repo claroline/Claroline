@@ -11,19 +11,19 @@
 
 namespace Claroline\TagBundle\Security\Voter;
 
-use Claroline\CoreBundle\Security\Voter\AbstractVoter;
+use Claroline\AppBundle\Security\Voter\AbstractVoter;
 use Claroline\TagBundle\Entity\Tag;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class TagVoter extends AbstractVoter
 {
-    public function getClass()
+    public function getClass(): string
     {
         return Tag::class;
     }
 
-    public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
+    public function checkPermission(TokenInterface $token, $object, array $attributes, array $options): int
     {
         switch ($attributes[0]) {
             case self::CREATE:

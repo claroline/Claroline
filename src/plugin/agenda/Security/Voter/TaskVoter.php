@@ -15,7 +15,7 @@ use Claroline\AgendaBundle\Entity\Task;
 
 class TaskVoter extends AbstractEventVoter
 {
-    public function getClass()
+    public function getClass(): string
     {
         return Task::class;
     }

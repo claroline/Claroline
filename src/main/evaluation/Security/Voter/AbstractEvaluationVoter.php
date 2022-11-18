@@ -11,7 +11,7 @@
 
 namespace Claroline\EvaluationBundle\Security\Voter;
 
-use Claroline\CoreBundle\Security\Voter\AbstractVoter;
+use Claroline\AppBundle\Security\Voter\AbstractVoter;
 
 abstract class AbstractEvaluationVoter extends AbstractVoter
 {

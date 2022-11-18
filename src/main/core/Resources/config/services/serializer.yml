@@ -41,7 +41,7 @@ services:
             - '@security.token_storage'
             - '@event_dispatcher'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@claroline.manager.workspace_manager'
+            - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
             - '@Claroline\CommunityBundle\Serializer\UserSerializer'
             - '@Claroline\CommunityBundle\Serializer\OrganizationSerializer'
             - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'

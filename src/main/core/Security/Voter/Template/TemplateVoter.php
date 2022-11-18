@@ -11,8 +11,8 @@
 
 namespace Claroline\CoreBundle\Security\Voter\Template;
 
+use Claroline\AppBundle\Security\Voter\AbstractVoter;
 use Claroline\CoreBundle\Entity\Template\Template;
-use Claroline\CoreBundle\Security\Voter\AbstractVoter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
@@ -21,7 +21,7 @@ class TemplateVoter extends AbstractVoter
     /**
      * @param Template $object
      */
-    public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
+    public function checkPermission(TokenInterface $token, $object, array $attributes, array $options): int
     {
         switch ($attributes[0]) {
             case self::CREATE:
@@ -47,12 +47,12 @@ class TemplateVoter extends AbstractVoter
         return VoterInterface::ACCESS_ABSTAIN;
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return Template::class;
     }
 
-    public function getSupportedActions()
+    public function getSupportedActions(): array
     {
         return [self::OPEN, self::VIEW, self::CREATE, self::EDIT, self::DELETE, self::PATCH];
     }

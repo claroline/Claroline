@@ -56,7 +56,7 @@ services:
             - '@Claroline\AppBundle\API\FinderProvider'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@security.token_storage'
-            - '@claroline.manager.workspace_manager'
+            - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
         tags:
             - { name: kernel.event_listener, event: data_source.tools.load, method: getData }
 
@@ -75,7 +75,7 @@ services:
             - '@security.token_storage'
             - '@request_stack'
             - '@service_container'
-            - '@claroline.manager.role_manager'
+            - '@Claroline\CoreBundle\Manager\RoleManager'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
             - '@Claroline\CoreBundle\Manager\LogConnectManager'
         tags:
@@ -93,9 +93,9 @@ services:
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\AppBundle\API\Crud'
             - '@Claroline\CoreBundle\Manager\FileManager'
-            - '@claroline.manager.resource_manager'
+            - '@Claroline\CoreBundle\Manager\ResourceManager'
             - '@Claroline\CoreBundle\Manager\Resource\ResourceActionManager'
-            - '@claroline.manager.rights_manager'
+            - '@Claroline\CoreBundle\Manager\Resource\RightsManager'
         tags:
             - { name: kernel.event_listener, event: resource.directory.load, method: onLoad }
             - { name: kernel.event_listener, event: resource.directory.add, method: onAdd }
@@ -108,7 +108,7 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\Event\StrictDispatcher'
             - '@Claroline\AppBundle\API\SerializerProvider'
-            - '@claroline.manager.resource_manager'
+            - '@Claroline\CoreBundle\Manager\ResourceManager'
             - '@Claroline\CoreBundle\Manager\FileManager'
         tags:
             - { name: kernel.event_listener, event: resource.file.load, method: onLoad }
@@ -132,7 +132,7 @@ services:
             - '@security.token_storage'
             - '@Claroline\AppBundle\API\Crud'
             - '@Claroline\AppBundle\API\SerializerProvider'
-            - '@claroline.manager.resource_manager'
+            - '@Claroline\CoreBundle\Manager\ResourceManager'
             - '@Claroline\CoreBundle\Manager\Resource\ResourceLifecycleManager'
         tags:
             - { name: kernel.event_listener, event: resource_load, method: load }
@@ -154,7 +154,7 @@ services:
             - '@security.authorization_checker'
             - '@security.token_storage'
             - '@Claroline\AuthenticationBundle\Security\Authentication\Authenticator'
-            - '@claroline.manager.role_manager'
+            - '@Claroline\CoreBundle\Manager\RoleManager'
             - '@Claroline\AppBundle\Event\StrictDispatcher'
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onViewAs, priority: 2 }

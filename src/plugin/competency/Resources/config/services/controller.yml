@@ -19,7 +19,7 @@ services:
         arguments:
             - '@security.authorization_checker'
             - '@HeVinci\CompetencyBundle\Manager\CompetencyManager'
-            - '@claroline.manager.tool_manager'
+            - '@Claroline\CoreBundle\Manager\Tool\ToolManager'
 
     HeVinci\CompetencyBundle\Controller\API\ScaleController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController

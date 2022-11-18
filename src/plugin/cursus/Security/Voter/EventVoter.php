@@ -11,9 +11,9 @@
 
 namespace Claroline\CursusBundle\Security\Voter;
 
+use Claroline\AppBundle\Security\Voter\AbstractVoter;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Repository\Tool\OrderedToolRepository;
-use Claroline\CoreBundle\Security\Voter\AbstractVoter;
 use Claroline\CursusBundle\Entity\Event;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
@@ -22,17 +22,15 @@ class EventVoter extends AbstractVoter
 {
     const REGISTER = 'REGISTER';
 
-    public function getClass()
+    public function getClass(): string
     {
         return Event::class;
     }
 
     /**
      * @param Event $object
-     *
-     * @return int
      */
-    public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
+    public function checkPermission(TokenInterface $token, $object, array $attributes, array $options): int
     {
         /** @var OrderedToolRepository $orderedToolRepo */
         $orderedToolRepo = $this->getObjectManager()->getRepository(OrderedTool::class);

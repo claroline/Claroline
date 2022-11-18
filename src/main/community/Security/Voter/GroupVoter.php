@@ -15,7 +15,6 @@ use Claroline\AppBundle\Security\ObjectCollection;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Security\Voter\AbstractRoleSubjectVoter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
@@ -29,7 +28,7 @@ class GroupVoter extends AbstractRoleSubjectVoter
     /**
      * @param Group $object
      */
-    public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
+    public function checkPermission(TokenInterface $token, $object, array $attributes, array $options): int
     {
         $collection = isset($options['collection']) ? $options['collection'] : null;
 

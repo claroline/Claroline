@@ -24,7 +24,7 @@ trait Hidden
     /**
      * Sets the hidden flag.
      */
-    public function setHidden(bool $hidden)
+    public function setHidden(bool $hidden): void
     {
         $this->hidden = $hidden;
     }

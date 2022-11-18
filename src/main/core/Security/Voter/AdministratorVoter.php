@@ -22,32 +22,21 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
  */
 class AdministratorVoter implements VoterInterface
 {
-    public function vote(TokenInterface $token, $object, array $attributes)
+    public function vote(TokenInterface $token, $object, array $attributes): int
     {
-        $isImpersonating = $this->isUsurpingWorkspaceRole($token);
-        if ($this->isAdmin($token) && !$isImpersonating) {
+        if ($this->isAdmin($token) && !$this->isUsurpingWorkspaceRole($token)) {
             return VoterInterface::ACCESS_GRANTED;
         }
 
         return VoterInterface::ACCESS_ABSTAIN;
     }
 
-    public function supportsAttribute($attribute)
-    {
-        return true;
-    }
-
-    public function supportsClass($class)
-    {
-        return true;
-    }
-
-    private function isAdmin(TokenInterface $token)
+    private function isAdmin(TokenInterface $token): bool
     {
         return in_array(PlatformRoles::ADMIN, $token->getRoleNames());
     }
 
-    private function isUsurpingWorkspaceRole(TokenInterface $token)
+    private function isUsurpingWorkspaceRole(TokenInterface $token): bool
     {
         return in_array('ROLE_USURPATE_WORKSPACE_ROLE', $token->getRoleNames());
     }

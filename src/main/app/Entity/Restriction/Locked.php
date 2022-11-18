@@ -18,7 +18,7 @@ trait Locked
         return $this->locked;
     }
 
-    public function setLocked(bool $locked)
+    public function setLocked(bool $locked): void
     {
         $this->locked = $locked;
     }

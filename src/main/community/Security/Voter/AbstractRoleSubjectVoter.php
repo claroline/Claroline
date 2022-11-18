@@ -9,17 +9,27 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Security\Voter;
+namespace Claroline\CommunityBundle\Security\Voter;
 
 use Claroline\AppBundle\Security\ObjectCollection;
+use Claroline\AppBundle\Security\Voter\AbstractVoter;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class AbstractRoleSubjectVoter extends AbstractVoter
 {
+    /** @var WorkspaceManager */
+    private $workspaceManager;
+
+    public function setWorkspaceManager(WorkspaceManager $workspaceManager)
+    {
+        $this->workspaceManager = $workspaceManager;
+    }
+
     protected function checkPatchRoles(TokenInterface $token, AbstractRoleSubject $object, ObjectCollection $collection): int
     {
         if (!$collection->isInstanceOf(Role::class)) {
@@ -32,9 +42,8 @@ class AbstractRoleSubjectVoter extends AbstractVoter
             $workspace = $role->getWorkspace();
             if ($workspace) {
                 if ($this->isGranted(['community', 'create_user'], $workspace)) {
-                    $workspaceManager = $this->getContainer()->get('claroline.manager.workspace_manager');
                     // If user is workspace manager then grant access
-                    if ($workspaceManager->isManager($workspace, $token)) {
+                    if ($this->workspaceManager->isManager($workspace, $token)) {
                         return false;
                     }
 

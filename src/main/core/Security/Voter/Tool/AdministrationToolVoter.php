@@ -11,19 +11,19 @@
 
 namespace Claroline\CoreBundle\Security\Voter\Tool;
 
+use Claroline\AppBundle\Security\Voter\AbstractVoter;
 use Claroline\CoreBundle\Entity\Tool\AdminTool;
-use Claroline\CoreBundle\Security\Voter\AbstractVoter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
-class AdministrationToolVoter extends AbstractVoter implements VoterInterface
+class AdministrationToolVoter extends AbstractVoter
 {
     /**
      * @param AdminTool $object
      *
      * @return int
      */
-    public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
+    public function checkPermission(TokenInterface $token, $object, array $attributes, array $options): int
     {
         if ($this->isAdmin($token)) {
             return VoterInterface::ACCESS_GRANTED;
@@ -42,12 +42,12 @@ class AdministrationToolVoter extends AbstractVoter implements VoterInterface
         return VoterInterface::ACCESS_DENIED;
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return AdminTool::class;
     }
 
-    public function getSupportedActions()
+    public function getSupportedActions(): ?array
     {
         //atm, null means "everything is supported... implement this later"
         return null;

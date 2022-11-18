@@ -20,7 +20,7 @@ class ImportFileVoter extends AbstractTransferFileVoter
 {
     const IMPORT = 'IMPORT';
 
-    public function getClass()
+    public function getClass(): string
     {
         return ImportFile::class;
     }
@@ -28,7 +28,7 @@ class ImportFileVoter extends AbstractTransferFileVoter
     /**
      * @param ImportFile $object
      */
-    public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
+    public function checkPermission(TokenInterface $token, $object, array $attributes, array $options): int
     {
         switch ($attributes[0]) {
             case self::CREATE:

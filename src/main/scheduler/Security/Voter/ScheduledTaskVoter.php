@@ -11,7 +11,7 @@
 
 namespace Claroline\SchedulerBundle\Security\Voter;
 
-use Claroline\CoreBundle\Security\Voter\AbstractVoter;
+use Claroline\AppBundle\Security\Voter\AbstractVoter;
 use Claroline\SchedulerBundle\Entity\ScheduledTask;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
@@ -21,7 +21,7 @@ class ScheduledTaskVoter extends AbstractVoter
     /**
      * @param ScheduledTask $object
      */
-    public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
+    public function checkPermission(TokenInterface $token, $object, array $attributes, array $options): int
     {
         if ($this->hasAdminToolAccess($token, 'scheduled_tasks')) {
             return VoterInterface::ACCESS_GRANTED;
@@ -30,12 +30,12 @@ class ScheduledTaskVoter extends AbstractVoter
         return VoterInterface::ACCESS_DENIED;
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return ScheduledTask::class;
     }
 
-    public function getSupportedActions()
+    public function getSupportedActions(): array
     {
         return [self::OPEN, self::VIEW, self::CREATE, self::EDIT, self::DELETE, self::PATCH];
     }

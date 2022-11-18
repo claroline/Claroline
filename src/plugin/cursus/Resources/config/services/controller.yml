@@ -11,7 +11,7 @@ services:
             - '@security.token_storage'
             - '@twig'
             - '@Claroline\CoreBundle\Library\RoutingHelper'
-            - '@claroline.manager.tool_manager'
+            - '@Claroline\CoreBundle\Manager\Tool\ToolManager'
             - '@Claroline\CursusBundle\Manager\CourseManager'
             - '@Claroline\AppBundle\Manager\PdfManager'
 

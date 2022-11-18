@@ -7,7 +7,7 @@ services:
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\AppBundle\API\Crud'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-            - '@claroline.manager.role_manager'
+            - '@Claroline\CoreBundle\Manager\RoleManager'
             - '@Claroline\ClacoFormBundle\Manager\ClacoFormManager'
         tags:
             - { name: kernel.event_listener, event: resource.claroline_claco_form.load, method: onLoad }

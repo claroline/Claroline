@@ -11,8 +11,8 @@
 
 namespace Claroline\CoreBundle\Security\Voter\Tool;
 
+use Claroline\AppBundle\Security\Voter\AbstractVoter;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
-use Claroline\CoreBundle\Security\Voter\AbstractVoter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
@@ -24,10 +24,8 @@ class OrderedToolVoter extends AbstractVoter
 {
     /**
      * @param OrderedTool $object
-     *
-     * @return int
      */
-    public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
+    public function checkPermission(TokenInterface $token, $object, array $attributes, array $options): int
     {
         if (!empty($object->getWorkspace())) {
             // let the workspace voter decide
@@ -44,12 +42,12 @@ class OrderedToolVoter extends AbstractVoter
         return VoterInterface::ACCESS_DENIED;
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return OrderedTool::class;
     }
 
-    public function getSupportedActions()
+    public function getSupportedActions(): ?array
     {
         //atm, null means "everything is supported... implement this later"
         return null;

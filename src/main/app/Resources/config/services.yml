@@ -4,6 +4,7 @@ imports:
     - { resource: services/manager.yml }
     - { resource: services/persistence.yml }
     - { resource: services/routing.yml }
+    - { resource: services/voter.yml }
 
 services:
     _defaults:
@@ -48,12 +49,6 @@ services:
             - '@security.token_storage'
         tags:
             - { name: kernel.event_listener, event: kernel.exception, method: onError, priority: 99 }
-
-    Claroline\AppBundle\Persistence\ObjectManager:
-        arguments:
-            - '@doctrine.orm.entity_manager'
-        calls:
-            - setLogger: ['@logger']
 
     Claroline\AppBundle\Event\StrictDispatcher:
         arguments:

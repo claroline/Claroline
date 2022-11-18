@@ -1,22 +1,9 @@
 services:
     _defaults:
-        autowire: false
-        autoconfigure: false
-        public: true
+        tags: [security.voter]
 
-    _instanceof:
-        Claroline\CoreBundle\Security\Voter\AbstractVoter:
-            autowire: false
-            tags: [security.voter]
-            calls:
-              - method: setContainer
-                arguments:
-                  - '@service_container'
+    Claroline\ClacoFormBundle\Security\Voter\CategoryVoter:
+        parent: Claroline\AppBundle\Security\Voter\AbstractVoter
 
-    Claroline\ClacoFormBundle\Security\Voter\CategoryVoter: ~
-
-    Claroline\ClacoFormBundle\Security\Voter\ClacoFormVoter: ~
-
-    Claroline\ClacoFormBundle\Security\Voter\EntryVoter: ~
-
-    Claroline\ClacoFormBundle\Security\Voter\KeywordVoter: ~
+    Claroline\ClacoFormBundle\Security\Voter\EntryVoter:
+        parent: Claroline\AppBundle\Security\Voter\AbstractVoter

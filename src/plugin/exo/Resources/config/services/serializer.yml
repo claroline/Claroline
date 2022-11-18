@@ -186,7 +186,7 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '%claroline.param.files_directory%'
             - '@router'
-            - '@claroline.manager.resource_manager'
+            - '@Claroline\CoreBundle\Manager\ResourceManager'
 
     ujm_exo.serializer.resource_content:
          alias: UJM\ExoBundle\Serializer\Content\ResourceContentSerializer

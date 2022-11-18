@@ -9,7 +9,7 @@ services:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
         public: true
         arguments:
-            - '@claroline.manager.resource_manager'
+            - '@Claroline\CoreBundle\Manager\ResourceManager'
             - '@Claroline\WebResourceBundle\Manager\WebResourceManager'
 
     Claroline\WebResourceBundle\Listener\WebResourceListener:
@@ -18,7 +18,7 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '%claroline.param.uploads_directory%'
             - '@Claroline\WebResourceBundle\Manager\WebResourceManager'
-            - '@claroline.manager.resource_manager'
+            - '@Claroline\CoreBundle\Manager\ResourceManager'
             - '@Claroline\AppBundle\API\SerializerProvider'
         tags:
             - { name: kernel.event_listener, event: resource.claroline_web_resource.load, method: onLoad }

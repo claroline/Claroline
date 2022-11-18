@@ -11,14 +11,14 @@
 
 namespace Claroline\CoreBundle\Security\Voter\ConnectionMessage;
 
+use Claroline\AppBundle\Security\Voter\AbstractVoter;
 use Claroline\CoreBundle\Entity\ConnectionMessage\ConnectionMessage;
-use Claroline\CoreBundle\Security\Voter\AbstractVoter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class ConnectionMessageVoter extends AbstractVoter
 {
-    public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
+    public function checkPermission(TokenInterface $token, $object, array $attributes, array $options): int
     {
         switch ($attributes[0]) {
             case self::CREATE:
@@ -38,7 +38,7 @@ class ConnectionMessageVoter extends AbstractVoter
         return VoterInterface::ACCESS_ABSTAIN;
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return ConnectionMessage::class;
     }

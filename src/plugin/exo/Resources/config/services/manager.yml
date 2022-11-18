@@ -64,7 +64,7 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@UJM\ExoBundle\Validator\JsonSchema\ExerciseValidator'
             - '@ujm_exo.serializer.exercise'
-            - '@claroline.manager.resource_manager'
+            - '@Claroline\CoreBundle\Manager\ResourceManager'
             - '@UJM\ExoBundle\Manager\Item\ItemManager'
             - '@UJM\ExoBundle\Manager\Attempt\PaperManager'
             - '@Claroline\CoreBundle\Library\Utilities\ClaroUtilities'
