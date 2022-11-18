@@ -12,8 +12,8 @@
 namespace Claroline\TeamBundle\Security\Voter;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\AppBundle\Security\Voter\AbstractVoter;
 use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Security\Voter\AbstractVoter;
 use Claroline\TeamBundle\Entity\Team;
 use Claroline\TeamBundle\Repository\TeamRepository;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -37,7 +37,7 @@ class RoleVoter extends AbstractVoter
     /**
      * @param Team $object
      */
-    public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
+    public function checkPermission(TokenInterface $token, $object, array $attributes, array $options): int
     {
         $teams = $this->teamRepo->findByRole($object->getName());
 
@@ -61,12 +61,12 @@ class RoleVoter extends AbstractVoter
         return VoterInterface::ACCESS_ABSTAIN;
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return Role::class;
     }
 
-    public function getSupportedActions()
+    public function getSupportedActions(): array
     {
         return [self::OPEN, self::VIEW];
     }

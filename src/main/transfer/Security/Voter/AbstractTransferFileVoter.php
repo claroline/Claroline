@@ -2,7 +2,7 @@
 
 namespace Claroline\TransferBundle\Security\Voter;
 
-use Claroline\CoreBundle\Security\Voter\AbstractVoter;
+use Claroline\AppBundle\Security\Voter\AbstractVoter;
 
 abstract class AbstractTransferFileVoter extends AbstractVoter
 {

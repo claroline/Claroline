@@ -15,7 +15,7 @@ use Claroline\AgendaBundle\Entity\Event;
 
 class EventVoter extends AbstractEventVoter
 {
-    public function getClass()
+    public function getClass(): string
     {
         return Event::class;
     }

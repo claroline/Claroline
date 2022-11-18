@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Security\Voter;
 
 use Claroline\AppBundle\Security\ObjectCollection;
+use Claroline\AppBundle\Security\Voter\AbstractVoter;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceRestrictionsManager;
@@ -34,12 +35,12 @@ class WorkspaceVoter extends AbstractVoter
         $this->restrictionsManager = $restrictionsManager;
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return Workspace::class;
     }
 
-    public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
+    public function checkPermission(TokenInterface $token, $object, array $attributes, array $options): int
     {
         $collection = isset($options['collection']) ? $options['collection'] : null;
 
@@ -75,7 +76,7 @@ class WorkspaceVoter extends AbstractVoter
         return VoterInterface::ACCESS_DENIED;
     }
 
-    private function checkCreation(TokenInterface $token)
+    private function checkCreation(TokenInterface $token): int
     {
         if ($this->isWorkspaceCreator($token)) {
             return VoterInterface::ACCESS_GRANTED;
@@ -84,7 +85,7 @@ class WorkspaceVoter extends AbstractVoter
         return VoterInterface::ACCESS_DENIED;
     }
 
-    private function checkEdit($token, Workspace $workspace)
+    private function checkEdit($token, Workspace $workspace): int
     {
         if (!$this->isWorkspaceManaged($token, $workspace)) {
             return VoterInterface::ACCESS_DENIED;
@@ -132,12 +133,12 @@ class WorkspaceVoter extends AbstractVoter
             VoterInterface::ACCESS_GRANTED : VoterInterface::ACCESS_DENIED;
     }
 
-    private function isWorkspaceManaged(TokenInterface $token, Workspace $workspace)
+    private function isWorkspaceManaged(TokenInterface $token, Workspace $workspace): bool
     {
         return $this->workspaceManager->isManager($workspace, $token);
     }
 
-    private function isWorkspaceCreator(TokenInterface $token)
+    private function isWorkspaceCreator(TokenInterface $token): bool
     {
         return in_array(PlatformRoles::WS_CREATOR, $token->getRoleNames());
     }

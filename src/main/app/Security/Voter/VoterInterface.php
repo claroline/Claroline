@@ -15,7 +15,7 @@ interface VoterInterface
      *
      * @return int
      */
-    public function checkPermission(TokenInterface $token, $object, array $attributes, array $options);
+    public function checkPermission(TokenInterface $token, $object, array $attributes, array $options): int;
 
     /**
      * @return string

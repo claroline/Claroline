@@ -11,7 +11,7 @@
 
 namespace Claroline\CursusBundle\Security\Voter;
 
-use Claroline\CoreBundle\Security\Voter\AbstractVoter;
+use Claroline\AppBundle\Security\Voter\AbstractVoter;
 use Claroline\CursusBundle\Entity\Session;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
@@ -20,12 +20,12 @@ class SessionVoter extends AbstractVoter
 {
     const REGISTER = 'REGISTER';
 
-    public function getClass()
+    public function getClass(): string
     {
         return Session::class;
     }
 
-    public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
+    public function checkPermission(TokenInterface $token, $object, array $attributes, array $options): int
     {
         $granted = null;
         switch ($attributes[0]) {
@@ -55,7 +55,7 @@ class SessionVoter extends AbstractVoter
         return VoterInterface::ACCESS_DENIED;
     }
 
-    public function getSupportedActions()
+    public function getSupportedActions(): array
     {
         return [self::OPEN, self::VIEW, self::CREATE, self::EDIT, self::DELETE, self::REGISTER];
     }

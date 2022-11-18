@@ -1,18 +1,8 @@
 services:
-  _defaults:
-    autowire: false
-    autoconfigure: false
-    public: true
+    _defaults:
+        tags: [security.voter]
 
-  _instanceof:
-    Claroline\CoreBundle\Security\Voter\AbstractVoter:
-      autowire: false
-      tags: [security.voter]
-      calls:
-        - method: setContainer
-          arguments:
-            - '@service_container'
-
-  Claroline\HomeBundle\Security\Voter\HomeTabVoter:
-    arguments:
-      - '@Claroline\AppBundle\Persistence\ObjectManager'
+    Claroline\HomeBundle\Security\Voter\HomeTabVoter:
+        parent: Claroline\AppBundle\Security\Voter\AbstractVoter
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'

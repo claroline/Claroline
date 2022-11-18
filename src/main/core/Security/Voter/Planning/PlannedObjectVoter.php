@@ -12,8 +12,8 @@
 namespace Claroline\CoreBundle\Security\Voter\Planning;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\AppBundle\Security\Voter\AbstractVoter;
 use Claroline\CoreBundle\Entity\Planning\PlannedObject;
-use Claroline\CoreBundle\Security\Voter\AbstractVoter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
@@ -47,7 +47,7 @@ class PlannedObjectVoter extends AbstractVoter
         return AbstractVoter::ACCESS_ABSTAIN;
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return PlannedObject::class;
     }

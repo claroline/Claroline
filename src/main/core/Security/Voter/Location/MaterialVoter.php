@@ -11,14 +11,14 @@
 
 namespace Claroline\CoreBundle\Security\Voter\Location;
 
+use Claroline\AppBundle\Security\Voter\AbstractVoter;
 use Claroline\CoreBundle\Entity\Location\Material;
-use Claroline\CoreBundle\Security\Voter\AbstractVoter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class MaterialVoter extends AbstractVoter
 {
-    public function getClass()
+    public function getClass(): string
     {
         return Material::class;
     }

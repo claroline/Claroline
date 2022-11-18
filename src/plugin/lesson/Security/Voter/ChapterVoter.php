@@ -11,24 +11,22 @@
 
 namespace Icap\LessonBundle\Security\Voter;
 
-use Claroline\CoreBundle\Security\Voter\AbstractVoter;
+use Claroline\AppBundle\Security\Voter\AbstractVoter;
 use Icap\LessonBundle\Entity\Chapter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class ChapterVoter extends AbstractVoter
 {
-    public function getClass()
+    public function getClass(): string
     {
         return Chapter::class;
     }
 
     /**
      * @param Chapter $object
-     *
-     * @return int
      */
-    public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
+    public function checkPermission(TokenInterface $token, $object, array $attributes, array $options): int
     {
         $parentNode = $object->getLesson()->getResourceNode();
 

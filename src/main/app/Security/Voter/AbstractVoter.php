@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Security\Voter;
+namespace Claroline\AppBundle\Security\Voter;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AppBundle\Security\ObjectCollection;
@@ -18,9 +18,9 @@ use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
+use Symfony\Component\Security\Core\Security;
 
 /**
  *  This is the voter we use in the API. It's able to handle the ObjectCollection.
@@ -42,20 +42,25 @@ abstract class AbstractVoter implements ClarolineVoterInterface, VoterInterface
     /** @var string */
     const PATCH = 'PATCH';
 
-    /** @var ContainerInterface */
-    protected $container;
+    /** @var Security */
+    private $security;
+    /** @var ObjectManager */
+    private $om;
 
-    public function setContainer(ContainerInterface $container)
+    public function setSecurity(Security $security): void
     {
-        $this->container = $container;
+        $this->security = $security;
+    }
+
+    public function setObjectManager(ObjectManager $om): void
+    {
+        $this->om = $om;
     }
 
     /**
      * @param mixed $object
-     *
-     * @return int
      */
-    public function vote(TokenInterface $token, $object, array $attributes)
+    public function vote(TokenInterface $token, $object, array $attributes): int
     {
         //attributes[0] contains the permission (ie create, edit, open, ...)
         $attributes[0] = strtoupper($attributes[0]);
@@ -77,12 +82,7 @@ abstract class AbstractVoter implements ClarolineVoterInterface, VoterInterface
         return VoterInterface::ACCESS_GRANTED;
     }
 
-    /**
-     * @param mixed $object
-     *
-     * @return ObjectCollection
-     */
-    protected function getCollection($object)
+    protected function getCollection($object): ObjectCollection
     {
         if (!$object instanceof ObjectCollection) {
             $object = new ObjectCollection([$object]);
@@ -92,23 +92,13 @@ abstract class AbstractVoter implements ClarolineVoterInterface, VoterInterface
     }
 
     /**
-     * @return ContainerInterface
-     *
-     * @deprecated
-     */
-    protected function getContainer()
-    {
-        return $this->container;
-    }
-
-    /**
      * @return ObjectManager
      *
      * @deprecated
      */
     protected function getObjectManager()
     {
-        return $this->getContainer()->get('Claroline\AppBundle\Persistence\ObjectManager');
+        return $this->om;
     }
 
     /**
@@ -116,38 +106,32 @@ abstract class AbstractVoter implements ClarolineVoterInterface, VoterInterface
      *
      * @param mixed $attributes
      * @param mixed $object
-     *
-     * @return bool
      */
-    protected function isGranted($attributes, $object = null)
+    protected function isGranted($attributes, $object = null): bool
     {
-        return $this->getContainer()->get('security.authorization_checker')->isGranted($attributes, $object);
+        return $this->security->isGranted($attributes, $object);
     }
 
     /**
      * @param mixed $object
-     *
-     * @return bool
      */
-    private function supports($object)
+    private function supports($object): bool
     {
         if ($object instanceof ObjectCollection) {
             return $object->isInstanceOf($this->getClass());
-        } else {
-            //doctrine sends proxy so we have to do the check with the instanceof operator
-            $rc = new \ReflectionClass($this->getClass());
-            $toCheck = $rc->newInstanceWithoutConstructor();
-
-            return $object instanceof $toCheck;
         }
+
+        //doctrine sends proxy so we have to do the check with the instanceof operator
+        $rc = new \ReflectionClass($this->getClass());
+        $toCheck = $rc->newInstanceWithoutConstructor();
+
+        return $object instanceof $toCheck;
     }
 
     /**
      * @param string $action
-     *
-     * @return bool
      */
-    private function supportsAction($action)
+    private function supportsAction($action): bool
     {
         if (null === $this->getSupportedActions()) {
             return true;
@@ -176,7 +160,7 @@ abstract class AbstractVoter implements ClarolineVoterInterface, VoterInterface
         return true;
     }
 
-    protected function isToolGranted($permission, string $toolName, Workspace $workspace = null)
+    protected function isToolGranted($permission, string $toolName, Workspace $workspace = null): bool
     {
         $orderedToolRepo = $this->getObjectManager()->getRepository(OrderedTool::class);
 
@@ -201,10 +185,8 @@ abstract class AbstractVoter implements ClarolineVoterInterface, VoterInterface
 
     /**
      * @param mixed $object
-     *
-     * @return bool
      */
-    protected function isOrganizationManager(TokenInterface $token, $object)
+    protected function isOrganizationManager(TokenInterface $token, $object): bool
     {
         if (method_exists($object, 'getOrganizations') && $token->getUser() instanceof User) {
             $adminOrganizations = $token->getUser()->getAdministratedOrganizations();
@@ -222,7 +204,7 @@ abstract class AbstractVoter implements ClarolineVoterInterface, VoterInterface
         return false;
     }
 
-    protected function isOrganizationMember(TokenInterface $token, $object)
+    protected function isOrganizationMember(TokenInterface $token, $object): bool
     {
         if ($token->getUser() instanceof User) {
             $userOrganizations = $token->getUser()->getOrganizations();
@@ -240,12 +222,12 @@ abstract class AbstractVoter implements ClarolineVoterInterface, VoterInterface
         return false;
     }
 
-    protected function isAdmin(TokenInterface $token)
+    protected function isAdmin(TokenInterface $token): bool
     {
         return $this->isGranted('ROLE_ADMIN');
     }
 
-    public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
+    public function checkPermission(TokenInterface $token, $object, array $attributes, array $options): int
     {
         $collection = isset($options['collection']) ? $options['collection'] : null;
 

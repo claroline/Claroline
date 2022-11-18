@@ -42,7 +42,6 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     Claroline\CoreBundle\Manager\Tool\ToolManager:
-        public: true
         arguments:
             - '@security.authorization_checker'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
@@ -56,7 +55,6 @@ services:
         public: true
 
     Claroline\CoreBundle\Manager\RoleManager:
-        public: true
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
 
@@ -67,7 +65,7 @@ services:
     Claroline\CoreBundle\Manager\ResourceManager:
         arguments:
             - '@security.authorization_checker'
-            - '@claroline.manager.rights_manager'
+            - '@Claroline\CoreBundle\Manager\Resource\RightsManager'
             - '@Claroline\AppBundle\Event\StrictDispatcher'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\Library\Utilities\ClaroUtilities'
@@ -86,10 +84,6 @@ services:
             - '%claroline.param.bundle_file%'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@kernel'
-
-    claroline.manager.plugin_manager:
-        alias: Claroline\CoreBundle\Manager\PluginManager
-        public: true
 
     Claroline\CoreBundle\Manager\MailManager:
         arguments:
@@ -181,9 +175,10 @@ services:
         public: true
         arguments:
             - '%claroline.param.files_directory%'
+            - '%claroline.param.workspace.default%'
             - '@Claroline\AppBundle\API\Crud'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@service_container'
+            - '@Claroline\CoreBundle\Manager\Workspace\TransferManager'
         calls:
             - setLogger: [ '@logger' ]
 
@@ -192,7 +187,6 @@ services:
         public: true
 
     Claroline\CoreBundle\Manager\Workspace\TransferManager:
-        public: true
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\Event\StrictDispatcher'
@@ -222,7 +216,7 @@ services:
             - '@Claroline\AppBundle\Event\StrictDispatcher'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\Manager\Resource\MaskManager'
-            - '@service_container'
+            - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
         calls:
             - setLogger: [ '@logger' ]
 
@@ -233,7 +227,7 @@ services:
     Claroline\CoreBundle\Manager\Resource\ResourceRestrictionsManager:
         arguments:
             - '@request_stack'
-            - '@claroline.manager.rights_manager'
+            - '@Claroline\CoreBundle\Manager\Resource\RightsManager'
             - '@security.authorization_checker'
 
     Claroline\CoreBundle\Manager\Resource\ResourceLifecycleManager:
@@ -246,7 +240,7 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@security.authorization_checker'
             - '@Claroline\AppBundle\Event\StrictDispatcher'
-            - '@claroline.manager.resource_manager'
+            - '@Claroline\CoreBundle\Manager\ResourceManager'
 
     Claroline\CoreBundle\Manager\Resource\MaskManager:
         arguments:
@@ -260,7 +254,7 @@ services:
         calls:
             - setLogger: [ '@logger' ]
 
-    claroline.manager.organization.organization_manager:
+    claroline.manager.organization_manager:
         alias: Claroline\CoreBundle\Manager\Organization\OrganizationManager
         public: true
 

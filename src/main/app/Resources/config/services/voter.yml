@@ -1,0 +1,10 @@
+services:
+    Claroline\AppBundle\Security\Voter\AbstractVoter:
+        abstract: true
+        calls:
+            - method: setSecurity
+              arguments:
+                  - '@security.helper'
+            - method: setObjectManager
+              arguments:
+                  - '@Claroline\AppBundle\Persistence\ObjectManager'

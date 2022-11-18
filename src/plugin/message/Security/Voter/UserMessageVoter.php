@@ -11,14 +11,14 @@
 
 namespace Claroline\MessageBundle\Security\Voter;
 
-use Claroline\CoreBundle\Security\Voter\AbstractVoter;
+use Claroline\AppBundle\Security\Voter\AbstractVoter;
 use Claroline\MessageBundle\Entity\UserMessage;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class UserMessageVoter extends AbstractVoter
 {
-    public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
+    public function checkPermission(TokenInterface $token, $object, array $attributes, array $options): int
     {
         if ($token->getUser()->getUuid() === $object->getUser()->getUuid()) {
             return VoterInterface::ACCESS_GRANTED;
@@ -27,12 +27,12 @@ class UserMessageVoter extends AbstractVoter
         return VoterInterface::ACCESS_ABSTAIN;
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return UserMessage::class;
     }
 
-    public function getSupportedActions()
+    public function getSupportedActions(): array
     {
         return [self::OPEN, self::VIEW, self::CREATE, self::EDIT, self::DELETE, self::PATCH];
     }

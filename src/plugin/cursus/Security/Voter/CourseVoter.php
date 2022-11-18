@@ -11,11 +11,11 @@
 
 namespace Claroline\CursusBundle\Security\Voter;
 
+use Claroline\AppBundle\Security\Voter\AbstractVoter;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Repository\Tool\OrderedToolRepository;
-use Claroline\CoreBundle\Security\Voter\AbstractVoter;
 use Claroline\CursusBundle\Entity\Course;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
@@ -24,7 +24,7 @@ class CourseVoter extends AbstractVoter
 {
     const REGISTER = 'REGISTER';
 
-    public function getClass()
+    public function getClass(): string
     {
         return Course::class;
     }
@@ -32,7 +32,7 @@ class CourseVoter extends AbstractVoter
     /**
      * @param Course $object
      */
-    public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
+    public function checkPermission(TokenInterface $token, $object, array $attributes, array $options): int
     {
         /** @var OrderedToolRepository $orderedToolRepo */
         $orderedToolRepo = $this->getObjectManager()->getRepository(OrderedTool::class);
@@ -75,7 +75,7 @@ class CourseVoter extends AbstractVoter
         return VoterInterface::ACCESS_ABSTAIN;
     }
 
-    private function checkOrganization(TokenInterface $token, Course $object)
+    private function checkOrganization(TokenInterface $token, Course $object): bool
     {
         $currentUser = $token->getUser();
 
@@ -91,7 +91,7 @@ class CourseVoter extends AbstractVoter
         return $sameOrganization;
     }
 
-    public function getSupportedActions()
+    public function getSupportedActions(): array
     {
         return [self::OPEN, self::VIEW, self::CREATE, self::EDIT, self::DELETE, self::REGISTER];
     }

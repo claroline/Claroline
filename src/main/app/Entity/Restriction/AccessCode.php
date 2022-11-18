@@ -7,28 +7,24 @@ use Doctrine\ORM\Mapping as ORM;
 trait AccessCode
 {
     /**
-     * @var \DateTime
-     *
      * @ORM\Column(name="access_code", type="string", nullable=true)
+     *
+     * @var string
      */
     protected $accessCode;
 
     /**
      * Returns the access code.
-     *
-     * @return \DateTime
      */
-    public function getAccessCode()
+    public function getAccessCode(): ?string
     {
         return $this->accessCode;
     }
 
     /**
      * Sets the access code.
-     *
-     * @param string $accessCode
      */
-    public function setAccessCode($accessCode)
+    public function setAccessCode(?string $accessCode): void
     {
         $this->accessCode = $accessCode;
     }

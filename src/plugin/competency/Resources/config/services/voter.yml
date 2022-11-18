@@ -1,22 +1,15 @@
 services:
     _defaults:
-        autowire: false
-        autoconfigure: false
-        public: true
+        tags: [security.voter]
 
-    _instanceof:
-        Claroline\CoreBundle\Security\Voter\AbstractVoter:
-            autowire: false
-            tags: [security.voter]
-            calls:
-              - method: setContainer
-                arguments:
-                  - '@service_container'
+    HeVinci\CompetencyBundle\Security\Voter\AbilityVoter:
+        parent: Claroline\AppBundle\Security\Voter\AbstractVoter
 
-    HeVinci\CompetencyBundle\Security\Voter\AbilityVoter: ~
+    HeVinci\CompetencyBundle\Security\Voter\CompetencyAbilityVoter:
+        parent: Claroline\AppBundle\Security\Voter\AbstractVoter
 
-    HeVinci\CompetencyBundle\Security\Voter\CompetencyAbilityVoter: ~
+    HeVinci\CompetencyBundle\Security\Voter\CompetencyVoter:
+        parent: Claroline\AppBundle\Security\Voter\AbstractVoter
 
-    HeVinci\CompetencyBundle\Security\Voter\CompetencyVoter: ~
-
-    HeVinci\CompetencyBundle\Security\Voter\ScaleVoter: ~
+    HeVinci\CompetencyBundle\Security\Voter\ScaleVoter:
+        parent: Claroline\AppBundle\Security\Voter\AbstractVoter

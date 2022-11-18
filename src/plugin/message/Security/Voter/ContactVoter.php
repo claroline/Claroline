@@ -11,8 +11,8 @@
 
 namespace Claroline\MessageBundle\Security\Voter;
 
+use Claroline\AppBundle\Security\Voter\AbstractVoter;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Security\Voter\AbstractVoter;
 use Claroline\MessageBundle\Entity\Contact\Contact;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
@@ -22,7 +22,7 @@ class ContactVoter extends AbstractVoter
     /**
      * @param Contact $object
      */
-    public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
+    public function checkPermission(TokenInterface $token, $object, array $attributes, array $options): int
     {
         // contacts are only visible by the owner
         if ($token->getUser() instanceof User && $object->getUser() && $token->getUser()->getId() === $object->getUser()->getId()) {
@@ -32,12 +32,12 @@ class ContactVoter extends AbstractVoter
         return VoterInterface::ACCESS_DENIED;
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return Contact::class;
     }
 
-    public function getSupportedActions()
+    public function getSupportedActions(): array
     {
         return [self::OPEN, self::VIEW, self::CREATE, self::EDIT, self::DELETE, self::PATCH];
     }

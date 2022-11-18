@@ -1,15 +1,12 @@
 services:
-    _instanceof:
-        Claroline\CoreBundle\Security\Voter\AbstractVoter:
-            autowire: false
-            tags: [security.voter]
-            calls:
-              - method: setContainer
-                arguments:
-                  - '@service_container'
+    _defaults:
+        tags: [security.voter]
 
-    Claroline\DropZoneBundle\Security\Voter\DropCommentVoter: ~
+    Claroline\DropZoneBundle\Security\Voter\DropCommentVoter:
+        parent: Claroline\AppBundle\Security\Voter\AbstractVoter
 
-    Claroline\DropZoneBundle\Security\Voter\RevisionCommentVoter: ~
+    Claroline\DropZoneBundle\Security\Voter\RevisionCommentVoter:
+        parent: Claroline\AppBundle\Security\Voter\AbstractVoter
 
-    Claroline\DropZoneBundle\Security\Voter\RevisionVoter: ~
+    Claroline\DropZoneBundle\Security\Voter\RevisionVoter:
+        parent: Claroline\AppBundle\Security\Voter\AbstractVoter

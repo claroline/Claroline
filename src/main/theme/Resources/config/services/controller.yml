@@ -16,4 +16,4 @@ services:
         arguments:
             - '@security.authorization_checker'
             - '@Claroline\ThemeBundle\Manager\IconSetManager'
-            - '@claroline.manager.tool_manager'
+            - '@Claroline\CoreBundle\Manager\Tool\ToolManager'

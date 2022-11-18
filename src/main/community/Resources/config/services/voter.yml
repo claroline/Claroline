@@ -1,30 +1,30 @@
 services:
-    _defaults:
-        autowire: false
-        autoconfigure: false
-        public: true
+    Claroline\CommunityBundle\Security\Voter\AbstractRoleSubjectVoter:
+        abstract: true
+        parent: Claroline\AppBundle\Security\Voter\AbstractVoter
+        calls:
+            - method: setWorkspaceManager
+              arguments:
+                  - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
 
-    _instanceof:
-        Claroline\CoreBundle\Security\Voter\AbstractVoter:
-            autowire: false
-            tags: [security.voter]
-            calls:
-                - method: setContainer
-                  arguments:
-                      - '@service_container'
-
-        Claroline\CoreBundle\Security\Voter\AbstractRoleSubjectVoter:
-            autowire: false
-            tags: [security.voter]
-
-    Claroline\CommunityBundle\Security\Voter\GroupVoter: ~
+    Claroline\CommunityBundle\Security\Voter\GroupVoter:
+        parent: Claroline\CommunityBundle\Security\Voter\AbstractRoleSubjectVoter
+        tags: [ security.voter ]
 
     Claroline\CommunityBundle\Security\Voter\OrganizationVoter:
+        parent: Claroline\AppBundle\Security\Voter\AbstractVoter
+        tags: [ security.voter ]
         arguments:
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
 
-    Claroline\CommunityBundle\Security\Voter\RoleVoter: ~
+    Claroline\CommunityBundle\Security\Voter\RoleVoter:
+        parent: Claroline\AppBundle\Security\Voter\AbstractVoter
+        tags: [ security.voter ]
+        arguments:
+            - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
 
     Claroline\CommunityBundle\Security\Voter\UserVoter:
+        parent: Claroline\CommunityBundle\Security\Voter\AbstractRoleSubjectVoter
+        tags: [ security.voter ]
         arguments:
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'

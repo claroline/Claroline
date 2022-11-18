@@ -12,10 +12,10 @@
 namespace Claroline\HomeBundle\Security\Voter;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\AppBundle\Security\Voter\AbstractVoter;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Repository\Tool\OrderedToolRepository;
-use Claroline\CoreBundle\Security\Voter\AbstractVoter;
 use Claroline\HomeBundle\Entity\HomeTab;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
@@ -35,7 +35,7 @@ class HomeTabVoter extends AbstractVoter
         $this->orderedToolRepo = $this->om->getRepository(OrderedTool::class);
     }
 
-    public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
+    public function checkPermission(TokenInterface $token, $object, array $attributes, array $options): int
     {
         switch ($attributes[0]) {
             case self::OPEN:
@@ -137,12 +137,12 @@ class HomeTabVoter extends AbstractVoter
         return false;
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return HomeTab::class;
     }
 
-    public function getSupportedActions()
+    public function getSupportedActions(): array
     {
         return [self::OPEN, self::VIEW, self::CREATE, self::EDIT, self::DELETE];
     }

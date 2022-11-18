@@ -24,7 +24,6 @@ use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Claroline\CoreBundle\Repository\Resource\ResourceRightsRepository;
 use Doctrine\DBAL\Connection;
 use Psr\Log\LoggerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class RightsManager implements LoggerAwareInterface
@@ -43,8 +42,8 @@ class RightsManager implements LoggerAwareInterface
     private $rightsRepo;
     /** @var ObjectManager */
     private $om;
-
-    private $container;
+    /** @var WorkspaceManager */
+    private $workspaceManager;
 
     public function __construct(
         Connection $conn,
@@ -52,14 +51,14 @@ class RightsManager implements LoggerAwareInterface
         StrictDispatcher $dispatcher,
         ObjectManager $om,
         MaskManager $maskManager,
-        ContainerInterface $container
+        WorkspaceManager $workspaceManager
     ) {
         $this->conn = $conn;
         $this->tokenStorage = $tokenStorage;
         $this->dispatcher = $dispatcher;
         $this->om = $om;
         $this->maskManager = $maskManager;
-        $this->container = $container; // todo remove me (required because of a circular dependency with claroline.manager.resource_manager)
+        $this->workspaceManager = $workspaceManager;
 
         $this->rightsRepo = $om->getRepository(ResourceRights::class);
     }
@@ -67,7 +66,7 @@ class RightsManager implements LoggerAwareInterface
     /**
      * @param array|int $permissions - either an array of perms or an encoded mask
      */
-    public function create($permissions, Role $role, ResourceNode $node, bool $isRecursive, array $creations = [], bool $log = true)
+    public function create($permissions, Role $role, ResourceNode $node, bool $isRecursive, ?array $creations = [], ?bool $log = true): void
     {
         $this->update($permissions, $role, $node, $isRecursive, $creations, $log);
     }
@@ -75,7 +74,7 @@ class RightsManager implements LoggerAwareInterface
     /**
      * @param array|int $permissions - either an array of perms or an encoded mask
      */
-    public function update($permissions, Role $role, ResourceNode $node, bool $isRecursive = false, array $creations = [], bool $log = true)
+    public function update($permissions, Role $role, ResourceNode $node, ?bool $isRecursive = false, ?array $creations = [], ?bool $log = true): void
     {
         if (!is_int($permissions)) {
             $mask = $this->maskManager->encodeMask($permissions, $node->getResourceType());
@@ -193,8 +192,6 @@ class RightsManager implements LoggerAwareInterface
         $token = $this->tokenStorage->getToken();
         $roleNames = $token->getRoleNames();
 
-        $workspaceManager = $this->container->get(WorkspaceManager::class);
-
         if (!$token->getUser() instanceof User) {
             return false;
         }
@@ -203,15 +200,15 @@ class RightsManager implements LoggerAwareInterface
             return true;
         }
 
-        // If not workspace usurper
-        if ($token->getUser() === $resourceNode->getCreator() && !$workspaceManager->isImpersonated($token)) {
+        // if not workspace usurper
+        if ($token->getUser() === $resourceNode->getCreator() && !$this->workspaceManager->isImpersonated($token)) {
             return true;
         }
 
         $workspace = $resourceNode->getWorkspace();
 
-        //if we manage the workspace
-        if ($workspace && $workspaceManager->isManager($workspace, $token)) {
+        // if we manage the workspace
+        if ($workspace && $this->workspaceManager->isManager($workspace, $token)) {
             return true;
         }
 
@@ -253,7 +250,7 @@ class RightsManager implements LoggerAwareInterface
         }, $creationRights);
     }
 
-    private function singleUpdate(ResourceNode $node, Role $role, $mask = 1, $types = [])
+    private function singleUpdate(ResourceNode $node, Role $role, $mask = 1, $types = []): void
     {
         $sql = "
             INSERT INTO claro_resource_rights (role_id, mask, resourceNode_id)
@@ -308,7 +305,7 @@ class RightsManager implements LoggerAwareInterface
         );
     }
 
-    private function recursiveUpdate(ResourceNode $node, Role $role, $mask = 1, $types = [])
+    private function recursiveUpdate(ResourceNode $node, Role $role, ?int $mask = 1, ?array $types = []): void
     {
         //take into account the fact that some node have type with extended permissions
         //default actions should be set in stone with that way of doing it
@@ -388,11 +385,7 @@ class RightsManager implements LoggerAwareInterface
         );
     }
 
-    /**
-     * @param int   $mask
-     * @param array $types
-     */
-    private function logUpdate(ResourceNode $node, Role $role, $mask, $types)
+    private function logUpdate(ResourceNode $node, Role $role, int $mask, array $types): void
     {
         $this->dispatcher->dispatch(
             'log',

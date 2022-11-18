@@ -12,11 +12,11 @@
 namespace Claroline\CoreBundle\Security\Voter\Tool;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\AppBundle\Security\Voter\AbstractVoter;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Tool\ToolRights;
 use Claroline\CoreBundle\Manager\Tool\ToolMaskDecoderManager;
 use Claroline\CoreBundle\Repository\Tool\ToolRightsRepository;
-use Claroline\CoreBundle\Security\Voter\AbstractVoter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
@@ -39,7 +39,7 @@ class ToolVoter extends AbstractVoter
         $this->rightsRepository = $om->getRepository(ToolRights::class);
     }
 
-    public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
+    public function checkPermission(TokenInterface $token, $object, array $attributes, array $options): int
     {
         if ($this->isAdmin($token)) {
             return VoterInterface::ACCESS_GRANTED;
@@ -59,12 +59,12 @@ class ToolVoter extends AbstractVoter
         return VoterInterface::ACCESS_ABSTAIN;
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return Tool::class;
     }
 
-    public function getSupportedActions()
+    public function getSupportedActions(): ?array
     {
         //atm, null means "everything is supported... implement this later"
         return null;

@@ -4,8 +4,8 @@ services:
         autoconfigure: false
         public: true
 
-    Claroline\AppBundle\Persistence\TableManager:
+    Claroline\AppBundle\Persistence\ObjectManager:
         arguments:
-            - '@doctrine.dbal.default_connection'
+            - '@doctrine.orm.entity_manager'
         calls:
             - setLogger: [ '@logger' ]

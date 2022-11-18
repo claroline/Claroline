@@ -23,7 +23,6 @@ use Claroline\CoreBundle\Entity\Workspace\WorkspaceOptions;
 use Claroline\CoreBundle\Repository\User\UserRepository;
 use Claroline\CoreBundle\Repository\WorkspaceRepository;
 use Psr\Log\LoggerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class WorkspaceManager implements LoggerAwareInterface
@@ -32,11 +31,14 @@ class WorkspaceManager implements LoggerAwareInterface
 
     /** @var string */
     private $filesDir;
+    /** @var string */
+    private $defaultWorkspacePath;
     /** @var ObjectManager */
     private $om;
     /** @var Crud */
     private $crud;
-    private $container;
+    /** @var TransferManager */
+    private $transferManager;
 
     private $shortcutsRepo;
     /** @var UserRepository */
@@ -46,14 +48,16 @@ class WorkspaceManager implements LoggerAwareInterface
 
     public function __construct(
         string $fileDir,
+        string $defaultWorkspacePath,
         Crud $crud,
         ObjectManager $om,
-        ContainerInterface $container
+        TransferManager $transferManager
     ) {
         $this->filesDir = $fileDir;
+        $this->defaultWorkspacePath = $defaultWorkspacePath;
         $this->om = $om;
-        $this->container = $container;
         $this->crud = $crud;
+        $this->transferManager = $transferManager;
 
         $this->userRepo = $om->getRepository(User::class);
         $this->workspaceRepo = $om->getRepository(Workspace::class);
@@ -95,14 +99,14 @@ class WorkspaceManager implements LoggerAwareInterface
         return $workspace;
     }
 
-    public function export(Workspace $workspace)
+    public function export(Workspace $workspace): string
     {
-        return $this->container->get(TransferManager::class)->export($workspace);
+        return $this->transferManager->export($workspace);
     }
 
-    public function import(string $archivePath, ?Workspace $workspace = null)
+    public function import(string $archivePath, ?Workspace $workspace = null): Workspace
     {
-        return $this->container->get(TransferManager::class)->import($archivePath, $workspace ?? new Workspace());
+        return $this->transferManager->import($archivePath, $workspace ?? new Workspace());
     }
 
     public function hasAccess(Workspace $workspace, TokenInterface $token, string $toolName = null, string $permission = 'open'): bool
@@ -284,17 +288,13 @@ class WorkspaceManager implements LoggerAwareInterface
                 $this->om->flush();
             }
 
-            $this->log(sprintf('Import from archive "%s"...', $this->container->getParameter('claroline.param.workspace.default')));
+            $this->log(sprintf('Import from archive "%s"...', $this->defaultWorkspacePath));
 
             $workspace = new Workspace();
             $workspace->setName($name);
             $workspace->setCode($name);
 
-            /** @var Workspace $workspace */
-            $workspace = $this->import(
-                $this->container->getParameter('claroline.param.workspace.default'),
-                $workspace
-            );
+            $workspace = $this->import($this->defaultWorkspacePath, $workspace);
 
             //just in case
             $workspace->setPersonal($isPersonal);
@@ -342,12 +342,12 @@ class WorkspaceManager implements LoggerAwareInterface
         return $workspace;
     }
 
-    public function unregister(AbstractRoleSubject $subject, Workspace $workspace, array $options = [])
+    public function unregister(AbstractRoleSubject $subject, Workspace $workspace, array $options = []): void
     {
         $this->crud->patch($subject, 'role', Crud::COLLECTION_REMOVE, $workspace->getRoles()->toArray(), $options);
     }
 
-    public function countUsersForRoles(Workspace $workspace)
+    public function countUsersForRoles(Workspace $workspace): array
     {
         $roles = $workspace->getRoles();
 
@@ -374,7 +374,7 @@ class WorkspaceManager implements LoggerAwareInterface
         return $shortcuts;
     }
 
-    public function addShortcuts(Workspace $workspace, Role $role, array $toAdd)
+    public function addShortcuts(Workspace $workspace, Role $role, array $toAdd): void
     {
         $workspaceShortcuts = $this->shortcutsRepo->findOneBy(['workspace' => $workspace, 'role' => $role]);
 
@@ -401,7 +401,7 @@ class WorkspaceManager implements LoggerAwareInterface
         $this->om->flush();
     }
 
-    public function removeShortcut(Workspace $workspace, Role $role, $type, $name)
+    public function removeShortcut(Workspace $workspace, Role $role, $type, $name): void
     {
         $workspaceShortcuts = $this->shortcutsRepo->findOneBy(['workspace' => $workspace, 'role' => $role]);
 

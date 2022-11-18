@@ -7,27 +7,24 @@ use Doctrine\ORM\Mapping as ORM;
 trait AccessibleUntil
 {
     /**
-     * @var \DateTime
      * @ORM\Column(name="accessible_until", type="datetime", nullable=true)
+     *
+     * @var \DateTimeInterface
      */
     protected $accessibleUntil;
 
     /**
      * Returns the resource accessible until date.
-     *
-     * @return \DateTime
      */
-    public function getAccessibleUntil()
+    public function getAccessibleUntil(): ?\DateTimeInterface
     {
         return $this->accessibleUntil;
     }
 
     /**
      * Sets the resource accessible until date.
-     *
-     * @param \DateTime $accessibleUntil
      */
-    public function setAccessibleUntil(\DateTime $accessibleUntil = null)
+    public function setAccessibleUntil(?\DateTimeInterface $accessibleUntil = null): void
     {
         $this->accessibleUntil = $accessibleUntil;
     }

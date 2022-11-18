@@ -12,22 +12,22 @@
 namespace Claroline\AnnouncementBundle\Security\Voter;
 
 use Claroline\AnnouncementBundle\Entity\Announcement;
-use Claroline\CoreBundle\Security\Voter\AbstractVoter;
+use Claroline\AppBundle\Security\Voter\AbstractVoter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class AnnouncementVoter extends AbstractVoter
 {
-    public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
+    public function checkPermission(TokenInterface $token, $object, array $attributes, array $options): int
     {
         return $this->isGranted($attributes, $object->getAggregate()->getResourceNode());
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return Announcement::class;
     }
 
-    public function getSupportedActions()
+    public function getSupportedActions(): array
     {
         return [self::OPEN, self::VIEW, self::CREATE, self::EDIT, self::DELETE, self::PATCH];
     }

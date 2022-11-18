@@ -26,7 +26,7 @@ class ResourceUserEvaluationVoter extends AbstractEvaluationVoter
     /**
      * @param ResourceUserEvaluation $object
      */
-    public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
+    public function checkPermission(TokenInterface $token, $object, array $attributes, array $options): int
     {
         $isAdmin = $this->isToolGranted(self::EDIT, 'evaluation')
             || $this->isToolGranted(self::EDIT, 'evaluation', $object->getResourceNode()->getWorkspace());

@@ -11,15 +11,15 @@
 
 namespace Claroline\OpenBadgeBundle\Security\Voter;
 
+use Claroline\AppBundle\Security\Voter\AbstractVoter;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Security\Voter\AbstractVoter;
 use Claroline\OpenBadgeBundle\Entity\Evidence;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class EvidenceVoter extends AbstractVoter
 {
-    public function getClass()
+    public function getClass(): string
     {
         return Evidence::class;
     }
@@ -27,7 +27,7 @@ class EvidenceVoter extends AbstractVoter
     /**
      * @param Evidence $object
      */
-    public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
+    public function checkPermission(TokenInterface $token, $object, array $attributes, array $options): int
     {
         $currentUser = null;
         if ($token->getUser() instanceof User) {
@@ -35,7 +35,7 @@ class EvidenceVoter extends AbstractVoter
         }
 
         $badge = $object->getAssertion()->getBadge();
-        $recipient = $object->getRecipient();
+        $recipient = $object->getUser();
 
         switch ($attributes[0]) {
             case self::OPEN:
@@ -62,7 +62,7 @@ class EvidenceVoter extends AbstractVoter
         return VoterInterface::ACCESS_ABSTAIN;
     }
 
-    public function getSupportedActions()
+    public function getSupportedActions(): array
     {
         return [self::OPEN, self::CREATE, self::EDIT, self::DELETE];
     }
