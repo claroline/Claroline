@@ -32,7 +32,7 @@ class RegisteredSource
         $options = $event->getOptions();
 
         $options['hiddenFilters']['model'] = false;
-        $options['hiddenFilters']['user'] = null;
+        $options['hiddenFilters']['roles'] = $this->tokenStorage->getToken()->getRoleNames();
 
         $user = $this->tokenStorage->getToken()->getUser();
         if ($user instanceof User) {
