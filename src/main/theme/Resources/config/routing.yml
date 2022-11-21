@@ -1,6 +1,5 @@
 claro_theme:
     resource: "@ClarolineThemeBundle/Controller/"
     prefix: apiv2
-    type: api
     options:
         expose: true

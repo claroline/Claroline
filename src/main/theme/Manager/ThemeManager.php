@@ -18,10 +18,13 @@ use Claroline\ThemeBundle\Repository\ThemeRepository;
 
 class ThemeManager
 {
-    /** @var ThemeRepository */
-    private $repository;
     /** @var PlatformConfigurationHandler */
     private $config;
+    /** @var ObjectManager */
+    private $om;
+
+    /** @var ThemeRepository */
+    private $repository;
 
     /** @var Theme */
     private $currentTheme;
@@ -30,8 +33,21 @@ class ThemeManager
         ObjectManager $om,
         PlatformConfigurationHandler $config
     ) {
-        $this->repository = $om->getRepository(Theme::class);
         $this->config = $config;
+        $this->om = $om;
+
+        $this->repository = $om->getRepository(Theme::class);
+    }
+
+    public function createTheme(string $themeName): Theme
+    {
+        $theme = new Theme();
+        $theme->setName($themeName);
+
+        $this->om->persist($theme);
+        $this->om->flush();
+
+        return $theme;
     }
 
     /**
@@ -39,9 +55,9 @@ class ThemeManager
      *
      * @return string[]
      */
-    public function listThemeNames(?bool $onlyEnabled = false): array
+    public function getAvailableThemes(): array
     {
-        $themes = $this->all($onlyEnabled);
+        $themes = $this->all(true);
         $themeNames = [];
 
         foreach ($themes as $theme) {

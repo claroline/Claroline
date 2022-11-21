@@ -3,26 +3,41 @@ plugin:
         - name: Claroline
 
     resource_icons:
+        # Texts
         - name: res_text
           mime_types: [text/plain]
         - name: res_html
           mime_types: [text/html]
+        - name: res_rtf
+          mime_types: [ application/rtf, application/x-rtf, text/richtext ]
+
+        # Spreadsheets
+        - name: res_ods
+          mime_types: [ application/vnd.oasis.opendocument.spreadsheet ]
         - name: res_xls
           mime_types: [application/excel, application/vnd.ms-excel, application/msexcel, application/x-msexcel, application/x-ms-excel, application/x-excel, application/xls, application/x-xls, application/x-dos_ms_excel]
         - name: res_xlsx
           mime_types: [application/vnd.openxmlformats-officedocument.spreadsheetml.sheet]
+
+        # Documents
         - name: res_odt
           mime_types: [application/vnd.oasis.opendocument.text]
+        - name: res_doc
+          mime_types: [ application/msword ]
+        - name: res_docx
+          mime_types: [ application/vnd.openxmlformats-officedocument.wordprocessingml.document ]
+        - name: res_pdf
+          mime_types: [ application/pdf ]
+
+        # Presentation
+        - name: res_odp
+          mime_types: [ application/vnd.oasis.opendocument.presentation ]
         - name: res_ppt
           mime_types: [application/mspowerpoint, application/powerpoint, application/vnd.ms-powerpoint, application/application/x-mspowerpoint]
         - name: res_pptx
           mime_types: [application/vnd.openxmlformats-officedocument.presentationml.presentation]
-        - name: res_doc
-          mime_types: [application/msword]
-        - name: res_docx
-          mime_types: [application/vnd.openxmlformats-officedocument.wordprocessingml.document]
-        - name: res_pdf
-          mime_types: [application/pdf]
+
+        # Archives
         - name: res_zip
           mime_types: [application/zip]
         - name: res_rar
@@ -33,9 +48,3 @@ plugin:
           mime_types: [application/x-compressed, application/x-gzip, multipart/x-gzip]
         - name: res_tar
           mime_types: [application/x-tar]
-        - name: res_odp
-          mime_types: [application/vnd.oasis.opendocument.presentation]
-        - name: res_ods
-          mime_types: [application/vnd.oasis.opendocument.spreadsheet]
-        - name: res_rtf
-          mime_types: [application/rtf, application/x-rtf, text/richtext]

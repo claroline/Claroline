@@ -1,0 +1,48 @@
+<svg id="f4a91ebb-826f-446b-902e-acf2ce2e37dd" data-name="resources" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 134 134">
+  <defs>
+    <style>
+      .ef632f4e-d834-4ebb-8fdd-18aca33eff9a {
+        fill: #fff;
+      }
+
+      .ed1d51cc-c579-4134-8d52-a3bcc155795e {
+        fill: var(--secondary-color);
+      }
+
+      .ad1beba0-2df9-4d02-a704-16d12a8f10b6 {
+        fill: var(--primary-color);
+      }
+    </style>
+  </defs>
+  <g id="e28e90c8-afae-48b5-b746-c9aa784238c5" data-name="Custom">
+    <g id="e4646858-ebfe-4b09-827a-a00a34c57915" data-name="Path">
+      <path class="ef632f4e-d834-4ebb-8fdd-18aca33eff9a" d="M106.77,91.43,84,35.63v-.87a22.49,22.49,0,1,1,45,0v.85Z"/>
+      <rect class="ed1d51cc-c579-4134-8d52-a3bcc155795e" x="-0.05" y="48.5" width="134.1" height="73.23"/>
+      <rect class="ef632f4e-d834-4ebb-8fdd-18aca33eff9a" x="-0.05" y="47.5" width="134.1" height="64.25"/>
+      <rect class="ad1beba0-2df9-4d02-a704-16d12a8f10b6" x="-0.05" y="53.47" width="134.1" height="52.31"/>
+      <g>
+        <path class="ef632f4e-d834-4ebb-8fdd-18aca33eff9a" d="M6.37,76.34H21.56v6.57H6.37Z"/>
+        <path class="ef632f4e-d834-4ebb-8fdd-18aca33eff9a" d="M32.89,76.34H48.08v6.57H32.89Z"/>
+        <path class="ef632f4e-d834-4ebb-8fdd-18aca33eff9a" d="M59.4,76.34H74.6v6.57H59.4Z"/>
+        <path class="ef632f4e-d834-4ebb-8fdd-18aca33eff9a" d="M85.92,76.34h15.19v6.57H85.92Z"/>
+        <path class="ef632f4e-d834-4ebb-8fdd-18aca33eff9a" d="M112.43,76.34h15.2v6.57h-15.2Z"/>
+      </g>
+      <g>
+        <path class="ed1d51cc-c579-4134-8d52-a3bcc155795e" d="M106.51,19.38A16.13,16.13,0,0,0,90.36,35.53L106.7,75.62l16-40.09A16.13,16.13,0,0,0,106.51,19.38Z"/>
+        <path class="ef632f4e-d834-4ebb-8fdd-18aca33eff9a" d="M106.53,41.07a6.69,6.69,0,1,1,.15-13.37,6.55,6.55,0,0,1,6.69,6.69A6.77,6.77,0,0,1,106.53,41.07Z"/>
+      </g>
+      <g>
+        <path class="ef632f4e-d834-4ebb-8fdd-18aca33eff9a" d="M80.18,102.36a8,8,0,1,1,.18-16,7.86,7.86,0,0,1,8,8A8.12,8.12,0,0,1,80.18,102.36Z"/>
+        <path class="ed1d51cc-c579-4134-8d52-a3bcc155795e" d="M80.21,99.54a5.2,5.2,0,1,1,.12-10.39,5.1,5.1,0,0,1,5.2,5.19A5.27,5.27,0,0,1,80.21,99.54Z"/>
+      </g>
+      <g>
+        <path class="ef632f4e-d834-4ebb-8fdd-18aca33eff9a" d="M53.51,72a8,8,0,1,1,.18-16,7.85,7.85,0,0,1,8,8A8.12,8.12,0,0,1,53.51,72Z"/>
+        <path class="ed1d51cc-c579-4134-8d52-a3bcc155795e" d="M53.54,69.21a5.2,5.2,0,1,1,.12-10.39A5.09,5.09,0,0,1,58.86,64,5.27,5.27,0,0,1,53.54,69.21Z"/>
+      </g>
+      <g>
+        <path class="ef632f4e-d834-4ebb-8fdd-18aca33eff9a" d="M26.85,102.36a8,8,0,1,1,.18-16,7.86,7.86,0,0,1,8,8A8.12,8.12,0,0,1,26.85,102.36Z"/>
+        <path class="ed1d51cc-c579-4134-8d52-a3bcc155795e" d="M26.88,99.54A5.2,5.2,0,1,1,27,89.15a5.09,5.09,0,0,1,5.19,5.19A5.27,5.27,0,0,1,26.88,99.54Z"/>
+      </g>
+    </g>
+  </g>
+</svg>

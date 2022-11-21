@@ -16,7 +16,6 @@ namespace Claroline\ThemeBundle\Entity\Icon;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Name;
-use Claroline\AppBundle\Entity\Restriction\Locked;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -30,37 +29,39 @@ class IconSet
     use Id;
     use Uuid;
     use Name;
-    use Locked;
 
-    const RESOURCE_ICON_SET = 'resource_icon_set';
-    const WIDGET_ICON_SET = 'widget_icon_set';
-    const DATA_ICON_SET = 'data_icon_set';
+    const RESOURCE_ICON_SET = 'resources';
+    const WIDGET_ICON_SET = 'widgets';
+    const DATA_ICON_SET = 'data';
 
     /**
-     * @var string
      * @Gedmo\Slug(fields={"name"}, unique=true, updatable=false, separator="_")
      * @ORM\Column(unique=true)
+     *
+     * @var string
+     *
+     * @deprecated
      */
     private $cname;
 
     /**
-     * @var bool
+     * @ORM\Column(name="is_default", type="boolean", options={"default"= 0})
      *
-     * @ORM\Column(name="is_default", type="boolean")
+     * @var bool
      */
     private $default = false;
 
     /**
-     * @var string
-     *
      * @ORM\Column(nullable=true)
+     *
+     * @var string
      */
     private $type;
 
     /**
-     * @var ArrayCollection
-     *
      * @ORM\OneToMany(targetEntity="IconItem", mappedBy="iconSet")
+     *
+     * @var ArrayCollection|IconItem[]
      */
     private $icons;
 
@@ -71,6 +72,9 @@ class IconSet
         $this->icons = new ArrayCollection();
     }
 
+    /**
+     * @deprecated
+     */
     public function getCname(): ?string
     {
         return $this->cname;
@@ -96,23 +100,25 @@ class IconSet
         $this->type = $type;
     }
 
+    /**
+     * @return IconItem[]
+     */
     public function getIcons()
     {
         return $this->icons;
     }
 
-    /**
-     * @param array $icons
-     *
-     * @deprecated
-     */
-    public function setIcons($icons): void
+    public function addIcon(IconItem $icon): void
     {
-        $this->icons = $icons;
+        if (!$this->icons->contains($icon)) {
+            $this->icons->add($icon);
+        }
     }
 
-    public function addIcon(IconItem $icon)
+    public function removeIcon(IconItem $icon): void
     {
-        $this->icons->add($icon);
+        if ($this->icons->contains($icon)) {
+            $this->icons->removeElement($icon);
+        }
     }
 }

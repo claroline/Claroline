@@ -1,0 +1,6 @@
+services:
+    _defaults:
+        tags: [security.voter]
+
+    Claroline\ThemeBundle\Security\Voter\IconSetVoter:
+        parent: Claroline\AppBundle\Security\Voter\AbstractVoter

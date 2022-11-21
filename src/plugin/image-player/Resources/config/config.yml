@@ -2,9 +2,13 @@ plugin:
     resource_icons:
         - name: res_jpeg
           mime_types: [image, image/jpeg, image/pjpeg]
+        - name: res_png
+          mime_types: [image/png]
         - name: res_bmp
           mime_types: [image/bmp, image/x-windows-bmp]
         - name: res_gif
           mime_types: [image/gif]
         - name: res_tiff
           mime_types: [image/tiff, image/x-tiff]
+        - name: res_vector
+          mime_types: [image/svg+xml]

@@ -34,7 +34,7 @@ services:
             - '@filesystem'
             - '@Claroline\CoreBundle\Manager\Tool\ToolManager'
             - '@Claroline\CoreBundle\Manager\Tool\ToolMaskDecoderManager'
-            - '@Claroline\ThemeBundle\Manager\IconSetManager'
+            - '@Claroline\ThemeBundle\Manager\IconSetBuilderManager'
         calls:
             - setLogger: [ '@logger' ]
 

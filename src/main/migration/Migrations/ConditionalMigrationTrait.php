@@ -31,4 +31,18 @@ trait ConditionalMigrationTrait
 
         return !empty($stmt->fetchAllAssociative());
     }
+
+    private function checkColumnExists(string $tableName, string $columnName, Connection $connection): bool
+    {
+        $stmt = $connection->executeQuery('
+            SELECT *
+            FROM information_schema.columns
+            WHERE table_name = :tableName AND column_name = :columnName
+        ', [
+            'tableName' => $tableName,
+            'columnName' => $columnName,
+        ]);
+
+        return !empty($stmt->fetchAllAssociative());
+    }
 }

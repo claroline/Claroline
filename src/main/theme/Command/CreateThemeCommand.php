@@ -11,8 +11,7 @@
 
 namespace Claroline\ThemeBundle\Command;
 
-use Claroline\AppBundle\API\Crud;
-use Claroline\ThemeBundle\Entity\Theme;
+use Claroline\ThemeBundle\Manager\ThemeManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -20,12 +19,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class CreateThemeCommand extends Command
 {
-    /** @var Crud */
-    private $crud;
+    /** @var ThemeManager */
+    private $themeManager;
 
-    public function __construct(Crud $crud)
+    public function __construct(ThemeManager $themeManager)
     {
-        $this->crud = $crud;
+        $this->themeManager = $themeManager;
 
         parent::__construct();
     }
@@ -43,7 +42,7 @@ class CreateThemeCommand extends Command
 
         $output->writeln('Create a new theme "'.$name.'".');
 
-        $this->crud->create(Theme::class, ['name' => $name], [Crud::NO_PERMISSIONS]);
+        $this->themeManager->createTheme($name);
 
         $output->writeln('Done !');
 

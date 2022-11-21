@@ -1,0 +1,27 @@
+<svg id="ab6a80f1-2076-4fd9-8813-342adea053b1" data-name="resources" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 134 134">
+  <defs>
+    <style>
+      .a64f17b7-9370-4e6c-95ae-96bacb62da87 {
+        fill: var(--secondary-color);
+      }
+
+      .baebb5a7-f014-4ac4-955c-393290d55279 {
+        fill: #fff;
+        stroke: var(--primary-color);
+        stroke-miterlimit: 10;
+        stroke-width: 4px;
+      }
+    </style>
+  </defs>
+  <g id="ac96a30b-2b8f-4e31-862c-3c3680f623c5" data-name="Custom">
+    <g id="e7ca5482-5e91-4b9f-bad8-d59183e2d7a4" data-name="Lesson">
+      <g>
+        <polygon class="a64f17b7-9370-4e6c-95ae-96bacb62da87" points="-0.05 31.14 -0.05 117.05 68.18 131.1 68.18 131.1 134.05 117.05 134.05 31.14 -0.05 31.14"/>
+        <polygon class="baebb5a7-f014-4ac4-955c-393290d55279" points="68.18 122.4 7.66 109.33 7.66 19.91 68.18 32.99 68.18 122.4"/>
+        <polygon class="baebb5a7-f014-4ac4-955c-393290d55279" points="68.18 122.4 125.34 109.33 125.34 19.91 68.18 32.99 68.18 122.4"/>
+        <polygon class="baebb5a7-f014-4ac4-955c-393290d55279" points="68.18 121.41 72.43 121.41 92.02 91.55 92.02 2.9 68.18 32.99 68.18 121.41"/>
+      </g>
+      <polygon class="a64f17b7-9370-4e6c-95ae-96bacb62da87" points="134.05 109.98 68.18 124.48 68.18 124.48 -0.05 109.98 -0.05 113.41 68.18 127.91 68.18 127.91 134.05 113.41 134.05 109.98"/>
+    </g>
+  </g>
+</svg>

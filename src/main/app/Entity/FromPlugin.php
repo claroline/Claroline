@@ -22,7 +22,7 @@ trait FromPlugin
         return $this->plugin;
     }
 
-    public function setPlugin(Plugin $plugin)
+    public function setPlugin(Plugin $plugin): void
     {
         $this->plugin = $plugin;
     }

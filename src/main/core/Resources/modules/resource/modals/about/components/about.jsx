@@ -7,10 +7,10 @@ import {url} from '#/main/app/api'
 import {trans} from '#/main/app/intl/translation'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {DetailsData} from '#/main/app/content/details/components/data'
-import {ThemeIcon} from '#/main/theme/components/icon'
 
 import {route} from '#/main/core/resource/routing'
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
+import {ResourceIcon} from '#/main/core/resource/components/icon'
 
 const AboutModal = props =>
   <Modal
@@ -34,7 +34,7 @@ const AboutModal = props =>
               type: 'type',
               hideLabel: true,
               calculated: (resourceNode) => ({
-                icon: <ThemeIcon mimeType={resourceNode.meta.mimeType} />,
+                icon: <ResourceIcon mimeType={resourceNode.meta.mimeType} />,
                 name: trans(resourceNode.meta.type, {}, 'resource'),
                 description: trans(`${resourceNode.meta.type}_desc`, {}, 'resource')
               })

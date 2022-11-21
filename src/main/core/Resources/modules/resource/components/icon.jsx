@@ -2,10 +2,14 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
-import {icon} from '#/main/theme/config'
+import {ThemeIcon} from '#/main/theme/components/icon'
 
 const ResourceIcon = props =>
-  <img className={classes('resource-icon', props.className)} src={icon(props.mimeType)} />
+  <ThemeIcon
+    className={classes('resource-icon', props.className)}
+    mimeType={props.mimeType}
+    set="resources"
+  />
 
 ResourceIcon.propTypes = {
   className: T.string,

@@ -11,102 +11,93 @@
 
 namespace Claroline\ThemeBundle\Controller;
 
-use Claroline\AppBundle\API\Options;
-use Claroline\AppBundle\Controller\AbstractCrudController;
-use Claroline\CoreBundle\Manager\Tool\ToolManager;
-use Claroline\ThemeBundle\Entity\Icon\IconItem;
+use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Security\PermissionCheckerTrait;
+use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Claroline\ThemeBundle\Entity\Icon\IconSet;
 use Claroline\ThemeBundle\Manager\IconSetManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @Route("/icon_set")
  */
-class IconSetController extends AbstractCrudController
+class IconSetController
 {
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
+    use PermissionCheckerTrait;
 
+    /** @var ObjectManager */
+    private $om;
     /** @var IconSetManager */
     private $iconSetManager;
 
-    /** @var ToolManager */
-    private $toolManager;
-
     public function __construct(
         AuthorizationCheckerInterface $authorization,
-        IconSetManager $iconSetManager,
-        ToolManager $toolManager
+        ObjectManager $om,
+        IconSetManager $iconSetManager
     ) {
         $this->authorization = $authorization;
+        $this->om = $om;
         $this->iconSetManager = $iconSetManager;
-        $this->toolManager = $toolManager;
-    }
-
-    public function getName(): string
-    {
-        return 'icon_set';
-    }
-
-    public function getClass(): string
-    {
-        return IconSet::class;
-    }
-
-    public function getIgnore(): array
-    {
-        return ['exist', 'copyBulk', 'find'];
     }
 
     /**
-     * @Route("/{iconSet}/items/list", name="apiv2_icon_set_items_list", methods={"GET"})
-     * @EXT\ParamConverter("iconSet", class="Claroline\ThemeBundle\Entity\Icon\IconSet", options={"mapping": {"iconSet": "uuid"}})
+     * @Route("/", name="apiv2_icon_set_create", methods={"POST"})
      */
-    public function listItemsAction(IconSet $iconSet, Request $request): JsonResponse
+    public function createAction(Request $request): JsonResponse
     {
-        return new JsonResponse($this->finder->search(
-            IconItem::class,
-            array_merge($request->query->all(), ['hiddenFilters' => ['iconSet' => $iconSet->getUuid()]]),
-            [Options::SERIALIZE_MINIMAL]
-        ));
+        $this->checkPermission('CREATE', new IconSet(), [], true);
+
+        $setName = $request->request->get('name');
+        $files = $request->files->all();
+
+        $errors = [];
+        if (empty($setName)) {
+            $errors[] = ['path' => '/name', 'message' => 'value_not_blank'];
+        }
+        if (empty($files)) {
+            $errors[] = ['path' => '/archive', 'message' => 'value_not_blank'];
+        }
+
+        $existingSets = $this->om->getRepository(IconSet::class)->count(['name' => $setName]);
+        if (0 !== $existingSets) {
+            $errors[] = ['path' => '/name', 'message' => 'value_not_unique'];
+        }
+
+        if ($errors) {
+            throw new InvalidDataException('Invalid data sent.', $errors);
+        }
+
+        $createdSet = $this->iconSetManager->createSet($setName, array_shift($files));
+
+        return new JsonResponse($createdSet, 201);
     }
 
     /**
-     * @Route("/{iconSet}/item/update", name="apiv2_icon_set_item_update", methods={"POST", "PUT"})
-     * @EXT\ParamConverter("iconSet", class="Claroline\ThemeBundle\Entity\Icon\IconSet", options={"mapping": {"iconSet": "uuid"}})
+     * @Route("/{iconSet}", name="apiv2_icon_set_get", methods={"GET"})
      */
-    public function updateItemAction(IconSet $iconSet, Request $request): JsonResponse
+    public function downloadAction(string $iconSet): BinaryFileResponse
     {
-        if ($iconSet->isLocked() || !$this->hasToolAccess()) {
-            throw new AccessDeniedException();
-        }
-        $data = json_decode($request->request->all()['iconItem'], true);
-        $mimeTypes = [];
-
-        $file = $request->files->all()['file'];
-        $relativeUrl = $file ? $this->iconSetManager->uploadIcon($iconSet, $file) : null;
-
-        if (isset($data['mimeTypes'])) {
-            $mimeTypes = $data['mimeTypes'];
-        } elseif (isset($data['mimeType'])) {
-            $mimeTypes = [$data['mimeType']];
-        }
-        $iconItems = $relativeUrl ? $this->iconSetManager->updateIconItems($iconSet, $mimeTypes, $relativeUrl) : [];
-
-        return new JsonResponse(array_map(function (IconItem $iconItem) {
-            return $this->serializer->serialize($iconItem);
-        }, $iconItems));
+        return new BinaryFileResponse($this->iconSetManager->downloadSet($iconSet), 200, [
+            'Content-Disposition' => "attachment; filename={$iconSet}.zip",
+        ]);
     }
 
-    private function hasToolAccess(string $rights = 'OPEN'): bool
+    /**
+     * @Route("/{iconSet}", name="apiv2_icon_set_delete", methods={"DELETE"})
+     */
+    public function deleteAction(string $iconSet): JsonResponse
     {
-        $tool = $this->toolManager->getAdminToolByName('main_settings');
+        $existingSets = $this->om->getRepository(IconSet::class)->findBy(['name' => $iconSet]);
+        if (!empty($existingSets)) {
+            $this->checkPermission('DELETE', $existingSets[0], [], true);
 
-        return !is_null($tool) && $this->authorization->isGranted($rights, $tool);
+            $this->iconSetManager->deleteSet($iconSet);
+        }
+
+        return new JsonResponse(null, 204);
     }
 }

@@ -1,0 +1,35 @@
+<svg id="e397def7-6070-44b9-b04f-7b2704b19958" data-name="data" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 134 134">
+  <defs>
+    <style>
+      .b6e1d34f-659d-4652-92f6-5c46682c131f, .e2fa8886-c8f7-41d1-97cb-0c157ae3f8bb {
+        fill: var(--secondary-color);
+      }
+
+      .b6e1d34f-659d-4652-92f6-5c46682c131f {
+        stroke: var(--secondary-color);
+      }
+
+      .ac16ddd3-be17-474c-beaf-13beae4e3682, .b6e1d34f-659d-4652-92f6-5c46682c131f {
+        stroke-miterlimit: 10;
+        stroke-width: 4px;
+      }
+
+      .ac16ddd3-be17-474c-beaf-13beae4e3682 {
+        fill: #fff;
+        stroke: var(--primary-color);
+      }
+    </style>
+  </defs>
+  <g id="adc02592-4839-4f10-998f-f34eb92a3e8b" data-name="ForumMessages">
+    <g>
+      <polygon class="b6e1d34f-659d-4652-92f6-5c46682c131f" points="26.47 55.85 26.47 39.45 56.4 39.45 56.4 14.09 2.07 14.09 2.07 51.47 16.36 51.47 9.69 67.86 26.47 55.85"/>
+      <polygon class="e2fa8886-c8f7-41d1-97cb-0c157ae3f8bb" points="45.01 82.04 45.01 48.86 86.18 48.86 86.18 31.34 24.42 31.34 24.42 74.98 37.77 74.98 25.66 98.5 45.01 82.04"/>
+      <path class="b6e1d34f-659d-4652-92f6-5c46682c131f" d="M54.5,127.56l10.11-24.41H45V49h79.32v54H89.2Z"/>
+    </g>
+    <g>
+      <polygon class="ac16ddd3-be17-474c-beaf-13beae4e3682" points="34.12 48.2 34.12 31.8 64.06 31.8 64.06 6.44 9.72 6.44 9.72 43.81 24.02 43.81 17.34 60.21 34.12 48.2"/>
+      <polygon class="e2fa8886-c8f7-41d1-97cb-0c157ae3f8bb" points="52.66 74.39 52.66 41.21 93.83 41.21 93.83 23.69 32.07 23.69 32.07 67.33 45.42 67.33 33.31 90.84 52.66 74.39"/>
+      <path class="ac16ddd3-be17-474c-beaf-13beae4e3682" d="M62.15,119.91,72.26,95.5H52.61V41.35h79.32v54H96.85Z"/>
+    </g>
+  </g>
+</svg>

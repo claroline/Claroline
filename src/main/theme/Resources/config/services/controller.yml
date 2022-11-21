@@ -2,18 +2,12 @@ services:
     _defaults:
         public: true # because controller
 
-    Claroline\ThemeBundle\Controller\ThemeController:
-        parent: Claroline\AppBundle\Controller\AbstractCrudController
-        public: true
-
     Claroline\ThemeBundle\Controller\IconController:
         arguments:
             - '%kernel.project_dir%'
 
     Claroline\ThemeBundle\Controller\IconSetController:
-        parent: Claroline\AppBundle\Controller\AbstractCrudController
-        public: true
         arguments:
             - '@security.authorization_checker'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\ThemeBundle\Manager\IconSetManager'
-            - '@Claroline\CoreBundle\Manager\Tool\ToolManager'

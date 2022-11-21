@@ -26,9 +26,10 @@ function theme(assetName = 'bootstrap') {
  * Get the icon defined for a mime-type.
  *
  * @param {object} mimeType
+ * @param {string} set
  */
-function icon(mimeType) {
-  const icons = param('theme.icons')
+function icon(mimeType, set) {
+  const icons = param('theme.icons')[set]
 
   // try to find an icon for the exact mime type
   let typeIcon = icons.find(current => -1 !== current.mimeTypes.indexOf(mimeType))
@@ -43,7 +44,7 @@ function icon(mimeType) {
     }
   }
 
-  return asset(typeIcon.url)
+  return typeIcon
 }
 
 export {

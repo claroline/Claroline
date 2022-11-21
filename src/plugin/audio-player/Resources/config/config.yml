@@ -2,9 +2,7 @@ plugin:
     resource_icons:
         - name: res_audio
           mime_types: [audio]
-
         - name: res_wav
           mime_types: [audio/wav, audio/x-wav]
-
         - name: res_mp3
           mime_types: [audio/mpeg3, audio/x-mpeg3, audio/mp3]

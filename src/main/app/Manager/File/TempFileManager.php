@@ -8,6 +8,8 @@ use Symfony\Component\HttpFoundation\File\File;
 
 class TempFileManager
 {
+    /** @var Filesystem */
+    private $filesystem;
     /** @var string */
     private $tmpDir;
 
@@ -23,6 +25,7 @@ class TempFileManager
         string $tmpDir
     ) {
         $this->tmpDir = $tmpDir;
+        $this->filesystem = new FileSystem();
     }
 
     /**
@@ -68,13 +71,13 @@ class TempFileManager
      * NB. persisted files are not automatically cleared at the end of each requests (this is useful when the file is processed
      * in the messenger). YOU NEED TO MANUALLY REMOVE THE FILE WHEN YOU ARE DONE WITH IT.
      */
-    public function copy(File $file, ?bool $persist = false)
+    public function copy(\SplFileInfo $file, ?bool $persist = false)
     {
         // generates an unique name for the new temp
         $tempName = Uuid::uuid4()->toString();
         $tempFile = $this->getDirectory().DIRECTORY_SEPARATOR.$tempName;
 
-        $file->move($this->getDirectory(), $tempName);
+        $this->filesystem->copy($file->getPathname(), $tempFile);
         if (!$persist) {
             $this->files[] = $tempFile;
         }
@@ -88,9 +91,8 @@ class TempFileManager
     public function clear(): void
     {
         if (!empty($this->files)) {
-            $fs = new FileSystem();
             foreach ($this->files as $file) {
-                $fs->remove($file);
+                $this->filesystem->remove($file);
             }
         }
     }

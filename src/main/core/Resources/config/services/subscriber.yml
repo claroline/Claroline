@@ -81,6 +81,14 @@ services:
         arguments:
             - '@Claroline\CoreBundle\Manager\MailManager'
 
+    # Administration
+    Claroline\CoreBundle\Subscriber\Administration\ParametersSubscriber:
+        tags: [kernel.event_subscriber]
+        arguments:
+            - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
+            - '@Claroline\CoreBundle\Manager\LocaleManager'
+            - '@Claroline\ThemeBundle\Manager\IconSetManager'
+
     # Tools
     Claroline\CoreBundle\Subscriber\Tool\LocationsSubscriber:
         tags: [kernel.event_subscriber]

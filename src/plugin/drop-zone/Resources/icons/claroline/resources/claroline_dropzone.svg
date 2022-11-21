@@ -1,0 +1,53 @@
+<svg id="b9f004b8-0ff0-4311-92c4-75d649fdafa0" data-name="resources" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 134 134">
+  <defs>
+    <style>
+      .bc0d6988-98c6-4637-b8e3-8bb48ac4eaf7, .bfd1256c-611a-49a3-95d6-c96bff9ffb6a, .f1665f49-dc7a-4c9a-840f-ae19766c3b8e {
+        fill: #fff;
+      }
+
+      .b1a87fde-161e-4946-bbfa-e3c442011da6, .bc0d6988-98c6-4637-b8e3-8bb48ac4eaf7, .f1665f49-dc7a-4c9a-840f-ae19766c3b8e {
+        stroke: var(--primary-color);
+      }
+
+      .b1a87fde-161e-4946-bbfa-e3c442011da6, .bc0d6988-98c6-4637-b8e3-8bb48ac4eaf7, .bfa2169b-6c5b-4f35-be99-60d2cee268f8, .f1665f49-dc7a-4c9a-840f-ae19766c3b8e, .f9718bc3-e2d3-4d3d-afc4-7e7e7473831d {
+        stroke-miterlimit: 10;
+      }
+
+      .bc0d6988-98c6-4637-b8e3-8bb48ac4eaf7, .bfa2169b-6c5b-4f35-be99-60d2cee268f8 {
+        stroke-width: 4px;
+      }
+
+      .ab338f61-2653-4262-9237-8eae24b30898, .bfa2169b-6c5b-4f35-be99-60d2cee268f8 {
+        fill: var(--secondary-color);
+      }
+
+      .bfa2169b-6c5b-4f35-be99-60d2cee268f8, .f9718bc3-e2d3-4d3d-afc4-7e7e7473831d {
+        stroke: var(--secondary-color);
+      }
+
+      .b1a87fde-161e-4946-bbfa-e3c442011da6 {
+        fill: var(--primary-color);
+      }
+
+      .f9718bc3-e2d3-4d3d-afc4-7e7e7473831d {
+        fill: none;
+        stroke-width: 3px;
+      }
+    </style>
+  </defs>
+  <g id="fd9c2f56-59e3-4240-9dc1-259fcf09b376" data-name="Custom">
+    <g id="e2faca94-5263-4979-a4f4-147e6a89fce2" data-name="Dropzone">
+      <polygon class="bc0d6988-98c6-4637-b8e3-8bb48ac4eaf7" points="52.53 2.51 25.3 104.11 98.81 123.8 122.02 37.21 110.38 18 52.53 2.51"/>
+      <polygon class="bfa2169b-6c5b-4f35-be99-60d2cee268f8" points="39.21 10.19 11.98 111.8 85.49 131.49 108.7 44.89 97.06 25.7 39.21 10.19"/>
+      <polygon class="bc0d6988-98c6-4637-b8e3-8bb48ac4eaf7" points="52.53 2.51 25.3 104.11 98.81 123.8 122.02 37.21 110.38 18 52.53 2.51"/>
+      <rect class="b1a87fde-161e-4946-bbfa-e3c442011da6" x="39.11" y="76.68" width="24.78" height="24.71" transform="translate(-47.83 115.74) rotate(-75)"/>
+      <polygon class="bfd1256c-611a-49a3-95d6-c96bff9ffb6a" points="58.84 76.47 51.06 88.97 50.83 82.14 46.98 81.11 47.94 94.81 50.81 95.58 62.58 77.47 58.84 76.47"/>
+      <rect class="f1665f49-dc7a-4c9a-840f-ae19766c3b8e" x="71.26" y="85.3" width="24.78" height="24.71" transform="translate(-32.33 153.18) rotate(-75)"/>
+      <polygon class="ab338f61-2653-4262-9237-8eae24b30898" points="91.57 93.05 87.34 91.92 84.8 94.31 83.8 90.97 79.58 89.84 81.78 97.15 76.21 102.39 80.44 103.52 82.98 101.13 83.98 104.47 88.2 105.6 86 98.28 91.57 93.05"/>
+      <line class="f9718bc3-e2d3-4d3d-afc4-7e7e7473831d" x1="52.7" y1="36.83" x2="108.67" y2="52.03"/>
+      <line class="f9718bc3-e2d3-4d3d-afc4-7e7e7473831d" x1="45.68" y1="63.03" x2="101.64" y2="78.28"/>
+      <line class="f9718bc3-e2d3-4d3d-afc4-7e7e7473831d" x1="56.21" y1="23.72" x2="112.19" y2="38.92"/>
+      <line class="f9718bc3-e2d3-4d3d-afc4-7e7e7473831d" x1="49.19" y1="49.92" x2="105.15" y2="65.17"/>
+    </g>
+  </g>
+</svg>

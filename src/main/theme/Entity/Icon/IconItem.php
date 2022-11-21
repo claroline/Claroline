@@ -19,7 +19,7 @@ use Claroline\AppBundle\Entity\Meta\Name;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="Claroline\ThemeBundle\Repository\Icon\IconItemRepository")
+ * @ORM\Entity()
  * @ORM\Table(name="claro_icon_item")
  */
 class IconItem
@@ -43,6 +43,13 @@ class IconItem
     private $relativeUrl;
 
     /**
+     * @ORM\Column(type="boolean")
+     *
+     * @var bool
+     */
+    private $svg = false;
+
+    /**
      * @ORM\ManyToOne(targetEntity="IconSet", inversedBy="icons", fetch="LAZY")
      * @ORM\JoinColumn(name="icon_set_id", referencedColumnName="id", onDelete="CASCADE")
      *
@@ -50,18 +57,9 @@ class IconItem
      */
     private $iconSet;
 
-    public function __construct(
-        IconSet $iconSet,
-        string $relativeUrl,
-        ?string $name = null,
-        ?string $mimeType = null
-    ) {
+    public function __construct()
+    {
         $this->refreshUuid();
-
-        $this->iconSet = $iconSet;
-        $this->relativeUrl = $relativeUrl;
-        $this->name = $name;
-        $this->mimeType = $mimeType;
     }
 
     public function getIconSet(): ?IconSet
@@ -94,5 +92,15 @@ class IconItem
     public function setRelativeUrl(string $relativeUrl): void
     {
         $this->relativeUrl = $relativeUrl;
+    }
+
+    public function isSvg(): bool
+    {
+        return $this->svg;
+    }
+
+    public function setSvg(bool $svg): void
+    {
+        $this->svg = $svg;
     }
 }
