@@ -38,7 +38,7 @@ class AllSource
     {
         $options = $event->getOptions();
         $options['hiddenFilters']['hidden'] = false;
-        $options['hiddenFilters']['organization'] = $this->getOrganizations();
+        $options['hiddenFilters']['organizations'] = $this->getOrganizations();
 
         if (DataSource::CONTEXT_HOME === $event->getContext()) {
             $options['hiddenFilters']['model'] = false;

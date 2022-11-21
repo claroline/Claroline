@@ -85,16 +85,10 @@ class WorkspaceFinder extends AbstractFinder
                     $qb->andWhere('o.uuid IN (:organizationIds)');
                     $qb->setParameter('organizationIds', is_array($filterValue) ? $filterValue : [$filterValue]);
                     break;
-                case 'user':
+                case 'roles':
                     $qb->leftJoin('obj.roles', 'r');
-                    $qb->leftJoin('r.users', 'ru');
-                    $qb->leftJoin('r.groups', 'rg');
-                    $qb->leftJoin('rg.users', 'rgu');
-
-                    $qb->andWhere('(ru.uuid = :_userId OR rgu.uuid = :_userId)');
-
-                    $qb->setParameter('_userId', $filterValue);
-
+                    $qb->andWhere('r.name IN (:roleNames)');
+                    $qb->setParameter('roleNames', is_array($filterValue) ? $filterValue : [$filterValue]);
                     break;
                 default:
                     $this->setDefaults($qb, $filterName, $filterValue);

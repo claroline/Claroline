@@ -157,7 +157,7 @@ class WorkspaceController extends AbstractCrudController
             Workspace::class,
             array_merge($request->query->all(), ['hiddenFilters' => [
                 'model' => false,
-                'user' => $this->tokenStorage->getToken()->getUser()->getUuid(),
+                'roles' => $this->tokenStorage->getToken()->getRoleNames(),
             ]]),
             $this->getOptions()['list']
         ));
@@ -533,7 +533,7 @@ class WorkspaceController extends AbstractCrudController
             $user = $this->tokenStorage->getToken()->getUser();
             if ($user instanceof User) {
                 return [
-                    'organization' => array_map(function (Organization $organization) {
+                    'organizations' => array_map(function (Organization $organization) {
                         return $organization->getUuid();
                     }, $user->getOrganizations()),
                 ];
