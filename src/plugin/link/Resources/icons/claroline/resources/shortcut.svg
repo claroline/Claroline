@@ -1,0 +1,26 @@
+<svg id="a551e83f-3e91-4f0a-9e23-1e097df19ed8" data-name="resources" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 134 134">
+  <defs>
+    <style>
+      .e529eee6-0311-4f75-87f4-1139d173e1b8 {
+        fill: var(--secondary-color);
+        stroke: var(--secondary-color);
+      }
+
+      .be7892e4-9af5-424b-aa23-7e18bf3adf13, .e529eee6-0311-4f75-87f4-1139d173e1b8 {
+        stroke-miterlimit: 10;
+        stroke-width: 4px;
+      }
+
+      .be7892e4-9af5-424b-aa23-7e18bf3adf13 {
+        fill: #fff;
+        stroke: var(--primary-color);
+      }
+    </style>
+  </defs>
+  <g id="b8d219dd-da21-4936-9966-e9213a28f1e4" data-name="Custom">
+    <g id="a002020f-c2ec-4d34-b85b-40f34a6c56d9" data-name="Shortcut">
+      <path class="e529eee6-0311-4f75-87f4-1139d173e1b8" d="M129.89,87.09l-4.75-6h0L77.58,20.5,69.39,33.6a43.31,43.31,0,0,0-57.63,15c-.3.48-.58,1-.85,1.45l-.17.24-.36.54A45.12,45.12,0,0,0,23.18,112l2.12,1.47,7-11.27-2.07-1.29A28.43,28.43,0,0,1,23.8,95.5,26.46,26.46,0,0,1,55.57,55.71L47.25,69.05Z"/>
+      <path class="be7892e4-9af5-424b-aa23-7e18bf3adf13" d="M32.48,101.63A29.74,29.74,0,0,1,63.22,50.92l.74.36-8.18,13.1L130.5,80.69,83.2,20.5,74.94,33.72a43.95,43.95,0,0,0-46.5,74.5Z"/>
+    </g>
+  </g>
+</svg>

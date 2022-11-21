@@ -1,0 +1,58 @@
+<svg id="faf09f39-9a82-4b7a-8ba8-bfc3d987514a" data-name="data" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 134 134">
+  <defs>
+    <style>
+      .ad017ac3-64a4-4f0a-a2fd-4a031ce0124c {
+        fill: var(--secondary-color);
+      }
+
+      .ad017ac3-64a4-4f0a-a2fd-4a031ce0124c, .b758ce91-e854-489e-b20e-c4b7b64b282f, .e658aea8-d629-4a30-8625-a949463ed0b2 {
+        stroke: var(--secondary-color);
+      }
+
+      .aabc8d74-26b9-48d3-8665-4fc446ca711c, .ad017ac3-64a4-4f0a-a2fd-4a031ce0124c, .b758ce91-e854-489e-b20e-c4b7b64b282f, .e658aea8-d629-4a30-8625-a949463ed0b2 {
+        stroke-miterlimit: 10;
+      }
+
+      .aabc8d74-26b9-48d3-8665-4fc446ca711c, .ad017ac3-64a4-4f0a-a2fd-4a031ce0124c {
+        stroke-width: 4px;
+      }
+
+      .a08aeb05-8668-473f-a3ce-25b0918bc5bd, .aabc8d74-26b9-48d3-8665-4fc446ca711c {
+        fill: #fff;
+      }
+
+      .aabc8d74-26b9-48d3-8665-4fc446ca711c {
+        stroke: var(--primary-color);
+      }
+
+      .b758ce91-e854-489e-b20e-c4b7b64b282f, .e658aea8-d629-4a30-8625-a949463ed0b2 {
+        fill: none;
+      }
+
+      .b758ce91-e854-489e-b20e-c4b7b64b282f {
+        stroke-width: 3px;
+      }
+
+      .fd5d2bcb-8884-4942-9e47-8ab8a644b2f8 {
+        fill: var(--primary-color);
+      }
+    </style>
+  </defs>
+  <g id="f7c75b62-64ad-44a1-b2fd-1107faa053c5" data-name="Tasks">
+    <polygon class="ad017ac3-64a4-4f0a-a2fd-4a031ce0124c" points="39.29 10.36 12.15 111.66 85.44 131.3 108.57 44.96 96.97 25.82 39.29 10.36"/>
+    <polygon class="aabc8d74-26b9-48d3-8665-4fc446ca711c" points="52.57 2.7 25.43 104 98.72 123.63 121.85 37.3 110.25 18.15 52.57 2.7"/>
+    <g>
+      <line class="b758ce91-e854-489e-b20e-c4b7b64b282f" x1="76.92" y1="32.71" x2="111" y2="41.85"/>
+      <line class="b758ce91-e854-489e-b20e-c4b7b64b282f" x1="71.14" y1="54.29" x2="105.22" y2="63.42"/>
+      <line class="b758ce91-e854-489e-b20e-c4b7b64b282f" x1="65.2" y1="76.46" x2="99.28" y2="85.59"/>
+      <line class="b758ce91-e854-489e-b20e-c4b7b64b282f" x1="59.6" y1="97.37" x2="93.67" y2="106.53"/>
+    </g>
+    <g>
+      <rect class="fd5d2bcb-8884-4942-9e47-8ab8a644b2f8" x="56.13" y="15.8" width="19.22" height="19.16" transform="translate(24.2 82.31) rotate(-75)"/>
+      <polygon class="a08aeb05-8668-473f-a3ce-25b0918bc5bd" points="73.86 12.09 65.33 25.47 65.1 18.74 61.32 17.73 62.25 31.2 65.08 31.96 77.55 13.08 73.86 12.09"/>
+    </g>
+    <rect class="e658aea8-d629-4a30-8625-a949463ed0b2" x="50.27" y="37.68" width="19.21" height="19.16" transform="matrix(0.26, -0.97, 0.97, 0.26, -1.27, 92.86)"/>
+    <rect class="e658aea8-d629-4a30-8625-a949463ed0b2" x="44.41" y="59.55" width="19.21" height="19.16" transform="translate(-26.74 103.42) rotate(-75)"/>
+    <rect class="e658aea8-d629-4a30-8625-a949463ed0b2" x="38.55" y="81.42" width="19.21" height="19.16" transform="translate(-52.21 113.97) rotate(-75)"/>
+  </g>
+</svg>

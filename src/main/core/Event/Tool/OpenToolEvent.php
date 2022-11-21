@@ -38,7 +38,7 @@ class OpenToolEvent extends Event
         $this->toolName = $toolName;
     }
 
-    public function getWorkspace()
+    public function getWorkspace(): ?Workspace
     {
         return $this->workspace;
     }
@@ -62,17 +62,17 @@ class OpenToolEvent extends Event
      * Sets data to return in the api.
      * NB. It MUST contain serialized structures.
      */
-    public function setData(array $data)
+    public function setData(array $data): void
     {
-        $this->data = $data;
+        $this->data = array_merge($data, $this->data);
     }
 
-    public function getData()
+    public function getData(): array
     {
         return $this->data;
     }
 
-    public function getMessage(TranslatorInterface $translator)
+    public function getMessage(TranslatorInterface $translator): string
     {
         return $translator->trans('toolOpen', ['userName' => $this->user->getUsername(), 'context' => $this->context, 'toolName' => $this->toolName], 'tools');
     }

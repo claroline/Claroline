@@ -1,9 +1,4 @@
 {
-  "webpack": {
-    "entry": {
-    }
-  },
-
   "styles": {
     "entry": {
       "lesson-resource": "resources/lesson.less",

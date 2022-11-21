@@ -24,37 +24,13 @@ const locales = createSelector(
   (parameters) => parameters.locales
 )
 
-const theme = createSelector(
-  [parameters],
-  (parameters) => parameters.theme
-)
-
-const iconSetChoices = createSelector(
-  [store],
-  (store) => store.iconSetChoices.reduce((acc, current) => Object.assign(acc, {
-    [current]: current
-  }), {})
-)
-
-const icons = createSelector(
-  [store],
-  (store) => store.icons
-)
-
-const mimeTypes = createSelector(
-  [icons],
-  (icons) => icons.mimeTypes
-)
-
 export const selectors = {
   STORE_NAME,
   FORM_NAME,
 
+  store,
   availableLocales,
   lockedParameters,
   parameters,
-  locales,
-  theme,
-  iconSetChoices,
-  mimeTypes
+  locales
 }

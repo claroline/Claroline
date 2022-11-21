@@ -1,0 +1,26 @@
+<svg id="ed765697-40b2-4e0c-93b6-a46c9f39a925" data-name="resources" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 134 134">
+  <defs>
+    <style>
+      .be6322ba-9b60-48e2-8bc8-b6431109a3f7 {
+        fill: var(--secondary-color);
+        stroke: var(--secondary-color);
+      }
+
+      .a3b37c45-5f5a-4bba-b67c-b1c3b3d8d86d, .be6322ba-9b60-48e2-8bc8-b6431109a3f7 {
+        stroke-miterlimit: 10;
+        stroke-width: 4px;
+      }
+
+      .a3b37c45-5f5a-4bba-b67c-b1c3b3d8d86d {
+        fill: #fff;
+        stroke: var(--primary-color);
+      }
+    </style>
+  </defs>
+  <g id="ad03792e-0c91-45d6-b822-0f2aa63d8e30" data-name="Custom">
+    <g id="b85db68a-1198-47be-8374-7cae3c5a1b79" data-name="File">
+      <polygon class="be6322ba-9b60-48e2-8bc8-b6431109a3f7" points="38.17 10.2 10.95 111.79 84.46 131.49 107.66 44.9 96.02 25.7 38.17 10.2"/>
+      <polygon class="a3b37c45-5f5a-4bba-b67c-b1c3b3d8d86d" points="51.49 2.51 24.27 104.11 97.77 123.8 120.97 37.21 109.34 18.01 51.49 2.51"/>
+    </g>
+  </g>
+</svg>

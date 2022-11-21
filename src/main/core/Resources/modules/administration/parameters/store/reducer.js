@@ -6,7 +6,8 @@ import {FORM_SUBMIT_SUCCESS} from '#/main/app/content/form/store/actions'
 
 import {TOOL_LOAD} from '#/main/core/tool/store/actions'
 import {selectors} from '#/main/core/administration/parameters/store/selectors'
-import {reducer as iconsReducer} from '#/main/theme/administration/appearance/icon/store/reducer'
+
+import {reducer as themeReducer, selectors as themeSelectors} from '#/main/theme/administration/appearance/store'
 
 const reducer = combineReducers({
   lockedParameters: makeReducer([], {
@@ -33,10 +34,9 @@ const reducer = combineReducers({
     }),
     current: makeFormReducer(selectors.STORE_NAME+'.messages.current')
   }),
-  iconSetChoices: makeReducer([], {
-    [makeInstanceAction(TOOL_LOAD, 'main_settings')]: (state, action) => action.toolData.iconSetChoices
-  }),
-  icons: iconsReducer
+
+  // for appearance. Should be injected by ThemeBundle later
+  [themeSelectors.STORE_NAME]: themeReducer
 })
 
 export {

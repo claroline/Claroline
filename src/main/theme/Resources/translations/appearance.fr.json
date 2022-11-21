@@ -1,12 +1,14 @@
 {
-  "user_interface": "Interface utilisateur",
   "themes": "Thèmes",
+  "theme": "Thème",
   "icons": "Icones",
-  "posters": "Images de couverture & miniatures",
   "colors": "Couleurs",
 
   "footer": "Pied de page",
   "footer_show_locale": "Afficher la langue",
   "footer_show_help": "Afficher l'aide",
-  "footer_show_terms_of_service": "Afficher les conditions d'utilisation"
+  "footer_show_terms_of_service": "Afficher les conditions d'utilisation",
+  "new_icon_set": "Nouveau jeu d'icones",
+  "icon_set_delete_confirm_title": "{1} Suppression d'un jeu d'icones | [2,Inf[ Suppression de plusieurs jeux d'icones",
+  "icon_set_delete_confirm_message": "{1} Êtes-vous sûr de vouloir supprimer ce jeu d'icones ? | [2,Inf[ Êtes-vous sûr de vouloir supprimer ces %count% jeux d'icones ?"
 }

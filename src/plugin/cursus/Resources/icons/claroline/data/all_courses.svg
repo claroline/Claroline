@@ -1,0 +1,43 @@
+<svg id="a3344215-57ff-4d2c-a144-7cdc47f32fdf" data-name="data" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 134 134">
+  <defs>
+    <style>
+      .b536c11f-9e4b-4fcc-a0cb-a29ed7f4b032, .bc158ce3-65bc-499b-9a61-4c6282e6fcdb {
+        fill: var(--secondary-color);
+      }
+
+      .b536c11f-9e4b-4fcc-a0cb-a29ed7f4b032 {
+        stroke: var(--secondary-color);
+      }
+
+      .ae2c1049-fbf4-408b-a864-23e4b6f93b6c, .b536c11f-9e4b-4fcc-a0cb-a29ed7f4b032 {
+        stroke-miterlimit: 10;
+        stroke-width: 4px;
+      }
+
+      .e9dfa232-70d7-4940-884e-6ba682edfabd {
+        fill: var(--primary-color);
+      }
+
+      .ae2c1049-fbf4-408b-a864-23e4b6f93b6c {
+        fill: #fff;
+        stroke: var(--primary-color);
+      }
+    </style>
+  </defs>
+  <g id="b044c2fe-9959-4280-b552-658e09dc9319" data-name="Trainings">
+    <g>
+      <polygon class="bc158ce3-65bc-499b-9a61-4c6282e6fcdb" points="104.76 102.47 99.75 102.47 93.6 121 110.91 121 104.76 102.47"/>
+      <path class="b536c11f-9e4b-4fcc-a0cb-a29ed7f4b032" d="M102,75c0,10.23-11,18.52-24.61,18.52H56.71C43.11,93.53,32.1,85.24,32.1,75V59.44c0-10.23,11-18.52,24.61-18.52H77.4C91,40.92,102,49.21,102,59.44Z"/>
+      <polygon class="b536c11f-9e4b-4fcc-a0cb-a29ed7f4b032" points="128.98 51.35 67 23.74 5.02 51.35 67 78.97 128.98 51.35"/>
+      <rect class="bc158ce3-65bc-499b-9a61-4c6282e6fcdb" x="99.75" y="63.26" width="5.01" height="47.25"/>
+    </g>
+    <g>
+      <polygon class="e9dfa232-70d7-4940-884e-6ba682edfabd" points="104.76 91.73 99.75 91.73 93.6 110.26 110.91 110.26 104.76 91.73"/>
+      <path class="ae2c1049-fbf4-408b-a864-23e4b6f93b6c" d="M102,64.26c0,10.23-11,18.52-24.61,18.52H56.71c-13.6,0-24.61-8.29-24.61-18.52V48.7c0-10.23,11-18.52,24.61-18.52H77.4C91,30.18,102,38.47,102,48.7Z"/>
+      <polygon class="ae2c1049-fbf4-408b-a864-23e4b6f93b6c" points="128.98 40.61 67 12.99 5.02 40.61 67 68.23 128.98 40.61"/>
+      <rect class="e9dfa232-70d7-4940-884e-6ba682edfabd" x="99.75" y="52.52" width="5.01" height="47.25"/>
+      <rect class="e9dfa232-70d7-4940-884e-6ba682edfabd" x="81.83" y="27.35" width="5.01" height="40.01" transform="translate(6.77 105.14) rotate(-66)"/>
+      <path class="ae2c1049-fbf4-408b-a864-23e4b6f93b6c" d="M60.82,39.36a6.24,6.24,0,1,1,6.23,6.23A6.23,6.23,0,0,1,60.82,39.36Z"/>
+    </g>
+  </g>
+</svg>

@@ -20,8 +20,6 @@ class AdministrationToolVoter extends AbstractVoter
 {
     /**
      * @param AdminTool $object
-     *
-     * @return int
      */
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options): int
     {

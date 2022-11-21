@@ -25,6 +25,7 @@ class Updater130700 extends Updater
     public function preUpdate()
     {
         $this->updateLocales();
+        $this->updateIconSets(); // not in ThemeBundle because it will be too late (plugin configuration is processed before preUpdate)
     }
 
     private function updateLocales()
@@ -51,5 +52,13 @@ class Updater130700 extends Updater
             ['fr', $removed],
             [ParameterType::STRING, Connection::PARAM_STR_ARRAY]
         );
+    }
+
+    private function updateIconSets()
+    {
+        // delete old set
+        $this->connection->executeQuery('DELETE FROM claro_icon_set WHERE cname = "claroline"');
+        // replace current set by the new one
+        $this->config->setParameter('display.resource_icon_set', 'claroline');
     }
 }

@@ -19,12 +19,12 @@ import {
 import {getActions, getToolbar} from '#/main/core/resource/utils'
 import {ToolPage} from '#/main/core/tool/containers/page'
 import {constants as toolConst} from '#/main/core/tool/constants'
-import {ThemeIcon} from '#/main/theme/components/icon'
 import {ResourceRestrictions} from '#/main/core/resource/components/restrictions'
 import {UserProgression} from '#/main/core/resource/components/user-progression'
 
 // FIXME
 import {DashboardMain} from '#/plugin/analytics/resource/dashboard/containers/main'
+import {ResourceIcon} from '#/main/core/resource/components/icon'
 
 const ResourcePage = (props) => {
   // remove workspace root from path (it's already known by the breadcrumb)
@@ -68,7 +68,7 @@ const ResourcePage = (props) => {
           width={70}
           height={70}
         /> :
-        <ThemeIcon
+        <ResourceIcon
           mimeType={props.resourceNode.meta.mimeType}
         />
       )}

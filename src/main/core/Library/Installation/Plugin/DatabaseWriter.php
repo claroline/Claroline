@@ -28,7 +28,7 @@ use Claroline\CoreBundle\Manager\Tool\ToolMaskDecoderManager;
 use Claroline\CoreBundle\Repository\PluginRepository;
 use Claroline\KernelBundle\Bundle\PluginBundleInterface;
 use Claroline\ThemeBundle\Entity\Theme;
-use Claroline\ThemeBundle\Manager\IconSetManager;
+use Claroline\ThemeBundle\Manager\IconSetBuilderManager;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LogLevel;
 use Symfony\Component\Filesystem\Filesystem;
@@ -53,7 +53,7 @@ class DatabaseWriter implements LoggerAwareInterface
     private $toolManager;
     /** @var ToolMaskDecoderManager */
     private $toolMaskManager;
-    /** @var IconSetManager */
+    /** @var IconSetBuilderManager */
     private $iconSetManager;
 
     /** @var PluginRepository */
@@ -65,7 +65,7 @@ class DatabaseWriter implements LoggerAwareInterface
         Filesystem $fileSystem,
         ToolManager $toolManager,
         ToolMaskDecoderManager $toolMaskManager,
-        IconSetManager $iconSetManager
+        IconSetBuilderManager $iconSetManager
     ) {
         $this->em = $em;
         $this->mm = $mm;
@@ -192,13 +192,12 @@ class DatabaseWriter implements LoggerAwareInterface
         foreach ($processedConfiguration['templates'] as $templateType) {
             $this->createTemplateType($templateType, $plugin);
         }
-        $mimeTypes = [];
 
+        $mimeTypes = [];
         foreach ($processedConfiguration['resource_icons'] as $iconConfig) {
             $mimeTypes[$iconConfig['name']] = $iconConfig['mime_types'];
         }
-        $this->iconSetManager->setLogger($this->logger);
-        $this->iconSetManager->generateIconSets($pluginBundle->getResourcesIconsSetsFolder(), $mimeTypes);
+        $this->iconSetManager->generateFromPlugin($pluginBundle->getPath(), $mimeTypes);
     }
 
     /**
@@ -291,12 +290,10 @@ class DatabaseWriter implements LoggerAwareInterface
         }
 
         $mimeTypes = [];
-
         foreach ($processedConfiguration['resource_icons'] as $iconConfig) {
             $mimeTypes[$iconConfig['name']] = $iconConfig['mime_types'];
         }
-        $this->iconSetManager->setLogger($this->logger);
-        $this->iconSetManager->generateIconSets($pluginBundle->getResourcesIconsSetsFolder(), $mimeTypes);
+        $this->iconSetManager->generateFromPlugin($pluginBundle->getPath(), $mimeTypes);
     }
 
     /**

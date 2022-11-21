@@ -1,0 +1,47 @@
+<svg id="bb96725b-bfa9-432f-bdb4-195746d399c7" data-name="resources" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 134 134">
+  <defs>
+    <style>
+      .afd4ee2b-f9a7-410e-a45b-b39a31b4045e, .b2bc55c7-d1d5-4a2a-88f2-16d8c54791db {
+        fill: var(--secondary-color);
+      }
+
+      .b2bc55c7-d1d5-4a2a-88f2-16d8c54791db {
+        stroke: var(--secondary-color);
+      }
+
+      .aeeedda1-29f6-4945-a33f-35ec88c7b963, .b2bc55c7-d1d5-4a2a-88f2-16d8c54791db {
+        stroke-miterlimit: 10;
+        stroke-width: 4px;
+      }
+
+      .aeeedda1-29f6-4945-a33f-35ec88c7b963 {
+        fill: #fff;
+        stroke: var(--primary-color);
+      }
+
+      .b4f3ded3-e742-426b-9eec-ced7b0579531 {
+        fill: var(--primary-color);
+      }
+    </style>
+  </defs>
+  <g id="aab5893a-141f-4f19-993c-dc8ee0ffdebf" data-name="Custom">
+    <g id="ac34a52c-2e8b-4fbf-8404-07916c69514f" data-name="Bibliography">
+      <path class="b2bc55c7-d1d5-4a2a-88f2-16d8c54791db" d="M55.92,128.11c-3.62,1.73-5.72,3.81-14.22,3.81H18.39V18.31H30.9V13h20v-6H74.12v3.74L82.23,9l1.3,4H110.6V131.86l-38.29-.05Z"/>
+      <path class="aeeedda1-29f6-4945-a33f-35ec88c7b963" d="M60.94,123.1c-3.63,1.72-5.72,3.81-14.23,3.81H23.4V13.3H35.91V8h20v-6H79.13V5.82L87.25,4l1.29,4h27.07V126.85l-38.29-.06Z"/>
+      <g>
+        <rect class="afd4ee2b-f9a7-410e-a45b-b39a31b4045e" x="62.96" y="9.1" width="9.15" height="48.37"/>
+        <polygon class="b4f3ded3-e742-426b-9eec-ced7b0579531" points="82.52 12.24 96.22 55.02 85.73 57.38 72.04 14.62 82.52 12.24"/>
+        <polygon class="b4f3ded3-e742-426b-9eec-ced7b0579531" points="74.5 87.4 64.68 118.08 72.2 119.77 82.02 89.1 74.5 87.4"/>
+        <rect class="b4f3ded3-e742-426b-9eec-ced7b0579531" x="53.62" y="15.06" width="6.51" height="42.41"/>
+        <rect class="afd4ee2b-f9a7-410e-a45b-b39a31b4045e" x="96.26" y="15.02" width="12.33" height="42.41"/>
+        <rect class="afd4ee2b-f9a7-410e-a45b-b39a31b4045e" x="30.42" y="20.32" width="9.57" height="37.14"/>
+        <rect class="b4f3ded3-e742-426b-9eec-ced7b0579531" x="42.93" y="15.05" width="6.51" height="42.41"/>
+        <rect class="afd4ee2b-f9a7-410e-a45b-b39a31b4045e" x="40.05" y="61.96" width="68.61" height="7.76"/>
+        <rect class="b4f3ded3-e742-426b-9eec-ced7b0579531" x="92.46" y="80.55" width="6.65" height="39.22"/>
+        <rect class="b4f3ded3-e742-426b-9eec-ced7b0579531" x="101.91" y="89.47" width="6.65" height="30.35"/>
+        <rect class="afd4ee2b-f9a7-410e-a45b-b39a31b4045e" x="82.17" y="75.56" width="7.62" height="44.21"/>
+        <path class="afd4ee2b-f9a7-410e-a45b-b39a31b4045e" d="M30.42,119.89V61.77h9.13q8,0,11.63,1a15.59,15.59,0,0,1,8.31,5.13,13.49,13.49,0,0,1,3.09,8.85,12.82,12.82,0,0,1-1.41,6,15.18,15.18,0,0,1-4.56,5.08,18.14,18.14,0,0,1,7.74,6.22,15.75,15.75,0,0,1,2.45,8.83,16.43,16.43,0,0,1-2.53,8.93,16.22,16.22,0,0,1-6.52,6c-2.67,1.33-6.34,2-11,2ZM41.48,72.33V84.57H43.9c2.7,0,4.7-.56,6-1.7a5.78,5.78,0,0,0,2-4.62A5.36,5.36,0,0,0,50,73.93q-1.86-1.61-5.67-1.6Zm0,22.12v14.89h2.77c4.6,0,7.69-.58,9.29-1.74a5.85,5.85,0,0,0,2.4-5.06,7.1,7.1,0,0,0-2.81-5.92q-2.82-2.18-9.35-2.17Z"/>
+      </g>
+    </g>
+  </g>
+</svg>

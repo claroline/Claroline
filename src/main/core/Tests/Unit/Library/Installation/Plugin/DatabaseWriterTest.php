@@ -32,7 +32,7 @@ class DatabaseWriterTest extends MockeryTestCase
         $this->mm = $this->mock('Claroline\CoreBundle\Manager\Resource\MaskManager');
         $this->tm = $this->mock('Claroline\CoreBundle\Manager\Tool\ToolManager');
         $this->tmd = $this->mock('Claroline\CoreBundle\Manager\Tool\ToolMaskDecoderManager');
-        $this->ism = $this->mock('Claroline\ThemeBundle\Manager\IconSetManager');
+        $this->ism = $this->mock('Claroline\ThemeBundle\Manager\IconSetBuilderManager');
         $this->fileSystem = $this->mock('Symfony\Component\Filesystem\Filesystem');
         $this->dbWriter = new DatabaseWriter(
             $this->om,

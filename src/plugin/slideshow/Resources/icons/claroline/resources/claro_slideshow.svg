@@ -1,0 +1,41 @@
+<svg id="a7ef9b88-4133-4b0c-9dad-e6d0c99156a7" data-name="resources" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 134 134">
+  <defs>
+    <style>
+      .b0bddd8f-37dd-46ce-aa16-18ac7e746c8d, .b18679f8-d3a0-45c2-9454-2a48f90bb997 {
+        fill: var(--secondary-color);
+      }
+
+      .b0bddd8f-37dd-46ce-aa16-18ac7e746c8d {
+        stroke: var(--secondary-color);
+      }
+
+      .b0bddd8f-37dd-46ce-aa16-18ac7e746c8d, .e282645c-7c20-47f9-b704-38c951286b08 {
+        stroke-miterlimit: 10;
+        stroke-width: 4px;
+      }
+
+      .ac738c49-c2d5-4566-ada4-54acca25a602, .e282645c-7c20-47f9-b704-38c951286b08 {
+        fill: #fff;
+      }
+
+      .e282645c-7c20-47f9-b704-38c951286b08 {
+        stroke: var(--primary-color);
+      }
+
+      .f0755214-87f4-4ceb-999c-385db703f9bf {
+        fill: var(--primary-color);
+      }
+    </style>
+  </defs>
+  <g id="b06f0f0f-c72f-49b8-b22f-e6fdaca4faa8" data-name="Custom">
+    <g id="add6f0ae-1cdf-4ce1-b33f-c8a1a1384ab3" data-name="Slideshow">
+      <rect class="b0bddd8f-37dd-46ce-aa16-18ac7e746c8d" x="1.5" y="53.24" width="131" height="34.51"/>
+      <rect class="b0bddd8f-37dd-46ce-aa16-18ac7e746c8d" x="17.17" y="46.49" width="99.67" height="48.02"/>
+      <rect class="b18679f8-d3a0-45c2-9454-2a48f90bb997" x="33.34" y="36.84" width="67.33" height="67.33"/>
+      <rect class="e282645c-7c20-47f9-b704-38c951286b08" x="1.5" y="46.24" width="131" height="34.51"/>
+      <rect class="e282645c-7c20-47f9-b704-38c951286b08" x="17.17" y="39.49" width="99.67" height="48.02"/>
+      <rect class="f0755214-87f4-4ceb-999c-385db703f9bf" x="33.34" y="29.84" width="67.33" height="67.33"/>
+      <polygon class="ac738c49-c2d5-4566-ada4-54acca25a602" points="56.16 75.99 56.16 51.01 77.84 63.5 56.16 75.99"/>
+    </g>
+  </g>
+</svg>

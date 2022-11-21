@@ -27,7 +27,7 @@ class ScriptHandler
      *
      * Should occur on "post-install-cmd" and "post-update-cmd" events.
      */
-    public static function buildBundleFile(Event $event)
+    public static function buildBundleFile(Event $event): void
     {
         static::getHandler($event)->writeBundleFile();
     }

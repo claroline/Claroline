@@ -1,0 +1,40 @@
+<svg id="b68946c8-8ac4-4738-ade1-167e2af78b7a" data-name="resources" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 134 134">
+  <defs>
+    <style>
+      .b039bee5-7369-45ab-a3c8-60b6ec2413ec {
+        fill: var(--secondary-color);
+      }
+
+      .fc5f1485-18d6-4cab-8f32-b47e2dcdfaa6 {
+        fill: #fff;
+      }
+
+      .a95f1f09-f926-47d2-8f47-bd80b2de12d4 {
+        fill: var(--primary-color);
+      }
+    </style>
+  </defs>
+  <g id="b371c2c8-a664-4c5f-ac2b-b53fbf89b008" data-name="Files">
+    <g>
+      <g>
+        <polygon class="b039bee5-7369-45ab-a3c8-60b6ec2413ec" points="87.85 134.11 10.48 113.38 38.74 7.91 99.3 24.14 111.79 44.76 87.85 134.11"/>
+        <polygon class="fc5f1485-18d6-4cab-8f32-b47e2dcdfaa6" points="53.47 2.67 26.25 104.27 99.75 123.97 122.96 37.38 111.32 18.18 53.47 2.67"/>
+        <path class="a95f1f09-f926-47d2-8f47-bd80b2de12d4" d="M101.17,126.42,23.8,105.69,52.06.23l60.56,16.22,12.49,20.62ZM28.7,102.86l69.64,18.66L120.8,37.68,110,19.9,54.89,5.12Z"/>
+      </g>
+      <g>
+        <rect class="a95f1f09-f926-47d2-8f47-bd80b2de12d4" y="92" width="134" height="42"/>
+        <g>
+          <path class="fc5f1485-18d6-4cab-8f32-b47e2dcdfaa6" d="M34.73,102h4v7.49h6.79V102h4v19.73h-4v-8.59H38.69v8.59h-4Z"/>
+          <path class="fc5f1485-18d6-4cab-8f32-b47e2dcdfaa6" d="M52.09,102H63.41v3.66H59.64v16.07h-4V105.7H52.09V102Z"/>
+          <path class="fc5f1485-18d6-4cab-8f32-b47e2dcdfaa6" d="M67.94,102h3.78l4.72,13.7L81.16,102h3.77l3.4,19.73H84.55l-2.26-12.42L78,121.77h-3.4l-4.34-12.42-2.27,12.42H64.17Z"/>
+          <path class="fc5f1485-18d6-4cab-8f32-b47e2dcdfaa6" d="M91.35,102h4v16.07H101v3.66H91.54V102Z"/>
+        </g>
+      </g>
+      <g>
+        <path class="b039bee5-7369-45ab-a3c8-60b6ec2413ec" d="M66.17,60.88l-1.09,4.57L49.17,51.37l1.1-4L70.74,43l-1.09,4.57L55,50.82Z"/>
+        <path class="b039bee5-7369-45ab-a3c8-60b6ec2413ec" d="M66,72.94,86.28,43.87l3.48.92L69.65,73.86Z"/>
+        <path class="b039bee5-7369-45ab-a3c8-60b6ec2413ec" d="M90.85,53,92,48.45l15.72,13.89-1.09,4L86.1,70.93l1.1-4.57,14.62-3.29Z"/>
+      </g>
+    </g>
+  </g>
+</svg>

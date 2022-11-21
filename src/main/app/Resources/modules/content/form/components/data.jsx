@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {createElement} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import get from 'lodash/get'
@@ -154,7 +154,7 @@ const FormData = (props) => {
               updateProp={props.updateProp}
               setErrors={props.setErrors}
             >
-              {primarySection.component}
+              {primarySection.component && createElement(primarySection.component)}
               {!primarySection.component && primarySection.render && primarySection.render()}
             </FormFieldset>
           </div>
@@ -193,7 +193,7 @@ const FormData = (props) => {
                 updateProp={props.updateProp}
                 setErrors={props.setErrors}
               >
-                {section.component}
+                {section.component && createElement(section.component)}
                 {!section.component && section.render && section.render()}
               </FormFieldset>
             </FormSection>

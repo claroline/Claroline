@@ -2,13 +2,13 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
-import {SvgIcon} from '#/main/app/icon/svg/components/icon'
+import {ThemeIcon} from '#/main/theme/components/icon'
 
 const WidgetSourceIcon = props =>
-  <SvgIcon
+  <ThemeIcon
     className={classes('widget-icon', props.className)}
-    path="bundles/clarolinecore/images/data-icons"
-    name={props.type}
+    mimeType={`custom/${props.type}`}
+    set="data"
   />
 
 WidgetSourceIcon.propTypes = {
@@ -17,10 +17,10 @@ WidgetSourceIcon.propTypes = {
 }
 
 const WidgetContentIcon = props =>
-  <SvgIcon
+  <ThemeIcon
     className={classes('widget-icon', props.className)}
-    path="bundles/clarolinecore/images/widget-icons"
-    name={props.type}
+    mimeType={`custom/${props.type}`}
+    set="widgets"
   />
 
 WidgetContentIcon.propTypes = {

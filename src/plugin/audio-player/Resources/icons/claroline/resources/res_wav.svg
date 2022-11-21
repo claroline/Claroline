@@ -1,0 +1,54 @@
+<svg id="a4d5ada2-d1af-44b0-94ab-b4f6ae437c5a" data-name="resources" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 134 134">
+  <defs>
+    <style>
+      .a0ca805b-1ae2-40ff-ad7b-2417e623d039 {
+        fill: var(--secondary-color);
+      }
+
+      .a0ca805b-1ae2-40ff-ad7b-2417e623d039, .b2999951-7946-4d4a-81cb-c7c36c014e0a {
+        stroke: var(--secondary-color);
+      }
+
+      .a0ca805b-1ae2-40ff-ad7b-2417e623d039, .a67f8833-9995-4122-b671-a04a0f44b6c8, .b2999951-7946-4d4a-81cb-c7c36c014e0a, .ba6b6a5d-7606-45fe-bf6b-4f8366d4f4a6 {
+        stroke-miterlimit: 10;
+        stroke-width: 4px;
+      }
+
+      .a67f8833-9995-4122-b671-a04a0f44b6c8, .b2999951-7946-4d4a-81cb-c7c36c014e0a {
+        fill: none;
+      }
+
+      .a67f8833-9995-4122-b671-a04a0f44b6c8, .ba6b6a5d-7606-45fe-bf6b-4f8366d4f4a6 {
+        stroke: var(--primary-color);
+      }
+
+      .aaafb6b9-bb0d-473f-afd3-7431e1fbdf20, .ba6b6a5d-7606-45fe-bf6b-4f8366d4f4a6 {
+        fill: #fff;
+      }
+
+      .afa633c9-25e1-44f1-a931-0750f0b16c17 {
+        fill: var(--primary-color);
+      }
+    </style>
+  </defs>
+  <g id="f8f3dffc-80fb-4310-973d-4fb341a9c72b" data-name="Files">
+    <g id="ee301c99-b1e4-47ce-9411-11cbb6984b95" data-name="WAV">
+      <polygon class="a0ca805b-1ae2-40ff-ad7b-2417e623d039" points="35.79 36.7 16.87 36.7 16.87 64.86 35.79 64.86 70.99 90.38 70.99 11.18 35.79 36.7"/>
+      <g>
+        <path class="b2999951-7946-4d4a-81cb-c7c36c014e0a" d="M85,32.14c6.32,4.38,9.79,10.3,9.79,16.73S91.27,61.21,85,65.6"/>
+        <path class="b2999951-7946-4d4a-81cb-c7c36c014e0a" d="M95.47,15.58c12.76,8.8,19.66,20.68,19.66,33.29s-6.9,24.64-19.66,33.44"/>
+        <path class="a67f8833-9995-4122-b671-a04a0f44b6c8" d="M87,29.14c6.32,4.38,9.79,10.3,9.79,16.73S93.27,58.21,87,62.6"/>
+        <path class="a67f8833-9995-4122-b671-a04a0f44b6c8" d="M97.47,12.58c12.76,8.8,19.66,20.68,19.66,33.29s-6.9,24.64-19.66,33.44"/>
+        <polygon class="ba6b6a5d-7606-45fe-bf6b-4f8366d4f4a6" points="41.73 30.76 22.81 30.76 22.81 58.92 41.73 58.92 76.93 84.44 76.93 5.24 41.73 30.76"/>
+      </g>
+      <g>
+        <rect class="afa633c9-25e1-44f1-a931-0750f0b16c17" y="92" width="134" height="42"/>
+        <g>
+          <path class="aaafb6b9-bb0d-473f-afd3-7431e1fbdf20" d="M38.72,102.23h3.77l3,12.6,3.59-12.6h3.21l3.77,12.6,2.83-12.6h3.78L58.16,122H54.38l-3.77-12.79L47,122H43.43Z"/>
+          <path class="aaafb6b9-bb0d-473f-afd3-7431e1fbdf20" d="M71.93,102.23h4L83.63,122h-4l-1.51-4h-8.3l-1.7,4h-4Zm1.89,5.29-2.64,6.76h5.47Z"/>
+          <path class="aaafb6b9-bb0d-473f-afd3-7431e1fbdf20" d="M85.14,102.23h4l5.09,14.06,5.29-14.06h3.77L95.9,122H92.13Z"/>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

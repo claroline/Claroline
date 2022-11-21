@@ -9,12 +9,17 @@ services:
             - '@kernel'
             - '%claroline.param.files_directory%'
 
-    Claroline\ThemeBundle\Manager\IconSetManager:
+    Claroline\ThemeBundle\Manager\IconSetBuilderManager:
         arguments:
             - '%claroline.param.public_directory%'
             - '%claroline.param.icon_sets_web_dir%'
             - '%claroline.param.icon_sets_directory%'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\Manager\File\TempFileManager'
+            - '@Claroline\AppBundle\Manager\File\ArchiveManager'
+
+    Claroline\ThemeBundle\Manager\IconSetManager:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-        calls:
-            - setLogger: [ '@logger' ]
+            - '@Claroline\ThemeBundle\Manager\IconSetBuilderManager'

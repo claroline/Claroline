@@ -1,0 +1,14 @@
+services:
+    _defaults:
+        tags: [ kernel.event_subscriber ]
+
+    Claroline\ThemeBundle\Subscriber\PlatformSubscriber:
+        arguments:
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+            - '@Claroline\ThemeBundle\Manager\IconSetManager'
+
+    # Administration
+    Claroline\ThemeBundle\Subscriber\Administration\ParametersSubscriber:
+        arguments:
+            - '@Claroline\ThemeBundle\Manager\ThemeManager'
+            - '@Claroline\ThemeBundle\Manager\IconSetManager'

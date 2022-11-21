@@ -53,3 +53,35 @@
         }
     }
 }
+
+// to move in ThemeBundle
+.theme-icon-preview-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin: -2px;
+
+    .theme-icon-preview {
+        padding: 10px;
+        border: 1px solid @panel-default-border;
+        margin: 2px;
+        font-size: 0; // avoid extra space under svg element
+
+        .theme-icon { // to merge with .type-icon
+            width: 40px;
+            height: 40px;
+            min-width: 40px; // for correct alignment
+
+            &.lg {
+                width: 64px;
+                height: 64px;
+                min-width: 64px; // for correct alignment
+            }
+
+            &.sm {
+                width: 24px;
+                height: 24px;
+                min-width: 24px; // for correct alignment
+            }
+        }
+    }
+}

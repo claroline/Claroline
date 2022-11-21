@@ -1,21 +1,7 @@
 services:
-    _defaults:
-        autowire: false
-        autoconfigure: false
-        public: true #because lazy
-
     Claroline\CoreBundle\Listener\Administration\IntegrationListener:
         tags:
             - { name: kernel.event_listener, event: tool.open.administration.integration, method: onDisplayTool }
-
-    Claroline\CoreBundle\Listener\Administration\ParametersListener:
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
-            - '@Claroline\CoreBundle\Manager\LocaleManager'
-            - '@Claroline\ThemeBundle\Manager\IconSetManager'
-        tags:
-            - { name: kernel.event_listener, event: tool.open.administration.main_settings, method: onDisplayTool }
 
     Claroline\CoreBundle\Listener\Administration\TemplateListener:
         tags:

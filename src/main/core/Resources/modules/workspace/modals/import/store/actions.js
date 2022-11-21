@@ -4,8 +4,13 @@ export const actions = {}
 
 actions.save = (data) => {
   const formData = new FormData()
-  formData.append('name', data.name || null)
-  formData.append('code', data.code || null)
+  if (data.name) {
+    formData.append('name', data.name || null)
+  }
+  if (data.code) {
+    formData.append('code', data.code || null)
+  }
+
   formData.append('archive', data.archive) // this is an uploaded file
 
   return ({

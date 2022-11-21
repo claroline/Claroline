@@ -168,7 +168,6 @@ FormData.propTypes = {
   save: T.shape({
     type: T.string.isRequired,
     disabled: T.bool
-    // todo find a way to document custom action type props
   }),
 
   /**
@@ -177,7 +176,6 @@ FormData.propTypes = {
   cancel: T.shape({
     type: T.string.isRequired,
     disabled: T.bool
-    // todo find a way to document custom action type props
   })
 }
 
