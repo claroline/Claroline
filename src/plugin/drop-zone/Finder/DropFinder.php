@@ -12,6 +12,7 @@
 namespace Claroline\DropZoneBundle\Finder;
 
 use Claroline\AppBundle\API\Finder\AbstractFinder;
+use Claroline\CommunityBundle\Finder\Filter\UserFilter;
 use Claroline\DropZoneBundle\Entity\Drop;
 use Doctrine\ORM\QueryBuilder;
 
@@ -25,13 +26,14 @@ class DropFinder extends AbstractFinder
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null): QueryBuilder
     {
         $userJoin = false;
-        if (!array_key_exists('userDisabled', $searches) && !array_key_exists('user', $searches)) {
-            // don't show evaluation of disabled/deleted users
+        if (!array_key_exists('user', $searches)) {
             $qb->join('obj.user', 'u');
             $userJoin = true;
 
-            $qb->andWhere('u.isEnabled = TRUE');
-            $qb->andWhere('u.isRemoved = FALSE');
+            // automatically excludes results for disabled/deleted users
+            $this->addFilter(UserFilter::class, $qb, 'u', [
+                'disabled' => in_array('userDisabled', array_keys($searches)) && $searches['userDisabled'],
+            ]);
         }
 
         foreach ($searches as $filterName => $filterValue) {
@@ -41,6 +43,7 @@ class DropFinder extends AbstractFinder
                     $qb->andWhere('d.uuid = :dropzoneUuid');
                     $qb->setParameter('dropzoneUuid', $searches['dropzone']);
                     break;
+
                 case 'user':
                     if (!$userJoin) {
                         $qb->join('obj.user', 'u');
@@ -56,15 +59,7 @@ class DropFinder extends AbstractFinder
                     ");
                     $qb->setParameter('name', '%'.strtoupper($filterValue).'%');
                     break;
-                case 'userDisabled':
-                    if (!$userJoin) {
-                        $qb->join('obj.user', 'u');
-                        $userJoin = true;
-                    }
-                    $qb->andWhere('u.isEnabled = :isEnabled');
-                    $qb->andWhere('u.isRemoved = FALSE');
-                    $qb->setParameter('isEnabled', !$filterValue);
-                    break;
+
                 default:
                     $this->setDefaults($qb, $filterName, $filterValue);
             }

@@ -20,6 +20,7 @@ use Claroline\AppBundle\Entity\Meta\Thumbnail;
 use Claroline\CoreBundle\Entity\Model\GroupsTrait;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Organization\UserOrganizationReference;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -55,7 +56,7 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
      * @ORM\Column(name="first_name", length=50)
      * @Assert\NotBlank()
      */
-    protected $firstName;
+    private $firstName;
 
     /**
      * @var string
@@ -63,7 +64,7 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
      * @ORM\Column(name="last_name", length=50)
      * @Assert\NotBlank()
      */
-    protected $lastName;
+    private $lastName;
 
     /**
      * @var string
@@ -72,28 +73,28 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
      * @Assert\NotBlank()
      * @Assert\Length(min="3")
      */
-    protected $username;
+    private $username;
 
     /**
      * @var string
      *
      * @ORM\Column()
      */
-    protected $password;
+    private $password;
 
     /**
      * @var string
      *
      * @ORM\Column(nullable=true)
      */
-    protected $locale;
+    private $locale;
 
     /**
      * @var string
      *
      * @ORM\Column()
      */
-    protected $salt;
+    private $salt;
 
     /**
      * @var string
@@ -101,14 +102,14 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
      * @Assert\NotBlank(groups={"registration"})
      * @Assert\Length(min="4", groups={"registration"})
      */
-    protected $plainPassword;
+    private $plainPassword;
 
     /**
      * @var string
      *
      * @ORM\Column(nullable=true)
      */
-    protected $phone;
+    private $phone;
 
     /**
      * @var string
@@ -117,14 +118,14 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
      * @Assert\NotBlank()
      * @Assert\Email(strict = true)
      */
-    protected $email;
+    private $email;
 
     /**
      * @var string
      *
      * @ORM\Column(name="administrative_code", nullable=true)
      */
-    protected $administrativeCode;
+    private $administrativeCode;
 
     /**
      * @var Group[]|ArrayCollection
@@ -135,7 +136,7 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
      * )
      * @ORM\JoinTable(name="claro_user_group")
      */
-    protected $groups;
+    private $groups;
 
     /**
      * @var Role[]|ArrayCollection
@@ -151,7 +152,7 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
     protected $roles;
 
     /**
-     * @var Workspace\Workspace
+     * @var Workspace
      *
      * @ORM\OneToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace",
@@ -159,7 +160,7 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
      * )
      * @ORM\JoinColumn(name="workspace_id", onDelete="SET NULL")
      */
-    protected $personalWorkspace;
+    private $personalWorkspace;
 
     /**
      * @var \DateTime
@@ -167,43 +168,45 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
      * @ORM\Column(name="creation_date", type="datetime")
      * @Gedmo\Timestampable(on="create")
      */
-    protected $created;
+    private $created;
 
     /**
      * @var \DateTime
      *
      * @ORM\Column(name="last_activity", type="datetime", nullable=true)
      */
-    protected $lastActivity;
+    private $lastActivity;
 
     /**
      * @var \DateTime
      *
      * @ORM\Column(name="initialization_date", type="datetime", nullable=true)
      */
-    protected $initDate;
+    private $initDate;
 
     /**
      * @ORM\Column(name="reset_password", nullable=true)
      */
-    protected $resetPasswordHash;
+    private $resetPasswordHash;
 
     /**
      * @ORM\Column(name="hash_time", type="integer", nullable=true)
+     *
+     * @deprecated
      */
-    protected $hashTime;
+    private $hashTime;
 
     /**
      * @ORM\Column(nullable=true)
      */
-    protected $picture;
+    private $picture;
 
     /**
      * @var bool
      *
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="boolean")
      */
-    protected $hasAcceptedTerms;
+    private $hasAcceptedTerms = false;
 
     /**
      *  This should be renamed because this field really means "is not deleted".
@@ -212,51 +215,64 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
      *
      * @ORM\Column(name="is_enabled", type="boolean")
      */
-    protected $isEnabled = true;
+    private $isEnabled = true;
 
     /**
      * @ORM\Column(name="is_removed", type="boolean")
      */
-    protected $isRemoved = false;
+    private $isRemoved = false;
 
     /**
-     * Avoids any modification on the user. It also excludes it from stats.
+     * Avoids any modification on the user.
      *
      * @ORM\Column(name="is_locked", type="boolean")
+     *
+     * @deprecated
      */
-    protected $locked = false;
+    private $locked = false;
+
+    /**
+     * A technical user is only creatable from the command line/code, cannot be modified,
+     * and is hidden in the searches.
+     * This is useful to create a support user in the platform.
+     *
+     * @ORM\Column(type="boolean", options={"default"= 0})
+     *
+     * @var bool
+     */
+    private $technical = false;
 
     /**
      * @var bool
      *
      * @ORM\Column(name="is_mail_notified", type="boolean")
      */
-    protected $isMailNotified = true;
+    private $isMailNotified = true;
 
     /**
      * @var bool
      *
      * @ORM\Column(name="is_mail_validated", type="boolean")
      */
-    protected $isMailValidated = false;
+    private $isMailValidated = false;
 
     /**
      * @var \DateTime
      *
      * @ORM\Column(name="expiration_date", type="datetime", nullable=true)
      */
-    protected $expirationDate;
+    private $expirationDate;
 
     /**
      * @ORM\Column(name="email_validation_hash", nullable=true)
      */
-    protected $emailValidationHash;
+    private $emailValidationHash;
 
     /**
      * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\Organization\Organization", inversedBy="administrators")
      * @ORM\JoinTable(name="claro_user_administrator")
      */
-    protected $administratedOrganizations;
+    private $administratedOrganizations;
 
     /**
      * @var ArrayCollection
@@ -267,8 +283,10 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
      * )
      *
      * @todo relation should not be declared here (only use Unidirectional)
+     *
+     * @deprecated
      */
-    protected $locations;
+    private $locations;
 
     /**
      * @ORM\OneToMany(
@@ -278,14 +296,14 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
      *  )
      * @ORM\JoinColumn(name="user_id", nullable=false)
      */
-    protected $userOrganizationReferences;
+    private $userOrganizationReferences;
 
     /**
      * @var string
      *
      * @ORM\Column(nullable=true)
      */
-    protected $code;
+    private $code;
 
     public function __construct()
     {
@@ -309,10 +327,8 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
 
     /**
      * Required to store user in session.
-     *
-     * @return string
      */
-    public function serialize()
+    public function serialize(): string
     {
         return serialize([
             'id' => $this->id,
@@ -323,8 +339,6 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
 
     /**
      * Required to store user in session.
-     *
-     * @param string $serialized
      */
     public function unserialize($serialized)
     {
@@ -337,162 +351,82 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
         $this->administratedOrganizations = new ArrayCollection();
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @return string
-     */
-    public function getFirstName()
+    public function getFirstName(): ?string
     {
         return $this->firstName;
     }
 
-    /**
-     * @return string
-     */
-    public function getLastName()
+    public function getLastName(): ?string
     {
         return $this->lastName;
     }
 
-    public function getFullName()
+    public function getFullName(): ?string
     {
         return trim($this->firstName.' '.$this->lastName);
     }
 
-    /**
-     * @return string
-     */
-    public function getUsername()
+    public function getUsername(): ?string
     {
         return $this->username;
     }
 
-    /**
-     * @return string
-     */
-    public function getPassword()
+    public function getPassword(): ?string
     {
         return $this->password;
     }
 
-    /**
-     * @return string
-     */
-    public function getPlainPassword()
+    public function getPlainPassword(): ?string
     {
         return $this->plainPassword;
     }
 
-    /**
-     * @return string
-     */
-    public function getLocale()
+    public function getLocale(): ?string
     {
         return $this->locale;
     }
 
-    /**
-     * @return string
-     */
-    public function getSalt()
+    public function getSalt(): ?string
     {
         return $this->salt;
     }
 
-    /**
-     * @param string $salt
-     *
-     * @return User
-     */
-    public function setSalt($salt)
+    public function setSalt(string $salt): void
     {
         $this->salt = $salt;
-
-        return $this;
     }
 
-    /**
-     * @param string $firstName
-     *
-     * @return User
-     */
-    public function setFirstName($firstName)
+    public function setFirstName(string $firstName): void
     {
         $this->firstName = $firstName;
-
-        return $this;
     }
 
-    /**
-     * @param string $lastName
-     *
-     * @return User
-     */
-    public function setLastName($lastName)
+    public function setLastName(string $lastName): void
     {
         $this->lastName = $lastName;
-
-        return $this;
     }
 
-    /**
-     * @param string $username
-     *
-     * @return User
-     */
-    public function setUsername($username)
+    public function setUsername(string $username): void
     {
         $this->username = $username;
-
-        return $this;
     }
 
-    /**
-     * @param string $password
-     *
-     * @return User
-     */
-    public function setPassword($password)
+    public function setPassword(?string $password): void
     {
-        if (null === $password) {
-            return $this;
+        if (null !== $password) {
+            $this->password = $password;
         }
-
-        $this->password = $password;
-
-        return $this;
     }
 
-    /**
-     * @param string $locale
-     *
-     * @return User
-     */
-    public function setLocale($locale)
+    public function setLocale(?string $locale): void
     {
         $this->locale = $locale;
-
-        return $this;
     }
 
-    /**
-     * @param string $plainPassword
-     *
-     * @return User
-     */
-    public function setPlainPassword($plainPassword)
+    public function setPlainPassword(string $plainPassword): void
     {
         $this->plainPassword = $plainPassword;
         $this->password = null;
-
-        return $this;
     }
 
     /**
@@ -500,11 +434,9 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
      * Symfony security checks). The roles owned by groups the user is a
      * member are included by default.
      *
-     * @param bool $areGroupsIncluded
-     *
      * @return string[]
      */
-    public function getRoles($areGroupsIncluded = true)
+    public function getRoles(?bool $areGroupsIncluded = true): array
     {
         $roleNames = parent::getRoles();
 
@@ -521,11 +453,9 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
      * Returns the user's roles as an array of entities. The roles
      * owned by groups the user is a member are included by default.
      *
-     * @param bool $areGroupsIncluded
-     *
      * @return Role[]
      */
-    public function getEntityRoles($areGroupsIncluded = true)
+    public function getEntityRoles(?bool $areGroupsIncluded = true): array
     {
         $roles = [];
         if ($this->roles) {
@@ -550,7 +480,7 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
      *
      * @return Role[]
      */
-    public function getGroupRoles()
+    public function getGroupRoles(): array
     {
         $roles = [];
 
@@ -573,10 +503,9 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
     /**
      * Checks if the user has a given role.
      *
-     * @param bool        $includeGroup
      * @param string|Role $role
      */
-    public function hasRole($role, $includeGroup = true): bool
+    public function hasRole($role, ?bool $includeGroup = true): bool
     {
         $roleName = $role instanceof Role ? $role->getName() : $role;
 
@@ -588,11 +517,9 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
         return in_array($roleName, $roleNames);
     }
 
-    public function eraseCredentials()
+    public function eraseCredentials(): void
     {
         $this->plainPassword = null;
-
-        return $this;
     }
 
     public function isEqualTo(UserInterface $user): bool
@@ -616,98 +543,52 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
         return true;
     }
 
-    /**
-     * @return string
-     */
-    public function getPhone()
+    public function getPhone(): ?string
     {
         return $this->phone;
     }
 
-    /**
-     * @param string $phone
-     *
-     * @return User
-     */
-    public function setPhone($phone)
+    public function setPhone(?string $phone): void
     {
         $this->phone = $phone;
-
-        return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getEmail()
+    public function getEmail(): ?string
     {
         return $this->email;
     }
 
-    /**
-     * @param string $email
-     *
-     * @return User
-     */
-    public function setEmail($email)
+    public function setEmail(string $email): void
     {
         $this->email = $email;
-
-        return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getAdministrativeCode()
+    public function getAdministrativeCode(): ?string
     {
         return $this->administrativeCode;
     }
 
-    /**
-     * @param string $administrativeCode
-     *
-     * @return User
-     */
-    public function setAdministrativeCode($administrativeCode)
+    public function setAdministrativeCode(?string $administrativeCode): void
     {
         $this->administrativeCode = $administrativeCode;
-
-        return $this;
     }
 
-    /**
-     * @param Workspace\Workspace $workspace
-     *
-     * @return User
-     */
-    public function setPersonalWorkspace($workspace)
+    public function setPersonalWorkspace(Workspace $workspace): void
     {
         $this->personalWorkspace = $workspace;
-
-        return $this;
     }
 
-    /**
-     * @return Workspace\Workspace
-     */
-    public function getPersonalWorkspace()
+    public function getPersonalWorkspace(): ?Workspace
     {
         return $this->personalWorkspace;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getCreationDate()
+    public function getCreationDate(): ?\DateTimeInterface
     {
         return $this->created;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getCreated()
+    public function getCreated(): ?\DateTimeInterface
     {
         return $this->created;
     }
@@ -718,52 +599,58 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
      * NOTE : creation date is already handled by the timestamp listener; this
      *        setter exists mainly for testing purposes.
      */
-    public function setCreationDate(\DateTime $date)
+    public function setCreationDate(\DateTime $date): void
     {
         $this->created = $date;
     }
 
-    public function getResetPasswordHash()
+    public function getResetPasswordHash(): ?string
     {
         return $this->resetPasswordHash;
     }
 
-    public function setResetPasswordHash($resetPasswordHash)
+    public function setResetPasswordHash(?string $resetPasswordHash): void
     {
         $this->resetPasswordHash = $resetPasswordHash;
     }
 
-    public function getHashTime()
+    /**
+     * @deprecated
+     */
+    public function getHashTime(): ?int
     {
         return $this->hashTime;
     }
 
-    public function setHashTime($hashTime)
+    /**
+     * @deprecated
+     */
+    public function setHashTime(?int $hashTime): void
     {
         $this->hashTime = $hashTime;
     }
 
-    public function setPicture($picture)
+    public function setPicture(?string $picture): void
     {
         $this->picture = $picture;
     }
 
-    public function getPicture()
+    public function getPicture(): ?string
     {
         return $this->picture;
     }
 
-    public function hasAcceptedTerms()
+    public function hasAcceptedTerms(): bool
     {
         return $this->hasAcceptedTerms;
     }
 
-    public function setAcceptedTerms($boolean)
+    public function setAcceptedTerms(bool $hasAcceptedTerms): void
     {
-        $this->hasAcceptedTerms = $boolean;
+        $this->hasAcceptedTerms = $hasAcceptedTerms;
     }
 
-    public function isAccountNonExpired()
+    public function isAccountNonExpired(): bool
     {
         foreach ($this->getRoles() as $role) {
             if ('ROLE_ADMIN' === $role) {
@@ -774,42 +661,58 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
         return $this->getExpirationDate() >= new \DateTime();
     }
 
-    public function isLocked()
+    /**
+     * @deprecated
+     */
+    public function isLocked(): bool
     {
         return $this->locked;
     }
 
-    public function setLocked(bool $locked)
+    /**
+     * @deprecated
+     */
+    public function setLocked(bool $locked): void
     {
         $this->locked = $locked;
     }
 
-    public function isEnabled()
+    public function isTechnical(): bool
+    {
+        return $this->technical;
+    }
+
+    public function setTechnical(bool $technical): void
+    {
+        $this->technical = $technical;
+    }
+
+    public function isEnabled(): bool
     {
         return $this->isEnabled;
     }
 
-    public function setIsEnabled($isEnabled)
+    public function setIsEnabled(bool $isEnabled): void
     {
         $this->isEnabled = $isEnabled;
     }
 
-    public function setIsMailNotified($isMailNotified)
+    public function setIsMailNotified(bool $isMailNotified): void
     {
         $this->isMailNotified = $isMailNotified;
     }
 
-    public function isMailNotified()
+    public function isMailNotified(): bool
     {
         return $this->isMailNotified;
     }
 
-    public function setExpirationDate($expirationDate)
+    public function setExpirationDate($expirationDate): void
     {
         $this->expirationDate = $expirationDate;
     }
 
-    public function getExpirationDate()
+    public function getExpirationDate(): ?\DateTimeInterface
     {
         $defaultExpirationDate = (strtotime('2100-01-01')) ? '2100-01-01' : '2038-01-01';
 
@@ -818,32 +721,32 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
             new \DateTime($defaultExpirationDate);
     }
 
-    public function setInitDate($initDate)
+    public function setInitDate(?\DateTimeInterface $initDate): void
     {
         $this->initDate = $initDate;
     }
 
-    public function getInitDate()
+    public function getInitDate(): ?\DateTimeInterface
     {
         return $this->initDate;
     }
 
-    public function setIsMailValidated($isMailValidated)
+    public function setIsMailValidated($isMailValidated): void
     {
         $this->isMailValidated = $isMailValidated;
     }
 
-    public function isMailValidated()
+    public function isMailValidated(): bool
     {
         return $this->isMailValidated;
     }
 
-    public function setEmailValidationHash($hash)
+    public function setEmailValidationHash($hash): void
     {
         $this->emailValidationHash = $hash;
     }
 
-    public function getEmailValidationHash()
+    public function getEmailValidationHash(): ?string
     {
         return $this->emailValidationHash;
     }
@@ -860,14 +763,7 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
         return false;
     }
 
-    /**
-     * @param bool $includeGroups
-     *
-     * @return array
-     *
-     * @todo this should return an array collection
-     */
-    public function getOrganizations($includeGroups = true)
+    public function getOrganizations(?bool $includeGroups = true): array
     {
         $organizations = [];
 
@@ -885,7 +781,7 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
         return array_merge($organizations, $userOrganizations);
     }
 
-    public function addOrganization(Organization $organization)
+    public function addOrganization(Organization $organization): void
     {
         if ($organization->getMaxUsers() > -1) {
             $totalUsers = count($organization->getUserOrganizationReferences());
@@ -911,7 +807,7 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
         }
     }
 
-    public function removeOrganization(Organization $organization)
+    public function removeOrganization(Organization $organization): void
     {
         /** @var UserOrganizationReference $found */
         $found = null;
@@ -929,7 +825,7 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
         }
     }
 
-    public function hasAdministratedOrganization(Organization $organization)
+    public function hasAdministratedOrganization(Organization $organization): bool
     {
         return $this->administratedOrganizations->contains($organization);
     }
@@ -939,7 +835,7 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
         return $this->administratedOrganizations;
     }
 
-    public function addAdministratedOrganization(Organization $organization)
+    public function addAdministratedOrganization(Organization $organization): void
     {
         $this->addOrganization($organization);
 
@@ -948,17 +844,17 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
         }
     }
 
-    public function removeAdministratedOrganization(Organization $organization)
+    public function removeAdministratedOrganization(Organization $organization): void
     {
         $this->administratedOrganizations->removeElement($organization);
     }
 
-    public function setAdministratedOrganizations($organizations)
+    public function setAdministratedOrganizations($organizations): void
     {
         $this->administratedOrganizations = $organizations;
     }
 
-    public function getMainOrganization()
+    public function getMainOrganization(): ?Organization
     {
         foreach ($this->userOrganizationReferences as $ref) {
             if ($ref->isMain()) {
@@ -969,7 +865,7 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
         return null;
     }
 
-    public function setMainOrganization(Organization $organization)
+    public function setMainOrganization(Organization $organization): void
     {
         $this->addOrganization($organization);
 
@@ -984,33 +880,33 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
         }
     }
 
-    public function setRemoved($isRemoved)
+    public function setRemoved($isRemoved): void
     {
         $this->isRemoved = $isRemoved;
     }
 
     //alias
-    public function remove()
+    public function remove(): void
     {
         $this->setRemoved(true);
     }
 
-    public function isRemoved()
+    public function isRemoved(): bool
     {
         return $this->isRemoved;
     }
 
-    public function enable()
+    public function enable(): void
     {
         $this->isEnabled = true;
     }
 
-    public function disable()
+    public function disable(): void
     {
         $this->isEnabled = false;
     }
 
-    public function clearRoles()
+    public function clearRoles(): void
     {
         foreach ($this->roles as $role) {
             if ('ROLE_USER' !== $role->getName()) {
@@ -1019,12 +915,12 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
         }
     }
 
-    public function setLastActivity(\DateTime $date)
+    public function setLastActivity(\DateTimeInterface $date): void
     {
         $this->lastActivity = $date;
     }
 
-    public function getLastActivity()
+    public function getLastActivity(): ?\DateTimeInterface
     {
         return $this->lastActivity;
     }
@@ -1034,12 +930,12 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
         return $this->locations;
     }
 
-    public function setCode($code)
+    public function setCode($code): void
     {
         $this->code = $code;
     }
 
-    public function getCode()
+    public function getCode(): ?string
     {
         return $this->code;
     }

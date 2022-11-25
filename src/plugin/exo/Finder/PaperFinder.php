@@ -12,6 +12,7 @@
 namespace UJM\ExoBundle\Finder;
 
 use Claroline\AppBundle\API\Finder\AbstractFinder;
+use Claroline\CommunityBundle\Finder\Filter\UserFilter;
 use Doctrine\ORM\QueryBuilder;
 use UJM\ExoBundle\Entity\Attempt\Paper;
 
@@ -28,12 +29,14 @@ class PaperFinder extends AbstractFinder
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null): QueryBuilder
     {
         $userJoin = false;
-        if (!array_key_exists('userDisabled', $searches) && !array_key_exists('user', $searches)) {
+        if (!array_key_exists('user', $searches)) {
             // don't show evaluation of disabled/deleted users
             $qb->leftJoin('obj.user', 'u');
             $userJoin = true;
 
-            $qb->andWhere('(u.id IS NULL OR (u.isEnabled = TRUE AND u.isRemoved = FALSE))');
+            $this->addFilter(UserFilter::class, $qb, 'u', [
+                'disabled' => in_array('isDisabled', array_keys($searches)) && $searches['isDisabled'],
+            ]);
         }
 
         foreach ($searches as $filterName => $filterValue) {
@@ -51,16 +54,6 @@ class PaperFinder extends AbstractFinder
                     }
                     $qb->andWhere('u.uuid = :userId');
                     $qb->setParameter('userId', $filterValue);
-                    break;
-
-                case 'userDisabled':
-                    if (!$userJoin) {
-                        $qb->join('obj.user', 'u');
-                        $userJoin = true;
-                    }
-                    $qb->andWhere('u.isEnabled = :isEnabled');
-                    $qb->andWhere('u.isRemoved = FALSE');
-                    $qb->setParameter('isEnabled', !$filterValue);
                     break;
 
                 case 'finished':

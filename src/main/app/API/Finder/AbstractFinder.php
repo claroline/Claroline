@@ -22,6 +22,8 @@ abstract class AbstractFinder implements FinderInterface
     protected $om;
     /** @var StrictDispatcher */
     private $eventDispatcher;
+    /** @var iterable */
+    private $filters;
 
     public function setObjectManager(ObjectManager $om): void
     {
@@ -31,6 +33,11 @@ abstract class AbstractFinder implements FinderInterface
     public function setEventDispatcher(StrictDispatcher $eventDispatcher): void
     {
         $this->eventDispatcher = $eventDispatcher;
+    }
+
+    public function setFilters(iterable $filters)
+    {
+        $this->filters = $filters;
     }
 
     /**
@@ -80,6 +87,25 @@ abstract class AbstractFinder implements FinderInterface
         $query = $qb->getQuery();
 
         return $count ? (int) $query->getSingleScalarResult() : $query->getResult();
+    }
+
+    protected function addFilter(string $handlerClass, QueryBuilder $qb, string $alias, ?array $searches = []): QueryBuilder
+    {
+        $handler = null;
+        foreach ($this->filters as $filterDef) {
+            if ($filterDef instanceof $handlerClass) {
+                $handler = $filterDef;
+                break;
+            }
+        }
+
+        if (!$handler) {
+            throw new \Exception(sprintf('Request an unknown filter handler %s.', $handlerClass));
+        }
+
+        $handler->addFilter($qb, $alias, $searches);
+
+        return $qb;
     }
 
     protected function setDefaults(QueryBuilder $qb, string $filterName, $filterValue): void

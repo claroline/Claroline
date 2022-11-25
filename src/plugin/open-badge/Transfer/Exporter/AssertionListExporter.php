@@ -23,14 +23,6 @@ class AssertionListExporter extends AbstractListExporter
         return Assertion::class;
     }
 
-    protected function getHiddenFilters(?array $options = [], ?array $extra = []): array
-    {
-        return [
-            // do not filter disabled and deleted users for now
-            'userDisabled' => 'all',
-        ];
-    }
-
     public function getExtraDefinition(?array $options = [], ?array $extra = []): array
     {
         $extraDef = parent::getExtraDefinition($options, $extra);

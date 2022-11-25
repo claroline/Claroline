@@ -4,7 +4,10 @@ services:
         calls:
             - method: setObjectManager
               arguments:
-                - '@Claroline\AppBundle\Persistence\ObjectManager'
+                  - '@Claroline\AppBundle\Persistence\ObjectManager'
             - method: setEventDispatcher
               arguments:
-                - '@Claroline\AppBundle\Event\StrictDispatcher'
+                  - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - method: setFilters
+              arguments:
+                  - !tagged_iterator { tag: 'claroline.finder.filter'}

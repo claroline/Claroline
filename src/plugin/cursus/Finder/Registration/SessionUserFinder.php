@@ -12,6 +12,7 @@
 namespace Claroline\CursusBundle\Finder\Registration;
 
 use Claroline\AppBundle\API\Finder\AbstractFinder;
+use Claroline\CommunityBundle\Finder\Filter\UserFilter;
 use Claroline\CursusBundle\Entity\Registration\SessionUser;
 use Doctrine\ORM\QueryBuilder;
 
@@ -27,13 +28,14 @@ class SessionUserFinder extends AbstractFinder
         $userJoin = false;
         $sessionJoin = false;
 
-        if (!array_key_exists('userDisabled', $searches) && !array_key_exists('user', $searches)) {
-            // don't show registrations of disabled/deleted users
+        if (!array_key_exists('user', $searches)) {
             $qb->join('obj.user', 'u');
             $userJoin = true;
 
-            $qb->andWhere('u.isEnabled = TRUE');
-            $qb->andWhere('u.isRemoved = FALSE');
+            // automatically excludes results for disabled/deleted users
+            $this->addFilter(UserFilter::class, $qb, 'u', [
+                'disabled' => in_array('userDisabled', array_keys($searches)) && $searches['userDisabled'],
+            ]);
         }
 
         foreach ($searches as $filterName => $filterValue) {
@@ -65,16 +67,6 @@ class SessionUserFinder extends AbstractFinder
 
                     $qb->andWhere("u.uuid = :{$filterName}");
                     $qb->setParameter($filterName, $filterValue);
-                    break;
-
-                case 'userDisabled':
-                    if (!$userJoin) {
-                        $qb->join('obj.user', 'u');
-                        $userJoin = true;
-                    }
-                    $qb->andWhere('u.isEnabled = :isEnabled');
-                    $qb->andWhere('u.isRemoved = FALSE');
-                    $qb->setParameter('isEnabled', !$filterValue);
                     break;
 
                 case 'organizations':

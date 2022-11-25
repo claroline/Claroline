@@ -12,6 +12,7 @@
 namespace Claroline\OpenBadgeBundle\Finder;
 
 use Claroline\AppBundle\API\Finder\AbstractFinder;
+use Claroline\CommunityBundle\Finder\Filter\UserFilter;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\User;
@@ -44,13 +45,14 @@ class AssertionFinder extends AbstractFinder
         $workspaceJoin = false;
         $badgeJoin = false;
 
-        if (!array_key_exists('userDisabled', $searches) && !array_key_exists('user', $searches) && !array_key_exists('recipient', $searches)) {
-            // don't show assertions of disabled/deleted users
+        if (!array_key_exists('user', $searches) && !array_key_exists('recipient', $searches)) {
             $qb->join('obj.recipient', 'u');
             $userJoin = true;
 
-            $qb->andWhere('u.isEnabled = TRUE');
-            $qb->andWhere('u.isRemoved = FALSE');
+            // automatically excludes results for disabled/deleted users
+            $this->addFilter(UserFilter::class, $qb, 'u', [
+                'disabled' => in_array('userDisabled', array_keys($searches)) && $searches['userDisabled'],
+            ]);
         }
 
         /** @var User $user */
@@ -87,17 +89,6 @@ class AssertionFinder extends AbstractFinder
                     }
                     $qb->andWhere('u.uuid = :user');
                     $qb->setParameter('user', $filterValue);
-                    break;
-                case 'userDisabled':
-                    if (is_bool($filterValue)) {
-                        if (!$userJoin) {
-                            $qb->join('obj.recipient', 'u');
-                            $userJoin = true;
-                        }
-                        $qb->andWhere('u.isEnabled = :isEnabled');
-                        $qb->andWhere('u.isRemoved = FALSE');
-                        $qb->setParameter('isEnabled', !$filterValue);
-                    }
                     break;
                 case 'fromGrantableBadges':
                     $grantDecoder = $this->toolMaskDecoderManager->getMaskDecoderByToolAndName(
