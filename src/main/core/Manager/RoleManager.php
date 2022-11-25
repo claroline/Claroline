@@ -17,7 +17,6 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Repository\User\RoleRepository;
-use Claroline\CoreBundle\Repository\User\UserRepository;
 
 class RoleManager
 {
@@ -26,8 +25,6 @@ class RoleManager
 
     /** @var RoleRepository */
     private $roleRepo;
-    /** @var UserRepository */
-    private $userRepo;
 
     public function __construct(
         ObjectManager $om
@@ -35,7 +32,6 @@ class RoleManager
         $this->om = $om;
 
         $this->roleRepo = $om->getRepository(Role::class);
-        $this->userRepo = $om->getRepository(User::class);
     }
 
     /**
@@ -207,14 +203,6 @@ class RoleManager
         $role = $this->roleRepo->findOneBy(['translationKey' => $key, 'workspace' => $workspace]);
 
         return $role;
-    }
-
-    /**
-     * @return bool
-     */
-    public function countUsersByRoleIncludingGroup(Role $role)
-    {
-        return $this->userRepo->countUsersByRoleIncludingGroup($role);
     }
 
     /**

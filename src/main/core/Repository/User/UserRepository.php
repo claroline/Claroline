@@ -144,6 +144,7 @@ class UserRepository extends ServiceEntityRepository implements UserProviderInte
             LEFT JOIN u.roles r
             LEFT JOIN r.workspace rws
             WHERE u.isRemoved = false
+              AND u.technical = false
         ')->getResult();
     }
 
@@ -161,6 +162,7 @@ class UserRepository extends ServiceEntityRepository implements UserProviderInte
             WHERE g.id = :groupId
               AND u.isRemoved = false
               AND u.isEnabled = true
+              AND u.technical = false
         ');
 
         $query->setParameter('groupId', $group->getId());
@@ -186,6 +188,7 @@ class UserRepository extends ServiceEntityRepository implements UserProviderInte
             LEFT JOIN ur.workspace uws
             WHERE (uws.id IN (:workspaces) OR grws.id IN (:workspaces))
             AND u.isRemoved = false
+            AND u.technical = false
         ';
         $query = $this->_em->createQuery($dql);
         $query->setParameter('workspaces', $workspaces);
@@ -233,6 +236,7 @@ class UserRepository extends ServiceEntityRepository implements UserProviderInte
             ->andWhere('roles.id = :roleId')
             ->andWhere('user.isEnabled = :enabled')
             ->andWhere('user.isRemoved = false')
+            ->andWhere('user.technical = false')
             ->setParameter('roleId', $role->getId())
             ->setParameter('enabled', true);
         if (!empty($restrictionRoleNames)) {
@@ -261,7 +265,8 @@ class UserRepository extends ServiceEntityRepository implements UserProviderInte
         $qb = $this->createQueryBuilder('user')
             ->select('COUNT(user.id)')
             ->where('user.isRemoved = false')
-            ->andWhere('user.isEnabled = true');
+            ->andWhere('user.isEnabled = true')
+            ->andWhere('user.technical = false');
 
         if (!empty($organizations)) {
             $qb->join('user.userOrganizationReferences', 'orgaRef')
@@ -286,63 +291,11 @@ class UserRepository extends ServiceEntityRepository implements UserProviderInte
             ->leftJoin('user.roles', 'roles')
             ->andWhere('roles.name IN (:roleNames)')
             ->andWhere('user.isRemoved = false')
+            ->andWhere('user.technical = false')
             ->setParameter('roleNames', $roleNames);
         $query = $qb->getQuery();
 
         return array_column($query->getScalarResult(), 'id');
-    }
-
-    /**
-     * Returns the first name, last name, username and number of workspaces of
-     * each user enrolled in at least one workspace.
-     *
-     * @param int $max
-     *
-     * @return User[]
-     */
-    public function findUsersEnrolledInMostWorkspaces($max, $organizations = null)
-    {
-        $orgasJoin = '';
-        $orgasCondition = '';
-        if (null !== $organizations) {
-            $orgasJoin = 'JOIN ws.organizations orgas';
-            $orgasCondition = 'AND orgas IN (:organizations)';
-        }
-        $dql = "
-            SELECT CONCAT(CONCAT(u.firstName, ' '), u.lastName) AS name, u.username, COUNT(DISTINCT ws.id) AS total
-            FROM Claroline\\CoreBundle\\Entity\\User u, Claroline\\CoreBundle\\Entity\\Workspace\\Workspace ws
-            ${orgasJoin}
-            WHERE (CONCAT(CONCAT(u.id,':'), ws.id) IN
-            (
-                SELECT CONCAT(CONCAT(u1.id, ':'), ws1.id)
-                FROM Claroline\\CoreBundle\\Entity\\Workspace\\Workspace ws1
-                JOIN ws1.roles r1
-                JOIN r1.users u1
-            ) OR CONCAT(CONCAT(u.id, ':'), ws.id) IN
-            (
-                SELECT CONCAT(CONCAT(u2.id, ':'), ws2.id)
-                FROM Claroline\\CoreBundle\\Entity\\Workspace\\Workspace ws2
-                JOIN ws2.roles r2
-                JOIN r2.groups g2
-                JOIN g2.users u2
-            ))
-            ${orgasCondition}
-            AND u.isRemoved = false
-            GROUP BY u.id
-            ORDER BY total DESC, name ASC
-        ";
-
-        $query = $this->_em->createQuery($dql);
-
-        if (null !== $organizations) {
-            $query->setParameter('organizations', $organizations);
-        }
-
-        if ($max > 1) {
-            $query->setMaxResults($max);
-        }
-
-        return $query->getResult();
     }
 
     /**
@@ -362,6 +315,7 @@ class UserRepository extends ServiceEntityRepository implements UserProviderInte
                     WHERE (ur.role_id IN (:roles)) 
                     AND u.is_removed = false 
                     AND u.is_enabled = true
+                    AND u.technical = false
                 )
                 UNION DISTINCT
                 (
@@ -372,52 +326,13 @@ class UserRepository extends ServiceEntityRepository implements UserProviderInte
                     WHERE (gr.role_id IN (:roles)) 
                     AND u.is_removed = false 
                     AND u.is_enabled = true
+                    AND u.technical = false
                 )
             ', $rsm)
             ->setParameter('roles', array_map(function (Role $role) {
                 return $role->getId();
             }, $roles))
             ->getResult();
-    }
-
-    /**
-     * Returns the first name, last name, username and number of created workspaces
-     * of each user who has created at least one workspace.
-     *
-     * @param int $max
-     *
-     * @return array
-     */
-    public function findUsersOwnersOfMostWorkspaces($max, $organizations = null)
-    {
-        $orgasJoin = '';
-        $orgasCondition = '';
-        if (null !== $organizations) {
-            $orgasJoin = 'JOIN ws.organizations orgas';
-            $orgasCondition = 'AND orgas IN (:organizations)';
-        }
-
-        $dql = "
-            SELECT CONCAT(CONCAT(u.firstName,' '), u.lastName) AS name, u.username, COUNT(DISTINCT ws.id) AS total
-            FROM Claroline\\CoreBundle\\Entity\\Workspace\\Workspace ws
-            JOIN ws.creator u
-            ${orgasJoin}
-            WHERE u.isRemoved = false
-            ${orgasCondition}
-            GROUP BY u.id
-            ORDER BY total DESC
-        ";
-        $query = $this->_em->createQuery($dql);
-
-        if (null !== $organizations) {
-            $query->setParameter('organizations', $organizations);
-        }
-
-        if ($max > 1) {
-            $query->setMaxResults($max);
-        }
-
-        return $query->getResult();
     }
 
     public function countUsersByRoleIncludingGroup(Role $role)
@@ -429,13 +344,21 @@ class UserRepository extends ServiceEntityRepository implements UserProviderInte
               FROM claro_user u1
               INNER JOIN claro_user_role ur1 ON u1.id = ur1.user_id
               WHERE ur1.role_id = :roleId
+                AND u1.is_removed = false 
+                AND u1.is_enabled = true
+                AND u1.technical = false
+                
               UNION
+              
               SELECT u2.id AS id
               FROM claro_user u2
               INNER JOIN claro_user_group ug2 ON u2.id = ug2.user_id
               INNER JOIN claro_group g2 ON g2.id = ug2.group_id
               INNER JOIN claro_group_role gr2 ON g2.id = gr2.group_id
               WHERE gr2.role_id = :roleId
+                AND u2.is_removed = false 
+                AND u2.is_enabled = true
+                AND u2.technical = false
             ) AS usr
         ';
 
@@ -455,6 +378,7 @@ class UserRepository extends ServiceEntityRepository implements UserProviderInte
             FROM Claroline\CoreBundle\Entity\User u
             WHERE u.isEnabled = TRUE
               AND u.isRemoved = FALSE
+              AND u.technical = false
         ';
         $query = $this->_em->createQuery($dql);
 
@@ -465,7 +389,7 @@ class UserRepository extends ServiceEntityRepository implements UserProviderInte
     {
         return $this->createQueryBuilder('u')
             ->where('(u.lastActivity IS NULL OR u.lastActivity < :dateLastActivity)')
-            ->andWhere('u.isEnabled = true AND u.isRemoved = false')
+            ->andWhere('u.isEnabled = true AND u.isRemoved = false AND u.technical = false')
             ->setParameter('dateLastActivity', $dateLastActivity)
             ->getQuery()
             ->getResult();

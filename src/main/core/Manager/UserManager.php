@@ -95,26 +95,6 @@ class UserManager
     }
 
     /**
-     * @param int $max
-     *
-     * @return User[]
-     */
-    public function getUsersEnrolledInMostWorkspaces($max, $organizations = null)
-    {
-        return $this->userRepo->findUsersEnrolledInMostWorkspaces($max, $organizations);
-    }
-
-    /**
-     * @param int $max
-     *
-     * @return User[]
-     */
-    public function getUsersOwnersOfMostWorkspaces($max, $organizations = null)
-    {
-        return $this->userRepo->findUsersOwnersOfMostWorkspaces($max, $organizations);
-    }
-
-    /**
      * @param string $resetPassword
      *
      * @return User
@@ -168,11 +148,6 @@ class UserManager
         $user->setLocale($locale);
         $this->om->persist($user);
         $this->om->flush();
-    }
-
-    public function countUsersByRoleIncludingGroup(Role $role)
-    {
-        return $this->userRepo->countUsersByRoleIncludingGroup($role);
     }
 
     public function setUserInitDate(User $user)
@@ -287,6 +262,9 @@ class UserManager
             $this->om->persist($user);
             $this->om->flush();
         }
+
+        // hide this user for everyone
+        $user->setTechnical(true);
 
         return $user;
     }

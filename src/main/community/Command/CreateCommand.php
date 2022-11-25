@@ -62,6 +62,12 @@ class CreateCommand extends Command
             InputOption::VALUE_NONE,
             'When set to true, created user will have the admin role'
         );
+        $this->addOption(
+            'technical',
+            't',
+            InputOption::VALUE_NONE,
+            'When set to true, created user will be a technical user (aka. hidden from everyone)'
+        );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -78,6 +84,7 @@ class CreateCommand extends Command
             $roleName = PlatformRoles::USER;
         }
 
+        /** @var UserEntity $object */
         $object = $this->crud->create(UserEntity::class, [
             'firstName' => $input->getArgument('user_first_name'),
             'lastName' => $input->getArgument('user_last_name'),
@@ -88,6 +95,11 @@ class CreateCommand extends Command
 
         $role = $this->om->getRepository(Role::class)->findOneBy(['name' => $roleName]);
         $object->addRole($role);
+
+        if ($input->getOption('technical')) {
+            $object->setTechnical(true);
+        }
+
         $this->om->persist($object);
         $this->om->flush();
 

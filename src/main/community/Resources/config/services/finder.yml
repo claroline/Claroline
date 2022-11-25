@@ -1,4 +1,5 @@
 services:
+    # Finders
     Claroline\CommunityBundle\Finder\GroupFinder:
         parent: Claroline\AppBundle\API\Finder\AbstractFinder
         tags: [ claroline.finder ]
@@ -17,3 +18,9 @@ services:
     Claroline\CommunityBundle\Finder\UserFinder:
         parent: Claroline\AppBundle\API\Finder\AbstractFinder
         tags: [ claroline.finder ]
+
+    # Filters
+    Claroline\CommunityBundle\Finder\Filter\UserFilter:
+        tags: [ claroline.finder.filter ]
+        arguments:
+            - '@security.token_storage'

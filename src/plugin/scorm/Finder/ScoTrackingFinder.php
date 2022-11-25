@@ -12,6 +12,7 @@
 namespace Claroline\ScormBundle\Finder;
 
 use Claroline\AppBundle\API\Finder\AbstractFinder;
+use Claroline\CommunityBundle\Finder\Filter\UserFilter;
 use Doctrine\ORM\QueryBuilder;
 
 class ScoTrackingFinder extends AbstractFinder
@@ -26,13 +27,14 @@ class ScoTrackingFinder extends AbstractFinder
         $qb->join('obj.sco', 'sco');
 
         $userJoin = false;
-        if (!array_key_exists('userDisabled', $searches) && !in_array('user', $searches) && !in_array('userEmail', $searches)) {
-            // only return results for enabled users
+        if (!in_array('user', $searches) && !in_array('userEmail', $searches)) {
             $qb->join('obj.user', 'u');
             $userJoin = true;
 
-            $qb->andWhere('u.isEnabled = TRUE');
-            $qb->andWhere('u.isRemoved = FALSE');
+            // automatically excludes results for disabled/deleted users
+            $this->addFilter(UserFilter::class, $qb, 'u', [
+                'disabled' => in_array('userDisabled', array_keys($searches)) && $searches['userDisabled'],
+            ]);
         }
 
         foreach ($searches as $filterName => $filterValue) {

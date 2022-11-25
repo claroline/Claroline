@@ -12,6 +12,7 @@
 namespace Claroline\CommunityBundle\Finder;
 
 use Claroline\AppBundle\API\Finder\AbstractFinder;
+use Claroline\CommunityBundle\Finder\Filter\UserFilter;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
@@ -29,6 +30,14 @@ class UserFinder extends AbstractFinder
         $roleJoin = false;
         $groupJoin = false;
         $groupRoleJoin = false;
+
+        $this->addFilter(UserFilter::class, $qb, 'obj', [
+            'disabled' => in_array('isDisabled', array_keys($searches)) && $searches['isDisabled'],
+        ]);
+
+        if (in_array('isDisabled', array_keys($searches))) {
+            unset($searches['isDisabled']);
+        }
 
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
@@ -60,11 +69,6 @@ class UserFinder extends AbstractFinder
                     }, str_getcsv($filterValue));
 
                     $qb->setParameter('emails', $data);
-                    break;
-
-                case 'isDisabled':
-                    $qb->andWhere('obj.isEnabled = :enabled');
-                    $qb->setParameter('enabled', !$filterValue);
                     break;
 
                 case 'hasPersonalWorkspace':
@@ -229,21 +233,12 @@ class UserFinder extends AbstractFinder
             }
         }
 
-        // if we don't explicitly request for it, we will not return disabled or removed users
-        if (!in_array('isDisabled', array_keys($searches)) && !in_array('isEnabled', array_keys($searches))) {
-            $qb->andWhere('obj.isEnabled = TRUE');
-        }
-
-        if (!in_array('isRemoved', array_keys($searches))) {
-            $qb->andWhere('obj.isRemoved = FALSE');
-        }
-
         $this->sortBy($qb, $sortBy);
 
         return $qb;
     }
 
-    private function sortBy($qb, array $sortBy = null)
+    private function sortBy(QueryBuilder $qb, array $sortBy = null)
     {
         // manages custom sort properties
         if ($sortBy && 0 !== $sortBy['direction']) {
