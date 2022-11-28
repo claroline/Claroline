@@ -17,20 +17,19 @@ use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Description;
 use Claroline\AppBundle\Entity\Meta\Poster;
 use Claroline\AppBundle\Entity\Meta\Thumbnail;
-use Claroline\CoreBundle\Entity\Model\GroupsTrait;
+use Claroline\CommunityBundle\Model\HasGroups;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Organization\UserOrganizationReference;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\User\UserRepository")
+ * @ORM\Entity(repositoryClass="Claroline\CommunityBundle\Repository\UserRepository")
  * @ORM\Table(
  *     name="claro_user",
  *     indexes={
@@ -38,8 +37,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  *         @ORM\Index(name="enabled_idx", columns={"is_enabled"}),
  *         @ORM\Index(name="is_removed", columns={"is_removed"})
  * })
- * @DoctrineAssert\UniqueEntity("username")
- * @DoctrineAssert\UniqueEntity("email")
  */
 class User extends AbstractRoleSubject implements \Serializable, UserInterface, EquatableInterface, IdentifiableInterface
 {
@@ -48,7 +45,7 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
     use Poster;
     use Thumbnail;
     use Description;
-    use GroupsTrait;
+    use HasGroups;
 
     /**
      * @var string

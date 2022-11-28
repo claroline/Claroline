@@ -5,7 +5,6 @@ import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
-import {ListData} from '#/main/app/content/list/containers/data'
 import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
 
 import {getActions as getWorkspaceActions} from '#/main/core/workspace/utils'
@@ -14,15 +13,15 @@ import {constants as workspaceConstants} from '#/main/core/workspace/constants'
 import {selectors} from '#/main/community/tools/community/store'
 import {Role as RoleTypes} from '#/main/community/prop-types'
 import {Workspace as WorkspaceType} from '#/main/core/workspace/prop-types'
-import {GroupList} from '#/main/community/administration/community/group/components/group-list'
-import {UserList} from '#/main/core/user/components/list'
+import {GroupList} from '#/main/community/group/components/list'
+import {UserList} from '#/main/community/user/components/list'
 import {MODAL_USERS} from '#/main/community/modals/users'
 import {MODAL_GROUPS} from '#/main/community/modals/groups'
 
-import {RoleTools} from '#/main/community/tools/community/role/components/tools'
+import {RoleTools} from '#/main/community/role/components/tools'
 import {MODAL_ROLE_RIGHTS} from '#/main/community/tools/community/role/modals/rights'
 
-// TODO : merge with main/community/administration/community/role/components/role
+// TODO : remove
 
 const ShortcutRow = props =>
   <div className="tool-rights-row list-group-item">
@@ -162,22 +161,22 @@ class Role extends Component {
                 }
               ]}
             >
-              {this.props.role.id && !this.props.new &&
-                <UserList
-                  name={selectors.STORE_NAME + '.roles.current.users'}
-                  url={['apiv2_role_list_users', {id: this.props.role.id}]}
-                  delete={{
-                    url: ['apiv2_role_remove_users', {id: this.props.role.id}]
-                  }}
-                />
-              }
+              <UserList
+                name={selectors.STORE_NAME + '.roles.current.users'}
+                url={['apiv2_role_list_users', {id: this.props.role.id}]}
+                autoload={this.props.role.id && !this.props.new}
+                delete={{
+                  url: ['apiv2_role_remove_users', {id: this.props.role.id}]
+                }}
+                actions={undefined}
+              />
             </FormSection>
           }
 
           {-1 === ['ROLE_ANONYMOUS', 'ROLE_USER'].indexOf(this.props.role.name) &&
             <FormSection
               className="embedded-list-section"
-              icon="fa fa-fw fa-id-badge"
+              icon="fa fa-fw fa-users"
               title={trans('groups')}
               disabled={this.props.new}
               actions={[
@@ -196,18 +195,14 @@ class Role extends Component {
                 }
               ]}
             >
-              <ListData
+              <GroupList
                 name={selectors.STORE_NAME + '.roles.current.groups'}
-                primaryAction={GroupList.open}
-                fetch={{
-                  url: ['apiv2_role_list_groups', {id: this.props.role.id}],
-                  autoload: this.props.role.id && !this.props.new
-                }}
+                url={['apiv2_role_list_groups', {id: this.props.role.id}]}
+                autoload={this.props.role.id && !this.props.new}
                 delete={{
                   url: ['apiv2_role_remove_groups', {id: this.props.role.id}]
                 }}
-                definition={GroupList.definition}
-                card={GroupList.card}
+                actions={undefined}
               />
             </FormSection>
           }

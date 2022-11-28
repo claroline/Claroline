@@ -6,6 +6,7 @@ use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CommunityBundle\Repository\UserRepository;
 use Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\AdminTool;
@@ -18,43 +19,40 @@ use Claroline\CoreBundle\Manager\Tool\ToolMaskDecoderManager;
 use Claroline\CoreBundle\Manager\Tool\ToolRightsManager;
 use Claroline\CoreBundle\Repository\Tool\OrderedToolRepository;
 use Claroline\CoreBundle\Repository\Tool\ToolRightsRepository;
-use Claroline\CoreBundle\Repository\User\UserRepository;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class RoleSerializer
 {
     use SerializerTrait;
 
+    /** @var AuthorizationCheckerInterface */
+    private $authorization;
     /** @var ObjectManager */
     private $om;
-
     /** @var ToolMaskDecoderManager */
     private $maskManager;
-
     /** @var ToolRightsManager */
     private $rightsManager;
-
     /** @var WorkspaceSerializer */
     private $workspaceSerializer;
-
     /** @var UserSerializer */
     private $userSerializer;
-
     /** @var OrderedToolRepository */
     private $orderedToolRepo;
-
     /** @var ToolRightsRepository */
     private $toolRightsRepo;
-
     /** @var UserRepository */
     private $userRepo;
 
     public function __construct(
+        AuthorizationCheckerInterface $authorization,
         ObjectManager $om,
         ToolMaskDecoderManager $maskManager,
         ToolRightsManager $rightsManager,
         WorkspaceSerializer $workspaceSerializer,
         UserSerializer $userSerializer
     ) {
+        $this->authorization = $authorization;
         $this->om = $om;
         $this->maskManager = $maskManager;
         $this->rightsManager = $rightsManager;
@@ -85,71 +83,68 @@ class RoleSerializer
     {
         $serialized = [
             'id' => $role->getUuid(),
+            'autoId' => $role->getId(),
             'name' => $role->getName(),
             'type' => $role->getType(), // TODO : should be a string for better data readability
             'translationKey' => $role->getTranslationKey(),
         ];
 
-        if (!in_array(SerializerInterface::SERIALIZE_MINIMAL, $options) && !in_array(SerializerInterface::SERIALIZE_TRANSFER, $options)) {
-            $serialized['meta'] = $this->serializeMeta($role);
+        if (!in_array(SerializerInterface::SERIALIZE_MINIMAL, $options)) {
+            $serialized['meta'] = [
+                'description' => $role->getDescription(),
+                'readOnly' => $role->isLocked(),
+                'personalWorkspaceCreationEnabled' => $role->getPersonalWorkspaceCreationEnabled(),
+            ];
 
-            if ($role->getWorkspace()) {
-                $serialized['workspace'] = $this->workspaceSerializer->serialize($role->getWorkspace(), [SerializerInterface::SERIALIZE_MINIMAL]);
-            }
+            if (!in_array(SerializerInterface::SERIALIZE_TRANSFER, $options)) {
+                $serialized['permissions'] = [
+                    'open' => $this->authorization->isGranted('OPEN', $role),
+                    'edit' => $this->authorization->isGranted('EDIT', $role),
+                    'administrate' => $this->authorization->isGranted('ADMINISTRATE', $role),
+                    'delete' => $this->authorization->isGranted('DELETE', $role),
+                ];
 
-            if (Role::USER_ROLE === $role->getType()) {
-                if (count($role->getUsers()->toArray()) > 0) {
-                    $serialized['user'] = $this->userSerializer->serialize($role->getUsers()->toArray()[0], [SerializerInterface::SERIALIZE_MINIMAL]);
-                } else {
-                    //if we removed some user roles... for some reason.
-                    $serialized['user'] = null;
-                }
-            }
-
-            // TODO: remove this block later. For now it's still used by the UI
-            if (in_array(Options::SERIALIZE_ROLE_TOOLS_RIGHTS, $options)) {
-                $workspaceId = null;
-
-                foreach ($options as $option) {
-                    if ('workspace_id_' === substr($option, 0, 13)) {
-                        $workspaceId = substr($option, 13);
-                        break;
+                if (Role::WS_ROLE === $role->getType() && $role->getWorkspace()) {
+                    $serialized['workspace'] = $this->workspaceSerializer->serialize($role->getWorkspace(), [SerializerInterface::SERIALIZE_MINIMAL]);
+                } elseif (Role::USER_ROLE === $role->getType()) {
+                    if (count($role->getUsers()->toArray()) > 0) {
+                        $serialized['user'] = $this->userSerializer->serialize($role->getUsers()->toArray()[0], [SerializerInterface::SERIALIZE_MINIMAL]);
+                    } else {
+                        //if we removed some user roles... for some reason.
+                        $serialized['user'] = null;
                     }
                 }
-                if ($workspaceId) {
-                    $serialized['tools'] = $this->serializeTools($role, $workspaceId);
-                }
-            }
-            if (Role::PLATFORM_ROLE === $role->getType()) {
-                // easier request than count users which will go into mysql cache so I'm not too worried about looping here.
-                $adminTools = [];
 
-                /** @var AdminTool $adminTool */
-                foreach ($this->om->getRepository(AdminTool::class)->findAll() as $adminTool) {
-                    $adminTools[$adminTool->getName()] = $role->getAdminTools()->contains($adminTool);
-                }
+                // TODO: remove this block later. For now it's still used by the UI
+                if (in_array(Options::SERIALIZE_ROLE_TOOLS_RIGHTS, $options)) {
+                    $workspaceId = null;
 
-                $serialized['adminTools'] = $adminTools;
-                $serialized['desktopTools'] = $this->serializeTools($role);
+                    foreach ($options as $option) {
+                        if ('workspace_id_' === substr($option, 0, 13)) {
+                            $workspaceId = substr($option, 13);
+                            break;
+                        }
+                    }
+                    if ($workspaceId) {
+                        $serialized['tools'] = $this->serializeTools($role, $workspaceId);
+                    }
+                }
+                if (Role::PLATFORM_ROLE === $role->getType()) {
+                    // easier request than count users which will go into mysql cache so I'm not too worried about looping here.
+                    $adminTools = [];
+
+                    /** @var AdminTool $adminTool */
+                    foreach ($this->om->getRepository(AdminTool::class)->findAll() as $adminTool) {
+                        $adminTools[$adminTool->getName()] = $role->getAdminTools()->contains($adminTool);
+                    }
+
+                    $serialized['adminTools'] = $adminTools;
+                    $serialized['desktopTools'] = $this->serializeTools($role);
+                }
             }
         }
 
         return $serialized;
-    }
-
-    public function serializeMeta(Role $role): array
-    {
-        $meta = [
-            'readOnly' => $role->isReadOnly(),
-            'personalWorkspaceCreationEnabled' => $role->getPersonalWorkspaceCreationEnabled(),
-            'users' => 1,
-       ];
-
-        if (Role::USER_ROLE !== $role->getType()) {
-            $meta['users'] = $this->userRepo->countUsersByRoleIncludingGroup($role);
-        }
-
-        return $meta;
     }
 
     private function serializeTools(Role $role, string $workspaceId = null): array
@@ -183,12 +178,13 @@ class RoleSerializer
             $role->refreshUuid();
         }
 
-        if (!$role->isReadOnly()) {
+        if (!$role->isLocked()) { // shouldn't be checked in the deserialize
             $this->sipe('name', 'setName', $data, $role);
             $this->sipe('type', 'setType', $data, $role);
             $this->sipe('translationKey', 'setTranslationKey', $data, $role);
         }
 
+        $this->sipe('meta.description', 'setDescription', $data, $role);
         $this->sipe('meta.personalWorkspaceCreationEnabled', 'setPersonalWorkspaceCreationEnabled', $data, $role);
 
         // we should test role type before trying to set the workspace

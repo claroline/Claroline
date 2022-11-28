@@ -13,15 +13,12 @@ namespace Claroline\CommunityBundle\Controller;
 
 use Claroline\AppBundle\Annotations\ApiDoc;
 use Claroline\AppBundle\Controller\AbstractCrudController;
-use Claroline\CoreBundle\Controller\APINew\Model\HasOrganizationsTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasRolesTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasUsersTrait;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Organization\Organization;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -36,7 +33,6 @@ class GroupController extends AbstractCrudController
 {
     use HasUsersTrait;
     use HasRolesTrait;
-    use HasOrganizationsTrait;
     use PermissionCheckerTrait;
 
     /** @var TokenStorageInterface */
@@ -90,36 +86,7 @@ class GroupController extends AbstractCrudController
     }
 
     /**
-     * @Route("/list/managed", name="apiv2_group_list_managed", methods={"GET"})
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     * @ApiDoc(
-     *     description="List the objects of class $class.",
-     *     queryString={
-     *         "$finder",
-     *         {"name": "page", "type": "integer", "description": "The queried page."},
-     *         {"name": "limit", "type": "integer", "description": "The max amount of objects per page."},
-     *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
-     *     },
-     *     response={"$list"}
-     * )
-     */
-    public function listManagedAction(User $user, Request $request): JsonResponse
-    {
-        $filters = [];
-        if (!$this->authorization->isGranted('ROLE_ADMIN')) {
-            $filters['organization'] = array_map(function (Organization $organization) {
-                return $organization->getUuid();
-            }, $user->getAdministratedOrganizations()->toArray());
-        }
-
-        return new JsonResponse($this->finder->search(
-            Group::class,
-            array_merge($request->query->all(), ['hiddenFilters' => $filters])
-        ));
-    }
-
-    /**
-     * @Route("/password/reset", name="apiv2_group_initialize_password", methods={"POST"})
+     * @Route("/password/reset", name="apiv2_group_password_reset", methods={"PUT"})
      */
     public function resetPasswordAction(Request $request): JsonResponse
     {
@@ -131,7 +98,7 @@ class GroupController extends AbstractCrudController
         foreach ($groups as $group) {
             foreach ($group->getUsers() as $user) {
                 if ($this->authorization->isGranted('ADMINISTRATE', $user)) {
-                    $this->mailManager->sendForgotPassword($user);
+                    $this->mailManager->sendInitPassword($user);
                     ++$i;
                 }
 
@@ -152,7 +119,7 @@ class GroupController extends AbstractCrudController
             $user = $this->tokenStorage->getToken()->getUser();
 
             return [
-                'organization' => array_map(function (Organization $organization) {
+                'organizations' => array_map(function (Organization $organization) {
                     return $organization->getUuid();
                 }, $user->getOrganizations()),
             ];

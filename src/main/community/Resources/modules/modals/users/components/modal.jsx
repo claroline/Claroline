@@ -6,8 +6,8 @@ import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
 
-import {UserList} from '#/main/core/user/components/list'
-import {User as UserType} from '#/main/community/prop-types'
+import {UserList} from '#/main/community/user/components/list'
+import {User as UserTypes} from '#/main/community/prop-types'
 
 import {selectors} from '#/main/community/modals/users/store'
 
@@ -25,16 +25,8 @@ const UsersModal = props => {
       <UserList
         name={selectors.STORE_NAME}
         url={props.url}
-        customDefinition={[
-          {
-            name: 'emails',
-            label: trans('emails'),
-            type: 'string',
-            displayed: false,
-            displayable: false,
-            sortable: false
-          }
-        ]}
+        primaryAction={undefined}
+        actions={undefined}
       />
 
       <Button
@@ -55,7 +47,7 @@ UsersModal.propTypes = {
   subtitle: T.string,
   selectAction: T.func.isRequired,
   fadeModal: T.func.isRequired,
-  selected: T.arrayOf(T.shape(UserType.propTypes)).isRequired,
+  selected: T.arrayOf(T.shape(UserTypes.propTypes)).isRequired,
   reset: T.func.isRequired
 }
 

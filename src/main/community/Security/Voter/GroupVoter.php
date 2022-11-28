@@ -56,7 +56,7 @@ class GroupVoter extends AbstractRoleSubjectVoter
 
         /** @var User $user */
         $user = $token->getUser();
-        if ($user && $user->hasGroup($group)) {
+        if ($user instanceof User && $user->hasGroup($group)) {
             return VoterInterface::ACCESS_GRANTED;
         }
 
@@ -87,7 +87,7 @@ class GroupVoter extends AbstractRoleSubjectVoter
 
     private function checkDelete($token, Group $group)
     {
-        if ($group->isReadOnly()) {
+        if ($group->isLocked()) {
             return VoterInterface::ACCESS_DENIED;
         }
 

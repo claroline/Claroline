@@ -145,8 +145,7 @@ UserForm.propTypes = {
       dates: T.arrayOf(T.string).isRequired
     })
   }).isRequired,
-  updateProp: T.func.isRequired,
-  pickRoles: T.func.isRequired
+  updateProp: T.func.isRequired
 }
 
 const User = connect(

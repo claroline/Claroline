@@ -4,7 +4,7 @@ namespace Claroline\AuthenticationBundle\Messenger\Middleware;
 
 use Claroline\AuthenticationBundle\Messenger\Stamp\AuthenticationStamp;
 use Claroline\AuthenticationBundle\Security\Authentication\Authenticator;
-use Claroline\CoreBundle\Repository\User\UserRepository;
+use Claroline\CommunityBundle\Repository\UserRepository;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Middleware\MiddlewareInterface;
 use Symfony\Component\Messenger\Middleware\StackInterface;

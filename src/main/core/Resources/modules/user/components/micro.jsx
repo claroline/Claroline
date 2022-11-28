@@ -5,7 +5,7 @@ import classes from 'classnames'
 import {trans} from '#/main/app/intl/translation'
 import {LinkButton} from '#/main/app/buttons/link'
 
-import {route} from '#/main/community/routing'
+import {route} from '#/main/community/user/routing'
 import {UserAvatar} from '#/main/core/user/components/avatar'
 
 /**
@@ -18,8 +18,10 @@ const UserMicro = props => {
   let displayName
   if (props.showUsername) {
     displayName = props.username
+  } else if (props.name) {
+    displayName = props.name
   } else {
-    displayName = props.firstName + ' ' + props.lastName
+    displayName = (props.firstName || '') + ' ' + (props.lastName || '')
     displayName = displayName.trim()
   }
 
@@ -45,6 +47,7 @@ const UserMicro = props => {
 }
 
 UserMicro.propTypes = {
+  name: T.string,
   firstName: T.string,
   lastName: T.string,
   username: T.string,

@@ -7,7 +7,7 @@ import {AlertBlock} from '#/main/app/alert/components/alert-block'
 import {Button} from '#/main/app/action/components/button'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {constants as listConst} from '#/main/app/content/list/constants'
-import {GroupCard} from '#/main/core/user/data/components/group-card'
+import {GroupCard} from '#/main/community/group/components/card'
 
 import {isFull} from '#/plugin/cursus/utils'
 import {Session as SessionTypes} from '#/plugin/cursus/prop-types'

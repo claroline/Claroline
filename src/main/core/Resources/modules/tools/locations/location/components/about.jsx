@@ -5,18 +5,17 @@ import {trans} from '#/main/app/intl/translation'
 import {hasPermission} from '#/main/app/security'
 import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {ContentSections, ContentSection} from '#/main/app/content/components/sections'
-import {ListData} from '#/main/app/content/list/containers/data'
 import {DetailsData} from '#/main/app/content/details/containers/data'
 
 import {Location as LocationTypes} from '#/main/core/tools/locations/prop-types'
 import {selectors} from '#/main/core/tools/locations/location/store'
 
 import {MODAL_USERS} from '#/main/community/modals/users'
-import {UserList} from '#/main/core/user/components/list'
+import {UserList} from '#/main/community/user/components/list'
 import {MODAL_GROUPS} from '#/main/community/modals/groups'
-import {GroupList} from '#/main/community/administration/community/group/components/group-list'
+import {GroupList} from '#/main/community/group/components/list'
 import {MODAL_ORGANIZATIONS} from '#/main/community/modals/organizations'
-import {OrganizationList} from '#/main/community/administration/community/organization/components/organization-list'
+import {OrganizationList} from '#/main/community/organization/components/list'
 
 const LocationAbout = (props) =>
   <Fragment>
@@ -101,18 +100,14 @@ const LocationAbout = (props) =>
           }
         ]}
       >
-        <ListData
-          name={`${selectors.STORE_NAME}.current.groups`}
-          fetch={{
-            url: ['apiv2_location_list_groups', {id: props.location.id}],
-            autoload: true
-          }}
+        <GroupList
+          name={selectors.STORE_NAME + '.current.groups'}
+          url={['apiv2_location_list_groups', {id: props.location.id}]}
           delete={{
             url: ['apiv2_location_remove_groups', {id: props.location.id}],
             displayed: () => hasPermission('edit', props.location)
           }}
-          definition={GroupList.definition}
-          card={GroupList.card}
+          actions={undefined}
         />
       </ContentSection>
 
@@ -137,18 +132,14 @@ const LocationAbout = (props) =>
           }
         ]}
       >
-        <ListData
-          name={`${selectors.STORE_NAME}.current.organizations`}
-          fetch={{
-            url: ['apiv2_location_list_organizations', {id: props.location.id}],
-            autoload: true
-          }}
+        <OrganizationList
+          name={selectors.STORE_NAME + '.current.organizations'}
+          url={['apiv2_location_list_organizations', {id: props.location.id}]}
           delete={{
             url: ['apiv2_location_remove_organizations', {id: props.location.id}],
             displayed: () => hasPermission('edit', props.location)
           }}
-          definition={OrganizationList.definition}
-          card={OrganizationList.card}
+          actions={undefined}
         />
       </ContentSection>
     </ContentSections>

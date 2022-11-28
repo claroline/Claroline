@@ -6,7 +6,7 @@ import omit from 'lodash/omit'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
 
 import {Role as RoleTypes} from '#/main/community/prop-types'
-import {RoleCard} from '#/main/core/user/data/components/role-card'
+import {RoleCard} from '#/main/community/role/components/card'
 
 // TODO : find a way to merge with other roles modals
 // Used in register groups/users and impersonation actions

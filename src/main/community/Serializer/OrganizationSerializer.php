@@ -8,16 +8,22 @@ use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Location\Location;
 use Claroline\CoreBundle\Entity\Organization\Organization;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class OrganizationSerializer
 {
     use SerializerTrait;
 
+    /** @var AuthorizationCheckerInterface */
+    private $authorization;
     /** @var ObjectManager */
     private $om;
 
-    public function __construct(ObjectManager $om)
-    {
+    public function __construct(
+        AuthorizationCheckerInterface $authorization,
+        ObjectManager $om
+    ) {
+        $this->authorization = $authorization;
         $this->om = $om;
     }
 
@@ -55,6 +61,7 @@ class OrganizationSerializer
                 'id' => $organization->getUuid(),
                 'name' => $organization->getName(),
                 'code' => $organization->getCode(),
+                'thumbnail' => $organization->getThumbnail(),
             ];
         }
 
@@ -63,9 +70,12 @@ class OrganizationSerializer
             'autoId' => $organization->getId(),
             'name' => $organization->getName(),
             'code' => $organization->getCode(),
+            'thumbnail' => $organization->getThumbnail(),
+            'poster' => $organization->getPoster(),
             'email' => $organization->getEmail(),
             'type' => $organization->getType(),
             'meta' => [
+                'description' => $organization->getDescription(),
                 'default' => $organization->isDefault(),
                 'position' => $organization->getPosition(),
             ],
@@ -73,21 +83,26 @@ class OrganizationSerializer
                 'public' => $organization->isPublic(),
                 'users' => $organization->getMaxUsers(),
             ],
-            'parent' => !empty($organization->getParent()) ? [
-                'id' => $organization->getParent()->getUuid(),
-                'name' => $organization->getParent()->getName(),
-                'code' => $organization->getParent()->getCode(),
-                'meta' => [
-                    'default' => $organization->getParent()->getDefault(),
-                ],
-            ] : null,
-            'locations' => array_map(function (Location $location) {
+            'parent' => !empty($organization->getParent()) ? $this->serialize($organization->getParent(), [SerializerInterface::SERIALIZE_MINIMAL]) : null,
+        ];
+
+        if (!in_array(SerializerInterface::SERIALIZE_LIST, $options)) {
+            $serialized['locations'] = array_map(function (Location $location) {
                 return [
                     'id' => $location->getId(),
                     'name' => $location->getName(),
                 ];
-            }, $organization->getLocations()->toArray()),
-        ];
+            }, $organization->getLocations()->toArray());
+        }
+
+        if (!in_array(SerializerInterface::SERIALIZE_TRANSFER, $options)) {
+            $serialized['permissions'] = [
+                'open' => $this->authorization->isGranted('OPEN', $organization),
+                'edit' => $this->authorization->isGranted('EDIT', $organization),
+                'administrate' => $this->authorization->isGranted('ADMINISTRATE', $organization),
+                'delete' => $this->authorization->isGranted('DELETE', $organization),
+            ];
+        }
 
         if (in_array(Options::IS_RECURSIVE, $options)) {
             $serialized['children'] = array_map(function (Organization $child) use ($options) {
@@ -105,18 +120,21 @@ class OrganizationSerializer
         $this->sipe('email', 'setEmail', $data, $organization);
         $this->sipe('type', 'setType', $data, $organization);
         $this->sipe('vat', 'setVat', $data, $organization);
+        $this->sipe('poster', 'setPoster', $data, $organization);
+        $this->sipe('thumbnail', 'setThumbnail', $data, $organization);
+        $this->sipe('meta.description', 'setDescription', $data, $organization);
         $this->sipe('restrictions.users', 'setMaxUsers', $data, $organization);
         $this->sipe('restrictions.public', 'setPublic', $data, $organization);
 
-        if (isset($data['parent'])) {
-            if (empty($data['parent'])) {
-                $organization->setParent(null);
-            } else {
+        if (array_key_exists('parent', $data)) {
+            $parent = null;
+            if (!empty($data['parent'])) {
                 $parent = $this->om->getRepository(Organization::class)->findOneBy([
                     'uuid' => $data['parent']['id'],
                 ]);
-                $organization->setParent($parent);
             }
+
+            $organization->setParent($parent);
         }
 
         return $organization;

@@ -13,10 +13,6 @@
 
 @brand-secondary:         #C51162;
 
-// colors for SVG theme icons
-@icon-primary-color: @brand-primary;
-@icon-secondary-color: @top-bar-bg;
-
 @enable-box-shadow:       true;
 @enable-border-radius:    true;
 @enable-border:           true;
@@ -30,6 +26,12 @@
 // react strips whitespaces, so we need to move icons to avoid from text
 @icon-text-spacer:     10px;
 @icon-dropdown-spacer: 15px;
+
+// colors for SVG theme icons
+@icon-primary-color: @brand-primary;
+@icon-secondary-color: @top-bar-bg;
+
+@icon-fixed-width: 1.25em; // same value as fa-fw (there is no var for it in font awesome)
 
 @images-path: "images/";
 

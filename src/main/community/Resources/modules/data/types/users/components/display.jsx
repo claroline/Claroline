@@ -6,9 +6,9 @@ import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
-import {route} from '#/main/community/routing'
+import {route} from '#/main/community/user/routing'
 import {User as UserType} from '#/main/community/prop-types'
-import {UserCard} from '#/main/core/user/components/card'
+import {UserCard} from '#/main/community/user/components/card'
 
 const UsersDisplay = (props) => {
   if (!isEmpty(props.data)) {

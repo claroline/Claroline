@@ -10,7 +10,7 @@ import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {MODAL_GROUPS} from '#/main/community/modals/groups'
 
 const GroupsFilter = (props) =>
-  <span className="data-filter role-filter">
+  <span className="data-filter group-filter">
     {props.search}
 
     <Button

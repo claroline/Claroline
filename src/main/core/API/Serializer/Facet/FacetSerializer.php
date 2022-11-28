@@ -73,7 +73,7 @@ class FacetSerializer
         $this->sipe('meta.main', 'setMain', $data, $facet);
         $this->sipe('display.creation', 'setForceCreationForm', $data, $facet);
 
-        if (isset($data['sections']) && in_array(Options::DEEP_DESERIALIZE, $options)) {
+        if (isset($data['sections']) && in_array(Options::IS_RECURSIVE, $options)) {
             $facet->resetPanelFacets();
 
             foreach ($data['sections'] as $section) {

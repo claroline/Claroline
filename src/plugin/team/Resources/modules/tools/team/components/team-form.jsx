@@ -7,7 +7,7 @@ import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
 
-import {UserList} from '#/main/core/user/components/list'
+import {UserList} from '#/main/community/user/components/list'
 
 import {Team as TeamType} from '#/plugin/team/tools/team/prop-types'
 import {selectors} from '#/plugin/team/tools/team/store'

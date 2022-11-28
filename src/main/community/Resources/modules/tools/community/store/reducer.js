@@ -1,34 +1,30 @@
-import {makeInstanceAction} from '#/main/app/store/actions'
 import {makeReducer, combineReducers} from '#/main/app/store/reducer'
-import {makeFormReducer} from '#/main/app/content/form/store/reducer'
+import {makeInstanceAction} from '#/main/app/store/actions'
 
+import {FORM_SUBMIT_SUCCESS} from '#/main/app/content/form/store'
 import {TOOL_LOAD} from '#/main/core/tool/store/actions'
+import {selectors as parametersSelectors} from '#/main/core/tool/modals/parameters/store'
 
-import {selectors} from '#/main/community/tools/community/store/selectors'
 import {reducer as pendingReducer} from '#/main/community/tools/community/pending/store/reducer'
 import {reducer as usersReducer} from '#/main/community/tools/community/user/store/reducer'
 import {reducer as groupsReducer} from '#/main/community/tools/community/group/store/reducer'
 import {reducer as rolesReducer} from '#/main/community/tools/community/role/store/reducer'
+import {reducer as organizationReducer} from '#/main/community/tools/community/organization/store/reducer'
+import {reducer as profileReducer} from '#/main/community/tools/community/profile/store/reducer'
+
+import {selectors} from '#/main/community/tools/community/store/selectors'
 
 const reducer = combineReducers({
+  parameters: makeReducer({}, {
+    [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: (state, action) => action.toolData.parameters,
+    [makeInstanceAction(FORM_SUBMIT_SUCCESS, parametersSelectors.STORE_NAME)]: (state, action) => action.updatedData.parameters
+  }),
   users: usersReducer,
   groups: groupsReducer,
   roles: rolesReducer,
-  pending: pendingReducer,
-  parameters: makeFormReducer(selectors.STORE_NAME + '.parameters', {}, {
-    originalData: makeReducer({}, {
-      [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: (state, action) => action.context.data
-    }),
-    data: makeReducer({}, {
-      [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: (state, action) => action.context.data
-    }),
-    initialData: makeReducer({}, {
-      [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: (state, action) => action.context.data
-    })
-  }),
-  restrictions: makeReducer({}, {
-    [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: (state, action) => action.toolData.restrictions || []
-  })
+  organizations: organizationReducer,
+  profile: profileReducer,
+  pending: pendingReducer
 })
 
 export {

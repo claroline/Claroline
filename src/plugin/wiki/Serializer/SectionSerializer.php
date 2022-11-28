@@ -5,9 +5,9 @@ namespace Icap\WikiBundle\Serializer;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CommunityBundle\Repository\UserRepository;
 use Claroline\CommunityBundle\Serializer\UserSerializer;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Repository\User\UserRepository;
 use Icap\WikiBundle\Entity\Section;
 use Icap\WikiBundle\Entity\Wiki;
 
@@ -59,7 +59,7 @@ class SectionSerializer
     {
         $author = $section->getAuthor();
         $extraMeta = [];
-        if (in_array(Options::DEEP_SERIALIZE, $options) && !$section->isRoot()) {
+        if (in_array(Options::IS_RECURSIVE, $options) && !$section->isRoot()) {
             $extraMeta = [
                 'new' => $isNew,
                 'parent' => $section->getParent()->getUuid(),

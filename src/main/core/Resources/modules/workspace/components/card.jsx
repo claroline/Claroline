@@ -18,7 +18,7 @@ const WorkspaceCard = props =>
     })}
     id={props.data.id}
     poster={props.data.thumbnail ? asset(props.data.thumbnail) : null}
-    icon="fa fa-book"
+    icon="fa fa-fw fa-book"
     title={props.data.name}
     subtitle={props.data.code}
     flags={[

@@ -14,9 +14,9 @@ namespace Claroline\CommunityBundle\Subscriber\Tool;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\CommunityBundle\Serializer\ProfileSerializer;
 use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
-use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Event\CatalogEvents\ToolEvents;
+use Claroline\CoreBundle\Event\Tool\ConfigureToolEvent;
 use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 use Claroline\CoreBundle\Manager\UserManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -51,7 +51,6 @@ class CommunitySubscriber implements EventSubscriberInterface
         return [
             ToolEvents::getEventName(ToolEvents::OPEN, Tool::DESKTOP, static::NAME) => 'onOpen',
             ToolEvents::getEventName(ToolEvents::OPEN, Tool::WORKSPACE, static::NAME) => 'onOpen',
-            ToolEvents::getEventName(ToolEvents::OPEN, Tool::ADMINISTRATION, static::NAME) => 'onOpenAdministration',
         ];
     }
 
@@ -59,25 +58,29 @@ class CommunitySubscriber implements EventSubscriberInterface
     {
         $event->setData([
             'profile' => $this->profileSerializer->serialize(),
-            'parameters' => $this->parametersSerializer->serialize()['profile'],
+            'parameters' => $this->parametersSerializer->serialize(),
             'usersLimitReached' => $this->userManager->hasReachedLimit(),
         ]);
 
         $event->stopPropagation();
     }
 
-    public function onOpenAdministration(OpenToolEvent $event)
+    public function onDesktopConfigure(ConfigureToolEvent $event)
     {
-        $event->setData([
-            // todo : put it in the async load of form
-            'parameters' => $this->parametersSerializer->serialize(),
-            'profile' => $this->profileSerializer->serialize(),
-            'platformRoles' => $this->finder->search(Role::class, [
-                'filters' => ['type' => Role::PLATFORM_ROLE],
-            ]),
-            'usersLimitReached' => $this->userManager->hasReachedLimit(),
-        ]);
+        $parameters = $event->getParameters();
+        if (isset($parameters['parameters'])) {
+            if (!empty($event->getWorkspace())) {
 
-        $event->stopPropagation();
+            } else {
+
+            }
+
+            // send updated data to the caller
+            $event->setData([
+                'parameters' => $this->parametersSerializer->serialize(),
+            ]);
+
+            $event->stopPropagation();
+        }
     }
 }

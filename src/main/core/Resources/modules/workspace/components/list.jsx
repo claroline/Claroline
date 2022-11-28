@@ -2,6 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 import merge from 'lodash/merge'
+import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
 import {selectors as securitySelectors} from '#/main/app/security/store'
@@ -20,21 +21,26 @@ const Workspaces = (props) => {
 
   return (
     <ListData
-      name={props.name}
-      fetch={{
-        url: props.url,
-        autoload: true
-      }}
+      primaryAction={(row) => getDefaultAction(row, workspacesRefresher, props.path, props.currentUser)}
+      actions={(rows) => getActions(rows, workspacesRefresher, props.path, props.currentUser).then((actions) => [].concat(actions, props.customActions(rows)))}
       definition={[
         {
           name: 'name',
+          type: 'string',
           label: trans('name'),
           displayed: true,
           primary: true
         }, {
           name: 'code',
+          type: 'string',
           label: trans('code'),
           displayed: true
+        }, {
+          name: 'meta.description',
+          type: 'string',
+          label: trans('description'),
+          sortable: false,
+          options: {long: true}
         }, {
           name: 'meta.created',
           label: trans('creation_date'),
@@ -74,6 +80,12 @@ const Workspaces = (props) => {
           type: 'date',
           displayable: false
         }, {
+          name: 'registration.waitingForRegistration',
+          label: trans('pending'),
+          type: 'boolean',
+          filterable: false,
+          sortable: false
+        }, {
           name: 'registration.selfRegistration',
           label: trans('public_registration'),
           type: 'boolean',
@@ -94,24 +106,29 @@ const Workspaces = (props) => {
           }
         }
       ].concat(props.customDefinition)}
-      card={WorkspaceCard}
-      display={props.display}
 
-      primaryAction={(row) => getDefaultAction(row, workspacesRefresher, props.basePath, props.currentUser)}
-      actions={(rows) => getActions(rows, workspacesRefresher, props.basePath, props.currentUser)}
+      {...omit(props, 'path', 'url', 'autoload', 'customDefinition', 'refresher', 'invalidate')}
+
+      name={props.name}
+      fetch={{
+        url: props.url,
+        autoload: props.autoload
+      }}
+      card={WorkspaceCard}
     />
   )
 }
 
 Workspaces.propTypes = {
-  basePath: T.string,
+  path: T.string,
   currentUser: T.object,
   name: T.string.isRequired,
-  model: T.bool,
   url: T.oneOfType([T.string, T.array]).isRequired,
+  autoload: T.bool,
   customDefinition: T.arrayOf(T.shape({
-    // TODO : data list prop types
+    // data list prop types
   })),
+  customActions: T.func,
   display: T.object,
   invalidate: T.func.isRequired,
   refresher: T.shape({
@@ -122,9 +139,9 @@ Workspaces.propTypes = {
 }
 
 Workspaces.defaultProps = {
-  basePath: '',
+  autoload: true,
   customDefinition: [],
-  model: false
+  customActions: () => []
 }
 
 const WorkspaceList = connect(

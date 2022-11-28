@@ -16,9 +16,21 @@ use Claroline\AppBundle\API\Serializer\SerializerInterface;
 // todo : should be broken in multiple files.
 final class Options
 {
+    /**
+     * @deprecated use SerializerInterface::SERIALIZE_LIST
+     */
     const SERIALIZE_LIST = SerializerInterface::SERIALIZE_LIST;
+    /**
+     * @deprecated use SerializerInterface::SERIALIZE_MINIMAL
+     */
     const SERIALIZE_MINIMAL = SerializerInterface::SERIALIZE_MINIMAL;
+    /**
+     * @deprecated use SerializerInterface::ABSOLUTE_URL
+     */
     const ABSOLUTE_URL = SerializerInterface::ABSOLUTE_URL;
+    /**
+     * @deprecated use SerializerInterface::REFRESH_UUID
+     */
     const REFRESH_UUID = SerializerInterface::REFRESH_UUID;
 
     /* SPECIFIC SERIALIZER OPTIONS */
@@ -43,7 +55,9 @@ final class Options
     const VALIDATE_FACET = 'validate_facet';
     const REGISTRATION = 'registration';
 
-    //for workspace
+    /**
+     * @deprecated
+     */
     const WORKSPACE_VALIDATE_ROLES = 'workspace_validate_roles';
     // make created workspace a model
     const AS_MODEL = 'as_model';
@@ -53,11 +67,11 @@ final class Options
     //for role
     const SERIALIZE_ROLE_TOOLS_RIGHTS = 'serialize_role_tools_rights';
 
-    //for serialize, do we want to (de)serialize objects in subtrees ?
-    const DEEP_SERIALIZE = 'deep_serialize';
-    const DEEP_DESERIALIZE = 'deep_deserialize';
-
-    //for resource node
+    /**
+     * for resource node.
+     *
+     * @deprecated
+     */
     const NO_RIGHTS = 'no_rights';
 
     // for transfer tool

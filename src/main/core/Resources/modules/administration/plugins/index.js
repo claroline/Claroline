@@ -5,6 +5,5 @@ import {PluginsMenu} from '#/main/core/administration/plugins/components/menu'
 export default {
   component: PluginsTool,
   menu: PluginsMenu,
-  store: reducer,
-  styles: ['claroline-distribution-main-core-administration-plugins']
+  store: reducer
 }
