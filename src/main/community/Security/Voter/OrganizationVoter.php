@@ -34,7 +34,7 @@ class OrganizationVoter extends AbstractVoter
             return VoterInterface::ACCESS_GRANTED;
         }
 
-        if ($this->hasAdminToolAccess($token, 'community')) {
+        if ($this->isToolGranted('EDIT', 'community')) {
             return VoterInterface::ACCESS_GRANTED;
         }
 

@@ -1,6 +1,6 @@
 import {trans} from '#/main/app/intl'
-import {UserCard} from '#/main/core/user/components/card'
-import {route} from '#/main/community/routing'
+import {UserCard} from '#/main/community/user/components/card'
+import {route} from '#/main/community/user/routing'
 
 export default {
   name: 'user',

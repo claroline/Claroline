@@ -2,8 +2,6 @@
   "styles": {
     "entry": {
       "administration-parameters": "administration/parameters.less",
-      "administration-plugins": "administration/plugins.less",
-      "theme-management": "tools/theme-management.less",
       "swagger": "swagger/index.less"
     }
   }

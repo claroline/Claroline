@@ -1,4 +1,4 @@
-import React from 'react'
+import {createElement} from 'react'
 
 import {trans} from '#/main/app/intl/translation'
 import {chain, string} from '#/main/app/data/types/validators'
@@ -17,11 +17,7 @@ const dataType = {
   },
   // nothing special to do
   parse: (display) => display,
-  render: (raw) => {
-    const htmlRendered = React.createElement(ContentHtml, {}, raw)
-
-    return htmlRendered
-  },
+  render: (raw) => createElement(ContentHtml, {}, raw),
   validate: (value, options) => chain(value, options, [string]),
   components: {
     table: HtmlCell,

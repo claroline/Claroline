@@ -26,28 +26,33 @@ class CryptographyManager
 
     public function generatePair()
     {
-        $config = [
-            'digest_alg' => 'sha512',
-            'private_key_bits' => 4096,
-            'private_key_type' => OPENSSL_KEYTYPE_RSA,
-        ];
+        try {
+            $config = [
+                'digest_alg' => 'sha512',
+                'private_key_bits' => 4096,
+                'private_key_type' => OPENSSL_KEYTYPE_RSA,
+            ];
 
-        $res = openssl_pkey_new($config);
+            $res = openssl_pkey_new($config);
 
-        // Extract the private key from $res to $privKey
-        $privKey = '';
-        openssl_pkey_export($res, $privKey);
-        // Extract the public key from $res to $pubKey
-        $pubKey = openssl_pkey_get_details($res);
-        $pubKey = $pubKey['key'];
+            // Extract the private key from $res to $privKey
+            $privKey = '';
+            openssl_pkey_export($res, $privKey);
+            // Extract the public key from $res to $pubKey
+            $pubKey = openssl_pkey_get_details($res);
+            $pubKey = $pubKey['key'];
 
-        $crypto = new CryptographicKey();
-        $crypto->setPublicKeyParam($pubKey);
-        $crypto->setPrivateKeyParam($privKey);
+            $crypto = new CryptographicKey();
+            $crypto->setPublicKeyParam($pubKey);
+            $crypto->setPrivateKeyParam($privKey);
 
-        $this->om->persist($crypto);
-        $this->om->flush();
+            $this->om->persist($crypto);
+            $this->om->flush();
 
-        return $crypto;
+            return $crypto;
+        } catch (\Exception $e) {
+            // do something more complex
+            return null;
+        }
     }
 }

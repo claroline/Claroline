@@ -201,7 +201,7 @@ class ResourceNodeSerializer
         $this->sipe('poster', 'setPoster', $data, $resourceNode);
         $this->sipe('thumbnail', 'setThumbnail', $data, $resourceNode);
 
-        if (!in_array(Options::REFRESH_UUID, $options)) {
+        if (!in_array(SerializerInterface::REFRESH_UUID, $options)) {
             $this->sipe('id', 'setUuid', $data, $resourceNode);
             $this->sipe('slug', 'setSlug', $data, $resourceNode);
         } else {

@@ -6,13 +6,13 @@ import {Routes} from '#/main/app/router'
 import {constants as toolConstants} from '#/main/core/tool/constants'
 import {getToolBreadcrumb, showToolBreadcrumb} from '#/main/core/tool/utils'
 
-import {User as UserType} from '#/main/community/prop-types'
 import {Profile} from '#/main/community/profile/containers/main'
-import {UserTab} from '#/main/community/tools/community/user/containers/tab'
-import {GroupTab} from '#/main/community/tools/community/group/containers/tab'
-import {RoleTab} from '#/main/community/tools/community/role/containers/tab'
-import {ParametersTab} from '#/main/community/tools/community/parameters/containers/tab'
-import {PendingTab} from '#/main/community/tools/community/pending/containers/tab'
+import {UserMain} from '#/main/community/tools/community/user/containers/main'
+import {GroupMain} from '#/main/community/tools/community/group/containers/main'
+import {RoleMain} from '#/main/community/tools/community/role/containers/main'
+import {PendingMain} from '#/main/community/tools/community/pending/containers/main'
+import {ProfileMain} from '#/main/community/tools/community/profile/containers/main'
+import {OrganizationMain} from '#/main/community/tools/community/organization/containers/main'
 
 const CommunityTool = (props) =>
   <Routes
@@ -24,24 +24,33 @@ const CommunityTool = (props) =>
     routes={[
       {
         path: '/users',
-        component: UserTab,
+        component: UserMain,
         disabled: props.contextType === toolConstants.TOOL_WORKSPACE && get(props.workspace, 'meta.model')
       }, {
         path: '/groups',
-        component: GroupTab,
-        disabled:  props.contextType !== toolConstants.TOOL_WORKSPACE && get(props.workspace, 'meta.model')
+        component: GroupMain,
+        disabled:  props.contextType === toolConstants.TOOL_WORKSPACE && get(props.workspace, 'meta.model')
       }, {
         path: '/roles',
-        component: RoleTab,
-        disabled: !props.canAdministrate || props.contextType !== toolConstants.TOOL_WORKSPACE
+        component: RoleMain,
+        disabled: !props.canAdministrate
+      }, {
+        path: '/organizations',
+        component: OrganizationMain,
+        disabled: props.contextType !== toolConstants.TOOL_DESKTOP || !props.canAdministrate
       }, {
         path: '/pending',
-        component: PendingTab,
+        component: PendingMain,
         disabled: !props.canAdministrate || props.contextType !== toolConstants.TOOL_WORKSPACE || !get(props.workspace, 'registration.selfRegistration') || !get(props.workspace, 'registration.validation')
-      }, {
+      }, /*{
         path: '/parameters',
-        component: ParametersTab,
-        disabled: !props.canAdministrate || props.contextType !== toolConstants.TOOL_WORKSPACE
+        component: ParametersMain,
+        disabled: !props.canAdministrate,
+        exact: true
+      }, */{
+        path: '/parameters/profile',
+        component: ProfileMain,
+        disabled: props.contextType !== toolConstants.TOOL_DESKTOP || !props.canAdministrate
       }, {
         path: '/profile/:username',
         render(routerProps) {
@@ -62,9 +71,7 @@ CommunityTool.propTypes = {
   contextType: T.string,
   contextData: T.object,
   path: T.string.isRequired,
-  currentUser: T.shape(UserType.propTypes),
   workspace: T.object,
-  loadUser: T.func.isRequired,
   canAdministrate: T.bool.isRequired
 }
 

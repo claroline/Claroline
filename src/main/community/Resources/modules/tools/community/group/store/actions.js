@@ -3,46 +3,82 @@ import {API_REQUEST, url} from '#/main/app/api'
 import {actions as listActions} from '#/main/app/content/list/store'
 import {actions as formActions} from '#/main/app/content/form/store'
 
-import {selectors} from '#/main/community/tools/community/store/selectors'
+import {selectors} from '#/main/community/tools/community/group/store/selectors'
+import {selectors as baseSelectors} from '#/main/community/tools/community/store/selectors'
+import {Group as GroupTypes} from '#/main/community/group/prop-types'
 
 export const actions = {}
 
-actions.open = (formName, id = null, defaultProps) => {
-  if (id) {
-    return {
-      [API_REQUEST]: {
-        url: ['apiv2_group_get', {id}],
-        success: (response, dispatch) => dispatch(formActions.resetForm(formName, response, false))
-      }
-    }
-  } else {
-    return formActions.resetForm(formName, defaultProps, true)
+actions.new = () => formActions.resetForm(selectors.FORM_NAME, GroupTypes.defaultProps, true)
+
+actions.open = (id, reload = false) => (dispatch) => {
+  if (!reload) {
+    // remove previous group if any to avoid displaying it while loading
+    dispatch(formActions.resetForm(selectors.FORM_NAME, {}, false))
   }
+
+  // invalidate embedded lists
+  dispatch(listActions.invalidateData(selectors.FORM_NAME+'.users'))
+  dispatch(listActions.invalidateData(selectors.FORM_NAME+'.organizations'))
+  dispatch(listActions.invalidateData(selectors.FORM_NAME+'.roles'))
+
+  return dispatch({
+    [API_REQUEST]: {
+      url: ['apiv2_group_get', {id}],
+      success: (response) => dispatch(formActions.resetForm(selectors.FORM_NAME, response, false))
+    }
+  })
 }
 
-actions.addGroupsToRole = (role, groups)  => ({
+actions.addGroupsToRole = (role, groups) => (dispatch) => dispatch({
   [API_REQUEST]: {
     url: url(['apiv2_role_add_groups', {id: role.id}], {ids: groups.map(group => group.id)}),
     request: {
       method: 'PATCH'
     },
-    success: (data, dispatch) => {
-      dispatch(listActions.invalidateData(selectors.STORE_NAME + '.groups.list'))
-      dispatch(listActions.invalidateData(selectors.STORE_NAME + '.users.list'))
-      dispatch(listActions.invalidateData(selectors.STORE_NAME + '.groups.current.roles'))
+    success: () => {
+      dispatch(listActions.invalidateData(selectors.LIST_NAME))
+      dispatch(listActions.invalidateData(baseSelectors.STORE_NAME + '.users.list'))
+      dispatch(listActions.invalidateData(selectors.FORM_NAME + '.roles'))
     }
   }
 })
 
-actions.unregister = (groups, workspace) => ({
+actions.unregister = (groups, workspace) => (dispatch) => dispatch({
   [API_REQUEST]: {
     url: url(['apiv2_workspace_unregister_groups', {id: workspace.id}]) + '?'+ groups.map(group => 'ids[]='+group.id).join('&'),
     request: {
       method: 'DELETE'
     },
-    success: (data, dispatch) => {
-      dispatch(listActions.invalidateData(selectors.STORE_NAME + '.groups.list'))
-      dispatch(listActions.invalidateData(selectors.STORE_NAME + '.users.list'))
+    success: () => {
+      dispatch(listActions.invalidateData(selectors.LIST_NAME))
+      dispatch(listActions.invalidateData(baseSelectors.STORE_NAME + '.users.list'))
+    }
+  }
+})
+
+actions.addUsers = (id, users) => (dispatch) => dispatch({
+  [API_REQUEST]: {
+    url: url(['apiv2_group_add_users', {id: id}], {ids: users}),
+    request: {
+      method: 'PATCH'
+    },
+    success: () => {
+      dispatch(listActions.invalidateData(selectors.LIST_NAME))
+      dispatch(listActions.invalidateData(selectors.FORM_NAME+'.users'))
+    }
+  }
+})
+
+actions.addRoles = (id, roles) => (dispatch) => dispatch({
+  [API_REQUEST]: {
+    url: url(['apiv2_group_add_roles', {id: id}], {ids: roles}),
+    request: {
+      method: 'PATCH'
+    },
+    success: () => {
+      dispatch(listActions.invalidateData(selectors.LIST_NAME))
+      dispatch(listActions.invalidateData(selectors.FORM_NAME+'.roles'))
     }
   }
 })

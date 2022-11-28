@@ -20,6 +20,7 @@ services:
         arguments:
             - '@security.token_storage'
             - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - '@Claroline\CoreBundle\Manager\FileManager'
 
     Claroline\CommunityBundle\Subscriber\Crud\OrganizationSubscriber:
         arguments:
@@ -28,6 +29,7 @@ services:
             - '@Claroline\CoreBundle\Manager\CryptographyManager'
             - '@Claroline\AppBundle\API\Crud'
             - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - '@Claroline\CoreBundle\Manager\FileManager'
 
     Claroline\CommunityBundle\Subscriber\Crud\RoleSubscriber:
         arguments:

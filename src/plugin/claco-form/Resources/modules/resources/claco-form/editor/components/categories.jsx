@@ -68,7 +68,7 @@ const EditorCategories = props =>
           name: 'details.notify_edition',
           type: 'boolean',
           alias: 'notify_edition',
-          label: trans('edition', {}, 'clacoform'),
+          label: trans('edition'),
           displayed: true,
           sortable: false
         }, {

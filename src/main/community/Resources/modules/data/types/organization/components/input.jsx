@@ -7,7 +7,7 @@ import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
-import {OrganizationCard} from '#/main/core/user/data/components/organization-card'
+import {OrganizationCard} from '#/main/community/organization/components/card'
 import {Organization as OrganizationTypes} from '#/main/community/prop-types'
 import {MODAL_ORGANIZATIONS} from '#/main/community/modals/organizations'
 import {OrganizationChoice} from '#/main/community/data/types/organization/components/choice'

@@ -22,7 +22,7 @@ const CurrentUser = (props) =>
         {props.currentUser.name}
       </h3>
 
-      {getPlatformRoles(props.currentUser.roles).join(', ')}
+      {getPlatformRoles(props.currentUser.roles).map(role => trans(role.translationKey)).join(', ')}
     </div>
   </div>
 

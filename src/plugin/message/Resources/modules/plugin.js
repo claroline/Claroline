@@ -19,8 +19,14 @@ registry.add('ClarolineMessageBundle', {
 
   actions: {
     user: {
-      'add-contact': () => { return import(/* webpackChunkName: "message-action-user-send-message" */ '#/plugin/message/user/actions/add-contact') },
-      'send-message': () => { return import(/* webpackChunkName: "message-action-user-send-message" */ '#/plugin/message/user/actions/send-message') }
+      'add-contact': () => { return import(/* webpackChunkName: "message-action-user-send-message" */ '#/plugin/message/actions/user/add-contact') },
+      'send-message': () => { return import(/* webpackChunkName: "message-action-user-send-message" */ '#/plugin/message/actions/user/send-message') }
+    },
+    group: {
+      'send-message': () => { return import(/* webpackChunkName: "message-action-group-send-message" */ '#/plugin/message/actions/group/send-message') }
+    },
+    workspace: {
+      'send-message': () => { return import(/* webpackChunkName: "message-action-workspace-send-message" */ '#/plugin/message/actions/workspace/send-message') }
     }
   }
 })

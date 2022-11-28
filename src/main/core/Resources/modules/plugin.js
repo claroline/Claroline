@@ -40,29 +40,28 @@ registry.add('ClarolineCoreBundle', {
    * Provides actions for base Claroline objects.
    */
   actions: {
-    administration: {
-
-    },
+    administration: {},
+    desktop: {},
 
     tool: {
-      'configure': () => { return import(/* webpackChunkName: "core-action-tool-configure" */ '#/main/core/tool/actions/configure') },
-      'rights'   : () => { return import(/* webpackChunkName: "core-action-tool-rights" */    '#/main/core/tool/actions/rights') }
+      'configure': () => { return import(/* webpackChunkName: "core-action-tool-configure" */ '#/main/core/actions/tool/configure') },
+      'rights'   : () => { return import(/* webpackChunkName: "core-action-tool-rights" */    '#/main/core/actions/tool/rights') }
     },
 
     resource: {
       // all resources
-      'about'    : () => { return import(/* webpackChunkName: "core-action-resource-about" */       '#/main/core/resource/actions/about') },
-      'configure': () => { return import(/* webpackChunkName: "core-action-resource-configure" */   '#/main/core/resource/actions/configure') },
-      'copy'     : () => { return import(/* webpackChunkName: "core-action-resource-copy" */        '#/main/core/resource/actions/copy') },
-      'delete'   : () => { return import(/* webpackChunkName: "core-action-resource-delete" */      '#/main/core/resource/actions/delete') },
-      'edit'     : () => { return import(/* webpackChunkName: "core-action-resource-edit" */        '#/main/core/resource/actions/edit') },
-      'export'   : () => { return import(/* webpackChunkName: "core-action-resource-export" */      '#/main/core/resource/actions/export') },
-      'move'     : () => { return import(/* webpackChunkName: "core-action-resource-move" */        '#/main/core/resource/actions/move') },
-      'open'     : () => { return import(/* webpackChunkName: "core-action-resource-open" */        '#/main/core/resource/actions/open') },
-      'publish'  : () => { return import(/* webpackChunkName: "core-action-resource-publish" */     '#/main/core/resource/actions/publish') },
-      'restore'  : () => { return import(/* webpackChunkName: "core-action-resource-restore" */     '#/main/core/resource/actions/restore') },
-      'rights'   : () => { return import(/* webpackChunkName: "core-action-resource-rights" */      '#/main/core/resource/actions/rights') },
-      'unpublish': () => { return import(/* webpackChunkName: "core-action-resource-unpublish" */   '#/main/core/resource/actions/unpublish') },
+      'about'    : () => { return import(/* webpackChunkName: "core-action-resource-about" */       '#/main/core/actions/resource/about') },
+      'configure': () => { return import(/* webpackChunkName: "core-action-resource-configure" */   '#/main/core/actions/resource/configure') },
+      'copy'     : () => { return import(/* webpackChunkName: "core-action-resource-copy" */        '#/main/core/actions/resource/copy') },
+      'delete'   : () => { return import(/* webpackChunkName: "core-action-resource-delete" */      '#/main/core/actions/resource/delete') },
+      'edit'     : () => { return import(/* webpackChunkName: "core-action-resource-edit" */        '#/main/core/actions/resource/edit') },
+      'export'   : () => { return import(/* webpackChunkName: "core-action-resource-export" */      '#/main/core/actions/resource/export') },
+      'move'     : () => { return import(/* webpackChunkName: "core-action-resource-move" */        '#/main/core/actions/resource/move') },
+      'open'     : () => { return import(/* webpackChunkName: "core-action-resource-open" */        '#/main/core/actions/resource/open') },
+      'publish'  : () => { return import(/* webpackChunkName: "core-action-resource-publish" */     '#/main/core/actions/resource/publish') },
+      'restore'  : () => { return import(/* webpackChunkName: "core-action-resource-restore" */     '#/main/core/actions/resource/restore') },
+      'rights'   : () => { return import(/* webpackChunkName: "core-action-resource-rights" */      '#/main/core/actions/resource/rights') },
+      'unpublish': () => { return import(/* webpackChunkName: "core-action-resource-unpublish" */   '#/main/core/actions/resource/unpublish') },
 
       // directory resource
       'add'       : () => { return import(/* webpackChunkName: "core-action-resource-add" */       '#/main/core/resources/directory/actions/add') },
@@ -74,19 +73,19 @@ registry.add('ClarolineCoreBundle', {
     },
 
     workspace: {
-      'about'    : () => { return import(/* webpackChunkName: "core-action-workspace-about" */     '#/main/core/workspace/actions/about') },
-      'archive'  : () => { return import(/* webpackChunkName: "core-action-workspace-archive" */   '#/main/core/workspace/actions/archive') },
-      'configure': () => { return import(/* webpackChunkName: "core-action-workspace-configure" */ '#/main/core/workspace/actions/configure') },
-      'copy'     : () => { return import(/* webpackChunkName: "core-action-workspace-copy" */      '#/main/core/workspace/actions/copy') },
-      'delete'   : () => { return import(/* webpackChunkName: "core-action-workspace-delete" */    '#/main/core/workspace/actions/delete') },
-      'export'   : () => { return import(/* webpackChunkName: "core-action-workspace-export" */    '#/main/core/workspace/actions/export') },
-      'open'     : () => { return import(/* webpackChunkName: "core-action-workspace-open" */      '#/main/core/workspace/actions/open') },
-      'unarchive': () => { return import(/* webpackChunkName: "core-action-workspace-unarchive" */ '#/main/core/workspace/actions/unarchive') }
+      'about'    : () => { return import(/* webpackChunkName: "core-action-workspace-about" */     '#/main/core/actions/workspace/about') },
+      'archive'  : () => { return import(/* webpackChunkName: "core-action-workspace-archive" */   '#/main/core/actions/workspace/archive') },
+      'configure': () => { return import(/* webpackChunkName: "core-action-workspace-configure" */ '#/main/core/actions/workspace/configure') },
+      'copy'     : () => { return import(/* webpackChunkName: "core-action-workspace-copy" */      '#/main/core/actions/workspace/copy') },
+      'delete'   : () => { return import(/* webpackChunkName: "core-action-workspace-delete" */    '#/main/core/actions/workspace/delete') },
+      'export'   : () => { return import(/* webpackChunkName: "core-action-workspace-export" */    '#/main/core/actions/workspace/export') },
+      'open'     : () => { return import(/* webpackChunkName: "core-action-workspace-open" */      '#/main/core/actions/workspace/open') },
+      'unarchive': () => { return import(/* webpackChunkName: "core-action-workspace-unarchive" */ '#/main/core/actions/workspace/unarchive') }
     },
 
     user: {
-      'ws-disable': () => { return import(/* webpackChunkName: "core-action-user-ws-disable" */ '#/main/core/user/actions/ws-disable') },
-      'ws-enable' : () => { return import(/* webpackChunkName: "core-action-user-ws-enable" */  '#/main/core/user/actions/ws-enable') }
+      'ws-disable': () => { return import(/* webpackChunkName: "core-action-user-ws-disable" */ '#/main/core/actions/user/ws-disable') },
+      'ws-enable' : () => { return import(/* webpackChunkName: "core-action-user-ws-enable" */  '#/main/core/actions/user/ws-enable') }
     }
   },
 
@@ -134,8 +133,7 @@ registry.add('ClarolineCoreBundle', {
   widgets: {
     'list'    : () => { return import(/* webpackChunkName: "core-widget-list" */     '#/main/core/widget/types/list') },
     'simple'  : () => { return import(/* webpackChunkName: "core-widget-simple" */   '#/main/core/widget/types/simple') },
-    'resource': () => { return import(/* webpackChunkName: "core-widget-resource" */ '#/main/core/widget/types/resource') },
-    'profile' : () => { return import(/* webpackChunkName: "core-widget-profile" */  '#/main/core/widget/types/profile') }
+    'resource': () => { return import(/* webpackChunkName: "core-widget-resource" */ '#/main/core/widget/types/resource') }
   },
 
   data: {

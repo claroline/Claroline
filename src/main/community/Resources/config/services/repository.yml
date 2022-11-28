@@ -1,0 +1,10 @@
+services:
+    _instanceof:
+        Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository:
+            autowire: false
+            tags: [ doctrine.repository_service ]
+
+    Claroline\CommunityBundle\Repository\UserRepository:
+        arguments:
+            - '@Doctrine\Persistence\ManagerRegistry'
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'

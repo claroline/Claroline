@@ -18,7 +18,6 @@ use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Manager\File\TempFileManager;
 use Claroline\AuthenticationBundle\Messenger\Stamp\AuthenticationStamp;
 use Claroline\CoreBundle\Controller\APINew\Model\HasGroupsTrait;
-use Claroline\CoreBundle\Controller\APINew\Model\HasOrganizationsTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasRolesTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasUsersTrait;
 use Claroline\CoreBundle\Entity\Organization\Organization;
@@ -52,7 +51,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class WorkspaceController extends AbstractCrudController
 {
     use HasGroupsTrait;
-    use HasOrganizationsTrait;
     use HasRolesTrait;
     use HasUsersTrait;
     use PermissionCheckerTrait;

@@ -25,6 +25,7 @@ import {ListEmpty} from '#/main/app/content/list/components/empty'
 import {ListHeader} from '#/main/app/content/list/components/header'
 
 import {flattenTree} from '#/main/app/content/tree/utils'
+import {ContentLoader} from '#/main/app/content/components/loader'
 
 // todo there are some big c/c from data-list
 // todo maybe make it a list view
@@ -192,11 +193,20 @@ class TreeData extends Component {
     return (
       <div className="data-list">
         <ListHeader
+          id={this.props.id}
           disabled={0 === this.props.totalResults}
           filters={filtersTool}
         />
 
-        {0 < this.props.totalResults &&
+        {this.props.loading &&
+          <ContentLoader />
+        }
+
+        {(!this.props.loading && 0 === this.props.totalResults) &&
+          <ListEmpty hasFilters={this.props.filters && 0 < this.props.filters.current.length} />
+        }
+
+        {(!this.props.loading && 0 < this.props.totalResults) &&
           <div className="data-tree">
             <div className="data-tree-header">
               <Button
@@ -257,16 +267,15 @@ class TreeData extends Component {
             </ul>
           </div>
         }
-
-        {0 === this.props.totalResults &&
-          <ListEmpty hasFilters={this.props.filters && 0 < this.props.filters.current.length} />
-        }
       </div>
     )
   }
 }
 
 TreeData.propTypes = {
+  id: T.string.isRequired,
+  loading: T.bool,
+
   /**
    * The data tree to display.
    */

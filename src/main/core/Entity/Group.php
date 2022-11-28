@@ -13,20 +13,28 @@ namespace Claroline\CoreBundle\Entity;
 
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
-use Claroline\CoreBundle\Entity\Model\OrganizationsTrait;
+use Claroline\AppBundle\Entity\Meta\Description;
+use Claroline\AppBundle\Entity\Meta\Poster;
+use Claroline\AppBundle\Entity\Meta\Thumbnail;
+use Claroline\AppBundle\Entity\Restriction\Locked;
+use Claroline\CommunityBundle\Model\HasOrganizations;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\User\GroupRepository")
+ * @ORM\Entity(repositoryClass="Claroline\CommunityBundle\Repository\GroupRepository")
  * @ORM\Table(name="claro_group")
  */
 class Group extends AbstractRoleSubject
 {
-    use OrganizationsTrait;
     use Id;
     use Uuid;
+    use Description;
+    use Poster;
+    use Thumbnail;
+    use Locked;
+    use HasOrganizations;
 
     /**
      * @ORM\Column(unique=true)
@@ -34,7 +42,7 @@ class Group extends AbstractRoleSubject
      *
      * @var string
      */
-    protected $name;
+    private $name;
 
     /**
      * @ORM\ManyToMany(
@@ -43,7 +51,7 @@ class Group extends AbstractRoleSubject
      *     mappedBy="groups"
      * )
      */
-    protected $users;
+    private $users;
 
     /**
      * @ORM\ManyToMany(
@@ -63,7 +71,7 @@ class Group extends AbstractRoleSubject
      *     inversedBy="groups"
      * )
      */
-    protected $organizations;
+    private $organizations;
 
     /**
      * @var ArrayCollection
@@ -73,14 +81,7 @@ class Group extends AbstractRoleSubject
      *     inversedBy="groups"
      * )
      */
-    protected $locations;
-
-    /**
-     * @ORM\Column(name="is_read_only", type="boolean")
-     *
-     * @var bool
-     */
-    protected $isReadOnly = false;
+    private $locations;
 
     public function __construct()
     {
@@ -126,7 +127,10 @@ class Group extends AbstractRoleSubject
         return $this->users;
     }
 
-    public function getUserIds()
+    /**
+     * @deprecated
+     */
+    public function getUserIds(): array
     {
         $users = $this->getUsers();
         $userIds = [];
@@ -137,20 +141,6 @@ class Group extends AbstractRoleSubject
         return $userIds;
     }
 
-    public function getPlatformRoles()
-    {
-        $roles = $this->getEntityRoles();
-        $return = [];
-
-        foreach ($roles as $role) {
-            if (Role::WS_ROLE !== $role->getType()) {
-                $return[] = $role;
-            }
-        }
-
-        return $return;
-    }
-
     /**
      * @return ArrayCollection
      */
@@ -159,13 +149,19 @@ class Group extends AbstractRoleSubject
         return $this->locations;
     }
 
+    /**
+     * @deprecated use isLocked()
+     */
     public function isReadOnly(): bool
     {
-        return $this->isReadOnly;
+        return $this->isLocked();
     }
 
+    /**
+     * @deprecated use setLocked()
+     */
     public function setReadOnly(bool $value)
     {
-        $this->isReadOnly = $value;
+        $this->setLocked($value);
     }
 }

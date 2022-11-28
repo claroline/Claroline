@@ -180,7 +180,7 @@ class RoleController
     {
         $data = $this->decodeRequest($request);
 
-        if (isset($data['type']) && 0 < count($data['name'])) {
+        if (!empty($data['type']) && !empty($data['name'])) {
             $this->workspaceManager->removeShortcut($workspace, $role, $data['type'], $data['name']);
         }
         $shortcuts = array_values(array_map(function (Shortcuts $shortcuts) {

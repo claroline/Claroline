@@ -9,7 +9,7 @@ import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
 import {FormData} from '#/main/app/content/form/containers/data'
-import {UserList} from '#/main/core/user/components/list'
+import {UserList} from '#/main/community/user/components/list'
 import {constants as userConst} from '#/main/community/constants'
 
 import {Announcement as AnnouncementTypes} from '#/plugin/announcement/resources/announcement/prop-types'

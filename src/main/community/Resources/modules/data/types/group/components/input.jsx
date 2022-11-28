@@ -7,7 +7,7 @@ import {Button} from '#/main/app/action/components/button'
 import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
-import {GroupCard} from '#/main/core/user/data/components/group-card'
+import {GroupCard} from '#/main/community/group/components/card'
 import {Group as GroupTypes} from '#/main/community/prop-types'
 import {MODAL_GROUPS} from '#/main/community/modals/groups'
 

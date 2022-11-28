@@ -80,6 +80,7 @@ class UserSubscriber implements EventSubscriberInterface
     {
         return [
             Crud::getEventName('create', 'pre', User::class) => 'preCreate',
+            Crud::getEventName('create', 'pre', User::class) => 'postCreate',
             Crud::getEventName('update', 'pre', User::class) => 'preUpdate',
             Crud::getEventName('update', 'post', User::class) => 'postUpdate',
             Crud::getEventName('patch', 'post', User::class) => 'postPatch',
@@ -163,6 +164,24 @@ class UserSubscriber implements EventSubscriberInterface
         $this->om->endFlushSuite();
     }
 
+    public function postCreate(CreateEvent $event): void
+    {
+        /** @var User $user */
+        $user = $event->getObject();
+
+        if ($user->getPoster()) {
+            $this->fileManager->linkFile(User::class, $user->getUuid(), $user->getPoster());
+        }
+
+        if ($user->getThumbnail()) {
+            $this->fileManager->linkFile(User::class, $user->getUuid(), $user->getThumbnail());
+        }
+
+        if ($user->getPicture()) {
+            $this->fileManager->linkFile(User::class, $user->getUuid(), $user->getPicture());
+        }
+    }
+
     public function preUpdate(UpdateEvent $event)
     {
         $oldData = $event->getOldData();
@@ -178,7 +197,30 @@ class UserSubscriber implements EventSubscriberInterface
 
     public function postUpdate(UpdateEvent $event)
     {
+        /** @var User $user */
         $user = $event->getObject();
+        $oldData = $event->getOldData();
+
+        $this->fileManager->updateFile(
+            User::class,
+            $user->getUuid(),
+            $user->getPoster(),
+            !empty($oldData['poster']) ? $oldData['poster'] : null
+        );
+
+        $this->fileManager->updateFile(
+            User::class,
+            $user->getUuid(),
+            $user->getPoster(),
+            !empty($oldData['thumbnail']) ? $oldData['thumbnail'] : null
+        );
+
+        $this->fileManager->updateFile(
+            User::class,
+            $user->getUuid(),
+            $user->getPicture(),
+            !empty($oldData['picture']) ? $oldData['picture'] : null
+        );
 
         if ($user->getPlainpassword()) {
             $this->dispatcher->dispatch(SecurityEvents::NEW_PASSWORD, NewPasswordEvent::class, [$user]);
@@ -244,6 +286,10 @@ class UserSubscriber implements EventSubscriberInterface
 
         if ($user->getPoster()) {
             $this->fileManager->unlinkFile(User::class, $user->getUuid(), $user->getPoster());
+        }
+
+        if ($user->getThumbnail()) {
+            $this->fileManager->unlinkFile(User::class, $user->getUuid(), $user->getThumbnail());
         }
 
         if ($user->getPicture()) {

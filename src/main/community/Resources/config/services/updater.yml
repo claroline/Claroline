@@ -5,3 +5,7 @@ services:
     Claroline\CommunityBundle\Installation\Updater\Updater130500:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
+
+    Claroline\CommunityBundle\Installation\Updater\Updater130700:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'

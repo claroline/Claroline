@@ -3,7 +3,6 @@ import isEmpty from 'lodash/isEmpty'
 import cloneDeep from 'lodash/cloneDeep'
 
 import {trans} from '#/main/app/intl/translation'
-import {hasPermission} from '#/main/app/security/permissions'
 import {param} from '#/main/app/config'
 
 function getMainFacet(facets) {
@@ -73,42 +72,31 @@ function getFormDefaultSections(user, isNew = false) {
           label: trans('email'),
           required: true
         }, {
-          name: 'phone',
-          type: 'string',
-          label: trans('phone')
-        }, {
           name: 'username',
           type: 'username',
           label: trans('username'),
           required: true,
-          displayed: param('community.username'),
-          disabled: !isNew && !hasPermission('administrate', user)
+          displayed: isNew && param('community.username')
         }, {
           name: 'plainPassword',
           type: 'password',
           label: trans('password'),
           displayed: isNew,
           required: true
-        }, {
+        }
+      ]
+    }, {
+      icon: 'fa fa-fw fa-info',
+      title: trans('information'),
+      fields: [
+        {
           name: 'meta.description',
           type: 'html',
-          label: trans('description'),
-          options: {
-            minRows: 5
-          }
+          label: trans('description')
         }, {
-          name: 'meta.locale',
-          type: 'locale',
-          label: trans('language'),
-          required: true,
-          displayed: isNew,
-          options: {
-            onlyEnabled: true
-          }
-        }, {
-          name: 'picture',
-          type: 'image',
-          label: trans('picture')
+          name: 'phone',
+          type: 'string',
+          label: trans('phone')
         }
       ]
     }, {
@@ -116,6 +104,10 @@ function getFormDefaultSections(user, isNew = false) {
       title: trans('display_parameters'),
       fields: [
         {
+          name: 'picture',
+          type: 'image',
+          label: trans('picture')
+        }, {
           name: 'poster',
           label: trans('poster'),
           type: 'image'

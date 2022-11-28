@@ -18,24 +18,49 @@ registry.add('ClarolineCommunityBundle', {
    */
   actions: {
     desktop: {
-      'impersonation': () => { return import(/* webpackChunkName: "community-action-desktop-impersonation" */ '#/main/community/desktop/actions/impersonation') },
+      'view-as': () => { return import(/* webpackChunkName: "community-action-desktop-impersonation" */ '#/main/community/actions/desktop/view-as') },
     },
 
     workspace: {
-      'register-users' : () => { return import(/* webpackChunkName: "community-action-workspace-register-users" */  '#/main/community/workspace/actions/register-users') },
-      'register-groups': () => { return import(/* webpackChunkName: "community-action-workspace-register-groups" */ '#/main/community/workspace/actions/register-groups') },
-      'register-self'  : () => { return import(/* webpackChunkName: "community-action-workspace-register-self" */   '#/main/community/workspace/actions/register-self') },
-      'unregister-self': () => { return import(/* webpackChunkName: "community-action-workspace-unregister-self" */ '#/main/community/workspace/actions/unregister-self') },
-      'view-as'        : () => { return import(/* webpackChunkName: "community-action-workspace-view-as" */         '#/main/community/workspace/actions/view-as') }
+      'register-users' : () => { return import(/* webpackChunkName: "community-action-workspace-register-users" */  '#/main/community/actions/workspace/register-users') },
+      'register-groups': () => { return import(/* webpackChunkName: "community-action-workspace-register-groups" */ '#/main/community/actions/workspace/register-groups') },
+      'register-self'  : () => { return import(/* webpackChunkName: "community-action-workspace-register-self" */   '#/main/community/actions/workspace/register-self') },
+      'unregister-self': () => { return import(/* webpackChunkName: "community-action-workspace-unregister-self" */ '#/main/community/actions/workspace/unregister-self') },
+      'view-as'        : () => { return import(/* webpackChunkName: "community-action-workspace-view-as" */         '#/main/community/actions/workspace/view-as') }
     },
 
     user: {
-      'disable'        : () => { return import(/* webpackChunkName: "community-action-user-disable" */         '#/main/community/user/actions/disable') },
-      'enable'         : () => { return import(/* webpackChunkName: "community-action-user-enable" */          '#/main/community/user/actions/enable') },
-      'password-change': () => { return import(/* webpackChunkName: "community-action-user-password-change" */ '#/main/community/user/actions/password-change') },
-      'password-reset' : () => { return import(/* webpackChunkName: "community-action-user-password-reset" */  '#/main/community/user/actions/password-reset') },
-      'show-as'        : () => { return import(/* webpackChunkName: "community-action-user-show-as" */         '#/main/community/user/actions/show-as') },
-      'show-profile'   : () => { return import(/* webpackChunkName: "community-action-user-show-profile" */    '#/main/community/user/actions/show-profile') }
+      'open'           : () => { return import(/* webpackChunkName: "community-action-user-open" */            '#/main/community/actions/user/open') },
+      'edit'           : () => { return import(/* webpackChunkName: "community-action-user-edit" */            '#/main/community/actions/user/edit') },
+      'disable'        : () => { return import(/* webpackChunkName: "community-action-user-disable" */         '#/main/community/actions/user/disable') },
+      'enable'         : () => { return import(/* webpackChunkName: "community-action-user-enable" */          '#/main/community/actions/user/enable') },
+      'password-change': () => { return import(/* webpackChunkName: "community-action-user-password-change" */ '#/main/community/actions/user/password-change') },
+      'password-reset' : () => { return import(/* webpackChunkName: "community-action-user-password-reset" */  '#/main/community/actions/user/password-reset') },
+      'view-as'        : () => { return import(/* webpackChunkName: "community-action-user-view-as" */         '#/main/community/actions/user/view-as') },
+      'delete'         : () => { return import(/* webpackChunkName: "community-action-user-delete" */          '#/main/community/actions/user/delete') }
+    },
+
+    group: {
+      'about'         : () => { return import(/* webpackChunkName: "community-action-group-about" */          '#/main/community/actions/group/about') },
+      'open'          : () => { return import(/* webpackChunkName: "community-action-group-open" */           '#/main/community/actions/group/open') },
+      'edit'          : () => { return import(/* webpackChunkName: "community-action-group-edit" */           '#/main/community/actions/group/edit') },
+      'password-reset': () => { return import(/* webpackChunkName: "community-action-group-password-reset" */ '#/main/community/actions/group/password-reset') },
+      'delete'        : () => { return import(/* webpackChunkName: "community-action-group-delete" */         '#/main/community/actions/group/delete') }
+    },
+
+    role: {
+      'about'  : () => { return import(/* webpackChunkName: "community-action-role-about" */   '#/main/community/actions/role/about') },
+      'open'   : () => { return import(/* webpackChunkName: "community-action-role-open" */    '#/main/community/actions/role/open') },
+      'edit'   : () => { return import(/* webpackChunkName: "community-action-role-edit" */    '#/main/community/actions/role/edit') },
+      'delete' : () => { return import(/* webpackChunkName: "community-action-role-delete" */  '#/main/community/actions/role/delete') },
+      'view-as': () => { return import(/* webpackChunkName: "community-action-role-view-as" */ '#/main/community/actions/role/view-as') }
+    },
+
+    organization: {
+      'about' : () => { return import(/* webpackChunkName: "community-action-organization-about" */  '#/main/community/actions/organization/about') },
+      'open'  : () => { return import(/* webpackChunkName: "community-action-organization-open" */   '#/main/community/actions/organization/open') },
+      'edit'  : () => { return import(/* webpackChunkName: "community-action-organization-edit" */   '#/main/community/actions/organization/edit') },
+      'delete': () => { return import(/* webpackChunkName: "community-action-organization-delete" */ '#/main/community/actions/organization/delete') }
     }
   },
 
@@ -44,13 +69,6 @@ registry.add('ClarolineCommunityBundle', {
    */
   tools: {
     'community': () => { return import(/* webpackChunkName: "core-tool-users" */ '#/main/community/tools/community') }
-  },
-
-  /**
-   * Provides Administration tools.
-   */
-  administration: {
-    'community': () => { return import(/* webpackChunkName: "core-admin-users" */ '#/main/community/administration/community') }
   },
 
   /**

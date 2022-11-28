@@ -12,12 +12,12 @@ const DataFormProperty = {
     hideLabel: T.bool,
     displayed: T.oneOfType([
       T.bool,
-      T.func // a function that receives the whole form data and returns the new state
+      T.func // a function that receives the whole form data and returns a bool
     ]),
     required: T.bool,
     disabled: T.oneOfType([
       T.bool,
-      T.func // a function that receives the whole form data and returns the new state
+      T.func // a function that receives the whole form data and returns a bool
     ]),
     readOnly: T.bool,
     autoFocus: T.bool,
@@ -43,6 +43,7 @@ const DataFormSection = {
     title: T.string.isRequired,
     primary: T.bool,
     displayed: T.oneOfType([T.bool, T.func]),
+    disabled: T.oneOfType([T.bool, T.func]),
     defaultOpened: T.bool,
     actions: T.arrayOf(T.shape({
       // TODO : action types
@@ -55,7 +56,7 @@ const DataFormSection = {
         ))
       })
     )),
-    component: T.node, // TODO : add warn if component and render are defined on the same section
+    component: T.node,
     render: T.func
   },
   defaultProps: {

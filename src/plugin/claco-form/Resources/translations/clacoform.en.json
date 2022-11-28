@@ -39,7 +39,6 @@
     "delete_selected_entries_confirm_message": "{1} Are you sure you want to delete the selected entry ?|[2,Inf[ Are you sure you want to delete the selected entries ?",
     "display": "Display",
     "display_comments_for_roles": "Display comments for roles",
-    "edition": "Edition",
     "enable_comments_for_roles": "Enable comments for roles",
     "entries": "Entries",
     "entries_list": "List of entries",

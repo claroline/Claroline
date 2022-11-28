@@ -5,11 +5,11 @@ import omit from 'lodash/omit'
 import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
-import {ListData} from '#/main/app/content/list/containers/data'
+
+import {Organization as OrganizationTypes} from '#/main/community/prop-types'
+import {OrganizationList} from '#/main/community/organization/components/list'
 
 import {selectors} from '#/main/community/modals/organizations/store'
-import {OrganizationList} from '#/main/community/administration/community/organization/components/organization-list'
-import {Organization as OrganizationType} from '#/main/community/prop-types'
 
 const OrganizationsModal = props => {
   const selectAction = props.selectAction(props.selected)
@@ -22,14 +22,11 @@ const OrganizationsModal = props => {
       bsSize="lg"
       onExiting={props.reset}
     >
-      <ListData
+      <OrganizationList
         name={selectors.STORE_NAME}
-        fetch={{
-          url: props.url,
-          autoload: true
-        }}
-        definition={OrganizationList.definition}
-        card={OrganizationList.card}
+        url={props.url}
+        primaryAction={undefined}
+        actions={undefined}
       />
 
       <Button
@@ -51,7 +48,9 @@ OrganizationsModal.propTypes = {
   fadeModal: T.func.isRequired,
 
   // from store
-  selected: T.arrayOf(T.shape(OrganizationType.propTypes)).isRequired,
+  selected: T.arrayOf(T.shape(
+    OrganizationTypes.propTypes
+  )).isRequired,
   reset: T.func.isRequired
 }
 

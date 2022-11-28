@@ -83,7 +83,7 @@ class PanelFacetSerializer
             $this->deserializeRoles($data['roles'], $panel);
         }
 
-        if (isset($data['fields']) && in_array(Options::DEEP_DESERIALIZE, $options)) {
+        if (isset($data['fields']) && in_array(Options::IS_RECURSIVE, $options)) {
             $panel->resetFieldFacets();
             $i = 0;
 

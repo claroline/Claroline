@@ -9,7 +9,7 @@ import {Button} from '#/main/app/action/components/button'
 import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 import {Role as RoleType} from '#/main/community/prop-types'
 import {MODAL_ROLES} from '#/main/community/modals/roles'
-import {RoleCard} from '#/main/core/user/data/components/role-card'
+import {RoleCard} from '#/main/community/role/components/card'
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
 const RolesButton = props =>

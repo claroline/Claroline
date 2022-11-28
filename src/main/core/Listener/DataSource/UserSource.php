@@ -41,11 +41,11 @@ class UserSource
             $options['hiddenFilters']['workspace'] = $event->getWorkspace()->getUuid();
         } elseif (!$this->authorization->isGranted('ROLE_ADMIN')) {
             // only shows users of the same organizations
-            $options['hiddenFilters']['recursiveOrXOrganization'] = [];
+            $options['hiddenFilters']['organizations'] = [];
 
             $user = $this->tokenStorage->getToken()->getUser();
             if ($user instanceof User) {
-                $options['hiddenFilters']['recursiveOrXOrganization'] = array_map(function (Organization $organization) {
+                $options['hiddenFilters']['organizations'] = array_map(function (Organization $organization) {
                     return $organization->getUuid();
                 }, $user->getOrganizations());
             }

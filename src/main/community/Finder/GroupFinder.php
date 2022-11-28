@@ -24,36 +24,53 @@ class GroupFinder extends AbstractFinder
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null): QueryBuilder
     {
+        $organizationJoin = false;
+
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
                 case 'organization':
-                    $qb->leftJoin('obj.organizations', 'o');
+                case 'organizations':
+                    if (!$organizationJoin) {
+                        $qb->leftJoin('obj.organizations', 'o');
+                        $organizationJoin = true;
+                    }
+
                     $qb->andWhere('o.uuid IN (:organizationIds)');
                     $qb->setParameter('organizationIds', is_array($filterValue) ? $filterValue : [$filterValue]);
                     break;
+                case 'administrated':
+                    if (!$organizationJoin) {
+                        $qb->leftJoin('obj.organizations', 'o');
+                        $organizationJoin = true;
+                    }
+                    // TODO
+                    break;
                 case 'user':
+                case 'users':
                     $qb->leftJoin('obj.users', 'gu');
                     $qb->andWhere('gu.uuid IN (:userIds)');
                     $qb->setParameter('userIds', is_array($filterValue) ? $filterValue : [$filterValue]);
                     break;
                 case 'location':
+                case 'locations':
                     $qb->leftJoin('obj.locations', 'l');
                     $qb->andWhere('l.uuid IN (:locationIds)');
                     $qb->setParameter('locationIds', is_array($filterValue) ? $filterValue : [$filterValue]);
                     break;
-              case 'role':
-                  $qb->leftJoin('obj.roles', 'r');
-                  $qb->andWhere('r.uuid IN (:roleIds)');
-                  $qb->setParameter('roleIds', is_array($filterValue) ? $filterValue : [$filterValue]);
-                  break;
-              case 'workspace':
-                  $qb->leftJoin('obj.roles', 'wsgroles');
-                  $qb->leftJoin('wsgroles.workspace', 'rws');
-                  $qb->andWhere('rws.uuid = (:workspaceId)');
-                  $qb->setParameter('workspaceId', $filterValue);
-                  break;
+                case 'role':
+                case 'roles':
+                    $qb->leftJoin('obj.roles', 'r');
+                    $qb->andWhere('r.uuid IN (:roleIds)');
+                    $qb->setParameter('roleIds', is_array($filterValue) ? $filterValue : [$filterValue]);
+                    break;
+                case 'workspace':
+                    $qb->leftJoin('obj.roles', 'wsgroles');
+                    $qb->leftJoin('wsgroles.workspace', 'rws');
+                    $qb->andWhere('rws.uuid = (:workspaceId)');
+                    $qb->setParameter('workspaceId', $filterValue);
+                    break;
                 default:
-                  $this->setDefaults($qb, $filterName, $filterValue);
+                    $this->setDefaults($qb, $filterName, $filterValue);
             }
         }
 
@@ -63,7 +80,7 @@ class GroupFinder extends AbstractFinder
     protected function getExtraFieldMapping(): array
     {
         return [
-            'meta.readOnly' => 'isReadOnly',
+            'meta.description' => 'description',
         ];
     }
 }

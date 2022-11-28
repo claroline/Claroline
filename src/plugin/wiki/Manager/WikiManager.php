@@ -12,6 +12,7 @@
 namespace Icap\WikiBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CommunityBundle\Repository\UserRepository;
 use Claroline\CoreBundle\Entity\User;
 use Icap\WikiBundle\Entity\Contribution;
 use Icap\WikiBundle\Entity\Section;
@@ -38,7 +39,7 @@ class WikiManager
     private $contributionRepository;
 
     /**
-     * @var \Claroline\CoreBundle\Repository\User\UserRepository
+     * @var UserRepository
      */
     private $userRepository;
 

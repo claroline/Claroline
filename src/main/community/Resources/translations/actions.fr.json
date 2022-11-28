@@ -1,0 +1,8 @@
+{
+  "password_reset": "Réinitialiser le mot de passe",
+  "add_group": "Ajouter un groupe",
+  "add_role": "Ajouter un rôle",
+  "add_user": "Ajouter un utilisateur",
+  "add_organization": "Ajouter une organisation",
+  "add_sub_organization": "Ajouter une sous-organisation"
+}
