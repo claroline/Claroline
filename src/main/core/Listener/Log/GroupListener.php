@@ -62,7 +62,7 @@ class GroupListener
 
         // we don't directly use data from event because it can contain only partial data.
         $newData = $this->serializer->serialize($group);
-        $changeSet = array_diff_assoc($event->getOldData(), $newData);
+        $changeSet = $this->getUpdateDiff($event->getOldData(), $newData);
         if (!empty($changeSet)) {
             $this->dispatcher->dispatch('log', 'Log\LogGroupUpdate', [$group, $changeSet]);
         }
@@ -81,5 +81,21 @@ class GroupListener
                 $this->dispatcher->dispatch('log', 'Log\LogRoleUnsubscribe', [$value, $group]);
             }
         }
+    }
+
+    private function getUpdateDiff(array $old, array $new): array
+    {
+        $result = [];
+        foreach ($old as $key => $val) {
+            if (isset($new[$key])) {
+                if (is_array($val) && $new[$key]) {
+                    $result[$key] = $this->getUpdateDiff($val, $new[$key]);
+                }
+            } else {
+                $result[$key] = $val;
+            }
+        }
+
+        return $result;
     }
 }

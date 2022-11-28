@@ -720,6 +720,7 @@ const EditorParameters = props => {
                 label: trans('restrict_user_attempts_per_day', {}, 'quiz'),
                 help: trans('restrict_user_attempts_per_day_help', {}, 'quiz'),
                 type: 'boolean',
+                displayed: false, // not implemented
                 calculated: (quiz) => get(quiz, 'parameters._maxAttemptsPerDay') || 0 < get(quiz, 'parameters.maxAttemptsPerDay'),
                 onChange: (restrict) => {
                   if (restrict) {
@@ -745,6 +746,7 @@ const EditorParameters = props => {
                 label: trans('restrict_total_attempts', {}, 'quiz'),
                 help: trans('restrict_total_attempts_help', {}, 'quiz'),
                 type: 'boolean',
+                displayed: false, // not implemented
                 calculated: (quiz) => get(quiz, 'parameters._maxPapers') || 0 < get(quiz, 'parameters.maxPapers'),
                 onChange: (restrict) => {
                   if (restrict) {

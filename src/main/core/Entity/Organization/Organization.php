@@ -14,30 +14,36 @@ namespace Claroline\CoreBundle\Entity\Organization;
 use Claroline\AppBundle\Entity\Identifier\Code;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Claroline\AppBundle\Entity\Meta\Description;
+use Claroline\AppBundle\Entity\Meta\Name;
+use Claroline\AppBundle\Entity\Meta\Poster;
+use Claroline\AppBundle\Entity\Meta\Thumbnail;
+use Claroline\CommunityBundle\Model\HasGroups;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Location\Location;
-use Claroline\CoreBundle\Entity\Model\GroupsTrait;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Ramsey\Uuid\Uuid as BaseUuid;
-use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\User\OrganizationRepository")
+ * @ORM\Entity(repositoryClass="Claroline\CommunityBundle\Repository\OrganizationRepository")
  * @ORM\Table(name="claro__organization")
- * @DoctrineAssert\UniqueEntity("name")
  * @Gedmo\Tree(type="nested")
  */
 class Organization
 {
     use Code;
-    use GroupsTrait;
     use Id;
     use Uuid;
+    use Name;
+    use Description;
+    use Poster;
+    use Thumbnail;
+    use HasGroups;
 
     const TYPE_EXTERNAL = 'external';
     const TYPE_INTERNAL = 'internal';
@@ -47,15 +53,7 @@ class Organization
      *
      * @var int
      */
-    protected $position;
-
-    /**
-     * @ORM\Column(type="string")
-     * @Assert\NotBlank()
-     *
-     * @var string
-     */
-    protected $name;
+    private $position;
 
     /**
      * @ORM\Column(nullable=true, type="string")
@@ -63,7 +61,7 @@ class Organization
      *
      * @var string
      */
-    protected $email;
+    private $email;
 
     /**
      * @ORM\ManyToMany(
@@ -75,7 +73,7 @@ class Organization
      *
      * @var ArrayCollection
      */
-    protected $locations;
+    private $locations;
 
     /**
      * @Gedmo\TreeLeft
@@ -116,15 +114,15 @@ class Organization
      *
      * @var Organization
      */
-    protected $parent;
+    private $parent;
 
     /**
      * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Organization\Organization", mappedBy="parent")
-     * @ORM\OrderBy({"lft" = "ASC"})
+     * @ORM\OrderBy({"name" = "ASC"})
      *
      * @var Organization[]|ArrayCollection
      */
-    protected $children;
+    private $children;
 
     /**
      * @ORM\ManyToMany(
@@ -137,7 +135,7 @@ class Organization
      *
      * @todo should be unidirectional
      */
-    protected $workspaces;
+    private $workspaces;
 
     /**
      * @ORM\ManyToMany(
@@ -150,7 +148,7 @@ class Organization
      *
      * @todo should be unidirectional
      */
-    protected $groups;
+    private $groups;
 
     /**
      * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\User", mappedBy="administratedOrganizations")
@@ -159,31 +157,31 @@ class Organization
      *
      * @todo reuse $userOrganizationReferences and add a prop on UserOrganizationReference. This will avoid a multiple join.
      */
-    protected $administrators;
+    private $administrators;
 
     /**
      * @ORM\Column(name="is_default", type="boolean")
      */
-    protected $default = false;
+    private $default = false;
 
     /**
      * @ORM\Column(name="is_public", type="boolean")
      */
-    protected $public = false;
+    private $public = false;
 
     /**
      * @ORM\Column(type="string", nullable=true)
      *
      * @var string
      */
-    protected $vat;
+    private $vat;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      *
      * @var string
      */
-    protected $type = self::TYPE_INTERNAL;
+    private $type = self::TYPE_INTERNAL;
 
     /**
      * @ORM\OneToMany(
@@ -198,19 +196,19 @@ class Organization
      *
      * @todo should be unidirectional
      */
-    protected $userOrganizationReferences;
+    private $userOrganizationReferences;
 
     /**
      * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Cryptography\CryptographicKey", mappedBy="organization")
      */
-    protected $keys;
+    private $keys;
 
     /**
      * @ORM\Column(type="integer")
      *
      * @var int
      */
-    protected $maxUsers = -1;
+    private $maxUsers = -1;
 
     public function __construct()
     {
@@ -228,16 +226,6 @@ class Organization
     }
 
     public function __toString()
-    {
-        return $this->name;
-    }
-
-    public function setName($name)
-    {
-        $this->name = $name;
-    }
-
-    public function getName()
     {
         return $this->name;
     }

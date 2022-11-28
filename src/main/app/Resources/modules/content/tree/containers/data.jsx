@@ -14,7 +14,7 @@ import {TreeData as TreeDataComponent} from '#/main/app/content/tree/components/
  * Connected TreeData.
  *
  * It automatically displays list features registered in the store (@see makeListReducer()).
- * Counter to ListData, TreeData cannot handle the sortable and pagination features.
+ * Counter to ListData, TreeData cannot handle the search, sortable and pagination features.
  *
  * @param props
  * @constructor
@@ -63,13 +63,10 @@ class AutoloadedTreeData extends Component {
   }
 
   render() {
-    if (this.isAutoLoaded()) {
-      this.reload()
-    }
-
     return (
       <TreeDataComponent
         {...this.props}
+        loading={!this.props.loaded || this.props.invalidated}
       />
     )
   }
@@ -83,6 +80,10 @@ AutoloadedTreeData.propTypes = {
   totalResults: T.number.isRequired,
   filters: T.object,
   selection: T.object,
+  fetch: T.shape({
+    url: T.oneOfType([T.string, T.array]).isRequired,
+    autoload: T.bool
+  }),
   fetchData: T.func
 }
 

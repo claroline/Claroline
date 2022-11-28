@@ -1,12 +1,6 @@
 services:
-    _defaults:
-        autowire: false
-        autoconfigure: false
-        public: false
-
     _instanceof:
         Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository:
-            autowire: false
             tags: [doctrine.repository_service]
 
     Claroline\CoreBundle\Repository\Tool\AdministrationToolRepository:
@@ -33,11 +27,6 @@ services:
         arguments:
           - '@Doctrine\Persistence\ManagerRegistry'
           - '@Claroline\CoreBundle\Manager\PluginManager'
-
-    Claroline\CoreBundle\Repository\User\UserRepository:
-        arguments:
-          - '@Doctrine\Persistence\ManagerRegistry'
-          - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
 
     Claroline\CoreBundle\Repository\Log\LogRepository:
         arguments:

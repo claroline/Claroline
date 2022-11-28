@@ -68,7 +68,7 @@ class UserVoter extends AbstractRoleSubjectVoter
             return VoterInterface::ACCESS_GRANTED;
         }
 
-        if ($this->hasAdminToolAccess($token, 'community')) {
+        if ($this->isToolGranted('EDIT', 'community')) {
             return VoterInterface::ACCESS_GRANTED;
         }
 
@@ -151,7 +151,7 @@ class UserVoter extends AbstractRoleSubjectVoter
     private function checkCreate(TokenInterface $token, User $user)
     {
         // allow creation to administrators
-        if ($this->hasAdminToolAccess($token, 'community')) {
+        if ($this->isToolGranted('EDIT', 'community')) {
             return VoterInterface::ACCESS_GRANTED;
         }
 

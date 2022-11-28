@@ -8,8 +8,8 @@ import {createListDefinition} from '#/main/app/content/list/utils'
 import {ListSource} from '#/main/app/content/list/containers/source'
 
 import resourcesSource from '#/main/core/data/sources/resources'
-import deleteAction from '#/main/core/resource/actions/delete'
-import restoreAction from '#/main/core/resource/actions/restore'
+import deleteAction from '#/main/core/actions/resource/delete'
+import restoreAction from '#/main/core/actions/resource/restore'
 import {selectors} from '#/main/core/tools/trash/store'
 import {ToolPage} from '#/main/core/tool/containers/page'
 

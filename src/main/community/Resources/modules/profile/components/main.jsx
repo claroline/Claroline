@@ -1,16 +1,14 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {trans} from '#/main/app/intl/translation'
 import {Routes} from '#/main/app/router'
-import {LINK_BUTTON} from '#/main/app/buttons'
 import {hasPermission} from '#/main/app/security'
 import {ContentLoader} from '#/main/app/content/components/loader'
 
 import {UserPage} from '#/main/core/user/components/page'
 import {User as UserTypes} from '#/main/community/prop-types'
-import {route} from '#/main/community/routing'
-import {getActions} from '#/main/community/utils'
+import {route} from '#/main/community/user/routing'
+import {getActions} from '#/main/community/user/utils'
 
 import {ProfileEdit} from '#/main/community/profile/editor/components/main'
 import {ProfileShow} from '#/main/community/profile/player/components/main'
@@ -40,24 +38,11 @@ class Profile extends Component {
         breadcrumb={this.props.breadcrumb}
         user={this.props.user}
         toolbar="edit | send-message add-contact | fullscreen more"
-        actions={
-          getActions([this.props.user], {
-            add: () => false,
-            update: (users) => this.props.history.push(route(users[0])),
-            delete: () => false
-          }, this.props.path, this.props.currentUser)
-            .then(actions => [
-              {
-                name: 'edit',
-                type: LINK_BUTTON,
-                icon: 'fa fa-pencil',
-                label: trans('edit', {}, 'actions'),
-                target: this.props.path + '/edit',
-                displayed: hasPermission('edit', this.props.user),
-                primary: true
-              }
-            ].concat(actions))
-        }
+        actions={getActions([this.props.user], {
+          add: () => false,
+          update: (users) => this.props.history.push(route(users[0])),
+          delete: () => false
+        }, this.props.path, this.props.currentUser)}
       >
         <Routes
           path={this.props.path}

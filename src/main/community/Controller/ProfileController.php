@@ -152,7 +152,7 @@ class ProfileController
         // updates facets data
         $updatedFacets = [];
         foreach ($formData as $facetData) {
-            $updated = $this->crud->update(Facet::class, $facetData, [Options::DEEP_DESERIALIZE]);
+            $updated = $this->crud->update(Facet::class, $facetData, [Options::IS_RECURSIVE]);
             $updatedFacets[$updated->getId()] = $updated;
         }
 

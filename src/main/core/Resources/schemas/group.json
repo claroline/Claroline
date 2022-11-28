@@ -10,6 +10,15 @@
       "type": "string",
       "description": "The group name",
       "minLength": 1
+    },
+    "meta": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": ["string", "null"],
+          "description": "The group description"
+        }
+      }
     }
   },
   "claroline": {

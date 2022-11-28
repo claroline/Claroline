@@ -63,16 +63,16 @@ class OrganizationController extends AbstractCrudController
     /**
      * @Route("/list/recursive", name="apiv2_organization_list_recursive")
      */
-    public function recursiveListAction(): JsonResponse
+    public function recursiveListAction(Request $request): JsonResponse
     {
-        $hiddenFilters = $this->getDefaultHiddenFilters();
+        $query = $request->query->all();
+
+        $query['hiddenFilters'] = $this->getDefaultHiddenFilters();
         // only get the root organization to build the tree
-        $hiddenFilters['parent'] = null;
+        $query['hiddenFilters']['parent'] = null;
 
         return new JsonResponse(
-            $this->finder->search(Organization::class, [
-                'hiddenFilters' => $hiddenFilters,
-            ], [Options::IS_RECURSIVE])
+            $this->finder->search(Organization::class, $query, [Options::IS_RECURSIVE])
         );
     }
 

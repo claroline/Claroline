@@ -1,4 +1,4 @@
-import React, {createElement, Component} from 'react'
+import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import omit from 'lodash/omit'
 
@@ -24,7 +24,7 @@ class ParametersModal extends Component {
     getTool(this.props.toolName).then((module) => {
       let parametersComponent = null
       if (module.default && module.default.parameters) {
-        parametersComponent = createElement(module.default.parameters)
+        parametersComponent = module.default.parameters
       }
 
       this.setState({customForm: parametersComponent})
@@ -42,7 +42,7 @@ class ParametersModal extends Component {
       >
         <FormData
           name={selectors.STORE_NAME}
-          sections={[
+          definition={[
             {
               className: 'embedded-form-section',
               title: trans('custom'),

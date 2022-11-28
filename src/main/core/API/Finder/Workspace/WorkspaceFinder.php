@@ -103,6 +103,7 @@ class WorkspaceFinder extends AbstractFinder
         return [
             'meta.personal' => 'personal',
             'meta.model' => 'model',
+            'meta.description' => 'description',
         ];
     }
 

@@ -9,7 +9,7 @@ import {CallbackButton} from '#/main/app/buttons/callback/components/button'
 import {LinkButton} from '#/main/app/buttons/link/components/button'
 
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
-import {route} from '#/main/community/routing'
+import {route} from '#/main/community/user/routing'
 import {UserAvatar} from '#/main/core/user/components/avatar'
 
 import {selectors} from '#/plugin/blog/resources/blog/store/selectors'

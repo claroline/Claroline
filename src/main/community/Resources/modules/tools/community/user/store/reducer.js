@@ -10,7 +10,7 @@ import {selectors} from '#/main/community/tools/community/store/selectors'
 
 const reducer = combineReducers({
   list: makeListReducer(selectors.STORE_NAME + '.users.list', {
-    sortBy: {property: 'created', direction: -1}
+    sortBy: {property: 'lastName', direction: 1}
   }, {
     invalidated: makeReducer(false, {
       [FORM_SUBMIT_SUCCESS + '/' + selectors.STORE_NAME + '.users.current']: () => true,

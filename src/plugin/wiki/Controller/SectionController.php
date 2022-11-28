@@ -115,7 +115,7 @@ class SectionController
         $newSection = $this->sectionManager->createSection($wiki, $section, $user, $isAdmin, json_decode($request->getContent(), true));
 
         return new JsonResponse(
-            $this->sectionManager->serializeSection($newSection, [Options::DEEP_SERIALIZE], true)
+            $this->sectionManager->serializeSection($newSection, [Options::IS_RECURSIVE], true)
         );
     }
 
@@ -142,7 +142,7 @@ class SectionController
         $this->sectionManager->updateSection($section, $user, json_decode($request->getContent(), true));
 
         return new JsonResponse(
-            $this->sectionManager->serializeSection($section, [Options::DEEP_SERIALIZE])
+            $this->sectionManager->serializeSection($section, [Options::IS_RECURSIVE])
         );
     }
 

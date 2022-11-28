@@ -87,7 +87,7 @@ class UserController extends AbstractCrudController
      * @ApiDoc(
      *     description="Get the list of user in that share the current user managed organizations (and sub organizations).",
      *     queryString={
-     *         "$finder=Claroline\CoreBundle\Entity\User&!recursiveOrXOrganization",
+     *         "$finder",
      *         {"name": "page", "type": "integer", "description": "The queried page."},
      *         {"name": "limit", "type": "integer", "description": "The max amount of objects per page."},
      *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
@@ -98,13 +98,12 @@ class UserController extends AbstractCrudController
      */
     public function listManagedOrganizationAction(User $user, Request $request): JsonResponse
     {
-        $filters = $this->authorization->isGranted('ROLE_ADMIN') ?
-            [] :
-            [
-                'recursiveOrXOrganization' => array_map(function (Organization $organization) {
-                    return $organization->getUuid();
-                }, $user->getAdministratedOrganizations()->toArray()),
-            ];
+        $filters = [];
+        if (!$this->authorization->isGranted('ROLE_ADMIN')) {
+            $filters['organizations'] = array_map(function (Organization $organization) {
+                return $organization->getUuid();
+            }, $user->getAdministratedOrganizations()->toArray());
+        }
 
         return new JsonResponse($this->finder->search(
             User::class,
@@ -258,7 +257,7 @@ class UserController extends AbstractCrudController
      *         {"name": "ids[]", "type": {"string", "integer"}, "description": "The object id or uuid."}
      *     }
      * )
-     * @Route("/password/reset", name="apiv2_users_password_reset", methods={"PUT"})
+     * @Route("/password/reset", name="apiv2_user_password_reset", methods={"PUT"})
      */
     public function resetPasswordAction(Request $request): JsonResponse
     {
@@ -307,14 +306,14 @@ class UserController extends AbstractCrudController
             if ($user instanceof User) {
                 // only shows users of the same organizations
                 return [
-                    'recursiveOrXOrganization' => array_map(function (Organization $organization) {
+                    'organizations' => array_map(function (Organization $organization) {
                         return $organization->getUuid();
                     }, $user->getOrganizations()),
                 ];
             }
 
             return [
-                'recursiveOrXOrganization' => [],
+                'organizations' => [],
             ];
         }
 

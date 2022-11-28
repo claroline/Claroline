@@ -11,7 +11,7 @@ import {User as UserTypes} from '#/main/community/prop-types'
 
 import {LinkButton} from '#/main/app/buttons/link/components/button'
 
-import {route} from '#/main/community/routing'
+import {route} from '#/main/community/user/routing'
 import {UserAvatar} from '#/main/core/user/components/avatar'
 
 /**

@@ -39,7 +39,6 @@
     "delete_selected_entries_confirm_message": "{1} Êtes-vous sûr de vouloir supprimer la fiche sélectionnée ?|[2,Inf[ Êtes-vous sûr de vouloir supprimer les %count% fiches sélectionnées ?",
     "display": "Afficher",
     "display_comments_for_roles": "Afficher les commentaires pour les roles",
-    "edition": "Modification",
     "enable_comments_for_roles": "Autoriser les commentaires pour les roles",
     "entries": "Fiches",
     "entries_list": "Liste de fiches",

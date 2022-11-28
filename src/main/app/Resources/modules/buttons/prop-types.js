@@ -4,7 +4,7 @@ const Button = {
   propTypes: {
     id: T.string,
     className: T.string,
-    size: T.oneOf(['sm', 'lg']),
+    size: T.oneOf(['xs', 'sm', 'lg']),
     children: T.node.isRequired,
     disabled: T.bool,
     primary: T.bool,

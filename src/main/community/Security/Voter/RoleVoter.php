@@ -85,14 +85,14 @@ class RoleVoter extends AbstractVoter
     {
         // probably do the check from the UserVoter or a security issue will arise
         if (!$object->getWorkspace()) {
-            return $this->hasAdminToolAccess($token, 'community') ?
-              VoterInterface::ACCESS_GRANTED : VoterInterface::ACCESS_DENIED;
+            return $this->isToolGranted('EDIT', 'community') ?
+                VoterInterface::ACCESS_GRANTED : VoterInterface::ACCESS_DENIED;
         }
 
         // if it's a workspace role, we must be granted the edit perm on the workspace users tool
         // and our right level to be less than the role we're trying to remove that way, a user cannot remove admins
         $workspace = $object->getWorkspace();
-        if ($this->isGranted(['community', 'edit'], $workspace)) {
+        if ($this->isToolGranted('EDIT', 'community', $workspace)) {
             // If user is workspace manager then grant access
             if ($this->workspaceManager->isManager($object->getWorkspace(), $token)) {
                 return VoterInterface::ACCESS_GRANTED;

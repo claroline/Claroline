@@ -1,8 +1,8 @@
 import {trans} from '#/main/app/intl/translation'
 import {URL_BUTTON} from '#/main/app/buttons'
 
-import {route} from '#/main/community/routing'
-import {UserCard} from '#/main/core/user/components/card'
+import {route} from '#/main/community/user/routing'
+import {UserCard} from '#/main/community/user/components/card'
 
 export default {
   name: 'users',

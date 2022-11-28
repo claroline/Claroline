@@ -115,11 +115,13 @@ class Modal extends Component {
                 <span className={classes('modal-icon', this.props.icon)} />
               }
 
-              {this.props.title}
+              <div role="presentation">
+                {this.props.title}
 
-              {this.props.subtitle &&
-                <small className={classes({'with-icon': !!this.props.icon})}>{this.props.subtitle}</small>
-              }
+                {this.props.subtitle &&
+                  <small>{this.props.subtitle}</small>
+                }
+              </div>
             </BaseModal.Title>
           </BaseModal.Header>
         }

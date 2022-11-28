@@ -592,9 +592,9 @@
 @modal-inner-padding:         15px;
 
 //** Padding applied to the modal title
-@modal-title-padding:         15px;
+@modal-title-padding:         @line-height-computed 15px;
 //** Modal title line-height
-@modal-title-line-height:     @line-height-base;
+@modal-title-line-height:     1; // 1 is required to correctly align the icon with the title
 
 //** Background color of modal content area
 @modal-content-bg:                             #fff;

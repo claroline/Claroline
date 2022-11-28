@@ -7,9 +7,9 @@ import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
-import {route} from '#/main/community/routing'
+import {route} from '#/main/community/user/routing'
 import {User as UserType} from '#/main/community/prop-types'
-import {UserCard} from '#/main/core/user/components/card'
+import {UserCard} from '#/main/community/user/components/card'
 import {MODAL_USERS} from '#/main/community/modals/users'
 
 const UserButton = props =>

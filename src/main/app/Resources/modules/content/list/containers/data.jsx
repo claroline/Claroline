@@ -99,8 +99,6 @@ ListData.propTypes = {
 
   /**
    * Provides asynchronous data load.
-   *
-   * @todo : maybe also allow a CallbackAction
    */
   fetch: T.shape({
     url: T.oneOfType([T.string, T.array]).isRequired,

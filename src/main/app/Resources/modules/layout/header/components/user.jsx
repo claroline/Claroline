@@ -33,7 +33,7 @@ const UserMenu = props =>
       </h2>
 
       <em>
-        {getPlatformRoles(props.currentUser.roles).join(', ')}
+        {getPlatformRoles(props.currentUser.roles).map(role => trans(role.translationKey)).join(', ')}
       </em>
     </div>
 

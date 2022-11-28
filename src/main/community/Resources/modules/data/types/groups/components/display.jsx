@@ -6,7 +6,7 @@ import {trans} from '#/main/app/intl/translation'
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
 import {Group as GroupType} from '#/main/community/prop-types'
-import {GroupCard} from '#/main/core/user/data/components/group-card'
+import {GroupCard} from '#/main/community/group/components/card'
 
 const GroupsDisplay = (props) => {
   if (!isEmpty(props.data)) {

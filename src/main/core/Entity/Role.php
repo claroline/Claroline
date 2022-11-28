@@ -13,7 +13,8 @@ namespace Claroline\CoreBundle\Entity;
 
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
-use Claroline\CoreBundle\Entity\Resource\ResourceRights;
+use Claroline\AppBundle\Entity\Meta\Description;
+use Claroline\AppBundle\Entity\Restriction\Locked;
 use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\Entity\Tool\ToolRights;
 use Claroline\CoreBundle\Entity\Workspace\Shortcuts;
@@ -22,19 +23,19 @@ use Claroline\CoreBundle\Security\PlatformRoles;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use RuntimeException;
-use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\User\RoleRepository")
+ * @ORM\Entity(repositoryClass="Claroline\CommunityBundle\Repository\RoleRepository")
  * @ORM\Table(name="claro_role")
  * @ORM\HasLifecycleCallbacks
- * @DoctrineAssert\UniqueEntity("name")
  */
 class Role
 {
     use Id;
     use Uuid;
+    use Description;
+    use Locked;
 
     // TODO : should be a string for better data readability
     const PLATFORM_ROLE = 1;
@@ -47,7 +48,7 @@ class Role
      *
      * @var string
      */
-    protected $name;
+    private $name;
 
     /**
      * @ORM\Column(name="translation_key")
@@ -55,16 +56,11 @@ class Role
      *
      * @var string
      */
-    protected $translationKey;
+    private $translationKey;
 
     /**
-     * @ORM\Column(name="is_read_only", type="boolean")
+     * should be unidirectional.
      *
-     * @var bool
-     */
-    protected $isReadOnly = false;
-
-    /**
      * @ORM\ManyToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\User",
      *     mappedBy="roles"
@@ -72,7 +68,7 @@ class Role
      *
      * @var ArrayCollection
      */
-    protected $users;
+    private $users;
 
     /**
      * should be unidirectional.
@@ -84,9 +80,11 @@ class Role
      *
      * @var ArrayCollection|AdminTool[]
      */
-    protected $adminTools;
+    private $adminTools;
 
     /**
+     * should be unidirectional.
+     *
      * @ORM\ManyToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Group",
      *     mappedBy="roles"
@@ -94,24 +92,14 @@ class Role
      *
      * @var ArrayCollection
      */
-    protected $groups;
+    private $groups;
 
     /**
      * @ORM\Column(type="integer")
      *
      * @var int
      */
-    protected $type = self::PLATFORM_ROLE;
-
-    /**
-     * should be unidirectional.
-     *
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceRights",
-     *     mappedBy="role"
-     * )
-     */
-    protected $resourceRights;
+    private $type = self::PLATFORM_ROLE;
 
     /**
      * @ORM\ManyToOne(
@@ -122,7 +110,7 @@ class Role
      *
      * @var Workspace
      */
-    protected $workspace;
+    private $workspace;
 
     /**
      * should be unidirectional.
@@ -132,14 +120,14 @@ class Role
      *     mappedBy="role"
      * )
      */
-    protected $toolRights;
+    private $toolRights;
 
     /**
      * @ORM\Column(name="personal_workspace_creation_enabled", type="boolean")
      *
      * @var bool
      */
-    protected $personalWorkspaceCreationEnabled = false;
+    private $personalWorkspaceCreationEnabled = false;
 
     /**
      * should be unidirectional.
@@ -152,7 +140,7 @@ class Role
      *
      * @var Shortcuts[]|ArrayCollection
      */
-    protected $shortcuts;
+    private $shortcuts;
 
     public function __construct()
     {
@@ -160,7 +148,6 @@ class Role
 
         $this->users = new ArrayCollection();
         $this->groups = new ArrayCollection();
-        $this->resourceRights = new ArrayCollection();
         $this->toolRights = new ArrayCollection();
         $this->adminTools = new ArrayCollection();
         $this->shortcuts = new ArrayCollection();
@@ -193,7 +180,7 @@ class Role
         }
 
         if (PlatformRoles::contains($name)) {
-            $this->isReadOnly = true;
+            $this->locked = true;
         }
 
         $this->name = $name;
@@ -204,19 +191,22 @@ class Role
         return $this->name;
     }
 
-    public function setTranslationKey($key)
+    public function setTranslationKey(string $key): void
     {
         $this->translationKey = $key;
     }
 
-    public function getTranslationKey()
+    public function getTranslationKey(): string
     {
         return $this->translationKey;
     }
 
+    /**
+     * @deprecated use isLocked
+     */
     public function isReadOnly()
     {
-        return $this->isReadOnly;
+        return $this->isLocked();
     }
 
     /**
@@ -239,9 +229,12 @@ class Role
         }
     }
 
+    /**
+     * @deprecated use setLocked
+     */
     public function setReadOnly($value)
     {
-        $this->isReadOnly = $value;
+        $this->setLocked($value);
     }
 
     /**
@@ -300,16 +293,6 @@ class Role
     public function getType()
     {
         return $this->type;
-    }
-
-    public function addResourceRights(ResourceRights $rc)
-    {
-        $this->resourceRights->add($rc);
-    }
-
-    public function getResourceRights()
-    {
-        return $this->resourceRights;
     }
 
     public function setWorkspace(Workspace $ws = null)

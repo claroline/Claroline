@@ -5,12 +5,12 @@ import omit from 'lodash/omit'
 import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
-import {ListData} from '#/main/app/content/list/containers/data'
 
 import {constants} from '#/main/community/constants'
+import {Role as RoleTypes} from '#/main/community/prop-types'
+import {RoleList} from '#/main/community/role/components/list'
+
 import {selectors} from '#/main/community/modals/roles/store'
-import {RoleList} from '#/main/community/administration/community/role/components/role-list'
-import {Role as RoleType} from '#/main/community/prop-types'
 
 class RolesModal extends Component {
   constructor(props) {
@@ -36,14 +36,12 @@ class RolesModal extends Component {
         }}
         onExited={this.props.reset}
       >
-        <ListData
+        <RoleList
           name={selectors.STORE_NAME}
-          fetch={{
-            url: this.props.url,
-            autoload: this.state.initialized
-          }}
-          definition={RoleList.definition}
-          card={RoleList.card}
+          url={this.props.url}
+          autoload={this.state.initialized}
+          primaryAction={undefined}
+          actions={undefined}
         />
 
         <Button
@@ -63,12 +61,12 @@ RolesModal.propTypes = {
   url: T.oneOfType([T.string, T.array]),
   title: T.string,
   filters: T.arrayOf(T.shape({
-    // TODO : list filter types
+    // list filter types
   })),
   selectAction: T.func.isRequired,
   fadeModal: T.func.isRequired,
   selected: T.arrayOf(
-    T.shape(RoleType.propTypes)
+    T.shape(RoleTypes.propTypes)
   ).isRequired,
   resetFilters: T.func.isRequired,
   reset: T.func.isRequired

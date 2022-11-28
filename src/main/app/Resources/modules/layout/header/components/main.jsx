@@ -1,6 +1,7 @@
 import React, {createElement} from 'react'
 import {PropTypes as T} from 'prop-types'
 
+import {url} from '#/main/app/api'
 import {trans} from '#/main/app/intl/translation'
 import {Await} from '#/main/app/components/await'
 import {Button} from '#/main/app/action/components/button'
@@ -75,7 +76,7 @@ const HeaderMain = props =>
             type: URL_BUTTON,
             icon: 'fa fa-fw fa-power-off',
             label: trans('logout'),
-            target: ['claro_index', {_switch: '_exit'}],
+            target: url(['claro_index', {_switch: '_exit'}])+'#'+props.location.pathname,
             displayed: props.impersonated,
             dangerous: true
           }
@@ -100,6 +101,11 @@ HeaderMain.propTypes = {
     about: T.bool.isRequired,
     help: T.bool.isRequired
   }).isRequired,
+
+  //from router
+  location: T.shape({
+    pathname: T.string.isRequired
+  }),
 
   /**
    * The currently logged user.

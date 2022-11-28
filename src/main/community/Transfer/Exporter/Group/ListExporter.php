@@ -29,6 +29,10 @@ class ListExporter extends AbstractListExporter
                     'name' => 'name',
                     'type' => 'string',
                     'description' => $this->translator->trans('The group name', [], 'schema'),
+                ], [
+                    'name' => 'meta.description',
+                    'type' => 'string',
+                    'description' => $this->translator->trans('The group description', [], 'schema'),
                 ],
             ],
         ];

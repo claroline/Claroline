@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, {createElement, Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import invariant from 'invariant'
 import classes from 'classnames'
@@ -183,7 +183,7 @@ class ListData extends Component {
         }
 
         {(!this.props.loading && 0 !== this.props.totalResults) &&
-          React.createElement(listConst.DISPLAY_MODES[this.state.display.current].component, Object.assign({},
+          createElement(listConst.DISPLAY_MODES[this.state.display.current].component, Object.assign({},
             listConst.DISPLAY_MODES[this.state.display.current].options,
             {
               data:          this.props.data,

@@ -104,7 +104,7 @@ implementPropTypes(Button, ActionTypes, {
    *
    * @type {string}
    */
-  size: T.oneOf(['sm', 'lg']),
+  size: T.oneOf(['xs', 'sm', 'lg']),
   children: T.any
 })
 

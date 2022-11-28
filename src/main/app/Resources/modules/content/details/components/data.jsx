@@ -123,7 +123,7 @@ DetailsData.propTypes = {
    */
   sections: T.arrayOf(T.shape(
     DataDetailsSectionTypes.propTypes
-  )).isRequired,
+  )),
   definition: T.arrayOf(T.shape(
     DataDetailsSectionTypes.propTypes
   )).isRequired,

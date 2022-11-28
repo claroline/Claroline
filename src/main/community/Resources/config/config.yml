@@ -7,16 +7,6 @@ plugin:
           tool_rights:
               - name: create_user
 
-    admin_tools:
-        - name: community
-          class: user
-
-    widgets:
-        # - name: profile
-        #   class: Claroline\CoreBundle\Entity\Widget\Type\ProfileWidget
-        #   context: [workspace, desktop]
-        #   tags: [community]
-
     data_sources:
         - name: users
           type: list
