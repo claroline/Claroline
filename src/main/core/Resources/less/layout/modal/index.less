@@ -15,27 +15,6 @@
     justify-content: space-between;
     align-items: center;
 
-    h4 {
-        // sometimes `modal-title` class is missing
-        // so we need to grab rules from it
-        // it will no longer be needed when app will be full react
-        &:extend(.modal-title);
-
-        small {
-            // same than page header
-            display: block;
-            margin-top: 5px;
-
-            &.with-icon:before {
-                content: " ";
-                display: inline-block;
-                // same as .modal-icon
-                width: 20px;
-                margin-right: 10px;
-            }
-        }
-    }
-
     .close {
         order: 2;
         // reset bootstrap
@@ -63,19 +42,26 @@
     }
     // use movie subtitles styles to make title always readable
     .modal-title,
-    .modal-title > small {
+    .modal-title small {
         .text-movie-subtitles();
     }
 }
 
 .modal-icon {
-    width: 20px !important; // removes .fa-fw form HTML to avoid the !important
-    margin-right: 10px;
+    margin-right: @icon-text-spacer;
+    font-size: @font-size-h4; // same size than modal-title
 }
 
 .modal-title {
     order: 1;
     flex: 1;
+    display: flex;
+
+    small {
+        // same than page header
+        display: block;
+        margin-top: 10px;
+    }
 }
 
 .modal-footer {

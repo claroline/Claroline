@@ -17,7 +17,7 @@ const AboutModal = props =>
     {...omit(props, 'workspaceId', 'workspace', 'get', 'reset')}
     icon="fa fa-fw fa-info"
     title={trans('about')}
-    subtitle={get(props.workspace, 'name')}
+    subtitle={props.workspace ? get(props.workspace, 'name') : trans('loading')}
     poster={get(props.workspace, 'poster')}
     onEntering={() => props.get(props.workspaceId)}
     onExiting={() => props.reset()}

@@ -4,7 +4,7 @@ import {PropTypes as T} from 'prop-types'
 import {trans} from '#/main/app/intl'
 import {LinkButton} from '#/main/app/buttons'
 
-import {route} from '#/main/community/routing'
+import {route} from '#/main/community/user/routing'
 
 const UserLink = (props) => {
   let displayName

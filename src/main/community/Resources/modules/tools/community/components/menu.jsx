@@ -23,23 +23,16 @@ const CommunityMenu = (props) =>
           name: 'users',
           type: LINK_BUTTON,
           icon: 'fa fa-fw fa-user',
-          label: trans('users'),
+          label: trans('users', {}, 'community'),
           target: `${props.path}/users`,
           displayed: props.contextType !== toolConstants.TOOL_WORKSPACE || !get(props.workspace, 'meta.model')
         }, {
           name: 'groups',
           type: LINK_BUTTON,
           icon: 'fa fa-fw fa-users',
-          label: trans('groups'),
+          label: trans('groups', {}, 'community'),
           target: `${props.path}/groups`,
-          displayed: props.contextType === toolConstants.TOOL_WORKSPACE && !get(props.workspace, 'meta.model')
-        }, {
-          name: 'roles',
-          type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-id-badge',
-          label: trans('roles'),
-          target: `${props.path}/roles`,
-          displayed: props.contextType === toolConstants.TOOL_WORKSPACE && props.canAdministrate
+          displayed: props.contextType !== toolConstants.TOOL_WORKSPACE || !get(props.workspace, 'meta.model')
         }, {
           name: 'pending',
           type: LINK_BUTTON,
@@ -48,12 +41,26 @@ const CommunityMenu = (props) =>
           target: `${props.path}/pending`,
           displayed: props.contextType === toolConstants.TOOL_WORKSPACE && props.canAdministrate && get(props.workspace, 'registration.selfRegistration') && get(props.workspace, 'registration.validation')
         }, {
-          name: 'parameters',
+          name: 'roles',
           type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-cog',
-          label: trans('parameters'),
-          target: `${props.path}/parameters`,
-          displayed: props.contextType === toolConstants.TOOL_WORKSPACE  && props.canAdministrate
+          icon: 'fa fa-fw fa-id-badge',
+          label: trans('roles', {}, 'community'),
+          target: `${props.path}/roles`,
+          displayed: props.canAdministrate
+        }, {
+          name: 'organizations',
+          type: LINK_BUTTON,
+          icon: 'fa fa-fw fa-building',
+          label: trans('organizations'),
+          target: `${props.path}/organizations`,
+          displayed: props.contextType === toolConstants.TOOL_DESKTOP /*&& props.canAdministrate*/
+        }, {
+          name: 'profile',
+          type: LINK_BUTTON,
+          icon: 'fa fa-fw fa-id-card',
+          label: trans('user_profile'),
+          target: `${props.path}/parameters/profile`,
+          displayed: props.contextType === toolConstants.TOOL_DESKTOP && props.canAdministrate
         }
       ]}
       onClick={props.autoClose}

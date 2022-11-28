@@ -6,7 +6,7 @@ import {trans} from '#/main/app/intl/translation'
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
 import {Organization as OrganizationTypes} from '#/main/community/prop-types'
-import {OrganizationCard} from '#/main/core/user/data/components/organization-card'
+import {OrganizationCard} from '#/main/community/organization/components/card'
 
 const OrganizationsDisplay = (props) => {
   if (!isEmpty(props.data)) {

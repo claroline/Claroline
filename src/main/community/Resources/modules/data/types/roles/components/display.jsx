@@ -5,7 +5,7 @@ import isEmpty from 'lodash/isEmpty'
 import {trans} from '#/main/app/intl/translation'
 
 import {Role as RoleType} from '#/main/community/prop-types'
-import {RoleCard} from '#/main/core/user/data/components/role-card'
+import {RoleCard} from '#/main/community/role/components/card'
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
 const RolesDisplay = (props) => {

@@ -6,24 +6,38 @@ import {makeFormReducer} from '#/main/app/content/form/store/reducer'
 import {makeInstanceAction} from '#/main/app/store/actions'
 
 import {TOOL_LOAD} from '#/main/core/tool/store/actions'
-import {selectors} from '#/main/community/tools/community/store/selectors'
+
+import {constants} from '#/main/community/constants'
+import {selectors as baseSelectors} from '#/main/community/tools/community/store/selectors'
+import {selectors} from '#/main/community/tools/community/role/store/selectors'
 
 const reducer = combineReducers({
-  list: makeListReducer(selectors.STORE_NAME + '.roles.list', {}, {
+  list: makeListReducer(selectors.LIST_NAME, {
+    sortBy: {property: 'name', direction: 1}
+  }, {
     invalidated: makeReducer(false, {
-      [FORM_SUBMIT_SUCCESS + '/' + selectors.STORE_NAME + '.roles.current']: () => true,
-      [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: () => true
+      [makeInstanceAction(TOOL_LOAD, baseSelectors.STORE_NAME)]: () => true,
+      [makeInstanceAction(FORM_SUBMIT_SUCCESS, selectors.FORM_NAME)]: () => true
+    }),
+    filters: makeReducer([], {
+      [makeInstanceAction(TOOL_LOAD, baseSelectors.STORE_NAME)]: (state, action) => 'desktop' === action.context.type ? [
+        {property: 'type', value: constants.ROLE_PLATFORM}
+      ] : state
     })
   }),
-  current: makeFormReducer(selectors.STORE_NAME + '.roles.current', {}, {
-    users: makeListReducer(selectors.STORE_NAME + '.roles.current.users', {}, {
+  current: makeFormReducer(selectors.FORM_NAME, {}, {
+    users: makeListReducer(selectors.FORM_NAME + '.users', {
+      sortBy: {property: 'lastName', direction: 1}
+    }, {
       invalidated: makeReducer(false, {
-        [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: () => true
+        [makeInstanceAction(TOOL_LOAD, baseSelectors.STORE_NAME)]: () => true
       })
     }),
-    groups: makeListReducer(selectors.STORE_NAME + '.roles.current.groups', {}, {
+    groups: makeListReducer(selectors.FORM_NAME + '.groups', {
+      sortBy: {property: 'name', direction: 1}
+    }, {
       invalidated: makeReducer(false, {
-        [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: () => true
+        [makeInstanceAction(TOOL_LOAD, baseSelectors.STORE_NAME)]: () => true
       })
     })
   })

@@ -8,11 +8,14 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Role;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class GroupSerializer
 {
     use SerializerTrait;
 
+    /** @var AuthorizationCheckerInterface */
+    private $authorization;
     /** @var ObjectManager */
     private $om;
     /** @var OrganizationSerializer */
@@ -21,10 +24,12 @@ class GroupSerializer
     private $roleSerializer;
 
     public function __construct(
+        AuthorizationCheckerInterface $authorization,
         ObjectManager $om,
         OrganizationSerializer $organizationSerializer,
         RoleSerializer $roleSerializer
     ) {
+        $this->authorization = $authorization;
         $this->om = $om;
         $this->organizationSerializer = $organizationSerializer;
         $this->roleSerializer = $roleSerializer;
@@ -59,25 +64,41 @@ class GroupSerializer
             return [
                 'id' => $group->getUuid(),
                 'name' => $group->getName(),
+                'thumbnail' => $group->getThumbnail(),
             ];
         }
 
-        return [
+        $serialized = [
             'id' => $group->getUuid(),
             'autoId' => $group->getId(),
             'name' => $group->getName(),
+            'thumbnail' => $group->getThumbnail(),
+            'poster' => $group->getPoster(),
             'meta' => [
-                'readOnly' => $group->isReadOnly(),
+                'description' => $group->getDescription(),
+                'readOnly' => $group->isLocked(), // TODO : to remove. for retro compatibility
             ],
-
-            // should not be exposed here
             'roles' => array_map(function (Role $role) use ($options) {
                 return $this->roleSerializer->serialize($role, $options);
             }, $group->getEntityRoles()->toArray()),
-            'organizations' => array_map(function (Organization $organization) use ($options) {
-                return $this->organizationSerializer->serialize($organization, $options);
-            }, $group->getOrganizations()->toArray()),
         ];
+
+        if (!in_array(SerializerInterface::SERIALIZE_TRANSFER, $options)) {
+            $serialized['permissions'] = [
+                'open' => $this->authorization->isGranted('OPEN', $group),
+                'edit' => $this->authorization->isGranted('EDIT', $group),
+                'administrate' => $this->authorization->isGranted('ADMINISTRATE', $group),
+                'delete' => $this->authorization->isGranted('DELETE', $group),
+            ];
+        }
+
+        if (!in_array(SerializerInterface::SERIALIZE_LIST, $options)) {
+            $serialized['organizations'] = array_map(function (Organization $organization) use ($options) {
+                return $this->organizationSerializer->serialize($organization, $options);
+            }, $group->getOrganizations()->toArray());
+        }
+
+        return $serialized;
     }
 
     /**
@@ -86,25 +107,19 @@ class GroupSerializer
     public function deserialize(array $data, Group $group, ?array $options = []): Group
     {
         $this->sipe('name', 'setName', $data, $group);
+        $this->sipe('poster', 'setPoster', $data, $group);
+        $this->sipe('thumbnail', 'setThumbnail', $data, $group);
+        $this->sipe('meta.description', 'setDescription', $data, $group);
 
-        if (isset($data['organizations'])) {
-            $group->setOrganizations(
-                array_map(function ($organization) {
+        if (array_key_exists('organizations', $data)) {
+            $organizations = [];
+            if (!empty($data['organizations'])) {
+                $organizations = array_map(function ($organization) {
                     return $this->om->getObject($organization, Organization::class);
-                }, $data['organizations'])
-            );
-        }
-
-        // only add role here. If we want to remove them, use the crud remove method instead
-        // it's useful if we want to create a user with a list of roles
-        if (isset($data['roles'])) {
-            foreach ($data['roles'] as $roleData) {
-                /** @var Role $role */
-                $role = $this->om->getObject($roleData, Role::class);
-                if ($role) {
-                    $group->addRole($role);
-                }
+                }, $data['organizations']);
             }
+
+            $group->setOrganizations($organizations);
         }
 
         return $group;

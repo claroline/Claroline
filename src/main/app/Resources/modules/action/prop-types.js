@@ -107,7 +107,7 @@ const Toolbar = {
      */
     buttonName: T.string,
 
-    size: T.oneOf(['sm', 'lg']),
+    size: T.oneOf(['xs', 'sm', 'lg']),
 
     /**
      * The toolbar display configuration as a string.

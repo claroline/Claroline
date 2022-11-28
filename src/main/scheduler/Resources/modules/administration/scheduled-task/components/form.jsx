@@ -5,7 +5,7 @@ import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
-import {UserList} from '#/main/core/user/components/list'
+import {UserList} from '#/main/community/user/components/list'
 
 import {constants} from '#/main/scheduler/administration/scheduled-task/constants'
 import {selectors} from '#/main/scheduler/administration/scheduled-task/store'

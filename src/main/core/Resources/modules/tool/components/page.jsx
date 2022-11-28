@@ -1,5 +1,6 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import classes from 'classnames'
 import get from 'lodash/get'
 import omit from 'lodash/omit'
 
@@ -9,7 +10,6 @@ import {PageFull} from '#/main/app/page/components/full'
 import {ToolIcon} from '#/main/core/tool/components/icon'
 import {getActions, getToolBreadcrumb, showToolBreadcrumb} from '#/main/core/tool/utils'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
-import classes from 'classnames'
 
 const ToolPage = props => {
   let toolbar = 'edit'
@@ -34,7 +34,7 @@ const ToolPage = props => {
 
   return (
     <PageFull
-      className={`${props.name}-page`}
+      className={classes(`${props.name}-page`, props.className)}
       title={trans(props.name, {}, 'tools')}
       showBreadcrumb={showToolBreadcrumb(props.currentContext.type, props.currentContext.data)}
       path={[].concat(getToolBreadcrumb(props.name, props.currentContext.type, props.currentContext.data), props.path)}
@@ -50,8 +50,9 @@ const ToolPage = props => {
         description: get(props.currentContext.data, 'meta.description')
       }}
 
-      {...omit(props, 'name', 'currentContext', 'path', 'basePath', 'toolData', 'reload')}
       toolbar={toolbar}
+      {...omit(props, 'name', 'currentContext', 'path', 'basePath', 'toolData', 'reload')}
+
       actions={getActions(props.toolData, props.currentContext, {
         update: () => props.reload()
       }, props.basePath).then(baseActions => {
@@ -68,6 +69,8 @@ const ToolPage = props => {
 }
 
 ToolPage.propTypes = {
+  className: T.string,
+
   // tool props
   name: T.string.isRequired,
   toolData: T.shape({

@@ -40,21 +40,11 @@ class OrganizationFinder extends AbstractFinder
                         $qb->setParameter('parentIds', is_array($filterValue) ? $filterValue : [$filterValue]);
                     }
                     break;
-                case 'user':
+                case 'user': // I'm not sure this is used
                     $qb->leftJoin('obj.userOrganizationReferences', 'ur');
                     $qb->leftJoin('ur.user', 'u');
                     $qb->andWhere('u.uuid IN (:userIds)');
                     $qb->setParameter('userIds', is_array($filterValue) ? $filterValue : [$filterValue]);
-                    break;
-                case 'group':
-                    $qb->leftJoin('obj.groups', 'g');
-                    $qb->andWhere('g.uuid IN (:groupIds)');
-                    $qb->setParameter('groupIds', is_array($filterValue) ? $filterValue : [$filterValue]);
-                    break;
-                case 'workspace':
-                    $qb->leftJoin('obj.workspaces', 'w');
-                    $qb->andWhere('w.uuid IN (:workspaceIds)');
-                    $qb->setParameter('workspaceIds', is_array($filterValue) ? $filterValue : [$filterValue]);
                     break;
                 default:
                     $this->setDefaults($qb, $filterName, $filterValue);

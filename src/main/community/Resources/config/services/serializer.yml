@@ -2,6 +2,7 @@ services:
     Claroline\CommunityBundle\Serializer\GroupSerializer:
         tags: [claroline.serializer]
         arguments:
+            - '@security.authorization_checker'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CommunityBundle\Serializer\OrganizationSerializer'
             - '@Claroline\CommunityBundle\Serializer\RoleSerializer'
@@ -9,6 +10,7 @@ services:
     Claroline\CommunityBundle\Serializer\OrganizationSerializer:
         tags: [claroline.serializer]
         arguments:
+            - '@security.authorization_checker'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     Claroline\CommunityBundle\Serializer\ProfileSerializer:
@@ -20,6 +22,7 @@ services:
     Claroline\CommunityBundle\Serializer\RoleSerializer:
         tags: [claroline.serializer]
         arguments:
+            - '@security.authorization_checker'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\Manager\Tool\ToolMaskDecoderManager'
             - '@Claroline\CoreBundle\Manager\Tool\ToolRightsManager'

@@ -28,8 +28,7 @@
     },
     "administrativeCode": {
       "type": ["string", "null"],
-      "description": "The user administrativeCode",
-      "minLength": 1
+      "description": "The user administrativeCode"
     },
     "plainPassword": {
       "type": "string",

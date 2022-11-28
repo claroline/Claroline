@@ -14,7 +14,6 @@ namespace Claroline\CommunityBundle\Finder;
 use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\CommunityBundle\Finder\Filter\UserFilter;
 use Claroline\CoreBundle\Entity\Group;
-use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\QueryBuilder;
 
@@ -56,19 +55,6 @@ class UserFinder extends AbstractFinder
                 case 'id': // should not exist
                     $qb->andWhere('obj.uuid IN (:userUuids)');
                     $qb->setParameter('userUuids', is_array($filterValue) ? $filterValue : [$filterValue]);
-                    break;
-
-                case 'emails':
-                    $qb->orWhere($qb->expr()->orX(
-                        $qb->expr()->in('obj.email', ':globalSearch'),
-                        $qb->expr()->in('obj.username', ':globalSearch')
-                    ));
-
-                    $data = array_map(function ($email) {
-                        return trim($email);
-                    }, str_getcsv($filterValue));
-
-                    $qb->setParameter('emails', $data);
                     break;
 
                 case 'hasPersonalWorkspace':
@@ -113,7 +99,7 @@ class UserFinder extends AbstractFinder
                     $qb->setParameter('groupRoleIds', is_array($filterValue) ? $filterValue : [$filterValue]);
                     break;
 
-                case 'roleTranslation':
+                case 'roleTranslation': // should not exist
                     if (!$roleJoin) {
                         $qb->leftJoin('obj.roles', 'r');
                         $roleJoin = true;
@@ -131,33 +117,6 @@ class UserFinder extends AbstractFinder
                    $qb->setParameter('organizationIds', is_array($filterValue) ? $filterValue : [$filterValue]);
                    break;
 
-                case 'recursiveOrXOrganization':
-                    $value = is_array($filterValue) ? $filterValue : [$filterValue];
-                    $roots = $this->om->findList(Organization::class, 'uuid', $value);
-
-                    if (count($roots) > 0) {
-                        $qb->leftJoin('obj.userOrganizationReferences', 'oref');
-                        $qb->leftJoin('oref.organization', 'oparent');
-                        $qb->leftJoin('oref.organization', 'organization');
-
-                        $expr = [];
-                        foreach ($roots as $root) {
-                            $expr[] = $qb->expr()->andX(
-                                $qb->expr()->gte('organization.lft', $root->getLeft()),
-                                $qb->expr()->lte('organization.rgt', $root->getRight()),
-                                $qb->expr()->eq('oparent.root', $root->getRoot())
-                            );
-                        }
-
-                        $qb->andWhere($qb->expr()->orX(...$expr));
-                    } else {
-                        //no roots mean no user so we stop it here and make a crazy search
-                        $qb->andWhere('obj.id = -1');
-
-                        return $qb;
-                    }
-                    break;
-
                 case 'location':
                     $qb->leftJoin('obj.locations', 'l');
                     $qb->andWhere('l.uuid IN (:locationIds)');
@@ -170,7 +129,7 @@ class UserFinder extends AbstractFinder
                     $qb->setParameter('administratedOrganizations', is_array($filterValue) ? $filterValue : [$filterValue]);
                     break;
 
-                case 'workspace':
+                case 'workspace': // Avoid using it : directly search by passing the workspace roles (more efficient)
                     if (!is_array($filterValue)) {
                         $filterValue = [$filterValue];
                     }

@@ -72,16 +72,19 @@ class RoleFinder extends AbstractFinder
                     $qb->setParameter($filterName, $filterValue);
                     break;
                 case 'user':
+                case 'users':
                     $qb->leftJoin('obj.users', 'ru');
                     $qb->andWhere('ru.uuid IN (:userIds)');
                     $qb->setParameter('userIds', is_array($filterValue) ? $filterValue : [$filterValue]);
                     break;
                 case 'group':
+                case 'groups':
                     $qb->leftJoin('obj.groups', 'g');
                     $qb->andWhere('g.uuid IN (:groupIds)');
                     $qb->setParameter('groupIds', is_array($filterValue) ? $filterValue : [$filterValue]);
                     break;
                 case 'workspace':
+                case 'workspaces':
                     if (!$workspaceJoin) {
                         $qb->leftJoin('obj.workspace', 'w');
                         $workspaceJoin = true;

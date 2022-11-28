@@ -22,7 +22,7 @@ import {ListData} from '#/main/app/content/list/containers/data'
 import {formatField} from '#/main/community/profile/utils'
 
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
-import {UserCard} from '#/main/core/user/components/card'
+import {UserCard} from '#/main/community/user/components/card'
 import {MODAL_USERS} from '#/main/community/modals/users'
 import {ContentHtml} from '#/main/app/content/components/html'
 import {UserMicro} from '#/main/core/user/components/micro'

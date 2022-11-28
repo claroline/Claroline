@@ -3,8 +3,8 @@
 namespace Claroline\OpenBadgeBundle\Library\Rules;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CommunityBundle\Repository\UserRepository;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Repository\User\UserRepository;
 use Claroline\OpenBadgeBundle\Entity\Rules\Rule;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;

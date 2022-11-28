@@ -9,9 +9,9 @@ const STORE_NAME = 'community'
 
 const store = (state) => state[STORE_NAME]
 
-const restrictions = createSelector(
+const parameters = createSelector(
   [store],
-  (store) => store.restrictions
+  (store) => store.parameters
 )
 
 const loaded = createSelector(
@@ -31,11 +31,6 @@ const canCreate = createSelector(
   }
 )
 
-const canCreateRole = createSelector(
-  [toolSelectors.toolData],
-  (tool) => hasPermission('administrate', tool)
-)
-
 const defaultRole = createSelector(
   [toolSelectors.contextType, toolSelectors.contextData],
   (contextType, contextData) => {
@@ -51,9 +46,8 @@ export const selectors = {
   STORE_NAME,
 
   store,
+  parameters,
   loaded,
-  restrictions,
   canCreate,
-  canCreateRole,
   defaultRole
 }

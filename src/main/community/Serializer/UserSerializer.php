@@ -6,6 +6,7 @@ use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CommunityBundle\Repository\RoleRepository;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;
 use Claroline\CoreBundle\Entity\Organization\Organization;
@@ -18,7 +19,6 @@ use Claroline\CoreBundle\Manager\FacetManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceUserQueueManager;
 use Claroline\CoreBundle\Repository\Facet\FieldFacetRepository;
 use Claroline\CoreBundle\Repository\Facet\FieldFacetValueRepository;
-use Claroline\CoreBundle\Repository\User\RoleRepository;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -154,13 +154,19 @@ class UserSerializer
             'phone' => $showEmail ? $user->getPhone() : null,
             'meta' => $this->serializeMeta($user),
             'restrictions' => $this->serializeRestrictions($user),
-            // this has a uge negative impact on perfs
-            // be this is useful to have the user roles in DataLists (mostly in workspace to know which ws role a user has)
+            // this has a uge negative impact on performances
+            // but this is useful to have the user roles in DataLists (mostly in workspace to know which ws role a user has)
             'roles' => array_merge($userRoles, $groupRoles),
         ];
 
-        if ($user->getMainOrganization()) {
-            $serializedUser['mainOrganization'] = $this->organizationSerializer->serialize($user->getMainOrganization(), [SerializerInterface::SERIALIZE_MINIMAL]);
+        if (!in_array(SerializerInterface::SERIALIZE_LIST, $options)) {
+            if ($user->getMainOrganization()) {
+                $serializedUser['mainOrganization'] = $this->organizationSerializer->serialize($user->getMainOrganization(), [SerializerInterface::SERIALIZE_MINIMAL]);
+            }
+
+            $serializedUser['organizations'] = array_map(function (Organization $organization) {
+                return $this->organizationSerializer->serialize($organization, [SerializerInterface::SERIALIZE_MINIMAL]);
+            }, $user->getOrganizations());
         }
 
         if (!in_array(SerializerInterface::SERIALIZE_TRANSFER, $options)) {
@@ -185,83 +191,14 @@ class UserSerializer
         return $serializedUser;
     }
 
-    private function serializeMeta(User $user): array
+    public function deserialize(array $data, User $user, array $options = []): User
     {
-        return [
-            'acceptedTerms' => $user->hasAcceptedTerms(),
-            'lastActivity' => DateNormalizer::normalize($user->getLastActivity()),
-            'created' => DateNormalizer::normalize($user->getCreated()),
-            'description' => $user->getDescription(),
-            'mailValidated' => $user->isMailValidated(),
-            'mailNotified' => $user->isMailNotified(),
-            'personalWorkspace' => (bool) $user->getPersonalWorkspace(),
-            'locale' => $user->getLocale(),
-        ];
-    }
-
-    private function deserializeMeta(array $meta, User $user)
-    {
-        $this->sipe('locale', 'setLocale', $meta, $user);
-        $this->sipe('description', 'setDescription', $meta, $user);
-        $this->sipe('mailNotified', 'setIsMailNotified', $meta, $user);
-        $this->sipe('mailValidated', 'setIsMailValidated', $meta, $user);
-    }
-
-    private function serializePermissions(User $user): array
-    {
-        $token = $this->tokenStorage->getToken();
-        $currentUser = $token ? $token->getUser() : null;
-
-        $isOwner = $currentUser instanceof User && $currentUser->getUuid() === $user->getUuid();
-
-        return [
-            'open' => true,
-            'contact' => !$isOwner,
-            'edit' => $this->authorization->isGranted('EDIT', $user),
-            'administrate' => $this->authorization->isGranted('ADMINISTRATE', $user),
-            'delete' => $this->authorization->isGranted('DELETE', $user),
-        ];
-    }
-
-    private function serializeRestrictions(User $user): array
-    {
-        return [
-            'locked' => $user->isLocked(),
-            'disabled' => !$user->isEnabled(),
-            'removed' => $user->isRemoved(),
-            'dates' => DateRangeNormalizer::normalize($user->getInitDate(), $user->getExpirationDate()),
-        ];
-    }
-
-    private function deserializeRestrictions(array $restrictions, User $user)
-    {
-        if (isset($restrictions['disabled'])) {
-            $user->setIsEnabled(!$restrictions['disabled']);
+        if (!in_array(SerializerInterface::REFRESH_UUID, $options)) {
+            $this->sipe('id', 'setUuid', $data, $user);
+        } else {
+            $user->refreshUuid();
         }
 
-        if (isset($restrictions['locked'])) {
-            $user->setLocked($restrictions['locked']);
-        }
-
-        if (isset($restrictions['removed'])) {
-            $user->setRemoved($restrictions['removed']);
-        }
-
-        if (isset($restrictions['dates'])) {
-            $dateRange = DateRangeNormalizer::denormalize($restrictions['dates']);
-
-            $user->setInitDate($dateRange[0]);
-            $user->setExpirationDate($dateRange[1]);
-        }
-    }
-
-    public function deserialize(array $data, User $user = null, array $options = []): User
-    {
-        if (empty($user)) {
-            $user = new User();
-        }
-
-        $this->sipe('id', 'setUuid', $data, $user);
         $this->sipe('username', 'setUserName', $data, $user);
         $this->sipe('firstName', 'setFirstName', $data, $user);
         $this->sipe('lastName', 'setLastName', $data, $user);
@@ -356,5 +293,75 @@ class UserSerializer
         }
 
         return $user;
+    }
+
+    private function serializeMeta(User $user): array
+    {
+        return [
+            'acceptedTerms' => $user->hasAcceptedTerms(),
+            'lastActivity' => DateNormalizer::normalize($user->getLastActivity()),
+            'created' => DateNormalizer::normalize($user->getCreated()),
+            'description' => $user->getDescription(),
+            'mailValidated' => $user->isMailValidated(),
+            'mailNotified' => $user->isMailNotified(),
+            'personalWorkspace' => (bool) $user->getPersonalWorkspace(),
+            'locale' => $user->getLocale(),
+        ];
+    }
+
+    private function deserializeMeta(array $meta, User $user): void
+    {
+        $this->sipe('locale', 'setLocale', $meta, $user);
+        $this->sipe('description', 'setDescription', $meta, $user);
+        $this->sipe('mailNotified', 'setIsMailNotified', $meta, $user);
+        $this->sipe('mailValidated', 'setIsMailValidated', $meta, $user);
+    }
+
+    private function serializePermissions(User $user): array
+    {
+        $token = $this->tokenStorage->getToken();
+        $currentUser = $token ? $token->getUser() : null;
+
+        $isOwner = $currentUser instanceof User && $currentUser->getUuid() === $user->getUuid();
+
+        return [
+            'open' => true,
+            'contact' => !$isOwner,
+            'edit' => $this->authorization->isGranted('EDIT', $user),
+            'administrate' => $this->authorization->isGranted('ADMINISTRATE', $user),
+            'delete' => $this->authorization->isGranted('DELETE', $user),
+        ];
+    }
+
+    private function serializeRestrictions(User $user): array
+    {
+        return [
+            'locked' => $user->isLocked(),
+            'disabled' => !$user->isEnabled(),
+            'removed' => $user->isRemoved(),
+            'dates' => DateRangeNormalizer::normalize($user->getInitDate(), $user->getExpirationDate()),
+        ];
+    }
+
+    private function deserializeRestrictions(array $restrictions, User $user): void
+    {
+        if (isset($restrictions['disabled'])) {
+            $user->setIsEnabled(!$restrictions['disabled']);
+        }
+
+        if (isset($restrictions['locked'])) {
+            $user->setLocked($restrictions['locked']);
+        }
+
+        if (isset($restrictions['removed'])) {
+            $user->setRemoved($restrictions['removed']);
+        }
+
+        if (isset($restrictions['dates'])) {
+            $dateRange = DateRangeNormalizer::denormalize($restrictions['dates']);
+
+            $user->setInitDate($dateRange[0]);
+            $user->setExpirationDate($dateRange[1]);
+        }
     }
 }

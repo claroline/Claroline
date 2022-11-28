@@ -7,7 +7,7 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {constants as listConst} from '#/main/app/content/list/constants'
 
-import {route} from '#/main/community/routing'
+import {route} from '#/main/community/user/routing'
 import {ContactCard} from '#/plugin/message/data/components/contact-card'
 import {ToolParameters as ToolParametersTypes} from '#/plugin/message/tools/messaging/prop-types'
 import {selectors} from '#/plugin/message/tools/messaging/store'

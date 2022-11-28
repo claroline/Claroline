@@ -5,14 +5,13 @@ import omit from 'lodash/omit'
 import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
-import {ListData} from '#/main/app/content/list/containers/data'
+
+import {Group as GroupTypes} from '#/main/community/prop-types'
+import {GroupList} from '#/main/community/group/components/list'
 
 import {selectors} from '#/main/community/modals/groups/store'
-import {GroupList} from '#/main/community/administration/community/group/components/group-list'
-import {Group as GroupType} from '#/main/community/prop-types'
 
-class GroupsModal extends Component
-{
+class GroupsModal extends Component {
   constructor(props) {
     super(props)
 
@@ -27,7 +26,7 @@ class GroupsModal extends Component
     return (
       <Modal
         icon="fa fa-fw fa-users"
-        {...omit(this.props, 'url', 'selected', 'selectAction', 'reset', 'resetFilters', 'filters', 'isAdmin')}
+        {...omit(this.props, 'url', 'selected', 'selectAction', 'reset', 'resetFilters', 'filters')}
         className="data-picker-modal"
         bsSize="lg"
         onEnter={() => {
@@ -36,14 +35,12 @@ class GroupsModal extends Component
         }}
         onExited={this.props.reset}
       >
-        <ListData
+        <GroupList
           name={selectors.STORE_NAME}
-          fetch={{
-            url: this.props.url,
-            autoload: this.state.initialized
-          }}
-          definition={GroupList.definition}
-          card={GroupList.card}
+          url={this.props.url}
+          autoload={this.state.initialized}
+          primaryAction={undefined}
+          actions={undefined}
         />
 
         <Button
@@ -64,13 +61,13 @@ GroupsModal.propTypes = {
   url: T.oneOfType([T.string, T.array]),
   title: T.string,
   filters: T.arrayOf(T.shape({
-    // TODO : list filter types
+    // list filter types
   })),
   selectAction: T.func.isRequired,
   fadeModal: T.func.isRequired,
 
   // from store
-  selected: T.arrayOf(T.shape(GroupType.propTypes)).isRequired,
+  selected: T.arrayOf(T.shape(GroupTypes.propTypes)).isRequired,
   reset: T.func.isRequired,
   resetFilters: T.func.isRequired
 }

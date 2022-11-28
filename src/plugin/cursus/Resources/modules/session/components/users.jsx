@@ -6,7 +6,7 @@ import {hasPermission} from '#/main/app/security'
 import {Button} from '#/main/app/action/components/button'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {constants as listConst} from '#/main/app/content/list/constants'
-import {UserCard} from '#/main/core/user/components/card'
+import {UserCard} from '#/main/community/user/components/card'
 
 import {Session as SessionTypes} from '#/plugin/cursus/prop-types'
 
@@ -37,7 +37,7 @@ const SessionUsers = (props) =>
           displayed: true
         }, {
           name: 'userDisabled',
-          label: trans('user_disabled'),
+          label: trans('user_disabled', {}, 'community'),
           type: 'boolean',
           displayable: false,
           sortable: false,

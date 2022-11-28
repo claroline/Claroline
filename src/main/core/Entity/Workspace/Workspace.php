@@ -28,7 +28,7 @@ use Claroline\AppBundle\Entity\Restriction\AccessibleFrom;
 use Claroline\AppBundle\Entity\Restriction\AccessibleUntil;
 use Claroline\AppBundle\Entity\Restriction\AllowedIps;
 use Claroline\AppBundle\Entity\Restriction\Hidden;
-use Claroline\CoreBundle\Entity\Model\OrganizationsTrait;
+use Claroline\CommunityBundle\Model\HasOrganizations;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -62,7 +62,7 @@ class Workspace implements IdentifiableInterface
     use AccessibleUntil;
     use AccessCode;
     use AllowedIps;
-    use OrganizationsTrait;
+    use HasOrganizations;
 
     /**
      * @Gedmo\Slug(fields={"code"})

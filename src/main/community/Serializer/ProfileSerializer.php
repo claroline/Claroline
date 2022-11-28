@@ -20,9 +20,6 @@ class ProfileSerializer
     /** @var FacetSerializer */
     private $facetSerializer;
 
-    /**
-     * ProfileSerializer constructor.
-     */
     public function __construct(
         TokenStorageInterface $tokenStorage,
         ObjectManager $om,
@@ -33,17 +30,15 @@ class ProfileSerializer
         $this->facetSerializer = $facetSerializer;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'profile';
     }
 
     /**
      * Serializes the profile configuration.
-     *
-     * @return array
      */
-    public function serialize(array $options = [])
+    public function serialize(array $options = []): array
     {
         $facets = $this->repository
             ->findVisibleFacets($this->tokenStorage->getToken(), in_array(Options::REGISTRATION, $options));
