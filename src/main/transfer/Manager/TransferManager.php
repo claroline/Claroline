@@ -146,7 +146,7 @@ class TransferManager
             $fs->mkdir($this->filesDir);
         }
 
-        $exportPath = $this->filesDir.$exportFile->getUuid();
+        $exportPath = $this->filesDir.DIRECTORY_SEPARATOR.$exportFile->getUuid();
         if ($fs->exists($exportPath)) {
             $fs->remove($exportPath);
         }
