@@ -8,7 +8,7 @@ import {FormDataModal} from '#/main/app/modals/form/components/data'
 const DisableInactiveModal = (props) =>
   <FormDataModal
     {...omit(props, 'disableInactive')}
-    icon="fa fa-fw fa-user-slash"
+    icon="fa fa-fw fa-user-clock"
     title={trans('disable_inactive_users', {}, 'community')}
     save={(data) => props.disableInactive(data.lastActivity)}
     sections={[

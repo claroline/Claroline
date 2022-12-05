@@ -1,7 +1,7 @@
 plugin:
     tools:
         - name: community
-          class: user
+          class: users
           is_displayable_in_workspace: true
           is_displayable_in_desktop: true
           tool_rights:

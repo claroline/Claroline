@@ -11,7 +11,7 @@ import {Event as EventTypes} from '#/plugin/cursus/prop-types'
 const AboutModal = props =>
   <Modal
     {...omit(props, 'event')}
-    icon="fa fa-fw fa-info"
+    icon="fa fa-fw fa-circle-info"
     title={trans('about')}
     subtitle={props.event.name}
     poster={props.event.poster ? props.event.poster : undefined}

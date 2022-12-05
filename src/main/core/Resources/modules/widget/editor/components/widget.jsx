@@ -63,12 +63,12 @@ const WidgetCol = props =>
         <Button
           className="btn-link"
           type={MODAL_BUTTON}
-          icon="fa fa-fw fa-trash-o"
+          icon="fa fa-fw fa-trash"
           label={trans('delete', {}, 'actions')}
           dangerous={true}
           modal={[MODAL_CONFIRM, {
             dangerous: true,
-            icon: 'fa fa-fw fa-trash-o',
+            icon: 'fa fa-fw fa-trash',
             title: trans('widget_delete_confirm_title', {}, 'widget'),
             question: trans('widget_delete_confirm_message', {}, 'widget'),
             handleConfirm: () => props.deleteContent(props.content)

@@ -66,7 +66,7 @@ function getEditButtons(solution) {
   //Also DO NOT INCLUDE 'style' for tinymce because it'll mess everything aswell for it. He doesn't like that at all.
   //Positions can't be computed that way because he recursively adds it everywhere like a retard
   //DO NOT ADD EXTRA SPACES HERE EITHER. Or it'll brake tinymce again. This is a scared line and must not be changed !
-  return `<span class="selection-buttons"><em class="fa fa-pencil edit-selection-btn selection-button" data-selection-id="${id}">&nbsp;</em><em class="fa fa-trash-o delete-selection-btn selection-button" data-selection-id="${id}">&nbsp;</em></span>`
+  return `<span class="selection-buttons"><em class="fa fa-pencil edit-selection-btn selection-button" data-selection-id="${id}">&nbsp;</em><em class="fa fa-trash delete-selection-btn selection-button" data-selection-id="${id}">&nbsp;</em></span>`
 }
 
 //This function allows us to remove our decorations class to get to proper text.

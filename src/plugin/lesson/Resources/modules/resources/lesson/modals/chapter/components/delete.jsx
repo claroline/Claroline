@@ -39,7 +39,7 @@ class ChapterDeleteModal extends Component {
     return (
       <Modal
         {...omit(this.props, 'deleteChapter', 'chapterTitle')}
-        icon="fa fa-fw fa-trash-o"
+        icon="fa fa-fw fa-trash"
         title={trans('delete_warning', {}, 'lesson')}
       >
         <FormData

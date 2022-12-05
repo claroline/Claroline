@@ -6,7 +6,7 @@ import {ImageDisplay} from '#/main/app/data/types/image/components/display'
 const dataType = {
   name: 'image',
   meta: {
-    icon: 'fa fa-fw fa-picture-o',
+    icon: 'fa fa-fw fa-picture',
     label: trans('image', {}, 'data'),
     description: trans('image_desc', {}, 'data')
   },

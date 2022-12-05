@@ -26,7 +26,7 @@ export const QuestionRow = props =>
           className="btn btn-link"
           target={`${props.path}/correction/${props.question.id}`}
         >
-          <span className="fa fa-fw fa-check-square-o" />
+          <span className="fa fa-fw fa-check-square" />
         </LinkButton>
       </TooltipOverlay>
     </td>

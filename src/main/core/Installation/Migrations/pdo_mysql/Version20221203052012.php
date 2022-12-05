@@ -18,7 +18,8 @@ class Version20221203052012 extends AbstractMigration
             ALTER TABLE claro__organization 
             ADD description LONGTEXT DEFAULT NULL, 
             ADD poster VARCHAR(255) DEFAULT NULL, 
-            ADD thumbnail VARCHAR(255) DEFAULT NULL
+            ADD thumbnail VARCHAR(255) DEFAULT NULL,
+            CHANGE type type VARCHAR(255) DEFAULT NULL
         ');
     }
 
@@ -28,7 +29,8 @@ class Version20221203052012 extends AbstractMigration
             ALTER TABLE claro__organization 
             DROP description, 
             DROP poster, 
-            DROP thumbnail
+            DROP thumbnail,
+            CHANGE type type VARCHAR(255) CHARACTER SET utf8 NOT NULL COLLATE `utf8_unicode_ci`
         ');
     }
 }

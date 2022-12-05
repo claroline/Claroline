@@ -45,7 +45,7 @@ const EventPage = (props) =>
       }, {
         name: 'delete',
         type: CALLBACK_BUTTON,
-        icon: 'fa fa-fw fa-trash-o',
+        icon: 'fa fa-fw fa-trash',
         label: trans('delete', {}, 'actions'),
         callback: () => props.delete(props.event).then(() => {
           props.reload(props.event)

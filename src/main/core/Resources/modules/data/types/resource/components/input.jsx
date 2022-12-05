@@ -49,7 +49,7 @@ const ResourceInput = props => {
           }, {
             name: 'delete',
             type: MODAL_BUTTON,
-            icon: 'fa fa-fw fa-trash-o',
+            icon: 'fa fa-fw fa-trash',
             label: trans('delete', {}, 'actions'),
             dangerous: true,
             disabled: props.disabled,
@@ -73,7 +73,7 @@ const ResourceInput = props => {
           disabled={props.disabled}
           modal={[MODAL_CONFIRM, {
             dangerous: true,
-            icon: 'fa fa-fw fa-trash-o',
+            icon: 'fa fa-fw fa-trash',
             title: transChoice('resources_delete_confirm', 1, {}, 'resource'),
             question: transChoice('resources_delete_message', 1, {count: 1}, 'resource'),
             handleConfirm: () => props.onChange(null)

@@ -13,7 +13,7 @@ import {route} from '#/main/core/resource/routing'
 export default (resourceNodes, nodesRefresher, path) => ({
   name: 'open',
   type: LINK_BUTTON,
-  icon: 'fa fa-fw fa-arrow-circle-o-right',
+  icon: 'fa fa-fw fa-arrow-circle-right',
   label: trans('open', {}, 'actions'),
   target: route(resourceNodes[0], path),
   scope: ['object'],

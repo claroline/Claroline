@@ -110,7 +110,7 @@ const RoomDetails = (props) =>
           {
             name: 'about',
             type: LINK_BUTTON,
-            icon: 'fa fa-fw fa-info',
+            icon: 'fa fa-fw fa-circle-info',
             label: trans('about'),
             target: `${props.path}/rooms/${props.room.id}`,
             exact: true

@@ -20,7 +20,7 @@ const FacetSection = props =>
     actions={[
       {
         type: CALLBACK_BUTTON,
-        icon: 'fa fa-fw fa-trash-o',
+        icon: 'fa fa-fw fa-trash',
         label: trans('delete'),
         callback: props.remove,
         dangerous: true,
@@ -118,7 +118,7 @@ const ProfileFacet = props =>
     {0 === props.facet.sections.length &&
       <ContentPlaceholder
         size="lg"
-        icon="fa fa-frown-o"
+        icon="fa fa-face-frown"
         title={trans('profile_facet_no_section')}
       />
     }

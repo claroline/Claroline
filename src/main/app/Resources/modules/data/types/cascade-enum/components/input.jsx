@@ -116,7 +116,7 @@ class EnumItem extends Component {
               id={`enum-item-${this.props.item.id}-delete`}
               type={CALLBACK_BUTTON}
               className="btn-link"
-              icon="fa fa-fw fa-trash-o"
+              icon="fa fa-fw fa-trash"
               label={this.props.deleteButtonLabel}
               tooltip="left"
               callback={() => this.props.onDelete(this.props.indexes)}

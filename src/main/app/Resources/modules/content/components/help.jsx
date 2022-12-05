@@ -7,14 +7,14 @@ const ContentHelp = props => Array.isArray(props.help) ?
   <ul className="help-block-list" style={props.style}>
     {props.help.map(help =>
       <li key={toKey(help)} className="help-block">
-        <span className="help-icon fa fa-fw fa-info-circle" />
+        <span className="help-icon fa fa-fw fa-circle-info" />
         {help}
       </li>
     )}
   </ul>
   :
   <div className="help-block" style={props.style}>
-    <span className="help-icon fa fa-fw fa-info-circle" />
+    <span className="help-icon fa fa-fw fa-circle-info" />
     {props.help}
   </div>
 

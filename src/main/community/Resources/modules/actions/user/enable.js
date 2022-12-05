@@ -1,23 +1,28 @@
+import get from 'lodash/get'
+
 import {url} from '#/main/app/api'
 import {hasPermission} from '#/main/app/security'
 import {trans} from '#/main/app/intl/translation'
 import {ASYNC_BUTTON} from '#/main/app/buttons'
 
-export default (users, refresher) => ({
-  name: 'enable',
-  type: ASYNC_BUTTON,
-  icon: 'fa fa-fw fa-check-circle',
-  label: trans('enable_user'),
-  scope: ['object', 'collection'],
-  displayed: users.length === users.filter(u => hasPermission('administrate', u)).length &&
-    0 < users.filter(u => u.restrictions.disabled).length,
-  request: {
-    url: url(['apiv2_users_enable'], {ids: users.map(u => u.id)}),
+export default (users, refresher) => {
+  const processable = users.filter(user => hasPermission('administrate', user) && get(user, 'restrictions.disabled', false))
+
+  return {
+    name: 'enable',
+    type: ASYNC_BUTTON,
+    icon: 'fa fa-fw fa-user-check',
+    label: trans('enable', {}, 'actions'),
+    scope: ['object', 'collection'],
+    displayed: 0 !== processable.length,
     request: {
-      method: 'PUT'
+      url: url(['apiv2_users_enable'], {ids: users.map(u => u.id)}),
+      request: {
+        method: 'PUT'
+      },
+      success: (response) => refresher.update(response)
     },
-    success: (users) => refresher.update(users)
-  },
-  group: trans('management'),
-  primary: true
-})
+    group: trans('management'),
+    primary: true
+  }
+}

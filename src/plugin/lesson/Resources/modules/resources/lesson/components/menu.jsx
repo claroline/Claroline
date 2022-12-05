@@ -48,7 +48,7 @@ const LessonMenu = props => {
         }, {
           name: 'delete',
           type: CALLBACK_BUTTON,
-          icon: 'fa fa-fw fa-trash-o',
+          icon: 'fa fa-fw fa-trash',
           label: trans('delete', {}, 'actions'),
           callback: () => props.delete(props.lesson.id, chapter.slug, chapter.title, props.history, props.path),
           onClick: (e) => {

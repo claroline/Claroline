@@ -84,7 +84,7 @@ const AnnouncePost = props =>
               id={`${props.announcement.id}-delete`}
               className="btn-link"
               type={CALLBACK_BUTTON}
-              icon="fa fa-fw fa-trash-o"
+              icon="fa fa-fw fa-trash"
               label={trans('delete')}
               tooltip="top"
               callback={props.removePost}

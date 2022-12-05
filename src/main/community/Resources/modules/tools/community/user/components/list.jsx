@@ -72,7 +72,7 @@ const UserList = props =>
       }, {
         name: 'disable-inactive',
         type: MODAL_BUTTON,
-        icon: 'fa fa-fw fa-user-slash',
+        icon: 'fa fa-fw fa-user-clock',
         label: trans('disable_inactive_users', {}, 'community'),
         modal: [MODAL_USER_DISABLE_INACTIVE],
         displayed: 'desktop' === props.contextType && props.canAdministrate,

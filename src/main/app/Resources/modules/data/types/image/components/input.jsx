@@ -141,7 +141,7 @@ class ImageInputComponent extends PureComponent {
               id={`${this.props.id}-delete`}
               type={CALLBACK_BUTTON}
               className="btn"
-              icon="fa fa-fw fa-trash-o"
+              icon="fa fa-fw fa-trash"
               label={trans('delete', {}, 'actions')}
               tooltip="left"
               disabled={this.props.disabled}

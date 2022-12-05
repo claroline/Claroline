@@ -230,7 +230,7 @@ AutoComplete.prototype = {
   },
 
   render: function (item, query) {
-    let avatar = '<span class="user-avatar fa fa-user-circle-o"></span>'
+    let avatar = '<span class="user-avatar fa fa-user-circle"></span>'
     if (item.picture) {
       avatar = `<img class="user-avatar" src="${asset(item.picture)}" alt="${item.name}" />`
     }

@@ -65,7 +65,7 @@ class AnswerRow extends Component {
               id={`feedback-${this.props.id}-toggle`}
               className="btn-link"
               type={CALLBACK_BUTTON}
-              icon="fa fa-fw fa-comments-o"
+              icon="fa fa-fw fa-comments"
               label={trans('feedback', {}, 'quiz')}
               callback={() => this.setState({showFeedback: !this.state.showFeedback})}
             />

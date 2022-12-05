@@ -54,7 +54,7 @@ class Section extends Component {
             className="btn-link"
             callback={() => this.props.onPlay(this.props.solution.section.start, this.props.solution.section.end)}
           >
-            <span className="fa fa-fw fa-play-circle-o" />
+            <span className="fa fa-fw fa-play" />
           </CallbackButton>
 
           <div
@@ -119,7 +119,7 @@ class Section extends Component {
               className="btn-link"
               callback={() => this.setState({showFeedback: !this.state.showFeedback})}
             >
-              <span className="fa fa-fw fa-comments-o" />
+              <span className="fa fa-fw fa-comments" />
             </CallbackButton>
 
             <CallbackButton
@@ -128,7 +128,7 @@ class Section extends Component {
               callback={() => this.props.onRemove()}
               dangerous={true}
             >
-              <span className="fa fa-fw fa-trash-o" />
+              <span className="fa fa-fw fa-trash" />
             </CallbackButton>
           </div>
         </div>
@@ -148,7 +148,7 @@ class Section extends Component {
               parseFloat((this.props.solution.section.end + this.props.solution.section.endTolerance).toFixed(1))
             )}
           >
-            <span className="fa fa-fw fa-play-circle-o" />
+            <span className="fa fa-fw fa-play" />
           </CallbackButton>
 
           <div

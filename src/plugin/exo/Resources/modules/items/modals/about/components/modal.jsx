@@ -7,7 +7,7 @@ import {Modal} from '#/main/app/overlays/modal/components/modal'
 
 const AboutModal = props =>
   <Modal
-    icon="fa fa-fw fa-info"
+    icon="fa fa-fw fa-circle-info"
     title={trans('about')}
     {...omit(props)}
   >

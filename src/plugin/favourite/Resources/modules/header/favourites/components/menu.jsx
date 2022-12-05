@@ -70,7 +70,7 @@ const FavouritesDropdown = props =>
         actions: [
           {
             type: CALLBACK_BUTTON,
-            icon: 'fa fa-fw fa-trash-o',
+            icon: 'fa fa-fw fa-trash',
             label: trans('delete', {}, 'actions'),
             callback: () => props.deleteFavourite(result, props.section),
             confirm: {

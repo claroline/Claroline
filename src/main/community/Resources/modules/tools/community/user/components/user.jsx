@@ -67,7 +67,7 @@ const UserForm = props =>
           }
         ]
       }, {
-        icon: 'fa fa-fw fa-info',
+        icon: 'fa fa-fw fa-circle-info',
         title: trans('information'),
         fields: [
           {
@@ -103,10 +103,6 @@ const UserForm = props =>
         title: trans('access_restrictions'),
         fields: [
           {
-            name: 'restrictions.disabled',
-            type: 'boolean',
-            label: trans('disable_user')
-          }, {
             name: 'restrictions.enableDates',
             type: 'boolean',
             label: trans('restrict_by_dates'),

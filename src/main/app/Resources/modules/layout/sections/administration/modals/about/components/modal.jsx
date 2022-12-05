@@ -9,7 +9,7 @@ import {ContentHtml} from '#/main/app/content/components/html'
 const AboutModal = props =>
   <Modal
     {...omit(props, 'version', 'changelogs', 'get')}
-    icon="fa fa-fw fa-info"
+    icon="fa fa-fw fa-circle-info"
     title={trans('about')}
     subtitle={props.version}
     onEntering={() => props.get()}

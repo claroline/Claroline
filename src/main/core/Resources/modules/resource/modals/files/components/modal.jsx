@@ -23,7 +23,7 @@ const Files = props =>
           dangerous={true}
           callback={() => props.onRemove(key)}
         >
-          <span className="fa fa-trash-o" />
+          <span className="fa fa-trash" />
         </CallbackButton>
       </li>
     )}

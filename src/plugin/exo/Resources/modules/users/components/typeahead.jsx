@@ -73,7 +73,7 @@ export class UserTypeahead extends Component {
           <span
             className={classes(
               'fa fa-fw',
-              this.state.isFetching ? 'fa-circle-o-notch fa-spin' : 'fa-user'
+              this.state.isFetching ? 'fa-circle-notch fa-spin' : 'fa-user'
             )}
           ></span>
         </span>

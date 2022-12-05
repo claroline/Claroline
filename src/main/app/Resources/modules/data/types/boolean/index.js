@@ -12,7 +12,7 @@ import {BooleanFilter} from '#/main/app/data/types/boolean/components/filter'
 const dataType = {
   name: 'boolean',
   meta: {
-    icon: 'fa fa-fw fa-check-square-o',
+    icon: 'fa fa-fw fa-check-square',
     label: trans('boolean', {}, 'data'),
     description: trans('boolean_desc', {}, 'data'),
     creatable: true

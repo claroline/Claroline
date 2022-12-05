@@ -71,7 +71,7 @@ export class Pointer extends Component {
               ref={el => this.feedbackButton = el}
               onMouseOver={() => this.setState({showFeedback: true})}
               onMouseLeave={() => this.setState({showFeedback: false})}
-              className="fa fa-fw fa-comments-o pointer-feedback-btn"
+              className="fa fa-fw fa-comments pointer-feedback-btn"
             />
             <Overlay
               show={this.state.showFeedback}

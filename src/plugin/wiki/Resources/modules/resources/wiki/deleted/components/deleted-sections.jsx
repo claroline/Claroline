@@ -64,7 +64,7 @@ const DeletedSectionsComponent = props =>
           displayed: true
         }, {
           type: CALLBACK_BUTTON,
-          icon: 'fa fa-fw fa-trash-o',
+          icon: 'fa fa-fw fa-trash',
           dangerous: true,
           label: trans('remove_section', {}, 'icap_wiki'),
           scope: ['object', 'collection'],

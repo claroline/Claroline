@@ -38,7 +38,7 @@ let SortableItem = forwardRef((props, ref) => {
             id={`answer-${props.index}-delete`}
             className="btn-link"
             type={CALLBACK_BUTTON}
-            icon="fa fa-fw fa-trash-o"
+            icon="fa fa-fw fa-trash"
             label={trans('delete', {}, 'actions')}
             callback={props.onDelete}
             tooltip="top"

@@ -151,7 +151,7 @@ class AppearanceTool extends Component {
                               }, {
                                 name: 'delete',
                                 type: ASYNC_BUTTON,
-                                icon: 'fa fa-fw fa-trash-o',
+                                icon: 'fa fa-fw fa-trash',
                                 label: trans('delete', {}, 'actions'),
                                 request: {
                                   url: ['apiv2_icon_set_delete', {iconSet: current.name}],

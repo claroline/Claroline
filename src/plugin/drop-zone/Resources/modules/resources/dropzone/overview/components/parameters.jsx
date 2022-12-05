@@ -13,7 +13,7 @@ const Parameters = props =>
       <b>{constants.DROP_TYPES[props.dropType]}</b>
     </li>
     <li className="evaluation-parameter">
-      <span className="fa fa-fw fa-check-square-o icon-with-text-right" />
+      <span className="fa fa-fw fa-check-square icon-with-text-right" />
       {trans('reviews_done_by', {}, 'dropzone')}
       &nbsp;
       <b>{constants.REVIEW_TYPES[props.reviewType]}</b>
