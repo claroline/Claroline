@@ -67,7 +67,7 @@ const WorkspaceFormComponent = (props) =>
           }
         ]
       }, {
-        icon: 'fa fa-fw fa-info',
+        icon: 'fa fa-fw fa-circle-info',
         title: trans('information'),
         fields: [
           {
@@ -436,7 +436,7 @@ const WorkspaceFormComponent = (props) =>
           }
         ]
       }, {
-        icon: 'fa fa-fw fa-bell-o',
+        icon: 'fa fa-fw fa-bell',
         title: trans('notifications'),
         mode: 'advanced',
         fields: [

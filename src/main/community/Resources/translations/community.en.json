@@ -37,6 +37,8 @@
   "users": "Users",
   "user_delete_confirm_title": "{1} User deletion | [2,Inf[ Users deletion",
   "user_delete_confirm_message": "{1} Are you sure you want to delete this user? | [2,Inf[ Are you sure you want to delete these %count% users?",
+  "user_disable_confirm_title": "{1} User deactivation | [2,Inf[ Users deactivation",
+  "user_disable_confirm_message": "{1} Are you sure you want to disable this user? | [2,Inf[ Are you sure you want to disable these %count% users?",
   "new_user": "New user",
   "user_disabled": "Inactive user",
   "disable_inactive_users": "Disable inactive users",

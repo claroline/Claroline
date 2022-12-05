@@ -17,7 +17,7 @@ export default (workspaces, refresher) => {
   return {
     name: 'delete',
     type: ASYNC_BUTTON,
-    icon: 'fa fa-fw fa-trash-o',
+    icon: 'fa fa-fw fa-trash',
     label: trans('delete', {}, 'actions'),
     displayed: 0 !== processable.length,
     dangerous: true,

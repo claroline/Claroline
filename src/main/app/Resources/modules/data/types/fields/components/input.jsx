@@ -145,7 +145,7 @@ class FieldList extends Component {
                     id={`${this.props.id}-${fieldIndex}-delete`}
                     type={CALLBACK_BUTTON}
                     className="btn-link"
-                    icon="fa fa-fw fa-trash-o"
+                    icon="fa fa-fw fa-trash"
                     label={trans('delete', {}, 'actions')}
                     tooltip="top"
                     confirm={{

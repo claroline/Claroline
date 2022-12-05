@@ -9,7 +9,7 @@ const dataType = {
   name: 'date',
   meta: {
     creatable: true,
-    icon: 'fa fa-fw fa-calendar-o',
+    icon: 'fa fa-fw fa-calendar',
     label: trans('date', {}, 'data'),
     description: trans('date_desc', {}, 'data')
   },

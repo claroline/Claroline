@@ -73,7 +73,7 @@ const ReceivedMessagesComponent = (props) =>
         callback: () => props.unreadMessages(rows)
       }, {
         type: CALLBACK_BUTTON,
-        icon: 'fa fa-fw fa-trash-o',
+        icon: 'fa fa-fw fa-trash',
         label: trans('delete'),
         dangerous: true,
         confirm: {

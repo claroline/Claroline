@@ -113,7 +113,7 @@ const Drop = props => props.drop ?
       <CorrectionCreation {...props}/>
     }
   </div> :
-  <span className="fa fa-fw fa-circle-o-notch fa-spin"></span>
+  <span className="fa fa-fw fa-circle-notch fa-spin"></span>
 
 
 Drop.propTypes = {

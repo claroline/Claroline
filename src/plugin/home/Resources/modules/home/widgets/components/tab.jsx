@@ -22,7 +22,7 @@ const WidgetsTab = props => {
       {0 === visibleWidgets.length &&
         <ContentPlaceholder
           size="lg"
-          icon="fa fa-frown-o"
+          icon="fa fa-face-frown"
           title={trans('no_section')}
         />
       }

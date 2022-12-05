@@ -27,7 +27,7 @@ const EnumItem = props =>
         id={`enum-item-${props.item.id}-delete`}
         type={CALLBACK_BUTTON}
         className="btn-link"
-        icon="fa fa-fw fa-trash-o"
+        icon="fa fa-fw fa-trash"
         label={props.deleteButtonLabel}
         tooltip="left"
         callback={props.onDelete}

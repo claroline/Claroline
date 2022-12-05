@@ -20,7 +20,7 @@ const ParametersMenu = (props) =>
         {
           name: 'general',
           type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-info',
+          icon: 'fa fa-fw fa-circle-info',
           label: trans('general'),
           target: props.path+'/',
           exact: true

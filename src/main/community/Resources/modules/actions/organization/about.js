@@ -7,7 +7,7 @@ import {MODAL_ORGANIZATION_ABOUT} from '#/main/community/organization/modals/abo
 export default (organizations) => ({
   name: 'about',
   type: MODAL_BUTTON,
-  icon: 'fa fa-fw fa-info',
+  icon: 'fa fa-fw fa-circle-info',
   label: trans('show-info', {}, 'actions'),
   displayed: hasPermission('open', organizations[0]),
   modal: [MODAL_ORGANIZATION_ABOUT, {

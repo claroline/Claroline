@@ -36,7 +36,7 @@ export class AreaPopover extends Component {
                 id="area-popover-delete"
                 className="btn-link"
                 type={CALLBACK_BUTTON}
-                icon="fa fa-fw fa-trash-o"
+                icon="fa fa-fw fa-trash"
                 label={trans('delete', {}, 'actions')}
                 callback={this.props.onDelete}
                 tooltip="top"
@@ -88,7 +88,7 @@ export class AreaPopover extends Component {
             <Button
               className="btn-link"
               type={CALLBACK_BUTTON}
-              icon="fa fa-fw fa-comments-o"
+              icon="fa fa-fw fa-comments"
               label={trans('graphic_feedback_info', {}, 'quiz')}
               callback={() => this.setState({showFeedback: !this.state.showFeedback})}
               tooltip="left"

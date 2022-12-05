@@ -156,7 +156,7 @@ class Item extends Component {
             id={`item-${this.props.id}-feedback-toggle`}
             className="btn-link"
             type={CALLBACK_BUTTON}
-            icon="fa fa-fw fa-comments-o"
+            icon="fa fa-fw fa-comments"
             label={trans('choice_feedback_info', {}, 'quiz')}
             callback={() => this.setState({showFeedback: !this.state.showFeedback})}
             tooltip="top"
@@ -166,7 +166,7 @@ class Item extends Component {
             id={`item-${this.props.id}-delete`}
             className="btn-link"
             type={CALLBACK_BUTTON}
-            icon="fa fa-fw fa-trash-o"
+            icon="fa fa-fw fa-trash"
             label={trans('delete', {}, 'actions')}
             callback={() => removeItem(this.props.id, this.props.item.items, this.props.item.solutions, this.props.onChange)}
             disabled={!this.props.deletable}

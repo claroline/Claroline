@@ -42,7 +42,7 @@ class UsersChart extends Component {
             <Button
               className="btn-link"
               type={CALLBACK_BUTTON}
-              icon="fa fa-fw fa-th-list"
+              icon="fa fa-fw fa-table-list"
               label={trans('list')}
               callback={() => this.props.changeMode('list')}
               active={'list' === this.props.mode}

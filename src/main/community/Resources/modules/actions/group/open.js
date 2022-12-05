@@ -9,7 +9,7 @@ import {route} from '#/main/community/group/routing'
 export default (groups, refresher, path) => ({
   name: 'open',
   type: LINK_BUTTON,
-  icon: 'fa fa-fw fa-arrow-circle-o-right',
+  icon: 'fa fa-fw fa-arrow-circle-right',
   label: trans('open', {}, 'actions'),
   target: route(groups[0], path),
   scope: ['object'],

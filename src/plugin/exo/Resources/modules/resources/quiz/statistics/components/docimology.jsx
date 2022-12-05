@@ -16,7 +16,7 @@ const COLOR_DANGER  = '#BF0404'
 
 const GeneralStats = props =>
   <div className="row" style={{marginTop: '-20px'}}>
-    <ContentCounter label={trans('steps', {}, 'quiz')} icon="fa fa-th-list" value={props.statistics.nbSteps} color={schemeCategory20c[1]} />
+    <ContentCounter label={trans('steps', {}, 'quiz')} icon="fa fa-table-list" value={props.statistics.nbSteps} color={schemeCategory20c[1]} />
     <ContentCounter label={trans('questions', {}, 'quiz')} icon="fa fa-question" value={props.statistics.nbQuestions} color={schemeCategory20c[5]} />
     <ContentCounter label={trans('users')} icon="fa fa-user" value={props.statistics.nbRegisteredUsers} color={schemeCategory20c[9]} />
     <ContentCounter label={trans('anonymous')} icon="fa fa-user-secret" value={props.statistics.nbAnonymousUsers} color={schemeCategory20c[13]}/>
@@ -86,7 +86,7 @@ const ScoreDistribution = props =>
   <div className="paper-score-distribution">
     <h2>{trans('docimology_score_distribution', {}, 'quiz')}</h2>
     <div className="help-block">
-      <span className="fa fa-fw fa-info-circle" />
+      <span className="fa fa-fw fa-circle-info" />
       {trans('docimology_note_gauges_help', {}, 'quiz')}
     </div>
 
@@ -179,7 +179,7 @@ const DifficultyIndex = props =>
         <div className="docimology-help">
           <div className="icon">
             <span className="help-block">
-              <span className="fa fa-fw fa-info-circle" />
+              <span className="fa fa-fw fa-circle-info" />
             </span>
           </div>
           <div className="text">
@@ -224,7 +224,7 @@ const DiscriminationIndex = props =>
         <div className="docimology-help">
           <div className="icon">
             <span className="help-block">
-              <span className="fa fa-fw fa-info-circle" />
+              <span className="fa fa-fw fa-circle-info" />
             </span>
           </div>
           <div className="text">

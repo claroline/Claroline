@@ -33,7 +33,7 @@ const BadgeDetailsComponent = (props) => {
           <Fragment>
             {!props.badge.meta.enabled &&
               <div className="alert alert-info">
-                <span className="fa fa-fw fa-info-circle icon-with-text-right" />
+                <span className="fa fa-fw fa-circle-info icon-with-text-right" />
                 {trans('badge_disabled_help', {}, 'badge')}
               </div>
             }
@@ -193,7 +193,7 @@ const BadgeDetailsComponent = (props) => {
         }, {
           name: 'enable',
           type: CALLBACK_BUTTON,
-          icon: 'fa fa-fw fa-check-circle',
+          icon: 'fa fa-fw fa-circle-check',
           label: trans('enable', {}, 'actions'),
           displayed: get(props.badge, 'permissions.edit') && !get(props.badge, 'meta.enabled'),
           callback: () => props.enable(props.badge),
@@ -201,7 +201,7 @@ const BadgeDetailsComponent = (props) => {
         }, {
           name: 'disable',
           type: CALLBACK_BUTTON,
-          icon: 'fa fa-fw fa-times-circle',
+          icon: 'fa fa-fw fa-circle-xmark',
           label: trans('disable', {}, 'actions'),
           displayed: get(props.badge, 'permissions.edit') && get(props.badge, 'meta.enabled'),
           callback: () => props.disable(props.badge),
@@ -213,7 +213,7 @@ const BadgeDetailsComponent = (props) => {
         }, {
           name: 'delete',
           type: CALLBACK_BUTTON,
-          icon: 'fa fa-fw fa-trash-o',
+          icon: 'fa fa-fw fa-trash',
           label: trans('delete', {}, 'actions'),
           dangerous: true,
           displayed: get(props.badge, 'permissions.delete'),

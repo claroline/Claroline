@@ -24,7 +24,7 @@ const UserCard = props =>
     title={props.data.username}
     subtitle={displayUsername(props.data)}
     flags={[
-      get(props.data, 'restrictions.disabled', false) && ['fa fa-times-circle', trans('user_disabled', {}, 'community')] // todo also checks accessibility dates
+      get(props.data, 'restrictions.disabled', false) && ['fa fa-circle-xmark', trans('user_disabled', {}, 'community')] // todo also checks accessibility dates
     ].filter(flag => !!flag)}
     contentText={get(props.data, 'meta.description')}
     footer={get(props.data, 'meta.lastActivity') &&

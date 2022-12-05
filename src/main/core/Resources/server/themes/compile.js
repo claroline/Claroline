@@ -15,6 +15,7 @@ function compile(srcFile, outputFile, additionalVarsFiles) {
     paths: [
       paths.root()
     ],
+    math: 'always',
     sourceMap: {
       // directly embed the less files in the map instead of referencing them
       // this permits to avoid giving access to the original files

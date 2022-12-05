@@ -13,7 +13,7 @@ const FormStatus = props =>
   >
     <span className={classes('validation-status fa fa-fw', {
       'fa-warning text-danger': props.validating,
-      'fa-clock-o text-warning': !props.validating
+      'fa-clock text-warning': !props.validating
     })} />
   </TooltipOverlay>
 

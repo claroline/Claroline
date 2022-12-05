@@ -40,7 +40,7 @@ const PairItem = props =>
         id={`pair-${props.item.id}-delete`}
         type={CALLBACK_BUTTON}
         className="btn-link btn-item-remove pull-right"
-        icon="fa fa-fw fa-trash-o"
+        icon="fa fa-fw fa-trash"
         label={trans('delete', {}, 'actions')}
         callback={() => props.handleItemRemove(props.item.id)}
         tooltip="top"

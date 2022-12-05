@@ -33,7 +33,7 @@ const EventPage = (props) => {
         {
           name: 'about',
           type: MODAL_BUTTON,
-          icon: 'fa fa-fw fa-info',
+          icon: 'fa fa-fw fa-circle-info',
           label: trans('show-info', {}, 'actions'),
           modal: [MODAL_TRAINING_EVENT_ABOUT, {
             event: props.event

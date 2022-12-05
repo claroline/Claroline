@@ -74,7 +74,7 @@ const Section = props =>
           callback={() => props.deleteSection()}
           dangerous={true}
         >
-          <span className="fa fa-trash-o"/>
+          <span className="fa fa-trash"/>
         </CallbackButton>
       }
     </div>
@@ -126,7 +126,7 @@ const Section = props =>
               displayed: true,
               callback: () => props.updateOption(props.section.id, 'showCommentForm', true)
             }, {
-              icon: 'fa fa-fw fa-trash-o',
+              icon: 'fa fa-fw fa-trash',
               type: CALLBACK_BUTTON,
               label: trans('delete'),
               displayed: true,
@@ -420,7 +420,7 @@ const AudioPlayer = connect(
     },
     deleteSection(sections, sectionId) {
       dispatch(modalActions.showModal(MODAL_CONFIRM, {
-        icon: 'fa fa-fw fa-trash-o',
+        icon: 'fa fa-fw fa-trash',
         title: trans('section_deletion', {}, 'audio'),
         question: trans('section_deletion_confirm_message', {}, 'audio'),
         dangerous: true,
@@ -432,7 +432,7 @@ const AudioPlayer = connect(
     },
     deleteComment(sections, sectionId, commentId) {
       dispatch(modalActions.showModal(MODAL_CONFIRM, {
-        icon: 'fa fa-fw fa-trash-o',
+        icon: 'fa fa-fw fa-trash',
         title: trans('comment_deletion'),
         question: trans('comment_deletion_confirm_message'),
         dangerous: true,

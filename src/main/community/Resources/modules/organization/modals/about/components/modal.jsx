@@ -14,7 +14,7 @@ import {constants} from '#/main/community/organization/constants'
 const AboutModal = props =>
   <Modal
     {...omit(props, 'organizationId', 'organization', 'get', 'reset')}
-    icon="fa fa-fw fa-info"
+    icon="fa fa-fw fa-circle-info"
     title={trans('about')}
     subtitle={props.organization ? get(props.organization, 'name') : trans('loading')}
     poster={get(props.organization, 'poster')}

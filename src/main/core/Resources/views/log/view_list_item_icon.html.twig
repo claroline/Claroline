@@ -13,7 +13,7 @@
 {% endif %}
 
 {% if 'ws_role' in log.getAction() %}
-    {% set icon_class = 'fa fa-circle-o' %}
+    {% set icon_class = 'fa fa-circle' %}
 {% endif %}
 
 {% if 'tool' in log.getAction() %}
@@ -21,7 +21,7 @@
 {% endif %}
 
 {% if 'delete' in log.getAction() or 'remove' in log.getAction() %}
-    {% set icon_class = 'fa fa-trash-o' %}
+    {% set icon_class = 'fa fa-trash' %}
 {% endif %}
 
 {% if 'edit' in log.getAction() or 'update' in log.getAction() %}

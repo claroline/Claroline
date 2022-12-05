@@ -62,7 +62,7 @@ const Timeline = props =>
 
     {constants.REVIEW_TYPE_PEER === props.reviewType &&
       <EvaluationStatus
-        icon="fa fa-check-square-o"
+        icon="fa fa-check-square"
         title={constants.PLANNING_STATES.all[constants.STATE_PEER_REVIEW]}
         active={[
           constants.STATE_PEER_REVIEW,

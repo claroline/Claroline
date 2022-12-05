@@ -31,13 +31,13 @@ const ForumResource = props =>
         exact: true
       }, {
         type: CALLBACK_BUTTON,
-        icon: 'fa fa-fw fa-envelope',
+        icon: 'fa fa-fw fa-bell',
         label: trans('receive_notifications', {}, 'forum'),
         displayed: !get(props.forum, 'meta.notified'),
         callback: () => props.notify(props.forum, props.currentUser)
       }, {
         type: CALLBACK_BUTTON,
-        icon: 'fa fa-fw fa-envelope-o',
+        icon: 'fa fa-fw fa-bell',
         label: trans('stop_receive_notifications', {}, 'forum'),
         displayed: !!get(props.forum, 'meta.notified'),
         callback: () => props.stopNotify(props.forum, props.currentUser)

@@ -36,7 +36,7 @@ const LocationForm = props =>
         ]
       }, {
         title: trans('information'),
-        icon: 'fa fa-fw fa-info',
+        icon: 'fa fa-fw fa-circle-info',
         fields: [
           {
             name: 'meta.description',

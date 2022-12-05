@@ -178,7 +178,7 @@ class WidgetsTabParameters extends Component {
                   }]
                 }, {
                   type: CALLBACK_BUTTON,
-                  icon: 'fa fa-fw fa-trash-o',
+                  icon: 'fa fa-fw fa-trash',
                   label: trans('delete', {}, 'actions'),
                   dangerous: true,
                   confirm: {
@@ -200,7 +200,7 @@ class WidgetsTabParameters extends Component {
         {0 === widgets.length &&
           <ContentPlaceholder
             size="lg"
-            icon="fa fa-frown-o"
+            icon="fa fa-face-frown"
             title={trans('no_section')}
           />
         }

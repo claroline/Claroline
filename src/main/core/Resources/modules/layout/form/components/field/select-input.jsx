@@ -8,7 +8,7 @@ const ChoicesTypeAhead = props => {
     <ul className="choices-dropdown-menu dropdown-menu">
       {props.isFetching &&
         <li className="tags-fetching text-center">
-          <span className="fa fa-fw fa-circle-o-notch fa-spin" />
+          <span className="fa fa-fw fa-circle-notch fa-spin" />
         </li>
       }
       {props.choices.map((choice, idx) =>

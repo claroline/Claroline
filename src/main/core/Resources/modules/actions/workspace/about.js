@@ -7,7 +7,7 @@ import {MODAL_WORKSPACE_ABOUT} from '#/main/core/workspace/modals/about'
 export default (workspaces) => ({
   name: 'about',
   type: MODAL_BUTTON,
-  icon: 'fa fa-fw fa-info',
+  icon: 'fa fa-fw fa-circle-info',
   label: trans('show-info', {}, 'actions'),
   displayed: hasPermission('open', workspaces[0]),
   modal: [MODAL_WORKSPACE_ABOUT, {

@@ -144,7 +144,7 @@ const ScoreRule = props =>
         id={`rule-${props.rule.id}-delete`}
         className="btn-link"
         type={CALLBACK_BUTTON}
-        icon="fa fa-fw fa-trash-o"
+        icon="fa fa-fw fa-trash"
         label={trans('delete', {}, 'actions')}
         callback={props.onDelete}
         tooltip="top"

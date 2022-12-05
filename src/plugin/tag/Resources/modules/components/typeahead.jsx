@@ -13,7 +13,7 @@ const TagsList = props =>
   <ul className="tags-dropdown-menu dropdown-menu">
     {props.isFetching &&
       <li className="tags-fetching text-center">
-        <span className="fa fa-fw fa-circle-o-notch fa-spin" />
+        <span className="fa fa-fw fa-circle-notch fa-spin" />
       </li>
     }
 

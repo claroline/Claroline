@@ -30,7 +30,7 @@ const DISPLAY_MODES = {
     }
   },
   [DISPLAY_TABLE]: {
-    icon: 'fa fa-fw fa-th-list',
+    icon: 'fa fa-fw fa-table-list',
     label: trans('list_display_table'),
     component: DataTable,
     options: {

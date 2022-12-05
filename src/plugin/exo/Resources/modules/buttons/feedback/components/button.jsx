@@ -29,7 +29,7 @@ const FeedbackButton = props => {
       id={`feedback-${props.id}`}
       className={classes('btn-link btn-feedback', props.className)}
       type={POPOVER_BUTTON}
-      icon="fa fa-fw fa-comments-o"
+      icon="fa fa-fw fa-comments"
       label={trans('show-feedback', {}, 'actions')}
       tooltip="left"
       popover={{

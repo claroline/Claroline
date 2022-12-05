@@ -17,7 +17,7 @@ export default (groups, refresher) => {
   return {
     name: 'delete',
     type: ASYNC_BUTTON,
-    icon: 'fa fa-fw fa-trash-o',
+    icon: 'fa fa-fw fa-trash',
     label: trans('delete', {}, 'actions'),
     disabled: -1 === groups.findIndex(group => !get(group, 'meta.readOnly')),
     displayed: -1 !== groups.findIndex(group => hasPermission('delete', group)),

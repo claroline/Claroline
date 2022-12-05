@@ -9,10 +9,10 @@ const AlertBlock = props =>
     className={classes('alert alert-detailed', 'alert-'+props.type, props.className)}
   >
     <span className={classes('alert-icon', !props.icon && 'fa fa-fw', props.icon || {
-      'fa-info-circle':          'info' === props.type,
-      'fa-check-circle':         'success' === props.type,
+      'fa-circle-info':          'info' === props.type,
+      'fa-circle-check':         'success' === props.type,
       'fa-exclamation-triangle': 'warning' === props.type,
-      'fa-times-circle':         'danger' === props.type
+      'fa-circle-xmark':         'danger' === props.type
     })} />
 
     <div className="alert-content">

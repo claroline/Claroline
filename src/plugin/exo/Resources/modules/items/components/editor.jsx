@@ -73,7 +73,7 @@ const ItemEditor = props => {
           primary: true,
           component: CustomSection
         }, {
-          icon: 'fa fa-fw fa-info',
+          icon: 'fa fa-fw fa-circle-info',
           title: trans('information'),
           fields: [
             {
@@ -135,7 +135,7 @@ const ItemEditor = props => {
           ]
         }, {
           id: 'help',
-          icon: 'fa fa-fw fa-info',
+          icon: 'fa fa-fw fa-circle-info',
           title: trans('help'),
           displayed: props.definition.answerable,
           fields: [

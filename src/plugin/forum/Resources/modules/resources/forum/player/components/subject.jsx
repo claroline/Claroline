@@ -75,7 +75,7 @@ class SubjectComponent extends Component {
   deleteSubject(subjectId) {
     this.props.showModal(MODAL_CONFIRM, {
       dangerous: true,
-      icon: 'fa fa-fw fa-trash-o',
+      icon: 'fa fa-fw fa-trash',
       title: trans('delete_subject', {}, 'forum'),
       question: trans('remove_subject_confirm_message', {}, 'forum'),
       handleConfirm: () => this.props.deleteSubject([subjectId], this.props.history.push, this.props.path)
@@ -85,7 +85,7 @@ class SubjectComponent extends Component {
   deleteMessage(messageId) {
     this.props.showModal(MODAL_CONFIRM, {
       dangerous: true,
-      icon: 'fa fa-fw fa-trash-o',
+      icon: 'fa fa-fw fa-trash',
       title: trans('delete_message', {}, 'forum'),
       question: trans('remove_post_confirm_message', {}, 'forum'),
       handleConfirm: () => this.props.deleteMessage(messageId)
@@ -173,19 +173,19 @@ class SubjectComponent extends Component {
                 callback: () => this.props.unStickSubject(this.props.subject)
               }, {
                 type: CALLBACK_BUTTON,
-                icon: 'fa fa-fw fa-times-circle',
+                icon: 'fa fa-fw fa-circle-xmark',
                 label: trans('close_subject', {}, 'forum'),
                 displayed: !(get(this.props.subject, 'meta.closed', true)) && this.props.currentUser && (get(this.props.subject, 'meta.creator.id', false) === this.props.currentUser.id || this.props.moderator),
                 callback: () => this.props.closeSubject(this.props.subject)
               }, {
                 type: CALLBACK_BUTTON,
-                icon: 'fa fa-fw fa-check-circle',
+                icon: 'fa fa-fw fa-circle-check',
                 label: trans('open_subject', {}, 'forum'),
                 displayed: (get(this.props.subject, 'meta.closed', false)) && this.props.currentUser && (get(this.props.subject, 'meta.creator.id', false) === this.props.currentUser.id || this.props.moderator),
                 callback: () => this.props.unCloseSubject(this.props.subject)
               }, {
                 type: CALLBACK_BUTTON,
-                icon: 'fa fa-fw fa-flag-o',
+                icon: 'fa fa-fw fa-flag',
                 label: trans('flag', {}, 'forum'),
                 displayed: this.props.currentUser && (get(this.props.subject, 'meta.creator.id') !== this.props.currentUser.id) && !(get(this.props.subject, 'meta.flagged', true)),
                 callback: () => this.props.flagSubject(this.props.subject)
@@ -197,7 +197,7 @@ class SubjectComponent extends Component {
                 callback: () => this.props.unFlagSubject(this.props.subject)
               }, {
                 type: CALLBACK_BUTTON,
-                icon: 'fa fa-fw fa-trash-o',
+                icon: 'fa fa-fw fa-trash',
                 label: trans('delete'),
                 displayed: this.props.currentUser && get(this.props.subject, 'meta.creator.id') === this.props.currentUser.id || this.props.moderator,
                 callback: () => this.deleteSubject(this.props.subject.id),
@@ -234,7 +234,7 @@ class SubjectComponent extends Component {
                           callback: () => this.setState({showMessageForm: message.id})
                         }, {
                           type: CALLBACK_BUTTON,
-                          icon: 'fa fa-fw fa-flag-o',
+                          icon: 'fa fa-fw fa-flag',
                           label: trans('flag', {}, 'forum'),
                           displayed: this.props.currentUser && (message.meta.creator.id !== this.props.currentUser.id) && !message.meta.flagged,
                           callback: () => this.props.flag(message, this.props.subject.id)
@@ -246,7 +246,7 @@ class SubjectComponent extends Component {
                           callback: () => this.props.unFlag(message, this.props.subject.id)
                         }, {
                           type: CALLBACK_BUTTON,
-                          icon: 'fa fa-fw fa-trash-o',
+                          icon: 'fa fa-fw fa-trash',
                           label: trans('delete', {}, 'actions'),
                           displayed:  this.props.currentUser && (message.meta.creator.id === this.props.currentUser.id || this.props.moderator),
                           callback: () => this.deleteMessage(message.id),

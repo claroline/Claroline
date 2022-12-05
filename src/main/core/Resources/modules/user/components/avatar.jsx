@@ -14,7 +14,7 @@ const UserAvatar = props =>
   props.picture ?
     <img className={classes('user-avatar', props.className)} alt="avatar" src={asset(props.picture)} /> :
     <span className={classes('user-avatar fa', props.className, {
-      'fa-user-circle-o': !props.alt,
+      'fa-user-circle': !props.alt,
       'fa-user': props.alt
     })} />
 

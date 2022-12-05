@@ -17,7 +17,7 @@ const Player = (props) => {
     return (
       <ContentPlaceholder
         size="lg"
-        icon="fa fa-frown-o"
+        icon="fa fa-face-frown"
         title={trans('no_section')}
       />
     )

@@ -104,7 +104,7 @@ class FieldsValues extends Component {
               callback={() => this.removeField(idx)}
               dangerous={true}
             >
-              <span className="fa fa-trash-o" />
+              <span className="fa fa-trash" />
             </CallbackButton>
             <DataInput
               label={fv.field.label}

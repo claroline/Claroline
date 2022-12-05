@@ -60,7 +60,7 @@ const Overview = props =>
       }, {
         name: 'correct',
         type: LINK_BUTTON,
-        icon: 'fa fa-fw fa-check-square-o icon-with-text-right',
+        icon: 'fa fa-fw fa-check-square icon-with-text-right',
         label: trans('correct_a_copy', {}, 'dropzone'),
         target: `${props.path}/peer/drop`,
         primary: props.myDrop && props.myDrop.finished,

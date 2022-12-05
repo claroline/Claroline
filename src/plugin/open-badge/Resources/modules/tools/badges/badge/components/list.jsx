@@ -73,7 +73,7 @@ const BadgesList = (props) =>
         group: trans('management')
       }, {
         type: CALLBACK_BUTTON,
-        icon: 'fa fa-fw fa-check-circle',
+        icon: 'fa fa-fw fa-circle-check',
         label: trans('enable', {}, 'actions'),
         scope: ['object', 'collection'],
         displayed: 0 < rows.filter(b => b.permissions.edit && !b.meta.enabled).length,
@@ -81,7 +81,7 @@ const BadgesList = (props) =>
         group: trans('management')
       }, {
         type: CALLBACK_BUTTON,
-        icon: 'fa fa-fw fa-times-circle',
+        icon: 'fa fa-fw fa-circle-xmark',
         label: trans('disable', {}, 'actions'),
         scope: ['object', 'collection'],
         displayed: 0 < rows.filter(b => b.permissions.edit && b.meta.enabled).length,
@@ -94,7 +94,7 @@ const BadgesList = (props) =>
       }, {
         name: 'delete',
         type: CALLBACK_BUTTON,
-        icon: 'fa fa-fw fa-trash-o',
+        icon: 'fa fa-fw fa-trash',
         label: trans('delete', {}, 'actions'),
         dangerous: true,
         displayed: 0 < rows.filter(b => b.permissions.delete).length,

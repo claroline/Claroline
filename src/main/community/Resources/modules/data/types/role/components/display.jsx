@@ -13,7 +13,7 @@ const RoleDisplay = (props) => props.data ?
     size="xs"
   /> :
   <ContentPlaceholder
-    icon="fa fa-id-card"
+    icon="fa fa-fw fa-id-badge"
     title={trans('no_role')}
   />
 

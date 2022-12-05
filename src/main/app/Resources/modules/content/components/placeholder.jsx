@@ -48,7 +48,6 @@ ContentPlaceholder.propTypes = {
 }
 
 ContentPlaceholder.defaultProps = {
-  //icon: 'fa fa-fw fa-hand-pointer-o',
   help: null,
   size: 'md'
 }

@@ -12,7 +12,7 @@ const ContentCounter = props =>
         {props.label}
         {props.help &&
           <TooltipOverlay id={toKey(props.label)+'-counter-tip'} tip={props.help}>
-            <span className="fa fa-fw fa-info-circle icon-with-text-left" />
+            <span className="fa fa-fw fa-circle-info icon-with-text-left" />
           </TooltipOverlay>
         }
       </small>

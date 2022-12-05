@@ -151,7 +151,7 @@ function getEditButtons(solution) {
       class="btn btn-link default delete-hole-btn"
       data-hole-id="${solution.holeId}"
     >
-      <span class="fa fa-fw fa-trash-o delete-hole-btn-icon" data-hole-id="${solution.holeId}"></span>
+      <span class="fa fa-fw fa-trash delete-hole-btn-icon" data-hole-id="${solution.holeId}"></span>
     </button>
   `
 }

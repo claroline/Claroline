@@ -23,14 +23,14 @@ const ModeSelector = props =>
       }, {
         name: 'rect',
         type: CALLBACK_BUTTON,
-        icon: 'fa fa-fw fa-square-o',
+        icon: 'fa fa-fw fa-square',
         label: trans('graphic_mode_rect', {}, 'quiz'),
         active: props.currentMode === MODE_RECT,
         callback: () => props.onChange(MODE_RECT)
       }, {
         name: 'circle',
         type: CALLBACK_BUTTON,
-        icon: 'fa fa-fw fa-circle-thin',
+        icon: 'fa fa-fw fa-circle',
         label: trans('graphic_mode_circle', {}, 'quiz'),
         active: props.currentMode === MODE_CIRCLE,
         callback: () => props.onChange(MODE_CIRCLE)

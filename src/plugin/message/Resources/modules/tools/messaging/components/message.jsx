@@ -112,7 +112,7 @@ class MessageComponent extends Component {
                 }, {
                   name: 'hard-delete',
                   type: CALLBACK_BUTTON,
-                  icon: 'fa fa-fw fa-trash-o',
+                  icon: 'fa fa-fw fa-trash',
                   label: trans('delete', {}, 'actions'),
                   callback: () => this.props.delete(message, this.props.history.push, this.props.path),
                   dangerous: true,
@@ -124,7 +124,7 @@ class MessageComponent extends Component {
                 }, {
                   name: 'soft-delete',
                   type: CALLBACK_BUTTON,
-                  icon: 'fa fa-fw fa-trash-o',
+                  icon: 'fa fa-fw fa-trash',
                   label: trans('delete', {}, 'actions'),
                   callback: () => this.props.remove(message, this.props.history.push, this.props.path),
                   dangerous: true,

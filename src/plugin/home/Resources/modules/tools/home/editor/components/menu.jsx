@@ -74,7 +74,7 @@ const EditorMenu = (props) => {
           name: 'delete',
           type: CALLBACK_BUTTON,
           label: trans('delete', {}, 'actions'),
-          icon: 'fa fa-fw fa-trash-o',
+          icon: 'fa fa-fw fa-trash',
           dangerous: true,
           confirm: {
             title: trans('home_tab_delete_confirm_title', {}, 'home'),

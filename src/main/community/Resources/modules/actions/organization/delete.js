@@ -17,7 +17,7 @@ export default (organizations, refresher) => {
   return {
     name: 'delete',
     type: ASYNC_BUTTON,
-    icon: 'fa fa-fw fa-trash-o',
+    icon: 'fa fa-fw fa-trash',
     label: trans('delete', {}, 'actions'),
     disabled: -1 === organizations.findIndex(organization => !get(organization, 'meta.default')),
     displayed: -1 !== organizations.findIndex(organization => hasPermission('delete', organization)),

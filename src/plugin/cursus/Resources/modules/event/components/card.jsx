@@ -15,7 +15,7 @@ const EventCard = props =>
     {...props}
     id={props.data.id}
     poster={props.data.thumbnail ? asset(props.data.thumbnail) : null}
-    icon="fa fa-clock-o"
+    icon="fa fa-clock"
     title={props.data.name}
     subtitle={displayDateRange(props.data.start, props.data.end)}
     contentText={props.data.description}

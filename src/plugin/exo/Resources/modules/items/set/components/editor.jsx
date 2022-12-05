@@ -265,7 +265,7 @@ class Association extends Component {
             id={`ass-${this.props.association.itemId}-${this.props.association.setId}-feedback-toggle`}
             className="btn-link"
             type={CALLBACK_BUTTON}
-            icon="fa fa-fw fa-comments-o"
+            icon="fa fa-fw fa-comments"
             label={trans('feedback_association_created', {}, 'quiz')}
             callback={() => this.setState({showFeedback: !this.state.showFeedback})}
             tooltip="top"
@@ -275,7 +275,7 @@ class Association extends Component {
             id={`ass-${this.props.association.itemId}-${this.props.association.setId}-delete`}
             className="btn-link"
             type={CALLBACK_BUTTON}
-            icon="fa fa-fw fa-trash-o"
+            icon="fa fa-fw fa-trash"
             label={trans('delete', {}, 'actions')}
             callback={() => this.props.onDelete(this.props.association.setId, this.props.association.itemId)}
             tooltip="top"
@@ -313,7 +313,7 @@ const Set = (props) =>
           id={`set-${props.set.id}-delete`}
           className="btn-link"
           type={CALLBACK_BUTTON}
-          icon="fa fa-fw fa-trash-o"
+          icon="fa fa-fw fa-trash"
           label={trans('delete', {}, 'actions')}
           disabled={!props.deletable}
           callback={props.onDelete}
@@ -412,7 +412,7 @@ let Item = (props) =>
         id={`set-item-${props.item.id}-delete`}
         className="btn-link"
         type={CALLBACK_BUTTON}
-        icon="fa fa-fw fa-trash-o"
+        icon="fa fa-fw fa-trash"
         label={trans('delete', {}, 'actions')}
         disabled={!props.deletable}
         callback={props.onDelete}
@@ -541,7 +541,7 @@ class Odd extends Component {
             id={`odd-${this.props.odd.id}-feedback-toggle`}
             className="btn-link"
             type={CALLBACK_BUTTON}
-            icon="fa fa-fw fa-comments-o"
+            icon="fa fa-fw fa-comments"
             label={trans('feedback', {}, 'quiz')}
             callback={() => this.setState({showFeedback: !this.state.showFeedback})}
             tooltip="top"
@@ -551,7 +551,7 @@ class Odd extends Component {
             id={`odd-${this.props.odd.id}-delete`}
             className="btn-link"
             type={CALLBACK_BUTTON}
-            icon="fa fa-fw fa-trash-o"
+            icon="fa fa-fw fa-trash"
             label={trans('delete', {}, 'actions')}
             callback={this.props.onDelete}
             tooltip="top"
