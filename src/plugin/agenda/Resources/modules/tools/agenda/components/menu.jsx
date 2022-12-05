@@ -60,7 +60,7 @@ class AgendaMenu extends Component {
           links={this.state.eventTypes.map(eventType => ({
             id: eventType,
             type: CALLBACK_BUTTON,
-            icon: -1 === this.props.types.indexOf(eventType) ? 'fa fa-fw fa-square-o' : 'fa fa-fw fa-check-square',
+            icon: -1 === this.props.types.indexOf(eventType) ? 'fa fa-fw fa-square' : 'fa fa-fw fa-check-square',
             label: trans(eventType, {}, 'event'),
             callback: () => {
               let newTypes = [].concat(this.props.types)
@@ -86,7 +86,7 @@ class AgendaMenu extends Component {
             label: (
               <Fragment key="action-label">
                 <span key="action-icon" className={classes('action-icon fa fa-fw icon-with-text-right', {
-                  'fa-square-o': !planning.displayed,
+                  'fa-square': !planning.displayed,
                   'fa-check-square': planning.displayed
                 })} style={{color: planning.color}}/>
 
@@ -120,7 +120,7 @@ class AgendaMenu extends Component {
                     <li>
                       <Button
                         type={CALLBACK_BUTTON}
-                        icon="fa fa-fw fa-trash-o"
+                        icon="fa fa-fw fa-trash"
                         label={trans('delete', {}, 'actions')}
                         callback={() => this.props.removePlanning(planning.id)}
                         dangerous={true}

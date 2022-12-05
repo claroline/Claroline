@@ -36,7 +36,7 @@ const Actions = props =>
       <span
         role="button"
         title={trans('delete')}
-        className="action-button fa fa-trash-o"
+        className="action-button fa fa-trash"
         onClick={e => props.handleDelete(e)}
       />
     }

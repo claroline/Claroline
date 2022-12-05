@@ -50,7 +50,7 @@ ImageThumbnail.propTypes = {
 
 const DefaultThumbnail = props =>
   <div className="default-file-thumbnail">
-    <span className="file-thumbnail-icon fa fa-fw fa-file-o"/>
+    <span className="file-thumbnail-icon fa fa-fw fa-file"/>
     {props.data && props.data.name &&
       <div className="file-thumbnail-name text-center">{props.data.name}</div>
     }
@@ -115,7 +115,7 @@ const Actions = props =>
       <span
         role="button"
         title={trans('delete')}
-        className="action-button fa fa-fw fa-trash-o"
+        className="action-button fa fa-fw fa-trash"
         onClick={e => props.handleDelete(e)}
       />
     }

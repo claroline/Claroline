@@ -275,7 +275,7 @@ class ChoiceItem extends Component {
             id={`choice-${this.getSelectionId()}-feedback-toggle`}
             className="btn pull-right"
             type={CALLBACK_BUTTON}
-            icon="fa fa-fw fa-comments-o"
+            icon="fa fa-fw fa-comments"
             label={trans('choice_feedback_info', {}, 'quiz')}
             callback={() => this.setState({showFeedback: !this.state.showFeedback})}
             tooltip="top"
@@ -379,7 +379,7 @@ class SelectionForm extends Component {
                 id={`selection-${this.props.selectionId}-delete`}
                 className="btn-link"
                 type={CALLBACK_BUTTON}
-                icon="fa fa-fw fa-trash-o"
+                icon="fa fa-fw fa-trash"
                 label={trans('delete', {}, 'quiz')}
                 callback={this.props.onRemove}
                 tooltip="top"
@@ -483,7 +483,7 @@ class ColorElement extends Component {
         />
         {'\u00a0'}
         <span
-          className="fa fa-trash-o pointer"
+          className="fa fa-trash pointer"
           onClick={() => {
             const newColors = cloneDeep(this.props.item.colors)
             newColors.splice(newColors.findIndex(c => c.id === this.props.color.id), 1)
@@ -572,7 +572,7 @@ class HighlightAnswer extends Component {
               id={`choice-${this.props.answer._answerId}-feedback-toggle`}
               className="btn"
               type={CALLBACK_BUTTON}
-              icon="fa fa-fw fa-comments-o"
+              icon="fa fa-fw fa-comments"
               label={trans('choice_feedback_info', {}, 'quiz')}
               callback={() => this.setState({showFeedback: !this.state.showFeedback})}
               tooltip="top"
@@ -580,7 +580,7 @@ class HighlightAnswer extends Component {
           </div>
           <div className={this.props.item.hasExpectedAnswers ? 'col-xs-3' : 'col-xs-4'}>
             <span
-              className="fa fa-trash-o pointer checkbox"
+              className="fa fa-trash pointer checkbox"
               onClick={() => {
                 const newSolutions = cloneDeep(this.props.item.solutions)
                 const solution = newSolutions.find(s => s.selectionId === this.props.selectionId)

@@ -9,7 +9,7 @@ import {route} from '#/main/core/workspace/routing'
 export default (workspaces) => ({
   name: 'open',
   type: LINK_BUTTON,
-  icon: 'fa fa-fw fa-arrow-circle-o-right',
+  icon: 'fa fa-fw fa-arrow-circle-right',
   label: trans('open', {}, 'actions'),
   target: route(workspaces[0]),
   scope: ['object'],

@@ -126,7 +126,7 @@ const RolePermissions = props =>
           <Button
             className="btn btn-link"
             type={CALLBACK_BUTTON}
-            icon="fa fa-fw fa-trash-o"
+            icon="fa fa-fw fa-trash"
             label={trans('delete', {}, 'actions')}
             tooltip="left"
             callback={props.delete}

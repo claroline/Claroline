@@ -183,7 +183,7 @@ const CourseAbout = (props) => {
                     <Button
                       className="icon-with-text-left"
                       type={POPOVER_BUTTON}
-                      icon="fa fa-fw fa-info-circle"
+                      icon="fa fa-fw fa-circle-info"
                       label={trans('show-info', {}, 'actions')}
                       tooltip="top"
                       popover={{

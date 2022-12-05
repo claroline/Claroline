@@ -44,7 +44,7 @@ const PlayerMain = connect(
     },
     deleteComment(commentId) {
       dispatch(modalActions.showModal(MODAL_CONFIRM, {
-        icon: 'fa fa-fw fa-trash-o',
+        icon: 'fa fa-fw fa-trash',
         title: trans('comment_deletion'),
         question: trans('comment_deletion_confirm_message'),
         dangerous: true,

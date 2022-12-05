@@ -12,10 +12,10 @@ const Alert = props =>
     className={classes('alert', 'alert-'+props.type)}
   >
     <span className={classes('fa fa-fw icon-with-text-right', {
-      'fa-info-circle': 'info' === props.type,
-      'fa-check-circle': 'success' === props.type,
+      'fa-circle-info': 'info' === props.type,
+      'fa-circle-check': 'success' === props.type,
       'fa-exclamation-triangle': 'warning' === props.type,
-      'fa-times-circle': 'danger' === props.type
+      'fa-circle-xmark': 'danger' === props.type
     })} aria-hidden={true} />
 
     {props.children}

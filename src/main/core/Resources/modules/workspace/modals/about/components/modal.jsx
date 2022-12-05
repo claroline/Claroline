@@ -15,7 +15,7 @@ import {Workspace as WorkspaceTypes} from '#/main/core/workspace/prop-types'
 const AboutModal = props =>
   <Modal
     {...omit(props, 'workspaceId', 'workspace', 'get', 'reset')}
-    icon="fa fa-fw fa-info"
+    icon="fa fa-fw fa-circle-info"
     title={trans('about')}
     subtitle={props.workspace ? get(props.workspace, 'name') : trans('loading')}
     poster={get(props.workspace, 'poster')}

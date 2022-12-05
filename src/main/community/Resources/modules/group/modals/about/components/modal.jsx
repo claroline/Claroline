@@ -13,7 +13,7 @@ import {Group as GroupTypes} from '#/main/community/group/prop-types'
 const AboutModal = props =>
   <Modal
     {...omit(props, 'groupId', 'group', 'get', 'reset')}
-    icon="fa fa-fw fa-info"
+    icon="fa fa-fw fa-circle-info"
     title={trans('about')}
     subtitle={props.group ? get(props.group, 'name') : trans('loading')}
     poster={get(props.group, 'poster')}

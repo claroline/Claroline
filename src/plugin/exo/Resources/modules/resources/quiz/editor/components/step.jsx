@@ -38,7 +38,7 @@ const EditorStep = props =>
       dataPart={props.path}
       sections={[
         {
-          icon: 'fa fa-fw fa-info',
+          icon: 'fa fa-fw fa-circle-info',
           title: trans('information'),
           fields: [
             {
@@ -56,123 +56,123 @@ const EditorStep = props =>
       ]}
     >
       {0 === props.items.length &&
-        <ContentPlaceholder
-          size="lg"
-          icon="fa fa-question"
-          title={trans('no_item_info', {}, 'quiz')}
-        />
+      <ContentPlaceholder
+        size="lg"
+        icon="fa fa-question"
+        title={trans('no_item_info', {}, 'quiz')}
+      />
       }
 
       {0 !== props.items.length &&
-        <FormSections level={3}>
-          {props.items.map((item, itemIndex) =>
-            <EditorItem
-              id={item.id}
-              key={itemIndex}
-              formName={props.formName}
-              path={`${props.path}.items[${itemIndex}]`}
-              errors={get(props.errors, `items[${itemIndex}]`)}
+      <FormSections level={3}>
+        {props.items.map((item, itemIndex) =>
+          <EditorItem
+            id={item.id}
+            key={itemIndex}
+            formName={props.formName}
+            path={`${props.path}.items[${itemIndex}]`}
+            errors={get(props.errors, `items[${itemIndex}]`)}
 
-              enableScores={props.hasExpectedAnswers}
-              numbering={getNumbering(props.questionNumberingType, props.index, itemIndex)}
-              item={item}
-              update={(prop, value) => props.update(prop ? `items[${itemIndex}].${prop}`:`items[${itemIndex}]`, value)}
-              actions={[
-                {
-                  name: 'lock',
-                  type: CALLBACK_BUTTON,
-                  icon: 'fa fa-fw fa-lock',
-                  label: trans('lock', {}, 'actions'),
-                  callback: () => true,
-                  disabled: true, // TODO : restore
-                  group: trans('management')
-                }, {
-                  name: 'copy',
-                  type: MODAL_BUTTON,
-                  icon: 'fa fa-fw fa-clone',
-                  label: trans('copy', {}, 'actions'),
-                  modal: [MODAL_ITEM_POSITION, {
-                    icon: 'fa fa-fw fa-arrows',
-                    title: trans('copy'),
-                    step: {
-                      id: props.id,
-                      title: props.title || trans('step', {number: props.index + 1}, 'quiz')
-                    },
-                    steps: (props.steps || []).map((s, i) => ({
-                      id: s.id,
-                      title: s.title || trans('step', {number: i + 1}, 'quiz'),
-                      items: s.items
-                    })),
-                    items: (props.items || []).map((s, i) => ({
-                      id: s.id,
-                      title: s.title || trans('item', {number: i + 1}, 'quiz')
-                    })),
-                    item: item,
-                    selectAction: (position) => ({
-                      type: CALLBACK_BUTTON,
-                      label: trans('copy', {}, 'actions'),
-                      callback: () => {
-                        refreshIdentifiers(item).then(item => {
-                          props.copyItem(item, position)
-                        })
-                      }
-                    })
-                  }],
-                  group: trans('management')
-                }, {
-                  name: 'move',
-                  type: MODAL_BUTTON,
+            enableScores={props.hasExpectedAnswers}
+            numbering={getNumbering(props.questionNumberingType, props.index, itemIndex)}
+            item={item}
+            update={(prop, value) => props.update(prop ? `items[${itemIndex}].${prop}`:`items[${itemIndex}]`, value)}
+            actions={[
+              {
+                name: 'lock',
+                type: CALLBACK_BUTTON,
+                icon: 'fa fa-fw fa-lock',
+                label: trans('lock', {}, 'actions'),
+                callback: () => true,
+                disabled: true, // TODO : restore
+                group: trans('management')
+              }, {
+                name: 'copy',
+                type: MODAL_BUTTON,
+                icon: 'fa fa-fw fa-clone',
+                label: trans('copy', {}, 'actions'),
+                modal: [MODAL_ITEM_POSITION, {
                   icon: 'fa fa-fw fa-arrows',
-                  label: trans('move', {}, 'actions'),
-                  modal: [MODAL_ITEM_POSITION, {
-                    icon: 'fa fa-fw fa-arrows',
-                    title: trans('movement'),
-                    step: {
-                      id: props.id,
-                      title: props.title || trans('step', {number: props.index + 1}, 'quiz')
-                    },
-                    steps: (props.steps || []).map((s, i) => ({
-                      id: s.id,
-                      title: s.title || trans('step', {number: i + 1}, 'quiz'),
-                      items: s.items
-                    })),
-                    items: (props.items || []).map((s, i) => ({
-                      id: s.id,
-                      title: s.title || trans('item', {number: i + 1}, 'quiz')
-                    })),
-                    item: item,
-                    selectAction: (position) => ({
-                      type: CALLBACK_BUTTON,
-                      label: trans('move', {}, 'actions'),
-                      callback: () => {
-                        props.moveItem(item.id, position)
-                      }
-                    })
-                  }],
-                  group: trans('management')
-                }, {
-                  name: 'delete',
-                  type: CALLBACK_BUTTON,
-                  icon: 'fa fa-fw fa-trash-o',
-                  label: trans('delete', {}, 'actions'),
-                  callback: () => {
-                    const newItems = props.items.slice()
+                  title: trans('copy'),
+                  step: {
+                    id: props.id,
+                    title: props.title || trans('step', {number: props.index + 1}, 'quiz')
+                  },
+                  steps: (props.steps || []).map((s, i) => ({
+                    id: s.id,
+                    title: s.title || trans('step', {number: i + 1}, 'quiz'),
+                    items: s.items
+                  })),
+                  items: (props.items || []).map((s, i) => ({
+                    id: s.id,
+                    title: s.title || trans('item', {number: i + 1}, 'quiz')
+                  })),
+                  item: item,
+                  selectAction: (position) => ({
+                    type: CALLBACK_BUTTON,
+                    label: trans('copy', {}, 'actions'),
+                    callback: () => {
+                      refreshIdentifiers(item).then(item => {
+                        props.copyItem(item, position)
+                      })
+                    }
+                  })
+                }],
+                group: trans('management')
+              }, {
+                name: 'move',
+                type: MODAL_BUTTON,
+                icon: 'fa fa-fw fa-arrows',
+                label: trans('move', {}, 'actions'),
+                modal: [MODAL_ITEM_POSITION, {
+                  icon: 'fa fa-fw fa-arrows',
+                  title: trans('movement'),
+                  step: {
+                    id: props.id,
+                    title: props.title || trans('step', {number: props.index + 1}, 'quiz')
+                  },
+                  steps: (props.steps || []).map((s, i) => ({
+                    id: s.id,
+                    title: s.title || trans('step', {number: i + 1}, 'quiz'),
+                    items: s.items
+                  })),
+                  items: (props.items || []).map((s, i) => ({
+                    id: s.id,
+                    title: s.title || trans('item', {number: i + 1}, 'quiz')
+                  })),
+                  item: item,
+                  selectAction: (position) => ({
+                    type: CALLBACK_BUTTON,
+                    label: trans('move', {}, 'actions'),
+                    callback: () => {
+                      props.moveItem(item.id, position)
+                    }
+                  })
+                }],
+                group: trans('management')
+              }, {
+                name: 'delete',
+                type: CALLBACK_BUTTON,
+                icon: 'fa fa-fw fa-trash-o',
+                label: trans('delete', {}, 'actions'),
+                callback: () => {
+                  const newItems = props.items.slice()
 
-                    newItems.splice(itemIndex, 1)
-                    props.update('items', newItems)
-                  },
-                  confirm: {
-                    title: trans('deletion'),
-                    //subtitle: props.item.title || trans('', {}, 'question_types'),
-                    message: trans('remove_item_confirm_message', {}, 'quiz')
-                  },
-                  dangerous: true,
-                  group: trans('management')
-                }
-              ]}
-            />
-          )}
-        </FormSections>
+                  newItems.splice(itemIndex, 1)
+                  props.update('items', newItems)
+                },
+                confirm: {
+                  title: trans('deletion'),
+                  //subtitle: props.item.title || trans('', {}, 'question_types'),
+                  message: trans('remove_item_confirm_message', {}, 'quiz')
+                },
+                dangerous: true,
+                group: trans('management')
+              }
+            ]}
+          />
+        )}
+      </FormSections>
       }
 
       <div className="component-container">

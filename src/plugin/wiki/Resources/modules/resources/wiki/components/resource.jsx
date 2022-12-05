@@ -33,7 +33,7 @@ const WikiResource = props =>
         target: ['apiv2_wiki_export_pdf', {id: props.wiki.id}]
       }, {
         type: LINK_BUTTON,
-        icon: 'fa fa-fw fa-trash-o',
+        icon: 'fa fa-fw fa-trash',
         displayed: props.canEdit,
         label: trans('deleted_sections', {}, 'icap_wiki'),
         target: `${props.path}/section/deleted`

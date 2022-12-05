@@ -16,7 +16,7 @@ import {AttemptsChart} from '#/plugin/exo/charts/attempts/components/chart'
 const Parameters = props =>
   <ul className="exercise-parameters">
     <li className="exercise-parameter">
-      <span className="fa fa-fw fa-check-square-o icon-with-text-right" />
+      <span className="fa fa-fw fa-check-square icon-with-text-right" />
       {trans('results_availability', {}, 'quiz')} :
       &nbsp;
       <b>
@@ -42,7 +42,7 @@ const Parameters = props =>
     </li>
 
     <li className="exercise-parameter">
-      <span className="fa fa-fw fa-files-o icon-with-text-right" />
+      <span className="fa fa-fw fa-files icon-with-text-right" />
       {trans('maximum_attempts', {}, 'quiz')} :
       &nbsp;
       <b>{props.maxAttempts ? props.maxAttempts : '-'}</b>
@@ -50,7 +50,7 @@ const Parameters = props =>
 
     {(props.timeLimited && props.duration) &&
       <li className="exercise-parameter">
-        <span className="fa fa-fw fa-clock-o icon-with-text-right" />
+        <span className="fa fa-fw fa-clock icon-with-text-right" />
         {trans('duration')} :
         &nbsp;
         <b>{displayDuration(props.duration)}</b>

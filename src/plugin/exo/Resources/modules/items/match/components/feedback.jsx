@@ -143,7 +143,7 @@ class MatchFeedback extends Component {
     return (
       <div className="match-feedback">
         <span className="help-block">
-          <span className="fa fa-info-circle" /> {trans('match_player_click_link_help', {}, 'quiz')}
+          <span className="fa fa-circle-info" /> {trans('match_player_click_link_help', {}, 'quiz')}
         </span>
 
         <div className="match-items row" ref={(el) => { this.container = el }} id={`match-question-paper-${this.props.item.id}-first`}>

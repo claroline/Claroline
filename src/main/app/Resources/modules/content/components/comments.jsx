@@ -131,7 +131,7 @@ class ContentComments extends Component {
                       callback: () => this.showCommentForm(comment)
                     }, {
                       name: 'delete',
-                      icon: 'fa fa-fw fa-trash-o',
+                      icon: 'fa fa-fw fa-trash',
                       type: CALLBACK_BUTTON,
                       label: trans('delete'),
                       displayed: !!this.props.deleteComment && (this.props.canManage || this.props.currentUser && comment.user.id === this.props.currentUser.id),

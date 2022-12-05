@@ -38,7 +38,7 @@ class SectionDeleteModal extends Component {
     return (
       <Modal
         {...omit(this.props, 'deleteSection', 'sectionTitle')}
-        icon="fa fa-fw fa-trash-o"
+        icon="fa fa-fw fa-trash"
         title={trans('delete_confirmation', {'sectionTitle': this.props.sectionTitle}, 'icap_wiki')}
       >
         <FormData

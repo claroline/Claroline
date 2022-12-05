@@ -80,7 +80,7 @@ class MessageCommentsComponent extends Component {
                         callback: () => this.setState({showCommentForm: comment.id})
                       }, {
                         type: CALLBACK_BUTTON,
-                        icon: 'fa fa-fw fa-flag-o',
+                        icon: 'fa fa-fw fa-flag',
                         label: trans('flag', {}, 'forum'),
                         displayed: this.props.currentUser && (comment.meta.creator.id !== this.props.currentUser.id) && !comment.meta.flagged,
                         callback: () => this.props.flag(comment, this.props.subject.id)
@@ -92,7 +92,7 @@ class MessageCommentsComponent extends Component {
                         callback: () => this.props.unFlag(comment, this.props.subject.id)
                       }, {
                         type: CALLBACK_BUTTON,
-                        icon: 'fa fa-fw fa-trash-o',
+                        icon: 'fa fa-fw fa-trash',
                         label: trans('delete', {}, 'actions'),
                         displayed: this.props.currentUser && (comment.meta.creator.id === this.props.currentUser.id || this.props.moderator),
                         callback: () => this.props.deleteComment(comment.id),

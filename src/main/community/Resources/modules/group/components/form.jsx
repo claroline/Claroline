@@ -34,7 +34,7 @@ const GroupForm = props =>
           }
         ]
       }, {
-        icon: 'fa fa-fw fa-info',
+        icon: 'fa fa-fw fa-circle-info',
         title: trans('information'),
         fields: [
           {

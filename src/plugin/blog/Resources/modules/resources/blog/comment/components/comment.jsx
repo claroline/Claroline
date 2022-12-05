@@ -66,7 +66,7 @@ const CommentComponent = (props) =>
             }
           },{
             type: CALLBACK_BUTTON,
-            icon: 'fa fa-fw fa-trash-o',
+            icon: 'fa fa-fw fa-trash',
             label: trans('delete', {}, 'actions'),
             displayed: props.canEdit || (props.comment.author !== null && props.currentUser !== null && props.comment.author.id === props.currentUser.id && !props.comment.isPublished),
             callback: () => props.deleteComment(props.blogId, props.comment.id),

@@ -9,7 +9,7 @@ import {trans, transChoice} from '#/main/app/intl/translation'
 
 const UsedHint = props =>
   <div className="well well-sm used-hint">
-    <span className="fa fa-fw fa-lightbulb-o" />
+    <span className="fa fa-fw fa-lightbulb" />
     <ContentHtml className="hint-text">
       {props.value}
     </ContentHtml>
@@ -32,7 +32,7 @@ const Hint = props =>
     className="btn btn-link btn-block hint-btn"
     onClick={props.showHint}
   >
-    <span className="fa fa-fw fa-lightbulb-o"/>
+    <span className="fa fa-fw fa-lightbulb"/>
     &nbsp;{trans('hint', {}, 'quiz')}&nbsp;{props.number}
 
     {props.penalty > 0 &&

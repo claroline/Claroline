@@ -9,7 +9,7 @@ import {EventCard} from '#/plugin/cursus/event/components/card'
 
 export default {
   name: 'session-events',
-  icon: 'fa fa-fw fa-clock-o',
+  icon: 'fa fa-fw fa-clock',
   parameters: {
     primaryAction: (event) => ({
       type: URL_BUTTON,

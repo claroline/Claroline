@@ -15,7 +15,7 @@ const dataType = {
   name: 'score',
   meta: {
     creatable: false,
-    icon: 'fa fa-fw fa fa-check-square-o',
+    icon: 'fa fa-fw fa fa-check-square',
     label: trans('score', {}, 'data'),
     description: trans('score_desc', {}, 'data')
   },

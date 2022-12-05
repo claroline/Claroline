@@ -32,7 +32,7 @@ const CourseDetails = (props) =>
           {
             name: 'about',
             type: LINK_BUTTON,
-            icon: 'fa fa-fw fa-info',
+            icon: 'fa fa-fw fa-circle-info',
             label: props.activeSession ? trans('session_about', {}, 'cursus') : trans('about'),
             target: route(props.path, props.course, props.activeSession),
             exact: true

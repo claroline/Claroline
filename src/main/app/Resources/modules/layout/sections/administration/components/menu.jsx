@@ -99,7 +99,7 @@ class PlatformStatus extends Component {
               <Button
                 className="icon-with-text-left"
                 type={CALLBACK_BUTTON}
-                icon="fa fa-fw fa-info-circle"
+                icon="fa fa-fw fa-circle-info"
                 label={trans('show-info', {}, 'actions')}
                 callback={() => this.changeMode('usages' === this.state.mode ? 'status' : 'usages')}
                 tooltip="right"
@@ -150,7 +150,7 @@ const AdministrationMenu = props =>
       {
         name: 'about',
         type: MODAL_BUTTON,
-        icon: 'fa fa-fw fa-info',
+        icon: 'fa fa-fw fa-circle-info',
         label: trans('show-info', {}, 'actions'),
         modal: [MODAL_PLATFORM_ABOUT]
       }, {

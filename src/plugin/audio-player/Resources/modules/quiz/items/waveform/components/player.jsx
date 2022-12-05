@@ -23,7 +23,7 @@ const Section = props =>
         className="btn-link"
         callback={() => props.onPlay()}
       >
-        <span className="fa fa-fw fa-play-circle-o" />
+        <span className="fa fa-fw fa-play" />
       </CallbackButton>
 
       <div
@@ -71,7 +71,7 @@ const Section = props =>
             callback={() => props.onRemove()}
             dangerous={true}
           >
-            <span className="fa fa-fw fa-trash-o" />
+            <span className="fa fa-fw fa-trash" />
           </CallbackButton>
         </div>
       }

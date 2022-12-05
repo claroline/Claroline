@@ -11,7 +11,7 @@ const DataError = (props) => Array.isArray(props.error) ?
         'error-block-warning': props.warnOnly,
         'error-block-danger': !props.warnOnly
       })}>
-        <span className={classes('fa fa-fw icon-with-text-right', props.warnOnly ? 'fa-clock-o' : 'fa-warning')} />
+        <span className={classes('fa fa-fw icon-with-text-right', props.warnOnly ? 'fa-clock' : 'fa-warning')} />
         {error}
       </li>
     )}
@@ -20,7 +20,7 @@ const DataError = (props) => Array.isArray(props.error) ?
     'error-block-warning': props.warnOnly,
     'error-block-danger': !props.warnOnly
   })}>
-    <span className={classes('fa fa-fw icon-with-text-right', props.warnOnly ? 'fa-clock-o' : 'fa-warning')} />
+    <span className={classes('fa fa-fw icon-with-text-right', props.warnOnly ? 'fa-clock' : 'fa-warning')} />
     {props.error}
   </div>
 

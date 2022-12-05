@@ -17,7 +17,7 @@ export default (users, usersRefresher, path, currentUser) => {
   return {
     name: 'add-contact',
     type: ASYNC_BUTTON,
-    icon: 'fa fa-fw fa-address-book-o',
+    icon: 'fa fa-fw fa-address-book',
     label: trans('add-contact', {}, 'actions'),
     displayed: 0 !== filteredUsers.length,
     scope: ['object', 'collection'],

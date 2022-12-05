@@ -150,7 +150,7 @@ const Editor = props =>
           }
         ]
       }, {
-        icon: 'fa fa-fw fa-check-square-o',
+        icon: 'fa fa-fw fa-check-square',
         title: trans('correction'),
         fields: [
           {
@@ -281,7 +281,7 @@ const Editor = props =>
           }
         ]
       }, {
-        icon: 'fa fa-fw fa-bell-o',
+        icon: 'fa fa-fw fa-bell',
         title: trans('notifications', {}, 'platform'),
         fields: [
           {

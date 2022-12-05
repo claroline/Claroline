@@ -121,7 +121,7 @@ const CardActions = props =>
       <Button
         id={`action-delete-${props.post.id}`}
         type={CALLBACK_BUTTON}
-        icon="fa fa-trash-o"
+        icon="fa fa-trash"
         className="btn btn-link post-button"
         tooltip="top"
         label={trans('delete', {}, 'platform')}

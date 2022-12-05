@@ -17,7 +17,7 @@ export default (roles, refresher) => {
   return {
     name: 'delete',
     type: ASYNC_BUTTON,
-    icon: 'fa fa-fw fa-trash-o',
+    icon: 'fa fa-fw fa-trash',
     label: trans('delete', {}, 'actions'),
     disabled: -1 === roles.findIndex(role => !get(role, 'meta.readOnly') && -1 === role.name.indexOf('ROLE_WS_COLLABORATOR_') && -1 === role.name.indexOf('ROLE_WS_MANAGER_')),
     displayed: -1 !== roles.findIndex(role => hasPermission('delete', role)),

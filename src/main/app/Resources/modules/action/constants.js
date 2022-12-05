@@ -40,11 +40,11 @@ const ACTIONS = {
     icon: 'fa fa-save'
   },
   [ACTION_DELETE]: {
-    icon: 'fa fa-trash-o',
+    icon: 'fa fa-trash',
     dangerous: true
   },
   [ACTION_SEND]: {
-    icon: 'fa fa-paper-plane-o'
+    icon: 'fa fa-paper-plane'
   },
   [ACTION_UPLOAD]: {
     icon: 'fa fa-upload'

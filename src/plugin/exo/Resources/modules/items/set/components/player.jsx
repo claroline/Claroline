@@ -41,7 +41,7 @@ const Association = props =>
         id={`ass-${props.association.itemId}-${props.association.setId}-delete`}
         className="btn-link"
         type={CALLBACK_BUTTON}
-        icon="fa fa-fw fa-trash-o"
+        icon="fa fa-fw fa-trash"
         label={trans('delete', {}, 'actions')}
         callback={() => props.handleItemRemove(props.association.setId, props.association.itemId)}
         tooltip="top"

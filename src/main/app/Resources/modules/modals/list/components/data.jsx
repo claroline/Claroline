@@ -68,7 +68,7 @@ ListDataModal.propTypes = {
 ListDataModal.defaultProps = {
   title: trans('objects_select_title'),
   confirmText: trans('objects_select_confirm'),
-  icon: 'fa fa-fw fa-hand-pointer-o',
+  icon: 'fa fa-fw fa-hand-pointer',
   onlyId: true
 }
 

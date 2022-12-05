@@ -42,7 +42,7 @@ class EntryCommentsComponent extends Component {
 
   deleteComment(commentId) {
     this.props.showModal(MODAL_CONFIRM, {
-      icon: 'fa fa-fw fa-trash-o',
+      icon: 'fa fa-fw fa-trash',
       title: trans('delete_comment', {}, 'clacoform'),
       question: trans('delete_comment_confirm_message', {}, 'clacoform'),
       handleConfirm: () => this.props.deleteComment(commentId)
@@ -174,7 +174,7 @@ class EntryCommentsComponent extends Component {
                       callback: () => this.props.blockComment(comment.id)
                     }, {
                       type: CALLBACK_BUTTON,
-                      icon: 'fa fa-fw fa-trash-o',
+                      icon: 'fa fa-fw fa-trash',
                       label: trans('delete'),
                       displayed: this.props.canManage,
                       callback: () => this.deleteComment(comment.id),
