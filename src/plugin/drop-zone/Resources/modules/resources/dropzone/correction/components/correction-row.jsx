@@ -42,7 +42,7 @@ class CorrectionRow extends Component {
 
   deleteCorrection(correctionId) {
     this.props.showModal(MODAL_CONFIRM, {
-      icon: 'fa fa-fw fa-trash-o',
+      icon: 'fa fa-fw fa-trash',
       title: trans('delete_correction', {}, 'dropzone'),
       question: trans('delete_correction_confirm_message', {}, 'dropzone'),
       dangerous: true,

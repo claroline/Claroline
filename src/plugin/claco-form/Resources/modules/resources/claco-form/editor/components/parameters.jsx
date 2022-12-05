@@ -27,7 +27,7 @@ const EditorParameters = props =>
     sections={[
       {
         id: 'fields',
-        icon: 'fa fa-fw fa-th-list',
+        icon: 'fa fa-fw fa-table-list',
         title: trans('fields'),
         primary: true,
         fields: [

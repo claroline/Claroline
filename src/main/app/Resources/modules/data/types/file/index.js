@@ -7,7 +7,7 @@ const dataType = {
   name: 'file',
   meta: {
     creatable: true,
-    icon: 'fa fa-fw fa fa-file-o',
+    icon: 'fa fa-fw fa fa-file',
     label: trans('file', {}, 'data'),
     description: trans('file_desc', {}, 'data')
   },

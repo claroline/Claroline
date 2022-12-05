@@ -70,7 +70,7 @@ const DeletedMessagesComponent = (props) =>
         }
       }, {
         type: CALLBACK_BUTTON,
-        icon: 'fa fa-fw fa-trash-o',
+        icon: 'fa fa-fw fa-trash',
         label: trans('delete', {}, 'actions'),
         dangerous: true,
         confirm: {

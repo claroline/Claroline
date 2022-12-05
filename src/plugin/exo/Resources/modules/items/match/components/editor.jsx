@@ -76,7 +76,7 @@ class MatchLinkPopover extends Component {
                 id={`match-connection-${this.props.solution.firstId}-${this.props.solution.secondId}-delete`}
                 className="btn-link"
                 type={CALLBACK_BUTTON}
-                icon="fa fa-fw fa-trash-o"
+                icon="fa fa-fw fa-trash"
                 label={trans('delete', {}, 'actions')}
                 disabled={!this.props.deletable}
                 callback={() => this.props.handleConnectionDelete(this.props.solution.firstId, this.props.solution.secondId)}
@@ -126,7 +126,7 @@ class MatchLinkPopover extends Component {
             id={`solution-${this.props.solution.firstId}-${this.props.solution.secondId}-feedback-toggle`}
             className="btn-link"
             type={CALLBACK_BUTTON}
-            icon="fa fa-fw fa-comments-o"
+            icon="fa fa-fw fa-comments"
             label={trans('feedback_association_created', {}, 'quiz')}
             callback={() => this.setState({showFeedback: !this.state.showFeedback})}
             tooltip="top"
@@ -178,7 +178,7 @@ class MatchItem extends Component{
               id={`match-source-${this.props.item.id}-delete`}
               className="btn-link"
               type={CALLBACK_BUTTON}
-              icon="fa fa-fw fa-trash-o"
+              icon="fa fa-fw fa-trash"
               label={trans('delete', {}, 'actions')}
               disabled={!this.props.deletable}
               callback={() => this.props.onUnmount(this.props.item.id, this.props.type + '_' + this.props.item.id)}
@@ -204,7 +204,7 @@ class MatchItem extends Component{
               id={`match-target-${this.props.type + '_' + this.props.item.id}-delete`}
               className="btn-link"
               type={CALLBACK_BUTTON}
-              icon="fa fa-fw fa-trash-o"
+              icon="fa fa-fw fa-trash"
               label={trans('delete', {}, 'actions')}
               disabled={!this.props.deletable}
               callback={() => this.props.onUnmount(this.props.item.id, this.props.type + '_' + this.props.item.id)}

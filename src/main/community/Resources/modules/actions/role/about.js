@@ -7,7 +7,7 @@ import {MODAL_ROLE_ABOUT} from '#/main/community/role/modals/about'
 export default (roles) => ({
   name: 'about',
   type: MODAL_BUTTON,
-  icon: 'fa fa-fw fa-info',
+  icon: 'fa fa-fw fa-circle-info',
   label: trans('show-info', {}, 'actions'),
   displayed: hasPermission('open', roles[0]),
   modal: [MODAL_ROLE_ABOUT, {

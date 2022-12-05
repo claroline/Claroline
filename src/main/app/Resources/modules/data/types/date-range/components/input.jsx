@@ -34,7 +34,7 @@ class DateRangeInput extends Component {
         })}>
           <DateInput
             id={`${this.props.id}-start`}
-            calendarIcon="fa fa-fw fa-calendar-check-o"
+            calendarIcon="fa fa-fw fa-calendar-check"
             value={this.props.value[0]}
             disabled={this.props.disabled}
             onChange={this.setRangeStart}
@@ -56,7 +56,7 @@ class DateRangeInput extends Component {
         })}>
           <DateInput
             id={`${this.props.id}-end`}
-            calendarIcon="fa fa-fw fa-calendar-times-o"
+            calendarIcon="fa fa-fw fa-calendar-xmark"
             value={this.props.value[1]}
             disabled={this.props.disabled}
             onChange={this.setRangeEnd}

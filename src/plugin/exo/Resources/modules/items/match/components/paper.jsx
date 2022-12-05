@@ -202,7 +202,7 @@ class MatchPaper extends Component {
             <Tab.Content animation>
               <Tab.Pane eventKey="first">
                 <span className="help-block">
-                  <span className="fa fa-info-circle" />{trans('match_player_click_link_help', {}, 'quiz')}
+                  <span className="fa fa-circle-info" />{trans('match_player_click_link_help', {}, 'quiz')}
                 </span>
                 <div id={`match-question-paper-${this.props.item.id}-first`} className="match-items row">
                   <div className="item-col col-md-5 col-sm-5 col-xs-5">
@@ -247,7 +247,7 @@ class MatchPaper extends Component {
               {this.props.showExpected &&
                 <Tab.Pane eventKey="second">
                   <span className="help-block" style={{visibility:'hidden'}} >
-                    <span className="fa fa-info-circle" />{trans('match_player_click_link_help', {}, 'quiz')}
+                    <span className="fa fa-circle-info" />{trans('match_player_click_link_help', {}, 'quiz')}
                   </span>
                   <div id={`match-question-paper-${this.props.item.id}-second`} className="match-items row">
                     <div className="item-col col-md-5 col-sm-5 col-xs-5">

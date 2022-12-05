@@ -39,7 +39,7 @@ const SectionAudio = props =>
       callback={() => props.onDelete()}
       dangerous={true}
     >
-      <span className="fa fa-trash-o"/>
+      <span className="fa fa-trash"/>
     </CallbackButton>
   </div>
 
@@ -56,7 +56,7 @@ const SectionConfiguration = (props) =>
         className="btn-link"
         callback={() => props.onPlay(props.section.start, props.section.end)}
       >
-        <span className="fa fa-fw fa-play-circle-o" />
+        <span className="fa fa-fw fa-play" />
       </CallbackButton>
 
       <div className="section-time-group input-group">
@@ -91,7 +91,7 @@ const SectionConfiguration = (props) =>
           callback={() => props.onRemove()}
           dangerous={true}
         >
-          <span className="fa fa-fw fa-trash-o" />
+          <span className="fa fa-fw fa-trash" />
         </CallbackButton>
       </div>
     </div>

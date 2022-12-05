@@ -80,7 +80,7 @@ const WikiSectionContent = props =>
               displayed: props.canEdit && props.setSectionVisibility && !props.isRoot
             }, {
               type: CALLBACK_BUTTON,
-              icon: 'fa fa-fw fa-trash-o',
+              icon: 'fa fa-fw fa-trash',
               label: trans('delete', {}, 'actions'),
               callback: () => props.deleteSection(props.wikiId, props.section),
               displayed: !props.isRoot && (props.canEdit || (props.section.meta.creator && props.loggedUserId === props.section.meta.creator.id)),

@@ -11,7 +11,7 @@ import {MODAL_RESOURCE_ABOUT} from '#/main/core/resource/modals/about'
 export default (resourceNodes) => ({
   name: 'about',
   type: MODAL_BUTTON,
-  icon: 'fa fa-fw fa-info',
+  icon: 'fa fa-fw fa-circle-info',
   label: trans('show-info', {}, 'actions'),
   modal: [MODAL_RESOURCE_ABOUT, {
     resourceNode: resourceNodes[0]

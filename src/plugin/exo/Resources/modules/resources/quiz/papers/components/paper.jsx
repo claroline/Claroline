@@ -146,7 +146,7 @@ const PaperComponent = props =>
          },*/ {
           name: 'delete',
           type: CALLBACK_BUTTON,
-          icon: 'fa fa-fw fa-trash-o',
+          icon: 'fa fa-fw fa-trash',
           label: trans('delete', {}, 'actions'),
           displayed: props.admin,
           callback: () => props.delete(props.quizId, props.paper).then(() => {

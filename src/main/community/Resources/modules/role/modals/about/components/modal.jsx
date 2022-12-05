@@ -14,7 +14,7 @@ import {constants} from '#/main/community/constants'
 const AboutModal = props =>
   <Modal
     {...omit(props, 'roleId', 'role', 'get', 'reset')}
-    icon="fa fa-fw fa-info"
+    icon="fa fa-fw fa-circle-info"
     title={trans('about')}
     subtitle={trans(get(props.role, 'translationKey', 'loading'))}
     onEntering={() => props.get(props.roleId)}

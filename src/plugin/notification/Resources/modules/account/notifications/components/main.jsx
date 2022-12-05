@@ -7,7 +7,7 @@ import {showBreadcrumb} from '#/main/app/layout/utils'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {constants as listConstants} from '#/main/app/content/list/constants'
 import {UserPage} from '#/main/core/user/components/page'
-import {User as UserTypes} from '#/main/community/prop-types'
+import {User as UserTypes} from '#/main/community/user/prop-types'
 
 import {NotificationCard} from '#/plugin/notification/components/card'
 import {selectors} from '#/plugin/notification/account/notifications/store/selectors'

@@ -40,7 +40,7 @@ const FooterMain = (props) =>
         <Button
           className="app-footer-btn btn-link"
           type={URL_BUTTON}
-          icon="fa fa-fw fa-question-circle-o visible-xs"
+          icon="fa fa-fw fa-question-circle visible-xs"
           label={<span key="label" className="hidden-xs">{trans('help')}</span>}
           target={props.helpUrl}
         />

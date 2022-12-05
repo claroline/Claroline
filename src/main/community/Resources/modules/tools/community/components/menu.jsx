@@ -57,7 +57,7 @@ const CommunityMenu = (props) =>
         }, {
           name: 'profile',
           type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-id-card',
+          icon: 'fa fa-fw fa-user-circle',
           label: trans('user_profile'),
           target: `${props.path}/parameters/profile`,
           displayed: props.contextType === toolConstants.TOOL_DESKTOP && props.canAdministrate

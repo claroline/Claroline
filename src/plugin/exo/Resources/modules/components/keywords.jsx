@@ -115,7 +115,7 @@ class KeywordItem extends Component {
             id={`keyword-${this.props.keyword._id}-feedback-toggle`}
             className="btn-link"
             type={CALLBACK_BUTTON}
-            icon="fa fa-fw fa-comments-o"
+            icon="fa fa-fw fa-comments"
             label={trans('words_feedback_info', {}, 'quiz')}
             callback={() => this.setState({showFeedback: !this.state.showFeedback})}
             tooltip="top"
@@ -125,7 +125,7 @@ class KeywordItem extends Component {
             id={`keyword-${this.props.keyword._id}-delete`}
             className="btn-link"
             type={CALLBACK_BUTTON}
-            icon="fa fa-fw fa-trash-o"
+            icon="fa fa-fw fa-trash"
             label={trans('delete', {}, 'actions')}
             callback={() => this.props.keyword._deletable && this.props.removeKeyword()}
             disabled={!this.props.keyword._deletable}
@@ -312,7 +312,7 @@ const KeywordsPopover = props =>
               id={`keywords-popover-${props.id}-remove`}
               className="btn-link"
               type={CALLBACK_BUTTON}
-              icon="fa fa-fw fa-trash-o"
+              icon="fa fa-fw fa-trash"
               label={trans('delete', {}, 'actions')}
               callback={props.remove}
               tooltip="top"

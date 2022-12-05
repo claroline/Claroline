@@ -24,7 +24,7 @@ const MyDrop = props =>
         {
           name: 'show-instructions',
           type: MODAL_BUTTON,
-          icon: 'fa fa-fw fa-info',
+          icon: 'fa fa-fw fa-circle-info',
           label: trans('show_instructions', {}, 'dropzone'),
           modal: [MODAL_ALERT, {
             title: trans('instructions', {}, 'dropzone'),
@@ -57,7 +57,7 @@ const MyDrop = props =>
           {
             name: 'request-revision',
             type: CALLBACK_BUTTON,
-            icon: 'fa fa-fw fa-comments-o',
+            icon: 'fa fa-fw fa-comments',
             label: trans('submit_for_revision', {}, 'dropzone'),
             displayed: props.dropzone.parameters.revisionEnabled,
             disabled: !props.myDrop.documents || 0 === props.myDrop.documents.filter(d => !d.revision).length,

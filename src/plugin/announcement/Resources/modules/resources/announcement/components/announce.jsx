@@ -65,7 +65,7 @@ const Announce = connect(
     removePost(aggregateId, announcePost) {
       dispatch(
         modalActions.showModal(MODAL_CONFIRM, {
-          icon: 'fa fa-fw fa-trash-o',
+          icon: 'fa fa-fw fa-trash',
           title: trans('remove_announce', {}, 'announcement'),
           question: trans('remove_announce_confirm', {}, 'announcement'),
           dangerous: true,

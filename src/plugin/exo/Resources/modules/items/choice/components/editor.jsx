@@ -83,7 +83,7 @@ class Choice extends Component {
             id={`choice-${this.props.id}-feedback-toggle`}
             className="btn-link"
             type={CALLBACK_BUTTON}
-            icon="fa fa-fw fa-comments-o"
+            icon="fa fa-fw fa-comments"
             label={trans('choice_feedback_info', {}, 'quiz')}
             callback={() => this.setState({showFeedback: !this.state.showFeedback})}
             tooltip="top"
@@ -94,7 +94,7 @@ class Choice extends Component {
             className="btn-link"
             type={CALLBACK_BUTTON}
             disabled={!this.props.deletable}
-            icon="fa fa-fw fa-trash-o"
+            icon="fa fa-fw fa-trash"
             label={trans('delete')}
             callback={this.props.delete}
             tooltip="top"

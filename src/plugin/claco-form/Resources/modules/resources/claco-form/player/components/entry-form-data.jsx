@@ -20,7 +20,7 @@ const EntryDataList = props =>
           type="button"
           onClick={() => props.removeData(d)}
         >
-          <span className="fa fa-times-circle" />
+          <span className="fa fa-circle-xmark" />
         </button>
       </div>
     )}

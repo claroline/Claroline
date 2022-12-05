@@ -10,8 +10,8 @@ const AlertModal = props =>
   <Modal
     {...omit(props, 'type', 'message')}
     icon={classes('fa fa-fw', {
-      'fa-info-circle':          props.type === 'info',
-      'fa-check-circle':         props.type === 'success',
+      'fa-circle-info':          props.type === 'info',
+      'fa-circle-check':         props.type === 'success',
       'fa-exclamation-triangle': props.type === 'warning',
       'fa-minus-circle':         props.type === 'danger'
     })}

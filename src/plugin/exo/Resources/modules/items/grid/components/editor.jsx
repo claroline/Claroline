@@ -268,7 +268,7 @@ class GridCell extends Component {
                 id={`cell-${this.props.cell.id}-delete-solution`}
                 className="btn-link"
                 type={CALLBACK_BUTTON}
-                icon="fa fa-fw fa-trash-o"
+                icon="fa fa-fw fa-trash"
                 label={trans('delete', {}, 'actions')}
                 callback={this.props.removeSolution}
                 tooltip="top"
@@ -402,7 +402,7 @@ const GridRow = props =>
         id={`grid-btn-delete-row-${props.index}`}
         className="btn-link"
         type={CALLBACK_BUTTON}
-        icon="fa fa-fw fa-trash-o"
+        icon="fa fa-fw fa-trash"
         label={trans('delete', {}, 'actions')}
         disabled={!props.deletable}
         callback={props.removeRow}
@@ -592,7 +592,7 @@ const GridTable = props =>
               id={`grid-btn-delete-col-${colIndex}`}
               className="btn-link"
               type={CALLBACK_BUTTON}
-              icon="fa fa-fw fa-trash-o"
+              icon="fa fa-fw fa-trash"
               label={trans('delete', {}, 'actions')}
               disabled={utils.getNbCols(props.item.cells) <= 1}
               callback={() => props.removeColumn(colIndex)}

@@ -15,7 +15,7 @@ import {ResourceIcon} from '#/main/core/resource/components/icon'
 const AboutModal = props =>
   <Modal
     {...omit(props, 'resourceNode')}
-    icon="fa fa-fw fa-info"
+    icon="fa fa-fw fa-circle-info"
     title={trans('about')}
     subtitle={props.resourceNode.name}
     poster={props.resourceNode.poster}

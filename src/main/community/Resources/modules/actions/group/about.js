@@ -7,7 +7,7 @@ import {MODAL_GROUP_ABOUT} from '#/main/community/group/modals/about'
 export default (groups) => ({
   name: 'about',
   type: MODAL_BUTTON,
-  icon: 'fa fa-fw fa-info',
+  icon: 'fa fa-fw fa-circle-info',
   label: trans('show-info', {}, 'actions'),
   displayed: hasPermission('open', groups[0]),
   modal: [MODAL_GROUP_ABOUT, {

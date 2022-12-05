@@ -70,7 +70,7 @@ const QuizResource = props =>
         group: trans('transfer')
       }, {
         type: LINK_BUTTON,
-        icon: 'fa fa-fw fa-check-square-o',
+        icon: 'fa fa-fw fa-check-square',
         label: trans('correct', {}, 'actions'),
         displayed: props.papersAdmin,
         target: `${props.path}/correction`,

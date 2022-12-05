@@ -43,7 +43,7 @@ class AboutModal extends Component {
     return (
       <Modal
         {...omit(this.props, 'event', 'reload')}
-        icon="fa fa-fw fa-info"
+        icon="fa fa-fw fa-circle-info"
         title={this.props.event.name}
         subtitle={trans('about')}
         poster={this.props.event.thumbnail ? this.props.event.thumbnail : undefined}

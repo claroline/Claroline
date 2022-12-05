@@ -39,7 +39,7 @@ const EditorMenu = props =>
       subscript: !isEmpty(get(props.errors, `steps[${index}]`)) ? {
         type: 'text',
         status: props.validating ? 'danger' : 'warning',
-        value: <span className={classes('fa fa-fw', {'fa-warning': props.validating, 'fa-clock-o': !props.validating})} />
+        value: <span className={classes('fa fa-fw', {'fa-warning': props.validating, 'fa-clock': !props.validating})} />
       } : undefined,
       onClick: (e) => {
         props.autoClose(e)
@@ -97,7 +97,7 @@ const EditorMenu = props =>
         }, {
           name: 'delete',
           type: CALLBACK_BUTTON,
-          icon: 'fa fa-fw fa-trash-o',
+          icon: 'fa fa-fw fa-trash',
           label: trans('delete', {}, 'actions'),
           callback: () => {
             props.removeStep(step.id)

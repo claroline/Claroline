@@ -345,7 +345,7 @@ class Pair extends Component {
             id={`ass-${this.props.pair.itemIds[0]}-${this.props.pair.itemIds[1]}-feedback-toggle`}
             className="btn-link"
             type={CALLBACK_BUTTON}
-            icon="fa fa-fw fa-comments-o"
+            icon="fa fa-fw fa-comments"
             label={trans('feedback_association_created', {}, 'quiz')}
             callback={() => this.setState({showFeedback: !this.state.showFeedback})}
             tooltip="top"
@@ -355,7 +355,7 @@ class Pair extends Component {
             id={`ass-${this.props.pair.itemIds[0]}-${this.props.pair.itemIds[1]}-delete`}
             className="btn-link"
             type={CALLBACK_BUTTON}
-            icon="fa fa-fw fa-trash-o"
+            icon="fa fa-fw fa-trash"
             label={trans('delete', {}, 'actions')}
             disabled={!this.props.pair._deletable}
             callback={() => this.props.onDelete(this.props.pair.itemIds[0], this.props.pair.itemIds[1])}
@@ -496,7 +496,7 @@ class Odd extends Component {
             id={`odd-${this.props.odd.id}-feedback-toggle`}
             className="btn-link"
             type={CALLBACK_BUTTON}
-            icon="fa fa-fw fa-comments-o"
+            icon="fa fa-fw fa-comments"
             label={trans('feedback_answer_check', {}, 'quiz')}
             callback={() => this.setState({showFeedback: !this.state.showFeedback})}
             tooltip="top"
@@ -506,7 +506,7 @@ class Odd extends Component {
             id={`odd-${this.props.odd.id}-delete`}
             className="btn-link"
             type={CALLBACK_BUTTON}
-            icon="fa fa-fw fa-trash-o"
+            icon="fa fa-fw fa-trash"
             label={trans('delete', {}, 'actions')}
             callback={() => this.props.onDelete()}
             tooltip="top"
@@ -595,7 +595,7 @@ let Item = props =>
         id={`set-item-${props.item.id}-delete`}
         className="btn-link"
         type={CALLBACK_BUTTON}
-        icon="fa fa-fw fa-trash-o"
+        icon="fa fa-fw fa-trash"
         label={trans('delete', {}, 'actions')}
         disabled={!props.item._deletable}
         callback={() => props.onDelete()}

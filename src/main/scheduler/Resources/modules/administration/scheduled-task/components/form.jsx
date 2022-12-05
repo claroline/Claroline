@@ -56,7 +56,7 @@ const ScheduledTaskForm = props =>
           }
         ]
       }, {
-        icon: 'fa fa-fw fa-envelope-o',
+        icon: 'fa fa-fw fa-envelope',
         title: trans('message'),
         fields: [
           {

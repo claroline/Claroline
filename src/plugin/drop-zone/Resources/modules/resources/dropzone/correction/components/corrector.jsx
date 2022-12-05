@@ -47,7 +47,7 @@ Corrections.propTypes = {
 }
 
 const Corrector = props => !props.drop || !props.corrections ?
-  <span className="fa fa-fw fa-circle-o-notch fa-spin"></span> :
+  <span className="fa fa-fw fa-circle-notch fa-spin"></span> :
   <div id="corrector-container">
     <h2>
       {trans(
