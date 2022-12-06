@@ -74,6 +74,8 @@ const DetailsData = props => {
         </div>
       )}
 
+      {props.affix}
+
       {0 !== otherSections.length &&
         <Sections
           level={hLevel}
@@ -127,6 +129,7 @@ DetailsData.propTypes = {
   definition: T.arrayOf(T.shape(
     DataDetailsSectionTypes.propTypes
   )).isRequired,
+  affix: T.node,
   children: T.node
 }
 

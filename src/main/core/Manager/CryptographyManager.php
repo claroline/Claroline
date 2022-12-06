@@ -24,7 +24,7 @@ class CryptographyManager
         $this->om = $om;
     }
 
-    public function generatePair()
+    public function generatePair(): ?CryptographicKey
     {
         try {
             $config = [

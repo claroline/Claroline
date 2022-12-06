@@ -5,7 +5,7 @@ import {MODAL_BUTTON} from '#/main/app/buttons'
 import {MODAL_MESSAGE} from '#/plugin/message/modals/message'
 
 export default (groups) => {
-  const processable = groups.filter(group => hasPermission('administrate', group))
+  const processable = groups.filter(group => hasPermission('edit', group))
 
   return {
     name: 'send-message',

@@ -8,28 +8,21 @@ import {LINK_BUTTON, CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {AlertBlock} from '#/main/app/alert/components/alert-block'
 import {ContentTitle} from '#/main/app/content/components/title'
 import {DetailsData} from '#/main/app/content/details/components/data'
-import {showBreadcrumb} from '#/main/app/layout/utils'
 import {MODAL_TERMS_OF_SERVICE} from '#/main/app/modals/terms-of-service'
-
-import {UserPage} from '#/main/core/user/components/page'
+import {AccountPage} from '#/main/app/account/containers/page'
+import {route} from '#/main/app/account/routing'
 import {User as UserTypes} from '#/main/community/prop-types'
 
 const PrivacyMain = (props) =>
-  <UserPage
-    showBreadcrumb={showBreadcrumb()}
-    breadcrumb={[
+  <AccountPage
+    path={[
       {
         type: LINK_BUTTON,
-        label: trans('my_account'),
-        target: '/account'
-      }, {
-        type: LINK_BUTTON,
         label: trans('privacy'),
-        target: '/account/privacy'
+        target: route('privacy')
       }
     ]}
     title={trans('privacy')}
-    user={props.currentUser}
   >
     <ContentTitle
       title={trans('terms_of_service')}
@@ -113,7 +106,7 @@ const PrivacyMain = (props) =>
         dangerous={true}
       />
     }
-  </UserPage>
+  </AccountPage>
 
 PrivacyMain.propTypes = {
   currentUser: T.shape(

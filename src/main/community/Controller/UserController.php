@@ -12,6 +12,7 @@
 namespace Claroline\CommunityBundle\Controller;
 
 use Claroline\AppBundle\Annotations\ApiDoc;
+use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Controller\APINew\Model\HasGroupsTrait;
@@ -26,7 +27,6 @@ use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -83,32 +83,27 @@ class UserController extends AbstractCrudController
         return User::class;
     }
 
-    /**
-     * @ApiDoc(
-     *     description="Get the list of user in that share the current user managed organizations (and sub organizations).",
-     *     queryString={
-     *         "$finder",
-     *         {"name": "page", "type": "integer", "description": "The queried page."},
-     *         {"name": "limit", "type": "integer", "description": "The max amount of objects per page."},
-     *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
-     *     }
-     * )
-     * @Route("/list/managed", name="apiv2_user_list_managed", methods={"GET"})
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     */
-    public function listManagedOrganizationAction(User $user, Request $request): JsonResponse
+    public function updateAction($id, Request $request, $class): JsonResponse
     {
-        $filters = [];
-        if (!$this->authorization->isGranted('ROLE_ADMIN')) {
-            $filters['organizations'] = array_map(function (Organization $organization) {
-                return $organization->getUuid();
-            }, $user->getAdministratedOrganizations()->toArray());
+        $data = $this->decodeRequest($request);
+        if (!isset($data['id'])) {
+            $data['id'] = $id;
         }
 
-        return new JsonResponse($this->finder->search(
-            User::class,
-            array_merge($request->query->all(), ['hiddenFilters' => $filters])
-        ));
+        $object = $this->crud->get(User::class, $id);
+        if (!$this->checkPermission('ADMINISTRATE', $object)) {
+            // removes main organization from the serialized structure because it will cause access issues.
+            unset($data['mainOrganization']);
+            // removes roles from the serialized structure because it will cause access issues.
+            // those roles should not be here anyway.
+            unset($data['roles']);
+        }
+
+        $object = $this->crud->update($class, $data, [Options::SERIALIZE_FACET, Crud::THROW_EXCEPTION]);
+
+        return new JsonResponse(
+            $this->serializer->serialize($object, [Options::SERIALIZE_FACET])
+        );
     }
 
     /**
@@ -237,8 +232,8 @@ class UserController extends AbstractCrudController
      */
     public function disableInactiveAction(Request $request): JsonResponse
     {
-        $tool = $this->toolManager->getAdminToolByName('community');
-        $this->checkPermission('OPEN', $tool, [], true);
+        $tool = $this->toolManager->getToolByName('community');
+        $this->checkPermission('ADMINISTRATE', $tool, [], true);
 
         $data = $this->decodeRequest($request);
         if (empty($data['lastActivity'])) {
@@ -288,8 +283,10 @@ class UserController extends AbstractCrudController
                 //maybe move these options in an other class
                 Options::ADD_NOTIFICATIONS,
                 Options::WORKSPACE_VALIDATE_ROLES,
+                Options::SERIALIZE_FACET,
             ],
             'get' => [Options::SERIALIZE_FACET],
+            'find' => [Options::SERIALIZE_FACET],
             'update' => [Options::SERIALIZE_FACET],
         ]);
     }

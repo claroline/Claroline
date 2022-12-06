@@ -51,7 +51,7 @@ class AuthenticationFailureHandler extends DefaultAuthenticationFailureHandler
         $this->dispatchAuthenticationFailureEvent($authData['username'] ?? '', $exception->getMessage());
 
         if ($request->isXmlHttpRequest()) {
-            return new JsonResponse($exception->getMessage(), 422);
+            return new JsonResponse($exception->getMessage(), 401);
         }
 
         return parent::onAuthenticationFailure($request, $exception);

@@ -187,13 +187,6 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
     private $resetPasswordHash;
 
     /**
-     * @ORM\Column(name="hash_time", type="integer", nullable=true)
-     *
-     * @deprecated
-     */
-    private $hashTime;
-
-    /**
      * @ORM\Column(nullable=true)
      */
     private $picture;
@@ -266,12 +259,6 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
     private $emailValidationHash;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\Organization\Organization", inversedBy="administrators")
-     * @ORM\JoinTable(name="claro_user_administrator")
-     */
-    private $administratedOrganizations;
-
-    /**
      * @var ArrayCollection
      *
      * @ORM\ManyToMany(
@@ -279,9 +266,7 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
      *     inversedBy="users"
      * )
      *
-     * @todo relation should not be declared here (only use Unidirectional)
-     *
-     * @deprecated
+     * @deprecated relation should not be declared here (only use Unidirectional)
      */
     private $locations;
 
@@ -292,6 +277,8 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
      *     cascade={"all"}
      *  )
      * @ORM\JoinColumn(name="user_id", nullable=false)
+     *
+     * @var ArrayCollection|UserOrganizationReference[]
      */
     private $userOrganizationReferences;
 
@@ -313,7 +300,6 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
         $this->groups = new ArrayCollection();
         $this->locations = new ArrayCollection();
         $this->salt = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
-        $this->administratedOrganizations = new ArrayCollection();
         $this->userOrganizationReferences = new ArrayCollection();
     }
 
@@ -345,7 +331,6 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
         $this->username = $user['username'];
         $this->roles = new ArrayCollection();
         $this->groups = new ArrayCollection();
-        $this->administratedOrganizations = new ArrayCollection();
     }
 
     public function getFirstName(): ?string
@@ -611,22 +596,6 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
         $this->resetPasswordHash = $resetPasswordHash;
     }
 
-    /**
-     * @deprecated
-     */
-    public function getHashTime(): ?int
-    {
-        return $this->hashTime;
-    }
-
-    /**
-     * @deprecated
-     */
-    public function setHashTime(?int $hashTime): void
-    {
-        $this->hashTime = $hashTime;
-    }
-
     public function setPicture(?string $picture): void
     {
         $this->picture = $picture;
@@ -655,7 +624,7 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
             }
         }
 
-        return $this->getExpirationDate() >= new \DateTime();
+        return empty($this->getExpirationDate()) || $this->getExpirationDate() >= new \DateTime();
     }
 
     /**
@@ -704,18 +673,14 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
         return $this->isMailNotified;
     }
 
-    public function setExpirationDate($expirationDate): void
+    public function setExpirationDate(?\DateTimeInterface $expirationDate): void
     {
         $this->expirationDate = $expirationDate;
     }
 
     public function getExpirationDate(): ?\DateTimeInterface
     {
-        $defaultExpirationDate = (strtotime('2100-01-01')) ? '2100-01-01' : '2038-01-01';
-
-        return (null !== $this->expirationDate && $this->expirationDate->getTimestamp()) ?
-            $this->expirationDate :
-            new \DateTime($defaultExpirationDate);
+        return $this->expirationDate;
     }
 
     public function setInitDate(?\DateTimeInterface $initDate): void
@@ -766,19 +731,20 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
 
         if ($includeGroups) {
             foreach ($this->groups as $group) {
-                array_merge($organizations, $group->getOrganizations()->toArray());
+                foreach ($group->getOrganizations() as $groupOrganization) {
+                    $organizations[$groupOrganization->getId()] = $groupOrganization;
+                }
             }
         }
 
-        $userOrganizations = $this->userOrganizationReferences->toArray();
-        $userOrganizations = array_map(function (UserOrganizationReference $ref) {
-            return $ref->getOrganization();
-        }, $userOrganizations);
+        foreach ($this->userOrganizationReferences as $userOrganizationReference) {
+            $organizations[$userOrganizationReference->getOrganization()->getId()] = $userOrganizationReference->getOrganization();
+        }
 
-        return array_merge($organizations, $userOrganizations);
+        return array_values($organizations);
     }
 
-    public function addOrganization(Organization $organization): void
+    public function addOrganization(Organization $organization, ?bool $managed = false): void
     {
         if ($organization->getMaxUsers() > -1) {
             $totalUsers = count($organization->getUserOrganizationReferences());
@@ -787,21 +753,23 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
             }
         }
 
-        $found = false;
-        foreach ($this->userOrganizationReferences as $userOrgaRef) {
-            if ($userOrgaRef->getOrganization() === $organization && $userOrgaRef->getUser() === $this) {
-                $found = true;
+        $ref = null;
+        foreach ($this->userOrganizationReferences as $userRef) {
+            if ($userRef->getOrganization() === $organization && $userRef->getUser() === $this) {
+                $ref = $userRef;
                 break;
             }
         }
 
-        if (!$found) {
+        if (empty($ref)) {
             $ref = new UserOrganizationReference();
             $ref->setOrganization($organization);
             $ref->setUser($this);
 
             $this->userOrganizationReferences->add($ref);
         }
+
+        $ref->setManager($managed);
     }
 
     public function removeOrganization(Organization $organization): void
@@ -817,38 +785,31 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
 
         if ($found) {
             $this->userOrganizationReferences->removeElement($found);
-            //this is the line doing all the work. I'm not sure the previous one is usefull
+            //this is the line doing all the work. I'm not sure the previous one is useful
             $found->getOrganization()->removeUser($this);
         }
     }
 
-    public function hasAdministratedOrganization(Organization $organization): bool
+    public function getAdministratedOrganizations(): ArrayCollection
     {
-        return $this->administratedOrganizations->contains($organization);
-    }
+        $managedOrganizations = new ArrayCollection();
+        foreach ($this->userOrganizationReferences as $userRef) {
+            if ($userRef->isManager()) {
+                $managedOrganizations->add($userRef->getOrganization());
+            }
+        }
 
-    public function getAdministratedOrganizations()
-    {
-        return $this->administratedOrganizations;
+        return $managedOrganizations;
     }
 
     public function addAdministratedOrganization(Organization $organization): void
     {
-        $this->addOrganization($organization);
-
-        if (!$this->administratedOrganizations->contains($organization)) {
-            $this->administratedOrganizations->add($organization);
-        }
+        $this->addOrganization($organization, true);
     }
 
     public function removeAdministratedOrganization(Organization $organization): void
     {
-        $this->administratedOrganizations->removeElement($organization);
-    }
-
-    public function setAdministratedOrganizations($organizations): void
-    {
-        $this->administratedOrganizations = $organizations;
+        $this->removeOrganization($organization);
     }
 
     public function getMainOrganization(): ?Organization
@@ -868,11 +829,11 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
 
         foreach ($this->userOrganizationReferences as $ref) {
             if ($ref->isMain()) {
-                $ref->setIsMain(false);
+                $ref->setMain(false);
             }
 
             if ($ref->getOrganization()->getUuid() === $organization->getUuid()) {
-                $ref->setIsMain(true);
+                $ref->setMain(true);
             }
         }
     }

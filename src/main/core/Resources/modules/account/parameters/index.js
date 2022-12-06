@@ -6,5 +6,6 @@ export default {
   name: 'parameters',
   icon: 'fa fa-fw fa-cog',
   label: trans('parameters'),
-  component: ParametersMain
+  component: ParametersMain,
+  order: 2
 }

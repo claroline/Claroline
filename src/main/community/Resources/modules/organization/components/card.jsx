@@ -12,7 +12,7 @@ const OrganizationCard = props =>
   <DataCard
     {...props}
     id={props.data.id}
-    icon="fa fa-fw fa-building"
+    icon={!props.data.thumbnail ? 'fa fa-fw fa-building' : null}
     poster={props.data.thumbnail ? asset(props.data.thumbnail) : null}
     title={props.data.name}
     subtitle={props.data.code}
@@ -20,6 +20,7 @@ const OrganizationCard = props =>
       get(props.data, 'meta.default', false) && ['fa fa-check', trans('default')],
       get(props.data, 'restrictions.public') && ['fa fa-globe', trans('public_organization', {}, 'community')]
     ].filter(flag => !!flag)}
+    contentText={get(props.data, 'meta.description')}
   />
 
 OrganizationCard.propTypes = {

@@ -100,7 +100,7 @@ class OrganizationController extends AbstractCrudController
     public function addManagersAction(Organization $organization, Request $request): JsonResponse
     {
         $users = $this->decodeIdsString($request, User::class);
-        $this->crud->patch($organization, 'administrator', Crud::COLLECTION_ADD, $users);
+        $this->crud->patch($organization, 'manager', Crud::COLLECTION_ADD, $users);
 
         return new JsonResponse($this->serializer->serialize($organization));
     }
@@ -114,7 +114,7 @@ class OrganizationController extends AbstractCrudController
     public function removeManagersAction(Organization $organization, Request $request): JsonResponse
     {
         $users = $this->decodeIdsString($request, User::class);
-        $this->crud->patch($organization, 'administrator', Crud::COLLECTION_REMOVE, $users);
+        $this->crud->patch($organization, 'manager', Crud::COLLECTION_REMOVE, $users);
 
         return new JsonResponse($this->serializer->serialize($organization));
     }

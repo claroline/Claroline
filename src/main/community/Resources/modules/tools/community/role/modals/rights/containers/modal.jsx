@@ -20,8 +20,8 @@ const RightsModal = withReducer(selectors.STORE_NAME, reducer)(
       loadRights(rights) {
         dispatch(formActions.resetForm(selectors.STORE_NAME, rights, false))
       },
-      save(role, workspace, onSave) {
-        dispatch(formActions.save(selectors.STORE_NAME, ['apiv2_workspace_tools_set', {workspace: workspace.id, role: role.id}])).then((response) => {
+      save(role, contextType, contextId = null, onSave = null) {
+        dispatch(formActions.save(selectors.STORE_NAME, ['apiv2_role_rights_update', {id: role.id, contextType: contextType, contextId: contextId}])).then((response) => {
           if (onSave) {
             onSave(response)
           }

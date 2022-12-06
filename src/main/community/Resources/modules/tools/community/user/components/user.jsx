@@ -24,7 +24,7 @@ const UserForm = props =>
       target: props.path+'/users',
       exact: true
     }}
-    sections={[
+    definition={[
       {
         title: trans('general'),
         primary: true,

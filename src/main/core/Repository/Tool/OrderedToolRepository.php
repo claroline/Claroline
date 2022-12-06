@@ -22,9 +22,6 @@ class OrderedToolRepository extends ServiceEntityRepository
     /** @var array */
     private $bundles;
 
-    /**
-     * OrderedToolRepository constructor.
-     */
     public function __construct(ManagerRegistry $registry, PluginManager $pluginManager)
     {
         $this->bundles = $pluginManager->getEnabled();
@@ -46,7 +43,7 @@ class OrderedToolRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findOneByNameAndWorkspace(string $name, Workspace $workspace = null): ?OrderedTool
+    public function findOneByNameAndWorkspace(string $name, ?Workspace $workspace = null): ?OrderedTool
     {
         return $this->_em
             ->createQuery('
@@ -121,12 +118,7 @@ class OrderedToolRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    /**
-     * @param string $name
-     *
-     * @return OrderedTool
-     */
-    public function findOneByNameAndDesktop($name)
+    public function findOneByNameAndDesktop(string $name): ?OrderedTool
     {
         return $this->_em
             ->createQuery('

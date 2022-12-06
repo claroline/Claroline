@@ -4,7 +4,6 @@ import merge from 'lodash/merge'
 import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
-import {currentUser} from '#/main/app/security'
 import {makeId} from '#/main/core/scaffolding/id'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {GridSelection} from '#/main/app/content/grid/components/selection'
@@ -52,10 +51,7 @@ class CreationModal extends Component {
           handleSelect={(type) => {
             let newItem = merge({
               id: makeId(),
-              type: type.id,
-              meta: {
-                creator: currentUser()
-              }
+              type: type.id
             }, ItemTypes.defaultProps)
 
             // check if the current item type implement a callback for creation
@@ -73,7 +69,6 @@ class CreationModal extends Component {
     )
   }
 }
-
 
 CreationModal.propTypes = {
   fadeModal: T.func.isRequired,

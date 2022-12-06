@@ -95,13 +95,10 @@ services:
 
     Claroline\CoreBundle\Controller\APINew\Workspace\RoleController:
         arguments:
-            - '@security.token_storage'
             - '@security.authorization_checker'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\FinderProvider'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
-            - '@Claroline\CoreBundle\Manager\Tool\ToolManager'
 
     Claroline\CoreBundle\Controller\APINew\Workspace\WorkspaceController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController

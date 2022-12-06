@@ -19,7 +19,7 @@ export default (workspaces, refresher, path, currentUser) => {
     name: 'unregister-self',
     type: ASYNC_BUTTON,
     icon: 'fa fa-fw fa-sign-out',
-    label: trans('self-unregister', {}, 'actions'),
+    label: trans('self_unregister', {}, 'actions'),
     displayed: 0 !== processable.length,
     confirm: {
       title: transChoice('self_unregister_confirm_title', processable.length, {}, 'workspace'),

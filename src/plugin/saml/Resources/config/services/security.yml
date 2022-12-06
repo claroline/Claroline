@@ -6,6 +6,7 @@ services:
 
     Claroline\SamlBundle\Security\UserChecker:
         arguments:
+            - '@translator'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
 
     Claroline\SamlBundle\Security\Authentication\AuthenticationSuccessListener:

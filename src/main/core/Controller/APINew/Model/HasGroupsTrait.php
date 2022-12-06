@@ -5,6 +5,9 @@ namespace Claroline\CoreBundle\Controller\APINew\Model;
 use Claroline\AppBundle\Annotations\ApiDoc;
 use Claroline\AppBundle\API\Crud;
 use Claroline\CoreBundle\Entity\Group;
+use Claroline\CoreBundle\Entity\Organization\Organization;
+use Claroline\CoreBundle\Entity\User;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -30,17 +33,29 @@ trait HasGroupsTrait
      *     },
      *     response={"$list=Claroline\CoreBundle\Entity\Group"}
      * )
+     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      */
-    public function listGroupsAction(string $id, string $class, Request $request): JsonResponse
+    public function listGroupsAction(string $id, string $class, User $user, Request $request): JsonResponse
     {
         $object = $this->crud->get($class, $id);
         $this->checkPermission('OPEN', $object, [], true);
 
+        $hiddenFilters = [
+            // filter the list by the parent
+            $this->getName() => [$id],
+        ];
+
+        if (!$this->checkPermission('ROLE_ADMIN')) {
+            // only list groups for the current user organizations
+            $hiddenFilters['organizations'] = array_map(function (Organization $organization) {
+                return $organization->getUuid();
+            }, $user->getOrganizations());
+        }
+
         return new JsonResponse(
-            $this->crud->list(Group::class, array_merge(
-                $request->query->all(),
-                ['hiddenFilters' => [$this->getName() => [$id]]]
-            ))
+            $this->crud->list(Group::class, array_merge($request->query->all(), [
+                'hiddenFilters' => $hiddenFilters,
+            ]))
         );
     }
 

@@ -1,9 +1,0 @@
-services:
-    Claroline\TeamBundle\Manager\TeamManager:
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\AppBundle\API\Crud'
-            - '@Claroline\CoreBundle\Manager\ResourceManager'
-            - '@Claroline\CoreBundle\Manager\Resource\RightsManager'
-            - '@Claroline\CoreBundle\Manager\RoleManager'
-            - '@Claroline\CoreBundle\Manager\Tool\ToolRightsManager'

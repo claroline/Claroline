@@ -107,6 +107,18 @@ const UserList = props =>
       }] : []}
       customDefinition={[
         {
+          name: 'groups',
+          label: trans('groups'),
+          type: 'groups',
+          options: {
+            picker: !isEmpty(props.contextData) ? {
+              url: ['apiv2_workspace_list_groups', {id: props.contextData.id}]
+            } : undefined
+          },
+          displayed: false,
+          displayable: false,
+          sortable: false
+        }, {
           name: 'roles',
           type: 'roles',
           label: trans('roles'),

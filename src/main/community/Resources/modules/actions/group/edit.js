@@ -15,5 +15,6 @@ export default (groups, refresher, path) => ({
   displayed: hasPermission('edit', groups[0]),
   disabled: get(groups[0], 'meta.readOnly'),
   primary: true,
-  group: trans('management')
+  group: trans('management'),
+  scope: ['object']
 })

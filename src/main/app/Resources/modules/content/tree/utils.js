@@ -6,7 +6,7 @@ function flattenTree(roots = []) {
 }
 
 function flattenChildren(object) {
-  return concat([object], flatten(object.children.map(child => flattenChildren(child))))
+  return concat([object], object.children ? flatten(object.children.map(child => flattenChildren(child))) : [])
 }
 
 export {

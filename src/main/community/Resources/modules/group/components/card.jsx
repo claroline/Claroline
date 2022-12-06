@@ -11,7 +11,7 @@ const GroupCard = props =>
   <DataCard
     {...props}
     id={props.data.id}
-    icon="fa fa-fw fa-users"
+    icon={!props.data.thumbnail ? 'fa fa-fw fa-users' : null}
     poster={props.data.thumbnail ? asset(props.data.thumbnail) : null}
     title={props.data.name}
     contentText={get(props.data, 'meta.description')}

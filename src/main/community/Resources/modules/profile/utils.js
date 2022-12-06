@@ -4,6 +4,7 @@ import cloneDeep from 'lodash/cloneDeep'
 
 import {trans} from '#/main/app/intl/translation'
 import {param} from '#/main/app/config'
+import {hasPermission} from '#/main/app/security'
 
 function getMainFacet(facets) {
   return facets.find(facet => facet.meta.main)
@@ -44,12 +45,17 @@ function getDetailsDefaultSection(parameters, user) {
         options: {
           minRows: 5
         }
+      }, {
+        name: 'mainOrganization',
+        type: 'organization',
+        displayed: hasPermission('administrate', user),
+        label: trans('main_organization')
       }
     ]
   }
 }
 
-function getFormDefaultSections(user, isNew = false) {
+function getFormDefaultSections(user, update, isNew = false) {
   return [
     {
       id: 'default-props',
@@ -76,13 +82,19 @@ function getFormDefaultSections(user, isNew = false) {
           type: 'username',
           label: trans('username'),
           required: true,
-          displayed: isNew && param('community.username')
+          displayed: param('community.username')
         }, {
           name: 'plainPassword',
           type: 'password',
           label: trans('password'),
           displayed: isNew,
           required: true
+        }, {
+          name: 'mainOrganization',
+          type: 'organization',
+          required: true,
+          displayed: hasPermission('administrate', user),
+          label: trans('main_organization')
         }
       ]
     }, {
@@ -90,6 +102,11 @@ function getFormDefaultSections(user, isNew = false) {
       title: trans('information'),
       fields: [
         {
+          name: 'administrativeCode',
+          type: 'string',
+          displayed: hasPermission('administrate', user),
+          label: trans('administrativeCode')
+        }, {
           name: 'meta.description',
           type: 'html',
           label: trans('description')
@@ -115,6 +132,37 @@ function getFormDefaultSections(user, isNew = false) {
           name: 'thumbnail',
           label: trans('thumbnail'),
           type: 'image'
+        }
+      ]
+    }, {
+      icon: 'fa fa-fw fa-key',
+      title: trans('access_restrictions'),
+      displayed: hasPermission('administrate', user),
+      fields: [
+        {
+          name: 'restrictions.enableDates',
+          type: 'boolean',
+          label: trans('restrict_by_dates'),
+          calculated: (user) => user.restrictions && 0 !== user.restrictions.dates.length,
+          onChange: (activated) => {
+            if (!activated) {
+              update('restrictions.dates', [])
+            } else {
+              update('restrictions.dates', [null, null])
+            }
+          },
+          linked: [
+            {
+              name: 'restrictions.dates',
+              type: 'date-range',
+              label: trans('access_dates'),
+              displayed: (user) => user.restrictions && 0!== user.restrictions.dates.length,
+              required: true,
+              options: {
+                time: true
+              }
+            }
+          ]
         }
       ]
     }

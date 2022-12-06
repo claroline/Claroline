@@ -4,26 +4,31 @@ import {PropTypes as T} from 'prop-types'
 import {Routes} from '#/main/app/router'
 
 import {UserList} from '#/main/community/tools/community/user/containers/list'
-import {User} from '#/main/community/tools/community/user/components/user'
 import {UserCreate} from '#/main/community/tools/community/user/containers/create'
+import {UserShow} from '#/main/community/tools/community/user/containers/show'
+import {UserEdit} from '#/main/community/tools/community/user/containers/edit'
 
 const UserMain = props =>
   <Routes
-    path={props.path}
+    path={`${props.path}/users`}
     routes={[
       {
-        path: '/users',
+        path: '/',
         component: UserList,
         exact: true
       }, {
-        path: '/users/new',
+        path: '/new',
         component: UserCreate,
         onEnter: props.new,
         disabled: 'desktop' !== props.contextType || !props.canRegister
       }, {
-        path: '/users/form/:id?',
-        component: User,
-        onEnter: (params) => props.open(params.id || null)
+        path: '/:username/edit',
+        component: UserEdit,
+        onEnter: (params) => props.open(params.username)
+      }, {
+        path: '/:username',
+        component: UserShow,
+        onEnter: (params) => props.open(params.username)
       }
     ]}
   />

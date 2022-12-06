@@ -14,8 +14,8 @@ const RoleMain = connect(
     canCreate: selectors.canCreate(state)
   }),
   dispatch => ({
-    open(id) {
-      dispatch(actions.open(id))
+    open(id, contextData) {
+      dispatch(actions.open(id, contextData))
     },
     new(contextData) {
       dispatch(actions.new(!isEmpty(contextData) ? {

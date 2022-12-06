@@ -72,6 +72,8 @@ class Organization
      * @ORM\JoinTable(name="claro__location_organization")
      *
      * @var ArrayCollection
+     *
+     * @deprecated Should be unidirectional. Still used in badges
      */
     private $locations;
 
@@ -133,7 +135,7 @@ class Organization
      *
      * @var Workspace[]|ArrayCollection
      *
-     * @todo should be unidirectional
+     * @deprecated should be unidirectional
      */
     private $workspaces;
 
@@ -146,18 +148,9 @@ class Organization
      *
      * @var ArrayCollection
      *
-     * @todo should be unidirectional
+     * @deprecated should be unidirectional
      */
     private $groups;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\User", mappedBy="administratedOrganizations")
-     *
-     * @var User[]|ArrayCollection
-     *
-     * @todo reuse $userOrganizationReferences and add a prop on UserOrganizationReference. This will avoid a multiple join.
-     */
-    private $administrators;
 
     /**
      * @ORM\Column(name="is_default", type="boolean")
@@ -192,9 +185,7 @@ class Organization
      * )
      * @ORM\JoinColumn(name="organization_id", nullable=false)
      *
-     * @var ArrayCollection
-     *
-     * @todo should be unidirectional
+     * @var ArrayCollection|UserOrganizationReference[]
      */
     private $userOrganizationReferences;
 
@@ -220,7 +211,6 @@ class Organization
         $this->workspaces = new ArrayCollection();
         $this->keys = new ArrayCollection();
         $this->groups = new ArrayCollection();
-        $this->administrators = new ArrayCollection();
         $this->userOrganizationReferences = new ArrayCollection();
         $this->children = new ArrayCollection();
     }
@@ -230,136 +220,111 @@ class Organization
         return $this->name;
     }
 
-    public function setPosition($position)
+    public function setPosition(?int $position = null): void
     {
         $this->position = $position;
     }
 
-    public function getPosition()
+    public function getPosition(): ?int
     {
         return $this->position;
     }
 
-    /**
-     * Get parent.
-     *
-     * @return Organization
-     */
-    public function getParent()
+    public function getParent(): ?Organization
     {
         return $this->parent;
     }
 
-    /**
-     * Set parent.
-     *
-     * @param Organization $parent
-     */
-    public function setParent(self $parent = null)
+    public function setParent(?Organization $parent = null): void
     {
         $this->parent = $parent;
     }
 
-    public function setEmail($email)
+    public function setEmail(?string $email): void
     {
         $this->email = $email;
     }
 
-    public function getEmail()
+    public function getEmail(): ?string
     {
         return $this->email;
     }
 
-    public function setLocations($locations)
+    /**
+     * @deprecated
+     */
+    public function setLocations($locations): void
     {
         $this->locations = $locations;
     }
 
+    /**
+     * @deprecated
+     */
     public function getLocations()
     {
         return $this->locations;
     }
 
+    /**
+     * @deprecated
+     */
     public function addLocation(Location $location)
     {
         return $this->locations->add($location);
     }
 
+    /**
+     * @deprecated
+     */
     public function removeLocation(Location $location)
     {
         return $this->locations->removeElement($location);
     }
 
-    /**
-     * @deprecated use getManagers()
-     */
-    public function getAdministrators()
+    public function getManagers(): ArrayCollection
     {
-        return $this->getManagers();
-    }
+        $managers = new ArrayCollection();
+        foreach ($this->userOrganizationReferences as $userRef) {
+            if ($userRef->isManager()) {
+                $managers->add($userRef->getUser());
+            }
+        }
 
-    /**
-     * @deprecated use addManager()
-     */
-    public function addAdministrator(User $user)
-    {
-        $this->addManager($user);
-    }
-
-    /**
-     * @deprecated use removeAdministrator()
-     */
-    public function removeAdministrator(User $user)
-    {
-        $this->removeManager($user);
-    }
-
-    public function getManagers()
-    {
-        return $this->administrators;
+        return $managers;
     }
 
     public function hasManager(User $user): bool
     {
-        return $this->administrators->contains($user);
+        foreach ($this->userOrganizationReferences as $userRef) {
+            if ($userRef->isManager() && $user->getId() === $userRef->getUser()->getId()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
-    public function addManager(User $user)
+    public function addManager(User $user): void
     {
-        if (!$this->administrators->contains($user)) {
-            $this->addUser($user);
-            $this->administrators->add($user);
-            $user->addAdministratedOrganization($this);
+        $this->addUser($user, true);
+    }
+
+    public function removeManager(User $user): void
+    {
+        foreach ($this->userOrganizationReferences as $userRef) {
+            if ($userRef->isManager() && $user->getId() === $userRef->getUser()->getId()) {
+                $userRef->setManager(false);
+            }
         }
     }
 
-    public function removeManager(User $user)
-    {
-        if ($this->administrators->contains($user)) {
-            $this->administrators->removeElement($user);
-            $user->removeAdministratedOrganization($this);
-        }
-    }
-
-    public function setAdministrators(ArrayCollection $users)
-    {
-        $this->administrators = $users;
-    }
-
-    public function setDefault($default)
+    public function setDefault(bool $default): void
     {
         $this->default = $default;
     }
 
-    public function isDefault()
-    {
-        return $this->default;
-    }
-
-    /**
-     * @deprecated use isDefault()
-     */
-    public function getDefault()
+    public function isDefault(): bool
     {
         return $this->default;
     }
@@ -369,7 +334,7 @@ class Organization
         return $this->public;
     }
 
-    public function setPublic(bool $public)
+    public function setPublic(bool $public): void
     {
         $this->public = $public;
     }
@@ -382,7 +347,7 @@ class Organization
         return $this->children;
     }
 
-    public function addGroup(Group $group)
+    public function addGroup(Group $group): void
     {
         if (!$this->groups->contains($group)) {
             $this->groups->add($group);
@@ -390,7 +355,7 @@ class Organization
         }
     }
 
-    public function removeGroup(Group $group)
+    public function removeGroup(Group $group): void
     {
         if ($this->groups->contains($group)) {
             $this->groups->removeElement($group);
@@ -406,34 +371,22 @@ class Organization
         return $this->workspaces;
     }
 
-    /**
-     * @param string $vat
-     */
-    public function setVat($vat)
+    public function setVat(?string $vat = null): void
     {
         $this->vat = $vat;
     }
 
-    /**
-     * @return string
-     */
-    public function getVat()
+    public function getVat(): ?string
     {
         return $this->vat;
     }
 
-    /**
-     * @param string $type
-     */
-    public function setType($type)
+    public function setType(?string $type = null): void
     {
         $this->type = $type;
     }
 
-    /**
-     * @return string
-     */
-    public function getType()
+    public function getType(): ?string
     {
         return $this->type;
     }
@@ -443,42 +396,53 @@ class Organization
         return $this->userOrganizationReferences;
     }
 
-    public function addUser(User $user)
+    public function hasUser(User $user): bool
+    {
+        foreach ($this->userOrganizationReferences as $userRef) {
+            if ($user->getId() === $userRef->getUser()->getId()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function addUser(User $user, ?bool $manager = false): void
     {
         if ($this->getMaxUsers() > -1) {
-            $totalUsers = count($this->getUserOrganizationReferences());
+            $totalUsers = count($this->userOrganizationReferences);
             if ($totalUsers >= $this->getMaxUsers()) {
                 throw new \Exception('The organization user limit has been reached');
             }
         }
 
-        $found = false;
-
+        $ref = null;
         foreach ($this->userOrganizationReferences as $userOrgaRef) {
             if ($userOrgaRef->getOrganization() === $this && $userOrgaRef->getUser() === $user) {
-                $found = true;
+                $ref = $userOrgaRef;
             }
         }
 
-        if (!$found) {
+        if (empty($ref)) {
             $ref = new UserOrganizationReference();
             $ref->setOrganization($this);
             $ref->setUser($user);
             $this->userOrganizationReferences->add($ref);
         }
+
+        $ref->setManager($manager);
     }
 
-    public function removeUser(User $user)
+    public function removeUser(User $user): void
     {
         $found = null;
-
         foreach ($this->userOrganizationReferences as $ref) {
             if ($ref->getUser()->getId() === $user->getId() && !$ref->isMain()) {
                 $found = $ref;
             }
         }
 
-        if ($found && count($user->getOrganizations()) > 0) {
+        if ($found) {
             $this->userOrganizationReferences->removeElement($found);
         }
     }
@@ -503,12 +467,12 @@ class Organization
         return $this->keys;
     }
 
-    public function getMaxUsers()
+    public function getMaxUsers(): ?int
     {
         return $this->maxUsers;
     }
 
-    public function setMaxUsers($maxUsers)
+    public function setMaxUsers(int $maxUsers): void
     {
         $this->maxUsers = $maxUsers;
     }

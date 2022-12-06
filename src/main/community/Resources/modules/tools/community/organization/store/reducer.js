@@ -20,7 +20,11 @@ const reducer = combineReducers({
   }),
   current: makeFormReducer(selectors.FORM_NAME, {}, {
     workspaces: makeListReducer(selectors.FORM_NAME+'.workspaces', {
-      sortBy: {property: 'createdAt', direction: -1}
+      sortBy: {property: 'createdAt', direction: -1},
+      filters: [
+        {property: 'model', value: 0},
+        {property: 'personal', value: 0}
+      ]
     }, {
       invalidated: makeReducer(false, {
         [makeInstanceAction(TOOL_LOAD, 'community')]: () => true

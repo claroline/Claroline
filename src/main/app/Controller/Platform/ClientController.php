@@ -3,7 +3,6 @@
 namespace Claroline\AppBundle\Controller\Platform;
 
 use Claroline\AppBundle\API\SerializerProvider;
-use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Manager\SecurityManager;
 use Claroline\CoreBundle\API\Serializer\Platform\ClientSerializer;
 use Claroline\CoreBundle\Entity\User;
@@ -12,6 +11,7 @@ use Claroline\CoreBundle\Event\Layout\InjectStylesheetEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Maintenance\MaintenanceHandler;
 use Claroline\CoreBundle\Manager\Tool\ToolManager;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -26,35 +26,25 @@ class ClientController
 {
     /** @var TokenStorageInterface */
     private $tokenStorage;
-
     /** @var Environment */
     private $templating;
-
-    /** @var StrictDispatcher */
+    /** @var EventDispatcherInterface */
     private $dispatcher;
-
     /** @var PlatformConfigurationHandler */
     private $configHandler;
-
     /** @var SecurityManager */
     private $securityManager;
-
     /** @var ToolManager */
     private $toolManager;
-
     /** @var SerializerProvider */
     private $serializer;
-
     /** @var ClientSerializer */
     private $clientSerializer;
 
-    /**
-     * ClientController constructor.
-     */
     public function __construct(
         TokenStorageInterface $tokenStorage,
         Environment $templating,
-        StrictDispatcher $dispatcher,
+        EventDispatcherInterface $dispatcher,
         PlatformConfigurationHandler $configHandler,
         SecurityManager $securityManager,
         ToolManager $toolManager,
@@ -132,8 +122,8 @@ class ClientController
      */
     private function injectJavascript(): string
     {
-        /** @var InjectJavascriptEvent $event */
-        $event = $this->dispatcher->dispatch('layout.inject.javascript', InjectJavascriptEvent::class);
+        $event = new InjectJavascriptEvent();
+        $this->dispatcher->dispatch($event, 'layout.inject.javascript');
 
         return $event->getContent();
     }
@@ -143,8 +133,8 @@ class ClientController
      */
     private function injectStylesheet(): string
     {
-        /** @var InjectStylesheetEvent $event */
-        $event = $this->dispatcher->dispatch('layout.inject.stylesheet', InjectStylesheetEvent::class);
+        $event = new InjectStylesheetEvent();
+        $this->dispatcher->dispatch($event, 'layout.inject.stylesheet');
 
         return $event->getContent();
     }

@@ -1,34 +1,26 @@
 import React from 'react'
-import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
-import {showBreadcrumb} from '#/main/app/layout/utils'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {constants as listConstants} from '#/main/app/content/list/constants'
-import {UserPage} from '#/main/core/user/components/page'
-import {User as UserTypes} from '#/main/community/prop-types'
+import {AccountPage} from '#/main/app/account/containers/page'
+import {route} from '#/main/app/account/routing'
 import {route as toolRoute} from '#/main/core/tool/routing'
 
 import {selectors} from '#/plugin/open-badge/account/badges/store/selectors'
 import {AssertionBadgeCard} from '#/plugin/open-badge/tools/badges/assertion/components/card'
 
-const BadgesMain = (props) =>
-  <UserPage
-    showBreadcrumb={showBreadcrumb()}
-    breadcrumb={[
+const BadgesMain = () =>
+  <AccountPage
+    path={[
       {
         type: LINK_BUTTON,
-        label: trans('my_account'),
-        target: '/account'
-      }, {
-        type: LINK_BUTTON,
         label: trans('my_badges', {}, 'badge'),
-        target: '/account/badges'
+        target: route('badges')
       }
     ]}
     title={trans('my_badges', {}, 'badge')}
-    user={props.currentUser}
   >
     <div style={{
       marginTop: 60 // TODO : manage spacing correctly
@@ -71,13 +63,7 @@ const BadgesMain = (props) =>
         display={{current: listConstants.DISPLAY_LIST_SM}}
       />
     </div>
-  </UserPage>
-
-BadgesMain.propTypes = {
-  currentUser: T.shape(
-    UserTypes.propTypes
-  ).isRequired
-}
+  </AccountPage>
 
 export {
   BadgesMain

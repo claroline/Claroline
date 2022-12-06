@@ -16,15 +16,19 @@ use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Controller\APINew\Model\HasGroupsTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasUsersTrait;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\Tool\AdminTool;
+use Claroline\CoreBundle\Entity\Tool\OrderedTool;
+use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\LogManager;
+use Claroline\CoreBundle\Manager\Tool\ToolManager;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @Route("/role")
@@ -37,15 +41,18 @@ class RoleController extends AbstractCrudController
 
     /** @var AuthorizationCheckerInterface */
     private $authorization;
-
+    /** @var ToolManager */
+    private $toolManager;
     /** @var LogManager */
     private $logManager;
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
+        ToolManager $toolManager,
         LogManager $logManager
     ) {
         $this->authorization = $authorization;
+        $this->toolManager = $toolManager;
         $this->logManager = $logManager;
     }
 
@@ -75,11 +82,102 @@ class RoleController extends AbstractCrudController
      */
     public function listAction(Request $request, $class): JsonResponse
     {
-        if (!$this->authorization->isGranted('IS_AUTHENTICATED_FULLY')) {
-            throw new AccessDeniedException();
-        }
+        $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
 
         return parent::listAction($request, $class);
+    }
+
+    /**
+     * Get a role rights for the given context.
+     *
+     * @Route("/{id}/rights/{contextType}/{contextId}", name="apiv2_role_rights_list", defaults={"contextId"=null}, methods={"GET"})
+     * @EXT\ParamConverter("role", options={"mapping": {"id": "uuid"}})
+     */
+    public function listRightsAction(Role $role, string $contextType, ?string $contextId = null): JsonResponse
+    {
+        $this->checkPermission('OPEN', $role, [], true);
+
+        $rights = [];
+
+        switch ($contextType) {
+            case Tool::DESKTOP:
+                // get desktop tools
+                $orderedTools = $this->om->getRepository(OrderedTool::class)->findByDesktop();
+                foreach ($orderedTools as $orderedTool) {
+                    $rights[$orderedTool->getTool()->getName()] = $this->toolManager->getPermissions($orderedTool, $role);
+                }
+
+                break;
+            case Tool::WORKSPACE:
+                // get workspace tools
+                $workspace = $this->om->getRepository(Workspace::class)->findOneBy(['uuid' => $contextId]);
+                $orderedTools = $this->om->getRepository(OrderedTool::class)->findByWorkspace($workspace);
+                foreach ($orderedTools as $orderedTool) {
+                    $rights[$orderedTool->getTool()->getName()] = $this->toolManager->getPermissions($orderedTool, $role);
+                }
+
+                break;
+            case Tool::ADMINISTRATION:
+                $adminTools = $this->om->getRepository(AdminTool::class)->findAll();
+                foreach ($adminTools as $adminTool) {
+                    $rights[$adminTool->getName()] = [
+                        'open' => $role->getAdminTools()->contains($adminTool),
+                    ];
+                }
+
+                break;
+        }
+
+        return new JsonResponse($rights);
+    }
+
+    /**
+     * Manages workspace tools accesses for a Role.
+     *
+     * @Route("/{id}/rights/{contextType}/{contextId}", name="apiv2_role_rights_update", defaults={"contextId"=null}, methods={"PUT"})
+     * @EXT\ParamConverter("role", options={"mapping": {"id": "uuid"}})
+     */
+    public function updateRightsAction(Request $request, Role $role, string $contextType, ?string $contextId = null): JsonResponse
+    {
+        $this->checkPermission('ADMINISTRATE', $role, [], true);
+
+        $rightsData = $this->decodeRequest($request);
+
+        if ($rightsData) {
+            $this->om->startFlushSuite();
+
+            switch ($contextType) {
+                case Tool::DESKTOP:
+                case Tool::WORKSPACE:
+                    foreach ($rightsData as $toolName => $toolRights) {
+                        $orderedTool = $this->toolManager->getOrderedTool($toolName, $contextType, $contextId);
+                        if ($orderedTool) {
+                            $this->toolManager->setPermissions($toolRights, $orderedTool, $role);
+                        }
+                    }
+
+                    break;
+                case Tool::ADMINISTRATION:
+                    foreach ($rightsData as $toolName => $toolRights) {
+                        $adminTool = $this->toolManager->getAdminToolByName($toolName);
+                        if ($adminTool) {
+                            if ($toolRights['open']) {
+                                $adminTool->addRole($role);
+                            } else {
+                                $adminTool->removeRole($role);
+                            }
+
+                            $this->om->persist($adminTool);
+                        }
+                    }
+
+                    break;
+            }
+
+            $this->om->endFlushSuite();
+        }
+
+        return new JsonResponse();
     }
 
     /**
@@ -89,6 +187,8 @@ class RoleController extends AbstractCrudController
      */
     public function analyticsAction(User $currentUser, Role $role, string $year): JsonResponse
     {
+        $this->checkPermission('OPEN', $role, [], true);
+
         // get values for user administrated organizations
         $organizations = null;
         $defaultFilters = [];

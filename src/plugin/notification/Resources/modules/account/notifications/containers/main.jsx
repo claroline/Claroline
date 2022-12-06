@@ -1,16 +1,13 @@
 import {connect} from 'react-redux'
 
 import {withReducer} from '#/main/app/store/components/withReducer'
-import {selectors as securitySelectors} from '#/main/app/security/store'
 
 import {NotificationMain as NotificationMainComponent} from '#/plugin/notification/account/notifications/components/main'
 import {actions, reducer, selectors} from '#/plugin/notification/account/notifications/store'
 
 const NotificationMain = withReducer(selectors.STORE_NAME, reducer)(
   connect(
-    (state) => ({
-      currentUser: securitySelectors.currentUser(state)
-    }),
+    null,
     (dispatch) => ({
       markAsRead(notifications) {
         dispatch(actions.markAsRead(notifications))

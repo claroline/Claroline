@@ -94,7 +94,6 @@ class AuthenticationController
         $user = $this->om->getRepository(User::class)->findOneBy(['email' => $data['email']]);
 
         if ($user) {
-            $user->setHashTime(time());
             $password = sha1(rand(1000, 10000).$user->getUsername().$user->getSalt());
             $user->setResetPasswordHash($password);
             $this->om->persist($user);

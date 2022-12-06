@@ -1,4 +1,4 @@
-import React, {Fragment, Component} from 'react'
+import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import moment from 'moment'
 import {schemeCategory20c} from 'd3-scale'
@@ -56,53 +56,51 @@ class RoleMetrics extends Component {
     }
 
     return (
-      <Fragment>
-        <div className="row" style={{display: 'flex', alignItems: 'center'}}>
-          <Toolbar
-            buttonName="btn-block"
-            style={{marginLeft: '15px'}}
-            toolbar={this.state.available.map(year => 'y'+year).join(' ')}
-            size="xs"
-            actions={this.state.available.map(year => (
-              {
-                className: year === this.state.current ? 'btn' : 'btn-link',
-                name: 'y'+year,
-                type: CALLBACK_BUTTON,
-                label: year,
-                callback: () => this.changeYear(year)
-              }
-            ))}
-          />
+      <div className="row component-container" style={{display: 'flex', alignItems: 'center'}}>
+        <Toolbar
+          buttonName="btn-block"
+          style={{marginLeft: '15px'}}
+          toolbar={this.state.available.map(year => 'y'+year).join(' ')}
+          size="xs"
+          actions={this.state.available.map(year => (
+            {
+              className: year === this.state.current ? 'btn' : 'btn-link',
+              name: 'y'+year,
+              type: CALLBACK_BUTTON,
+              label: year,
+              callback: () => this.changeYear(year)
+            }
+          ))}
+        />
 
-          <ContentCounter
-            icon="fa fa-user"
-            label={trans('users')}
-            color={schemeCategory20c[1]}
-            value={!this.state.loaded ? '?' : this.state.count.users}
-            help={trans('role_analytics_users_help', {}, 'community')}
-          />
+        <ContentCounter
+          icon="fa fa-user"
+          label={trans('users')}
+          color={schemeCategory20c[1]}
+          value={!this.state.loaded ? '?' : this.state.count.users}
+          help={trans('role_analytics_users_help', {}, 'community')}
+        />
 
-          <ContentCounter
-            icon="fa fa-power-off"
-            label={trans('connections')}
-            color={schemeCategory20c[5]}
-            value={!this.state.loaded ?
-              '? ' :
-              this.state.count.connections + ' (' + Math.ceil(this.state.count.connections / ellapsedDays) + ' ' + trans('per_day_short') + ')'}
-            help={trans('role_analytics_connections_help', {}, 'community')}
-          />
+        <ContentCounter
+          icon="fa fa-power-off"
+          label={trans('connections')}
+          color={schemeCategory20c[5]}
+          value={!this.state.loaded ?
+            '? ' :
+            this.state.count.connections + ' (' + Math.ceil(this.state.count.connections / ellapsedDays) + ' ' + trans('per_day_short') + ')'}
+          help={trans('role_analytics_connections_help', {}, 'community')}
+        />
 
-          <ContentCounter
-            icon="fa fa-history"
-            label={trans('actions')}
-            color={schemeCategory20c[9]}
-            value={!this.state.loaded ?
-              '? ' :
-              this.state.count.actions + ' (' + Math.ceil(this.state.count.actions / ellapsedDays) + ' ' + trans('per_day_short') + ')'}
-            help={trans('role_analytics_actions_help', {}, 'community')}
-          />
-        </div>
-      </Fragment>
+        <ContentCounter
+          icon="fa fa-history"
+          label={trans('actions')}
+          color={schemeCategory20c[9]}
+          value={!this.state.loaded ?
+            '? ' :
+            this.state.count.actions + ' (' + Math.ceil(this.state.count.actions / ellapsedDays) + ' ' + trans('per_day_short') + ')'}
+          help={trans('role_analytics_actions_help', {}, 'community')}
+        />
+      </div>
     )
   }
 }

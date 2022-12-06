@@ -11,7 +11,7 @@ const DisableInactiveModal = (props) =>
     icon="fa fa-fw fa-user-clock"
     title={trans('disable_inactive_users', {}, 'community')}
     save={(data) => props.disableInactive(data.lastActivity)}
-    sections={[
+    definition={[
       {
         id: 'general',
         title: trans('general'),

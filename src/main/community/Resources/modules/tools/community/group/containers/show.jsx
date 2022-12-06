@@ -9,6 +9,7 @@ import {GroupShow as GroupShowComponent} from '#/main/community/tools/community/
 const GroupShow = connect(
   state => ({
     path: toolSelectors.path(state),
+    contextType: toolSelectors.contextType(state),
     group: formSelectors.data(formSelectors.form(state, selectors.FORM_NAME))
   }),
   dispatch =>({

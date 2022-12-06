@@ -1,11 +1,11 @@
 import {getActions as getPluginsActions, getDefaultAction as getPluginsDefaultAction} from '#/main/app/plugins'
 
-function getActions(workspaces, workspacesRefresher, path, currentUser, withDefault = false) {
-  return getPluginsActions('user', workspaces, workspacesRefresher, path, currentUser, withDefault)
+function getActions(users, usersRefresher, path, currentUser, withDefault = false) {
+  return getPluginsActions('user', users, usersRefresher, path, currentUser, withDefault)
 }
 
-function getDefaultAction(workspace, workspacesRefresher, path, currentUser = null) {
-  return getPluginsDefaultAction('user', workspace, workspacesRefresher, path, currentUser)
+function getDefaultAction(user, usersRefresher, path, currentUser = null) {
+  return getPluginsDefaultAction('user', user, usersRefresher, path, currentUser)
 }
 
 export {

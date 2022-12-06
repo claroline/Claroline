@@ -16,7 +16,6 @@ const Group = {
       administrate: T.bool,
       delete: T.bool
     }),
-    organizations: T.arrayOf(T.object),
     roles: T.arrayOf(T.object)
   },
   defaultProps: {}

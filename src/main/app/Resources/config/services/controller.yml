@@ -34,7 +34,7 @@ services:
         arguments:
             - '@security.token_storage'
             - '@twig'
-            - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - '@event_dispatcher'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
             - '@Claroline\AppBundle\Manager\SecurityManager'
             - '@Claroline\CoreBundle\Manager\Tool\ToolManager'

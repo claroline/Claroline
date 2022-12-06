@@ -29,6 +29,7 @@ class UserFinder extends AbstractFinder
         $roleJoin = false;
         $groupJoin = false;
         $groupRoleJoin = false;
+        $organizationJoin = false;
 
         $this->addFilter(UserFilter::class, $qb, 'obj', [
             'disabled' => in_array('isDisabled', array_keys($searches)) && $searches['isDisabled'],
@@ -99,23 +100,46 @@ class UserFinder extends AbstractFinder
                     $qb->setParameter('groupRoleIds', is_array($filterValue) ? $filterValue : [$filterValue]);
                     break;
 
-                case 'roleTranslation': // should not exist
+                // should not exist : used by the users DataSource
+                case 'roleTranslation':
                     if (!$roleJoin) {
                         $qb->leftJoin('obj.roles', 'r');
                         $roleJoin = true;
                     }
 
-                    $qb->andWhere('UPPER(r.translationKey) LIKE :roleTranslation');
+                    if (!$groupJoin) {
+                        $qb->leftJoin('obj.groups', 'g');
+                        $groupJoin = true;
+                    }
+
+                    if (!$groupRoleJoin) {
+                        $qb->leftJoin('g.roles', 'gr');
+                        $groupRoleJoin = true;
+                    }
+
+                    $qb->andWhere('(UPPER(r.translationKey) LIKE :roleTranslation OR UPPER(gr.translationKey) LIKE :roleTranslation)');
                     $qb->setParameter('roleTranslation', '%'.strtoupper($filterValue).'%');
                     break;
 
                 case 'organization':
                 case 'organizations':
-                   $qb->leftJoin('obj.userOrganizationReferences', 'oref');
-                   $qb->leftJoin('oref.organization', 'o');
-                   $qb->andWhere('o.uuid IN (:organizationIds)');
-                   $qb->setParameter('organizationIds', is_array($filterValue) ? $filterValue : [$filterValue]);
-                   break;
+                    if (!$organizationJoin) {
+                        $qb->leftJoin('obj.userOrganizationReferences', 'ref');
+                        $qb->leftJoin('ref.organization', 'o');
+
+                        $organizationJoin = true;
+                    }
+
+                    // get organizations from the group
+                    if (!$groupJoin) {
+                        $qb->leftJoin('obj.groups', 'g');
+                        $groupJoin = true;
+                    }
+                    $qb->join('g.organizations', 'go');
+
+                    $qb->andWhere('(o.uuid IN (:organizations) OR go.uuid IN (:organizations))');
+                    $qb->setParameter('organizations', is_array($filterValue) ? $filterValue : [$filterValue]);
+                    break;
 
                 case 'location':
                     $qb->leftJoin('obj.locations', 'l');
@@ -124,8 +148,16 @@ class UserFinder extends AbstractFinder
                     break;
 
                 case 'organizationManager':
-                    $qb->leftJoin('obj.administratedOrganizations', 'ao');
-                    $qb->andWhere('ao.uuid IN (:administratedOrganizations)');
+                    if (!$organizationJoin) {
+                        $qb->leftJoin('obj.userOrganizationReferences', 'ref');
+                        $qb->leftJoin('ref.organization', 'o');
+
+                        $organizationJoin = true;
+                    }
+
+                    $qb->andWhere('ref.manager = 1');
+                    $qb->andWhere('o.uuid IN (:administratedOrganizations)');
+
                     $qb->setParameter('administratedOrganizations', is_array($filterValue) ? $filterValue : [$filterValue]);
                     break;
 

@@ -6,5 +6,6 @@ export default {
   name: 'privacy',
   icon: 'fa fa-fw fa-user-shield',
   label: trans('privacy'),
-  component: PrivacyMain
+  component: PrivacyMain,
+  order: 3
 }

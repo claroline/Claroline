@@ -39,7 +39,7 @@ const MaterialAbout = (props) =>
             name: 'location',
             type: 'location',
             label: trans('location')
-          },
+          }
         ]
       }
     ]}

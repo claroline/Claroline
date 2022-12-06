@@ -20,7 +20,7 @@ const GroupMain = props =>
         path: '/new',
         component: GroupCreate,
         onEnter: props.new,
-        disabled: 'desktop' !== props.contextType || !props.canRegister
+        disabled: 'desktop' !== props.contextType || !props.canEdit
       }, {
         path: '/:id',
         component: GroupShow,
@@ -37,7 +37,7 @@ const GroupMain = props =>
 GroupMain.propTypes = {
   path: T.string.isRequired,
   contextType: T.string.isRequired,
-  canRegister: T.bool.isRequired,
+  canEdit: T.bool.isRequired,
 
   open: T.func.isRequired,
   new: T.func.isRequired

@@ -32,7 +32,7 @@ const GroupList = props =>
         icon: 'fa fa-fw fa-plus',
         label: trans('add_group', {}, 'actions'),
         target: `${props.path}/groups/new`,
-        displayed: 'desktop' === props.contextType && props.canRegister,
+        displayed: 'desktop' === props.contextType && props.canEdit,
         primary: true
       }, {
         name: 'add',
@@ -132,6 +132,7 @@ GroupList.propTypes = {
   contextType: T.string.isRequired,
   contextData: T.object,
   canRegister: T.bool.isRequired,
+  canEdit: T.bool.isRequired,
   unregister: T.func.isRequired,
   addGroupsToRoles: T.func.isRequired
 }

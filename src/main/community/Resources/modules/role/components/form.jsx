@@ -1,12 +1,10 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
-import classes from 'classnames'
 import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
-import {Checkbox} from '#/main/app/input/components/checkbox'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {actions as formActions} from '#/main/app/content/form/store'
 
@@ -73,6 +71,12 @@ const RoleFormComponent = props =>
                 displayed: (role) => constants.ROLE_USER === role.type
               }
             ]
+          }, {
+            name: 'meta.personalWorkspaceCreationEnabled',
+            type: 'boolean',
+            label: trans('role_personalWorkspaceCreation'),
+            help: trans('role_personalWorkspaceCreation_help'),
+            displayed: (role) => constants.ROLE_PLATFORM === role.type
           }
         ]
       }, {
@@ -88,65 +92,6 @@ const RoleFormComponent = props =>
             }
           }
         ]
-      }, {
-        icon: 'fa fa-fw fa-book',
-        title: trans('workspace'),
-        displayed: (role) => constants.ROLE_PLATFORM === role.type,
-        fields: [
-          {
-            name: 'meta.personalWorkspaceCreationEnabled',
-            type: 'boolean',
-            label: trans('role_personalWorkspaceCreation'),
-            help: trans('role_personalWorkspaceCreation_help')
-          }
-        ]
-      }, {
-        icon: 'fa fa-fw fa-tools',
-        title: trans('desktop_tools'),
-        displayed: (role) => constants.ROLE_PLATFORM === role.type,
-        render: (role) => (
-          <div className="list-group" fill={true}>
-            {Object.keys(role.desktopTools || {}).map(toolName =>
-              <div key={toolName} className="tool-rights-row list-group-item">
-                <div className="tool-rights-title">
-                  {trans(toolName, {}, 'tools')}
-                </div>
-
-                <div className="tool-rights-actions">
-                  {Object.keys(role.desktopTools[toolName]).map((permName) =>
-                    <Checkbox
-                      key={permName}
-                      id={`${toolName}-${permName}`}
-                      label={trans(permName, {}, 'actions')}
-                      checked={role.desktopTools[toolName][permName]}
-                      onChange={checked => props.updateProp(`desktopTools.${toolName}.${permName}`, checked)}
-                    />
-                  )}
-                </div>
-              </div>
-            )}
-          </div>
-        )
-      }, {
-        icon: 'fa fa-fw fa-cogs',
-        title: trans('administration_tools'),
-        displayed: (role) => constants.ROLE_PLATFORM === role.type,
-        render: (role) => (
-          <div className="list-group" fill={true}>
-            {Object.keys(role.adminTools || {}).map(toolName =>
-              <Checkbox
-                key={toolName}
-                id={toolName}
-                className={classes('list-group-item', {
-                  'list-group-item-selected': role.adminTools[toolName]
-                })}
-                label={trans(toolName, {}, 'tools')}
-                checked={role.adminTools[toolName]}
-                onChange={checked => props.updateProp(`adminTools.${toolName}`, checked)}
-              />
-            )}
-          </div>
-        )
       }
     ].concat(props.customDefinition)}
   >

@@ -24,12 +24,12 @@ const RoleMain = props =>
       }, {
         path: '/:id',
         component: RoleShow,
-        onEnter: (params) => props.open(params.id),
+        onEnter: (params) => props.open(params.id, props.contextData),
         exact: true
       }, {
         path: '/:id/edit',
         component: RoleEdit,
-        onEnter: (params) => props.open(params.id)
+        onEnter: (params) => props.open(params.id, props.contextData)
       }
     ]}
   />

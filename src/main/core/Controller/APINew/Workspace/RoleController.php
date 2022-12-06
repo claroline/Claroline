@@ -15,20 +15,15 @@ use Claroline\AppBundle\Annotations\ApiDoc;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
-use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Workspace\Shortcuts;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Manager\Tool\ToolManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
-use Claroline\CoreBundle\Repository\Tool\OrderedToolRepository;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
@@ -40,8 +35,6 @@ class RoleController
     use PermissionCheckerTrait;
     use RequestDecoderTrait;
 
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
     /** @var AuthorizationCheckerInterface */
     private $authorization;
     /** @var FinderProvider */
@@ -50,28 +43,17 @@ class RoleController
     private $serializer;
     /** @var WorkspaceManager */
     private $workspaceManager;
-    /** @var ToolManager */
-    private $toolManager;
-    /** @var OrderedToolRepository */
-    private $orderedToolRepo;
 
     public function __construct(
-        TokenStorageInterface $tokenStorage,
         AuthorizationCheckerInterface $authorization,
-        ObjectManager $om,
         FinderProvider $finder,
         SerializerProvider $serializer,
-        WorkspaceManager $workspaceManager,
-        ToolManager $toolManager
+        WorkspaceManager $workspaceManager
     ) {
-        $this->tokenStorage = $tokenStorage;
         $this->authorization = $authorization;
         $this->finder = $finder;
         $this->serializer = $serializer;
         $this->workspaceManager = $workspaceManager;
-        $this->toolManager = $toolManager;
-
-        $this->orderedToolRepo = $om->getRepository(OrderedTool::class);
     }
 
     /**
@@ -99,30 +81,6 @@ class RoleController
                 ['hiddenFilters' => ['workspaceConfigurable' => [$workspace->getUuid()]]]
             ))
         );
-    }
-
-    /**
-     * Manages workspace tools accesses for a Role.
-     *
-     * @Route("/{role}/tools", name="apiv2_workspace_tools_set", methods={"PUT"})
-     * @EXT\ParamConverter("role", class="Claroline\CoreBundle\Entity\Role", options={"mapping": {"role": "uuid"}})
-     */
-    public function setToolRightsAction(Workspace $workspace, Role $role, Request $request): JsonResponse
-    {
-        $this->checkPermission(['community', 'edit'], $workspace, [], true);
-
-        $rightsData = $this->decodeRequest($request);
-
-        if ($rightsData) {
-            foreach ($rightsData as $toolName => $toolRights) {
-                $orderedTool = $this->orderedToolRepo->findOneByNameAndWorkspace($toolName, $workspace);
-                if ($orderedTool) {
-                    $this->toolManager->setPermissions($toolRights, $orderedTool, $role);
-                }
-            }
-        }
-
-        return new JsonResponse();
     }
 
     /**

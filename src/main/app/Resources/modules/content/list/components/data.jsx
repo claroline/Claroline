@@ -71,7 +71,7 @@ class ListData extends Component {
    */
   computeDisplay(definition, display = {}, hasCard = false) {
     let currentDisplay    = display.current ? display.current : listConst.DEFAULT_DISPLAY_MODE
-    let availableDisplays = display.available ? display.available : Object.keys(listConst.DISPLAY_MODES)
+    let availableDisplays = display.available ? display.available : listConst.DEFAULT_DISPLAY_MODES
 
     if (!hasCard) {
       // disables grid based displays if no card provided
@@ -116,7 +116,12 @@ class ListData extends Component {
         this.state.definition,
         { current: displayMode, available: this.state.display.available },
         !!this.props.card
-      )
+      ),
+      () => {
+        if (this.props.display && this.props.display.changeDisplay) {
+          this.props.display.changeDisplay(displayMode)
+        }
+      }
     )
   }
 
@@ -274,7 +279,12 @@ ListData.propTypes = {
     /**
      * Current format.
      */
-    current: T.oneOf(Object.keys(listConst.DISPLAY_MODES))
+    current: T.oneOf(Object.keys(listConst.DISPLAY_MODES)),
+
+    /**
+     * A callback fired when the display mode is changed by the user.
+     */
+    changeDisplay: T.func
   }),
 
   /**
@@ -332,7 +342,7 @@ ListData.defaultProps = {
   loading: false,
   count: false,
   display: {
-    available: Object.keys(listConst.DISPLAY_MODES),
+    available: listConst.DEFAULT_DISPLAY_MODES,
     current: listConst.DEFAULT_DISPLAY_MODE
   }
 }

@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, {Component, createElement} from 'react'
 import {PropTypes as T} from 'prop-types'
 import omit from 'lodash/omit'
 
@@ -48,7 +48,7 @@ class ParametersModal extends Component {
               title: trans('custom'),
               primary: true,
               displayed: !!this.state.customForm,
-              component: this.state.customForm
+              render: () => createElement(this.state.customForm)
             }, {
               icon: 'fa fa-fw fa-desktop',
               title: trans('display_parameters'),

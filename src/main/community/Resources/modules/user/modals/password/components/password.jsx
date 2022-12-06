@@ -11,7 +11,7 @@ const PasswordModal = props =>
     icon="fa fa-fw fa-lock"
     title={trans('change_password')}
     save={(data) => props.changePassword(props.user, data.plainPassword)}
-    sections={[
+    definition={[
       {
         id: 'general',
         title: trans('general'),

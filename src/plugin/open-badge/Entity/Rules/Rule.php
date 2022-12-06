@@ -61,21 +61,25 @@ class Rule
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
+     * @ORM\JoinColumn(onDelete="SET NULL")
      */
     private $node;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace")
+     * @ORM\JoinColumn(onDelete="SET NULL")
      */
     private $workspace;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Role")
+     * @ORM\JoinColumn(onDelete="SET NULL")
      */
     private $role;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Group")
+     * @ORM\JoinColumn(onDelete="SET NULL")
      */
     private $group;
 

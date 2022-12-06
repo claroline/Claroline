@@ -1,4 +1,6 @@
 {
+  "functional": "Logs fonctionnels",
+  "security": "Logs de sécurité",
   "group_add": "Ajout de groupe",
   "group_add_desc": "a ajouté %user% au groupe %group%",
   "group_remove": "Suppression de groupe",

@@ -37,15 +37,12 @@ class DataSourceManager
     /** @var PluginManager */
     private $pluginManager;
 
-    /**
-     * WidgetManager constructor.
-     */
     public function __construct(
         TokenStorageInterface $tokenStorage,
         ObjectManager $om,
         StrictDispatcher $eventDispatcher,
-        PluginManager $pluginManager)
-    {
+        PluginManager $pluginManager
+    ) {
         $this->tokenStorage = $tokenStorage;
         $this->om = $om;
         $this->eventDispatcher = $eventDispatcher;

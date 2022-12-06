@@ -1,5 +1,7 @@
-import {API_REQUEST, url} from '#/main/app/api'
+import merge from 'lodash/merge'
 
+import {API_REQUEST, url} from '#/main/app/api'
+import {selectors as securitySelectors} from '#/main/app/security/store'
 import {actions as listActions} from '#/main/app/content/list/store'
 import {actions as formActions} from '#/main/app/content/form/store'
 
@@ -9,12 +11,18 @@ import {Group as GroupTypes} from '#/main/community/group/prop-types'
 
 export const actions = {}
 
-actions.new = () => formActions.resetForm(selectors.FORM_NAME, GroupTypes.defaultProps, true)
+actions.new = () => (dispatch, getState) => {
+  const defaultOrganization = securitySelectors.mainOrganization(getState())
+
+  return dispatch(formActions.reset(selectors.FORM_NAME, merge({
+    organizations: defaultOrganization ? [defaultOrganization] : []
+  }, GroupTypes.defaultProps), true))
+}
 
 actions.open = (id, reload = false) => (dispatch) => {
   if (!reload) {
     // remove previous group if any to avoid displaying it while loading
-    dispatch(formActions.resetForm(selectors.FORM_NAME, {}, false))
+    dispatch(formActions.reset(selectors.FORM_NAME, {}, false))
   }
 
   // invalidate embedded lists
@@ -25,6 +33,7 @@ actions.open = (id, reload = false) => (dispatch) => {
   return dispatch({
     [API_REQUEST]: {
       url: ['apiv2_group_get', {id}],
+      silent: true,
       success: (response) => dispatch(formActions.resetForm(selectors.FORM_NAME, response, false))
     }
   })
@@ -79,6 +88,19 @@ actions.addRoles = (id, roles) => (dispatch) => dispatch({
     success: () => {
       dispatch(listActions.invalidateData(selectors.LIST_NAME))
       dispatch(listActions.invalidateData(selectors.FORM_NAME+'.roles'))
+    }
+  }
+})
+
+actions.addOrganizations = (id, organizations) => (dispatch) => dispatch({
+  [API_REQUEST]: {
+    url: url(['apiv2_group_add_organizations', {id: id}], {ids: organizations}),
+    request: {
+      method: 'PATCH'
+    },
+    success: () => {
+      dispatch(listActions.invalidateData(selectors.LIST_NAME))
+      dispatch(listActions.invalidateData(selectors.FORM_NAME+'.organizations'))
     }
   }
 })

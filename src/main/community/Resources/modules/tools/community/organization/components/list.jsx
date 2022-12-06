@@ -2,6 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
+import {hasPermission} from '#/main/app/security'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ToolPage} from '#/main/core/tool/containers/page'
 
@@ -32,7 +33,7 @@ const OrganizationList = (props) =>
     <BaseOrganizationList
       path={props.path}
       name={selectors.LIST_NAME}
-      url={['apiv2_organization_list_recursive']}
+      url={['apiv2_organization_list']}
       tree={true}
       customActions={(rows) => [
         {
@@ -41,6 +42,7 @@ const OrganizationList = (props) =>
           icon: 'fa fa-fw fa-plus',
           label: trans('add_sub_organization', {}, 'actions'),
           target: props.path+'/organizations/new/' + rows[0].id,
+          displayed: hasPermission('edit', rows[0]),
           scope: ['object'],
           group: trans('management')
         }

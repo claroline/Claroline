@@ -4,6 +4,7 @@ namespace Claroline\DropZoneBundle\Manager;
 
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CommunityBundle\Entity\Team;
 use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\DropZoneBundle\Entity\Drop;
@@ -13,7 +14,6 @@ use Claroline\DropZoneBundle\Event\Log\LogDropStartEvent;
 use Claroline\DropZoneBundle\Repository\DropRepository;
 use Claroline\EvaluationBundle\Entity\AbstractEvaluation;
 use Claroline\EvaluationBundle\Manager\ResourceEvaluationManager;
-use Claroline\TeamBundle\Entity\Team;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**

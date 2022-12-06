@@ -22,7 +22,6 @@ Icap\NotificationBundle\IcapNotificationBundle = true
 Claroline\AnnouncementBundle\ClarolineAnnouncementBundle = true
 Claroline\ScormBundle\ClarolineScormBundle = true
 Claroline\PdfPlayerBundle\ClarolinePdfPlayerBundle = true
-Claroline\TeamBundle\ClarolineTeamBundle = true
 Claroline\VideoPlayerBundle\ClarolineVideoPlayerBundle = true
 Claroline\WebResourceBundle\ClarolineWebResourceBundle = true
 Claroline\TextPlayerBundle\ClarolineTextPlayerBundle = true

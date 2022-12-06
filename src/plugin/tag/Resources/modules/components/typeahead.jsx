@@ -3,7 +3,6 @@ import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
 import {makeCancelable, url} from '#/main/app/api'
-import {currentUser} from '#/main/app/security'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 
@@ -60,8 +59,6 @@ class TagTypeahead extends Component {
   }
 
   updateCurrentTag(value) {
-    const authenticated = currentUser()
-
     this.setState({currentTag: value})
 
     // cancel previous search if any
@@ -74,7 +71,7 @@ class TagTypeahead extends Component {
 
       this.pending = makeCancelable(
         fetch(
-          url(['apiv2_tag_list'], {filters: {name: value, user: authenticated ? authenticated.id : null}}), {
+          url(['apiv2_tag_list'], {filters: {name: value}}), {
             method: 'GET' ,
             credentials: 'include'
           })

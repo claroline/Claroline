@@ -40,6 +40,8 @@ class WorkspaceFinder extends AbstractFinder
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null): QueryBuilder
     {
+        $organizationJoin = false;
+
         // force non archived workspaces only if not explicitly requested
         if (!array_key_exists('archived', $searches)) {
             $searches['archived'] = false;
@@ -49,13 +51,20 @@ class WorkspaceFinder extends AbstractFinder
             switch ($filterName) {
                 case 'administrated':
                     if ('cli' !== php_sapi_name() && !$this->authChecker->isGranted('ROLE_ADMIN')) {
-                        $qb->leftJoin('obj.organizations', 'uo');
-                        $qb->leftJoin('uo.administrators', 'ua');
+                        if (!$organizationJoin) {
+                            $qb->leftJoin('obj.organizations', 'o');
+                            $organizationJoin = true;
+                        }
+
+                        $qb->leftJoin('o.userOrganizationReferences', 'uo');
                         $qb->leftJoin('obj.creator', 'creator');
                         $qb->leftJoin('obj.roles', 'r');
                         $qb->leftJoin('r.users', 'ru');
                         $qb->andWhere($qb->expr()->orX(
-                            $qb->expr()->eq('ua.id', ':uaId'),
+                            $qb->expr()->andX(
+                                $qb->expr()->eq('uo.user', ':uaId'),
+                                $qb->expr()->eq('uo.manager', '1')
+                            ),
                             $qb->expr()->eq('creator.id', ':cId'),
                             $qb->expr()->andX(
                                 $qb->expr()->eq('r.name', "CONCAT('ROLE_WS_MANAGER_', obj.uuid)"),
@@ -81,7 +90,11 @@ class WorkspaceFinder extends AbstractFinder
                     break;
                 case 'organization':
                 case 'organizations':
-                    $qb->leftJoin('obj.organizations', 'o');
+                    if (!$organizationJoin) {
+                        $qb->leftJoin('obj.organizations', 'o');
+                        $organizationJoin = true;
+                    }
+
                     $qb->andWhere('o.uuid IN (:organizationIds)');
                     $qb->setParameter('organizationIds', is_array($filterValue) ? $filterValue : [$filterValue]);
                     break;

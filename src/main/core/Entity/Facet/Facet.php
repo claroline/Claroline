@@ -188,18 +188,6 @@ class Facet
     }
 
     /**
-     * @param bool|string $boolean
-     *
-     * @deprecated
-     */
-    public function setIsMain($boolean)
-    {
-        $this->setMain(
-            !is_bool($boolean) ? 'true' === $boolean : $boolean
-        );
-    }
-
-    /**
      * @param bool $main
      */
     public function setMain($main)

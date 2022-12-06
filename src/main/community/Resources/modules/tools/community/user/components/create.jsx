@@ -32,7 +32,11 @@ const UserCreate = (props) =>
       primary: true
     }]}
   >
-    <UserForm path={`${props.path}/users`} name={selectors.FORM_NAME} />
+    <UserForm
+      path={`${props.path}/users/new`}
+      back={`${props.path}/users`}
+      name={selectors.FORM_NAME}
+    />
   </ToolPage>
 
 UserCreate.propTypes = {

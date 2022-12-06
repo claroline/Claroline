@@ -68,22 +68,22 @@ class WorkspaceSerializer
         $this->resNodeSerializer = $resNodeSerializer;
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return Workspace::class;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'workspace';
     }
 
-    public function getSchema()
+    public function getSchema(): string
     {
         return '#/main/core/workspace.json';
     }
 
-    public function getSamples()
+    public function getSamples(): string
     {
         return '#/main/core/workspace';
     }
@@ -250,6 +250,7 @@ class WorkspaceSerializer
             'selfRegistration' => $workspace->getSelfRegistration(),
             'selfUnregistration' => $workspace->getSelfUnregistration(),
             'defaultRole' => $defaultRole,
+            'maxTeams' => $workspace->getMaxTeams(),
         ];
 
         if (!in_array(SerializerInterface::SERIALIZE_TRANSFER, $options)) {
@@ -325,6 +326,7 @@ class WorkspaceSerializer
             $this->sipe('registration.validation', 'setRegistrationValidation', $data, $workspace);
             $this->sipe('registration.selfRegistration', 'setSelfRegistration', $data, $workspace);
             $this->sipe('registration.selfUnregistration', 'setSelfUnregistration', $data, $workspace);
+            $this->sipe('registration.maxTeams', 'setMaxTeams', $data, $workspace);
 
             if (isset($data['registration']['defaultRole'])) {
                 /** @var Role $defaultRole */
