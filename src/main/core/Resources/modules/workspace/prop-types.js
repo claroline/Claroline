@@ -77,7 +77,7 @@ const Workspace = {
 const UserEvaluation = {
   propTypes: {
     id: T.string.isRequired,
-    date: T.String,
+    date: T.string,
     status: T.string,
     duration: T.number,
     score: T.number,

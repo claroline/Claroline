@@ -29,7 +29,7 @@ const GroupShow = (props) =>
       </div>
     }
 
-    {hasPermission('administrate', props.group) && get(props.group, 'meta.readOnly') &&
+    {hasPermission('edit', props.group) && get(props.group, 'meta.readOnly') &&
       <Alert type="info">
         {trans('group_locked', {}, 'community')}
       </Alert>
@@ -48,7 +48,7 @@ const GroupShow = (props) =>
             type: MODAL_BUTTON,
             icon: 'fa fa-fw fa-plus',
             label: trans('add_users'),
-            displayed: hasPermission('administrate', props.group),
+            displayed: hasPermission('edit', props.group),
             disabled: get(props.group, 'meta.readOnly'),
             modal: [MODAL_USERS, {
               selectAction: (selected) => ({
@@ -67,13 +67,13 @@ const GroupShow = (props) =>
           delete={{
             url: ['apiv2_group_remove_users', {id: props.group.id}],
             disabled: () => get(props.group, 'meta.readOnly'),
-            displayed: () => hasPermission('administrate', props.group)
+            displayed: () => hasPermission('edit', props.group)
           }}
           actions={undefined}
         />
       </ContentSection>
 
-      {hasPermission('administrate', props.group) &&
+      {hasPermission('edit', props.group) &&
         <ContentSection
           id="group-roles"
           className="embedded-list-section"

@@ -1,9 +1,13 @@
+import merge from 'lodash/merge'
+
 import {trans} from '#/main/app/intl/translation'
 
 import {constants as paginationConst} from '#/main/app/content/pagination/constants'
 
 import {DataTable} from '#/main/app/content/list/components/view/data-table'
 import {DataGrid} from '#/main/app/content/list/components/view/data-grid'
+
+import {constants as treeConst} from '#/main/app/content/tree/constants'
 
 const DISPLAY_TABLE    = 'table'
 const DISPLAY_TABLE_SM = 'table-sm'
@@ -19,7 +23,7 @@ const DEFAULT_DISPLAY_MODE = DISPLAY_TABLE
  *
  * @type {object}
  */
-const DISPLAY_MODES = {
+const DISPLAY_MODES = merge({
   [DISPLAY_TABLE_SM]: {
     icon: 'fa fa-fw fa-list',
     label: trans('list_display_table_sm'),
@@ -78,7 +82,7 @@ const DISPLAY_MODES = {
       orientation: 'col'
     }
   }
-}
+}, treeConst.DISPLAY_MODES)
 
 // reexport pagination constants here for retro compatibility
 export const constants = Object.assign({}, paginationConst, {

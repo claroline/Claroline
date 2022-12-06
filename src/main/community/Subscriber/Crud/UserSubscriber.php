@@ -211,7 +211,7 @@ class UserSubscriber implements EventSubscriberInterface
         $this->fileManager->updateFile(
             User::class,
             $user->getUuid(),
-            $user->getPoster(),
+            $user->getThumbnail(),
             !empty($oldData['thumbnail']) ? $oldData['thumbnail'] : null
         );
 

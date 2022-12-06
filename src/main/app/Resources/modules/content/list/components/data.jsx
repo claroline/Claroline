@@ -116,7 +116,12 @@ class ListData extends Component {
         this.state.definition,
         { current: displayMode, available: this.state.display.available },
         !!this.props.card
-      )
+      ),
+      () => {
+        if (this.props.display && this.props.display.changeDisplay) {
+          this.props.display.changeDisplay(displayMode)
+        }
+      }
     )
   }
 
@@ -274,7 +279,12 @@ ListData.propTypes = {
     /**
      * Current format.
      */
-    current: T.oneOf(Object.keys(listConst.DISPLAY_MODES))
+    current: T.oneOf(Object.keys(listConst.DISPLAY_MODES)),
+
+    /**
+     * A callback fired when the display mode is changed by the user.
+     */
+    changeDisplay: T.func
   }),
 
   /**

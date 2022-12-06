@@ -50,6 +50,13 @@ const RoleListComponent = props => {
           },
           displayed: true
         }, {
+          name: 'meta.description',
+          type: 'string',
+          label: trans('description'),
+          options: {long: true},
+          displayed: true,
+          sortable: false
+        }, {
           name: 'workspace',
           type: 'workspace',
           label: trans('workspace')

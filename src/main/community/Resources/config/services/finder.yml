@@ -15,6 +15,10 @@ services:
             - '@security.authorization_checker'
             - '@security.token_storage'
 
+    Claroline\CommunityBundle\Finder\TeamFinder:
+        parent: Claroline\AppBundle\API\Finder\AbstractFinder
+        tags: [ claroline.finder ]
+
     Claroline\CommunityBundle\Finder\UserFinder:
         parent: Claroline\AppBundle\API\Finder\AbstractFinder
         tags: [ claroline.finder ]

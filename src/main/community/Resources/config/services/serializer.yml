@@ -29,6 +29,15 @@ services:
             - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'
             - '@Claroline\CommunityBundle\Serializer\UserSerializer'
 
+    Claroline\CommunityBundle\Serializer\TeamSerializer:
+        tags: [claroline.serializer]
+        arguments:
+            - '@security.authorization_checker'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
+            - '@Claroline\CommunityBundle\Serializer\RoleSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'
+
     Claroline\CommunityBundle\Serializer\UserSerializer:
         tags: [claroline.serializer]
         arguments:

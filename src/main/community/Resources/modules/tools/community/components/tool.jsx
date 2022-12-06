@@ -13,6 +13,7 @@ import {RoleMain} from '#/main/community/tools/community/role/containers/main'
 import {PendingMain} from '#/main/community/tools/community/pending/containers/main'
 import {ProfileMain} from '#/main/community/tools/community/profile/containers/main'
 import {OrganizationMain} from '#/main/community/tools/community/organization/containers/main'
+import {TeamMain} from '#/main/community/tools/community/team/containers/main'
 
 const CommunityTool = (props) =>
   <Routes
@@ -33,24 +34,23 @@ const CommunityTool = (props) =>
       }, {
         path: '/roles',
         component: RoleMain,
-        disabled: !props.canAdministrate
+        disabled: !props.canEdit
       }, {
         path: '/organizations',
         component: OrganizationMain,
-        disabled: props.contextType !== toolConstants.TOOL_DESKTOP || !props.canAdministrate
+        disabled: props.contextType !== toolConstants.TOOL_DESKTOP || !props.canEdit
+      }, {
+        path: '/teams',
+        component: TeamMain,
+        disabled: props.contextType === toolConstants.TOOL_DESKTOP
       }, {
         path: '/pending',
         component: PendingMain,
-        disabled: !props.canAdministrate || props.contextType !== toolConstants.TOOL_WORKSPACE || !get(props.workspace, 'registration.selfRegistration') || !get(props.workspace, 'registration.validation')
-      }, /*{
-        path: '/parameters',
-        component: ParametersMain,
-        disabled: !props.canAdministrate,
-        exact: true
-      }, */{
+        disabled: !props.canEdit || props.contextType !== toolConstants.TOOL_WORKSPACE || !get(props.workspace, 'registration.selfRegistration') || !get(props.workspace, 'registration.validation')
+      }, {
         path: '/parameters/profile',
         component: ProfileMain,
-        disabled: props.contextType !== toolConstants.TOOL_DESKTOP || !props.canAdministrate
+        disabled: props.contextType !== toolConstants.TOOL_DESKTOP || !props.canEdit
       }, {
         path: '/profile/:username',
         render(routerProps) {
@@ -72,7 +72,7 @@ CommunityTool.propTypes = {
   contextData: T.object,
   path: T.string.isRequired,
   workspace: T.object,
-  canAdministrate: T.bool.isRequired
+  canEdit: T.bool.isRequired
 }
 
 export {

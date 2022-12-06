@@ -87,7 +87,6 @@ class GroupSerializer
             $serialized['permissions'] = [
                 'open' => $this->authorization->isGranted('OPEN', $group),
                 'edit' => $this->authorization->isGranted('EDIT', $group),
-                'administrate' => $this->authorization->isGranted('ADMINISTRATE', $group),
                 'delete' => $this->authorization->isGranted('DELETE', $group),
             ];
         }

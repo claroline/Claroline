@@ -15,7 +15,7 @@ export default (roles) => ({
   type: URL_BUTTON,
   icon: 'fa fa-fw fa-mask',
   label: trans('view-as', {}, 'actions'),
-  displayed: constants.ROLE_WORKSPACE === roles[0].type && hasPermission('administrate', roles[0]),
+  displayed: constants.ROLE_WORKSPACE === roles[0].type && hasPermission('edit', roles[0]),
   target: url(['claro_index', {}], {view_as: roles[0].name}) + '#' + (roles[0].workspace ? route(roles[0].workspace) : ''),
   group: trans('management'),
   scope: ['object']

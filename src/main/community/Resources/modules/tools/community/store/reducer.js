@@ -11,6 +11,7 @@ import {reducer as groupsReducer} from '#/main/community/tools/community/group/s
 import {reducer as rolesReducer} from '#/main/community/tools/community/role/store/reducer'
 import {reducer as organizationReducer} from '#/main/community/tools/community/organization/store/reducer'
 import {reducer as profileReducer} from '#/main/community/tools/community/profile/store/reducer'
+import {reducer as teamsReducer} from '#/main/community/tools/community/team/store/reducer'
 
 import {selectors} from '#/main/community/tools/community/store/selectors'
 
@@ -22,6 +23,7 @@ const reducer = combineReducers({
   users: usersReducer,
   groups: groupsReducer,
   roles: rolesReducer,
+  teams: teamsReducer,
   organizations: organizationReducer,
   profile: profileReducer,
   pending: pendingReducer

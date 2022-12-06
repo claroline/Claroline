@@ -99,7 +99,6 @@ class OrganizationSerializer
             $serialized['permissions'] = [
                 'open' => $this->authorization->isGranted('OPEN', $organization),
                 'edit' => $this->authorization->isGranted('EDIT', $organization),
-                'administrate' => $this->authorization->isGranted('ADMINISTRATE', $organization),
                 'delete' => $this->authorization->isGranted('DELETE', $organization),
             ];
         }

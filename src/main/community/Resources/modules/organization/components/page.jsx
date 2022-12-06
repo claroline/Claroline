@@ -17,7 +17,7 @@ const Organization = (props) =>
   <ToolPage
     className="organization-page"
     meta={{
-      title: get(props.organization, 'name'),
+      title: trans('organization_name', {name: get(props.organization, 'name', trans('loading'))}, 'community'),
       description: get(props.organization, 'meta.description')
     }}
     path={[

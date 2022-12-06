@@ -16,6 +16,7 @@ export default (resourceNodes, nodesRefresher) => ({
   icon: 'fa fa-fw fa-clone',
   label: trans('copy', {}, 'actions'),
   modal: [MODAL_RESOURCES, {
+    icon: 'fa fa-fw fa-clone',
     title: trans('select_target_directory'),
     current: 0 < resourceNodes.length && resourceNodes[0].parent ? resourceNodes[0].parent : null,
     selectAction: (selected = []) => ({

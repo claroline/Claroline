@@ -17,7 +17,7 @@ const Group = (props) =>
   <ToolPage
     className="group-page"
     meta={{
-      title: get(props.group, 'name'),
+      title: trans('group_name', {name: get(props.group, 'name', trans('loading'))}, 'community'),
       description: get(props.group, 'meta.description')
     }}
     path={[

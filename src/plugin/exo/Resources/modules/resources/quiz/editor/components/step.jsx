@@ -153,7 +153,7 @@ const EditorStep = props =>
               }, {
                 name: 'delete',
                 type: CALLBACK_BUTTON,
-                icon: 'fa fa-fw fa-trash-o',
+                icon: 'fa fa-fw fa-trash',
                 label: trans('delete', {}, 'actions'),
                 callback: () => {
                   const newItems = props.items.slice()

@@ -24,9 +24,4 @@ class ClarolineCommunityInstaller extends BaseInstaller
             '13.7.0' => Updater130700::class,
         ];
     }
-
-    public function hasMigrations(): bool
-    {
-        return false;
-    }
 }
