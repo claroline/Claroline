@@ -131,6 +131,7 @@ class BadgeClassSerializer
     public function deserialize(array $data, BadgeClass $badge = null, array $options = []): BadgeClass
     {
         $this->sipe('name', 'setName', $data, $badge);
+        $this->sipe('description', 'setDescription', $data, $badge);
         $this->sipe('image', 'setImage', $data, $badge);
         $this->sipe('color', 'setColor', $data, $badge);
         $this->sipe('color', 'setColor', $data, $badge);
