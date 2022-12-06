@@ -13,6 +13,7 @@ namespace Claroline\CommunityBundle\Controller;
 
 use Claroline\AppBundle\Annotations\ApiDoc;
 use Claroline\AppBundle\Controller\AbstractCrudController;
+use Claroline\CoreBundle\Controller\APINew\Model\HasOrganizationsTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasRolesTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasUsersTrait;
 use Claroline\CoreBundle\Entity\Group;
@@ -33,6 +34,7 @@ class GroupController extends AbstractCrudController
 {
     use HasUsersTrait;
     use HasRolesTrait;
+    use HasOrganizationsTrait;
     use PermissionCheckerTrait;
 
     /** @var TokenStorageInterface */

@@ -1,6 +1,5 @@
 {
   "Bad credentials.": "Votre identifiant ou votre mot de passe est incorrect.",
-  "User account is disabled.": "Votre compte utilisateur est désactivé.",
   "userLogout": "L'utilisateur username vient de se déconnecter.",
   "userLogin": "L'utilisateur username vient de se connecter.",
   "userDisable": "L'utilisateur username vient d'être désactivé.",
@@ -25,5 +24,6 @@
   "security.switch_user": "Voir en tant que",
   "security.validate_email": "Validation de l'email",
   "security.authentication_failure": "Authentification échouée",
-  "Your user account no longer exists.": "Votre compte utilisateur est désactivé. Veuillez contacter un administrateur."
+  "account_deleted": "Votre compte utilisateur est désactivé. Veuillez contacter un administrateur (%support_email%).",
+  "account_expired": "Votre compte utilisateur a expiré. Veuillez contacter un administrateur (%support_email%)."
 }

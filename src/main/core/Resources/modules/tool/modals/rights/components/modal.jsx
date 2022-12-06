@@ -12,7 +12,7 @@ import {ContentRights} from '#/main/app/content/components/rights'
 
 const RightsModal = props =>
   <Modal
-    {...omit(props, 'toolName', 'currentContext', 'rights', 'loadRights', 'updateRights', 'saveEnabled', 'save')}
+    {...omit(props, 'toolName', 'currentContext', 'rights', 'loadRights', 'updateRights', 'saveEnabled', 'save', 'onSave')}
     icon="fa fa-fw fa-lock"
     title={trans('rights')}
     subtitle={trans(props.toolName, {}, 'tools')}

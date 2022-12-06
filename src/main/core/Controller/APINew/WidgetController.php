@@ -35,14 +35,11 @@ class WidgetController
     /** @var DataSourceManager */
     private $dataSourceManager;
 
-    /**
-     * WidgetController constructor.
-     */
     public function __construct(
         SerializerProvider $serializer,
         WidgetManager $widgetManager,
-        DataSourceManager $dataSourceManager)
-    {
+        DataSourceManager $dataSourceManager
+    ) {
         $this->serializer = $serializer;
         $this->widgetManager = $widgetManager;
         $this->dataSourceManager = $dataSourceManager;
@@ -52,12 +49,8 @@ class WidgetController
      * Lists available widgets for a given context.
      *
      * @Route("/{context}", name="apiv2_widget_available", defaults={"context"=null}, methods={"GET"})
-     *
-     * @param string $context
-     *
-     * @return JsonResponse
      */
-    public function listAction($context = null)
+    public function listAction(?string $context = null): JsonResponse
     {
         return new JsonResponse([
             'widgets' => array_map(function (Widget $widget) {

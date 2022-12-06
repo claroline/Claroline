@@ -11,7 +11,7 @@ import {route} from '#/main/core/workspace/routing'
 
 import {selectors} from '#/main/core/tool/modals/parameters/store'
 
-const workspaceDefinition = (contextData) => [
+const workspaceDefinition = (contextData, update) => [
   {
     icon: 'fa fa-fw fa-user-plus',
     title: trans('registration'),
@@ -53,6 +53,25 @@ const workspaceDefinition = (contextData) => [
             filters: []
           } : undefined
         }
+      }, {
+        name: 'registration._restrictMaxTeams',
+        type: 'boolean',
+        label: trans('restrict_max_teams', {}, 'community'),
+        calculated: (parameters) => get(parameters, 'registration._restrictMaxTeams') || get(parameters, 'registration.maxTeams'),
+        onChange: (enabled) => {
+          if (!enabled) {
+            update('registration.maxTeams', null)
+          }
+        },
+        linked: [
+          {
+            name: 'registration.maxTeams',
+            type: 'number',
+            label: trans('teams_count', {}, 'community'),
+            displayed: (parameters) => get(parameters, 'registration._restrictMaxTeams') || get(parameters, 'registration.maxTeams'),
+            options: {min: 0}
+          }
+        ]
       }
     ]
   }
@@ -74,7 +93,7 @@ const desktopDefinition = () => [
       }, {
         name: 'authentication.changePassword',
         type: 'boolean',
-        label: trans('allow_change_password')
+        label: trans('allow_change_password', {}, 'community')
       }
     ]
   }, {
@@ -181,9 +200,10 @@ class CommunityParameters extends Component {
       <FormData
         embedded={true}
         name={selectors.STORE_NAME}
+        dataPart="parameters"
         definition={'desktop' === this.props.contextType ?
-          desktopDefinition(this.props.contextData) :
-          workspaceDefinition(this.props.contextData)
+          desktopDefinition(this.props.contextData, this.props.updateProp) :
+          workspaceDefinition(this.props.contextData, this.props.updateProp)
         }
       />
     )
@@ -195,7 +215,8 @@ CommunityParameters.propTypes = {
   contextData: T.object,
   parameters: T.object,
   pendingChanges: T.bool.isRequired,
-  load: T.func.isRequired
+  load: T.func.isRequired,
+  updateProp: T.func.isRequired
 }
 
 export {

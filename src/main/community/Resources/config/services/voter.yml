@@ -23,6 +23,10 @@ services:
         arguments:
             - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
 
+    Claroline\CommunityBundle\Security\Voter\TeamVoter:
+        parent: Claroline\AppBundle\Security\Voter\AbstractVoter
+        tags: [ security.voter ]
+
     Claroline\CommunityBundle\Security\Voter\UserVoter:
         parent: Claroline\CommunityBundle\Security\Voter\AbstractRoleSubjectVoter
         tags: [ security.voter ]

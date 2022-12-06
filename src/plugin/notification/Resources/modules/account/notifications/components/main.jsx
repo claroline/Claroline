@@ -3,31 +3,24 @@ import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
-import {showBreadcrumb} from '#/main/app/layout/utils'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {constants as listConstants} from '#/main/app/content/list/constants'
-import {UserPage} from '#/main/core/user/components/page'
-import {User as UserTypes} from '#/main/community/user/prop-types'
+import {AccountPage} from '#/main/app/account/containers/page'
+import {route} from '#/main/app/account/routing'
 
 import {NotificationCard} from '#/plugin/notification/components/card'
 import {selectors} from '#/plugin/notification/account/notifications/store/selectors'
 
 const NotificationMain = (props) =>
-  <UserPage
-    showBreadcrumb={showBreadcrumb()}
+  <AccountPage
     breadcrumb={[
       {
         type: LINK_BUTTON,
-        label: trans('my_account'),
-        target: '/account'
-      }, {
-        type: LINK_BUTTON,
         label: trans('notifications'),
-        target: '/account/notifications'
+        target: route('notifications')
       }
     ]}
     title={trans('notifications')}
-    user={props.currentUser}
   >
     <div style={{
       marginTop: 60 // TODO : manage spacing correctly
@@ -98,12 +91,9 @@ const NotificationMain = (props) =>
         ]}
       />
     </div>
-  </UserPage>
+  </AccountPage>
 
 NotificationMain.propTypes = {
-  currentUser: T.shape(
-    UserTypes.propTypes
-  ).isRequired,
   delete: T.func.isRequired,
   markAsRead: T.func.isRequired,
   markAsUnread: T.func.isRequired

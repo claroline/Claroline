@@ -17,6 +17,9 @@ const CommunityParameters = connect(
   (dispatch) => ({
     load(parameters) {
       dispatch(formActions.updateProp(parametersSelectors.STORE_NAME, 'parameters', parameters))
+    },
+    updateProp(prop, value) {
+      dispatch(formActions.updateProp(parametersSelectors.STORE_NAME, 'parameters.'+prop, value))
     }
   })
 )(CommunityParametersComponent)

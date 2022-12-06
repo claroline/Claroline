@@ -84,7 +84,7 @@ class FormDataModal extends Component {
           errors={this.state.errors}
           pendingChanges={this.state.pendingChanges}
           validating={this.state.validating}
-          sections={this.props.sections}
+          definition={this.props.definition || this.props.sections}
           setErrors={this.setErrors}
           updateProp={this.updateProp}
           setMode={() => true}
@@ -115,9 +115,15 @@ FormDataModal.propTypes = {
 
   // form configuration
   data: T.any,
-  sections: T.arrayOf(T.shape(
+  definition: T.arrayOf(T.shape(
     DataFormSectionTypes.propTypes
   )).isRequired,
+  /**
+   * @deprecated
+   */
+  sections: T.arrayOf(T.shape(
+    DataFormSectionTypes.propTypes
+  )),
   save: T.func.isRequired,
   onChange: T.func
 }

@@ -19,61 +19,27 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class MessageVoter extends AbstractVoter
 {
-    const POST = 'POST';
+    public function checkPermission(TokenInterface $token, $object, array $attributes, array $options): int
+    {
+        switch ($attributes[0]) {
+            case self::CREATE: return $this->checkCreate($token);
+        }
+
+        return self::ACCESS_ABSTAIN;
+    }
+
+    public function checkCreate($token): int
+    {
+        return $token->getUser() instanceof User ? VoterInterface::ACCESS_GRANTED : VoterInterface::ACCESS_DENIED;
+    }
 
     public function getClass(): string
     {
         return Message::class;
     }
 
-    /**
-     * @param Message $object
-     */
-    public function checkPermission(TokenInterface $token, $object, array $attributes, array $options): int
-    {
-        if (empty($object->getForum())) {
-            return VoterInterface::ACCESS_ABSTAIN;
-        }
-
-        switch ($attributes[0]) {
-            case self::CREATE:
-                return $this->checkCreate($object, $token);
-            case self::EDIT:
-            case self::DELETE:
-                return $this->checkEdit($object, $token);
-        }
-
-        return VoterInterface::ACCESS_ABSTAIN;
-    }
-
-    public function checkCreate(Message $message, TokenInterface $token): int
-    {
-        $subject = $message->getSubject();
-
-        if ($token->getUser() instanceof User && $this->isGranted('OPEN', $subject)) {
-            return VoterInterface::ACCESS_GRANTED;
-        }
-
-        return VoterInterface::ACCESS_DENIED;
-    }
-
-    private function checkEdit(Message $message, TokenInterface $token): int
-    {
-        $forum = $message->getForum();
-
-        if ($this->isGranted('EDIT', $forum->getResourceNode())) {
-            return VoterInterface::ACCESS_GRANTED;
-        }
-
-        if ($token->getUser() instanceof User && $message->getCreator() && $message->getCreator()->getId() === $token->getUser()->getId()) {
-            return VoterInterface::ACCESS_GRANTED;
-        }
-
-        return VoterInterface::ACCESS_DENIED;
-    }
-
     public function getSupportedActions(): array
     {
-        return [self::CREATE, self::EDIT, self::DELETE];
+        return [self::CREATE, self::EDIT, self::DELETE, self::PATCH];
     }
 }

@@ -11,23 +11,22 @@
 
 namespace Claroline\CoreBundle\Entity\Organization;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity()
- * @ORM\Table(name="user_organization")
+ * @ORM\Table(
+ *     name="user_organization",
+ *     uniqueConstraints={
+ *          @ORM\UniqueConstraint(name="organization_unique_user", columns={"user_id", "organization_id"})
+ *     }
+ * )
  */
 class UserOrganizationReference
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     *
-     * @var int
-     */
-    private $id;
+    use Id;
 
     /**
      * @ORM\ManyToOne(
@@ -46,49 +45,63 @@ class UserOrganizationReference
      *     inversedBy="userOrganizationReferences",
      *     cascade={"persist"}
      * )
-     * @ORM\JoinColumn(name="oganization_id", nullable=false, onDelete="CASCADE")
+     * @ORM\JoinColumn(name="organization_id", nullable=false, onDelete="CASCADE")
      *
      * @var Organization
      */
     private $organization;
 
     /**
+     * The organization is the main organization of the user.
+     *
      * @ORM\Column(name="is_main", type="boolean")
      */
-    private $isMain = false;
+    private $main = false;
 
-    public function getId()
-    {
-        return $this->id;
-    }
+    /**
+     * The user is a manager of the organization.
+     *
+     * @ORM\Column(name="is_manager", type="boolean")
+     */
+    private $manager = false;
 
-    public function isMain()
-    {
-        return $this->isMain;
-    }
-
-    public function setIsMain($boolean)
-    {
-        return $this->isMain = $boolean;
-    }
-
-    public function setUser(User $user)
-    {
-        $this->user = $user;
-    }
-
-    public function setOrganization(Organization $organization)
-    {
-        $this->organization = $organization;
-    }
-
-    public function getUser()
+    public function getUser(): User
     {
         return $this->user;
     }
 
-    public function getOrganization()
+    public function setUser(User $user): void
+    {
+        $this->user = $user;
+    }
+
+    public function getOrganization(): Organization
     {
         return $this->organization;
+    }
+
+    public function setOrganization(Organization $organization): void
+    {
+        $this->organization = $organization;
+    }
+
+    public function isMain(): bool
+    {
+        return $this->main;
+    }
+
+    public function setMain(bool $main): void
+    {
+        $this->main = $main;
+    }
+
+    public function isManager(): bool
+    {
+        return $this->manager;
+    }
+
+    public function setManager(bool $manager): void
+    {
+        $this->manager = $manager;
     }
 }

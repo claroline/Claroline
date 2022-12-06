@@ -1,7 +1,5 @@
 services:
-    _defaults:
-        autowire: false
-        autoconfigure: false
-        public: false
-
-    Claroline\CoreBundle\Security\UserChecker: ~
+    Claroline\CoreBundle\Security\UserChecker:
+        arguments:
+            - '@translator'
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'

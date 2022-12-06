@@ -12,14 +12,7 @@
 namespace Claroline\DropZoneBundle;
 
 use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
-use Claroline\TeamBundle\ClarolineTeamBundle;
 
 class ClarolineDropZoneBundle extends DistributionPluginBundle
 {
-    public function getRequiredPlugins(): array
-    {
-        return [
-            ClarolineTeamBundle::class,
-        ];
-    }
 }

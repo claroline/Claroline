@@ -6,31 +6,24 @@ import {url} from '#/main/app/api'
 import {trans} from '#/main/app/intl/translation'
 import {hasPermission} from '#/main/app/security'
 import {DOWNLOAD_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
-import {showBreadcrumb} from '#/main/app/layout/utils'
-import {UserPage} from '#/main/core/user/components/page'
 import {User as UserTypes} from '#/main/community/prop-types'
+import {AccountPage} from '#/main/app/account/containers/page'
+import {route} from '#/main/app/account/routing'
 
 import {MODAL_TOKEN_PARAMETERS} from '#/main/authentication/token/modals/parameters'
 import {TokenList} from '#/main/authentication/token/components/list'
 import {selectors} from '#/main/authentication/account/tokens/store'
 
 const TokensMain = props =>
-  <UserPage
-    showBreadcrumb={showBreadcrumb()}
-    breadcrumb={[
+  <AccountPage
+    path={[
       {
         type: LINK_BUTTON,
-        label: trans('my_account'),
-        target: '/account'
-      }, {
-        type: LINK_BUTTON,
         label: trans('tokens', {}, 'security'),
-        target: '/account/tokens'
+        target: route('tokens')
       }
     ]}
     title={trans('tokens', {}, 'security')}
-    user={props.currentUser}
-    toolbar="add-token | fullscreen more"
     actions={[
       {
         name: 'add-token',
@@ -81,7 +74,7 @@ const TokensMain = props =>
         ]}
       />
     </div>
-  </UserPage>
+  </AccountPage>
 
 TokensMain.propTypes = {
   currentUser: T.shape(

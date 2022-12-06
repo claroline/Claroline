@@ -36,7 +36,7 @@ const FacetSection = props =>
       level={3}
       name={selectors.FORM_NAME}
       dataPart={`[${props.parentIndex}].sections[${props.index}]`}
-      sections={[
+      definition={[
         {
           icon: 'fa fa-fw fa-cog',
           title: trans('general'),
@@ -79,7 +79,7 @@ const ProfileFacet = props =>
     dataPart={`[${props.index}]`}
     buttons={true}
     target={['apiv2_profile_configure']}
-    sections={[
+    definition={[
       {
         icon: 'fa fa-fw fa-cog',
         title: trans('parameters'),

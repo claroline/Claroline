@@ -6,41 +6,44 @@ import {makeFormReducer} from '#/main/app/content/form/store/reducer'
 import {makeInstanceAction} from '#/main/app/store/actions'
 
 import {TOOL_LOAD} from '#/main/core/tool/store/actions'
-import {selectors} from '#/main/community/tools/community/store/selectors'
+
+import {selectors as baseSelectors} from '#/main/community/tools/community/store/selectors'
+import {selectors} from '#/main/community/tools/community/user/store/selectors'
 
 const reducer = combineReducers({
-  list: makeListReducer(selectors.STORE_NAME + '.users.list', {
+  list: makeListReducer(selectors.LIST_NAME, {
     sortBy: {property: 'lastName', direction: 1}
   }, {
     invalidated: makeReducer(false, {
-      [FORM_SUBMIT_SUCCESS + '/' + selectors.STORE_NAME + '.users.current']: () => true,
-      [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: () => true
+      [makeInstanceAction(TOOL_LOAD, baseSelectors.STORE_NAME)]: () => true,
+      [makeInstanceAction(FORM_SUBMIT_SUCCESS, selectors.FORM_NAME)]: () => true
     })
   }),
-  current: makeFormReducer(selectors.STORE_NAME + '.users.current', {}, {
-    workspaces: makeListReducer(selectors.STORE_NAME + '.users.current.workspaces', {}, {
+  current: makeFormReducer(selectors.FORM_NAME, {}, {
+    groups: makeListReducer(selectors.FORM_NAME + '.groups', {
+      sortBy: {property: 'name', direction: 1}
+    }, {
       invalidated: makeReducer(false, {
-        [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: () => true
+        [makeInstanceAction(TOOL_LOAD, baseSelectors.STORE_NAME)]: () => true
       })
     }),
-    groups: makeListReducer(selectors.STORE_NAME + '.users.current.groups', {}, {
+    organizations: makeListReducer(selectors.FORM_NAME + '.organizations', {
+      sortBy: {property: 'name', direction: 1}
+    }, {
       invalidated: makeReducer(false, {
-        [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: () => true
+        [makeInstanceAction(TOOL_LOAD, baseSelectors.STORE_NAME)]: () => true
       })
     }),
-    organizations: makeListReducer(selectors.STORE_NAME + '.users.current.organizations', {}, {
+    roles: makeListReducer(selectors.FORM_NAME + '.roles', {
+      sortBy: {property: 'name', direction: 1}
+    }, {
       invalidated: makeReducer(false, {
-        [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: () => true
-      })
-    }),
-    roles: makeListReducer(selectors.STORE_NAME + '.users.current.roles', {}, {
-      invalidated: makeReducer(false, {
-        [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: () => true
+        [makeInstanceAction(TOOL_LOAD, baseSelectors.STORE_NAME)]: () => true
       })
     })
   }),
   limitReached: makeReducer(false, {
-    [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: (state, action) => action.toolData.usersLimitReached
+    [makeInstanceAction(TOOL_LOAD, baseSelectors.STORE_NAME)]: (state, action) => action.toolData.usersLimitReached
   })
 })
 

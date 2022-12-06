@@ -9,15 +9,31 @@ import {RoleShow as RoleShowComponent} from '#/main/community/tools/community/ro
 const RoleShow = connect(
   state => ({
     path: toolSelectors.path(state),
-    role: formSelectors.data(formSelectors.form(state, selectors.FORM_NAME))
+    role: formSelectors.data(formSelectors.form(state, selectors.FORM_NAME)),
+    contextType: toolSelectors.contextType(state),
+    contextData: toolSelectors.contextData(state),
+    workspaceRights: selectors.workspaceRights(state),
+    desktopRights: selectors.desktopRights(state),
+    administrationRights: selectors.administrationRights(state)
   }),
   dispatch =>({
-    reload(id) {
-      dispatch(actions.open(id, true))
+    reload(id, contextData) {
+      dispatch(actions.open(id, contextData, true))
     },
     loadMetrics(roleId, year) {
       return dispatch(actions.fetchMetrics(roleId, year))
     },
+
+    loadWorkspaceRights(roleId, contextId) {
+      return dispatch(actions.fetchWorkspaceRights(roleId, contextId))
+    },
+    loadDesktopRights(roleId) {
+      return dispatch(actions.fetchDesktopRights(roleId))
+    },
+    loadAdministrationRights(roleId) {
+      return dispatch(actions.fetchAdministrationRights(roleId))
+    },
+
     addUsers(roleId, selected) {
       dispatch(actions.addUsers(roleId, selected.map(row => row.id)))
     },

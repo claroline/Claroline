@@ -80,7 +80,7 @@ class UserSubscriber implements EventSubscriberInterface
     {
         return [
             Crud::getEventName('create', 'pre', User::class) => 'preCreate',
-            Crud::getEventName('create', 'pre', User::class) => 'postCreate',
+            Crud::getEventName('create', 'post', User::class) => 'postCreate',
             Crud::getEventName('update', 'pre', User::class) => 'preUpdate',
             Crud::getEventName('update', 'post', User::class) => 'postUpdate',
             Crud::getEventName('patch', 'post', User::class) => 'postPatch',
@@ -211,7 +211,7 @@ class UserSubscriber implements EventSubscriberInterface
         $this->fileManager->updateFile(
             User::class,
             $user->getUuid(),
-            $user->getPoster(),
+            $user->getThumbnail(),
             !empty($oldData['thumbnail']) ? $oldData['thumbnail'] : null
         );
 

@@ -75,17 +75,5 @@ class PlatformRolesData extends AbstractFixture implements PreInstallInterface, 
         if (!$this->roleManager->getRoleByName('ROLE_HOME_MANAGER')) {
             $this->roleManager->createBaseRole('ROLE_HOME_MANAGER', 'home_manager');
         }
-
-        if (!$this->roleManager->getRoleByName('ROLE_ADMIN_ORGANIZATION')) {
-            $adminOrganization = $this->roleManager->createBaseRole('ROLE_ADMIN_ORGANIZATION', 'admin_organization');
-
-            $userManagement = $this->toolManager->getAdminToolByName('community');
-            if ($userManagement) {
-                $userManagement->addRole($adminOrganization);
-
-                $manager->persist($userManagement);
-                $manager->flush();
-            }
-        }
     }
 }

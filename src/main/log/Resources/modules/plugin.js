@@ -17,7 +17,6 @@ registry.add('ClarolineLogBundle', {
      * Provides current user Account sections.
      */
     account: {
-        'functional': () => { return import(/* webpackChunkName: "log-account-functional" */ '#/main/log/account/functional') },
-        'security': () => { return import(/* webpackChunkName: "core-account-security" */ '#/main/log/account/security') },
+      'logs': () => { return import(/* webpackChunkName: "log-account-functional" */ '#/main/log/account/logs') }
     },
 })

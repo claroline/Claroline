@@ -69,6 +69,19 @@ const isAdmin = createSelector(
 )
 
 /**
+ * Get the main organization of the current user.
+ * Useful to set the default in forms when creating new objects which are linked to organizations.
+ *
+ * NB. returns null if no main organization (should not be possible).
+ *
+ * @return {object|null}
+ */
+const mainOrganization = createSelector(
+  [currentUser],
+  (currentUser) => currentUser.mainOrganization
+)
+
+/**
  * Checks if the current user has access to administration section.
  *
  * @return {bool}
@@ -99,6 +112,7 @@ export const selectors = {
   isImpersonated,
   isAuthenticated,
   isAdmin,
+  mainOrganization,
   hasAdministration,
   clientIp
 }

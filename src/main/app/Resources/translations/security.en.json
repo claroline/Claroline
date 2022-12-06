@@ -1,6 +1,5 @@
 {
   "Bad credentials.": "Your username or password is incorrect.",
-  "User account is disabled.": "Your user account is disabled.",
   "userLogout": "User username has just logged out.",
   "userLogin": "User username has just logged in.",
   "userDisable": "User username has just been disabled.",
@@ -24,5 +23,7 @@
   "security.view_as": "View as",
   "security.switch_user": "View as",
   "security.validate_email": "Validate email",
-  "security.authentication_failure": "Authentication failure"
+  "security.authentication_failure": "Authentication failure",
+  "account_deleted": "Your user account no longer exists. Please contact an administrator (%support_email%).",
+  "account_expired": "Your user account is expired. Please contact an administrator (%support_email%)."
 }

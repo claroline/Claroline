@@ -11,8 +11,6 @@ import {formatFormSections} from '#/main/community/profile/utils'
 /**
  * Registration Form : Facet section.
  * Contains all fields of a facet displayed in registration form.
- *
- * @todo maybe merge with #/main/community/profile/editor/components/facet.jsx
  */
 const Facet = props => {
   // todo : create selector

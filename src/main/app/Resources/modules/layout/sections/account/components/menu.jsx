@@ -11,7 +11,10 @@ import {MenuSection} from '#/main/app/layout/menu/components/section'
 import {getPlatformRoles} from '#/main/community/utils'
 import {User as UserTypes} from '#/main/community/prop-types'
 import {UserAvatar} from '#/main/core/user/components/avatar'
-import {getSections} from '#/main/app/layout/sections/account/utils'
+
+import {getSections} from '#/main/app/account/utils'
+
+import {route} from '#/main/app/account/routing'
 
 const CurrentUser = (props) =>
   <div className="app-menu-status">
@@ -46,7 +49,7 @@ const Links = (props) =>
         type: LINK_BUTTON,
         icon: section.icon,
         label: section.label,
-        target: '/account/'+section.name,
+        target: route(section.name),
         onClick: props.autoClose
       })))}
     />
@@ -57,7 +60,6 @@ const AccountMenu = (props) =>
     title={trans('my_account')}
     backAction={{
       type: LINK_BUTTON,
-      icon: 'fa fa-fw fa-angle-double-left',
       label: trans('desktop'),
       target: '/desktop',
       exact: true

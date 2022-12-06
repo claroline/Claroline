@@ -30,12 +30,12 @@ const RoleListComponent = props => {
           type: 'translation',
           label: trans('name'),
           displayed: true,
-          primary: true,
+          primary: true/*,
           calculated: (row) => {
             const workspaceCode = row.workspace ? row.workspace.code : null
 
             return  trans(row.translationKey) + (workspaceCode ? ' (' + workspaceCode + ')' : '')
-          }
+          }*/
         }, {
           name: 'name',
           type: 'string',
@@ -49,6 +49,13 @@ const RoleListComponent = props => {
             choices: constants.ROLE_TYPES
           },
           displayed: true
+        }, {
+          name: 'meta.description',
+          type: 'string',
+          label: trans('description'),
+          options: {long: true},
+          displayed: true,
+          sortable: false
         }, {
           name: 'workspace',
           type: 'workspace',

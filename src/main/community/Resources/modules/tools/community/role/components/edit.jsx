@@ -34,6 +34,10 @@ RoleEdit.propTypes = {
   role: T.shape(
     RoleTypes.propTypes
   ),
+
+  workspace: T.object,
+  shortcuts: T.array,
+
   reload: T.func.isRequired
 }
 

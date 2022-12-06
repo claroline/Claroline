@@ -21,8 +21,8 @@ const UserCard = props =>
     id={props.data.id}
     poster={props.data.thumbnail ? asset(props.data.thumbnail) : null}
     icon={<UserAvatar picture={props.data.picture} alt={true} />}
-    title={props.data.username}
-    subtitle={displayUsername(props.data)}
+    title={displayUsername(props.data)}
+    subtitle={props.data.username}
     flags={[
       get(props.data, 'restrictions.disabled', false) && ['fa fa-circle-xmark', trans('user_disabled', {}, 'community')] // todo also checks accessibility dates
     ].filter(flag => !!flag)}

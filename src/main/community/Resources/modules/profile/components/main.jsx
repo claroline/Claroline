@@ -1,98 +1,116 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
+import classes from 'classnames'
+import get from 'lodash/get'
 
 import {Routes} from '#/main/app/router'
-import {hasPermission} from '#/main/app/security'
-import {ContentLoader} from '#/main/app/content/components/loader'
+import {getPlatformRoles} from '#/main/community/utils'
+import {displayDate, trans} from '#/main/app/intl'
+import {Vertical} from '#/main/app/content/tabs/components/vertical'
 
-import {UserPage} from '#/main/core/user/components/page'
 import {User as UserTypes} from '#/main/community/prop-types'
-import {route} from '#/main/community/user/routing'
-import {getActions} from '#/main/community/user/utils'
+import {getMainFacet} from '#/main/community/profile/utils'
 
-import {ProfileEdit} from '#/main/community/profile/editor/components/main'
-import {ProfileShow} from '#/main/community/profile/player/components/main'
+const UserDetails = props =>
+  <div className="user-details panel panel-default">
+    <div className="panel-body text-center">
+      {getPlatformRoles(props.user.roles).map(role => trans(role.translationKey)).join(', ')}
+    </div>
+
+    <ul className="list-group list-group-values">
+      <li className="list-group-item">
+        {trans('registered_at')}
+        <span className="value">
+          {displayDate(props.user.meta.created)}
+        </span>
+      </li>
+      <li className="list-group-item">
+        {trans('last_activity_at')}
+        <span className="value">
+          {props.user.meta.lastActivity ? displayDate(props.user.meta.lastActivity, false, true) : trans('never')}
+        </span>
+      </li>
+    </ul>
+  </div>
+
+UserDetails.propTypes = {
+  user: T.shape({
+    meta: T.shape({
+      created: T.string.isRequired,
+      lastActivity: T.string
+    }),
+    roles: T.arrayOf(T.shape({
+      type: T.number.isRequired,
+      translationKey: T.string.isRequired
+    })).isRequired
+  })
+}
 
 class Profile extends Component {
   componentDidMount() {
-    this.props.open(this.props.username)
+    if (!this.props.loaded) {
+      this.props.open()
+    }
   }
 
   componentDidUpdate() {
-    this.props.open(this.props.username)
+    if (!this.props.loaded) {
+      this.props.open()
+    }
   }
 
   render() {
-    if (!this.props.loaded) {
-      return (
-        <ContentLoader
-          size="lg"
-          description="Nous chargeons votre utilisateur..."
-        />
-      )
-    }
-
     return (
-      <UserPage
-        showBreadcrumb={this.props.showBreadcrumb}
-        breadcrumb={this.props.breadcrumb}
-        user={this.props.user}
-        toolbar="edit | send-message add-contact | fullscreen more"
-        actions={getActions([this.props.user], {
-          add: () => false,
-          update: (users) => this.props.history.push(route(users[0])),
-          delete: () => false
-        }, this.props.path, this.props.currentUser)}
-      >
-        <Routes
-          path={this.props.path}
-          routes={[
-            {
-              path: '/show',
-              render: () => (
-                <ProfileShow
-                  path={this.props.path}
-                />
-              )
-            }, {
-              path: '/edit',
-              disabled: !hasPermission('edit', this.props.user),
-              render: () => (
-                <ProfileEdit
-                  path={this.props.path}
-                />
-              )
-            }
-          ]}
-          redirect={[
-            {from: '/', exact: true, to: '/show'}
-          ]}
-        />
-      </UserPage>
+      <div className={classes('row user-profile', this.props.className)}>
+        <div className="user-profile-aside col-md-3">
+          {this.props.user.id &&
+            <UserDetails
+              user={this.props.user}
+            />
+          }
+
+          {this.props.facets && 1 < this.props.facets.length &&
+            <Vertical
+              basePath={this.props.path}
+              tabs={this.props.facets.map(facet => ({
+                icon: facet.icon,
+                title: facet.title,
+                path: get(facet, 'meta.main') ? '' : `/${facet.id}`,
+                exact: true
+              }))}
+            />
+          }
+        </div>
+
+        <div className="user-profile-content col-md-9">
+          <Routes
+            path={this.props.path}
+            routes={[
+              {
+                path: '/:id?',
+                onEnter: (params) => this.props.openFacet(params.id || getMainFacet(this.props.facets).id),
+                render: () => this.props.children
+              }
+            ]}
+          />
+        </div>
+      </div>
     )
   }
 }
 
 Profile.propTypes = {
-  username: T.string.isRequired,
-  history: T.object.isRequired,
-  showBreadcrumb: T.bool.isRequired,
-  breadcrumb: T.arrayOf(T.shape({
-    type: T.string,
-    label: T.string.isRequired,
-    displayed: T.bool,
-    target: T.oneOfType([T.string, T.array])
-  })),
+  className: T.string,
+  path: T.string.isRequired,
+  facets: T.array,
   user: T.shape(
     UserTypes.propTypes
   ).isRequired,
-  currentUser: T.shape(
-    UserTypes.propTypes
-  ).isRequired,
-  path: T.string,
   loaded: T.bool,
   parameters: T.object.isRequired,
-  open: T.func.isRequired
+  open: T.func.isRequired,
+  openFacet: T.func.isRequired,
+  children: T.node
 }
 
 export {

@@ -12,29 +12,24 @@
 namespace Claroline\SamlBundle\Security;
 
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Security\UserChecker as BaseUserChecker;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class UserChecker extends BaseUserChecker
 {
-    /** @var PlatformConfigurationHandler */
-    private $config;
-
-    public function __construct(PlatformConfigurationHandler $config)
-    {
-        $this->config = $config;
-    }
-
-    public function checkPreAuth(UserInterface $user)
+    public function checkPreAuth(UserInterface $user): void
     {
         if (!$user instanceof User) {
             return;
         }
 
         if ((!$this->config->getParameter('saml.reactivate_on_login') && !$user->isEnabled()) || $user->isRemoved()) {
-            throw new AccessDeniedException('Your user account no longer exists.');
+            $message = $this->translator->trans('account_deleted', [
+                '%support_email%' => $this->config->getParameter('help.support_email'),
+            ], 'security');
+
+            throw new AccessDeniedException($message);
         }
     }
 }

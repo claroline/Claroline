@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Entity\Resource;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\CoreBundle\Entity\Role;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -30,28 +31,20 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ResourceRights
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
+    use Id;
 
     /**
      * @ORM\Column(type="integer")
      */
-    protected $mask = 0;
+    private $mask = 0;
 
     /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Role",
-     *     inversedBy="resourceRights"
-     * )
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Role")
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      *
      * @var Role
      */
-    protected $role;
+    private $role;
 
     /**
      * @ORM\ManyToOne(
@@ -63,7 +56,7 @@ class ResourceRights
      *
      * @var ResourceNode
      */
-    protected $resourceNode;
+    private $resourceNode;
 
     /**
      * @ORM\ManyToMany(
@@ -75,53 +68,42 @@ class ResourceRights
      *     joinColumns={@ORM\JoinColumn(name="resource_rights_id", onDelete="CASCADE")},
      *     inverseJoinColumns={@ORM\JoinColumn(name="resource_type_id", onDelete="CASCADE")})
      * )
+     *
+     * @var ArrayCollection|ResourceType[]
      */
-    protected $resourceTypes;
+    private $resourceTypes;
 
     public function __construct()
     {
         $this->resourceTypes = new ArrayCollection();
     }
 
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Get Role.
-     *
-     * @return Role
-     */
-    public function getRole()
+    public function getRole(): ?Role
     {
         return $this->role;
     }
 
-    public function setRole(Role $role)
+    public function setRole(Role $role): void
     {
         $this->role = $role;
     }
 
-    /**
-     * @return ResourceNode
-     */
-    public function getResourceNode()
+    public function getResourceNode(): ?ResourceNode
     {
         return $this->resourceNode;
     }
 
-    public function setResourceNode(ResourceNode $resourceNode = null)
+    public function setResourceNode(?ResourceNode $resourceNode = null): void
     {
         $this->resourceNode = $resourceNode;
     }
 
-    public function getMask()
+    public function getMask(): ?int
     {
         return $this->mask;
     }
 
-    public function setMask($mask)
+    public function setMask(int $mask): void
     {
         $this->mask = $mask;
     }
@@ -131,18 +113,22 @@ class ResourceRights
         return $this->resourceTypes;
     }
 
-    public function setCreatableResourceTypes(array $resourceTypes)
+    public function setCreatableResourceTypes(array $resourceTypes): void
     {
         $this->resourceTypes = new ArrayCollection($resourceTypes);
     }
 
-    public function addCreatableResourceType(ResourceType $resourceType)
+    public function addCreatableResourceType(ResourceType $resourceType): void
     {
-        $this->resourceTypes->add($resourceType);
+        if (!$this->resourceTypes->contains($resourceType)) {
+            $this->resourceTypes->add($resourceType);
+        }
     }
 
-    public function removeCreatableResourceType(ResourceType $resourceType)
+    public function removeCreatableResourceType(ResourceType $resourceType): void
     {
-        $this->resourceTypes->removeElement($resourceType);
+        if ($this->resourceTypes->contains($resourceType)) {
+            $this->resourceTypes->removeElement($resourceType);
+        }
     }
 }

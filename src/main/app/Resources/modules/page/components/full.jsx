@@ -25,9 +25,11 @@ class PageFull extends Component {
       actions: []
     }
 
-    this.generateActions()
-
     this.toggleFullscreen = this.toggleFullscreen.bind(this)
+  }
+
+  componentDidMount() {
+    this.generateActions()
   }
 
   componentDidUpdate(prevProps) {

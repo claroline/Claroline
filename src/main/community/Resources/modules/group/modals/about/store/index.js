@@ -1,5 +1,5 @@
 /**
- * Workspace about store.
+ * Group about store.
  */
 
 import {actions} from '#/main/community/group/modals/about/store/actions'

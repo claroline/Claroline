@@ -6,6 +6,7 @@ import {trans} from '#/main/app/intl/translation'
 import {hasPermission} from '#/main/app/security'
 import {ContentSection, ContentSections} from '#/main/app/content/components/sections'
 import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
+import {DetailsData} from '#/main/app/content/details/containers/data'
 import {Alert} from '#/main/app/alert/components/alert'
 
 import {MODAL_USERS} from '#/main/community/modals/users'
@@ -16,6 +17,8 @@ import {RoleList} from '#/main/community/role/components/list'
 import {Group as GroupTypes} from '#/main/community/group/prop-types'
 import {selectors} from '#/main/community/tools/community/group/store/selectors'
 import {GroupPage} from '#/main/community/group/components/page'
+import {MODAL_ORGANIZATIONS} from '#/main/community/modals/organizations'
+import {OrganizationList} from '#/main/community/organization/components/list'
 
 const GroupShow = (props) =>
   <GroupPage
@@ -23,13 +26,29 @@ const GroupShow = (props) =>
     group={props.group}
     reload={props.reload}
   >
-    {get(props.group, 'meta.description') &&
-      <div className="panel panel-default">
-        <div className="panel-body">{get(props.group, 'meta.description')}</div>
-      </div>
-    }
+    <DetailsData
+      name={selectors.FORM_NAME}
+      definition={[
+        {
+          title: trans('general'),
+          primary: true,
+          fields: [
+            {
+              name: 'meta.description',
+              type: 'string',
+              label: trans('description'),
+              hideLabel: true,
+              displayed: (group) => get(group, 'meta.description'),
+              options: {
+                long: true
+              }
+            }
+          ]
+        }
+      ]}
+    />
 
-    {hasPermission('administrate', props.group) && get(props.group, 'meta.readOnly') &&
+    {hasPermission('edit', props.group) && get(props.group, 'meta.readOnly') &&
       <Alert type="info">
         {trans('group_locked', {}, 'community')}
       </Alert>
@@ -48,7 +67,7 @@ const GroupShow = (props) =>
             type: MODAL_BUTTON,
             icon: 'fa fa-fw fa-plus',
             label: trans('add_users'),
-            displayed: hasPermission('administrate', props.group),
+            displayed: hasPermission('edit', props.group),
             disabled: get(props.group, 'meta.readOnly'),
             modal: [MODAL_USERS, {
               selectAction: (selected) => ({
@@ -61,19 +80,57 @@ const GroupShow = (props) =>
         ]}
       >
         <UserList
+          path={props.path}
           name={`${selectors.FORM_NAME}.users`}
           url={['apiv2_group_list_users', {id: props.group.id}]}
           autoload={!!props.group.id}
           delete={{
             url: ['apiv2_group_remove_users', {id: props.group.id}],
+            label: trans('unregister', {}, 'actions'),
             disabled: () => get(props.group, 'meta.readOnly'),
-            displayed: () => hasPermission('administrate', props.group)
+            displayed: () => hasPermission('edit', props.group)
           }}
           actions={undefined}
         />
       </ContentSection>
 
-      {hasPermission('administrate', props.group) &&
+      <ContentSection
+        id="group-organizations"
+        icon="fa fa-fw fa-building"
+        className="embedded-list-section"
+        title={trans('organizations', {}, 'community')}
+        disabled={!props.group.id}
+        actions={[
+          {
+            name: 'add',
+            type: MODAL_BUTTON,
+            icon: 'fa fa-fw fa-plus',
+            label: trans('add_organization'),
+            displayed: hasPermission('edit', props.group),
+            modal: [MODAL_ORGANIZATIONS, {
+              selectAction: (organizations) => ({
+                type: CALLBACK_BUTTON,
+                label: trans('add', {}, 'actions'),
+                callback: () => props.addOrganizations(props.group.id, organizations)
+              })
+            }]
+          }
+        ]}
+      >
+        <OrganizationList
+          path={props.path}
+          name={`${selectors.FORM_NAME}.organizations`}
+          url={['apiv2_group_list_organizations', {id: props.group.id}]}
+          autoload={!!props.group.id}
+          delete={{
+            url: ['apiv2_group_remove_organizations', {id: props.group.id}],
+            displayed: () => hasPermission('edit', props.group)
+          }}
+          actions={() => []}
+        />
+      </ContentSection>
+
+      {hasPermission('edit', props.group) &&
         <ContentSection
           id="group-roles"
           className="embedded-list-section"
@@ -98,6 +155,7 @@ const GroupShow = (props) =>
           ]}
         >
           <RoleList
+            path={props.path}
             name={`${selectors.FORM_NAME}.roles`}
             url={['apiv2_group_list_roles', {id: props.group.id}]}
             autoload={!!props.group.id}
@@ -114,12 +172,14 @@ const GroupShow = (props) =>
 
 GroupShow.propTypes = {
   path: T.string.isRequired,
+  contextType: T.string.isRequired,
   group: T.shape(
     GroupTypes.propTypes
   ),
   reload: T.func.isRequired,
   addUsers: T.func.isRequired,
-  addRoles: T.func.isRequired
+  addRoles: T.func.isRequired,
+  addOrganizations: T.func.isRequired
 }
 
 export {

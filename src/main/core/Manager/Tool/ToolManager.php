@@ -17,6 +17,7 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Tool\Tool;
+use Claroline\CoreBundle\Entity\Tool\ToolRights;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Repository\Tool\AdministrationToolRepository;
 use Claroline\CoreBundle\Repository\Tool\OrderedToolRepository;
@@ -63,7 +64,7 @@ class ToolManager implements LoggerAwareInterface
         $this->adminToolRepo = $om->getRepository(AdminTool::class);
     }
 
-    public function create(Tool $tool)
+    public function create(Tool $tool): void
     {
         $this->om->startFlushSuite();
         $this->om->persist($tool);
@@ -118,7 +119,7 @@ class ToolManager implements LoggerAwareInterface
         }
     }
 
-    public function getCurrentPermissions(OrderedTool $orderedTool)
+    public function getCurrentPermissions(OrderedTool $orderedTool): array
     {
         $decoders = $this->toolMaskManager->getMaskDecodersByTool($orderedTool->getTool());
 
@@ -131,10 +132,22 @@ class ToolManager implements LoggerAwareInterface
         return $perms;
     }
 
+    public function getPermissions(OrderedTool $orderedTool, Role $role): array
+    {
+        $toolRights = $this->om->getRepository(ToolRights::class)->findBy([
+            'role' => $role,
+            'orderedTool' => $orderedTool,
+        ]);
+
+        $mask = 0 < count($toolRights) ? $toolRights[0]->getMask() : 0;
+
+        return $this->toolMaskManager->decodeMask($mask, $orderedTool->getTool());
+    }
+
     /**
      * @deprecated can be done by the ToolRightsSerializer
      */
-    public function setPermissions(array $perms, OrderedTool $orderedTool, Role $role)
+    public function setPermissions(array $perms, OrderedTool $orderedTool, Role $role): void
     {
         $mask = $this->toolMaskManager->encodeMask($perms, $orderedTool->getTool());
         $this->toolRightsManager->setToolRights($orderedTool, $role, $mask);
@@ -188,17 +201,9 @@ class ToolManager implements LoggerAwareInterface
         return $tools;
     }
 
-    /**
-     * @param string $name
-     *
-     * @return AdminTool
-     */
-    public function getAdminToolByName($name)
+    public function getAdminToolByName(string $name): ?AdminTool
     {
-        /** @var AdminTool $adminTool */
-        $adminTool = $this->adminToolRepo->findOneBy(['name' => $name]);
-
-        return $adminTool;
+        return $this->adminToolRepo->findOneBy(['name' => $name]);
     }
 
     /**
@@ -209,7 +214,7 @@ class ToolManager implements LoggerAwareInterface
         return $this->adminToolRepo->findByRoles($roles);
     }
 
-    public function getToolByName($name)
+    public function getToolByName(string $name): ?Tool
     {
         return $this->toolRepo->findOneBy(['name' => $name]);
     }
@@ -217,7 +222,7 @@ class ToolManager implements LoggerAwareInterface
     /**
      * Adds the tools missing in the database for a workspace.
      */
-    public function addMissingWorkspaceTools(Workspace $workspace)
+    public function addMissingWorkspaceTools(Workspace $workspace): void
     {
         $undisplayedTools = $this->toolRepo->findUndisplayedToolsByWorkspace($workspace);
         if (0 === count($undisplayedTools)) {
@@ -250,12 +255,7 @@ class ToolManager implements LoggerAwareInterface
         $this->om->endFlushSuite();
     }
 
-    /**
-     * @param int $position
-     *
-     * @return OrderedTool
-     */
-    private function setWorkspaceTool(Tool $tool, $position, Workspace $workspace)
+    private function setWorkspaceTool(Tool $tool, int $position, Workspace $workspace): OrderedTool
     {
         $orderedTool = $this->orderedToolRepo->findOneBy([
             'workspace' => $workspace,

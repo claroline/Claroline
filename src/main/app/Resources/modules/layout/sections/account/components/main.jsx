@@ -7,7 +7,7 @@ import {Routes} from '#/main/app/router'
 import {Await} from '#/main/app/components/await'
 import {ContentLoader} from '#/main/app/content/components/loader'
 
-import {getSections} from '#/main/app/layout/sections/account/utils'
+import {getSections} from '#/main/app/account/utils'
 
 const AccountMain = () =>
   <Await

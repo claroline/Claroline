@@ -28,7 +28,7 @@ services:
             - '@event_dispatcher'
             - '@translator'
             - '@Claroline\AppBundle\API\SerializerProvider'
-            - '@Claroline\TeamBundle\Manager\TeamManager'
+            - '@Claroline\CommunityBundle\Manager\TeamManager'
             - '@Claroline\DropZoneBundle\Manager\EvaluationManager'
             - '@Claroline\DropZoneBundle\Manager\DropManager'
 

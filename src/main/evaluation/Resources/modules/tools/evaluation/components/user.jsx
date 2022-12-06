@@ -23,7 +23,7 @@ import {ResourceCard} from '#/main/evaluation/resource/components/card'
 import {route as resourceRoute} from '#/main/core/resource/routing'
 import {MODAL_RESOURCE_EVALUATIONS} from '#/main/evaluation/modals/resource-evaluations'
 import {EvaluationDetails} from '#/main/evaluation/components/details'
-import {route} from '#/main/community/routing'
+import {route} from '#/main/community/user/routing'
 
 class EvaluationUser extends Component {
   constructor(props) {

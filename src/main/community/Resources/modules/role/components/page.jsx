@@ -17,7 +17,7 @@ const Role = (props) =>
   <ToolPage
     className="role-page"
     meta={{
-      title: get(props.role, 'name'),
+      title: trans('role_name', {name: trans(get(props.role, 'translationKey', 'loading'))}, 'community'),
       description: get(props.role, 'meta.description')
     }}
     path={[

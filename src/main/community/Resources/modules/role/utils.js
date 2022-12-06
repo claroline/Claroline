@@ -1,11 +1,11 @@
 import {getActions as getPluginsActions, getDefaultAction as getPluginsDefaultAction} from '#/main/app/plugins'
 
-function getActions(groups, groupsRefresher, path, currentUser, withDefault = false) {
-  return getPluginsActions('role', groups, groupsRefresher, path, currentUser, withDefault)
+function getActions(roles, rolesRefresher, path, currentUser, withDefault = false) {
+  return getPluginsActions('role', roles, rolesRefresher, path, currentUser, withDefault)
 }
 
-function getDefaultAction(groups, groupsRefresher, path, currentUser = null) {
-  return getPluginsDefaultAction('role', groups, groupsRefresher, path, currentUser)
+function getDefaultAction(roles, rolesRefresher, path, currentUser = null) {
+  return getPluginsDefaultAction('role', roles, rolesRefresher, path, currentUser)
 }
 
 export {

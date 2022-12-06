@@ -88,7 +88,7 @@ class GroupSubscriber implements EventSubscriberInterface
         $this->fileManager->updateFile(
             Group::class,
             $group->getUuid(),
-            $group->getPoster(),
+            $group->getThumbnail(),
             !empty($oldData['thumbnail']) ? $oldData['thumbnail'] : null
         );
     }

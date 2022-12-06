@@ -201,14 +201,15 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 
       if (actions instanceof Promise) {
         if (actions) {
-          actions = actions.then((actions) => actions.concat([deleteAction]))
+          actions = actions.then((actions) => [deleteAction].concat(actions))
+          //actions = actions.then((actions) => actions.concat([deleteAction]))
         } else {
           actions = Promise.resolve([deleteAction])
         }
-
       } else {
         if (actions) {
-          actions = actions.concat([deleteAction])
+          actions = [deleteAction].concat(actions)
+          // actions = actions.concat([deleteAction])
         } else {
           actions = [deleteAction]
         }

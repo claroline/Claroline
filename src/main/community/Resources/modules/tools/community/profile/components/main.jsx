@@ -1,14 +1,16 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
+import {Routes} from '#/main/app/router'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {Button} from '#/main/app/action/components/button'
 import {ToolPage} from '#/main/core/tool/containers/page'
 import {Vertical} from '#/main/app/content/tabs/components/vertical'
 
-import {ProfileFacets} from '#/main/community/profile/components/facets'
 import {ProfileFacet} from '#/main/community/tools/community/profile/containers/facet'
+import {getMainFacet} from '#/main/community/profile/utils'
 
 // TODO : redirect on facet delete
 
@@ -28,14 +30,15 @@ const ProfileMain = props =>
           tabs={props.facets.map(facet => ({
             icon: facet.icon,
             title: facet.title,
-            path: `/${facet.id}`,
+            path: get(facet, 'meta.main') ? '' : `/${facet.id}`,
+            exact: true,
             actions: [
               {
                 name: 'delete',
                 type: CALLBACK_BUTTON,
                 icon: 'fa fa-fw fa-trash',
                 label: trans('delete', {}, 'actions'),
-                displayed: !facet.meta || !facet.meta.main,
+                displayed: !get(facet, 'meta.main'),
                 callback: () => props.removeFacet(facet),
                 confirm: {
                   title: trans('profile_remove_facet'),
@@ -57,11 +60,14 @@ const ProfileMain = props =>
       </div>
 
       <div className="user-profile-content col-md-9">
-        <ProfileFacets
-          prefix={`${props.path}/parameters/profile`}
-          facets={props.facets}
-          facetComponent={ProfileFacet}
-          openFacet={props.openFacet}
+        <Routes
+          routes={[
+            {
+              path: `${props.path}/parameters/profile/:id?`,
+              onEnter: (params) => props.openFacet(params.id || getMainFacet(props.facets).id),
+              component: ProfileFacet
+            }
+          ]}
         />
       </div>
     </div>

@@ -3,6 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 import omit from 'lodash/omit'
 import uniq from 'lodash/uniq'
+import isUndefined from 'lodash/isUndefined'
 
 import {trans}  from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
@@ -44,7 +45,7 @@ const ToolRights = (props) => {
                   key={toolPerm}
                   className="checkbox-cell"
                 >
-                  {props.rights[toolName].hasOwnProperty(toolPerm) &&
+                  {!isUndefined(props.rights[toolName][toolPerm]) &&
                     <input
                       type="checkbox"
                       checked={get(props.rights, `${toolName}.${toolPerm}`, false)}
@@ -64,9 +65,9 @@ const ToolRights = (props) => {
 const RightsModal = props =>
   <Modal
     {...omit(props, 'role', 'workspace', 'rights', 'formData', 'save', 'saveEnabled', 'updateRights', 'loadRights', 'onSave')}
-    icon="fa fa-fw fa-tools"
-    title={trans('tools')}
-    subtitle={props.role.name}
+    icon="fa fa-fw fa-lock"
+    title={trans('rights')}
+    subtitle={props.title}
     onEntering={() => props.loadRights(props.rights)}
   >
     <Form
@@ -85,7 +86,7 @@ const RightsModal = props =>
         disabled={!props.saveEnabled}
         htmlType="submit"
         callback={() => {
-          props.save(props.role, props.workspace, props.onSave)
+          props.save(props.role, props.contextType, props.contextId, props.onSave)
           props.fadeModal()
         }}
       />
@@ -93,8 +94,11 @@ const RightsModal = props =>
   </Modal>
 
 RightsModal.propTypes = {
+  title: T.string,
   role: T.object.isRequired,
-  workspace: T.object.isRequired,
+  contextType: T.string.isRequired,
+  contextId: T.string,
+  rights: T.object.isRequired,
   saveEnabled: T.bool.isRequired,
   formData: T.object,
   save: T.func.isRequired,

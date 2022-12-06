@@ -17,6 +17,7 @@ use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
+use Claroline\CoreBundle\Security\PlatformRoles;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
@@ -43,12 +44,21 @@ class RoleVoter extends AbstractVoter
 
         switch ($attributes[0]) {
             case self::OPEN:
-                if (in_array($object->getName(), $token->getRoleNames())) {
+                if (PlatformRoles::ANONYMOUS === $object->getName() || in_array($object->getName(), $token->getRoleNames())) {
                     return VoterInterface::ACCESS_GRANTED;
+                }
+
+                if (!empty($object->getWorkspace())) {
+                    if ($this->isToolGranted('EDIT', 'community', $object->getWorkspace())
+                        || $this->workspaceManager->isManager($object->getWorkspace(), $token)) {
+                        // If user is workspace manager then grant access
+                        return VoterInterface::ACCESS_GRANTED;
+                    }
                 }
 
                 return VoterInterface::ACCESS_DENIED;
             case self::EDIT:
+            case self::ADMINISTRATE:
                 return $this->check($token, $object);
             case self::PATCH:
                 return $this->checkPatch($token, $object, $collection);
@@ -125,6 +135,6 @@ class RoleVoter extends AbstractVoter
 
     public function getSupportedActions()
     {
-        return [self::CREATE, self::OPEN, self::EDIT, self::DELETE, self::PATCH];
+        return [self::CREATE, self::OPEN, self::EDIT, self::ADMINISTRATE, self::DELETE, self::PATCH];
     }
 }

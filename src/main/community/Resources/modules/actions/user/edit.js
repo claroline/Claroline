@@ -12,5 +12,6 @@ export default (users, refresher, path) => ({
   target: route(users[0], path) + '/edit',
   displayed: hasPermission('edit', users[0]),
   primary: true,
-  group: trans('management')
+  group: trans('management'),
+  scope: ['object']
 })

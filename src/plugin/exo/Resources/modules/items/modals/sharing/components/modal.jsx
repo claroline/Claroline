@@ -6,7 +6,7 @@ import {trans, transChoice} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {Checkbox} from '#/main/app/input/components/checkbox'
 import {ConfirmModal} from '#/main/app/modals/confirm/components/modal'
-import {UserCard} from '#/main/core/user/components/card'
+import {UserCard} from '#/main/community/user/components/card'
 
 const SharingModal = (props) => {
   const [shareAdminRights, setShareAdminRights] = useState(false)

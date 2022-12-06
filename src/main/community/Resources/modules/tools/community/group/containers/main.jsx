@@ -1,8 +1,8 @@
 import {connect} from 'react-redux'
 
+import {hasPermission} from '#/main/app/security'
 import {selectors as toolSelectors} from '#/main/core/tool/store'
 
-import {selectors as communitySelectors} from '#/main/community/tools/community/store'
 import {GroupMain as GroupMainComponent} from '#/main/community/tools/community/group/components/main'
 import {actions} from '#/main/community/tools/community/group/store'
 
@@ -10,7 +10,7 @@ const GroupMain = connect(
   state => ({
     path: toolSelectors.path(state),
     contextType: toolSelectors.contextType(state),
-    canRegister: communitySelectors.canCreate(state)
+    canEdit: hasPermission('edit', toolSelectors.toolData(state))
   }),
   dispatch => ({
     open(id) {

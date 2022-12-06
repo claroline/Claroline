@@ -14,9 +14,18 @@ namespace Claroline\CommunityBundle\Finder;
 use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Doctrine\ORM\QueryBuilder;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class OrganizationFinder extends AbstractFinder
 {
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
+
+    public function __construct(TokenStorageInterface $tokenStorage)
+    {
+        $this->tokenStorage = $tokenStorage;
+    }
+
     public static function getClass(): string
     {
         return Organization::class;
@@ -40,11 +49,23 @@ class OrganizationFinder extends AbstractFinder
                         $qb->setParameter('parentIds', is_array($filterValue) ? $filterValue : [$filterValue]);
                     }
                     break;
-                case 'user': // I'm not sure this is used
+                case 'group':
+                    $qb->leftJoin('obj.groups', 'g');
+                    $qb->andWhere('g.uuid IN (:groupIds)');
+                    $qb->setParameter('groupIds', is_array($filterValue) ? $filterValue : [$filterValue]);
+                    break;
+                case 'user':
                     $qb->leftJoin('obj.userOrganizationReferences', 'ur');
                     $qb->leftJoin('ur.user', 'u');
                     $qb->andWhere('u.uuid IN (:userIds)');
                     $qb->setParameter('userIds', is_array($filterValue) ? $filterValue : [$filterValue]);
+                    break;
+                case 'administrated':
+                    $qb->leftJoin('obj.userOrganizationReferences', 'ur2');
+                    $qb->leftJoin('ur2.user', 'u2');
+                    $qb->andWhere('ur2.manager = 1');
+                    $qb->andWhere('ur2.user = (:currentUserId)');
+                    $qb->setParameter('currentUserId', $this->tokenStorage->getToken()->getUser() ? $this->tokenStorage->getToken()->getUser()->getId() : null);
                     break;
                 default:
                     $this->setDefaults($qb, $filterName, $filterValue);

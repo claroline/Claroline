@@ -12,32 +12,54 @@
 namespace Claroline\CoreBundle\Security;
 
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Security\Core\Exception\AccountExpiredException;
 use Symfony\Component\Security\Core\User\UserCheckerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class UserChecker implements UserCheckerInterface
 {
-    public function checkPreAuth(UserInterface $user)
+    /** @var TranslatorInterface */
+    protected $translator;
+    /** @var PlatformConfigurationHandler */
+    protected $config;
+
+    public function __construct(
+        TranslatorInterface $translator,
+        PlatformConfigurationHandler $config
+    ) {
+        $this->translator = $translator;
+        $this->config = $config;
+    }
+
+    public function checkPreAuth(UserInterface $user): void
     {
         if (!$user instanceof User) {
             return;
         }
 
         if (!$user->isEnabled() || $user->isRemoved()) {
-            throw new AccessDeniedException('Your user account no longer exists.');
+            $message = $this->translator->trans('account_deleted', [
+                '%support_email%' => $this->config->getParameter('help.support_email'),
+            ], 'security');
+
+            throw new AccessDeniedException($message);
         }
     }
 
-    public function checkPostAuth(UserInterface $user)
+    public function checkPostAuth(UserInterface $user): void
     {
         if (!$user instanceof User) {
             return;
         }
 
         if (!$user->isAccountNonExpired()) {
-            throw new AccountExpiredException('Your user account is expired.');
+            $message = $this->translator->trans('account_expired', [
+                '%support_email%' => $this->config->getParameter('help.support_email'),
+            ], 'security');
+
+            throw new AccessDeniedException($message);
         }
     }
 }

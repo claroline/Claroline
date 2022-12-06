@@ -39,28 +39,35 @@ const CommunityMenu = (props) =>
           icon: 'fa fa-fw fa-user-plus',
           label: trans('pending_registrations'),
           target: `${props.path}/pending`,
-          displayed: props.contextType === toolConstants.TOOL_WORKSPACE && props.canAdministrate && get(props.workspace, 'registration.selfRegistration') && get(props.workspace, 'registration.validation')
+          displayed: props.contextType === toolConstants.TOOL_WORKSPACE && props.canEdit && get(props.workspace, 'registration.selfRegistration') && get(props.workspace, 'registration.validation')
         }, {
-          name: 'roles',
+          name: 'teams',
           type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-id-badge',
-          label: trans('roles', {}, 'community'),
-          target: `${props.path}/roles`,
-          displayed: props.canAdministrate
+          icon: 'fa fa-fw fa-user-group',
+          label: trans('teams', {}, 'community'),
+          target: `${props.path}/teams`,
+          displayed: props.contextType === toolConstants.TOOL_WORKSPACE
         }, {
           name: 'organizations',
           type: LINK_BUTTON,
           icon: 'fa fa-fw fa-building',
           label: trans('organizations'),
           target: `${props.path}/organizations`,
-          displayed: props.contextType === toolConstants.TOOL_DESKTOP /*&& props.canAdministrate*/
+          displayed: props.contextType === toolConstants.TOOL_DESKTOP/* && props.canEdit*/
+        }, {
+          name: 'roles',
+          type: LINK_BUTTON,
+          icon: 'fa fa-fw fa-id-badge',
+          label: trans('roles', {}, 'community'),
+          target: `${props.path}/roles`,
+          displayed: props.canEdit
         }, {
           name: 'profile',
           type: LINK_BUTTON,
           icon: 'fa fa-fw fa-user-circle',
           label: trans('user_profile'),
           target: `${props.path}/parameters/profile`,
-          displayed: props.contextType === toolConstants.TOOL_DESKTOP && props.canAdministrate
+          displayed: props.contextType === toolConstants.TOOL_DESKTOP && props.canEdit
         }
       ]}
       onClick={props.autoClose}
@@ -74,7 +81,7 @@ CommunityMenu.propTypes = {
     UserType.propTypes
   ),
   workspace: T.object,
-  canAdministrate: T.bool.isRequired,
+  canEdit: T.bool.isRequired,
 
   // from menu
   opened: T.bool.isRequired,

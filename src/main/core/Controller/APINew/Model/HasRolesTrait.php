@@ -48,10 +48,12 @@ trait HasRolesTrait
         $this->checkPermission('OPEN', $object, [], true);
 
         return new JsonResponse(
-            $this->crud->list(Role::class, array_merge(
-                $request->query->all(),
-                ['hiddenFilters' => [$this->getName() => [$id]]]
-            ))
+            $this->crud->list(Role::class, array_merge($request->query->all(), [
+                'hiddenFilters' => [
+                    $this->getName() => [$id],
+                    'grantable' => true,
+                ],
+            ]))
         );
     }
 
