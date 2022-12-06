@@ -3,6 +3,7 @@ import {trans} from '#/main/app/intl/translation'
 import {OrganizationDisplay} from '#/main/community/data/types/organization/components/display'
 import {OrganizationCell} from '#/main/community/data/types/organization/components/cell'
 import {OrganizationInput} from '#/main/community/data/types/organization/components/input'
+import {OrganizationFilter} from '#/main/community/data/types/organization/components/filter'
 
 const dataType = {
   name: 'organization',
@@ -31,7 +32,8 @@ const dataType = {
   components: {
     details: OrganizationDisplay,
     input: OrganizationInput,
-    table: OrganizationCell
+    table: OrganizationCell,
+    search: OrganizationFilter
   }
 }
 

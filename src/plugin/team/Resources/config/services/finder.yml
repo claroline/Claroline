@@ -1,4 +1,0 @@
-services:
-    Claroline\TeamBundle\Finder\TeamFinder:
-        parent: Claroline\AppBundle\API\Finder\AbstractFinder
-        tags: [ claroline.finder ]

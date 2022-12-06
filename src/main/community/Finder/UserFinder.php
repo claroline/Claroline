@@ -99,13 +99,24 @@ class UserFinder extends AbstractFinder
                     $qb->setParameter('groupRoleIds', is_array($filterValue) ? $filterValue : [$filterValue]);
                     break;
 
-                case 'roleTranslation': // should not exist
+                // should not exist : used by the users DataSource
+                case 'roleTranslation':
                     if (!$roleJoin) {
                         $qb->leftJoin('obj.roles', 'r');
                         $roleJoin = true;
                     }
 
-                    $qb->andWhere('UPPER(r.translationKey) LIKE :roleTranslation');
+                    if (!$groupJoin) {
+                        $qb->leftJoin('obj.groups', 'g');
+                        $groupJoin = true;
+                    }
+
+                    if (!$groupRoleJoin) {
+                        $qb->leftJoin('g.roles', 'gr');
+                        $groupRoleJoin = true;
+                    }
+
+                    $qb->andWhere('(UPPER(r.translationKey) LIKE :roleTranslation OR UPPER(gr.translationKey) LIKE :roleTranslation)');
                     $qb->setParameter('roleTranslation', '%'.strtoupper($filterValue).'%');
                     break;
 

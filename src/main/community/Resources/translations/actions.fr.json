@@ -4,5 +4,6 @@
   "add_role": "Ajouter un rôle",
   "add_user": "Ajouter un utilisateur",
   "add_organization": "Ajouter une organisation",
-  "add_sub_organization": "Ajouter une sous-organisation"
+  "add_sub_organization": "Ajouter une sous-organisation",
+  "add_team": "Ajouter une équipe"
 }

@@ -15,6 +15,7 @@ use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CommunityBundle\Entity\Team;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
@@ -27,7 +28,6 @@ use Claroline\DropZoneBundle\Manager\DocumentManager;
 use Claroline\DropZoneBundle\Manager\DropManager;
 use Claroline\DropZoneBundle\Manager\DropzoneManager;
 use Claroline\DropZoneBundle\Manager\EvaluationManager;
-use Claroline\TeamBundle\Entity\Team;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -125,7 +125,7 @@ class DropController
      *
      * @Route("/{id}/drops/{teamId}", name="claro_dropzone_drop_create", defaults={"teamId"=null}, methods={"POST"})
      * @EXT\ParamConverter("dropzone", class="Claroline\DropZoneBundle\Entity\Dropzone", options={"mapping": {"id": "uuid"}})
-     * @EXT\ParamConverter("team", class="Claroline\TeamBundle\Entity\Team", options={"mapping": {"teamId": "uuid"}})
+     * @EXT\ParamConverter("team", class="Claroline\CommunityBundle\Entity\Team", options={"mapping": {"teamId": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
     public function createAction(Dropzone $dropzone, User $user, Team $team = null): JsonResponse

@@ -26,7 +26,6 @@ use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -81,34 +80,6 @@ class UserController extends AbstractCrudController
     public function getClass(): string
     {
         return User::class;
-    }
-
-    /**
-     * @ApiDoc(
-     *     description="Get the list of user in that share the current user managed organizations (and sub organizations).",
-     *     queryString={
-     *         "$finder",
-     *         {"name": "page", "type": "integer", "description": "The queried page."},
-     *         {"name": "limit", "type": "integer", "description": "The max amount of objects per page."},
-     *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
-     *     }
-     * )
-     * @Route("/list/managed", name="apiv2_user_list_managed", methods={"GET"})
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     */
-    public function listManagedOrganizationAction(User $user, Request $request): JsonResponse
-    {
-        $filters = [];
-        if (!$this->authorization->isGranted('ROLE_ADMIN')) {
-            $filters['organizations'] = array_map(function (Organization $organization) {
-                return $organization->getUuid();
-            }, $user->getAdministratedOrganizations()->toArray());
-        }
-
-        return new JsonResponse($this->finder->search(
-            User::class,
-            array_merge($request->query->all(), ['hiddenFilters' => $filters])
-        ));
     }
 
     /**
@@ -237,8 +208,8 @@ class UserController extends AbstractCrudController
      */
     public function disableInactiveAction(Request $request): JsonResponse
     {
-        $tool = $this->toolManager->getAdminToolByName('community');
-        $this->checkPermission('OPEN', $tool, [], true);
+        $tool = $this->toolManager->getToolByName('community');
+        $this->checkPermission('ADMINISTRATE', $tool, [], true);
 
         $data = $this->decodeRequest($request);
         if (empty($data['lastActivity'])) {

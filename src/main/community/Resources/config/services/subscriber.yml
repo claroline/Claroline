@@ -10,10 +10,13 @@ services:
     # Tools
     Claroline\CommunityBundle\Subscriber\Tool\CommunitySubscriber:
         arguments:
-            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\AppBundle\API\Crud'
             - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
             - '@Claroline\CommunityBundle\Serializer\ProfileSerializer'
             - '@Claroline\CoreBundle\Manager\UserManager'
+            - '@Claroline\CommunityBundle\Manager\TeamManager'
 
     # Crud
     Claroline\CommunityBundle\Subscriber\Crud\GroupSubscriber:
@@ -35,6 +38,13 @@ services:
         arguments:
             - '@doctrine.dbal.default_connection'
             - '@Claroline\AppBundle\Event\StrictDispatcher'
+
+    Claroline\CommunityBundle\Subscriber\Crud\TeamSubscriber:
+        arguments:
+            - '@security.token_storage'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\Manager\FileManager'
+            - '@Claroline\CommunityBundle\Manager\TeamManager'
 
     Claroline\CommunityBundle\Subscriber\Crud\UserSubscriber:
         arguments:

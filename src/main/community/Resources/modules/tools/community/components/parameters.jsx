@@ -74,7 +74,7 @@ const desktopDefinition = () => [
       }, {
         name: 'authentication.changePassword',
         type: 'boolean',
-        label: trans('allow_change_password')
+        label: trans('allow_change_password', {}, 'community')
       }
     ]
   }, {

@@ -6,6 +6,7 @@ import {Routes} from '#/main/app/router'
 import {UserList} from '#/main/community/tools/community/user/containers/list'
 import {User} from '#/main/community/tools/community/user/components/user'
 import {UserCreate} from '#/main/community/tools/community/user/containers/create'
+import {UserShow} from '#/main/community/tools/community/user/containers/show'
 
 const UserMain = props =>
   <Routes
@@ -20,6 +21,11 @@ const UserMain = props =>
         component: UserCreate,
         onEnter: props.new,
         disabled: 'desktop' !== props.contextType || !props.canRegister
+      }, {
+        path: '/users/:username',
+        component: UserShow,
+        onEnter: (params) => props.open(params.id),
+        exact: true
       }, {
         path: '/users/form/:id?',
         component: User,

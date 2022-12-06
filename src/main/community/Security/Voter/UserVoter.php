@@ -151,7 +151,7 @@ class UserVoter extends AbstractRoleSubjectVoter
     private function checkCreate(TokenInterface $token, User $user)
     {
         // allow creation to administrators
-        if ($this->isToolGranted('EDIT', 'community')) {
+        if ($this->isToolGranted('CREATE_USER', 'community')) {
             return VoterInterface::ACCESS_GRANTED;
         }
 

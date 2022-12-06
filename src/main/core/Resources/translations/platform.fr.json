@@ -745,6 +745,7 @@
     "list_display_table_sm": "Tableau condensé",
     "list_display_tiles": "Grille large",
     "list_display_tiles_sm": "Grille",
+    "list_display_tree": "Arborescence",
     "list_select_all": "tout sélectionner",
     "list_deselect_all": "tout déselectionner",
     "list_sort_by": "Trier par :",

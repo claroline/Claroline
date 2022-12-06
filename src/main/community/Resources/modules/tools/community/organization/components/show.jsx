@@ -42,9 +42,8 @@ const OrganizationShow = props =>
             type: MODAL_BUTTON,
             icon: 'fa fa-fw fa-plus',
             label: trans('add_managers'),
-            displayed: hasPermission('administrate', props.organization),
+            displayed: hasPermission('edit', props.organization),
             modal: [MODAL_USERS, {
-              url: ['apiv2_user_list_managed'],
               selectAction: (users) => ({
                 type: CALLBACK_BUTTON,
                 label: trans('add', {}, 'actions'),
@@ -76,7 +75,7 @@ const OrganizationShow = props =>
             type: MODAL_BUTTON,
             icon: 'fa fa-fw fa-plus',
             label: trans('add_workspaces'),
-            displayed: hasPermission('administrate', props.organization),
+            displayed: hasPermission('edit', props.organization),
             modal: [MODAL_WORKSPACES, {
               url: ['apiv2_workspace_list'],
               selectAction: (workspaces) => ({
@@ -110,9 +109,8 @@ const OrganizationShow = props =>
             type: MODAL_BUTTON,
             icon: 'fa fa-fw fa-plus',
             label: trans('add_user'),
-            displayed: hasPermission('administrate', props.organization),
+            displayed: hasPermission('edit', props.organization),
             modal: [MODAL_USERS, {
-              url: ['apiv2_user_list_managed'],
               selectAction: (users) => ({
                 type: CALLBACK_BUTTON,
                 label: trans('add', {}, 'actions'),
@@ -144,7 +142,7 @@ const OrganizationShow = props =>
             type: MODAL_BUTTON,
             icon: 'fa fa-fw fa-plus',
             label: trans('add_group'),
-            displayed: hasPermission('administrate', props.organization),
+            displayed: hasPermission('edit', props.organization),
             modal: [MODAL_GROUPS, {
               selectAction: (groups) => ({
                 type: CALLBACK_BUTTON,

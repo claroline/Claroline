@@ -51,8 +51,8 @@ export class UserTypeahead extends Component {
         method: 'GET' ,
         credentials: 'include'
       })
-      .then(response => response.json())
-      .then(users => this.setState({results: users, isFetching: false}))
+        .then(response => response.json())
+        .then(users => this.setState({results: users, isFetching: false}))
     }
   }
 
@@ -69,14 +69,14 @@ export class UserTypeahead extends Component {
     return (
       <div className={classes('dropdown', 0 < this.state.results.length ? 'open' : null)}>
         <div className="input-group">
-        <span className="input-group-addon">
-          <span
-            className={classes(
-              'fa fa-fw',
-              this.state.isFetching ? 'fa-circle-notch fa-spin' : 'fa-user'
-            )}
-          ></span>
-        </span>
+          <span className="input-group-addon">
+            <span
+              className={classes(
+                'fa fa-fw',
+                this.state.isFetching ? 'fa-circle-notch fa-spin' : 'fa-user'
+              )}
+            ></span>
+          </span>
 
           <input
             id="search-users"

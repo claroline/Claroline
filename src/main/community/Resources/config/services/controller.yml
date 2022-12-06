@@ -53,6 +53,13 @@ services:
             - '@security.authorization_checker'
             - '@Claroline\CoreBundle\Manager\LogManager'
 
+    Claroline\CommunityBundle\Controller\TeamController:
+        parent: Claroline\AppBundle\Controller\AbstractCrudController
+        public: true
+        arguments:
+            - '@security.authorization_checker'
+            - '@Claroline\CommunityBundle\Manager\TeamManager'
+
     Claroline\CommunityBundle\Controller\UserController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
         public: true

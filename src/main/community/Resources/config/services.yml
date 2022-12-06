@@ -4,6 +4,7 @@ imports:
     - { resource: services/exporter.yml }
     - { resource: services/finder.yml }
     - { resource: services/importer.yml }
+    - { resource: services/manager.yml }
     - { resource: services/messenger.yml }
     - { resource: services/repository.yml }
     - { resource: services/serializer.yml }

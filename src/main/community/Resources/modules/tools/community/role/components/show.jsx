@@ -48,7 +48,7 @@ const RoleShow = (props) =>
             type: MODAL_BUTTON,
             icon: 'fa fa-fw fa-plus',
             label: trans('add_user'),
-            displayed: hasPermission('administrate', props.role),
+            displayed: hasPermission('edit', props.role),
             modal: [MODAL_USERS, {
               selectAction: (selected) => ({
                 type: CALLBACK_BUTTON,
@@ -65,7 +65,7 @@ const RoleShow = (props) =>
           autoload={!!props.role.id}
           delete={{
             url: ['apiv2_role_remove_users', {id: props.role.id}],
-            displayed: () => hasPermission('administrate', props.role)
+            displayed: () => hasPermission('edit', props.role)
           }}
           actions={undefined}
         />
@@ -83,7 +83,7 @@ const RoleShow = (props) =>
             type: MODAL_BUTTON,
             icon: 'fa fa-fw fa-plus',
             label: trans('add_group'),
-            displayed: hasPermission('administrate', props.role),
+            displayed: hasPermission('edit', props.role),
             modal: [MODAL_GROUPS, {
               selectAction: (selected) => ({
                 type: CALLBACK_BUTTON,
@@ -100,7 +100,7 @@ const RoleShow = (props) =>
           autoload={!!props.role.id}
           delete={{
             url: ['apiv2_role_remove_groups', {id: props.role.id}],
-            displayed: () => hasPermission('administrate', props.role)
+            displayed: () => hasPermission('edit', props.role)
           }}
           actions={undefined}
         />

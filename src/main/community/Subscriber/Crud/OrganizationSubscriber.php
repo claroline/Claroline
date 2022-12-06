@@ -106,7 +106,7 @@ class OrganizationSubscriber implements EventSubscriberInterface
         $this->fileManager->updateFile(
             Organization::class,
             $organization->getUuid(),
-            $organization->getPoster(),
+            $organization->getThumbnail(),
             !empty($oldData['thumbnail']) ? $oldData['thumbnail'] : null
         );
     }

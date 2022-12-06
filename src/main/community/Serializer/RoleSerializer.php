@@ -100,7 +100,6 @@ class RoleSerializer
                 $serialized['permissions'] = [
                     'open' => $this->authorization->isGranted('OPEN', $role),
                     'edit' => $this->authorization->isGranted('EDIT', $role),
-                    'administrate' => $this->authorization->isGranted('ADMINISTRATE', $role),
                     'delete' => $this->authorization->isGranted('DELETE', $role),
                 ];
 

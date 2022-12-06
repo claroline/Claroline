@@ -6,9 +6,10 @@ import merge from 'lodash/merge'
 
 import {trans} from '#/main/app/intl/translation'
 import {ListData} from '#/main/app/content/list/containers/data'
-import {TreeData} from '#/main/app/content/tree/containers/data'
 import {selectors as securitySelectors} from '#/main/app/security/store'
 import {actions as listActions} from '#/main/app/content/list/store'
+import {constants as listConst} from '#/main/app/content/list/constants'
+import {constants as treeConst} from '#/main/app/content/tree/constants'
 
 import {getActions, getDefaultAction} from '#/main/community/organization/utils'
 import {OrganizationCard} from '#/main/community/organization/components/card'
@@ -20,7 +21,14 @@ const OrganizationListComponent = props => {
     delete: () => props.invalidate(props.name)
   }, props.refresher || {})
 
-  return createElement(props.tree ? TreeData : ListData, merge({
+  const display = {
+    current: props.tree ? treeConst.DISPLAY_TREE : listConst.DEFAULT_DISPLAY_MODE,
+    //available: merge({}, listConst.DISPLAY_MODES, treeConst.DISPLAY_MODES),
+    changeDisplay: (display) => console.log(display)
+  }
+
+  return createElement(ListData, merge({
+    display: display,
     primaryAction: (row) => getDefaultAction(row, refresher, props.path, props.currentUser),
     actions: (rows) => getActions(rows, refresher, props.path, props.currentUser).then((actions) => [].concat(actions, props.customActions(rows))),
     definition: [
@@ -31,21 +39,24 @@ const OrganizationListComponent = props => {
         displayed: true,
         primary: true
       }, {
+        name: 'code',
+        type: 'string',
+        label: trans('code')
+      }, {
+        name: 'meta.description',
+        type: 'string',
+        label: trans('description'),
+        options: {long: true},
+        displayed: true,
+        sortable: false
+      },{
         name: 'meta.default',
         type: 'boolean',
         label: trans('default')
       }, {
-        name: 'meta.parent',
-        type: 'organization',
-        label: trans('parent')
-      }, {
         name: 'email',
         type: 'email',
         label: trans('email')
-      }, {
-        name: 'code',
-        type: 'string',
-        label: trans('code')
       }, {
         name: 'parent',
         type: 'organization',

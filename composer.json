@@ -128,7 +128,6 @@
             "Claroline\\RssBundle\\": "src/plugin/rss",
             "Claroline\\ScormBundle\\": "src/plugin/scorm",
             "Claroline\\TagBundle\\": "src/plugin/tag",
-            "Claroline\\TeamBundle\\": "src/plugin/team",
             "Claroline\\TextPlayerBundle\\": "src/plugin/text-player",
             "Claroline\\VideoPlayerBundle\\": "src/plugin/video-player",
             "Claroline\\WebResourceBundle\\": "src/plugin/web-resource",

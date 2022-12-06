@@ -11,7 +11,7 @@ const CommunityMenu = connect(
     contextType: toolSelectors.contextType(state),
     currentUser: securitySelectors.currentUser(state),
     workspace: toolSelectors.contextData(state),
-    canAdministrate: hasPermission('edit', toolSelectors.toolData(state))
+    canEdit: hasPermission('edit', toolSelectors.toolData(state))
   })
 )(CommunityMenuComponent)
 
