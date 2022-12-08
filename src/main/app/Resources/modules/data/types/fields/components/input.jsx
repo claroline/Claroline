@@ -2,8 +2,8 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 import classes from 'classnames'
-import uuid from 'uuid'
 
+import {makeId} from '#/main/core/scaffolding/id'
 import {trans} from '#/main/app/intl/translation'
 
 import {actions as modalActions} from '#/main/app/overlays/modal/store'
@@ -175,7 +175,7 @@ class FieldList extends Component {
               title: trans('create_field'),
               items: types.map(type => Object.assign({}, type.meta, {name: type.name})),
               handleSelect: (type) => this.open({
-                id: uuid(),
+                id: makeId(),
                 type: type.name,
                 restrictions: {
                   locked: false,

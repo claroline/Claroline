@@ -11,7 +11,7 @@
   "scripts": {
     "themes": "node src/main/core/Resources/server/themes/bin build",
     "webpack": "webpack --config=webpack.config.prod.js --progress --bail",
-    "webpack:dev": "webpack-dev-server --config=webpack.config.dev.js --color"
+    "webpack:dev": "webpack-dev-server --config=webpack.config.dev.js"
   },
   "dependencies": {
     "@babel/core": "^7.4.1",
@@ -25,7 +25,7 @@
     "bootstrap": "^3.4.1",
     "classnames": "^2.2.5",
     "codemirror": "^5.34.0",
-    "core-js": "^3.0.1",
+    "core-js": "^3.26.1",
     "cssnano": "^4.1",
     "d3": "^4.4.0",
     "html-react-parser": "^0.9.1",
@@ -58,22 +58,21 @@
     "tinycolor2": "^1.4.1",
     "tinymce": "^4.9.3",
     "tinymce-codemirror": "git+https://github.com/christiaan/tinymce-codemirror.git#20c1bbe708",
-    "uuid": "^3.3.2",
+    "uuid": "^9.0.0",
     "video.js": "7.7.4",
     "wavesurfer.js": "2.2.1",
-    "webpack": "^4.43.0",
-    "webpack-cli": "^3.0.0",
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.1",
     "whatwg-fetch": "^2.0.1"
   },
   "files": [
     "package.json"
   ],
   "devDependencies": {
-    "circular-dependency-plugin": "^4",
+    "circular-dependency-plugin": "^5.2.2",
     "eslint": "^7.15.0",
     "eslint-plugin-react": "^7.21.5",
     "redux-freeze": "^0.1.7",
-    "webpack-dev-server": "^3.1.14",
-    "webpack-notifier": "^1.6.0"
+    "webpack-dev-server": "^4.11.1"
   }
 }
