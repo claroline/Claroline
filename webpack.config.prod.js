@@ -2,12 +2,13 @@
  * Webpack configuration for PROD environments.
  */
 
+const webpack = require('webpack')
+
 const entries = require('./webpack/entries')
 const config = require('./webpack/config')
 const paths = require('./webpack/paths')
 
 const assetsFile = require('./webpack/plugins/assets-file')
-const hashedModuleIds = require('./webpack/plugins/hashed-module-ids')
 const vendorDistributionShortcut = require('./webpack/plugins/vendor-shortcut')
 const distributionShortcut = require('./webpack/plugins/distribution-shortcut')
 
@@ -20,7 +21,6 @@ module.exports = {
     colors: true,
     all: false,
     modules: true,
-    maxModules: 0,
     errors: true,
     warnings: false,
     moduleTrace: true,
@@ -48,11 +48,15 @@ module.exports = {
   ),
   plugins: [
     assetsFile('webpack-prod.json'),
-    hashedModuleIds(),
     vendorDistributionShortcut(),
-    distributionShortcut()
+    distributionShortcut(),
+    // this is required by swagger-ui-react
+    new webpack.ProvidePlugin({
+      Buffer: ['buffer', 'Buffer']
+    })
   ],
   optimization: {
+    moduleIds: 'deterministic',
     // bundle webpack runtime code into a single chunk file
     // it avoids having it embed in each generated chunk
     runtimeChunk: 'single',

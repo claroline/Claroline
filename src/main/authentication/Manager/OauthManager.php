@@ -194,7 +194,7 @@ class OauthManager
         curl_close($curlHandle);
         $data = json_decode($json);
 
-        if (!$json || array_key_exists('error', $data)) {
+        if (!$json || isset($data->error)) {
             return ['error' => 'facebook_application_validation_error'];
         }
 

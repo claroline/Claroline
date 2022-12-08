@@ -2,19 +2,17 @@
  * Webpack configuration for DEV environments.
  */
 
+const webpack = require('webpack')
+
 const entries = require('./webpack/entries')
 const config = require('./webpack/config')
 const paths = require('./webpack/paths')
 
 const assetsFile = require('./webpack/plugins/assets-file')
-const hashedModuleIds = require('./webpack/plugins/hashed-module-ids')
 const vendorDistributionShortcut = require('./webpack/plugins/vendor-shortcut')
 const distributionShortcut = require('./webpack/plugins/distribution-shortcut')
-
 // dev
-const circularDependency = require('./webpack/plugins/dev/circular-dependency')
-const hotModuleReplacement = require('./webpack/plugins/dev/hot-module-replacement')
-const notifier = require('./webpack/plugins/dev/notifier')
+const circularDependency = require('./webpack/plugins/circular-dependency')
 
 const babel = require('./webpack/rules/babel')
 
@@ -26,9 +24,18 @@ module.exports = {
     errorDetails: true
   },
   devServer: {
-    hot: true,
+    // HMR is broken in our env and is tricky to enable
+    // https://webpack.js.org/guides/hot-module-replacement/#gotchas
+    hot: false,
+    client: {
+      // display compile errors in browser
+      overlay: {
+        errors: true,
+        warnings: false, // hide warning (there are circular deps I can't remove)
+      },
+    },
     port: 8080,
-    contentBase: paths.output(),
+    static: paths.output(),
     headers: {
       'Access-Control-Allow-Origin': '*'
     }
@@ -36,10 +43,9 @@ module.exports = {
   output: {
     path: paths.output(),
     publicPath: '/dist',
-    // webpack-dev-server requires to use the hash of the build
-    // it doesn't accept [contenthash] like in prod
-    filename: '[name].[hash].js', // this is for static entries declared in assets.json
-    chunkFilename: '[name].[hash].js' // this is for dynamic entries declared in modules/plugin.js
+    // use content hash in the name of generated file for proper caching
+    filename: '[name].[contenthash].js', // this is for static entries declared in assets.json
+    chunkFilename: '[name].[contenthash].js' // this is for dynamic entries declared in modules/plugin.js
   },
   module: {
     rules: [
@@ -55,16 +61,17 @@ module.exports = {
   ),
   plugins: [
     assetsFile('webpack-dev.json'),
-    hashedModuleIds(),
     vendorDistributionShortcut(),
     distributionShortcut(),
-
+    // this is required by swagger-ui-react
+    new webpack.ProvidePlugin({
+      Buffer: ['buffer', 'Buffer']
+    }),
     // dev tools
-    hotModuleReplacement(),
-    notifier(),
     circularDependency()
   ],
   optimization: {
+    moduleIds: 'deterministic',
     // bundle webpack runtime code into a single chunk file
     // it avoids having it embed in each generated chunk
     runtimeChunk: 'single',

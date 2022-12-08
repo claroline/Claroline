@@ -32,7 +32,7 @@ For the next steps of the installation, you'll need to go inside the Claroline d
 #### 2. install external dependencies
 
     composer install --no-dev --optimize-autoloader
-    npm install (for npm 7+ you need to pass --legacy-peer-deps)
+    npm install --legacy-peer-deps
 
 #### 3. build the application
 
