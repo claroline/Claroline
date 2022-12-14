@@ -177,6 +177,8 @@
 
 .data-card-description {
     margin-bottom: @data-card-padding;
+    margin-left: @data-card-padding;
+    margin-right: @data-card-padding;
     font-size: @data-card-content-font;
     line-height: @line-height-base;
     text-align: justify;
@@ -238,7 +240,7 @@
     }
 
     .data-card-description {
-        padding: 0 10px;
+        margin: 0 10px;
     }
 
     .data-card-footer {
@@ -349,11 +351,6 @@
         flex: 1 0 auto;
 
         .border-radius(0 0 @data-card-border-radius @data-card-border-radius);
-    }
-
-    .data-card-description {
-        margin-left: @data-card-padding;
-        margin-right: @data-card-padding;
     }
 }
 
