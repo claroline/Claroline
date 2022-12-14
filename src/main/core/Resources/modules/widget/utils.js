@@ -18,7 +18,7 @@ function computeStyles(widget) {
       styles.background = display.background
       break
     case 'image':
-      styles.background = `url(${asset(display.background.url)}) center center no-repeat`
+      styles.background = `url(${asset(display.background)}) center center no-repeat`
       break
   }
 
