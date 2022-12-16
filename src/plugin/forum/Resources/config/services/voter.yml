@@ -13,6 +13,6 @@ services:
                 arguments:
                   - '@service_container'
 
-    Claroline\ForumBundle\Security\MessageVoter: ~
+    Claroline\ForumBundle\Security\Voter\MessageVoter: ~
 
-    Claroline\ForumBundle\Security\SubjectVoter: ~
+    Claroline\ForumBundle\Security\Voter\SubjectVoter: ~
