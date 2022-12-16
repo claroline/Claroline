@@ -24,6 +24,7 @@ const defaultTab = createSelector(
     restrictions: {
       hidden: false
     },
+    workspace: context.data,
     parameters: {
       widgets: []
     }
