@@ -1,9 +1,11 @@
 <?php
 
-namespace Claroline\ForumBundle\Controller\API;
+namespace Claroline\ForumBundle\Controller;
 
 use Claroline\AppBundle\Annotations\ApiDoc;
+use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Controller\AbstractCrudController;
+use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\ForumBundle\Entity\Forum;
 use Claroline\ForumBundle\Entity\Message;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -11,15 +13,33 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * @Route("/forum_message")
  */
 class MessageController extends AbstractCrudController
 {
+    use PermissionCheckerTrait;
+
+    public function __construct(AuthorizationCheckerInterface $authorization)
+    {
+        $this->authorization = $authorization;
+    }
+
     public function getName(): string
     {
         return 'forum_message';
+    }
+
+    public function getClass(): string
+    {
+        return Message::class;
+    }
+
+    public function getIgnore(): array
+    {
+        return ['list', 'create'];
     }
 
     /**
@@ -32,32 +52,17 @@ class MessageController extends AbstractCrudController
      *          {"name": "id", "type": {"string", "integer"},  "description": "The message id or uuid"}
      *     }
      * )
-     *
-     * @param string $id
-     * @param string $class
-     *
-     * @return JsonResponse
      */
-    public function createComment(Message $message, Request $request)
+    public function createComment(Message $message, Request $request): JsonResponse
     {
-        $subject = $this->serializer->serialize($message->getSubject());
-        $message = $this->serializer->serialize($message);
-        $data = $this->decodeRequest($request);
-        $data['subject'] = $subject;
-        $data['parent'] = $message;
+        $comment = new Message();
+        $comment->setSubject($message->getSubject());
+        $comment->setParent($message);
 
-        $object = $this->crud->create(
-            Message::class,
-            $data,
-            $this->options['create']
-        );
-
-        if (is_array($object)) {
-            return new JsonResponse($object, 400);
-        }
+        $this->crud->create($comment, $this->decodeRequest($request), array_merge($this->options['create'], [Crud::THROW_EXCEPTION]));
 
         return new JsonResponse(
-            $this->serializer->serialize($object, $this->options['get']),
+            $this->serializer->serialize($comment, $this->options['get']),
             201
         );
     }
@@ -65,16 +70,13 @@ class MessageController extends AbstractCrudController
     /**
      * @Route("forum/{forum}/messages/list/flagged", name="apiv2_forum_message_flagged_list", methods={"GET"})
      * @EXT\ParamConverter("forum", class = "Claroline\ForumBundle\Entity\Forum",  options={"mapping": {"forum": "uuid"}})
-     *
-     * @param string $id
-     * @param string $class
-     *
-     * @return JsonResponse
      */
-    public function getFlaggedMessagesAction(Request $request, Forum $forum)
+    public function getFlaggedMessagesAction(Request $request, Forum $forum): JsonResponse
     {
+        $this->checkPermission('EDIT', $forum->getResourceNode(), [], true);
+
         return new JsonResponse(
-        $this->finder->search($this->getClass(), array_merge(
+            $this->finder->search($this->getClass(), array_merge(
                 $request->query->all(),
                 ['hiddenFilters' => ['flagged' => true, 'forum' => $forum->getUuid()]]
             ))
@@ -84,24 +86,16 @@ class MessageController extends AbstractCrudController
     /**
      * @Route("forum/{forum}/messages/list/blocked", name="apiv2_forum_message_blocked_list", methods={"GET"})
      * @EXT\ParamConverter("forum", class = "Claroline\ForumBundle\Entity\Forum",  options={"mapping": {"forum": "uuid"}})
-     *
-     * @param string $id
-     * @param string $class
-     *
-     * @return JsonResponse
      */
-    public function getBlockedMessagesAction(Request $request, Forum $forum)
+    public function getBlockedMessagesAction(Request $request, Forum $forum): JsonResponse
     {
+        $this->checkPermission('EDIT', $forum->getResourceNode(), [], true);
+
         return new JsonResponse(
-        $this->finder->search($this->getClass(), array_merge(
+            $this->finder->search($this->getClass(), array_merge(
                 $request->query->all(),
                 ['hiddenFilters' => ['moderation' => true, 'forum' => $forum->getUuid()]]
             ))
       );
-    }
-
-    public function getClass(): string
-    {
-        return Message::class;
     }
 }

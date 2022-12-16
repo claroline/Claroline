@@ -1,15 +1,18 @@
 services:
-    Claroline\ForumBundle\Controller\API\ForumController:
+    Claroline\ForumBundle\Controller\ForumController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
         public: true
         arguments:
-             - '@Claroline\ForumBundle\Manager\ForumManager'
+            - '@security.authorization_checker'
+            - '@Claroline\ForumBundle\Manager\ForumManager'
 
-    Claroline\ForumBundle\Controller\API\MessageController:
+    Claroline\ForumBundle\Controller\MessageController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
         public: true
+        arguments:
+            - '@security.authorization_checker'
 
-    Claroline\ForumBundle\Controller\API\SubjectController:
+    Claroline\ForumBundle\Controller\SubjectController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
         public: true
         arguments:

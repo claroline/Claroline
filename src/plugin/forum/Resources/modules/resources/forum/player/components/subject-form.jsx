@@ -197,12 +197,12 @@ const SubjectForm = withRouter(withModal(connect(
       })
     },
     createModeratedSubject(forumId) {
-      dispatch(formActions.saveForm(`${selectors.STORE_NAME}.subjects.form`, ['claroline_forum_api_forum_createsubject', {id: forumId}])).then(() => {
+      dispatch(formActions.saveForm(`${selectors.STORE_NAME}.subjects.form`, ['claroline_forum_forum_createsubject', {id: forumId}])).then(() => {
         ownProps.history.push(`${ownProps.path}/subjects`)
       })
     },
     createSubject(forumId, subjectId, path) {
-      dispatch(formActions.saveForm(`${selectors.STORE_NAME}.subjects.form`, ['claroline_forum_api_forum_createsubject', {id: forumId}])).then(() => {
+      dispatch(formActions.saveForm(`${selectors.STORE_NAME}.subjects.form`, ['claroline_forum_forum_createsubject', {id: forumId}])).then(() => {
         ownProps.history.push(`${path}/subjects/show/${subjectId}`)
       })
     }

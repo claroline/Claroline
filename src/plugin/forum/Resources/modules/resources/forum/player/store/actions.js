@@ -167,7 +167,7 @@ actions.unFlagSubject = (subject) => ({
 actions.createMessage = (subjectId, content, moderation) => (dispatch, getState) => {
   dispatch({
     [API_REQUEST]: {
-      url: ['claroline_forum_api_subject_createmessage', {id: subjectId}],
+      url: ['claroline_forum_subject_createmessage', {id: subjectId}],
       request: {
         method: 'POST',
         body: JSON.stringify({
@@ -192,7 +192,7 @@ actions.createMessage = (subjectId, content, moderation) => (dispatch, getState)
 actions.createComment = (messageId, comment, moderation) => (dispatch, getState) => {
   dispatch({
     [API_REQUEST]: {
-      url: ['claroline_forum_api_message_createcomment', {id: messageId}],
+      url: ['claroline_forum_message_createcomment', {id: messageId}],
       request: {
         method: 'POST',
         body: JSON.stringify({

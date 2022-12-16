@@ -101,7 +101,11 @@ class Message extends AbstractMessage
 
     public function getForum()
     {
-        return $this->getSubject()->getForum();
+        if ($this->getSubject()) {
+            return $this->getSubject()->getForum();
+        }
+
+        return null;
     }
 
     public function setModerated($moderated)

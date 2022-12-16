@@ -35,7 +35,7 @@ const ForumResource = props =>
         label: trans('receive_notifications', {}, 'forum'),
         displayed: !get(props.forum, 'meta.notified'),
         callback: () => props.notify(props.forum, props.currentUser)
-      },{
+      }, {
         type: CALLBACK_BUTTON,
         icon: 'fa fa-fw fa-envelope-o',
         label: trans('stop_receive_notifications', {}, 'forum'),
@@ -73,8 +73,9 @@ const ForumResource = props =>
       }, {
         path: '/subjects',
         component: Player
-      },  {
+      }, {
         path: '/moderation',
+        disabled: !get(props.forum, 'restrictions.moderator', false),
         render: () => {
           const component = <Moderation path={props.path} />
 
