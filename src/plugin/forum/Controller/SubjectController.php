@@ -1,8 +1,9 @@
 <?php
 
-namespace Claroline\ForumBundle\Controller\API;
+namespace Claroline\ForumBundle\Controller;
 
 use Claroline\AppBundle\Annotations\ApiDoc;
+use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\ForumBundle\Entity\Forum;
@@ -36,6 +37,11 @@ class SubjectController extends AbstractCrudController
         return Subject::class;
     }
 
+    public function getIgnore(): array
+    {
+        return ['list', 'create'];
+    }
+
     /**
      * @Route("/{id}/messages", methods={"GET"})
      * @Route("/forum/{forumId}/subjects/{id}/messages", name="apiv2_forum_subject_get_message", methods={"GET"})
@@ -54,10 +60,8 @@ class SubjectController extends AbstractCrudController
      *          {"name": "id", "type": {"string", "integer"},  "description": "The subject id or uuid"}
      *     }
      * )
-     *
-     * @param string $id
      */
-    public function getMessagesAction(Request $request, Subject $subject, ?Forum $forum = null): JsonResponse
+    public function listMessagesAction(Request $request, Subject $subject, ?Forum $forum = null): JsonResponse
     {
         if ($forum && ($forum->getId() !== $subject->getForum()->getId())) {
             throw new \Exception('This subject was not created in the forum.');
@@ -88,22 +92,13 @@ class SubjectController extends AbstractCrudController
     {
         $this->checkPermission('OPEN', $subject, [], true);
 
-        $subject = $this->serializer->serialize($subject);
-        $data = $this->decodeRequest($request);
-        $data['subject'] = $subject;
+        $message = new Message();
+        $message->setSubject($subject);
 
-        $object = $this->crud->create(
-            Message::class,
-            $data,
-            $this->options['create']
-        );
-
-        if (is_array($object)) {
-            return new JsonResponse($object, 400);
-        }
+        $this->crud->create($message, $this->decodeRequest($request), array_merge($this->options['create'], [Crud::THROW_EXCEPTION]));
 
         return new JsonResponse(
-            $this->serializer->serialize($object, $this->options['get']),
+            $this->serializer->serialize($message, $this->options['get']),
             201
         );
     }

@@ -22,7 +22,7 @@ const SubjectsList = props =>
     <ListData
       name={`${selectors.STORE_NAME}.subjects.list`}
       fetch={{
-        url: ['claroline_forum_api_forum_getsubjects', {id: props.forum.id}],
+        url: ['apiv2_forum_list_subjects', {id: props.forum.id}],
         autoload: true
       }}
       delete={{
