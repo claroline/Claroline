@@ -1,10 +1,12 @@
 <?php
 
-namespace Claroline\ForumBundle\Controller\API;
+namespace Claroline\ForumBundle\Controller;
 
 use Claroline\AppBundle\Annotations\ApiDoc;
+use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\ForumBundle\Entity\Forum;
 use Claroline\ForumBundle\Entity\Message;
 use Claroline\ForumBundle\Entity\Subject;
@@ -13,17 +15,23 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * @Route("/forum")
  */
 class ForumController extends AbstractCrudController
 {
+    use PermissionCheckerTrait;
+
     /* @var ForumManager */
     private $manager;
 
-    public function __construct(ForumManager $manager)
-    {
+    public function __construct(
+        AuthorizationCheckerInterface $authorization,
+        ForumManager $manager
+    ) {
+        $this->authorization = $authorization;
         $this->manager = $manager;
     }
 
@@ -38,8 +46,8 @@ class ForumController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/subjects", methods={"GET"})
-     *
+     * @Route("/{id}/subjects", name="apiv2_forum_list_subjects", methods={"GET"})
+     * @EXT\ParamConverter("forum", options={"mapping": {"id": "uuid"}})
      * @ApiDoc(
      *     description="Get the subjects of a forum",
      *     queryString={
@@ -52,15 +60,31 @@ class ForumController extends AbstractCrudController
      *          {"name": "id", "type": {"string", "integer"},  "description": "The forum id or uuid"}
      *     }
      * )
-     *
-     * @param string $id
      */
-    public function getSubjectsAction($id, Request $request): JsonResponse
+    public function listSubjectsAction(Forum $forum, Request $request): JsonResponse
     {
+        $this->checkPermission('OPEN', $forum->getResourceNode(), [], true);
+
         return new JsonResponse(
             $this->finder->search(Subject::class, array_merge(
                 $request->query->all(),
-                ['hiddenFilters' => ['forum' => [$id], 'moderation' => false]]
+                ['hiddenFilters' => ['forum' => [$forum->getUuid()], 'moderation' => false]]
+            ))
+        );
+    }
+
+    /**
+     * @Route("/{id}/messages", name="apiv2_forum_list_messages", methods={"GET"})
+     * @EXT\ParamConverter("forum", options={"mapping": {"id": "uuid"}})
+     */
+    public function listMessagesAction(Forum $forum, Request $request): JsonResponse
+    {
+        $this->checkPermission('OPEN', $forum->getResourceNode(), [], true);
+
+        return new JsonResponse(
+            $this->finder->search(Message::class, array_merge(
+                $request->query->all(),
+                ['hiddenFilters' => ['forum' => [$forum->getUuid()], 'moderation' => false]]
             ))
         );
     }
@@ -78,21 +102,13 @@ class ForumController extends AbstractCrudController
      */
     public function createSubjectAction(Forum $forum, Request $request): JsonResponse
     {
-        $serializedForum = $this->serializer->serialize($forum);
-        $data = $this->decodeRequest($request);
-        $data['forum'] = $serializedForum;
-        $object = $this->crud->create(
-            Subject::class,
-            $data,
-            $this->options['create']
-        );
+        $subject = new Subject();
+        $subject->setForum($forum);
 
-        if (is_array($object)) {
-            return new JsonResponse($object, 400);
-        }
+        $this->crud->create($subject, $this->decodeRequest($request), array_merge($this->options['create'], [Crud::THROW_EXCEPTION]));
 
         return new JsonResponse(
-            $this->serializer->serialize($object, $this->options['get']),
+            $this->serializer->serialize($subject, $this->options['get']),
             201
         );
     }
@@ -104,6 +120,8 @@ class ForumController extends AbstractCrudController
      */
     public function unlockAction(User $user, Forum $forum): JsonResponse
     {
+        $this->checkPermission('EDIT', $forum->getResourceNode(), [], true);
+
         // unlock user
         $validationUser = $this->manager->getValidationUser($user, $forum);
         $validationUser->setAccess(true);
@@ -140,8 +158,11 @@ class ForumController extends AbstractCrudController
      */
     public function lockAction(User $user, Forum $forum): JsonResponse
     {
+        $this->checkPermission('EDIT', $forum->getResourceNode(), [], true);
+
         $validationUser = $this->manager->getValidationUser($user, $forum);
         $validationUser->setAccess(false);
+
         $this->om->persist($validationUser);
         $this->om->flush();
 
@@ -155,8 +176,11 @@ class ForumController extends AbstractCrudController
      */
     public function banAction(User $user, Forum $forum): JsonResponse
     {
+        $this->checkPermission('EDIT', $forum->getResourceNode(), [], true);
+
         $validationUser = $this->manager->getValidationUser($user, $forum);
         $validationUser->setBanned(true);
+
         $this->om->persist($validationUser);
         $this->om->flush();
 
@@ -170,6 +194,8 @@ class ForumController extends AbstractCrudController
      */
     public function unbanAction(User $user, Forum $forum): JsonResponse
     {
+        $this->checkPermission('EDIT', $forum->getResourceNode(), [], true);
+
         $validationUser = $this->manager->getValidationUser($user, $forum);
         $validationUser->setBanned(false);
         $this->om->persist($validationUser);
@@ -185,6 +211,8 @@ class ForumController extends AbstractCrudController
      */
     public function notifyAction(User $user, Forum $forum): JsonResponse
     {
+        $this->checkPermission('OPEN', $forum->getResourceNode(), [], true);
+
         $validationUser = $this->manager->getValidationUser($user, $forum);
         $validationUser->setNotified(true);
         $this->om->persist($validationUser);
@@ -200,6 +228,8 @@ class ForumController extends AbstractCrudController
      */
     public function unnotifyAction(User $user, Forum $forum): JsonResponse
     {
+        $this->checkPermission('OPEN', $forum->getResourceNode(), [], true);
+
         $validationUser = $this->manager->getValidationUser($user, $forum);
         $validationUser->setNotified(false);
         $this->om->persist($validationUser);

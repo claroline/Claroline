@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\ForumBundle\Security;
+namespace Claroline\ForumBundle\Security\Voter;
 
 use Claroline\AppBundle\Security\Voter\AbstractVoter;
 use Claroline\CoreBundle\Entity\User;
@@ -19,13 +19,15 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class SubjectVoter extends AbstractVoter
 {
+    const POST = 'POST';
+
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options): int
     {
         switch ($attributes[0]) {
             case self::OPEN:
                 return $this->checkOpen($object);
             case self::CREATE:
-                return $this->checkCreate($object, $token);
+                return $this->checkCreate($object);
             case self::EDIT:
             case self::DELETE:
                 return $this->checkEdit($object, $token);
@@ -45,14 +47,12 @@ class SubjectVoter extends AbstractVoter
         return VoterInterface::ACCESS_DENIED;
     }
 
-    private function checkCreate(Subject $subject, TokenInterface $token): int
+    private function checkCreate(Subject $subject): int
     {
         $forum = $subject->getForum();
 
-        if ($this->isGranted('OPEN', $forum->getResourceNode())) {
-            if ($token->getUser() instanceof User) {
-                return VoterInterface::ACCESS_GRANTED;
-            }
+        if ($this->isGranted(self::POST, $forum->getResourceNode())) {
+            return VoterInterface::ACCESS_GRANTED;
         }
 
         return VoterInterface::ACCESS_DENIED;
@@ -80,6 +80,6 @@ class SubjectVoter extends AbstractVoter
 
     public function getSupportedActions(): array
     {
-        return [self::CREATE, self::EDIT, self::DELETE];
+        return [self::OPEN, self::CREATE, self::EDIT, self::DELETE, self::POST];
     }
 }

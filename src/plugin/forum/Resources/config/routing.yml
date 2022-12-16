@@ -1,5 +1,5 @@
 claro_forum_api:
-    resource: "@ClarolineForumBundle/Controller/API"
+    resource: "@ClarolineForumBundle/Controller"
     prefix: apiv2
     type: api
     options:
