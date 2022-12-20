@@ -32,7 +32,7 @@ const CourseSessions = (props) =>
       url={['apiv2_cursus_course_list_sessions', {id: props.course.id}]}
       delete={{
         url: ['apiv2_cursus_session_delete_bulk'],
-        displayed: (row) => hasPermission('delete', row)
+        displayed: (rows) => -1 !== rows.findIndex(row => hasPermission('delete', row))
       }}
       definition={[
         {
