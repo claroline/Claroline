@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Controller;
 
-use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
@@ -95,10 +94,8 @@ class ResourceController
      *
      * @param int|string $id       - the id or slug of the target node (we don't use ParamConverter to support ID and UUID)
      * @param int        $embedded
-     *
-     * @return JsonResponse
      */
-    public function openAction($id, $embedded = 0)
+    public function openAction($id, $embedded = 0): JsonResponse
     {
         /** @var ResourceNode $resourceNode */
         $resourceNode = $this->om->getRepository(ResourceNode::class)->findOneByUuidOrSlug($id);
@@ -140,7 +137,7 @@ class ResourceController
 
         return new JsonResponse([
             'managed' => $isManager,
-            'resourceNode' => $this->serializer->serialize($resourceNode, [Options::SERIALIZE_MINIMAL]),
+            'resourceNode' => $this->serializer->serialize($resourceNode),
             'accessErrors' => $accessErrors,
         ], $statusCode);
     }
