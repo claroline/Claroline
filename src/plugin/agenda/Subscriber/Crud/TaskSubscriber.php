@@ -14,7 +14,7 @@ class TaskSubscriber extends AbstractPlannedSubscriber
         return Task::class;
     }
 
-    public function preCreate(CreateEvent $event)
+    public function preCreate(CreateEvent $event): void
     {
         parent::preCreate($event);
 

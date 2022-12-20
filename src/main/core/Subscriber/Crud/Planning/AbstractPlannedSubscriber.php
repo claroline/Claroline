@@ -28,22 +28,22 @@ abstract class AbstractPlannedSubscriber implements EventSubscriberInterface
     /** @var PlanningManager */
     protected $planningManager;
 
-    public function setTokenStorage(TokenStorageInterface $tokenStorage)
+    public function setTokenStorage(TokenStorageInterface $tokenStorage): void
     {
         $this->tokenStorage = $tokenStorage;
     }
 
-    public function setObjectManager(ObjectManager $om)
+    public function setObjectManager(ObjectManager $om): void
     {
         $this->om = $om;
     }
 
-    public function setFileManager(FileManager $fileManager)
+    public function setFileManager(FileManager $fileManager): void
     {
         $this->fileManager = $fileManager;
     }
 
-    public function setPlanningManager(PlanningManager $planningManager)
+    public function setPlanningManager(PlanningManager $planningManager): void
     {
         $this->planningManager = $planningManager;
     }
@@ -57,12 +57,13 @@ abstract class AbstractPlannedSubscriber implements EventSubscriberInterface
     {
         return [
             Crud::getEventName('create', 'pre', static::getPlannedClass()) => 'preCreate',
+            Crud::getEventName('create', 'post', static::getPlannedClass()) => 'postCreate',
             Crud::getEventName('update', 'pre', static::getPlannedClass()) => 'preUpdate',
             Crud::getEventName('delete', 'post', static::getPlannedClass()) => 'postDelete',
         ];
     }
 
-    public function preCreate(CreateEvent $event)
+    public function preCreate(CreateEvent $event): void
     {
         /** @var AbstractPlanned $object */
         $object = $event->getObject();
@@ -84,7 +85,21 @@ abstract class AbstractPlannedSubscriber implements EventSubscriberInterface
         }
     }
 
-    public function preUpdate(UpdateEvent $event)
+    public function postCreate(CreateEvent $event): void
+    {
+        /** @var AbstractPlanned $object */
+        $object = $event->getObject();
+
+        if ($object->getPoster()) {
+            $this->fileManager->linkFile(PlannedObject::class, $object->getUuid(), $object->getPoster());
+        }
+
+        if ($object->getThumbnail()) {
+            $this->fileManager->linkFile(PlannedObject::class, $object->getUuid(), $object->getThumbnail());
+        }
+    }
+
+    public function preUpdate(UpdateEvent $event): void
     {
         /** @var AbstractPlanned $object */
         $object = $event->getObject();
@@ -129,7 +144,28 @@ abstract class AbstractPlannedSubscriber implements EventSubscriberInterface
         }
     }
 
-    public function postDelete(DeleteEvent $event)
+    public function postUpdate(UpdateEvent $event): void
+    {
+        /** @var AbstractPlanned $object */
+        $object = $event->getObject();
+        $oldData = $event->getOldData();
+
+        $this->fileManager->updateFile(
+            PlannedObject::class,
+            $object->getUuid(),
+            $object->getPoster(),
+            !empty($oldData['poster']) ? $oldData['poster'] : null
+        );
+
+        $this->fileManager->updateFile(
+            PlannedObject::class,
+            $object->getUuid(),
+            $object->getThumbnail(),
+            !empty($oldData['thumbnail']) ? $oldData['thumbnail'] : null
+        );
+    }
+
+    public function postDelete(DeleteEvent $event): void
     {
         /** @var AbstractPlanned $object */
         $object = $event->getObject();
