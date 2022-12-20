@@ -14,7 +14,7 @@ class EventSubscriber extends AbstractPlannedSubscriber
         return Event::class;
     }
 
-    public function preCreate(CreateEvent $event)
+    public function preCreate(CreateEvent $event): void
     {
         parent::preCreate($event);
 
