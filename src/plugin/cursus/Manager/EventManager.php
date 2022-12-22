@@ -221,7 +221,9 @@ class EventManager
             }
         }
 
-        $this->sendSessionEventInvitation($event, $users);
+        if ($event->getRegistrationMail()) {
+            $this->sendSessionEventInvitation($event, $users);
+        }
 
         $this->om->endFlushSuite();
 
