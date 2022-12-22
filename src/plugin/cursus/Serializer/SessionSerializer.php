@@ -97,6 +97,9 @@ class SessionSerializer
                 'code' => $session->getCode(),
                 'name' => $session->getName(),
                 'thumbnail' => $session->getThumbnail(),
+                'restrictions' => [
+                    'dates' => DateRangeNormalizer::normalize($session->getStartDate(), $session->getEndDate()),
+                ],
             ];
         }
 
