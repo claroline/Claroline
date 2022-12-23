@@ -1,0 +1,13 @@
+services:
+    Claroline\PeerTubeBundle\Subscriber\PluginSubscriber:
+        tags: [ kernel.event_subscriber ]
+        arguments:
+            - '@twig'
+
+    Claroline\PeerTubeBundle\Subscriber\Resource\VideoSubscriber:
+        tags: [ kernel.event_subscriber ]
+        arguments:
+            - '@security.token_storage'
+            - '@twig'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\PeerTubeBundle\Manager\EvaluationManager'

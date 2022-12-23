@@ -154,6 +154,7 @@
             "Claroline\\BigBlueButtonBundle\\": "src/integration/big-blue-button",
             "Claroline\\DocumentationBundle\\": "src/plugin/documentation",
             "Claroline\\LogBundle\\": "src/main/log",
+            "Claroline\\PeerTubeBundle\\": "src/integration/peertube",
             "Claroline\\SchedulerBundle\\": "src/main/scheduler",
             "Claroline\\TransferBundle\\": "src/main/transfer"
         }

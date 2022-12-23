@@ -10,6 +10,11 @@ final class ResourceEvents
     public const RESOURCE_OPEN = 'resource_load';
 
     /**
+     * @Event("Claroline\CoreBundle\Event\Resource\EmbedResourceEvent")
+     */
+    public const EMBED = 'resource.embed';
+
+    /**
      * @Event("Claroline\CoreBundle\Event\Resource\CloseResourceEvent")
      */
     public const CLOSE = 'resource.close';

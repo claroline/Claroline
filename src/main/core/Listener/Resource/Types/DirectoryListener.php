@@ -28,6 +28,7 @@ use Claroline\CoreBundle\Manager\Resource\ResourceActionManager;
 use Claroline\CoreBundle\Manager\Resource\RightsManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Security\Collection\ResourceCollection;
+use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -165,17 +166,43 @@ class DirectoryListener
 
     private function createResource(ResourceNode $parent, array $nodeData, ?array $resourceData = [], ?array $options = [])
     {
-        /** @var ResourceNode $resourceNode */
-        $resourceNode = $this->crud->create(ResourceNode::class, $nodeData, $options);
-        $resourceNode->setParent($parent);
-        $resourceNode->setWorkspace($parent->getWorkspace());
+        try {
+            /** @var ResourceNode $resourceNode */
+            $resourceNode = $this->crud->create(ResourceNode::class, $nodeData, $options);
+            $resourceNode->setParent($parent);
+            $resourceNode->setWorkspace($parent->getWorkspace());
+        } catch (InvalidDataException $e) {
+            // for resource creation we submit the resourceNode and resource data at once
+            // we need to update the errors path for correct rendering in form
+            $errors = array_map(function (array $error) {
+                return [
+                    'path' => 'resourceNode/'.ltrim($error['path'], '/'),
+                    'message' => $error['message'],
+                ];
+            }, $e->getErrors());
+
+            throw new InvalidDataException(sprintf('%s is not valid', ResourceNode::class), $errors);
+        }
 
         // initialize custom resource Entity
         $resourceClass = $resourceNode->getResourceType()->getClass();
 
-        /** @var AbstractResource $resource */
-        $resource = $this->crud->create($resourceClass, $resourceData, $options);
-        $resource->setResourceNode($resourceNode);
+        try {
+            /** @var AbstractResource $resource */
+            $resource = $this->crud->create($resourceClass, $resourceData, $options);
+            $resource->setResourceNode($resourceNode);
+        } catch (InvalidDataException $e) {
+            // for resource creation we submit the resourceNode and resource data at once
+            // we need to update the errors path for correct rendering in form
+            $errors = array_map(function (array $error) {
+                return [
+                    'path' => 'resource/'.ltrim($error['path'], '/'),
+                    'message' => $error['message'],
+                ];
+            }, $e->getErrors());
+
+            throw new InvalidDataException(sprintf('%s is not valid', $resourceClass), $errors);
+        }
 
         if (!empty($nodeData['rights'])) {
             foreach ($nodeData['rights'] as $rights) {

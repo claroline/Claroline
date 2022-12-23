@@ -39,15 +39,10 @@ class LoadResourceEvent extends Event implements MandatoryEventInterface, DataCo
     /** @var User */
     private $user;
 
-    /**
-     * LoadResourceEvent constructor.
-     *
-     * @param bool $embedded
-     */
     public function __construct(
         AbstractResource $resource,
         ?User $user = null,
-        $embedded = false
+        ?bool $embedded = false
     ) {
         $this->resource = $resource;
         $this->user = $user;
@@ -61,25 +56,21 @@ class LoadResourceEvent extends Event implements MandatoryEventInterface, DataCo
 
     /**
      * Gets the loaded resource Entity.
-     *
-     * @return AbstractResource
      */
-    public function getResource()
+    public function getResource(): AbstractResource
     {
         return $this->resource;
     }
 
     /**
      * Gets the loaded resource ResourceNode entity.
-     *
-     * @return ResourceNode
      */
-    public function getResourceNode()
+    public function getResourceNode(): ResourceNode
     {
         return $this->resource->getResourceNode();
     }
 
-    public function isEmbedded()
+    public function isEmbedded(): bool
     {
         return $this->embedded;
     }
@@ -88,23 +79,23 @@ class LoadResourceEvent extends Event implements MandatoryEventInterface, DataCo
      * Sets data to return in the api.
      * NB. It MUST contain serialized structures.
      */
-    public function setData(array $data)
+    public function setData(array $data): void
     {
         $this->data = $data;
         $this->populated = true;
     }
 
-    public function getData()
+    public function getData(): ?array
     {
         return $this->data;
     }
 
-    public function isPopulated()
+    public function isPopulated(): bool
     {
         return $this->populated;
     }
 
-    public function getMessage(TranslatorInterface $translator)
+    public function getMessage(TranslatorInterface $translator): string
     {
         return $translator->trans('resourceOpen', ['userName' => $this->user->getUsername(), 'resourceName' => $this->getResourceNode()->getName()], 'resource');
     }

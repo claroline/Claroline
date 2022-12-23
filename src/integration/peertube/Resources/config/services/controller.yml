@@ -1,0 +1,7 @@
+services:
+    Claroline\PeerTubeBundle\Controller\VideoController:
+        public: true # because controller
+        parent: Claroline\AppBundle\Controller\AbstractCrudController
+        arguments:
+            - '@security.authorization_checker'
+            - '@Claroline\PeerTubeBundle\Manager\EvaluationManager'

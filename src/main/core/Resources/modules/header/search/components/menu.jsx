@@ -85,7 +85,7 @@ class SearchMenu extends Component {
           }
 
           <Menu
-            className="app-header-dropdown dropdown-menu dropdown-menu-full"
+            className="app-header-dropdown dropdown-menu dropdown-menu-full data-cards-stacked"
             open={menuOpened}
             onClose={this.reset}
           >

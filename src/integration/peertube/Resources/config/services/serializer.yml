@@ -1,0 +1,5 @@
+services:
+    Claroline\PeerTubeBundle\Serializer\VideoSerializer:
+        tags: [claroline.serializer]
+        arguments:
+            - '@Claroline\PeerTubeBundle\Manager\PeerTubeManager'
