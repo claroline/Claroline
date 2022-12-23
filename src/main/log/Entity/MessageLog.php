@@ -6,7 +6,7 @@ use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass=Claroline\LogBundle\Repository\MessageLogRepository)
  * @ORM\Table(name="claro_log_message")
  */
 class MessageLog extends AbstractLog

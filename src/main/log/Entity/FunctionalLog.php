@@ -8,11 +8,13 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass=Claroline\LogBundle\Repository\FunctionnalLogRepository)
  * @ORM\Table(name="claro_log_functionnal")
  */
 class FunctionalLog extends AbstractLog
 {
+    public const ARCHIVE_TABLE_PREFIX = 'claro_log_functional_archive';
+
     /**
      * @var User
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
