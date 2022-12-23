@@ -25,6 +25,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\CatalogEvents\ResourceEvents;
 use Claroline\CoreBundle\Event\Resource\DownloadResourceEvent;
+use Claroline\CoreBundle\Event\Resource\EmbedResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Exception\ResourceNotFoundException;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
@@ -433,6 +434,26 @@ class ResourceManager implements LoggerAwareInterface
                 ResourceEvents::RESOURCE_OPEN,
                 LoadResourceEvent::class,
                 [$resource, $this->security->getUser(), $embedded]
+            );
+
+            return $event->getData();
+        }
+
+        throw new ResourceNotFoundException();
+    }
+
+    /**
+     * Embed a resource inside a rich text.
+     */
+    public function embed(ResourceNode $resourceNode)
+    {
+        $resource = $this->getResourceFromNode($resourceNode);
+        if ($resource) {
+            /** @var EmbedResourceEvent $event */
+            $event = $this->dispatcher->dispatch(
+                ResourceEvents::EMBED,
+                EmbedResourceEvent::class,
+                [$resource]
             );
 
             return $event->getData();

@@ -1,0 +1,6 @@
+plugin:
+    resources:
+        - name: peertube_video
+          class: Claroline\PeerTubeBundle\Entity\Video
+          tags: [ content ]
+          exportable: true

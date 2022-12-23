@@ -116,12 +116,14 @@ services:
     Claroline\CoreBundle\Listener\Resource\ResourceListener:
         arguments:
             - '@security.token_storage'
+            - '@twig'
             - '@Claroline\AppBundle\API\Crud'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\CoreBundle\Manager\ResourceManager'
             - '@Claroline\CoreBundle\Manager\Resource\ResourceLifecycleManager'
         tags:
             - { name: kernel.event_listener, event: resource_load, method: load }
+            - { name: kernel.event_listener, event: resource.embed, method: embed }
             - { name: kernel.event_listener, event: resource.create, method: create }
             - { name: kernel.event_listener, event: resource.about, method: about }
             - { name: kernel.event_listener, event: resource.configure, method: configure }

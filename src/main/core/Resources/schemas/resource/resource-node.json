@@ -17,6 +17,7 @@
     }
   },
   "claroline": {
+    "requiredAtCreation": ["name"],
     "ids":  ["id", "name"]
   }
 }

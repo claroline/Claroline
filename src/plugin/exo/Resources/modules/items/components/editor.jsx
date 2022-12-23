@@ -23,7 +23,7 @@ const ItemEditor = props => {
     }), {})
   }
 
-  const CustomSection = createElement(props.definition.components.editor, {
+  const CustomSection = () => createElement(props.definition.components.editor, {
     formName: props.formName,
     path: props.path,
     disabled: props.disabled,
@@ -41,7 +41,7 @@ const ItemEditor = props => {
       meta={props.meta}
       dataPart={props.path}
       disabled={props.disabled}
-      sections={[
+      definition={[
         {
           title: trans('general'),
           primary: true,

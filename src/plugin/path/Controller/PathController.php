@@ -55,6 +55,12 @@ class PathController extends AbstractCrudController
         return 'path';
     }
 
+    public function getIgnore(): array
+    {
+        // we only keep update method
+        return ['list', 'get', 'create', 'deleteBulk', 'copyBulk', 'exist', 'find'];
+    }
+
     /**
      * Update step progression for an user.
      *

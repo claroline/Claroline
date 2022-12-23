@@ -1,0 +1,9 @@
+services:
+    Claroline\PeerTubeBundle\Manager\PeerTubeManager:
+        arguments:
+            - '@Claroline\CoreBundle\Manager\CurlManager'
+
+    Claroline\PeerTubeBundle\Manager\EvaluationManager:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\EvaluationBundle\Manager\ResourceEvaluationManager'
