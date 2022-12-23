@@ -130,7 +130,11 @@
     //fill: rgba(0, 0, 0, 0.5) !important;
     //stroke: rgba(0, 0, 0, 0.5) !important;
 
-    img {
+    .theme-icon {
+        flex: 1;
+    }
+
+    img, svg {
         max-width: 100%;
         max-height: 100%;
     }
@@ -278,7 +282,8 @@
         height: @icon-size;
         margin: @icon-spacer;
 
-        .theme-icon {
+        .theme-icon,
+        .theme-icon * {
             max-width: floor(@icon-size / 2);
             max-height: floor(@icon-size / 2);
         }

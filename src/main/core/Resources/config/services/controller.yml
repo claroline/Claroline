@@ -205,7 +205,6 @@ services:
     Claroline\CoreBundle\Controller\ResourceController:
         arguments:
             - '@security.token_storage'
-            - '@twig'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\CoreBundle\Manager\ResourceManager'
             - '@Claroline\CoreBundle\Manager\Resource\ResourceActionManager'

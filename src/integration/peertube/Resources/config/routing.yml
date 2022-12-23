@@ -1,0 +1,6 @@
+claro_peertube_video:
+    resource: "@ClarolinePeerTubeBundle/Controller/"
+    prefix: apiv2
+    type: api
+    options:
+        expose: true

@@ -6,38 +6,40 @@ use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Event\Resource\EmbedResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\ResourceActionEvent;
 use Claroline\CoreBundle\Manager\Resource\ResourceLifecycleManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Twig\Environment;
 
 class ResourceListener
 {
     /** @var TokenStorageInterface */
     private $tokenStorage;
-
+    /** @var Environment */
+    private $templating;
     /** @var Crud */
     private $crud;
-
     /** @var SerializerProvider */
     private $serializer;
-
     /** @var ResourceManager */
     private $manager;
-
     /** @var ResourceLifecycleManager */
     private $lifecycleManager;
 
     public function __construct(
         TokenStorageInterface $tokenStorage,
+        Environment $templating,
         Crud $crud,
         SerializerProvider $serializer,
         ResourceManager $manager,
         ResourceLifecycleManager $lifecycleManager
     ) {
         $this->tokenStorage = $tokenStorage;
+        $this->templating = $templating;
         $this->crud = $crud;
         $this->serializer = $serializer;
         $this->manager = $manager;
@@ -58,6 +60,28 @@ class ResourceListener
         $subEvent = $this->lifecycleManager->load($resourceNode);
 
         $event->setData(array_merge($event->getData(), $subEvent->getData()));
+    }
+
+    public function embed(EmbedResourceEvent $event)
+    {
+        $resourceNode = $event->getResourceNode();
+
+        // propagate event to resource type
+        $subEvent = $this->lifecycleManager->embed($resourceNode);
+        if ($subEvent->isPopulated()) {
+            $event->setData($subEvent->getData());
+        } else {
+            $mimeType = explode('/', $resourceNode->getMimeType());
+
+            $view = 'default';
+            if ($mimeType[0] && in_array($mimeType[0], ['video', 'audio', 'image'])) {
+                $view = $mimeType[0];
+            }
+
+            $event->setData($this->templating->render("@ClarolineCore/resource/embed/{$view}.html.twig", [
+                'resource' => $event->getResource(),
+            ]));
+        }
     }
 
     public function create(ResourceActionEvent $event)

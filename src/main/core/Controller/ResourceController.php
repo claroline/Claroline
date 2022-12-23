@@ -33,7 +33,6 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Twig\Environment;
 
 /**
  * Manages platform resources.
@@ -49,8 +48,6 @@ class ResourceController
     private $tokenStorage;
     /** @var AuthorizationCheckerInterface */
     private $authorization;
-    /** @var Environment */
-    private $templating;
     /** @var SerializerProvider */
     private $serializer;
     /** @var ResourceManager */
@@ -66,7 +63,6 @@ class ResourceController
 
     public function __construct(
         TokenStorageInterface $tokenStorage,
-        Environment $templating,
         SerializerProvider $serializer,
         ResourceManager $manager,
         ResourceActionManager $actionManager,
@@ -76,7 +72,6 @@ class ResourceController
         RoutingHelper $routing
     ) {
         $this->tokenStorage = $tokenStorage;
-        $this->templating = $templating;
         $this->serializer = $serializer;
         $this->manager = $manager;
         $this->actionManager = $actionManager;
@@ -150,18 +145,7 @@ class ResourceController
      */
     public function embedAction(ResourceNode $resourceNode): Response
     {
-        $mimeType = explode('/', $resourceNode->getMimeType());
-
-        $view = 'default';
-        if ($mimeType[0] && in_array($mimeType[0], ['video', 'audio', 'image'])) {
-            $view = $mimeType[0];
-        }
-
-        return new Response(
-            $this->templating->render("@ClarolineCore/resource/embed/{$view}.html.twig", [
-                'resource' => $this->manager->getResourceFromNode($resourceNode),
-            ])
-        );
+        return new Response($this->manager->embed($resourceNode));
     }
 
     /**

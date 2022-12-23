@@ -12,6 +12,7 @@ use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\CreateResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DownloadResourceEvent;
+use Claroline\CoreBundle\Event\Resource\EmbedResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\EvaluationBundle\Event\ResourceEvaluationEvent;
 
@@ -42,6 +43,18 @@ class ResourceLifecycleManager
         $event = $this->dispatcher->dispatch(
             static::eventName('load', $resourceNode),
             LoadResourceEvent::class,
+            [$this->getResourceFromNode($resourceNode)]
+        );
+
+        return $event;
+    }
+
+    public function embed(ResourceNode $resourceNode)
+    {
+        /** @var EmbedResourceEvent $event */
+        $event = $this->dispatcher->dispatch(
+            static::eventName('embed', $resourceNode),
+            EmbedResourceEvent::class,
             [$this->getResourceFromNode($resourceNode)]
         );
 
