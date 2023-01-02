@@ -52,7 +52,7 @@ class TransferManager
         SerializerProvider $serializer,
         Crud $crud,
         ExportProvider $exporter,
-        importProvider $importer,
+        ImportProvider $importer,
         FileManager $fileManager,
         string $filesDir,
         string $logDir
