@@ -65,6 +65,7 @@ class ScheduledTaskSerializer
             'executionType' => $scheduledTask->getExecutionType(),
             'scheduledDate' => DateNormalizer::normalize($scheduledTask->getScheduledDate()),
             'executionDate' => DateNormalizer::normalize($scheduledTask->getExecutionDate()),
+            'executionInterval' => $scheduledTask->getExecutionInterval(),
             'endDate' => DateNormalizer::normalize($scheduledTask->getEndDate()),
             'status' => $scheduledTask->getStatus(),
             'parentId' => $scheduledTask->getParentId(),
