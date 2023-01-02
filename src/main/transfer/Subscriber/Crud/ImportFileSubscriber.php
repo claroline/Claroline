@@ -5,6 +5,7 @@ namespace Claroline\TransferBundle\Subscriber\Crud;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
+use Claroline\AppBundle\Event\Crud\UpdateEvent;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\SchedulerBundle\Entity\ScheduledTask;
@@ -41,6 +42,7 @@ class ImportFileSubscriber implements EventSubscriberInterface
         return [
             Crud::getEventName('create', 'pre', ImportFile::class) => 'preCreate',
             Crud::getEventName('create', 'post', ImportFile::class) => 'postCreate',
+            Crud::getEventName('update', 'post', ImportFile::class) => 'postUpdate',
             Crud::getEventName('delete', 'post', ImportFile::class) => 'postDelete',
         ];
     }
@@ -73,6 +75,35 @@ class ImportFileSubscriber implements EventSubscriberInterface
             'action' => 'import',
             'parentId' => $object->getUuid(),
         ]), [Crud::THROW_EXCEPTION]);
+    }
+
+    public function postUpdate(UpdateEvent $event)
+    {
+        /** @var ImportFile $object */
+        $object = $event->getObject();
+        $data = $event->getData();
+
+        $scheduler = $this->om->getRepository(ScheduledTask::class)->findOneBy(['parentId' => $object->getUuid()]);
+        if (empty($data['scheduler']) && empty($scheduler)) {
+            // no scheduled task
+            return;
+        }
+
+        if (empty($data['scheduler'])) {
+            if (!empty($scheduler)) {
+                $this->crud->delete($scheduler);
+            }
+        } else {
+            if (!empty($scheduler)) {
+                $this->crud->update($scheduler, $data['scheduler'], [Crud::NO_PERMISSIONS, Crud::THROW_EXCEPTION]);
+            } else {
+                $this->crud->create(ScheduledTask::class, array_merge($data['scheduler'], [
+                    'name' => $object->getAction(),
+                    'action' => 'import',
+                    'parentId' => $object->getUuid(),
+                ]), [Crud::NO_PERMISSIONS, Crud::THROW_EXCEPTION]);
+            }
+        }
     }
 
     public function postDelete(DeleteEvent $event)
