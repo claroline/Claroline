@@ -23,9 +23,9 @@ class ScheduledTaskRepository extends EntityRepository
                 SELECT t
                 FROM Claroline\SchedulerBundle\Entity\ScheduledTask t
                 WHERE (
-                    (t.executionType = ":once" AND t.executionDate IS NULL)) 
+                    (t.executionType = :once AND t.executionDate IS NULL) 
                     OR 
-                    ((t.executionType = ":recurring" AND (t.endDate IS NULL OR t.endDate < :now))
+                    (t.executionType = :recurring AND (t.endDate IS NULL OR t.endDate < :now))
                 )  
                 AND t.scheduledDate < :now
             ')
