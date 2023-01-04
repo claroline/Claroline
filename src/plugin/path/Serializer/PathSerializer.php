@@ -2,8 +2,11 @@
 
 namespace Innova\PathBundle\Serializer;
 
-use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
+use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\Step;
 
@@ -11,13 +14,30 @@ class PathSerializer
 {
     use SerializerTrait;
 
+    /** @var ObjectManager */
+    private $om;
+    /** @var ResourceNodeSerializer */
+    private $resourceNodeSerializer;
     /** @var StepSerializer */
     private $stepSerializer;
 
+    private $resourceNodeRepo;
+
     public function __construct(
+        ObjectManager $om,
+        ResourceNodeSerializer $resourceSerializer,
         StepSerializer $stepSerializer
     ) {
+        $this->om = $om;
+        $this->resourceNodeSerializer = $resourceSerializer;
         $this->stepSerializer = $stepSerializer;
+
+        $this->resourceNodeRepo = $om->getRepository(ResourceNode::class);
+    }
+
+    public function getClass(): string
+    {
+        return Path::class;
     }
 
     public function getSchema(): string
@@ -45,6 +65,7 @@ class PathSerializer
                 'manualProgressionAllowed' => $path->isManualProgressionAllowed(),
                 'showScore' => $path->getShowScore(),
             ],
+            'overviewResource' => $path->getOverviewResource() ? $this->resourceNodeSerializer->serialize($path->getOverviewResource(), [SerializerInterface::SERIALIZE_MINIMAL]) : null,
             'opening' => [
                 'secondaryResources' => $path->getSecondaryResourcesTarget(),
             ],
@@ -60,7 +81,7 @@ class PathSerializer
 
     public function deserialize(array $data, Path $path, array $options = []): Path
     {
-        if (!in_array(Options::REFRESH_UUID, $options)) {
+        if (!in_array(SerializerInterface::REFRESH_UUID, $options)) {
             $this->sipe('id', 'setUuid', $data, $path);
         } else {
             $path->refreshUuid();
@@ -78,6 +99,15 @@ class PathSerializer
 
         $this->sipe('score.success', 'setSuccessScore', $data, $path);
         $this->sipe('score.total', 'setScoreTotal', $data, $path);
+
+        if (array_key_exists('overviewResource', $data)) {
+            $overviewResource = null;
+            if (!empty($data['overviewResource'])) {
+                $overviewResource = $this->resourceNodeRepo->findOneBy(['uuid' => $data['overviewResource']['id']]);
+            }
+
+            $path->setOverviewResource($overviewResource);
+        }
 
         if (isset($data['steps'])) {
             $this->deserializeSteps($data['steps'] ?? [], $path, $options);

@@ -2,7 +2,6 @@
 
 namespace Innova\PathBundle\Serializer;
 
-use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
@@ -89,7 +88,7 @@ class StepSerializer
 
     public function deserialize(Step $step, array $data, array $options = []): Step
     {
-        if (!in_array(Options::REFRESH_UUID, $options)) {
+        if (!in_array(SerializerInterface::REFRESH_UUID, $options)) {
             $this->sipe('id', 'setUuid', $data, $step);
         } else {
             $step->refreshUuid();

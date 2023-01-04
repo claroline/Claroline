@@ -47,6 +47,12 @@ const Path = {
       manualProgressionAllowed: T.bool,
       showScore: T.bool
     }).isRequired,
+    overviewResource: T.shape({
+      id: T.string.isRequired,
+      meta: T.shape({
+        type: T.string.isRequired
+      })
+    }),
     score: T.shape({
       success: T.number,
       total: T.number
