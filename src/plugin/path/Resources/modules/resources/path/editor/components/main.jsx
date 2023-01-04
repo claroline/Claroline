@@ -112,6 +112,7 @@ class EditorMain extends Component {
                     basePath={this.props.basePath}
                     path={this.props.path}
                     workspace={this.props.workspace}
+                    resourceParent={this.props.resourceParent}
                   />
                 )
 

@@ -3,6 +3,7 @@
 namespace Innova\PathBundle\Entity\Path;
 
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Innova\PathBundle\Entity\Step;
@@ -25,14 +26,7 @@ class Path extends AbstractResource
      *     "order" = "ASC"
      * })
      */
-    protected $steps;
-
-    /**
-     * @var bool
-     *
-     * @ORM\Column(name="modified", type="boolean")
-     */
-    protected $modified = false;
+    private $steps;
 
     /**
      * Numbering of the steps.
@@ -41,7 +35,7 @@ class Path extends AbstractResource
      *
      * @ORM\Column
      */
-    protected $numbering = 'none';
+    private $numbering = 'none';
 
     /**
      * Description of the path.
@@ -50,7 +44,7 @@ class Path extends AbstractResource
      *
      * @ORM\Column(name="description", type="text", nullable=true)
      */
-    protected $description;
+    private $description;
 
     /**
      * Is it possible for the user to manually set the progression.
@@ -59,7 +53,7 @@ class Path extends AbstractResource
      *
      * @ORM\Column(name="manual_progression_allowed", type="boolean")
      */
-    protected $manualProgressionAllowed = true;
+    private $manualProgressionAllowed = true;
 
     /**
      * Show overview to users or directly start the path.
@@ -69,6 +63,14 @@ class Path extends AbstractResource
      * @var bool
      */
     private $showOverview = true;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
+     * @ORM\JoinColumn(name="resource_id", nullable=true, onDelete="SET NULL")
+     *
+     * @var ResourceNode
+     */
+    private $overviewResource;
 
     /**
      * Show an end page when the user has finished the path.
@@ -268,33 +270,6 @@ class Path extends AbstractResource
     }
 
     /**
-     * Gets all the path step in a flat array in correct order.
-     *
-     * @return Step[]
-     */
-    public function getOrderedSteps()
-    {
-        $flatten = [];
-
-        $roots = $this->getRootSteps();
-        foreach ($roots as $root) {
-            $flatten = array_merge($flatten, $this->getFlatSteps($root));
-        }
-
-        return $flatten;
-    }
-
-    private function getFlatSteps(Step $step)
-    {
-        $steps = [$step];
-        foreach ($step->getChildren() as $child) {
-            $steps = array_merge($steps, $this->getFlatSteps($child));
-        }
-
-        return $steps;
-    }
-
-    /**
      * Get root step of the path.
      *
      * @return Step[]
@@ -335,6 +310,16 @@ class Path extends AbstractResource
         return $this->showOverview;
     }
 
+    public function getOverviewResource(): ?ResourceNode
+    {
+        return $this->overviewResource;
+    }
+
+    public function setOverviewResource(?ResourceNode $overviewResource = null): void
+    {
+        $this->overviewResource = $overviewResource;
+    }
+
     /**
      * Get the opening target for secondary resources.
      *
@@ -355,8 +340,12 @@ class Path extends AbstractResource
         $this->secondaryResourcesTarget = $secondaryResourcesTarget;
     }
 
-    public function hasResources()
+    public function hasResources(): bool
     {
+        if (!empty($this->overviewResource)) {
+            return true;
+        }
+
         foreach ($this->steps as $step) {
             if ($step->hasResources()) {
                 return true;

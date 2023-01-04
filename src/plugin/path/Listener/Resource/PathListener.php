@@ -67,7 +67,7 @@ class PathListener
     /**
      * Loads the Path resource.
      */
-    public function onLoad(LoadResourceEvent $event)
+    public function onLoad(LoadResourceEvent $event): void
     {
         /** @var Path $path */
         $path = $event->getResource();
@@ -96,7 +96,7 @@ class PathListener
     /**
      * Fired when a ResourceNode of type Path is duplicated.
      */
-    public function onCopy(CopyResourceEvent $event)
+    public function onCopy(CopyResourceEvent $event): void
     {
         // Start the transaction. We'll copy every resource in one go that way.
         $this->om->startFlushSuite();
@@ -111,8 +111,16 @@ class PathListener
             // A forced flush is required for rights propagation on the copied resources
             $this->om->forceFlush();
 
-            // copy resources for all steps
             $copiedResources = [];
+
+            if (!empty($path->getOverviewResource())) {
+                $copiedResources = $this->copyResource($path->getOverviewResource(), $resourcesDirectory->getResourceNode(), $copiedResources);
+
+                // replace resource by the copy
+                $path->setOverviewResource($copiedResources[$path->getOverviewResource()->getUuid()]);
+            }
+
+            // copy resources for all steps
             foreach ($path->getSteps() as $step) {
                 if ($step->hasResources()) {
                     $copiedResources = $this->copyStepResources($step, $resourcesDirectory->getResourceNode(), $copiedResources);
@@ -133,7 +141,7 @@ class PathListener
      * Fired when a Resource Evaluation with a score is created.
      * We will update progression for all paths using this resource.
      */
-    public function onEvaluation(ResourceEvaluationEvent $event)
+    public function onEvaluation(ResourceEvaluationEvent $event): void
     {
         if ($event->getAttempt()) {
             $this->evaluationManager->handleResourceEvaluation($event->getEvaluation(), $event->getAttempt());
@@ -162,20 +170,11 @@ class PathListener
 
     private function copyStepResources(Step $step, ResourceNode $destination, array $copiedResources = []): array
     {
-        /** @var User $user */
-        $user = $this->tokenStorage->getToken()->getUser();
-
         // copy primary resource
         if (!empty($step->getResource())) {
             $resourceNode = $step->getResource();
-            if (!isset($copiedResources[$resourceNode->getUuid()])) {
-                // resource not already copied, create a new copy
-                $resourceCopy = $this->crud->copy($resourceNode, [Options::NO_RIGHTS, Crud::NO_PERMISSIONS], ['user' => $user, 'parent' => $destination]);
 
-                if ($resourceCopy) {
-                    $copiedResources[$resourceNode->getUuid()] = $resourceCopy;
-                }
-            }
+            $copiedResources = $this->copyResource($resourceNode, $destination, $copiedResources);
 
             // replace resource by the copy
             $step->setResource($copiedResources[$resourceNode->getUuid()]);
@@ -185,16 +184,27 @@ class PathListener
         if (!empty($step->getSecondaryResources())) {
             foreach ($step->getSecondaryResources() as $secondaryResource) {
                 $resourceNode = $secondaryResource->getResource();
-                if (!isset($copiedResources[$resourceNode->getUuid()])) {
-                    // resource not already copied, create a new copy
-                    $resourceCopy = $this->crud->copy($resourceNode, [Options::NO_RIGHTS, Crud::NO_PERMISSIONS], ['user' => $user, 'parent' => $destination]);
-                    if ($resourceCopy) {
-                        $copiedResources[$resourceNode->getUuid()] = $resourceCopy;
-                    }
-                }
+                $copiedResources = $this->copyResource($resourceNode, $destination, $copiedResources);
 
                 // replace resource by the copy
                 $secondaryResource->setResource($copiedResources[$resourceNode->getUuid()]);
+            }
+        }
+
+        return $copiedResources;
+    }
+
+    private function copyResource(ResourceNode $resourceNode, ResourceNode $destination, array $copiedResources): array
+    {
+        /** @var User $user */
+        $user = $this->tokenStorage->getToken()->getUser();
+
+        if (!isset($copiedResources[$resourceNode->getUuid()])) {
+            // resource not already copied, create a new copy
+            $resourceCopy = $this->crud->copy($resourceNode, [Options::NO_RIGHTS, Crud::NO_PERMISSIONS], ['user' => $user, 'parent' => $destination]);
+
+            if ($resourceCopy) {
+                $copiedResources[$resourceNode->getUuid()] = $resourceCopy;
             }
         }
 

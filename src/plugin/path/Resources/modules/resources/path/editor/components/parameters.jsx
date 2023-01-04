@@ -6,6 +6,7 @@ import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ContentTitle} from '#/main/app/content/components/title'
 import {FormData} from '#/main/app/content/form/containers/data'
+import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
 
 import {constants} from '#/plugin/path/resources/path/constants'
 import {selectors} from '#/plugin/path/resources/path/editor/store'
@@ -47,6 +48,15 @@ const EditorParameters = props =>
                   displayed: props.path.display.showOverview,
                   options: {
                     workspace: props.workspace
+                  }
+                }, {
+                  name: 'overviewResource',
+                  type: 'resource',
+                  label: trans('resource'),
+                  options: {
+                    picker: {
+                      current : props.resourceParent
+                    }
                   }
                 }
               ]
@@ -144,6 +154,9 @@ const EditorParameters = props =>
 EditorParameters.propTypes = {
   basePath: T.string,
   workspace: T.object,
+  resourceParent: T.shape(
+    ResourceNodeTypes.propTypes
+  ),
   path: T.shape({
     id: T.string,
     display: T.shape({

@@ -14,6 +14,7 @@ import {ResourceOverview} from '#/main/core/resource/components/overview'
 import {UserEvaluation as UserEvaluationTypes} from '#/main/core/resource/prop-types'
 
 import {Path as PathTypes} from '#/plugin/path/resources/path/prop-types'
+import {ResourceEmbedded} from '#/main/core/resource/containers/embedded'
 
 const PathOverview = props => {
   function getStepSummary(step) {
@@ -65,6 +66,14 @@ const PathOverview = props => {
       ]}
     >
       <section className="resource-parameters">
+        {!isEmpty(props.path.overviewResource) &&
+          <ResourceEmbedded
+            className="step-primary-resource"
+            resourceNode={props.path.overviewResource}
+            showHeader={false}
+          />
+        }
+
         <h3 className="h2">{trans('summary')}</h3>
 
         {!isEmpty(props.path.steps) &&
