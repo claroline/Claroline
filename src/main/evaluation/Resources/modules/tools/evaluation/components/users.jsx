@@ -4,7 +4,7 @@ import get from 'lodash/get'
 
 import {url} from '#/main/app/api'
 import {trans} from '#/main/app/intl/translation'
-import {LINK_BUTTON, MODAL_BUTTON, URL_BUTTON} from '#/main/app/buttons'
+import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 import {DOWNLOAD_BUTTON} from '#/main/app/buttons'
 import {ToolPage} from '#/main/core/tool/containers/page'
 import {ListData} from '#/main/app/content/list/containers/data'
@@ -143,30 +143,50 @@ const EvaluationUsers = (props) =>
           }]
         }, {
           name: 'download-participation-certificate',
-          type: URL_BUTTON,
+          type: CALLBACK_BUTTON,
           icon: 'fa fa-fw fa-file-pdf',
           label: trans('download_participation_certificate', {}, 'actions'),
-          target: ['apiv2_workspace_download_participation_certificate', {workspace: get(rows[0], 'workspace.id'), user: get(rows[0], 'user.id')}],
-          disabled: ![
+          disabled: -1 === rows.findIndex(row => [
             evalConstants.EVALUATION_STATUS_COMPLETED,
             evalConstants.EVALUATION_STATUS_PASSED,
             evalConstants.EVALUATION_STATUS_PARTICIPATED,
             evalConstants.EVALUATION_STATUS_FAILED
-          ].includes(get(rows[0], 'status', evalConstants.EVALUATION_STATUS_UNKNOWN)),
+          ].includes(get(row, 'status', evalConstants.EVALUATION_STATUS_UNKNOWN))),
+          callback: () => {
+            rows.map(row => {
+              if ([
+                evalConstants.EVALUATION_STATUS_COMPLETED,
+                evalConstants.EVALUATION_STATUS_PASSED,
+                evalConstants.EVALUATION_STATUS_PARTICIPATED,
+                evalConstants.EVALUATION_STATUS_FAILED
+              ].includes(get(row, 'status', evalConstants.EVALUATION_STATUS_UNKNOWN))) {
+                props.downloadParticipationCertificate(row)
+              }
+            })
+          },
           group: trans('transfer'),
-          scope: ['object']
+          scope: ['object', 'collection']
         }, {
           name: 'download-success-certificate',
-          type: URL_BUTTON,
+          type: CALLBACK_BUTTON,
           icon: 'fa fa-fw fa-file-pdf',
           label: trans('download_success_certificate', {}, 'actions'),
-          target: ['apiv2_workspace_download_success_certificate', {workspace: get(rows[0], 'workspace.id'), user: get(rows[0], 'user.id')}],
-          disabled: ![
+          disabled: -1 === rows.findIndex((row) => [
             evalConstants.EVALUATION_STATUS_PASSED,
             evalConstants.EVALUATION_STATUS_FAILED
-          ].includes(get(rows[0], 'status', evalConstants.EVALUATION_STATUS_UNKNOWN)),
+          ].includes(get(row, 'status', evalConstants.EVALUATION_STATUS_UNKNOWN))),
+          callback: () => {
+            rows.map(row => {
+              if ([
+                evalConstants.EVALUATION_STATUS_PASSED,
+                evalConstants.EVALUATION_STATUS_FAILED
+              ].includes(get(rows, 'status', evalConstants.EVALUATION_STATUS_UNKNOWN))) {
+                props.downloadSuccessCertificate(row)
+              }
+            })
+          },
           group: trans('transfer'),
-          scope: ['object']
+          scope: ['object', 'collection']
         }
       ]}
     />
@@ -175,7 +195,9 @@ const EvaluationUsers = (props) =>
 EvaluationUsers.propTypes = {
   path: T.string.isRequired,
   contextId: T.string.isRequired,
-  searchQueryString: T.string
+  searchQueryString: T.string,
+  downloadParticipationCertificate: T.func.isRequired,
+  downloadSuccessCertificate: T.func.isRequired
 }
 
 export {
