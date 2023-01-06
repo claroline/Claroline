@@ -4,7 +4,7 @@ import classes from 'classnames'
 import shuffle from 'lodash/shuffle'
 
 import {ContentHtml} from '#/main/app/content/components/html'
-import {getNumbering} from '#/plugin/exo/utils/numbering'
+import {getNumbering} from '#/plugin/exo/resources/quiz/utils'
 import {constants} from '#/plugin/exo/resources/quiz/constants'
 
 class ChoicePlayer extends Component {

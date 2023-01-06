@@ -131,6 +131,7 @@ class EditorMain extends Component {
                       formName={this.props.formName}
                       path={`steps[${stepIndex}]`}
                       numberingType={this.props.numberingType}
+                      questionNumberingType={this.props.questionNumberingType}
                       steps={this.props.steps}
                       index={stepIndex}
                       id={currentStep.id}
@@ -184,6 +185,7 @@ EditorMain.propTypes = {
   }).isRequired,
   workspace: T.object,
   numberingType: T.string,
+  questionNumberingType: T.string,
   tags: T.array.isRequired,
   randomPick: T.string,
   steps: T.arrayOf(T.shape(
