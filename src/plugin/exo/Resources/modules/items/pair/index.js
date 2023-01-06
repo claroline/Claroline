@@ -66,14 +66,14 @@ export default {
     errors.penalty = chainSync(item.penalty, {}, [notBlank, number])
 
     // random can not be used if no pinned item
-    if (item.random && item.items.filter(pItem => pItem.hasOwnProperty('coordinates') && pItem.coordinates.length === 2).length === 0) {
-      errors.items = trans('pair_random_needs_pin_item', {}, 'quiz')
+    if (item.random && item.items.filter(pItem => pItem.coordinates && pItem.coordinates.length === 2).length === 0) {
+      errors.random = trans('pair_random_needs_pin_item', {}, 'quiz')
     }
 
     // no blank items / odds
     if (item.items.find(pItem => notBlank(pItem.data, {isHtml: true}))) {
       // item / odd data should not be empty
-      errors.items = trans('item_empty_data_error', {}, 'quiz')
+      errors.solutions = trans('item_empty_data_error', {}, 'quiz')
     }
 
     // solutions and odd
