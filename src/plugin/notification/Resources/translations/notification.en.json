@@ -5,8 +5,5 @@
     "more_unread": "+ %count% other new notifications",
     "done_at": "at %date%",
     "disable_notifications": "Stop following this resource",
-    "disable_notifications_info": "Stop being notified of changes for this resource",
-    "enable_notifications": "Follow this resource",
-    "enable_notifications_info": "Get notified of changes for this resource",
-    "mark_all_viewed": "Mark all as read"
+    "enable_notifications": "Follow this resource"
 }

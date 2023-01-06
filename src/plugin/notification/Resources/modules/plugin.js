@@ -20,7 +20,10 @@ registry.add('IcapNotificationBundle', {
     }
   },
 
-  tools: {
-    'notification'   : () => { return import(/* webpackChunkName: "plugin-tool-notification" */ '#/plugin/notification/tools/notification') }
-  },
+  /**
+   * Provides current user Account sections.
+   */
+  account: {
+    'notifications': () => { return import(/* webpackChunkName: "notification-account-notifications" */ '#/plugin/notification/account/notifications') }
+  }
 })

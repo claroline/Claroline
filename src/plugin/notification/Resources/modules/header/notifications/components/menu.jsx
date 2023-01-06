@@ -5,7 +5,7 @@ import isEmpty from 'lodash/isEmpty'
 import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
 import {LINK_BUTTON, MENU_BUTTON} from '#/main/app/buttons'
-import {route as toolRoute} from '#/main/core/tool/routing'
+import {route as accountRoute} from '#/main/core/account/routing'
 
 import {NotificationCard} from '#/plugin/notification/components/card'
 import {constants} from '#/plugin/notification/header/notifications/constants'
@@ -41,7 +41,7 @@ const NotificationsDropdown = (props) =>
         className="btn-link btn-emphasis btn-block"
         type={LINK_BUTTON}
         label={trans('all_notifications', {}, 'notification')}
-        target={toolRoute('notification')}
+        target={accountRoute('notifications')}
         primary={true}
         onClick={props.closeMenu}
       />

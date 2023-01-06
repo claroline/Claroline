@@ -1,5 +1,5 @@
 
-const STORE_NAME = 'notification'
+const STORE_NAME = 'accountNotifications'
 const LIST_NAME = `${STORE_NAME}.notifications`
 
 export const selectors = {

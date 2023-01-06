@@ -102,6 +102,9 @@
       - title: Quiz
         doc: plugins/quiz
 
+      - title: Notification
+        doc: plugins/notification
+
       - title: Path
         doc: plugins/path
 
