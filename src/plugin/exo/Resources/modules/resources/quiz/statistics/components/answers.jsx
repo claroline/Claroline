@@ -8,7 +8,7 @@ import {ContentTitle} from '#/main/app/content/components/title'
 import {getDefinition, isQuestionType} from '#/plugin/exo/items/item-types'
 import {Metadata as ItemMetadata} from '#/plugin/exo/items/components/metadata'
 import {constants} from '#/plugin/exo/resources/quiz/constants'
-import {getNumbering} from '#/plugin/exo/utils/numbering'
+import {getNumbering} from '#/plugin/exo/resources/quiz/utils'
 
 const AnswersStats = props =>
   <div className="quiz-statistics">
