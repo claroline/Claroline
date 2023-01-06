@@ -4,7 +4,7 @@ import {makeInstanceAction} from '#/main/app/store/actions'
 
 import {TOOL_LOAD} from '#/main/core/tool/store/actions'
 
-import {selectors} from '#/plugin/notification/tools/notification/store/selectors'
+import {selectors} from '#/plugin/notification/account/notifications/store/selectors'
 
 const reducer = combineReducers({
   notifications: makeListReducer(selectors.LIST_NAME, {

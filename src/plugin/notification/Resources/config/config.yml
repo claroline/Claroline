@@ -27,9 +27,3 @@ plugin:
           group: notifications
           scope: [object, collection] # The action can be executed on multiple resources at once.
           api: [PUT]
-
-    tools:
-        - name: notification
-          class: bell
-          is_displayable_in_workspace: false
-          is_displayable_in_desktop: true

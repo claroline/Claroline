@@ -1,7 +1,7 @@
 import {API_REQUEST} from '#/main/app/api'
 import {actions as listActions} from '#/main/app/content/list/store/actions'
 
-import {selectors} from '#/plugin/notification/tools/notification/store/selectors'
+import {selectors} from '#/plugin/notification/account/notifications/store/selectors'
 
 export const actions = {}
 

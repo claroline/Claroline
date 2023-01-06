@@ -1,0 +1,7 @@
+services:
+    _defaults:
+        tags: [ 'claroline.platform.updater' ]
+
+    Icap\NotificationBundle\Installation\Updater\Updater130700:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
