@@ -19,7 +19,7 @@ import {selectors as resourceSelect} from '#/main/core/resource/store'
 
 import {getDefinition, isQuestionType} from '#/plugin/exo/items/item-types'
 import {getContentDefinition} from '#/plugin/exo/contents/utils'
-import {getNumbering} from '#/plugin/exo/utils/numbering'
+import {getNumbering} from '#/plugin/exo/resources/quiz/utils'
 import {constants} from '#/plugin/exo/resources/quiz/constants'
 import {select} from '#/plugin/exo/quiz/player/selectors'
 import {actions} from '#/plugin/exo/quiz/player/actions'
@@ -65,7 +65,7 @@ const CurrentStep = props => {
                 showHint={props.showHint}
                 usedHints={props.answers[item.id] ? props.answers[item.id].usedHints : []}
                 showTitle={props.showQuestionTitles}
-                numbering={props.questionNumbering !== constants.NUMBERING_NONE ? props.number + '.' + getNumbering(props.questionNumbering, index): null}
+                numbering={getNumbering(props.questionNumbering, props.number - 1, index)}
               >
                 {React.createElement(getDefinition(item.type).player, {
                   item: item,
