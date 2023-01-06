@@ -25,7 +25,7 @@ class ScheduledTaskRepository extends EntityRepository
                 WHERE (
                     (t.executionType = :once AND t.executionDate IS NULL) 
                     OR 
-                    (t.executionType = :recurring AND (t.endDate IS NULL OR t.endDate < :now))
+                    (t.executionType = :recurring AND (t.endDate IS NULL OR t.endDate > :now))
                 )  
                 AND t.scheduledDate < :now
             ')
