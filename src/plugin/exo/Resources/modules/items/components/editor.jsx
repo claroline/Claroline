@@ -23,15 +23,6 @@ const ItemEditor = props => {
     }), {})
   }
 
-  const CustomSection = () => createElement(props.definition.components.editor, {
-    formName: props.formName,
-    path: props.path,
-    disabled: props.disabled,
-    item: props.item,
-    hasAnswerScores: props.definition.answerable && props.enableScores ? currentScore.hasAnswerScores: false,
-    update: props.update
-  })
-
   return (
     <FormData
       id={`form-${props.item.id}`}
@@ -71,7 +62,14 @@ const ItemEditor = props => {
         }, {
           title: trans('custom'),
           primary: true,
-          component: CustomSection
+          render: () => createElement(props.definition.components.editor, {
+            formName: props.formName,
+            path: props.path,
+            disabled: props.disabled,
+            item: props.item,
+            hasAnswerScores: props.definition.answerable && props.enableScores ? currentScore.hasAnswerScores: false,
+            update: props.update
+          })
         }, {
           icon: 'fa fa-fw fa-info',
           title: trans('information'),
