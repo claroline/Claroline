@@ -1,6 +1,10 @@
 
 function route(toolName) {
-  return `/desktop/${toolName}`
+  if (toolName) {
+    return `/desktop/${toolName}`
+  }
+
+  return '/desktop'
 }
 
 export {

@@ -12,14 +12,13 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 import {route as toolRoute} from '#/main/core/tool/routing'
 import {route as workspaceRoute} from '#/main/core/workspace/routing'
 
-import {
-  ResourceNode as ResourceNodeTypes,
-  UserEvaluation as UserEvaluationTypes
-} from '#/main/core/resource/prop-types'
+import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
 import {getActions, getToolbar} from '#/main/core/resource/utils'
 import {ToolPage} from '#/main/core/tool/containers/page'
 import {constants as toolConst} from '#/main/core/tool/constants'
 import {ResourceRestrictions} from '#/main/core/resource/components/restrictions'
+
+import {ResourceEvaluation as ResourceEvaluationTypes} from '#/main/evaluation/resource/prop-types'
 import {UserProgression} from '#/main/core/resource/components/user-progression'
 
 // FIXME
@@ -165,7 +164,7 @@ ResourcePage.propTypes = {
    * The current user evaluation.
    */
   userEvaluation: T.shape(
-    UserEvaluationTypes.propTypes
+    ResourceEvaluationTypes.propTypes
   ),
 
   // the name of the primary action of the resource (if we want to override the default one).

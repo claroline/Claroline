@@ -2,7 +2,7 @@
 
 namespace Claroline\EvaluationBundle\Serializer;
 
-use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\CommunityBundle\Serializer\UserSerializer;
 use Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer;
 use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
@@ -53,9 +53,9 @@ class ResourceUserEvaluationSerializer
             'required' => $resourceUserEvaluation->getResourceNode()->isRequired(),
         ];
 
-        if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
-            $serialized['resourceNode'] = $this->resourceNodeSerializer->serialize($resourceUserEvaluation->getResourceNode(), [Options::SERIALIZE_MINIMAL]);
-            $serialized['user'] = $this->userSerializer->serialize($resourceUserEvaluation->getUser(), [Options::SERIALIZE_MINIMAL]);
+        if (!in_array(SerializerInterface::SERIALIZE_MINIMAL, $options)) {
+            $serialized['resourceNode'] = $this->resourceNodeSerializer->serialize($resourceUserEvaluation->getResourceNode(), [SerializerInterface::SERIALIZE_MINIMAL]);
+            $serialized['user'] = $this->userSerializer->serialize($resourceUserEvaluation->getUser(), [SerializerInterface::SERIALIZE_MINIMAL]);
         }
 
         return $serialized;

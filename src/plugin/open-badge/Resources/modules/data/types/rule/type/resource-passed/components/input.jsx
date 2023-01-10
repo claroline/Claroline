@@ -9,7 +9,7 @@ import {ChoiceInput} from '#/main/app/data/types/choice/components/input'
 
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
 import {ResourceInput} from '#/main/core/data/types/resource/components/input'
-import {constants} from '#/main/core/resource/constants'
+import {constants} from '#/main/evaluation/resource/constants'
 
 // todo : manages errors
 

@@ -204,7 +204,7 @@ class Persister
         $exercise->setExpectedAnswers(true);
         $exercise->setScoreRule(json_encode(['type' => 'sum']));
 
-        $exercise->setDescription('This is the description of my exercise');
+        $exercise->setOverviewMessage('This is the description of my exercise');
         if ($user) {
             if (!isset($this->exoType)) {
                 $this->exoType = new ResourceType();

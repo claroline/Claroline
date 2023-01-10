@@ -74,30 +74,6 @@ const Workspace = {
   }
 }
 
-const UserEvaluation = {
-  propTypes: {
-    id: T.string.isRequired,
-    date: T.String,
-    status: T.string,
-    duration: T.number,
-    score: T.number,
-    scoreMin: T.number,
-    scoreMax: T.number,
-    progression: T.number,
-    progressionMax: T.number,
-    user: T.shape(
-      User.propTypes
-    ),
-    workspace: T.shape(
-      Workspace.propTypes
-    )
-  },
-  defaultProps: {
-
-  }
-}
-
 export {
-  Workspace,
-  UserEvaluation
+  Workspace
 }

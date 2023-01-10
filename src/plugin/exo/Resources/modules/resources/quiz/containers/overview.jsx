@@ -4,10 +4,10 @@ import {hasPermission} from '#/main/app/security'
 import {selectors as securitySelectors} from '#/main/app/security/store/selectors'
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
 
-import {OverviewMain as OverviewMainComponent} from '#/plugin/exo/resources/quiz/overview/components/main'
+import {QuizOverview as QuizOverviewComponent} from '#/plugin/exo/resources/quiz/components/overview'
 import {selectors} from '#/plugin/exo/resources/quiz/store'
 
-const OverviewMain = connect(
+const QuizOverview = connect(
   (state) => ({
     path: resourceSelectors.path(state),
     empty: selectors.empty(state),
@@ -18,8 +18,8 @@ const OverviewMain = connect(
     currentUserId: securitySelectors.currentUserId(state),
     resourceNode: resourceSelectors.resourceNode(state)
   })
-)(OverviewMainComponent)
+)(QuizOverviewComponent)
 
 export {
-  OverviewMain
+  QuizOverview
 }

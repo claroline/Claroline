@@ -25,6 +25,8 @@ const paper = createSelector(
   (resource) => resource.paper
 )
 
+const attempt = playerSelectors.attempt
+
 const answers = createSelector(
   [quizSelectors.resource],
   (resource) => resource.answers || {}
@@ -89,6 +91,10 @@ const quizEndMessage = createSelector(
 const quizEndNavigation = createSelector(
   [paperParameters],
   (parameters) => parameters.endNavigation || false
+)
+const attemptsReachedMessage = createSelector(
+  [paperParameters],
+  (parameters) => parameters.attemptsReachedMessage
 )
 const showEndConfirm = createSelector(
   [paperParameters],
@@ -278,6 +284,7 @@ export const select = {
   testMode,
   offline,
   paper,
+  attempt,
   steps,
   answers,
   showFeedback,
@@ -305,6 +312,7 @@ export const select = {
   hasMoreAttempts,
   maxAttempts,
   maxAttemptsPerDay,
+  attemptsReachedMessage,
   items,
   countItems,
   answersEditable,

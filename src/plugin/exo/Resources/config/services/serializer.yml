@@ -17,7 +17,9 @@ services:
         tags: [claroline.serializer]
         arguments:
             - '@security.token_storage'
-            - '@ujm_exo.serializer.step'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
+            - '@UJM\ExoBundle\Serializer\StepSerializer'
             - '@UJM\ExoBundle\Manager\Item\ItemManager'
 
     ujm_exo.serializer.exercise:

@@ -1,12 +1,27 @@
+import React from 'react'
+
 import {trans} from '#/main/app/intl/translation'
 
-import {constants} from '#/main/core/resource/constants'
+import {constants} from '#/main/evaluation/constants'
 
 export default {
   name: 'resource_attempts',
   parameters: {
     definition: [
       {
+        name: 'status',
+        type: 'choice',
+        label: trans('status'),
+        options: {
+          choices: constants.EVALUATION_STATUSES_SHORT
+        },
+        displayed: true,
+        render: (row) => (
+          <span className={`label label-${constants.EVALUATION_STATUS_COLOR[row.status]}`}>
+            {constants.EVALUATION_STATUSES_SHORT[row.status]}
+          </span>
+        )
+      }, {
         name: 'user',
         type: 'user',
         label: trans('user'),
@@ -23,14 +38,6 @@ export default {
         options: {time: true},
         displayed: true,
         primary: true
-      }, {
-        name: 'status',
-        type: 'choice',
-        label: trans('status'),
-        options: {
-          choices: constants.EVALUATION_STATUSES
-        },
-        displayed: true
       }, {
         name: 'duration',
         type: 'time',

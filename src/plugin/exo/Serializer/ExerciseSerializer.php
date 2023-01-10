@@ -2,7 +2,11 @@
 
 namespace UJM\ExoBundle\Serializer;
 
+use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
+use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use UJM\ExoBundle\Entity\Exercise;
@@ -22,19 +26,25 @@ class ExerciseSerializer
 
     /** @var TokenStorageInterface */
     private $tokenStorage;
-
+    /** @var ObjectManager */
+    private $om;
+    /** @var ResourceNodeSerializer */
+    private $resourceNodeSerializer;
     /** @var StepSerializer */
     private $stepSerializer;
-
     /** @var ItemManager */
     private $itemManager;
 
     public function __construct(
         TokenStorageInterface $tokenStorage,
+        ObjectManager $om,
+        ResourceNodeSerializer $resourceNodeSerializer,
         StepSerializer $stepSerializer,
         ItemManager $itemManager
     ) {
         $this->tokenStorage = $tokenStorage;
+        $this->om = $om;
+        $this->resourceNodeSerializer = $resourceNodeSerializer;
         $this->stepSerializer = $stepSerializer;
         $this->itemManager = $itemManager;
     }
@@ -55,8 +65,8 @@ class ExerciseSerializer
         ];
 
         if (!in_array(Transfer::MINIMAL, $options)) {
-            if (!empty($exercise->getDescription())) {
-                $serialized['description'] = $exercise->getDescription();
+            if (!empty($exercise->getOverviewMessage())) {
+                $serialized['description'] = $exercise->getOverviewMessage();
             }
 
             $serialized['score'] = json_decode($exercise->getScoreRule(), true);
@@ -76,7 +86,7 @@ class ExerciseSerializer
         $exercise = $exercise ?: new Exercise();
 
         $this->sipe('id', 'setUuid', $data, $exercise);
-        $this->sipe('description', 'setDescription', $data, $exercise);
+        $this->sipe('description', 'setOverviewMessage', $data, $exercise);
 
         if (in_array(Transfer::REFRESH_UUID, $options)) {
             $exercise->refreshUuid();
@@ -138,11 +148,18 @@ class ExerciseSerializer
             'showFullCorrection' => !$exercise->isMinimalCorrection(),
             'showScoreAt' => $exercise->getMarkMode(),
             'showCorrectionAt' => $exercise->getCorrectionMode(),
+            'successScore' => $exercise->getSuccessScore(),
             'successMessage' => $exercise->getSuccessMessage(),
             'failureMessage' => $exercise->getFailureMessage(),
-            'successScore' => $exercise->getSuccessScore(),
             'correctionDate' => $exercise->getDateCorrection() ? DateNormalizer::normalize($exercise->getDateCorrection()) : null,
             'hasExpectedAnswers' => $exercise->hasExpectedAnswers(),
+            'attemptsReachedMessage' => $exercise->getAttemptsReachedMessage(),
+            'workspaceCertificates' => $exercise->getShowWorkspaceCertificates(),
+            'back' => [
+                'type' => $exercise->getEndBackType(),
+                'label' => $exercise->getEndBackLabel(),
+                'target' => $exercise->getEndBackTarget() ? $this->resourceNodeSerializer->serialize($exercise->getEndBackTarget(), [SerializerInterface::SERIALIZE_MINIMAL]) : null,
+            ],
         ];
 
         if (!empty($exercise->getEndMessage())) {
@@ -189,6 +206,22 @@ class ExerciseSerializer
         $this->sipe('showScoreAt', 'setMarkMode', $parameters, $exercise);
         $this->sipe('answersEditable', 'setAnswersEditable', $parameters, $exercise);
         $this->sipe('hasExpectedAnswers', 'setExpectedAnswers', $parameters, $exercise);
+        $this->sipe('attemptsReachedMessage', 'setAttemptsReachedMessage', $parameters, $exercise);
+        $this->sipe('workspaceCertificates', 'setShowWorkspaceCertificates', $parameters, $exercise);
+
+        if (!empty($parameters['back'])) {
+            $this->sipe('back.type', 'setEndBackType', $parameters, $exercise);
+            $this->sipe('back.label', 'setEndBackLabel', $parameters, $exercise);
+
+            if (array_key_exists('target', $parameters['back'])) {
+                $targetResource = null;
+                if (!empty($parameters['back']['target'])) {
+                    $targetResource = $this->om->getRepository(ResourceNode::class)->findOneBy(['uuid' => $parameters['back']['target']['id']]);
+                }
+
+                $exercise->setEndBackTarget($targetResource);
+            }
+        }
 
         if (isset($parameters['showFullCorrection'])) {
             $exercise->setMinimalCorrection(!$parameters['showFullCorrection']);

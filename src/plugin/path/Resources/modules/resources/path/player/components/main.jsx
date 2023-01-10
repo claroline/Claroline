@@ -1,5 +1,6 @@
 import React, {Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
+import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
 import {Routes} from '#/main/app/router'
@@ -33,18 +34,14 @@ const PlayerMain = props => {
         routes={[
           {
             path: '/play/end',
-            disabled: !props.path.display.showEndPage,
+            disabled: !get(props.path, 'end.display'),
             render: () => (
               <PlayerEnd
-                path={props.basePath}
-                pathId={props.path.id}
+                basePath={props.basePath}
                 resourceId={props.resourceId}
+                path={props.path}
                 currentUser={props.currentUser}
                 workspace={props.workspace}
-                steps={props.path.steps}
-                scoreTotal={props.path.score.total}
-                showScore={props.path.display.showScore}
-                endMessage={props.path.meta.endMessage}
                 attempt={props.attempt}
                 getAttempt={props.getAttempt}
               />
@@ -70,7 +67,7 @@ const PlayerMain = props => {
                     current={step}
                     all={props.steps}
                     navigation={props.navigationEnabled}
-                    endPage={props.path.display.showEndPage}
+                    endPage={get(props.path, 'end.display')}
                   >
                     <Step
                       {...step}

@@ -1,0 +1,10 @@
+{
+  "password_reset": "Reset password",
+  "add_group": "Add a group",
+  "add_role": "Add a group",
+  "add_user": "Add a user",
+  "add_organization": "Add an organization",
+  "add_sub_organization": "Add a sub-organization",
+  "add_team": "Add a team",
+  "show_profile": "Show user profile"
+}

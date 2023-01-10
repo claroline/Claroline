@@ -3,6 +3,7 @@
 namespace UJM\ExoBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -218,13 +219,9 @@ class AttemptManager
     /**
      * Submits user answers to a paper.
      *
-     * @param string $clientIp
-     *
      * @throws InvalidDataException - if there is any invalid answer
-     *
-     * @return Answer[]
      */
-    public function submit(Paper $paper, array $answers, $clientIp)
+    public function submit(Paper $paper, array $answers, string $clientIp): array
     {
         $submitted = [];
 
@@ -271,11 +268,8 @@ class AttemptManager
     /**
      * Ends a user paper.
      * Sets the end date of the paper and calculates its score.
-     *
-     * @param bool $finished
-     * @param bool $generateEvaluation
      */
-    public function end(Paper $paper, $finished = true, $generateEvaluation = true)
+    public function end(Paper $paper, ?bool $finished = true, ?bool $generateEvaluation = true): ?ResourceEvaluation
     {
         $this->om->startFlushSuite();
 
@@ -292,8 +286,9 @@ class AttemptManager
 
         $this->paperManager->checkPaperEvaluated($paper);
 
+        $attempt = null;
         if ($generateEvaluation) {
-            $this->paperManager->generateResourceEvaluation($paper, $finished);
+            $attempt = $this->paperManager->generateResourceEvaluation($paper, $finished);
 
             $user = $paper->getUser();
             $event = new LogExerciseEvent('resource-ujm_exercise-paper-end', $paper->getExercise(), [
@@ -301,18 +296,14 @@ class AttemptManager
             ]);
             $this->eventDispatcher->dispatch($event, 'log');
         }
+
+        return $attempt;
     }
 
     /**
      * Flags an hint has used in the user paper and returns the hint content.
-     *
-     * @param string $questionId
-     * @param string $hintId
-     * @param string $clientIp
-     *
-     * @return mixed
      */
-    public function useHint(Paper $paper, $questionId, $hintId, $clientIp)
+    public function useHint(Paper $paper, string $questionId, string $hintId, string $clientIp): ?array
     {
         $question = $paper->getQuestion($questionId);
 
