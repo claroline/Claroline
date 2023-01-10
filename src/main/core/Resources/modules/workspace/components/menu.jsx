@@ -19,8 +19,11 @@ import {constants as baseConstants} from '#/main/evaluation/constants'
 
 import {route as workspaceRoute} from '#/main/core/workspace/routing'
 import {getActions} from '#/main/core/workspace/utils'
-import {Workspace as WorkspaceTypes, UserEvaluation as UserEvaluationTypes} from '#/main/core/workspace/prop-types'
+import {Workspace as WorkspaceTypes} from '#/main/core/workspace/prop-types'
+
 import {constants} from '#/main/core/workspace/constants'
+import {WorkspaceEvaluation as WorkspaceEvaluationTypes} from '#/main/evaluation/workspace/prop-types'
+import {constants as evalConstants} from '#/main/evaluation/workspace/constants'
 
 const WorkspaceImpersonation = (props) =>
   <section className="app-menu-status app-menu-impersonation">
@@ -94,7 +97,7 @@ const WorkspaceProgression = props => {
           }
         </h3>
 
-        {constants.EVALUATION_STATUSES[get(props.userEvaluation, 'status', baseConstants.EVALUATION_STATUS_UNKNOWN)]}
+        {evalConstants.EVALUATION_STATUSES[get(props.userEvaluation, 'status', baseConstants.EVALUATION_STATUS_UNKNOWN)]}
       </div>
     </section>
   )
@@ -105,7 +108,7 @@ WorkspaceProgression.propTypes = {
     translationKey: T.string.isRequired
   })),
   userEvaluation: T.shape(
-    UserEvaluationTypes.propTypes
+    WorkspaceEvaluationTypes.propTypes
   )
 }
 
@@ -218,9 +221,9 @@ WorkspaceMenu.propTypes = {
   currentUser: T.shape(
     UserTypes.propTypes
   ),
-  userEvaluation: T.shape({
-
-  }),
+  userEvaluation: T.shape(
+    WorkspaceEvaluationTypes.propTypes
+  ),
   roles: T.arrayOf(T.shape({
     translationKey: T.string.isRequired
   })),

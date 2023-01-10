@@ -2,13 +2,13 @@
 
 namespace UJM\ExoBundle\Controller;
 
-use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\API\Serializer\SerializerInterface;
+use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Claroline\EvaluationBundle\Manager\ResourceEvaluationManager;
-use Claroline\EvaluationBundle\Serializer\ResourceUserEvaluationSerializer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,46 +30,29 @@ class AttemptController
 {
     use RequestDecoderTrait;
 
-    /**
-     * @var AuthorizationCheckerInterface
-     */
+    /** @var AuthorizationCheckerInterface */
     private $authorization;
-
-    /**
-     * @var AttemptManager
-     */
+    /** @var SerializerProvider */
+    private $serializer;
+    /** @var AttemptManager */
     private $attemptManager;
-
-    /**
-     * @var PaperManager
-     */
+    /** @var PaperManager */
     private $paperManager;
-
-    /**
-     * @var ResourceEvaluationManager
-     */
+    /** @var ResourceEvaluationManager */
     private $resourceEvalManager;
 
-    /**
-     * @var ResourceUserEvaluationSerializer
-     */
-    private $userEvalSerializer;
-
-    /**
-     * AttemptController constructor.
-     */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
+        SerializerProvider $serializer,
         AttemptManager $attemptManager,
         PaperManager $paperManager,
-        ResourceEvaluationManager $resourceEvalManager,
-        ResourceUserEvaluationSerializer $userEvalSerializer
+        ResourceEvaluationManager $resourceEvalManager
     ) {
         $this->authorization = $authorization;
+        $this->serializer = $serializer;
         $this->attemptManager = $attemptManager;
         $this->paperManager = $paperManager;
         $this->resourceEvalManager = $resourceEvalManager;
-        $this->userEvalSerializer = $userEvalSerializer;
     }
 
     /**
@@ -78,12 +61,8 @@ class AttemptController
      *
      * @Route("", name="exercise_attempt_start", methods={"POST"})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
-     *
-     * @param User $user
-     *
-     * @return JsonResponse
      */
-    public function startAction(Exercise $exercise, User $user = null)
+    public function startAction(Exercise $exercise, ?User $user = null): JsonResponse
     {
         $this->assertHasPermission('OPEN', $exercise);
 
@@ -108,12 +87,8 @@ class AttemptController
      * @Route("/{id}", name="exercise_attempt_submit", methods={"PUT"})
      * @EXT\ParamConverter("paper", class="UJM\ExoBundle\Entity\Attempt\Paper", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
-     *
-     * @param User $user
-     *
-     * @return JsonResponse
      */
-    public function submitAnswersAction(Paper $paper, User $user = null, Request $request)
+    public function submitAnswersAction(Paper $paper, ?User $user = null, Request $request): JsonResponse
     {
         $this->assertHasPermission('OPEN', $paper->getExercise());
         $this->assertHasPaperAccess($paper, $user);
@@ -148,24 +123,22 @@ class AttemptController
      * @Route("/{id}/end", name="exercise_attempt_finish", methods={"PUT"})
      * @EXT\ParamConverter("paper", class="UJM\ExoBundle\Entity\Attempt\Paper", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
-     *
-     * @param User $user
-     *
-     * @return JsonResponse
      */
-    public function finishAction(Paper $paper, User $user = null)
+    public function finishAction(Paper $paper, ?User $user = null): JsonResponse
     {
         $this->assertHasPermission('OPEN', $paper->getExercise());
         $this->assertHasPaperAccess($paper, $user);
 
-        $this->attemptManager->end($paper, true, !empty($user));
+        $attempt = $this->attemptManager->end($paper, true, !empty($user));
         $userEvaluation = !empty($user) ?
             $this->resourceEvalManager->getUserEvaluation($paper->getExercise()->getResourceNode(), $user) :
             null;
 
         return new JsonResponse([
             'paper' => $this->paperManager->serialize($paper),
-            'userEvaluation' => !empty($userEvaluation) ? $this->userEvalSerializer->serialize($userEvaluation, [Options::SERIALIZE_MINIMAL]) : null,
+            // return the Claroline evaluations (current attempt and updated evaluation)
+            'attempt' => !empty($attempt) ? $this->serializer->serialize($attempt, [SerializerInterface::SERIALIZE_MINIMAL]) : null,
+            'userEvaluation' => !empty($userEvaluation) ? $this->serializer->serialize($userEvaluation, [SerializerInterface::SERIALIZE_MINIMAL]) : null,
         ]);
     }
 
@@ -176,14 +149,8 @@ class AttemptController
      * @Route("/{id}/{questionId}/hints/{hintId}", name="exercise_attempt_hint_show", methods={"GET"})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      * @EXT\ParamConverter("paper", class="UJM\ExoBundle\Entity\Attempt\Paper", options={"mapping": {"id": "uuid"}})
-     *
-     * @param string $questionId
-     * @param string $hintId
-     * @param User   $user
-     *
-     * @return JsonResponse
      */
-    public function useHintAction(Paper $paper, $questionId, $hintId, User $user = null, Request $request)
+    public function useHintAction(Paper $paper, string $questionId, string $hintId, Request $request, ?User $user = null): JsonResponse
     {
         $this->assertHasPermission('OPEN', $paper->getExercise());
         $this->assertHasPaperAccess($paper, $user);
@@ -202,26 +169,22 @@ class AttemptController
 
     /**
      * Checks whether a User has access to a Paper.
-     *
-     * @param User $user
-     *
-     * @throws AccessDeniedException
      */
-    private function assertHasPaperAccess(Paper $paper, User $user = null)
+    private function assertHasPaperAccess(Paper $paper, ?User $user = null): void
     {
         if (!$this->attemptManager->canUpdate($paper, $user)) {
             throw new AccessDeniedException();
         }
     }
 
-    private function isAdmin(Exercise $exercise)
+    private function isAdmin(Exercise $exercise): bool
     {
         $collection = new ResourceCollection([$exercise->getResourceNode()]);
 
         return $this->authorization->isGranted('ADMINISTRATE', $collection);
     }
 
-    private function assertHasPermission($permission, Exercise $exercise)
+    private function assertHasPermission($permission, Exercise $exercise): void
     {
         $collection = new ResourceCollection([$exercise->getResourceNode()]);
 

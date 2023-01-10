@@ -35,7 +35,7 @@ const OverviewComponent = props =>
                 height={140}
               />
 
-              <h4 className="user-progression-status h5">
+              <h4 className="user-progression-status">
                 {trans('my_messages', {}, 'forum')}
               </h4>
             </div>

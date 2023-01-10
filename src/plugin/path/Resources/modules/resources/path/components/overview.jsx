@@ -11,7 +11,7 @@ import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 import {ContentSummary} from '#/main/app/content/components/summary'
 import {ScoreBox} from '#/main/core/layout/evaluation/components/score-box'
 import {ResourceOverview} from '#/main/core/resource/components/overview'
-import {UserEvaluation as UserEvaluationTypes} from '#/main/core/resource/prop-types'
+import {ResourceEvaluation as ResourceEvaluationTypes} from '#/main/evaluation/resource/prop-types'
 
 import {Path as PathTypes} from '#/plugin/path/resources/path/prop-types'
 import {ResourceEmbedded} from '#/main/core/resource/containers/embedded'
@@ -45,18 +45,22 @@ const PathOverview = props => {
 
   return (
     <ResourceOverview
-      contentText={get(props.path, 'meta.description')}
+      contentText={get(props.path, 'overview.message')}
       evaluation={props.evaluation}
       resourceNode={props.resourceNode}
       display={{
         score: get(props.path, 'display.showScore'),
-        scoreMax: get(props.path, 'score.total')
+        scoreMax: get(props.path, 'score.total'),
+        successScore: get(props.path, 'score.success'),
+        feedback: !!get(props.path, 'evaluation.successMessage') || !!get(props.path, 'evaluation.failureMessage')
       }}
-
+      feedbacks={{
+        success: get(props.path, 'evaluation.successMessage'),
+        failure: get(props.path, 'evaluation.failureMessage')
+      }}
       actions={[
-        { // TODO : implement continue and restart
+        {
           type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-play icon-with-text-right',
           label: trans('start_path', {}, 'path'),
           target: `${props.basePath}/play`,
           primary: true,
@@ -66,10 +70,10 @@ const PathOverview = props => {
       ]}
     >
       <section className="resource-parameters">
-        {!isEmpty(props.path.overviewResource) &&
+        {!isEmpty(get(props.path, 'overview.resource')) &&
           <ResourceEmbedded
             className="step-primary-resource"
-            resourceNode={props.path.overviewResource}
+            resourceNode={get(props.path, 'overview.resource')}
             showHeader={false}
           />
         }
@@ -102,7 +106,7 @@ PathOverview.propTypes = {
   ).isRequired,
   empty: T.bool.isRequired,
   evaluation: T.shape(
-    UserEvaluationTypes.propTypes
+    ResourceEvaluationTypes.propTypes
   ),
   attempt: T.object,
   resourceNode: T.object

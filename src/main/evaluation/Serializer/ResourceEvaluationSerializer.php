@@ -2,7 +2,7 @@
 
 namespace Claroline\EvaluationBundle\Serializer;
 
-use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\CommunityBundle\Serializer\UserSerializer;
 use Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer;
 use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
@@ -50,7 +50,7 @@ class ResourceEvaluationSerializer
             'progressionMax' => $resourceEvaluation->getProgressionMax(),
         ];
 
-        if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
+        if (!in_array(SerializerInterface::SERIALIZE_MINIMAL, $options)) {
             $resourceUserEvaluation = $resourceEvaluation->getResourceUserEvaluation();
 
             $serialized = array_merge($serialized, [
@@ -58,8 +58,8 @@ class ResourceEvaluationSerializer
                 'data' => $resourceEvaluation->getData(),
 
                 // used by data source, this may require another option to avoid getting it where we don't want it
-                'resourceNode' => $this->resourceNodeSerializer->serialize($resourceUserEvaluation->getResourceNode(), [Options::SERIALIZE_MINIMAL]),
-                'user' => $this->userSerializer->serialize($resourceUserEvaluation->getUser(), [Options::SERIALIZE_MINIMAL]),
+                'resourceNode' => $this->resourceNodeSerializer->serialize($resourceUserEvaluation->getResourceNode(), [SerializerInterface::SERIALIZE_MINIMAL]),
+                'user' => $this->userSerializer->serialize($resourceUserEvaluation->getUser(), [SerializerInterface::SERIALIZE_MINIMAL]),
             ]);
         }
 

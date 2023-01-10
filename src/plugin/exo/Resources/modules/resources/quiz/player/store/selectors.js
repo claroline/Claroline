@@ -24,9 +24,16 @@ const userPaperDayCount = createSelector(
   (playerState) => playerState.userPaperDayCount
 )
 
+const attempt = createSelector(
+  [player],
+  (playerState) => playerState.attempt
+)
+
 export const selectors = {
   STORE_NAME,
+
   paperCount,
   userPaperCount,
-  userPaperDayCount
+  userPaperDayCount,
+  attempt
 }

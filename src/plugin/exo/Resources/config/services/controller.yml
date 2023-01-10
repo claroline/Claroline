@@ -17,10 +17,10 @@ services:
     UJM\ExoBundle\Controller\AttemptController:
         arguments:
             - '@security.authorization_checker'
+            - '@Claroline\AppBundle\API\SerializerProvider'
             - '@UJM\ExoBundle\Manager\AttemptManager'
             - '@UJM\ExoBundle\Manager\Attempt\PaperManager'
             - '@Claroline\EvaluationBundle\Manager\ResourceEvaluationManager'
-            - '@Claroline\EvaluationBundle\Serializer\ResourceUserEvaluationSerializer'
 
     UJM\ExoBundle\Controller\CorrectionController:
         arguments:

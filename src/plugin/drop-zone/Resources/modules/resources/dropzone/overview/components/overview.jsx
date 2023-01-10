@@ -48,7 +48,6 @@ const Overview = props =>
       {
         name: 'participate',
         type: !props.myDrop ? CALLBACK_BUTTON : LINK_BUTTON,
-        icon: 'fa fa-fw fa-upload icon-with-text-right',
         label: trans(!props.myDrop ? 'start_evaluation' : (!props.myDrop.finished ? 'continue_evaluation' : 'show_evaluation'), {}, 'dropzone'),
         target: props.myDrop ? `${props.path}/my/drop` : undefined,
         callback: !props.myDrop ?
@@ -60,7 +59,6 @@ const Overview = props =>
       }, {
         name: 'correct',
         type: LINK_BUTTON,
-        icon: 'fa fa-fw fa-check-square-o icon-with-text-right',
         label: trans('correct_a_copy', {}, 'dropzone'),
         target: `${props.path}/peer/drop`,
         primary: props.myDrop && props.myDrop.finished,

@@ -350,12 +350,8 @@ class PaperManager
 
     /**
      * Creates a ResourceEvaluation for the attempt.
-     *
-     * @param bool $finished
-     *
-     * @return ResourceEvaluation
      */
-    public function generateResourceEvaluation(Paper $paper, $finished)
+    public function generateResourceEvaluation(Paper $paper, bool $finished): ResourceEvaluation
     {
         $score = $this->calculateScore($paper);
         $successScore = $paper->getExercise()->getSuccessScore();
@@ -397,7 +393,7 @@ class PaperManager
             }
         }
 
-        return $this->resourceEvalManager->createResourceEvaluation(
+        return $this->resourceEvalManager->createAttempt(
             $paper->getExercise()->getResourceNode(),
             $paper->getUser(),
             [

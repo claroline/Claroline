@@ -3,13 +3,12 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import get from 'lodash/get'
 
-import {trans} from '#/main/app/intl/translation'
+import {trans, displayDate} from '#/main/app/intl'
 import {asset} from '#/main/app/config/asset'
-
 import {DataCard} from '#/main/app/data/components/card'
-import {Workspace as WorkspaceTypes} from '#/main/core/workspace/prop-types'
 import {UserMicro} from '#/main/core/user/components/micro'
-import {displayDate} from '#/main/app/intl'
+
+import {Workspace as WorkspaceTypes} from '#/main/core/workspace/prop-types'
 
 const WorkspaceCard = props =>
   <DataCard

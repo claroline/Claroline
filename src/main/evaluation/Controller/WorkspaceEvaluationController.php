@@ -133,6 +133,29 @@ class WorkspaceEvaluationController extends AbstractSecurityController
     }
 
     /**
+     * @Route("/{workspace}/user/{user}", name="apiv2_workspace_evaluation_get", methods={"GET"})
+     * @EXT\ParamConverter("user", class="Claroline\CoreBundle\Entity\User", options={"mapping": {"user": "uuid"}})
+     * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
+     */
+    public function getAction(Workspace $workspace, User $user): JsonResponse
+    {
+        if (!$this->checkToolAccess('SHOW_EVALUATIONS', $workspace, false)
+            || !$this->tokenStorage->getToken()->getUser() instanceof User || $user->getUuid() !== $this->tokenStorage->getToken()->getUser()->getUuid()
+        ) {
+            throw new AccessDeniedException();
+        }
+
+        $workspaceEvaluation = $this->om->getRepository(Evaluation::class)->findOneBy([
+            'workspace' => $workspace,
+            'user' => $user,
+        ]);
+
+        return new JsonResponse(
+            $this->serializer->serialize($workspaceEvaluation)
+        );
+    }
+
+    /**
      * @Route("/csv/{workspaceId}", name="apiv2_workspace_evaluation_csv", methods={"GET"})
      * @EXT\ParamConverter("workspace", options={"mapping": {"workspace": "uuid"}})
      *
