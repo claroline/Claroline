@@ -10,8 +10,8 @@ import {CustomDragLayer} from '#/plugin/exo/utils/custom-drag-layer'
 import {Player}     from '#/plugin/exo/quiz/player/components/player'
 import {AttemptEnd} from '#/plugin/exo/quiz/player/components/attempt-end'
 
+import {QuizOverview}   from '#/plugin/exo/resources/quiz/containers/overview'
 import {EditorMain}     from '#/plugin/exo/resources/quiz/editor/containers/main'
-import {OverviewMain}   from '#/plugin/exo/resources/quiz/overview/containers/main'
 import {PapersMain}     from '#/plugin/exo/resources/quiz/papers/containers/main'
 import {CorrectionMain} from '#/plugin/exo/resources/quiz/correction/containers/main'
 import {StatisticsMain} from '#/plugin/exo/resources/quiz/statistics/containers/main'
@@ -88,7 +88,7 @@ const QuizResource = props =>
       {
         path: '/',
         exact: true,
-        component: OverviewMain,
+        component: QuizOverview,
         disabled: !props.hasOverview
       }, {
         path: '/edit',

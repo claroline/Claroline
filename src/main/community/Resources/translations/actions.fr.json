@@ -5,5 +5,6 @@
   "add_user": "Ajouter un utilisateur",
   "add_organization": "Ajouter une organisation",
   "add_sub_organization": "Ajouter une sous-organisation",
-  "add_team": "Ajouter une équipe"
+  "add_team": "Ajouter une équipe",
+  "show_profile": "Voir le profil de l'utilisateur"
 }

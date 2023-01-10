@@ -30,9 +30,8 @@ const LessonOverview = (props) => {
       contentText={get(props.lesson, 'display.description')}
       resourceNode={props.resourceNode}
       actions={[
-        { // TODO : implement continue and restart
+        {
           type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-play icon-with-text-right',
           label: trans('start_lesson', {}, 'lesson'),
           target: `${props.path}/${get(chapters, '[0].slug')}`,
           primary: true,

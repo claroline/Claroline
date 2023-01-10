@@ -8,10 +8,10 @@ import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON, URL_BUTTON} from '#/main/app
 import {DOWNLOAD_BUTTON} from '#/main/app/buttons'
 import {ToolPage} from '#/main/core/tool/containers/page'
 import {ListData} from '#/main/app/content/list/containers/data'
-import {constants} from '#/main/core/workspace/constants'
-import {constants as evalConstants} from '#/main/evaluation/constants'
 
 import {MODAL_MESSAGE} from '#/plugin/message/modals/message'
+import {constants} from '#/main/evaluation/constants'
+import {WorkspaceCard} from '#/main/evaluation/workspace/components/card'
 import {selectors} from '#/main/evaluation/tools/evaluation/store'
 
 const EvaluationUsers = (props) =>
@@ -40,6 +40,19 @@ const EvaluationUsers = (props) =>
       }}
       definition={[
         {
+          name: 'status',
+          type: 'choice',
+          label: trans('status'),
+          options: {
+            choices: constants.EVALUATION_STATUSES_SHORT
+          },
+          displayed: true,
+          render: (row) => (
+            <span className={`label label-${constants.EVALUATION_STATUS_COLOR[row.status]}`}>
+              {constants.EVALUATION_STATUSES_SHORT[row.status]}
+            </span>
+          )
+        }, {
           name: 'workspace',
           type: 'workspace',
           label: trans('workspace'),
@@ -65,14 +78,6 @@ const EvaluationUsers = (props) =>
           label: trans('last_activity'),
           options: {
             time: true
-          },
-          displayed: true
-        }, {
-          name: 'status',
-          type: 'choice',
-          label: trans('status'),
-          options: {
-            choices: constants.EVALUATION_STATUSES
           },
           displayed: true
         }, {
@@ -147,19 +152,19 @@ const EvaluationUsers = (props) =>
           icon: 'fa fa-fw fa-file-pdf',
           label: trans('download_participation_certificate', {}, 'actions'),
           disabled: -1 === rows.findIndex(row => [
-            evalConstants.EVALUATION_STATUS_COMPLETED,
-            evalConstants.EVALUATION_STATUS_PASSED,
-            evalConstants.EVALUATION_STATUS_PARTICIPATED,
-            evalConstants.EVALUATION_STATUS_FAILED
-          ].includes(get(row, 'status', evalConstants.EVALUATION_STATUS_UNKNOWN))),
+            constants.EVALUATION_STATUS_COMPLETED,
+            constants.EVALUATION_STATUS_PASSED,
+            constants.EVALUATION_STATUS_PARTICIPATED,
+            constants.EVALUATION_STATUS_FAILED
+          ].includes(get(row, 'status', constants.EVALUATION_STATUS_UNKNOWN))),
           callback: () => {
             rows.map(row => {
               if ([
-                evalConstants.EVALUATION_STATUS_COMPLETED,
-                evalConstants.EVALUATION_STATUS_PASSED,
-                evalConstants.EVALUATION_STATUS_PARTICIPATED,
-                evalConstants.EVALUATION_STATUS_FAILED
-              ].includes(get(row, 'status', evalConstants.EVALUATION_STATUS_UNKNOWN))) {
+                constants.EVALUATION_STATUS_COMPLETED,
+                constants.EVALUATION_STATUS_PASSED,
+                constants.EVALUATION_STATUS_PARTICIPATED,
+                constants.EVALUATION_STATUS_FAILED
+              ].includes(get(row, 'status', constants.EVALUATION_STATUS_UNKNOWN))) {
                 props.downloadParticipationCertificate(row)
               }
             })
@@ -172,15 +177,15 @@ const EvaluationUsers = (props) =>
           icon: 'fa fa-fw fa-file-pdf',
           label: trans('download_success_certificate', {}, 'actions'),
           disabled: -1 === rows.findIndex((row) => [
-            evalConstants.EVALUATION_STATUS_PASSED,
-            evalConstants.EVALUATION_STATUS_FAILED
-          ].includes(get(row, 'status', evalConstants.EVALUATION_STATUS_UNKNOWN))),
+            constants.EVALUATION_STATUS_PASSED,
+            constants.EVALUATION_STATUS_FAILED
+          ].includes(get(row, 'status', constants.EVALUATION_STATUS_UNKNOWN))),
           callback: () => {
             rows.map(row => {
               if ([
-                evalConstants.EVALUATION_STATUS_PASSED,
-                evalConstants.EVALUATION_STATUS_FAILED
-              ].includes(get(rows, 'status', evalConstants.EVALUATION_STATUS_UNKNOWN))) {
+                constants.EVALUATION_STATUS_PASSED,
+                constants.EVALUATION_STATUS_FAILED
+              ].includes(get(rows, 'status', constants.EVALUATION_STATUS_UNKNOWN))) {
                 props.downloadSuccessCertificate(row)
               }
             })
@@ -189,6 +194,7 @@ const EvaluationUsers = (props) =>
           scope: ['object', 'collection']
         }
       ]}
+      card={WorkspaceCard}
     />
   </ToolPage>
 

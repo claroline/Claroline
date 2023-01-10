@@ -36,23 +36,12 @@ const Step = {
 const Path = {
   propTypes: {
     id: T.string.isRequired,
-    meta: T.shape({
-      description: T.string,
-      endMessage: T.string
-    }),
     display: T.shape({
       showOverview: T.bool,
-      showEndPage: T.bool,
       numbering: T.oneOf(['none', 'numeric', 'literal', 'custom']),
       manualProgressionAllowed: T.bool,
       showScore: T.bool
     }).isRequired,
-    overviewResource: T.shape({
-      id: T.string.isRequired,
-      meta: T.shape({
-        type: T.string.isRequired
-      })
-    }),
     score: T.shape({
       success: T.number,
       total: T.number
@@ -62,10 +51,24 @@ const Path = {
     }),
     steps: T.arrayOf(T.shape(
       Step.propTypes
-    ))
+    )),
+    overview: T.shape({
+      display: T.bool,
+      message: T.string,
+      resource: T.shape({
+        id: T.string.isRequired,
+        meta: T.shape({
+          type: T.string.isRequired
+        })
+      }),
+    }),
+    end: T.shape({
+      display: T.bool,
+      message: T.string,
+      navigation: T.bool
+    })
   },
   defaultProps: {
-    meta: {},
     display: {
       showOverview: false,
       showEndPage: false,

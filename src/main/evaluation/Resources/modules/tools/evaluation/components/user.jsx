@@ -6,86 +6,24 @@ import isEmpty from 'lodash/isEmpty'
 import {trans, displayDate, displayDuration, number} from '#/main/app/intl'
 import {Button} from '#/main/app/action/components/button'
 import {Toolbar} from '#/main/app/action/components/toolbar'
-import {CALLBACK_BUTTON, MODAL_BUTTON, URL_BUTTON} from '#/main/app/buttons'
+import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 import {Alert} from '#/main/app/alert/components/alert'
 import {ContentLoader} from '#/main/app/content/components/loader'
 import {ContentTitle} from '#/main/app/content/components/title'
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
-import {UserMicro} from '#/main/core/user/components/micro'
 import {displayUsername} from '#/main/community/utils'
-import {LiquidGauge} from '#/main/core/layout/gauge/components/liquid-gauge'
-
-import {constants as baseConstants} from '#/main/evaluation/constants'
-import {constants} from '#/main/core/workspace/constants'
-import {UserEvaluation as WorkspaceUserEvaluationTypes} from '#/main/core/workspace/prop-types'
-import {ResourceUserEvaluation as ResourceUserEvaluationTypes} from '#/main/evaluation/resource/prop-types'
-import {ResourceCard} from '#/main/evaluation/resource/components/card'
 import {MODAL_MESSAGE} from '#/plugin/message/modals/message'
 import {ContentHelp} from '#/main/app/content/components/help'
 
-const WorkspaceProgression = (props) => {
-  let progression = 0
-  if (props.workspaceEvaluation.progression) {
-    progression = props.workspaceEvaluation.progression
-    if (props.workspaceEvaluation.progressionMax) {
-      progression = (progression / props.workspaceEvaluation.progressionMax) * 100
-    }
-  }
-
-  return (
-    <div className="panel panel-default">
-      <div className="panel-heading">
-        <UserMicro
-          className="content-creator"
-          {...get(props.workspaceEvaluation, 'user', {})}
-          link={true}
-        />
-      </div>
-
-      <div className="panel-body text-center">
-        <LiquidGauge
-          id={`user-progression-${props.workspaceEvaluation.id}`}
-          type="user"
-          value={progression}
-          displayValue={(value) => number(value) + '%'}
-          width={140}
-          height={140}
-        />
-
-        <h4 className="user-progression-status h5">
-          {constants.EVALUATION_STATUSES[get(props.workspaceEvaluation, 'status', baseConstants.EVALUATION_STATUS_UNKNOWN)]}
-        </h4>
-      </div>
-
-      <ul className="list-group list-group-values">
-        <li className="list-group-item">
-          {trans('last_activity')}
-          <span className="value">{get(props.workspaceEvaluation, 'date') ? displayDate(props.workspaceEvaluation.date, false, true) : '-'}</span>
-        </li>
-
-        <li className="list-group-item">
-          {trans('duration')}
-          <span className="value">{get(props.workspaceEvaluation, 'duration') ? displayDuration(get(props.workspaceEvaluation, 'duration')) : '-'}</span>
-        </li>
-
-        {get(props.workspaceEvaluation, 'scoreMax') &&
-          <li className="list-group-item">
-            {trans('score')}
-            <span className="value">
-              {get(props.workspaceEvaluation, 'score') ? number((get(props.workspaceEvaluation, 'score') / get(props.workspaceEvaluation, 'scoreMax')) * 100) : '?'} / 100
-            </span>
-          </li>
-        }
-      </ul>
-    </div>
-  )
-}
-
-WorkspaceProgression.propTypes = {
-  workspaceEvaluation: T.shape(
-    WorkspaceUserEvaluationTypes.propTypes
-  ).isRequired
-}
+import {constants as baseConstants} from '#/main/evaluation/constants'
+import {constants} from '#/main/evaluation/workspace/constants'
+import {WorkspaceEvaluation as WorkspaceEvaluationTypes} from '#/main/evaluation/workspace/prop-types'
+import {ResourceEvaluation as ResourceEvaluationTypes} from '#/main/evaluation/resource/prop-types'
+import {ResourceCard} from '#/main/evaluation/resource/components/card'
+import {route as resourceRoute} from '#/main/core/resource/routing'
+import {MODAL_RESOURCE_EVALUATIONS} from '#/main/evaluation/modals/resource-evaluations'
+import {EvaluationDetails} from '#/main/evaluation/components/details'
+import {route} from '#/main/community/user/routing'
 
 class EvaluationUser extends Component {
   constructor(props) {
@@ -132,24 +70,6 @@ class EvaluationUser extends Component {
           <ContentTitle
             title={displayUsername(get(this.props.workspaceEvaluation, 'user'))}
             backAction={this.props.backAction}
-            actions={[
-              {
-                name: 'export',
-                type: URL_BUTTON,
-                icon: 'fa fa-fw fa-download',
-                label: trans('export', {}, 'actions'),
-                target: ['apiv2_workspace_export_user_progression', {workspace: this.props.workspaceId, user: this.props.userId}],
-                group: trans('export')
-              }, {
-                type: MODAL_BUTTON,
-                icon: 'fa fa-fw fa-envelope',
-                label: trans('send-message', {}, 'actions'),
-                scope: ['object', 'collection'],
-                modal: [MODAL_MESSAGE, {
-                  receivers: {users: [get(this.props.workspaceEvaluation, 'user')]}
-                }]
-              }
-            ]}
           />
         }
 
@@ -161,15 +81,42 @@ class EvaluationUser extends Component {
           }}
         >
           <div className="col-md-4 user-progression">
-            <WorkspaceProgression
-              workspaceEvaluation={this.props.workspaceEvaluation}
+            <EvaluationDetails
+              evaluation={this.props.workspaceEvaluation}
+              statusTexts={constants.EVALUATION_STATUSES}
+              details={[
+                [trans('last_activity'), get(this.props.workspaceEvaluation, 'date') ? displayDate(this.props.workspaceEvaluation.date, false, true) : '-'],
+                [trans('duration'), get(this.props.workspaceEvaluation, 'duration') ? displayDuration(get(this.props.workspaceEvaluation, 'duration')) : '-'],
+                get(this.props.workspaceEvaluation, 'scoreMax') && [
+                  trans('score'),
+                  (get(this.props.workspaceEvaluation, 'score') ? number((get(this.props.workspaceEvaluation, 'score') / get(this.props.workspaceEvaluation, 'scoreMax')) * 100) : '?') + '/ 100'
+                ]
+              ].filter(value => !!value)}
+              estimatedDuration={get(this.props, 'workspace.evaluation.estimatedDuration')}
             />
 
             <div className="component-container">
               <Toolbar
                 buttonName="btn btn-block"
+                toolbar="show-profile send-message"
                 actions={[
                   {
+                    name: 'show-profile',
+                    className: 'btn-emphasis',
+                    type: LINK_BUTTON,
+                    label: trans('show_profile', {}, 'actions'),
+                    target: route(get(this.props.workspaceEvaluation, 'user')),
+                    primary: true,
+                    displayed: this.props.userId !== this.props.currentUserId
+                  }, {
+                    name: 'send-message',
+                    type: MODAL_BUTTON,
+                    label: trans('send-message', {}, 'actions'),
+                    modal: [MODAL_MESSAGE, {
+                      receivers: {users: [get(this.props.workspaceEvaluation, 'user')]}
+                    }],
+                    displayed: this.props.userId !== this.props.currentUserId
+                  }, {
                     name: 'download-participation-certificate',
                     type: URL_BUTTON,
                     label: trans('download_participation_certificate', {}, 'actions'),
@@ -252,6 +199,23 @@ class EvaluationUser extends Component {
                     marginBottom: '10px'
                   }}
                   data={evaluation}
+                  actions={[
+                    {
+                      name: 'open',
+                      type: LINK_BUTTON,
+                      icon: 'fa fa-fw fa-external-link',
+                      label: trans('open', {}, 'actions'),
+                      target: resourceRoute(evaluation.resourceNode)
+                    }, {
+                      name: 'about',
+                      type: MODAL_BUTTON,
+                      icon: 'fa fa-fw fa-circle-info',
+                      label: trans('show-info', {}, 'actions'),
+                      modal: [MODAL_RESOURCE_EVALUATIONS, {
+                        userEvaluation: evaluation
+                      }]
+                    }
+                  ]}
                 />
               ))
             }
@@ -263,6 +227,8 @@ class EvaluationUser extends Component {
 }
 
 EvaluationUser.propTypes = {
+  contextPath: T.string,
+  currentUserId: T.string,
   userId: T.string.isRequired,
   workspaceId: T.string.isRequired,
   backAction: T.shape({
@@ -272,10 +238,10 @@ EvaluationUser.propTypes = {
   // from store
   loaded: T.bool.isRequired,
   workspaceEvaluation: T.shape(
-    WorkspaceUserEvaluationTypes.propTypes
+    WorkspaceEvaluationTypes.propTypes
   ),
   resourceEvaluations: T.arrayOf(T.shape(
-    ResourceUserEvaluationTypes.propTypes
+    ResourceEvaluationTypes.propTypes
   )),
   load: T.func.isRequired
 }

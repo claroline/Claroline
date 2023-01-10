@@ -1,8 +1,9 @@
 import {PropTypes as T} from 'prop-types'
-import {User} from '#/main/community/prop-types'
-import {ResourceNode} from '#/main/core/resource/prop-types'
 
-const ResourceUserEvaluation = {
+import {ResourceNode} from '#/main/core/resource/prop-types'
+import {User} from '#/main/community/user/prop-types'
+
+const ResourceEvaluation = {
   propTypes: {
     id: T.number.isRequired,
     date: T.string.isRequired,
@@ -12,7 +13,6 @@ const ResourceUserEvaluation = {
     scoreMin: T.number,
     scoreMax: T.number,
     progression: T.number,
-    progressionMin: T.number,
     progressionMax: T.number,
     resourceNode: T.shape(
       ResourceNode.propTypes
@@ -31,7 +31,32 @@ const ResourceUserEvaluation = {
   }
 }
 
-export {
-  ResourceUserEvaluation
+const ResourceAttempt = {
+  propTypes: {
+    id: T.number.isRequired,
+    date: T.string.isRequired,
+    status: T.string.isRequired,
+    duration: T.number,
+    score: T.number,
+    scoreMin: T.number,
+    scoreMax: T.number,
+    progression: T.number,
+    progressionMax: T.number,
+    resourceNode: T.shape(
+      ResourceNode.propTypes
+    ),
+    user: T.shape(
+      User.propTypes
+    ),
+    comment: T.string,
+    data: T.oneOfType([T.object, T.array])
+  },
+  defaultProps: {
+
+  }
 }
 
+export {
+  ResourceEvaluation,
+  ResourceAttempt
+}

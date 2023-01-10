@@ -29,7 +29,7 @@ export const actions = {}
 
 actions.setTestMode = makeActionCreator(TEST_MODE_SET, 'testMode')
 actions.startAttempt = makeActionCreator(ATTEMPT_START, 'paper', 'answers')
-actions.finishAttempt = makeActionCreator(ATTEMPT_FINISH, 'paper')
+actions.finishAttempt = makeActionCreator(ATTEMPT_FINISH, 'paper', 'attempt')
 actions.openStep = makeActionCreator(STEP_OPEN, 'step')
 actions.updateAnswer = makeActionCreator(ANSWER_UPDATE, 'questionId', 'answerData')
 actions.submitAnswers = makeActionCreator(ANSWERS_SUBMIT, 'quizId', 'paperId', 'answers')
@@ -157,7 +157,7 @@ actions.requestEnd = (quizId, paperId, navigate) => ({
       method: 'PUT'
     },
     success: (response, dispatch) => {
-      dispatch(actions.handleAttemptEnd(response.paper, navigate))
+      dispatch(actions.handleAttemptEnd(response.paper, response.attempt, navigate))
       dispatch(resourceActions.updateUserEvaluation(response.userEvaluation))
     }
   }
@@ -180,10 +180,10 @@ actions.processEnd = (paper, navigate) => (dispatch, getState) => {
   dispatch(actions.handleAttemptEnd(newPaper, navigate))
 }
 
-actions.handleAttemptEnd = (paper, navigate) => {
+actions.handleAttemptEnd = (paper, attempt, navigate) => {
   return (dispatch, getState) => {
     // Finish the current attempt
-    dispatch(actions.finishAttempt(paper))
+    dispatch(actions.finishAttempt(paper, attempt))
 
     const correctionAvailable = showCorrection(paper)
     if (correctionAvailable) {

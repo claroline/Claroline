@@ -5,14 +5,12 @@ import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
 import {hasPermission} from '#/main/app/security'
-import {Toolbar} from '#/main/app/action/components/toolbar'
 import {LINK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 import {route} from '#/main/core/workspace/routing'
-import {selectors as resourceSelect} from '#/main/core/resource/store'
 import {selectors as securitySelectors} from '#/main/app/security/store/selectors'
+import {selectors as resourceSelect} from '#/main/core/resource/store'
+import {ResourceEnd} from '#/main/core/resource/components/end'
 
-import {ContentHtml} from '#/main/app/content/components/html'
-import {ScoreGauge} from '#/main/core/layout/gauge/components/score'
 import {ScoreBox} from '#/main/core/layout/evaluation/components/score-box'
 import {calculateScore, calculateTotal} from '#/plugin/exo/items/score'
 import {isQuestionType} from '#/plugin/exo/items/item-types'
@@ -20,9 +18,6 @@ import {isQuestionType} from '#/plugin/exo/items/item-types'
 import {select as playerSelect} from '#/plugin/exo/quiz/player/selectors'
 import {showCorrection, showScore} from '#/plugin/exo/resources/quiz/papers/restrictions'
 import {AttemptsChart} from '#/plugin/exo/charts/attempts/components/chart'
-
-// TODO : merge with PlayerRestrictions
-// TODO : show number of attempts info
 
 const IntermediateScores = (props) => {
   let intermediate = []
@@ -111,135 +106,107 @@ IntermediateScores.defaultProps = {
 }
 
 const AttemptEndComponent = props =>
-  <div className="quiz-player">
-    <div className="row">
-      {props.showAttemptScore &&
-        <div className="col-md-3 text-center" style={{marginTop: '20px'}}>
-          <ScoreGauge
-            type="user"
-            value={get(props.paper, 'score')}
-            total={get(props.paper, 'total')}
-            width={140}
-            height={140}
-            displayValue={value => undefined === value || null === value ? '?' : value+''}
-          />
-        </div>
+  <ResourceEnd
+    contentText={props.endMessage ||
+      <Fragment>
+        <h2 className="h3">{trans('attempt_end_title', {}, 'quiz')}</h2>
+        <p>{trans('attempt_end_info', {}, 'quiz')}</p>
+      </Fragment>
+    }
+    attempt={props.attempt}
+    display={{
+      score: props.showAttemptScore,
+      scoreMax: get(props.paper, 'total'),
+      successScore: get(props.paper, 'structure.parameters.successScore'),
+      feedback: !!get(props.paper, 'structure.parameters.successMessage') || !!get(props.paper, 'structure.parameters.failureMessage'),
+      toolbar: props.endNavigation
+    }}
+    feedbacks={{
+      success: get(props.paper, 'structure.parameters.successMessage'),
+      failure: get(props.paper, 'structure.parameters.failureMessage'),
+      closed: !props.hasMoreAttempts ? [[
+        trans('exercise_attempt_limit', {}, 'quiz'),
+        get(props.paper, 'structure.parameters.attemptsReachedMessage')
+      ]] : undefined
+    }}
+    details={[
+      [trans('attempts'), get(props.userEvaluation, 'nbAttempts', 0) + (props.maxAttempts ? ' / ' + props.maxAttempts : '') ]
+    ]}
+
+    actions={[
+      {
+        name: 'test',
+        type: LINK_BUTTON,
+        icon: 'fa fa-fw fa-flask',
+        label: trans('test', {}, 'actions'),
+        exact: true,
+        primary: true,
+        displayed: props.testMode
+      }, {
+        name: 'restart',
+        type: LINK_BUTTON,
+        label: trans('exercise_restart', {}, 'quiz'),
+        target: `${props.path}/play`,
+        exact: true,
+        primary: true,
+        displayed: props.hasMoreAttempts
+      }, {
+        name: 'correction',
+        type: LINK_BUTTON,
+        label: trans('view_paper', {}, 'quiz'),
+        target: `${props.path}/papers/${props.paper.id}`,
+        displayed: props.showAttemptCorrection,
+        primary: true
+      }, {
+        name: 'statistics',
+        type: LINK_BUTTON,
+        label: trans('statistics', {}, 'quiz'),
+        target: `${props.path}/statistics`,
+        displayed: props.showStatistics
+      }, {
+        name: 'home',
+        type: URL_BUTTON, // we require an URL_BUTTON here to escape the embedded resource router
+        label: trans('return-home', {}, 'actions'),
+        target: '#'+route(props.workspace),
+        displayed: !!props.workspace,
+        exact: true
       }
+    ]}
+  >
+    {props.showAttemptScore &&
+      <IntermediateScores
+        mode={get(props.paper, 'structure.parameters.intermediateScores')}
+        steps={props.paper.structure.steps}
+        tags={props.tags}
+        answers={props.answers}
+        total={get(props.paper, 'structure.score.total')}
+      />
+    }
 
-      <div className={props.showAttemptScore ? 'col-md-9':'col-md-12'}>
-        {props.showAttemptScore &&
-        get(props.paper, 'total') &&
-        get(props.paper, 'structure.parameters.successScore') &&
-        get(props.paper, 'structure.parameters.successMessage') &&
-        (get(props.paper, 'score') / get(props.paper, 'total')) * 100 >= get(props.paper, 'structure.parameters.successScore') &&
-          <div className="alert alert-info">
-            <ContentHtml>{get(props.paper, 'structure.parameters.successMessage')}</ContentHtml>
-          </div>
-        }
+    {props.showEndStats && ['user', 'both'].includes(get(props.paper, 'structure.parameters.overviewStats')) &&
+      <AttemptsChart
+        quizId={props.paper.structure.id}
+        userId={props.currentUserId}
+        steps={props.paper.structure.steps}
+        questionNumberingType={get(props.paper, 'structure.parameters.questionNumbering')}
+      />
+    }
 
-        {props.showAttemptScore &&
-        get(props.paper, 'total') &&
-        get(props.paper, 'structure.parameters.successScore') &&
-        get(props.paper, 'structure.parameters.failureMessage') &&
-        (get(props.paper, 'score') / get(props.paper, 'total')) * 100 < get(props.paper, 'structure.parameters.successScore') &&
-          <div className="alert alert-danger">
-            <ContentHtml>{get(props.paper, 'structure.parameters.failureMessage')}</ContentHtml>
-          </div>
-        }
-
-        {props.endMessage ?
-          <ContentHtml className="component-container">{props.endMessage}</ContentHtml> :
-          <Fragment>
-            <h2 className="h3">{trans('attempt_end_title', {}, 'quiz')}</h2>
-            <p>{trans('attempt_end_info', {}, 'quiz')}</p>
-          </Fragment>
-        }
-
-        {props.showAttemptScore &&
-          <IntermediateScores
-            mode={get(props.paper, 'structure.parameters.intermediateScores')}
-            steps={props.paper.structure.steps}
-            tags={props.tags}
-            answers={props.answers}
-            total={get(props.paper, 'structure.score.total')}
-          />
-        }
-
-        {props.showEndStats && ['user', 'both'].includes(get(props.paper, 'structure.parameters.overviewStats')) &&
-          <AttemptsChart
-            quizId={props.paper.structure.id}
-            userId={props.currentUserId}
-            steps={props.paper.structure.steps}
-            questionNumberingType={get(props.paper, 'structure.parameters.questionNumbering')}
-          />
-        }
-
-        {props.showEndStats && ['all', 'both'].includes(get(props.paper, 'structure.parameters.overviewStats')) &&
-          <AttemptsChart
-            quizId={props.paper.structure.id}
-            steps={props.paper.structure.steps}
-            questionNumberingType={get(props.paper, 'structure.parameters.questionNumbering')}
-          />
-        }
-
-        {props.endNavigation &&
-          <Toolbar
-            buttonName="btn btn-block btn-emphasis"
-            toolbar="test restart correction statistics home"
-            actions={[
-              {
-                name: 'test',
-                type: LINK_BUTTON,
-                icon: 'fa fa-fw fa-flask',
-                label: trans('test', {}, 'actions'),
-                target: `${props.path}/test`,
-                exact: true,
-                primary: true,
-                displayed: props.testMode
-              }, {
-                name: 'restart',
-                type: LINK_BUTTON,
-                icon: 'fa fa-fw fa-redo',
-                label: trans('exercise_restart', {}, 'quiz'),
-                target: `${props.path}/play`,
-                exact: true,
-                primary: true,
-                displayed: props.hasMoreAttempts
-              }, {
-                name: 'correction',
-                type: LINK_BUTTON,
-                icon: 'fa fa-fw fa-check-double',
-                label: trans('view_paper', {}, 'quiz'),
-                target: `${props.path}/papers/${props.paper.id}`,
-                displayed: props.showAttemptCorrection,
-                primary: true
-              }, {
-                name: 'statistics',
-                type: LINK_BUTTON,
-                icon: 'fa fa-fw fa-bar-chart',
-                label: trans('statistics', {}, 'quiz'),
-                target: `${props.path}/statistics`,
-                displayed: props.showStatistics
-              }, {
-                name: 'home',
-                type: URL_BUTTON, // we require an URL_BUTTON here to escape the embedded resource router
-                icon: 'fa fa-fw fa-home',
-                label: trans('return-home', {}, 'actions'),
-                target: '#'+route(props.workspace),
-                displayed: !!props.workspace,
-                exact: true
-              }
-            ]}
-          />
-        }
-      </div>
-    </div>
-  </div>
+    {props.showEndStats && ['all', 'both'].includes(get(props.paper, 'structure.parameters.overviewStats')) &&
+      <AttemptsChart
+        quizId={props.paper.structure.id}
+        steps={props.paper.structure.steps}
+        questionNumberingType={get(props.paper, 'structure.parameters.questionNumbering')}
+      />
+    }
+  </ResourceEnd>
 
 AttemptEndComponent.propTypes = {
   path: T.string.isRequired,
   workspace: T.object,
   currentUserId: T.string.isRequired,
+  userEvaluation: T.object,
+  attempt: T.object,
   paper: T.shape({ // TODO : paper prop types
     id: T.string.isRequired,
     structure: T.object.isRequired,
@@ -248,7 +215,9 @@ AttemptEndComponent.propTypes = {
   tags: T.array,
   answers: T.object,
   testMode: T.bool.isRequired,
+  maxAttempts: T.number,
   hasMoreAttempts: T.bool.isRequired,
+  attemptsReachedMessage: T.string,
   endMessage: T.string,
   endNavigation: T.bool.isRequired,
   showStatistics: T.bool.isRequired,
@@ -264,13 +233,17 @@ const AttemptEnd = connect(
 
     return {
       path: resourceSelect.path(state),
+      userEvaluation: resourceSelect.resourceEvaluation(state),
       workspace: resourceSelect.workspace(state),
       currentUserId: securitySelectors.currentUserId(state),
       paper: paper,
+      attempt: playerSelect.attempt(state),
       answers: playerSelect.answers(state),
       tags: playerSelect.tags(state),
       testMode: playerSelect.testMode(state),
       hasMoreAttempts: playerSelect.hasMoreAttempts(state),
+      maxAttempts: playerSelect.maxAttempts(state),
+      attemptsReachedMessage: playerSelect.attemptsReachedMessage(state),
       endMessage: playerSelect.quizEndMessage(state),
       endNavigation: playerSelect.quizEndNavigation(state),
 

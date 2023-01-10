@@ -9,14 +9,6 @@
     "display": {
       "type": "object",
       "properties": {
-        "description": {
-          "type": ["string", "null"],
-          "description": "The description of the path"
-        },
-        "showOverview": {
-          "type": "boolean",
-          "description": "Wether the overview is displayed or not"
-        },
         "numbering": {
           "enum": ["none", "numeric", "literal", "custom"],
           "description": "Numbering of the steps"
@@ -29,8 +21,7 @@
           "type": "boolean",
           "description": "Wether the score is displayed or not"
         }
-      },
-      "required": ["showOverview", "manualProgressionAllowed"]
+      }
     },
     "score": {
       "type": "object",
@@ -50,6 +41,19 @@
       "uniqueItems": true,
       "items": {
         "$ref": "https://github.com/claroline/Claroline/tree/master/src/plugin/path/Resources/schemas/step.json"
+      }
+    },
+    "overview": {
+      "type": "object",
+      "properties": {
+        "display": {
+          "type": "boolean",
+          "description": "Wether the overview is displayed or not"
+        },
+        "message": {
+          "type": ["string", "null"],
+          "description": "The description of the path"
+        }
       }
     }
   },

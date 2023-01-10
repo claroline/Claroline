@@ -89,13 +89,13 @@ class ExerciseListener
         // fetch additional user data
         $lastAttempt = null;
         $nbUserPapers = 0;
-        $nbUserPapersDayCount = 0;
+        //$nbUserPapersDayCount = 0;
         $userEvaluation = null;
         if ($currentUser instanceof User) {
             $lastAttempt = $this->attemptManager->getLastPaper($exercise, $currentUser);
 
             $nbUserPapers = (int) $this->paperManager->countUserFinishedPapers($exercise, $currentUser);
-            $nbUserPapersDayCount = (int) $this->paperManager->countUserFinishedDayPapers($exercise, $currentUser);
+            //$nbUserPapersDayCount = (int) $this->paperManager->countUserFinishedDayPapers($exercise, $currentUser);
             $userEvaluation = $this->serializer->serialize(
                 $this->resourceEvalManager->getUserEvaluation($exercise->getResourceNode(), $currentUser),
                 [Options::SERIALIZE_MINIMAL]
@@ -104,12 +104,12 @@ class ExerciseListener
 
         $event->setData([
             'quiz' => $this->serializer->serialize($exercise, $options),
-            'paperCount' => (int) $this->paperManager->countExercisePapers($exercise),
+            //'paperCount' => (int) $this->paperManager->countExercisePapers($exercise),
 
             // user data
             'lastAttempt' => $lastAttempt ? $this->paperManager->serialize($lastAttempt) : null,
             'userPaperCount' => $nbUserPapers,
-            'userPaperDayCount' => $nbUserPapersDayCount,
+            //'userPaperDayCount' => $nbUserPapersDayCount,
             'userEvaluation' => $userEvaluation,
         ]);
         $event->stopPropagation();

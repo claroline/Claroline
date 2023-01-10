@@ -54,18 +54,11 @@ class PathSerializer
     {
         return [
             'id' => $path->getUuid(),
-            'meta' => [
-                'description' => $path->getDescription(),
-                'endMessage' => $path->getEndMessage(),
-            ],
             'display' => [
-                'showOverview' => $path->getShowOverview(),
-                'showEndPage' => $path->getShowEndPage(),
                 'numbering' => $path->getNumbering() ? $path->getNumbering() : 'none',
                 'manualProgressionAllowed' => $path->isManualProgressionAllowed(),
                 'showScore' => $path->getShowScore(),
             ],
-            'overviewResource' => $path->getOverviewResource() ? $this->resourceNodeSerializer->serialize($path->getOverviewResource(), [SerializerInterface::SERIALIZE_MINIMAL]) : null,
             'opening' => [
                 'secondaryResources' => $path->getSecondaryResourcesTarget(),
             ],
@@ -75,6 +68,20 @@ class PathSerializer
             'score' => [
                 'success' => $path->getSuccessScore(),
                 'total' => $path->getScoreTotal(),
+            ],
+            'evaluation' => [
+                'successMessage' => $path->getSuccessMessage(),
+                'failureMessage' => $path->getFailureMessage(),
+            ],
+            'overview' => [
+                'display' => $path->getShowOverview(),
+                'message' => $path->getOverviewMessage(),
+                'resource' => $path->getOverviewResource() ? $this->resourceNodeSerializer->serialize($path->getOverviewResource(), [SerializerInterface::SERIALIZE_MINIMAL]) : null,
+            ],
+            'end' => [
+                'display' => $path->getShowEndPage(),
+                'message' => $path->getEndMessage(),
+                'navigation' => $path->hasEndNavigation(),
             ],
         ];
     }
@@ -87,10 +94,6 @@ class PathSerializer
             $path->refreshUuid();
         }
 
-        $this->sipe('meta.description', 'setDescription', $data, $path);
-        $this->sipe('meta.endMessage', 'setEndMessage', $data, $path);
-        $this->sipe('display.showOverview', 'setShowOverview', $data, $path);
-        $this->sipe('display.showEndPage', 'setShowEndPage', $data, $path);
         $this->sipe('display.numbering', 'setNumbering', $data, $path);
         $this->sipe('display.manualProgressionAllowed', 'setManualProgressionAllowed', $data, $path);
         $this->sipe('display.showScore', 'setShowScore', $data, $path);
@@ -100,13 +103,26 @@ class PathSerializer
         $this->sipe('score.success', 'setSuccessScore', $data, $path);
         $this->sipe('score.total', 'setScoreTotal', $data, $path);
 
-        if (array_key_exists('overviewResource', $data)) {
-            $overviewResource = null;
-            if (!empty($data['overviewResource'])) {
-                $overviewResource = $this->resourceNodeRepo->findOneBy(['uuid' => $data['overviewResource']['id']]);
-            }
+        $this->sipe('evaluation.successMessage', 'setSuccessMessage', $data, $path);
+        $this->sipe('evaluation.failureMessage', 'setFailureMessage', $data, $path);
 
-            $path->setOverviewResource($overviewResource);
+        if (!empty($data['overview'])) {
+            $this->sipe('overview.display', 'setShowOverview', $data, $path);
+            $this->sipe('overview.message', 'setOverviewMessage', $data, $path);
+            if (array_key_exists('resource', $data['overview'])) {
+                $overviewResource = null;
+                if (!empty($data['overview']['resource'])) {
+                    $overviewResource = $this->resourceNodeRepo->findOneBy(['uuid' => $data['overview']['resource']['id']]);
+                }
+
+                $path->setOverviewResource($overviewResource);
+            }
+        }
+
+        if (!empty($data['end'])) {
+            $this->sipe('end.display', 'setShowEndPage', $data, $path);
+            $this->sipe('end.message', 'setEndMessage', $data, $path);
+            $this->sipe('end.navigation', 'setEndNavigation', $data, $path);
         }
 
         if (isset($data['steps'])) {

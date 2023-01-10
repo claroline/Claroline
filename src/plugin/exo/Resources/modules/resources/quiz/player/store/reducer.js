@@ -18,6 +18,10 @@ const reducer = combineReducers({
   userPaperDayCount: makeReducer(0, {
     [makeInstanceAction(RESOURCE_LOAD, quizSelectors.STORE_NAME)]: (state, action) => action.resourceData.userPaperDayCount || state,
     [ATTEMPT_FINISH]: (state) => state + 1
+  }),
+  // the base evaluation attempt
+  attempt: makeReducer(null, {
+    [ATTEMPT_FINISH]: (state, action) => action.attempt
   })
 })
 

@@ -1,12 +1,34 @@
-import {trans} from '#/main/app/intl/translation'
+import React from 'react'
 
-import {constants} from '#/main/core/resource/constants'
+import {trans} from '#/main/app/intl/translation'
+import {URL_BUTTON} from '#/main/app/buttons'
+
+import {constants} from '#/main/evaluation/constants'
+import {route} from '#/main/core/resource/routing'
+import {ResourceCard} from '#/main/evaluation/resource/components/card'
 
 export default {
   name: 'resource_evaluations',
   parameters: {
+    primaryAction: (evaluation) => ({
+      type: URL_BUTTON,
+      target: `#${route(evaluation.resourceNode)}`
+    }),
     definition: [
       {
+        name: 'status',
+        type: 'choice',
+        label: trans('status'),
+        options: {
+          choices: constants.EVALUATION_STATUSES_SHORT
+        },
+        displayed: true,
+        render: (row) => (
+          <span className={`label label-${constants.EVALUATION_STATUS_COLOR[row.status]}`}>
+            {constants.EVALUATION_STATUSES_SHORT[row.status]}
+          </span>
+        )
+      }, {
         name: 'user',
         type: 'user',
         label: trans('user'),
@@ -23,14 +45,6 @@ export default {
         options: {time: true},
         displayed: true,
         primary: true
-      }, {
-        name: 'status',
-        type: 'choice',
-        label: trans('status'),
-        options: {
-          choices: constants.EVALUATION_STATUSES
-        },
-        displayed: true
       }, {
         name: 'duration',
         type: 'time',
@@ -71,6 +85,7 @@ export default {
         sortable: false,
         filterable: true
       }
-    ]
+    ],
+    card: ResourceCard
   }
 }

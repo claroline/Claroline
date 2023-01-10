@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
 import {schemeCategory20c} from 'd3-scale'
 
@@ -6,12 +6,10 @@ import {asset} from '#/main/app/config'
 import {toKey} from '#/main/core/scaffolding/text'
 import {LiquidGauge} from '#/main/core/layout/gauge/components/liquid-gauge'
 import {displayDuration, number, trans} from '#/main/app/intl'
-import {LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {DataCard} from '#/main/app/data/components/card'
-import {route as resourceRoute} from '#/main/core/resource/routing'
 
-import {MODAL_RESOURCE_EVALUATIONS} from '#/main/evaluation/modals/resource-evaluations'
-import {ResourceUserEvaluation as ResourceUserEvaluationTypes} from '#/main/evaluation/resource/prop-types'
+import {constants} from '#/main/evaluation/constants'
+import {ResourceEvaluation as ResourceEvaluationTypes} from '#/main/evaluation/resource/prop-types'
 
 const ResourceCard = (props) => {
   let progression = 0
@@ -34,70 +32,65 @@ const ResourceCard = (props) => {
           type="user"
           value={progression}
           displayValue={(value) => number(value) + '%'}
-          width={60}
-          height={60}
+          width={'lg' === props.size ? 100 : 60}
+          height={'lg' === props.size ? 100 : 60}
         />
       }
-      title={props.data.resourceNode.name}
+      title={
+        <Fragment>
+          <span className={`label label-${constants.EVALUATION_STATUS_COLOR[props.data.status]} icon-with-text-right`}>
+            {constants.EVALUATION_STATUSES_SHORT[props.data.status]}
+          </span>
+
+          {props.data.resourceNode.name}
+        </Fragment>
+      }
       subtitle={trans(props.data.resourceNode.meta.type, {}, 'resource')}
-      actions={[
-        {
-          name: 'open',
-          type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-external-link',
-          label: trans('open', {}, 'actions'),
-          target: resourceRoute(props.data.resourceNode)
-        }, {
-          name: 'about',
-          type: MODAL_BUTTON,
-          icon: 'fa fa-fw fa-circle-info',
-          label: trans('show-info', {}, 'actions'),
-          modal: [MODAL_RESOURCE_EVALUATIONS, {
-            userEvaluation: props.data
-          }]
-        }
-      ]}
     >
-      <div className="resource-evaluation-details">
-        {[
-          {
-            icon: 'fa fa-fw fa-eye',
-            label: trans('views'),
-            value: number(props.data.nbOpenings)
-          }, {
-            icon: 'fa fa-fw fa-redo',
-            label: trans('attempts'),
-            value: number(props.data.nbAttempts)
-          }, {
-            icon: 'fa fa-fw fa-hourglass-half',
-            label: trans('time_spent'),
-            value: displayDuration(props.data.duration) || trans('unknown')
-          }, {
-            icon: 'fa fa-fw fa-award',
-            label: trans('score'),
-            displayed: !!props.data.scoreMax,
-            value: (number(props.data.score) || 0) + ' / ' + number(props.data.scoreMax)
+      {-1 === ['xs', 'sm'].indexOf(props.size) && (!props.display || -1 !== props.display.indexOf('footer')) &&
+        <div className="resource-evaluation-details">
+          {[
+            {
+              icon: 'fa fa-fw fa-eye',
+              label: trans('views'),
+              value: number(props.data.nbOpenings)
+            }, {
+              icon: 'fa fa-fw fa-redo',
+              label: trans('attempts'),
+              value: number(props.data.nbAttempts)
+            }, {
+              icon: 'fa fa-fw fa-hourglass-half',
+              label: trans('time_spent'),
+              value: displayDuration(props.data.duration) || trans('unknown')
+            }, {
+              icon: 'fa fa-fw fa-award',
+              label: trans('score'),
+              displayed: !!props.data.scoreMax,
+              value: (number(props.data.score) || 0) + ' / ' + number(props.data.scoreMax)
+            }
+          ]
+            .filter(item => undefined === item.displayed || item.displayed)
+            .map((item, index) => (
+              <article key={toKey(item.label)}>
+                <span className={item.icon} style={{backgroundColor: schemeCategory20c[(index * 4) + 1]}}/>
+                <h5>
+                  <small>{item.label}</small>
+                  {item.value}
+                </h5>
+              </article>
+            ))
           }
-        ]
-          .filter(item => undefined === item.displayed || item.displayed)
-          .map((item, index) => (
-            <article key={toKey(item.label)}>
-              <span className={item.icon} style={{backgroundColor: schemeCategory20c[(index * 4) + 1]}} />
-              <h5>
-                <small>{item.label}</small>
-                {item.value}
-              </h5>
-            </article>
-          ))
-        }
-      </div>
+        </div>
+      }
     </DataCard>
   )
 }
 
 ResourceCard.propTypes = {
+  size: T.string,
+  display: T.array, // from widget list
   data: T.shape(
-    ResourceUserEvaluationTypes.propTypes
+    ResourceEvaluationTypes.propTypes
   )
 }
 

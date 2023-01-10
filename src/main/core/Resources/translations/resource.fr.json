@@ -20,6 +20,8 @@
     "resource_overview": "Vue d'ensemble de la ressource",
     "resource_overview_actions": "Actions disponibles",
     "resource_overview_info": "Informations",
+    "resource_end": "Fin de la ressource",
+    "resource_end_navigation": "Afficher les raccourcis de navigation",
     "resource_rights_admin": "Uniquement les gestionnaires",
     "resource_rights_admin_tip": "Cette ressource est uniquement accessible aux gestionnaires.",
     "resource_rights_all": "Tout le monde",

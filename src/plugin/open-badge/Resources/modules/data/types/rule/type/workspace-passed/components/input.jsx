@@ -9,7 +9,7 @@ import {ChoiceInput} from '#/main/app/data/types/choice/components/input'
 
 import {Workspace as WorkspaceTypes} from '#/main/core/workspace/prop-types'
 import {WorkspaceInput} from '#/main/core/data/types/workspace/components/input'
-import {constants} from '#/main/core/workspace/constants'
+import {constants} from '#/main/evaluation/workspace/constants'
 
 // todo : manages errors
 

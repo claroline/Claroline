@@ -130,7 +130,7 @@ const EditorParameters = props => {
                     name: 'parameters._showOverviewStats',
                     type: 'boolean',
                     label: trans('show_attempts_stats', {}, 'quiz'),
-                    displayed: (quiz) => get(quiz, 'parameters.hasExpectedAnswers'),
+                    displayed: (quiz) => get(quiz, 'parameters.hasExpectedAnswers') && hasOverview(quiz),
                     calculated: (quiz) => 'none' !== get(quiz, 'parameters.overviewStats'),
                     onChange: (checked) => {
                       if (checked) {
@@ -433,14 +433,14 @@ const EditorParameters = props => {
                   }, {
                     name: 'parameters.endNavigation',
                     type: 'boolean',
-                    label: trans('show_end_navigation', {}, 'quiz'),
+                    label: trans('resource_end_navigation', {}, 'resource'),
                     help: trans('show_end_navigation_help', {}, 'quiz'),
                     displayed: hasEnd
                   }, {
                     name: 'parameters._showEndStats',
                     type: 'boolean',
                     label: trans('show_attempts_stats', {}, 'quiz'),
-                    displayed: (quiz) => get(quiz, 'parameters.hasExpectedAnswers'),
+                    displayed: (quiz) => get(quiz, 'parameters.hasExpectedAnswers') && hasEnd(quiz),
                     calculated: (quiz) => 'none' !== get(quiz, 'parameters.endStats'),
                     onChange: (checked) => {
                       if (checked) {
@@ -598,22 +598,32 @@ const EditorParameters = props => {
             fields: [
               {
                 name: 'parameters.successScore',
-                label: trans('quiz_success_score', {}, 'quiz'),
+                label: trans('score_to_pass'),
                 type: 'number',
-                required: true,
                 options: {
                   min: 0,
                   max: 100,
                   unit: '%'
-                }
-              }, {
-                name: 'parameters.successMessage',
-                label: trans('success_message'),
-                type: 'html'
-              }, {
-                name: 'parameters.failureMessage',
-                label: trans('failure_message'),
-                type: 'html'
+                },
+                linked: [
+                  {
+                    name: 'parameters.successMessage',
+                    label: trans('success_message'),
+                    type: 'html',
+                    displayed: (quiz) => !!get(quiz, 'parameters.successScore'),
+                    options: {
+                      workspace: props.workspace
+                    }
+                  }, {
+                    name: 'parameters.failureMessage',
+                    label: trans('failure_message'),
+                    type: 'html',
+                    displayed: (quiz) => !!get(quiz, 'parameters.successScore'),
+                    options: {
+                      workspace: props.workspace
+                    }
+                  }
+                ]
               }
             ]
           }, {
@@ -642,6 +652,14 @@ const EditorParameters = props => {
                     displayed: (quiz) => get(quiz, 'parameters._maxAttempts') || 0 < get(quiz, 'parameters.maxAttempts'),
                     options: {
                       min: 0
+                    }
+                  }, {
+                    name: 'parameters.attemptsReachedMessage',
+                    label: trans('message'),
+                    type: 'html',
+                    displayed: (quiz) => get(quiz, 'parameters._maxAttempts') || 0 < get(quiz, 'parameters.maxAttempts'),
+                    options: {
+                      workspace: props.workspace
                     }
                   }
                 ]

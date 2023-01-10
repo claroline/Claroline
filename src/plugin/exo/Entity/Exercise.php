@@ -3,6 +3,9 @@
 namespace UJM\ExoBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Claroline\CoreBundle\Entity\Resource\HasEndPage;
+use Claroline\CoreBundle\Entity\Resource\HasHomePage;
+use Claroline\EvaluationBundle\Entity\EvaluationFeedbacks;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use UJM\ExoBundle\Entity\Item\Item;
@@ -18,6 +21,9 @@ use UJM\ExoBundle\Library\Options\ShowScoreAt;
  */
 class Exercise extends AbstractResource
 {
+    use HasHomePage;
+    use HasEndPage;
+    use EvaluationFeedbacks;
     use AttemptParametersTrait;
 
     /**
@@ -28,13 +34,6 @@ class Exercise extends AbstractResource
      * @var string
      */
     private $type = ExerciseType::CUSTOM;
-
-    /**
-     * @ORM\Column(name="description", type="text", nullable=true)
-     *
-     * @var string
-     */
-    private $description = '';
 
     /**
      * When corrections are available to the Users ?
@@ -73,15 +72,6 @@ class Exercise extends AbstractResource
     private $interruptible = true;
 
     /**
-     * Show overview to users or directly start the quiz.
-     *
-     * @ORM\Column(name="show_overview", type="boolean")
-     *
-     * @var bool
-     */
-    private $showOverview = true;
-
-    /**
      * Show back button in player.
      *
      * @ORM\Column(name="show_back", type="boolean")
@@ -93,29 +83,11 @@ class Exercise extends AbstractResource
     /**
      * Show an end page when the user has finished the quiz.
      *
-     * @ORM\Column(name="show_end_page", type="boolean")
-     *
-     * @var bool
-     */
-    private $showEndPage = false;
-
-    /**
-     * Show an end page when the user has finished the quiz.
-     *
      * @ORM\Column(name="show_end_confirm", type="boolean")
      *
      * @var bool
      */
     private $showEndConfirm = true;
-
-    /**
-     * A message to display at the end of the quiz.
-     *
-     * @ORM\Column(name="end_message", type="text", nullable=true)
-     *
-     * @var string
-     */
-    private $endMessage = '';
 
     /**
      * Show intermediates scores by steps, by tags or not at all on the end page.
@@ -134,29 +106,6 @@ class Exercise extends AbstractResource
      * @var string
      */
     private $attemptsReachedMessage = '';
-
-    /**
-     * @ORM\Column(name="success_message", type="text", nullable=true)
-     *
-     * @var string
-     */
-    private $successMessage = '';
-
-    /**
-     * @ORM\Column(name="failure_message", type="text", nullable=true)
-     *
-     * @var string
-     */
-    private $failureMessage = '';
-
-    /**
-     * Show navigation buttons on the end page.
-     *
-     * @ORM\Column(name="end_navigation", type="boolean")
-     *
-     * @var bool
-     */
-    private $endNavigation = true;
 
     /**
      * Show attempts stats on the end page.
@@ -346,9 +295,6 @@ class Exercise extends AbstractResource
      */
     private $steps;
 
-    /**
-     * Exercise constructor.
-     */
     public function __construct()
     {
         parent::__construct();
@@ -357,152 +303,54 @@ class Exercise extends AbstractResource
         $this->steps = new ArrayCollection();
     }
 
-    /**
-     * Set description.
-     *
-     * @param string $description
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-    }
-
-    /**
-     * Get description.
-     *
-     * @return string
-     */
-    public function getDescription()
-    {
-        return $this->description;
-    }
-
-    /**
-     * Set correctionMode.
-     *
-     * @param string $correctionMode
-     */
-    public function setCorrectionMode($correctionMode)
+    public function setCorrectionMode(string $correctionMode): void
     {
         $this->correctionMode = $correctionMode;
     }
 
-    /**
-     * Get correctionMode.
-     *
-     * @return string
-     */
-    public function getCorrectionMode()
+    public function getCorrectionMode(): string
     {
         return $this->correctionMode;
     }
 
-    /**
-     * Set dateCorrection.
-     */
-    public function setDateCorrection(\DateTime $dateCorrection = null)
+    public function setDateCorrection(?\DateTimeInterface $dateCorrection = null): void
     {
         $this->dateCorrection = $dateCorrection;
     }
 
-    /**
-     * Get dateCorrection.
-     *
-     * @return \Datetime
-     */
-    public function getDateCorrection()
+    public function getDateCorrection(): ?\DateTimeInterface
     {
         return $this->dateCorrection;
     }
 
-    /**
-     * Set markMode.
-     *
-     * @param string $markMode
-     */
-    public function setMarkMode($markMode)
+    public function setMarkMode(string $markMode): void
     {
         $this->markMode = $markMode;
     }
 
-    /**
-     * Get markMode.
-     *
-     * @return string
-     */
-    public function getMarkMode()
+    public function getMarkMode(): string
     {
         return $this->markMode;
     }
 
-    /**
-     * Set interruptible.
-     *
-     * @param bool $interruptible
-     */
-    public function setInterruptible($interruptible)
+    public function setInterruptible(bool $interruptible): void
     {
         $this->interruptible = $interruptible;
     }
 
-    /**
-     * Is interruptible?
-     *
-     * @return bool
-     */
-    public function isInterruptible()
+    public function isInterruptible(): bool
     {
         return $this->interruptible;
     }
 
-    /**
-     * Set show end confirm dialog.
-     *
-     * @param bool $showEndConfirm
-     */
-    public function setShowEndConfirm($showEndConfirm)
+    public function setShowEndConfirm(bool $showEndConfirm): void
     {
         $this->showEndConfirm = $showEndConfirm;
     }
 
-    /**
-     * Is end confirm dialog shown ?
-     *
-     * @return bool
-     */
-    public function getShowEndConfirm()
+    public function getShowEndConfirm(): bool
     {
         return $this->showEndConfirm;
-    }
-
-    /**
-     * Set show end page.
-     *
-     * @param bool $showEndPage
-     */
-    public function setShowEndPage($showEndPage)
-    {
-        $this->showEndPage = $showEndPage;
-    }
-
-    /**
-     * Is end page shown ?
-     *
-     * @return bool
-     */
-    public function getShowEndPage()
-    {
-        return $this->showEndPage;
-    }
-
-    public function getEndMessage()
-    {
-        return $this->endMessage;
-    }
-
-    public function setEndMessage($endMessage)
-    {
-        $this->endMessage = $endMessage;
     }
 
     public function getOverviewStats(): string
@@ -510,7 +358,7 @@ class Exercise extends AbstractResource
         return $this->overviewStats;
     }
 
-    public function setOverviewStats(string $overviewStats)
+    public function setOverviewStats(string $overviewStats): void
     {
         $this->overviewStats = $overviewStats;
     }
@@ -520,183 +368,96 @@ class Exercise extends AbstractResource
         return $this->endStats;
     }
 
-    public function setEndStats(string $endStats)
+    public function setEndStats(string $endStats): void
     {
         $this->endStats = $endStats;
     }
 
-    public function getIntermediateScores()
+    public function getIntermediateScores(): string
     {
         return $this->intermediateScores;
     }
 
-    public function setIntermediateScores($intermediateScores)
+    public function setIntermediateScores(string $intermediateScores): void
     {
         $this->intermediateScores = $intermediateScores;
     }
 
-    public function setAttemptsReachedMessage($attemptsReachedMessage)
+    public function setAttemptsReachedMessage(?string $attemptsReachedMessage = null): void
     {
         $this->attemptsReachedMessage = $attemptsReachedMessage;
     }
 
-    public function getAttemptsReachedMessage()
+    public function getAttemptsReachedMessage(): ?string
     {
         return $this->attemptsReachedMessage;
     }
 
-    public function setSuccessMessage($successMessage)
-    {
-        $this->successMessage = $successMessage;
-    }
-
-    public function getSuccessMessage()
-    {
-        return $this->successMessage;
-    }
-
-    public function setFailureMessage($failureMessage)
-    {
-        $this->failureMessage = $failureMessage;
-    }
-
-    public function getFailureMessage()
-    {
-        return $this->failureMessage;
-    }
-
-    /**
-     * Set show overview.
-     *
-     * @param bool $showOverview
-     */
-    public function setShowOverview($showOverview)
-    {
-        $this->showOverview = $showOverview;
-    }
-
-    /**
-     * Is overview shown ?
-     *
-     * @return bool
-     */
-    public function getShowOverview()
-    {
-        return $this->showOverview;
-    }
-
-    /**
-     * Set show back.
-     *
-     * @param bool $showBack
-     */
-    public function setShowBack($showBack)
+    public function setShowBack(bool $showBack): void
     {
         $this->showBack = $showBack;
     }
 
-    /**
-     * Is back shown ?
-     *
-     * @return bool
-     */
-    public function getShowBack()
+    public function getShowBack(): bool
     {
         return $this->showBack;
     }
 
-    /**
-     * Set visibility of metadata.
-     *
-     * @param bool $visible
-     */
-    public function setMetadataVisible($visible)
+    public function setMetadataVisible(bool $visible): void
     {
         $this->metadataVisible = $visible;
     }
 
-    /**
-     * Are metadata visible ?
-     *
-     * @return bool
-     */
-    public function isMetadataVisible()
+    public function isMetadataVisible(): bool
     {
         return $this->metadataVisible;
     }
 
     /**
      * Do the current exercise include statistics ?
-     *
-     * @return bool
      */
-    public function hasStatistics()
+    public function hasStatistics(): bool
     {
         return $this->statistics;
     }
 
-    /**
-     * Set statistics.
-     *
-     * @param bool $statistics
-     */
-    public function setStatistics($statistics)
+    public function setStatistics(bool $statistics): void
     {
         $this->statistics = $statistics;
     }
 
     /**
      * Set minimal correction.
-     *
-     * @param bool $minimalCorrection
      */
-    public function setMinimalCorrection($minimalCorrection)
+    public function setMinimalCorrection(bool $minimalCorrection): void
     {
         $this->minimalCorrection = $minimalCorrection;
     }
 
     /**
      * Do we have to show the minimal correction view ?
-     *
-     * @return bool
      */
-    public function isMinimalCorrection()
+    public function isMinimalCorrection(): bool
     {
         return $this->minimalCorrection;
     }
 
-    /**
-     * Set anonymize attempts.
-     *
-     * @param bool $anonymizeAttempts
-     */
-    public function setAnonymizeAttempts($anonymizeAttempts)
+    public function setAnonymizeAttempts(bool $anonymizeAttempts): void
     {
         $this->anonymizeAttempts = $anonymizeAttempts;
     }
 
-    /**
-     * Get anonymize attempts.
-     *
-     * @return bool
-     */
-    public function getAnonymizeAttempts()
+    public function getAnonymizeAttempts(): bool
     {
         return $this->anonymizeAttempts;
     }
 
-    /**
-     * @param string $type
-     */
-    public function setType($type)
+    public function setType(string $type): void
     {
         $this->type = $type;
     }
 
-    /**
-     * @return string
-     */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
@@ -711,12 +472,8 @@ class Exercise extends AbstractResource
 
     /**
      * Gets a step by its UUID.
-     *
-     * @param string $uuid
-     *
-     * @return Step|null
      */
-    public function getStep($uuid)
+    public function getStep(string $uuid): ?Step
     {
         foreach ($this->steps as $step) {
             if ($step->getUuid() === $uuid) {
@@ -729,12 +486,8 @@ class Exercise extends AbstractResource
 
     /**
      * Gets a question by its UUID.
-     *
-     * @param string $uuid
-     *
-     * @return Item|null
      */
-    public function getQuestion($uuid)
+    public function getQuestion(string $uuid): ?Item
     {
         foreach ($this->steps as $step) {
             $questions = $step->getQuestions();
@@ -751,249 +504,171 @@ class Exercise extends AbstractResource
     /**
      * Adds a step to the Exercise.
      */
-    public function addStep(Step $step)
+    public function addStep(Step $step): void
     {
         if (!$this->steps->contains($step)) {
             $step->setOrder($this->steps->count());
             $this->steps->add($step);
             $step->setExercise($this);
         }
-
-        return $this;
     }
 
     /**
      * Removes a Step from the Exercise.
      */
-    public function removeStep(Step $step)
+    public function removeStep(Step $step): void
     {
         if ($this->steps->contains($step)) {
             $this->steps->removeElement($step);
         }
-
-        return $this;
     }
 
-    /**
-     * Sets show feedback.
-     *
-     * @param bool $showFeedback
-     */
-    public function setShowFeedback($showFeedback)
+    public function setShowFeedback(bool $showFeedback): void
     {
         $this->showFeedback = $showFeedback;
     }
 
-    /**
-     * Gets show feedback.
-     *
-     * @return bool
-     */
-    public function getShowFeedback()
+    public function getShowFeedback(): bool
     {
         return $this->showFeedback;
     }
 
-    /**
-     * @return string
-     */
-    public function getScoreRule()
+    public function getScoreRule(): ?string
     {
         return $this->scoreRule;
     }
 
-    /**
-     * @param string $scoreRule
-     *
-     * @return string
-     */
-    public function setScoreRule($scoreRule)
+    public function setScoreRule(?string $scoreRule): void
     {
         $this->scoreRule = $scoreRule;
-
-        return $this->scoreRule;
     }
 
-    /**
-     * Sets successScore.
-     *
-     * @param float $successScore
-     */
-    public function setSuccessScore($successScore)
+    public function setSuccessScore(?float $successScore = null): void
     {
         $this->successScore = $successScore;
     }
 
-    /**
-     * Gets successScore.
-     *
-     * @return float
-     */
-    public function getSuccessScore()
+    public function getSuccessScore(): ?float
     {
         return $this->successScore;
     }
 
-    public function setNumbering($numbering)
+    public function setNumbering(string $numbering): void
     {
         $this->numbering = $numbering;
     }
 
-    public function getNumbering()
+    public function getNumbering(): string
     {
         return $this->numbering;
     }
 
-    public function setQuestionNumbering($numbering)
+    public function setQuestionNumbering(string $numbering): void
     {
         $this->questionNumbering = $numbering;
     }
 
-    public function getQuestionNumbering()
+    public function getQuestionNumbering(): string
     {
         return $this->questionNumbering;
     }
 
-    public function setShowTitles($showTitles)
+    public function setShowTitles(bool $showTitles): void
     {
         $this->showTitles = $showTitles;
     }
 
-    public function getShowTitles()
+    public function getShowTitles(): bool
     {
         return $this->showTitles;
     }
 
-    public function setShowQuestionTitles($showTitles)
+    public function setShowQuestionTitles(bool $showTitles): void
     {
         $this->showQuestionTitles = $showTitles;
     }
 
-    public function getShowQuestionTitles()
+    public function getShowQuestionTitles(): bool
     {
         return $this->showQuestionTitles;
     }
 
-    public function setPicking($picking)
+    public function setPicking(string $picking): void
     {
         $this->picking = $picking;
     }
 
-    public function getPicking()
+    public function getPicking(): string
     {
         return $this->picking;
     }
 
-    public function setMaxPapers($maxPapers)
+    public function setMaxPapers(?int $maxPapers = null): void
     {
         $this->maxPapers = $maxPapers;
     }
 
-    public function getMaxPapers()
+    public function getMaxPapers(): ?int
     {
         return $this->maxPapers;
     }
 
-    /**
-     * Gets allPapersStatistics.
-     *
-     * @return bool
-     */
-    public function isAllPapersStatistics()
+    public function isAllPapersStatistics(): bool
     {
         return $this->allPapersStatistics;
     }
 
-    /**
-     * Sets allPapersStatistics.
-     *
-     * @param bool $allPapersStatistics
-     */
-    public function setAllPapersStatistics($allPapersStatistics)
+    public function setAllPapersStatistics(bool $allPapersStatistics): void
     {
         $this->allPapersStatistics = $allPapersStatistics;
     }
 
-    public function setMandatoryQuestions($mandatoryQuestions)
+    public function setMandatoryQuestions(bool $mandatoryQuestions): void
     {
         $this->mandatoryQuestions = $mandatoryQuestions;
     }
 
-    public function getMandatoryQuestions()
+    public function getMandatoryQuestions(): bool
     {
         return $this->mandatoryQuestions;
     }
 
-    public function hasEndNavigation()
-    {
-        return $this->endNavigation;
-    }
-
-    public function setEndNavigation($endNavigation)
-    {
-        $this->endNavigation = $endNavigation;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isTimeLimited()
+    public function isTimeLimited(): bool
     {
         return $this->timeLimited;
     }
 
-    /**
-     * @param bool $timeLimited
-     */
-    public function setTimeLimited($timeLimited)
+    public function setTimeLimited(bool $timeLimited): void
     {
         $this->timeLimited = $timeLimited;
     }
 
-    /**
-     * @return bool
-     */
-    public function isProgressionDisplayed()
+    public function isProgressionDisplayed(): bool
     {
         return $this->progressionDisplayed;
     }
 
-    /**
-     * @param bool $progressionDisplayed
-     */
-    public function setProgressionDisplayed($progressionDisplayed)
+    public function setProgressionDisplayed(bool $progressionDisplayed): void
     {
         $this->progressionDisplayed = $progressionDisplayed;
     }
 
-    /**
-     * @return bool
-     */
-    public function isAnswersEditable()
+    public function isAnswersEditable(): bool
     {
         return $this->answersEditable;
     }
 
-    /**
-     * @param bool $answersEditable
-     */
-    public function setAnswersEditable($answersEditable)
+    public function setAnswersEditable(bool $answersEditable): void
     {
         $this->answersEditable = $answersEditable;
     }
 
-    /**
-     * @return bool
-     */
-    public function hasExpectedAnswers()
+    public function hasExpectedAnswers(): bool
     {
         return $this->expectedAnswers;
     }
 
-    /**
-     * @param bool $expectedAnswers
-     */
-    public function setExpectedAnswers($expectedAnswers)
+    public function setExpectedAnswers(bool $expectedAnswers): void
     {
         $this->expectedAnswers = $expectedAnswers;
     }

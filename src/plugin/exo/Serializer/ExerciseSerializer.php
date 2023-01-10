@@ -55,8 +55,8 @@ class ExerciseSerializer
         ];
 
         if (!in_array(Transfer::MINIMAL, $options)) {
-            if (!empty($exercise->getDescription())) {
-                $serialized['description'] = $exercise->getDescription();
+            if (!empty($exercise->getOverviewMessage())) {
+                $serialized['description'] = $exercise->getOverviewMessage();
             }
 
             $serialized['score'] = json_decode($exercise->getScoreRule(), true);
@@ -138,11 +138,12 @@ class ExerciseSerializer
             'showFullCorrection' => !$exercise->isMinimalCorrection(),
             'showScoreAt' => $exercise->getMarkMode(),
             'showCorrectionAt' => $exercise->getCorrectionMode(),
+            'successScore' => $exercise->getSuccessScore(),
             'successMessage' => $exercise->getSuccessMessage(),
             'failureMessage' => $exercise->getFailureMessage(),
-            'successScore' => $exercise->getSuccessScore(),
             'correctionDate' => $exercise->getDateCorrection() ? DateNormalizer::normalize($exercise->getDateCorrection()) : null,
             'hasExpectedAnswers' => $exercise->hasExpectedAnswers(),
+            'attemptsReachedMessage' => $exercise->getAttemptsReachedMessage(),
         ];
 
         if (!empty($exercise->getEndMessage())) {
@@ -189,6 +190,7 @@ class ExerciseSerializer
         $this->sipe('showScoreAt', 'setMarkMode', $parameters, $exercise);
         $this->sipe('answersEditable', 'setAnswersEditable', $parameters, $exercise);
         $this->sipe('hasExpectedAnswers', 'setExpectedAnswers', $parameters, $exercise);
+        $this->sipe('attemptsReachedMessage', 'setAttemptsReachedMessage', $parameters, $exercise);
 
         if (isset($parameters['showFullCorrection'])) {
             $exercise->setMinimalCorrection(!$parameters['showFullCorrection']);

@@ -9,8 +9,8 @@ import {MenuButton} from '#/main/app/buttons/menu'
 import {LiquidGauge} from '#/main/core/layout/gauge/components/liquid-gauge'
 
 import {constants as baseConstants} from '#/main/evaluation/constants'
-import {constants} from '#/main/core/resource/constants'
-import {UserEvaluation as UserEvaluationTypes} from '#/main/core/resource/prop-types'
+import {constants} from '#/main/evaluation/resource/constants'
+import {ResourceEvaluation as ResourceEvaluationTypes} from '#/main/evaluation/resource/prop-types'
 
 const ProgressionPopover = props =>
   <div className="dropdown-menu">
@@ -125,7 +125,7 @@ const UserProgression = props => {
 
 UserProgression.propTypes = {
   userEvaluation: T.shape(
-    UserEvaluationTypes.propTypes
+    ResourceEvaluationTypes.propTypes
   ).isRequired,
   width: T.number,
   height: T.number

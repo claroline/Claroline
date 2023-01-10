@@ -7,6 +7,7 @@ import {ContentTitle} from '#/main/app/content/components/title'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {MODAL_MESSAGE} from '#/plugin/message/modals/message'
 
+import {ResourceCard} from '#/main/evaluation/resource/components/card'
 import resourceEvaluationSource from '#/main/evaluation/data/sources/resource-evaluations'
 import {MODAL_RESOURCE_EVALUATIONS} from '#/main/evaluation/modals/resource-evaluations'
 import {selectors} from '#/main/evaluation/analytics/resource/evaluation/store'
@@ -56,6 +57,7 @@ const EvaluationDashboard = (props) =>
           }]
         }
       ]}
+      card={ResourceCard}
     />
   </Fragment>
 
