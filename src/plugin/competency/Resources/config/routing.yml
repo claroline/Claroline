@@ -1,12 +1,7 @@
 # JSON API
 hevinci_competency_bundle_api:
-    resource: "@HeVinciCompetencyBundle/Controller/API/"
+    resource: "@HeVinciCompetencyBundle/Controller/"
     prefix: apiv2
     type: api
     options:
         expose: true
-
-hevinci_my_objectives_tool:
-    resource: "@HeVinciCompetencyBundle/Controller/MyObjectiveController.php"
-    type: annotation
-    prefix: competencies

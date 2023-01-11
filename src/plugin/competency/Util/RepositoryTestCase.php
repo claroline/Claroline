@@ -14,10 +14,6 @@ use HeVinci\CompetencyBundle\Entity\Ability;
 use HeVinci\CompetencyBundle\Entity\Competency;
 use HeVinci\CompetencyBundle\Entity\CompetencyAbility;
 use HeVinci\CompetencyBundle\Entity\Level;
-use HeVinci\CompetencyBundle\Entity\Objective;
-use HeVinci\CompetencyBundle\Entity\ObjectiveCompetency;
-use HeVinci\CompetencyBundle\Entity\Progress\AbilityProgress;
-use HeVinci\CompetencyBundle\Entity\Progress\CompetencyProgress;
 use HeVinci\CompetencyBundle\Entity\Scale;
 
 abstract class RepositoryTestCase extends TransactionalTestCase
@@ -169,45 +165,5 @@ abstract class RepositoryTestCase extends TransactionalTestCase
         $this->om->persist($pastEval);
 
         return $pastEval;
-    }
-
-    protected function persistObjective($name, array $competenciesData)
-    {
-        $objective = new Objective();
-        $objective->setName($name);
-
-        foreach ($competenciesData as $competencyData) {
-            $link = new ObjectiveCompetency();
-            $link->setCompetency($competencyData[0]);
-            $link->setFramework($competencyData[1]);
-            $link->setLevel($competencyData[2]);
-            $this->om->persist($link);
-            $objective->addObjectiveCompetency($link);
-        }
-
-        $this->om->persist($objective);
-
-        return $objective;
-    }
-
-    protected function persistCompetencyProgress(User $user, Competency $competency)
-    {
-        $progress = new CompetencyProgress();
-        $progress->setUser($user);
-        $progress->setCompetency($competency);
-        $this->om->persist($progress);
-
-        return $progress;
-    }
-
-    protected function persistAbilityProgress(User $user, Ability $ability, $status)
-    {
-        $progress = new AbilityProgress();
-        $progress->setUser($user);
-        $progress->setAbility($ability);
-        $progress->setStatus($status);
-        $this->om->persist($progress);
-
-        return $progress;
     }
 }

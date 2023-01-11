@@ -24,3 +24,24 @@ services:
         arguments:
             - '@translator'
             - '@messenger.default_bus'
+
+    # Rules
+    Claroline\OpenBadgeBundle\Subscriber\Rules\GroupSubscriber:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\OpenBadgeBundle\Manager\RuleManager'
+
+    Claroline\OpenBadgeBundle\Subscriber\Rules\ResourceEvaluationSubscriber:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\OpenBadgeBundle\Manager\RuleManager'
+
+    Claroline\OpenBadgeBundle\Subscriber\Rules\RoleSubscriber:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\OpenBadgeBundle\Manager\RuleManager'
+
+    Claroline\OpenBadgeBundle\Subscriber\Rules\WorkspaceEvaluationSubscriber:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\OpenBadgeBundle\Manager\RuleManager'

@@ -6,8 +6,18 @@ use Claroline\EvaluationBundle\Entity\AbstractEvaluation;
 
 abstract class AbstractEvaluationManager
 {
-    protected function updateEvaluation(AbstractEvaluation $evaluation, ?array $data = [], ?\DateTime $date = null): AbstractEvaluation
+    /**
+     * Updates some evaluation data and return whether the progression of the evaluation has changed.
+     * (aka. the score, status or progression has been updated).
+     */
+    protected function updateEvaluation(AbstractEvaluation $evaluation, ?array $data = [], ?\DateTime $date = null): array
     {
+        $changes = [
+            'status' => false,
+            'progression' => false,
+            'score' => false,
+        ];
+
         $evaluationDate = $date ?? new \DateTime();
         if (empty($evaluation->getDate()) || $evaluationDate > $evaluation->getDate()) {
             $evaluation->setDate($evaluationDate);
@@ -18,22 +28,44 @@ abstract class AbstractEvaluationManager
         }
 
         if (isset($data['status'])) {
+            $previousStatus = $evaluation->getStatus();
             $this->updateEvaluationStatus($evaluation, $data['status']);
+
+            if ($previousStatus !== $evaluation->getStatus()) {
+                $changes['status'] = true;
+            }
         }
 
         if (!empty($data['scoreMax'])) {
-            $this->updateEvaluationScore($evaluation, $data['scoreMax'], $data['score'] ?? null, $data['scoreMin'] ?? null);
+            $score = $data['score'] ?? null;
+            $scoreMin = $data['scoreMin'] ?? null;
+
+            if ($score !== $evaluation->getScore() || $scoreMin !== $evaluation->getScoreMin() || $data['scoreMax'] !== $evaluation->getScoreMax()) {
+                $changes['score'] = true;
+            }
+
+            $this->updateEvaluationScore($evaluation, $data['scoreMax'], $score, $scoreMin);
         }
 
         if (isset($data['progression'])) {
-            $evaluation->setProgression($data['progression']);
-            $evaluation->setProgressionMax($data['progressionMax'] ?? 100); // TODO : for retro-compatibility
+            // for retro-compatibility : progressionMax must always be 100 and should be removed
+            $progressionMax = $data['progressionMax'] ?? 100; // for retro-compatibility : progressionMax must always be 100 and should be removed
+
+            $previousProgression = (($evaluation->getProgression() ?? 0) * 100) / ($evaluation->getProgressionMax() ?? 100);
+            $newProgression = ($data['progression'] * 100) / $progressionMax;
+
+            if ($newProgression > $previousProgression) {
+                $changes['progression'] = true;
+
+                $evaluation->setProgression($newProgression);
+                $evaluation->setProgressionMax(100);
+            }
         }
 
-        return $evaluation;
+        return $changes;
     }
 
-    private function updateEvaluationStatus(AbstractEvaluation $evaluation, string $status): ?AbstractEvaluation
+    private function updateEvaluationStatus(AbstractEvaluation $evaluation, string $status): AbstractEvaluation
     {
         if (AbstractEvaluation::STATUS_PRIORITY[$status] > AbstractEvaluation::STATUS_PRIORITY[$evaluation->getStatus()]) {
             $evaluation->setStatus($status);

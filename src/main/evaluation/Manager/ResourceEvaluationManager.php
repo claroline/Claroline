@@ -19,6 +19,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\EvaluationBundle\Entity\AbstractEvaluation;
 use Claroline\EvaluationBundle\Event\EvaluationEvents;
+use Claroline\EvaluationBundle\Event\ResourceAttemptEvent;
 use Claroline\EvaluationBundle\Event\ResourceEvaluationEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -56,46 +57,28 @@ class ResourceEvaluationManager extends AbstractEvaluationManager
         return $evaluation;
     }
 
-    public function createResourceEvaluation(ResourceNode $node, User $user, ?array $data = [], ?\DateTime $date = null): ResourceEvaluation
+    public function createAttempt(ResourceNode $node, User $user, ?array $data = [], ?\DateTime $date = null): ResourceEvaluation
     {
-        $resourceUserEvaluation = $this->getUserEvaluation($node, $user);
+        // retrieve the parent evaluation for the attempt
+        $evaluation = $this->getUserEvaluation($node, $user);
 
-        $evaluation = new ResourceEvaluation();
-        $evaluation->setResourceUserEvaluation($resourceUserEvaluation);
+        // initialize a new attempt
+        $attempt = new ResourceEvaluation();
+        $attempt->setResourceUserEvaluation($evaluation);
+        $this->om->persist($attempt);
 
-        $resourceUserEvaluation->setNbAttempts($resourceUserEvaluation->getNbAttempts() + 1);
-        $this->om->persist($resourceUserEvaluation);
+        $evaluation->setNbAttempts($evaluation->getNbAttempts() + 1);
 
-        $this->updateResourceEvaluation($evaluation, $data, $date);
+        $this->updateAttempt($attempt, $data, $date);
 
-        return $evaluation;
+        return $attempt;
     }
 
-    public function updateResourceEvaluation(ResourceEvaluation $attempt, ?array $data = [], ?\DateTime $date = null): ResourceEvaluation
+    public function updateAttempt(ResourceEvaluation $attempt, ?array $data = [], ?\DateTime $date = null): ResourceEvaluation
     {
-        $attempt->setDate($date ?? new \DateTime());
+        // update the current attempt data
+        $attemptUpdated = $this->updateEvaluation($attempt, $data, $date);
 
-        if (isset($data['status'])) {
-            $attempt->setStatus($data['status']);
-        }
-        if (isset($data['score'])) {
-            $attempt->setScore($data['score']);
-        }
-        if (isset($data['scoreMin'])) {
-            $attempt->setScoreMin($data['scoreMin']);
-        }
-        if (isset($data['scoreMax'])) {
-            $attempt->setScoreMax($data['scoreMax']);
-        }
-        if (isset($data['progression'])) {
-            $attempt->setProgression($data['progression']);
-        }
-        if (isset($data['progressionMax'])) {
-            $attempt->setProgressionMax($data['progressionMax']);
-        }
-        if (isset($data['duration'])) {
-            $attempt->setDuration($data['duration']);
-        }
         if (isset($data['comment'])) {
             $attempt->setComment($data['comment']);
         }
@@ -103,37 +86,52 @@ class ResourceEvaluationManager extends AbstractEvaluationManager
             $attempt->setData($data['data']);
         }
 
-        $resourceUserEvaluation = $this->updateEvaluation($attempt->getResourceUserEvaluation(), $data, $attempt->getDate());
+        // update the parent evaluation
+        $evaluationUpdated = $this->updateEvaluation($attempt->getResourceUserEvaluation(), $data, $attempt->getDate());
 
-        $this->om->persist($resourceUserEvaluation);
-        $this->om->persist($attempt);
         $this->om->flush();
 
-        $this->eventDispatcher->dispatch(new ResourceEvaluationEvent($resourceUserEvaluation, $attempt), EvaluationEvents::RESOURCE);
+        if ($attemptUpdated['status'] || $attemptUpdated['progression'] || $attemptUpdated['score']) {
+            // notify the app an attempt has progressed
+            $this->eventDispatcher->dispatch(new ResourceAttemptEvent($attempt, $attemptUpdated), EvaluationEvents::RESOURCE_ATTEMPT);
+        }
+
+        if ($evaluationUpdated['status'] || $evaluationUpdated['progression'] || $evaluationUpdated['score']) {
+            // notify the app an evaluation has progressed
+            $this->eventDispatcher->dispatch(new ResourceEvaluationEvent($attempt->getResourceUserEvaluation(), $evaluationUpdated), EvaluationEvents::RESOURCE_EVALUATION);
+        }
 
         return $attempt;
     }
 
-    public function updateUserEvaluation(ResourceNode $node, User $user, ?array $data = [], ?\DateTime $date = null): ResourceUserEvaluation
+    public function updateUserEvaluation(ResourceNode $node, User $user, ?array $data = [], ?\DateTime $date = null, ?bool $withCreation = true): ?ResourceUserEvaluation
     {
-        $evaluation = $this->getUserEvaluation($node, $user);
+        $this->om->startFlushSuite();
 
-        $this->updateEvaluation($evaluation, $data, $date);
+        $evaluation = $this->getUserEvaluation($node, $user, $withCreation);
+        if (empty($evaluation)) {
+            return null;
+        }
+
+        $evaluationUpdated = $this->updateEvaluation($evaluation, $data, $date);
 
         if (isset($data['status']) && AbstractEvaluation::STATUS_OPENED === $data['status']) {
             $evaluation->setNbOpenings($evaluation->getNbOpenings() + 1);
         }
 
-        $this->om->persist($evaluation);
-        $this->om->flush();
+        $this->om->endFlushSuite();
 
-        $this->eventDispatcher->dispatch(new ResourceEvaluationEvent($evaluation), EvaluationEvents::RESOURCE);
+        if ($evaluationUpdated['status'] || $evaluationUpdated['progression'] || $evaluationUpdated['score']) {
+            $this->eventDispatcher->dispatch(new ResourceEvaluationEvent($evaluation, $evaluationUpdated), EvaluationEvents::RESOURCE_EVALUATION);
+        }
 
         return $evaluation;
     }
 
     /**
      * Add duration to a resource user evaluation.
+     *
+     * @deprecated should not be declared here
      */
     public function addDurationToResourceEvaluation(ResourceNode $node, User $user, int $duration)
     {
@@ -156,6 +154,8 @@ class ResourceEvaluationManager extends AbstractEvaluationManager
 
     /**
      * Compute duration for a resource user evaluation.
+     *
+     * @deprecated should not be declared here
      */
     public function computeDuration(ResourceUserEvaluation $resUserEval): int
     {
@@ -178,5 +178,21 @@ class ResourceEvaluationManager extends AbstractEvaluationManager
         $this->om->flush();
 
         return $duration;
+    }
+
+    /**
+     * @deprecated use createAttempt()
+     */
+    public function createResourceEvaluation(ResourceNode $node, User $user, ?array $data = [], ?\DateTime $date = null): ResourceEvaluation
+    {
+        return $this->createAttempt($node, $user, $data, $date);
+    }
+
+    /**
+     * @deprecated use updateAttempt()
+     */
+    public function updateResourceEvaluation(ResourceEvaluation $attempt, ?array $data = [], ?\DateTime $date = null): ResourceEvaluation
+    {
+        return $this->updateAttempt($attempt, $data, $date);
     }
 }

@@ -6,10 +6,10 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\EvaluationBundle\Manager\ResourceEvaluationManager;
-use Claroline\EvaluationBundle\Messenger\Message\InitializeResourceEvaluations;
+use Claroline\EvaluationBundle\Messenger\Message\UpdateResourceEvaluations;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
-class InitializeResourceEvaluationsHandler implements MessageHandlerInterface
+class UpdateResourceEvaluationsHandler implements MessageHandlerInterface
 {
     /** @var ObjectManager */
     private $om;
@@ -24,7 +24,7 @@ class InitializeResourceEvaluationsHandler implements MessageHandlerInterface
         $this->resourceEvaluationManager = $resourceEvaluationManager;
     }
 
-    public function __invoke(InitializeResourceEvaluations $initMessage)
+    public function __invoke(UpdateResourceEvaluations $initMessage)
     {
         $resourceNode = $this->om->getRepository(ResourceNode::class)->find($initMessage->getResourceNodeId());
         if (empty($resourceNode)) {
@@ -47,7 +47,9 @@ class InitializeResourceEvaluationsHandler implements MessageHandlerInterface
             $this->resourceEvaluationManager->updateUserEvaluation(
                 $resourceNode,
                 $user,
-                ['status' => $initMessage->getStatus()]
+                ['status' => $initMessage->getStatus()],
+                null,
+                $initMessage->getWithCreation()
             );
         }
     }

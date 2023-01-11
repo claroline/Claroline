@@ -2,7 +2,6 @@
 
 namespace Claroline\EvaluationBundle\Event;
 
-use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\User;
@@ -16,13 +15,13 @@ class ResourceEvaluationEvent extends Event
 {
     /** @var ResourceUserEvaluation */
     private $evaluation;
-    /** @var ResourceEvaluation */
-    private $attempt;
+    /** @var array */
+    private $changes;
 
-    public function __construct(ResourceUserEvaluation $evaluation, ?ResourceEvaluation $attempt = null)
+    public function __construct(ResourceUserEvaluation $evaluation, array $changes)
     {
         $this->evaluation = $evaluation;
-        $this->attempt = $attempt;
+        $this->changes = $changes;
     }
 
     /**
@@ -38,17 +37,24 @@ class ResourceEvaluationEvent extends Event
         return $this->evaluation->getUser();
     }
 
-    /**
-     * Get the current attempt.
-     */
-    public function getAttempt(): ?ResourceEvaluation
-    {
-        return $this->attempt;
-    }
-
     public function getResourceNode(): ResourceNode
     {
         return $this->evaluation->getResourceNode();
+    }
+
+    public function hasStatusChanged(): bool
+    {
+        return $this->changes['status'];
+    }
+
+    public function hasProgressionChanged(): bool
+    {
+        return $this->changes['progression'];
+    }
+
+    public function hasScoreChanged(): bool
+    {
+        return $this->changes['score'];
     }
 
     public function getMessage(TranslatorInterface $translator)

@@ -1,28 +1,6 @@
 services:
-    _defaults:
-        autowire: false #change to true
-        autoconfigure: false
-        public: true #because controller
-
     HeVinci\CompetencyBundle\Listener\Administration\CompetenciesListener:
         arguments:
             - '@HeVinci\CompetencyBundle\Manager\CompetencyManager'
         tags:
             - { name: kernel.event_listener, event: tool.open.administration.competencies, method: onDisplayTool }
-
-    HeVinci\CompetencyBundle\Listener\PluginListener:
-        arguments:
-            - '@HeVinci\CompetencyBundle\Manager\CompetencyManager'
-            - '@HeVinci\CompetencyBundle\Manager\ObjectiveManager'
-            - '@security.token_storage'
-            - '@request_stack'
-            - '@http_kernel'
-        tags:
-            - { name: kernel.event_listener, event: tool.open.administration.learning-objectives, method: onOpenLearningObjectivesTool }
-            - { name: kernel.event_listener, event: tool.open.desktop.my-learning-objectives, method: onOpenMyLearningObjectivesTool }
-
-    HeVinci\CompetencyBundle\Listener\ResourceListener:
-        arguments:
-            - '@HeVinci\CompetencyBundle\Manager\ProgressManager'
-        tags:
-            - { name: kernel.event_listener, event: resource_evaluation, method: onResourceEvaluation }
