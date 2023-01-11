@@ -5,6 +5,7 @@ namespace Claroline\LogBundle\Subscriber;
 use Claroline\CoreBundle\Event\CatalogEvents\ResourceEvents;
 use Claroline\CoreBundle\Event\CatalogEvents\ToolEvents;
 use Claroline\EvaluationBundle\Event\EvaluationEvents;
+use Claroline\EvaluationBundle\Event\ResourceEvaluationEvent;
 use Claroline\LogBundle\Messenger\Message\CreateFunctionalLog;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -29,7 +30,7 @@ class FunctionalLogSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            EvaluationEvents::RESOURCE => ['logEvent', 10],
+            EvaluationEvents::RESOURCE_EVALUATION => ['logEvaluation', 10],
             ResourceEvents::RESOURCE_OPEN => ['logEvent', 10],
             ToolEvents::OPEN => ['logEvent', 10],
         ];
@@ -51,6 +52,23 @@ class FunctionalLogSubscriber implements EventSubscriberInterface
         // Hack because of ToolEvents::OPEN implements the DataConveyorEventInterface
         if (method_exists($event, 'setData')) {
             $event->setData([]);
+        }
+    }
+
+    /**
+     * @todo move in EvaluationBundle
+     */
+    public function logEvaluation(ResourceEvaluationEvent $event, string $eventName)
+    {
+        if ($event->getUser() && $event->hasStatusChanged()) {
+            $this->messageBus->dispatch(new CreateFunctionalLog(
+                new \DateTime(),
+                $eventName,
+                $event->getMessage($this->translator), // this should not be done by the symfony event
+                $event->getUser()->getId(),
+                $event->getResourceNode()->getWorkspace() ? $event->getResourceNode()->getWorkspace()->getId() : null,
+                $event->getResourceNode()->getId()
+            ));
         }
     }
 }

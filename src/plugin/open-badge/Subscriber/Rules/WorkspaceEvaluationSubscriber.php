@@ -9,17 +9,19 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\OpenBadgeBundle\Listener\Rules;
+namespace Claroline\OpenBadgeBundle\Subscriber\Rules;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\Evaluation;
 use Claroline\EvaluationBundle\Entity\AbstractEvaluation;
-use Claroline\EvaluationBundle\Event\ResourceEvaluationEvent;
+use Claroline\EvaluationBundle\Event\EvaluationEvents;
+use Claroline\EvaluationBundle\Event\WorkspaceEvaluationEvent;
 use Claroline\OpenBadgeBundle\Entity\Rules\Rule;
 use Claroline\OpenBadgeBundle\Manager\RuleManager;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class ResourceEvaluationListener
+class WorkspaceEvaluationSubscriber implements EventSubscriberInterface
 {
     /** @var ObjectManager */
     private $om;
@@ -34,23 +36,30 @@ class ResourceEvaluationListener
         $this->manager = $manager;
     }
 
-    public function onResourceEvaluation(ResourceEvaluationEvent $event)
+    public static function getSubscribedEvents(): array
+    {
+        return [
+            EvaluationEvents::WORKSPACE_EVALUATION => 'onWorkspaceEvaluation',
+        ];
+    }
+
+    public function onWorkspaceEvaluation(WorkspaceEvaluationEvent $event): void
     {
         $evaluation = $event->getEvaluation();
 
         /** @var Rule[] $rules */
-        $rules = $this->om->getRepository(Rule::class)->findBy(['node' => $evaluation->getResourceNode()]);
+        $rules = $this->om->getRepository(Rule::class)->findBy(['workspace' => $evaluation->getWorkspace()]);
 
         foreach ($rules as $rule) {
             switch ($rule->getAction()) {
-                case Rule::RESOURCE_SCORE_ABOVE:
-                    $this->awardResourceScoreAbove($evaluation->getUser(), $evaluation, $rule);
+                case Rule::WORKSPACE_SCORE_ABOVE:
+                    $this->awardWorkspaceScoreAbove($evaluation->getUser(), $evaluation, $rule);
                     break;
-                case Rule::RESOURCE_COMPLETED_ABOVE:
-                    $this->awardResourceCompletedAbove($evaluation->getUser(), $evaluation, $rule);
+                case Rule::WORKSPACE_COMPLETED_ABOVE:
+                    $this->awardWorkspaceCompletedAbove($evaluation->getUser(), $evaluation, $rule);
                     break;
-                case Rule::RESOURCE_STATUS:
-                    $this->awardResourceStatus($evaluation->getUser(), $evaluation, $rule);
+                case Rule::WORKSPACE_STATUS:
+                    $this->awardWorkspaceStatus($evaluation->getUser(), $evaluation, $rule);
                     break;
                 default:
                     break;
@@ -58,7 +67,7 @@ class ResourceEvaluationListener
         }
     }
 
-    private function awardResourceStatus(User $user, ResourceUserEvaluation $evaluation, Rule $rule)
+    private function awardWorkspaceStatus(User $user, Evaluation $evaluation, Rule $rule): void
     {
         $data = $rule->getData();
         if (!empty($data) && !empty($data['value'])) {
@@ -68,7 +77,7 @@ class ResourceEvaluationListener
         }
     }
 
-    private function awardResourceScoreAbove(User $user, ResourceUserEvaluation $evaluation, Rule $rule)
+    private function awardWorkspaceScoreAbove(User $user, Evaluation $evaluation, Rule $rule): void
     {
         $data = $rule->getData();
         if (isset($data)) {
@@ -83,10 +92,10 @@ class ResourceEvaluationListener
         }
     }
 
-    private function awardResourceCompletedAbove(User $user, ResourceUserEvaluation $evaluation, Rule $rule)
+    private function awardWorkspaceCompletedAbove(User $user, Evaluation $evaluation, Rule $rule): void
     {
         $data = $rule->getData();
-        $progression = ($evaluation->getProgression() / ($evaluation->getProgressionMax() ?? 100)) * 100;
+        $progression = ($evaluation->getProgression() / $evaluation->getProgressionMax()) * 100;
         if ($data && $progression >= $data['value']) {
             $this->manager->grant($rule, $user);
         }

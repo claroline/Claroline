@@ -13,10 +13,13 @@ class WorkspaceEvaluationEvent extends Event
 {
     /** @var Evaluation */
     private $evaluation;
+    /** @var array */
+    private $changes;
 
-    public function __construct(Evaluation $evaluation)
+    public function __construct(Evaluation $evaluation, array $changes)
     {
         $this->evaluation = $evaluation;
+        $this->changes = $changes;
     }
 
     /**
@@ -30,5 +33,20 @@ class WorkspaceEvaluationEvent extends Event
     public function getUser(): User
     {
         return $this->evaluation->getUser();
+    }
+
+    public function hasStatusChanged(): bool
+    {
+        return $this->changes['status'];
+    }
+
+    public function hasProgressionChanged(): bool
+    {
+        return $this->changes['progression'];
+    }
+
+    public function hasScoreChanged(): bool
+    {
+        return $this->changes['score'];
     }
 }
