@@ -102,8 +102,9 @@ class EvaluationManager
     /**
      * Fetches and updates score for all paths linked to the evaluation.
      */
-    public function handleResourceEvaluation(ResourceUserEvaluation $resourceUserEvaluation, ResourceEvaluation $resourceAttempt)
+    public function handleResourceEvaluation(ResourceEvaluation $resourceAttempt)
     {
+        $resourceUserEvaluation = $resourceAttempt->getResourceUserEvaluation();
         $resourceNode = $resourceUserEvaluation->getResourceNode();
 
         // only update paths evaluations if the current attempt is fully evaluated

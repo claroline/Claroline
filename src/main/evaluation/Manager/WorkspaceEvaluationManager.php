@@ -104,9 +104,16 @@ class WorkspaceEvaluationManager extends AbstractEvaluationManager
 
     public function updateUserEvaluation(Workspace $workspace, User $user, ?array $data = [], ?\DateTime $date = null): Evaluation
     {
-        $evaluation = $this->getUserEvaluation($workspace, $user);
+        $this->om->startFlushSuite();
 
-        $this->updateEvaluation($evaluation, $data, $date);
+        $evaluation = $this->getUserEvaluation($workspace, $user);
+        $hasChanged = $this->updateEvaluation($evaluation, $data, $date);
+
+        $this->om->endFlushSuite();
+
+        if ($hasChanged['status'] || $hasChanged['progression'] || $hasChanged['score']) {
+            $this->eventDispatcher->dispatch(new WorkspaceEvaluationEvent($evaluation, $hasChanged), EvaluationEvents::WORKSPACE_EVALUATION);
+        }
 
         return $evaluation;
     }
@@ -250,12 +257,14 @@ class WorkspaceEvaluationManager extends AbstractEvaluationManager
             'progressionMax' => $progressionMax,
         ];
 
-        $this->updateEvaluation($evaluation, $evaluationData, $currentRue ? $currentRue->getDate() : null);
+        $hasChanged = $this->updateEvaluation($evaluation, $evaluationData, $currentRue ? $currentRue->getDate() : null);
 
         $this->om->persist($evaluation);
         $this->om->flush();
 
-        $this->eventDispatcher->dispatch(new WorkspaceEvaluationEvent($evaluation), EvaluationEvents::WORKSPACE);
+        if ($hasChanged['status'] || $hasChanged['progression'] || $hasChanged['score']) {
+            $this->eventDispatcher->dispatch(new WorkspaceEvaluationEvent($evaluation, $hasChanged), EvaluationEvents::WORKSPACE_EVALUATION);
+        }
 
         return $evaluation;
     }

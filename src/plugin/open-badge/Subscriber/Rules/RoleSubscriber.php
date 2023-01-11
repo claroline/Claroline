@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\OpenBadgeBundle\Listener\Rules;
+namespace Claroline\OpenBadgeBundle\Subscriber\Rules;
 
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Event\Crud\PatchEvent;
@@ -19,8 +19,9 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\OpenBadgeBundle\Entity\Rules\Rule;
 use Claroline\OpenBadgeBundle\Manager\RuleManager;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class RoleListener
+class RoleSubscriber implements EventSubscriberInterface
 {
     /** @var ObjectManager */
     private $om;
@@ -33,6 +34,15 @@ class RoleListener
     ) {
         $this->om = $om;
         $this->manager = $manager;
+    }
+
+    public static function getSubscribedEvents(): array
+    {
+        return [
+            Crud::getEventName('patch', 'post', User::class) => 'onUserPatch',
+            Crud::getEventName('patch', 'post', Group::class) => 'onGroupPatch',
+            Crud::getEventName('patch', 'post', Role::class) => 'onRolePatch',
+        ];
     }
 
     public function onUserPatch(PatchEvent $event)

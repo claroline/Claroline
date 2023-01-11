@@ -5,20 +5,17 @@ namespace Claroline\CoreBundle\Manager\Resource;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
-use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\CreateResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DownloadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
-use Claroline\EvaluationBundle\Event\ResourceEvaluationEvent;
 
 /**
  * Centralizes events dispatched for resources integration.
  *
- * @todo finish me
+ * @deprecated
  */
 class ResourceLifecycleManager
 {
@@ -105,18 +102,6 @@ class ResourceLifecycleManager
             static::eventName('delete', $resourceNode),
             DeleteResourceEvent::class,
             [$this->getResourceFromNode($resourceNode), $soft]
-        );
-
-        return $event;
-    }
-
-    public function evaluate(ResourceUserEvaluation $resourceUserEvaluation, ResourceEvaluation $attempt)
-    {
-        /** @var ResourceEvaluationEvent $event */
-        $event = $this->dispatcher->dispatch(
-            'evaluate', // old : resource_evaluation
-            ResourceEvaluationEvent::class,
-            [$resourceUserEvaluation, $attempt]
         );
 
         return $event;
