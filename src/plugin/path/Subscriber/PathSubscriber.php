@@ -1,6 +1,6 @@
 <?php
 
-namespace Innova\PathBundle\Listener\Resource;
+namespace Innova\PathBundle\Subscriber;
 
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
@@ -13,36 +13,32 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Manager\ResourceManager;
-use Claroline\EvaluationBundle\Event\ResourceEvaluationEvent;
+use Claroline\EvaluationBundle\Event\EvaluationEvents;
+use Claroline\EvaluationBundle\Event\ResourceAttemptEvent;
 use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\Step;
 use Innova\PathBundle\Manager\EvaluationManager;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Used to integrate Path to Claroline resource manager.
  */
-class PathListener
+class PathSubscriber implements EventSubscriberInterface
 {
     /** @var TokenStorageInterface */
     private $tokenStorage;
-
     /** @var TranslatorInterface */
     private $translator;
-
     /* @var ObjectManager */
     private $om;
-
     /** @var Crud */
     private $crud;
-
     /** @var SerializerProvider */
     private $serializer;
-
     /** @var ResourceManager */
     private $resourceManager;
-
     /** @var EvaluationManager */
     private $evaluationManager;
 
@@ -53,8 +49,8 @@ class PathListener
         Crud $crud,
         SerializerProvider $serializer,
         ResourceManager $resourceManager,
-        EvaluationManager $evaluationManager)
-    {
+        EvaluationManager $evaluationManager
+    ) {
         $this->tokenStorage = $tokenStorage;
         $this->translator = $translator;
         $this->om = $om;
@@ -62,6 +58,15 @@ class PathListener
         $this->serializer = $serializer;
         $this->resourceManager = $resourceManager;
         $this->evaluationManager = $evaluationManager;
+    }
+
+    public static function getSubscribedEvents(): array
+    {
+        return [
+            'resource.innova_path.load' => 'onLoad',
+            'resource.innova_path.copy' => 'onCopy',
+            EvaluationEvents::RESOURCE_ATTEMPT => 'onEvaluation',
+        ];
     }
 
     /**
@@ -141,11 +146,9 @@ class PathListener
      * Fired when a Resource Evaluation with a score is created.
      * We will update progression for all paths using this resource.
      */
-    public function onEvaluation(ResourceEvaluationEvent $event): void
+    public function onEvaluation(ResourceAttemptEvent $event): void
     {
-        if ($event->getAttempt()) {
-            $this->evaluationManager->handleResourceEvaluation($event->getEvaluation(), $event->getAttempt());
-        }
+        $this->evaluationManager->handleResourceEvaluation($event->getAttempt());
     }
 
     /**

@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace HeVinci\CompetencyBundle\Controller\API;
+namespace HeVinci\CompetencyBundle\Controller;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;

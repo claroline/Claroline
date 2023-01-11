@@ -3,6 +3,7 @@
 namespace Claroline\EvaluationBundle\Subscriber;
 
 use Claroline\AppBundle\API\Crud;
+use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
@@ -12,7 +13,7 @@ use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Repository\User\UserRepository;
 use Claroline\EvaluationBundle\Entity\AbstractEvaluation;
 use Claroline\EvaluationBundle\Manager\ResourceEvaluationManager;
-use Claroline\EvaluationBundle\Messenger\Message\InitializeResourceEvaluations;
+use Claroline\EvaluationBundle\Messenger\Message\UpdateResourceEvaluations;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 
@@ -40,9 +41,29 @@ class ResourceEvaluationSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
+            Crud::getEventName('create', 'post', ResourceNode::class) => 'createEvaluations',
             Crud::getEventName('update', 'post', ResourceNode::class) => 'updateEvaluations',
             ResourceEvents::RESOURCE_OPEN => ['open', 10],
         ];
+    }
+
+    public function createEvaluations(CreateEvent $event)
+    {
+        /** @var ResourceNode $resourceNode */
+        $resourceNode = $event->getObject();
+
+        if ($resourceNode->isRequired()) {
+            $registeredUsers = $this->userRepo->findByWorkspaces([$resourceNode->getWorkspace()]);
+            if (!empty($registeredUsers)) {
+                $registeredUserIds = array_map(function (User $user) {
+                    return $user->getId();
+                }, $registeredUsers);
+
+                $this->messageBus->dispatch(
+                    new UpdateResourceEvaluations($resourceNode->getId(), $registeredUserIds, AbstractEvaluation::STATUS_TODO)
+                );
+            }
+        }
     }
 
     public function updateEvaluations(UpdateEvent $event)
@@ -60,12 +81,11 @@ class ResourceEvaluationSubscriber implements EventSubscriberInterface
 
                 if ($resourceNode->isRequired()) {
                     $this->messageBus->dispatch(
-                        new InitializeResourceEvaluations($resourceNode->getId(), $registeredUserIds, AbstractEvaluation::STATUS_TODO)
+                        new UpdateResourceEvaluations($resourceNode->getId(), $registeredUserIds, AbstractEvaluation::STATUS_TODO)
                     );
                 } else {
-                    // TODO : do an update, as is it will generate missing evaluations and we don't want to
                     $this->messageBus->dispatch(
-                        new InitializeResourceEvaluations($resourceNode->getId(), $registeredUserIds, AbstractEvaluation::STATUS_NOT_ATTEMPTED)
+                        new UpdateResourceEvaluations($resourceNode->getId(), $registeredUserIds, AbstractEvaluation::STATUS_NOT_ATTEMPTED, false)
                     );
                 }
             }

@@ -1,0 +1,12 @@
+services:
+    Innova\PathBundle\Subscriber\PathSubscriber:
+        arguments:
+            - '@security.token_storage'
+            - '@translator'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\Crud'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@claroline.manager.resource_manager'
+            - '@Innova\PathBundle\Manager\EvaluationManager'
+        tags:
+            - { name: kernel.event_subscriber }

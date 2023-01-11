@@ -9,15 +9,18 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\OpenBadgeBundle\Listener\Rules;
+namespace Claroline\OpenBadgeBundle\Subscriber\Rules;
 
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Event\Crud\PatchEvent;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Group;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\OpenBadgeBundle\Entity\Rules\Rule;
 use Claroline\OpenBadgeBundle\Manager\RuleManager;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class GroupListener
+class GroupSubscriber implements EventSubscriberInterface
 {
     /** @var ObjectManager */
     private $om;
@@ -32,7 +35,15 @@ class GroupListener
         $this->manager = $manager;
     }
 
-    public function onUserPatch(PatchEvent $event)
+    public static function getSubscribedEvents(): array
+    {
+        return [
+            Crud::getEventName('patch', 'post', User::class) => 'onUserPatch',
+            Crud::getEventName('patch', 'post', Group::class) => 'onGroupPatch',
+        ];
+    }
+
+    public function onUserPatch(PatchEvent $event): void
     {
         if (Crud::COLLECTION_ADD === $event->getAction() && 'group' === $event->getProperty()) {
             /** @var Rule[] $rules */
@@ -44,7 +55,7 @@ class GroupListener
         }
     }
 
-    public function onGroupPatch(PatchEvent $event)
+    public function onGroupPatch(PatchEvent $event): void
     {
         if (Crud::COLLECTION_ADD === $event->getAction() && 'user' === $event->getProperty()) {
             /** @var Rule[] $rules */

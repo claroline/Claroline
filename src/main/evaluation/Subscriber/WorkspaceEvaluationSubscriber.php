@@ -62,7 +62,7 @@ class WorkspaceEvaluationSubscriber implements EventSubscriberInterface
         return [
             WorkspaceEvents::OPEN => 'onOpen',
             SecurityEvents::ADD_ROLE => 'onAddRole',
-            EvaluationEvents::RESOURCE => 'onResourceEvaluate',
+            EvaluationEvents::RESOURCE_EVALUATION => 'onResourceEvaluate',
             Crud::getEventName('update', 'post', ResourceNode::class) => 'onResourcePublicationChange',
             Crud::getEventName('delete', 'post', ResourceNode::class) => 'onResourceDelete',
         ];

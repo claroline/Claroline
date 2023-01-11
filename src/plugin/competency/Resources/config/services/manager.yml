@@ -1,22 +1,7 @@
 services:
-    _defaults:
-        autowire: false #change to true
-        autoconfigure: false
-        public: true
-
     HeVinci\CompetencyBundle\Manager\CompetencyManager:
+        public: true # for tests
         arguments:
             - '@HeVinci\CompetencyBundle\Transfer\Converter'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@translator'
-
-    HeVinci\CompetencyBundle\Manager\ObjectiveManager:
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@HeVinci\CompetencyBundle\Manager\CompetencyManager'
-            - '@HeVinci\CompetencyBundle\Manager\ProgressManager'
-            - '@translator'
-
-    HeVinci\CompetencyBundle\Manager\ProgressManager:
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
