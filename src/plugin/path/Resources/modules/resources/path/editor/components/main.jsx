@@ -113,6 +113,7 @@ class EditorMain extends Component {
                     path={this.props.path}
                     workspace={this.props.workspace}
                     resourceParent={this.props.resourceParent}
+                    update={this.props.update}
                   />
                 )
 
@@ -181,6 +182,7 @@ EditorMain.propTypes = {
     ResourceNodeTypes.propTypes
   ),
 
+  update: T.func.isRequired,
   // step actions
   addStep: T.func.isRequired,
   copyStep: T.func.isRequired,

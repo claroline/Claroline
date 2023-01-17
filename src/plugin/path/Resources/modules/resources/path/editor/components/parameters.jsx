@@ -130,6 +130,13 @@ const EditorParameters = props =>
                       label: trans('resource_end_back', {}, 'resource'),
                       displayed: (path) => get(path, 'end.display') && get(path, 'end.navigation'),
                       calculated: (path) => !!get(path, 'end.back.type') || get(path, 'end.back._enabled'),
+                      onChange: (enabled) => {
+                        if (!enabled) {
+                          props.update('end.back.type', null)
+                          props.update('end.back.label', null)
+                          props.update('end.back.target', null)
+                        }
+                      },
                       linked: [
                         {
                           name: 'end.back.label',
@@ -234,7 +241,8 @@ EditorParameters.propTypes = {
   ),
   path: T.shape(
     PathTypes.propTypes
-  ).isRequired
+  ).isRequired,
+  update: T.func.isRequired
 }
 
 export {

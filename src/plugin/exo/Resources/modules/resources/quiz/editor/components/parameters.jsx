@@ -443,6 +443,13 @@ const EditorParameters = props => {
                         label: trans('resource_end_back', {}, 'resource'),
                         displayed: (quiz) => hasEnd(quiz) && get(quiz, 'parameters.endNavigation'),
                         calculated: (quiz) => !!get(quiz, 'parameters.back.type') || get(quiz, 'parameters.back._enabled'),
+                        onChange: (enabled) => {
+                          if (!enabled) {
+                            props.update('parameters.back.type', null)
+                            props.update('parameters.back.label', null)
+                            props.update('parameters.back.target', null)
+                          }
+                        },
                         linked: [
                           {
                             name: 'parameters.back.label',
