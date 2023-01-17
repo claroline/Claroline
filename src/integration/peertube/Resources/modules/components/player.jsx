@@ -7,6 +7,7 @@ const PeerTubePlayer = (props) => {
 
   return (
     <iframe
+      style={{minHeight: '540px'}}
       height="100%"
       ref={embedIframe}
       src={`${props.url}?api=1&p2p=0`}
