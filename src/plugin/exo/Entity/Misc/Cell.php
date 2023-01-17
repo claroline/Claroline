@@ -7,6 +7,7 @@ use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use UJM\ExoBundle\Entity\ItemType\GridQuestion;
+use UJM\ExoBundle\Library\Model\ShuffleTrait;
 
 /**
  * GridItem.
@@ -17,6 +18,8 @@ use UJM\ExoBundle\Entity\ItemType\GridQuestion;
 class Cell
 {
     use Uuid;
+    use ShuffleTrait;
+
     /**
      * Unique identifier of the item.
      *

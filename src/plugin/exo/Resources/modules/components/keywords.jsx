@@ -342,6 +342,17 @@ const KeywordsPopover = props =>
       onChange={checked => props.onChange('_multiple', checked)}
     />
 
+    {props._multiple &&
+      <div className="sub-fields">
+        <CheckGroup
+          id={`keywords-${props.id}-shuffle`}
+          label={trans('shuffle_answers', {}, 'quiz')}
+          value={props.random}
+          onChange={checked => props.onChange('random', checked)}
+        />
+      </div>
+    }
+
     <KeywordItems
       keywords={props.keywords}
       validating={props.validating}
@@ -387,6 +398,8 @@ KeywordsPopover.propTypes = {
    * If false, the user will have to type his answer in a text input.
    */
   _multiple: T.bool.isRequired,
+
+  random: T.bool,
 
   /**
    * The collection of keywords for the solution

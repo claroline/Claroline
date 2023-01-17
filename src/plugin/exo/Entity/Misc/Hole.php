@@ -7,6 +7,7 @@ use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use UJM\ExoBundle\Entity\ItemType\ClozeQuestion;
+use UJM\ExoBundle\Library\Model\ShuffleTrait;
 
 /**
  * Hole.
@@ -17,6 +18,8 @@ use UJM\ExoBundle\Entity\ItemType\ClozeQuestion;
 class Hole
 {
     use Uuid;
+    use ShuffleTrait;
+
     /**
      * The identifier of the hole.
      *

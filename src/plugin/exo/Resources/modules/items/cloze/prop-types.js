@@ -8,6 +8,7 @@ const ClozeItem = {
       id: T.string.isRequired,
       size: T.number,
       placeholder: T.string,
+      random: T.bool,
       choices: T.arrayOf(T.shape(T.string))
     })).isRequired,
     solutions: T.arrayOf(T.shape({
