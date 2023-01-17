@@ -151,6 +151,7 @@ const GridCellPopover = props =>
     showScore={props.hasScore}
     hasExpectedAnswers={props.hasExpectedAnswers}
     _multiple={props._multiple}
+    random={props.random}
     close={props.closeSolution}
     remove={props.removeSolution}
     onChange={props.update}
@@ -167,6 +168,7 @@ GridCellPopover.propTypes = {
   hasScore: T.bool.isRequired,
   hasExpectedAnswers: T.bool.isRequired,
   _multiple: T.bool.isRequired,
+  random: T.bool,
   validating: T.bool.isRequired,
   _errors: T.shape({
     keywords: T.object
@@ -232,7 +234,8 @@ class GridCell extends Component {
                   hasScore={this.props.hasScore}
                   hasExpectedAnswers={this.props.hasExpectedAnswers}
                   validating={this.props.validating}
-                  _multiple={this.props.cell._multiple}
+                  _multiple={this.props.cell._multiple || !isEmpty(this.props.cell.choices)}
+                  random={this.props.cell.random}
                   _errors={this.props._errors}
                   update={this.props.update}
                   removeSolution={this.props.removeSolution}
@@ -333,6 +336,7 @@ GridCell.propTypes = {
   cell: T.shape({
     id: T.string.isRequired,
     _multiple: T.bool.isRequired,
+    random: T.bool,
     data: T.string.isRequired,
     background: T.string.isRequired,
     color: T.string.isRequired,

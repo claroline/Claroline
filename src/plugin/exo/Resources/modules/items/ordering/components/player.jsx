@@ -1,6 +1,7 @@
 import React, {Component, forwardRef} from 'react'
 import {PropTypes as T} from 'prop-types'
 import cloneDeep from 'lodash/cloneDeep'
+import shuffle from 'lodash/shuffle'
 import classes from 'classnames'
 
 import {trans} from '#/main/app/intl/translation'
@@ -100,15 +101,18 @@ DraggableItem = makeDraggable(
 )
 
 class OrderingPlayer extends Component {
-
   constructor(props) {
     super(props)
+
+    this.state = {
+      items: shuffle(this.props.item.items)
+    }
   }
 
   componentDidMount() {
     if (this.props.item.mode === constants.MODE_INSIDE && (this.props.answer.length === 0 || !this.props.answer)) {
       const answers = []
-      this.props.item.items.forEach((item, index) => {
+      this.state.items.forEach((item, index) => {
         answers.push({
           itemId: item.id,
           position: index + 1,
@@ -181,7 +185,7 @@ class OrderingPlayer extends Component {
                   )}/>
               )
               :
-              this.props.item.items.filter(item => undefined === this.props.answer.find(answer => answer.itemId === item.id)).map((item) =>
+              this.state.items.filter(item => undefined === this.props.answer.find(answer => answer.itemId === item.id)).map((item) =>
                 <DraggableItem
                   item={item}
                   key={item.id}

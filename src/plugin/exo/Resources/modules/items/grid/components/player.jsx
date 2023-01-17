@@ -1,12 +1,53 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import cloneDeep from 'lodash/cloneDeep'
+import shuffle from 'lodash/shuffle'
 import classes from 'classnames'
 
 import {trans} from '#/main/app/intl/translation'
 import {MenuButton, CALLBACK_BUTTON} from '#/main/app/buttons'
 
 import {utils} from '#/plugin/exo/items/grid/utils/utils'
+
+class CellChoices extends Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      choices: props.random ? shuffle(props.choices) : props.choices
+    }
+  }
+
+  render() {
+    return (
+      <MenuButton
+        className={classes('btn', {disabled: this.props.disabled})}
+        id={`choice-drop-down-${this.props.cellId}`}
+        menu={{
+          items: this.state.choices.map((choice) => ({
+            type: CALLBACK_BUTTON,
+            label: choice,
+            disabled: this.props.disabled,
+            active: this.props.selected === choice,
+            callback: () => this.props.onChange(choice)
+          }))
+        }}
+      >
+        {this.props.selected || trans('grid_choice_select_empty', {}, 'quiz')}
+        &nbsp;<span className="caret" />
+      </MenuButton>
+    )
+  }
+}
+
+CellChoices.propTypes = {
+  cellId: T.string.isRequired,
+  disabled: T.bool,
+  random: T.bool,
+  choices: T.array,
+  selected: T.string,
+  onChange: T.func.isRequired
+}
 
 class GridCell extends Component {
   constructor(props) {
@@ -43,22 +84,14 @@ class GridCell extends Component {
           }
 
           {this.props.cell.choices.length > 0 &&
-            <MenuButton
-              className={classes('btn', {disabled: this.props.disabled})}
-              id={`choice-drop-down-${this.props.cell.id}`}
-              menu={{
-                items: this.props.cell.choices.map((choice) => ({
-                  type: CALLBACK_BUTTON,
-                  label: choice,
-                  disabled: this.props.disabled,
-                  active: this.getTextValue() === choice,
-                  callback: () => this.props.onChange(this.setTextAnswer(choice))
-                }))
-              }}
-            >
-              {this.getTextValue() || trans('grid_choice_select_empty', {}, 'quiz')}
-              &nbsp;<span className="caret" />
-            </MenuButton>
+            <CellChoices
+              cellId={this.props.cell.id}
+              disabled={this.props.disabled}
+              random={this.props.cell.random}
+              choices={this.props.cell.choices}
+              selected={this.getTextValue()}
+              onChange={(choice) => this.props.onChange(this.setTextAnswer(choice))}
+            />
           }
 
           {this.props.cell.input && this.props.cell.choices.length === 0 &&

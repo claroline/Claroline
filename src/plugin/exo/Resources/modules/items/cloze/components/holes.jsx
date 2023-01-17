@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
+import shuffle from 'lodash/shuffle'
 import classes from 'classnames'
 
 import {trans} from '#/main/app/intl/translation'
@@ -48,20 +49,34 @@ HoleInput.defaultProps = {
 /**
  * Display Hole in player.
  */
-const PlayerHole = props =>
-  <span className="cloze-hole">
-    <HoleInput
-      value={props.answer}
-      size={props.size}
-      choices={props.choices}
-      disabled={props.disabled}
-      onChange={props.onChange}
-    />
-  </span>
+class PlayerHole extends Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      choices: props.random ? shuffle(props.choices) : props.choices
+    }
+  }
+
+  render() {
+    return (
+      <span className="cloze-hole">
+        <HoleInput
+          value={this.props.answer}
+          size={this.props.size}
+          choices={this.state.choices}
+          disabled={this.props.disabled}
+          onChange={this.props.onChange}
+        />
+      </span>
+    )
+  }
+}
 
 PlayerHole.propTypes = {
   size: T.number,
   answer: T.string,
+  random: T.bool,
   choices: T.arrayOf(T.string),
   disabled: T.bool.isRequired,
   onChange: T.func.isRequired

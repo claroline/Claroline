@@ -59,13 +59,14 @@ class GridQuestionSerializer
      */
     private function serializeCells(GridQuestion $gridQuestion, array $options = [])
     {
-        return array_map(function (Cell $cell) {
+        return array_map(function (Cell $cell) use ($options) {
             $cellData = [
                 'id' => $cell->getUuid(),
                 'background' => $cell->getBackground(),
                 'color' => $cell->getColor(),
                 'coordinates' => $cell->getCoords(),
                 'input' => $cell->isInput(),
+                'random' => $cell->getShuffle(),
             ];
             if ($cell->getData()) {
                 $cellData['data'] = $cell->getData();
@@ -73,9 +74,15 @@ class GridQuestionSerializer
             // add a list of choice if needed
             if ($cell->isSelector()) {
                 // We want to render a list of choices
-                $cellData['choices'] = array_map(function (CellChoice $choice) {
+                $choices = array_map(function (CellChoice $choice) {
                     return $choice->getText();
                 }, $cell->getChoices()->toArray());
+
+                if ($cell->getShuffle() && in_array(Transfer::SHUFFLE_ANSWERS, $options)) {
+                    shuffle($choices);
+                }
+
+                $cellData['choices'] = $choices;
             } else {
                 $cellData['choices'] = [];
             }
@@ -171,8 +178,10 @@ class GridQuestionSerializer
             }
             if (!empty($cellData['choices'])) {
                 $cell->setSelector(true);
+                $cell->setShuffle(!empty($cellData['random']));
             } else {
                 $cell->setSelector(false);
+                $cell->setShuffle(false);
             }
             $hasSolution = false;
 

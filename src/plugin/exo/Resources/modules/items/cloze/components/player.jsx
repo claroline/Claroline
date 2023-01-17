@@ -20,6 +20,7 @@ export const ClozePlayer = props =>
             id={hole.id}
             size={hole.size}
             answer={answer ? answer.answerText : ''}
+            random={hole.random}
             choices={hole.choices}
             disabled={props.disabled}
             onChange={(newAnswer) => {

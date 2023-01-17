@@ -40,7 +40,7 @@ class ClozeQuestionSerializer
     {
         $serialized = [
             'text' => $clozeQuestion->getText(),
-            'holes' => $this->serializeHoles($clozeQuestion),
+            'holes' => $this->serializeHoles($clozeQuestion, $options),
         ];
 
         if (in_array(Transfer::INCLUDE_SOLUTIONS, $options)) {
@@ -72,23 +72,29 @@ class ClozeQuestionSerializer
 
     /**
      * Serializes the Question holes.
-     *
-     * @return array
      */
-    private function serializeHoles(ClozeQuestion $clozeQuestion)
+    private function serializeHoles(ClozeQuestion $clozeQuestion, ?array $options = []): ?array
     {
-        return array_values(array_map(function (Hole $hole) {
+        return array_values(array_map(function (Hole $hole) use ($options) {
             $holeData = [
                 'id' => $hole->getUuid(),
                 'size' => $hole->getSize(),
+                'random' => $hole->getShuffle(),
             ];
 
             if ($hole->getSelector()) {
                 // We want to propose a list of choices
-                $holeData['choices'] = array_map(function (Keyword $keyword) {
+                $choices = array_map(function (Keyword $keyword) {
                     return $keyword->getText();
                 }, $hole->getKeywords()->toArray());
+
+                if ($hole->getShuffle() && in_array(Transfer::SHUFFLE_ANSWERS, $options)) {
+                    shuffle($choices);
+                }
+
+                $holeData['choices'] = $choices;
             }
+
             $placeholder = $hole->getPlaceholder();
 
             if (!empty($placeholder)) {
@@ -128,8 +134,10 @@ class ClozeQuestionSerializer
 
             if (!empty($holeData['choices'])) {
                 $hole->setSelector(true);
+                $hole->setShuffle(!empty($holeData['random']));
             } else {
                 $hole->setSelector(false);
+                $hole->setShuffle(false);
             }
 
             foreach ($solutions as $solution) {

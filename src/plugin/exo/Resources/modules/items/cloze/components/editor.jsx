@@ -61,6 +61,7 @@ const HolePopover = props => {
       _errors={get(props, '_errors')}
       validating={props.validating}
       showCaseSensitive={true}
+      random={props.hole.random}
       showScore={props.hasExpectedAnswers && props.hasScore}
       hasExpectedAnswers={props.hasExpectedAnswers}
       close={props.close}
@@ -93,6 +94,7 @@ HolePopover.propTypes = {
   hole: T.shape({
     id: T.string.isRequired,
     _multiple: T.bool.isRequired,
+    random: T.bool,
     size: T.number
   }).isRequired,
   solution: T.shape({
@@ -316,7 +318,7 @@ class MainField extends Component {
               const newItem = cloneDeep(this.props.item)
               const hole = getHoleFromId(newItem, newItem._holeId)
 
-              if (['size', '_multiple'].indexOf(property) > -1) {
+              if (['size', '_multiple', 'random'].indexOf(property) > -1) {
                 hole[property] = value
               } else {
                 throw `${property} is not a valid hole attribute`
