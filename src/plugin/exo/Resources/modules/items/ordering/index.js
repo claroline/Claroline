@@ -129,7 +129,7 @@ export default {
   refreshIdentifiers: (item) => {
     const mapIds = {}
 
-    item.choices.forEach(choice => {
+    item.items.forEach(choice => {
       mapIds[choice.id] = makeId()
       choice.id = mapIds[choice.id]
     })
