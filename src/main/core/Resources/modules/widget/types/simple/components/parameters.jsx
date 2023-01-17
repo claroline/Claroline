@@ -20,8 +20,7 @@ const SimpleWidgetParameters = (props) =>
             type: 'html',
             required: true,
             options: {
-              workspace: 'workspace' === props.currentContext.type ? props.currentContext.data : undefined,
-              minimal: false
+              workspace: 'workspace' === props.currentContext.type ? props.currentContext.data : undefined
             }
           }
         ]
