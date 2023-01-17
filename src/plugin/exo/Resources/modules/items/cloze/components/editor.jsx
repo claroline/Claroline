@@ -408,7 +408,8 @@ const ClozeEditor = props => {
               name: 'clozeText',
               label: trans('text'),
               required: true,
-              component: ClozeText
+              component: ClozeText,
+              help: trans('cloze_add_hole_help', {}, 'quiz')
             }
           ]
         }
