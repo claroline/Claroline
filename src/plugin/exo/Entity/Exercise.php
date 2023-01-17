@@ -373,12 +373,12 @@ class Exercise extends AbstractResource
         $this->endStats = $endStats;
     }
 
-    public function getIntermediateScores(): string
+    public function getIntermediateScores(): ?string
     {
         return $this->intermediateScores;
     }
 
-    public function setIntermediateScores(string $intermediateScores): void
+    public function setIntermediateScores(?string $intermediateScores = null): void
     {
         $this->intermediateScores = $intermediateScores;
     }
