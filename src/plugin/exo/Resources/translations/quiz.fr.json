@@ -49,6 +49,7 @@
     "cloze_multiple_answers_required": "Plusieurs réponses sont requises",
     "cloze_must_contains_clozes_error": "Le texte doit contenir des trous",
     "cloze_solutions_requires_positive_answer": "Au moins une réponse doit avoir un score positif",
+    "cloze_add_hole_help": "L'ajout de trou est possible uniquement lorsque l'éditeur de texte riche est fermé. Veuillez fermer l'éditeur avec le bouton \"-\" pour pouvoir ajouter/modifier un trou.",
     "comment": "Commentaire",
     "statistics_all_attempts": "Toutes les tentatives (terminées et en cours)",
     "statistics_finished_attempts": "Uniquement les tentatives terminées",

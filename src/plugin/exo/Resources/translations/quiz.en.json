@@ -49,6 +49,7 @@
     "cloze_multiple_answers_required": "Multiple answers required",
     "cloze_must_contains_clozes_error": "The text must contains clozes",
     "cloze_solutions_requires_positive_answer": "At least one answer must have a positive score",
+    "cloze_add_hole_help": "Adding a hole is only possible when the rich text editor is closed. Please close the editor with the \"-\" button to be able to add/modify a hole.",
     "comment": "Comment",
     "statistics_all_attempts": "All attempts (finished and in progress)",
     "statistics_finished_attempts": "Only finished attempts",
