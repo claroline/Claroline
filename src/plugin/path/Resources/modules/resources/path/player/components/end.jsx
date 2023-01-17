@@ -95,10 +95,10 @@ class PlayerEnd extends Component {
             name: 'home',
             type: URL_BUTTON, // we require an URL_BUTTON here to escape the embedded resource router
             label: get(this.props.path, 'end.back.label') || trans('return-home', {}, 'actions'),
-            target: classes({
-              ['#'+desktopRoute()]: 'desktop' === get(this.props.path, 'end.back.type'),
-              ['#'+workspaceRoute(this.props.workspace)]: 'workspace' === get(this.props.path, 'end.back.type'),
-              ['#'+resourceRoute(get(this.props.path, 'end.back.target'))]: 'resource' === get(this.props.path, 'end.back.type')
+            target: '#'+classes({
+              [desktopRoute()]: 'desktop' === get(this.props.path, 'end.back.type'),
+              [this.props.workspace ? workspaceRoute(this.props.workspace) : undefined]: 'workspace' === get(this.props.path, 'end.back.type'),
+              [get(this.props.path, 'end.back.target') ? resourceRoute(get(this.props.path, 'end.back.target')) : undefined]: 'resource' === get(this.props.path, 'end.back.type')
             })
           }
         ] : [])}

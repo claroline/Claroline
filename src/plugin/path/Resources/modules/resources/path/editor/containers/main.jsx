@@ -2,6 +2,7 @@ import {connect} from 'react-redux'
 
 import {withRouter} from '#/main/app/router'
 import {toKey} from '#/main/core/scaffolding/text'
+import {actions as formActions} from '#/main/app/content/form/store'
 
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
 
@@ -21,6 +22,9 @@ const EditorMain = withRouter(
       workspace: resourceSelectors.workspace(state)
     }),
     (dispatch) => ({
+      update(prop, value) {
+        dispatch(formActions.updateProp(selectors.FORM_NAME, prop, value))
+      },
       addStep(steps, parent = null) {
         // generate slug now to be able to redirect
         const title = getStepTitle(steps, parent)

@@ -28,7 +28,7 @@ const WorkspaceCertificatesToolbar = (props) => {
     })
       .then(response => response.json())
       .then(response => setWsEval(response))
-  })
+  }, [props.workspace.id, props.currentUser.id])
 
   return (
     <Toolbar

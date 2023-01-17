@@ -172,10 +172,10 @@ const AttemptEndComponent = props =>
         name: 'home',
         type: URL_BUTTON, // we require an URL_BUTTON here to escape the embedded resource router
         label: get(props.paper, 'structure.parameters.back.label') || trans('return-home', {}, 'actions'),
-        target: classes({
-          ['#'+desktopRoute()]: 'desktop' === get(props.paper, 'structure.parameters.back.type'),
-          ['#'+workspaceRoute(props.workspace)]: 'workspace' === get(props.paper, 'structure.parameters.back.type'),
-          ['#'+resourceRoute(get(props.paper, 'structure.parameters.back.target'))]: 'resource' === get(props.paper, 'structure.parameters.back.type')
+        target: '#'+classes({
+          [desktopRoute()]: 'desktop' === get(props.paper, 'structure.parameters.back.type'),
+          [props.workspace ? workspaceRoute(props.workspace) : undefined]: 'workspace' === get(props.paper, 'structure.parameters.back.type'),
+          [get(props.paper, 'structure.parameters.back.target') ? resourceRoute(get(props.paper, 'structure.parameters.back.target')) : undefined]: 'resource' === get(props.paper, 'structure.parameters.back.type')
         })
       }
     ] : [])}
