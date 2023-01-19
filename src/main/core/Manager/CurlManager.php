@@ -28,11 +28,6 @@ class CurlManager
         $options[CURLOPT_URL] = $url;
 
         $ch = curl_init();
-
-        foreach ($options as $option => $value) {
-            curl_setopt($ch, $option, $value);
-        }
-
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 
         switch ($type) {
@@ -45,6 +40,10 @@ class CurlManager
             case 'DELETE':
                 $this->setDeleteCurl($ch);
                 break;
+        }
+
+        foreach ($options as $option => $value) {
+            curl_setopt($ch, $option, $value);
         }
 
         $serverOutput = curl_exec($ch);
