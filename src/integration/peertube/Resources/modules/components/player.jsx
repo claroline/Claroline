@@ -10,7 +10,7 @@ const PeerTubePlayer = (props) => {
       style={{minHeight: '540px'}}
       height="100%"
       ref={embedIframe}
-      src={`${props.url}?api=1&p2p=0`}
+      src={`${props.url}?api=1&p2p=0&title=0&peertubeLink=0`}
       allowFullScreen={true}
       frameBorder="0"
       onLoad={() => {
