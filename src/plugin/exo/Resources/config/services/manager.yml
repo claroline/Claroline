@@ -24,6 +24,7 @@ services:
 
     UJM\ExoBundle\Manager\Item\ItemManager:
         arguments:
+            - '@security.authorization_checker'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@UJM\ExoBundle\Manager\Attempt\ScoreManager'
             - '@UJM\ExoBundle\Validator\JsonSchema\Item\ItemValidator'
@@ -33,8 +34,8 @@ services:
 
     UJM\ExoBundle\Manager\Item\ShareManager:
         arguments:
+            - '@security.authorization_checker'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@UJM\ExoBundle\Manager\Item\ItemManager'
 
     UJM\ExoBundle\Manager\AttemptManager:
         arguments:

@@ -5,23 +5,40 @@ namespace UJM\ExoBundle\Manager\Item;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use UJM\ExoBundle\Entity\Item\Item;
 use UJM\ExoBundle\Entity\Item\Shared;
 use UJM\ExoBundle\Repository\ItemRepository;
 
 class ShareManager
 {
+    /** @var AuthorizationCheckerInterface */
+    private $authorization;
     /** @var ObjectManager */
     private $om;
-    /** @var ItemManager */
-    private $itemManager;
 
     public function __construct(
-        ObjectManager $om,
-        ItemManager $itemManager)
-    {
+        AuthorizationCheckerInterface $authorization,
+        ObjectManager $om
+    ) {
+        $this->authorization = $authorization;
         $this->om = $om;
-        $this->itemManager = $itemManager;
+    }
+
+    public function canEdit(Item $question, User $user): bool
+    {
+        $shared = $this->om->getRepository(Shared::class)
+            ->findOneBy([
+                'question' => $question,
+                'user' => $user,
+            ]);
+
+        if ($shared && $shared->hasAdminRights()) {
+            // User has admin rights so he can delete question
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -29,7 +46,7 @@ class ShareManager
      *
      * @throws InvalidDataException
      */
-    public function share(array $shareRequest, User $user)
+    public function share(array $shareRequest): void
     {
         $errors = $this->validateShareRequest($shareRequest);
         if (count($errors) > 0) {
@@ -48,7 +65,7 @@ class ShareManager
 
         // Share each question with each user
         foreach ($questions as $question) {
-            if ($this->itemManager->canEdit($question, $user)) {
+            if ($this->authorization->isGranted('edit', $question)) {
                 $sharedWith = $this->om
                     ->getRepository(Shared::class)
                     ->findBy(['question' => $question]);
@@ -74,10 +91,8 @@ class ShareManager
      * Gets an existing share link for a user in the share list of the question.
      *
      * @param Shared[] $shared
-     *
-     * @return Shared
      */
-    private function getSharedForUser(User $user, array $shared)
+    private function getSharedForUser(User $user, array $shared): ?Shared
     {
         $userLink = null;
         foreach ($shared as $shareLink) {
@@ -92,10 +107,8 @@ class ShareManager
 
     /**
      * Validates a share request.
-     *
-     * @return array
      */
-    private function validateShareRequest(array $shareRequest)
+    private function validateShareRequest(array $shareRequest): array
     {
         $errors = [];
 

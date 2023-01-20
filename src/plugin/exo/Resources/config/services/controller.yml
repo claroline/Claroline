@@ -1,17 +1,13 @@
 services:
     _defaults:
-        public: true #because controller
+        public: true # because controller
 
-    UJM\ExoBundle\Controller\Item\ItemController:
+    UJM\ExoBundle\Controller\ItemController:
+        parent: Claroline\AppBundle\Controller\AbstractCrudController
+        public: true
         arguments:
-            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@security.authorization_checker'
             - '@UJM\ExoBundle\Manager\Item\ItemManager'
-            - '@event_dispatcher'
-
-    UJM\ExoBundle\Controller\Item\ShareController:
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CommunityBundle\Serializer\UserSerializer'
             - '@UJM\ExoBundle\Manager\Item\ShareManager'
 
     UJM\ExoBundle\Controller\AttemptController:

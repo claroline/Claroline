@@ -43,14 +43,14 @@ services:
     UJM\ExoBundle\Serializer\Item\ItemSerializer:
         tags: [claroline.serializer]
         arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@security.authorization_checker'
             - '@security.token_storage'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@ujm_exo.collection.item_definitions'
             - '@Claroline\CommunityBundle\Serializer\UserSerializer'
             - '@ujm_exo.serializer.hint'
             - '@ujm_exo.serializer.resource_content'
             - '@ujm_exo.serializer.item_object'
-            - '@service_container'
             - '@event_dispatcher'
 
     ujm_exo.serializer.item:

@@ -11,9 +11,3 @@ plugin:
               - name: view_docimology
                 decoder: view_docimology
                 group: log
-
-    tools:
-        - name: ujm_questions
-          is_displayable_in_workspace: false
-          is_displayable_in_desktop: true
-          class: database

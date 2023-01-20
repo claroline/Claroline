@@ -12,6 +12,7 @@ import {Step as StepTypes} from '#/plugin/exo/resources/quiz/prop-types'
 import {EditorParameters} from '#/plugin/exo/resources/quiz/editor/components/parameters'
 import {EditorStep} from '#/plugin/exo/resources/quiz/editor/components/step'
 import {MODAL_STEP_POSITION} from '#/plugin/exo/resources/quiz/editor/modals/step-position'
+import {EditorBank} from '#/plugin/exo/resources/quiz/editor/containers/bank'
 
 class EditorMain extends Component {
   getStepActions(step, index) {
@@ -119,6 +120,9 @@ class EditorMain extends Component {
                   update={this.props.update}
                 />
               )
+            }, {
+              path: '/edit/bank',
+              component: EditorBank
             }, {
               path: '/edit/:slug',
               render: (routeProps) => {

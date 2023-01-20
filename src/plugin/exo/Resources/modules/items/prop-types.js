@@ -64,7 +64,7 @@ const Item = {
       protectQuestion: false,
       mandatory: false
     },
-    rights: {
+    permissions: {
       edit: true
     },
     hints: [],

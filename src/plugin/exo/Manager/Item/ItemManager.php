@@ -3,12 +3,11 @@
 namespace UJM\ExoBundle\Manager\Item;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Entity\Item\Item;
-use UJM\ExoBundle\Entity\Item\Shared;
 use UJM\ExoBundle\Library\Attempt\CorrectedAnswer;
 use UJM\ExoBundle\Library\Item\Definition\AnswerableItemDefinitionInterface;
 use UJM\ExoBundle\Library\Item\ItemDefinitionsCollection;
@@ -24,6 +23,8 @@ use UJM\ExoBundle\Validator\JsonSchema\Item\ItemValidator;
 
 class ItemManager
 {
+    /** @var AuthorizationCheckerInterface */
+    private $authorization;
     /** @var ObjectManager */
     private $om;
     /** @var ScoreManager */
@@ -42,6 +43,7 @@ class ItemManager
     private $hintSerializer;
 
     public function __construct(
+        AuthorizationCheckerInterface $authorization,
         ObjectManager $om,
         ScoreManager $scoreManager,
         ItemValidator $validator,
@@ -49,41 +51,24 @@ class ItemManager
         ItemDefinitionsCollection $itemDefinitions,
         HintSerializer $hintSerializer
     ) {
+        $this->authorization = $authorization;
         $this->om = $om;
         $this->scoreManager = $scoreManager;
-        $this->repository = $this->om->getRepository(Item::class);
-        $this->answerRepository = $this->om->getRepository(Answer::class);
         $this->validator = $validator;
         $this->serializer = $serializer;
         $this->itemDefinitions = $itemDefinitions;
         $this->hintSerializer = $hintSerializer;
-    }
 
-    public function canEdit(Item $question, User $user)
-    {
-        $shared = $this->om->getRepository(Shared::class)
-            ->findOneBy([
-                'question' => $question,
-                'user' => $user,
-            ]);
-
-        if (($question->getCreator() && ($question->getCreator()->getId() === $user->getId()))
-            || ($shared && $shared->hasAdminRights())) {
-            // User has admin rights so he can delete question
-            return true;
-        }
-
-        return false;
+        $this->repository = $this->om->getRepository(Item::class);
+        $this->answerRepository = $this->om->getRepository(Answer::class);
     }
 
     /**
      * Validates and creates a new Item from raw data.
      *
-     * @return Item
-     *
      * @throws InvalidDataException
      */
-    public function create(array $data)
+    public function create(array $data): Item
     {
         return $this->update(new Item(), $data);
     }
@@ -91,11 +76,9 @@ class ItemManager
     /**
      * Validates and updates a Item entity with raw data.
      *
-     * @return Item
-     *
      * @throws InvalidDataException
      */
-    public function update(Item $question, array $data)
+    public function update(Item $question, array $data): Item
     {
         // Validate received data
         $validationOptions = [];
@@ -123,58 +106,34 @@ class ItemManager
 
     /**
      * Serializes a question.
-     *
-     * @return array
      */
-    public function serialize(Item $question, array $options = [])
+    public function serialize(Item $question, array $options = []): array
     {
         return $this->serializer->serialize($question, $options);
     }
 
     /**
      * Deserializes a question.
-     *
-     * @return Item
      */
-    public function deserialize(array $itemData, Item $item = null, array $options = [])
+    public function deserialize(array $itemData, Item $item = null, array $options = []): Item
     {
         return $this->serializer->deserialize($itemData, $item ?? new Item(), $options);
     }
 
     /**
-     * Deletes an Item.
-     * It's only possible if the Item is not used in an Exercise.
-     *
-     * @param $user
-     * @param bool $skipErrors
-     *
-     * @throws \Exception
-     */
-    public function delete(Item $item, $user, $skipErrors = false)
-    {
-        if (!$this->canEdit($item, $user)) {
-            if (!$skipErrors) {
-                throw new \Exception('You can not delete this item.');
-            } else {
-                return;
-            }
-        }
-
-        $this->om->remove($item);
-        $this->om->flush();
-    }
-
-    /**
      * Deletes a list of Items.
      */
-    public function deleteBulk(array $questions, User $user)
+    public function deleteBulk(array $questions): void
     {
         // Load the list of questions to delete
         $toDelete = $this->repository->findByUuids($questions);
 
         $this->om->startFlushSuite();
         foreach ($toDelete as $question) {
-            $this->delete($question, $user, true);
+            if ($this->authorization->isGranted('delete', $question)) {
+                $this->om->remove($questions);
+                $this->om->flush();
+            }
         }
         $this->om->endFlushSuite();
     }
