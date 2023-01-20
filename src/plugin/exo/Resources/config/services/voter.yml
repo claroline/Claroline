@@ -1,0 +1,8 @@
+services:
+    _defaults:
+        tags: [security.voter]
+
+    UJM\ExoBundle\Security\Voter\ItemVoter:
+        parent: Claroline\AppBundle\Security\Voter\AbstractVoter
+        arguments:
+            - '@UJM\ExoBundle\Manager\Item\ShareManager'

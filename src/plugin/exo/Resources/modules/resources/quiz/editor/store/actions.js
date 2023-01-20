@@ -1,6 +1,9 @@
 import {makeActionCreator} from '#/main/app/store/actions'
 
+import {API_REQUEST} from '#/main/app/api'
+import {actions as listActions} from '#/main/app/content/list/store'
 import {actions as formActions, selectors as formSelectors} from '#/main/app/content/form/store'
+
 import {selectors} from '#/plugin/exo/resources/quiz/editor/store/selectors'
 import {validate} from '#/plugin/exo/resources/quiz/editor/validation'
 
@@ -31,3 +34,18 @@ actions.save = (quizId) => (dispatch, getState) => {
     dispatch(formActions.save(selectors.FORM_NAME, ['exercise_update', {id: quizId}]))
   })
 }
+
+actions.shareQuestions = (questions, users, adminRights) => ({
+  [API_REQUEST]: {
+    url: ['apiv2_quiz_questions_share'],
+    request: {
+      method: 'POST',
+      body: JSON.stringify({
+        questions: questions.map(question => question.id),
+        users: users.map(user => user.id),
+        adminRights
+      })
+    },
+    success: (data, dispatch) => dispatch(listActions.invalidateData(selectors.BANK_NAME))
+  }
+})

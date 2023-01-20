@@ -2,5 +2,6 @@
 ujm_exo_api:
     resource: "@UJMExoBundle/Controller/"
     prefix: apiv2
+    type: api
     options:
         expose: true

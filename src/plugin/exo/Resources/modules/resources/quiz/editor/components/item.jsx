@@ -3,6 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import omit from 'lodash/omit'
 
 import {trans, transChoice} from '#/main/app/intl/translation'
+import {hasPermission} from '#/main/app/security'
 import {Await} from '#/main/app/components/await'
 import {FormSection} from '#/main/app/content/form/components/sections'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
@@ -53,7 +54,7 @@ const EditorItem = props =>
             embedded={true}
             formName={props.formName}
             path={props.path}
-            disabled={props.item.meta.protectQuestion && props.item.rights ? !props.item.rights.edit: false}
+            disabled={props.item.meta.protectQuestion && !hasPermission('edit', props.item)}
             enableScores={props.enableScores}
             definition={itemDefinition}
             item={props.item}

@@ -21,6 +21,8 @@ import {
   QUIZ_ITEM_MOVE,
   QUIZ_ITEM_COPY
 } from '#/plugin/exo/resources/quiz/editor/store/actions'
+import {selectors} from '#/plugin/exo/resources/quiz/editor/store/selectors'
+import {makeListReducer} from '#/main/app/content/list/store'
 
 function setDefaults(quiz) {
   // adds default value to quiz data
@@ -91,7 +93,7 @@ function pushItem(item, items, position) {
   return newItems
 }
 
-export const reducer = makeFormReducer(quizSelectors.STORE_NAME + '.editor', {}, {
+export const reducer = makeFormReducer(selectors.FORM_NAME, {}, {
   pendingChanges: makeReducer(false, {
     [QUIZ_STEP_ADD]: () => true,
     [QUIZ_STEP_COPY]: () => true,
@@ -100,6 +102,7 @@ export const reducer = makeFormReducer(quizSelectors.STORE_NAME + '.editor', {},
     [QUIZ_ITEM_MOVE]: () => true,
     [QUIZ_ITEM_COPY]: () => true
   }),
+  bank: makeListReducer(selectors.BANK_NAME),
   originalData: makeReducer({}, {
     [makeInstanceAction(RESOURCE_LOAD, quizSelectors.STORE_NAME)]: (state, action) => setDefaults(action.resourceData.quiz) || state
   }),

@@ -7,6 +7,7 @@ import {selectors as quizSelectors} from '#/plugin/exo/resources/quiz/store/sele
 
 const STORE_NAME = 'editor'
 const FORM_NAME = `${quizSelectors.STORE_NAME}.editor`
+const BANK_NAME = `${FORM_NAME}.bank`
 
 const quiz = (state) => formSelectors.data(formSelectors.form(state, FORM_NAME))
 
@@ -63,6 +64,8 @@ const tags = createSelector(
 export const selectors = {
   STORE_NAME,
   FORM_NAME,
+  BANK_NAME,
+
   quizId,
   quizType,
   steps,

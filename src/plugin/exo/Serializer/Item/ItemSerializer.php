@@ -11,18 +11,15 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use UJM\ExoBundle\Entity\Exercise;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use UJM\ExoBundle\Entity\Item\Hint;
 use UJM\ExoBundle\Entity\Item\Item;
 use UJM\ExoBundle\Entity\Item\ItemObject;
 use UJM\ExoBundle\Entity\Item\ItemResource;
-use UJM\ExoBundle\Entity\Item\Shared;
 use UJM\ExoBundle\Library\Item\ItemDefinitionsCollection;
 use UJM\ExoBundle\Library\Options\Transfer;
-use UJM\ExoBundle\Repository\ExerciseRepository;
 use UJM\ExoBundle\Serializer\Content\ResourceContentSerializer;
 
 /**
@@ -32,57 +29,48 @@ class ItemSerializer
 {
     use SerializerTrait;
 
-    /** @var ObjectManager */
-    private $om;
-
+    /** @var AuthorizationCheckerInterface */
+    private $authorization;
     /** @var TokenStorageInterface */
     private $tokenStorage;
-
+    /** @var ObjectManager */
+    private $om;
     /** @var ItemDefinitionsCollection */
     private $itemDefinitions;
-
     /** @var UserSerializer */
     private $userSerializer;
-
     /** @var HintSerializer */
     private $hintSerializer;
-
     /** @var ResourceContentSerializer */
     private $resourceContentSerializer;
-
     /** @var ItemObjectSerializer */
     private $itemObjectSerializer;
-
-    /** @var ContainerInterface */
-    private $container;
-    /**
-     * @var EventDispatcherInterface
-     */
+    /** @var EventDispatcherInterface */
     private $eventDispatcher;
 
     public function __construct(
-        ObjectManager $om,
+        AuthorizationCheckerInterface $authorization,
         TokenStorageInterface $tokenStorage,
+        ObjectManager $om,
         ItemDefinitionsCollection $itemDefinitions,
         UserSerializer $userSerializer,
         HintSerializer $hintSerializer,
         ResourceContentSerializer $resourceContentSerializer,
         ItemObjectSerializer $itemObjectSerializer,
-        ContainerInterface $container,
         EventDispatcherInterface $eventDispatcher
     ) {
-        $this->om = $om;
+        $this->authorization = $authorization;
         $this->tokenStorage = $tokenStorage;
+        $this->om = $om;
         $this->itemDefinitions = $itemDefinitions;
         $this->userSerializer = $userSerializer;
         $this->hintSerializer = $hintSerializer;
         $this->resourceContentSerializer = $resourceContentSerializer;
         $this->itemObjectSerializer = $itemObjectSerializer;
-        $this->container = $container; // FIXME : this is a cheat to avoid a circular reference with `UJM\ExoBundle\Manager\Item\ItemManager`
         $this->eventDispatcher = $eventDispatcher;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'exo_item';
     }
@@ -90,7 +78,7 @@ class ItemSerializer
     /**
      * Converts a Item into a JSON-encodable structure.
      */
-    public function serialize(Item $question, array $options = []): array
+    public function serialize(Item $question, ?array $options = []): array
     {
         // Serialize specific data for the item type
         $serialized = $this->serializeQuestionType($question, $options);
@@ -113,15 +101,16 @@ class ItemSerializer
 
         if (1 === preg_match('#^application\/x\.[^/]+\+json$#', $question->getMimeType())) {
             // question items
-            $canEdit = $this->tokenStorage->getToken() && $this->tokenStorage->getToken()->getUser() instanceof User ?
-                $this->container->get('UJM\ExoBundle\Manager\Item\ItemManager')->canEdit($question, $this->tokenStorage->getToken()->getUser()) :
-                false;
             // Adds minimal information
             $serialized = array_merge($serialized, [
                 'content' => $question->getContent(),
                 'hasExpectedAnswers' => $question->hasExpectedAnswers(),
                 'score' => json_decode($question->getScoreRule(), true),
-                'rights' => ['edit' => $canEdit],
+                'permissions' => [
+                    // the check on token is required because of tests utilities
+                    'edit' => !empty($this->tokenStorage->getToken()) ? $this->authorization->isGranted('EDIT', $question) : false,
+                    'delete' => !empty($this->tokenStorage->getToken()) ? $this->authorization->isGranted('DELETE', $question) : false,
+                ],
             ]);
 
             // Adds full definition of the item
@@ -144,13 +133,8 @@ class ItemSerializer
 
     /**
      * Converts raw data into a Item entity.
-     *
-     * @param array $data
-     * @param Item  $item
-     *
-     * @return Item
      */
-    public function deserialize($data, Item $item = null, array $options = [])
+    public function deserialize(array $data, ?Item $item = null, ?array $options = []): Item
     {
         if (!in_array(Transfer::NO_FETCH, $options) && empty($item) && !empty($data['id'])) {
             // Loads the Item from DB if already exist
@@ -260,9 +244,10 @@ class ItemSerializer
         $creator = $question->getCreator();
 
         if (!empty($creator)) {
-            $metadata['creator'] = $this->userSerializer->serialize($creator, [SerializerInterface::SERIALIZE_MINIMAL]);
+            $serializedCreator = $this->userSerializer->serialize($creator, [SerializerInterface::SERIALIZE_MINIMAL]);
+            $metadata['creator'] = $serializedCreator;
             // TODO : remove me. for retro compatibility with old schema
-            $metadata['authors'] = [$this->userSerializer->serialize($creator, [SerializerInterface::SERIALIZE_MINIMAL])];
+            $metadata['authors'] = [$serializedCreator];
         }
 
         if ($question->getDateCreate()) {
@@ -271,28 +256,6 @@ class ItemSerializer
 
         if ($question->getDateModify()) {
             $metadata['updated'] = DateNormalizer::normalize($question->getDateModify());
-        }
-
-        if (in_array(Transfer::INCLUDE_ADMIN_META, $options)) {
-            /** @var ExerciseRepository $exerciseRepo */
-            $exerciseRepo = $this->om->getRepository(Exercise::class);
-
-            // Gets exercises that use this item
-            $exercises = $exerciseRepo->findByQuestion($question);
-            $metadata['usedBy'] = array_map(function (Exercise $exercise) {
-                return $exercise->getUuid();
-            }, $exercises);
-
-            // Gets users who have access to this item
-            $users = $this->om->getRepository(Shared::class)->findBy(['question' => $question]);
-            $metadata['sharedWith'] = array_map(function (Shared $sharedQuestion) use ($options) {
-                $shared = [
-                    'adminRights' => $sharedQuestion->hasAdminRights(),
-                    'user' => $this->userSerializer->serialize($sharedQuestion->getUser(), $options),
-                ];
-
-                return $shared;
-            }, $users);
         }
 
         return $metadata;
