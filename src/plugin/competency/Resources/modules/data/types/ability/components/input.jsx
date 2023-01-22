@@ -8,9 +8,9 @@ import {ModalButton} from '#/main/app/buttons/modal/containers/button'
 import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
-import {Ability as AbilityType} from '#/plugin/competency/administration/competency/prop-types'
+import {Ability as AbilityType} from '#/plugin/competency/tools/evaluation/prop-types'
 import {MODAL_ABILITIES_PICKER} from '#/plugin/competency/modals/abilities'
-import {AbilityCard} from '#/plugin/competency/administration/competency/data/components/ability-card'
+import {AbilityCard} from '#/plugin/competency/tools/evaluation/data/components/ability-card'
 
 const AbilityInput = props => {
   if (props.value) {

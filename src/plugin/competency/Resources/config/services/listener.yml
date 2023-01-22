@@ -1,6 +1,0 @@
-services:
-    HeVinci\CompetencyBundle\Listener\Administration\CompetenciesListener:
-        arguments:
-            - '@HeVinci\CompetencyBundle\Manager\CompetencyManager'
-        tags:
-            - { name: kernel.event_listener, event: tool.open.administration.competencies, method: onDisplayTool }

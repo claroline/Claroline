@@ -9,8 +9,8 @@ import {ListData} from '#/main/app/content/list/containers/data'
 import {trans} from '#/main/app/intl/translation'
 
 import {selectors} from '#/plugin/competency/modals/scales/store'
-import {Scale as ScaleType} from '#/plugin/competency/administration/competency/prop-types'
-import {ScaleCard} from '#/plugin/competency/administration/competency/data/components/scale-card'
+import {Scale as ScaleType} from '#/plugin/competency/tools/evaluation/prop-types'
+import {ScaleCard} from '#/plugin/competency/tools/evaluation/data/components/scale-card'
 
 const ScalesPickerModal = props => {
   const selectAction = props.selectAction(props.selected)

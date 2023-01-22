@@ -11,7 +11,9 @@ const EvaluationTool = connect(
     canEdit: hasPermission('edit', toolSelectors.toolData(state)),
     canShowEvaluations: hasPermission('show_evaluations', toolSelectors.toolData(state)),
     contextId: toolSelectors.contextId(state),
-    currentUserId: securitySelectors.currentUserId(state)
+    contextType: toolSelectors.contextType(state),
+    currentUserId: securitySelectors.currentUserId(state),
+    permissions: toolSelectors.permissions(state)
   })
 )(EvaluationToolComponent)
 

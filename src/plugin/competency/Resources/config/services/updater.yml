@@ -5,3 +5,8 @@ services:
     HeVinci\CompetencyBundle\Installation\Updater\Updater130600:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
+
+    HeVinci\CompetencyBundle\Installation\Updater\Updater130700:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\Manager\Tool\ToolManager'

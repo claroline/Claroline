@@ -5,8 +5,8 @@ import {trans} from '#/main/app/intl/translation'
 
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
-import {Ability as AbilityType} from '#/plugin/competency/administration/competency/prop-types'
-import {AbilityCard} from '#/plugin/competency/administration/competency/data/components/ability-card'
+import {Ability as AbilityType} from '#/plugin/competency/tools/evaluation/prop-types'
+import {AbilityCard} from '#/plugin/competency/tools/evaluation/data/components/ability-card'
 
 const AbilityDisplay = (props) => props.data ?
   <AbilityCard

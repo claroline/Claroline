@@ -11,7 +11,7 @@ import {ModalButton} from '#/main/app/buttons/modal/containers/button'
 import {
   Competency as CompetencyType,
   Ability as AbilityType
-} from '#/plugin/competency/administration/competency/prop-types'
+} from '#/plugin/competency/tools/evaluation/prop-types'
 import {MODAL_COMPETENCIES_PICKER} from '#/plugin/competency/modals/competencies'
 import {MODAL_ABILITIES_PICKER} from '#/plugin/competency/modals/abilities'
 
