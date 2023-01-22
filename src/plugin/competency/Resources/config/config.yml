@@ -1,8 +1,4 @@
 plugin:
-    admin_tools:
-        - name: competencies
-          class: atom
-
     resource_actions:
         - name: manage_competencies
           group: management

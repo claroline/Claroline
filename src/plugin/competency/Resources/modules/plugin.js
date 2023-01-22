@@ -14,7 +14,7 @@ registry.add('HeVinciCompetencyBundle', {
       'manage_competencies': () => { return import(/* webpackChunkName: "competency-action-resource-manage-competencies" */ '#/plugin/competency/resource/actions/manage-competencies') }
     }
   },
-  administration: {
-    'competencies': () => { return import(/* webpackChunkName: "plugin-competency-admin-competency" */ '#/plugin/competency/administration/competency') }
+  evaluation: {
+    'competencies': () => { return import(/* webpackChunkName: "plugin-competency-evaluation-competency" */ '#/plugin/competency/tools/evaluation') }
   }
 })

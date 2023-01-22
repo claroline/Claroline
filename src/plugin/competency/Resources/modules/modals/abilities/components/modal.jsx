@@ -9,8 +9,8 @@ import {ListData} from '#/main/app/content/list/containers/data'
 import {trans} from '#/main/app/intl/translation'
 
 import {selectors} from '#/plugin/competency/modals/abilities/store'
-import {Ability as AbilityType} from '#/plugin/competency/administration/competency/prop-types'
-import {AbilityCard} from '#/plugin/competency/administration/competency/data/components/ability-card'
+import {Ability as AbilityType} from '#/plugin/competency/tools/evaluation/prop-types'
+import {AbilityCard} from '#/plugin/competency/tools/evaluation/data/components/ability-card'
 
 const AbilitiesPickerModal = props => {
   const selectAction = props.selectAction(props.selected)

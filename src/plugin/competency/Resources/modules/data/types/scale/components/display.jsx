@@ -5,8 +5,8 @@ import {trans} from '#/main/app/intl/translation'
 
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
-import {Scale as ScaleType} from '#/plugin/competency/administration/competency/prop-types'
-import {ScaleCard} from '#/plugin/competency/administration/competency/data/components/scale-card'
+import {Scale as ScaleType} from '#/plugin/competency/tools/evaluation/prop-types'
+import {ScaleCard} from '#/plugin/competency/tools/evaluation/data/components/scale-card'
 
 const ScaleDisplay = (props) => props.data ?
   <ScaleCard

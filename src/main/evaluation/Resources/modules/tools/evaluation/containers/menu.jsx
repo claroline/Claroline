@@ -9,7 +9,8 @@ const EvaluationMenu = connect(
   (state) => ({
     canEdit: hasPermission('edit', toolSelectors.toolData(state)),
     canShowEvaluations: hasPermission('show_evaluations', toolSelectors.toolData(state)),
-    contextType: toolSelectors.contextType(state)
+    contextType: toolSelectors.contextType(state),
+    permissions: toolSelectors.permissions(state)
   })
 )(EvaluationMenuComponent)
 

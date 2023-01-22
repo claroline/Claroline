@@ -79,10 +79,8 @@ class DatabaseWriter implements LoggerAwareInterface
 
     /**
      * Persists a plugin in the database.
-     *
-     * @return Plugin
      */
-    public function insert(PluginBundleInterface $pluginBundle, array $pluginConfiguration)
+    public function insert(PluginBundleInterface $pluginBundle, array $pluginConfiguration): Plugin
     {
         $namespaceParts = explode('\\', $pluginBundle->getNamespace());
 
@@ -97,12 +95,7 @@ class DatabaseWriter implements LoggerAwareInterface
         return $pluginEntity;
     }
 
-    /**
-     * @return Plugin|null
-     *
-     * @throws \Exception
-     */
-    public function update(PluginBundleInterface $pluginBundle, array $pluginConfiguration)
+    public function update(PluginBundleInterface $pluginBundle, array $pluginConfiguration): ?Plugin
     {
         $namespaceParts = explode('\\', $pluginBundle->getNamespace());
 
@@ -130,10 +123,8 @@ class DatabaseWriter implements LoggerAwareInterface
 
     /**
      * Removes a plugin from the database.
-     *
-     * @param string $pluginFqcn
      */
-    public function delete($pluginFqcn)
+    public function delete(string $pluginFqcn): void
     {
         $plugin = $this->pluginRepository->findOneByBundleFQCN($pluginFqcn);
 
@@ -144,10 +135,8 @@ class DatabaseWriter implements LoggerAwareInterface
 
     /**
      * Checks if a plugin is persisted in the database.
-     *
-     * @return bool
      */
-    public function isSaved(PluginBundleInterface $plugin)
+    public function isSaved(PluginBundleInterface $plugin): bool
     {
         if (null !== $this->pluginRepository->findOneByBundleFQCN(get_class($plugin))) {
             return true;
@@ -156,10 +145,7 @@ class DatabaseWriter implements LoggerAwareInterface
         return false;
     }
 
-    /**
-     * @param array $processedConfiguration
-     */
-    private function persistConfiguration($processedConfiguration, Plugin $plugin, PluginBundleInterface $pluginBundle)
+    private function persistConfiguration(array $processedConfiguration, Plugin $plugin, PluginBundleInterface $pluginBundle): void
     {
         foreach ($processedConfiguration['resources'] as $resource) {
             $this->persistResourceType($resource, $plugin, $pluginBundle);
@@ -200,10 +186,7 @@ class DatabaseWriter implements LoggerAwareInterface
         $this->iconSetManager->generateFromPlugin($pluginBundle->getPath(), $mimeTypes);
     }
 
-    /**
-     * @param array $processedConfiguration
-     */
-    private function updateConfiguration($processedConfiguration, Plugin $plugin, PluginBundleInterface $pluginBundle)
+    private function updateConfiguration(array $processedConfiguration, Plugin $plugin, PluginBundleInterface $pluginBundle): void
     {
         foreach ($processedConfiguration['resources'] as $resourceConfiguration) {
             $this->updateResourceType($resourceConfiguration, $plugin, $pluginBundle);
@@ -296,14 +279,9 @@ class DatabaseWriter implements LoggerAwareInterface
         $this->iconSetManager->generateFromPlugin($pluginBundle->getPath(), $mimeTypes);
     }
 
-    /**
-     * @param array $resourceConfiguration
-     *
-     * @return ResourceType
-     */
-    private function updateResourceType($resourceConfiguration, Plugin $plugin, PluginBundleInterface $pluginBundle)
+    private function updateResourceType(array $resourceConfiguration, Plugin $plugin, PluginBundleInterface $pluginBundle): ResourceType
     {
-        $this->log('Update the resource type : "'.$resourceConfiguration['name'].'".');
+        $this->log(sprintf('Updating the resource type : "%s".', $resourceConfiguration['name']));
 
         $resourceType = $this->em->getRepository(ResourceType::class)
             ->findOneBy(['name' => $resourceConfiguration['name']]);
@@ -354,10 +332,7 @@ class DatabaseWriter implements LoggerAwareInterface
         return $resourceType;
     }
 
-    /**
-     * @param array $toolConfiguration
-     */
-    private function updateTool($toolConfiguration, Plugin $plugin)
+    private function updateTool(array $toolConfiguration, Plugin $plugin): void
     {
         $tool = $this->em
             ->getRepository(Tool::class)
@@ -371,12 +346,7 @@ class DatabaseWriter implements LoggerAwareInterface
         $this->updateCustomToolRights($toolConfiguration['tool_rights'], $tool);
     }
 
-    /**
-     * @param array $widgetConfiguration
-     *
-     * @return Widget
-     */
-    private function updateWidget($widgetConfiguration, Plugin $plugin)
+    private function updateWidget(array $widgetConfiguration, Plugin $plugin): Widget
     {
         /** @var Widget $widget */
         $widget = $this->em
@@ -385,12 +355,12 @@ class DatabaseWriter implements LoggerAwareInterface
 
         if (is_null($widget)) {
             return $this->createWidget($widgetConfiguration, $plugin);
-        } else {
-            return $this->persistWidget($widgetConfiguration, $widget);
         }
+
+        return $this->persistWidget($widgetConfiguration, $widget);
     }
 
-    public function persistResourceAction(array $action, Plugin $plugin)
+    public function persistResourceAction(array $action, Plugin $plugin): void
     {
         // also remove duplicates if some are found
         $resourceType = null;
@@ -401,7 +371,7 @@ class DatabaseWriter implements LoggerAwareInterface
                 ->findOneBy(['name' => $action['resource_type']]);
         }
 
-        $this->log('Updating resource action '.$action['name']);
+        $this->log(sprintf('Updating resource action : "%s".', $action['name']));
 
         // initializes the mask decoder if needed
         $this->mm->createDecoder($action['decoder'], $resourceType);
@@ -428,17 +398,12 @@ class DatabaseWriter implements LoggerAwareInterface
         $this->em->flush();
     }
 
-    public function updateResourceAction(array $action, Plugin $plugin)
+    public function updateResourceAction(array $action, Plugin $plugin): void
     {
         $this->persistResourceAction($action, $plugin);
     }
 
-    /**
-     * @param array $resourceConfiguration
-     *
-     * @return ResourceType
-     */
-    private function persistResourceType($resourceConfiguration, Plugin $plugin, PluginBundleInterface $pluginBundle)
+    private function persistResourceType(array $resourceConfiguration, Plugin $plugin, PluginBundleInterface $pluginBundle): ResourceType
     {
         $this->log('Adding resource type '.$resourceConfiguration['name']);
         $resourceType = new ResourceType();
@@ -463,7 +428,7 @@ class DatabaseWriter implements LoggerAwareInterface
         return $resourceType;
     }
 
-    private function setResourceTypeDefaultMask(array $rightsName, ResourceType $resourceType)
+    private function setResourceTypeDefaultMask(array $rightsName, ResourceType $resourceType): void
     {
         $mask = 0 === count($rightsName) ? 1 : 0;
         $permMap = $this->mm->getPermissionMap($resourceType);
@@ -480,12 +445,7 @@ class DatabaseWriter implements LoggerAwareInterface
         $this->em->persist($resourceType);
     }
 
-    /**
-     * @param array $widgetConfiguration
-     *
-     * @return Widget
-     */
-    private function createWidget($widgetConfiguration, Plugin $plugin)
+    private function createWidget(array $widgetConfiguration, Plugin $plugin): Widget
     {
         $widget = new Widget();
         $widget->setPlugin($plugin);
@@ -495,12 +455,7 @@ class DatabaseWriter implements LoggerAwareInterface
         return $widget;
     }
 
-    /**
-     * @param array $widgetConfiguration
-     *
-     * @return Widget
-     */
-    private function persistWidget($widgetConfiguration, Widget $widget)
+    private function persistWidget(array $widgetConfiguration, Widget $widget): Widget
     {
         $widget->setName($widgetConfiguration['name']);
         $widget->setContext(isset($widgetConfiguration['context']) ? $widgetConfiguration['context'] : []);
@@ -514,7 +469,7 @@ class DatabaseWriter implements LoggerAwareInterface
         return $widget;
     }
 
-    private function createDataSource($sourceConfiguration, Plugin $plugin)
+    private function createDataSource(array $sourceConfiguration, Plugin $plugin): DataSource
     {
         $source = new DataSource();
         $source->setPlugin($plugin);
@@ -524,7 +479,7 @@ class DatabaseWriter implements LoggerAwareInterface
         return $source;
     }
 
-    private function persistDataSource($sourceConfiguration, DataSource $source)
+    private function persistDataSource(array $sourceConfiguration, DataSource $source): DataSource
     {
         $source->setName($sourceConfiguration['name']);
         $source->setType($sourceConfiguration['type']);
@@ -536,7 +491,7 @@ class DatabaseWriter implements LoggerAwareInterface
         return $source;
     }
 
-    private function updateDataSource($sourceConfiguration, Plugin $plugin)
+    private function updateDataSource($sourceConfiguration, Plugin $plugin): DataSource
     {
         /** @var DataSource $source */
         $source = $this->em
@@ -545,17 +500,14 @@ class DatabaseWriter implements LoggerAwareInterface
 
         if (is_null($source)) {
             return $this->createDataSource($sourceConfiguration, $plugin);
-        } else {
-            return $this->persistDataSource($sourceConfiguration, $source);
         }
+
+        return $this->persistDataSource($sourceConfiguration, $source);
     }
 
-    /**
-     * @param array $toolConfiguration
-     */
-    private function persistTool($toolConfiguration, Plugin $plugin, Tool $tool)
+    private function persistTool(array $toolConfiguration, Plugin $plugin, Tool $tool): void
     {
-        $this->log('Update the tool : "'.$toolConfiguration['name'].'".');
+        $this->log(sprintf('Updating the tool : "%s".', $toolConfiguration['name']));
 
         $tool->setName($toolConfiguration['name']);
         $tool->setPlugin($plugin);
@@ -573,19 +525,13 @@ class DatabaseWriter implements LoggerAwareInterface
         $this->persistCustomToolRights($toolConfiguration['tool_rights'], $tool);
     }
 
-    /**
-     * @param array $themeConfiguration
-     */
-    private function createTheme($themeConfiguration, Plugin $plugin)
+    private function createTheme(array $themeConfiguration, Plugin $plugin): void
     {
         $theme = new Theme();
         $this->persistTheme($themeConfiguration, $plugin, $theme);
     }
 
-    /**
-     * @param array $themeConfiguration
-     */
-    private function updateTheme($themeConfiguration, Plugin $plugin)
+    private function updateTheme(array $themeConfiguration, Plugin $plugin): void
     {
         $theme = $this->em->getRepository(Theme::class)
             ->findOneBy(['name' => $themeConfiguration['name']]);
@@ -597,41 +543,31 @@ class DatabaseWriter implements LoggerAwareInterface
         $this->persistTheme($themeConfiguration, $plugin, $theme);
     }
 
-    /**
-     * @param array $themeConfiguration
-     */
-    private function persistTheme($themeConfiguration, Plugin $plugin, Theme $theme)
+    private function persistTheme(array $themeConfiguration, Plugin $plugin, Theme $theme): void
     {
         $theme->setName($themeConfiguration['name']);
         $theme->setPlugin($plugin);
         $this->em->persist($theme);
     }
 
-    /**
-     * @param array $adminToolConfiguration
-     */
-    private function createAdminTool($adminToolConfiguration, Plugin $plugin)
+    private function createAdminTool(array $adminToolConfiguration, Plugin $plugin): void
     {
         $adminTool = new AdminTool();
         $this->persistAdminTool($adminToolConfiguration, $plugin, $adminTool);
     }
 
-    /**
-     * @param array $adminToolConfiguration
-     */
-    private function persistAdminTool($adminToolConfiguration, Plugin $plugin, AdminTool $adminTool)
+    private function persistAdminTool(array $adminToolConfiguration, Plugin $plugin, AdminTool $adminTool): void
     {
-        $this->log('Update the administration tool : "'.$adminToolConfiguration['name'].'".');
+        $this->log(sprintf('Update the administration tool : "%s".', $adminToolConfiguration['name']));
+
         $adminTool->setName($adminToolConfiguration['name']);
         $adminTool->setClass($adminToolConfiguration['class']);
         $adminTool->setPlugin($plugin);
+
         $this->em->persist($adminTool);
     }
 
-    /**
-     * @param array $adminToolConfiguration
-     */
-    private function updateAdminTool($adminToolConfiguration, Plugin $plugin)
+    private function updateAdminTool(array $adminToolConfiguration, Plugin $plugin): void
     {
         $adminTool = $this->em->getRepository(AdminTool::class)
             ->findOneBy(['name' => $adminToolConfiguration['name']]);
@@ -643,7 +579,7 @@ class DatabaseWriter implements LoggerAwareInterface
         $this->persistAdminTool($adminToolConfiguration, $plugin, $adminTool);
     }
 
-    private function persistCustomToolRights(array $rights, Tool $tool)
+    private function persistCustomToolRights(array $rights, Tool $tool): void
     {
         $decoders = $this->toolMaskManager->getMaskDecodersByTool($tool);
         $nb = count($decoders);
@@ -664,13 +600,13 @@ class DatabaseWriter implements LoggerAwareInterface
         }
     }
 
-    private function updateCustomToolRights(array $rights, Tool $tool)
+    private function updateCustomToolRights(array $rights, Tool $tool): void
     {
         $this->deleteCustomToolRights($tool);
         $this->persistCustomToolRights($rights, $tool);
     }
 
-    private function deleteCustomToolRights(Tool $tool)
+    private function deleteCustomToolRights(Tool $tool): void
     {
         $customDecoders = $this->toolMaskManager->getCustomMaskDecodersByTool($tool);
 
@@ -680,19 +616,13 @@ class DatabaseWriter implements LoggerAwareInterface
         $this->em->flush();
     }
 
-    /**
-     * @param array $templateTypeConfiguration
-     */
-    private function createTemplateType($templateTypeConfiguration, Plugin $plugin)
+    private function createTemplateType(array $templateTypeConfiguration, Plugin $plugin): void
     {
         $templateType = new TemplateType();
         $this->persistTemplateType($templateTypeConfiguration, $plugin, $templateType);
     }
 
-    /**
-     * @param array $templateTypeConfiguration
-     */
-    private function updateTemplateType($templateTypeConfiguration, Plugin $plugin)
+    private function updateTemplateType(array $templateTypeConfiguration, Plugin $plugin): void
     {
         $templateType = $this->em->getRepository(TemplateType::class)
             ->findOneBy(['name' => $templateTypeConfiguration['name']]);
@@ -704,10 +634,7 @@ class DatabaseWriter implements LoggerAwareInterface
         $this->persistTemplateType($templateTypeConfiguration, $plugin, $templateType);
     }
 
-    /**
-     * @param array $templateTypeConfiguration
-     */
-    private function persistTemplateType($templateTypeConfiguration, Plugin $plugin, TemplateType $templateType)
+    private function persistTemplateType(array $templateTypeConfiguration, Plugin $plugin, TemplateType $templateType): void
     {
         $templateType->setName($templateTypeConfiguration['name']);
         $templateType->setType($templateTypeConfiguration['type']);

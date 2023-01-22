@@ -7,6 +7,8 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 import {Toolbar} from '#/main/app/action/components/toolbar'
 import {MenuSection} from '#/main/app/layout/menu/components/section'
 
+import {getTabs} from '#/main/evaluation/evaluation'
+
 const EvaluationMenu = (props) =>
   <MenuSection
     {...omit(props, 'path', 'canEdit', 'contextType')}
@@ -15,7 +17,7 @@ const EvaluationMenu = (props) =>
     <Toolbar
       className="list-group"
       buttonName="list-group-item"
-      actions={[
+      actions={getTabs(props.contextType, props.permissions).then((apps) => [
         {
           name: 'my-progression',
           type: LINK_BUTTON,
@@ -29,15 +31,20 @@ const EvaluationMenu = (props) =>
           label: trans('users_progression', {}, 'evaluation'),
           target: props.path+'/users',
           displayed: props.canShowEvaluations || props.canEdit
-        }, {
-          name: 'parameters',
-          type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-cog',
-          label: trans('parameters'),
-          target: props.path+'/parameters',
-          displayed: props.canEdit && 'workspace' === props.contextType
         }
-      ]}
+      ].concat(apps.map(app => ({
+        name: app.name,
+        type: LINK_BUTTON,
+        label: trans(app.name, {}, 'evaluation'),
+        target: `${props.path}/${app.name}`
+      }))).concat([{
+        name: 'parameters',
+        type: LINK_BUTTON,
+        icon: 'fa fa-fw fa-cog',
+        label: trans('parameters'),
+        target: props.path+'/parameters',
+        displayed: props.canEdit && 'workspace' === props.contextType
+      }]))}
       onClick={props.autoClose}
     />
   </MenuSection>
@@ -47,6 +54,7 @@ EvaluationMenu.propTypes = {
   canEdit: T.bool.isRequired,
   canShowEvaluations: T.bool.isRequired,
   contextType: T.string.isRequired,
+  permissions: T.object,
 
   // from menu
   opened: T.bool.isRequired,

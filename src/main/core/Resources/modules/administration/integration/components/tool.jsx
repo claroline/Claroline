@@ -1,6 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
+import {trans} from '#/main/app/intl/translation'
 import {Routes} from '#/main/app/router'
 import {Await} from '#/main/app/components/await'
 import {ContentLoader} from '#/main/app/content/components/loader'
@@ -13,7 +14,7 @@ const IntegrationTool = props =>
     placeholder={
       <ContentLoader
         size="lg"
-        description="Nous chargeons votre outil..."
+        description={trans('loading', {}, 'tools')}
       />
     }
     then={(apps) => (

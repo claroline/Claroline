@@ -8,9 +8,9 @@ import {ModalButton} from '#/main/app/buttons/modal/containers/button'
 import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
-import {Scale as ScaleType} from '#/plugin/competency/administration/competency/prop-types'
+import {Scale as ScaleType} from '#/plugin/competency/tools/evaluation/prop-types'
 import {MODAL_COMPETENCY_SCALES_PICKER} from '#/plugin/competency/modals/scales'
-import {ScaleCard} from '#/plugin/competency/administration/competency/data/components/scale-card'
+import {ScaleCard} from '#/plugin/competency/tools/evaluation/data/components/scale-card'
 
 const ScaleInput = props => {
   if (props.value) {
