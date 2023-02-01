@@ -21,8 +21,8 @@ class Version20230129092146 extends AbstractMigration
 
         // merge organization managers and organization members table
         $this->addSql('
-            INSERT INTO user_organization (user_id, organization_id, is_manager)
-                SELECT a.user_id, a.organization_id, 1 AS is_manager
+            INSERT INTO user_organization (user_id, organization_id, is_manager, is_main)
+                SELECT a.user_id, a.organization_id, 1 AS is_manager, 0 AS is_main
                 FROM claro_user_administrator AS a
                 WHERE NOT EXISTS (
                     SELECT uo.*
