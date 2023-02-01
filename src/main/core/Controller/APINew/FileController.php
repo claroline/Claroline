@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Controller\APINew;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\File\PublicFile;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,6 +27,14 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class FileController extends AbstractCrudController
 {
+    /** @var PlatformConfigurationHandler */
+    private $config;
+
+    public function __construct(PlatformConfigurationHandler $config)
+    {
+        $this->config = $config;
+    }
+
     public function getClass(): string
     {
         return PublicFile::class;
@@ -50,6 +59,10 @@ class FileController extends AbstractCrudController
 
         $objects = [];
         foreach ($files as $file) {
+            if (!empty($this->config->getParameter('file_blacklist')) && in_array($file->getMimeType(), $this->config->getParameter('file_blacklist'))) {
+                throw new InvalidDataException('Unauthorized file type.');
+            }
+
             $object = $this->crud->create(PublicFile::class, [], ['file' => $file, Crud::THROW_EXCEPTION]);
             $objects[] = $this->serializer->serialize($object);
         }
