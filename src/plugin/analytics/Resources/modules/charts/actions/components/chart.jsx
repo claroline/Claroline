@@ -36,8 +36,8 @@ class ActionsChart extends Component {
   refreshData() {
     this.props.fetchActions(
       this.props.url,
-      apiDate(moment().startOf(this.state.range)),
-      apiDate(moment().endOf(this.state.range))
+      apiDate(moment().subtract(1, this.state.range)),
+      apiDate(moment())
     )
   }
 

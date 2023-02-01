@@ -163,10 +163,6 @@ class UserSerializer
             if ($user->getMainOrganization()) {
                 $serializedUser['mainOrganization'] = $this->organizationSerializer->serialize($user->getMainOrganization(), [SerializerInterface::SERIALIZE_MINIMAL]);
             }
-
-            $serializedUser['organizations'] = array_map(function (Organization $organization) {
-                return $this->organizationSerializer->serialize($organization, [SerializerInterface::SERIALIZE_MINIMAL]);
-            }, $user->getOrganizations());
         }
 
         if (!in_array(SerializerInterface::SERIALIZE_TRANSFER, $options)) {

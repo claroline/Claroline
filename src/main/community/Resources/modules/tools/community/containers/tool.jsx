@@ -12,7 +12,8 @@ const CommunityTool = withRouter(
       contextType: toolSelectors.contextType(state),
       contextData: toolSelectors.contextData(state),
       workspace: toolSelectors.contextData(state),
-      canEdit: hasPermission('edit', toolSelectors.toolData(state))
+      canEdit: hasPermission('edit', toolSelectors.toolData(state)),
+      canShowActivity: hasPermission('show_activity', toolSelectors.toolData(state))
     })
   )(CommunityToolComponent)
 )

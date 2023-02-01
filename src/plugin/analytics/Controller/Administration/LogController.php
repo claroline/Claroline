@@ -72,7 +72,7 @@ class LogController extends AbstractSecurityController
         $query = $this->addOrganizationFilter($request->query->all());
 
         return new JsonResponse($this->finder->search(
-            $this->getClass(),
+            Log::class,
             $query,
             []
         ));

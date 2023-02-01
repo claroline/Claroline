@@ -8,5 +8,6 @@
   "add_team": "Ajouter une équipe",
   "show_profile": "Voir le profil de l'utilisateur",
   "fill": "Remplir",
-  "empty": "Vider"
+  "empty": "Vider",
+  "show_activity": "Voir l'activité"
 }

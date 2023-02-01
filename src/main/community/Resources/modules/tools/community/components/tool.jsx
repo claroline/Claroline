@@ -4,9 +4,8 @@ import get from 'lodash/get'
 
 import {Routes} from '#/main/app/router'
 import {constants as toolConstants} from '#/main/core/tool/constants'
-import {getToolBreadcrumb, showToolBreadcrumb} from '#/main/core/tool/utils'
 
-import {Profile} from '#/main/community/profile/containers/main'
+import {ActivityMain} from '#/main/community/tools/community/activity/containers/main'
 import {UserMain} from '#/main/community/tools/community/user/containers/main'
 import {GroupMain} from '#/main/community/tools/community/group/containers/main'
 import {RoleMain} from '#/main/community/tools/community/role/containers/main'
@@ -24,6 +23,10 @@ const CommunityTool = (props) =>
     ]}
     routes={[
       {
+        path: '/activity',
+        component: ActivityMain,
+        disabled: !props.canShowActivity || (props.contextType === toolConstants.TOOL_WORKSPACE && get(props.workspace, 'meta.model'))
+      }, {
         path: '/users',
         component: UserMain,
         disabled: props.contextType === toolConstants.TOOL_WORKSPACE && get(props.workspace, 'meta.model')
@@ -51,18 +54,6 @@ const CommunityTool = (props) =>
         path: '/parameters/profile',
         component: ProfileMain,
         disabled: props.contextType !== toolConstants.TOOL_DESKTOP || !props.canEdit
-      }, {
-        path: '/profile/:username',
-        render(routerProps) {
-          return (
-            <Profile
-              path={props.path + '/profile/' + routerProps.match.params.username}
-              showBreadcrumb={showToolBreadcrumb(props.contextType, props.contextData)}
-              breadcrumb={getToolBreadcrumb('community', props.contextType, props.contextData)}
-              username={routerProps.match.params.username}
-            />
-          )
-        }
       }
     ]}
   />
@@ -72,7 +63,8 @@ CommunityTool.propTypes = {
   contextData: T.object,
   path: T.string.isRequired,
   workspace: T.object,
-  canEdit: T.bool.isRequired
+  canEdit: T.bool.isRequired,
+  canShowActivity: T.bool.isRequired
 }
 
 export {

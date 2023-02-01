@@ -2,13 +2,15 @@ services:
     _defaults:
         public: true # because controller
 
-    Claroline\CommunityBundle\Controller\CommunityController:
-        parent: Claroline\AppBundle\Controller\AbstractSecurityController
-        public: true
+    Claroline\CommunityBundle\Controller\ActivityController:
         arguments:
             - '@security.authorization_checker'
-            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-            - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
+            - '@security.token_storage'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@Claroline\CoreBundle\Manager\Tool\ToolManager'
+            - '@Claroline\CoreBundle\Manager\EventManager'
+            - '@Claroline\AnalyticsBundle\Manager\AnalyticsManager'
 
     Claroline\CommunityBundle\Controller\GroupController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController

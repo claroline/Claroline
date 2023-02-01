@@ -7,7 +7,7 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 export default (resourceNodes, nodesRefresher, path) => ({
   name: 'dashboard',
   type: LINK_BUTTON,
-  icon: 'fa fa-fw fa-tachometer',
-  label: trans('show_dashboard', {}, 'actions'),
+  icon: 'fa fa-fw fa-wave-square',
+  label: trans('show_activity', {}, 'actions'),
   target: `${path}/${resourceNodes[0].slug}/dashboard`
 })
