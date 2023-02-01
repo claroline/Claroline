@@ -22,7 +22,7 @@ abstract class AbstractImporter implements ImporterInterface
 
     public function getBatchSize(): int
     {
-        return 100;
+        return 1;
     }
 
     public function getMode()
