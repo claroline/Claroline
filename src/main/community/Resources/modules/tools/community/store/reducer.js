@@ -5,6 +5,7 @@ import {FORM_SUBMIT_SUCCESS} from '#/main/app/content/form/store'
 import {TOOL_LOAD} from '#/main/core/tool/store/actions'
 import {selectors as parametersSelectors} from '#/main/core/tool/modals/parameters/store'
 
+import {reducer as activityReducer} from '#/main/community/tools/community/activity/store/reducer'
 import {reducer as pendingReducer} from '#/main/community/tools/community/pending/store/reducer'
 import {reducer as usersReducer} from '#/main/community/tools/community/user/store/reducer'
 import {reducer as groupsReducer} from '#/main/community/tools/community/group/store/reducer'
@@ -20,6 +21,7 @@ const reducer = combineReducers({
     [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: (state, action) => action.toolData.parameters,
     [makeInstanceAction(FORM_SUBMIT_SUCCESS, parametersSelectors.STORE_NAME)]: (state, action) => action.updatedData.parameters
   }),
+  activity: activityReducer,
   users: usersReducer,
   groups: groupsReducer,
   roles: rolesReducer,

@@ -5,13 +5,3 @@ plugin:
           decoder: administrate
           scope: [object]
           api: [GET]
-
-    admin_tools:
-        - name: dashboard
-          class: tachometer
-
-    tools:
-        - name: dashboard
-          class: tachometer
-          is_displayable_in_workspace: true
-          is_displayable_in_desktop: false

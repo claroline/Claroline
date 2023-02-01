@@ -20,6 +20,13 @@ const CommunityMenu = (props) =>
       buttonName="list-group-item"
       actions={[
         {
+          name: 'activity',
+          type: LINK_BUTTON,
+          icon: 'fa fa-fw fa-wave-square',
+          label: trans('activity'),
+          target: `${props.path}/activity`,
+          displayed: props.canShowActivity && (props.contextType !== toolConstants.TOOL_WORKSPACE || !get(props.workspace, 'meta.model'))
+        }, {
           name: 'users',
           type: LINK_BUTTON,
           icon: 'fa fa-fw fa-user',
@@ -82,6 +89,7 @@ CommunityMenu.propTypes = {
   ),
   workspace: T.object,
   canEdit: T.bool.isRequired,
+  canShowActivity: T.bool.isRequired,
 
   // from menu
   opened: T.bool.isRequired,

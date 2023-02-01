@@ -8,5 +8,6 @@
   "add_team": "Add a team",
   "show_profile": "Show user profile",
   "fill": "Fill",
-  "empty": "Empty"
+  "empty": "Empty",
+  "show_activity": "Show activity"
 }

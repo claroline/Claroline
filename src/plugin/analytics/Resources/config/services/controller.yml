@@ -2,15 +2,6 @@ services:
     _defaults:
         public: true # required by controllers
 
-    Claroline\AnalyticsBundle\Controller\Administration\DashboardController:
-        parent: Claroline\AppBundle\Controller\AbstractSecurityController
-        public: true
-        arguments:
-            - '@security.token_storage'
-            - '@Claroline\AppBundle\API\FinderProvider'
-            - '@Claroline\AnalyticsBundle\Manager\AnalyticsManager'
-            - '@Claroline\CoreBundle\Manager\EventManager'
-
     Claroline\AnalyticsBundle\Controller\Administration\LogController:
         parent: Claroline\AppBundle\Controller\AbstractSecurityController
         public: true
@@ -34,14 +25,6 @@ services:
             - '@security.authorization_checker'
             - '@Claroline\AppBundle\API\FinderProvider'
             - '@Claroline\CoreBundle\Manager\LogManager'
-
-    Claroline\AnalyticsBundle\Controller\Workspace\DashboardController:
-        arguments:
-            - '@security.authorization_checker'
-            - '@security.token_storage'
-            - '@Claroline\AppBundle\API\FinderProvider'
-            - '@Claroline\AnalyticsBundle\Manager\AnalyticsManager'
-            - '@Claroline\CoreBundle\Manager\EventManager'
 
     Claroline\AnalyticsBundle\Controller\Workspace\LogController:
         arguments:

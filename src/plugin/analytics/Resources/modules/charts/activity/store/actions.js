@@ -19,6 +19,7 @@ actions.fetchActivity = (fetchUrl, start = null, end = null) => {
   return ({
     [API_REQUEST]: {
       url: url(fetchUrl, {filters: filters}),
+      silent: true,
       success: (response, dispatch) => dispatch(actions.loadActivity(response))
     }
   })
