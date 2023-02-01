@@ -109,6 +109,7 @@ class ClientSerializer
             'openGraph' => [
                 'enabled' => $this->config->getParameter('enable_opengraph'),
             ],
+            'richTextScript' => $this->config->getParameter('rich_text_script'),
             'home' => $this->config->getParameter('home'),
             'resources' => [
                 'types' => array_map(function (ResourceType $resourceType) {
