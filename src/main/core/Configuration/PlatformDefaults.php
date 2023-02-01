@@ -211,6 +211,10 @@ class PlatformDefaults implements ParameterProviderInterface
                 // which roles see the changelog message
                 'roles' => ['ROLE_ADMIN'],
             ],
+            // a list of file mime types disallowed on the whole platform
+            'file_blacklist' => [],
+            // allow embedded javascript in TinyMCE contents
+            'rich_text_script' => true,
         ];
     }
 }

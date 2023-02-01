@@ -114,6 +114,7 @@ const config = getExternalPlugins().then(extPlugins => {
     },
 
     extended_valid_elements: 'user[id], a[data-toggle|data-parent], span[*]',
+    invalid_elements : param('richTextScript') ? undefined : 'script',
     remove_script_host: false,
     browser_spellcheck: true,
 
