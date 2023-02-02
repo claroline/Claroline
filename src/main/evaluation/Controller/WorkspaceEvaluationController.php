@@ -140,7 +140,7 @@ class WorkspaceEvaluationController extends AbstractSecurityController
     public function getAction(Workspace $workspace, User $user): JsonResponse
     {
         if (!$this->checkToolAccess('SHOW_EVALUATIONS', $workspace, false)
-            || !$this->tokenStorage->getToken()->getUser() instanceof User || $user->getUuid() !== $this->tokenStorage->getToken()->getUser()->getUuid()
+            && (!$this->tokenStorage->getToken()->getUser() instanceof User || $user->getUuid() !== $this->tokenStorage->getToken()->getUser()->getUuid())
         ) {
             throw new AccessDeniedException();
         }
