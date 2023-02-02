@@ -53,9 +53,13 @@ class PdfManager
             return null;
         }
 
+        $score = $evaluation->getScore() || 0;
+        $scoreMax = $evaluation->getScoreMax() || 1;
+        $finalScore = ($score / $scoreMax) * 100;
+
         $placeholders = array_merge($this->getCommonPlaceholders($evaluation), [
-            'evaluation_score' => $evaluation->getScore() ? $evaluation->getScore() : '0',
-            'evaluation_score_max' => $evaluation->getScoreMax(),
+            'evaluation_score' => $finalScore ? $finalScore : '0',
+            'evaluation_score_max' => 100,
         ]);
 
         return $this->pdfManager->fromHtml(
