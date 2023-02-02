@@ -202,6 +202,7 @@ class WorkspaceEvaluationManager extends AbstractEvaluationManager
             $statusCount[AbstractEvaluation::STATUS_COMPLETED] +
             $statusCount[AbstractEvaluation::STATUS_PARTICIPATED];
 
+        $evaluationData = [];
         $status = $evaluation->getStatus();
         if ($progression >= $progressionMax) {
             // recompute workspace score and status if all resources are done
@@ -251,11 +252,9 @@ class WorkspaceEvaluationManager extends AbstractEvaluationManager
             $status = AbstractEvaluation::STATUS_INCOMPLETE;
         }
 
-        $evaluationData = [
-            'status' => $status,
-            'progression' => $progression,
-            'progressionMax' => $progressionMax,
-        ];
+        $evaluationData['status'] = $status;
+        $evaluationData['progression'] = $progression;
+        $evaluationData['progressionMax'] = $progressionMax;
 
         $hasChanged = $this->updateEvaluation($evaluation, $evaluationData, $currentRue ? $currentRue->getDate() : null);
 
