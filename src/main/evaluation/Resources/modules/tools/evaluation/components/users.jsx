@@ -151,18 +151,14 @@ const EvaluationUsers = (props) =>
           type: CALLBACK_BUTTON,
           icon: 'fa fa-fw fa-file-pdf',
           label: trans('download_participation_certificate', {}, 'actions'),
-          disabled: -1 === rows.findIndex(row => [
+          displayed: -1 !== rows.findIndex(row => [
             constants.EVALUATION_STATUS_COMPLETED,
-            constants.EVALUATION_STATUS_PASSED,
-            constants.EVALUATION_STATUS_PARTICIPATED,
-            constants.EVALUATION_STATUS_FAILED
+            constants.EVALUATION_STATUS_PARTICIPATED
           ].includes(get(row, 'status', constants.EVALUATION_STATUS_UNKNOWN))),
           callback: () => {
             rows.map(row => {
               if ([
-                constants.EVALUATION_STATUS_COMPLETED,
                 constants.EVALUATION_STATUS_PASSED,
-                constants.EVALUATION_STATUS_PARTICIPATED,
                 constants.EVALUATION_STATUS_FAILED
               ].includes(get(row, 'status', constants.EVALUATION_STATUS_UNKNOWN))) {
                 props.downloadParticipationCertificate(row)
@@ -176,7 +172,7 @@ const EvaluationUsers = (props) =>
           type: CALLBACK_BUTTON,
           icon: 'fa fa-fw fa-file-pdf',
           label: trans('download_success_certificate', {}, 'actions'),
-          disabled: -1 === rows.findIndex((row) => [
+          displayed: -1 !== rows.findIndex((row) => [
             constants.EVALUATION_STATUS_PASSED,
             constants.EVALUATION_STATUS_FAILED
           ].includes(get(row, 'status', constants.EVALUATION_STATUS_UNKNOWN))),

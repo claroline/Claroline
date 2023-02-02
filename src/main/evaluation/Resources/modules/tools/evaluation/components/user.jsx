@@ -89,7 +89,7 @@ class EvaluationUser extends Component {
                 [trans('duration'), get(this.props.workspaceEvaluation, 'duration') ? displayDuration(get(this.props.workspaceEvaluation, 'duration')) : '-'],
                 get(this.props.workspaceEvaluation, 'scoreMax') && [
                   trans('score'),
-                  (get(this.props.workspaceEvaluation, 'score') ? number((get(this.props.workspaceEvaluation, 'score') / get(this.props.workspaceEvaluation, 'scoreMax')) * 100) : '?') + '/ 100'
+                  (get(this.props.workspaceEvaluation, 'score') ? number((get(this.props.workspaceEvaluation, 'score') / get(this.props.workspaceEvaluation, 'scoreMax')) * 100) : '?') + ' / 100'
                 ]
               ].filter(value => !!value)}
               estimatedDuration={get(this.props, 'workspace.evaluation.estimatedDuration')}
@@ -118,27 +118,27 @@ class EvaluationUser extends Component {
                     displayed: this.props.userId !== this.props.currentUserId
                   }, {
                     name: 'download-participation-certificate',
+                    className: 'btn-emphasis',
                     type: URL_BUTTON,
                     label: trans('download_participation_certificate', {}, 'actions'),
                     target: ['apiv2_workspace_download_participation_certificate', {
                       workspace: get(this.props.workspaceEvaluation, 'workspace.id'),
                       user: get(this.props.workspaceEvaluation, 'user.id')
                     }],
-                    disabled: ![
+                    displayed: [
                       baseConstants.EVALUATION_STATUS_COMPLETED,
-                      baseConstants.EVALUATION_STATUS_PASSED,
-                      baseConstants.EVALUATION_STATUS_PARTICIPATED,
-                      baseConstants.EVALUATION_STATUS_FAILED
+                      baseConstants.EVALUATION_STATUS_PARTICIPATED
                     ].includes(get(this.props.workspaceEvaluation, 'status', baseConstants.EVALUATION_STATUS_UNKNOWN))
                   }, {
                     name: 'download-success-certificate',
+                    className: 'btn-emphasis',
                     type: URL_BUTTON,
                     label: trans('download_success_certificate', {}, 'actions'),
                     target: ['apiv2_workspace_download_success_certificate', {
                       workspace: get(this.props.workspaceEvaluation, 'workspace.id'),
                       user: get(this.props.workspaceEvaluation, 'user.id')
                     }],
-                    disabled: ![
+                    displayed: [
                       baseConstants.EVALUATION_STATUS_PASSED,
                       baseConstants.EVALUATION_STATUS_FAILED
                     ].includes(get(this.props.workspaceEvaluation, 'status', baseConstants.EVALUATION_STATUS_UNKNOWN))
