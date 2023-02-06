@@ -168,16 +168,14 @@ class WorkspaceEvaluationManager extends AbstractEvaluationManager
             if (isset($resources[$currentResource->getUuid()])) {
                 if ($currentRue->getStatus()) {
                     ++$statusCount[$currentRue->getStatus()];
-                    $score += $currentRue->getScore() ?? 0;
-                    $scoreMax += $currentRue->getScoreMax() ?? 0;
-                }
 
-                if ($currentResource->isEvaluated()) {
-                    $score += $currentRue->getScore() ?? 0;
-                    $scoreMax += $currentRue->getScoreMax() ?? 0;
+                    if ($currentResource->isEvaluated() && 'custom/innova_path' !== $currentResource->getMimeType()) {
+                        // we don't count Path score because it's calculated from the sum of all the scores of the embedded resources
+                        // which are already taken into account in the workspace score.
+                        $score += $currentRue->getScore() ?? 0;
+                        $scoreMax += $currentRue->getScoreMax() ?? 0;
+                    }
                 }
-
-                unset($resources[$currentResource->getUuid()]);
             }
         }
 
@@ -187,10 +185,16 @@ class WorkspaceEvaluationManager extends AbstractEvaluationManager
                 'user' => $user,
             ]);
 
-            if ($resourceEval && $resourceEval->getStatus()) {
+            if (!$resourceEval || ($currentRue && $resourceEval->getId() === $currentRue->getId())) {
+                continue;
+            }
+
+            if ($resourceEval->getStatus()) {
                 ++$statusCount[$resourceEval->getStatus()];
 
-                if ($resource->isEvaluated()) {
+                if ($resource->isEvaluated() && 'custom/innova_path' !== $resource->getMimeType()) {
+                    // we don't count Path score because it's calculated from the sum of all the scores of the embedded resources
+                    // which are already taken into account in the workspace score.
                     $score += $resourceEval->getScore() ?? 0;
                     $scoreMax += $resourceEval->getScoreMax() ?? 0;
                 }
