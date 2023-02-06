@@ -55,7 +55,7 @@ const ALERT_STATUS = {
   },
   [ALERT_STATUS_INFO]: {
     order: 8,
-    icon: 'fa-info',
+    icon: 'fa-lightbulb',
     removable: true,
     timeout: ALERT_DISPLAY_TIMEOUT * 3 // increase display time to let users read the message
   }

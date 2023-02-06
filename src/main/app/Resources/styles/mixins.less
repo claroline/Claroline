@@ -10,10 +10,6 @@
 // Modifiers
 // ---
 
-.font-size-modifier(@font-size) {
-    font-size: floor(@font-size * @font-size-modifier);
-}
-
 .box-shadow(@shadow) when (@enable-box-shadow = true) {
     -webkit-box-shadow: @shadow;
     -moz-box-shadow: @shadow;
@@ -248,7 +244,7 @@
     //font-size: @font-size;
     padding: @padding;
     border-width: @border;
-    border-radius: @border-radius;
+    .border-radius(@border-radius);
 
     .placeholder-icon {
         font-size: @font-size*2;
@@ -283,8 +279,8 @@
     background-color: @bg-color;
     border-color: @border-color;
 
-    .flying-alert-icon-secondary {
+    /*.flying-alert-icon-secondary {
         background: @bg-color;
         border-color: @color;
-    }
+    }*/
 }

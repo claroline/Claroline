@@ -18,7 +18,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #CCCCCC;
+    color: @toolbar-bg;
 
     // make avatar always look as a square
     &:after {
@@ -52,17 +52,17 @@
     align-items: center;
     vertical-align: middle;
     font-size: @font-size-small;
-    font-weight: bold;
+    font-weight: 400;
     white-space: nowrap;
 
     .user-avatar {
         margin-right: 10px;
 
         // for picture
-        max-height: 30px;
+        max-height: 50px;
 
         // for .fa when no picture
-        font-size: 30px;
+        font-size: 50px;
     }
 }
 

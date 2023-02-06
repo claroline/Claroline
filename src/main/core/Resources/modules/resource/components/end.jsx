@@ -33,7 +33,7 @@ const WorkspaceCertificatesToolbar = (props) => {
   return (
     <Toolbar
       className="component-container"
-      buttonName="btn btn-block"
+      buttonName="btn btn-block btn-emphasis"
       actions={[
         {
           name: 'download-participation-certificate',

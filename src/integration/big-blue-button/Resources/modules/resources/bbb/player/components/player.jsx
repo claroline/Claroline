@@ -100,7 +100,6 @@ class Player extends Component {
             <Button
               type={CALLBACK_BUTTON}
               className="btn btn-block btn-emphasis component-container"
-              icon="fa fa-fw fa-sign-in-alt"
               label={trans('join', {}, 'bbb')}
               callback={() => this.openTab()}
               disabled={!this.state.ready}
@@ -114,7 +113,6 @@ class Player extends Component {
           <Button
             type={URL_BUTTON}
             className="btn btn-block btn-emphasis"
-            icon="fa fa-fw fa-video"
             label={trans('show-last-record', {}, 'actions')}
             target={this.props.lastRecording.media.presentation}
             primary={true}
@@ -126,7 +124,6 @@ class Player extends Component {
           <Button
             type={LINK_BUTTON}
             className="btn btn-block"
-            icon="fa fa-fw fa-list"
             label={trans('show-records', {}, 'actions')}
             target={`${this.props.path}/records`}
           />

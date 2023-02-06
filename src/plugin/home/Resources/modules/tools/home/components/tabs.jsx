@@ -3,7 +3,6 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import {get, isEmpty} from 'lodash'
 
-import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {LinkButton} from '#/main/app/buttons/link/components/button'
@@ -84,17 +83,6 @@ const Tabs = props => {
         })
       }
     </ul>
-
-    {props.create &&
-      <Button
-        className="nav-add-tab"
-        type={CALLBACK_BUTTON}
-        icon="fa fa-fw fa-plus"
-        label={trans('add_tab', {}, 'home')}
-        tooltip="bottom"
-        callback={props.create}
-      />
-    }
   </nav>
 }
 
@@ -104,8 +92,7 @@ Tabs.propTypes = {
   prefix: T.string,
   tabs: T.arrayOf(T.shape(
     TabTypes.propTypes
-  )),
-  create: T.func
+  ))
 }
 
 Tabs.defaultProps = {

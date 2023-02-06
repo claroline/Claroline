@@ -15,7 +15,7 @@
 @gray-lighter:           #ebebeb; // #eee
 @gray-lightest:          #F9F9F9;
 
-@brand-primary:         #148AC7; // bootstrap original : #337ab7
+@brand-primary:         #046d8a /*#148AC7*/; // bootstrap original : #337ab7
 @brand-success:         #4f7302;
 @brand-info:            #335768;
 @brand-warning:         #ED9E2F; // todo adapt to new @state-warning-text color
@@ -43,13 +43,13 @@
 //
 //## Font, line-height, and color for body text, headings, and more.
 
-@font-family-sans-serif:  Arial, sans-serif;
+@font-family-sans-serif:  "Roboto", Arial, sans-serif;
 @font-family-serif:       Georgia, "Times New Roman", Times, serif;
 //** Default monospace fonts for `<code>`, `<kbd>`, and `<pre>`.
 @font-family-monospace:   Menlo, Monaco, Consolas, "Courier New", monospace;
 @font-family-base:        @font-family-sans-serif;
 
-@font-size-base:          floor(16px * @font-size-modifier);
+@font-size-base:          floor(18px * @font-size-modifier);
 @font-size-large:         ceil((@font-size-base * 1.25)); // ~18px
 @font-size-small:         ceil((@font-size-base * 0.85)); // ~12px
 
@@ -66,7 +66,7 @@
 @line-height-computed:    floor((@font-size-base * @line-height-base)); // ~20px
 
 //** By default, this inherits from the `<body>`.
-@headings-font-family:    "Century Gothic", Arial, sans-serif; // todo : embed the font inside claroline
+@headings-font-family:    "Roboto", Arial, sans-serif;
 @headings-font-weight:    500;
 @headings-line-height:    1.1;
 @headings-color:          inherit;
@@ -123,9 +123,9 @@
 //## Customizes the `.table` component with basic values, each used across all table variations.
 
 //** Padding for `<th>`s and `<td>`s.
-@table-cell-padding:            8px;
+@table-cell-padding:            @table-cell-padding-y @table-cell-padding-x;
 //** Padding for cells in `.table-condensed`.
-@table-condensed-cell-padding:  5px;
+@table-condensed-cell-padding:  10px;
 
 //** Default background color used for all tables.
 @table-bg:                      transparent;
@@ -625,21 +625,21 @@
 @alert-border-radius:         @border-radius-base;
 @alert-link-font-weight:      bold;
 
-@alert-success-bg:            @state-success-bg;
-@alert-success-text:          @state-success-text;
-@alert-success-border:        @state-success-border;
+@alert-success-bg:            @brand-success;
+@alert-success-text:          white;
+@alert-success-border:        @alert-success-bg;
 
-@alert-info-bg:               @state-info-bg;
-@alert-info-text:             @state-info-text;
-@alert-info-border:           @state-info-border;
+@alert-info-bg:               @brand-info;
+@alert-info-text:             white;
+@alert-info-border:           @alert-info-bg;
 
-@alert-warning-bg:            @state-warning-bg;
-@alert-warning-text:          @state-warning-text;
-@alert-warning-border:        @state-warning-border;
+@alert-warning-bg:            @brand-warning;
+@alert-warning-text:          white;
+@alert-warning-border:        @alert-warning-bg;
 
-@alert-danger-bg:             @state-danger-bg;
-@alert-danger-text:           @state-danger-text;
-@alert-danger-border:         @state-danger-border;
+@alert-danger-bg:             @brand-danger;
+@alert-danger-text:           white;
+@alert-danger-border:         @alert-danger-bg;
 
 
 //== Progress bars

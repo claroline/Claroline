@@ -3,6 +3,10 @@
     .text-emphasis-variant(@text-muted);
 }
 
+.text-secondary {
+    .text-emphasis-variant(@brand-secondary);
+}
+
 // a color to use on background which is considered 'dark' by tinycolor2
 // @see https://www.npmjs.com/package/tinycolor2#isdark
 .text-light {
@@ -52,8 +56,8 @@
     margin-right: 10px;
     background: @heading-numbering-bg;
     color: @heading-numbering-color;
-    border-radius: @heading-numbering-border-radius;
     .box-shadow(@heading-numbering-box-shadow);
+    .border-radius(@heading-numbering-border-radius);
 
     &:after {
         content: @heading-numbering-separator;
@@ -87,4 +91,18 @@
     img {
         max-width: 100%; // avoids user images to overflow their container
     }
+}
+
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+    small,
+    .small {
+        font-weight: 300;
+    }
+}
+
+::-moz-selection, /* Code for Firefox */
+::selection {
+    color: @text-selection-color;
+    background: @text-selection-bg;
 }

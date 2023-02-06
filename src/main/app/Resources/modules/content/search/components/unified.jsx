@@ -125,18 +125,6 @@ class SearchForm extends Component {
   render() {
     return (
       <div className="search-form dropdown-menu dropdown-menu-full">
-        {false &&
-          <ul className="nav nav-tabs">
-            <li className="active">
-              <a role="button" href="">Recherche avancée</a>
-            </li>
-
-            <li>
-              <a role="button" href="">Mes recherches</a>
-            </li>
-          </ul>
-        }
-
         {this.props.available.map(filter =>
           <div key={filter.name} className="form-group">
             <label className="control-label" htmlFor={toKey(filter.name)}>

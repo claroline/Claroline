@@ -1,11 +1,14 @@
 .breadcrumb {
     overflow: hidden; // to avoid horizontal overflow due to the array in items
-    padding: 0;
+    //padding: 0;
+    padding: @breadcrumb-padding-vertical @breadcrumb-padding-horizontal;
     margin: @breadcrumb-margin-vertical @breadcrumb-margin-horizontal;
     font-size: @breadcrumb-font-size;
-    text-transform: @breadcrumb-text-transform;
+    //text-transform: @breadcrumb-text-transform;
 
-    .box-shadow(@breadcrumb-box-shadow);
+    background: none;
+
+    /*.box-shadow(@breadcrumb-box-shadow);
     .border-radius(@breadcrumb-border-radius);
 
 
@@ -16,7 +19,7 @@
 
         a {
             color: @breadcrumb-link-color;
-            font-weight: bold;
+            font-weight: 400;
 
             &:hover,
             &:focus {
@@ -57,5 +60,5 @@
                 border-left-color: @breadcrumb-bg;
             }
         }
-    }
+    }*/
 }

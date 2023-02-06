@@ -10,15 +10,20 @@ const Alert = props =>
   <div
     {...omit(props, 'type', 'children')}
     className={classes('alert', 'alert-'+props.type)}
+    role="alert"
   >
-    <span className={classes('fa fa-fw icon-with-text-right', {
-      'fa-circle-info': 'info' === props.type,
-      'fa-circle-check': 'success' === props.type,
-      'fa-exclamation-triangle': 'warning' === props.type,
-      'fa-circle-xmark': 'danger' === props.type
-    })} aria-hidden={true} />
+    <span className="alert-icon" role="presentation">
+      <span className={classes('fa fa-fw', {
+        'fa-lightbulb': 'info' === props.type,
+        'fa-check': 'success' === props.type,
+        'fa-exclamation': 'warning' === props.type,
+        'fa-xmark': 'danger' === props.type
+      })} aria-hidden={true} />
+    </span>
 
-    {props.children}
+    <span className="alert-message" role="presentation">
+      {props.children}
+    </span>
   </div>
 
 Alert.propTypes = {

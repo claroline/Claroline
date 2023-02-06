@@ -1,4 +1,4 @@
-import React, {Component}from 'react'
+import React, {Component, Fragment}from 'react'
 import {PropTypes as T} from 'prop-types'
 import isUndefined from 'lodash/isUndefined'
 
@@ -35,7 +35,7 @@ class ResourceRestrictions extends Component {
 
   render() {
     return (
-      <div className="access-restrictions">
+      <Fragment>
         <h2>{trans('restricted_access')}</h2>
         <p>{trans('restricted_access_message', {}, 'resource')}</p>
 
@@ -127,7 +127,6 @@ class ResourceRestrictions extends Component {
                 <Button
                   className="btn btn-block btn-emphasis"
                   type={CALLBACK_BUTTON}
-                  icon="fa fa-fw fa-sign-in-alt"
                   disabled={!this.state.codeAccess}
                   label={trans('open-resource', {}, 'actions')}
                   callback={this.submitCodeAccess}
@@ -157,7 +156,6 @@ class ResourceRestrictions extends Component {
           <Button
             className="btn btn-block btn-emphasis"
             type={CALLBACK_BUTTON}
-            icon="fa fa-fw fa-sign-in-alt"
             label={trans('open-resource', {}, 'actions')}
             callback={this.props.dismiss}
             primary={true}
@@ -169,7 +167,7 @@ class ResourceRestrictions extends Component {
             help={trans('restrictions.dismiss_help', {}, 'resource')}
           />
         }
-      </div>
+      </Fragment>
     )
   }
 }

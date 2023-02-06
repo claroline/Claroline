@@ -6,16 +6,103 @@ import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {ToolPage} from '#/main/core/tool/containers/page'
 import {ListData} from '#/main/app/content/list/containers/data'
+import {TooltipOverlay} from '#/main/app/overlays/tooltip/components/overlay'
 
 import {MODAL_MESSAGE} from '#/plugin/message/modals/message'
 import {constants} from '#/main/evaluation/constants'
 import {WorkspaceCard} from '#/main/evaluation/workspace/components/card'
 import {selectors} from '#/main/evaluation/tools/evaluation/store'
+import {number, percent} from '#/main/app/intl/number'
+
+import {LiquidGauge} from '#/main/core/layout/gauge/components/liquid-gauge'
+import {ScoreGauge} from '#/main/core/layout/gauge/components/score'
+
+const EvaluationResume = (props) =>
+  <div className="content-resume" style={{marginTop: 20}}>
+    <div className="content-resume-info">
+      <span className="text-muted">
+        Complétion moyenne
+      </span>
+      <h1 className="content-resume-title h2 text-secondary">
+        <LiquidGauge
+          id="resume-progression"
+          type="user"
+          value={props.progression || 0}
+          displayValue={(value) => number(value) + '%'}
+          width={64}
+          height={64}
+        />
+      </h1>
+    </div>
+
+    <div className="content-resume-info">
+      <span className="text-muted">
+        Taux de réussite
+      </span>
+    </div>
+
+    <div className="content-resume-info">
+      <span className="text-muted">
+        Score moyen
+      </span>
+
+      <h1 className="content-resume-title h2 text-secondary">
+        <ScoreGauge
+          type="user"
+          value={52}
+          total={100}
+          width={64}
+          height={64}
+        />
+      </h1>
+    </div>
+
+    <div className="content-resume-info">
+      <span className="text-muted">
+        Répartition des scores
+      </span>
+
+      <h1 className="content-resume-title h2 text-secondary">
+        <div className="score-chart">
+          {props.scores.map((score, index) =>
+            <TooltipOverlay tip={0 === index ?
+              `${score.users} utilisateurs ont obtenus 25 ou moins` : `${score.users} utilisateurs ont obtenus entre `
+            } position="bottom">
+              <div className="score-progress">
+                <div className="score-progressbar" style={{height: percent(score.users, props.users)+'%'}} />
+              </div>
+
+            </TooltipOverlay>
+          )}
+        </div>
+      </h1>
+    </div>
+  </div>
+
+EvaluationResume.propTypes = {
+  progression: T.number,
+  users: T.number,
+  scores: T.arrayOf(T.shape({
+
+  }))
+}
 
 const EvaluationUsers = (props) =>
   <ToolPage
     subtitle={trans('users_progression', {}, 'evaluation')}
   >
+    <EvaluationResume
+      progression={33}
+      users={20}
+      scores={[
+        {users: 2, score: 12},
+        {users: 3, score: 12},
+        {users: 9, score: 12},
+        {users: 4, score: 12},
+        {users: 1, score: 12}
+      ]}
+    />
+
     <ListData
       name={selectors.STORE_NAME + '.workspaceEvaluations'}
       fetch={{
@@ -57,7 +144,8 @@ const EvaluationUsers = (props) =>
           name: 'user',
           type: 'user',
           label: trans('user'),
-          displayed: true
+          displayed: true,
+          primary: true
         }, {
           name: 'date',
           type: 'date',
@@ -116,6 +204,7 @@ const EvaluationUsers = (props) =>
           displayed: !!get(rows[0], 'user.id'),
           scope: ['object']
         }, {
+          name: 'send-message',
           type: MODAL_BUTTON,
           icon: 'fa fa-fw fa-envelope',
           label: trans('send-message', {}, 'actions'),

@@ -7,6 +7,7 @@
     max-width: @toolbar-size;
     width: 100%;
     top: @top-bar-height;
+    //top: 0;
     bottom: 0;
     display: flex;
     flex-direction: column;
@@ -42,6 +43,12 @@
         flex-wrap: wrap;
         align-items: center;
 
+        .user-avatar {
+            max-width: 70px;
+            max-height: 70px;
+            font-size: 70px;
+        }
+
         .gauge {
             flex-shrink: 0;
         }
@@ -51,10 +58,11 @@
             margin-left: floor(@grid-gutter-width / 2);
             font-style: italic;
             font-size: @font-size-small;
-            color: @top-bar-link-disabled-color;
+            color: @toolbar-link-color;
 
             h3 {
                 margin-top: 0;
+                margin-bottom: 5px;
                 font-style: normal;
                 color: @toolbar-color;
                 display: flex;
@@ -153,7 +161,7 @@
     }
 
     .list-group-item {
-        font-style: italic;
+        //font-style: italic;
         padding-left: @grid-gutter-width !important;
 
         &.active {

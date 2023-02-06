@@ -76,7 +76,7 @@
 
     // customize view modes
     .data-table {
-        margin-bottom: -1px; // merge last row and footer borders
+        margin-bottom: -1px !important; // merge last row and footer borders. important is to override .modal-content > .table
     }
 
     .data-grid {
@@ -106,13 +106,13 @@
         th:first-child,
         td:first-child {
             border-left: none;
-            padding-left: @padding-base;
+            //padding-left: @padding-base;
         }
 
         th:last-child,
         td:last-child {
             border-right: none;
-            padding-right: @padding-base;
+            //padding-right: @padding-base;
         }
     }
 }

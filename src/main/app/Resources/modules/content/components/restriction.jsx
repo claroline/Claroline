@@ -20,14 +20,14 @@ const ContentRestriction = props => {
       'alert-warning': props.failed && props.onlyWarn,
       'alert-danger': props.failed && !props.onlyWarn
     })}>
-      <span className={classes('alert-icon', props.icon)} />
+      <span className="alert-icon">
+        <span className={props.icon} />
+      </span>
 
-      <div className="alert-content">
-        <h5 className="alert-title h4">{title}</h5>
+      <div className="alert-message">
+        <b className="alert-title">{title}</b>
 
-        {help &&
-          <ContentHtml className="alert-text">{help}</ContentHtml>
-        }
+        {help}
 
         {props.failed && props.children}
       </div>

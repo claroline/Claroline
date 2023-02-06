@@ -19,13 +19,12 @@
 
 @font-size-modifier:      1;
 
-@box-shadow-base:               0 0 2px rgba(0, 0, 0, 0.15);
+@box-shadow-base:               0 0 6px rgba(0, 0, 0, 0.25);
 @component-margin-bottom:       @line-height-computed; // ~20px
 @component-margin-bottom-small: floor(@line-height-computed / 2); // ~10px
 
-// react strips whitespaces, so we need to move icons to avoid from text
-@icon-text-spacer:     10px;
-@icon-dropdown-spacer: 15px;
+// react strips whitespaces, so we need to move icons from text
+@icon-text-spacer:     15px;
 
 // colors for SVG theme icons
 @icon-primary-color: @brand-primary;
@@ -43,6 +42,8 @@
 // @see https://www.npmjs.com/package/tinycolor2#islight
 @text-dark-color:  @gray-darker; // todo : adjust
 
+@text-selection-color: @btn-primary-color;
+@text-selection-bg:    @btn-primary-bg;
 
 // -
 // Z-indexes
@@ -63,14 +64,7 @@
 
 @state-selected-text:   @state-info-text;
 @state-selected-border: @state-info-border;
-@state-selected-bg:      @state-info-bg;
-
-
-// -
-// Application
-// ---
-
-@app-max-width: 1200px; // max width for the app content
+@state-selected-bg:     @state-info-bg;
 
 
 // -
@@ -112,10 +106,10 @@
 // Loader (aka hourglass)
 // ---
 
-@loader-primary:   lighten(@brand-primary, 35%);
-@loader-secondary: lighten(@brand-secondary, 35%);
-@loader-color:     #585858;
-@loader-bg:        @gray-lighter;
+@loader-primary:   @brand-primary;
+@loader-secondary: @brand-secondary;
+@loader-color:     @gray-light;
+@loader-bg:        @gray-lightest; // same as body bg
 
 
 // -
@@ -124,16 +118,16 @@
 
 @breadcrumb-margin-vertical:    0;
 @breadcrumb-margin-horizontal:  0;
-@breadcrumb-border-radius:      0;
-@breadcrumb-box-shadow:         none;
+//@breadcrumb-border-radius:      0;
+//@breadcrumb-box-shadow:         none;
 @breadcrumb-font-size:          @font-size-small;
-@breadcrumb-line-height:        @line-height-base;
-@breadcrumb-text-transform:     inherit;
-@breadcrumb-inner-border-size:  1;
-@breadcrumb-inner-border-color: #bbb;
+//@breadcrumb-line-height:        @line-height-base;
+//@breadcrumb-text-transform:     inherit;
+//@breadcrumb-inner-border-size:  1;
+//@breadcrumb-inner-border-color: #bbb;
 
-@breadcrumb-link-color:         #777;
-@breadcrumb-link-hover-color:   #333;
+//@breadcrumb-link-color:         @gray-light;
+//@breadcrumb-link-hover-color:   @gray-dark;
 
 
 // -
@@ -162,23 +156,42 @@
 // Page
 // ---
 
-@page-header-bg:               white;
-@page-header-padding:          0;
-@page-header-font-size:        @font-size-h1;
-@page-header-weight:           700;
-@page-header-link-color:       @gray; // todo : should be #666 for WCAG AA or #555 for AAA
-@page-header-link-hover-color: @gray-darker;
+@page-header-bg:          transparent /*white*/;
+@page-header-padding:     0;
+@page-header-font-size:   @font-size-h1;
+@page-header-font-weight: 700;
+@page-header-box-shadow:  none /*0 2px 2px rgba(0,0,0,.15)*/;
+@page-poster-placeholder: @toolbar-bg;
+
+
+// -
+// Page actions
+// ---
+
+@page-action-primary-color:  @btn-primary-color;
+@page-action-primary-bg:     @btn-primary-bg;
+@page-action-primary-border: transparent;
+
+@page-action-default-color:  @gray-dark;
+@page-action-default-bg:     transparent;
+@page-action-default-border: transparent;
+
+@page-action-danger-color:   @btn-danger-color;
+@page-action-danger-bg:      @btn-danger-bg;
+@page-action-danger-border:  transparent;
 
 
 // -
 // Flying alerts
 // ---
 
-@flying-alert-opacity:        .8; // becomes 1 on alert hover
-@flying-alert-width:          400px;
-@flying-alert-padding:        5px;
+//@flying-alert-opacity:        .8; // becomes 1 on alert hover
+@flying-alert-color:          @text-color;
+@flying-alert-bg:             white;
+@flying-alert-width:          420px;
+@flying-alert-padding:        10px;
 @flying-alert-border-radius:  0;
-@flying-alert-box-shadow:     0 0 3px rgba(0,0,0,.5); // same as topbar
+@flying-alert-box-shadow:     @box-shadow-base/*0 0 3px rgba(0,0,0,.5)*/;
 @flying-alert-margin-bottom:  10px;
 @flying-alert-icon-size:      32px;
 
@@ -218,7 +231,7 @@
 // ---
 
 @summary-font:              @font-size-base;
-@summary-font-style:        italic;
+@summary-font-style:        normal;
 @summary-color:             white;
 @summary-lvl-indent:        20px; // indent children of a step in the summary
 
@@ -263,7 +276,7 @@
 // ---
 
 @help-block-color:          @brand-info;
-@help-block-font-size:      12px;
+@help-block-font-size:      @font-size-small;
 
 // Controls
 @input-box-shadow:          inset 0 1px 1px rgba(0,0,0,.075);
@@ -300,7 +313,7 @@
 @heading-numbering-font:          100%;
 @heading-numbering-weight:        bold;
 @heading-numbering-border-radius: 0;
-@heading-numbering-box-shadow:    @box-shadow-base;
+@heading-numbering-box-shadow:    none;
 @heading-numbering-separator:     "."; // separator between numbering levels
 
 
@@ -351,7 +364,7 @@
 // Dropdown
 // ---
 
-@dropdown-menu-padding-v:     5px;
+@dropdown-menu-padding-v:     @component-margin-bottom-small;
 @dropdown-menu-padding-h:     0;
 @dropdown-menu-box-shadow:    0 1px 2px rgba(0, 0, 0, 0.2);
 @dropdown-menu-border-radius: 0;
@@ -449,7 +462,10 @@
 // Data grid
 // ---
 
-@data-grid-gutter: 10px;
+@data-grid-gutter: 15px;
+
+@table-cell-padding-x: 10px;
+@table-cell-padding-y: 20px;
 
 
 // -
@@ -464,21 +480,33 @@
 @data-card-color:             @text-color;
 @data-card-color-muted:       @text-muted;
 @data-card-bg:                @panel-bg;
-@data-card-border-radius:     @panel-border-radius;
+@data-card-border-radius:     6px/*@panel-border-radius*/;
 @data-card-box-shadow:        @box-shadow-base;
-@data-card-header-bg:         @panel-default-heading-bg;
+@data-card-header-bg:         linear-gradient(135deg,
+                                @toolbar-bg 0%,
+                                @toolbar-bg 35%,
+                                rgba(54,54,54,1) 35%,
+                                rgba(54,54,54,1) 57%,
+                                @toolbar-bg 57%,
+                                @toolbar-bg 61%,
+                                rgba(54,54,54,1) 61%,
+                                rgba(54,54,54,1) 65%,
+                                @toolbar-bg 65%,
+                                @toolbar-bg 100%
+                              );
 
 // sizing
-@data-card-icon-sm-size:      60px;
+@data-card-icon-sm-size:      80px;
 @data-card-title-sm-font:     @font-size-base;
-@data-card-icon-lg-size:      100px;
-@data-card-title-lg-font:     16px;
+
+@data-card-icon-lg-size:      120px;
+@data-card-title-lg-font:     18px;
 
 // states
 @data-card-active-color:        @text-color;
 @data-card-active-bg:           @table-bg-hover;
-@data-card-active-box-shadow:   0 0 4px rgba(0,0,0,.25);
-@data-card-active-header-bg:    #ededed;
+@data-card-active-box-shadow:   0 0 10px 2px fadeOut(@brand-primary, 25%);
+@data-card-active-header-bg:    @brand-primary;
 @data-card-active-border:       @data-card-border;
 @data-card-active-inner-border: @data-card-inner-border;
 

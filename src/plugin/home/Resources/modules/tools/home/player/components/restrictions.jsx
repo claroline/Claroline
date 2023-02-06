@@ -1,4 +1,4 @@
-import React, {Component}from 'react'
+import React, {Component, Fragment}from 'react'
 import {PropTypes as T} from 'prop-types'
 import isUndefined from 'lodash/isUndefined'
 
@@ -34,7 +34,7 @@ class PlayerRestrictions extends Component {
 
   render() {
     return (
-      <div className="access-restrictions">
+      <Fragment>
         <h2>{trans('restricted_access')}</h2>
         <p>{trans('restricted_access_message', {}, 'home')}</p>
 
@@ -90,7 +90,6 @@ class PlayerRestrictions extends Component {
                 <Button
                   className="btn btn-block btn-emphasis"
                   type={CALLBACK_BUTTON}
-                  icon="fa fa-fw fa-sign-in-alt"
                   disabled={!this.state.codeAccess}
                   label={trans('open-tab', {}, 'actions')}
                   callback={this.submitCodeAccess}
@@ -105,7 +104,6 @@ class PlayerRestrictions extends Component {
           <Button
             className="btn btn-block btn-emphasis"
             type={CALLBACK_BUTTON}
-            icon="fa fa-fw fa-sign-in-alt"
             label={trans('open-tab', {}, 'actions')}
             callback={this.props.dismiss}
             primary={true}
@@ -117,7 +115,7 @@ class PlayerRestrictions extends Component {
             help={trans('restrictions.dismiss_help', {}, 'home')}
           />
         }
-      </div>
+      </Fragment>
     )
   }
 }

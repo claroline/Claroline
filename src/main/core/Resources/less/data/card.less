@@ -7,7 +7,7 @@
 .data-card {
     display: flex;
     position: relative; // constrain actions toolbar
-    border: 1px solid @data-card-border;
+    //border: 1px solid @data-card-border;
     color: @data-card-color;
     background: @data-card-bg;
     font-size: @data-card-font;
@@ -18,26 +18,26 @@
 
 .data-card-toolbar {
     position: absolute;
-    top: -1px; // absorb btn border
-    right: -1px; // absorb btn border
+    top: 0; // absorb btn border
+    right: 0; // absorb btn border
 
     .btn {
         padding: @data-grid-gutter;
     }
 
     .dropdown.open {
-        .btn {
+        /*.btn {
             position: relative;
             background: @gray-lighter;
             border-color: @dropdown-border;
             border-bottom-color: @dropdown-bg;
             box-shadow: @dropdown-menu-box-shadow;
             background-clip: padding-box;
-        }
+        }*/
     }
 
     .dropdown-menu {
-        margin-top: -1px;
+        //margin-top: -1px;
     }
 }
 
@@ -45,26 +45,27 @@
 .data-card-clickable {
     &:hover {
         //z-index: 2;
-        border-color: @data-card-active-border;
-        color: @data-card-active-color;
-        background-color: @data-card-active-bg;
+        /*border-color: @data-card-active-border;
+        color: @data-card-active-color;*/
+        //background-color: @data-card-active-bg;
         .box-shadow(@data-card-active-box-shadow);
 
         .data-card-header {
-            background: @data-card-active-header-bg;
-            border-color: @data-card-active-inner-border;
+            //background: @data-card-active-header-bg;
+            //border-color: @data-card-active-inner-border;
         }
 
         .data-card-content {
-            color: @data-card-active-color;
+            //color: @data-card-active-color;
         }
     }
 }
 
 // TODO : create a mixin to generate card styles variants
 .data-card-muted {
-    border-color: @data-card-muted-border;
-    color: @data-card-muted-color;
+    //border-color: @data-card-muted-border;
+    box-shadow: none;
+    /*color: @data-card-muted-color;
     background-color: @data-card-muted-bg;
     .box-shadow(@data-card-muted-box-shadow);
 
@@ -75,7 +76,11 @@
 
     .data-card-content {
         color: @data-card-muted-color;
-    }
+    }*/
+}
+
+.data-grid-item-container:hover {
+    padding: 0 !important;
 }
 
 .data-card-selected {
@@ -111,20 +116,20 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    //border-color: @data-card-inner-border;
     background: @data-card-header-bg;
-    border-color: @data-card-inner-border;
 }
 
 .data-card-icon {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background: rgba(255, 255, 255, .6);
+    background: @data-card-bg;
     border-radius: 50%;
     line-height: 0;
 
     // for FA icons
-    color: rgba(0, 0, 0, 0.5) !important;
+    color: @data-card-header-bg;
 
     // for SVG icons
     //fill: rgba(0, 0, 0, 0.5) !important;
@@ -246,11 +251,11 @@
 }
 
 .data-card-sm {
-    .data-card-size-variant(@data-card-icon-sm-size, @data-card-title-sm-font, 10px);
+    .data-card-size-variant(@data-card-icon-sm-size, @data-card-title-sm-font, @data-card-padding);
 
     .data-card-flags {
-        bottom: 10px;
-        right: 10px;
+        bottom: @data-card-padding;
+        right: @data-card-padding;
     }
 
     .data-card-flag {
@@ -330,19 +335,23 @@
     flex-direction: column;
 
     .data-card-header {
-        border-bottom-width: 1px;
-        border-bottom-style: solid;
+        /*border-bottom-width: 1px;
+        border-bottom-style: solid;*/
 
         .border-radius(@data-card-border-radius @data-card-border-radius 0 0);
     }
 
     &.data-card-poster {
-        .data-card-toolbar {
+        .data-card-toolbar .data-card-toolbar-btn {
+            .text-movie-subtitles();
+        }
+
+        /*.data-card-toolbar {
             > .data-card-toolbar-btn,
             .dropdown:not(.open) .dropdown-toggle {
                 .text-movie-subtitles();
             }
-        }
+        }*/
     }
 
     .data-card-content {
@@ -358,8 +367,8 @@
 
     .data-card-header {
         min-width: 40%;
-        border-right-width: 1px;
-        border-right-style: solid;
+        /*border-right-width: 1px;
+        border-right-style: solid;*/
 
         .border-radius(@data-card-border-radius 0 0 @data-card-border-radius);
     }

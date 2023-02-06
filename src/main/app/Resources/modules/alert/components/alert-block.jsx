@@ -7,20 +7,23 @@ const AlertBlock = props =>
   <div
     {...omit(props, 'className', 'icon', 'type', 'title', 'children')}
     className={classes('alert alert-detailed', 'alert-'+props.type, props.className)}
+    role="alert"
   >
-    <span className={classes('alert-icon', !props.icon && 'fa fa-fw', props.icon || {
-      'fa-circle-info':          'info' === props.type,
-      'fa-circle-check':         'success' === props.type,
-      'fa-exclamation-triangle': 'warning' === props.type,
-      'fa-circle-xmark':         'danger' === props.type
-    })} />
+    <span className="alert-icon">
+      <span className={classes(!props.icon && 'fa fa-fw', props.icon || {
+        'fa-lightbulb':        'info' === props.type,
+        'fa-check':       'success' === props.type,
+        'fa-exclamation': 'warning' === props.type,
+        'fa-xmark':       'danger' === props.type
+      })} />
+    </span>
 
-    <div className="alert-content">
+    <div className="alert-message">
       {props.title &&
         <b className="alert-title">{props.title}</b>
       }
 
-      <div className="alert-text">{props.children}</div>
+      {props.children}
     </div>
   </div>
 

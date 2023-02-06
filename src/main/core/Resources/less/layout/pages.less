@@ -52,7 +52,7 @@
     padding: @page-header-padding;
     margin: 0;
     border-bottom: none;
-    .box-shadow(0 2px 2px rgba(0,0,0,.15));
+    .box-shadow(@page-header-box-shadow);
 
     .page-title {
         order: 2;
@@ -64,13 +64,14 @@
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
-    min-height: 300px;
+    min-height: 320px;
     border-bottom: none;
 
     // use movie subtitles styles to make title always readable
     // maybe one day add a background checker
     .page-title,
-    .page-title > small {
+    .page-title > small,
+    .page-actions .page-actions-btn {
         .text-movie-subtitles();
     }
 }
@@ -90,7 +91,7 @@
 
 .page-title {
     font-size: @page-header-font-size;
-    font-weight: @page-header-weight;
+    font-weight: @page-header-font-weight;
     margin: floor(@grid-gutter-width / 2) 0;
     padding: 0 floor(@grid-gutter-width / 2);
 
@@ -142,15 +143,15 @@
     border: 1px solid transparent !important; // not perfect, it's required to override default btns border
 
     &.default {
-        .button-variant(@gray-dark; @gray-lightest; transparent);
+        .button-variant(@page-action-default-color; @page-action-default-bg; @page-action-default-border);
     }
 
     &.primary {
-         .button-variant(@btn-primary-color; @btn-primary-bg; transparent);
+         .button-variant(@page-action-primary-color; @page-action-primary-bg; @page-action-primary-border);
      }
 
     &.danger {
-        .button-variant(@brand-danger; @gray-lighter; transparent);
+        .button-variant(@page-action-danger-color; @page-action-danger-bg; @page-action-danger-border);
     }
 
     // displays icon as a square
@@ -190,11 +191,11 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        background: hsla(0,0%,100%,.6);
+        background: white;
         border-radius: 50%;
         font-size: 32px;
         padding: floor(@grid-gutter-width / 2);
-        .box-shadow(0 0px 4px rgba(0,0,0,.5));
+        //.box-shadow(0 0px 4px rgba(0,0,0,.5));
     }
 
     .tool-icon {

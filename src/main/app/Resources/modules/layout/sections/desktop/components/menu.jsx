@@ -14,6 +14,7 @@ import {User as UserTypes} from '#/main/community/prop-types'
 import {getActions} from '#/main/core/desktop'
 import {MenuMain} from '#/main/app/layout/menu/containers/main'
 import {ToolMenu} from '#/main/core/tool/containers/menu'
+import {MenuUser} from '#/main/app/layout/menu/containers/user'
 
 const DesktopShortcuts = props =>
   <Toolbar
@@ -70,9 +71,7 @@ const DesktopMenu = props => {
       }
       actions={desktopActions}
     >
-      {props.showProgression &&
-        <DesktopProgression />
-      }
+      <MenuUser />
 
       {!isEmpty(props.shortcuts) &&
         <DesktopShortcuts

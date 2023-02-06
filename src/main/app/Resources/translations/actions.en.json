@@ -39,6 +39,7 @@
   "like": "Like",
   "lock": "Lock",
   "login": "Login",
+  "logout": "Logout",
   "mark-as-read": "Mark as read",
   "mark-as-unread": "Mark as unread",
   "merge": "Merge",

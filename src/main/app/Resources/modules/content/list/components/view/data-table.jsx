@@ -210,6 +210,12 @@ const DataTable = props =>
             {column.label}
           </TableHeaderCell>
         )}
+
+        {props.actions &&
+          <TableHeaderCell key="actions">
+            <span className="sr-only">{trans('actions')}</span>
+          </TableHeaderCell>
+        }
       </tr>
 
       {props.selection && 0 < props.selection.current.length &&

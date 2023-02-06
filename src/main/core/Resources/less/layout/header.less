@@ -58,6 +58,7 @@
 
 .app-header-brand {
     height: 100%;
+    padding: floor(@grid-gutter-width / 2);
     text-align: center;
     margin-right: auto; // will stack button bar to the rights (TODO : it will not work if brand is not displayed)
 
@@ -69,7 +70,7 @@
 }
 
 .app-header-logo {
-    max-height: 75%;
+    max-height: 40px;
 
     // fallback for IE 11 and logos that don't define color schema
     fill: @top-bar-brand-color;
@@ -107,7 +108,7 @@
 
     //.fa,
     .action-icon {
-        font-size: @font-size-large;
+        font-size: @font-size-base;
     }
 
     // puts labels in the bottom right corner
@@ -119,7 +120,7 @@
         line-height: 1;
 
         &.label {
-            font-size: 10px;
+            font-size: 12px;
             padding: .2em .4em;
         }
     }
@@ -230,7 +231,7 @@
     .user-avatar {
         color: @top-bar-link-color;
         // for picture
-        max-height: 30px;
+        max-height: 40px;
 
         &.fa {
             background: @top-bar-link-color;
