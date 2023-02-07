@@ -17,8 +17,13 @@ export default {
       {
         name: 'name',
         label: trans('name'),
+        type: 'string',
         displayed: true,
         primary: true
+      }, {
+        name: 'code',
+        label: trans('code'),
+        type: 'string'
       }, {
         name: 'meta.type',
         alias: 'resourceType',

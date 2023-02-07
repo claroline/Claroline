@@ -187,4 +187,24 @@ class ResourceNodeRepository extends MaterializedPathRepository
 
         return (int) $qb->getQuery()->getSingleScalarResult();
     }
+
+    /**
+     * Returns the list of resource codes starting with $prefix.
+     * Useful to auto generate unique resource codes.
+     */
+    public function findCodesWithPrefix(string $prefix): array
+    {
+        return array_map(
+            function (array $ws) {
+                return $ws['code'];
+            },
+            $this->_em->createQuery('
+                SELECT UPPER(n.code) AS code
+                FROM Claroline\CoreBundle\Entity\Resource\ResourceNode n
+                WHERE UPPER(n.code) LIKE :search
+            ')
+                ->setParameter('search', strtoupper($prefix).'%')
+                ->getResult()
+        );
+    }
 }

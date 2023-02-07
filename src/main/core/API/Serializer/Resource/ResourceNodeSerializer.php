@@ -76,6 +76,7 @@ class ResourceNodeSerializer
                 'id' => $resourceNode->getUuid(),
                 'slug' => $resourceNode->getSlug(),
                 'name' => $resourceNode->getName(),
+                'code' => $resourceNode->getCode(),
                 'thumbnail' => $resourceNode->getThumbnail(),
                 'meta' => [
                     'published' => $resourceNode->isPublished(), // not required but nice to have
@@ -91,6 +92,7 @@ class ResourceNodeSerializer
             'autoId' => $resourceNode->getId(),
             'slug' => $resourceNode->getSlug(),
             'name' => $resourceNode->getName(),
+            'code' => $resourceNode->getCode(),
             'path' => $resourceNode->getAncestors(),
             'meta' => [
                 'type' => $resourceNode->getType(), // try to remove. use mimeType instead
@@ -198,6 +200,7 @@ class ResourceNodeSerializer
     public function deserialize(array $data, ResourceNode $resourceNode, array $options = []): ResourceNode
     {
         $this->sipe('name', 'setName', $data, $resourceNode);
+        $this->sipe('code', 'setCode', $data, $resourceNode);
         $this->sipe('poster', 'setPoster', $data, $resourceNode);
         $this->sipe('thumbnail', 'setThumbnail', $data, $resourceNode);
 

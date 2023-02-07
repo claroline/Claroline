@@ -467,6 +467,25 @@ class ResourceManager implements LoggerAwareInterface
         return $this->rightsManager->isManager($resourceNode);
     }
 
+    /**
+     * Generates an unique resource code from given one by iterating it.
+     */
+    public function getUniqueCode(string $code): string
+    {
+        $existingCodes = $this->resourceNodeRepo->findCodesWithPrefix($code);
+        if (empty($existingCodes)) {
+            return $code;
+        }
+
+        do {
+            $index = count($existingCodes) + 1;
+            $currentCode = $code.'_'.$index;
+            $upperCurrentCode = strtoupper($currentCode);
+        } while (in_array($upperCurrentCode, $existingCodes));
+
+        return $currentCode;
+    }
+
     private function getEncoding()
     {
         return 'UTF-8//TRANSLIT';

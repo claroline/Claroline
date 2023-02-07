@@ -186,7 +186,7 @@ class WorkspaceRepository extends EntityRepository
      * Returns the list of workspace codes starting with $prefix.
      * Useful to auto generate unique workspace codes.
      */
-    public function findWorkspaceCodesWithPrefix(string $prefix): array
+    public function findCodesWithPrefix(string $prefix): array
     {
         return array_map(
             function (array $ws) {

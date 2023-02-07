@@ -39,6 +39,11 @@ const ResourceFormComponent = (props) =>
             label: trans('name'),
             type: 'string',
             required: true
+          }, {
+            name: 'code',
+            label: trans('code'),
+            type: 'string',
+            required: true
           }
         ]
       }, {
