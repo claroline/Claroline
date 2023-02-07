@@ -2,6 +2,10 @@ services:
     _defaults:
         tags: [claroline.transfer.exporter]
 
+    # Resource
+    Claroline\CoreBundle\Transfer\Exporter\Resource\ListExporter:
+        parent: Claroline\TransferBundle\Transfer\Exporter\AbstractListExporter
+
     # Workspace
     Claroline\CoreBundle\Transfer\Exporter\Workspace\ListExporter:
         parent: Claroline\TransferBundle\Transfer\Exporter\AbstractListExporter

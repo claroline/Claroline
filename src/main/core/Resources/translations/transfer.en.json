@@ -1,6 +1,7 @@
 {
     "workspace": "Workspace",
     "directory": "Directory",
+    "resource": "Resource",
     "archive": "Archive",
     "unarchive": "Unarchive",
     "empty_role": "Empty role (users and groups)",

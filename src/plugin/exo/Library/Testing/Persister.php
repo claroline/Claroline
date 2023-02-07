@@ -215,6 +215,7 @@ class Persister
 
             $node = new ResourceNode();
             $node->setName($title);
+            $node->setCode($title);
             $node->setCreator($user);
             $node->setResourceType($this->exoType);
             $node->setWorkspace($user->getPersonalWorkspace());

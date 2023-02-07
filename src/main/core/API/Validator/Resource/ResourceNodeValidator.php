@@ -33,8 +33,6 @@ class ResourceNodeValidator implements ValidatorInterface
     /**
      * @param array  $data
      * @param string $mode
-     *
-     * @return array
      */
     public function validate($data, $mode, array $options = []): array
     {
