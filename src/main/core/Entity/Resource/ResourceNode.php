@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Entity\Resource;
 
+use Claroline\AppBundle\Entity\Identifier\Code;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Creator;
@@ -41,6 +42,7 @@ class ResourceNode
     // identifiers
     use Id;
     use Uuid;
+    use Code;
     // meta
     use Thumbnail;
     use Poster;

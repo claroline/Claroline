@@ -13,9 +13,6 @@ class ResourceNodeValidator implements ValidatorInterface
     /** @var ObjectManager */
     private $om;
 
-    /**
-     * UserValidator constructor.
-     */
     public function __construct(ObjectManager $om)
     {
         $this->om = $om;
@@ -28,9 +25,9 @@ class ResourceNodeValidator implements ValidatorInterface
 
     public function getUniqueFields()
     {
-        // we don't put the name as an unique constraint because for existing
-        // one we don't throw validation errors, we just generate an unique one
-        return [];
+        return [
+            'code' => 'code',
+        ];
     }
 
     /**
@@ -39,7 +36,7 @@ class ResourceNodeValidator implements ValidatorInterface
      *
      * @return array
      */
-    public function validate($data, $mode, array $options = [])
+    public function validate($data, $mode, array $options = []): array
     {
         $errors = [];
 

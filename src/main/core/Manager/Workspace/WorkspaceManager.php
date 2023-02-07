@@ -425,7 +425,7 @@ class WorkspaceManager implements LoggerAwareInterface
      */
     public function getUniqueCode(string $code): string
     {
-        $existingCodes = $this->workspaceRepo->findWorkspaceCodesWithPrefix($code);
+        $existingCodes = $this->workspaceRepo->findCodesWithPrefix($code);
         if (empty($existingCodes)) {
             return $code;
         }
