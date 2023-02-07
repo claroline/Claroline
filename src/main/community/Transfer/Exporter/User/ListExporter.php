@@ -12,6 +12,11 @@ class ListExporter extends AbstractListExporter
         return ['user', 'list'];
     }
 
+    public function supports(string $format, ?array $options = [], ?array $extra = []): bool
+    {
+        return in_array($format, ['json', 'csv']);
+    }
+
     protected static function getClass(): string
     {
         return User::class;
