@@ -12,6 +12,11 @@ class ListExporter extends AbstractListExporter
         return ['group', 'list'];
     }
 
+    public function supports(string $format, ?array $options = [], ?array $extra = []): bool
+    {
+        return in_array($format, ['json', 'csv']);
+    }
+
     protected static function getClass(): string
     {
         return Group::class;
