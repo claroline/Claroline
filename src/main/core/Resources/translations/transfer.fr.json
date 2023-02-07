@@ -1,6 +1,7 @@
 {
     "workspace": "Espace d'activités",
     "directory": "Dossier",
+    "resource": "Ressource",
     "archive": "Archiver",
     "unarchive": "Désarchiver",
     "empty_role": "Vider le rôle (utilisateurs et groupes)",

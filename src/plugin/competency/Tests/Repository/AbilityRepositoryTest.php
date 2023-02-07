@@ -9,6 +9,9 @@ use Claroline\EvaluationBundle\Entity\AbstractEvaluation;
 use HeVinci\CompetencyBundle\Entity\Ability;
 use HeVinci\CompetencyBundle\Util\RepositoryTestCase;
 
+/**
+ * This should extends Claroline\CoreBundle\Library\Testing\RepositoryTestCase.
+ */
 class AbilityRepositoryTest extends RepositoryTestCase
 {
     private $repo;
@@ -278,6 +281,9 @@ class AbilityRepositoryTest extends RepositoryTestCase
         $this->persistLink($competency, $ability, $level);
     }
 
+    /**
+     * @deprecated Claroline\CoreBundle\Library\Testing\RepositoryTestCase::prepareResource
+     */
     private function createResource($name)
     {
         $user = $this->persistUser('jdoe');
@@ -293,6 +299,7 @@ class AbilityRepositoryTest extends RepositoryTestCase
 
         $node = new ResourceNode();
         $node->setName($name);
+        $node->setCode($name);
         $node->setCreator($user);
         $node->setResourceType($type);
         $node->setWorkspace($workspace);
