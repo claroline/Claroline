@@ -45,7 +45,7 @@ class Version20230129080754 extends AbstractMigration
                 HAVING count(*) > 1
             ) uo2 ON (uo1.user_id = uo2.user_id AND uo1.organization_id = uo2.organization_id)
             WHERE uo1.id > uo2.min_id
-              AND uo1.is_main != 1
+              AND (uo1.is_main = 0 OR uo2.is_main = 1)
         ');
 
         $this->addSql('
