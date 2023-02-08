@@ -79,6 +79,10 @@ class FileController extends AbstractCrudController
 
         $objects = [];
         foreach ($files as $file) {
+            if (!empty($this->config->getParameter('file_blacklist')) && in_array($file->getMimeType(), $this->config->getParameter('file_blacklist'))) {
+                throw new InvalidDataException('Unauthorized file type.');
+            }
+
             if (0 !== strpos($file->getMimeType(), 'image')) {
                 throw new InvalidDataException('Invalid image type.');
             }
