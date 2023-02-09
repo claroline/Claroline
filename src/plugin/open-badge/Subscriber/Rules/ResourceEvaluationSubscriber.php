@@ -95,8 +95,17 @@ class ResourceEvaluationSubscriber implements EventSubscriberInterface
     private function awardResourceCompletedAbove(User $user, ResourceUserEvaluation $evaluation, Rule $rule): void
     {
         $data = $rule->getData();
-        $progression = ($evaluation->getProgression() / ($evaluation->getProgressionMax() ?? 100)) * 100;
-        if ($data && $progression >= $data['value']) {
+        if (empty($data)) {
+            return;
+        }
+
+        $expectedProgression = $data['value'];
+        if ($expectedProgression > 100) {
+            // progression is a percentage, it can not be over 100
+            $expectedProgression = 100;
+        }
+
+        if ($evaluation->getProgression() >= $expectedProgression) {
             $this->manager->grant($rule, $user);
         }
     }

@@ -19,10 +19,7 @@ const Step = {
     showResourceHeader: T.bool,
     secondaryResources: T.arrayOf(T.shape({
       // minimal resource
-    })),
-    userProgression: T.shape({
-      status: T.string
-    })
+    }))
   },
   defaultProps: {
     description: null,

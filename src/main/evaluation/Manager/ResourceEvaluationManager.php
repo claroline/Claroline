@@ -45,10 +45,8 @@ class ResourceEvaluationManager extends AbstractEvaluationManager
 
         if ($withCreation && empty($evaluation)) {
             $evaluation = new ResourceUserEvaluation();
-
             $evaluation->setResourceNode($node);
             $evaluation->setUser($user);
-            $evaluation->setUserName($user->getFullName());
 
             $this->om->persist($evaluation);
             $this->om->flush();
@@ -57,7 +55,7 @@ class ResourceEvaluationManager extends AbstractEvaluationManager
         return $evaluation;
     }
 
-    public function createAttempt(ResourceNode $node, User $user, ?array $data = [], ?\DateTime $date = null): ResourceEvaluation
+    public function createAttempt(ResourceNode $node, User $user, ?array $data = [], ?\DateTimeInterface $date = null): ResourceEvaluation
     {
         // retrieve the parent evaluation for the attempt
         $evaluation = $this->getUserEvaluation($node, $user);
@@ -74,7 +72,7 @@ class ResourceEvaluationManager extends AbstractEvaluationManager
         return $attempt;
     }
 
-    public function updateAttempt(ResourceEvaluation $attempt, ?array $data = [], ?\DateTime $date = null): ResourceEvaluation
+    public function updateAttempt(ResourceEvaluation $attempt, ?array $data = [], ?\DateTimeInterface $date = null): ResourceEvaluation
     {
         // update the current attempt data
         $attemptUpdated = $this->updateEvaluation($attempt, $data, $date);
@@ -104,7 +102,7 @@ class ResourceEvaluationManager extends AbstractEvaluationManager
         return $attempt;
     }
 
-    public function updateUserEvaluation(ResourceNode $node, User $user, ?array $data = [], ?\DateTime $date = null, ?bool $withCreation = true): ?ResourceUserEvaluation
+    public function updateUserEvaluation(ResourceNode $node, User $user, ?array $data = [], ?\DateTimeInterface $date = null, ?bool $withCreation = true): ?ResourceUserEvaluation
     {
         $this->om->startFlushSuite();
 
@@ -178,21 +176,5 @@ class ResourceEvaluationManager extends AbstractEvaluationManager
         $this->om->flush();
 
         return $duration;
-    }
-
-    /**
-     * @deprecated use createAttempt()
-     */
-    public function createResourceEvaluation(ResourceNode $node, User $user, ?array $data = [], ?\DateTime $date = null): ResourceEvaluation
-    {
-        return $this->createAttempt($node, $user, $data, $date);
-    }
-
-    /**
-     * @deprecated use updateAttempt()
-     */
-    public function updateResourceEvaluation(ResourceEvaluation $attempt, ?array $data = [], ?\DateTime $date = null): ResourceEvaluation
-    {
-        return $this->updateAttempt($attempt, $data, $date);
     }
 }

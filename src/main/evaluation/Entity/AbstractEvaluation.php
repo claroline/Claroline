@@ -12,12 +12,13 @@
 namespace Claroline\EvaluationBundle\Entity;
 
 use Claroline\AppBundle\Entity\Identifier\Id;
+use Claroline\EvaluationBundle\Library\EvaluationInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\MappedSuperclass
  */
-class AbstractEvaluation
+abstract class AbstractEvaluation implements EvaluationInterface
 {
     use Id;
 
@@ -38,23 +39,29 @@ class AbstractEvaluation
         self::STATUS_OPENED => 2,
         self::STATUS_PARTICIPATED => 3,
         self::STATUS_INCOMPLETE => 4,
-        self::STATUS_FAILED => 5,
-        self::STATUS_COMPLETED => 6,
+        self::STATUS_COMPLETED => 5,
+        self::STATUS_FAILED => 6,
         self::STATUS_PASSED => 7,
     ];
 
     /**
      * @ORM\Column(name="evaluation_date", type="datetime", nullable=true)
+     *
+     * @var \DateTimeInterface
      */
     protected $date;
 
     /**
-     * @ORM\Column(name="evaluation_status", nullable=true)
+     * @ORM\Column(name="evaluation_status")
+     *
+     * @var string
      */
     protected $status = self::STATUS_NOT_ATTEMPTED;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     *
+     * @var int
      */
     protected $duration = 0;
 
@@ -74,93 +81,78 @@ class AbstractEvaluation
     protected $scoreMax;
 
     /**
-     * @ORM\Column(name="progression", type="integer", nullable=true)
+     * @ORM\Column(name="progression", type="integer")
      */
-    protected $progression;
+    protected $progression = 0;
 
-    /**
-     * @ORM\Column(name="progression_max", type="integer", nullable=true)
-     */
-    protected $progressionMax;
-
-    public function getDate()
+    public function getDate(): ?\DateTimeInterface
     {
         return $this->date;
     }
 
-    public function setDate(\DateTime $date = null)
+    public function setDate(?\DateTimeInterface $date = null): void
     {
         $this->date = $date;
     }
 
-    public function getStatus()
+    public function getStatus(): ?string
     {
         return $this->status;
     }
 
-    public function setStatus($status)
+    public function setStatus(string $status): void
     {
         $this->status = $status;
     }
 
-    public function getDuration()
+    public function getDuration(): int
     {
         return $this->duration ?? 0;
     }
 
-    public function setDuration($duration)
+    public function setDuration(?int $duration): void
     {
         $this->duration = $duration;
     }
 
-    public function getScore()
+    public function getScore(): ?float
     {
         return $this->score;
     }
 
-    public function setScore($score)
+    public function setScore(?float $score = null): void
     {
         $this->score = $score;
     }
 
-    public function getScoreMin()
+    public function getScoreMin(): ?float
     {
         return $this->scoreMin;
     }
 
-    public function setScoreMin($scoreMin)
+    public function setScoreMin(?float $scoreMin = null): void
     {
         $this->scoreMin = $scoreMin;
     }
 
-    public function getScoreMax()
+    public function getScoreMax(): ?float
     {
         return $this->scoreMax;
     }
 
-    public function setScoreMax($scoreMax)
+    public function setScoreMax(?float $scoreMax = null): void
     {
         $this->scoreMax = $scoreMax;
     }
 
-    public function getProgression()
+    public function getProgression(): float
     {
         return $this->progression;
     }
 
-    public function setProgression($progression)
+    public function setProgression(float $progression): void
     {
         $this->progression = $progression;
-    }
-
-    public function getProgressionMax()
-    {
-        return $this->progressionMax;
-    }
-
-    public function setProgressionMax($progressionMax)
-    {
-        $this->progressionMax = $progressionMax;
     }
 
     public function isTerminated(): bool

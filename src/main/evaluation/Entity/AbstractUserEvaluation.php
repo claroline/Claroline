@@ -17,58 +17,23 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\MappedSuperclass
  */
-class AbstractUserEvaluation extends AbstractEvaluation
+abstract class AbstractUserEvaluation extends AbstractEvaluation
 {
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
-     * @ORM\JoinColumn(name="user_id", onDelete="SET NULL")
+     * @ORM\JoinColumn(name="user_id", onDelete="CASCADE")
      *
      * @var User
      */
     protected $user;
 
-    /**
-     * @ORM\Column(name="user_name")
-     *
-     * @var string
-     */
-    protected $userName;
-
-    /**
-     * @return User
-     */
-    public function getUser()
+    public function getUser(): ?User
     {
         return $this->user;
     }
 
-    /**
-     * @param User $user
-     */
-    public function setUser(User $user = null)
+    public function setUser(User $user): void
     {
         $this->user = $user;
-
-        if ($user) {
-            $this->setUserName($user->getFirstName().' '.$user->getLastName());
-        } else {
-            $this->setUsername('anonymous');
-        }
-    }
-
-    /**
-     * @return string
-     */
-    public function getUserName()
-    {
-        return $this->userName;
-    }
-
-    /**
-     * @param string $userName
-     */
-    public function setUserName($userName)
-    {
-        $this->userName = $userName;
     }
 }

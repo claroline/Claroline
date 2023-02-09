@@ -32,7 +32,7 @@
         "ext-simplexml": "*",
         "ext-zip": "*",
         "claroline/json-quiz": "^1.0",
-        "composer/composer": "^1.6|^2.0",
+        "composer/composer": "^1.6|^2.5",
         "doctrine/data-fixtures": "^1.3",
         "doctrine/dbal": "^2.7",
         "doctrine/doctrine-bundle": "^2.4",
@@ -156,6 +156,11 @@
             "Claroline\\PeerTubeBundle\\": "src/integration/peertube",
             "Claroline\\SchedulerBundle\\": "src/main/scheduler",
             "Claroline\\TransferBundle\\": "src/main/transfer"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true
         }
     },
     "scripts": {

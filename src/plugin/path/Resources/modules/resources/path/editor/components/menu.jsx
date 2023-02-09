@@ -1,7 +1,5 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import classes from 'classnames'
-import get from 'lodash/get'
 
 import {scrollTo} from '#/main/app/dom/scroll'
 import {matchPath} from '#/main/app/router'
@@ -16,7 +14,6 @@ const EditorMenu = props => {
   function getStepSummary(step) {
     return {
       type: LINK_BUTTON,
-      icon: classes('step-progression fa fa-fw fa-circle', get(step, 'userProgression.status')),
       label: step.title,
       target: `${props.basePath}/edit/${step.slug}`,
       active: !!matchPath(props.location.pathname, {path: `${props.basePath}/edit/${step.slug}`}),

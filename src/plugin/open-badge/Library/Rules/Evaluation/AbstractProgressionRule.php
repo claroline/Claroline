@@ -16,13 +16,15 @@ abstract class AbstractProgressionRule extends AbstractRule
     {
         $ruleData = $rule->getData();
         $expectedProgression = $ruleData['value'];
+        if ($expectedProgression > 100) {
+            // progression is a percentage, it can not be over 100
+            $expectedProgression = 100;
+        }
 
         return array_map(function (ResourceUserEvaluation $evaluation) {
             return $evaluation->getUser();
         }, array_filter($evaluations, function (AbstractUserEvaluation $evaluation) use ($expectedProgression) {
-            $progression = ($evaluation->getProgression() / $evaluation->getProgressionMax()) * 100;
-
-            return $progression >= $expectedProgression;
+            return $evaluation->getProgression() >= $expectedProgression;
         }));
     }
 }

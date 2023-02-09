@@ -68,60 +68,49 @@ ProgressionPopover.defaultProps = {
 /**
  * Renders a gauge to display progression of the user in the resource evaluation.
  */
-const UserProgression = props => {
-  let progression = 0
-  if (props.userEvaluation.progression) {
-    progression = props.userEvaluation.progression
-    if (props.userEvaluation.progressionMax) {
-      progression = (progression / props.userEvaluation.progressionMax) * 100
-    }
-  }
-
-  return (
-    <MenuButton
-      id="resource-progression"
-      containerClassName="resource-user-progression"
-      menu={(
-        <ProgressionPopover
-          status={props.userEvaluation.status}
-          items={[
-            {
-              icon: 'fa fa-fw fa-award',
-              label: trans('score'),
-              displayed: !!props.userEvaluation.scoreMax,
-              value: (number(props.userEvaluation.score) || 0) + ' / ' + number(props.userEvaluation.scoreMax)
-            }, {
-              icon: 'fa fa-fw fa-percent',
-              label: 'Complétion',
-              value: number(progression) + '%'
-            }, {
-              icon: 'fa fa-fw fa-eye',
-              label: trans('views'),
-              value: number(props.userEvaluation.nbOpenings)
-            }, {
-              icon: 'fa fa-fw fa-redo',
-              label: trans('attempts'),
-              value: number(props.userEvaluation.nbAttempts)
-            }, {
-              icon: 'fa fa-fw fa-hourglass-half',
-              label: trans('time_spent'),
-              value: displayDuration(props.userEvaluation.duration) || trans('unknown')
-            }
-          ]}
-        />
-      )}
-    >
-      <LiquidGauge
-        id="user-progression"
-        type="user"
-        value={progression}
-        displayValue={(value) => number(value) + '%'}
-        width={props.width}
-        height={props.height}
+const UserProgression = props =>
+  <MenuButton
+    id="resource-progression"
+    containerClassName="resource-user-progression"
+    menu={(
+      <ProgressionPopover
+        status={props.userEvaluation.status}
+        items={[
+          {
+            icon: 'fa fa-fw fa-award',
+            label: trans('score'),
+            displayed: !!props.userEvaluation.scoreMax,
+            value: (number(props.userEvaluation.score) || 0) + ' / ' + number(props.userEvaluation.scoreMax)
+          }, {
+            icon: 'fa fa-fw fa-percent',
+            label: 'Complétion',
+            value: number(props.userEvaluation.progression || 0) + '%'
+          }, {
+            icon: 'fa fa-fw fa-eye',
+            label: trans('views'),
+            value: number(props.userEvaluation.nbOpenings)
+          }, {
+            icon: 'fa fa-fw fa-redo',
+            label: trans('attempts'),
+            value: number(props.userEvaluation.nbAttempts)
+          }, {
+            icon: 'fa fa-fw fa-hourglass-half',
+            label: trans('time_spent'),
+            value: displayDuration(props.userEvaluation.duration) || trans('unknown')
+          }
+        ]}
       />
-    </MenuButton>
-  )
-}
+    )}
+  >
+    <LiquidGauge
+      id="user-progression"
+      type="user"
+      value={props.userEvaluation.progression || 0}
+      displayValue={(value) => number(value) + '%'}
+      width={props.width}
+      height={props.height}
+    />
+  </MenuButton>
 
 UserProgression.propTypes = {
   userEvaluation: T.shape(

@@ -47,10 +47,9 @@ class ResourceUserEvaluationSerializer
             'scoreMin' => $resourceUserEvaluation->getScoreMin(),
             'scoreMax' => $resourceUserEvaluation->getScoreMax(),
             'progression' => $resourceUserEvaluation->getProgression(),
-            'progressionMax' => $resourceUserEvaluation->getProgressionMax(),
             'nbAttempts' => $resourceUserEvaluation->getNbAttempts(),
             'nbOpenings' => $resourceUserEvaluation->getNbOpenings(),
-            'required' => $resourceUserEvaluation->getResourceNode()->isRequired(),
+            'required' => $resourceUserEvaluation->isRequired(),
         ];
 
         if (!in_array(SerializerInterface::SERIALIZE_MINIMAL, $options)) {

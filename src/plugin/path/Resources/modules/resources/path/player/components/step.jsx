@@ -86,7 +86,7 @@ const Step = props =>
 
       {props.manualProgressionAllowed && props.currentUser &&
         <ManualProgression
-          status={props.userProgression.status}
+          status={props.progression}
           stepId={props.id}
           updateProgression={props.updateProgression}
         />
@@ -131,6 +131,7 @@ const Step = props =>
 
 implementPropTypes(Step, StepTypes, {
   currentUser: T.object,
+  progression: T.string,
   numbering: T.string,
   showResourceHeader: T.bool.isRequired,
   manualProgressionAllowed: T.bool.isRequired,

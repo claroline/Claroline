@@ -6,12 +6,11 @@ import {trans} from '#/main/app/intl/translation'
 import {Routes} from '#/main/app/router'
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
-import {constants} from '#/plugin/path/resources/path/constants'
 import {Path as PathTypes, Step as StepTypes} from '#/plugin/path/resources/path/prop-types'
 import {PathCurrent} from '#/plugin/path/resources/path/components/current'
 import {Step} from '#/plugin/path/resources/path/player/components/step'
 import {PlayerEnd} from '#/plugin/path/resources/path/player/components/end'
-import {getNumbering, getStepUserProgression} from '#/plugin/path/resources/path/utils'
+import {getNumbering} from '#/plugin/path/resources/path/utils'
 
 const PlayerMain = props => {
   if (0 === props.steps.length) {
@@ -51,7 +50,7 @@ const PlayerMain = props => {
             onEnter: (params) => {
               const step = props.steps.find(step => params.slug === step.slug)
 
-              if (props.currentUser && getStepUserProgression(props.steps, step.id) === constants.STATUS_UNSEEN) {
+              if (step && props.currentUser) {
                 props.updateProgression(step.id)
               }
             },
@@ -73,6 +72,7 @@ const PlayerMain = props => {
                       {...step}
                       currentUser={props.currentUser}
                       numbering={getNumbering(props.path.display.numbering, props.path.steps, step)}
+                      progression={props.stepsProgression[step.id]}
                       manualProgressionAllowed={props.path.display.manualProgressionAllowed}
                       updateProgression={props.updateProgression}
                       enableNavigation={props.enableNavigation}
@@ -106,6 +106,7 @@ PlayerMain.propTypes = {
   steps: T.arrayOf(T.shape(
     StepTypes.propTypes
   )),
+  stepsProgression: T.object,
   attempt: T.object,
   workspace: T.object,
   updateProgression: T.func.isRequired,

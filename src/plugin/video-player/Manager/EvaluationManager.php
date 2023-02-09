@@ -66,14 +66,13 @@ class EvaluationManager
         $evaluationData = [
             'status' => $status,
             'progression' => $progression,
-            'progressionMax' => 100,
         ];
 
         if ($evaluation) {
-            return $this->resourceEvalManager->updateResourceEvaluation($evaluation, $evaluationData);
+            return $this->resourceEvalManager->updateAttempt($evaluation, $evaluationData);
         }
 
-        return $this->resourceEvalManager->createResourceEvaluation(
+        return $this->resourceEvalManager->createAttempt(
             $node,
             $user,
             $evaluationData

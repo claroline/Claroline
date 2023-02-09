@@ -2,7 +2,7 @@
 
 namespace Claroline\EvaluationBundle\Serializer;
 
-use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\CommunityBundle\Serializer\UserSerializer;
 use Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer;
 use Claroline\CoreBundle\Entity\Workspace\Evaluation;
@@ -45,20 +45,17 @@ class WorkspaceEvaluationSerializer
             'scoreMin' => $evaluation->getScoreMin(),
             'scoreMax' => $evaluation->getScoreMax(),
             'progression' => $evaluation->getProgression(),
-            'progressionMax' => $evaluation->getProgressionMax(),
         ];
 
-        if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
+        if (!in_array(SerializerInterface::SERIALIZE_MINIMAL, $options)) {
+            $serialized['user'] = null;
             if ($evaluation->getUser()) {
-                $serialized['user'] = $this->userSerializer->serialize($evaluation->getUser(), [Options::SERIALIZE_MINIMAL]);
-            } else {
-                $serialized['user'] = ['userName' => $evaluation->getUserName()];
+                $serialized['user'] = $this->userSerializer->serialize($evaluation->getUser(), [SerializerInterface::SERIALIZE_MINIMAL]);
             }
 
+            $serialized['workspace'] = null;
             if ($evaluation->getWorkspace()) {
-                $serialized['workspace'] = $this->workspaceSerializer->serialize($evaluation->getWorkspace(), [Options::SERIALIZE_MINIMAL]);
-            } else {
-                $serialized['workspace'] = ['code' => $evaluation->getWorkspaceCode()];
+                $serialized['workspace'] = $this->workspaceSerializer->serialize($evaluation->getWorkspace(), [SerializerInterface::SERIALIZE_MINIMAL]);
             }
         }
 

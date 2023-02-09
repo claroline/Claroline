@@ -47,7 +47,6 @@ class ResourceEvaluationSerializer
             'scoreMin' => $resourceEvaluation->getScoreMin(),
             'scoreMax' => $resourceEvaluation->getScoreMax(),
             'progression' => $resourceEvaluation->getProgression(),
-            'progressionMax' => $resourceEvaluation->getProgressionMax(),
         ];
 
         if (!in_array(SerializerInterface::SERIALIZE_MINIMAL, $options)) {

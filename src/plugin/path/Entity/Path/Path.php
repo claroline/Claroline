@@ -12,10 +12,10 @@ use Doctrine\ORM\Mapping as ORM;
 use Innova\PathBundle\Entity\Step;
 
 /**
- * Path.
+ * Path resource.
  *
+ * @ORM\Entity(repositoryClass="Innova\PathBundle\Repository\PathRepository")
  * @ORM\Table(name="innova_path")
- * @ORM\Entity()
  */
 class Path extends AbstractResource
 {

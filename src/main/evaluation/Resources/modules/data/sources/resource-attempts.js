@@ -50,7 +50,6 @@ export default {
         type: 'progression',
         displayed: true,
         filterable: false,
-        calculated: (rowData) => rowData.progression && rowData.progressionMax ? Math.round((rowData.progression / rowData.progressionMax) * 100) : 0,
         options: {
           type: 'user'
         }

@@ -92,7 +92,6 @@ const EvaluationUsers = (props) =>
           label: trans('progression'),
           displayed: true,
           filterable: false,
-          calculated: (row) => ((row.progression || 0) / (row.progressionMax || 1)) * 100,
           options: {
             type: 'user'
           }

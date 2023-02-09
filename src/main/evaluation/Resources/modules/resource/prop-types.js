@@ -13,7 +13,6 @@ const ResourceEvaluation = {
     scoreMin: T.number,
     scoreMax: T.number,
     progression: T.number,
-    progressionMax: T.number,
     resourceNode: T.shape(
       ResourceNode.propTypes
     ),
@@ -41,7 +40,6 @@ const ResourceAttempt = {
     scoreMin: T.number,
     scoreMax: T.number,
     progression: T.number,
-    progressionMax: T.number,
     resourceNode: T.shape(
       ResourceNode.propTypes
     ),

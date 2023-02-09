@@ -14,9 +14,15 @@ const lastAttempt = createSelector(
   (store) => store.lastAttempt
 )
 
+const resourceEvaluations = createSelector(
+  [store],
+  (store) => store.resourceEvaluations
+)
+
 export const selectors = {
   STORE_NAME,
 
   stepsProgression,
-  lastAttempt
+  lastAttempt,
+  resourceEvaluations
 }

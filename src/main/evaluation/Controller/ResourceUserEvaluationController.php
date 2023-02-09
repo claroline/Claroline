@@ -101,7 +101,6 @@ class ResourceUserEvaluationController
                 'status',
                 'date',
                 'progression',
-                'progression_max',
             ], ';', '"');
 
             foreach ($evaluations['data'] as $evaluation) {
@@ -111,7 +110,6 @@ class ResourceUserEvaluationController
                     DateNormalizer::normalize($evaluation->getDate()),
                     $evaluation->getStatus(),
                     $evaluation->getProgression(),
-                    $evaluation->getProgressionMax(),
                     $evaluation->getScore(),
                     $evaluation->getScoreMax(),
                     $evaluation->getDuration(),

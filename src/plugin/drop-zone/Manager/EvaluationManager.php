@@ -89,7 +89,7 @@ class EvaluationManager
                 foreach ($team->getRole()->getUsers() as $teamUser) {
                     $drop->addUser($teamUser);
                     /* TODO: checks that a valid status is not overwritten */
-                    $this->resourceEvalManager->createResourceEvaluation(
+                    $this->resourceEvalManager->createAttempt(
                         $dropzone->getResourceNode(),
                         $teamUser,
                         ['status' => AbstractEvaluation::STATUS_INCOMPLETE]
@@ -98,7 +98,7 @@ class EvaluationManager
             } elseif (!$drop->hasUser($user)) {
                 $drop->addUser($user);
 
-                $this->resourceEvalManager->createResourceEvaluation(
+                $this->resourceEvalManager->createAttempt(
                     $dropzone->getResourceNode(),
                     $user,
                     ['status' => AbstractEvaluation::STATUS_INCOMPLETE]
@@ -138,7 +138,7 @@ class EvaluationManager
                 $userEval = $this->resourceEvalManager->getUserEvaluation($dropzone->getResourceNode(), $user, false);
 
                 if (!empty($userEval) && !$userEval->isTerminated()) {
-                    $this->resourceEvalManager->createResourceEvaluation(
+                    $this->resourceEvalManager->createAttempt(
                         $dropzone->getResourceNode(),
                         $user,
                         ['status' => AbstractEvaluation::STATUS_COMPLETED, 'progression' => 100]
@@ -191,7 +191,7 @@ class EvaluationManager
                 AbstractEvaluation::STATUS_FAILED;
 
             foreach ($users as $user) {
-                $this->resourceEvalManager->createResourceEvaluation(
+                $this->resourceEvalManager->createAttempt(
                     $dropzone->getResourceNode(),
                     $user,
                     [
@@ -220,14 +220,14 @@ class EvaluationManager
 
         if (Dropzone::DROP_TYPE_TEAM === $dropzone->getDropType()) {
             foreach ($drop->getUsers() as $user) {
-                $this->resourceEvalManager->createResourceEvaluation(
+                $this->resourceEvalManager->createAttempt(
                     $dropzone->getResourceNode(),
                     $user,
                     ['progression' => $progression, 'data' => $this->serializer->serialize($drop)]
                 );
             }
         } else {
-            $this->resourceEvalManager->createResourceEvaluation(
+            $this->resourceEvalManager->createAttempt(
                 $dropzone->getResourceNode(),
                 $drop->getUser(),
                 ['progression' => $progression, 'data' => $this->serializer->serialize($drop)]
@@ -275,7 +275,7 @@ class EvaluationManager
 
         $this->om->persist($drop);
 
-        $this->resourceEvalManager->createResourceEvaluation(
+        $this->resourceEvalManager->createAttempt(
             $dropzone->getResourceNode(),
             $user,
             ['status' => AbstractEvaluation::STATUS_INCOMPLETE]

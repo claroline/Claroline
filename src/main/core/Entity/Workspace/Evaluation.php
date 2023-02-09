@@ -35,46 +35,22 @@ class Evaluation extends AbstractUserEvaluation
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace")
-     * @ORM\JoinColumn(name="workspace_id", onDelete="SET NULL")
+     * @ORM\JoinColumn(name="workspace_id", onDelete="CASCADE")
      */
-    protected $workspace;
-
-    /**
-     * @ORM\Column(name="workspace_code")
-     */
-    protected $workspaceCode;
+    private $workspace;
 
     public function __construct()
     {
         $this->refreshUuid();
     }
 
-    /**
-     * @return Workspace
-     */
-    public function getWorkspace()
+    public function getWorkspace(): ?Workspace
     {
         return $this->workspace;
     }
 
-    public function setWorkspace(Workspace $workspace)
+    public function setWorkspace(Workspace $workspace): void
     {
         $this->workspace = $workspace;
-    }
-
-    /**
-     * @return string
-     */
-    public function getWorkspaceCode()
-    {
-        return $this->workspaceCode;
-    }
-
-    /**
-     * @param string $workspaceCode
-     */
-    public function setWorkspaceCode($workspaceCode)
-    {
-        $this->workspaceCode = $workspaceCode;
     }
 }

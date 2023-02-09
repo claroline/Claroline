@@ -4,17 +4,19 @@ namespace Innova\PathBundle\Subscriber;
 
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\EvaluationBundle\Event\EvaluationEvents;
-use Claroline\EvaluationBundle\Event\ResourceAttemptEvent;
+use Claroline\EvaluationBundle\Event\ResourceEvaluationEvent;
 use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\Step;
 use Innova\PathBundle\Manager\EvaluationManager;
@@ -65,7 +67,7 @@ class PathSubscriber implements EventSubscriberInterface
         return [
             'resource.innova_path.load' => 'onLoad',
             'resource.innova_path.copy' => 'onCopy',
-            EvaluationEvents::RESOURCE_ATTEMPT => 'onEvaluation',
+            EvaluationEvents::RESOURCE_EVALUATION => 'onEvaluation',
         ];
     }
 
@@ -79,21 +81,31 @@ class PathSubscriber implements EventSubscriberInterface
         $user = $this->tokenStorage->getToken()->getUser();
 
         $evaluation = null;
+        $resourceEvaluations = [];
         $currentAttempt = null;
+        $stepsProgression = [];
         if ($user instanceof User) {
             // retrieve user progression
             $evaluation = $this->serializer->serialize(
                 $this->evaluationManager->getResourceUserEvaluation($path, $user),
-                [Options::SERIALIZE_MINIMAL]
+                [SerializerInterface::SERIALIZE_MINIMAL]
             );
 
             $currentAttempt = $this->serializer->serialize($this->evaluationManager->getCurrentAttempt($path, $user));
+
+            $resourceEvaluations = array_map(function (ResourceUserEvaluation $resourceEvaluation) {
+                return $this->serializer->serialize($resourceEvaluation);
+            }, $this->evaluationManager->getRequiredEvaluations($path, $user));
+
+            $stepsProgression = $this->evaluationManager->getStepsProgressionForUser($path, $user);
         }
 
         $event->setData([
             'path' => $this->serializer->serialize($path),
             'userEvaluation' => $evaluation,
+            'resourceEvaluations' => $resourceEvaluations,
             'attempt' => $currentAttempt,
+            'stepsProgression' => $stepsProgression,
         ]);
         $event->stopPropagation();
     }
@@ -146,9 +158,19 @@ class PathSubscriber implements EventSubscriberInterface
      * Fired when a Resource Evaluation with a score is created.
      * We will update progression for all paths using this resource.
      */
-    public function onEvaluation(ResourceAttemptEvent $event): void
+    public function onEvaluation(ResourceEvaluationEvent $event): void
     {
-        $this->evaluationManager->handleResourceEvaluation($event->getAttempt());
+        $user = $event->getUser();
+        $resourceNode = $event->getResourceNode();
+
+        if ($resourceNode->isRequired()) {
+            // check if the resource is linked to any path
+            $paths = $this->om->getRepository(Path::class)->findByPrimaryResource($resourceNode);
+            foreach ($paths as $path) {
+                // update evaluations for all the path using the resource
+                $this->evaluationManager->compute($path, $user);
+            }
+        }
     }
 
     /**

@@ -8,8 +8,6 @@ import {LiquidGauge} from '#/main/core/layout/gauge/components/liquid-gauge'
 import {constants} from '#/main/evaluation/constants'
 
 const EvaluationDetails = (props) => {
-  const progression = props.evaluation.progression && props.evaluation.progressionMax ? (props.evaluation.progression / props.evaluation.progressionMax) * 100 : props.evaluation.progression
-
   let successScore
   if (props.showScore && props.successScore) {
     successScore = (props.scoreMax || props.evaluation.scoreMax) * props.successScore / 100
@@ -33,7 +31,7 @@ const EvaluationDetails = (props) => {
           <LiquidGauge
             id={`user-progression-${props.evaluation.id}`}
             type="user"
-            value={progression}
+            value={props.evaluation.progression || 0}
             displayValue={(value) => number(value) + '%'}
             width={140}
             height={140}
@@ -91,8 +89,7 @@ EvaluationDetails.propTypes = {
     status: T.string.isRequired,
     score: T.number,
     scoreMax: T.number,
-    progression: T.number,
-    progressionMax: T.number
+    progression: T.number
   }).isRequired,
   estimatedDuration: T.number,
   details: T.arrayOf(

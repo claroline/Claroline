@@ -9,11 +9,13 @@ import {matchPath} from '#/main/app/router'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ContentSummary} from '#/main/app/content/components/summary'
 
+import {Step as StepTypes} from '#/plugin/path/resources/path/prop-types'
+
 const PlayerMenu = props => {
   function getStepSummary(step) {
     return {
       type: LINK_BUTTON,
-      icon: classes('step-progression fa fa-fw fa-circle', get(step, 'userProgression.status')),
+      icon: classes('step-progression fa fa-fw fa-circle', get(props.stepsProgression, step.id, 'unseen')),
       label: step.title,
       target: `${props.path}/play/${step.slug}`,
       active: !!matchPath(props.location.pathname, {path: `${props.path}/play/${step.slug}`}),
@@ -55,9 +57,10 @@ PlayerMenu.propTypes = {
   }),
   path: T.string.isRequired,
   overview: T.bool,
-  steps: T.arrayOf(T.shape({
-    // TODO : step types
-  })),
+  steps: T.arrayOf(T.shape(
+    StepTypes.propTypes
+  )),
+  stepsProgression: T.object,
   autoClose: T.func
 }
 

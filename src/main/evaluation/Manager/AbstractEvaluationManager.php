@@ -10,7 +10,7 @@ abstract class AbstractEvaluationManager
      * Updates some evaluation data and return whether the progression of the evaluation has changed.
      * (aka. the score, status or progression has been updated).
      */
-    protected function updateEvaluation(AbstractEvaluation $evaluation, ?array $data = [], ?\DateTime $date = null): array
+    protected function updateEvaluation(AbstractEvaluation $evaluation, ?array $data = [], ?\DateTimeInterface $date = null): array
     {
         $changes = [
             'status' => false,
@@ -47,19 +47,10 @@ abstract class AbstractEvaluationManager
             $this->updateEvaluationScore($evaluation, $data['scoreMax'], $score, $scoreMin);
         }
 
-        if (isset($data['progression'])) {
-            // for retro-compatibility : progressionMax must always be 100 and should be removed
-            $progressionMax = $data['progressionMax'] ?? 100; // for retro-compatibility : progressionMax must always be 100 and should be removed
-
-            $previousProgression = (($evaluation->getProgression() ?? 0) * 100) / ($evaluation->getProgressionMax() ?? 100);
-            $newProgression = ($data['progression'] * 100) / $progressionMax;
-
-            if ($newProgression > $previousProgression) {
-                $changes['progression'] = true;
-
-                $evaluation->setProgression($newProgression);
-                $evaluation->setProgressionMax(100);
-            }
+        if (isset($data['progression']) && $data['progression'] > $evaluation->getProgression()) {
+            // only update the evaluation if the user progression has increased
+            $evaluation->setProgression($data['progression']);
+            $changes['progression'] = true;
         }
 
         return $changes;
@@ -87,21 +78,5 @@ abstract class AbstractEvaluationManager
         }
 
         return $evaluation;
-    }
-
-    protected function computeStatus(AbstractEvaluation $evaluation): string
-    {
-        $newStatus = $evaluation->getStatus() ?? AbstractEvaluation::STATUS_NOT_ATTEMPTED;
-
-        // checks progression
-        if (0 !== $evaluation->getProgression() && 100 > $evaluation->getProgression()) {
-            $newStatus = AbstractEvaluation::STATUS_INCOMPLETE;
-        } elseif (100 <= $evaluation->getProgression()) {
-            $newStatus = AbstractEvaluation::STATUS_COMPLETED;
-        }
-
-        // checks score if any
-
-        return $newStatus;
     }
 }

@@ -1,4 +1,5 @@
 import cloneDeep from 'lodash/cloneDeep'
+import isEmpty from 'lodash/isEmpty'
 
 import {makeInstanceAction} from '#/main/app/store/actions'
 import {makeReducer, combineReducers} from '#/main/app/store/reducer'
@@ -9,13 +10,13 @@ import {
   STEP_ENABLE_NAVIGATION,
   STEP_DISABLE_NAVIGATION,
   STEP_UPDATE_PROGRESSION,
-  ATTEMPT_LOAD
+  ATTEMPT_LOAD,
+  RESOURCE_EVALUATIONS_LOAD
 } from '#/plugin/path/resources/path/store/actions'
 
 import {reducer as editorReducer} from '#/plugin/path/resources/path/editor/store/reducer'
 import {reducer as analyticsReducer} from '#/plugin/path/analytics/resource/progression/store/reducer'
 import {selectors as editorSelectors} from '#/plugin/path/resources/path/editor/store/selectors'
-import {getStepPath} from '#/plugin/path/resources/path/editor/utils'
 
 const reducer = combineReducers({
   navigationEnabled: makeReducer(true, {
@@ -27,20 +28,24 @@ const reducer = combineReducers({
     [makeInstanceAction(RESOURCE_LOAD, 'innova_path')]: (state, action) => action.resourceData.attempt || state,
     [ATTEMPT_LOAD]: (state, action) => action.attempt
   }),
+  // the list of evaluation for the embedded required resources
+  resourceEvaluations: makeReducer([], {
+    [makeInstanceAction(RESOURCE_LOAD, 'innova_path')]: (state, action) => action.resourceData.resourceEvaluations || state,
+    [RESOURCE_EVALUATIONS_LOAD]: (state, action) => action.resourceEvaluations || state,
+    [ATTEMPT_LOAD]: (state, action) => action.resourceEvaluations || state
+  }),
   path: makeReducer({}, {
     [makeInstanceAction(RESOURCE_LOAD, 'innova_path')]: (state, action) => action.resourceData.path || state,
     // replaces path data after success updates
-    [makeInstanceAction(FORM_SUBMIT_SUCCESS, editorSelectors.FORM_NAME)]: (state, action) => action.updatedData,
+    [makeInstanceAction(FORM_SUBMIT_SUCCESS, editorSelectors.FORM_NAME)]: (state, action) => action.updatedData
+  }),
+  stepsProgression: makeReducer({}, {
+    [makeInstanceAction(RESOURCE_LOAD, 'innova_path')]: (state, action) => !isEmpty(action.resourceData.stepsProgression) ? action.resourceData.stepsProgression : state,
     [STEP_UPDATE_PROGRESSION]: (state, action) => {
+      console.log(action)
       const newState = cloneDeep(state)
-      const stepPath = getStepPath(action.stepId, newState.steps, 0, [])
 
-      let step = newState.steps[stepPath[0]]
-
-      for (let i = 1; i < stepPath.length; ++i) {
-        step = step.children[stepPath[i]]
-      }
-      step.userProgression.status = action.status
+      newState[action.stepId] = action.status
 
       return newState
     }
