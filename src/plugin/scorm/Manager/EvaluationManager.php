@@ -265,10 +265,10 @@ class EvaluationManager
         }
 
         if (!empty($attempt)) {
-            return $this->resourceEvalManager->updateResourceEvaluation($attempt, $evaluationData, $tracking->getLatestDate());
+            return $this->resourceEvalManager->updateAttempt($attempt, $evaluationData, $tracking->getLatestDate());
         }
 
-        return $this->resourceEvalManager->createResourceEvaluation(
+        return $this->resourceEvalManager->createAttempt(
             $scorm->getResourceNode(),
             $tracking->getUser(),
             $evaluationData,

@@ -65,43 +65,32 @@ WorkspaceImpersonation.propTypes = {
   workspace: T.object.isRequired
 }
 
-const WorkspaceProgression = props => {
-  let progression = 0
-  if (get(props.userEvaluation, 'progression')) {
-    progression = props.userEvaluation.progression
-    if (props.userEvaluation.progressionMax) {
-      progression = (progression / props.userEvaluation.progressionMax) * 100
-    }
-  }
+const WorkspaceProgression = (props) =>
+  <section className="app-menu-status">
+    <h2 className="sr-only">
+      {trans('my_progression')}
+    </h2>
 
-  return (
-    <section className="app-menu-status">
-      <h2 className="sr-only">
-        {trans('my_progression')}
-      </h2>
+    <LiquidGauge
+      id="workspace-progression"
+      type="user"
+      value={get(props.userEvaluation, 'progression') || 0}
+      displayValue={(value) => number(value) + '%'}
+      width={70}
+      height={70}
+    />
 
-      <LiquidGauge
-        id="workspace-progression"
-        type="user"
-        value={progression}
-        displayValue={(value) => number(value) + '%'}
-        width={70}
-        height={70}
-      />
+    <div className="app-menu-status-info">
+      <h3 className="h4">
+        {!isEmpty(props.roles) ?
+          props.roles.map(role => trans(role.translationKey)).join(', ') :
+          trans('guest')
+        }
+      </h3>
 
-      <div className="app-menu-status-info">
-        <h3 className="h4">
-          {!isEmpty(props.roles) ?
-            props.roles.map(role => trans(role.translationKey)).join(', ') :
-            trans('guest')
-          }
-        </h3>
-
-        {evalConstants.EVALUATION_STATUSES[get(props.userEvaluation, 'status', baseConstants.EVALUATION_STATUS_UNKNOWN)]}
-      </div>
-    </section>
-  )
-}
+      {evalConstants.EVALUATION_STATUSES[get(props.userEvaluation, 'status', baseConstants.EVALUATION_STATUS_UNKNOWN)]}
+    </div>
+  </section>
 
 WorkspaceProgression.propTypes = {
   roles: T.arrayOf(T.shape({

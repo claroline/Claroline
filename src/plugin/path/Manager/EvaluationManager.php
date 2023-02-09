@@ -6,23 +6,28 @@ use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Repository\Resource\ResourceEvaluationRepository;
-use Claroline\EvaluationBundle\Entity\AbstractEvaluation;
+use Claroline\EvaluationBundle\Library\Checker\ProgressionChecker;
+use Claroline\EvaluationBundle\Library\Checker\ScoreChecker;
+use Claroline\EvaluationBundle\Library\EvaluationAggregator;
+use Claroline\EvaluationBundle\Library\EvaluationStatusChecker;
+use Claroline\EvaluationBundle\Library\GenericEvaluation;
 use Claroline\EvaluationBundle\Manager\ResourceEvaluationManager;
 use Doctrine\Persistence\ObjectManager;
 use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\Step;
 use Innova\PathBundle\Entity\UserProgression;
+use Innova\PathBundle\Repository\PathRepository;
 
 class EvaluationManager
 {
     /** @var ObjectManager */
     private $om;
-
     /** @var ResourceEvaluationManager */
     private $resourceEvalManager;
 
     private $progressionRepo;
-    private $stepRepo;
+    /** @var PathRepository */
+    private $pathRepo;
     /** @var ResourceEvaluationRepository */
     private $resourceEvalRepo;
 
@@ -34,33 +39,8 @@ class EvaluationManager
         $this->resourceEvalManager = $resourceEvalManager;
 
         $this->progressionRepo = $this->om->getRepository(UserProgression::class);
-        $this->stepRepo = $this->om->getRepository(Step::class);
+        $this->pathRepo = $this->om->getRepository(Path::class);
         $this->resourceEvalRepo = $this->om->getRepository(ResourceEvaluation::class);
-    }
-
-    public function update(Step $step, User $user, string $status): UserProgression
-    {
-        // Retrieve the current progression for this step
-        $progression = $this->progressionRepo->findOneBy([
-            'step' => $step,
-            'user' => $user,
-        ]);
-
-        if (empty($progression)) {
-            // No progression for User => initialize a new one
-            $progression = new UserProgression();
-            $progression->setStep($step);
-            $progression->setUser($user);
-        }
-
-        $progression->setStatus($status);
-
-        $this->om->persist($progression);
-        $this->om->flush();
-
-        $this->updateResourceEvaluation($step, $user, $status);
-
-        return $progression;
     }
 
     /**
@@ -71,14 +51,19 @@ class EvaluationManager
         return $this->resourceEvalManager->getUserEvaluation($path->getResourceNode(), $user);
     }
 
-    public function getCurrentAttempt(Path $path, User $user, bool $createMissing = true)
+    public function getCurrentAttempt(Path $path, User $user, ?bool $createMissing = true): ?ResourceEvaluation
     {
         $pathAttempt = $this->resourceEvalRepo->findLast($path->getResourceNode(), $user);
         if (empty($pathAttempt) && $createMissing) {
-            $pathAttempt = $this->resourceEvalManager->createResourceEvaluation($path->getResourceNode(), $user);
+            $pathAttempt = $this->resourceEvalManager->createAttempt($path->getResourceNode(), $user);
         }
 
         return $pathAttempt;
+    }
+
+    public function getRequiredEvaluations(Path $path, User $user)
+    {
+        return $this->pathRepo->findRequiredEvaluations($path, $user);
     }
 
     /**
@@ -99,210 +84,97 @@ class EvaluationManager
         return $stepsProgression;
     }
 
-    /**
-     * Fetches and updates score for all paths linked to the evaluation.
-     */
-    public function handleResourceEvaluation(ResourceEvaluation $resourceAttempt)
+    public function update(Step $step, User $user, string $status): UserProgression
     {
-        $resourceUserEvaluation = $resourceAttempt->getResourceUserEvaluation();
-        $resourceNode = $resourceUserEvaluation->getResourceNode();
+        // Retrieve the current progression for this step
+        $progression = $this->progressionRepo->findOneBy([
+            'step' => $step,
+            'user' => $user,
+        ]);
 
-        // only update paths evaluations if the current attempt is fully evaluated
-        if ($resourceNode->isEvaluated() && !is_null($resourceAttempt->getScore()) && !is_null($resourceAttempt->getScoreMax())) {
-            $user = $resourceUserEvaluation->getUser();
-
-            // Gets all steps containing the resource node with an evaluation
-            /** @var Step[] $steps */
-            $steps = $this->stepRepo->findBy(['resource' => $resourceNode]);
-
-            foreach ($steps as $step) {
-                // get the current attempt of the path
-                $pathAttempt = $this->resourceEvalRepo->findLast($step->getPath()->getResourceNode(), $user);
-                if ($pathAttempt) {
-                    // will be used to know if we need to recompute the path ResourceEvaluation
-                    // the path attempt will be recomputed if a linked resource is terminated or gets a new/better score
-                    $updateEvaluation = false;
-
-                    $attemptData = $pathAttempt->getData();
-                    if (empty($attemptData['resources'])) {
-                        $attemptData['resources'] = [];
-                    }
-
-                    $resourceData = [
-                        'id' => $resourceAttempt->getId(),
-                        'terminated' => false,
-                    ];
-
-                    if (!empty($attemptData['resources'][$step->getUuid()])) {
-                        $resourceData = array_merge($resourceData, $attemptData['resources'][$step->getUuid()]);
-                    }
-
-                    // check if the status of the resource has changed
-                    if (!$resourceData['terminated'] && $resourceAttempt->isTerminated()) {
-                        $resourceData['terminated'] = true;
-
-                        $updateEvaluation = true;
-                    }
-
-                    // check if the score of the resource has changed
-                    $oldScore = null;
-                    if (isset($resourceData['score']) && !is_null($resourceData['score'])) {
-                        $oldScore = $resourceData['score'] / $resourceData['max'];
-                    }
-
-                    if (empty($oldScore)
-                        || (!is_null($resourceAttempt->getScore()) && $resourceAttempt->getScore() / $resourceAttempt->getScoreMax() >= $oldScore)
-                    ) {
-                        // only update path attempt if it's the first time the user do the resource
-                        // or if he gets a better score
-                        $resourceData['score'] = $resourceAttempt->getScore();
-                        $resourceData['max'] = $resourceAttempt->getScoreMax();
-
-                        $updateEvaluation = true;
-                    }
-
-                    if ($updateEvaluation) {
-                        $attemptData['resources'][$step->getUuid()] = $resourceData;
-
-                        // recompute path attempt progression
-                        $progressionData = $this->computeProgression($step->getPath(), $attemptData);
-                        // recompute path attempt score if the path is finished
-                        $scoreData = [];
-                        if (AbstractEvaluation::STATUS_COMPLETED === $progressionData['status']) {
-                            $scoreData = $this->computeScore($step->getPath(), $attemptData['resources']);
-                        }
-
-                        $data = array_merge(['data' => $attemptData], $progressionData, $scoreData);
-
-                        // forward update to core to let him recompute the ResourceUserEvaluation if needed
-                        $this->resourceEvalManager->updateResourceEvaluation($pathAttempt, $data, $resourceAttempt->getDate());
-                    }
-                }
-            }
+        if (empty($progression)) {
+            // No progression for User => initialize a new one
+            $progression = new UserProgression();
+            $progression->setStep($step);
+            $progression->setUser($user);
         }
+
+        if ('seen' !== $status || 'unseen' === $progression->getStatus()) {
+            $progression->setStatus($status);
+        }
+
+        $this->om->persist($progression);
+        $this->om->flush();
+
+        // recompute path progression for user
+        $this->compute($step->getPath(), $user);
+
+        return $progression;
     }
 
-    private function updateResourceEvaluation(Step $step, User $user, string $status): ResourceEvaluation
+    public function compute(Path $path, User $user): ResourceEvaluation
     {
-        $evaluation = $this->resourceEvalRepo->findLast($step->getPath()->getResourceNode(), $user);
+        // get the current attempt of the path
+        // for now path can only have one attempt, that's why we retrieve the last attempt without checking if it's already ended.
+        $pathAttempt = $this->resourceEvalRepo->findLast($path->getResourceNode(), $user);
 
-        $data = [
-            'done' => [],
-            'resources' => [],
-        ];
-        if ($evaluation) {
-            $data = array_merge($data, $evaluation->getData() ?? []);
-        }
+        $evaluationData = $pathAttempt && $pathAttempt->getData() ? $pathAttempt->getData() : ['done' => []];
 
-        if (!in_array($step->getUuid(), $data['done']) && in_array($status, ['seen', 'done'])) {
-            // mark the step as done if it has the correct status
-            $data['done'][] = $step->getUuid();
-        } elseif (in_array($step->getUuid(), $data['done']) && !in_array($status, ['seen', 'done'])) {
-            // mark the step as not done
-            array_splice($data['done'], array_search($step->getUuid(), $data['done']), 1);
-        }
+        // load the user progression for the path (aka the seen/done/etc. flags on steps)
+        $stepsProgression = $this->getStepsProgressionForUser($path, $user);
 
-        // recompute path attempt progression
-        $progressionData = $this->computeProgression($step->getPath(), $data);
-        // recompute path attempt score if the path is finished
-        $scoreData = [];
-        if (AbstractEvaluation::STATUS_COMPLETED === $progressionData['status']) {
-            $scoreData = $this->computeScore($step->getPath(), $data['resources']);
-        }
-
-        $statusData = array_merge(['data' => $data], $progressionData, $scoreData);
-
-        if ($evaluation) {
-            return $this->resourceEvalManager->updateResourceEvaluation($evaluation, $statusData);
-        }
-
-        return $this->resourceEvalManager->createResourceEvaluation(
-            $step->getPath()->getResourceNode(),
-            $user,
-            $statusData
-        );
-    }
-
-    /**
-     * Computes score for path and updates user evaluation.
-     */
-    private function computeScore(Path $path, ?array $resourceScores = [])
-    {
-        $toEvaluate = count(array_filter($path->getSteps()->toArray(), function (Step $step) {
-            return !empty($step->getResource()) && $step->getResource()->isEvaluated();
-        }));
-
-        if (!empty($resourceScores)) {
-            // get the scores of all embedded resources for this attempt to compute path score
-            $evaluatedSteps = 0;
-            $score = 0;
-            $scoreTotal = 0;
-            foreach ($resourceScores as $resourceScore) {
-                ++$evaluatedSteps;
-                $score += $resourceScore['score'];
-                $scoreTotal += $resourceScore['max'];
-            }
-
-            if (0 < $scoreTotal) {
-                $finalScore = ($score * $path->getScoreTotal()) / $scoreTotal;
-                $finished = $toEvaluate === $evaluatedSteps;
-                $success = $finished && $path->getSuccessScore() <= ($score * 100) / $scoreTotal;
-
-                $status = null;
-                if ($finished) {
-                    // change the attempt status if all steps have been evaluated
-                    $status = $success ? AbstractEvaluation::STATUS_PASSED : AbstractEvaluation::STATUS_FAILED;
+        // the path evaluation aggregates the progression/score of all its required/evaluated resource
+        // and the status of the steps which don't contain any resource.
+        $aggregator = new EvaluationAggregator();
+        foreach ($path->getSteps() as $step) {
+            if (!empty($step->getResource()) && $step->getResource()->isRequired()) {
+                // the step contains a required resource, we need to get the evaluation for this resource
+                // in order to compute the step progression
+                $resourceEvaluation = $this->resourceEvalManager->getUserEvaluation($step->getResource(), $user, false);
+                if (!$resourceEvaluation) {
+                    // no evaluation, adds an empty evaluation for correct progression check
+                    $resourceEvaluation = new GenericEvaluation(0);
                 }
 
-                return [
-                    'status' => $status,
-                    'score' => $finalScore,
-                    'scoreMax' => $path->getScoreTotal(),
-                ];
-            }
-        }
-
-        // no evaluation data for embedded resources => nothing to recompute
-        return [];
-    }
-
-    /**
-     * Compute current resource evaluation status.
-     */
-    private function computeProgression(Path $path, array $data = []): array
-    {
-        $progression = 0;
-        $progressionMax = count($path->getSteps());
-
-        $status = AbstractEvaluation::STATUS_OPENED;
-        // only compute progression if path is not empty
-        if ($progressionMax) {
-            $resourcesData = [];
-            if (!empty($data['resources'])) {
-                $resourcesData = $data['resources'];
-            }
-
-            foreach ($path->getSteps() as $step) {
-                if ((empty($step->getResource()) || !$step->getResource()->isEvaluated()) && in_array($step->getUuid(), $data['done'])) {
-                    ++$progression;
-                }
-
-                if (!empty($step->getResource()) && $step->getResource()->isEvaluated() && !empty($resourcesData[$step->getUuid()]) && $resourcesData[$step->getUuid()]['terminated']) {
-                    ++$progression;
-                }
-            }
-
-            if ($progression >= $progressionMax) {
-                $status = AbstractEvaluation::STATUS_COMPLETED;
+                $aggregator->addEvaluation($resourceEvaluation, $step->getResource()->isEvaluated());
             } else {
-                $status = AbstractEvaluation::STATUS_INCOMPLETE;
+                // no required resource in the step, we only check if the step is seen/done
+                $stepDone = !empty($stepsProgression[$step->getUuid()]) && in_array($stepsProgression[$step->getUuid()], ['seen', 'done']);
+                $aggregator->addEvaluation(new GenericEvaluation($stepDone ? 100 : 0));
+
+                // store the step status in the path attempt
+                if ($stepDone && !in_array($step->getUuid(), $evaluationData['done'])) {
+                    // mark the step as done if it has the correct status
+                    $evaluationData['done'][] = $step->getUuid();
+                } elseif (!$stepDone && in_array($step->getUuid(), $evaluationData['done'])) {
+                    // mark the step as not done
+                    array_splice($evaluationData['done'], array_search($step->getUuid(), $evaluationData['done']), 1);
+                }
             }
         }
 
-        return [
-            'progression' => $progressionMax ? ($progression / $progressionMax) * 100 : $progression,
-            'progressionMax' => 100, // TODO : for retro compatibility
-            'status' => $status,
+        // compute the status of the path
+        $checker = new EvaluationStatusChecker([
+            new ProgressionChecker(),
+            new ScoreChecker($path->getSuccessScore()),
+        ]);
+
+        $evaluationData = [
+            'status' => $checker->getStatus($aggregator),
+            'score' => $aggregator->getScore(),
+            'scoreMax' => $aggregator->getScoreMax(),
+            'progression' => $aggregator->getProgression(),
+            'data' => $evaluationData,
         ];
+
+        if ($pathAttempt) {
+            return $this->resourceEvalManager->updateAttempt($pathAttempt, $evaluationData);
+        }
+
+        return $this->resourceEvalManager->createAttempt(
+            $path->getResourceNode(),
+            $user,
+            $evaluationData
+        );
     }
 }

@@ -90,9 +90,7 @@ class WorkspaceEvaluationManager extends AbstractEvaluationManager
             $evaluation = new Evaluation();
 
             $evaluation->setWorkspace($workspace);
-            $evaluation->setWorkspaceCode($workspace->getCode());
             $evaluation->setUser($user);
-            $evaluation->setUserName($user->getFullName());
             $evaluation->setStatus(AbstractEvaluation::STATUS_NOT_ATTEMPTED);
 
             $this->om->persist($evaluation);
@@ -102,7 +100,7 @@ class WorkspaceEvaluationManager extends AbstractEvaluationManager
         return $evaluation;
     }
 
-    public function updateUserEvaluation(Workspace $workspace, User $user, ?array $data = [], ?\DateTime $date = null): Evaluation
+    public function updateUserEvaluation(Workspace $workspace, User $user, ?array $data = [], ?\DateTimeInterface $date = null): Evaluation
     {
         $this->om->startFlushSuite();
 
@@ -258,7 +256,6 @@ class WorkspaceEvaluationManager extends AbstractEvaluationManager
 
         $evaluationData['status'] = $status;
         $evaluationData['progression'] = $progression;
-        $evaluationData['progressionMax'] = $progressionMax;
 
         $hasChanged = $this->updateEvaluation($evaluation, $evaluationData, $currentRue ? $currentRue->getDate() : null);
 

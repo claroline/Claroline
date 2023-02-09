@@ -12,4 +12,3 @@ services:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
-            - '@security.token_storage'

@@ -52,7 +52,6 @@
     margin-bottom: @component-margin-bottom;
 }
 
-// todo : rename it in step indicator
 .step-progression {
     font-size: @step-status-size !important; // override font-awesome
 
@@ -61,4 +60,19 @@
     &.to_do     { color: @step-status-to_do-color; }
     &.done      { color: @step-status-done-color; }
     &.to_review { color: @step-status-to_review-color; }
+}
+
+.step-status {
+    margin-left: auto;
+    color: @brand-secondary;
+    font-style: normal; // overrid summary styles
+
+    .not_started {
+        color: @step-status-unseen-color;
+    }
+
+    .step-progression {
+        font-size: @font-size-base !important;
+        font-weight: bold;
+    }
 }

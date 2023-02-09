@@ -11,8 +11,9 @@
 
 namespace Innova\PathBundle\Controller;
 
-use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\Controller\AbstractCrudController;
+use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Innova\PathBundle\Entity\Path\Path;
@@ -64,7 +65,7 @@ class PathController extends AbstractCrudController
     /**
      * Update step progression for an user.
      *
-     * @Route("/step/{id}/progression/update", name="innova_path_progression_update", methods={"PUT"})
+     * @Route("/step/{id}/progression", name="innova_path_progression_update", methods={"PUT"})
      * @EXT\ParamConverter("step", class="Innova\PathBundle\Entity\Step", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
@@ -74,15 +75,22 @@ class PathController extends AbstractCrudController
 
         $this->checkPermission('OPEN', $node, [], true);
 
-        $status = $this->decodeRequest($request)['status'];
-        $this->evaluationManager->update($step, $user, $status);
+        $progression = $this->evaluationManager->update($step, $user, $this->decodeRequest($request)['status']);
+
+        // get updated version of the current path evaluation
         $resourceUserEvaluation = $this->evaluationManager->getResourceUserEvaluation($step->getPath(), $user);
 
+        // get updated version of the embedded resources evaluations
+        $resourceEvaluations = $this->evaluationManager->getRequiredEvaluations($step->getPath(), $user);
+
         return new JsonResponse([
-            'userEvaluation' => $this->serializer->serialize($resourceUserEvaluation, [Options::SERIALIZE_MINIMAL]),
+            'userEvaluation' => $this->serializer->serialize($resourceUserEvaluation, [SerializerInterface::SERIALIZE_MINIMAL]),
+            'resourceEvaluations' => array_map(function (ResourceUserEvaluation $resourceEvaluation) {
+                return $this->serializer->serialize($resourceEvaluation);
+            }, $resourceEvaluations),
             'userProgression' => [
                 'stepId' => $step->getUuid(),
-                'status' => $status,
+                'status' => $progression->getStatus(),
             ],
         ]);
     }
@@ -92,16 +100,23 @@ class PathController extends AbstractCrudController
      * @EXT\ParamConverter("path", class="Innova\PathBundle\Entity\Path\Path", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      */
-    public function getAttemptAction(Path $path, User $user = null)
+    public function getAttemptAction(Path $path, ?User $user = null): JsonResponse
     {
         $this->checkPermission('OPEN', $path->getResourceNode(), [], true);
 
         $attempt = null;
+        $resourceEvaluations = [];
         if ($user) {
             $attempt = $this->serializer->serialize($this->evaluationManager->getCurrentAttempt($path, $user));
+            $resourceEvaluations = array_map(function (ResourceUserEvaluation $resourceEvaluation) {
+                return $this->serializer->serialize($resourceEvaluation);
+            }, $this->evaluationManager->getRequiredEvaluations($path, $user));
         }
 
-        return new JsonResponse($attempt);
+        return new JsonResponse([
+            'attempt' => $attempt,
+            'resourceEvaluations' => $resourceEvaluations,
+        ]);
     }
 
     /**
@@ -120,6 +135,9 @@ class PathController extends AbstractCrudController
                 $this->evaluationManager->getCurrentAttempt($path, $user, false)
             ),
             'progression' => $this->evaluationManager->getStepsProgressionForUser($path, $user),
+            'resourceEvaluations' => array_map(function (ResourceUserEvaluation $resourceEvaluation) {
+                return $this->serializer->serialize($resourceEvaluation);
+            }, $this->evaluationManager->getRequiredEvaluations($path, $user)),
         ]);
     }
 }

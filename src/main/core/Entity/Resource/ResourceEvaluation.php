@@ -47,41 +47,32 @@ class ResourceEvaluation extends AbstractEvaluation
      */
     private $data;
 
-    /**
-     * @return ResourceUserEvaluation
-     */
-    public function getResourceUserEvaluation()
+    public function getResourceUserEvaluation(): ?ResourceUserEvaluation
     {
         return $this->resourceUserEvaluation;
     }
 
-    public function setResourceUserEvaluation(ResourceUserEvaluation $resourceUserEvaluation)
+    public function setResourceUserEvaluation(ResourceUserEvaluation $resourceUserEvaluation): void
     {
         $this->resourceUserEvaluation = $resourceUserEvaluation;
     }
 
-    /**
-     * @return string
-     */
-    public function getComment()
+    public function getComment(): ?string
     {
         return $this->comment;
     }
 
-    /**
-     * @param string $comment
-     */
-    public function setComment($comment)
+    public function setComment(?string $comment = null): void
     {
         $this->comment = $comment;
     }
 
-    public function getData()
+    public function getData(): ?array
     {
         return $this->data;
     }
 
-    public function setData($data)
+    public function setData(?array $data): void
     {
         $this->data = $data;
     }

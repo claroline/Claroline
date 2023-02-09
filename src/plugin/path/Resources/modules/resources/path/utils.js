@@ -93,14 +93,7 @@ function getNumbering(type, steps, step) {
   }
 }
 
-function getStepUserProgression(steps, stepId) {
-  const step = steps.find(s => s.id === stepId)
-
-  return step ? step.userProgression.status : null
-}
-
 export {
   flattenSteps,
-  getNumbering,
-  getStepUserProgression
+  getNumbering
 }

@@ -3,9 +3,9 @@
 namespace HeVinci\CompetencyBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use HeVinci\CompetencyBundle\Util\UnitTestCase;
+use PHPUnit\Framework\TestCase;
 
-class ScaleTest extends UnitTestCase
+class ScaleTest extends TestCase
 {
     public function testSetLevels()
     {

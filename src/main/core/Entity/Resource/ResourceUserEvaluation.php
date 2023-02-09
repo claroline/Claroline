@@ -60,7 +60,7 @@ class ResourceUserEvaluation extends AbstractUserEvaluation
         return $this->resourceNode;
     }
 
-    public function setResourceNode(ResourceNode $resourceNode)
+    public function setResourceNode(ResourceNode $resourceNode): void
     {
         $this->resourceNode = $resourceNode;
     }
@@ -70,7 +70,7 @@ class ResourceUserEvaluation extends AbstractUserEvaluation
         return $this->nbAttempts ?? 0;
     }
 
-    public function setNbAttempts(int $nbAttempts)
+    public function setNbAttempts(int $nbAttempts): void
     {
         $this->nbAttempts = $nbAttempts;
     }
@@ -80,8 +80,26 @@ class ResourceUserEvaluation extends AbstractUserEvaluation
         return $this->nbOpenings ?? 0;
     }
 
-    public function setNbOpenings(int $nbOpenings)
+    public function setNbOpenings(int $nbOpenings): void
     {
         $this->nbOpenings = $nbOpenings;
+    }
+
+    public function isRequired(): bool
+    {
+        if ($this->resourceNode) {
+            return $this->resourceNode->isRequired();
+        }
+
+        return false;
+    }
+
+    public function isEvaluated(): bool
+    {
+        if ($this->resourceNode) {
+            return $this->resourceNode->isEvaluated();
+        }
+
+        return false;
     }
 }

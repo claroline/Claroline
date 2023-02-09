@@ -59,15 +59,14 @@ class EvaluationManager
         $evaluationData = [
             'status' => $statusData['status'],
             'progression' => $statusData['progression'],
-            'progressionMax' => $statusData['progressionMax'],
             'data' => $data,
         ];
 
         if ($evaluation) {
-            return $this->resourceEvalManager->updateResourceEvaluation($evaluation, $evaluationData);
+            return $this->resourceEvalManager->updateAttempt($evaluation, $evaluationData);
         }
 
-        return $this->resourceEvalManager->createResourceEvaluation(
+        return $this->resourceEvalManager->createAttempt(
             $node,
             $user,
             $evaluationData
@@ -76,12 +75,8 @@ class EvaluationManager
 
     /**
      * Compute current resource evaluation status.
-     *
-     * @param int $total
-     *
-     * @return array
      */
-    private function computeResourceUserEvaluation($total, array $data = [])
+    private function computeResourceUserEvaluation(int $total, array $data = []): array
     {
         $progression = 0;
         $progressionMax = $total;
@@ -102,7 +97,6 @@ class EvaluationManager
 
         return [
             'progression' => $progressionMax ? ($progression / $progressionMax) * 100 : $progression,
-            'progressionMax' => 100, // TODO : for retro compatibility
             'status' => $status,
         ];
     }

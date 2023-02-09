@@ -69,10 +69,8 @@ class PaperManager
 
     /**
      * Serializes a user paper.
-     *
-     * @return array
      */
-    public function serialize(Paper $paper, array $options = [])
+    public function serialize(Paper $paper, array $options = []): array
     {
         $isAdmin = $this->authorization->isGranted('ADMINISTRATE', $paper->getExercise()->getResourceNode())
             || $this->authorization->isGranted('MANAGE_PAPERS', $paper->getExercise()->getResourceNode());
@@ -88,10 +86,8 @@ class PaperManager
 
     /**
      * Check if a Paper is full evaluated and dispatch a Log event if yes.
-     *
-     * @return bool
      */
-    public function checkPaperEvaluated(Paper $paper)
+    public function checkPaperEvaluated(Paper $paper): bool
     {
         $fullyEvaluated = $this->repository->isFullyEvaluated($paper);
         if ($fullyEvaluated) {
@@ -108,10 +104,8 @@ class PaperManager
 
     /**
      * Calculates the score of a Paper.
-     *
-     * @return float|null
      */
-    public function calculateScore(Paper $paper)
+    public function calculateScore(Paper $paper): ?float
     {
         $structure = $paper->getStructure(true);
 
@@ -179,10 +173,8 @@ class PaperManager
 
     /**
      * Calculates the total score of a Paper.
-     *
-     * @return float|null
      */
-    public function calculateTotal(Paper $paper)
+    public function calculateTotal(Paper $paper): ?float
     {
         $structure = $paper->getStructure(true);
 
@@ -208,12 +200,8 @@ class PaperManager
 
     /**
      * Returns the papers for a given exercise, in a JSON format.
-     *
-     * @param User $user
-     *
-     * @return array
      */
-    public function serializeExercisePapers(Exercise $exercise, User $user = null)
+    public function serializeExercisePapers(Exercise $exercise, ?User $user = null): array
     {
         if (!empty($user)) {
             // Load papers for of a single user
@@ -238,7 +226,7 @@ class PaperManager
      *
      * @param Paper[] $papers
      */
-    public function delete(array $papers)
+    public function delete(array $papers): void
     {
         foreach ($papers as $paper) {
             $this->om->remove($paper);
@@ -265,40 +253,32 @@ class PaperManager
 
     /**
      * Returns the number of papers already done for a given exercise.
-     *
-     * @return int
      */
-    public function countExercisePapers(Exercise $exercise)
+    public function countExercisePapers(Exercise $exercise): int
     {
         return $this->repository->countExercisePapers($exercise);
     }
 
     /**
      * Returns the number of different registered users that have passed a given exercise.
-     *
-     * @return int
      */
-    public function countUsersPapers(Exercise $exercise)
+    public function countUsersPapers(Exercise $exercise): int
     {
         return $this->repository->countUsersPapers($exercise);
     }
 
     /**
      * Returns the number of different anonymous users that have passed a given exercise.
-     *
-     * @return int
      */
-    public function countAnonymousPapers(Exercise $exercise)
+    public function countAnonymousPapers(Exercise $exercise): int
     {
         return $this->repository->countAnonymousPapers($exercise);
     }
 
     /**
      * Check if the solution of the Paper is available to User.
-     *
-     * @return bool
      */
-    public function isSolutionAvailable(Exercise $exercise, Paper $paper)
+    public function isSolutionAvailable(Exercise $exercise, Paper $paper): bool
     {
         $correctionMode = $exercise->getCorrectionMode();
         switch ($correctionMode) {
@@ -326,10 +306,8 @@ class PaperManager
 
     /**
      * Check if the score of the Paper is available to User.
-     *
-     * @return bool
      */
-    public function isScoreAvailable(Exercise $exercise, Paper $paper)
+    public function isScoreAvailable(Exercise $exercise, Paper $paper): bool
     {
         $markMode = $exercise->getMarkMode();
         switch ($markMode) {
@@ -385,11 +363,13 @@ class PaperManager
                 }));
             }
         }
-        $nbAnswers = 0;
 
-        foreach ($paper->getAnswers() as $answer) {
-            if (!is_null($answer->getData())) {
-                ++$nbAnswers;
+        $nbAnswers = 0;
+        if ($nbQuestions) {
+            foreach ($paper->getAnswers() as $answer) {
+                if (!is_null($answer->getData())) {
+                    ++$nbAnswers;
+                }
             }
         }
 
@@ -400,8 +380,7 @@ class PaperManager
                 'status' => $status,
                 'score' => $score,
                 'scoreMax' => $paper->getTotal(),
-                'progression' => $nbAnswers,
-                'progressionMax' => $nbQuestions,
+                'progression' => $nbQuestions ? ($nbAnswers / $nbQuestions) * 100 : $nbAnswers,
                 'data' => $data,
             ]
         );

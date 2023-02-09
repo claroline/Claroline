@@ -155,7 +155,6 @@ abstract class RepositoryTestCase extends TransactionalTestCase
         $eval = $previous ? $previous->getResourceUserEvaluation() : new ResourceUserEvaluation();
         $eval->setResourceNode($resource);
         $eval->setUser($user);
-        $eval->setUserName($user->getUsername());
         $eval->setStatus($status);
         $eval->setDate(new \DateTime());
         $this->om->persist($eval);

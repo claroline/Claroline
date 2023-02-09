@@ -59,10 +59,6 @@ abstract class AbstractEvaluationListExporter extends AbstractListExporter
                     'name' => 'progression',
                     'type' => 'number',
                     'description' => $this->translator->trans('The evaluation progression', [], 'schema'),
-                ], [
-                    'name' => 'progressionMax',
-                    'type' => 'number',
-                    'description' => $this->translator->trans('The evaluation progression max', [], 'schema'),
                 ],
 
                 // recipient
