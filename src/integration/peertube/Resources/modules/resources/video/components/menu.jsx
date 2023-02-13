@@ -9,7 +9,7 @@ import {MenuSection} from '#/main/app/layout/menu/components/section'
 const VideoMenu = props =>
   <MenuSection
     {...omit(props, 'path')}
-    title={trans('ujm_exercise', {}, 'resource')}
+    title={trans('peertube_video', {}, 'resource')}
   />
 
 VideoMenu.propTypes = {

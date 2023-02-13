@@ -20,7 +20,8 @@ const PlayerMain = withRouter(connect(
     steps: flattenSteps(selectors.steps(state)),
     workspace: resourceSelectors.workspace(state),
     attempt: selectors.attempt(state),
-    stepsProgression: selectors.stepsProgression(state)
+    stepsProgression: selectors.stepsProgression(state),
+    resourceEvaluations: selectors.resourceEvaluations(state)
   }),
   dispatch => ({
     updateProgression(stepId, status = constants.STATUS_SEEN, silent) {

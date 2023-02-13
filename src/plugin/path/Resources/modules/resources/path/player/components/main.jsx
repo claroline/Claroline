@@ -5,6 +5,7 @@ import get from 'lodash/get'
 import {trans} from '#/main/app/intl/translation'
 import {Routes} from '#/main/app/router'
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
+import {ResourceAttempt as ResourceAttemptTypes, ResourceEvaluation as ResourceEvaluationTypes} from '#/main/evaluation/resource/prop-types'
 
 import {Path as PathTypes, Step as StepTypes} from '#/plugin/path/resources/path/prop-types'
 import {PathCurrent} from '#/plugin/path/resources/path/components/current'
@@ -42,6 +43,8 @@ const PlayerMain = props => {
                 currentUser={props.currentUser}
                 workspace={props.workspace}
                 attempt={props.attempt}
+                resourceEvaluations={props.resourceEvaluations}
+                stepsProgression={props.stepsProgression}
                 getAttempt={props.getAttempt}
               />
             )
@@ -107,7 +110,12 @@ PlayerMain.propTypes = {
     StepTypes.propTypes
   )),
   stepsProgression: T.object,
-  attempt: T.object,
+  attempt: T.shape(
+    ResourceAttemptTypes.propTypes
+  ),
+  resourceEvaluations: T.arrayOf(T.shape(
+    ResourceEvaluationTypes.propTypes
+  )),
   workspace: T.object,
   updateProgression: T.func.isRequired,
   enableNavigation: T.func.isRequired,

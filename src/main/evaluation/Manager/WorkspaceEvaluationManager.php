@@ -255,7 +255,7 @@ class WorkspaceEvaluationManager extends AbstractEvaluationManager
         }
 
         $evaluationData['status'] = $status;
-        $evaluationData['progression'] = $progression;
+        $evaluationData['progression'] = $progressionMax ? ($progression / $progressionMax) * 100 : 0;
 
         $hasChanged = $this->updateEvaluation($evaluation, $evaluationData, $currentRue ? $currentRue->getDate() : null);
 
