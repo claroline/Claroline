@@ -56,7 +56,7 @@ class EvaluationManager
                 $progression = 100;
             }
 
-            if ($progression >= $progressionMax) {
+            if ($progression >= 100) {
                 $status = AbstractEvaluation::STATUS_COMPLETED;
             } else {
                 $status = AbstractEvaluation::STATUS_INCOMPLETE;

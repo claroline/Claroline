@@ -16,7 +16,7 @@ import {number} from '#/main/app/intl'
 const PathSummary = (props) => {
   function getStepSummary(step) {
     let resourceEvaluation
-    if (!isEmpty(step.primaryResource)) {
+    if (!isEmpty(step.primaryResource) && !isEmpty(props.resourceEvaluations)) {
       resourceEvaluation = props.resourceEvaluations.find(evaluation => get(evaluation, 'resourceNode.id') === get(step, 'primaryResource.id'))
     }
 

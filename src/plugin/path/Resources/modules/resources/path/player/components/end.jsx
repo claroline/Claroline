@@ -2,19 +2,18 @@ import React, {Component, Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import get from 'lodash/get'
-import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl'
-import {ContentSummary} from '#/main/app/content/components/summary'
 import {scrollTo} from '#/main/app/dom/scroll'
 import {LINK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
-import {ScoreBox} from '#/main/core/layout/evaluation/components/score-box'
 import {route as desktopRoute} from '#/main/core/tool/routing'
 import {route as workspaceRoute} from '#/main/core/workspace/routing'
 import {route as resourceRoute} from '#/main/core/resource/routing'
+import {ResourceAttempt as ResourceAttemptTypes, ResourceEvaluation as ResourceEvaluationTypes} from '#/main/evaluation/resource/prop-types'
 
 import {ResourceEnd} from '#/main/core/resource/components/end'
 import {Path as PathTypes} from '#/plugin/path/resources/path/prop-types'
+import {PathSummary} from '#/plugin/path/resources/path/components/summary'
 
 class PlayerEnd extends Component {
   constructor(props) {
@@ -23,37 +22,11 @@ class PlayerEnd extends Component {
     this.state = {
       loaded: !this.props.currentUser
     }
-
-    this.getStepSummary = this.getStepSummary.bind(this)
   }
 
   componentDidMount() {
     if (!this.state.loaded) {
       this.props.getAttempt(this.props.path.id).then(() => this.setState({loaded: true}))
-    }
-  }
-
-  getStepSummary(step) {
-    return {
-      id: step.id,
-      type: LINK_BUTTON,
-      icon: classes('step-progression fa fa-fw fa-circle', get(step, 'userProgression.status')),
-      label: (
-        <Fragment>
-          {step.title}
-          {!isEmpty(step.primaryResource) && get(this.props.path, 'display.showScore') && get(this.props.attempt, `data.resources[${step.id}].max`, null) &&
-            <ScoreBox
-              score={get(this.props.attempt, `data.resources[${step.id}].score`, null)}
-              scoreMax={get(this.props.attempt, `data.resources[${step.id}].max`)}
-              size="sm"
-              style={{marginLeft: 'auto'}}
-            />
-          }
-        </Fragment>
-      ),
-      target: `${this.props.path}/play/${step.slug}`,
-      children: step.children ? step.children.map(this.getStepSummary) : [],
-      onClick: () => scrollTo(`#resource-${this.props.resourceId} > .page-content`)
     }
   }
 
@@ -105,10 +78,15 @@ class PlayerEnd extends Component {
       >
         <section className="resource-parameters">
           <h3 className="h2">{trans('summary')}</h3>
-          <ContentSummary
+          <PathSummary
             className="component-container"
-            links={this.props.path.steps.map(this.getStepSummary)}
-            noCollapse={true}
+            basePath={this.props.basePath}
+            path={this.props.path}
+            stepsProgression={this.props.stepsProgression}
+            resourceEvaluations={this.props.resourceEvaluations}
+            onNavigate={() => {
+              scrollTo(`#resource-${this.props.resourceId} > .page-content`)
+            }}
           />
         </section>
       </ResourceEnd>
@@ -124,7 +102,13 @@ PlayerEnd.propTypes = {
   ).isRequired,
   workspace: T.object,
   currentUser: T.object,
-  attempt: T.object,
+  attempt: T.shape(
+    ResourceAttemptTypes.propTypes
+  ),
+  resourceEvaluations: T.arrayOf(T.shape(
+    ResourceEvaluationTypes.propTypes
+  )),
+  stepsProgression: T.object,
   getAttempt: T.func.isRequired
 }
 
