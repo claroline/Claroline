@@ -102,6 +102,7 @@ const RoleShow = (props) =>
           ]}
         >
           <UserList
+            path={props.path}
             name={`${selectors.FORM_NAME}.users`}
             url={['apiv2_role_list_users', {id: props.role.id}]}
             autoload={!!props.role.id}
@@ -139,6 +140,7 @@ const RoleShow = (props) =>
           ]}
         >
           <GroupList
+            path={props.path}
             name={`${selectors.FORM_NAME}.groups`}
             url={['apiv2_role_list_groups', {id: props.role.id}]}
             autoload={!!props.role.id}
