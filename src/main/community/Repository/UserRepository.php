@@ -180,8 +180,9 @@ class UserRepository extends ServiceEntityRepository implements UserProviderInte
             LEFT JOIN gr.workspace grws
             LEFT JOIN ur.workspace uws
             WHERE (uws.id IN (:workspaces) OR grws.id IN (:workspaces))
-            AND u.isRemoved = false
-            AND u.technical = false
+              AND u.isRemoved = false
+              AND u.isEnabled = true
+              AND u.technical = false
         ';
         $query = $this->_em->createQuery($dql);
         $query->setParameter('workspaces', $workspaces);
@@ -227,11 +228,10 @@ class UserRepository extends ServiceEntityRepository implements UserProviderInte
             ->select('COUNT(DISTINCT user.id)')
             ->leftJoin('user.roles', 'roles')
             ->andWhere('roles.id = :roleId')
-            ->andWhere('user.isEnabled = :enabled')
+            ->andWhere('user.isEnabled = true')
             ->andWhere('user.isRemoved = false')
             ->andWhere('user.technical = false')
-            ->setParameter('roleId', $role->getId())
-            ->setParameter('enabled', true);
+            ->setParameter('roleId', $role->getId());
         if (!empty($restrictionRoleNames)) {
             $qb->andWhere('user.id NOT IN (:userIds)')
                 ->setParameter('userIds', $this->findUserIdsInRoles($restrictionRoleNames));
