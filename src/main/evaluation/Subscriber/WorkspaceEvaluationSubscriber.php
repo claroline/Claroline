@@ -32,6 +32,9 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
+/**
+ * Updates the WorkspaceEvaluation in response to application events.
+ */
 class WorkspaceEvaluationSubscriber implements EventSubscriberInterface
 {
     /** @var TokenStorageInterface */
