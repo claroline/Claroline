@@ -4,7 +4,6 @@ services:
         autoconfigure: false
 
     # Dev
-
     Claroline\CoreBundle\Command\Maintenance\DisableMaintenanceCommand:
         tags:
             - { name: 'console.command', command: 'claroline:maintenance:disable' }
@@ -14,7 +13,6 @@ services:
             - { name: 'console.command', command: 'claroline:maintenance:enable' }
 
     # GeoIp
-
     Claroline\CoreBundle\Command\GeoIp\DownloadGeoIpDatabaseCommand:
         arguments:
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
@@ -24,15 +22,22 @@ services:
             - { name: 'console.command', command: 'claroline:geoip:download' }
 
     # Logs
-
     Claroline\CoreBundle\Command\Logs\LogConnectionComputeCommand:
         arguments:
             - '@Claroline\CoreBundle\Manager\LogConnectManager'
         tags:
             - { name: 'console.command', command: 'claroline:connection:duration' }
 
-    # Workspace
+    # Resources
+    Claroline\CoreBundle\Command\Resource\DeleteInactiveCommand:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@Claroline\AppBundle\API\Crud'
+        tags:
+            - { name: 'console.command', command: 'claroline:resource:delete-inactive' }
 
+    # Workspace
     Claroline\CoreBundle\Command\Workspace\ArchiveCommand:
         arguments:
             - '@doctrine.orm.entity_manager'
@@ -69,7 +74,6 @@ services:
             - { name: 'console.command', command: 'claroline:workspace:delete-archived' }
 
     # Common
-
     Claroline\CoreBundle\Command\ComputeStorageCommand:
         arguments:
             - '@Claroline\CoreBundle\Manager\FileManager'
