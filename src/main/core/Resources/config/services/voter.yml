@@ -22,6 +22,9 @@ services:
 
     Claroline\CoreBundle\Security\Voter\AdministratorVoter: ~
 
+    Claroline\CoreBundle\Security\Voter\PublicFileVoter:
+        parent: Claroline\AppBundle\Security\Voter\AbstractVoter
+
     Claroline\CoreBundle\Security\Voter\Location\LocationVoter:
         parent: Claroline\AppBundle\Security\Voter\AbstractVoter
 
