@@ -69,16 +69,7 @@ class CourseManager
             'course_max_users' => $course->getMaxUsers(),
         ];
 
-        $content = $this->templateManager->getTemplate('training_course', $placeholders, $locale);
-
-        // append all available sessions to the export
-        foreach ($course->getSessions() as $session) {
-            if (!$session->isTerminated()) {
-                $content .= "<div style='page-break-before: always'>{$this->sessionManager->generateFromTemplate($session, $locale)}</div>";
-            }
-        }
-
-        return $content;
+        return $this->templateManager->getTemplate('training_course', $placeholders, $locale);
     }
 
     public function addUsers(Course $course, array $users): array
