@@ -166,9 +166,10 @@ class DirectoryListener
 
     private function createResource(ResourceNode $parent, array $nodeData, ?array $resourceData = [], ?array $options = [])
     {
+        // initialize resource node Entity
         try {
             /** @var ResourceNode $resourceNode */
-            $resourceNode = $this->crud->create(ResourceNode::class, $nodeData, $options);
+            $resourceNode = $this->crud->create(ResourceNode::class, $nodeData, array_merge([Options::NO_RIGHTS], $options));
             $resourceNode->setParent($parent);
             $resourceNode->setWorkspace($parent->getWorkspace());
         } catch (InvalidDataException $e) {
@@ -204,6 +205,7 @@ class DirectoryListener
             throw new InvalidDataException(sprintf('%s is not valid', $resourceClass), $errors);
         }
 
+        // initialize resource rights
         if (!empty($nodeData['rights'])) {
             foreach ($nodeData['rights'] as $rights) {
                 /** @var Role $role */

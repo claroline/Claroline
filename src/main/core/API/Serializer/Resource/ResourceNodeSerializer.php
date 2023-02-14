@@ -269,7 +269,7 @@ class ResourceNodeSerializer
         }
 
         if (!in_array(Options::NO_RIGHTS, $options) && isset($data['rights'])) {
-            // only used to be able to directly create a node with rights. Used in transfer feature and ui creation. To move later
+            // only used to be able to directly create a node with rights. Used in transfer feature. To move later
             $this->deserializeRights($data['rights'], $resourceNode, $options);
         }
 

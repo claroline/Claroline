@@ -77,9 +77,8 @@ class ResourceNodeSubscriber implements EventSubscriberInterface
         $resourceNode = $event->getObject();
 
         // make sure the resource code is unique
-        if (!empty($resourceNode->getCode())) {
-            $resourceNode->setCode($this->resourceManager->getUniqueCode($resourceNode->getCode()));
-        }
+        // use name as code if not defined
+        $resourceNode->setCode($this->resourceManager->getUniqueCode(!empty($resourceNode->getCode()) ? $resourceNode->getCode() : $resourceNode->getName()));
 
         // set the creator of the resource
         $user = $this->tokenStorage->getToken()->getUser();
@@ -177,9 +176,7 @@ class ResourceNodeSubscriber implements EventSubscriberInterface
             return;
         }
 
-        if (!empty($newNode->getCode())) {
-            $newNode->setCode($this->resourceManager->getUniqueCode($newNode->getCode()));
-        }
+        $newNode->setCode($this->resourceManager->getUniqueCode($newNode->getCode() ?? $newNode->getName()));
 
         // set the creator of the copy
         $user = $this->tokenStorage->getToken()->getUser();

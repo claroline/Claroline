@@ -32,8 +32,6 @@ use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Manager\Resource\RightsManager;
 use Claroline\CoreBundle\Repository\Resource\ResourceNodeRepository;
 use Claroline\CoreBundle\Repository\Resource\ResourceTypeRepository;
-use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\NoResultException;
 use Psr\Log\LoggerAwareInterface;
 use Symfony\Component\Mime\MimeTypes;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -122,6 +120,7 @@ class ResourceManager implements LoggerAwareInterface
             $resource->getMimeType();
         $node->setMimeType($mimeType);
         $node->setName($resource->getName());
+        $node->setCode($this->getUniqueCode($resource->getName()));
 
         if (!empty($creator)) {
             $node->setCreator($creator);
@@ -299,12 +298,12 @@ class ResourceManager implements LoggerAwareInterface
                         $obj = $event->getItem();
 
                         if (null !== $obj) {
-                            $archive->addFile($obj, iconv($this->ut->detectEncoding($filename), $this->getEncoding(), $filename));
+                            $archive->addFile($obj, iconv($this->ut->detectEncoding($filename), 'UTF-8//TRANSLIT', $filename));
                         } else {
-                            $archive->addFromString(iconv($this->ut->detectEncoding($filename), $this->getEncoding(), $filename), '');
+                            $archive->addFromString(iconv($this->ut->detectEncoding($filename), 'UTF-8//TRANSLIT', $filename), '');
                         }
                     } else {
-                        $archive->addEmptyDir(iconv($this->ut->detectEncoding($filename), $this->getEncoding(), $filename));
+                        $archive->addEmptyDir(iconv($this->ut->detectEncoding($filename), 'UTF-8//TRANSLIT', $filename));
                     }
 
                     $this->dispatcher->dispatch('log', 'Log\LogResourceExport', [$node]);
@@ -321,25 +320,14 @@ class ResourceManager implements LoggerAwareInterface
         return $data;
     }
 
-    /**
-     * @return ResourceNode
-     */
-    public function getWorkspaceRoot(Workspace $workspace)
+    public function getWorkspaceRoot(Workspace $workspace): ?ResourceNode
     {
         return $this->resourceNodeRepo->findWorkspaceRoot($workspace);
     }
 
-    /**
-     * @param string $name
-     *
-     * @return ResourceType
-     */
-    public function getResourceTypeByName($name)
+    public function getResourceTypeByName(string $name): ?ResourceType
     {
-        /** @var ResourceType $type */
-        $type = $this->resourceTypeRepo->findOneBy(['name' => $name]);
-
-        return $type;
+        return $this->resourceTypeRepo->findOneBy(['name' => $name]);
     }
 
     /**
@@ -378,19 +366,6 @@ class ResourceManager implements LoggerAwareInterface
         }
 
         return null;
-    }
-
-    public function getLastIndex(ResourceNode $parent)
-    {
-        try {
-            $lastIndex = $this->resourceNodeRepo->findLastIndex($parent);
-        } catch (NonUniqueResultException $e) {
-            $lastIndex = 0;
-        } catch (NoResultException $e) {
-            $lastIndex = 0;
-        }
-
-        return $lastIndex;
     }
 
     public function getNotDeletableResourcesByWorkspace(Workspace $workspace)
@@ -484,11 +459,6 @@ class ResourceManager implements LoggerAwareInterface
         } while (in_array($upperCurrentCode, $existingCodes));
 
         return $currentCode;
-    }
-
-    private function getEncoding()
-    {
-        return 'UTF-8//TRANSLIT';
     }
 
     /**
