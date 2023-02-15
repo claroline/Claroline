@@ -2,10 +2,8 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 
-import {url} from '#/main/app/api'
 import {trans} from '#/main/app/intl/translation'
-import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON, URL_BUTTON} from '#/main/app/buttons'
-import {DOWNLOAD_BUTTON} from '#/main/app/buttons'
+import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {ToolPage} from '#/main/core/tool/containers/page'
 import {ListData} from '#/main/app/content/list/containers/data'
 
@@ -17,18 +15,6 @@ import {selectors} from '#/main/evaluation/tools/evaluation/store'
 const EvaluationUsers = (props) =>
   <ToolPage
     subtitle={trans('users_progression', {}, 'evaluation')}
-    actions={[
-      {
-        name: 'download',
-        type: DOWNLOAD_BUTTON,
-        icon: 'fa fa-fw fa-download',
-        label: trans('export', {}, 'actions'),
-        file: {
-          url: url(['apiv2_workspace_evaluation_csv', {workspaceId: props.contextId}])+props.searchQueryString
-        },
-        group: trans('transfer')
-      }
-    ]}
   >
     <ListData
       name={selectors.STORE_NAME + '.workspaceEvaluations'}
@@ -130,14 +116,6 @@ const EvaluationUsers = (props) =>
           displayed: !!get(rows[0], 'user.id'),
           scope: ['object']
         }, {
-          name: 'export',
-          type: URL_BUTTON,
-          icon: 'fa fa-fw fa-download',
-          label: trans('export-csv', {}, 'actions'),
-          target: ['apiv2_workspace_export_user_progression', {workspace: get(rows[0], 'workspace.id'), user: get(rows[0], 'user.id')}],
-          group: trans('transfer'),
-          scope: ['object']
-        }, {
           type: MODAL_BUTTON,
           icon: 'fa fa-fw fa-envelope',
           label: trans('send-message', {}, 'actions'),
@@ -196,7 +174,6 @@ const EvaluationUsers = (props) =>
 EvaluationUsers.propTypes = {
   path: T.string.isRequired,
   contextId: T.string.isRequired,
-  searchQueryString: T.string,
   downloadParticipationCertificate: T.func.isRequired,
   downloadSuccessCertificate: T.func.isRequired
 }
