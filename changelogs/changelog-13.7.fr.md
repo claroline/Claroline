@@ -1,4 +1,4 @@
-Interface graphique
+Interface graphique :
 - Nouveau jeu d'icones pour la plateforme
 - Nouvelle liste de ressources lors de la création d'une ressource
 - Nouvelle liste de widget lors de l'ajout d'un widget sur l'accueil
