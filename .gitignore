@@ -5,6 +5,7 @@ config/parameters.yml
 coverage
 files/*
 node_modules
+jsconfig.json
 npm-debug.log
 theme-assets.json
 webpack-*.json
