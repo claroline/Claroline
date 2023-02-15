@@ -37,7 +37,6 @@ class AllSource
     public function getData(GetDataEvent $event)
     {
         $options = $event->getOptions();
-        $options['hiddenFilters']['hidden'] = false;
 
         if (!$this->authorization->isGranted('ROLE_ADMIN')) {
             $options['hiddenFilters']['organizations'] = $this->getOrganizations();
