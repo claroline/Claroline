@@ -52,7 +52,7 @@
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
     "reselect": "^4.0.0",
-    "shelljs": "^0.5.3",
+    "shelljs": "^0.8.5",
     "svg4everybody": "^2.1.2",
     "swagger-ui-react": "3.51.2",
     "tinycolor2": "^1.4.1",
