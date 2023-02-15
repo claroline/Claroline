@@ -158,7 +158,7 @@ const EvaluationUsers = (props) =>
               if ([
                 constants.EVALUATION_STATUS_PASSED,
                 constants.EVALUATION_STATUS_FAILED
-              ].includes(get(rows, 'status', constants.EVALUATION_STATUS_UNKNOWN))) {
+              ].includes(get(row, 'status', constants.EVALUATION_STATUS_UNKNOWN))) {
                 props.downloadSuccessCertificate(row)
               }
             })
