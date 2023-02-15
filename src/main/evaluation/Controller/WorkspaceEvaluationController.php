@@ -18,19 +18,16 @@ use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\AbstractSecurityController;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Evaluation;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\EvaluationBundle\Manager\PdfManager;
 use Claroline\EvaluationBundle\Manager\WorkspaceEvaluationManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -156,63 +153,6 @@ class WorkspaceEvaluationController extends AbstractSecurityController
     }
 
     /**
-     * @Route("/csv/{workspaceId}", name="apiv2_workspace_evaluation_csv", methods={"GET"})
-     * @EXT\ParamConverter("workspace", options={"mapping": {"workspace": "uuid"}})
-     *
-     * @deprecated to move inside the Transfer system
-     */
-    public function exportAction(Request $request, ?string $workspaceId = null): BinaryFileResponse
-    {
-        $workspace = null;
-        if (!empty($workspaceId)) {
-            $workspace = $this->om->getRepository(Workspace::class)->findOneBy(['uuid' => $workspaceId]);
-            if (empty($workspace)) {
-                throw new NotFoundHttpException('Workspace not found.');
-            }
-        }
-
-        $this->checkToolAccess('EDIT', $workspace);
-
-        $query = $request->query->all();
-        // remove pagination if any
-        $query['page'] = 0;
-        $query['limit'] = -1;
-        $query['columns'] = [
-            'user.lastName',
-            'user.firstName',
-            'user.username',
-            'user.email',
-            'date',
-            'status',
-            'progression',
-            'score',
-            'scoreMax',
-            'duration',
-        ];
-
-        if (!isset($query['filters'])) {
-            $query['filters'] = [];
-        }
-
-        if (!empty($workspace)) {
-            $query['filters']['workspace'] = $workspace->getUuid();
-        } else {
-            // adds the workspace names in the export
-            array_unshift($query['columns'], 'workspace.name');
-        }
-
-        $csvFilename = $this->crud->csv(Evaluation::class, $query);
-
-        $now = new \DateTime();
-        $fileName = "workspace-evaluations{$now->format('Y-m-d-His')}.csv";
-
-        return new BinaryFileResponse($csvFilename, 200, [
-            'Content-Type' => 'text/csv',
-            'Content-Disposition' => "attachment; filename={$fileName}",
-        ]);
-    }
-
-    /**
      * @Route("/{workspace}/init", name="apiv2_workspace_evaluations_init", methods={"PUT"})
      * @EXT\ParamConverter("workspace", options={"mapping": {"workspace": "uuid"}})
      */
@@ -261,104 +201,6 @@ class WorkspaceEvaluationController extends AbstractSecurityController
             'resourceEvaluations' => $this->finder->search(ResourceUserEvaluation::class, [
                 'filters' => ['workspace' => $workspace->getUuid(), 'user' => $user->getUuid()],
             ])['data'],
-        ]);
-    }
-
-    /**
-     * @Route("/{workspace}/progression/{user}/export", name="apiv2_workspace_export_user_progression", methods={"GET"})
-     * @EXT\ParamConverter("user", class="Claroline\CoreBundle\Entity\User", options={"mapping": {"user": "uuid"}})
-     * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
-     *
-     * @deprecated to move inside the Transfer system
-     */
-    public function exportUserProgressionAction(Workspace $workspace, User $user): StreamedResponse
-    {
-        /** @var Evaluation $workspaceEvaluation */
-        $workspaceEvaluation = $this->om->getRepository(Evaluation::class)->findOneBy([
-            'workspace' => $workspace,
-            'user' => $user,
-        ]);
-
-        if (empty($workspaceEvaluation)) {
-            throw new NotFoundHttpException();
-        }
-
-        $this->checkPermission('OPEN', $workspaceEvaluation, [], true);
-
-        /** @var ResourceUserEvaluation[] $resourceUserEvaluations */
-        $resourceUserEvaluations = $this->finder->searchEntities(ResourceUserEvaluation::class, [
-            'filters' => ['workspace' => $workspace->getUuid(), 'user' => $user->getUuid()],
-            'sortBy' => '-date',
-        ])['data'];
-
-        return new StreamedResponse(function () use ($workspace, $workspaceEvaluation, $resourceUserEvaluations) {
-            // Prepare CSV file
-            $handle = fopen('php://output', 'w+');
-
-            // Create header
-            fputcsv($handle, [
-                $this->translator->trans('name', [], 'platform'),
-                $this->translator->trans('type', [], 'platform'),
-                $this->translator->trans('date', [], 'platform'),
-                $this->translator->trans('status', [], 'platform'),
-                $this->translator->trans('progression', [], 'platform'),
-                $this->translator->trans('score', [], 'platform'),
-                $this->translator->trans('score_total', [], 'platform'),
-                $this->translator->trans('duration', [], 'platform'),
-            ], ';', '"');
-
-            // put Workspace evaluation
-            fputcsv($handle, [
-                $workspace->getName(),
-                $this->translator->trans('workspace', [], 'platform'),
-                DateNormalizer::normalize($workspaceEvaluation->getDate()),
-                $workspaceEvaluation->getStatus(),
-                $workspaceEvaluation->getProgression(),
-                $workspaceEvaluation->getScore(),
-                $workspaceEvaluation->getScoreMax(),
-                $workspaceEvaluation->getDuration(),
-            ], ';', '"');
-
-            // Get evaluations
-            foreach ($resourceUserEvaluations as $resourceUserEvaluation) {
-                // put ResourceUserEvaluation
-                fputcsv($handle, [
-                    $resourceUserEvaluation->getResourceNode()->getName(),
-                    $this->translator->trans('resource', [], 'platform'),
-                    DateNormalizer::normalize($resourceUserEvaluation->getDate()),
-                    $resourceUserEvaluation->getStatus(),
-                    $resourceUserEvaluation->getProgression(),
-                    $resourceUserEvaluation->getScore(),
-                    $resourceUserEvaluation->getScoreMax(),
-                    $resourceUserEvaluation->getDuration(),
-                ], ';', '"');
-
-                /** @var ResourceEvaluation[] $resourceEvaluations */
-                $resourceEvaluations = $this->finder->searchEntities(ResourceEvaluation::class, [
-                    'filters' => ['resourceUserEvaluation' => $resourceUserEvaluation],
-                    'sortBy' => '-date',
-                ])['data'];
-
-                foreach ($resourceEvaluations as $resourceEvaluation) {
-                    fputcsv($handle, [
-                        $resourceUserEvaluation->getResourceNode()->getName(),
-                        $this->translator->trans('attempt', [], 'platform'),
-                        DateNormalizer::normalize($resourceEvaluation->getDate()),
-                        $resourceEvaluation->getStatus(),
-                        $resourceEvaluation->getProgression(),
-                        $resourceEvaluation->getScore(),
-                        $resourceEvaluation->getScoreMax(),
-                        $resourceEvaluation->getDuration(),
-                    ], ';', '"');
-                }
-            }
-
-            fclose($handle);
-
-            return $handle;
-        }, 200, [
-            'Content-Type' => 'application/force-download',
-            'Content-Disposition' => 'attachment; filename="'.TextNormalizer::toKey("progression-{$user->getFullName()}").'.csv"',
         ]);
     }
 
