@@ -75,6 +75,13 @@ export default {
         filterable: true,
         displayable: false
       }, {
+        name: 'restrictions.hidden',
+        label: trans('hidden'),
+        type: 'boolean',
+        alias: 'hidden',
+        filterable: true,
+        displayable: false
+      }, {
         name: 'tags',
         type: 'tag',
         label: trans('tags'),
