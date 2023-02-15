@@ -27,7 +27,7 @@
     "codemirror": "^5.34.0",
     "core-js": "^3.26.1",
     "cssnano": "^4.1",
-    "d3": "^4.4.0",
+    "d3": "^7.8.2",
     "html-react-parser": "^0.9.1",
     "html2pdf.js": "^0.9.1",
     "invariant": "^2.2.4",
