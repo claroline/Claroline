@@ -45,9 +45,7 @@ const WorkspaceCertificatesToolbar = (props) => {
           }],
           displayed: [
             evalConstants.EVALUATION_STATUS_COMPLETED,
-            evalConstants.EVALUATION_STATUS_PASSED,
-            evalConstants.EVALUATION_STATUS_PARTICIPATED,
-            evalConstants.EVALUATION_STATUS_FAILED
+            evalConstants.EVALUATION_STATUS_PARTICIPATED
           ].includes(get(wsEval, 'status', evalConstants.EVALUATION_STATUS_UNKNOWN))
         }, {
           name: 'download-success-certificate',
