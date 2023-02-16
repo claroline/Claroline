@@ -68,7 +68,7 @@ const ResourceOverview = props =>
       </div>
 
       <div className="col-md-8">
-        {((!isEmpty(props.evaluation) && get(props, 'display.feedback', false)) || !isEmpty(props.feedbacks.closed)) &&
+        {((!isEmpty(props.evaluation) && get(props, 'display.feedback', false)) || !isEmpty(get(props.feedbacks, 'closed'))) &&
           <section className="resource-feedbacks">
             {!isEmpty(props.evaluation) && get(props, 'display.feedback', false) &&
               <EvaluationFeedback
@@ -77,7 +77,7 @@ const ResourceOverview = props =>
               />
             }
 
-            {!isEmpty(props.feedbacks.closed) && props.feedbacks.closed.map(closedMessage =>
+            {!isEmpty(get(props.feedbacks, 'closed')) && props.feedbacks.closed.map(closedMessage =>
               <AlertBlock key={toKey(closedMessage[0])} type="warning" title={closedMessage[0]}>
                 <ContentHtml>{closedMessage[1]}</ContentHtml>
               </AlertBlock>
