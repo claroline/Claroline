@@ -132,6 +132,15 @@ function getFormDefaultSections(user, update, isNew = false) {
           name: 'thumbnail',
           label: trans('thumbnail'),
           type: 'image'
+        }, {
+          name: 'meta.locale',
+          type: 'locale',
+          label: trans('language'),
+          required: true,
+          displayed: hasPermission('administrate', user),
+          options: {
+            onlyEnabled: true
+          }
         }
       ]
     }, {
