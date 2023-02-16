@@ -135,7 +135,7 @@ class UserFinder extends AbstractFinder
                         $qb->leftJoin('obj.groups', 'g');
                         $groupJoin = true;
                     }
-                    $qb->join('g.organizations', 'go');
+                    $qb->leftJoin('g.organizations', 'go');
 
                     $qb->andWhere('(o.uuid IN (:organizations) OR go.uuid IN (:organizations))');
                     $qb->setParameter('organizations', is_array($filterValue) ? $filterValue : [$filterValue]);

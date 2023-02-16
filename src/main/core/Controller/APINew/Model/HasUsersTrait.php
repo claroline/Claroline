@@ -46,7 +46,7 @@ trait HasUsersTrait
 
         if (!$this->checkPermission('ROLE_ADMIN')) {
             // only list users for the current user organizations
-            $hiddenFilters['organization'] = array_map(function (Organization $organization) {
+            $hiddenFilters['organizations'] = array_map(function (Organization $organization) {
                 return $organization->getUuid();
             }, $user->getOrganizations());
         }
