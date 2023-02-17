@@ -60,22 +60,6 @@ class GroupRepository extends EntityRepository
         return $this->findAll();
     }
 
-    public function findByRoles(array $roles, $getQuery = false, $orderedBy = 'id', $order = null)
-    {
-        $dql = "
-            SELECT u, ws, r FROM Claroline\\CoreBundle\\Entity\\Group u
-            JOIN u.roles r
-            LEFT JOIN r.workspace ws
-            WHERE r IN (:roles)
-            ORDER BY u.{$orderedBy}
-            ".$order;
-
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('roles', $roles);
-
-        return ($getQuery) ? $query : $query->getResult();
-    }
-
     /**
      * Returns groups by their names.
      *
@@ -91,20 +75,6 @@ class GroupRepository extends EntityRepository
         $query = $this->_em->createQuery($dql);
         $query->setParameter('names', $names);
 
-        $result = $query->getResult();
-
-        return $result;
-    }
-
-    public function countGroupsByRole(Role $role)
-    {
-        $qb = $this->createQueryBuilder('grp')
-            ->select('COUNT(DISTINCT grp.id)')
-            ->leftJoin('grp.roles', 'roles')
-            ->andWhere('roles.id = :roleId')
-            ->setParameter('roleId', $role->getId());
-        $query = $qb->getQuery();
-
-        return $query->getSingleScalarResult();
+        return $query->getResult();
     }
 }

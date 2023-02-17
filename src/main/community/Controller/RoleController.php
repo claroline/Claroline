@@ -193,7 +193,7 @@ class RoleController extends AbstractCrudController
         $organizations = null;
         $defaultFilters = [];
         if (!$currentUser->hasRole('ROLE_ADMIN')) {
-            $organizations = $currentUser->getAdministratedOrganizations();
+            $organizations = $currentUser->getOrganizations();
             $defaultFilters = [
                 'organization' => $organizations,
             ];
@@ -226,7 +226,7 @@ class RoleController extends AbstractCrudController
         ]);
 
         return new JsonResponse([
-            'users' => $this->om->getRepository(User::class)->countUsersByRole($role, null, $organizations, $year.'-12-31'),
+            'users' => $this->om->getRepository(User::class)->countUsersByRole($role, $organizations, $year.'-12-31'),
             'connections' => array_reduce($connections, function (int $total, array $connection) {
                 return $total + ($connection['total'] ?? 0);
             }, 0),

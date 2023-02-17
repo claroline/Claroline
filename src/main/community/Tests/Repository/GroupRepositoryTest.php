@@ -37,17 +37,4 @@ class GroupRepositoryTest extends RepositoryTestCase
         $this->assertEquals('group_1', $groups[0]->getName());
         $this->assertEquals('group_2', $groups[1]->getName());
     }
-
-    public function testFindAll()
-    {
-        $groups = self::$repo->findAll();
-        $this->assertEquals(5, count($groups));
-    }
-
-    public function testFindByRoles()
-    {
-        $groups = self::$repo->findByRoles([self::get('ROLE_1')]);
-        $this->assertEquals('group_1', $groups[0]->getName());
-        $this->assertEquals('group_2', $groups[1]->getName());
-    }
 }
