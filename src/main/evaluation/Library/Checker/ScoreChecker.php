@@ -22,6 +22,11 @@ class ScoreChecker implements CheckerInterface
             return null;
         }
 
+        if (!$evaluation->isTerminated()) {
+            // score is only available when the evaluation is terminated
+            return null;
+        }
+
         if (empty($evaluation->getScoreMax())) {
             // can't vote if the evaluation as no score
             return null;
