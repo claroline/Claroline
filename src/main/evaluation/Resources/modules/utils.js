@@ -5,7 +5,7 @@ function displayScore(scoreMax, score, displayScore) {
     return number((score / scoreMax) * displayScore) + ''
   }
 
-  return '0';
+  return '0'
 }
 
 export {

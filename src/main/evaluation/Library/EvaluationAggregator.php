@@ -44,15 +44,25 @@ class EvaluationAggregator implements EvaluationInterface
         return $totalProgression / count($this->progressionEvaluations);
     }
 
-    public function getScore(): float
+    public function getScore(): ?float
     {
+        if (!$this->isTerminated()) {
+            // score is only available when the evaluation is terminated
+            return null;
+        }
+
         return array_reduce($this->scoreEvaluations, function (float $score, EvaluationInterface $evaluation) {
             return $evaluation->getScore() ? $score + $evaluation->getScore() : $score;
         }, 0);
     }
 
-    public function getScoreMax(): float
+    public function getScoreMax(): ?float
     {
+        if (!$this->isTerminated()) {
+            // score is only available when the evaluation is terminated
+            return null;
+        }
+
         return array_reduce($this->scoreEvaluations, function (float $scoreMax, EvaluationInterface $evaluation) {
             return $evaluation->getScoreMax() ? $scoreMax + $evaluation->getScoreMax() : $scoreMax;
         }, 0);
