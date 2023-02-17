@@ -10,6 +10,7 @@ import {DataCard} from '#/main/app/data/components/card'
 
 import {constants} from '#/main/evaluation/constants'
 import {WorkspaceEvaluation as WorkspaceEvaluationTypes} from '#/main/evaluation/workspace/prop-types'
+import {displayScore} from '#/main/evaluation/utils'
 
 const WorkspaceCard = (props) =>
   <DataCard
@@ -49,7 +50,7 @@ const WorkspaceCard = (props) =>
             icon: 'fa fa-fw fa-award',
             label: trans('score'),
             displayed: !!props.data.scoreMax,
-            value: (number(props.data.score) || 0) + ' / ' + number(props.data.scoreMax)
+            value: !!props.data.scoreMax && displayScore(props.data.scoreMax, props.data.score, 100) + ' / 100'
           }
         ]
           .filter(item => undefined === item.displayed || item.displayed)

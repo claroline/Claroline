@@ -123,6 +123,7 @@ class WorkspaceEvaluationController extends AbstractSecurityController
         // don't show all users evaluations if no right
         if (!$this->checkToolAccess('SHOW_EVALUATIONS', $workspace, false)) {
             /** @var User $user */
+            $user = $this->tokenStorage->getToken()->getUser();
             $hiddenFilters['user'] = $user->getUuid();
         }
 
