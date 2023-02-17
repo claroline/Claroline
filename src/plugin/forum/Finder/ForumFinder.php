@@ -28,10 +28,6 @@ class ForumFinder extends AbstractFinder
                 'type' => 'integer',
                 'description' => 'The forum validation mode',
             ],
-            'maxComment' => [
-                'type' => 'integer',
-                'description' => 'The max amount of sub comments per messages',
-            ],
         ];
     }
 }

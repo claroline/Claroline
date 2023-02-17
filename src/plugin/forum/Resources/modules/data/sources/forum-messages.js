@@ -28,14 +28,13 @@ export default {
         alias: 'creationDate',
         type: 'date',
         label: trans('date'),
-        displayed: true
+        displayed: true,
+        options: {time: true}
       }, {
         name: 'meta.creator',
-        alias: 'creator',
-        type: 'string',
+        type: 'user',
         label: trans('creator'),
-        displayed: true,
-        calculated: rowData => rowData.meta.creator.username
+        displayed: true
       }
     ],
     card: MessageCard

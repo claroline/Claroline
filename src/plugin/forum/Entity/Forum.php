@@ -12,6 +12,7 @@
 namespace Claroline\ForumBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Claroline\CoreBundle\Entity\Resource\HasHomePage;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -21,6 +22,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Forum extends AbstractResource
 {
+    use HasHomePage;
+
     const VALIDATE_NONE = 'NONE';
     const VALIDATE_PRIOR_ONCE = 'PRIOR_ONCE';
     const VALIDATE_PRIOR_ALL = 'PRIOR_ALL';
@@ -38,47 +41,38 @@ class Forum extends AbstractResource
      *     mappedBy="forum"
      * )
      * @ORM\OrderBy({"id" = "ASC"})
+     *
+     * @var ArrayCollection|Subject[]
      */
     protected $subjects;
 
     /**
      * @ORM\Column(type="string")
+     *
+     * @var string
      */
     protected $validationMode = self::VALIDATE_NONE;
 
     /**
      * @ORM\Column(type="integer")
-     */
-    protected $maxComment = 10;
-
-    /**
-     * @ORM\Column(type="integer")
+     *
+     * @var int
      */
     protected $displayMessages = 3;
 
     /**
      * @ORM\Column(type="string")
+     *
+     * @var string
      */
     protected $dataListOptions = self::DISPLAY_LIST;
 
     /**
-     * @ORM\Column(type="datetime", nullable = true)
+     * @ORM\Column(type="datetime", nullable=true)
+     *
+     * @var \DateTimeInterface
      */
     protected $lockDate = null;
-
-    /**
-     * @ORM\Column(name="show_overview", type="boolean", options={"default" = 1})
-     *
-     * @var bool
-     */
-    private $showOverview = true;
-
-    /**
-     * @ORM\Column(name="description", type="text", nullable=true)
-     *
-     * @var string
-     */
-    private $description;
 
     /**
      * @ORM\Column(options={"default"="ASC"})
@@ -99,8 +93,6 @@ class Forum extends AbstractResource
         parent::__construct();
 
         $this->subjects = new ArrayCollection();
-        $this->validationMode = self::VALIDATE_NONE;
-        $this->dataListOptions = self::DISPLAY_LIST;
     }
 
     public function getSubjects()
@@ -108,104 +100,54 @@ class Forum extends AbstractResource
         return $this->subjects;
     }
 
-    public function addSubject(Subject $subject)
+    public function addSubject(Subject $subject): void
     {
         $this->subjects->add($subject);
     }
 
-    public function removeSubject(Subject $subject)
+    public function removeSubject(Subject $subject): void
     {
         $this->subjects->removeElement($subject);
     }
 
-    public function setValidationMode($mode)
+    public function setValidationMode($mode): void
     {
         $this->validationMode = $mode;
     }
 
-    public function getValidationMode()
+    public function getValidationMode(): string
     {
         return $this->validationMode;
     }
 
-    public function setMaxComment($max)
-    {
-        $this->maxComment = $max;
-    }
-
-    public function getMaxComment()
-    {
-        return $this->maxComment;
-    }
-
-    public function setDataListOptions($options)
+    public function setDataListOptions($options): void
     {
         $this->dataListOptions = $options;
     }
 
-    public function getDataListOptions()
+    public function getDataListOptions(): string
     {
         return $this->dataListOptions;
     }
 
-    public function setLockDate(\DateTimeInterface $date = null)
+    public function setLockDate(\DateTimeInterface $date = null): void
     {
         $this->lockDate = $date;
     }
 
-    public function getLockDate()
+    public function getLockDate(): ?\DateTimeInterface
     {
         return $this->lockDate;
     }
 
-    public function setDisplayMessage($count)
+    public function setDisplayMessage(int $count): void
     {
         $this->displayMessages = $count;
     }
 
-    public function getDisplayMessages()
+    public function getDisplayMessages(): ?int
     {
         return $this->displayMessages;
-    }
-
-    /**
-     * Set show overview.
-     *
-     * @param bool $showOverview
-     */
-    public function setShowOverview($showOverview)
-    {
-        $this->showOverview = $showOverview;
-    }
-
-    /**
-     * Is overview shown ?
-     *
-     * @return bool
-     */
-    public function getShowOverview()
-    {
-        return $this->showOverview;
-    }
-
-    /**
-     * Get description.
-     *
-     * @return string
-     */
-    public function getDescription()
-    {
-        return $this->description;
-    }
-
-    /**
-     * Set description.
-     *
-     * @param string $description
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
     }
 
     public function getMessageOrder(): string
@@ -213,7 +155,7 @@ class Forum extends AbstractResource
         return $this->messageOrder;
     }
 
-    public function setMessageOrder(string $order)
+    public function setMessageOrder(string $order): void
     {
         $this->messageOrder = $order;
     }
@@ -223,7 +165,7 @@ class Forum extends AbstractResource
         return $this->expandComments;
     }
 
-    public function setExpandComments(bool $expand)
+    public function setExpandComments(bool $expand): void
     {
         $this->expandComments = $expand;
     }

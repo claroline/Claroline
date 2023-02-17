@@ -46,10 +46,6 @@ const restrictions = createSelector(
   [forum],
   (forum) => forum.restrictions
 )
-const meta = createSelector(
-  [forum],
-  (forum) => forum.meta
-)
 
 const bannedUser = createSelector(
   [restrictions],
@@ -61,8 +57,8 @@ const moderator = createSelector(
 )
 
 const myMessages = createSelector(
-  [meta],
-  (meta) => meta.myMessages
+  [resource],
+  (resource) => resource.myMessages
 )
 
 const subject = createSelector(

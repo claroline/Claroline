@@ -87,31 +87,23 @@ class SubjectSubscriber implements EventSubscriberInterface
             }
         }
 
-        $messages = $subject->getMessages();
-        $first = $messages && isset($messages[0]) ? $messages[0] : null;
-
+        $moderation = Forum::VALIDATE_NONE;
         if (!$this->checkPermission('EDIT', $forum->getResourceNode())) {
-            if (Forum::VALIDATE_PRIOR_ALL === $forum->getValidationMode()) {
-                $subject->setModerated(Forum::VALIDATE_PRIOR_ALL);
-                if ($first) {
-                    $first->setModerated(Forum::VALIDATE_PRIOR_ALL);
-                }
-            }
+            $moderation = $forum->getValidationMode();
 
-            if (Forum::VALIDATE_PRIOR_ONCE === $forum->getValidationMode()) {
-                $subject->setModerated($user->getAccess() ? Forum::VALIDATE_NONE : Forum::VALIDATE_PRIOR_ONCE);
-                if ($first) {
-                    $first->setModerated(Forum::VALIDATE_PRIOR_ALL);
-                }
-            }
-        } else {
-            $subject->setModerated(Forum::VALIDATE_NONE);
-            if ($first) {
-                $first->setModerated(Forum::VALIDATE_PRIOR_ALL);
+            if (Forum::VALIDATE_PRIOR_ONCE === $moderation && $user->getAccess()) {
+                // user has already posted an accepted message
+                $moderation = Forum::VALIDATE_NONE;
             }
         }
 
+        $subject->setModerated($moderation);
+
+        $messages = $subject->getMessages();
+        $first = $messages && isset($messages[0]) ? $messages[0] : null;
         if ($first) {
+            $first->setModerated($moderation);
+
             $this->om->persist($first);
         }
     }

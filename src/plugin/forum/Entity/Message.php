@@ -61,13 +61,11 @@ class Message extends AbstractMessage
 
     /**
      * @ORM\Column(type="boolean")
-     * todo: renommer
      */
     protected $flagged = false;
 
     /**
      * @ORM\Column(type="boolean")
-     * todo: renommer
      */
     protected $first = false;
 

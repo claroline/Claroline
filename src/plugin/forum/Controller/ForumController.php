@@ -129,7 +129,7 @@ class ForumController extends AbstractCrudController
 
         $filters = [
             'forum' => $forum->getUuid(),
-            'creatorId' => $user->getUuid(),
+            'creator' => $user->getUuid(),
             'moderation' => true,
         ];
         // validate all moderated subjects for this user and forum

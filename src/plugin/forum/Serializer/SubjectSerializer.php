@@ -112,6 +112,7 @@ class SubjectSerializer
         return [
             'moderation' => $subject->getModerated(),
             'views' => $subject->getViewCount(),
+            // don't use Finder in a Serializer
             'messages' => $this->finder->fetch(Message::class, ['subject' => $subject->getUuid(), 'parent' => null], null, 0, 0, true),
             'creator' => !empty($subject->getCreator()) ? $this->userSerializer->serialize($subject->getCreator(), [Options::SERIALIZE_MINIMAL]) : null,
             'created' => DateNormalizer::normalize($subject->getCreationDate()),
@@ -171,8 +172,6 @@ class SubjectSerializer
             }
 
             if (isset($data['meta']['creator'])) {
-                $subject->setAuthor($data['meta']['creator']['name']);
-
                 // TODO: reuse value from token Storage if new
                 $creator = $this->om->getObject($data['meta']['creator'], User::class);
 

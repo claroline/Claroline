@@ -9,10 +9,6 @@
     "validationMode": {
       "type": "integer",
       "description": "The validation mode"
-    },
-    "maxComment": {
-      "type": "integer",
-      "description": "The max amount of comment per post"
     }
   }
 }

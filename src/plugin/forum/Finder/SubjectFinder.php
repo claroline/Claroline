@@ -25,14 +25,13 @@ class SubjectFinder extends AbstractFinder
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null): QueryBuilder
     {
+        $creatorJoin = false;
+
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
                 case 'forum':
                     $qb->leftJoin('obj.forum', 'forum');
-                    $qb->andWhere($qb->expr()->orX(
-                        $qb->expr()->like('forum.id', ':'.$filterName),
-                        $qb->expr()->like('forum.uuid', ':'.$filterName)
-                    ));
+                    $qb->andWhere("forum.uuid = :{$filterName}");
                     $qb->setParameter($filterName, $filterValue);
                     break;
                 case 'createdAfter':
@@ -44,12 +43,11 @@ class SubjectFinder extends AbstractFinder
                     $qb->setParameter($filterName, $filterValue);
                     break;
                 case 'creator':
-                    $qb->leftJoin('obj.creator', 'creator');
-                    $qb->andWhere("creator.username LIKE :{$filterName}");
-                    $qb->setParameter($filterName, '%'.$filterValue.'%');
-                    break;
-                case 'creatorId':
-                    $qb->join('obj.creator', 'creator');
+                    if (!$creatorJoin) {
+                        $qb->leftJoin('obj.creator', 'creator');
+                        $creatorJoin = true;
+                    }
+
                     $qb->andWhere("creator.uuid = :{$filterName}");
                     $qb->setParameter($filterName, $filterValue);
                     break;
@@ -86,8 +84,11 @@ class SubjectFinder extends AbstractFinder
                     $qb->orderBy('countMsg', 1 === $sortBy['direction'] ? 'ASC' : 'DESC');
                     break;
                 case 'creator':
-                    $qb->leftJoin('obj.creator', 'sortCreator');
-                    $qb->orderBy('sortCreator.username', 1 === $sortBy['direction'] ? 'ASC' : 'DESC');
+                    if (!$creatorJoin) {
+                        $qb->leftJoin('obj.creator', 'creator');
+                    }
+
+                    $qb->orderBy('creator.username', 1 === $sortBy['direction'] ? 'ASC' : 'DESC');
                     break;
                 case 'lastMessage':
                     $qb->select('obj, MAX(lm.creationDate) AS HIDDEN lastMessageCreated');
@@ -100,6 +101,13 @@ class SubjectFinder extends AbstractFinder
         }
 
         return $qb;
+    }
+
+    protected function getExtraFieldMapping(): array
+    {
+        return [
+            'meta.creator' => 'creator',
+        ];
     }
 
     public function getFilters(): array
