@@ -40,41 +40,23 @@ class MessageFinder extends AbstractFinder
                     $qb->setParameter('active', $filterValue);
                     break;
                 case 'subject':
-                    $qb->andWhere($qb->expr()->orX(
-                        $qb->expr()->like('subject.id', ':'.$filterName),
-                        $qb->expr()->like('subject.uuid', ':'.$filterName)
-                    ));
+                    $qb->andWhere("subject.uuid = :{$filterName}");
                     $qb->setParameter($filterName, $filterValue);
-                    break;
-                case 'subject.title':
-                    $qb->andWhere('UPPER(subject.title) LIKE :title');
-                    $qb->setParameter('title', '%'.strtoupper($filterValue).'%');
                     break;
                 case 'parent':
                     if (empty($filterValue)) {
                         $qb->andWhere('obj.parent IS NULL');
                     } else {
                         $qb->join('obj.parent', 'parent');
-                        $qb->andWhere($qb->expr()->orX(
-                            $qb->expr()->like('parent.id', ':'.$filterName),
-                            $qb->expr()->like('parent.uuid', ':'.$filterName)
-                        ));
+                        $qb->andWhere("parent.uuid = :{$filterName}");
                         $qb->setParameter($filterName, $filterValue);
                     }
                     break;
                 case 'forum':
-                    $qb->andWhere($qb->expr()->orX(
-                        $qb->expr()->like('forum.id', ':'.$filterName),
-                        $qb->expr()->like('forum.uuid', ':'.$filterName)
-                    ));
+                    $qb->andWhere("forum.uuid = :{$filterName}");
                     $qb->setParameter($filterName, $filterValue);
                     break;
                 case 'creator':
-                    $qb->join('obj.creator', 'creator');
-                    $qb->andWhere("creator.username LIKE :{$filterName}");
-                    $qb->setParameter($filterName, '%'.$filterValue.'%');
-                    break;
-                case 'creatorId':
                     $qb->join('obj.creator', 'creator');
                     $qb->andWhere("creator.uuid = :{$filterName}");
                     $qb->setParameter($filterName, $filterValue);
@@ -148,12 +130,19 @@ class MessageFinder extends AbstractFinder
         return $qb;
     }
 
+    protected function getExtraFieldMapping(): array
+    {
+        return [
+            'meta.creator' => 'creator',
+        ];
+    }
+
     public function getFilters(): array
     {
         return [
             'subject' => [
-                'type' => ['integer', 'string'],
-                'description' => 'The parent subject id (int) or uuid (string)',
+                'type' => ['string'],
+                'description' => 'The parent subject uuid',
             ],
             'parent' => [
                 'type' => ['integer', 'string'],
@@ -178,10 +167,6 @@ class MessageFinder extends AbstractFinder
             'updated' => [
                 'type' => 'datetime',
                 'description' => 'The last update date',
-            ],
-            'author' => [
-                'type' => 'string',
-                'description' => 'the author name',
             ],
         ];
     }

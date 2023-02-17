@@ -39,11 +39,10 @@ const BlockedSubjectsComponent = (props) =>
         label: trans('subject_title', {}, 'forum'),
         displayed: true
       }, {
-        name: 'meta.creator.username',
-        type: 'string',
+        name: 'meta.creator',
+        type: 'user',
         label: trans('creator'),
-        displayed: true,
-        searchable: false
+        displayed: true
       }, {
         name: 'meta.updated',
         type: 'date',

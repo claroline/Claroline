@@ -13,11 +13,12 @@ services:
 
     Claroline\ForumBundle\Listener\Resource\ForumListener:
         arguments:
+            - '@security.token_storage'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\AppBundle\API\Crud'
+            - '@Claroline\AppBundle\API\FinderProvider'
             - '@Claroline\ForumBundle\Manager\ForumManager'
-            - '@security.token_storage'
         tags:
             - { name: kernel.event_listener, event: resource.claroline_forum.load, method: onOpen }
             - { name: kernel.event_listener, event: resource.claroline_forum.copy, method: onCopy }

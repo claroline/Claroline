@@ -72,7 +72,7 @@ class SubjectController extends AbstractCrudController
         return new JsonResponse(
           $this->finder->search(Message::class, array_merge(
               $request->query->all(),
-              ['hiddenFilters' => ['subject' => $subject->getId(), 'parent' => null, 'first' => false]]
+              ['hiddenFilters' => ['subject' => $subject->getUuid(), 'parent' => null, 'first' => false]]
             ))
         );
     }

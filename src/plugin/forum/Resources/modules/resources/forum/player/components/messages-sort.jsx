@@ -12,6 +12,7 @@ const MessagesSort = props =>
         className="btn btn-link"
         disabled={0 === props.totalResults}
         callback={props.toggleSort}
+        primary={true}
       >
         {trans(1 === props.sortOrder ? 'from_older_to_newer':'from_newer_to_older', {}, 'forum')}
       </CallbackButton>

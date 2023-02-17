@@ -63,7 +63,7 @@ class NotifyUsersOnMessageCreatedHandler implements MessageHandlerInterface
             'subject_url' => $this->routing->resourcePath($forum->getResourceNode()).'/subjects/show/'.$subject->getUuid(),
             'message' => $message->getContent(),
             'date' => $message->getCreationDate() ? $message->getCreationDate()->format('d/m/Y H:m:s') : null,
-            'author' => $message->getCreator() ? $message->getCreator()->getFullName() : $message->getAuthor(),
+            'author' => $message->getCreator() ? $message->getCreator()->getFullName() : null,
             'workspace' => $forum->getResourceNode()->getWorkspace()->getName(),
             'workspace_url' => $this->routing->workspacePath($forum->getResourceNode()->getWorkspace()),
         ];

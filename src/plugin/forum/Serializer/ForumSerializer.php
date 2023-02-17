@@ -40,42 +40,31 @@ class ForumSerializer
         $this->authorization = $authorization;
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return Forum::class;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'forum';
     }
 
-    /**
-     * @return string
-     */
-    public function getSchema()
+    public function getSchema(): string
     {
         return '#/plugin/forum/forum.json';
     }
 
-    /**
-     * @return string
-     */
-    public function getSamples()
+    public function getSamples(): string
     {
         return '#/plugin/forum/forum';
     }
 
-    /**
-     * Serializes a Forum entity.
-     *
-     * @return array
-     */
-    public function serialize(Forum $forum, array $options = [])
+    public function serialize(Forum $forum, ?array $options = []): array
     {
         $currentUser = $this->tokenStorage->getToken()->getUser();
 
-        if (!is_string($currentUser)) {
+        if ($currentUser instanceof User) {
             $forumUser = $this->manager->getValidationUser($currentUser, $forum);
         } else {
             $forumUser = new User();
@@ -95,9 +84,8 @@ class ForumSerializer
         return [
             'id' => $forum->getUuid(),
             'moderation' => $forum->getValidationMode(),
-            'maxComment' => $forum->getMaxComment(),
             'display' => [
-                'description' => $forum->getDescription(),
+                'description' => $forum->getOverviewMessage(),
                 'showOverview' => $forum->getShowOverview(),
                 'subjectDataList' => $forum->getDataListOptions(),
                 'lastMessagesCount' => $forum->getDisplayMessages(),
@@ -105,38 +93,29 @@ class ForumSerializer
                 'expandComments' => $forum->getExpandComments(),
             ],
             'restrictions' => [
-                'lockDate' => $forum->getLockDate() ? $forum->getLockDate()->format('Y-m-d\TH:i:s') : null, // TODO : use DateNormalizer
+                'lockDate' => DateNormalizer::normalize($forum->getLockDate()),
                 'banned' => $banned, // TODO : data about current user should not be here
                 'moderator' => $this->checkPermission('EDIT', $forum->getResourceNode()), // TODO : data about current user should not be here
             ],
             'meta' => [
-                'users' => $this->finder->fetch(User::class, ['forum' => $forum->getUuid()], null, 0, 0, true),
-                'subjects' => $this->finder->fetch(Subject::class, ['forum' => $forum->getUuid()], null, 0, 0, true),
-                //probably an issue with the validate_none somewhere
-                'messages' => $this->finder->fetch(Message::class, ['forum' => $forum->getUuid()], null, 0, 0, true),
-                'myMessages' => !is_string($currentUser) ?
-                    $this->finder->fetch(Message::class, ['forum' => $forum->getUuid(), 'creator' => $currentUser->getUsername()], null, 0, 0, true) :
-                    0, // TODO : data about current user should not be here
                 'tags' => $this->getTags($forum),
+
+                // TODO : do not use finder in serializer
+                'users' => $this->finder->fetch(User::class, ['forum' => $forum->getUuid(), 'banned' => false], null, 0, 0, true),
+                'subjects' => $this->finder->fetch(Subject::class, ['forum' => $forum->getUuid(), 'flagged' => false], null, 0, 0, true),
+                'messages' => $this->finder->fetch(Message::class, ['forum' => $forum->getUuid(), 'flagged' => false], null, 0, 0, true),
+                // TODO : data about current user should not be here
                 'notified' => $forumUser->isNotified(),
             ],
         ];
     }
 
-    /**
-     * Deserializes data into a Forum entity.
-     *
-     * @param array $data
-     *
-     * @return Forum
-     */
-    public function deserialize($data, Forum $forum, array $options = [])
+    public function deserialize(array $data, Forum $forum, ?array $options = []): Forum
     {
         $this->sipe('moderation', 'setValidationMode', $data, $forum);
-        $this->sipe('maxComment', 'setMaxComment', $data, $forum);
         $this->sipe('display.lastMessagesCount', 'setDisplayMessage', $data, $forum);
         $this->sipe('display.subjectDataList', 'setDataListOptions', $data, $forum);
-        $this->sipe('display.description', 'setDescription', $data, $forum);
+        $this->sipe('display.description', 'setOverviewMessage', $data, $forum);
         $this->sipe('display.showOverview', 'setShowOverview', $data, $forum);
         $this->sipe('display.messageOrder', 'setMessageOrder', $data, $forum);
         $this->sipe('display.expandComments', 'setExpandComments', $data, $forum);
@@ -150,12 +129,10 @@ class ForumSerializer
         return $forum;
     }
 
-    public function getTags(Forum $forum)
+    public function getTags(Forum $forum): array
     {
         $subjects = $forum->getSubjects();
-        $availables = [];
-        //pas terrible comme manière de procéder mais je n'en ai pas d'autre actuellement
-        //on va dire que c'est une première version
+        $available = [];
 
         foreach ($subjects as $subject) {
             $event = new GenericDataEvent([
@@ -169,9 +146,9 @@ class ForumSerializer
             );
 
             $tags = $event->getResponse() ?? [];
-            $availables = array_merge($availables, $tags);
+            $available = array_merge($available, $tags);
         }
 
-        return $availables;
+        return $available;
     }
 }

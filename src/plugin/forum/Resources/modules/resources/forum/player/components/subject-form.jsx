@@ -2,8 +2,6 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 
-import {url} from '#/main/app/api'
-
 import {withRouter} from '#/main/app/router'
 import {withModal} from '#/main/app/overlays/modal/withModal'
 import {trans} from '#/main/app/intl/translation'
@@ -20,53 +18,43 @@ import {UserAvatar} from '#/main/core/user/components/avatar'
 
 import {selectors} from '#/plugin/forum/resources/forum/store'
 
-const SubjectFormWrapper = (props) => {
-  //this is a hack while we don't have the proper login redirection
-  if (!props.user) {
-    window.location.replace(url(['claro_security_login', {}, true]))
-  }
+const SubjectFormWrapper = (props) =>
+  <div className='user-message-container user-message-form-container user-message-left'>
+    <UserAvatar picture={props.user.picture} />
 
-  return(
-    <div>
-      <div className='user-message-container user-message-form-container user-message-left'>
-        <UserAvatar picture={props.user.picture} />
-
-        <div className="user-message">
-          <div className="user-message-meta">
-            <div className="user-message-info">
-              {props.user.name}
-            </div>
-
-            {(props.editingSubject && props.cancel) &&
-              <div className="user-message-actions">
-                <Button
-                  type={CALLBACK_BUTTON}
-                  className="btn-link"
-                  tooltip="bottom"
-                  icon="fa fa-fw fa-times"
-                  label={trans('cancel', {}, 'actions')}
-                  callback={props.cancel}
-                />
-              </div>
-            }
-          </div>
-
-          <div className="user-message-content embedded-form-section">
-            {props.children}
-          </div>
-
-          <Button
-            className="btn btn-block btn-save btn-emphasis"
-            label={props.editingSubject ? trans('save') : trans('post_the_subject', {}, 'forum')}
-            type={CALLBACK_BUTTON}
-            callback={props.callback}
-            primary={true}
-          />
+    <div className="user-message">
+      <div className="user-message-meta">
+        <div className="user-message-info">
+          {props.user.name}
         </div>
+
+        {(props.editingSubject && props.cancel) &&
+          <div className="user-message-actions">
+            <Button
+              type={CALLBACK_BUTTON}
+              className="btn-link"
+              tooltip="bottom"
+              icon="fa fa-fw fa-times"
+              label={trans('cancel', {}, 'actions')}
+              callback={props.cancel}
+            />
+          </div>
+        }
       </div>
+
+      <div className="user-message-content embedded-form-section">
+        {props.children}
+      </div>
+
+      <Button
+        className="btn btn-block btn-save btn-emphasis"
+        label={props.editingSubject ? trans('save') : trans('post_the_subject', {}, 'forum')}
+        type={CALLBACK_BUTTON}
+        callback={props.callback}
+        primary={true}
+      />
     </div>
-  )
-}
+  </div>
 
 SubjectFormWrapper.propTypes = {
   /**
@@ -96,8 +84,7 @@ const SubjectFormComponent = (props) => {
   const saveSubjectForm = (forumId, editingSubject, subjectId) => {
     if (editingSubject) {
       props.editSubject(forumId, subjectId)
-    }
-    else if (!props.moderator &&
+    } else if (!props.moderator &&
       (props.forum.moderation === 'PRIOR_ALL' || (props.forum.moderation === 'PRIOR_ONCE' && !props.isValidatedUser))) {
       props.showModal(MODAL_ALERT, {
         title: trans('moderated_posts', {}, 'forum'),

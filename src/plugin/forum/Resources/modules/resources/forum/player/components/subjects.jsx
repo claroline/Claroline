@@ -81,15 +81,14 @@ const SubjectsList = props =>
           displayed: true,
           filterable: false,
           sortable: false,
-          option: {
+          options: {
             time: true
           }
         }, {
-          name: 'meta.creator.username',
-          type: 'string',
+          name: 'meta.creator',
+          type: 'user',
           label: trans('creator'),
           displayed: true,
-          searchable: true,
           filterable: true,
           alias: 'creator'
         }, {
@@ -131,14 +130,8 @@ const SubjectsList = props =>
       actions={(rows) => [
         {
           type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-eye',
-          label: trans('see_subject', {}, 'forum'),
-          target: `${props.path}/subjects/show/${rows[0].id}`,
-          scope: ['object']
-        }, {
-          type: LINK_BUTTON,
           icon: 'fa fa-fw fa-pencil',
-          label: trans('edit'),
+          label: trans('edit', {}, 'actions'),
           target: `${props.path}/subjects/form/${rows[0].id}`,
           scope: ['object'],
           displayed: props.currentUser && rows[0].meta.creator.id === props.currentUser.id

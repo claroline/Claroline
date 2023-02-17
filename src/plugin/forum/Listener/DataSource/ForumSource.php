@@ -38,6 +38,7 @@ class ForumSource
         $options = $event->getOptions() ? $event->getOptions() : [];
         $options['hiddenFilters']['published'] = true;
         $options['hiddenFilters']['moderation'] = false;
+        $options['hiddenFilters']['flagged'] = false;
 
         if (DataSource::CONTEXT_HOME === $event->getContext()) {
             // only what is accessible by anonymous

@@ -31,6 +31,9 @@ const reducer = combineReducers({
   isValidatedUser: makeReducer({}, {
     [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.isValidatedUser
   }),
+  myMessages:  makeReducer(0, {
+    [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.myMessages
+  }),
   lastMessages: overviewReducer,
   moderation: moderationReducer,
   forumForm: editorReducer,

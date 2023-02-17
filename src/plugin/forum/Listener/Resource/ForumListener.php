@@ -12,6 +12,7 @@
 namespace Claroline\ForumBundle\Listener\Resource;
 
 use Claroline\AppBundle\API\Crud;
+use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
@@ -21,37 +22,38 @@ use Claroline\CoreBundle\Event\Resource\ExportResourceEvent;
 use Claroline\CoreBundle\Event\Resource\ImportResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\ForumBundle\Entity\Forum;
+use Claroline\ForumBundle\Entity\Message;
 use Claroline\ForumBundle\Entity\Subject;
 use Claroline\ForumBundle\Manager\ForumManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class ForumListener
 {
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
     /** @var ObjectManager */
     private $om;
-
     /** @var SerializerProvider */
     private $serializer;
-
     /** @var Crud */
     private $crud;
-
+    /** @var FinderProvider */
+    private $finder;
     /** @var ForumManager */
     private $manager;
 
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-
     public function __construct(
+        TokenStorageInterface $tokenStorage,
         ObjectManager $om,
         SerializerProvider $serializer,
         Crud $crud,
-        ForumManager $manager,
-        TokenStorageInterface $tokenStorage
+        FinderProvider $finder,
+        ForumManager $manager
     ) {
         $this->om = $om;
         $this->serializer = $serializer;
         $this->crud = $crud;
+        $this->finder = $finder;
         $this->manager = $manager;
         $this->tokenStorage = $tokenStorage;
     }
@@ -69,9 +71,18 @@ class ForumListener
             $isValidatedUser = $validationUser->getAccess();
         }
 
+        $myMessages = 0;
+        if ($this->tokenStorage->getToken()->getUser() instanceof User) {
+            $myMessages = $this->finder->fetch(Message::class, [
+                'forum' => $forum->getUuid(),
+                'creator' => $this->tokenStorage->getToken()->getUser()->getUuid(),
+            ], null, 0, 0, true);
+        }
+
         $event->setData([
             'forum' => $this->serializer->serialize($forum),
             'isValidatedUser' => $isValidatedUser,
+            'myMessages' => $myMessages,
         ]);
 
         $event->stopPropagation();

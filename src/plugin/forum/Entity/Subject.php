@@ -106,13 +106,6 @@ class Subject
     protected $flagged = false;
 
     /**
-     * @ORM\Column(nullable=true)
-     *
-     * @var string
-     */
-    protected $author;
-
-    /**
      * @ORM\Column(type="integer")
      *
      * @var int
@@ -138,9 +131,6 @@ class Subject
      */
     protected $moderation = Forum::VALIDATE_NONE;
 
-    /**
-     * Constructor.
-     */
     public function __construct()
     {
         $this->refreshUuid();
@@ -150,30 +140,27 @@ class Subject
         $this->updated = new \DateTime();
     }
 
-    public function getTitle()
+    public function getTitle(): ?string
     {
         return $this->title;
     }
 
-    public function setTitle($title)
+    public function setTitle(string $title): void
     {
         $this->title = $title;
     }
 
-    public function setForum(Forum $forum)
+    public function setForum(Forum $forum): void
     {
         $this->forum = $forum;
     }
 
-    /**
-     * @return Forum
-     */
-    public function getForum()
+    public function getForum(): ?Forum
     {
         return $this->forum;
     }
 
-    public function getFirstMessage()
+    public function getFirstMessage(): ?Message
     {
         $first = null;
         foreach ($this->messages as $message) {
@@ -186,17 +173,12 @@ class Subject
         return $first;
     }
 
-    /**
-     * Sets the subject creator.
-     *
-     * @param \Claroline\CoreBundle\Entity\User
-     */
-    public function setCreator(User $creator)
+    public function setCreator(User $creator): void
     {
         $this->creator = $creator;
     }
 
-    public function getCreator()
+    public function getCreator(): ?User
     {
         return $this->creator;
     }
@@ -211,19 +193,19 @@ class Subject
         return $this->messages;
     }
 
-    public function addMessage(Message $message)
+    public function addMessage(Message $message): void
     {
         if (!$this->messages->contains($message)) {
             $this->messages->add($message);
         }
     }
 
-    public function setSticked($boolean)
+    public function setSticked(bool $sticked)
     {
-        $this->sticked = $boolean;
+        $this->sticked = $sticked;
     }
 
-    public function isSticked()
+    public function isSticked(): bool
     {
         return $this->sticked;
     }
@@ -261,20 +243,6 @@ class Subject
     public function isFlagged()
     {
         return $this->flagged;
-    }
-
-    public function getAuthor()
-    {
-        if (!$this->author) {
-            return 'undefined';
-        }
-
-        return $this->author;
-    }
-
-    public function setAuthor($author)
-    {
-        $this->author = $author;
     }
 
     public function getViewCount()
