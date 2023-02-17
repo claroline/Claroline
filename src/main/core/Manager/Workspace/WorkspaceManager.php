@@ -347,21 +347,6 @@ class WorkspaceManager implements LoggerAwareInterface
         $this->crud->patch($subject, 'role', Crud::COLLECTION_REMOVE, $workspace->getRoles()->toArray(), $options);
     }
 
-    public function countUsersForRoles(Workspace $workspace): array
-    {
-        $roles = $workspace->getRoles();
-
-        $usersInRoles = [];
-        foreach ($roles as $role) {
-            $usersInRoles[] = [
-                'name' => $role->getTranslationKey(),
-                'total' => floatval($this->userRepo->countUsersByRole($role)),
-            ];
-        }
-
-        return $usersInRoles;
-    }
-
     public function getShortcuts(Workspace $workspace, array $roleNames = []): array
     {
         $shortcuts = [];

@@ -72,29 +72,6 @@ class UserManager
         return $user;
     }
 
-    public function countUsersForPlatformRoles($organizations = null): array
-    {
-        $roles = $this->roleRepo->findAllPlatformRoles();
-        $roleNames = array_map(function (Role $r) {return $r->getName(); }, $roles);
-        $usersInRoles = [];
-        foreach ($roles as $role) {
-            $restrictionRoleNames = null;
-            if ('ROLE_USER' === $role->getName()) {
-                $restrictionRoleNames = array_diff($roleNames, ['ROLE_USER']);
-            } elseif ('ROLE_WS_CREATOR' !== $role->getName() && 'ROLE_ADMIN' !== $role->getName()) {
-                $restrictionRoleNames = ['ROLE_WS_CREATOR', 'ROLE_ADMIN'];
-            } elseif ('ROLE_ADMIN' !== $role->getName()) {
-                $restrictionRoleNames = ['ROLE_ADMIN'];
-            }
-            $usersInRoles[] = [
-                'name' => $role->getTranslationKey(),
-                'total' => floatval($this->userRepo->countUsersByRole($role, $restrictionRoleNames, $organizations)),
-            ];
-        }
-
-        return $usersInRoles;
-    }
-
     public function getByResetPasswordHash(string $resetPassword): ?User
     {
         return $this->userRepo->findOneBy(['resetPasswordHash' => $resetPassword]);

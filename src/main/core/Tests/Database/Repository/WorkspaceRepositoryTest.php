@@ -58,12 +58,4 @@ class WorkspaceRepositoryTest extends RepositoryTestCase
         $workspaces = self::$repo->findByRoles(['ROLE_2', 'ROLE_ANONYMOUS']);
         $this->assertEquals(2, count($workspaces)); // ws_1 and ws_2
     }
-
-    public function testFindWorkspacesWithMostResources()
-    {
-        $workspaces = self::$repo->findWorkspacesWithMostResources(10);
-        $this->assertEquals(7, count($workspaces));
-        $this->assertEquals('ws_2', $workspaces[0]['name']);
-        $this->assertEquals(2, $workspaces[0]['total']);
-    }
 }

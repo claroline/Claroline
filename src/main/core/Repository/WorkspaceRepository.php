@@ -119,36 +119,6 @@ class WorkspaceRepository extends EntityRepository
         return 0 < (int) $query->getSingleScalarResult();
     }
 
-    /**
-     * Returns the name, code and number of resources of each workspace.
-     *
-     * @param int $max
-     *
-     * @return array
-     */
-    public function findWorkspacesWithMostResources($max, array $organizations = [])
-    {
-        $qb = $this
-            ->createQueryBuilder('ws')
-            ->select('ws.name, ws.code, COUNT(rs.id) AS total')
-            ->leftJoin('Claroline\CoreBundle\Entity\Resource\ResourceNode', 'rs', 'WITH', 'ws = rs.workspace')
-            ->groupBy('ws.id')
-            ->orderBy('total', 'DESC');
-
-        if (!empty($organizations)) {
-            $qb
-                ->leftJoin('ws.organizations', 'o')
-                ->andWhere('o IN (:organizations)')
-                ->setParameter('organizations', $organizations);
-        }
-
-        if ($max > 1) {
-            $qb->setMaxResults($max);
-        }
-
-        return $qb->getQuery()->getResult();
-    }
-
     public function findManaged(string $userId)
     {
         $qb = $this

@@ -112,19 +112,6 @@ class DashboardController
     }
 
     /**
-     * @Route("/{resource}/users", name="apiv2_resource_analytics_users", methods={"GET"})
-     * @EXT\ParamConverter("resourceNode", class="Claroline\CoreBundle\Entity\Resource\ResourceNode", options={"mapping": {"resource": "uuid"}})
-     */
-    public function usersAction(ResourceNode $resourceNode): JsonResponse
-    {
-        $this->checkDashboardAccess($resourceNode);
-
-        return new JsonResponse(
-            $this->analyticsManager->userRolesData($resourceNode)
-        );
-    }
-
-    /**
      * @Route("/{resource}/users/top", name="apiv2_resource_analytics_top_users", methods={"GET"})
      * @EXT\ParamConverter("resourceNode", class="Claroline\CoreBundle\Entity\Resource\ResourceNode", options={"mapping": {"resource": "uuid"}})
      */

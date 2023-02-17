@@ -205,15 +205,6 @@ class AnalyticsManager
         return $this->logRepo->findTopResourcesByAction($queryParams['allFilters'], $queryParams['limit']);
     }
 
-    public function userRolesData(Workspace $workspace = null, $organizations = null)
-    {
-        if ($workspace) {
-            return $this->workspaceManager->countUsersForRoles($workspace);
-        }
-
-        return $this->userManager->countUsersForPlatformRoles($organizations);
-    }
-
     private function formatQueryParams(array $finderParams = [])
     {
         $filters = isset($finderParams['filters']) ? $finderParams['filters'] : [];

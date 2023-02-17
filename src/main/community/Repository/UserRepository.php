@@ -64,8 +64,7 @@ class UserRepository extends ServiceEntityRepository implements UserProviderInte
         ';
 
         if ($isUserAdminCodeUnique) {
-            $dql .= '
-                OR u.administrativeCode LIKE :username';
+            $dql .= ' OR u.administrativeCode LIKE :username';
         }
 
         $query = $this->_em->createQuery($dql);
@@ -123,25 +122,6 @@ class UserRepository extends ServiceEntityRepository implements UserProviderInte
     }
 
     /**
-     * Returns all the users.
-     *
-     * @return User[]
-     */
-    public function findAll()
-    {
-        return $this->_em->createQuery('
-            SELECT u, pws, g, r, rws
-            FROM Claroline\\CoreBundle\\Entity\\User u
-            LEFT JOIN u.personalWorkspace pws
-            LEFT JOIN u.groups g
-            LEFT JOIN u.roles r
-            LEFT JOIN r.workspace rws
-            WHERE u.isRemoved = false
-              AND u.technical = false
-        ')->getResult();
-    }
-
-    /**
      * Returns the users of a group.
      *
      * @return User[]
@@ -164,8 +144,7 @@ class UserRepository extends ServiceEntityRepository implements UserProviderInte
     }
 
     /**
-     * Returns the users who are members of one of the given workspaces. Users's groups are not
-     * taken into account.
+     * Returns the users who are members of one of the given workspaces.
      *
      * @return User[]
      */
@@ -216,26 +195,19 @@ class UserRepository extends ServiceEntityRepository implements UserProviderInte
 
     /**
      * Counts the users subscribed in a platform role.
-     *
-     * @param $restrictionRoleNames
-     * @param null $organizations
-     *
-     * @return int
      */
-    public function countUsersByRole(Role $role, $restrictionRoleNames = null, $organizations = null, $dateCreated = null)
+    public function countUsersByRole(Role $role, $organizations = null, ?string $dateCreated = null): int
     {
         $qb = $this->createQueryBuilder('user')
             ->select('COUNT(DISTINCT user.id)')
-            ->leftJoin('user.roles', 'roles')
-            ->andWhere('roles.id = :roleId')
+            ->leftJoin('user.roles', 'role')
+            ->leftJoin('user.groups', 'group')
+            ->leftJoin('group.roles', 'groupRole')
+            ->andWhere('(role.id = :roleId OR groupRole.id = :roleId)')
             ->andWhere('user.isEnabled = true')
             ->andWhere('user.isRemoved = false')
             ->andWhere('user.technical = false')
             ->setParameter('roleId', $role->getId());
-        if (!empty($restrictionRoleNames)) {
-            $qb->andWhere('user.id NOT IN (:userIds)')
-                ->setParameter('userIds', $this->findUserIdsInRoles($restrictionRoleNames));
-        }
 
         if ($dateCreated) {
             $qb
@@ -243,20 +215,22 @@ class UserRepository extends ServiceEntityRepository implements UserProviderInte
                 ->setParameter('date', $dateCreated);
         }
 
-        if (null !== $organizations) {
-            $qb->join('user.userOrganizationReferences', 'orgaRef')
-                ->andWhere('orgaRef.organization IN (:organizations)')
+        if (!empty($organizations)) {
+            $qb
+                ->leftJoin('group.organizations', 'groupOrganization')
+                ->leftJoin('user.userOrganizationReferences', 'orgaRef')
+                ->andWhere('(orgaRef.organization IN (:organizations) OR groupOrganization IN (:organizations))')
                 ->setParameter('organizations', $organizations);
         }
         $query = $qb->getQuery();
 
-        return $query->getSingleScalarResult();
+        return (int) $query->getSingleScalarResult();
     }
 
     public function countUsers(array $organizations = [])
     {
         $qb = $this->createQueryBuilder('user')
-            ->select('COUNT(user.id)')
+            ->select('COUNT(DISTINCT user.id)')
             ->where('user.isRemoved = false')
             ->andWhere('user.isEnabled = true')
             ->andWhere('user.technical = false');
@@ -268,27 +242,6 @@ class UserRepository extends ServiceEntityRepository implements UserProviderInte
         }
 
         return (int) $qb->getQuery()->getSingleScalarResult();
-    }
-
-    /**
-     * Returns user Ids that are subscribed to one of the roles given.
-     *
-     * @param array $roleNames
-     *
-     * @return array
-     */
-    private function findUserIdsInRoles($roleNames)
-    {
-        $qb = $this->createQueryBuilder('user')
-            ->select('DISTINCT(user.id) as id')
-            ->leftJoin('user.roles', 'roles')
-            ->andWhere('roles.name IN (:roleNames)')
-            ->andWhere('user.isRemoved = false')
-            ->andWhere('user.technical = false')
-            ->setParameter('roleNames', $roleNames);
-        $query = $qb->getQuery();
-
-        return array_column($query->getScalarResult(), 'id');
     }
 
     /**
@@ -326,20 +279,6 @@ class UserRepository extends ServiceEntityRepository implements UserProviderInte
                 return $role->getId();
             }, $roles))
             ->getResult();
-    }
-
-    public function findAllEnabledUsers($executeQuery = true)
-    {
-        $dql = '
-            SELECT u
-            FROM Claroline\CoreBundle\Entity\User u
-            WHERE u.isEnabled = TRUE
-              AND u.isRemoved = FALSE
-              AND u.technical = false
-        ';
-        $query = $this->_em->createQuery($dql);
-
-        return $executeQuery ? $query->getResult() : $query;
     }
 
     public function findInactiveSince($dateLastActivity)
