@@ -49,8 +49,17 @@ function fileSize(num, short = true) {
   return precision(num, 1)
 }
 
+function percent(value, total) {
+  if (!value) {
+    return 0
+  }
+
+  return number((value / total) * 100)
+}
+
 export {
   number,
   fileSize,
-  precision
+  precision,
+  percent
 }
