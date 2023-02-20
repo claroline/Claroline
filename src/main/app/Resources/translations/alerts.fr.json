@@ -222,5 +222,19 @@
       "title": "Echec de l'inscription",
       "message": "Nous n'avons pas réussi à créer votre compte."
     }
+  },
+  "schedule": {
+    "pending": {
+      "title": "Planification en cours",
+      "message": "Veuillez patienter pendant que nous préparons votre tâche."
+    },
+    "info": {
+      "title": "Planification réussie",
+      "message": "Votre tâche a été correctement planifiée et sera exécutée dans les plus brefs délais."
+    },
+    "error": {
+      "title": "Echec de la planification",
+      "message": "Nous n'avons pas réussi à planifier votre tâche."
+    }
   }
 }

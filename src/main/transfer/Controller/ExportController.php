@@ -85,7 +85,8 @@ class ExportController extends AbstractCrudController
         $this->transferManager->requestExport($exportFile);
 
         return new JsonResponse(
-            $this->serializer->serialize($exportFile)
+            $this->serializer->serialize($exportFile),
+            ExportFile::IN_PROGRESS === $exportFile->getStatus() ? 202 : 200
         );
     }
 

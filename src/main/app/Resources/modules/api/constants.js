@@ -23,6 +23,7 @@ const HTTP_ALERT_STATUS = {
   // success
   200: alertConstants.ALERT_STATUS_SUCCESS,
   201: alertConstants.ALERT_STATUS_SUCCESS,
+  202: alertConstants.ALERT_STATUS_INFO,
   204: alertConstants.ALERT_STATUS_SUCCESS,
   // warning
   401: alertConstants.ALERT_STATUS_UNAUTHORIZED,

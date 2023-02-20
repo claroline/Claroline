@@ -22,5 +22,6 @@
     "col_delimiter": "Columns delimiter",
     "list_delimiter": "List values delimiter",
     "unnamed_import": "Unnamed import",
-    "unnamed_export": "Unnamed export"
+    "unnamed_export": "Unnamed export",
+    "export_in_progress_help": "The export is scheduled / running. Please come back when it is finished to access your data."
 }

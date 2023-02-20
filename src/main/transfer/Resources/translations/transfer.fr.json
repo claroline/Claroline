@@ -22,5 +22,6 @@
     "col_delimiter": "Délimiteur de colonnes",
     "list_delimiter": "Délimiteur des valeurs dans les listes",
     "unnamed_import": "Import sans nom",
-    "unnamed_export": "Export sans nom"
+    "unnamed_export": "Export sans nom",
+    "export_in_progress_help": "L'export est planifié / en cours d'exécution. Veuillez revenir lorsqu'il sera terminé afin d'accéder à vos données."
 }
