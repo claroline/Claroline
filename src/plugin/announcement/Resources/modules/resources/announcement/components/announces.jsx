@@ -3,7 +3,8 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {trans} from '#/main/app/intl/translation'
-
+import {Button} from '#/main/app/action'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {actions as modalActions} from '#/main/app/overlays/modal/store'
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
@@ -17,14 +18,13 @@ const AnnouncesList = props =>
   <Fragment>
     <div className="announces-sort">
       {trans('list_sort_by')}
-      <button
-        type="button"
+      <Button
         className="btn btn-link"
-        disabled={0 === props.posts.length}
-        onClick={props.toggleSort}
-      >
-        {trans(1 === props.sortOrder ? 'from_older_to_newer':'from_newer_to_older', {}, 'announcement')}
-      </button>
+        type={CALLBACK_BUTTON}
+        label={trans(1 === props.sortOrder ? 'from_older_to_newer':'from_newer_to_older', {}, 'announcement')}
+        callback={props.toggleSort}
+        primary={true}
+      />
     </div>
 
     {props.posts.map(post =>
