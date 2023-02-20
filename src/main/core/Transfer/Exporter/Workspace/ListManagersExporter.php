@@ -44,8 +44,8 @@ class ListManagersExporter extends AbstractListExporter
                     'workspace' => $extra['workspace'],
                 ];
             } else {
-                // find all workspaces the user manages
-                $workspaces = $this->om->getRepository(Workspace::class)->findManaged($user['id']);
+                // find all workspaces the group is registered to
+                $workspaces = $this->om->getRepository(Workspace::class)->findByRoles($user['id']);
                 foreach ($workspaces as $workspace) {
                     $data[] = [
                         'user' => $user,
