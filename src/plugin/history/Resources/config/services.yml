@@ -21,6 +21,7 @@ services:
     Claroline\HistoryBundle\Listener\ResourceListener:
         arguments:
             - '@security.token_storage'
+            - '@Claroline\AppBundle\Manager\SecurityManager'
             - '@Claroline\HistoryBundle\Manager\HistoryManager'
         tags:
             - { name: kernel.event_listener, event: resource_load, method: onLoad }

@@ -19,9 +19,6 @@ class WorkspaceListener
     /** @var HistoryManager */
     private $manager;
 
-    /**
-     * WorkspaceListener constructor.
-     */
     public function __construct(
         TokenStorageInterface $tokenStorage,
         SecurityManager $securityManager,
