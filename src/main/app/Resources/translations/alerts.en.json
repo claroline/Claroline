@@ -218,5 +218,19 @@
       "title": "Registration failure",
       "message": "We are unable to create your account."
     }
+  },
+  "schedule": {
+    "pending": {
+      "title": "Planning in progress",
+      "message": "Please wait while we prepare your task."
+    },
+    "info": {
+      "title": "Successful planning",
+      "message": "Your task has been correctly planned and will be executed as soon as possible."
+    },
+    "error": {
+      "title": "Planning failure",
+      "message": "We were unable to plan your task."
+    }
   }
 }

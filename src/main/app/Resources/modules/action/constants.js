@@ -21,6 +21,7 @@ const ACTION_UPLOAD    = 'upload'
 const ACTION_DOWNLOAD  = 'download'
 const ACTION_PUBLISH   = 'publish'
 const ACTION_UNPUBLISH = 'unpublish'
+const ACTION_SCHEDULE = 'schedule'
 
 const ACTIONS = {
   [ACTION_GENERIC]: {},
@@ -57,6 +58,9 @@ const ACTIONS = {
   },
   [ACTION_UNPUBLISH]: {
     icon: 'fa fa-eye-slash'
+  },
+  [ACTION_SCHEDULE]: {
+    icon: 'fa fa-clock'
   }
 }
 
@@ -79,5 +83,6 @@ export const constants = {
   ACTION_UPLOAD,
   ACTION_DOWNLOAD,
   ACTION_PUBLISH,
-  ACTION_UNPUBLISH
+  ACTION_UNPUBLISH,
+  ACTION_SCHEDULE
 }

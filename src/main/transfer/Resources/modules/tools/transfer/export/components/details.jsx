@@ -9,6 +9,7 @@ import {Routes} from '#/main/app/router'
 import {ExportFile as ExportFileTypes} from '#/main/transfer/prop-types'
 import {TransferDetails} from '#/main/transfer/tools/transfer/components/details'
 import {ExportForm} from '#/main/transfer/tools/transfer/export/containers/form'
+import {Alert} from '#/main/app/alert/components/alert'
 
 const ExportDetails = props =>
   <TransferDetails
@@ -32,6 +33,12 @@ const ExportDetails = props =>
       }
     ]}
   >
+    {!props.exportFile || 'in_progress' === props.exportFile.status &&
+      <Alert type="info" style={{marginTop: 20}}>
+        {trans('export_in_progress_help', {}, 'transfer')}
+      </Alert>
+    }
+
     {props.exportFile &&
       <Routes
         path={props.path+'/export/history/'+props.exportFile.id}

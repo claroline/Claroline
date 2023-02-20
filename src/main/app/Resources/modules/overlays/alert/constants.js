@@ -57,7 +57,7 @@ const ALERT_STATUS = {
     order: 8,
     icon: 'fa-info',
     removable: true,
-    timeout: ALERT_DISPLAY_TIMEOUT
+    timeout: ALERT_DISPLAY_TIMEOUT * 3 // increase display time to let users read the message
   }
 }
 
@@ -254,7 +254,7 @@ const ALERT_ACTIONS = {
     },
     [ALERT_STATUS_SUCCESS]: {
       title: trans('publish.success.title', {}, 'alerts'),
-      message: trans('send.success.message', {}, 'alerts')
+      message: trans('publish.success.message', {}, 'alerts')
     },
     [ALERT_STATUS_ERROR]: {
       title: trans('publish.error.title', {}, 'alerts'),
@@ -273,6 +273,20 @@ const ALERT_ACTIONS = {
     [ALERT_STATUS_ERROR]: {
       title: trans('unpublish.error.title', {}, 'alerts'),
       message: trans('unpublish.error.message', {}, 'alerts')
+    }
+  },
+  [actionConstants.ACTION_SCHEDULE]: {
+    [ALERT_STATUS_PENDING]: {
+      title: trans('schedule.pending.title', {}, 'alerts'),
+      message: trans('schedule.pending.message', {}, 'alerts')
+    },
+    [ALERT_STATUS_INFO]: {
+      title: trans('schedule.info.title', {}, 'alerts'),
+      message: trans('schedule.info.message', {}, 'alerts')
+    },
+    [ALERT_STATUS_ERROR]: {
+      title: trans('schedule.error.title', {}, 'alerts'),
+      message: trans('schedule.error.message', {}, 'alerts')
     }
   }
 }

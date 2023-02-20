@@ -13,5 +13,6 @@
     "disable": "Disable",
     "list_users": "List of users",
     "list_managers": "List of managers",
+    "list_groups": "List of groups",
     "empty_users": "Remove all users"
 }

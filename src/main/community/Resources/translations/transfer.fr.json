@@ -13,5 +13,6 @@
     "disable": "Désactiver",
     "list_users": "Liste des utilisateurs",
     "list_managers": "Liste des gestionnaires",
+    "list_groups": "Liste des groupes",
     "empty_users": "Supprimer tous les utilisateurs"
 }

@@ -3,6 +3,7 @@ import {makeActionCreator} from '#/main/app/store/actions'
 
 import {actions as logActions} from '#/main/transfer/tools/transfer/log/store'
 import {actions as formActions} from '#/main/app/content/form/store'
+import {constants} from '#/main/app/action'
 
 export const IMPORT_FILE_LOAD = 'IMPORT_FILE_LOAD'
 
@@ -33,6 +34,7 @@ actions.fetch = (importFileId) => (dispatch) => dispatch({
 actions.execute = (importFileId) => ({
   [API_REQUEST]: {
     url: ['apiv2_transfer_import_execute', {id: importFileId}],
+    type: constants.ACTION_SCHEDULE,
     request: {
       method: 'POST'
     }

@@ -86,7 +86,8 @@ class ImportController extends AbstractCrudController
         $this->transferManager->requestImport($importFile);
 
         return new JsonResponse(
-            $this->serializer->serialize($importFile)
+            $this->serializer->serialize($importFile),
+            ImportFile::IN_PROGRESS === $importFile->getStatus() ? 202 : 200
         );
     }
 

@@ -2,6 +2,8 @@ import {API_REQUEST} from '#/main/app/api'
 import {makeActionCreator} from '#/main/app/store/actions'
 import {actions as formActions} from '#/main/app/content/form/store'
 
+import {constants} from '#/main/app/action/constants'
+
 export const EXPORT_FILE_LOAD = 'EXPORT_FILE_LOAD'
 
 export const actions = {}
@@ -30,6 +32,7 @@ actions.fetch = (exportFileId) => (dispatch) => dispatch({
 actions.execute = (exportFileId) => ({
   [API_REQUEST]: {
     url: ['apiv2_transfer_export_execute', {id: exportFileId}],
+    type: constants.ACTION_SCHEDULE,
     request: {
       method: 'POST'
     }
