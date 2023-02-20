@@ -98,6 +98,7 @@ const SendingModal = (props) =>
             url={['claro_announcement_validate', {aggregateId: props.aggregateId, id: props.announcement.id}]}
             selectable={false}
             filterable={false}
+            actions={undefined}
           />
         }
       </FormSection>

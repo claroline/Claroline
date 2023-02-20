@@ -78,15 +78,10 @@ class AnnouncementController
      */
     public function createAction(AnnouncementAggregate $aggregate, Request $request): JsonResponse
     {
-        $this->checkPermission('CREATE-ANNOUNCE', $aggregate->getResourceNode(), [], true);
-
         $announcement = new Announcement();
         $announcement->setAggregate($aggregate);
 
-        $this->crud->create($announcement, $this->decodeRequest($request), [
-            Crud::NO_PERMISSIONS, // this has already been checked
-            Crud::THROW_EXCEPTION,
-        ]);
+        $this->crud->create($announcement, $this->decodeRequest($request), [Crud::THROW_EXCEPTION]);
 
         return new JsonResponse(
             $this->serializer->serialize($announcement),
@@ -106,15 +101,10 @@ class AnnouncementController
      */
     public function updateAction(AnnouncementAggregate $aggregate, Announcement $announcement, Request $request): JsonResponse
     {
-        $this->checkPermission('EDIT', $aggregate->getResourceNode(), [], true);
-
-        $this->crud->update($announcement, $this->decodeRequest($request), [
-            Crud::NO_PERMISSIONS, // this has already been checked
-        ]);
+        $this->crud->update($announcement, $this->decodeRequest($request), [Crud::THROW_EXCEPTION]);
 
         return new JsonResponse(
-            $this->serializer->serialize($announcement),
-            201
+            $this->serializer->serialize($announcement)
         );
     }
 
@@ -132,9 +122,7 @@ class AnnouncementController
     {
         $this->checkPermission('EDIT', $aggregate->getResourceNode(), [], true);
 
-        $this->crud->delete($announcement, [
-            Crud::NO_PERMISSIONS, // this has already been checked
-        ]);
+        $this->crud->delete($announcement, [Crud::THROW_EXCEPTION]);
 
         return new JsonResponse(null, 204);
     }
