@@ -118,7 +118,7 @@ class WorkspaceEvaluationSubscriber implements EventSubscriberInterface
         $workspace = $resourceNode->getWorkspace();
         $user = $resourceUserEvaluation->getUser();
 
-        $this->manager->computeEvaluation($workspace, $user, $resourceUserEvaluation);
+        $this->manager->computeEvaluation($workspace, $user);
     }
 
     /**

@@ -132,7 +132,7 @@ class WorkspaceEvaluationManager extends AbstractEvaluationManager
     /**
      * Compute evaluation status and progression of an user in a workspace.
      */
-    public function computeEvaluation(Workspace $workspace, User $user, ResourceUserEvaluation $currentRue = null): Evaluation
+    public function computeEvaluation(Workspace $workspace, User $user): Evaluation
     {
         $evaluation = $this->getUserEvaluation($workspace, $user);
 
@@ -158,32 +158,15 @@ class WorkspaceEvaluationManager extends AbstractEvaluationManager
         $scoreMax = 0;
         $progressionMax = count($resources);
 
-        // if there is a triggering resource evaluation checks if it is part of the workspace requirements
-        // if not, no evaluation is computed
-        if ($currentRue) {
-            $currentResource = $currentRue->getResourceNode();
-
-            if (isset($resources[$currentResource->getUuid()])) {
-                if ($currentRue->getStatus()) {
-                    ++$statusCount[$currentRue->getStatus()];
-
-                    if ($currentResource->isEvaluated() && 'custom/innova_path' !== $currentResource->getMimeType()) {
-                        // we don't count Path score because it's calculated from the sum of all the scores of the embedded resources
-                        // which are already taken into account in the workspace score.
-                        $score += $currentRue->getScore() ?? 0;
-                        $scoreMax += $currentRue->getScoreMax() ?? 0;
-                    }
-                }
-            }
-        }
-
         foreach ($resources as $resource) {
             $resourceEval = $this->om->getRepository(ResourceUserEvaluation::class)->findOneBy([
                 'resourceNode' => $resource,
                 'user' => $user,
             ]);
 
-            if (!$resourceEval || ($currentRue && $resourceEval->getId() === $currentRue->getId())) {
+            if (!$resourceEval) {
+                ++$statusCount[AbstractEvaluation::STATUS_NOT_ATTEMPTED];
+
                 continue;
             }
 
@@ -214,11 +197,12 @@ class WorkspaceEvaluationManager extends AbstractEvaluationManager
             }
 
             $successCondition = $workspace->getSuccessCondition();
-            if (!empty($successCondition)) {
+            if ($scoreMax && !empty($successCondition)) {
+                // success conditions only apply if the workspace as a score
                 $status = AbstractEvaluation::STATUS_PASSED;
 
                 // check user score (the condition is a percentage of the max score)
-                if ($scoreMax && isset($successCondition['score'])) {
+                if (isset($successCondition['score'])) {
                     // the condition has been set for the workspace, we need to check it
 
                     $successScore = ($successCondition['score'] * $scoreMax) / 100;
@@ -257,7 +241,7 @@ class WorkspaceEvaluationManager extends AbstractEvaluationManager
         $evaluationData['status'] = $status;
         $evaluationData['progression'] = $progressionMax ? ($progression / $progressionMax) * 100 : 0;
 
-        $hasChanged = $this->updateEvaluation($evaluation, $evaluationData, $currentRue ? $currentRue->getDate() : null);
+        $hasChanged = $this->updateEvaluation($evaluation, $evaluationData);
 
         $this->om->persist($evaluation);
         $this->om->flush();
