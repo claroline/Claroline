@@ -126,6 +126,17 @@ class EvaluationManager
         // the path evaluation aggregates the progression/score of all its required/evaluated resource
         // and the status of the steps which don't contain any resource.
         $aggregator = new EvaluationAggregator();
+
+        if (!empty($path->getOverviewResource()) && $path->getOverviewResource()->isRequired()) {
+            $resourceEvaluation = $this->resourceEvalManager->getUserEvaluation($path->getOverviewResource(), $user, false);
+            if (!$resourceEvaluation) {
+                // no evaluation, adds an empty evaluation for correct progression check
+                $resourceEvaluation = new GenericEvaluation(0);
+            }
+
+            $aggregator->addEvaluation($resourceEvaluation, $path->getOverviewResource()->isEvaluated());
+        }
+
         foreach ($path->getSteps() as $step) {
             if (!empty($step->getResource()) && $step->getResource()->isRequired()) {
                 // the step contains a required resource, we need to get the evaluation for this resource
