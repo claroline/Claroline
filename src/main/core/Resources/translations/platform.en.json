@@ -1084,5 +1084,6 @@
     "platform_home_tool": "Tool (Displaying the platform's home)",
     "no_title": "No title",
     "time_spent": "Time spent",
-    "edition": "Edition"
+    "edition": "Edition",
+    "after_today": "After today"
 }
