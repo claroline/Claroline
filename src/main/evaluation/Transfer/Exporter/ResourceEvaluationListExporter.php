@@ -46,6 +46,10 @@ class ResourceEvaluationListExporter extends AbstractEvaluationListExporter
                 'type' => 'string',
                 'description' => $this->translator->trans('The resource name', [], 'schema'),
             ], [
+                'name' => 'resourceNode.code',
+                'type' => 'string',
+                'description' => $this->translator->trans('The resource code', [], 'schema'),
+            ], [
                 'name' => 'resourceNode.slug',
                 'type' => 'string',
                 'description' => $this->translator->trans('The resource slug', [], 'schema'),
