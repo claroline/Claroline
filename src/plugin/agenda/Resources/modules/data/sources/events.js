@@ -40,7 +40,7 @@ export default {
       }, {
         name: 'afterToday',
         type: 'boolean',
-        label: trans('after_today', {}, 'agenda'),
+        label: trans('after_today'),
         displayed: false,
         filterable: true,
         sortable: false

@@ -70,7 +70,8 @@ class AnnouncementManager
         $message = $this->getMessage($announcement, $roles);
         $taskData = [
             'name' => $message['object'],
-            'type' => 'message',
+            'action' => 'message',
+            'parentId' => $announcement->getUuid(),
             'scheduledDate' => DateNormalizer::normalize($scheduledDate),
             'data' => [
                 'object' => $message['object'],

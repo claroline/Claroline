@@ -102,7 +102,8 @@ class AnnouncementFinder extends AbstractFinder
     protected function getExtraFieldMapping(): array
     {
         return [
-          'meta.publishedAt' => 'publication_date',
+            'meta.publishedAt' => 'publication_date',
+            'meta.author' => 'announcer',
         ];
     }
 }

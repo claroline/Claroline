@@ -1107,5 +1107,6 @@
     "platform_home_tool": "Outil (Affichage de l'accueil de la plateforme)",
     "no_title": "Aucun titre",
     "time_spent": "Temps passé",
-    "edition": "Modification"
+    "edition": "Modification",
+    "after_today": "A partir d'aujourd'hui"
 }

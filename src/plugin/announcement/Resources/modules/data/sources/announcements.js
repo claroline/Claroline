@@ -29,15 +29,15 @@ export default {
         alias: 'publicationDate',
         type: 'date',
         label: trans('date'),
-        displayed: true
+        displayed: true,
+        options: {time: true}
       }, {
         name: 'meta.author',
-        alias: 'announcer',
         type: 'string',
         label: trans('author'),
         displayed: true
       }, {
-        name: 'meta.resource.workspace',
+        name: 'workspace',
         type: 'workspace',
         label: trans('workspace'),
         displayed: true,
@@ -46,7 +46,7 @@ export default {
       }, {
         name: 'notDoneYet',
         type: 'boolean',
-        label: trans('not_done_yet'),
+        label: trans('after_today'),
         displayed: false,
         displayable: false,
         filterable: true,
