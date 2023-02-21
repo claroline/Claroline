@@ -135,8 +135,8 @@ const EvaluationUsers = (props) =>
           callback: () => {
             rows.map(row => {
               if ([
-                constants.EVALUATION_STATUS_PASSED,
-                constants.EVALUATION_STATUS_FAILED
+                constants.EVALUATION_STATUS_COMPLETED,
+                constants.EVALUATION_STATUS_PARTICIPATED
               ].includes(get(row, 'status', constants.EVALUATION_STATUS_UNKNOWN))) {
                 props.downloadParticipationCertificate(row)
               }
