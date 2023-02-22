@@ -137,7 +137,7 @@ function getFormDefaultSections(user, update, isNew = false) {
           type: 'locale',
           label: trans('language'),
           required: true,
-          displayed: hasPermission('administrate', user),
+          displayed: isNew || hasPermission('administrate', user),
           options: {
             onlyEnabled: true
           }
