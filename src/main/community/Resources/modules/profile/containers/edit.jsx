@@ -21,6 +21,9 @@ const ProfileEdit = withRouter(
       (dispatch, ownProps) => ({
         updateProp(prop, value) {
           dispatch(formActions.updateProp(ownProps.name, prop, value))
+        },
+        save(targetUrl) {
+          return dispatch(formActions.save(ownProps.name, targetUrl))
         }
       })
     )(ProfileEditComponent)

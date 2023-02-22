@@ -3,11 +3,11 @@ import {PropTypes as T} from 'prop-types'
 import cloneDeep from 'lodash/cloneDeep'
 import get from 'lodash/get'
 
+import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 
 import {Profile} from '#/main/community/profile/containers/main'
 import {formatFormSections, getDefaultFacet, getFormDefaultSections} from '#/main/community/profile/utils'
-import {LINK_BUTTON} from '#/main/app/buttons'
 
 const ProfileEdit = (props) => {
   let facet = props.facet || getDefaultFacet()
@@ -31,10 +31,17 @@ const ProfileEdit = (props) => {
       <FormData
         name={props.name}
         title={facet.title}
-        target={(user, isNew) => isNew ?
-          ['apiv2_user_create'] :
-          ['apiv2_user_update', {id: user.id}]
-        }
+        save={{
+          type: CALLBACK_BUTTON,
+          callback: () => props.save(props.isNew ?
+            ['apiv2_user_create'] :
+            ['apiv2_user_update', {id: props.user.id}]
+          ).then(user => {
+            if (props.isNew) {
+              props.history.push(props.back+'/'+user.username) // slightly ugly
+            }
+          })
+        }}
         cancel={{
           type: LINK_BUTTON,
           target: props.back,
@@ -50,6 +57,9 @@ const ProfileEdit = (props) => {
 ProfileEdit.propTypes = {
   name: T.string.isRequired,
   path: T.string.isRequired,
+  history: T.shape({
+    push: T.func.isRequired
+  }).isRequired,
   back: T.string.isRequired,
   user: T.object,
   isNew: T.bool.isRequired,
@@ -57,6 +67,7 @@ ProfileEdit.propTypes = {
   allFields: T.array,
   parameters: T.object,
   currentUser: T.object,
+  save: T.func.isRequired,
   updateProp: T.func.isRequired
 }
 
