@@ -107,9 +107,9 @@ class UpdateRichTextCommand extends Command
             'Claroline\CoreBundle\Entity\Planning\PlannedObject' => ['description'],
             // plugins (should not be here)
             'Claroline\AnnouncementBundle\Entity\Announcement' => ['content'],
-            'Innova\PathBundle\Entity\Path\Path' => ['description'],
+            'Innova\PathBundle\Entity\Path\Path' => ['overviewMessage', 'endMessage', 'successMessage', 'failureMessage'],
             'Innova\PathBundle\Entity\Step' => ['description'],
-            'UJM\ExoBundle\Entity\Exercise' => ['endMessage'],
+            'UJM\ExoBundle\Entity\Exercise' => ['overviewMessage', 'endMessage', 'successMessage', 'failureMessage'],
             'UJM\ExoBundle\Entity\Item\Item' => ['title', 'content'],
             'Claroline\ForumBundle\Entity\Message' => ['content'],
             'Claroline\CursusBundle\Entity\Course' => ['description'],
