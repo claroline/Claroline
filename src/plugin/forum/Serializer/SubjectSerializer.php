@@ -38,28 +38,22 @@ class SubjectSerializer
     /** @var ObjectRepository */
     private $messageRepo;
 
-    public function getClass()
+    public function getClass(): string
     {
         return Subject::class;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'forum_subject';
     }
 
-    /**
-     * @return string
-     */
-    public function getSchema()
+    public function getSchema(): string
     {
         return '#/plugin/forum/subject.json';
     }
 
-    /**
-     * @return string
-     */
-    public function getSamples()
+    public function getSamples(): string
     {
         return '#/plugin/forum/subject';
     }
@@ -84,10 +78,8 @@ class SubjectSerializer
 
     /**
      * Serializes a Subject entity.
-     *
-     * @return array
      */
-    public function serialize(Subject $subject, array $options = [])
+    public function serialize(Subject $subject, ?array $options = []): array
     {
         $first = $this->messageRepo->findOneBy([
           'subject' => $subject,
@@ -102,36 +94,27 @@ class SubjectSerializer
             'tags' => $this->serializeTags($subject),
             'content' => $first ? $first->getContent() : null,
             'title' => $subject->getTitle(),
-            'meta' => $this->serializeMeta($subject, $options),
+            'meta' => [
+                'moderation' => $subject->getModerated(),
+                'views' => $subject->getViewCount(),
+                // don't use Finder in a Serializer
+                'messages' => $this->finder->fetch(Message::class, ['subject' => $subject->getUuid(), 'parent' => null], null, 0, 0, true),
+                'creator' => !empty($subject->getCreator()) ? $this->userSerializer->serialize($subject->getCreator(), [Options::SERIALIZE_MINIMAL]) : null,
+                'created' => DateNormalizer::normalize($subject->getCreationDate()),
+                'updated' => DateNormalizer::normalize($subject->getModificationDate()),
+                'sticky' => $subject->isSticked(),
+                'closed' => $subject->isClosed(),
+                'flagged' => $subject->isFlagged(),
+                'hot' => in_array($subject->getUuid(), $this->manager->getHotSubjects($subject->getForum())),
+            ],
             'poster' => $subject->getPoster() ? $subject->getPoster()->getUrl() : null,
-        ];
-    }
-
-    private function serializeMeta(Subject $subject, array $options = [])
-    {
-        return [
-            'moderation' => $subject->getModerated(),
-            'views' => $subject->getViewCount(),
-            // don't use Finder in a Serializer
-            'messages' => $this->finder->fetch(Message::class, ['subject' => $subject->getUuid(), 'parent' => null], null, 0, 0, true),
-            'creator' => !empty($subject->getCreator()) ? $this->userSerializer->serialize($subject->getCreator(), [Options::SERIALIZE_MINIMAL]) : null,
-            'created' => DateNormalizer::normalize($subject->getCreationDate()),
-            'updated' => DateNormalizer::normalize($subject->getModificationDate()),
-            'sticky' => $subject->isSticked(),
-            'closed' => $subject->isClosed(),
-            'flagged' => $subject->isFlagged(),
-            'hot' => $this->isHot($subject),
         ];
     }
 
     /**
      * Deserializes data into a Subject entity.
-     *
-     * @param array $data
-     *
-     * @return Subject
      */
-    public function deserialize($data, Subject $subject, array $options = [])
+    public function deserialize(array $data, Subject $subject, array $options = []): Subject
     {
         $first = $this->messageRepo->findOneBy([
           'subject' => $subject,
@@ -149,14 +132,8 @@ class SubjectSerializer
         $this->sipe('meta.moderation', 'setModerated', $data, $subject);
 
         if (isset($data['content'])) {
-            // this should be done in the CRUD instead
+            // TODO this should be done in the CRUD instead
             if (!$first) {
-                $messageData = ['content' => $data['content']];
-
-                if (isset($data['meta']) && isset($data['meta']['creator'])) {
-                    $messageData['meta']['creator'] = $data['meta']['creator'];
-                }
-
                 $first = new Message();
                 $first->setFirst(true);
                 $first->setSubject($subject);
@@ -172,7 +149,6 @@ class SubjectSerializer
             }
 
             if (isset($data['meta']['creator'])) {
-                // TODO: reuse value from token Storage if new
                 $creator = $this->om->getObject($data['meta']['creator'], User::class);
 
                 if ($creator) {
@@ -247,10 +223,5 @@ class SubjectSerializer
         ]);
 
         $this->eventDispatcher->dispatch($event, 'claroline_tag_multiple_data');
-    }
-
-    private function isHot(Subject $subject)
-    {
-        return in_array($subject->getUuid(), $this->manager->getHotSubjects($subject->getForum()));
     }
 }
