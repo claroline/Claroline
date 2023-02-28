@@ -77,6 +77,10 @@ class SubjectFinder extends AbstractFinder
         // manages custom sort properties
         if (!empty($sortBy)) {
             switch ($sortBy['property']) {
+                case 'sticked':
+                    $qb->addOrderBy('obj.sticked', 1 === $sortBy['direction'] ? 'ASC' : 'DESC');
+                    $qb->addOrderBy('obj.title', 'ASC');
+                    break;
                 case 'meta.messages':
                     $qb->select('obj, count(msg) AS HIDDEN countMsg');
                     $qb->leftJoin('obj.messages', 'msg');
