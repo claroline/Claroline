@@ -97,10 +97,13 @@ class ForumListener
 
         $this->om->startFlushSuite();
         foreach ($forum->getSubjects() as $subject) {
+            $subjectData = $this->serializer->serialize($subject);
+            unset($subjectData['forum']);
+
             $newSubject = new Subject();
             $newSubject->setForum($copy);
 
-            $this->crud->create($newSubject, $this->serializer->serialize($subject), [
+            $this->crud->create($newSubject, $subjectData, [
                 Crud::NO_PERMISSIONS, // this has already been checked by the core before forwarding the copy
                 Options::REFRESH_UUID,
             ]);
