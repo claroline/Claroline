@@ -14,35 +14,29 @@ abstract class AbstractUserRegistration extends AbstractRegistration
      * The registration request has been confirmed by the user.
      *
      * @ORM\Column(type="boolean")
-     *
-     * @var bool
      */
-    protected $confirmed = false;
+    protected bool $confirmed = false;
 
     /**
      * The registration request has been validated by a manager.
-     * It is false when the registration requires manual validation or if their is no more seats to validate the registration.
+     * It is false when the registration requires manual validation or if there is no more seats to validate the registration.
      *
      * @ORM\Column(type="boolean")
-     *
-     * @var bool
      */
-    protected $validated = false;
+    protected bool $validated = false;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
      * @ORM\JoinColumn(name="user_id", nullable=false, onDelete="CASCADE")
-     *
-     * @var User
      */
-    protected $user;
+    protected ?User $user = null;
 
     public function isConfirmed(): bool
     {
         return $this->confirmed;
     }
 
-    public function setConfirmed(bool $confirmed)
+    public function setConfirmed(bool $confirmed): void
     {
         $this->confirmed = $confirmed;
     }
@@ -52,7 +46,7 @@ abstract class AbstractUserRegistration extends AbstractRegistration
         return $this->validated;
     }
 
-    public function setValidated(bool $validated)
+    public function setValidated(bool $validated): void
     {
         $this->validated = $validated;
     }
@@ -62,7 +56,7 @@ abstract class AbstractUserRegistration extends AbstractRegistration
         return $this->user;
     }
 
-    public function setUser(User $user)
+    public function setUser(User $user): void
     {
         $this->user = $user;
     }

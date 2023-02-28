@@ -18,7 +18,7 @@ const CourseCard = props =>
     })}
     id={props.data.id}
     poster={props.data.thumbnail ? asset(props.data.thumbnail) : null}
-    icon="fa fa-graduation-cap"
+    icon={!props.data.thumbnail ? 'fa fa-graduation-cap' : null}
     title={props.data.name}
     subtitle={props.data.code}
     contentText={props.data.plainDescription || props.data.description}

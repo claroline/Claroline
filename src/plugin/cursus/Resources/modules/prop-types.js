@@ -20,9 +20,7 @@ const Course = {
     meta: T.shape({
       workspace: T.shape(WorkspaceTypes.propTypes),
       workspaceModel: T.shape(WorkspaceTypes.propTypes),
-      tutorRoleName: T.string,
-      learnerRoleName: T.string,
-      defaultSessionDuration: T.number
+      duration: T.number
     }),
     display: T.shape({
       order: T.number,
@@ -38,15 +36,19 @@ const Course = {
       selfUnregistration: T.bool,
       validation: T.bool,
       mail: T.bool,
-      userValidation: T.bool
+      userValidation: T.bool,
+      tutorRoleName: T.string,
+      learnerRoleName: T.string,
+      // custom registration form using FieldFacets
+      form: T.array
     })
   },
   defaultProps: {
-    code: '',
-    title: '',
-    parent: null,
+    meta: {
+      duration: 1
+    },
     display: {
-      order: constants.DEFAULT_ORDER,
+      order: 1,
       hideSessions: false
     },
     restrictions: {
@@ -112,7 +114,7 @@ const Session = {
       default: false
     },
     display: {
-      order: constants.DEFAULT_ORDER
+      order: 1
     },
     registration: {
       selfRegistration: false,

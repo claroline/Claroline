@@ -4,17 +4,9 @@ const ProfileFacetSection = {
   propTypes: {
     id: T.string.isRequired,
     title: T.string.isRequired,
-    position: T.number,
     display: T.shape({
-      collapsed: T.bool
+      order: T.number
     }),
-    roles: T.arrayOf(T.shape({
-      edit: T.bool,
-      open: T.bool,
-      role: T.shape({
-        // todo get from role prop-types
-      })
-    })),
     fields: T.arrayOf(T.shape({
 
     }))
@@ -25,11 +17,11 @@ const ProfileFacet = {
   propTypes: {
     id: T.string.isRequired,
     title: T.string.isRequired,
-    position: T.number,
     meta: T.shape({
       main: T.bool
     }),
     display: T.shape({
+      order: T.number,
       creation: T.bool
     }),
     sections: T.arrayOf(T.shape(
@@ -42,6 +34,7 @@ const ProfileFacet = {
       main: false
     },
     display: {
+      order: 0,
       creation: false
     },
     sections: []

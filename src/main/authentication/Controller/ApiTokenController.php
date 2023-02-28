@@ -77,13 +77,9 @@ class ApiTokenController extends AbstractCrudController
             throw new AccessDeniedException();
         }
 
+        $options = static::getOptions();
+
         $query = $request->query->all();
-        $options = $this->options['list'];
-
-        if (isset($query['options'])) {
-            $options = $query['options'];
-        }
-
         $query['hiddenFilters'] = [
             'user' => $this->tokenStorage->getToken()->getUser()->getUuid(),
         ];
@@ -91,7 +87,7 @@ class ApiTokenController extends AbstractCrudController
         return new JsonResponse($this->finder->search(
             $this->getClass(),
             $query,
-            $options
+            $options['get'] ?? []
         ));
     }
 }

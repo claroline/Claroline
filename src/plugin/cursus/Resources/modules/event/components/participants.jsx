@@ -20,12 +20,12 @@ import {isFull} from '#/plugin/cursus/utils'
 
 import {selectors} from '#/plugin/cursus/event/store'
 import {MODAL_EVENT_PRESENCE} from '#/plugin/cursus/event/modals/presence'
-import {SessionGroups} from '#/plugin/cursus/session/components/groups'
-import {SessionUsers} from '#/plugin/cursus/session/components/users'
+import {RegistrationGroups} from '#/plugin/cursus/registration/components/groups'
+import {RegistrationUsers} from '#/plugin/cursus/registration/components/users'
 import {ContentCounter} from '#/main/app/content/components/counter'
 
 const EventUsers = (props) =>
-  <SessionUsers
+  <RegistrationUsers
     session={props.event}
     name={props.name}
     url={['apiv2_cursus_event_list_users', {type: props.type, id: props.event.id}]}
@@ -74,7 +74,7 @@ EventUsers.propTypes = {
 }
 
 const EventGroups = (props) =>
-  <SessionGroups
+  <RegistrationGroups
     session={props.event}
     name={props.name}
     url={['apiv2_cursus_event_list_groups', {type: props.type, id: props.event.id}]}

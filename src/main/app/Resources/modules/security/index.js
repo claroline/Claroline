@@ -1,7 +1,8 @@
 
-import {isAdmin, hasPermission} from '#/main/app/security/permissions'
+import {isAdmin, hasPermission, hasRole} from '#/main/app/security/permissions'
 
 export {
   isAdmin,
-  hasPermission
+  hasPermission,
+  hasRole
 }

@@ -28,7 +28,7 @@ const ProfileMain = props =>
         <Vertical
           basePath={`${props.path}/parameters/profile`}
           tabs={props.facets.map(facet => ({
-            icon: facet.icon,
+            icon: get(facet, 'display.icon'),
             title: facet.title,
             path: get(facet, 'meta.main') ? '' : `/${facet.id}`,
             exact: true,

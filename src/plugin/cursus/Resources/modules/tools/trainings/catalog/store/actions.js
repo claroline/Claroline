@@ -227,13 +227,14 @@ actions.validatePending = (sessionId, users) => ({
   }
 })
 
-actions.register = (course, sessionId = null) => ({
+actions.register = (course, sessionId = null, registrationData = null) => ({
   [API_REQUEST]: {
     url: sessionId ?
       ['apiv2_cursus_session_self_register', {id: sessionId}] :
       ['apiv2_cursus_course_self_register', {id: course.id}],
     request: {
-      method: 'PUT'
+      method: 'PUT',
+      body: JSON.stringify(registrationData)
     },
     success: (response, dispatch) => dispatch(actions.open(course.slug, true))
   }

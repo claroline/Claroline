@@ -174,13 +174,13 @@ class ResourceNodeController extends AbstractCrudController
         return new JsonResponse(null, 204);
     }
 
-    public function getOptions(): array
+    public static function getOptions(): array
     {
-        return [
+        return array_merge(parent::getOptions(), [
             'list' => [Options::NO_RIGHTS, Options::SERIALIZE_LIST],
             'get' => [Options::NO_RIGHTS],
             'update' => [Options::NO_RIGHTS],
             'find' => [Options::NO_RIGHTS],
-        ];
+        ]);
     }
 }

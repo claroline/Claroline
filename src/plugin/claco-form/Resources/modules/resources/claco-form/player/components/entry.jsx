@@ -19,7 +19,7 @@ import {Button} from '#/main/app/action/components/button'
 import {Toolbar} from '#/main/app/action/components/toolbar'
 import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
 import {ListData} from '#/main/app/content/list/containers/data'
-import {formatField} from '#/main/community/profile/utils'
+import {formatField} from '#/main/app/content/form/parameters/utils'
 
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
 import {UserCard} from '#/main/community/user/components/card'
@@ -212,7 +212,7 @@ class EntryComponent extends Component {
         fields: fields
           .filter(f => this.isFieldDisplayable(f))
           .map(f => {
-            const params = formatField(f, fields, 'values')
+            const params = formatField(f, fields, 'values', true)
 
             switch (f.type) {
               case 'file':

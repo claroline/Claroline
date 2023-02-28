@@ -6,19 +6,16 @@ use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\Facet\FacetSerializer;
 use Claroline\CoreBundle\Entity\Facet\Facet;
-use Claroline\CoreBundle\Repository\Facet\FacetRepository;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class ProfileSerializer
 {
     /** @var TokenStorageInterface */
     private $tokenStorage;
-
-    /** @var FacetRepository */
-    private $repository;
-
     /** @var FacetSerializer */
     private $facetSerializer;
+
+    private $repository;
 
     public function __construct(
         TokenStorageInterface $tokenStorage,
@@ -38,13 +35,17 @@ class ProfileSerializer
     /**
      * Serializes the profile configuration.
      */
-    public function serialize(array $options = []): array
+    public function serialize(?array $options = []): array
     {
-        $facets = $this->repository
-            ->findVisibleFacets($this->tokenStorage->getToken(), in_array(Options::REGISTRATION, $options));
+        if (in_array(Options::REGISTRATION, $options)) {
+            // only get facets configured to be displayed in the registration form
+            $facets = $this->repository->findBy(['forceCreationForm' => true]);
+        } else {
+            $facets = $this->repository->findAll();
+        }
 
-        return array_map(function (Facet $facet) {
-            return $this->facetSerializer->serialize($facet);
+        return array_map(function (Facet $facet) use ($options) {
+            return $this->facetSerializer->serialize($facet, $options);
         }, $facets);
     }
 }

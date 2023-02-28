@@ -26,6 +26,7 @@ class SessionGroupFinder extends AbstractFinder
     {
         $sessionJoin = false;
         $groupJoin = false;
+
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
                 case 'course':
@@ -65,6 +66,17 @@ class SessionGroupFinder extends AbstractFinder
 
                     $qb->leftJoin('g.users', 'gu');
                     $qb->andWhere("gu.uuid = :{$filterName}");
+                    $qb->setParameter($filterName, $filterValue);
+                    break;
+
+                case 'organizations':
+                    if (!$groupJoin) {
+                        $qb->join('obj.group', 'g');
+                        $groupJoin = true;
+                    }
+
+                    $qb->join('g.organizations', 'o');
+                    $qb->andWhere("o.uuid IN (:{$filterName})");
                     $qb->setParameter($filterName, $filterValue);
                     break;
 

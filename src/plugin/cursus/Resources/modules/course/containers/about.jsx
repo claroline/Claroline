@@ -9,8 +9,8 @@ const CourseAbout = withRouter(
   connect(
     null,
     (dispatch) => ({
-      register(course, sessionId = null) {
-        return dispatch(actions.register(course, sessionId))
+      register(course, sessionId = null, registrationData = null) {
+        return dispatch(actions.register(course, sessionId, registrationData))
       }
     })
   )(CourseAboutComponent)

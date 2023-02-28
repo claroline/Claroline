@@ -54,8 +54,6 @@
     "event_loading": "We are loading the event...",
     "default_session_help": "The default session is displayed when opening the training in the catalog.",
     "default_session_help_registration": "The default session is used when automatically registering users from a parent training.",
-    "propagate_registration": "Automatically register users to linked trainings",
-    "propagate_registration_help": "Users will be registered to the default session of linked trainings if there is one and this session is not finished.",
     "training_hidden": "This training is hidden",
     "training_public_registration": "Registration is public.",
     "available_seats": "Available seats",

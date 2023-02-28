@@ -100,21 +100,6 @@ class RoleRepository extends EntityRepository
             ->getResult();
     }
 
-    public function findRolesByWorkspaceCodeAndTranslationKey(string $workspaceCode, string $translationKey)
-    {
-        return $this->_em
-            ->createQuery('
-                SELECT r
-                FROM Claroline\CoreBundle\Entity\Role r
-                INNER JOIN r.workspace w
-                WHERE w.code = :code
-                AND r.translationKey = :key
-            ')
-            ->setParameter('code', $workspaceCode)
-            ->setParameter('key', $translationKey)
-            ->getResult();
-    }
-
     /**
      * Returns user-type role of an user.
      */

@@ -377,7 +377,7 @@ const CourseAbout = (props) => {
             title={trans('linked_trainings', {}, 'cursus')}
             subtitle={props.course.parent ?
               'Cette formation fait partie de la formation' :
-              'En vous inscrivant à cette formation, vous serez également inscrit aux formations suivantes'
+              'Cette formation contient les formations suivantes'
             }
           />
         }
@@ -399,7 +399,7 @@ const CourseAbout = (props) => {
           <ContentTitle
             level={3}
             displayLevel={2}
-            subtitle="En vous inscrivant à cette formation, vous serez également inscrit aux formations suivantes"
+            subtitle="Cette formation contient les formations suivantes"
           />
         }
 

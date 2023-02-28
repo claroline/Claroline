@@ -13,6 +13,8 @@ namespace Claroline\HomeBundle\Entity;
 
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Claroline\AppBundle\Entity\Meta\Color;
+use Claroline\AppBundle\Entity\Meta\Icon;
 use Claroline\AppBundle\Entity\Meta\Order;
 use Claroline\AppBundle\Entity\Meta\Poster;
 use Claroline\AppBundle\Entity\Restriction\AccessCode;
@@ -35,6 +37,8 @@ class HomeTab
     use Uuid;
     use Order;
     use Poster;
+    use Color;
+    use Icon;
     // restrictions
     use Hidden;
     use AccessibleFrom;
@@ -89,20 +93,6 @@ class HomeTab
      * @ORM\Column(type="boolean", options={"default"=1})
      */
     private $showTitle = true;
-
-    /**
-     * @ORM\Column(nullable=true)
-     */
-    private $icon;
-
-    /**
-     * The color of the tab.
-     *
-     * @ORM\Column(nullable=true)
-     *
-     * @var string
-     */
-    private $color = null;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
@@ -184,36 +174,6 @@ class HomeTab
     public function setClass(string $class = null)
     {
         $this->class = $class;
-    }
-
-    /**
-     * Get color.
-     *
-     * @return string
-     */
-    public function getColor()
-    {
-        return $this->color;
-    }
-
-    /**
-     * Set color.
-     *
-     * @param string $color
-     */
-    public function setColor($color)
-    {
-        $this->color = $color;
-    }
-
-    public function getIcon()
-    {
-        return $this->icon;
-    }
-
-    public function setIcon($icon)
-    {
-        $this->icon = $icon;
     }
 
     public function getName()

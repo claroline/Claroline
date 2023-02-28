@@ -1,12 +1,6 @@
 services:
-    _defaults:
-        autowire: false
-        autoconfigure: false
-        public: true
-
     Claroline\CursusBundle\Manager\CourseManager:
         arguments:
-            - '@event_dispatcher'
             - '@translator'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\Manager\PlatformManager'
@@ -25,6 +19,7 @@ services:
             - '@Claroline\CoreBundle\Library\RoutingHelper'
             - '@Claroline\CoreBundle\Manager\Template\TemplateManager'
             - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
+            - '@Claroline\CoreBundle\Manager\FacetManager'
             - '@Claroline\CursusBundle\Manager\EventManager'
 
     Claroline\CursusBundle\Manager\EventManager:

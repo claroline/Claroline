@@ -1,6 +1,5 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import cloneDeep from 'lodash/cloneDeep'
 import get from 'lodash/get'
 
 import {DetailsData} from '#/main/app/content/details/containers/data'
@@ -13,7 +12,7 @@ const ProfileShow = (props) => {
   let sections = []
 
   if (facet.sections) {
-    sections = formatDetailsSections(cloneDeep(facet.sections), props.allFields, props.user, props.parameters, props.currentUser)
+    sections = formatDetailsSections(facet.sections, props.allFields, props.user, props.parameters, props.currentUser)
   }
 
   if (get(props.facet, 'meta.main')) {

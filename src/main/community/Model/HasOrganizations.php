@@ -4,11 +4,12 @@ namespace Claroline\CommunityBundle\Model;
 
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 trait HasOrganizations
 {
-    /** @var ArrayCollection|Organization[] */
-    private $organizations;
+    /** @var Collection|Organization[] */
+    private Collection $organizations;
 
     /**
      * Add an organization.
@@ -52,9 +53,9 @@ trait HasOrganizations
     /**
      * Get the organizations.
      *
-     * @return ArrayCollection|Organization[]
+     * @return Collection|Organization[]
      */
-    public function getOrganizations()
+    public function getOrganizations(): Collection
     {
         return $this->organizations ?? new ArrayCollection();
     }

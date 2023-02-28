@@ -21,8 +21,7 @@ abstract class AbstractUserSerializer
 {
     use SerializerTrait;
 
-    /** @var UserSerializer */
-    private $userSerializer;
+    private UserSerializer $userSerializer;
 
     public function __construct(UserSerializer $userSerializer)
     {

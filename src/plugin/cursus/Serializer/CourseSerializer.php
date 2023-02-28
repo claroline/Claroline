@@ -12,11 +12,14 @@
 namespace Claroline\CursusBundle\Serializer;
 
 use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CommunityBundle\Serializer\OrganizationSerializer;
 use Claroline\CommunityBundle\Serializer\UserSerializer;
+use Claroline\CoreBundle\API\Serializer\Facet\PanelFacetSerializer;
 use Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer;
+use Claroline\CoreBundle\Entity\Facet\PanelFacet;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -24,6 +27,7 @@ use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Repository\WorkspaceRepository;
 use Claroline\CursusBundle\Entity\Course;
+use Claroline\CursusBundle\Repository\CourseRepository;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -31,23 +35,17 @@ class CourseSerializer
 {
     use SerializerTrait;
 
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-    /** @var EventDispatcherInterface */
-    private $eventDispatcher;
-    /** @var ObjectManager */
-    private $om;
-    /** @var UserSerializer */
-    private $userSerializer;
-    /** @var OrganizationSerializer */
-    private $orgaSerializer;
-    /** @var WorkspaceSerializer */
-    private $workspaceSerializer;
+    private AuthorizationCheckerInterface $authorization;
+    private EventDispatcherInterface $eventDispatcher;
+    private ObjectManager $om;
 
-    private $orgaRepo;
-    /** @var WorkspaceRepository */
-    private $workspaceRepo;
-    private $courseRepo;
+    private UserSerializer $userSerializer;
+    private OrganizationSerializer $orgaSerializer;
+    private WorkspaceSerializer $workspaceSerializer;
+    private PanelFacetSerializer $panelFacetSerializer;
+
+    private WorkspaceRepository $workspaceRepo;
+    private CourseRepository $courseRepo;
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
@@ -55,7 +53,8 @@ class CourseSerializer
         ObjectManager $om,
         UserSerializer $userSerializer,
         OrganizationSerializer $orgaSerializer,
-        WorkspaceSerializer $workspaceSerializer
+        WorkspaceSerializer $workspaceSerializer,
+        PanelFacetSerializer $panelFacetSerializer
     ) {
         $this->authorization = $authorization;
         $this->eventDispatcher = $eventDispatcher;
@@ -63,64 +62,83 @@ class CourseSerializer
         $this->userSerializer = $userSerializer;
         $this->orgaSerializer = $orgaSerializer;
         $this->workspaceSerializer = $workspaceSerializer;
+        $this->panelFacetSerializer = $panelFacetSerializer;
 
-        $this->orgaRepo = $om->getRepository(Organization::class);
         $this->workspaceRepo = $om->getRepository(Workspace::class);
         $this->courseRepo = $om->getRepository(Course::class);
     }
 
-    public function getSchema()
+    public function getClass(): string
+    {
+        return Course::class;
+    }
+
+    public function getSchema(): string
     {
         return '#/plugin/cursus/course.json';
     }
 
     public function serialize(Course $course, array $options = []): array
     {
+        if (in_array(SerializerInterface::SERIALIZE_MINIMAL, $options)) {
+            return [
+                'id' => $course->getUuid(),
+                'name' => $course->getName(),
+                'code' => $course->getCode(),
+                'slug' => $course->getSlug(),
+                'thumbnail' => $course->getThumbnail(),
+            ];
+        }
+
         $serialized = [
             'id' => $course->getUuid(),
-            'code' => $course->getCode(),
             'name' => $course->getName(),
+            'code' => $course->getCode(),
             'slug' => $course->getSlug(),
+            'thumbnail' => $course->getThumbnail(),
             'description' => $course->getDescription(),
             'plainDescription' => $course->getPlainDescription(),
-            'thumbnail' => $course->getThumbnail(),
-            'permissions' => [
-                'open' => $this->authorization->isGranted('OPEN', $course),
-                'edit' => $this->authorization->isGranted('EDIT', $course),
-                'delete' => $this->authorization->isGranted('DELETE', $course),
-                'register' => $this->authorization->isGranted('REGISTER', $course),
+            'meta' => [
+                'creator' => $course->getCreator() ?
+                    $this->userSerializer->serialize($course->getCreator(), [SerializerInterface::SERIALIZE_MINIMAL]) :
+                    null,
+                'created' => DateNormalizer::normalize($course->getCreatedAt()),
+                'updated' => DateNormalizer::normalize($course->getUpdatedAt()),
+                'duration' => $course->getDefaultSessionDuration(),
             ],
             'opening' => [
                 'session' => $course->getSessionOpening(),
             ],
+            'pricing' => [
+                'price' => $course->getPrice(),
+                'description' => $course->getPriceDescription(),
+            ],
+            'restrictions' => [
+                'hidden' => $course->isHidden(),
+                'active' => $course->hasAvailableSession(),
+                'users' => $course->getMaxUsers(),
+            ],
             'tags' => $this->serializeTags($course),
         ];
 
-        if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
+        if (!in_array(SerializerInterface::SERIALIZE_TRANSFER, $options)) {
+            $serialized['permissions'] = [
+                'open' => $this->authorization->isGranted('OPEN', $course),
+                'edit' => $this->authorization->isGranted('EDIT', $course),
+                'delete' => $this->authorization->isGranted('DELETE', $course),
+                'register' => $this->authorization->isGranted('REGISTER', $course),
+            ];
+        }
+
+        if (!in_array(SerializerInterface::SERIALIZE_LIST, $options)) {
             $serialized = array_merge($serialized, [
                 'poster' => $course->getPoster(),
-                'parent' => $course->getParent() ? $this->serialize($course->getParent(), [Options::SERIALIZE_MINIMAL]) : null,
-                'meta' => [
-                    'creator' => $course->getCreator() ?
-                        $this->userSerializer->serialize($course->getCreator(), [Options::SERIALIZE_MINIMAL]) :
-                        null,
-                    'created' => DateNormalizer::normalize($course->getCreatedAt()),
-                    'updated' => DateNormalizer::normalize($course->getUpdatedAt()),
-                    'tutorRoleName' => $course->getTutorRoleName(),
-                    'learnerRoleName' => $course->getLearnerRoleName(),
-                    'duration' => $course->getDefaultSessionDuration(),
-                ],
+                'parent' => $course->getParent() ? $this->serialize($course->getParent(), [SerializerInterface::SERIALIZE_MINIMAL]) : null,
                 'display' => [
                     'order' => $course->getOrder(),
                     'hideSessions' => $course->getHideSessions(),
                 ],
-                'restrictions' => [
-                    'hidden' => $course->isHidden(),
-                    'active' => $course->hasAvailableSession(),
-                    'users' => $course->getMaxUsers(),
-                ],
                 'registration' => [
-                    'propagate' => $course->getPropagateRegistration(),
                     'selfRegistration' => $course->getPublicRegistration(),
                     'autoRegistration' => $course->getAutoRegistration(),
                     'selfUnregistration' => $course->getPublicUnregistration(),
@@ -128,22 +146,23 @@ class CourseSerializer
                     'userValidation' => $course->getUserValidation(),
                     'mail' => $course->getRegistrationMail(),
                     'pendingRegistrations' => $course->getPendingRegistrations(),
-                ],
-                'pricing' => [
-                    'price' => $course->getPrice(),
-                    'description' => $course->getPriceDescription(),
+                    'tutorRoleName' => $course->getTutorRoleName(),
+                    'learnerRoleName' => $course->getLearnerRoleName(),
+                    'form' => array_map(function (PanelFacet $panelFacet) {
+                        return $this->panelFacetSerializer->serialize($panelFacet);
+                    }, $course->getPanelFacets()->toArray()),
                 ],
                 'workspace' => $course->getWorkspace() ?
-                    $this->workspaceSerializer->serialize($course->getWorkspace(), [Options::SERIALIZE_MINIMAL]) :
+                    $this->workspaceSerializer->serialize($course->getWorkspace(), [SerializerInterface::SERIALIZE_MINIMAL]) :
                     null,
                 'workspaceModel' => $course->getWorkspaceModel() ?
-                    $this->workspaceSerializer->serialize($course->getWorkspaceModel(), [Options::SERIALIZE_MINIMAL]) :
+                    $this->workspaceSerializer->serialize($course->getWorkspaceModel(), [SerializerInterface::SERIALIZE_MINIMAL]) :
                     null,
                 'organizations' => array_map(function (Organization $organization) {
-                    return $this->orgaSerializer->serialize($organization, [Options::SERIALIZE_MINIMAL]);
+                    return $this->orgaSerializer->serialize($organization, [SerializerInterface::SERIALIZE_MINIMAL]);
                 }, $course->getOrganizations()->toArray()),
                 'children' => array_map(function (Course $child) {
-                    return $this->serialize($child, [Options::SERIALIZE_MINIMAL]);
+                    return $this->serialize($child, [SerializerInterface::SERIALIZE_MINIMAL]);
                 }, $course->getChildren()->toArray()),
             ]);
         }
@@ -161,25 +180,11 @@ class CourseSerializer
         $this->sipe('poster', 'setPoster', $data, $course);
         $this->sipe('thumbnail', 'setThumbnail', $data, $course);
 
-        $this->sipe('meta.tutorRoleName', 'setTutorRoleName', $data, $course);
-        $this->sipe('meta.learnerRoleName', 'setLearnerRoleName', $data, $course);
-        $this->sipe('meta.icon', 'setIcon', $data, $course);
-        $this->sipe('meta.duration', 'setDefaultSessionDuration', $data, $course);
-
         $this->sipe('display.order', 'setOrder', $data, $course);
         $this->sipe('display.hideSessions', 'setHideSessions', $data, $course);
 
         $this->sipe('restrictions.users', 'setMaxUsers', $data, $course);
         $this->sipe('restrictions.hidden', 'setHidden', $data, $course);
-
-        $this->sipe('registration.propagate', 'setPropagateRegistration', $data, $course);
-        $this->sipe('registration.selfRegistration', 'setPublicRegistration', $data, $course);
-        $this->sipe('registration.autoRegistration', 'setAutoRegistration', $data, $course);
-        $this->sipe('registration.selfUnregistration', 'setPublicUnregistration', $data, $course);
-        $this->sipe('registration.validation', 'setRegistrationValidation', $data, $course);
-        $this->sipe('registration.userValidation', 'setUserValidation', $data, $course);
-        $this->sipe('registration.mail', 'setRegistrationMail', $data, $course);
-        $this->sipe('registration.pendingRegistrations', 'setPendingRegistrations', $data, $course);
 
         $this->sipe('opening.session', 'setSessionOpening', $data, $course);
 
@@ -187,6 +192,8 @@ class CourseSerializer
         $this->sipe('pricing.description', 'setPriceDescription', $data, $course);
 
         if (isset($data['meta'])) {
+            $this->sipe('meta.duration', 'setDefaultSessionDuration', $data, $course);
+
             if (isset($data['meta']['created'])) {
                 $course->setCreatedAt(DateNormalizer::denormalize($data['meta']['created']));
             }
@@ -202,7 +209,37 @@ class CourseSerializer
             }
         }
 
-        if (isset($data['parent'])) {
+        if (isset($data['registration'])) {
+            $this->sipe('registration.selfRegistration', 'setPublicRegistration', $data, $course);
+            $this->sipe('registration.autoRegistration', 'setAutoRegistration', $data, $course);
+            $this->sipe('registration.selfUnregistration', 'setPublicUnregistration', $data, $course);
+            $this->sipe('registration.validation', 'setRegistrationValidation', $data, $course);
+            $this->sipe('registration.userValidation', 'setUserValidation', $data, $course);
+            $this->sipe('registration.mail', 'setRegistrationMail', $data, $course);
+            $this->sipe('registration.pendingRegistrations', 'setPendingRegistrations', $data, $course);
+            $this->sipe('registration.tutorRoleName', 'setTutorRoleName', $data, $course);
+            $this->sipe('registration.learnerRoleName', 'setLearnerRoleName', $data, $course);
+
+            if (array_key_exists('form', $data['registration'])) {
+                $sectionIds = [];
+                foreach ($data['registration']['form'] as $section) {
+                    // check if section exists first
+                    $panelFacet = $this->om->getObject($section, PanelFacet::class) ?? new PanelFacet();
+                    $this->panelFacetSerializer->deserialize($section, $panelFacet, $options);
+
+                    $course->addPanelFacet($panelFacet);
+                    $sectionIds[] = $panelFacet->getUuid();
+                }
+
+                foreach ($course->getPanelFacets() as $panelFacet) {
+                    if (!in_array($panelFacet->getUuid(), $sectionIds)) {
+                        $course->removePanelFacet($panelFacet);
+                    }
+                }
+            }
+        }
+
+        if (array_key_exists('parent', $data)) {
             $parent = null;
             if (!empty($data['parent'])) {
                 $parent = $this->courseRepo->findOneBy(['uuid' => $data['parent']['id']]);
@@ -229,15 +266,21 @@ class CourseSerializer
             $course->setWorkspaceModel($workspace);
         }
 
-        if (isset($data['organizations'])) {
-            $course->emptyOrganizations();
-            foreach ($data['organizations'] as $organizationData) {
-                /** @var Organization $organization */
-                $organization = $this->orgaRepo->findOneBy(['uuid' => $organizationData['id']]);
-                if ($organization) {
-                    $course->addOrganization($organization);
+        if (array_key_exists('organizations', $data)) {
+            $organizations = [];
+            if (!empty($data['organizations'])) {
+                foreach ($data['organizations'] as $organizationData) {
+                    if (!empty($organizationData['id']) && empty($organizations[$organizationData['id']])) {
+                        /** @var Organization $organization */
+                        $organization = $this->om->getObject($organizationData, Organization::class);
+                        if ($organization) {
+                            $organizations[$organization->getUuid()] = $organization;
+                        }
+                    }
                 }
             }
+
+            $course->setOrganizations(array_values($organizations));
         }
 
         if (isset($data['tags'])) {

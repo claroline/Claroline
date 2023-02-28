@@ -2,7 +2,6 @@
 
 namespace Claroline\AppBundle\API;
 
-use Claroline\AppBundle\API\Utils\ArrayUtils;
 use Claroline\AppBundle\Event\Crud\CrudEvent;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
@@ -104,45 +103,6 @@ class Crud
                 return $this->serializer->serialize($result, $options);
             }, $results['data']),
         ]);
-    }
-
-    /**
-     * @deprecated
-     */
-    public function csv(string $class, array $query = [], array $options = [])
-    {
-        $data = $this->list($class, $query, $options)['data'];
-
-        $titles = [];
-        $formatted = [];
-        if (!empty($data[0])) {
-            $firstRow = $data[0];
-            //get the title list
-            $titles = !empty($query['columns']) ? $query['columns'] : ArrayUtils::getPropertiesName($firstRow);
-
-            foreach ($data as $el) {
-                $formattedData = [];
-                foreach ($titles as $title) {
-                    $formattedData[$title] = ArrayUtils::has($el, $title) ?
-                        ArrayUtils::get($el, $title) : null;
-                    $formattedData[$title] = !is_array($formattedData[$title]) ? $formattedData[$title] : json_encode($formattedData[$title]);
-                }
-                $formatted[] = $formattedData;
-            }
-        }
-
-        $tmpFile = tempnam(sys_get_temp_dir(), 'CSVCLARO').'.csv';
-        $fp = fopen($tmpFile, 'w');
-
-        fputcsv($fp, $titles, ';');
-
-        foreach ($formatted as $item) {
-            fputcsv($fp, $item, ';');
-        }
-
-        fclose($fp);
-
-        return $tmpFile;
     }
 
     /**

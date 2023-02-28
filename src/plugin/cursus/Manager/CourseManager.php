@@ -19,35 +19,25 @@ use Claroline\CursusBundle\Entity\Registration\AbstractRegistration;
 use Claroline\CursusBundle\Entity\Registration\CourseUser;
 use Claroline\CursusBundle\Entity\Registration\SessionUser;
 use Claroline\CursusBundle\Entity\Session;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CourseManager
 {
-    /** @var EventDispatcherInterface */
-    private $eventDispatcher;
-    /** @var TranslatorInterface */
-    private $translator;
-    /** @var ObjectManager */
-    private $om;
-    /** @var PlatformManager */
-    private $platformManager;
-    /** @var TemplateManager */
-    private $templateManager;
-    /** @var SessionManager */
-    private $sessionManager;
+    private TranslatorInterface $translator;
+    private ObjectManager $om;
+    private PlatformManager $platformManager;
+    private TemplateManager $templateManager;
+    private SessionManager $sessionManager;
 
     private $courseUserRepo;
 
     public function __construct(
-        EventDispatcherInterface $eventDispatcher,
         TranslatorInterface $translator,
         ObjectManager $om,
         PlatformManager $platformManager,
         TemplateManager $templateManager,
         SessionManager $sessionManager
     ) {
-        $this->eventDispatcher = $eventDispatcher;
         $this->om = $om;
         $this->translator = $translator;
         $this->platformManager = $platformManager;
@@ -57,7 +47,7 @@ class CourseManager
         $this->courseUserRepo = $this->om->getRepository(CourseUser::class);
     }
 
-    public function generateFromTemplate(Course $course, string $locale)
+    public function generateFromTemplate(Course $course, string $locale): string
     {
         $placeholders = [
             'course_name' => $course->getName(),
@@ -104,7 +94,7 @@ class CourseManager
     /**
      * @param CourseUser[] $courseUsers
      */
-    public function removeUsers(array $courseUsers)
+    public function removeUsers(array $courseUsers): void
     {
         foreach ($courseUsers as $courseUser) {
             $this->om->remove($courseUser);
@@ -116,7 +106,7 @@ class CourseManager
     /**
      * @param CourseUser[] $courseUsers
      */
-    public function moveUsers(Session $targetSession, array $courseUsers)
+    public function moveUsers(Session $targetSession, array $courseUsers): void
     {
         $this->om->startFlushSuite();
 
@@ -134,7 +124,7 @@ class CourseManager
     /**
      * @param SessionUser[] $sessionUsers
      */
-    public function moveToPending(Course $course, array $sessionUsers)
+    public function moveToPending(Course $course, array $sessionUsers): void
     {
         if (!empty($sessionUsers)) {
             $session = $sessionUsers[0]->getSession();

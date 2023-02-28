@@ -6,6 +6,8 @@ import cloneDeep from 'lodash/cloneDeep'
 import isEmpty from 'lodash/isEmpty'
 import set from 'lodash/set'
 
+import {trans} from '#/main/app/intl/translation'
+import {hasPermission} from '#/main/app/security'
 import {withRouter} from '#/main/app/router'
 import {Alert} from '#/main/app/alert/components/alert'
 import {selectors as securitySelectors} from '#/main/app/security/store'
@@ -16,10 +18,8 @@ import {notEmpty} from '#/main/app/data/types/validators'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {Form} from '#/main/app/content/form/components/form'
 import {DataInput} from '#/main/app/data/components/input'
-import {formatField, isFieldDisplayed} from '#/main/community/profile/utils'
+import {isFieldDisplayed, formatSections} from '#/main/app/content/form/parameters/utils'
 
-import {trans} from '#/main/app/intl/translation'
-import {hasPermission} from '#/main/app/security'
 import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
 
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
@@ -42,8 +42,6 @@ class EntryFormComponent extends Component {
     this.state = {
       template: ''
     }
-
-    //this.getConfirm = this.getConfirm.bind(this)
   }
 
   componentDidMount() {
@@ -56,44 +54,38 @@ class EntryFormComponent extends Component {
   getSections() {
     const isShared = this.props.entryUser && this.props.entryUser.id ? this.props.entryUser.shared : false
 
-    const sectionFields = [
-      {
-        name: 'title',
-        type: 'string',
-        label: this.props.titleLabel ? this.props.titleLabel : trans('title'),
-        required: true
-      }
-    ]
-    this.props.fields
-      .filter(f => this.props.isNew ||
-        isShared ||
-        this.props.displayMetadata === 'all' ||
-        (this.props.displayMetadata === 'manager' && this.props.isManager) ||
-        !f.restrictions.metadata ||
-        (this.props.entry.user && this.props.entry.user.id === this.props.currentUser.id)
-      )
-      .forEach(f => {
-        const params = formatField(f, this.props.fields, 'values')
+    const hasConfidentialRights = 'all' === this.props.displayMetadata
+      || ('manager' === this.props.displayMetadata && this.props.isManager)
+      || isShared
+      || (this.props.entry.user && this.props.entry.user.id === this.props.currentUser.id)
 
-        params.disabled = !this.props.isManager
-          && ((this.props.isNew && f.restrictions.locked && !f.restrictions.lockedEditionOnly) || (!this.props.isNew && f.restrictions.locked))
+    const hasLockedRights = this.props.isManager
 
-        switch (f.type) {
-          case 'file':
-            params['options'] = Object.assign({}, params['options'], {'uploadUrl': ['apiv2_clacoformentry_file_upload', {clacoForm: this.props.clacoFormId}]})
-            break
-        }
-        sectionFields.push(params)
-      })
-
-    return [
+    return formatSections([
       {
         id: 'general',
         title: trans('general'),
         primary: true,
-        fields: sectionFields
+        fields: [
+          {
+            name: 'title',
+            type: 'string',
+            label: this.props.titleLabel ? this.props.titleLabel : trans('title'),
+            required: true
+          }
+        ].concat(this.props.fields.map(field => {
+          const fieldDef = cloneDeep(field)
+
+          if ('file' === fieldDef.type) {
+            fieldDef.options = Object.assign({}, fieldDef.options, {
+              uploadUrl: ['apiv2_clacoformentry_file_upload', {clacoForm: this.props.clacoFormId}]
+            })
+          }
+
+          return fieldDef
+        }))
       }
-    ]
+    ], this.props.fields, 'values', hasConfidentialRights, hasLockedRights)
   }
 
   generateTemplate() {

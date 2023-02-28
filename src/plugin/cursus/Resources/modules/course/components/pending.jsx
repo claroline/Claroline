@@ -19,6 +19,7 @@ const CoursePending = (props) =>
     </Alert>
 
     <SessionUsers
+      course={props.course}
       session={props.course}
       name={selectors.STORE_NAME+'.coursePending'}
       url={['apiv2_cursus_course_list_users', {id: props.course.id}]}

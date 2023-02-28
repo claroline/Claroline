@@ -11,10 +11,8 @@ import {decorate} from '#/main/community/profile/decorator'
 import {
   PROFILE_FACET_OPEN,
   PROFILE_FACET_ADD,
-  PROFILE_FACET_REMOVE,
-  PROFILE_ADD_SECTION,
-  PROFILE_REMOVE_SECTION
-} from './actions'
+  PROFILE_FACET_REMOVE
+} from '#/main/community/tools/community/profile/store/actions'
 
 const defaultState = {
   currentFacet: null,
@@ -24,9 +22,7 @@ const defaultState = {
 const reducer = makeFormReducer(baseSelectors.STORE_NAME+'.profile', defaultState, {
   pendingChanges: makeReducer(false, {
     [PROFILE_FACET_ADD]: () => true,
-    [PROFILE_FACET_REMOVE]: () => true,
-    [PROFILE_ADD_SECTION]: () => true,
-    [PROFILE_REMOVE_SECTION]: () => true
+    [PROFILE_FACET_REMOVE]: () => true
   }),
   originalData: makeReducer(defaultState.data, {
     [makeInstanceAction(TOOL_LOAD, 'community')]: (state, action) => decorate(action.toolData.profile)
@@ -63,43 +59,6 @@ const reducer = makeFormReducer(baseSelectors.STORE_NAME+'.profile', defaultStat
 
         return facet
       })
-
-      return newState
-    },
-
-    [PROFILE_ADD_SECTION]: (state, action) => {
-      const newState = cloneDeep(state)
-
-      const currentFacet = newState.find(facet => facet.id === action.facetId)
-      if (currentFacet) {
-        currentFacet.sections.push({
-          id: makeId(),
-          title: '',
-          position: newState.length,
-          fields: []
-        })
-      }
-
-      return newState
-    },
-
-    [PROFILE_REMOVE_SECTION]: (state, action) => {
-      const newState = cloneDeep(state)
-
-      const currentFacet = newState.find(facet => facet.id === action.facetId)
-      if (currentFacet) {
-        const pos = currentFacet.sections.findIndex(section => section.id === action.sectionId)
-        if (-1 !== pos) {
-          currentFacet.sections.splice(pos, 1)
-        }
-
-        // reorder sections
-        currentFacet.sections.map((section, sectionIndex) => {
-          section.position = sectionIndex
-
-          return section
-        })
-      }
 
       return newState
     }

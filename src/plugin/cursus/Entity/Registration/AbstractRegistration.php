@@ -19,17 +19,13 @@ abstract class AbstractRegistration
 
     /**
      * @ORM\Column(name="registration_type")
-     *
-     * @var string
      */
-    protected $type = self::LEARNER;
+    protected string $type = self::LEARNER;
 
     /**
      * @ORM\Column(name="registration_date", type="datetime")
-     *
-     * @var \DateTime
      */
-    protected $date;
+    protected \DateTimeInterface $date;
 
     public function __construct()
     {
@@ -43,17 +39,17 @@ abstract class AbstractRegistration
         return $this->type;
     }
 
-    public function setType(string $type)
+    public function setType(string $type): void
     {
         $this->type = $type;
     }
 
-    public function getDate(): \DateTime
+    public function getDate(): \DateTimeInterface
     {
         return $this->date;
     }
 
-    public function setDate(\DateTime $date)
+    public function setDate(\DateTimeInterface $date): void
     {
         $this->date = $date;
     }

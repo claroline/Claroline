@@ -18,7 +18,7 @@ trait Description
         return $this->description;
     }
 
-    public function setDescription(string $description = null)
+    public function setDescription(?string $description = null): void
     {
         $this->description = $description;
     }

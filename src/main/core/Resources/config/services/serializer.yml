@@ -249,7 +249,6 @@ services:
         tags: [claroline.serializer]
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CommunityBundle\Serializer\RoleSerializer'
             - '@Claroline\CoreBundle\API\Serializer\Facet\FieldFacetSerializer'
 
     Claroline\CoreBundle\API\Serializer\Facet\FieldFacetSerializer:
@@ -265,7 +264,6 @@ services:
         tags: [claroline.serializer]
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CommunityBundle\Serializer\RoleSerializer'
             - '@Claroline\CoreBundle\API\Serializer\Facet\PanelFacetSerializer'
 
     Claroline\CoreBundle\API\Serializer\Platform\ConnectionMessageSerializer:

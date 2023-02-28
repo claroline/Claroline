@@ -25,6 +25,7 @@ import {SessionUsers} from '#/plugin/cursus/session/components/users'
 
 const CourseUsers = (props) =>
   <SessionUsers
+    course={props.course}
     session={props.activeSession}
     name={props.name}
     url={['apiv2_cursus_session_list_users', {type: props.type, id: props.activeSession.id}]}
@@ -79,6 +80,9 @@ const CourseUsers = (props) =>
 CourseUsers.propTypes = {
   name: T.string.isRequired,
   type: T.string.isRequired,
+  course: T.shape(
+    CourseTypes.propTypes
+  ).isRequired,
   activeSession: T.shape(
     SessionTypes.propTypes
   ),
@@ -157,7 +161,7 @@ const CourseParticipants = (props) =>
       />
 
       <ContentCounter
-        icon="fa fa-chalkboard-teacher"
+        icon="fa fa-user"
         label={trans('users')}
         color={schemeCategory20c[5]}
         value={get(props.activeSession, 'participants.learners', 0)}
@@ -222,6 +226,7 @@ const CourseParticipants = (props) =>
                 const Tutors = (
                   <CourseUsers
                     type={constants.TEACHER_TYPE}
+                    course={props.course}
                     activeSession={props.activeSession}
                     name={selectors.STORE_NAME+'.sessionTutors'}
                     addUsers={props.addUsers}
@@ -256,6 +261,7 @@ const CourseParticipants = (props) =>
 
                     <CourseUsers
                       type={constants.LEARNER_TYPE}
+                      course={props.course}
                       activeSession={props.activeSession}
                       name={selectors.STORE_NAME+'.sessionUsers'}
                       addUsers={props.addUsers}
@@ -298,6 +304,7 @@ const CourseParticipants = (props) =>
                     }
 
                     <SessionUsers
+                      course={props.course}
                       session={props.activeSession}
                       name={selectors.STORE_NAME+'.sessionPending'}
                       url={['apiv2_cursus_session_list_pending', {id: props.activeSession.id}]}

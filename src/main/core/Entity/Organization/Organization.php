@@ -186,6 +186,8 @@ class Organization
      * @ORM\JoinColumn(name="organization_id", nullable=false)
      *
      * @var ArrayCollection|UserOrganizationReference[]
+     *
+     * @deprecated should be unidirectional
      */
     private $userOrganizationReferences;
 

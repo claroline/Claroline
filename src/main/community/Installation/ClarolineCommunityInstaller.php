@@ -13,9 +13,9 @@ namespace Claroline\CommunityBundle\Installation;
 
 use Claroline\CommunityBundle\Installation\Updater\Updater130500;
 use Claroline\CommunityBundle\Installation\Updater\Updater130700;
-use Claroline\InstallationBundle\Additional\AdditionalInstaller as BaseInstaller;
+use Claroline\InstallationBundle\Additional\AdditionalInstaller;
 
-class ClarolineCommunityInstaller extends BaseInstaller
+class ClarolineCommunityInstaller extends AdditionalInstaller
 {
     public static function getUpdaters(): array
     {

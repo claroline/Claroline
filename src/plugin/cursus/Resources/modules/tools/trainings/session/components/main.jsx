@@ -27,7 +27,7 @@ const SessionMain = (props) =>
             name: 'current',
             type: LINK_BUTTON,
             label: trans('Actives', {}, 'cursus'),
-            target: `${props.path}/registered/`,
+            target: `${props.path}/registered`,
             exact: true
           }, {
             name: 'ended',

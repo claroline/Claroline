@@ -18,7 +18,9 @@ use Claroline\AppBundle\Entity\Meta\Poster;
 use Claroline\AppBundle\Entity\Meta\Thumbnail;
 use Claroline\AppBundle\Entity\Restriction\Locked;
 use Claroline\CommunityBundle\Model\HasOrganizations;
+use Claroline\CoreBundle\Entity\Organization\Organization;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -64,14 +66,14 @@ class Group extends AbstractRoleSubject
     protected $roles;
 
     /**
-     * @var ArrayCollection
-     *
      * @ORM\ManyToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Organization\Organization",
      *     inversedBy="groups"
      * )
+     *
+     * @var Collection|Organization[]
      */
-    private $organizations;
+    private Collection $organizations;
 
     /**
      * @var ArrayCollection
@@ -80,6 +82,8 @@ class Group extends AbstractRoleSubject
      *     targetEntity="Claroline\CoreBundle\Entity\Location\Location",
      *     inversedBy="groups"
      * )
+     *
+     * @deprecated should not be declared here. (also Groups are already linked to Organizations which are linked to Locations)
      */
     private $locations;
 

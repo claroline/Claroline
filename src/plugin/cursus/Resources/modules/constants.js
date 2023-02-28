@@ -1,7 +1,5 @@
 import {trans} from '#/main/app/intl/translation'
 
-const DEFAULT_ORDER = 1
-
 const REGISTRATION_AUTO = 0
 const REGISTRATION_MANUAL = 1
 const REGISTRATION_PUBLIC = 2
@@ -35,7 +33,6 @@ const LEARNER_TYPE = 'learner'
 const TEACHER_TYPE = 'tutor'
 
 export const constants = {
-  DEFAULT_ORDER,
   REGISTRATION_AUTO,
   REGISTRATION_MANUAL,
   REGISTRATION_PUBLIC,

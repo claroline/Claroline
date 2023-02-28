@@ -54,8 +54,6 @@
     "event_loading": "Nous chargeons la séance de formation...",
     "default_session_help": "La session par défaut est affichée à l'ouverture de la formation dans le catalogue.",
     "default_session_help_registration": "La session par défaut est utilisée lors de l'inscription automatique des utilisateurs depuis une formation parente.",
-    "propagate_registration": "Inscrire automatiquement les utilisateurs aux formations liées",
-    "propagate_registration_help": "Les utilisateurs seront inscrits à la session par défaut des formations liées si il y en a une et que cette session n'est pas terminée.",
     "training_hidden": "Cette formation est cachée",
     "training_public_registration": "Les inscriptions sont publiques.",
     "available_seats": "Places disponibles",
